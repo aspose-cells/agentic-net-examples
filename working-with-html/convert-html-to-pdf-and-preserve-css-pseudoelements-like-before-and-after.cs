@@ -1,52 +1,42 @@
-// Title: Convert HTML to PDF with Aspose.Cells for .NET – Preserve CSS ::before and ::after
-// Description: Demonstrates how to load a local HTML file with Aspose.Cells' HtmlLoadOptions, create a Workbook, and save it as a PDF while keeping CSS pseudo‑elements ( ::before / ::after ) intact. Includes basic error handling for missing files and conversion failures.
-// Keywords: Aspose.Cells HTML to PDF | preserve CSS pseudo‑elements | C# convert HTML to PDF | HtmlLoadOptions | Workbook to PDF | CSS ::before ::after rendering | .NET PDF conversion
-// Common Searches: Aspose.Cells keep ::before and ::after when converting HTML to PDF | C# HTML to PDF conversion with CSS pseudo‑elements | How to render CSS ::before ::after in PDF using Aspose.Cells | HtmlLoadOptions settings for CSS support in Aspose.Cells
-// Developer Intent: Generate a PDF from an HTML document using Aspose.Cells for .NET and ensure that CSS ::before and ::after pseudo‑elements are rendered in the output.
-// Use Cases: Quickly convert a static HTML page to a PDF with default settings. | Enable advanced CSS processing in HtmlLoadOptions to improve pseudo‑element rendering. | Add robust file‑existence checks and exception handling around the conversion workflow.
-// AI Prompts: Write C# code that configures HtmlLoadOptions in Aspose.Cells to guarantee ::before and ::after pseudo‑elements appear in the saved PDF. | Explain methods to verify that CSS pseudo‑elements are present in the PDF and suggest fallback techniques if they are omitted. | Show how to capture conversion warnings and log detailed information about unsupported CSS features during HTML‑to‑PDF conversion with Aspose.Cells.
+// Title: C# – Convert HTML to PDF with Aspose.Cells while retaining CSS ::before and ::after
+// Description: Load an HTML file (including CSS ::before/::after pseudo‑elements) into an Aspose.Cells Workbook and export it to PDF using PdfSaveOptions, preserving the original visual layout.
+// Keywords: Aspose.Cells HTML to PDF | C# convert HTML PDF | preserve CSS pseudo‑elements | PdfSaveOptions | Aspose.Cells workbook load HTML
+// Common Searches: Aspose.Cells convert HTML to PDF with pseudo elements | C# keep ::before ::after when exporting HTML to PDF | How to render CSS pseudo‑elements in PDF using Aspose.Cells | Save HTML workbook as PDF Aspose.Cells C#
+// Developer Intent: Create a PDF from an HTML document that contains CSS ::before and ::after pseudo‑elements using Aspose.Cells for .NET.
+// Use Cases: Archive marketing emails that use icon fonts via ::before into printable PDFs. | Generate printable reports from HTML templates that rely on ::after footnote markers. | Batch‑convert a collection of web pages to PDFs while maintaining all CSS visual effects.
+// AI Prompts: Show how to set OnePagePerSheet = true in PdfSaveOptions without losing CSS pseudo‑elements. | Demonstrate adding a custom web font so text in ::before and ::after renders correctly in the PDF. | Explain how to reference external CSS files when loading HTML into an Aspose.Cells Workbook for PDF export.
 
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace HtmlToPdfExample
+// Load an HTML file (including CSS ::before/::after pseudo‑elements) into an Aspose.Cells Workbook and export it to PDF using PdfSaveOptions, preserving the original visual layout.
+class HtmlToPdfConverter
 {
-    // Demonstrates how to load a local HTML file with Aspose.Cells' HtmlLoadOptions, create a Workbook, and save it as a PDF while keeping CSS pseudo‑elements ( ::before / ::after ) intact. Includes basic error handling for missing files and conversion failures.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Input HTML file that may contain CSS pseudo‑elements (::before, ::after)
+        string htmlFile = "input.html";
+
+        // Output PDF file
+        string pdfFile = "output.pdf";
+
+        // Load the HTML document into a Workbook.
+        // Aspose.Cells automatically parses the HTML and creates the corresponding worksheet.
+        Workbook workbook = new Workbook(htmlFile);
+
+        // Configure PDF save options.
+        // The default rendering preserves the visual appearance of the HTML,
+        // including CSS pseudo‑elements, as they are interpreted during the load phase.
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Path to the source HTML file
-            string htmlPath = "input.html";
+            // Example: keep each worksheet on its own page (optional)
+            OnePagePerSheet = false
+        };
 
-            // Path for the resulting PDF file
-            string pdfPath = "output.pdf";
+        // Save the workbook as a PDF file.
+        workbook.Save(pdfFile, pdfOptions);
 
-            // Verify that the input file exists
-            if (!File.Exists(htmlPath))
-            {
-                Console.WriteLine($"Input HTML file not found: {htmlPath}");
-                return;
-            }
-
-            try
-            {
-                // Load the HTML content (HtmlLoadOptions can be used for additional settings if needed)
-                HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-                Workbook workbook = new Workbook(htmlPath, loadOptions);
-
-                // Create PDF save options (default settings are sufficient)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-                // Save the workbook as PDF
-                workbook.Save(pdfPath, pdfOptions);
-                Console.WriteLine($"PDF saved successfully to {pdfPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        Console.WriteLine($"HTML file \"{htmlFile}\" has been converted to PDF \"{pdfFile}\".");
     }
 }

@@ -1,56 +1,59 @@
-// Title: Apply a Light‑Blue Data Bar Conditional Format to Column G with Aspose.Cells for .NET (C#)
-// Description: This example creates a new workbook, writes incremental numbers to cells G1‑G10, defines a CellArea for column G, adds a DataBar conditional format with automatic minimum and maximum values, sets the bar color to LightBlue, shows the numeric value, and saves the result as ColumnGDataBar.xlsx.
-// Keywords: Aspose.Cells | C# | DataBar | ConditionalFormatting | Column G | Excel workbook | AutomaticMin | AutomaticMax | LightBlue bar | SaveFormat.Xlsx | GitHub sample
-// Common Searches: Aspose.Cells add data bar to a column C# | conditional formatting data bar column G .NET | automatic min max data bar Aspose.Cells example | set data bar color LightBlue Aspose.Cells | show values with data bar conditional format
-// Developer Intent: Add a data‑bar conditional format to column G to visualize numeric trends in an Excel file using Aspose.Cells for .NET.
-// Use Cases: Show sales figures in column G with a light‑blue bar that scales from the lowest to highest value. | Display progress percentages in column G while keeping the numeric value visible beside the bar. | Create a quick KPI dashboard where column G values are highlighted with data bars for instant trend analysis.
-// AI Prompts: Generate C# code that applies a red DataBar with a custom range (0‑100) to column H using Aspose.Cells. | Modify the sample to hide the numeric values while keeping the LightBlue DataBar visible in column G. | Provide an example that combines a DataBar and a three‑color scale conditional format on the same column with Aspose.Cells.
+// Title: Apply a Blue Data Bar Conditional Format to Column G with Aspose.Cells for C#
+// Description: This example creates a new workbook, fills cells G1‑G10 with numeric values, and adds a conditional‑formatting rule that displays a blue data bar. The data bar uses automatic minimum and maximum values, shows the cell values, and the workbook is saved as DataBarColumnG.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | Excel | Data Bar | Conditional Formatting | Column G | Automatic Min Max | Blue data bar | Workbook example
+// Common Searches: Aspose.Cells data bar column G C# | How to add conditional formatting data bar in Aspose.Cells .NET | C# code for Excel data bar conditional format | Set data bar color Aspose.Cells | Automatic minimum maximum data bar Aspose.Cells
+// Developer Intent: Add a data‑bar conditional format to column G to visualize numeric trends in an Excel file generated with Aspose.Cells.
+// Use Cases: Show sales figures in column G with blue bars for quick performance comparison. | Visualize project completion percentages in column G using data bars. | Create an inventory‑level heat map in column G with proportional bars. | Display KPI scores in column G for an executive dashboard. | Highlight financial variance in column G with a visual bar indicator.
+// AI Prompts: Generate C# Aspose.Cells code to apply a red data bar to column H with custom minimum 0 and maximum 100. | Show how to modify the example to hide cell values while keeping the blue data bar visible. | Provide a sample that adds both a data bar and a three‑color scale to column G in the same worksheet. | Write a reusable method that applies a data‑bar conditional format to any specified column range. | Create an Aspose.Cells script that uses a gradient color data bar and sets the bar direction to left‑to‑right.
 
 using System;
-using Aspose.Cells;
 using System.Drawing;
+using Aspose.Cells;
 
-// This example creates a new workbook, writes incremental numbers to cells G1‑G10, defines a CellArea for column G, adds a DataBar conditional format with automatic minimum and maximum values, sets the bar color to LightBlue, shows the numeric value, and saves the result as ColumnGDataBar.xlsx.
-class DataBarColumnG
+namespace AsposeCellsDataBarExample
 {
-    static void Main()
+    // This example creates a new workbook, fills cells G1‑G10 with numeric values, and adds a conditional‑formatting rule that displays a blue data bar. The data bar uses automatic minimum and maximum values, shows the cell values, and the workbook is saved as DataBarColumnG.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample numeric data in column G (index 6)
-        for (int i = 0; i < 10; i++)
+        static void Main()
         {
-            sheet.Cells[i, 6].PutValue(i * 10 + 5);
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate column G (index 6) with sample numeric data
+            for (int row = 0; row < 10; row++)
+            {
+                sheet.Cells[row, 6].PutValue(row * 10 + 5); // G1..G10
+            }
+
+            // Add an empty conditional formatting collection
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
+
+            // Define the range for the data bar (column G, rows 0-9)
+            CellArea area = new CellArea
+            {
+                StartRow = 0,
+                EndRow = 9,
+                StartColumn = 6,
+                EndColumn = 6
+            };
+            cfCollection.AddArea(area);
+
+            // Add a DataBar condition to the collection
+            int conditionIndex = cfCollection.AddCondition(FormatConditionType.DataBar);
+            FormatCondition condition = cfCollection[conditionIndex];
+
+            // Configure the DataBar properties
+            DataBar dataBar = condition.DataBar;
+            dataBar.MinCfvo.Type = FormatConditionValueType.AutomaticMin; // Minimum based on data
+            dataBar.MaxCfvo.Type = FormatConditionValueType.AutomaticMax; // Maximum based on data
+            dataBar.Color = Color.Blue;                                   // Bar color
+            dataBar.ShowValue = true;                                     // Show cell values
+
+            // Save the workbook to a file
+            workbook.Save("DataBarColumnG.xlsx", SaveFormat.Xlsx);
         }
-
-        // Add a data bar conditional formatting to column G
-        int fmtIndex = sheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcs = sheet.ConditionalFormattings[fmtIndex];
-
-        // Define the range for column G (rows 0‑9)
-        CellArea area = new CellArea
-        {
-            StartRow = 0,
-            EndRow = 9,
-            StartColumn = 6,
-            EndColumn = 6
-        };
-        fcs.AddArea(area);
-
-        // Add the DataBar condition
-        int condIndex = fcs.AddCondition(FormatConditionType.DataBar);
-        FormatCondition condition = fcs[condIndex];
-
-        // Configure the DataBar properties
-        DataBar dataBar = condition.DataBar;
-        dataBar.MinCfvo.Type = FormatConditionValueType.AutomaticMin;
-        dataBar.MaxCfvo.Type = FormatConditionValueType.AutomaticMax;
-        dataBar.Color = Color.LightBlue;
-        dataBar.ShowValue = true;
-
-        // Save the workbook
-        workbook.Save("ColumnGDataBar.xlsx", SaveFormat.Xlsx);
     }
 }

@@ -1,63 +1,55 @@
 // Title: C# – Delete Multiple Non‑Contiguous Ranges Using UnionRange in Aspose.Cells
-// Description: Creates a workbook, fills a 10×10 grid, defines a UnionRange covering A2:B3 and D5:E6, iterates each sub‑range, deletes it with Cells.DeleteRange (ShiftType.Up), and saves the result as an XLSX file.
-// Keywords: Aspose.Cells C# | UnionRange delete | non‑contiguous range removal | Cells.DeleteRange | ShiftType.Up | Excel range deletion | .NET Excel library | multiple range delete | Aspose.Cells example GitHub | XLSX file manipulation
-// Common Searches: Aspose.Cells delete non adjacent ranges C# | How to use UnionRange to remove several areas in a worksheet | Delete multiple cell blocks with ShiftType.Up in Aspose.Cells | C# code for deleting non‑contiguous ranges in Excel | Aspose.Cells UnionRange example GitHub
-// Developer Intent: Remove specified non‑contiguous cell blocks from a worksheet in a single operation and shift the remaining cells upward.
-// Use Cases: Clear header/footer sections after data processing without disturbing the main table. | Strip out obsolete data blocks before importing a new dataset into the same sheet. | Delete separate merged‑cell areas in a generated report while keeping surrounding content intact.
-// AI Prompts: Generate a C# method that accepts a UnionRange address string and deletes all its areas using ShiftType.Left. | Explain best practices for exception handling when deleting multiple ranges with UnionRange in Aspose.Cells. | Show an alternative technique to delete non‑contiguous ranges without looping over each Range object.
+// Description: Creates a workbook, populates sample data, defines a UnionRange (e.g., A2:B3,D5:E6), deletes each sub‑range while shifting cells up, and saves the result as DeletedNonContiguousRanges.xlsx.
+// Keywords: Aspose.Cells delete non‑contiguous ranges | UnionRange C# example | delete multiple ranges shift up | .NET spreadsheet cell removal | Aspose.Cells bulk delete cells
+// Common Searches: Aspose.Cells delete several non‑adjacent blocks | C# UnionRange delete cells and shift up | remove multiple ranges in one operation Aspose.Cells | how to delete non‑contiguous ranges .NET
+// Developer Intent: Remove specified non‑contiguous cell blocks from a worksheet and shift the remaining cells upward in a single workflow.
+// Use Cases: Strip out separate header/footer sections from a generated report. | Clean data by deleting scattered rows or columns that are not needed for export. | Implement a bulk delete feature for user‑selected cells across different sheet areas.
+// AI Prompts: Write C# code with Aspose.Cells that deletes multiple non‑contiguous ranges defined by a UnionRange and shifts cells up. | Explain the UnionRange class in Aspose.Cells and how to iterate its ranges for deletion. | Show an alternative approach to delete non‑contiguous ranges without explicit loops.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsUnionRangeDeleteDemo
+// Creates a workbook, populates sample data, defines a UnionRange (e.g., A2:B3,D5:E6), deletes each sub‑range while shifting cells up, and saves the result as DeletedNonContiguousRanges.xlsx.
+class DeleteNonContiguousRanges
 {
-    // Creates a workbook, fills a 10×10 grid, defines a UnionRange covering A2:B3 and D5:E6, iterates each sub‑range, deletes it with Cells.DeleteRange (ShiftType.Up), and saves the result as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Fill the worksheet with sample data
+            for (int row = 0; row < 10; row++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Populate sample data to visualize the ranges before deletion
-                for (int row = 0; row < 10; row++)
+                for (int col = 0; col < 5; col++)
                 {
-                    for (int col = 0; col < 10; col++)
-                    {
-                        cells[row, col].PutValue($"R{row}C{col}");
-                    }
+                    cells[row, col].PutValue($"R{row}C{col}");
                 }
-
-                // Define a union range consisting of two non‑contiguous areas:
-                //   A2:B3  (rows 1‑2, columns 0‑1)
-                //   D5:E6  (rows 4‑5, columns 3‑4)
-                UnionRange unionRange = workbook.Worksheets.CreateUnionRange("A2:B3,D5:E6", 0);
-
-                // Delete each area of the union range.
-                // Use Aspose.Cells.Range to avoid conflict with System.Range
-                foreach (Aspose.Cells.Range r in unionRange.Ranges)
-                {
-                    int startRow = r.FirstRow;
-                    int startColumn = r.FirstColumn;
-                    int totalRows = r.RowCount;
-                    int totalColumns = r.ColumnCount;
-
-                    // Delete the range and shift cells up
-                    cells.DeleteRange(startRow, startColumn, totalRows, totalColumns, ShiftType.Up);
-                }
-
-                // Save the workbook
-                workbook.Save("UnionRangeDeleteDemo.xlsx");
             }
-            catch (Exception ex)
+
+            // Create a UnionRange that represents non‑contiguous areas (e.g., A2:B3 and D5:E6)
+            UnionRange unionRange = workbook.Worksheets.CreateUnionRange("A2:B3,D5:E6", 0);
+
+            // Delete each range in the union and shift cells up
+            foreach (Aspose.Cells.Range range in unionRange.Ranges)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                cells.DeleteRange(
+                    range.FirstRow,
+                    range.FirstColumn,
+                    range.RowCount,
+                    range.ColumnCount,
+                    ShiftType.Up);
             }
+
+            // Save the modified workbook
+            workbook.Save("DeletedNonContiguousRanges.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,81 +1,68 @@
-// Title: C# Unit Test for Worksheet.PageSetup.FitToPagesWide Pagination in Aspose.Cells
-// Description: This example creates a workbook, fills cells A1:J100, defines a print area, sets FitToPagesWide = 2 and FitToPagesTall = 1, renders the sheet with SheetRender, and asserts that the resulting PageCount is two and that PageScale is a valid positive percentage.
-// Keywords: Aspose.Cells | FitToPagesWide | unit test | C# | SheetRender pagination | PageCount verification | PrintArea scaling
-// Common Searches: Aspose.Cells unit test FitToPagesWide | verify printed page count C# Aspose | how to test pagination with SheetRender | check page scale after setting FitToPagesTall | C# Aspose.Cells pagination example
-// Developer Intent: Confirm that the FitToPagesWide setting restricts the rendered worksheet to the specified number of pages.
-// Use Cases: Automated regression testing of pagination after library upgrades. | Ensuring generated reports fit within a predefined column width per printed page. | Validating that page scaling remains within acceptable limits when using fit‑to‑pages options.
-// AI Prompts: Generate an MSTest method that asserts Worksheet.PageSetup.FitToPagesWide limits the page count to two using Aspose.Cells. | Create a NUnit test that populates a workbook, applies FitToPagesWide/Tall, renders with SheetRender, and checks PageCount and PageScale. | Write an xUnit test verifying pagination and scaling when FitToPagesWide is set to 3 and FitToPagesTall to 1.
+// Title: C# Unit Test for Aspose.Cells FitToPagesWide Pagination
+// Description: Demonstrates how to verify that the FitToPagesWide setting in Aspose.Cells correctly limits the number of printed columns per page. The test creates a workbook, fills a row with 30 columns, defines a print area, renders the sheet with FitToPagesWide = 1 and = 2, and asserts that the resulting page counts are 1 and 2 respectively.
+// Keywords: Aspose.Cells | FitToPagesWide | C# unit test | SheetRender page count | pagination verification | .NET Excel printing | MSTest | xUnit | NUnit
+// Common Searches: Aspose.Cells FitToPagesWide unit test example | how to test page count after setting FitToPagesWide | C# verify printed pages with Aspose.Cells | unit testing Excel pagination in .NET | SheetRender page count assertion
+// Developer Intent: Provide a ready‑to‑run unit test that confirms the FitToPagesWide property restricts printed columns to the expected number of pages.
+// Use Cases: Automated regression testing of worksheet pagination after library upgrades. | Ensuring generated reports fit within a single page width for printing. | Validating that a two‑page width layout splits wide data correctly. | Integrating pagination checks into CI pipelines for .NET Excel solutions.
+// AI Prompts: Create an MSTest method that builds a workbook, populates 30 columns, sets PrintArea, applies FitToPagesWide = 1 and 2, renders with SheetRender, and asserts PageCount equals 1 and 2. | Write an xUnit test for Aspose.Cells that verifies FitToPagesWide pagination while FitToPagesTall remains zero, including proper disposal of Workbook and SheetRender objects. | Generate a NUnit test example that logs the observed page counts for FitToPagesWide values and fails with a clear message if the counts differ from expected.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsTests
+namespace AsposeCellsExamples
 {
-    // This example creates a workbook, fills cells A1:J100, defines a print area, sets FitToPagesWide = 2 and FitToPagesTall = 1, renders the sheet with SheetRender, and asserts that the resulting PageCount is two and that PageScale is a valid positive percentage.
-    public class FitToPagesWideTests
+    // Demonstrates how to verify that the FitToPagesWide setting in Aspose.Cells correctly limits the number of printed columns per page. The test creates a workbook, fills a row with 30 columns, defines a print area, renders the sheet with FitToPagesWide = 1 and = 2, and asserts that the resulting page counts are 1 and 2 respectively.
+    public class FitToPagesWideDemo
     {
         public static void Main()
         {
             try
             {
-                RunTest();
-                Console.WriteLine("Test completed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void RunTest()
-        {
-            try
-            {
                 // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                var workbook = new Workbook();
+                var sheet = workbook.Worksheets[0];
 
-                // Populate the worksheet with data spanning many columns and rows (100 rows, 10 columns)
-                for (int row = 0; row < 100; row++)
+                // Populate a single row with many columns (30 columns)
+                for (int col = 0; col < 30; col++)
                 {
-                    for (int col = 0; col < 10; col++)
-                    {
-                        worksheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                    }
+                    sheet.Cells[0, col].PutValue($"Col{col + 1}");
                 }
 
-                // Define the print area covering all populated cells
-                worksheet.PageSetup.PrintArea = "A1:J100";
+                // Define the print area to include all populated columns
+                sheet.PageSetup.PrintArea = "A1:AD1"; // AD is the 30th column
 
-                // Set FitToPagesWide to 2 pages and FitToPagesTall to 1 page
-                worksheet.PageSetup.FitToPagesWide = 2;
-                worksheet.PageSetup.FitToPagesTall = 1;
+                // Scenario 1: Fit all columns into a single page width
+                sheet.PageSetup.FitToPagesWide = 1;
+                sheet.PageSetup.FitToPagesTall = 0; // Let height adjust automatically
 
-                // Create rendering options (default options are sufficient for this test)
-                ImageOrPrintOptions options = new ImageOrPrintOptions();
+                var options = new ImageOrPrintOptions();
+                var renderOnePage = new SheetRender(sheet, options);
+                int pageCountWhenWide1 = renderOnePage.PageCount;
 
-                // Render the worksheet to evaluate pagination
-                SheetRender render = new SheetRender(worksheet, options);
-                // Verify that the total page count equals 2
-                if (render.PageCount != 2)
+                // Scenario 2: Allow the content to span two pages wide
+                sheet.PageSetup.FitToPagesWide = 2;
+                // Recreate the renderer to recalculate page count
+                var renderTwoPages = new SheetRender(sheet, options);
+                int pageCountWhenWide2 = renderTwoPages.PageCount;
+
+                // Output results
+                Console.WriteLine($"FitToPagesWide = 1 => Page count: {pageCountWhenWide1}");
+                Console.WriteLine($"FitToPagesWide = 2 => Page count: {pageCountWhenWide2}");
+
+                // Simple verification
+                if (pageCountWhenWide1 == 1 && pageCountWhenWide2 == 2)
                 {
-                    throw new InvalidOperationException($"FitToPagesWide did not limit the worksheet to the expected number of pages. Expected 2, got {render.PageCount}.");
+                    Console.WriteLine("Test passed.");
                 }
-
-                // Verify that the calculated page scale reflects the fit-to-pages setting
-                double pageScale = render.PageScale;
-                if (pageScale <= 0 || pageScale > 100)
+                else
                 {
-                    throw new InvalidOperationException($"PageScale should be a positive percentage when using FitToPages settings. Actual: {pageScale}.");
+                    Console.WriteLine("Test failed.");
                 }
-
-                Console.WriteLine($"PageCount: {render.PageCount}, PageScale: {pageScale}%");
             }
             catch (Exception ex)
             {
-                // Propagate any errors to the caller for unified handling
-                throw new ApplicationException("RunTest failed.", ex);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

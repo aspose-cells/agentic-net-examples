@@ -1,47 +1,58 @@
-// Title: Aspose.Cells for .NET – Add a label shape, link it to a percentage‑formatted cell, and confirm the format
-// Description: This example creates a workbook, writes 0.25 to cell A1, applies a custom percentage number format, inserts a label shape at row 2 column 2, links the shape to the formatted cell with SetLinkedCell, checks the cell's IsPercent flag, and saves the file as ShapeLinkedWithPercent.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | Excel shape linking | label shape | SetLinkedCell | percentage number format | custom number format | IsPercent property | verify cell format | Excel automation example | Add shape to worksheet
-// Common Searches: Aspose.Cells link shape to cell with percentage format | How to use SetLinkedCell in C# | Check if a cell is formatted as percent in Aspose.Cells | Add label shape to Excel workbook using Aspose.Cells | Apply custom number format to a cell in Aspose.Cells
-// Developer Intent: Create a label shape, bind it to a percent‑formatted cell, and validate the formatting programmatically.
-// Use Cases: Bind a visual label to a data cell so clicking the shape jumps to the cell in the UI. | Apply a percentage format to numeric data and programmatically confirm the format before further processing. | Generate Excel reports where shapes act as interactive markers linked to formatted values.
-// AI Prompts: Write C# code with Aspose.Cells that adds a label shape, links it to a cell formatted as a percentage, and prints whether the cell is a percent. | Explain the role of SetLinkedCell and the IsPercent property when linking shapes to formatted cells in Aspose.Cells. | Provide a step‑by‑step tutorial for adding a shape, applying a custom percentage format via TEXT or style, linking the shape, and verifying the format in Aspose.Cells for .NET.
+// Title: Link a Label Shape to a Percentage‑Formatted Cell with Aspose.Cells for .NET
+// Description: Creates a new workbook, writes 0.25 to cell B2, applies the built‑in percent format (index 10) which sets IsPercent = true, adds a label shape at row 2 column 2 (100 × 50 pt), links the shape to B2 using SetLinkedCell, refreshes the displayed value, prints the label text, and saves the file as ShapeLinkedPercent.xlsx.
+// Keywords: Aspose.Cells label shape | link shape to cell | percentage number format | IsPercent property | SetLinkedCell C# | Excel shape binding | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells link label to cell percentage | How to bind a shape to a cell in C# | Check IsPercent after applying number format Aspose.Cells | Add label shape and display cell value Aspose.Cells | Set linked cell for a shape Aspose.Cells .NET
+// Developer Intent: Add a label shape, bind it to a cell formatted as a percent, and verify the displayed text.
+// Use Cases: Dynamic dashboards where shapes reflect live percentage calculations. | Automated report generation with shapes that automatically show formatted values. | Testing that a cell’s number format is recognized as percent before linking to a shape.
+// AI Prompts: Generate C# code that adds a rectangle shape linked to cell C5 formatted as currency and confirms the format. | Show how to link multiple shapes to different cells, each using a custom number format, and output their texts. | Explain the parameters of SetLinkedCell, how they affect linking behavior, and how to refresh shape content after the source cell changes.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This example creates a workbook, writes 0.25 to cell A1, applies a custom percentage number format, inserts a label shape at row 2 column 2, links the shape to the formatted cell with SetLinkedCell, checks the cell's IsPercent flag, and saves the file as ShapeLinkedWithPercent.xlsx.
-class ShapeLinkWithPercentFormat
+// Creates a new workbook, writes 0.25 to cell B2, applies the built‑in percent format (index 10) which sets IsPercent = true, adds a label shape at row 2 column 2 (100 × 50 pt), links the shape to B2 using SetLinkedCell, refreshes the displayed value, prints the label text, and saves the file as ShapeLinkedPercent.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Put a numeric value into cell A1
-        Cell cell = worksheet.Cells["A1"];
-        cell.PutValue(0.25); // 25%
+            // Put a numeric value (0.25) into cell B2 (represents 25%)
+            Cell cell = worksheet.Cells["B2"];
+            cell.PutValue(0.25);
 
-        // Apply a percentage number format to the cell
-        Style style = cell.GetStyle();
-        style.Number = 10; // Built‑in percentage format
-        cell.SetStyle(style);
+            // Apply a built‑in percentage number format (index 10) which sets IsPercent = true
+            Style style = cell.GetStyle();
+            style.Number = 10; // Built‑in percent format
+            cell.SetStyle(style);
 
-        // Add a label shape to the worksheet
-        // Parameters: upperLeftRow, upperLeftColumn, top, left, height, width
-        Label label = (Label)worksheet.Shapes.AddLabel(2, 2, 0, 0, 100, 30);
-        label.Text = "Linked Shape";
+            // Verify that the style reports IsPercent = true
+            Console.WriteLine("IsPercent after applying format: " + style.IsPercent);
 
-        // Link the shape to cell A1
-        // formula, isR1C1, isLocal
-        label.SetLinkedCell("$A$1", false, true);
+            // Add a label shape at row 2, column 2 with size 100x50 points
+            // AddLabel overload requires six integer parameters in this API version:
+            // upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn, height, width
+            Shape shape = worksheet.Shapes.AddLabel(2, 2, 2, 2, 100, 50);
+            Label label = (Label)shape;
 
-        // Verify that the cell's style is a percent format
-        Style verifyStyle = cell.GetStyle();
-        Console.WriteLine("IsPercent after formatting: " + verifyStyle.IsPercent);
+            // Link the label to cell B2 so it displays the cell's value
+            label.SetLinkedCell("$B$2", false, true);
+            label.UpdateSelectedValue(); // Refresh the displayed value
 
-        // Save the workbook
-        workbook.Save("ShapeLinkedWithPercent.xlsx");
+            // Retrieve and display the text shown by the shape
+            string displayedText = label.Text; // Use the Text property for label content
+            Console.WriteLine("Label displays: " + displayedText);
+
+            // Save the workbook
+            workbook.Save("ShapeLinkedPercent.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

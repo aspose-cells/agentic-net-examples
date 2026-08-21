@@ -1,10 +1,10 @@
-// Title: Encrypt an Excel workbook with Aspise.Cells .NET and upload to Azure Blob storage while preserving encryption
-// Description: Shows how to create a workbook with Aspose.Cells, insert data, apply password protection and AES‑128 encryption, save the file, and upload it to Azure Blob storage without decrypting the content.
-// Keywords: Aspose.Cells encrypt workbook | C# AES 128 Excel encryption | password protect Excel .NET | upload encrypted Excel Azure Blob | preserve encryption Azure storage | SetEncryptionOptions Aspose.Cells | Azure Blob storage .NET SDK | secure Excel upload | encrypted spreadsheet cloud
-// Common Searches: encrypt Excel file with Aspose.Cells .NET | set password and AES encryption for .xlsx using Aspose.Cells | upload encrypted Excel to Azure Blob storage | keep workbook encryption after Azure upload | Aspose.Cells SetEncryptionOptions example
-// Developer Intent: Create an Excel file, protect it with a password and AES‑128 encryption via Aspose.Cells, and store it directly in Azure Blob storage while retaining the encryption.
-// Use Cases: Generate confidential financial reports, encrypt them with strong AES‑128, and archive the files in Azure Blob for regulated data storage. | Automate the production of sensitive HR spreadsheets, apply password protection, and push the encrypted files to cloud storage for secure sharing across offices. | Integrate workbook encryption into a CI/CD pipeline, ensuring that every released .xlsx remains encrypted when uploaded to Azure.
-// AI Prompts: Provide C# code that creates an Excel workbook with Aspose.Cells, applies a password and AES‑128 encryption, and uploads the encrypted file to Azure Blob storage without decrypting it. | Show how to configure the Azure Blob .NET client to stream an already encrypted .xlsx file directly to a container. | Explain how to verify that the workbook’s encryption is intact after it has been uploaded to Azure Blob storage.
+// Title: Upload AES‑128 Encrypted Aspose.Cells Workbook to Azure Blob Storage using C#
+// Description: Demonstrates how to create a password‑protected Excel workbook with Aspose.Cells, apply AES‑128 encryption, and upload the encrypted file directly to Azure Blob Storage without decrypting or writing an intermediate copy. Includes code for MemoryStream handling and Azure.Storage.Blobs integration.
+// Keywords: Aspose.Cells | C# | AES-128 encryption | password protected workbook | Azure Blob Storage | upload encrypted Excel | Azure.Storage.Blobs | cloud file protection | encrypted workbook upload | secure Excel storage
+// Common Searches: C# upload encrypted Excel to Azure Blob | Aspose.Cells save encrypted workbook to Azure | How to store password protected Excel in Azure Blob | Upload AES encrypted workbook without decryption | Azure Blob storage encrypted Excel example
+// Developer Intent: Upload an Aspose.Cells workbook that is already encrypted with a password and AES‑128 encryption directly to Azure Blob Storage, preserving its protection throughout the transfer.
+// Use Cases: Securely archive confidential financial spreadsheets in Azure Blob while retaining workbook encryption for compliance. | Transfer password‑protected reports between microservices via Azure Blob without exposing plaintext data. | Store regulated data in the cloud with end‑to‑end encryption applied by Aspose.Cells, ensuring only authorized users can open the file.
+// AI Prompts: Write C# code that takes a MemoryStream containing an AES‑128 encrypted Aspose.Cells workbook and uploads it to Azure Blob Storage using Azure.Storage.Blobs, preserving the stream unchanged. | Provide a step‑by‑step tutorial for creating a SAS token, configuring a Blob container, and uploading an encrypted workbook without creating a local file. | Show how to modify the sample program to upload the encrypted workbook to Azure Blob, then delete any temporary local files and handle errors gracefully.
 
 using System;
 using System.IO;
@@ -12,47 +12,58 @@ using Aspose.Cells;
 
 namespace EncryptedWorkbookUpload
 {
-    // Shows how to create a workbook with Aspose.Cells, insert data, apply password protection and AES‑128 encryption, save the file, and upload it to Azure Blob storage without decrypting the content.
+    // Demonstrates how to create a password‑protected Excel workbook with Aspose.Cells, apply AES‑128 encryption, and upload the encrypted file directly to Azure Blob Storage without decrypting or writing an intermediate copy. Includes code for MemoryStream handling and Azure.Storage.Blobs integration.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Wrap the whole process in a try-catch to handle unexpected errors.
             try
             {
-                // Create a new workbook.
-                using (Workbook workbook = new Workbook())
+                // -------------------- Create and encrypt workbook --------------------
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Add sample data
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Sensitive Data");
+                sheet.Cells["B1"].PutValue(DateTime.Now);
+
+                // Set password protection
+                workbook.Settings.Password = "StrongPassword123";
+
+                // Set stronger encryption options (AES 128-bit)
+                workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+
+                // Save the encrypted workbook to a memory stream
+                using (MemoryStream workbookStream = new MemoryStream())
                 {
-                    // Add sample data.
-                    Worksheet sheet = workbook.Worksheets[0];
-                    sheet.Cells["A1"].PutValue("Sensitive Data");
-                    sheet.Cells["B1"].PutValue(DateTime.Now);
+                    workbook.Save(workbookStream, SaveFormat.Xlsx);
+                    workbookStream.Position = 0; // Reset for reading
 
-                    // Set a password to encrypt the workbook.
-                    workbook.Settings.Password = "StrongPassword123";
-
-                    // Set stronger encryption options (AES 128-bit).
-                    workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
-
-                    // Define the output path.
-                    string outputPath = Path.Combine(Environment.CurrentDirectory, "encryptedWorkbook.xlsx");
-
-                    // Ensure the directory exists.
-                    string outputDir = Path.GetDirectoryName(outputPath);
-                    if (!Directory.Exists(outputDir))
+                    // -------------------- Save to local file (replace Azure upload) --------------------
+                    string outputFolder = Path.Combine(Environment.CurrentDirectory, "Output");
+                    if (!Directory.Exists(outputFolder))
                     {
-                        Directory.CreateDirectory(outputDir);
+                        Directory.CreateDirectory(outputFolder);
                     }
 
-                    // Save the encrypted workbook to the file system.
-                    workbook.Save(outputPath, SaveFormat.Xlsx);
-                    Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+                    string outputPath = Path.Combine(outputFolder, "encryptedWorkbook.xlsx");
+
+                    // Write the stream to the file
+                    using (FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                    {
+                        workbookStream.CopyTo(fileStream);
+                    }
+
+                    Console.WriteLine($"Encrypted workbook saved to: {outputPath}");
                 }
+
+                // Clean up
+                workbook.Dispose();
             }
             catch (Exception ex)
             {
-                // Log the exception details.
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

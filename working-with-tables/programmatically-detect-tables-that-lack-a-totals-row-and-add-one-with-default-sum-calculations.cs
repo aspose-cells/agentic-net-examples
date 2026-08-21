@@ -1,10 +1,10 @@
-// Title: Add a Totals Row with Sum Calculations to All Excel Tables Using Aspose.Cells for .NET
-// Description: C# code that loads an Excel workbook, iterates through each worksheet and ListObject, turns on the totals row when it is absent, assigns TotalsCalculation.Sum to every column, and saves the updated file.
-// Keywords: Aspose.Cells | .NET | C# | Excel totals row | ListObject | ShowTotals | TotalsCalculation.Sum | add totals row programmatically | detect tables without totals row | Excel table automation
-// Common Searches: How to add a totals row to all tables in an Excel workbook with Aspose.Cells | Aspose.Cells C# enable totals row for ListObject | Set default sum totals for Excel tables using Aspose.Cells | Iterate worksheets and add missing totals row Aspose.Cells | Programmatically show totals row in Excel tables .NET
-// Developer Intent: Enable a missing totals row and apply a sum calculation to each column of every table in a workbook.
-// Use Cases: Automatically insert a totals row in financial reports so each table displays column sums before distribution. | Prepare data‑export files that must contain sum totals for downstream processing. | Standardize Excel templates by guaranteeing every ListObject includes a totals row with default calculations.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a totals row using average calculations instead of sum for numeric columns. | Create a method that adds a sum totals row only when a table has no custom totals, preserving existing settings. | Add robust error handling for missing input files and ensure the workbook is saved after all tables are processed.
+// Title: Add Missing Totals Row with Sum Calculations to Excel Tables using Aspose.Cells for .NET
+// Description: Loads a workbook, scans every worksheet for ListObjects without a totals row, enables the totals row, applies a SUM calculation to each column, optionally labels the first cell, and saves the updated file.
+// Keywords: Aspose.Cells totals row | C# ListObject ShowTotals | Excel table sum calculation | programmatic totals row | add missing totals row | Aspose.Cells .NET example | ListObject TotalsCalculation.Sum | Excel automation C#
+// Common Searches: How to enable a totals row for Excel tables with Aspose.Cells C# | Programmatically add sum totals to ListObjects in a workbook | Detect tables without totals row and insert one using Aspose.Cells | C# code to set TotalsCalculation.Sum for all columns | Aspose.Cells example for adding a totals row automatically
+// Developer Intent: Insert a default SUM totals row into every Excel table that lacks one.
+// Use Cases: Generate consolidated summary rows for financial statements across multiple sheets. | Standardize reporting templates before distributing workbooks to clients. | Automate data‑import pipelines that create tables without totals, ensuring each table displays column totals. | Prepare analytics dashboards where every dataset needs a quick aggregate row.
+// AI Prompts: Create a reusable C# method with Aspose.Cells that adds a totals row using average calculations instead of sum. | Write code to format the inserted totals row with bold text, a gray background, and right‑aligned numbers. | Generate a script that adds a custom label to the first column's totals cell and applies currency formatting to numeric totals.
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Tables;
 
 namespace AsposeCellsTotalsRowAdder
 {
-    // C# code that loads an Excel workbook, iterates through each worksheet and ListObject, turns on the totals row when it is absent, assigns TotalsCalculation.Sum to every column, and saves the updated file.
+    // Loads a workbook, scans every worksheet for ListObjects without a totals row, enables the totals row, applies a SUM calculation to each column, optionally labels the first cell, and saves the updated file.
     class Program
     {
         static void Main(string[] args)
@@ -23,27 +23,32 @@ namespace AsposeCellsTotalsRowAdder
             // Iterate through all worksheets in the workbook
             foreach (Worksheet worksheet in workbook.Worksheets)
             {
-                // Access the collection of tables (ListObjects) on the current worksheet
-                ListObjectCollection tables = worksheet.ListObjects;
-
-                // Process each table
-                foreach (ListObject table in tables)
+                // Iterate through all tables (ListObjects) in the current worksheet
+                foreach (ListObject table in worksheet.ListObjects)
                 {
-                    // If the table does not already show a totals row, enable it
+                    // If the table does not already show a totals row, add one
                     if (!table.ShowTotals)
                     {
+                        // Enable the totals row for the table
                         table.ShowTotals = true;
 
-                        // Set a default Sum calculation for each column in the totals row
-                        for (int colIndex = 0; colIndex < table.ListColumns.Count; colIndex++)
+                        // Set default sum calculation for each column in the totals row
+                        for (int i = 0; i < table.ListColumns.Count; i++)
                         {
-                            table.ListColumns[colIndex].TotalsCalculation = TotalsCalculation.Sum;
+                            ListColumn column = table.ListColumns[i];
+                            column.TotalsCalculation = TotalsCalculation.Sum;
+
+                            // Optionally, set a label for the first column's totals cell
+                            if (i == 0)
+                            {
+                                column.TotalsRowLabel = "Total";
+                            }
                         }
                     }
                 }
             }
 
-            // Save the modified workbook (replace with your desired output path)
+            // Save the modified workbook (replace with desired output path)
             workbook.Save("output.xlsx");
         }
     }

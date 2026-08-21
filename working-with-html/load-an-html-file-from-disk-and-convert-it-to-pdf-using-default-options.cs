@@ -1,34 +1,29 @@
-// Title: HTML to PDF conversion using Aspose.Cells for .NET – default settings
-// Description: C# example that loads a local HTML file into an Aspose.Cells Workbook with default HtmlLoadOptions and saves it as a PDF using the default SaveFormat.Pdf. A console message confirms the conversion.
-// Keywords: Aspose.Cells | C# | .NET | HTML to PDF | HtmlLoadOptions default | SaveFormat.Pdf | server‑side PDF generation | batch HTML conversion | GitHub example | Aspose.Cells HTML PDF
-// Common Searches: Aspose.Cells convert HTML to PDF C# | C# load HTML workbook Aspose.Cells | default HtmlLoadOptions Aspose.Cells | save workbook as PDF Aspose | HTML to PDF example Aspose.Cells .NET | how to export HTML as PDF using Aspose.Cells
-// Developer Intent: Generate a PDF file from an HTML document with Aspose.Cells using the library’s default configuration.
-// Use Cases: Automated nightly conversion of HTML reports to PDF for archival. | Creating PDF invoices from pre‑designed HTML templates in a web service. | Batch processing of marketing assets (HTML) into printable PDF files without custom settings.
-// AI Prompts: Provide C# code that converts an HTML file to PDF with Aspose.Cells and adds custom page margins. | Show error‑handling patterns for loading an HTML file and saving it as PDF using Aspose.Cells. | Explain how to convert an HTML string directly to PDF with Aspose.Cells, avoiding intermediate files.
+// Title: Convert a local HTML file to PDF with Aspose.Cells for .NET (default settings)
+// Description: A concise C# example that reads an HTML file from disk and uses Aspose.Cells.Utility.ConversionUtility.Convert to generate a PDF with the library's built‑in load and save options, then confirms success on the console.
+// Keywords: Aspose.Cells HTML to PDF | C# ConversionUtility | load HTML file .NET | export PDF default options | Aspose.Cells Utility Convert example | HTML to PDF conversion .NET | Aspose.Cells PDF export
+// Common Searches: Aspose.Cells convert HTML file to PDF C# | ConversionUtility default HTML to PDF example | How to export HTML as PDF using Aspose.Cells | C# code for HTML to PDF with Aspose.Cells
+// Developer Intent: Generate a PDF from a local HTML document using Aspose.Cells with no custom configuration.
+// Use Cases: Archive a batch of HTML reports as PDFs for compliance. | Create printable invoices from HTML templates in a .NET service. | Automate nightly conversion of web‑based documentation to PDF for distribution.
+// AI Prompts: Show C# code that converts an HTML string to PDF with custom margins using Aspose.Cells. | Add robust error handling around ConversionUtility.Convert for missing or malformed HTML files. | Write a script that scans a folder for *.html files and converts each to a matching PDF using Aspose.Cells.
 
 using System;
-using Aspose.Cells;               // Aspose.Cells namespace
-using Aspose.Cells.Utility;      // For ConversionUtility (not required here but available)
+using Aspose.Cells;
+using Aspose.Cells.Utility;
 
-// C# example that loads a local HTML file into an Aspose.Cells Workbook with default HtmlLoadOptions and saves it as a PDF using the default SaveFormat.Pdf. A console message confirms the conversion.
-class HtmlToPdfConverter
+// A concise C# example that reads an HTML file from disk and uses Aspose.Cells.Utility.ConversionUtility.Convert to generate a PDF with the library's built‑in load and save options, then confirms success on the console.
+class Program
 {
     static void Main()
     {
-        // Path to the source HTML file
-        string htmlFilePath = "input.html";
+        // Path to the HTML file that will be converted
+        string htmlPath = "input.html";
 
-        // Path for the resulting PDF file
-        string pdfFilePath = "output.pdf";
+        // Desired output PDF file path
+        string pdfPath = "output.pdf";
 
-        // Create default HTML load options
-        HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-
-        // Load the HTML file into a Workbook using the load options
-        Workbook workbook = new Workbook(htmlFilePath, loadOptions);
-
-        // Save the workbook as PDF using default save options
-        workbook.Save(pdfFilePath, SaveFormat.Pdf);
+        // Convert the HTML file to PDF using default load and save options
+        // This utilizes the provided ConversionUtility.Convert method
+        ConversionUtility.Convert(htmlPath, pdfPath);
 
         Console.WriteLine("HTML file has been successfully converted to PDF.");
     }

@@ -1,47 +1,47 @@
-// Title: C# – Link a rectangle shape to a cell, replace placeholder text, and refresh the shape with Aspose.Cells for .NET
-// Description: Demonstrates how to add a rectangle shape, link it to cell A1, use Workbook.Replace to swap a {{Name}} placeholder with actual text, and call UpdateSelectedValue so the shape shows the new value. The workbook is then saved as an XLSX file.
-// Keywords: Aspose.Cells | C# | .NET | rectangle shape | SetLinkedCell | UpdateSelectedValue | Workbook.Replace | placeholder replacement | linked cell shape | dynamic shape text
-// Common Searches: Aspose.Cells link shape to cell C# | Update shape text after Workbook.Replace | SetLinkedCell example Aspose.Cells | Refresh linked shape after placeholder substitution | C# Aspose.Cells replace placeholder in worksheet
-// Developer Intent: Create a shape linked to a cell, replace a placeholder in that cell, and ensure the shape displays the updated content.
-// Use Cases: Template generation where shape captions must reflect data inserted into linked cells. | Automated report creation that uses shapes as visual labels synchronized with cell values after bulk text replacement. | Dynamic dashboards where shape text updates automatically when underlying cell content changes.
-// AI Prompts: Generate C# code using Aspose.Cells to add a rectangle shape, link it to A1, replace "{{Name}}" with a real name, and refresh the shape text. | Explain how SetLinkedCell and UpdateSelectedValue work together when cell content is modified via Workbook.Replace. | Suggest error‑handling patterns for linking shapes to cells and updating them after text substitution in Aspose.Cells.
+// Title: Aspose.Cells for .NET: Add Rectangle Shape, Link to Cell, Replace Placeholder, Update Shape Text
+// Description: Demonstrates creating a workbook, inserting a placeholder in A1, adding a rectangle shape, linking it to the cell, using Workbook.Replace to change the placeholder, calling Shape.UpdateSelectedValue, and saving the file so the shape shows the new text.
+// Keywords: Aspose.Cells | C# | .NET | rectangle shape | linked cell | Workbook.Replace | Shape.UpdateSelectedValue | dynamic label | Excel automation | Aspose.Cells tutorial | US developers | global Excel SDK
+// Common Searches: Aspose.Cells link shape to cell and refresh after replace | C# update shape text after Workbook.Replace | How to use Shape.UpdateSelectedValue in Aspose.Cells | Add rectangle shape linked to cell Aspose.Cells .NET | Replace placeholder and sync shape text Excel SDK
+// Developer Intent: Add a shape, bind it to a cell, replace the cell’s placeholder text, and have the shape automatically display the updated value.
+// Use Cases: Template worksheets where shapes act as live captions that change when placeholders are replaced. | Automated report generation with rectangle shapes that reflect calculated cell values instantly. | Diagram annotations that stay synchronized with data updates by linking shapes to worksheet cells.
+// AI Prompts: Generate C# code with Aspose.Cells to add a rectangle shape, link it to cell A1, replace a placeholder string, and refresh the shape text. | Explain why Shape.UpdateSelectedValue is required after calling Workbook.Replace in Aspose.Cells. | Provide a step‑by‑step verification method to confirm that a shape linked to a cell shows the replaced text in the saved Excel file.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a rectangle shape, link it to cell A1, use Workbook.Replace to swap a {{Name}} placeholder with actual text, and call UpdateSelectedValue so the shape shows the new value. The workbook is then saved as an XLSX file.
+// Demonstrates creating a workbook, inserting a placeholder in A1, adding a rectangle shape, linking it to the cell, using Workbook.Replace to change the placeholder, calling Shape.UpdateSelectedValue, and saving the file so the shape shows the new text.
 class ShapeReplaceDemo
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
         // Put a placeholder text into a cell that will be linked to the shape
-        sheet.Cells["A1"].PutValue("{{Name}}");
+        sheet.Cells["A1"].PutValue("{{PLACEHOLDER}}");
 
         // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, upper left pixel X, upper left pixel Y, width, height
-        Shape shape = sheet.Shapes.AddRectangle(2, 2, 100, 100, 0, 0);
+        // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
+        Shape shape = sheet.Shapes.AddRectangle(1, 1, 0, 0, 150, 50);
 
         // Link the shape to the cell containing the placeholder
-        shape.SetLinkedCell("$A$1", false, false);
+        shape.LinkedCell = "A1";
 
-        // Load the initial linked value into the shape
+        // Optionally set some initial text for the shape (will be replaced after linking)
+        shape.Text = "Initial Text";
+
+        // Replace the placeholder in the worksheet with the desired string
+        workbook.Replace("{{PLACEHOLDER}}", "Replaced Text");
+
+        // Update the shape so that it reflects the new value of the linked cell
         shape.UpdateSelectedValue();
 
-        // Replace the placeholder in the worksheet with the desired text
-        workbook.Replace("{{Name}}", "John Doe");
+        // Verify that the shape now shows the replaced text
+        Console.WriteLine("Shape text after replacement: " + shape.Text);
 
-        // Refresh the shape so it reflects the replaced value
-        shape.UpdateSelectedValue();
-
-        // Verify by printing the linked cell's current value (the shape displays this value)
-        Console.WriteLine("Linked cell value after replace: " + sheet.Cells["A1"].StringValue);
-
-        // Save the workbook (lifecycle rule)
+        // Save the workbook (the shape will be visible in the saved file)
         workbook.Save("ShapeReplaceDemo.xlsx");
     }
 }

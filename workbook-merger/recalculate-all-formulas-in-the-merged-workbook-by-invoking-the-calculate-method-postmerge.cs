@@ -1,54 +1,55 @@
-// Title: Merge Excel workbooks and recalculate formulas using Aspose.Cells for .NET (C#)
-// Description: Loads two Excel files, copies every worksheet from the second workbook into the first with Workbook.Worksheets.AddCopy, runs Workbook.CalculateFormula to update all formulas, and saves the merged workbook. Includes basic file‑existence checks and exception handling.
-// Keywords: Aspose.Cells merge workbooks C# | Workbook.CalculateFormula | AddCopy worksheet Aspose | recalculate formulas after merge | combine Excel files .NET | Excel workbook consolidation | Aspose.Cells error handling
-// Common Searches: how to merge two Excel workbooks with Aspose.Cells | C# recalculate formulas after merging worksheets | Aspose.Cells AddCopy example | merge Excel files and refresh calculations .NET | Workbook.CalculateFormula usage
-// Developer Intent: Combine multiple Excel files into one workbook and ensure every formula reflects the merged data.
-// Use Cases: Consolidate monthly departmental reports into a single workbook before distribution. | Merge a master template with a data‑driven workbook and automatically refresh totals and percentages. | Automate the aggregation of quarterly financial statements and recompute summary calculations for a final audit file.
-// AI Prompts: Write C# code that merges several Excel workbooks with Aspose.Cells and calls Workbook.CalculateFormula on the result. | Explain how Workbook.CalculateFormula works after adding worksheets via AddCopy. | Provide robust error‑handling patterns for missing source files and save failures when merging workbooks with Aspose.Cells.
+// Title: Merge Excel workbooks and recalculate formulas with Aspose.Cells for .NET
+// Description: Loads a target and a source workbook, copies each worksheet from the source into the target using AddCopy, runs Workbook.CalculateFormula to update every formula, and saves the merged file. Includes error handling for missing files.
+// Keywords: Aspose.Cells | merge workbooks | calculate formulas | C# .NET | AddCopy | Workbook.CalculateFormula | copy worksheets | Excel file consolidation | formula recalculation | merged workbook
+// Common Searches: Aspose.Cells merge workbooks C# | CalculateFormula after adding worksheets | Copy worksheets between workbooks Aspose.Cells | Recalculate all formulas in merged Excel file .NET | Combine two Excel files with Aspose.Cells
+// Developer Intent: Combine two Excel workbooks into one and refresh every formula in the resulting file.
+// Use Cases: Consolidate monthly reports into a master workbook while ensuring totals and derived values are up‑to‑date. | Merge scenario sheets from separate financial models and automatically recalculate dependent calculations. | Automate the creation of a final report by merging a template workbook with data workbooks, delivering accurate formula results.
+// AI Prompts: Write C# code that merges multiple Excel workbooks using Aspose.Cells and invokes CalculateFormula on the combined workbook. | Suggest robust error‑handling patterns for loading, merging, and recalculating formulas with Aspose.Cells in a .NET application. | Explain how to recalculate formulas only on selected worksheets after a workbook merge using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads two Excel files, copies every worksheet from the second workbook into the first with Workbook.Worksheets.AddCopy, runs Workbook.CalculateFormula to update all formulas, and saves the merged workbook. Includes basic file‑existence checks and exception handling.
-class MergeAndCalculate
+// Loads a target and a source workbook, copies each worksheet from the source into the target using AddCopy, runs Workbook.CalculateFormula to update every formula, and saves the merged file. Includes error handling for missing files.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string source1Path = "source1.xlsx";
-            const string source2Path = "source2.xlsx";
+            const string targetPath = "source1.xlsx";
+            const string sourcePath = "source2.xlsx";
             const string outputPath = "merged_output.xlsx";
 
-            // Verify that source files exist to avoid FileNotFoundException
-            if (!File.Exists(source1Path))
-                throw new FileNotFoundException($"The file '{source1Path}' was not found.");
-            if (!File.Exists(source2Path))
-                throw new FileNotFoundException($"The file '{source2Path}' was not found.");
+            // Verify that input files exist to avoid FileNotFoundException
+            if (!File.Exists(targetPath))
+                throw new FileNotFoundException($"Target workbook not found: {targetPath}");
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"Source workbook not found: {sourcePath}");
 
-            // Load the first workbook (creates the workbook instance)
-            Workbook mergedWorkbook = new Workbook(source1Path);
+            // Load the primary workbook (the one that will receive the merged content)
+            Workbook targetWorkbook = new Workbook(targetPath);
 
-            // Load the second workbook to be merged
-            Workbook workbookToMerge = new Workbook(source2Path);
+            // Load the secondary workbook whose worksheets will be merged into the target
+            Workbook sourceWorkbook = new Workbook(sourcePath);
 
-            // Merge: copy each worksheet from the second workbook into the first one
-            foreach (Worksheet sheet in workbookToMerge.Worksheets)
+            // Iterate through each worksheet in the source workbook and add a copy to the target workbook
+            foreach (Worksheet sourceSheet in sourceWorkbook.Worksheets)
             {
-                // Add a copy of the worksheet to the merged workbook using the sheet name
-                mergedWorkbook.Worksheets.AddCopy(sheet.Name);
+                // AddCopy expects the name of the worksheet to copy
+                targetWorkbook.Worksheets.AddCopy(sourceSheet.Name);
             }
 
-            // Recalculate all formulas in the merged workbook
-            mergedWorkbook.CalculateFormula();
+            // Recalculate all formulas in the combined workbook
+            targetWorkbook.CalculateFormula();
 
-            // Save the merged and recalculated workbook
-            mergedWorkbook.Save(outputPath);
+            // Save the merged workbook with updated formula results
+            targetWorkbook.Save(outputPath);
+            Console.WriteLine($"Workbooks merged successfully. Output saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

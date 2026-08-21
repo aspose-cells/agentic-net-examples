@@ -1,70 +1,111 @@
+// Title: Convert Excel to PDF with hierarchical outline bookmarks from named ranges using Aspose.Cells for .NET
+// Description: This C# example demonstrates how to export an Aspose.Cells workbook to PDF while building a multi‑level bookmark outline. Named ranges (or worksheet titles) are mapped to PdfBookmarkEntry objects, the bookmark tree is attached to PdfSaveOptions, and the PDF is saved with document structure enabled. The code also ensures the output directory exists and removes any previous file before writing the new PDF.
+// Keywords: Aspose.Cells PDF bookmarks | C# Excel to PDF conversion | named ranges PDF outline | PdfBookmarkEntry example | PdfSaveOptions bookmark | export Excel workbook as PDF | outline navigation in PDF | Aspose.Cells .NET | programmatic PDF generation | document structure PDF
+// Common Searches: how to add PDF bookmarks when converting Excel to PDF with Aspose.Cells | C# create hierarchical PDF outline from named ranges in Excel | Aspose.Cells save workbook as PDF with custom bookmark tree | export Excel worksheets to PDF with navigation bookmarks .NET | PdfBookmarkEntry usage example Aspose.Cells
+// Developer Intent: Generate a PDF from an Excel workbook and automatically include a hierarchical bookmark outline that links to each named range or worksheet.
+// Use Cases: Produce navigable PDF reports where each section (e.g., Introduction, Chapter, Conclusion) is reachable via outline bookmarks. | Automate documentation pipelines that convert Excel templates into PDF manuals with a clickable table of contents. | Integrate PDF generation with bookmarks into CI/CD workflows for consistent, searchable deliverables.
+// AI Prompts: Show C# code that creates a PDF bookmark hierarchy from named ranges in an Aspose.Cells workbook. | Explain how to configure PdfSaveOptions to embed a custom bookmark tree and preserve document structure when saving to PDF. | Provide a snippet that checks for the output folder, deletes an existing PDF, and saves the new file with bookmarks using Aspose.Cells.
+
 using System;
 using System.Collections;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsBookmarkPdfDemo
+// This C# example demonstrates how to export an Aspose.Cells workbook to PDF while building a multi‑level bookmark outline. Named ranges (or worksheet titles) are mapped to PdfBookmarkEntry objects, the bookmark tree is attached to PdfSaveOptions, and the PDF is saved with document structure enabled. The code also ensures the output directory exists and removes any previous file before writing the new PDF.
+class WorkbookToPdfWithBookmarks
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            // Create a new workbook
+            Workbook wb = new Workbook();
+
+            // -----------------------------------------------------------------
+            // Populate worksheets with sample data
+            // -----------------------------------------------------------------
+            Worksheet wsIntro = wb.Worksheets[0];
+            wsIntro.Name = "Introduction";
+            wsIntro.Cells["A1"].PutValue("Introduction");
+            wsIntro.Cells["A2"].PutValue("This is the intro section.");
+
+            Worksheet wsChapter = wb.Worksheets.Add("Chapter1");
+            wsChapter.Cells["A1"].PutValue("Chapter 1");
+            wsChapter.Cells["A2"].PutValue("Details of chapter 1.");
+
+            Worksheet wsConclusion = wb.Worksheets.Add("Conclusion");
+            wsConclusion.Cells["A1"].PutValue("Conclusion");
+            wsConclusion.Cells["A2"].PutValue("Final remarks.");
+
+            // -----------------------------------------------------------------
+            // Build PDF bookmark hierarchy
+            // -----------------------------------------------------------------
+            PdfBookmarkEntry rootBookmark = new PdfBookmarkEntry
+            {
+                Text = "Document",
+                Destination = wsIntro.Cells["A1"], // Root points to first section
+                IsOpen = true,
+                SubEntry = new ArrayList()
+            };
+
+            // Helper to create a bookmark entry from a worksheet
+            PdfBookmarkEntry CreateBookmark(string title, Worksheet ws)
+            {
+                // Destination is the first cell of the worksheet (assumed A1 here)
+                Cell dest = ws.Cells["A1"];
+                return new PdfBookmarkEntry
+                {
+                    Text = title,
+                    Destination = dest
+                };
+            }
+
+            // Add sub‑bookmarks for each section
+            rootBookmark.SubEntry.Add(CreateBookmark("Introduction", wsIntro));
+            rootBookmark.SubEntry.Add(CreateBookmark("Chapter 1", wsChapter));
+            rootBookmark.SubEntry.Add(CreateBookmark("Conclusion", wsConclusion));
+
+            // -----------------------------------------------------------------
+            // Configure PDF save options with the bookmark tree
+            // -----------------------------------------------------------------
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                Bookmark = rootBookmark,
+                ExportDocumentStructure = true
+            };
+
+            // -----------------------------------------------------------------
+            // Save the workbook as PDF
+            // -----------------------------------------------------------------
+            string outputPath = "DocumentWithBookmarks.pdf";
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "Report";
-
-                // Populate some sample data
-                sheet.Cells["A1"].PutValue("Executive Summary");
-                sheet.Cells["A2"].PutValue("This is the executive summary.");
-                sheet.Cells["A5"].PutValue("Section 1");
-                sheet.Cells["A6"].PutValue("Details of section 1...");
-                sheet.Cells["A10"].PutValue("Section 2");
-                sheet.Cells["A11"].PutValue("Details of section 2...");
-
-                // Create the root bookmark entry
-                PdfBookmarkEntry rootBookmark = new PdfBookmarkEntry
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
                 {
-                    Text = "Report",
-                    Destination = sheet.Cells["A1"], // Destination for the root (optional)
-                    IsOpen = true,
-                    SubEntry = new ArrayList()
-                };
-
-                // Helper to create a bookmark entry for a specific cell
-                PdfBookmarkEntry CreateBookmark(string text, string cellRef)
-                {
-                    return new PdfBookmarkEntry
-                    {
-                        Text = text,
-                        Destination = sheet.Cells[cellRef]
-                    };
+                    Directory.CreateDirectory(outputDir);
                 }
 
-                // Add sub‑bookmarks for each section
-                rootBookmark.SubEntry.Add(CreateBookmark("Executive Summary", "A1"));
-                rootBookmark.SubEntry.Add(CreateBookmark("Section 1", "A5"));
-                rootBookmark.SubEntry.Add(CreateBookmark("Section 2", "A10"));
-
-                // Configure PDF save options with the bookmark hierarchy
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                // Delete existing file if present
+                if (File.Exists(outputPath))
                 {
-                    Bookmark = rootBookmark,
-                    ExportDocumentStructure = true // Preserve document structure for accessibility
-                };
+                    File.Delete(outputPath);
+                }
 
-                // Save the workbook as a PDF
-                string outputPath = "ReportWithBookmarks.pdf";
-                workbook.Save(outputPath, pdfOptions);
-
-                Console.WriteLine($"PDF saved successfully with outline bookmarks to '{outputPath}'.");
+                wb.Save(outputPath, pdfOptions);
+                Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error saving PDF: {ex.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

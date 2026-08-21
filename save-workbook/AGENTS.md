@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Save Workbook Agent
 category: save-workbook
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: C# examples for saving workbooks to files and streams, selecting formats, configuring compression, compliance, PDF, HTML, text, and ODS options
 primary_apis: [Workbook.Save, SaveFormat, PdfSaveOptions, HtmlSaveOptions, TxtSaveOptions, OdsSaveOptions]
 search_intents: [save Excel workbook in C#, save XLSX to stream, save Excel as PDF, save strict OOXML]
@@ -315,3 +315,4 @@ Interpret one developer intent
 ## Definition of done
 
 A `save-workbook` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
+

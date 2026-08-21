@@ -1,85 +1,77 @@
-// Title: Build a Progress‑Bar Style Stacked Column Chart with Aspose.Cells for .NET (C#)
-// Description: This example shows how to create a new workbook, populate task, completed, and remaining data, add a stacked column chart, remove column gaps, set full overlap, apply green and light‑gray colors, hide the legend, add a title, and save the file as ProgressBarChart.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# progress bar chart | stacked column chart Aspose.Cells | remove gaps Aspose.Cells chart | chart series overlap Aspose.Cells | custom series colors Aspose.Cells | Excel progress bar .NET | Aspose.Cells chart formatting | C# generate progress bar Excel
-// Common Searches: Aspose.Cells create progress bar chart | stacked column chart without gaps C# | set overlap for Aspose.Cells column series | change chart series colors Aspose.Cells | C# Aspose.Cells progress bar example
-// Developer Intent: Generate a stacked column chart that looks like a progress bar, displaying completed versus remaining work for each task in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Show task completion percentages in a project status report. | Add visual progress indicators to a dashboard sheet with multiple processes. | Export a concise progress summary to XLSX for stakeholder distribution.
-// AI Prompts: Write C# code with Aspose.Cells to create a stacked column chart that mimics a progress bar, using custom colors and no gaps. | Explain how to configure GapWidth and Overlap properties in Aspose.Cells to produce seamless bars. | Show how to add data labels and format them for a progress‑bar style chart in Aspose.Cells.
+// Title: Create a Progress Bar Chart with a Stacked Column in Aspose.Cells for .NET (C#)
+// Description: This example builds an Excel workbook, writes a task name with completed and remaining percentages, adds a stacked column chart, assigns the category axis, creates "Completed" and "Remaining" series, colors them green and light‑gray, removes column gaps, sets an overlap of -100 to merge the series into a single bar, adds a chart title, and saves the file as ProgressBarChart.xlsx.
+// Keywords: Aspose.Cells progress bar chart | stacked column chart C# | Aspose.Cells set gap width | Aspose.Cells series overlap | C# Excel progress bar | Aspose.Cells chart series colors | export Aspose.Cells chart as PNG | Aspose.Cells stacked column example
+// Common Searches: How to create a progress bar in Excel using Aspose.Cells | Aspose.Cells stacked column chart without gaps | Set overlap -100 in Aspose.Cells column chart | Change series color in Aspose.Cells chart | Export Aspose.Cells chart to image
+// Developer Intent: Generate an Excel file that visualizes task completion as a single‑category progress bar using a stacked column chart.
+// Use Cases: Project‑management dashboard showing task completion percentages | Status‑report worksheets with printable progress indicators | Automated invoices that display processing stage progress | Production‑line KPI sheets visualizing throughput targets | Learning‑management reports illustrating course completion
+// AI Prompts: Add data labels that display the percentage value for each series in the progress bar chart. | Write code to loop through multiple task rows and create a stacked progress bar for each row automatically. | Provide a snippet to export the generated progress bar chart as a PNG file using Aspose.Cells. | Show how to apply conditional coloring so the "Completed" segment turns red when below 50%. | Generate dynamic chart titles that pull the task name from the worksheet cells.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// This example shows how to create a new workbook, populate task, completed, and remaining data, add a stacked column chart, remove column gaps, set full overlap, apply green and light‑gray colors, hide the legend, add a title, and save the file as ProgressBarChart.xlsx using Aspose.Cells for .NET.
-class ProgressBarChartDemo
+namespace ProgressBarChartDemo
 {
-    static void Main()
+    // This example builds an Excel workbook, writes a task name with completed and remaining percentages, adds a stacked column chart, assigns the category axis, creates "Completed" and "Remaining" series, colors them green and light‑gray, removes column gaps, sets an overlap of -100 to merge the series into a single bar, adds a chart title, and saves the file as ProgressBarChart.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // -------------------------------------------------
-        // Populate sample data:
-        // Column A – Task names (categories)
-        // Column B – Completed work
-        // Column C – Remaining work
-        // -------------------------------------------------
-        sheet.Cells["A1"].PutValue("Task");
-        sheet.Cells["B1"].PutValue("Completed");
-        sheet.Cells["C1"].PutValue("Remaining");
-
-        string[] tasks = { "Design", "Development", "Testing", "Deployment" };
-        double[] completed = { 70, 40, 20, 10 };
-        double[] remaining = { 30, 60, 80, 90 };
-
-        for (int i = 0; i < tasks.Length; i++)
+        static void Main()
         {
-            int row = i + 2; // Data starts from row 2
-            sheet.Cells[$"A{row}"].PutValue(tasks[i]);
-            sheet.Cells[$"B{row}"].PutValue(completed[i]);
-            sheet.Cells[$"C{row}"].PutValue(remaining[i]);
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // -------------------------------------------------
+            // Prepare data for the progress bar (single category)
+            // -------------------------------------------------
+            // Category label
+            sheet.Cells["A2"].PutValue("Task 1");
+
+            // Completed work (e.g., 70%)
+            sheet.Cells["B2"].PutValue(70);
+
+            // Remaining work (e.g., 30%)
+            sheet.Cells["C2"].PutValue(30);
+
+            // -------------------------------------------------
+            // Add a stacked column chart to represent the progress bar
+            // -------------------------------------------------
+            // Parameters: chart type, top row, left column, bottom row, right column
+            int chartIndex = sheet.Charts.Add(ChartType.ColumnStacked, 5, 0, 20, 8);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the category (X‑axis) data
+            chart.NSeries.CategoryData = "A2:A2";
+
+            // Add the "Completed" series
+            int completedSeriesIdx = chart.NSeries.Add("B2:B2", true);
+            Series completedSeries = chart.NSeries[completedSeriesIdx];
+            completedSeries.Name = "Completed";
+            completedSeries.Area.ForegroundColor = Color.Green; // Color for completed part
+
+            // Add the "Remaining" series
+            int remainingSeriesIdx = chart.NSeries.Add("C2:C2", true);
+            Series remainingSeries = chart.NSeries[remainingSeriesIdx];
+            remainingSeries.Name = "Remaining";
+            remainingSeries.Area.ForegroundColor = Color.LightGray; // Color for remaining part
+
+            // Remove gaps between columns to make it look like a single bar
+            chart.GapWidth = 0;          // No space between column clusters
+            completedSeries.GapWidth = 0;
+            remainingSeries.GapWidth = 0;
+
+            // Optional: set overlap to -100 to ensure the two parts touch each other tightly
+            completedSeries.Overlap = -100;
+            remainingSeries.Overlap = -100;
+
+            // Add a title to the chart
+            chart.Title.Text = "Progress Bar";
+
+            // -------------------------------------------------
+            // Save the workbook
+            // -------------------------------------------------
+            workbook.Save("ProgressBarChart.xlsx", SaveFormat.Xlsx);
         }
-
-        // -------------------------------------------------
-        // Add a stacked column chart (acts as a progress bar)
-        // -------------------------------------------------
-        int chartIndex = sheet.Charts.Add(ChartType.ColumnStacked, 6, 0, 25, 10);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Set the category (X‑axis) data
-        chart.NSeries.CategoryData = "A2:A5";
-
-        // Add the "Completed" series
-        chart.NSeries.Add("B2:B5", true);
-        // Add the "Remaining" series
-        chart.NSeries.Add("C2:C5", true);
-
-        // -------------------------------------------------
-        // Visual tweaks to make it look like a progress bar
-        // -------------------------------------------------
-        // Remove gaps between columns
-        chart.GapWidth = 0;
-
-        // Optional: increase overlap so the two series appear as a single bar
-        // (only effective for 2‑D column charts)
-        chart.NSeries[0].Overlap = 100;
-        chart.NSeries[1].Overlap = 100;
-
-        // Set colors: Completed – green, Remaining – light gray
-        chart.NSeries[0].Area.ForegroundColor = Color.Green;
-        chart.NSeries[1].Area.ForegroundColor = Color.LightGray;
-
-        // Hide the legend (not needed for a simple progress bar)
-        chart.ShowLegend = false;
-
-        // Add a title
-        chart.Title.Text = "Project Progress";
-
-        // -------------------------------------------------
-        // Save the workbook
-        // -------------------------------------------------
-        workbook.Save("ProgressBarChart.xlsx", SaveFormat.Xlsx);
     }
 }

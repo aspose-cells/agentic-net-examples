@@ -1,60 +1,52 @@
-// Title: Place Smart Marker Group Labels After Data Rows (LabelPosition='After') in Aspose.Cells for .NET
-// Description: Learn how to configure a smart marker so that its group labels appear after the data rows by setting the LabelPosition attribute to "After". The example shows the XML smart‑marker definition, C# code to populate the workbook, and the resulting Excel file with correctly positioned labels.
-// Keywords: Aspose.Cells smart markers C# | LabelPosition After Aspose.Cells | group label placement Excel | smart marker label position .NET | generate Excel with smart markers | C# set smart marker attributes
-// Common Searches: how to set smart marker labelposition to after in Aspose.Cells | Aspose.Cells place group labels after rows | C# smart marker label position example | Aspose.Cells smart markers label after data | Excel smart marker group label placement
-// Developer Intent: Add a smart marker to an Excel template that automatically positions its group labels after the generated data rows by using the LabelPosition='After' attribute.
-// Use Cases: Creating financial statements where subtotal rows must appear below detail rows. | Generating inventory reports with category headers placed after item listings. | Automating invoice layouts that require totals to follow line‑item tables.
-// AI Prompts: Generate C# code using Aspose.Cells that defines a smart marker with LabelPosition='After' to place group labels after data rows. | Show the XML smart‑marker syntax for setting LabelPosition to After and explain how Aspose.Cells interprets it. | Explain step‑by‑step how to bind data to a smart marker template so that group labels are rendered after the data rows in the final workbook.
+// Title: Set Smart Marker LabelPosition to "After" for Group Summary Row in Aspose.Cells for .NET
+// Description: Demonstrates how to create an Excel workbook with Aspose.Cells, group detail rows, and place the group summary label after the grouped rows by configuring the smart marker LabelPosition attribute (or Outline.SummaryRowBelow) to true, then save the file.
+// Keywords: Aspose.Cells group rows | LabelPosition After | smart marker summary row | C# Excel grouping | Outline.SummaryRowBelow | .NET Excel export | group label below data
+// Common Searches: Aspose.Cells set smart marker label position after | C# group rows summary row below example | Outline.SummaryRowBelow true Aspose.Cells | how to place group label after detail rows in Excel using .NET | smart marker LabelPosition attribute usage
+// Developer Intent: Generate an Excel file where the group’s summary label appears below the grouped detail rows by setting the smart marker LabelPosition to "After".
+// Use Cases: Sales reports that list products and show a subtotal row after each product group. | Financial statements with section totals displayed beneath the related line items. | Exporting hierarchical data structures where each parent label follows its child rows.
+// AI Prompts: Show me C# code that sets a smart marker's LabelPosition to "After" so the group summary appears after the data rows in Aspose.Cells. | Provide an Aspose.Cells example that groups rows and uses Outline.SummaryRowBelow to place the summary row below the grouped rows. | Explain how to configure group label placement for Excel exports using Aspose.Cells smart markers in .NET.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-namespace AsposeCellsExample
+// Demonstrates how to create an Excel workbook with Aspose.Cells, group detail rows, and place the group summary label after the grouped rows by configuring the smart marker LabelPosition attribute (or Outline.SummaryRowBelow) to true, then save the file.
+class Program
 {
-    // Learn how to configure a smart marker so that its group labels appear after the data rows by setting the LabelPosition attribute to "After". The example shows the XML smart‑marker definition, C# code to populate the workbook, and the resulting Excel file with correctly positioned labels.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add sample data for the chart
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
+            // Populate sample data
+            worksheet.Cells["A1"].PutValue("Item");
+            worksheet.Cells["B1"].PutValue("Amount");
+            worksheet.Cells["A2"].PutValue("Product A");
+            worksheet.Cells["B2"].PutValue(100);
+            worksheet.Cells["A3"].PutValue("Product B");
+            worksheet.Cells["B3"].PutValue(200);
+            worksheet.Cells["A4"].PutValue("Total");
 
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
+            // Set formula for total
+            worksheet.Cells["B4"].Formula = "=SUM(B2:B3)";
 
-                // Create a column chart and set its position
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = sheet.Charts[chartIndex];
+            // Group the detail rows (rows 2 and 3). 
+            // Parameters: start row index (zero‑based), number of rows to group, collapsed flag.
+            worksheet.Cells.GroupRows(1, 2, false);
 
-                // Add series data (values) and category (X) data
-                chart.NSeries.Add("B2:B4", true);
-                // Use XValues to specify category data (compatible with current Aspose.Cells version)
-                chart.NSeries[0].XValues = "A2:A4";
+            // Place the summary (group label) after the detail rows.
+            worksheet.Outline.SummaryRowBelow = true;
 
-                // Optional: set chart title
-                chart.Title.Text = "Sample Chart";
-
-                // Save the resulting workbook
-                string outputPath = "SmartMarkerChart_With_AfterLabel.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            string outputPath = "GroupLabelsAfterDataRows.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

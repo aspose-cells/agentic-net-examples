@@ -1,17 +1,17 @@
-// Title: Benchmark SmartArt Detection Across Worksheets with Aspose.Cells for .NET
-// Description: Loads an Excel file, uses a Stopwatch to time the enumeration of every worksheet and its Shapes collection, counts shapes where IsSmartArt is true, outputs the SmartArt total and elapsed milliseconds, and saves the workbook unchanged. Ideal for measuring and optimizing SmartArt detection performance.
-// Keywords: Aspose.Cells | C# | .NET | SmartArt detection | shape enumeration | performance benchmark | execution time measurement | Stopwatch | Excel workbook processing | count SmartArt shapes
-// Common Searches: how to benchmark SmartArt detection with Aspose.Cells | measure execution time of shape enumeration in C# | count SmartArt objects in Excel using Aspose.Cells | performance test for SmartArt detection .NET | timing shape.IsSmartArt loop Aspose
-// Developer Intent: Find out how long it takes to locate and count SmartArt objects across all worksheets in an Excel workbook using Aspose.Cells.
-// Use Cases: Evaluate the latency of SmartArt detection before adding further processing in a server‑side workflow. | Compare detection speed between small and large workbooks to decide if optimization is required. | Verify that SmartArt enumeration meets a specific performance SLA in an automated Excel pipeline.
-// AI Prompts: Generate a C# method that returns both the SmartArt count and elapsed milliseconds for a given workbook using Aspose.Cells. | Suggest performance improvements for the SmartArt detection loop, such as parallel processing, early exit, or shape type filtering. | Create unit tests that assert the SmartArt count is correct and that the detection time stays under a defined threshold for sample files.
+// Title: Benchmark SmartArt Shape Detection Across Worksheets with Aspose.Cells for .NET
+// Description: Loads an Excel workbook, starts a Stopwatch, iterates every worksheet and its shapes, counts shapes where IsSmartArt is true, stops the timer, prints the SmartArt total and elapsed milliseconds, then saves the file.
+// Keywords: Aspose.Cells | SmartArt detection | performance benchmark | C# Stopwatch | shape enumeration | Excel workbook | .NET | count SmartArt shapes | execution time measurement | large workbook optimization
+// Common Searches: Aspose.Cells measure time to find SmartArt | C# benchmark shape iteration in Excel | How long does SmartArt detection take with Aspose.Cells | Performance test for SmartArt enumeration .NET | Count SmartArt objects in workbook using Aspose.Cells
+// Developer Intent: The developer wants to time how long it takes to detect and count SmartArt shapes across all worksheets in a workbook.
+// Use Cases: Identify performance bottlenecks when processing workbooks that contain many SmartArt objects. | Compare detection speed before and after optimizing shape traversal logic. | Log execution time for SmartArt detection as part of an automated Excel processing pipeline. | Include timing metrics in CI/CD reports to ensure scalability. | Generate performance dashboards for large‑scale Excel automation.
+// AI Prompts: Suggest code changes to reduce SmartArt detection time in large workbooks using Aspose.Cells. | Show how to log Stopwatch results to a file with robust exception handling for missing input files. | Explain a safe way to parallelize worksheet shape iteration while accurately counting SmartArt objects. | Provide an example of sending execution metrics to Azure Application Insights or another monitoring service. | Recommend memory‑efficient techniques for enumerating shapes in very large Excel files.
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an Excel file, uses a Stopwatch to time the enumeration of every worksheet and its Shapes collection, counts shapes where IsSmartArt is true, outputs the SmartArt total and elapsed milliseconds, and saves the workbook unchanged. Ideal for measuring and optimizing SmartArt detection performance.
+// Loads an Excel workbook, starts a Stopwatch, iterates every worksheet and its shapes, counts shapes where IsSmartArt is true, stops the timer, prints the SmartArt total and elapsed milliseconds, then saves the file.
 class SmartArtDetectionPerformance
 {
     static void Main()
@@ -20,35 +20,31 @@ class SmartArtDetectionPerformance
         Workbook workbook = new Workbook("input.xlsx");
 
         // Start measuring time
-        Stopwatch timer = Stopwatch.StartNew();
+        Stopwatch stopwatch = Stopwatch.StartNew();
 
         int smartArtCount = 0;
 
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Iterate through all worksheets and their shapes
+        foreach (Worksheet worksheet in workbook.Worksheets)
         {
-            // Iterate through all shapes in the worksheet
-            foreach (Shape shape in sheet.Shapes)
+            foreach (Shape shape in worksheet.Shapes)
             {
-                // Check if the shape is a SmartArt object
+                // Detect if the shape is a SmartArt object
                 if (shape.IsSmartArt)
                 {
                     smartArtCount++;
-
-                    // Optional: convert SmartArt to grouped shapes if further processing is needed
-                    // GroupShape group = shape.GetResultOfSmartArt();
                 }
             }
         }
 
         // Stop the timer
-        timer.Stop();
+        stopwatch.Stop();
 
-        // Output the results
-        Console.WriteLine($"SmartArt shapes detected: {smartArtCount}");
-        Console.WriteLine($"Execution time: {timer.ElapsedMilliseconds} ms");
+        // Output results
+        Console.WriteLine($"Total SmartArt shapes found: {smartArtCount}");
+        Console.WriteLine($"Execution time: {stopwatch.ElapsedMilliseconds} ms");
 
-        // Save the workbook (unchanged) to demonstrate lifecycle compliance
+        // Save the workbook (no modifications made, just to follow lifecycle)
         workbook.Save("output.xlsx");
     }
 }

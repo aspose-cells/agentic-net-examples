@@ -1,64 +1,37 @@
-// Title: Create a VeryHidden worksheet with Aspose.Cells for .NET (cannot be shown in Excel UI)
-// Description: Demonstrates how to add a worksheet, rename it, set its VisibilityType to VeryHidden, save the workbook, and reload it to confirm the sheet remains hidden using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | VeryHidden worksheet | VisibilityType.VeryHidden | hide Excel sheet C# | protect hidden sheet .NET | programmatically hide worksheet | Excel very hidden sheet
-// Common Searches: Aspose.Cells set worksheet to VeryHidden | How to hide a worksheet from Excel UI using Aspose.Cells | C# create very hidden sheet in Excel | Verify VeryHidden worksheet after saving Aspose.Cells | Unhide VeryHidden sheet programmatically Aspose
-// Developer Intent: Hide a worksheet so it cannot be displayed through Excel’s UI by setting its VisibilityType to VeryHidden.
-// Use Cases: Store sensitive data that should not be visible to end users | Keep configuration or metadata sheets hidden while still usable by formulas | Prevent accidental editing of intermediate calculation sheets | Embed macro‑related data without exposing it to users
-// AI Prompts: Write C# code with Aspose.Cells to add multiple VeryHidden worksheets and save the workbook. | Show how to switch a worksheet between Visible, Hidden, and VeryHidden at runtime using Aspose.Cells. | Explain how to programmatically unhide a VeryHidden sheet for internal processing while keeping it hidden from end users.
+// Title: Hide a worksheet with VisibilityType.VeryHidden using Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, add a visible sheet, set the original worksheet's VisibilityType to VeryHidden, and save the file so the sheet cannot be shown through Excel's UI.
+// Keywords: Aspose.Cells VeryHidden worksheet | VisibilityType.VeryHidden C# | hide sheet Excel UI .NET | Aspose.Cells hide worksheet programmatically | VeryHidden sheet Aspose.Cells example
+// Common Searches: Aspose.Cells set worksheet VeryHidden | C# hide Excel sheet so user cannot unhide | VisibilityType VeryHidden Aspose.Cells tutorial | make worksheet invisible in Excel using .NET | Aspose.Cells VeryHidden sheet example
+// Developer Intent: Set a worksheet to VeryHidden so it is inaccessible via the Excel interface.
+// Use Cases: Store internal configuration data that end users must not see. | Protect proprietary formulas by moving them to a VeryHidden sheet. | Maintain an audit log worksheet that remains hidden on workbook open.
+// AI Prompts: Provide C# code that sets a worksheet's VisibilityType to VeryHidden with Aspose.Cells and saves the workbook. | Show how to hide multiple worksheets as VeryHidden in a single Aspose.Cells .NET project. | Explain how to toggle a worksheet between Visible and VeryHidden using Aspose.Cells for C#.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Demonstrates how to create a workbook, add a visible sheet, set the original worksheet's VisibilityType to VeryHidden, and save the file so the sheet cannot be shown through Excel's UI.
+class Program
 {
-    // Demonstrates how to add a worksheet, rename it, set its VisibilityType to VeryHidden, save the workbook, and reload it to confirm the sheet remains hidden using Aspose.Cells for .NET.
-    public class VeryHiddenWorksheetDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook (default worksheet is added automatically)
-                Workbook workbook = new Workbook();
+            // Create a new workbook (contains one default worksheet)
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet and rename it
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "SecretSheet";
+            // Add an additional visible worksheet to satisfy the requirement
+            workbook.Worksheets.Add("VisibleSheet");
 
-                // Make the worksheet very hidden so it cannot be shown via Excel UI
-                sheet.VisibilityType = VisibilityType.VeryHidden;
+            // Make the original first worksheet VeryHidden (cannot be shown via Excel UI)
+            Worksheet hiddenSheet = workbook.Worksheets[0];
+            hiddenSheet.VisibilityType = VisibilityType.VeryHidden;
 
-                // Define output file path
-                string outputPath = "VeryHiddenWorksheet.xlsx";
-
-                // Save the workbook
-                workbook.Save(outputPath);
-
-                // Optional: reload to verify the visibility setting
-                if (File.Exists(outputPath))
-                {
-                    Workbook loaded = new Workbook(outputPath);
-                    Console.WriteLine("Worksheet visibility after reload: " + loaded.Worksheets[0].VisibilityType);
-                }
-                else
-                {
-                    Console.WriteLine("Failed to create the output file.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Save the workbook
+            workbook.Save("VeryHiddenSheet.xlsx");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            VeryHiddenWorksheetDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

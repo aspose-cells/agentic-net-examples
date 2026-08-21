@@ -1,88 +1,130 @@
-// Title: Aspose.Cells .NET: Detect Circular References and Generate a Report
-// Description: Loads an Excel workbook, sets a CalculationOptions with a custom CircularReferenceMonitor, captures every cell involved in a circular reference and its dependent formulas, writes the findings to a new worksheet named "CircularReport", and saves the updated file.
-// Keywords: Aspose.Cells circular reference detection | C# Excel circular reference monitor | Aspose.Cells CalculationOptions | Excel circular formula report | GetDependents Aspose.Cells | detect circular formulas .NET | Excel diagnostics Aspose | US .NET developers | European C# Excel automation
-// Common Searches: how to log circular reference cells with Aspose.Cells | generate circular reference report in C# | Aspose.Cells AbstractCalculationMonitor example | list dependent formulas for circular cells | Excel circular reference detection .NET library
-// Developer Intent: Find cells that cause circular calculations, collect their addresses and dependent formulas, and output the information to a dedicated worksheet.
-// Use Cases: Audit complex financial models for circular logic and provide a clear remediation list. | Validate user‑uploaded spreadsheets on a server, rejecting files that contain circular formulas before processing. | Supply end‑users with an automatic diagnostic sheet that pinpoints problematic cells and shows related formulas.
-// AI Prompts: Create a function that returns circular reference details as a JSON array instead of writing to a worksheet. | Enhance the monitor to include the recursion depth of each dependent formula in the report. | Write a unit test that confirms CircularReferenceMonitor captures all circular cells and their dependents correctly.
+// Title: Aspose.Cells C# – Detect Circular References and Export Dependent Formulas to a Report Sheet
+// Description: This example shows how to load or create a workbook, attach a custom AbstractCalculationMonitor that captures the addresses of cells involved in circular references, run workbook.CalculateFormula, retrieve each circular cell's dependents with GetDependentsInCalculation(true), and write the circular cell, dependent cell, and dependent formula to a new worksheet named "CircularReferenceReport" before saving the file.
+// Keywords: Aspose.Cells circular reference detection | C# calculation monitor | GetDependentsInCalculation | Excel dependent formulas report | .NET Excel circular reference | Aspose.Cells API example
+// Common Searches: how to capture circular references with Aspose.Cells | list cells that depend on a circular reference in C# | generate circular reference report worksheet Aspose.Cells | custom calculation monitor example .NET | retrieve dependent formulas from circular cells
+// Developer Intent: Find circular‑reference cells, enumerate their dependent formulas, and produce an Excel summary sheet.
+// Use Cases: Attach a custom AbstractCalculationMonitor to record circular cell addresses during workbook.CalculateFormula. | Use GetDependentsInCalculation(true) to collect all cells whose results rely on each circular cell. | Write the circular cell address, dependent cell address, and dependent formula to a dedicated report worksheet for analysis. | Save the workbook with the report for auditing or debugging complex Excel models.
+// AI Prompts: Generate C# code using Aspose.Cells that detects circular references, lists dependent cells, and creates a report worksheet. | Show how to implement a custom CalculationMonitor to capture circular cell addresses and then export dependent formulas to a new sheet. | Provide an Aspose.Cells example that retrieves dependents of a circular cell with GetDependentsInCalculation and saves the results as an Excel report.
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, sets a CalculationOptions with a custom CircularReferenceMonitor, captures every cell involved in a circular reference and its dependent formulas, writes the findings to a new worksheet named "CircularReport", and saves the updated file.
-class Program
+// This example shows how to load or create a workbook, attach a custom AbstractCalculationMonitor that captures the addresses of cells involved in circular references, run workbook.CalculateFormula, retrieve each circular cell's dependents with GetDependentsInCalculation(true), and write the circular cell, dependent cell, and dependent formula to a new worksheet named "CircularReferenceReport" before saving the file.
+class CircularReferenceMonitor : AbstractCalculationMonitor
 {
-    // Holds report entries: "CellAddress|DependentFormulas"
-    static List<string> reportLines = new List<string>();
+    // Stores addresses of cells that are part of circular references
+    public List<string> CircularCellAddresses { get; } = new List<string>();
 
-    static void Main()
+    // Called by the calculation engine when a circular reference is detected
+    public override bool OnCircular(IEnumerator circularCellsData)
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Set up calculation options with a custom monitor to capture circular references
-        CalculationOptions options = new CalculationOptions();
-        options.CalculationMonitor = new CircularReferenceMonitor();
-
-        // Perform formula calculation; the monitor will be invoked for circular references
-        workbook.CalculateFormula(options);
-
-        // Create a worksheet to hold the circular reference report
-        Worksheet reportSheet = workbook.Worksheets.Add("CircularReport");
-        int row = 0;
-        reportSheet.Cells[row, 0].PutValue("Circular Cell");
-        reportSheet.Cells[row, 1].PutValue("Dependent Formulas");
-        row++;
-
-        // Populate the report sheet with collected data
-        foreach (string line in reportLines)
+        while (circularCellsData.MoveNext())
         {
-            string[] parts = line.Split('|');
-            reportSheet.Cells[row, 0].PutValue(parts[0]);               // Cell address
-            reportSheet.Cells[row, 1].PutValue(parts.Length > 1 ? parts[1] : ""); // Dependents
-            row++;
-        }
-
-        // Save the workbook with the added report
-        workbook.Save("output_with_circular_report.xlsx");
-    }
-
-    // Custom calculation monitor that captures circular reference information
-    class CircularReferenceMonitor : AbstractCalculationMonitor
-    {
-        public override bool OnCircular(IEnumerator circularCellsData)
-        {
-            // Iterate over each cell involved in the circular reference
-            while (circularCellsData.MoveNext())
+            // Each item is a Cell (or CalculationCell) involved in the circular reference.
+            // Retrieve its address via the Name property.
+            string address = string.Empty;
+            if (circularCellsData.Current is Cell cell)
             {
-                object current = circularCellsData.Current;
-
-                // Try to treat the item as a Cell; if not possible, fall back to its string representation
-                Cell cell = current as Cell;
-                string address = cell != null ? cell.Name : current?.ToString() ?? "Unknown";
-                string formula = cell != null ? cell.Formula : string.Empty;
-
-                // Gather dependent cells (recursive) if we have a valid Cell object
-                string dependentsInfo = string.Empty;
-                if (cell != null)
-                {
-                    Cell[] dependents = cell.GetDependents(true);
-                    List<string> depList = new List<string>();
-                    foreach (Cell dep in dependents)
-                    {
-                        depList.Add($"{dep.Name}:{dep.Formula}");
-                    }
-                    dependentsInfo = string.Join(", ", depList);
-                }
-
-                // Store the information for later reporting
-                Program.reportLines.Add($"{address}|{dependentsInfo}");
+                address = cell.Name;
+            }
+            else if (circularCellsData.Current != null)
+            {
+                // Fallback to string representation if casting fails.
+                address = circularCellsData.Current.ToString();
             }
 
-            // Return true to let the engine continue processing other cells
-            return true;
+            if (!string.IsNullOrEmpty(address))
+            {
+                CircularCellAddresses.Add(address);
+            }
+        }
+        // Continue calculation for these cells.
+        return true;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            // -------------------------------------------------
+            // 1. Create a workbook (or load an existing one)
+            // -------------------------------------------------
+            Workbook workbook = new Workbook(); // create new workbook
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Sample data that creates a circular reference:
+            sheet.Cells["A1"].Formula = "=B1";
+            sheet.Cells["B1"].Formula = "=A1";
+
+            // -------------------------------------------------
+            // 2. Prepare calculation options with a custom monitor
+            // -------------------------------------------------
+            CalculationOptions options = new CalculationOptions();
+            CircularReferenceMonitor monitor = new CircularReferenceMonitor();
+            options.CalculationMonitor = monitor;
+
+            // Ensure iterative calculation is disabled (default behavior)
+            workbook.Settings.FormulaSettings.EnableIterativeCalculation = false;
+
+            // -------------------------------------------------
+            // 3. Perform calculation (circular references will trigger the monitor)
+            // -------------------------------------------------
+            workbook.CalculateFormula(options);
+
+            // -------------------------------------------------
+            // 4. Build a report worksheet with circular cells and their dependents
+            // -------------------------------------------------
+            Worksheet report = workbook.Worksheets.Add("CircularReferenceReport");
+            int reportRow = 0;
+            report.Cells[reportRow, 0].PutValue("Circular Cell");
+            report.Cells[reportRow, 1].PutValue("Dependent Cell");
+            report.Cells[reportRow, 2].PutValue("Dependent Formula");
+            reportRow++;
+
+            foreach (string circAddress in monitor.CircularCellAddresses)
+            {
+                Cell circCell = sheet.Cells[circAddress];
+
+                // Get all cells whose calculated result depends on the circular cell
+                IEnumerator dependents = circCell.GetDependentsInCalculation(true);
+
+                if (dependents != null)
+                {
+                    while (dependents.MoveNext())
+                    {
+                        if (dependents.Current is Cell depCell)
+                        {
+                            report.Cells[reportRow, 0].PutValue(circAddress);
+                            report.Cells[reportRow, 1].PutValue(depCell.Name);
+                            report.Cells[reportRow, 2].PutValue(depCell.Formula);
+                            reportRow++;
+                        }
+                    }
+                }
+                else
+                {
+                    // No dependents found; just list the circular cell
+                    report.Cells[reportRow, 0].PutValue(circAddress);
+                    reportRow++;
+                }
+            }
+
+            // -------------------------------------------------
+            // 5. Save the workbook (including the report)
+            // -------------------------------------------------
+            string outputPath = "CircularReferenceReport.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Report saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

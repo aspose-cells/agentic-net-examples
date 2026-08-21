@@ -1,67 +1,104 @@
-// Title: Detect XLS format, convert to XLSX and apply password protection with Aspose.Cells for .NET
-// Description: Demonstrates using Aspose.Cells to identify a legacy XLS workbook, convert it to XLSX, set a password through Workbook.Settings.Password, save the encrypted file, and optionally confirm encryption by re‑loading with LoadOptions.
-// Keywords: Aspose.Cells detect file format | XLS to XLSX conversion C# | Excel password protection .NET | FileFormatUtil | Workbook.Settings.Password | Encrypt Excel workbook Aspose | Legacy Excel conversion | Secure XLSX output
-// Common Searches: how to detect xls vs xlsx with Aspose.Cells | convert old xls to xlsx and set password c# | asp.net encrypt excel file after conversion | verify excel file encryption Aspose.Cells | batch convert and protect legacy excel files
-// Developer Intent: Identify workbook type, convert legacy XLS to XLSX, and protect the result with a password.
-// Use Cases: Automated pipeline that normalizes mixed‑format spreadsheets to XLSX and secures them before storage. | Web service that receives user‑uploaded Excel files, ensures they are saved as encrypted XLSX, and returns a download link. | Compliance workflow that validates encryption by re‑opening the saved file with the supplied password.
-// AI Prompts: Generate C# code using Aspose.Cells to detect an Excel file's format, convert XLS to XLSX if needed, and encrypt it with a password. | Explain how to confirm that a workbook saved with Aspose.Cells is encrypted and how to handle decryption failures. | Provide best‑practice recommendations for batch processing, converting, and password‑protecting large numbers of legacy Excel files with Aspose.Cells.
+// Title: Convert legacy XLS to XLSX and encrypt with password using Aspose.Cells for .NET
+// Description: Detect a legacy .xls workbook, convert it to .xlsx via a temporary file, then apply a password and 128‑bit strong encryption before saving the protected file.
+// Keywords: Aspose.Cells | C# | .NET | convert XLS to XLSX | encrypt Excel workbook | password protection | strong encryption | AES 128 | temporary file cleanup | legacy Excel format detection
+// Common Searches: How to convert .xls to .xlsx and password protect with Aspose.Cells | Aspose.Cells encrypt workbook with strong cryptographic provider | Detect legacy Excel file before applying encryption in C# | Save encrypted XLSX to custom folder using Aspose.Cells | Batch convert and encrypt mixed .xls/.xlsx files .NET
+// Developer Intent: Identify whether an input workbook is an old .xls file, transform it to .xlsx if needed, and save the result with password‑based strong encryption.
+// Use Cases: Upgrade archived Excel reports to encrypted .xlsx files for secure sharing. | Automate processing of mixed‑format spreadsheets, ensuring every output is password‑protected. | Integrate conversion‑encryption logic into a file‑upload service that only accepts encrypted .xlsx files.
+// AI Prompts: Write C# code with Aspose.Cells that checks a file extension, converts .xls to .xlsx, applies a password and 128‑bit AES encryption, and removes temporary files. | Show an Aspose.Cells example that encrypts an existing .xlsx workbook, creates missing output directories, and uses the StrongCryptographicProvider. | Explain how to extend the sample to assign different passwords to individual worksheets while keeping the whole workbook encrypted.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Detect a legacy .xls workbook, convert it to .xlsx via a temporary file, then apply a password and 128‑bit strong encryption before saving the protected file.
+public class LegacyXlsToXlsxEncryptor
 {
-    // Demonstrates using Aspose.Cells to identify a legacy XLS workbook, convert it to XLSX, set a password through Workbook.Settings.Password, save the encrypted file, and optionally confirm encryption by re‑loading with LoadOptions.
-    public class ConvertLegacyXlsAndEncrypt
+    /// <param name="sourcePath">Path to the original workbook (XLS or XLSX).</param>
+    /// <param name="encryptedPath">Path where the encrypted XLSX workbook will be saved.</param>
+    /// <param name="password">Password to protect the workbook.</param>
+    public static void ConvertAndEncrypt(string sourcePath, string encryptedPath, string password)
     {
-        /// <param name="sourcePath">Path to the original workbook (XLS or XLSX).</param>
-        /// <param name="outputPath">Path where the encrypted XLSX workbook will be saved.</param>
-        /// <param name="password">Password to protect the workbook.</param>
-        public static void Run(string sourcePath, string outputPath, string password)
+        // Verify that the source file exists to avoid FileNotFoundException.
+        if (!File.Exists(sourcePath))
         {
-            try
-            {
-                // Ensure the source file exists to avoid FileNotFoundException.
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
-
-                // Detect the file format of the source workbook.
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(sourcePath);
-
-                // Load the workbook (Aspose.Cells automatically selects the correct load format).
-                Workbook workbook = new Workbook(sourcePath);
-
-                // Apply password protection (encryption) to the workbook.
-                workbook.Settings.Password = password;
-
-                // Save as XLSX. If the source is a legacy XLS, this also performs the conversion.
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-
-                // Optional: verify that the saved file is encrypted.
-                LoadOptions loadOptions = new LoadOptions { Password = password };
-                Workbook encryptedWorkbook = new Workbook(outputPath, loadOptions);
-                Console.WriteLine($"Workbook encrypted: {encryptedWorkbook.Settings.IsEncrypted}");
-            }
-            catch (Exception ex)
-            {
-                // Catch any runtime exceptions and display a friendly message.
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            throw new FileNotFoundException($"Source file not found: {sourcePath}");
         }
 
-        // Entry point for the console application.
-        public static void Main(string[] args)
-        {
-            // Example usage – replace with actual paths and password as needed.
-            string sourcePath = "input.xls";
-            string outputPath = "encrypted_output.xlsx";
-            string password = "StrongPassword123";
+        // Determine whether the source is a legacy XLS file based on its extension.
+        bool isLegacyXls = sourcePath.EndsWith(".xls", StringComparison.OrdinalIgnoreCase);
 
-            Run(sourcePath, outputPath, password);
+        Workbook workbook = null;
+        string tempXlsxPath = null;
+
+        try
+        {
+            // Load the workbook (Aspose.Cells automatically handles the format).
+            workbook = new Workbook(sourcePath);
+
+            // If the source was XLS, convert it to XLSX first.
+            if (isLegacyXls)
+            {
+                // Save the workbook as XLSX to a temporary location.
+                tempXlsxPath = Path.Combine(Path.GetTempPath(),
+                                            Guid.NewGuid().ToString("N") + ".xlsx");
+                workbook.Save(tempXlsxPath, SaveFormat.Xlsx);
+
+                // Reload the newly saved XLSX for further processing.
+                workbook.Dispose();
+                workbook = new Workbook(tempXlsxPath);
+            }
+
+            // Apply password protection.
+            workbook.Settings.Password = password;
+
+            // Set stronger encryption options (relevant for XLSX).
+            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+
+            // Ensure the output directory exists.
+            string outputDir = Path.GetDirectoryName(encryptedPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the encrypted workbook as XLSX.
+            workbook.Save(encryptedPath, SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            // Log or rethrow as needed.
+            Console.Error.WriteLine($"Error during conversion/encryption: {ex.Message}");
+            throw;
+        }
+        finally
+        {
+            // Clean up resources.
+            workbook?.Dispose();
+
+            // Delete temporary file if it was created.
+            if (tempXlsxPath != null && File.Exists(tempXlsxPath))
+            {
+                try { File.Delete(tempXlsxPath); } catch { /* ignore cleanup errors */ }
+            }
+        }
+    }
+
+    // Example usage.
+    public static void Main()
+    {
+        try
+        {
+            string sourceFile = "LegacyWorkbook.xls";          // Input file (could be .xls or .xlsx)
+            string encryptedFile = "EncryptedWorkbook.xlsx";   // Desired output file
+            string password = "MySecurePassword";
+
+            ConvertAndEncrypt(sourceFile, encryptedFile, password);
+
+            Console.WriteLine("Conversion and encryption completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Operation failed: {ex.Message}");
         }
     }
 }

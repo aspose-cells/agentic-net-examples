@@ -1,10 +1,10 @@
-// Title: C# Batch Convert XLSM Workbooks to Optimized PDF (Minimum Size) with Aspose.Cells
-// Description: A console utility that scans a folder for *.xlsm files, creates an output directory, and uses Aspose.Cells ConversionUtility with LoadOptions and PdfSaveOptions (OptimizationType = MinimumSize) to generate matching PDF files. Includes basic error handling and progress logging.
-// Keywords: Aspose.Cells | C# | .NET | batch convert XLSM to PDF | PDF MinimumSize optimization | ConversionUtility | LoadOptions | PdfSaveOptions | macro-enabled Excel conversion | folder processing
-// Common Searches: convert all xlsm files in a folder to pdf using aspose.cells | aspnet batch conversion of macro enabled workbooks to optimized pdf | c# code for pdf minimum size optimization with aspose.cells | aspse.cells convert multiple excel files to pdf command line | how to use ConversionUtility to batch convert xlsm to pdf
-// Developer Intent: Automatically transform every XLSM workbook in a specified directory into a PDF with MinimumSize compression.
-// Use Cases: Generate lightweight PDFs from a collection of macro‑enabled reports for archiving. | Schedule nightly export of XLSM dashboards to PDF for stakeholder distribution. | Create a command‑line tool that processes a folder of XLSM files and saves size‑optimized PDFs to another folder.
-// AI Prompts: Write C# code that uses Aspose.Cells to batch convert all XLSM files in a directory to PDF with MinimumSize optimization and logs each conversion. | Show how to configure LoadOptions for opening macro‑enabled workbooks and set PdfSaveOptions for MinimumSize in Aspose.Cells. | Explain how to extend the sample to recursively process subfolders while preserving the original folder hierarchy in the output location.
+// Title: Batch convert XLSM workbooks to Minimum‑Size PDFs with Aspose.Cells for .NET
+// Description: A C# console utility that scans a source folder for *.xlsm files, converts each workbook to PDF using Aspose.Cells ConversionUtility, and applies PdfSaveOptions.OptimizationType = MinimumSize for compact output. The program creates matching PDFs in a target directory, logs progress, and isolates per‑file errors.
+// Keywords: Aspose.Cells batch conversion | XLSM to PDF .NET | MinimumSize PDF optimization | ConversionUtility Convert | PdfSaveOptions OptimizationType | C# Excel macro PDF export | Windows folder processing | Aspose.Cells PDF compression
+// Common Searches: how to batch convert xlsm files to pdf using aspose.cells | asp.net convert macro enabled excel to small pdf | c# convert all excel files in a folder to pdf with minimum size | aspocells pdfsaveoptions minimumsize example | automate folder conversion of xlsm to pdf
+// Developer Intent: Convert every macro‑enabled Excel workbook in a directory to an optimized PDF using Aspose.Cells.
+// Use Cases: Archive nightly macro‑driven financial reports as space‑efficient PDFs. | Provide a command‑line service that transforms uploaded XLSM files into web‑ready PDFs. | Integrate into a server‑side workflow that reduces storage costs by compressing Excel workbooks to MinimumSize PDFs.
+// AI Prompts: Generate a C# method that receives input and output folder paths and batch converts all .xlsm files to PDF with MinimumSize optimization, including detailed error handling. | Write unit tests that verify a PDF is produced for each XLSM file and that PdfSaveOptions.OptimizationType is set to MinimumSize. | Create a PowerShell wrapper that runs the compiled converter, passes folder arguments, and writes a log file with success/failure for each conversion.
 
 using System;
 using System.IO;
@@ -14,56 +14,55 @@ using Aspose.Cells.Rendering;
 
 namespace BatchXlsmToPdf
 {
-    // A console utility that scans a folder for *.xlsm files, creates an output directory, and uses Aspose.Cells ConversionUtility with LoadOptions and PdfSaveOptions (OptimizationType = MinimumSize) to generate matching PDF files. Includes basic error handling and progress logging.
+    // A C# console utility that scans a source folder for *.xlsm files, converts each workbook to PDF using Aspose.Cells ConversionUtility, and applies PdfSaveOptions.OptimizationType = MinimumSize for compact output. The program creates matching PDFs in a target directory, logs progress, and isolates per‑file errors.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            try
+            // Folder containing the XLSM files
+            string sourceFolder = @"C:\InputXlsm";
+            // Folder where the PDF files will be saved
+            string outputFolder = @"C:\OutputPdf";
+
+            // Verify source folder exists
+            if (!Directory.Exists(sourceFolder))
             {
-                // Folder containing the source XLSM files
-                string sourceFolder = @"C:\InputXlsm";
+                Console.WriteLine($"Source folder not found: {sourceFolder}");
+                return;
+            }
 
-                // Folder where the converted PDF files will be saved
-                string outputFolder = @"C:\OutputPdf";
-
-                // Ensure the output directory exists
+            // Ensure the output directory exists
+            if (!Directory.Exists(outputFolder))
                 Directory.CreateDirectory(outputFolder);
 
-                // Get all XLSM files in the source folder
-                string[] xlsmFiles = Directory.GetFiles(sourceFolder, "*.xlsm", SearchOption.TopDirectoryOnly);
+            // Load options – let Aspose.Cells auto‑detect the format
+            LoadOptions loadOptions = new LoadOptions();
 
-                // Load options for XLSM files (use Xlsx format as LoadFormat.Xlsm is not defined)
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            // PDF save options with MinimumSize optimization
+            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions
+            {
+                OptimizationType = PdfOptimizationType.MinimumSize
+            };
 
-                // PDF save options with MinimumSize optimization
-                PdfSaveOptions pdfSaveOptions = new PdfSaveOptions
+            try
+            {
+                // Process each .xlsm file in the source folder
+                foreach (string xlsmPath in Directory.GetFiles(sourceFolder, "*.xlsm"))
                 {
-                    OptimizationType = PdfOptimizationType.MinimumSize
-                };
-
-                // Convert each XLSM file to PDF using ConversionUtility
-                foreach (string sourcePath in xlsmFiles)
-                {
-                    if (!File.Exists(sourcePath))
-                    {
-                        Console.WriteLine($"Source file not found: {sourcePath}");
-                        continue;
-                    }
-
                     try
                     {
-                        string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
-                        string destPath = Path.Combine(outputFolder, fileNameWithoutExt + ".pdf");
+                        // Determine the output PDF file path
+                        string fileNameWithoutExt = Path.GetFileNameWithoutExtension(xlsmPath);
+                        string pdfPath = Path.Combine(outputFolder, fileNameWithoutExt + ".pdf");
 
-                        // Perform conversion
-                        ConversionUtility.Convert(sourcePath, loadOptions, destPath, pdfSaveOptions);
+                        // Convert the workbook to PDF
+                        ConversionUtility.Convert(xlsmPath, loadOptions, pdfPath, pdfSaveOptions);
 
-                        Console.WriteLine($"Converted: {sourcePath} -> {destPath}");
+                        Console.WriteLine($"Converted: {xlsmPath} -> {pdfPath}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error converting file '{sourcePath}': {ex.Message}");
+                        Console.WriteLine($"Error converting '{xlsmPath}': {ex.Message}");
                     }
                 }
 

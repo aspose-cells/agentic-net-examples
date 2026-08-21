@@ -1,10 +1,10 @@
-// Title: C# Example: Move a Shape to the Front Layer with Aspose.Cells ToFrontOrBack
-// Description: Demonstrates how to create a workbook, add overlapping rectangle shapes, and change their z‑order using Shape.ToFrontOrBack. A positive integer moves a shape forward (front layer), while a negative integer sends it backward, then the workbook is saved.
-// Keywords: Aspose.Cells C# shape layering | ToFrontOrBack method | bring shape to front Aspose.Cells | move shape forward Excel | z‑order shapes Aspose.Cells | shape front back example
-// Common Searches: Aspose.Cells move shape to front | C# ToFrontOrBack example | change shape z‑order Aspose.Cells | bring overlapping shape forward in Excel using Aspose | how to send shape to back Aspose.Cells
-// Developer Intent: Adjust the z‑order of a specific Shape object so it appears above or below other worksheet objects.
-// Use Cases: Display a newly added annotation on top of existing graphics by calling shape.ToFrontOrBack(1). | Hide a background watermark by sending it to the back with shape.ToFrontOrBack(-1). | Create interactive reports where users can reorder chart elements dynamically via positive or negative offsets.
-// AI Prompts: Generate C# code that uses Aspose.Cells to bring a given shape to the front layer with ToFrontOrBack(1). | Write a reusable function that accepts a Shape and an integer offset to modify its z‑order using ToFrontOrBack. | Explain the effect of positive and negative values passed to Shape.ToFrontOrBack in Aspose.Cells.
+// Title: Aspose.Cells .NET: Move a worksheet shape to the front layer using ToFrontOrBack(int)
+// Description: C# example that creates a workbook, adds two overlapping rectangle shapes, and uses shape2.ToFrontOrBack(1) to shift the second shape one level forward, placing it above the first shape before saving as ShapeFrontDemo.xlsx.
+// Keywords: Aspose.Cells ToFrontOrBack | C# move shape to front | shape z-order Aspose.Cells | bring shape forward .NET | Excel shape layering | Aspose.Cells shape ordering | worksheet shape front layer | Aspose.Cells C# example
+// Common Searches: Aspose.Cells move shape to front | ToFrontOrBack method C# | change shape z-order Aspose.Cells | bring shape forward Excel API | shape layering Aspose.Cells example
+// Developer Intent: Programmatically set a specific worksheet shape as the topmost object.
+// Use Cases: Ensure a title textbox appears above data bars in a financial report. | Overlay a company logo on top of decorative shapes in a dashboard worksheet. | Adjust the visual stacking order of chart annotations and shapes for clearer presentation.
+// AI Prompts: Generate C# code that sends a shape to the back layer in Aspose.Cells by passing a negative integer to ToFrontOrBack. | Show how to reorder multiple worksheet shapes in a loop using ToFrontOrBack to achieve a custom z‑order. | Explain how different integer values affect shape layering when using ToFrontOrBack in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
@@ -12,44 +12,38 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, add overlapping rectangle shapes, and change their z‑order using Shape.ToFrontOrBack. A positive integer moves a shape forward (front layer), while a negative integer sends it backward, then the workbook is saved.
+    // C# example that creates a workbook, adds two overlapping rectangle shapes, and uses shape2.ToFrontOrBack(1) to shift the second shape one level forward, placing it above the first shape before saving as ShapeFrontDemo.xlsx.
     public class MoveShapeToFrontDemo
     {
-        public static void Run()
+        // Entry point for the application
+        public static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add two overlapping shapes to demonstrate z‑order
-                Shape shape1 = worksheet.Shapes.AddRectangle(10, 10, 100, 100, 0, 0);
-                Shape shape2 = worksheet.Shapes.AddRectangle(30, 30, 100, 100, 0, 0);
-
-                // Bring shape2 to the front by moving it forward 1 position
-                shape2.ToFrontOrBack(1);   // positive integer => front
-
-                // Optionally, send shape1 to the back
-                shape1.ToFrontOrBack(-1);  // negative integer => back
-
-                // Save the workbook
-                workbook.Save("ShapeFrontDemo.xlsx");
-                Console.WriteLine("Workbook saved as ShapeFrontDemo.xlsx");
+                Run();
+                Console.WriteLine("Workbook saved successfully as ShapeFrontDemo.xlsx");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        public static void Run()
         {
-            MoveShapeToFrontDemo.Run();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add two overlapping rectangle shapes
+            Shape shape1 = worksheet.Shapes.AddRectangle(10, 10, 100, 100, 0, 0);
+            Shape shape2 = worksheet.Shapes.AddRectangle(30, 30, 100, 100, 0, 0);
+
+            // Bring shape2 to the front layer (positive integer moves forward)
+            shape2.ToFrontOrBack(1);
+
+            // Save the workbook with the updated shape order
+            workbook.Save("ShapeFrontDemo.xlsx");
         }
     }
 }

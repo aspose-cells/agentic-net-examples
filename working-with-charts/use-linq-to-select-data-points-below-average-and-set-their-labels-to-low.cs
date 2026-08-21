@@ -1,18 +1,21 @@
-// Title: C# – Add "Low" labels to chart points below average with Aspose.Cells (LINQ)
-// Description: Demonstrates using Aspose.Cells for .NET to create a column chart, compute the series average, and apply a custom "Low" data label to points whose values are below average, using LINQ for selection.
-// Keywords: Aspose.Cells | C# | LINQ | Excel chart | custom data label | low values | average calculation | column chart | NSeries | chart point filtering | Aspose.Cells for .NET
-// Common Searches: Aspose.Cells set custom data label C# | label chart points below average Aspose.Cells | LINQ filter chart series Aspose.Cells | display literal text in Excel chart label Aspose.Cells | C# Aspose.Cells chart point labeling
-// Developer Intent: Mark chart points with values below the average as "Low" using Aspose.Cells.
-// Use Cases: Flag under‑performing categories in sales or KPI column charts | Automatically annotate Excel reports where values fall below the mean | Build dashboards that dynamically highlight low‑value data points
-// AI Prompts: Convert the point‑selection loop to a LINQ query that sets the "Low" label for points below average. | Create a reusable C# method that takes a worksheet, computes the average of an NSeries, and applies a custom label to sub‑average points using LINQ. | Explain how the NumberFormat property works to show literal text such as "Low" on Aspose.Cells chart data labels.
+// Title: Aspose.Cells .NET – Label chart points below average as “Low” using LINQ
+// Description: Creates a workbook, adds a column chart, computes the series average with LINQ, and sets a custom data label "Low" on every point whose value is below the average before saving the file.
+// Keywords: Aspose.Cells | C# chart data labels | LINQ average | label points below average | column chart Aspose | Excel automation .NET | custom data label | highlight low values | chart point labeling | Aspose.Cells example
+// Common Searches: Aspose.Cells label low values chart | C# set custom data label for chart points | calculate average of series with LINQ Aspose.Cells | how to mark points below average in Excel chart using Aspose | Aspose.Cells chart point labeling tutorial
+// Developer Intent: Add a “Low” label to chart points whose values are below the series average.
+// Use Cases: Mark under‑performing sales categories in a column chart. | Automatically flag KPI values that fall under the average in financial reports. | Generate Excel dashboards that highlight data points below a computed threshold. | Create printable reports where low measurements are clearly identified.
+// AI Prompts: Generate C# code with Aspose.Cells that computes the average of a column‑chart series using LINQ and sets the DataLabels of points below the average to "Low". | Show how to read chart series values without GetValueArray, calculate the mean, and apply a custom label to each point under the mean in Aspose.Cells. | Extend the example to also label points above the average as "High" while preserving the existing "Low" labels.
 
 using System;
+using System.IO;
+using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates using Aspose.Cells for .NET to create a column chart, compute the series average, and apply a custom "Low" data label to points whose values are below average, using LINQ for selection.
+    // Creates a workbook, adds a column chart, computes the series average with LINQ, and sets a custom data label "Low" on every point whose value is below the average before saving the file.
     public class BelowAverageLabelDemo
     {
         public static void Main()
@@ -20,6 +23,7 @@ namespace AsposeCellsExamples
             try
             {
                 Run();
+                Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)
             {
@@ -33,7 +37,7 @@ namespace AsposeCellsExamples
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart (values in column B)
+            // Populate sample data for the chart (values in column B, categories in column A)
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["A2"].PutValue("A");
@@ -44,54 +48,62 @@ namespace AsposeCellsExamples
             sheet.Cells["B2"].PutValue(10);
             sheet.Cells["B3"].PutValue(25);
             sheet.Cells["B4"].PutValue(15);
-            sheet.Cells["B5"].PutValue(5);
-            sheet.Cells["B6"].PutValue(30);
+            sheet.Cells["B5"].PutValue(30);
+            sheet.Cells["B6"].PutValue(5);
 
             // Add a column chart
             int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 8);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data source for the series and categories
+            // Set the data source for the chart
             chart.NSeries.Add("B2:B6", true);
             chart.NSeries.CategoryData = "A2:A6";
 
-            // Calculate the average of the series values using the NSeries.Values collection
-            double sum = 0;
-            int count = 0;
-            foreach (double val in chart.NSeries[0].Values)
+            // Retrieve the numeric values from the source range without using GetValueArray (not available in some versions)
+            double[] seriesValues;
+            try
             {
-                sum += val;
-                count++;
+                // Rows 2‑6 correspond to indices 1‑5 (zero‑based)
+                int startRow = 1;
+                int endRow = 5;
+                seriesValues = new double[endRow - startRow + 1];
+                for (int r = startRow; r <= endRow; r++)
+                {
+                    object cellValue = sheet.Cells[r, 1].Value; // Column B (index 1)
+                    seriesValues[r - startRow] = Convert.ToDouble(cellValue);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Failed to read chart data values.", ex);
             }
 
-            double average = count > 0 ? sum / count : 0;
+            // Calculate the average of the series values
+            double average = seriesValues.Average();
 
-            // Apply custom label "Low" to points whose value is below the average
-            for (int i = 0; i < chart.NSeries[0].Points.Count; i++)
+            // Iterate through points and label those below average
+            ChartPointCollection points = chart.NSeries[0].Points;
+            for (int i = 0; i < points.Count; i++)
             {
-                double pointValue = chart.NSeries[0].Values[i];
-                if (pointValue < average)
+                if (seriesValues[i] < average)
                 {
-                    ChartPoint point = chart.NSeries[0].Points[i];
-                    // Show the data label
-                    point.DataLabels.ShowValue = true;
-                    // Use a custom number format to display the literal text "Low"
-                    point.DataLabels.NumberFormat = "\"Low\"";
-                    // Optional: set label position for better visibility
-                    point.DataLabels.Position = LabelPositionType.OutsideEnd;
+                    ChartPoint point = points[i];
+                    point.DataLabels.ShowValue = true; // ensure the label is displayed
+                    point.DataLabels.Text = "Low";     // custom label text
                 }
             }
 
             // Save the workbook
-            try
+            string outputPath = "BelowAverageLabelDemo.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                workbook.Save("BelowAverageLabelDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+                Directory.CreateDirectory(outputDir);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+
+            workbook.Save(outputPath);
         }
     }
 }

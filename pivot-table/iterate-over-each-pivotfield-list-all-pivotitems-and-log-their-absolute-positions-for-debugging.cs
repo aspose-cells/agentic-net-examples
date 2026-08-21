@@ -1,87 +1,80 @@
-// Title: C# – List All PivotFields and Log Each PivotItem’s Absolute Position with Aspose.Cells
-// Description: This Aspose.Cells for .NET example creates a workbook, builds a simple pivot table, refreshes and calculates it, then iterates through Row, Column, Page, and Data fields. For each field it safely logs the field name and, when available, every PivotItem’s name together with its absolute Position index – a handy debugging technique before saving the workbook.
-// Keywords: Aspose.Cells | C# | .NET | PivotTable | PivotField | PivotItem | absolute position | item index | debug pivot table | list pivot items | iterate pivot fields | Aspose.Cells example | GitHub Aspose.Cells | Excel pivot debugging | retrieve pivot item position
-// Common Searches: Aspose.Cells get PivotItem position C# | list all PivotFields in a pivot table Aspose.Cells | debug pivot table items Aspose.Cells .NET | how to log pivot item absolute index using Aspose.Cells | iterate pivot fields and items Aspose.Cells example
-// Developer Intent: The developer needs to enumerate every PivotField in a pivot table and output each PivotItem’s name and absolute position for troubleshooting.
-// Use Cases: Verify that RefreshData and CalculateData generate the expected PivotItems after modifying source data. | Identify missing or out‑of‑order items when programmatically adjusting pivot fields. | Provide detailed logs for custom grouping, sorting, or filtering logic in a pivot table. | Create diagnostic output for automated tests that validate pivot table structure.
-// AI Prompts: Write C# code that loops through all PivotFields in an Aspose.Cells pivot table and prints each PivotItem’s Name and Position, handling null collections. | Generate a helper method for Aspose.Cells that logs a warning when a PivotField has no PivotItems and returns the list of positions. | Explain the relationship between a PivotItem’s Position property and its absolute index in the pivot cache for Aspose.Cells.
+// Title: Aspose.Cells C# – Log Absolute Positions of All PivotItems per PivotField (Debug)
+// Description: Creates a workbook, adds sample data, builds a pivot table, refreshes it, then iterates through Row, Column, and Page fields. For each PivotField it initializes the items, enumerates every PivotItem, and writes the item name with its absolute Position to the console for debugging, finally saving the workbook.
+// Keywords: Aspose.Cells | C# | .NET | pivot table debugging | list pivot items | pivot item position | InitPivotItems | enumerate PivotFields | absolute position | Aspose.Cells API
+// Common Searches: Aspose.Cells enumerate pivot items C# | Get pivot item position Aspose.Cells | Debug pivot table fields Aspose.Cells .NET | How to list PivotFields and PivotItems in Aspose.Cells | Retrieve absolute position of pivot items
+// Developer Intent: The developer needs to walk through every PivotField in a pivot table, list all associated PivotItems, and output each item's absolute position for troubleshooting or validation.
+// Use Cases: Validate that pivot items are generated correctly after a data refresh. | Detect missing or out‑of‑order items by comparing logged positions with expected layout. | Generate diagnostic logs for automated testing of pivot table structures.
+// AI Prompts: Write C# code using Aspose.Cells to iterate all PivotFields and log each PivotItem's name and Position to a file. | Explain the role of InitPivotItems() in exposing PivotItems and when it should be invoked. | Show how to export pivot item names and their absolute positions to a CSV file with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace PivotTableDemo
+namespace AsposeCellsPivotDebug
 {
-    // This Aspose.Cells for .NET example creates a workbook, builds a simple pivot table, refreshes and calculates it, then iterates through Row, Column, Page, and Data fields. For each field it safely logs the field name and, when available, every PivotItem’s name together with its absolute Position index – a handy debugging technique before saving the workbook.
+    // Creates a workbook, adds sample data, builds a pivot table, refreshes it, then iterates through Row, Column, and Page fields. For each PivotField it initializes the items, enumerates every PivotItem, and writes the item name with its absolute Position to the console for debugging, finally saving the workbook.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the pivot table
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Product");
+            sheet.Cells["C1"].PutValue("Sales");
+
+            sheet.Cells["A2"].PutValue("Fruit");
+            sheet.Cells["B2"].PutValue("Apple");
+            sheet.Cells["C2"].PutValue(120);
+
+            sheet.Cells["A3"].PutValue("Fruit");
+            sheet.Cells["B3"].PutValue("Banana");
+            sheet.Cells["C3"].PutValue(80);
+
+            sheet.Cells["A4"].PutValue("Vegetable");
+            sheet.Cells["B4"].PutValue("Carrot");
+            sheet.Cells["C4"].PutValue(50);
+
+            // Add a pivot table based on the data range
+            int ptIndex = sheet.PivotTables.Add("A1:C4", "E3", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[ptIndex];
+
+            // Add fields to the pivot table
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+
+            // Refresh and calculate to ensure items are generated
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // Helper method to process a collection of PivotFields
+            void ProcessFields(PivotFieldCollection fields, string areaName)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                foreach (PivotField field in fields)
+                {
+                    Console.WriteLine($"--- {areaName} Field: {field.Name} ---");
+                    // Ensure pivot items are initialized
+                    field.InitPivotItems();
 
-                // Populate sample data for the pivot table
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["B3"].PutValue(20);
-                worksheet.Cells["A4"].PutValue("A");
-                worksheet.Cells["B4"].PutValue(30);
-
-                // Add a pivot table based on the data range
-                int pivotIndex = worksheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
-                PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-
-                // Add fields to the pivot table
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
-
-                // Refresh and calculate the pivot table to ensure items are generated
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Log items of each field type, guarding against null PivotItems
-                foreach (PivotField field in pivotTable.RowFields)
-                    LogPivotFieldItems(field);
-
-                foreach (PivotField field in pivotTable.ColumnFields)
-                    LogPivotFieldItems(field);
-
-                foreach (PivotField field in pivotTable.PageFields)
-                    LogPivotFieldItems(field);
-
-                foreach (PivotField field in pivotTable.DataFields)
-                    LogPivotFieldItems(field);
-
-                // Save the workbook
-                workbook.Save("PivotDebugOutput.xlsx");
+                    foreach (PivotItem item in field.PivotItems)
+                    {
+                        // Log the item name and its absolute position
+                        Console.WriteLine($"Item Name: {item.Name}, Position: {item.Position}");
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
 
-        // Helper method to log each PivotItem's name and absolute position
-        static void LogPivotFieldItems(PivotField field)
-        {
-            if (field == null) return;
+            // Iterate over RowFields, ColumnFields, PageFields (if any)
+            ProcessFields(pivotTable.RowFields, "Row");
+            ProcessFields(pivotTable.ColumnFields, "Column");
+            ProcessFields(pivotTable.PageFields, "Page");
 
-            Console.WriteLine($"PivotField: {field.Name}");
-
-            // Some field types (e.g., Data fields) may not have PivotItems
-            if (field.PivotItems == null) return;
-
-            foreach (PivotItem item in field.PivotItems)
-            {
-                // Position provides the absolute index of the item among all items
-                Console.WriteLine($"  Item Name: {item.Name}, Absolute Position: {item.Position}");
-            }
+            // Save the workbook (debug workbook can be inspected if needed)
+            workbook.Save("PivotDebugOutput.xlsx");
         }
     }
 }

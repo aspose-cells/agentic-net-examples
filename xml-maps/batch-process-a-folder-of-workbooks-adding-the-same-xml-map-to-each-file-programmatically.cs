@@ -1,46 +1,73 @@
+// Title: C# – Batch Add a Shared XML Map to Multiple Excel Workbooks with Aspose.Cells
+// Description: A console utility that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, inserts the same XSD schema as an XML map using Worksheets.XmlMaps.Add, assigns a friendly name, overwrites the original file, and logs successes or errors.
+// Keywords: Aspose.Cells | C# | .NET | XML map | XmlMaps.Add | batch process Excel | add XSD to workbook | automate Excel XML schema | folder scanning | Excel automation
+// Common Searches: batch add xml map to excel workbooks c# | aspacells add same xml schema to multiple files | how to apply an XSD as an XML map to all workbooks in a folder | c# program to insert xml map into many Excel files | aspocells XmlMaps.Add example for batch processing
+// Developer Intent: Insert an identical XML map into every workbook within a specified directory.
+// Use Cases: Standardize a set of reporting templates with a common XML schema before data export. | Prepare bulk workbook files for downstream XML import pipelines. | Integrate XML map insertion into CI/CD workflows that generate Excel reports.
+// AI Prompts: Write C# code that reads an XSD file and adds it as an XML map to all .xlsx files in a directory using Aspose.Cells. | Modify the batch script to recurse into subfolders and log the processing results to a CSV file. | Explain how to programmatically verify that the XML map was added to each workbook after the batch run.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
-class BatchXmlMapAdder
+namespace BatchXmlMapAdder
 {
-    static void Main()
+    // A console utility that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, inserts the same XSD schema as an XML map using Worksheets.XmlMaps.Add, assigns a friendly name, overwrites the original file, and logs successes or errors.
+    class Program
     {
-        // Folder containing the source workbooks
-        string inputFolder = @"C:\InputWorkbooks";
+        // Path to the folder containing the Excel workbooks
+        private const string InputFolder = @"C:\Workbooks";
 
-        // Folder where the modified workbooks will be saved
-        string outputFolder = @"C:\OutputWorkbooks";
+        // XML schema (XSD) content or file path to be added as a map.
+        // Here we use a string containing the schema; you can also provide a file path.
+        private const string XmlSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+                                            <xs:element name='Root'>
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name='Item' type='xs:string'/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                          </xs:schema>";
 
-        // Path to the XML schema (XSD) that defines the XML map to be added
-        string xmlMapPath = @"C:\Schema\MyMap.xsd";
-
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Retrieve all Excel files (you can adjust the pattern if needed)
-        string[] workbookFiles = Directory.GetFiles(inputFolder, "*.xlsx");
-
-        foreach (string filePath in workbookFiles)
+        static void Main()
         {
-            // Load the workbook from file
-            Workbook workbook = new Workbook(filePath);
+            // Validate that the input folder exists
+            if (!Directory.Exists(InputFolder))
+            {
+                Console.WriteLine($"Folder not found: {InputFolder}");
+                return;
+            }
 
-            // Add the XML map to the workbook's XmlMaps collection
-            int mapIndex = workbook.Worksheets.XmlMaps.Add(xmlMapPath);
+            // Get all Excel files in the folder (you can adjust the search pattern as needed)
+            string[] excelFiles = Directory.GetFiles(InputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
 
-            // Optionally set a friendly name for the map
-            XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-            xmlMap.Name = Path.GetFileNameWithoutExtension(xmlMapPath) + "_Map";
+            foreach (string filePath in excelFiles)
+            {
+                try
+                {
+                    // Load the workbook from the file
+                    Workbook workbook = new Workbook(filePath);
 
-            // Save the modified workbook to the output folder (overwrites if exists)
-            string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-            workbook.Save(outputPath);
+                    // Add the XML map to the workbook (returns the index of the new map)
+                    int mapIndex = workbook.Worksheets.XmlMaps.Add(XmlSchema);
 
-            // Release resources
-            workbook.Dispose();
+                    // Optional: set a friendly name for the map
+                    XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
+                    xmlMap.Name = "SharedXmlMap";
+
+                    // Save the workbook, overwriting the original file
+                    workbook.Save(filePath);
+
+                    Console.WriteLine($"Processed: {Path.GetFileName(filePath)} (Map added at index {mapIndex})");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{Path.GetFileName(filePath)}': {ex.Message}");
+                }
+            }
+
+            Console.WriteLine("Batch processing completed.");
         }
-
-        Console.WriteLine("Batch processing of workbooks completed successfully.");
     }
 }

@@ -1,11 +1,11 @@
----
+﻿---
 name: Aspose.Cells VBA and Macro Project Agent
 category: macro-project
 product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Inspect, create, modify, copy, protect, and sign Excel VBA projects in C#
 primary_apis: [VbaProject, VbaModule, VbaModuleCollection, VbaProjectReferenceCollection]
 related_categories: [../encryption-and-protection/, ../open-workbook/, ../save-workbook/]
@@ -82,3 +82,4 @@ Target one direct intent such as "read VBA modules from XLSM in C#," "copy Excel
 ## Definition of done
 
 The example is done when active-content risk, macro format, operation, environment dependencies, and post-save project/signature state are explicit and verified.
+

@@ -1,18 +1,18 @@
-// Title: Hide Excel error values on print with Aspose.Cells for .NET (PrintErrorsBlank)
-// Description: Demonstrates how to set the PageSetup.PrintErrors property to PrintErrorsType.PrintErrorsBlank so that error cells (e.g., #DIV/0!, #N/A) appear blank when a worksheet is printed, then saves the workbook as PrintErrorsBlank.xlsx.
-// Keywords: Aspose.Cells PrintErrorsBlank | PrintErrors property .NET | hide Excel errors on print | suppress #DIV/0! in printed workbook | Aspose.Cells PageSetup | C# Excel printing errors | Aspose.Cells documentation example
-// Common Searches: Aspose.Cells hide error values when printing | Set PrintErrors to blank in C# Aspose.Cells | PrintErrorsBlank example Aspose.Cells .NET | Remove #N/A from printed Excel using Aspose | How to suppress Excel error cells on print with Aspose
-// Developer Intent: Configure a worksheet’s PageSetup.PrintErrors to PrintErrorsBlank so that any error values are rendered as empty cells during printing.
-// Use Cases: Create printable financial statements that hide calculation errors. | Generate client‑facing invoices where error symbols must not appear on paper. | Prepare archived reports that require a clean printout without Excel error markers.
-// AI Prompts: Provide C# code to apply PrintErrorsBlank to all worksheets in an Aspose.Cells workbook and save the file. | Explain the effect of PrintErrorsType.PrintErrorsBlank on printed Excel output and how to switch back to showing errors. | Show how to hide error values only on selected sheets while leaving other sheets unchanged using Aspose.Cells.
+// Title: Hide Excel Print Errors with Aspose.Cells for .NET (PrintErrorsBlank)
+// Description: Shows how to suppress error values such as #DIV/0! or #N/A in printed output by assigning Worksheet.PageSetup.PrintErrors = PrintErrorsType.PrintErrorsBlank, then saving the workbook.
+// Keywords: Aspose.Cells PrintErrorsBlank | C# hide print errors | Excel suppress #DIV/0! printing | PageSetup PrintErrors property | blank cells on print
+// Common Searches: Aspose.Cells hide error values when printing | Set PrintErrors to blank in C# Aspose.Cells | Suppress #N/A in printed Excel using Aspose.Cells | PageSetup PrintErrors example .NET | Print Excel without error messages Aspose
+// Developer Intent: The developer wants to prevent error values from appearing in the printed or PDF version of an Excel worksheet.
+// Use Cases: Financial reports that may contain division‑by‑zero errors but must look clean on paper. | Printable invoices where formula errors should be shown as empty cells in the hard‑copy output. | Batch‑printing workbooks where any error indicators need to be omitted from the final print.
+// AI Prompts: Write C# code that applies PrintErrorsType.PrintErrorsBlank to every worksheet in an Aspose.Cells workbook before exporting to PDF. | Explain how the PageSetup.PrintErrors property influences PDF and printer output and how to restore the default setting after printing. | Create a method that scans a worksheet for error cells and sets PrintErrors to PrintErrorsBlank only when errors are detected.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to set the PageSetup.PrintErrors property to PrintErrorsType.PrintErrorsBlank so that error cells (e.g., #DIV/0!, #N/A) appear blank when a worksheet is printed, then saves the workbook as PrintErrorsBlank.xlsx.
-class Program
+// Shows how to suppress error values such as #DIV/0! or #N/A in printed output by assigning Worksheet.PageSetup.PrintErrors = PrintErrorsType.PrintErrorsBlank, then saving the workbook.
+public class SuppressPrintErrorsDemo
 {
-    static void Main()
+    public static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
@@ -20,10 +20,10 @@ class Program
         // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Suppress error values during printing by displaying them as blank
+        // Suppress error values during printing by setting PrintErrors to blank
         sheet.PageSetup.PrintErrors = PrintErrorsType.PrintErrorsBlank;
 
-        // Save the workbook to a file
-        workbook.Save("PrintErrorsBlank.xlsx");
+        // Save the workbook
+        workbook.Save("SuppressPrintErrors.xlsx");
     }
 }

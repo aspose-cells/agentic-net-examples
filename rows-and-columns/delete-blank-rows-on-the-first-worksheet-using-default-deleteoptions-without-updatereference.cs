@@ -1,17 +1,17 @@
-// Title: C# – Delete blank rows from the first worksheet with Aspose.Cells DeleteBlankRows (default UpdateReference=false)
-// Description: Shows how to create a workbook, insert sample data with intentional empty rows, invoke Cells.DeleteBlankRows() using the default DeleteOptions (UpdateReference = false) to purge all blank rows, and save the file as DeletedBlankRows.xlsx. Compatible with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | DeleteBlankRows | blank rows | remove empty rows | UpdateReference false | default DeleteOptions | worksheet rows | Excel automation
-// Common Searches: Aspose.Cells delete blank rows C# example | DeleteBlankRows default behavior Aspose.Cells | Remove empty rows from first worksheet without updating references | How to use DeleteBlankRows in Aspose.Cells for .NET | C# code to delete blank rows in Excel workbook
-// Developer Intent: Remove every empty row from the first worksheet while leaving existing cell references unchanged.
-// Use Cases: Clean imported CSV or data‑feed files by stripping blank rows before analysis. | Prepare a worksheet for PDF or Excel export where empty rows affect pagination. | Normalize report sheets after programmatic data insertion to ensure contiguous rows for charting or pivot tables.
-// AI Prompts: Generate C# code that deletes blank rows on the first worksheet using Aspose.Cells with default DeleteOptions and keeps formulas intact. | Explain the effect of UpdateReference = false when calling Cells.DeleteBlankRows in Aspose.Cells and provide a usage snippet. | Create a step‑by‑step tutorial for removing empty rows from a workbook while preserving cell references, using Aspose.Cells for .NET.
+// Title: Delete Blank Rows in First Worksheet with Aspose.Cells C# (default DeleteOptions)
+// Description: Creates a workbook, adds data with intentional empty rows, then calls Cells.DeleteBlankRows() using the default DeleteOptions (UpdateReference = false) to remove only the blank rows and saves the file as DeletedBlankRows.xlsx.
+// Keywords: Aspose.Cells | DeleteBlankRows | C# | .NET | blank rows removal | default DeleteOptions | UpdateReference false | worksheet cleanup
+// Common Searches: Aspose.Cells delete blank rows C# | DeleteBlankRows default options | Remove empty rows without updating references Aspose.Cells | How to clean up worksheet rows in .NET
+// Developer Intent: Remove all empty rows from the first worksheet while leaving existing cell references unchanged.
+// Use Cases: Clean imported spreadsheets that contain sporadic empty rows before analysis. | Prepare data for charts or pivot tables where blank rows cause gaps. | Automate workbook sanitization in ETL pipelines to ensure consistent row structures.
+// AI Prompts: Generate C# code using Aspose.Cells to delete blank rows on the first worksheet without altering cell references. | Show how to verify that only empty rows were removed after calling DeleteBlankRows. | Explain the effect of DeleteOptions.UpdateReference when deleting blank rows in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace DeleteBlankRowsDemo
+namespace DeleteBlankRowsExample
 {
-    // Shows how to create a workbook, insert sample data with intentional empty rows, invoke Cells.DeleteBlankRows() using the default DeleteOptions (UpdateReference = false) to purge all blank rows, and save the file as DeletedBlankRows.xlsx. Compatible with Aspose.Cells for .NET.
+    // Creates a workbook, adds data with intentional empty rows, then calls Cells.DeleteBlankRows() using the default DeleteOptions (UpdateReference = false) to remove only the blank rows and saves the file as DeletedBlankRows.xlsx.
     class Program
     {
         static void Main()

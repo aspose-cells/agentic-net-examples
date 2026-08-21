@@ -1,31 +1,29 @@
-// Title: Freeze Header Row in Excel with Aspose.Cells for .NET (C#) and Save as New XLSX
-// Description: Loads an existing workbook (input.xlsx), accesses the first worksheet, applies FreezePanes at cell A2 to lock the top row, and saves the result to a new file (output.xlsx) using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells FreezePanes C# | freeze top row Excel .NET | lock header row Aspose.Cells | save workbook as new XLSX | Aspose.Cells worksheet freeze example
-// Common Searches: how to freeze the first row in Excel with Aspose.Cells C# | Aspose.Cells FreezePanes example for header row | C# code to freeze top row and save new file | Aspose.Cells freeze panes and export workbook
-// Developer Intent: The developer needs to programmatically freeze the first (header) row of a worksheet and write the modified workbook to a separate XLSX file.
-// Use Cases: Create reports where column titles stay visible while scrolling through large data sets. | Distribute Excel templates that keep header information fixed for collaborators. | Export data extracts with frozen headers to improve usability for downstream analysts.
-// AI Prompts: Generate C# code to freeze multiple rows and columns with Aspose.Cells FreezePanes. | Show how to unfreeze panes and reset the view in an Aspose.Cells workbook. | Explain how to determine the freeze range dynamically based on variable header rows using Aspose.Cells.
+// Title: Freeze Header Row and Save as New XLSX with Aspose.Cells for .NET (C#)
+// Description: Load an existing workbook, freeze the first row of the first worksheet using FreezePanes, and save the result to a new XLSX file.
+// Keywords: Aspose.Cells FreezePanes C# | freeze header row Excel .NET | save workbook new file Aspose | freeze first row Aspose.Cells | C# Excel freeze panes
+// Common Searches: Aspose.Cells freeze top row C# | how to freeze header row in Excel using Aspose | save workbook after FreezePanes Aspose.Cells | C# code to freeze first row and export XLSX | Aspose.Cells FreezePanes example
+// Developer Intent: Apply a row freeze to the header row of the first worksheet and write the modified workbook to a new XLSX file.
+// Use Cases: Create scroll‑friendly reports where column headings stay visible. | Prepare downloadable Excel exports for web apps with locked header rows. | Build reusable templates that automatically freeze the first row before distribution.
+// AI Prompts: Generate C# code to freeze the first two rows of a worksheet with Aspose.Cells. | Show how to freeze both the first row and first column, then save the workbook as XLSX. | Explain how to remove frozen panes from a workbook using Aspose.Cells for .NET.
 
-using System;
 using Aspose.Cells;
 
-// Loads an existing workbook (input.xlsx), accesses the first worksheet, applies FreezePanes at cell A2 to lock the top row, and saves the result to a new file (output.xlsx) using Aspose.Cells for .NET.
+// Load an existing workbook, freeze the first row of the first worksheet using FreezePanes, and save the result to a new XLSX file.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook from a file
+        // Load the existing workbook
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet (index 0)
+        // Get the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Freeze the first row (header row)
-        // FreezePanes(cellName, freezedRows, freezedColumns)
-        // "A2" means the freeze line is just below the first row.
+        // Freeze the first row (header) by splitting at cell A2
+        // This freezes 1 row and 0 columns
         worksheet.FreezePanes("A2", 1, 0);
 
-        // Save the modified workbook to a new XLSX file
+        // Save the modified workbook to a new file
         workbook.Save("output.xlsx");
     }
 }

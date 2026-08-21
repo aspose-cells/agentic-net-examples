@@ -1,18 +1,18 @@
 // Title: Color Worksheet Tab and Freeze First Column with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to set a custom tab color for a worksheet and freeze column A using Aspose.Cells in C#. The example creates a workbook, applies a LightGreen tab color, freezes the first column with FreezePanes, and saves the file as TabColorAndFreezeFirstColumn.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | worksheet tab color | set TabColor | FreezePanes | freeze first column | Excel workbook example | change Excel tab color programmatically | freeze panes Aspose.Cells
-// Common Searches: Aspose.Cells set worksheet tab color C# | How to freeze column A with Aspose.Cells | Freeze first column and change tab color in Excel using .NET | Aspose.Cells FreezePanes example | C# code to color Excel sheet tab and freeze panes
-// Developer Intent: Apply a custom color to a worksheet tab and lock the first column so the colored tab stays identifiable while scrolling.
-// Use Cases: Mark a summary or status sheet with a colored tab and keep identifier column visible during horizontal scrolling. | Create a multi‑sheet report where each sheet’s tab color reflects its category and the first column remains fixed for easy navigation. | Design a template that highlights key sheets by tab color while freezing the ID column for data entry consistency.
-// AI Prompts: Generate C# code that sets a custom RGB tab color for multiple worksheets and freezes the first two columns using Aspose.Cells. | Show how to apply different tab colors based on worksheet names and freeze column A on each sheet with Aspose.Cells for .NET.
+// Description: Shows how to assign a custom color to a worksheet tab and freeze column A using Aspose.Cells for .NET, then save the file as TabColorAndFreezeFirstColumn.xlsx.
+// Keywords: Aspose.Cells | C# | worksheet tab color | freeze first column | FreezePanes | Excel tab color .NET | column A freeze | set tab color programmatically | Excel UI customization
+// Common Searches: Aspose.Cells change worksheet tab color C# | Freeze first column Aspose.Cells .NET | How to lock column A with FreezePanes in Excel using Aspose | Set tab color programmatically with Aspose.Cells | C# example for coloring Excel sheet tab and freezing a column
+// Developer Intent: Apply a distinct tab color to a worksheet and keep column A fixed during scrolling.
+// Use Cases: Mark a dashboard sheet with a bright tab and freeze the identifier column for quick reference while scrolling through data. | Create department-specific worksheets where each tab has a unique color and the first column remains visible for row labels. | Generate export files that combine visual navigation (colored tabs) with static key columns to improve user experience in large reports.
+// AI Prompts: Provide a C# snippet that sets a worksheet tab to a custom RGB value and freezes the first two columns using Aspose.Cells. | Explain how to conditionally change the tab color based on sheet content and apply FreezePanes to keep the header column static. | Show examples of FreezePanes with different cell references to lock rows, columns, or both in Aspose.Cells for .NET.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsTabColorFreeze
+namespace AsposeCellsDemo
 {
-    // Demonstrates how to set a custom tab color for a worksheet and freeze column A using Aspose.Cells in C#. The example creates a workbook, applies a LightGreen tab color, freezes the first column with FreezePanes, and saves the file as TabColorAndFreezeFirstColumn.xlsx.
+    // Shows how to assign a custom color to a worksheet tab and freeze column A using Aspose.Cells for .NET, then save the file as TabColorAndFreezeFirstColumn.xlsx.
     class Program
     {
         static void Main()
@@ -21,17 +21,18 @@ namespace AsposeCellsTabColorFreeze
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Set the worksheet tab color (e.g., LightGreen)
-            sheet.TabColor = Color.LightGreen;
+            // Set the worksheet tab color (e.g., blue) to make it easily identifiable
+            worksheet.TabColor = Color.Blue;
 
-            // Freeze the first column (column A)
-            // Freeze at column index 1 (B) with 0 frozen rows and 1 frozen column
-            sheet.FreezePanes(0, 1, 0, 1);
+            // Freeze the first column.
+            // FreezePanes with cell "B1" freezes columns to the left of column B (i.e., column A)
+            // No rows are frozen (0), and 1 column is frozen.
+            worksheet.FreezePanes("B1", 0, 1);
 
             // Save the workbook
-            workbook.Save("TabColorAndFreezeFirstColumn.xlsx", SaveFormat.Xlsx);
+            workbook.Save("TabColorAndFreezeFirstColumn.xlsx");
         }
     }
 }

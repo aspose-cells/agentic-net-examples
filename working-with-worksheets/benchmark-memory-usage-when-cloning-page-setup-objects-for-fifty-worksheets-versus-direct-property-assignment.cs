@@ -1,10 +1,10 @@
-// Title: Aspose.Cells .NET – Memory Benchmark: PageSetup.Copy vs Manual Property Assignment for 50 Worksheets
-// Description: A C# console program that creates a source worksheet with specific PageSetup settings, then measures and compares the memory consumption of two approaches for applying those settings to 50 worksheets: using PageSetup.Copy with a CopyOptions object versus assigning each property individually. The benchmark records memory before and after each method, saves the workbooks, and prints the memory usage and difference.
-// Keywords: Aspose.Cells | .NET | C# | PageSetup.Copy | memory benchmark | worksheet cloning | property assignment | performance testing | Excel automation | GC.GetTotalMemory | workbook generation
-// Common Searches: Aspose.Cells memory benchmark PageSetup.Copy | compare memory usage of PageSetup cloning vs manual settings | C# measure memory for worksheet page setup cloning | performance test Aspose.Cells page setup for many sheets | how much memory does PageSetup.Copy allocate
-// Developer Intent: Identify which technique—PageSetup.Copy or explicit property assignment—consumes less memory when applied to fifty worksheets in an Aspose.Cells .NET workbook.
-// Use Cases: Run the benchmark to choose the most memory‑efficient method for applying page setup across large workbooks. | Integrate the test into CI pipelines to monitor memory impact of workbook generation code. | Guide architecture decisions for memory‑constrained applications that generate Excel files with Aspose.Cells.
-// AI Prompts: Explain the internal memory allocation differences between PageSetup.Copy and manual property setting in Aspose.Cells. | Suggest code enhancements to capture CPU time, run multiple iterations, and compute statistical confidence for the benchmark. | Create a similar memory‑usage benchmark for cloning worksheet styles, cells, or charts using Aspose.Cells for .NET.
+// Title: Aspose.Cells .NET: Memory Benchmark – PageSetup.Clone vs Direct Property Assignment for 50 Worksheets
+// Description: A C# console app that creates a workbook, configures a sample PageSetup, and measures managed heap memory when the same settings are applied to 49 additional worksheets using either PageSetup.Copy (clone) or manual property assignment. The program reports the memory delta for each approach, helping developers choose the most efficient method.
+// Keywords: Aspose.Cells | C# | .NET | PageSetup | memory benchmark | clone vs direct assignment | Copy method performance | worksheet page settings | memory usage measurement | Excel report optimization
+// Common Searches: Aspose.Cells PageSetup memory usage benchmark | Clone PageSetup vs manual property setting performance | How to measure memory impact of PageSetup.Copy in .NET | Best way to apply identical page settings to many worksheets | Memory efficient worksheet page setup Aspose.Cells
+// Developer Intent: Identify which technique—PageSetup.Copy (clone) or explicit property assignment—consumes less memory when applied to 50 worksheets in Aspose.Cells for .NET.
+// Use Cases: Select the most memory‑efficient strategy for applying identical page layouts in large, server‑side workbook generation. | Optimize Excel reporting pipelines by basing implementation on concrete memory‑consumption data. | Validate that cloning PageSetup does not cause unexpected memory growth in high‑volume spreadsheet processing.
+// AI Prompts: Generate a C# routine that runs the benchmark repeatedly and returns average memory usage for both cloning and direct assignment methods. | Suggest refactorings to lower memory consumption when copying PageSetup across many worksheets in Aspose.Cells. | Create a unit test that asserts the clone approach uses no more than a specified percentage of additional memory compared to manual property assignment for a given worksheet count.
 
 using System;
 using System.Diagnostics;
@@ -12,84 +12,124 @@ using Aspose.Cells;
 
 namespace AsposeCellsMemoryBenchmark
 {
-    // A C# console program that creates a source worksheet with specific PageSetup settings, then measures and compares the memory consumption of two approaches for applying those settings to 50 worksheets: using PageSetup.Copy with a CopyOptions object versus assigning each property individually. The benchmark records memory before and after each method, saves the workbooks, and prints the memory usage and difference.
+    // A C# console app that creates a workbook, configures a sample PageSetup, and measures managed heap memory when the same settings are applied to 49 additional worksheets using either PageSetup.Copy (clone) or manual property assignment. The program reports the memory delta for each approach, helping developers choose the most efficient method.
     class Program
     {
+        // Configure a sample PageSetup with several properties
+        static void ConfigurePageSetup(PageSetup ps)
+        {
+            ps.PaperSize = PaperSizeType.PaperA4;
+            ps.Orientation = PageOrientationType.Landscape;
+            ps.FitToPagesWide = 1;
+            ps.FitToPagesTall = 0; // let height adjust automatically
+            ps.PrintArea = "A1:D50";
+            ps.CenterHorizontally = true;
+            ps.CenterVertically = true;
+        }
+
+        // Clone PageSetup using the Copy method
+        static long BenchmarkClone()
+        {
+            try
+            {
+                // Force garbage collection before measurement
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+
+                long beforeMemory = GC.GetTotalMemory(true);
+
+                // Create workbook and source worksheet
+                Workbook wb = new Workbook();
+                Worksheet sourceSheet = wb.Worksheets[0];
+                ConfigurePageSetup(sourceSheet.PageSetup);
+                PageSetup sourceSetup = sourceSheet.PageSetup;
+
+                // Add 49 more worksheets and clone the PageSetup
+                for (int i = 1; i < 50; i++)
+                {
+                    int newIndex = wb.Worksheets.Add();
+                    Worksheet ws = wb.Worksheets[newIndex];
+                    ws.PageSetup.Copy(sourceSetup, new CopyOptions());
+                }
+
+                // Optional: save to ensure workbook is fully built
+                wb.Save("CloneBenchmark.xlsx");
+
+                // Measure memory after operation
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+
+                long afterMemory = GC.GetTotalMemory(true);
+                return afterMemory - beforeMemory;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in BenchmarkClone: {ex.Message}");
+                return -1;
+            }
+        }
+
+        // Directly assign each property without using Copy
+        static long BenchmarkDirect()
+        {
+            try
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+
+                long beforeMemory = GC.GetTotalMemory(true);
+
+                Workbook wb = new Workbook();
+
+                // First worksheet: set properties directly
+                Worksheet first = wb.Worksheets[0];
+                ConfigurePageSetup(first.PageSetup);
+
+                // Remaining worksheets: assign properties one by one
+                for (int i = 1; i < 50; i++)
+                {
+                    int newIndex = wb.Worksheets.Add();
+                    Worksheet ws = wb.Worksheets[newIndex];
+                    PageSetup ps = ws.PageSetup;
+                    ps.PaperSize = PaperSizeType.PaperA4;
+                    ps.Orientation = PageOrientationType.Landscape;
+                    ps.FitToPagesWide = 1;
+                    ps.FitToPagesTall = 0;
+                    ps.PrintArea = "A1:D50";
+                    ps.CenterHorizontally = true;
+                    ps.CenterVertically = true;
+                }
+
+                wb.Save("DirectBenchmark.xlsx");
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+
+                long afterMemory = GC.GetTotalMemory(true);
+                return afterMemory - beforeMemory;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in BenchmarkDirect: {ex.Message}");
+                return -1;
+            }
+        }
+
         static void Main()
         {
-            // Prepare a source worksheet with specific page setup settings
-            Workbook sourceWb = new Workbook();
-            Worksheet sourceSheet = sourceWb.Worksheets[0];
-            sourceSheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
-            sourceSheet.PageSetup.Orientation = PageOrientationType.Portrait;
-            sourceSheet.PageSetup.FitToPagesWide = 1;
-            sourceSheet.PageSetup.FitToPagesTall = 0;
-            sourceSheet.PageSetup.PrintArea = "A1:D50";
+            // Benchmark cloning approach
+            long cloneMemory = BenchmarkClone();
+            if (cloneMemory >= 0)
+                Console.WriteLine($"Memory used when cloning PageSetup for 50 worksheets: {cloneMemory / 1024} KB");
 
-            // ---------- Clone PageSetup using Copy ----------
-            // Force garbage collection before measurement
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            long beforeClone = GC.GetTotalMemory(true);
-
-            // Create a workbook and add 50 worksheets
-            Workbook cloneWb = new Workbook();
-            // Ensure we have at least 50 sheets (the first one already exists)
-            for (int i = 1; i < 50; i++)
-            {
-                cloneWb.Worksheets.Add();
-            }
-
-            // Clone the page setup from the source sheet to each worksheet
-            for (int i = 0; i < 50; i++)
-            {
-                Worksheet ws = cloneWb.Worksheets[i];
-                ws.PageSetup.Copy(sourceSheet.PageSetup, new CopyOptions());
-            }
-
-            // Measure memory after cloning
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            long afterClone = GC.GetTotalMemory(true);
-            long cloneMemoryUsed = afterClone - beforeClone;
-
-            // Save the workbook (uses provided save rule)
-            cloneWb.Save("ClonePageSetup.xlsx");
-
-            // ---------- Direct property assignment ----------
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            long beforeDirect = GC.GetTotalMemory(true);
-
-            Workbook directWb = new Workbook();
-            for (int i = 1; i < 50; i++)
-            {
-                directWb.Worksheets.Add();
-            }
-
-            // Manually assign the same properties to each worksheet
-            for (int i = 0; i < 50; i++)
-            {
-                PageSetup ps = directWb.Worksheets[i].PageSetup;
-                ps.PaperSize = sourceSheet.PageSetup.PaperSize;
-                ps.Orientation = sourceSheet.PageSetup.Orientation;
-                ps.FitToPagesWide = sourceSheet.PageSetup.FitToPagesWide;
-                ps.FitToPagesTall = sourceSheet.PageSetup.FitToPagesTall;
-                ps.PrintArea = sourceSheet.PageSetup.PrintArea;
-            }
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            long afterDirect = GC.GetTotalMemory(true);
-            long directMemoryUsed = afterDirect - beforeDirect;
-
-            // Save the workbook (uses provided save rule)
-            directWb.Save("DirectPageSetup.xlsx");
-
-            // Output the memory usage comparison
-            Console.WriteLine("Memory used when cloning PageSetup (Copy): {0} bytes", cloneMemoryUsed);
-            Console.WriteLine("Memory used when assigning properties directly: {0} bytes", directMemoryUsed);
-            Console.WriteLine("Difference: {0} bytes", directMemoryUsed - cloneMemoryUsed);
+            // Benchmark direct assignment approach
+            long directMemory = BenchmarkDirect();
+            if (directMemory >= 0)
+                Console.WriteLine($"Memory used when assigning PageSetup properties directly for 50 worksheets: {directMemory / 1024} KB");
         }
     }
 }

@@ -1,106 +1,81 @@
-// Title: Export Excel Named Ranges and Tables to a Single HTML Document using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, extracts all defined named ranges and tables with GetNamedRangesAndTables, converts each range to HTML using HtmlSaveOptions (ExportNamedRangeAnchors = true), and merges the results into one HTML file that shows the range name followed by its table representation.
-// Keywords: Aspose.Cells | C# export named ranges to HTML | GetNamedRangesAndTables | ExportNamedRangeAnchors | Excel to HTML conversion | named range documentation | Aspose.Range ToHtml | C# Excel HTML example | Aspose.Cells .NET tutorial | export named ranges .NET
-// Common Searches: How to export all named ranges from an Excel workbook to HTML with Aspose.Cells | C# code to convert Excel named ranges and tables into HTML tables | Aspose.Cells example for generating HTML documentation of named ranges | Export named ranges to a single HTML file using .NET | Aspose.Cells GetNamedRangesAndTables HTML output
-// Developer Intent: Create a single HTML file that lists every named range and table from an Excel workbook as separate tables for documentation or review.
-// Use Cases: Provide auditors with a searchable HTML reference of all named ranges in a financial model. | Automate documentation of data‑validation ranges before publishing a shared spreadsheet. | Include an HTML snapshot of workbook named ranges in version‑control change logs.
-// AI Prompts: Write a C# method that loads an Excel file with Aspose.Cells, iterates over all named ranges and tables, converts each to HTML with ExportNamedRangeAnchors enabled, and saves a combined HTML document. | Explain how the ExportNamedRangeAnchors option influences the HTML produced by Aspose.Range.ToHtml. | Suggest improvements for error handling, logging, and output‑path validation in the ExportNamedRangesToHtml example.
+// Title: Export Named Ranges and Tables to Separate HTML Files with Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook, retrieves all defined named ranges and tables using GetNamedRangesAndTables(), converts each range to HTML with HtmlSaveOptions, sanitizes the range name for a safe file name, and writes the HTML output to individual .html files. Includes basic error handling and console feedback.
+// Keywords: Aspose.Cells export named range HTML | C# Aspose.Cells GetNamedRangesAndTables | range.ToHtml example | save Excel named ranges as HTML | Aspose.Cells HTML documentation | sanitize file names C#
+// Common Searches: export named ranges to html aspnet cells | c# convert excel named range to html file | aspocells getnamedrangesandtables usage | how to save each excel table as html c# | safe filename generation for exported ranges
+// Developer Intent: Create individual HTML documents for every named range and table in a workbook to support documentation or web publishing.
+// Use Cases: Produce HTML reference sheets for all data model ranges. | Generate web‑ready snapshots of tables for dashboards. | Track changes to range definitions via version‑controlled HTML files.
+// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, extracts all named ranges and tables, and saves each as an HTML file with a sanitized filename. | Provide a method that takes a Workbook object and returns a dictionary mapping each range name to its HTML string using Aspose.Cells. | Explain how to configure HtmlSaveOptions to include gridlines, column headers, and custom CSS when exporting named ranges to HTML.
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsNamedRangesToHtml
 {
-    // Alias to avoid conflict with System.Range
-    using AsposeRange = Aspose.Cells.Range;
-
-    // Loads an Excel workbook, extracts all defined named ranges and tables with GetNamedRangesAndTables, converts each range to HTML using HtmlSaveOptions (ExportNamedRangeAnchors = true), and merges the results into one HTML file that shows the range name followed by its table representation.
-    public class ExportNamedRangesToHtml
+    // Loads an Excel workbook, retrieves all defined named ranges and tables using GetNamedRangesAndTables(), converts each range to HTML with HtmlSaveOptions, sanitizes the range name for a safe file name, and writes the HTML output to individual .html files. Includes basic error handling and console feedback.
+    class Program
     {
-        public static void Run(string inputFilePath, string outputHtmlPath)
+        static void Main()
         {
+            const string inputPath = "InputWorkbook.xlsx";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
             try
             {
-                // Verify input file exists
-                if (!File.Exists(inputFilePath))
-                {
-                    Console.WriteLine($"Input file not found: {inputFilePath}");
-                    return;
-                }
-
-                // Load the workbook from the specified file
-                Workbook workbook = new Workbook(inputFilePath);
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
                 // Retrieve all named ranges (and tables) defined in the workbook
                 AsposeRange[] namedRanges = workbook.Worksheets.GetNamedRangesAndTables();
 
-                // Prepare HTML save options; ensure named range anchors are exported
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                if (namedRanges == null || namedRanges.Length == 0)
                 {
-                    ExportNamedRangeAnchors = true
-                };
+                    Console.WriteLine("No named ranges found in the workbook.");
+                    return;
+                }
 
-                // Build a single HTML document that contains each named range as a separate table
-                StringBuilder htmlBuilder = new StringBuilder();
-                htmlBuilder.AppendLine("<!DOCTYPE html>");
-                htmlBuilder.AppendLine("<html>");
-                htmlBuilder.AppendLine("<head>");
-                htmlBuilder.AppendLine("<meta charset=\"UTF-8\"/>");
-                htmlBuilder.AppendLine("<title>Named Ranges Documentation</title>");
-                htmlBuilder.AppendLine("</head>");
-                htmlBuilder.AppendLine("<body>");
-                htmlBuilder.AppendLine("<h1>Named Ranges</h1>");
-
-                if (namedRanges != null && namedRanges.Length > 0)
+                // Iterate through each named range and export it to an individual HTML file
+                for (int i = 0; i < namedRanges.Length; i++)
                 {
-                    foreach (AsposeRange range in namedRanges)
+                    AsposeRange range = namedRanges[i];
+
+                    // Prepare HTML save options – default ExportNamedRangeAnchors (true) is kept
+                    HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+
+                    // Convert the range to HTML; the method returns the HTML content as a byte array
+                    byte[] htmlBytes = range.ToHtml(htmlOptions);
+
+                    // Determine a safe file name: use the range name if available, otherwise use the index
+                    string safeName = string.IsNullOrWhiteSpace(range.Name) ? $"Range_{i + 1}" : range.Name;
+
+                    // Replace any characters that are invalid in file names
+                    foreach (char c in Path.GetInvalidFileNameChars())
                     {
-                        // Convert the range to HTML using the provided ToHtml method
-                        byte[] htmlBytes = range.ToHtml(htmlOptions);
-                        string rangeHtml = Encoding.UTF8.GetString(htmlBytes);
-
-                        // Add a heading for the named range and its HTML representation
-                        htmlBuilder.AppendLine($"<h2>{range.Name}</h2>");
-                        htmlBuilder.AppendLine(rangeHtml);
+                        safeName = safeName.Replace(c, '_');
                     }
-                }
-                else
-                {
-                    htmlBuilder.AppendLine("<p>No named ranges found in the workbook.</p>");
+
+                    string outputPath = $"{safeName}.html";
+
+                    // Write the HTML bytes to the file system
+                    File.WriteAllBytes(outputPath, htmlBytes);
+
+                    Console.WriteLine($"Exported named range '{range.Name}' to '{outputPath}'.");
                 }
 
-                htmlBuilder.AppendLine("</body>");
-                htmlBuilder.AppendLine("</html>");
-
-                // Write the combined HTML to the output file
-                File.WriteAllText(outputHtmlPath, htmlBuilder.ToString(), Encoding.UTF8);
-                Console.WriteLine($"HTML exported successfully to: {outputHtmlPath}");
+                Console.WriteLine("All named ranges have been exported to HTML.");
             }
             catch (Exception ex)
             {
+                // Catch any unexpected errors and display a friendly message
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        // Entry point for the console application
-        public static void Main(string[] args)
-        {
-            // Expecting two arguments: input Excel file path and output HTML file path
-            if (args.Length < 2)
-            {
-                Console.WriteLine("Usage: ExportNamedRangesToHtml <inputExcelPath> <outputHtmlPath>");
-                return;
-            }
-
-            string inputPath = args[0];
-            string outputPath = args[1];
-
-            ExportNamedRangesToHtml.Run(inputPath, outputPath);
         }
     }
 }

@@ -1,55 +1,47 @@
-// Title: Aspose.Cells for .NET – Set Custom Text Margins on Rectangle Shapes in Excel
-// Description: C# example that loads an Excel workbook, iterates through each worksheet, filters shapes to rectangles, sets top, bottom, left, and right text margins (points) via ShapeTextAlignment, disables automatic margin calculation, and saves the updated file.
-// Keywords: Aspose.Cells | C# shape margins | Excel rectangle shape | ShapeTextAlignment | set text padding | filter shapes by type | AutoShapeType.Rectangle | disable auto margin | Aspose.Cells .NET | Excel shape formatting
-// Common Searches: Aspose.Cells set rectangle shape margins | C# change text padding of Excel shapes | filter shapes by type Aspose.Cells | disable auto margin Aspose.Cells shape | how to set shape text margins in .NET
-// Developer Intent: Apply specific top, bottom, left, and right text margins only to rectangle shapes in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Standardize padding of rectangle callout shapes in financial report templates. | Prepare Excel workbooks with uniform shape margins before converting to PDF. | Automate layout adjustments for dashboard widgets stored as rectangle shapes. | Ensure printable Excel charts have consistent text spacing inside rectangle containers.
-// AI Prompts: Write C# code using Aspose.Cells to set 12‑pt margins on all ellipse shapes in a workbook. | Show how to list each shape's name and type while applying custom margins with Aspose.Cells. | Create a script that reads margin values from a JSON file and applies them to rectangle shapes. | Provide a PowerShell example that calls Aspose.Cells to adjust text margins for rectangle shapes.
+// Title: C# – Apply fixed text margins to rectangle shapes in an Excel file with Aspose.Cells
+// Description: The sample opens an Excel workbook, walks through each worksheet and its shapes, selects only RectangleShape objects, sets explicit top, bottom, left, and right margins via ShapeTextAlignment, disables automatic margin calculation, and saves the modified file.
+// Keywords: Aspose.Cells | C# shape margins | RectangleShape | ShapeTextAlignment | Excel shape padding | disable auto margin | set text margins .NET | iterate worksheet shapes | custom shape formatting
+// Common Searches: How to change padding inside rectangle shapes in Excel using Aspose.Cells C# | Aspose.Cells iterate shapes and set fixed margins | Disable automatic margins for specific shape types with Aspose.Cells | Set top and left margin for rectangle shape text in .NET | Batch update shape text alignment across worksheets Aspose.Cells
+// Developer Intent: Programmatically adjust the text padding of rectangle shapes in an Excel workbook with Aspose.Cells for .NET.
+// Use Cases: Prepare a corporate template where all rectangle callout boxes must have uniform 5‑pt padding. | Generate printable reports that require consistent text positioning inside rectangle shapes. | Automate the cleanup of legacy workbooks to enforce branding‑compliant shape margins.
+// AI Prompts: Write C# code that sets 8‑point margins for all oval shapes and keeps auto‑margin enabled using Aspose.Cells. | Show how to log the name and original margin values of each rectangle shape before updating them. | Create a script that toggles IsAutoMargin on for rectangle shapes after custom margins have been applied.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsShapeMarginExample
+// The sample opens an Excel workbook, walks through each worksheet and its shapes, selects only RectangleShape objects, sets explicit top, bottom, left, and right margins via ShapeTextAlignment, disables automatic margin calculation, and saves the modified file.
+class ShapeMarginProcessor
 {
-    // C# example that loads an Excel workbook, iterates through each worksheet, filters shapes to rectangles, sets top, bottom, left, and right text margins (points) via ShapeTextAlignment, disables automatic margin calculation, and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through all worksheets
+        foreach (Worksheet worksheet in workbook.Worksheets)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Iterate through all shapes on the worksheet
+            foreach (Shape shape in worksheet.Shapes)
             {
-                // Iterate through all shapes in the worksheet
-                foreach (Shape shape in sheet.Shapes)
+                // Process only rectangle shapes
+                if (shape is RectangleShape rectangle)
                 {
-                    // Check if the shape is a rectangle (either by type or by AutoShapeType)
-                    bool isRectangle = shape is RectangleShape ||
-                                       shape.Type == AutoShapeType.Rectangle;
+                    // Access the text alignment object of the rectangle
+                    ShapeTextAlignment alignment = rectangle.TextBody.TextAlignment;
 
-                    if (isRectangle)
-                    {
-                        // Access the text alignment object of the shape
-                        ShapeTextAlignment alignment = shape.TextBody.TextAlignment;
-
-                        // Set specific margins (values are in points)
-                        alignment.TopMarginPt = 5.0;      // Top margin
-                        alignment.BottomMarginPt = 5.0;   // Bottom margin
-                        alignment.LeftMarginPt = 8.0;     // Left margin
-                        alignment.RightMarginPt = 8.0;    // Right margin
-
-                        // Optionally disable automatic margin calculation
-                        alignment.IsAutoMargin = false;
-                    }
+                    // Set explicit margins (in points) and disable auto‑margin
+                    alignment.TopMarginPt = 5.0;
+                    alignment.BottomMarginPt = 5.0;
+                    alignment.LeftMarginPt = 5.0;
+                    alignment.RightMarginPt = 5.0;
+                    alignment.IsAutoMargin = false;
                 }
             }
-
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("output.xlsx");
         }
+
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

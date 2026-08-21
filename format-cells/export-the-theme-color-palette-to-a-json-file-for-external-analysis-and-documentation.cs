@@ -1,10 +1,10 @@
-// Title: Export Excel Theme Palette to JSON with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, optionally changes accent colors, reads the first 12 ThemeColorType entries, converts each to an ARGB hex string, serializes the collection to indented JSON, and writes ThemePalette.json while optionally saving the workbook.
-// Keywords: Aspose.Cells | C# | Export theme colors | Excel theme palette | JSON serialization | GetThemeColor | SetThemeColor | ThemeColorType | Workbook theme extraction | .NET
-// Common Searches: Aspose.Cells export theme colors to JSON | C# read Excel theme palette Aspose | How to get theme colors from workbook using Aspose.Cells | Save Excel theme palette as JSON file | Extract workbook theme colors .NET
-// Developer Intent: Generate a JSON file that lists the workbook's theme color palette for external analysis or documentation.
-// Use Cases: Document the exact theme colors of an Excel template for a design system. | Compare theme palettes across multiple workbooks by exporting each to JSON. | Supply UI styling tools with the workbook's theme colors to ensure consistent theming. | Audit corporate branding consistency by analyzing exported theme palettes. | Automate creation of style guides from Excel files.
-// AI Prompts: Write C# code using Aspose.Cells to read all theme colors from a workbook and output a pretty‑printed JSON file. | Create a method that returns a JSON string containing only theme colors that differ from Aspose.Cells' default palette. | Generate a console application that accepts a workbook path argument and exports its theme palette to a specified JSON file. | Show how to serialize the theme palette dictionary with camelCase property names for JavaScript consumption. | Provide code to batch‑process a folder of Excel files, exporting each workbook's theme palette to separate JSON files.
+// Title: C# – Export Aspose.Cells Theme Color Palette to JSON
+// Description: Creates a new Workbook, reads its 56‑color theme palette via Workbook.Colors, builds a JSON array containing the index, ARGB hex string and individual RGBA components, and writes the result to ThemePalette.json. The example also demonstrates optional workbook saving.
+// Keywords: Aspose.Cells | C# | theme palette export | Workbook.Colors | JSON serialization | System.Text.Json | Excel theme colors | color palette extraction | .NET
+// Common Searches: Aspose.Cells export theme colors C# | Get workbook theme palette as JSON | Serialize Excel theme palette Aspose .NET | How to extract 56 theme colors from Aspose.Cells | Save Aspose.Cells theme palette to file
+// Developer Intent: Export the workbook's 56‑entry theme color palette to a JSON file for external analysis or documentation.
+// Use Cases: Document all theme colors used in generated Excel files. | Compare palettes across multiple workbooks to enforce visual consistency. | Feed the exported colors into a design system or UI style guide. | Automate testing of Excel color schemes in CI pipelines.
+// AI Prompts: Write C# code that reads Aspose.Cells Workbook.Colors and outputs a formatted JSON file. | Provide a reusable method that returns the theme palette as a JSON string and optionally saves it to a given path. | Explain how to add custom color names or filter specific indices when exporting the palette.
 
 using System;
 using System.Collections.Generic;
@@ -15,44 +15,46 @@ using Aspose.Cells;
 
 namespace AsposeCellsThemePaletteExport
 {
-    // Creates a workbook, optionally changes accent colors, reads the first 12 ThemeColorType entries, converts each to an ARGB hex string, serializes the collection to indented JSON, and writes ThemePalette.json while optionally saving the workbook.
+    // Creates a new Workbook, reads its 56‑color theme palette via Workbook.Colors, builds a JSON array containing the index, ARGB hex string and individual RGBA components, and writes the result to ThemePalette.json. The example also demonstrates optional workbook saving.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle create)
+            // Create a new workbook (uses the mandated create rule)
             Workbook workbook = new Workbook();
 
-            // Optional: modify some theme colors to demonstrate export
-            workbook.SetThemeColor(ThemeColorType.Accent1, Color.FromArgb(255, 255, 0, 0)); // Red
-            workbook.SetThemeColor(ThemeColorType.Accent2, Color.FromArgb(255, 0, 255, 0)); // Green
-            workbook.SetThemeColor(ThemeColorType.Accent3, Color.FromArgb(255, 0, 0, 255)); // Blue
+            // Retrieve the 56‑entry theme color palette
+            Color[] palette = workbook.Colors;
 
-            // Collect all theme colors (there are 12 defined in ThemeColorType enum)
-            var themeColors = new Dictionary<string, string>();
-            foreach (ThemeColorType type in Enum.GetValues(typeof(ThemeColorType)))
+            // Prepare a simple DTO for JSON serialization
+            var paletteData = new List<object>();
+            for (int i = 0; i < palette.Length; i++)
             {
-                // Only consider the first 12 types (0-11) which correspond to theme palette entries
-                if ((int)type > 11) break;
-
-                Color color = workbook.GetThemeColor(type);
-                // Store as ARGB hex string for readability
-                themeColors[type.ToString()] = $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
+                Color c = palette[i];
+                paletteData.Add(new
+                {
+                    Index = i,
+                    // Store color as ARGB hex string for readability
+                    ARGB = $"#{c.A:X2}{c.R:X2}{c.G:X2}{c.B:X2}",
+                    // Also expose individual components if needed
+                    A = c.A,
+                    R = c.R,
+                    G = c.G,
+                    B = c.B
+                });
             }
 
-            // Serialize the dictionary to JSON
-            string json = JsonSerializer.Serialize(themeColors, new JsonSerializerOptions { WriteIndented = true });
+            // Serialize the palette to a formatted JSON string
+            string json = JsonSerializer.Serialize(paletteData, new JsonSerializerOptions { WriteIndented = true });
 
-            // Define output file path
-            string jsonPath = "ThemePalette.json";
+            // Write the JSON to a file
+            string outputPath = "ThemePalette.json";
+            File.WriteAllText(outputPath, json);
 
-            // Write JSON to file (lifecycle save)
-            File.WriteAllText(jsonPath, json);
-
-            // (Optional) Save the workbook to demonstrate that changes persist
+            // Optionally, save the workbook (demonstrates the mandated save rule)
             workbook.Save("ThemePaletteDemo.xlsx");
 
-            Console.WriteLine($"Theme palette exported to {jsonPath}");
+            Console.WriteLine($"Theme palette exported to '{outputPath}'.");
         }
     }
 }

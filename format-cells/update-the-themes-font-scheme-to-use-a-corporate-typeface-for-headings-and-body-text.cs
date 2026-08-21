@@ -1,72 +1,48 @@
-// Title: Set Corporate Heading and Body Fonts in an Excel Workbook with Aspose.Cells for .NET
-// Description: Demonstrates how to create a new workbook, define corporate heading and body typefaces, apply a 20‑pt bold heading font to cell A1 and a 12‑pt body font to cell A3, and save the file using Aspose.Cells for C#.
-// Keywords: Aspose.Cells | C# Excel font styling | custom corporate font | heading font Aspose.Cells | body text font .NET | programmatic Excel formatting | Excel workbook theme fonts | apply font to cells | enterprise Excel branding
-// Common Searches: how to set custom heading font in Aspose.Cells C# | apply corporate body font to Excel cells programmatically | change font of specific cells using Aspose.Cells .NET | set theme fonts for Excel workbook with Aspose | C# code to use corporate typeface in Excel
-// Developer Intent: Apply corporate typefaces to heading and body cells in an Excel workbook via Aspose.Cells for .NET.
-// Use Cases: Generate branded reports where the title uses a corporate heading font and the content uses the company’s body font. | Create a reusable Excel template that automatically formats headings and body text with specified corporate fonts. | Automate the styling of financial statements to match corporate brand guidelines.
-// AI Prompts: Show me how to modify an Excel workbook’s theme font scheme globally to use corporate heading and body fonts with Aspose.Cells for .NET. | Provide C# code that loads an existing .xlsx file and replaces its theme’s heading and body fonts with specified corporate typefaces. | Explain how to define a reusable style in Aspose.Cells that applies corporate fonts to multiple cells without setting each cell individually.
+// Title: Set Excel Theme Font Scheme (Major & Minor) to a Corporate Typeface with Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, assign a corporate font (e.g., Calibri) to the Major (heading) and Minor (body) theme schemes using Font.SetName with FontSchemeType, apply the styles to cells, and save the file as CorporateThemeFontScheme.xlsx.
+// Keywords: Aspose.Cells C# theme font scheme | FontSchemeType Major Minor | set corporate font Excel workbook | apply custom font to headings and body | Excel theme fonts Aspose.Cells .NET
+// Common Searches: how to change major and minor font scheme in Aspose.Cells | set corporate typeface for Excel headings C# | apply custom theme fonts to Excel workbook using Aspose.Cells | Aspose.Cells FontSchemeType example | update Excel theme fonts programmatically .NET
+// Developer Intent: Configure the workbook’s theme so that headings use the Major font scheme and body text uses the Minor scheme, both set to a corporate typeface.
+// Use Cases: Create a new workbook and define a corporate font for the Major scheme to style report titles. | Apply the same corporate font to the Minor scheme for body paragraphs and data cells. | Save the workbook so that any subsequent styles inherit the corporate typeface automatically.
+// AI Prompts: Generate C# code with Aspose.Cells that changes the Major and Minor theme fonts of an existing workbook to 'Arial' and saves the result. | Explain FontSchemeType in Aspose.Cells and show how to use it for heading and body styles. | Provide a step‑by‑step tutorial for updating an Excel workbook’s theme fonts to a corporate typeface using Aspose.Cells for .NET.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace CorporateThemeFontDemo
+// Demonstrates how to create a workbook, assign a corporate font (e.g., Calibri) to the Major (heading) and Minor (body) theme schemes using Font.SetName with FontSchemeType, apply the styles to cells, and save the file as CorporateThemeFontScheme.xlsx.
+class UpdateThemeFontScheme
 {
-    // Demonstrates how to create a new workbook, define corporate heading and body typefaces, apply a 20‑pt bold heading font to cell A1 and a 12‑pt body font to cell A3, and save the file using Aspose.Cells for C#.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+        // Corporate typeface to be used for both headings (Major) and body text (Minor)
+        string corporateFontName = "Calibri";
 
-                // -------------------------------------------------
-                // Define corporate typefaces (replace with actual font names)
-                string corporateHeadingFont = "CorporateHeadingFont";
-                string corporateBodyFont = "CorporateBodyFont";
+        // ---------- Heading style (Major scheme) ----------
+        Style headingStyle = workbook.CreateStyle();
+        // Set the font name and associate it with the Major scheme
+        headingStyle.Font.SetName(corporateFontName, FontSchemeType.Major);
+        headingStyle.Font.Size = 16;
+        headingStyle.Font.IsBold = true;
 
-                // -------------------------------------------------
-                // Apply corporate heading font to a heading cell
-                Cell headingCell = sheet.Cells["A1"];
-                headingCell.PutValue("Report Title");
+        // Apply heading style to a cell
+        worksheet.Cells["A1"].PutValue("Report Title");
+        worksheet.Cells["A1"].SetStyle(headingStyle);
 
-                // Get the style of the heading cell and modify its font
-                Style headingStyle = headingCell.GetStyle();
-                headingStyle.Font.Name = corporateHeadingFont;
-                headingStyle.Font.Size = 20;
-                headingStyle.Font.IsBold = true;
+        // ---------- Body style (Minor scheme) ----------
+        Style bodyStyle = workbook.CreateStyle();
+        // Set the font name and associate it with the Minor scheme
+        bodyStyle.Font.SetName(corporateFontName, FontSchemeType.Minor);
+        bodyStyle.Font.Size = 11;
 
-                // Assign the modified style back to the cell
-                headingCell.SetStyle(headingStyle);
+        // Apply body style to a cell
+        worksheet.Cells["A2"].PutValue("This is body text using the corporate typeface.");
+        worksheet.Cells["A2"].SetStyle(bodyStyle);
 
-                // -------------------------------------------------
-                // Apply corporate body font to a body text cell
-                Cell bodyCell = sheet.Cells["A3"];
-                bodyCell.PutValue("This is the body text of the report.");
-
-                // Get the style of the body cell and modify its font
-                Style bodyStyle = bodyCell.GetStyle();
-                bodyStyle.Font.Name = corporateBodyFont;
-                bodyStyle.Font.Size = 12;
-
-                // Assign the modified style back to the cell
-                bodyCell.SetStyle(bodyStyle);
-
-                // -------------------------------------------------
-                // Save the workbook
-                string outputPath = "CorporateThemeFontDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Save the workbook
+        workbook.Save("CorporateThemeFontScheme.xlsx");
     }
 }

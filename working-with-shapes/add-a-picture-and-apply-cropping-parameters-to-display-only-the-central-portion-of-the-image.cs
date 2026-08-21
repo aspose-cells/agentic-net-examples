@@ -1,20 +1,20 @@
-// Title: C# – Add and Center‑Crop a Picture in Excel with Aspose.Cells
-// Description: Demonstrates how to create a workbook, insert an image into cell A1, apply 25 % left/right/top/bottom cropping to keep the central 50 % of the picture, and save the file as an XLSX document using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells picture crop | C# add image Excel | Excel image cropping .NET | center crop Aspose.Cells | FormatPicture LeftCrop RightCrop | Aspose.Cells picture example
-// Common Searches: how to crop a picture in Aspose.Cells | center crop image Excel C# | Aspose.Cells add picture to worksheet | C# crop picture percentages Aspose.Cells | remove borders from Excel image programmatically
-// Developer Intent: Insert an image into a worksheet and trim it so only the central portion remains visible.
-// Use Cases: Generate reports with logos that need only the central emblem displayed. | Create product catalogs where each photo is automatically centered and cropped to fit a cell. | Build dashboards that focus on the main content of pictures without manual editing.
-// AI Prompts: Write C# code using Aspose.Cells to add a picture from a file path and crop 30 % from each side. | Explain the effect of LeftCrop, RightCrop, TopCrop, and BottomCrop on an Excel image placed with Aspose.Cells. | Provide a reusable method that accepts custom cropping percentages and applies them to any picture in a workbook.
+// Title: C# – Add a picture to an Excel worksheet and crop to the central area with Aspose.Cells for .NET
+// Description: Creates a new Workbook, inserts a JPEG into cell B2, crops 25 % from each side (leaving the central 50 % of the image) using FormatPicture cropping properties, and saves the file as CroppedPicture.xlsx. Includes a file‑existence check and error handling.
+// Keywords: Aspose.Cells | C# | add picture to Excel | crop image Excel | FormatPicture | LeftCrop | RightCrop | TopCrop | BottomCrop | central crop | worksheet picture | sample.jpg | CroppedPicture.xlsx
+// Common Searches: Aspose.Cells insert picture and crop center .NET | C# crop picture in Excel using FormatPicture properties | How to display only the middle part of an image in Aspose.Cells | Aspose.Cells picture cropping example C# | Excel worksheet add image and trim margins with Aspose
+// Developer Intent: Insert an image into a worksheet and apply cropping so that only the central portion of the picture is visible.
+// Use Cases: Embed a company logo in a report while removing surrounding whitespace. | Generate a product catalog that shows cropped thumbnails focused on the main visual element. | Create a template that displays scanned documents with margins hidden by central cropping.
+// AI Prompts: Generate C# code with Aspose.Cells to place a picture at cell D4 and crop 15 % from each side. | Explain the purpose of FormatPicture.LeftCrop, RightCrop, TopCrop, and BottomCrop and how to calculate pixel‑based cropping values. | Show an example that loads an image, adds it to a worksheet, and crops it to display only the middle 40 % of the picture.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsCropExample
+namespace Example
 {
-    // Demonstrates how to create a workbook, insert an image into cell A1, apply 25 % left/right/top/bottom cropping to keep the central 50 % of the picture, and save the file as an XLSX document using Aspose.Cells for .NET.
-    class Program
+    // Creates a new Workbook, inserts a JPEG into cell B2, crops 25 % from each side (leaving the central 50 % of the image) using FormatPicture cropping properties, and saves the file as CroppedPicture.xlsx. Includes a file‑existence check and error handling.
+    class AddCroppedPicture
     {
         static void Main()
         {
@@ -22,36 +22,31 @@ namespace AsposeCellsCropExample
             {
                 // Create a new workbook
                 Workbook workbook = new Workbook();
-
-                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Path to the image file (replace with your actual image path)
                 string imagePath = "sample.jpg";
 
-                // Verify that the image file exists before adding it
-                if (!File.Exists(imagePath))
+                // Ensure the image file exists before adding it
+                if (File.Exists(imagePath))
                 {
-                    Console.WriteLine($"Image file not found: {Path.GetFullPath(imagePath)}");
-                    return;
+                    // Add picture at cell B2 (row 1, column 1)
+                    int pictureIndex = sheet.Pictures.Add(1, 1, imagePath);
+                    Picture picture = sheet.Pictures[pictureIndex];
+
+                    // Crop 25% from each side, leaving the central 50%
+                    picture.FormatPicture.LeftCrop = 0.25;
+                    picture.FormatPicture.RightCrop = 0.25;
+                    picture.FormatPicture.TopCrop = 0.25;
+                    picture.FormatPicture.BottomCrop = 0.25;
+                }
+                else
+                {
+                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
                 }
 
-                // Add the picture to the worksheet at cell A1 (row 0, column 0)
-                int pictureIndex = sheet.Pictures.Add(0, 0, imagePath);
-                Picture picture = sheet.Pictures[pictureIndex];
-
-                // Crop the picture to show only the central portion.
-                // Setting each side to 0.25 crops 25% from that side,
-                // leaving the middle 50% of the image visible.
-                picture.FormatPicture.LeftCrop = 0.25;
-                picture.FormatPicture.RightCrop = 0.25;
-                picture.FormatPicture.TopCrop = 0.25;
-                picture.FormatPicture.BottomCrop = 0.25;
-
-                // Save the workbook with the cropped picture
-                string outputPath = "CroppedPictureDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully: {Path.GetFullPath(outputPath)}");
+                // Save the workbook
+                workbook.Save("CroppedPicture.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)
             {

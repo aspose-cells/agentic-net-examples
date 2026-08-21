@@ -1,35 +1,34 @@
-// Title: Check if an Excel workbook's structure or window is protected using Aspose.Cells for .NET (C#)
-// Description: A concise C# example that loads an .xlsx file with Aspose.Cells, reads the WorkbookSettings.IsProtected flag, and prints the protection status (true/false) to the console. Demonstrates how to detect workbook structure or window protection without altering the file.
-// Keywords: Aspose.Cells | C# | .NET | WorkbookSettings | IsProtected | workbook protection | structure protection | window protection | detect Excel protection | read protection status | encryption and protection
-// Common Searches: Aspose.Cells check workbook protection | C# get workbook structure protected flag | How to read IsProtected property Aspose.Cells | Determine if Excel file is protected using Aspose.Cells | WorkbookSettings.IsProtected example
-// Developer Intent: Identify whether the loaded workbook has structure or window protection enabled.
-// Use Cases: Skip automated modifications when a workbook is protected | Log protection status of each file for compliance auditing | Conditionally unprotect a workbook before editing | Batch audit of Excel files to verify protection settings | Integrate protection checks into CI/CD pipelines
-// AI Prompts: Generate C# code with Aspose.Cells that returns a boolean indicating workbook protection and writes a detailed log entry. | Create a reusable method that accepts a file path, checks WorkbookSettings.IsProtected, and throws a custom exception if protection is detected. | Write a PowerShell script that invokes a .NET assembly to report the protection status of multiple Excel files. | Explain how to differentiate between structure and window protection using Aspose.Cells properties.
+// Title: Check if an Excel workbook’s structure or window is protected using Aspose.Cells for .NET (C#)
+// Description: Loads an Excel file with Aspose.Cells, reads the WorkbookSettings.IsProtected flag to determine whether the workbook’s structure or window is protected, and writes the boolean result to the console.
+// Keywords: Aspose.Cells | C# | WorkbookSettings.IsProtected | check workbook protection | Excel structure protection | window protection | detect workbook protection | read protection flag | Aspose.Cells example
+// Common Searches: Aspose.Cells how to check workbook protection | C# get workbook structure protection status | IsProtected property Aspose.Cells | determine if Excel workbook is locked with Aspose.Cells | read workbook protection flag C#
+// Developer Intent: Identify whether the loaded workbook’s structure or window is protected.
+// Use Cases: Prevent editing operations when a workbook is protected. | Show or hide UI controls (Save, Modify) based on protection state. | Log protection status of incoming workbooks for compliance audits.
+// AI Prompts: Generate C# code that uses Aspose.Cells to unprotect a workbook when WorkbookSettings.IsProtected is true, handling a password. | Show how to differentiate between structure protection and window protection using Aspose.Cells properties. | Explain how to programmatically remove workbook protection with a password in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsProtectionCheck
+namespace WorkbookProtectionCheck
 {
-    // A concise C# example that loads an .xlsx file with Aspose.Cells, reads the WorkbookSettings.IsProtected flag, and prints the protection status (true/false) to the console. Demonstrates how to detect workbook structure or window protection without altering the file.
+    // Loads an Excel file with Aspose.Cells, reads the WorkbookSettings.IsProtected flag to determine whether the workbook’s structure or window is protected, and writes the boolean result to the console.
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the workbook to be examined.
-            // Replace with the actual file path as needed.
-            string filePath = "input.xlsx";
+            // Path to the workbook to be examined
+            string filePath = "SampleWorkbook.xlsx";
 
-            // Load the workbook from the specified file.
+            // Load the workbook (uses the provided load rule)
             Workbook workbook = new Workbook(filePath);
 
-            // Access the workbook settings.
+            // Access workbook settings
             WorkbookSettings settings = workbook.Settings;
 
-            // Determine if the workbook's structure or window is protected.
+            // Determine if the workbook structure or window is protected
             bool isProtected = settings.IsProtected;
 
-            // Output the protection status to the console.
+            // Output the protection status to the console
             Console.WriteLine("Workbook structure/window protected: " + isProtected);
         }
     }

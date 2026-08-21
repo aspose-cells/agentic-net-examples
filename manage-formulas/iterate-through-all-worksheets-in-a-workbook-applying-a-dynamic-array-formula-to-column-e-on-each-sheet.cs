@@ -1,62 +1,50 @@
-// Title: Set a SEQUENCE dynamic array formula in column E across all worksheets with Aspose.Cells for .NET
-// Description: C# example that creates a workbook, adds several sheets, fills column D with sample data, then loops through every worksheet to assign the dynamic array formula "=SEQUENCE(D1)" to cell E1 using SetDynamicArrayFormula, recalculates, refreshes spill ranges, and saves the file as XLSX.
-// Keywords: Aspose.Cells | C# | .NET | dynamic array formula | SEQUENCE function | SetDynamicArrayFormula | loop worksheets | refresh spill range | calculate formulas | save workbook | Excel automation | multiple sheets
-// Common Searches: Aspose.Cells set dynamic array formula on all sheets | C# apply SEQUENCE formula to each worksheet | Refresh spill ranges after inserting dynamic array in Aspose.Cells | Loop through worksheets and set formula Aspose.Cells .NET | Calculate and save workbook with dynamic arrays
-// Developer Intent: Apply the same dynamic array formula to column E of every worksheet, ensure the spill results are updated, and persist the workbook.
-// Use Cases: Generate a sequence in column E that depends on the value in D1 for each sheet. | Automate bulk formula insertion across many worksheets in an Excel file. | Guarantee that dynamic array spill ranges are refreshed before saving the workbook.
-// AI Prompts: Write C# code that iterates over all worksheets in an Aspose.Cells workbook and sets the formula "=SEQUENCE(D1)" in cell E1 using SetDynamicArrayFormula, then calculates and refreshes the workbook. | Show how to use FormulaParseOptions with SetDynamicArrayFormula to apply a dynamic array formula to every sheet and save the result as an XLSX file.
+// Title: C# – Set a SEQUENCE dynamic array formula in column E of every worksheet using Aspose.Cells
+// Description: Creates a workbook, adds a second sheet, iterates over all worksheets, inserts the dynamic‑array formula =SEQUENCE(5) into cell E1 with SetDynamicArrayFormula, forces immediate calculation, refreshes spill ranges, and saves the file as DynamicArrayResult.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | dynamic array formula | SetDynamicArrayFormula | SEQUENCE function | iterate worksheets | refresh spill range | calculate workbook formulas | multi‑sheet Excel automation
+// Common Searches: Aspose.Cells set dynamic array formula on all sheets | C# loop through worksheets and apply SEQUENCE formula | Refresh dynamic array spill ranges Aspose.Cells | How to add a dynamic array to column E in each worksheet | Aspose.Cells SetDynamicArrayFormula example
+// Developer Intent: Insert the same dynamic‑array formula into column E of every worksheet in a workbook and ensure the formulas are calculated and spill ranges are updated.
+// Use Cases: Generate a numbered list (1‑5) in column E of each sheet for template‑based reporting. | Automatically populate multi‑sheet workbooks with calculated arrays without manual entry. | Maintain consistent dynamic‑array behavior across all worksheets after bulk updates.
+// AI Prompts: Write C# code that loops through every worksheet in an Aspose.Cells workbook and sets =SEQUENCE(5) in cell E1, then calculates and refreshes the formulas. | Show how to replace the SEQUENCE formula with FILTER or SORT in column E for each worksheet using Aspose.Cells for .NET. | Explain the purpose of RefreshDynamicArrayFormulas after calling SetDynamicArrayFormula in a multi‑sheet workbook.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsDynamicArrayExample
 {
-    // C# example that creates a workbook, adds several sheets, fills column D with sample data, then loops through every worksheet to assign the dynamic array formula "=SEQUENCE(D1)" to cell E1 using SetDynamicArrayFormula, recalculates, refreshes spill ranges, and saves the file as XLSX.
+    // Creates a workbook, adds a second sheet, iterates over all worksheets, inserts the dynamic‑array formula =SEQUENCE(5) into cell E1 with SetDynamicArrayFormula, forces immediate calculation, refreshes spill ranges, and saves the file as DynamicArrayResult.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle: create)
+            // Create a new workbook (using the standard creation rule)
             Workbook workbook = new Workbook();
 
-            // Add a few worksheets for demonstration
-            Worksheet sheet1 = workbook.Worksheets[0]; // default sheet
-            sheet1.Name = "FirstSheet";
+            // Add a second worksheet to demonstrate iteration over multiple sheets
+            workbook.Worksheets.Add("Sheet2");
 
-            Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
-            Worksheet sheet3 = workbook.Worksheets.Add("ThirdSheet");
-
-            // Sample data that the dynamic array formulas will reference
-            // (optional, just to make the formulas produce visible results)
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Populate column D with numbers 1..5
-                for (int i = 0; i < 5; i++)
-                {
-                    ws.Cells[i, 3].PutValue(i + 1); // D1:D5
-                }
+                // Get the cell at the top of column E (E1) for the current sheet
+                Cell targetCell = sheet.Cells["E1"];
+
+                // Apply a dynamic array formula that will spill into the rows below.
+                // Example formula: SEQUENCE(5) creates a vertical array of numbers 1‑5.
+                // The FormulaParseOptions instance uses default settings.
+                targetCell.SetDynamicArrayFormula(
+                    "=SEQUENCE(5)",               // dynamic array formula
+                    new FormulaParseOptions(),    // parsing options
+                    true);                        // calculate the values immediately
             }
 
-            // Iterate through all worksheets and set a dynamic array formula in column E
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                // The formula will generate a sequence based on the value in D1 (e.g., =SEQUENCE(D1))
-                // It will spill into the cells below E1 as needed.
-                Cell targetCell = ws.Cells["E1"];
-                string dynamicFormula = "=SEQUENCE(D1)";
-
-                // Set the dynamic array formula; calculateValue = true to compute immediately
-                targetCell.SetDynamicArrayFormula(dynamicFormula, new FormulaParseOptions(), true);
-            }
-
-            // Calculate all formulas in the workbook (optional, ensures values are up‑to‑date)
+            // Calculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Refresh dynamic array formulas so that spill ranges are correctly updated
+            // Refresh dynamic array formulas to ensure spill ranges are updated
             workbook.RefreshDynamicArrayFormulas(true);
 
-            // Save the workbook to a file (lifecycle: save)
-            workbook.Save("DynamicArrayResult.xlsx", SaveFormat.Xlsx);
+            // Save the workbook (using the standard save rule)
+            workbook.Save("DynamicArrayResult.xlsx");
         }
     }
 }

@@ -1,41 +1,41 @@
-// Title: Load Only Chart Objects from an Excel Workbook with Aspose.Cells C#
-// Description: Demonstrates how to use Aspose.Cells LoadOptions with a LoadFilter set to LoadDataFilterOptions.Chart to open an Excel file, load exclusively its chart objects, enumerate them, and save a new workbook that contains only the charts, reducing memory usage and processing time.
-// Keywords: Aspose.Cells C# LoadFilter | LoadDataFilterOptions.Chart | extract charts from Excel | chart‑only workbook | performance‑optimized Excel loading | save workbook with charts only | Aspose.Cells LoadOptions example
-// Common Searches: Aspose.Cells load only charts C# | LoadFilter chart objects Excel | How to save chart‑only workbook with Aspose | C# extract charts from .xlsx using Aspose.Cells | Load workbook without cell data Aspose
-// Developer Intent: Open an Excel file, keep just the chart objects, and write a new file that contains only those charts.
-// Use Cases: Create a lightweight version of a report that includes only visual charts for quick distribution. | Separate chart graphics from a data‑heavy workbook for presentation slides. | Count or validate charts per worksheet without incurring the overhead of loading cell data.
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, using LoadOptions to include only chart objects, then saves the result. | Explain how to enumerate worksheets and retrieve the chart count after applying LoadDataFilterOptions.Chart. | Show how to produce a chart‑only workbook while skipping all cell data for faster processing.
+// Title: C# – Load Only Chart Objects from an Excel Workbook Using Aspose.Cells LoadFilter
+// Description: Demonstrates how to configure Aspose.Cells LoadOptions with a LoadFilter set to LoadDataFilterOptions.Chart, load an XLSX file so that only chart objects are retained, enumerate the charts per worksheet, and save a new workbook containing just the charts.
+// Keywords: Aspose.Cells LoadFilter chart | LoadDataFilterOptions.Chart C# | load workbook charts only | extract charts Aspose.Cells | save workbook with charts only | .NET Excel chart extraction
+// Common Searches: Aspose.Cells load only charts example | C# LoadFilter to include just chart objects | how to extract charts from Excel with Aspose.Cells | save Excel file with only charts using .NET | LoadOptions chart-only loading Aspose
+// Developer Intent: Load an Excel file, keep only its chart objects, and write them to a new workbook.
+// Use Cases: Create a lightweight workbook that contains only visualizations for distribution. | Extract charts from a data‑heavy report to generate a summary file for mobile viewers. | Validate chart presence and count without loading full worksheet data, reducing memory usage.
+// AI Prompts: Write C# code that uses Aspose.Cells LoadOptions with LoadFilter = LoadDataFilterOptions.Chart to load only charts from an Excel file and save them to a new workbook. | Explain the impact of LoadFilter on workbook loading in Aspose.Cells and show how to list the charts after applying the filter. | Suggest performance‑optimized practices for extracting chart objects from large workbooks with Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to use Aspose.Cells LoadOptions with a LoadFilter set to LoadDataFilterOptions.Chart to open an Excel file, load exclusively its chart objects, enumerate them, and save a new workbook that contains only the charts, reducing memory usage and processing time.
+// Demonstrates how to configure Aspose.Cells LoadOptions with a LoadFilter set to LoadDataFilterOptions.Chart, load an XLSX file so that only chart objects are retained, enumerate the charts per worksheet, and save a new workbook containing just the charts.
 class LoadChartsOnly
 {
     static void Main()
     {
-        // Path to the source workbook
-        string sourcePath = "input.xlsx";
+        // Input workbook containing various data and charts
+        string inputFile = "input.xlsx";
 
-        // Path to the output workbook (will contain only charts)
-        string outputPath = "output_charts_only.xlsx";
+        // Output workbook that will contain only the chart objects
+        string outputFile = "charts_only.xlsx";
 
         // Create LoadOptions instance
         LoadOptions loadOptions = new LoadOptions();
 
-        // Configure the LoadFilter to load only chart objects
+        // Configure the LoadFilter to load only charts
         loadOptions.LoadFilter = new LoadFilter(LoadDataFilterOptions.Chart);
 
         // Load the workbook with the specified load options
-        Workbook workbook = new Workbook(sourcePath, loadOptions);
+        Workbook workbook = new Workbook(inputFile, loadOptions);
 
-        // Optional: Verify that only charts are loaded
+        // Verify that only charts are loaded (optional)
         foreach (Worksheet sheet in workbook.Worksheets)
         {
             Console.WriteLine($"Sheet: {sheet.Name}, Charts loaded: {sheet.Charts.Count}");
         }
 
         // Save the workbook; it will contain only the chart objects
-        workbook.Save(outputPath);
+        workbook.Save(outputFile);
     }
 }

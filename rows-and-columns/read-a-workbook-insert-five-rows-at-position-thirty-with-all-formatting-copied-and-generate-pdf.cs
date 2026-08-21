@@ -1,38 +1,33 @@
-// Title: Insert 5 Rows with Copied Formatting at Row 31 and Save as PDF – Aspose.Cells C# Example
-// Description: Loads an existing Excel workbook, inserts five rows beginning at row 31 while copying the formatting of the rows above and updating formula references, then saves the modified file directly as a PDF.
-// Keywords: Aspose.Cells InsertRows | CopyFormatType.SameAsAbove | C# Excel row insertion | preserve cell formatting Aspose.Cells | update references after insert | save workbook as PDF | Aspose.Cells PDF conversion | InsertOptions C# | Excel row 31 insertion .NET | Aspose.Cells export to PDF
-// Common Searches: Aspose.Cells insert rows with same formatting | How to add rows at a specific position in Excel using C# | Copy formatting from above rows Aspose.Cells | Export modified workbook to PDF with Aspose.Cells | Update formulas after inserting rows Aspose.Cells
-// Developer Intent: Add five rows at row 31 while preserving formatting, then generate a PDF of the workbook.
-// Use Cases: Add blank rows for a new data section in a template, keep header styles unchanged, and produce a printable PDF report. | Insert rows in a financial sheet, maintain existing formula links, and export the updated worksheet as a PDF for client distribution. | Create an invoice PDF by inserting extra line‑item rows, preserving the original cell styles and formulas.
-// AI Prompts: Show C# code that uses Aspose.Cells InsertOptions to insert five rows at row 31 with the same formatting as the rows above and then saves the workbook as a PDF. | Explain how CopyFormatType.SameAsAbove works when inserting rows and how it affects formula references in Aspose.Cells. | Provide a step‑by‑step guide to insert rows at a specific index, copy formatting, update references, and convert the workbook to PDF using Aspose.Cells for .NET.
+// Title: C# – Insert 5 Rows at Row 31 with Formatting and Save Workbook as PDF (Aspose.Cells)
+// Description: Load an Excel file, add five new rows starting at the 31st row while copying the style of the row above and updating formula references, then convert the sheet to a PDF document.
+// Keywords: Aspose.Cells C# | InsertRows | CopyFormatType.SameAsAbove | UpdateReference | export Excel to PDF | add multiple rows | preserve formatting | formula adjustment | Workbook.Save PDF | row insertion example
+// Common Searches: aspnet insert multiple rows same formatting | aspose.cells copy row style when inserting | save excel as pdf after adding rows | how to keep formulas when inserting rows asp.net | c# insert rows at specific index aspose cells
+// Developer Intent: Add five consecutive rows beginning at the 31st line, retain the preceding row’s style and formula links, and generate a PDF output.
+// Use Cases: Create a printable report where a new section requires blank rows that match the existing layout. | Expand a financial model by inserting rows for additional line items while keeping cell styles and formulas intact before distributing as PDF. | Prepare an invoice template that needs extra rows for extra products, preserving design and then exporting to PDF for client delivery.
+// AI Prompts: Write C# code with Aspose.Cells to insert N rows at a given index, copy the above row’s formatting, update references, and export the result to PDF. | Describe the effect of the UpdateReference flag on formulas during row insertion and provide a code snippet demonstrating it. | Show how to convert a worksheet to PDF after modifying its structure with Aspose.Cells in .NET.
 
 using System;
 using Aspose.Cells;
 
-// Loads an existing Excel workbook, inserts five rows beginning at row 31 while copying the formatting of the rows above and updating formula references, then saves the modified file directly as a PDF.
+// Load an Excel file, add five new rows starting at the 31st row while copying the style of the row above and updating formula references, then convert the sheet to a PDF document.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook from disk
-        string inputFile = "input.xlsx";
-        Workbook workbook = new Workbook(inputFile);
+        // Load the existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Configure insertion options to copy formatting from the rows above
+        // Set insert options to copy the formatting of the rows above the insertion point
         InsertOptions insertOptions = new InsertOptions
         {
             CopyFormatType = CopyFormatType.SameAsAbove,
             UpdateReference = true
         };
 
-        // Insert five rows starting at row index 30 (Excel row 31, zero‑based indexing)
-        worksheet.Cells.InsertRows(30, 5, insertOptions);
+        // Insert 5 rows at row index 30 (31st row, zero‑based indexing)
+        workbook.Worksheets[0].Cells.InsertRows(30, 5, insertOptions);
 
         // Save the modified workbook as a PDF file
-        string outputFile = "output.pdf";
-        workbook.Save(outputFile, SaveFormat.Pdf);
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

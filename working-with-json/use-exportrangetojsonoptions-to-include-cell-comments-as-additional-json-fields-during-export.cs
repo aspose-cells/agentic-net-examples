@@ -1,112 +1,115 @@
+// Title: Export Excel Range to JSON with Cell Comments Using Aspose.Cells for .NET
+// Description: Demonstrates how to export a worksheet range to JSON with Aspose.Cells' ExportRangeToJsonOptions, then enrich the output by adding a "<Header>_Comment" property for each cell that contains a comment. The example creates a workbook, inserts headers, data, and comments, exports the range, merges comment data, and prints pretty‑printed JSON.
+// Keywords: Aspose.Cells ExportRangeToJsonOptions | C# export Excel to JSON | include cell comments in JSON | .NET Excel to JSON with comments | Aspose.Cells add comment fields | JSON export with annotations | pretty printed JSON from Excel
+// Common Searches: Aspose.Cells export range to JSON with comments | C# add Excel cell comments to JSON output | Export Excel data and comments as JSON .NET | How to include cell notes in JSON using Aspose.Cells | Export worksheet to JSON with extra comment columns
+// Developer Intent: The developer needs to convert a selected Excel range into JSON while preserving any cell comments as separate fields in the resulting objects.
+// Use Cases: Create API payloads that combine data values and reviewer notes from an Excel template. | Generate audit logs that capture both cell content and associated comments for compliance reporting. | Produce configuration files where comments act as metadata alongside the actual values.
+// AI Prompts: Show a reusable C# method that takes a worksheet and returns JSON with data and "<Header>_Comment" properties for all commented cells. | Explain how to handle rows that lack comments so the JSON structure stays uniform. | Provide guidance on customizing ExportRangeToJsonOptions to control indentation and string formatting.
+
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-class ExportRangeToJsonWithComments
+// Alias to avoid ambiguity with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+namespace AsposeCellsJsonExportWithComments
 {
-    static void Main()
+    // Demonstrates how to export a worksheet range to JSON with Aspose.Cells' ExportRangeToJsonOptions, then enrich the output by adding a "<Header>_Comment" property for each cell that contains a comment. The example creates a workbook, inserts headers, data, and comments, exports the range, merges comment data, and prints pretty‑printed JSON.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample data (including a header row)
-            cells["A1"].PutValue("Name");
-            cells["B1"].PutValue("Age");
-            cells["A2"].PutValue("John");
-            cells["B2"].PutValue(30);
-            cells["A3"].PutValue("Alice");
-            cells["B3"].PutValue(25);
-
-            // Add comments to some cells
-            int commentIdx1 = sheet.Comments.Add("A2");
-            sheet.Comments[commentIdx1].Note = "Employee name";
-            int commentIdx2 = sheet.Comments.Add("B3");
-            sheet.Comments[commentIdx2].Note = "Age in years";
-
-            // Define the range to export (including header)
-            Aspose.Cells.Range exportRange = cells.CreateRange("A1:B3");
-
-            // Configure ExportRangeToJsonOptions
-            ExportRangeToJsonOptions jsonOptions = new ExportRangeToJsonOptions
+            try
             {
-                HasHeaderRow = true,
-                ExportEmptyCells = true,
-                ExportAsString = false,
-                Indent = "  " // pretty‑print with two spaces
-            };
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-            // Export the range to a JSON string
-            string json = JsonUtility.ExportRangeToJson(exportRange, jsonOptions);
+                // Add header row
+                cells["A1"].PutValue("Name");
+                cells["B1"].PutValue("Age");
 
-            // Build a dictionary of cell address -> comment text for quick lookup
-            Dictionary<string, string> commentMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            foreach (Comment comment in sheet.Comments)
-            {
-                // comment.CommentShape?.Name contains the cell name (e.g., "A2")
-                string cellName = comment.CommentShape?.Name;
-                if (!string.IsNullOrEmpty(cellName) && !string.IsNullOrEmpty(comment.Note))
+                // Add data rows
+                cells["A2"].PutValue("John");
+                cells["B2"].PutValue(30);
+                cells["A3"].PutValue("Alice");
+                cells["B3"].PutValue(25);
+
+                // Add comments to some data cells and store them in a dictionary for later use
+                var commentMap = new Dictionary<string, string>();
+
+                int commentIdx = sheet.Comments.Add("A2");
+                Comment commentA2 = sheet.Comments[commentIdx];
+                commentA2.Note = "Employee of the month";
+                commentMap["A2"] = commentA2.Note;
+
+                commentIdx = sheet.Comments.Add("B2");
+                Comment commentB2 = sheet.Comments[commentIdx];
+                commentB2.Note = "Salary in USD";
+                commentMap["B2"] = commentB2.Note;
+
+                // Define the range to export (including header)
+                AsposeRange exportRange = cells.CreateRange("A1:B3");
+
+                // Configure ExportRangeToJsonOptions
+                ExportRangeToJsonOptions jsonOptions = new ExportRangeToJsonOptions
                 {
-                    commentMap[cellName] = comment.Note;
+                    HasHeaderRow = true,
+                    ExportAsString = true,
+                    Indent = "  " // pretty‑print JSON
+                };
+
+                // Export the range to a JSON string
+                string json = JsonUtility.ExportRangeToJson(exportRange, jsonOptions);
+
+                // Parse the JSON into a mutable node structure
+                JsonNode? rootNode = JsonNode.Parse(json);
+                if (rootNode is not JsonArray jsonArray)
+                {
+                    Console.WriteLine("Failed to parse JSON array.");
+                    return;
                 }
-            }
 
-            // Parse the exported JSON so we can inject comment fields
-            JsonNode rootNode = JsonNode.Parse(json);
-            if (rootNode is not JsonArray rowsArray)
-            {
-                Console.WriteLine("Unexpected JSON format.");
-                return;
-            }
+                // Header names (same order as in the worksheet)
+                List<string> headers = new List<string> { "Name", "Age" };
 
-            // Retrieve header names from the first row of the range
-            List<string> headers = new List<string>();
-            for (int col = exportRange.FirstColumn; col <= exportRange.FirstColumn + exportRange.ColumnCount - 1; col++)
-            {
-                object headerVal = cells[exportRange.FirstRow, col].Value;
-                headers.Add(headerVal?.ToString() ?? $"Column{col}");
-            }
-
-            // Iterate over data rows and add comment fields where applicable
-            for (int i = 0; i < rowsArray.Count; i++)
-            {
-                if (rowsArray[i] is not JsonObject rowObj) continue;
-
-                int excelRow = exportRange.FirstRow + 1 + i; // data rows start after header
-                for (int colOffset = 0; colOffset < headers.Count; colOffset++)
+                // Enrich each JSON object with comment fields where applicable
+                for (int i = 0; i < jsonArray.Count; i++)
                 {
-                    int excelCol = exportRange.FirstColumn + colOffset;
-                    string cellAddress = CellsHelper.CellIndexToName(excelRow, excelCol); // e.g., "A2"
+                    // Row index in the worksheet (header row is row 0, data starts at row 1)
+                    int worksheetRow = i + 1; // because HasHeaderRow = true
 
-                    if (commentMap.TryGetValue(cellAddress, out string commentText))
+                    if (jsonArray[i] is not JsonObject rowObject)
+                        continue;
+
+                    for (int col = 0; col < headers.Count; col++)
                     {
-                        // Add a new field named "<Header>_Comment" with the comment text
-                        string commentFieldName = $"{headers[colOffset]}_Comment";
-                        rowObj[commentFieldName] = commentText;
+                        string cellAddress = cells[worksheetRow, col].Name; // e.g., "A2"
+                        if (commentMap.TryGetValue(cellAddress, out string commentText))
+                        {
+                            // Add a new property named "<Header>_Comment" with the comment text
+                            string commentPropertyName = $"{headers[col]}_Comment";
+                            rowObject[commentPropertyName] = commentText;
+                        }
                     }
                 }
+
+                // Serialize the enriched JSON back to a string
+                string enrichedJson = jsonArray.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+
+                // Output the final JSON
+                Console.WriteLine("Exported JSON with comments:");
+                Console.WriteLine(enrichedJson);
             }
-
-            // Serialize the enriched JSON back to a string with indentation
-            string enrichedJson = rootNode.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
-
-            // Output the final JSON
-            Console.WriteLine("Exported JSON with comments:");
-            Console.WriteLine(enrichedJson);
-
-            // Optionally, save the JSON to a file
-            File.WriteAllText("ExportedWithComments.json", enrichedJson);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

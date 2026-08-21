@@ -1,131 +1,90 @@
+// Title: Custom Calculation Engine in Aspose.Cells (.NET) for User‑Defined Functions
+// Description: Shows how to create a workbook, populate cells, assign formulas that include the built‑in SUM and custom functions DOUBLE and CONCAT, implement a custom engine by extending AbstractCalculationEngine, set it via CalculationOptions.CustomEngine, calculate all formulas with wb.CalculateFormula, display the results, and save the workbook.
+// Keywords: Aspose.Cells | custom calculation engine | AbstractCalculationEngine | user‑defined functions | C# | .NET | Excel formula extension | DOUBLE function | CONCAT function | wb.CalculateFormula | CalculationOptions | GitHub example
+// Common Searches: Aspose.Cells custom calculation engine example | how to add user defined functions in Aspose.Cells | C# extend AbstractCalculationEngine | replace missing Excel functions with custom logic Aspose.Cells | calculate formulas with custom engine .NET
+// Developer Intent: Create and register a custom calculation engine that implements undefined Excel functions and use it to evaluate workbook formulas in Aspose.Cells.
+// Use Cases: Extend Aspose.Cells to support a DOUBLE function that returns twice the numeric argument. | Implement a CONCAT function that joins multiple cell values into a single string. | Run wb.CalculateFormula with a custom engine to combine built‑in and user‑defined functions, then export the results.
+// AI Prompts: Generate a C# class inheriting from AbstractCalculationEngine that adds a POWER(base, exponent) function for Aspose.Cells. | Explain how to register a custom calculation engine in Aspose.Cells and evaluate formulas containing both native and custom functions. | Provide robust error‑handling code for parameter conversion inside a custom calculation engine method.
+
 using System;
-using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace CustomCalculationEngineDemo
+namespace CustomEngineDemo
 {
-    // Custom engine that provides implementations for user‑defined functions.
-    // If a function is not recognized, it returns the Excel error "#NAME?".
-    public class UserDefinedEngine : AbstractCalculationEngine
-    {
-        // Mapping of function name (upper case) to a delegate that performs the calculation.
-        private readonly Dictionary<string, Func<CalculationData, object>> _functions;
-
-        public UserDefinedEngine()
-        {
-            _functions = new Dictionary<string, Func<CalculationData, object>>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "MYADD",  CalculateMyAdd },
-                { "MYMULT", CalculateMyMult }
-                // Add more custom functions here as needed.
-            };
-        }
-
-        // Force recalculation for all custom functions to ensure each cell gets its own result.
-        public override bool ForceRecalculate(string functionName)
-        {
-            return _functions.ContainsKey(functionName);
-        }
-
-        // Core calculation method invoked by Aspose.Cells for each function call.
-        public override void Calculate(CalculationData data)
-        {
-            if (data == null) return;
-
-            // Try to find a user‑defined implementation.
-            if (_functions.TryGetValue(data.FunctionName, out var handler))
-            {
-                // Execute the custom logic and assign the result.
-                data.CalculatedValue = handler(data);
-                return;
-            }
-
-            // Function not found – return Excel's #NAME? error.
-            data.CalculatedValue = "#NAME?";
-        }
-
-        // Example implementation: MYADD(param1, param2, ...) returns the sum of all numeric parameters.
-        private object CalculateMyAdd(CalculationData data)
-        {
-            double sum = 0;
-            for (int i = 0; i < data.ParamCount; i++)
-            {
-                // Parameters are returned as objects; attempt conversion to double.
-                object val = data.GetParamValue(i);
-                if (val is double d)
-                {
-                    sum += d;
-                }
-                else
-                {
-                    // Try to convert other types (e.g., string representations of numbers).
-                    if (double.TryParse(Convert.ToString(val), out double parsed))
-                        sum += parsed;
-                }
-            }
-            return sum;
-        }
-
-        // Example implementation: MYMULT(param1, param2, ...) returns the product of all numeric parameters.
-        private object CalculateMyMult(CalculationData data)
-        {
-            double product = 1;
-            for (int i = 0; i < data.ParamCount; i++)
-            {
-                object val = data.GetParamValue(i);
-                if (val is double d)
-                {
-                    product *= d;
-                }
-                else
-                {
-                    if (double.TryParse(Convert.ToString(val), out double parsed))
-                        product *= parsed;
-                }
-            }
-            return product;
-        }
-    }
-
+    // Shows how to create a workbook, populate cells, assign formulas that include the built‑in SUM and custom functions DOUBLE and CONCAT, implement a custom engine by extending AbstractCalculationEngine, set it via CalculationOptions.CustomEngine, calculate all formulas with wb.CalculateFormula, display the results, and save the workbook.
     class Program
     {
         static void Main()
         {
-            // -------------------- Create workbook --------------------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
 
-            // Populate some sample data.
-            sheet.Cells["A1"].PutValue(5);
-            sheet.Cells["A2"].PutValue(10);
-            sheet.Cells["B1"].PutValue(2);
-            sheet.Cells["B2"].PutValue(3);
+            // Populate cells with sample data
+            ws.Cells["A1"].PutValue(5);
+            ws.Cells["A2"].PutValue(10);
+            ws.Cells["B1"].PutValue("Hello");
+            ws.Cells["B2"].PutValue("World");
 
-            // Formulas that use user‑defined functions.
-            sheet.Cells["C1"].Formula = "=MYADD(A1, A2)";      // Expected 15
-            sheet.Cells["C2"].Formula = "=MYMULT(B1, B2)";    // Expected 6
-            // This function does not exist in our engine – should return #NAME?.
-            sheet.Cells["C3"].Formula = "=UNKNOWNFUNC(A1)";
+            // Built‑in function
+            ws.Cells["C1"].Formula = "=SUM(A1:A2)";
 
-            // -------------------- Set calculation options with custom engine --------------------
-            CalculationOptions options = new CalculationOptions
+            // Custom functions that are not built‑in
+            ws.Cells["C2"].Formula = "=DOUBLE(A1)";
+            ws.Cells["C3"].Formula = "=CONCAT(B1, \" \", B2)";
+
+            // Set calculation options with the custom engine
+            CalculationOptions opts = new CalculationOptions
             {
-                CustomEngine = new UserDefinedEngine(),
-                // Keep default settings for other options.
-                Recursive = true,
-                IgnoreError = false
+                CustomEngine = new MyCustomEngine()
             };
 
-            // Perform calculation using the custom engine.
-            workbook.CalculateFormula(options);
+            // Calculate all formulas using the custom engine
+            wb.CalculateFormula(opts);
 
-            // Output results to console.
-            Console.WriteLine("C1 (MYADD)   = " + sheet.Cells["C1"].Value);
-            Console.WriteLine("C2 (MYMULT)  = " + sheet.Cells["C2"].Value);
-            Console.WriteLine("C3 (UNKNOWN) = " + sheet.Cells["C3"].Value);
+            // Output results
+            Console.WriteLine("SUM(A1:A2) = " + ws.Cells["C1"].Value);
+            Console.WriteLine("DOUBLE(A1) = " + ws.Cells["C2"].Value);
+            Console.WriteLine("CONCAT(B1, \" \", B2) = " + ws.Cells["C3"].StringValue);
 
-            // -------------------- Save workbook --------------------
-            workbook.Save("CustomEngineResult.xlsx");
+            // Save the workbook
+            wb.Save("CustomEngineResult.xlsx");
         }
+    }
+
+    // Custom calculation engine that provides implementations for missing functions
+    class MyCustomEngine : AbstractCalculationEngine
+    {
+        public override void Calculate(CalculationData data)
+        {
+            string func = data.FunctionName?.ToUpperInvariant();
+
+            if (func == "DOUBLE")
+            {
+                // One numeric parameter, return its double
+                object param = data.GetParamValue(0);
+                double val = Convert.ToDouble(param);
+                data.CalculatedValue = val * 2;
+                return;
+            }
+
+            if (func == "CONCAT")
+            {
+                // Concatenate all parameters as strings
+                var sb = new System.Text.StringBuilder();
+                for (int i = 0; i < data.ParamCount; i++)
+                {
+                    object p = data.GetParamValue(i);
+                    sb.Append(p?.ToString());
+                }
+                data.CalculatedValue = sb.ToString();
+                return;
+            }
+
+            // For other functions, let the default engine handle them (do nothing)
+        }
+
+        // No need to force recalculation for these functions
+        public override bool ForceRecalculate(string functionName) => false;
     }
 }

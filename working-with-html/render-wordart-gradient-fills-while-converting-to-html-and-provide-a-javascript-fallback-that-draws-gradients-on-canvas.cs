@@ -1,102 +1,92 @@
-// Title: C# – Export WordArt Gradient to HTML with Canvas JavaScript Fallback using Aspose.Cells
-// Description: Demonstrates how to create a workbook, add a TextBox with PresetWordArtStyle.WordArtStyle7 (gradient fill), save it as a single‑file HTML (images embedded as Base64), and inject a positioned canvas element plus JavaScript that redraws the same gradient and text as a fallback for browsers that cannot render the original shape.
-// Keywords: Aspose.Cells | C# | WordArt gradient | HTML export | canvas fallback | JavaScript gradient | ExportImagesAsBase64 | PresetWordArtStyle.WordArtStyle7 | Excel to HTML | single file HTML
-// Common Searches: Aspose.Cells export WordArt to HTML | preserve WordArt gradient in HTML | add canvas fallback for Excel WordArt | C# generate HTML with embedded images | draw linear gradient on canvas with JavaScript
-// Developer Intent: Create a single‑file HTML version of an Excel workbook that contains gradient‑filled WordArt and add a JavaScript canvas fallback that reproduces the same visual effect.
-// Use Cases: Convert Excel worksheets with WordArt to portable HTML for web publishing. | Ensure gradient‑filled WordArt displays correctly in browsers lacking native shape support. | Embed all images and styles as Base64 to simplify deployment and avoid external assets. | Programmatically inject custom JavaScript into the generated HTML for post‑processing. | Provide a lightweight canvas rendering for mobile or low‑power browsers.
-// AI Prompts: Write C# code that adds a TextBox shape, applies PresetWordArtStyle.WordArtStyle7, saves the workbook as HTML with ExportImagesAsBase64 = true, then inserts a canvas element with JavaScript that draws the same gradient and centered white text. | Generate JavaScript that creates a linear gradient from light blue to dark blue on a 400 × 100 canvas, fills the rectangle, and renders bold white text centered in the canvas. | Explain how to locate the closing </body> tag in the saved HTML, insert custom canvas markup before it, and fall back to appending at the end if the tag is missing.
+// Title: Render WordArt Gradient in HTML with Canvas Fallback – Aspose.Cells for .NET
+// Description: Adds a WordArt TextBox with preset gradient (WordArtStyle7), saves the workbook as HTML, then injects JavaScript that replaces the generated shape image with a canvas rendering the same linear gradient.
+// Keywords: Aspose.Cells | C# | WordArt | gradient fill | HTML export | canvas fallback | JavaScript gradient | PresetWordArtStyle | shape image replacement | Excel to HTML
+// Common Searches: export WordArt gradient to HTML using Aspose.Cells | JavaScript canvas fallback for Aspose.Cells WordArt | replace Aspose.Cells shape image with canvas gradient | preserve WordArtStyle7 gradient in HTML output | Aspose.Cells HTML shape rendering issue
+// Developer Intent: Generate HTML from an Excel workbook that keeps the WordArt gradient appearance and provide a JavaScript canvas fallback to redraw the gradient when the original shape image cannot be displayed.
+// Use Cases: Convert an Excel sheet containing WordArt to HTML while maintaining visual fidelity of gradient fills. | Automatically insert a script into Aspose.Cells HTML output that swaps shape images for canvas elements drawing matching gradients. | Create a reusable helper that adds gradient‑aware fallbacks for any WordArt shape exported by Aspose.Cells.
+// AI Prompts: Write a C# method that adds a WordArt TextBox with a preset gradient, saves the workbook as HTML, and injects JavaScript to replace the shape image with a canvas drawing the same gradient. | Generate JavaScript code that locates the <img> tag for a WordArt shape in Aspose.Cells HTML and replaces it with a canvas element rendering a linear gradient matching WordArtStyle7. | Explain how to modify Aspose.Cells‑generated HTML to include a fallback script that draws WordArt gradients on a canvas for browsers that cannot display the original shape image.
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// Demonstrates how to create a workbook, add a TextBox with PresetWordArtStyle.WordArtStyle7 (gradient fill), save it as a single‑file HTML (images embedded as Base64), and inject a positioned canvas element plus JavaScript that redraws the same gradient and text as a fallback for browsers that cannot render the original shape.
-class WordArtGradientHtmlDemo
+namespace WordArtGradientHtmlDemo
 {
-    static void Main()
+    // Adds a WordArt TextBox with preset gradient (WordArtStyle7), saves the workbook as HTML, then injects JavaScript that replaces the generated shape image with a canvas rendering the same linear gradient.
+    class Program
     {
-        try
+        static void Main()
         {
-            // 1. Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // 2. Add a TextBox shape that will hold the WordArt text
-            // Parameters: upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn, width, height
-            Shape textBox = sheet.Shapes.AddTextBox(2, 0, 2, 0, 400, 100);
-            textBox.TextBody.Text = "Aspose Cells WordArt";
+            // Add a TextBox shape that will hold the WordArt
+            // Parameters: upperLeftRow, top, upperLeftColumn, left, height, width
+            Shape textBox = sheet.Shapes.AddTextBox(2, 0, 2, 0, 120, 400);
+            textBox.Name = "MyWordArt";
 
-            // 3. Apply a preset WordArt style that contains a gradient fill (WordArtStyle7)
-            textBox.TextBody.SetWordArtStyle(PresetWordArtStyle.WordArtStyle7);
+            // Set the text for the WordArt
+            FontSettingCollection fontSettings = textBox.TextBody;
+            fontSettings.Text = "Gradient WordArt";
 
-            // 4. Save the workbook as HTML
-            string htmlPath = "WordArtGradient.html";
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
-            {
-                // Keep the HTML in a single file (styles and images embedded as base64)
-                ExportImagesAsBase64 = true
-            };
-            workbook.Save(htmlPath, saveOptions);
+            // Apply a preset WordArt style that includes a gradient fill (WordArtStyle7)
+            fontSettings.SetWordArtStyle(PresetWordArtStyle.WordArtStyle7);
 
-            // 5. Read the generated HTML, inject a canvas fallback and JavaScript that draws the same gradient
-            if (!File.Exists(htmlPath))
-                throw new FileNotFoundException("Generated HTML file not found.", htmlPath);
+            // Save the workbook as HTML
+            string htmlPath = "WordArt.html";
+            workbook.Save(htmlPath, SaveFormat.Html);
 
+            // Load the generated HTML
             string htmlContent = File.ReadAllText(htmlPath);
 
-            // Define a simple canvas element that matches the shape size
-            string canvasHtml = @"
-<div style='position:relative; width:400px; height:100px;'>
-    <canvas id='wordartCanvas' width='400' height='100' style='position:absolute; left:0; top:0;'></canvas>
-    <div id='wordartFallback' style='position:absolute; left:0; top:0; width:400px; height:100px;'></div>
-</div>
+            // JavaScript fallback that draws a matching gradient on a canvas element
+            string fallbackScript = @"
 <script>
-    // JavaScript fallback: draw the same gradient on the canvas
-    (function() {
-        var canvas = document.getElementById('wordartCanvas');
-        if (!canvas.getContext) return;
-        var ctx = canvas.getContext('2d');
+window.addEventListener('load', function () {
+    // Locate the first image generated for the shape (Aspose uses <img> tags for shapes)
+    var img = document.querySelector('img[alt=""MyWordArt""]');
+    if (!img) return;
 
-        // Create a linear gradient that mimics the WordArtStyle7 (blue to accent1)
-        var gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-        gradient.addColorStop(0, '#ADD8E6'); // LightBlue
-        gradient.addColorStop(1, '#00008B'); // DarkBlue
+    // Create a canvas with the same dimensions as the image
+    var canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
 
-        // Fill the canvas with the gradient
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Draw a linear gradient that approximates WordArtStyle7 (Blue to Accent1)
+    var ctx = canvas.getContext('2d');
+    var grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+    grad.addColorStop(0, '#00B0F0'); // Approximate Accent1 blue
+    grad.addColorStop(1, '#FFFFFF'); // White (reflection effect)
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Optional: add the text on top of the gradient
-        ctx.font = 'bold 36px Arial';
-        ctx.fillStyle = '#FFFFFF';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('Aspose Cells WordArt', canvas.width / 2, canvas.height / 2);
-    })();
+    // Replace the image with the canvas
+    img.parentNode.replaceChild(canvas, img);
+});
 </script>";
 
-            // Insert the canvas HTML just before the closing </body> tag
+            // Insert the fallback script before the closing </body> tag
             int bodyCloseIndex = htmlContent.LastIndexOf("</body>", StringComparison.OrdinalIgnoreCase);
             if (bodyCloseIndex >= 0)
             {
-                htmlContent = htmlContent.Insert(bodyCloseIndex, canvasHtml);
+                htmlContent = htmlContent.Insert(bodyCloseIndex, fallbackScript);
             }
             else
             {
-                // Fallback: append at the end
-                htmlContent += canvasHtml;
+                // If </body> not found, append at the end
+                htmlContent += fallbackScript;
             }
 
-            // 6. Write the modified HTML back to file
+            // Write the modified HTML back to disk
             File.WriteAllText(htmlPath, htmlContent);
 
-            Console.WriteLine("HTML with WordArt gradient and JavaScript fallback generated at: " + Path.GetFullPath(htmlPath));
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine("HTML with WordArt gradient and JavaScript fallback has been generated at: " + Path.GetFullPath(htmlPath));
         }
     }
 }

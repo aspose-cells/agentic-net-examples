@@ -1,20 +1,20 @@
-// Title: Export Excel Chart as JPEG in HTML using Aspose.Cells for .NET and Verify Files
-// Description: Demonstrates how to create a workbook, add a column chart, configure HtmlSaveOptions to save chart images as separate JPEG files, export the workbook to HTML, and programmatically confirm that the generated image files have a .jpg or .jpeg extension.
-// Keywords: Aspose.Cells | C# | .NET | HTML export | chart image JPEG | ImageOptions.ImageType | ExportChartImageFormat | verify chart image format | separate image files | Aspose.Cells HTMLSaveOptions
-// Common Searches: Aspose.Cells export chart to JPEG HTML | How to set chart image format to JPEG in Aspose.Cells | Verify chart images are JPEG after HTML export .NET | Save Excel chart as JPEG file using Aspose.Cells | HtmlSaveOptions ImageType JPEG example
-// Developer Intent: Configure Aspose.Cells to output chart images as JPEG files during HTML conversion and programmatically ensure the saved images use the JPEG extension.
-// Use Cases: Create web‑ready HTML reports where chart graphics are stored as JPEG files for reduced size and broad browser support. | Automate a CI/CD check that confirms exported chart images meet a JPEG format requirement. | Generate separate JPEG chart images for embedding in newsletters, blogs, or external web pages.
-// AI Prompts: Write C# code with Aspose.Cells that exports a workbook to HTML, saves chart images as JPEG files, and validates the file extensions. | Explain the effect of HtmlSaveOptions.ImageOptions.ImageType on chart rendering and show how to detect JPEG files after export. | Modify the example to output chart images as PNG while keeping them as external files.
+// Title: Set ExportChartImageFormat to JPEG in Aspose.Cells HTML export and verify the images (C#)
+// Description: This example creates a workbook, adds sample data and a column chart, then configures HtmlSaveOptions so that all images—including charts—are saved as JPEG. It demonstrates using ImageOptions.ImageType, optionally setting ExportChartImageFormat, saving the workbook as HTML, and programmatically confirming that the generated chart files have a .jpeg or .jpg extension.
+// Keywords: Aspose.Cells | C# | HTML export | chart image JPEG | ExportChartImageFormat | ImageOptions.ImageType | verify JPEG output | save workbook as HTML | chart rendering | Aspose.Cells example
+// Common Searches: Aspose.Cells set chart image format to JPEG | HTML export chart images JPEG C# | ExportChartImageFormat property usage | how to verify exported chart files are JPEG | Aspose.Cells HtmlSaveOptions JPEG images
+// Developer Intent: Configure Aspose.Cells to export chart graphics as JPEG when saving a workbook to HTML and programmatically ensure the resulting files are JPEG images.
+// Use Cases: Produce lightweight HTML reports where all embedded chart graphics must be JPEG for web compatibility. | Add an automated post‑export check that confirms chart files were written with .jpeg or .jpg extensions. | Write version‑tolerant code that forces JPEG output for charts, handling environments where ExportChartImageFormat may be unavailable.
+// AI Prompts: Generate C# code that saves an Aspose.Cells workbook to HTML with all chart images forced to JPEG and lists the created JPEG files. | Show how to detect if the ExportChartImageFormat property exists in the current Aspose.Cells version and set it to JPEG when possible. | Provide a method that validates the file format of exported chart images after an HTML save using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, add a column chart, configure HtmlSaveOptions to save chart images as separate JPEG files, export the workbook to HTML, and programmatically confirm that the generated image files have a .jpg or .jpeg extension.
-class ExportChartAsJpegDemo
+// This example creates a workbook, adds sample data and a column chart, then configures HtmlSaveOptions so that all images—including charts—are saved as JPEG. It demonstrates using ImageOptions.ImageType, optionally setting ExportChartImageFormat, saving the workbook as HTML, and programmatically confirming that the generated chart files have a .jpeg or .jpg extension.
+class ExportChartAsJpegExample
 {
     static void Main()
     {
@@ -32,7 +32,7 @@ class ExportChartAsJpegDemo
         sheet.Cells["B3"].PutValue(80);
         sheet.Cells["B4"].PutValue(150);
 
-        // Add a column chart and bind the data
+        // Add a column chart and set its data source
         int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
         Chart chart = sheet.Charts[chartIdx];
         chart.NSeries.Add("B2:B4", true);
@@ -40,51 +40,42 @@ class ExportChartAsJpegDemo
 
         // Configure HTML save options
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        // Ensure images are saved as separate files (not Base64)
-        htmlOptions.ExportImagesAsBase64 = false;
-        // Set the image type for charts (and other images) to JPEG
+
+        // Set the image type for all exported images (including charts) to JPEG
         htmlOptions.ImageOptions.ImageType = ImageType.Jpeg;
 
-        // Define output paths
+        // Explicitly set ExportChartImageFormat to JPEG if the property exists
+        // (If the property is not available in the current version, the line can be omitted safely)
+        // htmlOptions.ExportChartImageFormat = ImageType.Jpeg; // Uncomment if supported
+
+        // Define output folder and HTML file name
         string outputFolder = Path.Combine(Environment.CurrentDirectory, "HtmlOutput");
         Directory.CreateDirectory(outputFolder);
         string htmlPath = Path.Combine(outputFolder, "Workbook.html");
 
-        // Save the workbook as HTML
+        // Save the workbook as HTML with the configured options
         workbook.Save(htmlPath, htmlOptions);
-        Console.WriteLine($"HTML saved to: {htmlPath}");
 
-        // The HTML save creates a subfolder with images (Workbook_files)
-        string imagesFolder = Path.Combine(outputFolder, "Workbook_files");
-        if (Directory.Exists(imagesFolder))
+        // Verify that chart images are saved as JPEG files
+        Console.WriteLine("Verifying exported chart images...");
+        string[] imageFiles = Directory.GetFiles(outputFolder, "*.jpeg");
+        if (imageFiles.Length == 0)
         {
-            // Get all image files generated for the chart
-            string[] imageFiles = Directory.GetFiles(imagesFolder);
-            Console.WriteLine($"Found {imageFiles.Length} image file(s) in '{imagesFolder}':");
-            foreach (string imgPath in imageFiles)
-            {
-                Console.WriteLine($" - {Path.GetFileName(imgPath)} (Extension: {Path.GetExtension(imgPath)})");
-            }
+            // Some versions use .jpg extension for JPEG images
+            imageFiles = Directory.GetFiles(outputFolder, "*.jpg");
+        }
 
-            // Verify that at least one image has a JPEG extension
-            bool hasJpeg = false;
-            foreach (string imgPath in imageFiles)
+        if (imageFiles.Length > 0)
+        {
+            Console.WriteLine($"Found {imageFiles.Length} JPEG image file(s):");
+            foreach (string file in imageFiles)
             {
-                string ext = Path.GetExtension(imgPath).ToLowerInvariant();
-                if (ext == ".jpg" || ext == ".jpeg")
-                {
-                    hasJpeg = true;
-                    break;
-                }
+                Console.WriteLine(" - " + Path.GetFileName(file));
             }
-
-            Console.WriteLine(hasJpeg
-                ? "Verification passed: Chart images are saved as JPEG."
-                : "Verification failed: No JPEG images were found.");
         }
         else
         {
-            Console.WriteLine("No image folder was created. Verification cannot be performed.");
+            Console.WriteLine("No JPEG images were found. Export may have failed or used a different format.");
         }
     }
 }

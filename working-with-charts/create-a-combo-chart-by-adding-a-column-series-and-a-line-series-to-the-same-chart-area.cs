@@ -1,74 +1,66 @@
-// Title: Create a Column‑Line Combo Chart with Aspose.Cells for .NET
-// Description: This example builds an Excel workbook, fills it with month, sales and profit data, adds a column chart, converts the profit series to a line, customizes its markers, and saves the file as ComboChart.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells combo chart | column and line series .NET | change series type Aspose.Cells | custom line markers Excel chart | Aspose.Cells chart API example | Excel combo chart code | Aspose.Cells .NET tutorial
-// Common Searches: Aspose.Cells create combo chart column line | how to change series type to line in Aspose.Cells | add markers to line series Aspose.Cells chart | combo chart example Aspose.Cells for .NET | Aspose.Cells column chart with secondary line series
-// Developer Intent: Generate an Excel file that displays sales as columns and profit as a line on the same chart.
-// Use Cases: Business dashboards that compare sales volume (columns) with profit trend (line) in a single view. | Reports requiring two metrics with different scales without using separate charts. | Highlighting profit fluctuations by applying custom markers while keeping sales data in column format.
-// AI Prompts: Show how to add a secondary Y‑axis for the line series in this combo chart. | Provide code that sets distinct colors for the column and line series and adds a chart title. | Explain how to export the generated combo chart as a PNG image using Aspose.Cells.
+// Title: Create a Column‑Line Combo Chart with Aspose.Cells for .NET (C#)
+// Description: This C# example uses Aspose.Cells for .NET to generate an Excel workbook, fill quarterly sales and profit data, and build a combo chart that combines a column series (sales) and a line series (profit) on a shared category axis, then saves the file as ComboChart.xlsx.
+// Keywords: Aspose.Cells | C# | combo chart | column chart | line chart | mixed chart | Excel chart automation | set series type | chart series range | Excel export | Aspose.Cells example
+// Common Searches: how to create a combo chart with column and line series using Aspose.Cells C# | Aspose.Cells set different chart types for multiple series | add line series to an existing column chart Aspose.Cells | define category axis data for a combo chart in Aspose.Cells | Aspose.Cells mixed chart example .NET
+// Developer Intent: Generate an Excel workbook that contains a combo chart where one series is displayed as columns and another as a line, using Aspose.Cells for .NET.
+// Use Cases: Business reports that need sales shown as columns and profit shown as a line on the same chart. | Dashboard widgets where different metrics require distinct visual styles. | Automated financial statements that export data to Excel with a combined column‑line chart for stakeholder presentations.
+// AI Prompts: Show how to change the line series color and marker style in the combo chart with Aspose.Cells. | Provide code to add a secondary Y‑axis for the line series in the combo chart. | Explain how to bind chart data ranges from a DataTable and create a combo chart dynamically.
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// This example builds an Excel workbook, fills it with month, sales and profit data, adds a column chart, converts the profit series to a line, customizes its markers, and saves the file as ComboChart.xlsx using Aspose.Cells for .NET.
-class ComboChartDemo
+// This C# example uses Aspose.Cells for .NET to generate an Excel workbook, fill quarterly sales and profit data, and build a combo chart that combines a column series (sales) and a line series (profit) on a shared category axis, then saves the file as ComboChart.xlsx.
+class ComboChartExample
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate header row
-            sheet.Cells["A1"].PutValue("Month");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["C1"].PutValue("Profit");
+        // Populate sample data
+        // Column A – categories
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("Q1");
+        sheet.Cells["A3"].PutValue("Q2");
+        sheet.Cells["A4"].PutValue("Q3");
+        sheet.Cells["A5"].PutValue("Q4");
 
-            // Sample data
-            string[] months = { "Jan", "Feb", "Mar", "Apr", "May" };
-            int[] sales = { 100, 150, 130, 170, 160 };
-            double[] profit = { 20, 30, 25, 35, 28 };
+        // Column B – values for the column series
+        sheet.Cells["B1"].PutValue("Sales");
+        sheet.Cells["B2"].PutValue(120);
+        sheet.Cells["B3"].PutValue(150);
+        sheet.Cells["B4"].PutValue(180);
+        sheet.Cells["B5"].PutValue(210);
 
-            // Fill worksheet with data
-            for (int i = 0; i < months.Length; i++)
-            {
-                sheet.Cells[i + 2, 0].PutValue(months[i]);   // Column A
-                sheet.Cells[i + 2, 1].PutValue(sales[i]);   // Column B
-                sheet.Cells[i + 2, 2].PutValue(profit[i]);  // Column C
-            }
+        // Column C – values for the line series
+        sheet.Cells["C1"].PutValue("Profit");
+        sheet.Cells["C2"].PutValue(30);
+        sheet.Cells["C3"].PutValue(45);
+        sheet.Cells["C4"].PutValue(55);
+        sheet.Cells["C5"].PutValue(70);
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 10);
-            Chart chart = sheet.Charts[chartIndex];
+        // Add a chart (initially a Column chart) to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 22, 10);
+        Chart chart = sheet.Charts[chartIndex];
 
-            // Set category (X‑axis) data
-            chart.NSeries.CategoryData = "A2:A6";
+        // Add the first series (column series) and set its type explicitly
+        chart.NSeries.Add("=Sheet1!$B$2:$B$5", true);
+        chart.NSeries[0].Type = ChartType.Column; // column series
 
-            // Add Sales series (column)
-            chart.NSeries.Add("B2:B6", true);
+        // Add the second series (line series) and set its type to Line
+        chart.NSeries.Add("=Sheet1!$C$2:$C$5", true);
+        chart.NSeries[1].Type = ChartType.Line; // line series
 
-            // Add Profit series (will be changed to line)
-            chart.NSeries.Add("C2:C6", true);
+        // Set the category (X‑axis) data for both series
+        chart.NSeries.CategoryData = "=Sheet1!$A$2:$A$5";
 
-            // Convert the second series to a line type for a combo chart
-            chart.NSeries[1].Type = ChartType.Line;
+        // Optional: give the series meaningful names
+        chart.NSeries[0].Name = "Sales";
+        chart.NSeries[1].Name = "Profit";
 
-            // Customize the line series markers
-            chart.NSeries[1].Marker.MarkerStyle = ChartMarkerType.Circle;
-            // Size property may not be available in some versions; omitted for compatibility
-            chart.NSeries[1].Marker.ForegroundColor = Color.Blue;
-
-            // Save the workbook
-            string outputPath = "ComboChart.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook
+        workbook.Save("ComboChart.xlsx");
     }
 }

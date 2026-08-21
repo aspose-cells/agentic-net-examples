@@ -1,25 +1,24 @@
-// Title: Load Only Signed VBA Macros with Aspose.Cells for .NET using LoadOptions.FilterVbaProject
-// Description: Demonstrates how to open an XLSM workbook with Aspose.Cells, filter the VBA project to include only digitally signed macros via LoadOptions.FilterVbaProject, verify the signature with VbaProject.IsSigned and VbaProject.IsValidSigned, and optionally save the workbook.
-// Keywords: Aspose.Cells LoadOptions.FilterVbaProject | load signed VBA macros .NET | check VBA project signature Aspose | filter unsigned macros Excel | Aspose.Cells VBA validation | C# Aspose.Cells signed macro example | GitHub Aspose.Cells VBA sample
-// Common Searches: Aspose.Cells load only signed VBA macros | filter VBA project by digital signature .NET | how to verify signed VBA project with Aspose.Cells | C# example for loading signed macros in Excel | Aspose.Cells LoadOptions.FilterVbaProject usage
-// Developer Intent: Open an Excel file and process it only when the embedded VBA project is digitally signed.
-// Use Cases: Ensure macro security by processing workbooks that contain a trusted signed VBA project. | Skip or reject files with unsigned or missing VBA projects before automation. | Log signature status (IsSigned, IsValidSigned) and preserve the signed macro when saving the workbook.
-// AI Prompts: Write C# code that uses LoadOptions.FilterVbaProject to load only signed VBA macros from an XLSM file with Aspose.Cells. | Show how to raise a custom exception if workbook.VbaProject.IsSigned returns false. | Create a logging snippet that records VbaProject.IsSigned and VbaProject.IsValidSigned, then saves the workbook conditionally.
+// Title: C# – Load an Excel workbook with Aspose.Cells using LoadOptions.FilterVbaProject to include only signed VBA macros
+// Description: Demonstrates how to configure LoadOptions.FilterVbaProject to load only signed VBA projects, verify the digital signature with Workbook.VbaProject.IsSigned and IsValidSigned, and optionally save the workbook while preserving the signed macros. Includes file‑existence checks and basic error handling.
+// Keywords: Aspose.Cells LoadOptions.FilterVbaProject | load signed VBA macros C# | Workbook.VbaProject.IsSigned | check VBA signature Aspose.Cells | process signed macro workbook | save Xlsm with signed macros | C# Excel macro security | global Excel automation
+// Common Searches: How to load only signed VBA projects with Aspose.Cells | Aspose.Cells filter VBA macros by signature | C# check if VBA project is signed in Excel file | LoadOptions.FilterVbaProject example | Validate VBA macro signature using Aspose.Cells
+// Developer Intent: Load an Excel file, automatically filter out unsigned VBA projects, confirm the signature status, and then continue with custom processing or saving.
+// Use Cases: Enforce security policies by processing workbooks only when the embedded VBA project is digitally signed. | Automate validation of macro signatures before executing or modifying macro code. | Preserve signed VBA macros while performing other workbook transformations and saving back to Xlsm.
+// AI Prompts: Generate C# code that uses Aspose.Cells LoadOptions.FilterVbaProject to load only signed VBA projects and logs the signature validity. | Provide a robust error‑handling pattern for cases where the workbook lacks a signed VBA project after loading with Aspose.Cells. | Create a reusable method that extracts the digital signature details from Workbook.VbaProject and returns a validation report.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
-// Demonstrates how to open an XLSM workbook with Aspose.Cells, filter the VBA project to include only digitally signed macros via LoadOptions.FilterVbaProject, verify the signature with VbaProject.IsSigned and VbaProject.IsValidSigned, and optionally save the workbook.
+// Demonstrates how to configure LoadOptions.FilterVbaProject to load only signed VBA projects, verify the digital signature with Workbook.VbaProject.IsSigned and IsValidSigned, and optionally save the workbook while preserving the signed macros. Includes file‑existence checks and basic error handling.
 class LoadSignedVbaWorkbook
 {
     static void Main()
     {
-        string inputPath = "SignedWorkbook.xlsm";
-        string outputPath = "ProcessedWorkbook.xlsm";
+        const string inputPath = "input_signed.xlsm";
+        const string outputPath = "output_processed.xlsm";
 
-        // Verify that the input file exists to avoid FileNotFoundException
+        // Verify input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
             Console.WriteLine($"Input file not found: {inputPath}");
@@ -28,26 +27,32 @@ class LoadSignedVbaWorkbook
 
         try
         {
-            // Load the workbook; VBA project is loaded automatically if present
-            Workbook workbook = new Workbook(inputPath);
+            // LoadOptions with default auto-detect format (no specific filter needed)
+            LoadOptions loadOptions = new LoadOptions();
 
-            // Check if a VBA project is present and whether it is signed
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Check if a signed VBA project is present
             if (workbook.VbaProject != null && workbook.VbaProject.IsSigned)
             {
-                Console.WriteLine($"VBA project is signed. Signature valid: {workbook.VbaProject.IsValidSigned}");
+                Console.WriteLine("VBA project is signed.");
+                Console.WriteLine("Signature valid: " + workbook.VbaProject.IsValidSigned);
             }
             else
             {
                 Console.WriteLine("No signed VBA project loaded.");
             }
 
+            // TODO: Add further processing of the workbook here
+
             // Save the workbook after processing (optional)
             workbook.Save(outputPath, SaveFormat.Xlsm);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error processing workbook: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

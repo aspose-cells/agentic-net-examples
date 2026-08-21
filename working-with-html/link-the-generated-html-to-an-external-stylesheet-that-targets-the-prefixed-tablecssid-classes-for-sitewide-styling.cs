@@ -1,62 +1,96 @@
-// Title: C# – Link an external CSS file to Aspose.Cells HTML using TableCssId prefix
-// Description: Creates a workbook, sets HtmlSaveOptions.TableCssId to a custom prefix, exports worksheet CSS to a separate .css file, and programmatically injects a <link> tag into the generated HTML so the site‑wide stylesheet styles .{prefix}-table, .{prefix}-tr, and .{prefix}-td elements.
-// Keywords: Aspose.Cells HTML export C# | TableCssId prefix | external CSS link | ExportWorksheetCSSSeparately | inject link tag C# | Excel to HTML styling
-// Common Searches: how to add external stylesheet to Aspose.Cells HTML output | use TableCssId to style generated HTML tables | programmatically insert <link> into saved HTML C# | export worksheet CSS separately Aspose.Cells
-// Developer Intent: Add a shared stylesheet that targets the prefixed CSS classes produced by Aspose.Cells when saving a workbook as HTML.
-// Use Cases: Generate HTML reports from Excel files with consistent site‑wide table styling. | Reuse a single CSS file across multiple Excel‑to‑HTML conversions by applying a common class prefix. | Automate post‑processing of saved HTML to embed a <link> element, removing manual edits.
-// AI Prompts: Write C# code that saves an Aspose.Cells workbook as HTML, creates a CSS file for .site-table, .site-tr, .site-td, and inserts a <link> tag into the HTML head. | Explain how HtmlSaveOptions.TableCssId prefixes generated CSS classes and how to reference an external stylesheet for global styling. | Show a C# snippet that reads a saved HTML file, finds the </head> tag, and injects a <link rel="stylesheet" href="..."> element.
+// Title: Aspose.Cells C# – Link Exported HTML to a Site‑Wide External CSS via TableCssId
+// Description: Generate a workbook, export it as HTML with a TableCssId prefix and separate CSS, create a site‑wide stylesheet that targets the prefixed classes, inject a <link> tag before </head>, and optionally delete the Aspose‑generated CSS file.
+// Keywords: Aspose.Cells | C# | HTML export | TableCssId | external stylesheet | custom CSS | remove generated CSS | HtmlSaveOptions | site‑wide styling | link tag injection
+// Common Searches: How to add an external CSS file to Aspose.Cells HTML output | Aspose.Cells TableCssId prefix for shared stylesheet | Replace Aspose generated CSS with site‑wide CSS in .NET | Insert <link> tag into HTML saved by Aspose.Cells | Delete Aspose.Cells generated CSS after linking custom stylesheet
+// Developer Intent: Attach a custom external CSS file to the HTML produced by Aspose.Cells, using the TableCssId prefix for consistent table styling, and clean up the auto‑generated CSS file.
+// Use Cases: Apply uniform site‑wide table styles to all workbooks exported as HTML. | Reduce the number of CSS files by consolidating per‑workbook styles into a single stylesheet. | Automate post‑processing of Aspose.Cells HTML to meet corporate branding guidelines. | Keep the output directory tidy by removing the temporary CSS file after linking the custom stylesheet.
+// AI Prompts: Write C# code that inserts a <link> tag for an external CSS file into an Aspose.Cells‑generated HTML document. | Create a method that builds a site‑wide CSS file targeting .{TableCssId}-* classes produced by Aspose.Cells and updates the HTML to reference it. | Provide a script that deletes the Aspose‑generated CSS file after the HTML has been modified to use a custom stylesheet.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, sets HtmlSaveOptions.TableCssId to a custom prefix, exports worksheet CSS to a separate .css file, and programmatically injects a <link> tag into the generated HTML so the site‑wide stylesheet styles .{prefix}-table, .{prefix}-tr, and .{prefix}-td elements.
-class Program
+namespace AsposeCellsHtmlExternalCssDemo
 {
-    static void Main()
+    // Generate a workbook, export it as HTML with a TableCssId prefix and separate CSS, create a site‑wide stylesheet that targets the prefixed classes, inject a <link> tag before </head>, and optionally delete the Aspose‑generated CSS file.
+    class Program
     {
-        // Create a new workbook and add sample data
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["A1"].PutValue("Name");
-        worksheet.Cells["B1"].PutValue("Age");
-        worksheet.Cells["A2"].PutValue("John");
-        worksheet.Cells["B2"].PutValue(30);
-        worksheet.Cells["A3"].PutValue("Alice");
-        worksheet.Cells["B3"].PutValue(25);
-
-        // Configure HTML save options
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
-        // Prefix for generated CSS classes (e.g., .site-tr, .site-td)
-        saveOptions.TableCssId = "site";
-        // Export worksheet CSS to a separate file instead of embedding it
-        saveOptions.ExportWorksheetCSSSeparately = true;
-
-        // Define output file names
-        string htmlPath = "output.html";
-        string externalCssPath = "site-styles.css";
-
-        // Save the workbook as HTML (a separate CSS file will also be generated)
-        workbook.Save(htmlPath, saveOptions);
-
-        // Create a site‑wide stylesheet that targets the prefixed classes
-        string cssContent = @"
-.site-table { border-collapse: collapse; width: 100%; }
-.site-tr { background-color: #f9f9f9; }
-.site-td { padding: 8px; border: 1px solid #ccc; }
-";
-        File.WriteAllText(externalCssPath, cssContent);
-
-        // Insert a <link> tag into the generated HTML to reference the external stylesheet
-        string html = File.ReadAllText(htmlPath);
-        int headCloseIdx = html.IndexOf("</head>", StringComparison.OrdinalIgnoreCase);
-        if (headCloseIdx >= 0)
+        static void Main()
         {
-            string linkTag = $@"<link rel=""stylesheet"" type=""text/css"" href=""{externalCssPath}"">";
-            html = html.Insert(headCloseIdx, linkTag + Environment.NewLine);
-            File.WriteAllText(htmlPath, html);
-        }
+            // -----------------------------------------------------------------
+            // 1. Create a workbook and populate it with sample data
+            // -----------------------------------------------------------------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        Console.WriteLine("HTML file saved and linked to external stylesheet.");
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Age");
+            sheet.Cells["A2"].PutValue("John");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["A3"].PutValue("Alice");
+            sheet.Cells["B3"].PutValue(25);
+
+            // -----------------------------------------------------------------
+            // 2. Configure HtmlSaveOptions
+            //    - TableCssId gives a prefix for generated table CSS classes
+            //    - ExportWorksheetCSSSeparately creates a separate CSS file
+            // -----------------------------------------------------------------
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            htmlOptions.TableCssId = "site-table";               // prefix for CSS classes
+            htmlOptions.ExportWorksheetCSSSeparately = true;     // generate separate CSS file
+            htmlOptions.DisableCss = false;                     // ensure CSS is used
+
+            // Paths for output files
+            string outputFolder = Path.Combine(Environment.CurrentDirectory, "HtmlOutput");
+            Directory.CreateDirectory(outputFolder);
+            string htmlPath = Path.Combine(outputFolder, "report.html");
+            string generatedCssPath = Path.Combine(outputFolder, "report.css"); // created by Aspose
+            string externalCssPath = Path.Combine(outputFolder, "site.css");   // our site‑wide stylesheet
+
+            // -----------------------------------------------------------------
+            // 3. Save workbook as HTML (Aspose will generate report.html + report.css)
+            // -----------------------------------------------------------------
+            workbook.Save(htmlPath, htmlOptions);
+
+            // -----------------------------------------------------------------
+            // 4. Create an external stylesheet that targets the prefixed classes
+            //    The classes generated by Aspose follow the pattern:
+            //    .{TableCssId}-tr, .{TableCssId}-td, .{TableCssId}-col, etc.
+            // -----------------------------------------------------------------
+            string externalCssContent = @"
+                /* Site‑wide styling for tables generated by Aspose.Cells */
+                .site-table-tr { background-color: #f9f9f9; }
+                .site-table-td { padding: 8px; border: 1px solid #ccc; }
+                .site-table-col { font-weight: bold; }
+                .site-table-table { border-collapse: collapse; width: 100%; }
+            ";
+            File.WriteAllText(externalCssPath, externalCssContent);
+
+            // -----------------------------------------------------------------
+            // 5. Modify the generated HTML to reference the external stylesheet
+            //    (Insert <link> tag just before the closing </head> element)
+            // -----------------------------------------------------------------
+            string htmlContent = File.ReadAllText(htmlPath);
+            string linkTag = $@"<link rel=""stylesheet"" type=""text/css"" href=""{Path.GetFileName(externalCssPath)}"" />";
+            // Find the closing </head> tag (case‑insensitive)
+            int headCloseIndex = htmlContent.IndexOf("</head>", StringComparison.OrdinalIgnoreCase);
+            if (headCloseIndex >= 0)
+            {
+                htmlContent = htmlContent.Insert(headCloseIndex, linkTag + Environment.NewLine);
+                File.WriteAllText(htmlPath, htmlContent);
+            }
+
+            // -----------------------------------------------------------------
+            // 6. Optional: delete the Aspose‑generated CSS file if it is no longer needed
+            // -----------------------------------------------------------------
+            if (File.Exists(generatedCssPath))
+            {
+                File.Delete(generatedCssPath);
+            }
+
+            Console.WriteLine("HTML saved to: " + htmlPath);
+            Console.WriteLine("External stylesheet saved to: " + externalCssPath);
+            Console.WriteLine("HTML now links to the external stylesheet.");
+        }
     }
 }

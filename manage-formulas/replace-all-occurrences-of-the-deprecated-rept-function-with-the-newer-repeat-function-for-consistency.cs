@@ -1,10 +1,10 @@
-// Title: C# – Replace deprecated REPT with REPEAT in all Excel formulas using Aspose.Cells
-// Description: Loads an existing workbook, iterates through every worksheet and cell, detects formulas that contain the REPT function, replaces each occurrence with the newer REPEAT function (case‑insensitive), and saves the updated workbook. Includes robust error handling for loading and saving.
-// Keywords: Aspose.Cells | C# | REPT function | REPEAT function | Excel formula replace | bulk formula update | deprecated Excel function | worksheet iteration | programmatic Excel editing
-// Common Searches: Aspose.Cells replace REPT with REPEAT | C# code to update Excel formulas programmatically | bulk replace function name in Excel workbook | case‑insensitive formula replace using Aspose.Cells | how to migrate REPT to REPEAT in Excel files
-// Developer Intent: Replace every occurrence of the REPT function with REPEAT in all formulas of an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Modernize legacy spreadsheets that still use the deprecated REPT function. | Ensure compatibility with newer Excel versions that require REPEAT. | Automate large‑scale formula migrations across multiple worksheets before distribution.
-// AI Prompts: Generate C# code with Aspose.Cells to replace a specific function name in all workbook formulas. | Show best‑practice error handling when loading, modifying, and saving Excel files with Aspose.Cells. | Explain how to perform a case‑insensitive function name replacement in Excel formulas using Aspose.Cells.
+// Title: Replace REPT with REPEAT in Excel formulas using Aspose.Cells for .NET
+// Description: Loads a workbook, scans every worksheet and cell, detects formulas that contain the deprecated REPT function (case‑insensitive), swaps it for the newer REPEAT function, and saves the updated file.
+// Keywords: Aspose.Cells | C# | .NET | Excel formula replace | REPT to REPEAT | bulk formula update | deprecated Excel function | programmatic Excel cleanup | formula search and replace | Excel automation
+// Common Searches: replace REPT with REPEAT Aspose.Cells C# | bulk update Excel formulas .NET | iterate worksheets and modify formulas Aspose.Cells | programmatically change deprecated Excel functions | search and replace formulas in Excel workbook C#
+// Developer Intent: Swap every REPT occurrence for REPEAT in all formula cells of a workbook.
+// Use Cases: Modernize legacy spreadsheets that still use REPT. | Ensure consistency after upgrading to newer Excel versions. | Automate cleanup of deprecated functions across multiple workbooks.
+// AI Prompts: Write C# code with Aspose.Cells that finds and replaces REPT with REPEAT in all formula cells, handling case‑insensitivity. | Provide a snippet that logs the address of each cell where REPT was changed to REPEAT. | Explain how to extend the logic to replace several deprecated functions in one pass.
 
 using System;
 using System.IO;
@@ -12,72 +12,56 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Loads an existing workbook, iterates through every worksheet and cell, detects formulas that contain the REPT function, replaces each occurrence with the newer REPEAT function (case‑insensitive), and saves the updated workbook. Includes robust error handling for loading and saving.
-    public class ReplaceReptWithRepeatDemo
+    // Loads a workbook, scans every worksheet and cell, detects formulas that contain the deprecated REPT function (case‑insensitive), swaps it for the newer REPEAT function, and saves the updated file.
+    public class ReplaceReptWithRepeat
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            Run();
         }
 
         public static void Run()
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists before loading
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            Workbook workbook;
             try
             {
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
-                return;
-            }
-
-            // Replace deprecated REPT function with REPEAT in all formulas
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                Cells cells = sheet.Cells;
-                foreach (Cell cell in cells)
+                // Ensure the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    if (cell.IsFormula)
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets and cells
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    foreach (Cell cell in sheet.Cells)
                     {
-                        string formula = cell.Formula;
-                        if (!string.IsNullOrEmpty(formula) &&
-                            formula.IndexOf("REPT", StringComparison.OrdinalIgnoreCase) >= 0)
+                        if (cell.IsFormula)
                         {
-                            string updatedFormula = formula.Replace("REPT", "REPEAT", StringComparison.OrdinalIgnoreCase);
-                            cell.Formula = updatedFormula;
+                            // Detect deprecated REPT function (case‑insensitive)
+                            if (cell.Formula.IndexOf("REPT", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                // Replace REPT with REPEAT, preserving case‑insensitivity
+                                string updatedFormula = cell.Formula.Replace("REPT", "REPEAT", StringComparison.OrdinalIgnoreCase);
+                                cell.Formula = updatedFormula;
+                            }
                         }
                     }
                 }
-            }
 
-            // Save the modified workbook
-            try
-            {
+                // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

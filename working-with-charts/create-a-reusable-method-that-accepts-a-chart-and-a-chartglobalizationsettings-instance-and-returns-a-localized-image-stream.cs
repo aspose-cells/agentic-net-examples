@@ -1,10 +1,10 @@
-// Title: C# helper method to render an Aspose.Cells chart with custom ChartGlobalizationSettings to a PNG MemoryStream
-// Description: A static C# utility that accepts an Aspose.Cells Chart and a ChartGlobalizationSettings instance, applies the settings to the chart's workbook, renders the chart as a high‑resolution PNG into a MemoryStream, resets the stream position, and returns the stream for further use.
-// Keywords: Aspose.Cells | ChartGlobalizationSettings | C# chart rendering | PNG MemoryStream | chart localization | export chart image | SettableChartGlobalizationSettings | high resolution chart image | Aspose.Cells ImageOrPrintOptions | chart to image stream
-// Common Searches: Aspose.Cells render chart with ChartGlobalizationSettings | C# export chart to PNG memory stream | localized chart image Aspose.Cells .NET | how to apply SettableChartGlobalizationSettings to a chart | generate chart image stream without saving file
-// Developer Intent: Create a PNG image stream of a chart that incorporates specified localization settings.
-// Use Cases: Produce language‑specific chart images for multi‑region dashboards. | Return chart graphics directly from a Web API without creating temporary files. | Batch render charts with different locales before embedding them into PDFs or reports.
-// AI Prompts: Write a C# method that takes an Aspose.Cells Chart and a ChartGlobalizationSettings object and returns a MemoryStream containing a PNG of the localized chart. | Show how to use SettableChartGlobalizationSettings to change a chart title and series name, then call the helper to get a localized image stream. | Demonstrate calling GetLocalizedChartImage from an ASP.NET Core controller and returning the result as a FileResult with the correct content type.
+// Title: C# helper to render an Aspose.Cells chart with ChartGlobalizationSettings into a PNG MemoryStream
+// Description: Provides a reusable method that validates a Chart object, applies a ChartGlobalizationSettings instance to the owning workbook, configures 300 DPI PNG rendering via ImageOrPrintOptions, and returns the chart image as a MemoryStream. Includes a complete example that creates sample data, builds a column chart, sets localized series and title names, and saves the resulting image.
+// Keywords: Aspose.Cells chart localization | ChartGlobalizationSettings C# | render chart to PNG stream | Aspose.Cells ImageOrPrintOptions | C# memory stream chart image | .NET Excel chart export | localized chart thumbnail
+// Common Searches: Aspose.Cells apply ChartGlobalizationSettings to a chart | C# render Aspose.Cells chart as PNG stream | How to export an Aspose.Cells chart to MemoryStream | Generate localized chart image with Aspose.Cells for .NET | ChartGlobalizationSettings example code
+// Developer Intent: Create a PNG image stream of an Excel chart that reflects custom globalization (locale‑specific titles, series names, etc.) without writing intermediate files.
+// Use Cases: Produce language‑specific chart images for multi‑region reporting dashboards. | Serve chart thumbnails directly from a web API using a MemoryStream response. | Embed localized chart graphics into PDFs or Word documents generated on the server. | Cache chart images per locale to improve performance in international applications.
+// AI Prompts: Show how to call GetLocalizedChartImage with French ChartGlobalizationSettings and write the result to a file. | Extend GetLocalizedChartImage to accept an output format (PNG, JPEG) and a custom DPI value. | Write unit tests that verify ArgumentNullException for null chart or settings and that InvalidOperationException wraps rendering errors. | Explain how to reuse the helper in an ASP.NET Core controller that returns FileStreamResult.
 
 using System;
 using System.IO;
@@ -12,92 +12,99 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-namespace ChartLocalizationDemo
+// Provides a reusable method that validates a Chart object, applies a ChartGlobalizationSettings instance to the owning workbook, configures 300 DPI PNG rendering via ImageOrPrintOptions, and returns the chart image as a MemoryStream. Includes a complete example that creates sample data, builds a column chart, sets localized series and title names, and saves the resulting image.
+public static class ChartLocalizationHelper
 {
-    // A static C# utility that accepts an Aspose.Cells Chart and a ChartGlobalizationSettings instance, applies the settings to the chart's workbook, renders the chart as a high‑resolution PNG into a MemoryStream, resets the stream position, and returns the stream for further use.
-    public static class ChartLocalizationHelper
+    /// <param name="chart">The chart to be rendered.</param>
+    /// <param name="globalizationSettings">Custom globalization settings for the chart.</param>
+    /// <returns>A MemoryStream containing the chart image (PNG format).</returns>
+    public static MemoryStream GetLocalizedChartImage(Chart chart, ChartGlobalizationSettings globalizationSettings)
     {
-        /// <param name="chart">The chart to be rendered.</param>
-        /// <param name="globalizationSettings">Custom globalization settings for the chart.</param>
-        /// <returns>A MemoryStream containing the chart image (PNG format).</returns>
-        public static MemoryStream GetLocalizedChartImage(Chart chart, ChartGlobalizationSettings globalizationSettings)
+        if (chart == null) throw new ArgumentNullException(nameof(chart));
+        if (globalizationSettings == null) throw new ArgumentNullException(nameof(globalizationSettings));
+
+        try
         {
-            // Apply custom globalization settings to the workbook that owns the chart.
-            chart.Worksheet.Workbook.Settings.GlobalizationSettings = new GlobalizationSettings
+            // Apply the custom globalization settings to the workbook that owns the chart
+            Workbook workbook = chart.Worksheet.Workbook;
+            workbook.Settings.GlobalizationSettings = new GlobalizationSettings
             {
                 ChartSettings = globalizationSettings
             };
 
-            // Prepare a memory stream to receive the image data.
-            var imageStream = new MemoryStream();
-
-            // Configure image rendering options. PNG is the default format.
-            var options = new ImageOrPrintOptions
+            // Set image rendering options (PNG, 300 DPI)
+            ImageOrPrintOptions options = new ImageOrPrintOptions
             {
-                // ImageFormat property is optional; default is PNG.
+                // Default format is PNG; explicit setting omitted to avoid API mismatch
                 HorizontalResolution = 300,
                 VerticalResolution = 300
             };
 
-            // Render the chart into the stream using the specified options.
+            // Render the chart into a memory stream
+            MemoryStream imageStream = new MemoryStream();
             chart.ToImage(imageStream, options);
-
-            // Reset the stream position so that callers can read from the beginning.
-            imageStream.Position = 0;
+            imageStream.Position = 0; // Reset for downstream consumers
 
             return imageStream;
         }
-    }
-
-    class Program
-    {
-        static void Main()
+        catch (Exception ex)
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet.
-                var wb = new Workbook();
-                var ws = wb.Worksheets[0];
-
-                // Populate worksheet with sample data.
-                ws.Cells["A1"].PutValue("Category");
-                ws.Cells["B1"].PutValue("Value");
-                ws.Cells["A2"].PutValue("A");
-                ws.Cells["A3"].PutValue("B");
-                ws.Cells["A4"].PutValue("C");
-                ws.Cells["A5"].PutValue("D");
-                ws.Cells["B2"].PutValue(10);
-                ws.Cells["B3"].PutValue(20);
-                ws.Cells["B4"].PutValue(30);
-                ws.Cells["B5"].PutValue(40);
-
-                // Add a column chart.
-                int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart myChart = ws.Charts[chartIdx];
-                myChart.NSeries.Add("B2:B5", true);
-                myChart.NSeries.CategoryData = "A2:A5";
-
-                // Create custom globalization settings.
-                var customSettings = new SettableChartGlobalizationSettings();
-                customSettings.SetChartTitleName("自定义标题");
-                customSettings.SetSeriesName("自定义系列");
-
-                // Generate the localized image stream.
-                MemoryStream localizedImage = ChartLocalizationHelper.GetLocalizedChartImage(myChart, customSettings);
-
-                // Save the image to a file.
-                string outputPath = "LocalizedChart.png";
-                using (FileStream file = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-                {
-                    localizedImage.CopyTo(file);
-                }
-
-                Console.WriteLine($"Chart image saved to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Wrap and rethrow to preserve stack trace while providing context
+            throw new InvalidOperationException("Failed to generate localized chart image.", ex);
         }
+    }
+}
+
+public class Example
+{
+    public static void Run()
+    {
+        try
+        {
+            // Create a workbook and populate sample data
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            ws.Cells["A1"].PutValue("Category");
+            ws.Cells["A2"].PutValue("A");
+            ws.Cells["A3"].PutValue("B");
+            ws.Cells["B1"].PutValue("Value");
+            ws.Cells["B2"].PutValue(10);
+            ws.Cells["B3"].PutValue(20);
+
+            // Add a column chart
+            int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = ws.Charts[chartIdx];
+            chart.NSeries.Add("B2:B3", true);
+            chart.NSeries.CategoryData = "A2:A3";
+
+            // Create custom globalization settings (e.g., custom series and title names)
+            var customSettings = new SettableChartGlobalizationSettings();
+            customSettings.SetSeriesName("Custom Series");
+            customSettings.SetChartTitleName("Localized Chart");
+
+            // Generate the localized chart image
+            MemoryStream imgStream = ChartLocalizationHelper.GetLocalizedChartImage(chart, customSettings);
+
+            // Save the image stream to a file
+            string outputPath = "LocalizedChart.png";
+            using (FileStream file = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+            {
+                imgStream.CopyTo(file);
+            }
+
+            Console.WriteLine($"Localized chart image saved as '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Example.Run();
     }
 }

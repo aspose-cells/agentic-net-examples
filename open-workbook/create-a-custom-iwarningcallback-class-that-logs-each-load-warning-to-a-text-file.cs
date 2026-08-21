@@ -1,10 +1,10 @@
-// Title: C# – Custom IWarningCallback in Aspose.Cells to Log Workbook Load Warnings to a Text File
-// Description: Demonstrates how to implement a FileLoggingWarningCallback class that implements Aspose.Cells.IWarningCallback, writes each load‑time warning (timestamp, type, description) to a specified text file, and wires the callback into LoadOptions for automatic logging when opening an Excel workbook.
-// Keywords: Aspose.Cells IWarningCallback C# | log workbook load warnings | custom warning callback .NET | LoadOptions warning logging | Excel warning file logger | Aspose.Cells warning callback example
-// Common Searches: Aspose.Cells custom warning callback example | how to log load warnings in Aspose.Cells | C# IWarningCallback write to file | record Excel load warnings Aspose.Cells | LoadOptions warning callback C#
-// Developer Intent: Create a C# IWarningCallback that records every warning generated while loading a workbook into a text file.
-// Use Cases: Audit unsupported features across many Excel files by collecting load warnings in a central log. | Debug workbook import issues during development with timestamped warning entries. | Generate compliance reports that include all warnings encountered during batch processing.
-// AI Prompts: Write C# code for an IWarningCallback that appends warning type, description, and timestamp to a log file. | Show how to configure Aspose.Cells LoadOptions with a custom warning callback and ensure the log file is cleared before each run. | Provide a sample that filters out specific warning types before writing them to the log.
+// Title: Log Aspose.Cells Workbook Load Warnings to a Text File via Custom IWarningCallback (C#)
+// Description: Demonstrates how to create a FileLoggingWarningCallback class that implements IWarningCallback, writes each warning's type, description, and timestamp to a text file, attaches it to LoadOptions, loads a workbook, and disposes the callback safely.
+// Keywords: Aspose.Cells | IWarningCallback | C# | load warnings | text file logging | Workbook loading | LoadOptions | StreamWriter | dispose pattern | error monitoring
+// Common Searches: Aspose.Cells capture load warnings C# | custom IWarningCallback example | write Aspose.Cells warnings to log file | how to dispose IWarningCallback after workbook load | log workbook load warnings with Aspose.Cells
+// Developer Intent: Implement a warning callback that records every workbook load warning to a persistent log.
+// Use Cases: Maintain an audit trail of data issues when processing large batches of Excel files. | Generate summary reports of warning types across multiple workbooks for quality control. | Ensure file handles are released promptly by applying the dispose pattern to the callback.
+// AI Prompts: Create a C# IWarningCallback that logs warnings to a CSV file with columns for timestamp, type, and description. | Show the steps to attach a custom warning callback to LoadOptions, load a workbook, and correctly dispose the callback afterward. | Explain how to filter warnings by type (e.g., FormulaError) inside a custom IWarningCallback implementation.
 
 using System;
 using System.IO;
@@ -12,55 +12,37 @@ using Aspose.Cells;
 
 namespace AsposeCellsWarningLogger
 {
-    // Custom warning callback that logs each warning to a text file
-    // Demonstrates how to implement a FileLoggingWarningCallback class that implements Aspose.Cells.IWarningCallback, writes each load‑time warning (timestamp, type, description) to a specified text file, and wires the callback into LoadOptions for automatic logging when opening an Excel workbook.
-    public class FileLoggingWarningCallback : IWarningCallback
+    // Custom warning callback that writes each warning to a text file
+    // Demonstrates how to create a FileLoggingWarningCallback class that implements IWarningCallback, writes each warning's type, description, and timestamp to a text file, attaches it to LoadOptions, loads a workbook, and disposes the callback safely.
+    public class FileLoggingWarningCallback : IWarningCallback, IDisposable
     {
-        private readonly string _logFilePath;
+        private readonly StreamWriter _writer;
+        private bool _disposed;
 
-        public FileLoggingWarningCallback(string logFilePath)
+        public FileLoggingWarningCallback(string filePath)
         {
-            _logFilePath = logFilePath;
-
-            // Ensure the log file exists and is empty at start
-            File.WriteAllText(_logFilePath, string.Empty);
+            // Open the file for appending warnings
+            _writer = new StreamWriter(filePath, append: true);
         }
 
         // This method is called by Aspose.Cells for every warning encountered
         public void Warning(WarningInfo warningInfo)
         {
-            // Build a log entry with timestamp, warning type and description
-            string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | Type: {warningInfo.Type} | Description: {warningInfo.Description}{Environment.NewLine}";
+            if (_disposed) return;
 
-            // Append the entry to the log file
-            File.AppendAllText(_logFilePath, logEntry);
+            // Log warning type and description
+            _writer.WriteLine($"{DateTime.Now:u} - Type: {warningInfo.Type}, Description: {warningInfo.Description}");
+            _writer.Flush();
         }
-    }
 
-    public class LoadWithWarningLoggingDemo
-    {
-        public static void Run()
+        // Dispose pattern to close the StreamWriter
+        public void Dispose()
         {
-            // Path to the log file where warnings will be recorded
-            string warningLogPath = "load_warnings.txt";
-
-            // Create an instance of the custom warning callback
-            IWarningCallback warningCallback = new FileLoggingWarningCallback(warningLogPath);
-
-            // Initialize LoadOptions with the warning callback
-            LoadOptions loadOptions = new LoadOptions
+            if (!_disposed)
             {
-                WarningCallback = warningCallback
-            };
-
-            // Load the workbook using the options (any warnings during load will be logged)
-            Workbook workbook = new Workbook("input.xlsx", loadOptions);
-
-            // Optional: Access a cell to trigger potential warnings
-            Console.WriteLine($"First cell value: {workbook.Worksheets[0].Cells["A1"].StringValue}");
-
-            // Save the workbook (no additional warning handling needed here)
-            workbook.Save("output.xlsx");
+                _writer?.Dispose();
+                _disposed = true;
+            }
         }
     }
 
@@ -68,7 +50,31 @@ namespace AsposeCellsWarningLogger
     {
         static void Main()
         {
-            LoadWithWarningLoggingDemo.Run();
+            // Path to the workbook to be loaded
+            string inputPath = "input.xlsx";
+
+            // Path to the warning log file
+            string logPath = "load_warnings.txt";
+
+            // Initialize load options with the custom warning callback
+            var loadOptions = new LoadOptions
+            {
+                WarningCallback = new FileLoggingWarningCallback(logPath)
+            };
+
+            // Load the workbook using the options (warnings will be logged)
+            var workbook = new Workbook(inputPath, loadOptions);
+
+            // Optionally, perform operations on the workbook here
+
+            // Save the workbook to a new file (no additional warning handling needed)
+            workbook.Save("output.xlsx");
+
+            // Dispose the warning callback to release the file handle
+            if (loadOptions.WarningCallback is IDisposable disposableCallback)
+            {
+                disposableCallback.Dispose();
+            }
         }
     }
 }

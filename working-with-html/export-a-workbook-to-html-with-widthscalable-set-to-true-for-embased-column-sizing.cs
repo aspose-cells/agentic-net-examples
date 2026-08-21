@@ -1,39 +1,55 @@
-// Title: Export Workbook to HTML with WidthScalable (em‑based column sizing) in C#
-// Description: Shows how to create a workbook, add sample data, enable HtmlSaveOptions.WidthScalable to use em units for column widths, and save the result as responsive HTML with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells HtmlSaveOptions WidthScalable | C# export Excel to HTML | em based column width | responsive HTML from Excel | Aspose.Cells HTML scaling | save workbook as HTML .NET | column width scaling
-// Common Searches: Aspose.Cells WidthScalable example C# | how to enable em column sizing when saving Excel to HTML | export Excel to responsive HTML using Aspose.Cells | HtmlSaveOptions WidthScalable property usage | C# generate HTML with scalable column widths from workbook
-// Developer Intent: The developer needs to export an Excel workbook to HTML where column widths are defined in em units by setting HtmlSaveOptions.WidthScalable to true.
-// Use Cases: Create web‑friendly reports that adapt column widths to font size on different devices. | Generate HTML email templates from spreadsheets without fixed pixel widths. | Build responsive dashboards where column layout scales with surrounding CSS.
-// AI Prompts: Provide a C# snippet that saves an Aspose.Cells workbook to HTML with WidthScalable enabled and custom CSS. | Explain the impact of the WidthScalable property on column width units and how to fine‑tune the scaling factor. | Give a step‑by‑step guide to convert an Excel file to responsive HTML using HtmlSaveOptions.WidthScalable in Aspose.Cells for .NET.
+// Title: Export Workbook to HTML with WidthScalable (em‑based column sizing) using Aspose.Cells C#
+// Description: Demonstrates how to create a workbook, add data, enable the WidthScalable option in HtmlSaveOptions to generate column widths in em units, and save the result as a responsive HTML file.
+// Keywords: Aspose.Cells | HtmlSaveOptions | WidthScalable | C# export to HTML | em based column width | responsive Excel HTML | scalable column sizing | Excel to HTML conversion
+// Common Searches: Aspose.Cells WidthScalable true example | export Excel to HTML with em units | C# save workbook as responsive HTML | how to use HtmlSaveOptions WidthScalable | HTML column scaling Aspose.Cells
+// Developer Intent: Create an HTML representation of an Excel workbook where column widths are expressed in scalable em units instead of fixed pixels.
+// Use Cases: Display Excel data on web pages that adapt to different screen sizes. | Generate email‑friendly HTML reports with proportionate column widths. | Build responsive dashboards that preserve Excel layout without pixel‑based constraints.
+// AI Prompts: Write C# code with Aspose.Cells to save a workbook as HTML using WidthScalable=true and add custom CSS for table styling. | Explain the effect of the WidthScalable property on column width calculation and how to influence the resulting em values. | Provide a step‑by‑step guide to export multiple worksheets into a single responsive HTML file while keeping column widths scalable.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsWidthScalableDemo
+namespace AsposeCellsExamples
 {
-    // Shows how to create a workbook, add sample data, enable HtmlSaveOptions.WidthScalable to use em units for column widths, and save the result as responsive HTML with Aspose.Cells for .NET.
-    class Program
+    // Demonstrates how to create a workbook, add data, enable the WidthScalable option in HtmlSaveOptions to generate column widths in em units, and save the result as a responsive HTML file.
+    public class ExportWorkbookToHtmlWithWidthScalable
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook and add some sample data
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Column A");
+                sheet.Cells["B1"].PutValue("Column B");
+                sheet.Cells["A2"].PutValue("Short");
+                sheet.Cells["B2"].PutValue("A much longer piece of text that would normally be truncated");
 
-            // Access the first worksheet and add sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Column A");
-            sheet.Cells["B1"].PutValue("Column B");
-            sheet.Cells["A2"].PutValue("Short");
-            sheet.Cells["B2"].PutValue("This is a longer text that will demonstrate column width scaling.");
+                // Configure HTML save options to use scalable column widths (em units)
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    WidthScalable = true // Enable em‑based column sizing
+                };
 
-            // Create HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+                // Save the workbook as an HTML file using the configured options
+                string outputPath = "Workbook_With_WidthScalable.html";
+                workbook.Save(outputPath, htmlOptions);
+                Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
 
-            // Enable em‑based column sizing (WidthScalable = true)
-            htmlOptions.WidthScalable = true;
-
-            // Save the workbook as HTML (lifecycle rule: save)
-            workbook.Save("WidthScalableOutput.html", htmlOptions);
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ExportWorkbookToHtmlWithWidthScalable.Run();
         }
     }
 }

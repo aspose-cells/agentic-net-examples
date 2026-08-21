@@ -1,95 +1,97 @@
-// Title: C# – Find Regex Matches in the "LogEntries" Named Range with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, retrieves the named range "LogEntries", builds a CellArea that mirrors the range limits, and uses FindOptions (RegexKey, LookInType.Values, LookAtType.EntireContent) to locate every cell whose value matches a regular‑expression pattern (e.g., YYYY‑MM‑DD dates). Matches are printed to the console and the workbook is saved. Includes error handling for missing files and absent named ranges.
-// Keywords: Aspose.Cells | C# | .NET | regex search | named range | FindOptions | CellArea | Excel pattern matching | LogEntries range | GitHub example | code sample
-// Common Searches: Aspose.Cells regex search in named range C# | Find cells by pattern Aspose.Cells .NET | Search Excel named range with regular expression | Aspose.Cells FindOptions example GitHub | C# locate dates in a specific named range using Aspose
-// Developer Intent: Identify all cells whose content matches a given regular expression inside the "LogEntries" named range of an Excel workbook.
-// Use Cases: Extract every date string from a log worksheet for reporting or further analysis. | Validate that entries in a specific named range follow a required format before exporting data. | Highlight or log cells that meet a pattern criterion to support data quality audits.
-// AI Prompts: Generate C# code that replaces regex matches within the "LogEntries" named range using Aspose.Cells and writes the updated values back to the workbook. | Show how to collect matched cells into a list, then create a new worksheet that lists each cell address and its matched value. | Provide an example of configuring FindOptions to locate email addresses in a named range and apply a background color to the matching cells.
+// Title: C# – Find Regex Patterns in the Named Range "LogEntries" with Aspose.Cells
+// Description: Loads an Excel file, retrieves the named range "LogEntries", builds a matching CellArea, configures FindOptions for regular‑expression search, iterates over all cells that match a date pattern (YYYY‑MM‑DD), outputs their addresses, and saves the workbook.
+// Keywords: Aspose.Cells regex search | C# find cells by pattern | named range FindOptions | Excel regex lookup | CellArea range search
+// Common Searches: Aspose.Cells find regex in named range | C# search Excel cells with regular expression | Limit Aspose.Cells Find to a specific range | How to use FindOptions.RegexKey in .NET | Extract dates from a named range using Aspose
+// Developer Intent: Retrieve every cell whose value matches a regular expression inside the "LogEntries" named range.
+// Use Cases: Extract all date strings from a log sheet for reporting. | Validate that entries in a named range follow a required format. | Flag or highlight cells that meet a pattern before exporting data.
+// AI Prompts: Write C# code that uses Aspose.Cells to locate email addresses in a named range "Contacts" and apply a yellow background. | Show how to configure FindOptions to search formulas with a regex that matches cell references within a specific range. | Provide an example that iterates over regex matches in a named range and copies the matched values to a new worksheet.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Loads an Excel workbook, retrieves the named range "LogEntries", builds a CellArea that mirrors the range limits, and uses FindOptions (RegexKey, LookInType.Values, LookAtType.EntireContent) to locate every cell whose value matches a regular‑expression pattern (e.g., YYYY‑MM‑DD dates). Matches are printed to the console and the workbook is saved. Includes error handling for missing files and absent named ranges.
-class Program
+namespace AsposeCellsRegexSearch
 {
-    static void Main()
+    // Loads an Excel file, retrieves the named range "LogEntries", builds a matching CellArea, configures FindOptions for regular‑expression search, iterates over all cells that match a date pattern (YYYY‑MM‑DD), outputs their addresses, and saves the workbook.
+    class Program
     {
-        const string inputPath = "Input.xlsx";
-        const string outputPath = "Output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main()
         {
-            Console.WriteLine($"Input file '{inputPath}' not found.");
-            return;
-        }
-
-        try
-        {
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Retrieve the named range "LogEntries"
-            AsposeRange logRange = workbook.Worksheets.GetRangeByName("LogEntries");
-            if (logRange == null)
-            {
-                Console.WriteLine("Named range 'LogEntries' not found.");
-                return;
-            }
-
-            // Worksheet that contains the named range
-            Worksheet sheet = logRange.Worksheet;
-
-            // Configure find options for regex search within the named range
-            FindOptions findOptions = new FindOptions
-            {
-                RegexKey = true,                     // Enable regex interpretation
-                LookInType = LookInType.Values,      // Search cell values
-                LookAtType = LookAtType.EntireContent // Exact match (no extra wildcards)
-            };
-
-            // Define the search area based on the named range
-            CellArea area = new CellArea
-            {
-                StartRow = logRange.FirstRow,
-                StartColumn = logRange.FirstColumn,
-                EndRow = logRange.FirstRow + logRange.RowCount - 1,
-                EndColumn = logRange.FirstColumn + logRange.ColumnCount - 1
-            };
-            findOptions.SetRange(area);
-
-            // Regular expression pattern to look for (e.g., dates like 2023-07-28)
-            string pattern = @"\d{4}-\d{2}-\d{2}";
-
-            // Iterate through all matches in the named range
-            Cell? previous = null;
-            while (true)
-            {
-                Cell found = sheet.Cells.Find(pattern, previous, findOptions);
-                if (found == null)
-                    break;
-
-                Console.WriteLine($"Found match at {found.Name}: {found.StringValue}");
-                previous = found; // Continue searching after the current match
-            }
-
-            // Save the workbook (if any modifications were made)
             try
             {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
+
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (adjust if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Retrieve the named range "LogEntries"
+                Name logRangeName = workbook.Worksheets.Names["LogEntries"];
+                if (logRangeName == null)
+                {
+                    Console.WriteLine("Named range 'LogEntries' not found.");
+                    return;
+                }
+
+                // Obtain the Aspose.Cells.Range object from the named range
+                Aspose.Cells.Range logRange = logRangeName.GetRange();
+
+                // Build a CellArea that represents the same range
+                int firstRow = logRange.FirstRow;
+                int firstColumn = logRange.FirstColumn;
+                int lastRow = firstRow + logRange.RowCount - 1;
+                int lastColumn = firstColumn + logRange.ColumnCount - 1;
+
+                CellArea searchArea = new CellArea
+                {
+                    StartRow = firstRow,
+                    StartColumn = firstColumn,
+                    EndRow = lastRow,
+                    EndColumn = lastColumn
+                };
+
+                // Configure find options for regex search
+                FindOptions findOptions = new FindOptions
+                {
+                    RegexKey = true,                         // Enable regular expression matching
+                    LookInType = LookInType.Values,          // Search in cell values
+                    LookAtType = LookAtType.EntireContent    // Exact match of the whole cell content
+                };
+                findOptions.SetRange(searchArea);            // Limit the search to the named range
+
+                // Define the regular expression pattern to search for (e.g., dates YYYY-MM-DD)
+                string regexPattern = @"\d{4}-\d{2}-\d{2}";
+
+                // Perform the first search
+                Cell foundCell = worksheet.Cells.Find(regexPattern, null, findOptions);
+
+                // Iterate through all matching cells within the named range
+                while (foundCell != null)
+                {
+                    Console.WriteLine($"Found match at {foundCell.Name}: {foundCell.StringValue}");
+
+                    // Continue searching from the cell after the current one
+                    foundCell = worksheet.Cells.Find(regexPattern, foundCell, findOptions);
+                }
+
+                // Save the workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-            catch (Exception saveEx)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

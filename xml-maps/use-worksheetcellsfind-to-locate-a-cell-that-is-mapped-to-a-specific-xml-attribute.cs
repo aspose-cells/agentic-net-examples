@@ -1,64 +1,106 @@
+// Title: Find a Cell Mapped to an XML Attribute Using Worksheet.Cells.Find (Aspose.Cells .NET)
+// Description: Demonstrates how to import XML into a workbook, create an XML map, link a worksheet cell to an attribute, search for the attribute value with Worksheet.Cells.Find, verify the mapping via XmlMapQuery, and save the result.
+// Keywords: Aspose.Cells | Worksheet.Cells.Find | XML map | LinkToXmlMap | XmlMapQuery | C# XML attribute lookup | search mapped cell | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells find cell by XML attribute | Worksheet.Cells.Find XML map C# | link cell to XML attribute Aspose | verify XML mapped cell Aspose.Cells | search XML attribute value in workbook
+// Developer Intent: Locate the worksheet cell that is linked to a specific XML attribute and confirm that the found cell belongs to the XML map.
+// Use Cases: Confirm that a cell linked to an XML attribute holds the expected value before further processing. | Programmatically locate and update cells representing XML attribute values during data synchronization. | Generate a list of cell addresses for all occurrences of a particular XML attribute after a search operation.
+// AI Prompts: Write C# code that imports XML into a worksheet, links a cell to an attribute, searches for the attribute value using Worksheet.Cells.Find, and validates the mapping with XmlMapQuery. | Explain step‑by‑step how Worksheet.Cells.Find and XmlMapQuery can be combined to ensure a found cell is part of a specific XML map in Aspose.Cells for .NET.
+
 using System;
+using System.Collections;
 using Aspose.Cells;
-using Aspose.Cells.Tables; // for FindOptions enums
 
 namespace AsposeCellsXmlFindDemo
 {
+    // Demonstrates how to import XML into a workbook, create an XML map, link a worksheet cell to an attribute, search for the attribute value with Worksheet.Cells.Find, verify the mapping via XmlMapQuery, and save the result.
     class Program
     {
         static void Main()
         {
             try
             {
-                // 1. Create a new workbook and get the first worksheet.
+                // 1. Create a new workbook
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
 
-                // 2. Sample XML containing an attribute "id".
+                // 2. Define a simple XML with an attribute we want to map
                 string xml = @"<?xml version='1.0' encoding='UTF-8'?>
 <Root>
-    <Item id='123'>Value1</Item>
-    <Item id='456'>Value2</Item>
+    <Item id='123'>SampleValue</Item>
 </Root>";
 
-                // 3. Import the XML into the worksheet.
-                //    This creates an XML map automatically (default name is "Map1").
-                workbook.ImportXml(xml, sheet.Name, 0, 0);
+                // 3. Import the XML into the first worksheet.
+                //    This creates an XML map and populates the sheet with the XML data.
+                workbook.ImportXml(xml, "Sheet1", 0, 0);
 
-                // 4. Use the default map name created by ImportXml.
-                const string mapName = "Map1";
-
-                // 5. Link cell A1 (row 0, column 0) to the first item's "id" attribute.
-                //    Path syntax: "/Root/Item/@id"
-                cells.LinkToXmlMap(mapName, 0, 0, "/Root/Item/@id");
-
-                // 6. Retrieve and display the linked cell's value (populated from XML).
-                Cell linkedCell = cells[0, 0];
-                Console.WriteLine($"Linked cell initial value: {linkedCell.StringValue}");
-
-                // 7. Use Find to locate the cell that holds the attribute value "123".
-                FindOptions findOptions = new FindOptions
+                // 4. Retrieve the created XML map.
+                //    In newer Aspose.Cells versions the collection is accessed via workbook.XmlMaps.
+                //    For compatibility, use the XmlMapCollection property if XmlMaps is unavailable.
+                XmlMap xmlMap = null;
+                // Try the standard XmlMaps property first
+                var xmlMapsProp = workbook.GetType().GetProperty("XmlMaps");
+                if (xmlMapsProp != null)
                 {
-                    LookInType = LookInType.Values,
-                    LookAtType = LookAtType.EntireContent,
-                    CaseSensitive = false
-                };
-
-                Cell foundCell = cells.Find("123", null, findOptions);
-                if (foundCell != null)
-                {
-                    Console.WriteLine($"Found cell mapped to attribute 'id' at: {foundCell.Name}");
+                    var xmlMaps = (XmlMapCollection)xmlMapsProp.GetValue(workbook);
+                    if (xmlMaps.Count > 0)
+                        xmlMap = xmlMaps[0];
                 }
                 else
                 {
-                    Console.WriteLine("Attribute value not found.");
+                    // Fallback to XmlMapCollection (older API)
+                    var xmlMapCollProp = workbook.GetType().GetProperty("XmlMapCollection");
+                    if (xmlMapCollProp != null)
+                    {
+                        var xmlMaps = (XmlMapCollection)xmlMapCollProp.GetValue(workbook);
+                        if (xmlMaps.Count > 0)
+                            xmlMap = xmlMaps[0];
+                    }
                 }
 
-                // 8. Save the workbook (optional).
-                string outputPath = "XmlAttributeFindDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {System.IO.Path.GetFullPath(outputPath)}");
+                if (xmlMap == null)
+                {
+                    Console.WriteLine("No XML map was created.");
+                    return;
+                }
+
+                // 5. Link a specific cell to the XML attribute "id"
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+                cells.LinkToXmlMap(xmlMap.Name, 2, 0, "/Root/Item/@id"); // Links cell A3 to the attribute
+
+                // 6. Ensure the linked cell contains the expected value.
+                cells["A3"].PutValue("123");
+
+                // 7. Use Find to locate the cell that contains the attribute value "123"
+                Cell foundCell = sheet.Cells.Find("123", null);
+
+                // 8. Verify that the found cell is part of the XML mapping
+                ArrayList mappedAreas = sheet.XmlMapQuery("/Root/Item/@id", xmlMap);
+                bool isMapped = false;
+                if (foundCell != null)
+                {
+                    foreach (CellArea area in mappedAreas)
+                    {
+                        if (foundCell.Row >= area.StartRow && foundCell.Row <= area.EndRow &&
+                            foundCell.Column >= area.StartColumn && foundCell.Column <= area.EndColumn)
+                        {
+                            isMapped = true;
+                            break;
+                        }
+                    }
+                }
+
+                // 9. Output the result
+                if (foundCell != null && isMapped)
+                {
+                    Console.WriteLine($"Found mapped cell at {foundCell.Name} with value '{foundCell.StringValue}'.");
+                }
+                else
+                {
+                    Console.WriteLine("Mapped cell not found.");
+                }
+
+                // 10. Save the workbook
+                workbook.Save("XmlAttributeFindDemo.xlsx");
             }
             catch (Exception ex)
             {

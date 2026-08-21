@@ -1,76 +1,72 @@
-// Title: Concatenate Text from Multiple Child Shapes in Aspose.Cells (C#)
-// Description: Shows how to create a workbook, add rectangle shapes as child shapes, read each shape's Text property, concatenate non‑empty values with StringBuilder, display the result, and save the workbook as an XLSX file.
-// Keywords: Aspose.Cells | C# | shape text concatenation | child shapes | StringBuilder | Excel workbook | extract shape text | combine rectangle shapes | save XLSX | Aspose.Cells API
-// Common Searches: Aspose.Cells concatenate shape text C# | merge text from multiple shapes Aspose.Cells | read Text property of shapes in Excel using Aspose | combine rectangle shape texts in C# | iterate over shapes in Aspose.Cells workbook | save workbook after processing shape texts
-// Developer Intent: Combine the Text values of several Shape objects into a single string.
-// Use Cases: Build a dynamic header by joining the Text of multiple rectangle shapes before exporting the sheet. | Create a composite label from separate shape parts, concatenate them, and write the result to a cell. | Generate a searchable keyword string by merging annotation texts from all shapes in a worksheet. | Prepare a summary report by aggregating shape captions into one continuous paragraph.
-// AI Prompts: Write C# code using Aspose.Cells to concatenate the Text of all shapes in a worksheet and save the workbook. | Explain how to filter shapes by type (e.g., rectangles) before merging their Text values with Aspose.Cells. | Show how to handle null or empty Text properties safely while building a combined string from shape texts.
+// Title: Extract and Concatenate Text from All Shapes (including grouped) in an Excel Worksheet – Aspose.Cells for .NET (C#)
+// Description: Loads a workbook, walks through every shape on the first worksheet, recursively reads text from group shapes and their children (preferring TextBody.Text, falling back to Shape.Text), builds a single space‑separated string, prints it, and saves the file.
+// Keywords: Aspose.Cells | C# | shape text extraction | grouped shapes | concatenate shape texts | Excel worksheet shapes | TextBody | Shape.Text | StringBuilder | Excel automation
+// Common Searches: Aspose.Cells get text from grouped shapes | C# concatenate all shape texts in Excel | How to read shape TextBody with Aspose.Cells | Iterate worksheet shapes Aspose.Cells .NET | Extract shape comments from Excel using Aspose
+// Developer Intent: Retrieve the textual content of every shape on a worksheet—including nested shapes in groups—and combine it into one string.
+// Use Cases: Generate a summary of all annotations, labels, and comments embedded in worksheet shapes for reporting. | Create a searchable index of shape content for document management or compliance audits. | Feed the combined text into downstream processes such as language detection, keyword extraction, or AI summarization.
+// AI Prompts: Write a C# method that extracts text from every shape in a worksheet using Aspose.Cells, handling grouped shapes, and returns a concatenated string. | Modify the sample to separate each shape's text with a newline instead of a space. | Explain why TextBody.Text should be prioritized over Shape.Text when reading shape content with Aspose.Cells.
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// Loads a workbook, walks through every shape on the first worksheet, recursively reads text from group shapes and their children (preferring TextBody.Text, falling back to Shape.Text), builds a single space‑separated string, prints it, and saves the file.
+class ConcatenateShapeTexts
 {
-    // Shows how to create a workbook, add rectangle shapes as child shapes, read each shape's Text property, concatenate non‑empty values with StringBuilder, display the result, and save the workbook as an XLSX file.
-    public class ConcatenateChildShapeTexts
+    static void Main()
     {
-        public static void Main(string[] args)
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // StringBuilder to accumulate texts from all shapes
+        StringBuilder concatenated = new StringBuilder();
+
+        // Iterate through each shape on the worksheet
+        foreach (Shape shape in worksheet.Shapes)
         {
-            try
+            // If the shape is a group, process its child shapes
+            if (shape is GroupShape groupShape)
             {
-                Run();
+                foreach (Shape childShape in groupShape.GetGroupedShapes())
+                {
+                    AppendShapeText(childShape, concatenated);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("Error: " + ex.Message);
+                AppendShapeText(shape, concatenated);
             }
         }
 
-        public static void Run()
+        // Resulting concatenated string
+        string result = concatenated.ToString().Trim();
+        Console.WriteLine("Concatenated Shape Texts: " + result);
+
+        // Save the workbook if any modifications were made
+        workbook.Save("output.xlsx");
+    }
+
+    // Helper method to extract text from a shape and append it to the StringBuilder
+    private static void AppendShapeText(Shape shape, StringBuilder sb)
+    {
+        // Prefer TextBody.Text (rich text) if available; otherwise use Shape.Text
+        string text = null;
+
+        if (shape.TextBody != null && !string.IsNullOrEmpty(shape.TextBody.Text))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            text = shape.TextBody.Text;
+        }
+        else if (!string.IsNullOrEmpty(shape.Text))
+        {
+            text = shape.Text;
+        }
 
-            // Add individual rectangle shapes (acting as child shapes)
-            Shape child1 = worksheet.Shapes.AddShape(MsoDrawingType.Rectangle, 0, 0, 0, 0, 150, 30);
-            child1.Text = "First part ";
-
-            Shape child2 = worksheet.Shapes.AddShape(MsoDrawingType.Rectangle, 0, 1, 0, 0, 150, 30);
-            child2.Text = "Second part ";
-
-            Shape child3 = worksheet.Shapes.AddShape(MsoDrawingType.Rectangle, 0, 2, 0, 0, 150, 30);
-            child3.Text = "Third part";
-
-            // Store the child shapes for easy iteration
-            List<Shape> childShapes = new List<Shape> { child1, child2, child3 };
-
-            // Concatenate texts from all child shapes
-            StringBuilder concatenatedBuilder = new StringBuilder();
-            foreach (Shape child in childShapes)
-            {
-                if (!string.IsNullOrEmpty(child.Text))
-                {
-                    concatenatedBuilder.Append(child.Text);
-                }
-            }
-
-            string concatenatedText = concatenatedBuilder.ToString();
-            Console.WriteLine("Concatenated Text: " + concatenatedText);
-
-            // Save the workbook safely
-            try
-            {
-                workbook.Save("ConcatenatedChildShapeTexts.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine("Failed to save workbook: " + saveEx.Message);
-            }
+        if (!string.IsNullOrEmpty(text))
+        {
+            sb.Append(text);
+            sb.Append(" "); // Add a space as a separator between shape texts
         }
     }
 }

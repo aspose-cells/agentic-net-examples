@@ -1,93 +1,79 @@
-// Title: C# – Replace Excel INDIRECT Formulas with Direct References Using Aspose.Cells
-// Description: Loads an Excel workbook, scans every worksheet and cell for formulas that contain the INDIRECT function, converts them to stable direct references (handling both quoted literals and cell‑based address values), recalculates the workbook, and saves the updated file.
-// Keywords: Aspose.Cells | C# | replace INDIRECT formula | direct cell reference | Excel formula stability | convert INDIRECT to A1 | recalculate workbook | programmatic Excel modification
-// Common Searches: how to remove INDIRECT function with Aspose.Cells C# | replace dynamic Excel references using Aspose.Cells | convert INDIRECT("A1") to =A1 programmatically | Aspose.Cells replace indirect formulas example | stable Excel formulas C# Aspose
-// Developer Intent: Programmatically replace all INDIRECT formulas in an Excel workbook with equivalent direct references to improve calculation reliability.
-// Use Cases: Transform string‑literal INDIRECT calls (e.g., =INDIRECT("B2")) into simple =B2 formulas. | Resolve INDIRECT formulas that point to a cell containing an address (e.g., =INDIRECT(C1)) and substitute the resolved address. | Recalculate the workbook after replacements to ensure dependent calculations reflect the new formulas.
-// AI Prompts: Write C# code with Aspose.Cells that iterates through a workbook and replaces any INDIRECT formula with a direct reference, supporting quoted literals and cell‑based addresses. | Provide a robust TryReplaceIndirect method that validates extracted addresses, skips unsupported patterns, and logs cells that could not be converted.
+// Title: Aspose.Cells for .NET – Replace INDIRECT Formulas with Static Values
+// Description: Demonstrates how to create a workbook, identify cells that use the volatile INDIRECT function, evaluate each formula, write the result back as a plain value, clear the formula, and save the file using Aspose.Cells in C#.
+// Keywords: Aspose.Cells | C# | .NET | replace INDIRECT | volatile formula removal | Excel formula to value | calculate and clear formulas | performance optimization | Excel stability | workbook cleanup
+// Common Searches: how to remove INDIRECT formulas with Aspose.Cells | replace volatile Excel functions in C# | convert Excel formulas to values using Aspose.Cells | Aspose.Cells evaluate and clear formulas | C# code to eliminate INDIRECT in workbook
+// Developer Intent: Convert every INDIRECT formula in a workbook to its evaluated result, removing volatility while preserving other formulas.
+// Use Cases: Prepare a workbook for distribution by turning dynamic references into fixed numbers to improve calculation speed. | Clean up legacy Excel files that rely on INDIRECT, ensuring stable recalculation in automated pipelines. | Export Excel data to CSV or other flat formats after converting all formulas, including INDIRECT, to static values.
+// AI Prompts: Write C# code with Aspose.Cells that scans a worksheet, finds cells containing INDIRECT, evaluates them, and replaces the formulas with the computed values. | Show a robust method to replace volatile INDIRECT formulas in large Excel files while leaving non‑volatile formulas untouched. | Suggest an approach to rewrite INDIRECT references as direct cell addresses instead of static values using Aspose.Cells.
 
 using System;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
 
 namespace AsposeCellsIndirectReplacement
 {
-    // Loads an Excel workbook, scans every worksheet and cell for formulas that contain the INDIRECT function, converts them to stable direct references (handling both quoted literals and cell‑based address values), recalculates the workbook, and saves the updated file.
+    // Demonstrates how to create a workbook, identify cells that use the volatile INDIRECT function, evaluate each formula, write the result back as a plain value, clear the formula, and save the file using Aspose.Cells in C#.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Path to the source workbook (replace with actual path)
-            string inputPath = "InputWorkbook.xlsx";
-            // Path to the output workbook
-            string outputPath = "OutputWorkbook.xlsx";
+            // 1. Create a new workbook (lifecycle rule: create)
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            Cells cells = ws.Cells;
 
-            // Load the workbook (lifecycle rule: load)
-            Workbook workbook = new Workbook(inputPath);
+            // ------------------------------------------------------------
+            // Sample data demonstrating the use of INDIRECT
+            // ------------------------------------------------------------
+            // A1 holds a reference string "B1"
+            cells["A1"].PutValue("B1");
+            // B1 holds a numeric value
+            cells["B1"].PutValue(123);
+            // C1 uses INDIRECT to refer to the cell address stored in A1
+            cells["C1"].Formula = "=INDIRECT(A1)";
 
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Another example where the reference is a range
+            // D1 holds "E1:E3"
+            cells["D1"].PutValue("E1:E3");
+            cells["E1"].PutValue(10);
+            cells["E2"].PutValue(20);
+            cells["E3"].PutValue(30);
+            // F1 uses INDIRECT to refer to the range in D1 and sums it
+            cells["F1"].Formula = "=SUM(INDIRECT(D1))";
+
+            // Calculate all formulas so that dependent values are available
+            wb.CalculateFormula();
+
+            // ------------------------------------------------------------
+            // Replace all formulas that contain the INDIRECT function
+            // ------------------------------------------------------------
+            // Iterate through all used cells in the worksheet
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+
+            for (int row = 0; row <= maxRow; row++)
             {
-                Cells cells = sheet.Cells;
-                // Iterate through all used cells
-                foreach (Cell cell in cells)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    // Process only formula cells that contain the INDIRECT function
+                    Cell cell = cells[row, col];
+
+                    // Process only cells that have a formula containing "INDIRECT"
                     if (cell.IsFormula && cell.Formula.IndexOf("INDIRECT", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        string originalFormula = cell.Formula; // e.g. "=INDIRECT(\"A1\")" or "=INDIRECT(B1)"
-                        string newFormula = TryReplaceIndirect(originalFormula, sheet);
-                        if (!string.IsNullOrEmpty(newFormula) && newFormula != originalFormula)
-                        {
-                            // Set the new stable formula (lifecycle rule: set formula)
-                            cell.Formula = newFormula;
-                        }
+                        // Evaluate the original formula to obtain its current result
+                        object evaluatedResult = ws.CalculateFormula(cell.Formula);
+
+                        // Replace the formula with the evaluated result (value only)
+                        // This removes the volatile INDIRECT dependency
+                        cell.PutValue(evaluatedResult);
+                        cell.Formula = string.Empty; // clear the formula text
                     }
                 }
             }
 
-            // Recalculate all formulas after replacement (feature rule: calculate)
-            workbook.CalculateFormula();
-
+            // ------------------------------------------------------------
             // Save the modified workbook (lifecycle rule: save)
-            workbook.Save(outputPath);
-        }
-
-        static string TryReplaceIndirect(string formula, Worksheet sheet)
-        {
-            // Remove leading '=' if present for easier parsing
-            string trimmed = formula.TrimStart('=').Trim();
-
-            // Regex to capture the argument inside INDIRECT(...)
-            Match match = Regex.Match(trimmed, @"INDIRECT\s*\(\s*(.+?)\s*\)", RegexOptions.IgnoreCase);
-            if (!match.Success)
-                return formula; // Not a recognizable INDIRECT usage
-
-            string argument = match.Groups[1].Value;
-
-            // Case 1: Argument is a quoted string literal e.g. "A1"
-            if (argument.StartsWith("\"") && argument.EndsWith("\""))
-            {
-                string address = argument.Trim('\"');
-                // Build direct reference formula
-                return $"={address}";
-            }
-
-            // Case 2: Argument is a cell reference e.g. B1
-            // Resolve the address stored in that cell
-            Cell refCell = sheet.Cells[argument];
-            if (refCell != null && refCell.Value != null)
-            {
-                string address = refCell.StringValue.Trim();
-                // Basic validation: address should look like A1, B2, etc.
-                if (Regex.IsMatch(address, @"^[A-Za-z]+\d+$"))
-                {
-                    return $"={address}";
-                }
-            }
-
-            // If we cannot determine a stable address, return the original formula
-            return formula;
+            // ------------------------------------------------------------
+            wb.Save("Workbook_IndirectReplaced.xlsx");
         }
     }
 }

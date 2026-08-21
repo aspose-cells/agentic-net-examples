@@ -1,63 +1,42 @@
-// Title: Preserve Excel Formulas While Merging Cells – Set Automatic Calculation Mode with Aspose.Cells for .NET
-// Description: Shows how to load (or create) a workbook, force FormulaSettings.CalculationMode to Automatic before and after merging the range A1:B2 on the first worksheet, and save the file so that all existing formulas stay intact.
-// Keywords: Aspose.Cells | C# | merge cells | preserve formulas | automatic calculation mode | Workbook merge | Excel automation | FormulaSettings | CalcModeType.Automatic
-// Common Searches: Aspose.Cells keep formulas after merging cells | set calculation mode automatic before merge Aspose.Cells | C# merge Excel range without breaking formulas | preserve Excel formulas Aspose.Cells .NET | automatic calculation mode merge cells example
-// Developer Intent: Maintain formula integrity by keeping the workbook’s calculation mode set to Automatic before and after a cell‑merge operation.
-// Use Cases: Load an existing workbook, enforce Automatic calculation, merge A1:B2, and save the result. | Create a new workbook when the source file is missing, apply the same Automatic setting, merge cells, and preserve any default formulas. | Process multiple worksheets in a loop, setting Automatic mode before each merge to ensure formulas remain correct across the entire file.
-// AI Prompts: Write C# code using Aspose.Cells that merges cells A1:B2 while preserving all formulas by setting the workbook’s calculation mode to Automatic before and after the merge. | Generate a method that checks for an input Excel file, creates a fallback workbook if missing, forces Automatic calculation mode, merges a specified range, and saves the workbook. | Provide an example that iterates through every worksheet in a workbook, merges a given cell range on each sheet, and keeps formulas intact by using Automatic calculation mode.
+// Title: Keep formulas intact when merging cells – set CalculationMode to Automatic in Aspose.Cells for .NET
+// Description: Shows how to preserve existing formulas while merging cells by temporarily switching the workbook’s CalculationMode to Automatic, then restoring the original setting, using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells merge cells | C# calculation mode automatic | preserve formulas Aspose.Cells | cell merge formula integrity | Aspose.Cells workbook settings | C# Excel automation | Aspose.Cells calculation mode | merge cells without breaking formulas | Aspose.Cells .NET example | Excel formula recalculation
+// Common Searches: Aspose.Cells merge cells keep formula | Set CalculationMode Automatic before merging Aspose.Cells | Restore original calculation mode after merge C# | How to prevent formula loss when merging cells Aspose.Cells | C# Aspose.Cells merge header cells formula | Aspose.Cells calculation mode best practice
+// Developer Intent: Ensure that merging cells does not disrupt existing formulas by temporarily enabling automatic calculation and then returning to the workbook’s original calculation setting.
+// Use Cases: Create a report header that spans multiple columns while a SUM formula referencing those cells stays accurate. | Adjust the layout of a generated financial model without affecting dependent formulas. | Apply custom workbook settings, perform structural changes, and guarantee the original calculation preferences are preserved.
+// AI Prompts: Generate C# code using Aspose.Cells that merges a range of cells and temporarily sets CalculationMode to Automatic to keep formulas working. | Explain why switching to Automatic calculation before a merge prevents formula errors in Aspose.Cells. | Show how to save and restore the original CalculationMode around a merge operation in a .NET spreadsheet automation script.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Shows how to preserve existing formulas while merging cells by temporarily switching the workbook’s CalculationMode to Automatic, then restoring the original setting, using Aspose.Cells for .NET.
+class Program
 {
-    // Shows how to load (or create) a workbook, force FormulaSettings.CalculationMode to Automatic before and after merging the range A1:B2 on the first worksheet, and save the file so that all existing formulas stay intact.
-    public class PreserveFormulasDuringMerge
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook (lifecycle create)
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        public static void Run()
-        {
-            const string inputPath = "InputWorkbook.xlsx";
-            const string outputPath = "OutputWorkbook.xlsx";
+        // Add sample data and a formula
+        cells["A1"].PutValue(10);
+        cells["A2"].PutValue(20);
+        cells["B1"].Formula = "=SUM(A1:A2)";
 
-            // Verify input file exists; if not, create a new workbook as a fallback
-            Workbook workbook;
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                Console.WriteLine($"Input file '{inputPath}' not found. Creating a new workbook.");
-                workbook = new Workbook();
-                // Optionally add a sample worksheet with data/formulas here
-            }
+        // Preserve the original calculation mode
+        CalcModeType originalMode = workbook.Settings.FormulaSettings.CalculationMode;
 
-            // Ensure calculation mode is Automatic before merging
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+        // Set calculation mode to Automatic before merging
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
 
-            // Perform cell merging on the first worksheet (merge A1:B2)
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells.Merge(0, 0, 2, 2); // firstRow, firstColumn, totalRows, totalColumns
+        // Merge cells A1:B1 (row 0, column 0, 1 row, 2 columns)
+        cells.Merge(0, 0, 1, 2);
 
-            // Re‑assert Automatic calculation mode after merging
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+        // Restore the original calculation mode after merging
+        workbook.Settings.FormulaSettings.CalculationMode = originalMode;
 
-            // Save the workbook to the desired output path
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
+        // Save the workbook (lifecycle save)
+        workbook.Save("MergedWithFormula.xlsx");
     }
 }

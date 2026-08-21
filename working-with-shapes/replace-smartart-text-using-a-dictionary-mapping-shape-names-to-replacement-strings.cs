@@ -1,10 +1,10 @@
-// Title: Replace SmartArt Text in Excel with Aspose.Cells (C#) Using a Name‑to‑Text Dictionary
-// Description: Loads an Excel workbook, creates a case‑insensitive dictionary that maps SmartArt shape names to new strings, iterates through all worksheets and shapes, detects SmartArt objects, accesses their grouped sub‑shapes via GetResultOfSmartArt().GetGroupedShapes(), updates the Text property of matching shapes, and saves the file with UpdateSmartArt enabled.
-// Keywords: Aspose.Cells | C# | SmartArt | replace text | dictionary mapping | GetResultOfSmartArt | GetGroupedShapes | UpdateSmartArt | Excel automation | shape name lookup
-// Common Searches: How to change SmartArt shape text in Excel using Aspose.Cells C# | C# replace specific SmartArt items by name | Aspose.Cells update SmartArt after editing text | Dictionary based text replacement for SmartArt in .xlsx
-// Developer Intent: Update the text of selected SmartArt shapes in an Excel workbook based on a name‑to‑text dictionary.
-// Use Cases: Generate quarterly reports by programmatically inserting titles and bullet points into SmartArt placeholders. | Localize Excel templates by swapping placeholder shape names with translated strings. | Populate presentation‑style spreadsheets where SmartArt elements are filled from a database or API at runtime.
-// AI Prompts: Write C# code with Aspose.Cells that replaces SmartArt shape text using a dictionary and saves the workbook with UpdateSmartArt true. | Explain the purpose of GetResultOfSmartArt().GetGroupedShapes() and how to iterate over the returned shapes to modify their Text property. | Provide error‑handling strategies for missing shape names, unsupported SmartArt types, and save‑time failures when updating SmartArt text.
+// Title: Replace SmartArt node text in Excel with Aspose.Cells for .NET using a shape‑name dictionary
+// Description: Loads an Excel workbook, builds a case‑insensitive Dictionary<string,string> that maps SmartArt shape names to new captions, walks every worksheet and each SmartArt shape, updates matching node texts, and saves the file with OoxmlSaveOptions.UpdateSmartArt so the changes persist.
+// Keywords: Aspose.Cells | C# | .NET | SmartArt text replacement | UpdateSmartArt | shape name dictionary | Excel workbook automation | bulk SmartArt update | localize SmartArt labels
+// Common Searches: change SmartArt node text Aspose.Cells C# | replace multiple SmartArt shapes using a dictionary | programmatically update SmartArt in Excel with .NET | Enable UpdateSmartArt when saving workbook | Aspose.Cells example for SmartArt text modification
+// Developer Intent: Update specific SmartArt node captions based on a name‑to‑text mapping.
+// Use Cases: Refresh diagram labels across all sheets in a financial report. | Localize SmartArt captions by swapping original names for translated strings. | Populate dashboard SmartArt titles from a data source via a dictionary lookup.
+// AI Prompts: Show how to get the grouped shapes of a SmartArt object and replace their text with Aspose.Cells for .NET. | Create a reusable method that accepts a Workbook and a Dictionary<string,string> to update SmartArt node text and saves with UpdateSmartArt enabled. | Explain how to skip SmartArt shapes whose names are not present in the replacement dictionary while iterating.
 
 using System;
 using System.Collections.Generic;
@@ -12,49 +12,53 @@ using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Saving;
 
-// Loads an Excel workbook, creates a case‑insensitive dictionary that maps SmartArt shape names to new strings, iterates through all worksheets and shapes, detects SmartArt objects, accesses their grouped sub‑shapes via GetResultOfSmartArt().GetGroupedShapes(), updates the Text property of matching shapes, and saves the file with UpdateSmartArt enabled.
-class SmartArtTextReplacer
+namespace SmartArtTextReplacement
 {
-    static void Main()
+    // Loads an Excel workbook, builds a case‑insensitive Dictionary<string,string> that maps SmartArt shape names to new captions, walks every worksheet and each SmartArt shape, updates matching node texts, and saves the file with OoxmlSaveOptions.UpdateSmartArt so the changes persist.
+    public class Program
     {
-        // Load the workbook (lifecycle rule: load)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Define the mapping from shape names to replacement texts
-        var replacements = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        public static void Main()
         {
-            { "TitleShape", "Quarterly Report" },
-            { "SubtitleShape", "Fiscal Year 2025" },
-            { "Bullet1", "Increase sales by 15%" },
-            { "Bullet2", "Launch new product line" }
-        };
+            // Load the workbook (replace with your source file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Iterate through all worksheets and their shapes
-        foreach (Worksheet sheet in workbook.Worksheets)
-        {
-            foreach (Shape shape in sheet.Shapes)
+            // Dictionary mapping SmartArt shape names to new text values
+            var replacementMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                // Process only SmartArt shapes
-                if (shape.IsSmartArt)
-                {
-                    // Get the grouped shapes that represent the SmartArt layout
-                    var grouped = shape.GetResultOfSmartArt().GetGroupedShapes();
+                { "SmartArtNode1", "New Text 1" },
+                { "SmartArtNode2", "New Text 2" },
+                { "SmartArtNode3", "New Text 3" }
+                // Add more mappings as needed
+            };
 
-                    foreach (Shape smartArtShape in grouped)
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all shapes in the worksheet
+                foreach (Shape shape in sheet.Shapes)
+                {
+                    // Process only SmartArt shapes
+                    if (shape.IsSmartArt)
                     {
-                        // If the shape's name exists in the dictionary, replace its text
-                        if (replacements.TryGetValue(smartArtShape.Name, out string newText))
+                        // Get the grouped shapes that represent the SmartArt nodes
+                        Shape[] smartArtShapes = shape.GetResultOfSmartArt().GetGroupedShapes();
+
+                        foreach (Shape smartArtShape in smartArtShapes)
                         {
-                            smartArtShape.Text = newText;
+                            // If the shape's name exists in the replacement dictionary, replace its text
+                            if (replacementMap.TryGetValue(smartArtShape.Name, out string newText))
+                            {
+                                smartArtShape.Text = newText;
+                            }
                         }
                     }
                 }
             }
-        }
 
-        // Save the workbook with SmartArt update enabled (lifecycle rule: save)
-        OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
-        saveOptions.UpdateSmartArt = true;
-        workbook.Save("output.xlsx", saveOptions);
+            // Save the workbook with SmartArt update enabled
+            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
+            saveOptions.UpdateSmartArt = true; // Ensure SmartArt text changes are persisted
+            workbook.Save("output.xlsx", saveOptions);
+        }
     }
 }

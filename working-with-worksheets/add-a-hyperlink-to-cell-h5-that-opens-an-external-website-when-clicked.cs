@@ -1,15 +1,15 @@
-// Title: Add an External Hyperlink to Cell H5 with Display Text using Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, inserts a hyperlink in cell H5 that opens https://www.example.com, sets the visible text to "Visit Example Site", and saves the file as HyperlinkDemo.xlsx.
-// Keywords: Aspose.Cells | C# hyperlink | add hyperlink to Excel cell | external URL | cell H5 | display text | save workbook | Excel automation
-// Common Searches: Aspose.Cells add hyperlink to cell | C# set hyperlink display text in Excel | Create clickable link in Excel using Aspose.Cells | Programmatically add external URL to Excel cell
-// Developer Intent: Insert an external URL into cell H5 and customize the text shown in the cell.
-// Use Cases: Generate a report where cell H5 links to a live dashboard or documentation site. | Build an Excel‑based navigation sheet that directs users to online resources. | Automate the addition of labeled web links across multiple worksheets for quick access.
-// AI Prompts: Write C# code with Aspose.Cells to add a hyperlink to cell H5 that opens https://www.example.com and displays "Visit Example Site". | Show how to add multiple external hyperlinks with custom display text to different cells using Aspose.Cells for .NET. | Explain how to update the address or display text of an existing hyperlink in an Aspose.Cells worksheet.
+// Title: Add an external hyperlink to cell H5 using Aspose.Cells for .NET (C#)
+// Description: Creates a new workbook, accesses the first worksheet, inserts a hyperlink in cell H5 that opens https://www.example.com, sets the display text to "Visit Example Site", and saves the file as HyperlinkDemo.xlsx.
+// Keywords: Aspose.Cells hyperlink C# | add external link Excel cell | set hyperlink text Aspose.Cells | Excel hyperlink programmatically | C# Aspose.Cells tutorial
+// Common Searches: Aspose.Cells add hyperlink to specific cell | C# set display text for Excel hyperlink | How to link a cell to an external website with Aspose.Cells | Create clickable URL in Excel using Aspose.Cells .NET
+// Developer Intent: Insert a clickable URL into cell H5 that opens an external website.
+// Use Cases: Embedding reference URLs in generated financial reports. | Building marketing templates with product page links. | Automating documentation indexes that point to online guides.
+// AI Prompts: Generate code to add hyperlinks to multiple cells in a worksheet with Aspose.Cells. | Show how to modify the address and display text of an existing hyperlink in a .NET workbook. | Provide an example that forces a hyperlink to open in a new browser tab using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Creates a new workbook, inserts a hyperlink in cell H5 that opens https://www.example.com, sets the visible text to "Visit Example Site", and saves the file as HyperlinkDemo.xlsx.
+// Creates a new workbook, accesses the first worksheet, inserts a hyperlink in cell H5 that opens https://www.example.com, sets the display text to "Visit Example Site", and saves the file as HyperlinkDemo.xlsx.
 class Program
 {
     static void Main()
@@ -18,8 +18,8 @@ class Program
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a hyperlink to cell H5 (row 5, column H) that points to an external website
-        // The Add method returns the index of the newly created hyperlink
+        // Add a hyperlink to cell H5 that points to an external website
+        // Parameters: cell name, rows in range, columns in range, hyperlink address
         int hyperlinkIndex = worksheet.Hyperlinks.Add("H5", 1, 1, "https://www.example.com");
 
         // Optionally set the text that will be displayed in the cell

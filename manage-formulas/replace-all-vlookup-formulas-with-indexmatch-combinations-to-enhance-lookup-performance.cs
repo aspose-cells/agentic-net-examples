@@ -1,69 +1,102 @@
-// Title: Bulk replace VLOOKUP with INDEX‑MATCH in Excel using Aspose.Cells for .NET (C#)
-// Description: A C# utility that loads an Excel workbook with Aspose.Cells, scans every worksheet for VLOOKUP formulas using a tolerant regex, converts each to an equivalent INDEX‑MATCH expression, updates the cell, recalculates all formulas, and saves the optimized file.
-// Keywords: Aspose.Cells | C# | .NET | VLOOKUP replacement | INDEX MATCH conversion | bulk formula update | Excel performance | regex formula detection | workbook automation | Excel lookup optimization
-// Common Searches: replace VLOOKUP with INDEX MATCH Aspose.Cells C# | bulk convert Excel formulas using Aspose.Cells | regex to find VLOOKUP in .NET workbook | optimize Excel lookup speed with Aspose.Cells | C# code to change all VLOOKUP formulas
-// Developer Intent: Automatically transform every VLOOKUP formula in a workbook into an INDEX‑MATCH equivalent to improve calculation speed.
-// Use Cases: Migrate legacy spreadsheets to faster lookup logic before distribution. | Accelerate large financial models by swapping VLOOKUP for INDEX‑MATCH across all sheets. | Provide a server‑side service that receives user Excel files, rewrites lookup formulas, and returns an optimized version.
-// AI Prompts: Generate C# code with Aspose.Cells that detects VLOOKUP formulas via regex and replaces them with INDEX‑MATCH while keeping absolute references intact. | Create unit tests that verify the VLOOKUP‑to‑INDEX‑MATCH conversion works for exact match, approximate match, and named‑range scenarios. | Explain how to extend the regex to capture VLOOKUP calls that include sheet‑qualified ranges or named ranges.
+// Title: Convert VLOOKUP to INDEX‑MATCH in Excel with Aspose.Cells for .NET
+// Description: C# program that loads an Excel workbook using Aspose.Cells, scans every worksheet for VLOOKUP formulas, parses their arguments, builds equivalent INDEX‑MATCH expressions (preserving exact or approximate match), replaces the original formulas, forces a full recalculation, and saves the updated file. Improves lookup speed and modernizes legacy spreadsheets.
+// Keywords: Aspose.Cells VLOOKUP replace | INDEX MATCH conversion .NET | C# Excel formula update | bulk formula replacement | Excel performance optimization | programmatic formula rewrite | Aspose.Cells workbook manipulation
+// Common Searches: replace VLOOKUP with INDEX MATCH using Aspose.Cells | C# code to convert Excel VLOOKUP formulas | how to update formulas in Aspose.Cells workbook | recalculate workbook after formula changes Aspose.Cells | bulk VLOOKUP to INDEX MATCH conversion .NET
+// Developer Intent: Automatically replace all VLOOKUP formulas in an Excel workbook with faster INDEX‑MATCH equivalents via Aspose.Cells.
+// Use Cases: Modernizing legacy spreadsheets before distribution to end users. | Optimizing uploaded Excel files in a web service for faster calculation. | Ensuring consistent, high‑performance lookup logic across multiple worksheets.
+// AI Prompts: Write C# code with Aspose.Cells that scans a workbook, detects VLOOKUP formulas, parses arguments (including quoted commas), and substitutes them with correct INDEX‑MATCH formulas. | Provide a robust VLOOKUP argument parser that handles nested functions and quoted strings, then generates the matching INDEX‑MATCH expression. | Explain how to trigger a full workbook recalculation and safely save the file after programmatically modifying formulas with Aspose.Cells.
 
 using System;
-using System.Text.RegularExpressions;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsVlookupReplacement
+namespace VlookupToIndexMatch
 {
-    // A C# utility that loads an Excel workbook with Aspose.Cells, scans every worksheet for VLOOKUP formulas using a tolerant regex, converts each to an equivalent INDEX‑MATCH expression, updates the cell, recalculates all formulas, and saves the optimized file.
+    // C# program that loads an Excel workbook using Aspose.Cells, scans every worksheet for VLOOKUP formulas, parses their arguments, builds equivalent INDEX‑MATCH expressions (preserving exact or approximate match), replaces the original formulas, forces a full recalculation, and saves the updated file. Improves lookup speed and modernizes legacy spreadsheets.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Load the workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Regular expression to capture VLOOKUP arguments:
-            // =VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup])
-            // This pattern is tolerant to spaces and optional fourth argument.
-            Regex vlookupRegex = new Regex(
-                @"=VLOOKUP\s*\(\s*(?<lookup>[^,]+)\s*,\s*(?<table>[^,]+)\s*,\s*(?<col>\d+)\s*(,\s*(?<range>TRUE|FALSE))?\s*\)",
-                RegexOptions.IgnoreCase);
-
-            // Iterate through all worksheets and cells
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                Cells cells = sheet.Cells;
-                foreach (Cell cell in cells)
+                // Verify input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    // Process only cells that contain a formula
-                    if (cell.IsFormula)
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Iterate through all cells that contain formulas
+                    foreach (Cell cell in sheet.Cells)
                     {
-                        string formula = cell.Formula;
-
-                        // Check if the formula contains VLOOKUP
-                        Match match = vlookupRegex.Match(formula);
-                        if (match.Success)
+                        if (cell.IsFormula)
                         {
-                            // Extract parts of the VLOOKUP formula
-                            string lookupValue = match.Groups["lookup"].Value.Trim();
-                            string tableArray = match.Groups["table"].Value.Trim();
-                            string colIndex = match.Groups["col"].Value.Trim();
-                            // range_lookup (TRUE/FALSE) is ignored because INDEX-MATCH performs exact match by default
-                            
-                            // Build the equivalent INDEX-MATCH formula
-                            // =INDEX(table_array, MATCH(lookup_value, INDEX(table_array,0,1), 0), col_index_num)
-                            string indexMatchFormula = $"=INDEX({tableArray}, MATCH({lookupValue}, INDEX({tableArray},0,1), 0), {colIndex})";
+                            string formula = cell.Formula;
 
-                            // Replace the original VLOOKUP formula with the new one
-                            cell.Formula = indexMatchFormula;
+                            // Check if the formula is a VLOOKUP (case‑insensitive)
+                            if (formula.StartsWith("=VLOOKUP", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // Extract the argument list inside the parentheses
+                                int openParen = formula.IndexOf('(');
+                                int closeParen = formula.LastIndexOf(')');
+                                if (openParen < 0 || closeParen < 0 || closeParen <= openParen)
+                                    continue; // malformed formula, skip
+
+                                string argsInside = formula.Substring(openParen + 1, closeParen - openParen - 1);
+                                // Simple split by commas (does not handle commas inside quoted strings)
+                                string[] parts = argsInside.Split(',');
+
+                                if (parts.Length < 3)
+                                    continue; // not enough arguments, skip
+
+                                // Trim whitespace from each part
+                                string lookupValue = parts[0].Trim();
+                                string tableArray = parts[1].Trim();
+                                string colIndex = parts[2].Trim();
+                                string rangeLookup = parts.Length > 3 ? parts[3].Trim() : "FALSE";
+
+                                // Determine match_type for MATCH: 0 = exact (FALSE), 1 = approximate (TRUE)
+                                string matchType = rangeLookup.Equals("TRUE", StringComparison.OrdinalIgnoreCase) ? "1" : "0";
+
+                                // Build the INDEX‑MATCH formula
+                                // =INDEX(tableArray, MATCH(lookupValue, INDEX(tableArray,0,1), matchType), colIndex)
+                                string newFormula = $"=INDEX({tableArray}, MATCH({lookupValue}, INDEX({tableArray},0,1), {matchType}), {colIndex})";
+
+                                // Replace the VLOOKUP formula with the new INDEX‑MATCH formula
+                                cell.Formula = newFormula;
+                            }
                         }
                     }
                 }
+
+                // Recalculate all formulas after replacement
+                workbook.CalculateFormula();
+
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
-
-            // Recalculate all formulas after replacement
-            workbook.CalculateFormula();
-
-            // Save the modified workbook (replace with desired output path)
-            workbook.Save("output.xlsx");
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

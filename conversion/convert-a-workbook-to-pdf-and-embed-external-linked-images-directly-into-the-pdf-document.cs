@@ -1,48 +1,60 @@
-// Title: Embed Linked Images When Converting Excel to PDF with Aspose.Cells for .NET
-// Description: Load an Excel workbook, refresh external linked data, enable PdfSaveOptions.EmbedAttachments, and save the file as a PDF so that all linked images are embedded directly in the PDF output.
-// Keywords: Aspose.Cells embed linked images PDF | Excel to PDF conversion .NET | PdfSaveOptions EmbedAttachments | UpdateLinkedDataSource Aspose.Cells | external image linking Excel PDF | C# Aspose.Cells PDF export
-// Common Searches: how to embed linked images in PDF using Aspose.Cells | Aspose.Cells update linked data before PDF conversion | PdfSaveOptions EmbedAttachments example C# | convert Excel with external images to PDF .NET | Aspose.Cells PDF/A with embedded graphics
-// Developer Intent: Generate a PDF from an Excel workbook that includes all externally linked images as embedded content.
-// Use Cases: Create client‑ready PDF reports from Excel templates that contain linked logos or charts. | Batch‑process multiple workbooks, ensuring linked graphics are preserved in archival PDFs. | Produce compliance‑oriented PDFs (e.g., PDF/A) where all media must be self‑contained.
-// AI Prompts: Write C# code using Aspose.Cells to load an .xlsx file, refresh external links, and save it as a PDF with embedded linked images. | Explain the effect of PdfSaveOptions.EmbedAttachments on PDF output and how to combine it with PDF/A compliance settings. | Provide a script that scans a directory of Excel files, updates linked data sources, and converts each to a PDF with embedded images using Aspose.Cells.
+// Title: Convert Excel Workbook to PDF with Embedded Images Using Aspose.Cells for .NET (C#)
+// Description: Loads an Excel file, validates its path, and saves it as a PDF with PdfSaveOptions.EmbedAttachments enabled, ensuring OLE objects such as embedded pictures are stored inside the PDF. The example also explains that external linked images cannot be embedded with the current Aspose.Cells API and suggests alternative approaches.
+// Keywords: Aspose.Cells PDF conversion C# | PdfSaveOptions EmbedAttachments | Excel to PDF with images | embed OLE objects in PDF | .NET workbook to PDF | convert Excel with embedded pictures
+// Common Searches: Aspose.Cells embed images when converting Excel to PDF | PdfSaveOptions EmbedAttachments C# example | How to keep pictures inside PDF generated from Excel | Convert .xlsx to PDF with embedded objects Aspose | C# code to save Excel as PDF with attachments
+// Developer Intent: Generate a PDF from an Excel workbook and embed any embedded images or OLE objects directly into the PDF using Aspose.Cells for .NET.
+// Use Cases: Produce PDF versions of financial reports that retain embedded charts and logos. | Create PDF invoices from Excel templates while ensuring company branding images are included. | Automate batch conversion of multiple .xlsx files to PDFs, preserving all embedded graphics.
+// AI Prompts: Write C# code that loads an Excel file, checks its existence, and saves it as a PDF with PdfSaveOptions.EmbedAttachments set to true using Aspose.Cells. | Explain why external linked images cannot be embedded with the current Aspose.Cells API and recommend workarounds or required library updates. | Generate a PowerShell script that scans a folder for .xlsx files and calls a .NET executable to convert each to PDF with embedded attachments.
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfEmbeddingExample
+// Loads an Excel file, validates its path, and saves it as a PDF with PdfSaveOptions.EmbedAttachments enabled, ensuring OLE objects such as embedded pictures are stored inside the PDF. The example also explains that external linked images cannot be embedded with the current Aspose.Cells API and suggests alternative approaches.
+class Program
 {
-    // Load an Excel workbook, refresh external linked data, enable PdfSaveOptions.EmbedAttachments, and save the file as a PDF so that all linked images are embedded directly in the PDF output.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the source Excel file that contains external linked images
-            string sourcePath = "input.xlsx";
+            // Path to the source Excel file (may contain external linked images)
+            string sourceFile = "input.xlsx";
+
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourceFile))
+            {
+                Console.WriteLine($"Error: Source file \"{sourceFile}\" not found.");
+                return;
+            }
 
             // Load the workbook from the file system
-            Workbook workbook = new Workbook(sourcePath);
+            Workbook workbook = new Workbook(sourceFile);
 
-            // Ensure that any external linked data (including linked images) is refreshed
-            // This will pull the latest data from the external sources into the workbook
-            // Passing null updates all external links without needing additional source workbooks
-            workbook.UpdateLinkedDataSource(null);
+            // NOTE: The original code attempted to embed linked images using
+            // properties (IsLinked, LinkPath, SetImage) that are not available
+            // in the current Aspose.Cells version. If embedding of external
+            // linked images is required, it must be handled outside of Aspose.Cells
+            // or by using a newer library version that supports those members.
+            // The essential conversion to PDF works without this optional step.
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Create PDF save options and enable embedding of attachments.
+            // This ensures that any OLE objects (including embedded pictures)
+            // are stored directly inside the resulting PDF.
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                EmbedAttachments = true
+            };
 
-            // When set to true, Aspose.Cells embeds OLE objects (including linked images) directly into the PDF
-            // This ensures that external linked images become part of the PDF file rather than references
-            pdfOptions.EmbedAttachments = true;
+            // Save the workbook as a PDF file with the specified options.
+            string pdfFile = "output.pdf";
+            workbook.Save(pdfFile, pdfOptions);
 
-            // Optional: you can enable other PDF features as needed, e.g., embed fonts, set compliance, etc.
-            // pdfOptions.EmbedStandardWindowsFonts = true;
-            // pdfOptions.Compliance = PdfCompliance.PdfA1b;
-
-            // Save the workbook as a PDF with the specified options
-            string outputPath = "output.pdf";
-            workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"Workbook successfully converted to PDF with embedded images: {outputPath}");
+            Console.WriteLine($"Workbook successfully converted to PDF: {pdfFile}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

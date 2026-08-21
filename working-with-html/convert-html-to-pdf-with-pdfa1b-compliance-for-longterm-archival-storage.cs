@@ -1,31 +1,39 @@
 // Title: C# – Convert HTML to PDF/A‑1b with Aspose.Cells
-// Description: Load an HTML file into an Aspose.Cells Workbook, configure PdfSaveOptions.Compliance to PdfA1b, and save the workbook as a PDF/A‑1b file ready for long‑term archival.
-// Keywords: Aspose.Cells | HTML to PDF | PDF/A-1b | .NET | C# conversion | PdfSaveOptions | archival PDF | PDF compliance | document preservation | batch conversion
-// Common Searches: Aspose.Cells HTML to PDF/A-1b C# | how to create PDF/A-1b from HTML .NET | set PDF compliance Aspose.Cells | convert web page to archival PDF using C# | batch HTML to PDF/A-1b Aspose.Cells
-// Developer Intent: Create a PDF/A‑1b compliant PDF from an HTML source using Aspose.Cells in C#.
-// Use Cases: Archiving web‑based reports for legal retention | Converting HTML invoices to PDF/A‑1b for regulatory compliance | Batch processing of HTML documents into archival PDFs within a .NET service | Generating PDF/A‑1b attachments for automated email workflows
-// AI Prompts: Write C# code that loads an HTML file into an Aspose.Cells Workbook and saves it as a PDF/A‑1b compliant PDF. | Explain how to configure PdfSaveOptions for PDF/A‑1b compliance, including font embedding and metadata settings. | Show a loop that converts a list of HTML files to PDF/A‑1b using Aspose.Cells, handling errors and logging progress. | Suggest ways to optimize the conversion speed when processing large batches of HTML documents to PDF/A‑1b.
+// Description: This example shows how to load an HTML file into an Aspose.Cells Workbook, configure PdfSaveOptions for PDF/A‑1b compliance, and save the result as an archival‑grade PDF using .NET.
+// Keywords: Aspose.Cells HTML to PDF conversion | PDF/A-1b compliance .NET | C# convert HTML to archival PDF | PdfSaveOptions Compliance property | Generate PDF/A-1b from HTML workbook
+// Common Searches: Convert HTML to PDF/A-1b using Aspose.Cells C# | Aspose.Cells set PDF compliance to PDF/A-1b | C# archive HTML reports as PDF/A-1b | Save HTML workbook as PDF/A-1b with Aspose.Cells
+// Developer Intent: Create a PDF/A‑1b document from an HTML source with Aspose.Cells in C#.
+// Use Cases: Preserve web‑based financial statements for regulatory filing. | Store HTML invoices as long‑term, standards‑compliant PDFs. | Automate batch conversion of HTML assets to PDF/A‑1b in a background service.
+// AI Prompts: Write C# code that converts a folder of HTML files to PDF/A‑1b using Aspose.Cells with comprehensive error handling. | Explain how to embed custom fonts and add document metadata when saving PDF/A‑1b with Aspose.Cells. | Show how to tweak PdfSaveOptions (e.g., image quality, compression) for optimal PDF/A‑1b output in a console app.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Load an HTML file into an Aspose.Cells Workbook, configure PdfSaveOptions.Compliance to PdfA1b, and save the workbook as a PDF/A‑1b file ready for long‑term archival.
-class HtmlToPdfA1b
+// This example shows how to load an HTML file into an Aspose.Cells Workbook, configure PdfSaveOptions for PDF/A‑1b compliance, and save the result as an archival‑grade PDF using .NET.
+class HtmlToPdfA1bConverter
 {
     static void Main()
     {
-        // Load the source HTML file into a workbook.
-        // Aspose.Cells can directly load HTML documents.
-        Workbook workbook = new Workbook("input.html");
+        // Path to the source HTML file
+        string htmlFile = "input.html";
 
-        // Create PDF save options and set the compliance level to PDF/A‑1b.
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            Compliance = PdfCompliance.PdfA1b
-        };
+        // Path where the PDF/A‑1b file will be saved
+        string pdfFile = "output.pdf";
 
-        // Save the workbook as a PDF file using the specified options.
-        workbook.Save("output.pdf", pdfOptions);
+        // Load the HTML file into a workbook
+        // The Workbook constructor automatically detects the format based on the file extension
+        Workbook workbook = new Workbook(htmlFile);
+
+        // Create PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+        // Set compliance level to PDF/A‑1b for long‑term archival
+        pdfOptions.Compliance = PdfCompliance.PdfA1b;
+
+        // Save the workbook as a PDF with the specified compliance
+        workbook.Save(pdfFile, pdfOptions);
+
+        Console.WriteLine("HTML has been successfully converted to PDF/A‑1b.");
     }
 }

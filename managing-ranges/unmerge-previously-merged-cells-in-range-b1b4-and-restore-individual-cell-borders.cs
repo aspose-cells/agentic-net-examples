@@ -1,62 +1,64 @@
-// Title: C# – Unmerge B1:B4 and Add Thin Black Borders with Aspose.Cells
-// Description: Demonstrates how to split a previously merged range B1:B4 using Aspose.Cells.Range.UnMerge, then apply a thin black border to each individual cell and save the workbook as UnmergedBorders.xlsx.
-// Keywords: Aspose.Cells unmerge range C# | add cell borders Aspose.Cells | restore borders after unmerge | C# Excel thin black border | Range.UnMerge example
-// Common Searches: how to unmerge cells with Aspose.Cells .NET | apply borders to each cell after unmerge C# | Aspose.Cells set thin black border on range | unmerge B1:B4 and keep borders Aspose
-// Developer Intent: Split the merged range B1:B4 and give every cell its own thin black border.
-// Use Cases: Revert a temporary merged header to separate rows while keeping a printable border layout. | Generate Excel reports where merged cells must be expanded based on user input without losing visual consistency. | Automate cleanup of merged cells in legacy spreadsheets, ensuring each cell retains a uniform border style.
-// AI Prompts: Write C# code that uses Aspose.Cells to unmerge B1:B4 and apply thin black borders to each cell. | Explain the steps to loop through a range after calling Range.UnMerge and set individual border styles in Aspose.Cells. | Show how to customize border color and line style for cells that were previously merged using Aspose.Cells for .NET.
+// Title: Unmerge B1:B4 and Add Thin Black Borders with Aspose.Cells for .NET
+// Description: Shows how to merge a range, unmerge it, and apply an individual thin black border to each cell in B1:B4 using Aspose.Cells in C#.
+// Keywords: Aspose.Cells unmerge range | C# set cell borders | apply thin black border Aspose.Cells | restore individual borders after unmerge | Aspose.Cells .NET border style | Excel unmerge cells programmatically | Aspose.Cells cell style example
+// Common Searches: C# Aspose.Cells unmerge cells and add borders | How to apply borders to each cell after unmerge in Aspose.Cells | Aspose.Cells example for unmerging B1:B4 | Set thin black border on a column range using Aspose.Cells | Programmatically restore cell borders after unmerge in .NET
+// Developer Intent: The developer needs to split a previously merged range (B1:B4) and give each resulting cell its own thin black border.
+// Use Cases: Convert a merged header back to separate rows while keeping a printable grid. | Reset formatting after temporary merged calculations, ensuring each cell displays its own border. | Prepare a worksheet for data entry where merged cells must be split and each cell requires a consistent border style.
+// AI Prompts: Generate C# code with Aspose.Cells that unmerges a given range and applies a thin black border to every cell in that range. | Create a reusable method that takes a worksheet, a range address, and a border color, then unmerges the range and sets the specified border on all cells. | Explain how to preserve cell values while unmerging and adding borders using Aspose.Cells for .NET.
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates how to split a previously merged range B1:B4 using Aspose.Cells.Range.UnMerge, then apply a thin black border to each individual cell and save the workbook as UnmergedBorders.xlsx.
-class UnmergeAndRestoreBorders
+namespace AsposeCellsUnmergeExample
 {
-    static void Main()
+    // Shows how to merge a range, unmerge it, and apply an individual thin black border to each cell in B1:B4 using Aspose.Cells in C#.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // (Optional) Merge cells B1:B4 to demonstrate unmerging later
-            // B column is index 1, rows 0‑3 (zero‑based)
-            worksheet.Cells.Merge(0, 1, 4, 1);
-
-            // Unmerge the previously merged range B1:B4 using Range.UnMerge
-            AsposeRange range = worksheet.Cells.CreateRange("B1", "B4");
-            range.UnMerge();
-
-            // Restore individual thin black borders for each cell in B1:B4
-            for (int row = 0; row < 4; row++)
+            try
             {
-                Cell cell = worksheet.Cells[row, 1]; // column B = index 1
-                Style style = cell.GetStyle();
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
 
-                // Apply thin borders on all four sides
-                style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-                style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-                style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-                style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+                // Merge cells B1:B4 for demonstration (rows 0‑3, column 1)
+                cells.Merge(0, 1, 4, 1);
+                cells[0, 1].PutValue("Merged B1:B4");
 
-                // Set border color (optional, black is default)
-                style.Borders[BorderType.TopBorder].Color = Color.Black;
-                style.Borders[BorderType.BottomBorder].Color = Color.Black;
-                style.Borders[BorderType.LeftBorder].Color = Color.Black;
-                style.Borders[BorderType.RightBorder].Color = Color.Black;
+                // Unmerge the previously merged range B1:B4
+                cells.UnMerge(0, 1, 4, 1);
 
-                cell.SetStyle(style);
+                // Define a thin black border style
+                Style borderStyle = workbook.CreateStyle();
+                borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+
+                borderStyle.Borders[BorderType.TopBorder].Color = Color.Black;
+                borderStyle.Borders[BorderType.BottomBorder].Color = Color.Black;
+                borderStyle.Borders[BorderType.LeftBorder].Color = Color.Black;
+                borderStyle.Borders[BorderType.RightBorder].Color = Color.Black;
+
+                // Apply the style to each cell in the range B1:B4
+                for (int row = 0; row < 4; row++)
+                {
+                    cells[row, 1].SetStyle(borderStyle);
+                }
+
+                // Save the workbook
+                string outputPath = "UnmergedWithBorders.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
-
-            // Save the modified workbook
-            workbook.Save("UnmergedBorders.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

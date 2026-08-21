@@ -1,22 +1,21 @@
-// Title: Detect X‑Axis Value Axis and Convert Column Chart to Scatter in Aspose.Cells for .NET
-// Description: Creates a workbook, adds a column chart, checks if its X‑axis is a value axis (only Scatter or Bubble), and if not, switches the chart to Scatter, assigns numeric XValues, updates axis titles, and saves the file.
-// Keywords: Aspose.Cells X axis value axis | convert column chart to scatter | numeric X axis Aspose.Cells | chart type detection Aspose.Cells | C# Aspose.Cells chart conversion | set XValues Aspose.Cells
-// Common Searches: Aspose.Cells check if chart X axis is value axis | change column chart to scatter chart Aspose.Cells .NET | set XValues for scatter chart using Aspose.Cells | programmatically change chart type Aspose.Cells | numeric X axis in Aspose.Cells chart
-// Developer Intent: Identify whether a chart’s X‑axis is a value axis and, when it isn’t, programmatically convert the chart to a Scatter type so numeric X data can be used.
-// Use Cases: Validate chart axis before exporting to ensure numeric X values are displayed correctly. | Automatically convert category‑based charts to value‑based charts when source data contains numeric X values. | Generate dynamic reports where X values are timestamps or measurements that require a value axis. | Update axis titles after conversion to maintain clear chart labeling.
-// AI Prompts: Generate C# code with Aspose.Cells that detects if a chart’s X axis is a value axis and converts a column chart to a scatter chart with XValues set to a cell range. | Show how to switch a chart type to Scatter and assign numeric X data using Aspose.Cells for .NET. | Explain the steps to programmatically change a chart’s X axis from category to value axis in Aspose.Cells.
+// Title: Detect X‑Axis Value Axis and Convert a Column Chart to Scatter with Numeric X in Aspose.Cells for .NET
+// Description: Creates a workbook with a column chart, checks whether the X‑axis is a value axis (Scatter/Bubble), and if it isn’t, switches the chart to a Scatter type, assigns a numeric X‑value range, and saves the file.
+// Keywords: Aspose.Cells X axis value axis detection | convert column chart to scatter Aspose.Cells | set numeric X values Aspose.Cells .NET | chart axis conversion Aspose.Cells | programmatic chart type change Aspose
+// Common Searches: how to check if chart X axis is a value axis in Aspose.Cells | convert category axis chart to scatter chart .NET | assign custom X values to series Aspose.Cells | change chart type programmatically Aspose.Cells | numeric X axis for Excel chart using Aspose
+// Developer Intent: Determine if a chart’s X‑axis is a value axis and, when it isn’t, change the chart to a Scatter type and bind numeric X‑values.
+// Use Cases: Validate the axis type of an automatically generated column chart before exporting. | Transform a categorical X‑axis into a numeric axis for statistical analysis. | Generate Excel reports that start with category data and later require numeric positioning without manual user intervention.
+// AI Prompts: Generate C# code with Aspose.Cells that detects a chart’s X‑axis type and converts it to a Scatter chart with custom numeric X values. | Show how to programmatically change a column chart to a scatter chart and set the XValues property in Aspose.Cells for .NET. | Explain the steps to identify a value‑axis chart and modify its axis configuration to support numeric data using Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsChartAxisConversion
 {
-    // Creates a workbook, adds a column chart, checks if its X‑axis is a value axis (only Scatter or Bubble), and if not, switches the chart to Scatter, assigns numeric XValues, updates axis titles, and saves the file.
-    public class DetectAndConvertXAxis
+    // Creates a workbook with a column chart, checks whether the X‑axis is a value axis (Scatter/Bubble), and if it isn’t, switches the chart to a Scatter type, assigns a numeric X‑value range, and saves the file.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
@@ -24,63 +23,63 @@ namespace AsposeCellsExamples
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data (numeric X values and Y values)
-                sheet.Cells["A1"].PutValue("X");
-                sheet.Cells["B1"].PutValue("Y");
-                for (int i = 2; i <= 6; i++)
-                {
-                    sheet.Cells[$"A{i}"].PutValue(i - 1);          // X = 1,2,3,4,5
-                    sheet.Cells[$"B{i}"].PutValue((i - 1) * 10); // Y = 10,20,30,40,50
-                }
+                // Populate sample data (numeric Y values, categorical X values)
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["A4"].PutValue("C");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["B4"].PutValue(30);
 
-                // Add a column chart (its X axis is a category axis by default)
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 10, 0, 25, 15);
+                // Add a column chart (X axis is a Category axis by default)
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
                 Chart chart = sheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B6", true);          // Y values
-                chart.NSeries.CategoryData = "A2:A6";      // X values as categories
+                chart.NSeries.Add("B2:B4", true);
+                // Category data is automatically taken from the adjacent column (A2:A4)
 
-                // ----- Detect if the X axis is a value axis -----
-                // For scatter and bubble charts the X axis is a value axis.
+                // ------------------------------------------------------------
+                // Detect if the X axis is a Value axis.
+                // For most chart types the X axis is a Category axis.
+                // Scatter and Bubble charts use a Value axis for X.
+                // ------------------------------------------------------------
                 bool isXAxisValueAxis = chart.Type == ChartType.Scatter ||
                                         chart.Type == ChartType.Bubble;
 
-                Console.WriteLine("Is X axis a value axis? " + isXAxisValueAxis);
+                Console.WriteLine("Initial chart type: " + chart.Type);
+                Console.WriteLine("Is X axis a Value axis? " + isXAxisValueAxis);
 
-                // ----- If not, convert the chart to a scatter chart (numeric X axis) -----
+                // ------------------------------------------------------------
+                // If the X axis is not a Value axis, convert the chart to a
+                // Scatter chart which uses a numeric X axis, and assign numeric
+                // X values to the series.
+                // ------------------------------------------------------------
                 if (!isXAxisValueAxis)
                 {
-                    // Change chart type to Scatter which uses a value axis for X
+                    // Change chart type to Scatter (numeric X axis)
                     chart.Type = ChartType.Scatter;
 
-                    // Set the X values for the series to the numeric range
-                    // (CategoryData is ignored for scatter charts; use XValues instead)
-                    chart.NSeries[0].XValues = "A2:A6";
+                    // Provide numeric X values (e.g., 1, 2, 3) for the series
+                    sheet.Cells["C2"].PutValue(1);
+                    sheet.Cells["C3"].PutValue(2);
+                    sheet.Cells["C4"].PutValue(3);
 
-                    // Optionally, adjust axis titles for clarity
-                    chart.CategoryAxis.Title.Text = "Numeric X Axis";
-                    chart.ValueAxis.Title.Text = "Y Axis";
+                    // Assign the X values range to the series
+                    chart.NSeries[0].XValues = "C2:C4";
 
                     Console.WriteLine("Chart converted to Scatter. X axis now supports numeric data.");
                 }
 
                 // Save the workbook
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "DetectAndConvertXAxis.xlsx");
+                string outputPath = "ChartAxisConversion.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
+                Console.WriteLine("Workbook saved as " + outputPath);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            DetectAndConvertXAxis.Run();
         }
     }
 }

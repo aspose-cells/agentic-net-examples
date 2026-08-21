@@ -1,60 +1,60 @@
-// Title: C# – Generate a Summary Sheet of All Named Ranges with Addresses and RefersTo Formulas using Aspose.Cells
-// Description: This example creates a workbook, defines sample named ranges, adds a "Summary" worksheet, and writes a table that shows each defined name, the range address (or N/A), and the original RefersTo formula. The workbook is then saved as NamedRangeSummary.xlsx.
-// Keywords: Aspose.Cells C# | list named ranges | named range address | RefersTo formula | GetRange Aspose.Cells | Excel named range summary | iterate workbook names | export named ranges | Aspose.Cells API | C# Excel automation
-// Common Searches: how to list all named ranges with Aspose.Cells | C# get address of a named range in Excel | Aspose.Cells create summary sheet of names | retrieve RefersTo formula using Aspose.Cells | iterate over defined names in a workbook C#
-// Developer Intent: Create a worksheet that enumerates every defined name, displaying its name, cell address (when available), and the RefersTo expression.
-// Use Cases: Document and audit all named ranges in a generated report. | Provide end‑users a quick reference of workbook names for troubleshooting. | Validate that named ranges point to the correct cells before distribution.
-// AI Prompts: Write C# code with Aspose.Cells that builds a summary sheet of all workbook names, showing each name, its address, and its RefersTo formula, handling non‑range names gracefully. | Explain how to obtain a Range object from a Name and read its Address property in Aspose.Cells. | Show how to export the named‑range summary to a CSV file instead of an Excel worksheet using Aspose.Cells.
+// Title: Enumerate Named Ranges with Addresses and RefersTo Formulas using Aspose.Cells for .NET
+// Description: This C# example creates a workbook, defines sample data and two named ranges, then adds a "Summary" worksheet. It writes column headers and loops through every defined name, extracting the name text, the range address (or "N/A" when unavailable), and the RefersTo expression, finally saving the file as NamedRangeSummary.xlsx.
+// Keywords: Aspose.Cells C# list named ranges | named range address .NET | RefersTo formula extraction | enumerate defined names workbook | Aspose.Cells summary sheet | C# Excel automation | global developers
+// Common Searches: how to list all named ranges in Aspose.Cells | C# get address of a defined name Excel | Aspose.Cells create summary worksheet for named ranges | retrieve RefersTo formula with Aspose.Cells .NET | export named range metadata to new sheet
+// Developer Intent: Produce a worksheet that catalogs each defined name, its cell address (or placeholder), and its RefersTo formula.
+// Use Cases: Generate a quick‑reference guide for end users to locate and understand workbook named ranges. | Audit and validate data models by reporting all defined names and their targets. | Feed named‑range metadata into documentation pipelines or reporting tools.
+// AI Prompts: Write C# code with Aspose.Cells that adds a "Summary" sheet listing every defined name, its address (or "N/A"), and its RefersTo formula, while safely handling non‑range names. | Explain the behavior of Name.GetRange() when a name points to a constant, a formula, or an external reference in Aspose.Cells. | Modify the sample to also display the total number of cells covered by each named range on the summary sheet.
 
 using System;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsNamedRangeSummary
+namespace AsposeCellsExamples
 {
-    // This example creates a workbook, defines sample named ranges, adds a "Summary" worksheet, and writes a table that shows each defined name, the range address (or N/A), and the original RefersTo formula. The workbook is then saved as NamedRangeSummary.xlsx.
-    public class Program
+    // This C# example creates a workbook, defines sample data and two named ranges, then adds a "Summary" worksheet. It writes column headers and loops through every defined name, extracting the name text, the range address (or "N/A" when unavailable), and the RefersTo expression, finally saving the file as NamedRangeSummary.xlsx.
+    public class NamedRangeSummary
     {
-        public static void Main()
+        public static void Run()
         {
             try
             {
-                // Create a new workbook (lifecycle create)
+                // Create a new workbook (lifecycle: create)
                 Workbook workbook = new Workbook();
 
                 // -------------------------------------------------
-                // Sample data: create some named ranges for demo
+                // Sample data and named ranges (for demonstration)
                 // -------------------------------------------------
                 Worksheet sheet1 = workbook.Worksheets[0];
                 sheet1.Name = "Data";
 
                 // Populate some cells
-                sheet1.Cells["A1"].PutValue("Item");
-                sheet1.Cells["B1"].PutValue("Quantity");
-                sheet1.Cells["A2"].PutValue("Apple");
-                sheet1.Cells["B2"].PutValue(10);
-                sheet1.Cells["A3"].PutValue("Banana");
-                sheet1.Cells["B3"].PutValue(20);
+                sheet1.Cells["A1"].PutValue(10);
+                sheet1.Cells["A2"].PutValue(20);
+                sheet1.Cells["A3"].PutValue(30);
+                sheet1.Cells["B1"].PutValue("Alpha");
+                sheet1.Cells["B2"].PutValue("Beta");
+                sheet1.Cells["B3"].PutValue("Gamma");
 
-                // Define named ranges
-                int idx1 = workbook.Worksheets.Names.Add("Items");
-                workbook.Worksheets.Names[idx1].RefersTo = "=Data!$A$2:$A$3";
+                // Create named ranges
+                int idx1 = workbook.Worksheets.Names.Add("Numbers");
+                workbook.Worksheets.Names[idx1].RefersTo = "=Data!$A$1:$A$3";
 
-                int idx2 = workbook.Worksheets.Names.Add("Quantities");
-                workbook.Worksheets.Names[idx2].RefersTo = "=Data!$B$2:$B$3";
+                int idx2 = workbook.Worksheets.Names.Add("Texts");
+                workbook.Worksheets.Names[idx2].RefersTo = "=Data!$B$1:$B$3";
 
                 // -------------------------------------------------
-                // Create a summary worksheet
+                // Create a summary sheet
                 // -------------------------------------------------
                 Worksheet summary = workbook.Worksheets.Add("Summary");
 
                 // Write header row
-                summary.Cells[0, 0].PutValue("Name");
-                summary.Cells[0, 1].PutValue("Address");
-                summary.Cells[0, 2].PutValue("RefersTo Formula");
+                summary.Cells["A1"].PutValue("Name");
+                summary.Cells["B1"].PutValue("Address");
+                summary.Cells["C1"].PutValue("RefersTo Formula");
 
                 // Iterate over all defined names
-                int row = 1; // start after header
+                int row = 2; // start after header
                 foreach (Name name in workbook.Worksheets.Names)
                 {
                     // Name text
@@ -64,30 +64,42 @@ namespace AsposeCellsNamedRangeSummary
                     AsposeRange range = null;
                     try
                     {
-                        range = name.GetRange(); // may return null if not a range
+                        // GetRange() returns null if the name does not refer to a range
+                        range = name.GetRange();
                     }
                     catch
                     {
-                        // ignore exceptions; keep range null
+                        // Ignored – some names may refer to formulas or external links
                     }
 
                     // Address (if range is available)
                     string address = range != null ? range.Address : "N/A";
                     summary.Cells[row, 1].PutValue(address);
 
-                    // RefersTo formula (as stored in the Name object)
+                    // The formula (RefersTo) that defines the name
                     summary.Cells[row, 2].PutValue(name.RefersTo);
 
                     row++;
                 }
 
-                // Save the workbook (lifecycle save)
+                // -------------------------------------------------
+                // Save the workbook (lifecycle: save)
+                // -------------------------------------------------
                 workbook.Save("NamedRangeSummary.xlsx");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            NamedRangeSummary.Run();
         }
     }
 }

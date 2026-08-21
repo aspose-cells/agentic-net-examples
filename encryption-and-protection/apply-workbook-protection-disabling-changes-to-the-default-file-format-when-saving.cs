@@ -1,37 +1,33 @@
-// Title: Apply Write Protection with RecommendReadOnly to Block Format Changes in Aspose.Cells (C#)
-// Description: Creates a new Workbook, sets a password on WriteProtection, enables RecommendReadOnly, and saves the file in the default XLSX format, preventing users from saving the workbook in any other format without first removing protection.
-// Keywords: Aspose.Cells write protection | RecommendReadOnly | prevent format conversion | C# workbook protection | default XLSX save
-// Common Searches: Aspose.Cells stop saving workbook in another format | C# set read‑only with password using Aspose.Cells | disable format conversion for protected Excel file | how to enforce default file type in Aspose.Cells
-// Developer Intent: Secure a workbook with a password and read‑only recommendation so it can only be saved in its original XLSX format.
-// Use Cases: Distribute a template that must stay in XLSX and cannot be exported to CSV or PDF. | Share confidential financial reports that users may view but not re‑save in a different format. | Provide read‑only spreadsheets to partners while preserving the original file type.
-// AI Prompts: Generate C# code with Aspose.Cells that applies write protection, sets RecommendReadOnly, and saves the workbook as XLSX only. | Explain how to remove the password and RecommendReadOnly flag from a protected Aspose.Cells workbook. | Show an example where attempting to save a protected workbook in another format results in an error.
+// Title: Apply Write Protection to an Aspose.Cells Workbook and Save in the Default XLSX Format (C#)
+// Description: Creates a new Workbook, sets a password and a read‑only recommendation, saves it using the default XLSX format, then reloads the file to confirm the IsWriteProtected flag. Demonstrates how to prevent editing after save with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | write protection | password protected Excel | default XLSX save | RecommendReadOnly | IsWriteProtected | Excel file security | programmatic workbook protection
+// Common Searches: Aspose.Cells set password for Excel workbook C# | Save a write‑protected XLSX with Aspose.Cells | Verify workbook protection after saving Aspose.Cells .NET | Enable read‑only recommendation in Aspose.Cells workbook | How to prevent editing of saved Excel file using Aspose.Cells
+// Developer Intent: Add password‑based write protection to a workbook and store it in the default XLSX format.
+// Use Cases: Distribute template files that require a password before any edits can be made. | Generate read‑only financial reports that enforce a password when users try to modify them. | Automate compliance checks by confirming that saved Excel files retain write protection.
+// AI Prompts: Provide C# code that sets a password and RecommendReadOnly on an Aspose.Cells workbook, saves it as the default XLSX, and checks IsWriteProtected. | Show how to create a write‑protected Excel file with Aspose.Cells and verify the protection after loading the file. | Explain the steps to disable editing of a workbook saved in the default format using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsProtectionDemo
+// Creates a new Workbook, sets a password and a read‑only recommendation, saves it using the default XLSX format, then reloads the file to confirm the IsWriteProtected flag. Demonstrates how to prevent editing after save with Aspose.Cells for .NET.
+class Program
 {
-    // Creates a new Workbook, sets a password on WriteProtection, enables RecommendReadOnly, and saves the file in the default XLSX format, preventing users from saving the workbook in any other format without first removing protection.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access write‑protection settings via Workbook.Settings.WriteProtection
-            WriteProtection wp = workbook.Settings.WriteProtection;
+        // Enable write protection to prevent changes when saving
+        workbook.Settings.WriteProtection.Password = "securePwd";
+        workbook.Settings.WriteProtection.RecommendReadOnly = true; // recommend read‑only mode
 
-            // Set a password that will prevent modifications to the workbook
-            wp.Password = "SecurePwd123";
+        // Save the workbook using the default file format (XLSX)
+        string outputPath = "ProtectedWorkbook.xlsx";
+        workbook.Save(outputPath); // default SaveFormat is Xlsx
 
-            // Recommend the workbook be opened as read‑only, which disables
-            // changes such as saving in a different file format without removing protection
-            wp.RecommendReadOnly = true;
-
-            // Save the workbook using the default file format (Xlsx)
-            // (lifecycle rule: save)
-            workbook.Save("ProtectedWorkbook.xlsx");
-        }
+        // Load the saved workbook to verify the protection settings
+        Workbook loadedWorkbook = new Workbook(outputPath);
+        bool isWriteProtected = loadedWorkbook.Settings.WriteProtection.IsWriteProtected;
+        Console.WriteLine("Workbook is write protected: " + isWriteProtected);
     }
 }

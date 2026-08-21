@@ -1,49 +1,53 @@
-// Title: Merge Cells P15:Q17, Apply Date Format (mm‑dd‑yyyy) and Export to PDF with Aspose.Cells for .NET
-// Description: C# example that creates a workbook, merges the range P15:Q17, sets the upper‑left cell to the custom date format "mm-dd-yyyy", saves the sheet as a temporary XLSX file, converts it to PDF using Aspose.Cells ConversionUtility, and cleans up the temporary file.
-// Keywords: Aspose.Cells merge cells | C# merge P15 Q17 | custom date format mm-dd-yyyy | Aspose.Cells export to PDF | temporary XLSX to PDF conversion | .NET spreadsheet PDF generation | cell style custom format Aspose
-// Common Searches: how to merge cells and set date format with Aspose.Cells | Aspose.Cells convert merged range to PDF | C# set custom number format for merged cells | Aspose.Cells PDF export after cell styling | merge P15 Q17 Aspose.Cells example
-// Developer Intent: Create a workbook, merge a specific range, apply a date format, and generate a PDF file programmatically.
-// Use Cases: Produce PDF invoices where the issue date spans two columns. | Generate calendar PDFs with month titles merged and formatted as dates. | Automate reporting templates that require a merged header cell displaying a formatted date.
-// AI Prompts: Write C# code using Aspose.Cells to merge cells P15:Q17, set the number format to mm-dd-yyyy, and save the result as a PDF. | Explain the steps for converting a temporary XLSX workbook to PDF after applying a custom date style with Aspose.Cells. | Provide error‑handling best practices for temporary file cleanup when exporting a formatted workbook to PDF in .NET.
+// Title: C# – Merge Cells P15:Q17, Apply Date Format mm‑dd‑yyyy, and Export Workbook to PDF with Aspose.Cells
+// Description: Loads an XLSX workbook, merges the range P15:Q17 on the first worksheet, sets the merged cell's custom date format to "mm-dd-yyyy", saves the workbook, converts it to PDF using Aspose.Cells, and cleans up temporary files. Demonstrates end‑to‑end formatting and PDF export in .NET.
+// Keywords: Aspose.Cells C# merge cells | set custom date format Aspose.Cells | export XLSX to PDF .NET | merge range P15:Q17 Aspose | Aspose.Cells PDF conversion example | C# workbook formatting Aspose | date format mm-dd-yyyy Aspose.Cells
+// Common Searches: how to merge cells and set date format with Aspose.Cells | Aspose.Cells example merge P15 Q17 and export PDF | C# set custom number format for merged cells Aspose | convert formatted Excel to PDF using Aspose.Cells .NET | Aspose.Cells merge range and apply date style
+// Developer Intent: Merge a specific cell range, apply a custom date format, and generate a PDF from the workbook using Aspose.Cells for .NET.
+// Use Cases: Create a report header that spans P15:Q17, shows a date in mm‑dd‑yyyy format, and deliver the report as a PDF. | Build an invoice template where the due‑date cell is merged and formatted, then export the final invoice to PDF automatically. | Generate a schedule worksheet with a merged date cell and provide a ready‑to‑share PDF version for stakeholders.
+// AI Prompts: Give a concise Aspose.Cells for .NET snippet that merges P15:Q17, applies the "mm-dd-yyyy" date format, and saves directly to PDF without a temporary file. | Explain how to use the Style.Custom property to set a date format on a merged cell and then convert the workbook to PDF with Aspose.Cells. | Show best practices for cleaning up temporary files after converting an XLSX workbook with merged cells to PDF using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
+using Aspose.Cells;
 
-// C# example that creates a workbook, merges the range P15:Q17, sets the upper‑left cell to the custom date format "mm-dd-yyyy", saves the sheet as a temporary XLSX file, converts it to PDF using Aspose.Cells ConversionUtility, and cleans up the temporary file.
+// Loads an XLSX workbook, merges the range P15:Q17 on the first worksheet, sets the merged cell's custom date format to "mm-dd-yyyy", saves the workbook, converts it to PDF using Aspose.Cells, and cleans up temporary files. Demonstrates end‑to‑end formatting and PDF export in .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
 
         // Merge cells P15:Q17
-        // P column = index 15, row 15 = index 14, total rows = 3, total columns = 2
+        // P = column index 15 (zero‑based), Q = 16
+        // Row 15 = index 14, Row 17 = index 16, total rows = 3, total columns = 2
         worksheet.Cells.Merge(14, 15, 3, 2);
 
-        // Set the number format of the merged cell (upper‑left cell P15) to "mm-dd-yyyy"
+        // Set the number format of the merged cell (upper‑left cell) to date "mm-dd-yyyy"
         Cell mergedCell = worksheet.Cells[14, 15];
         Style style = mergedCell.GetStyle();
         style.Custom = "mm-dd-yyyy";
         mergedCell.SetStyle(style);
 
-        // Save the workbook to a temporary XLSX file (required for the conversion utility)
-        string tempXlsxPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xlsx");
-        workbook.Save(tempXlsxPath, SaveFormat.Xlsx);
+        // Save the modified workbook to a temporary XLSX file
+        string tempXlsx = Path.GetTempFileName().Replace(".tmp", ".xlsx");
+        workbook.Save(tempXlsx);
 
-        // Convert the temporary XLSX file to PDF using the provided ConversionUtility.Convert method
-        string outputPdfPath = "MergedCellsOutput.pdf";
-        ConversionUtility.Convert(tempXlsxPath, outputPdfPath);
+        // Convert the temporary XLSX file to PDF using the provided ConversionUtility rule
+        string outputPdf = "output.pdf";
+        ConversionUtility.Convert(tempXlsx, outputPdf);
 
-        // Clean up the temporary XLSX file
-        if (File.Exists(tempXlsxPath))
+        // Clean up the temporary file
+        if (File.Exists(tempXlsx))
         {
-            File.Delete(tempXlsxPath);
+            File.Delete(tempXlsx);
         }
 
-        Console.WriteLine($"PDF file created at: {Path.GetFullPath(outputPdfPath)}");
+        Console.WriteLine($"Workbook processed and saved as PDF: {outputPdf}");
     }
 }

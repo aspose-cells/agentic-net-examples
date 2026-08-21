@@ -1,48 +1,46 @@
-// Title: Add Workbook Name as Center Header on Every PDF Page with Aspose.Cells for .NET (C#)
-// Description: Shows how to place the workbook's file name—or a custom name—into a centered header on each page when exporting to PDF using Aspose.Cells PageSetup and PdfSaveOptions in C#.
-// Keywords: Aspose.Cells PDF header | C# add workbook name to PDF | PdfSaveOptions header | center header &F placeholder | Aspose.Cells set header | display workbook title in PDF | Aspose.Cells .NET PDF export | PageSetup SetHeader example | workbook filename placeholder | PDF page header Aspose
-// Common Searches: Aspose.Cells set PDF header to file name | C# add workbook name to each PDF page | How to use &F placeholder in Aspose.Cells | PdfSaveOptions display document title | Add centered header when exporting Excel to PDF | Show workbook title in PDF header Aspose
-// Developer Intent: Insert the workbook’s name as a centered header on every page of the generated PDF.
-// Use Cases: Creating multi‑page reports where each page displays the report title. | Exporting unsaved workbooks while preserving a meaningful name in the PDF header. | Automating branding of PDF documents generated from Excel files. | Ensuring consistent header information across all pages without post‑processing.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a custom workbook name and uses &F to place it in the center header of each PDF page. | Explain the role of PageSetup.SetHeader sections and the &F placeholder, and how PdfSaveOptions.DisplayDocTitle affects the PDF viewer. | Show how to assign Workbook.FileName for unsaved workbooks so the header displays the intended name. | Provide a step‑by‑step guide to export an Excel workbook to PDF with a centered header containing the workbook title.
+// Title: Add Workbook Name as Centered Header on Every PDF Page with Aspose.Cells for .NET
+// Description: Demonstrates how to set the workbook name as a centered page header on each worksheet, then export the workbook to PDF using PdfSaveOptions so the header appears on every PDF page.
+// Keywords: Aspose.Cells PDF header | C# add workbook name to PDF header | centered page header Aspose.Cells | PdfSaveOptions header example | export workbook to PDF with header | Aspose.Cells .NET PDF export
+// Common Searches: Aspose.Cells set header for PDF export | C# add workbook title to PDF page header | centered header on each PDF page Aspose.Cells | how to use PdfSaveOptions for headers | apply same header to all worksheets PDF
+// Developer Intent: Insert the workbook's title as a centered header on every page of the PDF generated from an Aspose.Cells workbook.
+// Use Cases: Create branded PDF reports that display the workbook title on each page. | Export multiple worksheets to a single PDF while maintaining a consistent header. | Produce printable documents that include the workbook name for easy identification.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a left‑aligned date header to each PDF page. | Show how to configure different headers for odd and even pages when saving a workbook to PDF. | Provide an example that adds page numbers to the footer while keeping a static workbook name header.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Shows how to place the workbook's file name—or a custom name—into a centered header on each page when exporting to PDF using Aspose.Cells PageSetup and PdfSaveOptions in C#.
+// Demonstrates how to set the workbook name as a centered page header on each worksheet, then export the workbook to PDF using PdfSaveOptions so the header appears on every PDF page.
 class AddWorkbookNameHeaderToPdf
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        // Define a name for the workbook (used in the header)
+        string workbookName = "SampleWorkbook";
 
-        // Access the first worksheet
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Set a page header that displays the file name (without path)
-        // Section 1 = center section of the header
-        // &F inserts the file name; if the workbook is not saved yet,
-        // Aspose.Cells uses the workbook name set in the FileName property.
-        sheet.PageSetup.SetHeader(1, "&F");
+        // Set a page header that displays the workbook name on the center section of each page
+        // Section 1 = Center. The header script can contain plain text.
+        sheet.PageSetup.SetHeader(1, workbookName);
 
-        // Optionally set the workbook name (used when the workbook is not saved to disk)
-        // This ensures the header shows a meaningful name.
-        workbook.FileName = "MyWorkbook";
+        // (Optional) Add some data so the PDF has visible content
+        sheet.Cells["A1"].PutValue("Data on first sheet");
+        sheet.Cells["A2"].PutValue("More data...");
 
-        // Configure PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        // If there are additional worksheets, apply the same header to them
+        for (int i = 1; i < workbook.Worksheets.Count; i++)
         {
-            // Display the document title in the PDF viewer's title bar (optional)
-            DisplayDocTitle = true
-        };
+            Worksheet ws = workbook.Worksheets[i];
+            ws.PageSetup.SetHeader(1, workbookName);
+        }
 
-        // Save the workbook as PDF; the header will appear on every page
-        string outputPath = "WorkbookWithHeader.pdf";
-        workbook.Save(outputPath, pdfOptions);
+        // Configure PDF save options (no special options needed for the header)
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        Console.WriteLine($"PDF saved to {Path.GetFullPath(outputPath)}");
+        // Save the workbook as a PDF; the header will appear on every page
+        workbook.Save("WorkbookWithHeader.pdf", pdfOptions);
     }
 }

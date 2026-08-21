@@ -1,89 +1,51 @@
-// Title: Batch Hide Empty Worksheets in Excel Workbooks with Aspose.Cells for .NET (C#)
-// Description: A C# console utility that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, evaluates every worksheet using MaxDataRow/MaxDataColumn, hides sheets that contain no data (IsVisible = false), and saves the cleaned workbooks to a target directory. Perfect for bulk Excel cleanup.
-// Keywords: Aspose.Cells | C# | hide empty worksheets | batch Excel processing | MaxDataRow | MaxDataColumn | programmatic sheet visibility | .NET Excel automation | Excel workbook cleanup | folder based workbook iteration
-// Common Searches: C# hide empty Excel sheets Aspose.Cells | batch hide blank worksheets .NET | detect empty worksheet Aspose.Cells | process multiple workbooks Aspose.Cells C# | automate Excel sheet visibility Aspose.Cells
-// Developer Intent: Automatically hide any worksheet that lacks data in each workbook and write the updated files back to disk.
-// Use Cases: Remove blank tabs from generated reports before distribution to keep the workbook tidy. | Pre‑process a batch of user‑uploaded Excel files, hiding empty worksheets to reduce visual clutter in a document management system. | Automate cleanup of archived workbooks so that only populated worksheets remain visible.
-// AI Prompts: Generate C# code using Aspose.Cells that hides empty worksheets in a single workbook and saves the result. | Refactor the program to log the names of hidden sheets and add support for both .xlsx and .xls formats. | Explain how MaxDataRow and MaxDataColumn can be used to determine whether a worksheet is empty in Aspose.Cells.
+// Title: Batch Hide Empty Worksheets in Multiple Excel Workbooks with Aspose.Cells for .NET
+// Description: Loads each workbook from a supplied list, scans every worksheet, marks sheets whose MaxDataRow and MaxDataColumn are -1 as invisible, and overwrites the original files using Aspose.Cells.
+// Keywords: Aspose.Cells | C# Excel automation | hide empty worksheets | batch process workbooks | MaxDataRow | MaxDataColumn | worksheet visibility | save workbook .NET | multiple Excel files
+// Common Searches: Aspose.Cells hide blank sheets in C# | process several Excel files and hide empty tabs | detect empty worksheet using MaxDataRow Aspose | overwrite original workbook after modifications Aspose.Cells | automate Excel cleanup with .NET
+// Developer Intent: Automatically conceal all worksheets that contain no data in each workbook and persist the changes to the same files.
+// Use Cases: Prepare distribution‑ready reports by removing unused tabs across a batch of workbooks. | Reduce file size and improve navigation in template files before they are shared with end users. | Clean up user‑generated Excel exports that may contain placeholder sheets left empty.
+// AI Prompts: Create a C# method that accepts a collection of Excel paths, hides empty worksheets using Aspose.Cells, and returns a count of hidden sheets per file. | Write code that logs the filenames and sheet names that were hidden while processing multiple workbooks with Aspose.Cells. | Show an alternative way to identify empty worksheets in Aspose.Cells by using the UsedRange property instead of MaxDataRow/MaxDataColumn.
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 
 namespace HideEmptyWorksheetsDemo
 {
-    // A C# console utility that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, evaluates every worksheet using MaxDataRow/MaxDataColumn, hides sheets that contain no data (IsVisible = false), and saves the cleaned workbooks to a target directory. Perfect for bulk Excel cleanup.
+    // Loads each workbook from a supplied list, scans every worksheet, marks sheets whose MaxDataRow and MaxDataColumn are -1 as invisible, and overwrites the original files using Aspose.Cells.
     class Program
     {
         static void Main()
         {
-            // Folder containing the workbooks to process
-            string inputFolder = @"C:\InputWorkbooks";
-            // Folder where the processed workbooks will be saved (can be the same as input)
-            string outputFolder = @"C:\OutputWorkbooks";
-
-            try
+            // List of workbook file paths to process
+            List<string> workbookFiles = new List<string>
             {
-                // Ensure input folder exists; if not, create it to avoid DirectoryNotFoundException
-                if (!Directory.Exists(inputFolder))
+                "Book1.xlsx",
+                "Book2.xlsx",
+                // Add more file paths as needed
+            };
+
+            foreach (string filePath in workbookFiles)
+            {
+                // Load the workbook (create/load rule)
+                Workbook workbook = new Workbook(filePath);
+
+                // Iterate over all worksheets in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    Directory.CreateDirectory(inputFolder);
-                    Console.WriteLine($"Input folder created at '{inputFolder}'. Place Excel files there and rerun the program.");
-                    return;
-                }
+                    // Determine if the worksheet contains any data
+                    // MaxDataRow and MaxDataColumn return -1 when there is no data
+                    bool hasNoData = sheet.Cells.MaxDataRow == -1 && sheet.Cells.MaxDataColumn == -1;
 
-                // Ensure output folder exists
-                Directory.CreateDirectory(outputFolder);
-
-                // Get all Excel files in the input folder
-                string[] workbookFiles = Directory.GetFiles(inputFolder, "*.xlsx");
-
-                foreach (string filePath in workbookFiles)
-                {
-                    try
+                    if (hasNoData)
                     {
-                        // Verify the file still exists before loading
-                        if (!File.Exists(filePath))
-                        {
-                            Console.WriteLine($"File not found: {filePath}");
-                            continue;
-                        }
-
-                        // Load the workbook
-                        Workbook workbook = new Workbook(filePath);
-
-                        // Iterate over all worksheets
-                        foreach (Worksheet sheet in workbook.Worksheets)
-                        {
-                            // Determine if the worksheet contains any data
-                            bool hasData = sheet.Cells.MaxDataRow >= 0 && sheet.Cells.MaxDataColumn >= 0;
-
-                            // Hide the worksheet if it has no data
-                            if (!hasData)
-                            {
-                                sheet.IsVisible = false;
-                            }
-                        }
-
-                        // Build the output file path (overwrite the original file if same folder)
-                        string fileName = Path.GetFileName(filePath);
-                        string outputPath = Path.Combine(outputFolder, fileName);
-
-                        // Save the modified workbook
-                        workbook.Save(outputPath, SaveFormat.Xlsx);
-                        Console.WriteLine($"Processed and saved: {outputPath}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                        // Hide the worksheet (set visibility to false)
+                        sheet.IsVisible = false;
                     }
                 }
 
-                Console.WriteLine("Processing completed.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                // Save the modified workbook back to the same file (save rule)
+                workbook.Save(filePath, SaveFormat.Xlsx);
             }
         }
     }

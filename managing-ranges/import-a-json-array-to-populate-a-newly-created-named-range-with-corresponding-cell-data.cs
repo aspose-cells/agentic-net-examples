@@ -1,62 +1,50 @@
-// Title: C# – Import a JSON array into Excel and create a named range with Aspose.Cells
-// Description: Demonstrates how to use Aspose.Cells for .NET to import a JSON array as a table (with headers) starting at A1, calculate the occupied area, create a named range that covers the imported cells, assign the name "MyJsonData", and save the workbook as an XLSX file.
-// Keywords: Aspose.Cells C# import JSON | JsonUtility ImportData example | create named range Aspose.Cells | JSON to Excel table .NET | AsposeRange assign name | C# Excel named range from JSON | Aspose.Cells workbook save | Excel automation JSON data | Aspose.Cells range creation | C# Excel API JSON import
-// Common Searches: How to import JSON array into Excel using Aspose.Cells C# | Create a named range after importing JSON with Aspose.Cells | Aspose.Cells JsonUtility ImportData named range example | C# code to convert JSON to Excel table and name the range | Aspose.Cells create range from dynamic data
-// Developer Intent: Generate a named range that encapsulates JSON‑derived cells in an Excel workbook.
-// Use Cases: Transform API‑provided JSON into a structured Excel table for reporting. | Expose imported JSON data through a named range for formulas, charts, or pivot tables. | Automate workbook creation where downstream tools reference a stable named range.
-// AI Prompts: Write C# code with Aspose.Cells to import a JSON array as a table and assign a named range to the imported cells. | Show how to determine the size of JSON‑imported data and create a range that covers the entire block. | Provide an example that saves an XLSX file after creating a named range from JSON data using Aspose.Cells.
+// Title: Import JSON array and create a named range with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, imports a JSON array as a table starting at A1 using JsonUtility with ArrayAsTable enabled, defines a named range that covers the imported cells, and saves the file as an XLSX workbook.
+// Keywords: Aspose.Cells JSON import C# | JsonUtility ImportData | ArrayAsTable JsonLayoutOptions | Excel named range from JSON | create named range Aspose.Cells | C# import JSON to Excel
+// Common Searches: Aspose.Cells import JSON as table C# | How to create a named range after JSON import in Aspose.Cells | JsonUtility ImportData example .NET | Define named range for JSON data in Excel using Aspose | ArrayAsTable option Aspose.Cells
+// Developer Intent: Load JSON data into an Excel worksheet and automatically generate a named range that references the imported cells.
+// Use Cases: Populate Excel reports from external JSON feeds and reference the data via a named range in formulas or charts. | Use the named range as a source for data‑validation lists or pivot tables after importing JSON records. | Programmatically adjust the named range size when the JSON array length changes at runtime.
+// AI Prompts: Write C# code that reads a JSON file, imports it into an Aspose.Cells worksheet as a table, and creates a named range covering the imported area. | Explain the effect of JsonLayoutOptions.ArrayAsTable and how to calculate the correct range dimensions for a named range after JSON import. | Show how to resize an existing named range when the imported JSON array contains a different number of rows.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
-using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates how to use Aspose.Cells for .NET to import a JSON array as a table (with headers) starting at A1, calculate the occupied area, create a named range that covers the imported cells, assign the name "MyJsonData", and save the workbook as an XLSX file.
-class Program
+namespace AsposeCellsJsonImportExample
 {
-    static void Main()
+    // Creates a workbook, imports a JSON array as a table starting at A1 using JsonUtility with ArrayAsTable enabled, defines a named range that covers the imported cells, and saves the file as an XLSX workbook.
+    class Program
     {
-        try
+        static void Main()
         {
-            // JSON array to be imported
+            // Sample JSON array (each object will become a row)
             string json = @"[
-                { ""Name"": ""John"", ""Age"": 30 },
-                { ""Name"": ""Alice"", ""Age"": 25 }
+                { ""Name"": ""John"", ""Age"": 30, ""City"": ""New York"" },
+                { ""Name"": ""Alice"", ""Age"": 25, ""City"": ""London"" },
+                { ""Name"": ""Bob"", ""Age"": 28, ""City"": ""Paris"" }
             ]";
 
-            // Create a new workbook and get the first worksheet
+            // 1. Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Configure JSON layout to treat the array as a table (adds header row)
-            JsonLayoutOptions layoutOptions = new JsonLayoutOptions
+            // 2. Set JSON layout options – treat the array as a table (header + rows)
+            JsonLayoutOptions jsonOptions = new JsonLayoutOptions
             {
                 ArrayAsTable = true
             };
 
-            // Import JSON data starting at cell A1 (row 0, column 0)
-            JsonUtility.ImportData(json, cells, 0, 0, layoutOptions);
+            // 3. Import JSON data starting at cell A1 (row 0, column 0)
+            JsonUtility.ImportData(json, sheet.Cells, 0, 0, jsonOptions);
 
-            // Determine the size of the imported data (including header row)
-            int lastRow = cells.MaxDataRow;          // zero‑based index of the last row with data
-            int lastColumn = cells.MaxDataColumn;    // zero‑based index of the last column with data
+            // 4. Define a named range that covers the imported data.
+            //    In this example the JSON has 3 columns (Name, Age, City) and 3 rows (header + 2 data rows).
+            //    Adjust the range size if your JSON differs.
+            Aspose.Cells.Range dataRange = sheet.Cells.CreateRange("A1:C3");
+            dataRange.Name = "MyDataRange";
 
-            // Create a range that covers the imported data
-            // Parameters: firstRow, firstColumn, totalRows, totalColumns
-            AsposeRange importedRange = cells.CreateRange(0, 0, lastRow + 1, lastColumn + 1);
-
-            // Assign a name to the range
-            importedRange.Name = "MyJsonData";
-
-            // Save the workbook
-            string outputPath = "JsonImported.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // 5. Save the workbook
+            workbook.Save("JsonImportedNamedRange.xlsx");
         }
     }
 }

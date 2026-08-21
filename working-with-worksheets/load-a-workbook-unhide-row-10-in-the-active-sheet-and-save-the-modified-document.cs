@@ -1,32 +1,29 @@
-// Title: C# – Unhide Row 10 in the Active Worksheet using Aspose.Cells and Save the Workbook
-// Description: Loads an existing Excel file, accesses the active sheet, unhides row 10 (zero‑based index 9) with automatic height adjustment, and saves the result to a new file.
-// Keywords: Aspose.Cells unhide row C# | unhide specific row Aspose.Cells | active worksheet row visibility | save workbook after row change | auto‑fit row height Aspose.Cells
-// Common Searches: Aspose.Cells C# unhide row 10 | how to make a hidden row visible with Aspose.Cells | retrieve active worksheet and modify row visibility | save Excel file after changing row visibility Aspose
-// Developer Intent: Programmatically reveal row 10 in the currently active worksheet and write the updated workbook to disk.
-// Use Cases: Expose a hidden header row before exporting a report. | Make a specific data row visible for downstream processing after loading a template. | Adjust row visibility in a dynamic Excel template prior to populating it with content.
-// AI Prompts: Generate C# code with Aspose.Cells to unhide rows 5‑15 and save the workbook. | Show how to unhide a row and set a custom height using Aspose.Cells for .NET. | Provide an example that checks if a row is hidden before calling UnhideRow in Aspose.Cells.
+// Title: Unhide Row 10 in the Active Worksheet and Save Workbook with Aspose.Cells for .NET
+// Description: Load an existing Excel file, access the active sheet, unhide row 10 (zero‑based index 9) with auto‑fit, and save the modified workbook as a new file using Aspose.Cells in C#.
+// Keywords: Aspose.Cells | C# unhide row | unhide Excel row .NET | active worksheet | save workbook Aspose.Cells | auto fit row height | Excel row visibility | Aspose.Cells API
+// Common Searches: Aspose.Cells unhide row 10 | C# hide/unhide rows Excel | How to unhide a row in Aspose.Cells | Save workbook after modifying rows Aspose.Cells | Active sheet index Aspose.Cells C#
+// Developer Intent: Load an Excel workbook, make row 10 visible on the active sheet, and write the changes back to disk.
+// Use Cases: Reveal a hidden header before exporting the sheet to PDF. | Prepare a template workbook by unhiding rows prior to data population. | Ensure all rows are displayed in a generated report for accurate printing.
+// AI Prompts: Create C# code that opens an Excel file with Aspose.Cells, unhides rows 5‑10, sets a custom height for each row, and saves the result to a memory stream. | Show an example of using Aspose.Cells to unhide a specific row, auto‑fit its height, and then save the workbook in a different format such as CSV or PDF.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsRowUnhideExample
+// Load an existing Excel file, access the active sheet, unhide row 10 (zero‑based index 9) with auto‑fit, and save the modified workbook as a new file using Aspose.Cells in C#.
+class Program
 {
-    // Loads an existing Excel file, accesses the active sheet, unhides row 10 (zero‑based index 9) with automatic height adjustment, and saves the result to a new file.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Load an existing workbook from file
-            Workbook workbook = new Workbook("input.xlsx");
+        // Load the existing workbook from file
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Get the active worksheet (the one currently selected)
-            Worksheet worksheet = workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex];
+        // Access the active worksheet (the one currently selected)
+        Worksheet worksheet = workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex];
 
-            // Unhide row 10 (zero‑based index 9) and let Aspose.Cells auto‑fit the height
-            worksheet.Cells.UnhideRow(9, -1);
+        // Unhide row 10 (zero‑based index 9) and let Aspose.Cells auto‑fit the height
+        worksheet.Cells.UnhideRow(9, -1);
 
-            // Save the modified workbook to a new file
-            workbook.Save("output.xlsx");
-        }
+        // Save the modified workbook to a new file
+        workbook.Save("output.xlsx");
     }
 }

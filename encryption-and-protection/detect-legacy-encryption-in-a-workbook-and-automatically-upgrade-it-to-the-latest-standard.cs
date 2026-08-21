@@ -1,61 +1,78 @@
+// Title: Detect legacy encrypted Excel workbook and upgrade to AES‑256 encryption with Aspose.Cells for .NET
+// Description: This C# example shows how to use Aspose.Cells to detect whether an Excel file is password‑protected, open it with the supplied password, apply the StrongCryptographicProvider AES‑256 encryption, and save the workbook in the modern XLSX format. It also handles non‑encrypted files by simply converting them to XLSX.
+// Keywords: Aspose.Cells | C# | Excel encryption upgrade | AES-256 | StrongCryptographicProvider | legacy .xls password | FileFormatUtil DetectFileFormat | LoadOptions password | SetEncryptionOptions | workbook protection | Excel security .NET | convert encrypted XLS to XLSX
+// Common Searches: how to detect encrypted Excel file using Aspose.Cells | upgrade legacy .xls password protection to AES-256 in C# | Aspose.Cells set StrongCryptographicProvider encryption | convert encrypted workbook to XLSX with Aspose.Cells | C# code to re‑encrypt Excel file with stronger algorithm
+// Developer Intent: Automatically detect a legacy encrypted Excel workbook, re‑encrypt it with AES‑256, and save as XLSX.
+// Use Cases: Batch‑process incoming legacy .xls files, upgrade their protection to meet modern compliance standards. | Integrate encryption strengthening into a document‑management workflow without manual intervention. | Migrate password‑protected workbooks to a stronger algorithm before archiving or sharing.
+// AI Prompts: Generate a C# method that uses Aspose.Cells to detect if a workbook is encrypted and upgrades it to AES‑256 with the same password. | Provide robust error handling for missing files, incorrect passwords, and unsupported formats when upgrading Excel encryption. | Create unit tests for the UpgradeWorkbookEncryption function covering encrypted, unencrypted, and error scenarios.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsEncryptionUpgrade
 {
+    // This C# example shows how to use Aspose.Cells to detect whether an Excel file is password‑protected, open it with the supplied password, apply the StrongCryptographicProvider AES‑256 encryption, and save the workbook in the modern XLSX format. It also handles non‑encrypted files by simply converting them to XLSX.
     class Program
     {
         static void Main(string[] args)
         {
-            // Input parameters
-            // args[0] - path to the source workbook
-            // args[1] - password to open the workbook (empty string if not password protected)
-            // args[2] - path for the upgraded workbook
-            if (args.Length < 3)
+            // Example usage:
+            // Input workbook path (could be legacy encrypted)
+            string inputPath = "LegacyEncryptedWorkbook.xls";
+            // Password required to open the legacy encrypted workbook
+            string password = "oldPassword";
+            // Path for the upgraded workbook
+            string outputPath = "UpgradedWorkbook.xlsx";
+
+            try
             {
-                Console.WriteLine("Usage: AsposeCellsEncryptionUpgrade <sourcePath> <password> <outputPath>");
-                return;
+                UpgradeWorkbookEncryption(inputPath, password, outputPath);
+                Console.WriteLine("Workbook encryption upgrade completed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        /// <param name="inputFilePath">Path to the source workbook.</param>
+        /// <param name="password">Password to open the source workbook (null if not needed).</param>
+        /// <param name="outputFilePath">Path where the upgraded workbook will be saved.</param>
+        static void UpgradeWorkbookEncryption(string inputFilePath, string password, string outputFilePath)
+        {
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFilePath))
+            {
+                throw new FileNotFoundException($"Input file not found: {inputFilePath}");
             }
 
-            string sourcePath = args[0];
-            string password = args[1];
-            string outputPath = args[2];
+            // Detect file format and encryption status without loading the whole workbook
+            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(inputFilePath);
 
-            // Detect file format and encryption status
-            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(sourcePath);
-            Console.WriteLine($"File format detected: {formatInfo.FileFormatType}");
-            Console.WriteLine($"Is encrypted (legacy detection): {formatInfo.IsEncrypted}");
-
-            // If the workbook is not encrypted, simply copy it (or inform the user)
+            // If the file is not encrypted, simply load and save (no upgrade needed)
             if (!formatInfo.IsEncrypted)
             {
-                Console.WriteLine("Workbook is not encrypted. No upgrade required.");
-                // Optionally copy the file as‑is
-                System.IO.File.Copy(sourcePath, outputPath, true);
-                Console.WriteLine($"File copied to {outputPath}");
+                Workbook wb = new Workbook(inputFilePath);
+                wb.Save(outputFilePath, SaveFormat.Xlsx);
                 return;
             }
 
-            // Load the encrypted workbook using the supplied password
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
-            loadOptions.Password = password;
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
-            Console.WriteLine("Encrypted workbook loaded successfully.");
+            // The file is encrypted; load it using the provided password
+            LoadOptions loadOptions = new LoadOptions
+            {
+                Password = password
+            };
+            Workbook encryptedWb = new Workbook(inputFilePath, loadOptions);
 
-            // Upgrade encryption to the latest standard (StrongCryptographicProvider, 256‑bit key)
-            // First, set the password again (required before applying encryption options)
-            workbook.Settings.Password = password;
-            // Apply new encryption options
-            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256);
-            Console.WriteLine("Encryption upgraded to StrongCryptographicProvider with 256‑bit key.");
+            // Apply the latest encryption options (AES‑256)
+            encryptedWb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256);
 
-            // Save the upgraded workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Upgraded workbook saved to {outputPath}");
+            // Keep the same password (or set a new one if desired)
+            encryptedWb.Settings.Password = password;
 
-            // Verify upgrade by re‑detecting encryption status
-            FileFormatInfo upgradedInfo = FileFormatUtil.DetectFileFormat(outputPath);
-            Console.WriteLine($"Upgraded file IsEncrypted: {upgradedInfo.IsEncrypted}");
+            // Save the workbook in a modern format (XLSX) which embeds the upgraded encryption
+            encryptedWb.Save(outputFilePath, SaveFormat.Xlsx);
         }
     }
 }

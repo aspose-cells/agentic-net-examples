@@ -1,68 +1,73 @@
-// Title: C# – Create a self‑expanding named range that grows with added columns using Aspose.Cells
-// Description: This example builds a workbook, adds a named range called ExpandingRange that starts at A1 and automatically extends to the last non‑empty cell in row 1 using the INDEX‑COUNTA formula, shows the range address before and after inserting a new column, and saves the file as ExpandingNamedRange.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | named range | dynamic range | auto‑expand columns | INDEX function | COUNTA function | Excel automation | workbook manipulation | self‑adjusting range
-// Common Searches: Aspose.Cells dynamic named range C# | expand named range when inserting column | auto expanding range Excel using Aspose | C# INDEX COUNTA named range example | how to create a self‑adjusting range in Aspose.Cells
-// Developer Intent: Define a named range that automatically extends to the right as new columns are inserted.
-// Use Cases: Maintain a header range that grows when additional data columns are added. | Provide a chart data source that updates automatically with new columns. | Apply formulas, formatting, or data validation across a column set that can expand over time.
-// AI Prompts: Generate C# Aspose.Cells code to create a named range that expands right when columns are added, using the INDEX‑COUNTA formula. | Show how to retrieve and display the address of an expanding named range before and after inserting a column. | Explain how the formula =Sheet1!$A$1:INDEX(Sheet1!$1:$1,1,COUNTA(Sheet1!$1:$1)) creates a self‑expanding range in Aspose.Cells.
+// Title: Aspose.Cells for .NET – Create a dynamically expanding named range that grows with added columns
+// Description: Demonstrates how to define a named range in a workbook using an OFFSET‑COUNTA formula, retrieve its dimensions before and after inserting a column, force formula recalculation, and save the file. The range automatically expands to the right whenever new columns are added, enabling self‑adjusting charts, pivot tables, and formulas.
+// Keywords: Aspose.Cells dynamic named range | auto expanding range C# | OFFSET COUNTA formula | named range update after column insert | GetRange true Aspose.Cells | .NET spreadsheet automation | Excel dynamic range programmatically
+// Common Searches: Aspose.Cells create named range that expands horizontally | C# OFFSET COUNTA dynamic range example | How to refresh named range after inserting columns Aspose.Cells | GetRange true recalculate formula Aspose.Cells | auto‑adjusting named range for charts in .NET
+// Developer Intent: Define a named range that automatically expands when additional columns are inserted into the worksheet.
+// Use Cases: Generate a header range that always includes every populated column for chart data sources. | Maintain a self‑updating range for pivot tables or formulas that grow as new data columns are added. | Validate range size programmatically before and after column insertion to ensure downstream calculations stay accurate.
+// AI Prompts: Write C# code with Aspose.Cells that creates a named range using OFFSET and COUNTA to auto‑expand horizontally as new columns are added. | Show how to retrieve the updated range after inserting a column and forcing formula recalculation with GetRange(true). | Explain the steps to make a named range self‑adjusting for charts or pivot tables in an Aspose.Cells workbook.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsNamedRangeExpansion
+// Demonstrates how to define a named range in a workbook using an OFFSET‑COUNTA formula, retrieve its dimensions before and after inserting a column, force formula recalculation, and save the file. The range automatically expands to the right whenever new columns are added, enabling self‑adjusting charts, pivot tables, and formulas.
+class Program
 {
-    // This example builds a workbook, adds a named range called ExpandingRange that starts at A1 and automatically extends to the last non‑empty cell in row 1 using the INDEX‑COUNTA formula, shows the range address before and after inserting a new column, and saves the file as ExpandingNamedRange.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Populate header row and some sample data
+            worksheet.Cells["A1"].PutValue("Header1");
+            worksheet.Cells["B1"].PutValue("Header2");
+            worksheet.Cells["C1"].PutValue("Header3");
+            worksheet.Cells["A2"].PutValue(1);
+            worksheet.Cells["B2"].PutValue(2);
+            worksheet.Cells["C2"].PutValue(3);
+
+            // Add a named range that expands automatically to the right
+            // The formula uses OFFSET with COUNTA to count filled columns in row 1
+            int nameIndex = workbook.Worksheets.Names.Add("MyRange");
+            Name myRangeName = workbook.Worksheets.Names[nameIndex];
+            myRangeName.RefersTo = "=OFFSET(Sheet1!$A$1,0,0,1,COUNTA(Sheet1!$1:$1))";
+
+            // Retrieve the range before inserting a new column
+            AsposeRange rangeBefore = myRangeName.GetRange();
+            Console.WriteLine($"Before inserting column: {rangeBefore.Address}, Columns = {rangeBefore.ColumnCount}");
+
+            // Insert a new column to the right of the existing data (after column C)
+            worksheet.Cells.InsertColumn(3);
+            // Add header and data in the newly inserted column D
+            worksheet.Cells["D1"].PutValue("Header4");
+            worksheet.Cells["D2"].PutValue(4);
+
+            // Recalculate formulas so the named range reflects the new column count
+            workbook.CalculateFormula();
+
+            // Retrieve the range after insertion; use GetRange(true) to force recalculation
+            AsposeRange rangeAfter = myRangeName.GetRange(true);
+            Console.WriteLine($"After inserting column: {rangeAfter.Address}, Columns = {rangeAfter.ColumnCount}");
+
+            // Save the workbook (ensure the directory exists)
+            string outputPath = "DynamicNamedRange.xlsx";
             try
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate initial data in row 1 (A1, B1, C1)
-                cells["A1"].PutValue("Header1");
-                cells["B1"].PutValue("Header2");
-                cells["C1"].PutValue("Header3");
-                cells["A2"].PutValue(10);
-                cells["B2"].PutValue(20);
-                cells["C2"].PutValue(30);
-
-                // Add a named range that expands to the right as new columns are added.
-                // The formula uses INDEX together with COUNTA to determine the last used column in row 1.
-                // It starts at A1 and ends at the last non‑empty cell in row 1.
-                int nameIndex = workbook.Worksheets.Names.Add("ExpandingRange");
-                Name expandingRange = workbook.Worksheets.Names[nameIndex];
-                expandingRange.RefersTo = "=Sheet1!$A$1:INDEX(Sheet1!$1:$1,1,COUNTA(Sheet1!$1:$1))";
-
-                // Verify the range before adding a new column
-                AsposeRange rangeBefore = expandingRange.GetRange();
-                Console.WriteLine("Range before adding column: " + rangeBefore.Address); // Expected: A1:C2
-
-                // Insert a new column at the end (after column C)
-                cells.InsertColumn(3); // Inserts column D (zero‑based index)
-
-                // Populate data in the new column D
-                cells["D1"].PutValue("Header4");
-                cells["D2"].PutValue(40);
-
-                // Retrieve the range again; it should now include the new column D
-                AsposeRange rangeAfter = expandingRange.GetRange();
-                Console.WriteLine("Range after adding column: " + rangeAfter.Address); // Expected: A1:D2
-
-                // Save the workbook (lifecycle rule: save)
-                workbook.Save("ExpandingNamedRange.xlsx");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
-            catch (Exception ex)
+            catch (Exception saveEx)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Error saving workbook: {saveEx.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

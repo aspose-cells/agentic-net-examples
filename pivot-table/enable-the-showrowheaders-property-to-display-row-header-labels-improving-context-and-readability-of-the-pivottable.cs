@@ -1,66 +1,70 @@
-// Title: C# Example – Enable ShowRowHeaders for an Aspose.Cells PivotTable
-// Description: Demonstrates how to set the PivotTable.ShowRowHeaders property in Aspose.Cells using C#. The sample creates a workbook, adds sample data, builds a pivot table, assigns row and data fields, explicitly enables row header labels, and saves the file. Enabling ShowRowHeaders improves the context and readability of generated Excel reports.
-// Keywords: Aspose.Cells ShowRowHeaders C# | PivotTable row headers Aspose | Enable row header labels Excel | C# Aspose.Cells PivotTable example | ShowRowHeaders property | Excel pivot table readability | Aspose.Cells API row headers
-// Common Searches: how to enable ShowRowHeaders in Aspose.Cells | Aspose.Cells C# pivot table row header visibility | set ShowRowHeaders property for PivotTable .NET | display row header labels in generated Excel pivot table | Aspose.Cells ShowRowHeaders example on GitHub
-// Developer Intent: Set PivotTable.ShowRowHeaders = true so that row header captions are always displayed in the exported Excel pivot table.
-// Use Cases: Create an automated financial report where row headers must be visible for auditors. | Build a data‑driven dashboard that toggles row header visibility based on user preferences. | Generate Excel files programmatically for downstream analytics tools that rely on clear row labels.
-// AI Prompts: Write C# code with Aspose.Cells that creates a pivot table and sets ShowRowHeaders = true before saving. | Explain the default value of ShowRowHeaders in Aspose.Cells and how to change it at runtime. | Provide a snippet that reads the current ShowRowHeaders setting, logs the value, and then toggles it.
+// Title: C# Example: ShowRowHeaderCaption Property to Display Row Header Labels in Aspose.Cells PivotTable
+// Description: Demonstrates creating a workbook, populating sample data, adding a PivotTable, assigning row, column, and data fields, enabling the ShowRowHeaderCaption property, refreshing and calculating the PivotTable, and saving the file as PivotTable_ShowRowHeaders.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# PivotTable | ShowRowHeaderCaption | row header labels | .NET Excel pivot | display row headers | Aspose.Cells example | PivotTable properties | Excel export | GitHub sample
+// Common Searches: Aspose.Cells ShowRowHeaderCaption C# | how to display row headers in Aspose.Cells pivot table | C# code example for PivotTable row header captions | Aspose.Cells PivotTable properties tutorial | enable row header labels in Excel pivot using Aspose
+// Developer Intent: Enable the ShowRowHeaderCaption property so the PivotTable shows row header captions.
+// Use Cases: Generate financial reports with clear row headings for better readability. | Create Excel dashboards where row labels improve data comprehension. | Provide end‑users with readable pivot tables in .NET web or desktop applications. | Allow dynamic toggling of row header visibility based on user preferences.
+// AI Prompts: Write C# code using Aspose.Cells to create a PivotTable and turn on ShowRowHeaderCaption. | Explain the impact of ShowRowHeaderCaption on PivotTable layout and how to disable it. | Provide a step‑by‑step guide to add a PivotTable with row header captions and customize its appearance in Aspose.Cells for .NET. | Suggest how to conditionally set ShowRowHeaderCaption based on a configuration setting.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Demonstrates how to set the PivotTable.ShowRowHeaders property in Aspose.Cells using C#. The sample creates a workbook, adds sample data, builds a pivot table, assigns row and data fields, explicitly enables row header labels, and saves the file. Enabling ShowRowHeaders improves the context and readability of generated Excel reports.
-public class EnableShowRowHeadersDemo
+namespace AsposeCellsPivotDemo
 {
-    public static void Main()
+    // Demonstrates creating a workbook, populating sample data, adding a PivotTable, assigning row, column, and data fields, enabling the ShowRowHeaderCaption property, refreshing and calculating the PivotTable, and saving the file as PivotTable_ShowRowHeaders.xlsx using Aspose.Cells for .NET.
+    class ShowRowHeadersExample
     {
-        try
+        static void Main()
         {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-        }
-    }
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet (data source)
+            Worksheet dataSheet = workbook.Worksheets[0];
 
-        // Populate sample data for the pivot table
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Amount");
-        worksheet.Cells["A2"].PutValue("Fruit");
-        worksheet.Cells["B2"].PutValue(120);
-        worksheet.Cells["A3"].PutValue("Vegetable");
-        worksheet.Cells["B3"].PutValue(80);
-        worksheet.Cells["A4"].PutValue("Grain");
-        worksheet.Cells["B4"].PutValue(150);
+            // Populate sample data for the pivot table
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Item");
+            dataSheet.Cells["C1"].PutValue("Amount");
 
-        // Add a pivot table to the worksheet
-        int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D5", "PivotTable1");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+            dataSheet.Cells["A2"].PutValue("Fruit");
+            dataSheet.Cells["B2"].PutValue("Apple");
+            dataSheet.Cells["C2"].PutValue(120);
 
-        // Configure the pivot table fields
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");   // Row field
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");    // Data field
+            dataSheet.Cells["A3"].PutValue("Fruit");
+            dataSheet.Cells["B3"].PutValue("Banana");
+            dataSheet.Cells["C3"].PutValue(80);
 
-        // Row headers are displayed by default; no explicit property needed.
+            dataSheet.Cells["A4"].PutValue("Vegetable");
+            dataSheet.Cells["B4"].PutValue("Carrot");
+            dataSheet.Cells["C4"].PutValue(50);
 
-        // Save the workbook to a file
-        string outputPath = "PivotTableShowRowHeaderCaptionDemo.xlsx";
-        try
-        {
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Failed to save workbook: " + ex.Message);
+            dataSheet.Cells["A5"].PutValue("Vegetable");
+            dataSheet.Cells["B5"].PutValue("Tomato");
+            dataSheet.Cells["C5"].PutValue(70);
+
+            // Add a new worksheet to host the pivot table
+            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+
+            // Create the pivot table using the data range and place it at D3
+            int pivotIndex = pivotSheet.PivotTables.Add("=Sheet1!A1:C5", "D3", "MyPivotTable");
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+
+            // Configure the pivot table fields
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");   // Row field
+            pivotTable.AddFieldToArea(PivotFieldType.Column, "Item");    // Column field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");   // Data field
+
+            // Enable the display of row header captions (row header labels)
+            pivotTable.ShowRowHeaderCaption = true;
+
+            // Refresh and calculate the pivot data
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // Save the workbook to a file
+            workbook.Save("PivotTable_ShowRowHeaders.xlsx");
         }
     }
 }

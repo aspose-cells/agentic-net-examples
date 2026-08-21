@@ -1,57 +1,36 @@
+// Title: Rename a DBConnection in an Excel workbook using Aspose.Cells for .NET (C#)
+// Description: Load an existing workbook, iterate its DataConnections, locate DBConnection objects, assign a meaningful Name (e.g., SalesDataConnection), and save the updated file.
+// Keywords: Aspose.Cells rename DBConnection | C# change Excel data connection name | set DBConnection.Name property | update external connection identifier .NET | programmatic Excel connection rename | Aspose.Cells ExternalConnection C# | Excel workbook data connections
+// Common Searches: Aspose.Cells rename DBConnection C# | How to change Excel DB connection name programmatically | Set name of external connection in .xlsx using Aspose | Rename database connection in workbook with .NET
+// Developer Intent: Modify the DBConnection.Name property to a descriptive identifier such as SalesDataConnection.
+// Use Cases: Enforce a naming convention for data connections across a suite of reports before distribution. | Replace generic connection names with business‑specific identifiers after consolidating data sources. | Integrate connection‑renaming into CI/CD pipelines that generate Excel dashboards automatically.
+// AI Prompts: Create C# code that prefixes each DBConnection name with its worksheet title using Aspose.Cells. | Write a method to verify the existence of a DBConnection with a specific name before renaming it. | Show how to log original and new DBConnection names to a text file while processing a workbook.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsExamples
+// Load an existing workbook, iterate its DataConnections, locate DBConnection objects, assign a meaningful Name (e.g., SalesDataConnection), and save the updated file.
+class RenameDbConnection
 {
-    public class RenameDbConnectionDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        // Load an existing workbook that contains a DBConnection
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through all external connections in the workbook
+        foreach (ExternalConnection connection in workbook.DataConnections)
         {
-            Run();
-        }
-
-        public static void Run()
-        {
-            try
+            // Check if the connection is a DBConnection
+            if (connection is DBConnection dbConnection)
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
-
-                // Verify that the input workbook exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                    return;
-                }
-
-                // Load the workbook that contains a DBConnection
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the collection of external connections in the workbook
-                ExternalConnectionCollection connections = workbook.DataConnections;
-
-                // Iterate through the connections to find DBConnection objects
-                foreach (ExternalConnection connection in connections)
-                {
-                    if (connection is DBConnection dbConn)
-                    {
-                        // Rename the connection to a more descriptive identifier
-                        dbConn.Name = "SalesDataConnection";
-                        Console.WriteLine($"DBConnection renamed to: {dbConn.Name}");
-                    }
-                }
-
-                // Save the workbook with the updated connection name
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved as \"{outputPath}\"");
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Rename the connection to a descriptive identifier
+                dbConnection.Name = "SalesDataConnection";
+                Console.WriteLine($"DBConnection renamed to: {dbConnection.Name}");
             }
         }
+
+        // Save the workbook with the updated connection name
+        workbook.Save("output.xlsx");
     }
 }

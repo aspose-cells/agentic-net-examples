@@ -1,98 +1,88 @@
-// Title: Copy an XLSM workbook with macros and UserForm storage using Aspose.Cells for .NET
-// Description: Demonstrates how to load a macro‑enabled workbook, copy its worksheets, VBA modules, references, and UserForm designer storage, and save the result as an Xlsm file. The example uses CopyOptions.KeepMacros and VbaProject.Modules.AddUserForm to ensure all macros and UserForms remain functional after the copy.
-// Keywords: Aspose.Cells copy macros | preserve UserForm storage | CopyOptions KeepMacros .NET | VbaProject AddUserForm | duplicate XLSM workbook | C# Aspose.Cells VBA modules | macro‑enabled workbook copy
-// Common Searches: copy xlsm file with macros Aspose.Cells | preserve VBA UserForm when duplicating workbook C# | Aspose.Cells KeepMacros example | how to copy VBA references with Aspose.Cells | add UserForm designer storage Aspose.Cells .NET
-// Developer Intent: Copy a macro‑enabled Excel workbook while keeping all VBA code, references, and UserForm designer storage intact.
-// Use Cases: Create personalized copies of a template workbook that retain existing macros and UserForms. | Migrate legacy Excel macros to a new file without losing UserForm layouts or external VBA references. | Automate batch generation of macro‑enabled reports that require identical VBA functionality.
-// AI Prompts: Write C# code with Aspose.Cells to duplicate an XLSM workbook and preserve VBA modules, references, and UserForm designer storage. | Explain the role of VbaProject.Modules.AddUserForm and how to retrieve designer storage for a UserForm in Aspose.Cells. | Suggest robust error‑handling patterns for copying macro‑enabled workbooks using Aspose.Cells.
+// Title: Copy a macro‑enabled workbook and retain a VBA UserForm (code + .frx) using Aspose.Cells for .NET
+// Description: Loads a source .xlsm, copies it with CopyOptions.KeepMacros, extracts the specified UserForm's VBA code and designer storage, inserts the form into a new workbook, and saves the result as a macro‑enabled file.
+// Keywords: Aspose.Cells copy workbook macros | preserve VBA UserForm .frx | AddUserForm C# | CopyOptions KeepMacros example | macro enabled Excel duplication .NET | VBA module transfer Aspose | Excel UserForm cloning C#
+// Common Searches: Aspose.Cells copy .xlsm keep macros | how to copy VBA UserForm with Aspose.Cells | preserve .frx designer storage when copying workbook | C# copy macro enabled Excel file and retain UserForm | Aspose.Cells AddUserForm example
+// Developer Intent: Duplicate a macro‑enabled Excel workbook while keeping a chosen VBA UserForm’s code and binary designer data intact.
+// Use Cases: Create client‑specific reports from a template, preserving the UI form used for data entry. | Migrate legacy .xlsm files to a new project without losing custom UserForm interfaces. | Automate generation of multiple workbooks that must share the same VBA UserForm across deployments.
+// AI Prompts: Write C# code that copies an .xlsm workbook, keeps all macros, and adds a specific UserForm with its .frx storage using Aspose.Cells. | Explain how to detect a missing UserForm module during workbook copy and provide fallback handling in Aspose.Cells. | Show how to copy only selected VBA modules, including UserForms, from one workbook to another with Aspose.Cells for .NET.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsMacroCopyDemo
+namespace PreserveMacrosAndUserFormApp
 {
-    // Demonstrates how to load a macro‑enabled workbook, copy its worksheets, VBA modules, references, and UserForm designer storage, and save the result as an Xlsm file. The example uses CopyOptions.KeepMacros and VbaProject.Modules.AddUserForm to ensure all macros and UserForms remain functional after the copy.
-    public class PreserveMacrosAndUserForms
+    // Loads a source .xlsm, copies it with CopyOptions.KeepMacros, extracts the specified UserForm's VBA code and designer storage, inserts the form into a new workbook, and saves the result as a macro‑enabled file.
+    class PreserveMacrosAndUserForm
     {
-        // Entry point required for console application
-        public static void Main(string[] args)
+        static void Main()
         {
             try
             {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+                string sourcePath = "source_with_userform.xlsm";
+                string destPath = "destination_with_userform.xlsm";
 
-        public static void Run()
-        {
-            const string sourcePath = "source_with_userforms.xlsm";
-            const string destPath = "destination_preserved.xlsm";
+                // Verify that the source file exists before loading
+                if (!File.Exists(sourcePath))
+                {
+                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    return;
+                }
 
-            // Verify source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
-
-            try
-            {
-                // Load the source workbook that contains macros and UserForms
+                // Load the source workbook that contains macros and a UserForm
                 Workbook sourceWorkbook = new Workbook(sourcePath);
 
                 // Create an empty destination workbook
                 Workbook destinationWorkbook = new Workbook();
 
-                // Configure copy options to keep macros during the workbook copy
+                // Configure copy options to keep macros during the copy operation
                 CopyOptions copyOptions = new CopyOptions
                 {
                     KeepMacros = true
                 };
 
-                // Copy the entire workbook (worksheets, data, macros) while preserving macros
+                // Copy the entire source workbook into the destination workbook,
+                // preserving all macros (including standard modules)
                 destinationWorkbook.Copy(sourceWorkbook, copyOptions);
 
-                // Copy VBA references (e.g., external libraries) from source to destination
-                if (sourceWorkbook.VbaProject != null && destinationWorkbook.VbaProject != null)
+                // Name of the UserForm to be copied
+                string userFormName = "UserForm1";
+
+                // Attempt to retrieve the VBA module for the specified UserForm
+                VbaModule sourceModule = null;
+                try
                 {
-                    destinationWorkbook.VbaProject.References.Copy(sourceWorkbook.VbaProject.References);
+                    sourceModule = sourceWorkbook.VbaProject.Modules[userFormName];
+                }
+                catch
+                {
+                    // Module not found; will be handled below
                 }
 
-                // Iterate through each VBA module in the source workbook
-                for (int i = 0; i < sourceWorkbook.VbaProject.Modules.Count; i++)
+                if (sourceModule != null && destinationWorkbook.VbaProject != null)
                 {
-                    VbaModule srcModule = sourceWorkbook.VbaProject.Modules[i];
+                    // Retrieve the VBA code of the UserForm
+                    string userFormCode = sourceModule.Codes;
 
-                    // Obtain designer storage for the module (non‑null for UserForms)
-                    byte[] designerStorage = sourceWorkbook.VbaProject.Modules.GetDesignerStorage(srcModule.Name);
+                    // Retrieve the designer storage (binary .frx data) of the UserForm
+                    byte[] designerStorage = sourceWorkbook.VbaProject.Modules.GetDesignerStorage(userFormName);
 
-                    if (designerStorage != null && designerStorage.Length > 0)
-                    {
-                        // The module is a UserForm – add it to the destination VBA project
-                        destinationWorkbook.VbaProject.Modules.AddUserForm(srcModule.Name, srcModule.Codes, designerStorage);
-                    }
-                    else
-                    {
-                        // Regular VBA module – add it and copy its code
-                        int newIndex = destinationWorkbook.VbaProject.Modules.Add(srcModule.Type, srcModule.Name);
-                        destinationWorkbook.VbaProject.Modules[newIndex].Codes = srcModule.Codes;
-                    }
+                    // Insert the UserForm into the destination workbook, preserving both code and designer storage
+                    destinationWorkbook.VbaProject.Modules.AddUserForm(userFormName, userFormCode, designerStorage);
+                }
+                else
+                {
+                    Console.WriteLine($"UserForm '{userFormName}' not found in the source workbook.");
                 }
 
                 // Save the destination workbook as a macro‑enabled file
                 destinationWorkbook.Save(destPath, SaveFormat.Xlsm);
-
-                Console.WriteLine("Workbook copied with macros and UserForms preserved.");
+                Console.WriteLine($"Destination workbook saved to: {destPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An exception occurred during processing: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

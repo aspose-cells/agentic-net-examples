@@ -1,8 +1,17 @@
+// Title: Aspose.Cells .NET: Preserve QuotePrefix after applying NumberFormat with StyleFlag
+// Description: C# example that creates a workbook, sets cell A1 to a text value with QuotePrefix enabled, updates only the number format using StyleFlag, and verifies that the QuotePrefix flag remains true before and after the style change, after saving to XLSX, and after reloading the file.
+// Keywords: Aspose.Cells | QuotePrefix | StyleFlag | NumberFormat | C# | .NET | preserve leading apostrophe | SetStyle | Excel cell formatting | save and reload workbook | XLSX
+// Common Searches: Aspose.Cells keep QuotePrefix after style change | SetStyle with StyleFlag preserve leading quote | QuotePrefix true after saving workbook Aspose.Cells | C# Aspose.Cells update number format without losing QuotePrefix | How to use StyleFlag to change only NumberFormat in Aspose.Cells
+// Developer Intent: Confirm that a cell’s QuotePrefix stays true when its number format is modified with a StyleFlag and after the workbook is saved and reloaded.
+// Use Cases: Validate that applying a NumberFormat style via StyleFlag does not reset QuotePrefix. | Ensure leading apostrophe remains after serializing an Aspose.Cells workbook to XLSX. | Demonstrate selective style updates (NumberFormat only) while preserving other cell style attributes.
+// AI Prompts: Generate a C# unit test using Aspose.Cells that asserts QuotePrefix is unchanged after applying a NumberFormat StyleFlag. | Provide sample code to modify only the number format of a cell without affecting its QuotePrefix, then verify the property after saving and loading the file. | Explain how StyleFlag works with SetStyle to keep unchanged style properties such as QuotePrefix in Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsQuotePrefixValidation
 {
+    // C# example that creates a workbook, sets cell A1 to a text value with QuotePrefix enabled, updates only the number format using StyleFlag, and verifies that the QuotePrefix flag remains true before and after the style change, after saving to XLSX, and after reloading the file.
     class Program
     {
         static void Main()
@@ -10,41 +19,52 @@ namespace AsposeCellsQuotePrefixValidation
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cell cell = sheet.Cells["A1"];
+            Cells cells = sheet.Cells;
 
-            // Put a value that starts with a single quote (quote prefix)
-            cell.PutValue("'MixedFormatting");
-
-            // Create an initial style with QuotePrefix = true and make the text bold
+            // ------------------------------------------------------------
+            // Step 1: Set a cell value that looks like a number but should be
+            //         treated as text with a leading quote (QuotePrefix = true)
+            // ------------------------------------------------------------
+            Cell cell = cells["A1"];
+            cell.PutValue("123456");               // Put a numeric string
             Style initialStyle = workbook.CreateStyle();
-            initialStyle.QuotePrefix = true;          // Enable quote prefix
-            initialStyle.Font.IsBold = true;          // Additional formatting
+            initialStyle.QuotePrefix = true;       // Enable QuotePrefix
+            cell.SetStyle(initialStyle);           // Apply the style
 
-            // Apply the initial style to the cell
-            cell.SetStyle(initialStyle);
-
-            // Verify that QuotePrefix is set initially
+            // Verify initial QuotePrefix
             Console.WriteLine("Initial QuotePrefix: " + cell.GetStyle().QuotePrefix); // Expected: True
 
-            // Create a new style that changes only the font color
-            Style newStyle = workbook.CreateStyle();
-            newStyle.Font.Color = System.Drawing.Color.Red;
+            // ------------------------------------------------------------
+            // Step 2: Create a style that changes only the number format.
+            //         Use a StyleFlag to apply only the NumberFormat property.
+            // ------------------------------------------------------------
+            Style numberFormatStyle = workbook.CreateStyle();
+            numberFormatStyle.Custom = "#,##0.00"; // Example custom number format
 
-            // Create a StyleFlag that applies only the FontBold property (for demonstration)
-            // Here we set FontBold flag to true to modify font boldness, leaving QuotePrefix untouched
             StyleFlag flag = new StyleFlag();
-            flag.FontBold = true;   // Only font bold flag is enabled
-            // All other flags, including QuotePrefix, remain false
+            flag.NumberFormat = true;              // Apply only number format
 
-            // Apply the new style with the flag; this should not affect the QuotePrefix
-            cell.SetStyle(newStyle, flag);
+            // Apply the style with the flag. QuotePrefix flag is NOT set,
+            // so QuotePrefix should remain unchanged.
+            cell.SetStyle(numberFormatStyle, flag);
 
-            // After applying the style flag, check that QuotePrefix is still true
+            // ------------------------------------------------------------
+            // Step 3: Validate that QuotePrefix is still true after the update.
+            // ------------------------------------------------------------
             bool quotePrefixAfterUpdate = cell.GetStyle().QuotePrefix;
-            Console.WriteLine("QuotePrefix after StyleFlag update: " + quotePrefixAfterUpdate); // Expected: True
+            Console.WriteLine("QuotePrefix after NumberFormat update: " + quotePrefixAfterUpdate); // Expected: True
 
-            // Save the workbook (optional, just to verify the result in Excel)
-            workbook.Save("QuotePrefixValidation.xlsx");
+            // ------------------------------------------------------------
+            // Step 4: Save the workbook, reload it, and verify QuotePrefix again.
+            // ------------------------------------------------------------
+            string filePath = "QuotePrefixValidation.xlsx";
+            workbook.Save(filePath, SaveFormat.Xlsx);
+
+            // Load the saved workbook
+            Workbook loadedWorkbook = new Workbook(filePath);
+            Cell loadedCell = loadedWorkbook.Worksheets[0].Cells["A1"];
+            bool quotePrefixAfterLoad = loadedCell.GetStyle().QuotePrefix;
+            Console.WriteLine("QuotePrefix after reload: " + quotePrefixAfterLoad); // Expected: True
         }
     }
 }

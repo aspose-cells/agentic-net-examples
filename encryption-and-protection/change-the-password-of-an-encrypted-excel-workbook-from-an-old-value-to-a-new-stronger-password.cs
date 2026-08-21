@@ -1,55 +1,52 @@
-// Title: Change the password of an encrypted Excel workbook using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to open a password‑protected Excel file with LoadOptions.Password, assign a stronger password via Workbook.Settings.Password, and save the workbook to re‑encrypt it, including file‑existence validation and Aspose.Cells exception handling.
-// Keywords: Aspose.Cells | C# | change Excel password | update workbook encryption | LoadOptions.Password | Workbook.Settings.Password | encrypted Excel file | password replacement .NET | Excel file protection | programmatic password change
-// Common Searches: Aspose.Cells change workbook password C# | replace Excel file password programmatically | load encrypted workbook with old password .NET | save Excel workbook with new password Aspose | update Excel encryption using C#
-// Developer Intent: Replace an existing workbook password with a new, stronger one programmatically.
-// Use Cases: Open a password‑protected workbook using the current password. | Set Workbook.Settings.Password to a new value. | Save the workbook so it is re‑encrypted with the new password. | Validate that the source file exists before attempting to load it. | Catch CellsException and generic exceptions to handle errors gracefully.
-// AI Prompts: Generate C# code that uses Aspose.Cells to change the password of an encrypted Excel workbook, including error handling. | Provide a reusable method that accepts inputPath, oldPassword, newPassword and updates the workbook’s encryption. | Explain the role of LoadOptions.Password versus Workbook.Settings.Password when re‑encrypting an Excel file with Aspose.Cells.
+// Title: Change the password of an encrypted Excel workbook with Aspose.Cells for .NET (C#)
+// Description: Loads a password‑protected .xlsx using LoadOptions, assigns a new password via workbook.Settings.Password, and saves the file. Includes error handling for CellsException and generic exceptions.
+// Keywords: Aspose.Cells | C# | change Excel password | update workbook password | encrypted Excel file | LoadOptions password | Workbook.Settings.Password | re‑encrypt Excel workbook | password rotation | Excel file security
+// Common Searches: how to change password of encrypted Excel using Aspose.Cells | Aspose.Cells replace workbook password C# | update Excel file password programmatically .NET | re‑encrypt Excel workbook with new password Aspose | batch change Excel passwords Aspose.Cells
+// Developer Intent: Replace an existing workbook password with a stronger one programmatically.
+// Use Cases: Secure legacy Excel files by updating their passwords to meet current policy requirements. | Automate bulk password rotation for multiple workbooks in a scheduled job. | Integrate password update into a CI/CD pipeline to re‑encrypt artifacts after deployment.
+// AI Prompts: Generate C# code that opens an encrypted Excel workbook with Aspose.Cells, changes its password, and saves the result. | Explain how to catch and process CellsException when modifying a protected workbook's password. | Create a reusable method that takes input path, old password, new password, and output path to re‑encrypt an Excel file using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace ChangeWorkbookPasswordDemo
+namespace WorkbookPasswordUpdater
 {
-    // Demonstrates how to open a password‑protected Excel file with LoadOptions.Password, assign a stronger password via Workbook.Settings.Password, and save the workbook to re‑encrypt it, including file‑existence validation and Aspose.Cells exception handling.
+    // Loads a password‑protected .xlsx using LoadOptions, assigns a new password via workbook.Settings.Password, and saves the file. Includes error handling for CellsException and generic exceptions.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Path to the existing encrypted workbook
-            string inputPath = "EncryptedWorkbook.xlsx";
+            // Paths to the source and destination workbooks
+            string inputFile = "encrypted_workbook.xlsx";
+            string outputFile = "encrypted_workbook_newpwd.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Old password used to protect the workbook
-            string oldPassword = "oldPass123";
-
-            // New, stronger password to replace the old one
-            string newPassword = "NewStrongPass!@#456";
+            // Old (current) password and the new stronger password
+            string oldPassword = "oldPassword123";
+            string newPassword = "NewStrongPassword!2026";
 
             try
             {
+                // Ensure the input file exists
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    return;
+                }
+
                 // Load the workbook using the old password
                 LoadOptions loadOptions = new LoadOptions
                 {
-                    Password = oldPassword // password for opening the encrypted file
+                    Password = oldPassword
                 };
-                Workbook workbook = new Workbook(inputPath, loadOptions);
+                Workbook workbook = new Workbook(inputFile, loadOptions);
 
-                // Change the encryption password to the new value
-                workbook.Settings.Password = newPassword; // password for saving the file
+                // Update the workbook encryption password
+                workbook.Settings.Password = newPassword;
 
-                // Save the workbook; it will be encrypted with the new password
-                string outputPath = "EncryptedWorkbook_NewPassword.xlsx";
-                workbook.Save(outputPath);
-
-                Console.WriteLine("Password changed successfully.");
+                // Save the workbook with the new password
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
             }
             catch (CellsException ex)
             {

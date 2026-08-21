@@ -1,59 +1,78 @@
-// Title: Batch convert CSV files to ODS with Aspose.Cells for .NET (default ODF version) and verify each workbook
-// Description: C# example that scans a folder, loads every *.csv using Aspose.Cells LoadOptions, converts each file to an ODS workbook with default OdsSaveOptions via ConversionUtility, saves it with a .ods extension, then reloads the ODS to confirm worksheet count and logs success or errors.
-// Keywords: Aspose.Cells | C# CSV to ODS | batch conversion .NET | default ODF version | OdsSaveOptions | ConversionUtility | verify ODS output | load CSV directory | LibreOffice compatibility | OpenOffice ODS | GitHub example | global developers | US developers | Europe developers
-// Common Searches: C# batch convert CSV to ODS Aspose.Cells | How to verify ODS after conversion .NET | Default ODF version when saving ODS with Aspose | Convert all CSV files in a folder to ODS using Aspose | Aspose.Cells example for bulk CSV to ODS conversion
-// Developer Intent: Automatically transform every CSV file in a specified directory into an ODS spreadsheet using Aspose.Cells’s default ODF settings and ensure each output file is structurally valid.
-// Use Cases: Nightly automation that turns exported CSV reports into ODS files for LibreOffice or OpenOffice consumption. | Bulk data‑import pipelines where source CSVs must be packaged as ODS workbooks before downstream analysis. | Quality‑control scripts that confirm each generated ODS contains the expected number of worksheets and logs any failures.
-// AI Prompts: Generate C# code that iterates through a folder of CSV files, uses Aspose.Cells ConversionUtility to convert each to ODS with default OdsSaveOptions, then reloads each ODS to verify worksheet count. | Provide a robust error‑handling and detailed logging pattern for batch CSV‑to‑ODS conversion with Aspose.Cells. | Show how to customize OdsSaveOptions to target a specific ODF version while still performing post‑conversion verification of the ODS workbooks.
+// Title: Batch convert CSV files to ODS with Aspose.Cells for .NET (default ODF version)
+// Description: Scans a folder for *.csv files, loads each into an Aspose.Cells Workbook using LoadOptions, saves it as an ODS document with OdsSaveOptions (default ODF version), and confirms the output file exists while handling per‑file errors.
+// Keywords: Aspose.Cells | CSV to ODS conversion | batch conversion C# | LoadOptions CSV | OdsSaveOptions | default ODF version | file existence verification | .NET spreadsheet automation | convert multiple CSV files
+// Common Searches: Aspose.Cells batch CSV to ODS example | C# convert folder of CSV files to ODS | verify ODS files after conversion Aspose | default ODF version when saving ODS | load CSV with Aspose.Cells LoadOptions
+// Developer Intent: Automatically transform every CSV file in a directory into an ODS spreadsheet using Aspose.Cells and ensure each result is created successfully.
+// Use Cases: Nightly job that turns exported CSV reports into LibreOffice‑compatible ODS files. | Migrating legacy CSV datasets to OpenDocument spreadsheets for downstream processing. | CI/CD validation step that checks ODS output files exist after a bulk conversion.
+// AI Prompts: Write C# code that iterates over all CSV files in a given folder, loads each with Aspose.Cells LoadOptions, saves them as ODS using the default ODF version, and logs success or failure. | Add functionality to the batch converter that records source CSV path, destination ODS path, and conversion status into a summary CSV report. | Explain how to set a specific ODF version in OdsSaveOptions and how to programmatically validate ODS compliance after saving.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using Aspose.Cells.Ods;
 
-// C# example that scans a folder, loads every *.csv using Aspose.Cells LoadOptions, converts each file to an ODS workbook with default OdsSaveOptions via ConversionUtility, saves it with a .ods extension, then reloads the ODS to confirm worksheet count and logs success or errors.
-class CsvToOdsBatch
+namespace CsvToOdsBatchConversion
 {
-    static void Main()
+    // Scans a folder for *.csv files, loads each into an Aspose.Cells Workbook using LoadOptions, saves it as an ODS document with OdsSaveOptions (default ODF version), and confirms the output file exists while handling per‑file errors.
+    class Program
     {
-        // Directory containing CSV files
-        string csvDirectory = "CsvFiles";
-
-        // Verify the directory exists
-        if (!Directory.Exists(csvDirectory))
+        static void Main()
         {
-            Console.WriteLine($"Directory not found: {csvDirectory}");
-            return;
-        }
+            // Folder containing CSV files – adjust as needed
+            string inputFolder = @"C:\CsvFiles";
 
-        // Get all CSV files in the directory
-        string[] csvFiles = Directory.GetFiles(csvDirectory, "*.csv");
-
-        foreach (string csvFilePath in csvFiles)
-        {
-            try
+            // Verify the folder exists
+            if (!Directory.Exists(inputFolder))
             {
-                // Destination ODS file path (same name, .ods extension)
-                string odsFilePath = Path.ChangeExtension(csvFilePath, ".ods");
-
-                // Load options for CSV files
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
-
-                // Save options for ODS (default ODF version)
-                OdsSaveOptions saveOptions = new OdsSaveOptions();
-
-                // Convert CSV to ODS using the utility method
-                ConversionUtility.Convert(csvFilePath, loadOptions, odsFilePath, saveOptions);
-                Console.WriteLine($"Converted: {Path.GetFileName(csvFilePath)} → {Path.GetFileName(odsFilePath)}");
-
-                // Verify compliance by loading the generated ODS file
-                OdsLoadOptions odsLoadOptions = new OdsLoadOptions();
-                Workbook workbook = new Workbook(odsFilePath, odsLoadOptions);
-                Console.WriteLine($"Verification: {workbook.Worksheets.Count} worksheet(s) in {Path.GetFileName(odsFilePath)}");
+                Console.WriteLine($"Input folder does not exist: {inputFolder}");
+                return;
             }
-            catch (Exception ex)
+
+            // Get all CSV files in the folder
+            string[] csvFiles = Directory.GetFiles(inputFolder, "*.csv");
+
+            if (csvFiles.Length == 0)
             {
-                Console.WriteLine($"Error processing {Path.GetFileName(csvFilePath)}: {ex.Message}");
+                Console.WriteLine("No CSV files found to convert.");
+                return;
+            }
+
+            foreach (string csvPath in csvFiles)
+            {
+                try
+                {
+                    // ---------- Load CSV ----------
+                    // Create load options specifying CSV format
+                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+
+                    // Load the CSV file into a workbook using the load options
+                    Workbook workbook = new Workbook(csvPath, loadOptions);
+
+                    // ---------- Save as ODS ----------
+                    // Create ODS save options – default ODF version will be used
+                    OdsSaveOptions saveOptions = new OdsSaveOptions();
+
+                    // Determine output ODS file path (same name, .ods extension)
+                    string odsPath = Path.ChangeExtension(csvPath, ".ods");
+
+                    // Save the workbook as ODS with the specified options
+                    workbook.Save(odsPath, saveOptions);
+
+                    // ---------- Verify conversion ----------
+                    // Simple verification: check that the ODS file now exists
+                    if (File.Exists(odsPath))
+                    {
+                        Console.WriteLine($"Successfully converted '{Path.GetFileName(csvPath)}' to ODS.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Failed to create ODS file for '{Path.GetFileName(csvPath)}'.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing '{Path.GetFileName(csvPath)}': {ex.Message}");
+                }
             }
         }
     }

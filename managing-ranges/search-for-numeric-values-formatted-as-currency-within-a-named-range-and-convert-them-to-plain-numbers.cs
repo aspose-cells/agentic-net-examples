@@ -1,109 +1,85 @@
-// Title: Convert Currency‑Formatted Cells in a Named Range to Numeric Values with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, accesses the named range "CurrencyRange", removes common currency symbols from string cells, parses them to numbers, converts numeric cells with currency styles to the General format, and saves the updated file using Aspose.Cells for C#.
-// Keywords: Aspose.Cells | C# | .NET | currency to number conversion | remove currency symbols | named range processing | Excel cell style change | general number format | financial data cleaning
-// Common Searches: Aspose.Cells convert currency formatted cells to numbers | remove $ € £ symbols from Excel cells using C# | change currency style to General in a named range Aspose.Cells | parse currency strings to numeric values in .NET Excel library | detect and replace built‑in currency formats with General format
-// Developer Intent: Transform every cell inside the "CurrencyRange" that displays a currency—whether as a text string with a symbol or as a numeric value with a currency style—into a plain numeric value using the General format.
-// Use Cases: Clean imported financial spreadsheets by stripping currency symbols before calculations. | Standardize data for CSV or database export when only raw numbers are required. | Prepare a reporting template where the designated range must contain unformatted numeric amounts.
-// AI Prompts: Generate C# code with Aspose.Cells that locates a named range called 'CurrencyRange', removes any leading currency symbols from string cells, converts them to double, and sets the cell style to General. | Provide a method that scans an Aspose.Cells.Range, identifies cells using built‑in currency number formats (e.g., indices 164‑169) or custom formats containing a currency symbol, and changes those cells to the General number format.
+// Title: Aspose.Cells C# – Convert Currency‑Formatted Numbers to General Format in a Named Range
+// Description: Load an Excel workbook with Aspose.Cells, retrieve the named range "MyRange", iterate through its cells, detect numeric cells that use a currency style (custom format containing "$" or built‑in format ID 44), and change their style to the General number format (Number = 0) before saving the file.
+// Keywords: Aspose.Cells | C# | .NET | currency format | remove currency formatting | named range | convert to general format | cell style | Excel number format | format ID 44 | custom number format | financial data cleaning
+// Common Searches: Aspose.Cells change currency format to general | C# remove $ symbol from cells in named range | detect currency style Aspose.Cells | convert formatted numbers to plain numbers Aspose.Cells | iterate named range cells Aspose.Cells C#
+// Developer Intent: Locate numeric cells formatted as currency inside a specific named range and convert them to the plain (General) number format.
+// Use Cases: Sanitize financial reports by stripping currency symbols before exporting data to other systems. | Prepare data for calculations where currency formatting interferes with numeric operations. | Standardize worksheet appearance by converting currency‑styled cells in a defined range to General.
+// AI Prompts: Provide C# code using Aspose.Cells to find numeric cells with a currency style in a named range and set their Number format to General while preserving other cell attributes. | Explain how to extend the sample to process multiple named ranges and support additional currency symbols such as € or £. | Suggest a technique to log the addresses of cells that were changed from currency to General during the conversion.
 
 using System;
-using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsCurrencyConversion
 {
-    // Loads an Excel workbook, accesses the named range "CurrencyRange", removes common currency symbols from string cells, parses them to numbers, converts numeric cells with currency styles to the General format, and saves the updated file using Aspose.Cells for C#.
+    // Load an Excel workbook with Aspose.Cells, retrieve the named range "MyRange", iterate through its cells, detect numeric cells that use a currency style (custom format containing "$" or built‑in format ID 44), and change their style to the General number format (Number = 0) before saving the file.
     class Program
     {
         static void Main()
         {
-            const string inputPath = "InputWorkbook.xlsx";
-            const string outputPath = "OutputWorkbook.xlsx";
-
-            // Verify input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
-            }
-
             try
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-                // Retrieve the named range "CurrencyRange"
-                Name namedRange = workbook.Worksheets.Names["CurrencyRange"];
-                if (namedRange == null)
+                // Verify input file exists
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine("Named range 'CurrencyRange' not found.");
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
                     return;
                 }
 
-                // Get the actual cell range
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Retrieve the named range "MyRange"
+                Name namedRange = workbook.Worksheets.Names["MyRange"];
+                if (namedRange == null)
+                {
+                    Console.WriteLine("Named range 'MyRange' not found.");
+                    return;
+                }
+
+                // Get the actual range object
                 Aspose.Cells.Range range = namedRange.GetRange();
 
-                // Process each cell in the range
-                foreach (Cell cell in range)
+                // Iterate through each cell in the range
+                for (int row = range.FirstRow; row < range.FirstRow + range.RowCount; row++)
                 {
-                    if (cell.Type == CellValueType.IsString)
+                    for (int col = range.FirstColumn; col < range.FirstColumn + range.ColumnCount; col++)
                     {
-                        string raw = cell.StringValue.Trim();
+                        Cell cell = workbook.Worksheets[0].Cells[row, col];
 
-                        // Detect common currency symbols
-                        if (raw.StartsWith("$") || raw.StartsWith("€") || raw.StartsWith("£") ||
-                            raw.StartsWith("¥") || raw.StartsWith("₹"))
+                        // Process only numeric cells
+                        if (cell.Type == CellValueType.IsNumeric)
                         {
-                            // Remove symbols and thousand separators
-                            string cleaned = raw.Replace("$", "")
-                                                .Replace("€", "")
-                                                .Replace("£", "")
-                                                .Replace("¥", "")
-                                                .Replace("₹", "")
-                                                .Replace(",", "")
-                                                .Trim();
+                            // Retrieve the cell's current style
+                            Style style = cell.GetStyle();
 
-                            // Parse numeric part
-                            if (double.TryParse(cleaned, NumberStyles.Any, CultureInfo.InvariantCulture, out double numericValue))
-                            {
-                                cell.PutValue(numericValue);
+                            // Determine if the cell uses a currency format
+                            bool isCurrencyFormat = false;
 
-                                // Set General number format
-                                Style style = cell.GetStyle();
-                                style.Number = 0; // General
-                                cell.SetStyle(style);
-                            }
-                        }
-                    }
-                    else if (cell.Type == CellValueType.IsNumeric)
-                    {
-                        // Check if the cell uses a currency format
-                        Style style = cell.GetStyle();
-                        bool isCurrencyFormat = false;
-
-                        // Common built‑in currency format indices (example values)
-                        int[] currencyIndices = { 164, 165, 166, 167, 168, 169 };
-                        foreach (int idx in currencyIndices)
-                        {
-                            if (style.Number == idx)
+                            // Check custom format string for currency symbols
+                            string customFormat = style.Custom;
+                            if (!string.IsNullOrEmpty(customFormat) && customFormat.Contains("$"))
                             {
                                 isCurrencyFormat = true;
-                                break;
                             }
-                        }
+                            else
+                            {
+                                // Check built‑in format IDs (44 is a common currency format)
+                                if (style.Number == 44)
+                                    isCurrencyFormat = true;
+                            }
 
-                        // Fallback: look for a currency symbol in a custom format string
-                        if (!isCurrencyFormat && !string.IsNullOrEmpty(style.Custom) && style.Custom.Contains("$"))
-                        {
-                            isCurrencyFormat = true;
-                        }
-
-                        if (isCurrencyFormat)
-                        {
-                            // Change to General format
-                            style.Number = 0;
-                            cell.SetStyle(style);
+                            // If currency formatted, change to General format
+                            if (isCurrencyFormat)
+                            {
+                                style.Number = 0; // General format
+                                // Optionally clear custom format to avoid conflicts
+                                style.Custom = string.Empty;
+                                cell.SetStyle(style);
+                            }
                         }
                     }
                 }

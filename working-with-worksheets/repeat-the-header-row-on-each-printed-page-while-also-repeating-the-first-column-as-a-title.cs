@@ -1,60 +1,70 @@
-// Title: C# – Repeat Header Row & First Column on Every Printed Page with Aspose.Cells
-// Description: Creates a new Workbook, adds a header row (A1:C1) and sample data (rows 2‑50), then uses Worksheet.PageSetup to set PrintTitleRows = "$1:$1" and PrintTitleColumns = "$A:$A" so the first row and column repeat on each printed page. Saves as RepeatHeaderAndFirstColumn.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | repeat header row | repeat first column | PrintTitleRows | PrintTitleColumns | PageSetup | print titles | Excel pagination | multi‑page print | Aspose.Cells example | global | US
-// Common Searches: Aspose.Cells repeat header row on each printed page | How to set first column as title in Aspose.Cells .NET | PrintTitleRows and PrintTitleColumns Aspose.Cells example | C# code to repeat rows and columns when printing Excel | Aspose.Cells page setup for multi‑page reports
-// Developer Intent: Set up a worksheet so the top row and leftmost column are printed on every page of a multi‑page Excel document.
-// Use Cases: Printing large tables where column A holds identifiers that must appear on every page | Generating multi‑page invoices or reports with persistent column headers and row titles | Creating printable schedules or timetables that need both header row and title column repeated
-// AI Prompts: Provide C# code that configures Aspose.Cells PageSetup to repeat the first row and first column on each printed page. | Explain how to test that PrintTitleRows and PrintTitleColumns are applied correctly in an Aspose.Cells workbook. | Show an Aspose.Cells example that repeats multiple header rows and a title column when printing.
+// Title: Repeat Header Row and First Column on Every Printed Page – Aspose.Cells for .NET (C#)
+// Description: This C# example creates a workbook, fills a range (A1:D30) with a title row, column headers and data, then uses PageSetup to set PrintTitleRows = "$1:$1" and PrintTitleColumns = "$A:$A" so the header row and the first column appear on each printed page. The workbook is saved as an XLSX file.
+// Keywords: Aspose.Cells repeat header row | Aspose.Cells repeat first column | PrintTitleRows C# | PrintTitleColumns .NET | page setup repeat titles | Aspose.Cells printing options | C# workbook print area | Aspose.Cells pagination
+// Common Searches: Aspose.Cells how to repeat header row on each printed page | repeat first column in printed Excel using Aspose.Cells C# | set PrintTitleRows and PrintTitleColumns in .NET | configure page setup for repeating titles Aspose.Cells | define print area and repeat titles Aspose.Cells
+// Developer Intent: Configure a worksheet so that both the top header row and the leftmost column are printed on every page of a multi‑page document.
+// Use Cases: Generating multi‑page reports where column headings must stay visible on each sheet. | Creating printable inventory lists that keep the item name column as a persistent title. | Producing financial statements with a fixed title column and header row for consistent pagination.
+// AI Prompts: Show C# code that sets PrintTitleRows and PrintTitleColumns in Aspose.Cells and defines a custom print area. | Provide an example that saves the workbook as PDF after configuring the page setup to repeat both header row and first column. | Explain how to adjust PageSetup properties to repeat titles without altering existing worksheet data.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Creates a new Workbook, adds a header row (A1:C1) and sample data (rows 2‑50), then uses Worksheet.PageSetup to set PrintTitleRows = "$1:$1" and PrintTitleColumns = "$A:$A" so the first row and column repeat on each printed page. Saves as RepeatHeaderAndFirstColumn.xlsx.
+    // This C# example creates a workbook, fills a range (A1:D30) with a title row, column headers and data, then uses PageSetup to set PrintTitleRows = "$1:$1" and PrintTitleColumns = "$A:$A" so the header row and the first column appear on each printed page. The workbook is saved as an XLSX file.
     public class RepeatHeaderAndFirstColumnDemo
     {
-        public static void Main(string[] args)
+        public static void Run()
         {
             try
             {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Populate sample data
+                worksheet.Cells["A1"].PutValue("Title");
+                worksheet.Cells["B1"].PutValue("Header 1");
+                worksheet.Cells["C1"].PutValue("Header 2");
+                worksheet.Cells["D1"].PutValue("Header 3");
+
+                // Data rows (first column will act as a title column)
+                for (int row = 2; row <= 30; row++)
+                {
+                    worksheet.Cells[row - 1, 0].PutValue("Row Title " + (row - 1));
+                    worksheet.Cells[row - 1, 1].PutValue("Data " + (row - 1) + "-1");
+                    worksheet.Cells[row - 1, 2].PutValue("Data " + (row - 1) + "-2");
+                    worksheet.Cells[row - 1, 3].PutValue("Data " + (row - 1) + "-3");
+                }
+
+                // Configure page setup to repeat header row and first column
+                PageSetup pageSetup = worksheet.PageSetup;
+                pageSetup.PrintTitleRows = "$1:$1";
+                pageSetup.PrintTitleColumns = "$A:$A";
+                pageSetup.PrintArea = "A1:D30";
+
+                // Define output file path
+                string outputPath = "RepeatHeaderAndFirstColumn.xlsx";
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.Error.WriteLine($"Error during workbook creation: {ex.Message}");
             }
         }
+    }
 
-        public static void Run()
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Sample data: header row
-            worksheet.Cells["A1"].PutValue("Title");
-            worksheet.Cells["B1"].PutValue("Header1");
-            worksheet.Cells["C1"].PutValue("Header2");
-
-            // Sample data: multiple rows to cause pagination
-            for (int i = 2; i <= 50; i++)
-            {
-                worksheet.Cells[$"A{i}"].PutValue($"Row {i - 1}");
-                worksheet.Cells[$"B{i}"].PutValue($"Data {i - 1} - 1");
-                worksheet.Cells[$"C{i}"].PutValue($"Data {i - 1} - 2");
-            }
-
-            // Configure page setup to repeat the first row and first column on each printed page
-            PageSetup pageSetup = worksheet.PageSetup;
-            pageSetup.PrintTitleRows = "$1:$1";   // repeat row 1 (header)
-            pageSetup.PrintTitleColumns = "$A:$A"; // repeat column A (title)
-
-            // Save the workbook
-            workbook.Save("RepeatHeaderAndFirstColumn.xlsx");
+            RepeatHeaderAndFirstColumnDemo.Run();
         }
     }
 }

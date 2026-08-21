@@ -1,68 +1,91 @@
+// Title: Create Multiple Pivot Tables in One Worksheet with Aspose.Cells for .NET
+// Description: This example builds a workbook, fills it with random sales data, defines the entire data block as the source range, and adds two pivot tables to the same sheet—one summarizing total Quantity by Region at F3 and another summarizing total Revenue by Product at F20. Each pivot uses a different built‑in style, is refreshed, calculated, and the workbook is saved as an XLSX file.
+// Keywords: Aspose.Cells multiple pivot tables | C# create pivot tables same worksheet | Aspose.Cells .NET pivot table example | summarize quantity by region Aspose | summarize revenue by product Aspose | pivot table style Aspose.Cells | refresh calculate pivot Aspose
+// Common Searches: how to add two pivot tables on one sheet using Aspose.Cells | Aspose.Cells example multiple pivot tables .NET | set different styles for each pivot table Aspose | create pivot tables from same source range Aspose.Cells
+// Developer Intent: Generate two distinct pivot tables on a single worksheet, each summarizing a different metric from the same source data.
+// Use Cases: Generate a sales report that shows quantity per region alongside revenue per product in one workbook. | Build a dashboard worksheet with side‑by‑side KPIs for quick comparative analysis. | Apply separate built‑in styles to visually differentiate multiple pivot summaries.
+// AI Prompts: Add a third pivot table that calculates average revenue per region using the existing data range. | Change the aggregation of the Quantity field from Sum to Count in the first pivot table and refresh it. | Move the second pivot table to a new cell location and update its source range programmatically.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-class CreateMultiplePivotTables
+namespace AsposeCellsMultiplePivotTables
 {
-    static void Main()
+    // This example builds a workbook, fills it with random sales data, defines the entire data block as the source range, and adds two pivot tables to the same sheet—one summarizing total Quantity by Region at F3 and another summarizing total Revenue by Product at F20. Each pivot uses a different built‑in style, is refreshed, calculated, and the workbook is saved as an XLSX file.
+    public class Program
     {
-        // Create a new workbook and get the first worksheet for data
-        Workbook workbook = new Workbook();
-        Worksheet dataSheet = workbook.Worksheets[0];
-        dataSheet.Name = "Data";
-
-        // Populate sample data
-        Cells cells = dataSheet.Cells;
-        cells["A1"].PutValue("Region");
-        cells["B1"].PutValue("Product");
-        cells["C1"].PutValue("Sales");
-        cells["D1"].PutValue("Quantity");
-
-        string[] regions = { "North", "South", "East", "West" };
-        string[] products = { "Apple", "Banana", "Cherry" };
-        Random rnd = new Random();
-        int currentRow = 2;
-
-        for (int i = 0; i < 20; i++)
+        public static void Main()
         {
-            cells[currentRow, 0].PutValue(regions[rnd.Next(regions.Length)]);
-            cells[currentRow, 1].PutValue(products[rnd.Next(products.Length)]);
-            cells[currentRow, 2].PutValue(rnd.Next(1000, 5000));   // Sales
-            cells[currentRow, 3].PutValue(rnd.Next(10, 100));     // Quantity
-            currentRow++;
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate sample data
+            // Header row
+            cells["A1"].PutValue("Region");
+            cells["B1"].PutValue("Product");
+            cells["C1"].PutValue("Quantity");
+            cells["D1"].PutValue("Revenue");
+
+            // Sample rows
+            string[] regions = { "North", "South", "East", "West" };
+            string[] products = { "Apple", "Banana", "Cherry" };
+            Random rnd = new Random();
+
+            int row = 2;
+            for (int i = 0; i < 30; i++)
+            {
+                cells[row, 0].PutValue(regions[rnd.Next(regions.Length)]);
+                cells[row, 1].PutValue(products[rnd.Next(products.Length)]);
+                cells[row, 2].PutValue(rnd.Next(1, 100));          // Quantity
+                cells[row, 3].PutValue(rnd.Next(100, 1000));      // Revenue
+                row++;
+            }
+
+            // Define the source data range for pivot tables
+            // Using a formula style reference to the whole data block
+            string sourceData = $"=Sheet1!{cells.MaxDisplayRange.Address}";
+
+            // -------------------------------------------------
+            // First PivotTable: Summarize total Quantity by Region
+            // -------------------------------------------------
+            PivotTableCollection pivots = sheet.PivotTables;
+            int pivotIndex1 = pivots.Add(sourceData, "F3", "QuantityByRegion");
+            PivotTable pivot1 = pivots[pivotIndex1];
+
+            // Row field: Region
+            pivot1.AddFieldToArea(PivotFieldType.Row, "Region");
+            // Data field: Quantity (sum)
+            pivot1.AddFieldToArea(PivotFieldType.Data, "Quantity");
+
+            // Optional: set a built‑in style
+            pivot1.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
+
+            // -------------------------------------------------
+            // Second PivotTable: Summarize total Revenue by Product
+            // -------------------------------------------------
+            int pivotIndex2 = pivots.Add(sourceData, "F20", "RevenueByProduct");
+            PivotTable pivot2 = pivots[pivotIndex2];
+
+            // Row field: Product
+            pivot2.AddFieldToArea(PivotFieldType.Row, "Product");
+            // Data field: Revenue (sum)
+            pivot2.AddFieldToArea(PivotFieldType.Data, "Revenue");
+
+            // Apply a different style
+            pivot2.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium12;
+
+            // Refresh and calculate data for both pivot tables
+            pivot1.RefreshData();
+            pivot1.CalculateData();
+
+            pivot2.RefreshData();
+            pivot2.CalculateData();
+
+            // Save the workbook
+            workbook.Save("MultiplePivotTables.xlsx");
         }
-
-        // Define the source data range for the pivot tables
-        string sourceData = $"=Data!A1:D{currentRow - 1}";
-
-        // Add a new worksheet to hold the pivot tables
-        Worksheet pivotSheet = workbook.Worksheets.Add("PivotTables");
-        PivotTableCollection pivotTables = pivotSheet.PivotTables;
-
-        // -------------------------------------------------
-        // First PivotTable: Sales summarized by Region and Product
-        // -------------------------------------------------
-        int pivotIndex1 = pivotTables.Add(sourceData, "A3", "SalesByRegion");
-        PivotTable salesPivot = pivotTables[pivotIndex1];
-        salesPivot.AddFieldToArea(PivotFieldType.Row, "Region");
-        salesPivot.AddFieldToArea(PivotFieldType.Column, "Product");
-        salesPivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-        salesPivot.ShowInTabularForm();
-
-        // -------------------------------------------------
-        // Second PivotTable: Quantity summarized by Product
-        // -------------------------------------------------
-        // Use overload that specifies row and column indices for placement
-        int pivotIndex2 = pivotTables.Add(sourceData, 20, 0, "QuantityByProduct");
-        PivotTable qtyPivot = pivotTables[pivotIndex2];
-        qtyPivot.AddFieldToArea(PivotFieldType.Row, "Product");
-        qtyPivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
-        qtyPivot.ShowInOutlineForm();
-
-        // Refresh all pivot tables to ensure they reflect the source data
-        workbook.Worksheets.RefreshPivotTables();
-
-        // Save the workbook
-        workbook.Save("MultiplePivotTables.xlsx");
     }
 }

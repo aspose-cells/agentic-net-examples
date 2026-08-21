@@ -1,58 +1,76 @@
-// Title: C# – Calculate Department‑wise Salary Subtotals in Excel with Aspose.Cells Subtotal (subtotal1:ColumnName) syntax
-// Description: This example creates a workbook, adds a header and employee data, defines a cell range, and uses Cells.Subtotal to group rows by the Department column and sum the Salary column. The call replaces existing subtotals, inserts page breaks, and places a summary row below each group, then saves the file as SubtotalDemo.xlsx.
-// Keywords: Aspose.Cells | C# | Excel subtotal | group by column | sum function | department salary total | smart markers | subtotal1 syntax | cells.Subtotal method | .NET Excel automation
-// Common Searches: Aspose.Cells subtotal example C# | group rows and sum in Excel using Aspose.Cells | how to add department subtotals with Aspose.Cells | C# cells.Subtotal method usage | subtotal1:ColumnName smart marker syntax
-// Developer Intent: Generate an Excel file that automatically groups employee rows by Department and inserts subtotal rows that sum Salary, using the Aspose.Cells Subtotal API.
-// Use Cases: Produce payroll reports that show total salary per department. | Create printable Excel sheets with page breaks after each department group. | Refresh subtotals programmatically when underlying data changes.
-// AI Prompts: Show how to modify the Subtotal call to also calculate average salary per department. | Provide code to export the workbook with subtotals to PDF after saving. | Explain how to achieve the same grouped sum using the (subtotal1:ColumnName) smart marker syntax in an Aspose.Cells template.
+// Title: Calculate grouped subtotals in Excel with Aspose.Cells C# (subtotal1:ColumnName syntax)
+// Description: Shows how to use Aspose.Cells Cells.Subtotal to group rows by a column, sum another column, replace existing subtotals, insert page breaks, place summary rows below each group, and save the workbook.
+// Keywords: Aspose.Cells | C# subtotal | Excel group subtotal | Cells.Subtotal method | subtotal1 column syntax | smart markers subtotal | Excel report pagination | page breaks Aspose | summary below data | group by column Aspose
+// Common Searches: Aspose.Cells subtotal example C# | How to use Cells.Subtotal in C# | Group rows and sum column Aspose.Cells | Add page breaks with subtotal Aspose | subtotal1:ColumnName smart marker | Retrieve SubtotalSetting Aspose.Cells | C# Excel subtotal rows
+// Developer Intent: Add grouped sum subtotals, page breaks, and summary rows to an Excel worksheet using Aspose.Cells.
+// Use Cases: Create a regional financial report that automatically inserts subtotal rows for each region and adds page breaks for printable sections. | Generate a sales summary where each product category receives a summed subtotal row placed directly below its grouped data. | Export data to Excel with grouped totals and pagination, enabling easy distribution of large datasets across multiple pages.
+// AI Prompts: Write C# code with Aspose.Cells to apply Cells.Subtotal, grouping by the first column and summing the second column, with page breaks and summary rows below each group. | Explain how to retrieve and modify SubtotalSetting after calling Cells.Subtotal in Aspose.Cells. | Show how to use the (subtotal1:ColumnName) syntax inside a smart marker template to calculate grouped subtotals automatically.
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// This example creates a workbook, adds a header and employee data, defines a cell range, and uses Cells.Subtotal to group rows by the Department column and sum the Salary column. The call replaces existing subtotals, inserts page breaks, and places a summary row below each group, then saves the file as SubtotalDemo.xlsx.
-class SubtotalExample
+namespace AsposeCellsSubtotalExample
 {
-    static void Main()
+    // Shows how to use Aspose.Cells Cells.Subtotal to group rows by a column, sum another column, replace existing subtotals, insert page breaks, place summary rows below each group, and save the workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Add header row
-        cells["A1"].PutValue("Department");
-        cells["B1"].PutValue("Employee");
-        cells["C1"].PutValue("Salary");
-
-        // Populate sample data
-        object[,] data = new object[,]
+        static void Main()
         {
-            { "HR",      "Alice",   5000 },
-            { "HR",      "Bob",     4500 },
-            { "IT",      "Charlie", 7000 },
-            { "IT",      "David",   6500 },
-            { "IT",      "Eve",     7200 },
-            { "Finance", "Frank",   6000 }
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        for (int i = 0; i < data.GetLength(0); i++)
-        {
-            cells[i + 1, 0].PutValue(data[i, 0]); // Department
-            cells[i + 1, 1].PutValue(data[i, 1]); // Employee
-            cells[i + 1, 2].PutValue(data[i, 2]); // Salary
+            // Populate sample data
+            // Header row
+            cells["A1"].PutValue("Category");
+            cells["B1"].PutValue("Amount");
+
+            // Data rows
+            object[,] data = new object[,]
+            {
+                { "North", 1200 },
+                { "North", 800 },
+                { "South", 1500 },
+                { "South", 700 },
+                { "East",  900 },
+                { "East",  1100 }
+            };
+
+            for (int i = 0; i < data.GetLength(0); i++)
+            {
+                cells[i + 1, 0].PutValue(data[i, 0]); // Category column (A)
+                cells[i + 1, 1].PutValue(data[i, 1]); // Amount column (B)
+            }
+
+            // Define the range that contains the data (including header)
+            // A1:B7 -> rows 0‑6, columns 0‑1
+            CellArea area = CellArea.CreateCellArea(0, 0, data.GetLength(0), 1);
+
+            // Apply subtotal:
+            // - Group by the first column (Category) -> index 0
+            // - Use SUM function
+            // - Add subtotal for the second column (Amount) -> index 1
+            // - Replace existing subtotals, add page breaks, place summary below data
+            cells.Subtotal(
+                area,
+                0,                                 // groupBy column index
+                ConsolidationFunction.Sum,         // subtotal function
+                new int[] { 1 },                   // columns to subtotal
+                true,                              // replace existing subtotals
+                true,                              // insert page breaks between groups
+                true                               // place summary below each group
+            );
+
+            // OPTIONAL: Retrieve the subtotal setting to verify parameters
+            SubtotalSetting setting = cells.RetrieveSubtotalSetting(area);
+            Console.WriteLine($"GroupBy column index: {setting.GroupBy}");
+            Console.WriteLine($"Subtotal function: {setting.SubtotalFunction}");
+            Console.WriteLine($"Subtotal column index: {setting.TotalList[0]}");
+            Console.WriteLine($"Summary below data: {setting.SummaryBelowData}");
+
+            // Save the workbook
+            workbook.Save("SubtotalExample.xlsx");
         }
-
-        // Define the cell area that includes the header and data
-        CellArea area = CellArea.CreateCellArea("A1", "C7");
-
-        // Apply subtotal:
-        // - Group by column 0 (Department)
-        // - Use SUM function
-        // - Subtotal the Salary column (index 2)
-        // - Replace existing subtotals, add page breaks, place summary below data
-        cells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 2 }, true, true, true);
-
-        // Save the workbook
-        workbook.Save("SubtotalDemo.xlsx");
     }
 }

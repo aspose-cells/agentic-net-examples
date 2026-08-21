@@ -1,62 +1,67 @@
-// Title: C# – Remove All Signature Lines and Add a New One in an Excel Workbook with Aspose.Cells
-// Description: Loads an existing workbook, iterates through every worksheet, deletes shapes that contain a SignatureLine, creates a new SignatureLine with custom signer information, places it in cell B2 of the first sheet, and saves the file as a new workbook.
-// Keywords: Aspose.Cells remove signature line C# | add signature line Excel Aspose.Cells | delete existing signature lines .NET | update signer details Excel workbook | SignatureLine shape removal | Aspose.Cells workbook protection | C# Excel digital signature line
-// Common Searches: How to delete all signature lines from an Excel file using Aspose.Cells | Add a custom signature line to a worksheet with Aspose.Cells .NET | Remove picture shapes that contain signature lines in a workbook | Replace existing Excel signature lines with new signer details
-// Developer Intent: Remove every existing signature line from a workbook and insert a single updated signature line with specified signer data.
-// Use Cases: Refresh a signed template before re‑signing it with a new approver. | Automate signature line updates in generated reports to reflect the current reviewer. | Ensure each worksheet contains only one up‑to‑date signature line prior to distribution.
-// AI Prompts: Write C# code using Aspose.Cells that removes all signature lines from every worksheet and adds a new SignatureLine at a given cell with custom signer, title, email, and instructions. | Show how to safely iterate a ShapeCollection backwards to delete picture shapes that hold a SignatureLine. | Explain the purpose of each SignatureLine property (Signer, Title, Email, Instructions, AllowComments, ShowSignedDate, IsLine) before adding it to a worksheet.
+// Title: C# – Remove All Signature Lines and Insert a New One in an Excel Workbook with Aspose.Cells
+// Description: Load an Excel file with Aspose.Cells for .NET, iterate through each worksheet, delete every picture shape that contains a SignatureLine, create a new SignatureLine with custom signer information, place it at a specified cell, and save the updated workbook.
+// Keywords: Aspose.Cells | C# | .NET | Excel | SignatureLine | remove signature line | add signature line | update signer details | ShapeCollection | Picture | automation
+// Common Searches: How to delete signature lines in Excel using Aspose.Cells C# | Add a signature line to a specific cell with Aspose.Cells .NET | Replace existing signature lines programmatically | Remove all picture signatures from a workbook | Update signer name, title, and email in Excel signature line
+// Developer Intent: Programmatically clear all existing signature line objects from a workbook and add a fresh signature line with defined signer attributes.
+// Use Cases: Clean outdated signature lines before re‑signing a contract workbook. | Batch‑update signer name, title, and email across multiple worksheets. | Prepare a template by removing placeholder signatures and inserting a new approver line.
+// AI Prompts: Generate C# code using Aspose.Cells that removes every signature line picture from an Excel file and adds a new SignatureLine with custom signer name, title, email, and instructions. | Explain how to safely iterate a worksheet's ShapeCollection, detect Picture objects with a non‑null SignatureLine, and delete them without index errors. | Provide troubleshooting steps if the new signature line does not appear after calling shapes.AddSignatureLine.
 
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSignatureLineDemo
+// Load an Excel file with Aspose.Cells for .NET, iterate through each worksheet, delete every picture shape that contains a SignatureLine, create a new SignatureLine with custom signer information, place it at a specified cell, and save the updated workbook.
+class SignatureLineUpdater
 {
-    // Loads an existing workbook, iterates through every worksheet, deletes shapes that contain a SignatureLine, creates a new SignatureLine with custom signer information, places it in cell B2 of the first sheet, and saves the file as a new workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the existing workbook
+        string inputPath = "input.xlsx";
+        Workbook workbook = new Workbook(inputPath);
+
+        // Process each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Load the existing workbook
-            string inputPath = "SignedWorkbook.xlsx";
-            Workbook workbook = new Workbook(inputPath);
+            ShapeCollection shapes = sheet.Shapes;
 
-            // Iterate through all worksheets and remove existing signature lines
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Identify indices of all signature line pictures
+            List<int> indicesToRemove = new List<int>();
+            for (int i = 0; i < shapes.Count; i++)
             {
-                ShapeCollection shapes = sheet.Shapes;
-
-                // Iterate backwards so removal does not affect the index order
-                for (int i = shapes.Count - 1; i >= 0; i--)
+                // Signature lines are stored as Picture objects with a non‑null SignatureLine
+                if (shapes[i] is Picture pic && pic.SignatureLine != null)
                 {
-                    // Each shape can be a Picture; check if it has an associated SignatureLine
-                    if (shapes[i] is Picture picture && picture.SignatureLine != null)
-                    {
-                        // Remove the shape containing the signature line
-                        shapes.RemoveAt(i);
-                    }
+                    indicesToRemove.Add(i);
                 }
+            }
+
+            // Remove identified signature lines (remove from highest index to keep collection stable)
+            for (int i = indicesToRemove.Count - 1; i >= 0; i--)
+            {
+                shapes.RemoveAt(indicesToRemove[i]);
             }
 
             // Create a new signature line with updated signer details
             SignatureLine newSignature = new SignatureLine
             {
-                Signer = "Alice Johnson",
+                Signer = "Jane Doe",
                 Title = "Project Manager",
-                Email = "alice.johnson@example.com",
-                Instructions = "Please sign to approve the document.",
+                Email = "jane.doe@example.com",
+                Instructions = "Please sign to approve.",
+                IsLine = true,
                 AllowComments = true,
-                ShowSignedDate = true,
-                IsLine = true
+                ShowSignedDate = true
             };
 
-            // Add the new signature line to the first worksheet at cell B2 (row index 1, column index 1)
-            Worksheet firstSheet = workbook.Worksheets[0];
-            firstSheet.Shapes.AddSignatureLine(1, 1, newSignature);
-
-            // Save the updated workbook
-            string outputPath = "UpdatedSignatureWorkbook.xlsx";
-            workbook.Save(outputPath);
+            // Add the new signature line at the desired cell position (row 5, column 2)
+            int topRow = 5;      // zero‑based row index
+            int leftColumn = 2;  // zero‑based column index
+            shapes.AddSignatureLine(topRow, leftColumn, newSignature);
         }
+
+        // Save the workbook with the updated signature line
+        string outputPath = "output.xlsx";
+        workbook.Save(outputPath);
     }
 }

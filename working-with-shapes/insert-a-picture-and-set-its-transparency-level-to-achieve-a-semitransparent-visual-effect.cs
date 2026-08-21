@@ -1,10 +1,10 @@
-// Title: Insert a picture with semi‑transparent effect using Aspose.Cells for .NET (C#)
-// Description: This example creates a new Workbook, adds a PNG file to cell B3, accesses the Picture object, and sets its FillFormat.Transparency to 0.5, producing a semi‑transparent visual before saving the workbook as an .xlsx file.
-// Keywords: Aspose.Cells picture transparency C# | insert image into Excel worksheet .NET | FillFormat Transparency property | C# set picture opacity Aspose | Excel watermark Aspose.Cells | overlay logo with opacity in Excel
-// Common Searches: Aspose.Cells set picture opacity C# | how to make an inserted image transparent in Excel using Aspose | add semi transparent picture to worksheet Aspose.Cells | C# example for picture transparency in Excel | Aspose.Cells watermark image transparency
-// Developer Intent: Add an image to a worksheet and apply a 50 % transparency level.
-// Use Cases: Create a light‑weight watermark that does not hide cell data. | Overlay a corporate logo on a report while keeping the content readable. | Design a background image for a chart area with reduced opacity to improve visual hierarchy.
-// AI Prompts: Generate C# code that inserts a JPEG into cell C5 and sets its transparency to 30 % with Aspose.Cells. | Explain how the FillFormat.Transparency property works for pictures and what values are accepted in Aspose.Cells for .NET. | Show how to modify the opacity of an existing picture in an Excel file using Aspose.Cells without re‑adding the image.
+// Title: Insert a Picture with Semi‑Transparent Effect in Excel using Aspose.Cells for .NET (C#)
+// Description: This example demonstrates how to add a PNG image to the first worksheet of a new Excel workbook, set its FormatPicture.Transparency to 0.5 for a 50 % semi‑transparent look, save the file, and verify the transparency after reloading. The code also creates a placeholder image if the source file is missing.
+// Keywords: Aspose.Cells | C# | insert picture Excel | picture transparency | FormatPicture.Transparency | semi transparent image | Excel watermark | Aspose.Cells API | Excel workbook image | adjust picture opacity
+// Common Searches: how to set picture transparency in Excel with Aspose.Cells C# | Aspose.Cells insert image with opacity | semi transparent picture in Excel using .NET | Aspose.Cells FormatPicture.Transparency example | C# code to add watermark image to Excel workbook
+// Developer Intent: Add an image to a worksheet and apply a specific transparency level.
+// Use Cases: Create a light watermark by inserting a logo at 50 % opacity behind data. | Overlay a semi‑transparent background on a chart to enhance visual contrast. | Generate reports where product photos need partial see‑through to keep text readable.
+// AI Prompts: Show C# code that inserts a PNG into an Excel sheet and sets its transparency to 30 % using Aspose.Cells. | Write a method to open an existing workbook, change all picture opacities to 75 % and save it with Aspose.Cells for .NET. | Explain how to read and confirm the transparency value of a picture after loading a workbook with Aspose.Cells.
 
 using System;
 using System.IO;
@@ -13,43 +13,70 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsPictureTransparencyDemo
 {
-    // This example creates a new Workbook, adds a PNG file to cell B3, accesses the Picture object, and sets its FillFormat.Transparency to 0.5, producing a semi‑transparent visual before saving the workbook as an .xlsx file.
+    // This example demonstrates how to add a PNG image to the first worksheet of a new Excel workbook, set its FormatPicture.Transparency to 0.5 for a 50 % semi‑transparent look, save the file, and verify the transparency after reloading. The code also creates a placeholder image if the source file is missing.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
+                // Path to the image file
+                string imagePath = "sampleImage.png";
+
+                // Ensure the image exists; create a placeholder if it does not
+                if (!File.Exists(imagePath))
+                {
+                    CreatePlaceholderImage(imagePath);
+                }
+
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Path to the image file to be inserted
-                string imagePath = "sample.png";
-
-                // Verify that the image file exists before adding it
-                if (!File.Exists(imagePath))
-                {
-                    Console.WriteLine($"Image file '{imagePath}' not found. Please ensure the file exists.");
-                    return;
-                }
-
-                // Add the picture to the worksheet at row 2, column 2 (zero‑based indices)
+                // Add the picture to the worksheet at row 2, column 2 (zero‑based indexes)
                 int pictureIndex = worksheet.Pictures.Add(2, 2, imagePath);
                 Picture picture = worksheet.Pictures[pictureIndex];
 
-                // Set the picture's transparency to 50% (0.5)
-                picture.FillFormat.Transparency = 0.5;
+                // Set picture transparency (0.0 = opaque, 1.0 = fully transparent)
+                picture.FormatPicture.Transparency = 0.5; // 50% transparent
 
                 // Save the workbook
                 string outputPath = "PictureTransparencyDemo.xlsx";
                 workbook.Save(outputPath);
 
-                Console.WriteLine($"Workbook saved to '{outputPath}' with picture transparency set to 0.5.");
+                // Load the workbook again to verify the transparency setting
+                if (File.Exists(outputPath))
+                {
+                    Workbook loadedWorkbook = new Workbook(outputPath);
+                    Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
+                    double loadedTransparency = loadedWorksheet.Pictures[0].FormatPicture.Transparency;
+                    Console.WriteLine("Loaded picture transparency: " + loadedTransparency);
+                }
+                else
+                {
+                    Console.WriteLine("Failed to save the workbook.");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+
+        // Creates a simple 1x1 red PNG image as a placeholder
+        private static void CreatePlaceholderImage(string path)
+        {
+            try
+            {
+                // PNG data for a 1x1 red pixel
+                byte[] pngData = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADUlEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==");
+                File.WriteAllBytes(path, pngData);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to create placeholder image: " + e.Message);
+                throw;
             }
         }
     }

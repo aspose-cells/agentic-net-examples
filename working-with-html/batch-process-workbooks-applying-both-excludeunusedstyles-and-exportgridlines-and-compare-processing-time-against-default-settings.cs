@@ -1,93 +1,83 @@
-// Title: C# batch conversion of Excel workbooks to HTML with ExcludeUnusedStyles, ExportGridLines and performance comparison
-// Description: Scans a directory of .xlsx files, saves each workbook to HTML twice—first with default settings, then with HtmlSaveOptions (ExcludeUnusedStyles = true, ExportGridLines = true)—while measuring and reporting the elapsed time for both approaches.
-// Keywords: Aspose.Cells | C# HTML export | ExcludeUnusedStyles | ExportGridLines | batch workbook conversion | performance benchmark | .NET Excel to HTML | SaveFormat.Html | bulk Excel processing | conversion speed comparison
-// Common Searches: Aspose.Cells batch export Excel to HTML C# | ExcludeUnusedStyles HtmlSaveOptions example | ExportGridLines performance Aspose.Cells | measure HTML save time for multiple workbooks | compare default and custom HTML export speed .NET
-// Developer Intent: The developer wants to convert many Excel files to HTML with specific options and see how those options affect conversion time compared with the default export.
-// Use Cases: Generate quick HTML previews of a large Excel archive using default settings. | Create lightweight web pages that include grid lines and omit unused CSS styles. | Benchmark the impact of ExcludeUnusedStyles and ExportGridLines on conversion throughput.
-// AI Prompts: Write a C# method that accepts input and output folder paths and returns a dictionary mapping each file name to its default and custom conversion durations. | Show how to log the timing results to a CSV file instead of the console while preserving the batch workflow. | Explain how to safely parallelize the processing loop with Aspose.Cells to improve overall conversion speed.
+// Title: Batch convert Excel workbooks to HTML with ExcludeUnusedStyles, ExportGridLines and benchmark performance
+// Description: Scans an "InputWorkbooks" folder, loads each .xlsx file with Aspose.Cells, saves a default HTML version, then saves a custom HTML version using HtmlSaveOptions (ExcludeUnusedStyles = true, ExportGridLines = true), measures the elapsed time for each save, and outputs a side‑by‑side performance comparison.
+// Keywords: Aspose.Cells batch HTML conversion | HtmlSaveOptions ExcludeUnusedStyles | ExportGridLines performance | Excel to HTML benchmark | measure Aspose.Cells save time | bulk workbook processing C#
+// Common Searches: how to convert multiple Excel files to HTML with Aspose.Cells | Aspose.Cells HtmlSaveOptions ExcludeUnusedStyles example | compare default and custom HTML save speed Aspose | batch export Excel to HTML with grid lines | measure Aspose.Cells HTML save time per workbook
+// Developer Intent: Convert a collection of Excel workbooks to HTML with specific styling options and evaluate the impact on save speed versus the default configuration.
+// Use Cases: Generate lightweight HTML reports for a large set of spreadsheets by omitting unused CSS. | Produce web‑ready HTML that preserves Excel grid lines for clearer visual layout. | Run performance benchmarks to decide whether custom HtmlSaveOptions affect processing time in bulk conversions.
+// AI Prompts: Refactor the code to write timing results to a CSV file with columns: workbook, default_ms, custom_ms. | Show how to parallelize the conversion loop using Task Parallel Library while keeping accurate per‑file timing. | Explain how to disable ExportGridLines in HtmlSaveOptions and compare the resulting HTML file sizes.
 
 using System;
-using System.Diagnostics;
 using System.IO;
+using System.Diagnostics;
 using Aspose.Cells;
 
-// Scans a directory of .xlsx files, saves each workbook to HTML twice—first with default settings, then with HtmlSaveOptions (ExcludeUnusedStyles = true, ExportGridLines = true)—while measuring and reporting the elapsed time for both approaches.
-class BatchWorkbookProcessor
+// Scans an "InputWorkbooks" folder, loads each .xlsx file with Aspose.Cells, saves a default HTML version, then saves a custom HTML version using HtmlSaveOptions (ExcludeUnusedStyles = true, ExportGridLines = true), measures the elapsed time for each save, and outputs a side‑by‑side performance comparison.
+class BatchProcessWorkbooks
 {
     static void Main()
     {
         // Folder containing source Excel files
-        string sourceFolder = @"C:\Workbooks\Input";
-        // Output folders for default and custom HTML saves
-        string defaultOutputFolder = @"C:\Workbooks\Output\Default";
-        string customOutputFolder = @"C:\Workbooks\Output\Custom";
+        string inputFolder = "InputWorkbooks";
 
-        // Ensure output directories exist
-        Directory.CreateDirectory(defaultOutputFolder);
-        Directory.CreateDirectory(customOutputFolder);
-
-        // Verify source folder exists
-        if (!Directory.Exists(sourceFolder))
+        // Verify input folder exists
+        if (!Directory.Exists(inputFolder))
         {
-            Console.WriteLine($"Source folder not found: {sourceFolder}");
+            Console.WriteLine($"Input folder \"{inputFolder}\" not found. Please ensure the folder exists and contains .xlsx files.");
             return;
         }
 
-        // Process each .xlsx file in the source folder
-        foreach (string filePath in Directory.GetFiles(sourceFolder, "*.xlsx"))
+        // Output folders for default and custom HTML saves
+        string outputFolderDefault = "OutputDefault";
+        string outputFolderCustom = "OutputCustom";
+
+        // Ensure output directories exist
+        Directory.CreateDirectory(outputFolderDefault);
+        Directory.CreateDirectory(outputFolderCustom);
+
+        // Get all .xlsx files in the input folder
+        string[] workbookFiles = Directory.GetFiles(inputFolder, "*.xlsx");
+
+        foreach (string workbookPath in workbookFiles)
         {
+            // Skip if the file somehow does not exist
+            if (!File.Exists(workbookPath))
+            {
+                Console.WriteLine($"File not found: {workbookPath}");
+                continue;
+            }
+
             try
             {
-                if (!File.Exists(filePath))
+                // Load the workbook (create + load lifecycle)
+                Workbook workbook = new Workbook(workbookPath);
+
+                string fileBaseName = Path.GetFileNameWithoutExtension(workbookPath);
+
+                // ---------- Default save (no special options) ----------
+                string defaultHtmlPath = Path.Combine(outputFolderDefault, fileBaseName + "_default.html");
+                Stopwatch swDefault = Stopwatch.StartNew();
+                workbook.Save(defaultHtmlPath, SaveFormat.Html); // save lifecycle
+                swDefault.Stop();
+
+                // ---------- Custom save with ExcludeUnusedStyles & ExportGridLines ----------
+                string customHtmlPath = Path.Combine(outputFolderCustom, fileBaseName + "_custom.html");
+                HtmlSaveOptions customOptions = new HtmlSaveOptions
                 {
-                    Console.WriteLine($"File not found (skipped): {filePath}");
-                    continue;
-                }
-
-                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-
-                // ---------- Default save (no explicit options) ----------
-                Stopwatch defaultTimer = Stopwatch.StartNew();
-
-                // Load workbook using the standard constructor
-                Workbook defaultWb = new Workbook(filePath);
-                // Save to HTML using default options
-                string defaultHtmlPath = Path.Combine(defaultOutputFolder, fileNameWithoutExt + ".html");
-                defaultWb.Save(defaultHtmlPath, SaveFormat.Html);
-
-                defaultTimer.Stop();
-                long defaultElapsedMs = defaultTimer.ElapsedMilliseconds;
-
-                // ---------- Custom save (ExcludeUnusedStyles + ExportGridLines) ----------
-                Stopwatch customTimer = Stopwatch.StartNew();
-
-                // Load workbook again for a fair comparison
-                Workbook customWb = new Workbook(filePath);
-                // Create HtmlSaveOptions and set required properties
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    ExcludeUnusedStyles = true,   // explicitly exclude unused styles
-                    ExportGridLines = true        // export grid lines
+                    ExcludeUnusedStyles = true,   // explicitly set (default is true)
+                    ExportGridLines = true        // enable grid line export
                 };
-                // Save to HTML with the custom options
-                string customHtmlPath = Path.Combine(customOutputFolder, fileNameWithoutExt + "_grid.html");
-                customWb.Save(customHtmlPath, htmlOptions);
-
-                customTimer.Stop();
-                long customElapsedMs = customTimer.ElapsedMilliseconds;
+                Stopwatch swCustom = Stopwatch.StartNew();
+                workbook.Save(customHtmlPath, customOptions); // save lifecycle with options
+                swCustom.Stop();
 
                 // Output timing comparison
-                Console.WriteLine($"File: {Path.GetFileName(filePath)}");
-                Console.WriteLine($"  Default save time: {defaultElapsedMs} ms");
-                Console.WriteLine($"  Custom save time : {customElapsedMs} ms");
-                Console.WriteLine();
+                Console.WriteLine($"{fileBaseName}: Default = {swDefault.ElapsedMilliseconds} ms, Custom = {swCustom.ElapsedMilliseconds} ms");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                // Log the error and continue processing other files
+                Console.WriteLine($"Error processing \"{workbookPath}\": {ex.Message}");
             }
         }
-
-        Console.WriteLine("Batch processing completed.");
     }
 }

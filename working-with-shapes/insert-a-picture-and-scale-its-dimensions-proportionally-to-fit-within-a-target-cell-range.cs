@@ -1,61 +1,66 @@
-// Title: Insert and proportionally scale a picture within a cell range using Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, defines a target cell block, validates an image file, adds the picture to that rectangle, locks its aspect ratio, sets PlacementType.MoveAndSize so the image moves and resizes with the cells, and saves the workbook.
-// Keywords: Aspose.Cells C# picture insert | scale image to fit cells | lock aspect ratio Aspose.Cells | PlacementType.MoveAndSize | add picture to worksheet .NET | fit image within cell range | Aspose.Cells image handling
-// Common Searches: how to add an image to a specific cell range in Aspose.Cells | Aspose.Cells keep picture aspect ratio when resizing | C# insert picture and fit it inside merged cells | Aspose.Cells picture placement MoveAndSize example | scale picture to cell block without distortion
-// Developer Intent: Place an image inside a defined cell range and have it automatically resize proportionally as the cells change size.
-// Use Cases: Insert a company logo across cells C3:G7 while preserving its proportions. | Add product thumbnails to a table so they expand or shrink with row and column adjustments. | Generate a report where each record includes a picture that fits within a merged cell area.
-// AI Prompts: Show C# code to insert a picture into a worksheet range with Aspose.Cells and lock its aspect ratio. | Explain how to set PlacementType.MoveAndSize so an image resizes with its surrounding cells. | Provide an example of retrieving the picture index after adding an image with worksheet.Pictures.Add.
+// Title: C# – Insert and proportionally scale a picture to fit a cell range with Aspose.Cells
+// Description: Creates a new workbook, defines a target range (e.g., B2:E10), loads an image, adds it to the worksheet using the Add method with cell coordinates, sets the picture to be placed inside the cells, locks its aspect ratio, and saves the file as an XLSX document.
+// Keywords: Aspose.Cells picture placement | C# insert image into cells | scale image to fit cell range Aspose.Cells | lock aspect ratio picture Aspose.Cells | add picture with cell boundaries .NET | FitImageToCellRange Aspose.Cells
+// Common Searches: Aspose.Cells add picture to specific cell range C# | fit image proportionally inside cells Aspose.Cells | place picture in cells and lock aspect ratio .NET | resize picture to match cell dimensions Aspose.Cells | C# Aspose.Cells picture scaling example
+// Developer Intent: Insert an image and have it automatically resize to fill a defined cell range while preserving its original aspect ratio.
+// Use Cases: Add a company logo across cells B2:E10 in a generated report without distortion. | Insert product photos into catalog cells, ensuring each image scales proportionally. | Automate placement of scanned signatures in a form area, keeping signature proportions intact.
+// AI Prompts: Show C# code to insert a picture into a worksheet range and maintain aspect ratio using Aspose.Cells. | Provide an Aspose.Cells example that fits an image inside cells B2:E10 and locks its aspect ratio. | Explain how to adjust picture placement and scaling when the target cell range changes in Aspose.Cells for .NET.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace InsertPictureFitInRange
+namespace AsposeCellsPictureFitExample
 {
-    // Creates a new workbook, defines a target cell block, validates an image file, adds the picture to that rectangle, locks its aspect ratio, sets PlacementType.MoveAndSize so the image moves and resizes with the cells, and saves the workbook.
+    // Creates a new workbook, defines a target range (e.g., B2:E10), loads an image, adds it to the worksheet using the Add method with cell coordinates, sets the picture to be placed inside the cells, locks its aspect ratio, and saves the file as an XLSX document.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook.
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Define the target cell range (rows 2‑6, columns 2‑6).
-                int topRow = 2;      // zero‑based index (row 3 in Excel)
-                int leftColumn = 2;  // zero‑based index (column C)
-                int bottomRow = 6;   // row 7
-                int rightColumn = 6; // column G
+                // Define the target cell range where the picture should fit (e.g., B2:E10)
+                int topRow = 1;      // B2 -> row index 1 (zero‑based)
+                int leftColumn = 1;  // B2 -> column index 1
+                int bottomRow = 9;   // E10 -> row index 9
+                int rightColumn = 4; // E10 -> column index 4
 
-                // Verify that the image file exists before adding it.
-                string imagePath = "image.jpg";
-                if (!File.Exists(imagePath))
+                string imagePath = "sample.jpg";
+
+                // Ensure the image file exists before attempting to load it
+                if (File.Exists(imagePath))
                 {
-                    throw new FileNotFoundException($"Image file not found: {imagePath}");
+                    using (FileStream imageStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+                    {
+                        // Add the picture to the worksheet within the specified cell range.
+                        int pictureIndex = worksheet.Pictures.Add(topRow, leftColumn, bottomRow, rightColumn, imageStream);
+
+                        // Retrieve the picture object
+                        Picture picture = worksheet.Pictures[pictureIndex];
+
+                        // Place the picture inside the cells and lock aspect ratio
+                        picture.IsPlacedInCell = true;
+                        picture.IsAspectRatioLocked = true; // Obsolete but still functional
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
                 }
 
-                // Add the picture to the worksheet within the specified range.
-                // This overload stretches the picture to the rectangle defined by the cells.
-                int pictureIndex = worksheet.Pictures.Add(topRow, leftColumn, bottomRow, rightColumn, imagePath);
-                Picture picture = worksheet.Pictures[pictureIndex];
-
-                // Lock the aspect ratio so the picture scales proportionally.
-                picture.IsAspectRatioLocked = true;
-
-                // Ensure the picture moves and resizes with the cells.
-                picture.Placement = PlacementType.MoveAndSize;
-
-                // Save the workbook.
+                // Save the workbook
                 string outputPath = "PictureFitInRange.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

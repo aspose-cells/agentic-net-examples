@@ -1,76 +1,105 @@
-// Title: C# Aspose.Cells: Validate yyyy-MM-dd dates in column E before saving
-// Description: Creates a workbook, fills column E with sample values, and iterates through all used rows. Each non‑empty cell is checked with DateTime.TryParseExact against the ISO 8601 pattern (yyyy‑MM‑dd). Invalid entries trigger an exception, while valid cells receive a custom date style before the workbook is saved.
-// Keywords: Aspose.Cells | C# date validation | Excel date format yyyy-MM-dd | column E validation | Aspose.Cells .NET | custom date style | Excel workbook save | DateTime.TryParseExact
-// Common Searches: Aspose.Cells validate column E date format | C# check yyyy-MM-dd in Excel cells | How to enforce date style with Aspose.Cells | Throw exception for invalid Excel dates Aspose | Iterate through Excel column with Aspose.Cells C#
-// Developer Intent: Guarantee that every populated cell in column E contains a date string matching the yyyy‑MM‑dd format and apply that format before persisting the workbook.
-// Use Cases: Screen user‑uploaded spreadsheets for incorrect date strings before further processing. | Standardize date columns in financial or inventory reports generated with Aspose.Cells. | Prevent downstream parsing errors by ensuring Excel dates follow the ISO 8601 standard.
-// AI Prompts: Provide C# code that scans column E of an Aspose.Cells workbook, verifies each non‑empty cell matches the 'yyyy-MM-dd' pattern, and raises an exception for any mismatch. | Show how to set a custom date format on validated cells using Aspose.Cells styling API and then save the file. | Create NUnit tests that confirm the validation logic accepts correct dates and rejects invalid formats in an Aspose.Cells worksheet.
+// Title: C# – Validate and Highlight yyyy-MM-dd Dates in Column E with Aspose.Cells
+// Description: Creates or loads a workbook, scans column E, skips blanks, verifies each value against the exact "yyyy-MM-dd" pattern using DateTime.TryParseExact, marks non‑conforming cells with a red fill, reports mismatches, and saves the file.
+// Keywords: Aspose.Cells | C# date validation | yyyy-MM-dd format | highlight invalid dates | Excel column E validation | DateTime.TryParseExact | red background style | data integrity | worksheet cell style | Aspose.Cells example
+// Common Searches: Aspose.Cells validate date format C# | How to highlight cells with wrong date format using Aspose.Cells | Check yyyy-MM-dd column in Excel with C# | Mark invalid dates red Aspose.Cells | C# code to enforce date pattern in Excel column | Validate column E dates before saving workbook
+// Developer Intent: Ensure every non‑empty cell in column E follows the yyyy-MM-dd pattern and visually flag any violations before saving the workbook.
+// Use Cases: Cleanse imported spreadsheets where dates must follow a standard format. | Prevent downstream errors by rejecting workbooks containing malformed dates. | Provide visual cues (red fill) for users to correct date entries. | Generate logs of cells with invalid dates for audit trails. | Automate data‑quality checks in ETL pipelines using Aspose.Cells.
+// AI Prompts: Generate C# code using Aspose.Cells that iterates column E, validates dates with "yyyy-MM-dd" format, and applies a red background to invalid cells. | Write a function that returns a list of addresses of cells in column E that do not match the required date pattern. | Explain how to customize the error style (font color, border, pattern) for invalid date cells in Aspose.Cells. | Show how to log validation results to a text file while processing a workbook with Aspose.Cells. | Provide a version of the code that throws an exception instead of highlighting when an invalid date is found.
 
 using System;
+using System.Drawing;
+using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, fills column E with sample values, and iterates through all used rows. Each non‑empty cell is checked with DateTime.TryParseExact against the ISO 8601 pattern (yyyy‑MM‑dd). Invalid entries trigger an exception, while valid cells receive a custom date style before the workbook is saved.
-public class ValidateDateColumnE
+namespace AsposeCellsDateValidation
 {
-    public static void Run()
+    // Creates or loads a workbook, scans column E, skips blanks, verifies each value against the exact "yyyy-MM-dd" pattern using DateTime.TryParseExact, marks non‑conforming cells with a red fill, reports mismatches, and saves the file.
+    public class Program
     {
-        try
+        public static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Sample data in column E (index 4)
-            sheet.Cells["E1"].PutValue("2023-01-15");
-            sheet.Cells["E2"].PutValue("2023/02/20"); // invalid format
-            sheet.Cells["E3"].PutValue(DateTime.Now); // date value, will be formatted
-
-            const string expectedFormat = "yyyy-MM-dd";
-
-            // Determine the last used row in the worksheet
-            int lastRow = sheet.Cells.MaxDataRow;
-
-            // Validate each non‑empty cell in column E
-            for (int row = 0; row <= lastRow; row++)
+            try
             {
-                Cell cell = sheet.Cells[row, 4]; // column E (zero‑based index)
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook(); // lifecycle: create
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                if (cell.Type == CellValueType.IsNull) continue; // skip empty cells
+                // Sample data for demonstration – in real scenario the workbook would already contain data
+                worksheet.Cells["E1"].PutValue("2023-01-15"); // valid
+                worksheet.Cells["E2"].PutValue("15/01/2023"); // invalid format
+                worksheet.Cells["E3"].PutValue("2023-12-31"); // valid
+                worksheet.Cells["E4"].PutValue("");           // empty – ignored
 
-                string cellText = cell.StringValue.Trim();
+                // Define the expected date format
+                const string expectedFormat = "yyyy-MM-dd";
 
-                // Verify the cell text matches the required date format
-                if (!DateTime.TryParseExact(cellText, expectedFormat,
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    System.Globalization.DateTimeStyles.None, out DateTime _))
+                // Get the used range to limit iteration (optional, here we just iterate a reasonable number of rows)
+                int maxRow = worksheet.Cells.MaxDataRow;
+
+                // Flag to indicate if any cell violates the format
+                bool hasInvalidDate = false;
+
+                // Iterate through all cells in column E (zero‑based column index 4)
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    throw new InvalidOperationException(
-                        $"Cell {cell.Name} does not follow the required format '{expectedFormat}'. Value: '{cellText}'.");
+                    Cell cell = worksheet.Cells[row, 4]; // column E
+
+                    // Skip empty or blank cells
+                    if (cell.Type == CellValueType.IsNull || string.IsNullOrWhiteSpace(cell.StringValue))
+                        continue;
+
+                    // Retrieve the cell's displayed string value
+                    string cellText = cell.StringValue?.Trim() ?? string.Empty;
+
+                    // Try to parse using the exact format
+                    if (!DateTime.TryParseExact(
+                            cellText,
+                            expectedFormat,
+                            CultureInfo.InvariantCulture,
+                            DateTimeStyles.None,
+                            out _))
+                    {
+                        // Mark the cell with a red background to highlight the issue
+                        Style style = cell.GetStyle();
+                        style.ForegroundColor = Color.Red;
+                        style.Pattern = BackgroundType.Solid;
+                        cell.SetStyle(style);
+
+                        hasInvalidDate = true;
+                    }
                 }
 
-                // Apply the correct display format to the cell
-                Style style = cell.GetStyle();
-                style.Custom = expectedFormat;
-                cell.SetStyle(style);
+                // Report any invalid dates
+                if (hasInvalidDate)
+                {
+                    Console.WriteLine("One or more cells in column E do not match the format yyyy-MM-dd.");
+                }
+
+                // Ensure output directory exists
+                string outputPath = "ValidatedWorkbook.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook (lifecycle: save)
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine("Workbook saved successfully.");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                }
             }
-
-            // Save the workbook after successful validation
-            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ValidatedWorkbook.xlsx");
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"An error occurred during validation: {ex.Message}");
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        ValidateDateColumnE.Run();
     }
 }

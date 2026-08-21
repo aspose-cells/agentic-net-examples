@@ -1,20 +1,19 @@
-// Title: Localize Chart Rendering with Workbook Region and Export to PNG using Aspose.Cells for .NET
-// Description: Demonstrates how to set a workbook's regional setting (e.g., Japan) in Aspose.Cells, create a column chart, apply a localized title, and export the chart as a PNG image while optionally saving the workbook.
-// Keywords: Aspose.Cells | C# chart localization | Workbook region setting | CountryCode Japan | chart to image | export chart PNG | regional formatting Aspose.Cells | .NET Excel chart image
-// Common Searches: Aspose.Cells set workbook locale for chart | export chart as PNG after setting region | localize chart number format Aspose.Cells | chart ToImage method .NET example | Japanese chart formatting Aspose.Cells
-// Developer Intent: Apply a specific locale to a workbook so that chart axes and titles use regional formats, then generate a standalone image of the chart.
-// Use Cases: Produce sales charts with Japanese number/date formats for regional reports and export them as PNG files. | Automate creation of localized charts for multiple countries and deliver both Excel files and image assets for web dashboards. | Save a workbook containing a localized chart while also providing a high‑resolution chart image for presentations or documentation.
-// AI Prompts: Show how to set the workbook region to French and export a line chart as a JPEG with Aspose.Cells. | Generate code that loops through several CountryCode values, creates a chart for each region, and saves each chart as a PNG image. | Explain the impact of the Workbook.Settings.Region property on axis number formatting when converting a chart to an image.
+// Title: Aspose.Cells .NET: Set Workbook Region for Chart Localization and Export Chart as PNG
+// Description: Demonstrates how to assign a regional setting (e.g., Japanese) to a Workbook, create a column chart, bind data, and render the chart to a PNG image using Aspose.Cells for .NET. The example also shows optional workbook saving.
+// Keywords: aspocells set workbook region | chart localization aspocells | export chart to png c# | aspocells chart toimage | regional settings workbook aspocells | .net chart image conversion
+// Common Searches: Aspose.Cells change chart locale | How to export Aspose.Cells chart as PNG | Set workbook region for number formatting in Aspose.Cells | Localized chart image generation Aspose.Cells .NET | C# Aspose.Cells chart rendering with culture
+// Developer Intent: Apply a specific culture to a workbook so that chart labels and number formats follow that locale, then save the rendered chart as an image file.
+// Use Cases: Produce sales charts formatted for Japanese conventions and embed the PNG in reports. | Generate region‑specific financial charts automatically and deliver them as images for web dashboards. | Create multilingual workbook templates where each chart is exported as an image matching the target market’s locale.
+// AI Prompts: Write C# code with Aspose.Cells to set the workbook region to France and export a line chart as a JPEG image. | Provide step‑by‑step instructions for localizing chart axis labels to German and saving the chart as a BMP using Aspose.Cells for .NET. | Explain how to read a user‑selected locale at runtime, apply it to Workbook.Settings.Region, and then convert the chart to an image.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsChartLocalization
 {
-    // Demonstrates how to set a workbook's regional setting (e.g., Japan) in Aspose.Cells, create a column chart, apply a localized title, and export the chart as a PNG image while optionally saving the workbook.
+    // Demonstrates how to assign a regional setting (e.g., Japanese) to a Workbook, create a column chart, bind data, and render the chart to a PNG image using Aspose.Cells for .NET. The example also shows optional workbook saving.
     class Program
     {
         static void Main()
@@ -22,14 +21,15 @@ namespace AsposeCellsChartLocalization
             // 1. Create a new workbook
             Workbook workbook = new Workbook();
 
-            // 2. Set the workbook's regional settings (e.g., Japanese locale)
-            // This influences number/date formatting used during chart rendering.
-            workbook.Settings.Region = CountryCode.Japan;
+            // 2. Set the regional (localization) settings for the workbook.
+            //    This influences how numbers, dates, and other culture‑specific data are formatted
+            //    when the chart is rendered.
+            workbook.Settings.Region = CountryCode.Japan;   // Example: Japanese locale
 
             // 3. Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // 4. Populate sample data for the chart
+            // 4. Populate sample data that will be used by the chart
             sheet.Cells["A1"].PutValue("Month");
             sheet.Cells["A2"].PutValue("Jan");
             sheet.Cells["A3"].PutValue("Feb");
@@ -47,19 +47,14 @@ namespace AsposeCellsChartLocalization
             // 6. Define the data range for the chart
             chart.SetChartDataRange("A1:B4", true);
 
-            // 7. Optionally customize the chart (title, axis format, etc.)
-            chart.Title.Text = "月別売上 (Sales by Month)";
+            // 7. Convert the chart to an image file.
+            //    The image format is inferred from the file extension (PNG in this case).
+            chart.ToImage("LocalizedChart.png", ImageType.Png);
 
-            // 8. Convert the chart to an image file.
-            // The image format is inferred from the file extension.
-            string imagePath = "LocalizedChart.png";
-            chart.ToImage(imagePath, ImageType.Png);
-
-            // 9. Save the workbook (optional, to keep the chart in the Excel file)
+            // 8. Optionally, save the workbook itself
             workbook.Save("LocalizedChartWorkbook.xlsx");
 
-            Console.WriteLine($"Chart image saved to: {Path.GetFullPath(imagePath)}");
-            Console.WriteLine("Workbook saved to: LocalizedChartWorkbook.xlsx");
+            Console.WriteLine("Chart rendered with Japanese locale and saved as image.");
         }
     }
 }

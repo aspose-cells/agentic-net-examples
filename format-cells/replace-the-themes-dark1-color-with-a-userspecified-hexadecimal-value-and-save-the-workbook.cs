@@ -1,50 +1,33 @@
-// Title: Set Dark1 Theme Color via Hex Code in an Excel Workbook with Aspose.Cells for .NET (C#)
-// Description: C# sample that creates a new workbook, converts a user‑provided hexadecimal string (e.g., "#FF5733") to a System.Drawing.Color, assigns it to the Dark1 (Background1) theme element using Workbook.SetThemeColor, and saves the file to a specified path.
-// Keywords: Aspose.Cells | C# | SetThemeColor | Dark1 theme color | hexadecimal color | Excel workbook styling | custom theme color | Background1 | ColorTranslator | programmatic Excel formatting
-// Common Searches: Aspose.Cells change Dark1 theme color | C# set Excel theme color hex | How to modify workbook theme color with Aspose.Cells | Set custom theme color in Excel using .NET | Replace default Dark1 color Aspose.Cells
-// Developer Intent: Replace the workbook’s Dark1 (Background1) theme color with a hex value supplied by the user and save the updated workbook.
-// Use Cases: Brand a generated report by matching the Dark1 theme color to a corporate hex code. | Produce department‑specific workbooks, each using a different accent color for the Dark1 element. | Enable end‑users to pick a color in a UI and export an Excel file whose theme reflects that selection.
-// AI Prompts: Write a C# method that validates a hex string, updates the Dark1 theme color of an existing workbook with Aspose.Cells, and saves the file. | Add robust error handling for hex‑to‑Color conversion and SetThemeColor calls in the provided example. | Show how to read the current Dark1 color from a workbook before applying a new hex value using Aspose.Cells.
+// Title: C# – Change Dark1 (Background1) Theme Color with a Hex Code using Aspose.Cells and Save the Workbook
+// Description: Demonstrates how to convert a user‑provided hex string (e.g., "#FF5733") to a System.Drawing.Color, apply it to the Dark1 (Background1) theme color via Workbook.SetThemeColor, and save the workbook as "Workbook_With_Custom_Dark1.xlsx".
+// Keywords: Aspose.Cells SetThemeColor | C# change Dark1 theme color | Background1 hex color Aspose | custom theme color Excel .NET | Aspose.Cells theme color example
+// Common Searches: how to set Dark1 theme color Aspose.Cells C# | replace Background1 color with hex value in Excel using Aspose | Aspose.Cells change theme color programmatically | save workbook after modifying theme colors Aspose.Cells
+// Developer Intent: Apply a user‑specified hex color to the workbook’s Dark1 (Background1) theme and persist the change.
+// Use Cases: Branding: enforce corporate brand color across all generated reports. | Dynamic styling: let end‑users pick a theme color when creating spreadsheets. | Template preparation: build a starter workbook with a custom Dark1 color for downstream automation.
+// AI Prompts: Write C# code that reads a hex color from input, sets the Dark1 (Background1) theme color in an Aspose.Cells workbook, and saves the file. | Explain the role of ThemeColorType.Background1 in Aspose.Cells and how to convert a hex string to System.Drawing.Color. | Show how to load a hex value from a JSON configuration, apply it to the Dark1 theme, and export the workbook with Aspose.Cells.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsThemeDemo
+// Demonstrates how to convert a user‑provided hex string (e.g., "#FF5733") to a System.Drawing.Color, apply it to the Dark1 (Background1) theme color via Workbook.SetThemeColor, and save the workbook as "Workbook_With_Custom_Dark1.xlsx".
+class ReplaceDark1ThemeColor
 {
-    // C# sample that creates a new workbook, converts a user‑provided hexadecimal string (e.g., "#FF5733") to a System.Drawing.Color, assigns it to the Dark1 (Background1) theme element using Workbook.SetThemeColor, and saves the file to a specified path.
-    public class ReplaceDark1Color
+    static void Main()
     {
-        /// <param name="hexColor">Hexadecimal color string (e.g., "#FF5733").</param>
-        /// <param name="outputPath">Path where the workbook will be saved.</param>
-        public static void Run(string hexColor, string outputPath)
-        {
-            // Create a new workbook (default theme is applied)
-            Workbook workbook = new Workbook();
+        // User‑specified hexadecimal color (e.g., "#FF5733")
+        string hexColor = "#FF5733";
 
-            // Convert the hexadecimal string to a System.Drawing.Color.
-            // ColorTranslator supports strings with or without the leading '#'.
-            Color newColor = ColorTranslator.FromHtml(hexColor);
+        // Convert the hex string to a System.Drawing.Color
+        Color newColor = ColorTranslator.FromHtml(hexColor);
 
-            // Set the theme color for Dark1 (Background1) to the new color.
-            workbook.SetThemeColor(ThemeColorType.Background1, newColor);
+        // Create a new workbook (lifecycle rule: create)
+        Workbook workbook = new Workbook();
 
-            // Save the workbook to the specified location.
-            workbook.Save(outputPath);
-        }
+        // Replace the Dark1 (Background1) theme color with the new color
+        workbook.SetThemeColor(ThemeColorType.Background1, newColor);
 
-        // Example usage
-        public static void Main()
-        {
-            // User‑specified hexadecimal color.
-            string userHex = "#4A90E2";
-
-            // Desired output file.
-            string filePath = "WorkbookWithCustomDark1.xlsx";
-
-            Run(userHex, filePath);
-
-            Console.WriteLine($"Workbook saved with Dark1 color set to {userHex} at '{filePath}'.");
-        }
+        // Save the workbook (lifecycle rule: save)
+        workbook.Save("Workbook_With_Custom_Dark1.xlsx");
     }
 }

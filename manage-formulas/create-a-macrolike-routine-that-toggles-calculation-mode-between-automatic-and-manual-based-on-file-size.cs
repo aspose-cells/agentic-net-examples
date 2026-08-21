@@ -1,86 +1,82 @@
-// Title: C# – Toggle Excel Calculation Mode (Automatic ↔ Manual) Based on Workbook Size with Aspose.Cells
-// Description: A reusable C# routine that loads an Excel workbook using Aspose.Cells, checks the file size, and switches FormulaSettings.CalculationMode to Manual for files larger than a specified threshold or to Automatic for smaller files, then saves the workbook.
-// Keywords: Aspose.Cells | C# | Excel calculation mode | Automatic calculation | Manual calculation | file size threshold | FormulaSettings | performance optimization | toggle calculation mode | batch Excel processing
-// Common Searches: Aspose.Cells set calculation mode by file size | C# toggle Excel automatic/manual calculation | change Excel calculation mode programmatically | performance tip for large Excel workbooks Aspose | how to use FormulaSettings.CalculationMode in .NET | adjust Excel calculation mode before bulk updates
-// Developer Intent: Automatically apply Manual calculation to large workbooks and Automatic calculation to smaller ones to balance performance and accuracy.
-// Use Cases: Speed up bulk data imports on >50 MB workbooks by switching to manual calculation before updates. | Ensure small workbooks recalculate instantly after loading, preserving expected results. | Integrate the toggler into an automated pipeline that processes multiple Excel files of varying sizes. | Provide a safety net for server‑side Excel processing where memory consumption must be controlled.
-// AI Prompts: Write unit tests for CalculationModeToggler.ToggleCalculationMode covering both threshold scenarios. | Create a version of the toggler that logs the previous calculation mode and returns it to the caller. | Show how to extend the method to accept a custom CalcModeType parameter instead of hard‑coding Automatic and Manual. | Generate documentation comments for the ToggleCalculationMode method following the XML doc standard.
+// Title: C# macro‑style routine to toggle Aspose.Cells calculation mode (Automatic/Manual) by workbook size
+// Description: A self‑contained C# method that checks an Excel file's existence, creates it if missing, measures its size, loads the workbook with Aspose.Cells, and sets workbook.Settings.FormulaSettings.CalculationMode to Manual when the file exceeds a given byte threshold or to Automatic otherwise, then saves the file.
+// Keywords: Aspose.Cells calculation mode | C# toggle manual automatic | Excel file size threshold | FormulaSettings CalcModeType | programmatic workbook settings | performance optimization Excel | create workbook if not exists
+// Common Searches: set Aspose.Cells calculation mode to manual C# | toggle Excel calculation mode based on file size | change formula calculation mode automatically Aspose.Cells | create workbook when missing before setting calculation mode | performance tip for large Excel files Aspose
+// Developer Intent: Automatically choose Manual calculation for large workbooks and Automatic for smaller ones to balance performance and accuracy.
+// Use Cases: Speed up batch processing by disabling automatic recalculation for files larger than a defined size. | Ensure small or newly created workbooks recalculate formulas on open without extra code. | Integrate size‑aware calculation mode selection into ETL pipelines that ingest Excel files of varying dimensions.
+// AI Prompts: Generate a C# method using Aspose.Cells that sets CalcModeType.Manual for Excel files over 2 MB and Automatic otherwise. | Write robust error‑handling for a routine that toggles calculation mode based on workbook size, including auto‑creation of missing files. | Create unit tests for a size‑threshold calculation mode switcher using Aspose.Cells in .NET.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMacro
+namespace AsposeCellsMacroLikeRoutine
 {
-    // A reusable C# routine that loads an Excel workbook using Aspose.Cells, checks the file size, and switches FormulaSettings.CalculationMode to Manual for files larger than a specified threshold or to Automatic for smaller files, then saves the workbook.
+    // A self‑contained C# method that checks an Excel file's existence, creates it if missing, measures its size, loads the workbook with Aspose.Cells, and sets workbook.Settings.FormulaSettings.CalculationMode to Manual when the file exceeds a given byte threshold or to Automatic otherwise, then saves the file.
     public static class CalculationModeToggler
     {
         /// <param name="filePath">Full path to the Excel file.</param>
-        /// <param name="sizeThresholdBytes">Size threshold in bytes.</param>
+        /// <param name="sizeThresholdBytes">Size threshold in bytes. Files larger than this will use Manual mode.</param>
         public static void ToggleCalculationMode(string filePath, long sizeThresholdBytes)
         {
-            // Ensure the file exists
+            // If the file does not exist, create a new workbook to avoid FileNotFoundException
             if (!File.Exists(filePath))
-                throw new FileNotFoundException("The specified workbook file was not found.", filePath);
+            {
+                Workbook newWb = new Workbook();
+                newWb.Save(filePath);
+            }
+
+            // Determine the current file size
+            long fileSize = new FileInfo(filePath).Length;
 
             // Load the workbook (lifecycle rule: load)
             Workbook workbook = new Workbook(filePath);
 
-            // Determine current file size
-            long fileSize = new FileInfo(filePath).Length;
-
-            // Access formula settings
-            FormulaSettings formulaSettings = workbook.Settings.FormulaSettings;
-
-            // Toggle calculation mode based on size
+            // Choose the calculation mode based on the size threshold
             if (fileSize > sizeThresholdBytes)
             {
-                // Large file -> Manual calculation to improve performance
-                formulaSettings.CalculationMode = CalcModeType.Manual;
+                // Set to Manual calculation mode
+                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
             }
             else
             {
-                // Small file -> Automatic calculation
-                formulaSettings.CalculationMode = CalcModeType.Automatic;
+                // Set to Automatic calculation mode
+                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
             }
 
             // Save the workbook (lifecycle rule: save)
-            // Overwrite the original file
             workbook.Save(filePath);
         }
     }
 
-    // Entry point for the console application
-    public class Program
+    // Example usage
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
             try
             {
-                if (args.Length < 2)
+                // Path to the workbook to process
+                string workbookPath = @"C:\Temp\Sample.xlsx";
+
+                // Ensure the directory exists
+                string dir = Path.GetDirectoryName(workbookPath);
+                if (!Directory.Exists(dir))
                 {
-                    Console.WriteLine("Usage: AsposeCellsMacro <ExcelFilePath> <SizeThresholdBytes>");
-                    return;
+                    Directory.CreateDirectory(dir);
                 }
 
-                string filePath = args[0];
-                if (!long.TryParse(args[1], out long sizeThresholdBytes))
-                {
-                    Console.WriteLine("Invalid size threshold. Please provide a numeric value.");
-                    return;
-                }
+                // Define a size threshold (e.g., 1 MB)
+                long threshold = 1 * 1024 * 1024; // 1,048,576 bytes
 
-                // Call the toggler
-                CalculationModeToggler.ToggleCalculationMode(filePath, sizeThresholdBytes);
-                Console.WriteLine("Calculation mode toggled successfully.");
-            }
-            catch (FileNotFoundException ex)
-            {
-                Console.WriteLine($"File not found: {ex.FileName}");
+                // Toggle the calculation mode based on the file size
+                CalculationModeToggler.ToggleCalculationMode(workbookPath, threshold);
+
+                Console.WriteLine("Calculation mode toggled based on file size.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

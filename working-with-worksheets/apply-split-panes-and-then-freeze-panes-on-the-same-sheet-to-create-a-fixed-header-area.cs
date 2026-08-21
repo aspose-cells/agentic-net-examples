@@ -1,15 +1,14 @@
-// Title: Split and Freeze Panes to Create a Fixed Header in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to split a worksheet window, then freeze the first five rows to keep a header visible while scrolling. The example populates sample data, calls Worksheet.Split(), applies Worksheet.FreezePanes(5,0,5,0), and saves the workbook as SplitAndFreezeDemo.xlsx.
-// Keywords: Aspose.Cells split panes | Aspose.Cells freeze panes | fixed header Excel C# | Worksheet.Split | Worksheet.FreezePanes | C# Aspose.Cells example
-// Common Searches: Aspose.Cells split panes and freeze rows | How to freeze top rows after splitting in Aspose.Cells .NET | Create fixed header in Excel using Aspose.Cells C# | Split window then freeze panes Aspose.Cells
-// Developer Intent: The developer wants to split the worksheet view and then lock the first five rows so the header stays in place while the rest of the sheet scrolls.
-// Use Cases: Build a large data report where column headers remain visible during vertical scrolling. | Design an interactive Excel dashboard that separates scrolling areas while keeping a static header. | Prepare a printable workbook where the top rows are locked for consistent header display across pages.
-// AI Prompts: Show a C# snippet that splits a worksheet at row 5 and freezes the top five rows using Aspose.Cells. | Explain the difference between Worksheet.Split() and Worksheet.FreezePanes() and when to combine them. | Give guidance on freezing both rows and columns after a split with Aspose.Cells, including parameter calculations.
+// Title: Split and Freeze Panes to Create a Fixed Header in Excel with Aspose.Cells for .NET (C#)
+// Description: Shows how to split a worksheet window and then freeze the top row as a fixed header using Aspose.Cells for .NET. The example fills 30 rows, calls Worksheet.Split(), applies Worksheet.FreezePanes(1,0,1,0), and saves the workbook as SplitAndFreezeDemo.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | split panes | freeze panes | fixed header | Worksheet.Split | Worksheet.FreezePanes | Excel automation | Excel UI simulation
+// Common Searches: Aspose.Cells split panes then freeze header row C# | How to freeze top row after splitting worksheet with Aspose.Cells | Split and freeze panes on same sheet Aspose.Cells .NET | Create fixed header area in Excel using Aspose.Cells | Worksheet.Split and FreezePanes example C#
+// Developer Intent: The developer wants to divide the worksheet view into panes and then lock the first row so it remains visible while scrolling.
+// Use Cases: Building a reporting workbook where column titles stay in view during vertical scrolling. | Designing a large data grid that allows side‑by‑side comparison after splitting the view, with a frozen header for context. | Preparing an interactive Excel file for data analysis where the header row is locked while users navigate through rows.
+// AI Prompts: Provide C# code that splits a worksheet at a specific row and then freezes the top row using Aspose.Cells for .NET. | Show an example of combining Worksheet.Split() and Worksheet.FreezePanes() on the same sheet with custom frozen rows and columns. | Explain the difference between Split() and FreezePanes() in Aspose.Cells and how to use them together to create a fixed header area.
 
-using System;
 using Aspose.Cells;
 
-// Demonstrates how to split a worksheet window, then freeze the first five rows to keep a header visible while scrolling. The example populates sample data, calls Worksheet.Split(), applies Worksheet.FreezePanes(5,0,5,0), and saves the workbook as SplitAndFreezeDemo.xlsx.
+// Shows how to split a worksheet window and then freeze the top row as a fixed header using Aspose.Cells for .NET. The example fills 30 rows, calls Worksheet.Split(), applies Worksheet.FreezePanes(1,0,1,0), and saves the workbook as SplitAndFreezeDemo.xlsx.
 class Program
 {
     static void Main()
@@ -20,23 +19,21 @@ class Program
         // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate some sample data (optional, just for visual verification)
-        for (int row = 0; row < 30; row++)
+        // Add some sample data to illustrate the header row
+        for (int i = 0; i < 30; i++)
         {
-            for (int col = 0; col < 5; col++)
-            {
-                sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-            }
+            sheet.Cells[i, 0].PutValue($"Item {i + 1}");
+            sheet.Cells[i, 1].PutValue(i * 5);
         }
 
-        // First, split the window. This creates separate panes without freezing them.
+        // Split the window to create multiple panes
         sheet.Split();
 
-        // Then freeze the top rows to keep the header visible while scrolling.
-        // Freeze the first 5 rows (row index 5) and no columns.
-        sheet.FreezePanes(5, 0, 5, 0);
+        // Freeze the top row (row index 1) so the header stays visible while scrolling
+        // Parameters: row index, column index, number of frozen rows, number of frozen columns
+        sheet.FreezePanes(1, 0, 1, 0);
 
-        // Save the workbook to a file
+        // Save the workbook
         workbook.Save("SplitAndFreezeDemo.xlsx");
     }
 }

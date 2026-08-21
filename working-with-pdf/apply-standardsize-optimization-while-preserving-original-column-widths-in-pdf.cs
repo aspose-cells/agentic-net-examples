@@ -1,58 +1,40 @@
-// Title: C# – Export Excel to PDF with StandardSize optimization while preserving column widths (Aspose.Cells)
-// Description: Demonstrates how to create a workbook, record its column widths, configure PdfSaveOptions with OptimizationType = Standard (StandardSize), and save the file as a PDF without altering the original column layout. Ideal for high‑print‑quality PDFs that retain exact column dimensions.
-// Keywords: Aspose.Cells PDF StandardSize | preserve column widths | PdfSaveOptions OptimizationType Standard | C# export Excel to PDF | Aspose.Cells column width PDF | high quality PDF Aspose.Cells
-// Common Searches: Aspose.Cells keep column widths when saving to PDF | StandardSize PDF optimization Aspose.Cells C# | PdfSaveOptions OptimizationType Standard example | Export Excel as PDF with original layout Aspose.Cells
-// Developer Intent: Generate a PDF from an Excel workbook using StandardSize optimization while ensuring the worksheet’s column widths remain unchanged.
-// Use Cases: Produce print‑ready PDF reports that match the exact column layout defined in Excel. | Reduce PDF file size with StandardSize optimization without compromising column alignment. | Automate consistent PDF exports in batch processes where column dimensions must stay fixed.
-// AI Prompts: Provide C# code that saves an Aspose.Cells workbook to PDF with StandardSize optimization and retains original column widths. | Explain the impact of PdfSaveOptions.OptimizationType = PdfOptimizationType.Standard on PDF quality and layout. | Step‑by‑step guide to export Excel to PDF using Aspose.Cells while preserving column widths and applying StandardSize optimization.
+// Title: Export Excel to PDF with Standard optimization and retain column widths using Aspose.Cells (C#)
+// Description: Demonstrates how to set explicit column widths in a worksheet, configure PdfSaveOptions for Standard (high‑quality) optimization, and save the workbook as a PDF while preserving the original column layout.
+// Keywords: Aspose.Cells PDF export | Standard optimization | preserve column width | PdfSaveOptions | C# Aspose.Cells | Excel to PDF column width | high quality PDF Aspose
+// Common Searches: Aspose.Cells keep column width when saving to PDF | C# export workbook to PDF with Standard optimization | how to set column width before PDF conversion Aspose | standard quality PDF output Aspose.Cells
+// Developer Intent: Create a PDF from an Excel workbook with high‑quality settings while ensuring the worksheet’s column widths remain unchanged.
+// Use Cases: Producing printable reports where column alignment must match the original Excel layout. | Generating invoices or financial statements as PDFs that require exact column dimensions. | Distributing data tables to clients in PDF format without losing the designed column spacing.
+// AI Prompts: Write C# code that uses Aspose.Cells to export a workbook to PDF with Standard optimization and keeps the defined column widths. | Show the steps to set custom column widths in Aspose.Cells before converting the sheet to a high‑quality PDF. | Explain how to configure PdfSaveOptions for Standard optimization while preserving column widths in the resulting PDF.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfOptimizationDemo
+// Demonstrates how to set explicit column widths in a worksheet, configure PdfSaveOptions for Standard (high‑quality) optimization, and save the workbook as a PDF while preserving the original column layout.
+class Program
 {
-    // Demonstrates how to create a workbook, record its column widths, configure PdfSaveOptions with OptimizationType = Standard (StandardSize), and save the file as a PDF without altering the original column layout. Ideal for high‑print‑quality PDFs that retain exact column dimensions.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate some data
-            sheet.Cells["A1"].PutValue("Item");
-            sheet.Cells["B1"].PutValue("Description");
-            sheet.Cells["C1"].PutValue("Price");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue("Fresh red apple");
-            sheet.Cells["C2"].PutValue(1.25);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue("Ripe yellow banana");
-            sheet.Cells["C3"].PutValue(0.80);
+        // Add some sample data
+        worksheet.Cells["A1"].PutValue("Header");
+        worksheet.Cells["A2"].PutValue("This is a longer piece of text that should retain its column width");
+        worksheet.Cells["B1"].PutValue("Value");
+        worksheet.Cells["B2"].PutValue(12345);
 
-            // Preserve original column widths
-            // Store current widths (optional, just for demonstration)
-            double col0Width = sheet.Cells.GetColumnWidth(0);
-            double col1Width = sheet.Cells.GetColumnWidth(1);
-            double col2Width = sheet.Cells.GetColumnWidth(2);
+        // Preserve original column widths by setting them explicitly.
+        // (If you omit this step, Aspose.Cells will keep the default widths.)
+        worksheet.Cells.SetColumnWidth(0, 20); // Column A width
+        worksheet.Cells.SetColumnWidth(1, 15); // Column B width
 
-            // Optionally set explicit widths to ensure they are not altered later
-            sheet.Cells.SetColumnWidth(0, col0Width);
-            sheet.Cells.SetColumnWidth(1, col1Width);
-            sheet.Cells.SetColumnWidth(2, col2Width);
+        // Configure PDF save options to use Standard (high‑quality) optimization.
+        PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
+        pdfSaveOptions.OptimizationType = PdfOptimizationType.Standard; // High print quality
 
-            // Create PDF save options and set the optimization type to Standard (high print quality)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                OptimizationType = PdfOptimizationType.Standard   // StandardSize optimization
-            };
-
-            // Save the workbook as PDF while keeping the original column widths intact
-            workbook.Save("Output_StandardSize.pdf", pdfOptions);
-
-            Console.WriteLine("PDF saved with Standard optimization and original column widths preserved.");
-        }
+        // Save the workbook as a PDF while keeping the column widths unchanged.
+        workbook.Save("StandardSizeOptimized.pdf", pdfSaveOptions);
     }
 }

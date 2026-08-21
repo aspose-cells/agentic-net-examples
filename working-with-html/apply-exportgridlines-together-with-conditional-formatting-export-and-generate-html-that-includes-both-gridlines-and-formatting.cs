@@ -1,10 +1,10 @@
-// Title: Export Excel to HTML with Gridlines & Conditional Formatting – Aspose.Cells C# Example
-// Description: Demonstrates how to create a workbook, enable gridlines, apply a conditional formatting rule (value > 20), and save it as HTML using Aspose.Cells for .NET. HtmlSaveOptions.ExportGridLines is set to true and ExportDataOptions to All, ensuring both gridlines and formatting are retained.
-// Keywords: Aspose.Cells | C# HTML export | ExportGridLines | conditional formatting | HtmlSaveOptions | Excel to HTML | gridlines visible | HtmlExportDataOptions.All | .NET spreadsheet conversion | web report generation
-// Common Searches: Aspose.Cells export gridlines to HTML | C# export Excel with conditional formatting to HTML | HtmlSaveOptions ExportGridLines example | How to keep Excel gridlines in HTML output | Conditional formatting not showing in Aspose.Cells HTML export
-// Developer Intent: Create an HTML representation of an Excel worksheet that preserves the original gridlines and conditional formatting using Aspose.Cells for .NET.
-// Use Cases: Web dashboards that need exact Excel layout with gridlines and highlighted cells | Automated email reports where Excel sheets are converted to HTML while keeping visual cues | Documentation snapshots of spreadsheets for intranet publishing with full formatting
-// AI Prompts: Generate C# code using Aspose.Cells to export a workbook to HTML with ExportGridLines enabled and conditional formatting applied. | Explain the role of HtmlSaveOptions.ExportGridLines and HtmlExportDataOptions.All in preserving worksheet appearance. | Troubleshoot why conditional formatting might be missing in the exported HTML and suggest fixes.
+// Title: Export Gridlines and Conditional Formatting to HTML with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, enable worksheet gridlines, apply a conditional formatting rule (values > 20 highlighted in orange), and save the sheet as an HTML file using Aspose.Cells HtmlSaveOptions with ExportGridLines, row/column headings, and active‑worksheet only settings.
+// Keywords: Aspose.Cells HTML export | ExportGridLines C# | conditional formatting to HTML | HtmlSaveOptions example | gridlines in HTML output | .NET Excel to HTML | Aspose.Cells workbook to HTML | C# Excel export with styling
+// Common Searches: Aspose.Cells export gridlines to HTML | how to keep conditional formatting when saving as HTML | C# HtmlSaveOptions ExportGridLines sample | export Excel worksheet with row and column headings HTML | Aspose.Cells HTML export with styling
+// Developer Intent: Generate an HTML representation of an Excel worksheet that shows both gridlines and conditional formatting.
+// Use Cases: Web dashboards that need Excel‑style gridlines and highlighted cells. | Embedding styled Excel data in emails or web pages without losing formatting. | Creating printable HTML snapshots of reports with value‑based highlights.
+// AI Prompts: Provide C# code using Aspose.Cells to export a workbook to HTML with gridlines and conditional formatting preserved. | Show how to add a conditional formatting rule for values greater than a threshold and save the sheet as HTML with row/column headings. | Explain the HtmlSaveOptions settings required to include gridlines, export only the active worksheet, and retain conditional formatting.
 
 using System;
 using System.Drawing;
@@ -13,7 +13,7 @@ using Aspose.Cells.Rendering;
 
 namespace AsposeCellsHtmlExport
 {
-    // Demonstrates how to create a workbook, enable gridlines, apply a conditional formatting rule (value > 20), and save it as HTML using Aspose.Cells for .NET. HtmlSaveOptions.ExportGridLines is set to true and ExportDataOptions to All, ensuring both gridlines and formatting are retained.
+    // Demonstrates how to create a workbook, enable worksheet gridlines, apply a conditional formatting rule (values > 20 highlighted in orange), and save the sheet as an HTML file using Aspose.Cells HtmlSaveOptions with ExportGridLines, row/column headings, and active‑worksheet only settings.
     class Program
     {
         static void Main()
@@ -22,56 +22,66 @@ namespace AsposeCellsHtmlExport
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Make gridlines visible in the worksheet
-                sheet.IsGridlinesVisible = true;
-
-                // Populate some sample data
+                // Populate sample data (values 1 to 100)
                 for (int row = 0; row < 10; row++)
                 {
-                    for (int col = 0; col < 5; col++)
+                    for (int col = 0; col < 3; col++)
                     {
-                        sheet.Cells[row, col].PutValue(row * col);
+                        worksheet.Cells[row, col].PutValue(row * 3 + col + 1);
                     }
                 }
 
-                // Define the range for conditional formatting (A1:E10)
-                int cfIndex = sheet.ConditionalFormattings.Add();
-                var cf = sheet.ConditionalFormattings[cfIndex];
-                cf.AddArea(new CellArea { StartRow = 0, StartColumn = 0, EndRow = 9, EndColumn = 4 });
+                // Enable gridlines visibility in the worksheet
+                worksheet.IsGridlinesVisible = true;
 
-                // Add a condition: highlight cells with value > 20
+                // Add a simple conditional formatting rule:
+                // Highlight cells with value greater than 20 with a light orange background
+                int cfIndex = worksheet.ConditionalFormattings.Add();
+                var cf = worksheet.ConditionalFormattings[cfIndex];
+
+                // Apply to the populated range A1:C10
+                CellArea area = new CellArea
+                {
+                    StartRow = 0,
+                    StartColumn = 0,
+                    EndRow = 9,
+                    EndColumn = 2
+                };
+                cf.AddArea(area);
+
+                // Add condition (operator GreaterThan requires only one formula; second can be null)
                 int conditionIndex = cf.AddCondition(
                     FormatConditionType.CellValue,
                     OperatorType.GreaterThan,
                     "20",
-                    string.Empty); // formula2 not used for this operator
-
-                // Retrieve the created condition
+                    null);
                 FormatCondition condition = cf[conditionIndex];
 
                 // Define the style for the condition
-                Style style = workbook.CreateStyle();
-                style.ForegroundColor = Color.LightCoral;
-                style.Pattern = BackgroundType.Solid;
-                condition.Style = style;
+                Style cfStyle = workbook.CreateStyle();
+                cfStyle.ForegroundColor = Color.FromArgb(255, 230, 180); // Light orange
+                cfStyle.Pattern = BackgroundType.Solid;
+                condition.Style = cfStyle;
 
-                // Configure HTML save options to export gridlines and all data (including conditional formatting)
+                // Configure HTML save options to export gridlines
                 HtmlSaveOptions htmlOptions = new HtmlSaveOptions
                 {
-                    ExportGridLines = true,
-                    ExportDataOptions = HtmlExportDataOptions.All
+                    ExportGridLines = true,               // Export the worksheet gridlines
+                    ExportActiveWorksheetOnly = true,     // Export only the first worksheet
+                    ExportRowColumnHeadings = true        // Include row/column headings
                 };
 
-                // Save the workbook as an HTML file
+                // Save the workbook as HTML with the specified options
                 string outputPath = "ConditionalFormattingWithGridlines.html";
                 workbook.Save(outputPath, htmlOptions);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+
+                Console.WriteLine($"HTML file generated at '{outputPath}' with gridlines and conditional formatting.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }

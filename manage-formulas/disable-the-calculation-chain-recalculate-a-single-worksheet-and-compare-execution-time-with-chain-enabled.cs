@@ -1,74 +1,86 @@
-// Title: Measure Aspose.Cells worksheet formula calculation speed with and without the calculation chain (C#/.NET)
-// Description: A C# example that builds a 2,000‑row workbook, adds dependent formulas across five columns, toggles the EnableCalculationChain setting, recalculates the worksheet using Worksheet.CalculateFormula, and records the elapsed milliseconds with Stopwatch for both enabled and disabled states.
-// Keywords: Aspose.Cells calculation chain | Disable calculation chain | Worksheet.CalculateFormula performance | C# spreadsheet benchmark | formula evaluation timing .NET | Aspose.Cells performance testing
-// Common Searches: Aspose.Cells benchmark calculation chain | How to measure formula calculation time in Aspose.Cells | EnableCalculationChain true vs false performance | C# speed test for spreadsheet formulas | Disable formula dependency chain Aspose.Cells
-// Developer Intent: Compare the execution time of worksheet formula recalculation when the calculation chain is enabled versus when it is disabled.
-// Use Cases: Determine whether turning off the calculation chain speeds up bulk updates in large workbooks. | Profile formula evaluation to choose optimal settings for automated report generation. | Benchmark Aspose.Cells performance before deploying to production environments.
-// AI Prompts: Write C# code that disables the calculation chain, recalculates a specific worksheet, and logs the elapsed time using Aspose.Cells. | Explain the impact of EnableCalculationChain on formula dependency processing and when disabling it improves performance. | Provide a step‑by‑step guide to benchmark worksheet calculation time with different CalculationOptions and chain settings in Aspose.Cells.
+// Title: Benchmark Worksheet.CalculateFormula with Calculation Chain Disabled vs Enabled in Aspose.Cells for .NET (C#)
+// Description: C# sample that builds a workbook with thousands of formulas, toggles Workbook.Settings.FormulaSettings.EnableCalculationChain, recalculates only the first worksheet using Worksheet.CalculateFormula, measures execution time with Stopwatch, and saves the results. Demonstrates performance impact of the calculation chain on large sheets.
+// Keywords: Aspose.Cells | C# | .NET | calculation chain | EnableCalculationChain | Worksheet.CalculateFormula | formula performance | benchmark Excel calculation | recalculate single worksheet | large workbook optimization
+// Common Searches: Aspose.Cells disable calculation chain performance | measure formula calculation time Aspose.Cells C# | Worksheet.CalculateFormula benchmark | how to turn off calculation chain in Aspose.Cells | speed up Excel calculations with Aspose.Cells
+// Developer Intent: Evaluate the speed difference of recalculating a worksheet when the calculation chain is turned off versus on.
+// Use Cases: Determine whether disabling the calculation chain improves performance for workbooks with many inter‑sheet formulas. | Recalculate only a specific sheet after data changes without triggering full workbook evaluation. | Create automated performance tests for formula engines in .NET applications.
+// AI Prompts: Show how to disable the calculation chain in Aspose.Cells, recalculate a single worksheet, and log the elapsed milliseconds for both states. | Provide a C# code snippet that benchmarks Worksheet.CalculateFormula with EnableCalculationChain set to true and false. | Explain how to interpret timing results when comparing calculation chain settings in Aspose.Cells for .NET.
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-// A C# example that builds a 2,000‑row workbook, adds dependent formulas across five columns, toggles the EnableCalculationChain setting, recalculates the worksheet using Worksheet.CalculateFormula, and records the elapsed milliseconds with Stopwatch for both enabled and disabled states.
-class Program
+namespace AsposeCellsCalculationChainDemo
 {
-    static void Main()
+    // C# sample that builds a workbook with thousands of formulas, toggles Workbook.Settings.FormulaSettings.EnableCalculationChain, recalculates only the first worksheet using Worksheet.CalculateFormula, measures execution time with Stopwatch, and saves the results. Demonstrates performance impact of the calculation chain on large sheets.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate a large number of formulas for performance testing
-        int totalRows = 2000;
-        int totalCols = 5;
-
-        // Fill column A with numeric values
-        for (int r = 0; r < totalRows; r++)
+        static void Main()
         {
-            cells[r, 0].PutValue(r + 1);
+            try
+            {
+                const int rowCount = 2000;
+
+                // Prepare a workbook with many formulas to see performance difference
+                Workbook wbTemplate = CreateWorkbookWithFormulas(rowCount);
+
+                // ----------- Test with Calculation Chain Disabled -----------
+                // Create a fresh workbook with the same formulas
+                Workbook wbNoChain = CreateWorkbookWithFormulas(rowCount);
+                wbNoChain.Settings.FormulaSettings.EnableCalculationChain = false;
+
+                Stopwatch swNoChain = Stopwatch.StartNew();
+                // Recalculate only the first worksheet
+                Worksheet wsNoChain = wbNoChain.Worksheets[0];
+                wsNoChain.CalculateFormula(new CalculationOptions(), true);
+                swNoChain.Stop();
+
+                Console.WriteLine($"Calculation time with chain disabled: {swNoChain.ElapsedMilliseconds} ms");
+
+                // ----------- Test with Calculation Chain Enabled -----------
+                // Create another fresh workbook with the same formulas
+                Workbook wbWithChain = CreateWorkbookWithFormulas(rowCount);
+                wbWithChain.Settings.FormulaSettings.EnableCalculationChain = true;
+
+                Stopwatch swWithChain = Stopwatch.StartNew();
+                Worksheet wsWithChain = wbWithChain.Worksheets[0];
+                wsWithChain.CalculateFormula(new CalculationOptions(), true);
+                swWithChain.Stop();
+
+                Console.WriteLine($"Calculation time with chain enabled: {swWithChain.ElapsedMilliseconds} ms");
+
+                // Save the workbooks (optional, demonstrates lifecycle usage)
+                wbNoChain.Save("NoChainResult.xlsx", SaveFormat.Xlsx);
+                wbWithChain.Save("WithChainResult.xlsx", SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
 
-        // Add formulas in column B that sum the values in column A up to the current row
-        for (int r = 0; r < totalRows; r++)
+        // Helper method to create a workbook filled with formulas
+        private static Workbook CreateWorkbookWithFormulas(int rowCount)
         {
-            cells[r, 1].Formula = $"=SUM(A1:A{r + 1})";
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            Cells cells = ws.Cells;
+
+            // Put initial value in A1
+            cells["A1"].PutValue(1);
+
+            // Each subsequent cell in column A adds 1 to the previous cell
+            for (int i = 2; i <= rowCount; i++)
+            {
+                string prevCell = $"A{i - 1}";
+                string curCell = $"A{i}";
+                cells[curCell].Formula = $"={prevCell}+1";
+            }
+
+            // Column B sums the range A1:A{rowCount}
+            cells[$"B1"].Formula = $"=SUM(A1:A{rowCount})";
+
+            return wb;
         }
-
-        // Add additional simple formulas to increase workload
-        for (int r = 0; r < totalRows; r++)
-        {
-            cells[r, 2].Formula = $"=B{r + 1}*2";
-            cells[r, 3].Formula = $"=C{r + 1}+10";
-            cells[r, 4].Formula = $"=D{r + 1}/3";
-        }
-
-        // Helper method to calculate the worksheet and measure elapsed time
-        void MeasureCalculation(bool enableChain)
-        {
-            // Enable or disable the calculation chain
-            workbook.Settings.FormulaSettings.EnableCalculationChain = enableChain;
-
-            // Prepare calculation options (default options are sufficient here)
-            CalculationOptions calcOptions = new CalculationOptions();
-
-            // Measure execution time
-            Stopwatch sw = Stopwatch.StartNew();
-
-            // Recalculate all formulas in the worksheet (recursive = true)
-            worksheet.CalculateFormula(calcOptions, true);
-
-            sw.Stop();
-            Console.WriteLine($"EnableCalculationChain = {enableChain}: {sw.ElapsedMilliseconds} ms");
-        }
-
-        // First measurement: calculation chain disabled
-        MeasureCalculation(false);
-
-        // Second measurement: calculation chain enabled
-        MeasureCalculation(true);
     }
 }

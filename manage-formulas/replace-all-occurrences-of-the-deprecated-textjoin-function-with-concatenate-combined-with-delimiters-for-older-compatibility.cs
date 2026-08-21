@@ -1,13 +1,12 @@
-// Title: Convert TEXTJOIN to CONCATENATE in Excel using Aspose.Cells for .NET
-// Description: A C# example that loads an Excel file, scans every worksheet, detects TEXTJOIN formulas, rewrites them as CONCATENATE expressions with the original delimiter, and saves the workbook—ensuring compatibility with legacy Excel versions (2007‑2010).
-// Keywords: Aspose.Cells | C# Excel formula conversion | TEXTJOIN replacement | CONCATENATE fallback | legacy Excel compatibility | server‑side spreadsheet processing | Excel 2007 support | global spreadsheet automation | US developers | EU data handling
-// Common Searches: how to replace TEXTJOIN with CONCATENATE using Aspose.Cells | C# code to convert Excel TEXTJOIN formulas | update old Excel workbooks for 2007 compatibility | Aspose.Cells replace deprecated functions | bulk formula conversion .NET
-// Developer Intent: Rewrite all TEXTJOIN formulas in a workbook to equivalent CONCATENATE formulas for older Excel versions.
-// Use Cases: Prepare a workbook for distribution to users running Excel 2007 or earlier. | Automate bulk migration of a spreadsheet library to legacy‑compatible formulas on a server. | Integrate formula conversion into a CI pipeline that validates Excel files before release.
-// AI Prompts: Generate C# code with Aspose.Cells that finds every TEXTJOIN formula and replaces it with CONCATENATE while preserving delimiters and the ignore‑empty flag. | Create unit tests for ConvertTextJoinToConcat covering quoted delimiters, multiple arguments, and formulas without TEXTJOIN. | Explain how to extend the conversion logic to handle range arguments such as TEXTJOIN(",",TRUE,A1:A5).
+// Title: Convert TEXTJOIN to CONCATENATE in Excel files with Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook, scans all worksheets for TEXTJOIN formulas, extracts the delimiter and source arguments, and rewrites each formula as an equivalent CONCATENATE expression that preserves the original delimiter. Handles both range references and comma‑separated lists, then saves the updated file.
+// Keywords: Aspose.Cells C# replace TEXTJOIN | convert TEXTJOIN to CONCATENATE | Excel formula migration .NET | programmatic formula edit | legacy Excel compatibility | C# regex formula replace | Aspose.Cells formula manipulation
+// Common Searches: C# Aspose.Cells replace TEXTJOIN | How to change TEXTJOIN to CONCATENATE in .NET | Batch convert Excel TEXTJOIN formulas | Programmatically edit Excel formulas with Aspose.Cells | Remove deprecated TEXTJOIN function
+// Developer Intent: Replace every TEXTJOIN function in a workbook with an equivalent CONCATENATE expression for older Excel versions.
+// Use Cases: Modernize legacy spreadsheets before opening them in Excel 2010 or earlier. | Automate bulk conversion of customer‑uploaded workbooks during data‑import pipelines. | Prepare files for environments that lack TEXTJOIN support, such as older Office suites or third‑party parsers.
+// AI Prompts: Generate C# code using Aspose.Cells that finds all TEXTJOIN formulas in a workbook and rewrites them as CONCATENATE formulas, preserving delimiters and handling both range and list sources. | Show how to add logging to the ReplaceTextJoinWithConcatenate example so each converted formula is recorded, and skip conversion when the ignore_empty argument is TRUE. | Write unit tests for the conversion logic that verify correct output for TEXTJOIN with a range, with a list of cells, and with mixed arguments.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,100 +14,10 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // A C# example that loads an Excel file, scans every worksheet, detects TEXTJOIN formulas, rewrites them as CONCATENATE expressions with the original delimiter, and saves the workbook—ensuring compatibility with legacy Excel versions (2007‑2010).
-    public class TextJoinReplacementDemo
+    // Loads an Excel workbook, scans all worksheets for TEXTJOIN formulas, extracts the delimiter and source arguments, and rewrites each formula as an equivalent CONCATENATE expression that preserves the original delimiter. Handles both range references and comma‑separated lists, then saves the updated file.
+    public class ReplaceTextJoinWithConcatenate
     {
-        // Converts a TEXTJOIN formula to an equivalent CONCATENATE formula.
-        // Supports simple TEXTJOIN usage: TEXTJOIN(delimiter, ignore_empty, arg1, arg2, ...)
-        private static string ConvertTextJoinToConcat(string formula)
-        {
-            // Remove leading '=' if present for easier processing
-            string cleanFormula = formula.StartsWith("=") ? formula.Substring(1) : formula;
-
-            // Regex to capture delimiter, ignore_empty flag, and the rest of the arguments
-            var match = Regex.Match(
-                cleanFormula,
-                @"TEXTJOIN\s*\(\s*(?<delim>[^,]+)\s*,\s*(?<ignore>[^,]+)\s*,\s*(?<args>.+)\)",
-                RegexOptions.IgnoreCase);
-
-            if (!match.Success)
-                return formula; // Return original if pattern not matched
-
-            // Extract delimiter (remove surrounding quotes if any)
-            string delimiter = match.Groups["delim"].Value.Trim().Trim('\"', '\'');
-
-            // Extract arguments string and split by commas not inside quotes
-            string argsPart = match.Groups["args"].Value;
-            var argList = new List<string>();
-            int start = 0;
-            bool inQuote = false;
-            for (int i = 0; i < argsPart.Length; i++)
-            {
-                if (argsPart[i] == '\"')
-                    inQuote = !inQuote;
-                else if (argsPart[i] == ',' && !inQuote)
-                {
-                    argList.Add(argsPart.Substring(start, i - start).Trim());
-                    start = i + 1;
-                }
-            }
-            // Add last argument
-            argList.Add(argsPart.Substring(start).Trim());
-
-            // Build CONCATENATE formula by interleaving delimiter between arguments
-            var concatBuilder = new StringBuilder();
-            concatBuilder.Append("CONCATENATE(");
-            for (int i = 0; i < argList.Count; i++)
-            {
-                concatBuilder.Append(argList[i]);
-                if (i < argList.Count - 1)
-                {
-                    concatBuilder.Append($", \"{delimiter}\", ");
-                }
-            }
-            concatBuilder.Append(")");
-
-            // Preserve leading '=' if it existed
-            return "=" + concatBuilder.ToString();
-        }
-
-        public static void Run()
-        {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Load workbook if file exists; otherwise create a new empty workbook
-            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
-
-            // Iterate through all worksheets and cells
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                Cells cells = sheet.Cells;
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-
-                for (int row = 0; row <= maxRow; row++)
-                {
-                    for (int col = 0; col <= maxCol; col++)
-                    {
-                        Cell cell = cells[row, col];
-                        if (cell != null && cell.IsFormula && cell.Formula.Contains("TEXTJOIN", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string originalFormula = cell.Formula;
-                            string newFormula = ConvertTextJoinToConcat(originalFormula);
-                            cell.Formula = newFormula;
-                        }
-                    }
-                }
-            }
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
-
-        // Entry point
-        public static void Main(string[] args)
+        public static void Main()
         {
             try
             {
@@ -118,6 +27,114 @@ namespace AsposeCellsExamples
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        public static void Run()
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Regex to capture TEXTJOIN parameters: TEXTJOIN(delimiter, ignore_empty, source)
+            Regex textJoinRegex = new Regex(
+                @"TEXTJOIN\(\s*(?<delim>[^,]+)\s*,\s*(?<ignore>[^,]+)\s*,\s*(?<source>.+?)\)",
+                RegexOptions.IgnoreCase);
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all cells that contain formulas
+                foreach (Cell cell in sheet.Cells)
+                {
+                    if (!cell.IsFormula)
+                        continue;
+
+                    string formula = cell.Formula;
+                    Match match = textJoinRegex.Match(formula);
+                    if (!match.Success)
+                        continue; // No TEXTJOIN in this formula
+
+                    // Extract delimiter (keep quotes as is)
+                    string delimiter = match.Groups["delim"].Value.Trim();
+
+                    // Extract source argument (could be a range or a list of arguments)
+                    string source = match.Groups["source"].Value.Trim();
+
+                    string newFormula;
+
+                    // Simple handling for a single range like A1:A3
+                    if (source.Contains(":"))
+                    {
+                        // Create a range object to enumerate cells
+                        Aspose.Cells.Range range = sheet.Cells.CreateRange(source);
+                        int cellCount = range.RowCount * range.ColumnCount;
+
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append("="); // start formula
+                        sb.Append("CONCATENATE(");
+
+                        int added = 0;
+                        for (int r = 0; r < range.RowCount; r++)
+                        {
+                            for (int c = 0; c < range.ColumnCount; c++)
+                            {
+                                // Reference to the cell (e.g., A1)
+                                string cellRef = range[r, c].Name;
+
+                                sb.Append(cellRef);
+                                added++;
+
+                                // Append delimiter between cells (except after the last one)
+                                if (added < cellCount)
+                                {
+                                    sb.Append(","); // separator for CONCATENATE arguments
+                                    sb.Append(delimiter);
+                                    sb.Append(",");
+                                }
+                            }
+                        }
+
+                        sb.Append(")");
+                        newFormula = sb.ToString();
+                    }
+                    else
+                    {
+                        // Source is a list of arguments (e.g., A1,B1,C1)
+                        string[] args = source.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append("=");
+                        sb.Append("CONCATENATE(");
+                        for (int i = 0; i < args.Length; i++)
+                        {
+                            sb.Append(args[i].Trim());
+                            if (i < args.Length - 1)
+                            {
+                                sb.Append(","); // separator for CONCATENATE arguments
+                                sb.Append(delimiter);
+                                sb.Append(",");
+                            }
+                        }
+                        sb.Append(")");
+                        newFormula = sb.ToString();
+                    }
+
+                    // Replace the original formula with the new CONCATENATE formula
+                    cell.Formula = newFormula;
+                }
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
     }
 }

@@ -1,56 +1,50 @@
-// Title: C# – Sort Excel Sheet by Date (Asc) & Amount (Desc) with Aspose.Cells DataSorter
-// Description: Shows how to create a workbook, add Date and Amount columns, and apply Aspose.Cells DataSorter to sort rows first by the Date column in ascending order and then by the Amount column in descending order while keeping the header row intact.
-// Keywords: Aspose.Cells | C# DataSorter | Excel multi‑column sort | sort by date ascending | sort by amount descending | .NET Excel sorting | multiple key sort Aspose | Excel workbook sorting C#
-// Common Searches: Aspose.Cells sort by multiple columns C# | C# sort Excel by date then amount | DataSorter example with headers | How to sort Excel range using Aspose.Cells .NET | Sort Excel worksheet ascending date descending amount
-// Developer Intent: Apply Aspose.Cells to order worksheet rows by Date ascending and Amount descending, preserving a header row.
-// Use Cases: Prepare a chronological financial ledger where each day's transactions are listed with the largest amounts first. | Create a sales export file that requires date‑first ordering and amount priority for downstream analytics. | Generate a sorted dataset for pivot‑table reporting, ensuring dates are in order and amounts are ranked within each date.
-// AI Prompts: Write a C# snippet using Aspose.Cells to sort a worksheet by multiple columns with custom directions and skip empty rows. | Explain how to add a third sort key (e.g., Category) to the existing DataSorter configuration. | Provide XML documentation comments for each DataSorter property used in the example. | Show how to modify the code to sort a specific named range instead of the entire sheet.
+// Title: C# – Sort Excel Table by Date (asc) and Amount (desc) with Aspose.Cells
+// Description: Shows how to load a workbook, configure Aspose.Cells DataSorter with header awareness, set column A (Date) to ascending order, column B (Amount) to descending order, define the data range, execute the sort, and save the sorted file.
+// Keywords: Aspose.Cells | C# Excel sort | DataSorter | multi‑column sort | date ascending | amount descending | .NET Excel sorting | header aware sort | CellArea range
+// Common Searches: Aspose.Cells sort by date then amount C# | C# DataSorter multiple columns example | How to sort Excel worksheet with headers using Aspose.Cells | Sort Excel range ascending descending Aspose | Multi‑key sort Aspose.Cells .NET
+// Developer Intent: Implement a multi‑key sort on an Excel worksheet where rows are ordered first by the Date column in ascending order and then by the Amount column in descending order.
+// Use Cases: Generate chronological transaction reports with the highest amounts listed first for each day. | Prepare sales data for pivot‑table analysis by ordering dates earliest‑to‑latest and amounts highest‑to‑lowest within each date. | Reorder imported financial records before feeding them to an ERP system to satisfy business sorting rules. | Create sorted export files for regulatory filing where date order is mandatory and amounts need descending priority.
+// AI Prompts: Write C# code using Aspose.Cells to sort a worksheet by column A ascending and column B descending, keeping the header row intact. | Explain how to add a third sort key with a custom order in Aspose.Cells DataSorter. | Show how to limit the sort to a specific range such as B2:D150 while sorting by date and amount. | Provide a step‑by‑step guide to sort large Excel files efficiently with Aspose.Cells. | Demonstrate how to sort dates stored as text using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to create a workbook, add Date and Amount columns, and apply Aspose.Cells DataSorter to sort rows first by the Date column in ascending order and then by the Amount column in descending order while keeping the header row intact.
-class Program
+// Shows how to load a workbook, configure Aspose.Cells DataSorter with header awareness, set column A (Date) to ascending order, column B (Amount) to descending order, define the data range, execute the sort, and save the sorted file.
+class SortTableByDateAndAmount
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("Input.xlsx");
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Get the first worksheet and its cells collection
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate sample data (first row is header)
-        cells["A1"].PutValue("Date");
-        cells["B1"].PutValue("Amount");
-        cells["A2"].PutValue(new DateTime(2023, 5, 10));
-        cells["B2"].PutValue(1500);
-        cells["A3"].PutValue(new DateTime(2023, 4, 22));
-        cells["B3"].PutValue(2000);
-        cells["A4"].PutValue(new DateTime(2023, 5, 10));
-        cells["B4"].PutValue(1200);
-        cells["A5"].PutValue(new DateTime(2023, 3, 15));
-        cells["B5"].PutValue(1800);
-
-        // Configure the DataSorter
+        // Get the DataSorter object
         DataSorter sorter = workbook.DataSorter;
-        sorter.HasHeaders = true;               // First row contains column names
-        sorter.Key1 = 0;                         // First key: Date column (A)
-        sorter.Order1 = SortOrder.Ascending;     // Ascending order for dates
-        sorter.Key2 = 1;                         // Second key: Amount column (B)
-        sorter.Order2 = SortOrder.Descending;    // Descending order for amounts
 
-        // Define the range to sort (including header row)
-        int startRow = 0;
-        int startColumn = 0;
-        int endRow = cells.MaxDataRow;           // Last used row
-        int endColumn = cells.MaxDataColumn;     // Last used column
+        // Assume the first row contains headers
+        sorter.HasHeaders = true;
+
+        // First sort key: Date column (A) ascending
+        sorter.Key1 = 0; // Column A index
+        sorter.Order1 = SortOrder.Ascending;
+
+        // Second sort key: Amount column (B) descending
+        sorter.Key2 = 1; // Column B index
+        sorter.Order2 = SortOrder.Descending;
+
+        // Define the range to sort (including headers)
+        CellArea sortArea = new CellArea
+        {
+            StartRow = 0,
+            StartColumn = 0,
+            EndRow = worksheet.Cells.MaxDataRow,
+            EndColumn = worksheet.Cells.MaxDataColumn
+        };
 
         // Perform the sort
-        sorter.Sort(cells, startRow, startColumn, endRow, endColumn);
+        sorter.Sort(worksheet.Cells, sortArea);
 
         // Save the sorted workbook
-        workbook.Save("SortedByDateAndAmount.xlsx");
+        workbook.Save("SortedOutput.xlsx");
     }
 }

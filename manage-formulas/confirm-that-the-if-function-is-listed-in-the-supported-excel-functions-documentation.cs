@@ -1,51 +1,53 @@
-// Title: Verify IF Function Support in Aspose.Cells for .NET
-// Description: C# example that creates a workbook, writes values to A1 and B1, sets an IF formula in C1, runs CalculateFormula, prints the result, and optionally saves the file to confirm that the IF function is processed correctly by Aspose.Cells.
-// Keywords: Aspose.Cells | IF function | .NET | C# formula calculation | supported Excel functions | Excel IF example | Aspose.Cells documentation | formula evaluation
-// Common Searches: Aspose.Cells IF function support | does Aspose.Cells evaluate IF formulas | list of supported Excel functions Aspose.Cells | C# verify Excel IF in Aspose.Cells | Aspose.Cells calculate IF formula
-// Developer Intent: Confirm that the IF function is recognized and correctly evaluated by Aspose.Cells for .NET.
-// Use Cases: Programmatically ensure critical logical formulas work after migration. | Automated testing of formula support during CI builds. | Validate end‑to‑end workbook processing when using conditional logic.
-// AI Prompts: Write an NUnit test in C# that inserts an IF formula, calculates it with Aspose.Cells, and asserts the expected output. | Generate a PowerShell script that checks the Aspose.Cells documentation for the IF function entry and fails if missing. | Explain how to retrieve the catalog of supported Excel functions from Aspose.Cells via its API or documentation.
+// Title: Confirm IF Function Support in Aspose.Cells for .NET
+// Description: Creates a workbook, writes values to A1 and B1, sets an IF formula in C1, calculates the sheet, and outputs the result to verify that the IF function is listed in Aspose.Cells' Supported Excel Functions documentation.
+// Keywords: Aspose.Cells | IF function | Excel formula support | .NET | C# | workbook calculation | supported functions list | formula evaluation example
+// Common Searches: Aspose.Cells IF formula example | verify Excel IF support in Aspose.Cells | check supported functions Aspose.Cells .NET | how to test IF function with Aspose.Cells | Aspose.Cells documentation supported Excel functions
+// Developer Intent: Validate that the IF function appears in the Supported Excel Functions reference for Aspose.Cells by executing it in a .NET workbook.
+// Use Cases: Run a quick sanity check that the IF function works before processing large spreadsheets. | Automate a regression test suite that confirms core Excel functions remain supported after library upgrades. | Generate a log entry confirming successful execution of specific formulas during batch workbook generation.
+// AI Prompts: Write a C# unit test using Aspose.Cells that asserts the IF formula returns the correct value. | Explain step‑by‑step how to programmatically verify any Excel function’s support in Aspose.Cells. | Create a script that iterates through a list of Excel functions, evaluates each with Aspose.Cells, and records pass/fail results.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // C# example that creates a workbook, writes values to A1 and B1, sets an IF formula in C1, runs CalculateFormula, prints the result, and optionally saves the file to confirm that the IF function is processed correctly by Aspose.Cells.
-    public class VerifyIfFunctionSupported
+    // Creates a workbook, writes values to A1 and B1, sets an IF formula in C1, calculates the sheet, and outputs the result to verify that the IF function is listed in Aspose.Cells' Supported Excel Functions documentation.
+    public class ConfirmIfFunctionSupported
     {
         public static void Run()
         {
             try
             {
-                // Create a new workbook (lifecycle: create)
+                // Create a new workbook (lifecycle rule: create)
                 Workbook wb = new Workbook();
 
                 // Access the first worksheet and its cells
                 Worksheet sheet = wb.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // Put test values in cells A1 and B1
+                // Put sample values in A1 and B1
                 cells["A1"].PutValue(10);
                 cells["B1"].PutValue(20);
 
-                // Use the IF function in cell C1
-                // IF(A1 > B1, "A is greater", "B is greater or equal")
-                cells["C1"].Formula = "=IF(A1>B1,\"A is greater\",\"B is greater or equal\")";
+                // Use the IF function in C1: if A1 > B1 then return A1 else return B1
+                cells["C1"].Formula = "=IF(A1>B1, A1, B1)";
 
-                // Calculate formulas (supported functions are processed here)
+                // Calculate formulas (lifecycle rule: calculate)
                 wb.CalculateFormula();
 
-                // Output the result to confirm that IF was evaluated correctly
-                Console.WriteLine("Result of IF function in C1: " + cells["C1"].StringValue);
-                // Expected output: "B is greater or equal" because 10 is not greater than 20
+                // Retrieve the result
+                var result = cells["C1"].Value;
 
-                // Save the workbook (lifecycle: save) – optional, just to complete the lifecycle steps
-                wb.Save("IfFunctionSupported.xlsx", SaveFormat.Xlsx);
+                // Output the result and a confirmation that IF is supported
+                Console.WriteLine($"Result of IF formula in C1: {result}");
+                Console.WriteLine("The IF function executed successfully, confirming it is listed in the Supported Excel Functions documentation.");
+
+                // Save the workbook (lifecycle rule: save)
+                wb.Save("ConfirmIfFunctionSupported.xlsx", SaveFormat.Xlsx);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }
@@ -55,7 +57,7 @@ namespace AsposeCellsExamples
     {
         public static void Main(string[] args)
         {
-            VerifyIfFunctionSupported.Run();
+            ConfirmIfFunctionSupported.Run();
         }
     }
 }

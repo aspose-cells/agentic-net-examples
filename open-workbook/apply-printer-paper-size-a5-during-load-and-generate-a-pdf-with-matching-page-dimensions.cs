@@ -1,34 +1,35 @@
-// Title: Aspose.Cells for .NET – Load Excel with A5 paper size and export to PDF
-// Description: Demonstrates how to use Aspose.Cells LoadOptions to set the default paper size to A5 when opening an Excel workbook, optionally enforce A5 on each worksheet, and save the workbook as a PDF with exact A5 dimensions. The example is written in C# and works with .NET 6+.
-// Keywords: Aspose.Cells C# | LoadOptions SetPaperSize | A5 paper size Excel | Export Excel to PDF | PDF page dimensions A5 | Worksheet PageSetup A5 | Aspose.Cells .NET example
-// Common Searches: set A5 paper size when loading Excel with Aspose.Cells | export Excel to PDF A5 page size .NET | Aspose.Cells LoadOptions SetPaperSize example | how to force worksheet page size before PDF conversion | C# Aspose.Cells PDF page dimensions
-// Developer Intent: Apply A5 paper size during workbook load and generate a PDF that matches those dimensions.
-// Use Cases: Create printable A5 flyers or brochures directly from Excel templates. | Produce compact A5 financial statements for mobile distribution. | Batch‑convert multiple workbooks to A5‑sized PDFs for consistent publishing.
-// AI Prompts: Write C# code using Aspose.Cells to load an Excel file with A5 paper size and save it as a PDF. | Explain how to guarantee every worksheet retains the A5 size during PDF export with Aspose.Cells. | Adapt the example to use Letter paper size while keeping the same load‑and‑save workflow.
+// Title: Set A5 Paper Size on Load and Export Excel to PDF with Aspose.Cells for .NET
+// Description: Shows how to configure Aspose.Cells LoadOptions to apply the A5 printer paper size when loading an Excel workbook, optionally enforce the size on a worksheet, and save the workbook as a PDF whose pages exactly match A5 dimensions.
+// Keywords: Aspose.Cells | C# | LoadOptions | SetPaperSize | A5 paper size | Excel to PDF | PageSetup | printer settings | document conversion | PDF page dimensions
+// Common Searches: Aspose.Cells set A5 paper size on load | Export Excel to A5 PDF using C# | LoadOptions SetPaperSize example | How to change worksheet page size before PDF export | C# code for A5 PDF output with Aspose.Cells
+// Developer Intent: Apply the A5 printer paper size during workbook loading and generate a PDF that uses the same page dimensions.
+// Use Cases: Load an existing spreadsheet and ensure all printed pages use A5 without manually adjusting each sheet. | Override a specific worksheet’s page setup to A5 when the default size differs. | Create A5‑sized PDF reports from Excel files for consistent printing or distribution.
+// AI Prompts: Provide C# code that loads an Excel file with A5 paper size using Aspose.Cells and saves it as a PDF. | Explain the effect of LoadOptions.SetPaperSize on workbook printing and PDF export. | Show how to set PageSetup.PaperSize to A5 for a single worksheet before converting to PDF.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to use Aspose.Cells LoadOptions to set the default paper size to A5 when opening an Excel workbook, optionally enforce A5 on each worksheet, and save the workbook as a PDF with exact A5 dimensions. The example is written in C# and works with .NET 6+.
-class Program
+namespace AsposeCellsA5PdfDemo
 {
-    static void Main()
+    // Shows how to configure Aspose.Cells LoadOptions to apply the A5 printer paper size when loading an Excel workbook, optionally enforce the size on a worksheet, and save the workbook as a PDF whose pages exactly match A5 dimensions.
+    class Program
     {
-        // Create load options and set the default paper size to A5
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.SetPaperSize(PaperSizeType.PaperA5);
-
-        // Load the workbook with the specified load options
-        // (replace "input.xlsx" with the path to your source file)
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
-
-        // Ensure each worksheet uses A5 paper size (optional but guarantees consistency)
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            sheet.PageSetup.PaperSize = PaperSizeType.PaperA5;
-        }
+            // Prepare load options and set the default printer paper size to A5
+            LoadOptions loadOptions = new LoadOptions();
+            loadOptions.SetPaperSize(PaperSizeType.PaperA5);
 
-        // Save the workbook as PDF; the PDF pages will have A5 dimensions
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+            // Load an existing workbook (replace with your actual file path)
+            // The paper size defined in loadOptions will be applied to the workbook settings
+            Workbook workbook = new Workbook("input.xlsx", loadOptions);
+
+            // Ensure the first worksheet also uses A5 (optional, usually inherited from settings)
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.PageSetup.PaperSize = PaperSizeType.PaperA5;
+
+            // Save the workbook as PDF; the page dimensions will match A5 size
+            workbook.Save("output.pdf", SaveFormat.Pdf);
+        }
     }
 }

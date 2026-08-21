@@ -1,49 +1,62 @@
-// Title: Set Integrated Security for a Query Table Connection in Aspose.Cells (.NET)
-// Description: Loads a workbook, gets the first worksheet’s query table, updates its ExternalConnection.ConnectionString to use Windows Integrated Security (e.g., SQLOLEDB with Integrated Security=SSPI), optionally sets CredentialsMethodType to Integrated, and saves the file.
-// Keywords: Aspose.Cells query table connection string | integrated security Aspose.Cells | Windows authentication Excel query table | ExternalConnection CredentialsMethodType | C# modify query table connection
-// Common Searches: Aspose.Cells set query table to use integrated security | How to enable Windows authentication for a query table in .NET | Change external connection string for Excel query table programmatically | Set CredentialsMethodType to Integrated in Aspose.Cells | Secure query table connection string Aspose.Cells
-// Developer Intent: Modify a query table’s external connection so it authenticates with Windows Integrated Security instead of stored credentials.
-// Use Cases: Replace hard‑coded SQL credentials with Windows authentication for compliance‑driven reporting. | Automate workbook preparation before deployment to ensure all query tables use secure authentication. | Batch‑process multiple Excel files to enforce Integrated Security on their data connections.
-// AI Prompts: Write C# code using Aspose.Cells to change a query table’s connection string to Windows Integrated Security and save the workbook. | Explain how to read and set the CredentialsMethodType property of an ExternalConnection for a query table. | Show how to verify that a query table’s connection string was updated after saving the workbook.
+// Title: Configure QueryTable Connection String for Integrated Security with Aspose.Cells (.NET)
+// Description: Shows how to locate a QueryTable in a worksheet, set its ExternalConnection.ConnectionString to an OLE DB string that uses Windows Integrated Security (SSPI), and save the workbook.
+// Keywords: Aspose.Cells | QueryTable | Integrated Security | Windows Authentication | OLE DB | ConnectionString | .NET | C# | Excel automation | secure database access | external connection
+// Common Searches: Aspose.Cells set query table integrated security | How to use Windows authentication for QueryTable in Aspose.Cells | Change QueryTable connection string to SSPI C# | Update external connection of existing query table Aspose.Cells | Secure Excel data connection with Integrated Security Aspose.Cells
+// Developer Intent: Update an existing QueryTable’s connection string to use Windows Integrated Security for secure data retrieval.
+// Use Cases: Convert a QueryTable from SQL authentication to Windows authentication without storing credentials. | Programmatically generate Excel reports that pull data from a protected SQL Server using SSPI. | Automate workbook creation where the data connection must comply with corporate security policies.
+// AI Prompts: Provide C# code using Aspose.Cells to modify a QueryTable’s ExternalConnection.ConnectionString to Integrated Security=SSPI. | Explain the steps to retrieve and change the connection string of an existing QueryTable in Aspose.Cells for Windows authentication. | Describe how to verify that a saved Excel file’s QueryTable uses Integrated Security when refreshed.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-// Loads a workbook, gets the first worksheet’s query table, updates its ExternalConnection.ConnectionString to use Windows Integrated Security (e.g., SQLOLEDB with Integrated Security=SSPI), optionally sets CredentialsMethodType to Integrated, and saves the file.
-class SetQueryTableConnectionString
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Shows how to locate a QueryTable in a worksheet, set its ExternalConnection.ConnectionString to an OLE DB string that uses Windows Integrated Security (SSPI), and save the workbook.
+    public class SetQueryTableIntegratedSecurity
     {
-        // Load an existing workbook that contains a query table
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the first worksheet (adjust index if needed)
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Ensure there is at least one query table
-        if (sheet.QueryTables.Count > 0)
+        public static void Run()
         {
-            // Get the first query table
-            QueryTable queryTable = sheet.QueryTables[0];
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Retrieve the external connection associated with the query table
-            ExternalConnection connection = queryTable.ExternalConnection;
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Set the connection string to use Integrated Security (Windows authentication)
-            // Example for SQL Server OLE DB provider
-            connection.ConnectionString = 
-                "Provider=SQLOLEDB;Data Source=MyServer;Initial Catalog=MyDatabase;Integrated Security=SSPI;";
+                // Add sample data (optional)
+                sheet.Cells["A1"].PutValue("ID");
+                sheet.Cells["B1"].PutValue("Name");
+                sheet.Cells["A2"].PutValue(1);
+                sheet.Cells["B2"].PutValue("Sample");
 
-            // Optionally, you can also set the authentication method explicitly
-            connection.CredentialsMethodType = CredentialsMethodType.Integrated;
+                // If a query table exists, update its connection string to use Integrated Security
+                if (sheet.QueryTables.Count > 0)
+                {
+                    QueryTable queryTable = sheet.QueryTables[0];
+                    ExternalConnection connection = queryTable.ExternalConnection;
+
+                    // Example OLE DB connection string with Integrated Security
+                    connection.ConnectionString =
+                        "Provider=SQLOLEDB;Data Source=MyServer;Initial Catalog=MyDatabase;Integrated Security=SSPI;";
+                }
+
+                // Save the workbook
+                string outputPath = "QueryTableIntegratedSecurity.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        else
+
+        // Entry point for the application
+        public static void Main(string[] args)
         {
-            Console.WriteLine("No query tables found in the worksheet.");
+            Run();
         }
-
-        // Save the workbook with the updated connection string
-        workbook.Save("output.xlsx");
     }
 }

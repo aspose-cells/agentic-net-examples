@@ -1,20 +1,21 @@
-// Title: Create a column‑wide named range and compute its average with Aspose.Cells for .NET (C#)
-// Description: This C# example shows how to generate a new workbook, fill column B with numbers, use the EntireColumn property to build a named range that covers the whole column, apply =AVERAGE(MyColumn) in cell C1, evaluate the formula, output the result, and save the file as NamedColumnAverage.xlsx.
-// Keywords: Aspose.Cells named range column | C# entire column reference | average formula Aspose.Cells | column‑wide named range .NET | Workbook.CalculateFormula | CreateRange EntireColumn | Aspose.Cells GitHub example | Excel column average C#
-// Common Searches: Aspose.Cells create named range for whole column | C# calculate average of a column using named range | How to use EntireColumn property in Aspose.Cells | Define column‑wide named range in .NET | Aspose.Cells average formula example
-// Developer Intent: Define a named range that spans an entire worksheet column and use it in a formula to calculate the column’s average.
-// Use Cases: Generate a reusable column‑wide named range for summary calculations across multiple sheets. | Insert =AVERAGE(MyColumn) into any cell to display the average of the referenced column. | Automate reporting by saving the workbook with the computed average and the named range for future reference.
-// AI Prompts: Write C# code with Aspose.Cells that creates a named range for column D and returns its sum using =SUM(). | Explain how the EntireColumn property can be leveraged to build dynamic column‑wide named ranges for formulas. | Provide error‑handling strategies when the column‑wide named range contains mixed data types while calculating an average.
+// Title: Aspose.Cells .NET: Define a Named Range for an Entire Column and Compute Its Average
+// Description: Demonstrates how to create a new workbook, fill column B with numbers, define a named range that references the whole column using the EntireColumn property, apply an =AVERAGE formula that points to the named range, calculate the workbook, retrieve the result, and save the file.
+// Keywords: Aspose.Cells | named range entire column | C# average formula | EntireColumn property | Aspose.Cells calculate formulas | create named range .NET | column average Aspose | Excel named range programmatically | Aspose.Cells workbook calculation
+// Common Searches: Aspose.Cells create named range for whole column | How to use EntireColumn property in Aspose.Cells | Calculate average of a column using named range Aspose.Cells | Set formula with named range in Aspose.Cells C# | Reference entire column in named range Aspose.Cells
+// Developer Intent: Create a column‑wide named range and use it in an AVERAGE formula with Aspose.Cells for .NET.
+// Use Cases: Define a named range that covers column B and calculate its average in cell C1. | Reuse the column‑wide named range across multiple worksheets for aggregate operations such as SUM, COUNT, or AVERAGE. | Programmatically generate reports where column totals are needed without hard‑coding cell references.
+// AI Prompts: Show me C# code that creates a named range for an entire column and uses it in an AVERAGE formula with Aspose.Cells. | How can I reference a whole column in a named range and apply SUM, COUNT, or AVERAGE functions using Aspose.Cells for .NET? | Provide an example of using the EntireColumn property to define a column‑wide named range and calculate its average in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsNamedColumnAverage
+namespace AsposeCellsExamples
 {
-    // This C# example shows how to generate a new workbook, fill column B with numbers, use the EntireColumn property to build a named range that covers the whole column, apply =AVERAGE(MyColumn) in cell C1, evaluate the formula, output the result, and save the file as NamedColumnAverage.xlsx.
-    class Program
+    // Demonstrates how to create a new workbook, fill column B with numbers, define a named range that references the whole column using the EntireColumn property, apply an =AVERAGE formula that points to the named range, calculate the workbook, retrieve the result, and save the file.
+    public class NamedRangeEntireColumnAverage
     {
-        static void Main()
+        public static void Run()
         {
             try
             {
@@ -25,44 +26,48 @@ namespace AsposeCellsNamedColumnAverage
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // Populate sample numeric data in column B (index 1)
-                for (int i = 0; i < 10; i++)
+                // Populate some sample numeric data in column B (index 1)
+                for (int row = 0; row < 5; row++)
                 {
-                    cells[i, 1].PutValue(i + 1); // B1..B10 = 1..10
+                    cells[row, 1].PutValue(row + 1); // Values 1,2,3,4,5
                 }
 
-                // Create a temporary range that starts at B1
-                // Then obtain the entire column that contains this range
-                Aspose.Cells.Range tempRange = cells.CreateRange(0, 1, 1, 1);
-                Aspose.Cells.Range entireColumn = tempRange.EntireColumn;
+                // Create a range that starts at B1 (row 0, column 1) with a single cell
+                AsposeRange singleCellRange = cells.CreateRange(0, 1, 1, 1);
+
+                // Get the entire column that contains the range (column B)
+                AsposeRange entireColumn = singleCellRange.EntireColumn;
 
                 // Define a named range that refers to the whole column B
                 int nameIndex = workbook.Worksheets.Names.Add("MyColumn");
-                Name namedRange = workbook.Worksheets.Names[nameIndex];
-
-                // Build the reference string like =Sheet1!$B:$B
-                string columnLetter = CellsHelper.ColumnIndexToName(1); // column B
-                namedRange.RefersTo = $"={sheet.Name}!${columnLetter}:${columnLetter}";
+                // RefersTo must start with '=' and use absolute column reference
+                workbook.Worksheets.Names[nameIndex].RefersTo = "=Sheet1!$B:$B";
 
                 // Use the named range in a formula to calculate the average
-                // (use the literal name to avoid potential property issues)
-                cells["C1"].Formula = $"=AVERAGE(MyColumn)";
+                cells["C1"].Formula = "=AVERAGE(MyColumn)";
 
                 // Calculate all formulas in the workbook
                 workbook.CalculateFormula();
 
-                // Output the result to the console
-                Console.WriteLine($"Average of column {columnLetter}: {cells["C1"].Value}");
+                // Retrieve and display the calculated average
+                double average = cells["C1"].DoubleValue;
+                Console.WriteLine("Average of MyColumn: " + average);
 
-                // Save the workbook
-                string outputPath = "NamedColumnAverage.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                // Save the workbook (the file will contain the data and the formula result)
+                workbook.Save("NamedRangeEntireColumnAverage.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            NamedRangeEntireColumnAverage.Run();
         }
     }
 }

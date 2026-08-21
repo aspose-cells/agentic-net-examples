@@ -1,70 +1,49 @@
-// Title: Set Custom Number Formats on PivotChart Axes with Aspose.Cells for .NET
-// Description: Loads an XLSX workbook, checks that the first worksheet has a chart, assigns a currency format to the value‑axis and a date format to the category‑axis of a PivotChart, and saves the modified file.
-// Keywords: Aspose.Cells PivotChart axis formatting | C# custom number format chart | Excel value axis currency format | category axis date format Aspose | modify chart tick labels .NET | save workbook after chart changes | Aspose.Cells chart number format
-// Common Searches: how to format pivotchart value axis with Aspose.Cells | set date format on chart category axis C# | apply currency format to Excel chart axis using Aspose | Aspose.Cells change chart tick label format | save workbook after updating chart formatting
-// Developer Intent: Apply specific number formats to a PivotChart’s axes and write the updated workbook to disk.
-// Use Cases: Show sales amounts as $#,##0.00 on the value axis of a quarterly revenue PivotChart. | Display month‑day labels (mmm dd) on the category axis of a timeline chart. | Validate worksheet and chart existence before formatting to avoid runtime errors.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a currency format on a PivotChart value axis and saves the workbook. | Create error‑handling logic that confirms a worksheet contains at least one chart before applying axis formats. | Provide an example that formats the category axis of a PivotChart with a month‑day pattern and exports the file as XLSX.
+// Title: Aspose.Cells .NET – Apply Custom Number Format to PivotChart Axis Labels (C#)
+// Description: Load a workbook, locate a PivotChart, set a custom number format for the value (and optionally category) axis tick labels, and save the updated file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells PivotChart number format | C# chart axis custom format | set value axis format Aspose.Cells | format pivot chart tick labels | apply currency format to chart axis | date format category axis Aspose.Cells | Aspose.Cells chart formatting example
+// Common Searches: Aspose.Cells change PivotChart axis number format C# | how to set custom format for chart value axis using Aspose.Cells | apply dollar format to PivotChart axis labels .NET | date format for PivotChart category axis Aspose.Cells | save workbook after modifying chart axis Aspose.Cells
+// Developer Intent: Modify the number format of a PivotChart’s axis tick labels and persist the changes in the workbook.
+// Use Cases: Display monetary values on a PivotChart’s value axis with "$#,##0.00" formatting before exporting. | Show month‑day labels on the category axis of a PivotChart using "mmm dd" format. | Validate the presence of charts, apply distinct formats to each axis, and save the workbook in a single operation.
+// AI Prompts: Generate a C# snippet that sets a custom number format for both value and category axes of a PivotChart with Aspose.Cells. | Provide code that iterates through all charts in a workbook and applies different axis formats based on chart type using Aspose.Cells for .NET. | Explain how to detect a PivotChart and safely apply axis number formatting with Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads an XLSX workbook, checks that the first worksheet has a chart, assigns a currency format to the value‑axis and a date format to the category‑axis of a PivotChart, and saves the modified file.
-class Program
+namespace PivotChartNumberFormatExample
 {
-    static void Main()
+    // Load a workbook, locate a PivotChart, set a custom number format for the value (and optionally category) axis tick labels, and save the updated file using Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Ensure the workbook contains at least one worksheet
-            if (workbook.Worksheets.Count == 0)
-            {
-                Console.WriteLine("Error: The workbook does not contain any worksheets.");
-                return;
-            }
+            // Load an existing workbook that contains a PivotChart
+            Workbook workbook = new Workbook("input.xlsx");
 
             // Access the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Verify that the worksheet contains at least one chart
+            // Ensure there is at least one chart in the worksheet
             if (worksheet.Charts.Count == 0)
             {
-                Console.WriteLine("Error: No charts were found on the first worksheet.");
+                Console.WriteLine("No charts found in the worksheet.");
                 return;
             }
 
-            // Retrieve the first chart – assumed to be the PivotChart
-            Chart pivotChart = worksheet.Charts[0];
+            // Get the first chart (assumed to be a PivotChart)
+            Chart chart = worksheet.Charts[0];
 
-            // Apply a custom number format to the value‑axis tick labels (e.g., currency)
-            pivotChart.ValueAxis.TickLabels.NumberFormat = "$#,##0.00";
+            // Apply a custom number format to the value axis tick labels
+            // Example format: two decimal places with a dollar sign
+            chart.ValueAxis.TickLabels.NumberFormat = "$#,##0.00";
 
-            // Optional: Apply a custom number format to the category‑axis tick labels (e.g., month and day)
-            pivotChart.CategoryAxis.TickLabels.NumberFormat = "mmm dd";
+            // Optionally, apply a custom format to the category axis tick labels
+            // chart.CategoryAxis.TickLabels.NumberFormat = "mmm dd";
 
             // Save the modified workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+
+            Console.WriteLine("PivotChart axis labels formatted and workbook saved.");
         }
     }
 }

@@ -1,37 +1,37 @@
-// Title: C# – Use WorkbookDesigner with a custom DataTable to fill smart markers in Aspose.Cells
-// Description: Shows how to create a Workbook, insert smart markers that reference a DataTable named Products, build the table in code, bind it to WorkbookDesigner via SetDataSource, process the markers, and save the populated Excel file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | WorkbookDesigner | SetDataSource | DataTable | smart markers | C# .NET | Excel export | template filling | custom data source | product catalog example
-// Common Searches: WorkbookDesigner SetDataSource DataTable example | Aspose.Cells populate smart markers from DataTable | C# fill Excel template with DataTable | How to bind DataTable to WorkbookDesigner | Aspose.Cells smart markers tutorial
-// Developer Intent: Bind a user‑created DataTable to WorkbookDesigner so that smart markers in an Excel template are automatically populated.
-// Use Cases: Generate a product catalog Excel file by linking a Products DataTable to smart markers. | Create invoices by mapping an Orders DataTable to markers in a pre‑designed worksheet. | Export a financial summary by associating a ReportData DataTable with smart markers in a template.
-// AI Prompts: Provide C# code to attach multiple DataTables to a single WorkbookDesigner, each using a distinct smart‑marker prefix. | Show how to load an existing Excel template and set a DataSet as the data source for WorkbookDesigner smart markers. | Explain strategies for handling null or missing values in a DataTable when processing smart markers with WorkbookDesigner.
+// Title: Use a custom DataTable with WorkbookDesigner to populate smart markers in Aspose.Cells for .NET (C#)
+// Description: This C# example shows how to create a workbook, define smart markers that reference a runtime DataTable named "Products", fill the table with data, assign it to WorkbookDesigner via SetDataSource, process the markers, and save the populated Excel file.
+// Keywords: Aspose.Cells | WorkbookDesigner | SetDataSource | DataTable | smart markers | C# .NET | Excel generation | custom data source | template population | example code
+// Common Searches: Aspose.Cells WorkbookDesigner SetDataSource C# | bind DataTable to smart markers Aspose | populate Excel template from DataTable .NET | smart markers custom data source example | how to use WorkbookDesigner with DataTable
+// Developer Intent: Bind a DataTable to WorkbookDesigner, process smart markers, and generate a filled Excel workbook.
+// Use Cases: Generate a product catalog by filling smart markers from a DataTable. | Create invoices where line‑item details are supplied by a DataTable. | Build multi‑sheet reports, each sheet driven by a different DataTable. | Export query results from a database to an Excel template. | Automate data‑driven dashboards using smart markers and runtime data.
+// AI Prompts: Provide C# code that loads an existing .xlsx template, sets a DataSet with several tables as the data source for WorkbookDesigner, and processes smart markers for each sheet. | Explain step‑by‑step how WorkbookDesigner.SetDataSource works with a DataTable and how to reference its columns in smart markers. | Generate a sample that uses a DataTable of employee records to fill a payroll worksheet via smart markers.
 
 using System;
 using System.Data;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsCustomDataSourceDemo
 {
-    // Shows how to create a Workbook, insert smart markers that reference a DataTable named Products, build the table in code, bind it to WorkbookDesigner via SetDataSource, process the markers, and save the populated Excel file using Aspose.Cells for .NET.
-    class WorkbookDesignerCustomDataTableDemo
+    // This C# example shows how to create a workbook, define smart markers that reference a runtime DataTable named "Products", fill the table with data, assign it to WorkbookDesigner via SetDataSource, process the markers, and save the populated Excel file.
+    class Program
     {
         static void Main()
         {
             // Create a new workbook (template can be loaded here if needed)
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet and add smart markers where data will be inserted
+            // Add a worksheet and place smart markers where data will be inserted
             Worksheet sheet = workbook.Worksheets[0];
-            // Smart markers use the name of the DataTable (e.g., "Products")
+            // Smart markers use the name of the DataTable ("Products") followed by column names
             sheet.Cells["A1"].PutValue("Product ID");
             sheet.Cells["B1"].PutValue("Product Name");
             sheet.Cells["C1"].PutValue("Price");
-            // Markers for data rows
-            sheet.Cells["A2"].PutValue("&=$Products.ProductID");
-            sheet.Cells["B2"].PutValue("&=$Products.ProductName");
-            sheet.Cells["C2"].PutValue("&=$Products.Price");
+            // Markers start from row 2
+            sheet.Cells["A2"].PutValue("&=Products.ProductID");
+            sheet.Cells["B2"].PutValue("&=Products.ProductName");
+            sheet.Cells["C2"].PutValue("&=Products.Price");
 
-            // Build a custom DataTable with sample data
+            // Create a custom DataTable and populate it with sample data
             DataTable dataTable = new DataTable("Products");
             dataTable.Columns.Add("ProductID", typeof(int));
             dataTable.Columns.Add("ProductName", typeof(string));
@@ -41,18 +41,18 @@ namespace AsposeCellsExamples
             dataTable.Rows.Add(102, "Smartphone", 799.99m);
             dataTable.Rows.Add(103, "Tablet", 450.00m);
 
-            // Initialize the WorkbookDesigner and assign the workbook
+            // Initialize WorkbookDesigner and assign the workbook
             WorkbookDesigner designer = new WorkbookDesigner();
             designer.Workbook = workbook;
 
             // Set the custom DataTable as the data source (uses SetDataSource(DataTable) rule)
             designer.SetDataSource(dataTable);
 
-            // Process the smart markers to populate the worksheet with the data
+            // Process the smart markers to populate the worksheet with data
             designer.Process();
 
             // Save the resulting workbook
-            designer.Workbook.Save("CustomDataTableOutput.xlsx");
+            designer.Workbook.Save("CustomDataSourceOutput.xlsx");
         }
     }
 }

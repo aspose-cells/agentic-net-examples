@@ -1,54 +1,67 @@
-// Title: Copy cell formatting from A1:B5 to C1:D5 with Aspose.Cells for .NET
-// Description: This example demonstrates how to load an Excel workbook (or create a placeholder if missing), define source and target ranges, transfer only the style information using the CopyStyle method, and save the result to a new file. No cell values are moved—only visual formatting is duplicated.
-// Keywords: Aspose.Cells CopyStyle | C# Excel formatting copy | transfer cell style Aspose | range formatting Aspose.Cells | copy only style .NET
-// Common Searches: Aspose.Cells copy only formatting between ranges | C# CopyStyle method example | how to duplicate Excel cell style with Aspose | copy style A1:B5 to C1:D5 Aspose.Cells | copy cell formatting without values .NET
-// Developer Intent: Duplicate the visual style of cells A1:B5 into C1:D5 while leaving the underlying data unchanged.
-// Use Cases: Apply a consistent theme to new worksheet sections without altering existing data. | Generate report templates where formatting is reused across multiple columns. | Refresh data in a sheet while preserving the original layout and styling.
-// AI Prompts: Write C# code that uses Aspose.Cells to copy only the formatting from range A1:B5 to C1:D5 and saves the workbook as output.xlsx. | Explain which style attributes (fonts, borders, colors, etc.) are copied by the CopyStyle method and how it differs from the Copy method. | Provide a snippet that copies formatting, then clears the source cells' values while keeping their styles intact.
+// Title: Copy Formatting Only from A1:B5 to C1:D5 with Aspose.Cells (.NET C#)
+// Description: The sample loads (or creates) an Excel workbook, applies a light‑blue solid fill to cells A1:B5, and then moves just the style data to cells C1:D5 using Aspose.Cells' CopyStyle method, leaving any existing values untouched.
+// Keywords: Aspose.Cells C# copy formatting | CopyStyle method | transfer cell style .NET | Excel range style copy | copy only formatting Aspose | range A1:B5 to C1:D5 | apply style without data
+// Common Searches: Aspose.Cells copy only cell style C# | How to use CopyStyle in Aspose.Cells | Copy formatting between ranges in .NET Excel | Transfer Excel range styling without values | C# example for copying styles with Aspose.Cells
+// Developer Intent: Move the visual styling of the source range to the destination range while preserving the destination's cell contents.
+// Use Cases: Standardize header appearance across multiple table sections | Reuse a predefined theme for a new data block without overwriting values | Migrate conditional‑formatting rules to another area of the sheet | Create a template where only styles are propagated to fresh data
+// AI Prompts: Write a C# program that uses Aspose.Cells to copy only the style from range A1:B5 to C1:D5, keeping existing cell values unchanged. | Explain step‑by‑step how the CopyStyle method works in Aspose.Cells and show how to verify that only formatting was transferred.
 
 using System;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 
-// This example demonstrates how to load an Excel workbook (or create a placeholder if missing), define source and target ranges, transfer only the style information using the CopyStyle method, and save the result to a new file. No cell values are moved—only visual formatting is duplicated.
-class Program
+// The sample loads (or creates) an Excel workbook, applies a light‑blue solid fill to cells A1:B5, and then moves just the style data to cells C1:D5 using Aspose.Cells' CopyStyle method, leaving any existing values untouched.
+class CopyFormattingExample
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            Workbook workbook;
-
-            // Load existing workbook or create a new one if the file is missing
-            if (File.Exists(inputPath))
+            // Ensure the input file exists; create a simple workbook if it does not.
+            if (!File.Exists(inputPath))
             {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                Worksheet ws = workbook.Worksheets[0];
-                // Optional: add sample data to the source range
-                ws.Cells["A1"].PutValue("Sample1");
-                ws.Cells["B1"].PutValue("Sample2");
-                // Save placeholder input for future runs
-                workbook.Save(inputPath);
+                Workbook tempWb = new Workbook();
+                Worksheet tempWs = tempWb.Worksheets[0];
+                Cells tempCells = tempWs.Cells;
+
+                // Populate source range with sample data.
+                tempCells["A1"].PutValue("Header1");
+                tempCells["B1"].PutValue("Header2");
+                for (int i = 2; i <= 5; i++)
+                {
+                    tempCells[$"A{i}"].PutValue($"R{i - 1}C1");
+                    tempCells[$"B{i}"].PutValue($"R{i - 1}C2");
+                }
+
+                // Apply a simple style to the source range.
+                Style style = tempWb.CreateStyle();
+                style.ForegroundColor = Color.LightBlue;
+                style.Pattern = BackgroundType.Solid;
+                Aspose.Cells.Range srcRange = tempCells.CreateRange("A1:B5");
+                srcRange.ApplyStyle(style, new StyleFlag { All = true });
+
+                tempWb.Save(inputPath);
             }
 
+            // Load the workbook.
+            Workbook workbook = new Workbook(inputPath);
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Define source and destination ranges (use fully qualified Aspose.Cells.Range)
-            Aspose.Cells.Range sourceRange = sheet.Cells.CreateRange("A1:B5");
-            Aspose.Cells.Range destinationRange = sheet.Cells.CreateRange("C1:D5");
+            // Define source and destination ranges (fully qualified to avoid ambiguity).
+            Aspose.Cells.Range sourceRange = cells.CreateRange("A1:B5");
+            Aspose.Cells.Range destinationRange = cells.CreateRange("C1:D5");
 
-            // Copy only formatting (style) from source to destination
+            // Copy only the formatting (styles) from source to destination.
             destinationRange.CopyStyle(sourceRange);
 
-            // Save the workbook with applied formatting changes
+            // Save the modified workbook.
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {

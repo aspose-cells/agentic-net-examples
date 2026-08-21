@@ -1,117 +1,105 @@
-// Title: C# – Merge Adjacent RichTextPortion Runs with Identical Formatting in Aspose.Cells
-// Description: This Aspose.Cells for .NET example creates a rectangle shape, adds rich‑text with alternating bold/normal segments, extracts FontSetting runs via GetRichFormattings, merges consecutive runs that share the same Font and TextOptions, reapplies the consolidated formatting, and saves the workbook.
-// Keywords: Aspose.Cells | .NET | C# | RichTextPortion | merge formatting runs | GetRichFormattings | FontSetting | shape rich text | consolidate text formatting | performance optimization | reduce file size
-// Common Searches: Aspose.Cells merge RichTextPortion runs | C# combine adjacent rich text portions | How to consolidate identical font formatting in Aspose.Cells shape | Remove duplicate formatting from shape text Aspose.Cells | GetRichFormattings example C#
-// Developer Intent: Combine consecutive RichTextPortion objects that have the same Font and TextOptions into a single run.
-// Use Cases: Simplify shape text by reducing the number of formatting runs | Improve workbook load/save performance and file size after rich‑text editing | Prepare user‑generated shape text for export or further processing | Ensure consistent formatting when programmatically editing shapes
-// AI Prompts: Write a reusable C# method that takes a Shape and merges its RichTextPortion runs with identical Font and TextOptions using Aspose.Cells. | Show how to iterate over FontSetting[] from GetRichFormattings, combine adjacent portions with matching formatting, and reapply the merged runs to the shape. | Explain how to extend the merge logic to include underline, strikeout, superscript, and subscript properties. | Provide a GitHub‑style README snippet describing this example and its prerequisites.
+// Title: C# – Merge Adjacent RichTextPortion Objects with Identical Formatting in Aspose.Cells TextBox
+// Description: Demonstrates how to create a workbook, add a TextBox shape, apply the same font style to consecutive character ranges, detect identical Font properties, consolidate those ranges into a single RichTextPortion, and save the result. Reduces internal rich‑text objects and improves rendering performance.
+// Keywords: Aspose.Cells RichTextPortion merge | C# Aspose.Cells TextBox formatting | combine consecutive font runs | reduce RichTextPortion count | Aspose.Cells merge identical font styles | TextBox rich text consolidation | Aspose.Cells .NET example
+// Common Searches: merge adjacent RichTextPortion Aspose.Cells .NET | combine consecutive characters with same font in TextBox | reduce number of RichTextPortion objects in Excel workbook | Aspose.Cells C# merge text formatting runs | how to consolidate rich text portions in a shape
+// Developer Intent: Identify consecutive characters that share the same Font settings and collapse them into a single RichTextPortion to simplify the text model and boost performance.
+// Use Cases: After applying bold formatting to two neighboring ranges, merge them into one RichTextPortion to keep the document lightweight. | When generating reports with mixed styles, automatically combine runs that have identical Font attributes to streamline rendering. | Before exporting a workbook, re‑apply merged formatting so the TextBox contains the minimal number of RichTextPortion objects.
+// AI Prompts: Write a C# method for Aspose.Cells that scans a Shape's Characters collection, compares Font properties, and merges adjacent RichTextPortion objects with identical formatting. | Generate code that extracts formatting runs from a TextBox, determines equality of Font attributes, and re‑applies merged runs to reduce RichTextPortion count. | Explain step‑by‑step how to compare two Aspose.Cells Font objects for equality and rebuild merged runs to simplify rich‑text structures in a workbook.
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
 namespace AsposeCellsRichTextMergeDemo
 {
-    // This Aspose.Cells for .NET example creates a rectangle shape, adds rich‑text with alternating bold/normal segments, extracts FontSetting runs via GetRichFormattings, merges consecutive runs that share the same Font and TextOptions, reapplies the consolidated formatting, and saves the workbook.
+    // Demonstrates how to create a workbook, add a TextBox shape, apply the same font style to consecutive character ranges, detect identical Font properties, consolidate those ranges into a single RichTextPortion, and save the result. Reduces internal rich‑text objects and improves rendering performance.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add a rectangle shape with rich text containing different formatting parts
-            // Parameters: upper left row, upper left column, upper left offset, height, width, lower right offset
-            Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 100, 200, 0);
-            shape.Text = "Bold text. Normal text. Bold text again. Normal again.";
-
-            // Apply formatting to create separate portions
-            // Portion 1: "Bold text." (bold)
-            shape.Characters(0, 10).Font.IsBold = true;
-
-            // Portion 2: " Normal text. " (normal)
-            shape.Characters(10, 13).Font.IsBold = false;
-
-            // Portion 3: "Bold text again." (bold)
-            shape.Characters(23, 16).Font.IsBold = true;
-
-            // Portion 4: " Normal again." (normal)
-            shape.Characters(39, 13).Font.IsBold = false;
-
-            // Retrieve the existing rich text portions
-            FontSetting[] portions = shape.GetRichFormattings();
-
-            // List to hold merged portions (start index, length, font, text options)
-            var mergedPortions = new List<(int Start, int Length, Font Font, TextOptions Options)>();
-            var mergedTextBuilder = new StringBuilder();
-
-            foreach (FontSetting setting in portions)
+            try
             {
-                // Extract the text for the current portion
-                string partText = shape.Text.Substring(setting.StartIndex, setting.Length);
+                // ---------- Create a new workbook ----------
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Capture formatting details
-                Font currentFont = setting.Font;
-                TextOptions currentOptions = setting.TextOptions;
+                // ---------- Add a TextBox shape with rich text ----------
+                // Parameters: upper left row, upper left column, upper left offset, height, width, lower right offset
+                Shape textBox = worksheet.Shapes.AddTextBox(1, 0, 1, 100, 200, 0);
+                // Sample text containing three logical portions
+                textBox.Text = "BoldPart1BoldPart2NormalPart";
 
-                // Determine if we can merge with the previous portion
-                bool canMerge = false;
-                if (mergedPortions.Count > 0)
+                // Apply formatting to create adjacent portions with identical formatting
+                // Portion 1: characters 0-9 (Bold)
+                textBox.Characters(0, 10).Font.IsBold = true;
+                // Portion 2: characters 10-19 (Bold) – same formatting as previous, should be merged
+                textBox.Characters(10, 10).Font.IsBold = true;
+                // Portion 3: characters 20-30 (Normal)
+                textBox.Characters(20, 11).Font.IsBold = false;
+
+                // ---------- Merge adjacent RichTextPortion objects with identical formatting ----------
+                string fullText = textBox.Text;
+                int textLength = fullText.Length;
+
+                // Helper method to compare two Font objects for equality of relevant properties
+                bool FontsAreEqual(Font f1, Font f2)
                 {
-                    var last = mergedPortions[mergedPortions.Count - 1];
-
-                    // Compare essential formatting properties (you can extend this comparison as needed)
-                    bool sameFont = last.Font.IsBold == currentFont.IsBold &&
-                                    last.Font.IsItalic == currentFont.IsItalic &&
-                                    last.Font.Size == currentFont.Size &&
-                                    last.Font.Color.ToArgb() == currentFont.Color.ToArgb();
-
-                    bool sameOptions = last.Options.IsBold == currentOptions.IsBold &&
-                                       last.Options.IsItalic == currentOptions.IsItalic;
-
-                    canMerge = sameFont && sameOptions;
+                    return f1.IsBold == f2.IsBold &&
+                           f1.IsItalic == f2.IsItalic &&
+                           f1.Underline == f2.Underline &&   // use Underline property
+                           f1.Size == f2.Size &&
+                           f1.Color.ToArgb() == f2.Color.ToArgb() &&
+                           f1.Name == f2.Name;
                 }
 
-                if (canMerge)
+                // List to hold merged runs: start index, length, and the Font to apply
+                var mergedRuns = new List<(int Start, int Length, Font Font)>();
+
+                int index = 0;
+                while (index < textLength)
                 {
-                    // Extend the previous merged portion
-                    var last = mergedPortions[mergedPortions.Count - 1];
-                    mergedPortions[mergedPortions.Count - 1] = (last.Start, last.Length + partText.Length, last.Font, last.Options);
-                }
-                else
-                {
-                    // Create a new merged portion entry
-                    mergedPortions.Add((mergedTextBuilder.Length, partText.Length, currentFont, currentOptions));
+                    // Get the formatting of the current character
+                    Font currentFont = textBox.Characters(index, 1).Font;
+
+                    int runLength = 1;
+                    // Extend the run while the next character has identical formatting
+                    while (index + runLength < textLength)
+                    {
+                        Font nextFont = textBox.Characters(index + runLength, 1).Font;
+                        if (!FontsAreEqual(currentFont, nextFont))
+                            break;
+                        runLength++;
+                    }
+
+                    // Store the merged run
+                    mergedRuns.Add((index, runLength, currentFont));
+
+                    // Move to the next unprocessed character
+                    index += runLength;
                 }
 
-                // Append the text to the combined string
-                mergedTextBuilder.Append(partText);
+                // Re‑apply formatting based on the merged runs.
+                // This effectively reduces the number of internal RichTextPortion objects.
+                foreach (var run in mergedRuns)
+                {
+                    var chars = textBox.Characters(run.Start, run.Length);
+                    chars.Font.IsBold = run.Font.IsBold;
+                    chars.Font.IsItalic = run.Font.IsItalic;
+                    chars.Font.Underline = run.Font.Underline;   // apply underline
+                    chars.Font.Size = run.Font.Size;
+                    chars.Font.Color = run.Font.Color;
+                    chars.Font.Name = run.Font.Name;
+                }
+
+                // ---------- Save the workbook ----------
+                workbook.Save("RichTextPortionMergeDemo.xlsx");
             }
-
-            // Replace the shape's text with the merged text
-            shape.Text = mergedTextBuilder.ToString();
-
-            // Reapply formatting based on the merged portions
-            foreach (var mp in mergedPortions)
+            catch (Exception ex)
             {
-                var chars = shape.Characters(mp.Start, mp.Length);
-                // Apply font formatting
-                chars.Font.IsBold = mp.Font.IsBold;
-                chars.Font.IsItalic = mp.Font.IsItalic;
-                chars.Font.Size = mp.Font.Size;
-                chars.Font.Color = mp.Font.Color;
-
-                // Apply text options (e.g., bold/italic via TextOptions if needed)
-                chars.TextOptions.IsBold = mp.Options.IsBold;
-                chars.TextOptions.IsItalic = mp.Options.IsItalic;
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("RichTextPortionMergeDemo.xlsx");
         }
     }
 }

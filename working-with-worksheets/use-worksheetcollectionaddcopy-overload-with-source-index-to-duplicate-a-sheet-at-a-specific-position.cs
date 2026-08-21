@@ -1,39 +1,55 @@
-// Title: Copy a worksheet to a specific index with WorksheetCollection.AddCopy in Aspose.Cells for .NET (C#)
-// Description: Shows how to duplicate a worksheet by its index using Workbook.Worksheets.AddCopy, rename the new sheet, reposition it with Worksheet.MoveTo, and save the workbook.
-// Keywords: Aspose.Cells | C# | .NET | WorksheetCollection.AddCopy | copy worksheet by index | move worksheet position | duplicate sheet | insert copied sheet | Worksheet.MoveTo
-// Common Searches: Aspose.Cells copy worksheet to specific position | WorksheetCollection AddCopy overload example | How to move copied worksheet in Aspose.Cells | Insert duplicated sheet at index C# | Copy sheet and set order Aspose.Cells
-// Developer Intent: The developer wants to duplicate an existing worksheet and place the copy at a chosen index within the workbook using Aspose.Cells for .NET.
-// Use Cases: Generate multiple template sheets and insert each copy sequentially between other worksheets. | Copy a data sheet, rename it, and position it immediately after a summary sheet for automated reporting. | Duplicate a configuration worksheet and insert it right after the main sheet to keep versioned settings together.
-// AI Prompts: Write C# code that copies the worksheet at index 2 and inserts the copy at index 0 using Aspose.Cells. | Explain how Worksheet.MoveTo can reorder worksheets after using WorksheetCollection.AddCopy in a .NET workbook. | Provide a step‑by‑step guide to duplicate a sheet and place it between two existing sheets with Aspose.Cells for .NET.
+// Title: Copy a worksheet and set its tab order with WorksheetCollection.AddCopy in Aspose.Cells for .NET
+// Description: Shows how to create a workbook, rename the default sheet, duplicate it using Worksheets.AddCopy(sourceIndex), obtain the new sheet’s index, rename the copy, and move it to a specific tab position with Worksheet.MoveTo before saving.
+// Keywords: Aspose.Cells | WorksheetCollection.AddCopy | duplicate worksheet C# | move worksheet | set tab order | reorder worksheets programmatically | copy sheet by index | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells copy worksheet to specific position | WorksheetCollection AddCopy usage example | How to move a copied sheet in Aspose.Cells | C# duplicate sheet and set tab order | Reorder worksheets programmatically Aspose.Cells
+// Developer Intent: Copy an existing worksheet and insert the copy at a chosen tab index within the workbook.
+// Use Cases: Create a template sheet, duplicate it, and place the copy as the second tab for a report. | Generate monthly report tabs by copying a base sheet and inserting each copy after a summary sheet. | Programmatically reorder sheets after copying to match a predefined layout before export.
+// AI Prompts: Provide C# code that uses Aspose.Cells to copy a worksheet by its index and insert the copy at position 2. | Explain how Worksheet.MoveTo works after using Worksheets.AddCopy in Aspose.Cells. | Show an example of duplicating multiple worksheets and arranging them in a custom order with Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to duplicate a worksheet by its index using Workbook.Worksheets.AddCopy, rename the new sheet, reposition it with Worksheet.MoveTo, and save the workbook.
-    public class DuplicateSheetAtPosition
+    // Shows how to create a workbook, rename the default sheet, duplicate it using Worksheets.AddCopy(sourceIndex), obtain the new sheet’s index, rename the copy, and move it to a specific tab position with Worksheet.MoveTo before saving.
+    public class DuplicateSheetAtSpecificPosition
     {
         public static void Main()
         {
-            // Create a new workbook (contains a default worksheet)
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook (default workbook contains one worksheet)
             Workbook workbook = new Workbook();
 
-            // Prepare the source worksheet (index 0)
-            Worksheet sourceSheet = workbook.Worksheets[0];
-            sourceSheet.Name = "SourceSheet";
-            sourceSheet.Cells["A1"].PutValue("Data in source sheet");
+            // Access the original worksheet (index 0) and add some data
+            Worksheet originalSheet = workbook.Worksheets[0];
+            originalSheet.Name = "Original";
+            originalSheet.Cells["A1"].PutValue("Data in the original sheet");
 
-            // Duplicate the source worksheet using AddCopy overload with source index
-            int copiedIndex = workbook.Worksheets.AddCopy(0); // copies sheet at index 0
+            // Duplicate the original worksheet using AddCopy overload that takes the source index
+            // This method returns the index of the newly created copy (added at the end)
+            int copiedIndex = workbook.Worksheets.AddCopy(0);
             Worksheet copiedSheet = workbook.Worksheets[copiedIndex];
-            copiedSheet.Name = "CopiedSheet";
+            copiedSheet.Name = "Copied";
 
-            // Move the copied sheet to the desired position (e.g., index 1)
+            // Move the copied sheet to the desired position, e.g., index 1 (second tab)
+            // MoveTo repositions the sheet within the workbook's sheet collection
             copiedSheet.MoveTo(1);
 
-            // Save the workbook
-            workbook.Save("DuplicatedSheetAtPosition.xlsx");
+            // Save the workbook to a file
+            string outputPath = "DuplicatedSheetAtPosition.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
     }
 }

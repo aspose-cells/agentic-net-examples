@@ -1,18 +1,17 @@
-// Title: Export Active Worksheet to HTML with Aspose.Cells for .NET (C#)
-// Description: Shows how to set HtmlSaveOptions.ExportActiveWorksheetOnly to true so that saving a Workbook generates an HTML file that includes only the currently active sheet.
-// Keywords: Aspose.Cells | HtmlSaveOptions | ExportActiveWorksheetOnly | C# HTML export | single worksheet HTML | active sheet only | Aspose.Cells .NET | Workbook to HTML | save active worksheet | Aspose.Cells example
-// Common Searches: Aspose.Cells export only active sheet to HTML C# | HtmlSaveOptions ExportActiveWorksheetOnly usage | Generate HTML from a specific worksheet using Aspose.Cells | C# save workbook as HTML with active worksheet only | How to hide other sheets when exporting to HTML Aspose
-// Developer Intent: Produce an HTML file that contains just the active worksheet from a workbook that has multiple sheets.
-// Use Cases: Display a preview of the user‑selected sheet on a web page without loading other worksheets. | Create a lightweight HTML report for email that reveals data from only one sheet. | Export a confidential worksheet to HTML while keeping the remaining sheets private.
-// AI Prompts: Provide a C# code snippet that sets ExportActiveWorksheetOnly to true and saves only the active sheet as HTML using Aspose.Cells. | Explain the impact of HtmlSaveOptions.ExportActiveWorksheetOnly on the generated HTML and what other options may need adjustment. | Show how to programmatically select a worksheet as active and then export just that sheet to HTML with Aspose.Cells.
+// Title: Export Active Worksheet Only to HTML with Aspose.Cells for .NET (C#)
+// Description: Shows how to use Aspose.Cells for .NET to save a workbook as an HTML file that contains only the active worksheet. The sample creates a workbook with two sheets, marks the first sheet as active, sets HtmlSaveOptions.ExportActiveWorksheetOnly to true, and writes the output to an HTML document.
+// Keywords: Aspose.Cells | C# | HtmlSaveOptions | ExportActiveWorksheetOnly | export active worksheet html | single sheet html export | Aspose.Cells HTML export | save workbook as html | active sheet only | Aspose.Cells .NET
+// Common Searches: Aspose.Cells export only active worksheet to HTML | HtmlSaveOptions ExportActiveWorksheetOnly C# example | How to save a single worksheet as HTML using Aspose.Cells | Generate HTML for active sheet only Aspose.Cells .NET | C# Aspose.Cells HTML export single sheet
+// Developer Intent: Generate an HTML file that includes only the workbook’s active worksheet.
+// Use Cases: Web preview that displays only the user‑selected sheet without loading other tabs. | Email‑friendly HTML snapshot of the current sheet for reporting. | Download button that provides the active sheet as a standalone HTML document in multi‑sheet applications. | Embedding the active worksheet in a portal where only one sheet should be visible.
+// AI Prompts: Write C# code using Aspose.Cells to export the active worksheet to HTML with custom CSS styling. | Explain how ExportActiveWorksheetOnly interacts with other HtmlSaveOptions such as ExportImagesAsBase64. | Show how to export a worksheet by its name to HTML instead of using the active sheet with Aspose.Cells for .NET. | Provide a PowerShell script that calls Aspose.Cells to convert the active sheet of an Excel file to HTML.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExportActiveWorksheetOnlyDemo
 {
-    // Shows how to set HtmlSaveOptions.ExportActiveWorksheetOnly to true so that saving a Workbook generates an HTML file that includes only the currently active sheet.
+    // Shows how to use Aspose.Cells for .NET to save a workbook as an HTML file that contains only the active worksheet. The sample creates a workbook with two sheets, marks the first sheet as active, sets HtmlSaveOptions.ExportActiveWorksheetOnly to true, and writes the output to an HTML document.
     class Program
     {
         static void Main()
@@ -21,7 +20,7 @@ namespace AsposeCellsExportActiveWorksheetOnlyDemo
             Workbook workbook = new Workbook();
             workbook.Worksheets.Add("SecondSheet");
 
-            // Add sample data to both sheets
+            // Populate data in both worksheets
             workbook.Worksheets[0].Cells["A1"].PutValue("Data in First Sheet");
             workbook.Worksheets[1].Cells["A1"].PutValue("Data in Second Sheet");
 
@@ -32,13 +31,8 @@ namespace AsposeCellsExportActiveWorksheetOnlyDemo
             HtmlSaveOptions saveOptions = new HtmlSaveOptions();
             saveOptions.ExportActiveWorksheetOnly = true;
 
-            // Define output path (adjust as needed)
-            string outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "ActiveSheetOnly.html");
-
-            // Save the workbook as HTML using the configured options
-            workbook.Save(outputPath, saveOptions);
-
-            Console.WriteLine($"HTML file saved to: {outputPath}");
+            // Save the workbook to HTML; only the active worksheet will be exported
+            workbook.Save("ActiveSheetOnly.html", saveOptions);
         }
     }
 }

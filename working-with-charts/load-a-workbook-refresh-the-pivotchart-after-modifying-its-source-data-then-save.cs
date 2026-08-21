@@ -1,50 +1,46 @@
-// Title: Refresh a PivotChart after modifying source data with Aspose.Cells (C#)
-// Description: Load a workbook, update cells that feed a PivotTable, call RefreshPivotTables, loop through Worksheet.Charts to invoke RefreshPivotData on charts linked to a pivot source, and save the file. Ensures the PivotChart reflects the new data.
-// Keywords: Aspose.Cells C# refresh PivotChart | RefreshPivotData example | Update PivotTable source programmatically | Pivot cache refresh Aspose.Cells | C# Excel PivotChart update | Aspose.Cells workbook modify cells | RefreshPivotTables worksheet
-// Common Searches: how to refresh a PivotChart in Aspose.Cells C# | Aspose.Cells refresh pivot cache after data change | C# code to update PivotTable and PivotChart | RefreshPivotData Aspose.Cells example | programmatically refresh Excel PivotChart with Aspose
-// Developer Intent: Update the workbook’s source values, refresh the associated PivotTable cache, refresh any PivotCharts, and save the updated file.
-// Use Cases: Correct sales figures in an Excel report, then refresh all pivot visualizations before publishing. | Automate monthly KPI updates by changing key metrics, refreshing pivot structures, and generating a fresh workbook. | Batch‑process multiple Excel files to fix data errors, ensure pivot tables and charts are up‑to‑date, and overwrite the originals.
-// AI Prompts: Generate C# code using Aspose.Cells that changes specific cell values, refreshes all PivotTables, refreshes only charts with a PivotSource, and saves the workbook. | Show how to iterate over Worksheet.Charts and call RefreshPivotData conditionally based on Chart.PivotSource. | Provide error‑handling patterns for RefreshPivotData when a chart is not linked to a pivot source.
+// Title: Refresh PivotChart After Modifying Source Data – Aspose.Cells C# Example
+// Description: Load an Excel workbook with Aspose.Cells, change source cells, call RefreshPivotTables, iterate through charts with a PivotSource and invoke RefreshPivotData, then save the file so the PivotChart reflects the new values.
+// Keywords: Aspose.Cells C# refresh PivotChart | RefreshPivotData Aspose.Cells | RefreshPivotTables programmatically | update pivot chart source data .NET | PivotSource property chart Aspose | modify Excel cells and refresh pivot chart | Aspose.Cells example refresh chart
+// Common Searches: how to refresh a PivotChart after changing source data using Aspose.Cells | Aspose.Cells C# refresh all pivot tables and charts | programmatically update Excel cells and refresh PivotChart | RefreshPivotData example Aspose.Cells | refresh pivot chart in .NET workbook
+// Developer Intent: Update source cells, refresh associated pivot tables and charts, and save the workbook with the latest data.
+// Use Cases: Automate monthly sales report generation by editing source values and instantly updating pivot charts. | Batch‑process multiple workbooks to correct data errors and ensure every PivotChart displays the corrected figures. | Build a real‑time dashboard where cell edits trigger automatic refresh of pivot tables and charts before publishing.
+// AI Prompts: Write C# code with Aspose.Cells that changes specific cell values, refreshes all pivot tables, and refreshes only charts that have a PivotSource. | Explain how Chart.PivotSource is used to identify pivot charts that need RefreshPivotData in Aspose.Cells. | Suggest robust error‑handling patterns for RefreshPivotData and RefreshPivotTables calls in a .NET application.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Pivot;
 
-namespace PivotChartRefreshExample
+// Load an Excel workbook with Aspose.Cells, change source cells, call RefreshPivotTables, iterate through charts with a PivotSource and invoke RefreshPivotData, then save the file so the PivotChart reflects the new values.
+class Program
 {
-    // Load a workbook, update cells that feed a PivotTable, call RefreshPivotTables, loop through Worksheet.Charts to invoke RefreshPivotData on charts linked to a pivot source, and save the file. Ensures the PivotChart reflects the new data.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook that contains the pivot table and pivot chart
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Assume the source data for the pivot table is on the first worksheet
+        Worksheet dataSheet = workbook.Worksheets[0];
+
+        // Modify the source data that the pivot table/chart depends on
+        dataSheet.Cells["B2"].PutValue(1500);
+        dataSheet.Cells["B3"].PutValue(2500);
+
+        // Refresh all pivot tables in the workbook after the data change
+        workbook.Worksheets.RefreshPivotTables();
+
+        // Refresh all pivot charts (charts that have a PivotSource defined)
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            // Load the existing workbook that contains a PivotTable and a PivotChart
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Assume the first worksheet holds the data, pivot table and pivot chart
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // ----- Modify the source data that the pivot table uses -----
-            // Example: change some values in the data range
-            worksheet.Cells["B2"].PutValue(1500);
-            worksheet.Cells["B3"].PutValue(2500);
-
-            // ----- Refresh all PivotTables in the worksheet -----
-            // This updates the pivot cache with the new source data
-            worksheet.RefreshPivotTables();
-
-            // ----- Refresh the PivotChart(s) that depend on the PivotTable -----
-            // Iterate through all charts in the worksheet and refresh those that have a PivotSource
-            foreach (Chart chart in worksheet.Charts)
+            foreach (Chart chart in ws.Charts)
             {
                 if (!string.IsNullOrEmpty(chart.PivotSource))
                 {
                     chart.RefreshPivotData();
                 }
             }
-
-            // Save the updated workbook
-            workbook.Save("output.xlsx");
         }
+
+        // Save the workbook with the refreshed pivot tables and charts
+        workbook.Save("output.xlsx");
     }
 }

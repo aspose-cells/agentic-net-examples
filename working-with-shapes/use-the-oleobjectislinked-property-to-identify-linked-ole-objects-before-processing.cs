@@ -1,54 +1,78 @@
-// Title: C# – Detect and Update Linked OLE Objects in Excel with Aspose.Cells
-// Description: Load an Excel workbook using Aspose.Cells for .NET, iterate through each worksheet’s OleObjects, use the OleObject.IsLink property to identify linked OLE objects, modify their ObjectSourceFullName (e.g., change a drive letter), skip embedded objects, and save the workbook with the updated links.
-// Keywords: Aspose.Cells | C# | linked OLE objects | OleObject.IsLink | ObjectSourceFullName | update OLE link path | Excel automation | OleObject collection | skip embedded OLE | modify OLE source file
-// Common Searches: How to check if an OLE object is linked using Aspose.Cells C# | Update source path of linked OLE objects in Excel with Aspose.Cells | Skip embedded OLE objects while processing a workbook in .NET | Change drive letter of OLE link in Excel programmatically | Aspose.Cells example for iterating OleObjects
-// Developer Intent: Identify linked OLE objects in an Excel workbook and programmatically change their source file paths before saving.
-// Use Cases: Process only linked OLE objects and ignore embedded ones across all worksheets. | Replace a specific drive letter or folder in the ObjectSourceFullName of every linked OLE object. | Automate bulk updates of OLE link locations when files are moved to a new server. | Validate that linked OLE objects point to existing files and log missing references.
-// AI Prompts: Generate a C# method that returns a list of OleObject instances where IsLink is true. | Write code to change the folder path of all linked OLE objects to "D:\NewFolder" while leaving embedded objects untouched. | Provide a robust error‑handling pattern for missing source files when updating OleObject.ObjectSourceFullName with Aspose.Cells.
+// Title: Detect and Update Linked OLE Objects in Excel with Aspose.Cells for .NET
+// Description: Shows how to load a workbook, iterate worksheets, filter OLE objects using OleObject.IsLink, read and change the ObjectSourceFullName of linked OLE items, and save the updated file.
+// Keywords: Aspose.Cells | C# | .NET | OleObject.IsLink | linked OLE objects | ObjectSourceFullName | modify OLE path | Excel OLE handling | workbook automation
+// Common Searches: filter linked OLE objects Aspose.Cells | change OLE source path C# Excel | skip embedded OLE objects Aspose | OleObject.IsLink example | update external OLE links in workbook
+// Developer Intent: Identify only linked OLE objects, adjust their source file paths, and save the workbook with the corrected references.
+// Use Cases: Exclude embedded OLE objects from processing to improve performance. | Rewrite the drive letter or folder in ObjectSourceFullName for all linked OLE items. | Persist the modified links by saving the workbook to a new file.
+// AI Prompts: Generate C# code that lists every linked OLE object in an Excel file and prints its original source path using Aspose.Cells. | Create a method that replaces the drive letter in ObjectSourceFullName of linked OLE objects from C: to D: and saves the workbook. | Explain best practices for handling exceptions when updating OleObject.ObjectSourceFullName for linked objects.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace OleObjectLinkProcessor
+namespace AsposeCellsExamples
 {
-    // Load an Excel workbook using Aspose.Cells for .NET, iterate through each worksheet’s OleObjects, use the OleObject.IsLink property to identify linked OLE objects, modify their ObjectSourceFullName (e.g., change a drive letter), skip embedded objects, and save the workbook with the updated links.
-    class Program
+    // Shows how to load a workbook, iterate worksheets, filter OLE objects using OleObject.IsLink, read and change the ObjectSourceFullName of linked OLE items, and save the updated file.
+    public class OleObjectIsLinkDemo
     {
-        static void Main(string[] args)
+        public static void Run()
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Iterate through each OLE object in the current worksheet
-                foreach (OleObject ole in sheet.OleObjects)
-                {
-                    // Identify linked OLE objects using the IsLink property
-                    if (!ole.IsLink)
-                    {
-                        // Skip processing for embedded (non‑linked) OLE objects
-                        Console.WriteLine($"Worksheet \"{sheet.Name}\": Skipping embedded OLE object.");
-                        continue;
-                    }
-
-                    // Process linked OLE object
-                    Console.WriteLine($"Worksheet \"{sheet.Name}\": Found linked OLE object.");
-                    Console.WriteLine($"Original linked file: {ole.ObjectSourceFullName}");
-
-                    // Example modification: change the drive letter from C: to D:
-                    string updatedPath = ole.ObjectSourceFullName.Replace("C:", "D:");
-                    ole.ObjectSourceFullName = updatedPath;
-
-                    Console.WriteLine($"Updated linked file: {ole.ObjectSourceFullName}");
-                }
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("output.xlsx");
-            Console.WriteLine("Workbook saved with updated OLE links.");
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Iterate through all OLE objects in the current worksheet
+                    foreach (OleObject ole in sheet.OleObjects)
+                    {
+                        // Process only linked OLE objects
+                        if (!ole.IsLink)
+                        {
+                            // Skip embedded OLE objects
+                            Console.WriteLine("Skipping embedded OLE object.");
+                            continue;
+                        }
+
+                        // Display the original linked file path
+                        Console.WriteLine($"Linked OLE object found. Original path: {ole.ObjectSourceFullName}");
+
+                        // Example modification: change drive letter from C: to D:
+                        string updatedPath = ole.ObjectSourceFullName.Replace("C:", "D:");
+                        ole.ObjectSourceFullName = updatedPath;
+
+                        // Show the updated path
+                        Console.WriteLine($"Updated linked path: {ole.ObjectSourceFullName}");
+                    }
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved with updated linked OLE objects: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            Run();
         }
     }
 }

@@ -1,17 +1,17 @@
-// Title: Copy rows while preserving hidden rows – Aspose.Cells for .NET
-// Description: Demonstrates how to duplicate a range of rows in a workbook, hide the same rows in the copy, and retain all row settings by using Cells.CopyRows followed by Row.CopySettings. The resulting file keeps hidden rows hidden in both the original and the copied sections.
-// Keywords: Aspose.Cells copy rows | preserve hidden rows | Row.CopySettings C# | Cells.CopyRows example | duplicate rows visibility | Aspose.Cells .NET hidden state
-// Common Searches: Aspose.Cells copy rows keep hidden rows hidden | How to retain row visibility after copying in Aspose.Cells | CopyRows with hidden row flag in C# | Row.CopySettings after Cells.CopyRows
-// Developer Intent: Duplicate a block of rows and maintain the hidden/visible state and other row attributes.
-// Use Cases: Copy a table that includes collapsed grouping rows for a multi‑page report. | Create a template section that can be reused without losing hidden row configurations. | Generate repeated worksheet sections where hidden rows control conditional display.
-// AI Prompts: Provide C# code that copies rows in Aspose.Cells and keeps hidden rows hidden using Row.CopySettings. | Explain why Row.CopySettings must be invoked after Cells.CopyRows to preserve visibility and formatting. | Show an example that copies rows with height, style, and hidden state intact in Aspose.Cells for .NET.
+// Title: Aspose.Cells for .NET – Copy rows while keeping hidden rows hidden (C#)
+// Description: Demonstrates how to copy a block of rows to another location using Cells.CopyRows and then transfer the IsHidden flag so that any rows originally hidden stay hidden in the duplicated range. The example creates a workbook, fills rows, hides specific rows, copies them, syncs visibility, and saves the file.
+// Keywords: Aspose.Cells copy rows C# | preserve hidden rows Aspose.Cells | CopyRows IsHidden property | duplicate rows keep hidden state | Excel hidden rows automation .NET | Aspose.Cells row visibility | C# Excel copy rows hidden | Aspose.Cells hidden row handling | Excel worksheet row copy preserve format
+// Common Searches: Aspose.Cells copy rows keep hidden rows hidden | How to preserve hidden row state after copying rows in Aspose.Cells | Copy rows with hidden rows using Aspose.Cells .NET | Aspose.Cells CopyRows retain IsHidden flag | C# copy Excel rows and keep hidden rows hidden
+// Developer Intent: Copy a range of rows to a new location and ensure that any rows that were hidden in the source range remain hidden in the destination range.
+// Use Cases: Replicate a template section that includes collapsed group headers, preserving the hidden state for each copy. | Generate a printable report by moving data blocks while maintaining hidden rows used for subtotal grouping. | Programmatically duplicate filtered data where hidden rows represent collapsed details, keeping the same visibility after copy.
+// AI Prompts: Write C# code with Aspose.Cells to copy rows 10‑20 to rows 30‑40 and retain hidden rows. | Show an Aspose.Cells .NET example that copies rows and synchronizes the IsHidden property after using CopyRows. | Explain step‑by‑step how to copy rows with formatting and preserve hidden row state in Aspose.Cells without affecting other worksheet settings.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsRowCopyPreserveHidden
 {
-    // Demonstrates how to duplicate a range of rows in a workbook, hide the same rows in the copy, and retain all row settings by using Cells.CopyRows followed by Row.CopySettings. The resulting file keeps hidden rows hidden in both the original and the copied sections.
+    // Demonstrates how to copy a block of rows to another location using Cells.CopyRows and then transfer the IsHidden flag so that any rows originally hidden stay hidden in the duplicated range. The example creates a workbook, fills rows, hides specific rows, copies them, syncs visibility, and saves the file.
     class Program
     {
         static void Main()
@@ -21,35 +21,35 @@ namespace AsposeCellsRowCopyPreserveHidden
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate sample data in rows 0 to 4
-            for (int r = 0; r < 5; r++)
+            // Populate sample data in rows 0-5
+            for (int r = 0; r < 6; r++)
             {
-                cells[r, 0].PutValue($"Row {r + 1}");
+                cells[r, 0].PutValue($"Row {r + 1} Col A");
+                cells[r, 1].PutValue($"Row {r + 1} Col B");
             }
 
-            // Hide rows 1 and 3 (zero‑based indexes)
-            cells.HideRow(1); // Row 2
-            cells.HideRow(3); // Row 4
+            // Hide rows 2 and 4 (zero‑based indexes 1 and 3)
+            sheet.Cells.HideRow(1);
+            sheet.Cells.HideRow(3);
 
-            // Destination start row (copy rows 0‑4 to start at row 5)
+            // Destination start row (copy rows 0‑5 to rows 6‑11)
             int sourceStart = 0;
-            int destinationStart = 5;
-            int rowCount = 5;
+            int destinationStart = 6;
+            int rowCount = 6;
 
             // Copy rows data and formats
-            cells.CopyRows(cells, sourceStart, destinationStart, rowCount);
+            sheet.Cells.CopyRows(sheet.Cells, sourceStart, destinationStart, rowCount);
 
-            // Preserve hidden state (and other row settings) for each copied row
+            // Preserve hidden state for each copied row
             for (int i = 0; i < rowCount; i++)
             {
-                Row srcRow = sheet.Cells.Rows[sourceStart + i];
+                Row sourceRow = sheet.Cells.Rows[sourceStart + i];
                 Row destRow = sheet.Cells.Rows[destinationStart + i];
-                // Copy all settings; checkStyle = false because source and destination are in the same workbook
-                destRow.CopySettings(srcRow, false);
+                destRow.IsHidden = sourceRow.IsHidden;
             }
 
-            // Save the workbook (output will retain hidden rows in both original and copied sections)
-            workbook.Save("RowsCopiedWithHiddenState.xlsx");
+            // Save the workbook
+            workbook.Save("RowsCopiedPreserveHidden.xlsx");
         }
     }
 }

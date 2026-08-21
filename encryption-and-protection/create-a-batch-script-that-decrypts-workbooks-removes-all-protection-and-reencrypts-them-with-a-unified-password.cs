@@ -1,173 +1,108 @@
-// Title: C# batch script to decrypt, strip protection, and re‑encrypt Excel workbooks with a single password using Aspose.Cells
-// Description: A .NET console utility that scans a specified folder, loads each .xlsx, .xls, .xlsb, or .xlsm file (including password‑protected workbooks), removes workbook‑level, shared‑workbook, and worksheet protection, deletes macros, digital signatures and personal information, then saves the file in its original format encrypted with a unified password. The solution leverages Aspose.Cells for fast, password‑aware processing and supports custom input and output directories.
-// Keywords: Aspose.Cells | C# batch Excel encryption | remove worksheet protection programmatically | decrypt Excel workbook | re‑encrypt Excel files | bulk Excel password change | Excel macro removal C# | shared workbook unprotect | Excel file format preservation | console app Aspose.Cells .NET
-// Common Searches: batch change Excel password C# | remove protection from multiple Excel files Aspose.Cells | decrypt and re‑encrypt Excel workbooks .NET | strip macros from Excel files in bulk | how to unprotect shared workbook using Aspose.Cells | C# script to process all Excel files in a folder | convert encrypted Excel to new password programmatically
-// Developer Intent: Create a single command‑line tool that cleans, unprotects, and re‑protects a collection of Excel workbooks with one common password.
-// Use Cases: Standardize the password for all corporate Excel reports before archiving them in a secure repository. | Prepare a batch of workbooks for external distribution by removing macros, digital signatures, and personal metadata. | Migrate legacy encrypted spreadsheets to a new security policy that requires a unified password across the organization.
-// AI Prompts: Write a robust C# method that iterates through a directory, opens each encrypted Excel file with Aspose.Cells, removes all protections, and saves it using a new unified password. | Add detailed logging and error handling to the batch processor, capturing files that fail to load, unprotect, or save, and outputting a summary report. | Extend the script to generate a CSV audit file that records the original protection state of each worksheet before removal.
+// Title: C# batch script to decrypt, strip protection, and re‑encrypt Excel/ODS workbooks with a single password using Aspose.Cells
+// Description: Scans a folder for Excel and ODS files, loads each workbook with its original password (if known), removes workbook, shared‑workbook and worksheet protection, optionally clears macros, digital signatures and personal information, then applies a unified strong encryption password and saves the files to an output directory.
+// Keywords: Aspose.Cells | C# batch workbook processing | Excel decryption | remove worksheet protection | re‑encrypt workbooks | unified password | strong encryption AES | load options password | shared workbook unprotect | ODS encryption | .NET Excel security
+// Common Searches: batch remove protection from Excel files Aspose.Cells | C# re‑encrypt multiple workbooks with one password | how to decrypt and re‑encrypt ODS files programmatically | Aspose.Cells remove shared workbook protection in bulk | set AES encryption for Excel files using Aspose.Cells
+// Developer Intent: Open each workbook, clear all existing protections, and save it encrypted with a common password.
+// Use Cases: Standardize password protection across a legacy collection of spreadsheets before distribution. | Clean up shared workbooks by removing shared mode, macros, and personal data prior to archiving. | Prepare a batch of confidential spreadsheets for secure sharing by applying a single strong password.
+// AI Prompts: Generate C# code that uses Aspose.Cells to batch decrypt Excel/ODS files, remove all protection types, and re‑encrypt them with a specified password. | Explain how to handle workbooks when the original password is unknown or missing while using Aspose.Cells. | Show how to configure AES‑128 encryption options when saving workbooks with Aspose.Cells.
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace WorkbookBatchProcessor
+namespace WorkbookBatchReencrypt
 {
-    // A .NET console utility that scans a specified folder, loads each .xlsx, .xls, .xlsb, or .xlsm file (including password‑protected workbooks), removes workbook‑level, shared‑workbook, and worksheet protection, deletes macros, digital signatures and personal information, then saves the file in its original format encrypted with a unified password. The solution leverages Aspose.Cells for fast, password‑aware processing and supports custom input and output directories.
+    // Scans a folder for Excel and ODS files, loads each workbook with its original password (if known), removes workbook, shared‑workbook and worksheet protection, optionally clears macros, digital signatures and personal information, then applies a unified strong encryption password and saves the files to an output directory.
     class Program
     {
         // Unified password to be applied to all processed workbooks
         private const string UnifiedPassword = "UnifiedPass123";
 
-        // Original password used for opening encrypted workbooks (replace with actual password or retrieve per file)
-        private const string OriginalPassword = "oldPassword";
-
         static void Main(string[] args)
         {
             // Folder containing the workbooks to process
             string inputFolder = @"C:\InputWorkbooks";
-            // Folder where the processed workbooks will be saved
+            // Folder where the re‑encrypted workbooks will be saved
             string outputFolder = @"C:\OutputWorkbooks";
+
+            // Mapping of workbook file name to its current password (if known)
+            // If a workbook is not password‑protected, leave the value null or empty
+            var originalPasswords = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                // Example entries:
+                // { "Encrypted1.xlsx", "oldPass1" },
+                // { "Encrypted2.xlsm", "oldPass2" }
+            };
 
             // Ensure output directory exists
             Directory.CreateDirectory(outputFolder);
 
-            // Verify input folder exists
-            if (!Directory.Exists(inputFolder))
+            // Process each supported workbook file in the input folder
+            foreach (string filePath in Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly))
             {
-                Console.WriteLine($"Input folder does not exist: {inputFolder}");
-                return;
-            }
-
-            string[] files;
-            try
-            {
-                // Process all Excel files in the input folder (non‑recursive)
-                files = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to enumerate files in '{inputFolder}': {ex.Message}");
-                return;
-            }
-
-            foreach (string filePath in files)
-            {
-                // Consider only supported Excel extensions
                 string extension = Path.GetExtension(filePath).ToLowerInvariant();
-                if (extension != ".xlsx" && extension != ".xls" && extension != ".xlsb" && extension != ".xlsm")
-                    continue;
+                if (extension != ".xlsx" && extension != ".xls" && extension != ".xlsm" && extension != ".ods")
+                    continue; // Skip unsupported files
 
-                // Ensure the file actually exists before attempting to load
-                if (!File.Exists(filePath))
+                string fileName = Path.GetFileName(filePath);
+                Console.WriteLine($"Processing: {fileName}");
+
+                // Determine the original password (if any) for this file
+                originalPasswords.TryGetValue(fileName, out string originalPassword);
+
+                // Load the workbook (with password if it is encrypted)
+                LoadOptions loadOptions = new LoadOptions();
+                if (!string.IsNullOrEmpty(originalPassword))
+                    loadOptions.Password = originalPassword;
+
+                Workbook workbook = new Workbook(filePath, loadOptions);
+
+                // ----- Remove workbook‑level protection -----
+                if (workbook.IsWorkbookProtectedWithPassword)
                 {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
+                    // Unprotect using the original password (empty string if none)
+                    workbook.Unprotect(originalPassword ?? string.Empty);
                 }
 
+                // ----- Remove shared workbook protection (if any) -----
                 try
                 {
-                    // Load the workbook (use LoadOptions with password if the file is encrypted)
-                    Workbook workbook = LoadWorkbook(filePath);
-
-                    // Attempt to remove workbook‑level protection (structure protection)
-                    try
-                    {
-                        workbook.Unprotect(OriginalPassword);
-                    }
-                    catch
-                    {
-                        // Ignore if workbook is not protected or password is incorrect
-                    }
-
-                    // Remove shared workbook protection if applicable
-                    if (workbook.Settings.IsEncrypted)
-                    {
-                        try
-                        {
-                            workbook.UnprotectSharedWorkbook(OriginalPassword);
-                        }
-                        catch
-                        {
-                            // Ignore if not a shared workbook or password is incorrect
-                        }
-                    }
-
-                    // Iterate through all worksheets and remove their protection
-                    foreach (Worksheet sheet in workbook.Worksheets)
-                    {
-                        if (sheet.IsProtected)
-                        {
-                            try
-                            {
-                                sheet.Unprotect(OriginalPassword);
-                            }
-                            catch
-                            {
-                                // Ignore if sheet is not protected or password is incorrect
-                            }
-                        }
-                    }
-
-                    // Remove macros, digital signatures, and personal information
-                    workbook.RemoveMacro();
-                    workbook.RemoveDigitalSignature();
-                    workbook.RemovePersonalInformation();
-
-                    // Apply the unified password to encrypt the workbook
-                    workbook.Settings.Password = UnifiedPassword;
-
-                    // Determine appropriate SaveFormat based on original file extension
-                    SaveFormat saveFormat = GetSaveFormat(extension);
-
-                    // Build output file path (preserve original file name)
-                    string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-
-                    // Save the processed workbook
-                    workbook.Save(outputPath, saveFormat);
+                    workbook.UnprotectSharedWorkbook(originalPassword ?? string.Empty);
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                    // Ignored – workbook may not be a shared workbook
                 }
+
+                // ----- Remove worksheet protection for all worksheets -----
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    if (sheet.IsProtected)
+                    {
+                        sheet.Unprotect(originalPassword ?? string.Empty);
+                    }
+                }
+
+                // ----- Optional cleanup (macros, digital signatures, personal info) -----
+                try { workbook.RemoveMacro(); } catch { }
+                try { workbook.RemoveDigitalSignature(); } catch { }
+                try { workbook.RemovePersonalInformation(); } catch { }
+
+                // ----- Apply unified encryption password -----
+                workbook.Settings.Password = UnifiedPassword;
+
+                // Set strong encryption options (optional but recommended)
+                workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+
+                // ----- Save the re‑encrypted workbook -----
+                string outputPath = Path.Combine(outputFolder, fileName);
+                workbook.Save(outputPath);
+
+                Console.WriteLine($"Saved re‑encrypted workbook to: {outputPath}");
             }
 
             Console.WriteLine("Batch processing completed.");
-        }
-
-        // Loads a workbook, handling encrypted files using the original password if needed
-        private static Workbook LoadWorkbook(string filePath)
-        {
-            try
-            {
-                // Attempt to load without a password
-                return new Workbook(filePath);
-            }
-            catch
-            {
-                // If loading fails, assume the workbook is encrypted and retry with the original password
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    Password = OriginalPassword
-                };
-                return new Workbook(filePath, loadOptions);
-            }
-        }
-
-        // Maps file extensions to Aspose.Cells SaveFormat values
-        private static SaveFormat GetSaveFormat(string extension)
-        {
-            switch (extension)
-            {
-                case ".xlsx":
-                case ".xlsm":
-                    return SaveFormat.Xlsx;
-                case ".xls":
-                    return SaveFormat.Excel97To2003;
-                case ".xlsb":
-                    return SaveFormat.Xlsb;
-                default:
-                    return SaveFormat.Xlsx;
-            }
         }
     }
 }

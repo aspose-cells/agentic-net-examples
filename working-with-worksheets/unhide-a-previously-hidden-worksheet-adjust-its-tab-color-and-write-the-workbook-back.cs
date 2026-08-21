@@ -1,33 +1,75 @@
-// Title: Unhide a Worksheet, Set Tab Color, and Save Workbook with Aspose.Cells for .NET (C#)
-// Description: Load an existing Excel file using Aspose.Cells, make a hidden worksheet visible, change its tab color, and save the updated workbook—all in C#.
-// Keywords: Aspose.Cells unhide worksheet C# | Aspose.Cells set worksheet tab color | C# change sheet visibility Aspose.Cells | Aspose.Cells Workbook.Save | Excel worksheet visibility .NET | Aspose.Cells VisibilityType | C# Excel tab color | Aspose.Cells modify worksheet properties
-// Common Searches: How to unhide a hidden worksheet with Aspose.Cells C# | Set worksheet tab color using Aspose.Cells for .NET | Change sheet visibility and save workbook Aspose.Cells | C# code to make hidden Excel sheet visible Aspose.Cells | Aspose.Cells unhide sheet by index and apply tab color
-// Developer Intent: Programmatically reveal a hidden worksheet, assign a custom tab color, and persist the changes to the Excel file using Aspose.Cells for .NET.
-// Use Cases: Expose a hidden financial summary sheet, color its tab green for quick identification, and save the workbook before distribution. | Automatically unhide a configuration worksheet in generated reports, mark it with a red tab to signal caution, and write the file to a shared folder. | Batch‑process multiple workbooks to ensure the first sheet is visible, apply a corporate blue tab color, and overwrite the originals for branding consistency.
-// AI Prompts: Generate C# code that uses Aspose.Cells to unhide a worksheet by name, set its tab color to a specific RGB value, and save the workbook. | Explain how to check a worksheet's current VisibilityType before changing it with Aspose.Cells, including error handling for missing sheets. | Create a reusable method that accepts a file path, sheet index, and System.Drawing.Color, then unhides the sheet, applies the tab color, and returns the path of the saved workbook.
+// Title: Unhide Hidden Worksheet, Change Tab Color, and Save Workbook with Aspose.Cells for .NET (C#)
+// Description: C# example that loads an Excel file using Aspose.Cells, locates a worksheet named "HiddenSheet" or the first hidden sheet, makes it visible, sets its tab color to green, and saves the updated workbook to a new file.
+// Keywords: Aspose.Cells unhide worksheet C# | set worksheet tab color Aspose.Cells | Excel hidden sheet visibility .NET | save workbook after modifying sheet Aspose | C# find first hidden worksheet Aspose.Cells | Aspose.Cells workbook save example
+// Common Searches: how to unhide a hidden worksheet with Aspose.Cells | change Excel sheet tab color using C# Aspose.Cells | save modified workbook after changing sheet properties | C# code to locate first hidden sheet in Excel file | Aspose.Cells example for worksheet visibility and tab color
+// Developer Intent: Reveal a hidden worksheet, apply a custom tab color, and write the modified workbook back to disk.
+// Use Cases: Programmatically unhide a specific sheet by name before publishing a report. | Automatically detect and reveal the first hidden sheet in legacy workbooks. | Apply corporate color schemes to worksheet tabs after making them visible. | Batch‑process Excel files to ensure all sheets are visible and correctly colored before distribution.
+// AI Prompts: Generate C# code with Aspose.Cells that unhides a worksheet called "Report" and sets its tab color to blue, then saves the workbook. | Explain how to iterate through a workbook's worksheets in Aspose.Cells to find the first hidden sheet, make it visible, assign a custom tab color, and persist the changes. | Provide a step‑by‑step guide for handling missing input files when unhide‑and‑color operations fail in Aspose.Cells.
 
 using System;
-using Aspose.Cells;
 using System.Drawing;
+using System.IO;
+using Aspose.Cells;
 
-// Load an existing Excel file using Aspose.Cells, make a hidden worksheet visible, change its tab color, and save the updated workbook—all in C#.
-class Program
+namespace AsposeCellsWorksheetUnhideExample
 {
-    static void Main()
+    // C# example that loads an Excel file using Aspose.Cells, locates a worksheet named "HiddenSheet" or the first hidden sheet, makes it visible, sets its tab color to green, and saves the updated workbook to a new file.
+    class Program
     {
-        // Load the existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main()
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Access the worksheet that needs to be unhidden (by index or name)
-        Worksheet worksheet = workbook.Worksheets[0]; // example: first worksheet
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                    return;
+                }
 
-        // Unhide the worksheet
-        worksheet.IsVisible = true; // alternatively: worksheet.VisibilityType = VisibilityType.Visible;
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        // Adjust the worksheet tab color
-        worksheet.TabColor = Color.Blue; // set desired color
+                // Try to get the worksheet named "HiddenSheet"
+                Worksheet sheet = workbook.Worksheets["HiddenSheet"];
 
-        // Save the workbook with the changes
-        workbook.Save("output.xlsx");
+                // If not found, look for the first hidden worksheet
+                if (sheet == null)
+                {
+                    foreach (Worksheet ws in workbook.Worksheets)
+                    {
+                        if (!ws.IsVisible)
+                        {
+                            sheet = ws;
+                            break;
+                        }
+                    }
+                }
+
+                // If still not found, report and exit
+                if (sheet == null)
+                {
+                    Console.WriteLine("No hidden worksheet found in the workbook.");
+                    return;
+                }
+
+                // Unhide the worksheet
+                sheet.IsVisible = true;
+
+                // Change the tab color
+                sheet.TabColor = Color.Green;
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

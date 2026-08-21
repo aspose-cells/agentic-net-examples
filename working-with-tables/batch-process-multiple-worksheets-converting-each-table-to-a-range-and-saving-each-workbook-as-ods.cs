@@ -1,85 +1,61 @@
-// Title: Batch convert Excel tables to ranges and save as ODS – Aspose.Cells C#
-// Description: C# utility scans a folder of .xlsx files, converts every ListObject table on each worksheet to a normal range, applies OdsSaveOptions (e.g., ignore pivots), and saves each workbook as an .ods file using Aspose.Cells.
-// Keywords: Aspose.Cells C# batch conversion | convert Excel tables to ranges | save workbook as ODS | ListObject ConvertToRange | OdsSaveOptions ignore pivot tables | process multiple Excel files | automate Excel to OpenDocument | C# Excel to ODS utility
-// Common Searches: batch convert Excel tables to ranges C# | Aspose.Cells save as ODS multiple files | convert ListObject to range loop Aspose | ignore pivot tables when saving ODS Aspose.Cells | C# script to convert .xlsx to .ods folder
-// Developer Intent: Automatically transform all tables in each worksheet of many Excel workbooks into ranges and export the modified workbooks as ODS files.
-// Use Cases: Migrate legacy Excel reports to OpenDocument format while flattening table structures for downstream systems. | Prepare a large set of financial spreadsheets for platforms that only accept .ods, ensuring compatibility by removing ListObject tables. | Automate cleanup of generated Excel files—convert tables to ranges and produce ODS versions in a single batch operation.
-// AI Prompts: Write C# code that iterates through every worksheet in a workbook, converts each ListObject to a range, and saves the file as ODS with custom OdsSaveOptions. | Show how to add robust logging and error handling to a batch process that converts .xlsx files to .ods using Aspose.Cells. | Explain how to extend the sample to delete empty worksheets after table conversion before saving the workbook as ODS.
+// Title: C# Batch: Convert Excel Tables to Ranges and Export Workbooks as ODS with Aspose.Cells
+// Description: Scans a directory for .xlsx files, loads each workbook using Aspose.Cells, iterates every worksheet and ListObject, converts each table to a normal range, and saves the result as an ODS file in a target folder.
+// Keywords: Aspose.Cells C# | convert Excel table to range | batch process Excel workbooks | save workbook as ODS | ListObject to range | automate Excel to ODS conversion | C# Excel to OpenDocument
+// Common Searches: C# Aspose.Cells convert all tables to ranges | batch export Excel files to ODS format | remove ListObjects from worksheets programmatically | convert Excel tables to ranges before saving as ODS | Aspose.Cells example for bulk workbook conversion
+// Developer Intent: Automatically change every table in multiple Excel files into plain ranges and generate corresponding ODS files.
+// Use Cases: Migrate legacy Excel reports with embedded tables to the open‑source ODS format for cross‑platform compatibility. | Pre‑process uploaded .xlsx documents in a web service, flatten table structures, and deliver ODS versions to downstream systems. | Integrate into a build or CI pipeline to ensure all workbooks are table‑free before publishing them as ODS assets.
+// AI Prompts: Generate C# code that uses Aspose.Cells to iterate all worksheets, convert each ListObject to a range, and save the workbook as ODS. | Add comprehensive error handling and logging to the batch conversion script, skipping files that cannot be opened or saved. | Extend the example to delete empty worksheets after table conversion and then export the workbook to ODS.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using Aspose.Cells.Ods;
+using Aspose.Cells.Utility;
 
-// C# utility scans a folder of .xlsx files, converts every ListObject table on each worksheet to a normal range, applies OdsSaveOptions (e.g., ignore pivots), and saves each workbook as an .ods file using Aspose.Cells.
-class BatchTableToRangeToOds
+namespace BatchTableToRangeToOds
 {
-    static void Main()
+    // Scans a directory for .xlsx files, loads each workbook using Aspose.Cells, iterates every worksheet and ListObject, converts each table to a normal range, and saves the result as an ODS file in a target folder.
+    class Program
     {
-        // Folder containing source Excel workbooks
-        string inputFolder = @"C:\InputWorkbooks";
-        // Folder where ODS files will be saved
-        string outputFolder = @"C:\OutputOds";
-
-        // Verify input folder exists
-        if (!Directory.Exists(inputFolder))
+        static void Main()
         {
-            Console.WriteLine($"Input folder not found: {inputFolder}");
-            return;
-        }
+            // Folder containing source Excel workbooks
+            string inputFolder = @"C:\InputWorkbooks";
 
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputFolder);
+            // Folder where ODS files will be saved
+            string outputFolder = @"C:\OutputOds";
 
-        // Process each .xlsx file in the input folder
-        foreach (string sourcePath in Directory.GetFiles(inputFolder, "*.xlsx"))
-        {
-            // Verify the source file exists (redundant but safe)
-            if (!File.Exists(sourcePath))
+            // Ensure output directory exists
+            Directory.CreateDirectory(outputFolder);
+
+            // Get all Excel files in the input folder (you can adjust the pattern as needed)
+            string[] excelFiles = Directory.GetFiles(inputFolder, "*.xlsx");
+
+            foreach (string excelPath in excelFiles)
             {
-                Console.WriteLine($"File not found: {sourcePath}");
-                continue;
-            }
+                // Load the workbook
+                Workbook workbook = new Workbook(excelPath);
 
-            try
-            {
-                // Load the workbook from the source file
-                Workbook workbook = new Workbook(sourcePath);
-
-                // Iterate through all worksheets in the workbook
+                // Iterate through each worksheet in the workbook
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Convert every table (ListObject) on the worksheet to a normal range
-                    for (int i = 0; i < sheet.ListObjects.Count; i++)
+                    // Iterate through each table (ListObject) in the worksheet
+                    foreach (ListObject table in sheet.ListObjects)
                     {
-                        ListObject table = sheet.ListObjects[i];
-                        table.ConvertToRange(); // Uses ListObject.ConvertToRange method
+                        // Convert the table to a normal range
+                        table.ConvertToRange();
                     }
                 }
 
-                // Configure ODS save options (optional settings)
-                OdsSaveOptions odsOptions = new OdsSaveOptions
-                {
-                    IgnorePivotTables = true // Example: ignore pivot tables when saving
-                };
+                // Prepare the output ODS file path
+                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(excelPath);
+                string odsPath = Path.Combine(outputFolder, fileNameWithoutExt + ".ods");
 
-                // Build the output file path with .ods extension
-                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
-                string outputPath = Path.Combine(outputFolder, fileNameWithoutExt + ".ods");
-
-                // Save the modified workbook as ODS using the specified options
-                workbook.Save(outputPath, odsOptions);
-
-                Console.WriteLine($"Converted: {sourcePath} -> {outputPath}");
+                // Save the modified workbook as ODS
+                workbook.Save(odsPath, SaveFormat.Ods);
             }
-            catch (Exception ex)
-            {
-                // Log any errors for the current file and continue processing others
-                Console.WriteLine($"Error processing file '{sourcePath}': {ex.Message}");
-            }
+
+            Console.WriteLine("Batch processing completed successfully.");
         }
-
-        Console.WriteLine("Batch processing of tables to ranges and ODS conversion completed.");
     }
 }

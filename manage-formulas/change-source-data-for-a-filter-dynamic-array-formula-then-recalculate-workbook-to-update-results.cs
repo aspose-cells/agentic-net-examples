@@ -1,58 +1,87 @@
-// Title: Refresh a FILTER dynamic array formula after changing source data with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, apply a FILTER dynamic array formula using SetDynamicArrayFormula, modify the source range, invoke RefreshDynamicArrayFormulas, recalculate the workbook, read the updated spill values, and save the file.
-// Keywords: Aspose.Cells FILTER dynamic array | SetDynamicArrayFormula .NET | RefreshDynamicArrayFormulas | update source data spreadsheet | recalculate dynamic array formula | C# Aspose.Cells example | spill range handling
-// Common Searches: Aspose.Cells change source data for FILTER formula | Refresh dynamic array after cell update Aspose.Cells | C# set and recalculate FILTER dynamic array | How to refresh spilled results in Aspose.Cells | Update FILTER criteria programmatically .NET
-// Developer Intent: Update the source cells that a FILTER dynamic array depends on and refresh the formula to obtain the new spill results.
-// Use Cases: Generate reports where FILTER results automatically reflect data edits. | Build dashboards that need real‑time recalculation after user input. | Programmatically adjust spreadsheet calculations before exporting or sharing.
-// AI Prompts: Write C# code with Aspose.Cells to set a FILTER dynamic array, modify a source cell, and refresh the formula to get updated spill values. | Explain why RefreshDynamicArrayFormulas must be called after changing source data for dynamic arrays in Aspose.Cells. | Show how to iterate over the spill range of a FILTER formula and print each value using Aspose.Cells.
+// Title: Refresh a FILTER dynamic array after source data change with Aspose.Cells for .NET
+// Description: This C# example demonstrates how to create a workbook, populate source columns, apply a FILTER dynamic‑array formula, modify the criteria values, and invoke RefreshDynamicArrayFormulas(true) to recalculate and spill the updated results. The workbook is then saved with the refreshed data.
+// Keywords: Aspose.Cells .NET | FILTER dynamic array | RefreshDynamicArrayFormulas | recalculate spilled range | update source data | dynamic array formula refresh | C# spreadsheet automation | Excel FILTER function programmatic
+// Common Searches: Aspose.Cells refresh FILTER formula after data change | C# recalculate dynamic array formulas | how to update spilled range in Aspose.Cells | RefreshDynamicArrayFormulas usage example | dynamic array formula recalc .NET
+// Developer Intent: Update source data for a FILTER dynamic array and recalculate the spilled results using Aspose.Cells.
+// Use Cases: Create a new workbook and fill columns with source and criteria values. | Set a FILTER dynamic‑array formula that spills into adjacent cells. | Modify the criteria range to change which rows meet the filter condition. | Call RefreshDynamicArrayFormulas(true) to automatically refresh the spill area. | Print the refreshed values and save the workbook.
+// AI Prompts: Write C# code that changes the criteria range of a FILTER dynamic array and uses Aspose.Cells to refresh the spilled results. | Explain how RefreshDynamicArrayFormulas(true) works in Aspose.Cells and why it is needed after modifying source data. | Provide a step‑by‑step tutorial for setting, updating, and saving a FILTER dynamic array in a .NET workbook.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, apply a FILTER dynamic array formula using SetDynamicArrayFormula, modify the source range, invoke RefreshDynamicArrayFormulas, recalculate the workbook, read the updated spill values, and save the file.
-class Program
+namespace AsposeCellsDynamicArrayRefreshDemo
 {
-    static void Main()
+    // This C# example demonstrates how to create a workbook, populate source columns, apply a FILTER dynamic‑array formula, modify the criteria values, and invoke RefreshDynamicArrayFormulas(true) to recalculate and spill the updated results. The workbook is then saved with the refreshed data.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-        Cells cells = ws.Cells;
-
-        // Populate source data for the FILTER formula
-        cells["A2"].PutValue(10);
-        cells["A3"].PutValue(20);
-        cells["A4"].PutValue(30);
-        cells["A5"].PutValue(40);
-
-        cells["B2"].PutValue(5);
-        cells["B3"].PutValue(15);
-        cells["B4"].PutValue(25);
-        cells["B5"].PutValue(35);
-
-        // Set a FILTER dynamic array formula in C2:
-        // =FILTER(A2:A5, B2:B5>20)
-        Cell formulaCell = cells["C2"];
-        string formula = "=FILTER(A2:A5, B2:B5>20)";
-        formulaCell.SetDynamicArrayFormula(formula, new FormulaParseOptions(), true);
-
-        // Calculate initial results so the spill range is populated
-        wb.CalculateFormula();
-
-        // Change source data that influences the FILTER result
-        // For example, make B4 greater than 20 so its corresponding A4 should appear in the result
-        cells["B4"].PutValue(50);
-
-        // Refresh dynamic array formulas and recalculate their values
-        wb.RefreshDynamicArrayFormulas(true);
-
-        // Output the values from the spill range (C2:C5)
-        for (int row = 2; row <= 5; row++)
+        static void Main()
         {
-            Console.WriteLine($"C{row} = {cells[$"C{row}"].Value}");
+            try
+            {
+                // Create a new workbook (lifecycle: create)
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Populate source data for the FILTER formula
+                // Column A: values to be filtered
+                cells["A2"].PutValue(10);
+                cells["A3"].PutValue(20);
+                cells["A4"].PutValue(30);
+                cells["A5"].PutValue(40);
+
+                // Column B: criteria values
+                cells["B2"].PutValue(40);
+                cells["B3"].PutValue(60);
+                cells["B4"].PutValue(55);
+                cells["B5"].PutValue(30);
+
+                // Set a FILTER dynamic array formula in C1
+                // It will spill results into C1:Cn depending on the criteria
+                cells["C1"].SetDynamicArrayFormula(
+                    "=FILTER(A2:A5, B2:B5>50)",
+                    new FormulaParseOptions(),
+                    true); // calculateValue = true
+
+                // Calculate initial formulas (optional, RefreshDynamicArrayFormulas can also calculate)
+                workbook.CalculateFormula();
+
+                Console.WriteLine("Initial FILTER results:");
+                PrintSpillRange(cells, startRow: 0, startColumn: 2); // C column (index 2)
+
+                // Change the source data that influences the FILTER formula
+                cells["B2"].PutValue(70); // Now this row meets the >50 condition
+                cells["B4"].PutValue(80); // This row also meets the condition
+
+                // Refresh dynamic array formulas and recalculate their values
+                workbook.RefreshDynamicArrayFormulas(true);
+
+                Console.WriteLine("\nAfter data change and refresh:");
+                PrintSpillRange(cells, startRow: 0, startColumn: 2);
+
+                // Save the workbook (lifecycle: save)
+                workbook.Save("DynamicArrayRefreshResult.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
 
-        // Save the workbook with the updated dynamic array results
-        wb.Save("FilterDynamicArrayDemo.xlsx");
+        // Helper method to print the spilled range of a dynamic array formula starting at a given cell
+        static void PrintSpillRange(Cells cells, int startRow, int startColumn)
+        {
+            int row = startRow;
+            while (true)
+            {
+                Cell cell = cells[row, startColumn];
+                // Stop when the cell is null or contains no value
+                if (cell == null || cell.Value == null)
+                    break;
+
+                Console.WriteLine($"Cell {cell.Name}: {cell.Value}");
+                row++;
+            }
+        }
     }
 }

@@ -1,56 +1,75 @@
-// Title: Apply a custom percentage format to column C after offsetting a range by two rows – Aspose.Cells for .NET
-// Description: Creates a workbook, defines a range starting at C1, shifts it down two rows, retrieves the EntireColumn of the shifted range (still column C), builds a style with the custom format "0.00%", and applies the number format to the whole column before saving the file.
-// Keywords: Aspose.Cells C# custom number format | apply style to entire column | EntireColumn property Aspose.Cells | offset range rows Aspose.Cells | percentage format .NET | column C formatting Aspose.Cells
-// Common Searches: Aspose.Cells apply custom number format to a column | How to use EntireColumn after offsetting a range in C# | Set percentage format for column C with Aspose.Cells | Shift range by rows and style column in .NET | Apply style flag number format Aspose.Cells
-// Developer Intent: Format column C with a two‑decimal percentage style after moving the source range down two rows.
-// Use Cases: Display financial ratios as percentages when data begins at row 3. | Maintain consistent column formatting after inserting header rows. | Quickly reapply a predefined style to a column when the data range is programmatically repositioned.
-// AI Prompts: Generate C# code that creates a custom "0.00%" number format and applies it to the EntireColumn of a range offset by two rows using Aspose.Cells. | Explain step‑by‑step how to offset a range, retrieve its EntireColumn, and apply only the number‑format flag in Aspose.Cells for .NET.
+// Title: Aspose.Cells .NET – Apply Custom Percentage Format to Column C After Row Offset
+// Description: Creates a workbook, offsets a range from C1 to C3, retrieves the whole column C, builds a style with the custom format "##0.00%", and applies it using a StyleFlag that targets only the number format.
+// Keywords: Aspose.Cells | custom number format | percentage format | column C formatting | range offset rows | StyleFlag | C# Excel automation | .NET workbook styling
+// Common Searches: Aspose.Cells offset range by rows | apply custom number format to entire column in .NET | percentage format column C Aspose.Cells | StyleFlag number format only Aspose.Cells | C# set column format after moving range
+// Developer Intent: Set a custom percentage number format for the whole column C after moving a source range down two rows.
+// Use Cases: Standardize percentage display in financial reports regardless of data start row. | Create a reusable template where column C always shows values as "##0.00%" after inserting rows. | Automate formatting of copied data when the source range is shifted within a worksheet.
+// AI Prompts: Generate Aspose.Cells .NET code that offsets a range by two rows and applies the custom format "##0.00%" to the entire column containing the offset range. | Show how to create a Style with a custom percentage pattern and use StyleFlag to apply only the number format to column C after an offset operation. | Write a reusable function that accepts a worksheet, an original range, and a row offset, then formats the whole column of the offset range with a custom numeric pattern.
 
 using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Creates a workbook, defines a range starting at C1, shifts it down two rows, retrieves the EntireColumn of the shifted range (still column C), builds a style with the custom format "0.00%", and applies the number format to the whole column before saving the file.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Alias to avoid conflict with System.Range
+    using CellsRange = Aspose.Cells.Range;
+
+    // Creates a workbook, offsets a range from C1 to C3, retrieves the whole column C, builds a style with the custom format "##0.00%", and applies it using a StyleFlag that targets only the number format.
+    public class ApplyCustomNumberFormatToColumnC
     {
-        try
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Define the original range (starting at row 0, column 2 i.e., C1)
-            int originalStartRow = 0;
-            int originalStartColumn = 2; // Column C
-            int rowCount = 5;   // number of rows in the original range
-            int columnCount = 1; // number of columns in the original range
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
 
-            // Offset the original range by two rows
-            AsposeRange offsetRange = cells.CreateRange(originalStartRow + 2, originalStartColumn, rowCount, columnCount);
+                // Define an original range starting at cell C1 (row 0, column 2)
+                // For demonstration we use a single‑cell range; the size can be adjusted as needed
+                CellsRange originalRange = cells.CreateRange(0, 2, 1, 1);
 
-            // Get the entire column that contains the offset range (still column C)
-            AsposeRange entireColumn = offsetRange.EntireColumn;
+                // Offset the original range by two rows (row index + 2)
+                // Since there is no direct Offset method, create a new range at the offset position
+                CellsRange offsetRange = cells.CreateRange(2, 2, 1, 1); // starts at C3
 
-            // Create a style with a custom number format (percentage with two decimals)
-            Style style = workbook.CreateStyle();
-            style.Custom = "0.00%";
+                // Get the entire column that contains the offset range (column C)
+                CellsRange entireColumn = offsetRange.EntireColumn;
 
-            // Configure the style flag to apply only the number format
-            StyleFlag styleFlag = new StyleFlag();
-            styleFlag.NumberFormat = true;
+                // Create a style with a custom number format (percentage with two decimals)
+                Style style = workbook.CreateStyle();
+                style.Custom = "##0.00%";
 
-            // Apply the style to the whole column
-            entireColumn.ApplyStyle(style, styleFlag);
+                // Configure the style flag to apply only the number format
+                StyleFlag styleFlag = new StyleFlag
+                {
+                    NumberFormat = true
+                };
 
-            // Save the workbook
-            workbook.Save("CustomNumberFormatColumnC.xlsx");
+                // Apply the style to the entire column C
+                entireColumn.ApplyStyle(style, styleFlag);
+
+                // Save the workbook
+                string outputPath = "ColumnC_CustomNumberFormat.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+    }
+
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            ApplyCustomNumberFormatToColumnC.Run();
         }
     }
 }

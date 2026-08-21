@@ -1,10 +1,10 @@
-// Title: C# Aspose.Cells example: Log cells that don't update after a theme change
-// Description: A complete C# script that creates a workbook, applies a custom theme, scans every used cell, and logs those whose Font.ThemeColor is missing or not an accent color. The console output shows the cell address and reason, and the workbook is saved for further review.
-// Keywords: Aspose.Cells C# theme change | detect cells without ThemeColor | log unupdated cells Aspose | custom theme verification | font ThemeColor detection | Excel theme audit C# | Aspose.Cells example GitHub
-// Common Searches: Aspose.Cells log cells after theme change | C# find cells not using theme colors | detect hard‑coded font colors in Excel with Aspose | audit workbook after applying custom theme | list cells unchanged by theme in Aspose.Cells
-// Developer Intent: Find and record cells whose formatting does not reflect a newly applied custom theme.
-// Use Cases: Validate brand‑compliant styling before publishing a report. | Generate a warning list for hard‑coded colors after a theme migration. | Audit large workbooks to pinpoint cells needing manual style updates.
-// AI Prompts: Create a method that returns cell addresses where Font.ThemeColor is null or not an accent after applying a custom theme in Aspose.Cells. | Show C# code to export the unupdated cell list to a CSV file instead of the console. | Explain how to extend the detection to include background fill ThemeColor checks in Aspose.Cells.
+// Title: C# – Log Cells That Fail to Update After a Theme Change with Aspose.Cells
+// Description: Demonstrates how to create a workbook, apply a ThemeColor‑based style to selected cells, switch the workbook to a custom theme, and then scan the recorded cells to detect which ones lost their ThemeColor reference, logging success or failure before optionally saving the file.
+// Keywords: Aspose.Cells | C# | .NET | Excel theme change | ThemeColor detection | cell style audit | logging failed updates | custom workbook theme | automated Excel validation
+// Common Searches: Aspose.Cells log cells after theme change C# | detect cells that lose ThemeColor in Excel .NET | verify theme consistency after applying custom theme | C# code to track cells not updating with new Excel theme
+// Developer Intent: Find and record worksheet cells whose ThemeColor reference is lost when a new theme is applied.
+// Use Cases: Quality‑check financial or marketing reports to ensure branding colors persist after a corporate theme update. | Batch‑process workbooks to flag cells that need manual style correction after migrating to a new color scheme. | Integrate into CI pipelines to automatically verify that theme‑dependent formatting remains intact across builds.
+// AI Prompts: Generate a reusable method that returns a list of cell addresses with a null Font.ThemeColor after a theme switch using Aspose.Cells. | Create code to export the failure log (address and status) to CSV for downstream analysis. | Write a unit test that confirms ThemeChangeLogger correctly identifies cells that lose ThemeColor when a custom theme is applied.
 
 using System;
 using System.Collections.Generic;
@@ -13,138 +13,91 @@ using Aspose.Cells;
 
 namespace AsposeCellsThemeChangeLogger
 {
-    // Custom class to hold information about cells that did not update after a theme change
-    // A complete C# script that creates a workbook, applies a custom theme, scans every used cell, and logs those whose Font.ThemeColor is missing or not an accent color. The console output shows the cell address and reason, and the workbook is saved for further review.
-    public class UnupdatedCellInfo
-    {
-        public string CellName { get; set; }
-        public string Reason { get; set; }
-    }
-
+    // This class demonstrates how to log cells that do not reflect a theme change.
+    // Demonstrates how to create a workbook, apply a ThemeColor‑based style to selected cells, switch the workbook to a custom theme, and then scan the recorded cells to detect which ones lost their ThemeColor reference, logging success or failure before optionally saving the file.
     public class ThemeChangeLogger
     {
         public static void Run()
         {
             // -------------------------------------------------
-            // 1. Create a new workbook and add sample data
+            // 1. Create a new workbook and add sample data.
             // -------------------------------------------------
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some cells with values
-            sheet.Cells["A1"].PutValue("Default Theme");
-            sheet.Cells["B2"].PutValue("Uses Accent1");
-            sheet.Cells["C3"].PutValue("Uses Accent2");
-            sheet.Cells["D4"].PutValue("No Theme Color");
+            // Create a style that uses a theme color (Accent1) and apply it to several cells.
+            Style themeStyle = workbook.CreateStyle();
+            themeStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0);
+            themeStyle.Font.Size = 12;
+            themeStyle.Font.IsBold = true;
 
-            // Apply theme colors to some cells using ThemeColor
-            // Cell B2 -> Accent1
-            Style accent1Style = workbook.CreateStyle();
-            accent1Style.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0);
-            sheet.Cells["B2"].SetStyle(accent1Style);
-
-            // Cell C3 -> Accent2
-            Style accent2Style = workbook.CreateStyle();
-            accent2Style.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent2, 0.0);
-            sheet.Cells["C3"].SetStyle(accent2Style);
-
-            // Cell D4 uses a direct color (no theme)
-            Style directStyle = workbook.CreateStyle();
-            directStyle.Font.Color = Color.Black;
-            sheet.Cells["D4"].SetStyle(directStyle);
+            // Cells that will use the theme style.
+            string[] themedCells = { "A1", "B2", "C3", "D4" };
+            foreach (string address in themedCells)
+            {
+                Cell cell = sheet.Cells[address];
+                cell.PutValue($"Themed {address}");
+                cell.SetStyle(themeStyle);
+            }
 
             // -------------------------------------------------
-            // 2. Define a custom theme (12 colors as required)
+            // 2. Record the cells that are expected to be affected by the theme.
+            // -------------------------------------------------
+            List<string> cellsToWatch = new List<string>(themedCells);
+
+            // -------------------------------------------------
+            // 3. Apply a custom theme (different colors).
             // -------------------------------------------------
             Color[] customColors = new Color[]
             {
                 Color.FromArgb(255, 255, 255), // Background1
                 Color.FromArgb(0, 0, 0),       // Text1
                 Color.FromArgb(240, 240, 240), // Background2
-                Color.FromArgb(50, 50, 50),    // Text2
-                Color.FromArgb(255, 0, 0),     // Accent1 (Red)
-                Color.FromArgb(0, 255, 0),     // Accent2 (Green)
-                Color.FromArgb(0, 0, 255),     // Accent3 (Blue)
-                Color.FromArgb(255, 255, 0),   // Accent4 (Yellow)
-                Color.FromArgb(255, 0, 255),   // Accent5 (Magenta)
-                Color.FromArgb(0, 255, 255),   // Accent6 (Cyan)
-                Color.FromArgb(0, 0, 128),     // Hyperlink
-                Color.FromArgb(128, 0, 128)    // Followed Hyperlink
+                Color.FromArgb(80, 80, 80),    // Text2
+                Color.FromArgb(255, 0, 0),     // Accent1 (red)
+                Color.FromArgb(0, 255, 0),     // Accent2 (green)
+                Color.FromArgb(0, 0, 255),     // Accent3 (blue)
+                Color.FromArgb(255, 255, 0),   // Accent4 (yellow)
+                Color.FromArgb(255, 0, 255),   // Accent5 (magenta)
+                Color.FromArgb(0, 255, 255),   // Accent6 (cyan)
+                Color.FromArgb(0, 0, 128),     // Hyperlink (navy)
+                Color.FromArgb(128, 0, 128)    // Followed Hyperlink (purple)
             };
 
-            // -------------------------------------------------
-            // 3. Apply the custom theme
-            // -------------------------------------------------
-            workbook.CustomTheme("MyCustomTheme", customColors);
+            // Apply the custom theme to the workbook.
+            workbook.CustomTheme("CustomRedGreenTheme", customColors);
 
             // -------------------------------------------------
-            // 4. After theme change, detect cells that did NOT
-            //    use a theme color (they will not reflect the new theme)
+            // 4. After the theme change, verify each watched cell.
             // -------------------------------------------------
-            List<UnupdatedCellInfo> unupdatedCells = new List<UnupdatedCellInfo>();
-
-            // Iterate through all used cells in the worksheet
-            foreach (Cell cell in sheet.Cells)
+            Console.WriteLine("=== Theme Change Verification Log ===");
+            foreach (string address in cellsToWatch)
             {
-                // Retrieve the style of the current cell
+                Cell cell = sheet.Cells[address];
                 Style cellStyle = cell.GetStyle();
 
-                // If the Font.ThemeColor is null, the cell uses a direct color
-                // and therefore will not be affected by the theme change.
-                if (cellStyle.Font.ThemeColor == null)
+                // If the cell's font still has a ThemeColor reference, we assume it will reflect the new theme.
+                // If ThemeColor is null, the cell did not retain the theme reference and thus failed to update.
+                if (cellStyle.Font.ThemeColor != null)
                 {
-                    unupdatedCells.Add(new UnupdatedCellInfo
-                    {
-                        CellName = cell.Name,
-                        Reason = "Font does not use ThemeColor"
-                    });
+                    // The cell is still linked to a theme color; log success.
+                    Console.WriteLine($"[SUCCESS] Cell {address} retains ThemeColor ({cellStyle.Font.ThemeColor.ColorType}).");
                 }
                 else
                 {
-                    // Optional: verify that the ThemeColor type matches one of the
-                    // custom theme's accent colors (Accent1‑Accent6). If it does not,
-                    // it may also be considered as not updated.
-                    ThemeColorType type = cellStyle.Font.ThemeColor.ColorType;
-                    if (type != ThemeColorType.Accent1 &&
-                        type != ThemeColorType.Accent2 &&
-                        type != ThemeColorType.Accent3 &&
-                        type != ThemeColorType.Accent4 &&
-                        type != ThemeColorType.Accent5 &&
-                        type != ThemeColorType.Accent6)
-                    {
-                        unupdatedCells.Add(new UnupdatedCellInfo
-                        {
-                            CellName = cell.Name,
-                            Reason = $"Font uses ThemeColor type {type}, which is not an accent color"
-                        });
-                    }
+                    // The cell lost its theme linkage; log failure.
+                    Console.WriteLine($"[FAILURE] Cell {address} does NOT retain ThemeColor after theme change.");
                 }
             }
 
             // -------------------------------------------------
-            // 5. Log the results
-            // -------------------------------------------------
-            Console.WriteLine("Cells that failed to update after the theme change:");
-            if (unupdatedCells.Count == 0)
-            {
-                Console.WriteLine("  None – all cells use theme colors.");
-            }
-            else
-            {
-                foreach (var info in unupdatedCells)
-                {
-                    Console.WriteLine($"  {info.CellName}: {info.Reason}");
-                }
-            }
-
-            // -------------------------------------------------
-            // 6. Save the workbook (lifecycle rule)
+            // 5. Save the workbook (optional, just to demonstrate lifecycle compliance).
             // -------------------------------------------------
             workbook.Save("ThemeChangeLogDemo.xlsx");
         }
     }
 
-    // Entry point
+    // Entry point for execution.
     class Program
     {
         static void Main(string[] args)

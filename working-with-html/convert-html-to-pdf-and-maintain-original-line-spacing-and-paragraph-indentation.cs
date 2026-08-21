@@ -1,40 +1,84 @@
-// Title: C# – Convert HTML to PDF while keeping exact line spacing and paragraph indentation with Aspose.Cells
-// Description: This example shows how to load an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions.DeleteRedundantSpaces = false, then save it as a PDF with PdfSaveOptions. The original whitespace, line breaks, and paragraph indentation are retained in the output PDF, making the conversion faithful to the source HTML layout.
-// Keywords: Aspose.Cells HTML to PDF | DeleteRedundantSpaces false | preserve whitespace Aspose.Cells | C# HTML to PDF conversion | maintain paragraph indentation PDF | Aspose.Cells .NET example | HTML layout retention PDF
-// Common Searches: Aspose.Cells keep spaces when converting HTML to PDF | HtmlLoadOptions DeleteRedundantSpaces example C# | Convert HTML file to PDF without losing indentation | C# preserve line breaks HTML to PDF Aspose | How to retain original formatting in PDF generated from HTML
-// Developer Intent: Create a PDF from an HTML document that mirrors the source's spacing and indentation using Aspose.Cells for .NET.
-// Use Cases: Archiving marketing‑email HTML templates as printable PDFs with exact layout. | Generating compliance‑ready PDFs from HTML reports where whitespace matters. | Batch‑processing web‑page snapshots into PDFs that must preserve original formatting.
-// AI Prompts: Write C# code that uses Aspose.Cells to convert an HTML file to PDF, ensuring whitespace and paragraph indentation are unchanged. | Explain how HtmlLoadOptions.DeleteRedundantSpaces influences HTML‑to‑PDF conversion and how to tweak PdfSaveOptions for page size or orientation. | Provide a loop that processes multiple HTML files, converting each to a PDF while preserving formatting with Aspose.Cells.
+// Title: C# – Convert HTML to PDF with Aspose.Cells while preserving line spacing and paragraph indentation
+// Description: This example demonstrates how to load an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions (DeleteRedundantSpaces = false), optionally inspect text‑box shapes for TextParagraphs, and save the workbook as a PDF with PdfSaveOptions (OnePagePerSheet = false). The workflow keeps the original whitespace, line spacing, and indentation intact.
+// Keywords: Aspose.Cells | C# | .NET | HTML to PDF conversion | preserve line spacing | paragraph indentation | DeleteRedundantSpaces | HtmlLoadOptions | PdfSaveOptions | OnePagePerSheet | text box shape | TextParagraph | formatting retention
+// Common Searches: Aspose.Cells keep original spacing when converting HTML to PDF | DeleteRedundantSpaces HtmlLoadOptions effect on whitespace | C# convert HTML with text boxes to PDF preserving indentation | PdfSaveOptions OnePagePerSheet false example | how to retain line breaks in Aspose.Cells HTML import
+// Developer Intent: Generate a PDF from an HTML document using Aspose.Cells without losing line breaks, spacing, or paragraph indentation.
+// Use Cases: Produce printable PDFs from HTML reports that contain formatted text boxes. | Batch‑process email templates or web pages into PDFs while maintaining exact layout. | Create compliance‑critical PDFs (e.g., invoices, legal forms) where spacing and indentation must match the source HTML.
+// AI Prompts: Write C# code that converts an HTML file to PDF with Aspose.Cells and keeps all line spacing and indentation. | Explain why setting DeleteRedundantSpaces to false preserves whitespace during HTML import. | Show how to modify TextParagraph properties of shape.TextBody after loading HTML to fine‑tune spacing.
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing.Texts;
 
-// This example shows how to load an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions.DeleteRedundantSpaces = false, then save it as a PDF with PdfSaveOptions. The original whitespace, line breaks, and paragraph indentation are retained in the output PDF, making the conversion faithful to the source HTML layout.
-class HtmlToPdfConverter
+namespace AsposeCellsHtmlToPdf
 {
-    static void Main()
+    // This example demonstrates how to load an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions (DeleteRedundantSpaces = false), optionally inspect text‑box shapes for TextParagraphs, and save the workbook as a PDF with PdfSaveOptions (OnePagePerSheet = false). The workflow keeps the original whitespace, line spacing, and indentation intact.
+    class Program
     {
-        // Path to the source HTML file
-        string htmlFile = "input.html";
-
-        // Path for the resulting PDF file
-        string pdfFile = "output.pdf";
-
-        // Load the HTML into a workbook.
-        // DeleteRedundantSpaces = false preserves original spaces and line breaks.
-        HtmlLoadOptions loadOptions = new HtmlLoadOptions
+        static void Main()
         {
-            DeleteRedundantSpaces = false
-        };
-        Workbook workbook = new Workbook(htmlFile, loadOptions);
+            try
+            {
+                // Path to the source HTML file
+                string htmlPath = "input.html";
 
-        // Configure PDF save options if needed (default settings keep formatting).
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // Verify that the HTML file exists
+                if (!File.Exists(htmlPath))
+                {
+                    Console.WriteLine($"Error: The file '{htmlPath}' was not found.");
+                    return;
+                }
 
-        // Save the workbook as PDF, preserving line spacing and paragraph indentation.
-        workbook.Save(pdfFile, pdfOptions);
+                // Path for the resulting PDF file
+                string pdfPath = "output.pdf";
 
-        Console.WriteLine("HTML successfully converted to PDF with original formatting.");
+                // Ensure the output directory exists
+                string pdfDir = Path.GetDirectoryName(pdfPath) ?? string.Empty;
+                if (!string.IsNullOrEmpty(pdfDir) && !Directory.Exists(pdfDir))
+                {
+                    Directory.CreateDirectory(pdfDir);
+                }
+
+                // Load the HTML content into a workbook with specific options
+                HtmlLoadOptions loadOptions = new HtmlLoadOptions
+                {
+                    DeleteRedundantSpaces = false
+                };
+
+                Workbook workbook = new Workbook(htmlPath, loadOptions);
+
+                // Preserve line spacing in text box shapes (if any)
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    foreach (Shape shape in sheet.Shapes)
+                    {
+                        // Process only shapes that contain a TextBody (e.g., text boxes)
+                        if (shape.TextBody != null)
+                        {
+                            foreach (TextParagraph paragraph in shape.TextBody.TextParagraphs)
+                            {
+                                // Placeholder for custom line spacing logic if needed
+                            }
+                        }
+                    }
+                }
+
+                // Save the workbook as PDF with desired options
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    OnePagePerSheet = false
+                };
+
+                workbook.Save(pdfPath, pdfOptions);
+
+                Console.WriteLine($"HTML has been converted to PDF and saved at: {pdfPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

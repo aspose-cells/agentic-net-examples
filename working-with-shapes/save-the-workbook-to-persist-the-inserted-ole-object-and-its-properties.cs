@@ -1,94 +1,73 @@
-// Title: Save Workbook with Embedded OLE Object and Preserve Its Properties – Aspose.Cells C#
-// Description: Demonstrates how to add an OLE object to a worksheet, configure its ProgID, format, icon, and loading options, enable EmbedOoxmlAsOleObject, and save the workbook so the OLE object and all settings are retained.
-// Keywords: Aspose.Cells C# OLE object | embed Excel file as OLE | save workbook with OLE icon | OoxmlSaveOptions EmbedOoxmlAsOleObject | persist OleObject properties | C# Excel OLE embedding | Aspose.Cells example
-// Common Searches: how to embed an Excel file as an OLE object using Aspose.Cells | save OLE object with custom icon in .xlsx C# | preserve OLE object settings when exporting workbook | Aspose.Cells OoxmlSaveOptions embed OLE | C# code to add and persist OLE objects in Excel
-// Developer Intent: Store the inserted OLE object and all its configured attributes by saving the workbook with appropriate options.
-// Use Cases: Embedding a secondary workbook or document as an OLE object with a custom icon for distribution. | Setting OLE properties such as ProgID, FileFormatType, DisplayAsIcon, Label, AutoLoad, and AutoUpdate before saving. | Ensuring OLE objects are correctly written to an .xlsx file by using OoxmlSaveOptions.EmbedOoxmlAsOleObject.
-// AI Prompts: Generate C# code that inserts a Word document as an OLE object, shows it as an icon, and saves the workbook with Aspose.Cells preserving the object. | Explain the impact of OoxmlSaveOptions.EmbedOoxmlAsOleObject on OLE storage in an Aspose.Cells workbook. | Provide a step‑by‑step guide to handle missing icon files when embedding OLE objects with Aspose.Cells for .NET.
+// Title: Persist Embedded OLE Object and Its Properties When Saving an Aspose.Cells Workbook (C#)
+// Description: Demonstrates how to add an OLE object with a custom icon to a worksheet, configure ProgID, label, DisplayAsIcon and AutoLoad, and then save the workbook so the OLE object and all settings are retained. Includes a second save using OoxmlSaveOptions with EmbedOoxmlAsOleObject to store the entire OOXML package as an OLE object.
+// Keywords: Aspose.Cells | C# | OLE object | embed Excel file | save workbook | OoxmlSaveOptions | DisplayAsIcon | AutoLoad | ProgID | embedded OOXML
+// Common Searches: Aspose.Cells save workbook with embedded OLE object | C# add OLE object to worksheet Aspose.Cells | persist OLE object properties after saving | OoxmlSaveOptions EmbedOoxmlAsOleObject example | display OLE as icon Aspose.Cells
+// Developer Intent: The developer needs to save a workbook while ensuring that the inserted OLE object and all its configured properties remain intact.
+// Use Cases: Generate a report that contains a template Excel file as an OLE object, preserving the icon and auto‑load behavior after export. | Create a spreadsheet that shows a custom document icon, loads the linked file on open, and retains these settings when the file is shared. | Store the full OOXML package inside an OLE object for later extraction, using OoxmlSaveOptions during the save operation.
+// AI Prompts: Write C# code with Aspose.Cells to insert an OLE object, set a custom icon, ProgID, label, and AutoLoad, then save the workbook preserving these settings. | Show how to use OoxmlSaveOptions in Aspose.Cells to embed the workbook's OOXML as an OLE object while saving. | Provide robust error handling for missing icon or embedded files when adding an OLE object with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add an OLE object to a worksheet, configure its ProgID, format, icon, and loading options, enable EmbedOoxmlAsOleObject, and save the workbook so the OLE object and all settings are retained.
+// Demonstrates how to add an OLE object with a custom icon to a worksheet, configure ProgID, label, DisplayAsIcon and AutoLoad, and then save the workbook so the OLE object and all settings are retained. Includes a second save using OoxmlSaveOptions with EmbedOoxmlAsOleObject to store the entire OOXML package as an OLE object.
 class SaveOleObjectDemo
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Paths to the icon image and the file to embed
+            // Paths for the icon image and the file to embed as OLE object
             string iconPath = "icon.png";
             string embedFilePath = "sample.xlsx";
 
-            // Prepare icon image data (must be a valid image)
-            byte[] iconData;
-            if (File.Exists(iconPath))
+            // Ensure the icon file exists – create a minimal 1x1 PNG if missing
+            if (!File.Exists(iconPath))
             {
-                iconData = File.ReadAllBytes(iconPath);
-            }
-            else
-            {
-                // Use a minimal 1x1 PNG as a placeholder (transparent pixel)
+                // Transparent 1x1 PNG (base64 encoded)
                 const string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=";
-                iconData = Convert.FromBase64String(base64Png);
+                byte[] pngBytes = Convert.FromBase64String(base64Png);
+                File.WriteAllBytes(iconPath, pngBytes);
             }
 
-            // Prepare embedded file data
-            byte[] embedData;
-            if (File.Exists(embedFilePath))
+            // Ensure the file to embed exists – create an empty workbook if missing
+            if (!File.Exists(embedFilePath))
             {
-                embedData = File.ReadAllBytes(embedFilePath);
-            }
-            else
-            {
-                // Create a minimal workbook to embed if the file is missing
-                Workbook tempWb = new Workbook();
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    tempWb.Save(ms, SaveFormat.Xlsx);
-                    embedData = ms.ToArray();
-                }
+                new Workbook().Save(embedFilePath);
             }
 
-            // Add an OLE object using the icon image data
-            int oleIndex = sheet.OleObjects.Add(2, 2, 100, 100, iconData);
+            // Read the icon image data
+            byte[] imageData = File.ReadAllBytes(iconPath);
 
-            // Retrieve the OleObject instance
+            // Add an OLE object to the worksheet (initially with the icon image)
+            int oleIndex = sheet.OleObjects.Add(2, 2, 200, 200, imageData);
             OleObject ole = sheet.OleObjects[oleIndex];
 
-            // Set the embedded file data and related properties
-            ole.ObjectData = embedData;                     // actual embedded content
-            ole.ProgID = "Excel.Sheet";                     // program identifier
-            ole.FileFormatType = FileFormatType.Xlsx;       // format of the embedded file
-            ole.DisplayAsIcon = true;                       // show as an icon
-            ole.Label = "Embedded Sample.xlsx";             // icon label
-            ole.AutoLoad = true;                            // load automatically when workbook opens
-            ole.AutoUpdate = false;                         // do not auto‑update linked content
+            // Set the embedded file data and other properties
+            ole.ObjectData = File.ReadAllBytes(embedFilePath);
+            ole.ProgID = "Excel.Sheet";
+            ole.DisplayAsIcon = true;
+            ole.Label = "Embedded Sample";
+            ole.AutoLoad = true; // Load automatically when the workbook is opened
 
-            // Create OOXML save options to embed OLE objects as OLE objects
+            // Save the workbook using the standard Save method
+            workbook.Save("OleObjectResult.xlsx");
+
+            // Optionally, save with OoxmlSaveOptions to embed OOXML as an OLE object
             OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
             {
                 EmbedOoxmlAsOleObject = true
             };
-
-            // Save the workbook, persisting the OLE object and its properties
-            workbook.Save("OleObjectPersisted.xlsx", saveOptions);
-        }
-        catch (Aspose.Cells.CellsException ex)
-        {
-            Console.WriteLine("Aspose.Cells error: " + ex.Message);
+            workbook.Save("OleObjectResult_OoxmlEmbedded.xlsx", saveOptions);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Unexpected error: " + ex.Message);
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

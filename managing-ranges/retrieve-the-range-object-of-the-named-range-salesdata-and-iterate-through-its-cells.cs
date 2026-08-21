@@ -1,56 +1,53 @@
-// Title: C# – Retrieve and Loop Through the Named Range "SalesData" with Aspose.Cells
-// Description: Load an Excel workbook, obtain the named range "SalesData" via Workbook.Worksheets.GetRangeByName, enumerate each cell to display its address and value, and optionally save the modified file. Includes file‑existence check and exception handling.
-// Keywords: Aspose.Cells | C# | GetRangeByName | named range | enumerate cells | Excel automation | read cell values | Workbook.Save | range iteration | Excel .NET library
-// Common Searches: Aspose.Cells GetRangeByName example C# | how to iterate cells in a named range Aspose.Cells | read values from named range SalesData C# | C# enumerate cells in Excel named range | Aspose.Cells retrieve named range and print values
-// Developer Intent: The developer needs to access the "SalesData" named range in an existing workbook and loop through its cells to read each cell’s address and content.
-// Use Cases: Extract sales figures from the "SalesData" range to feed a reporting engine. | Validate data consistency inside a named range before publishing the workbook. | Apply conditional formatting or calculations to cells within a specific named range.
-// AI Prompts: Generate C# code that updates values in the "SalesData" named range using Aspose.Cells and saves the workbook. | Explain best practices for handling a missing named range and suggest alternative ways to locate a range by address. | Rewrite the enumerator loop as a foreach statement to iterate through cells in a named range.
+// Title: C# – Retrieve the "SalesData" named range as a Range object and loop through its cells with Aspose.Cells
+// Description: Load or create a workbook, get the Name object for "SalesData", convert it to an Aspose.Cells.Range, enumerate each Cell to display its address and value, and save the workbook. Includes error handling for missing named ranges.
+// Keywords: Aspose.Cells named range | C# get Range object by name | iterate cells in named range | SalesData range example | read cell values Aspose.Cells | check named range existence
+// Common Searches: how to retrieve a named range in Aspose.Cells .NET | loop through cells of a named range using C# | Aspose.Cells get range object from name | validate named range before reading values | save workbook after processing named range
+// Developer Intent: Obtain the Range object for the "SalesData" named range and iterate each cell to read its address and value.
+// Use Cases: Read and display all values in a predefined named range. | Verify a named range exists before performing calculations. | Update cell contents within a named range and persist changes.
+// AI Prompts: Generate C# code with Aspose.Cells that checks for a named range, retrieves its Range object, and prints each cell's address and value. | Show how to handle a missing named range gracefully while iterating cells in Aspose.Cells. | Explain how to modify values inside a retrieved Range object and save the workbook using Aspose.Cells.
 
 using System;
-using System.Collections;
 using System.IO;
 using Aspose.Cells;
 
-// Load an Excel workbook, obtain the named range "SalesData" via Workbook.Worksheets.GetRangeByName, enumerate each cell to display its address and value, and optionally save the modified file. Includes file‑existence check and exception handling.
+// Load or create a workbook, get the Name object for "SalesData", convert it to an Aspose.Cells.Range, enumerate each Cell to display its address and value, and save the workbook. Includes error handling for missing named ranges.
 class Program
 {
     static void Main()
     {
         try
         {
+            // Load an existing workbook if the file exists; otherwise create a new workbook.
+            Workbook workbook;
             const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            if (File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
-            }
-
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Retrieve the named range "SalesData"
-            // Use fully qualified name to avoid ambiguity with System.Range
-            Aspose.Cells.Range salesRange = workbook.Worksheets.GetRangeByName("SalesData");
-
-            if (salesRange != null)
-            {
-                // Iterate through each cell in the range using its enumerator
-                IEnumerator enumerator = salesRange.GetEnumerator();
-                while (enumerator.MoveNext())
-                {
-                    Cell cell = (Cell)enumerator.Current;
-                    Console.WriteLine($"{cell.Name}: {cell.Value}");
-                }
+                workbook = new Workbook(inputPath);
             }
             else
             {
-                Console.WriteLine("Named range 'SalesData' not found.");
+                workbook = new Workbook();
             }
 
-            // Save the workbook (optional)
+            // Retrieve the named range "SalesData".
+            Name salesName = workbook.Worksheets.Names["SalesData"];
+            if (salesName == null)
+            {
+                Console.WriteLine("Named range 'SalesData' not found.");
+                return;
+            }
+
+            // Get the Aspose.Cells.Range object that the name refers to.
+            Aspose.Cells.Range salesRange = salesName.GetRange();
+
+            // Iterate through each cell in the range and display its address and value.
+            foreach (Cell cell in salesRange)
+            {
+                Console.WriteLine($"{cell.Name}: {cell.Value}");
+            }
+
+            // Save the workbook (if any changes were made).
+            const string outputPath = "Output.xlsx";
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }

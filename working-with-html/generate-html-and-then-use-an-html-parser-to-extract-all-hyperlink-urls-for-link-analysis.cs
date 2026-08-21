@@ -1,10 +1,10 @@
-// Title: Export Aspose.Cells Workbook to HTML and Extract Hyperlink URLs in C#
-// Description: Creates a workbook, adds cells with hyperlinks, saves it as HTML with links opening in a new tab, reads the HTML file, extracts all href values using a regular expression, and prints the URLs to the console.
-// Keywords: Aspose.Cells HTML export | C# hyperlink extraction | regex href parsing | HtmlSaveOptions LinkTargetType Blank | .NET spreadsheet to web page | parse generated HTML for URLs | Aspose.Cells link audit | C# HTML parsing | SEO link extraction from Excel
-// Common Searches: how to save Aspose.Cells workbook as HTML in C# | extract href attributes from generated HTML using regex | retrieve all hyperlinks from Aspose.Cells HTML output | C# parse HTML file for URLs | Aspose.Cells export with links opening in new tab
-// Developer Intent: Generate an HTML version of a workbook and programmatically collect every hyperlink URL it contains.
-// Use Cases: Publish a spreadsheet as a web page and verify that all embedded links are correct. | Automate SEO audits by gathering URLs from a report generated with Aspose.Cells. | Create a link‑checking script that validates destinations in exported HTML files. | Integrate hyperlink extraction into a CI pipeline to ensure documentation links remain functional.
-// AI Prompts: Replace the regex logic with HtmlAgilityPack to safely parse href attributes from the saved HTML. | Write code that saves the extracted URLs to a CSV or JSON file instead of printing them. | Show how to configure HtmlSaveOptions to embed CSS inline while keeping hyperlink functionality. | Demonstrate how to filter extracted URLs by domain (e.g., only external links).
+// Title: C# – Save Aspose.Cells workbook as HTML and extract every hyperlink URL
+// Description: The sample creates a new Aspose.Cells workbook, inserts cells with hyperlinks, and saves the sheet as an HTML file using HtmlSaveOptions (blank target and full‑path links). It then reads the generated HTML, parses all <a href> attributes with a regular expression, collects the URLs into a list, and prints them for link‑analysis or validation purposes.
+// Keywords: Aspose.Cells C# HTML export | hyperlink extraction C# | regex href parsing | HtmlSaveOptions LinkTargetType.Blank | full path links Aspose HTML | HTML link analysis | C# workbook to HTML | extract URLs from HTML | Aspose.Cells hyperlink example | GitHub Aspose.Cells code
+// Common Searches: save Aspose.Cells workbook as HTML C# | extract href links from Aspose generated HTML | C# regex to get all URLs from HTML file | how to parse hyperlinks in Aspose.Cells HTML output | link extraction for SEO from spreadsheet HTML
+// Developer Intent: Generate an HTML representation of a spreadsheet and retrieve every hyperlink URL contained in that HTML for further processing.
+// Use Cases: Verify that spreadsheet hyperlinks are correctly exported before publishing a web report. | Gather external URLs from multiple workbooks for bulk SEO or compliance audits. | Feed extracted links into a crawler or validation tool to detect broken or malicious URLs. | Create a link‑inventory for marketing analytics from automatically generated HTML reports.
+// AI Prompts: Show how to replace the regex with HtmlAgilityPack for more reliable href extraction. | Provide code to export the workbook with relative links while still being able to parse them. | Explain how to deduplicate URLs and safely handle malformed href attributes during parsing. | Generate a PowerShell script that runs this C# program across a folder of workbooks and aggregates all extracted links.
 
 using System;
 using System.Collections.Generic;
@@ -14,18 +14,18 @@ using Aspose.Cells;
 
 namespace AsposeCellsHtmlLinkExtraction
 {
-    // Creates a workbook, adds cells with hyperlinks, saves it as HTML with links opening in a new tab, reads the HTML file, extracts all href values using a regular expression, and prints the URLs to the console.
+    // The sample creates a new Aspose.Cells workbook, inserts cells with hyperlinks, and saves the sheet as an HTML file using HtmlSaveOptions (blank target and full‑path links). It then reads the generated HTML, parses all <a href> attributes with a regular expression, collects the URLs into a list, and prints them for link‑analysis or validation purposes.
     class Program
     {
         static void Main()
         {
             try
             {
-                // 1. Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                // ---------- Create a workbook and add sample hyperlinks ----------
+                Workbook workbook = new Workbook();                         // create a new workbook
+                Worksheet sheet = workbook.Worksheets[0];                  // get the first worksheet
 
-                // 2. Add sample data and hyperlinks to the worksheet
+                // Add sample text and hyperlinks
                 sheet.Cells["A1"].PutValue("Google");
                 sheet.Hyperlinks.Add("A1", 1, 1, "https://www.google.com");
 
@@ -35,37 +35,39 @@ namespace AsposeCellsHtmlLinkExtraction
                 sheet.Cells["A3"].PutValue("GitHub");
                 sheet.Hyperlinks.Add("A3", 1, 1, "https://github.com");
 
-                // 3. Configure HTML save options (open links in new tab)
+                // ---------- Save the workbook as HTML ----------
                 HtmlSaveOptions htmlOptions = new HtmlSaveOptions
                 {
-                    LinkTargetType = HtmlLinkTargetType.Blank
+                    LinkTargetType = HtmlLinkTargetType.Blank, // open links in a new tab/window
+                    IsFullPathLink = true                       // use full path links in the HTML
                 };
+                string htmlPath = "output.html";
+                workbook.Save(htmlPath, htmlOptions); // save workbook to HTML
 
-                // 4. Save the workbook as an HTML file
-                string htmlPath = "WorkbookOutput.html";
-                workbook.Save(htmlPath, htmlOptions);
-
-                // 5. Ensure the HTML file was created
+                // ---------- Verify the HTML file exists ----------
                 if (!File.Exists(htmlPath))
                 {
-                    Console.WriteLine($"HTML file not found: {htmlPath}");
+                    Console.WriteLine($"Error: HTML file '{htmlPath}' was not created.");
                     return;
                 }
 
-                // 6. Read the HTML content and extract href attributes using a regex
+                // ---------- Parse the generated HTML and extract hyperlink URLs ----------
                 string htmlContent = File.ReadAllText(htmlPath);
+                // Simple regex to capture href values within <a> tags
+                Regex hrefRegex = new Regex(@"<a[^>]+href\s*=\s*[""'](?<url>[^""'>]+)[""']", RegexOptions.IgnoreCase);
+                MatchCollection matches = hrefRegex.Matches(htmlContent);
+
                 List<string> extractedUrls = new List<string>();
-                foreach (Match match in Regex.Matches(htmlContent, @"href\s*=\s*[""']([^""']+)[""']",
-                    RegexOptions.IgnoreCase))
+                foreach (Match match in matches)
                 {
-                    string url = match.Groups[1].Value;
+                    string url = match.Groups["url"].Value;
                     if (!string.IsNullOrEmpty(url))
                     {
                         extractedUrls.Add(url);
                     }
                 }
 
-                // 7. Output the extracted URLs
+                // ---------- Output the extracted URLs ----------
                 Console.WriteLine("Extracted hyperlink URLs from HTML:");
                 foreach (string url in extractedUrls)
                 {
@@ -74,7 +76,7 @@ namespace AsposeCellsHtmlLinkExtraction
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

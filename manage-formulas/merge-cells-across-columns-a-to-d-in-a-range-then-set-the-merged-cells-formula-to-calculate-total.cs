@@ -1,44 +1,50 @@
-// Title: C# – Merge A1:D1 and Apply a SUM Formula with Aspose.Cells
-// Description: Shows how to create a workbook, fill A2‑D2 with numbers, merge A1:D1 into a single header cell, assign the formula =SUM(A2:D2), recalculate the sheet, display the result, and save the file as MergedTotal.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# merge cells | Aspose.Cells set formula | SUM formula Aspose | Workbook.CalculateFormula | save Excel file Aspose | merged header total | Excel automation .NET
-// Common Searches: Aspose.Cells merge cells and set formula | C# merge A1:D1 Aspose.Cells example | calculate sum in merged cell using Aspose | Workbook.CalculateFormula usage C# | save workbook with merged cells Aspose .NET
-// Developer Intent: Combine a range into one cell and embed a SUM expression that totals a data row.
-// Use Cases: Create a spanning header that automatically shows the total of a row of figures. | Build a financial summary where the top merged row reflects the sum of monthly values. | Design an invoice template with a merged cell that calculates the grand total of line items.
-// AI Prompts: Generate C# code with Aspose.Cells to merge cells A1:D1, insert =SUM(A2:D2) in the merged cell, evaluate the formula, and save the workbook. | Explain how to use Workbook.CalculateFormula after merging cells and assigning a formula in Aspose.Cells for .NET.
+// Title: C# Aspose.Cells Example: Merge A1:D1 and Apply a SUM Formula
+// Description: Demonstrates how to create a workbook with Aspose.Cells for .NET, fill cells A1‑D1, merge them into a single range, assign a =SUM(A1:D1) formula to the merged cell, calculate the result, output it to the console, and save the file as MergedCellsWithTotal.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | merge cells | cells.Merge | SUM formula | calculate total | Excel automation | worksheet formula | CalculateFormula | save workbook
+// Common Searches: Aspose.Cells merge cells and set formula C# | How to apply SUM to merged cells using Aspose.Cells | C# code to merge A1:D1 and calculate total | Aspose.Cells example for merged range formula | Calculate sum after merging cells in .NET
+// Developer Intent: Merge a specific cell range and attach a SUM formula that computes the total of the original cells.
+// Use Cases: Create a multi‑column header that automatically shows the sum of its underlying data. | Generate a summary row where the label spans several columns and the total is calculated in the merged cell. | Build financial or inventory reports that need a merged label with a dynamic aggregate value.
+// AI Prompts: Generate C# code using Aspose.Cells to merge cells A1:D1, set a dynamic =SUM(A1:D1) formula, and recalculate when source values change. | Provide an Aspose.Cells for .NET snippet that merges a range, applies a formula, handles possible errors, and saves the workbook.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to create a workbook, fill A2‑D2 with numbers, merge A1:D1 into a single header cell, assign the formula =SUM(A2:D2), recalculate the sheet, display the result, and save the file as MergedTotal.xlsx using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsMergeAndFormulaDemo
 {
-    static void Main()
+    // Demonstrates how to create a workbook with Aspose.Cells for .NET, fill cells A1‑D1, merge them into a single range, assign a =SUM(A1:D1) formula to the merged cell, calculate the result, output it to the console, and save the file as MergedCellsWithTotal.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Fill some sample numbers that we will total
-        cells["A2"].PutValue(10);
-        cells["B2"].PutValue(20);
-        cells["C2"].PutValue(30);
-        cells["D2"].PutValue(40);
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Merge cells A1:D1 (row 0, columns 0‑3)
-        // Parameters: firstRow, firstColumn, totalRows (1‑based), totalColumns (1‑based)
-        cells.Merge(0, 0, 1, 4);
+            // Populate some sample values in the range A1:D1
+            cells["A1"].PutValue(10);
+            cells["B1"].PutValue(20);
+            cells["C1"].PutValue(30);
+            cells["D1"].PutValue(40);
 
-        // Set a formula in the merged cell (address A1) to calculate the sum of A2:D2
-        cells["A1"].Formula = "=SUM(A2:D2)";
+            // Merge cells from column A (0) to column D (3) in row 0 (first row)
+            // Parameters: firstRow, firstColumn, totalRows, totalColumns
+            cells.Merge(firstRow: 0, firstColumn: 0, totalRows: 1, totalColumns: 4);
 
-        // Evaluate the formula so the result is stored in the cell
-        workbook.CalculateFormula();
+            // After merging, the merged cell is referenced by the upper‑left cell (A1)
+            // Set a formula in the merged cell to calculate the total of the original range
+            cells["A1"].Formula = "=SUM(A1:D1)";
 
-        // Output the calculated total to the console (optional)
-        Console.WriteLine("Calculated total: " + cells["A1"].Value);
+            // Calculate formulas so the result is stored in the cell
+            workbook.CalculateFormula();
 
-        // Save the workbook to a file
-        workbook.Save("MergedTotal.xlsx");
+            // Optional: display the calculated total in the console
+            Console.WriteLine("Total of merged cells: " + cells["A1"].Value);
+
+            // Save the workbook to a file
+            workbook.Save("MergedCellsWithTotal.xlsx");
+        }
     }
 }

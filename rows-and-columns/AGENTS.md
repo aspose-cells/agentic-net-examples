@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Rows and Columns Agent
 category: rows-and-columns
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: C# examples for inserting and deleting rows and columns, hiding, showing, copying, sizing, grouping, and autofitting worksheet structure
 primary_apis: [Cells.InsertRows, Cells.DeleteRows, Cells.InsertColumns, Cells.DeleteColumns, Cells.SetRowHeight, Cells.SetColumnWidth]
 search_intents: [insert Excel row in C#, delete Excel column, autofit Excel rows, hide worksheet columns]
@@ -314,3 +314,4 @@ Interpret one developer intent
 ## Definition of done
 
 A `rows-and-columns` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
+

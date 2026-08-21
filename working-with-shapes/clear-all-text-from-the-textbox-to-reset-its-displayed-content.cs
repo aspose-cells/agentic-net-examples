@@ -1,44 +1,49 @@
-// Title: Clear TextBox content in an Aspose.Cells for .NET workbook (C#)
-// Description: Demonstrates how to add a TextBox shape to a worksheet, set initial text, and then clear the text by assigning an empty string to the TextBox.Text property before saving the Excel file.
-// Keywords: Aspose.Cells | C# | Clear TextBox | TextBox.Text empty | Excel shape text removal | Worksheet TextBox | Aspose.Cells .NET API | reset textbox content | remove shape text | clear textbox programmatically
-// Common Searches: clear textbox text Aspose.Cells C# | set TextBox.Text to empty Aspose.Cells | remove text from Excel textbox using Aspose | reset shape text in Aspose.Cells | Aspose.Cells clear shape content
-// Developer Intent: Remove existing text from a TextBox shape while keeping its size, position, and formatting unchanged.
-// Use Cases: Prepare a template workbook by deleting placeholder text in TextBox controls before distribution. | Refresh a data‑entry sheet by clearing previous entries from TextBox shapes for a new collection cycle. | Automate cleanup of Excel reports, removing all TextBox content while preserving visual layout.
-// AI Prompts: Show C# code to clear the text of a single TextBox shape using Aspose.Cells. | Provide a snippet that iterates over all TextBox objects in a worksheet and empties their Text property. | Explain how to reset TextBox content without affecting its formatting, size, or position in Aspose.Cells for .NET.
+// Title: Clear TextBox Content in an Excel Worksheet using Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds a TextBox shape, then empties its Text property to reset the displayed content while preserving size, position, and formatting, and saves the file.
+// Keywords: Aspose.Cells | C# | .NET | clear textbox | reset textbox text | empty TextBox | Excel shape | worksheet TextBox | remove text from shape | Aspose.Cells example
+// Common Searches: Aspose.Cells clear textbox text C# | How to empty a TextBox shape in Excel with Aspose.Cells | Reset TextBox content programmatically Aspose.Cells .NET | Remove text from worksheet TextBox using Aspose.Cells
+// Developer Intent: Remove all text from a TextBox shape in an Excel worksheet while keeping its formatting intact.
+// Use Cases: Clear placeholder text after generating a report so the next run starts with a blank box. | Reset a template TextBox before reusing the workbook for new data. | Strip user‑entered notes from a TextBox before exporting the final Excel file. | Prepare a clean workbook for downstream processing by emptying all TextBox contents.
+// AI Prompts: Generate C# code that clears the Text property of every TextBox in an Aspose.Cells workbook without changing size or style. | Show how to empty a specific TextBox by index in a worksheet using Aspose.Cells for .NET. | Provide an Aspose.Cells .NET snippet that clears a TextBox, saves the workbook, and logs the full file path.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Demonstrates how to add a TextBox shape to a worksheet, set initial text, and then clear the text by assigning an empty string to the TextBox.Text property before saving the Excel file.
+    // Creates a workbook, adds a TextBox shape, then empties its Text property to reset the displayed content while preserving size, position, and formatting, and saves the file.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet worksheet = workbook.Worksheets[0];
 
                 // Add a textbox at row 1, column 1 with width 200 and height 100 (points)
-                int textboxIndex = worksheet.TextBoxes.Add(1, 1, 200, 100);
-                TextBox textBox = worksheet.TextBoxes[textboxIndex];
+                int textBoxIndex = worksheet.TextBoxes.Add(1, 1, 200, 100);
 
-                // Set initial text
-                textBox.Text = "Sample text that will be cleared.";
+                // Retrieve the added textbox
+                TextBox textBox = worksheet.TextBoxes[textBoxIndex];
 
-                // Clear the text content
+                // Set initial text (optional demonstration)
+                textBox.Text = "Initial content of the textbox";
+
+                // Clear the text
                 textBox.Text = string.Empty;
 
                 // Define output file path
-                string outputPath = "ClearTextBoxContent.xlsx";
+                string outputPath = "ClearedTextBox.xlsx";
 
                 // Save the workbook
                 workbook.Save(outputPath);
+
                 Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)

@@ -1,16 +1,16 @@
-// Title: Position an Aspose.Cells chart at cell D5 using UpperLeftRow and UpperLeftColumn (C#)
-// Description: Creates a workbook, adds sample data, inserts a column chart, then moves the chart so its upper‑left corner aligns with cell D5 by assigning row index 4 and column index 3 to the chart's UpperLeftRow and UpperLeftColumn properties before saving.
-// Keywords: Aspose.Cells chart positioning | UpperLeftRow UpperLeftColumn | C# chart placement Excel | move chart to specific cell | Aspose.Cells .NET chart location
-// Common Searches: Aspose.Cells set chart start cell D5 | C# move Aspose chart to cell | UpperLeftRow UpperLeftColumn example | position chart at D5 Aspose.Cells | chart object location Excel .NET
-// Developer Intent: Place a chart so its upper‑left corner starts at cell D5.
-// Use Cases: Align charts with tables in financial statements for a clean layout. | Build dashboards where each chart occupies a predefined cell range. | Adjust chart placement after data refresh to keep a consistent worksheet design.
-// AI Prompts: Show C# code that moves an Aspose.Cells chart to cell D5 using UpperLeftRow and UpperLeftColumn. | Provide an example that repositions and resizes a chart to fit a specific cell block starting at D5. | Explain how zero‑based row/column indices map to Excel references when setting chart.ChartObject.UpperLeftRow and UpperLeftColumn.
+// Title: C# – Move an Aspose.Cells chart to start at cell D5
+// Description: Shows how to create a workbook, add sample data, insert a column chart, and reposition its upper‑left corner to cell D5 by assigning UpperLeftRow = 4 and UpperLeftColumn = 3 on the ChartObject, then save the file.
+// Keywords: Aspose.Cells | C# | chart positioning | UpperLeftRow | UpperLeftColumn | move chart to cell | Excel chart placement | programmatic chart location
+// Common Searches: Aspose.Cells set chart position C# | How to move chart to D5 Aspose.Cells | ChartObject UpperLeftRow UpperLeftColumn example | Reposition Excel chart with Aspose.Cells .NET | Change chart location after creation Aspose.Cells
+// Developer Intent: Place the chart’s upper‑left corner at cell D5 programmatically.
+// Use Cases: Generate a report where the chart must align with a specific cell for layout consistency. | Adjust chart locations dynamically based on user‑defined positions. | Batch‑process worksheets to align multiple charts with designated cells.
+// AI Prompts: Write C# code using Aspose.Cells to move an existing chart so its top‑left corner starts at cell D5. | Show how to calculate zero‑based indices for Excel cells when setting UpperLeftRow and UpperLeftColumn. | Explain how to reposition a chart after creation in Aspose.Cells for .NET.
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds sample data, inserts a column chart, then moves the chart so its upper‑left corner aligns with cell D5 by assigning row index 4 and column index 3 to the chart's UpperLeftRow and UpperLeftColumn properties before saving.
+// Shows how to create a workbook, add sample data, insert a column chart, and reposition its upper‑left corner to cell D5 by assigning UpperLeftRow = 4 and UpperLeftColumn = 3 on the ChartObject, then save the file.
 class MoveChartExample
 {
     static void Main()
@@ -19,7 +19,7 @@ class MoveChartExample
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate some sample data for the chart
+        // Add some sample data for the chart (optional but useful for a visible chart)
         sheet.Cells["A1"].PutValue("Category");
         sheet.Cells["A2"].PutValue("A");
         sheet.Cells["A3"].PutValue("B");
@@ -29,20 +29,18 @@ class MoveChartExample
         sheet.Cells["B3"].PutValue(20);
         sheet.Cells["B4"].PutValue(30);
 
-        // Add a chart with an arbitrary initial position
+        // Add a chart at an initial position
         int chartIndex = sheet.Charts.Add(ChartType.Column, 0, 0, 10, 5);
         Chart chart = sheet.Charts[chartIndex];
-
-        // Set the chart's data source
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Move the chart so its upper‑left corner starts at cell D5
-        // D5 corresponds to row index 4 (zero‑based) and column index 3 (zero‑based)
-        chart.ChartObject.UpperLeftRow = 4;      // Row 5
-        chart.ChartObject.UpperLeftColumn = 3;   // Column D
+        // Move the chart so its upper‑left corner starts at cell D5.
+        // Row and column indices are zero‑based: D = 3, 5 = 4.
+        chart.ChartObject.UpperLeftRow = 4;      // Row index for row 5
+        chart.ChartObject.UpperLeftColumn = 3;   // Column index for column D
 
-        // Save the workbook with the repositioned chart
+        // Save the workbook with the moved chart
         workbook.Save("ChartMoved.xlsx");
     }
 }

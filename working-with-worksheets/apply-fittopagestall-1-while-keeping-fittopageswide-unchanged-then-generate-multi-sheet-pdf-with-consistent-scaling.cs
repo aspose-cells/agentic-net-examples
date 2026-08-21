@@ -1,10 +1,10 @@
-// Title: Aspose.Cells .NET: Export Multi‑Sheet PDF with FitToPagesTall = 1 (Width Unchanged)
-// Description: Demonstrates how to create a workbook with two worksheets, define print areas, set PageSetup.FitToPagesTall = 1 while leaving FitToPagesWide at its default, and save the file as a single PDF using PdfSaveOptions (OnePagePerSheet = false, AllColumnsInOnePagePerSheet = false). The result is a multi‑sheet PDF that preserves vertical scaling on every sheet.
-// Keywords: Aspose.Cells C# | FitToPagesTall | FitToPagesWide default | multi sheet PDF export | PdfSaveOptions OnePagePerSheet false | page setup scaling Aspose.Cells | vertical scaling PDF | Aspose.Cells .NET example | print area Aspose.Cells | PDF generation from workbook
-// Common Searches: Aspose.Cells set FitToPagesTall for all worksheets | export workbook to PDF with consistent scaling | keep FitToPagesWide default when fitting to pages tall | multi‑sheet PDF Aspose.Cells .NET | PdfSaveOptions settings for vertical fit
-// Developer Intent: Apply FitToPagesTall = 1 on each worksheet without altering FitToPagesWide, then generate a single PDF that contains all sheets with the same vertical scaling.
-// Use Cases: Print reports where each sheet must fit on one page height but may extend horizontally. | Distribute large data tables that need only vertical scaling before merging into one PDF. | Create dashboard PDFs where sheet height is constrained while preserving original column widths.
-// AI Prompts: Generate C# code that loops through every worksheet in an Aspose.Cells workbook, sets FitToPagesTall = 1 while leaving FitToPagesWide unchanged, and saves the workbook as a combined PDF. | Explain the impact of OnePagePerSheet and AllColumnsInOnePagePerSheet on PDF output when FitToPagesTall is used in Aspose.Cells. | Provide a step‑by‑step tutorial for configuring page setup to fit each sheet to one page tall and exporting all sheets to a single PDF with Aspose.Cells for .NET.
+// Title: Aspose.Cells .NET – Set FitToPagesTall = 1, preserve FitToPagesWide, export all worksheets to a single PDF
+// Description: Creates a workbook with two worksheets, fills them with sample data, disables percent scaling, keeps the existing FitToPagesWide, sets FitToPagesTall to 1, defines a dynamic print area for each sheet, and saves the file as a multi‑sheet PDF using PdfSaveOptions that respect the vertical fit‑to‑page setting.
+// Keywords: Aspose.Cells | FitToPagesTall | FitToPagesWide | C# PDF export | multi‑sheet PDF | PageSetup scaling | dynamic print area | PdfSaveOptions | .NET Excel to PDF | vertical fit to page
+// Common Searches: Aspose.Cells set FitToPagesTall 1 without changing FitToPagesWide | export multiple worksheets to one PDF in C# | how to keep horizontal scaling when fitting to one page tall | define print area programmatically before PDF conversion Aspose.Cells | PdfSaveOptions allow multiple pages per sheet Aspose.Cells
+// Developer Intent: Apply a one‑page‑tall vertical scaling to every worksheet while leaving the horizontal scaling unchanged, then generate a combined PDF of all sheets.
+// Use Cases: Produce a printable report where each sheet must fit vertically on a single page regardless of column width. | Create invoices or statements with varying column counts that need a consistent height across a multi‑sheet PDF. | Automate the conversion of large data tables across several worksheets to PDF while preserving vertical page layout.
+// AI Prompts: Show C# code to set FitToPagesTall = 1 for all worksheets in an Aspose.Cells workbook while keeping FitToPagesWide unchanged and export to a single PDF. | How can I dynamically set the print area for each worksheet based on its used range before saving as PDF with Aspose.Cells? | Explain PdfSaveOptions settings that allow multiple pages per sheet but still respect FitToPagesTall = 1 in Aspose.Cells .NET.
 
 using System;
 using Aspose.Cells;
@@ -12,67 +12,89 @@ using Aspose.Cells.Rendering;
 
 namespace AsposeCellsFitToPagesTallDemo
 {
-    // Demonstrates how to create a workbook with two worksheets, define print areas, set PageSetup.FitToPagesTall = 1 while leaving FitToPagesWide at its default, and save the file as a single PDF using PdfSaveOptions (OnePagePerSheet = false, AllColumnsInOnePagePerSheet = false). The result is a multi‑sheet PDF that preserves vertical scaling on every sheet.
+    // Creates a workbook with two worksheets, fills them with sample data, disables percent scaling, keeps the existing FitToPagesWide, sets FitToPagesTall to 1, defines a dynamic print area for each sheet, and saves the file as a multi‑sheet PDF using PdfSaveOptions that respect the vertical fit‑to‑page setting.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
             // -------------------------------------------------
-            // Sheet 1: populate with sample data
+            // Sheet 1 – populate with sample data
             // -------------------------------------------------
             Worksheet sheet1 = workbook.Worksheets[0];
             sheet1.Name = "FirstSheet";
-            for (int i = 0; i < 120; i++)          // enough rows to span multiple pages
+            for (int row = 0; row < 120; row++)          // enough rows to span several pages
             {
-                for (int j = 0; j < 8; j++)        // enough columns to span multiple pages
+                for (int col = 0; col < 8; col++)
                 {
-                    sheet1.Cells[i, j].PutValue($"R{i + 1}C{j + 1}");
+                    sheet1.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
                 }
             }
 
-            // Configure page setup for Sheet 1
-            PageSetup ps1 = sheet1.PageSetup;
-            ps1.PrintArea = "A1:H120";               // define the printable area
-            ps1.FitToPagesTall = 1;                  // apply FitToPagesTall = 1
-            // FitToPagesWide is left unchanged (default = 1)
-
             // -------------------------------------------------
-            // Sheet 2: another sheet with different data
+            // Sheet 2 – populate with different sample data
             // -------------------------------------------------
             Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
-            for (int i = 0; i < 80; i++)
+            for (int row = 0; row < 80; row++)
             {
-                for (int j = 0; j < 12; j++)
+                for (int col = 0; col < 12; col++)
                 {
-                    sheet2.Cells[i, j].PutValue($"S{i + 1}C{j + 1}");
+                    sheet2.Cells[row, col].PutValue($"S{row + 1}C{col + 1}");
                 }
             }
 
-            // Configure page setup for Sheet 2 (same scaling settings)
-            PageSetup ps2 = sheet2.PageSetup;
-            ps2.PrintArea = "A1:L80";
-            ps2.FitToPagesTall = 1;                  // same FitToPagesTall
-            // FitToPagesWide remains default (1)
+            // -------------------------------------------------
+            // Apply page‑setup scaling: FitToPagesTall = 1,
+            // keep FitToPagesWide unchanged (default = 1)
+            // -------------------------------------------------
+            foreach (Worksheet ws in workbook.Worksheets)
+            {
+                PageSetup ps = ws.PageSetup;
+
+                // Ensure scaling is driven by FitToPagesWide/Tall, not by percent zoom
+                ps.IsPercentScale = false;
+
+                // Keep the existing FitToPagesWide value (do not modify it)
+                // Set FitToPagesTall to 1 so each sheet fits vertically on a single page
+                ps.FitToPagesTall = 1;
+
+                // Optional: define a print area that covers the used range
+                int lastRow = ws.Cells.MaxDataRow;
+                int lastCol = ws.Cells.MaxDataColumn;
+                ps.PrintArea = $"A1:{CellIndexToName(lastRow, lastCol)}";
+            }
 
             // -------------------------------------------------
-            // Save the workbook as a multi‑sheet PDF with consistent scaling
+            // Save the workbook as a multi‑sheet PDF.
+            // The scaling settings applied above are respected
+            // for every sheet, giving consistent output.
             // -------------------------------------------------
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Ensure each sheet can span multiple pages (do not force one page per sheet)
+                // Do not force one page per sheet; allow multiple pages
+                // while preserving the FitToPagesTall = 1 setting.
                 OnePagePerSheet = false,
-                AllColumnsInOnePagePerSheet = false,
-                // Keep the scaling defined by FitToPagesTall/Wide
-                // No additional scaling updates required
+                // Keep column width handling default (no forced single‑page width)
+                AllColumnsInOnePagePerSheet = false
             };
 
-            // Save (lifecycle rule: save)
             workbook.Save("MultiSheetOutput.pdf", pdfOptions);
+        }
 
-            Console.WriteLine("PDF generated with FitToPagesTall = 1 on all sheets.");
+        // Helper to convert zero‑based row/column indexes to Excel cell name (e.g., 0,0 -> A1)
+        private static string CellIndexToName(int row, int col)
+        {
+            string columnName = "";
+            int dividend = col + 1;
+            while (dividend > 0)
+            {
+                int modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar('A' + modulo) + columnName;
+                dividend = (dividend - modulo) / 26;
+            }
+            return $"{columnName}{row + 1}";
         }
     }
 }

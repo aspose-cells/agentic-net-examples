@@ -1,45 +1,37 @@
-// Title: Add an External PDF Hyperlink and Freeze Its Row with Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, inserts a hyperlink to an external PDF in cell A2, sets display text and screen tip, freezes the first two rows so the link stays visible, and saves the file as HyperlinkAndFreezeDemo.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# hyperlink | external PDF link | FreezePanes | freeze rows | Excel hyperlink Aspose | worksheet freeze row | add hyperlink Aspose.Cells | set hyperlink text | hyperlink screen tip
-// Common Searches: Aspose.Cells add hyperlink to external file | C# FreezePanes example Aspose.Cells | How to freeze row with hyperlink in Excel using Aspose | Set hyperlink display text and screen tip Aspose.Cells | Create clickable PDF link in Excel with Aspose.Cells
-// Developer Intent: Generate an Excel workbook that contains a clickable link to an external PDF and keeps the link row pinned by freezing it.
-// Use Cases: Report templates with a persistent link to a user‑guide PDF. | Dashboard sheets where the top row provides quick access to supporting documents. | Exported data files that reference external specifications while keeping the reference visible during scrolling.
-// AI Prompts: Write C# code with Aspose.Cells to add a hyperlink to a Word document in cell B1, set custom display text and a screen tip, and freeze the top three rows. | Explain the parameters of the FreezePanes method in Aspose.Cells and how to use a cell reference to freeze specific rows. | Provide a step‑by‑step tutorial for adding multiple external hyperlinks to a worksheet and freezing the header row using Aspose.Cells for .NET.
+// Title: C# Aspose.Cells: Add an external PDF hyperlink and freeze its row
+// Description: Creates a new workbook, inserts a hyperlink to an external PDF in cell A2, customizes the display text and screen tip, freezes row 2 with FreezePanes, and saves the file as HyperlinkAndFreeze.xlsx.
+// Keywords: Aspose.Cells add hyperlink | C# Excel external link | FreezePanes row | hyperlink display text Aspose.Cells | freeze row after hyperlink
+// Common Searches: Aspose.Cells add hyperlink to external file | Freeze specific row in Aspose.Cells C# | Set screen tip for hyperlink Aspose.Cells | FreezePanes using cell reference Aspose.Cells | C# Excel hyperlink external PDF
+// Developer Intent: Insert an external document link into a worksheet cell and keep the link visible by freezing its row.
+// Use Cases: Provide quick access to policy PDFs from a summary sheet while keeping the link row fixed. | Create a navigation worksheet where each row links to a separate report and the link rows stay in view. | Build a dashboard that pins rows containing external resource links for constant accessibility.
+// AI Prompts: Generate C# Aspose.Cells code that adds a hyperlink to a Word document in cell B5, sets custom display text, and freezes the first three rows. | Show how to add multiple external hyperlinks to different cells and freeze the top header row in an Aspose.Cells workbook. | Explain the use of FreezePanes with a cell reference to lock rows after inserting hyperlinks in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace HyperlinkAndFreezeDemo
+// Creates a new workbook, inserts a hyperlink to an external PDF in cell A2, customizes the display text and screen tip, freezes row 2 with FreezePanes, and saves the file as HyperlinkAndFreeze.xlsx.
+class HyperlinkAndFreezeDemo
 {
-    // Creates a new workbook, inserts a hyperlink to an external PDF in cell A2, sets display text and screen tip, freezes the first two rows so the link stays visible, and saves the file as HyperlinkAndFreezeDemo.xlsx using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Define the cell where the hyperlink will be placed (e.g., A2)
-            string hyperlinkCell = "A2";
+        // Add a hyperlink to an external document in cell A2
+        // Parameters: cell name, total rows, total columns, address (file path)
+        int hyperlinkIndex = worksheet.Hyperlinks.Add("A2", 1, 1, @"C:\Docs\ExternalDoc.pdf");
 
-            // Add a hyperlink that points to an external document (e.g., a PDF file)
-            // Parameters: start cell, rows in range, columns in range, address
-            worksheet.Hyperlinks.Add(hyperlinkCell, 1, 1, @"C:\Docs\ExternalDocument.pdf");
+        // Optionally set the display text and screen tip for the hyperlink
+        Hyperlink link = worksheet.Hyperlinks[hyperlinkIndex];
+        link.TextToDisplay = "Open External Document";
+        link.ScreenTip = "Click to open the external PDF";
 
-            // Optionally set display text and screen tip for better UX
-            int linkIndex = worksheet.Hyperlinks.Count - 1; // index of the hyperlink just added
-            Hyperlink link = worksheet.Hyperlinks[linkIndex];
-            link.TextToDisplay = "Open External Document";
-            link.ScreenTip = "Click to open the PDF file";
+        // Freeze the row that contains the hyperlink (row 2) for quick access
+        // FreezePanes(cellName, freezedRows, freezedColumns)
+        worksheet.FreezePanes("A2", 1, 0);
 
-            // Freeze the row that contains the hyperlink (row 2)
-            // FreezePanes(string cellName, int freezedRows, int freezedColumns)
-            // Use cell "A3" as the split point and freeze the first 2 rows
-            worksheet.FreezePanes("A3", 2, 0);
-
-            // Save the workbook to an Excel file
-            workbook.Save("HyperlinkAndFreezeDemo.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("HyperlinkAndFreeze.xlsx");
     }
 }

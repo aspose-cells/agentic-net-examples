@@ -1,57 +1,64 @@
-// Title: Check VLOOKUP support in Aspose.Cells for .NET with HasCustomFunction
-// Description: This C# example creates a workbook, adds a simple table, inserts a VLOOKUP formula, calculates the sheet, and uses the HasCustomFunction property to confirm that VLOOKUP is recognized as a native function (not custom) according to Aspose.Cells supported‑functions documentation.
-// Keywords: Aspose.Cells VLOOKUP .NET | HasCustomFunction C# | supported Excel functions Aspose | detect unsupported formulas | Aspose.Cells formula validation
-// Common Searches: Is VLOOKUP supported by Aspose.Cells | Aspose.Cells HasCustomFunction usage | check unsupported Excel functions in .NET | Aspose.Cells supported functions list | how to verify formula compatibility Aspose
-// Developer Intent: Confirm whether the VLOOKUP function is natively supported by Aspose.Cells for .NET.
-// Use Cases: Validate workbook formulas before publishing to ensure no unsupported functions are present. | Automate regression tests that flag cells marked as custom functions after calculation. | Generate dynamic reports that rely on VLOOKUP without risking runtime errors.
-// AI Prompts: Create a C# routine that scans all cells in an Aspose.Cells workbook and returns those where HasCustomFunction is true. | Write a unit test in .NET that asserts a VLOOKUP formula is not flagged as a custom function after wb.CalculateFormula(). | Provide code that reads the Aspose.Cells supported‑functions documentation and programmatically verifies if a given function name (e.g., VLOOKUP) is supported.
+// Title: Check if Aspose.Cells for .NET Supports the VLOOKUP Function
+// Description: A C# sample that creates a workbook, builds a small lookup table, inserts a VLOOKUP formula, runs calculation, and inspects the result cell for errors or custom‑function flags to confirm whether the VLOOKUP function is available in the current Aspose.Cells version.
+// Keywords: Aspose.Cells VLOOKUP support | C# VLOOKUP formula evaluation | Aspose.Cells supported Excel functions | detect unsupported Excel functions | calculate formula Aspose.Cells .NET | VLOOKUP error handling Aspose
+// Common Searches: does Aspose.Cells support VLOOKUP | how to test VLOOKUP in Aspose.Cells .NET | Aspose.Cells VLOOKUP returns error | verify Excel function support Aspose.Cells | check if VLOOKUP works in Aspose.Cells
+// Developer Intent: Confirm whether the VLOOKUP function can be calculated by Aspose.Cells for .NET and obtain a boolean status at runtime.
+// Use Cases: Validate compatibility of incoming workbooks that rely on VLOOKUP before bulk processing. | Implement a fallback routine when VLOOKUP is unavailable, preventing calculation failures. | Log function‑support metrics for compliance reports or version‑upgrade decisions.
+// AI Prompts: Generate C# code that uses Aspose.Cells to detect VLOOKUP support and switches to a manual lookup if needed. | Write a unit test that asserts the VLOOKUP formula evaluates without error in Aspose.Cells. | Explain how Cell.HasCustomFunction and CellValueType.IsError can be used to identify unsupported Excel functions in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsVLookupCheck
+namespace AsposeCellsVlookupSupportCheck
 {
-    // This C# example creates a workbook, adds a simple table, inserts a VLOOKUP formula, calculates the sheet, and uses the HasCustomFunction property to confirm that VLOOKUP is recognized as a native function (not custom) according to Aspose.Cells supported‑functions documentation.
+    // A C# sample that creates a workbook, builds a small lookup table, inserts a VLOOKUP formula, runs calculation, and inspects the result cell for errors or custom‑function flags to confirm whether the VLOOKUP function is available in the current Aspose.Cells version.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Create a new workbook
-            Workbook wb = new Workbook();
+            try
+            {
+                // Create a new workbook (lifecycle: create)
+                Workbook wb = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = wb.Worksheets[0];
-            Cells cells = sheet.Cells;
+                // Access the first worksheet
+                Worksheet sheet = wb.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-            // Populate a simple table for VLOOKUP
-            // Header
-            cells["A1"].PutValue("Key");
-            cells["B1"].PutValue("Value");
-            // Data rows
-            cells["A2"].PutValue("Apple");
-            cells["B2"].PutValue(10);
-            cells["A3"].PutValue("Banana");
-            cells["B3"].PutValue(20);
-            cells["A4"].PutValue("Cherry");
-            cells["B4"].PutValue(30);
+                // Populate a simple lookup table (A1:B4)
+                cells["A1"].PutValue("Key");
+                cells["B1"].PutValue("Value");
+                cells["A2"].PutValue("Apple");
+                cells["B2"].PutValue(10);
+                cells["A3"].PutValue("Banana");
+                cells["B3"].PutValue(20);
+                cells["A4"].PutValue("Cherry");
+                cells["B4"].PutValue(30);
 
-            // Set a VLOOKUP formula that should be supported
-            // Lookup "Banana" in the table A1:B4 and return the value from the second column
-            cells["D1"].Formula = "=VLOOKUP(\"Banana\", A1:B4, 2, FALSE)";
+                // Set a VLOOKUP formula that searches for "Banana"
+                // Syntax: VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup])
+                cells["D1"].Formula = "=VLOOKUP(\"Banana\", A1:B4, 2, FALSE)";
 
-            // Calculate formulas
-            wb.CalculateFormula();
+                // Calculate formulas (this will attempt to evaluate VLOOKUP)
+                wb.CalculateFormula();
 
-            // Check if the formula used a custom (unsupported) function
-            bool hasCustom = cells["D1"].HasCustomFunction;
+                // Retrieve the result
+                Cell resultCell = cells["D1"];
+                string resultText = resultCell.StringValue;
 
-            // Output the result
-            Console.WriteLine("VLOOKUP formula result: " + cells["D1"].StringValue);
-            Console.WriteLine("Is VLOOKUP a custom/unsupported function? " + hasCustom);
-            Console.WriteLine("Conclusion: VLOOKUP is " + (hasCustom ? "NOT supported" : "supported") + " by Aspose.Cells.");
+                // Determine support:
+                // If VLOOKUP is unsupported, Aspose.Cells marks the cell as having a custom function
+                // or returns an error value. We check both conditions.
+                bool isSupported = !resultCell.HasCustomFunction &&
+                                   resultCell.Type != CellValueType.IsError;
 
-            // Optionally save the workbook for visual verification
-            wb.Save("VLookupCheck.xlsx");
+                Console.WriteLine($"VLOOKUP supported: {isSupported}");
+                Console.WriteLine($"Result of VLOOKUP: {resultText}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

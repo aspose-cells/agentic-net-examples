@@ -1,19 +1,19 @@
-// Title: Rotate chart legend 90° and keep legend entries transparent using Aspose.Cells for .NET
-// Description: C# example that creates a column chart, sets Legend.RotationAngle to 90 degrees, and makes each LegendEntry background transparent without altering text fill, then saves the workbook as an Excel file.
-// Keywords: Aspose.Cells chart legend rotation | C# Legend.RotationAngle 90 | transparent legend entries Aspose.Cells | BackgroundMode.Transparent chart legend | .NET Excel chart customization | Aspose.Cells LegendEntry background | rotate legend vertical Aspose.Cells
-// Common Searches: Aspose.Cells rotate chart legend 90 degrees | make legend entries transparent Aspose.Cells .NET | set Legend.RotationAngle in C# Aspose.Cells | how to keep legend background transparent in Excel chart | Aspose.Cells legend entry background mode transparent
-// Developer Intent: Apply a 90‑degree rotation to a chart legend while preserving a transparent background for each legend entry.
-// Use Cases: Design compact dashboards where a vertical legend saves horizontal space. | Generate clean‑look Excel reports with legend boxes that have no fill, ideal for printing or PDF export. | Automate consistent legend styling across multiple charts in a reporting pipeline.
-// AI Prompts: Show C# code to set Legend.RotationAngle = 90 and make LegendEntry.BackgroundMode Transparent in Aspose.Cells. | Explain how to iterate over LegendEntries to apply a transparent background without changing text fill. | Provide a step‑by‑step guide for rotating a chart legend vertically while keeping legend entry fill transparent using Aspose.Cells for .NET.
+// Title: Aspose.Cells .NET – Rotate Chart Legend 90° and Keep Entry Background Transparent
+// Description: Creates a workbook with a column chart, sets the legend rotation to 90 degrees, and makes each legend entry’s background transparent while preserving text fill, then saves the file.
+// Keywords: Aspose.Cells rotate legend | chart legend 90 degrees .NET | transparent legend entry background | Legend.RotationAngle Aspose | BackgroundMode.Transparent chart | C# Excel chart formatting
+// Common Searches: rotate chart legend 90° Aspose.Cells | keep legend entry background transparent after rotation | Aspose.Cells legend formatting C# | set legend rotation angle without changing fill | transparent legend entries Excel chart
+// Developer Intent: Set a chart legend to vertical orientation while retaining transparent entry backgrounds.
+// Use Cases: Display a vertical legend in narrow charts without visual clutter. | Generate Excel reports where legends must be rotated for layout constraints. | Apply uniform transparent styling to legend entries across multiple charts programmatically.
+// AI Prompts: Write C# code using Aspose.Cells to rotate a chart legend 90 degrees and ensure each legend entry has a transparent background. | Explain how to change Legend.RotationAngle and set LegendEntry.BackgroundMode to Transparent without affecting text appearance. | Show a method to apply transparent legend entry backgrounds to several charts in a workbook after rotating their legends.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsLegendRotationExample
+namespace AsposeCellsLegendRotationDemo
 {
-    // C# example that creates a column chart, sets Legend.RotationAngle to 90 degrees, and makes each LegendEntry background transparent without altering text fill, then saves the workbook as an Excel file.
+    // Creates a workbook with a column chart, sets the legend rotation to 90 degrees, and makes each legend entry’s background transparent while preserving text fill, then saves the file.
     class Program
     {
         static void Main()
@@ -41,11 +41,11 @@ namespace AsposeCellsLegendRotationExample
             // Rotate the legend text by 90 degrees (upward)
             chart.Legend.RotationAngle = 90;
 
-            // Ensure each legend entry retains a transparent background (no fill)
+            // Ensure each legend entry keeps a transparent background fill
             foreach (LegendEntry entry in chart.Legend.LegendEntries)
             {
-                entry.BackgroundMode = BackgroundMode.Transparent;
-                // Preserve existing IsTextNoFill setting (do not modify)
+                entry.BackgroundMode = BackgroundMode.Transparent; // transparent fill
+                entry.IsTextNoFill = false;                       // text fill remains enabled
             }
 
             // Save the workbook

@@ -1,28 +1,17 @@
-// Title: Clear splits and frozen panes with Worksheet.ResetPanes before applying FreezePanes in Aspose.Cells for .NET
-// Description: C# example that defines a WorksheetExtensions.ResetPanes method (RemoveSplit + UnFreezePanes) to clear all pane settings, then freezes panes at cell C3 and saves the workbook as ResetPanesDemo.xlsx.
-// Keywords: Aspose.Cells ResetPanes | Worksheet.RemoveSplit | Worksheet.UnFreezePanes | C# clear frozen panes | FreezePanes example | pane management Aspose.Cells | .NET worksheet panes
-// Common Searches: Aspose.Cells reset panes before freeze | C# Worksheet.ResetPanes usage | remove split window Aspose.Cells | unfreeze panes programmatically .NET | how to clear frozen panes in Aspose.Cells
-// Developer Intent: Remove any existing split or frozen panes from a worksheet prior to setting a new FreezePanes configuration.
-// Use Cases: Standardize workbook layout by clearing previous pane settings before applying a specific freeze. | Refresh a template workbook where old splits must be removed before generating a report. | Update user‑driven view preferences by resetting panes and then applying a new freeze position.
-// AI Prompts: Write C# code using Aspose.Cells to clear all splits and frozen panes, then freeze panes at cell D5. | Explain the internal actions performed by Worksheet.ResetPanes in Aspose.Cells. | Create a step‑by‑step guide for building an extension method that resets panes and applies a custom FreezePanes range.
+// Title: Reset worksheet panes with Worksheet.ResetPanes and set a new freeze using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to call Worksheet.ResetPanes to remove any split or frozen panes, verify the PaneState, then apply a new FreezePanes configuration and save the workbook with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells ResetPanes | Worksheet.ResetPanes C# | clear worksheet splits Aspose.Cells | unfreeze panes Aspose.Cells .NET | freeze panes after reset Aspose.Cells | Aspose.Cells pane management | C# Excel pane reset
+// Common Searches: How to reset all panes in an Excel worksheet using Aspose.Cells | Aspose.Cells remove split and unfreeze panes programmatically | Worksheet.ResetPanes example C# | Clear frozen panes before applying new FreezePanes Aspose.Cells
+// Developer Intent: Remove any existing split or frozen panes from a worksheet so a fresh pane layout can be applied.
+// Use Cases: Standardize the pane layout of imported workbooks before generating reports. | Prepare a template workbook by clearing unknown pane settings prior to custom formatting. | Iterate over multiple sheets in a batch process, ensuring each starts with a clean pane state before applying specific FreezePanes.
+// AI Prompts: Generate C# code that uses Worksheet.ResetPanes to clear splits and frozen panes, then freezes panes at B2 with Aspose.Cells for .NET. | Show how to check that Worksheet.PaneState equals Normal after resetting panes and before applying a new FreezePanes call.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace ResetPanesExample
+namespace AsposeCellsExamples
 {
-    // Extension method to clear splits and frozen panes
-    // C# example that defines a WorksheetExtensions.ResetPanes method (RemoveSplit + UnFreezePanes) to clear all pane settings, then freezes panes at cell C3 and saves the workbook as ResetPanesDemo.xlsx.
-    public static class WorksheetExtensions
-    {
-        public static void ResetPanes(this Worksheet ws)
-        {
-            ws.RemoveSplit();      // Remove any split window
-            ws.UnFreezePanes();    // Unfreeze any frozen panes
-        }
-    }
-
+    // Demonstrates how to call Worksheet.ResetPanes to remove any split or frozen panes, verify the PaneState, then apply a new FreezePanes configuration and save the workbook with Aspose.Cells for .NET.
     public class ResetPanesDemo
     {
         public static void Run()
@@ -33,26 +22,35 @@ namespace ResetPanesExample
                 Workbook workbook = new Workbook();
 
                 // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Clear all existing splits and freezes
-                sheet.ResetPanes();
+                // Set up an initial split and freeze to demonstrate the reset
+                worksheet.Split();                         // Create a split window
+                worksheet.FreezePanes("C3", 2, 2);         // Freeze some panes
 
-                // Apply a new pane configuration (freeze panes at C3)
-                sheet.FreezePanes("C3", 3, 3);
+                // Reset panes: remove any split and unfreeze any frozen panes
+                worksheet.RemoveSplit();                   // Clears split window
+                worksheet.UnFreezePanes();                 // Unfreezes panes
+
+                // Verify that the pane state is now Normal (no split, no freeze)
+                Console.WriteLine("Pane state after reset: " + worksheet.PaneState);
+
+                // Apply a new pane configuration, e.g., freeze panes at B2
+                worksheet.FreezePanes("B2", 1, 1);
 
                 // Save the workbook
                 string outputPath = "ResetPanesDemo.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }
 
+    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)

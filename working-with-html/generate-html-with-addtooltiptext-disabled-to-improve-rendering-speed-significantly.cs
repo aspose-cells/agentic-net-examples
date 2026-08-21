@@ -1,52 +1,39 @@
-// Title: Aspose.Cells .NET – Export Workbook to HTML with AddTooltipText Disabled for Faster Rendering
-// Description: Demonstrates how to create a workbook, insert long text, narrow a column, and save it as HTML using HtmlSaveOptions with AddTooltipText set to false. Disabling tooltips reduces file size and speeds up HTML rendering in web applications.
-// Keywords: Aspose.Cells HTML export | AddTooltipText false | disable tooltip Aspose.Cells | HTML rendering performance .NET | save workbook as HTML without tooltips | Aspose.Cells HtmlSaveOptions example | C# Excel to HTML conversion
-// Common Searches: Aspose.Cells disable tooltip when saving to HTML | How to improve HTML export speed with Aspose.Cells | HtmlSaveOptions AddTooltipText property usage | C# export Excel to HTML without hover tooltips | Fast HTML conversion using Aspose.Cells .NET
-// Developer Intent: Turn off tooltip generation during HTML export to accelerate rendering and lower output size.
-// Use Cases: Generate lightweight HTML reports from large spreadsheets. | Create web‑ready Excel views where cell overflow should not show hover text. | Optimize performance of services that repeatedly convert Excel files to HTML.
-// AI Prompts: Write C# code that saves an Aspose.Cells workbook as HTML with AddTooltipText disabled and explain why this improves performance. | Show how to toggle AddTooltipText in HtmlSaveOptions based on a configuration flag in a .NET application.
+// Title: Aspose.Cells C# – Export Excel to HTML without Tooltips for Faster Rendering
+// Description: Demonstrates how to save a workbook as HTML using Aspose.Cells with HtmlSaveOptions.AddTooltipText set to false, eliminating tooltip markup and significantly speeding up page load.
+// Keywords: Aspose.Cells HTML export C# | AddTooltipText false | disable tooltips Aspose.Cells | HTML rendering performance | Excel to HTML without tooltips
+// Common Searches: Aspose.Cells turn off tooltips when saving to HTML | HtmlSaveOptions AddTooltipText performance impact | C# export Excel to HTML faster Aspose.Cells | How to remove tooltip text from HTML output Aspose.Cells
+// Developer Intent: Export an Excel workbook to HTML while suppressing tooltip generation to improve export speed.
+// Use Cases: Create lightweight HTML previews of large spreadsheets where overflow tooltips are unnecessary. | Generate fast‑loading HTML reports in web apps by omitting tooltip markup. | Produce mobile‑friendly HTML exports of data‑heavy workbooks with reduced payload.
+// AI Prompts: Show C# code that saves an Aspose.Cells workbook to HTML with AddTooltipText disabled. | Explain how HtmlSaveOptions.AddTooltipText affects HTML size and rendering time. | Provide a step‑by‑step guide to improve Aspose.Cells HTML export performance by turning off tooltips.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsHtmlTooltipDemo
 {
-    // Demonstrates how to create a workbook, insert long text, narrow a column, and save it as HTML using HtmlSaveOptions with AddTooltipText set to false. Disabling tooltips reduces file size and speeds up HTML rendering in web applications.
-    public class HtmlSaveOptionsAddTooltipTextDisabledDemo
+    // Demonstrates how to save a workbook as HTML using Aspose.Cells with HtmlSaveOptions.AddTooltipText set to false, eliminating tooltip markup and significantly speeding up page load.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook
+            // Create a new workbook and access the first worksheet
             Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Add some sample data that would normally require a tooltip if it overflows
+            sheet.Cells["A1"].PutValue("This is a very long text that would normally need a tooltip when displayed in HTML.");
 
-            // Add sample data that would normally require a tooltip if it overflows
-            worksheet.Cells["A1"].PutValue("This is a very long text that exceeds the column width and would normally show a tooltip.");
-            worksheet.Cells.SetColumnWidth(0, 10); // Set a narrow column width to force overflow
+            // Set a narrow column width to force overflow
+            sheet.Cells.SetColumnWidth(0, 10);
 
-            // Create HTML save options and disable tooltip text for better performance
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
-            {
-                AddTooltipText = false // Disable tooltip generation
-            };
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Disable tooltip generation to improve rendering speed
+            htmlOptions.AddTooltipText = false;
 
             // Save the workbook as HTML with the specified options
             string outputPath = "output_without_tooltip.html";
-            workbook.Save(outputPath, saveOptions);
+            workbook.Save(outputPath, htmlOptions);
 
             Console.WriteLine($"Workbook saved to '{outputPath}' with AddTooltipText disabled.");
         }

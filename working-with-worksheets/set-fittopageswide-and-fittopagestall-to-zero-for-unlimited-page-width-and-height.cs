@@ -1,43 +1,57 @@
-// Title: Aspose.Cells C# – Set FitToPagesWide and FitToPagesTall to Unlimited (0)
-// Description: Creates a workbook, accesses the first worksheet, uses PageSetup.SetFitToPages(0,0) to remove page‑fit limits, verifies the settings, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells PageSetup SetFitToPages | FitToPagesWide zero | FitToPagesTall zero | unlimited page scaling C# | remove page fit Aspose.Cells | print without scaling Aspose
-// Common Searches: Aspose.Cells set FitToPagesWide to 0 | FitToPagesTall zero Aspose.Cells C# | disable page scaling in Excel with Aspose | how to print without page fit using Aspose.Cells | C# Aspose.Cells unlimited page width height
-// Developer Intent: Configure a worksheet so that no automatic page‑fit scaling is applied by setting both FitToPagesWide and FitToPagesTall to zero.
-// Use Cases: Generate reports that span any number of pages without forced scaling. | Create printable spreadsheets where column width is preserved. | Export data for users who need full‑size printing control.
-// AI Prompts: Provide C# code that calls PageSetup.SetFitToPages(0,0) with Aspose.Cells and saves the workbook. | Explain how setting FitToPagesWide and FitToPagesTall to zero affects printing and layout. | Show how to read back the FitToPagesWide and FitToPagesTall values after calling SetFitToPages.
+// Title: Aspose.Cells for .NET – Set FitToPagesWide & FitToPagesTall to 0 for Unlimited Page Size
+// Description: Shows how to configure a worksheet’s PageSetup in Aspose.Cells (.NET) by assigning 0 to FitToPagesWide and FitToPagesTall, disabling percent‑scale printing, and saving the workbook, allowing unlimited page width and height.
+// Keywords: Aspose.Cells | .NET | C# | FitToPagesWide | FitToPagesTall | unlimited pages | page setup | disable percent scaling | Excel printing | worksheet layout | Aspose.Cells API | zero page scaling
+// Common Searches: Aspose.Cells set FitToPagesWide to 0 | FitToPagesTall zero Aspose.Cells | unlimited page size Aspose.Cells .NET | disable percent scale Aspose.Cells | print Excel without page limits using Aspose | Aspose.Cells page setup unlimited | C# Aspose.Cells page scaling | remove page scaling Aspose.Cells
+// Developer Intent: Configure worksheet printing to use unlimited pages by setting FitToPagesWide and FitToPagesTall to zero and turning off percent scaling.
+// Use Cases: Create a new workbook and set the first worksheet to print without page‑size constraints before saving. | Adjust an existing Excel file’s page setup so content can span any number of pages for custom report layouts. | Generate Excel output for large tables or charts where automatic scaling would truncate or shrink data.
+// AI Prompts: Provide C# code using Aspose.Cells to set FitToPagesWide = 0 and FitToPagesTall = 0 and disable percent scaling for a worksheet. | Explain the effect of setting FitToPagesWide and FitToPagesTall to zero on Excel printing behavior in Aspose.Cells. | Give a step‑by‑step tutorial for creating a workbook, configuring unlimited page dimensions, and saving it with Aspose.Cells for .NET.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsFitToPagesDemo
+namespace AsposeCellsExamples
 {
-    // Creates a workbook, accesses the first worksheet, uses PageSetup.SetFitToPages(0,0) to remove page‑fit limits, verifies the settings, and saves the file as an XLSX document.
-    class Program
+    // Shows how to configure a worksheet’s PageSetup in Aspose.Cells (.NET) by assigning 0 to FitToPagesWide and FitToPagesTall, disabling percent‑scale printing, and saving the workbook, allowing unlimited page width and height.
+    public class FitToPagesUnlimitedDemo
     {
-        static void Main(string[] args)
+        public static void Run()
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+                // Get the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Get the PageSetup object for the worksheet
-            PageSetup pageSetup = worksheet.PageSetup;
+                // Set FitToPagesWide and FitToPagesTall to 0 (unlimited width and height)
+                worksheet.PageSetup.FitToPagesWide = 0;
+                worksheet.PageSetup.FitToPagesTall = 0;
 
-            // Set FitToPagesWide and FitToPagesTall to zero for unlimited page width and height
-            // Using the SetFitToPages method as defined in the API
-            pageSetup.SetFitToPages(0, 0);
+                // Ensure the FitToPages settings are used instead of percent scaling
+                worksheet.PageSetup.IsPercentScale = false;
 
-            // Optionally, verify the settings (should both be zero)
-            Console.WriteLine("FitToPagesWide: " + pageSetup.FitToPagesWide);
-            Console.WriteLine("FitToPagesTall: " + pageSetup.FitToPagesTall);
+                // Define output file path
+                string outputPath = "FitToPagesUnlimited.xlsx";
 
-            // Save the workbook to a file (lifecycle: save)
-            workbook.Save("FitToPagesUnlimited.xlsx");
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
 
-            // Indicate completion
-            Console.WriteLine("Workbook saved with unlimited FitToPages settings.");
+    // Application entry point
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            FitToPagesUnlimitedDemo.Run();
         }
     }
 }

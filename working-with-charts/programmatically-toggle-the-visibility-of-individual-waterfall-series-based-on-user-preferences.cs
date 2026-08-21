@@ -1,10 +1,10 @@
-// Title: C# – Toggle Visibility of Individual Waterfall Chart Series with Aspose.Cells
-// Description: Creates a workbook, adds two data series to a Waterfall chart, and uses a boolean array to set each series' IsFiltered flag, enabling programmatic show/hide of chart series before saving the Excel file.
-// Keywords: Aspose.Cells C# | Waterfall chart series visibility | IsFiltered property | hide chart series .NET | show chart series programmatically | dynamic chart filtering | Excel export Aspose.Cells | GitHub Aspose.Cells example | chart series toggle code | Aspose.Cells chart API
-// Common Searches: how to hide a series in Aspose.Cells Waterfall chart | set chart series visibility based on user input Aspose.Cells | use IsFiltered to filter chart series C# | toggle multiple Waterfall series programmatically | Aspose.Cells example for dynamic chart series
-// Developer Intent: The developer needs to control which Waterfall chart series are displayed by programmatically setting their visibility according to runtime preferences.
-// Use Cases: Interactive dashboards where users select which series to display before exporting to Excel. | Financial reports that only show user‑chosen data streams in a Waterfall chart. | Automated scripts that remove irrelevant series to keep charts concise during batch processing.
-// AI Prompts: Generate C# code using Aspose.Cells that toggles any number of chart series based on a boolean array. | Explain the effect of the IsFiltered property on chart rendering and how to use it for visibility control. | Show how to bind WinForms checkboxes to Waterfall chart series visibility with Aspose.Cells.
+// Title: Toggle Waterfall chart series visibility programmatically with Aspose.Cells for .NET
+// Description: Creates a workbook, adds sample data and a Waterfall chart with two series, then uses a boolean array to set each series' IsFiltered property, showing or hiding the series before saving the file.
+// Keywords: Aspose.Cells | Waterfall chart | series visibility | IsFiltered | .NET | C# | toggle chart series | hide Excel series | programmatic chart filter | Excel automation
+// Common Searches: Aspose.Cells hide waterfall series | How to filter chart series in Aspose.Cells | Set IsFiltered property C# | Toggle chart series visibility .NET | Programmatically show or hide Excel chart series
+// Developer Intent: Show or hide individual Waterfall chart series based on user‑defined preferences.
+// Use Cases: Allow users to deselect secondary series in a financial waterfall report via UI controls. | Create interactive Excel dashboards where checkboxes toggle series before export. | Generate scenario‑specific waterfall charts by displaying only the relevant series.
+// AI Prompts: Write C# code that reads series visibility flags from a JSON file and applies them to a Waterfall chart using Aspose.Cells' IsFiltered property. | Show how to bind WinForms checkboxes to each Waterfall series' IsFiltered setting for real‑time toggling. | Explain how to refresh a Waterfall chart after changing IsFiltered values so the changes appear in the saved workbook.
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Charts;
 
 namespace WaterfallSeriesVisibilityDemo
 {
-    // Creates a workbook, adds two data series to a Waterfall chart, and uses a boolean array to set each series' IsFiltered flag, enabling programmatic show/hide of chart series before saving the Excel file.
+    // Creates a workbook, adds sample data and a Waterfall chart with two series, then uses a boolean array to set each series' IsFiltered property, showing or hiding the series before saving the file.
     class Program
     {
         static void Main()
@@ -29,37 +29,36 @@ namespace WaterfallSeriesVisibilityDemo
             sheet.Cells["A4"].PutValue("Decrease");
             sheet.Cells["A5"].PutValue("End");
 
-            // Values column (multiple series to demonstrate toggling)
-            sheet.Cells["B1"].PutValue("Series 1");
+            // Values column (multiple series for demonstration)
+            sheet.Cells["B1"].PutValue("Series1");
             sheet.Cells["B2"].PutValue(100);
             sheet.Cells["B3"].PutValue(30);
             sheet.Cells["B4"].PutValue(-20);
             sheet.Cells["B5"].PutValue(110);
 
-            sheet.Cells["C1"].PutValue("Series 2");
-            sheet.Cells["C2"].PutValue(80);
-            sheet.Cells["C3"].PutValue(25);
-            sheet.Cells["C4"].PutValue(-15);
-            sheet.Cells["C5"].PutValue(90);
+            sheet.Cells["C1"].PutValue("Series2");
+            sheet.Cells["C2"].PutValue(120);
+            sheet.Cells["C3"].PutValue(40);
+            sheet.Cells["C4"].PutValue(-10);
+            sheet.Cells["C5"].PutValue(150);
 
             // Add a Waterfall chart
             int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 15);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Add both series to the chart
-            chart.NSeries.Add("B2:B5", true); // Series 1
-            chart.NSeries.Add("C2:C5", true); // Series 2
+            // Add the two series to the chart
+            chart.NSeries.Add("B2:B5", true);
+            chart.NSeries.Add("C2:C5", true);
             chart.NSeries.CategoryData = "A2:A5";
 
-            // Simulated user preferences: true = show series, false = hide series
-            // For example, hide Series 2 and show Series 1
-            bool[] userPreferences = new bool[] { true, false };
+            // Simulated user preferences: true = visible, false = hidden
+            bool[] userPreferences = new bool[] { true, false }; // Series1 visible, Series2 hidden
 
-            // Apply visibility based on preferences
+            // Apply visibility based on preferences using IsFiltered property
             for (int i = 0; i < chart.NSeries.Count; i++)
             {
                 // If a series is filtered (IsFiltered = true) it will NOT be displayed.
-                // Therefore, set IsFiltered to the opposite of the user's "show" preference.
+                // Therefore we set IsFiltered to the inverse of the user's visibility choice.
                 chart.NSeries[i].IsFiltered = !userPreferences[i];
             }
 

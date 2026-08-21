@@ -1,43 +1,50 @@
-// Title: C# – Retrieve and Store a Worksheet by Name Using Aspose.Cells
-// Description: Shows how to create a workbook, rename the default sheet, add a second sheet, then access a worksheet by its name with workbook.Worksheets["SheetName"] and keep the reference for further cell updates before saving the file. Example uses Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | retrieve worksheet by name | store worksheet reference | access worksheet Aspose | worksheet cell operations | save workbook Aspose.Cells | example code
-// Common Searches: Aspose.Cells get worksheet by sheet name C# | How to access a worksheet using its name in Aspose.Cells .NET | Retrieve worksheet reference Aspose.Cells C# example | Write to a named worksheet with Aspose.Cells | Aspose.Cells workbook.Worksheets["SheetName"] usage
-// Developer Intent: Obtain a specific worksheet by its name and retain the object for subsequent manipulation in C# with Aspose.Cells.
-// Use Cases: Update header rows in a known sheet without looping through all worksheets. | Insert calculated values into cells of a sheet identified by name. | Copy data from a named worksheet to another sheet within the same workbook.
-// AI Prompts: Generate C# code that opens an existing workbook, accesses the worksheet named "Report", writes a SUM formula to cell C5, and saves the file. | Provide an Aspose.Cells example that retrieves a sheet called "Log", writes the current timestamp to cell A2, and exports the workbook to PDF. | Show how to locate a worksheet by name, add a new column with incremental numbers, rename the sheet to "Processed", and save the workbook.
+// Title: Aspose.Cells .NET: Access a Worksheet by Its Name and Obtain a Reference (C#)
+// Description: Demonstrates how to create a workbook, add a sheet named "DataSheet", retrieve that sheet using the Workbook.Worksheets["DataSheet"] indexer, write a value to cell A1, and save the file as AccessWorksheetByName.xlsx.
+// Keywords: Aspose.Cells | C# | access worksheet by name | retrieve worksheet reference | Workbook.Worksheets indexer | get sheet by string key | Aspose.Cells .NET example | worksheet name lookup | C# spreadsheet library
+// Common Searches: Aspose.Cells get worksheet by name C# | How to retrieve a sheet using its name in Aspose.Cells | Workbook.Worksheets["SheetName"] example | C# Aspose.Cells access specific worksheet | Aspose.Cells reference worksheet after adding
+// Developer Intent: Fetch a Worksheet object from a Workbook by specifying the sheet's name.
+// Use Cases: After adding a custom‑named sheet, locate it later to populate data or apply formatting. | Use the named worksheet reference to write values, formulas, or styles to particular cells. | Check for a sheet's existence by name before performing operations such as data import or validation. | Reuse the worksheet reference across multiple methods to keep code clean and avoid repeated lookups.
+// AI Prompts: Write C# code that verifies a worksheet named "Report" exists before accessing it with Aspose.Cells. | Show how to loop through all worksheets in a workbook and apply formatting only to the sheet called "Summary" using Aspose.Cells for .NET. | Explain best practices for handling exceptions when retrieving a worksheet by name in Aspose.Cells. | Generate a method that returns a Worksheet object given a workbook and a sheet name, creating the sheet if it does not already exist.
 
 using System;
 using Aspose.Cells;
 
-namespace WorksheetAccessExample
+namespace AsposeCellsExamples
 {
-    // Shows how to create a workbook, rename the default sheet, add a second sheet, then access a worksheet by its name with workbook.Worksheets["SheetName"] and keep the reference for further cell updates before saving the file. Example uses Aspose.Cells for .NET.
-    class Program
+    // Demonstrates how to create a workbook, add a sheet named "DataSheet", retrieve that sheet using the Workbook.Worksheets["DataSheet"] indexer, write a value to cell A1, and save the file as AccessWorksheetByName.xlsx.
+    public class AccessWorksheetByNameExample
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook (default contains one worksheet)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Rename the default worksheet to a known name
-            Worksheet firstSheet = workbook.Worksheets[0];
-            firstSheet.Name = "DataSheet";
+                // Add a worksheet with a specific name
+                Worksheet newSheet = workbook.Worksheets.Add("DataSheet");
 
-            // Add another worksheet for demonstration
-            Worksheet secondSheet = workbook.Worksheets.Add("Summary");
+                // Access the worksheet by its name
+                Worksheet accessedSheet = workbook.Worksheets["DataSheet"];
 
-            // Access the worksheet by its name and store the reference
-            Worksheet accessedSheet = workbook.Worksheets["DataSheet"];
+                // Write a message to cell A1
+                accessedSheet.Cells["A1"].PutValue("Worksheet accessed successfully!");
 
-            // Perform further operations on the accessed worksheet
-            accessedSheet.Cells["A1"].PutValue("Accessed by name successfully!");
-            accessedSheet.Cells["A2"].PutValue(DateTime.Now);
+                // Save the workbook
+                string outputPath = "AccessWorksheetByName.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-            // Example: write something to the second sheet as well
-            secondSheet.Cells["B1"].PutValue("This is the Summary sheet.");
-
-            // Save the workbook to a file
-            workbook.Save("WorksheetAccessDemo.xlsx");
+        // Entry point
+        public static void Main(string[] args)
+        {
+            Run();
         }
     }
 }

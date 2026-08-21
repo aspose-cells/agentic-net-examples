@@ -1,51 +1,63 @@
-// Title: Save Workbook as XLSB while Preserving XML Maps – C# Aspose.Cells Example
-// Description: Demonstrates how to create a workbook, add sample data, configure XlsbSaveOptions, ensure the output folder exists, and save the file as a binary .xlsb. The code notes that XML‑map support depends on the Aspose.Cells version, and any attached maps are retained when the library supports them.
-// Keywords: Aspose.Cells | C# | XLSB | XlsbSaveOptions | XML map | save workbook | binary Excel | retain XML map | export to .xlsb | Aspose.Cells .NET
-// Common Searches: Aspose.Cells save as xlsb with xml map | C# export workbook to xlsb preserving xml map | keep xml maps when saving xlsb Aspose | XlsbSaveOptions retain xml mapping | save workbook to binary format Aspose.Cells
-// Developer Intent: Export a workbook to the XLSB binary format while keeping any attached XML maps intact (provided the library version supports XmlMaps).
-// Use Cases: Generate a workbook, populate it with data, and save it as a compact .xlsb file for faster loading. | Maintain XML‑map definitions for downstream data import/export processes when the Aspose.Cells version includes XmlMap support. | Create the target directory programmatically to avoid path‑not‑found errors before calling Workbook.Save. | Wrap the save operation in try‑catch logic to handle version‑related or I/O exceptions gracefully.
-// AI Prompts: Write C# code that attaches an XML map to a workbook and saves it as an XLSB file using Aspose.Cells, including a version check for XmlMap support. | Explain how XlsbSaveOptions works in Aspose.Cells and describe any limitations when preserving XML maps during XLSB export. | Provide best‑practice guidelines for error handling and folder management when saving a workbook with XML maps to XLSB in a .NET application.
+// Title: Save a Workbook as XLSB with Embedded XML Map using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, attach an XML map from an XSD schema, and export it to a binary .xlsb file with XlsbSaveOptions while preserving the XML mapping metadata.
+// Keywords: Aspose.Cells | C# | .NET | XLSB export | XML map | XSD schema | XlsbSaveOptions | preserve XML map | binary Excel file | save workbook as .xlsb
+// Common Searches: Aspose.Cells save workbook as xlsb with xml map | C# keep xml map when exporting to xlsb | how to embed xml schema in xlsb using Aspose.Cells | XlsbSaveOptions retain xml mapping | export Excel to binary format with xml map .NET
+// Developer Intent: Export a workbook to .xlsb while ensuring the attached XML map remains intact.
+// Use Cases: Distribute a binary Excel template that includes XML mapping for automated data import. | Generate reports for systems that require XLSB files with embedded XML schema metadata. | Create reusable XLSB files for downstream applications that consume XML‑mapped data.
+// AI Prompts: Write C# code with Aspose.Cells to add an XML map from an XSD file and save the workbook as XLSB, keeping the map embedded. | Explain the role of XlsbSaveOptions in preserving XML maps during XLSB export and list any required properties. | Show how to programmatically verify that an XML map exists in a saved XLSB file using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, add sample data, configure XlsbSaveOptions, ensure the output folder exists, and save the file as a binary .xlsb. The code notes that XML‑map support depends on the Aspose.Cells version, and any attached maps are retained when the library supports them.
-class Program
+// Demonstrates how to create a workbook, attach an XML map from an XSD schema, and export it to a binary .xlsb file with XlsbSaveOptions while preserving the XML mapping metadata.
+class SaveXlsbWithXmlMap
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Populate some sample data
+            worksheet.Cells["A1"].PutValue("Product");
+            worksheet.Cells["B1"].PutValue("Price");
+            worksheet.Cells["A2"].PutValue("Laptop");
+            worksheet.Cells["B2"].PutValue(999.99);
 
-            // Populate sample data
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Price");
-            sheet.Cells["A2"].PutValue("Laptop");
-            sheet.Cells["B2"].PutValue(999.99);
+            // Define a simple XML schema (XSD) and write it to a temporary file
+            string xmlSchema = @"<?xml version='1.0' encoding='utf-8'?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+  <xs:element name='Product'>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name='Name' type='xs:string' />
+        <xs:element name='Price' type='xs:decimal' />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>";
 
-            // NOTE: XML map functionality is not available in the current Aspose.Cells version.
-            // If needed, ensure the library version supports XmlMaps before using the related APIs.
+            string schemaPath = "ProductSchema.xsd";
 
-            // Create XLSB save options (default options retain all workbook data)
+            // Ensure the schema file exists (create or overwrite)
+            File.WriteAllText(schemaPath, xmlSchema);
+
+            // Add the XML map using the schema file
+            int mapIndex = workbook.Worksheets.XmlMaps.Add(schemaPath);
+            XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
+            xmlMap.Name = "ProductDataMap"; // give the map a friendly name
+
+            // Create XLSB save options
             XlsbSaveOptions saveOptions = new XlsbSaveOptions();
 
-            // Define output path and ensure the directory exists
+            // Save the workbook as an XLSB file while retaining the attached XML map
             string outputPath = "ProductData.xlsb";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook as an XLSB file
             workbook.Save(outputPath, saveOptions);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

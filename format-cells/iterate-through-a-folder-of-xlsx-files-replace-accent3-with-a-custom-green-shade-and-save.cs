@@ -1,72 +1,95 @@
-// Title: C# – Batch replace Accent3 theme color with a custom green shade in multiple XLSX files using Aspose.Cells
-// Description: Iterates through a specified folder, loads each .xlsx workbook with Aspose.Cells, changes the Accent3 theme color to a user‑defined green (RGB 0,128,0) via SetThemeColor, saves the file, and logs results while handling missing files and exceptions.
-// Keywords: Aspose.Cells | C# | SetThemeColor | Accent3 | theme color | batch update Excel | XLSX folder processing | custom green shade | RGB 0 128 0 | automate Excel theme | replace theme color programmatically
-// Common Searches: change Accent3 theme color in all Excel files using Aspose.Cells | C# code to update Excel theme colors in a folder | batch modify XLSX theme colors with Aspose.Cells .NET | set custom green shade for Accent3 across multiple workbooks | automate Excel theme color replacement C#
-// Developer Intent: Replace the Accent3 theme color with a specific green shade in every Excel workbook located in a given directory.
-// Use Cases: Enforce corporate branding by updating the Accent3 color to the approved green across existing spreadsheets. | Prepare a collection of financial reports for a green‑themed presentation by applying the custom shade automatically. | Ensure design‑guideline compliance that mandates a particular green for Accent3 in all Excel files.
-// AI Prompts: Generate C# code that uses Aspose.Cells to set Accent3 to #008000 for all .xlsx files in a folder, including error handling and logging. | Show how to read an RGB value from a JSON configuration file and apply it as the Accent3 theme color to multiple workbooks with Aspose.Cells. | Refactor the batch processing loop to use async file I/O while updating the Accent3 theme color in each workbook.
+// Title: Batch replace Accent3 theme color with a custom green in XLSX files using Aspose.Cells C#
+// Description: Iterates through a folder of .xlsx workbooks, reads the current theme, substitutes the Accent3 color with a user‑defined green RGB, applies a custom theme via Aspose.Cells, and saves each file. Includes folder validation and error handling.
+// Keywords: Aspose.Cells C# replace theme color | Accent3 custom green | batch update Excel theme colors | CustomTheme method Aspose.Cells | process multiple XLSX files programmatically
+// Common Searches: change Accent3 theme color in all Excel files with Aspose.Cells | C# code to replace Excel theme Accent3 with specific RGB | bulk update Excel workbook theme colors .NET | apply custom green theme to multiple XLSX files
+// Developer Intent: Replace the Accent3 theme color with a custom green shade in every XLSX file within a specified directory and overwrite the originals.
+// Use Cases: Enforce corporate green branding across all generated reports. | Prepare a batch of workbooks for brand‑compliance before distribution. | Automate a rebranding effort by updating the Accent3 color in existing Excel files.
+// AI Prompts: Write C# code that uses Aspose.Cells to replace the Accent3 theme color with a given RGB value for all Excel files in a folder, adding error handling and optional backup creation. | Explain how Aspose.Cells' CustomTheme method can retrieve, modify, and reapply theme colors before saving a workbook. | Suggest how to make the folder path configurable via command‑line arguments and log processing results to a text file.
 
 using System;
-using System.IO;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsThemeUpdater
+// Iterates through a folder of .xlsx workbooks, reads the current theme, substitutes the Accent3 color with a user‑defined green RGB, applies a custom theme via Aspose.Cells, and saves each file. Includes folder validation and error handling.
+class ReplaceAccent3WithCustomGreen
 {
-    // Iterates through a specified folder, loads each .xlsx workbook with Aspose.Cells, changes the Accent3 theme color to a user‑defined green (RGB 0,128,0) via SetThemeColor, saves the file, and logs results while handling missing files and exceptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Folder containing the XLSX files – adjust as needed or pass via command line
+        string folderPath = @"C:\Path\To\XlsxFolder";
+
+        // Verify that the folder exists
+        if (!Directory.Exists(folderPath))
         {
-            // Folder containing the XLSX files – adjust as needed or keep empty to use the current directory.
-            string folderPath = @"C:\Path\To\XlsxFolder";
+            Console.WriteLine($"Folder not found: {folderPath}");
+            return;
+        }
 
-            // Verify that the folder exists.
-            if (!Directory.Exists(folderPath))
+        // Define the custom green shade to replace Accent3
+        Color customGreen = Color.FromArgb(0, 200, 0); // Adjust RGB as needed
+
+        // Get all .xlsx files in the folder (non‑recursive)
+        string[] files;
+        try
+        {
+            files = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error retrieving files: {ex.Message}");
+            return;
+        }
+
+        foreach (string filePath in files)
+        {
+            // Ensure the file still exists before processing
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine($"Folder not found: {folderPath}");
-                Console.WriteLine("Please ensure the path is correct or update the folderPath variable.");
-                return;
+                Console.WriteLine($"File not found (skipped): {filePath}");
+                continue;
             }
-
-            // Define the custom green shade to replace Accent3.
-            Color customGreen = Color.FromArgb(0, 128, 0); // adjust RGB as needed
 
             try
             {
-                // Iterate over each XLSX file in the folder.
-                foreach (string filePath in Directory.GetFiles(folderPath, "*.xlsx"))
+                // Load the workbook from the file
+                using (Workbook workbook = new Workbook(filePath))
                 {
-                    // Ensure the file still exists before processing.
-                    if (!File.Exists(filePath))
-                    {
-                        Console.WriteLine($"File not found (skipped): {filePath}");
-                        continue;
-                    }
+                    // Prepare an array for the 12 theme colors
+                    Color[] themeColors = new Color[12];
 
-                    try
-                    {
-                        // Load the workbook from the file (lifecycle rule: load).
-                        Workbook workbook = new Workbook(filePath);
+                    // Fill the array with the current theme colors
+                    themeColors[0] = workbook.GetThemeColor(ThemeColorType.Background1);
+                    themeColors[1] = workbook.GetThemeColor(ThemeColorType.Text1);
+                    themeColors[2] = workbook.GetThemeColor(ThemeColorType.Background2);
+                    themeColors[3] = workbook.GetThemeColor(ThemeColorType.Text2);
+                    themeColors[4] = workbook.GetThemeColor(ThemeColorType.Accent1);
+                    themeColors[5] = workbook.GetThemeColor(ThemeColorType.Accent2);
+                    themeColors[6] = workbook.GetThemeColor(ThemeColorType.Accent3); // will be replaced
+                    themeColors[7] = workbook.GetThemeColor(ThemeColorType.Accent4);
+                    themeColors[8] = workbook.GetThemeColor(ThemeColorType.Accent5);
+                    themeColors[9] = workbook.GetThemeColor(ThemeColorType.Accent6);
+                    themeColors[10] = workbook.GetThemeColor(ThemeColorType.Hyperlink);
+                    themeColors[11] = workbook.GetThemeColor(ThemeColorType.FollowedHyperlink);
 
-                        // Replace the Accent3 theme color with the custom green shade.
-                        workbook.SetThemeColor(ThemeColorType.Accent3, customGreen);
+                    // Replace Accent3 (index 6) with the custom green shade
+                    themeColors[6] = customGreen;
 
-                        // Save the workbook back to the same file (lifecycle rule: save).
-                        workbook.Save(filePath, SaveFormat.Xlsx);
+                    // Apply the modified theme to the workbook
+                    workbook.CustomTheme("CustomThemeWithGreenAccent3", themeColors);
 
-                        Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-                    }
+                    // Save the workbook, overwriting the original file
+                    workbook.Save(filePath);
                 }
+
+                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
         }
+
+        Console.WriteLine("Accent3 color replacement completed for all files.");
     }
 }

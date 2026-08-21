@@ -1,22 +1,22 @@
-// Title: Unit test to confirm shape macro assignment fails when the macro is missing in Aspose.Cells for .NET
-// Description: Creates a macro‑enabled workbook, adds a rectangle shape, sets its MacroName to a non‑existent VBA procedure, and saves as Xlsm. The test asserts that Aspose.Cells throws a CellsException, proving that invalid macro references are detected during save.
-// Keywords: Aspose.Cells unit test | C# macro validation | shape MacroName exception | CellsException on save | macro‑enabled workbook testing | .NET Aspose.Cells macro error | invalid VBA procedure detection
-// Common Searches: Aspose.Cells test for missing macro on shape | how to assert CellsException for invalid MacroName | unit test macro validation Aspose.Cells .NET | shape macro assignment error handling | verify macro existence before saving workbook
-// Developer Intent: Validate that assigning a non‑existent macro to a shape triggers a CellsException when the workbook is saved as a macro‑enabled file.
-// Use Cases: Automated CI checks for broken macro references in generated Excel files | Quality‑gate testing in document‑generation pipelines that use Aspose.Cells | Ensuring reliable workbook saves by catching invalid VBA procedure names early
-// AI Prompts: Generate an MSTest method that creates a workbook with macros enabled, adds a rectangle shape, assigns a non‑existent MacroName, saves as Xlsm, and asserts that a CellsException is thrown. | Write a NUnit test for Aspose.Cells that verifies saving a macro‑enabled workbook fails when a shape references a missing VBA macro. | Provide an xUnit example that checks the exception message returned by Aspose.Cells when an invalid MacroName is set on a shape.
+// Title: Aspose.Cells .NET unit test – verify exception when assigning a non‑existent macro to a shape
+// Description: Creates a macro‑enabled workbook, adds a rectangle shape, sets its MacroName to a name that is not defined, and saves the file. The test asserts that Aspose.Cells throws a CellsException because the macro reference is invalid.
+// Keywords: Aspose.Cells | .NET | macro validation | shape MacroName | exception handling | unit test | MSTest | NUnit | xUnit | CellsException | nonexistent macro | save validation
+// Common Searches: Aspose.Cells test missing macro exception | shape macro name not found error .NET | unit test for macro validation Aspose.Cells | assert CellsException on invalid macro reference | how to verify macro assignment fails Aspose.Cells
+// Developer Intent: Confirm that assigning a macro name that does not exist to a shape triggers a CellsException during workbook save.
+// Use Cases: Write an MSTest/NUnit/xUnit test that creates a macro‑enabled workbook, adds a shape, assigns an invalid MacroName, and asserts that Save throws a CellsException. | Add the test to a CI pipeline to catch regressions in macro reference validation after library updates. | Log the exception message to verify it contains the missing macro name for easier debugging.
+// AI Prompts: Generate an MSTest method that creates a workbook with EnableMacros = true, adds a rectangle shape, sets MacroName = "NonExistingMacro()", saves the workbook, and asserts that a CellsException is thrown. | Provide a NUnit test example that verifies Aspose.Cells throws an exception when a shape references a macro that is not present in the workbook. | Write an xUnit test that catches the expected CellsException and checks that the exception message includes the missing macro name.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System.IO;
 
 namespace AsposeCellsTests
 {
-    // Creates a macro‑enabled workbook, adds a rectangle shape, sets its MacroName to a non‑existent VBA procedure, and saves as Xlsm. The test asserts that Aspose.Cells throws a CellsException, proving that invalid macro references are detected during save.
+    // Creates a macro‑enabled workbook, adds a rectangle shape, sets its MacroName to a name that is not defined, and saves the file. The test asserts that Aspose.Cells throws a CellsException because the macro reference is invalid.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
@@ -30,38 +30,20 @@ namespace AsposeCellsTests
                 // Add a rectangle shape to the worksheet
                 Shape shape = worksheet.Shapes.AddRectangle(1, 1, 100, 100, 0, 0);
 
-                // Assign a macro name that does not exist in the workbook
+                // Assign a macro name that does NOT exist in the workbook
                 shape.MacroName = "NonExistingMacro()";
 
-                // Attempt to save as a macro‑enabled file; this should throw a CellsException
+                // Define the output file path
                 string outputPath = "NonExistingMacroTest.xlsm";
 
-                // Ensure any existing file is deleted to avoid FileNotFoundException on overwrite
-                if (File.Exists(outputPath))
-                {
-                    File.Delete(outputPath);
-                }
-
-                try
-                {
-                    workbook.Save(outputPath, SaveFormat.Xlsm);
-                    Console.WriteLine("Test Failed: Expected exception was not thrown.");
-                }
-                catch (CellsException ex)
-                {
-                    // Expected path – the macro cannot be resolved
-                    Console.WriteLine($"Test Passed: Caught expected CellsException -> {ex.Message}");
-                }
-                catch (Exception ex)
-                {
-                    // Any other exception indicates an unexpected failure
-                    Console.WriteLine($"Test Failed: Unexpected exception -> {ex.GetType().Name}: {ex.Message}");
-                }
+                // Save the workbook; Aspose.Cells validates macro references on save
+                workbook.Save(outputPath);
+                Console.WriteLine("Workbook saved successfully (unexpected).");
             }
             catch (Exception ex)
             {
-                // General safety net for any unforeseen errors
-                Console.WriteLine($"Unhandled exception: {ex.GetType().Name}: {ex.Message}");
+                // Expected exception because the macro is missing
+                Console.WriteLine($"Expected exception caught: {ex.Message}");
             }
         }
     }

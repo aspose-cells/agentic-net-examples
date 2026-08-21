@@ -1,70 +1,61 @@
-// Title: Apply Accent5 Theme Color to Data Bar Conditional Formatting with Aspose.Cells for .NET
-// Description: This example creates a workbook, fills cells A1:A5 with numbers, adds a Data Bar conditional format, retrieves the workbook's Accent5 theme color via GetThemeColor, assigns it to the Data Bar, configures automatic minimum and maximum values, shows the cell value, and saves the result as ThemeAccent5DataBar.xlsx.
-// Keywords: Aspose.Cells | C# | DataBar | conditional formatting | theme accent color | GetThemeColor | Accent5 | Excel workbook styling | FormatCondition | XLSX export
-// Common Searches: Aspose.Cells set data bar color from theme | GetThemeColor Accent5 C# example | apply workbook theme accent to conditional formatting | data bar conditional formatting Aspose.Cells .NET | change data bar color programmatically in Excel
-// Developer Intent: Set a Data Bar conditional formatting rule to use the workbook’s Accent5 theme color.
-// Use Cases: Generate reports where data bars automatically match the workbook’s Accent5 color for a cohesive visual theme. | Apply the same accent color to multiple data bar rules across worksheets to maintain consistent branding. | Build interactive dashboards that adapt their conditional formatting colors when the workbook theme is changed.
-// AI Prompts: Write C# code that retrieves any theme accent (e.g., Accent3) and applies it to a Data Bar conditional format using Aspose.Cells. | Show how to change the data bar color to the workbook's Accent5 theme color and adjust the conditional range to B2:B10. | Explain how to switch a data bar's color between different theme accents based on user input in an Aspose.Cells workbook.
+// Title: Aspose.Cells for .NET – Apply Theme Accent5 Color to a Data Bar Conditional Formatting Rule
+// Description: Creates a workbook, fills cells A1:A5 with numbers, adds a Data Bar conditional format, sets automatic min/max, shows values, and assigns the workbook's Accent5 theme color to the data bar before saving as XLSX.
+// Keywords: Aspose.Cells C# data bar color | theme accent color conditional formatting | Workbook.GetThemeColor | Accent5 data bar Aspose | conditional formatting Excel .NET
+// Common Searches: set data bar color using workbook theme in Aspose.Cells | apply Accent5 theme color to conditional formatting data bar C# | Aspose.Cells GetThemeColor example | change Excel data bar color programmatically .NET
+// Developer Intent: Assign the workbook’s Accent5 theme color to a Data Bar conditional formatting rule using Aspose.Cells for .NET.
+// Use Cases: Generate reports where data bars match the document’s theme for consistent branding. | Programmatically style multiple worksheets so all data bars share the same accent color. | Build dashboards that automatically adapt data‑bar colors when the workbook theme changes.
+// AI Prompts: Show how to retrieve a theme color and apply it to a DataBar conditional format in Aspose.Cells C#. | Provide code to change an existing DataBar rule to use the workbook’s Accent2 color. | Explain how to apply different theme accent colors to several conditional formatting rules in one workbook.
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using System.Drawing;
 
-namespace AsposeCellsThemeAccentDemo
+// Creates a workbook, fills cells A1:A5 with numbers, adds a Data Bar conditional format, sets automatic min/max, shows values, and assigns the workbook's Accent5 theme color to the data bar before saving as XLSX.
+class ApplyAccent5ToDataBar
 {
-    // This example creates a workbook, fills cells A1:A5 with numbers, adds a Data Bar conditional format, retrieves the workbook's Accent5 theme color via GetThemeColor, assigns it to the Data Bar, configures automatic minimum and maximum values, shows the cell value, and saves the result as ThemeAccent5DataBar.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate some sample numeric data
-                sheet.Cells["A1"].PutValue(10);
-                sheet.Cells["A2"].PutValue(30);
-                sheet.Cells["A3"].PutValue(50);
-                sheet.Cells["A4"].PutValue(70);
-                sheet.Cells["A5"].PutValue(90);
+            // Populate sample data in column A (rows 1-5)
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(30);
+            sheet.Cells["A3"].PutValue(20);
+            sheet.Cells["A4"].PutValue(40);
+            sheet.Cells["A5"].PutValue(25);
 
-                // Define the range that will receive the data bar conditional formatting
-                CellArea area = new CellArea
-                {
-                    StartRow = 0,
-                    EndRow = 4,
-                    StartColumn = 0,
-                    EndColumn = 0
-                };
+            // Define the cell area that will receive the conditional formatting (A1:A5)
+            CellArea area = new CellArea { StartRow = 0, EndRow = 4, StartColumn = 0, EndColumn = 0 };
 
-                // Add an empty conditional formatting collection
-                int cfIndex = sheet.ConditionalFormattings.Add();
-                FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
-                cfCollection.AddArea(area);
+            // Add a new conditional formatting collection to the worksheet
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
+            cfCollection.AddArea(area);
 
-                // Add a DataBar condition
-                int conditionIndex = cfCollection.AddCondition(FormatConditionType.DataBar);
-                FormatCondition condition = cfCollection[conditionIndex];
+            // Add a DataBar condition to the collection
+            int conditionIdx = cfCollection.AddCondition(FormatConditionType.DataBar);
+            FormatCondition condition = cfCollection[conditionIdx];
 
-                // Retrieve the theme's Accent5 color and apply it to the data bar
-                Color accent5 = workbook.GetThemeColor(ThemeColorType.Accent5);
-                condition.DataBar.Color = accent5;
+            // Configure the DataBar (automatic min/max and show cell values)
+            condition.DataBar.MinCfvo.Type = FormatConditionValueType.AutomaticMin;
+            condition.DataBar.MaxCfvo.Type = FormatConditionValueType.AutomaticMax;
+            condition.DataBar.ShowValue = true;
 
-                // Set other required properties for the data bar
-                condition.DataBar.MinCfvo.Type = FormatConditionValueType.AutomaticMin;
-                condition.DataBar.MaxCfvo.Type = FormatConditionValueType.AutomaticMax;
-                condition.DataBar.ShowValue = true; // display the cell value alongside the bar
+            // Apply the workbook theme's Accent5 color to the data bar
+            condition.DataBar.Color = workbook.GetThemeColor(ThemeColorType.Accent5);
 
-                // Save the workbook
-                workbook.Save("ThemeAccent5DataBar.xlsx", SaveFormat.Xlsx);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook to a file
+            string outputPath = "Accent5DataBar.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

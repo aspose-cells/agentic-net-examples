@@ -1,10 +1,10 @@
-// Title: C# – Aspose.Cells: Create a Chart Template with Fixed Legend Position and Data Labels
-// Description: Demonstrates how to build a reusable Excel chart template in C# using Aspose.Cells: add sample data, insert a column chart, set the legend to the bottom, enable value data labels for the first series, customize label font size, and save the workbook as an .xlsx file.
-// Keywords: Aspose.Cells | C# chart template | legend position bottom | data labels show value | column chart customization | SaveFormat.Xlsx | Excel automation | global chart template | US developers | Europe chart scripting
-// Common Searches: Aspose.Cells set legend position bottom C# | How to enable data labels in Aspose.Cells chart | Create reusable chart template with Aspose.Cells | C# Aspose.Cells column chart with legend and labels | Save chart as template using Aspose.Cells
-// Developer Intent: Generate a ready‑to‑use Excel chart template that enforces a specific legend placement and data‑label formatting for consistent reporting.
-// Use Cases: Standardize sales or KPI charts across dozens of workbooks with a pre‑configured legend at the bottom. | Automate monthly reports where each column chart must display numeric values directly on the columns. | Distribute a template file to end‑users so they can replace data while preserving legend and label styles.
-// AI Prompts: Write C# code with Aspose.Cells to create a line‑chart template that places the legend at the top and shows percentage data labels. | Provide a method that accepts a Workbook object and adds a bar chart with the legend on the right and a custom 14‑pt font for data labels. | Explain how to modify an existing Aspose.Cells chart template to move the legend to the left and hide all data labels.
+// Title: C# – Create an Excel chart template with predefined legend position and data label formatting using Aspose.Cells
+// Description: This example shows how to build a new Workbook, add sample data, insert a column chart, set the legend to the top with custom width, height and bold font, enable value and category name data labels with a dark‑blue font, recalculate the layout, and save the result as an XLSX chart template.
+// Keywords: Aspose.Cells chart template C# | set legend position Aspose.Cells | custom data labels Aspose.Cells | Excel chart legend formatting | Aspose.Cells column chart example
+// Common Searches: Aspose.Cells how to position chart legend | C# Aspose.Cells data label formatting | create reusable Excel chart template with Aspose.Cells | save chart as template Aspose.Cells .NET | set legend size and font Aspose.Cells
+// Developer Intent: Generate an Excel chart template in C# where the legend position, size and style, as well as data‑label visibility and appearance, are predefined.
+// Use Cases: Standardize monthly sales charts with a top legend and visible value/category labels. | Provide a reusable chart template that preserves corporate branding for legends and data labels across multiple workbooks. | Automate report generation where every chart must follow specific legend dimensions and label styling.
+// AI Prompts: Write C# code with Aspose.Cells to create a line chart template that places the legend at the bottom and shows percentage data labels. | Give a snippet that copies an existing Aspose.Cells chart template, updates its data range, and keeps the original legend and label formatting. | Explain how to set the data label position to OutsideEnd for a bar chart in Aspose.Cells, including any version‑specific considerations.
 
 using System;
 using Aspose.Cells;
@@ -12,43 +12,69 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsChartTemplate
 {
-    // Demonstrates how to build a reusable Excel chart template in C# using Aspose.Cells: add sample data, insert a column chart, set the legend to the bottom, enable value data labels for the first series, customize label font size, and save the workbook as an .xlsx file.
-    class Program
+    // This example shows how to build a new Workbook, add sample data, insert a column chart, set the legend to the top with custom width, height and bold font, enable value and category name data labels with a dark‑blue font, recalculate the layout, and save the result as an XLSX chart template.
+    public class CreateChartTemplate
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(30);
+                // Populate sample data for the chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["A4"].PutValue("C");
+                sheet.Cells["B4"].PutValue(30);
 
-            // Add a column chart to the worksheet (topRow, leftColumn, bottomRow, rightColumn)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
+                // Add a column chart to the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the chart (including categories and values)
-            chart.SetChartDataRange("A1:B4", true);
+                // Define the data range for the chart
+                chart.SetChartDataRange("A1:B4", true);
 
-            // Predefine legend position (e.g., Bottom)
-            chart.Legend.Position = LegendPositionType.Bottom;
+                // ---- Predefined Legend Settings ----
+                chart.Legend.Position = LegendPositionType.Top;
+                chart.Legend.IsOverLay = false;
+                chart.Legend.IsAutomaticSize = false;
+                chart.Legend.Width = 300;
+                chart.Legend.Height = 40;
+                chart.Legend.Font.Size = 11;
+                chart.Legend.Font.IsBold = true;
 
-            // Enable data labels to show values for the first series
-            chart.NSeries[0].DataLabels.ShowValue = true;
+                // ---- Predefined Data Label Settings ----
+                chart.NSeries[0].DataLabels.ShowValue = true;
+                chart.NSeries[0].DataLabels.ShowCategoryName = true;
+                // Position data labels outside the data points (if supported by the library version)
+                // chart.NSeries[0].DataLabels.Position = DataLabelPositionType.OutsideEnd;
+                chart.NSeries[0].DataLabels.Font.Size = 10;
+                chart.NSeries[0].DataLabels.Font.Color = System.Drawing.Color.DarkBlue;
 
-            // Optional: customize data label font size
-            chart.NSeries[0].DataLabels.Font.Size = 12;
+                // Apply layout changes
+                chart.Calculate();
 
-            // Save the workbook with the predefined chart template
-            workbook.Save("ChartTemplateWithLegendAndDataLabels.xlsx", SaveFormat.Xlsx);
+                // Save the workbook containing the chart template
+                workbook.Save("ChartTemplateWithLegendAndDataLabels.xlsx", SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating chart template: {ex.Message}");
+            }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CreateChartTemplate.Run();
         }
     }
 }

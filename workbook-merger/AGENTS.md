@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Workbook Merger Agent
 category: workbook-merger
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Merge Excel workbooks or selected worksheets in C#
 primary_apis: [Workbook.Combine, Worksheet.Copy, WorksheetCollection.Add, Workbook.Save]
 search_intents: [merge Excel files C#, combine XLSX without Excel, copy worksheet between workbooks, consolidate Excel workbooks]
@@ -93,3 +93,4 @@ Use `Combine` for whole workbooks and `Worksheet.Copy` for selected sheets. A bl
 ## Definition of done
 
 The example compiles, runs, merges the intended workbook content, validates exact sheet/data state and round-trip output, and does not overwrite or silently lose source content.
+

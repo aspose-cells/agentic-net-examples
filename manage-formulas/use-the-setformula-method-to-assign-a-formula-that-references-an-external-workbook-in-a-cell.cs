@@ -1,10 +1,10 @@
-// Title: Set an external workbook reference formula with Aspose.Cells for .NET (C#)
-// Description: This example creates (or verifies) an external Excel file, adds it as an ExternalLink to a new workbook, and uses the SetFormula method (via the Formula property) to insert a formula in cell B2 that points to cell A1 on Sheet1 of the external workbook. The workbook is then saved.
-// Keywords: Aspose.Cells SetFormula external workbook | C# Aspose.Cells external link | reference another workbook Excel .NET | ExternalLink example Aspose.Cells | link external Excel file C# | GitHub Aspose.Cells external formula sample | global Excel automation
-// Common Searches: how to reference a cell in another workbook using Aspose.Cells C# | Aspose.Cells external link and formula tutorial | set formula to external Excel file with Aspose.Cells | C# code for external workbook formula Aspose.Cells
-// Developer Intent: Insert a formula that pulls data from a specific cell in an external Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Build a consolidated financial dashboard that pulls key figures from departmental workbooks. | Create a master report that references lookup tables stored in separate Excel files. | Maintain a single source of truth for pricing data and link it to multiple analysis workbooks.
-// AI Prompts: Write C# code with Aspose.Cells to add an ExternalLink to a workbook and set a formula that references cell A1 of Sheet1 in the linked file. | Explain how to retrieve the index of an added ExternalLink and construct the correct formula string for SetFormula. | Suggest robust error‑handling strategies when the external workbook is missing or the link path is invalid while using SetFormula.
+// Title: SetFormula to reference an external workbook cell in Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create or locate an external workbook, register it as an external link, assign a formula that points to a cell in that workbook using the Formula property (SetFormula), recalculate the workbook, and save the result. The example works with Aspose.Cells for .NET and handles optional custom paths.
+// Keywords: Aspose.Cells SetFormula external workbook | C# external link Excel formula | Aspose.Cells reference another file | Add external link Aspose.Cells | Calculate external formulas Aspose.Cells | Excel external workbook formula .NET | Aspose.Cells external workbook example
+// Common Searches: Aspose.Cells set formula to another workbook | How to add external link in Aspose.Cells C# | Reference cell in external Excel file using Aspose.Cells | Calculate formulas that pull data from another workbook Aspose.Cells | Save workbook after linking external file Aspose.Cells
+// Developer Intent: Insert a formula that pulls a value from a specific cell in an external Excel workbook and ensure the link is registered for correct calculation.
+// Use Cases: Create a summary report that always reflects the latest figures from a source workbook. | Consolidate departmental financial data into a master workbook without manual copy‑paste. | Build a dashboard that pulls real‑time metrics from multiple external Excel files.
+// AI Prompts: Show C# code using Aspose.Cells to add an external link, set a formula referencing that link, calculate, and save the workbook. | Explain how to register an external workbook in Aspose.Cells and use SetFormula to reference a cell in it. | Provide guidance on handling relative and absolute paths for external workbook formulas with Aspose.Cells.
 
 using System;
 using System.IO;
@@ -12,7 +12,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsExternalFormulaDemo
 {
-    // This example creates (or verifies) an external Excel file, adds it as an ExternalLink to a new workbook, and uses the SetFormula method (via the Formula property) to insert a formula in cell B2 that points to cell A1 on Sheet1 of the external workbook. The workbook is then saved.
+    // Demonstrates how to create or locate an external workbook, register it as an external link, assign a formula that points to a cell in that workbook using the Formula property (SetFormula), recalculate the workbook, and save the result. The example works with Aspose.Cells for .NET and handles optional custom paths.
     class Program
     {
         static void Main()
@@ -23,33 +23,32 @@ namespace AsposeCellsExternalFormulaDemo
                 string externalFileName = "ExternalWorkbook.xlsx";
                 if (!File.Exists(externalFileName))
                 {
-                    var externalWb = new Workbook();
-                    Worksheet extSheet = externalWb.Worksheets[0];
-                    extSheet.Name = "Sheet1";
-                    extSheet.Cells["A1"].PutValue("External Value");
-                    externalWb.Save(externalFileName);
+                    var extWb = new Workbook();
+                    extWb.Worksheets[0].Name = "Sheet1";
+                    extWb.Worksheets[0].Cells["A1"].PutValue("External Value");
+                    extWb.Save(externalFileName);
                 }
 
                 // Create the main workbook
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                var mainWb = new Workbook();
+                var sheet = mainWb.Worksheets[0];
 
-                // Add an external link to the main workbook
-                string[] externalSheets = new string[] { "Sheet1" };
-                int linkIndex = workbook.Worksheets.ExternalLinks.Add(externalFileName, externalSheets);
-                ExternalLink externalLink = workbook.Worksheets.ExternalLinks[linkIndex];
+                // Register the external link to the external workbook and its sheet
+                string[] externalSheets = { "Sheet1" };
+                int linkIndex = sheet.Workbook.Worksheets.ExternalLinks.Add(externalFileName, externalSheets);
+                ExternalLink externalLink = sheet.Workbook.Worksheets.ExternalLinks[linkIndex];
 
-                // Optional: set the data source path if needed
-                // externalLink.DataSource = Path.GetFullPath(externalFileName);
+                // Optionally set the data source path if the external file is located elsewhere
+                // externalLink.DataSource = @"C:\Path\To\ExternalWorkbook.xlsx";
 
-                // Set a formula that references cell A1 in the external workbook
-                sheet.Cells["B2"].Formula = "='[ExternalWorkbook.xlsx]Sheet1'!A1";
+                // Set a formula that references cell A1 of the external workbook's Sheet1
+                sheet.Cells["A1"].Formula = "='[ExternalWorkbook.xlsx]Sheet1'!A1";
 
-                // Save the workbook
-                string outputFile = "OutputWithExternalFormula.xlsx";
-                workbook.Save(outputFile);
+                // Calculate formulas (will pull data from the external workbook)
+                mainWb.CalculateFormula();
 
-                Console.WriteLine($"Workbook saved successfully as '{outputFile}'.");
+                // Save the main workbook
+                mainWb.Save("MainWorkbook_WithExternalFormula.xlsx");
             }
             catch (Exception ex)
             {

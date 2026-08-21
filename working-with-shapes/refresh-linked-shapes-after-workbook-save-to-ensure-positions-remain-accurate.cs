@@ -1,47 +1,51 @@
-// Title: Refresh linked shapes after saving a workbook – Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a ComboBox shape linked to a cell range, save the file, and then call `sheet.Shapes.UpdateSelectedValue()` to synchronize the shape's selected value and position. An optional second save persists the refreshed state.
-// Keywords: Aspose.Cells | C# | .NET | Refresh linked shapes | UpdateSelectedValue | ComboBox shape | shape synchronization | Workbook.Save | linked shape positions | Aspose.Cells drawing API
-// Common Searches: Aspose.Cells refresh linked shapes after save | UpdateSelectedValue C# example | ComboBox shape linked to range Aspose.Cells | Synchronize shape positions after Workbook.Save | How to refresh linked shapes in Aspose.Cells .NET
-// Developer Intent: Synchronize the values and positions of cell‑linked shapes after a workbook is saved.
-// Use Cases: Ensure a ComboBox reflects the latest range data before persisting the workbook. | Refresh data‑validation drop‑downs or other linked shapes after programmatic changes. | Persist the updated state of linked shapes by saving the workbook a second time.
-// AI Prompts: Show a C# code snippet that refreshes all linked shapes after saving a workbook with Aspose.Cells. | Explain why `UpdateSelectedValue` should be called after `Workbook.Save` and how it affects shape positioning. | Provide step‑by‑step instructions to synchronize ComboBox shapes linked to cell ranges in Aspose.Cells for .NET.
+// Title: Refresh linked ComboBox and other shapes after saving a workbook – Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, add a ComboBox linked to cells A1:A3, modify source data, and call sheet.Shapes.UpdateSelectedValue() to synchronize the shape's selected value before the final save, ensuring accurate linked shape positions and selections.
+// Keywords: Aspose.Cells | C# | Refresh linked shapes | UpdateSelectedValue | ComboBox shape | worksheet shapes | Excel automation | save workbook | linked control | shape synchronization
+// Common Searches: Aspose.Cells update linked shape after cell change | C# Refresh ComboBox selected value in Excel | UpdateSelectedValue method example | Synchronize linked shapes after saving workbook | How to refresh linked shapes in Aspose.Cells | Refresh shape positions after workbook save
+// Developer Intent: Synchronize the selected values of linked shapes (e.g., ComboBox) with their source cells after modifying data and saving the workbook.
+// Use Cases: Generate reports where dropdowns must reflect programmatically changed options before distribution. | Maintain UI consistency in Excel templates that use linked shapes after batch data updates. | Ensure multiple linked shapes stay in sync when source ranges are edited during automated processing.
+// AI Prompts: Write C# code using Aspose.Cells to refresh all linked shapes after updating their source cells. | Show how to use the UpdateSelectedValue method for ComboBox, ListBox, and CheckBox shapes in a worksheet. | Explain the steps to keep linked shape selections accurate when saving a workbook multiple times with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, add a ComboBox shape linked to a cell range, save the file, and then call `sheet.Shapes.UpdateSelectedValue()` to synchronize the shape's selected value and position. An optional second save persists the refreshed state.
-class RefreshLinkedShapesDemo
+namespace RefreshLinkedShapesDemo
 {
-    static void Main()
+    // Demonstrates how to create a workbook, add a ComboBox linked to cells A1:A3, modify source data, and call sheet.Shapes.UpdateSelectedValue() to synchronize the shape's selected value before the final save, ensuring accurate linked shape positions and selections.
+    class Program
     {
-        // Create a new workbook (lifecycle rule: create)
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // ---------- Create a new workbook ----------
+            Workbook workbook = new Workbook();                     // create
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Add some data that will be linked to a shape
+            sheet.Cells["A1"].PutValue("Option 1");
+            sheet.Cells["A2"].PutValue("Option 2");
+            sheet.Cells["A3"].PutValue("Option 3");
 
-        // Add some sample data that will be linked to a shape
-        sheet.Cells["B2"].PutValue("Option 1");
-        sheet.Cells["B3"].PutValue("Option 2");
-        sheet.Cells["B4"].PutValue("Option 3");
+            // Add a ComboBox shape and link its input range to the data above
+            ComboBox combo = (ComboBox)sheet.Shapes.AddComboBox(2, 2, 120, 20, 3, 20);
+            combo.SetInputRange("A1:A3", false, false);            // link range
+            combo.SelectedIndex = 0;                               // initial selection
 
-        // Add a ComboBox shape and link its input range to the data above
-        // (All shape-related operations are part of the drawing API)
-        ComboBox combo = (ComboBox)sheet.Shapes.AddComboBox(2, 2, 100, 20, 3, 20);
-        combo.SetInputRange("B2:B4", false, false); // link to the range
-        combo.SelectedIndex = 0; // initial selection
+            // Save the workbook (first save)
+            workbook.Save("LinkedShapesBeforeRefresh.xlsx");        // save
 
-        // Save the workbook (lifecycle rule: save)
-        string filePath = "LinkedShapesDemo.xlsx";
-        workbook.Save(filePath);
+            // Change the linked cell value to see the effect after refresh
+            sheet.Cells["A2"].PutValue("Updated Option 2");
 
-        // After saving, refresh linked shapes to ensure their positions/values are up‑to‑date
-        // The ShapeCollection.UpdateSelectedValue method updates the selected value of all
-        // shapes that are linked to cells or ranges.
-        sheet.Shapes.UpdateSelectedValue();
+            // Save again (second save)
+            workbook.Save("LinkedShapesAfterChange.xlsx");          // save
 
-        // Optionally, save again if you want the refreshed state persisted
-        workbook.Save("LinkedShapesDemo_Refreshed.xlsx");
+            // Refresh linked shapes so that their selected values reflect the current cell contents
+            // This updates all shapes in the worksheet collection
+            sheet.Shapes.UpdateSelectedValue();                     // refresh linked shapes
+
+            // Optional: Save the workbook after refreshing to persist the updated shape state
+            workbook.Save("LinkedShapesRefreshed.xlsx");            // save
+        }
     }
 }

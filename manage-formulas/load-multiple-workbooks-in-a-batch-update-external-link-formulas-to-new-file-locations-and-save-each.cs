@@ -1,10 +1,10 @@
-// Title: Batch Update External Link Formulas in Multiple Excel Workbooks with Aspose.Cells (C#)
-// Description: A C# console app that scans a folder of .xlsx files, loads each workbook with Aspose.Cells, replaces every external link’s DataSource using a user‑defined mapping, recalculates all formulas, and saves the updated files to a target directory while preserving original names.
-// Keywords: Aspose.Cells external link update | batch Excel link replacement C# | replace external data source path .NET | recalculate formulas programmatically | process multiple workbooks Aspose | Excel automation external references | update workbook links in bulk | C# Excel file batch processing
-// Common Searches: how to change external link paths in many Excel files using Aspose.Cells | batch update external references in .xlsx with C# | Aspose.Cells recalculate formulas after link change | C# code to replace external data source in Excel workbooks | process multiple workbooks external links Aspose
-// Developer Intent: Replace old external link paths with new locations across a set of Excel workbooks and save the refreshed files.
-// Use Cases: Migrate financial models to a new data warehouse by updating source file references in all linked workbooks. | Automate spreadsheet relocation after a server folder restructure, ensuring formulas point to the new files. | Refresh reporting dashboards after moving source data to a different drive, with automatic formula recalculation.
-// AI Prompts: Write C# code that uses Aspose.Cells to map old external link filenames to new absolute paths, update the links, recalculate formulas, and save each workbook. | Show how to log any external links that do not match the provided mapping before saving the workbook. | Provide a verification routine that confirms every external link in a workbook has been updated to a new location.
+// Title: Batch update external link formulas in multiple Excel workbooks with Aspose.Cells for .NET (C#)
+// Description: A C# console example that loads a list of Excel files, maps old external link paths to new locations, updates each workbook's Worksheets.ExternalLinks DataSource, recalculates all formulas, and saves the changes. Ideal for automating link migration across many workbooks.
+// Keywords: Aspose.Cells | C# | .NET | Excel external links | batch update | DataSource replacement | recalculate formulas | load workbook | save workbook | automation | Excel link migration
+// Common Searches: Aspose.Cells batch update external links C# | Change external reference paths in multiple Excel files | Recalculate formulas after updating external links with Aspose | C# script to replace Excel external data source | Automate external link migration in .NET
+// Developer Intent: Programmatically replace old external link paths with new ones in a set of Excel workbooks and refresh formulas using Aspose.Cells.
+// Use Cases: Migrate linked data sources to a new server for all financial reporting workbooks. | Standardize external reference paths after reorganizing shared data folders. | Update chart or pivot table sources across departmental spreadsheets in one run. | Prepare legacy workbooks for a cloud‑based data repository. | Automate compliance checks by ensuring all external links point to approved files.
+// AI Prompts: Write a C# snippet that reads a collection of Excel files and updates specified external link paths using Aspose.Cells. | Show how to iterate over Worksheets.ExternalLinks, change each DataSource, and recalculate formulas in Aspose.Cells. | Explain error handling for missing files when batch‑updating external links in multiple workbooks.
 
 using System;
 using System.Collections.Generic;
@@ -13,64 +13,67 @@ using Aspose.Cells;
 
 namespace BatchExternalLinkUpdater
 {
-    // A C# console app that scans a folder of .xlsx files, loads each workbook with Aspose.Cells, replaces every external link’s DataSource using a user‑defined mapping, recalculates all formulas, and saves the updated files to a target directory while preserving original names.
+    // A C# console example that loads a list of Excel files, maps old external link paths to new locations, updates each workbook's Worksheets.ExternalLinks DataSource, recalculates all formulas, and saves the changes. Ideal for automating link migration across many workbooks.
     class Program
     {
         static void Main()
         {
-            // Folder containing the workbooks to process
-            string inputFolder = @"C:\InputWorkbooks";
-            // Folder where the updated workbooks will be saved
-            string outputFolder = @"C:\UpdatedWorkbooks";
-
-            // Ensure the output folder exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Mapping of old external link file names to new file locations
-            // Key: old file name (as it appears in the external link)
-            // Value: new absolute file path to replace with
-            var linkMapping = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            // List of workbook files to process
+            string[] workbookFiles = new string[]
             {
-                { "OldDataSource1.xlsx", @"D:\NewDataSources\NewDataSource1.xlsx" },
-                { "OldDataSource2.xlsx", @"D:\NewDataSources\NewDataSource2.xlsx" }
-                // Add more mappings as required
+                @"C:\Workbooks\Book1.xlsx",
+                @"C:\Workbooks\Book2.xlsx",
+                // add more files as needed
             };
 
-            // Process each workbook file in the input folder
-            foreach (string workbookPath in Directory.GetFiles(inputFolder, "*.xlsx"))
+            // Mapping of old external link file names (or full paths) to new locations
+            var linkUpdates = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                // Load the workbook
-                Workbook wb = new Workbook(workbookPath);
+                // key = existing external link data source, value = new data source
+                { @"C:\OldLinks\External1.xlsx", @"D:\NewLinks\External1_v2.xlsx" },
+                { @"C:\OldLinks\External2.xlsx", @"D:\NewLinks\External2_v2.xlsx" }
+                // add more mappings as needed
+            };
 
-                // Update each external link in the workbook
-                ExternalLinkCollection externalLinks = wb.Worksheets.ExternalLinks;
-                for (int i = 0; i < externalLinks.Count; i++)
+            foreach (var filePath in workbookFiles)
+            {
+                // Verify that the workbook file exists before attempting to load it
+                if (!File.Exists(filePath))
                 {
-                    ExternalLink link = externalLinks[i];
-                    string originalSource = link.DataSource; // Current external link path
-
-                    // Determine if the link matches any entry in the mapping dictionary
-                    foreach (var kvp in linkMapping)
-                    {
-                        if (originalSource.IndexOf(kvp.Key, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            // Replace the old file name with the new absolute path
-                            string updatedSource = originalSource.Replace(kvp.Key, kvp.Value, StringComparison.OrdinalIgnoreCase);
-                            link.DataSource = updatedSource;
-                            break; // Exit the inner loop once a match is found
-                        }
-                    }
+                    Console.WriteLine($"File not found: {filePath}");
+                    continue;
                 }
 
-                // Recalculate formulas so that they reflect the new external data
-                wb.CalculateFormula();
+                try
+                {
+                    // Load the workbook (lifecycle rule: load)
+                    Workbook wb = new Workbook(filePath);
 
-                // Save the updated workbook to the output folder, preserving the original file name
-                string outputPath = Path.Combine(outputFolder, Path.GetFileName(workbookPath));
-                wb.Save(outputPath);
+                    // Update each external link if it matches an entry in the mapping
+                    foreach (ExternalLink extLink in wb.Worksheets.ExternalLinks)
+                    {
+                        // extLink.DataSource holds the current external file reference
+                        if (linkUpdates.TryGetValue(extLink.DataSource, out string newSource))
+                        {
+                            // Update the external link to point to the new location
+                            extLink.DataSource = newSource;
+                        }
+                    }
+
+                    // Recalculate formulas so that values reflect the new external data
+                    wb.CalculateFormula();
+
+                    // Save the workbook (lifecycle rule: save)
+                    wb.Save(filePath); // overwrites the original file; change path if a different output is required
+                }
+                catch (Exception ex)
+                {
+                    // Log the error and continue with the next workbook
+                    Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
+                }
             }
 
-            Console.WriteLine("Batch processing completed.");
+            Console.WriteLine("Batch external link update completed.");
         }
     }
 }

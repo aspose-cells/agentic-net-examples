@@ -1,29 +1,32 @@
-// Title: C# – Load only “Summary” and “Data” worksheets with Aspose.Cells LoadFilter
-// Description: Demonstrates how to create a custom LoadFilter that fully loads the "Summary" and "Data" sheets while loading only the structure for all other worksheets. The example shows configuring LoadOptions, opening the workbook, optionally removing unwanted sheets, and saving the filtered file, helping reduce memory usage and improve performance.
-// Keywords: Aspose.Cells LoadFilter C# | load specific worksheets | partial workbook load | LoadOptions custom filter | memory‑efficient Excel processing | remove unwanted sheets Aspose | C# Excel sheet selection
-// Common Searches: Aspose.Cells load only selected sheets C# | How to use LoadFilter to open specific worksheets | Load workbook with structure only for other sheets | C# remove worksheets after loading with Aspose.Cells | Partial Excel load for performance
-// Developer Intent: Open an Excel file with Aspose.Cells, fully loading only the "Summary" and "Data" worksheets while keeping other sheets as structure‑only, then save a trimmed workbook.
-// Use Cases: Speed up processing of large workbooks by loading only the needed sheets. | Create a lightweight copy containing just summary and data for reporting. | Pre‑filter worksheets before applying transformations to reduce memory footprint.
-// AI Prompts: Generate a C# example that uses Aspose.Cells LoadFilter to load only worksheets named "Report" and "Details" and then saves the workbook. | Show how to modify CustomLoadFilter to load sheets matching a wildcard pattern like "*2023". | Explain how to handle formulas that reference sheets not loaded when using LoadFilter.
+// Title: Load only "Summary" and "Data" worksheets with Aspose.Cells LoadFilter in C#
+// Description: Demonstrates a custom LoadFilter that fully loads the "Summary" and "Data" sheets (LoadDataFilterOptions.All) and loads only the structure for all other worksheets (LoadDataFilterOptions.Structure). The filter is applied via LoadOptions, the workbook is opened, sheet cell counts are displayed, and the file is saved.
+// Keywords: Aspose.Cells | LoadFilter | C# | load specific worksheets | partial workbook loading | LoadDataFilterOptions.All | LoadDataFilterOptions.Structure | memory optimization | Excel sheet selection | custom load filter
+// Common Searches: Aspose.Cells load only selected sheets | C# LoadFilter example for specific worksheets | partial workbook loading with LoadOptions | how to skip sheet data in Aspose.Cells | load workbook structure only for some sheets
+// Developer Intent: Open a workbook, fully loading only the "Summary" and "Data" worksheets while loading just the layout of all other sheets.
+// Use Cases: Minimize RAM usage when processing large workbooks by loading full data only for required sheets. | Create a lightweight copy of a file that retains complete data for essential sheets and only the layout for ancillary ones. | Generate reports that need detailed values from "Summary" and "Data" while ignoring cell contents of other worksheets.
+// AI Prompts: Write a C# snippet that uses Aspose.Cells LoadOptions with a custom LoadFilter to fully load "Summary" and "Data" sheets and load only the structure for the rest. | Explain the performance impact of LoadDataFilterOptions.All versus LoadDataFilterOptions.Structure when opening large Excel files with Aspose.Cells. | Show an alternative way to load selected worksheets without a custom LoadFilter, using built‑in Aspose.Cells features.
 
 using System;
 using Aspose.Cells;
 
 namespace LoadSpecificSheetsExample
 {
-    // Custom LoadFilter to load data only for "Summary" and "Data" worksheets
-    // Demonstrates how to create a custom LoadFilter that fully loads the "Summary" and "Data" sheets while loading only the structure for all other worksheets. The example shows configuring LoadOptions, opening the workbook, optionally removing unwanted sheets, and saving the filtered file, helping reduce memory usage and improve performance.
-    class CustomLoadFilter : LoadFilter
+    // Custom load filter to load only "Summary" and "Data" worksheets with full data.
+    // Other worksheets will be loaded with only their structure (no cell data).
+    // Demonstrates a custom LoadFilter that fully loads the "Summary" and "Data" sheets (LoadDataFilterOptions.All) and loads only the structure for all other worksheets (LoadDataFilterOptions.Structure). The filter is applied via LoadOptions, the workbook is opened, sheet cell counts are displayed, and the file is saved.
+    public class CustomLoadFilter : LoadFilter
     {
         public override void StartSheet(Worksheet sheet)
         {
-            // Load full data for the required sheets, otherwise load only the structure
+            // Check the worksheet name and set the appropriate load options.
             if (sheet.Name == "Summary" || sheet.Name == "Data")
             {
+                // Load all data for the required sheets.
                 LoadDataFilterOptions = LoadDataFilterOptions.All;
             }
             else
             {
+                // Load only the structure for other sheets (no cell data).
                 LoadDataFilterOptions = LoadDataFilterOptions.Structure;
             }
         }
@@ -33,29 +36,27 @@ namespace LoadSpecificSheetsExample
     {
         static void Main()
         {
-            // Path to the source workbook
+            // Path to the source workbook.
             string sourcePath = "input.xlsx";
 
-            // Configure LoadOptions with the custom filter
+            // Configure load options with the custom filter.
             LoadOptions loadOptions = new LoadOptions();
             loadOptions.LoadFilter = new CustomLoadFilter();
 
-            // Load the workbook using the specified LoadOptions
+            // Load the workbook using the specified load options.
             Workbook workbook = new Workbook(sourcePath, loadOptions);
 
-            // Optional: remove worksheets that are not needed after loading
-            for (int i = workbook.Worksheets.Count - 1; i >= 0; i--)
+            // Display loaded worksheets and their cell counts.
+            Console.WriteLine("Loaded worksheets:");
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                Worksheet ws = workbook.Worksheets[i];
-                if (ws.Name != "Summary" && ws.Name != "Data")
-                {
-                    workbook.Worksheets.RemoveAt(i);
-                }
+                Console.WriteLine($"- {ws.Name}: Cells count = {ws.Cells.Count}");
             }
 
-            // Save the filtered workbook
+            // Save the workbook (optional, to verify the result).
             string outputPath = "output.xlsx";
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
     }
 }

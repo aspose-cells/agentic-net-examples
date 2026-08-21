@@ -1,33 +1,49 @@
-// Title: C# – Bring a Shape to the Front of the Z‑Order Stack with Aspose.Cells
-// Description: Shows how to add overlapping rectangle shapes to a worksheet and use the Shape.ToFrontOrBack method to move a selected shape forward in the Z‑order, ensuring it appears on top before saving the workbook.
-// Keywords: Aspose.Cells | C# | shape Z‑order | ToFrontOrBack | bring shape to front | Excel shape layering | programmatic shape ordering | .NET Excel graphics
-// Common Searches: Aspose.Cells move shape to front C# | Shape.ToFrontOrBack example | How to reorder shapes in Excel using Aspose.Cells | C# bring rectangle shape to front in worksheet | Z‑order stacking order Aspose.Cells .NET
-// Developer Intent: Programmatically adjust a shape's stacking order so it overlays other worksheet objects.
-// Use Cases: Place a label shape above a chart to improve readability. | Highlight a warning rectangle by positioning it on top of decorative graphics. | Create a custom legend that must appear above data series shapes before exporting the workbook.
-// AI Prompts: Generate C# code that sends a shape to the back of the Z‑order stack with Aspose.Cells. | Provide an example that brings a shape to the front and then saves the workbook as a PDF. | Explain the difference between positive and negative arguments for the ToFrontOrBack method in Aspose.Cells.
+// Title: Move a Shape to the Front of the Z‑Order with Aspose.Cells .NET
+// Description: C# sample that creates a workbook, adds overlapping rectangles, and uses Shape.ToFrontOrBack to raise one shape (or lower another) before saving the Excel file.
+// Keywords: Aspose.Cells | C# shape Z order | ToFrontOrBack | Excel shape layering | move shape forward | send shape to back | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells bring shape to front | C# move Excel shape forward | ToFrontOrBack usage Aspose.Cells | change shape Z order in Excel .NET | layer shapes with Aspose.Cells
+// Developer Intent: Reorder a specific shape so it appears above all other objects in an Excel worksheet.
+// Use Cases: Overlay a label or annotation on a chart by moving it to the top layer. | Place a watermark image behind all content by sending it to the back of the stack. | Adjust shape order dynamically based on user input in a reporting application.
+// AI Prompts: Generate C# code with Aspose.Cells that moves shape index 2 to the front of the Z‑order. | Show how to toggle a shape between front and back positions using ToFrontOrBack in Aspose.Cells. | Provide a script that orders multiple shapes so the largest rectangle ends up on top.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to add overlapping rectangle shapes to a worksheet and use the Shape.ToFrontOrBack method to move a selected shape forward in the Z‑order, ensuring it appears on top before saving the workbook.
-class Program
+// C# sample that creates a workbook, adds overlapping rectangles, and uses Shape.ToFrontOrBack to raise one shape (or lower another) before saving the Excel file.
+public class ShapeZOrderDemo
 {
-    static void Main()
+    public static void Main(string[] args)
     {
-        // Create a new workbook
+        try
+        {
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    public static void Run()
+    {
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
         // Add two overlapping rectangle shapes
-        Shape shape1 = worksheet.Shapes.AddRectangle(10, 10, 100, 100, 0, 0);
+        Shape shape1 = worksheet.Shapes.AddRectangle(5, 5, 100, 100, 0, 0);
         Shape shape2 = worksheet.Shapes.AddRectangle(50, 50, 100, 100, 0, 0);
 
         // Bring shape2 to the front of the Z‑order stack
-        // Positive value moves the shape forward; 1 moves it one position forward
-        shape2.ToFrontOrBack(1);
+        shape2.ToFrontOrBack(1); // positive value moves shape forward
 
-        // Save the workbook
-        workbook.Save("ShapeZOrderFrontDemo.xlsx");
+        // (Optional) Send shape1 to the back of the Z‑order stack
+        shape1.ToFrontOrBack(-1); // negative value moves shape backward
+
+        // Save the workbook to a file
+        string outputPath = "ShapeZOrderDemo.xlsx";
+        workbook.Save(outputPath);
+        Console.WriteLine($"Workbook saved to '{outputPath}'.");
     }
 }

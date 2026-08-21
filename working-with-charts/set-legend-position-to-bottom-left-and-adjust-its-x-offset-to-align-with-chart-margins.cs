@@ -1,21 +1,21 @@
-// Title: Aspose.Cells for .NET – Position Chart Legend Bottom‑Left and Align with Chart Margins (C#)
-// Description: Creates a workbook, adds sample data, inserts a column chart, then sets the chart's Legend.Position to Bottom and adjusts Legend.X to 0 so the legend aligns with the left edge of the chart area before saving the file as an Excel workbook.
-// Keywords: Aspose.Cells legend bottom left | C# chart legend offset | Aspose.Cells set legend position | Excel chart legend alignment | Aspose.Cells Chart.Legend.X | .NET Excel chart formatting
-// Common Searches: how to move chart legend to bottom left in Aspose.Cells | Aspose.Cells legend X property example | C# set chart legend position bottom Aspose.Cells | align Excel chart legend with left margin using Aspose
-// Developer Intent: Place a chart legend at the bottom of the plot area and shift it horizontally so it lines up with the chart’s left margin.
-// Use Cases: Automated financial reports where the legend must sit at the bottom left to preserve page layout. | Generating dashboards that require consistent legend placement across multiple charts. | Preparing printable spreadsheets where the legend should not overlap data series or worksheet content.
-// AI Prompts: Show a C# snippet that sets a chart legend to Bottom and aligns it with the left edge using Aspose.Cells. | Explain the effect of the Legend.X property in Aspose.Cells and how to use it for precise legend positioning. | Provide step‑by‑step instructions to adjust a chart legend’s horizontal offset for Excel files created with Aspose.Cells for .NET.
+// Title: Aspose.Cells for .NET – Position Chart Legend at Bottom‑Left and Align X Offset
+// Description: Demonstrates how to create a workbook, add a column chart, and configure the legend to sit at the bottom‑left of the plot area. The example sets Legend.Position, uses XRatioToChart = 0.0 to line up with the left margin, and disables overlay to keep the chart area clear, then saves the file as an XLSX document.
+// Keywords: Aspose.Cells legend position | chart legend bottom left C# | XRatioToChart Aspose.Cells | disable legend overlay | .NET chart formatting | Aspose.Cells chart customization
+// Common Searches: Aspose.Cells set legend to bottom left | C# align chart legend with left margin | how to use Legend.XRatioToChart in Aspose.Cells | remove legend overlay from chart Aspose.Cells | position chart legend bottom side .NET
+// Developer Intent: Place a chart legend at the bottom‑left of the plot area and align its left edge with the chart margin without overlapping the data series.
+// Use Cases: Designing financial dashboards where the legend must stay out of the plot area and align with the left edge for a tidy layout. | Generating automated reports that follow corporate branding rules requiring legends at a fixed bottom‑left position. | Creating reusable chart templates in .NET applications where legend placement and offset are programmatically controlled.
+// AI Prompts: Generate C# code using Aspose.Cells to set a chart legend at the bottom‑left and align its X offset with the chart margin. | Show how to adjust Legend.XRatioToChart and disable overlay for a column chart in Aspose.Cells. | Provide an example that moves an existing chart legend to the bottom side and ensures it does not overlap the plot area.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data, inserts a column chart, then sets the chart's Legend.Position to Bottom and adjusts Legend.X to 0 so the legend aligns with the left edge of the chart area before saving the file as an Excel workbook.
+// Demonstrates how to create a workbook, add a column chart, and configure the legend to sit at the bottom‑left of the plot area. The example sets Legend.Position, uses XRatioToChart = 0.0 to line up with the left margin, and disables overlay to keep the chart area clear, then saves the file as an XLSX document.
 class SetLegendBottomLeft
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
@@ -29,22 +29,17 @@ class SetLegendBottomLeft
         sheet.Cells["B3"].PutValue(20);
         sheet.Cells["B4"].PutValue(30);
 
-        // Add a column chart to the worksheet
+        // Add a column chart
         int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
         Chart chart = sheet.Charts[chartIndex];
-
-        // Set the data range for the chart
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Access the legend and position it at the bottom
+        // Configure the legend: position at bottom left
         Legend legend = chart.Legend;
         legend.Position = LegendPositionType.Bottom;   // Bottom side of the plot area
-
-        // Align the legend with the left margin of the chart.
-        // Since the legend is docked at the bottom, the X property (or XPixel) controls horizontal offset.
-        // Setting X to 0 aligns it with the left edge of the chart area.
-        legend.X = 0;   // offset in units of 1/4000 of the chart area (obsolete but functional)
+        legend.XRatioToChart = 0.0;                    // Align left edge with chart margin
+        legend.IsOverLay = false;                      // Ensure legend does not overlap the plot area
 
         // Save the workbook
         workbook.Save("LegendBottomLeft.xlsx");

@@ -1,3 +1,11 @@
+// Title: Async concurrent digital signing of multiple Excel workbooks with Aspose.Cells (C#)
+// Description: This example demonstrates how to load an X509Certificate2 once and apply a digital signature to a collection of Excel files using Aspose.Cells. Each workbook is processed in its own async task, and Task.WhenAll is used to run the signatures in parallel, dramatically increasing throughput while handling errors gracefully.
+// Keywords: Aspose.Cells | C# async digital signature | parallel workbook signing | Task.WhenAll | X509Certificate2 reuse | Excel batch signing | digital signature .NET | concurrent Excel processing
+// Common Searches: sign multiple Excel files concurrently C# | Aspose.Cells async digital signature example | parallel workbook signing with Task.WhenAll | reuse X509Certificate2 for batch signing | how to improve Excel signing throughput .NET
+// Developer Intent: Implement high‑throughput batch signing of Excel workbooks by leveraging asynchronous tasks and a single certificate instance.
+// Use Cases: Mass signing of financial statements before external distribution. | Automated background service that signs thousands of generated invoices in parallel. | Secure archiving of regulatory reports where each file must carry a trusted timestamp.
+// AI Prompts: Create a version of the code that limits parallelism with a SemaphoreSlim and a configurable max degree of concurrency. | Add logging that records successful and failed signatures to a structured JSON file for audit purposes. | Refactor the sample to support cancellation via a CancellationToken and report progress through IProgress<T>.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,91 +14,102 @@ using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.DigitalSignatures;
 
-namespace AsposeCellsConcurrentSigning
+// This example demonstrates how to load an X509Certificate2 once and apply a digital signature to a collection of Excel files using Aspose.Cells. Each workbook is processed in its own async task, and Task.WhenAll is used to run the signatures in parallel, dramatically increasing throughput while handling errors gracefully.
+public class WorkbookSigner
 {
-    class Program
+    // Asynchronously signs a single workbook and saves the signed copy.
+    private static async Task SignWorkbookAsync(string sourcePath, string destinationPath, X509Certificate2 certificate)
     {
-        // Asynchronously signs a single workbook and saves the signed copy.
-        private static async Task SignWorkbookAsync(string inputPath, string outputPath, X509Certificate2 certificate)
+        try
         {
-            try
+            // Verify source workbook exists.
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"Source workbook not found: {sourcePath}");
+
+            // Load the workbook from the source file.
+            using (Workbook workbook = new Workbook(sourcePath))
             {
-                if (!File.Exists(inputPath))
-                    throw new FileNotFoundException($"Input workbook not found: {inputPath}");
+                // Create a digital signature collection and add a signature.
+                DigitalSignatureCollection signatures = new DigitalSignatureCollection();
+                DigitalSignature signature = new DigitalSignature(certificate, "Automated Signature", DateTime.Now);
+                signatures.Add(signature);
 
-                // Load the workbook.
-                using (Workbook workbook = new Workbook(inputPath))
-                {
-                    // Create a digital signature.
-                    DigitalSignature signature = new DigitalSignature(certificate, "Concurrent Signature", DateTime.Now);
+                // Add the digital signature to the workbook.
+                workbook.AddDigitalSignature(signatures);
 
-                    // Add the signature to a collection and attach it to the workbook.
-                    DigitalSignatureCollection signatures = new DigitalSignatureCollection { signature };
-                    workbook.AddDigitalSignature(signatures);
+                // Ensure destination directory exists.
+                string destDir = Path.GetDirectoryName(destinationPath);
+                if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
+                    Directory.CreateDirectory(destDir);
 
-                    // Save the signed workbook.
-                    workbook.Save(outputPath);
-                }
+                // Save the signed workbook to the destination path.
+                workbook.Save(destinationPath);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error signing workbook '{inputPath}': {ex.Message}");
-            }
-
-            // Simulate asynchronous work (optional).
-            await Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error signing workbook '{sourcePath}': {ex.Message}");
         }
 
-        static async Task Main(string[] args)
+        // Simulate asynchronous work (optional).
+        await Task.Yield();
+    }
+
+    // Signs multiple workbooks concurrently using asynchronous tasks.
+    public static async Task SignWorkbooksConcurrentlyAsync(IEnumerable<(string source, string destination)> files, string certPath, string certPassword)
+    {
+        try
         {
-            try
+            // Verify certificate file exists.
+            if (!File.Exists(certPath))
+                throw new FileNotFoundException($"Certificate file not found: {certPath}");
+
+            // Load the certificate once; it will be reused for all workbooks.
+            using (X509Certificate2 certificate = new X509Certificate2(certPath, certPassword))
             {
-                // Paths of workbooks to be signed.
-                List<string> inputFiles = new List<string>
-                {
-                    "Workbook1.xlsx",
-                    "Workbook2.xlsx",
-                    "Workbook3.xlsx"
-                };
-
-                // Corresponding output paths for signed workbooks.
-                List<string> outputFiles = new List<string>
-                {
-                    "Workbook1_Signed.xlsx",
-                    "Workbook2_Signed.xlsx",
-                    "Workbook3_Signed.xlsx"
-                };
-
-                // Verify certificate file exists before loading.
-                string certPath = "certificate.pfx";
-                string certPassword = "password";
-
-                if (!File.Exists(certPath))
-                    throw new FileNotFoundException($"Certificate file not found: {certPath}");
-
-                // Load the signing certificate.
-                X509Certificate2 cert = new X509Certificate2(certPath, certPassword, X509KeyStorageFlags.MachineKeySet);
-
-                // Create a list to hold signing tasks.
                 List<Task> signingTasks = new List<Task>();
 
-                // Launch signing tasks concurrently.
-                for (int i = 0; i < inputFiles.Count; i++)
+                foreach (var (source, destination) in files)
                 {
-                    string input = inputFiles[i];
-                    string output = outputFiles[i];
-                    signingTasks.Add(SignWorkbookAsync(input, output, cert));
+                    // Start a signing task for each workbook.
+                    signingTasks.Add(SignWorkbookAsync(source, destination, certificate));
                 }
 
-                // Wait for all signing operations to complete.
+                // Await all signing tasks to complete.
                 await Task.WhenAll(signingTasks);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error during signing process: {ex.Message}");
+        }
+    }
 
-                Console.WriteLine("All workbooks have been signed successfully.");
-            }
-            catch (Exception ex)
+    // Example usage.
+    public static async Task Main()
+    {
+        try
+        {
+            // Define source and destination file pairs.
+            var filesToSign = new List<(string source, string destination)>
             {
-                Console.WriteLine($"Fatal error: {ex.Message}");
-            }
+                (@"C:\Docs\Report1.xlsx", @"C:\Signed\Report1_Signed.xlsx"),
+                (@"C:\Docs\Report2.xlsx", @"C:\Signed\Report2_Signed.xlsx"),
+                (@"C:\Docs\Report3.xlsx", @"C:\Signed\Report3_Signed.xlsx")
+            };
+
+            // Path to the PFX certificate and its password.
+            string certificatePath = @"C:\Certificates\mycert.pfx";
+            string certificatePassword = "yourPassword";
+
+            // Sign all workbooks concurrently.
+            await SignWorkbooksConcurrentlyAsync(filesToSign, certificatePath, certificatePassword);
+
+            Console.WriteLine("All workbooks have been processed.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
         }
     }
 }

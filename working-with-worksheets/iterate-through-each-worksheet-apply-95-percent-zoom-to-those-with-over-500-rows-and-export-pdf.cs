@@ -1,39 +1,54 @@
-// Title: C# – Apply 95% Zoom to Worksheets with >500 Rows and Export to PDF using Aspose.Cells
-// Description: Load an Excel workbook, loop through each worksheet, check the used row count with MaxDataRow, set the Zoom property to 95% for sheets that exceed 500 rows, and save the entire workbook as a PDF with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# | worksheet zoom | MaxDataRow | conditional zoom | export to PDF | .NET Excel to PDF | large worksheet scaling | batch PDF conversion | Excel row count zoom
-// Common Searches: Aspose.Cells set zoom for worksheets over 500 rows | C# export Excel to PDF after adjusting zoom | How to apply conditional zoom in Aspose.Cells | Iterate worksheets and change zoom before PDF conversion | Zoom property Aspose.Cells example
-// Developer Intent: Automatically set a 95% zoom on any worksheet that contains more than 500 rows and then generate a PDF of the workbook.
-// Use Cases: Create printable PDFs where dense sheets are scaled to fit more content per page. | Batch‑process workbooks to normalize zoom levels for large worksheets before reporting. | Generate consistent PDF documentation from Excel files with mixed sheet sizes.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a 95% zoom on worksheets having over 500 rows and saves the workbook as a PDF. | Show how to iterate all worksheets, use MaxDataRow to determine row count, apply conditional zoom, and export to PDF with custom options. | Explain the steps to modify the Zoom property for selected sheets before PDF conversion using Aspose.Cells for .NET.
+// Title: C# – Apply 95% Zoom to Worksheets with More Than 500 Rows and Export to PDF with Aspose.Cells
+// Description: Loads an Excel workbook, iterates each worksheet, sets the view zoom to 95% when the sheet contains over 500 rows, and saves the entire workbook as a PDF using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# set worksheet zoom | conditional zoom Excel rows | export Excel to PDF Aspose.Cells | iterate worksheets .NET | zoom 95% before PDF conversion
+// Common Searches: Aspose.Cells set zoom for large worksheets | C# export Excel to PDF after adjusting zoom | how to apply conditional zoom in Aspose.Cells | loop through worksheets and change view settings | save workbook as PDF with Aspose.Cells .NET
+// Developer Intent: Set a 95% view zoom on any worksheet that exceeds 500 rows and then generate a PDF of the workbook.
+// Use Cases: Create printable PDFs where dense sheets are automatically zoomed to fit more data per page. | Automate batch reporting that adjusts worksheet zoom based on row count before PDF generation. | Build a server‑side service that validates incoming Excel files, applies conditional zoom, and returns a PDF version.
+// AI Prompts: Generate C# code with Aspose.Cells that loops through all worksheets, sets Zoom = 95 for sheets with more than 500 rows, and saves the workbook as a PDF. | Provide an example that includes error handling for missing input files while applying conditional zoom and exporting to PDF. | Show how to customize PDF save options (orientation, compression, page size) after setting worksheet zoom with Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Load an Excel workbook, loop through each worksheet, check the used row count with MaxDataRow, set the Zoom property to 95% for sheets that exceed 500 rows, and save the entire workbook as a PDF with Aspose.Cells for .NET.
-class Program
+// Loads an Excel workbook, iterates each worksheet, sets the view zoom to 95% when the sheet contains over 500 rows, and saves the entire workbook as a PDF using Aspose.Cells for .NET.
+class ApplyZoomAndExportPdf
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Get the number of rows that contain data (zero‑based index + 1)
-            int usedRows = sheet.Cells.MaxDataRow + 1;
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-            // If the worksheet has more than 500 rows, set the zoom to 95%
-            if (usedRows > 500)
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                sheet.Zoom = 95; // Worksheet.Zoom property (percentage)
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets and set zoom if rows > 500
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                int usedRows = sheet.Cells.MaxDataRow + 1; // MaxDataRow is zero‑based
+                if (usedRows > 500)
+                {
+                    sheet.Zoom = 95; // Set view zoom to 95%
+                }
+            }
+
+            // Save the workbook as a PDF with default options
+            workbook.Save(outputPath, SaveFormat.Pdf);
+
+            Console.WriteLine("PDF exported successfully.");
         }
-
-        // Create PDF save options (default settings)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-        // Export the workbook to PDF
-        workbook.Save("output.pdf", pdfOptions);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

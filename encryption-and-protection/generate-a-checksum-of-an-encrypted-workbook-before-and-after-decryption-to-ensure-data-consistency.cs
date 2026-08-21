@@ -1,100 +1,81 @@
-// Title: Compute SHA256 Checksums for Encrypted and Decrypted Excel Workbooks with Aspose.Cells (C#)
-// Description: This C# example demonstrates how to create an Excel workbook, protect it with a password using Aspose.Cells, save the encrypted file, generate a SHA‑256 hash of the encrypted file, open it with LoadOptions, remove the password, save the decrypted version, compute its hash, and compare the two checksums to confirm data integrity while the cell values stay unchanged.
-// Keywords: Aspose.Cells | C# | SHA256 checksum | Excel encryption | password‑protected workbook | LoadOptions password | file integrity verification | hash comparison | decryption validation | Excel file hash
-// Common Searches: C# compute SHA256 hash of password protected Excel file | Aspose.Cells verify workbook integrity after decryption | How to compare checksums of encrypted and plain Excel files | Load encrypted workbook with password using Aspose.Cells | Check data consistency after removing Excel file password
-// Developer Intent: The developer needs to generate SHA‑256 hashes for an encrypted Excel workbook and its decrypted copy to ensure that decryption does not alter the underlying data.
-// Use Cases: Automated integrity checks for batches of password‑protected Excel files before archival. | Validation that a decryption routine preserves all cell values and formulas. | Detecting corruption or unauthorized modifications by comparing pre‑ and post‑decryption hashes.
-// AI Prompts: Write C# code that opens a password‑protected Excel file with Aspose.Cells, computes a SHA256 hash, removes the password, saves the unencrypted file, and verifies that the two hashes match. | Explain the role of LoadOptions.Password when loading an encrypted workbook and how to clear the password to produce an unencrypted copy. | Suggest a robust logging and exception‑handling pattern for checksum mismatches during bulk workbook decryption.
+// Title: Compute SHA256 Checksums of Aspose.Cells Workbooks Before Encryption and After Decryption (C#)
+// Description: This example creates an Excel workbook with Aspose.Cells, calculates a SHA256 hash of the unencrypted file, encrypts it with a password, hashes the encrypted file, then loads and decrypts the workbook, re‑hashes the result, and compares the two checksums to confirm data integrity.
+// Keywords: Aspose.Cells | C# | .NET | SHA256 checksum | workbook integrity | Excel encryption | password‑protected .xlsx | LoadOptions | SaveFormat | data consistency verification | memory stream hash
+// Common Searches: Aspose.Cells compute SHA256 hash of workbook C# | verify Excel file integrity after decryption Aspose | checksum encrypted .xlsx using Aspose.Cells | compare original and decrypted workbook hashes | C# example for password‑protected Excel checksum
+// Developer Intent: Generate a SHA256 hash of a workbook before it is encrypted, generate a second hash after decryption, and compare the two values to ensure the content has not changed.
+// Use Cases: Confirm that password‑protected Excel reports can be restored without data loss. | Detect tampering or corruption of encrypted workbooks by comparing pre‑ and post‑decryption hashes. | Automate integrity validation in CI/CD pipelines for Excel files generated with Aspose.Cells.
+// AI Prompts: Show C# code that uses Aspose.Cells to calculate a SHA256 checksum of a workbook saved to a MemoryStream, then verify it after loading with a password. | Explain why clearing the workbook password before re‑saving is required for matching checksums. | Provide a pattern for batch processing multiple workbooks, each encrypted with a different password, and validating their checksums.
 
 using System;
 using System.IO;
 using System.Security.Cryptography;
 using Aspose.Cells;
 
-// This C# example demonstrates how to create an Excel workbook, protect it with a password using Aspose.Cells, save the encrypted file, generate a SHA‑256 hash of the encrypted file, open it with LoadOptions, remove the password, save the decrypted version, compute its hash, and compare the two checksums to confirm data integrity while the cell values stay unchanged.
-class WorkbookChecksumDemo
+namespace AsposeCellsChecksumDemo
 {
-    // Helper method to compute SHA256 checksum of a file and return as hex string
-    private static string ComputeChecksum(string filePath)
+    // This example creates an Excel workbook with Aspose.Cells, calculates a SHA256 hash of the unencrypted file, encrypts it with a password, hashes the encrypted file, then loads and decrypts the workbook, re‑hashes the result, and compares the two checksums to confirm data integrity.
+    class Program
     {
-        using (FileStream stream = File.OpenRead(filePath))
-        using (SHA256 sha256 = SHA256.Create())
+        // Compute SHA256 checksum of a byte array and return as hex string
+        static string ComputeChecksum(byte[] data)
         {
-            byte[] hash = sha256.ComputeHash(stream);
-            return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-        }
-    }
-
-    static void Main()
-    {
-        // -----------------------------------------------------------------
-        // 1. Create a new workbook and add some data
-        // -----------------------------------------------------------------
-        Workbook wb = new Workbook();
-        Worksheet sheet = wb.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Hello");
-        sheet.Cells["B2"].PutValue(12345);
-        sheet.Cells["C3"].PutValue(DateTime.Now);
-
-        // -----------------------------------------------------------------
-        // 2. Encrypt the workbook with a password and save it
-        // -----------------------------------------------------------------
-        string password = "SecretPwd123";
-        wb.Settings.Password = password;               // encrypt
-        string encryptedPath = "encrypted.xlsx";
-        wb.Save(encryptedPath);                         // save encrypted file
-
-        // Verify that the workbook is indeed encrypted
-        Console.WriteLine($"Is encrypted (after save): {wb.Settings.IsEncrypted}");
-
-        // -----------------------------------------------------------------
-        // 3. Compute checksum of the encrypted file
-        // -----------------------------------------------------------------
-        string encryptedChecksum = ComputeChecksum(encryptedPath);
-        Console.WriteLine($"Checksum of encrypted workbook: {encryptedChecksum}");
-
-        // -----------------------------------------------------------------
-        // 4. Load the encrypted workbook using the password
-        // -----------------------------------------------------------------
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.Password = password;
-        Workbook loadedEncryptedWb = new Workbook(encryptedPath, loadOptions);
-
-        // Confirm that Aspose reports the workbook as encrypted before decryption
-        Console.WriteLine($"Is encrypted (after load): {loadedEncryptedWb.Settings.IsEncrypted}");
-
-        // -----------------------------------------------------------------
-        // 5. Decrypt the workbook by clearing the password and save it
-        // -----------------------------------------------------------------
-        loadedEncryptedWb.Settings.Password = null;    // remove encryption
-        string decryptedPath = "decrypted.xlsx";
-        loadedEncryptedWb.Save(decryptedPath);          // save unencrypted file
-
-        // Verify that the workbook is no longer encrypted
-        Console.WriteLine($"Is encrypted (after decryption): {loadedEncryptedWb.Settings.IsEncrypted}");
-
-        // -----------------------------------------------------------------
-        // 6. Compute checksum of the decrypted file
-        // -----------------------------------------------------------------
-        string decryptedChecksum = ComputeChecksum(decryptedPath);
-        Console.WriteLine($"Checksum of decrypted workbook: {decryptedChecksum}");
-
-        // -----------------------------------------------------------------
-        // 7. Compare checksums to ensure data consistency
-        // -----------------------------------------------------------------
-        if (encryptedChecksum == decryptedChecksum)
-        {
-            Console.WriteLine("Checksums match – data is consistent.");
-        }
-        else
-        {
-            Console.WriteLine("Checksums differ – files are different as expected (encryption changes file bytes).");
+            using (SHA256 sha = SHA256.Create())
+            {
+                byte[] hash = sha.ComputeHash(data);
+                return BitConverter.ToString(hash).Replace("-", string.Empty);
+            }
         }
 
-        // Optional: verify that cell data remained unchanged after decryption
-        Worksheet decryptedSheet = loadedEncryptedWb.Worksheets[0];
-        Console.WriteLine($"Cell A1 value after decryption: {decryptedSheet.Cells["A1"].Value}");
-        Console.WriteLine($"Cell B2 value after decryption: {decryptedSheet.Cells["B2"].Value}");
-        Console.WriteLine($"Cell C3 value after decryption: {decryptedSheet.Cells["C3"].Value}");
+        static void Main()
+        {
+            // ---------- Create a new workbook and add sample data ----------
+            Workbook originalWorkbook = new Workbook();
+            Worksheet sheet = originalWorkbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Checksum Test");
+            sheet.Cells["B2"].PutValue(12345);
+            sheet.Cells["C3"].PutValue(DateTime.Now);
+
+            // ---------- Save original workbook to memory (unencrypted) ----------
+            byte[] originalBytes;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                originalWorkbook.Save(ms, SaveFormat.Xlsx);
+                originalBytes = ms.ToArray();
+            }
+            string originalChecksum = ComputeChecksum(originalBytes);
+            Console.WriteLine($"Original (unencrypted) checksum: {originalChecksum}");
+
+            // ---------- Encrypt the workbook with a password ----------
+            string password = "SecretPwd123";
+            originalWorkbook.Settings.Password = password;
+            string encryptedPath = "encrypted_workbook.xlsx";
+            originalWorkbook.Save(encryptedPath); // saved encrypted
+
+            // ---------- Compute checksum of the encrypted file ----------
+            byte[] encryptedBytes = File.ReadAllBytes(encryptedPath);
+            string encryptedChecksum = ComputeChecksum(encryptedBytes);
+            Console.WriteLine($"Encrypted file checksum: {encryptedChecksum}");
+
+            // ---------- Load the encrypted workbook using the password ----------
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+            loadOptions.Password = password;
+            Workbook decryptedWorkbook = new Workbook(encryptedPath, loadOptions);
+
+            // ---------- Save the decrypted workbook to memory (without password) ----------
+            byte[] decryptedBytes;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // Ensure password is cleared before saving
+                decryptedWorkbook.Settings.Password = null;
+                decryptedWorkbook.Save(ms, SaveFormat.Xlsx);
+                decryptedBytes = ms.ToArray();
+            }
+            string decryptedChecksum = ComputeChecksum(decryptedBytes);
+            Console.WriteLine($"Decrypted (after loading) checksum: {decryptedChecksum}");
+
+            // ---------- Verify data consistency ----------
+            bool isConsistent = originalChecksum.Equals(decryptedChecksum, StringComparison.OrdinalIgnoreCase);
+            Console.WriteLine($"Data consistency check passed: {isConsistent}");
+        }
     }
 }

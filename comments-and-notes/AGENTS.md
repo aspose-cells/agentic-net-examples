@@ -1,11 +1,11 @@
----
+﻿---
 name: Aspose.Cells Comments and Notes Agent
 category: comments-and-notes
 product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Add, read, update, format, copy, and remove Excel comments and threaded comments in C#
 primary_apis: [Comment, CommentCollection, ThreadedComment, ThreadedCommentCollection, ThreadedCommentAuthor]
 related_categories: [../cells-data/, ../format-cells/, ../working-with-shapes/]
@@ -86,3 +86,4 @@ Verify exact author, collection, shape, and removal APIs against the installed p
 ## Definition of done
 
 The example is done when the annotation type and API are unambiguous, synthetic content is safe, the saved workbook preserves the verified text/author/cell relationship, and the intent is immediately retrievable.
+

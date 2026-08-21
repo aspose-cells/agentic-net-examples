@@ -1,10 +1,10 @@
-// Title: Group nested parent‑child data with Aspose.Cells WorkbookDesigner – set LineByLine = false
-// Description: Demonstrates how to bind a List<Parent> containing child collections, name the child range "_CellsSmartMarkers", set WorkbookDesigner.LineByLine to false, and process smart markers so the child rows are merged as a single grouped block before saving the Excel file.
-// Keywords: Aspose.Cells | WorkbookDesigner | LineByLine | smart markers | nested data | parent child | grouped records | C# | Excel export | hierarchical data
-// Common Searches: Aspose.Cells LineByLine false example | smart markers group child rows | bind nested collection Aspose.Cells C# | disable line‑by‑line processing Aspose.Cells | group parent child data in Excel using Aspose
-// Developer Intent: Disable line‑by‑line processing so a child collection is merged into one smart‑marker block when using WorkbookDesigner.
-// Use Cases: Generate an order report where each order appears once and its items are listed together in a grouped block. | Create an invoice sheet with a customer header and a single smart‑marker range for all line‑item rows. | Export categories and sub‑categories to Excel while keeping each category’s sub‑items in the same block. | Produce a multi‑level inventory sheet that groups product variants under their parent SKU.
-// AI Prompts: Add a total quantity column for each parent after the grouped child rows while keeping LineByLine set to false. | Provide C# code that uses multiple "_CellsSmartMarkers" ranges to process several nested collections in one workbook. | Explain how to troubleshoot cases where smart markers do not group correctly after setting WorkbookDesigner.LineByLine to false.
+// Title: Set WorkbookDesigner.LineByLine = false to group nested objects with smart markers (C#)
+// Description: Demonstrates how to disable line‑by‑line processing in Aspose.Cells WorkbookDesigner so that a root collection and its nested Department list are merged as grouped records in an Excel workbook using smart markers.
+// Keywords: Aspose.Cells WorkbookDesigner LineByLine false | C# smart markers nested collection | grouped records Excel export | hierarchical data Aspose.Cells | merge parent child records | WorkbookDesigner hierarchical data | smart markers C# example
+// Common Searches: Aspose.Cells disable line by line processing | WorkbookDesigner group nested objects | smart markers hierarchical data C# | LineByLine false example Aspose.Cells | export master‑detail Excel with Aspose.Cells
+// Developer Intent: Turn off line‑by‑line mode so that child collections are rendered as grouped rows under each parent record.
+// Use Cases: Create a master‑detail Excel report where each employee appears once with their departments listed below. | Export orders with line items while preserving the order‑item hierarchy. | Generate a consolidated financial sheet that groups department budgets under each company.
+// AI Prompts: Show how to set WorkbookDesigner.LineByLine to false and bind a list with nested collections using smart markers in C#. | Explain the difference between LineByLine true and false in WorkbookDesigner and illustrate the grouped output. | Provide a complete C# example that exports hierarchical data to Excel with WorkbookDesigner while disabling line‑by‑line processing.
 
 using System;
 using System.Collections.Generic;
@@ -12,76 +12,77 @@ using Aspose.Cells;
 
 namespace AsposeCellsLineByLineDemo
 {
-    // Sample data classes representing nested (parent‑child) objects
-    // Demonstrates how to bind a List<Parent> containing child collections, name the child range "_CellsSmartMarkers", set WorkbookDesigner.LineByLine to false, and process smart markers so the child rows are merged as a single grouped block before saving the Excel file.
-    public class Parent
+    // Demonstrates how to disable line‑by‑line processing in Aspose.Cells WorkbookDesigner so that a root collection and its nested Department list are merged as grouped records in an Excel workbook using smart markers.
+    public class Program
     {
-        public string Name { get; set; }
-        public List<Child> Children { get; set; }
-    }
-
-    public class Child
-    {
-        public string Item { get; set; }
-        public int Quantity { get; set; }
-    }
-
-    class Program
-    {
-        static void Main()
+        public static void Main()
         {
-            // 1. Create a new workbook (template) and add smart markers.
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            // Create a new workbook and obtain the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Smart markers for parent record
-            ws.Cells["A1"].PutValue("&Parent.Name");
+            // Define smart markers for a root collection and its nested collection
+            // Root level markers
+            sheet.Cells["A1"].PutValue("&RootData.Name");
+            sheet.Cells["B1"].PutValue("&RootData.Age");
+            // Nested collection markers (departments)
+            sheet.Cells["A2"].PutValue("&RootData.Departments.DName");
+            sheet.Cells["B2"].PutValue("&RootData.Departments.Budget");
 
-            // Smart markers for child collection – placed in a range that will be processed as a group.
-            // The range name "_CellsSmartMarkers" tells the designer to treat the whole block as one group
-            // when LineByLine is set to false.
-            ws.Cells["A2"].PutValue("&Children.Item");
-            ws.Cells["B2"].PutValue("&Children.Quantity");
-            ws.Cells.CreateRange("A2:B2").Name = "_CellsSmartMarkers";
-
-            // 2. Prepare nested data.
-            var data = new List<Parent>
+            // Sample data with nested objects
+            var data = new List<RootData>
             {
-                new Parent
+                new RootData
                 {
-                    Name = "Order001",
-                    Children = new List<Child>
+                    Name = "John",
+                    Age = 30,
+                    Departments = new List<Department>
                     {
-                        new Child { Item = "Apple",  Quantity = 10 },
-                        new Child { Item = "Banana", Quantity = 5 }
+                        new Department { DName = "Sales", Budget = 100000 },
+                        new Department { DName = "HR", Budget = 50000 }
                     }
                 },
-                new Parent
+                new RootData
                 {
-                    Name = "Order002",
-                    Children = new List<Child>
+                    Name = "Alice",
+                    Age = 28,
+                    Departments = new List<Department>
                     {
-                        new Child { Item = "Orange", Quantity = 8 },
-                        new Child { Item = "Grape",  Quantity = 12 }
+                        new Department { DName = "IT", Budget = 150000 }
                     }
                 }
             };
 
-            // 3. Initialize WorkbookDesigner, assign the workbook, and set LineByLine to false.
+            // Initialize WorkbookDesigner, assign the workbook, and set LineByLine to false
             WorkbookDesigner designer = new WorkbookDesigner
             {
-                Workbook = wb,
-                LineByLine = false   // Process nested objects as grouped records
+                Workbook = workbook,
+                LineByLine = false // Process nested objects as grouped records
             };
 
-            // 4. Bind the data source. The root name "Parent" matches the smart marker prefix.
-            designer.SetDataSource("Parent", data);
+            // Bind the root collection to the smart marker name
+            designer.SetDataSource("RootData", data);
 
-            // 5. Process the smart markers.
+            // Process the smart markers
             designer.Process();
 
-            // 6. Save the resulting workbook.
-            wb.Save("NestedObjectsGrouped.xlsx");
+            // Save the processed workbook
+            workbook.Save("LineByLineFalseOutput.xlsx");
         }
+    }
+
+    // Root data class containing a collection of nested objects
+    public class RootData
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public List<Department> Departments { get; set; }
+    }
+
+    // Nested object class representing a department
+    public class Department
+    {
+        public string DName { get; set; }
+        public double Budget { get; set; }
     }
 }

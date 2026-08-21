@@ -1,64 +1,54 @@
-// Title: Change Excel Chart Series Colors with a Monochromatic Palette using Aspose.Cells for .NET
-// Description: Loads an existing XLSX workbook, creates a column chart if none exists, accesses the first chart's series collection, applies the MonochromaticPalette5 scheme via the ChangeColors method, and saves the updated file.
-// Keywords: Aspose.Cells C# chart colors | ChangeColors method | ChartColorPaletteType MonochromaticPalette5 | replace Excel chart series colors | programmatic chart palette | Excel automation Aspose | update chart series colors .NET | custom chart color scheme | Excel chart styling code | Aspose.Cells chart example
-// Common Searches: how to change chart series colors with Aspose.Cells | Aspose.Cells ChangeColors example C# | apply monochromatic palette to Excel chart programmatically | replace Excel chart colors in .NET | Aspose.Cells chart color palette types
-// Developer Intent: Apply a predefined monochromatic palette to all series of an existing Excel chart and save the workbook.
-// Use Cases: Standardize chart colors across reports to match corporate branding. | Automatically recolor charts when generating workbooks from templates. | Update legacy workbooks that use default palettes without manual editing.
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, changes the chart series colors to a specified palette, and saves the workbook. | Show how to use the ChangeColors method with ChartColorPaletteType to apply MonochromaticPalette5 to a chart's series collection. | Explain how to create a chart only when none exists, then apply a custom color palette using Aspose.Cells.
+// Title: How to Replace Excel Chart Series Colors with a Custom Palette Using Aspose.Cells for .NET (C#)
+// Description: Loads an existing XLSX file, modifies the first five entries of the workbook palette with custom red, green, blue, orange, and purple colors via Workbook.ChangePalette, then iterates every worksheet and chart to apply a predefined ChartColorPaletteType (e.g., MonochromaticPalette5) to each series collection, and finally saves the workbook as a new file.
+// Keywords: Aspose.Cells | Aspose.Cells for .NET | C# | ChangePalette | custom chart colors | Excel chart series color | ChartColorPaletteType | MonochromaticPalette5 | programmatic Excel styling | replace chart palette | load workbook | save workbook
+// Common Searches: Aspose.Cells change chart series colors | set custom palette for Excel charts .NET | replace default Excel colors with custom palette using Aspose.Cells | apply monochromatic palette to all charts in a workbook | C# code to modify chart colors after loading an XLSX
+// Developer Intent: Update the color palette of chart series in an existing workbook and persist the changes.
+// Use Cases: Load an existing XLSX and redefine the first five palette entries with specific RGB values. | Loop through all worksheets and charts to assign a chosen ChartColorPaletteType to each series collection. | Save the modified workbook under a new filename while preserving all other data.
+// AI Prompts: Show me C# code that uses Aspose.Cells.ChangePalette to set custom colors for the first five palette entries in a workbook. | Generate a script that iterates over every chart in a workbook and applies MonochromaticPalette5 to the series collection. | Explain how to combine custom palette updates with chart series color changes and correctly save the workbook using Aspose.Cells.
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads an existing XLSX workbook, creates a column chart if none exists, accesses the first chart's series collection, applies the MonochromaticPalette5 scheme via the ChangeColors method, and saves the updated file.
-class ReplaceChartSeriesColors
+// Loads an existing XLSX file, modifies the first five entries of the workbook palette with custom red, green, blue, orange, and purple colors via Workbook.ChangePalette, then iterates every worksheet and chart to apply a predefined ChartColorPaletteType (e.g., MonochromaticPalette5) to each series collection, and finally saves the workbook as a new file.
+class Program
 {
     static void Main()
     {
-        // Load the existing workbook from disk
+        // Load the existing workbook
         string inputPath = "input.xlsx";
         Workbook workbook = new Workbook(inputPath);
 
-        // Access the first worksheet
-        Worksheet ws = workbook.Worksheets[0];
-
-        // If the worksheet has no chart, create a sample one (optional)
-        if (ws.Charts.Count == 0)
+        // Define custom colors and replace the first few palette entries
+        Color[] customColors = new Color[]
         {
-            // Sample data for the chart
-            ws.Cells["A1"].PutValue("Category");
-            ws.Cells["A2"].PutValue("Jan");
-            ws.Cells["A3"].PutValue("Feb");
-            ws.Cells["A4"].PutValue("Mar");
+            Color.FromArgb(255, 255, 0, 0),   // Red
+            Color.FromArgb(255, 0, 255, 0),   // Green
+            Color.FromArgb(255, 0, 0, 255),   // Blue
+            Color.FromArgb(255, 255, 165, 0), // Orange
+            Color.FromArgb(255, 128, 0, 128)  // Purple
+        };
 
-            ws.Cells["B1"].PutValue("Series1");
-            ws.Cells["B2"].PutValue(10);
-            ws.Cells["B3"].PutValue(20);
-            ws.Cells["B4"].PutValue(30);
-
-            ws.Cells["C1"].PutValue("Series2");
-            ws.Cells["C2"].PutValue(15);
-            ws.Cells["C3"].PutValue(25);
-            ws.Cells["C4"].PutValue(35);
-
-            // Add a column chart and bind data
-            int chartIdx = ws.Charts.Add(ChartType.Column, 6, 0, 20, 10);
-            Chart chart = ws.Charts[chartIdx];
-            chart.NSeries.Add("B1:C4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+        for (int i = 0; i < customColors.Length; i++)
+        {
+            // Change palette entry at index i to the custom color
+            workbook.ChangePalette(customColors[i], i);
         }
 
-        // Retrieve the first chart in the worksheet
-        Chart firstChart = ws.Charts[0];
+        // Iterate through all worksheets and their charts
+        foreach (Worksheet ws in workbook.Worksheets)
+        {
+            foreach (Chart chart in ws.Charts)
+            {
+                // Apply a monochromatic palette to the series collection
+                SeriesCollection seriesColl = chart.NSeries;
+                // Example: use MonochromaticPalette5
+                seriesColl.ChangeColors(ChartColorPaletteType.MonochromaticPalette5);
+            }
+        }
 
-        // Get the series collection of the chart
-        SeriesCollection seriesColl = firstChart.NSeries;
-
-        // Replace the existing series colors with a custom monochromatic palette
-        // (choose any palette type you prefer)
-        seriesColl.ChangeColors(ChartColorPaletteType.MonochromaticPalette5);
-
-        // Save the workbook with the updated chart colors
+        // Save the modified workbook
         string outputPath = "output.xlsx";
         workbook.Save(outputPath);
     }

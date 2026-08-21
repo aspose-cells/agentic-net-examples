@@ -1,77 +1,48 @@
-// Title: Format Bar Chart Data Labels as Currency (Two Decimals) with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add a 2‑D bar chart, enable data labels, and apply a currency number format with two decimal places ("$#,##0.00" and built‑in format index 2) to the labels using Aspose.Cells for C#. The workbook is saved as an Excel file.
-// Keywords: Aspose.Cells | C# chart formatting | bar chart data labels | currency number format | two decimal places | NumberFormat property | built‑in format index | Excel export | financial chart
-// Common Searches: Aspose.Cells format chart data labels as currency | C# set number format for bar chart labels | currency format with two decimals in Aspose.Cells chart | apply built‑in currency format index to chart labels | how to show dollar values on Excel bar chart using Aspose
+// Title: Aspose.Cells for .NET – Set Bar Chart Data Labels to Currency ($#,##0.00) with Two Decimals
+// Description: Creates a workbook, adds sample categories and values, inserts a bar chart, enables data labels, applies the number format "$#,##0.00" to show currency with two decimal places, and saves the file as BarChartDataLabelsCurrency.xlsx using Aspose.Cells in C#.
+// Keywords: Aspose.Cells | C# | Bar chart | Data labels | Currency format | NumberFormat | Excel chart formatting | Financial chart | Aspose.Cells example | Chart series label formatting
+// Common Searches: Aspose.Cells set chart data label currency format C# | How to format bar chart labels as $ with two decimals in .NET | Change number format of chart series data labels Aspose.Cells | C# Aspose.Cells bar chart currency data labels | Apply $#,##0.00 format to Excel chart labels using Aspose
 // Developer Intent: Apply a currency number format with two decimal places to the data labels of a bar chart in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Generate financial dashboards where bar chart labels display amounts in dollars and cents. | Create sales reports with bar charts that automatically format values as currency for readability. | Export analytics to Excel while ensuring chart labels follow locale‑specific currency formatting.
-// AI Prompts: Write C# code with Aspose.Cells that adds a bar chart and formats its data labels as currency with two decimal places. | Show how to set both a custom number format string and the built‑in currency format index for chart data labels in Aspose.Cells. | Explain how to modify the number format of existing chart data labels after the workbook has been saved.
+// Use Cases: Financial dashboards where bar chart columns display sales amounts like $1,234.56. | Budget reports that need monetary values shown directly on chart data labels. | Automated generation of cost‑analysis workbooks with standardized currency formatting on charts.
+// AI Prompts: Generate C# code with Aspose.Cells to set bar chart data label number format to "$#,##0.00". | Explain how to customize chart series data label formatting in Aspose.Cells, including currency examples. | Show step‑by‑step how to apply a custom currency format to Excel chart labels and save the workbook using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// Creates a workbook, adds sample categories and values, inserts a bar chart, enables data labels, applies the number format "$#,##0.00" to show currency with two decimal places, and saves the file as BarChartDataLabelsCurrency.xlsx using Aspose.Cells in C#.
+class SetDataLabelCurrency
 {
-    // Demonstrates how to create a workbook, add a 2‑D bar chart, enable data labels, and apply a currency number format with two decimal places ("$#,##0.00" and built‑in format index 2) to the labels using Aspose.Cells for C#. The workbook is saved as an Excel file.
-    public class BarChartDataLabelCurrencyFormat
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
+        // Populate sample data for the bar chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["A4"].PutValue("C");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(1000);
+        sheet.Cells["B3"].PutValue(2000);
+        sheet.Cells["B4"].PutValue(3000);
 
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(1000);
-                worksheet.Cells["B3"].PutValue(2000);
-                worksheet.Cells["B4"].PutValue(3000);
+        // Add a bar chart to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Bar, 5, 0, 20, 8);
+        Chart chart = sheet.Charts[chartIndex];
 
-                // Add a 2‑D bar chart
-                int chartIndex = worksheet.Charts.Add(ChartType.Bar, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
+        // Define the data range for the chart
+        chart.NSeries.Add("B2:B4", true);          // Values
+        chart.NSeries.CategoryData = "A2:A4";      // Categories
 
-                // Set the data range for the series and categories
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
+        // Enable data labels and set their number format to currency with two decimals
+        Series series = chart.NSeries[0];
+        series.DataLabels.ShowValue = true;
+        series.DataLabels.NumberFormat = "$#,##0.00";
 
-                // Access the first series
-                Series series = chart.NSeries[0];
-
-                // Enable data labels to show the values
-                series.DataLabels.ShowValue = true;
-
-                // Set the data label number format to currency with two decimal places
-                series.DataLabels.NumberFormat = "$#,##0.00";
-
-                // Optionally, also set the built‑in number format index for currency (2)
-                series.DataLabels.Number = 2;
-
-                // Save the workbook to a file
-                string outputPath = "BarChartDataLabelCurrency.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            BarChartDataLabelCurrencyFormat.Run();
-        }
+        // Save the workbook to a file
+        workbook.Save("BarChartDataLabelsCurrency.xlsx");
     }
 }

@@ -1,82 +1,76 @@
-// Title: Insert Company Logo into First Sheet After Merging Workbooks with Aspose.Cells (.NET)
-// Description: C# code that merges multiple Excel files using Workbook.Combine, guarantees a worksheet exists, and adds a PNG logo to the A1:E5 range of the first sheet with Worksheet.Pictures.Add. Includes checks for missing files, logo presence, and error handling, then saves the result as MergedWithLogo.xlsx.
-// Keywords: Aspose.Cells merge workbooks C# | add image to Excel sheet Aspose | insert logo first worksheet | Workbook.Combine example | Worksheet.Pictures.Add C# | handle missing files Aspose.Cells | save merged workbook with logo
-// Common Searches: how to merge several Excel files and add a logo using Aspose.Cells | Aspose.Cells insert picture into first worksheet after combine | C# combine workbooks and place image at specific cells | add company logo to merged Excel workbook Aspose | error handling when merging Excel files with Aspose.Cells
-// Developer Intent: Merge multiple Excel workbooks into one file and embed a company logo on the first worksheet.
-// Use Cases: Create a consolidated monthly report and brand the cover sheet with the corporate logo. | Generate a master presentation workbook that automatically includes the logo after merging departmental files. | Automate internal data aggregation while ensuring every combined workbook starts with consistent branding.
-// AI Prompts: Show how to move the logo to the top‑right corner of the first sheet instead of A1:E5. | Provide code to add a semi‑transparent watermark image to every worksheet after merging. | Explain how to support SVG, JPEG, and BMP formats and scale the logo proportionally when using Worksheet.Pictures.Add.
+// Title: Add a Company Logo to the First Sheet of a Merged Workbook with Aspose.Cells (C#)
+// Description: C# program that validates three source Excel files, merges them using Aspose.Cells.Combine, inserts a CompanyLogo.png into cells A1‑B5 of the first worksheet, and saves the result as MergedWorkbook_With_Logo.xlsx.
+// Keywords: Aspose.Cells merge workbooks C# | insert image Aspose.Cells | add logo to Excel sheet | Pictures.Add example | combine Excel files with branding | C# Excel workbook consolidation
+// Common Searches: how to add a logo after merging Excel files Aspose.Cells | Aspose.Cells C# insert picture into first worksheet | merge multiple workbooks and embed image | Aspose.Cells combine workbooks with header image | C# code to place logo on merged Excel sheet
+// Developer Intent: Insert a corporate logo into the first worksheet of a workbook created by merging multiple Excel files.
+// Use Cases: Produce a single report from departmental spreadsheets with the company logo on the cover page. | Automate client deliverables that combine several worksheets while preserving brand identity. | Generate monthly financial statements by merging files and adding a standardized header image.
+// AI Prompts: Show how to position the logo at cell C2 with custom width and height using Aspose.Cells. | Provide code to add the same logo to the header of every worksheet after merging. | Explain how to replace the hard‑coded logo path with a configurable parameter and support PNG, JPEG, and SVG formats.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// C# code that merges multiple Excel files using Workbook.Combine, guarantees a worksheet exists, and adds a PNG logo to the A1:E5 range of the first sheet with Worksheet.Pictures.Add. Includes checks for missing files, logo presence, and error handling, then saves the result as MergedWithLogo.xlsx.
-class InsertLogoAfterMerge
+namespace AsposeCellsMergeWithLogo
 {
-    static void Main()
+    // C# program that validates three source Excel files, merges them using Aspose.Cells.Combine, inserts a CompanyLogo.png into cells A1‑B5 of the first worksheet, and saves the result as MergedWorkbook_With_Logo.xlsx.
+    class Program
     {
-        // Files that need to be merged
-        string[] filesToMerge = { "File1.xlsx", "File2.xlsx", "File3.xlsx" };
-
-        // Create an empty workbook that will hold the merged result
-        Workbook mergedWorkbook = new Workbook();
-
-        // Load each source workbook and combine it into the destination workbook
-        foreach (string filePath in filesToMerge)
+        static void Main()
         {
             try
             {
-                if (!File.Exists(filePath))
+                // Paths of the workbooks to be merged
+                string[] sourceFiles = { "File1.xlsx", "File2.xlsx", "File3.xlsx" };
+
+                // Verify source files exist
+                foreach (var file in sourceFiles)
                 {
-                    Console.WriteLine($"Warning: File not found '{filePath}'. Skipping.");
-                    continue;
+                    if (!File.Exists(file))
+                    {
+                        Console.WriteLine($"Source file not found: {file}");
+                        return;
+                    }
                 }
 
-                // Load source workbook
-                Workbook sourceWorkbook = new Workbook(filePath);
+                // Path of the company logo image
+                string logoPath = "CompanyLogo.png";
 
-                // Combine source workbook into the merged workbook
-                mergedWorkbook.Combine(sourceWorkbook);
+                // Load the first workbook which will act as the destination workbook
+                Workbook mergedWorkbook = new Workbook(sourceFiles[0]);
+
+                // Combine the remaining workbooks into the destination workbook
+                for (int i = 1; i < sourceFiles.Length; i++)
+                {
+                    Workbook wb = new Workbook(sourceFiles[i]);
+                    mergedWorkbook.Combine(wb);
+                    wb.Dispose();
+                }
+
+                // Insert the logo image on the first worksheet if the file exists
+                if (File.Exists(logoPath))
+                {
+                    Worksheet firstSheet = mergedWorkbook.Worksheets[0];
+                    // Add picture occupying cells A1 to B5 (rows 0‑4, columns 0‑1)
+                    firstSheet.Pictures.Add(0, 0, 4, 1, logoPath);
+                }
+                else
+                {
+                    Console.WriteLine($"Logo file not found: {logoPath}. Skipping logo insertion.");
+                }
+
+                // Save the merged workbook with the logo
+                string outputPath = "MergedWorkbook_With_Logo.xlsx";
+                mergedWorkbook.Save(outputPath, SaveFormat.Xlsx);
+
+                // Clean up
+                mergedWorkbook.Dispose();
+
+                Console.WriteLine($"Merged workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        // Ensure there is at least one worksheet
-        if (mergedWorkbook.Worksheets.Count == 0)
-        {
-            mergedWorkbook.Worksheets.Add();
-        }
-
-        // Get the first worksheet of the merged workbook
-        Worksheet firstWorksheet = mergedWorkbook.Worksheets[0];
-
-        // Path to the company logo image
-        string logoPath = "CompanyLogo.png";
-
-        // Insert the logo picture if the file exists
-        if (File.Exists(logoPath))
-        {
-            // The picture will occupy rows 0‑4 and columns 0‑4 (A1:E5 area)
-            firstWorksheet.Pictures.Add(0, 0, 4, 4, logoPath);
-        }
-        else
-        {
-            Console.WriteLine($"Warning: Logo file '{logoPath}' not found. Skipping logo insertion.");
-        }
-
-        // Save the merged workbook with the inserted logo
-        try
-        {
-            mergedWorkbook.Save("MergedWithLogo.xlsx", SaveFormat.Xlsx);
-            Console.WriteLine("Merged workbook saved as 'MergedWithLogo.xlsx'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error saving merged workbook: {ex.Message}");
         }
     }
 }

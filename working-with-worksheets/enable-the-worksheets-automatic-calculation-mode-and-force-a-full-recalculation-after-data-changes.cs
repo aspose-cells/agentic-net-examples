@@ -1,55 +1,46 @@
-// Title: C# Aspose.Cells Example – Automatic Calculation Mode with Forced Full Recalculation
-// Description: Shows how to configure an Aspose.Cells Workbook for automatic formula calculation (CalcModeType.Automatic), enable ForceFullCalculation, add data and a SUM formula, trigger a full recalculation after cell updates, and save the file.
-// Keywords: Aspose.Cells automatic calculation | ForceFullCalculation C# | CalcModeType.Automatic | Aspose.Cells FormulaSettings | Workbook.CalculateFormula .NET | Excel formula recalculation C# | Aspose.Cells sample code | full workbook recalculation | C# Excel automation | Aspose.Cells API example
-// Common Searches: Aspose.Cells enable automatic calculation C# | ForceFullCalculation Aspose.Cells .NET example | CalcModeType.Automatic usage | Recalculate formulas after cell change Aspose.Cells | Workbook.CalculateFormula C# tutorial | C# code to force full recalculation in Excel | Aspose.Cells automatic vs manual calculation
-// Developer Intent: Configure a workbook to recalculate formulas automatically and guarantee a complete recalculation whenever data changes.
-// Use Cases: Automatically update totals, averages, or other aggregates when source cells are edited. | Ensure consistent results in complex financial models after bulk data imports. | Maintain accurate calculations in generated reports by forcing a full recompute before saving. | Debug spreadsheet logic by forcing a fresh evaluation of all formulas after each change.
-// AI Prompts: Generate C# code that sets Aspose.Cells Workbook to Automatic calculation mode and forces a full recalculation after each data modification. | Provide a step‑by‑step explanation of FormulaSettings.ForceFullCalculation and when to use it in Aspose.Cells. | Create a C# snippet that switches between automatic and manual calculation modes in Aspose.Cells and demonstrates Workbook.CalculateFormula usage. | Compare the performance impact of enabling ForceFullCalculation versus default incremental recalculation in large workbooks.
+// Title: Aspose.Cells .NET – Enable Automatic Calculation & Force Full Recalculation
+// Description: Demonstrates how to set a workbook to Automatic calculation mode, activate ForceFullCalculation, run an initial CalculateFormula, modify cell data, trigger another full recalculation, and save the file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells automatic calculation | ForceFullCalculation .NET | CalcModeType Automatic | Workbook.CalculateFormula example | C# Excel formula recalculation | Aspose.Cells formula settings
+// Common Searches: enable automatic formula calculation Aspose.Cells C# | force full workbook recalculation each time Aspose.Cells | recalculate formulas after cell update Aspose.Cells .NET | set calculation mode to automatic Aspose.Cells
+// Developer Intent: Configure a workbook to recalculate all formulas automatically and force a complete recompute after every data change.
+// Use Cases: Keep financial dashboards up‑to‑date when source values change. | Ensure consistent results in complex models that use volatile functions. | Maintain data integrity in generated reports that span multiple worksheets.
+// AI Prompts: Show how to switch between Automatic and Manual calculation modes in Aspose.Cells and trigger a full recalculation. | Provide C# code to recalculate only a specific range after updating cells with Aspose.Cells. | Explain the performance trade‑offs of ForceFullCalculation and suggest when to use it in large workbooks.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsAutomaticCalculationDemo
+// Demonstrates how to set a workbook to Automatic calculation mode, activate ForceFullCalculation, run an initial CalculateFormula, modify cell data, trigger another full recalculation, and save the file using Aspose.Cells for .NET.
+class Program
 {
-    // Shows how to configure an Aspose.Cells Workbook for automatic formula calculation (CalcModeType.Automatic), enable ForceFullCalculation, add data and a SUM formula, trigger a full recalculation after cell updates, and save the file.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle rule)
-            Workbook workbook = new Workbook();
+        // Create a new workbook (lifecycle rule: create)
+        Workbook workbook = new Workbook();
 
-            // Enable automatic calculation mode
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Force a full recalculation each time a calculation is triggered
-            workbook.Settings.FormulaSettings.ForceFullCalculation = true;
+        // Add initial data and a formula
+        worksheet.Cells["A1"].PutValue(10);
+        worksheet.Cells["A2"].PutValue(20);
+        worksheet.Cells["A3"].Formula = "=SUM(A1:A2)";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Enable automatic calculation mode (Excel setting)
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
 
-            // Add initial data and a formula
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["A3"].Formula = "=SUM(A1:A2)";
+        // Force a full recalculation each time a calculation is triggered
+        workbook.Settings.FormulaSettings.ForceFullCalculation = true;
 
-            // Perform the first calculation
-            workbook.CalculateFormula();
+        // Perform the initial full calculation
+        workbook.CalculateFormula();
 
-            Console.WriteLine($"Initial result (A3): {cells["A3"].Value}");
+        // Modify data to demonstrate that a full recalculation occurs again
+        worksheet.Cells["A1"].PutValue(30);
 
-            // Change data to trigger recalculation
-            cells["A1"].PutValue(30);
-            cells["A2"].PutValue(40);
+        // Recalculate after data change
+        workbook.CalculateFormula();
 
-            // Because ForceFullCalculation is true, a full recalculation will be performed
-            workbook.CalculateFormula();
-
-            Console.WriteLine($"After data change (A3): {cells["A3"].Value}");
-
-            // Save the workbook (lifecycle rule)
-            workbook.Save("AutomaticCalculationDemo.xlsx");
-        }
+        // Save the workbook (lifecycle rule: save)
+        workbook.Save("AutomaticFullCalc.xlsx");
     }
 }

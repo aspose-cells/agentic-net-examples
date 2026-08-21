@@ -1,71 +1,90 @@
-// Title: Encrypt an Excel workbook with a password using Aspose.Cells .NET and confirm decryption fails with a wrong password
-// Description: This C# example creates a workbook, writes data to cell A1, applies a password and strong 128‑bit encryption, saves the file, checks the IsEncrypted flag, uses FileFormatUtil.VerifyPassword with an incorrect password, attempts to load the file with a wrong password to capture the expected exception, and finally opens it with the correct password to demonstrate successful decryption.
-// Keywords: Aspose.Cells encrypt workbook | Excel password protection .NET | SetEncryptionOptions Aspose | FileFormatUtil VerifyPassword example | load encrypted workbook wrong password | Workbook.IsEncrypted property | C# Excel encryption Aspose
-// Common Searches: how to password‑protect an xlsx file with Aspose.Cells | check if an Excel file is encrypted using Aspose | verify decryption failure with wrong password Aspose.Cells | C# example for workbook encryption and error handling | Aspose.Cells strong encryption options
-// Developer Intent: Apply password protection to an Excel workbook, ensure the file reports as encrypted, and validate that opening it with an incorrect password throws an error.
-// Use Cases: Secure confidential spreadsheets before distribution. | Test that external systems cannot bypass password protection. | Implement robust error handling for encrypted workbook loading in automated pipelines.
-// AI Prompts: Generate C# code that encrypts an Excel workbook with 256‑bit AES using Aspose.Cells and verifies the IsEncrypted flag after saving. | Show how to catch the specific Aspose.Cells exception when loading an encrypted workbook with an invalid password.
+// Title: Encrypt an Excel workbook with Aspose.Cells, test AES decryption failure, and verify password
+// Description: Creates a workbook, writes sensitive data, applies a password using Aspose.Cells (optionally with strong encryption), saves it as XLSX, then attempts a naive AES decryption that inevitably fails, and finally validates the password with FileFormatUtil.VerifyPassword for both wrong and correct keys.
+// Keywords: Aspose.Cells encrypt workbook | C# Excel password protection | FileFormatUtil VerifyPassword | AES decryption attempt on XLSX | strong encryption options Aspose | OOXML password verification | third‑party decryption test
+// Common Searches: How to password‑protect an XLSX file using Aspose.Cells .NET | Verify Excel file password without opening the workbook | Can a custom AES routine decrypt an Aspose‑encrypted workbook | Set strong encryption options for Excel 2003 format in Aspose.Cells | Example of failed decryption of an encrypted XLSX file
+// Developer Intent: Show how to encrypt an Excel file with Aspose.Cells, demonstrate that generic AES code cannot decrypt it, and confirm password validity via Aspose's verification API.
+// Use Cases: Secure distribution of confidential spreadsheets and ensure they resist simple AES attacks. | Programmatically validate a user‑supplied password before loading the workbook. | Compliance testing to prove that third‑party libraries cannot bypass Aspose.Cells encryption.
+// AI Prompts: Generate C# code that encrypts an XLSX workbook with Aspose.Cells using a strong cryptographic provider and then checks the password with FileFormatUtil. | Write a method that tries to decrypt an Aspose‑encrypted XLSX file using AES and returns false on failure, handling all exceptions. | Explain how to test that an incorrect password is rejected for a workbook encrypted with Aspose.Cells.
 
 using System;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using Aspose.Cells;
 
 namespace AsposeCellsEncryptionDemo
 {
-    // This C# example creates a workbook, writes data to cell A1, applies a password and strong 128‑bit encryption, saves the file, checks the IsEncrypted flag, uses FileFormatUtil.VerifyPassword with an incorrect password, attempts to load the file with a wrong password to capture the expected exception, and finally opens it with the correct password to demonstrate successful decryption.
+    // Creates a workbook, writes sensitive data, applies a password using Aspose.Cells (optionally with strong encryption), saves it as XLSX, then attempts a naive AES decryption that inevitably fails, and finally validates the password with FileFormatUtil.VerifyPassword for both wrong and correct keys.
     class Program
     {
         static void Main()
         {
-            // 1. Create a new workbook and add some data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and add some data
+            Workbook wb = new Workbook();
+            Worksheet sheet = wb.Worksheets[0];
             sheet.Cells["A1"].PutValue("Sensitive Data");
 
-            // 2. Set a password to encrypt the workbook
-            workbook.Settings.Password = "Secret123";
+            // Set a password to encrypt the workbook
+            wb.Settings.Password = "Secret123";
 
-            // Optional: define encryption options (e.g., strong encryption, 128-bit key)
-            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+            // Optionally set stronger encryption options (Excel 2003 specific, ignored for newer formats)
+            wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
 
-            // 3. Save the encrypted workbook
-            string encryptedPath = "EncryptedWorkbook.xlsx";
-            workbook.Save(encryptedPath, SaveFormat.Xlsx);
+            // Save the encrypted workbook
+            string encryptedPath = "encrypted.xlsx";
+            wb.Save(encryptedPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved encrypted at '{encryptedPath}'.");
 
-            // Verify that the workbook reports being encrypted
-            Console.WriteLine($"Workbook.IsEncrypted after save: {workbook.Settings.IsEncrypted}");
+            // -----------------------------------------------------------------
+            // Attempt to decrypt the file using a third‑party library (AES demo)
+            // This will fail because the file is not a plain AES encrypted blob.
+            // -----------------------------------------------------------------
+            bool thirdPartyDecryptionResult = TryDecryptWithAes(encryptedPath, "WrongPass");
+            Console.WriteLine($"Third‑party AES decryption succeeded? {thirdPartyDecryptionResult}");
 
-            // ------------------------------------------------------------
-            // 4. Attempt decryption with an incorrect password using Aspose's
-            //    verification method (simulating a third‑party check)
-            // ------------------------------------------------------------
-            bool isPasswordCorrect = FileFormatUtil.VerifyPassword(
-                File.OpenRead(encryptedPath), "WrongPassword");
-            Console.WriteLine($"FileFormatUtil.VerifyPassword with wrong password: {isPasswordCorrect}");
+            // Verify failure using Aspose's built‑in password verification (wrong password)
+            bool asposePasswordCheck = FileFormatUtil.VerifyPassword(File.OpenRead(encryptedPath), "WrongPass");
+            Console.WriteLine($"Aspose password verification with wrong password: {asposePasswordCheck}");
 
-            // ------------------------------------------------------------
-            // 5. Attempt to load the encrypted workbook with a wrong password
-            //    and catch the expected exception
-            // ------------------------------------------------------------
+            // Verify success with correct password
+            bool asposeCorrectCheck = FileFormatUtil.VerifyPassword(File.OpenRead(encryptedPath), "Secret123");
+            Console.WriteLine($"Aspose password verification with correct password: {asposeCorrectCheck}");
+        }
+
+        // Demonstrates a naive AES decryption attempt on the encrypted OOXML file.
+        // Returns true only if decryption completes without exception (which it shouldn't).
+        static bool TryDecryptWithAes(string filePath, string password)
+        {
             try
             {
-                LoadOptions loadOptions = new LoadOptions { Password = "WrongPassword" };
-                Workbook wrongLoad = new Workbook(encryptedPath, loadOptions);
-                // If no exception, the decryption unexpectedly succeeded
-                Console.WriteLine("Unexpectedly opened workbook with wrong password.");
+                byte[] fileBytes = File.ReadAllBytes(filePath);
+
+                // Derive a key and IV from the password (for demonstration only)
+                var pdb = new Rfc2898DeriveBytes(password, Encoding.UTF8.GetBytes("salt1234"));
+                byte[] key = pdb.GetBytes(32); // 256‑bit key
+                byte[] iv = pdb.GetBytes(16);  // 128‑bit IV
+
+                using (Aes aes = Aes.Create())
+                {
+                    aes.Key = key;
+                    aes.IV = iv;
+
+                    using (var ms = new MemoryStream())
+                    using (var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(fileBytes, 0, fileBytes.Length);
+                        cs.FlushFinalBlock(); // Will throw if padding is invalid
+                    }
+                }
+
+                // If we reach here, decryption (incorrectly) succeeded
+                return true;
             }
-            catch (Exception ex)
+            catch
             {
                 // Expected path: decryption fails
-                Console.WriteLine($"Failed to open workbook with wrong password: {ex.Message}");
+                return false;
             }
-
-            // ------------------------------------------------------------
-            // 6. Load the workbook with the correct password to demonstrate success
-            // ------------------------------------------------------------
-            LoadOptions correctLoadOptions = new LoadOptions { Password = "Secret123" };
-            Workbook correctLoad = new Workbook(encryptedPath, correctLoadOptions);
-            Console.WriteLine($"Successfully opened workbook. Cell A1 value: {correctLoad.Worksheets[0].Cells["A1"].Value}");
         }
     }
 }

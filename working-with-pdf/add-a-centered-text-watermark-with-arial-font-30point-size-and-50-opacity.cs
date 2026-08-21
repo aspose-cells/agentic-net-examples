@@ -1,51 +1,55 @@
-// Title: Add a Centered Arial 30‑pt Text Watermark (50% Opacity) to PDF with Aspose.Cells for .NET
-// Description: This C# example creates a new Workbook, inserts sample data, defines an Arial 30‑point RenderingFont, and applies a semi‑transparent watermark using RenderingWatermark. The watermark is horizontally and vertically centered, set to 50 % opacity, placed behind the page content, and saved through PdfSaveOptions as a PDF file.
-// Keywords: Aspose.Cells PDF watermark C# | RenderingWatermark opacity | Arial 30‑point watermark | centered text watermark Aspose | PDF generation from Excel | Aspose.Cells .NET example
-// Common Searches: aspnet add centered watermark to PDF using Aspose.Cells | how to set watermark opacity in Aspose.Cells PDF output | C# RenderingWatermark Arial font example | create semi transparent text watermark in PDF with Aspose
-// Developer Intent: Generate a PDF from an Excel workbook that includes a centered, semi‑transparent text overlay.
-// Use Cases: Flag confidential Excel reports as PDFs with a light‑gray overlay before sharing. | Apply corporate branding or legal notices across all exported PDFs. | Produce draft PDFs that display a non‑intrusive watermark indicating they are not final.
-// AI Prompts: Write C# code using Aspose.Cells to place a centered Arial watermark at 30 pt with 50 % opacity in a PDF. | Show how to modify the watermark text, font size, color, or opacity in the given Aspose.Cells snippet. | Explain steps to replace the text watermark with an image while keeping it centered and semi‑transparent in PDF output.
+// Title: C# – Add a Centered Arial Text Watermark (30 pt, 50 % Opacity) to PDF with Aspose.Cells
+// Description: Demonstrates how to create a Workbook, define an Arial 30‑point RenderingFont, build a RenderingWatermark with the text "CONFIDENTIAL", center it horizontally and vertically, set 50 % opacity, place it behind the page content, attach the watermark to PdfSaveOptions, and save the workbook as a PDF that displays the centered watermark.
+// Keywords: Aspose.Cells | C# | .NET PDF watermark | centered text watermark | Arial 30pt | opacity 0.5 | RenderingWatermark | PdfSaveOptions | background watermark | workbook to PDF
+// Common Searches: Aspose.Cells add centered watermark to PDF | C# set watermark opacity Aspose.Cells | How to use RenderingWatermark with Arial font | Save workbook as PDF with background text watermark | Center text watermark in PDF using Aspose.Cells .NET
+// Developer Intent: Generate a PDF from a workbook that includes a centered, semi‑transparent Arial text watermark.
+// Use Cases: Mark confidential reports with a discreet background label before sharing. | Brand marketing PDFs by embedding the company name as a centered watermark. | Apply a legal disclaimer watermark to invoices to satisfy compliance rules.
+// AI Prompts: Write C# code with Aspose.Cells to add a diagonal red watermark at 70 % opacity to a PDF. | Show how to assign different watermarks to each worksheet when exporting them as separate PDFs. | Explain how to calculate watermark position dynamically based on page dimensions in Aspose.Cells.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// This C# example creates a new Workbook, inserts sample data, defines an Arial 30‑point RenderingFont, and applies a semi‑transparent watermark using RenderingWatermark. The watermark is horizontally and vertically centered, set to 50 % opacity, placed behind the page content, and saved through PdfSaveOptions as a PDF file.
-class AddWatermark
+namespace AsposeCellsWatermarkDemo
 {
-    static void Main()
+    // Demonstrates how to create a Workbook, define an Arial 30‑point RenderingFont, build a RenderingWatermark with the text "CONFIDENTIAL", center it horizontally and vertically, set 50 % opacity, place it behind the page content, attach the watermark to PdfSaveOptions, and save the workbook as a PDF that displays the centered watermark.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add sample content to demonstrate the watermark effect
-        sheet.Cells["A1"].PutValue("Sample data for the worksheet");
-
-        // Define the font for the watermark: Arial, 30‑point size
-        RenderingFont font = new RenderingFont("Arial", 30)
+        static void Main()
         {
-            // Optional: set a light color for better visibility
-            Color = Color.LightGray
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Create a centered text watermark with the specified font
-        RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
-        {
-            HAlignment = TextAlignmentType.Center,   // Horizontal center
-            VAlignment = TextAlignmentType.Center,   // Vertical center
-            Opacity = 0.5f,                          // 50% opacity
-            IsBackground = true                      // Place behind page contents
-        };
+            // Optional: add some sample data to visualize the watermark effect
+            sheet.Cells["A1"].PutValue("Sample content for watermark demonstration.");
 
-        // Configure PDF save options to include the watermark
-        PdfSaveOptions options = new PdfSaveOptions
-        {
-            Watermark = watermark
-        };
+            // Create a RenderingFont with Arial, 30‑point size
+            RenderingFont font = new RenderingFont("Arial", 30);
 
-        // Save the workbook as a PDF with the watermark applied
-        workbook.Save("WatermarkedOutput.pdf", options);
+            // Create a text watermark using the font
+            RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
+            {
+                // Center the watermark horizontally and vertically
+                HAlignment = TextAlignmentType.Center,
+                VAlignment = TextAlignmentType.Center,
+
+                // Set opacity to 50%
+                Opacity = 0.5f,
+
+                // Place the watermark behind the page contents (optional)
+                IsBackground = true
+            };
+
+            // Configure PDF save options with the watermark
+            PdfSaveOptions saveOptions = new PdfSaveOptions
+            {
+                Watermark = watermark
+            };
+
+            // Save the workbook as PDF with the centered watermark
+            workbook.Save("CenteredWatermark.pdf", saveOptions);
+        }
     }
 }

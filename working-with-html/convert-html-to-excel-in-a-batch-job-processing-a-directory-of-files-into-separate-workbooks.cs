@@ -1,81 +1,74 @@
-// Title: Batch Convert HTML Files to Separate Excel Workbooks with Aspose.Cells for .NET (C#)
-// Description: A C# console utility that scans a folder for *.html and *.htm files, loads each into an Aspose.Cells Workbook, and saves them as individual .xlsx files in a target directory, with directory validation and error logging.
-// Keywords: Aspose.Cells HTML to Excel batch | C# convert multiple HTML files to XLSX | directory HTML to Excel conversion | Aspose.Cells save as Xlsx | automate HTML to Excel .NET | bulk HTML to Excel conversion | Aspose.Cells workbook from HTML
-// Common Searches: convert all html files in a folder to excel using aspose.cells | c# batch html to xlsx conversion | aspnet process multiple html files to excel workbooks | automate html table export to excel .net
-// Developer Intent: Create a batch process that transforms every HTML file in a specified folder into its own Excel workbook.
-// Use Cases: Migrate legacy HTML reports to Excel for analytics pipelines. | Generate individual XLSX files from a collection of HTML email templates on a scheduled job. | Archive web‑app exported HTML tables as separate Excel files for compliance.
-// AI Prompts: Add timestamped logging to the HTML‑to‑Excel batch converter using Aspose.Cells. | Modify the sample to recursively process subfolders while preserving the source folder hierarchy in the output directory. | Implement a console progress bar that shows conversion percentage for each HTML file in the batch job.
+// Title: C# Batch Convert HTML Files to Individual Excel Workbooks with Aspose.Cells
+// Description: A console utility that validates input and output folders, scans a directory for *.html files, loads each file as an Aspose.Cells Workbook using LoadFormat.Html, and saves it as a separate .xlsx workbook with the same base name while logging successes and errors.
+// Keywords: Aspose.Cells HTML to Excel batch | C# convert multiple HTML files | directory processing Aspose.Cells | load HTML workbook C# | save workbook as Xlsx programmatically
+// Common Searches: batch convert html to xlsx c# | process folder of html files Aspose.Cells | convert all html tables to separate excel files | automate html to excel conversion .NET
+// Developer Intent: Transform every HTML file in a specified folder into its own Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Nightly automation that turns exported HTML reports into Excel sheets for analytics pipelines. | Migration of a legacy HTML data archive into individual .xlsx files for business users. | Command‑line tool that processes bulk HTML invoices and generates separate Excel files for accounting.
+// AI Prompts: Add detailed file‑level logging to the batch conversion and write errors to a log file. | Modify the program to accept input and output directories as command‑line arguments instead of hard‑coded paths. | Show how to implement a console progress bar while converting a large set of HTML files with Aspose.Cells.
 
 using System;
 using System.IO;
-using System.Collections.Generic;
 using Aspose.Cells;
 
-// A C# console utility that scans a folder for *.html and *.htm files, loads each into an Aspose.Cells Workbook, and saves them as individual .xlsx files in a target directory, with directory validation and error logging.
-class HtmlToExcelBatchConverter
+namespace HtmlToExcelBatch
 {
-    static void Main()
+    // A console utility that validates input and output folders, scans a directory for *.html files, loads each file as an Aspose.Cells Workbook using LoadFormat.Html, and saves it as a separate .xlsx workbook with the same base name while logging successes and errors.
+    class Program
     {
-        // Directory containing the source HTML files
-        string sourceDirectory = @"C:\InputHtml";
-
-        // Directory where the converted Excel files will be saved
-        string outputDirectory = @"C:\OutputExcel";
-
-        // Verify source directory exists
-        if (!Directory.Exists(sourceDirectory))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Source directory not found: {sourceDirectory}");
-            return;
-        }
+            // Directory containing HTML files
+            string inputDirectory = @"C:\InputHtmlFiles";
 
-        // Ensure the output directory exists
-        if (!Directory.Exists(outputDirectory))
-        {
-            Directory.CreateDirectory(outputDirectory);
-        }
+            // Directory where converted Excel files will be saved
+            string outputDirectory = @"C:\OutputExcelFiles";
 
-        // Collect all .html and .htm files from the source directory
-        var htmlFiles = new List<string>();
-        try
-        {
-            htmlFiles.AddRange(Directory.GetFiles(sourceDirectory, "*.html"));
-            htmlFiles.AddRange(Directory.GetFiles(sourceDirectory, "*.htm"));
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error enumerating files in {sourceDirectory}: {ex.Message}");
-            return;
-        }
-
-        // Process each HTML file
-        foreach (string htmlPath in htmlFiles)
-        {
             try
             {
-                // Verify the HTML file exists before loading
-                if (!File.Exists(htmlPath))
+                // Verify input directory exists
+                if (!Directory.Exists(inputDirectory))
                 {
-                    Console.WriteLine($"File not found: {htmlPath}");
-                    continue;
+                    Console.WriteLine($"Input directory does not exist: {inputDirectory}");
+                    return;
                 }
 
-                // Load the HTML file into a Workbook object
-                Workbook workbook = new Workbook(htmlPath);
+                // Ensure the output directory exists
+                if (!Directory.Exists(outputDirectory))
+                    Directory.CreateDirectory(outputDirectory);
 
-                // Build the output Excel file path (same name, .xlsx extension)
-                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(htmlPath);
-                string excelPath = Path.Combine(outputDirectory, fileNameWithoutExt + ".xlsx");
+                // Load options to treat source files as HTML
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
 
-                // Save the workbook as an Excel file
-                workbook.Save(excelPath, SaveFormat.Xlsx);
+                // Process each .html file in the input directory
+                foreach (string htmlFilePath in Directory.GetFiles(inputDirectory, "*.html"))
+                {
+                    try
+                    {
+                        // Load the HTML file into a workbook
+                        Workbook workbook = new Workbook(htmlFilePath, loadOptions);
 
-                Console.WriteLine($"Successfully converted: {htmlPath} -> {excelPath}");
+                        // Determine output file name (same base name with .xlsx extension)
+                        string fileNameWithoutExt = Path.GetFileNameWithoutExtension(htmlFilePath);
+                        string excelFilePath = Path.Combine(outputDirectory, fileNameWithoutExt + ".xlsx");
+
+                        // Save the workbook as an Excel file
+                        workbook.Save(excelFilePath, SaveFormat.Xlsx);
+
+                        Console.WriteLine($"Converted: {htmlFilePath} -> {excelFilePath}");
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log any errors but continue processing other files
+                        Console.WriteLine($"Error converting '{htmlFilePath}': {ex.Message}");
+                    }
+                }
+
+                Console.WriteLine("Batch conversion completed.");
             }
             catch (Exception ex)
             {
-                // Log any errors encountered during conversion
-                Console.WriteLine($"Error converting {htmlPath}: {ex.Message}");
+                // Catch any unexpected errors
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }

@@ -1,15 +1,15 @@
-// Title: Set Aspose.Cells Calculation Engine to Decimal Precision for 10‑12 Decimal Places (C#)
-// Description: Demonstrates how to configure Aspose.Cells CalculationOptions.PrecisionStrategy to Decimal, enabling 10‑12 decimal place accuracy for scientific formulas, then calculate, display, and save the workbook.
-// Keywords: Aspose.Cells | CalculationOptions | PrecisionStrategy | Decimal precision | high‑precision formulas | scientific calculations .NET | custom calculation precision | 10 decimal places | C#
-// Common Searches: Aspose.Cells set decimal precision | How to calculate formulas with 10 decimal places in Aspose.Cells | Increase calculation accuracy Aspose.Cells .NET | CalculationOptions PrecisionStrategy Decimal example | High precision scientific formulas Aspose.Cells
-// Developer Intent: Configure Aspose.Cells to use the Decimal precision strategy so formulas are evaluated with 10‑12 decimal places.
-// Use Cases: Perform engineering calculations that require 10‑12 decimal places and store results in a workbook. | Generate scientific or financial reports where rounding errors must be minimized. | Batch‑process worksheets with high‑precision formulas before exporting to Excel.
-// AI Prompts: Show C# code that sets CalculationOptions.PrecisionStrategy to Decimal and calculates a formula with 10‑12 decimal places using Aspose.Cells. | Explain the impact of the Decimal precision strategy on formula accuracy in Aspose.Cells and how to verify the result. | Provide a step‑by‑step guide to configure high‑precision calculations and save the workbook in Aspose.Cells.
+// Title: Configure Aspose.Cells to use Decimal precision for 10‑12 decimal places (C#)
+// Description: Demonstrates how to set Aspose.Cells' calculation engine to the Decimal precision strategy, enabling 10‑12 decimal place accuracy for scientific formulas. The example creates a workbook, inserts a high‑precision formula, applies CalculationOptions.PrecisionStrategy = Decimal, calculates the result, and saves the file.
+// Keywords: Aspose.Cells Decimal precision | CalculationOptions PrecisionStrategy | high precision scientific formula C# | 10‑12 decimal places Aspose.Cells | custom calculation accuracy .NET | Aspose.Cells calculation engine | decimal vs double precision Aspose
+// Common Searches: Aspose.Cells set decimal precision for formulas | CalculationPrecisionStrategy.Decimal example | increase formula accuracy Aspose.Cells .NET | how to calculate small scientific constants with Aspose.Cells | custom precision options Aspose.Cells C#
+// Developer Intent: Enable decimal‑based calculation in Aspose.Cells to achieve 10‑12 decimal place accuracy for scientific formulas.
+// Use Cases: Calculating tiny scientific constants (e.g., π × 10⁻¹¹) without double‑precision rounding errors. | Performing engineering or financial analyses that require consistent high‑precision results across worksheets. | Generating reports where regulatory standards demand exact decimal representation of computed values.
+// AI Prompts: Show C# code that configures Aspose.Cells CalculationOptions to use Decimal precision and evaluates a workbook. | Explain how CalculationPrecisionStrategy.Decimal provides up to 28‑29 significant digits compared to Double. | Give a step‑by‑step guide to verify 10‑12 decimal place results after setting custom precision in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to configure Aspose.Cells CalculationOptions.PrecisionStrategy to Decimal, enabling 10‑12 decimal place accuracy for scientific formulas, then calculate, display, and save the workbook.
+// Demonstrates how to set Aspose.Cells' calculation engine to the Decimal precision strategy, enabling 10‑12 decimal place accuracy for scientific formulas. The example creates a workbook, inserts a high‑precision formula, applies CalculationOptions.PrecisionStrategy = Decimal, calculates the result, and saves the file.
 class Program
 {
     static void Main()
@@ -18,13 +18,13 @@ class Program
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Example scientific formula that requires high precision (e.g., 3.1415926535e-11)
-        worksheet.Cells["A1"].Formula = "=3.1415926535E-11 * 2";
+        // Example of a scientific formula that requires high precision
+        // This calculates 3.1415926535 × 10⁻¹¹
+        worksheet.Cells["A1"].Formula = "=POWER(10, -11) * 3.1415926535";
 
-        // Configure calculation options to use the Decimal precision strategy.
-        // This strategy performs calculations using the .NET decimal type,
-        // providing up to 28‑29 significant digits, which comfortably covers
-        // the requested 10‑12 decimal places for scientific formulas.
+        // Configure calculation options to use decimal precision.
+        // The Decimal strategy processes operands as System.Decimal,
+        // providing up to 28‑29 significant digits (covers the 10‑12 decimal place requirement).
         CalculationOptions calcOptions = new CalculationOptions
         {
             PrecisionStrategy = CalculationPrecisionStrategy.Decimal
@@ -33,10 +33,10 @@ class Program
         // Perform the calculation with the custom precision settings
         workbook.CalculateFormula(calcOptions);
 
-        // Output the calculated result to the console
-        Console.WriteLine("Calculated value (A1): " + worksheet.Cells["A1"].Value);
+        // Output the calculated value
+        Console.WriteLine("Calculated result (A1): " + worksheet.Cells["A1"].Value);
 
-        // Save the workbook (demonstrates usage of the required create/save lifecycle)
-        workbook.Save("CustomPrecisionResult.xlsx");
+        // Save the workbook (lifecycle rule)
+        workbook.Save("CustomPrecision.xlsx");
     }
 }

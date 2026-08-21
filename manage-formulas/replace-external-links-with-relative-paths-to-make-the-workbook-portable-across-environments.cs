@@ -1,10 +1,10 @@
-// Title: Aspose.Cells C# – Convert absolute external links to relative paths for portable Excel workbooks
-// Description: The sample loads an Excel file, iterates its ExternalLinkCollection, calculates a workbook‑based relative reference for each absolute DataSource using Path.GetRelativePath, updates the link, and saves the result, allowing the file to be moved without breaking external connections.
-// Keywords: Aspose.Cells | C# external links | relative reference conversion | Excel workbook portability | ExternalLink.DataSource | Path.GetRelativePath | remove absolute paths | cross‑environment Excel | automate link update
-// Common Searches: how to change external link paths to relative in Aspose.Cells .NET | make Excel workbook portable by updating external links with C# | convert absolute external link to relative path Aspose.Cells example | Aspose.Cells replace absolute DataSource with relative path | C# code for adjusting external links after moving workbook
-// Developer Intent: Replace absolute DataSource values of external links with workbook‑relative references so the file remains functional after relocation.
-// Use Cases: Shift a workbook that pulls data from CSV files to a new folder hierarchy without breaking the links. | Distribute a template to team members where each copy resolves external sources relative to its own location. | Automate the preparation of existing reports for deployment on a shared server that uses a different directory structure.
-// AI Prompts: Write C# code using Aspose.Cells that scans all external links in a workbook and rewrites each DataSource to a relative reference based on the workbook’s directory. | Explain the interaction between Path.GetRelativePath and ExternalLink.DataSource, highlighting edge cases such as missing files or UNC paths. | Provide an enhanced version of the sample that logs every modified link, skips links that are already relative, and handles errors gracefully.
+// Title: Convert Excel external links to relative paths with Aspose.Cells (C#)
+// Description: A C# console app that loads an Excel workbook, scans all external links, resolves each link to an absolute path, computes a relative path using `Path.GetRelativePath`, updates both `DataSource` and `OriginalDataSource`, and saves the workbook. The result is a portable file that retains functional external references after being moved to another folder or system.
+// Keywords: Aspose.Cells external links | C# relative path Excel | convert absolute link to relative | make workbook portable | Path.GetRelativePath Aspose | update DataSource OriginalDataSource | .NET Excel link management
+// Common Searches: Aspose.Cells change external link to relative path | C# make Excel workbook portable | convert absolute external links in .xlsx to relative | update DataSource OriginalDataSource Aspose.Cells | Path.GetRelativePath example with Excel
+// Developer Intent: Replace absolute external link paths with relative ones so the workbook remains functional after being moved across environments.
+// Use Cases: Prepare a workbook for distribution by converting all external references to relative paths. | Automate link updates in a CI/CD pipeline to ensure Excel files work on any build agent. | Synchronize `OriginalDataSource` with `DataSource` after path conversion to keep metadata consistent.
+// AI Prompts: Generate a C# method that takes input and output workbook paths and rewrites every external link to a relative path using Aspose.Cells. | Explain why both `DataSource` and `OriginalDataSource` should be updated when converting external links to relative paths. | Show a step‑by‑step tutorial on using `Path.GetRelativePath` with Aspose.Cells to make Excel external links portable.
 
 using System;
 using System.IO;
@@ -12,22 +12,28 @@ using Aspose.Cells;
 
 namespace AsposeCellsExternalLinkRelativePath
 {
-    // The sample loads an Excel file, iterates its ExternalLinkCollection, calculates a workbook‑based relative reference for each absolute DataSource using Path.GetRelativePath, updates the link, and saves the result, allowing the file to be moved without breaking external connections.
+    // A C# console app that loads an Excel workbook, scans all external links, resolves each link to an absolute path, computes a relative path using `Path.GetRelativePath`, updates both `DataSource` and `OriginalDataSource`, and saves the workbook. The result is a portable file that retains functional external references after being moved to another folder or system.
     class Program
     {
         static void Main(string[] args)
         {
-            // Input and output workbook paths (adjust as needed)
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            // Expect two arguments: input workbook path and output workbook path
+            if (args.Length != 2)
+            {
+                Console.WriteLine("Usage: AsposeCellsExternalLinkRelativePath <input.xlsx> <output.xlsx>");
+                return;
+            }
 
-            // Load the workbook from the specified file
+            string inputPath = args[0];
+            string outputPath = args[1];
+
+            // Load the workbook (lifecycle rule: load)
             Workbook workbook = new Workbook(inputPath);
 
-            // Directory of the workbook – used as the base for relative paths
+            // Directory of the workbook file – used as the base for relative paths
             string workbookDirectory = Path.GetDirectoryName(Path.GetFullPath(inputPath));
 
-            // Get the collection of external links in the workbook
+            // Get the collection of external links
             ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
 
             // Iterate through each external link and replace its DataSource with a relative path
@@ -35,22 +41,25 @@ namespace AsposeCellsExternalLinkRelativePath
             {
                 ExternalLink link = externalLinks[i];
 
-                // Full (absolute) path of the current external link
-                string absoluteLinkPath = link.DataSource;
+                // Resolve the current DataSource to an absolute path (if it is already relative, combine with workbook directory)
+                string absoluteLinkPath = Path.IsPathRooted(link.DataSource)
+                    ? Path.GetFullPath(link.DataSource)
+                    : Path.GetFullPath(Path.Combine(workbookDirectory, link.DataSource));
 
-                // If the link is already a relative path, skip processing
-                if (!Path.IsPathRooted(absoluteLinkPath))
-                    continue;
-
-                // Compute the relative path from the workbook's directory to the external file
+                // Compute the relative path from the workbook directory to the external file
                 string relativePath = Path.GetRelativePath(workbookDirectory, absoluteLinkPath);
 
-                // Update the external link to use the relative path
+                // Update the link to use the relative path
                 link.DataSource = relativePath;
+
+                // Optionally also update OriginalDataSource to keep consistency
+                link.OriginalDataSource = relativePath;
             }
 
-            // Save the modified workbook to the output file
+            // Save the modified workbook (lifecycle rule: save)
             workbook.Save(outputPath);
+
+            Console.WriteLine($"Workbook saved with relative external links to: {outputPath}");
         }
     }
 }

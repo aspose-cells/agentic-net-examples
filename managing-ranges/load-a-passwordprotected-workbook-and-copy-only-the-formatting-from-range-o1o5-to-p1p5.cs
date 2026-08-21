@@ -1,53 +1,52 @@
-// Title: Copy Formatting from a Password‑Protected Excel Range (O1:O5 → P1:P5) with Aspose.Cells for .NET
-// Description: Load a password‑protected workbook using Aspose.Cells LoadOptions, create the source range O1:O5 and destination range P1:P5, copy only the cell styles with CopyStyle, and save the result to a new file.
-// Keywords: Aspose.Cells | C# | .NET | CopyStyle | copy formatting | password protected workbook | LoadOptions | Excel range formatting | cell style transfer
-// Common Searches: Aspose.Cells copy only formatting between ranges | load password protected Excel file Aspose.Cells .NET | CopyStyle example for protected workbook | transfer cell style O1:O5 to P1:P5 Aspose.Cells | how to preserve data while copying format in Excel using C#
-// Developer Intent: Load a password‑protected workbook and copy only the formatting from O1:O5 to P1:P5.
-// Use Cases: Apply the visual style of a secured template column to another column without altering its values. | Automate formatting updates in reports that are distributed with workbook passwords. | Standardize appearance across multiple sheets while keeping sensitive data protected.
-// AI Prompts: Generate C# code that opens a password‑protected Excel file with Aspose.Cells and copies only the style from range O1:O5 to P1:P5. | Explain the differences between CopyStyle, Copy, and CopyPasteOptions in Aspose.Cells for .NET. | Provide a step‑by‑step tutorial for loading a protected workbook, copying formatting between two ranges, and saving the file using Aspose.Cells.
+// Title: Copy Formatting Between Ranges in a Password‑Protected Excel Workbook Using Aspose.Cells for .NET (C#)
+// Description: Loads a password‑protected workbook (protected.xlsx) with Aspose.Cells, creates the O1:O5 and P1:P5 ranges on the first worksheet, copies only the cell style via CopyStyle, and saves the result as output.xlsx.
+// Keywords: Aspose.Cells | C# | CopyStyle | password protected workbook | range formatting | Excel automation | load workbook with password | copy cell style
+// Common Searches: Aspose.Cells copy range formatting | load password protected Excel file C# Aspose.Cells | CopyStyle method example | copy only styles between cells Aspose.Cells | copy formatting without values Aspose.Cells
+// Developer Intent: Load a password‑protected Excel file and copy only the formatting from cells O1:O5 to P1:P5 using Aspose.Cells for .NET.
+// Use Cases: Apply a corporate template style to a new column in a secured workbook. | Transfer conditional formatting from a protected source sheet to another area within the same file. | Generate reports that reuse formatting from a locked master workbook while preserving original data.
+// AI Prompts: Generate C# code that loads a password‑protected workbook and copies only the formatting from one range to another using Aspose.Cells. | Provide robust error‑handling examples for missing files and incorrect passwords when opening a workbook with Aspose.Cells. | Show how to copy formatting for multiple non‑contiguous ranges in a protected workbook using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Load a password‑protected workbook using Aspose.Cells LoadOptions, create the source range O1:O5 and destination range P1:P5, copy only the cell styles with CopyStyle, and save the result to a new file.
+// Loads a password‑protected workbook (protected.xlsx) with Aspose.Cells, creates the O1:O5 and P1:P5 ranges on the first worksheet, copies only the cell style via CopyStyle, and saves the result as output.xlsx.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "protected.xlsx";
-        const string outputPath = "output.xlsx";
-        const string password = "myPassword"; // replace with actual password
-
-        // Verify that the input workbook exists
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
-            // Load the password‑protected workbook
-            LoadOptions loadOptions = new LoadOptions
-            {
-                Password = password
-            };
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            const string inputPath = "protected.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the password‑protected workbook
+            var loadOptions = new LoadOptions
+            {
+                Password = "myPassword"
+            };
+            var workbook = new Workbook(inputPath, loadOptions);
+
+            // Access the first worksheet
+            var sheet = workbook.Worksheets[0];
 
             // Define source and destination ranges
             Aspose.Cells.Range sourceRange = sheet.Cells.CreateRange("O1:O5");
             Aspose.Cells.Range destinationRange = sheet.Cells.CreateRange("P1:P5");
 
-            // Copy only the formatting (style) from source to destination
+            // Copy only the formatting from source to destination
             destinationRange.CopyStyle(sourceRange);
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {

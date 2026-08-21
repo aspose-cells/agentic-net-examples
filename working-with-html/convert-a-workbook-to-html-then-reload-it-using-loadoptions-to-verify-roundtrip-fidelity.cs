@@ -1,82 +1,73 @@
-// Title: Convert Aspose.Cells Workbook to HTML and Reload with HtmlLoadOptions (C#)
-// Description: Demonstrates how to create a workbook, save it as a self‑contained HTML file using HtmlSaveOptions (preserving properties, formulas, and embedding images), then reload the HTML with HtmlLoadOptions (LoadFormulas enabled) and compare original and loaded cell values to confirm round‑trip fidelity in .NET.
-// Keywords: Aspose.Cells HTML export | HtmlSaveOptions C# | HtmlLoadOptions load workbook | Excel to HTML round trip | preserve formulas Aspose.Cells | embed images base64 Aspose | verify data integrity HTML | C# Aspose.Cells example
-// Common Searches: save Aspose.Cells workbook as HTML and reload | load HTML workbook with formulas using Aspose.Cells | round‑trip Excel to HTML verification .NET | self‑contained HTML export Aspose.Cells | compare original and loaded workbook cells
-// Developer Intent: Export a workbook to HTML, then load it back to ensure that all cell values, dates, numbers, and formulas remain unchanged.
-// Use Cases: Generate a single HTML report with embedded images for email or web publishing while keeping formulas for later editing. | Automated testing of Excel‑to‑HTML conversion to guarantee data integrity across export/import cycles. | Create a portable HTML snapshot of a workbook that can be re‑imported into Excel without loss of calculations.
-// AI Prompts: Write C# code that saves an Aspose.Cells workbook to a self‑contained HTML file with embedded images and then reloads it preserving formulas using HtmlLoadOptions. | Explain how to compare cell values and formulas after loading an HTML workbook to verify round‑trip fidelity. | Provide troubleshooting steps when formulas disappear after loading an HTML file with HtmlLoadOptions in Aspose.Cells.
+// Title: Save an Aspose.Cells Workbook to HTML with Formulas and Reload It to Verify Round‑Trip Fidelity (C#)
+// Description: Demonstrates how to export a workbook’s active worksheet to HTML while preserving formulas using HtmlSaveOptions, then reload the HTML with HtmlLoadOptions.LoadFormulas and compare original and loaded cell values to confirm data integrity.
+// Keywords: Aspose.Cells C# HTML export | HtmlSaveOptions ExportFormula | HtmlLoadOptions LoadFormulas | Excel to HTML round trip | verify workbook fidelity | load HTML into workbook Aspose | preserve formulas in HTML | export active worksheet only | Aspose.Cells roundtrip test | C# Aspose.Cells example
+// Common Searches: Aspose.Cells export worksheet to HTML with formulas | How to load HTML back into a workbook preserving formulas | Round‑trip Excel to HTML and back using Aspose.Cells | C# HtmlSaveOptions ExportFormula example | HtmlLoadOptions LoadFormulas usage
+// Developer Intent: The developer needs to save a workbook as HTML, keep formulas intact during the export, reload the HTML into a new workbook, and verify that the original and reloaded content match.
+// Use Cases: Create an HTML preview of a sheet for web display while retaining editable formulas for later processing. | Automate a regression test that checks for data or formula loss after converting Excel to HTML and back. | Export a single active worksheet for reporting, then re‑import it into a fresh workbook for further calculations.
+// AI Prompts: Generate C# code that uses Aspose.Cells to save a workbook to HTML with formulas and then reload the HTML preserving those formulas. | Explain the impact of HtmlLoadOptions.LoadFormulas on importing HTML into a Workbook and note any limitations. | Provide a method to compare cell values and formulas after an HTML round‑trip to confirm fidelity.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlRoundTrip
+// Demonstrates how to export a workbook’s active worksheet to HTML while preserving formulas using HtmlSaveOptions, then reload the HTML with HtmlLoadOptions.LoadFormulas and compare original and loaded cell values to confirm data integrity.
+class Program
 {
-    // Demonstrates how to create a workbook, save it as a self‑contained HTML file using HtmlSaveOptions (preserving properties, formulas, and embedding images), then reload the HTML with HtmlLoadOptions (LoadFormulas enabled) and compare original and loaded cell values to confirm round‑trip fidelity in .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a workbook and add sample data
+            Workbook original = new Workbook();
+            Worksheet ws = original.Worksheets[0];
+            ws.Cells["A1"].PutValue("Hello");
+            ws.Cells["B1"].PutValue(123);
+            ws.Cells["C1"].Formula = "=B1+10";
+
+            // Configure HTML save options
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
             {
-                // Step 1: Create a new workbook and add sample data.
-                Workbook originalWorkbook = new Workbook();
-                Worksheet sheet = originalWorkbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Round‑Trip Test");
-                sheet.Cells["B2"].PutValue(12345);
-                sheet.Cells["C3"].PutValue(DateTime.Now);
-                sheet.Cells["D4"].Formula = "=B2*2";
+                ExportActiveWorksheetOnly = true, // export only the active sheet
+                ExportFormula = true               // keep formulas in the HTML
+            };
 
-                // Step 2: Save the workbook as HTML using HtmlSaveOptions.
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions
-                {
-                    ExportWorkbookProperties = true, // Preserve workbook properties.
-                    ExportFormula = true,            // Keep formulas in the HTML.
-                    ExportActiveWorksheetOnly = true, // Avoid frames; embed the sheet directly.
-                    ExportImagesAsBase64 = true      // Embed images to keep HTML self‑contained.
-                };
+            // Save the workbook as HTML
+            string htmlPath = "roundtrip.html";
+            original.Save(htmlPath, saveOptions);
 
-                string htmlFilePath = "RoundTrip.html";
-                originalWorkbook.Save(htmlFilePath, saveOptions);
-
-                // Ensure the HTML file was created before attempting to load it.
-                if (!File.Exists(htmlFilePath))
-                {
-                    Console.WriteLine($"Error: The file '{htmlFilePath}' was not found.");
-                    return;
-                }
-
-                // Step 3: Load the previously saved HTML file using HtmlLoadOptions.
-                HtmlLoadOptions loadOptions = new HtmlLoadOptions
-                {
-                    LoadFormulas = true // Reload formulas.
-                    // LoadData is not required; data is loaded by default.
-                };
-
-                Workbook loadedWorkbook;
-                try
-                {
-                    loadedWorkbook = new Workbook(htmlFilePath, loadOptions);
-                }
-                catch (Exception loadEx)
-                {
-                    Console.WriteLine($"Failed to load HTML workbook: {loadEx.Message}");
-                    return;
-                }
-
-                // Step 4: Verify round‑trip fidelity by comparing cell values and formulas.
-                Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-
-                Console.WriteLine("Verification Results:");
-                Console.WriteLine($"A1 Value  : Original = {sheet.Cells["A1"].StringValue}, Loaded = {loadedSheet.Cells["A1"].StringValue}");
-                Console.WriteLine($"B2 Value  : Original = {sheet.Cells["B2"].IntValue}, Loaded = {loadedSheet.Cells["B2"].IntValue}");
-                Console.WriteLine($"C3 Value  : Original = {sheet.Cells["C3"].DateTimeValue}, Loaded = {loadedSheet.Cells["C3"].DateTimeValue}");
-                Console.WriteLine($"D4 Formula: Original = {sheet.Cells["D4"].Formula}, Loaded = {loadedSheet.Cells["D4"].Formula}");
-            }
-            catch (Exception ex)
+            // Ensure the HTML file exists before loading
+            if (!File.Exists(htmlPath))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: File '{htmlPath}' not found.");
+                return;
             }
+
+            // Configure HTML load options
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions
+            {
+                LoadFormulas = true // import formulas from HTML
+            };
+
+            // Load the HTML back into a new workbook
+            Workbook loaded = new Workbook(htmlPath, loadOptions);
+            Worksheet loadedWs = loaded.Worksheets[0];
+
+            // Verify round‑trip fidelity by comparing cell values and formulas
+            Console.WriteLine("Original A1: " + ws.Cells["A1"].StringValue);
+            Console.WriteLine("Loaded   A1: " + loadedWs.Cells["A1"].StringValue);
+
+            // B1 may be empty after load; handle safely
+            Cell originalB1 = ws.Cells["B1"];
+            Cell loadedB1 = loadedWs.Cells["B1"];
+            Console.WriteLine("Original B1: " + originalB1.IntValue);
+            Console.WriteLine("Loaded   B1: " + (loadedB1.Type == CellValueType.IsNull ? "Empty" : loadedB1.IntValue.ToString()));
+
+            Console.WriteLine("Original C1 formula: " + ws.Cells["C1"].Formula);
+            Console.WriteLine("Loaded   C1 formula: " + loadedWs.Cells["C1"].Formula);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

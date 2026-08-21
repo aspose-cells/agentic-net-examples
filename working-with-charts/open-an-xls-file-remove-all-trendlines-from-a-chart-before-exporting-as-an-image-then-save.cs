@@ -1,74 +1,91 @@
-// Title: C# – Remove Trendlines from XLS Charts and Export as PNG with Aspose.Cells
-// Description: Loads an XLS workbook, iterates through each worksheet and its charts, removes all trendlines when the API supports it, exports every chart to a PNG image, and saves the workbook as XLSX using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells chart trendline removal | C# export chart to PNG | Aspose.Cells remove trendlines | XLS chart image export .NET | Aspose.Cells save workbook after chart processing | Aspose.Cells chart manipulation C# | remove trendlines before chart export | Aspose.Cells version check trendlines
-// Common Searches: how to delete trendlines from a chart using Aspose.Cells C# | export chart as PNG without trendlines Aspose.Cells | Aspose.Cells remove chart trendlines before image export | save XLS workbook after chart modifications Aspose.Cells | Aspose.Cells chart image export example
-// Developer Intent: Iterate over all charts in an XLS workbook, strip any trendlines, export each chart as a PNG image, and save the workbook in XLSX format.
-// Use Cases: Create PNG assets for every chart in a legacy XLS report for web publishing. | Remove proprietary trendline calculations before sharing the workbook with external partners. | Migrate old XLS files to XLSX while preserving chart visuals as separate image files.
-// AI Prompts: Generate C# code with Aspose.Cells that deletes all trendlines from each chart before exporting the chart to a PNG image. | Show how to detect the Aspose.Cells version at runtime and use the Series.Trendlines collection to remove trendlines, with a fallback for older releases. | Refactor the sample to include robust error handling, version checking, and optional trendline removal while exporting charts and saving the workbook.
+// Title: Remove Trendlines from Excel Charts and Export as PNG with Aspose.Cells for .NET
+// Description: Loads an XLS workbook, iterates through every worksheet and chart, deletes all trendlines from each series (using reflection for compatibility), saves the cleaned workbook, and exports each chart as a PNG image.
+// Keywords: Aspose.Cells remove trendlines | Excel chart export PNG .NET | delete chart trendlines C# | Aspose.Cells chart image without trendlines | reflection trendline removal Aspose | batch process Excel charts | save modified workbook Aspose.Cells
+// Common Searches: how to delete trendlines from all charts in an XLS file using Aspose.Cells | export Excel chart as PNG after removing trendlines .NET | remove chart trendlines programmatically Aspose.Cells | save workbook after chart modifications Aspose.Cells | C# code to export chart image without trendlines
+// Developer Intent: Load an existing XLS file, strip every trendline from each chart, export the cleaned charts as PNG images, and write the updated workbook to a new file.
+// Use Cases: Prepare presentation‑ready chart images by eliminating trendlines before export. | Automate cleanup of legacy Excel reports for bulk image generation. | Ensure compatibility with downstream systems that cannot interpret trendline objects.
+// AI Prompts: Show a version of this code that removes trendlines without using reflection. | Suggest how to export charts at higher DPI while keeping trendlines removed. | Explain how to handle workbooks that contain no charts or no trendlines gracefully.
 
 using System;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsTrendlineRemoval
+// Loads an XLS workbook, iterates through every worksheet and chart, deletes all trendlines from each series (using reflection for compatibility), saves the cleaned workbook, and exports each chart as a PNG image.
+class RemoveTrendlinesAndExportImage
 {
-    // Loads an XLS workbook, iterates through each worksheet and its charts, removes all trendlines when the API supports it, exports every chart to a PNG image, and saves the workbook as XLSX using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the source XLS file
-            string sourcePath = "input.xls";
+            const string inputPath = "input.xls";
+            const string outputPath = "output.xls";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {sourcePath}");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            try
+            // Load the existing XLS workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet worksheet in workbook.Worksheets)
             {
-                // Load the workbook
-                using (Workbook workbook = new Workbook(sourcePath))
+                // Iterate through all charts on the current worksheet
+                for (int chartIndex = 0; chartIndex < worksheet.Charts.Count; chartIndex++)
                 {
-                    // Iterate through all worksheets
-                    foreach (Worksheet sheet in workbook.Worksheets)
+                    Chart chart = worksheet.Charts[chartIndex];
+
+                    // Remove every trendline from each series of the chart (using reflection for compatibility)
+                    foreach (Series series in chart.NSeries)
                     {
-                        // Iterate through all charts in the worksheet
-                        for (int i = 0; i < sheet.Charts.Count; i++)
+                        PropertyInfo trendlinesProp = series.GetType().GetProperty("Trendlines");
+                        if (trendlinesProp != null)
                         {
-                            Chart chart = sheet.Charts[i];
-
-                            // Export the chart to an image file
-                            string imagePath = $"Chart_{sheet.Name}_{i}.png";
-                            try
+                            object trendlinesObj = trendlinesProp.GetValue(series);
+                            if (trendlinesObj != null)
                             {
-                                chart.ToImage(imagePath);
+                                // TrendlineCollection implements IList, so we can treat it as such
+                                var trendlines = trendlinesObj as System.Collections.IList;
+                                if (trendlines != null && trendlines.Count > 0)
+                                {
+                                    // Remove trendlines in reverse order to avoid index shifting
+                                    for (int t = trendlines.Count - 1; t >= 0; t--)
+                                    {
+                                        MethodInfo removeAt = trendlines.GetType().GetMethod("RemoveAt");
+                                        removeAt?.Invoke(trendlines, new object[] { t });
+                                    }
+                                }
                             }
-                            catch (Exception imgEx)
-                            {
-                                Console.WriteLine($"Failed to export chart image: {imgEx.Message}");
-                            }
-
-                            // Note: Trendline removal is not supported in this version of Aspose.Cells.
-                            // If needed, upgrade to a newer version where Series.Trendlines is available.
                         }
                     }
 
-                    // Save the modified workbook (as XLSX to ensure compatibility)
-                    string outputPath = "output.xlsx";
-                    workbook.Save(outputPath, SaveFormat.Xlsx);
+                    // Export the chart (now without trendlines) to an image file
+                    try
+                    {
+                        string imageFileName = $"Chart_{worksheet.Name}_{chartIndex}.png";
+                        chart.ToImage(imageFileName, ImageType.Png);
+                        Console.WriteLine($"Chart exported to \"{imageFileName}\".");
+                    }
+                    catch (Exception imgEx)
+                    {
+                        Console.WriteLine($"Failed to export chart image: {imgEx.Message}");
+                    }
                 }
+            }
 
-                Console.WriteLine("Charts exported and workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved as \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

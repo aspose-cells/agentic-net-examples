@@ -1,10 +1,10 @@
-// Title: Create an In‑Memory PNG Chart with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to build a workbook, add sample data, insert a column chart, and render the chart directly to a PNG image stored in a MemoryStream using Aspose.Cells' Chart.ToImage method. The stream is created via a custom implementation factory, eliminating any temporary file writes and providing the image bytes for further processing.
-// Keywords: Aspose.Cells chart memory stream | C# export chart to PNG | Aspose.Cells ToImage without file | in‑memory chart image .NET | chart byte array Aspose.Cells | CustomImplementationFactory MemoryStream | Aspose.Cells chart rendering | no disk I/O chart export
-// Common Searches: Aspose.Cells render chart to MemoryStream C# | Export Aspose.Cells chart as PNG without saving file | Chart.ToImage MemoryStream example | Convert Aspose.Cells chart to byte array | Create chart image in memory Aspose.Cells .NET
-// Developer Intent: Generate a PNG image of an Aspose.Cells chart directly into a MemoryStream to avoid any file system operations.
-// Use Cases: Return the chart image bytes from a Web API response. | Store the chart PNG in a database BLOB for later retrieval. | Attach the in‑memory chart image to an email without creating a temporary file. | Upload the chart byte array to cloud storage (e.g., Azure Blob, Amazon S3) directly from memory.
-// AI Prompts: Show how to change the code to export the chart as a JPEG into a MemoryStream. | Provide a snippet that uploads the chart image bytes from the MemoryStream to Azure Blob Storage. | Explain how to reuse a single MemoryStream to render multiple charts sequentially.
+// Title: Render Aspose.Cells Chart to PNG in a MemoryStream (C#)
+// Description: Shows how to build a workbook, add sample data, create a column chart, and export the chart directly to a PNG image stored in a MemoryStream using Aspose.Cells for .NET, avoiding any intermediate files.
+// Keywords: Aspose.Cells | chart to MemoryStream | export chart PNG C# | ToImage MemoryStream | in‑memory chart image | no file system | custom implementation factory | .NET chart rendering
+// Common Searches: Aspose.Cells export chart to MemoryStream C# | How to get chart image bytes with Aspose.Cells | Render chart as PNG without saving file Aspose | C# chart ToImage MemoryStream example | Aspose.Cells chart image for web API
+// Developer Intent: Create a chart image in memory with Aspose.Cells so the PNG can be consumed programmatically without writing to disk.
+// Use Cases: Return the chart PNG from a REST endpoint as a byte array. | Embed the in‑memory chart image in an automated email attachment. | Save the chart bytes as a BLOB in a database. | Convert the image to Base64 for inclusion in JSON responses.
+// AI Prompts: Generate C# code that adds a title to the chart and renders it as a JPEG into a MemoryStream using Aspose.Cells. | Explain how to transform the MemoryStream bytes into a Base64 string for API output. | Show how to reuse a single MemoryStream to produce multiple chart images sequentially.
 
 using System;
 using System.IO;
@@ -12,7 +12,7 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to build a workbook, add sample data, insert a column chart, and render the chart directly to a PNG image stored in a MemoryStream using Aspose.Cells' Chart.ToImage method. The stream is created via a custom implementation factory, eliminating any temporary file writes and providing the image bytes for further processing.
+// Shows how to build a workbook, add sample data, create a column chart, and export the chart directly to a PNG image stored in a MemoryStream using Aspose.Cells for .NET, avoiding any intermediate files.
 class ChartToImageMemoryStreamDemo
 {
     static void Main()
@@ -37,22 +37,22 @@ class ChartToImageMemoryStreamDemo
         chart.NSeries.Add("B2:B3", true);
         chart.NSeries.CategoryData = "A2:A3";
 
-        // Create a MemoryStream via the provided factory (no direct new MemoryStream)
+        // Create a MemoryStream using the provided factory rule
         CustomImplementationFactory factory = new CustomImplementationFactory();
         using (MemoryStream imageStream = factory.CreateMemoryStream())
         {
-            // Render the chart into the stream as PNG using the Chart.ToImage overload
+            // Render the chart to PNG format directly into the memory stream
             chart.ToImage(imageStream, ImageType.Png);
 
-            // Reset the position if the stream will be read later
+            // Reset the stream position if you need to read from it later
             imageStream.Position = 0;
 
-            // Demonstrate that the image is in memory (no file written)
-            Console.WriteLine($"Chart image generated in memory. Stream length = {imageStream.Length} bytes.");
+            // Example: obtain the image bytes (still in memory, no file written)
+            byte[] imageBytes = imageStream.ToArray();
 
-            // Example: obtain the raw bytes for further processing
-            byte[] chartImageBytes = imageStream.ToArray();
-            // chartImageBytes can now be sent over a network, stored in a database, etc.
+            Console.WriteLine($"Chart image generated in memory. Byte size: {imageBytes.Length}");
         }
+
+        // No intermediate files are written to disk; the chart image resides only in memory.
     }
 }

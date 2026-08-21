@@ -1,38 +1,38 @@
-// Title: Disable Shape Reflections in Excel with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel file, iterates through every worksheet and shape, sets each shape's Reflection.Type to None, and saves the workbook, leaving all other visual effects untouched.
-// Keywords: Aspose.Cells C# disable reflection | remove shape reflection Excel | preserve shape effects Aspose | iterate shapes worksheet | ReflectionEffectType.None example
-// Common Searches: how to turn off reflections on all Excel shapes using Aspose.Cells | C# code to remove shape reflection while keeping other effects | Aspose.Cells loop through shapes and disable reflection
-// Developer Intent: Programmatically eliminate reflection effects from every shape in a workbook without altering other formatting.
-// Use Cases: Prepare a report for printing where reflections cause visual noise. | Standardize the appearance of templates before distribution. | Automate cleanup of legacy workbooks that contain unwanted shape reflections.
-// AI Prompts: Generate C# code that disables reflections on all shapes in an Excel workbook using Aspose.Cells and preserves other effects. | Explain the steps to loop through worksheets and shapes to set Reflection.Type to None in Aspose.Cells. | Show how to verify a shape has a reflection before clearing it to avoid redundant assignments.
+// Title: C# – Disable All Shape Reflections in an Excel Workbook with Aspose.Cells (Preserve Other Effects)
+// Description: Loads a workbook, walks through every worksheet and shape, sets each shape's Reflection.Type to None to turn off reflections while keeping all other visual effects, and saves the result to a new file.
+// Keywords: Aspose.Cells shape reflection | disable shape reflection .NET | Reflection.Type None | iterate shapes Aspose.Cells | preserve shape effects Excel
+// Common Searches: how to remove reflections from all shapes using Aspose.Cells | Aspose.Cells disable shape reflection C# | turn off shape reflections while keeping other effects | batch remove Excel shape reflections Aspose
+// Developer Intent: Remove the reflection effect from every shape in an Excel workbook without altering any other formatting or visual properties.
+// Use Cases: Prepare a printable report where shape reflections cause visual noise. | Standardize the appearance of templates before distribution by disabling reflections. | Automate batch processing of multiple workbooks to ensure consistent shape styling.
+// AI Prompts: Write C# code with Aspose.Cells that disables reflections on all shapes in a workbook and saves the file. | Explain how to modify only the reflection property of shapes while leaving other effects untouched in Aspose.Cells for .NET. | Extend the sample to log each shape's name or ID when its reflection is turned off.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an Excel file, iterates through every worksheet and shape, sets each shape's Reflection.Type to None, and saves the workbook, leaving all other visual effects untouched.
+// Loads a workbook, walks through every worksheet and shape, sets each shape's Reflection.Type to None to turn off reflections while keeping all other visual effects, and saves the result to a new file.
 class DisableShapeReflections
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
+        // Load an existing workbook (replace with your file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Loop through all worksheets
+        // Iterate through all worksheets
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Loop through all shapes in the current worksheet
+            // Iterate through all shapes in the worksheet
             foreach (Shape shape in sheet.Shapes)
             {
-                // Get the reflection effect of the shape
+                // Access the reflection effect of the shape
                 ReflectionEffect reflection = shape.Reflection;
 
-                // Disable the reflection while keeping other effects intact
+                // Disable reflection by setting its type to None
                 reflection.Type = ReflectionEffectType.None;
             }
         }
 
-        // Save the workbook with reflections disabled
+        // Save the modified workbook
         workbook.Save("output.xlsx");
     }
 }

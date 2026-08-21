@@ -1,69 +1,65 @@
-// Title: C# – Apply Theme Accent6 Color to Header Row in Excel with Aspose.Cells
-// Description: Creates a workbook, writes header cells, adds sample data, defines a style that uses the workbook’s Accent6 theme color for both background and font, applies the style to the first row, and saves the file as ReportWithAccent6Header.xlsx.
-// Keywords: Aspose.Cells C# theme color | Accent6 header style | Excel header background theme | Apply theme color Aspose.Cells | StyleFlag row styling | C# Excel report formatting | ThemeColorType Accent6 | dynamic Excel report Aspose | set header font theme color | solid background theme color
-// Common Searches: Aspose.Cells set header row background to Accent6 | C# apply theme color to Excel row | How to use ThemeColor Accent6 in Aspose.Cells | Apply style to entire row Aspose.Cells C# | Excel report header theme color Aspose.Cells | Create styled header with theme colors in .NET
-// Developer Intent: Apply the workbook’s Accent6 theme color to the header row of a generated Excel report.
-// Use Cases: Generate a sales summary where the header row follows the corporate Accent6 branding. | Export inventory data from a web service with a themed header that matches the document’s default palette. | Create automated Excel reports in a Windows service that automatically adopt the workbook’s Accent6 color for consistency. | Build a multi‑sheet financial workbook where each sheet’s header uses the same Accent6 style for unified appearance.
-// AI Prompts: Show how to add a thin border to the Accent6‑styled header row while keeping the background and font colors unchanged. | Generate C# code that creates a custom theme, sets Accent6 as the header background, and applies the style to several worksheets in one workbook. | Explain how to read the current Accent6 color value from the workbook theme and use it in a conditional formatting rule with Aspose.Cells.
+// Title: C# – Apply Theme Accent6 to Header Row in a Dynamic Excel Report with Aspose.Cells
+// Description: Creates a new workbook, fills header and data rows, defines a style that uses the workbook's Accent6 theme color for both cell fill and font, applies the style to the first row, and saves the file as DynamicReport.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# theme color | Accent6 Excel header style | apply theme color Aspose.Cells | Excel header formatting .NET | dynamic report styling Aspose | ThemeColor Accent6 C# | Excel workbook theme styling
+// Common Searches: Aspose.Cells set Accent6 theme color for header | C# apply theme color to Excel row | how to use ThemeColor in Aspose.Cells | format Excel header with theme accent in .NET | apply solid background theme color Aspose.Cells
+// Developer Intent: Use the workbook's Accent6 theme color for the background and font of the header row in a generated Excel file.
+// Use Cases: Standardize the look of sales or inventory reports by applying the corporate Accent6 color to column titles. | Create multi‑sheet workbooks where each sheet shares a consistent header style based on the workbook theme. | Generate automated Excel exports from applications that need branding without hard‑coding RGB values.
+// AI Prompts: Show how to switch the header style to another theme accent (e.g., Accent2) in the same code. | Demonstrate applying the Accent6 style to a specific range like A1:D1 instead of the whole row. | Explain how to combine the Accent6 theme color with a patterned fill or gradient using Aspose.Cells.
 
 using System;
-using System.IO;
+using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+namespace ReportGenerator
 {
-    // Creates a workbook, writes header cells, adds sample data, defines a style that uses the workbook’s Accent6 theme color for both background and font, applies the style to the first row, and saves the file as ReportWithAccent6Header.xlsx.
+    // Creates a new workbook, fills header and data rows, defines a style that uses the workbook's Accent6 theme color for both cell fill and font, applies the style to the first row, and saves the file as DynamicReport.xlsx using Aspose.Cells for .NET.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Sample data for the report
+            string[] headers = { "ID", "Name", "Quantity", "Price" };
+            string[,] data = {
+                { "1", "Apple",  "50", "0.5" },
+                { "2", "Banana", "30", "0.3" },
+                { "3", "Cherry", "20", "1.2" }
+            };
+
+            // Populate header row (row 0)
+            for (int col = 0; col < headers.Length; col++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Populate header row
-                string[] headers = { "ID", "Name", "Quantity", "Price", "Total" };
-                for (int col = 0; col < headers.Length; col++)
-                {
-                    cells[0, col].PutValue(headers[col]);
-                }
-
-                // Populate sample data rows
-                for (int row = 1; row <= 5; row++)
-                {
-                    cells[row, 0].PutValue(row);                     // ID
-                    cells[row, 1].PutValue($"Item {row}");           // Name
-                    cells[row, 2].PutValue(row * 2);                 // Quantity
-                    cells[row, 3].PutValue(row * 10.5);              // Price
-                    // Total = Quantity * Price
-                    cells[row, 4].Formula = $"C{row + 1}*D{row + 1}";
-                }
-
-                // Create a style that uses the theme's Accent6 color for background and font
-                Style headerStyle = workbook.CreateStyle();
-                headerStyle.Pattern = BackgroundType.Solid;
-                headerStyle.BackgroundThemeColor = new ThemeColor(ThemeColorType.Accent6, 0);
-                headerStyle.Font.IsBold = true;
-                headerStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent6, 0);
-
-                // Apply the style to the entire header row
-                Row headerRow = worksheet.Cells.Rows[0];
-                StyleFlag flag = new StyleFlag { All = true };
-                headerRow.ApplyStyle(headerStyle, flag);
-
-                // Save the workbook
-                string outputPath = Path.Combine(Environment.CurrentDirectory, "ReportWithAccent6Header.xlsx");
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+                cells[0, col].PutValue(headers[col]);
             }
-            catch (Exception ex)
+
+            // Populate data rows starting from row 1
+            for (int row = 0; row < data.GetLength(0); row++)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                for (int col = 0; col < data.GetLength(1); col++)
+                {
+                    cells[row + 1, col].PutValue(data[row, col]);
+                }
             }
+
+            // Create a style that uses the theme's Accent6 color for background and font
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.Pattern = BackgroundType.Solid;
+            // Apply Accent6 as the foreground (cell fill) theme color
+            headerStyle.ForegroundThemeColor = new ThemeColor(ThemeColorType.Accent6, 0);
+            // Apply Accent6 as the font theme color
+            headerStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent6, 0);
+            headerStyle.Font.IsBold = true;
+
+            // Apply the style to the entire header row
+            StyleFlag flag = new StyleFlag { All = true };
+            worksheet.Cells.Rows[0].ApplyStyle(headerStyle, flag);
+
+            // Save the workbook
+            workbook.Save("DynamicReport.xlsx");
         }
     }
 }

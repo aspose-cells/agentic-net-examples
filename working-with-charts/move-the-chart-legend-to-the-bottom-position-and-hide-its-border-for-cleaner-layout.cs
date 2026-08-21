@@ -1,6 +1,15 @@
+// Title: Aspose.Cells .NET: Move Chart Legend to Bottom and Hide Its Border
+// Description: Creates a workbook, adds a column chart, positions the legend at the bottom, disables the legend border, and saves the file as ChartWithBottomLegend.xlsx using Aspose.Cells for C#.
+// Keywords: Aspose.Cells | .NET chart legend position | legend bottom Aspose.Cells | hide legend border C# | Excel chart formatting Aspose | C# Aspose.Cells legend customization
+// Common Searches: Aspose.Cells set legend to bottom .NET | remove legend border Aspose.Cells C# | chart legend position bottom Aspose.Cells | hide chart legend border Aspose.Cells example | C# Aspose.Cells chart legend formatting
+// Developer Intent: Place the chart legend at the bottom and hide its border.
+// Use Cases: Design clean Excel reports where legends are positioned below the chart for better readability. | Apply corporate styling that requires legend borders to be invisible across multiple charts. | Automate generation of dashboards with consistently formatted legends in a .NET application.
+// AI Prompts: Show C# code to set a chart legend to the bottom and hide its border using Aspose.Cells. | Give an example of customizing legend position and border visibility for any chart type in Aspose.Cells .NET. | Explain how to programmatically adjust legend properties for multiple charts in a workbook with Aspose.Cells.
+
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
+// Creates a workbook, adds a column chart, positions the legend at the bottom, disables the legend border, and saves the file as ChartWithBottomLegend.xlsx using Aspose.Cells for C#.
 class Program
 {
     static void Main()

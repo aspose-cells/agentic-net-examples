@@ -1,62 +1,81 @@
-// Title: Validate Worksheet Charts Before PDF Export with Aspose.Cells for .NET (C#)
-// Description: C# example that creates sample data, adds a column chart, checks Worksheet.Charts.Count, aborts if no chart exists, and exports each chart to a separate PDF using Chart.ToPdf. Includes optional full‑workbook PDF save.
-// Keywords: Aspose.Cells C# chart validation | Worksheet.Charts.Count check | Chart.ToPdf example | export chart to PDF Aspose.Cells | Aspose.Cells PDF export .NET | Aspose.Cells USA | Aspose.Cells Europe | Aspose.Cells India | C# Aspose.Cells sample code | PDF generation from Excel charts
-// Common Searches: how to verify a worksheet has charts before saving to PDF Aspose.Cells | c# export each chart as separate PDF using Aspose.Cells | prevent empty PDF when no charts in Aspose.Cells worksheet | Aspose.Cells chart to PDF code sample | check worksheet charts count before PDF export
-// Developer Intent: Confirm that at least one chart exists on a worksheet before performing any PDF export operations.
-// Use Cases: Skip PDF generation when a worksheet contains no charts to avoid empty files. | Export every chart on a worksheet to individual PDF documents. | Save the entire workbook as a PDF after confirming chart presence.
-// AI Prompts: Write C# code that checks Worksheet.Charts.Count and calls Chart.ToPdf only when the count is greater than zero. | Show a loop that iterates through all charts in a worksheet and saves each as a separate PDF using Aspose.Cells. | Provide a complete example that adds sample data, creates a chart, validates chart existence, and optionally saves the whole workbook to PDF.
+// Title: Validate Chart Presence Before Exporting a Worksheet to PDF with Aspose.Cells for .NET
+// Description: This example creates a workbook, adds sample data and a column chart, checks whether the worksheet contains at least one chart, aborts the PDF conversion if none are found, and otherwise saves the file as PDF using PdfSaveOptions with RefreshChartCache enabled.
+// Keywords: Aspose.Cells chart validation | PDF export conditional on chart | RefreshChartCache .NET | Worksheet chart count check | skip PDF conversion without chart
+// Common Searches: Aspose.Cells verify chart before PDF | C# export worksheet to PDF only if chart exists | how to prevent PDF save when no chart in Excel | check Excel sheet for charts using Aspose.Cells
+// Developer Intent: Export a worksheet to PDF only when it contains at least one chart, otherwise skip the conversion.
+// Use Cases: Automated financial reports that include charts only when visual data is present. | Batch processing of multiple sheets, exporting PDFs for chart‑enabled worksheets while ignoring empty ones. | Conditional PDF generation in a dashboard that skips sheets lacking sales trend charts.
+// AI Prompts: Generate a reusable C# method that validates a worksheet for at least one chart and throws a custom exception if none are found before calling Workbook.Save with PdfSaveOptions. | Show how to log chart‑validation results for each worksheet in a multi‑sheet workbook and continue processing the remaining sheets. | Provide code that iterates through all worksheets, exports only those with charts to separate PDF files, and creates a summary report of skipped sheets.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Rendering;
 
 namespace AsposeCellsChartValidation
 {
-    // C# example that creates sample data, adds a column chart, checks Worksheet.Charts.Count, aborts if no chart exists, and exports each chart to a separate PDF using Chart.ToPdf. Includes optional full‑workbook PDF save.
-    class Program
+    // This example creates a workbook, adds sample data and a column chart, checks whether the worksheet contains at least one chart, aborts the PDF conversion if none are found, and otherwise saves the file as PDF using PdfSaveOptions with RefreshChartCache enabled.
+    public class ExportWithChartCheck
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data for a potential chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["A4"].PutValue("C");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["B4"].PutValue(30);
-
-            // Add a chart to the worksheet (comment out to test validation when no chart exists)
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Validate that the worksheet contains at least one chart before exporting
-            if (worksheet.Charts.Count == 0)
+            try
             {
-                Console.WriteLine("The worksheet does not contain any charts. PDF export aborted.");
-                return;
-            }
+                // Create a new workbook (replace with Workbook("input.xlsx") if a template file is needed)
+                Workbook workbook = new Workbook();
 
-            // Export each chart to a separate PDF file
-            for (int i = 0; i < worksheet.Charts.Count; i++)
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Populate sample data
+                worksheet.Cells["A1"].PutValue("Category");
+                worksheet.Cells["A2"].PutValue("A");
+                worksheet.Cells["A3"].PutValue("B");
+                worksheet.Cells["A4"].PutValue("C");
+                worksheet.Cells["B1"].PutValue("Value");
+                worksheet.Cells["B2"].PutValue(10);
+                worksheet.Cells["B3"].PutValue(20);
+                worksheet.Cells["B4"].PutValue(30);
+
+                // Add a chart (comment out this block to test validation when no chart exists)
+                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                Chart chart = worksheet.Charts[chartIndex];
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Validate that the worksheet contains at least one chart
+                if (worksheet.Charts.Count == 0)
+                {
+                    Console.WriteLine("The worksheet does not contain any charts. PDF export aborted.");
+                    return;
+                }
+
+                // Set PDF save options to refresh chart cache
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    RefreshChartCache = true
+                };
+
+                // Define output file path
+                string outputPath = "ExportedWithChart.pdf";
+
+                // Save the workbook as PDF
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"Workbook exported to PDF successfully: {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
             {
-                Chart c = worksheet.Charts[i];
-                string pdfPath = $"Chart_{i + 1}.pdf";
-                c.ToPdf(pdfPath);
-                Console.WriteLine($"Chart {i + 1} exported to PDF: {pdfPath}");
+                Console.WriteLine($"An error occurred during export: {ex.Message}");
             }
+        }
+    }
 
-            // Optionally, export the entire workbook to PDF (charts will be included)
-            // workbook.Save("WorkbookWithCharts.pdf", SaveFormat.Pdf);
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ExportWithChartCheck.Run();
         }
     }
 }

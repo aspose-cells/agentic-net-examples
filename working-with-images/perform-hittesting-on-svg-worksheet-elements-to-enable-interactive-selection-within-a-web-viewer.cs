@@ -1,111 +1,104 @@
-// Title: Create Interactive SVG from Excel with Hit‑Test Data using Aspose.Cells for .NET
-// Description: A C# example that builds a workbook, adds a rectangle shape, renders the sheet to SVG, and uses a custom DrawObjectEventHandler to capture each object's type, sheet index, page number and bounding box. The hit‑test information is saved as JSON, enabling client‑side click detection and interactivity in web viewers.
-// Keywords: Aspose.Cells SVG | C# hit test | DrawObjectEventHandler | Excel to SVG clickable | SVG element coordinates | export worksheet as SVG | interactive SVG Excel | JSON hit‑test mapping | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells capture SVG element positions | C# render Excel worksheet to SVG with hit test | How to get bounding boxes of shapes in SVG using Aspose.Cells | Export Excel to SVG and generate click map | DrawObjectEventHandler example for SVG
-// Developer Intent: Collect geometric data of every drawn object during SVG export so the front‑end can identify which element a user clicked.
-// Use Cases: Generate an SVG view of a spreadsheet and overlay JavaScript click handlers based on JSON‑encoded bounding boxes. | Create tooltips or pop‑ups for charts, images, and shapes by mapping SVG coordinates back to the original workbook. | Implement a web‑based spreadsheet viewer that allows users to select or edit objects directly on the SVG canvas.
-// AI Prompts: Extend SvgHitTestHandler to include object IDs and text content in the JSON output. | Show JavaScript code that loads HitTestMapping.json and highlights the clicked SVG shape. | Explain how to configure SvgImageOptions to fit the SVG to the viewport while preserving hit‑test data.
+// Title: Aspose.Cells .NET – Render Worksheet to SVG with DrawObject metadata for client‑side hit testing
+// Description: This example loads an Excel workbook, configures SvgImageOptions (FitToViewPort), attaches a custom DrawObjectEventHandler to capture each draw object's type, sheet index, page number, and bounding rectangle, saves the worksheet as SVG, and writes the collected data to a JSON file for interactive hit‑testing in a web viewer.
+// Keywords: Aspose.Cells | C# SVG rendering | draw object event handler | hit testing Excel SVG | FitToViewPort | worksheet to SVG | JSON map of SVG elements | interactive Excel viewer | client‑side hit test | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells export worksheet to SVG with element coordinates | How to capture draw object bounds during SVG rendering in C# | Generate JSON map for SVG hit testing using Aspose.Cells | Enable interactive selection of Excel cells in a web viewer | FitToViewPort option Aspose.Cells SVG
+// Developer Intent: Create an SVG of a worksheet and a JSON coordinate map to enable client‑side hit testing of Excel elements.
+// Use Cases: Render Excel sheets as SVG and provide a JSON map so JavaScript can highlight cells, charts, or shapes on hover. | Implement clickable charts or tables in a web dashboard that trigger server actions based on SVG element IDs. | Store draw‑object metadata for analytics, such as generating tooltips or exporting selected ranges.
+// AI Prompts: Write C# code that reads drawObjectsMap.json and returns the worksheet element at a given mouse coordinate. | Show how to extend SvgDrawObjectHandler to add a unique ID and layer information to the JSON output. | Explain how to integrate worksheet.svg and drawObjectsMap.json into a JavaScript front‑end for hit testing and interactive selection.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-// Custom handler to capture draw object details during SVG rendering
-// A C# example that builds a workbook, adds a rectangle shape, renders the sheet to SVG, and uses a custom DrawObjectEventHandler to capture each object's type, sheet index, page number and bounding box. The hit‑test information is saved as JSON, enabling client‑side click detection and interactivity in web viewers.
-class SvgHitTestHandler : DrawObjectEventHandler
+namespace AsposeCellsSvgHitTestDemo
 {
-    // List to store hit‑test information for each draw object
-    public List<Dictionary<string, object>> HitTestData { get; } = new List<Dictionary<string, object>>();
-
-    // Called for every draw object (shapes, charts, images, etc.)
-    public override void Draw(DrawObject drawObject, float x, float y, float width, float height)
+    // Custom handler to capture draw objects during SVG rendering
+    // This example loads an Excel workbook, configures SvgImageOptions (FitToViewPort), attaches a custom DrawObjectEventHandler to capture each draw object's type, sheet index, page number, and bounding rectangle, saves the worksheet as SVG, and writes the collected data to a JSON file for interactive hit‑testing in a web viewer.
+    class SvgDrawObjectHandler : DrawObjectEventHandler
     {
-        var info = new Dictionary<string, object>
+        // List to store information about each draw object
+        public List<DrawObjectInfo> ObjectsInfo { get; } = new List<DrawObjectInfo>();
+
+        public override void Draw(DrawObject drawObject, float x, float y, float width, float height)
         {
-            { "Type", drawObject.Type.ToString() },
-            { "SheetIndex", drawObject.SheetIndex },
-            { "Page", drawObject.CurrentPage + 1 }, // 1‑based page number
-            { "TotalPages", drawObject.TotalPages },
-            { "X", x },
-            { "Y", y },
-            { "Width", width },
-            { "Height", height }
-        };
-
-        HitTestData.Add(info);
-    }
-}
-
-class Program
-{
-    static void Main()
-    {
-        try
-        {
-            // -------------------------------------------------
-            // 1. Create a workbook and populate sample data
-            // -------------------------------------------------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Demo";
-
-            // Sample data
-            sheet.Cells["A1"].PutValue("Item");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["A3"].PutValue("Orange");
-            sheet.Cells["B3"].PutValue(85);
-
-            // Add a rectangle shape that we want to be clickable in the SVG
-            Shape rect = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 0, 5, 0, 200, 80);
-            rect.Text = "Click Me";
-
-            // -------------------------------------------------
-            // 2. Prepare SVG rendering options
-            // -------------------------------------------------
-            ImageOrPrintOptions renderOpts = new ImageOrPrintOptions
+            // Record relevant data for hit‑testing on the client side
+            ObjectsInfo.Add(new DrawObjectInfo
             {
-                ImageType = ImageType.Svg,
-                OnePagePerSheet = true
-                // FitToViewPort can be set via SvgImageOptions if the property is available in the used version
+                Type = drawObject.Type.ToString(),
+                SheetIndex = drawObject.SheetIndex,
+                Page = drawObject.CurrentPage + 1, // make it 1‑based for UI
+                X = x,
+                Y = y,
+                Width = width,
+                Height = height
+            });
+        }
+    }
+
+    // Simple DTO for serialization
+    class DrawObjectInfo
+    {
+        public string Type { get; set; }
+        public int SheetIndex { get; set; }
+        public int Page { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Width { get; set; }
+        public float Height { get; set; }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            // -----------------------------------------------------------------
+            // 1. Load an existing workbook (replace with your actual file path)
+            // -----------------------------------------------------------------
+            string workbookPath = "input.xlsx";
+            Workbook workbook = new Workbook(workbookPath);
+
+            // -----------------------------------------------------------------
+            // 2. Prepare SVG rendering options
+            // -----------------------------------------------------------------
+            SvgImageOptions svgOptions = new SvgImageOptions
+            {
+                // Ensure the generated SVG fits the viewport of the web viewer
+                FitToViewPort = true
             };
 
-            // Attach the custom draw‑object handler to collect hit‑test data
-            SvgHitTestHandler hitTestHandler = new SvgHitTestHandler();
-            renderOpts.DrawObjectEventHandler = hitTestHandler;
+            // -----------------------------------------------------------------
+            // 3. Attach the custom draw‑object handler to capture element bounds
+            // -----------------------------------------------------------------
+            SvgDrawObjectHandler handler = new SvgDrawObjectHandler();
+            svgOptions.DrawObjectEventHandler = handler;
 
-            // -------------------------------------------------
-            // 3. Render the worksheet to an SVG file
-            // -------------------------------------------------
-            SheetRender renderer = new SheetRender(sheet, renderOpts);
-            string svgPath = "WorksheetWithHitTest.svg";
-            renderer.ToImage(0, svgPath);
+            // -----------------------------------------------------------------
+            // 4. Render the first worksheet to SVG (in memory)
+            // -----------------------------------------------------------------
+            Worksheet sheet = workbook.Worksheets[0];
+            SheetRender renderer = new SheetRender(sheet, svgOptions);
 
-            // -------------------------------------------------
-            // 4. Persist the hit‑test mapping as a JSON file
-            // -------------------------------------------------
-            string jsonPath = "HitTestMapping.json";
-            string json = JsonSerializer.Serialize(hitTestHandler.HitTestData, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(jsonPath, json);
+            using (MemoryStream svgStream = new MemoryStream())
+            {
+                // Render page 0 (the only page because OnePagePerSheet is default for SVG)
+                renderer.ToImage(0, svgStream);
 
-            // -------------------------------------------------
-            // 5. Save the original workbook (optional)
-            // -------------------------------------------------
-            string workbookPath = "DemoWorkbook.xlsx";
-            workbook.Save(workbookPath);
+                // Save the SVG file for the web viewer
+                File.WriteAllBytes("worksheet.svg", svgStream.ToArray());
+            }
 
-            Console.WriteLine($"SVG generated: {svgPath}");
-            Console.WriteLine($"Hit‑test data saved: {jsonPath}");
-            Console.WriteLine($"Workbook saved: {workbookPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // -----------------------------------------------------------------
+            // 5. Serialize the captured draw‑object information to JSON
+            //    This JSON can be consumed by client‑side JavaScript to perform
+            //    hit‑testing (e.g., mapping mouse coordinates to object IDs).
+            // -----------------------------------------------------------------
+            string json = JsonSerializer.Serialize(handler.ObjectsInfo, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText("drawObjectsMap.json", json);
+
+            Console.WriteLine("SVG and hit‑test map generated successfully.");
         }
     }
 }

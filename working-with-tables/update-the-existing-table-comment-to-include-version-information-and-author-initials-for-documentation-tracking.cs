@@ -1,10 +1,10 @@
-// Title: Set ListObject Table Comment with Version and Author in Aspose.Cells C#
-// Description: Shows how to create a workbook, add a ListObject, and assign a comment that includes a version identifier and author initials before saving the file.
-// Keywords: Aspose.Cells | C# ListObject comment | Excel table metadata | version tag | author initials | update table comment | Aspose.Cells ListObject | Excel automation | metadata tracking
-// Common Searches: Aspose.Cells set table comment C# | add version info to Excel table using Aspose | store author initials in ListObject comment | update ListObject comment programmatically | Aspose.Cells comment property example
-// Developer Intent: Programmatically embed version and author information into a ListObject’s comment in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Include change‑log details in generated reports so reviewers can quickly see table version and author. | Automate documentation of data tables before distributing workbooks to stakeholders. | Maintain revision history across batch‑generated Excel files by updating the comment field of each table.
-// AI Prompts: Generate code that adds a timestamp to the ListObject comment together with version and author using Aspose.Cells. | Provide a C# snippet to read a ListObject comment and parse out the version and author values. | Explain how to apply the same comment update to every table in a workbook with Aspose.Cells.
+// Title: Aspose.Cells .NET – Update ListObject Table Comment with Version and Author Initials (C#)
+// Description: Demonstrates how to create a workbook with Aspose.Cells for .NET, add a ListObject (Excel table), and set its Comment property to a custom string that includes version information and author initials. The example saves the workbook as UpdatedTableComment.xlsx and prints the comment for verification.
+// Keywords: Aspose.Cells C# update table comment | ListObject comment .NET | Excel table metadata Aspose.Cells | add version to table comment | author initials in Excel table | Aspose.Cells ListObject Comment property | C# Aspose.Cells example
+// Common Searches: how to change ListObject comment using Aspose.Cells for .NET | add version number to Excel table comment C# | Aspose.Cells set author initials in table comment | update Aspose.Cells table comment after creation | store revision info in Excel table with Aspose.Cells
+// Developer Intent: Set a ListObject's Comment to include version and author initials for documentation tracking.
+// Use Cases: Embed revision metadata directly in an Excel table by updating ListObject.Comment. | Verify the comment value at runtime by printing it to the console before saving. | Persist the comment in the .xlsx file so downstream processes can read version and author information.
+// AI Prompts: Generate C# code that creates a workbook, adds a ListObject, and assigns a comment containing a version number and author initials using Aspose.Cells. | Explain where the ListObject.Comment value is stored in the .xlsx package and how to retrieve it later with Aspose.Cells. | Provide best‑practice error handling for updating a table comment in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
@@ -12,18 +12,18 @@ using Aspose.Cells.Tables;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to create a workbook, add a ListObject, and assign a comment that includes a version identifier and author initials before saving the file.
+    // Demonstrates how to create a workbook with Aspose.Cells for .NET, add a ListObject (Excel table), and set its Comment property to a custom string that includes version information and author initials. The example saves the workbook as UpdatedTableComment.xlsx and prints the comment for verification.
     public class UpdateTableCommentDemo
     {
         public static void Run()
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate sample data for the table
+                // Populate sample data for the table (A1:B3)
                 worksheet.Cells["A1"].PutValue("ID");
                 worksheet.Cells["B1"].PutValue("Value");
                 worksheet.Cells["A2"].PutValue(1);
@@ -33,18 +33,19 @@ namespace AsposeCellsExamples
 
                 // Add a ListObject (table) covering the data range
                 int listObjectIndex = worksheet.ListObjects.Add(0, 0, 2, 1, true);
-                ListObject table = worksheet.ListObjects[listObjectIndex];
+                ListObject listObject = worksheet.ListObjects[listObjectIndex];
 
-                // Update the table comment with version information and author initials
-                string versionInfo = "v1.0";
-                string authorInitials = "AB";
-                table.Comment = $"Version: {versionInfo} | Author: {authorInitials}";
+                // Update the table comment to include version info and author initials
+                string versionInfo = "Version 1.2";
+                string authorInitials = "JD";
+                listObject.Comment = $"{versionInfo} - Author: {authorInitials}";
 
-                // Optional: display the updated comment in console
-                Console.WriteLine("Updated Table Comment: " + table.Comment);
+                // Optional: display the comment in console for verification
+                Console.WriteLine("Updated Table Comment: " + listObject.Comment);
 
                 // Save the workbook
                 workbook.Save("UpdatedTableComment.xlsx", SaveFormat.Xlsx);
+                Console.WriteLine("Workbook saved as UpdatedTableComment.xlsx");
             }
             catch (Exception ex)
             {
@@ -53,18 +54,12 @@ namespace AsposeCellsExamples
         }
     }
 
+    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)
         {
-            try
-            {
-                UpdateTableCommentDemo.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Unhandled exception: " + ex.Message);
-            }
+            UpdateTableCommentDemo.Run();
         }
     }
 }

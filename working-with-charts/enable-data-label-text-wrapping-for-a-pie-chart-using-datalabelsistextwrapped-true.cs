@@ -1,55 +1,51 @@
-// Title: Enable Text Wrapping for Pie Chart Data Labels in Aspose.Cells (C#/.NET)
-// Description: C# example that creates an Excel workbook, adds a pie chart with values and category names, and activates text wrapping for the data labels by setting DataLabels.IsTextWrapped = true. The file is saved as PieChart_With_WrappedDataLabels.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | pie chart | data labels | text wrapping | IsTextWrapped | chart label wrap | Excel generation | sample code | GitHub example | Aspose.Cells chart API
-// Common Searches: Aspose.Cells wrap pie chart data labels | DataLabels.IsTextWrapped C# example | how to enable text wrap for chart labels in Aspose.Cells | C# pie chart label wrapping Aspose | Aspose.Cells chart data label options
-// Developer Intent: Wrap the text of pie‑chart data labels using Aspose.Cells.
-// Use Cases: Generate Excel reports where long category names in a pie chart stay readable without truncation. | Build dashboards that display both numeric values and wrapped category names on pie‑chart labels. | Automate workbook creation for presentations, ensuring chart annotations fit within label boxes. | Provide a reusable snippet for developers needing chart‑label formatting in Aspose.Cells.
-// AI Prompts: Show C# code to set DataLabels.IsTextWrapped = true for a pie chart in Aspose.Cells. | Explain how text wrapping changes the appearance of pie‑chart data labels in an Excel file generated with Aspose.Cells. | Give a step‑by‑step guide to add a pie chart with wrapped data labels using Aspose.Cells for .NET. | Provide a GitHub‑style snippet that creates a workbook, adds a pie chart, and enables label wrapping.
+// Title: Enable Text Wrapping for Pie Chart Data Labels in C# with Aspose.Cells
+// Description: This C# example creates a workbook, adds sales data, inserts a pie chart, shows values and category names on the labels, activates text wrapping via DataLabels.IsTextWrapped, and saves the file as an Excel workbook.
+// Keywords: Aspose.Cells | C# | .NET | pie chart | data labels | IsTextWrapped | text wrap | chart label formatting | Excel automation | sample code | GitHub example
+// Common Searches: Aspose.Cells wrap text in pie chart labels | DataLabels.IsTextWrapped C# example | how to enable label wrapping in Excel chart using Aspose | pie chart data label multiline Aspose.Cells .NET | C# code for wrapping chart labels in Excel
+// Developer Intent: Apply multiline wrapping to pie‑chart data labels so long category names and values are fully visible.
+// Use Cases: Generate sales dashboards where category titles exceed label width. | Automate Excel reports that include pie charts with readable, wrapped labels. | Create templates for recurring exports that need consistent label formatting across multiple charts.
+// AI Prompts: Provide C# code that sets DataLabels.IsTextWrapped = true for a pie chart using Aspose.Cells. | Show how to configure data label visibility and text wrapping for Excel charts in .NET. | Explain steps to apply multiline label wrapping to different chart types with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsPieChartDataLabelWrap
+// This C# example creates a workbook, adds sales data, inserts a pie chart, shows values and category names on the labels, activates text wrapping via DataLabels.IsTextWrapped, and saves the file as an Excel workbook.
+class EnableDataLabelWrapping
 {
-    // C# example that creates an Excel workbook, adds a pie chart with values and category names, and activates text wrapping for the data labels by setting DataLabels.IsTextWrapped = true. The file is saved as PieChart_With_WrappedDataLabels.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for a pie chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["A3"].PutValue("Orange");
-            sheet.Cells["A4"].PutValue("Banana");
+        // Add sample data for the pie chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("Apple");
+        sheet.Cells["A3"].PutValue("Orange");
+        sheet.Cells["A4"].PutValue("Banana");
+        sheet.Cells["B1"].PutValue("Sales");
+        sheet.Cells["B2"].PutValue(120);
+        sheet.Cells["B3"].PutValue(85);
+        sheet.Cells["B4"].PutValue(65);
 
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(85);
-            sheet.Cells["B4"].PutValue(65);
+        // Insert a pie chart into the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 12);
+        Chart chart = sheet.Charts[chartIndex];
+        chart.NSeries.Add("B2:B4", true);          // Values
+        chart.NSeries.CategoryData = "A2:A4";      // Categories
 
-            // Add a pie chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 12);
-            Chart pieChart = sheet.Charts[chartIndex];
+        // Access the data labels of the first series
+        DataLabels labels = chart.NSeries[0].DataLabels;
 
-            // Set the data range for the series and categories
-            pieChart.NSeries.Add("B2:B4", true);
-            pieChart.NSeries.CategoryData = "A2:A4";
+        // Show values and category names on the data labels
+        labels.ShowValue = true;
+        labels.ShowCategoryName = true;
 
-            // Enable data labels for the first series
-            DataLabels labels = pieChart.NSeries[0].DataLabels;
-            labels.ShowValue = true;          // Show the numeric values
-            labels.ShowCategoryName = true;   // Show the category names
+        // Enable text wrapping for the data labels
+        labels.IsTextWrapped = true;
 
-            // Enable text wrapping for the data labels
-            labels.IsTextWrapped = true;
-
-            // Save the workbook to a file
-            workbook.Save("PieChart_With_WrappedDataLabels.xlsx");
-        }
+        // Save the workbook to a file
+        workbook.Save("PieChartDataLabelsWrapped.xlsx");
     }
 }

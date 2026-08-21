@@ -1,10 +1,10 @@
-// Title: C# – Remove rows with empty first column from CSV using Aspose.Cells and export
-// Description: Loads a CSV into an Aspose.Cells workbook, deletes every row whose first column is blank or whitespace, and saves the cleaned worksheet back to CSV with TrimLeadingBlankRowAndColumn enabled.
-// Keywords: Aspose.Cells CSV import C# | delete empty rows Aspose.Cells | remove rows with blank first column | save worksheet to CSV .NET | TxtSaveOptions TrimLeadingBlankRowAndColumn | C# CSV cleanup Aspose | filter CSV rows Aspose.Cells
-// Common Searches: how to delete rows with empty column A using Aspose.Cells | C# Aspose.Cells import CSV and remove blank rows | save cleaned CSV with Aspose.Cells TxtSaveOptions | remove empty rows from CSV in .NET | Aspose.Cells filter rows by first column
-// Developer Intent: Load a CSV, drop rows where column A is empty, and write the result to a new CSV file.
-// Use Cases: Pre‑process exported data before loading into analytics tools that reject blank leading columns. | Clean log files or data extracts automatically in batch jobs. | Prepare CSV inputs for legacy systems that cannot handle rows with missing key values.
-// AI Prompts: Write C# code that uses Aspose.Cells to read a CSV, remove rows with an empty first column, and save the output as a new CSV. | Explain the impact of TxtSaveOptions.TrimLeadingBlankRowAndColumn when exporting a worksheet to CSV. | Suggest a LINQ‑based method to filter rows by the first column without iterating backwards.
+// Title: C# – Load CSV, Delete Rows with Empty First Column, and Export Clean CSV using Aspose.Cells
+// Description: A C# example that loads a CSV into an Aspose.Cells workbook, removes every row whose first column is blank, and saves the cleaned data back to CSV with custom separator and trimmed leading blanks.
+// Keywords: Aspose.Cells CSV import C# | delete rows with empty first column | remove blank rows from CSV | export CSV Aspose.Cells | TxtSaveOptions separator | trim leading blank rows | CSV cleaning .NET | Aspose.Cells workbook to CSV
+// Common Searches: how to delete rows with empty column A using Aspose.Cells | Aspose.Cells C# save worksheet as CSV with custom separator | remove empty rows from CSV programmatically .NET | trim leading blank rows when exporting CSV Aspose.Cells | load CSV, filter rows, and export with Aspose.Cells
+// Developer Intent: Filter out rows whose first column is empty from a CSV file and write the resulting dataset back to a new CSV using Aspose.Cells.
+// Use Cases: Clean raw data sets by discarding records missing a primary key before analytics. | Prepare bulk‑import CSV files for ERP or CRM systems, ensuring no leading‑column gaps. | Generate concise CSV reports after eliminating incomplete rows to reduce downstream errors.
+// AI Prompts: Generate C# code with Aspose.Cells that reads a CSV, removes rows where column A is empty, and writes the result to a new CSV. | Show how to configure TxtSaveOptions in Aspose.Cells to trim leading blank rows and set a comma separator when exporting to CSV.
 
 using System;
 using System.IO;
@@ -12,62 +12,72 @@ using Aspose.Cells;
 
 namespace AsposeCellsCsvProcessing
 {
-    // Loads a CSV into an Aspose.Cells workbook, deletes every row whose first column is blank or whitespace, and saves the cleaned worksheet back to CSV with TrimLeadingBlankRowAndColumn enabled.
+    // A C# example that loads a CSV into an Aspose.Cells workbook, removes every row whose first column is blank, and saves the cleaned data back to CSV with custom separator and trimmed leading blanks.
     class Program
     {
         static void Main()
         {
+            // Input and output CSV file paths
+            string inputCsvPath = "input.csv";
+            string outputCsvPath = "output.csv";
+
             try
             {
-                // Path to the source CSV file
-                string inputCsv = "input.csv";
-
                 // Verify that the input CSV file exists
-                if (!File.Exists(inputCsv))
+                if (!File.Exists(inputCsvPath))
                 {
-                    Console.WriteLine($"Error: Input file \"{inputCsv}\" not found.");
+                    Console.WriteLine($"Input file not found: {inputCsvPath}");
                     return;
                 }
 
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook and import the CSV data into the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
 
-                // Import the CSV file into the worksheet (starting at cell A1)
-                // Using comma as separator, converting numeric data, and starting at row 0, column 0
-                cells.ImportCSV(inputCsv, ",", true, 0, 0);
+                // Import CSV (comma‑separated, convert numeric data, start at A1)
+                cells.ImportCSV(inputCsvPath, ",", true, 0, 0);
 
-                // Iterate from the last data row upwards and delete rows where the first column is empty
+                // Iterate rows from bottom to top and delete rows whose first column is empty
                 for (int row = cells.MaxDataRow; row >= 0; row--)
                 {
-                    // Get the string value of the first column (column index 0)
-                    string firstColValue = cells[row, 0].StringValue;
+                    // Get the cell in the first column (index 0)
+                    Cell firstCell = cells[row, 0];
 
-                    // If the cell is empty or contains only whitespace, delete the entire row
-                    if (string.IsNullOrWhiteSpace(firstColValue))
+                    // Consider a cell empty if it has no value or its string representation is empty
+                    bool isEmpty = firstCell.Type == CellValueType.IsNull ||
+                                   string.IsNullOrEmpty(firstCell.StringValue);
+
+                    if (isEmpty)
                     {
-                        // Delete the row using the Rows collection
-                        cells.Rows.RemoveAt(row);
+                        // Delete the entire row
+                        cells.DeleteRow(row);
                     }
                 }
 
-                // Prepare CSV save options (trim leading blank rows/columns as Excel does)
+                // Prepare CSV save options (trim leading blanks and set separator)
                 TxtSaveOptions saveOptions = new TxtSaveOptions
                 {
                     TrimLeadingBlankRowAndColumn = true,
                     Separator = ','
                 };
 
-                // Save the modified worksheet back to a CSV file
-                string outputCsv = "output.csv";
-                workbook.Save(outputCsv, saveOptions);
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputCsvPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                Console.WriteLine("Processing completed. Output saved to " + outputCsv);
+                // Save the modified workbook back to CSV
+                workbook.Save(outputCsvPath, saveOptions);
+
+                Console.WriteLine("Processing completed. Output saved to: " + outputCsvPath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("An error occurred during processing:");
+                Console.WriteLine(ex.Message);
             }
         }
     }

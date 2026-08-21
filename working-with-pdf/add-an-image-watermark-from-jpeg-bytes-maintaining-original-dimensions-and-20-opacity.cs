@@ -1,65 +1,64 @@
-// Title: Add JPEG Image Watermark to PDF from Aspose.Cells (20% Opacity, Original Size)
-// Description: C# example that creates an empty Workbook, loads a JPEG file as a byte array, builds a RenderingWatermark with 20% opacity, keeps the original image dimensions (ScaleToPagePercent = 100) and places it behind the worksheet content. The watermark is attached to PdfSaveOptions and the workbook is saved as a PDF.
-// Keywords: Aspose.Cells PDF watermark C# | RenderingWatermark JPEG bytes | image watermark opacity 0.2 | keep original watermark size | background watermark Aspose.Cells | PdfSaveOptions watermark | C# add image watermark to PDF
-// Common Searches: Aspose.Cells add JPEG watermark to PDF | C# set watermark opacity to 20% in PDF | keep original image size when watermarking PDF with Aspose.Cells | background image watermark Aspose.Cells PDF export | RenderingWatermark example C#
-// Developer Intent: Apply a JPEG image as a background watermark to a PDF generated from an Aspose.Cells workbook, preserving the image’s original dimensions and using 20% opacity.
-// Use Cases: Brand a PDF report with a faint company logo behind the data. | Create confidential Excel‑to‑PDF exports that include a light watermark to deter unauthorized copying. | Add a custom background image to every page of PDFs produced from Excel workbooks.
-// AI Prompts: Show how to change the watermark to a PNG file with 30% opacity. | Explain how to apply different watermarks to individual worksheets when exporting a single PDF. | Provide code to center the watermark on each page and rotate it 45 degrees.
+// Title: Add JPEG Image Watermark to PDF from Aspose.Cells Using Byte Array (20% Opacity)
+// Description: Creates a Workbook, reads a JPEG file into a byte array, builds a RenderingWatermark with 20% opacity, keeps the original dimensions, centers the image, and applies it to PdfSaveOptions. The PDF is saved with the watermark, and the code gracefully skips the watermark if the image file is missing.
+// Keywords: Aspose.Cells PDF watermark | RenderingWatermark byte array | JPEG watermark opacity | scale watermark original size | C# add image watermark | PdfSaveOptions watermark | conditional watermark Aspose.Cells
+// Common Searches: Aspose.Cells add image watermark to PDF | C# RenderingWatermark from byte array | set watermark opacity 20% Aspose.Cells | preserve watermark dimensions PDF export | apply JPEG watermark only if file exists
+// Developer Intent: Create a PDF from a workbook and overlay a JPEG watermark loaded from bytes, keeping its original size and 20% opacity.
+// Use Cases: Brand a generated PDF report with a semi‑transparent company logo stored as a byte array. | Add a faint background image to invoices when the logo file is available. | Export spreadsheets to PDF with optional watermark based on file existence.
+// AI Prompts: Generate C# code that uses Aspose.Cells to apply a PNG watermark from a MemoryStream to a PDF with 30% opacity and 50% scaling. | Describe how RenderingWatermark properties Opacity, ScaleToPagePercent, IsBackground, HAlignment, and VAlignment control the visual result of an image watermark in a PDF.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWatermarkDemo
+// Creates a Workbook, reads a JPEG file into a byte array, builds a RenderingWatermark with 20% opacity, keeps the original dimensions, centers the image, and applies it to PdfSaveOptions. The PDF is saved with the watermark, and the code gracefully skips the watermark if the image file is missing.
+class AddImageWatermark
 {
-    // C# example that creates an empty Workbook, loads a JPEG file as a byte array, builds a RenderingWatermark with 20% opacity, keeps the original image dimensions (ScaleToPagePercent = 100) and places it behind the worksheet content. The watermark is attached to PdfSaveOptions and the workbook is saved as a PDF.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample data for watermark demonstration");
+
+            RenderingWatermark watermark = null;
+            string imagePath = "watermark.jpg";
+
+            // Load JPEG image bytes if the file exists
+            if (File.Exists(imagePath))
             {
-                // Create a new workbook (empty workbook with a default worksheet)
-                Workbook workbook = new Workbook();
-
-                const string watermarkPath = "watermark.jpg";
-
-                // Verify that the watermark image file exists
-                if (!File.Exists(watermarkPath))
-                {
-                    Console.WriteLine($"Error: Watermark image file '{watermarkPath}' not found.");
-                    return;
-                }
-
-                // Load JPEG image bytes
-                byte[] jpegBytes = File.ReadAllBytes(watermarkPath);
-
-                // Create an image‑based watermark using the JPEG bytes
-                RenderingWatermark watermark = new RenderingWatermark(jpegBytes)
-                {
-                    // Set opacity to 20% (0.2) and keep the original image size
-                    Opacity = 0.2f,               // 20% opacity
-                    ScaleToPagePercent = 100,    // 100% keeps original dimensions
-                    // Place the watermark behind the worksheet content
-                    IsBackground = true
-                };
-
-                // Configure PDF save options with the watermark
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    Watermark = watermark
-                };
-
-                // Save the workbook as a PDF with the image watermark applied
-                const string outputPath = "WatermarkedOutput.pdf";
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+                byte[] jpegBytes = File.ReadAllBytes(imagePath);
+                watermark = new RenderingWatermark(jpegBytes);
+                // Set watermark properties
+                watermark.Opacity = 0.2f;                     // 20% opacity
+                watermark.ScaleToPagePercent = 100;          // Keep original dimensions
+                watermark.IsBackground = false;              // Place in front of content
+                watermark.HAlignment = TextAlignmentType.Center;
+                watermark.VAlignment = TextAlignmentType.Center;
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Warning: Image file '{imagePath}' not found. Saving without watermark.");
             }
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Apply watermark only if it was created
+            if (watermark != null)
+            {
+                pdfOptions.Watermark = watermark;
+            }
+
+            // Save the workbook as a PDF
+            workbook.Save("WatermarkedOutput.pdf", pdfOptions);
+            Console.WriteLine("PDF saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

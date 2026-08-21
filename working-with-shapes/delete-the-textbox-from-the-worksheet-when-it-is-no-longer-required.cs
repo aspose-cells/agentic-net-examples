@@ -1,54 +1,49 @@
-// Title: Delete a TextBox shape from an Aspose.Cells worksheet (C#)
-// Description: Shows how to create a workbook, add a TextBox, verify its existence, remove a specific TextBox (the last one in the collection) and save the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells delete textbox C# | remove textbox Aspose.Cells | TextBoxes.RemoveAt Aspose.Cells | C# delete shape Excel | Aspose.Cells shape management | worksheet TextBox removal | Aspose.Cells .NET delete shape
-// Common Searches: How to delete a textbox in Excel with Aspose.Cells C# | Aspose.Cells remove TextBox shape programmatically | C# code to delete specific TextBox from worksheet | Delete all TextBoxes using Aspose.Cells .NET | Remove last TextBox from Aspose.Cells workbook
-// Developer Intent: Remove one or more TextBox shapes from a worksheet using Aspose.Cells for .NET.
-// Use Cases: Strip temporary annotation boxes before exporting a report. | Clean up user‑added textboxes during automated workbook processing. | Delete a textbox when a validation rule fails. | Purge all TextBoxes from a template workbook before reuse.
-// AI Prompts: Write C# code that iterates through worksheet.TextBoxes and deletes each one with Aspose.Cells. | Show how to delete a TextBox by its index or by matching its text content in Aspose.Cells for .NET. | Explain safe removal of TextBox shapes without affecting other drawing objects in an Excel file using Aspose.Cells.
+// Title: Delete a TextBox from an Aspose.Cells Worksheet (C#/.NET)
+// Description: Shows how to create a workbook, add a temporary TextBox, verify the TextBoxes collection, remove the first TextBox with worksheet.TextBoxes.RemoveAt(0), and save the file, demonstrating the proper way to delete a TextBox when it is no longer needed.
+// Keywords: Aspose.Cells delete textbox | C# TextBox removal Aspose.Cells | worksheet.TextBoxes.RemoveAt example | remove temporary textbox .NET | Aspose.Cells shape deletion | Aspose.Cells .NET API
+// Common Searches: Aspose.Cells C# delete textbox | Remove TextBox from Excel sheet using Aspose.Cells | How to clear all TextBoxes in a worksheet with Aspose.Cells | Delete specific TextBox by index Aspose.Cells .NET | Programmatically remove shapes from workbook Aspose.Cells
+// Developer Intent: Remove a TextBox that was added to a worksheet once it is no longer required.
+// Use Cases: Clean up temporary annotation boxes before exporting the workbook to avoid unwanted UI elements. | Strip user‑added TextBoxes during batch processing of multiple reports. | Ensure generated Excel files contain no stray TextBoxes when converting to PDF or other formats.
+// AI Prompts: Provide C# code that deletes all TextBoxes from a worksheet using Aspose.Cells for .NET. | Show an example that finds a TextBox with specific text and removes it from an Aspose.Cells worksheet. | Explain how to iterate through worksheet.TextBoxes safely and delete each item.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to create a workbook, add a TextBox, verify its existence, remove a specific TextBox (the last one in the collection) and save the file using Aspose.Cells for .NET.
+// Shows how to create a workbook, add a temporary TextBox, verify the TextBoxes collection, remove the first TextBox with worksheet.TextBoxes.RemoveAt(0), and save the file, demonstrating the proper way to delete a TextBox when it is no longer needed.
 public class DeleteTextboxDemo
 {
-    public static void Run()
+    public static void Main(string[] args)
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            using (Workbook workbook = new Workbook())
-            {
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add a sample textbox (for demonstration purposes)
-                worksheet.TextBoxes.Add(5, 5, 200, 50);
-                worksheet.TextBoxes[0].Text = "Sample TextBox";
-
-                // Delete the textbox if any exist
-                if (worksheet.TextBoxes.Count > 0)
-                {
-                    // Remove the last textbox in the collection
-                    int lastIndex = worksheet.TextBoxes.Count - 1;
-                    worksheet.TextBoxes.RemoveAt(lastIndex);
-                }
-
-                // Save the workbook to a file
-                string outputPath = "DeletedTextbox.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-            }
+            Run();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
-}
 
-public class Program
-{
-    public static void Main(string[] args)
+    public static void Run()
     {
-        DeleteTextboxDemo.Run();
+        // Create a new workbook and get the first worksheet
+        using (Workbook workbook = new Workbook())
+        {
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add a textbox to the worksheet (for demonstration)
+            worksheet.TextBoxes.Add(10, 10, 200, 50);
+            worksheet.TextBoxes[0].Text = "Temporary TextBox";
+
+            // Remove the textbox when it is no longer required
+            if (worksheet.TextBoxes.Count > 0)
+            {
+                // Remove the textbox at index 0
+                worksheet.TextBoxes.RemoveAt(0);
+            }
+
+            // Save the workbook to verify the textbox has been removed
+            workbook.Save("DeletedTextboxDemo.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

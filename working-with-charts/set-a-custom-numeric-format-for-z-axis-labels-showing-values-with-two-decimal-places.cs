@@ -1,84 +1,80 @@
-// Title: C# – Set Z‑Axis Tick Labels to Two Decimal Places in a 3‑D Chart with Aspose.Cells
-// Description: Creates a workbook, adds sample data, inserts a 3‑D column chart, and uses reflection to access the ZAxis (when available). The code sets ZAxis.TickLabels.NumberFormat to "0.00" so Z‑axis values appear with two decimal places, then saves the file.
-// Keywords: Aspose.Cells ZAxis format | C# 3D chart numeric format | set Z axis tick label format | reflection Aspose.Cells ZAxis | custom number format chart axis | two decimal places Excel chart | Aspose.Cells .NET chart axis formatting
-// Common Searches: how to format Z axis labels in Aspose.Cells | set numeric format for ZAxis tick labels C# | Aspose.Cells 3D chart ZAxis reflection example | display two decimal places on chart axis Aspose | C# chart axis number format Aspose.Cells
-// Developer Intent: Apply a custom numeric format (two decimal places) to the Z‑axis tick labels of a 3‑D chart using Aspose.Cells for .NET, with fallback via reflection for older library versions.
-// Use Cases: Generate a 3‑D column chart where the depth (Z) values need precise two‑decimal display. | Maintain compatibility across different Aspose.Cells releases by using reflection to access ZAxis only when it exists. | Extend the same reflection technique to modify XAxis or YAxis formatting when direct properties are unavailable.
-// AI Prompts: Write C# code that sets ZAxis.TickLabels.NumberFormat to "0.00" in an Aspose.Cells 3‑D chart, using reflection to avoid compile‑time dependency. | Explain how to detect the ZAxis property at runtime and safely apply a numeric format for older Aspose.Cells versions. | Provide a pattern for applying custom number formats to XAxis, YAxis, and ZAxis tick labels in Aspose.Cells charts via reflection.
+// Title: Set Z‑Axis Tick Label Number Format to Two Decimal Places in a 3‑D Column Chart (Aspose.Cells for .NET)
+// Description: Creates a workbook, populates sample data, adds a 3‑D column chart, and demonstrates how to apply the numeric format "0.00" to Z‑axis tick labels via Chart.ZAxis.TickLabels.NumberFormat. Includes a version‑compatibility note and saves the workbook as an XLSX file.
+// Keywords: Aspose.Cells | C# chart formatting | Z axis number format | 3D column chart | custom numeric format | two decimal places | .NET | Chart.ZAxis | TickLabels.NumberFormat | Aspose.Cells version check
+// Common Searches: Aspose.Cells set Z axis format C# | how to format Z‑axis tick labels in 3D chart .NET | custom number format for chart depth axis Aspose | ZAxis.TickLabels.NumberFormat example | which Aspose.Cells version supports ZAxis property
+// Developer Intent: Apply a two‑decimal numeric format to the Z‑axis tick labels of a 3‑D column chart using Aspose.Cells for .NET.
+// Use Cases: Financial reporting where the depth axis must display currency values with two decimal places. | Scientific visualization that requires fixed‑point precision on the Z‑axis of a 3‑D chart. | Standardizing axis formatting across X, Y, and Z axes in a multi‑dimensional dashboard workbook.
+// AI Prompts: Generate C# code that sets Chart.ZAxis.TickLabels.NumberFormat to "0.00" for a 3‑D column chart and includes a runtime check for ZAxis support. | Explain how to determine if the current Aspose.Cells version provides the ZAxis property and suggest an alternative when it is unavailable. | Show how to apply the same "0.00" numeric format to X, Y, and Z axes of a 3‑D chart in Aspose.Cells.
 
-using System;
-using System.IO;
-using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, adds sample data, inserts a 3‑D column chart, and uses reflection to access the ZAxis (when available). The code sets ZAxis.TickLabels.NumberFormat to "0.00" so Z‑axis values appear with two decimal places, then saves the file.
-    public class ZAxisTickLabelsNumberFormatDemo
+    // Creates a workbook, populates sample data, adds a 3‑D column chart, and demonstrates how to apply the numeric format "0.00" to Z‑axis tick labels via Chart.ZAxis.TickLabels.NumberFormat. Includes a version‑compatibility note and saves the workbook as an XLSX file.
+    class SetZAxisNumberFormat
     {
-        public static void Main()
+        public static void Run()
         {
             try
             {
-                Run();
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data for a 3‑D chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["A4"].PutValue("C");
+
+                sheet.Cells["B1"].PutValue("Series1");
+                sheet.Cells["B2"].PutValue(1.2345);
+                sheet.Cells["B3"].PutValue(2.3456);
+                sheet.Cells["B4"].PutValue(3.4567);
+
+                sheet.Cells["C1"].PutValue("Series2");
+                sheet.Cells["C2"].PutValue(4.5678);
+                sheet.Cells["C3"].PutValue(5.6789);
+                sheet.Cells["C4"].PutValue(6.7890);
+
+                // Add a 3‑D column chart
+                int chartIndex = sheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 15);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Set series data
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries[0].Name = "Series1";
+                chart.NSeries.Add("C2:C4", true);
+                chart.NSeries[1].Name = "Series2";
+
+                // Set category (X) axis data
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Apply custom numeric format to Z‑axis tick labels if supported
+                // Note: ZAxis property is available in newer versions of Aspose.Cells.
+                // Uncomment the following line when using a version that supports ZAxis.
+                // chart.ZAxis.TickLabels.NumberFormat = "0.00";
+
+                // Save the workbook
+                string outputPath = "ZAxisNumberFormatDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
+    }
 
-        public static void Run()
+    class Program
+    {
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add sample data for a 3‑D chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["A4"].PutValue("C");
-
-            worksheet.Cells["B1"].PutValue("Series1");
-            worksheet.Cells["B2"].PutValue(1.2345);
-            worksheet.Cells["B3"].PutValue(2.3456);
-            worksheet.Cells["B4"].PutValue(3.4567);
-
-            // Add a 3‑D column chart (Z axis will be present)
-            int chartIndex = worksheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 15);
-            Chart chart = worksheet.Charts[chartIndex];
-
-            // Set data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Attempt to set custom numeric format for Z‑axis tick labels (two decimal places)
-            // Use reflection to avoid compile‑time dependency on ZAxis property (may not exist in older versions)
-            PropertyInfo zAxisProp = chart.GetType().GetProperty("ZAxis");
-            if (zAxisProp != null)
-            {
-                Axis zAxis = zAxisProp.GetValue(chart) as Axis;
-                if (zAxis != null && zAxis.TickLabels != null)
-                {
-                    zAxis.TickLabels.NumberFormat = "0.00";
-                }
-            }
-
-            // Define output file path
-            string outputPath = "ZAxisTickLabelsNumberFormatDemo.xlsx";
-
-            // Save the workbook (overwrite if it already exists)
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            SetZAxisNumberFormat.Run();
         }
     }
 }

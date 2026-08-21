@@ -1,56 +1,37 @@
-// Title: Export AspNet Aspose.Cells Workbook to HTML using a MemoryStream (C#)
-// Description: Demonstrates how to generate HTML from an Aspose.Cells workbook directly into a MemoryStream, embed images as Base64, and read the result as a string—eliminating the need for a temporary file on disk.
-// Keywords: Aspose.Cells HTML MemoryStream | C# export workbook to HTML in memory | embed images Base64 Aspose.Cells | HtmlSaveOptions ExportActiveWorksheetOnly | CustomImplementationFactory MemoryStream | Aspose.Cells in‑memory HTML conversion
-// Common Searches: Aspose.Cells save workbook as HTML to MemoryStream C# | export Excel to HTML without creating a file | generate HTML from spreadsheet in memory Aspose | read HTML output from Aspose.Cells MemoryStream
-// Developer Intent: Generate an HTML representation of a spreadsheet and keep it in RAM for immediate consumption, such as sending it over a network or embedding it in another document.
-// Use Cases: Return spreadsheet HTML from a Web API endpoint without writing to disk. | Compose an email body that contains the workbook data as HTML. | Apply string manipulation or templating to the HTML before storing or transmitting it.
-// AI Prompts: Provide C# code that saves an Aspose.Cells workbook to a MemoryStream as HTML with Base64‑encoded images. | Show how to modify the sample to export all worksheets instead of only the active one. | Explain how to stream the generated HTML directly as the response body in an ASP.NET Core controller.
+// Title: Save Aspose.Cells Workbook as HTML to a MemoryStream in C# (.NET)
+// Description: Demonstrates how to generate HTML from an Aspose.Cells workbook directly into a MemoryStream, read the markup as a string, and avoid creating a temporary file. Ideal for web APIs, email bodies, or any scenario that requires in‑memory HTML processing.
+// Keywords: Aspose.Cells HTML MemoryStream | C# export workbook to HTML stream | in‑memory HTML generation .NET | Aspose.Cells SaveFormat.Html stream | convert workbook to HTML without file
+// Common Searches: Aspose.Cells save workbook as HTML to MemoryStream | C# generate HTML from Excel without writing file | How to use MemoryStream with Aspose.Cells Save method | In‑memory HTML export Aspose.Cells .NET
+// Developer Intent: Create HTML output from a workbook directly in memory for further processing or transmission.
+// Use Cases: Return HTML from an ASP.NET Core controller as a response. | Embed generated markup in an email template without disk I/O. | Store HTML in a database or pass it to another service.
+// AI Prompts: Write C# code that saves an Aspose.Cells workbook as HTML into a MemoryStream and returns the HTML string. | Show how to send the MemoryStream HTML result from an ASP.NET Core endpoint using FileContentResult. | Explain the benefits of using a custom MemoryStream factory when exporting HTML with Aspose.Cells.
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsInMemoryHtmlExport
+// Demonstrates how to generate HTML from an Aspose.Cells workbook directly into a MemoryStream, read the markup as a string, and avoid creating a temporary file. Ideal for web APIs, email bodies, or any scenario that requires in‑memory HTML processing.
+class Program
 {
-    // Demonstrates how to generate HTML from an Aspose.Cells workbook directly into a MemoryStream, embed images as Base64, and read the result as a string—eliminating the need for a temporary file on disk.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // 1. Create a sample workbook and add some data.
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Aspose.Cells HTML Export to MemoryStream");
-            sheet.Cells["A2"].PutValue(DateTime.Now);
-            sheet.Cells["B1"].PutValue(12345);
-            sheet.Cells["B2"].PutValue(3.14159);
+        // Create a new workbook and add sample data
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Hello Aspose.Cells");
 
-            // 2. Configure HTML save options.
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            // Embed images as Base64 to avoid external resource files.
-            htmlOptions.ExportImagesAsBase64 = true;
-            // Optional: export only the active worksheet.
-            htmlOptions.ExportActiveWorksheetOnly = true;
+        // Create a MemoryStream using the provided factory method
+        CustomImplementationFactory factory = new CustomImplementationFactory();
+        MemoryStream htmlStream = factory.CreateMemoryStream();
 
-            // 3. Create a MemoryStream using the provided CustomImplementationFactory rule.
-            CustomImplementationFactory factory = new CustomImplementationFactory();
-            MemoryStream htmlStream = factory.CreateMemoryStream();
+        // Save the workbook as HTML directly into the memory stream
+        workbook.Save(htmlStream, SaveFormat.Html);
 
-            // 4. Save the workbook as HTML into the MemoryStream.
-            workbook.Save(htmlStream, htmlOptions);
+        // Reset the stream position to read the generated HTML
+        htmlStream.Position = 0;
+        string htmlContent = new StreamReader(htmlStream).ReadToEnd();
 
-            // 5. Reset the stream position to read the generated HTML.
-            htmlStream.Position = 0;
-            string htmlContent = Encoding.UTF8.GetString(htmlStream.ToArray());
-
-            // 6. Demonstrate that the HTML is available in memory.
-            Console.WriteLine("Generated HTML content (first 200 characters):");
-            Console.WriteLine(htmlContent.Substring(0, Math.Min(200, htmlContent.Length)));
-
-            // Clean up.
-            htmlStream.Dispose();
-            workbook.Dispose();
-        }
+        // Output the HTML content (for demonstration purposes)
+        Console.WriteLine(htmlContent);
     }
 }

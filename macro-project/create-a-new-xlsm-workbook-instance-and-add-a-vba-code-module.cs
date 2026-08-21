@@ -1,36 +1,37 @@
-// Title: Create a macro‑enabled XLSM workbook and add a VBA class module in C# with Aspose.Cells
-// Description: Shows how to instantiate a Workbook, access its VbaProject, add a VBA class module named MyModule, assign a simple Sub procedure, and save the file as an XLSM macro‑enabled workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | VBA class module | VbaProject | Add VBA module | macro-enabled workbook | XLSM | SaveFormat.Xlsm | programmatic Excel macros | Excel automation
-// Common Searches: add VBA class module Aspose.Cells C# | create XLSM file with VBA using Aspose.Cells | save workbook as macro enabled with Aspose.Cells .NET | set VBA code in VbaModule Aspose.Cells | generate Excel file with macros programmatically C#
-// Developer Intent: Programmatically generate a macro‑enabled Excel workbook and embed a VBA class module containing custom code.
-// Use Cases: Distribute a template workbook that already includes predefined VBA macros for end‑users. | Automate the creation of reports that require custom VBA classes for data processing or charting. | Build a SaaS solution that produces Excel files with embedded macros tailored to each client. | Integrate VBA‑based functionality into Excel files generated from a .NET backend.
-// AI Prompts: How can I add a standard VBA module instead of a class module with Aspose.Cells? | Show code to add multiple VBA modules, each with its own procedure, using Aspose.Cells for .NET. | Explain how to reference the newly added VBA class module from Excel after the XLSM file is saved.
+// Title: Create an XLSM workbook and insert a VBA class module with Aspose.Cells for .NET
+// Description: Shows how to create a new Workbook, access its VbaProject, add a VBA class module named MyModule, embed a simple Sub routine, and save the result as a macro‑enabled XLSM file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | VBA class module | XLSM creation | C# Excel automation | VbaProject | macro enabled workbook | programmatic VBA insertion | SaveFormat.Xlsm | .NET Excel library
+// Common Searches: Aspose.Cells add VBA class module C# | Create XLSM file with VBA code using Aspose.Cells | How to save macro enabled workbook .NET | Insert VBA code into Excel programmatically | Aspose.Cells VbaProject example
+// Developer Intent: Add a VBA class module with code to a newly created macro‑enabled workbook and persist it as an XLSM file.
+// Use Cases: Automated report generation that includes custom macros for end‑user tasks. | Building Excel templates pre‑loaded with VBA utilities for distribution across an organization. | Server‑side services that produce macro‑enabled files without requiring Microsoft Excel.
+// AI Prompts: Show how to add a standard VBA module instead of a class module with Aspose.Cells. | Provide code to create multiple VBA modules, each containing a different procedure. | Explain how to reference external VBA libraries when adding modules via Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// Shows how to instantiate a Workbook, access its VbaProject, add a VBA class module named MyModule, assign a simple Sub procedure, and save the file as an XLSM macro‑enabled workbook using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsVbaDemo
 {
-    static void Main()
+    // Shows how to create a new Workbook, access its VbaProject, add a VBA class module named MyModule, embed a simple Sub routine, and save the result as a macro‑enabled XLSM file using Aspose.Cells for .NET.
+    public class Program
     {
-        // Create a new workbook instance (default format is Xlsx)
-        Workbook workbook = new Workbook();
+        public static void Main()
+        {
+            // Create a new workbook (default format is Xlsx)
+            Workbook workbook = new Workbook();
 
-        // Access the VBA project associated with the workbook
-        VbaProject vbaProject = workbook.VbaProject;
+            // Access the VBA project associated with the workbook
+            VbaProject vbaProject = workbook.VbaProject;
 
-        // Add a new class module named "MyModule" to the VBA project
-        int moduleIndex = vbaProject.Modules.Add(VbaModuleType.Class, "MyModule");
+            // Add a new VBA class module named "MyModule"
+            int moduleIndex = vbaProject.Modules.Add(VbaModuleType.Class, "MyModule");
 
-        // Retrieve the added module by its index
-        VbaModule module = vbaProject.Modules[moduleIndex];
+            // Retrieve the added module and set its VBA code
+            VbaModule module = vbaProject.Modules[moduleIndex];
+            module.Codes = "Sub HelloWorld()\r\n    MsgBox \"Hello from VBA!\"\r\nEnd Sub";
 
-        // Set VBA code for the module
-        module.Codes = "Sub HelloWorld()\r\n    MsgBox \"Hello from VBA!\"\r\nEnd Sub";
-
-        // Save the workbook as a macro‑enabled file (XLSM)
-        workbook.Save("MyWorkbook.xlsm", SaveFormat.Xlsm);
+            // Save the workbook as a macro‑enabled file (XLSM)
+            workbook.Save("MyWorkbookWithVba.xlsm", SaveFormat.Xlsm);
+        }
     }
 }

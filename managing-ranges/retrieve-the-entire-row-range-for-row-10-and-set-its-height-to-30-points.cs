@@ -1,51 +1,39 @@
-// Title: Aspose.Cells for .NET – Set Row 10 Height to 30 Points (C#)
-// Description: Demonstrates how to create a workbook, select the entire 10th row using Cells.CreateRange("10:10"), set its RowHeight to 30 points, verify the value, and save the file as RowHeightDemo.xlsx with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | Excel row height | SetRowHeight | CreateRange | 30 points | worksheet row formatting | Aspose.Cells API | Excel automation .NET | row height property
-// Common Searches: Aspose.Cells set row height C# | How to change height of a specific row in Excel using Aspose.Cells | CreateRange row height example Aspose.Cells .NET | Set row 10 height to 30 points Aspose.Cells | Excel row formatting with Aspose.Cells for .NET
-// Developer Intent: Set the height of row 10 to 30 points in an Excel worksheet using Aspose.Cells for .NET.
-// Use Cases: Standardize header row height for printable reports. | Ensure uniform row size before bulk data export. | Programmatically adjust row height to accommodate wrapped text.
-// AI Prompts: Write C# code with Aspose.Cells that sets row 15 height to 25 points and saves the workbook. | Show how to retrieve a row range and conditionally change its height based on cell content using Aspose.Cells for .NET. | Provide an example that reads back the RowHeight after setting it with Cells.CreateRange to confirm the change.
+// Title: Aspose.Cells for .NET – Set Row 10 Height to 30 Points (C# Example)
+// Description: Demonstrates how to obtain the entire row range for row 10 in a worksheet, change its RowHeight property to 30 points, and save the workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# set row height | entire row range Aspose.Cells | RowHeight property example | adjust row size .NET | Excel row height 30 points
+// Common Searches: how to change row height with Aspose.Cells C# | retrieve entire row range Aspose.Cells | set specific row height in Excel using .NET | Aspose.Cells row height 30 points
+// Developer Intent: Modify the height of row 10 by accessing its full row range and assigning a 30‑point value.
+// Use Cases: Standardize header row dimensions for consistent report layouts. | Prepare worksheet rows for PDF conversion with fixed heights. | Ensure printable rows have uniform spacing across different page sizes.
+// AI Prompts: Write C# code that sets rows 5‑15 to a height of 25 points with Aspose.Cells. | Show how to read the current RowHeight of a specific row before updating it. | Create an example that applies variable row heights based on the length of cell text using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// Demonstrates how to obtain the entire row range for row 10 in a worksheet, change its RowHeight property to 30 points, and save the workbook using Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates how to create a workbook, select the entire 10th row using Cells.CreateRange("10:10"), set its RowHeight to 30 points, verify the value, and save the file as RowHeightDemo.xlsx with Aspose.Cells for .NET.
-    public class SetRowHeightDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Retrieve the entire row range for row 10 (1‑based index) and set its height to 30 points
-                // "10:10" specifies the 10th row; RowHeight works in points
-                worksheet.Cells.CreateRange("10:10").RowHeight = 30;
+            // Retrieve the entire row range for row 10 (rows are 1‑based in the address string)
+            // Create a range for a single cell in row 10 and then use the EntireRow property
+            AsposeRange entireRow = worksheet.Cells.CreateRange("A10").EntireRow;
 
-                // Optionally, verify the height
-                double height = worksheet.Cells.CreateRange("10:10").RowHeight;
-                Console.WriteLine($"Row 10 height set to: {height} points");
+            // Set the height of the retrieved row range to 30 points
+            entireRow.RowHeight = 30;
 
-                // Save the workbook
-                workbook.Save("RowHeightDemo.xlsx");
-                Console.WriteLine("Workbook saved as RowHeightDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("RowHeightDemo.xlsx");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            SetRowHeightDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

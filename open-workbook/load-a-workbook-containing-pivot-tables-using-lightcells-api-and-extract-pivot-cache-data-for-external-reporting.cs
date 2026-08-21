@@ -1,116 +1,98 @@
-// Title: Extract Pivot Cache with LightCells in Aspose.Cells (C#) and Export to CSV
-// Description: The sample checks for the source file, loads the workbook with LightCells and pivot‑cache parsing enabled, refreshes all pivot tables, starts an access cache for fast read‑only access, walks through each worksheet and its pivot tables to collect row, column and data field items, closes the cache, and writes the gathered information to a CSV report.
-// Keywords: Aspose.Cells | LightCells API | C# | pivot cache extraction | ParsingPivotCachedRecords | RefreshPivotTables | AccessCacheOptions | Export pivot data to CSV | large workbook performance | PivotTable items enumeration
-// Common Searches: Aspose.Cells load workbook with LightCells and read pivot cache | Export pivot table cache to CSV using C# | How to use AccessCacheOptions for fast pivot cache extraction | Refresh all pivot tables before extracting cache Aspose.Cells | ParsingPivotCachedRecords example
-// Developer Intent: Read a workbook’s pivot cache via LightCells and save the details as a CSV file.
-// Use Cases: Generate a comprehensive pivot‑cache dump for downstream BI tools. | Ensure pivot tables are up‑to‑date before exporting cache data. | Accelerate extraction from very large workbooks by using AccessCacheOptions.All.
-// AI Prompts: Create C# code that extracts the pivot cache with LightCells and outputs JSON instead of CSV. | Show how to include filter field items when enumerating pivot cache records. | Explain how to modify LoadOptions to open password‑protected Excel files while still parsing pivot caches.
+// Title: Load Workbook with LightCells, Enable Pivot Cache Parsing, Refresh and Extract Pivot Data (Aspose.Cells C#)
+// Description: C# example that loads an XLSX workbook using Aspose.Cells LightCells API with ParsingPivotCachedRecords enabled, refreshes all pivot tables, iterates through each pivot table, and prints cached row, column, and data field items. The refreshed workbook can be saved for downstream reporting.
+// Keywords: Aspose.Cells | C# | LoadOptions | ParsingPivotCachedRecords | LightCells API | pivot cache extraction | refresh pivot tables programmatically | read pivot field items | external reporting | save refreshed workbook
+// Common Searches: how to enable pivot cache parsing with Aspose.Cells | C# read cached pivot table data Aspose.Cells | refresh all pivot tables before extracting cache | extract row and column items from pivot tables using Aspose.Cells | save workbook after pivot refresh Aspose.Cells
+// Developer Intent: Load a workbook, refresh its pivot tables, and retrieve cached pivot field values for reporting or analysis.
+// Use Cases: Generate external reports by pulling cached pivot items without connecting to the original data source. | Validate pivot table structure and cached calculations after a data refresh. | Create a refreshed copy of the workbook for downstream processing or archival.
+// AI Prompts: Show a C# snippet that loads an XLSX with Aspose.Cells, enables ParsingPivotCachedRecords, refreshes pivot tables, and enumerates row, column, and data field items. | Explain why refreshing pivot tables before reading cached values is necessary and how Aspose.Cells implements it. | Provide code to export the extracted pivot cache items to CSV or JSON instead of writing to the console.
 
 using System;
-using System.Data;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// The sample checks for the source file, loads the workbook with LightCells and pivot‑cache parsing enabled, refreshes all pivot tables, starts an access cache for fast read‑only access, walks through each worksheet and its pivot tables to collect row, column and data field items, closes the cache, and writes the gathered information to a CSV report.
-class Program
+// C# example that loads an XLSX workbook using Aspose.Cells LightCells API with ParsingPivotCachedRecords enabled, refreshes all pivot tables, iterates through each pivot table, and prints cached row, column, and data field items. The refreshed workbook can be saved for downstream reporting.
+class ExtractPivotCache
 {
     static void Main()
     {
-        // Path to the source workbook that contains pivot tables
-        string sourceFile = "PivotWorkbook.xlsx";
+        // Path to the workbook that contains pivot tables
+        string inputPath = "PivotData.xlsx";
 
-        // Verify that the source file exists to avoid FileNotFoundException
-        if (!File.Exists(sourceFile))
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Source file '{sourceFile}' not found. Please ensure the file exists in the application directory.");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
             return;
         }
 
         try
         {
-            // LoadOptions with LightCells enabled and pivot cache parsing turned on
+            // Enable parsing of pivot cached records while loading the file
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                ParsingPivotCachedRecords = true // ensures pivot cache is loaded
+                ParsingPivotCachedRecords = true
             };
 
-            // Load the workbook using the LightCells API (the constructor internally uses LightCells when the option is set)
-            Workbook workbook = new Workbook(sourceFile, loadOptions);
+            // Load the workbook with the specified options
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Refresh all pivot tables to make sure the cache reflects the latest source data
+            // Refresh all pivot tables to ensure the cache reflects the latest source data
             workbook.Worksheets.RefreshPivotTables();
 
-            // Start access cache for faster read‑only operations (recommended when extracting large amounts of data)
-            workbook.StartAccessCache(AccessCacheOptions.All);
-
-            // Prepare a DataTable that will hold the extracted pivot cache information
-            DataTable reportTable = new DataTable("PivotCacheReport");
-            reportTable.Columns.Add("Worksheet", typeof(string));
-            reportTable.Columns.Add("PivotTable", typeof(string));
-            reportTable.Columns.Add("FieldType", typeof(string));
-            reportTable.Columns.Add("FieldName", typeof(string));
-            reportTable.Columns.Add("ItemName", typeof(string));
-
-            // Iterate through all worksheets
+            // Iterate through each worksheet that contains pivot tables
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through all pivot tables in the current worksheet
-                foreach (PivotTable pivot in sheet.PivotTables)
+                if (sheet.PivotTables.Count == 0) continue;
+
+                Console.WriteLine($"Worksheet: {sheet.Name}");
+
+                // Iterate through each pivot table in the worksheet
+                foreach (PivotTable pivotTable in sheet.PivotTables)
                 {
+                    Console.WriteLine($"  PivotTable: {pivotTable.Name}");
+
                     // ----- Row Fields -----
-                    foreach (PivotField rowField in pivot.RowFields)
+                    foreach (PivotField rowField in pivotTable.RowFields)
                     {
+                        Console.WriteLine($"    Row Field: {rowField.Name}");
                         foreach (PivotItem item in rowField.PivotItems)
                         {
-                            reportTable.Rows.Add(sheet.Name, pivot.Name, "Row", rowField.Name, item.Name);
+                            Console.WriteLine($"      Item: {item.Value}");
                         }
                     }
 
                     // ----- Column Fields -----
-                    foreach (PivotField colField in pivot.ColumnFields)
+                    foreach (PivotField colField in pivotTable.ColumnFields)
                     {
+                        Console.WriteLine($"    Column Field: {colField.Name}");
                         foreach (PivotItem item in colField.PivotItems)
                         {
-                            reportTable.Rows.Add(sheet.Name, pivot.Name, "Column", colField.Name, item.Name);
+                            Console.WriteLine($"      Item: {item.Value}");
                         }
                     }
 
-                    // ----- Data Fields (no items, just field names) -----
-                    foreach (PivotField dataField in pivot.DataFields)
+                    // ----- Data Fields (cached values) -----
+                    foreach (PivotField dataField in pivotTable.DataFields)
                     {
-                        reportTable.Rows.Add(sheet.Name, pivot.Name, "Data", dataField.Name, string.Empty);
+                        Console.WriteLine($"    Data Field: {dataField.Name}");
+                        foreach (PivotItem item in dataField.PivotItems)
+                        {
+                            // The cached numeric value is stored in the Value property
+                            Console.WriteLine($"      Item: {item.Value}");
+                        }
                     }
                 }
             }
 
-            // Close the access cache now that extraction is finished
-            workbook.CloseAccessCache(AccessCacheOptions.All);
-
-            // Output the extracted data to console (could be written to CSV, DB, etc.)
-            Console.WriteLine("Extracted Pivot Cache Data:");
-            foreach (DataRow row in reportTable.Rows)
-            {
-                Console.WriteLine($"{row["Worksheet"]}\t{row["PivotTable"]}\t{row["FieldType"]}\t{row["FieldName"]}\t{row["ItemName"]}");
-            }
-
-            // Save the report as a CSV file for external reporting
-            string csvPath = "PivotCacheReport.csv";
-            using (var writer = new StreamWriter(csvPath))
-            {
-                // Write header
-                writer.WriteLine("Worksheet,PivotTable,FieldType,FieldName,ItemName");
-                // Write rows
-                foreach (DataRow row in reportTable.Rows)
-                {
-                    writer.WriteLine($"{row["Worksheet"]},{row["PivotTable"]},{row["FieldType"]},{row["FieldName"]},{row["ItemName"]}");
-                }
-            }
-
-            Console.WriteLine($"Report saved to {csvPath}");
+            // Save the workbook after refresh (optional)
+            string outputPath = "PivotData_Refreshed.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

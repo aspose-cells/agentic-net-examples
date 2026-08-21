@@ -1,19 +1,19 @@
-// Title: Apply Text Wrapping via CopyStyle in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a wrap‑enabled style, apply it to a source range, copy the style to another range with CopyStyle, insert long text, auto‑fit rows, and save the workbook, ensuring automatic text wrapping inheritance across cells.
-// Keywords: Aspose.Cells CopyStyle | text wrap style .NET | C# Aspose.Cells wrap inheritance | AutoFitRows text wrapping | copy cell style Aspose | wrap enabled style Aspose.Cells | Excel export C# Aspose | range style copy Aspose
-// Common Searches: Aspose.Cells copy style with text wrap | How to inherit IsTextWrapped property in Aspose.Cells | CopyStyle preserve wrap setting C# | AutoFitRows after applying wrap style Aspose | Apply text wrapping to multiple cells Aspose.Cells
-// Developer Intent: Copy a wrap‑enabled style from one range to another so that long text automatically wraps in the destination cells.
-// Use Cases: Define a single wrap style in a template and reuse it across many columns for consistent formatting. | Generate reports where description fields exceed column width, ensuring content stays readable without manual adjustments. | Apply a wrap style once, copy it to dynamic data ranges, and call AutoFitRows to adjust row heights automatically.
-// AI Prompts: Provide C# code that creates a style with IsTextWrapped = true, applies it to range A1:A2, copies it to B1:B2 using CopyStyle, and saves the workbook with Aspose.Cells. | Explain why CopyStyle retains the IsTextWrapped property and how to combine it with AutoFitRows for correct row height. | Show an example that copies a wrap‑enabled style across multiple worksheets in Aspose.Cells for .NET.
+// Title: CopyStyle Text‑Wrap Inheritance with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to enable text wrapping on a source range, copy the style to another range using CopyStyle, auto‑fit rows, and save the workbook as an Excel file.
+// Keywords: Aspose.Cells CopyStyle | text wrap inheritance | C# Excel style copy | auto fit rows Aspose | wrap long text cells | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells copy style with text wrap | how to inherit wrap formatting in Excel using C# | CopyStyle method text wrapping Aspose | auto‑fit rows after copying style Aspose.Cells | C# example for wrapping long text in cells
+// Developer Intent: Copy a predefined style that includes text wrapping from one cell range to another programmatically with Aspose.Cells.
+// Use Cases: Apply a template‑defined wrap style to dynamically generated report sections. | Ensure description columns in exported Excel sheets automatically wrap without per‑cell styling. | Reuse styled ranges (font, borders, wrap) across multiple worksheets in a single workbook.
+// AI Prompts: Write C# code that copies a style with text wrapping from range A1:A3 to range C1:C3 using Aspose.Cells. | Explain the effect of CopyStyle on text‑wrap, borders, and number formats in Aspose.Cells. | Provide a step‑by‑step tutorial for applying wrap inheritance and then auto‑fitting rows in an Aspose.Cells workbook.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsWrapInheritanceDemo
+namespace AsposeCellsTextWrapInheritance
 {
-    // Demonstrates how to create a wrap‑enabled style, apply it to a source range, copy the style to another range with CopyStyle, insert long text, auto‑fit rows, and save the workbook, ensuring automatic text wrapping inheritance across cells.
+    // Demonstrates how to enable text wrapping on a source range, copy the style to another range using CopyStyle, auto‑fit rows, and save the workbook as an Excel file.
     class Program
     {
         static void Main()
@@ -26,31 +26,32 @@ namespace AsposeCellsWrapInheritanceDemo
                 Cells cells = worksheet.Cells;
 
                 // Populate source cells with long text that needs wrapping
-                cells["A1"].PutValue("This is a very long text that should be wrapped automatically within the cell when the style is applied.");
-                cells["A2"].PutValue("Another long text entry that demonstrates text wrapping inheritance across cells.");
+                cells["A1"].PutValue("This is a very long text that should be wrapped within the cell A1.");
+                cells["A2"].PutValue("Another long text entry that demonstrates automatic text wrapping in cell A2.");
+                cells["A3"].PutValue("Yet another example of a lengthy string that will wrap when the style is applied to cell A3.");
 
-                // Create a style with text wrapping enabled
-                Style wrapStyle = workbook.CreateStyle();
-                wrapStyle.IsTextWrapped = true;
+                // Create a source style with text wrapping enabled
+                Style sourceStyle = workbook.CreateStyle();
+                sourceStyle.IsTextWrapped = true;
 
-                // Define a source range (A1:A2) and apply the wrapping style to it
-                AsposeRange sourceRange = cells.CreateRange("A1:A2");
-                sourceRange.SetStyle(wrapStyle);
+                // Apply the source style to a source range (A1:A3)
+                AsposeRange sourceRange = cells.CreateRange("A1:A3");
+                sourceRange.SetStyle(sourceStyle);
 
-                // Define a destination range (B1:B2) where the style will be inherited
-                AsposeRange destinationRange = cells.CreateRange("B1:B2");
-                // Copy the style from the source range to the destination range
+                // Populate destination cells with long text as well
+                cells["C1"].PutValue("Destination cell C1 contains a long text that should wrap after copying style.");
+                cells["C2"].PutValue("Destination cell C2 also has lengthy content requiring wrapping.");
+                cells["C3"].PutValue("Destination cell C3 demonstrates the inheritance of wrap style via CopyStyle.");
+
+                // Define destination range and copy style from source range
+                AsposeRange destinationRange = cells.CreateRange("C1:C3");
                 destinationRange.CopyStyle(sourceRange);
 
-                // Populate destination cells with long text to see the inherited wrapping
-                cells["B1"].PutValue("Destination cell with inherited wrap style. This text should also wrap automatically.");
-                cells["B2"].PutValue("Second destination cell demonstrating inherited text wrapping functionality.");
-
-                // Auto-fit rows to adjust height for wrapped text
+                // Auto-fit rows to display wrapped text properly
                 worksheet.AutoFitRows();
 
                 // Determine output file path
-                string outputPath = "WrapInheritanceDemo.xlsx";
+                string outputPath = "TextWrapInheritanceDemo.xlsx";
 
                 // Save the workbook
                 workbook.Save(outputPath);

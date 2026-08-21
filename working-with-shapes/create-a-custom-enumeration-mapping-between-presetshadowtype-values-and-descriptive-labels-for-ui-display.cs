@@ -1,83 +1,69 @@
-// Title: C# Mapping Aspose.Cells PresetShadowType Enum to UI‑Friendly Labels
-// Description: Learn how to build a static dictionary that links every Aspose.Cells PresetShadowType value to a readable UI string, expose it as a read‑only map, and retrieve labels with a helper method—shown in a shape‑shadow example.
-// Keywords: Aspose.Cells PresetShadowType | C# enum to UI label | shadow effect mapping | dictionary lookup Aspose.Cells | shape shadow preset | read‑only dictionary C# | UI friendly enum names | Aspose.Cells example | GitHub Aspose.Cells utilities
-// Common Searches: Aspose.Cells map PresetShadowType to text | C# get friendly name for shadow preset | dictionary for PresetShadowType enum | display shadow options in dropdown Aspose.Cells | how to convert PresetShadowType to string
-// Developer Intent: Create a reusable lookup that converts PresetShadowType enum values into human‑readable strings for UI components.
-// Use Cases: Populate a combo box or dropdown with descriptive shadow names for user selection. | Show the current shadow setting of a shape in a property grid or tooltip. | Validate or reverse‑lookup a user‑chosen label to the corresponding PresetShadowType before applying it.
-// AI Prompts: Write a method that returns the PresetShadowType enum value from a given UI label using the existing dictionary. | Generate unit tests for PresetShadowTypeMapper.GetLabel covering all enum values and the unknown case. | Show how to bind PresetShadowTypeMapper.Map to a WinForms ComboBox for selecting shadow presets.
+// Title: C# – Map Aspose.Cells PresetShadowType enum to readable UI labels
+// Description: Shows how to build a Dictionary<PresetShadowType,string> that pairs each PresetShadowType value with a friendly description, apply a preset shadow to a rectangle shape in a workbook, fetch the description for UI or logging, and save the workbook as PresetShadowMappingDemo.xlsx.
+// Keywords: Aspose.Cells | PresetShadowType | enum to string mapping | C# dictionary | shape shadow description | UI label mapping | Excel workbook example | rectangle shape shadow | Aspose.Cells API demo | code sample
+// Common Searches: Aspose.Cells map PresetShadowType to text | C# dictionary for shadow enum descriptions | display friendly shadow names in Excel workbook | retrieve shape shadow label Aspose.Cells | preset shadow type lookup table C#
+// Developer Intent: Create a lookup that converts PresetShadowType values into human‑readable strings for UI or logging.
+// Use Cases: Populate a drop‑down list with descriptive shadow names for end‑users. | Log the applied shadow effect in a status panel or audit trail. | Synchronize UI controls with a shape's current shadow setting during editing.
+// AI Prompts: Generate a method that returns the description for any PresetShadowType using the provided dictionary. | Show how to bind the shadowTypeDescriptions dictionary to a WinForms ComboBox for selecting shadow effects. | Write unit tests that verify each PresetShadowType maps to the correct description string.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Learn how to build a static dictionary that links every Aspose.Cells PresetShadowType value to a readable UI string, expose it as a read‑only map, and retrieve labels with a helper method—shown in a shape‑shadow example.
-public static class PresetShadowTypeMapper
+namespace PresetShadowMappingDemo
 {
-    // Dictionary that holds the mapping. The keys are the enum values, the values are the UI labels.
-    private static readonly Dictionary<PresetShadowType, string> _map = new Dictionary<PresetShadowType, string>
+    // Shows how to build a Dictionary<PresetShadowType,string> that pairs each PresetShadowType value with a friendly description, apply a preset shadow to a rectangle shape in a workbook, fetch the description for UI or logging, and save the workbook as PresetShadowMappingDemo.xlsx.
+    class Program
     {
-        { PresetShadowType.NoShadow, "No Shadow" },
-        { PresetShadowType.Custom, "Custom Shadow" },
-        { PresetShadowType.OffsetDiagonalBottomRight, "Outer Shadow – Offset Diagonal Bottom Right" },
-        { PresetShadowType.OffsetBottom, "Outer Shadow – Offset Bottom" },
-        { PresetShadowType.OffsetDiagonalBottomLeft, "Outer Shadow – Offset Diagonal Bottom Left" },
-        { PresetShadowType.OffsetRight, "Outer Shadow – Offset Right" },
-        { PresetShadowType.OffsetCenter, "Outer Shadow – Offset Center" },
-        { PresetShadowType.OffsetLeft, "Outer Shadow – Offset Left" },
-        { PresetShadowType.OffsetDiagonalTopRight, "Outer Shadow – Offset Diagonal Top Right" },
-        { PresetShadowType.OffsetTop, "Outer Shadow – Offset Top" },
-        { PresetShadowType.OffsetDiagonalTopLeft, "Outer Shadow – Offset Diagonal Top Left" },
-        { PresetShadowType.InsideDiagonalTopLeft, "Inner Shadow – Inside Diagonal Top Left" },
-        { PresetShadowType.InsideTop, "Inner Shadow – Inside Top" },
-        { PresetShadowType.InsideDiagonalTopRight, "Inner Shadow – Inside Diagonal Top Right" },
-        { PresetShadowType.InsideLeft, "Inner Shadow – Inside Left" },
-        { PresetShadowType.InsideCenter, "Inner Shadow – Inside Center" },
-        { PresetShadowType.InsideRight, "Inner Shadow – Inside Right" },
-        { PresetShadowType.InsideDiagonalBottomLeft, "Inner Shadow – Inside Diagonal Bottom Left" },
-        { PresetShadowType.InsideBottom, "Inner Shadow – Inside Bottom" },
-        { PresetShadowType.InsideDiagonalBottomRight, "Inner Shadow – Inside Diagonal Bottom Right" },
-        { PresetShadowType.PerspectiveDiagonalUpperLeft, "Outer Shadow – Perspective Diagonal Upper Left" },
-        { PresetShadowType.PerspectiveDiagonalUpperRight, "Outer Shadow – Perspective Diagonal Upper Right" },
-        { PresetShadowType.Below, "Outer Shadow – Below" },
-        { PresetShadowType.PerspectiveDiagonalLowerLeft, "Outer Shadow – Perspective Diagonal Lower Left" },
-        { PresetShadowType.PerspectiveDiagonalLowerRight, "Outer Shadow – Perspective Diagonal Lower Right" }
-    };
+        static void Main()
+        {
+            // Create a mapping between PresetShadowType enum values and user‑friendly descriptions.
+            var shadowTypeDescriptions = new Dictionary<PresetShadowType, string>
+            {
+                { PresetShadowType.NoShadow, "No shadow" },
+                { PresetShadowType.Custom, "Custom shadow" },
+                { PresetShadowType.OffsetDiagonalBottomRight, "Outer shadow offset diagonal bottom right" },
+                { PresetShadowType.OffsetBottom, "Outer shadow offset bottom" },
+                { PresetShadowType.OffsetDiagonalBottomLeft, "Outer shadow offset diagonal bottom left" },
+                { PresetShadowType.OffsetRight, "Outer shadow offset right" },
+                { PresetShadowType.OffsetCenter, "Outer shadow offset center" },
+                { PresetShadowType.OffsetLeft, "Outer shadow offset left" },
+                { PresetShadowType.OffsetDiagonalTopRight, "Outer shadow offset diagonal top right" },
+                { PresetShadowType.OffsetTop, "Outer shadow offset top" },
+                { PresetShadowType.OffsetDiagonalTopLeft, "Outer shadow offset diagonal top left" },
+                { PresetShadowType.InsideDiagonalTopLeft, "Inner shadow inside diagonal top left" },
+                { PresetShadowType.InsideTop, "Inner shadow inside top" },
+                { PresetShadowType.InsideDiagonalTopRight, "Inner shadow inside diagonal top right" },
+                { PresetShadowType.InsideLeft, "Inner shadow inside left" },
+                { PresetShadowType.InsideCenter, "Inner shadow inside center" },
+                { PresetShadowType.InsideRight, "Inner shadow inside right" },
+                { PresetShadowType.InsideDiagonalBottomLeft, "Inner shadow inside diagonal bottom left" },
+                { PresetShadowType.InsideBottom, "Inner shadow inside bottom" },
+                { PresetShadowType.InsideDiagonalBottomRight, "Inner shadow inside diagonal bottom right" },
+                { PresetShadowType.PerspectiveDiagonalUpperLeft, "Outer shadow perspective diagonal upper left" },
+                { PresetShadowType.PerspectiveDiagonalUpperRight, "Outer shadow perspective diagonal upper right" },
+                { PresetShadowType.Below, "Outer shadow below" },
+                { PresetShadowType.PerspectiveDiagonalLowerLeft, "Outer shadow perspective diagonal lower left" },
+                { PresetShadowType.PerspectiveDiagonalLowerRight, "Outer shadow perspective diagonal lower right" }
+            };
 
-    /// <summary>
-    /// Retrieves the UI label for a given <see cref="PresetShadowType"/>.
-    /// </summary>
-    /// <param name="type">The preset shadow type.</param>
-    /// <returns>The descriptive label, or "Unknown" if the type is not in the map.</returns>
-    public static string GetLabel(PresetShadowType type)
-    {
-        return _map.TryGetValue(type, out var label) ? label : "Unknown";
-    }
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-    /// <summary>
-    /// Exposes the complete mapping as a read‑only dictionary.
-    /// </summary>
-    public static IReadOnlyDictionary<PresetShadowType, string> Map => _map;
-}
+            // Add a rectangle shape to demonstrate a shadow effect
+            Shape rect = sheet.Shapes.AddRectangle(2, 2, 100, 100, 200, 200);
 
-// Demonstration of using the mapper in a typical Aspose.Cells workflow.
-class Program
-{
-    static void Main()
-    {
-        // Create a new workbook (lifecycle: create)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+            // Choose a preset shadow type
+            rect.ShadowEffect.PresetType = PresetShadowType.OffsetDiagonalBottomRight;
 
-        // Add a rectangle shape and assign a preset shadow type
-        Shape shape = sheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 100);
-        shape.ShadowEffect.PresetType = PresetShadowType.OffsetBottom;
+            // Retrieve the description for UI display
+            string description = shadowTypeDescriptions[rect.ShadowEffect.PresetType];
+            Console.WriteLine($"Applied shadow type: {rect.ShadowEffect.PresetType} – {description}");
 
-        // Obtain the UI‑friendly description for the current shadow type
-        string uiLabel = PresetShadowTypeMapper.GetLabel(shape.ShadowEffect.PresetType);
-        Console.WriteLine($"Current shadow type: {uiLabel}");
-
-        // Save the workbook (lifecycle: save)
-        workbook.Save("ShadowMappingDemo.xlsx");
+            // Save the workbook (lifecycle: save)
+            workbook.Save("PresetShadowMappingDemo.xlsx");
+        }
     }
 }

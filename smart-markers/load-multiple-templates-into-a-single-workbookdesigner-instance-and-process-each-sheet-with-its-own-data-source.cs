@@ -1,32 +1,33 @@
-// Title: Combine Multiple Excel Templates and Process Each Sheet with Separate Smart‑Marker Data Sources using Aspose.Cells WorkbookDesigner (C#)
-// Description: Load a primary template into a Workbook, merge additional template workbooks, assign distinct data collections (e.g., Person, Product) to individual worksheets, process each sheet with WorkbookDesigner while preserving unknown smart markers, and save the consolidated workbook.
-// Keywords: Aspose.Cells | WorkbookDesigner | C# merge Excel templates | smart markers multiple sheets | combine workbooks | set data source per worksheet | preserve unknown markers | Excel template merging example
-// Common Searches: Aspose.Cells combine multiple templates | WorkbookDesigner process each worksheet separately | smart markers different data source per sheet | merge Excel files and keep unknown markers | C# load several template workbooks into one | set data source for specific sheet Aspose.Cells
-// Developer Intent: Load several Excel template files into a single WorkbookDesigner, merge their sheets, and apply a unique smart‑marker data source to each worksheet.
-// Use Cases: Create a combined personnel and product catalog report by merging two template files and filling each sheet with its own object list. | Generate a multi‑section financial workbook where each section uses a different template and data source, preserving any custom markers. | Automate the production of a consolidated inventory and sales dashboard by loading separate templates, merging them, and binding distinct data collections to each tab.
-// AI Prompts: Write C# code that loads three Excel template files, merges them into one workbook, and processes each sheet with a different smart‑marker data source using Aspose.Cells WorkbookDesigner. | Explain how to preserve unrecognized smart markers while processing specific worksheets after combining multiple templates with Aspose.Cells. | Show how to handle missing template files gracefully when merging templates and assigning data sources per worksheet in a C# Aspose.Cells project.
+// Title: Merge multiple Excel templates and process sheet‑specific smart markers with Aspose.Cells WorkbookDesigner (C#)
+// Description: C# example that loads two Excel templates (EmployeeTemplate.xlsx and ProductTemplate.xlsx), combines them into a single workbook, assigns a distinct data source to each sheet (a List<Employee> and a DataTable), processes all smart markers with WorkbookDesigner, and saves the merged result as CombinedResult.xlsx.
+// Keywords: Aspose.Cells | WorkbookDesigner | smart markers | merge Excel templates | multiple worksheets | set data source per sheet | C# Excel automation | combine workbooks | populate Excel with List | populate Excel with DataTable
+// Common Searches: How to combine two Excel templates using Aspose.Cells | Aspose.Cells WorkbookDesigner multiple sheets different data sources | Process smart markers in merged workbook C# | Set separate data sources for each worksheet Aspose.Cells | Combine employee and product templates with smart markers
+// Developer Intent: Combine several template workbooks, bind a unique data source to each worksheet, and execute all smart markers in one WorkbookDesigner session.
+// Use Cases: Generate a consolidated employee‑and‑product report by merging two pre‑designed templates and filling each sheet with its own collection. | Create a multi‑sheet invoice where the staff list uses a List<Employee> and the product list uses a DataTable, processed together. | Build a dashboard that aggregates different data sets across worksheets, each driven by its own smart‑marker data source.
+// AI Prompts: Show me C# code to merge three Excel templates and assign a separate data source to each sheet using Aspose.Cells WorkbookDesigner. | Provide an example of binding a DataSet with multiple tables to different worksheets' smart markers in Aspose.Cells. | Explain how to handle missing template files gracefully when combining workbooks and processing smart markers.
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsMultipleTemplates
 {
-    // Sample data classes
-    // Load a primary template into a Workbook, merge additional template workbooks, assign distinct data collections (e.g., Person, Product) to individual worksheets, process each sheet with WorkbookDesigner while preserving unknown smart markers, and save the consolidated workbook.
-    public class Person
+    // Sample data classes for two different sheets
+    // C# example that loads two Excel templates (EmployeeTemplate.xlsx and ProductTemplate.xlsx), combines them into a single workbook, assigns a distinct data source to each sheet (a List<Employee> and a DataTable), processes all smart markers with WorkbookDesigner, and saves the merged result as CombinedResult.xlsx.
+    public class Employee
     {
         public string Name { get; set; }
         public int Age { get; set; }
-        public Person(string name, int age) { Name = name; Age = age; }
+        public Employee(string name, int age) { Name = name; Age = age; }
     }
 
     public class Product
     {
         public string Title { get; set; }
-        public double Price { get; set; }
-        public Product(string title, double price) { Title = title; Price = price; }
+        public decimal Price { get; set; }
+        public Product(string title, decimal price) { Title = title; Price = price; }
     }
 
     public class Program
@@ -35,68 +36,65 @@ namespace AsposeCellsMultipleTemplates
         {
             try
             {
-                // Paths to template files (each template contains its own smart markers)
-                string[] templateFiles = { "Template_Person.xlsx", "Template_Product.xlsx" };
+                // Load the first template (contains smart markers for Employee data)
+                Workbook template1 = LoadWorkbook("EmployeeTemplate.xlsx");
 
-                // Verify the first template exists before loading
-                if (!File.Exists(templateFiles[0]))
-                {
-                    Console.WriteLine($"Template file not found: {templateFiles[0]}");
-                    return;
-                }
+                // Load the second template (contains smart markers for Product data)
+                Workbook template2 = LoadWorkbook("ProductTemplate.xlsx");
 
-                // Load the first template into a workbook
-                Workbook mainWorkbook = new Workbook(templateFiles[0]);
+                // Merge the second template into the first one so that both sheets exist in a single workbook
+                template1.Combine(template2);
 
-                // Create a WorkbookDesigner and assign the loaded workbook
+                // Create a WorkbookDesigner and assign the merged workbook to it
                 WorkbookDesigner designer = new WorkbookDesigner
                 {
-                    Workbook = mainWorkbook
+                    Workbook = template1
                 };
 
-                // Load remaining templates and merge them into the main workbook
-                for (int i = 1; i < templateFiles.Length; i++)
+                // Prepare data source for the first sheet (Employees)
+                List<Employee> employees = new List<Employee>
                 {
-                    if (!File.Exists(templateFiles[i]))
-                    {
-                        Console.WriteLine($"Template file not found: {templateFiles[i]}");
-                        continue; // Skip missing templates
-                    }
-
-                    Workbook temp = new Workbook(templateFiles[i]);
-                    // Combine adds all worksheets from the temporary workbook into the main one
-                    mainWorkbook.Combine(temp);
-                }
-
-                // Prepare distinct data sources for each sheet
-                List<Person> persons = new List<Person>
-                {
-                    new Person("John Doe", 30),
-                    new Person("Jane Smith", 28)
+                    new Employee("John Doe", 30),
+                    new Employee("Jane Smith", 28)
                 };
+                // Bind the employee list to a data source name used in the first sheet's smart markers
+                designer.SetDataSource("Employee", employees);
 
-                List<Product> products = new List<Product>
-                {
-                    new Product("Laptop", 1200.50),
-                    new Product("Smartphone", 799.99)
-                };
+                // Prepare data source for the second sheet (Products)
+                DataTable productTable = new DataTable("Products");
+                productTable.Columns.Add("Title", typeof(string));
+                productTable.Columns.Add("Price", typeof(decimal));
+                productTable.Rows.Add("Laptop", 1200.00m);
+                productTable.Rows.Add("Smartphone", 799.99m);
+                // Bind the DataTable to a data source name used in the second sheet's smart markers
+                designer.SetDataSource("Product", productTable);
 
-                // Process first sheet (index 0) with Person data
-                designer.SetDataSource("Person", persons);
-                designer.Process(0, true); // true = preserve unrecognized markers
+                // Process all smart markers in the workbook (both sheets)
+                designer.Process();
 
-                // Process second sheet (index 1) with Product data
-                designer.SetDataSource("Product", products);
-                designer.Process(1, true);
-
-                // Save the combined and processed workbook
-                string outputPath = "CombinedOutput.xlsx";
-                designer.Workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                // Save the final workbook containing data from both templates
+                designer.Workbook.Save("CombinedResult.xlsx");
+                Console.WriteLine("Combined workbook saved successfully as 'CombinedResult.xlsx'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        // Helper method to load a workbook safely; creates an empty workbook if the file is missing
+        private static Workbook LoadWorkbook(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                return new Workbook(filePath);
+            }
+            else
+            {
+                Console.WriteLine($"Warning: File '{filePath}' not found. Creating an empty workbook as a placeholder.");
+                Workbook wb = new Workbook();
+                wb.Worksheets[0].Name = Path.GetFileNameWithoutExtension(filePath);
+                return wb;
             }
         }
     }

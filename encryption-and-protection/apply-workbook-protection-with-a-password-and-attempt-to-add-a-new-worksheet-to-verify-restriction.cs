@@ -1,60 +1,48 @@
+// Title: C# – Password‑protect workbook structure and block worksheet addition with Aspose.Cells
+// Description: Shows how to create a Workbook, lock its structure using a password, try to insert a new sheet (causing an exception), save the file, reload it, and verify the lock with the IsWorkbookProtectedWithPassword flag.
+// Keywords: Aspose.Cells | C# | Workbook.Protect | ProtectionType.Structure | password protection | prevent adding worksheets | IsWorkbookProtectedWithPassword | Excel workbook security .NET | structure lock | exception handling for protected workbook
+// Common Searches: How to lock Excel workbook structure with a password in C# | Aspose.Cells prevent adding new sheets after protection | Check if a saved workbook is password‑protected using Aspose.Cells | Exception when adding worksheet to a protected workbook | C# code sample for workbook structure protection
+// Developer Intent: Apply a password to the workbook’s structure and confirm that inserting additional worksheets is disallowed.
+// Use Cases: Distribute an Excel file where users cannot modify the sheet layout. | Automated tests that need to ensure protection settings survive a save‑load cycle. | Graceful handling of protection‑related errors in enterprise reporting tools.
+// AI Prompts: Write C# code that uses Aspose.Cells to protect a workbook’s structure with a password, attempts to add a worksheet, and logs the expected error. | Generate a snippet that loads a saved Excel file and programmatically checks the IsWorkbookProtectedWithPassword property. | Explain how to protect only the workbook structure (leaving windows unprotected) and how to catch protection exceptions in Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsWorkbookProtectionDemo
 {
+    // Shows how to create a Workbook, lock its structure using a password, try to insert a new sheet (causing an exception), save the file, reload it, and verify the lock with the IsWorkbookProtectedWithPassword flag.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Protect the workbook structure with a password
-            // This prevents adding, removing, or renaming worksheets
-            string password = "mySecretPwd";
-            workbook.Protect(ProtectionType.Structure, password);
+            // This prevents adding, deleting, or renaming worksheets
+            workbook.Protect(ProtectionType.Structure, "MySecretPwd");
+
+            // Attempt to add a new worksheet – should fail because the structure is protected
+            try
+            {
+                workbook.Worksheets.Add();
+                Console.WriteLine("New worksheet added (unexpected).");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unable to add worksheet as expected: " + ex.Message);
+            }
 
             // Save the protected workbook
-            string protectedPath = "ProtectedWorkbook.xlsx";
-            workbook.Save(protectedPath);
-            Console.WriteLine($"Workbook saved and protected at: {protectedPath}");
+            string filePath = "ProtectedWorkbook.xlsx";
+            workbook.Save(filePath);
+            workbook.Dispose();
 
-            // Load the protected workbook
-            Workbook loadedWorkbook = new Workbook(protectedPath);
-            Console.WriteLine("Loaded the protected workbook.");
-
-            // Attempt to add a new worksheet while the workbook is protected
-            try
-            {
-                loadedWorkbook.Worksheets.Add("NewSheetWhileProtected");
-                Console.WriteLine("Unexpected: Worksheet added while workbook is protected.");
-            }
-            catch (Exception ex)
-            {
-                // Expected exception because the workbook structure is protected
-                Console.WriteLine($"Failed to add worksheet as expected: {ex.Message}");
-            }
-
-            // Unprotect the workbook using the correct password
-            loadedWorkbook.Unprotect(password);
-            Console.WriteLine("Workbook unprotected successfully.");
-
-            // Now adding a new worksheet should succeed
-            try
-            {
-                loadedWorkbook.Worksheets.Add("NewSheetAfterUnprotect");
-                Console.WriteLine("Worksheet added after unprotecting the workbook.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error after unprotecting: {ex.Message}");
-            }
-
-            // Save the final workbook
-            string finalPath = "UnprotectedWorkbook.xlsx";
-            loadedWorkbook.Save(finalPath);
-            Console.WriteLine($"Final workbook saved at: {finalPath}");
+            // Load the saved workbook to verify protection status
+            Workbook loadedWorkbook = new Workbook(filePath);
+            Console.WriteLine("IsWorkbookProtectedWithPassword: " + loadedWorkbook.IsWorkbookProtectedWithPassword);
+            loadedWorkbook.Dispose();
         }
     }
 }

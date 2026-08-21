@@ -1,17 +1,17 @@
-// Title: C# – Retrieve the page‑scale percentage when fitting an Aspose.Cells worksheet to a single printed sheet
-// Description: Creates a workbook, fills cells A1:J50, sets the print area, applies SetFitToPages(1,1) to force a one‑page layout, builds ImageOrPrintOptions, instantiates SheetRender, reads the PageScale property, prints the scaling percentage, and optionally saves the file.
-// Keywords: Aspose.Cells | C# | .NET | PageScale | SheetRender | SetFitToPages | fit-to-page | print scaling | worksheet scaling factor | Excel print layout | calculate page scale
-// Common Searches: Aspose.Cells get page scale after SetFitToPages | C# calculate print scaling for Excel worksheet | How to retrieve scaling factor for fit‑to‑one‑page in Aspose.Cells | SheetRender PageScale example | Determine print zoom percentage with Aspose.Cells .NET
-// Developer Intent: Find out how to obtain the exact scaling percentage that Aspose.Cells applies when a worksheet is configured to fit on a single printed page.
-// Use Cases: Display the calculated scale to users before printing so they know the reduction level. | Adjust margins, headers, or other layout settings based on the retrieved PageScale value. | Log or report the scaling factor when generating batch prints to ensure consistent output. | Synchronize a custom viewer’s zoom level with the actual print scaling.
-// AI Prompts: Show code that changes the fit‑to‑page setting to 1 page wide and multiple pages tall while still returning the PageScale value. | Provide a loop that iterates over several print areas, captures each PageScale, and outputs a summary table of scaling percentages. | Explain how to use the PageScale value to set a custom zoom level in a WinForms or WPF worksheet viewer.
+// Title: C# – Retrieve the scaling factor for fitting a worksheet to a single printed page using Aspose.Cells
+// Description: This example creates a workbook, fills it with data, applies PageSetup.SetFitToPages(1,1) and disables percent scaling, then uses SheetRender to read the automatically calculated PageScale (0‑1) and prints it as a percentage. The workbook can be saved after the calculation.
+// Keywords: Aspose.Cells C# fit to one page | SheetRender PageScale | SetFitToPages scaling factor | calculate print scale Aspose.Cells | page setup scaling .NET
+// Common Searches: Aspose.Cells get scaling percentage after SetFitToPages | how to read page scale for fit‑to‑page printing in .NET | SheetRender.PageScale example | fit entire worksheet on one printed sheet Aspose.Cells
+// Developer Intent: Find out the exact print‑scale value that Aspose.Cells applies when a worksheet is configured to fit on one page.
+// Use Cases: Display the calculated shrinkage to users before printing. | Log the scale factor for debugging layout issues in automated report pipelines. | Adjust image or PDF export dimensions based on the retrieved PageScale.
+// AI Prompts: Show C# code that sets SetFitToPages(1,1), disables percent scaling, and outputs SheetRender.PageScale as a percentage. | Explain the algorithm behind SheetRender.PageScale and how to use it to modify rendering options before exporting. | Generate a snippet that saves the workbook after fitting it to one page and writes the scaling factor to a log file.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Creates a workbook, fills cells A1:J50, sets the print area, applies SetFitToPages(1,1) to force a one‑page layout, builds ImageOrPrintOptions, instantiates SheetRender, reads the PageScale property, prints the scaling percentage, and optionally saves the file.
-class FitToOnePageDemo
+// This example creates a workbook, fills it with data, applies PageSetup.SetFitToPages(1,1) and disables percent scaling, then uses SheetRender to read the automatically calculated PageScale (0‑1) and prints it as a percentage. The workbook can be saved after the calculation.
+class Program
 {
     static void Main()
     {
@@ -19,34 +19,35 @@ class FitToOnePageDemo
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate the sheet with sample data
-        for (int i = 0; i < 50; i++)
+        // Fill the sheet with enough data to normally span multiple pages
+        for (int row = 0; row < 100; row++)
         {
-            for (int j = 0; j < 10; j++)
+            for (int col = 0; col < 20; col++)
             {
-                sheet.Cells[i, j].PutValue($"R{i + 1}C{j + 1}");
+                sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
             }
         }
 
-        // Define the print area that includes the data
-        sheet.PageSetup.PrintArea = "A1:J50";
+        // Configure page setup to fit the entire sheet onto a single printed page
+        PageSetup pageSetup = sheet.PageSetup;
+        // Use the SetFitToPages method (rule) to specify 1 page wide and 1 page tall
+        pageSetup.SetFitToPages(1, 1);
+        // Ensure scaling is driven by FitToPages rather than a percent zoom
+        pageSetup.IsPercentScale = false;
 
-        // Fit the worksheet to a single page (wide and tall)
-        sheet.PageSetup.SetFitToPages(1, 1); // uses PageSetup.SetFitToPages
-
-        // Create rendering options
+        // Create rendering options (default settings)
         ImageOrPrintOptions options = new ImageOrPrintOptions();
 
-        // Create a SheetRender after page‑setup changes
-        SheetRender render = new SheetRender(sheet, options); // uses SheetRender constructor
+        // Create SheetRender after page‑setup changes (rule)
+        SheetRender sheetRender = new SheetRender(sheet, options);
 
-        // Retrieve the calculated page scale
-        double pageScale = render.PageScale; // uses SheetRender.PageScale
+        // Retrieve the calculated page scale (0.0‑1.0 range)
+        double pageScale = sheetRender.PageScale;
 
-        // Output the scale as a percentage
+        // Output the scaling factor as a percentage
         Console.WriteLine($"Calculated page scale to fit on one sheet: {pageScale * 100:0.##}%");
 
-        // Save the workbook (optional, demonstrates saving)
+        // Save the workbook (optional, demonstrates lifecycle rule)
         workbook.Save("FitToOnePage.xlsx");
     }
 }

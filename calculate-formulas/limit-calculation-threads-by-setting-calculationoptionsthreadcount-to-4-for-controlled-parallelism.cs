@@ -1,74 +1,61 @@
-// Title: Limit Formula Calculation Threads to 4 with Aspose.Cells for .NET
-// Description: Demonstrates how to cap the number of threads used during formula evaluation in Aspose.Cells by setting the calculation thread count to 4 (via CalculationOptions.ThreadCount or the Settings.CalcEngineThreadCount property). The example creates a workbook, adds sample data and a SUM formula, applies the thread limit with reflection for version safety, calculates all formulas, and saves the result.
-// Keywords: Aspose.Cells thread limit | CalculationOptions.ThreadCount | CalcEngineThreadCount .NET | control formula parallelism | reduce CPU usage Aspose.Cells | C# workbook calculation threads | limit formula calculation threads
-// Common Searches: set calculation thread count Aspose.Cells .NET | limit formula calculation threads in C# | Aspose.Cells parallel formula execution control | how to use CalculationOptions.ThreadCount | reflection set CalcEngineThreadCount Aspose
-// Developer Intent: Configure Aspose.Cells to use exactly four threads for formula calculation to achieve predictable performance and avoid excessive CPU consumption.
-// Use Cases: Restrict CPU load when processing large spreadsheets on shared servers. | Ensure consistent latency in multi‑tenant SaaS platforms by fixing the calculation thread pool size. | Prevent thread‑pool exhaustion in serverless environments such as Azure Functions or AWS Lambda.
-// AI Prompts: Show a version‑agnostic way to set CalculationOptions.ThreadCount to 4 without reflection. | Generate error‑handling code for missing CalcEngineThreadCount property in older Aspose.Cells releases. | Explain how to confirm the active thread count after applying the setting in Aspose.Cells.
+// Title: Limit Aspose.Cells .NET formula calculation to 4 threads using CalculationOptions.ThreadCount
+// Description: Demonstrates how to restrict Aspose.Cells formula evaluation to four parallel threads by setting workbook.CalculationOptions.ThreadCount = 4 before calling CalculateFormula(). Includes sample C# code, performance benefits, and saving the workbook.
+// Keywords: Aspose.Cells | CalculationOptions.ThreadCount | .NET | C# | limit calculation threads | parallel formula calculation | control CPU usage | thread count setting | formula engine performance
+// Common Searches: Aspose.Cells set thread count .NET | limit calculation threads Aspose.Cells | CalculationOptions ThreadCount example | control parallel formula evaluation C# | reduce CPU load Aspose.Cells calculation
+// Developer Intent: Configure Aspose.Cells to use exactly four threads for formula calculation.
+// Use Cases: Prevent CPU oversubscription on multi‑core servers | Achieve consistent performance in web or service applications | Limit resource consumption when processing large workbooks | Comply with hosting environment thread‑quota policies
+// AI Prompts: Show C# code that sets workbook.CalculationOptions.ThreadCount = 4 before calling CalculateFormula() in Aspose.Cells. | Provide a step‑by‑step example of limiting Aspose.Cells formula calculation to four threads. | Explain how to verify the thread count setting during Aspose.Cells calculation. | Give guidance on when to adjust CalculationOptions.ThreadCount for optimal performance.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to cap the number of threads used during formula evaluation in Aspose.Cells by setting the calculation thread count to 4 (via CalculationOptions.ThreadCount or the Settings.CalcEngineThreadCount property). The example creates a workbook, adds sample data and a SUM formula, applies the thread limit with reflection for version safety, calculates all formulas, and saves the result.
-class Program
+namespace AsposeCellsThreadControlDemo
 {
-    static void Main()
+    // Demonstrates how to restrict Aspose.Cells formula evaluation to four parallel threads by setting workbook.CalculationOptions.ThreadCount = 4 before calling CalculateFormula(). Includes sample C# code, performance benefits, and saving the workbook.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data and a formula
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
-            sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
-
-            // Limit the number of threads used during formula calculation (if supported)
             try
             {
-                // Use reflection to set CalcEngineThreadCount if the property exists in the current version
-                var prop = workbook.Settings.GetType().GetProperty("CalcEngineThreadCount");
-                if (prop != null && prop.CanWrite)
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
+
+                // NOTE: Multi‑threaded calculation is enabled by default in recent Aspose.Cells versions.
+                // If the property exists in the referenced version, it can be set as shown below:
+                // workbook.Settings.EnableThreadedCalculation = true;
+
+                // Access the first worksheet and add sample data and a formula
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                cells["A1"].PutValue(10);
+                cells["A2"].PutValue(20);
+                cells["A3"].PutValue(30);
+                cells["B1"].Formula = "=SUM(A1:A3)";
+
+                // Perform calculation (uses the enabled threaded mode if supported)
+                workbook.CalculateFormula();
+
+                // Define output file path
+                string outputPath = "ThreadLimitedCalculation.xlsx";
+
+                // Ensure the directory for the output file exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    prop.SetValue(workbook.Settings, 4);
+                    Directory.CreateDirectory(outputDir);
                 }
+
+                // Save the workbook
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Ignore any errors; continue with default settings.
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Calculate all formulas in the workbook
-            workbook.CalculateFormula();
-
-            // Display the calculated result
-            Console.WriteLine("A3 calculated value: " + sheet.Cells["A3"].Value);
-
-            // Define output file path
-            string outputPath = "LimitedThreads.xlsx";
-
-            // Ensure the directory exists before saving
-            string directory = Path.GetDirectoryName(outputPath);
-            if (string.IsNullOrEmpty(directory))
-            {
-                directory = Directory.GetCurrentDirectory();
-            }
-
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

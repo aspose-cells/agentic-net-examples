@@ -1,62 +1,70 @@
-// Title: Apply Aspose.Cells .NET License at Runtime to Remove Evaluation Watermarks (C#)
-// Description: This C# example demonstrates how to load an Aspose.Cells.NET.lic file at runtime, activate licensed mode, verify the workbook's licensing status, add sample data, and save the workbook without the evaluation watermark. It also shows graceful handling when the license file is missing.
-// Keywords: Aspose.Cells license C# | remove evaluation watermark | Workbook.IsLicensed | runtime license loading | Aspose.Cells .NET example | licensed mode workbook | C# Aspose.Cells tutorial | global Aspose.Cells licensing
-// Common Searches: how to set Aspose.Cells license in C# | remove Aspose.Cells evaluation watermark programmatically | check if Aspose.Cells workbook is licensed | load Aspose.Cells .NET license from file | C# example for Aspose.Cells licensed mode
-// Developer Intent: Load a valid Aspose.Cells .NET license at runtime to suppress evaluation watermarks and generate a fully licensed workbook.
-// Use Cases: Deploy applications that need to run without Aspose.Cells watermarks by applying the license programmatically. | Validate licensing status before using premium features such as advanced charting or PDF conversion. | Provide fallback behavior when the license file is absent, ensuring the app continues to function.
-// AI Prompts: Generate C# code that loads an Aspose.Cells license from a given path, checks Workbook.IsLicensed, and saves a workbook without watermarks. | Show error‑handling patterns for missing Aspose.Cells license files while still creating and saving a workbook. | Explain how to verify licensing status after applying a license and enable licensed‑only features conditionally.
+// Title: C# – Apply Aspose.Cells .NET License to Suppress Evaluation Watermarks and Save Workbook
+// Description: Demonstrates how to load an Aspose.Cells .NET license file, activate it with License.SetLicense, verify the activation via Workbook.IsLicensed, create a simple workbook, and save it as an Excel file without evaluation watermarks. Includes error handling for missing license files and I/O failures.
+// Keywords: Aspose.Cells | .NET | C# | license | SetLicense | IsLicensed | remove watermark | evaluation watermark | save workbook | Excel file
+// Common Searches: how to apply Aspose.Cells license in C# | remove Aspose.Cells evaluation watermark | Aspose.Cells SetLicense example | check if Aspose.Cells license is active | save licensed workbook with Aspose.Cells
+// Developer Intent: Activate an Aspose.Cells .NET license to generate a watermark‑free workbook and persist it to disk.
+// Use Cases: Load a .lic file from a known path and call License.SetLicense to enable full functionality. | Confirm licensing status with Workbook.IsLicensed before performing any spreadsheet operations. | Create and populate a workbook even when the license file is absent, logging the condition without crashing. | Save the workbook to a specified location while handling file‑system exceptions.
+// AI Prompts: Generate C# code that reads an Aspose.Cells license from an embedded resource, applies it, and checks the license status. | Show a robust pattern for applying an Aspose.Cells .NET license with fallback logic when the license file cannot be found.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Demonstrates how to load an Aspose.Cells .NET license file, activate it with License.SetLicense, verify the activation via Workbook.IsLicensed, create a simple workbook, and save it as an Excel file without evaluation watermarks. Includes error handling for missing license files and I/O failures.
+public class LicensedWorkbookDemo
 {
-    // This C# example demonstrates how to load an Aspose.Cells.NET.lic file at runtime, activate licensed mode, verify the workbook's licensing status, add sample data, and save the workbook without the evaluation watermark. It also shows graceful handling when the license file is missing.
-    public class LicensedWorkbookDemo
+    public static void Main(string[] args)
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Apply the Aspose.Cells license to suppress evaluation watermarks
-                string licensePath = "Aspose.Cells.NET.lic";
-                if (File.Exists(licensePath))
-                {
-                    License license = new License();
-                    license.SetLicense(licensePath);
-                }
-                else
-                {
-                    Console.WriteLine($"License file not found at '{licensePath}'. Continuing without license.");
-                }
-
-                // Create a new workbook and verify that the license is active
-                Workbook workbook = new Workbook();
-                Console.WriteLine($"IsLicensed: {workbook.IsLicensed}");
-
-                // Add some sample content
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "DataSheet";
-                sheet.Cells["A1"].PutValue("Licensed Workbook");
-
-                // Save the workbook
-                string outputPath = "LicensedWorkbook.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 
-    public class Program
+    public static void Run()
     {
-        public static void Main(string[] args)
+        // Apply the Aspose.Cells license to suppress evaluation watermarks
+        try
         {
-            LicensedWorkbookDemo.Run();
+            string licensePath = "Aspose.Cells.NET.lic";
+            if (File.Exists(licensePath))
+            {
+                License license = new License();
+                license.SetLicense(licensePath);
+                Console.WriteLine("License applied successfully.");
+            }
+            else
+            {
+                Console.WriteLine("License file not found. Continuing without a license.");
+            }
+        }
+        catch (Exception licEx)
+        {
+            Console.WriteLine($"License error: {licEx.Message}");
+        }
+
+        // Verify that the license has been applied
+        Console.WriteLine($"IsLicensed: {new Workbook().IsLicensed}");
+
+        // Create a new workbook and add some sample data
+        Workbook workbook = new Workbook();
+        workbook.Worksheets[0].Name = "Sheet1";
+        workbook.Worksheets[0].Cells[0, 0].PutValue("Licensed Workbook");
+
+        // Save the workbook to disk
+        try
+        {
+            string outputPath = "LicensedWorkbook.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception saveEx)
+        {
+            Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
         }
     }
 }

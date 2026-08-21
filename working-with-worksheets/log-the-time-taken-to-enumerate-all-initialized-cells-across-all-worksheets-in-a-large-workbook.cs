@@ -1,60 +1,69 @@
-// Title: Measure enumeration time of initialized cells across all worksheets in a large Aspose.Cells workbook (C#)
-// Description: C# example that loads a large Excel file with Aspose.Cells, starts a Stopwatch, iterates each worksheet using Cells.GetEnumerator to count every instantiated cell, stops the timer, prints elapsed milliseconds and total cells, verifies the count with Cells.CountLarge, and saves the workbook. Ideal for benchmarking cell‑enumeration performance in .NET.
-// Keywords: Aspose.Cells enumerate cells | C# cell enumeration performance | Stopwatch Aspose.Cells | large workbook benchmark | .NET Excel cell count | Cells.GetEnumerator timing | CountLarge verification | measure Excel processing speed | Aspose.Cells performance testing
-// Common Searches: how to time cell enumeration in Aspose.Cells C# | benchmark initialized cell count across worksheets | measure Aspose.Cells enumeration speed for large workbooks | verify total cells with CountLarge in Aspose.Cells | C# example to log enumeration time of Excel cells
-// Developer Intent: Log the duration required to enumerate every initialized cell in each worksheet of a large workbook using Aspose.Cells.
-// Use Cases: Benchmarking enumeration speed to assess performance impact of large spreadsheets. | Validating that enumerated cell count matches the sum of Cells.CountLarge for data integrity. | Profiling enumeration time before and after applying optimizations such as disabling the calculation engine.
-// AI Prompts: Generate C# code that uses Aspose.Cells to log enumeration time of initialized cells and compares the result with Cells.CountLarge for each worksheet. | Suggest performance‑enhancing techniques for enumerating cells in a large Aspose.Cells workbook, including API alternatives and configuration settings. | Create a unit test that asserts the cell‑enumeration time stays below a specified threshold for a given workbook size.
+// Title: Benchmark: Time to Enumerate All Initialized Cells in a Large Aspose.Cells Workbook (C#)
+// Description: This example creates (or loads) a workbook, populates thousands of cells, starts a Stopwatch, iterates through every worksheet, uses the Cells enumerator to walk through each instantiated cell, counts them, stops the timer, and writes the elapsed seconds and total cell count to the console. The workbook can then be saved.
+// Keywords: Aspose.Cells | C# | enumerate initialized cells | cell enumeration performance | Stopwatch benchmark | large workbook | .NET Excel processing | count populated cells | performance testing | Excel cell traversal
+// Common Searches: Aspose.Cells enumerate initialized cells performance | measure time to iterate over all cells in a workbook C# | benchmark cell enumeration across worksheets Aspose | how to count populated cells in a large Excel file using Aspose.Cells | stopwatch cell traversal Aspose.Cells .NET
+// Developer Intent: Find out how long it takes to traverse and count every initialized cell in all worksheets of a large Aspose.Cells workbook.
+// Use Cases: Benchmarking cell‑traversal speed to gauge performance impact of large data imports. | Verifying that all populated cells are reachable before applying further processing or saving. | Estimating execution time for custom validation or transformation logic that iterates over every initialized cell.
+// AI Prompts: Generate C# code that uses Aspose.Cells to enumerate only non‑empty cells in each worksheet, count them, and output the elapsed time. | Suggest a more efficient method to obtain the total number of initialized cells in a large workbook without iterating through each cell individually. | Provide an example that logs enumeration performance to a file instead of the console, using Aspose.Cells and Stopwatch.
 
 using System;
 using System.Collections;
 using System.Diagnostics;
 using Aspose.Cells;
 
-// C# example that loads a large Excel file with Aspose.Cells, starts a Stopwatch, iterates each worksheet using Cells.GetEnumerator to count every instantiated cell, stops the timer, prints elapsed milliseconds and total cells, verifies the count with Cells.CountLarge, and saves the workbook. Ideal for benchmarking cell‑enumeration performance in .NET.
-class EnumerateCellsTiming
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // This example creates (or loads) a workbook, populates thousands of cells, starts a Stopwatch, iterates through every worksheet, uses the Cells enumerator to walk through each instantiated cell, counts them, stops the timer, and writes the elapsed seconds and total cell count to the console. The workbook can then be saved.
+    public class EnumerateInitializedCellsDemo
     {
-        // Load a large workbook (replace with the actual file path)
-        Workbook workbook = new Workbook("LargeWorkbook.xlsx");
-
-        // Start timing
-        Stopwatch sw = Stopwatch.StartNew();
-
-        long enumeratedCellCount = 0;
-
-        // Enumerate initialized cells in every worksheet
-        foreach (Worksheet sheet in workbook.Worksheets)
+        public static void Main()
         {
-            // Use the Cells.GetEnumerator method (rule-provided)
-            IEnumerator enumerator = sheet.Cells.GetEnumerator();
-            while (enumerator.MoveNext())
+            // Create a new workbook (or load an existing large workbook)
+            // For demonstration, we create a workbook and populate many cells.
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate a large number of cells to simulate a large workbook
+            // (In real scenario, replace this with workbook = new Workbook("LargeFile.xlsx");)
+            for (int row = 0; row < 5000; row++)
             {
-                // Each iteration represents an instantiated cell
-                Cell cell = (Cell)enumerator.Current;
-                enumeratedCellCount++;
-
-                // (Optional) Access cell properties here if needed
-                // e.g., var value = cell.Value;
+                for (int col = 0; col < 50; col++)
+                {
+                    sheet.Cells[row, col].PutValue($"R{row}C{col}");
+                }
             }
+
+            // Start timing the enumeration of all initialized cells across all worksheets
+            Stopwatch sw = Stopwatch.StartNew();
+
+            long totalInitializedCells = 0;
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet ws in workbook.Worksheets)
+            {
+                // Get the Cells collection for the current worksheet
+                Cells cells = ws.Cells;
+
+                // Obtain the enumerator for the cells collection
+                IEnumerator enumerator = cells.GetEnumerator();
+
+                // Enumerate all instantiated cells
+                while (enumerator.MoveNext())
+                {
+                    // The current object is a Cell; we can cast if needed
+                    // Cell cell = (Cell)enumerator.Current;
+                    totalInitializedCells++;
+                }
+            }
+
+            sw.Stop();
+
+            // Log the results
+            Console.WriteLine($"Time taken to enumerate initialized cells: {sw.Elapsed.TotalSeconds:F3} seconds");
+            Console.WriteLine($"Total initialized cells enumerated: {totalInitializedCells}");
+
+            // Optionally save the workbook (demonstrates usage of save lifecycle)
+            workbook.Save("EnumeratedWorkbook.xlsx");
         }
-
-        // Stop timing
-        sw.Stop();
-
-        Console.WriteLine($"Enumeration time: {sw.ElapsedMilliseconds} ms");
-        Console.WriteLine($"Total initialized cells enumerated: {enumeratedCellCount}");
-
-        // Verify using the CountLarge property (rule-provided)
-        long sumCountLarge = 0;
-        foreach (Worksheet sheet in workbook.Worksheets)
-        {
-            sumCountLarge += sheet.Cells.CountLarge;
-        }
-        Console.WriteLine($"Sum of CountLarge across worksheets: {sumCountLarge}");
-
-        // Save the workbook (rule-provided)
-        workbook.Save("LargeWorkbook_Processed.xlsx");
     }
 }

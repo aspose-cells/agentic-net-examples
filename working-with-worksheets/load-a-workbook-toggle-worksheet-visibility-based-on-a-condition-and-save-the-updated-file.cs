@@ -1,39 +1,48 @@
-// Title: C# – Hide or show worksheets by name pattern with Aspose.Cells
-// Description: Loads an Excel workbook, loops through every worksheet, hides those whose names start with a given prefix (e.g., "Hidden") by setting IsVisible = false, keeps the rest visible, and saves the modified file to a new location.
-// Keywords: Aspose.Cells C# hide worksheet | worksheet visibility .NET | conditional sheet hide Aspose | Workbook.Save C# | IsVisible property Aspose.Cells | toggle Excel sheet visibility
-// Common Searches: Aspose.Cells hide worksheets by prefix | C# set worksheet IsVisible property | How to hide multiple sheets with Aspose.Cells | Save workbook after changing sheet visibility | Toggle Excel sheet visibility programmatically
-// Developer Intent: Programmatically adjust worksheet visibility according to naming rules and write the updated workbook to disk.
-// Use Cases: Prepare a distribution package by automatically concealing internal tabs whose names begin with "Hidden" before sending the file to clients. | Enforce reporting standards by ensuring every sheet is explicitly marked visible or hidden based on business logic, then export the workbook.
-// AI Prompts: Write C# code using Aspose.Cells that hides all worksheets containing the word "Temp" in their title and saves the workbook to a user‑specified path. | Show an example that iterates over a workbook's worksheets, applies a custom predicate to set the IsVisible flag, and writes the result to a new Excel file.
+// Title: C# – Hide or Show Worksheets by Name Prefix with Aspose.Cells
+// Description: Loads an Excel workbook, iterates all worksheets, hides those whose names begin with a given prefix (e.g., "Temp"), ensures the rest are visible, and saves the modified file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | .NET | C# | worksheet visibility | hide worksheet | show worksheet | IsVisible property | load workbook | save workbook | conditional sheet hide | Excel automation
+// Common Searches: Aspose.Cells hide worksheet C# | set worksheet visibility Aspose.Cells .NET | toggle worksheet visibility based on name | load and save workbook after changing sheet visibility | C# code to hide sheets starting with Temp
+// Developer Intent: Programmatically hide or reveal worksheets according to a naming rule and write the changes back to the file.
+// Use Cases: Clean up generated reports by hiding temporary tabs before distribution. | Create a user‑friendly template that displays only the required worksheets. | Enforce naming conventions in automated workflows by concealing placeholder sheets.
+// AI Prompts: Write C# code with Aspose.Cells that hides all worksheets whose name contains "Draft" and saves the result as a new file. | Provide an example that toggles worksheet visibility using a custom predicate and logs each sheet that was hidden or shown. | Create a function that accepts a name prefix, sets IsVisible = false for matching sheets, returns the count of hidden sheets, and saves the workbook.
 
 using System;
 using Aspose.Cells;
 
-// Loads an Excel workbook, loops through every worksheet, hides those whose names start with a given prefix (e.g., "Hidden") by setting IsVisible = false, keeps the rest visible, and saves the modified file to a new location.
-class ToggleWorksheetVisibility
+namespace WorksheetVisibilityToggle
 {
-    static void Main()
+    // Loads an Excel workbook, iterates all worksheets, hides those whose names begin with a given prefix (e.g., "Temp"), ensures the rest are visible, and saves the modified file using Aspose.Cells for .NET.
+    class Program
     {
-        // Load the workbook from an existing file
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath); // uses Workbook(string) constructor
-
-        // Loop through each worksheet and set visibility based on a condition
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            // Example condition: hide worksheets whose name starts with "Hidden"
-            if (sheet.Name.StartsWith("Hidden", StringComparison.OrdinalIgnoreCase))
-            {
-                sheet.IsVisible = false; // hide the sheet
-            }
-            else
-            {
-                sheet.IsVisible = true; // ensure the sheet is visible
-            }
-        }
+            // Path to the existing workbook
+            string inputPath = "input.xlsx";
 
-        // Save the modified workbook to a new file
-        string outputPath = "output.xlsx";
-        workbook.Save(outputPath); // uses Workbook.Save(string) method
+            // Load the workbook from file (uses the Workbook(string) constructor)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets and toggle visibility based on a condition
+            // Example condition: hide worksheets whose name starts with "Temp"
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                if (sheet.Name.StartsWith("Temp", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Hide the worksheet
+                    sheet.IsVisible = false;
+                }
+                else
+                {
+                    // Ensure the worksheet is visible
+                    sheet.IsVisible = true;
+                }
+            }
+
+            // Save the updated workbook (uses the Workbook.Save(string) method)
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+
+            Console.WriteLine($"Workbook saved to '{outputPath}' with updated worksheet visibility.");
+        }
     }
 }

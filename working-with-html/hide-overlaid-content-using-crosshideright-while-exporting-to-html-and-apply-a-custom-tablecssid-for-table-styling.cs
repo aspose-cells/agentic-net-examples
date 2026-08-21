@@ -1,40 +1,45 @@
-// Title: Hide Overlaid Text with CrossHideRight and Apply a Custom TableCssId When Exporting Excel to HTML – Aspose.Cells for .NET
-// Description: Shows how to export an Aspose.Cells workbook to HTML while using HtmlCrossType.CrossHideRight to suppress right‑hand overflow text and assigning a TableCssId to style the generated table with custom CSS.
-// Keywords: Aspose.Cells | HtmlSaveOptions | CrossHideRight | HtmlCrossType | TableCssId | export Excel to HTML | .NET | overlay text handling | custom CSS id | HTML table styling
-// Common Searches: Aspose.Cells hide overflow text in HTML export | CrossHideRight example C# | Set TableCssId for HTML table Aspose.Cells | Export Excel workbook to HTML with custom CSS id | Prevent cell text overlapping in HTML output Aspose
-// Developer Intent: Export a workbook to HTML, hide the right portion of overlaid cell text, and give the output table a specific CSS identifier for styling.
-// Use Cases: Creating HTML reports where long cell values must not spill into adjacent cells. | Applying brand‑consistent CSS rules to the exported table by using a custom TableCssId. | Generating printable HTML versions of spreadsheets with controlled overlay behavior for better layout control.
-// AI Prompts: How do I configure HtmlSaveOptions to use CrossHideRight and set a custom TableCssId in Aspose.Cells for .NET? | Provide a C# snippet that exports an Excel workbook to HTML with hidden right‑hand overflow text and a custom table CSS id. | Explain the effect of HtmlCrossType.CrossHideRight on overlaid text in the HTML output and how to verify it.
+// Title: Hide Overlapping Cell Text with CrossHideRight & Apply Custom TableCssId in Aspose.Cells HTML Export (C#)
+// Description: Shows how to create a workbook, insert a long string that overflows into the next cell, and configure HtmlSaveOptions to use HtmlCrossType.CrossHideRight to hide the right part of the overflow while assigning TableCssId="custom-table-style" for external CSS styling, then save the sheet as HTML.
+// Keywords: Aspose.Cells | HTML export | CrossHideRight | HtmlCrossType | TableCssId | C# | .NET | hide overlapping text | custom table CSS | workbook to HTML | export options
+// Common Searches: Aspose.Cells hide overlapping text HTML | CrossHideRight example C# | Set TableCssId in HtmlSaveOptions | C# export workbook to HTML with custom CSS id | truncate overflow cell text Aspose.Cells
+// Developer Intent: Export a workbook to HTML while truncating the right‑hand overflow of long cell values and assigning a specific CSS id to the generated table for styling.
+// Use Cases: Generate HTML reports where long cell values must not spill into adjacent columns. | Apply external stylesheet rules to the exported table via a known CSS id. | Create printable HTML output with consistent layout and controlled overflow handling. | Integrate HTML export into web applications that require precise table styling.
+// AI Prompts: Provide C# code using Aspose.Cells to export a worksheet to HTML with HtmlCrossType.CrossHideRight and TableCssId='custom-table-style'. | Explain how HtmlCrossType.CrossHideRight modifies overlapping cell content in the generated HTML and how to style the table using the assigned TableCssId. | Recommend additional HtmlSaveOptions (e.g., EmbedCss, ExportImagesAsBase64, PreserveFormatting) to improve HTML export quality while keeping the custom table id.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to export an Aspose.Cells workbook to HTML while using HtmlCrossType.CrossHideRight to suppress right‑hand overflow text and assigning a TableCssId to style the generated table with custom CSS.
-class Program
+namespace AsposeCellsHtmlExportDemo
 {
-    static void Main()
+    // Shows how to create a workbook, insert a long string that overflows into the next cell, and configure HtmlSaveOptions to use HtmlCrossType.CrossHideRight to hide the right part of the overflow while assigning TableCssId="custom-table-style" for external CSS styling, then save the sheet as HTML.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add data that will cause overlaid (cross‑cell) text
-        // Long text in A1 will overflow into B1 when column width is small
-        sheet.Cells["A1"].PutValue("This is a very long text that will overflow into the next cell");
-        sheet.Cells["B1"].PutValue("Right side content");
+            // Populate cells with data that will cause a cross‑cell string
+            // Cell A1 contains a long text that will overflow into B1
+            sheet.Cells["A1"].PutValue("This is a very long text that will overlap the next cell when rendered.");
+            sheet.Cells["B1"].PutValue("Right side");
 
-        // Reduce column widths to force overflow
-        sheet.Cells.SetColumnWidth(0, 10); // Column A
-        sheet.Cells.SetColumnWidth(1, 10); // Column B
+            // Optional: set column widths to make the overlap visible
+            sheet.Cells.SetColumnWidth(0, 20); // Column A
+            sheet.Cells.SetColumnWidth(1, 15); // Column B
 
-        // Configure HTML save options
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-        // Hide the right part of overlaid text when it overlaps
-        htmlOptions.HtmlCrossStringType = HtmlCrossType.CrossHideRight;
-        // Apply a custom TableCssId for styling the generated table
-        htmlOptions.TableCssId = "custom-table-style";
+            // Configure HTML save options
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-        // Save the workbook as HTML with the specified options
-        workbook.Save("output.html", htmlOptions);
+            // Hide the right part of overlapping text
+            saveOptions.HtmlCrossStringType = HtmlCrossType.CrossHideRight;
+
+            // Apply a custom TableCssId for styling the generated HTML table
+            saveOptions.TableCssId = "custom-table-style";
+
+            // Save the workbook as HTML using the configured options
+            workbook.Save("ExportedWithCrossHideRight.html", saveOptions);
+        }
     }
 }

@@ -1,40 +1,42 @@
-// Title: Retrieve and format a shape's TextBody alignment using Aspose.Cells for .NET
-// Description: Demonstrates how to add a rectangle shape to a worksheet, access its TextBody, obtain the ShapeTextAlignment object, enable text wrapping, set custom margins, and save the workbook as an .xlsx file.
-// Keywords: Aspose.Cells shape TextBody | ShapeTextAlignment C# | text wrapping Aspose.Cells | shape margin settings .NET | format shape text Aspose.Cells
-// Common Searches: how to get ShapeTextAlignment from a shape in Aspose.Cells | enable text wrap for rectangle shape Aspose.Cells .NET | set top bottom left right margins for shape text | Aspose.Cells shape text alignment example
-// Developer Intent: Access a shape's TextBody, retrieve the ShapeTextAlignment object, and apply formatting such as wrapping and margin adjustments.
-// Use Cases: Prepare reports where shape captions need consistent padding and line wrapping. | Create reusable templates with predefined text layout for charts, diagrams, or callouts. | Programmatically adjust shape text appearance in bulk before exporting to Excel.
-// AI Prompts: Provide C# code that retrieves a shape's ShapeTextAlignment via TextBody and sets wrap and margin properties using Aspose.Cells. | Write a method that accepts a Shape object and configures its text alignment, wrap flag, and margin values. | Explain the steps to modify ShapeTextAlignment properties of a shape in an Aspose.Cells workbook.
+// Title: Retrieve a Shape's TextBody and Configure ShapeTextAlignment (wrap & rotate) in Aspose.Cells for .NET
+// Description: This example creates a workbook, adds a rectangle shape, assigns text, accesses the ShapeTextAlignment object via shape.TextBody.TextAlignment, enables text wrapping, links text rotation to the shape, sets a 45° rotation, and saves the file.
+// Keywords: Aspose.Cells shape text alignment | ShapeTextAlignment .NET | text wrapping shape Aspose.Cells | rotate shape text Aspose.Cells | access TextBody Aspose.Cells | C# Aspose.Cells shape formatting | Excel shape text rotation | Aspose.Cells API TextAlignment
+// Common Searches: Aspose.Cells get shape text alignment | C# set text wrap on shape Aspose.Cells | rotate shape text Aspose.Cells .NET | how to access Shape.TextBody.TextAlignment | Aspose.Cells shape text rotation angle
+// Developer Intent: Obtain the ShapeTextAlignment object from a shape's TextBody and apply text‑wrap and rotation settings programmatically.
+// Use Cases: Create a labeled rectangle with wrapped, rotated text for a custom report header. | Design dashboard shapes where the text follows the shape orientation for clearer visuals. | Adjust shape text wrapping and rotation dynamically based on user‑defined layout rules.
+// AI Prompts: Show C# code using Aspose.Cells to enable text wrapping and set a rotation angle on a shape's text body. | Explain the effect of IsTextWrapped, RotateTextWithShape, and RotationAngle on shape text appearance in Excel. | Provide a snippet that reads the current RotationAngle from a shape's TextBody and modifies it based on shape size.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// Demonstrates how to add a rectangle shape to a worksheet, access its TextBody, obtain the ShapeTextAlignment object, enable text wrapping, set custom margins, and save the workbook as an .xlsx file.
-class Program
+namespace AsposeCellsShapeTextAlignmentDemo
 {
-    static void Main()
+    // This example creates a workbook, adds a rectangle shape, assigns text, accesses the ShapeTextAlignment object via shape.TextBody.TextAlignment, enables text wrapping, links text rotation to the shape, sets a 45° rotation, and saves the file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook (lifecycle create rule)
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a rectangle shape to the worksheet
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 50);
-        shape.Text = "Sample Text";
+            // Add a rectangle shape to the worksheet
+            // Parameters: upper left row, upper left column, top, left, height, width
+            Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 200);
+            shape.Text = "Sample Text for Alignment";
 
-        // Access the ShapeTextAlignment object via the shape's TextBody
-        ShapeTextAlignment textAlignment = shape.TextBody.TextAlignment;
+            // Access the ShapeTextAlignment object via the shape's TextBody
+            ShapeTextAlignment textAlignment = shape.TextBody.TextAlignment;
 
-        // Example formatting: enable text wrapping and set custom margins
-        textAlignment.IsTextWrapped = true;
-        textAlignment.TopMarginPt = 10;
-        textAlignment.BottomMarginPt = 10;
-        textAlignment.LeftMarginPt = 5;
-        textAlignment.RightMarginPt = 5;
+            // Example formatting: enable text wrapping and rotate text with the shape
+            textAlignment.IsTextWrapped = true;
+            textAlignment.RotateTextWithShape = true;
+            textAlignment.RotationAngle = 45; // rotate text 45 degrees
 
-        // Save the workbook with the formatted shape
-        workbook.Save("ShapeTextAlignmentDemo.xlsx");
+            // Save the workbook (lifecycle save rule)
+            workbook.Save("ShapeTextAlignmentDemo.xlsx");
+        }
     }
 }

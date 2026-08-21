@@ -1,77 +1,103 @@
-// Title: Check Base64 Image Deduplication with EnableCssCustomProperties in Aspose.Cells HTML Export (C#)
-// Description: A C# example that adds the same PNG picture to two cells, saves the workbook as HTML with ExportImagesAsBase64 and EnableCssCustomProperties enabled, then reads the output to verify that the base64 data URI appears only once, confirming CSS‑based deduplication.
-// Keywords: Aspose.Cells | HtmlSaveOptions | EnableCssCustomProperties | base64 image deduplication | ExportImagesAsBase64 | C# HTML conversion | duplicate picture handling | CSS custom properties
-// Common Searches: Aspose.Cells deduplicate base64 images | EnableCssCustomProperties duplicate picture | count base64 occurrences in Aspose HTML output | C# verify image deduplication Aspose.Cells | HTML export with CSS custom properties Aspose
-// Developer Intent: Confirm that identical images are emitted a single time in the HTML when CSS custom properties are used during conversion.
-// Use Cases: Generate compact HTML from a workbook that contains repeated pictures. | Programmatically validate that a single base64 data URI is referenced via a CSS variable. | Inspect the generated CSS custom property to ensure correct embedding of the image.
-// AI Prompts: Create a C# unit test that adds the same image to multiple cells, saves to HTML with EnableCssCustomProperties true, and asserts a single occurrence of the base64 string. | Write a C# method that extracts the CSS custom property containing the embedded base64 image from Aspose.Cells HTML output. | Explain the mechanism Aspose.Cells uses to deduplicate base64 images when EnableCssCustomProperties is enabled.
+// Title: Deduplicate Identical Images in HTML Export with EnableCssCustomProperties – Aspose.Cells for .NET
+// Description: This C# example creates a workbook, inserts the same PNG into two cells, and saves it as HTML with ExportImagesAsBase64 and EnableCssCustomProperties turned on. After saving, the code parses the HTML, extracts all data‑image Base64 URIs, and verifies that only one distinct Base64 string is emitted while multiple <img> tags exist, proving CSS‑custom‑property deduplication.
+// Keywords: Aspose.Cells HTML export | EnableCssCustomProperties | base64 image deduplication | C# .NET spreadsheet to HTML | duplicate image handling | CSS custom properties Aspose | reduce HTML size Aspose.Cells | global developers | North America .NET | Europe C#
+// Common Searches: Aspose.Cells duplicate images HTML export | EnableCssCustomProperties base64 example C# | how to deduplicate images in Aspose HTML output | count distinct base64 strings Aspose.Cells | verify image deduplication Aspose.Cells .NET
+// Developer Intent: Ensure that identical pictures are emitted once as a Base64 URI and referenced via CSS custom properties during HTML conversion.
+// Use Cases: Automated regression test that confirms image deduplication reduces HTML payload. | Generating compact HTML reports or email templates where a logo appears multiple times. | Validating compliance with size‑budget constraints for web‑published spreadsheet exports.
+// AI Prompts: Create an xUnit test in C# that adds the same image twice to a workbook, saves to HTML with EnableCssCustomProperties=true, and asserts that the distinct Base64 count equals 1. | Write a PowerShell script that scans an Aspose.Cells‑generated HTML file, lists all data:image Base64 URIs, and flags duplicates. | Explain the internal mechanism Aspose.Cells uses to replace repeated Base64 images with CSS custom properties during HTML export.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// A C# example that adds the same PNG picture to two cells, saves the workbook as HTML with ExportImagesAsBase64 and EnableCssCustomProperties enabled, then reads the output to verify that the base64 data URI appears only once, confirming CSS‑based deduplication.
-class HtmlBase64DeduplicationDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // This C# example creates a workbook, inserts the same PNG into two cells, and saves it as HTML with ExportImagesAsBase64 and EnableCssCustomProperties turned on. After saving, the code parses the HTML, extracts all data‑image Base64 URIs, and verifies that only one distinct Base64 string is emitted while multiple <img> tags exist, proving CSS‑custom‑property deduplication.
+    public class VerifyBase64ImageDeduplication
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Sample PNG image (1x1 red pixel) as base64 string
-        const string redPixelBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
-        byte[] imageBytes = Convert.FromBase64String(redPixelBase64);
-
-        // Add the same image twice to different cells
-        using (MemoryStream ms1 = new MemoryStream(imageBytes))
+        public static void Run()
         {
-            sheet.Pictures.Add(1, 1, ms1);
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Path to the image file
+                string imagePath = "logo.png";
+
+                // Ensure the image file exists before adding
+                if (File.Exists(imagePath))
+                {
+                    // Add the same image to two different cells
+                    int imgIndex1 = sheet.Pictures.Add(1, 1, imagePath);
+                    Picture pic1 = sheet.Pictures[imgIndex1];
+                    pic1.Width = 100;
+                    pic1.Height = 100;
+
+                    int imgIndex2 = sheet.Pictures.Add(5, 3, imagePath);
+                    Picture pic2 = sheet.Pictures[imgIndex2];
+                    pic2.Width = 100;
+                    pic2.Height = 100;
+                }
+                else
+                {
+                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping image insertion.");
+                }
+
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    ExportImagesAsBase64 = true,
+                    EnableCssCustomProperties = true
+                };
+
+                // Save the workbook as HTML
+                string htmlPath = "OutputWithCssCustomProperties.html";
+                workbook.Save(htmlPath, htmlOptions);
+
+                // Load the generated HTML content
+                string htmlContent = File.ReadAllText(htmlPath);
+
+                // Find all Base64 image data URIs in the HTML
+                Regex base64Regex = new Regex(@"data:image\/[a-zA-Z]+;base64,[A-Za-z0-9+/=]+", RegexOptions.Compiled);
+                MatchCollection matches = base64Regex.Matches(htmlContent);
+
+                // Count distinct Base64 strings
+                HashSet<string> distinctBase64 = new HashSet<string>();
+                foreach (Match match in matches)
+                {
+                    distinctBase64.Add(match.Value);
+                }
+
+                Console.WriteLine($"Total <img> tags with Base64 data: {matches.Count}");
+                Console.WriteLine($"Distinct Base64 image strings: {distinctBase64.Count}");
+
+                // Verification: when EnableCssCustomProperties is true, identical images should be stored once
+                if (distinctBase64.Count == 1 && matches.Count > 1)
+                {
+                    Console.WriteLine("Verification passed: Base64 image strings are deduplicated using CSS custom properties.");
+                }
+                else
+                {
+                    Console.WriteLine("Verification failed: Image deduplication did not occur as expected.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        using (MemoryStream ms2 = new MemoryStream(imageBytes))
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            sheet.Pictures.Add(5, 3, ms2);
-        }
-
-        // Configure HTML save options
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.ExportImagesAsBase64 = true;               // Embed images as base64
-        htmlOptions.EnableCssCustomProperties = true;          // Enable deduplication via CSS custom properties
-
-        // Save the workbook to HTML
-        const string outputHtml = "deduplication_demo.html";
-        workbook.Save(outputHtml, htmlOptions);
-
-        // Load the generated HTML
-        string htmlContent = File.ReadAllText(outputHtml);
-
-        // Count how many times the original base64 string appears in the HTML
-        int occurrenceCount = 0;
-        int startIndex = 0;
-        while ((startIndex = htmlContent.IndexOf(redPixelBase64, startIndex, StringComparison.Ordinal)) != -1)
-        {
-            occurrenceCount++;
-            startIndex += redPixelBase64.Length;
-        }
-
-        // Output verification result
-        Console.WriteLine($"Base64 image data occurrence count in HTML: {occurrenceCount}");
-        if (occurrenceCount == 1)
-        {
-            Console.WriteLine("Success: Base64 image string is deduplicated when EnableCssCustomProperties is true.");
-        }
-        else
-        {
-            Console.WriteLine("Failure: Base64 image string appears multiple times.");
-        }
-
-        // Optional: Show a snippet of the generated CSS custom property (for manual inspection)
-        var cssMatch = Regex.Match(htmlContent, @"--[^:]+:\s*url\(['""]?data:image/[^;]+;base64,[^'"")]+\)");
-        if (cssMatch.Success)
-        {
-            Console.WriteLine("Detected CSS custom property containing the base64 image:");
-            Console.WriteLine(cssMatch.Value);
+            VerifyBase64ImageDeduplication.Run();
         }
     }
 }

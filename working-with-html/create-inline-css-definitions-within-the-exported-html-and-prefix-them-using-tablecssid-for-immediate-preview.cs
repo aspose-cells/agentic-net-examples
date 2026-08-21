@@ -1,54 +1,48 @@
 // Title: C# – Export Excel to a Single HTML File with Inline CSS Using TableCssId (Aspose.Cells)
-// Description: Demonstrates how to create a workbook, fill it with data, and save it as a single HTML file that embeds custom CSS inside a <style> tag. The TableCssId property prefixes all table selectors, enabling immediate preview without external style sheets.
-// Keywords: Aspose.Cells | C# HTML export | inline CSS | TableCssId | single HTML file | embed CSS in HTML | Excel to HTML | custom table styling
-// Common Searches: Aspose.Cells embed CSS in HTML export | TableCssId prefix for HTML tables C# | save workbook as single HTML file Aspose | inline CSS with Aspose.Cells HtmlSaveOptions | custom CSS for exported Excel HTML
-// Developer Intent: Export an Excel workbook to a self‑contained HTML page that includes custom inline CSS prefixed by a TableCssId for instant visual preview.
-// Use Cases: Generate web‑ready reports from Excel with all styling bundled in one file. | Create preview pages for spreadsheets where external CSS files are undesirable. | Maintain consistent table appearance across multiple exported HTML documents by reusing the same TableCssId and CSS definitions.
-// AI Prompts: Write C# code with Aspose.Cells to export a workbook to HTML, embedding CSS that uses a custom TableCssId prefix. | Show how to adjust the CssStyles property to change header background color and cell padding while keeping SaveAsSingleFile enabled. | Explain the effect of TableCssId on generated HTML selectors and how to reference them in inline CSS.
+// Description: Demonstrates how to use Aspose.Cells for .NET to save a workbook as one HTML document with CSS embedded inline and class names prefixed by TableCssId, enabling instant preview without external style sheets.
+// Keywords: Aspose.Cells HTML export | inline CSS Aspose.Cells | TableCssId prefix | SaveAsSingleFile .NET | C# export Excel to HTML | embedded CSS in HTML | self‑contained HTML workbook
+// Common Searches: Aspose.Cells embed CSS in exported HTML | TableCssId usage in HtmlSaveOptions | C# save Excel as single HTML file | inline CSS for Aspose.Cells HTML output | how to prefix CSS classes when exporting Excel to HTML
+// Developer Intent: Create a self‑contained HTML preview of an Excel workbook with custom‑prefixed CSS classes defined inline.
+// Use Cases: Quickly display spreadsheet data on a web page without loading external CSS files. | Avoid class‑name collisions by applying a unique TableCssId prefix to all exported table styles. | Generate a single HTML file suitable for email bodies or documentation where external resources are prohibited.
+// AI Prompts: Show how to change the background color in the CssStyles string while keeping the TableCssId prefix. | Provide C# code that reads an existing .xlsx file and exports it to a single HTML file with inline CSS using a custom TableCssId value. | Explain the interaction between SaveAsSingleFile and TableCssId in producing a self‑contained HTML preview.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExportDemo
+// Demonstrates how to use Aspose.Cells for .NET to save a workbook as one HTML document with CSS embedded inline and class names prefixed by TableCssId, enabling instant preview without external style sheets.
+class Program
 {
-    // Demonstrates how to create a workbook, fill it with data, and save it as a single HTML file that embeds custom CSS inside a <style> tag. The TableCssId property prefixes all table selectors, enabling immediate preview without external style sheets.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate some sample data
-            sheet.Cells["A1"].PutValue("Name");
-            sheet.Cells["B1"].PutValue("Age");
-            sheet.Cells["A2"].PutValue("John");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["A3"].PutValue("Alice");
-            sheet.Cells["B3"].PutValue(25);
+        // Populate some sample data
+        worksheet.Cells["A1"].PutValue("Name");
+        worksheet.Cells["B1"].PutValue("Age");
+        worksheet.Cells["A2"].PutValue("John");
+        worksheet.Cells["B2"].PutValue(30);
+        worksheet.Cells["A3"].PutValue("Alice");
+        worksheet.Cells["B3"].PutValue(25);
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+        // Configure HTML save options
+        HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-            // Prefix for CSS class names applied to table elements (tr, td, etc.)
-            htmlOptions.TableCssId = "custom-table";
+        // Prefix for CSS class names that will be applied to table elements
+        saveOptions.TableCssId = "custom";
 
-            // Enable single‑file output so that CssStyles are embedded in the HTML <style> tag
-            htmlOptions.SaveAsSingleFile = true;
+        // Save as a single HTML file so that CSS is embedded inline
+        saveOptions.SaveAsSingleFile = true;
 
-            // Define inline CSS that will be placed inside the generated HTML.
-            // The CSS selectors use the TableCssId prefix defined above.
-            htmlOptions.CssStyles = @"
-                .custom-table tr { background-color:#f9f9f9; }
-                .custom-table td { border:1px solid #ddd; padding:5px; }
-                .custom-table th { background-color:#e0e0e0; font-weight:bold; }
-            ";
+        // Define inline CSS using the specified prefix
+        saveOptions.CssStyles = @"
+            .custom-table { border-collapse: collapse; width: 100%; }
+            .custom-tr:nth-child(even) { background-color: #f2f2f2; }
+            .custom-td, .custom-th { border: 1px solid #ddd; padding: 8px; }
+        ";
 
-            // Save the workbook as an HTML file with the specified options
-            workbook.Save("ExportedWithInlineCss.html", htmlOptions);
-
-            Console.WriteLine("HTML file generated with inline CSS and TableCssId prefix.");
-        }
+        // Export the workbook to HTML with the configured options
+        workbook.Save("preview.html", saveOptions);
     }
 }

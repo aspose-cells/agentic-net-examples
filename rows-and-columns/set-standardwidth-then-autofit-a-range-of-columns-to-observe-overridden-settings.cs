@@ -1,54 +1,71 @@
-// Title: Aspose.Cells .NET – Set StandardWidth and AutoFit Columns While Preserving Manual Width Overrides
-// Description: Demonstrates how to define a worksheet's default column width (StandardWidth), manually adjust a specific column, and then auto‑fit a range of columns. The example logs column widths before and after AutoFitColumns and saves the workbook, showing that explicit width settings are respected.
-// Keywords: Aspose.Cells StandardWidth | AutoFitColumns .NET | override column width Aspose.Cells | default column width worksheet | column width logging Aspose.Cells | C# spreadsheet column sizing
-// Common Searches: set default column width then auto‑fit in Aspose.Cells | preserve manually set column width after AutoFitColumns | Aspose.Cells StandardWidth example | how to log column widths before and after autofit Aspose.Cells | C# Aspose.Cells column width override
-// Developer Intent: Define a global default column width, change one column manually, and auto‑fit other columns to see how the manual setting is maintained.
-// Use Cases: Create templates with a uniform default width but keep certain columns narrow for layout control. | Generate reports where most columns expand automatically while a key column stays fixed. | Validate column‑width behavior by comparing measurements before and after auto‑fit.
-// AI Prompts: Write C# code using Aspose.Cells to set StandardWidth to 25, set column B width to 8, auto‑fit columns A‑D, and print the final widths. | Explain the interaction between AutoFitColumns and manually sized columns in Aspose.Cells, including how to retrieve widths after fitting. | Provide a step‑by‑step guide to log column widths before and after calling AutoFitColumns for a selected range in Aspose.Cells.
+// Title: Aspose.Cells .NET – Set StandardWidth and AutoFit a Column Range (Override Example)
+// Description: Shows how to define a worksheet's default column width, manually adjust a single column, auto‑fit a selected range, read column widths before and after the operation, and save the workbook with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells StandardWidth | AutoFitColumns range | SetColumnWidth before AutoFit | GetColumnWidth after AutoFit | .NET spreadsheet column width | default column width Aspose | override column width | column width debugging Aspose.Cells
+// Common Searches: Aspose.Cells set default column width | AutoFitColumns ignore manual width | How to get column width after AutoFit | C# Aspose.Cells column width range | Preserve custom column width while auto‑fitting
+// Developer Intent: Define a workbook's standard column width, apply a custom width to one column, auto‑fit a specific range, and confirm the resulting widths programmatically.
+// Use Cases: Create a template where most columns follow a standard width but selected columns expand to fit their content. | Generate a report that keeps a particular column narrow for layout constraints while allowing other columns to auto‑adjust. | Debug column‑width behavior by logging widths before and after AutoFit to ensure manual overrides are respected.
+// AI Prompts: Write C# code that sets cells.StandardWidth, overrides column B with SetColumnWidth, auto‑fits columns A‑D, and prints widths before and after using Aspose.Cells. | Explain the interaction between AutoFitColumns and manually set column widths in Aspose.Cells for .NET, and how to keep a custom width while auto‑fitting other columns. | Show how to retrieve column widths programmatically, compare them before and after applying AutoFitColumns to a defined range, and save the workbook.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to define a worksheet's default column width (StandardWidth), manually adjust a specific column, and then auto‑fit a range of columns. The example logs column widths before and after AutoFitColumns and saves the workbook, showing that explicit width settings are respected.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Shows how to define a worksheet's default column width, manually adjust a single column, auto‑fit a selected range, read column widths before and after the operation, and save the workbook with Aspose.Cells for .NET.
+    public class StandardWidthAutoFitDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Set the default column width (StandardWidth) for the worksheet
-        cells.StandardWidth = 20.0; // 20 characters
-        Console.WriteLine($"StandardWidth set to: {cells.StandardWidth}");
-
-        // Populate sample data in columns A to D
-        cells["A1"].PutValue("Short");
-        cells["B1"].PutValue("This is a longer text that should cause column B to expand when auto‑fit is applied");
-        cells["C1"].PutValue("Medium length");
-        cells["D1"].PutValue("Very very very long text that will definitely exceed the standard width");
-
-        // Manually override the width of column C (index 2) to be narrower than the standard width
-        cells.SetColumnWidth(2, 5.0);
-        Console.WriteLine($"Column C width before autofit: {cells.GetColumnWidth(2)}");
-
-        // Display column widths before auto‑fit for columns A‑D
-        for (int i = 0; i <= 3; i++)
+        public static void Main()
         {
-            Console.WriteLine($"Column {(char)('A' + i)} width before autofit: {cells.GetColumnWidth(i)}");
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
 
-        // Auto‑fit columns B through D (indexes 1‑3) to see overridden settings take effect
-        sheet.AutoFitColumns(1, 3);
-
-        // Display column widths after auto‑fit
-        for (int i = 0; i <= 3; i++)
+        public static void Run()
         {
-            Console.WriteLine($"Column {(char)('A' + i)} width after autofit: {cells.GetColumnWidth(i)}");
-        }
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Save the workbook
-        workbook.Save("StandardWidthAutoFitDemo.xlsx");
+            // Set the default column width (standard width) in characters
+            cells.StandardWidth = 20.0; // default width for all columns
+
+            // Populate sample data in columns A to D
+            cells["A1"].PutValue("Short");
+            cells["B1"].PutValue("This is a longer text that will need more width");
+            cells["C1"].PutValue("Medium length");
+            cells["D1"].PutValue("Very very long text that definitely exceeds the standard width");
+
+            // Override width of column B (index 1) before autofit
+            cells.SetColumnWidth(1, 10.0); // custom width for column B
+
+            // Show column widths before autofit
+            Console.WriteLine("Column widths before AutoFit:");
+            for (int i = 0; i < 4; i++)
+            {
+                Console.WriteLine($"Column {i} width: {cells.GetColumnWidth(i)}");
+            }
+
+            // AutoFit columns A through D (indices 0 to 3)
+            worksheet.AutoFitColumns(0, 3);
+
+            // Show column widths after autofit
+            Console.WriteLine("Column widths after AutoFit:");
+            for (int i = 0; i < 4; i++)
+            {
+                Console.WriteLine($"Column {i} width: {cells.GetColumnWidth(i)}");
+            }
+
+            // Save the workbook
+            string outputPath = "StandardWidthAutoFitDemo.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
     }
 }

@@ -1,51 +1,49 @@
-// Title: Set Worksheet Background Image in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to verify an image file, load it into a byte array, assign it to the Worksheet.BackgroundImage property, and save the workbook. Includes basic error handling for missing files.
-// Keywords: Aspose.Cells worksheet background image | C# set worksheet background picture | Excel background picture Aspose.Cells | Worksheet.BackgroundImage property | load image bytes C# Aspose | apply branding to Excel sheet | programmatic Excel background image | Aspose.Cells .NET background image example
-// Common Searches: how to set worksheet background image using Aspose.Cells C# | Aspose.Cells add background picture to Excel sheet .NET | C# code example for worksheet background image Aspose | set Excel worksheet background from file programmatically | Aspose.Cells background image tutorial
-// Developer Intent: Apply a specific image file as the background of an Excel worksheet using Aspose.Cells for .NET.
-// Use Cases: Brand corporate reports by overlaying a logo or watermark on each sheet. | Create reusable workbook templates that include a predefined visual background. | Design dashboards with a consistent theme across multiple worksheets. | Generate printable forms that require a letterhead or background graphic. | Automate production of worksheets that need a company‑wide visual identity.
-// AI Prompts: Generate C# code to set a PNG file as the background of a selected worksheet with Aspose.Cells. | Show how to replace an existing worksheet background image with a new one in an existing workbook. | Provide robust error handling for missing or unsupported image files when applying a worksheet background. | Explain how to remove a background image from a worksheet using Aspose.Cells. | Demonstrate applying the same background image to all worksheets in a workbook with a loop.
+// Title: Set a worksheet background image from a file with Aspose.Cells for .NET (C#)
+// Description: Creates a new Workbook, loads an image file into a byte array, assigns it to Worksheet.BackgroundImage, handles missing files, and saves the Excel file with the background applied.
+// Keywords: Aspose.Cells C# background image | Worksheet.BackgroundImage property | load image bytes Aspose.Cells | set Excel sheet background .NET | save workbook with background picture | error handling missing image file | Excel branding with Aspose.Cells
+// Common Searches: Aspose.Cells set worksheet background image C# | how to add background picture to Excel sheet using .NET | Worksheet.BackgroundImage example code | save Excel file with background graphic Aspose.Cells
+// Developer Intent: Apply an image file as the background of a worksheet by assigning byte data to the BackgroundImage property.
+// Use Cases: Brand reports with a company logo as a sheet background. | Add a watermark image to confidential worksheets. | Create visually styled dashboards that include decorative graphics.
+// AI Prompts: Generate C# code that sets a PNG file as a worksheet background using Aspose.Cells and logs a warning if the file is missing. | Show how to replace an existing worksheet background with a new image while keeping the workbook size minimal. | Explain the steps to embed a background picture in an Excel workbook with Aspose.Cells without altering cell contents.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace WorksheetBackgroundDemo
+namespace AsposeCellsBackgroundDemo
 {
-    // Demonstrates how to verify an image file, load it into a byte array, assign it to the Worksheet.BackgroundImage property, and save the workbook. Includes basic error handling for missing files.
-    class Program
+    // Creates a new Workbook, loads an image file into a byte array, assigns it to Worksheet.BackgroundImage, handles missing files, and saves the Excel file with the background applied.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                // Path to the background image file
-                string imagePath = "background.jpg";
-
-                // Verify that the image file exists before attempting to read it
-                if (!File.Exists(imagePath))
-                {
-                    Console.WriteLine($"Image file not found: {imagePath}");
-                    return;
-                }
-
-                // Load image data into a byte array
-                byte[] imageData = File.ReadAllBytes(imagePath);
-
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
                 // Get the first worksheet
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Apply the background image to the worksheet
-                worksheet.BackgroundImage = imageData;
+                // Path to the background image file
+                string imagePath = "background.jpg";
 
-                // Save the workbook
+                // Load the image file into a byte array if it exists
+                if (File.Exists(imagePath))
+                {
+                    byte[] imageData = File.ReadAllBytes(imagePath);
+                    // Set the worksheet background image
+                    worksheet.BackgroundImage = imageData;
+                }
+                else
+                {
+                    Console.WriteLine($"Warning: Image file '{imagePath}' not found. Workbook will be saved without a background image.");
+                }
+
+                // Save the workbook with the background applied (if any)
                 string outputPath = "WorksheetWithBackground.xlsx";
                 workbook.Save(outputPath);
-
-                Console.WriteLine($"Worksheet background image applied successfully. Saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {

@@ -1,84 +1,100 @@
-// Title: Create a Gantt chart in an existing XLSX workbook with Aspose.Cells for .NET
-// Description: Load an XLSX file, add task data, insert a stacked bar chart, hide the start series, set overlap and GapWidth to zero, and save the workbook as a Gantt chart using Aspose.Cells in C#.
-// Keywords: Aspose.Cells | Gantt chart | stacked bar chart | C# | ASP.NET | Excel chart overlap | GapWidth | project timeline chart | add chart to workbook | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells create Gantt chart from stacked bar | C# add Gantt chart to existing Excel file | set chart overlap and gap width Aspose.Cells | how to hide series in Aspose.Cells chart | generate project timeline Excel with Aspose.Cells
-// Developer Intent: Generate a Gantt chart inside an existing XLSX workbook by adding a stacked bar chart and configuring series visibility, overlap, and gaps with Aspose.Cells for .NET.
-// Use Cases: Automated project status reports that embed Gantt charts directly into Excel files. | Dynamic creation of timeline visualizations for task management dashboards in a C# application. | Reusable routine that converts raw start‑date and duration data into a professional Gantt view.
-// AI Prompts: Show C# code that loads an XLSX workbook, adds a stacked bar chart, hides the start series, and sets Overlap and GapWidth to produce a Gantt chart with Aspose.Cells. | Explain how to configure series properties in Aspose.Cells to turn a stacked bar chart into a Gantt chart. | Provide step‑by‑step instructions for creating a project Gantt chart in Excel using Aspose.Cells for .NET, including data preparation and chart saving.
+// Title: Create a Gantt chart in C# with Aspose.Cells by adding a stacked bar chart to an XLSX workbook
+// Description: C# sample that loads (or creates) an XLSX file containing Task, Start and Duration columns, inserts a stacked bar chart, hides the Start series, sets the gap width to zero, adds a chart title, and saves the file as a Gantt chart.
+// Keywords: Aspose.Cells | C# | Gantt chart | stacked bar chart | Excel chart | transparent series | gap width | project schedule | load workbook | add chart
+// Common Searches: Aspose.Cells create Gantt chart C# | how to hide series in Aspose.Cells chart | stacked bar chart Gantt view Aspose | set gap width zero Aspose.Cells | generate project schedule chart with Aspose.Cells
+// Developer Intent: Generate a Gantt chart from task data in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Transform a task list with start dates and durations into a visual Gantt chart for project reporting. | Automatically create a sample workbook when the source file is missing and produce a Gantt chart. | Customize chart appearance—gap width, transparent start series, title—for inclusion in dashboards or presentations.
+// AI Prompts: Write C# code using Aspose.Cells to load an Excel file, add a stacked bar chart, hide the start series, and output a Gantt chart. | Show how to set GapWidth to zero and make a series transparent in an Aspose.Cells chart for a Gantt view. | Provide a complete example that creates a sample task table if the input file does not exist and then generates a Gantt chart.
 
 using System;
+using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Load an XLSX file, add task data, insert a stacked bar chart, hide the start series, set overlap and GapWidth to zero, and save the workbook as a Gantt chart using Aspose.Cells in C#.
-class Program
+namespace AsposeCellsGanttExample
 {
-    static void Main()
+    // C# sample that loads (or creates) an XLSX file containing Task, Start and Duration columns, inserts a stacked bar chart, hides the Start series, sets the gap width to zero, adds a chart title, and saves the file as a Gantt chart.
+    class Program
     {
-        // Load an existing XLSX workbook
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath); // Workbook(string) constructor
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Define input and output file paths
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+                // Ensure the input file exists; if not, create a sample workbook
+                if (!File.Exists(inputPath))
+                {
+                    var sampleWorkbook = new Workbook();
+                    var sheet = sampleWorkbook.Worksheets[0];
 
-        // -------------------------------------------------
-        // Prepare sample data for a Gantt chart (if not already present)
-        // Columns: A - Task name, B - Start (numeric), C - Duration (numeric)
-        // -------------------------------------------------
-        sheet.Cells["A1"].PutValue("Task");
-        sheet.Cells["B1"].PutValue("Start");
-        sheet.Cells["C1"].PutValue("Duration");
+                    // Header row
+                    sheet.Cells["A1"].PutValue("Task");
+                    sheet.Cells["B1"].PutValue("Start");
+                    sheet.Cells["C1"].PutValue("Duration");
 
-        sheet.Cells["A2"].PutValue("Task 1");
-        sheet.Cells["B2"].PutValue(1);   // start
-        sheet.Cells["C2"].PutValue(3);   // duration
+                    // Sample data (rows 2‑6)
+                    string[] tasks = { "Task 1", "Task 2", "Task 3", "Task 4", "Task 5" };
+                    int[] starts = { 0, 2, 4, 6, 8 };
+                    int[] durations = { 2, 3, 1, 4, 2 };
 
-        sheet.Cells["A3"].PutValue("Task 2");
-        sheet.Cells["B3"].PutValue(2);
-        sheet.Cells["C3"].PutValue(4);
+                    for (int i = 0; i < tasks.Length; i++)
+                    {
+                        sheet.Cells[i + 1, 0].PutValue(tasks[i]);   // Column A
+                        sheet.Cells[i + 1, 1].PutValue(starts[i]); // Column B
+                        sheet.Cells[i + 1, 2].PutValue(durations[i]); // Column C
+                    }
 
-        sheet.Cells["A4"].PutValue("Task 3");
-        sheet.Cells["B4"].PutValue(4);
-        sheet.Cells["C4"].PutValue(2);
+                    sampleWorkbook.Save(inputPath, SaveFormat.Xlsx);
+                }
 
-        sheet.Cells["A5"].PutValue("Task 4");
-        sheet.Cells["B5"].PutValue(5);
-        sheet.Cells["C5"].PutValue(5);
-        // -------------------------------------------------
+                // Load the workbook (ensure file exists before loading)
+                Workbook workbook;
+                try
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                catch (Exception loadEx)
+                {
+                    Console.WriteLine($"Failed to load workbook '{inputPath}': {loadEx.Message}");
+                    return;
+                }
 
-        // Add a stacked bar chart (BarStacked) to the worksheet
-        // Parameters: topRow, leftColumn, bottomRow, rightColumn
-        int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 7, 0, 25, 10); // ChartCollection.Add(ChartType, int, int, int, int)
-        Chart chart = sheet.Charts[chartIndex];
+                var worksheet = workbook.Worksheets[0];
 
-        // Add the first series (Start) – this series will be made invisible later
-        chart.NSeries.Add("B2:B5", true); // series for start values
+                // Add a stacked bar chart (rows 5‑20, columns 0‑10)
+                int chartIndex = worksheet.Charts.Add(ChartType.BarStacked, 5, 0, 20, 10);
+                Chart ganttChart = worksheet.Charts[chartIndex];
 
-        // Add the second series (Duration) – this series represents the actual task length
-        chart.NSeries.Add("C2:C5", true); // series for duration values
+                // Add "Start" series (will be hidden later)
+                ganttChart.NSeries.Add("B2:B6", true);
+                ganttChart.NSeries[0].Name = "Start";
 
-        // Set the category (task names) for the X‑axis
-        chart.NSeries.CategoryData = "A2:A5";
+                // Add "Duration" series (visible bars)
+                ganttChart.NSeries.Add("C2:C6", true);
+                ganttChart.NSeries[1].Name = "Duration";
 
-        // -------------------------------------------------
-        // Configure the chart to behave like a Gantt chart
-        // 1. Make the "Start" series invisible by setting its gap width to 0
-        // 2. Overlap the bars completely (100%) so they appear stacked
-        // 3. Reduce the gap between bar clusters for a tighter look
-        // -------------------------------------------------
-        // Make the first series (Start) have no visible gap
-        chart.NSeries[0].GapWidth = 0;          // Series.GapWidth property
-        // Overlap the bars completely
-        chart.NSeries[0].Overlap = 100;        // Series.Overlap property
-        chart.NSeries[1].Overlap = 100;        // Ensure the second series also overlaps
-        // Reduce overall gap between bar clusters
-        chart.GapWidth = 0;                    // Chart.GapWidth property
+                // Configure chart appearance to mimic a Gantt chart
+                ganttChart.GapWidth = 0; // No gap between bars
 
-        // Optional: set the chart title
-        chart.Title.Text = "Project Gantt Chart";
+                // Hide the "Start" series by making it transparent
+                ganttChart.NSeries[0].Area.ForegroundColor = Color.Transparent;
+                ganttChart.NSeries[0].Border.Color = Color.Transparent;
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx", SaveFormat.Xlsx); // Workbook.Save(string, SaveFormat)
+                ganttChart.Title.Text = "Project Schedule (Gantt Chart)";
+
+                // Save the modified workbook
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Gantt chart created successfully. Output saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred while generating the Gantt chart:");
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }

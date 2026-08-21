@@ -1,15 +1,15 @@
-// Title: Split worksheet panes at row 10 & column 5 with Aspose.Cells for .NET (C#)
-// Description: Demonstrates creating a workbook, populating sample data, splitting the worksheet window, setting the bottom pane to start at row 11 and the right pane at column 6, and saving the file as an XLSX using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells split panes | C# split worksheet | set split row column Aspose.Cells | PaneCollection FirstVisibleRowOfBottomPane | FirstVisibleColumnOfRightPane | Excel split panes .NET | freeze panes programmatically
-// Common Searches: Aspose.Cells split panes C# | How to set split row and column in Aspose.Cells | Freeze panes at row 10 column 5 using Aspose.Cells | Programmatically split Excel window with Aspose.Cells .NET | Set first visible row of bottom pane Aspose.Cells
-// Developer Intent: Programmatically split a worksheet into separate scrolling panes at row 10 and column 5 using Aspose.Cells for .NET.
-// Use Cases: Keep header rows and columns visible while the rest of the sheet scrolls independently. | Create a static top‑left quadrant for titles and allow independent scrolling of the data area. | Design dashboards where navigation panels remain fixed and data sections scroll separately.
-// AI Prompts: Write C# code with Aspose.Cells to split panes at a specific row and column and save the workbook. | Explain how to adjust split pane positions dynamically based on worksheet dimensions using Aspose.Cells. | Show how to read, modify, or remove existing pane settings in an existing Excel file with Aspose.Cells.
+// Title: C# – Split Excel worksheet panes at row 10 and column 5 using Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, populate sample data, enable pane splitting with Worksheet.Split(), and position the bottom and right panes at row 10 and column 5 via PaneCollection. The file is saved as SplitPaneDemo.xlsx.
+// Keywords: Aspose.Cells split panes C# | Worksheet.Split Aspose.Cells | PaneCollection FirstVisibleRowOfBottomPane | FirstVisibleColumnOfRightPane | Excel split view programmatically | freeze panes vs split panes Aspose | Aspose.Cells .NET API pane splitting
+// Common Searches: how to split Excel panes with Aspose.Cells C# | set bottom pane start row Aspose.Cells | split worksheet at specific column using Aspose | Aspose.Cells example for pane splitting | C# code to create scrollable panes in Excel
+// Developer Intent: Programmatically divide an Excel sheet into independent scrolling areas by splitting after row 10 and column 5.
+// Use Cases: Show a fixed header (rows 1‑10) while allowing vertical scrolling of the data below. | Separate a summary block (columns A‑E) from detailed columns, enabling independent horizontal navigation. | Create a large report where both top rows and left columns stay visible in distinct panes for quick reference.
+// AI Prompts: Generate C# code to split worksheet panes at a custom row and column with Aspose.Cells. | Explain the differences between Worksheet.Split() and Worksheet.FreezePanes() in Aspose.Cells. | Show how to apply a different zoom level to each pane after splitting using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates creating a workbook, populating sample data, splitting the worksheet window, setting the bottom pane to start at row 11 and the right pane at column 6, and saving the file as an XLSX using Aspose.Cells for .NET.
+// Demonstrates how to create a workbook, populate sample data, enable pane splitting with Worksheet.Split(), and position the bottom and right panes at row 10 and column 5 via PaneCollection. The file is saved as SplitPaneDemo.xlsx.
 public class SplitPaneDemo
 {
     public static void Run()
@@ -20,13 +20,10 @@ public class SplitPaneDemo
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data to visualize the split
+            // Populate some data to visualize the split
             for (int i = 0; i < 30; i++)
             {
-                for (int j = 0; j < 15; j++)
-                {
-                    worksheet.Cells[i, j].PutValue($"R{i + 1}C{j + 1}");
-                }
+                worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
             }
 
             // Split the worksheet window
@@ -34,15 +31,17 @@ public class SplitPaneDemo
 
             // Set split positions
             PaneCollection panes = worksheet.GetPanes();
-            panes.FirstVisibleRowOfBottomPane = 10;   // Split after row 10 (zero‑based index)
-            panes.FirstVisibleColumnOfRightPane = 5; // Split after column 5 (zero‑based index)
+            panes.FirstVisibleRowOfBottomPane = 10;   // Horizontal split after row 10
+            panes.FirstVisibleColumnOfRightPane = 5; // Vertical split after column 5
 
             // Save the workbook
-            workbook.Save("SplitPaneDemo.xlsx", SaveFormat.Xlsx);
+            string outputPath = "SplitPaneDemo.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

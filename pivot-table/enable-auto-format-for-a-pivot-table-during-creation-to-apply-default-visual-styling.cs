@@ -1,6 +1,15 @@
+// Title: Apply Default Visual Style to a New PivotTable with Aspose.Cells for .NET (C#)
+// Description: Shows how to create a workbook, add sample data, insert a PivotTable, enable the IsAutoFormat property to apply the built‑in style automatically, calculate the data, and save the file.
+// Keywords: Aspose.Cells | C# | .NET | PivotTable | IsAutoFormat | automatic formatting | default style | Excel report | programmatic pivot styling
+// Common Searches: Aspose.Cells enable pivot table auto format | C# set IsAutoFormat true | default pivot table style Aspose.Cells | apply built‑in style to PivotTable programmatically | Aspose.Cells pivot table formatting options
+// Developer Intent: Create a PivotTable that automatically receives Excel’s built‑in visual style without manual styling code.
+// Use Cases: Generate analytical reports where every PivotTable uses a consistent default style. | Loop through multiple data sets, create PivotTables, and enable IsAutoFormat to ensure uniform appearance. | Export business intelligence dashboards to Excel with ready‑to‑read, auto‑styled PivotTables.
+// AI Prompts: How do I enable automatic formatting for a PivotTable using Aspose.Cells in C#? | Provide C# code that creates several PivotTables, sets IsAutoFormat = true for each, calculates the data, and saves the workbook. | Explain the impact of the IsAutoFormat property on PivotTable appearance and how to change the default style if needed.
+
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
+// Shows how to create a workbook, add sample data, insert a PivotTable, enable the IsAutoFormat property to apply the built‑in style automatically, calculate the data, and save the file.
 class Program
 {
     static void Main()
@@ -27,12 +36,10 @@ class Program
         pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
         pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
 
-        // Enable automatic formatting (default visual style)
+        // Enable automatic formatting (default visual styling)
         pivotTable.IsAutoFormat = true;
-        // Optionally specify a particular auto‑format type
-        pivotTable.AutoFormatType = PivotTableAutoFormatType.Classic;
 
-        // Populate the pivot table with calculated data
+        // Calculate the pivot table data
         pivotTable.CalculateData();
 
         // Save the workbook with the formatted pivot table

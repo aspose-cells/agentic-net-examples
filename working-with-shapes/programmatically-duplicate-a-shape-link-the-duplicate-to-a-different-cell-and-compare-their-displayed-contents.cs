@@ -1,62 +1,70 @@
-// Title: C# – Duplicate a Shape, Link to a Different Cell, and Compare Values with Aspose.Cells
-// Description: This Aspose.Cells for .NET example creates a workbook, adds a rectangle shape linked to cell A1, clones the shape to a new location, links the copy to cell B1, retrieves each shape's linked cell address, compares the displayed cell values, checks if the shapes reference the same cell object, and saves the workbook.
-// Keywords: Aspose.Cells | C# | .NET | duplicate shape | AddCopy | SetLinkedCell | linked cell address | compare cell values | rectangle shape | worksheet shapes | example code
-// Common Searches: Aspose.Cells duplicate shape C# | How to copy a shape and set a new linked cell in Aspose.Cells | Get linked cell address from a shape Aspose.Cells .NET | Compare values of cells linked to two shapes | AddCopy shape Aspose.Cells example
-// Developer Intent: The developer needs to clone an existing shape, bind the clone to a different worksheet cell, and verify that the values displayed by the two linked cells are as expected.
-// Use Cases: Design a report template where a header shape is duplicated for sub‑sections, each reflecting a distinct data cell. | Automate financial dashboards that place identical chart placeholders in multiple areas, each linked to separate calculation cells. | Validate workbook layouts by ensuring duplicated shapes reference the correct, unique cells before publishing.
-// AI Prompts: Generate C# code using Aspose.Cells to duplicate a shape and link the copy to a specified cell. | Show how to retrieve linked cell addresses from two shapes and compare their values for equality. | Explain the purpose of the parameters in SetLinkedCell when binding a shape to a worksheet cell.
+// Title: C# – Duplicate a Shape, Link to a New Cell, and Compare Linked Values with Aspose.Cells
+// Description: This example creates a workbook, adds a rectangle shape linked to cell A1, copies the shape to another location, links the copy to cell B1, then retrieves each shape's linked cell address, accesses the corresponding Cell objects, and checks both reference equality and displayed values before saving the file.
+// Keywords: Aspose.Cells shape copy | SetLinkedCell C# | AddCopy method | compare linked cell values | duplicate shape linked cell | .NET spreadsheet shape manipulation
+// Common Searches: Aspose.Cells copy shape and change linked cell | How to compare values of cells linked to shapes in C# | Set different linked cell for shape duplicate Aspose | Retrieve linked cell address from a shape Aspose.Cells
+// Developer Intent: Duplicate an existing shape, assign a different linked cell to the copy, and programmatically verify that the two shapes reference distinct cells and display different content.
+// Use Cases: Generate a report template where a header shape is cloned for each section, each clone linked to its own title cell. | Create monthly dashboards by copying a chart shape and linking each copy to month‑specific data cells. | Automated testing to ensure shape copies maintain independent links and display the correct cell values.
+// AI Prompts: Write C# code with Aspose.Cells that copies a shape, sets a new linked cell, and prints whether the linked cells are the same and have identical values. | Explain the interaction between AddCopy and SetLinkedCell for displaying separate cell contents in duplicated shapes. | Provide a step‑by‑step tutorial on comparing the underlying cell references of two shapes linked to different cells in an Aspose.Cells workbook.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This Aspose.Cells for .NET example creates a workbook, adds a rectangle shape linked to cell A1, clones the shape to a new location, links the copy to cell B1, retrieves each shape's linked cell address, compares the displayed cell values, checks if the shapes reference the same cell object, and saves the workbook.
-class DuplicateShapeExample
+namespace AsposeCellsShapeDuplicateExample
 {
-    static void Main()
+    // This example creates a workbook, adds a rectangle shape linked to cell A1, copies the shape to another location, links the copy to cell B1, then retrieves each shape's linked cell address, accesses the corresponding Cell objects, and checks both reference equality and displayed values before saving the file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Put sample values into two cells that will be linked to the shapes
-        sheet.Cells["A1"].PutValue("Original Shape Value");
-        sheet.Cells["B1"].PutValue("Duplicate Shape Value");
+            // -------------------------------------------------
+            // 1. Add a rectangle shape and link it to cell A1
+            // -------------------------------------------------
+            ShapeCollection shapes = worksheet.Shapes;
+            // Add a rectangle shape at row 2, column 2 (zero‑based indexes)
+            RectangleShape originalShape = shapes.AddRectangle(2, 0, 2, 0, 130, 130);
+            // Link the shape to cell A1
+            originalShape.SetLinkedCell("A1", false, false);
+            // Put a value into A1 that will be displayed by the shape
+            worksheet.Cells["A1"].PutValue("Original");
 
-        // Access the shapes collection of the worksheet
-        ShapeCollection shapes = sheet.Shapes;
+            // -------------------------------------------------
+            // 2. Duplicate the shape and place it at a new location
+            // -------------------------------------------------
+            // AddCopy creates a copy of the source shape; we move it to row 7, column 7
+            Shape duplicatedShape = shapes.AddCopy(originalShape, 7, 0, 7, 0);
+            // Link the duplicated shape to a different cell (B1)
+            duplicatedShape.SetLinkedCell("B1", false, false);
+            // Put a different value into B1
+            worksheet.Cells["B1"].PutValue("Duplicate");
 
-        // Add a rectangle shape and link it to cell A1
-        // Parameters: upper left row, upper left column, top offset, left offset, width, height
-        RectangleShape originalShape = shapes.AddRectangle(2, 0, 2, 0, 130, 130);
-        originalShape.SetLinkedCell("A1", false, false); // link to A1
+            // -------------------------------------------------
+            // 3. Retrieve linked cells and compare their displayed contents
+            // -------------------------------------------------
+            // Get linked cell addresses from both shapes
+            string originalLinkedAddress = originalShape.GetLinkedCell(false, false);
+            string duplicateLinkedAddress = duplicatedShape.GetLinkedCell(false, false);
 
-        // Duplicate the rectangle shape to a new location (row 7, column 7)
-        Shape duplicateShape = shapes.AddCopy(originalShape, 7, 0, 7, 0);
-        // Link the duplicate shape to a different cell (B1)
-        duplicateShape.SetLinkedCell("B1", false, false);
+            // Obtain the actual Cell objects
+            Cell originalCell = worksheet.Cells[originalLinkedAddress];
+            Cell duplicateCell = worksheet.Cells[duplicateLinkedAddress];
 
-        // Retrieve the linked cell addresses from both shapes
-        string originalLinkedCell = originalShape.GetLinkedCell(false, false);
-        string duplicateLinkedCell = duplicateShape.GetLinkedCell(false, false);
+            // Compare the cell objects (same location?) – should be false
+            bool sameCellReference = originalCell.Equals(duplicateCell);
+            Console.WriteLine($"Are linked cells the same reference? {sameCellReference}");
 
-        // Get the actual Cell objects
-        Cell cellOriginal = sheet.Cells[originalLinkedCell];
-        Cell cellDuplicate = sheet.Cells[duplicateLinkedCell];
+            // Compare the displayed values
+            bool sameValue = object.Equals(originalCell.Value, duplicateCell.Value);
+            Console.WriteLine($"Do linked cells contain the same value? {sameValue}");
 
-        // Compare the displayed contents (cell values) of the two linked cells
-        bool valuesAreEqual = cellOriginal.Value?.ToString() == cellDuplicate.Value?.ToString();
-
-        // Output the comparison result
-        Console.WriteLine($"Original shape linked to cell: {originalLinkedCell} with value \"{cellOriginal.Value}\"");
-        Console.WriteLine($"Duplicate shape linked to cell: {duplicateLinkedCell} with value \"{cellDuplicate.Value}\"");
-        Console.WriteLine($"Are the displayed contents equal? {valuesAreEqual}");
-
-        // Additionally, demonstrate using Cell.Equals to compare the cell references themselves
-        bool sameCellReference = cellOriginal.Equals(cellDuplicate);
-        Console.WriteLine($"Do both shapes reference the same cell object? {sameCellReference}");
-
-        // Save the workbook to verify the shapes and links (optional)
-        workbook.Save("DuplicateShapeExample.xlsx");
+            // -------------------------------------------------
+            // 4. Save the workbook (optional – demonstrates lifecycle rule)
+            // -------------------------------------------------
+            workbook.Save("ShapeDuplicateComparison.xlsx");
+        }
     }
 }

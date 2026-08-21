@@ -1,92 +1,88 @@
-// Title: Export all shape control properties to JSON using Aspose.Cells for .NET
-// Description: Creates a workbook, adds sample shapes, records each shape's worksheet name, shape name, type, hidden flag, control‑data length and Base64‑encoded control data on a "ShapeInfo" sheet, then saves that sheet as a formatted JSON file with JsonSaveOptions.
-// Keywords: Aspose.Cells | C# | export shape properties | JSON output | ControlData Base64 | JsonSaveOptions | shape metadata extraction | Excel shape export
-// Common Searches: Aspose.Cells export shape properties to JSON | Get ControlData of shapes Aspose.Cells .NET | Save specific worksheet as JSON Aspose.Cells | Iterate workbook shapes and export attributes | Base64 encode shape control data Aspose
-// Developer Intent: Extract every shape's attributes and control data from a workbook and write them to a JSON file.
-// Use Cases: Audit all form controls in an Excel file for compliance reporting. | Send shape metadata to a web API by converting ControlData to Base64 strings. | Create a lightweight JSON snapshot of shape layout for version control or documentation.
-// AI Prompts: Generate C# code with Aspose.Cells that reads an existing workbook, extracts each shape's Name, Type, IsHidden, ControlData length and Base64 value, and writes the data to a JSON file. | Adapt the example to export only rectangle shapes and include their top‑left coordinates in the JSON output. | Explain how to decode the Base64 ControlData from the produced JSON back to its original binary form in C#.
+// Title: Export Excel Shape Control Data to JSON with Aspose.Cells for .NET
+// Description: Loads an Excel workbook, walks through every worksheet and each shape, captures the shape's name, type, and any ControlData (encoded as Base64), writes these records to a temporary sheet with headers, and saves the sheet as a JSON file using Aspose.Cells JsonSaveOptions (HasHeaderRow, ExportEmptyCells, ExportStylePool).
+// Keywords: Aspose.Cells | C# export shapes to JSON | Excel shape control data | Base64 shape data | JsonSaveOptions example | .NET workbook shape extraction | shape metadata JSON
+// Common Searches: export shape properties to json aspose.cells | retrieve controldata from excel shapes c# | convert shape data to base64 aspose | jsonsaveoptions hasheaderrow example | list all shapes in workbook aspose.cells
+// Developer Intent: Extract the name, type, and ControlData of every shape in an Excel file and serialize the collection to a JSON document.
+// Use Cases: Create an inventory of form controls for downstream analytics. | Generate a JSON manifest for automated UI testing or reporting. | Archive shape metadata for version control, auditing, or migration.
+// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells, iterates all shapes, captures Name, Type, and ControlData as a Base64 string, and saves the result to a JSON file using JsonSaveOptions. | Explain how HasHeaderRow, ExportEmptyCells, and ExportStylePool affect the JSON output when exporting shape information with Aspose.Cells.
 
 using System;
 using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Json;
 
-namespace ShapeControlExport
+namespace AsposeCellsShapeExport
 {
-    // Creates a workbook, adds sample shapes, records each shape's worksheet name, shape name, type, hidden flag, control‑data length and Base64‑encoded control data on a "ShapeInfo" sheet, then saves that sheet as a formatted JSON file with JsonSaveOptions.
+    // Loads an Excel workbook, walks through every worksheet and each shape, captures the shape's name, type, and any ControlData (encoded as Base64), writes these records to a temporary sheet with headers, and saves the sheet as a JSON file using Aspose.Cells JsonSaveOptions (HasHeaderRow, ExportEmptyCells, ExportStylePool).
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "DemoSheet";
+            // Path to the source Excel file that contains shapes
+            string sourcePath = "input.xlsx";
 
-            // Add sample shapes (for demonstration purposes)
-            Shape rect = sheet.Shapes.AddRectangle(1, 1, 100, 100, 0, 0);
-            rect.Name = "Rectangle1";
-            rect.IsHidden = false;
+            // Load the workbook that contains the shapes
+            Workbook sourceWorkbook = new Workbook(sourcePath);
 
-            Shape oval = sheet.Shapes.AddOval(2, 2, 80, 80, 0, 0);
-            oval.Name = "Oval1";
-            oval.IsHidden = true;
-
-            // Create a worksheet to hold shape property data
-            int infoSheetIdx = workbook.Worksheets.Add();
-            Worksheet infoSheet = workbook.Worksheets[infoSheetIdx];
-            infoSheet.Name = "ShapeInfo";
+            // Create a new workbook that will hold the shape information
+            Workbook exportWorkbook = new Workbook();
+            Worksheet exportSheet = exportWorkbook.Worksheets[0];
 
             // Write header row
-            infoSheet.Cells["A1"].PutValue("Worksheet");
-            infoSheet.Cells["B1"].PutValue("ShapeName");
-            infoSheet.Cells["C1"].PutValue("ShapeType");
-            infoSheet.Cells["D1"].PutValue("IsHidden");
-            infoSheet.Cells["E1"].PutValue("ControlDataLength");
-            infoSheet.Cells["F1"].PutValue("ControlDataBase64");
+            exportSheet.Cells["A1"].PutValue("Worksheet");
+            exportSheet.Cells["B1"].PutValue("ShapeName");
+            exportSheet.Cells["C1"].PutValue("ShapeType");
+            exportSheet.Cells["D1"].PutValue("ControlDataBase64");
 
-            int row = 1; // zero‑based index; row 1 is the second row (after header)
+            int currentRow = 1; // zero‑based index; row 1 is the second row (after header)
 
-            // Iterate through all worksheets and their shapes
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Iterate through all worksheets in the source workbook
+            foreach (Worksheet ws in sourceWorkbook.Worksheets)
             {
-                foreach (Shape shp in ws.Shapes)
+                // Iterate through all shapes in the current worksheet
+                foreach (Shape shape in ws.Shapes)
                 {
-                    // Basic properties
-                    infoSheet.Cells[row, 0].PutValue(ws.Name);
-                    infoSheet.Cells[row, 1].PutValue(shp.Name);
-                    infoSheet.Cells[row, 2].PutValue(shp.Type.ToString());
-                    infoSheet.Cells[row, 3].PutValue(shp.IsHidden);
+                    // Retrieve shape name (if not set, use empty string)
+                    string shapeName = shape.Name ?? string.Empty;
 
-                    // ControlData handling
-                    byte[] ctrlData = shp.ControlData;
-                    if (ctrlData != null && ctrlData.Length > 0)
+                    // Retrieve shape type as string
+                    string shapeType = shape.Type.ToString();
+
+                    // Retrieve control data and convert to Base64 string (null if no data)
+                    string controlDataBase64 = null;
+                    byte[] controlData = shape.ControlData;
+                    if (controlData != null && controlData.Length > 0)
                     {
-                        infoSheet.Cells[row, 4].PutValue(ctrlData.Length);
-                        infoSheet.Cells[row, 5].PutValue(Convert.ToBase64String(ctrlData));
-                    }
-                    else
-                    {
-                        infoSheet.Cells[row, 4].PutValue(0);
-                        infoSheet.Cells[row, 5].PutValue(string.Empty);
+                        controlDataBase64 = Convert.ToBase64String(controlData);
                     }
 
-                    row++;
+                    // Populate the export sheet
+                    exportSheet.Cells[currentRow, 0].PutValue(ws.Name);          // Worksheet name
+                    exportSheet.Cells[currentRow, 1].PutValue(shapeName);       // Shape name
+                    exportSheet.Cells[currentRow, 2].PutValue(shapeType);       // Shape type
+                    exportSheet.Cells[currentRow, 3].PutValue(controlDataBase64); // Control data
+
+                    currentRow++;
                 }
             }
 
-            // Configure JSON save options to export only the ShapeInfo sheet
+            // Configure JSON save options
             JsonSaveOptions jsonOptions = new JsonSaveOptions
             {
-                SheetIndexes = new int[] { infoSheetIdx },
-                ExportEmptyCells = true,
+                // Export the header row as column names
                 HasHeaderRow = true,
-                ExportAsString = true,
-                Indent = "  "
+                // Export empty cells as null to keep structure consistent
+                ExportEmptyCells = true,
+                // Do not export styles (not needed for analysis)
+                ExportStylePool = false
             };
 
-            // Save the workbook as a JSON file containing shape properties
-            workbook.Save("ShapeProperties.json", jsonOptions);
+            // Save the workbook as a JSON file using Aspose.Cells saving mechanism
+            string outputPath = "shapes_export.json";
+            exportWorkbook.Save(outputPath, jsonOptions);
+
+            Console.WriteLine($"Shape information exported to JSON file: {outputPath}");
         }
     }
 }

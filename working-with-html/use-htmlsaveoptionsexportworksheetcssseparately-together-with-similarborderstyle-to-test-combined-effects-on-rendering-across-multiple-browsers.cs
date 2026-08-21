@@ -1,10 +1,10 @@
-// Title: Export Worksheet CSS Separately & Apply Similar Border Style with Aspose.Cells HTML Save (C#)
-// Description: This example creates a workbook with thick and thin bordered cells, then saves it to HTML using HtmlSaveOptions. It enables ExportWorksheetCSSSeparately to generate a distinct CSS file for each worksheet and activates ExportSimilarBorderStyle to provide fallback border rendering for browsers that lack native support. The HTML and CSS files are written to a desktop folder for easy cross‑browser testing.
-// Keywords: Aspose.Cells | HtmlSaveOptions | ExportWorksheetCSSSeparately | ExportSimilarBorderStyle | C# HTML export | separate CSS per worksheet | border rendering browsers | cross‑browser HTML output | Aspose.Cells example
-// Common Searches: Aspose.Cells export worksheet CSS to separate file | How to use ExportSimilarBorderStyle in Aspose.Cells | HTML export with per‑worksheet CSS C# | Test thick border rendering in Chrome Firefox Aspose.Cells | Set attached files directory for Aspose.Cells HTML save
-// Developer Intent: Generate HTML from a workbook with individual CSS files per worksheet and a fallback border style to compare rendering across browsers.
-// Use Cases: Produce modular HTML reports where each worksheet maintains its own stylesheet. | Ensure visual consistency on legacy browsers by falling back to similar border styles. | Automate placement of HTML and CSS assets in a known folder for manual or scripted UI testing.
-// AI Prompts: Write C# code that saves an Aspose.Cells workbook to HTML with ExportWorksheetCSSSeparately = true and ExportSimilarBorderStyle = true, then open the output in Chrome and Firefox to compare border appearance. | Explain how ExportSimilarBorderStyle maps unsupported border types to CSS properties and why it improves cross‑browser compatibility. | Create a PowerShell script that checks the desktop folder for the generated HTML file and the separate CSS files after the Aspose.Cells export completes.
+// Title: Export Excel to HTML with Separate CSS and Fallback Border Styles using Aspose.Cells for .NET
+// Description: Shows how to save a workbook as HTML, write each worksheet’s styles to an external CSS file, and automatically replace unsupported border types with similar ones. Includes configuration of a custom cell‑class prefix.
+// Keywords: Aspose.Cells HTML export | ExportWorksheetCSSSeparately | ExportSimilarBorderStyle | C# separate CSS file | border style fallback | cell CSS prefix | cross‑browser Excel to HTML | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells export HTML separate CSS | how to use ExportSimilarBorderStyle | C# save workbook as HTML with external stylesheet | fallback for thick borders in HTML output | custom CSS class prefix Aspose.Cells
+// Developer Intent: Generate an HTML file from a workbook where the worksheet’s CSS is stored in its own file and any border style unsupported by the browser is substituted with a compatible alternative.
+// Use Cases: Build web‑based reports that keep styling separate for caching and easier maintenance. | Maintain consistent border appearance across browsers by falling back to supported styles. | Integrate the HTML output into existing sites using a custom CSS class prefix to avoid naming conflicts.
+// AI Prompts: Add code to export workbook images to a dedicated folder while keeping the CSS file separate. | Provide C# that reads the generated CSS file and injects extra rules for header rows. | Explain the internal mapping logic of ExportSimilarBorderStyle and list which border types are considered similar.
 
 using System;
 using System.IO;
@@ -12,73 +12,80 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // This example creates a workbook with thick and thin bordered cells, then saves it to HTML using HtmlSaveOptions. It enables ExportWorksheetCSSSeparately to generate a distinct CSS file for each worksheet and activates ExportSimilarBorderStyle to provide fallback border rendering for browsers that lack native support. The HTML and CSS files are written to a desktop folder for easy cross‑browser testing.
+    // Shows how to save a workbook as HTML, write each worksheet’s styles to an external CSS file, and automatically replace unsupported border types with similar ones. Includes configuration of a custom cell‑class prefix.
     public class ExportWorksheetCssAndSimilarBorderDemo
     {
-        public static void Main(string[] args)
+        public static void Run()
         {
             try
             {
-                Run();
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Add sample data
+                sheet.Cells["A1"].PutValue("Border Test");
+                sheet.Cells["B1"].PutValue("Standard Border");
+                sheet.Cells["C1"].PutValue("Thick Border");
+
+                // Apply a standard thin border to B1
+                Style thinStyle = workbook.CreateStyle();
+                thinStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                thinStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+                thinStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                thinStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                sheet.Cells["B1"].SetStyle(thinStyle);
+
+                // Apply a thick border to C1 (border style not supported by some browsers)
+                Style thickStyle = workbook.CreateStyle();
+                thickStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thick;
+                thickStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thick;
+                thickStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thick;
+                thickStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thick;
+                sheet.Cells["C1"].SetStyle(thickStyle);
+
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    // Export the worksheet CSS into a separate file (e.g., sheet0.css)
+                    ExportWorksheetCSSSeparately = true,
+
+                    // When a border style is not supported by the browser, export a similar style
+                    ExportSimilarBorderStyle = true,
+
+                    // Optional: give the CSS file a custom prefix for cell classes
+                    CellCssPrefix = "cell-"
+                };
+
+                // Define output folder and file names
+                string outputFolder = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                    "HtmlExportDemo");
+
+                // Ensure the output directory exists
+                Directory.CreateDirectory(outputFolder);
+
+                // Save the workbook as HTML; separate CSS files will be placed in the same folder
+                string htmlPath = Path.Combine(outputFolder, "ExportDemo.html");
+                workbook.Save(htmlPath, htmlOptions);
+
+                Console.WriteLine($"HTML file saved to: {htmlPath}");
+                Console.WriteLine("Check the output folder for the separate CSS file (e.g., sheet0.css).");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred during the export process:");
+                Console.WriteLine(ex.Message);
             }
         }
+    }
 
-        public static void Run()
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "DemoSheet";
-
-            // Add a cell with a thick border (may not be supported by all browsers)
-            Cell thickCell = sheet.Cells["A1"];
-            thickCell.PutValue("Thick Border");
-            Style thickStyle = workbook.CreateStyle();
-            thickStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thick;
-            thickStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thick;
-            thickStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thick;
-            thickStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thick;
-            thickCell.SetStyle(thickStyle);
-
-            // Add a cell with a thin border (generally supported)
-            Cell thinCell = sheet.Cells["B2"];
-            thinCell.PutValue("Thin Border");
-            Style thinStyle = workbook.CreateStyle();
-            thinStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-            thinStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
-            thinStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-            thinStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-            thinCell.SetStyle(thinStyle);
-
-            // Configure HTML save options
-            HtmlSaveOptions options = new HtmlSaveOptions
-            {
-                // Export CSS for each worksheet into a separate file
-                ExportWorksheetCSSSeparately = true,
-                // Use similar border style for browsers that don't support the original style
-                ExportSimilarBorderStyle = true,
-                // Define output directory (CSS files will be placed here)
-                AttachedFilesDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "HtmlExport"),
-                // Ensure the directory is created automatically if it does not exist
-                CreateDirectory = true
-            };
-
-            // Ensure the output directory exists
-            if (!Directory.Exists(options.AttachedFilesDirectory))
-            {
-                Directory.CreateDirectory(options.AttachedFilesDirectory);
-            }
-
-            // Save the workbook as HTML
-            string htmlPath = Path.Combine(options.AttachedFilesDirectory, "Demo.html");
-            workbook.Save(htmlPath, options);
-
-            Console.WriteLine($"HTML file saved to: {htmlPath}");
-            Console.WriteLine($"Separate CSS files are located in: {options.AttachedFilesDirectory}");
+            ExportWorksheetCssAndSimilarBorderDemo.Run();
         }
     }
 }

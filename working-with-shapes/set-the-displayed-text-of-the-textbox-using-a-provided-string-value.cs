@@ -1,64 +1,56 @@
-// Title: Aspose.Cells C# – Set Text and Auto‑Resize a TextBox Shape in Excel
-// Description: Demonstrates how to create a workbook, add a TextBox shape to the first worksheet, assign a custom string to the shape's Text property, enable ResizeToFitText for automatic sizing, and save the file as an .xlsx document using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells set textbox text C# | Add TextBox shape Aspose.Cells | ResizeToFitText Aspose.Cells | Save workbook with shape Aspose.Cells | Excel textbox shape .NET | Aspose.Cells TextBoxOptions
-// Common Searches: how to set textbox text in Aspose.Cells C# | auto resize textbox shape Aspose.Cells | add textbox to worksheet using Aspose.Cells | save Excel file with textbox Aspose.Cells | Aspose.Cells TextBoxOptions example
-// Developer Intent: Insert a TextBox shape, set its displayed text, enable automatic resizing, and save the workbook with Aspose.Cells for .NET.
-// Use Cases: Generate a report where section titles are placed inside auto‑sized textboxes. | Create a template that adds a labeled textbox at a specific cell location. | Update existing textbox shapes with dynamic content while keeping the shape size appropriate.
-// AI Prompts: Write C# code to change the text of an existing Aspose.Cells TextBox shape and turn off ResizeToFitText. | Show how to loop through all TextBox shapes in a worksheet and populate their Text property from a dictionary. | Explain the steps to add a TextBox with custom dimensions, set its text, enable ResizeToFitText, and save the workbook using Aspose.Cells.
+// Title: Set Text of a TextBox Shape in Aspose.Cells (C#)
+// Description: Creates a new Workbook, adds a TextBox shape to the first worksheet, assigns a provided string to the shape's Text property, enables ResizeToFitText, and saves the file as TextboxWithText.xlsx.
+// Keywords: Aspose.Cells C# textbox | set textbox text Aspose.Cells | AddTextBox shape .NET | ResizeToFitText | save workbook with textbox | textbox shape text property | Aspose.Cells example | C# Excel textbox shape
+// Common Searches: Aspose.Cells set textbox text C# | how to add textbox to worksheet Aspose.Cells | ResizeToFitText Aspose.Cells example | save Excel file with textbox Aspose.Cells | C# code for textbox shape in Aspose.Cells
+// Developer Intent: Add a textbox shape to a worksheet and display a supplied string inside it.
+// Use Cases: Generate a report where the title or heading is placed in a dynamically sized textbox. | Insert user‑provided notes or comments into a spreadsheet via a textbox shape. | Create localized Excel files that automatically adjust textbox size to fit varying string lengths.
+// AI Prompts: Write C# code that adds a TextBox shape to an Aspose.Cells worksheet, sets its Text from a variable, enables ResizeToFitText, and saves the workbook. | Show how to insert a multiline string into a textbox shape in Aspose.Cells and ensure the shape resizes to fit the content. | Explain how to modify font style and alignment of a textbox after setting its text using Aspose.Cells for .NET.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// Creates a new Workbook, adds a TextBox shape to the first worksheet, assigns a provided string to the shape's Text property, enables ResizeToFitText, and saves the file as TextboxWithText.xlsx.
+public class Program
 {
-    // Demonstrates how to create a workbook, add a TextBox shape to the first worksheet, assign a custom string to the shape's Text property, enable ResizeToFitText for automatic sizing, and save the file as an .xlsx document using Aspose.Cells for .NET.
-    public class SetTextboxTextDemo
+    public static void Main(string[] args)
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // The text to display in the textbox
-                string displayText = "Hello, Aspose.Cells!";
+            string content = "Hello, Aspose.Cells!";
+            if (args.Length > 0)
+                content = args[0];
 
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Get the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add a textbox shape to the worksheet
-                // Parameters: upper left row, upper left column, top, left, width, height
-                Shape textBoxShape = worksheet.Shapes.AddTextBox(1, 1, 50, 50, 200, 100);
-
-                // Set the displayed text of the textbox
-                textBoxShape.Text = displayText;
-
-                // Resize the shape to fit the text
-                textBoxShape.TextBoxOptions.ResizeToFitText = true;
-
-                // Define output file path
-                string outputPath = "SetTextboxTextDemo.xlsx";
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            SetTextboxTextDemo.Run(content);
+            Console.WriteLine("Workbook saved successfully as 'TextboxWithText.xlsx'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
+}
 
-    // Entry point for the application
-    public class Program
+public class SetTextboxTextDemo
+{
+    // Sets the displayed text of a textbox shape using the provided string value.
+    public static void Run(string textboxContent)
     {
-        public static void Main(string[] args)
-        {
-            SetTextboxTextDemo.Run();
-        }
+        // Create a new workbook.
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Add a textbox shape to the worksheet.
+        // Parameters: upper left row, upper left column, top, left, width, height.
+        Shape textBox = worksheet.Shapes.AddTextBox(1, 1, 100, 100, 200, 50);
+
+        // Set the text that will be displayed inside the textbox.
+        textBox.Text = textboxContent;
+
+        // Resize the shape automatically so the whole text fits.
+        textBox.TextBoxOptions.ResizeToFitText = true;
+
+        // Save the workbook to a file.
+        workbook.Save("TextboxWithText.xlsx");
     }
 }

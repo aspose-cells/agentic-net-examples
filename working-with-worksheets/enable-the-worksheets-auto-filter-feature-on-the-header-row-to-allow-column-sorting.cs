@@ -1,59 +1,67 @@
-// Title: How to Enable AutoFilter on a Worksheet Header Row with Aspose.Cells for .NET (C#)
-// Description: C# sample that creates a workbook, populates cells A1:C4 with product data, applies an AutoFilter to the header row (A1:C4), sets HasHeaders=true for proper column sorting, and saves the file as AutoFilterEnabled.xlsx.
-// Keywords: Aspose.Cells | AutoFilter | C# | .NET | worksheet filter | header row | column sorting | Excel automation | filter arrows | Set AutoFilter range | Sorter.HasHeaders
-// Common Searches: Aspose.Cells enable AutoFilter C# | Set AutoFilter range Aspose.Cells .NET | AutoFilter header row Aspose.Cells example | How to sort columns with AutoFilter using Aspose.Cells | C# code to add filter arrows to Excel sheet | Aspose.Cells AutoFilter sample
-// Developer Intent: Add an AutoFilter to the first row of a worksheet so users can filter and sort columns directly in the generated Excel file.
-// Use Cases: Generate a product catalog workbook where users can quickly filter by category or price. | Create export files for business analysts that include clickable filter arrows for ad‑hoc data analysis. | Prepare reporting sheets that require sortable headers without manual Excel configuration.
-// AI Prompts: Show me C# code to enable AutoFilter on a specific range and set HasHeaders=true using Aspose.Cells. | How can I programmatically sort a column after applying AutoFilter with Aspose.Cells for .NET? | Give an example of determining the used range dynamically and applying AutoFilter with headers in an Aspose.Cells workbook.
+// Title: Enable AutoFilter on a Header Row with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, add header titles and sample data, set the AutoFilter range to A1:C4, flag the range as having headers, and save the file as AutoFilterEnabled.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells AutoFilter C# | enable AutoFilter Aspose.Cells | AutoFilter header row .NET | Excel column sorting Aspose.Cells | Aspose.Cells worksheet filter example
+// Common Searches: Aspose.Cells enable AutoFilter on range | C# set AutoFilter headers Aspose.Cells | How to add Excel AutoFilter with Aspose.Cells | AutoFilter sorter HasHeaders property example
+// Developer Intent: Add an AutoFilter to the worksheet’s header row so end users can sort and filter column data.
+// Use Cases: Create a sales report where the first row contains column titles and users can filter by product, category, or price. | Export database query results to Excel with AutoFilter pre‑enabled for quick analysis. | Generate a dynamic data sheet that automatically applies AutoFilter to the populated range for interactive end‑user exploration.
+// AI Prompts: Show C# code to enable AutoFilter on a worksheet range and set HasHeaders to true using Aspose.Cells. | Provide an Aspose.Cells for .NET example that applies AutoFilter to a range that expands to the last used row. | Explain how to customize AutoFilter dropdown options after enabling it with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// C# sample that creates a workbook, populates cells A1:C4 with product data, applies an AutoFilter to the header row (A1:C4), sets HasHeaders=true for proper column sorting, and saves the file as AutoFilterEnabled.xlsx.
-class EnableAutoFilterDemo
+namespace AsposeCellsAutoFilterDemo
 {
-    public static void Run()
+    // Demonstrates how to create a workbook, add header titles and sample data, set the AutoFilter range to A1:C4, flag the range as having headers, and save the file as AutoFilterEnabled.xlsx using Aspose.Cells for .NET.
+    public class EnableAutoFilter
     {
-        try
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add sample data with a header row
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Category");
-            sheet.Cells["C1"].PutValue("Price");
-            sheet.Cells["A2"].PutValue("Laptop");
-            sheet.Cells["B2"].PutValue("Electronics");
-            sheet.Cells["C2"].PutValue(1200);
-            sheet.Cells["A3"].PutValue("Shirt");
-            sheet.Cells["B3"].PutValue("Clothing");
-            sheet.Cells["C3"].PutValue(45);
-            sheet.Cells["A4"].PutValue("Phone");
-            sheet.Cells["B4"].PutValue("Electronics");
-            sheet.Cells["C4"].PutValue(800);
+                // Populate header row
+                worksheet.Cells["A1"].PutValue("Product");
+                worksheet.Cells["B1"].PutValue("Category");
+                worksheet.Cells["C1"].PutValue("Price");
 
-            // Enable AutoFilter on the header row (first row) covering the data range
-            sheet.AutoFilter.Range = "A1:C4";
+                // Populate sample data
+                worksheet.Cells["A2"].PutValue("Laptop");
+                worksheet.Cells["B2"].PutValue("Electronics");
+                worksheet.Cells["C2"].PutValue(1200);
 
-            // Specify that the range contains headers so sorting works correctly
-            sheet.AutoFilter.Sorter.HasHeaders = true;
+                worksheet.Cells["A3"].PutValue("Shirt");
+                worksheet.Cells["B3"].PutValue("Clothing");
+                worksheet.Cells["C3"].PutValue(45);
 
-            // Save the workbook
-            workbook.Save("AutoFilterEnabled.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+                worksheet.Cells["A4"].PutValue("Phone");
+                worksheet.Cells["B4"].PutValue("Electronics");
+                worksheet.Cells["C4"].PutValue(800);
+
+                // Enable AutoFilter on the range A1:C4
+                worksheet.AutoFilter.Range = "A1:C4";
+
+                // Indicate that the range has headers
+                worksheet.AutoFilter.Sorter.HasHeaders = true;
+
+                // Save the workbook
+                workbook.Save("AutoFilterEnabled.xlsx");
+                Console.WriteLine("Workbook saved as AutoFilterEnabled.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
-}
 
-class Program
-{
-    static void Main(string[] args)
+    public class Program
     {
-        EnableAutoFilterDemo.Run();
+        public static void Main(string[] args)
+        {
+            EnableAutoFilter.Run();
+        }
     }
 }

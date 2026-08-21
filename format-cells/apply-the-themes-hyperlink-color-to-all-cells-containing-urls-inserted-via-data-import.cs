@@ -1,89 +1,106 @@
-// Title: Apply Workbook Theme Hyperlink Color to URL Cells After Data Import – Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, imports a DataTable, scans every used cell with a regex to find strings that start with http/https, adds a hyperlink to each match, and applies the workbook's theme hyperlink style (color and underline) before saving the file.
-// Keywords: Aspose.Cells C# hyperlink theme | apply theme hyperlink color | detect URLs in worksheet | convert string to hyperlink Aspose | hyperlink style after data import | regex URL detection Aspose.Cells | C# Excel hyperlink automation | theme‑based hyperlink formatting
-// Common Searches: Aspose.Cells add hyperlink to URL strings | C# apply workbook theme color to hyperlinks | auto‑convert imported URLs to clickable links | regex based hyperlink creation Aspose.Cells | how to use theme hyperlink style in .NET
-// Developer Intent: Automatically turn text URLs imported into a worksheet into clickable hyperlinks that use the workbook’s theme color.
-// Use Cases: Import a contacts list and instantly make the website column clickable with consistent theme styling. | Process an existing report to locate any URL text, add hyperlinks, and keep visual appearance aligned with the workbook theme. | Generate export files where external references are uniformly formatted as themed hyperlinks.
-// AI Prompts: Generate C# code using Aspose.Cells that scans a worksheet for cells beginning with http:// or https://, adds a hyperlink, and applies the workbook's built‑in hyperlink theme color. | Show how to create a reusable hyperlink style based on the workbook theme and apply it to URL cells after importing a DataTable. | Explain how to replace a hard‑coded blue font with the theme's hyperlink color in an Aspose.Cells hyperlink‑adding routine.
+// Title: Apply Theme Hyperlink Color to URL Cells After Data Import with Aspose.Cells for .NET (C#)
+// Description: This example creates a workbook, imports a DataTable that contains plain text and URLs, detects strings that start with http:// or https://, adds a hyperlink to each matching cell, and applies the workbook's theme hyperlink formatting (blue, underlined). The file is then saved as an Excel workbook.
+// Keywords: Aspose.Cells C# hyperlink theme | apply theme hyperlink color .NET | detect URLs in worksheet Aspose | import DataTable Excel hyperlink | format hyperlinks after data import | Excel theme hyperlink style C# | Aspose.Cells add hyperlink programmatically
+// Common Searches: how to style hyperlinks with workbook theme using Aspose.Cells | C# add hyperlink to cells containing URLs Aspose | apply default hyperlink color after importing data Excel | Aspose.Cells detect and convert URL strings to hyperlinks | set theme hyperlink formatting programmatically
+// Developer Intent: Automatically convert URL strings in imported data to clickable hyperlinks and style them with the workbook’s default theme color.
+// Use Cases: Convert a contacts list’s website column into clickable, theme‑styled hyperlinks after bulk import. | Generate a report where any cell containing an http/https string becomes a hyperlink that matches the workbook’s default appearance. | Prepare an export that scans imported text fields for URLs, adds hyperlinks, and applies the theme’s hyperlink style before saving.
+// AI Prompts: Write C# code with Aspose.Cells that scans all used cells, adds a hyperlink to strings beginning with http:// or https://, and applies the workbook’s theme hyperlink style. | Provide an Aspose.Cells snippet that imports a DataTable and automatically formats any URL cells using the default theme color without hard‑coding the color value. | Explain how to retrieve the theme’s hyperlink color from a workbook and apply it to cells after adding hyperlinks in Aspose.Cells for .NET.
 
 using System;
 using System.Data;
-using System.Text.RegularExpressions;
+using System.IO;
 using System.Drawing;
 using Aspose.Cells;
 
-// This example creates a workbook, imports a DataTable, scans every used cell with a regex to find strings that start with http/https, adds a hyperlink to each match, and applies the workbook's theme hyperlink style (color and underline) before saving the file.
-class ApplyHyperlinkTheme
+namespace ApplyHyperlinkThemeColor
 {
-    static void Main()
+    // This example creates a workbook, imports a DataTable that contains plain text and URLs, detects strings that start with http:// or https://, adds a hyperlink to each matching cell, and applies the workbook's theme hyperlink formatting (blue, underlined). The file is then saved as an Excel workbook.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // ----- Sample data import (replace with actual import logic) -----
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Name");
-            dt.Columns.Add("Website");
-            dt.Rows.Add("Aspose", "https://www.aspose.com");
-            dt.Rows.Add("Google", "https://www.google.com");
-            dt.Rows.Add("NoLink", "Sample Text");
-
-            // Manually import the DataTable into the worksheet starting at cell A1
-            // Write column headers
-            for (int c = 0; c < dt.Columns.Count; c++)
+            try
             {
-                sheet.Cells[0, c].PutValue(dt.Columns[c].ColumnName);
-            }
-            // Write data rows
-            for (int r = 0; r < dt.Rows.Count; r++)
-            {
-                for (int c = 0; c < dt.Columns.Count; c++)
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Simulate data import with URLs
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Name");
+                dt.Columns.Add("Website");
+                dt.Rows.Add("Aspose", "https://www.aspose.com");
+                dt.Rows.Add("Google", "http://www.google.com");
+                dt.Rows.Add("NoLink", "Sample Text");
+
+                // Import the DataTable into the worksheet (compatible with all versions)
+                for (int r = 0; r < dt.Rows.Count; r++)
                 {
-                    sheet.Cells[r + 1, c].PutValue(dt.Rows[r][c]);
-                }
-            }
-            // -----------------------------------------------------------------
-
-            // Regular expression to identify URLs (http or https)
-            Regex urlRegex = new Regex(@"^https?://", RegexOptions.IgnoreCase);
-
-            // Create a hyperlink style that follows the workbook's theme colors
-            Style hyperlinkStyle = workbook.CreateStyle();
-            hyperlinkStyle.Font.Color = Color.Blue;
-            hyperlinkStyle.Font.Underline = FontUnderlineType.Single;
-
-            // Scan all used cells and convert URL strings to hyperlinks with the style
-            int maxRow = sheet.Cells.MaxDataRow;
-            int maxCol = sheet.Cells.MaxDataColumn;
-
-            for (int row = 0; row <= maxRow; row++)
-            {
-                for (int col = 0; col <= maxCol; col++)
-                {
-                    Cell cell = sheet.Cells[row, col];
-                    if (cell.Type == CellValueType.IsString)
+                    for (int c = 0; c < dt.Columns.Count; c++)
                     {
-                        string text = cell.StringValue.Trim();
-                        if (urlRegex.IsMatch(text))
+                        sheet.Cells[r, c].PutValue(dt.Rows[r][c]?.ToString() ?? string.Empty);
+                    }
+                }
+
+                // Create a hyperlink style (blue and underlined)
+                Style hyperlinkStyle = workbook.CreateStyle();
+                hyperlinkStyle.Font.Color = Color.Blue;
+                hyperlinkStyle.Font.Underline = FontUnderlineType.Single;
+
+                // Iterate through used cells to find URLs and apply hyperlinks with the style
+                int maxRow = sheet.Cells.MaxDataRow;
+                int maxCol = sheet.Cells.MaxDataColumn;
+
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        Cell cell = sheet.Cells[row, col];
+                        if (cell.Type == CellValueType.IsString)
                         {
-                            // Add a hyperlink to the cell
-                            sheet.Hyperlinks.Add(row, col, 1, 1, text);
-                            // Apply the hyperlink style to the cell
-                            cell.SetStyle(hyperlinkStyle);
+                            string text = cell.StringValue.Trim();
+
+                            // Simple URL detection (http or https)
+                            if (text.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                                text.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // Add hyperlink to the cell (single cell range)
+                                sheet.Hyperlinks.Add(row, col, 1, 1, text);
+
+                                // Apply the hyperlink style to the cell
+                                cell.SetStyle(hyperlinkStyle);
+                            }
                         }
                     }
                 }
-            }
 
-            // Save the workbook
-            workbook.Save("Output.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+                // Define output file path
+                string outputPath = "OutputWithHyperlinkTheme.xlsx";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

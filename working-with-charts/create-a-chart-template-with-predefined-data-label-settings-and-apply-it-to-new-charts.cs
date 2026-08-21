@@ -1,23 +1,24 @@
-// Title: Apply a .crtx Chart Template and Customize Data Labels in Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add sample data, insert a column chart, load a .crtx chart template (if available), apply the template, enable data labels, set their font color and size, and save the file as XLSX using Aspose.Cells for C#.
-// Keywords: Aspose.Cells | .crtx chart template | chart template C# | data labels formatting | column chart Aspose.Cells | ChangeTemplate method | SetChartDataRange | Series DataLabels | Excel automation .NET | chart styling programmatically
-// Common Searches: how to load a .crtx chart template with Aspose.Cells | set data label font color and size in Aspose.Cells chart | create column chart from worksheet data C# Aspose.Cells | apply predefined chart template to multiple charts Aspose.Cells | Aspose.Cells change chart template example
-// Developer Intent: Load a chart template and programmatically format data labels for a newly created chart in Aspose.Cells.
-// Use Cases: Standardize chart appearance across generated reports by reusing a .crtx template. | Automatically enable and style data labels for series in column charts. | Produce Excel workbooks where charts adopt predefined formatting without manual editing.
-// AI Prompts: Generate C# code that creates a line chart, applies a .crtx template, and sets data labels to show percentages in red using Aspose.Cells. | Show how to apply the same chart template to several charts in a workbook while customizing each chart's data label size. | Explain how to build a chart template programmatically with Aspose.Cells and use it without an external .crtx file.
+// Title: Aspose.Cells C# – Create a Chart from a .crtx Template and Apply Custom Data Labels
+// Description: This example shows how to build a workbook, fill a simple data range, load a .crtx chart template (if it exists), add a column chart using the template or create one manually, and then customize the first series' data labels—showing values, setting the position to InsideEnd, applying a "0.00" number format, and styling the font (dark blue, size 12). The workbook is saved as an Excel file.
+// Keywords: Aspose.Cells | C# | .NET | chart template | .crtx | custom data labels | column chart | Excel workbook | sample code | GitHub example | API usage | data label font | number format
+// Common Searches: load .crtx chart template Aspose.Cells C# | apply chart template to worksheet Aspose.Cells | set data label position and format Aspose.Cells | customize data label font Aspose.Cells column chart | fallback to manual chart creation when template missing Aspose.Cells
+// Developer Intent: Load a .crtx chart template, add a chart to a worksheet, and configure custom data label properties.
+// Use Cases: Read a ChartTemplate.crtx file into a byte array and create a chart with predefined styling. | Automatically switch to programmatic chart creation if the template file cannot be found. | Show series values on the chart, place labels inside the bar ends, apply a numeric format, and style the label font.
+// AI Prompts: Generate C# code that creates a line chart from a .crtx template and sets data label font to red, size 10, with a custom number format. | Explain how to edit a .crtx chart template to embed default data label settings before using it with Aspose.Cells. | Provide a step‑by‑step guide for handling missing chart template files and falling back to manual chart creation in Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 using System.Drawing;
 
-namespace AsposeCellsChartTemplateDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create a workbook, add sample data, insert a column chart, load a .crtx chart template (if available), apply the template, enable data labels, set their font color and size, and save the file as XLSX using Aspose.Cells for C#.
-    public class Program
+    // This example shows how to build a workbook, fill a simple data range, load a .crtx chart template (if it exists), add a column chart using the template or create one manually, and then customize the first series' data labels—showing values, setting the position to InsideEnd, applying a "0.00" number format, and styling the font (dark blue, size 12). The workbook is saved as an Excel file.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
             try
             {
@@ -35,35 +36,60 @@ namespace AsposeCellsChartTemplateDemo
                 sheet.Cells["B3"].PutValue(20);
                 sheet.Cells["B4"].PutValue(30);
 
-                // Add a column chart to the worksheet
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Set the data range for the chart
-                chart.SetChartDataRange("A1:B4", true);
-
-                // Load a pre‑created chart template (.crtx) if it exists
+                // Load a chart template (.crtx) into a byte array if the file exists
+                byte[] templateData = null;
                 const string templatePath = "ChartTemplate.crtx";
+
                 if (File.Exists(templatePath))
                 {
-                    byte[] templateData = File.ReadAllBytes(templatePath);
-                    chart.ChangeTemplate(templateData);
+                    templateData = File.ReadAllBytes(templatePath);
                 }
                 else
                 {
-                    Console.WriteLine($"Template file '{templatePath}' not found. Continuing without applying a template.");
+                    Console.WriteLine($"Template file \"{templatePath}\" not found. The chart will be created without a template.");
                 }
 
-                // Ensure data labels are visible and customize their appearance
+                int chartIdx;
+
+                if (templateData != null)
+                {
+                    // Add a chart using the template. The Add method with a byte[] parameter applies the preset template.
+                    chartIdx = sheet.Charts.Add(
+                        templateData,          // template byte array
+                        "A1:B4",              // data range for the chart
+                        true,                 // plot series by column
+                        5,                    // top row of the chart
+                        0,                    // left column of the chart
+                        20,                   // bottom row of the chart
+                        8);                   // right column of the chart
+                }
+                else
+                {
+                    // Create a chart without a template and set its data source manually
+                    chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                    Chart tempChart = sheet.Charts[chartIdx];
+                    tempChart.NSeries.Add("A1:B4", true);
+                }
+
+                Chart chart = sheet.Charts[chartIdx];
+
+                // Ensure the chart type matches the intended type (optional)
+                chart.Type = ChartType.Column;
+
+                // Access the first series and configure its data labels
                 Series series = chart.NSeries[0];
-                series.DataLabels.ShowValue = true;               // Show the value in each label
-                series.DataLabels.Font.Color = Color.DarkBlue;    // Set font color
-                series.DataLabels.Font.Size = 12;                 // Set font size
-                series.DataLabels.ApplyFont();                    // Apply the font settings
+                series.DataLabels.ShowValue = true; // show values
+                series.DataLabels.Position = LabelPositionType.InsideEnd; // position inside the end of bars
+                // Note: DataLabels does not expose a ShapeType property; omitted to avoid compilation error.
+                series.DataLabels.NumberFormat = "0.00"; // custom number format
+                series.DataLabels.Font.Color = Color.DarkBlue;
+                series.DataLabels.Font.Size = 12;
+                series.DataLabels.ApplyFont(); // apply font settings to all child labels
 
                 // Save the workbook with the chart
-                workbook.Save("ChartWithTemplate.xlsx", SaveFormat.Xlsx);
-                Console.WriteLine("Workbook saved successfully.");
+                const string outputPath = "ChartWithTemplate.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {

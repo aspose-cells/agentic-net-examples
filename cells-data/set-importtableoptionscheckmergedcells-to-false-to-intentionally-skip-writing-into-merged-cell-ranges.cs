@@ -1,49 +1,55 @@
-// Title: Skip Merged Cells When Importing a DataTable with Aspose.Cells (CheckMergedCells = false)
-// Description: C# example that creates a workbook, merges cells D4:D5, builds a DataTable, and imports it using ImportTableOptions. By setting CheckMergedCells to false and InsertRows to true, the import skips the merged range, preserves existing merged content, and adds new rows. The workbook is saved as ImportSkipMergedCells.xlsx.
-// Keywords: Aspose.Cells ImportTableOptions | CheckMergedCells false | ImportData DataTable merged cells | C# Aspose.Cells skip merged cells | InsertRows true | Excel merged cell import | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells import DataTable without overwriting merged cells | ImportTableOptions.CheckMergedCells false example | How to ignore merged ranges when using ImportData | C# Aspose.Cells skip merged cells during import | InsertRows true with ImportTableOptions
-// Developer Intent: Import a DataTable into a worksheet while leaving existing merged cells untouched.
-// Use Cases: Populate a template that contains merged header cells without destroying the header layout. | Add transactional rows to a sheet that has merged summary sections, preserving formatting. | Generate invoices where merged cells define sections, and external data must be inserted without altering those sections.
-// AI Prompts: Show a C# code snippet that uses Aspose.Cells ImportTableOptions to import a DataTable while skipping merged cells. | Explain how CheckMergedCells = false and InsertRows = true affect data import into a worksheet with merged ranges. | Provide step‑by‑step guidance for preserving merged cells when importing external data into an Aspose.Cells workbook.
+// Title: Skip merged‑cell validation when importing a DataTable with Aspose.Cells (C#)
+// Description: Shows how to import a DataTable into an Excel worksheet using Aspose.Cells C# while setting ImportTableOptions.CheckMergedCells = false to overwrite merged ranges.
+// Keywords: Aspose.Cells | C# | ImportTableOptions | CheckMergedCells | ImportData | DataTable | merged cells | skip merged validation | Excel export | worksheet import
+// Common Searches: Aspose.Cells import DataTable without checking merged cells | Set ImportTableOptions.CheckMergedCells false C# | ImportData skip merged ranges Aspose | Overwrite merged cells Aspose.Cells | ImportTableOptions example C#
+// Developer Intent: Load tabular data into an Excel sheet that contains merged cells without raising validation errors, allowing the new data to replace the merged areas.
+// Use Cases: Populate a pre‑designed report template where header rows are merged, but the data section must be filled programmatically. | Migrate query results into a worksheet that uses merged cells for layout, ensuring the import proceeds without exceptions. | Automate data refresh for dashboards that rely on merged cells as placeholders, overwriting them with fresh values.
+// AI Prompts: Write C# code that uses Aspose.Cells to import a DataTable into a worksheet with ImportTableOptions.CheckMergedCells set to false. | Explain the effect of the CheckMergedCells property on Cells.ImportData and how to safely overwrite merged ranges. | Provide step‑by‑step instructions for importing data into an Excel sheet containing merged cells without triggering validation errors.
 
 using System;
 using System.Data;
 using Aspose.Cells;
 
-// C# example that creates a workbook, merges cells D4:D5, builds a DataTable, and imports it using ImportTableOptions. By setting CheckMergedCells to false and InsertRows to true, the import skips the merged range, preserves existing merged content, and adds new rows. The workbook is saved as ImportSkipMergedCells.xlsx.
-class Program
+namespace AsposeCellsImportSkipMergedCells
 {
-    static void Main()
+    // Shows how to import a DataTable into an Excel worksheet using Aspose.Cells C# while setting ImportTableOptions.CheckMergedCells = false to overwrite merged ranges.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Create a merged cell range D4:D5 (row index 3, column index 3)
-        cells.Merge(3, 3, 2, 1);
-        cells[3, 3].PutValue("MergedValue");
-
-        // Prepare a DataTable with sample data to import
-        DataTable dataTable = new DataTable();
-        dataTable.Columns.Add("ID", typeof(int));
-        dataTable.Columns.Add("Name", typeof(string));
-        dataTable.Rows.Add(1, "Alice");
-        dataTable.Rows.Add(2, "Bob");
-
-        // Set import options and disable checking merged cells
-        ImportTableOptions importOptions = new ImportTableOptions
+        static void Main()
         {
-            IsFieldNameShown = true,   // import column headers
-            InsertRows = true,         // insert rows instead of overwriting
-            CheckMergedCells = false   // skip writing into merged cell ranges
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Import the data starting at the same location as the merged cells
-        // Because CheckMergedCells is false, the merged cells will be left unchanged
-        cells.ImportData(dataTable, 3, 3, importOptions);
+            // Create a merged cell range for demonstration (e.g., merge B2:C3)
+            cells.Merge(1, 1, 2, 2); // Merges cells B2:C3
+            cells[1, 1].PutValue("MergedCell");
 
-        // Save the workbook to a file
-        workbook.Save("ImportSkipMergedCells.xlsx", SaveFormat.Xlsx);
+            // Prepare sample data to import
+            DataTable table = new DataTable("Sample");
+            table.Columns.Add("ID", typeof(int));
+            table.Columns.Add("Name", typeof(string));
+            table.Rows.Add(1, "Alice");
+            table.Rows.Add(2, "Bob");
+            table.Rows.Add(3, "Charlie");
+
+            // Configure import options
+            ImportTableOptions options = new ImportTableOptions
+            {
+                // Skip checking merged cells so data will be written over them
+                CheckMergedCells = false,
+                // Do not import column headers
+                IsFieldNameShown = false,
+                // Insert rows if needed
+                InsertRows = true
+            };
+
+            // Import the DataTable starting at cell A1 (row 0, column 0)
+            cells.ImportData(table, 0, 0, options);
+
+            // Save the workbook to a file
+            workbook.Save("ImportSkipMergedCells.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

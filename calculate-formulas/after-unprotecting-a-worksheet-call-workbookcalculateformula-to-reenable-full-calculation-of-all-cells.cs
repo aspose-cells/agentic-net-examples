@@ -1,61 +1,34 @@
-// Title: Aspose.Cells for .NET: Unprotect a Worksheet and Recalculate All Formulas
-// Description: C# example that creates a workbook, adds values and formulas, protects the first sheet, then unprotects it with a password and calls Workbook.CalculateFormula to refresh every formula before reading the results.
-// Keywords: Aspose.Cells unprotect worksheet | Workbook.CalculateFormula C# | recalculate formulas after protection | protected sheet formula refresh .NET | Aspose.Cells worksheet protection example
-// Common Searches: how to recalculate formulas after unprotecting a sheet using Aspose.Cells | Aspose.Cells Workbook.CalculateFormula after sheet protection | C# unprotect worksheet and refresh formulas | Aspose.Cells protected workbook recalc all cells
-// Developer Intent: Refresh all cell calculations after removing worksheet protection.
-// Use Cases: Temporarily protect a sheet, modify data, then unprotect and recalculate to obtain current values. | Load a password‑protected workbook, change protection settings, and ensure formulas reflect the latest inputs. | Automate a pipeline where a sheet is secured for editing, then unlocked and fully recalculated before export or reporting.
-// AI Prompts: Write C# code that protects a worksheet, unprotects it with a password, and invokes Workbook.CalculateFormula to update all formulas using Aspose.Cells. | Explain why calling Workbook.CalculateFormula after unprotecting a sheet is required and show how to read the refreshed cell values. | Provide a step‑by‑step tutorial for handling protected worksheets and guaranteeing formula recalculation in Aspose.Cells for .NET.
+// Title: Unprotect an Excel worksheet and recalculate formulas with Aspose.Cells for .NET (C#)
+// Description: Loads a workbook, removes sheet protection (optionally with a password), runs Workbook.CalculateFormula to recompute all formulas, and saves the updated file.
+// Keywords: Aspose.Cells | C# unprotect worksheet | Workbook.CalculateFormula | recalculate Excel formulas | remove sheet protection | Aspose.Cells formula calculation
+// Common Searches: Aspose.Cells unprotect worksheet C# | CalculateFormula after unprotect Aspose.Cells | How to refresh formulas after removing sheet protection .NET | C# code to unprotect Excel sheet and recalc formulas | Batch unprotect and recalc Excel files Aspose.Cells
+// Developer Intent: Remove protection from a worksheet and trigger a full workbook formula recalculation using Aspose.Cells in C#.
+// Use Cases: Process a single workbook: unprotect a specific sheet, recalculate dependent formulas, and save the result. | Automate batch handling of multiple protected Excel files by unprotecting each sheet and invoking CalculateFormula to update values. | Provide a server‑side service that accepts protected Excel uploads, removes protection, refreshes all formulas, and returns a clean file.
+// AI Prompts: Write C# code using Aspose.Cells to unprotect a worksheet with a password and recalculate all formulas. | Explain how Workbook.CalculateFormula works after worksheet.Unprotect in Aspose.Cells for .NET. | Create a C# script that iterates through every worksheet in a workbook, unprotects each (if password‑protected), calls CalculateFormula, and saves the file.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads a workbook, removes sheet protection (optionally with a password), runs Workbook.CalculateFormula to recompute all formulas, and saves the updated file.
+class Program
 {
-    // C# example that creates a workbook, adds values and formulas, protects the first sheet, then unprotects it with a password and calls Workbook.CalculateFormula to refresh every formula before reading the results.
-    public class UnprotectAndCalculateDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Load an existing workbook (adjust the path as needed)
+        Workbook workbook = new Workbook("input.xlsx");
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+        // Get the first worksheet (or any worksheet you need to work with)
+        Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add sample data and formulas
-                sheet.Cells["A1"].PutValue(5);
-                sheet.Cells["B1"].Formula = "=A1*2";
-                sheet.Cells["C1"].Formula = "=B1+10";
+        // Unprotect the worksheet.
+        // If the sheet was protected with a password, pass it to Unprotect(string).
+        // Here we assume no password; otherwise use worksheet.Unprotect("yourPassword");
+        worksheet.Unprotect();
 
-                // Protect the worksheet with a password
-                sheet.Protect(ProtectionType.All, "pwd123", null);
+        // Re‑calculate all formulas in the workbook after unprotecting.
+        workbook.CalculateFormula();
 
-                // Unprotect the worksheet using the correct password
-                sheet.Unprotect("pwd123");
-
-                // Re‑calculate all formulas after unprotecting
-                workbook.CalculateFormula();
-
-                // Display the calculated results
-                Console.WriteLine("A1 = " + sheet.Cells["A1"].IntValue);
-                Console.WriteLine("B1 = " + sheet.Cells["B1"].IntValue);
-                Console.WriteLine("C1 = " + sheet.Cells["C1"].IntValue);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            UnprotectAndCalculateDemo.Run();
-        }
+        // Save the workbook with the updated values.
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

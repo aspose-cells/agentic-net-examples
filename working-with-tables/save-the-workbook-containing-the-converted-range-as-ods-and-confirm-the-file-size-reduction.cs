@@ -1,56 +1,55 @@
-// Title: C# Aspose.Cells: Save Workbook as ODS and Verify Size Reduction
-// Description: Creates a 1,000‑row by 10‑column workbook, saves it as XLSX, then uses OdsSaveOptions (LibreOffice generator) to export the same workbook to ODS, and finally compares the two file sizes to confirm whether the ODS file is smaller.
-// Keywords: Aspose.Cells ODS conversion | C# save workbook as ODS | OdsSaveOptions LibreOffice | XLSX to ODS file size | reduce spreadsheet size | .NET Aspose.Cells export ODS | compare XLSX and ODS sizes | Aspose.Cells file size optimization
-// Common Searches: How to export an Aspose.Cells workbook to ODS in C# | Aspose.Cells OdsSaveOptions example for size reduction | Convert large Excel file to ODS and check file size | C# compare XLSX and ODS file sizes using Aspose.Cells | LibreOffice generator impact on ODS output size
-// Developer Intent: Save a workbook as ODS and determine if the ODS file is smaller than the original XLSX.
-// Use Cases: Produce a compact ODS version of a massive Excel report for easier sharing. | Automate a routine that selects the most storage‑efficient format (XLSX vs ODS). | Leverage the LibreOffice generator to ensure maximum compatibility while minimizing file size.
-// AI Prompts: Generate C# code with Aspose.Cells that converts a workbook to ODS using OdsSaveOptions and prints the size difference. | Create a reusable method that accepts an XLSX path, saves it as ODS, and returns the percentage reduction in bytes. | Explain how OdsGeneratorType.LibreOffice affects ODS compatibility and file size compared to the default generator.
+// Title: C# – Save Aspose.Cells Workbook as ODS and Compare Size with XLSX
+// Description: Creates a simple workbook, saves it as XLSX to capture the original size, then uses Aspose.Cells OdsSaveOptions (LibreOffice generator) to export the same data as ODS. The code reads both file sizes, prints the byte difference and percentage reduction, demonstrating how ODS can produce a lighter file.
+// Keywords: Aspose.Cells C# | save workbook as ODS | ODS vs XLSX size | OdsSaveOptions | LibreOffice generator | file size reduction | convert XLSX to ODS .NET | spreadsheet compression | Aspose.Cells ODS export
+// Common Searches: How to export an Aspose.Cells workbook to ODS in C# | Compare XLSX and ODS file sizes using Aspose.Cells | Aspose.Cells OdsSaveOptions example | Reduce spreadsheet size by saving as ODS | C# code to check size difference between XLSX and ODS
+// Developer Intent: Export a workbook to ODS format and verify that the resulting file is smaller than the original XLSX.
+// Use Cases: Generate lightweight ODS reports for web portals while tracking storage savings. | Automate batch conversion of legacy XLSX files to ODS and log size metrics for compliance. | Provide end‑users with a compressed ODS download option for faster transfers.
+// AI Prompts: Write C# code that saves an Aspose.Cells workbook as ODS with maximum compression and outputs the size delta. | Explain the impact of different OdsGeneratorType values on ODS file size in Aspose.Cells. | Design a script to batch‑convert a folder of XLSX files to ODS and record each file's size reduction in a CSV.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Ods;
 
-// Creates a 1,000‑row by 10‑column workbook, saves it as XLSX, then uses OdsSaveOptions (LibreOffice generator) to export the same workbook to ODS, and finally compares the two file sizes to confirm whether the ODS file is smaller.
+// Creates a simple workbook, saves it as XLSX to capture the original size, then uses Aspose.Cells OdsSaveOptions (LibreOffice generator) to export the same data as ODS. The code reads both file sizes, prints the byte difference and percentage reduction, demonstrating how ODS can produce a lighter file.
 class Program
 {
     static void Main()
     {
         // Create a new workbook and populate it with sample data
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        for (int row = 0; row < 1000; row++)
-        {
-            for (int col = 0; col < 10; col++)
-            {
-                worksheet.Cells[row, col].PutValue($"R{row}C{col}");
-            }
-        }
+        Workbook workbook = new Workbook();                         // create workbook
+        Worksheet sheet = workbook.Worksheets[0];                  // access first worksheet
+        sheet.Cells["A1"].PutValue("Name");                        // add header
+        sheet.Cells["B1"].PutValue("Age");
+        sheet.Cells["A2"].PutValue("John");                        // add rows
+        sheet.Cells["B2"].PutValue(30);
+        sheet.Cells["A3"].PutValue("Jane");
+        sheet.Cells["B3"].PutValue(28);
 
-        // Save the workbook in its original XLSX format
-        string xlsxPath = "original.xlsx";
-        workbook.Save(xlsxPath, SaveFormat.Xlsx);
+        // Save the workbook as XLSX to obtain the original file size
+        string xlsxPath = "sample.xlsx";
+        workbook.Save(xlsxPath, SaveFormat.Xlsx);                  // save as XLSX
+        long xlsxSize = new FileInfo(xlsxPath).Length;            // get file size
 
         // Save the same workbook as ODS using OdsSaveOptions
-        string odsPath = "converted.ods";
-        OdsSaveOptions odsOptions = new OdsSaveOptions();
-        odsOptions.GeneratorType = OdsGeneratorType.LibreOffice; // optional setting
-        workbook.Save(odsPath, odsOptions);
+        OdsSaveOptions odsOptions = new OdsSaveOptions();         // create ODS save options
+        odsOptions.GeneratorType = OdsGeneratorType.LibreOffice;  // optional: set generator
+        string odsPath = "sample.ods";
+        workbook.Save(odsPath, odsOptions);                       // save as ODS with options
+        long odsSize = new FileInfo(odsPath).Length;              // get ODS file size
 
-        // Compare file sizes to confirm reduction
-        long xlsxSize = new FileInfo(xlsxPath).Length;
-        long odsSize = new FileInfo(odsPath).Length;
-
-        Console.WriteLine($"XLSX file size: {xlsxSize} bytes");
-        Console.WriteLine($"ODS file size: {odsSize} bytes");
-
+        // Output the size comparison and reduction information
+        Console.WriteLine($"XLSX size: {xlsxSize} bytes");
+        Console.WriteLine($"ODS size: {odsSize} bytes");
         if (odsSize < xlsxSize)
         {
-            Console.WriteLine($"Size reduced by {xlsxSize - odsSize} bytes after conversion to ODS.");
+            long reduction = xlsxSize - odsSize;
+            double percent = (double)reduction / xlsxSize;
+            Console.WriteLine($"File size reduced by {reduction} bytes ({percent:P2}).");
         }
         else
         {
-            Console.WriteLine("ODS file is not smaller than the original XLSX.");
+            Console.WriteLine("ODS file is not smaller than the XLSX file.");
         }
     }
 }

@@ -1,23 +1,26 @@
-// Title: Aspose.Cells C# – Hide Chart Legend and Reveal It Conditionally
-// Description: The sample builds a workbook, inserts a column chart with sample data, disables the legend, evaluates a runtime boolean, and re‑enables the legend when the condition is met before saving as ChartLegendConditional.xlsx.
-// Keywords: Aspose.Cells chart legend hide | C# conditional legend display | Aspose.Cells runtime chart settings | toggle legend Aspose.Cells | Excel chart legend C# example | GitHub Aspose.Cells chart demo | global Aspose.Cells chart manipulation
-// Common Searches: how to hide a chart legend using Aspose.Cells .NET | show chart legend only when a condition is true C# | Aspose.Cells hide and show legend at runtime | conditional chart legend visibility Aspose.Cells | example of chart legend toggle in C#
-// Developer Intent: Suppress a chart legend initially and display it later only if a runtime condition evaluates to true.
-// Use Cases: Create a clean‑look report where the legend appears only for large data sets. | Build an interactive dashboard that reveals the legend based on user selections. | Generate Excel exports that toggle legend visibility according to a configuration flag.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a line chart, hides its legend, and shows it when a boolean variable is true. | Provide an Aspose.Cells snippet that changes chart legend visibility based on a worksheet cell value. | Write a method that accepts a Chart object and a predicate, then sets ShowLegend accordingly.
+// Title: Aspose.Cells C# – Create a Column Chart, Hide Its Legend, and Show It Conditionally at Runtime
+// Description: Demonstrates how to build a workbook with a column chart using Aspose.Cells, hide the chart legend via the ShowLegend property, and re‑enable the legend when a runtime condition (e.g., a command‑line argument) is true, then save the file.
+// Keywords: Aspose.Cells chart legend hide | Aspose.Cells ShowLegend property | C# toggle chart legend | runtime chart legend Aspose.Cells | conditional legend visibility | create column chart Aspose.Cells | programmatic chart legend control
+// Common Searches: how to hide chart legend Aspose.Cells C# | show chart legend based on condition Aspose.Cells | Aspose.Cells toggle legend visibility at runtime | C# example for conditional chart legend | Aspose.Cells command line argument legend
+// Developer Intent: Programmatically control a chart's legend visibility in an Aspose.Cells workbook, hiding it by default and displaying it only when a specified runtime condition is met.
+// Use Cases: Generate compact Excel reports where legends are omitted for space, but include them when a user requests a detailed view. | Create automated dashboards that suppress legends on mobile exports and reveal them on desktop exports via a flag. | Produce multiple workbooks where legend visibility is driven by configuration settings such as command‑line arguments or JSON files.
+// AI Prompts: Write C# code with Aspose.Cells to add a line chart, hide its legend, and enable the legend only when a boolean variable `showLegend` is true. | Provide an Aspose.Cells example that reads a setting from appsettings.json and toggles the chart legend accordingly. | Explain how to use the ShowLegend property to hide and later show a chart legend after adding series in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartLegendDemo
+namespace AsposeCellsChartLegendToggle
 {
-    // The sample builds a workbook, inserts a column chart with sample data, disables the legend, evaluates a runtime boolean, and re‑enables the legend when the condition is met before saving as ChartLegendConditional.xlsx.
+    // Demonstrates how to build a workbook with a column chart using Aspose.Cells, hide the chart legend via the ShowLegend property, and re‑enable the legend when a runtime condition (e.g., a command‑line argument) is true, then save the file.
     class Program
     {
         static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
+            // Runtime condition: show legend if first argument is "true"
+            bool enableLegend = args.Length > 0 && args[0].Equals("true", StringComparison.OrdinalIgnoreCase);
+
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -26,13 +29,12 @@ namespace AsposeCellsChartLegendDemo
             sheet.Cells["A2"].PutValue("A");
             sheet.Cells["A3"].PutValue("B");
             sheet.Cells["A4"].PutValue("C");
-
             sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["B2"].PutValue(10);
             sheet.Cells["B3"].PutValue(20);
             sheet.Cells["B4"].PutValue(30);
 
-            // Add a column chart to the worksheet
+            // Add a column chart
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
             Chart chart = sheet.Charts[chartIndex];
 
@@ -42,28 +44,15 @@ namespace AsposeCellsChartLegendDemo
 
             // Initially hide the legend
             chart.ShowLegend = false;
-            Console.WriteLine("Legend hidden: " + chart.ShowLegend);
 
-            // Runtime condition to decide whether to show the legend again
-            bool shouldShowLegend = GetRuntimeCondition();
-
-            // Re‑enable legend visibility based on the condition
-            if (shouldShowLegend)
+            // Re‑enable legend visibility based on the runtime condition
+            if (enableLegend)
             {
                 chart.ShowLegend = true;
-                Console.WriteLine("Legend re‑enabled: " + chart.ShowLegend);
             }
 
             // Save the workbook
-            workbook.Save("ChartLegendConditional.xlsx");
-        }
-
-        // Example method that determines the runtime condition.
-        // Replace with actual logic as needed.
-        static bool GetRuntimeCondition()
-        {
-            // For demonstration, toggle based on current second (even = true, odd = false)
-            return DateTime.Now.Second % 2 == 0;
+            workbook.Save("ChartLegendToggle.xlsx");
         }
     }
 }

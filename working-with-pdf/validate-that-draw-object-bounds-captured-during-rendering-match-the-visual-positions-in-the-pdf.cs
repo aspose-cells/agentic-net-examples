@@ -1,3 +1,11 @@
+// Title: Validate Shape Bounds During PDF Export with Aspose.Cells for .NET
+// Description: A .NET example that adds a rectangle shape to a workbook and uses a custom DrawObjectEventHandler (via PdfSaveOptions) to compare the rendered X, Y, width and height with the shape's original properties, reporting any mismatches within a 0.5‑pixel tolerance.
+// Keywords: Aspose.Cells | .NET | C# | PDF export | DrawObjectEventHandler | shape bounds validation | rendering tolerance | Excel to PDF conversion | visual fidelity | custom PdfSaveOptions
+// Common Searches: how to verify shape positions when exporting Excel to PDF using Aspose.Cells | Aspose.Cells custom DrawObjectEventHandler example | check rectangle coordinates during PDF generation Aspose.Cells | validate draw object dimensions in PDF output .NET | Aspose.Cells PDF rendering accuracy test
+// Developer Intent: Confirm that the coordinates and dimensions of shapes rendered in a PDF match the workbook's shape definitions.
+// Use Cases: Automated regression testing to detect layout shifts after Excel‑to‑PDF conversion. | Compliance reporting that requires pixel‑perfect rendering of charts and diagrams. | Debugging complex worksheets by logging shape position discrepancies before publishing PDFs.
+// AI Prompts: Create a DrawObjectEventHandler that logs shape bound differences to a JSON file with a configurable tolerance. | Extend the ValidationHandler to also compare cell background colors and borders during PDF export. | Write unit tests for the ValidationHandler that verify no issues for correctly positioned shapes and intentionally offset shapes.
+
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
@@ -6,36 +14,41 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsDrawObjectValidation
 {
-    // Holds captured draw object information during rendering
-    class CapturedInfo
+    // Custom handler that captures draw object bounds and validates them against the original shape properties
+    // A .NET example that adds a rectangle shape to a workbook and uses a custom DrawObjectEventHandler (via PdfSaveOptions) to compare the rendered X, Y, width and height with the shape's original properties, reporting any mismatches within a 0.5‑pixel tolerance.
+    class ValidationHandler : DrawObjectEventHandler
     {
-        public DrawObjectEnum Type { get; set; }
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Width { get; set; }
-        public float Height { get; set; }
-        public Shape Shape { get; set; }
-        public Cell Cell { get; set; }
-    }
+        // Stores any mismatches found during rendering
+        public List<string> Issues { get; } = new List<string>();
 
-    // Custom handler that records bounds of each draw object
-    class ValidationDrawObjectHandler : DrawObjectEventHandler
-    {
-        public List<CapturedInfo> CapturedObjects { get; } = new List<CapturedInfo>();
+        // Tolerance for floating‑point comparison (in pixels)
+        private const float Tolerance = 0.5f;
 
         public override void Draw(DrawObject drawObject, float x, float y, float width, float height)
         {
-            // Store the information for later validation
-            CapturedObjects.Add(new CapturedInfo
+            // Only validate shape draw objects (cells can be validated similarly if needed)
+            if (drawObject.Shape != null)
             {
-                Type = drawObject.Type,
-                X = x,
-                Y = y,
-                Width = width,
-                Height = height,
-                Shape = drawObject.Shape,
-                Cell = drawObject.Cell
-            });
+                Shape shape = drawObject.Shape;
+
+                // Shape position and size as defined in the workbook
+                float expectedX = shape.Left;
+                float expectedY = shape.Top;
+                float expectedWidth = shape.Width;
+                float expectedHeight = shape.Height;
+
+                // Compare each dimension with a small tolerance
+                if (Math.Abs(x - expectedX) > Tolerance ||
+                    Math.Abs(y - expectedY) > Tolerance ||
+                    Math.Abs(width - expectedWidth) > Tolerance ||
+                    Math.Abs(height - expectedHeight) > Tolerance)
+                {
+                    Issues.Add(
+                        $"Shape '{shape.Name}' bounds mismatch. " +
+                        $"Expected ({expectedX:F2}, {expectedY:F2}, {expectedWidth:F2}, {expectedHeight:F2}) " +
+                        $"but got ({x:F2}, {y:F2}, {width:F2}, {height:F2}).");
+                }
+            }
         }
     }
 
@@ -43,69 +56,51 @@ namespace AsposeCellsDrawObjectValidation
     {
         static void Main()
         {
-            // ------------------- Create workbook and content -------------------
+            // -------------------- Create workbook --------------------
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some cells
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["B2"].PutValue(12345);
-            sheet.Cells["C3"].PutValue(DateTime.Now);
+            // Add some sample data to make the sheet non‑empty
+            sheet.Cells["A1"].PutValue("Validation Demo");
+            sheet.Cells["A2"].PutValue(12345);
 
-            // Add a rectangle shape (will be rendered as an image draw object)
-            Shape rect = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 0, 5, 0, 150, 80);
-            rect.Text = "Sample Shape";
+            // Add a rectangle shape whose bounds we will validate
+            Shape rect = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                5,   // upper left row
+                5,   // upper left column
+                0,   // top offset (pixels)
+                0,   // left offset (pixels)
+                200, // width (pixels)
+                100  // height (pixels)
+            );
+            rect.Name = "TestRectangle";
+            rect.Text = "Validate Me";
 
-            // ------------------- Set up rendering with custom handler -------------------
-            ValidationDrawObjectHandler handler = new ValidationDrawObjectHandler();
+            // -------------------- Set up PDF save options with custom handler --------------------
+            ValidationHandler handler = new ValidationHandler();
 
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
                 DrawObjectEventHandler = handler
             };
 
-            // Render workbook to PDF (this triggers the Draw method of the handler)
-            workbook.Save("RenderedDocument.pdf", pdfOptions);
+            // -------------------- Save workbook to PDF (triggers rendering) --------------------
+            workbook.Save("DrawObjectValidation.pdf", pdfOptions);
 
-            // ------------------- Validate captured bounds -------------------
-            const float tolerance = 0.5f; // acceptable difference in points
-
-            foreach (var info in handler.CapturedObjects)
+            // -------------------- Report validation results --------------------
+            if (handler.Issues.Count == 0)
             {
-                // Validation for shape objects (rendered as Image type)
-                if (info.Type == DrawObjectEnum.Image && info.Shape != null)
+                Console.WriteLine("All draw object bounds match the visual positions.");
+            }
+            else
+            {
+                Console.WriteLine("Bound mismatches detected:");
+                foreach (string issue in handler.Issues)
                 {
-                    // Shape's own coordinates are in pixels; Aspose.Cells converts them to points during rendering.
-                    // For a simple comparison we use the shape's Left/Top/Width/Height properties.
-                    float shapeLeft = info.Shape.Left;
-                    float shapeTop = info.Shape.Top;
-                    float shapeWidth = info.Shape.Width;
-                    float shapeHeight = info.Shape.Height;
-
-                    bool leftMatch = Math.Abs(info.X - shapeLeft) <= tolerance;
-                    bool topMatch = Math.Abs(info.Y - shapeTop) <= tolerance;
-                    bool widthMatch = Math.Abs(info.Width - shapeWidth) <= tolerance;
-                    bool heightMatch = Math.Abs(info.Height - shapeHeight) <= tolerance;
-
-                    Console.WriteLine($"Shape \"{info.Shape.Name}\" validation:");
-                    Console.WriteLine($"  Position X match: {leftMatch} (captured={info.X}, shape={shapeLeft})");
-                    Console.WriteLine($"  Position Y match: {topMatch} (captured={info.Y}, shape={shapeTop})");
-                    Console.WriteLine($"  Width match:      {widthMatch} (captured={info.Width}, shape={shapeWidth})");
-                    Console.WriteLine($"  Height match:     {heightMatch} (captured={info.Height}, shape={shapeHeight})");
-                }
-
-                // Validation for cell objects
-                if (info.Type == DrawObjectEnum.Cell && info.Cell != null)
-                {
-                    // Cells are rendered based on their row/column indices.
-                    // We can approximate the expected position using the cell's row height and column width.
-                    // For demonstration, we simply output the captured bounds.
-                    Console.WriteLine($"Cell \"{info.Cell.Name}\" rendered at ({info.X}, {info.Y}) size {info.Width}x{info.Height}");
+                    Console.WriteLine(issue);
                 }
             }
-
-            // ------------------- Save workbook (optional) -------------------
-            workbook.Save("ValidatedWorkbook.xlsx");
         }
     }
 }

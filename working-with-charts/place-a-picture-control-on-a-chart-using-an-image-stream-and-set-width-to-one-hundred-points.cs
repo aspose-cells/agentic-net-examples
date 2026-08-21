@@ -1,10 +1,10 @@
-// Title: Add a picture to an Aspose.Cells chart from a MemoryStream and set width to 100 pt (C#)
-// Description: Creates a new workbook, builds a column chart with sample data, loads an image file into a MemoryStream, inserts the image onto the chart using AddPictureInChart, sets the picture's WidthPt property to 100 points, and saves the workbook as an Excel file.
-// Keywords: Aspose.Cells | C# | AddPictureInChart | chart picture insertion | MemoryStream image | WidthPt | set picture width points | Excel chart overlay | image stream to chart | Aspose.Cells chart customization
-// Common Searches: How to add an image to a chart with Aspose.Cells C# | Set picture width in points on an Aspose.Cells chart | Insert picture from MemoryStream into Excel chart using Aspose | Aspose.Cells AddPictureInChart example code | Resize chart picture to exact points in Aspose.Cells
-// Developer Intent: Insert an image into a chart from a memory stream and define its width as exactly 100 points.
-// Use Cases: Brand a generated chart with a company logo for corporate reports. | Apply a confidential watermark image over a chart before distribution. | Show product thumbnails next to data points in a sales performance chart.
-// AI Prompts: Provide C# code that loads an image into a MemoryStream and adds it to an Aspose.Cells chart with a width of 100 pt. | Explain the offset parameters of AddPictureInChart and how to calculate them for precise placement. | Show robust error‑handling for missing image files when inserting pictures into Aspose.Cells charts.
+// Title: C# – Add a picture to an Aspose.Cells chart from a MemoryStream and set its width to 100 pt
+// Description: Creates a new workbook, builds a column chart with sample data, loads an image into a MemoryStream, inserts the image into the chart using AddPictureInChart, sets the picture width to 100 points, and saves the file as an Excel workbook.
+// Keywords: Aspose.Cells C# chart image | AddPictureInChart MemoryStream | set picture width points Aspose.Cells | chart picture control .NET | insert image into Excel chart programmatically | Aspose.Cells example | Excel chart branding logo
+// Common Searches: Aspose.Cells add picture to chart from stream | C# set picture width in points on chart | How to use AddPictureInChart in Aspose.Cells | Insert image into Excel chart using Aspose.Cells .NET | Aspose.Cells chart picture control example
+// Developer Intent: Insert an image into a chart from a MemoryStream and define its width as 100 points using Aspose.Cells for .NET.
+// Use Cases: Brand a generated chart with a company logo for consistent visual identity. | Add a dynamic watermark or badge to charts based on runtime data. | Place custom icons next to specific data points in automated reports.
+// AI Prompts: Show how to change the picture height and position after adding it to an Aspose.Cells chart. | Provide code to download an image from a URL, load it into a MemoryStream, and add it to a chart with custom offsets. | Explain the scaling parameters of AddPictureInChart and how to retrieve the Picture object for further formatting.
 
 using System;
 using System.IO;
@@ -12,14 +12,14 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, builds a column chart with sample data, loads an image file into a MemoryStream, inserts the image onto the chart using AddPictureInChart, sets the picture's WidthPt property to 100 points, and saves the workbook as an Excel file.
-class AddPictureToChart
+// Creates a new workbook, builds a column chart with sample data, loads an image into a MemoryStream, inserts the image into the chart using AddPictureInChart, sets the picture width to 100 points, and saves the file as an Excel workbook.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and obtain the first worksheet
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -38,29 +38,21 @@ class AddPictureToChart
             chart.NSeries.CategoryData = "A2:A3";
 
             // Load an image file into a memory stream if it exists
-            const string imagePath = "example.png";
+            const string imagePath = "example.jpg";
             if (File.Exists(imagePath))
             {
-                try
+                byte[] imageData = File.ReadAllBytes(imagePath);
+                using (MemoryStream imgStream = new MemoryStream(imageData))
                 {
-                    byte[] imageBytes = File.ReadAllBytes(imagePath);
-                    using (MemoryStream imageStream = new MemoryStream(imageBytes))
-                    {
-                        // Add the picture to the chart (offsets are in 1/4000 of the chart area)
-                        // widthScale and heightScale are set to 50% as an initial size
-                        Picture picture = chart.Shapes.AddPictureInChart(100, 100, imageStream, 50, 50);
-                        // Set the picture width to exactly 100 points
-                        picture.WidthPt = 100;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error loading image '{imagePath}': {ex.Message}");
+                    // Add the picture to the chart using the stream.
+                    // Offsets are in 1/4000 of the chart area; width/height scales are percentages.
+                    Picture picture = chart.Shapes.AddPictureInChart(0, 0, imgStream, 100, 100);
+                    picture.WidthPt = 100; // Set picture width to 100 points
                 }
             }
             else
             {
-                Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
+                Console.WriteLine($"Warning: Image file '{imagePath}' not found. Skipping picture insertion.");
             }
 
             // Save the workbook with the chart (and picture if added)
@@ -69,7 +61,7 @@ class AddPictureToChart
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

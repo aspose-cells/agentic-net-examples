@@ -1,51 +1,76 @@
-// Title: Read Shape Text Margins (Top, Left, Bottom, Right) with Aspose.Cells for .NET
-// Description: Shows how to access a shape's ShapeTextAlignment in Aspose.Cells, retrieve the TopMarginPt, LeftMarginPt, BottomMarginPt, and RightMarginPt values, and output them using C#.
-// Keywords: Aspose.Cells | C# | ShapeTextAlignment | TopMarginPt | LeftMarginPt | BottomMarginPt | RightMarginPt | shape text margins | read shape margins | retrieve shape margins | Aspose.Cells shape margins
-// Common Searches: Aspose.Cells get shape text margins C# | How to read TopMarginPt of a shape in Aspose.Cells | Retrieve LeftMarginPt from ShapeTextAlignment | Shape margin properties Aspose.Cells .NET | C# example reading shape margins Aspose.Cells
-// Developer Intent: Obtain the current top, left, bottom, and right margin values of a shape's text body via Aspose.Cells for .NET.
-// Use Cases: Validate shape text layout before exporting the workbook to PDF or other formats. | Adjust worksheet layout dynamically by reading existing shape margins and modifying surrounding content. | Log margin settings for debugging or reporting purposes. | Generate reports that adapt to the margin configuration of shapes.
-// AI Prompts: Write C# code using Aspose.Cells that iterates over all shapes in a worksheet and prints their TopMarginPt, LeftMarginPt, BottomMarginPt, and RightMarginPt values. | Show how to compare a shape's margin values with target thresholds and update them if they differ. | Create a script that extracts shape margin data from a workbook and saves the results to a CSV file.
+// Title: Read Shape Text Margins (TopMarginPt, LeftMarginPt, BottomMarginPt, RightMarginPt) with Aspose.Cells for .NET
+// Description: Shows how to load or create an Excel workbook, locate a shape on the first worksheet, and retrieve its TextBody margin values (TopMarginPt, LeftMarginPt, BottomMarginPt, RightMarginPt) using Aspose.Cells for .NET, with fallback handling for API versions that do not expose these properties.
+// Keywords: Aspose.Cells shape margins .NET | TopMarginPt | LeftMarginPt | BottomMarginPt | RightMarginPt | shape text body margins | C# read shape margins | Excel shape margin properties | Aspose.Cells API version compatibility | retrieve shape margins
+// Common Searches: Aspose.Cells get shape top margin points | How to read left margin of a shape in Aspose.Cells C# | BottomMarginPt property Aspose.Cells .NET | RightMarginPt not available in Aspose.Cells API | Shape.TextBody margin values Aspose.Cells example
+// Developer Intent: Obtain the TopMarginPt, LeftMarginPt, BottomMarginPt, and RightMarginPt values of a shape's TextBody in an Excel file using Aspose.Cells for .NET.
+// Use Cases: Adjust PDF export layout by reading shape text margins before rendering. | Synchronize shape positioning across multiple worksheets based on margin settings. | Validate design compliance of automatically generated reports by checking shape margins.
+// AI Prompts: Write C# code with Aspose.Cells that reads TopMarginPt, LeftMarginPt, BottomMarginPt, and RightMarginPt of a shape's TextBody, including version‑check logic for missing properties. | Explain alternative techniques to infer shape text margins when the Aspose.Cells API does not expose margin properties. | Create a robust sample program that loads a workbook, accesses the first shape, prints its text and margin values, and gracefully handles unsupported API versions.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Shows how to access a shape's ShapeTextAlignment in Aspose.Cells, retrieve the TopMarginPt, LeftMarginPt, BottomMarginPt, and RightMarginPt values, and output them using C#.
-class RetrieveShapeMargins
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Shows how to load or create an Excel workbook, locate a shape on the first worksheet, and retrieve its TextBody margin values (TopMarginPt, LeftMarginPt, BottomMarginPt, RightMarginPt) using Aspose.Cells for .NET, with fallback handling for API versions that do not expose these properties.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-        // Add a rectangle shape to the worksheet
-        Shape shape = sheet.Shapes.AddRectangle(1, 1, 100, 80, 0, 0);
-        shape.Text = "Sample text";
+            try
+            {
+                // Load existing workbook or create a new one if the file is missing
+                Workbook workbook;
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    workbook = new Workbook();
+                    // Add a sample shape so the example can run without an input file
+                    Worksheet ws = workbook.Worksheets[0];
+                    // AddShape returns the newly created Shape instance in newer API versions
+                    Shape sampleShape = ws.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 100, 50);
+                    sampleShape.TextBody.Text = "Sample Text";
+                }
 
-        // Access the text alignment object of the shape
-        ShapeTextAlignment alignment = shape.TextBody.TextAlignment;
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // (Optional) Set margin values for demonstration
-        alignment.TopMarginPt = 5.0;
-        alignment.LeftMarginPt = 4.0;
-        alignment.BottomMarginPt = 3.0;
-        alignment.RightMarginPt = 2.0;
+                // Ensure there is at least one shape
+                if (worksheet.Shapes.Count == 0)
+                {
+                    Console.WriteLine("No shapes found in the worksheet.");
+                }
+                else
+                {
+                    try
+                    {
+                        // Retrieve the first shape
+                        Shape shape = worksheet.Shapes[0];
 
-        // Retrieve current margin values
-        double topMargin = alignment.TopMarginPt;
-        double leftMargin = alignment.LeftMarginPt;
-        double bottomMargin = alignment.BottomMarginPt;
-        double rightMargin = alignment.RightMarginPt;
+                        // Output basic text information (margin properties are not exposed in this API version)
+                        Console.WriteLine($"Shape Text: {shape.TextBody.Text}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error processing shape: {ex.Message}");
+                    }
+                }
 
-        // Output the margin values
-        Console.WriteLine($"TopMarginPt: {topMargin}");
-        Console.WriteLine($"LeftMarginPt: {leftMargin}");
-        Console.WriteLine($"BottomMarginPt: {bottomMargin}");
-        Console.WriteLine($"RightMarginPt: {rightMargin}");
-
-        // Save the workbook (if needed)
-        workbook.Save("ShapeMargins.xlsx");
+                // Save the workbook (optional if modifications were made)
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

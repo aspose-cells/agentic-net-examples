@@ -1,10 +1,10 @@
-// Title: Render Gradient WordArt in PDF with a Raster Fallback using Aspose.Cells for .NET
-// Description: This C# example shows how to add a WordArt shape with a two‑color gradient to an Excel workbook, configure a semi‑transparent PNG as a background RenderingWatermark, and save the workbook as a PDF. The raster watermark acts as a fallback for PDF viewers that cannot render gradient fills, while PdfSaveOptions ensure font and compatibility checks.
-// Keywords: Aspose.Cells | C# | .NET | WordArt gradient | Excel to PDF conversion | RenderingWatermark | PDF fallback image | raster watermark | gradient fill support | PdfSaveOptions | cross‑platform PDF rendering
-// Common Searches: Aspose.Cells gradient WordArt PDF export | add PNG watermark as fallback in PDF using Aspose.Cells | render WordArt gradient in PDF with Aspose.Cells .NET | PdfSaveOptions watermark raster image Aspose.Cells | Excel WordArt gradient not showing in PDF viewer
-// Developer Intent: Create a gradient‑filled WordArt shape in an Excel workbook and export it to PDF while embedding a semi‑transparent raster watermark that serves as a visual fallback for PDF viewers lacking gradient support.
-// Use Cases: Design marketing brochures where Excel WordArt provides branding, with a PNG fallback for legacy PDF readers. | Generate compliance‑oriented reports that need a visible watermark if gradient rendering fails. | Produce printable PDFs from Excel dashboards that retain visual fidelity across all viewer versions.
-// AI Prompts: Generate C# code with Aspose.Cells to insert a WordArt shape using a custom two‑color gradient and export the sheet to PDF with a centered semi‑transparent PNG watermark as a background. | Explain how to set up PdfSaveOptions in Aspose.Cells to embed a raster image watermark that acts as a fallback for unsupported gradient fills. | Provide a step‑by‑step verification method to confirm that the gradient WordArt renders correctly in PDF and that the fallback watermark appears when the gradient is not supported.
+// Title: Render Gradient WordArt in PDF with Raster Fallback Using Aspose.Cells for .NET
+// Description: This C# example creates a workbook, adds a WordArt shape with a two‑color horizontal gradient, inserts a PNG fallback picture aligned to the same size, sets the Z‑order so the WordArt overlays the raster image, and saves the sheet as a PDF with font‑compatibility options.
+// Keywords: Aspose.Cells | WordArt gradient | PDF export | fallback image | AddPicture shape | Z‑order shapes | PdfSaveOptions | .NET Excel to PDF | gradient fill rendering
+// Common Searches: Aspose.Cells render WordArt gradient in PDF | add fallback PNG for WordArt gradient Aspose.Cells | set shape Z‑order Aspose.Cells PDF | PdfSaveOptions font compatibility Aspose.Cells | gradient WordArt not showing in PDF viewer
+// Developer Intent: Generate a PDF from an Excel workbook that preserves a gradient‑filled WordArt heading while providing a raster PNG fallback for PDF viewers that cannot render gradients.
+// Use Cases: Create marketing brochures with decorative gradient WordArt titles that remain visible on legacy PDF readers. | Automate batch conversion of spreadsheets containing gradient WordArt, embedding aligned PNG fallbacks to avoid rendering issues. | Produce financial or technical reports where section headings use gradient WordArt, ensuring consistent appearance across all PDF viewers.
+// AI Prompts: Write C# code with Aspose.Cells to add a WordArt shape using a two‑color horizontal gradient and embed a matching PNG fallback image before saving as PDF. | Explain how to control the Z‑order of shapes in Aspose.Cells so the WordArt appears above a raster fallback image in the exported PDF. | Show how to configure PdfSaveOptions for font compatibility and reliable gradient rendering when converting Excel to PDF with Aspose.Cells.
 
 using System;
 using System.Drawing;
@@ -13,88 +13,104 @@ using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWordArtPdfDemo
+// This C# example creates a workbook, adds a WordArt shape with a two‑color horizontal gradient, inserts a PNG fallback picture aligned to the same size, sets the Z‑order so the WordArt overlays the raster image, and saves the sheet as a PDF with font‑compatibility options.
+class WordArtPdfWithFallback
 {
-    // This C# example shows how to add a WordArt shape with a two‑color gradient to an Excel workbook, configure a semi‑transparent PNG as a background RenderingWatermark, and save the workbook as a PDF. The raster watermark acts as a fallback for PDF viewers that cannot render gradient fills, while PdfSaveOptions ensure font and compatibility checks.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-
-            // Get the shape collection of the worksheet
             ShapeCollection shapes = sheet.Shapes;
 
-            // Add a WordArt shape with a preset gradient style (WordArtStyle7)
-            // Parameters: style, text, topRow, top, leftColumn, left, height, width
+            // ------------------------------------------------------------
+            // 1. Add a WordArt shape that uses a preset style with a gradient
+            // ------------------------------------------------------------
+            // WordArtStyle7 = Gradient Fill - Blue, Accent 1, Reflection
             Shape wordArt = shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle7,
-                "Gradient WordArt",
-                5,   // topRow
-                10,  // top (pixels)
-                2,   // leftColumn
-                10,  // left (pixels)
-                100, // height (pixels)
-                400  // width (pixels)
+                PresetWordArtStyle.WordArtStyle7, // preset style with gradient
+                "Gradient WordArt",               // text
+                2,    // top row index
+                10,   // vertical offset (pixels)
+                2,    // left column index
+                10,   // horizontal offset (pixels)
+                100,  // height (pixels)
+                400   // width (pixels)
             );
 
-            // Ensure the fill type is gradient and customize the gradient colors
+            // Ensure the fill type is gradient (optional, preset already sets it)
             wordArt.Fill.FillType = FillType.Gradient;
-            GradientFill gradient = wordArt.Fill.GradientFill;
-            if (gradient != null)
-            {
-                // Two‑color gradient: LightBlue to DarkBlue, horizontal style, variant 1
-                gradient.SetTwoColorGradient(Color.LightBlue, Color.DarkBlue, GradientStyleType.Horizontal, 1);
-            }
 
-            // -----------------------------------------------------------------
-            // Prepare a fallback raster image (e.g., PNG) to be used as a watermark.
-            // This image will be visible in PDF viewers that cannot render the
-            // WordArt gradient correctly.
-            // -----------------------------------------------------------------
-            string fallbackImagePath = "fallback.png"; // Path to your raster image
-            if (!File.Exists(fallbackImagePath))
+            // Apply a custom two‑color gradient (blue → light blue, horizontal)
+            wordArt.Fill.SetTwoColorGradient(
+                Color.Blue,          // first color
+                Color.LightBlue,     // second color
+                GradientStyleType.Horizontal,
+                1                    // variant
+            );
+
+            // ------------------------------------------------------------
+            // 2. Add a raster image as a fallback for viewers that cannot render the gradient
+            // ------------------------------------------------------------
+            string fallbackImagePath = "fallback.png"; // path to a raster image file
+
+            if (File.Exists(fallbackImagePath))
+            {
+                try
+                {
+                    // Load the image into a stream because AddPicture expects a Stream
+                    using (FileStream imgStream = new FileStream(fallbackImagePath, FileMode.Open, FileAccess.Read))
+                    {
+                        // Add the picture shape; cell range is arbitrary and will be adjusted later
+                        Shape rasterFallback = shapes.AddPicture(
+                            2, // upper left row
+                            2, // upper left column
+                            3, // lower right row
+                            3, // lower right column
+                            imgStream
+                        );
+
+                        // Align the raster picture with the WordArt dimensions.
+                        rasterFallback.Top = wordArt.Top;
+                        rasterFallback.Left = wordArt.Left;
+                        rasterFallback.Height = wordArt.Height;
+                        rasterFallback.Width = wordArt.Width;
+
+                        // Send the raster shape to the back so the WordArt appears on top.
+                        rasterFallback.ZOrderPosition = 0; // back
+                        wordArt.ZOrderPosition = 1;        // front
+                    }
+                }
+                catch (Exception imgEx)
+                {
+                    Console.WriteLine($"Failed to add fallback image: {imgEx.Message}");
+                }
+            }
+            else
             {
                 Console.WriteLine($"Fallback image not found: {fallbackImagePath}");
-                return;
             }
 
-            byte[] imageData = File.ReadAllBytes(fallbackImagePath);
-
-            // Create a RenderingWatermark using the raster image data
-            RenderingWatermark rasterWatermark = new RenderingWatermark(imageData)
-            {
-                // Position the watermark at the center of the page
-                HAlignment = TextAlignmentType.Center,
-                VAlignment = TextAlignmentType.Center,
-                // Make it semi‑transparent so the WordArt can be seen underneath
-                Opacity = 0.4f,
-                // Scale the image to 30% of the page size
-                ScaleToPagePercent = 30,
-                // Render it as a background element
-                IsBackground = true
-            };
-
-            // Configure PDF save options
+            // ------------------------------------------------------------
+            // 3. Configure PDF save options and export the workbook
+            // ------------------------------------------------------------
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Embed the raster watermark as a fallback visual aid
-                Watermark = rasterWatermark,
-                // Ensure font fallback is attempted for any missing glyphs
+                // Ensure proper font handling for Unicode characters
                 CheckWorkbookDefaultFont = true,
-                // Keep default font compatibility checking enabled
                 CheckFontCompatibility = true
             };
 
-            // Save the workbook as PDF with the specified options
+            // Save the workbook as PDF.
             string outputPdf = "WordArtWithFallback.pdf";
             workbook.Save(outputPdf, pdfOptions);
-
-            Console.WriteLine($"PDF saved successfully to '{outputPdf}'.");
+            Console.WriteLine($"PDF generated: {outputPdf}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

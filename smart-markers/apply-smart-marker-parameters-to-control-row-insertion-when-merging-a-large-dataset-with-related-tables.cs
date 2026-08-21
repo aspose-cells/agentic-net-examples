@@ -1,10 +1,10 @@
-// Title: Control Row Insertion in Aspose.Cells Smart Markers (C#) – Using the noadd Parameter with Parent‑Child DataSets
-// Description: Demonstrates how to merge a DataSet that contains related tables (Orders and OrderDetails) into an Excel workbook using Aspose.Cells Smart Markers. The example shows the standard "&=Orders" marker for repeating master rows and the "noadd" suffix to suppress automatic row insertion for child rows. It also covers naming the smart‑marker range ("_CellsSmartMarkers") and processing it with WorkbookDesigner.
-// Keywords: Aspose.Cells | Smart Markers | noadd parameter | row insertion control | C# | DataSet to Excel | parent‑child tables | WorkbookDesigner | named smart‑marker range | large dataset export
-// Common Searches: Aspose.Cells prevent row insertion smart marker | noadd suffix smart markers C# | master detail Excel export Aspose.Cells | process DataSet with related tables using smart markers | named range _CellsSmartMarkers Aspose.Cells
-// Developer Intent: The developer needs to decide whether rows should be added for nested smart‑marker tables when a DataSet with parent‑child relations is merged into Excel.
-// Use Cases: Create an order report where each order appears once while the detail line stays on a single row to keep the sheet compact. | Export a master‑detail view from a large relational DataSet, disabling row insertion for selected child tables to improve performance. | Generate a printable invoice list where only the header rows repeat and the item rows are displayed without extra row duplication.
-// AI Prompts: Show how to apply the noadd suffix in Aspose.Cells smart markers to stop row insertion for a child table. | Provide a C# example that processes a parent‑child DataSet with WorkbookDesigner and a named smart‑marker range. | Explain how to switch between automatic row insertion and noadd behavior for smart markers based on a runtime flag.
+// Title: C# Example: Controlling Row Insertion with Smart Marker ‘noadd’ for Parent‑Child DataTables in Aspose.Cells
+// Description: This sample builds a DataSet with Customers (parent) and Orders (child) tables, defines a worksheet template that uses the smart‑marker parameter **noadd** on the order fields to stop automatic row creation, processes the markers to fill customer rows, then programmatically inserts the exact number of order rows for each customer and imports the order data into columns C and D. The workbook is saved as an Excel file.
+// Keywords: Aspose.Cells smart markers noadd | C# parent child DataSet Excel | manual row insertion Aspose.Cells | ImportData ImportTableOptions | .NET Excel template smart markers | GitHub Aspose.Cells example | Excel report customer orders
+// Common Searches: Aspose.Cells prevent automatic row insertion for child table | how to use noadd smart marker in C# | insert rows manually after processing smart markers | merge related DataTables into Excel with Aspose.Cells | sample code for parent‑detail smart markers
+// Developer Intent: Generate an Excel report from a parent‑child DataSet while suppressing the default row expansion for the child table and adding rows only where needed using the smart‑marker **noadd** parameter and programmatic row insertion.
+// Use Cases: Customer‑order summary where each customer appears once and their orders are listed directly beneath, with rows added only for existing orders. | Invoice generation that adds line‑item rows dynamically after the main invoice data has been populated. | Event schedule that groups events under categories, inserting rows only for categories that contain events.
+// AI Prompts: Write C# code using Aspose.Cells to apply the ‘noadd’ smart marker to a child table, then insert the required rows per parent record and import the child data. | Explain the effect of the ‘noadd’ parameter on smart‑marker processing and demonstrate how to use ImportData with ImportTableOptions for manual row insertion. | Provide a step‑by‑step guide to create an Excel template with smart markers for a master‑detail relationship and control row insertion for the detail rows in .NET.
 
 using System;
 using System.Data;
@@ -12,7 +12,7 @@ using Aspose.Cells;
 
 namespace SmartMarkerRowInsertionDemo
 {
-    // Demonstrates how to merge a DataSet that contains related tables (Orders and OrderDetails) into an Excel workbook using Aspose.Cells Smart Markers. The example shows the standard "&=Orders" marker for repeating master rows and the "noadd" suffix to suppress automatic row insertion for child rows. It also covers naming the smart‑marker range ("_CellsSmartMarkers") and processing it with WorkbookDesigner.
+    // This sample builds a DataSet with Customers (parent) and Orders (child) tables, defines a worksheet template that uses the smart‑marker parameter **noadd** on the order fields to stop automatic row creation, processes the markers to fill customer rows, then programmatically inserts the exact number of order rows for each customer and imports the order data into columns C and D. The workbook is saved as an Excel file.
     class Program
     {
         static void Main()
@@ -20,66 +20,97 @@ namespace SmartMarkerRowInsertionDemo
             // ---------- 1. Prepare a DataSet with related tables ----------
             DataSet ds = new DataSet();
 
-            // Orders table
+            // Parent table: Customers
+            DataTable customers = new DataTable("Customers");
+            customers.Columns.Add("CustomerID", typeof(int));
+            customers.Columns.Add("CustomerName", typeof(string));
+            customers.Rows.Add(1, "Alpha Corp");
+            customers.Rows.Add(2, "Beta Ltd");
+            ds.Tables.Add(customers);
+
+            // Child table: Orders (related to Customers via CustomerID)
             DataTable orders = new DataTable("Orders");
             orders.Columns.Add("OrderID", typeof(int));
-            orders.Columns.Add("Customer", typeof(string));
-            orders.Rows.Add(1001, "Alice");
-            orders.Rows.Add(1002, "Bob");
+            orders.Columns.Add("CustomerID", typeof(int));
+            orders.Columns.Add("OrderDate", typeof(DateTime));
+            orders.Rows.Add(1001, 1, new DateTime(2023, 1, 15));
+            orders.Rows.Add(1002, 1, new DateTime(2023, 2, 20));
+            orders.Rows.Add(2001, 2, new DateTime(2023, 3, 5));
             ds.Tables.Add(orders);
 
-            // OrderDetails table (related to Orders)
-            DataTable details = new DataTable("OrderDetails");
-            details.Columns.Add("OrderID", typeof(int));
-            details.Columns.Add("Product", typeof(string));
-            details.Columns.Add("Quantity", typeof(int));
-            details.Rows.Add(1001, "Laptop", 1);
-            details.Rows.Add(1001, "Mouse", 2);
-            details.Rows.Add(1002, "Monitor", 1);
-            ds.Tables.Add(details);
-
-            // Define relation between Orders and OrderDetails
-            ds.Relations.Add("Order_Details",
-                orders.Columns["OrderID"],
-                details.Columns["OrderID"]);
-
-            // ---------- 2. Create a workbook and place smart markers ----------
+            // ---------- 2. Create a workbook template with smart markers ----------
             Workbook wb = new Workbook();
             Worksheet ws = wb.Worksheets[0];
             Cells cells = ws.Cells;
 
-            // Header row for Orders
-            cells["A1"].PutValue("Order ID");
-            cells["B1"].PutValue("Customer");
+            // Header row
+            cells["A1"].PutValue("Customer ID");
+            cells["B1"].PutValue("Customer Name");
+            cells["C1"].PutValue("Order ID");
+            cells["D1"].PutValue("Order Date");
 
-            // Smart marker row that will be repeated for each order
-            // The marker "&=Orders" tells the designer to start a table for Orders
-            cells["A2"].PutValue("&=Orders.OrderID");
-            cells["B2"].PutValue("&=Orders.Customer");
+            // Row for customer data (will be repeated for each customer)
+            cells["A2"].PutValue("&=$Customers.CustomerID");
+            cells["B2"].PutValue("&=$Customers.CustomerName");
 
-            // Header row for OrderDetails (nested table)
-            cells["A3"].PutValue("Product");
-            cells["B3"].PutValue("Quantity");
+            // Row for order data (smart marker with 'noadd' to suppress automatic row insertion)
+            // The 'noadd' parameter tells the designer not to insert rows for each order record.
+            cells["C2"].PutValue("&=$Orders.OrderID(noadd)");
+            cells["D2"].PutValue("&=$Orders.OrderDate(noadd)");
 
-            // Smart marker row for details.
-            // By default rows are inserted for each detail record.
-            // If you want to prevent row insertion, use the "noadd" suffix, e.g. "&=OrderDetails.noadd.Product"
-            cells["A4"].PutValue("&=OrderDetails.Product");
-            cells["B4"].PutValue("&=OrderDetails.Quantity");
-
-            // Define the range that contains all smart markers.
-            // Naming the range "_CellsSmartMarkers" enables range‑based processing.
-            ws.Cells.CreateRange("A1:B4").Name = "_CellsSmartMarkers";
-
-            // ---------- 3. Process smart markers with the DataSet ----------
+            // ---------- 3. Process smart markers ----------
             WorkbookDesigner designer = new WorkbookDesigner
             {
                 Workbook = wb
             };
             designer.SetDataSource(ds);
-            designer.Process(); // processes all smart markers in the named range
+            designer.Process(); // Fills customer rows; order cells remain empty because of 'noadd'
 
-            // ---------- 4. Save the result ----------
+            // ---------- 4. Manually insert rows for orders and import order data ----------
+            // Determine where the first order row should be placed (row index 1 = second row, zero‑based)
+            int orderStartRow = 1; // corresponds to Excel row 2 (the row with order smart markers)
+
+            // For each customer, find related orders and insert rows accordingly
+            foreach (DataRow custRow in customers.Rows)
+            {
+                int custId = (int)custRow["CustomerID"];
+
+                // Filter orders for the current customer
+                DataRow[] custOrders = orders.Select($"CustomerID = {custId}");
+
+                if (custOrders.Length == 0)
+                {
+                    continue; // No orders for this customer
+                }
+
+                // Insert required number of rows below the current order placeholder row
+                // (InsertRows inserts *before* the specified index, so we add after the placeholder)
+                cells.InsertRows(orderStartRow + 1, custOrders.Length - 1, true);
+                // The placeholder row already exists; we need only (count‑1) additional rows.
+
+                // Prepare a temporary DataTable to hold the orders for this customer
+                DataTable tempOrders = new DataTable();
+                tempOrders.Columns.Add("OrderID", typeof(int));
+                tempOrders.Columns.Add("OrderDate", typeof(DateTime));
+                foreach (DataRow o in custOrders)
+                {
+                    tempOrders.Rows.Add(o["OrderID"], o["OrderDate"]);
+                }
+
+                // Import the order data starting at the placeholder row
+                ImportTableOptions importOpts = new ImportTableOptions
+                {
+                    InsertRows = true,          // Ensure rows are added if needed (safety)
+                    IsFieldNameShown = false   // Do not import column names again
+                };
+                // Import only the two columns (OrderID, OrderDate) into columns C and D
+                cells.ImportData(tempOrders, orderStartRow, 2, importOpts);
+
+                // Move the start row pointer past the rows we just filled
+                orderStartRow += custOrders.Length;
+            }
+
+            // ---------- 5. Save the result ----------
             wb.Save("SmartMarkerRowInsertionResult.xlsx");
         }
     }

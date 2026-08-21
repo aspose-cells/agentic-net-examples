@@ -1,48 +1,48 @@
-// Title: C# – Insert a picture into an Excel worksheet and set alt text with Aspose.Cells
-// Description: This example creates a new Workbook, verifies a PNG file, inserts the image into cells B2‑F5 using Worksheet.Pictures.Add, assigns descriptive AlternativeText for screen‑reader accessibility, and saves the file as an .xlsx workbook.
-// Keywords: Aspose.Cells C# picture insert | Excel image alternative text | set AlternativeText Aspose.Cells | accessibility Excel Aspose | add image to worksheet .NET | Worksheet.Pictures.Add example | screen reader alt text Excel | Aspose.Cells sample code | C# Excel image insertion
-// Common Searches: how to add a picture to Excel with Aspose.Cells C# | set alternative text for picture in Aspose.Cells | Aspose.Cells picture accessibility example | insert image into specific cell range Aspose.Cells | C# code to add PNG to worksheet and set alt text
-// Developer Intent: Add an image to a worksheet and provide alt text for accessibility using Aspose.Cells.
-// Use Cases: Include a company logo in generated reports with alt text so screen readers can describe it. | Embed chart screenshots in financial models and supply concise descriptions for compliance with accessibility standards. | Programmatically populate a product catalog worksheet with photos, each tagged with unique alternative text for visually impaired users.
-// AI Prompts: Write C# code that loads an image from a URL, inserts it into an Excel sheet with Aspose.Cells, and sets AlternativeText for accessibility. | Show how to iterate over a folder of images, add each to a separate worksheet range, and assign distinct AlternativeText values. | Explain best practices for handling missing image files when adding pictures with Aspose.Cells in C#.
+// Title: Insert a Picture with Alt Text into an Excel Worksheet using Aspose.Cells for .NET
+// Description: Demonstrates how to create a new Workbook, add a PNG image to cell C3 (row 2, column 2), assign descriptive AlternativeText for screen‑reader accessibility, handle missing files gracefully, and save the file as WorkbookWithPicture.xlsx.
+// Keywords: Aspose.Cells | .NET | C# | insert picture Excel | add image worksheet | AlternativeText property | alt text accessibility | Excel picture insertion | screen reader support | Aspose.Cells picture.Add
+// Common Searches: Aspose.Cells add image to Excel with alt text | C# set picture AlternativeText in Aspose.Cells | how to make Excel images accessible using Aspose | insert picture into worksheet Aspose.Cells .NET | alternative text for Excel picture Aspose
+// Developer Intent: Add an image to a worksheet and provide a descriptive alt text to meet accessibility requirements.
+// Use Cases: Embed a company logo in generated reports with compliance‑ready alt text. | Add product thumbnails to a catalog sheet while ensuring screen‑reader descriptions. | Programmatically insert diagrams into exported workbooks and supply accessibility metadata.
+// AI Prompts: Generate C# code that uses Aspose.Cells to place a PNG at cell C3 and set its AlternativeText to a custom description. | Create a reusable method that checks for an image file, inserts it into a worksheet, logs a warning if absent, and applies alt text. | Write a script to batch‑insert multiple pictures across different worksheets, assigning unique AlternativeText to each.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsAddPictureWithAltText
 {
-    // This example creates a new Workbook, verifies a PNG file, inserts the image into cells B2‑F5 using Worksheet.Pictures.Add, assigns descriptive AlternativeText for screen‑reader accessibility, and saves the file as an .xlsx workbook.
-    class AddPictureWithAltText
+    // Demonstrates how to create a new Workbook, add a PNG image to cell C3 (row 2, column 2), assign descriptive AlternativeText for screen‑reader accessibility, handle missing files gracefully, and save the file as WorkbookWithPicture.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Path to the image file to be inserted
-                string imagePath = "sample.png"; // replace with your actual image file path
+                // Path to the picture file to be inserted
+                string picturePath = "image.png";
 
-                // Verify that the image file exists
-                if (!File.Exists(imagePath))
+                if (File.Exists(picturePath))
                 {
-                    Console.WriteLine($"Image file not found: {imagePath}");
-                    return;
+                    // Add the picture at row 2, column 2 (zero‑based indices)
+                    int pictureIndex = worksheet.Pictures.Add(2, 2, picturePath);
+                    Picture picture = worksheet.Pictures[pictureIndex];
+
+                    // Set alternative (alt) text for screen readers
+                    picture.AlternativeText = "Company logo showing a blue circle with white initials";
+                }
+                else
+                {
+                    Console.WriteLine($"Picture file not found: {picturePath}. Skipping picture insertion.");
                 }
 
-                // Add the picture to the worksheet (from row 1, column 1 to row 5, column 5)
-                int pictureIndex = worksheet.Pictures.Add(1, 1, 5, 5, imagePath);
-                Picture picture = worksheet.Pictures[pictureIndex];
-
-                // Set alternative text for screen reader accessibility
-                picture.AlternativeText = "Company logo showing a blue circle with white text";
-
-                // Save the workbook
-                string outputPath = "PictureWithAltText.xlsx";
+                // Save the workbook to a file
+                string outputPath = "WorkbookWithPicture.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved to {outputPath}");
             }
@@ -50,12 +50,6 @@ namespace AsposeCellsExamples
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-
-        // Entry point
-        static void Main(string[] args)
-        {
-            Run();
         }
     }
 }

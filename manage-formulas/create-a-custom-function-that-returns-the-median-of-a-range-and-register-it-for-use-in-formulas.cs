@@ -1,126 +1,110 @@
-// Title: Define and Register a Custom MEDIAN Function in Aspose.Cells for .NET
-// Description: Learn how to create a MedianEngine that extends AbstractCalculationEngine, mark the range argument as array‑mode with a custom function definition, register both with a Workbook, apply the formula =MEDIAN(A1:A6), calculate the result, and save the workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells custom function | C# median user‑defined function | register custom calculation engine | array‑mode parameter Aspose.Cells | calculate median range workbook | Aspose.Cells .NET example | custom statistical functions
-// Common Searches: custom median function Aspose.Cells C# | how to register user defined function in Aspose.Cells | array mode custom function Aspose.Cells example | calculate median of a range with Aspose.Cells | Aspose.Cells custom calculation engine tutorial
-// Developer Intent: Implement a user‑defined MEDIAN function that can be called in worksheet formulas and integrate it into the Aspose.Cells calculation pipeline.
-// Use Cases: Compute the median of a column of numbers directly in a spreadsheet using =MEDIAN(range) after registering the custom function. | Add statistical or domain‑specific calculations (e.g., mode, percentile, custom aggregations) to Aspose.Cells without modifying the core library. | Automate report generation where custom formulas are required, evaluate them programmatically, and export the final workbook.
-// AI Prompts: Generate C# code that defines a custom MEDIAN function for Aspose.Cells, registers it, and uses it in a worksheet formula. | Explain why array‑mode is needed for range parameters in Aspose.Cells custom functions and how to configure it. | Provide step‑by‑step instructions to test and debug a user‑defined median function in an Aspose.Cells .NET project.
+// Title: Create & Register a Custom MEDIAN Function in Aspose.Cells for .NET
+// Description: Demonstrates how to build a custom calculation engine that computes the median of numeric values, define the MEDIAN function with array‑mode parameters, register it in a workbook, use the formula "=MEDIAN(A1:A5)", and save the result with Aspose.Cells for C#.
+// Keywords: Aspose.Cells custom function | C# median function | .NET custom calculation engine | array mode parameters | register custom function definition | worksheet formula extension | calculate median range | Aspose.Cells example | custom MEDIAN implementation
+// Common Searches: Aspose.Cells custom median function example | how to register a custom function in Aspose.Cells .NET | array mode parameter in Aspose.Cells custom function | calculate median of a range with Aspose.Cells | custom calculation engine Aspose.Cells C#
+// Developer Intent: Add a user‑defined MEDIAN function to an Aspose.Cells workbook and make it callable from standard formulas.
+// Use Cases: Compute the median of a column or row of numbers directly in a worksheet formula. | Support single‑cell or multi‑cell arguments while ignoring non‑numeric entries. | Extend Aspose.Cells with additional statistical functions without modifying the core library.
+// AI Prompts: Generate C# code that creates a custom Aspose.Cells MEDIAN function, registers it, and uses it in a worksheet formula. | Explain why array‑mode parameters are required for range‑based custom functions in Aspose.Cells. | Write a unit test in C# that validates the custom MEDIAN function returns correct results for mixed numeric and empty cells.
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomMedian
+// Custom calculation engine that computes the median of a range
+// Demonstrates how to build a custom calculation engine that computes the median of numeric values, define the MEDIAN function with array‑mode parameters, register it in a workbook, use the formula "=MEDIAN(A1:A5)", and save the result with Aspose.Cells for C#.
+class MyMedianEngine : AbstractCalculationEngine
 {
-    // Custom calculation engine that implements the MEDIAN function
-    // Learn how to create a MedianEngine that extends AbstractCalculationEngine, mark the range argument as array‑mode with a custom function definition, register both with a Workbook, apply the formula =MEDIAN(A1:A6), calculate the result, and save the workbook using Aspose.Cells for .NET.
-    public class MedianEngine : AbstractCalculationEngine
+    public override void Calculate(CalculationData data)
     {
-        public override void Calculate(CalculationData data)
+        // Handle only the custom MEDIAN function
+        if (data.FunctionName.Equals("MEDIAN", StringComparison.OrdinalIgnoreCase))
         {
-            // Only handle the custom function named "MEDIAN"
-            if (data.FunctionName.Equals("MEDIAN", StringComparison.OrdinalIgnoreCase))
+            // Retrieve the first parameter (expected to be in array mode)
+            object param = data.GetParamValue(0);
+            double[] values;
+
+            // If the parameter is an array, extract numeric values
+            if (param is object[,] arr)
             {
-                // Retrieve the first parameter (the range)
-                object param = data.GetParamValue(0);
-
-                // Collect numeric values from the parameter
-                List<double> values = new List<double>();
-
-                // If the parameter is already an array (array‑mode), iterate it
-                if (param is object[,] array)
+                List<double> list = new List<double>();
+                foreach (var v in arr)
                 {
-                    foreach (object item in array)
-                    {
-                        if (item != null && double.TryParse(item.ToString(), out double d))
-                            values.Add(d);
-                    }
+                    if (v != null && double.TryParse(v.ToString(), out double d))
+                        list.Add(d);
                 }
-                // Otherwise treat it as a single value
+                values = list.ToArray();
+            }
+            else
+            {
+                // Single value case
+                if (double.TryParse(param?.ToString() ?? "0", out double d))
+                    values = new double[] { d };
                 else
-                {
-                    if (param != null && double.TryParse(param.ToString(), out double d))
-                        values.Add(d);
-                }
-
-                // If there are no numeric values, result is 0
-                if (values.Count == 0)
-                {
-                    data.CalculatedValue = 0.0;
-                    return;
-                }
-
-                // Sort the values to compute median
-                values.Sort();
-
-                int n = values.Count;
-                double median = (n % 2 == 1)
-                    ? values[n / 2]
-                    : (values[(n / 2) - 1] + values[n / 2]) / 2.0;
-
-                data.CalculatedValue = median;
+                    values = new double[0];
             }
+
+            // If no numeric values, return 0
+            if (values.Length == 0)
+            {
+                data.CalculatedValue = 0;
+                return;
+            }
+
+            // Sort and compute median
+            Array.Sort(values);
+            int n = values.Length;
+            double median = (n % 2 == 1)
+                ? values[n / 2]
+                : (values[n / 2 - 1] + values[n / 2]) / 2.0;
+
+            data.CalculatedValue = median;
         }
     }
+}
 
-    // Custom function definition that marks the first parameter of MEDIAN to be evaluated in array mode
-    public class MedianFunctionDefinition : CustomFunctionDefinition
+// Custom function definition that marks the first parameter of MEDIAN as array‑mode
+class MyCustomFunctionDefinition : CustomFunctionDefinition
+{
+    public override int[] GetArrayModeParameters(string functionName)
     {
-        public override int[] GetArrayModeParameters(string functionName)
-        {
-            if (functionName.Equals("MEDIAN", StringComparison.OrdinalIgnoreCase))
-                return new[] { 0 };
-
-            return base.GetArrayModeParameters(functionName);
-        }
+        if (functionName.Equals("MEDIAN", StringComparison.OrdinalIgnoreCase))
+            return new int[] { 0 }; // first parameter needs array mode
+        return base.GetArrayModeParameters(functionName);
     }
+}
 
-    class Program
+class Program
+{
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (lifecycle rule)
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+
+        // Populate sample data in A1:A5
+        ws.Cells["A1"].PutValue(5);
+        ws.Cells["A2"].PutValue(2);
+        ws.Cells["A3"].PutValue(9);
+        ws.Cells["A4"].PutValue(4);
+        ws.Cells["A5"].PutValue(7);
+
+        // Register the custom function definition (so MEDIAN's parameter is array mode)
+        wb.UpdateCustomFunctionDefinition(new MyCustomFunctionDefinition());
+
+        // Set a formula that uses the custom MEDIAN function
+        ws.Cells["B1"].Formula = "=MEDIAN(A1:A5)";
+
+        // Calculate formulas using the custom engine
+        CalculationOptions calcOpts = new CalculationOptions
         {
-            try
-            {
-                // Create a new workbook
-                Workbook wb = new Workbook();
-                Worksheet ws = wb.Worksheets[0];
+            CustomEngine = new MyMedianEngine()
+        };
+        wb.CalculateFormula(calcOpts);
 
-                // Populate sample data in A1:A6
-                ws.Cells["A1"].PutValue(10);
-                ws.Cells["A2"].PutValue(20);
-                ws.Cells["A3"].PutValue(30);
-                ws.Cells["A4"].PutValue(40);
-                ws.Cells["A5"].PutValue(50);
-                ws.Cells["A6"].PutValue(60);
+        // Output the result
+        Console.WriteLine("Median of A1:A5 = " + ws.Cells["B1"].Value);
 
-                // Register the custom function definition so the parameter is processed in array mode
-                wb.UpdateCustomFunctionDefinition(new MedianFunctionDefinition());
-
-                // Set a formula that uses the custom MEDIAN function
-                ws.Cells["B1"].Formula = "=MEDIAN(A1:A6)";
-
-                // Prepare calculation options with the custom engine
-                CalculationOptions calcOptions = new CalculationOptions
-                {
-                    CustomEngine = new MedianEngine()
-                };
-
-                // Calculate all formulas in the workbook
-                wb.CalculateFormula(calcOptions);
-
-                // Output the result to console
-                Console.WriteLine("Median of A1:A6 = " + ws.Cells["B1"].Value);
-
-                // Save the workbook
-                string outputPath = "MedianCustomFunctionDemo.xlsx";
-                wb.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+        // Save the workbook (lifecycle rule)
+        wb.Save("MedianCustomFunction.xlsx");
     }
 }

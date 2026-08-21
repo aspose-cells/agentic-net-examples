@@ -1,10 +1,10 @@
-// Title: Convert Excel to CSV with email & credit‑card masking using Aspose.Cells (C#)
-// Description: Load an XLSX workbook with Aspose.Cells, scan string cells, replace email addresses and credit‑card numbers via Regex, save the sanitized workbook, and export it directly to CSV. Ideal for GDPR‑compliant data pipelines in .NET.
-// Keywords: Aspose.Cells CSV export | C# Excel masking | regex data sanitization | email redaction Excel | credit card masking | privacy compliant CSV | Excel to CSV conversion .NET | GDPR data masking Aspose
-// Common Searches: Aspose.Cells mask email before CSV export | C# replace credit card numbers in Excel workbook | how to sanitize Excel data with regex and convert to CSV | privacy compliant Excel to CSV conversion .NET | regex masking of PII in Aspose.Cells
-// Developer Intent: Remove personally identifiable information from an Excel workbook and generate a clean CSV file using Aspose.Cells.
-// Use Cases: Produce GDPR‑ready CSV reports by redacting customer emails. | Share financial worksheets without exposing credit‑card numbers. | Automate a data‑export workflow that strips PII before downstream processing.
-// AI Prompts: Write C# code that uses Aspose.Cells to mask phone numbers with a [PHONE] placeholder before CSV conversion. | Extend the example to also replace URLs and social‑security numbers using regular expressions. | Explain how to stream a masked workbook directly to CSV with Aspose.Cells, eliminating the intermediate XLSX file.
+// Title: Mask Emails & Credit Card Numbers in Excel and Export to CSV with Aspose.Cells (C#)
+// Description: Load an XLSX workbook, run regex patterns to replace email addresses and credit‑card numbers with placeholders, save a temporary masked file, convert it to CSV using Aspose.Cells.Utility.ConversionUtility, and clean up the intermediate file.
+// Keywords: Aspose.Cells | C# | Excel to CSV conversion | mask sensitive data | regex replace in cells | PII redaction | email masking | credit card masking | data privacy | ConversionUtility
+// Common Searches: Aspose.Cells replace email in Excel cells C# | How to mask credit card numbers in Excel before CSV export | Convert masked workbook to CSV using Aspose.Cells | Regex replace all cell values Aspose.Cells .NET | C# code to sanitize Excel data with Aspose.Cells
+// Developer Intent: Redact personal identifiers in an Excel workbook with regex and generate a privacy‑safe CSV file.
+// Use Cases: Prepare customer datasets for external sharing while complying with GDPR or PCI‑DSS. | Automate report pipelines that require PII removal before downstream analytics. | Create a one‑time masked export for auditors without altering the original workbook.
+// AI Prompts: Write C# code that uses Aspose.Cells to replace phone numbers with [PHONE] in every string cell before exporting to CSV. | Show how to add a regex for Social Security numbers to the masking list and generate a pipe‑delimited text file with ConversionUtility. | Explain how to modify the example to keep the original workbook unchanged while producing a masked CSV.
 
 using System;
 using System.IO;
@@ -12,98 +12,108 @@ using System.Text.RegularExpressions;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-namespace AsposeCellsExamples
+// Load an XLSX workbook, run regex patterns to replace email addresses and credit‑card numbers with placeholders, save a temporary masked file, convert it to CSV using Aspose.Cells.Utility.ConversionUtility, and clean up the intermediate file.
+public class WorkbookToCsvMasking
 {
-    // Load an XLSX workbook with Aspose.Cells, scan string cells, replace email addresses and credit‑card numbers via Regex, save the sanitized workbook, and export it directly to CSV. Ideal for GDPR‑compliant data pipelines in .NET.
-    public class WorkbookToCsvWithMasking
+    // Entry point
+    public static void Main(string[] args)
     {
-        public static void Run()
+        try
         {
-            // Paths for the original workbook, the masked intermediate workbook, and the final CSV file
-            string sourcePath = "input.xlsx";
-            string maskedPath = "masked.xlsx";
-            string csvPath = "output.csv";
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
+        }
+    }
 
-            try
+    // Example usage
+    public static void Run()
+    {
+        // Paths – adjust as needed
+        string sourceFile = "input.xlsx";          // Original workbook
+        string maskedFile = "masked.xlsx";         // Temporary masked workbook
+        string outputCsv = "output.csv";           // Final CSV file
+
+        // Verify source file exists to avoid FileNotFoundException
+        if (!File.Exists(sourceFile))
+        {
+            Console.Error.WriteLine($"Source file '{sourceFile}' not found.");
+            return;
+        }
+
+        // Load the source workbook (lifecycle: create & load)
+        using (Workbook workbook = new Workbook(sourceFile))
+        {
+            // Define regex patterns and replacement values
+            var patterns = new (string pattern, string replacement)[]
             {
-                // Verify source file exists
-                if (!File.Exists(sourcePath))
+                (@"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", "[EMAIL]"),
+                (@"\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b", "[CREDIT_CARD]")
+            };
+
+            // Iterate through all worksheets and cells
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
+
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
-
-                // Load the original workbook
-                Workbook workbook = new Workbook(sourcePath);
-
-                // Define regular expression patterns for sensitive data
-                Regex emailRegex = new Regex(@"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", RegexOptions.IgnoreCase);
-                Regex creditCardRegex = new Regex(@"\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b");
-
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    Cells cells = sheet.Cells;
-
-                    // Determine the used range
-                    int maxRow = cells.MaxDataRow;
-                    int maxCol = cells.MaxDataColumn;
-
-                    // Scan each cell in the used range
-                    for (int row = 0; row <= maxRow; row++)
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        for (int col = 0; col <= maxCol; col++)
+                        Cell cell = cells[row, col];
+                        if (cell.Type == CellValueType.IsString)
                         {
-                            Cell cell = cells[row, col];
+                            string original = cell.StringValue;
+                            string masked = original;
 
-                            // Process only string cells
-                            if (cell.Type == CellValueType.IsString)
+                            // Apply each regex pattern
+                            foreach (var (pattern, replacement) in patterns)
                             {
-                                string original = cell.StringValue;
-                                string masked = original;
+                                masked = Regex.Replace(masked, pattern, replacement);
+                            }
 
-                                // Mask email addresses
-                                if (emailRegex.IsMatch(masked))
-                                {
-                                    masked = emailRegex.Replace(masked, "[EMAIL]");
-                                }
-
-                                // Mask credit card numbers
-                                if (creditCardRegex.IsMatch(masked))
-                                {
-                                    masked = creditCardRegex.Replace(masked, "[CREDIT_CARD]");
-                                }
-
-                                // Update the cell only if a change occurred
-                                if (!masked.Equals(original))
-                                {
-                                    cell.PutValue(masked);
-                                }
+                            // If the value changed, write it back
+                            if (!masked.Equals(original))
+                            {
+                                cell.PutValue(masked);
                             }
                         }
                     }
                 }
-
-                // Save the workbook after masking (intermediate file)
-                workbook.Save(maskedPath, SaveFormat.Xlsx);
-
-                // Convert the masked workbook to CSV
-                ConversionUtility.Convert(maskedPath, csvPath);
-
-                Console.WriteLine($"Workbook has been masked and converted to CSV at: {csvPath}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the masked workbook (lifecycle: save)
+            workbook.Save(maskedFile, SaveFormat.Xlsx);
         }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
+        // Convert the masked workbook to CSV using the provided ConversionUtility rule
+        if (File.Exists(maskedFile))
         {
-            WorkbookToCsvWithMasking.Run();
+            ConversionUtility.Convert(maskedFile, outputCsv);
         }
+        else
+        {
+            Console.Error.WriteLine($"Masked file '{maskedFile}' was not created.");
+            return;
+        }
+
+        // Optional: clean up the temporary masked file
+        try
+        {
+            if (File.Exists(maskedFile))
+            {
+                File.Delete(maskedFile);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Failed to delete temporary file '{maskedFile}': {ex.Message}");
+        }
+
+        Console.WriteLine($"Conversion completed. CSV saved to '{outputCsv}'.");
     }
 }

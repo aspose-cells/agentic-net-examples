@@ -1,49 +1,46 @@
-// Title: C# – Set Primary Y‑Axis Major Unit to 10 in an AspNet Aspose.Cells Column Chart
-// Description: Creates a workbook, adds sample data, inserts a column chart, disables automatic major‑unit calculation on the primary Y axis, sets the major unit to 10, and saves the file as ChartWithStandardizedYAxis.xlsx.
-// Keywords: Aspose.Cells Y axis major unit | C# chart axis scaling | set primary Y axis interval | disable automatic major unit Aspose | column chart grid lines | .NET Excel chart formatting
-// Common Searches: Aspose.Cells set Y axis major unit C# | how to fix primary Y axis interval in Aspose chart | disable automatic major unit Aspose.Cells .NET | standardize chart grid lines Aspose.Cells | C# example for manual Y axis scaling
-// Developer Intent: Manually define the primary Y‑axis major unit as 10 to keep chart grid lines consistent.
-// Use Cases: Building dashboards where all charts share the same Y‑axis scale for easy comparison. | Generating reports that require Y‑axis ticks aligned with business thresholds (e.g., multiples of 10). | Automating Excel exports where precise axis intervals improve readability across multiple workbooks.
-// AI Prompts: Provide C# code to set a fixed major unit of 10 on the primary Y axis of an Aspose.Cells chart. | Show how to turn off automatic major‑unit calculation for a chart's ValueAxis in Aspose.Cells for .NET. | Explain how to adjust Y‑axis scaling for existing charts in a workbook using Aspose.Cells.
+// Title: Aspose.Cells for .NET: Set Primary Y‑Axis Major Unit to 10 in a Column Chart
+// Description: Shows how to create a workbook, populate sample data, add a column chart, turn off automatic major unit, set the primary Y‑axis (value axis) major unit to 10, and save the result as ChartWithMajorUnit.xlsx using Aspose.Cells for .NET (C#).
+// Keywords: Aspose.Cells | C# | .NET | chart major unit | Y axis interval | set major unit | disable automatic major unit | column chart formatting | Excel chart grid lines | ValueAxis.MajorUnit
+// Common Searches: Aspose.Cells set Y axis major unit | C# chart major unit 10 Aspose | disable automatic major unit Aspose.Cells | standardize chart grid lines Aspose | how to set ValueAxis.MajorUnit in .NET
+// Developer Intent: Configure the primary Y‑axis of a chart to use a fixed major unit of 10, overriding the automatic interval.
+// Use Cases: Produce financial column charts where every Y‑axis tick marks increase by exactly 10, ensuring visual consistency across multiple reports. | Generate a series of worksheets with charts that share the same major unit, making it easy to compare data scales side‑by‑side. | Export Excel charts that comply with publishing standards requiring uniform axis spacing and fixed grid intervals.
+// AI Prompts: Provide C# code to set the major unit of a line chart's value axis to 5 using Aspose.Cells. | Show how to re‑enable automatic major unit on a chart axis after it has been disabled in Aspose.Cells for .NET. | Explain how to read the current MajorUnit value from a chart's ValueAxis with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data, inserts a column chart, disables automatic major‑unit calculation on the primary Y axis, sets the major unit to 10, and saves the file as ChartWithStandardizedYAxis.xlsx.
-class SetPrimaryYAxisMajorUnit
+// Shows how to create a workbook, populate sample data, add a column chart, turn off automatic major unit, set the primary Y‑axis (value axis) major unit to 10, and save the result as ChartWithMajorUnit.xlsx using Aspose.Cells for .NET (C#).
+class SetMajorUnitDemo
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle: create)
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
         // Populate sample data for the chart
         sheet.Cells["A1"].PutValue("Category");
         sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["B2"].PutValue(12);
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["B3"].PutValue(27);
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B4"].PutValue(45);
-        sheet.Cells["A5"].PutValue("D");
-        sheet.Cells["B5"].PutValue(63);
+        for (int i = 1; i <= 5; i++)
+        {
+            sheet.Cells[$"A{i + 1}"].PutValue("Item " + i);
+            sheet.Cells[$"B{i + 1}"].PutValue(i * 12); // example values
+        }
 
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
+        // Add a column chart to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
         Chart chart = sheet.Charts[chartIndex];
 
         // Set the data range for the chart
-        chart.NSeries.Add("B2:B5", true);
-        chart.NSeries.CategoryData = "A2:A5";
+        chart.NSeries.Add("B2:B6", true);
+        chart.NSeries.CategoryData = "A2:A6";
 
-        // Disable automatic major unit calculation and set the major unit to 10
-        chart.ValueAxis.IsAutomaticMajorUnit = false;   // ensure manual setting is respected
-        chart.ValueAxis.MajorUnit = 10;                // major unit interval on primary Y axis
+        // Disable automatic major unit and set it to 10 on the primary Y axis
+        chart.ValueAxis.IsAutomaticMajorUnit = false;
+        chart.ValueAxis.MajorUnit = 10;
 
-        // Save the workbook (lifecycle: save)
-        workbook.Save("ChartWithStandardizedYAxis.xlsx");
+        // Save the workbook with the configured chart
+        workbook.Save("ChartWithMajorUnit.xlsx");
     }
 }

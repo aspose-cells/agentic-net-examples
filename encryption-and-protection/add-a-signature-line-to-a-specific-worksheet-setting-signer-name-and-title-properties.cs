@@ -1,46 +1,35 @@
-// Title: Add a Signature Line with Signer Name & Title to an Excel Worksheet using Aspose.Cells for .NET
-// Description: Shows how to create a Workbook, select a Worksheet, configure a SignatureLine (signer, title, email, instructions, display options) and insert it at a specific cell via Shapes.AddSignatureLine, then save the workbook.
-// Keywords: Aspose.Cells | C# | .NET | SignatureLine | add signature line | signer name | signer title | Excel worksheet | digital signature | Shapes.AddSignatureLine | office automation | document approval | programmatic Excel
-// Common Searches: Aspose.Cells add signature line C# | How to set signer name in Excel using Aspose.Cells | SignatureLine Title property Aspose.Cells .NET | Insert digital signature line into worksheet programmatically | C# code for Aspose.Cells signature line | Add approval line to Excel file Aspose
-// Developer Intent: Insert a signature line into a worksheet and define signer name and title.
-// Use Cases: Generate reports that require manager approval directly in the Excel file. | Create contract templates with pre‑populated signature placeholders for multiple parties. | Automate compliance documentation by adding signed‑date lines to generated spreadsheets. | Build a workflow where each department adds its own signature line to a shared workbook.
-// AI Prompts: Write C# code using Aspose.Cells to place a signature line with signer 'Emily Chen' and title 'Finance Director' at cell D5. | Explain how to update the Signer and Title of an existing SignatureLine object in a saved workbook. | Show how to add three different signature lines to three worksheets, each with unique signer details and custom instructions. | Provide a step‑by‑step guide for adding a signature line that includes email and comment permissions using Aspose.Cells for .NET.
+// Title: Add a Signature Line with Signer Name & Title in Aspose.Cells for .NET
+// Description: Shows how to create a workbook, get a worksheet, instantiate a SignatureLine, set its Signer and Title, insert it at a chosen cell with worksheet.Shapes.AddSignatureLine, and save the Excel file.
+// Keywords: Aspose.Cells | C# | SignatureLine | AddSignatureLine | signer name | title property | Excel digital signature | worksheet shape | programmatic Excel signing | example code
+// Common Searches: Aspose.Cells add signature line C# | set signer name Aspose.Cells | signature line title property .NET | insert digital signature line in Excel using Aspose | AddSignatureLine example
+// Developer Intent: Insert a digital signature line into a worksheet and pre‑define the signer’s name and title.
+// Use Cases: Generate contract templates that include a pre‑filled signature line for the responsible engineer. | Automate report creation with a manager’s signature line on the first sheet. | Produce compliance documents that embed signer name and title for audit trails.
+// AI Prompts: Write C# code with Aspose.Cells to add a signature line to cell B5 for signer 'Jane Smith' and title 'Project Lead'. | Explain how to change the size and style of a signature line after adding it with Aspose.Cells. | Provide sample code to add multiple signature lines to different worksheets, each with unique signer information.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSignatureLineDemo
+// Shows how to create a workbook, get a worksheet, instantiate a SignatureLine, set its Signer and Title, insert it at a chosen cell with worksheet.Shapes.AddSignatureLine, and save the Excel file.
+class AddSignatureLineExample
 {
-    // Shows how to create a Workbook, select a Worksheet, configure a SignatureLine (signer, title, email, instructions, display options) and insert it at a specific cell via Shapes.AddSignatureLine, then save the workbook.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet (or specify by name/index)
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Get the first worksheet (or specify another index as needed)
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Create a SignatureLine object and set signer properties
-            SignatureLine signatureLine = new SignatureLine
-            {
-                Signer = "John Doe",          // Signer's name
-                Title = "Chief Technology Officer", // Signer's title
-                Email = "john.doe@example.com", // Optional: email
-                IsLine = true,                // Display as a line
-                AllowComments = true,         // Allow comments
-                ShowSignedDate = true,        // Show signed date
-                Instructions = "Please sign to approve."
-            };
+        // Create a SignatureLine object and set signer name and title
+        SignatureLine signatureLine = new SignatureLine();
+        signatureLine.Signer = "John Doe";
+        signatureLine.Title = "Software Developer";
 
-            // Add the signature line to the worksheet at row 2, column 2 (zero‑based indices)
-            // This uses the ShapeCollection.AddSignatureLine method.
-            worksheet.Shapes.AddSignatureLine(1, 1, signatureLine);
+        // Add the signature line to the worksheet at row 0, column 0 (top‑left cell)
+        worksheet.Shapes.AddSignatureLine(0, 0, signatureLine);
 
-            // Save the workbook to a file (lifecycle: save)
-            workbook.Save("SignatureLineDemo.xlsx");
-        }
+        // Save the workbook to a file
+        workbook.Save("SignatureLineDemo.xlsx");
     }
 }

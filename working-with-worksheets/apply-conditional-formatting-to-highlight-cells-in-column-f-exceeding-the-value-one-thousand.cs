@@ -1,49 +1,51 @@
-// Title: Aspose.Cells C# – Highlight Column F Cells Greater Than 1000 Using Conditional Formatting
-// Description: Creates a new workbook, defines a CellArea for column F (rows 0‑99), adds a conditional‑formatting rule that colors cells with values over 1000 yellow, and saves the file as ConditionalFormatting_ColumnF.xlsx. Demonstrates Aspose.Cells .NET API for value‑based styling.
-// Keywords: Aspose.Cells | C# conditional formatting | highlight column F | values greater than 1000 | Excel conditional formatting .NET | format condition cell value | background color rule | Aspose.Cells tutorial
-// Common Searches: Aspose.Cells conditional formatting column F | C# highlight cells > 1000 Excel | how to add value‑based formatting with Aspose.Cells | set background color for cells over a threshold .NET | apply conditional formatting to a range using Aspose
-// Developer Intent: Add a conditional‑formatting rule that automatically colors any cell in column F yellow when its numeric value exceeds 1000.
-// Use Cases: Flag sales entries that surpass a target amount in generated reports. | Mark out‑of‑range sensor readings for quick quality inspection. | Create a financial dashboard where values above a limit stand out.
-// AI Prompts: Write C# code with Aspose.Cells to apply red background to column G cells where the value is less than 0. | Show how to set a bold italic font in a conditional‑formatting rule for column H cells containing the text "Error" using Aspose.Cells. | Provide an example of multiple conditional‑formatting rules on the same range: one for values >1000 (yellow) and another for values <500 (light red).
+// Title: Aspose.Cells for .NET C# – Highlight Column F Cells Over 1000 with Conditional Formatting
+// Description: Creates a workbook, defines a CellArea for column F, adds a CellValue rule (value > 1000), sets a yellow background style, and saves the file as ColumnF_ConditionalFormatting.xlsx.
+// Keywords: Aspose.Cells | C# | conditional formatting | column F | value greater than 1000 | highlight cells | background color | Excel automation | FormatCondition | GitHub sample
+// Common Searches: Aspose.Cells conditional formatting column F | C# highlight cells greater than 1000 | set background color based on value Aspose.Cells | add CellValue rule Aspose.Cells .NET | Excel conditional formatting example C#
+// Developer Intent: Add a conditional formatting rule that colors cells in column F yellow when their numeric value exceeds 1000.
+// Use Cases: Financial statements where expenses over 1,000 in column F are automatically flagged. | Data‑analysis dashboards that draw attention to outlier values in a specific column. | Reusable spreadsheet templates that visually emphasize high‑value entries without manual formatting.
+// AI Prompts: Generate C# code using Aspose.Cells to apply a yellow background to column F cells whose value is greater than 1000. | Show how to extend the snippet to apply the same conditional formatting to multiple columns or a dynamic row range. | Explain how to replace the CellValue condition with a formula‑based rule to highlight column F values exceeding 1000.
 
-using Aspose.Cells;
+using System;
 using System.Drawing;
+using Aspose.Cells;
 
-// Creates a new workbook, defines a CellArea for column F (rows 0‑99), adds a conditional‑formatting rule that colors cells with values over 1000 yellow, and saves the file as ConditionalFormatting_ColumnF.xlsx. Demonstrates Aspose.Cells .NET API for value‑based styling.
-class Program
+// Creates a workbook, defines a CellArea for column F, adds a CellValue rule (value > 1000), sets a yellow background style, and saves the file as ColumnF_ConditionalFormatting.xlsx.
+class ConditionalFormattingExample
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        // Add a new conditional formatting collection to the worksheet
+        int cfIndex = worksheet.ConditionalFormattings.Add();
+        FormatConditionCollection fcc = worksheet.ConditionalFormattings[cfIndex];
 
-        // Define the range for column F (zero‑based index 5), rows 0‑99
-        CellArea area = new CellArea
+        // Define the range for column F (zero‑based column index 5)
+        CellArea range = new CellArea
         {
-            StartRow = 0,
-            EndRow = 99,
-            StartColumn = 5,
+            StartRow = 0,      // first row (A1)
+            EndRow = 100,      // adjust as needed
+            StartColumn = 5,   // column F
             EndColumn = 5
         };
 
-        // Add a conditional formatting collection to the worksheet
-        int cfIndex = sheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
+        // Add a CellValue condition: value > 1000
+        // The Add method returns an array where the first element is the condition index
+        int[] addResult = fcc.Add(
+            range,
+            FormatConditionType.CellValue,
+            OperatorType.GreaterThan,
+            "1000",   // Formula1 – the threshold value
+            null);    // Formula2 – not required for GreaterThan
 
-        // Associate the defined range with the collection
-        fcc.AddArea(area);
-
-        // Add a condition: highlight cells with values greater than 1000
-        int condIndex = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "1000", null);
-        FormatCondition fc = fcc[condIndex];
-
-        // Set the formatting style (yellow background)
-        fc.Style.BackgroundColor = Color.Yellow;
+        // Retrieve the created condition and set its style (e.g., yellow background)
+        FormatCondition condition = fcc[addResult[0]];
+        condition.Style.BackgroundColor = Color.Yellow;
 
         // Save the workbook
-        workbook.Save("ConditionalFormatting_ColumnF.xlsx");
+        workbook.Save("ColumnF_ConditionalFormatting.xlsx");
     }
 }

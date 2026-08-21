@@ -1,84 +1,96 @@
-// Title: C# – Serialize Aspose.Cells ShapePath Geometry to JSON
-// Description: This example creates a workbook, adds a rectangular free‑form shape, extracts its CustomGeometry, iterates through each ShapePath and its segments, captures segment types and point coordinates, builds a serializable object with width, height and segment data, and writes the formatted JSON to the console, a file, and optionally saves the workbook.
-// Keywords: Aspose.Cells | C# | ShapePath | CustomGeometry | JSON serialization | freeform shape | export shape coordinates | Excel shape data | GitHub example | Aspose.Cells API
-// Common Searches: export Aspose.Cells shape path to JSON | C# get freeform shape coordinates Aspose.Cells | serialize custom geometry Aspose.Cells | convert ShapePath to JSON in .NET | extract shape segment points from Excel workbook
-// Developer Intent: Generate a JSON file that contains the dimensions, segment types, and point coordinates of a free‑form shape’s custom geometry created with Aspose.Cells.
-// Use Cases: Send shape geometry to a web service that renders diagrams from coordinate data. | Store shape outlines in a database for versioning or reconstruction in other workbooks. | Compare shape outlines across multiple Excel files by serializing them to JSON for automated validation.
-// AI Prompts: Write C# code that reads the produced shapePathData.json and recreates the original free‑form shape in a new Aspose.Cells workbook. | Provide a method to deserialize the JSON back into Aspose.Cells ShapePath and ShapeSegment objects while preserving segment types and coordinates. | Explain how to extend the serialization to include fill color, line style, and other visual properties for each shape.
+// Title: C# – Export Aspose.Cells ShapePath Geometry to JSON
+// Description: Demonstrates how to create a freeform shape with ShapePath, access its CustomGeometry, extract segment types and point coordinates, map them to DTO objects, and serialize the result to an indented JSON string using System.Text.Json in Aspose.Cells.
+// Keywords: Aspose.Cells ShapePath JSON | C# export shape geometry | CustomGeometry to JSON | freeform shape coordinates | System.Text.Json serialization | Aspose.Cells shape segment extraction | Excel shape path serialization
+// Common Searches: Aspose.Cells convert ShapePath to JSON | C# extract freeform shape coordinates from Excel | How to serialize custom geometry in Aspose.Cells | Export shape segment data as JSON using Aspose.Cells | ShapePath JSON example for Aspose.Cells
+// Developer Intent: Retrieve the segments and points of a ShapePath from a freeform shape in an Excel workbook and serialize the data to JSON.
+// Use Cases: Send shape geometry to a web front‑end for client‑side diagram rendering. | Store shape path coordinates in a database for version control or analytics. | Integrate shape data with third‑party vector‑graphics services via JSON payloads.
+// AI Prompts: Write C# code that reads all ShapePath objects from an Aspose.Cells worksheet and outputs their segment types and coordinates to a JSON file using System.Text.Json. | Create a method that converts a collection of ShapeSegmentPath objects into DTOs ready for JSON serialization. | Explain how to handle multiple freeform shapes in a workbook and combine their ShapePath data into a single JSON structure.
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This example creates a workbook, adds a rectangular free‑form shape, extracts its CustomGeometry, iterates through each ShapePath and its segments, captures segment types and point coordinates, builds a serializable object with width, height and segment data, and writes the formatted JSON to the console, a file, and optionally saves the workbook.
-class SerializeShapePathToJson
+namespace AsposeCellsShapePathToJson
 {
-    static void Main()
+    // DTO classes for JSON serialization
+    // Demonstrates how to create a freeform shape with ShapePath, access its CustomGeometry, extract segment types and point coordinates, map them to DTO objects, and serialize the result to an indented JSON string using System.Text.Json in Aspose.Cells.
+    public class ShapePathDto
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public List<SegmentDto> Segments { get; set; } = new List<SegmentDto>();
+    }
 
-        // Build a simple rectangular shape path
-        ShapePath shapePath = new ShapePath();
-        shapePath.MoveTo(10, 10);
-        shapePath.LineTo(200, 10);
-        shapePath.LineTo(200, 100);
-        shapePath.LineTo(10, 100);
-        shapePath.Close();
+    public class SegmentDto
+    {
+        public string Type { get; set; }
+        public List<PointDto> Points { get; set; } = new List<PointDto>();
+    }
 
-        // Add the shape path as a freeform shape to the worksheet
-        Shape shape = worksheet.Shapes.AddFreeform(0, 0, 0, 0, 300, 200, new ShapePath[] { shapePath });
+    public class PointDto
+    {
+        public float X { get; set; }
+        public float Y { get; set; }
+    }
 
-        // Cast the shape geometry to CustomGeometry to access its paths
-        CustomGeometry geometry = shape.Geometry as CustomGeometry;
-        if (geometry == null)
+    public class Program
+    {
+        public static void Main()
         {
-            Console.WriteLine("The shape does not contain custom geometry.");
-            return;
-        }
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Prepare a serializable structure for all paths and their segments
-        var pathsData = new List<object>();
+            // Build a simple rectangular freeform shape using ShapePath
+            ShapePath rectPath = new ShapePath();
+            rectPath.MoveTo(10, 10);
+            rectPath.LineTo(200, 10);
+            rectPath.LineTo(200, 100);
+            rectPath.LineTo(10, 100);
+            rectPath.Close();
 
-        foreach (ShapePath sp in geometry.Paths)
-        {
-            var segmentList = new List<object>();
+            // Add the freeform shape to the worksheet
+            Shape freeform = worksheet.Shapes.AddFreeform(0, 0, 0, 0, 300, 200, new ShapePath[] { rectPath });
 
-            foreach (ShapeSegmentPath segment in sp.PathSegementList)
+            // Cast the shape's geometry to CustomGeometry to access its paths
+            CustomGeometry geometry = freeform.Geometry as CustomGeometry;
+            if (geometry == null)
             {
-                var pointList = new List<object>();
-                foreach (ShapePathPoint pt in segment.Points)
-                {
-                    pointList.Add(new { X = pt.X, Y = pt.Y });
-                }
-
-                segmentList.Add(new
-                {
-                    Type = segment.Type.ToString(),
-                    Points = pointList
-                });
+                Console.WriteLine("The shape does not contain custom geometry.");
+                return;
             }
 
-            pathsData.Add(new
+            // Assume we are interested in the first path (the rectangle we created)
+            ShapePath shapePath = geometry.Paths[0];
+
+            // Prepare DTO for JSON
+            ShapePathDto dto = new ShapePathDto();
+
+            // Iterate over each segment in the path
+            foreach (ShapeSegmentPath segment in shapePath.PathSegementList)
             {
-                WidthPixel = sp.WidthPixel,
-                HeightPixel = sp.HeightPixel,
-                Segments = segmentList
-            });
+                SegmentDto segDto = new SegmentDto
+                {
+                    Type = segment.Type.ToString()
+                };
+
+                // Collect points of the segment
+                foreach (ShapePathPoint pt in segment.Points)
+                {
+                    segDto.Points.Add(new PointDto { X = pt.X, Y = pt.Y });
+                }
+
+                dto.Segments.Add(segDto);
+            }
+
+            // Serialize the DTO to JSON (indented for readability)
+            string json = JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true });
+
+            // Output the JSON string
+            Console.WriteLine(json);
+
+            // Save the workbook (optional, demonstrates lifecycle rule compliance)
+            workbook.Save("ShapePathDemo.xlsx");
         }
-
-        // Serialize the structure to JSON with indentation
-        string json = JsonSerializer.Serialize(pathsData, new JsonSerializerOptions { WriteIndented = true });
-
-        // Output JSON to console and write it to a file
-        Console.WriteLine(json);
-        File.WriteAllText("shapePathData.json", json);
-
-        // Save the workbook (optional, demonstrates lifecycle usage)
-        workbook.Save("ShapePathDemo.xlsx");
     }
 }

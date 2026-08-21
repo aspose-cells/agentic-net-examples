@@ -1,10 +1,10 @@
 // Title: Export Excel worksheets to 300 DPI JPEG images with Aspose.Cells for .NET
-// Description: Loads an .xlsx file, configures ImageOrPrintOptions for JPEG at 300 DPI, renders each worksheet as a single page, and saves the images to a folder while sanitizing sheet names for file‑system safety.
-// Keywords: Aspose.Cells JPEG export | 300 DPI Excel image | C# sheet to JPEG | SheetRender high resolution | Excel to image conversion .NET
-// Common Searches: Aspose.Cells export each sheet to JPEG 300 DPI C# | Render Excel worksheets as high‑resolution JPEG images | C# convert workbook sheets to printable JPEG files | How to save Excel sheets as 300 DPI images using Aspose
+// Description: The sample loads a workbook, creates an output folder, and loops through each worksheet. It configures ImageOrPrintOptions for JPEG format, sets both horizontal and vertical resolution to 300 DPI, forces one page per sheet, renders the sheet with SheetRender, and saves the result as <SheetName>_300dpi.jpg.
+// Keywords: Aspose.Cells | C# | .NET | export worksheet to JPEG | 300 DPI | SheetRender | ImageOrPrintOptions | one page per sheet | batch conversion | print‑ready image
+// Common Searches: Aspose.Cells export worksheet to JPEG 300 DPI | C# convert Excel sheets to high resolution JPEG | How to render Excel as 300 DPI images using Aspose.Cells | Batch export Excel worksheets to JPEG files .NET | Set DPI when saving Excel as JPEG with Aspose
 // Developer Intent: Generate a separate 300 DPI JPEG file for every worksheet in an Excel workbook.
-// Use Cases: Produce printable graphics of financial dashboards for stakeholder reports. | Create high‑quality product catalog pages from spreadsheet data for marketing materials. | Automate batch conversion of multi‑sheet workbooks into image assets for web or mobile apps.
-// AI Prompts: Write C# code that uses Aspose.Cells to export all worksheets of a workbook to 300 DPI JPEG files, handling invalid characters in sheet names. | Show how to adapt the sample to output single‑page PDFs while keeping 300 DPI resolution. | Provide a script to process every Excel file in a directory, converting each sheet to high‑resolution JPEG images with Aspose.Cells.
+// Use Cases: Produce print‑ready images of each sheet for catalogs or documentation. | Create high‑resolution thumbnails for a web gallery directly from Excel data. | Automate archival‑quality batch conversion of workbook sheets to JPEG.
+// AI Prompts: Write C# code that uses Aspose.Cells to export all worksheets of a workbook to 300 DPI JPEG images, one page per sheet. | Show how to modify the example to export only selected worksheets at 600 DPI. | Add robust error handling for missing input files and invalid output directories in the export script.
 
 using System;
 using System.IO;
@@ -12,62 +12,37 @@ using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
 
-namespace ExportSheetsAsJpeg
+// The sample loads a workbook, creates an output folder, and loops through each worksheet. It configures ImageOrPrintOptions for JPEG format, sets both horizontal and vertical resolution to 300 DPI, forces one page per sheet, renders the sheet with SheetRender, and saves the result as <SheetName>_300dpi.jpg.
+class ExportSheetsToJpeg
 {
-    // Loads an .xlsx file, configures ImageOrPrintOptions for JPEG at 300 DPI, renders each worksheet as a single page, and saves the images to a folder while sanitizing sheet names for file‑system safety.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook (replace with your actual file path)
+        string inputPath = "input.xlsx";
+        Workbook workbook = new Workbook(inputPath);
+
+        // Ensure output directory exists
+        string outputDir = "ExportedSheets";
+        Directory.CreateDirectory(outputDir);
+
+        // Process each worksheet
+        for (int i = 0; i < workbook.Worksheets.Count; i++)
         {
-            // Load the source workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            Worksheet sheet = workbook.Worksheets[i];
 
-            // Configure image options for JPEG output at 300 DPI
-            ImageOrPrintOptions options = new ImageOrPrintOptions
-            {
-                ImageType = ImageType.Jpeg,          // Export as JPEG
-                HorizontalResolution = 300,          // 300 DPI horizontally
-                VerticalResolution = 300,            // 300 DPI vertically
-                OnePagePerSheet = true               // Render each sheet as a single page
-            };
+            // Set image options: JPEG format, 300 DPI, one page per sheet
+            ImageOrPrintOptions options = new ImageOrPrintOptions();
+            options.ImageType = ImageType.Jpeg;
+            options.HorizontalResolution = 300;
+            options.VerticalResolution = 300;
+            options.OnePagePerSheet = true;
 
-            // Ensure the output directory exists
-            string outputDir = "ExportedImages";
-            Directory.CreateDirectory(outputDir);
-
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Create a SheetRender for the current worksheet with the specified options
-                SheetRender sheetRender = new SheetRender(sheet, options);
-
-                // Since OnePagePerSheet = true, PageCount will be 1.
-                // Loop through pages in case the setting is changed later.
-                for (int pageIndex = 0; pageIndex < sheetRender.PageCount; pageIndex++)
-                {
-                    // Build a file name that includes the sheet name and page index
-                    string safeSheetName = MakeFileSystemSafe(sheet.Name);
-                    string fileName = Path.Combine(outputDir, $"{safeSheetName}_page{pageIndex}.jpg");
-
-                    // Render the page to a JPEG file
-                    sheetRender.ToImage(pageIndex, fileName);
-                }
-
-                // Release resources used by the renderer
-                sheetRender.Dispose();
-            }
-
-            Console.WriteLine("All sheets have been exported as 300 DPI JPEG images.");
+            // Render the sheet to an image
+            SheetRender renderer = new SheetRender(sheet, options);
+            string outputPath = Path.Combine(outputDir, $"{sheet.Name}_300dpi.jpg");
+            renderer.ToImage(0, outputPath);
         }
 
-        // Helper method to remove invalid filename characters from sheet names
-        private static string MakeFileSystemSafe(string name)
-        {
-            foreach (char c in Path.GetInvalidFileNameChars())
-            {
-                name = name.Replace(c, '_');
-            }
-            return name;
-        }
+        Console.WriteLine("All worksheets have been exported as 300 DPI JPEG images.");
     }
 }

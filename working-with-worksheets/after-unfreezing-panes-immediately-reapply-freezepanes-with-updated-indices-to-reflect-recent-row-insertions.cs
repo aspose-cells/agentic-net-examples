@@ -1,58 +1,61 @@
-// Title: Update FreezePanes After Row Insertion in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to keep frozen rows and columns accurate after inserting rows in an Aspose.Cells worksheet. The example freezes the top rows, records the original pane settings, inserts rows above the frozen area, unfreezes the panes, recalculates the freeze row index, reapplies FreezePanes with the new index, and saves the workbook.
-// Keywords: Aspose.Cells FreezePanes C# | adjust frozen rows after insert Aspose.Cells | UnFreezePanes then FreezePanes .NET | recalculate frozen pane indices | programmatic pane update Aspose.Cells | row insertion impact on frozen panes
-// Common Searches: How to keep frozen header rows after inserting rows in Aspose.Cells | Aspose.Cells update FreezePanes row index after InsertRows | Unfreeze and reapply FreezePanes in C# | Adjust frozen pane when adding rows before freeze area | Recalculate FreezePanes coordinates Aspose.Cells .NET
-// Developer Intent: Refresh the frozen pane position to match newly inserted rows by unfreezing and re‑applying FreezePanes with corrected indices.
-// Use Cases: Preserve header rows frozen while programmatically adding rows above them. | Maintain column freeze when bulk inserting rows in generated reports. | Synchronize pane layout after dynamic data insertion in dashboards. | Automate pane adjustments in Excel export utilities.
-// AI Prompts: Generate C# code that inserts rows into an Aspose.Cells worksheet and automatically updates the FreezePanes row index. | Create a helper method for Aspose.Cells that takes original freeze settings and insertion details and returns updated FreezePanes parameters. | Explain the step‑by‑step process of using UnFreezePanes and FreezePanes to keep pane layout consistent after row insertions in Aspose.Cells. | Provide a reusable snippet that recalculates frozen pane indices when rows are inserted before the frozen area.
+// Title: C# – Update Freeze Panes After Inserting Rows with Aspose.Cells (Unfreeze & Reapply)
+// Description: Demonstrates how to freeze the top‑left pane, insert rows above the frozen area, unfreeze, recalculate the new freeze row index, and reapply FreezePanes using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# FreezePanes | update frozen rows after insert | unfreeze and refreeze worksheet | GetFreezedPanes example | InsertRows adjust freeze pane | .NET spreadsheet freeze pane | Aspose.Cells row insertion | Excel freeze pane programmatically
+// Common Searches: Aspose.Cells refresh freeze pane after inserting rows | C# unfreeze and reapply FreezePanes | How to shift frozen rows in Aspose.Cells | GetFreezedPanes and FreezePanes usage | Adjust frozen pane indices after row insert
+// Developer Intent: Reposition frozen rows/columns to reflect rows inserted above the original freeze point.
+// Use Cases: Maintain header rows frozen when new rows are added at the top of a report. | Automatically correct frozen column positions after inserting columns before the frozen area. | Validate and fix freeze settings after bulk row‑insertion operations in generated workbooks.
+// AI Prompts: Write C# code with Aspose.Cells that inserts rows and automatically updates the frozen pane coordinates. | Explain the interaction between GetFreezedPanes and FreezePanes for preserving frozen headers after row insertion. | Create a reusable method that accepts an insert index and count, updates freeze row/column values, and reapplies FreezePanes.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsPaneUpdateDemo
+namespace AsposeCellsFreezePaneUpdate
 {
-    // Demonstrates how to keep frozen rows and columns accurate after inserting rows in an Aspose.Cells worksheet. The example freezes the top rows, records the original pane settings, inserts rows above the frozen area, unfreezes the panes, recalculates the freeze row index, reapplies FreezePanes with the new index, and saves the workbook.
-    public class Program
+    // Demonstrates how to freeze the top‑left pane, insert rows above the frozen area, unfreeze, recalculate the new freeze row index, and reapply FreezePanes using Aspose.Cells for .NET.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Initial freeze: freeze at row index 4 (5th row) and column index 1 (2nd column)
-            // Freeze 4 rows and 1 column (the frozenRows/Columns must not exceed the indices)
-            int initialRow = 4;          // zero‑based row index where the split occurs
-            int initialColumn = 1;       // zero‑based column index where the split occurs
-            int frozenRows = 4;          // number of rows frozen in the top pane
-            int frozenColumns = 1;       // number of columns frozen in the left pane
-            worksheet.FreezePanes(initialRow, initialColumn, frozenRows, frozenColumns);
+            // Initial freeze: freeze at row index 5, column index 3 (zero‑based)
+            // This also freezes 5 rows and 3 columns in the top‑left pane
+            int initialRow = 5;
+            int initialColumn = 3;
+            worksheet.FreezePanes(initialRow, initialColumn, initialRow, initialColumn);
 
-            // Store the original freeze information for later recalculation
-            int originalRow, originalColumn, originalFrozenRows, originalFrozenColumns;
-            worksheet.GetFreezedPanes(out originalRow, out originalColumn, out originalFrozenRows, out originalFrozenColumns);
+            // Store the original freeze information
+            int frozenRow, frozenColumn, frozenRows, frozenColumns;
+            worksheet.GetFreezedPanes(out frozenRow, out frozenColumn, out frozenRows, out frozenColumns);
 
-            // Insert 2 rows at index 2 (i.e., before the original frozen row)
-            int insertRowIndex = 2;
+            // Insert 2 rows at index 2 (before the original frozen row)
+            int insertIndex = 2;
             int rowsToInsert = 2;
-            worksheet.Cells.InsertRows(insertRowIndex, rowsToInsert);
+            worksheet.Cells.InsertRows(insertIndex, rowsToInsert);
 
-            // Unfreeze the panes before applying the updated freeze
+            // Unfreeze the panes
             worksheet.UnFreezePanes();
 
-            // Recalculate the new freeze row index.
-            // If the insertion point is at or above the original freeze row, shift the freeze row down.
-            int newRow = originalRow;
-            if (insertRowIndex <= originalRow)
+            // Calculate the new freeze row index.
+            // If rows were inserted above the original frozen row, shift it down.
+            int updatedRow = frozenRow;
+            if (insertIndex <= frozenRow)
             {
-                newRow += rowsToInsert;
+                updatedRow += rowsToInsert;
             }
 
-            // Reapply FreezePanes with the updated row index while keeping other parameters unchanged
-            worksheet.FreezePanes(newRow, originalColumn, originalFrozenRows, originalFrozenColumns);
+            // Reapply freeze with the updated row index while keeping the same column and counts
+            worksheet.FreezePanes(updatedRow, frozenColumn, updatedRow, frozenColumn);
+
+            // Optional: verify the new freeze settings
+            worksheet.GetFreezedPanes(out frozenRow, out frozenColumn, out frozenRows, out frozenColumns);
+            Console.WriteLine($"New freeze position - Row: {frozenRow}, Column: {frozenColumn}");
+            Console.WriteLine($"Frozen rows: {frozenRows}, Frozen columns: {frozenColumns}");
 
             // Save the workbook
-            workbook.Save("PaneUpdateAfterRowInsert.xlsx");
+            workbook.Save("FreezePaneAfterInsert.xlsx");
         }
     }
 }

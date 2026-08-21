@@ -1,87 +1,85 @@
-// Title: Batch Update Worksheet TabId and Generate CSV Summary with Aspose.Cells for .NET
-// Description: Scans a folder for Excel workbooks, loads each file with Aspose.Cells, increments every worksheet's TabId, saves the changes, and writes a CSV log (file, sheet, old TabId, new TabId) to the same directory.
-// Keywords: Aspose.Cells TabId update | C# batch Excel processing | increment worksheet TabId | generate CSV change log | process multiple workbooks | bulk worksheet property edit
-// Common Searches: update TabId for all worksheets in a folder using Aspose.Cells | C# create CSV report of worksheet TabId changes | batch modify Excel TabId property .NET | automate TabId renumbering across many workbooks | Aspose.Cells example for bulk worksheet updates
-// Developer Intent: Iterate through every Excel file in a directory, change each worksheet's TabId, persist the workbook, and record old and new TabId values in a summary CSV.
-// Use Cases: Standardize tab ordering in a collection of financial models before distribution. | Maintain an audit trail of TabId adjustments when migrating legacy spreadsheets. | Quickly verify bulk TabId changes by reviewing a generated CSV report.
-// AI Prompts: Generate C# code with Aspose.Cells that increments the TabId of each worksheet in all Excel files of a given folder and outputs a CSV log. | Explain how to handle file‑access errors and avoid workbook locks during bulk TabId updates with Aspose.Cells. | Suggest ways to customize the TabId logic (e.g., set based on sheet index or naming pattern) while still producing a change summary CSV.
+// Title: Batch Update Worksheet TabIds and Export Change Log to CSV with Aspose.Cells for .NET
+// Description: Scans a folder for .xlsx files, loads each workbook with Aspose.Cells, iterates all worksheets, records the original TabId, assigns a new TabId based on the worksheet index, saves the workbook, and writes a CSV summary (FileName, WorksheetName, OldTabId, NewTabId).
+// Keywords: Aspose.Cells TabId update | C# batch Excel processing | modify worksheet tab order programmatically | generate CSV change log Aspose | process multiple workbooks .NET | Excel TabId automation | bulk worksheet property update
+// Common Searches: How to change TabId for all worksheets in a folder using Aspose.Cells | C# code to batch update Excel worksheet TabIds and create a CSV report | Aspose.Cells example for enumerating worksheets and saving changes | Generate a change log of worksheet TabId modifications in .NET
+// Developer Intent: Iterate through every .xlsx file in a directory, set each worksheet’s TabId to its index + 1, and log old and new values to a CSV file.
+// Use Cases: Standardize tab order across a collection of reports before distribution | Create an audit trail of worksheet identifier changes for compliance | Integrate automatic TabId normalization into a CI/CD pipeline for generated workbooks
+// AI Prompts: Write C# code with Aspose.Cells that updates each worksheet TabId to its position and outputs a CSV log of the changes. | Provide a version of the batch TabId updater that includes robust error handling for locked or corrupted files. | Show how to replace the index‑based TabId assignment with a custom mapping supplied from a JSON configuration.
 
 using System;
 using System.IO;
 using System.Text;
-using System.Linq;
 using Aspose.Cells;
 
-namespace ExcelTabIdUpdater
+// Scans a folder for .xlsx files, loads each workbook with Aspose.Cells, iterates all worksheets, records the original TabId, assigns a new TabId based on the worksheet index, saves the workbook, and writes a CSV summary (FileName, WorksheetName, OldTabId, NewTabId).
+class Program
 {
-    // Scans a folder for Excel workbooks, loads each file with Aspose.Cells, increments every worksheet's TabId, saves the changes, and writes a CSV log (file, sheet, old TabId, new TabId) to the same directory.
-    class UpdateTabIdsAndSummarize
+    static void Main()
     {
-        static void Main()
+        // Directory containing the Excel files
+        string sourceDirectory = @"C:\ExcelFiles";
+
+        // Verify that the source directory exists
+        if (!Directory.Exists(sourceDirectory))
         {
-            // Directory containing the Excel files
-            string sourceDirectory = @"C:\ExcelFiles";
+            Console.WriteLine($"Source directory not found: {sourceDirectory}");
+            return;
+        }
 
-            // Verify that the source directory exists
-            if (!Directory.Exists(sourceDirectory))
+        // Path for the summary CSV file
+        string summaryCsvPath = Path.Combine(sourceDirectory, "TabIdSummary.csv");
+
+        // StringBuilder to accumulate CSV rows
+        var csvBuilder = new StringBuilder();
+        csvBuilder.AppendLine("FileName,WorksheetName,OldTabId,NewTabId");
+
+        // Process each .xlsx file in the directory
+        foreach (string excelFilePath in Directory.GetFiles(sourceDirectory, "*.xlsx"))
+        {
+            // Ensure the file exists before attempting to load
+            if (!File.Exists(excelFilePath))
             {
-                Console.WriteLine($"Source directory not found: {sourceDirectory}");
-                return;
+                Console.WriteLine($"File not found (skipped): {excelFilePath}");
+                continue;
             }
-
-            // Path for the summary CSV file
-            string summaryCsvPath = Path.Combine(sourceDirectory, "TabIdSummary.csv");
-
-            // Prepare CSV header
-            StringBuilder csvBuilder = new StringBuilder();
-            csvBuilder.AppendLine("FileName,WorksheetName,OldTabId,NewTabId");
 
             try
             {
-                // Get all Excel files in the directory
-                var excelFiles = Directory.GetFiles(sourceDirectory, "*.*", SearchOption.TopDirectoryOnly)
-                    .Where(f => f.EndsWith(".xls", StringComparison.OrdinalIgnoreCase) ||
-                                f.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ||
-                                f.EndsWith(".xlsm", StringComparison.OrdinalIgnoreCase) ||
-                                f.EndsWith(".xlsb", StringComparison.OrdinalIgnoreCase));
+                // Load the workbook
+                var workbook = new Workbook(excelFilePath);
 
-                foreach (string filePath in excelFiles)
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Ensure the file exists before attempting to load
-                    if (!File.Exists(filePath))
-                    {
-                        Console.WriteLine($"File not found, skipping: {filePath}");
-                        continue;
-                    }
+                    // Capture the original TabId
+                    int oldTabId = sheet.TabId;
 
-                    // Load the workbook
-                    Workbook workbook = new Workbook(filePath);
+                    // Example update: set TabId to (worksheet index + 1)
+                    int newTabId = sheet.Index + 1;
+                    sheet.TabId = newTabId;
 
-                    // Iterate through all worksheets and update TabId
-                    foreach (Worksheet sheet in workbook.Worksheets)
-                    {
-                        int oldTabId = sheet.TabId;
-                        int newTabId = oldTabId + 1; // Example update: increment by 1
-                        sheet.TabId = newTabId;
-
-                        // Record the change in the CSV summary
-                        csvBuilder.AppendLine($"{Path.GetFileName(filePath)},{sheet.Name},{oldTabId},{newTabId}");
-                    }
-
-                    // Save the modified workbook back to the same file
-                    workbook.Save(filePath);
+                    // Record the change in the CSV
+                    csvBuilder.AppendLine($"{Path.GetFileName(excelFilePath)},{sheet.Name},{oldTabId},{newTabId}");
                 }
 
-                // Write the summary CSV to disk
-                File.WriteAllText(summaryCsvPath, csvBuilder.ToString());
-
-                Console.WriteLine("TabId update completed. Summary saved to: " + summaryCsvPath);
+                // Save the modified workbook
+                workbook.Save(excelFilePath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred during processing:");
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Error processing file '{excelFilePath}': {ex.Message}");
             }
+        }
+
+        try
+        {
+            // Write the summary CSV to disk
+            File.WriteAllText(summaryCsvPath, csvBuilder.ToString());
+            Console.WriteLine($"Summary CSV written to: {summaryCsvPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to write summary CSV: {ex.Message}");
         }
     }
 }

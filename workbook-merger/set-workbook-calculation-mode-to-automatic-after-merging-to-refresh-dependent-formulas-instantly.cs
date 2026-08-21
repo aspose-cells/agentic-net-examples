@@ -1,16 +1,16 @@
 // Title: Set Automatic Calculation Mode After Merging Cells with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to merge a range, switch the workbook's FormulaSettings.CalculationMode to Automatic, trigger an immediate recalculation, and save the file so dependent formulas update instantly.
-// Keywords: Aspose.Cells | C# | .NET | automatic calculation mode | merge cells | formula recalculation | CalcModeType.Automatic | Workbook.CalculateFormula
-// Common Searches: Aspose.Cells set calculation mode automatic C# | recalculate formulas after merging cells Aspose.Cells | how to trigger formula calculation programmatically .NET | merge cells and update dependent formulas Aspose
-// Developer Intent: Enable instant formula updates after a cell merge by activating automatic calculation.
-// Use Cases: Create a report header that spans multiple columns while keeping totals current. | Combine data blocks during workbook generation without manual refresh steps. | Apply automatic calculation in a data‑processing pipeline after structural changes.
-// AI Prompts: Generate C# code using Aspose.Cells to merge a range, set CalculationMode to Automatic, and run CalculateFormula. | Explain the steps to ensure formulas recalculate immediately after merging cells in an Aspose.Cells workbook. | Show how to verify that dependent formulas reflect the merged cells' values in a .NET application.
+// Description: Shows how to merge a range, switch the workbook's calculation mode to Automatic, trigger an immediate recalculation, and save the file so formulas that reference the merged cells update instantly.
+// Keywords: Aspose.Cells | C# | automatic calculation mode | merge cells | recalculate formulas | FormulaSettings | CalcModeType.Automatic | Workbook.CalculateFormula | Excel merging | refresh dependent formulas
+// Common Searches: Aspose.Cells set calculation mode to automatic after merge | C# merge cells and recalculate formulas Aspose.Cells | How to refresh formulas after merging cells in Aspose.Cells | Automatic formula calculation in Aspose.Cells .NET | Force recalculation after cell merge Aspose.Cells
+// Developer Intent: Enable automatic formula recalculation immediately after merging cells so dependent calculations stay up‑to‑date without manual intervention.
+// Use Cases: Merging header rows in a financial report while keeping total formulas current. | Consolidating data rows in a template and ensuring summary calculations update on the fly. | Building a dashboard where merged cells trigger instant updates of charts and KPI formulas.
+// AI Prompts: Generate C# code using Aspose.Cells to merge a range, set the workbook's calculation mode to Automatic, and recalculate all formulas. | Demonstrate switching the calculation mode to Manual, performing several merges, then invoking a single CalculateFormula call with Aspose.Cells. | Explain how to programmatically verify that formulas referencing merged cells return the expected values after the merge.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to merge a range, switch the workbook's FormulaSettings.CalculationMode to Automatic, trigger an immediate recalculation, and save the file so dependent formulas update instantly.
-class SetCalculationModeAfterMerge
+// Shows how to merge a range, switch the workbook's calculation mode to Automatic, trigger an immediate recalculation, and save the file so formulas that reference the merged cells update instantly.
+class Program
 {
     static void Main()
     {
@@ -18,20 +18,23 @@ class SetCalculationModeAfterMerge
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Sample data and a formula that depends on the cell to be merged
+        // Populate some sample data
         sheet.Cells["A1"].PutValue(10);
-        sheet.Cells["A2"].Formula = "=A1*2";
+        sheet.Cells["A2"].PutValue(20);
 
-        // Merge cells A1:B1 (row 0, column 0, 1 row, 2 columns)
-        sheet.Cells.Merge(0, 0, 1, 2);
+        // Add a formula that depends on the cells to be merged
+        sheet.Cells["B1"].Formula = "=SUM(A1:A2)";
+
+        // Merge cells A1:A2 (rows 0-1, column 0)
+        sheet.Cells.Merge(0, 0, 2, 1);
 
         // Set calculation mode to Automatic so dependent formulas recalculate instantly
         workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
 
-        // Trigger calculation immediately
+        // Force immediate recalculation of all formulas
         workbook.CalculateFormula();
 
-        // Save the workbook (lifecycle rule)
-        workbook.Save("MergedCalcMode.xlsx");
+        // Save the workbook
+        workbook.Save("MergedWorkbook.xlsx");
     }
 }

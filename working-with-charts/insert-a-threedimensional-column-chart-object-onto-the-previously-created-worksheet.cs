@@ -1,53 +1,45 @@
-// Title: Add a 3‑D Column Chart to an Aspose.Cells Worksheet (C#)
-// Description: Creates a new workbook, populates cells A1:B5 with quarterly sales figures, inserts a 3‑D column chart (ChartType.Column3D) positioned rows 6‑20 and columns A‑J, binds the range A1:B5 (including headers), adds a title and legend, and saves the file as 3DColumnChart.xlsx.
-// Keywords: Aspose.Cells | C# | 3D column chart | ChartType.Column3D | add chart to worksheet | set chart data range | chart title | chart legend | export XLSX | Aspose.Cells example
-// Common Searches: Aspose.Cells add 3D column chart C# | C# Aspose.Cells set chart data range | How to add title and legend to a 3D column chart in Aspose.Cells | Insert chart into worksheet Aspose.Cells .NET | ChartType.Column3D usage example
-// Developer Intent: Insert and configure a three‑dimensional column chart in a worksheet using Aspose.Cells for .NET.
-// Use Cases: Generate a sales report workbook that visualizes quarterly figures with a 3‑D column chart. | Build a performance dashboard that places multiple 3‑D column charts for side‑by‑side metric comparison. | Automate periodic financial exports that include titled charts and legends for stakeholder presentations.
-// AI Prompts: Write C# code with Aspose.Cells to add a 3‑D column chart from a dynamic range, customize its colors, and save the workbook as PDF. | Provide a step‑by‑step tutorial for inserting a 3‑D column chart, binding data, adding a title and legend, and exporting the result as XLSX using Aspose.Cells.
+// Title: Add a 3‑D Column Chart to an Excel Worksheet using Aspose.Cells for C#
+// Description: Creates a new Workbook, writes sample sales data to A1:B4, inserts a three‑dimensional column chart (ChartType.Column3D) positioned from rows 5‑20 and columns 0‑8, binds the chart to the data range, and saves the file as ThreeDColumnChart.xlsx.
+// Keywords: Aspose.Cells 3D column chart C# | ChartType.Column3D Aspose | add 3D chart Aspose.Cells | set chart data range Aspose | save workbook with chart Aspose | C# Excel chart generation | Aspose.Cells chart positioning
+// Common Searches: how to insert a 3d column chart with Aspose.Cells .NET | Aspose.Cells C# create 3‑D column chart | set data range for 3D chart Aspose.Cells | save Excel file containing a 3D chart using Aspose | Aspose.Cells chart placement rows columns
+// Developer Intent: Generate a three‑dimensional column chart on a worksheet and persist the workbook as an .xlsx file.
+// Use Cases: Visualize quarterly sales figures in a 3‑D column chart for management reports. | Provide a reusable routine that adds a 3‑D column chart to any worksheet given a data range and position. | Export Excel dashboards with embedded 3‑D charts for stakeholder presentations.
+// AI Prompts: Write a C# function that accepts a Worksheet, a data‑range string, and chart coordinates, then adds a 3‑D column chart with Aspose.Cells. | Show error‑handling code for creating a 3‑D column chart and saving the workbook, including logging of exceptions. | Demonstrate how to customize the title, axis labels, and series colors of a 3‑D column chart after it is added.
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCells3DColumnChart
+// Creates a new Workbook, writes sample sales data to A1:B4, inserts a three‑dimensional column chart (ChartType.Column3D) positioned from rows 5‑20 and columns 0‑8, binds the chart to the data range, and saves the file as ThreeDColumnChart.xlsx.
+class Program
 {
-    // Creates a new workbook, populates cells A1:B5 with quarterly sales figures, inserts a 3‑D column chart (ChartType.Column3D) positioned rows 6‑20 and columns A‑J, binds the range A1:B5 (including headers), adds a title and legend, and saves the file as 3DColumnChart.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Q1");
-            worksheet.Cells["A3"].PutValue("Q2");
-            worksheet.Cells["A4"].PutValue("Q3");
-            worksheet.Cells["A5"].PutValue("Q4");
+        // Populate sample data for the chart
+        worksheet.Cells["A1"].PutValue("Category");
+        worksheet.Cells["A2"].PutValue("Q1");
+        worksheet.Cells["A3"].PutValue("Q2");
+        worksheet.Cells["A4"].PutValue("Q3");
+        worksheet.Cells["B1"].PutValue("Sales");
+        worksheet.Cells["B2"].PutValue(1200);
+        worksheet.Cells["B3"].PutValue(1500);
+        worksheet.Cells["B4"].PutValue(1800);
 
-            worksheet.Cells["B1"].PutValue("Sales");
-            worksheet.Cells["B2"].PutValue(1200);
-            worksheet.Cells["B3"].PutValue(1500);
-            worksheet.Cells["B4"].PutValue(1800);
-            worksheet.Cells["B5"].PutValue(2100);
+        // Add a three‑dimensional column chart to the worksheet
+        // Parameters: chart type, top row, left column, bottom row, right column
+        int chartIndex = worksheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 8);
+        Chart chart = worksheet.Charts[chartIndex];
 
-            // Add a three‑dimensional column chart (Column3D)
-            // Parameters: chart type, top row, left column, bottom row, right column
-            int chartIndex = worksheet.Charts.Add(ChartType.Column3D, 6, 0, 20, 10);
-            Chart chart = worksheet.Charts[chartIndex];
+        // Define the data range for the chart (including headers)
+        chart.SetChartDataRange("A1:B4", true);
 
-            // Define the data range for the chart (including headers)
-            chart.SetChartDataRange("A1:B5", true);
+        // The chart is now a 3D column chart; Is3D property will return true
+        // Console.WriteLine($"Is3D: {chart.Is3D}");
 
-            // Optional: set a title and enable the legend
-            chart.Title.Text = "Quarterly Sales (3D)";
-            chart.ShowLegend = true;
-
-            // Save the workbook
-            workbook.Save("3DColumnChart.xlsx", SaveFormat.Xlsx);
-        }
+        // Save the workbook with the chart
+        workbook.Save("ThreeDColumnChart.xlsx", SaveFormat.Xlsx);
     }
 }

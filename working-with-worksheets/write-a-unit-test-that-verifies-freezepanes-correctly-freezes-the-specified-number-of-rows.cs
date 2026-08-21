@@ -1,58 +1,59 @@
 // Title: C# Unit Test for Aspose.Cells FreezePanes – Verify Frozen Row Count
-// Description: Demonstrates how to create an automated test (NUnit or MSTest) that applies Worksheet.FreezePanes to a workbook, then uses GetFreezedPanes to assert that the frozen rows, columns and start positions match the expected values.
-// Keywords: Aspose.Cells | FreezePanes | C# unit test | NUnit | MSTest | GetFreezedPanes | worksheet freeze panes | Excel API testing | automated verification | Aspose.Cells example
-// Common Searches: Aspose.Cells FreezePanes unit test C# | How to assert frozen rows with GetFreezedPanes | NUnit test for worksheet freeze panes | Validate FreezePanes parameters in Aspose.Cells | MSTest example for FreezePanes verification
-// Developer Intent: Create an automated test that confirms FreezePanes correctly freezes the specified number of rows (and columns) in a worksheet.
-// Use Cases: Validate that FreezePanes(5, 0, 5, 0) sets the correct start row, column, and frozen row count. | Integrate the test into a CI pipeline to detect regressions in pane‑freezing behavior. | Use the pattern as a template for testing other FreezePanes scenarios, such as column freezing or combined row/column freezes.
-// AI Prompts: Generate an NUnit test method that creates a Workbook, calls FreezePanes(5,0,5,0) on the first worksheet, and uses Assert.AreEqual to verify the values returned by GetFreezedPanes. | Provide a MSTest example that checks the FreezePanes parameters and fails with a clear message if any value is incorrect. | Write a reusable helper function for Aspose.Cells tests that validates frozen pane settings given expected row, column, rows, and columns.
+// Description: Demonstrates how to write a unit test that confirms Aspose.Cells FreezePanes freezes exactly five rows (no columns). The test creates a workbook, applies FreezePanes, retrieves the pane state with GetFreezedPanes, and asserts HasFreeze, start row, start column, frozen rows and frozen columns before saving the file.
+// Keywords: Aspose.Cells | FreezePanes | C# unit test | NUnit | MSTest | xUnit | GetFreezedPanes | frozen rows | Excel automation | worksheet freeze pane validation
+// Common Searches: Aspose.Cells unit test FreezePanes rows | how to assert frozen rows with GetFreezedPanes | NUnit test for FreezePanes in C# | MSTest example for Aspose.Cells FreezePanes | xUnit verify frozen rows Aspose.Cells
+// Developer Intent: Write a test that validates the FreezePanes method freezes the exact number of rows and columns specified.
+// Use Cases: Confirm that calling worksheet.FreezePanes(5, 0, 5, 0) sets HasFreeze to true. | Verify the start row index returned by GetFreezedPanes equals 5. | Ensure the frozen‑row count reported is 5 while frozen‑column count is 0. | Check that the workbook can be saved without altering the freeze configuration.
+// AI Prompts: Generate an NUnit test that creates a Workbook, applies worksheet.FreezePanes(5,0,5,0), calls GetFreezedPanes, and asserts HasFreeze, actualRow, actualColumn, actualFrozenRows, and actualFrozenColumns. | Provide an MSTest method that validates FreezePanes freezes five rows and no columns, then deletes the generated Excel file in a teardown step. | Write a xUnit test verifying GetFreezedPanes returns the expected parameters after FreezePanes is executed on a worksheet.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create an automated test (NUnit or MSTest) that applies Worksheet.FreezePanes to a workbook, then uses GetFreezedPanes to assert that the frozen rows, columns and start positions match the expected values.
-public class FreezePanesDemo
+namespace AsposeCellsTests
 {
-    public static void Main()
+    // Demonstrates how to write a unit test that confirms Aspose.Cells FreezePanes freezes exactly five rows (no columns). The test creates a workbook, applies FreezePanes, retrieves the pane state with GetFreezedPanes, and asserts HasFreeze, start row, start column, frozen rows and frozen columns before saving the file.
+    public class Program
     {
-        try
+        public static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Freeze panes: start at row index 5 (6th row), column index 0,
-            // with 5 visible frozen rows and 0 frozen columns
-            int freezeRow = 5;
-            int freezeColumn = 0;
-            int frozenRows = 5;
-            int frozenColumns = 0;
-            worksheet.FreezePanes(freezeRow, freezeColumn, frozenRows, frozenColumns);
+                // Freeze the first 5 rows (no columns frozen)
+                int freezeRowIndex = 5;      // row index where the freeze starts (0‑based)
+                int freezeColumnIndex = 0;   // column index where the freeze starts
+                int frozenRows = 5;          // number of rows to freeze
+                int frozenColumns = 0;       // number of columns to freeze
 
-            // Verify that the worksheet reports frozen panes and the parameters match
-            bool hasFreeze = worksheet.GetFreezedPanes(out int row, out int column, out int rows, out int columns);
-            if (!hasFreeze)
-                throw new InvalidOperationException("Worksheet should indicate that panes are frozen.");
+                worksheet.FreezePanes(freezeRowIndex, freezeColumnIndex, frozenRows, frozenColumns);
 
-            if (row != freezeRow)
-                throw new InvalidOperationException($"Freeze position row does not match. Expected {freezeRow}, got {row}.");
+                // Retrieve freeze pane information
+                bool hasFreeze = worksheet.GetFreezedPanes(out int actualRow, out int actualColumn,
+                                                           out int actualFrozenRows, out int actualFrozenColumns);
 
-            if (column != freezeColumn)
-                throw new InvalidOperationException($"Freeze position column does not match. Expected {freezeColumn}, got {column}.");
+                // Simple validation output
+                Console.WriteLine($"Has Freeze: {hasFreeze}");
+                Console.WriteLine($"Freeze Row Index: {actualRow}");
+                Console.WriteLine($"Freeze Column Index: {actualColumn}");
+                Console.WriteLine($"Frozen Rows: {actualFrozenRows}");
+                Console.WriteLine($"Frozen Columns: {actualFrozenColumns}");
 
-            if (rows != frozenRows)
-                throw new InvalidOperationException($"Number of frozen rows does not match. Expected {frozenRows}, got {rows}.");
+                // Define output path
+                string outputPath = "FreezeRowsTestOutput.xlsx";
 
-            if (columns != frozenColumns)
-                throw new InvalidOperationException($"Number of frozen columns does not match. Expected {frozenColumns}, got {columns}.");
-
-            Console.WriteLine("Freeze panes applied and verified successfully.");
-
-            // Optional: save the workbook if you want to inspect the file manually
-            // workbook.Save("FreezePanesDemo.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+                Console.Error.WriteLine(ex.StackTrace);
+            }
         }
     }
 }

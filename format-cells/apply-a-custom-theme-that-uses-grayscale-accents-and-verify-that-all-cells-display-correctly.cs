@@ -1,71 +1,73 @@
-// Title: Apply a Custom Grayscale Theme in Aspose.Cells (C#) and Validate Cell Styling
-// Description: Demonstrates how to create a 12‑color grayscale palette, register it with Workbook.CustomTheme, and use ThemeColor accents for font, fill, and border styling in an Aspose.Cells workbook before saving as GrayThemeDemo.xlsx.
-// Keywords: Aspose.Cells custom theme C# | grayscale Excel theme programmatically | Workbook.CustomTheme example | ThemeColor Accent1 Accent2 Accent3 | apply theme colors to cells Aspose | verify Excel theme styling | C# Aspose.Cells styling guide
-// Common Searches: how to create a custom grayscale theme with Aspose.Cells | apply theme accents to font fill border in C# Excel | Aspose.Cells CustomTheme usage example | verify theme colors in generated workbook | C# code for grayscale Excel theme Aspose
-// Developer Intent: Create a grayscale custom theme, apply its accent colors to cell font, background, and border, and save the workbook to confirm visual results.
-// Use Cases: Define a 12‑color grayscale array and register it via workbook.CustomTheme("GrayTheme", colors). | Set a cell’s Font.ThemeColor to Accent1 to display grayscale text. | Apply Accent2 as the cell’s background fill using ForegroundThemeColor. | Style a cell’s bottom border with Accent3 via Borders[BorderType.BottomBorder].ThemeColor. | Save the workbook and open the .xlsx file to ensure the theme renders correctly.
-// AI Prompts: Generate C# code that builds a 12‑color grayscale theme and registers it with Aspose.Cells. | Show how to assign ThemeColor Accent1 to a cell’s font, Accent2 to its fill, and Accent3 to its border using Aspose.Cells styles. | Provide a method to programmatically compare a cell’s actual ThemeColor values with the defined grayscale palette after saving.
+// Title: Apply a Custom Grayscale Theme in Aspose.Cells for .NET (C#) and Verify Cell Theme Colors
+// Description: Creates a new Workbook, defines a 12‑color grayscale palette, applies it with Workbook.CustomTheme, assigns Accent1, Accent2, and Text1 theme colors to cells A1‑A3, prints the ThemeColor types for verification, and saves the file as GrayscaleThemeDemo.xlsx.
+// Keywords: Aspose.Cells | C# | custom theme | grayscale theme | Workbook.CustomTheme | theme colors | cell formatting | Excel automation | ThemeColor verification | BackgroundType.Solid
+// Common Searches: Aspose.Cells apply custom grayscale theme C# | How to set theme colors for fonts and backgrounds in Aspose.Cells | Verify theme colors in an Aspose.Cells workbook | Workbook.CustomTheme example .NET | Create grayscale Excel reports with Aspose.Cells
+// Developer Intent: Generate a grayscale theme, apply it to a workbook, style specific cells with theme colors, and confirm that the colors are correctly applied.
+// Use Cases: Produce printable reports that use only grayscale accents for cost‑effective black‑and‑white printing. | Enforce corporate grayscale branding across multiple Excel files generated programmatically. | Create high‑contrast spreadsheets for accessibility where color differentiation is limited.
+// AI Prompts: Extend the example to include a custom font family while keeping the grayscale theme. | Write a unit test that asserts the ThemeColor of cells A1, A2, and A3 matches the defined grayscale palette. | Show how to export the workbook to PDF while preserving the grayscale theme colors.
 
-using Aspose.Cells;
+using System;
 using System.Drawing;
+using Aspose.Cells;
 
-// Demonstrates how to create a 12‑color grayscale palette, register it with Workbook.CustomTheme, and use ThemeColor accents for font, fill, and border styling in an Aspose.Cells workbook before saving as GrayThemeDemo.xlsx.
-class CustomThemeDemo
+// Creates a new Workbook, defines a 12‑color grayscale palette, applies it with Workbook.CustomTheme, assigns Accent1, Accent2, and Text1 theme colors to cells A1‑A3, prints the ThemeColor types for verification, and saves the file as GrayscaleThemeDemo.xlsx.
+class ApplyGrayscaleTheme
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Add some sample data to demonstrate the theme
-        sheet.Cells["A1"].PutValue("Header");
-        sheet.Cells["A2"].PutValue("Data 1");
-        sheet.Cells["A3"].PutValue("Data 2");
-
-        // Define a grayscale theme (12 colors as required)
-        Color[] grayTheme = new Color[]
+        // Define 12 grayscale colors for the custom theme
+        Color[] grayColors = new Color[]
         {
-            Color.FromArgb(255, 255, 255), // Background1 – white
-            Color.FromArgb(0,   0,   0),   // Text1 – black
-            Color.FromArgb(242, 242, 242), // Background2 – light gray
-            Color.FromArgb(64,  64,  64),  // Text2 – dark gray
+            Color.FromArgb(255, 255, 255), // Background1 - white
+            Color.FromArgb(0, 0, 0),       // Text1 - black
+            Color.FromArgb(240, 240, 240), // Background2 - light gray
+            Color.FromArgb(64, 64, 64),    // Text2 - dark gray
             Color.FromArgb(200, 200, 200), // Accent1
             Color.FromArgb(180, 180, 180), // Accent2
             Color.FromArgb(160, 160, 160), // Accent3
             Color.FromArgb(140, 140, 140), // Accent4
             Color.FromArgb(120, 120, 120), // Accent5
             Color.FromArgb(100, 100, 100), // Accent6
-            Color.FromArgb(0,   0, 255),   // Hyperlink – keep blue for visibility
-            Color.FromArgb(128, 0, 128)    // Followed Hyperlink – purple
+            Color.FromArgb(0, 0, 255),     // Hyperlink - blue (kept for visibility)
+            Color.FromArgb(128, 0, 128)    // FollowedHyperlink - purple (kept for visibility)
         };
 
         // Apply the custom grayscale theme
-        workbook.CustomTheme("GrayTheme", grayTheme);
+        workbook.CustomTheme("GrayscaleTheme", grayColors);
 
-        // Verify theme colors by applying them to cells
+        // Cell A1: Font uses Accent1 theme color
+        Cell cellA1 = sheet.Cells["A1"];
+        cellA1.PutValue("Accent1 Font");
+        Style styleA1 = workbook.CreateStyle();
+        styleA1.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0);
+        cellA1.SetStyle(styleA1);
 
-        // Cell B1 – font uses Accent1
-        Style style1 = workbook.CreateStyle();
-        style1.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0);
-        sheet.Cells["B1"].PutValue("Accent1 Text");
-        sheet.Cells["B1"].SetStyle(style1);
+        // Cell A2: Background uses Accent2 theme color
+        Cell cellA2 = sheet.Cells["A2"];
+        cellA2.PutValue("Accent2 Background");
+        Style styleA2 = workbook.CreateStyle();
+        styleA2.Pattern = BackgroundType.Solid;
+        styleA2.ForegroundThemeColor = new ThemeColor(ThemeColorType.Accent2, 0);
+        cellA2.SetStyle(styleA2);
 
-        // Cell B2 – background uses Accent2
-        Style style2 = workbook.CreateStyle();
-        style2.Pattern = BackgroundType.Solid;
-        style2.ForegroundThemeColor = new ThemeColor(ThemeColorType.Accent2, 0);
-        sheet.Cells["B2"].PutValue("Accent2 Fill");
-        sheet.Cells["B2"].SetStyle(style2);
+        // Cell A3: Font uses Text1 theme color (should be black)
+        Cell cellA3 = sheet.Cells["A3"];
+        cellA3.PutValue("Text1 Font");
+        Style styleA3 = workbook.CreateStyle();
+        styleA3.Font.ThemeColor = new ThemeColor(ThemeColorType.Text1, 0);
+        cellA3.SetStyle(styleA3);
 
-        // Cell B3 – bottom border uses Accent3
-        Style style3 = workbook.CreateStyle();
-        style3.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-        style3.Borders[BorderType.BottomBorder].ThemeColor = new ThemeColor(ThemeColorType.Accent3, 0);
-        sheet.Cells["B3"].PutValue("Accent3 Border");
-        sheet.Cells["B3"].SetStyle(style3);
+        // Verify that the theme colors are applied correctly
+        Console.WriteLine("Verification:");
+        Console.WriteLine("A1 Font Theme: " + cellA1.GetStyle().Font.ThemeColor.ColorType);
+        Console.WriteLine("A2 Background Theme: " + cellA2.GetStyle().ForegroundThemeColor.ColorType);
+        Console.WriteLine("A3 Font Theme: " + cellA3.GetStyle().Font.ThemeColor.ColorType);
 
-        // Save the workbook to verify the visual result
-        workbook.Save("GrayThemeDemo.xlsx");
+        // Save the workbook
+        workbook.Save("GrayscaleThemeDemo.xlsx");
     }
 }

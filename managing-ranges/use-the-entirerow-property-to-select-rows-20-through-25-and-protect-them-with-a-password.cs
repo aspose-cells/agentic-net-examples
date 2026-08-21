@@ -1,47 +1,73 @@
-// Title: Aspose.Cells .NET – Protect rows 20‑25 with a password using the EntireRow property
-// Description: A C# sample that creates a workbook, selects rows 20‑25 via the EntireRow property (or an AllowEditRange), assigns a password, applies worksheet protection, and saves the result as ProtectedRows.xlsx.
-// Keywords: Aspose.Cells EntireRow | protect specific rows C# | password protect rows Aspose.Cells | AllowEditRanges .NET | Excel row protection | C# Excel security | Aspose.Cells worksheet protection
-// Common Searches: Aspose.Cells protect rows with password | C# protect rows 20 to 25 Excel | How to use EntireRow property Aspose.Cells | Set password for row range Aspose.Cells .NET | Excel row lock example Aspose.Cells
-// Developer Intent: Secure rows 20‑25 of a worksheet so they can only be edited after entering a password.
-// Use Cases: Prevent accidental changes to header or total rows in financial reports. | Restrict access to confidential data rows before sharing a spreadsheet with clients. | Lock template sections while allowing users to fill in other parts of the sheet.
-// AI Prompts: Generate C# code that uses Aspose.Cells' EntireRow property to password‑protect rows 20‑25 while keeping other cells editable. | Show how to combine AllowEditRanges with worksheet protection to lock a specific row range in Aspose.Cells for .NET. | Provide an example of protecting multiple non‑contiguous row blocks, each with its own password, using Aspose.Cells.
+// Title: Password‑protect rows 20‑25 in an Excel sheet using Aspose.Cells for .NET (EntireRow)
+// Description: Creates a workbook, fills cells A1:E30, selects rows 20‑25 with the EntireRow property, adds them to the AllowEditRanges collection, assigns a password, protects the worksheet with all protection types, and saves the file as ProtectedRows20to25.xlsx.
+// Keywords: Aspose.Cells | .NET | C# | protect rows | EntireRow property | password protection | AllowEditRanges | Excel worksheet protection | range protection | specific rows
+// Common Searches: Aspose.Cells protect specific rows | How to password protect rows in Excel using Aspose.Cells | EntireRow property example Aspose.Cells | C# protect rows 20 to 25 Aspose.Cells | Set AllowEditRanges password Aspose.Cells
+// Developer Intent: The developer needs to lock rows 20‑25 of a worksheet with a password by using the EntireRow property in Aspose.Cells for .NET.
+// Use Cases: Lock header or template rows in a generated report while keeping data rows editable. | Secure confidential financial rows in a shared workbook to prevent accidental changes. | Create a read‑only section in a data‑entry form that users cannot modify.
+// AI Prompts: Generate C# code that password‑protects rows 10‑15 in an Excel file using Aspose.Cells. | Explain how to use AllowEditRanges with the EntireRow property to lock specific rows in Aspose.Cells for .NET. | Show the steps to unprotect a password‑protected row range in an Aspose.Cells workbook.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsProtectedRowsDemo
+namespace AsposeCellsExamples
 {
-    // A C# sample that creates a workbook, selects rows 20‑25 via the EntireRow property (or an AllowEditRange), assigns a password, applies worksheet protection, and saves the result as ProtectedRows.xlsx.
-    class Program
+    // Creates a workbook, fills cells A1:E30, selects rows 20‑25 with the EntireRow property, adds them to the AllowEditRanges collection, assigns a password, protects the worksheet with all protection types, and saves the file as ProtectedRows20to25.xlsx.
+    public class ProtectRowsWithEntireRowDemo
     {
-        static void Main()
+        public static void Run()
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-
-                // Access the first worksheet
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add a protected range that covers rows 20 through 25 (zero‑based indices 19‑24)
-                // The range starts at column A (index 0) and ends at column A (index 0)
-                int rangeIndex = worksheet.AllowEditRanges.Add("Rows20to25", 19, 0, 24, 0);
-                ProtectedRange protectedRange = worksheet.AllowEditRanges[rangeIndex];
+                // Populate sample data
+                for (int row = 0; row < 30; row++)
+                {
+                    for (int col = 0; col < 5; col++)
+                    {
+                        worksheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                    }
+                }
+
+                // Create a range covering rows 20‑25 and get the entire rows
+                Aspose.Cells.Range rowsRange = worksheet.Cells.CreateRange("A20:A25").EntireRow;
+
+                // Add a protected range for those rows
+                ProtectedRangeCollection allowEditRanges = worksheet.AllowEditRanges;
+                int protectedIndex = allowEditRanges.Add(
+                    "Rows20to25",
+                    rowsRange.FirstRow,
+                    rowsRange.FirstColumn,
+                    rowsRange.FirstRow + rowsRange.RowCount - 1,
+                    rowsRange.FirstColumn + rowsRange.ColumnCount - 1);
 
                 // Set a password for the protected range
+                ProtectedRange protectedRange = allowEditRanges[protectedIndex];
                 protectedRange.Password = "MySecretPassword";
 
-                // Protect the entire worksheet (all protection types)
+                // Protect the worksheet (all protection types)
                 worksheet.Protect(ProtectionType.All);
 
                 // Save the workbook
-                workbook.Save("ProtectedRows.xlsx");
+                string outputPath = "ProtectedRows20to25.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+    }
+
+    // Application entry point
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ProtectRowsWithEntireRowDemo.Run();
         }
     }
 }

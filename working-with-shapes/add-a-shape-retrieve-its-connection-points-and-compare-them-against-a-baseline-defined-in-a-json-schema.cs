@@ -1,93 +1,95 @@
-// Title: Retrieve Aspose.Cells Shape Connection Points (C#) and Validate with a JSON Baseline
-// Description: Creates a new workbook, adds a rectangle shape, calls Shape.GetConnectionPoints() to obtain its connection points, maps them to a simple PointModel list, loads expected points from a JSON file that follows a defined schema, compares each point within a tolerance, reports mismatches, and optionally saves the workbook.
-// Keywords: Aspose.Cells GetConnectionPoints | C# shape connection points | validate shape geometry JSON | Aspose.Cells rectangle shape example | compare Excel shape points | JSON baseline validation | Excel automation testing Aspose.Cells
-// Common Searches: How to get connection points of a shape using Aspose.Cells for .NET | Aspose.Cells compare shape points to JSON file C# | Validate rectangle shape geometry in Excel with Aspose.Cells | Shape.GetConnectionPoints example C# | Unit test shape coordinates Aspose.Cells
-// Developer Intent: Add a shape, extract its connection points, and verify them against expected coordinates defined in a JSON schema.
-// Use Cases: Automated unit test that confirms generated shapes retain correct connection points across releases. | Quality‑control script that checks diagram shapes in exported Excel files match a design specification stored in JSON. | CI pipeline validation to detect unintended changes in shape geometry after code modifications.
-// AI Prompts: Generate a reusable C# method that reads a JSON array of point objects and compares it with the float[][] returned by Shape.GetConnectionPoints(), returning a detailed mismatch report. | Provide example JSON content representing the expected connection points for a default rectangle shape added with Aspose.Cells. | Write robust error‑handling code that logs indices of connection points that differ beyond a tolerance and suggests possible causes.
+// Title: Validate Aspose.Cells Rectangle Shape Connection Points Against a JSON Baseline (C#)
+// Description: Creates a workbook, adds a rectangle shape, extracts its connection points with GetConnectionPoints(), loads expected coordinates from a baseline.json file, compares each pair within a 0.001 tolerance, reports mismatches, and optionally saves the file.
+// Keywords: Aspose.Cells | C# | shape connection points | GetConnectionPoints | JSON baseline | rectangle shape | coordinate comparison | tolerance check | regression testing | spreadsheet template validation
+// Common Searches: Aspose.Cells get connection points C# | compare shape points with JSON Aspose | validate rectangle shape geometry .NET | shape connection points tolerance comparison | load baseline points from JSON C#
+// Developer Intent: Add a rectangle shape, retrieve its connection points, and confirm they match a predefined set of coordinates stored in a JSON file.
+// Use Cases: Automated regression tests that verify shape geometry in generated spreadsheets. | Ensuring custom workbook templates adhere to design specifications by checking shape connection points. | Generating documentation that cross‑references extracted shape coordinates with a design baseline.
+// AI Prompts: Write C# code using Aspose.Cells to insert a rectangle shape, read its connection points, and compare them to a JSON array with a 0.001 tolerance. | Explain how to deserialize a JSON array of point coordinates in .NET and use it to validate shape connection points obtained via Aspose.Cells. | Provide a method that logs any mismatched connection points between an Aspose.Cells shape and a baseline JSON, returning a boolean indicating overall success.
 
 using System;
 using System.IO;
 using System.Text.Json;
-using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace ShapeConnectionPointsComparison
 {
-    // Simple model matching the JSON schema for a point
-    // Creates a new workbook, adds a rectangle shape, calls Shape.GetConnectionPoints() to obtain its connection points, maps them to a simple PointModel list, loads expected points from a JSON file that follows a defined schema, compares each point within a tolerance, reports mismatches, and optionally saves the workbook.
-    public class PointModel
-    {
-        public float X { get; set; }
-        public float Y { get; set; }
-    }
-
+    // Creates a workbook, adds a rectangle shape, extracts its connection points with GetConnectionPoints(), loads expected coordinates from a baseline.json file, compares each pair within a 0.001 tolerance, reports mismatches, and optionally saves the file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // ---------- Create a new workbook ----------
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // ---------- Add a rectangle shape ----------
-            // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
+            // Add a rectangle shape to the worksheet
+            // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height, rotation angle
             Shape shape = worksheet.Shapes.AddRectangle(1, 0, 0, 100, 200, 0);
 
-            // ---------- Retrieve connection points ----------
-            float[][] connectionPoints = shape.GetConnectionPoints();
+            // Retrieve the connection points of the shape
+            float[][] actualPoints = shape.GetConnectionPoints();
 
-            // Convert retrieved points to a list of PointModel for easier comparison
-            List<PointModel> actualPoints = new List<PointModel>();
-            foreach (float[] pt in connectionPoints)
-            {
-                if (pt.Length >= 2)
-                {
-                    actualPoints.Add(new PointModel { X = pt[0], Y = pt[1] });
-                }
-            }
-
-            // ---------- Load baseline points from JSON ----------
-            // Expected JSON format: [{ "X": 0.0, "Y": 0.0 }, { "X": 100.0, "Y": 0.0 }, ...]
+            // Load baseline connection points from a JSON file (baseline.json)
+            // Expected JSON format: { "points": [ [x1, y1], [x2, y2], ... ] }
             string jsonPath = "baseline.json";
             if (!File.Exists(jsonPath))
             {
-                Console.WriteLine($"Baseline file not found: {jsonPath}");
+                Console.WriteLine($"Baseline file '{jsonPath}' not found.");
                 return;
             }
 
             string jsonContent = File.ReadAllText(jsonPath);
-            List<PointModel> baselinePoints = JsonSerializer.Deserialize<List<PointModel>>(jsonContent);
+            JsonDocument doc = JsonDocument.Parse(jsonContent);
+            JsonElement root = doc.RootElement;
 
-            // ---------- Compare actual points with baseline ----------
+            // Parse baseline points
+            JsonElement pointsElement = root.GetProperty("points");
+            float[][] baselinePoints = new float[pointsElement.GetArrayLength()][];
+            int idx = 0;
+            foreach (JsonElement point in pointsElement.EnumerateArray())
+            {
+                float x = point[0].GetSingle();
+                float y = point[1].GetSingle();
+                baselinePoints[idx++] = new float[] { x, y };
+            }
+
+            // Compare actual points with baseline points
             const float tolerance = 0.001f; // allowable difference
             bool allMatch = true;
 
-            if (baselinePoints == null || baselinePoints.Count != actualPoints.Count)
+            if (actualPoints.Length != baselinePoints.Length)
             {
+                Console.WriteLine($"Point count mismatch: actual={actualPoints.Length}, baseline={baselinePoints.Length}");
                 allMatch = false;
-                Console.WriteLine("Point count mismatch between actual and baseline.");
             }
             else
             {
-                for (int i = 0; i < baselinePoints.Count; i++)
+                for (int i = 0; i < actualPoints.Length; i++)
                 {
-                    float dx = Math.Abs(baselinePoints[i].X - actualPoints[i].X);
-                    float dy = Math.Abs(baselinePoints[i].Y - actualPoints[i].Y);
-                    if (dx > tolerance || dy > tolerance)
+                    float actualX = actualPoints[i][0];
+                    float actualY = actualPoints[i][1];
+                    float expectedX = baselinePoints[i][0];
+                    float expectedY = baselinePoints[i][1];
+
+                    bool xMatch = Math.Abs(actualX - expectedX) <= tolerance;
+                    bool yMatch = Math.Abs(actualY - expectedY) <= tolerance;
+
+                    if (!xMatch || !yMatch)
                     {
+                        Console.WriteLine($"Point {i + 1} mismatch: actual=({actualX}, {actualY}) vs expected=({expectedX}, {expectedY})");
                         allMatch = false;
-                        Console.WriteLine($"Mismatch at point {i + 1}: Expected ({baselinePoints[i].X}, {baselinePoints[i].Y}) " +
-                                          $"but got ({actualPoints[i].X}, {actualPoints[i].Y})");
                     }
                 }
             }
 
-            Console.WriteLine(allMatch ? "All connection points match the baseline." : "Connection points do not match the baseline.");
+            if (allMatch)
+            {
+                Console.WriteLine("All connection points match the baseline.");
+            }
 
-            // ---------- Save the workbook (optional) ----------
-            workbook.Save("ShapeConnectionPointsDemo.xlsx");
+            // Save the workbook (optional, demonstrates lifecycle usage)
+            workbook.Save("ShapeConnectionPoints.xlsx");
         }
     }
 }

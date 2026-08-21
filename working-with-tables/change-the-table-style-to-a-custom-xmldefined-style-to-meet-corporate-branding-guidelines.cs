@@ -1,31 +1,30 @@
-// Title: Apply Corporate Branding with a Custom Table Style in Aspose.Cells for .NET
-// Description: Creates a workbook, fills sample data, defines a TableStyle named "CorporateBrandStyle" (header, first column, whole‑table formatting), adds a ListObject, applies the style, and saves as CorporateTableStyle.xlsx using the Aspose.Cells C# API.
-// Keywords: Aspose.Cells | C# | custom TableStyle | Excel table branding | TableStyleElements | ListObject | header row formatting | first column style | table borders | CorporateBrandStyle
-// Common Searches: Aspose.Cells create custom table style .NET | apply corporate colors to Excel table using Aspose.Cells | set header row style with TableStyleElements | format first column of a ListObject in C# | add thin gray borders to whole table Aspose.Cells | save styled workbook as xlsx with Aspose.Cells
-// Developer Intent: Generate and apply a branded TableStyle to an Excel table programmatically.
-// Use Cases: Standardize report tables to match company visual identity | Highlight key identifier column with bold text and brand‑color fill | Provide consistent thin gray grid lines across all table cells | Reuse the same style across multiple worksheets or workbooks
-// AI Prompts: Write C# code that creates a TableStyle called 'CorporateBrandStyle' with a bold white header on a corporate blue background, a light‑blue first column, and thin gray borders for the whole table, then applies it to a ListObject. | Explain how to extend the custom TableStyle to include a total row with a distinct background and summary formulas. | Show how to export the workbook containing the styled table to PDF while preserving the custom TableStyle using Aspose.Cells. | Provide a step‑by‑step guide to modify the custom style colors via XML definition instead of code.
+// Title: Create and Apply a Custom XML‑Defined TableStyle in C# with Aspose.Cells for .NET
+// Description: This example demonstrates how to generate a workbook, fill a 5‑column × 10‑row range, define a new TableStyle called "CorporateBrandStyle" using Aspose.Cells' TableStyleCollection, configure header, first‑column, and whole‑table elements (background colors, font attributes, thin borders), create a ListObject from the data range, apply the custom style, enable first‑column formatting, and save the result as CorporateTableStyle.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | custom TableStyle | XML defined table style | Excel table branding | ListObject styling | TableStyleCollection | programmatic Excel formatting | corporate Excel template
+// Common Searches: Aspose.Cells create custom TableStyle C# | apply XML defined table style Aspose.Cells | set header row color in Aspose.Cells table | add thin borders to whole table Aspose.Cells | brand Excel tables with custom style using Aspose
+// Developer Intent: Generate a reusable, brand‑compliant TableStyle in code and apply it to a worksheet table.
+// Use Cases: Produce quarterly financial reports with a dark‑blue header and white bold text that matches corporate guidelines. | Export sales dashboards where the first column is highlighted in light gray for quick row identification. | Create standardized Excel templates that enforce thin borders and a uniform font size across all tables.
+// AI Prompts: Write C# code that loads an XML‑defined TableStyle and assigns it to a ListObject using Aspose.Cells. | Show how to modify the HeaderRow element of an existing TableStyle to change its font size and background color. | Explain the steps to programmatically add a custom TableStyle, enable ShowTableStyleFirstColumn, and save the workbook with Aspose.Cells.
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Creates a workbook, fills sample data, defines a TableStyle named "CorporateBrandStyle" (header, first column, whole‑table formatting), adds a ListObject, applies the style, and saves as CorporateTableStyle.xlsx using the Aspose.Cells C# API.
-class Program
+// This example demonstrates how to generate a workbook, fill a 5‑column × 10‑row range, define a new TableStyle called "CorporateBrandStyle" using Aspose.Cells' TableStyleCollection, configure header, first‑column, and whole‑table elements (background colors, font attributes, thin borders), create a ListObject from the data range, apply the custom style, enable first‑column formatting, and save the result as CorporateTableStyle.xlsx.
+class CorporateTableStyleDemo
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle rule)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet and its cells
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate sample data (5 columns, 10 data rows)
+            // Populate sample data (5 columns, 10 rows of data)
             for (int col = 0; col < 5; col++)
             {
                 cells[0, col].PutValue($"Header {col + 1}");
@@ -38,63 +37,58 @@ class Program
                 }
             }
 
-            // Define a custom table style name that follows corporate branding
-            string customStyleName = "CorporateBrandStyle";
+            // ------------------------------------------------------------
+            // Create a custom table style that follows corporate branding
+            // ------------------------------------------------------------
+            string styleName = "CorporateBrandStyle";
 
-            // Access the table style collection (rule: TableStyleCollection)
+            // Access the table style collection and add a new style
             TableStyleCollection tableStyles = workbook.Worksheets.TableStyles;
-
-            // Add a new custom table style (rule: AddTableStyle)
-            int styleIndex = tableStyles.AddTableStyle(customStyleName);
+            int styleIndex = tableStyles.AddTableStyle(styleName);
             TableStyle customStyle = tableStyles[styleIndex];
+            TableStyleElementCollection elements = customStyle.TableStyleElements;
 
-            // ----- Header Row Style -----
-            Style headerStyle = workbook.CreateStyle(); // rule: CreateStyle
-            headerStyle.Font.IsBold = true;
-            headerStyle.Font.Color = Color.White;
+            // Header row style: dark blue background, white bold font
+            Style headerStyle = workbook.CreateStyle();
             headerStyle.Pattern = BackgroundType.Solid;
-            headerStyle.ForegroundColor = Color.FromArgb(0, 112, 192); // corporate blue
+            headerStyle.BackgroundColor = Color.DarkBlue;
+            headerStyle.Font.Color = Color.White;
+            headerStyle.Font.IsBold = true;
+            headerStyle.Font.Size = 12;
+            elements.Add(TableStyleElementType.HeaderRow);
+            elements[TableStyleElementType.HeaderRow].SetElementStyle(headerStyle);
 
-            // Set the style for the header row element (rule: SetElementStyle)
-            TableStyleElement headerElement = customStyle.TableStyleElements[TableStyleElementType.HeaderRow];
-            headerElement.SetElementStyle(headerStyle);
-
-            // ----- First Column Style -----
+            // First column style: light gray background
             Style firstColStyle = workbook.CreateStyle();
-            firstColStyle.Font.IsBold = true;
             firstColStyle.Pattern = BackgroundType.Solid;
-            firstColStyle.ForegroundColor = Color.FromArgb(221, 235, 247); // light corporate blue
+            firstColStyle.BackgroundColor = Color.LightGray;
+            elements.Add(TableStyleElementType.FirstColumn);
+            elements[TableStyleElementType.FirstColumn].SetElementStyle(firstColStyle);
 
-            TableStyleElement firstColElement = customStyle.TableStyleElements[TableStyleElementType.FirstColumn];
-            firstColElement.SetElementStyle(firstColStyle);
-
-            // ----- Whole Table Style (borders) -----
+            // Whole table style: thin borders and standard font size
             Style wholeTableStyle = workbook.CreateStyle();
-            wholeTableStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-            wholeTableStyle.Borders[BorderType.BottomBorder].Color = Color.Gray;
-            wholeTableStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-            wholeTableStyle.Borders[BorderType.TopBorder].Color = Color.Gray;
+            wholeTableStyle.Font.Size = 11;
             wholeTableStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-            wholeTableStyle.Borders[BorderType.LeftBorder].Color = Color.Gray;
             wholeTableStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
-            wholeTableStyle.Borders[BorderType.RightBorder].Color = Color.Gray;
+            wholeTableStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+            wholeTableStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+            elements.Add(TableStyleElementType.WholeTable);
+            elements[TableStyleElementType.WholeTable].SetElementStyle(wholeTableStyle);
 
-            TableStyleElement wholeTableElement = customStyle.TableStyleElements[TableStyleElementType.WholeTable];
-            wholeTableElement.SetElementStyle(wholeTableStyle);
-
-            // Create a table that covers the populated range
-            int totalRows = 11; // header + 10 data rows
-            int totalCols = 5;
-            int tableIndex = sheet.ListObjects.Add(0, 0, totalRows - 1, totalCols - 1, true);
+            // ------------------------------------------------------------
+            // Create a table from the data range and apply the custom style
+            // ------------------------------------------------------------
+            int tableIndex = sheet.ListObjects.Add(0, 0, 10, 4, true);
             ListObject table = sheet.ListObjects[tableIndex];
 
-            // Apply the custom style to the table (rule: TableStyleName property)
-            table.TableStyleName = customStyleName;
-            table.ShowTableStyleFirstColumn = true;
-            // Header row is already displayed because the table was created with hasHeaders = true
+            table.TableStyleName = styleName;               // Apply custom style
+            table.ShowTableStyleFirstColumn = true;         // Show first column formatting
+            // Header row formatting is automatically applied; no explicit property needed.
 
-            // Save the workbook (lifecycle rule)
-            workbook.Save("CorporateTableStyle.xlsx");
+            // Save the workbook with the styled table
+            string outputPath = "CorporateTableStyle.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

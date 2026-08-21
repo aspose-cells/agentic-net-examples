@@ -1,10 +1,10 @@
-// Title: Add a Second Digital Signature to an Existing Excel Workbook with Aspose.Cells for .NET
-// Description: Load a signed .xlsx file, retrieve its DigitalSignatureCollection, create a new DigitalSignature from a second X509Certificate2 (.pfx), append it, save the workbook, then reload and enumerate the signatures to confirm both the original and new signatures are present and valid.
-// Keywords: Aspose.Cells | C# digital signature | multiple Excel signatures | add second signature .NET | X509Certificate2 pfx | DigitalSignatureCollection | verify Excel signatures | programmatic signing Excel | Excel workbook security
-// Common Searches: add another digital signature to a signed Excel file Aspose.Cells | verify multiple signatures in an .xlsx using C# | append second X509 certificate to Excel workbook | count digital signatures in Excel with Aspose.Cells | preserve existing signatures when adding a new one
-// Developer Intent: Programmatically add a second X509‑based digital signature to an already signed Excel workbook and ensure both signatures remain after saving.
-// Use Cases: Add an approver’s signature to a contract workbook that already contains a manager’s signature, maintaining a complete audit trail. | Insert a timestamp signature into a financial report that was previously signed, then validate that the file now holds at least two signatures. | Automate multi‑step signing workflows by loading a signed workbook, applying an additional certificate, and confirming the total signature count for compliance.
-// AI Prompts: Generate C# code using Aspose.Cells to load a signed .xlsx, add a new digital signature from a .pfx file, and save the file while keeping existing signatures. | Write a method that returns true if an Excel workbook contains two or more digital signatures, using Aspose.Cells in .NET. | Explain error handling for loading X509 certificates and how to validate each signature after adding multiple digital signatures with Aspose.Cells.
+// Title: Add a Second Digital Signature to an Already Signed Excel Workbook Using Aspose.Cells for .NET
+// Description: This C# example shows how to load an Excel file that already contains a digital signature, create a new DigitalSignature from a PFX certificate, add it to the existing DigitalSignatureCollection, save the workbook, and then reload it to confirm that both signatures are retained and valid. The code demonstrates signature preservation, counting, and detailed output of each signature's comment, timestamp, and validation status.
+// Keywords: Aspose.Cells | digital signature | multiple signatures | add second signature | verify Excel signatures | C# | .NET | Excel workbook signing | DigitalSignatureCollection | PFX certificate | preserve existing signatures | Xlsx digital signature
+// Common Searches: how to add another digital signature to a signed Excel file using Aspose.Cells | Aspose.Cells C# add multiple digital signatures to .xlsx | verify multiple digital signatures in an Excel workbook .NET | preserve existing signature when adding a new one Aspose.Cells | count digital signatures in an Excel file with Aspose.Cells
+// Developer Intent: Add a second digital signature to a workbook that is already signed and confirm that both signatures remain after saving.
+// Use Cases: Create a contract workbook signed by a client, then programmatically append a manager’s signature for multi‑party approval. | Add an audit‑trail timestamp signature to a financial report after the accounting department’s signature, while keeping the original signature intact. | Automate compliance checks by enumerating and displaying all digital signatures in a workbook before distribution.
+// AI Prompts: Generate C# code with Aspose.Cells to add a third digital signature to an already signed Excel workbook and return the total signature count. | Explain how to validate each signature’s IsValid property after loading a signed workbook with Aspose.Cells. | Provide a method to remove a specific digital signature from an Excel file while preserving the remaining signatures using Aspose.Cells.
 
 using System;
 using System.IO;
@@ -14,99 +14,89 @@ using Aspose.Cells.DigitalSignatures;
 
 namespace AsposeCellsDigitalSignatureDemo
 {
-    // Load a signed .xlsx file, retrieve its DigitalSignatureCollection, create a new DigitalSignature from a second X509Certificate2 (.pfx), append it, save the workbook, then reload and enumerate the signatures to confirm both the original and new signatures are present and valid.
-    public class AddSecondSignature
+    // This C# example shows how to load an Excel file that already contains a digital signature, create a new DigitalSignature from a PFX certificate, add it to the existing DigitalSignatureCollection, save the workbook, and then reload it to confirm that both signatures are retained and valid. The code demonstrates signature preservation, counting, and detailed output of each signature's comment, timestamp, and validation status.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
             try
             {
-                Run();
+                // Paths for the original signed workbook, the certificate, and the output workbook
+                string signedWorkbookPath = "SignedWorkbook.xlsx";          // already contains one signature
+                string certificatePath = "certificate.pfx";                // certificate file
+                string certificatePassword = "password";                   // certificate password
+                string outputWorkbookPath = "SignedWorkbook_WithTwoSignatures.xlsx";
+
+                // Verify input files exist
+                if (!File.Exists(signedWorkbookPath))
+                {
+                    Console.WriteLine($"Error: Workbook file not found: {signedWorkbookPath}");
+                    return;
+                }
+
+                if (!File.Exists(certificatePath))
+                {
+                    Console.WriteLine($"Error: Certificate file not found: {certificatePath}");
+                    return;
+                }
+
+                // Load the already signed workbook
+                Workbook workbook = new Workbook(signedWorkbookPath);
+                Console.WriteLine("Initially digitally signed: " + workbook.IsDigitallySigned);
+
+                // Load the certificate to be used for the second signature
+                X509Certificate2 certificate = new X509Certificate2(certificatePath, certificatePassword, X509KeyStorageFlags.MachineKeySet);
+
+                // Create the second digital signature
+                DigitalSignature secondSignature = new DigitalSignature(
+                    certificate,
+                    "Second signature added by Aspose.Cells",
+                    DateTime.Now);
+
+                // Add the new signature to the workbook (existing signatures are preserved)
+                DigitalSignatureCollection signatureCollection = new DigitalSignatureCollection();
+                signatureCollection.Add(secondSignature);
+                workbook.AddDigitalSignature(signatureCollection);
+
+                // Save the workbook – the updated collection (now containing two signatures) is persisted
+                workbook.Save(outputWorkbookPath, SaveFormat.Xlsx);
+
+                // Load the saved workbook to confirm both signatures are present
+                Workbook verificationWorkbook = new Workbook(outputWorkbookPath);
+                DigitalSignatureCollection loadedSignatures = verificationWorkbook.GetDigitalSignature();
+
+                Console.WriteLine("After adding second signature, digitally signed: " + verificationWorkbook.IsDigitallySigned);
+                Console.WriteLine("Number of digital signatures present: " + (loadedSignatures != null ? CountSignatures(loadedSignatures) : 0));
+
+                // Display details of each signature
+                if (loadedSignatures != null)
+                {
+                    int index = 1;
+                    foreach (DigitalSignature sig in loadedSignatures)
+                    {
+                        Console.WriteLine($"Signature {index}:");
+                        Console.WriteLine($"  Comments : {sig.Comments}");
+                        Console.WriteLine($"  Sign Time: {sig.SignTime}");
+                        Console.WriteLine($"  Is Valid : {sig.IsValid}");
+                        index++;
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
 
-        public static void Run()
+        // Helper method to count signatures in the collection
+        private static int CountSignatures(DigitalSignatureCollection collection)
         {
-            // Paths to the original signed workbook and the certificate files
-            string signedWorkbookPath = "SignedWorkbook.xlsx";
-            string certificatePath1 = "cert1.pfx"; // not used in this demo but kept for reference
-            string certificatePath2 = "cert2.pfx";
-            string certificatePassword = "1234567890";
-
-            // Verify that the signed workbook exists
-            if (!File.Exists(signedWorkbookPath))
+            int count = 0;
+            foreach (DigitalSignature _ in collection)
             {
-                Console.WriteLine($"Workbook file not found: {signedWorkbookPath}");
-                return;
+                count++;
             }
-
-            // Verify that the second certificate exists
-            if (!File.Exists(certificatePath2))
-            {
-                Console.WriteLine($"Certificate file not found: {certificatePath2}");
-                return;
-            }
-
-            // Load the already signed workbook
-            Workbook workbook = new Workbook(signedWorkbookPath);
-
-            // Retrieve the existing digital signature collection (may be null if none)
-            DigitalSignatureCollection signatureCollection = workbook.GetDigitalSignature();
-            if (signatureCollection == null)
-            {
-                signatureCollection = new DigitalSignatureCollection();
-            }
-
-            // Load the second certificate
-            X509Certificate2 secondCertificate;
-            try
-            {
-                // Use Import to avoid obsolete constructor warning
-                byte[] certData = File.ReadAllBytes(certificatePath2);
-                secondCertificate = new X509Certificate2(certData, certificatePassword);
-            }
-            catch (Exception certEx)
-            {
-                Console.WriteLine($"Failed to load certificate: {certEx.Message}");
-                return;
-            }
-
-            // Create a new digital signature using the second certificate
-            DigitalSignature secondSignature = new DigitalSignature(
-                secondCertificate,
-                "Second signature added by Aspose.Cells",
-                DateTime.Now);
-
-            // Add the new signature to the collection
-            signatureCollection.Add(secondSignature);
-
-            // Apply the updated collection back to the workbook
-            workbook.SetDigitalSignature(signatureCollection);
-
-            // Save the workbook with the additional signature
-            string outputPath = "SignedWorkbook_WithSecondSignature.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved with second signature: {outputPath}");
-
-            // Verify that both signatures persist by reloading the file and counting signatures
-            Workbook verificationWorkbook = new Workbook(outputPath);
-            DigitalSignatureCollection verificationCollection = verificationWorkbook.GetDigitalSignature();
-
-            int signatureCount = 0;
-            if (verificationCollection != null)
-            {
-                foreach (DigitalSignature sig in verificationCollection)
-                {
-                    signatureCount++;
-                    Console.WriteLine($"Signature {signatureCount}: Comments = {sig.Comments}, SignTime = {sig.SignTime}, IsValid = {sig.IsValid}");
-                }
-            }
-
-            Console.WriteLine($"Total digital signatures after adding second one: {signatureCount}");
+            return count;
         }
     }
 }

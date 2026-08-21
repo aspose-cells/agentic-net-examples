@@ -1,81 +1,74 @@
-// Title: Benchmark HtmlCrossType.Cross vs Default for Large HTML Export in Aspose.Cells .NET
-// Description: This C# example builds a 10,000‑row, 5‑column workbook filled with overflow strings, saves it twice—once with HtmlSaveOptions.HtmlCrossStringType set to Default and once to Cross—and reports the elapsed milliseconds. Use it to verify whether the Cross option speeds up HTML conversion for massive worksheets.
-// Keywords: Aspose.Cells HtmlCrossType performance | HtmlCrossType.Cross speed | HTML export large workbook .NET | Aspose.Cells benchmark HTML save | Cross vs Default HtmlCrossStringType
-// Common Searches: Aspose.Cells HtmlCrossType.Cross performance test | HTML export speed comparison Default vs Cross | benchmark large worksheet HTML save Aspose | does HtmlCrossType.Cross improve export time | measure Aspose.Cells HTML conversion latency
-// Developer Intent: Determine if setting HtmlCrossStringType to Cross reduces the time required to export a workbook with thousands of rows to HTML.
-// Use Cases: Run a quick performance test before selecting the HtmlCrossStringType for a production reporting service. | Validate the benefit of the Cross option when generating HTML reports from datasets that cause cell overflow. | Provide empirical data for capacity planning of a web API that repeatedly converts large spreadsheets to HTML.
-// AI Prompts: Generate C# code that repeats the HTML save with HtmlCrossType.Cross 10 times and calculates the average duration. | Explain how HtmlCrossType.Cross handles overflow text and why it can be faster than the Default mode. | Create a snippet that logs both Default and Cross export times to a CSV file for later analysis.
+// Title: HtmlCrossType.Cross vs Default: Speed Test for Exporting a 100k‑row Workbook to HTML with Aspose.Cells .NET
+// Description: Generates a workbook of 100,000 rows and 5 columns filled with long strings, saves it twice—once using HtmlCrossStringType.Default and once using HtmlCrossStringType.Cross—while measuring the elapsed time for each export.
+// Keywords: Aspose.Cells | HtmlCrossType | Cross mode | Default mode | HTML export performance | large workbook | C# benchmark | Excel to HTML conversion | rendering speed | .NET
+// Common Searches: Aspose.Cells HtmlCrossType performance test | HTML export speed for 100k rows Aspose.Cells | Does HtmlCrossStringType.Cross speed up large Excel to HTML conversion | Benchmark HtmlCrossStringType options in .NET | Fast HTML rendering of massive worksheets with Aspose.Cells
+// Developer Intent: Find out if switching to the Cross setting shortens the time required to produce HTML from a very large worksheet compared with the default configuration.
+// Use Cases: Select the best cross‑string handling mode for high‑volume reporting dashboards. | Meet latency targets in web apps that serve extensive spreadsheets as HTML. | Compare memory and CPU usage of different HtmlCrossStringType values during bulk export.
+// AI Prompts: Write a C# program that creates a workbook with 150,000 rows, exports it to HTML using both HtmlCrossStringType.Default and HtmlCrossStringType.Cross, and prints a side‑by‑side performance summary. | Explain the internal differences between the Default and Cross modes for handling overflow text in Aspose.Cells HTML conversion. | Recommend additional HtmlSaveOptions (e.g., ExportActiveWorksheetOnly, MaxRowsPerPage) that can further accelerate HTML export of very large workbooks.
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPerformanceDemo
+namespace AsposeCellsHtmlCrossTypePerformanceDemo
 {
-    // This C# example builds a 10,000‑row, 5‑column workbook filled with overflow strings, saves it twice—once with HtmlSaveOptions.HtmlCrossStringType set to Default and once to Cross—and reports the elapsed milliseconds. Use it to verify whether the Cross option speeds up HTML conversion for massive worksheets.
-    public class HtmlCrossTypePerformance
+    // Generates a workbook of 100,000 rows and 5 columns filled with long strings, saves it twice—once using HtmlCrossStringType.Default and once using HtmlCrossStringType.Cross—while measuring the elapsed time for each export.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+            // Number of rows to simulate a large workbook
+            const int totalRows = 100_000;
+            const int totalColumns = 5;
 
-                // Populate the worksheet with a large amount of data (e.g., 10,000 rows, 5 columns)
-                int totalRows = 10000;
-                int totalColumns = 5;
-                for (int row = 0; row < totalRows; row++)
+            // ------------------------------------------------------------
+            // Create a workbook and populate it with sample data
+            // ------------------------------------------------------------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            for (int row = 0; row < totalRows; row++)
+            {
+                for (int col = 0; col < totalColumns; col++)
                 {
-                    for (int col = 0; col < totalColumns; col++)
-                    {
-                        // Use a string that will overflow the cell width to trigger cross‑cell behavior
-                        cells[row, col].PutValue($"Row{row}_Col{col}_LongTextThatWillOverflow");
-                    }
+                    // Put a string that will normally overflow the cell width
+                    cells[row, col].PutValue($"Row{row}_Col{col}_LongTextThatWillCrossCells");
                 }
-
-                // Prepare HTML save options with the default cross type (Default)
-                HtmlSaveOptions defaultOptions = new HtmlSaveOptions
-                {
-                    HtmlCrossStringType = HtmlCrossType.Default
-                };
-
-                // Measure time for saving with Default cross type
-                Stopwatch swDefault = Stopwatch.StartNew();
-                workbook.Save("LargeWorkbook_Default.html", defaultOptions);
-                swDefault.Stop();
-
-                // Prepare HTML save options with the performance‑optimized Cross type
-                HtmlSaveOptions crossOptions = new HtmlSaveOptions
-                {
-                    HtmlCrossStringType = HtmlCrossType.Cross
-                };
-
-                // Measure time for saving with Cross cross type
-                Stopwatch swCross = Stopwatch.StartNew();
-                workbook.Save("LargeWorkbook_Cross.html", crossOptions);
-                swCross.Stop();
-
-                // Output the measured times
-                Console.WriteLine($"Saving with HtmlCrossType.Default took: {swDefault.ElapsedMilliseconds} ms");
-                Console.WriteLine($"Saving with HtmlCrossType.Cross   took: {swCross.ElapsedMilliseconds} ms");
-                Console.WriteLine("Performance improvement can be observed if the Cross option is faster.");
             }
-            catch (Exception ex)
+
+            // ------------------------------------------------------------
+            // Save with the default HtmlCrossStringType (Default) and measure time
+            // ------------------------------------------------------------
+            HtmlSaveOptions defaultOptions = new HtmlSaveOptions
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
+                // Default value is HtmlCrossType.Default; set explicitly for clarity
+                HtmlCrossStringType = HtmlCrossType.Default
+            };
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            HtmlCrossTypePerformance.Run();
+            Stopwatch sw = Stopwatch.StartNew();
+            workbook.Save("LargeWorkbook_Default.html", defaultOptions);
+            sw.Stop();
+            Console.WriteLine($"Saving with HtmlCrossType.Default took: {sw.ElapsedMilliseconds} ms");
+
+            // ------------------------------------------------------------
+            // Save with HtmlCrossStringType.Cross and measure time
+            // ------------------------------------------------------------
+            HtmlSaveOptions crossOptions = new HtmlSaveOptions
+            {
+                HtmlCrossStringType = HtmlCrossType.Cross
+            };
+
+            sw.Restart();
+            workbook.Save("LargeWorkbook_Cross.html", crossOptions);
+            sw.Stop();
+            Console.WriteLine($"Saving with HtmlCrossType.Cross took: {sw.ElapsedMilliseconds} ms");
+
+            // ------------------------------------------------------------
+            // Cleanup
+            // ------------------------------------------------------------
+            workbook.Dispose();
         }
     }
 }

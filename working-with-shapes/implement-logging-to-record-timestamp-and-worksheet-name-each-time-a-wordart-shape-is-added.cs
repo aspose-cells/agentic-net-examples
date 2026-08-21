@@ -1,10 +1,10 @@
 // Title: Log Timestamp and Worksheet Name When Adding WordArt Shapes with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add WordArt shapes, and automatically record each addition with a timestamp and the worksheet name in a text log before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | WordArt | shape logging | timestamp | worksheet name | Excel automation | AddWordArt | log to file | audit trail
-// Common Searches: Aspose.Cells log WordArt creation | C# record worksheet name when adding shape | timestamp logging for WordArt in .NET | write shape addition details to file Aspose.Cells | how to audit WordArt objects in Excel using Aspose
-// Developer Intent: Add WordArt shapes and automatically write a log entry with the current date‑time and worksheet name for each shape.
-// Use Cases: Maintain an audit trail of WordArt objects for compliance reporting. | Debug shape placement by reviewing a chronological log of additions across worksheets. | Export a summary of WordArt content and locations for downstream processing.
-// AI Prompts: Generate C# code that logs any Aspose.Cells shape (e.g., pictures, charts) with timestamp, worksheet name, and shape type. | Show how to extend the logging method to include cell coordinates and output the log in CSV format. | Explain how to implement thread‑safe logging when adding WordArt shapes concurrently in a multi‑threaded Aspose.Cells application.
+// Description: C# example that creates a workbook, adds WordArt shapes, and writes a log entry containing the current date‑time and the worksheet name each time a shape is inserted. The log is saved to a text file and the workbook is stored as an XLSX file.
+// Keywords: Aspose.Cells | C# | .NET | WordArt | shape logging | timestamp | worksheet name | audit trail | Excel automation | log file
+// Common Searches: Aspose.Cells log WordArt addition | C# record worksheet name when adding WordArt | timestamp logging for Excel shapes Aspose | how to write shape events to a file with Aspose.Cells | track WordArt creation in .NET workbook
+// Developer Intent: Insert WordArt shapes into a worksheet and automatically append a log entry with the current timestamp and the worksheet's name for each insertion.
+// Use Cases: Maintain an audit trail of WordArt objects for compliance or review. | Debug shape placement by correlating timestamps with worksheet identifiers. | Generate usage statistics of WordArt across multiple generated workbooks.
+// AI Prompts: Create a generic logging method that records timestamp, worksheet name, and shape type for any Aspose.Cells shape. | Show how to switch the log output from a plain text file to a rotating log file or a database connection. | Write unit tests that verify the log contains correct entries after adding WordArt shapes.
 
 using System;
 using System.IO;
@@ -13,7 +13,7 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsWordArtLogging
 {
-    // Demonstrates how to create a workbook, add WordArt shapes, and automatically record each addition with a timestamp and the worksheet name in a text log before saving the file.
+    // C# example that creates a workbook, adds WordArt shapes, and writes a log entry containing the current date‑time and the worksheet name each time a shape is inserted. The log is saved to a text file and the workbook is stored as an XLSX file.
     class Program
     {
         // Path to the log file
@@ -21,6 +21,9 @@ namespace AsposeCellsWordArtLogging
 
         static void Main()
         {
+            // Ensure the log file is empty at start
+            File.WriteAllText(LogFilePath, string.Empty);
+
             // Create a new workbook
             Workbook workbook = new Workbook();
 
@@ -28,61 +31,39 @@ namespace AsposeCellsWordArtLogging
             Worksheet worksheet = workbook.Worksheets[0];
             worksheet.Name = "DataSheet";
 
-            // Ensure the log file is empty at start
-            File.WriteAllText(LogFilePath, string.Empty);
-
-            // Add a WordArt shape and log the operation
-            AddWordArtWithLogging(
-                worksheet,
-                PresetWordArtStyle.WordArtStyle2,
-                "Hello Aspose!",
-                topRow: 2,
-                top: 0,
-                leftColumn: 2,
-                left: 0,
-                height: 100,
-                width: 400);
-
-            // Add another WordArt shape to demonstrate multiple logs
-            AddWordArtWithLogging(
-                worksheet,
-                PresetWordArtStyle.WordArtStyle5,
-                "Second WordArt",
-                topRow: 5,
-                top: 0,
-                leftColumn: 5,
-                left: 0,
-                height: 120,
-                width: 450);
+            // Add a few WordArt shapes and log each addition
+            AddWordArtWithLogging(worksheet, PresetWordArtStyle.WordArtStyle1, "First WordArt", 1, 0, 1, 0, 100, 400);
+            AddWordArtWithLogging(worksheet, PresetWordArtStyle.WordArtStyle3, "Second WordArt", 5, 0, 5, 0, 120, 450);
+            AddWordArtWithLogging(worksheet, PresetWordArtStyle.WordArtStyle5, "Third WordArt", 10, 0, 10, 0, 150, 500);
 
             // Save the workbook
             workbook.Save("WordArtWithLogging.xlsx");
         }
 
-        private static void AddWordArtWithLogging(
-            Worksheet worksheet,
-            PresetWordArtStyle style,
-            string text,
-            int topRow,
-            int top,
-            int leftColumn,
-            int left,
-            int height,
-            int width)
+        /// <param name="worksheet">Target worksheet.</param>
+        /// <param name="style">Preset WordArt style.</param>
+        /// <param name="text">Text for the WordArt.</param>
+        /// <param name="topRow">Upper left row index.</param>
+        /// <param name="top">Vertical offset in pixels.</param>
+        /// <param name="leftColumn">Upper left column index.</param>
+        /// <param name="left">Horizontal offset in pixels.</param>
+        /// <param name="height">Height in pixels.</param>
+        /// <param name="width">Width in pixels.</param>
+        private static void AddWordArtWithLogging(Worksheet worksheet,
+                                                   PresetWordArtStyle style,
+                                                   string text,
+                                                   int topRow,
+                                                   int top,
+                                                   int leftColumn,
+                                                   int left,
+                                                   int height,
+                                                   int width)
         {
             // Add the WordArt shape
-            Shape wordArt = worksheet.Shapes.AddWordArt(
-                style,
-                text,
-                topRow,
-                top,
-                leftColumn,
-                left,
-                height,
-                width);
+            Shape wordArt = worksheet.Shapes.AddWordArt(style, text, topRow, top, leftColumn, left, height, width);
 
             // Prepare log entry with timestamp and worksheet name
-            string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}\tWorksheet: {worksheet.Name}\tShape: {text}";
+            string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Added WordArt to worksheet '{worksheet.Name}'";
 
             // Append the log entry to the log file
             File.AppendAllText(LogFilePath, logEntry + Environment.NewLine);

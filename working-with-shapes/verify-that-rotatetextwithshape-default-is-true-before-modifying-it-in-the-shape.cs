@@ -1,17 +1,17 @@
-// Title: Verify and Change RotateTextWithShape for a Text Box Shape in Aspose.Cells .NET
-// Description: Shows how to create a workbook, add a text box shape, read the default RotateTextWithShape flag (expected true), log the value, set it to false when desired, and save the workbook.
-// Keywords: Aspose.Cells | RotateTextWithShape | ShapeTextAlignment | text box rotation | C# example | default property value | Excel shape text orientation
-// Common Searches: Aspose.Cells check RotateTextWithShape default | disable RotateTextWithShape for a shape | ShapeTextAlignment RotateTextWithShape C# | how to turn off text rotation in Aspose.Cells shapes | Aspose.Cells text box rotation example
-// Developer Intent: Determine the initial RotateTextWithShape setting of a shape and programmatically switch it off if required.
-// Use Cases: Confirm default text rotation before applying custom orientation in generated reports. | Keep shape text horizontal when exporting data to Excel. | Toggle text rotation based on user preferences during workbook creation.
-// AI Prompts: Write C# code that reads the RotateTextWithShape flag of a ShapeTextAlignment object, prints the value, and sets it to false. | Provide an Aspose.Cells .NET snippet that adds a text box, logs the default RotateTextWithShape state, disables it, and saves the file. | Explain the effect of RotateTextWithShape on shape text rendering and how to modify it via the API.
+// Title: Check and Change RotateTextWithShape for a TextBox Shape in Aspose.Cells (.NET C#)
+// Description: Shows how to create a workbook, insert a TextBox shape, read the ShapeTextAlignment.RotateTextWithShape flag (initially true), toggle it to false when required, and save the workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | RotateTextWithShape | ShapeTextAlignment | TextBox shape | C# example | modify text rotation | Aspose.Cells .NET | shape text orientation | programmatic workbook | default setting true
+// Common Searches: Aspose.Cells default RotateTextWithShape value | how to disable RotateTextWithShape in C# | check ShapeTextAlignment.RotateTextWithShape property | change text rotation for textbox shape Aspose.Cells | example of RotateTextWithShape usage
+// Developer Intent: Verify that RotateTextWithShape is true for a newly added TextBox shape and then set the property to false through code.
+// Use Cases: Confirm orientation before applying custom rotation logic to shapes | Offer a user‑controlled switch to turn off automatic text rotation | Maintain consistent text layout when generating multi‑shape reports | Prepare shapes for PDF export with a fixed text direction
+// AI Prompts: Write C# code with Aspose.Cells that reads the RotateTextWithShape flag of a TextBox shape and changes it to false if it is true. | Explain the effect of ShapeTextAlignment.RotateTextWithShape on text rendering inside a shape and how to modify it. | Provide a step‑by‑step tutorial for updating RotateTextWithShape for every shape in a worksheet using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// Shows how to create a workbook, add a text box shape, read the default RotateTextWithShape flag (expected true), log the value, set it to false when desired, and save the workbook.
+// Shows how to create a workbook, insert a TextBox shape, read the ShapeTextAlignment.RotateTextWithShape flag (initially true), toggle it to false when required, and save the workbook using Aspose.Cells for .NET.
 class VerifyRotateTextWithShape
 {
     static void Main()
@@ -35,7 +35,7 @@ class VerifyRotateTextWithShape
         if (defaultRotate)
         {
             textAlignment.RotateTextWithShape = false;
-            Console.WriteLine("RotateTextWithShape has been set to false.");
+            Console.WriteLine("RotateTextWithShape changed to false.");
         }
 
         // Save the workbook

@@ -1,10 +1,10 @@
-// Title: C# Example: Embed Images in Excel Cells Using Custom {{Image:Key}} Markers with Aspose.Cells
-// Description: Loads image files into a dictionary, inserts {{Image:Key}} placeholders, scans cells, swaps each marker for an EmbeddedImage byte array, saves the workbook, reloads it, and lists cells that retain embedded pictures.
-// Keywords: Aspose.Cells embed image C# | custom image marker | Excel cell embedded picture | byte array image Aspose | load images from folder .NET | replace {{Image:Key}} | EmbeddedImage property | enumerate cells with pictures | C# Excel image marker example | GitHub Aspose.Cells image marker
-// Common Searches: How to replace {{Image:Key}} markers with embedded pictures in Aspose.Cells | Load images from a directory and embed them into specific Excel cells using C# | Enumerate cells that contain embedded images after saving an Aspose.Cells workbook | Aspose.Cells example for custom image providers
-// Developer Intent: Swap {{Image:Key}} placeholders in worksheet cells for images supplied by a custom byte‑array provider.
-// Use Cases: Generate a product catalog where each row displays a logo or icon defined by a {{Image:Key}} marker. | Create a financial report that pulls company logos from a shared folder and embeds them directly into designated cells. | Validate that embedded pictures persist after saving by reloading the workbook and enumerating cells with EmbeddedImage data.
-// AI Prompts: Write a C# method that scans a worksheet for {{Image:Key}} markers and replaces them with EmbeddedImage bytes from a dictionary. | Show how to list all cells containing embedded images in a saved Aspose.Cells workbook. | Explain how to handle missing image keys gracefully when using custom image markers in Aspose.Cells.
+// Title: Aspose.Cells for .NET – Embed Images in Excel Cells via {{Image:Key}} Markers (C#)
+// Description: C# sample that builds a workbook, writes cells containing markers such as {{Image:Logo}}, scans each used cell, extracts the key, retrieves the corresponding byte array from a custom ImageProvider (dictionary, database, or service), assigns the bytes to Cell.EmbeddedImage, optionally clears the placeholder, enumerates cells with embedded pictures, and saves the workbook.
+// Keywords: Aspose.Cells embed image C# | Excel cell image marker | place picture in cell Aspose | ImageProvider byte array | custom {{Image:Key}} syntax | C# load image from dictionary | Cell.EmbeddedImage property | Excel template image replacement | GitHub Aspose.Cells example | AEO image embedding Excel
+// Common Searches: Aspose.Cells replace {{Image:Key}} with picture | C# embed image in Excel cell using byte array | How to use custom image markers in Aspose.Cells | Place picture inside a cell with Aspose.Cells .NET | Load images from dictionary into Excel worksheet
+// Developer Intent: Replace {{Image:Key}} placeholders with binary images in specific Excel cells using Aspose.Cells.
+// Use Cases: Generate product catalogs where each row automatically shows the company logo stored in a database. | Create promotional worksheets that insert banner graphics based on markers defined in a template. | Build financial reports that pull pre‑rendered chart images from a service and embed them into designated cells.
+// AI Prompts: Write a reusable method that scans a worksheet for {{Image:Key}} markers and embeds images from an ImageProvider using Aspose.Cells. | Explain how to modify the example to retrieve image bytes from a SQL Server table instead of local files. | Provide code that extracts all embedded images from a saved workbook and writes them to separate PNG/JPEG files.
 
 using System;
 using System.Collections;
@@ -12,125 +12,117 @@ using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsImageMarkerDemo
+namespace EmbeddedImageDemo
 {
-    // Simple provider that returns image bytes based on a key.
-    // Loads image files into a dictionary, inserts {{Image:Key}} placeholders, scans cells, swaps each marker for an EmbeddedImage byte array, saves the workbook, reloads it, and lists cells that retain embedded pictures.
-    public static class CustomImageProvider
+    // Custom source that supplies image bytes based on a key (image marker)
+    // C# sample that builds a workbook, writes cells containing markers such as {{Image:Logo}}, scans each used cell, extracts the key, retrieves the corresponding byte array from a custom ImageProvider (dictionary, database, or service), assigns the bytes to Cell.EmbeddedImage, optionally clears the placeholder, enumerates cells with embedded pictures, and saves the workbook.
+    public class ImageProvider
     {
-        private static readonly Dictionary<string, byte[]> _imageCache = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, byte[]> _images = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
 
-        // Load images from the file system into the cache.
-        public static void LoadImages(string folderPath)
+        public ImageProvider()
         {
-            if (!Directory.Exists(folderPath))
-            {
-                // No images folder – skip loading but keep the cache empty.
-                Console.WriteLine($"Warning: Image folder not found: {folderPath}. Image placeholders will be ignored.");
-                return;
-            }
+            // Load images into the dictionary at initialization.
+            // In real scenarios, this could be a database, service, etc.
+            AddImage("Logo", "logo.png");
+            AddImage("Banner", "banner.jpg");
+        }
 
-            foreach (string filePath in Directory.GetFiles(folderPath))
+        private void AddImage(string key, string filePath)
+        {
+            if (File.Exists(filePath))
             {
-                string key = Path.GetFileNameWithoutExtension(filePath);
-                _imageCache[key] = File.ReadAllBytes(filePath);
+                _images[key] = File.ReadAllBytes(filePath);
             }
         }
 
-        // Retrieve image bytes for a given key; returns null if not found.
-        public static byte[] GetImageBytes(string key)
+        // Returns image bytes for the given marker; null if not found.
+        public byte[] GetImageBytes(string key)
         {
-            _imageCache.TryGetValue(key, out byte[] data);
+            _images.TryGetValue(key, out var data);
             return data;
         }
     }
 
-    class Program
+    public class Program
     {
-        static void Main()
+        // Marker format: {{Image:Key}}
+        private const string MarkerPrefix = "{{Image:";
+        private const string MarkerSuffix = "}}";
+
+        public static void Main()
         {
             try
             {
-                // -------------------------------------------------
-                // 1. Prepare image source (custom object)
-                // -------------------------------------------------
-                string imagesFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images");
-                CustomImageProvider.LoadImages(imagesFolder);
+                // Create a new workbook (lifecycle create)
+                var workbook = new Workbook();
+                var sheet = workbook.Worksheets[0];
 
-                // -------------------------------------------------
-                // 2. Create a new workbook and add placeholder markers
-                // -------------------------------------------------
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                // Populate some cells with image markers
+                sheet.Cells["A1"].PutValue("Product");
+                sheet.Cells["B1"].PutValue("{{Image:Logo}}");
+                sheet.Cells["A2"].PutValue("Promotion");
+                sheet.Cells["B2"].PutValue("{{Image:Banner}}");
 
-                // Example placeholders that reference images by key.
-                sheet.Cells["A1"].PutValue("Company Logo: {{Image:Logo}}");
-                sheet.Cells["A2"].PutValue("Product Icon: {{Image:ProductIcon}}");
-                sheet.Cells["A3"].PutValue("No image here");
+                // Initialize the custom image provider
+                var provider = new ImageProvider();
 
-                // -------------------------------------------------
-                // 3. Scan cells, replace markers with embedded images
-                // -------------------------------------------------
+                // Scan all used cells for markers and embed corresponding images
                 foreach (Cell cell in sheet.Cells)
                 {
-                    if (cell.Value is string text && text.Contains("{{Image:"))
+                    if (cell.Value is string text &&
+                        text.Contains(MarkerPrefix) &&
+                        text.Contains(MarkerSuffix))
                     {
-                        int startIdx = text.IndexOf("{{Image:", StringComparison.Ordinal) + "{{Image:".Length;
-                        int endIdx = text.IndexOf("}}", startIdx, StringComparison.Ordinal);
-                        if (endIdx > startIdx)
+                        // Extract the key between the prefix and suffix
+                        int start = text.IndexOf(MarkerPrefix, StringComparison.Ordinal) + MarkerPrefix.Length;
+                        int end = text.IndexOf(MarkerSuffix, start, StringComparison.Ordinal);
+                        if (end > start)
                         {
-                            string key = text.Substring(startIdx, endIdx - startIdx).Trim();
+                            string key = text.Substring(start, end - start).Trim();
 
-                            byte[] imgBytes = CustomImageProvider.GetImageBytes(key);
-                            if (imgBytes != null && imgBytes.Length > 0)
+                            // Retrieve image bytes from the provider
+                            byte[] imageBytes = provider.GetImageBytes(key);
+                            if (imageBytes != null && imageBytes.Length > 0)
                             {
-                                // Embed the image into the cell
-                                cell.EmbeddedImage = imgBytes;
+                                try
+                                {
+                                    // Embed the image into the cell
+                                    cell.EmbeddedImage = imageBytes;
 
-                                // Clear the placeholder text, leaving only the image
-                                cell.PutValue(string.Empty);
+                                    // Optionally clear the marker text
+                                    cell.PutValue(string.Empty);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"Failed to embed image for key '{key}': {ex.Message}");
+                                }
                             }
                         }
                     }
                 }
 
-                // -------------------------------------------------
-                // 4. Save the workbook (embedded images are stored inside)
-                // -------------------------------------------------
-                string outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ImageMarkerDemo.xlsx");
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
-
-                // -------------------------------------------------
-                // 5. Reload workbook to verify persistence
-                // -------------------------------------------------
-                if (!File.Exists(outputPath))
-                {
-                    Console.WriteLine("Error: Saved workbook not found.");
-                    return;
-                }
-
-                Workbook reloaded = new Workbook(outputPath);
-                Worksheet reloadedSheet = reloaded.Worksheets[0];
-
-                // -------------------------------------------------
-                // 6. Enumerate cells that contain embedded pictures
-                // -------------------------------------------------
-                IEnumerator enumerator = reloadedSheet.Cells.GetCellsWithPlaceInCellPicture();
-                int embeddedCount = 0;
+                // Enumerate cells that now contain embedded images
+                IEnumerator enumerator = sheet.Cells.GetCellsWithPlaceInCellPicture();
                 while (enumerator.MoveNext())
                 {
                     if (enumerator.Current is Cell imgCell)
                     {
-                        byte[] data = imgCell.EmbeddedImage;
-                        if (data != null && data.Length > 0)
-                        {
-                            embeddedCount++;
-                            Console.WriteLine($"Embedded image found in cell {imgCell.Name}, size: {data.Length} bytes");
-                        }
+                        Console.WriteLine($"Embedded image found in cell {imgCell.Name}, size: {imgCell.EmbeddedImage?.Length ?? 0} bytes");
                     }
                 }
-                Console.WriteLine($"Total cells with embedded images: {embeddedCount}");
+
+                // Save the workbook (lifecycle save)
+                string outputPath = "EmbeddedImagesDemo.xlsx";
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                }
             }
             catch (Exception ex)
             {

@@ -1,85 +1,82 @@
-// Title: Custom Chinese Legend Text for Aspose.Cells Charts via GetLegendEntry Override (C#)
-// Description: Shows how to subclass SettableChartGlobalizationSettings in Aspose.Cells for .NET, implement a GetLegendEntry method that returns predefined Chinese series names (or a generic fallback) and assign those names to chart series, resulting in a column chart with localized legend entries saved as ChartChineseSettings.xlsx.
-// Keywords: Aspose.Cells | C# | chart legend localization | Chinese legend names | SettableChartGlobalizationSettings | GetLegendEntry | custom globalization | column chart | series name assignment | .NET workbook | multilingual charts
-// Common Searches: Aspose.Cells set chart legend language | C# custom chart legend text Aspose | how to localize chart legends in Aspose.Cells | GetLegendEntry override example | SettableChartGlobalizationSettings Chinese names | Aspose.Cells assign series name programmatically | create chart with Chinese legend Aspose.Cells
-// Developer Intent: Create a subclass of SettableChartGlobalizationSettings that provides Chinese legend entries based on series index and apply it to a chart.
-// Use Cases: Generate column charts with Chinese legend entries for each data series. | Localize chart legends in multilingual workbooks by mapping series indices to language‑specific names. | Provide a fallback series name when the index exceeds predefined Chinese names to ensure all legends appear. | Integrate custom globalization settings into existing Aspose.Cells chart generation pipelines. | Automate translation of chart legends without modifying source data.
-// AI Prompts: Write a C# class that extends SettableChartGlobalizationSettings and implements GetLegendEntry to return Chinese names for known series indices and a generic name otherwise. | Demonstrate how to assign custom legend text to each series of an Aspose.Cells chart using a ChartChineseSettings instance. | Explain how to expand the GetLegendEntry method to support additional languages or dynamic lookup tables for chart legend localization.
+// Title: Override GetLegendEntry to Supply Chinese Legend Text for Chart Series in Aspose.Cells (.NET)
+// Description: Demonstrates a ChartChineseSettings class that overrides GetLegendEntry to return Chinese series names from a predefined array or a fallback pattern, creates a workbook with sample data, builds a column chart, retrieves localized legend entries for each series, and saves the file as an Excel workbook.
+// Keywords: Aspose.Cells | C# | Chart legend localization | Chinese legend text | GetLegendEntry override | custom chart legend | Excel chart series | column chart Aspose | i18n Aspose.Cells | chart series naming
+// Common Searches: Aspose.Cells customize chart legend text | GetLegendEntry Chinese series names Aspose | set Chinese legend for Excel chart .NET | override chart legend method Aspose.Cells | localize chart legends in C# Excel library
+// Developer Intent: Implement GetLegendEntry so that each chart series receives a Chinese legend label based on its index, with a fallback for undefined indexes.
+// Use Cases: Create Excel reports with column charts that display legend entries in Chinese. | Provide automatic fallback Chinese names when the series count exceeds a predefined list. | Integrate ChartChineseSettings into automated reporting pipelines to ensure localized chart legends before workbook export.
+// AI Prompts: Write a C# GetLegendEntry method that returns Chinese legend strings for chart series using an array and a fallback format. | Show how to apply the custom GetLegendEntry method to assign localized legend text to each series in an Aspose.Cells chart before saving. | Explain how to extend ChartChineseSettings to support additional languages while keeping index‑based legend retrieval.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// Demonstrates a ChartChineseSettings class that overrides GetLegendEntry to return Chinese series names from a predefined array or a fallback pattern, creates a workbook with sample data, builds a column chart, retrieves localized legend entries for each series, and saves the file as an Excel workbook.
+public class ChartChineseSettings
 {
-    // Custom globalization settings that provides Chinese legend names.
-    // Shows how to subclass SettableChartGlobalizationSettings in Aspose.Cells for .NET, implement a GetLegendEntry method that returns predefined Chinese series names (or a generic fallback) and assign those names to chart series, resulting in a column chart with localized legend entries saved as ChartChineseSettings.xlsx.
-    public class ChartChineseSettings : SettableChartGlobalizationSettings
+    /// <summary>
+    /// Returns the Chinese legend text for a given series index.
+    /// </summary>
+    public string GetLegendEntry(int seriesIndex)
     {
-        // Override (or implement) a method that returns the legend text for a given series index.
-        // The base class does not define GetLegendEntry, so we provide our own implementation.
-        public string GetLegendEntry(int index)
-        {
-            // Define Chinese names for the first few series.
-            string[] chineseNames = { "第一系列", "第二系列", "第三系列", "第四系列", "第五系列" };
+        string[] chineseNames = { "系列一", "系列二", "系列三", "系列四", "系列五" };
 
-            // Return the matching name if within range; otherwise generate a generic name.
-            if (index >= 0 && index < chineseNames.Length)
-                return chineseNames[index];
+        if (seriesIndex >= 0 && seriesIndex < chineseNames.Length)
+            return chineseNames[seriesIndex];
 
-            return $"系列{index + 1}";
-        }
+        // Fallback for indexes beyond the predefined array.
+        return $"系列{seriesIndex + 1}";
     }
+}
 
-    public class ChartChineseSettingsDemo
+class Program
+{
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            // Create a new workbook and get the first worksheet.
+            // Create a new workbook.
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data.
+            // Populate sample data for two series.
             sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-
-            sheet.Cells["B1"].PutValue("Series 1");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-
-            sheet.Cells["C1"].PutValue("Series 2");
-            sheet.Cells["C2"].PutValue(30);
-            sheet.Cells["C3"].PutValue(40);
+            sheet.Cells["A2"].PutValue("第一季度");
+            sheet.Cells["A3"].PutValue("第二季度");
+            sheet.Cells["B1"].PutValue("Series A");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["C1"].PutValue("Series B");
+            sheet.Cells["C2"].PutValue(80);
+            sheet.Cells["C3"].PutValue(130);
 
             // Add a column chart.
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the series and categories.
-            chart.NSeries.Add("B2:C3", true);          // Two series.
-            chart.NSeries.CategoryData = "A2:A3";      // Categories.
+            // Add two series to the chart.
+            chart.NSeries.Add("B2:B3", true); // Series A
+            chart.NSeries.Add("C2:C3", true); // Series B
+            chart.NSeries.CategoryData = "A2:A3";
 
-            // Apply Chinese legend names using the custom settings class.
+            // Instantiate the custom Chinese settings.
             ChartChineseSettings chineseSettings = new ChartChineseSettings();
 
+            // Retrieve and display Chinese legend names for each series.
             for (int i = 0; i < chart.NSeries.Count; i++)
             {
-                // The series name is reflected in the legend entry.
-                chart.NSeries[i].Name = chineseSettings.GetLegendEntry(i);
+                string chineseLegend = chineseSettings.GetLegendEntry(i);
+                Console.WriteLine($"Series {i} Chinese Legend: {chineseLegend}");
             }
 
             // Save the workbook.
-            workbook.Save("ChartChineseSettings.xlsx");
+            string outputPath = "ChartWithChineseLegends.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
-    }
-
-    // Entry point for demonstration.
-    class Program
-    {
-        static void Main()
+        catch (Exception ex)
         {
-            ChartChineseSettingsDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

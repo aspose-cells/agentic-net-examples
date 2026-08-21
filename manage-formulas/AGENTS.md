@@ -1,11 +1,11 @@
----
+﻿---
 name: Aspose.Cells Formula Management Agent
 category: manage-formulas
 product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Create, edit, copy, audit, and manage Excel formulas and named ranges in C#
 primary_apis: [Cell.Formula, Cell.FormulaLocal, Cell.SetArrayFormula, Cell.SetSharedFormula, Name.RefersTo, Cell.GetPrecedents, Cell.GetDependents]
 related_categories: [../calculate-formulas/, ../managing-ranges/, ../cells-data/, ../working-with-tables/]
@@ -109,3 +109,4 @@ Reject invented functions/APIs, unsafe text replacement, broken references, unsu
 ## Definition of done
 
 The example is done when formula type, syntax, target, dependencies, security assumptions, stored expression, calculated result where relevant, and persistence are explicit and verified.
+

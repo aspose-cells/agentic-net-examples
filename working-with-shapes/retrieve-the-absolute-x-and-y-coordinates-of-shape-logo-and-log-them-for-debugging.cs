@@ -1,76 +1,78 @@
-// Title: Get absolute X/Y pixel coordinates of a named shape (Logo) with Aspose.Cells for .NET
-// Description: Creates a workbook, adds a rectangle named "Logo", locates the shape via its Name property, calls GetActualBox() to obtain the left (X) and top (Y) pixel positions, writes the values to the console for debugging, and saves the workbook.
-// Keywords: Aspose.Cells GetActualBox | shape position .NET | retrieve shape coordinates | absolute pixel location | named shape Logo | worksheet shape coordinates | Aspose.Cells debugging | C# shape bounding box
-// Common Searches: Aspose.Cells get shape X coordinate | How to read shape Y position in .NET | GetActualBox example C# | Find shape by name Aspose.Cells | Log shape pixel location
-// Developer Intent: Extract and output the absolute pixel X and Y positions of the worksheet shape called "Logo".
-// Use Cases: Diagnose layout problems by printing the exact pixel location of a shape. | Align or distribute multiple shapes programmatically based on their absolute positions. | Export shape coordinates to another system for reporting or further processing.
-// AI Prompts: Show me C# code that retrieves the absolute X and Y pixel coordinates of a shape named "Logo" using Aspose.Cells and logs them. | Provide an example of iterating through worksheet shapes, finding a specific one, and using GetActualBox to get its bounding box. | Explain how to use the X/Y values returned by GetActualBox to align other objects on an Excel sheet with Aspose.Cells.
+// Title: Get absolute X/Y pixel coordinates of a named shape (Logo) in Aspose.Cells for .NET
+// Description: Creates a workbook, adds a rectangle shape named "Logo" to the first worksheet, finds the shape by its Name, reads the shape's X and Y properties (pixel offsets from the worksheet's top‑left corner), writes the coordinates to the console for debugging, and saves the file.
+// Keywords: Aspose.Cells | .NET | C# | shape coordinates | absolute position | X property | Y property | retrieve shape by name | worksheet shapes | debugging | pixel offsets | RetrieveShapeCoordinates | shape.X | shape.Y
+// Common Searches: Aspose.Cells get shape X coordinate | How to read shape Y position in .NET | Retrieve absolute pixel location of a shape in Excel using Aspose.Cells | Log shape coordinates for debugging Aspose.Cells C# | Find shape named Logo and get its position
+// Developer Intent: Read and output the absolute pixel X and Y positions of the shape named "Logo" in a worksheet.
+// Use Cases: Diagnose layout issues by printing exact pixel locations of specific shapes. | Programmatically align or distribute shapes based on their absolute coordinates. | Include shape position data in logs or reports for audit trails.
+// AI Prompts: Show C# code to obtain the X and Y pixel values of a shape called "Logo" with Aspose.Cells. | Give an example that iterates all worksheet shapes and logs each shape's absolute coordinates. | Explain how the X/Y properties of a shape map to the worksheet's pixel grid in Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, adds a rectangle named "Logo", locates the shape via its Name property, calls GetActualBox() to obtain the left (X) and top (Y) pixel positions, writes the values to the console for debugging, and saves the workbook.
+    // Creates a workbook, adds a rectangle shape named "Logo" to the first worksheet, finds the shape by its Name, reads the shape's X and Y properties (pixel offsets from the worksheet's top‑left corner), writes the coordinates to the console for debugging, and saves the file.
     public class RetrieveShapeCoordinates
     {
-        public static void Run()
+        public static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add a rectangle shape and name it "Logo"
-                // Parameters: topRow, top, leftColumn, left, height, width
-                Shape logoShape = worksheet.Shapes.AddRectangle(5, 5, 10, 10, 100, 50);
-                logoShape.Name = "Logo";
-
-                // Retrieve the shape named "Logo"
-                Shape targetShape = null;
-                foreach (Shape shape in worksheet.Shapes)
-                {
-                    if (shape.Name == "Logo")
-                    {
-                        targetShape = shape;
-                        break;
-                    }
-                }
-
-                if (targetShape != null)
-                {
-                    // Get the actual bounding box (left, top, right, bottom) in pixels
-                    float[] box = targetShape.GetActualBox();
-
-                    // Log absolute X (left) and Y (top) coordinates
-                    Console.WriteLine($"Logo absolute X (pixels): {box[0]}");
-                    Console.WriteLine($"Logo absolute Y (pixels): {box[1]}");
-                }
-                else
-                {
-                    Console.WriteLine("Shape named 'Logo' was not found.");
-                }
-
-                // Save the workbook (optional, just to complete the lifecycle)
-                string outputPath = "RetrieveShapeCoordinates.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+                Run();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
+        public static void Run()
         {
-            RetrieveShapeCoordinates.Run();
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add a rectangle shape and assign it the name "Logo"
+            // Parameters: upperLeftRow, upperLeftColumn, upperLeftPixel,
+            //             lowerRightRow, lowerRightColumn, lowerRightPixel
+            Shape logoShape = worksheet.Shapes.AddRectangle(
+                2,   // upperLeftRow (0‑based)
+                2,   // upperLeftColumn (0‑based)
+                0,   // upperLeftPixel
+                5,   // lowerRightRow
+                5,   // lowerRightColumn
+                0);  // lowerRightPixel
+            logoShape.Name = "Logo";
+
+            // Retrieve the shape by its name (manual search)
+            Shape retrievedShape = null;
+            foreach (Shape shape in worksheet.Shapes)
+            {
+                if (shape.Name == "Logo")
+                {
+                    retrievedShape = shape;
+                    break;
+                }
+            }
+
+            if (retrievedShape != null)
+            {
+                // X and Y give the absolute offset from the worksheet's left/top borders (pixels)
+                int absoluteX = retrievedShape.X;
+                int absoluteY = retrievedShape.Y;
+
+                // Log the coordinates for debugging
+                Console.WriteLine($"Logo shape absolute X: {absoluteX} pixels");
+                Console.WriteLine($"Logo shape absolute Y: {absoluteY} pixels");
+            }
+            else
+            {
+                Console.WriteLine("Shape named 'Logo' was not found.");
+            }
+
+            // Save the workbook (lifecycle: save)
+            workbook.Save("RetrieveShapeCoordinates.xlsx");
         }
     }
 }

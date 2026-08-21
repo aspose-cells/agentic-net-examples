@@ -1,18 +1,17 @@
-// Title: Move an Excel Table (ListObject) within a same worksheet using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, define a ListObject named "MyTable" over A1:B4, and relocate the entire table to cell D5 with Worksheet.Cells.MoveRange. All formulas, formatting, and structured references are refreshed automatically, and the result is saved as MovedTable.xlsx.
-// Keywords: Aspose.Cells move table | C# ListObject relocation | Worksheet Cells MoveRange | preserve structured references | update Excel formulas after move | .NET Excel table reposition
-// Common Searches: how to move an Excel table with Aspose.Cells | preserve structured references when moving ListObject .NET | move range with formulas C# Aspose.Cells | relocate Excel ListObject without breaking formulas | Aspose.Cells MoveRange example
-// Developer Intent: Reposition an existing ListObject to a new cell range in the same worksheet while letting Aspose.Cells automatically adjust all references.
-// Use Cases: Rearrange data tables to free space for new report sections. | Shift a table after inserting rows or columns to keep layout consistent. | Prepare a workbook for export by placing tables in a predefined order.
-// AI Prompts: Generate C# code with Aspose.Cells that moves a ListObject from A1:B4 to D5 and updates structured references. | Explain how Worksheet.Cells.MoveRange rewrites formulas and table references after a table is moved. | Show best‑practice error handling for moving tables using Aspose.Cells in a .NET application.
+// Title: Move an Excel Table Within a Worksheet and Auto‑Update Structured References – Aspose.Cells for .NET (C#)
+// Description: C# example that creates a workbook, defines a ListObject (table) on A1:B4, then uses Worksheet.Cells.MoveRange to relocate the table to row 10, column C. All structured references are refreshed automatically and the file is saved as MovedTable.xlsx.
+// Keywords: Aspose.Cells | C# | MoveRange | ListObject | Excel table relocation | structured references | worksheet MoveRange example | programmatic table move | Excel API | Aspose.Cells sample code
+// Common Searches: how to move an Excel table with Aspose.Cells C# | update structured references after moving a ListObject | Worksheet.Cells.MoveRange table example | relocate Excel table in same worksheet using .NET | Aspose.Cells move table without breaking formulas
+// Developer Intent: Shift a ListObject to a new range on the same worksheet while keeping all structured references and formulas intact.
+// Use Cases: Re‑position a data table after inserting rows above it without corrupting table formulas. | Organize a report layout by moving tables to designated sections while preserving calculations. | Automate dynamic worksheet designs where tables need to fit page‑size constraints or printing areas.
+// AI Prompts: Write C# code that moves a ListObject to a different location in the same worksheet using Aspose.Cells, ensuring structured references are updated. | Show how to obtain a table's CellArea and apply Worksheet.Cells.MoveRange to relocate it without breaking formulas. | Explain the behavior of MoveRange for tables in Aspose.Cells and note any limitations or special considerations.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
 
-// Demonstrates how to create a workbook, define a ListObject named "MyTable" over A1:B4, and relocate the entire table to cell D5 with Worksheet.Cells.MoveRange. All formulas, formatting, and structured references are refreshed automatically, and the result is saved as MovedTable.xlsx.
+// C# example that creates a workbook, defines a ListObject (table) on A1:B4, then uses Worksheet.Cells.MoveRange to relocate the table to row 10, column C. All structured references are refreshed automatically and the file is saved as MovedTable.xlsx.
 class MoveTableDemo
 {
     static void Main()
@@ -23,7 +22,7 @@ class MoveTableDemo
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data that will become a table
+            // Populate sample data
             worksheet.Cells["A1"].PutValue("ID");
             worksheet.Cells["B1"].PutValue("Name");
             worksheet.Cells["A2"].PutValue(1);
@@ -33,28 +32,24 @@ class MoveTableDemo
             worksheet.Cells["A4"].PutValue(3);
             worksheet.Cells["B4"].PutValue("Bob");
 
-            // Create a ListObject (Excel table) covering the range A1:B4
+            // Create a table (ListObject) covering A1:B4
             int tableIndex = worksheet.ListObjects.Add("A1", "B4", true);
             ListObject table = worksheet.ListObjects[tableIndex];
 
-            // Set a display name for the table
-            table.DisplayName = "MyTable";
+            // Destination position (e.g., move to row 10, column C)
+            int destRow = 9;      // zero‑based index for row 10
+            int destColumn = 2;   // zero‑based index for column C
 
-            // Define the source area of the table using its data range
-            AsposeRange dataRange = table.DataRange;
+            // Define the source area using the table's current range
             CellArea sourceArea = new CellArea
             {
-                StartRow = dataRange.FirstRow,
-                StartColumn = dataRange.FirstColumn,
-                EndRow = dataRange.FirstRow + dataRange.RowCount - 1,
-                EndColumn = dataRange.FirstColumn + dataRange.ColumnCount - 1
+                StartRow = table.StartRow,
+                StartColumn = table.StartColumn,
+                EndRow = table.EndRow,
+                EndColumn = table.EndColumn
             };
 
-            // Destination top‑left cell (zero‑based indices). D5 => row 4, column 3
-            int destRow = 4;      // Row index for row 5
-            int destColumn = 3;   // Column index for column D
-
-            // Move the range; formulas, formatting, and structured references are updated automatically
+            // Move the range; structured references inside the table are updated automatically
             worksheet.Cells.MoveRange(sourceArea, destRow, destColumn);
 
             // Save the workbook
@@ -64,7 +59,7 @@ class MoveTableDemo
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,61 +1,45 @@
-// Title: Export Workbook to CSV with Two‑Decimal Formatting using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, apply a "#,##0.00" style to numeric cells, ensure the output folder exists, and save the file as CSV so that financial values appear rounded to two decimal places.
-// Keywords: Aspose.Cells CSV export | C# number format two decimal | financial report CSV | custom style Aspose.Cells | SaveFormat.Csv .NET | worksheet range formatting | directory creation C# | rounded values CSV
-// Common Searches: Aspose.Cells export CSV with two decimal places | apply custom number format before saving CSV Aspose | C# round numbers to 2 decimals in CSV output
-// Developer Intent: Generate a CSV file from an Aspose.Cells workbook where monetary figures are displayed with two‑decimal precision.
-// Use Cases: Produce a financial summary that can be opened in Excel or any spreadsheet program with proper currency formatting. | Automate reporting pipelines that require CSV files with consistent decimal rounding. | Prevent file‑system errors by creating the destination directory programmatically before saving.
-// AI Prompts: Write C# code that uses Aspose.Cells to export a workbook to CSV with numbers formatted to two decimal places. | Explain why applying a custom number format before calling Workbook.Save preserves rounding in the CSV output. | Show how to create a style, apply it to a column range, and ensure the output folder exists when saving a CSV file.
+// Title: C# – Export Excel to CSV with numbers rounded to 2 decimals using Aspose.Cells
+// Description: Loads an XLSX workbook, rounds every numeric cell to two decimal places (MidpointRounding.AwayFromZero), and saves the result as a CSV file—ideal for precise financial reporting.
+// Keywords: Aspose.Cells CSV export C# | round numbers to two decimals | financial reporting Excel to CSV | C# round numeric cells Aspose | Save workbook as CSV | US accounting data export | midpoint rounding away from zero
+// Common Searches: C# Aspose.Cells round values before CSV export | export Excel to CSV with two‑decimal precision | how to round all numbers in a workbook using Aspose | financial CSV export Aspose.Cells .NET | midpoint rounding for accounting data
+// Developer Intent: Apply two‑decimal rounding to every numeric cell in a workbook and generate a CSV file.
+// Use Cases: Produce CSV statements for US GAAP‑compliant financial reports. | Create data feeds for accounting software that require fixed‑point monetary values. | Automate monthly ledger exports with uniform two‑decimal rounding.
+// AI Prompts: Generate C# code that uses Aspose.Cells to round all numeric cells to two decimal places and save the workbook as CSV. | Explain why MidpointRounding.AwayFromZero is preferred for financial rounding in CSV exports. | Suggest a method to format numbers to two decimals during CSV export without altering the original worksheet values.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, apply a "#,##0.00" style to numeric cells, ensure the output folder exists, and save the file as CSV so that financial values appear rounded to two decimal places.
-class ExportWorkbookToCsv
+// Loads an XLSX workbook, rounds every numeric cell to two decimal places (MidpointRounding.AwayFromZero), and saves the result as a CSV file—ideal for precise financial reporting.
+class ExportWorkbookToCsvRounded
 {
     static void Main()
     {
-        try
+        // Load the source workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Determine the used range of the worksheet
+        int maxRow = cells.MaxDataRow;
+        int maxCol = cells.MaxDataColumn;
+
+        // Round all numeric cells to two decimal places
+        for (int row = 0; row <= maxRow; row++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add header row
-            sheet.Cells["A1"].PutValue("Item");
-            sheet.Cells["B1"].PutValue("Amount");
-
-            // Add sample financial data
-            sheet.Cells["A2"].PutValue("Revenue");
-            sheet.Cells["B2"].PutValue(12345.6789);
-            sheet.Cells["A3"].PutValue("Expense");
-            sheet.Cells["B3"].PutValue(9876.54321);
-
-            // Create a style that formats numbers with two decimal places
-            Style twoDecimalStyle = workbook.CreateStyle();
-            twoDecimalStyle.Custom = "#,##0.00";
-
-            // Apply the style only to the number format of column B
-            StyleFlag flag = new StyleFlag { NumberFormat = true };
-            sheet.Cells.CreateRange("B2:B3").ApplyStyle(twoDecimalStyle, flag);
-
-            // Define output file path
-            string outputPath = "FinancialReport.csv";
-
-            // Ensure the directory exists (if a directory part is present)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            for (int col = 0; col <= maxCol; col++)
             {
-                Directory.CreateDirectory(outputDir);
+                Cell cell = cells[row, col];
+                if (cell.Type == CellValueType.IsNumeric)
+                {
+                    double roundedValue = Math.Round(cell.DoubleValue, 2, MidpointRounding.AwayFromZero);
+                    cell.PutValue(roundedValue);
+                }
             }
+        }
 
-            // Export the workbook to CSV; formatted values will be written
-            workbook.Save(outputPath, SaveFormat.Csv);
-            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
-        }
+        // Export the workbook to CSV format
+        workbook.Save("output.csv", SaveFormat.Csv);
     }
 }

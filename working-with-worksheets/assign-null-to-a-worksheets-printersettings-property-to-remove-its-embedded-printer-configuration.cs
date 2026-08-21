@@ -1,43 +1,49 @@
-// Title: Clear worksheet printer settings in Aspose.Cells (C#) by setting PageSetup.PrinterSettings to null
-// Description: Demonstrates how to remove an embedded printer configuration from a worksheet by assigning null to its PageSetup.PrinterSettings property, then saving the workbook.
-// Keywords: Aspose.Cells clear printer settings | PageSetup.PrinterSettings null | remove worksheet printer configuration | reset Excel printer settings C# | Aspose.Cells workbook without printer data
-// Common Searches: how to clear printer settings in Aspose.Cells | set worksheet PrinterSettings to null C# | remove embedded printer configuration from Excel file | Aspose.Cells reset page setup printer | clear printer configuration before saving workbook
-// Developer Intent: Remove the worksheet's embedded printer configuration by assigning null to its PageSetup.PrinterSettings property.
-// Use Cases: Prepare a template that must not retain any printer‑specific data before distribution. | Generate reports programmatically and ensure they open correctly on any printer. | Strip printer settings from a workbook to avoid conflicts when shared across different environments.
-// AI Prompts: Write C# code that clears printer settings for every worksheet in an existing Aspose.Cells workbook. | Explain the impact of setting PageSetup.PrinterSettings to null on the saved Excel file and any known limitations. | Show how to programmatically verify that printer settings have been removed after the workbook is saved.
+// Title: C# – Remove Worksheet Printer Settings with Aspose.Cells for .NET
+// Description: This Aspose.Cells for .NET example creates a workbook, accesses the first worksheet, optionally adds data, and clears the embedded printer configuration by setting worksheet.PageSetup.PrinterSettings to null before saving the file.
+// Keywords: Aspose.Cells remove printer settings | C# clear worksheet printer configuration | PageSetup.PrinterSettings null | delete embedded printer settings Excel | Aspose.Cells .NET printer setup | Excel workbook printer reset | remove printer config Aspose.Cells
+// Common Searches: how to clear printer settings in Aspose.Cells C# | set PageSetup.PrinterSettings to null example | remove embedded printer configuration from Excel using Aspose | Aspose.Cells delete worksheet printer settings | C# code to reset printer settings in Excel workbook
+// Developer Intent: Clear the worksheet's embedded printer configuration by assigning null to its PageSetup.PrinterSettings property.
+// Use Cases: Distribute a workbook without any printer-specific data attached. | Reset printer settings after copying worksheets between workbooks to avoid inheriting source printer information. | Prepare template files for end users so the Excel file opens with neutral printer defaults.
+// AI Prompts: Generate C# code that uses Aspose.Cells to remove printer settings from a specific worksheet. | Explain why assigning null to worksheet.PageSetup.PrinterSettings eliminates embedded printer configuration in an Excel file. | List steps to verify that printer settings have been cleared after saving a workbook with Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPrinterSettingsDemo
+// This Aspose.Cells for .NET example creates a workbook, accesses the first worksheet, optionally adds data, and clears the embedded printer configuration by setting worksheet.PageSetup.PrinterSettings to null before saving the file.
+public class RemovePrinterSettingsDemo
 {
-    // Demonstrates how to remove an embedded printer configuration from a worksheet by assigning null to its PageSetup.PrinterSettings property, then saving the workbook.
-    class Program
+    public static void Main(string[] args)
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Optionally add some data (not required for printer settings)
-            worksheet.Cells["A1"].PutValue("Demo: Remove printer settings");
-
-            // Access the page setup of the worksheet
-            PageSetup pageSetup = worksheet.PageSetup;
-
-            // Assign null to the PrinterSettings property to clear embedded printer configuration
-            pageSetup.PrinterSettings = null;
-
-            // Verify that the property is now null (optional)
-            Console.WriteLine("PrinterSettings is null: " + (pageSetup.PrinterSettings == null));
-
-            // Save the workbook (lifecycle: save)
-            workbook.Save("WorkbookWithoutPrinterSettings.xlsx");
-
-            Console.WriteLine("Workbook saved successfully.");
+            Run();
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    public static void Run()
+    {
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Add sample data (optional)
+        worksheet.Cells["A1"].PutValue("Demo for removing printer settings");
+
+        // Remove the embedded printer configuration by setting it to null
+        worksheet.PageSetup.PrinterSettings = null;
+
+        // Define output file path
+        string outputPath = "RemovedPrinterSettings.xlsx";
+
+        // Save the workbook
+        workbook.Save(outputPath);
+        Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
     }
 }

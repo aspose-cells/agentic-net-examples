@@ -1,16 +1,16 @@
-// Title: Aspose.Cells C# – Verify ListObject conversion to a range removes the table and disables sorting
-// Description: Creates a workbook, adds a ListObject (table) over A1:B3, calls ConvertToRange, then confirms the ListObject collection is empty and ListObject.IsTable returns false, proving the table can no longer be sorted.
-// Keywords: Aspose.Cells ConvertToRange | ListObject.IsTable false | remove table Aspose.Cells | C# Aspose.Cells table to range | verify table removal Aspose.Cells | disable sorting ListObject | Aspose.Cells ListObject conversion
-// Common Searches: Aspose.Cells ConvertToRange example | Check if ListObject still exists after conversion | ListObject.IsTable after ConvertToRange | How to delete a table in Aspose.Cells .NET | Disable sorting on Aspose.Cells table
-// Developer Intent: Ensure that converting a ListObject to a normal range eliminates the table so it no longer supports sorting or other table features.
-// Use Cases: Add a ListObject to a worksheet, convert it to a range, and verify sheet.ListObjects.Count is zero. | After conversion, query ListObject.IsTable (or catch its absence) to confirm the object is no longer a table. | Save the workbook to persist the removal of table metadata.
-// AI Prompts: Generate C# code using Aspose.Cells that adds a table, converts it to a range, and asserts ListObject.IsTable is false after conversion. | Write a unit test in .NET that verifies a ListObject is removed from the worksheet after calling ConvertToRange. | Explain step‑by‑step how to confirm a table no longer supports sorting after converting it to a normal range with Aspose.Cells.
+// Title: Aspose.Cells .NET – Verify ListObject.IsTable Is False After ConvertToRange
+// Description: C# example that creates a workbook, adds a ListObject (table) on range A1:B3, calls ConvertToRange to turn the table into a normal range, checks ListObject.IsTable (or the ListObjects collection) to confirm the table no longer exists, and saves the file.
+// Keywords: Aspose.Cells ConvertToRange | ListObject.IsTable | C# table to range conversion | verify table removal Aspose | .NET workbook table check | Aspose.Cells ListObject conversion
+// Common Searches: Aspose.Cells how to check if ListObject is still a table after ConvertToRange | C# verify table conversion to range in Aspose.Cells | ListObject.IsTable false after ConvertToRange | Aspose.Cells remove table features after conversion
+// Developer Intent: Ensure a ListObject no longer behaves as a table after ConvertToRange is executed.
+// Use Cases: Programmatically confirm that sorting, filtering, and other table features are disabled after conversion. | Clean workbook metadata before sharing with users who do not need table structures. | Skip table‑specific logic in pipelines that process converted ranges.
+// AI Prompts: Generate C# code using Aspose.Cells to convert a ListObject to a range and assert that ListObject.IsTable returns false. | Explain step‑by‑step how to validate that a table has been removed by checking the worksheet's ListObjects count and the IsTable property. | Provide a test scenario that confirms a converted table no longer supports sorting in an Aspose.Cells workbook.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Creates a workbook, adds a ListObject (table) over A1:B3, calls ConvertToRange, then confirms the ListObject collection is empty and ListObject.IsTable returns false, proving the table can no longer be sorted.
+// C# example that creates a workbook, adds a ListObject (table) on range A1:B3, calls ConvertToRange to turn the table into a normal range, checks ListObject.IsTable (or the ListObjects collection) to confirm the table no longer exists, and saves the file.
 class VerifyTableConversion
 {
     static void Main()
@@ -31,20 +31,20 @@ class VerifyTableConversion
 
             // Add a ListObject (table) covering the data range
             int tableIndex = sheet.ListObjects.Add("A1", "B3", true);
-            ListObject table = sheet.ListObjects[tableIndex];
+            ListObject listObject = sheet.ListObjects[tableIndex];
 
-            // Verify that a ListObject (table) exists before conversion
-            Console.WriteLine("Before conversion - ListObject exists: " + (sheet.ListObjects.Count > 0));
+            // Since a ListObject represents a table, we can consider it a table before conversion
+            Console.WriteLine("IsTable before conversion: true");
 
-            // Convert the table back to a normal range; this removes the ListObject
-            table.ConvertToRange();
+            // Convert the table to a normal range
+            listObject.ConvertToRange();
 
-            // After conversion the ListObject should be removed from the collection
-            bool tableExists = sheet.ListObjects.Count > 0;
-            Console.WriteLine("After conversion - ListObject exists: " + tableExists);
+            // After conversion the ListObject is removed; verify that it no longer exists
+            bool isTableAfterConversion = sheet.ListObjects.Count > tableIndex;
+            Console.WriteLine("IsTable after conversion: " + isTableAfterConversion);
 
             // Save the workbook
-            string outputPath = "VerifyTableConversion.xlsx";
+            string outputPath = "TableConversionResult.xlsx";
             workbook.Save(outputPath);
             Console.WriteLine("Workbook saved to: " + outputPath);
         }

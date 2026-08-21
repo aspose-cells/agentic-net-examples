@@ -1,174 +1,112 @@
-// Title: Detect and Optimize Formulas Referencing Large Worksheets with Aspose.Cells for .NET
-// Description: A C# utility that loads or creates an Excel workbook, flags worksheets exceeding 10,000 rows or 1,000 columns, scans every cell for formulas that point to those large sheets, reports the offending addresses, and applies performance‑boosting techniques such as shared‑formula conversion, calculation‑option tuning, and access‑cache activation before saving the optimized file.
-// Keywords: Aspose.Cells | C# Excel formula optimization | large worksheets detection | shared formulas .NET | CalculationOptions stack size | AccessCache performance | high‑volume Excel data | memory reduction Excel | detect cross‑sheet formulas | Excel workbook optimization
-// Common Searches: how to find formulas that reference large sheets using Aspose.Cells | convert repetitive formulas to shared formulas in C# Excel file | best practices for calculating massive workbooks with Aspose.Cells | enable access cache for big Excel data sets Aspose.Cells | optimize formula performance in .NET Excel applications
-// Developer Intent: Identify cross‑sheet formulas that target oversized worksheets and apply Aspose.Cells techniques to improve calculation speed and memory usage.
-// Use Cases: List all cell addresses whose formulas reference worksheets flagged as large for manual review. | Automatically replace vertical blocks of identical formulas with a single shared formula via SetSharedFormula to cut memory overhead. | Configure CalculationOptions (e.g., increase CalcStackSize, disable recursion) and wrap calculations with StartAccessCache/CloseAccessCache to prevent stack overflows on massive workbooks. | Replace heavy sub‑range formulas with static values to eliminate unnecessary recalculations. | Split or externalize data when formulas must reference extremely large sheets, reducing workbook size.
-// AI Prompts: Generate C# code using Aspose.Cells that scans a workbook and returns a list of cell addresses whose formulas reference any worksheet with more than 10,000 rows or 1,000 columns. | Write a method that iterates through each column, detects consecutive identical formulas, and converts them into a shared formula with SetSharedFormula. | Explain how to configure CalculationOptions and use StartAccessCache/CloseAccessCache to optimize formula evaluation for a workbook containing over 100,000 rows.
+// Title: Identify and Optimize Formulas in Massive Excel Worksheets with Aspose.Cells for .NET
+// Description: C# sample that loads a workbook, flags sheets exceeding a configurable cell‑count (default 1 M), lists formula cells and provides performance tips such as limiting whole‑range references, removing volatile functions, applying shared formulas, enabling calculation cache, and using Excel tables.
+// Keywords: Aspose.Cells | C# | formula optimization | large worksheet | whole column reference | volatile function detection | shared formulas | calculation cache | Excel tables | performance tuning
+// Common Searches: How to detect formulas that reference whole columns in a big Excel file using Aspose.Cells C# | Best practices for removing volatile functions from worksheets with over 1 million cells | Enable calculation cache and set stack size for large workbooks in Aspose.Cells | Convert repetitive formulas to shared formulas with Aspose.Cells .NET | Optimize performance of massive Excel sheets using Aspose.Cells
+// Developer Intent: Find formula cells in worksheets that exceed a size threshold and receive actionable suggestions to improve calculation speed and memory usage.
+// Use Cases: Scan a workbook and list every formula cell in sheets larger than 1 M cells, flagging whole‑range references (e.g., A:A) for reduction. | Detect volatile functions such as NOW(), RAND(), or RANDBETWEEN in large sheets and recommend alternatives. | Suggest converting short, repetitive formulas to shared formulas via Cell.SetSharedFormula to lower memory consumption. | Provide workbook‑level recommendations like enabling calculation cache, adjusting the calculation stack, and converting data ranges to Excel tables.
+// AI Prompts: Write C# code using Aspose.Cells that iterates through each worksheet, identifies formula cells in sheets with more than 1,000,000 cells, and logs suggestions for whole‑range references, volatile functions, and shared formulas. | Generate a snippet that enables the calculation cache and sets a custom calculation stack size before calling CalculateFormula on a large workbook with Aspose.Cells. | Create a function that automatically converts repetitive short formulas in a massive worksheet to shared formulas using Cell.SetSharedFormula.
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsFormulaOptimization
 {
-    // A C# utility that loads or creates an Excel workbook, flags worksheets exceeding 10,000 rows or 1,000 columns, scans every cell for formulas that point to those large sheets, reports the offending addresses, and applies performance‑boosting techniques such as shared‑formula conversion, calculation‑option tuning, and access‑cache activation before saving the optimized file.
+    // C# sample that loads a workbook, flags sheets exceeding a configurable cell‑count (default 1 M), lists formula cells and provides performance tips such as limiting whole‑range references, removing volatile functions, applying shared formulas, enabling calculation cache, and using Excel tables.
     class Program
     {
-        // Threshold to consider a worksheet as having a very large data set
-        const int LargeRowThreshold = 10000;
-        const int LargeColumnThreshold = 1000;
+        // Threshold to consider a worksheet as “very large”.
+        // Adjust based on your environment (e.g., 1,000,000 cells).
+        const long LargeSheetCellCountThreshold = 1_000_000;
 
         static void Main()
         {
-            try
+            // Load an existing workbook (replace with your file path).
+            Workbook workbook = new Workbook("input.xlsx");
+
+            // Iterate through all worksheets.
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // -------------------- Create / Load Workbook --------------------
-                string inputPath = "LargeDataWorkbook.xlsx";
-                Workbook workbook;
+                Cells cells = sheet.Cells;
 
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    Console.WriteLine($"[Warning] Input file \"{inputPath}\" not found. Creating a new workbook.");
-                    workbook = new Workbook(); // creates a default workbook with one sheet
-                }
+                // Determine the used range size.
+                int maxRow = cells.MaxDataRow;   // zero‑based index of last row with data
+                int maxCol = cells.MaxDataColumn; // zero‑based index of last column with data
+                long totalCells = ((long)maxRow + 1) * ((long)maxCol + 1);
 
-                // -------------------- Identify Large Worksheets --------------------
-                var largeSheets = new HashSet<string>();
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // If the sheet is large, analyze its formulas.
+                if (totalCells >= LargeSheetCellCountThreshold)
                 {
-                    int maxRow = sheet.Cells.MaxDataRow;      // zero‑based index of last used row
-                    int maxCol = sheet.Cells.MaxDataColumn;   // zero‑based index of last used column
+                    Console.WriteLine($"Worksheet \"{sheet.Name}\" is large ({totalCells:N0} cells).");
 
-                    if (maxRow + 1 > LargeRowThreshold || maxCol + 1 > LargeColumnThreshold)
+                    // Collect cells that contain formulas.
+                    List<Cell> formulaCells = new List<Cell>();
+                    for (int row = 0; row <= maxRow; row++)
                     {
-                        largeSheets.Add(sheet.Name);
-                        Console.WriteLine($"[Info] Worksheet \"{sheet.Name}\" is large (Rows: {maxRow + 1}, Columns: {maxCol + 1}).");
-                    }
-                }
-
-                // If no large worksheets were found, exit early
-                if (largeSheets.Count == 0)
-                {
-                    Console.WriteLine("[Info] No large worksheets detected. No optimization needed.");
-                    workbook.Save("OptimizedOutput.xlsx");
-                    return;
-                }
-
-                // -------------------- Scan Formulas Referencing Large Worksheets --------------------
-                var problematicCells = new List<Cell>();
-
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    Cells cells = sheet.Cells;
-                    for (int row = 0; row <= cells.MaxDataRow; row++)
-                    {
-                        for (int col = 0; col <= cells.MaxDataColumn; col++)
+                        for (int col = 0; col <= maxCol; col++)
                         {
                             Cell cell = cells[row, col];
                             if (!string.IsNullOrEmpty(cell.Formula))
                             {
-                                foreach (string largeSheetName in largeSheets)
-                                {
-                                    string pattern1 = $"'{largeSheetName}'!";
-                                    string pattern2 = $"{largeSheetName}!";
-
-                                    if (cell.Formula.IndexOf(pattern1, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                        cell.Formula.IndexOf(pattern2, StringComparison.OrdinalIgnoreCase) >= 0)
-                                    {
-                                        problematicCells.Add(cell);
-                                        Console.WriteLine($"[Detect] Formula in {sheet.Name}!{cell.Name} references large sheet \"{largeSheetName}\".");
-                                        break;
-                                    }
-                                }
+                                formulaCells.Add(cell);
                             }
                         }
                     }
-                }
 
-                // -------------------- Suggest Optimization Strategies --------------------
-                Console.WriteLine("\n--- Optimization Recommendations ---\n");
-                Console.WriteLine("1. Convert repetitive formulas to shared formulas to reduce memory overhead.");
-                Console.WriteLine("   Example: cell.SetSharedFormula(\"=A1*2\", rowCount, colCount);");
-                Console.WriteLine("2. Avoid volatile functions (INDIRECT, OFFSET) that force full‑sheet recalculation.");
-                Console.WriteLine("   Use structured table references or explicit ranges instead.");
-                Console.WriteLine("3. Adjust CalculationOptions.CalcStackSize if you encounter StackOverflowException.");
-                Console.WriteLine("   Example:");
-                Console.WriteLine("       var opts = new CalculationOptions { CalcStackSize = 100, Recursive = false };");
-                Console.WriteLine("       workbook.CalculateFormula(opts);");
-                Console.WriteLine("4. Enable caching for large data access:");
-                Console.WriteLine("       workbook.StartAccessCache(AccessCacheOptions.All);");
-                Console.WriteLine("       // perform read‑only operations");
-                Console.WriteLine("       workbook.CloseAccessCache(AccessCacheOptions.All);");
-                Console.WriteLine("5. When using dynamic array formulas, limit the spill range if full size is unnecessary:");
-                Console.WriteLine("       var opts = new CalculationOptions { Recursive = false };");
-                Console.WriteLine("       cell.SetDynamicArrayFormula(\"=SEQUENCE(5)\", new FormulaParseOptions(), calculateValue:true);");
-                Console.WriteLine("       workbook.RefreshDynamicArrayFormulas(true, opts);");
-                Console.WriteLine("6. For static heavy sub‑ranges, replace formulas with their calculated values:");
-                Console.WriteLine("       range.RemoveFormulas(); // converts formulas to values");
-                Console.WriteLine("7. Define named ranges or convert data to tables and reference them in formulas.");
-                Console.WriteLine("8. If formulas must reference large sheets, consider splitting data or using Power Query outside Excel.");
+                    Console.WriteLine($"  Found {formulaCells.Count} formula cells.");
 
-                // -------------------- Apply Some Automatic Optimizations (Optional) --------------------
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    Cells cells = sheet.Cells;
-                    for (int col = 0; col <= cells.MaxDataColumn; col++)
+                    // Suggest optimization strategies for each formula.
+                    foreach (Cell formulaCell in formulaCells)
                     {
-                        string firstFormula = null;
-                        int startRow = -1;
-                        int count = 0;
+                        // Example heuristics:
+                        // 1. If the formula references a whole column/row range, suggest using structured tables or dynamic arrays.
+                        // 2. If many similar formulas exist, suggest using shared formulas.
+                        // 3. If the formula is volatile (e.g., NOW(), RAND()), suggest limiting its use.
+                        // 4. If the formula result is used only for display, consider pre‑calculating values and storing them.
 
-                        for (int row = 0; row <= cells.MaxDataRow; row++)
+                        string formula = formulaCell.Formula;
+
+                        // Simple check for whole‑column/row references (e.g., A:A or 1:1).
+                        if (formula.Contains(":") && (formula.Contains("A:A") || formula.Contains("1:1")))
                         {
-                            Cell cur = cells[row, col];
-                            if (!string.IsNullOrEmpty(cur.Formula))
-                            {
-                                if (firstFormula == null)
-                                {
-                                    firstFormula = cur.Formula;
-                                    startRow = row;
-                                    count = 1;
-                                }
-                                else if (cur.Formula == firstFormula)
-                                {
-                                    count++;
-                                }
-                                else
-                                {
-                                    if (count > 1)
-                                    {
-                                        Cell anchor = cells[startRow, col];
-                                        anchor.SetSharedFormula(firstFormula, count, 1);
-                                    }
-                                    firstFormula = cur.Formula;
-                                    startRow = row;
-                                    count = 1;
-                                }
-                            }
+                            Console.WriteLine($"    Cell {formulaCell.Name} uses whole‑range reference. " +
+                                              $"Consider limiting the range or using a Table.");
                         }
 
-                        if (count > 1 && firstFormula != null)
+                        // Detect volatile functions.
+                        if (formula.IndexOf("NOW()", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                            formula.IndexOf("RAND()", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                            formula.IndexOf("RANDBETWEEN", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            Cell anchor = cells[startRow, col];
-                            anchor.SetSharedFormula(firstFormula, count, 1);
+                            Console.WriteLine($"    Cell {formulaCell.Name} contains volatile function. " +
+                                              $"Avoid if possible for large sheets.");
+                        }
+
+                        // Suggest shared formulas when many adjacent cells have similar formulas.
+                        // Here we just demonstrate the idea; a real implementation would analyze patterns.
+                        // For demonstration, we output a suggestion if the formula length is short.
+                        if (formula.Length < 30)
+                        {
+                            Console.WriteLine($"    Cell {formulaCell.Name} may benefit from a shared formula. " +
+                                              $"Use Cell.SetSharedFormula to reduce memory and calculation time.");
                         }
                     }
-                }
 
-                // -------------------- Save Optimized Workbook --------------------
-                workbook.Save("OptimizedOutput.xlsx");
-                Console.WriteLine("\n[Result] Optimized workbook saved as \"OptimizedOutput.xlsx\".");
+                    // General workbook‑level suggestions for large sheets.
+                    Console.WriteLine("  General optimization suggestions for this worksheet:");
+                    Console.WriteLine("    • Enable calculation cache: workbook.StartAccessCache(AccessCacheOptions.All);");
+                    Console.WriteLine("    • Reduce recursive stack size if deep dependency chains exist:");
+                    Console.WriteLine("        CalculationOptions opts = new CalculationOptions { CalcStackSize = 100 };");
+                    Console.WriteLine("        workbook.CalculateFormula(opts);");
+                    Console.WriteLine("    • If using dynamic array formulas, refresh them after data changes:");
+                    Console.WriteLine("        workbook.RefreshDynamicArrayFormulas(true);");
+                    Console.WriteLine("    • Convert repetitive formulas to shared formulas via Cell.SetSharedFormula.");
+                    Console.WriteLine("    • Consider converting large data ranges to Excel Tables and use structured references.");
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Error] An exception occurred: {ex.Message}");
-            }
+
+            // Save the workbook (optional – here we just save unchanged file).
+            workbook.Save("output.xlsx");
         }
     }
 }

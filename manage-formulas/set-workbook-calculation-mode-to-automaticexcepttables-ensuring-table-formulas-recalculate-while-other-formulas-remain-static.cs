@@ -1,64 +1,28 @@
+// Title: Aspose.Cells C# – Set Workbook Calculation Mode to AutomaticExceptTable
+// Description: Demonstrates how to configure Aspose.Cells Workbook.Settings.FormulaSettings.CalculationMode to CalcModeType.AutomaticExceptTable so that only table formulas recalculate automatically while all other formulas stay static, then saves the workbook.
+// Keywords: Aspose.Cells calculation mode | AutomaticExceptTable C# | Aspose.Cells formula settings | disable automatic recalculation Aspose | Excel table formulas recalc | Aspose.Cells .NET example | Workbook.Settings.FormulaSettings | CalcModeType AutomaticExceptTable | Aspose.Cells GitHub sample | C# Excel automation
+// Common Searches: Aspose.Cells set calculation mode AutomaticExceptTable | C# Aspose.Cells only recalculate table formulas | prevent non‑table formulas from auto‑calculating Aspose | how to enable AutomaticExceptTable in Aspose.Cells | save calculation mode in Excel file using Aspose.Cells
+// Developer Intent: Configure a workbook so that only table formulas auto‑recalculate, leaving other formulas unchanged.
+// Use Cases: Create an Excel template where static formulas stay fixed but table formulas stay up‑to‑date. | Export data with Aspose.Cells while preserving a custom calculation mode for downstream users. | Load an existing workbook, switch to AutomaticExceptTable to improve performance, and save without triggering full recalculation.
+// AI Prompts: Write C# code with Aspose.Cells to set Workbook.Settings.FormulaSettings.CalculationMode to AutomaticExceptTable and describe its impact. | Show how to load an existing workbook, change its calculation mode to AutomaticExceptTable, and save it without forcing a full recalculation. | Explain how to query the current calculation mode of a workbook using Aspose.Cells .NET API.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
+// Demonstrates how to configure Aspose.Cells Workbook.Settings.FormulaSettings.CalculationMode to CalcModeType.AutomaticExceptTable so that only table formulas recalculate automatically while all other formulas stay static, then saves the workbook.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Set calculation mode to AutomaticExceptTable.
-            // Table formulas will be recalculated by Excel,
-            // while other formulas stay static unless CalculateFormula is called.
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
+        // Set calculation mode to AutomaticExceptTable.
+        // Table formulas will be recalculated automatically,
+        // while other formulas stay static unless calculated manually.
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
 
-            // -------------------------------------------------
-            // Add a regular (non‑table) formula – it will NOT recalc automatically.
-            // -------------------------------------------------
-            Worksheet ws = workbook.Worksheets[0];
-            ws.Cells["A1"].PutValue(5);
-            ws.Cells["B1"].Formula = "=A1*2"; // static unless workbook.CalculateFormula() is invoked
-
-            // -------------------------------------------------
-            // Create a simple table with a calculated column.
-            // Table formulas are subject to the AutomaticExceptTable mode.
-            // -------------------------------------------------
-            int startRow = 2; // Excel rows are 1‑based; start at row 2 for the table data
-
-            ws.Cells[$"A{startRow}"].PutValue(1);
-            ws.Cells[$"A{startRow + 1}"].PutValue(2);
-            ws.Cells[$"A{startRow + 2}"].PutValue(3);
-
-            // Add a ListObject (table) covering A{startRow}:A{startRow+2}
-            // Parameters: firstRow (0‑based), firstColumn, totalRows, totalColumns, hasHeaders
-            int firstRowIndex = startRow - 1; // convert to zero‑based index
-            int firstColumnIndex = 0;
-            int totalRows = 3;
-            int totalColumns = 1;
-            bool hasHeaders = true;
-
-            // Create the table
-            ws.ListObjects.Add(firstRowIndex, firstColumnIndex,
-                               firstRowIndex + totalRows - 1,
-                               firstColumnIndex + totalColumns - 1,
-                               hasHeaders);
-
-            // Add a calculated column inside the table (column B)
-            // This formula will be recalculated by Excel when the workbook is opened.
-            ws.Cells[$"B{startRow}"].Formula = $"=A{startRow}*10";
-
-            // Save the workbook
-            string outputPath = "AutomaticExceptTable.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook (the calculation mode is stored in the file)
+        workbook.Save("AutomaticExceptTable.xlsx");
     }
 }

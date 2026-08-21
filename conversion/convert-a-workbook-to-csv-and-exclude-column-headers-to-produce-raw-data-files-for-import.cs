@@ -1,36 +1,43 @@
-// Title: Convert Excel Workbook to Header‑less CSV with Aspose.Cells for .NET (C#)
-// Description: Loads an .xlsx file, removes the first worksheet row (assumed header), and saves the result directly as a CSV file, producing a raw data file ready for bulk import or downstream processing.
-// Keywords: Aspose.Cells CSV export | C# remove header row | Excel to CSV without headers | SaveFormat.Csv Aspose | delete first row Aspose.Cells | raw data CSV generation | bulk import CSV | Aspose.Cells .NET conversion
-// Common Searches: Aspose.Cells export CSV without header | C# convert Excel to CSV skip first row | How to delete header row before saving as CSV using Aspose.Cells | Save Excel as CSV raw data C# Aspose | Remove column titles when exporting to CSV with Aspose.Cells
-// Developer Intent: Create a CSV file from an Excel workbook while excluding the header row.
-// Use Cases: Loading data into a database that expects header‑less CSV | Feeding raw CSV into ETL pipelines that strip metadata | Generating input files for legacy systems that reject column names | Preparing data extracts for analytics tools that require plain values
-// AI Prompts: Write C# code using Aspose.Cells to convert an .xlsx to CSV and omit the first row. | Show how to configure Aspose.Cells SaveOptions to export a worksheet without column headers. | Explain how to delete multiple header rows before saving a CSV with Aspose.Cells in .NET.
+// Title: Convert Excel to CSV without Headers using Aspose.Cells for .NET (C#)
+// Description: Loads an .xlsx workbook, deletes the first row of the first worksheet (assumed header), sets TxtSaveOptions.ExportAllSheets = true, and saves all sheets to a single CSV file that contains only raw data.
+// Keywords: Aspose.Cells CSV export C# | remove header row Aspose.Cells | ExportAllSheets CSV Aspose | Excel to raw CSV .NET | Aspose.Cells TxtSaveOptions | C# convert Excel to CSV without headers | save multiple worksheets to one CSV
+// Common Searches: Aspose.Cells export Excel to CSV without header row | C# save all worksheets as one CSV using Aspose.Cells | how to delete first row before CSV export Aspose.Cells | convert workbook to raw CSV Aspose.Cells .NET | export Excel data without column titles C#
+// Developer Intent: Create a CSV file that contains only the data rows from an Excel workbook by removing column headings before export.
+// Use Cases: Import raw data into a database where column titles are not required. | Combine data from several worksheets into a single CSV for batch processing. | Automate nightly ETL jobs that need header‑free CSV files.
+// AI Prompts: Show C# code with Aspose.Cells that deletes the first row of each worksheet and exports the workbook to a single CSV file. | Explain how to use TxtSaveOptions.ExportAllSheets to write all Excel sheets to one CSV without headers. | Provide a modification to keep headers in selected sheets while removing them from others during CSV export.
 
 using System;
 using Aspose.Cells;
 
-// Loads an .xlsx file, removes the first worksheet row (assumed header), and saves the result directly as a CSV file, producing a raw data file ready for bulk import or downstream processing.
-class ConvertWorkbookToCsvWithoutHeaders
+// Loads an .xlsx workbook, deletes the first row of the first worksheet (assumed header), sets TxtSaveOptions.ExportAllSheets = true, and saves all sheets to a single CSV file that contains only raw data.
+class Program
 {
     static void Main()
     {
         // Path to the source Excel workbook
         string sourcePath = "input.xlsx";
 
-        // Path for the resulting CSV file (raw data without column headers)
-        string destPath = "output.csv";
+        // Path for the resulting CSV file (raw data without headers)
+        string csvPath = "output.csv";
 
         // Load the workbook from the source file
         Workbook workbook = new Workbook(sourcePath);
 
-        // Access the first worksheet (you can adjust the index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Remove the first row (assumed to contain column headers) from the first worksheet.
+        // If you need to remove headers from all worksheets, iterate over workbook.Worksheets.
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells.DeleteRow(0);
 
-        // Remove the first row which typically contains column headers
-        // This operation modifies the worksheet in‑place
-        worksheet.Cells.DeleteRow(0);
+        // Prepare CSV save options.
+        // ExportAllSheets = true ensures that all worksheets are written to the CSV file.
+        TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
+        {
+            ExportAllSheets = true
+        };
 
-        // Save the modified workbook as CSV using the Save(string, SaveFormat) rule
-        workbook.Save(destPath, SaveFormat.Csv);
+        // Save the workbook as CSV using the specified options.
+        workbook.Save(csvPath, saveOptions);
+
+        Console.WriteLine($"Workbook converted to CSV without headers: {csvPath}");
     }
 }

@@ -1,59 +1,63 @@
-// Title: Insert a Local Image into a Specific Cell with MoveAndSize using Aspose.Cells for .NET (C#)
-// Description: C# example that creates a workbook, validates a local PNG/JPEG file, adds the picture to a target cell (e.g., C5) using zero‑based row/column indices, sets the picture's Placement to MoveAndSize so it follows cell resizing, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells insert picture C# | add image to cell Aspose.Cells | PlacementType.MoveAndSize | load local PNG Aspose.Cells | embed picture in worksheet .NET | Aspose.Cells picture placement | C# Excel image insertion | Aspose.Cells picture cell coordinates
-// Common Searches: how to add an image to a specific cell with Aspose.Cells | Aspose.Cells C# picture placement MoveAndSize example | insert PNG into Excel cell using Aspose.Cells .NET | validate image file before adding to worksheet Aspose | Aspose.Cells picture at C5 row 5 column 3
-// Developer Intent: Place a local image into a designated worksheet cell and bind it to the cell so it moves and resizes with the cell.
-// Use Cases: Attach product thumbnails to catalog rows for automated report generation. | Anchor a company logo in a header cell that scales with column width. | Insert employee photos next to data entries in HR spreadsheets.
-// AI Prompts: Generate C# code that inserts a JPEG into cell B2 with Aspose.Cells and sets Placement to MoveAndSize. | Provide robust error handling for missing image files when adding pictures to an Aspose.Cells worksheet. | Show how to programmatically adjust picture height and width after placing it in a specific cell using Aspose.Cells.
+// Title: C# – Insert a Local Image into a Specific Excel Cell with Aspose.Cells
+// Description: This example creates a new workbook, verifies that a PNG file exists at a given path, adds the picture to the top‑left corner of a target cell (e.g., C3) using Worksheet.Pictures.Add, sets IsPlacedInCell to true so the image is anchored inside the cell, and saves the file as Output.xlsx.
+// Keywords: Aspose.Cells add picture to cell | C# insert image into Excel cell | .NET embed PNG in worksheet | IsPlacedInCell property | save workbook with image
+// Common Searches: Aspose.Cells insert image into specific cell C# | how to anchor picture inside Excel cell using Aspose | check image file exists before adding to worksheet Aspose.Cells | place logo in Excel cell programmatically .NET | exception handling when adding picture Aspose.Cells
+// Developer Intent: Embed a local image file into a designated Excel cell and persist the workbook.
+// Use Cases: Add a company logo to the title cell of an automated report. | Insert product thumbnail pictures into a catalog sheet at exact cell positions. | Place a digital signature image into an approval cell for workflow documents.
+// AI Prompts: Generate C# code that loads a JPEG from a file path, inserts it into cell B5 of an Excel worksheet with Aspose.Cells, and ensures the picture is anchored inside the cell. | Show how to verify an image file exists, add it to a worksheet, handle possible exceptions, and save the workbook using Aspose.Cells in .NET.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace InsertPictureInCellApp
+// This example creates a new workbook, verifies that a PNG file exists at a given path, adds the picture to the top‑left corner of a target cell (e.g., C3) using Worksheet.Pictures.Add, sets IsPlacedInCell to true so the image is anchored inside the cell, and saves the file as Output.xlsx.
+class InsertPictureInCell
 {
-    // C# example that creates a workbook, validates a local PNG/JPEG file, adds the picture to a target cell (e.g., C5) using zero‑based row/column indices, sets the picture's Placement to MoveAndSize so it follows cell resizing, and saves the file as an XLSX document.
-    class InsertPictureInCell
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Define the target cell (zero‑based indices). Example: cell C3
+        int targetRow = 2;    // Row index for C3
+        int targetColumn = 2; // Column index for C3
+
+        // Local image file path
+        string imagePath = @"C:\Images\sample.png";
+
+        // Verify that the image file exists before attempting to add it
+        if (!File.Exists(imagePath))
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            Console.WriteLine($"Image file not found: {imagePath}");
+            return;
+        }
 
-                // Define the target cell (e.g., C5). Row and column indices are zero‑based.
-                int targetRow = 4;   // Row 5
-                int targetColumn = 2; // Column C
+        try
+        {
+            // Add the picture to the worksheet at the specified cell's top‑left corner
+            int pictureIndex = worksheet.Pictures.Add(targetRow, targetColumn, imagePath);
+            Picture picture = worksheet.Pictures[pictureIndex];
 
-                // Local image file path
-                string imagePath = "example.png";
+            // Place the picture inside the cell (instead of floating over cells)
+            picture.IsPlacedInCell = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error adding picture: {ex.Message}");
+            return;
+        }
 
-                // Verify that the image file exists
-                if (!File.Exists(imagePath))
-                {
-                    Console.WriteLine($"Image file not found: {imagePath}");
-                    return;
-                }
-
-                // Add the picture to the worksheet at the specified cell position
-                int pictureIndex = worksheet.Pictures.Add(targetRow, targetColumn, imagePath);
-                Picture picture = worksheet.Pictures[pictureIndex];
-
-                // Place the picture inside the cell (move and size with cells)
-                picture.Placement = PlacementType.MoveAndSize;
-
-                // Save the workbook
-                string outputPath = "PictureInCell.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+        try
+        {
+            // Save the workbook
+            workbook.Save("Output.xlsx");
+            Console.WriteLine("Workbook saved successfully as Output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
     }
 }

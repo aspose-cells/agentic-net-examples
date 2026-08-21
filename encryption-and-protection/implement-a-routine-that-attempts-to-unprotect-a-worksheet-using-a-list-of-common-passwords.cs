@@ -1,88 +1,108 @@
-// Title: C# Aspose.Cells Routine to Unprotect an Excel Worksheet Using a Common Password List
-// Description: Loads a workbook with Aspose.Cells, checks if the first worksheet is protected, then iterates through a predefined list of common passwords calling Worksheet.Unprotect. On success the workbook is saved without protection; otherwise the original file is saved and the result is logged.
-// Keywords: Aspose.Cells unprotect worksheet C# | Excel worksheet password brute force | C# try common passwords Aspose | remove worksheet protection programmatically | Worksheet.Unprotect method example | batch unprotect Excel sheets | Aspose.Cells security automation
-// Common Searches: how to unprotect an Excel worksheet with Aspose.Cells in C# | C# code to try multiple passwords on a protected worksheet | Aspose.Cells worksheet protection removal script | automate Excel sheet password cracking using Aspose | unprotect Excel worksheet without original password C#
-// Developer Intent: Programmatically test a set of common passwords to unlock a protected worksheet.
-// Use Cases: Recover data from legacy workbooks that use simple worksheet passwords before performing analysis. | Batch‑process a directory of protected sheets, attempting common passwords to enable further automation. | Integrate into a migration tool that must remove worksheet protection prior to applying schema changes.
-// AI Prompts: Write C# code that uses Aspose.Cells to iterate over a custom password file and unprotect a worksheet, handling errors and stopping after the first successful password. | Provide an optimized version of the unprotect routine that logs the password used for each worksheet and skips sheets that are already unprotected. | Suggest enhancements to parallelize password attempts across multiple worksheets while respecting Aspose.Cells thread‑safety guidelines.
+// Title: C# – Unprotect an Excel worksheet by testing common passwords with Aspose.Cells
+// Description: The routine loads a workbook, selects a worksheet, and iterates a predefined list of common passwords. For each entry it calls worksheet.Protection.VerifyPassword to test validity without raising an exception; when a match is found it invokes worksheet.Unprotect and finally saves the (potentially) unprotected file.
+// Keywords: Aspose.Cells | C# | Excel worksheet unprotect | common password list | VerifyPassword | worksheet protection API | programmatic Excel de‑protection | load workbook | save workbook | brute‑force password Excel
+// Common Searches: how to unprotect an Excel worksheet programmatically using Aspose.Cells | C# code to try common passwords on a protected worksheet | Aspose.Cells VerifyPassword example | remove worksheet protection without knowing the password | save workbook after attempting to unprotect sheet in .NET
+// Developer Intent: Automatically attempt to remove worksheet protection by testing a set of typical passwords and persist the outcome.
+// Use Cases: Regain access to a sheet when the original password is forgotten but likely weak. | Batch‑process a collection of workbooks to strip trivial worksheet protection before data extraction. | Integrate into a migration tool that cleans protected sheets prior to format conversion.
+// AI Prompts: Generate C# code using Aspose.Cells that tries a custom password list to unprotect a worksheet and logs the successful password. | Explain the behavior of worksheet.Protection.VerifyPassword in Aspose.Cells and how to handle verification errors during password trials. | Show how to extend the example to loop through all worksheets in a workbook and apply the common‑password test to each.
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// Loads a workbook with Aspose.Cells, checks if the first worksheet is protected, then iterates through a predefined list of common passwords calling Worksheet.Unprotect. On success the workbook is saved without protection; otherwise the original file is saved and the result is logged.
-public class WorksheetUnprotectHelper
+namespace AsposeCellsExamples
 {
-    // List of common passwords to try.
-    private static readonly List<string> CommonPasswords = new List<string>
+    // The routine loads a workbook, selects a worksheet, and iterates a predefined list of common passwords. For each entry it calls worksheet.Protection.VerifyPassword to test validity without raising an exception; when a match is found it invokes worksheet.Unprotect and finally saves the (potentially) unprotected file.
+    public class WorksheetUnprotectHelper
     {
-        "password",
-        "123456",
-        "admin",
-        "test",
-        "1234",
-        "abcd",
-        "secret",
-        "letmein",
-        "welcome",
-        "qwerty"
-    };
-
-    /// <param name="inputFilePath">Path to the protected workbook.</param>
-    /// <param name="outputFilePath">Path where the unprotected workbook will be saved.</param>
-    public static void UnprotectWorksheetWithCommonPasswords(string inputFilePath, string outputFilePath)
-    {
-        // Load the workbook (no password is supplied because we are dealing with worksheet protection, not file encryption).
-        Workbook workbook = new Workbook(inputFilePath);
-
-        // Access the first worksheet.
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // If the worksheet is not protected, simply save and exit.
-        if (!worksheet.IsProtected)
+        // List of common passwords to try
+        private static readonly string[] CommonPasswords = new string[]
         {
-            Console.WriteLine("Worksheet is not protected. Saving without changes.");
-            workbook.Save(outputFilePath);
-            return;
-        }
+            "123456", "password", "admin", "test", "12345",
+            "1234", "123", "password1", "12345678", "qwerty"
+        };
 
-        bool unprotected = false;
-
-        // Try each password in the list.
-        foreach (string pwd in CommonPasswords)
+        /// <param name="inputFilePath">Path to the protected workbook.</param>
+        /// <param name="outputFilePath">Path where the (potentially) unprotected workbook will be saved.</param>
+        public static void UnprotectWorksheetWithCommonPasswords(string inputFilePath, string outputFilePath)
         {
+            if (!File.Exists(inputFilePath))
+            {
+                Console.WriteLine($"Input file not found: {inputFilePath}");
+                return;
+            }
+
             try
             {
-                worksheet.Unprotect(pwd);
-                if (!worksheet.IsProtected)
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(inputFilePath);
+
+                // Access the first worksheet (adjust index as needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                bool unprotected = false;
+
+                // Iterate through the list of common passwords
+                foreach (string pwd in CommonPasswords)
                 {
-                    Console.WriteLine($"Worksheet successfully unprotected with password: \"{pwd}\"");
-                    unprotected = true;
-                    break;
+                    try
+                    {
+                        // Verify the password without throwing an exception
+                        if (worksheet.Protection.VerifyPassword(pwd))
+                        {
+                            // Correct password found – unprotect the worksheet
+                            worksheet.Unprotect(pwd);
+                            unprotected = true;
+                            Console.WriteLine($"Worksheet unprotected using password: \"{pwd}\"");
+                            break;
+                        }
+                    }
+                    catch (Exception verifyEx)
+                    {
+                        // Log verification errors but continue trying other passwords
+                        Console.WriteLine($"Error verifying password \"{pwd}\": {verifyEx.Message}");
+                    }
+                }
+
+                if (!unprotected)
+                {
+                    Console.WriteLine("Failed to unprotect the worksheet with the provided common passwords or worksheet is not protected.");
+                }
+
+                // Save the workbook (whether modified or not) to the output path
+                try
+                {
+                    workbook.Save(outputFilePath);
+                    Console.WriteLine($"Workbook saved to: {outputFilePath}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Error saving workbook: {saveEx.Message}");
                 }
             }
             catch (Exception ex)
             {
-                // Unprotect throws an exception when the password is incorrect.
-                Console.WriteLine($"Password \"{pwd}\" failed: {ex.Message}");
+                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
             }
         }
-
-        if (!unprotected)
-        {
-            Console.WriteLine("Failed to unprotect the worksheet with the provided common passwords.");
-        }
-
-        // Save the workbook (whether unprotected or not).
-        workbook.Save(outputFilePath);
     }
 
-    // Example usage.
-    public static void Main()
+    public class Program
     {
-        string inputPath = "ProtectedWorksheet.xlsx";
-        string outputPath = "UnprotectedWorksheet.xlsx";
+        // Entry point of the console application
+        public static void Main(string[] args)
+        {
+            // Example file paths – adjust as needed or pass via command‑line arguments
+            string inputPath = "protected.xlsx";
+            string outputPath = "unprotected.xlsx";
 
-        UnprotectWorksheetWithCommonPasswords(inputPath, outputPath);
+            if (args.Length >= 2)
+            {
+                inputPath = args[0];
+                outputPath = args[1];
+            }
+
+            WorksheetUnprotectHelper.UnprotectWorksheetWithCommonPasswords(inputPath, outputPath);
+        }
     }
 }

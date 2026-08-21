@@ -1,67 +1,69 @@
-// Title: C# – Unmerge A1:C1 and Copy Range to a New Worksheet with Aspose.Cells
-// Description: Load an existing workbook, unmerge the merged range A1:C1, add a new sheet, copy the range with all data and formatting using PasteOptions.All, and save the result as a new file.
-// Keywords: Aspose.Cells | C# | unmerge cells | copy range | PasteOptions.All | Workbook.Save | Excel automation | merge header row | add worksheet | copy formatting
-// Common Searches: Aspose.Cells unmerge merged cells C# | Copy range A1:C1 to another sheet preserving formatting | How to use PasteOptions.All in Aspose.Cells | Add new worksheet and copy data with Aspose.Cells | Save modified workbook after unmerging cells
-// Developer Intent: Unmerge the merged cells A1:C1, copy their content to a newly created worksheet, and save the updated workbook.
-// Use Cases: Duplicate a merged header row from a template sheet to a report sheet while retaining formatting. | Create a clean analysis sheet by unmerging and copying a specific range from the source workbook. | Archive a section of a workbook by moving an unmerged range to a separate worksheet before distribution.
-// AI Prompts: Generate C# code using Aspose.Cells that unmerges a specified range and copies it to a new worksheet with full formatting. | Explain how PasteOptions.PasteType.All affects copying merged cells between worksheets in Aspose.Cells. | Provide error‑handling patterns for missing input files and save failures when copying ranges with Aspose.Cells.
+// Title: C# – Unmerge A1:C1 and copy to a new worksheet using Aspose.Cells
+// Description: Loads an existing workbook, unmerges the merged range A1:C1 on the first sheet, adds a worksheet named "CopySheet", copies the unmerged content (values, formulas, formatting) to the same range on the new sheet with PasteOptions.All, and saves the result as output.xlsx.
+// Keywords: Aspose.Cells | C# unmerge cells | copy range to another sheet | PasteOptions.All | .NET spreadsheet manipulation | unmerge A1:C1 | duplicate merged header | save workbook Aspose
+// Common Searches: Aspose.Cells unmerge merged cells C# | copy range A1:C1 to new worksheet Aspose.Cells | how to duplicate merged header row with Aspose.Cells .NET | C# unmerge and copy cells between worksheets | Aspose.Cells paste options example
+// Developer Intent: Unmerge the merged range A1:C1, copy its full content to a newly created worksheet, and save the updated workbook.
+// Use Cases: Extract a merged title row from a source sheet and place it on a separate reporting sheet. | Create a template copy of a merged header while preserving styles, formulas, and values. | Prepare a workbook for downstream processing by isolating merged header cells on their own sheet.
+// AI Prompts: Write C# code that uses Aspose.Cells to unmerge range A1:C1, copy it to a new worksheet called "CopySheet", and save the file as output.xlsx. | Show how to copy a merged range with all formatting, formulas, and values using PasteOptions.All in Aspose.Cells for .NET. | Explain step‑by‑step how to handle merged cells, duplicate them on another sheet, and persist the workbook with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsUnmergeAndCopy
+namespace AsposeCellsExample
 {
-    // Load an existing workbook, unmerge the merged range A1:C1, add a new sheet, copy the range with all data and formatting using PasteOptions.All, and save the result as a new file.
+    // Loads an existing workbook, unmerges the merged range A1:C1 on the first sheet, adds a worksheet named "CopySheet", copies the unmerged content (values, formulas, formatting) to the same range on the new sheet with PasteOptions.All, and saves the result as output.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                const string inputFile = "Input.xlsx";
-                const string outputFile = "Output.xlsx";
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-                // Verify input file exists
-                if (!File.Exists(inputFile))
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Input file '{inputFile}' not found.");
+                    Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
                 // Load the existing workbook
-                Workbook workbook = new Workbook(inputFile);
+                Workbook workbook = new Workbook(inputPath);
 
-                // Access the first worksheet (source)
-                Worksheet sourceSheet = workbook.Worksheets[0];
+                // Source worksheet (first sheet)
+                Worksheet srcSheet = workbook.Worksheets[0];
 
                 // Unmerge the range A1:C1
-                Aspose.Cells.Range sourceRange = sourceSheet.Cells.CreateRange("A1", "C1");
-                sourceRange.UnMerge();
+                srcSheet.Cells.UnMerge(0, 0, 1, 3);
 
-                // Add a new worksheet to copy the content into (destination)
+                // Add a new worksheet to copy the content into
                 Worksheet destSheet = workbook.Worksheets.Add("CopySheet");
 
-                // Create the destination range A1:C1
-                Aspose.Cells.Range destRange = destSheet.Cells.CreateRange("A1", "C1");
+                // Define source and destination ranges (A1:C1)
+                AsposeRange srcRange = srcSheet.Cells.CreateRange("A1", "C1");
+                AsposeRange destRange = destSheet.Cells.CreateRange("A1", "C1");
 
-                // Prepare paste options to copy all cell data, formats, etc.
-                PasteOptions pasteOptions = new PasteOptions
+                // Set paste options (copy all content)
+                PasteOptions options = new PasteOptions
                 {
                     PasteType = PasteType.All,
                     SkipBlanks = false,
                     Transpose = false
                 };
 
-                // Copy the content from source range to destination range
-                sourceRange.Copy(destRange, pasteOptions);
+                // Copy the source range to the destination range
+                srcRange.Copy(destRange, options);
 
                 // Save the modified workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved to '{outputFile}'.");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
+                // Log any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

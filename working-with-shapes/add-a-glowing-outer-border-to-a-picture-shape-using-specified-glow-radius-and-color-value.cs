@@ -1,59 +1,57 @@
-// Title: Apply Glow Effect and Outer Border to a Picture Shape in Aspise.Cells for .NET (C#)
-// Description: Creates a new workbook, inserts a JPEG picture, optionally adds a black border, then sets a glow effect with a configurable radius, color, and transparency before saving the file as an XLSX document.
-// Keywords: Aspose.Cells picture glow | C# picture border | add outer glow Aspose.Cells | picture shape effect .NET | glow radius color transparency | Excel workbook image styling | Aspose.Cells example C#
-// Common Searches: Aspose.Cells add glow to picture | C# set picture border and glow in Excel | how to apply outer glow effect to image in Aspose.Cells | configure picture glow radius .NET | sample code picture glow Aspose.Cells
-// Developer Intent: Add a colored glow with a defined radius around a picture shape and optionally draw a visible border using Aspose.Cells for .NET.
-// Use Cases: Insert a JPEG into a worksheet, apply a 2‑point black border, and add a yellow glow of 12 points with 30% transparency. | Validate image file existence before adding it to avoid runtime errors. | Reuse the same glow configuration for multiple pictures by applying identical GlowEffect settings.
-// AI Prompts: Generate C# code that inserts an image into an Aspose.Cells worksheet, applies a red glow of 15 points with 20% transparency, and saves the workbook. | Create a reusable method in C# for Aspose.Cells that adds a picture with customizable border weight, border color, glow radius, glow color, and glow transparency.
+// Title: Apply a Green Outer Glow to a Picture Shape in Excel with Aspose.Cells for .NET
+// Description: Creates a workbook, inserts a PNG at cell C3, adds an optional black border, and configures the picture's GlowEffect with a green color, 12‑point radius, and 30 % transparency before saving as PictureWithGlow.xlsx.
+// Keywords: Aspose.Cells picture glow | C# Excel outer glow | picture border Aspose.Cells | GlowEffect size color | add glow to worksheet image | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells add outer glow to picture | C# set picture glow radius Excel | how to apply green glow to image in Aspose.Cells | configure picture border and glow in .NET | Excel picture glow effect code sample
+// Developer Intent: Add a colored outer glow with a defined radius to a picture shape in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Insert a PNG into a worksheet and highlight it with a green outer glow for visual emphasis. | Combine a thin black border with a customizable glow to match corporate branding. | Generate a placeholder PNG when the source image is missing, then apply identical glow settings.
+// AI Prompts: Generate C# code that adds a picture to an Excel sheet with Aspose.Cells and applies a red outer glow of 8 points at 50 % transparency. | Show how to change an existing picture's glow color to blue and increase the radius to 15 points using Aspose.Cells for .NET. | Explain how to programmatically create a placeholder PNG and then set a configurable glow effect on the picture in an Excel workbook.
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace Example
 {
-    // Creates a new workbook, inserts a JPEG picture, optionally adds a black border, then sets a glow effect with a configurable radius, color, and transparency before saving the file as an XLSX document.
-    class AddGlowToPicture
+    // Creates a workbook, inserts a PNG at cell C3, adds an optional black border, and configures the picture's GlowEffect with a green color, 12‑point radius, and 30 % transparency before saving as PictureWithGlow.xlsx.
+    class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                string imagePath = "sample.jpg";
-
+                // Ensure the image file exists; create a simple placeholder if missing
+                string imagePath = "sample.png";
                 if (!File.Exists(imagePath))
                 {
-                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
-                }
-                else
-                {
-                    // Add picture to the worksheet
-                    int picIndex = sheet.Pictures.Add(2, 2, imagePath);
-                    Picture picture = sheet.Pictures[picIndex];
-
-                    // Optional: set a visible border around the picture
-                    picture.BorderLineColor = Color.Black;
-                    picture.BorderWeight = 2; // border weight in points
-
-                    // Configure the glow effect for the picture
-                    GlowEffect glow = picture.Glow;
-                    glow.Size = 12; // glow radius in points
-                    CellsColor glowColor = workbook.CreateCellsColor();
-                    glowColor.Color = Color.Yellow; // desired glow color
-                    glow.Color = glowColor;
-                    glow.Transparency = 0.3; // 30% transparency (optional)
+                    // 1x1 pixel transparent PNG
+                    byte[] pngBytes = Convert.FromBase64String(
+                        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X2V8AAAAASUVORK5CYII=");
+                    File.WriteAllBytes(imagePath, pngBytes);
                 }
 
-                // Save the workbook
-                string outputPath = "PictureWithGlow.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Add picture to worksheet (row, column, image file path)
+                int pictureIndex = worksheet.Pictures.Add(2, 2, imagePath);
+                Picture picture = worksheet.Pictures[pictureIndex];
+
+                // Optional: set a visible border line around the picture
+                picture.BorderLineColor = System.Drawing.Color.Black;
+                picture.BorderWeight = 2f; // border weight in points
+
+                // Configure glow effect
+                GlowEffect glow = picture.Glow;
+                CellsColor glowColor = workbook.CreateCellsColor();
+                glowColor.Color = System.Drawing.Color.FromArgb(255, 0, 255, 0); // green glow
+                glow.Color = glowColor;
+                glow.Size = 12; // 12‑point radius
+                glow.Transparency = 0.3; // 0.0 = opaque, 1.0 = fully transparent
+
+                // Save the workbook with the picture that has a glowing outer border
+                workbook.Save("PictureWithGlow.xlsx");
             }
             catch (Exception ex)
             {

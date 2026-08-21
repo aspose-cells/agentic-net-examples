@@ -1,44 +1,37 @@
-// Title: C# – AutoFit a column after inserting multiline wrapped text with Aspose.Cells
-// Description: Creates a new workbook, writes multiline text to cell A1 using '\n', enables text wrapping, calls Worksheet.AutoFitColumn to size column A to the wrapped content, and saves the file as MultilineAutoFitColumn.xlsx.
-// Keywords: Aspose.Cells AutoFitColumn C# | multiline text wrap Aspose.Cells | auto adjust column width .NET | Excel column autofit wrapped text | Aspose.Cells line break column width
-// Common Searches: Aspose.Cells AutoFitColumn after line breaks | C# wrap text and autofit column in Excel | how to auto size column for wrapped text Aspose.Cells | auto fit column with multiline cell content .NET
-// Developer Intent: Automatically resize a column so that multiline, wrapped text is fully visible in the generated Excel file.
-// Use Cases: Reports with bullet‑point lists where each bullet is on a new line. | Invoices that contain multi‑line address fields requiring proper column width. | Product catalogs exporting paragraph‑style descriptions without truncation.
-// AI Prompts: Provide C# code that inserts multiline text into a cell, enables wrapping, and uses AutoFitColumn to fit the column width with Aspose.Cells. | Explain how to auto‑fit multiple columns that contain wrapped text, including the row‑range parameters for Worksheet.AutoFitColumn. | Show a step‑by‑step example of adjusting column width after adding line breaks to a cell using Aspose.Cells for .NET.
+// Title: C# Aspose.Cells: AutoFit Column After Wrapping Multiline Text
+// Description: Creates a workbook, inserts a newline‑separated string into cell A1, enables text wrapping, calls worksheet.AutoFitColumn to size column A to the wrapped content, and saves the file as AutoFitColumnMultiline.xlsx.
+// Keywords: Aspose.Cells AutoFitColumn C# | wrap text multiline Aspose.Cells | adjust column width .NET Excel | auto size column after newline | Excel column autosize wrapped cells | Aspose.Cells text wrap column fit
+// Common Searches: Aspose.Cells AutoFitColumn with wrapped text | C# auto‑fit column after inserting line breaks | how to resize Excel column for multiline cell in Aspose | auto size column for wrapped content Aspose.Cells .NET | worksheet.AutoFitColumn example with text wrap
+// Developer Intent: Automatically expand column A so every line of the wrapped multiline string in cell A1 is fully visible.
+// Use Cases: Generating reports where description fields contain line breaks and need column auto‑sizing. | Designing invoice templates with product details that wrap and require dynamic column widths. | Exporting log entries with multi‑line messages to Excel while preserving readability.
+// AI Prompts: Show C# code using Aspose.Cells to insert a multiline string, enable text wrapping, and auto‑fit the column for that cell. | Demonstrate how to call worksheet.AutoFitColumn for a specific column and row range after applying text wrap with newline characters. | Explain the parameters of AutoFitColumn and how they affect column width when the cell contains wrapped text.
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsAutoFitColumnExample
+// Creates a workbook, inserts a newline‑separated string into cell A1, enables text wrapping, calls worksheet.AutoFitColumn to size column A to the wrapped content, and saves the file as AutoFitColumnMultiline.xlsx.
+class AutoFitColumnExample
 {
-    // Creates a new workbook, writes multiline text to cell A1 using '\n', enables text wrapping, calls Worksheet.AutoFitColumn to size column A to the wrapped content, and saves the file as MultilineAutoFitColumn.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Insert multiline text into cell A1
+        Cell cell = worksheet.Cells["A1"];
+        cell.PutValue("First line\nSecond line with more text\nThird line");
 
-            // Insert multiline text into cell A1
-            // Use '\n' to create line breaks
-            worksheet.Cells["A1"].PutValue("First line\nSecond line\nThird line");
+        // Enable text wrapping for the cell so the text occupies multiple lines
+        Style style = cell.GetStyle();
+        style.IsTextWrapped = true;
+        cell.SetStyle(style);
 
-            // Enable text wrapping for the cell so that the multiline text is displayed correctly
-            Style style = worksheet.Cells["A1"].GetStyle();
-            style.IsTextWrapped = true;
-            worksheet.Cells["A1"].SetStyle(style);
+        // Auto-fit column A (index 0) for the rows that contain the multiline text
+        // Here we autofit only row 0 (A1), but you can specify a range of rows if needed
+        worksheet.AutoFitColumn(0, 0, 0);
 
-            // AutoFit the column that contains the multiline text (column A, index 0)
-            // Specify the row range that contains data (row 0 to 0 in this case)
-            worksheet.AutoFitColumn(0, 0, 0);
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("MultilineAutoFitColumn.xlsx");
-
-            Console.WriteLine("Workbook saved with AutoFitColumn applied.");
-        }
+        // Save the workbook to a file
+        workbook.Save("AutoFitColumnMultiline.xlsx");
     }
 }

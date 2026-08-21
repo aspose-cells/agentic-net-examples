@@ -1,35 +1,30 @@
-// Title: C# – Retrieve and Log Formula from Cell E10 with Aspose.Cells
-// Description: Load an Excel workbook, access the first worksheet, get the formula from cell E10 in standard A1 (non‑localized) format using GetFormula(false, false), write the formula to the console for audit, and optionally save the file.
-// Keywords: Aspose.Cells GetFormula C# | read Excel cell formula .NET | audit Excel formulas | retrieve formula from E10 | log Excel formula C#
-// Common Searches: Aspose.Cells read formula from specific cell | C# get formula of cell E10 Aspose | how to log Excel formula using Aspose.Cells | extract non‑localized formula string .NET
-// Developer Intent: Extract the formula text from cell E10 and output it for auditing purposes.
-// Use Cases: Create an audit trail of critical calculations in financial models. | Generate documentation that lists formulas used in key worksheet cells. | Validate that expected formulas are present before running automated processing.
-// AI Prompts: Write a C# program that extracts formulas from a range of cells with Aspose.Cells and saves them to a CSV file. | Show how to compare a retrieved formula string with an expected pattern and throw an exception on mismatch. | Explain how to obtain formulas in R1C1 notation using Aspose.Cells for .NET.
+// Title: Extract and Log Cell E10 Formula (A1 Notation) with Aspose.Cells for .NET
+// Description: Loads an Excel workbook, accesses cell E10 on the first worksheet, retrieves its formula in standard A1 notation using GetFormula(false, false), and writes the formula string to the console for auditing.
+// Keywords: Aspose.Cells GetFormula | C# read Excel formula | extract cell formula .NET | audit Excel calculations | non‑localized A1 notation | log Excel formula | retrieve formula from cell E10
+// Common Searches: Aspose.Cells read formula from specific cell C# | Get non‑localized formula using Aspose.Cells | How to log Excel cell formula for audit | Retrieve formula of E10 with Aspose.Cells .NET | Extract Excel formulas programmatically
+// Developer Intent: Obtain the formula from cell E10 and output it for auditing.
+// Use Cases: Verify that critical cells contain expected formulas before data processing. | Create an audit trail of spreadsheet logic by logging formulas from key cells. | Document worksheet calculations by extracting and storing formulas programmatically.
+// AI Prompts: Generate C# code with Aspose.Cells that reads the formula from cell E10 and writes it to a log file. | Show how to loop through a range of cells, retrieve each formula, and save them in a dictionary using Aspose.Cells. | Explain the GetFormula parameters for obtaining localized versus non‑localized formulas in Aspose.Cells.
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Load an Excel workbook, access the first worksheet, get the formula from cell E10 in standard A1 (non‑localized) format using GetFormula(false, false), write the formula to the console for audit, and optionally save the file.
+// Loads an Excel workbook, accesses cell E10 on the first worksheet, retrieves its formula in standard A1 notation using GetFormula(false, false), and writes the formula string to the console for auditing.
 class RetrieveFormula
 {
     static void Main()
     {
-        // Load the workbook (replace with actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Load the workbook containing the target cell
+        string filePath = "input.xlsx"; // TODO: replace with actual file path
+        Workbook workbook = new Workbook(filePath);
 
-        // Access the first worksheet (or specify by name/index as needed)
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Access cell E10 on the first worksheet
+        Cell cell = workbook.Worksheets[0].Cells["E10"];
 
-        // Retrieve the cell at E10
-        Cell cell = worksheet.Cells["E10"];
-
-        // Get the formula string (standard A1 notation, non‑localized)
+        // Retrieve the formula in standard A1 notation (non‑localized)
         string formula = cell.GetFormula(false, false);
 
-        // Log the formula for audit purposes
+        // Log the retrieved formula for audit purposes
         Console.WriteLine($"Formula in E10: {formula}");
-
-        // Save the workbook (optional, if any changes were made)
-        workbook.Save("output.xlsx");
     }
 }

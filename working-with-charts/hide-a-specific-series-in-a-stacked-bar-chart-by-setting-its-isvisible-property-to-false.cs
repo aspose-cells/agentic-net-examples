@@ -1,10 +1,10 @@
-// Title: Hide a Series in a Stacked Bar Chart with Aspose.Cells for .NET (IsFiltered)
-// Description: Creates a workbook, adds category data and two series, builds a stacked bar chart, then hides the second series by setting its IsFiltered flag to true before saving the file.
-// Keywords: Aspose.Cells | C# chart series hide | IsFiltered | stacked bar chart | .NET Excel chart | chart series visibility | hide series Aspose.Cells | Excel chart filtering | Aspose.Cells API
-// Common Searches: Aspose.Cells hide chart series C# | How to hide a series in a stacked bar chart using Aspose.Cells | Set IsFiltered true Aspose.Cells chart | Remove series from Excel chart programmatically | Chart series visibility .NET Aspose
-// Developer Intent: Programmatically exclude a specific data series from a stacked bar chart so it does not render in the exported Excel workbook.
-// Use Cases: Generate reports where optional series are hidden based on user selections. | Create chart templates with placeholder series that can be suppressed until real data is supplied. | Export Excel files that contain confidential data series, keeping the data but preventing visual display.
-// AI Prompts: Write C# code with Aspose.Cells that hides a chosen series in a stacked bar chart by setting IsFiltered to true. | Show how to toggle chart series visibility in Aspose.Cells based on a boolean parameter. | Explain the difference between IsFiltered and IsVisible for Aspose.Cells chart series and when to use each.
+// Title: Hide a Series in a Stacked Bar Chart with Aspose.Cells for .NET
+// Description: Creates a workbook, fills it with category and two data series, adds a stacked bar chart, and hides the second series by setting its IsFiltered property to false before saving the file.
+// Keywords: Aspose.Cells | C# | .NET | stacked bar chart | hide chart series | IsFiltered property | chart series visibility | Excel chart manipulation | Aspose.Cells chart API | filter series without deleting data
+// Common Searches: Aspose.Cells hide series stacked bar chart | C# hide chart series Aspose.Cells | IsFiltered property example Aspose.Cells | remove series from Excel chart programmatically | filter chart series Aspose.Cells .NET
+// Developer Intent: Hide a specific series in a stacked bar chart so it does not appear in the generated workbook.
+// Use Cases: Suppress a secondary data series to highlight the primary series in a stacked bar chart. | Toggle visibility of chart series based on user input without altering the underlying worksheet data.
+// AI Prompts: Generate C# code using Aspose.Cells that hides the third series in a clustered column chart. | Show how to programmatically toggle visibility of multiple chart series at runtime with Aspose.Cells for .NET. | Provide an example of using the IsFiltered property to conditionally hide series across different chart types.
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Charts;
 
 namespace HideSeriesInStackedBarChart
 {
-    // Creates a workbook, adds category data and two series, builds a stacked bar chart, then hides the second series by setting its IsFiltered flag to true before saving the file.
+    // Creates a workbook, fills it with category and two data series, adds a stacked bar chart, and hides the second series by setting its IsFiltered property to false before saving the file.
     class Program
     {
         static void Main()
@@ -21,27 +21,24 @@ namespace HideSeriesInStackedBarChart
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data
-            // Categories
+            // Populate sample data for two series
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["A2"].PutValue("Q1");
             sheet.Cells["A3"].PutValue("Q2");
             sheet.Cells["A4"].PutValue("Q3");
 
-            // Series 1 values
             sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["B3"].PutValue(40);
-            sheet.Cells["B4"].PutValue(50);
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-            // Series 2 values (the series we will hide)
             sheet.Cells["C1"].PutValue("Series2");
-            sheet.Cells["C2"].PutValue(20);
+            sheet.Cells["C2"].PutValue(15);
             sheet.Cells["C3"].PutValue(25);
             sheet.Cells["C4"].PutValue(35);
 
             // Add a stacked bar chart
-            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 6, 0, 20, 15);
+            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 5, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
 
             // Add the two series to the chart
@@ -54,7 +51,7 @@ namespace HideSeriesInStackedBarChart
             chart.NSeries[1].IsFiltered = true;
 
             // Save the workbook
-            workbook.Save("HiddenSeriesStackedBarChart.xlsx");
+            workbook.Save("StackedBar_HideSeries.xlsx");
         }
     }
 }

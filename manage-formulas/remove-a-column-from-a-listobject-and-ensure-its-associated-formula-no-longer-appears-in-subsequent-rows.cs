@@ -1,16 +1,16 @@
-// Title: Remove a ListObject column and clear its formula with Aspose.Cells for .NET
-// Description: Demonstrates how to delete a table (ListObject) column in a workbook, clear the column's Formula property, recalculate the sheet, and save the file so the removed column leaves no residual formulas in remaining rows.
-// Keywords: Aspose.Cells delete ListObject column | clear table column formula .NET | remove Excel table column Aspose | recalculate workbook after column removal | C# Aspose.Cells ListObject column deletion
-// Common Searches: how to delete a ListObject column in Aspose.Cells | clear formula before removing table column C# | Aspose.Cells remove column without leaving formulas | recalculate after deleting Excel table column Aspose | C# example delete ListObject column Aspose.Cells
-// Developer Intent: Delete a ListObject column while ensuring its formula is cleared and does not affect other cells.
-// Use Cases: Eliminate a temporary calculation column before exporting a report. | Clean up helper columns after performing intermediate data transformations. | Update a worksheet by removing a formula‑driven column and recalculating dependent values.
-// AI Prompts: Write C# code using Aspose.Cells that clears a ListObject column's formula, removes the column, and recalculates the workbook. | Show a safe way to delete a table column in Aspose.Cells without leaving leftover formulas in other rows. | Explain the steps to remove a ListObject column and prevent its formula from propagating after deletion in a .NET workbook.
+// Title: Aspose.Cells C# – Delete a ListObject column without retaining its formula
+// Description: Shows how to build a workbook, define a table, set a column formula, clear the ListColumn formula, delete the column, and save the file so the removed column's calculations are not present in any remaining rows.
+// Keywords: Aspose.Cells | C# | .NET | ListObject delete column | clear ListColumn formula | Excel table column removal | prevent formula copy | ListColumn.Formula | Excel automation | remove calculated column
+// Common Searches: Aspose.Cells delete table column formula C# | how to remove ListObject column without leaving formulas | clear ListColumn formula before column deletion Aspose.Cells | stop formula propagation when deleting Excel column using Aspose | remove calculated column from Excel table with Aspose.Cells
+// Developer Intent: Delete a ListObject column and ensure its formula does not affect other rows.
+// Use Cases: Eliminate a temporary "Total" column from a sales table while keeping all other data intact. | Clean up a worksheet by removing a helper column that contained a formula, avoiding stray calculations. | Update an Excel template by discarding an obsolete column and guaranteeing no residual formulas remain.
+// AI Prompts: Provide C# code that clears a ListColumn formula before deleting the column with Aspose.Cells. | Show an example of removing a ListObject column in Aspose.Cells while ensuring the column's formula is not copied to remaining rows. | Explain why setting ListColumn.Formula to an empty string stops formula propagation after the column is deleted.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Demonstrates how to delete a table (ListObject) column in a workbook, clear the column's Formula property, recalculate the sheet, and save the file so the removed column leaves no residual formulas in remaining rows.
+// Shows how to build a workbook, define a table, set a column formula, clear the ListColumn formula, delete the column, and save the file so the removed column's calculations are not present in any remaining rows.
 class Program
 {
     static void Main()
@@ -19,52 +19,37 @@ class Program
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data with a header row
-        sheet.Cells["A1"].PutValue("Number");
-        sheet.Cells["B1"].PutValue("Double");
-        sheet.Cells["A2"].PutValue(5);
-        sheet.Cells["A3"].PutValue(10);
-        sheet.Cells["A4"].PutValue(15);
+        // Populate sample data (header + two data rows)
+        sheet.Cells["A1"].PutValue("Item");
+        sheet.Cells["B1"].PutValue("Quantity");
+        sheet.Cells["C1"].PutValue("Total");
 
-        // Add a ListObject (table) that includes the data range A1:B4
-        int listIndex = sheet.ListObjects.Add("A1", "B4", true);
-        ListObject listObj = sheet.ListObjects[listIndex];
+        sheet.Cells["A2"].PutValue("Apple");
+        sheet.Cells["B2"].PutValue(2);
 
-        // Set a formula for the second column (index 1) of the table
-        // This formula will be applied to all data rows in that column
-        ListColumn doubleColumn = listObj.ListColumns[1];
-        doubleColumn.Formula = "=A2*2";
+        sheet.Cells["A3"].PutValue("Banana");
+        sheet.Cells["B3"].PutValue(3);
 
-        // Calculate formulas so the values are materialized
-        workbook.CalculateFormula();
+        // Add a formula to the Total column (C) that references the Quantity column (B)
+        sheet.Cells["C2"].Formula = "=B2*10";
+        sheet.Cells["C3"].Formula = "=B3*10";
 
-        // Before removal, the formula column exists
-        Console.WriteLine("Before removal:");
-        for (int row = 1; row <= sheet.Cells.MaxDataRow; row++)
-        {
-            Console.WriteLine($"Row {row + 1}: Number={sheet.Cells[row, 0].Value}, Double={sheet.Cells[row, 1].Value}");
-        }
+        // Create a ListObject (table) that includes the range A1:C3
+        int tableIndex = sheet.ListObjects.Add("A1", "C3", true);
+        ListObject table = sheet.ListObjects[tableIndex];
 
-        // Clear the column formula to ensure it does not persist after deletion
-        doubleColumn.Formula = null;
+        // Set the same formula for the entire Total column via ListColumn.Formula
+        // ListColumns are zero‑based; column C is index 2
+        ListColumn totalColumn = table.ListColumns[2];
+        totalColumn.Formula = "=B2*10";
 
-        // Remove the column from the ListObject
-        // This also removes the underlying cells for that column
-        listObj.ListColumns.RemoveAt(1);
+        // Clear the column formula so it will not be propagated after deletion
+        totalColumn.Formula = string.Empty;
 
-        // Recalculate in case any dependent formulas exist
-        workbook.CalculateFormula();
-
-        // After removal, the formula column should no longer be present
-        Console.WriteLine("\nAfter removal:");
-        for (int row = 1; row <= sheet.Cells.MaxDataRow; row++)
-        {
-            // Column index 1 now refers to the original third column (if any)
-            // Since we only had two columns, only column 0 remains
-            Console.WriteLine($"Row {row + 1}: Number={sheet.Cells[row, 0].Value}");
-        }
+        // Delete the Total column (index 2) and update references in other cells
+        sheet.Cells.DeleteColumn(2, true);
 
         // Save the modified workbook
-        workbook.Save("RemovedListObjectColumn.xlsx");
+        workbook.Save("RemoveColumnFromListObject.xlsx");
     }
 }

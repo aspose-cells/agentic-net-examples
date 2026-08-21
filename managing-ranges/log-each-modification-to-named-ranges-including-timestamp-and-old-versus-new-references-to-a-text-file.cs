@@ -1,71 +1,109 @@
-// Title: Track Named Range Modifications with Timestamps Using Aspose.Cells Revision Logs (C#)
-// Description: Creates a shared workbook, adds a named range, changes its reference, saves to generate revision entries, then reads RevisionLogs to capture DefinedName revisions. Each change is written with a UTC timestamp, the range name, old formula and new formula to a plain‑text log file.
-// Keywords: Aspose.Cells | C# | .NET | revision log | named range audit | track defined name changes | timestamped log file | workbook change history | shared workbook
-// Common Searches: Aspose.Cells log named range changes C# | How to capture defined name revisions with Aspose.Cells | Write named range modification history to a file using .NET | Audit named range updates in a shared Excel workbook
-// Developer Intent: Automatically record every alteration of a workbook's named ranges—including when the change occurred and the previous vs. new reference—into a readable log file.
-// Use Cases: Compliance audit of named‑range edits in collaborative spreadsheets. | Debugging unexpected formula shifts by reviewing a chronological change log. | Maintaining a versioned history for named ranges that feed downstream data pipelines.
-// AI Prompts: Generate code that also logs the user ID responsible for each named‑range change using Aspose.Cells revision metadata. | Create a method that returns the latest revision entry for each named range from the revision logs. | Show how to output the log entries in CSV format for easy import into Excel or Power BI.
+// Title: Track Named Range Modifications with Timestamps via Aspose.Cells Revision Logs in C#
+// Description: The sample creates a shared workbook, defines a workbook‑level named range, updates its reference several times while saving after each change, then reads the workbook’s RevisionLogs to extract DefinedName revisions. Each revision is written to a plain‑text file with the current timestamp, the name, the old formula and the new formula.
+// Keywords: Aspose.Cells | C# revision log | named range audit | track defined name changes | shared workbook | Excel revision tracking | log named range modifications | timestamped change history
+// Common Searches: Aspose.Cells log named range changes | revision logs defined name C# | write named range history to text file | track named range revisions in .NET | audit Excel named ranges with Aspose
+// Developer Intent: Automatically capture every change to workbook named ranges, recording the time, previous reference, and new reference in a readable log file.
+// Use Cases: Compliance reporting for financial models that rely on dynamic named ranges | Debugging automated spreadsheet updates by reviewing a chronological change log | Generating audit trails for shared Excel workbooks in collaborative environments
+// AI Prompts: Write C# code that reads Aspose.Cells RevisionLogs, filters for RevisionDefinedName entries, and exports the data to a CSV with columns: Timestamp, Name, OldFormula, NewFormula. | Explain how to enable revision tracking for a workbook, modify a named range, and retrieve its revision history using Aspose.Cells. | Provide a concise guide to log named range changes without overwriting existing log entries, ensuring each entry includes a timestamp.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Revisions;
 
-// Creates a shared workbook, adds a named range, changes its reference, saves to generate revision entries, then reads RevisionLogs to capture DefinedName revisions. Each change is written with a UTC timestamp, the range name, old formula and new formula to a plain‑text log file.
+// The sample creates a shared workbook, defines a workbook‑level named range, updates its reference several times while saving after each change, then reads the workbook’s RevisionLogs to extract DefinedName revisions. Each revision is written to a plain‑text file with the current timestamp, the name, the old formula and the new formula.
 class NamedRangeLogger
 {
     static void Main()
     {
         // Paths for the workbook and the log file
-        string workbookPath = "NamedRangeDemo.xlsx";
-        string logPath = "NamedRangeChanges.log";
+        string workbookPath = "NamedRangeLogDemo.xlsx";
+        string logPath = "NamedRangeChanges.txt";
 
-        // ---------- Create ----------
-        // Create a new workbook and enable sharing to capture revisions
-        Workbook wb = new Workbook();
-        wb.Settings.Shared = true;
-
-        // Add a named range "MyRange" referring to A1:A3
-        int nameIdx = wb.Worksheets.Names.Add("MyRange");
-        Name namedRange = wb.Worksheets.Names[nameIdx];
-        namedRange.RefersTo = "=Sheet1!$A$1:$A$3";
-
-        // Save the initial version (creates the first revision entry)
-        wb.Save(workbookPath);
-
-        // ---------- Modify ----------
-        // Change the reference of the named range to A1:A4
-        namedRange.RefersTo = "=Sheet1!$A$1:$A$4";
-
-        // Save after modification (generates a revision for the defined name change)
-        wb.Save(workbookPath);
-
-        // ---------- Load ----------
-        // Load the workbook to access its revision logs
-        Workbook loadedWb = new Workbook(workbookPath);
-
-        // Open the log file for appending
-        using (StreamWriter sw = new StreamWriter(logPath, true))
+        try
         {
-            // Iterate through all revision logs
-            foreach (RevisionLog log in loadedWb.Worksheets.RevisionLogs)
+            // -------------------------------------------------
+            // Create a workbook and enable shared mode to track revisions
+            // -------------------------------------------------
+            Workbook wb = new Workbook();
+            wb.Settings.Shared = true; // Enable shared workbook (required for revision tracking)
+
+            Worksheet ws = wb.Worksheets[0];
+            ws.Name = "Sheet1";
+
+            // -------------------------------------------------
+            // Create an initial named range (workbook‑level name)
+            // -------------------------------------------------
+            int nameIdx = wb.Worksheets.Names.Add("MyRange");
+            Name namedRange = wb.Worksheets.Names[nameIdx];
+            namedRange.RefersTo = "='Sheet1'!$A$1:$A$3";
+
+            // Save the first version (creates the initial revision entry)
+            wb.Save(workbookPath);
+
+            // -------------------------------------------------
+            // Modify the named range multiple times, saving after each change
+            // -------------------------------------------------
+            namedRange.RefersTo = "='Sheet1'!$A$1:$A$4";
+            wb.Save(workbookPath);
+
+            namedRange.RefersTo = "='Sheet1'!$B$1:$B$4";
+            wb.Save(workbookPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during workbook creation/modification: {ex.Message}");
+            return;
+        }
+
+        // -------------------------------------------------
+        // Reopen the workbook to read revision logs
+        // -------------------------------------------------
+        if (!File.Exists(workbookPath))
+        {
+            Console.WriteLine($"Workbook file not found: {workbookPath}");
+            return;
+        }
+
+        try
+        {
+            Workbook revWb = new Workbook(workbookPath);
+
+            // Open a StreamWriter to write the log entries
+            using (StreamWriter writer = new StreamWriter(logPath, false))
             {
-                // Iterate through each revision entry
-                foreach (Revision rev in log.Revisions)
+                // Iterate through all revision logs in the workbook
+                foreach (RevisionLog log in revWb.Worksheets.RevisionLogs)
                 {
-                    // Filter for defined name revisions
-                    if (rev.Type == RevisionType.DefinedName && rev is RevisionDefinedName definedNameRev)
+                    // Iterate through each revision in the log
+                    foreach (Revision rev in log.Revisions)
                     {
-                        // Record timestamp, name text, old formula and new formula
-                        string timestamp = DateTime.Now.ToString("o");
-                        sw.WriteLine($"{timestamp}: Name='{definedNameRev.Text}' OldFormula='{definedNameRev.OldFormula}' NewFormula='{definedNameRev.NewFormula}'");
+                        // We're interested only in defined name revisions
+                        if (rev.Type == RevisionType.DefinedName)
+                        {
+                            RevisionDefinedName nameRev = (RevisionDefinedName)rev;
+
+                            // Timestamp for when the log entry is written
+                            string timeStamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+                            // Write details to the log file
+                            writer.WriteLine($"{timeStamp} - Defined Name: {nameRev.Text}");
+                            writer.WriteLine($"    Old Formula: {nameRev.OldFormula}");
+                            writer.WriteLine($"    New Formula: {nameRev.NewFormula}");
+                        }
                     }
                 }
             }
-        }
 
-        // Optional: display the log content
-        Console.WriteLine("Named range modifications logged:");
-        Console.WriteLine(File.ReadAllText(logPath));
+            // Optional: display the generated log on console
+            if (File.Exists(logPath))
+            {
+                Console.WriteLine(File.ReadAllText(logPath));
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during revision reading/logging: {ex.Message}");
+        }
     }
 }

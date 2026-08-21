@@ -1,78 +1,99 @@
-// Title: Stream a Massive Excel Workbook with Aspose.Cells LightCells API and LoadOptions (C#)
-// Description: Demonstrates loading a multi‑gigabyte XLSX file in streaming mode using a custom LightCellsDataHandler, disabling KeepUnparsedData, limiting rows, logging each cell, and saving the workbook while keeping RAM usage minimal.
-// Keywords: Aspose.Cells | LightCells API | LoadOptions | KeepUnparsedData false | C# streaming Excel | large workbook processing | memory‑efficient Excel read | .NET Excel handler | GitHub example | custom LightCellsDataHandler
-// Common Searches: Aspose.Cells LightCells streaming example C# | How to read large Excel file without loading into memory | LoadOptions KeepUnparsedData false usage | Limit rows with LightCells StartRow method | Custom LightCellsDataHandler tutorial
-// Developer Intent: Read and process a huge Excel file in a low‑memory, row‑by‑row fashion using LightCells.
-// Use Cases: Extract data from a multi‑GB .xlsx without exhausting RAM. | Generate a summary of the first million rows of each sheet. | Create a trimmed copy of a large workbook after read‑only analysis. | Log every cell value to an external system while streaming.
-// AI Prompts: Write a LightCellsDataHandler that copies rows matching a specific column value into a new workbook. | Show how to modify SimpleLightCellsHandler to transform cell values before saving. | Provide code to export streamed cell addresses and values to a CSV file using Aspose.Cells LightCells.
+// Title: Low‑Memory Processing of Large Excel Files with Aspose.Cells LightCells and LoadOptions (C#)
+// Description: Demonstrates how to stream a massive Excel workbook using Aspose.Cells LightCellsDataHandler with LoadOptions. The custom handler prints each cell, accumulates a numeric sum, and keeps memory usage minimal by disabling KeepUnparsedData. The workbook is then saved without loading the full file into memory.
+// Keywords: Aspose.Cells LightCells | C# LightCellsDataHandler | LoadOptions KeepUnparsedData false | stream large Excel file | low memory Excel processing | calculate sum while streaming | memory‑efficient workbook loading | Aspose.Cells large dataset
+// Common Searches: Aspose.Cells LightCells example for large worksheets | How to reduce memory usage with LoadOptions in Aspose.Cells | Stream Excel cells in C# without loading entire workbook | Calculate numeric sum using LightCellsDataHandler | Disable KeepUnparsedData to save memory Aspose.Cells
+// Developer Intent: The developer needs to process a huge Excel workbook in a streaming fashion, compute aggregates on‑the‑fly, and keep RAM consumption as low as possible.
+// Use Cases: Read and log every cell of a multi‑gigabyte workbook without full in‑memory load. | Aggregate numeric columns (e.g., totals, averages) while streaming data. | Perform read‑only analysis on large spreadsheets and optionally save the unchanged file.
+// AI Prompts: Create a LightCellsDataHandler that writes each processed cell to a CSV file while maintaining low memory usage. | Modify the handler to skip rows where a specific column value meets a condition, still using LightCells. | Provide LoadOptions settings for optimal performance when processing a 10 GB Excel file with LightCells.
 
 using System;
 using Aspose.Cells;
 
 namespace LightCellsProcessingDemo
 {
-    // Demonstrates loading a multi‑gigabyte XLSX file in streaming mode using a custom LightCellsDataHandler, disabling KeepUnparsedData, limiting rows, logging each cell, and saving the workbook while keeping RAM usage minimal.
+    // Custom handler that processes cells in a streaming (lightweight) manner.
+    // This implementation simply prints each cell value and accumulates a numeric sum.
+    // Demonstrates how to stream a massive Excel workbook using Aspose.Cells LightCellsDataHandler with LoadOptions. The custom handler prints each cell, accumulates a numeric sum, and keeps memory usage minimal by disabling KeepUnparsedData. The workbook is then saved without loading the full file into memory.
+    public class SummingLightCellsHandler : LightCellsDataHandler
+    {
+        private double _numericSum = 0;
+
+        // Called when a worksheet is about to be processed.
+        public bool StartSheet(Worksheet sheet)
+        {
+            Console.WriteLine($"Processing sheet: {sheet.Name}");
+            // Return true to continue processing this sheet.
+            return true;
+        }
+
+        // Called before a row is processed.
+        public bool StartRow(int rowIndex)
+        {
+            // Return true to process the row.
+            return true;
+        }
+
+        // Called after the row object is created; can be used to inspect row properties.
+        public bool ProcessRow(Row row)
+        {
+            // Return true to allow processing of the cells in this row.
+            return true;
+        }
+
+        // Called before a cell in the current row is processed.
+        public bool StartCell(int columnIndex)
+        {
+            // Return true to process the cell.
+            return true;
+        }
+
+        // Called for each cell that needs to be processed.
+        public bool ProcessCell(Cell cell)
+        {
+            // Output cell address and value.
+            Console.WriteLine($"Cell[{cell.Row},{cell.Column}] = {cell.Value}");
+
+            // If the cell contains a numeric value, add it to the running sum.
+            if (cell.Type == CellValueType.IsNumeric)
+            {
+                _numericSum += cell.DoubleValue;
+            }
+
+            // Continue processing subsequent cells.
+            return true;
+        }
+
+        // Expose the accumulated sum after processing.
+        public double GetNumericSum()
+        {
+            return _numericSum;
+        }
+    }
+
     class Program
     {
         static void Main()
         {
-            // Path to the large Excel file to be processed
-            string inputPath = "LargeData.xlsx";
-            // Path where the processed workbook will be saved (optional)
-            string outputPath = "ProcessedLargeData.xlsx";
+            // Path to the large Excel file to be processed.
+            const string inputPath = "LargeDataFile.xlsx";
+            const string outputPath = "ProcessedLargeDataFile.xlsx";
 
-            // Create an instance of the custom LightCellsDataHandler
-            var handler = new SimpleLightCellsHandler();
-
-            // Configure LoadOptions to use LightCells mode and assign the handler
-            var loadOptions = new LoadOptions();
+            // Create load options and assign the custom LightCellsDataHandler.
+            LoadOptions loadOptions = new LoadOptions();
+            var handler = new SummingLightCellsHandler();
             loadOptions.LightCellsDataHandler = handler;
-            // Disable keeping unparsed data to further reduce memory consumption
+
+            // Disable keeping unparsed data to further reduce memory usage.
             loadOptions.KeepUnparsedData = false;
 
-            // Load the workbook in streaming (light) mode
-            var workbook = new Workbook(inputPath, loadOptions);
+            // Load the workbook using the LightCells mode.
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Save the workbook after processing (no modifications made in this example)
+            // After loading, retrieve the numeric sum calculated during streaming.
+            Console.WriteLine($"Total numeric sum of processed cells: {handler.GetNumericSum()}");
+
+            // Save the workbook (even if unchanged) using the standard save method.
             workbook.Save(outputPath);
-        }
-    }
-
-    // Custom implementation of LightCellsDataHandler for streaming processing
-    public class SimpleLightCellsHandler : LightCellsDataHandler
-    {
-        // Called for each worksheet; return true to process the sheet
-        public bool StartSheet(Worksheet sheet)
-        {
-            Console.WriteLine($"Processing sheet: {sheet.Name}");
-            return true;
-        }
-
-        // Called for each row index; return true to read the row
-        public bool StartRow(int rowIndex)
-        {
-            // Example: limit processing to the first 1,000,000 rows
-            return rowIndex < 1_000_000;
-        }
-
-        // Called after row properties are read; return true to process its cells
-        public bool ProcessRow(Row row)
-        {
-            // No specific row-level logic needed here
-            return true;
-        }
-
-        // Called for each cell column index; return true to read the cell
-        public bool StartCell(int columnIndex)
-        {
-            return true;
-        }
-
-        // Called for each cell; here we simply output its address and value
-        public bool ProcessCell(Cell cell)
-        {
-            Console.WriteLine($"Cell[{cell.Row},{cell.Column}] = {cell.Value}");
-            return true;
         }
     }
 }

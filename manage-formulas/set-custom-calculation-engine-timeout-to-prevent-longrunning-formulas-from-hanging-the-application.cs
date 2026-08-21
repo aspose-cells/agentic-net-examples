@@ -1,71 +1,82 @@
-// Title: Configure a Calculation Timeout in Aspose.Cells for .NET with a Custom AbstractCalculationMonitor
-// Description: This example shows how to create a TimeoutMonitor that inherits from AbstractCalculationMonitor, sets a deadline based on a millisecond limit, and throws an exception in BeforeCalculate when the limit is exceeded. The monitor is attached to CalculationOptions.CalculationMonitor, used in workbook.CalculateFormula inside a try‑catch block, and the workbook is then saved. The approach prevents long‑running formulas from hanging applications such as web services.
-// Keywords: Aspose.Cells | C# | Calculation timeout | AbstractCalculationMonitor | CalculationOptions | Formula evaluation limit | prevent hanging formulas | Excel processing performance | exception handling | web API Excel
-// Common Searches: Aspose.Cells set formula calculation timeout | C# custom calculation monitor Aspose.Cells | How to abort long formulas in Aspose.Cells | Timeout for workbook.CalculateFormula | Prevent Excel calculation hang using Aspose.Cells
-// Developer Intent: Add a configurable time limit to formula calculation so that any formula exceeding the limit aborts with an exception.
-// Use Cases: Enforce a 2‑second limit when processing workbooks that may contain heavy formulas or user‑defined functions. | Keep an ASP.NET web service responsive by terminating long‑running calculations on uploaded Excel files. | Apply a global calculation timeout across multiple workbooks in a batch‑processing job.
-// AI Prompts: Generate C# code for a custom AbstractCalculationMonitor that stops calculation after a specified number of milliseconds. | Show how to attach a timeout monitor to CalculationOptions and handle the timeout exception gracefully. | Explain how to log the sheet, row, and column where the timeout occurs inside BeforeCalculate.
+// Title: Configure a Calculation Timeout in Aspose.Cells for .NET to Abort Long‑Running Formulas
+// Description: Learn how to create a custom TimeoutCalculationMonitor by extending AbstractCalculationMonitor, attach it to CalculationOptions, and use wb.CalculateFormula with a time limit. The monitor throws a TimeoutException when the elapsed time exceeds the defined threshold, preventing the application from hanging during heavy spreadsheet calculations.
+// Keywords: Aspose.Cells calculation timeout | C# custom calculation monitor | AbstractCalculationMonitor example | prevent long‑running formulas | CalculationOptions timeout | Workbook.CalculateFormula limit | TimeoutException in Aspose.Cells | Excel engine performance guard
+// Common Searches: Aspose.Cells set formula calculation timeout C# | How to stop long calculations in Aspose.Cells | Custom AbstractCalculationMonitor for timeout | Limit workbook.CalculateFormula execution time | Abort hanging formulas Aspose.Cells .NET
+// Developer Intent: Implement a time‑bound calculation engine so that any formula exceeding the specified duration is automatically cancelled.
+// Use Cases: Avoid UI freezes in desktop apps by aborting formulas that run longer than a few seconds. | Protect server resources when processing user‑uploaded spreadsheets by enforcing a maximum calculation time. | Detect and log excessively complex or recursive formulas by catching the timeout exception. | Provide a graceful fallback (e.g., display a warning) when a workbook cannot be fully calculated within the allowed time.
+// AI Prompts: Generate a TimeoutCalculationMonitor that records the cell address before throwing a TimeoutException. | Show how to retry workbook.CalculateFormula with an increased timeout after the first attempt fails. | Create code that logs the sheet name, row, and column of the cell that triggered the timeout.
 
 using System;
+using System.Diagnostics;
 using Aspose.Cells;
 
-// This example shows how to create a TimeoutMonitor that inherits from AbstractCalculationMonitor, sets a deadline based on a millisecond limit, and throws an exception in BeforeCalculate when the limit is exceeded. The monitor is attached to CalculationOptions.CalculationMonitor, used in workbook.CalculateFormula inside a try‑catch block, and the workbook is then saved. The approach prevents long‑running formulas from hanging applications such as web services.
-class Program
+// Custom calculation monitor that aborts calculation after a specified time limit
+// Learn how to create a custom TimeoutCalculationMonitor by extending AbstractCalculationMonitor, attach it to CalculationOptions, and use wb.CalculateFormula with a time limit. The monitor throws a TimeoutException when the elapsed time exceeds the defined threshold, preventing the application from hanging during heavy spreadsheet calculations.
+class TimeoutCalculationMonitor : AbstractCalculationMonitor
 {
-    // Custom calculation monitor that aborts when the specified time limit is exceeded
-    class TimeoutMonitor : AbstractCalculationMonitor
+    private readonly Stopwatch _stopwatch;
+    private readonly long _maxMilliseconds;
+
+    public TimeoutCalculationMonitor(int maxMilliseconds)
     {
-        private readonly DateTime _deadline;
-
-        public TimeoutMonitor(int timeoutMilliseconds)
-        {
-            // Calculate the moment when the timeout will occur
-            _deadline = DateTime.UtcNow.AddMilliseconds(timeoutMilliseconds);
-        }
-
-        // Called before each cell is calculated
-        public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
-        {
-            // If the current time passed the deadline, abort the calculation
-            if (DateTime.UtcNow > _deadline)
-                throw new Exception("Formula calculation timed out.");
-        }
-
-        // Called after each cell is calculated (no action needed)
-        public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex) { }
-
-        // Handle circular references (continue calculation)
-        public override bool OnCircular(System.Collections.IEnumerator circularCellsData) => true;
+        _maxMilliseconds = maxMilliseconds;
+        _stopwatch = new Stopwatch();
+        _stopwatch.Start();
     }
 
+    // Called before each cell calculation
+    public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
+    {
+        if (_stopwatch.ElapsedMilliseconds > _maxMilliseconds)
+        {
+            // Stop the calculation by throwing an exception
+            throw new TimeoutException($"Formula calculation exceeded the time limit of {_maxMilliseconds} ms.");
+        }
+    }
+
+    // Called after each cell calculation (no action needed)
+    public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex) { }
+
+    // Called when a circular reference is detected (default handling)
+    public override bool OnCircular(System.Collections.IEnumerator circularCellsData)
+    {
+        return base.OnCircular(circularCellsData);
+    }
+}
+
+class SetCalculationTimeoutDemo
+{
     static void Main()
     {
-        // Create a new workbook and add some sample data / formulas
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue(10);
-        sheet.Cells["A2"].PutValue(20);
-        sheet.Cells["B1"].Formula = "=SUM(A1:A2)";          // Simple formula
-        sheet.Cells["B2"].Formula = "=POWER(2,30)";        // Potentially heavy calculation
+        // Create a new workbook
+        Workbook wb = new Workbook();
+        Worksheet sheet = wb.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        // Set up calculation options with the custom timeout monitor (e.g., 2 seconds)
+        // Populate cells with data that could cause long‑running calculations
+        cells["A1"].PutValue(1);
+        cells["A2"].Formula = "=A1+1";
+        // Example of a potentially heavy formula (recursive sum)
+        cells["B1"].Formula = "=SUM(A1:A1000)";
+
+        // Configure calculation options with the timeout monitor (e.g., 2 seconds)
         CalculationOptions calcOptions = new CalculationOptions
         {
-            CalculationMonitor = new TimeoutMonitor(2000) // 2000 ms timeout
+            CalculationMonitor = new TimeoutCalculationMonitor(2000) // 2000 ms = 2 seconds
         };
 
         try
         {
-            // Perform calculation; will be interrupted if it exceeds the timeout
-            workbook.CalculateFormula(calcOptions);
+            // Perform calculation using the custom options
+            wb.CalculateFormula(calcOptions);
             Console.WriteLine("Calculation completed successfully.");
         }
-        catch (Exception ex)
+        catch (TimeoutException ex)
         {
-            Console.WriteLine("Calculation interrupted: " + ex.Message);
+            Console.WriteLine("Calculation aborted: " + ex.Message);
         }
 
-        // Save the workbook (the save operation itself is not timed out here)
-        workbook.Save("Result.xlsx");
+        // Save the workbook (standard lifecycle)
+        wb.Save("TimeoutDemo.xlsx");
     }
 }

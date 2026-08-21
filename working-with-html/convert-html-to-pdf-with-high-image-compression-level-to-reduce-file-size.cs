@@ -1,36 +1,41 @@
-// Title: C# – Convert HTML to PDF with High Image Compression Using Aspose.Cells
-// Description: Loads an HTML file into an Aspose.Cells Workbook, configures PdfSaveOptions for Flate compression, MinimumSize optimization, and image resampling (96 PPI, 70 % JPEG quality), then saves a compact PDF. Ideal for reducing PDF size while preserving readable image quality.
-// Keywords: Aspose.Cells | HTML to PDF conversion | PDF compression | image resample | MinimumSize PDF | Flate compression | SetImageResample | PdfSaveOptions | C# example | reduce PDF file size
-// Common Searches: Aspose.Cells convert HTML to PDF with compression | how to shrink PDF size in Aspose.Cells C# | set JPEG quality for PDF images Aspose.Cells | minimum size PDF option Aspose.Cells | resample images to 96 PPI Aspose.Cells PDF export
-// Developer Intent: The developer needs to turn an HTML document into a PDF while applying aggressive image compression to keep the output file as small as possible.
-// Use Cases: Email‑friendly PDF reports generated from HTML templates. | Archiving web pages or dashboards with minimal storage impact. | Creating printable PDFs for mobile devices where bandwidth is limited.
-// AI Prompts: Generate C# code that uses Aspose.Cells to convert HTML to a PDF with maximum compression and custom image resampling. | Explain the effect of PdfOptimizationType.MinimumSize and SetImageResample on PDF file size in Aspose.Cells. | Suggest alternative Aspose.Cells settings for even smaller PDFs, such as different JPEG quality levels or image downsampling strategies.
+// Title: C# – Convert HTML to PDF with high image compression using Aspose.Cells
+// Description: Load an HTML file into an Aspose.Cells Workbook, configure PdfSaveOptions for Flate compression, select MinimumSize optimization, and resample images to 96 dpi with 50 % JPEG quality before saving a compact PDF.
+// Keywords: Aspose.Cells | HTML to PDF C# | PDF compression Flate | MinimumSize PDF | SetImageResample | strong image compression | reduce PDF file size | .NET PDF generation
+// Common Searches: Aspose.Cells compress PDF images when converting HTML | C# set PDF optimization to minimum size Aspose | How to resample images for PDF output with Aspose.Cells | Flate compression option in Aspose.Cells PDF save | Batch HTML to compressed PDF using Aspose.Cells .NET
+// Developer Intent: Create a PDF from an HTML source while applying aggressive image compression to achieve the smallest possible file size.
+// Use Cases: Email‑ready PDFs of web reports that stay under attachment limits. | Archiving large numbers of web pages as space‑efficient PDFs. | Generating PDFs for mobile apps where bandwidth and storage are limited.
+// AI Prompts: Show how to adjust DPI and JPEG quality with SetImageResample in Aspose.Cells PDF conversion. | Explain the effect of PdfCompressionCore.Flate and PdfOptimizationType.MinimumSize on PDF size and quality. | Provide a C# loop that converts multiple HTML files to compressed PDFs using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Loads an HTML file into an Aspose.Cells Workbook, configures PdfSaveOptions for Flate compression, MinimumSize optimization, and image resampling (96 PPI, 70 % JPEG quality), then saves a compact PDF. Ideal for reducing PDF size while preserving readable image quality.
-class HtmlToPdfConverter
+namespace HtmlToPdfConversion
 {
-    static void Main()
+    // Load an HTML file into an Aspose.Cells Workbook, configure PdfSaveOptions for Flate compression, select MinimumSize optimization, and resample images to 96 dpi with 50 % JPEG quality before saving a compact PDF.
+    class Program
     {
-        // Load the HTML file into a workbook
-        Workbook workbook = new Workbook("input.html");
+        static void Main()
+        {
+            // Load the HTML file into a workbook.
+            // The constructor automatically detects the format based on the file extension.
+            Workbook workbook = new Workbook("input.html");
 
-        // Create PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Create PDF save options.
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Use Flate compression for non‑image content
-        pdfOptions.PdfCompression = PdfCompressionCore.Flate;
+            // Use Flate compression for the PDF core content.
+            pdfOptions.PdfCompression = PdfCompressionCore.Flate;
 
-        // Optimize for minimum file size (higher compression)
-        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
+            // Optimize for minimum file size (prioritizes size over print quality).
+            pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
 
-        // Resample images to 96 PPI and set JPEG quality to 70 %
-        pdfOptions.SetImageResample(96, 70);
+            // Resample images to a lower DPI and reduce JPEG quality to achieve higher compression.
+            // DesiredPPI of 96 is suitable for email/web, JPEG quality of 50% balances quality and size.
+            pdfOptions.SetImageResample(96, 50);
 
-        // Save the workbook as a PDF with the configured options
-        workbook.Save("output.pdf", pdfOptions);
+            // Save the workbook as a PDF with the specified compression settings.
+            workbook.Save("output.pdf", pdfOptions);
+        }
     }
 }

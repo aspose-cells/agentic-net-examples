@@ -1,45 +1,84 @@
-// Title: Delete Rows Above a Frozen Pane and Reset FreezePanes with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, reads the current freeze‑pane coordinates, removes every row that sits above the frozen row, and then re‑applies FreezePanes using the updated indices so the worksheet layout stays consistent before saving.
-// Keywords: Aspose.Cells C# | .NET Excel freeze pane | DeleteRows above frozen row | Reset FreezePanes programmatically | GetFreezedPanes method | Excel worksheet row deletion | Adjust freeze pane after row removal | Automated Excel layout update
-// Common Searches: Aspose.Cells delete rows above frozen pane C# | How to reset FreezePanes after deleting rows in .NET | GetFreezedPanes and FreezePanes usage example | Remove header rows while keeping freeze pane in Excel | Programmatic freeze pane adjustment with Aspose.Cells
-// Developer Intent: Remove all rows that precede the current frozen row and re‑apply the freeze pane so it aligns with the new first visible row.
-// Use Cases: Cleaning a report by discarding header rows that sit above a frozen pane while preserving the freeze position. | Dynamically trimming worksheets in generated Excel files and automatically updating freeze settings to keep the intended view. | Automating Excel data preparation where rows are removed and the freeze pane must be recalibrated for downstream users.
-// AI Prompts: Generate C# code using Aspose.Cells that deletes every row above the frozen row and then calls FreezePanes with the corrected parameters. | Explain the interaction between GetFreezedPanes and FreezePanes when rows are removed from a worksheet in Aspose.Cells. | Provide a step‑by‑step tutorial for safely adjusting freeze pane settings after row deletions in an Aspose.Cells .NET project.
+// Title: C# Example: Delete Rows Above Frozen Pane and Reset FreezePanes with Aspose.Cells
+// Description: Demonstrates how to load a workbook, detect existing frozen panes, delete all rows above the frozen row, recalculate the freeze coordinates, reapply FreezePanes, and save the updated file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# | FreezePanes | delete rows above frozen pane | adjust frozen row after deletion | GetFreezedPanes | worksheet freeze settings | Aspose.Cells .NET example | preserve frozen header | row deletion API
+// Common Searches: Aspose.Cells delete rows above frozen pane | How to adjust FreezePanes after deleting rows in C# | Get frozen pane indices Aspose.Cells .NET | Reapply FreezePanes after row removal | C# code to reset freeze panes after row deletion
+// Developer Intent: Remove rows that precede the frozen area and update the FreezePanes parameters so the frozen region stays correctly positioned.
+// Use Cases: Clean up a worksheet by removing header rows while keeping the frozen header row for scrolling. | Prepare a template where rows above the frozen pane must be stripped before exporting to another format. | Update a generated report that contains frozen panes, ensuring the freeze position remains accurate after row deletions.
+// AI Prompts: Write C# code with Aspose.Cells to delete all rows above the current frozen row and update the FreezePanes settings. | Explain how to retrieve frozen pane parameters, delete rows, and reapply FreezePanes in Aspose.Cells for .NET. | Provide robust error handling best practices when adjusting freeze panes after row deletions using Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace FreezePaneAdjustment
+namespace AsposeCellsExamples
 {
-    // Loads an Excel workbook, reads the current freeze‑pane coordinates, removes every row that sits above the frozen row, and then re‑applies FreezePanes using the updated indices so the worksheet layout stays consistent before saving.
-    class Program
+    // Demonstrates how to load a workbook, detect existing frozen panes, delete all rows above the frozen row, recalculate the freeze coordinates, reapply FreezePanes, and save the updated file using Aspose.Cells for .NET.
+    public class AdjustFreezeAfterRowDeletion
     {
-        static void Main()
+        public static void Run()
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
+            Workbook workbook = null;
 
-            // Retrieve current freeze pane settings
-            int frozenRow, frozenColumn, frozenRows, frozenColumns;
-            bool hasFreeze = sheet.GetFreezedPanes(out frozenRow, out frozenColumn, out frozenRows, out frozenColumns);
-
-            if (hasFreeze && frozenRow > 0)
+            try
             {
-                // Delete all rows that are above the frozen row
-                // DeleteRows(startRowIndex, totalRows)
-                sheet.Cells.DeleteRows(0, frozenRow);
+                // Load existing workbook or create a new one if the file is missing
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    Console.WriteLine($"Input file '{inputPath}' not found. Creating a new workbook.");
+                    workbook = new Workbook();
+                }
 
-                // After deletion, the frozen row becomes the first visible row (index 0)
-                // Re‑apply freeze panes with updated parameters
-                // FreezePanes(row, column, freezedRows, freezedColumns)
-                sheet.FreezePanes(0, frozenColumn, 0, frozenColumns);
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Retrieve current freeze pane settings
+                int frozenRow, frozenColumn, frozenRowsCount, frozenColumnsCount;
+                bool hasFreeze = sheet.GetFreezedPanes(out frozenRow, out frozenColumn, out frozenRowsCount, out frozenColumnsCount);
+
+                if (!hasFreeze)
+                {
+                    Console.WriteLine("No frozen panes found. Saving workbook without changes.");
+                    workbook.Save(outputPath);
+                    return;
+                }
+
+                // Delete rows above the frozen row
+                int rowsToDelete = frozenRow; // rows 0 to frozenRow-1
+                if (rowsToDelete > 0)
+                {
+                    sheet.Cells.DeleteRows(0, rowsToDelete);
+
+                    // Adjust frozen row index after deletion
+                    int newFrozenRow = frozenRow - rowsToDelete;
+
+                    // Reapply freeze panes with the adjusted row index
+                    sheet.FreezePanes(newFrozenRow, frozenColumn, frozenRowsCount, frozenColumnsCount);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
 
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("output.xlsx");
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            AdjustFreezeAfterRowDeletion.Run();
         }
     }
 }

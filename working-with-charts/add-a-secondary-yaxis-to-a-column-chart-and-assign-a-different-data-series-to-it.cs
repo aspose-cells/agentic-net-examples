@@ -1,10 +1,10 @@
-// Title: Create a column chart with a secondary Y‑axis in Aspose.Cells for .NET (C#)
-// Description: Shows how to build an Excel workbook, add a column chart with two data series, plot the second series on a secondary Y‑axis, customize the secondary axis title and scale, and save the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells secondary Y axis C# | column chart secondary axis Aspose.Cells | plot series on second axis .NET | customize secondary value axis Aspose | Aspose.Cells chart axis scaling | C# Excel chart secondary axis example | NSeries PlotOnSecondAxis Aspose
-// Common Searches: Aspose.Cells secondary Y axis column chart C# | How to add a secondary value axis in Aspose.Cells | C# plot series on second axis Excel chart Aspose | Set secondary axis title and range Aspose.Cells | Example of secondary axis with column chart Aspose
-// Developer Intent: Generate an Excel column chart where one series uses the primary Y‑axis and another series uses a secondary Y‑axis, with optional formatting of the secondary axis.
-// Use Cases: Display units sold (primary axis) alongside revenue (secondary axis) in a single chart. | Compare a small‑scale metric such as defect count with a large‑scale metric like production cost. | Create financial reports that need separate scaling for quantity and monetary values. | Build dashboards where temperature (primary) and humidity (secondary) are visualized together.
-// AI Prompts: Write C# code with Aspose.Cells that adds a secondary Y‑axis to a bar chart and assigns the third data series to it. | Explain how to set the secondary axis title, minimum, maximum, and major unit values for an Aspose.Cells chart. | Provide step‑by‑step instructions to retrieve and modify the secondary axis after a chart has been created in Aspose.Cells for .NET.
+// Title: Aspose.Cells for .NET: Add a Secondary Y‑Axis to a Column Chart and Assign a Series (C#)
+// Description: Demonstrates how to create an Excel workbook with a column chart, add two data series, plot the second series on a secondary Y‑axis, customize the secondary axis (title, min, max, major unit), and save the file using Aspose.Cells in C#.
+// Keywords: Aspose.Cells secondary Y axis C# | column chart secondary axis .NET | PlotOnSecondAxis Aspose.Cells | customize secondary value axis Aspose | Excel chart multiple Y axes C# | Aspose.Cells chart example | C# add secondary axis to chart | Aspose.Cells chart NSeries
+// Common Searches: Aspose.Cells add secondary Y axis to column chart | C# plot series on second axis Aspose.Cells | set secondary axis title min max Aspose.Cells | Aspose.Cells chart secondary value axis example | how to use PlotOnSecondAxis in Aspose.Cells
+// Developer Intent: Create a column chart where one series uses the primary Y‑axis and another uses a secondary Y‑axis, then configure the secondary axis properties.
+// Use Cases: Display sales volume and revenue together when the scales differ dramatically. | Compare a low‑volume metric (e.g., defect count) with a high‑value metric (e.g., production cost) in a single visual. | Generate financial reports that require two Y‑axes for clear data separation.
+// AI Prompts: Show C# code to add a secondary Y‑axis to an Aspose.Cells column chart and assign a specific series to it. | Provide an Aspose.Cells example that sets the secondary axis title, minimum, maximum, and major unit for a column chart. | Explain how to retrieve and modify the secondary value axis object after creating a chart with Aspose.Cells in .NET.
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsSecondaryYAxisDemo
 {
-    // Shows how to build an Excel workbook, add a column chart with two data series, plot the second series on a secondary Y‑axis, customize the secondary axis title and scale, and save the file using Aspose.Cells for .NET.
+    // Demonstrates how to create an Excel workbook with a column chart, add two data series, plot the second series on a secondary Y‑axis, customize the secondary axis (title, min, max, major unit), and save the file using Aspose.Cells in C#.
     class Program
     {
         static void Main()
@@ -28,20 +28,20 @@ namespace AsposeCellsSecondaryYAxisDemo
             sheet.Cells["A4"].PutValue("C");
 
             sheet.Cells["B1"].PutValue("Series 1");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["B4"].PutValue(180);
+            sheet.Cells["B2"].PutValue(100);
+            sheet.Cells["B3"].PutValue(200);
+            sheet.Cells["B4"].PutValue(300);
 
             sheet.Cells["C1"].PutValue("Series 2");
             sheet.Cells["C2"].PutValue(5000);
             sheet.Cells["C3"].PutValue(3000);
-            sheet.Cells["C4"].PutValue(4000);
+            sheet.Cells["C4"].PutValue(1000);
 
             // Add a column chart
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Add two series: first uses primary Y‑axis, second will use secondary Y‑axis
+            // Add two data series
             chart.NSeries.Add("B2:B4", true); // Series 1
             chart.NSeries.Add("C2:C4", true); // Series 2
             chart.NSeries.CategoryData = "A2:A4";
@@ -51,13 +51,13 @@ namespace AsposeCellsSecondaryYAxisDemo
 
             // Optional: customize the secondary Y‑axis appearance
             Axis secondaryAxis = chart.SecondValueAxis;
-            secondaryAxis.Title.Text = "Secondary Axis (Units)";
+            secondaryAxis.Title.Text = "Secondary Axis";
             secondaryAxis.MinValue = 0;
             secondaryAxis.MaxValue = 6000;
             secondaryAxis.MajorUnit = 1000;
 
             // Save the workbook
-            workbook.Save("ColumnChartWithSecondaryYAxis.xlsx");
+            workbook.Save("SecondaryYAxisDemo.xlsx");
         }
     }
 }

@@ -1,10 +1,10 @@
-// Title: Aspose.Cells C# – Export Worksheet Images as Base64 in a Self‑Contained HTML File
-// Description: Demonstrates how to insert a picture into a worksheet, enable HtmlSaveOptions.ExportImagesAsBase64, and save the workbook as a single HTML document with all images embedded as Base64 data URIs, eliminating external image files.
-// Keywords: Aspose.Cells | C# | .NET | HtmlSaveOptions | ExportImagesAsBase64 | embed images base64 | self‑contained HTML | Excel to HTML conversion | picture insertion | code example | GitHub
-// Common Searches: Aspose.Cells ExportImagesAsBase64 example | C# save Excel as HTML with embedded images | HtmlSaveOptions ExportImagesAsBase64 .NET tutorial | self‑contained HTML from workbook Aspose | embed Excel picture as Base64 in HTML
-// Developer Intent: Create an HTML file from a workbook where every worksheet image is encoded as a Base64 string.
-// Use Cases: Generate portable HTML reports that include logos or charts without external files. | Embed branded Excel templates directly into email bodies or web pages. | Provide offline‑viewable HTML versions of spreadsheets where images stay inside the document.
-// AI Prompts: Write C# code that adds a picture to a worksheet and saves the workbook as HTML with ExportImagesAsBase64 enabled using Aspose.Cells. | Explain how HtmlSaveOptions.ExportImagesAsBase64 affects the HTML output and file size. | Give troubleshooting steps when Base64‑encoded images are missing from the generated HTML.
+// Title: Embed Worksheet Images as Base64 in HTML with Aspose.Cells (C#)
+// Description: Creates a workbook, optionally inserts a picture into cell A1, sets HtmlSaveOptions.ExportImagesAsBase64 to true, and saves the file as a single self‑contained HTML document where the image is stored as a Base64 string.
+// Keywords: Aspose.Cells ExportImagesAsBase64 | C# embed images in HTML | self‑contained HTML workbook | Base64 image embedding .NET | Aspose.Cells HTML export options
+// Common Searches: Aspose.Cells ExportImagesAsBase64 example C# | how to embed pictures in HTML output using Aspose.Cells | save Excel as single HTML file with embedded images | C# convert workbook to HTML with Base64 images
+// Developer Intent: Produce an HTML file from an Excel workbook where all worksheet images are encoded as Base64 and included directly in the markup.
+// Use Cases: Generate a portable HTML report that displays charts and pictures without external files. | Create email‑ready HTML content from Excel where embedded images guarantee proper rendering. | Distribute offline documentation that contains visual elements without requiring image folders.
+// AI Prompts: Show how to set a custom HTML title while using ExportImagesAsBase64 in Aspose.Cells. | Provide a C# snippet that loads an existing .xlsx, embeds its images as Base64, and writes the HTML to a MemoryStream. | Explain techniques to reduce memory usage when exporting large images as Base64 with Aspose.Cells.
 
 using System;
 using System.IO;
@@ -12,43 +12,39 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to insert a picture into a worksheet, enable HtmlSaveOptions.ExportImagesAsBase64, and save the workbook as a single HTML document with all images embedded as Base64 data URIs, eliminating external image files.
+    // Creates a workbook, optionally inserts a picture into cell A1, sets HtmlSaveOptions.ExportImagesAsBase64 to true, and saves the file as a single self‑contained HTML document where the image is stored as a Base64 string.
     public class ExportImagesAsBase64Demo
     {
         public static void Run()
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-
-                // Get the first worksheet
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Path to the image file
                 string imagePath = "example.jpg";
 
-                // Add image if file exists
+                // Verify the image file exists before adding it to the worksheet
                 if (File.Exists(imagePath))
                 {
+                    // Add the image at cell A1 (row 0, column 0)
                     worksheet.Pictures.Add(0, 0, imagePath);
                 }
                 else
                 {
-                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping image insertion.");
+                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
                 }
 
-                // Create HTML save options with Base64 image embedding
+                // Set HTML save options to embed images as Base64 strings
                 HtmlSaveOptions saveOptions = new HtmlSaveOptions
                 {
                     ExportImagesAsBase64 = true
                 };
 
-                // Save the workbook as a self‑contained HTML file
                 string outputPath = "output.html";
                 workbook.Save(outputPath, saveOptions);
-
-                Console.WriteLine($"HTML file '{outputPath}' with embedded Base64 images saved successfully.");
+                Console.WriteLine($"Workbook saved as HTML with embedded images to '{outputPath}'.");
             }
             catch (Exception ex)
             {
@@ -57,7 +53,7 @@ namespace AsposeCellsExamples
         }
     }
 
-    // Entry point for the application
+    // Application entry point
     public class Program
     {
         public static void Main(string[] args)

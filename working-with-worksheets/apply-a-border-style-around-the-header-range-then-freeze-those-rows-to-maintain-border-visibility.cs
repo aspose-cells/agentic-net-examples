@@ -1,18 +1,20 @@
-// Title: Add a Thick Red Outline Border to a Header Row and Freeze It with Aspose.Cells for .NET (C#)
-// Description: C# example that creates a workbook, writes a header in A1:D1, applies a thick red outline border using SetOutlineBorders, freezes the header row with FreezePanes at A2, and saves the file as HeaderBorderAndFreeze.xlsx.
-// Keywords: Aspose.Cells | C# | SetOutlineBorders | FreezePanes | header row border | Excel styling | outline border thick red | freeze top row | Excel workbook generation | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells set outline border C# | Freeze first row Aspose.Cells .NET | Apply red border to header Excel using Aspose | How to freeze panes after styling header Aspose.Cells | C# code for border and freeze panes in Excel
-// Developer Intent: Apply a thick red outline border to the header range (A1:D1) and freeze that row so it remains visible while scrolling.
-// Use Cases: Sales reports where column titles are highlighted with a red border and stay fixed during scrolling. | Invoice templates that keep the header row visible and visually distinct for easy reference. | Large data exports where a styled, frozen header improves readability and analysis.
-// AI Prompts: Write C# code using Aspose.Cells to apply a double blue border to header range A1:F1 and freeze the top two rows. | Show how to set different border styles for multiple header ranges and freeze both rows and columns in an Aspose.Cells workbook. | Provide an example that adds a thick green outline border to a header row, freezes the pane at cell B2, and saves the workbook as an .xlsx file.
+// Title: Add a Thick Black Outline Border to a Header Row and Freeze It with Aspose.Cells for .NET
+// Description: This example creates a new workbook, writes column titles to cells A1‑D1, defines the header range, applies a thick black outline using SetOutlineBorders, and then freezes the first row with FreezePanes so the styled header stays visible while scrolling. The file is saved as HeaderBorderAndFreeze.xlsx.
+// Keywords: Aspose.Cells C# | SetOutlineBorders | FreezePanes | header row border | thick black border | freeze top row | Excel export .NET | range styling Aspose | worksheet freeze pane | border and freeze example
+// Common Searches: how to add a border to a header row using Aspose.Cells | freeze first row in Excel with Aspose.Cells .NET | Aspose.Cells SetOutlineBorders example | FreezePanes usage in C# Aspose.Cells | apply thick border to range Aspose.Cells
+// Developer Intent: Apply a visible border to the header range and lock that row so it remains on screen during scrolling.
+// Use Cases: Financial reports where column titles need a distinct border and stay fixed while reviewing large data tables. | Dashboard exports that require the header to be highlighted and always visible for end‑users. | Printable worksheets where a frozen, bordered header ensures consistent labeling across pages.
+// AI Prompts: Show C# code that adds a thick black outline to a header range and freezes the row with Aspose.Cells. | Generate an Aspose.Cells example that styles multiple header rows with different borders and freezes them. | Explain how to adjust the freeze pane position after applying borders to keep the border visible.
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsHeaderBorderAndFreeze
 {
-    // C# example that creates a workbook, writes a header in A1:D1, applies a thick red outline border using SetOutlineBorders, freezes the header row with FreezePanes at A2, and saves the file as HeaderBorderAndFreeze.xlsx.
+    // This example creates a new workbook, writes column titles to cells A1‑D1, defines the header range, applies a thick black outline using SetOutlineBorders, and then freezes the first row with FreezePanes so the styled header stays visible while scrolling. The file is saved as HeaderBorderAndFreeze.xlsx.
     class Program
     {
         static void Main()
@@ -24,41 +26,32 @@ namespace AsposeCellsHeaderBorderAndFreeze
                 Worksheet worksheet = workbook.Worksheets[0];
                 Cells cells = worksheet.Cells;
 
-                // Populate sample data with a header row (A1:D1)
-                cells["A1"].PutValue("Product");
-                cells["B1"].PutValue("Category");
-                cells["C1"].PutValue("Price");
-                cells["D1"].PutValue("Quantity");
+                // Populate some header data (first row)
+                cells["A1"].PutValue("ID");
+                cells["B1"].PutValue("Name");
+                cells["C1"].PutValue("Quantity");
+                cells["D1"].PutValue("Price");
 
-                // Fill a few data rows for visibility
-                cells["A2"].PutValue("Apple");
-                cells["B2"].PutValue("Fruit");
-                cells["C2"].PutValue(1.20);
-                cells["D2"].PutValue(50);
+                // Define the header range (A1:D1)
+                AsposeRange headerRange = cells.CreateRange("A1:D1");
 
-                cells["A3"].PutValue("Carrot");
-                cells["B3"].PutValue("Vegetable");
-                cells["C3"].PutValue(0.80);
-                cells["D3"].PutValue(30);
+                // Apply a uniform thick black outline border around the header range
+                headerRange.SetOutlineBorders(CellBorderType.Thick, Color.Black);
 
-                // Define the header range (first row)
-                Aspose.Cells.Range headerRange = cells.CreateRange("A1:D1");
-
-                // Apply a thick red outline border around the header range
-                headerRange.SetOutlineBorders(CellBorderType.Thick, Color.Red);
-
-                // Freeze the header row so it stays visible while scrolling
-                // Freeze at cell A2 (row index 2) with 1 frozen row and 0 frozen columns
+                // Freeze the first row so the header (with its border) stays visible while scrolling
+                // Freeze at cell A2 (the first cell below the header), freezing 1 row and 0 columns
                 worksheet.FreezePanes("A2", 1, 0);
 
-                // Save the workbook
+                // Determine output file path
                 string outputPath = "HeaderBorderAndFreeze.xlsx";
+
+                // Save the workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

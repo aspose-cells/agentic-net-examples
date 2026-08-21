@@ -1,98 +1,76 @@
-// Title: Stream rows from a large Excel worksheet with Aspose.Cells LightCells API (C#)
-// Description: Demonstrates how to use a custom LightCellsDataHandler with LoadOptions to read and process an Excel workbook row‑by‑row, logging each sheet, row, and cell while keeping memory usage low, and optionally saving the workbook after processing.
-// Keywords: Aspose.Cells | LightCells API | C# streaming rows | large Excel workbook | memory‑efficient Excel processing | LoadOptions LightCellsDataHandler | row‑by‑row Excel read | GitHub example | open workbook without full load | Excel data extraction C#
-// Common Searches: Aspose.Cells LightCells stream rows C# | process large Excel file without loading whole workbook | C# LightCellsDataHandler example | read Excel rows one at a time Aspose | memory efficient Excel parsing Aspose.Cells
-// Developer Intent: Read and manipulate rows of a massive worksheet without loading the entire workbook into memory, using Aspose.Cells LightCells streaming capabilities.
-// Use Cases: Migrate data from a multi‑gigabyte Excel file to a database by streaming rows. | Audit or log every cell value in a large workbook without exhausting RAM. | Apply row‑level transformations (e.g., format changes, calculations) and save the result while keeping the process lightweight.
-// AI Prompts: Create a LightCellsDataHandler that skips rows where column A is empty. | Show how to write each processed row to a new workbook while streaming with LightCells. | Add comprehensive error handling for missing cells and type conversion errors during LightCells row streaming.
+// Title: C# – Stream Large Excel Worksheet Row‑by‑Row with Aspose.Cells LightCellsDataHandler
+// Description: Learn how to read a massive Excel file in C# using Aspose.Cells LightCells. By attaching a custom LightCellsDataHandler to LoadOptions, rows and cells are processed sequentially, eliminating the need to load the whole workbook into memory.
+// Keywords: Aspose.Cells | LightCells | LightCellsDataHandler | C# | stream large Excel | row streaming | memory‑efficient Excel processing | read Excel without loading | large worksheet | cell iteration
+// Common Searches: Aspose.Cells stream rows C# | LightCellsDataHandler example .NET | read large Excel file without loading into memory | process Excel rows on the fly Aspose.Cells | C# memory‑efficient Excel reading
+// Developer Intent: Read and handle rows and cells of a huge worksheet sequentially while keeping memory usage low.
+// Use Cases: Log or analyze every cell value in a multi‑gigabyte Excel file without OOM errors. | Filter, transform, or aggregate rows during streaming before exporting to another format. | Copy selected rows to a new workbook or CSV while the source file remains unmaterialized.
+// AI Prompts: Create a LightCellsDataHandler that writes each processed row to a CSV file during streaming. | Show how to stop LightCells processing after row 10,000 using the handler methods. | Provide code to correctly handle merged cells and formulas while streaming rows with LightCells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsStreamingExample
+// Learn how to read a massive Excel file in C# using Aspose.Cells LightCells. By attaching a custom LightCellsDataHandler to LoadOptions, rows and cells are processed sequentially, eliminating the need to load the whole workbook into memory.
+class Program
 {
-    // Demonstrates how to use a custom LightCellsDataHandler with LoadOptions to read and process an Excel workbook row‑by‑row, logging each sheet, row, and cell while keeping memory usage low, and optionally saving the workbook after processing.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the large workbook to be processed
-            string inputPath = "LargeFile_original.xlsx";
+        // Path to the large Excel file to be streamed
+        string inputPath = "LargeData.xlsx";
 
-            // Path where the processed workbook will be saved (optional)
-            string outputPath = "ProcessedLargeFile.xlsx";
+        // Create an instance of the custom LightCellsDataHandler
+        var handler = new StreamingHandler();
 
-            try
-            {
-                // Ensure the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    // Create a minimal placeholder workbook
-                    var placeholder = new Workbook();
-                    placeholder.Worksheets[0].Name = "Sheet1";
-                    placeholder.Save(inputPath);
-                    Console.WriteLine($"Created placeholder workbook at {inputPath}");
-                }
+        // Configure LoadOptions to use the handler
+        var loadOptions = new LoadOptions();
+        loadOptions.LightCellsDataHandler = handler;
 
-                // Create an instance of the custom LightCellsDataHandler
-                var handler = new StreamingHandler();
+        // Load the workbook in LightCells (streaming) mode.
+        // The workbook is not fully materialized in memory.
+        var workbook = new Workbook(inputPath, loadOptions);
 
-                // Configure load options to use the LightCellsDataHandler
-                var loadOptions = new LoadOptions
-                {
-                    LightCellsDataHandler = handler
-                };
-
-                // Load the workbook in light cells mode – rows are streamed and processed
-                var workbook = new Workbook(inputPath, loadOptions);
-
-                // Save the workbook after processing (optional, demonstrates full lifecycle)
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // At this point all rows and cells have been processed by the handler.
+        // If you need to save a copy, you can do so (optional):
+        // workbook.Save("Copy.xlsx");
     }
 
-    // Custom handler that streams rows and cells without loading the whole workbook into memory
+    // Custom implementation of LightCellsDataHandler that streams rows and cells.
     class StreamingHandler : LightCellsDataHandler
     {
-        // Called before reading a worksheet; return true to process this sheet
+        // Called before processing a worksheet.
         public bool StartSheet(Worksheet sheet)
         {
-            Console.WriteLine($"Starting to process sheet: {sheet.Name}");
+            Console.WriteLine($"Processing sheet: {sheet.Name}");
+            return true; // Continue processing this sheet.
+        }
+
+        // Called before processing each row.
+        public bool StartRow(int rowIndex)
+        {
+            // Return true to process the row and its cells.
             return true;
         }
 
-        // Called before reading each row; return true to process the row
-        public bool StartRow(int rowIndex)
-        {
-            return true; // Process every row
-        }
-
-        // Called after the row header is read; return true to process its cells
+        // Called after the row object is created; can be used to read row properties.
         public bool ProcessRow(Row row)
         {
-            Console.WriteLine($"Processing Row {row.Index}");
-            return true; // Continue to cell processing for this row
+            Console.WriteLine($"Row {row.Index}:");
+            // Return true to also process cells in this row.
+            return true;
         }
 
-        // Called before reading each cell in the current row; return true to process the cell
+        // Called before processing each cell in the current row.
         public bool StartCell(int columnIndex)
         {
-            return true; // Process every cell in the row
+            // Return true to process the cell.
+            return true;
         }
 
-        // Called for each cell that is to be processed
+        // Called for each cell that should be processed.
         public bool ProcessCell(Cell cell)
         {
-            Console.WriteLine($"Cell {cell.Name}: {cell.Value}");
-            return true; // Continue processing
+            // Output cell address and its value.
+            Console.WriteLine($"  {cell.Name} = {cell.Value}");
+            return true;
         }
     }
 }

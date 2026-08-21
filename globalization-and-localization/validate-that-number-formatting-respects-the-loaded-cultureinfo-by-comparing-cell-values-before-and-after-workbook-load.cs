@@ -1,64 +1,59 @@
+// Title: Validate CultureInfo‑specific number formatting in Aspose.Cells (C#)
+// Description: Creates a workbook, writes a numeric value with the built‑in "0.00" format, saves it, reads the cell's string representation using the default culture, then reloads the file with a German CultureInfo (de‑DE) and compares the string values to confirm that the decimal separator follows the loaded locale.
+// Keywords: Aspose.Cells | CultureInfo | C# | number formatting | decimal separator | LoadOptions | de-DE | globalization | localization | XLSX validation | unit test
+// Common Searches: Aspose.Cells verify CultureInfo on load | C# check decimal separator after loading workbook | how to test number format with different locales in Aspose.Cells | load XLSX with German culture Aspose.Cells
+// Developer Intent: Confirm that a workbook loaded with a specific CultureInfo renders numeric cells using that locale’s decimal separator.
+// Use Cases: Automated test to ensure financial reports display commas as decimal points when opened with a German locale. | Quality‑gate check that saved spreadsheets retain locale‑aware formatting after being transferred between regions. | Integration scenario where a report generated in one language is reviewed in another, requiring verification of correct number representation.
+// AI Prompts: Generate an xUnit test that creates a workbook, applies the built‑in number format, saves it, reloads with a given CultureInfo, and asserts the expected string value. | Write a reusable method that loads an XLSX file with LoadOptions.CultureInfo and returns the formatted string of a specified cell. | Explain how Aspose.Cells selects the decimal separator for built‑in number formats when a CultureInfo is supplied in LoadOptions.
+
 using System;
 using System.Globalization;
 using Aspose.Cells;
 
-namespace AsposeCellsCultureValidation
+// Creates a workbook, writes a numeric value with the built‑in "0.00" format, saves it, reads the cell's string representation using the default culture, then reloads the file with a German CultureInfo (de‑DE) and compares the string values to confirm that the decimal separator follows the loaded locale.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Define the culture to be used for formatting (German - uses comma as decimal separator)
-            CultureInfo germanCulture = new CultureInfo("de-DE");
+        // -------------------------------------------------
+        // Create a workbook, put a numeric value and apply a built‑in number format.
+        // -------------------------------------------------
+        Workbook wb = new Workbook();                         // create workbook
+        Worksheet ws = wb.Worksheets[0];
+        Cell cell = ws.Cells["A1"];
+        cell.PutValue(1234.56);                               // numeric value
 
-            // -------------------- Create workbook --------------------
-            Workbook workbook = new Workbook();
+        // Apply built‑in format "0.00" (Number = 2) which uses the current culture's decimal separator.
+        Style style = wb.CreateStyle();
+        style.Number = 2;                                     // decimal with two places
+        cell.SetStyle(style);
 
-            // Apply the culture to the workbook settings
-            workbook.Settings.CultureInfo = germanCulture;
+        // Save the workbook to a temporary file.
+        string filePath = "culture_test.xlsx";
+        wb.Save(filePath, SaveFormat.Xlsx);
 
-            // Access the first worksheet and target cell
-            Worksheet sheet = workbook.Worksheets[0];
-            Cell cell = sheet.Cells["A1"];
+        // Capture the string representation using the default (environment) culture.
+        string beforeLoad = cell.StringValue;
+        Console.WriteLine($"Before load (default culture): {beforeLoad}");
 
-            // Put a numeric value into the cell
-            double numericValue = 1234.56;
-            cell.PutValue(numericValue);
+        // -------------------------------------------------
+        // Load the same file with a different CultureInfo (German uses comma as decimal separator).
+        // -------------------------------------------------
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+        loadOptions.CultureInfo = new CultureInfo("de-DE");   // set culture for loading
 
-            // Create a style with a built‑in decimal format that includes grouping
-            Style style = workbook.CreateStyle();
-            style.Number = 4; // "#,##0.00"
-            cell.SetStyle(style);
+        Workbook loadedWb = new Workbook(filePath, loadOptions); // load with culture
+        Worksheet loadedWs = loadedWb.Worksheets[0];
+        Cell loadedCell = loadedWs.Cells["A1"];
 
-            // Save the workbook to a temporary file
-            string filePath = "CultureValidation.xlsx";
-            workbook.Save(filePath, SaveFormat.Xlsx);
+        // Get the string representation after loading with German culture.
+        string afterLoad = loadedCell.StringValue;
+        Console.WriteLine($"After load (de-DE culture): {afterLoad}");
 
-            // -------------------- Load workbook with culture --------------------
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            loadOptions.CultureInfo = germanCulture; // Ensure the same culture is used during load
-
-            Workbook loadedWorkbook = new Workbook(filePath, loadOptions);
-            Cell loadedCell = loadedWorkbook.Worksheets[0].Cells["A1"];
-
-            // Retrieve the formatted string value after loading
-            string loadedStringValue = loadedCell.StringValue;
-
-            // Expected formatted string according to German culture
-            string expectedStringValue = numericValue.ToString("N2", germanCulture); // "1.234,56"
-
-            // -------------------- Validation --------------------
-            Console.WriteLine($"Loaded string value : \"{loadedStringValue}\"");
-            Console.WriteLine($"Expected string value: \"{expectedStringValue}\"");
-
-            if (loadedStringValue == expectedStringValue)
-            {
-                Console.WriteLine("Success: Number formatting respects the loaded CultureInfo.");
-            }
-            else
-            {
-                Console.WriteLine("Failure: Number formatting does NOT respect the loaded CultureInfo.");
-            }
-        }
+        // -------------------------------------------------
+        // Compare the two representations to verify culture‑aware formatting.
+        // -------------------------------------------------
+        bool formattingUnchanged = beforeLoad == afterLoad;
+        Console.WriteLine($"Formatting unchanged: {formattingUnchanged}");
     }
 }

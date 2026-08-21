@@ -1,85 +1,86 @@
 // Title: C# – Detect #REF! Formulas After Deleting a Worksheet and Redirect Them to a Placeholder Sheet with Aspose.Cells
-// Description: This Aspose.Cells for .NET example creates a workbook, adds a Data and a Summary sheet, writes a formula that references the Data sheet, deletes the Data sheet, ensures a "Placeholder" sheet exists, scans every cell in the workbook, and replaces any #REF! formula with a reference to Placeholder!A1 before saving the file.
-// Keywords: Aspose.Cells C# #REF! handling | update formulas after sheet deletion | placeholder worksheet Aspose.Cells | detect invalid references .NET | replace #REF! with default cell
-// Common Searches: how to fix #REF! formulas after removing a worksheet using Aspose.Cells | C# code to redirect broken references to a placeholder sheet | scan all cells for #REF! in Aspose.Cells workbook | replace invalid sheet references with default value Aspose.Cells
-// Developer Intent: Automatically replace formulas that become #REF! when a referenced worksheet is deleted, pointing them to a predefined placeholder sheet.
-// Use Cases: Maintain functional summary reports when source data sheets are removed. | Create template workbooks that safely redirect broken references to a placeholder for later data entry. | Implement a cleanup routine that sanitizes all formulas before distributing a workbook.
-// AI Prompts: Write C# code with Aspose.Cells that finds every #REF! formula after a worksheet is deleted and changes it to "Placeholder!A1". | Show how to add a placeholder worksheet if it does not exist and update all invalid formulas across a workbook using Aspose.Cells. | Explain an efficient way to iterate through all cells in an Aspose.Cells workbook to replace #REF! references with a default cell.
+// Description: Creates a workbook, adds a placeholder sheet, writes formulas that point to a sheet scheduled for removal, deletes that sheet, scans all cells for "#REF!" errors, replaces the broken reference with the placeholder sheet name, and saves the corrected file.
+// Keywords: Aspose.Cells C# detect #REF! | update broken worksheet references | replace deleted sheet formulas | placeholder sheet Aspose.Cells | scan workbook for #REF! errors | auto‑fix Excel references .NET
+// Common Searches: Aspose.Cells replace #REF! after deleting sheet | C# find broken formulas in Excel workbook | redirect deleted worksheet references to placeholder | how to fix #REF! errors with Aspose.Cells | auto‑update formulas when sheet is removed
+// Developer Intent: Locate formulas that become #REF! after a worksheet is removed and automatically point them to a designated placeholder sheet.
+// Use Cases: Programmatically delete a worksheet and ensure no #REF! errors remain. | Maintain workbook integrity by redirecting all broken references to a placeholder sheet. | Generate clean Excel files for downstream processing or reporting.
+// AI Prompts: Generate C# code using Aspose.Cells that scans a Workbook for #REF! formulas after a sheet deletion and changes them to reference a sheet named "Placeholder". | Write a reusable method that accepts a Workbook and a placeholder sheet name, then updates any formulas broken by removed worksheets. | Explain the steps to safely delete a worksheet and automatically redirect its formulas to a placeholder sheet with Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Creates a workbook, adds a placeholder sheet, writes formulas that point to a sheet scheduled for removal, deletes that sheet, scans all cells for "#REF!" errors, replaces the broken reference with the placeholder sheet name, and saves the corrected file.
+class DetectAndUpdateDeletedSheetFormulas
 {
-    // This Aspose.Cells for .NET example creates a workbook, adds a Data and a Summary sheet, writes a formula that references the Data sheet, deletes the Data sheet, ensures a "Placeholder" sheet exists, scans every cell in the workbook, and replaces any #REF! formula with a reference to Placeholder!A1 before saving the file.
-    public class UpdateDeletedSheetReferences
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Add a placeholder sheet that will receive the broken references
+            Worksheet placeholderSheet = workbook.Worksheets.Add("Placeholder");
+
+            // Add a sheet that will be deleted later
+            Worksheet sheetToDelete = workbook.Worksheets.Add("SheetToDelete");
+
+            // Add a main sheet with formulas referencing the sheet that will be deleted
+            Worksheet mainSheet = workbook.Worksheets[0];
+            mainSheet.Name = "Main";
+            mainSheet.Cells["A1"].Formula = "=SheetToDelete!B1";
+            mainSheet.Cells["A2"].Formula = "=SUM(SheetToDelete!B1:B5)";
+
+            // Populate some data in the sheet that will be deleted
+            sheetToDelete.Cells["B1"].PutValue(10);
+            sheetToDelete.Cells["B2"].PutValue(20);
+            sheetToDelete.Cells["B3"].PutValue(30);
+            sheetToDelete.Cells["B4"].PutValue(40);
+            sheetToDelete.Cells["B5"].PutValue(50);
+
+            // Optional: calculate formulas before deletion
+            workbook.CalculateFormula();
+
+            // Delete the sheet that contains the referenced cells
+            int deleteIndex = workbook.Worksheets.IndexOf(sheetToDelete);
+            if (deleteIndex != -1)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                workbook.Worksheets.RemoveAt(deleteIndex);
+            }
 
-                // Add two worksheets: "Data" and "Summary"
-                Worksheet dataSheet = workbook.Worksheets[0];
-                dataSheet.Name = "Data";
-                Worksheet summarySheet = workbook.Worksheets.Add("Summary");
-
-                // Populate some data in the "Data" sheet
-                dataSheet.Cells["A1"].PutValue(10);
-                dataSheet.Cells["A2"].PutValue(20);
-
-                // In the "Summary" sheet, add a formula that references the "Data" sheet
-                // This formula will become invalid after we delete the "Data" sheet
-                summarySheet.Cells["B1"].Formula = "=Data!A1+A2";
-
-                // Ensure a placeholder sheet exists to receive updated references
-                const string placeholderName = "Placeholder";
-                Worksheet placeholderSheet = workbook.Worksheets[placeholderName];
-                if (placeholderSheet == null)
+            // After deletion, formulas that referenced the removed sheet become "#REF!"
+            // Iterate through all worksheets and cells to replace "#REF!" with the placeholder sheet name
+            foreach (Worksheet ws in workbook.Worksheets)
+            {
+                Cells cells = ws.Cells;
+                foreach (Cell cell in cells)
                 {
-                    placeholderSheet = workbook.Worksheets.Add(placeholderName);
-                    // Optionally put a default value in the placeholder cell
-                    placeholderSheet.Cells["A1"].PutValue(0);
-                }
-
-                // Delete the "Data" worksheet (the one referenced by the formula)
-                // After deletion, formulas that referenced it will contain #REF!
-                int dataSheetIndex = workbook.Worksheets.IndexOf(dataSheet);
-                workbook.Worksheets.RemoveAt(dataSheetIndex);
-
-                // Scan all cells in all worksheets and replace any #REF! with a reference to the placeholder sheet
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    // Use the Cells iterator for efficient traversal
-                    foreach (Cell cell in ws.Cells)
+                    if (cell.IsFormula && cell.Formula.Contains("#REF!"))
                     {
-                        if (cell.IsFormula && cell.Formula.Contains("#REF!"))
-                        {
-                            // Replace the invalid reference with a reference to the placeholder sheet's A1 cell
-                            cell.Formula = cell.Formula.Replace("#REF!", $"{placeholderName}!A1");
-                        }
+                        // Update the broken reference to point to the placeholder sheet
+                        cell.Formula = cell.Formula.Replace("#REF!", placeholderSheet.Name);
                     }
                 }
-
-                // Save the updated workbook
-                workbook.Save("UpdatedReferences.xlsx");
-                Console.WriteLine("Workbook saved as 'UpdatedReferences.xlsx'.");
             }
-            catch (Exception ex)
+
+            // Define output file path
+            string outputPath = "UpdatedFormulas.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
-        }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
         {
-            UpdateDeletedSheetReferences.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

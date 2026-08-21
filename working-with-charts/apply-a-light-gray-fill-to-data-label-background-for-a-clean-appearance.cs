@@ -1,73 +1,51 @@
-// Title: C# – Apply Light Gray Background to Chart Data Labels with Aspose.Cells
-// Description: Creates a workbook, adds sample data, inserts a column chart, enables data labels, and sets a solid light‑gray fill for the label background before saving the file.
-// Keywords: Aspose.Cells data label background | C# chart data label fill | light gray data label Aspose | Excel chart formatting .NET | solid fill pattern Aspose.Cells | chart label styling C# | US developers Aspose.Cells | UK Aspose.Cells examples
-// Common Searches: Aspose.Cells change data label background color | C# set solid fill for chart data labels | light gray background for Excel chart labels | how to format data labels in Aspose.Cells | chart label styling .NET
-// Developer Intent: Add a solid light‑gray fill to the background of chart data labels using Aspose.Cells for .NET.
-// Use Cases: Generate a column chart where each data label has a light‑gray background to improve readability. | Apply a consistent label style across multiple charts in an automated Excel report. | Retrofitting existing workbooks with corporate‑approved label colors without manual editing.
-// AI Prompts: Show C# code that sets a solid light gray fill for chart data labels with Aspose.Cells. | Give an example of applying a light gray background to pie‑chart data labels in .NET. | Explain how to customize data label fill pattern, background color, and border in Aspose.Cells charts.
+// Title: Set Light Gray Background for Chart Data Labels with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds sample data, inserts a column chart, enables data labels, applies a solid light‑gray fill to the label background, and saves the file as an .xlsx.
+// Keywords: Aspose.Cells | C# | chart data label background | light gray fill | solid fill pattern | Excel chart formatting | set data label color
+// Common Searches: Aspose.Cells set data label background color | how to apply solid fill to chart data labels in .NET | light gray data label background Aspose.Cells | change chart label background color C#
+// Developer Intent: Set a solid light‑gray background for chart data labels using Aspose.Cells in C#.
+// Use Cases: Generate column charts in automated reports where each data label has a light‑gray background for better readability. | Apply corporate styling to Excel workbooks by standardizing data label backgrounds across multiple charts. | Export dashboards with consistent label appearance, ensuring all chart data labels share the same light‑gray fill.
+// AI Prompts: Show how to apply a solid light‑gray fill to chart data labels with Aspose.Cells for .NET. | Provide a C# example that customizes chart data label appearance, including background color and font, using Aspose.Cells. | Explain how to set different background colors for data labels of multiple series in an Aspose.Cells chart.
 
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// Creates a workbook, adds sample data, inserts a column chart, enables data labels, applies a solid light‑gray fill to the label background, and saves the file as an .xlsx.
+class ApplyLightGrayDataLabelBackground
 {
-    // Creates a workbook, adds sample data, inserts a column chart, enables data labels, and sets a solid light‑gray fill for the label background before saving the file.
-    public class DataLabelsLightGrayBackgroundDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Add sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["B3"].PutValue(20);
-                worksheet.Cells["B4"].PutValue(30);
+        // Populate sample data for the chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["A4"].PutValue("C");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["B4"].PutValue(30);
 
-                // Add a column chart
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
-                Chart chart = worksheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
+        // Add a column chart
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
+        Chart chart = sheet.Charts[chartIndex];
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
 
-                // Enable data labels for the first series
-                DataLabels dataLabels = chart.NSeries[0].DataLabels;
-                dataLabels.ShowValue = true;
+        // Enable data labels for the first series
+        Series series = chart.NSeries[0];
+        series.DataLabels.ShowValue = true;
 
-                // Apply a solid light gray fill to the data label background
-                dataLabels.Area.FillFormat.Pattern = FillPattern.Solid;
-                dataLabels.Area.BackgroundColor = Color.LightGray;
+        // Apply a light gray fill to the data label background
+        series.DataLabels.Area.FillFormat.Pattern = FillPattern.Solid;
+        series.DataLabels.Area.BackgroundColor = Color.LightGray;
 
-                // Save the workbook
-                string outputPath = "DataLabelsLightGrayBackgroundDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            DataLabelsLightGrayBackgroundDemo.Run();
-        }
+        // Save the workbook
+        workbook.Save("ChartWithLightGrayDataLabels.xlsx");
     }
 }

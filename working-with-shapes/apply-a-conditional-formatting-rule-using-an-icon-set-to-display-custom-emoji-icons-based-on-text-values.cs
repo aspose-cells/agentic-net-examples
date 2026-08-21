@@ -1,104 +1,52 @@
-// Title: C# – Apply Emoji Icon Set Conditional Formatting with Aspose.Cells
-// Description: Creates a workbook, writes sentiment text (Happy, Neutral, Sad) in column A, adds a hidden numeric helper column, defines a conditional‑formatting range on the helper column, applies an IconSet (Symbols3) to display emoji‑style icons, hides the numeric values, customizes each icon level, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells | C# | .NET | conditional formatting | icon set | emoji icons | hide column | custom icons | Symbols3 | Excel automation | sentiment icons
-// Common Searches: Aspose.Cells emoji icon set C# | how to hide helper column and show only icons in Aspose.Cells | customize icon set thresholds Aspose.Cells .NET | conditional formatting with emojis using Aspose.Cells | display sentiment icons instead of text in Excel with Aspose
-// Developer Intent: Generate an Excel workbook that replaces text labels with emoji‑style icons by using a hidden numeric column and an IconSet conditional‑formatting rule.
-// Use Cases: Convert status text (Happy/Neutral/Sad) into visual emoji icons for concise reporting. | Build dashboards where numeric scores are concealed and only emoticon icons are visible for quick assessment. | Create printable spreadsheets that convey sentiment through custom icons without exposing underlying values.
-// AI Prompts: Write C# code with Aspose.Cells to map numeric thresholds to emoji icons using an IconSet and hide the helper column. | Explain how to customize individual icons in an Aspose.Cells IconSet condition for happy, neutral, and sad sentiment levels. | Provide step‑by‑step instructions to export an XLSX file that shows only emoji icons while keeping the numeric helper column invisible.
+// Title: C# – Apply Smilies3 Emoji Icon Set Conditional Formatting to Text Cells with Aspose.Cells
+// Description: Creates a workbook, writes "Excellent", "Good" and "Poor" to A1‑A3, adds a conditional‑formatting rule for that range, and uses the built‑in Smilies3 icon set to show only emoji icons (hiding the cell values). The file is saved as an .xlsx document.
+// Keywords: Aspose.Cells | C# conditional formatting | icon set | Smilies3 | emoji icons in Excel | hide cell values | text‑based icon set | Excel automation
+// Common Searches: Aspose.Cells Smilies3 icon set example | hide values and show only icons Aspose.Cells C# | conditional formatting with emoji icons in Excel | apply icon set to text range using Aspose.Cells | C# code for emoji icon conditional formatting
+// Developer Intent: Add a conditional‑formatting rule that applies the Smilies3 emoji icon set to a text range and displays only the icons.
+// Use Cases: Replace performance ratings with smiley icons for a concise report. | Build a status dashboard where words like "Excellent" become visual emojis. | Create printable spreadsheets that use emojis instead of text for a cleaner look.
+// AI Prompts: Write C# code with Aspose.Cells that maps specific text strings to different emoji icons using an IconSet. | Show how to configure an IconSet condition to hide cell values and display only Smilies3 icons for a given range. | Provide an example that reverses the icon order or switches to another built‑in icon set for text‑based conditional formatting.
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsExample
+// Creates a workbook, writes "Excellent", "Good" and "Poor" to A1‑A3, adds a conditional‑formatting rule for that range, and uses the built‑in Smilies3 icon set to show only emoji icons (hiding the cell values). The file is saved as an .xlsx document.
+class CustomEmojiIconSet
 {
-    // Creates a workbook, writes sentiment text (Happy, Neutral, Sad) in column A, adds a hidden numeric helper column, defines a conditional‑formatting range on the helper column, applies an IconSet (Symbols3) to display emoji‑style icons, hides the numeric values, customizes each icon level, and saves the file as an XLSX document.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate cells with text that will be evaluated by the icon set
+        worksheet.Cells["A1"].PutValue("Excellent");
+        worksheet.Cells["A2"].PutValue("Good");
+        worksheet.Cells["A3"].PutValue("Poor");
+
+        // Add a conditional formatting collection to the worksheet
+        int cfIndex = worksheet.ConditionalFormattings.Add();
+        FormatConditionCollection fcc = worksheet.ConditionalFormattings[cfIndex];
+
+        // Define the range A1:A3 for the conditional formatting
+        CellArea area = new CellArea
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            StartRow = 0,
+            EndRow = 2,
+            StartColumn = 0,
+            EndColumn = 0
+        };
+        fcc.AddArea(area);
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+        // Add an IconSet condition
+        int conditionIndex = fcc.AddCondition(FormatConditionType.IconSet);
+        FormatCondition condition = fcc[conditionIndex];
 
-                // Add sample text values that we want to represent with emojis
-                sheet.Cells["A1"].PutValue("Happy");
-                sheet.Cells["A2"].PutValue("Neutral");
-                sheet.Cells["A3"].PutValue("Sad");
+        // Use the built‑in Smilies3 icon set (emoji‑like icons) and hide cell values
+        condition.IconSet.Type = IconSetType.Smilies3;
+        condition.IconSet.ShowValue = false;   // Show only icons
+        condition.IconSet.Reverse = false;     // Keep default order (best value gets best icon)
 
-                // Add a numeric helper column that will drive the icon set thresholds
-                sheet.Cells["B1"].PutValue(3); // Happy → highest icon
-                sheet.Cells["B2"].PutValue(2); // Neutral → middle icon
-                sheet.Cells["B3"].PutValue(1); // Sad → lowest icon
-
-                // Hide the helper column so only the icons are visible
-                sheet.Cells.HideColumn(1);
-
-                // Define the range for the conditional formatting (the helper column)
-                CellArea formatArea = new CellArea
-                {
-                    StartRow = 0,
-                    EndRow = 2,
-                    StartColumn = 1,
-                    EndColumn = 1
-                };
-
-                // Add a new conditional formatting collection
-                int cfIndex = sheet.ConditionalFormattings.Add();
-                FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
-
-                // Apply the range
-                fcc.AddArea(formatArea);
-
-                // Add an IconSet condition
-                int iconConditionIdx = fcc.AddCondition(FormatConditionType.IconSet);
-                FormatCondition iconCondition = fcc[iconConditionIdx];
-
-                // Choose an icon set that resembles emojis (e.g., Symbols3)
-                iconCondition.IconSet.Type = IconSetType.Symbols3;
-
-                // Hide the numeric values; only icons will be shown
-                iconCondition.IconSet.ShowValue = false;
-
-                // Optionally reverse the order if you want the highest value to show the first icon
-                iconCondition.IconSet.Reverse = false;
-
-                // Customize individual icons if you want different symbols for each level
-                //   Index 0 (lowest) → Red cross (as a "sad" symbol)
-                //   Index 1 (middle) → Yellow exclamation (as a "neutral" symbol)
-                //   Index 2 (highest) → Green check (as a "happy" symbol)
-                ConditionalFormattingIcon lowIcon = iconCondition.IconSet.CfIcons[0];
-                lowIcon.Type = IconSetType.Symbols3;
-                lowIcon.Index = 0;
-
-                ConditionalFormattingIcon midIcon = iconCondition.IconSet.CfIcons[1];
-                midIcon.Type = IconSetType.Symbols3;
-                midIcon.Index = 1;
-
-                ConditionalFormattingIcon highIcon = iconCondition.IconSet.CfIcons[2];
-                highIcon.Type = IconSetType.Symbols3;
-                highIcon.Index = 2;
-
-                // Prepare output path and ensure directory exists
-                string outputPath = "EmojiIconSetConditionalFormatting.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Save the workbook
+        workbook.Save("CustomEmojiIconSet.xlsx");
     }
 }

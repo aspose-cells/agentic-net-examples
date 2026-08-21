@@ -1,63 +1,64 @@
-// Title: Conditional Freeze Panes in Aspose.Cells for .NET – Apply Only When Needed
-// Description: Shows how to read a worksheet's current frozen pane with GetFreezedPanes and invoke FreezePanes only when the existing row/column freeze differs, preventing redundant calls and preserving scroll position.
-// Keywords: Aspose.Cells | .NET | FreezePanes | GetFreezedPanes | conditional freeze | skip redundant freeze | worksheet freeze state | C# Aspose.Cells example | optimize freeze pane | Excel automation
-// Common Searches: Aspose.Cells skip FreezePanes if already set | GetFreezedPanes C# example | how to check existing frozen rows Aspose.Cells | conditional FreezePanes .NET | avoid duplicate FreezePanes call | Aspose.Cells freeze pane optimization | compare freeze pane settings Aspose.Cells
-// Developer Intent: Detect the current frozen pane configuration and call FreezePanes only when the desired start cell, frozen rows, or frozen columns are different.
-// Use Cases: Preserve user scroll position when regenerating a report workbook. | Validate and keep freeze settings in a template before populating data. | Batch‑export multiple worksheets while retaining predefined pane layouts. | Encapsulate the conditional logic in a reusable helper method for projects.
-// AI Prompts: Write a C# method that accepts a Worksheet and desired freeze parameters, checks GetFreezedPanes, and applies FreezePanes only if needed. | Explain the values returned by GetFreezedPanes and how to compare them with target freeze settings. | Generate a unit test for the conditional freeze logic using Aspose.Cells and NUnit.
+// Title: Apply Freeze Panes Conditionally with Aspose.Cells for .NET
+// Description: Shows how to read a worksheet's current frozen pane parameters via GetFreezedPanes, compare them to the desired rows and columns, and call FreezePanes only when the settings differ, then save the workbook.
+// Keywords: Aspose.Cells | C# | .NET | FreezePanes | GetFreezedPanes | conditional freeze | skip redundant freeze | worksheet freeze state | Excel automation | performance optimization
+// Common Searches: Aspose.Cells check if worksheet is already frozen | C# conditional FreezePanes example | GetFreezedPanes usage in .NET | avoid duplicate FreezePanes call | how to skip freeze panes when already set
+// Developer Intent: Learn how to detect the existing frozen pane configuration and apply a new freeze only when it does not match the target layout.
+// Use Cases: Generate Excel reports without overwriting user‑defined freeze settings. | Speed up batch processing of many sheets by eliminating unnecessary FreezePanes calls. | Preserve existing frozen rows/columns while programmatically adding data or formatting.
+// AI Prompts: Write C# code using Aspose.Cells that reads a worksheet's frozen pane coordinates and applies FreezePanes only if they differ from specified values. | Create a helper method that returns true when the current frozen rows and columns match given indices, otherwise updates the freeze configuration. | Generate a reusable Aspose.Cells snippet that conditionally freezes panes to improve performance in large workbook generation.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFreezePaneDemo
+// Shows how to read a worksheet's current frozen pane parameters via GetFreezedPanes, compare them to the desired rows and columns, and call FreezePanes only when the settings differ, then save the workbook.
+public class FreezePaneHelper
 {
-    // Shows how to read a worksheet's current frozen pane with GetFreezedPanes and invoke FreezePanes only when the existing row/column freeze differs, preventing redundant calls and preserving scroll position.
-    public class Program
+    public static void Run()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook (lifecycle rule)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Desired freeze pane settings
-            // Freeze at cell C3 (row index 2, column index 2) with 2 frozen rows and 2 frozen columns
-            int desiredRow = 2;          // zero‑based row index where the freeze starts
-            int desiredColumn = 2;       // zero‑based column index where the freeze starts
-            int desiredFrozenRows = 2;   // number of rows to freeze
-            int desiredFrozenColumns = 2;// number of columns to freeze
+            // Desired freeze parameters
+            int desiredRow = 3;               // Row index where the freeze starts
+            int desiredColumn = 3;            // Column index where the freeze starts
+            int desiredFrozenRows = 3;        // Number of rows to freeze
+            int desiredFrozenColumns = 3;     // Number of columns to freeze
 
-            // Check current freeze pane state
+            // Retrieve current freeze state
             int currentRow, currentColumn, currentFrozenRows, currentFrozenColumns;
-            bool hasFreeze = worksheet.GetFreezedPanes(out currentRow, out currentColumn,
-                                                       out currentFrozenRows, out currentFrozenColumns);
+            bool hasFreeze = worksheet.GetFreezedPanes(out currentRow, out currentColumn, out currentFrozenRows, out currentFrozenColumns);
 
-            // Determine whether we need to apply FreezePanes
-            bool needToFreeze = true;
+            // Determine whether freezing is needed
+            bool needFreeze = !hasFreeze ||
+                              currentRow != desiredRow ||
+                              currentColumn != desiredColumn ||
+                              currentFrozenRows != desiredFrozenRows ||
+                              currentFrozenColumns != desiredFrozenColumns;
 
-            if (hasFreeze)
+            // Apply freeze only if the worksheet does not already have the desired state
+            if (needFreeze)
             {
-                // If the existing freeze matches the desired state, skip freezing
-                if (currentRow == desiredRow &&
-                    currentColumn == desiredColumn &&
-                    currentFrozenRows == desiredFrozenRows &&
-                    currentFrozenColumns == desiredFrozenColumns)
-                {
-                    needToFreeze = false;
-                }
+                worksheet.FreezePanes(desiredRow, desiredColumn, desiredFrozenRows, desiredFrozenColumns);
             }
 
-            // Apply FreezePanes only when necessary
-            if (needToFreeze)
-            {
-                worksheet.FreezePanes(desiredRow, desiredColumn,
-                                      desiredFrozenRows, desiredFrozenColumns);
-            }
-
-            // Save the workbook (lifecycle rule)
-            workbook.Save("FreezePaneResult.xlsx");
+            // Save the workbook
+            workbook.Save("FreezePanesConditional.xlsx");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        FreezePaneHelper.Run();
     }
 }

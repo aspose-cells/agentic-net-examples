@@ -1,37 +1,46 @@
-// Title: C# – Convert Excel Workbook to PDF with Fit‑to‑Page Width Scaling using Aspose.Cells
-// Description: Creates a workbook, populates the first worksheet with sample data, applies PageSetup.SetFitToPages(1, 0) to fit the printable area to one page wide (height auto‑adjusts), and saves the file as a PDF. Demonstrates optimal paper usage without manual scaling.
-// Keywords: Aspose.Cells | C# PDF conversion | SetFitToPages | fit to page width | Excel to PDF | page scaling | printable area | SaveFormat.Pdf
-// Common Searches: Aspose.Cells set fit to page when saving PDF | C# convert Excel to PDF fit width | How to use SetFitToPages in Aspose.Cells | Fit printable area PDF Aspose.Cells .NET | Scale Excel sheet to one page width PDF
-// Developer Intent: Export an Excel workbook to PDF while automatically scaling the sheet to fit the printable width (one page) for efficient paper usage.
-// Use Cases: Generate invoices that print on a single page width without manual adjustments. | Produce multi‑sheet financial reports where each sheet is uniformly scaled to one page wide. | Batch‑process a folder of workbooks into PDFs with consistent fit‑to‑page scaling for archiving.
-// AI Prompts: Write C# code that converts an Aspose.Cells workbook to PDF using fit‑to‑page width scaling and custom margins. | Explain the parameters of SetFitToPages in Aspose.Cells and how they affect PDF output. | Provide a script to convert multiple Excel files to PDF, applying the same one‑page‑wide scaling to each workbook.
+// Title: C# – Convert Excel Workbook to PDF with Fit‑to‑Page Scaling using Aspose.Cells
+// Description: Shows how to load or create a workbook, set the page setup to fit all columns on one page (rows auto‑adjust), configure PdfSaveOptions (OnePagePerSheet), and save the file as a PDF for efficient paper usage.
+// Keywords: Aspose.Cells | C# | .NET | PDF conversion | Fit to page | SetFitToPages | OnePagePerSheet | page scaling | printable area | Excel to PDF | PdfSaveOptions
+// Common Searches: Aspose.Cells fit to page PDF export C# | SetFitToPages example Aspose.Cells | OnePagePerSheet PDF option Aspose.Cells .NET | How to scale Excel to PDF width using Aspose | Configure page setup for PDF conversion Aspose.Cells
+// Developer Intent: Generate a PDF from an Excel workbook while scaling the printable area to fit the page width, reducing the number of printed pages.
+// Use Cases: Printing invoices where all columns must appear on a single PDF page. | Exporting multi‑sheet reports to PDF with each sheet confined to one page for concise documentation. | Batch converting Excel files to PDF with consistent fit‑to‑page settings to standardize print layouts.
+// AI Prompts: Provide C# code that loads an existing Excel file, applies SetFitToPages(1,0), enables OnePagePerSheet, and saves it as a PDF with Aspose.Cells. | Explain the impact of SetFitToPages(1,0) on PDF output and how OnePagePerSheet further optimizes paper usage. | Show an example of configuring PdfSaveOptions for single‑page‑per‑sheet PDF export in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, populates the first worksheet with sample data, applies PageSetup.SetFitToPages(1, 0) to fit the printable area to one page wide (height auto‑adjusts), and saves the file as a PDF. Demonstrates optimal paper usage without manual scaling.
+// Shows how to load or create a workbook, set the page setup to fit all columns on one page (rows auto‑adjust), configure PdfSaveOptions (OnePagePerSheet), and save the file as a PDF for efficient paper usage.
 class ConvertWorkbookToPdf
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook (or load an existing one with new Workbook("input.xlsx"))
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate the worksheet with sample data
-        for (int row = 0; row < 30; row++)
-        {
-            sheet.Cells[row, 0].PutValue($"Item {row + 1}");
-            sheet.Cells[row, 1].PutValue((row + 1) * 5);
-        }
+        // Populate some sample data
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Item");
+        sheet.Cells["B1"].PutValue("Quantity");
+        sheet.Cells["A2"].PutValue("Apples");
+        sheet.Cells["B2"].PutValue(50);
+        sheet.Cells["A3"].PutValue("Bananas");
+        sheet.Cells["B3"].PutValue(30);
 
         // Set page scaling to fit the printable area:
-        // Fit to 1 page wide and let the height adjust automatically (0 means auto)
+        // Fit all columns on one page (wide = 1) and let rows expand automatically (tall = 0)
         sheet.PageSetup.SetFitToPages(1, 0);
+        // Alternatively:
+        // sheet.PageSetup.FitToPagesWide = 1;
+        // sheet.PageSetup.FitToPagesTall = 0;
 
-        // Convert the workbook to PDF using the default PDF save options
-        workbook.Save("ConvertedWorkbook.pdf", SaveFormat.Pdf);
+        // Configure PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            // Ensure each worksheet is rendered on a single page (optional, improves paper usage)
+            OnePagePerSheet = true
+        };
 
-        Console.WriteLine("Workbook has been successfully converted to PDF with fit-to-page scaling.");
+        // Save the workbook as PDF using the configured options
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

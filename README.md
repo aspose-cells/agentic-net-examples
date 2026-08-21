@@ -401,4 +401,4 @@ All examples use [Aspose.Cells for .NET](https://products.aspose.com/cells/net/)
 
 ---
 
-*This repository is maintained by automated code generation. For AI-friendly guidance, see [AGENTS.md](./AGENTS.md). Last updated: 2026-08-02*
+*This repository is maintained by automated code generation. For AI-friendly guidance, see [AGENTS.md](./AGENTS.md). Last updated: 2026-08-22*

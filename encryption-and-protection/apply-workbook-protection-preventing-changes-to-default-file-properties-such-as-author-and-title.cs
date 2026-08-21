@@ -1,38 +1,32 @@
-// Title: Protect Excel workbook metadata (author, title) with write‑protection using Aspose.Cells for .NET
-// Description: Shows how to configure Aspose.Cells Workbook.Settings.WriteProtection to set an author, assign a password, recommend read‑only mode, save the file, and verify the protection flags in C#.
-// Keywords: Aspose.Cells | C# | .NET | write protection | Excel workbook password | protect document properties | author metadata | read‑only recommendation | prevent metadata editing | Workbook.Settings.WriteProtection
-// Common Searches: Aspose.Cells set workbook author protection | C# write protect Excel file metadata | How to password protect Excel workbook properties with Aspose | Recommend read‑only mode Aspose.Cells | Prevent editing of Excel file properties .NET
-// Developer Intent: Apply write‑protection to an Excel workbook so its document properties (author, title, etc.) cannot be altered without a password.
-// Use Cases: Distribute a template that must retain the original author information across multiple users. | Share confidential financial reports that open as read‑only and block changes to metadata. | Enforce password‑protected, read‑only mode for spreadsheets containing sensitive corporate data.
-// AI Prompts: Provide C# code using Aspose.Cells to set write‑protection on workbook properties with a password and read‑only recommendation. | Generate a snippet that saves an Excel file, reloads it, and prints the author, IsWriteProtected, and RecommendReadOnly values. | Explain how Aspose.Cells prevents modifications to default file properties such as author and title.
+// Title: Protect Excel workbook metadata (author & title) with write protection using Aspose.Cells for .NET
+// Description: Creates a workbook, sets BuiltInDocumentProperties (Author, Title), applies WriteProtection with a password, protection author and a read‑only recommendation, then saves the file as ProtectedProperties.xlsx.
+// Keywords: Aspose.Cells workbook protection | Excel metadata lock C# | write protection password Aspose | prevent editing document properties | read‑only recommendation Aspose.Cells
+// Common Searches: Aspose.Cells how to lock author and title | C# write protect Excel file properties | set password for Excel workbook using Aspose | make Excel workbook read‑only with Aspose.Cells | prevent metadata changes in Excel via code
+// Developer Intent: Apply write protection so the workbook’s author and title fields cannot be modified after saving.
+// Use Cases: Distribute confidential reports where original author information must stay intact. | Share templates that require the creator’s metadata to remain unchanged. | Enforce read‑only access for collaborative workbooks while preserving initial document properties.
+// AI Prompts: Generate C# code to add write protection to an existing workbook and lock its built‑in document properties with Aspose.Cells. | Explain how to update or remove the write‑protection password on a protected Excel file using Aspose.Cells. | Show how to detect if a workbook has write protection enabled before allowing property edits.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsWorkbookProtectionDemo
+// Creates a workbook, sets BuiltInDocumentProperties (Author, Title), applies WriteProtection with a password, protection author and a read‑only recommendation, then saves the file as ProtectedProperties.xlsx.
+class ProtectWorkbookProperties
 {
-    // Shows how to configure Aspose.Cells Workbook.Settings.WriteProtection to set an author, assign a password, recommend read‑only mode, save the file, and verify the protection flags in C#.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Set write‑protection options to prevent editing of document properties
-            workbook.Settings.WriteProtection.Author = "John Doe";          // Author of the protected workbook
-            workbook.Settings.WriteProtection.Password = "owner123";       // Password required to modify the file
-            workbook.Settings.WriteProtection.RecommendReadOnly = true;   // Recommend opening as read‑only
+        // Set default document properties (author, title)
+        workbook.BuiltInDocumentProperties.Author = "Original Author";
+        workbook.BuiltInDocumentProperties.Title = "Confidential Report";
 
-            // Save the protected workbook
-            string outputPath = "ProtectedWorkbook.xlsx";
-            workbook.Save(outputPath);
+        // Apply write protection to prevent changes to these properties
+        workbook.Settings.WriteProtection.Password = "protect123";   // password required to modify the file
+        workbook.Settings.WriteProtection.Author = "Protected Author"; // author of the protection
+        workbook.Settings.WriteProtection.RecommendReadOnly = true; // suggest opening as read‑only
 
-            // Load the workbook back to verify the protection settings
-            Workbook loadedWorkbook = new Workbook(outputPath);
-            Console.WriteLine("Author: " + loadedWorkbook.Settings.WriteProtection.Author);
-            Console.WriteLine("Is Write Protected: " + loadedWorkbook.Settings.WriteProtection.IsWriteProtected);
-            Console.WriteLine("Read‑Only Recommended: " + loadedWorkbook.Settings.WriteProtection.RecommendReadOnly);
-        }
+        // Save the protected workbook
+        workbook.Save("ProtectedProperties.xlsx");
     }
 }

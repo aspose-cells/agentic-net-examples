@@ -1,83 +1,71 @@
-// Title: C# Custom dd/MM/yyyy Date Parser for CSV Loading with Aspose.Cells PreferredParsers
-// Description: Demonstrates how to implement an ICustomParser that recognises dates in the "dd/MM/yyyy" pattern, assign it to TxtLoadOptions.PreferredParsers for the first CSV column, load the data into a Workbook, verify the DateTime values, and save the result as an Excel file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells custom parser | PreferredParsers CSV | ICustomParser dd/MM/yyyy | C# load CSV Aspose.Cells | European date format parsing | .NET Excel import custom date | TxtLoadOptions custom parser | Aspose.Cells example GitHub
-// Common Searches: how to use ICustomParser with Aspose.Cells | parse dd/MM/yyyy dates from CSV in C# | assign custom date parser to PreferredParsers | load CSV with European date format Aspose.Cells | Aspose.Cells custom parser example GitHub
-// Developer Intent: Create a custom parser for "dd/MM/yyyy" dates and set it as the PreferredParser for the first column when importing a CSV workbook with Aspose.Cells.
-// Use Cases: Import CSV files where dates are stored as dd/MM/yyyy and need to be recognised as DateTime cells. | Combine a custom date parser with default numeric parsers to handle mixed‑type columns during CSV import. | Generate an Excel workbook from CSV data while preserving correct date formatting for downstream reporting.
-// AI Prompts: Write a C# ICustomParser that parses "dd/MM/yyyy" strings and integrates it into TxtLoadOptions.PreferredParsers. | Show code to validate that the custom parser correctly populated cell.DateTimeValue after loading a CSV. | Provide a fallback strategy for rows with invalid date strings when using a custom date parser in Aspose.Cells.
+// Title: Custom ICustomParser for dd/MM/yyyy Dates in Aspose.Cells CSV LoadOptions
+// Description: Shows how to implement a DdMMyyyyParser that implements ICustomParser, assign it to the second element of TxtLoadOptions.PreferredParsers, and automatically convert a CSV date column (dd/MM/yyyy) into DateTime cells in an Aspose.Cells workbook.
+// Keywords: Aspose.Cells | C# custom parser | ICustomParser | PreferredParsers | TxtLoadOptions CSV | dd/MM/yyyy date parsing | ConvertDateTimeData | CSV to Excel conversion
+// Common Searches: Aspose.Cells custom date parser example | How to use PreferredParsers with TxtLoadOptions | Parse dd/MM/yyyy dates from CSV in C# | ICustomParser implementation Aspose.Cells | Convert CSV date strings to DateTime cells
+// Developer Intent: Automatically transform dd/MM/yyyy date strings in a specific CSV column into native DateTime cells when loading the file with Aspose.Cells.
+// Use Cases: Load a CSV where the second column contains dates in dd/MM/yyyy format and store them as proper DateTime values in the workbook. | Preserve original text for cells that do not match the expected date pattern. | Export the parsed workbook to Excel while keeping correct date formatting for downstream processing.
+// AI Prompts: Create an ICustomParser in C# that parses "dd/MM/yyyy" dates and integrates it with TxtLoadOptions.PreferredParsers for CSV loading in Aspose.Cells. | Show how to fallback to the original string when a custom parser fails to parse a value. | Demonstrate retrieving the last successful format from a custom ICustomParser after loading a CSV workbook.
 
 using System;
-using System.Globalization;
 using System.IO;
+using System.Globalization;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomDateParserDemo
+// Shows how to implement a DdMMyyyyParser that implements ICustomParser, assign it to the second element of TxtLoadOptions.PreferredParsers, and automatically convert a CSV date column (dd/MM/yyyy) into DateTime cells in an Aspose.Cells workbook.
+class Program
 {
     // Custom parser that interprets dates in "dd/MM/yyyy" format
-    // Demonstrates how to implement an ICustomParser that recognises dates in the "dd/MM/yyyy" pattern, assign it to TxtLoadOptions.PreferredParsers for the first CSV column, load the data into a Workbook, verify the DateTime values, and save the result as an Excel file using Aspose.Cells for .NET.
-    public class DdMMyyyyParser : ICustomParser
+    private class DdMMyyyyParser : ICustomParser
     {
         private string _lastFormat;
 
-        // Parses the string and returns a DateTime object if the format matches
+        // Parse the string; if it matches the expected date format, return DateTime
         public object ParseObject(string value)
         {
             if (DateTime.TryParseExact(value, "dd/MM/yyyy", CultureInfo.InvariantCulture,
-                                       DateTimeStyles.None, out DateTime dt))
+                DateTimeStyles.None, out DateTime dt))
             {
                 _lastFormat = "dd/MM/yyyy";
                 return dt;
             }
 
+            // If parsing fails, return the original string (default handling)
             _lastFormat = null;
-            return null;
+            return value;
         }
 
-        // Required by ICustomParser – delegates to ParseObject
-        public bool Parse(string value, out object result)
-        {
-            result = ParseObject(value);
-            return result != null;
-        }
-
-        // Returns the format used for the last successful parse
+        // Return the format used during the last successful parse
         public string GetFormat()
         {
             return _lastFormat;
         }
     }
 
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Sample CSV data where the second column contains dates in dd/MM/yyyy format
+        string csvData = "Name,Date\nJohn,25/12/2023\nDoe,01/01/2024";
+
+        // Create TxtLoadOptions for CSV and assign the custom parser to the second column
+        TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv);
+        // parsers[0] -> first column (no custom parser), parsers[1] -> second column (our date parser)
+        loadOptions.PreferredParsers = new ICustomParser[] { null, new DdMMyyyyParser() };
+        loadOptions.ConvertDateTimeData = true; // Ensure date strings are converted to DateTime
+
+        // Load the workbook from the CSV data using the defined options
+        using (MemoryStream ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(csvData)))
         {
-            // Sample CSV data where the first column contains dates in dd/MM/yyyy format
-            string csvData = "01/02/2023,123.45\n15/03/2023,678.90";
-
-            // Convert the CSV string to a memory stream
-            byte[] csvBytes = System.Text.Encoding.UTF8.GetBytes(csvData);
-            using var csvStream = new MemoryStream(csvBytes);
-
-            // Create TxtLoadOptions for CSV format
-            TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv);
-
-            // Assign the custom date parser to the first column (index 0)
-            loadOptions.PreferredParsers = new ICustomParser[] { new DdMMyyyyParser(), null };
-
-            // Load the workbook using the custom parser
-            Workbook workbook = new Workbook(csvStream, loadOptions);
+            Workbook workbook = new Workbook(ms, loadOptions);
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Demonstrate that the first column is parsed as DateTime
-            Console.WriteLine("A1 (Date)   : " + sheet.Cells[0, 0].DateTimeValue.ToString("yyyy-MM-dd"));
-            Console.WriteLine("A2 (Date)   : " + sheet.Cells[1, 0].DateTimeValue.ToString("yyyy-MM-dd"));
+            // Demonstrate that the date column was parsed as DateTime
+            Console.WriteLine("A2 (Name): " + cells["A2"].StringValue);
+            Console.WriteLine("B2 (Date) Type: " + cells["B2"].Type);
+            Console.WriteLine("B2 (Date) Value: " + cells["B2"].DateTimeValue.ToString("dd/MM/yyyy"));
 
-            // Second column remains numeric (default parser)
-            Console.WriteLine("B1 (Number) : " + sheet.Cells[0, 1].DoubleValue);
-            Console.WriteLine("B2 (Number) : " + sheet.Cells[1, 1].DoubleValue);
-
-            // Save the result to an Excel file
-            workbook.Save("CustomDateParserOutput.xlsx");
+            // Save the workbook (optional)
+            workbook.Save("ParsedDates.xlsx");
         }
     }
 }

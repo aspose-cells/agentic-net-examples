@@ -1,40 +1,41 @@
-// Title: Import a Heterogeneous JSON Array into an Excel Table with Automatic Column Creation – Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to use Aspose.Cells' JsonUtility.ImportData with JsonLayoutOptions.ArrayAsTable to load a JSON array where each object may have different fields. The code creates a workbook, treats each JSON object as a row, generates columns for all distinct property names, and saves the result as an Excel file.
-// Keywords: Aspose.Cells JSON import | JsonUtility ImportData C# | JsonLayoutOptions ArrayAsTable | automatic column generation Excel | convert JSON to Excel table | dynamic JSON schema Excel export | C# Aspose.Cells example
-// Common Searches: Aspose.Cells import JSON array as table | C# JsonUtility.ImportData dynamic columns | How to create Excel table from heterogeneous JSON | Aspose.Cells JsonLayoutOptions ArrayAsTable example | Convert API JSON response to Excel with Aspose
-// Developer Intent: Load JSON data into a new Excel worksheet and let Aspose.Cells automatically create columns for every unique property found in the JSON objects.
-// Use Cases: Transform API responses with varying fields into a ready‑to‑use Excel report without manual column mapping. | Export data from loosely structured JSON files to Excel for analysis, preserving all available attributes. | Build a generic data‑export routine that adapts to any JSON schema by generating columns on‑the‑fly.
-// AI Prompts: Generate code to rename the Excel table created after importing JSON with JsonUtility.ImportData. | Show how to apply styling—bold headers, autofit columns, and table formatting—after using JsonLayoutOptions.ArrayAsTable. | Explain the steps to import nested JSON arrays into separate worksheets using Aspose.Cells.
+// Title: Import JSON Array into Excel Table with Auto‑Generated Columns using Aspose.Cells for .NET
+// Description: C# example that creates a workbook, sets JsonLayoutOptions.ArrayAsTable = true, and uses JsonUtility.ImportData to load a JSON array into the first worksheet starting at A1. Columns are created automatically from the JSON object properties, and the result is saved as JsonImported.xlsx.
+// Keywords: Aspose.Cells JSON import | JsonUtility ImportData | ArrayAsTable option | auto‑create Excel columns from JSON | C# export JSON to Excel | JSON to Excel table .NET | Aspose.Cells example
+// Common Searches: Aspose.Cells import JSON as table C# | JsonLayoutOptions ArrayAsTable example | Create Excel columns from JSON keys using Aspose | How to load JSON array into Excel with Aspose.Cells | C# JsonUtility.ImportData usage
+// Developer Intent: Generate an Excel worksheet where each JSON object becomes a row and each property becomes a column without manually defining the schema.
+// Use Cases: Convert API response data (JSON) into a sortable Excel report for business analysts. | Transform a list of user profiles stored in JSON into a structured table for HR processing. | Export configuration settings defined in JSON to an Excel document for audit trails.
+// AI Prompts: Write C# code that uses Aspose.Cells to import a JSON array into a worksheet as a table with columns generated from the JSON keys. | Explain how JsonLayoutOptions.ArrayAsTable influences the import process and how to change the start cell for the data. | Show how to handle nested JSON objects by splitting each level into separate worksheets with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-// Demonstrates how to use Aspose.Cells' JsonUtility.ImportData with JsonLayoutOptions.ArrayAsTable to load a JSON array where each object may have different fields. The code creates a workbook, treats each JSON object as a row, generates columns for all distinct property names, and saves the result as an Excel file.
+// C# example that creates a workbook, sets JsonLayoutOptions.ArrayAsTable = true, and uses JsonUtility.ImportData to load a JSON array into the first worksheet starting at A1. Columns are created automatically from the JSON object properties, and the result is saved as JsonImported.xlsx.
 class Program
 {
     static void Main()
     {
-        // Sample JSON array with objects that have different properties.
-        // Aspose.Cells will automatically create columns for all distinct property names.
+        // Sample JSON array; each object will become a row and its properties become columns
         string json = @"[
-            { ""Name"": ""Alice"",   ""Age"": 30, ""City"": ""New York"" },
-            { ""Name"": ""Bob"",     ""Age"": 25, ""Country"": ""USA"" },
-            { ""Name"": ""Charlie"", ""City"": ""Los Angeles"", ""Salary"": 50000 }
+            { ""Name"": ""Alice"", ""Age"": 30, ""City"": ""London"" },
+            { ""Name"": ""Bob"",   ""Age"": 25, ""City"": ""Paris""  },
+            { ""Name"": ""Carol"", ""Age"": 28, ""City"": ""Berlin"" }
         ]";
 
-        // Create a new workbook and get the first worksheet.
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Configure layout options to treat the JSON array as a table.
-        JsonLayoutOptions options = new JsonLayoutOptions();
-        options.ArrayAsTable = true;   // each object becomes a row, properties become columns
+        // Configure layout options to treat the JSON array as a table (auto‑create columns)
+        JsonLayoutOptions options = new JsonLayoutOptions
+        {
+            ArrayAsTable = true
+        };
 
-        // Import the JSON data starting at cell A1 (row 0, column 0).
-        JsonUtility.ImportData(json, sheet.Cells, 0, 0, options);
+        // Import the JSON data starting at cell A1 (row 0, column 0)
+        JsonUtility.ImportData(json, worksheet.Cells, 0, 0, options);
 
-        // Save the workbook to an Excel file.
-        workbook.Save("JsonImportedTable.xlsx");
+        // Save the workbook to an Excel file
+        workbook.Save("JsonImported.xlsx");
     }
 }

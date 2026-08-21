@@ -1,73 +1,61 @@
-// Title: C# – Convert HTML to Excel and Apply Scientific Notation Formatting with Aspose.Cells
-// Description: Load an HTML file using Aspose.Cells (LoadFormat.Html), convert any numeric strings—including scientific notation—to real numbers, apply the custom format "0.00E+00", and save the result as an XLSX workbook.
-// Keywords: Aspose.Cells | HTML to Excel | C# scientific notation | custom number format | LoadFormat.Html | parse numeric strings | cell style | Excel export | numeric conversion | Aspose.Cells example
-// Common Searches: Aspose.Cells load HTML keep numbers as numeric | C# apply scientific notation format after HTML import | convert HTML table to Excel with custom number format | parse scientific notation strings in Aspose.Cells | how to set custom number format in Aspose.Cells C#
-// Developer Intent: Read an HTML document into a Workbook, turn numeric strings (including scientific notation) into true numeric cells, apply a custom scientific‑notation style, and export to XLSX.
-// Use Cases: Convert web‑based financial reports that list large values in HTML to Excel, displaying all numbers in scientific notation. | Import engineering measurement tables from HTML where values appear as "1.23E+04" strings and need consistent numeric formatting. | Automate batch processing of multiple HTML files, standardizing numeric display across all worksheets with a custom format.
-// AI Prompts: Generate C# code using Aspose.Cells to load an HTML file, detect cells containing numeric strings (including scientific notation), convert them to doubles, apply the custom format "0.00E+00", and save as XLSX. | Write a method that iterates through all used cells in an Aspose.Cells worksheet, parses string values to double with invariant culture, and sets a scientific‑notation style on numeric cells. | Provide an example of loading HTML with LoadOptions, handling both numeric and string cell types, applying a custom number format for scientific notation, and exporting the workbook to Excel.
+// Title: C# – Convert HTML to Excel and apply scientific notation formatting with Aspose.Cells
+// Description: Loads an HTML file into an Aspose.Cells Workbook, converts parsable strings to numeric values, iterates the used range, and assigns a custom scientific notation format (0.00E+00) to every numeric cell before saving as XLSX.
+// Keywords: Aspose.Cells HTML to Excel | C# convert HTML workbook | custom number format scientific notation | Convert string to numeric Aspose.Cells | Load HTML workbook .NET | Apply custom format Excel C# | Aspose.Cells number formatting
+// Common Searches: how to load html into aspocells workbook c# | set scientific notation format for cells aspocells | convert string numbers to numeric values aspocells | html table to excel with custom number format | aspocells custom number format example
+// Developer Intent: Import an HTML document, turn numeric strings into true numbers, and display those numbers in scientific notation in the resulting Excel file.
+// Use Cases: Generate Excel reports from HTML tables where large values must appear in scientific notation. | Automate batch conversion of HTML files to Excel while preserving numeric data types and applying a uniform format. | Build a data‑processing pipeline that normalizes HTML‑derived numbers and formats them for downstream analytics.
+// AI Prompts: Write C# code using Aspose.Cells to load an HTML file, convert numeric strings to numbers, apply the custom format "0.00E+00" to all numeric cells, and save as XLSX. | Explain how to traverse the used range of a worksheet in Aspose.Cells and set a scientific notation style on cells of type IsNumeric. | Provide a step‑by‑step guide for batch‑processing a folder of HTML files, converting each to Excel with numeric conversion and scientific notation formatting using Aspose.Cells.
 
 using System;
-using System.Globalization;
 using Aspose.Cells;
 
-// Load an HTML file using Aspose.Cells (LoadFormat.Html), convert any numeric strings—including scientific notation—to real numbers, apply the custom format "0.00E+00", and save the result as an XLSX workbook.
-class HtmlToExcelWithScientificNotation
+namespace HtmlToExcelConversion
 {
-    static void Main()
+    // Loads an HTML file into an Aspose.Cells Workbook, converts parsable strings to numeric values, iterates the used range, and assigns a custom scientific notation format (0.00E+00) to every numeric cell before saving as XLSX.
+    class Program
     {
-        // Path to the source HTML file
-        string htmlPath = "input.html";
-
-        // Load the HTML file into a workbook
-        // LoadOptions with LoadFormat.Html ensures proper parsing of HTML content
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
-        Workbook workbook = new Workbook(htmlPath, loadOptions);
-
-        // Get the first worksheet (or iterate through all worksheets if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Determine the used range of the worksheet
-        int maxRow = cells.MaxDataRow;
-        int maxColumn = cells.MaxDataColumn;
-
-        // Custom number format for scientific notation (e.g., 1.23E+04)
-        const string scientificFormat = "0.00E+00";
-
-        // Iterate through each cell in the used range
-        for (int row = 0; row <= maxRow; row++)
+        static void Main()
         {
-            for (int col = 0; col <= maxColumn; col++)
+            // Paths for source HTML and destination Excel files
+            string htmlFile = "input.html";
+            string excelFile = "output.xlsx";
+
+            // Load the HTML file into a workbook
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+            Workbook workbook = new Workbook(htmlFile, loadOptions);
+
+            // Get the first worksheet's cells collection
+            Cells cells = workbook.Worksheets[0].Cells;
+
+            // Convert any string that can be interpreted as a number to a numeric value
+            cells.ConvertStringToNumericValue();
+
+            // Apply a custom scientific notation format to all numeric cells
+            // Define the format pattern (e.g., two decimal places in scientific notation)
+            string scientificFormat = "0.00E+00";
+
+            // Iterate through the used range of cells
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+            for (int row = 0; row <= maxRow; row++)
             {
-                Cell cell = cells[row, col];
-
-                // If the cell already contains a numeric value, apply the custom format directly
-                if (cell.Type == CellValueType.IsNumeric)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    Style style = cell.GetStyle();
-                    style.Custom = scientificFormat;
-                    cell.SetStyle(style);
-                }
-                // If the cell contains a string that can be parsed as a double (including scientific notation)
-                else if (cell.Type == CellValueType.IsString)
-                {
-                    double numericValue;
-                    // Try parsing using invariant culture to recognize scientific notation like "1.23E+04"
-                    if (double.TryParse(cell.StringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out numericValue))
+                    Cell cell = cells[row, col];
+                    if (cell.Type == CellValueType.IsNumeric)
                     {
-                        // Replace the string with the numeric value
-                        cell.PutValue(numericValue);
-
-                        // Apply the scientific notation format
+                        // Retrieve the existing style, modify the custom format, and reapply
                         Style style = cell.GetStyle();
                         style.Custom = scientificFormat;
                         cell.SetStyle(style);
                     }
                 }
             }
-        }
 
-        // Save the workbook as an Excel file (XLSX format)
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Save the workbook as an Excel file
+            workbook.Save(excelFile, SaveFormat.Xlsx);
+
+            Console.WriteLine("HTML has been converted to Excel with scientific notation formatting.");
+        }
     }
 }

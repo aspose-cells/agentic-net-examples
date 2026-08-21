@@ -1,55 +1,40 @@
-// Title: Decrease a Shape’s Z‑Order by Three in Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, add a rectangle shape, read its ZOrderPosition, subtract three (with a floor of zero), assign the new value, verify the change, and save the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# shape Z-order | set ZOrderPosition | move shape backward | adjust shape stacking order | Aspose.Cells shape order example | Excel shape Z-order .NET | programmatic shape layering | C# Aspose.Cells ZOrderPosition | shape order manipulation | Excel drawing order
-// Common Searches: how to lower a shape's Z-order in Aspose.Cells | C# code to move an Excel shape backward by three positions | Aspose.Cells set shape ZOrderPosition to zero | verify shape Z-order after change in .NET | adjust shape stacking order programmatically in Excel
-// Developer Intent: Programmatically lower a shape’s Z-order by three slots while preventing negative indices.
-// Use Cases: Place a newly added rectangle behind existing charts or images. | Prepare a worksheet for export where certain shapes must stay in the background. | Implement dynamic layering based on user preferences or data-driven rules.
-// AI Prompts: Generate C# code with Aspose.Cells that moves a specific shape three positions backward in Z-order and clamps the result at zero. | Create an example that iterates over all worksheet shapes and reduces each ZOrderPosition by a given offset without dropping below zero. | Explain how to read, modify, and validate a shape's ZOrderPosition after adjustment using Aspose.Cells for .NET.
+// Title: Decrease a Shape’s Z‑Order by 3 Using Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds a rectangle shape, reads its ZOrderPosition, subtracts three (clamped to zero), assigns the new value, prints both positions, and saves the file to confirm the change.
+// Keywords: Aspose.Cells shape ZOrderPosition | C# adjust shape Z-order | lower shape layering Aspose.Cells | programmatic shape Z-order change | prevent negative Z-order Aspose.Cells
+// Common Searches: how to lower shape Z-order by a specific amount in Aspose.Cells C# | set shape ZOrderPosition without negative value | Aspose.Cells move shape behind other objects | verify shape Z-order after modification .NET
+// Developer Intent: Reduce a shape’s Z‑order by three positions and validate the updated order.
+// Use Cases: Place a newly inserted graphic behind existing elements by decreasing its Z-order. | Maintain a back‑to‑front drawing order when adding shapes dynamically. | Reorder shapes based on custom priority while ensuring the Z-order never becomes negative.
+// AI Prompts: Write C# code with Aspose.Cells that decreases a shape’s ZOrderPosition by a given offset and clamps the result at zero. | Show how to loop through all worksheet shapes and shift each Z-order down by three, preventing negative values. | Explain how to read, modify, and confirm a shape’s Z-order using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsZOrderAdjustment
+// Creates a workbook, adds a rectangle shape, reads its ZOrderPosition, subtracts three (clamped to zero), assigns the new value, prints both positions, and saves the file to confirm the change.
+class AdjustShapeZOrder
 {
-    // Shows how to create a workbook, add a rectangle shape, read its ZOrderPosition, subtract three (with a floor of zero), assign the new value, verify the change, and save the file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add a rectangle shape to the worksheet
-                Shape shape = worksheet.Shapes.AddRectangle(10, 10, 100, 100, 0, 0);
+        // Add a rectangle shape to the worksheet
+        Shape shape = worksheet.Shapes.AddRectangle(10, 10, 100, 100, 0, 0);
 
-                // Retrieve the current Z-order position of the shape
-                int currentZOrder = shape.ZOrderPosition;
-                Console.WriteLine("Current Z-order position: " + currentZOrder);
+        // Get the current Z-order position
+        int currentZ = shape.ZOrderPosition;
+        Console.WriteLine("Current ZOrderPosition: " + currentZ);
 
-                // Calculate a new Z-order position, ensuring it stays within valid bounds
-                int newZOrder = Math.Max(0, currentZOrder - 3);
-                if (newZOrder != currentZOrder)
-                {
-                    // Apply the new Z-order position
-                    shape.ZOrderPosition = newZOrder;
-                }
+        // Subtract three from the current Z-order (ensure it does not become negative)
+        int newZ = currentZ - 3;
+        if (newZ < 0) newZ = 0;
+        shape.ZOrderPosition = newZ;
 
-                // Verify the new Z-order position
-                int verifiedZOrder = shape.ZOrderPosition;
-                Console.WriteLine("New Z-order position after adjustment: " + verifiedZOrder);
+        // Verify the new Z-order position
+        Console.WriteLine("New ZOrderPosition after subtracting 3: " + shape.ZOrderPosition);
 
-                // Save the workbook to verify the shape is retained
-                workbook.Save("ZOrderAdjusted.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+        // Save the workbook to verify changes
+        workbook.Save("AdjustedZOrder.xlsx");
     }
 }

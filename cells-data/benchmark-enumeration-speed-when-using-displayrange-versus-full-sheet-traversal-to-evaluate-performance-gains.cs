@@ -1,19 +1,21 @@
-// Title: Aspose.Cells .NET Benchmark: MaxDisplayRange vs Full Sheet Enumeration Speed
-// Description: Creates a 5,000 × 100 workbook, fills each cell with a numeric value, then measures and displays the elapsed time for iterating cells using the worksheet's MaxDisplayRange enumerator versus the full Cells enumerator. The workbook is saved after the test.
-// Keywords: Aspose.Cells | .NET | C# | cell enumeration | MaxDisplayRange | performance benchmark | worksheet traversal | speed test | large spreadsheet | enumeration speed
-// Common Searches: Aspose.Cells MaxDisplayRange performance | benchmark cell iteration Aspose.Cells | enumerate used cells vs all cells Aspose.Cells | C# Aspose.Cells enumeration speed | measure worksheet traversal time Aspose.Cells
-// Developer Intent: Compare the execution time of iterating cells through MaxDisplayRange with iterating the entire worksheet to identify the faster enumeration method.
-// Use Cases: Optimize data‑processing loops for large Excel files | Choose the most efficient iteration strategy in memory‑constrained applications | Profile spreadsheet handling before exporting or performing calculations | Integrate enumeration speed tests into CI pipelines for performance regression detection
-// AI Prompts: Create a benchmark that runs each enumeration method multiple times and reports average, min, and max durations. | Generate a function that selects the faster enumeration technique based on worksheet dimensions and density. | Suggest code changes to skip empty rows/columns while still leveraging MaxDisplayRange for maximum speed.
+// Title: Benchmark Cells.MaxDisplayRange vs full sheet enumeration in Aspose.Cells for .NET
+// Description: Creates a 10,000 × 50 workbook, fills each cell, forces MaxDisplayRange calculation, then measures and compares the elapsed time of iterating cells with MaxDisplayRange.GetEnumerator() and Cells.GetEnumerator(). The results are printed and the workbook can be saved.
+// Keywords: Aspose.Cells | C# | .NET | benchmark | enumeration performance | MaxDisplayRange | Cells.GetEnumerator | spreadsheet traversal speed | large worksheet processing | cell iteration timing
+// Common Searches: Aspose.Cells benchmark MaxDisplayRange enumeration speed | compare Cells.GetEnumerator vs MaxDisplayRange performance | measure cell traversal time in large Excel files using Aspose.Cells | how fast is MaxDisplayRange enumeration in C# | optimize spreadsheet iteration with Aspose.Cells
+// Developer Intent: Evaluate whether iterating through Cells.MaxDisplayRange provides a measurable speed advantage over iterating the entire worksheet with Cells.GetEnumerator.
+// Use Cases: Choose the most efficient enumeration method for data‑intensive Excel processing. | Generate performance baselines before implementing bulk cell operations. | Validate optimization decisions in ETL pipelines that manipulate large spreadsheets.
+// AI Prompts: Write a reusable C# function that accepts row and column counts, runs the MaxDisplayRange vs full sheet enumeration benchmark, and returns the time difference. | Suggest ways to reduce enumeration overhead when processing millions of cells with Aspose.Cells. | Explain how MaxDisplayRange is determined and why it can be faster than a full sheet enumeration.
 
 using System;
 using System.Collections;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsBenchmark
 {
-    // Creates a 5,000 × 100 workbook, fills each cell with a numeric value, then measures and displays the elapsed time for iterating cells using the worksheet's MaxDisplayRange enumerator versus the full Cells enumerator. The workbook is saved after the test.
+    // Creates a 10,000 × 50 workbook, fills each cell, forces MaxDisplayRange calculation, then measures and compares the elapsed time of iterating cells with MaxDisplayRange.GetEnumerator() and Cells.GetEnumerator(). The results are printed and the workbook can be saved.
     class Program
     {
         static void Main()
@@ -22,59 +24,66 @@ namespace AsposeCellsBenchmark
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
 
-                // Populate a large area with data to have a meaningful display range
-                int totalRows = 5000;
-                int totalCols = 100;
-                for (int r = 0; r < totalRows; r++)
+                // Populate a large dataset (e.g., 10,000 rows x 50 columns)
+                const int totalRows = 10000;
+                const int totalCols = 50;
+                for (int row = 0; row < totalRows; row++)
                 {
-                    for (int c = 0; c < totalCols; c++)
+                    for (int col = 0; col < totalCols; col++)
                     {
-                        cells[r, c].PutValue(r * totalCols + c);
+                        cells[row, col].PutValue(row * totalCols + col);
                     }
                 }
 
-                // Benchmark: enumerate cells using MaxDisplayRange (display range)
-                Aspose.Cells.Range displayRange = cells.MaxDisplayRange; // Includes data, merged cells and shapes
-                if (displayRange == null)
-                {
-                    Console.WriteLine("Worksheet is empty, cannot benchmark display range.");
-                    return;
-                }
+                // Ensure the MaxDisplayRange is calculated
+                AsposeRange maxDisplayRange = cells.MaxDisplayRange;
 
-                Stopwatch swDisplay = Stopwatch.StartNew();
-                IEnumerator displayEnum = displayRange.GetEnumerator();
+                // Benchmark enumeration using MaxDisplayRange
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                IEnumerator displayEnum = maxDisplayRange.GetEnumerator();
                 while (displayEnum.MoveNext())
                 {
                     Cell cell = (Cell)displayEnum.Current;
-                    var val = cell.Value; // Simulate work
+                    // Access the cell value to simulate realistic work
+                    var _ = cell.Value;
                 }
-                swDisplay.Stop();
+                sw.Stop();
+                long displayRangeTime = sw.ElapsedMilliseconds;
 
-                // Benchmark: enumerate all cells in the worksheet (full traversal)
-                Stopwatch swFull = Stopwatch.StartNew();
+                // Benchmark enumeration over the entire sheet
+                sw.Restart();
                 IEnumerator fullEnum = cells.GetEnumerator();
                 while (fullEnum.MoveNext())
                 {
                     Cell cell = (Cell)fullEnum.Current;
-                    var val = cell.Value; // Simulate work
+                    var _ = cell.Value;
                 }
-                swFull.Stop();
+                sw.Stop();
+                long fullSheetTime = sw.ElapsedMilliseconds;
 
-                // Output the results
-                Console.WriteLine($"Enumeration using MaxDisplayRange: {swDisplay.ElapsedMilliseconds} ms");
-                Console.WriteLine($"Enumeration using full sheet traversal: {swFull.ElapsedMilliseconds} ms");
+                // Output the benchmark results
+                Console.WriteLine($"Enumeration using MaxDisplayRange: {displayRangeTime} ms");
+                Console.WriteLine($"Enumeration over full sheet: {fullSheetTime} ms");
 
                 // Save the workbook (optional, just to keep the data)
-                string outputPath = "BenchmarkDisplayRange.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                string outputPath = "BenchmarkResult.xlsx";
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred during execution: {ex.Message}");
             }
         }
     }

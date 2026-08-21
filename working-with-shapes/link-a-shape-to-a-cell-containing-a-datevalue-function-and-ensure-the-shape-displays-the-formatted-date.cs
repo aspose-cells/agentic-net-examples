@@ -1,44 +1,48 @@
-// Title: C# – Link a rectangle shape to a DATEVALUE cell and display the formatted date with Aspose.Cells
-// Description: Shows how to place a DATEVALUE formula in a cell, apply a date number format, add a rectangle shape, link the shape to the cell using the LinkedCell property, refresh the shape with UpdateSelectedValue, and save the workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | LinkedCell | UpdateSelectedValue | shape to cell | DATEVALUE formula | date formatting | rectangle shape | Excel automation
-// Common Searches: link shape to cell Aspose.Cells C# | display DATEVALUE result in a shape using Aspose.Cells | update linked shape after changing cell format Aspose.Cells | how to bind a rectangle to a formula cell in Aspose.Cells | Aspose.Cells shape shows formatted date
-// Developer Intent: The developer needs to bind a shape to a cell that contains a DATEVALUE formula and ensure the shape shows the cell’s formatted date value.
-// Use Cases: Dashboard widgets that reflect calculated dates from formulas. | Automated reports where shapes display due dates derived from DATEVALUE. | Timeline graphics with shapes synchronized to formatted date cells.
-// AI Prompts: Provide C# code to link a rectangle shape to a DATEVALUE cell and display the formatted date with Aspose.Cells. | Show how to refresh a shape after changing a cell’s date format using LinkedCell and UpdateSelectedValue in Aspose.Cells. | Explain the steps to bind a shape to a formula cell and keep its displayed value synchronized in Aspose.Cells for .NET.
+// Title: Link a Label Shape to a DATEVALUE Cell and Display Formatted Date – Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, inserts a DATEVALUE formula in A1, applies a short‑date number format, adds a label shape, links it to the cell via the LinkedCell property, forces an immediate refresh with UpdateSelectedValue, and saves the file.
+// Keywords: Aspose.Cells | C# | label shape | LinkedCell | DATEVALUE | date formatting | shape linking | Excel automation | short date format
+// Common Searches: Aspose.Cells link shape to cell | C# label shape display date | LinkedCell property example | format date in linked shape Aspose.Cells | refresh shape after changing cell formula Aspose.Cells
+// Developer Intent: Bind a shape to a cell containing a DATEVALUE formula and have the shape show the cell’s formatted date.
+// Use Cases: Dynamic dashboard date stamps that update automatically when the source formula changes. | Report headers that reflect a calculated start date while preserving short‑date formatting. | Printable invoices where a shape displays the invoice date derived from a DATEVALUE function.
+// AI Prompts: Generate C# code using Aspose.Cells to add a label shape, link it to a DATEVALUE cell, and show the formatted date. | Explain how to refresh a linked shape after modifying the cell’s formula or number format in Aspose.Cells for .NET. | Provide a sample that links multiple label shapes to different date cells, each preserving its own date format.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to place a DATEVALUE formula in a cell, apply a date number format, add a rectangle shape, link the shape to the cell using the LinkedCell property, refresh the shape with UpdateSelectedValue, and save the workbook using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsLinkShapeToDate
 {
-    static void Main()
+    // Creates a workbook, inserts a DATEVALUE formula in A1, applies a short‑date number format, adds a label shape, links it to the cell via the LinkedCell property, forces an immediate refresh with UpdateSelectedValue, and saves the file.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Define a cell that contains a DATEVALUE formula
-        Cell dateCell = sheet.Cells["B2"];
-        dateCell.Formula = "=DATEVALUE(\"2023-08-15\")";
+            // Put a DATEVALUE formula in cell A1
+            Cell dateCell = sheet.Cells["A1"];
+            dateCell.Formula = "=DATEVALUE(\"2023-01-01\")";
 
-        // Apply a date number format to the cell (e.g., mm/dd/yyyy)
-        Style dateStyle = workbook.CreateStyle();
-        dateStyle.Number = 14; // Built‑in date format
-        dateCell.SetStyle(dateStyle);
+            // Apply a date number format to display the serial number as a date
+            Style dateStyle = workbook.CreateStyle();
+            dateStyle.Number = 14; // Built‑in short date format
+            dateCell.SetStyle(dateStyle);
 
-        // Add a rectangle shape that will display the linked cell's value
-        // Parameters: upperLeftRow, upperLeftColumn, upperLeftRowOffset, upperLeftColumnOffset, height, width
-        Shape shape = sheet.Shapes.AddRectangle(2, 1, 0, 0, 30, 150);
+            // Add a label shape that will show the linked cell's value
+            // Parameters: upper left row, upper left column, top offset, left offset, height, width
+            Label label = (Label)sheet.Shapes.AddLabel(2, 2, 0, 0, 30, 150);
 
-        // Link the shape to the cell containing the DATEVALUE formula
-        shape.LinkedCell = "$B$2";
+            // Link the label to cell A1 so it displays the formatted date
+            // Using the property setter (absolute A1 reference)
+            label.LinkedCell = "$A$1";
 
-        // Ensure the shape reflects the current cell value
-        shape.UpdateSelectedValue();
+            // Optionally, update the shape's displayed value immediately
+            label.UpdateSelectedValue();
 
-        // Save the workbook
-        workbook.Save("LinkedShapeDate.xlsx");
+            // Save the workbook
+            workbook.Save("ShapeLinkedToDate.xlsx");
+        }
     }
 }

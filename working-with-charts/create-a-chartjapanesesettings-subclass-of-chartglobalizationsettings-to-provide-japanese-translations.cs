@@ -1,22 +1,22 @@
-// Title: C# – Localize Aspose.Cells Charts to Japanese with a ChartGlobalizationSettings Subclass
-// Description: Demonstrates how to create a ChartJapaneseSettings class that inherits from ChartGlobalizationSettings, overrides methods to supply Japanese text for axis titles, units, chart title, legend labels, "Other" and series names, and applies the custom globalization settings to a workbook. The example builds a simple column chart, sets a Japanese chart title, prints localized values, and saves the file as JapaneseChartDemo.xlsx.
-// Keywords: Aspose.Cells | C# chart localization | ChartGlobalizationSettings | Japanese chart labels | Aspose.Cells Japanese example | globalization settings | Excel chart Japanese | DisplayUnitType Japanese | GitHub Aspose.Cells sample
-// Common Searches: Aspose.Cells chart Japanese localization example | How to override ChartGlobalizationSettings in C# | Set Japanese axis titles in Aspose.Cells charts | Custom chart globalization settings for Japanese language | Apply Japanese legend labels to Aspose.Cells workbook
-// Developer Intent: Create a reusable ChartGlobalizationSettings subclass that provides Japanese translations for all chart elements and apply it to an Aspose.Cells workbook.
-// Use Cases: Generate sales dashboards with fully Japanese chart UI for regional reports. | Standardize Japanese chart terminology across multiple workbooks in an enterprise solution. | Extend the subclass to support additional Japanese unit strings for financial and scientific charts.
-// AI Prompts: Write a C# class that inherits from ChartGlobalizationSettings and returns Japanese strings for axis titles, units, legend labels, and series names. | Show code that assigns a custom ChartGlobalizationSettings subclass to a workbook's GlobalizationSettings and verifies the output in the console. | Explain how to expand ChartJapaneseSettings to include custom number formats and data label translations for Japanese charts.
+// Title: C# – Localize Aspose.Cells Chart Elements to Japanese with a ChartJapaneseSettings Subclass
+// Description: Demonstrates how to create a ChartJapaneseSettings class that inherits from ChartGlobalizationSettings, overrides methods to supply Japanese text for axis titles, units, chart title, legend items, and series names, applies the settings to a workbook, and saves the file as JapaneseChartGlobalization.xlsx.
+// Keywords: Aspose.Cells | C# | ChartGlobalizationSettings | Japanese localization | Excel chart translation | chart axis Japanese | legend Japanese | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells Japanese chart globalization | How to translate chart axis labels to Japanese in C# | Custom ChartGlobalizationSettings subclass example | Set Japanese legend names in Aspose.Cells | Localize Excel chart titles with Aspose.Cells .NET
+// Developer Intent: Implement a reusable ChartGlobalizationSettings subclass that provides Japanese terminology for all chart components and apply it to workbooks generated with Aspose.Cells.
+// Use Cases: Produce Excel reports for Japanese users with fully localized chart labels and titles. | Standardize Japanese chart terminology across multiple workbooks in an automated reporting pipeline. | Create multilingual Excel dashboards by swapping ChartGlobalizationSettings instances at runtime.
+// AI Prompts: Generate a ChartJapaneseSettings method that returns Japanese text for data labels and error bars. | Show code to switch between English and Japanese ChartGlobalizationSettings based on a user‑selected language. | Provide an example of exporting a workbook using ChartJapaneseSettings to PDF while preserving Japanese characters.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsJapaneseChartDemo
+namespace AsposeCellsJapaneseGlobalization
 {
-    // Custom globalization settings for Japanese language
-    // Demonstrates how to create a ChartJapaneseSettings class that inherits from ChartGlobalizationSettings, overrides methods to supply Japanese text for axis titles, units, chart title, legend labels, "Other" and series names, and applies the custom globalization settings to a workbook. The example builds a simple column chart, sets a Japanese chart title, prints localized values, and saves the file as JapaneseChartDemo.xlsx.
+    // Subclass of ChartGlobalizationSettings providing Japanese translations
+    // Demonstrates how to create a ChartJapaneseSettings class that inherits from ChartGlobalizationSettings, overrides methods to supply Japanese text for axis titles, units, chart title, legend items, and series names, applies the settings to a workbook, and saves the file as JapaneseChartGlobalization.xlsx.
     public class ChartJapaneseSettings : ChartGlobalizationSettings
     {
-        // Axis title name in Japanese
+        // Axis title name (e.g., "軸タイトル")
         public override string GetAxisTitleName()
         {
             return "軸タイトル";
@@ -42,37 +42,37 @@ namespace AsposeCellsJapaneseChartDemo
             }
         }
 
-        // Chart title name in Japanese
+        // Chart title name
         public override string GetChartTitleName()
         {
             return "チャートタイトル";
         }
 
-        // Legend decrease label in Japanese
+        // Legend decrease name
         public override string GetLegendDecreaseName()
         {
             return "減少";
         }
 
-        // Legend increase label in Japanese
+        // Legend increase name
         public override string GetLegendIncreaseName()
         {
             return "増加";
         }
 
-        // Legend total label in Japanese
+        // Legend total name
         public override string GetLegendTotalName()
         {
             return "合計";
         }
 
-        // "Other" label in Japanese
+        // "Other" label name
         public override string GetOtherName()
         {
             return "その他";
         }
 
-        // Series name in Japanese
+        // Series name
         public override string GetSeriesName()
         {
             return "シリーズ";
@@ -89,38 +89,29 @@ namespace AsposeCellsJapaneseChartDemo
 
             // Populate sample data for the chart
             sheet.Cells["A1"].PutValue("カテゴリ");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-
-            sheet.Cells["B1"].PutValue("値");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["A2"].PutValue("Q1");
+            sheet.Cells["A3"].PutValue("Q2");
+            sheet.Cells["A4"].PutValue("Q3");
+            sheet.Cells["B1"].PutValue("売上");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["B4"].PutValue(180);
 
             // Add a column chart
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
             Chart chart = sheet.Charts[chartIndex];
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
+            chart.Title.Text = "売上推移";
 
-            // Apply Japanese globalization settings to the workbook
+            // Apply Japanese chart globalization settings
             workbook.Settings.GlobalizationSettings = new GlobalizationSettings
             {
                 ChartSettings = new ChartJapaneseSettings()
             };
 
-            // Set chart title to demonstrate that the title text can be localized
-            chart.Title.Text = "売上チャート";
-
-            // Display some of the localized names in the console
-            Console.WriteLine("Axis Title Name: " + chart.Title.Text);
-            Console.WriteLine("Series Name: " + ((ChartJapaneseSettings)workbook.Settings.GlobalizationSettings.ChartSettings).GetSeriesName());
-            Console.WriteLine("Legend Increase Name: " + ((ChartJapaneseSettings)workbook.Settings.GlobalizationSettings.ChartSettings).GetLegendIncreaseName());
-            Console.WriteLine("Axis Unit (Thousands): " + ((ChartJapaneseSettings)workbook.Settings.GlobalizationSettings.ChartSettings).GetAxisUnitName(DisplayUnitType.Thousands));
-
             // Save the workbook
-            workbook.Save("JapaneseChartDemo.xlsx");
+            workbook.Save("JapaneseChartGlobalization.xlsx");
         }
     }
 }

@@ -1,37 +1,33 @@
-// Title: C# – Convert Excel to PDF without Font Embedding using Aspose.Cells (Minimize Size)
-// Description: Loads or creates an Aspose.Cells Workbook, configures PdfSaveOptions to turn off EmbedStandardWindowsFonts and sets OptimizationType to MinimumSize, then saves the workbook as a compact PDF. This reduces the PDF file size by omitting standard Windows fonts.
-// Keywords: Aspose.Cells | C# | .NET | Excel to PDF | disable font embedding | EmbedStandardWindowsFonts false | PdfOptimizationType MinimumSize | reduce PDF size | PDF conversion optimization | Workbook.Save PDF options
-// Common Searches: Aspose.Cells disable font embedding when saving PDF | C# convert Excel workbook to PDF with small file size | PdfSaveOptions EmbedStandardWindowsFonts false example | How to set PdfOptimizationType to MinimumSize in Aspose.Cells | Reduce PDF size from Excel using Aspose.Cells .NET
-// Developer Intent: Create a PDF from an Excel workbook while preventing standard font embedding to keep the output file lightweight.
-// Use Cases: Generate downloadable PDF reports from Excel where embedded fonts are unnecessary, saving bandwidth. | Batch‑process large numbers of workbooks into minimal‑size PDFs for archival or email distribution. | Produce PDF invoices or statements from Excel templates that must stay under attachment size limits.
-// AI Prompts: Show C# code that converts an Aspose.Cells Workbook to PDF with font embedding disabled and minimum‑size optimization. | Explain how setting EmbedStandardWindowsFonts to false affects PDF output and what client‑side font requirements remain. | Provide a step‑by‑step guide to configure PdfSaveOptions for small PDF files using Aspose.Cells in .NET.
+// Title: C# Aspose.Cells – Convert Excel to PDF without Font Embedding for Minimal File Size
+// Description: Demonstrates how to use Aspose.Cells for .NET to save an Excel workbook as a PDF while disabling standard Windows font embedding and applying the MinimumSize optimization, resulting in a lightweight PDF suitable for fast distribution.
+// Keywords: Aspose.Cells PDF conversion C# | disable font embedding Aspose.Cells | minimum size PDF Aspose.Cells | PdfSaveOptions EmbedStandardWindowsFonts false | Excel to PDF small file size | C# reduce PDF size Aspose.Cells
+// Common Searches: Aspose.Cells disable font embedding when saving PDF | C# convert Excel to PDF with smallest size | PdfSaveOptions MinimumSize Aspose.Cells example | How to create lightweight PDF from workbook using Aspose.Cells | C# Aspose.Cells PDF optimization settings
+// Developer Intent: Create a PDF from an Excel workbook while turning off font embedding to keep the output file size as low as possible.
+// Use Cases: Generating compact PDF reports for email or web preview when target devices already have standard Windows fonts. | Batch‑processing large numbers of spreadsheets into small PDFs for archival or cloud storage. | Automating invoice or statement PDFs that need to be lightweight for fast download.
+// AI Prompts: Show a C# example that converts an .xlsx to PDF with Aspose.Cells, disables font embedding, and uses MinimumSize optimization. | Explain how the EmbedStandardWindowsFonts and OptimizationType properties affect PDF size in Aspose.Cells. | Provide step‑by‑step code to load an existing workbook, set PdfSaveOptions to not embed fonts, and save a reduced‑size PDF.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Loads or creates an Aspose.Cells Workbook, configures PdfSaveOptions to turn off EmbedStandardWindowsFonts and sets OptimizationType to MinimumSize, then saves the workbook as a compact PDF. This reduces the PDF file size by omitting standard Windows fonts.
+// Demonstrates how to use Aspose.Cells for .NET to save an Excel workbook as a PDF while disabling standard Windows font embedding and applying the MinimumSize optimization, resulting in a lightweight PDF suitable for fast distribution.
 class ConvertWorkbookToPdf
 {
     static void Main()
     {
         // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        Workbook workbook = new Workbook(); // new Workbook("input.xlsx") to load
 
-        // Add some sample data to the first worksheet
+        // Add some sample data
         Worksheet sheet = workbook.Worksheets[0];
         sheet.Cells["A1"].PutValue("Sample text for PDF conversion.");
 
-        // Configure PDF save options
+        // Configure PDF save options to disable font embedding and minimize file size
         PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        pdfOptions.EmbedStandardWindowsFonts = false;               // Disable embedding of standard Windows fonts
+        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize; // Optimize for smallest file size
 
-        // Disable embedding of standard Windows fonts to reduce file size
-        pdfOptions.EmbedStandardWindowsFonts = false;
-
-        // Optional: set optimization type to prioritize minimum file size
-        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
-
-        // Save the workbook as a PDF using the Save method with options
+        // Save the workbook as a PDF using the configured options
         workbook.Save("output.pdf", pdfOptions);
     }
 }

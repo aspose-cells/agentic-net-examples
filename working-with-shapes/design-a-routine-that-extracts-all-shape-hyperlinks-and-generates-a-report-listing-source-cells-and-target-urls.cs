@@ -1,93 +1,60 @@
-// Title: C# – Extract Shape Hyperlinks and Generate a Hyperlink Report Sheet with Aspose.Cells
-// Description: Loads an Excel workbook, iterates through all worksheets and shapes, captures each shape’s upper‑left cell address and hyperlink URL, writes the sheet name, cell reference and URL to a new worksheet called ShapeHyperlinkReport, and saves the updated file.
-// Keywords: Aspose.Cells | C# shape hyperlink extraction | Excel shape hyperlink report | extract shape URLs | hyperlink report worksheet | shape anchor cell | Aspose.Cells API | Excel automation | hyperlink audit | generate report sheet
-// Common Searches: Aspose.Cells get hyperlink from shape | list all shape URLs in Excel using C# | create report of shape hyperlinks Aspose | extract shape hyperlink address C# | find cell of a shape Aspose.Cells | export shape hyperlinks to new sheet | C# Aspose.Cells shape hyperlink enumeration
-// Developer Intent: Retrieve every hyperlink attached to shapes in a workbook and output a concise table of source cell locations and target URLs.
-// Use Cases: Audit all clickable shapes across a workbook for compliance or documentation purposes. | Export shape hyperlink data before performing bulk updates or migrations. | Provide end‑users with a summary sheet that shows where each shape links, improving navigation.
-// AI Prompts: Write a C# method using Aspose.Cells that scans all worksheets, finds shapes with hyperlinks, records the sheet name, upper‑left cell address, and URL into a new worksheet named 'ShapeHyperlinkReport', then saves the workbook. | Show how to extend the routine to also capture the shape name and hyperlink tooltip in the report. | Suggest a strategy for handling shapes that span multiple cells while still reporting the top‑left cell address and hyperlink.
+// Title: Extract Shape Hyperlinks and Generate a Cell‑to‑URL Report with Aspose.Cells for .NET
+// Description: Loads an Excel workbook, scans every worksheet for shapes with hyperlinks, determines each shape's top‑left cell (A1 style), and writes "Sheet!Cell -> URL" lines to a text report (optionally saving the workbook).
+// Keywords: Aspose.Cells shape hyperlink extraction | C# list shape URLs in Excel | generate hyperlink report Aspose.Cells | shape anchor cell address .NET | export shape hyperlink data | Excel shape hyperlink audit
+// Common Searches: Aspose.Cells get hyperlink from shape | C# extract all shape URLs in Excel workbook | report shape hyperlink addresses with cell reference | list shapes with hyperlinks Aspose.Cells .NET | export shape hyperlink mapping to text file
+// Developer Intent: Create a text (or CSV) report that maps each shape’s anchored cell to its hyperlink URL across all worksheets.
+// Use Cases: Compliance audit of all clickable shapes and their target URLs. | Automated documentation linking where shapes act as placeholders for external resources. | Pre‑release validation to ensure shape hyperlinks point only to approved domains.
+// AI Prompts: Write C# code using Aspose.Cells that iterates through every shape in a workbook and outputs the shape's hyperlink address together with its anchored cell reference. | Provide a method that returns a Dictionary<string,string> where the key is "SheetName!CellAddress" of a shape and the value is the hyperlink URL, using Aspose.Cells for .NET. | Generate a sample script that saves the shape hyperlink report to a CSV file, including columns for worksheet, cell address, and URL.
 
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace Example
+namespace AsposeCellsShapeHyperlinkReport
 {
-    // Loads an Excel workbook, iterates through all worksheets and shapes, captures each shape’s upper‑left cell address and hyperlink URL, writes the sheet name, cell reference and URL to a new worksheet called ShapeHyperlinkReport, and saves the updated file.
-    public class ShapeHyperlinkExtractor
+    // Loads an Excel workbook, scans every worksheet for shapes with hyperlinks, determines each shape's top‑left cell (A1 style), and writes "Sheet!Cell -> URL" lines to a text report (optionally saving the workbook).
+    class Program
     {
-        // Extracts all shape hyperlinks from a workbook and creates a report worksheet.
-        public static void ExtractShapeHyperlinks(string inputPath, string outputPath)
+        static void Main()
         {
-            try
+            // Load an existing workbook (replace with your file path)
+            Workbook workbook = new Workbook("InputWorkbook.xlsx");
+
+            // StringBuilder to collect the report lines
+            StringBuilder reportBuilder = new StringBuilder();
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Verify input file exists.
-                if (!File.Exists(inputPath))
-                    throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-                // Load the existing workbook.
-                Workbook workbook = new Workbook(inputPath);
-
-                // Add a new worksheet for the report.
-                int reportIndex = workbook.Worksheets.Add();
-                Worksheet reportSheet = workbook.Worksheets[reportIndex];
-                reportSheet.Name = "ShapeHyperlinkReport";
-
-                // Write header row.
-                reportSheet.Cells[0, 0].PutValue("Source Cell");
-                reportSheet.Cells[0, 1].PutValue("Target URL");
-
-                int reportRow = 1; // Start after header.
-
-                // Iterate through all worksheets.
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Iterate through all shapes on the current worksheet
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    // Iterate through all shapes in the worksheet.
-                    foreach (Shape shape in sheet.Shapes)
+                    // Get the hyperlink associated with the shape (if any)
+                    Hyperlink hyperlink = shape.Hyperlink;
+
+                    // Proceed only when a hyperlink exists and has an address
+                    if (hyperlink != null && !string.IsNullOrEmpty(hyperlink.Address))
                     {
-                        // Check if the shape has a hyperlink.
-                        Hyperlink link = shape.Hyperlink;
-                        if (link != null && !string.IsNullOrEmpty(link.Address))
-                        {
-                            // Determine the cell where the shape is anchored (upper‑left corner).
-                            int row = shape.UpperLeftRow;
-                            int column = shape.UpperLeftColumn;
+                        // Determine the cell address where the shape is anchored
+                        // UpperLeftRow and UpperLeftColumn give the top‑left cell indices (zero‑based)
+                        int rowIndex = shape.UpperLeftRow;
+                        int columnIndex = shape.UpperLeftColumn;
+                        string cellAddress = CellsHelper.CellIndexToName(rowIndex, columnIndex);
 
-                            // Convert row/column to Excel cell name (e.g., A1).
-                            string cellName = CellsHelper.CellIndexToName(row, column);
-
-                            // Write the information to the report sheet.
-                            reportSheet.Cells[reportRow, 0].PutValue($"{sheet.Name}!{cellName}");
-                            reportSheet.Cells[reportRow, 1].PutValue(link.Address);
-                            reportRow++;
-                        }
+                        // Build a line: SheetName!CellAddress -> HyperlinkAddress
+                        string line = $"{sheet.Name}!{cellAddress} -> {hyperlink.Address}";
+                        reportBuilder.AppendLine(line);
                     }
                 }
-
-                // Save the workbook with the added report.
-                workbook.Save(outputPath);
-                Console.WriteLine($"Report saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        // Entry point for the console application.
-        public static void Main(string[] args)
-        {
-            string inputPath = "InputWorkbook.xlsx";
-            string outputPath = "OutputWorkbook_WithReport.xlsx";
-
-            // Allow overriding paths via command‑line arguments.
-            if (args.Length >= 2)
-            {
-                inputPath = args[0];
-                outputPath = args[1];
             }
 
-            ExtractShapeHyperlinks(inputPath, outputPath);
+            // Write the report to a text file
+            File.WriteAllText("ShapeHyperlinksReport.txt", reportBuilder.ToString());
+
+            // Optionally, save the workbook (unchanged) to a new file
+            workbook.Save("ProcessedWorkbook.xlsx");
         }
     }
 }

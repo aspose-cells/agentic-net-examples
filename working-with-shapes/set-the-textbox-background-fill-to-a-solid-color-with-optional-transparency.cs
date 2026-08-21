@@ -1,40 +1,60 @@
-// Title: Aspose.Cells for .NET: Apply Solid Color and Transparency to a TextBox Shape
-// Description: Shows how to create a workbook, insert a TextBox shape, set its FillType to Solid, assign an ARGB color, adjust the SolidFill.Transparency (0‑1 range), and save the result as an XLSX file.
-// Keywords: Aspose.Cells | C# textbox shape fill | solid fill transparency | ARGB color Excel | shape background color .NET | Excel textbox styling | FillType.Solid | SolidFill.Transparency
-// Common Searches: set textbox background color Aspose.Cells C# | how to make textbox shape transparent in Excel using Aspose | solid fill for shapes Aspose.Cells .NET | change shape fill opacity programmatically | apply ARGB color to Excel shape with Aspose
-// Developer Intent: Set a TextBox shape’s background to a solid ARGB color and optionally control its opacity in an Excel workbook via Aspose.Cells for .NET.
-// Use Cases: Design report headers with colored, semi‑transparent text boxes | Highlight data regions by overlaying a translucent textbox | Generate Excel templates where background colors are defined by ARGB values | Create dashboards with visual emphasis using partially opaque shapes
-// AI Prompts: Write C# code using Aspose.Cells to add a TextBox shape and set its background to a solid color with 30% transparency. | Explain how to use Fill.FillType and SolidFill.Transparency to style a textbox in an Excel file. | Show an example of assigning an ARGB value to a shape’s fill and adjusting opacity in Aspose.Cells for .NET.
+// Title: Set TextBox Shape Background to Solid Color with Transparency in Aspose.Cells for .NET (C#)
+// Description: Shows how to insert a TextBox shape into an Excel worksheet with Aspose.Cells for .NET, apply a solid ARGB fill, adjust its transparency (0‑1), and save the file.
+// Keywords: Aspose.Cells | C# textbox fill | solid fill transparency | Excel shape background color | ARGB fill Aspose.Cells | shape fill type solid | Aspose.Cells .NET example | transparent shape fill | Excel textbox background
+// Common Searches: Aspose.Cells set textbox background color | C# Aspose.Cells solid fill transparency | How to change textbox shape fill in Excel using Aspose.Cells | Set ARGB color for textbox shape Aspose.Cells | Apply transparency to shape fill Aspose.Cells .NET
+// Developer Intent: Add a TextBox shape and apply a solid fill with optional transparency in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Create a report header with a semi‑transparent textbox that highlights the title while showing underlying data. | Overlay a colored, translucent textbox on a chart area to emphasize key metrics without obscuring the chart. | Design a dashboard widget where the textbox background matches a brand color and allows cell content to remain visible.
+// AI Prompts: Generate C# code that sets a textbox shape's fill to a solid ARGB color with 50% transparency using Aspose.Cells for .NET. | Explain how the Transparency property and ARGB values work together to control opacity of a shape fill in Aspose.Cells. | Show how to modify an existing textbox shape in a workbook to change its background color and opacity programmatically.
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to create a workbook, insert a TextBox shape, set its FillType to Solid, assign an ARGB color, adjust the SolidFill.Transparency (0‑1 range), and save the result as an XLSX file.
-class SetTextboxBackground
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Shows how to insert a TextBox shape into an Excel worksheet with Aspose.Cells for .NET, apply a solid ARGB fill, adjust its transparency (0‑1), and save the file.
+    public class TextBoxBackgroundFillDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-        // Add a textbox shape to the worksheet
-        // Parameters: drawing type, upper left row, upper left column, top, left, width, height
-        Shape textbox = sheet.Shapes.AddShape(MsoDrawingType.TextBox, 1, 0, 1, 0, 200, 100);
-        textbox.Text = "Sample Text";
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Configure the fill to be solid
-        textbox.Fill.FillType = FillType.Solid;
+            // Add a textbox shape to the worksheet
+            // Parameters: drawing type, upper left row, upper left column, top, left, width, height
+            Shape textBox = sheet.Shapes.AddShape(MsoDrawingType.TextBox, 2, 0, 2, 0, 200, 100);
 
-        // Set the solid fill color (opaque part)
-        textbox.Fill.SolidFill.Color = Color.FromArgb(255, 100, 150, 200); // ARGB where A=255 (opaque)
+            // Set the fill type to solid
+            textBox.Fill.FillType = FillType.Solid;
 
-        // Set optional transparency (0.0 = fully opaque, 1.0 = fully transparent)
-        textbox.Fill.SolidFill.Transparency = 0.3; // 30% transparent
+            // Configure solid fill color and transparency
+            SolidFill solidFill = textBox.Fill.SolidFill;
+            solidFill.Color = Color.FromArgb(255, 100, 150, 200); // solid background color
+            solidFill.Transparency = 0.3; // 30% transparent (0.0 = opaque, 1.0 = fully transparent)
 
-        // Save the workbook
-        workbook.Save("TextboxBackgroundSolidFill.xlsx");
+            // Set sample text and font color
+            textBox.Text = "Sample TextBox";
+            textBox.Font.Color = Color.White;
+
+            // Determine output path and save the workbook
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "TextBoxBackgroundFillDemo.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
+        }
     }
 }

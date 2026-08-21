@@ -1,62 +1,61 @@
-// Title: C# Console App: Convert Excel to HTML with Aspose.Cells using Best‑Fit (Normal) Layout
-// Description: A lightweight .NET console utility that accepts an Excel file path, loads the workbook with Aspose.Cells, applies HtmlSaveOptions with HtmlLayoutMode.Normal for a best‑fit HTML layout, and saves the result as a .html file in the same folder. Includes argument validation, file‑existence checks, and exception handling.
-// Keywords: Aspose.Cells | C# Excel to HTML conversion | HtmlLayoutMode.Normal | best‑fit HTML layout | HtmlSaveOptions example | .NET console Excel export | command line Excel to HTML
-// Common Searches: convert excel workbook to html using aspose.cells c# | htmllayoutmode.normal example console app | c# command line tool to export excel as html | aspose.cells save workbook as html best fit layout | batch convert excel files to html with asp.net
-// Developer Intent: Create a command‑line program that transforms an Excel workbook into a web‑ready HTML file using Aspose.Cells with the Normal (best‑fit) layout mode.
-// Use Cases: Automate bulk conversion of Excel reports to HTML for web publishing. | Integrate Excel‑to‑HTML rendering into CI/CD pipelines to generate documentation previews. | Provide end‑users a quick, no‑Excel preview of worksheets via a simple executable.
-// AI Prompts: Generate a C# console application that reads an Excel file path argument and saves it as HTML using Aspose.Cells with HtmlLayoutMode.Normal. | Extend the program to accept an optional output directory argument and write the HTML file there. | Add structured logging (e.g., to a file) for conversion successes and failures while preserving console output.
+// Title: C# Console App – Convert Excel to Best‑Fit HTML with Aspose.Cells
+// Description: A .NET console program that validates a file path, loads an Excel workbook with Aspose.Cells, applies HtmlSaveOptions (LayoutMode = Normal, ExportDataOptions = All) and saves the sheet as a best‑fit HTML file.
+// Keywords: Aspose.Cells | C# convert Excel to HTML | HtmlSaveOptions LayoutMode Normal | best fit HTML layout | ExportDataOptions.All | .NET console Excel to HTML | Excel workbook to web page
+// Common Searches: Aspose.Cells C# example for Excel to HTML conversion | How to use HtmlSaveOptions LayoutMode Normal in .NET | Console application that exports Excel as HTML | Best‑fit HTML layout for Excel files using Aspose | Save Excel workbook to HTML with all data in C#
+// Developer Intent: Create a command‑line tool that reads an .xlsx file and outputs a best‑fit HTML representation using Aspose.Cells.
+// Use Cases: Publish financial or sales reports as static HTML pages without Office installed. | Batch‑process a folder of Excel files for intranet documentation. | Provide a lightweight preview utility for end‑users to view spreadsheets in a browser.
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, sets HtmlSaveOptions.LayoutMode to Normal, enables ExportDataOptions.All, and saves the result as HTML. | Explain step‑by‑step how to build a .NET console app that accepts an Excel file path argument and creates a best‑fit HTML file. | Suggest modifications to handle multiple input files and custom output directories in the console converter.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace ExcelToHtmlConverter
+// A .NET console program that validates a file path, loads an Excel workbook with Aspose.Cells, applies HtmlSaveOptions (LayoutMode = Normal, ExportDataOptions = All) and saves the sheet as a best‑fit HTML file.
+class Program
 {
-    // A lightweight .NET console utility that accepts an Excel file path, loads the workbook with Aspose.Cells, applies HtmlSaveOptions with HtmlLayoutMode.Normal for a best‑fit HTML layout, and saves the result as a .html file in the same folder. Includes argument validation, file‑existence checks, and exception handling.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        // Verify arguments
+        if (args.Length == 0)
         {
-            // Verify that an input file path was provided
-            if (args.Length == 0)
-            {
-                Console.WriteLine("Usage: ExcelToHtmlConverter <excel-file-path>");
-                return;
-            }
+            Console.WriteLine("Usage: <exe> <excelFilePath> [outputHtmlPath]");
+            return;
+        }
 
-            string excelPath = args[0];
+        string excelPath = args[0];
+        if (!System.IO.File.Exists(excelPath))
+        {
+            Console.WriteLine($"File not found: {excelPath}");
+            return;
+        }
 
-            // Check if the source Excel file exists
-            if (!File.Exists(excelPath))
-            {
-                Console.WriteLine($"Error: File not found - {excelPath}");
-                return;
-            }
+        // Determine output HTML path
+        string htmlPath = args.Length > 1
+            ? args[1]
+            : System.IO.Path.ChangeExtension(excelPath, ".html");
 
-            try
-            {
-                // Load the workbook from the specified Excel file
-                Workbook workbook = new Workbook(excelPath);
+        try
+        {
+            // Load the workbook from the provided Excel file
+            Workbook workbook = new Workbook(excelPath);
 
-                // Create HTML save options (uses the default constructor rule)
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // Create HTML save options (constructor rule)
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
 
-                // Set layout mode to Normal (best‑fit layout similar to Excel)
-                htmlOptions.LayoutMode = HtmlLayoutMode.Normal;
+            // Set layout mode to Normal for best‑fit rendering (property rule)
+            saveOptions.LayoutMode = HtmlLayoutMode.Normal;
 
-                // Determine output HTML file path (same folder, same name with .html extension)
-                string outputPath = Path.ChangeExtension(excelPath, ".html");
+            // Export all data (property rule)
+            saveOptions.ExportDataOptions = HtmlExportDataOptions.All;
 
-                // Save the workbook as HTML using the configured options
-                workbook.Save(outputPath, htmlOptions);
+            // Save the workbook as HTML using the configured options
+            workbook.Save(htmlPath, saveOptions);
 
-                Console.WriteLine($"Conversion successful. HTML saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Conversion failed: {ex.Message}");
-            }
+            Console.WriteLine($"HTML file saved to: {htmlPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

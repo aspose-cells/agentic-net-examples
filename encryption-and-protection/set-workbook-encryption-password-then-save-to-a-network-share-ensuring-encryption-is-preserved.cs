@@ -1,16 +1,16 @@
-// Title: Encrypt Excel Workbook with Password and Save to UNC Network Share using Aspose.Cells for .NET
-// Description: Creates a new Workbook, adds data, applies a password (which encrypts the file), optionally sets strong AES encryption, validates a UNC network share path, falls back to a local folder if needed, and saves the encrypted .xlsx file.
-// Keywords: Aspose.Cells password protection | C# encrypt Excel workbook | save encrypted Excel to UNC path | network share Excel file Aspose | strong encryption Aspose.Cells | fallback to local folder C# | Excel file security .NET
-// Common Searches: Aspose.Cells set workbook password C# | save encrypted Excel to network share UNC | C# Excel encryption with fallback directory | how to apply strong AES encryption using Aspose.Cells | check network share existence before saving Excel
-// Developer Intent: Secure an Excel workbook with a password (and optional strong encryption) and reliably store it on a network share, using a fallback to a local directory when the share is unavailable.
-// Use Cases: Protect confidential financial reports before publishing them to a shared drive. | Automate generation of encrypted audit logs saved directly to a central server. | Ensure reliable saving of encrypted spreadsheets in environments with intermittent network share access.
-// AI Prompts: Write C# code with Aspose.Cells that encrypts a workbook using a 256‑bit AES password and saves it to a UNC path, including error handling for inaccessible shares. | Provide an example that checks a network share's availability, applies password protection, and falls back to a local "Output" folder when saving an Excel file with Aspose.Cells.
+// Title: Encrypt an Aspose.Cells workbook with password & AES‑128 and save to a UNC share (C#)
+// Description: C# example that creates a Workbook, writes data, sets a password, applies AES‑128 encryption via SetEncryptionOptions, checks the UNC network folder, falls back to a local directory if needed, and saves the encrypted XLSX file so the protection remains intact.
+// Keywords: Aspose.Cells password protection | AES 128 encryption Aspose.Cells | C# save workbook to UNC path | network share Excel encryption | Workbook.SetEncryptionOptions | Workbook.Settings.Password | encrypted Excel file save fallback | Aspose.Cells encryption C#
+// Common Searches: Aspose.Cells set workbook password C# | How to encrypt Excel file with AES using Aspose.Cells | Save encrypted workbook to network share UNC | Fallback to local folder when UNC path unavailable Aspose.Cells | Encryption not preserved after saving to network drive Aspose.Cells
+// Developer Intent: Add strong password protection (AES‑128) to a generated Excel workbook and ensure the encrypted file is reliably stored on a network share, with automatic fallback to a local path if the share is inaccessible.
+// Use Cases: Secure confidential reports before placing them on a shared file server. | Automate generation of encrypted financial spreadsheets for centralized storage. | Maintain encryption integrity when saving to intermittent network locations. | Provide compliance‑ready encrypted Excel files in batch processing pipelines.
+// AI Prompts: Generate C# code using Aspose.Cells to apply a password, choose AES‑256 encryption, and save the workbook to a UNC path with error handling and local fallback. | Explain how Aspose.Cells embeds encryption settings in an XLSX file and why they survive network transfers. | Outline steps to verify UNC path accessibility before saving an encrypted workbook with Aspose.Cells. | Show how to configure custom encryption provider and key size in Aspose.Cells for maximum security.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a new Workbook, adds data, applies a password (which encrypts the file), optionally sets strong AES encryption, validates a UNC network share path, falls back to a local folder if needed, and saves the encrypted .xlsx file.
+// C# example that creates a Workbook, writes data, sets a password, applies AES‑128 encryption via SetEncryptionOptions, checks the UNC network folder, falls back to a local directory if needed, and saves the encrypted XLSX file so the protection remains intact.
 class Program
 {
     static void Main()
@@ -18,38 +18,37 @@ class Program
         try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
+            Workbook wb = new Workbook();
 
             // Add sample data to the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sensitive information");
+            wb.Worksheets[0].Cells["A1"].PutValue("Sensitive data");
 
-            // Set a password – this encrypts the workbook so a password is required to open it
-            workbook.Settings.Password = "StrongPassword123";
+            // Set the password that encrypts the workbook
+            wb.Settings.Password = "MySecretPassword";
 
-            // (Optional) Specify stronger encryption options (relevant for older Excel formats)
-            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+            // Optional: specify stronger encryption options (AES 128‑bit)
+            wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
 
-            // Define the UNC path of the network share where the file will be saved
-            string networkSharePath = @"\\MyServer\SharedFolder\EncryptedWorkbook.xlsx";
+            // UNC path to the network share where the file will be saved
+            string networkPath = @"\\ServerName\SharedFolder\EncryptedWorkbook.xlsx";
 
-            // Verify that the target directory exists; if not, fall back to a local folder
-            string targetDirectory = Path.GetDirectoryName(networkSharePath);
-            if (string.IsNullOrEmpty(targetDirectory) || !Directory.Exists(targetDirectory))
+            // Determine if the target directory exists; if not, fall back to a local path
+            string targetPath = networkPath;
+            string targetDir = Path.GetDirectoryName(networkPath);
+
+            if (string.IsNullOrEmpty(targetDir) || !Directory.Exists(targetDir))
             {
-                // Use a local "Output" folder relative to the current directory
-                targetDirectory = Path.Combine(Environment.CurrentDirectory, "Output");
-                Directory.CreateDirectory(targetDirectory);
-                networkSharePath = Path.Combine(targetDirectory, "EncryptedWorkbook.xlsx");
+                // Fallback to a local folder (current directory)
+                targetPath = Path.Combine(Directory.GetCurrentDirectory(), "EncryptedWorkbook.xlsx");
+                Console.WriteLine($"Network path not available. Saving to local path: {targetPath}");
             }
 
-            // Save the encrypted workbook to the determined location
-            workbook.Save(networkSharePath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to: {networkSharePath}");
+            // Save the workbook; the encryption settings are preserved in the saved file
+            wb.Save(targetPath, SaveFormat.Xlsx);
+            Console.WriteLine("Workbook saved successfully.");
         }
         catch (Exception ex)
         {
-            // Log or display the error details
             Console.WriteLine($"Error: {ex.Message}");
         }
     }

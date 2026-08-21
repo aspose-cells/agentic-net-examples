@@ -1,74 +1,96 @@
-// Title: Export Formula Dependency Matrix to CSV with Aspose.Cells for .NET (C#)
-// Description: Loads an XLSX workbook, enables the calculation chain, forces formula evaluation, iterates the used range, retrieves recursive dependents via GetDependentsInCalculation, writes SourceCell‑DependentCell pairs to a CSV file, and saves the workbook unchanged.
-// Keywords: Aspose.Cells | C# | .NET | Excel formula dependency | GetDependentsInCalculation | CSV export | calculation chain | workbook processing | cell dependents | formula audit
-// Common Searches: Aspose.Cells export formula dependencies to CSV | How to get dependent cells in Aspose.Cells .NET | Export Excel calculation chain as CSV file | Retrieve recursive formula dependents using Aspose.Cells | C# code to write Excel cell dependency matrix
-// Developer Intent: Generate a CSV file that lists every formula cell and all cells that depend on it.
-// Use Cases: Produce an audit report showing which cells influence each formula. | Feed the dependency list into graph‑analysis tools to visualize calculation flow. | Create a lightweight data export for downstream processing while preserving the original workbook.
-// AI Prompts: Write C# code with Aspose.Cells that exports a recursive formula dependency matrix to a CSV file, including a header row. | Show how to enable the calculation chain, force formula calculation, and use GetDependentsInCalculation to collect dependent cells. | Explain how to add the worksheet name to each CSV row alongside the cell references.
+// Title: Export Excel formula dependency matrix to CSV using Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook, enables the calculation chain, forces formula evaluation, iterates all used cells to capture source‑dependent pairs via Cells.GetDependents, writes the pairs with sheet‑qualified A1 addresses to a CSV file, and saves the workbook unchanged.
+// Keywords: Aspose.Cells export formula dependencies | C# GetDependents CSV | Excel dependency matrix Aspose | calculation chain Aspose.Cells | write cell relationships to CSV
+// Common Searches: Aspose.Cells extract formula dependencies to CSV | How to get dependent cells with Aspose.Cells C# | Export Excel cell dependency matrix using Aspose | Enable calculation chain for dependency analysis Aspose.Cells
+// Developer Intent: Retrieve every formula's source‑to‑dependent relationship from a workbook and output the data as a CSV file.
+// Use Cases: Generate a dependency report for auditing complex spreadsheets before modifications. | Feed the CSV into graph‑analysis tools to visualize formula interconnections. | Create an impact‑analysis matrix to identify cells that require recalculation after changes.
+// AI Prompts: Write C# code that uses Aspose.Cells to export a formula dependency matrix to CSV, including handling for missing input files. | Show how to extend the sample to include hidden rows and columns and add a timestamp column to the CSV output. | Suggest performance improvements for extracting dependencies from very large workbooks with Aspose.Cells.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an XLSX workbook, enables the calculation chain, forces formula evaluation, iterates the used range, retrieves recursive dependents via GetDependentsInCalculation, writes SourceCell‑DependentCell pairs to a CSV file, and saves the workbook unchanged.
-class ExportFormulaDependencyMatrix
+namespace AsposeCellsDependencyExport
 {
-    static void Main()
+    // Loads an Excel workbook, enables the calculation chain, forces formula evaluation, iterates all used cells to capture source‑dependent pairs via Cells.GetDependents, writes the pairs with sheet‑qualified A1 addresses to a CSV file, and saves the workbook unchanged.
+    class Program
     {
-        // Load the workbook (replace with actual path if needed)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Enable calculation chain to allow dependency analysis
-        workbook.Settings.FormulaSettings.EnableCalculationChain = true;
-
-        // Ensure all formulas are calculated
-        workbook.CalculateFormula();
-
-        // Prepare to write CSV output
-        using (StreamWriter writer = new StreamWriter("dependency_matrix.csv"))
+        static void Main()
         {
-            // Write CSV header
-            writer.WriteLine("SourceCell,DependentCell");
-
-            // Get the first worksheet (adjust if multiple sheets are required)
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Determine the used range to iterate over all cells
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            // Iterate through each cell in the used range
-            for (int row = 0; row <= maxRow; row++)
+            try
             {
-                for (int col = 0; col <= maxCol; col++)
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
+                const string csvPath = "dependency_matrix.csv";
+
+                // Verify input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    Cell cell = cells[row, col];
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                    return;
+                }
 
-                    // Process only formula cells (skip empty or value-only cells)
-                    if (!string.IsNullOrEmpty(cell.Formula))
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Enable calculation chain for dependency analysis
+                workbook.Settings.FormulaSettings.EnableCalculationChain = true;
+
+                // Ensure all formulas are calculated
+                workbook.CalculateFormula();
+
+                // List to store dependency pairs (source, dependent)
+                List<(string Source, string Dependent)> dependencies = new List<(string, string)>();
+
+                // Iterate through worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    Cells cells = sheet.Cells;
+
+                    // Iterate through used rows and columns
+                    for (int row = 0; row <= cells.MaxDataRow; row++)
                     {
-                        // Get all dependents whose calculated result depends on this cell (recursive)
-                        IEnumerator dependents = cells.GetDependentsInCalculation(row, col, true);
-
-                        // If there are dependents, write each pair to the CSV
-                        if (dependents != null)
+                        for (int col = 0; col <= cells.MaxDataColumn; col++)
                         {
-                            while (dependents.MoveNext())
+                            Cell cell = cells[row, col];
+
+                            // Skip empty cells
+                            if (cell.Type == CellValueType.IsNull) continue;
+
+                            // Get dependent cells
+                            Cell[] dependents = cells.GetDependents(true, row, col);
+                            if (dependents == null) continue;
+
+                            foreach (Cell dependentCell in dependents)
                             {
-                                if (dependents.Current is Cell dependentCell)
-                                {
-                                    writer.WriteLine($"{cell.Name},{dependentCell.Name}");
-                                }
+                                // Record dependency using A1 notation with sheet name
+                                string sourceAddress = $"{sheet.Name}!{cell.Name}";
+                                string dependentAddress = $"{sheet.Name}!{dependentCell.Name}";
+                                dependencies.Add((sourceAddress, dependentAddress));
                             }
                         }
                     }
                 }
+
+                // Export dependencies to CSV
+                using (StreamWriter writer = new StreamWriter(csvPath))
+                {
+                    writer.WriteLine("SourceCell,DependentCell");
+                    foreach (var pair in dependencies)
+                    {
+                        writer.WriteLine($"{pair.Source},{pair.Dependent}");
+                    }
+                }
+
+                // Save the workbook (unchanged) to demonstrate lifecycle usage
+                workbook.Save(outputPath);
+                Console.WriteLine("Dependency extraction completed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        // Optionally save the workbook after processing (preserves original file)
-        workbook.Save("processed.xlsx");
     }
 }

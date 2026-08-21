@@ -1,59 +1,40 @@
-// Title: Adjust TextBox internal margins (padding) in Aspose.Cells for .NET
-// Description: Creates a workbook, adds a TextBox shape, sets custom left, right, top, and bottom margins via TextBoxOptions, disables automatic margin calculation, and saves the file. Demonstrates precise control of textbox padding in Excel using Aspose.Cells C# API.
-// Keywords: Aspose.Cells TextBox padding | custom textbox margins .NET | TextBoxOptions LeftMarginPt | disable auto margin Aspose.Cells | C# Excel shape internal margins | Aspose.Cells shape formatting
-// Common Searches: how to set padding inside a textbox shape using Aspose.Cells C# | Aspose.Cells disable automatic textbox margins | change left and right margins of Excel textbox with Aspose | adjust top bottom padding of a textbox in .NET | Aspose.Cells TextBoxOptions margin example
-// Developer Intent: The developer needs to apply explicit padding to a TextBox shape in an Excel worksheet and prevent Aspose.Cells from overriding those values with automatic margin calculations.
-// Use Cases: Design reports where textbox content must stay a fixed distance from the shape edges for a clean layout. | Generate Excel dashboards with consistently spaced text inside shapes across multiple sheets. | Create templates that require precise control of internal margins to meet branding guidelines.
-// AI Prompts: Generate C# code that sets custom left, right, top, and bottom margins for a TextBox in Aspose.Cells and disables auto‑margin. | Explain why disabling TextBody.TextAlignment.IsAutoMargin is required when defining explicit textbox padding in Aspose.Cells. | Show how to modify only the left margin of a TextBox while leaving other margins at their default values using Aspose.Cells for .NET.
+// Title: Aspose.Cells .NET – Set custom internal padding (margins) for a TextBox shape in Excel
+// Description: Demonstrates how to add a TextBox to an Excel worksheet with Aspose.Cells, turn off automatic margin calculation, and define left, right, top, and bottom padding in points using TextBoxOptions before saving the file.
+// Keywords: Aspose.Cells TextBox padding | Excel textbox internal margins .NET | TextBoxOptions margin points | disable auto margin Aspose.Cells | C# set textbox padding Excel | Aspose.Cells shape formatting | custom textbox margins Aspose
+// Common Searches: Aspose.Cells set textbox padding C# | how to change internal margins of Excel textbox using Aspose | disable automatic margin calculation Aspose.Cells TextBox | set left right top bottom margins TextBoxOptions | adjust textbox padding in .xlsx with Aspose.Cells
+// Developer Intent: Apply precise internal padding to a TextBox shape in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Design report templates where callout boxes need consistent spacing from their borders. | Generate invoices with note sections inside textboxes that require exact padding for readability. | Create dashboards where data labels are placed in textboxes with uniform margin settings.
+// AI Prompts: Provide C# code to set different left, right, top, and bottom margins for an Aspose.Cells TextBox and keep the settings after saving. | Show how to read the current padding of an existing TextBox in an Excel file and update only the top margin using Aspose.Cells for .NET. | Explain how to toggle automatic margin calculation for a TextBox shape in Aspose.Cells and apply custom margins in points.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsExamples
+// Demonstrates how to add a TextBox to an Excel worksheet with Aspose.Cells, turn off automatic margin calculation, and define left, right, top, and bottom padding in points using TextBoxOptions before saving the file.
+class AdjustTextboxMargins
 {
-    // Creates a workbook, adds a TextBox shape, sets custom left, right, top, and bottom margins via TextBoxOptions, disables automatic margin calculation, and saves the file. Demonstrates precise control of textbox padding in Excel using Aspose.Cells C# API.
-    class AdjustTextboxMargins
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a text box shape to the worksheet
-                // Parameters: upper left row, upper left column, upper left row offset, upper left column offset, width, height
-                TextBox textBox = sheet.Shapes.AddTextBox(1, 1, 2, 2, 200, 100);
-                textBox.Text = "Text with custom padding.";
+        // Add a text box shape to the worksheet
+        // Parameters: upper left row, upper left column, top offset, left offset, width, height
+        TextBox textBox = sheet.Shapes.AddTextBox(1, 1, 1, 1, 200, 100);
+        textBox.Text = "Text with custom internal margins (padding).";
 
-                // Set internal margins (in points) to control padding around the text
-                textBox.TextBoxOptions.LeftMarginPt = 15;    // left padding
-                textBox.TextBoxOptions.RightMarginPt = 15;   // right padding
-                textBox.TextBoxOptions.TopMarginPt = 10;     // top padding
-                textBox.TextBoxOptions.BottomMarginPt = 10;  // bottom padding
+        // Disable automatic margin calculation so custom values are applied
+        textBox.TextBody.TextAlignment.IsAutoMargin = false;
 
-                // Disable automatic margin calculation so the custom values are used
-                textBox.TextBody.TextAlignment.IsAutoMargin = false;
+        // Set internal margins (padding) in points
+        textBox.TextBoxOptions.LeftMarginPt = 15;    // left padding
+        textBox.TextBoxOptions.RightMarginPt = 15;   // right padding
+        textBox.TextBoxOptions.TopMarginPt = 10;     // top padding
+        textBox.TextBoxOptions.BottomMarginPt = 10;  // bottom padding
 
-                // Save the workbook
-                workbook.Save("TextboxMarginsDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully as TextboxMarginsDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            AdjustTextboxMargins.Run();
-        }
+        // Save the workbook to a file
+        workbook.Save("TextboxMarginsDemo.xlsx");
     }
 }

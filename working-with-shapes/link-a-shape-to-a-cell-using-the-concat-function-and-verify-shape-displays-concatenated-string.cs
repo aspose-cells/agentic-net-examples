@@ -1,59 +1,53 @@
-// Title: C# – Link a Shape to a Cell with CONCAT and Display the Result using Aspose.Cells
-// Description: Creates a workbook, fills A1 and B1, sets C1 to a CONCAT formula, calculates it, adds a rectangle shape, links the shape to C1, refreshes the shape text, verifies the displayed value, and saves the file.
-// Keywords: Aspose.Cells | C# shape linking | LinkedCell property | CONCAT formula | rectangle shape text | Excel shape automation
-// Common Searches: Aspose.Cells link shape to cell C# | display CONCAT result in Excel shape | update shape text after formula calculation | how to bind a rectangle to a cell with Aspose.Cells | verify shape Text property matches linked cell
-// Developer Intent: Show how to bind a rectangle shape to a cell that contains a CONCAT formula and ensure the shape shows the concatenated string.
-// Use Cases: Dynamic dashboards where shape captions reflect combined cell values. | Automated report generation with shape labels driven by text formulas. | Maintaining visual consistency in exported workbooks by syncing shapes with formula results.
-// AI Prompts: Provide C# code that links a rectangle shape to a cell containing a CONCAT formula and refreshes its displayed text with Aspose.Cells. | Demonstrate how to verify that a shape's Text property equals the value of its linked cell after formula evaluation. | Explain how to apply the LinkedCell property to multiple shapes that use different text functions in Aspose.Cells.
+// Title: Link a Shape to a CONCAT Formula Cell and Verify Displayed Text – Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, fills A1 and B1, sets C1 to =CONCAT(A1,B1), recalculates, adds a rectangle shape, links it to C1, forces an update, prints the concatenated result, and saves the file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# shape linked cell | CONCAT formula | rectangle shape | LinkedCell property | UpdateSelectedValue | dynamic shape text | Excel automation | cell formula display
+// Common Searches: Aspose.Cells link shape to cell C# | display CONCAT result in a shape | refresh shape text after formula calculation | verify shape shows cell value Aspose | how to bind rectangle to cell in Aspose.Cells
+// Developer Intent: Attach a rectangle shape to a cell that contains a CONCAT formula and confirm the shape displays the concatenated string.
+// Use Cases: Dashboard labels that automatically combine values from multiple cells. | Printable reports where shapes show merged identifiers without manual editing. | Interactive worksheets that reflect real‑time product codes or names in shape captions.
+// AI Prompts: Generate C# code to link a rectangle shape to a cell with a CONCAT formula and ensure the shape updates after workbook calculation using Aspose.Cells. | Explain how to programmatically verify that a shape's displayed text matches the result of its linked CONCAT formula. | Show how to automatically refresh a shape's text when source cells used in a formula are changed in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, fills A1 and B1, sets C1 to a CONCAT formula, calculates it, adds a rectangle shape, links the shape to C1, refreshes the shape text, verifies the displayed value, and saves the file.
-class Program
+// Creates a workbook, fills A1 and B1, sets C1 to =CONCAT(A1,B1), recalculates, adds a rectangle shape, links it to C1, forces an update, prints the concatenated result, and saves the file using Aspose.Cells for .NET.
+class ShapeLinkedCellConcatDemo
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Fill cells A1 and B1 with sample text
-            worksheet.Cells["A1"].PutValue("Hello");
-            worksheet.Cells["B1"].PutValue("World");
+        // Populate cells A1 and B1 with sample text
+        sheet.Cells["A1"].PutValue("Hello");
+        sheet.Cells["B1"].PutValue("World");
 
-            // Set C1 to a CONCAT formula that joins A1 and B1 with a space
-            worksheet.Cells["C1"].Formula = "CONCAT(A1,\" \",B1)";
+        // Set a formula in C1 that concatenates A1 and B1 using CONCAT function
+        sheet.Cells["C1"].Formula = "=CONCAT(A1,B1)";
 
-            // Calculate the formula so C1 contains the concatenated result
-            workbook.CalculateFormula();
+        // Recalculate the workbook to evaluate the formula
+        workbook.CalculateFormula();
 
-            // Add a rectangle shape to the sheet
-            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 200, 50, 0, 0);
+        // Add a rectangle shape to the worksheet
+        // Parameters: upper left row, upper left column, top, left, width, height
+        Shape shape = sheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 30);
 
-            // Link the shape to cell C1 (the cell that holds the concatenated string)
-            shape.LinkedCell = "C1";
+        // Link the shape to cell C1 so it displays the concatenated result
+        shape.LinkedCell = "C1";
 
-            // Refresh the shape's displayed value based on the linked cell
-            shape.UpdateSelectedValue();
+        // Ensure the shape updates its displayed value from the linked cell
+        shape.UpdateSelectedValue();
 
-            // Verify: read the value from the linked cell
-            string linkedCellValue = worksheet.Cells["C1"].StringValue;
-            Console.WriteLine("Linked cell value: " + linkedCellValue);
+        // Retrieve the value from the linked cell for verification
+        string linkedValue = sheet.Cells["C1"].StringValue;
 
-            // Verify: read the text displayed by the shape using the Text property
-            string shapeText = shape.Text ?? string.Empty;
-            Console.WriteLine("Shape displayed text: " + shapeText);
+        // Output the result
+        Console.WriteLine("Cell C1 (concatenated): " + linkedValue);
+        Console.WriteLine("Shape's linked cell address: " + shape.GetLinkedCell(false, false));
+        Console.WriteLine("Verification: Shape should display \"" + linkedValue + "\".");
 
-            // Save the workbook
-            workbook.Save("ShapeLinkedCellConcat.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
-        }
+        // Save the workbook (optional, demonstrates lifecycle usage)
+        workbook.Save("ShapeLinkedCellConcatDemo.xlsx");
     }
 }

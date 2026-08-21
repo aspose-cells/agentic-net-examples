@@ -1,41 +1,43 @@
 // Title: Enable Black‑and‑White Printing for All Worksheets in Aspose.Cells (C#)
-// Description: Creates a new Workbook, loops through each Worksheet, sets PageSetup.BlackAndWhite to true to force grayscale printing, and saves the file. Shows how to reduce ink consumption across an entire Excel workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells black and white printing | C# grayscale worksheet printing | PageSetup.BlackAndWhite property | reduce ink usage Excel .NET | print workbook in grayscale | Aspose.Cells printing settings | disable color printing Aspose
-// Common Searches: Aspose.Cells enable black and white printing | C# set workbook to grayscale printing | turn off color printing in Excel using Aspose.Cells | reduce ink consumption Aspose.Cells .NET | global page setup black and white Aspose
-// Developer Intent: Apply grayscale (black‑and‑white) printing to every worksheet in a workbook via Aspose.Cells for .NET.
-// Use Cases: Generate cost‑effective reports that print in grayscale to save ink. | Create archival copies that comply with corporate policies requiring monochrome prints. | Prepare bulk‑exported Excel files for mass printing where color adds no value.
-// AI Prompts: Show how to enable black‑and‑white printing for a single worksheet using Aspose.Cells in C#. | Provide code to toggle grayscale printing based on a configuration flag in a .NET application. | Explain how to revert a workbook back to color printing after it was set to black‑and‑white.
+// Description: Creates a workbook, iterates through each worksheet, sets PageSetup.BlackAndWhite to true, and saves the file, allowing the entire workbook to print in monochrome to conserve ink.
+// Keywords: Aspose.Cells | C# | BlackAndWhite property | PageSetup | monochrome printing | reduce ink usage | set black and white printing | worksheet page setup
+// Common Searches: Aspose.Cells set black and white printing for all sheets | C# enable monochrome printing in Excel workbook using Aspose.Cells | How to reduce ink consumption with Aspose.Cells | PageSetup BlackAndWhite example .NET | Print Excel file in black and white with Aspose.Cells
+// Developer Intent: Apply the BlackAndWhite page‑setup option to every worksheet so the workbook prints in monochrome, saving ink.
+// Use Cases: Generate printer‑friendly reports that use less ink by enabling black‑and‑white printing on all worksheets before distribution. | Batch‑process existing workbooks to convert them to monochrome for archival or mass mailing. | Automatically enforce monochrome output when exporting financial statements or dashboards to ensure consistent printing across all sheets.
+// AI Prompts: Write C# code with Aspose.Cells that sets BlackAndWhite = true for each worksheet and then saves the workbook as a PDF. | Provide an example that toggles the BlackAndWhite setting based on a configuration flag in a .NET application. | Explain how to programmatically verify that the BlackAndWhite property has been applied to all worksheets after saving the workbook.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Creates a new Workbook, loops through each Worksheet, sets PageSetup.BlackAndWhite to true to force grayscale printing, and saves the file. Shows how to reduce ink consumption across an entire Excel workbook using Aspose.Cells for .NET.
-    public class SetBlackAndWhitePrinting
+    // Creates a workbook, iterates through each worksheet, sets PageSetup.BlackAndWhite to true, and saves the file, allowing the entire workbook to print in monochrome to conserve ink.
+    public class EnableBlackAndWhitePrinting
     {
         public static void Run()
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook (empty with a default worksheet)
                 Workbook workbook = new Workbook();
 
-                // Enable black‑and‑white printing for every worksheet in the workbook
+                // Iterate through all worksheets in the workbook
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // PageSetup.BlackAndWhite property turns on B&W printing
-                    sheet.PageSetup.BlackAndWhite = true;
+                    // Access the PageSetup object of the worksheet
+                    PageSetup pageSetup = sheet.PageSetup;
+
+                    // Enable black‑and‑white printing for this worksheet
+                    pageSetup.BlackAndWhite = true;
                 }
 
-                // Save the workbook with the updated settings
-                string outputPath = "BlackAndWhiteWorkbook.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // Save the workbook to a file
+                workbook.Save("Workbook_BlackAndWhite.xlsx");
+                Console.WriteLine("Workbook saved successfully as Workbook_BlackAndWhite.xlsx");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }
@@ -45,7 +47,7 @@ namespace AsposeCellsExamples
     {
         public static void Main(string[] args)
         {
-            SetBlackAndWhitePrinting.Run();
+            EnableBlackAndWhitePrinting.Run();
         }
     }
 }

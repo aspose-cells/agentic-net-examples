@@ -1,75 +1,52 @@
-// Title: C# – Export Excel worksheets to individual TSV files with Aspose.Cells
-// Description: Loads an Excel workbook, creates an output folder, iterates through every worksheet, sets it as active, and saves each one as a separate Tab‑Separated Values (TSV) file using TxtSaveOptions (ExportAllSheets = false).
-// Keywords: Aspose.Cells C# export TSV | save Excel sheet as tab delimited | convert multi‑sheet workbook to TSV | TxtSaveOptions SaveFormat.Tsv example | C# Excel to TSV batch conversion
-// Common Searches: Aspose.Cells export each worksheet to separate TSV | C# code to save Excel sheets as .tsv files | how to use TxtSaveOptions ExportAllSheets false | convert Excel workbook to multiple TSV files .NET | Aspose.Cells TSV output per sheet
-// Developer Intent: Generate one TSV file per worksheet from an Excel workbook.
-// Use Cases: Produce department‑specific TSV reports from a master workbook. | Prepare separate tab‑delimited files for bulk database imports. | Automate pipeline steps that require individual sheet exports for downstream analytics.
-// AI Prompts: Write C# code using Aspose.Cells that converts every worksheet in an Excel file into separate TSV files, ensuring only the active sheet is saved each time. | Explain the role of TxtSaveOptions, SaveFormat.Tsv, and ExportAllSheets = false when exporting worksheets individually. | Suggest a robust method to sanitize worksheet names for valid file‑system names during TSV file creation.
+// Title: C# – Export each Excel worksheet to a separate TSV file using Aspose.Cells
+// Description: Loads an Excel workbook with Aspose.Cells, loops through all worksheets, sets each sheet as active, configures TxtSaveOptions for SaveFormat.Tsv with ExportAllSheets disabled, and saves the active sheet to a uniquely named TSV file (including sheet index and name). The workbook is then disposed.
+// Keywords: Aspose.Cells C# | export worksheet to TSV | Excel to TSV .NET | TxtSaveOptions SaveFormat.Tsv | save each sheet as TSV | multiple TSV files from workbook | Aspose.Cells SaveOptions | C# Excel conversion | TSV export Aspose | Excel multi‑sheet TSV export
+// Common Searches: Aspose.Cells export each sheet to TSV | C# save Excel worksheets as separate TSV files | How to loop through worksheets and create TSV files | TxtSaveOptions Tsv example Aspose.Cells | Convert multi‑sheet Excel to multiple TSV files .NET
+// Developer Intent: Generate individual TSV files for every worksheet in an Excel workbook.
+// Use Cases: Create per‑sheet TSV extracts for data‑pipeline ingestion. | Produce separate TSV reports for departmental worksheets. | Automate bulk conversion of multi‑sheet Excel reports into TSV for database import.
+// AI Prompts: Write C# code that uses Aspose.Cells to iterate through all worksheets in a workbook and save each one as a TSV file named with its index and sheet name. | Show how to set TxtSaveOptions for TSV format with ExportAllSheets = false to export only the active worksheet. | Explain how to modify the example to use a custom delimiter, skip hidden sheets, or write the TSV files to a specific folder.
 
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
 
 namespace AsposeCellsExamples
 {
-    // Loads an Excel workbook, creates an output folder, iterates through every worksheet, sets it as active, and saves each one as a separate Tab‑Separated Values (TSV) file using TxtSaveOptions (ExportAllSheets = false).
-    public class WorkbookToSeparateTsv
+    // Loads an Excel workbook with Aspose.Cells, loops through all worksheets, sets each sheet as active, configures TxtSaveOptions for SaveFormat.Tsv with ExportAllSheets disabled, and saves the active sheet to a uniquely named TSV file (including sheet index and name). The workbook is then disposed.
+    class ExportWorksheetsToTsv
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Path to the source Excel workbook
+            string sourcePath = "input.xlsx";
+
+            // Load the workbook (lifecycle rule: Workbook(string))
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Iterate through all worksheets in the workbook
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
-                // Path to the source Excel workbook
-                string sourcePath = "input.xlsx";
+                // Set the current worksheet as the active sheet
+                workbook.Worksheets.ActiveSheetIndex = i;
 
-                // Verify that the source file exists
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
+                // Create TSV save options (lifecycle rule: TxtSaveOptions(SaveFormat))
+                TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Tsv);
 
-                // Directory where TSV files will be saved
-                string outputDir = "tsv_output";
-                Directory.CreateDirectory(outputDir);
+                // Export only the active sheet (rule: ExportAllSheets property)
+                saveOptions.ExportAllSheets = false;
 
-                // Load the workbook (lifecycle: create/load)
-                Workbook workbook = new Workbook(sourcePath);
+                // Build output file name using sheet index and name
+                string sheetName = workbook.Worksheets[i].Name;
+                string outputPath = $"Sheet{i + 1}_{sheetName}.tsv";
 
-                // Iterate through each worksheet
-                for (int i = 0; i < workbook.Worksheets.Count; i++)
-                {
-                    // Set the current worksheet as the active sheet
-                    workbook.Worksheets.ActiveSheetIndex = i;
+                // Save the active worksheet as a TSV file (lifecycle rule: Workbook.Save(string, SaveOptions))
+                workbook.Save(outputPath, saveOptions);
 
-                    // Prepare the output file name (one TSV per sheet)
-                    string sheetName = workbook.Worksheets[i].Name;
-                    string tsvPath = Path.Combine(outputDir, $"{sheetName}.tsv");
-
-                    // Configure save options for TSV (ExportAllSheets = false by default)
-                    TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Tsv)
-                    {
-                        ExportAllSheets = false // ensure only the active sheet is exported
-                    };
-
-                    // Save the active sheet as a TSV file (lifecycle: save)
-                    workbook.Save(tsvPath, saveOptions);
-                }
-
-                Console.WriteLine("All worksheets have been exported to separate TSV files.");
+                Console.WriteLine($"Worksheet \"{sheetName}\" saved to \"{outputPath}\"");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            WorkbookToSeparateTsv.Run();
+            // Dispose the workbook when done
+            workbook.Dispose();
         }
     }
 }

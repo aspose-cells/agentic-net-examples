@@ -1,52 +1,64 @@
-// Title: C# – Create a Composite (Union) Named Range and Apply a Custom Style with Aspose.Cells for .NET
-// Description: This example shows how to build a UnionRange that combines three separate areas (A1:B2, C3:D4, E5:F6), assign it the name "MyCompositeRange", define a solid light‑green, bold dark‑blue style with centered alignment, apply the style to the whole range, and save the workbook as CompositeNamedRange.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells UnionRange C# | composite named range .NET | noncontiguous cells style | apply custom style Aspose.Cells | create named range multiple areas | C# Excel formatting example | Aspose.Cells sample code | union range styling
-// Common Searches: Aspose.Cells create named range from non‑adjacent cells | C# apply style to UnionRange in Excel | how to union multiple ranges in Aspose.Cells | custom cell formatting for composite range .NET | sample code for UnionRange with style
-// Developer Intent: Generate a UnionRange that spans several non‑adjacent blocks, give it a name, and format the entire range with a single custom style.
-// Use Cases: Define a report section that pulls data from scattered cells and formats them uniformly. | Set up a printable area composed of multiple separate blocks with consistent background and font. | Create a dashboard where related metrics reside in different ranges but share the same visual appearance.
-// AI Prompts: Provide C# code that creates a UnionRange for "A1:B2,C3:D4,E5:F6", names it, and applies a solid light‑green, bold dark‑blue style using Aspose.Cells. | Show how to modify the style of an existing composite named range in Aspose.Cells for .NET. | Explain step‑by‑step how to combine non‑contiguous cells into a single named range and format them with one style in C#.
+// Title: C# – Create a Composite Named Range with UnionRange and Apply a Custom Style using Aspose.Cells
+// Description: This example shows how to initialize a Workbook, define three separate ranges (A1:B2, C3:D4, E5:F6), merge them into a UnionRange, assign the name "MyCompositeRange", create a custom style (light‑green fill, bold dark‑blue centered text), apply the style to the composite range, and save the file as CompositeNamedRange.xlsx.
+// Keywords: Aspose.Cells UnionRange C# | .NET composite named range | apply custom style Aspose.Cells | union multiple cell ranges | named range with style | Aspose.Cells SetStyle example
+// Common Searches: how to union non‑contiguous ranges in Aspose.Cells | create a named range from multiple areas .NET | apply formatting to a UnionRange in Aspose.Cells | save workbook after styling composite range
+// Developer Intent: Combine several non‑adjacent cell blocks into a single named range and format that range with a custom style in a .NET application.
+// Use Cases: Define a reusable range that spans header and data sections for complex formulas. | Apply uniform formatting to disjoint cells in financial or reporting worksheets. | Provide a multi‑area data source for charts or pivot tables without manual range selection.
+// AI Prompts: Generate C# code that unions A1:B2, C3:D4, and E5:F6 with Aspose.Cells, names the composite range, applies a bold centered style with a light‑green background, and saves the workbook. | Explain the UnionRange class in Aspose.Cells, covering creation, naming, and style application. | Suggest best practices for error handling when creating and styling a composite named range in Aspose.Cells for .NET.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// This example shows how to build a UnionRange that combines three separate areas (A1:B2, C3:D4, E5:F6), assign it the name "MyCompositeRange", define a solid light‑green, bold dark‑blue style with centered alignment, apply the style to the whole range, and save the workbook as CompositeNamedRange.xlsx using Aspose.Cells for .NET.
-class CompositeNamedRangeDemo
+// This example shows how to initialize a Workbook, define three separate ranges (A1:B2, C3:D4, E5:F6), merge them into a UnionRange, assign the name "MyCompositeRange", create a custom style (light‑green fill, bold dark‑blue centered text), apply the style to the composite range, and save the file as CompositeNamedRange.xlsx.
+class CreateCompositeNamedRange
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Initialize a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate sample data in the three individual ranges
-        worksheet.Cells["A1"].PutValue("Range1");
-        worksheet.Cells["B2"].PutValue(100);
-        worksheet.Cells["C3"].PutValue("Range2");
-        worksheet.Cells["D4"].PutValue(200);
-        worksheet.Cells["E5"].PutValue("Range3");
-        worksheet.Cells["F6"].PutValue(300);
+            // Optional: add some sample data to visualize the ranges
+            worksheet.Cells["A1"].PutValue("R1");
+            worksheet.Cells["B2"].PutValue(10);
+            worksheet.Cells["C3"].PutValue("R2");
+            worksheet.Cells["D4"].PutValue(20);
+            worksheet.Cells["E5"].PutValue("R3");
+            worksheet.Cells["F6"].PutValue(30);
 
-        // Create a composite (union) range that combines the three areas
-        // Address format: "A1:B2,C3:D4,E5:F6"
-        UnionRange compositeRange = workbook.Worksheets.CreateUnionRange("A1:B2,C3:D4,E5:F6", 0);
+            // Define three separate ranges
+            AsposeRange range1 = worksheet.Cells.CreateRange("A1:B2");
+            AsposeRange range2 = worksheet.Cells.CreateRange("C3:D4");
+            AsposeRange range3 = worksheet.Cells.CreateRange("E5:F6");
 
-        // Assign a name to the composite range (named range)
-        compositeRange.Name = "MyCompositeRange";
+            // Union the three ranges into a composite UnionRange
+            UnionRange compositeRange = range1.UnionRanges(new AsposeRange[] { range2, range3 });
 
-        // Define a custom style to apply to the whole union range
-        Style customStyle = workbook.CreateStyle();
-        customStyle.Pattern = BackgroundType.Solid;
-        customStyle.ForegroundColor = Color.LightGreen;
-        customStyle.Font.IsBold = true;
-        customStyle.Font.Color = Color.DarkBlue;
-        customStyle.HorizontalAlignment = TextAlignmentType.Center;
-        customStyle.VerticalAlignment = TextAlignmentType.Center;
+            // Assign a custom name to the composite range
+            compositeRange.Name = "MyCompositeRange";
 
-        // Apply the style to the composite range
-        compositeRange.SetStyle(customStyle);
+            // Create a custom style
+            Style customStyle = workbook.CreateStyle();
+            customStyle.ForegroundColor = Color.LightGreen;
+            customStyle.Pattern = BackgroundType.Solid;
+            customStyle.Font.IsBold = true;
+            customStyle.Font.Color = Color.DarkBlue;
+            customStyle.HorizontalAlignment = TextAlignmentType.Center;
+            customStyle.VerticalAlignment = TextAlignmentType.Center;
 
-        // Save the workbook
-        workbook.Save("CompositeNamedRange.xlsx");
+            // Apply the custom style to the composite range
+            compositeRange.SetStyle(customStyle);
+
+            // Save the workbook
+            workbook.Save("CompositeNamedRange.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

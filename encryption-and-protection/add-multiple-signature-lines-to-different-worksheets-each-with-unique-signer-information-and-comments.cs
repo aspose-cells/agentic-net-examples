@@ -1,92 +1,74 @@
-// Title: Add Multiple Signature Lines with Unique Signer Details to Separate Worksheets using Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add Finance, HR, and IT sheets, configure three SignatureLine objects with distinct signer, title, email, instructions, comment and date settings, insert each line into a specific cell via Shapes.AddSignatureLine, and save the file as MultipleSignatureLines.xlsx.
-// Keywords: Aspose.Cells signature line C# | multiple signature lines Excel | different worksheets signature line | custom signer information | AllowComments property | ShowSignedDate option | Shapes.AddSignatureLine | digital signature workbook .NET | Excel protection Aspose.Cells
-// Common Searches: aspnet add signature line to multiple worksheets | unique signer info per signature line Aspose.Cells | place signature line in specific cell C# | configure AllowComments and ShowSignedDate for Excel signature lines | save workbook with several signature lines Aspose
-// Developer Intent: Generate a .NET workbook that contains separate signature lines on different worksheets, each populated with its own signer name, title, email, instructions, and comment/date preferences.
-// Use Cases: Finance sheet: CFO signature line to approve financial statements. | HR sheet: HR manager signature line for onboarding confirmation. | IT sheet: IT director signature line to validate system upgrade approval.
-// AI Prompts: Write C# code using Aspose.Cells that adds a signature line with custom signer name, title, email, and instructions to cell C3. | Show how to insert multiple signature lines with varying AllowComments and ShowSignedDate settings across several worksheets in one workbook. | Provide an example that saves an Excel file containing signature lines on three different sheets, each with unique signer details.
+// Title: Add Multiple Signature Lines to Different Worksheets with Aspose.Cells for .NET
+// Description: Creates a new workbook, adds two extra sheets, configures three SignatureLine objects with distinct signer details, instructions, comment options, and display settings, inserts each line into a specific cell via Shapes.AddSignatureLine, and saves the file as MultipleSignatureLines.xlsx using C# and Aspose.Cells.
+// Keywords: Aspose.Cells | C# signature line example | add signature line Excel | multiple worksheets signing | SignatureLine properties | digital signature .NET | Shapes.AddSignatureLine | Excel workbook protection | GitHub Aspose.Cells sample | worksheet approval workflow
+// Common Searches: how to insert a signature line on a specific worksheet using Aspose.Cells | Aspose.Cells C# add signer email and comments | place digital signature in Excel cell with Aspose | multiple sheet signature line tutorial | Aspose.Cells signature line example USA | Aspose.Cells signature line guide India
+// Developer Intent: Insert separate signature lines with unique signer information on several worksheets of one Excel file.
+// Use Cases: Financial report where the CFO signs the summary sheet, the marketing lead signs the budget sheet, and HR signs the policy sheet. | Automated distribution of department‑specific policies that require acknowledgment and optional comments on each relevant tab. | Template generation for cross‑functional approvals, embedding a pre‑configured signature line per sheet to streamline the signing process.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a signature line to cell B3, allows comments, and sets custom instructions. | Show how to create three signature lines on different worksheets, each with its own signer name, title, and email, then save the workbook. | Explain how to toggle ShowSignedDate and IsLine for an existing SignatureLine object after the workbook has been written.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSignatureLinesDemo
+// Creates a new workbook, adds two extra sheets, configures three SignatureLine objects with distinct signer details, instructions, comment options, and display settings, inserts each line into a specific cell via Shapes.AddSignatureLine, and saves the file as MultipleSignatureLines.xlsx using C# and Aspose.Cells.
+class AddMultipleSignatureLines
 {
-    // Shows how to create a workbook, add Finance, HR, and IT sheets, configure three SignatureLine objects with distinct signer, title, email, instructions, comment and date settings, insert each line into a specific cell via Shapes.AddSignatureLine, and save the file as MultipleSignatureLines.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // -------------------------------------------------
-            // Worksheet 1 - add a signature line with signer A
-            // -------------------------------------------------
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Finance";
+        // Access the default worksheet and add two more worksheets
+        Worksheet ws1 = workbook.Worksheets[0];
+        Worksheet ws2 = workbook.Worksheets.Add("Finance");
+        Worksheet ws3 = workbook.Worksheets.Add("HR");
 
-            // Configure signature line for signer A
-            SignatureLine sigLine1 = new SignatureLine
-            {
-                Signer = "Alice Johnson",
-                Title = "Chief Financial Officer",
-                Email = "alice.johnson@example.com",
-                Instructions = "Please sign to approve the financial report.",
-                AllowComments = true,
-                ShowSignedDate = true,
-                IsLine = true,
-                Id = Guid.NewGuid(),
-                ProviderId = Guid.NewGuid()
-            };
+        // -------------------------------------------------
+        // Signature line for the first worksheet (default)
+        // -------------------------------------------------
+        SignatureLine sig1 = new SignatureLine();
+        sig1.Signer = "Alice Johnson";
+        sig1.Title = "Chief Financial Officer";
+        sig1.Email = "alice.johnson@company.com";
+        sig1.Instructions = "Please sign to approve the financial report.";
+        sig1.AllowComments = true;
+        sig1.ShowSignedDate = true;
+        sig1.IsLine = true;
 
-            // Add the signature line to cell B2 (row index 1, column index 1)
-            sheet1.Shapes.AddSignatureLine(1, 1, sigLine1);
+        // Add the signature line at row 2, column 1 (zero‑based indices)
+        ws1.Shapes.AddSignatureLine(2, 1, sig1);
 
-            // -------------------------------------------------
-            // Worksheet 2 - add a signature line with signer B
-            // -------------------------------------------------
-            Worksheet sheet2 = workbook.Worksheets.Add("HR");
-            // Configure signature line for signer B
-            SignatureLine sigLine2 = new SignatureLine
-            {
-                Signer = "Bob Smith",
-                Title = "HR Manager",
-                Email = "bob.smith@example.com",
-                Instructions = "Sign to confirm employee onboarding.",
-                AllowComments = false,
-                ShowSignedDate = true,
-                IsLine = true,
-                Id = Guid.NewGuid(),
-                ProviderId = Guid.NewGuid()
-            };
+        // -------------------------------------------------
+        // Signature line for the second worksheet (Finance)
+        // -------------------------------------------------
+        SignatureLine sig2 = new SignatureLine();
+        sig2.Signer = "Bob Smith";
+        sig2.Title = "Head of Marketing";
+        sig2.Email = "bob.smith@company.com";
+        sig2.Instructions = "Sign to confirm the marketing plan.";
+        sig2.AllowComments = false;
+        sig2.ShowSignedDate = true;
+        sig2.IsLine = true;
 
-            // Add the signature line to cell D5 (row index 4, column index 3)
-            sheet2.Shapes.AddSignatureLine(4, 3, sigLine2);
+        // Add the signature line at row 5, column 3
+        ws2.Shapes.AddSignatureLine(5, 3, sig2);
 
-            // -------------------------------------------------
-            // Worksheet 3 - add a signature line with signer C
-            // -------------------------------------------------
-            Worksheet sheet3 = workbook.Worksheets.Add("IT");
-            // Configure signature line for signer C
-            SignatureLine sigLine3 = new SignatureLine
-            {
-                Signer = "Carol Lee",
-                Title = "IT Director",
-                Email = "carol.lee@example.com",
-                Instructions = "Approve the system upgrade.",
-                AllowComments = true,
-                ShowSignedDate = false,
-                IsLine = true,
-                Id = Guid.NewGuid(),
-                ProviderId = Guid.NewGuid()
-            };
+        // -------------------------------------------------
+        // Signature line for the third worksheet (HR)
+        // -------------------------------------------------
+        SignatureLine sig3 = new SignatureLine();
+        sig3.Signer = "Carol Lee";
+        sig3.Title = "HR Manager";
+        sig3.Email = "carol.lee@company.com";
+        sig3.Instructions = "Sign to acknowledge the new policy.";
+        sig3.AllowComments = true;
+        sig3.ShowSignedDate = false;
+        sig3.IsLine = true;
 
-            // Add the signature line to cell A10 (row index 9, column index 0)
-            sheet3.Shapes.AddSignatureLine(9, 0, sigLine3);
+        // Add the signature line at row 1, column 0
+        ws3.Shapes.AddSignatureLine(1, 0, sig3);
 
-            // Save the workbook with all signature lines
-            workbook.Save("MultipleSignatureLines.xlsx");
-        }
+        // Save the workbook with all signature lines
+        workbook.Save("MultipleSignatureLines.xlsx");
     }
 }

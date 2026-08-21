@@ -1,117 +1,120 @@
-// Title: Write formulas while streaming rows with a custom LightCellsDataProvider in Aspose.Cells for .NET
-// Description: Demonstrates how to create an empty Workbook, configure OoxmlSaveOptions for LightCells mode, and use a custom LightCellsDataProvider to stream a 6‑row, 5‑column table. The provider writes header text, populates ID, Name, Price, and Qty cells, and inserts a formula "=C{row}*D{row}" in the Total column, preserving calculation logic without loading the entire sheet into memory.
-// Keywords: Aspose.Cells | LightCells | DataProvider | formula streaming | .NET | C# | memory‑efficient Excel export | stream rows to XLSX | custom LightCellsDataProvider | write formulas with LightCells | OoxmlSaveOptions
-// Common Searches: Aspose.Cells LightCells write formulas | stream Excel rows with formulas .NET | custom LightCellsDataProvider example | save workbook with formulas using LightCells | memory‑efficient Excel export Aspose
-// Developer Intent: Stream rows and formulas to an Excel file using a custom LightCellsDataProvider.
-// Use Cases: Generate a massive sales report where each row’s Total column is a live formula, avoiding full‑sheet loading. | Export database query results to XLSX while keeping Price × Quantity calculations as formulas for downstream users. | Create a templated workbook on the fly with headers and computed columns, then distribute it for further analysis.
-// AI Prompts: Provide a LightCellsDataProvider that streams millions of rows with a per‑row SUM formula while staying under a low memory footprint. | Show how to apply number formats and cell styles to formula cells streamed via LightCellsDataProvider in Aspose.Cells. | Explain how to enable automatic recalculation after saving a workbook that contains formulas written through LightCellsDataProvider.
+// Title: Write Excel formulas while streaming rows with LightCellsDataProvider in Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, configure OoxmlSaveOptions for LightCells mode, implement a custom LightCellsDataProvider that streams headers, data rows, and a formula (Price * Qty) using SetFormula, save the file, reload it, recalculate formulas, and output the results.
+// Keywords: Aspose.Cells | .NET | LightCells | LightCellsDataProvider | streaming data | Excel formula | SetFormula | memory‑efficient export | OoxmlSaveOptions | large worksheet generation
+// Common Searches: Aspose.Cells LightCellsDataProvider write formula | set formula while streaming cells Aspose.Cells .NET | memory efficient Excel export with formulas | custom LightCellsDataProvider example | preserve formulas after saving with LightCells mode
+// Developer Intent: Generate an Excel file using LightCells mode, stream cell values and formulas row‑by‑row, and ensure the formulas remain active after the workbook is saved.
+// Use Cases: Export massive data sets with calculated columns without loading the entire sheet into memory. | Create invoice or sales reports where each row includes a total formula while streaming rows for performance. | Build lightweight Excel files that define formulas on the fly for dynamic calculations.
+// AI Prompts: Show how to extend the FormulaDataProvider to add a Discount column that uses a formula referencing Price and Qty. | Provide a LightCellsDataProvider example that writes conditional‑formatting formulas while streaming data. | Explain how to retrieve, modify, and evaluate formulas after loading a workbook saved in LightCells mode.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create an empty Workbook, configure OoxmlSaveOptions for LightCells mode, and use a custom LightCellsDataProvider to stream a 6‑row, 5‑column table. The provider writes header text, populates ID, Name, Price, and Qty cells, and inserts a formula "=C{row}*D{row}" in the Total column, preserving calculation logic without loading the entire sheet into memory.
+// Demonstrates how to create a workbook, configure OoxmlSaveOptions for LightCells mode, implement a custom LightCellsDataProvider that streams headers, data rows, and a formula (Price * Qty) using SetFormula, save the file, reload it, recalculate formulas, and output the results.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create an empty workbook; data will be supplied by the LightCellsDataProvider
-            Workbook workbook = new Workbook();
+        // Create an empty workbook
+        Workbook wb = new Workbook();
 
-            // Configure save options to use LightCells mode with the custom provider
-            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx)
-            {
-                LightCellsDataProvider = new FormulaStreamingProvider()
-            };
-
-            // Save the workbook – the provider streams rows/cells with formulas into the file
-            workbook.Save("FormulasStreaming.xlsx", saveOptions);
-        }
-        catch (Exception ex)
+        // Configure save options to use LightCells mode with a custom provider
+        var saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            LightCellsDataProvider = new FormulaDataProvider()
+        };
+
+        // Save the workbook (the provider streams cell data and writes formulas)
+        string filePath = "LightCellsFormulas.xlsx";
+        wb.Save(filePath, saveOptions);
+
+        // Load the saved workbook normally to verify that formulas were preserved
+        Workbook loaded = new Workbook(filePath);
+        loaded.CalculateFormula(); // Evaluate all formulas
+
+        // Output the calculated results
+        var cells = loaded.Worksheets[0].Cells;
+        for (int r = 1; r <= 5; r++)
+        {
+            Console.WriteLine($"Row {r}: ID={cells[r, 0].IntValue}, Price={cells[r, 1].DoubleValue}, Qty={cells[r, 2].IntValue}, Total={cells[r, 3].DoubleValue}");
         }
     }
 
-    // Custom LightCellsDataProvider that streams a small table containing formulas
-    class FormulaStreamingProvider : LightCellsDataProvider
+    // Custom LightCellsDataProvider that streams data and writes formulas
+    class FormulaDataProvider : LightCellsDataProvider
     {
         private int currentRow = -1;
         private int currentCol = -1;
+        private const int totalRows = 6; // 1 header row + 5 data rows
+        private const int totalCols = 4; // ID, Price, Qty, Total
 
-        // Define the size of the table (header + 5 data rows, 5 columns)
-        private const int TotalRows = 6; // 0 = header, 1‑5 = data
-        private const int TotalCols = 5; // ID, Name, Price, Qty, Total
+        public bool StartSheet(int sheetIndex)
+        {
+            // Process only the first worksheet
+            return sheetIndex == 0;
+        }
 
-        // Process only the first worksheet (index 0)
-        public bool StartSheet(int sheetIndex) => sheetIndex == 0;
-
-        // Return the next row index to be saved; -1 signals completion
         public int NextRow()
         {
             currentRow++;
-            currentCol = -1; // reset column for the new row
-            return currentRow < TotalRows ? currentRow : -1;
+            currentCol = -1;
+            return currentRow < totalRows ? currentRow : -1;
         }
 
-        // No special row initialization required
-        public void StartRow(Row row) { }
+        public void StartRow(Row row)
+        {
+            // No special row handling required
+        }
 
-        // Return the next column index for the current row; -1 signals end of columns
         public int NextCell()
         {
             currentCol++;
-            return currentCol < TotalCols ? currentCol : -1;
+            return currentCol < totalCols ? currentCol : -1;
         }
 
-        // Fill the cell with either a header, a value, or a formula
         public void StartCell(Cell cell)
         {
-            // Header row (row 0)
+            // Header row
             if (currentRow == 0)
             {
                 switch (currentCol)
                 {
                     case 0: cell.PutValue("ID"); break;
-                    case 1: cell.PutValue("Name"); break;
-                    case 2: cell.PutValue("Price"); break;
-                    case 3: cell.PutValue("Qty"); break;
-                    case 4: cell.PutValue("Total"); break;
+                    case 1: cell.PutValue("Price"); break;
+                    case 2: cell.PutValue("Qty"); break;
+                    case 3: cell.PutValue("Total"); break;
                 }
                 return;
             }
 
-            // Data rows (rows 1‑5)
-            int excelRow = currentRow + 1; // Excel rows are 1‑based
+            // Data rows (rows 1..5)
+            int dataRow = currentRow; // 1‑based for Excel formulas
             switch (currentCol)
             {
                 case 0:
-                    // ID
-                    cell.PutValue(currentRow);
+                    // ID column
+                    cell.PutValue(dataRow);
                     break;
                 case 1:
-                    // Name
-                    cell.PutValue($"Item {currentRow}");
+                    // Price column (example values)
+                    cell.PutValue(10 + dataRow * 2);
                     break;
                 case 2:
-                    // Price (simple incremental price)
-                    cell.PutValue(10 + currentRow);
+                    // Qty column (example values)
+                    cell.PutValue(dataRow % 3 + 1);
                     break;
                 case 3:
-                    // Quantity (cycle 1‑3)
-                    cell.PutValue((currentRow % 3) + 1);
-                    break;
-                case 4:
-                    // Formula: =C{row}*D{row}
-                    string formula = $"=C{excelRow}*D{excelRow}";
-                    // Set the formula; the calculated value will be computed later
-                    cell.Formula = formula;
+                    // Total column – set a formula that multiplies Price * Qty
+                    string formula = $"=B{dataRow + 1}*C{dataRow + 1}";
+                    // Use SetFormula to store the formula; value will be calculated later
+                    cell.SetFormula(formula, new FormulaParseOptions(), null);
                     break;
             }
         }
 
-        // Enable global string pooling for efficiency
-        public bool IsGatherString() => true;
+        public bool IsGatherString()
+        {
+            // Gather strings into the global string pool for efficiency
+            return true;
+        }
     }
 }

@@ -1,45 +1,38 @@
-// Title: Save a protected workbook as XLSB while preserving structure protection with Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add sample data, apply structure protection using a password, set XlsbSaveOptions (ExportAllColumnIndexes), and export the file as a protected XLSB binary workbook.
-// Keywords: Aspose.Cells | C# | .NET | XLSB export | structure protection | workbook protection | XlsbSaveOptions | ExportAllColumnIndexes | binary Excel | protected XLSB file
-// Common Searches: Aspose.Cells save workbook as XLSB with structure protection | C# protect workbook structure and export to XLSB | XlsbSaveOptions ExportAllColumnIndexes example | keep workbook protection when saving to XLSB | binary Excel file protection Aspose.Cells
-// Developer Intent: The developer needs to export a workbook to XLSB format without losing the workbook’s structure protection.
-// Use Cases: Distribute a template workbook that must retain its sheet order and be locked against changes, delivered as a binary XLSB file. | Generate financial or HR reports, apply a password‑protected structure lock, and send the protected XLSB to external stakeholders. | Automate a batch job that opens multiple workbooks, adds data, secures the structure, and saves each as a protected XLSB for archival.
-// AI Prompts: Write C# code with Aspose.Cells that opens an existing XLSX, applies structure protection using a password, and saves it as a protected XLSB. | Show how to configure XlsbSaveOptions to retain column indexes and keep workbook structure protection when exporting to XLSB. | Explain how to programmatically verify that structure protection remains active after saving a workbook as XLSB with Aspose.Cells.
+// Title: C# – Export Workbook to XLSB with Structure Protection using Aspose.Cells
+// Description: Demonstrates how to create or load a workbook, apply password‑protected structure protection, configure XlsbSaveOptions, and save the file as an XLSB document while preserving the protection.
+// Keywords: Aspose.Cells XLSB export | workbook structure protection .NET | C# XlsbSaveOptions | protect Excel workbook structure | ExportAllColumnIndexes Aspose | save protected XLSB file
+// Common Searches: Aspose.Cells save XLSB with structure protection | C# protect workbook structure and export to XLSB | XlsbSaveOptions ExportAllColumnIndexes example | how to keep workbook protection when saving as XLSB | Aspose.Cells .NET password protected XLSB
+// Developer Intent: Save a workbook as an XLSB file while retaining its password‑protected structure.
+// Use Cases: Distribute read‑only Excel files that prevent sheet addition, deletion, or renaming. | Create secure template workbooks that maintain layout when shared as XLSB. | Automate generation of compliance‑ready XLSB reports with enforced structure protection.
+// AI Prompts: Generate C# code to load an existing workbook, protect its structure with a password, and save it as XLSB using Aspose.Cells. | Show how to disable ExportAllColumnIndexes when exporting to XLSB with Aspose.Cells. | Explain how to programmatically verify that structure protection remains after saving to XLSB.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExportXlsb
+// Demonstrates how to create or load a workbook, apply password‑protected structure protection, configure XlsbSaveOptions, and save the file as an XLSB document while preserving the protection.
+class ExportWorkbookToXlsbWithStructureProtection
 {
-    // Shows how to create a workbook, add sample data, apply structure protection using a password, set XlsbSaveOptions (ExportAllColumnIndexes), and export the file as a protected XLSB binary workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
+
+        // Populate some data (optional, just for demonstration)
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sample Data");
+        sheet.Cells["B1"].PutValue(123);
+
+        // Protect the workbook structure with a password
+        workbook.Protect(ProtectionType.Structure, "MySecretPassword");
+
+        // Configure XLSB save options
+        XlsbSaveOptions saveOptions = new XlsbSaveOptions
         {
-            // Create a new workbook (creation rule)
-            Workbook workbook = new Workbook();
+            // Ensure column indexes are exported (default is true, set explicitly for clarity)
+            ExportAllColumnIndexes = true
+        };
 
-            // Populate some sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("Alice");
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Bob");
-
-            // Protect the workbook structure with a password (protect rule)
-            workbook.Protect(ProtectionType.Structure, "mySecretPwd");
-
-            // Create XLSB save options (creation rule)
-            XlsbSaveOptions saveOptions = new XlsbSaveOptions
-            {
-                // Export all column indexes to preserve exact column layout
-                ExportAllColumnIndexes = true
-            };
-
-            // Save the workbook as XLSB while retaining the protection (save rule)
-            workbook.Save("ProtectedWorkbook.xlsb", saveOptions);
-        }
+        // Save the workbook as XLSB while retaining the structure protection
+        workbook.Save("ProtectedWorkbook.xlsb", saveOptions);
     }
 }

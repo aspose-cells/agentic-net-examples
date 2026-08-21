@@ -1,104 +1,89 @@
-// Title: C# – Process only the first 100 smart‑marker rows in Aspose.Cells using a Range
-// Description: Shows how to limit Aspose.Cells smart‑marker evaluation to the first 100 data rows by creating a named Range ("_CellsSmartMarkers") and calling WorkbookDesigner.Process(range, true). The sample builds a workbook with 200 marker rows, a data source of 150 employees, and saves the optimized result.
-// Keywords: Aspose.Cells | smart markers | Range object | WorkbookDesigner.Process | C# | .NET | performance optimization | limit rows | named range | "_CellsSmartMarkers" | Excel template | data source | employee list
-// Common Searches: Aspose.Cells limit smart marker rows | WorkbookDesigner process specific range C# | How to restrict smart markers to first 100 rows in Aspose.Cells | Using Range with smart markers Aspose.Cells | Performance tips for large smart marker worksheets
-// Developer Intent: Restrict smart‑marker processing to a defined row range to boost performance.
-// Use Cases: Generate a report that only needs the top 100 records while the template contains placeholders for many more rows. | Create a quick preview of a large dataset by processing smart markers in a limited range, reducing execution time. | Skip hidden or extra rows in a worksheet template by defining a named range that includes only the required smart markers.
-// AI Prompts: Provide C# code that processes Aspose.Cells smart markers only within a specific Range and preserves unrecognized markers. | Explain how naming a Range "_CellsSmartMarkers" and passing it to WorkbookDesigner.Process(range, true) limits smart‑marker evaluation. | Show how to calculate zero‑based row and column indices when creating a Range for smart‑marker processing in Aspose.Cells.
+// Title: Limit Smart Marker Evaluation to 100 Rows Using Range in Aspose.Cells for .NET (C#)
+// Description: A C# sample that builds a workbook, inserts smart markers, binds a DataTable, creates a Range covering rows 0‑99 and all populated columns, and calls WorkbookDesigner.Process with that range to evaluate only that segment, boosting performance.
+// Keywords: Aspose.Cells C# range smart markers | process smart markers specific rows | WorkbookDesigner limited range | smart marker performance .NET | restrict smart marker evaluation | Aspose.Cells Range object | C# Excel smart markers | limit rows Aspose.Cells
+// Common Searches: Aspose.Cells process smart markers only first rows | C# WorkbookDesigner Process with range parameter | How to limit smart marker evaluation in Aspose.Cells | Range object for smart markers performance .NET | Smart markers processing subset of cells Aspose
+// Developer Intent: Execute smart‑marker replacement solely within a defined cell block to reduce execution time.
+// Use Cases: Generating a summary sheet where only the top section contains placeholders. | Working with large templates that have many markers but only a particular data block needs population. | Accelerating report creation by processing a bounded area while leaving other markers untouched.
+// AI Prompts: Provide a C# snippet that processes smart markers in a specified Range using Aspose.Cells. | Show how to call WorkbookDesigner.Process(range, true) to evaluate markers in rows 0‑99. | Explain how to preserve unknown smart markers while limiting processing to a cell region.
 
 using System;
-using System.Collections;
-using System.IO;
+using System.Data;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace SmartMarkerRangeDemo
+namespace SmartMarkerRangeExample
 {
-    // Shows how to limit Aspose.Cells smart‑marker evaluation to the first 100 data rows by creating a named Range ("_CellsSmartMarkers") and calling WorkbookDesigner.Process(range, true). The sample builds a workbook with 200 marker rows, a data source of 150 employees, and saves the optimized result.
-    class Program
+    // A C# sample that builds a workbook, inserts smart markers, binds a DataTable, creates a Range covering rows 0‑99 and all populated columns, and calls WorkbookDesigner.Process with that range to evaluate only that segment, boosting performance.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook (or load a template containing smart markers)
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
                 // ------------------------------------------------------------
-                // Set up sample smart markers in the first 200 rows (A2:B201)
+                // Sample smart markers placed in the first 100 rows for demo.
+                // In a real scenario the template would already contain them.
                 // ------------------------------------------------------------
-                // Header row
-                sheet.Cells["A1"].PutValue("Name");
-                sheet.Cells["B1"].PutValue("Value");
-
-                // Populate smart markers for 200 rows
-                for (int i = 2; i <= 201; i++)
+                for (int i = 0; i < 100; i++)
                 {
-                    // Smart marker syntax: &=$DataSource.ColumnName
-                    sheet.Cells[i - 1, 0].PutValue("&=$Employees.Name");
-                    sheet.Cells[i - 1, 1].PutValue("&=$Employees.Salary");
+                    // Example smart marker that will be populated from a data source named "Data"
+                    sheet.Cells[i, 0].PutValue($"&=Data.Column{i + 1}");
                 }
 
-                // ------------------------------------------------------------
-                // Prepare a data source with more than 100 records
-                // ------------------------------------------------------------
-                ArrayList employees = new ArrayList();
-                for (int i = 1; i <= 150; i++)
+                // Set up a data source with at least 100 columns (dummy data for illustration)
+                DataTable dataTable = new DataTable("Data");
+                for (int i = 0; i < 100; i++)
                 {
-                    employees.Add(new Employee
-                    {
-                        Name = $"Employee {i}",
-                        Salary = 3000 + i * 10
-                    });
+                    dataTable.Columns.Add($"Column{i + 1}", typeof(string));
                 }
 
-                // ------------------------------------------------------------
-                // Configure WorkbookDesigner
-                // ------------------------------------------------------------
+                DataRow row = dataTable.NewRow();
+                for (int i = 0; i < 100; i++)
+                {
+                    row[i] = $"Value {i + 1}";
+                }
+                dataTable.Rows.Add(row);
+
+                // Initialize WorkbookDesigner and assign the workbook
                 WorkbookDesigner designer = new WorkbookDesigner
                 {
                     Workbook = workbook
                 };
-                designer.SetDataSource("Employees", employees);
+
+                // Register the data source
+                designer.SetDataSource(dataTable);
 
                 // ------------------------------------------------------------
-                // Define a range that covers only the first 100 data rows
-                // Rows are zero‑based, so row index 1 corresponds to Excel row 2.
-                // CreateRange(startRow, startColumn, totalRows, totalColumns)
+                // Restrict processing to the first 100 rows using a Range object.
+                // The range starts at row 0, column 0 and spans 100 rows.
                 // ------------------------------------------------------------
-                int startRow = 1;          // Excel row 2 (first data row)
-                int startColumn = 0;       // Column A
-                int totalRows = 100;       // Process only first 100 rows
-                int totalColumns = 2;      // Columns A and B
+                int startRow = 0;
+                int startColumn = 0;
+                int totalRows = 100; // first 100 rows
+                int totalColumns = sheet.Cells.MaxDataColumn + 1; // include all columns that have data
 
-                // Resolve ambiguity with System.Range by using fully qualified name
-                Aspose.Cells.Range smartMarkerRange = sheet.Cells.CreateRange(startRow, startColumn, totalRows, totalColumns);
-                // The name "_CellsSmartMarkers" tells the designer that this range contains smart markers
+                AsposeRange smartMarkerRange = sheet.Cells.CreateRange(startRow, startColumn, totalRows, totalColumns);
+                // Naming the range as required for smart marker processing (optional but common)
                 smartMarkerRange.Name = "_CellsSmartMarkers";
 
-                // ------------------------------------------------------------
-                // Process only the defined range (true = preserve unrecognized markers)
-                // ------------------------------------------------------------
+                // Process only the defined range; true = preserve unrecognized markers
                 designer.Process(smartMarkerRange, true);
 
-                // ------------------------------------------------------------
-                // Save the result
-                // ------------------------------------------------------------
-                string outputPath = "SmartMarkersFirst100Rows.xlsx";
+                // Save the resulting workbook
+                string outputPath = "SmartMarkersProcessedFirst100Rows.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        // Simple POCO class used as a data source
-        public class Employee
-        {
-            public string Name { get; set; } = string.Empty;
-            public double Salary { get; set; }
         }
     }
 }

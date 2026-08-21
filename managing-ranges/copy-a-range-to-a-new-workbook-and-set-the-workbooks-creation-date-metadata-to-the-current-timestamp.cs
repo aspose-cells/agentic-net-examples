@@ -1,59 +1,61 @@
-// Title: Copy Excel Range to a New Workbook and Set Creation Date with Aspose.Cells for .NET (C#)
-// Description: Load a source workbook, copy a defined cell range (e.g., A1:B5) into a new workbook at a target range (e.g., C1:D5), assign the current timestamp to BuiltInDocumentProperties.CreatedTime, and save the file.
-// Keywords: Aspose.Cells copy range | C# copy cells between workbooks | set workbook creation date Aspose | BuiltInDocumentProperties CreatedTime | .NET Excel range transfer | Excel metadata timestamp
-// Common Searches: Aspose.Cells copy range to another workbook C# | How to set CreatedTime property in Aspose.Cells | Copy cells A1:B5 to C1:D5 using Aspose.Cells | Update Excel file metadata with current date in .NET
-// Developer Intent: Transfer a specific cell block from an existing Excel file to a fresh workbook and record the copy time in the workbook’s creation metadata.
-// Use Cases: Generate a standalone report section by extracting a data block from a master file. | Create template files on‑the‑fly while preserving accurate generation timestamps. | Archive selected worksheet ranges with metadata that reflects the exact copy moment.
-// AI Prompts: Write C# code with Aspose.Cells that copies a given range from one workbook to another and sets the CreatedTime to DateTime.UtcNow. | Explain error handling for missing source files when copying ranges using Aspose.Cells. | Provide a reusable method: (sourcePath, sourceRange, destPath, destRange) → copy range and update creation date.
+// Title: Copy a Cell Range to a New Workbook and Set Creation Date with Aspose.Cells for .NET (C#)
+// Description: Loads source.xlsx, copies cells A1:B2 to C3:D4 in a fresh workbook, updates the workbook's BuiltInDocumentProperties.CreatedTime to the current timestamp, and saves the result as output.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# copy range | Excel copy cells | Workbook creation date | BuiltInDocumentProperties | metadata timestamp | range.Copy | Aspose.Cells .NET | Excel automation | copy range between workbooks
+// Common Searches: Aspose.Cells copy range to another workbook C# | Set workbook CreatedTime property Aspose.Cells | How to copy cells A1:B2 to C3:D4 using Aspose.Cells | Update Excel file metadata with Aspose.Cells | Copy range and preserve formatting Aspose.Cells
+// Developer Intent: Transfer a defined block of cells from an existing Excel file to a new workbook and record the operation time by setting the workbook's creation metadata.
+// Use Cases: Generate a lightweight report by extracting a specific data block from a master workbook while automatically stamping the file with the current creation time for audit trails. | Create version‑controlled templates where only the required range is copied to a fresh workbook and the timestamp is stored in the document properties. | Automate data migration between Excel files in a CI/CD pipeline, ensuring each output file carries an accurate CreatedTime for downstream processing.
+// AI Prompts: Write C# code using Aspose.Cells to copy cells A1:B2 from source.xlsx to C3:D4 in a new workbook and set BuiltInDocumentProperties.CreatedTime to DateTime.UtcNow. | Explain step‑by‑step how to copy a range to a new workbook and update the workbook's creation date without affecting other worksheets in Aspose.Cells. | Suggest best‑practice error handling and resource cleanup when copying ranges and modifying document properties with Aspose.Cells for .NET.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Load a source workbook, copy a defined cell range (e.g., A1:B5) into a new workbook at a target range (e.g., C1:D5), assign the current timestamp to BuiltInDocumentProperties.CreatedTime, and save the file.
-class Program
+namespace AsposeCellsRangeCopyExample
 {
-    static void Main()
+    // Loads source.xlsx, copies cells A1:B2 to C3:D4 in a fresh workbook, updates the workbook's BuiltInDocumentProperties.CreatedTime to the current timestamp, and saves the result as output.xlsx using Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main()
         {
-            const string sourcePath = "Source.xlsx";
-            const string destinationPath = "CopiedRange.xlsx";
-
-            // Verify source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
+            try
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
+                const string sourcePath = "source.xlsx";
+                const string outputPath = "output.xlsx";
+
+                // Verify source file exists to avoid FileNotFoundException
+                if (!File.Exists(sourcePath))
+                {
+                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    return;
+                }
+
+                // Load the source workbook
+                Workbook sourceWorkbook = new Workbook(sourcePath);
+
+                // Define the source range to copy (A1:B2 on the first worksheet)
+                Aspose.Cells.Range sourceRange = sourceWorkbook.Worksheets[0].Cells.CreateRange("A1:B2");
+
+                // Create a new (empty) workbook for the destination
+                Workbook destWorkbook = new Workbook();
+
+                // Define the destination range where the source data will be copied (C3:D4)
+                Aspose.Cells.Range destRange = destWorkbook.Worksheets[0].Cells.CreateRange("C3:D4");
+
+                // Copy the source range into the destination range
+                destRange.Copy(sourceRange);
+
+                // Set the workbook's creation date metadata to the current timestamp
+                destWorkbook.BuiltInDocumentProperties.CreatedTime = DateTime.Now;
+
+                // Save the new workbook to a file
+                destWorkbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
-
-            // Load the source workbook
-            Workbook sourceWorkbook = new Workbook(sourcePath);
-
-            // Define the source range to copy (example: A1:B5)
-            AsposeRange sourceRange = sourceWorkbook.Worksheets[0].Cells.CreateRange("A1:B5");
-
-            // Create a new (empty) workbook that will receive the copied range
-            Workbook destinationWorkbook = new Workbook();
-
-            // Define the destination range where the data will be placed (example: C1:D5)
-            AsposeRange destinationRange = destinationWorkbook.Worksheets[0].Cells.CreateRange("C1:D5");
-
-            // Copy the source range into the destination range
-            destinationRange.Copy(sourceRange);
-
-            // Set the workbook's creation date metadata to the current timestamp
-            destinationWorkbook.BuiltInDocumentProperties.CreatedTime = DateTime.Now;
-
-            // Save the new workbook to disk
-            destinationWorkbook.Save(destinationPath);
-            Console.WriteLine($"Range copied successfully. File saved as {destinationPath}");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,16 +1,25 @@
+// Title: Convert Gregorian Dates to Japanese Era Format with Aspose.Cells (C#)
+// Description: Loads a workbook, sets its region to Japan, scans numeric date cells, converts each Excel serial number to a .NET DateTime via CellsHelper.GetDateTimeFromDouble, re‑writes the value, applies the custom format "[$-ja-JP]ggge年M月d日" to show the Japanese era, and saves the file.
+// Keywords: Aspose.Cells | Japanese era conversion | Gregorian to Japanese calendar | CellsHelper GetDateTimeFromDouble | workbook.Settings.Region Japan | custom number format ggge | C# Excel date formatting | locale ja-JP | Excel serial date handling
+// Common Searches: Aspose.Cells display Japanese era dates | convert Excel serial dates to Japanese calendar C# | preserve date serial while formatting Japanese era | set workbook region to Japan Aspose.Cells | custom number format for Japanese era in Excel
+// Developer Intent: Transform every Gregorian date cell in an Excel workbook to a Japanese era representation without altering the underlying serial numbers, using Aspose.Cells.
+// Use Cases: Load an existing .xlsx file and configure the workbook for the Japanese locale. | Identify cells that store dates as numeric values (Excel serial numbers). | Use CellsHelper.GetDateTimeFromDouble to obtain a .NET DateTime, then put the value back to retain the original serial. | Apply the number format "[$-ja-JP]ggge年M月d日" so the cell displays the era name and year. | Save the workbook with the updated formatting.
+// AI Prompts: Write C# code that reads an Excel workbook, converts all Gregorian date cells to Japanese era format using Aspose.Cells, and saves the result. | Explain step‑by‑step how to keep the original Excel serial number while showing dates in the Japanese calendar with Aspose.Cells. | Create a reusable function that accepts a Workbook object, sets its region to Japan, and formats every date cell with the "[$-ja-JP]ggge年M月d日" pattern.
+
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsJapaneseEraDemo
 {
+    // Loads a workbook, sets its region to Japan, scans numeric date cells, converts each Excel serial number to a .NET DateTime via CellsHelper.GetDateTimeFromDouble, re‑writes the value, applies the custom format "[$-ja-JP]ggge年M月d日" to show the Japanese era, and saves the file.
     class Program
     {
         static void Main()
         {
             // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            Workbook workbook = new Workbook("Input.xlsx");
 
-            // Ensure the workbook uses the Japanese regional settings
+            // Set the workbook region to Japan so that Japanese calendar formats are recognized
             workbook.Settings.Region = CountryCode.Japan;
 
             // Get the first worksheet (adjust if needed)
@@ -18,49 +27,26 @@ namespace AsposeCellsJapaneseEraDemo
             Cells cells = sheet.Cells;
 
             // Iterate through all used cells
-            for (int row = 0; row <= cells.MaxDataRow; row++)
+            foreach (Cell cell in cells)
             {
-                for (int col = 0; col <= cells.MaxDataColumn; col++)
+                // Process only cells that contain a numeric value (Excel stores dates as doubles)
+                if (cell.IsNumericValue && cell.Type == CellValueType.IsDateTime)
                 {
-                    Cell cell = cells[row, col];
+                    // Convert the Excel serial number to a .NET DateTime using the workbook's date system
+                    DateTime dt = CellsHelper.GetDateTimeFromDouble(cell.DoubleValue, workbook.Settings.Date1904);
 
-                    // Process only cells that contain a date (Excel stores dates as numbers)
-                    if (cell.Type == CellValueType.IsDateTime || 
-                        (cell.IsNumericValue && IsDateFormatted(cell)))
-                    {
-                        // Convert the Excel serial number to a .NET DateTime
-                        double serial = cell.DoubleValue;
-                        DateTime date = CellsHelper.GetDateTimeFromDouble(serial, workbook.Settings.Date1904);
+                    // Put the DateTime back into the cell (preserves the original serial value)
+                    cell.PutValue(dt);
 
-                        // Put the DateTime back into the cell
-                        cell.PutValue(date);
-
-                        // Apply Japanese era format (e.g., "平成31年4月30日")
-                        Style style = cell.GetStyle();
-                        style.Custom = "[$-ja-JP]ggge年m月d日";
-                        cell.SetStyle(style);
-                    }
+                    // Apply a custom number format that displays the Japanese era (ggge = era name, year)
+                    Style style = cell.GetStyle();
+                    style.Custom = "[$-ja-JP]ggge年M月d日";
+                    cell.SetStyle(style);
                 }
             }
 
             // Save the modified workbook
-            workbook.Save("output.xlsx");
-        }
-
-        // Helper method to determine if a numeric cell is formatted as a date
-        private static bool IsDateFormatted(Cell cell)
-        {
-            // Retrieve the number format index; 14-22 are built‑in date formats in Excel
-            int number = cell.GetStyle().Number;
-            if (number >= 14 && number <= 22) return true;
-
-            // Check for custom date format containing date placeholders
-            string custom = cell.GetStyle().Custom;
-            if (!string.IsNullOrEmpty(custom) &&
-                (custom.Contains("y") || custom.Contains("m") || custom.Contains("d")))
-                return true;
-
-            return false;
+            workbook.Save("Output.xlsx");
         }
     }
 }

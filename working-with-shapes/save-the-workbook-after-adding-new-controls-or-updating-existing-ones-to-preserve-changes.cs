@@ -1,66 +1,58 @@
-// Title: Add an ActiveX CheckBox to an Excel worksheet and save the workbook with Aspose.Cells for .NET
-// Description: Demonstrates how to create a new Workbook, insert an ActiveX CheckBox control with a custom caption and unchecked state, write text to a cell, ensure the output folder exists, and save the file as an .xlsx document while preserving the control.
-// Keywords: Aspose.Cells | ActiveX CheckBox | C# | .NET | AddActiveXControl | CheckBoxActiveXControl | save workbook | Excel worksheet | directory creation | persist ActiveX control
-// Common Searches: Aspose.Cells add ActiveX CheckBox C# | Save workbook after inserting ActiveX controls Aspose.Cells | Create Excel form with ActiveX controls using .NET | Ensure output folder exists before saving Excel file C# | How to set checkbox value with Aspose.Cells
-// Developer Intent: Insert an ActiveX CheckBox into a worksheet and persist the workbook with the new control.
-// Use Cases: Generate a terms‑acceptance checkbox on a programmatically created report and distribute the file. | Build a form‑style worksheet containing multiple ActiveX controls (e.g., CheckBox, ComboBox) and save it as a reusable template. | Update cell content based on a control’s state before saving the workbook for downstream processing.
-// AI Prompts: Write C# code that adds several ActiveX controls (CheckBox, ComboBox, ListBox) to a worksheet, configures their properties, and saves the workbook with Aspose.Cells. | Show how to load an existing .xlsx file, modify the caption of an existing ActiveX CheckBox, and save the changes using Aspose.Cells for .NET. | Explain best practices for directory creation, error handling, and workbook saving when the file contains ActiveX controls.
+// Title: Add, Update, and Save a CheckBox ActiveX Control in Excel with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, insert a CheckBox ActiveX control, set its properties, save the file, reload it, modify the control's caption, and save the changes again using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# ActiveX control | add CheckBox ActiveX Excel | update ActiveX caption | save workbook after modifying shapes | .NET Excel ActiveX example | preserve ActiveX controls Aspose
+// Common Searches: How to add a CheckBox ActiveX control with Aspose.Cells C# | Update ActiveX control properties and save workbook in .NET | Saving changes to Excel ActiveX controls using Aspose.Cells | Load Excel file, modify ActiveX control, and resave with C# | Aspose.Cells example for editing shapes
+// Developer Intent: Insert a CheckBox ActiveX control into a new workbook, change its caption later, and ensure all modifications are persisted when the file is saved.
+// Use Cases: Generate Excel templates that include interactive CheckBox controls for user input. | Programmatically adjust control captions based on dynamic business data before distribution. | Automate report creation with embedded ActiveX controls that remain functional after saving.
+// AI Prompts: Write C# code with Aspose.Cells to add a RadioButton ActiveX control, set its properties, and save the workbook. | Provide a step‑by‑step guide to locate a specific ActiveX control by name in an existing Excel file, change its value, and save the changes using Aspose.Cells. | Explain how to iterate over all ActiveX controls on a worksheet and modify a common attribute (e.g., Enabled) with Aspose.Cells for .NET.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.ActiveXControls;
 
 namespace AsposeCellsControlSaveDemo
 {
-    // Demonstrates how to create a new Workbook, insert an ActiveX CheckBox control with a custom caption and unchecked state, write text to a cell, ensure the output folder exists, and save the file as an .xlsx document while preserving the control.
+    // Demonstrates how to create a workbook, insert a CheckBox ActiveX control, set its properties, save the file, reload it, modify the control's caption, and save the changes again using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            try
+            // -------------------------------------------------
+            // 1. Create a new workbook and add an ActiveX control
+            // -------------------------------------------------
+            Workbook workbook = new Workbook();                     // create a new workbook
+            Worksheet sheet = workbook.Worksheets[0];               // get the first worksheet
+
+            // Add a CheckBox ActiveX control to the worksheet
+            Shape shape = sheet.Shapes.AddActiveXControl(
+                ControlType.CheckBox,   // type of control
+                1, 0, 1, 0,             // upper left row, column, lower right row, column
+                120, 30);               // width and height in points
+
+            // Cast to the specific control type to set its properties
+            CheckBoxActiveXControl checkBox = (CheckBoxActiveXControl)shape.ActiveXControl;
+            checkBox.Caption = "Demo CheckBox";
+            checkBox.IsAutoSize = true;
+
+            // Save the workbook to preserve the newly added control
+            workbook.Save("WorkbookWithControl.xlsx"); // uses Save(string) overload
+
+            // -------------------------------------------------
+            // 2. Load the saved workbook, modify the control, and save again
+            // -------------------------------------------------
+            Workbook loadedWorkbook = new Workbook("WorkbookWithControl.xlsx"); // load existing file
+            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
+
+            // Retrieve the first shape (our CheckBox) and change its caption
+            Shape loadedShape = loadedSheet.Shapes[0];
+            if (loadedShape.ActiveXControl is CheckBoxActiveXControl loadedCheckBox)
             {
-                // Create a new workbook
-                using (Workbook workbook = new Workbook())
-                {
-                    // Access the first worksheet
-                    Worksheet sheet = workbook.Worksheets[0];
-
-                    // Add an ActiveX CheckBox control to the worksheet
-                    // Parameters: control type, upper left row, upper left column, lower right row, lower right column, width, height
-                    Shape shape = sheet.Shapes.AddActiveXControl(
-                        ControlType.CheckBox, 1, 0, 1, 0, 100, 30);
-                    CheckBoxActiveXControl checkBox = (CheckBoxActiveXControl)shape.ActiveXControl;
-
-                    // Set properties of the CheckBox control
-                    checkBox.Caption = "Accept Terms";
-
-                    // Set the initial state (unchecked). Use numeric cast to avoid enum member mismatch.
-                    checkBox.Value = (CheckValueType)0; // 0 = Unchecked
-
-                    // Update a cell to reflect the control state (example of updating existing content)
-                    sheet.Cells["A1"].PutValue("User must accept terms before proceeding.");
-
-                    // Define output path
-                    string outputPath = "ControlDemo.xlsx";
-
-                    // Ensure the directory for the output file exists
-                    string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                    if (!Directory.Exists(outputDir))
-                    {
-                        Directory.CreateDirectory(outputDir);
-                    }
-
-                    // Save the workbook with the added control
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Workbook saved successfully at '{outputPath}' with ActiveX control.");
-                }
+                loadedCheckBox.Caption = "Updated CheckBox Caption";
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the changes back to disk
+            loadedWorkbook.Save("WorkbookWithControl_Updated.xlsx"); // preserve updates
         }
     }
 }

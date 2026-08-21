@@ -1,60 +1,45 @@
-// Title: Hide Row and Column Headings When Exporting a Worksheet to PDF with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, populate product data, turn off PrintHeadings, set a custom PrintArea, and save the sheet as a PDF ideal for a clean marketing brochure.
-// Keywords: Aspose.Cells hide headings PDF | C# export worksheet without row numbers | PrintHeadings false Aspose.Cells | set print area Aspose.Cells PDF | remove column letters PDF export .NET
-// Common Searches: how to hide row and column headings in Aspose.Cells PDF export | Aspose.Cells .NET disable print headings for brochure | set print area and turn off headings when saving as PDF | export Excel sheet to PDF without headings using Aspose
-// Developer Intent: Prevent row numbers and column letters from appearing in the PDF output so the brochure shows only the table data.
-// Use Cases: Generate a product catalog PDF with a tidy layout, free of worksheet headings. | Create a sales summary brochure where only the data grid is visible. | Export pricing tables for client presentations without Excel row/column labels.
-// AI Prompts: Write C# code with Aspose.Cells that disables row and column headings, defines a print area, and saves the worksheet as a PDF. | Show how to configure PageSetup.PrintHeadings and PageSetup.PrintArea before exporting to PDF for a marketing brochure. | Explain the steps to produce a PDF brochure from a worksheet using Aspose.Cells while omitting worksheet headings.
+// Title: C# – Turn Off Row/Column Headings When Exporting an Aspose.Cells Workbook to PDF
+// Description: The sample builds a new workbook, inserts a few product rows, sets PageSetup.PrintHeadings to false to keep headers out of the printed output, optionally hides the UI headers with IsRowColumnHeadersVisible, and saves the result as a PDF suitable for a clean marketing brochure.
+// Keywords: Aspose.Cells | C# | PrintHeadings | HideHeaders | PDF export | worksheet headings | disable printing headings | Excel to PDF | marketing brochure | PageSetup
+// Common Searches: Aspose.Cells hide row and column headings in PDF | C# disable printing of worksheet headers with Aspose.Cells | PageSetup.PrintHeadings false example | Export Excel to PDF without headers using Aspose | How to remove Excel grid headings in a brochure PDF
+// Developer Intent: Exclude row and column headings from the printed/PDF version of a worksheet and optionally conceal them in the on‑screen view before saving.
+// Use Cases: Create a product catalog PDF that shows only data rows, no Excel headers. | Generate a clean financial summary report for distribution as a brochure. | Produce a marketing flyer from Excel data where UI headers are hidden for a professional look.
+// AI Prompts: Write C# code with Aspose.Cells to suppress row/column headings during PDF export. | Explain the difference between PageSetup.PrintHeadings and IsRowColumnHeadersVisible in Aspose.Cells. | Show how to hide worksheet headers both on screen and in the printed PDF for a brochure layout.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace MarketingBrochure
 {
-    // Demonstrates how to create a workbook, populate product data, turn off PrintHeadings, set a custom PrintArea, and save the sheet as a PDF ideal for a clean marketing brochure.
-    public class DisableRowHeadingsPrintDemo
+    // The sample builds a new workbook, inserts a few product rows, sets PageSetup.PrintHeadings to false to keep headers out of the printed output, optionally hides the UI headers with IsRowColumnHeadersVisible, and saves the result as a PDF suitable for a clean marketing brochure.
+    class DisableRowHeadingsPrint
     {
-        public static void Run()
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Add sample data that will appear in the brochure
-                worksheet.Cells["A1"].PutValue("Product");
-                worksheet.Cells["B1"].PutValue("Price");
-                worksheet.Cells["A2"].PutValue("Apple");
-                worksheet.Cells["B2"].PutValue(2.5);
-                worksheet.Cells["A3"].PutValue("Orange");
-                worksheet.Cells["B3"].PutValue(1.8);
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Disable printing of row and column headings (row numbers, column letters)
-                worksheet.PageSetup.PrintHeadings = false;
+            // Populate sample data (optional, for demonstration)
+            worksheet.Cells["A1"].PutValue("Product");
+            worksheet.Cells["B1"].PutValue("Price");
+            worksheet.Cells["A2"].PutValue("Apple");
+            worksheet.Cells["B2"].PutValue(2.5);
+            worksheet.Cells["A3"].PutValue("Orange");
+            worksheet.Cells["B3"].PutValue(1.8);
 
-                // Define the area to be printed
-                worksheet.PageSetup.PrintArea = "A1:B3";
+            // Disable printing of row and column headings
+            worksheet.PageSetup.PrintHeadings = false;
 
-                // Save the workbook as PDF, suitable for a marketing brochure
-                string outputPath = "Brochure.pdf";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
+            // (Optional) Hide row/column headers in the UI as well
+            worksheet.IsRowColumnHeadersVisible = false;
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            DisableRowHeadingsPrintDemo.Run();
+            // Save the workbook (e.g., as PDF for brochure distribution)
+            workbook.Save("Brochure.pdf", SaveFormat.Pdf);
+
+            Console.WriteLine("Workbook saved with row headings disabled for printing.");
         }
     }
 }

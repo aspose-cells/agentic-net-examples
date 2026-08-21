@@ -1,60 +1,71 @@
-// Title: Resize Chart Data Label Shapes & Apply Transparent Background with Aspose.Cells (C#)
-// Description: Creates a workbook, adds a column chart, enables data labels, sets the label background to Transparent, disables automatic shape resizing, and defines a fixed 80 × 30 pixel rectangular label before saving the file.
-// Keywords: Aspose.Cells | C# chart data labels | resize data label shape | transparent label background | custom label size | disable auto resize | DataLabelShapeType.Rect | WidthPixel | HeightPixel | LabelPositionType.Center | column chart example | GitHub Aspose.Cells demo
-// Common Searches: Aspose.Cells set data label width and height | how to make chart data label background transparent in C# | disable automatic resizing of data labels Aspose.Cells | custom shape for chart data labels Aspose.Cells | resize data label shapes pixel units Aspose.Cells
-// Developer Intent: Define fixed dimensions and a transparent background for chart data label shapes in Aspose.Cells.
-// Use Cases: Generate charts with uniformly sized labels regardless of text length. | Test visual contrast of data labels against varying series colors by using a transparent fill. | Create printable reports where label dimensions must remain constant for layout stability.
-// AI Prompts: Show C# code using Aspose.Cells to set a fixed pixel width and height for chart data label shapes and make the background transparent. | Explain how to turn off automatic data label resizing and assign a rectangular shape type in an Aspose.Cells column chart. | Provide steps to evaluate label contrast by applying a transparent background while customizing label dimensions in Aspose.Cells.
+// Title: Resize Chart Data Label Shapes & Apply Transparent Background with Aspose.Cells for .NET (C#)
+// Description: Shows how to build a workbook, insert a column chart, enable data labels, set a rectangular shape, make the background transparent, turn off automatic resizing, and define custom width and height in pixels using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# chart data labels | resize data label shape | transparent background | manual label size | DataLabelShapeType.Rect | BackgroundMode.Transparent | IsResizeShapeToFitText false | WidthPixel HeightPixel | column chart Excel automation
+// Common Searches: how to set custom width for chart data labels Aspose.Cells | transparent background for Excel chart data labels .NET | disable auto resize of data label shapes in Aspose.Cells | change data label shape to rectangle in C# chart | Aspose.Cells example for manual data label sizing
+// Developer Intent: The developer wants precise control over chart data label dimensions and appearance, disabling auto‑resize and using a transparent fill to evaluate label contrast.
+// Use Cases: Create column charts with fixed‑size rectangular labels for a uniform layout across varying values. | Generate Excel reports where label backgrounds are transparent, allowing underlying series colors to show through. | Produce charts where auto‑sizing is turned off so custom fonts and label dimensions remain consistent.
+// AI Prompts: Provide C# code to set a fixed pixel width and height for Aspose.Cells chart data labels and turn off automatic resizing. | Show how to apply a transparent background to rectangular data labels in an Aspose.Cells column chart. | Explain the steps to change font color after manually resizing data label shapes using Aspose.Cells for .NET.
 
+using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a column chart, enables data labels, sets the label background to Transparent, disables automatic shape resizing, and defines a fixed 80 × 30 pixel rectangular label before saving the file.
-class ResizeDataLabelShapesDemo
+namespace AsposeCellsDataLabelResizeDemo
 {
-    static void Main()
+    // Shows how to build a workbook, insert a column chart, enable data labels, set a rectangular shape, make the background transparent, turn off automatic resizing, and define custom width and height in pixels using Aspose.Cells for .NET.
+    public class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Enable data labels for the first series
-        DataLabels dataLabels = chart.NSeries[0].DataLabels;
-        dataLabels.ShowValue = true;
-        dataLabels.Position = LabelPositionType.Center;
+            // Set the data range for the series
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-        // Set background mode to Transparent to test contrast with fill
-        dataLabels.BackgroundMode = BackgroundMode.Transparent;
+            // Access the first series' data labels
+            DataLabels dataLabels = chart.NSeries[0].DataLabels;
 
-        // Disable automatic resizing so we can define a custom shape size
-        dataLabels.IsResizeShapeToFitText = false;
+            // Show the value in each data label
+            dataLabels.ShowValue = true;
 
-        // Define custom size for the data label shape (pixel units)
-        dataLabels.WidthPixel = 80;   // Width of the label
-        dataLabels.HeightPixel = 30;  // Height of the label
+            // Set a rectangular shape for the data label
+            dataLabels.ShapeType = DataLabelShapeType.Rect;
 
-        // Optionally set a visible shape type
-        dataLabels.ShapeType = DataLabelShapeType.Rect;
+            // Enable a transparent background to test contrast
+            dataLabels.BackgroundMode = BackgroundMode.Transparent;
 
-        // Save the workbook to a file
-        workbook.Save("ResizeDataLabelShapes.xlsx");
+            // Disable automatic resizing of the shape to fit the text
+            dataLabels.IsResizeShapeToFitText = false;
+
+            // Manually set the size of the data label shape (in pixels)
+            dataLabels.WidthPixel = 80;   // narrower than default
+            dataLabels.HeightPixel = 30;  // shorter than default
+
+            // Optionally change the font color to make the contrast visible
+            dataLabels.Font.Color = Color.Black;
+            dataLabels.Font.Size = 10;
+
+            // Save the workbook to an XLSX file
+            workbook.Save("DataLabelResizeDemo.xlsx");
+        }
     }
 }

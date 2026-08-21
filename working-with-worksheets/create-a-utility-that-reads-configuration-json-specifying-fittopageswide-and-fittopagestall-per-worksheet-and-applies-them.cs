@@ -1,10 +1,10 @@
-// Title: Configure per‑worksheet FitToPages settings from JSON using Aspose.Cells for .NET
-// Description: A C# console utility that loads an Excel workbook, reads a JSON file describing worksheet names or indexes with desired FitToPagesWide and FitToPagesTall values, disables percent scaling, applies the settings via PageSetup.SetFitToPages, and saves the updated file.
-// Keywords: Aspose.Cells FitToPages JSON | C# set worksheet print scaling | PageSetup SetFitToPages example | load workbook apply config | batch worksheet page layout
-// Common Searches: set FitToPagesWide per worksheet Aspose.Cells | read JSON to configure Excel page setup C# | apply print scaling to multiple sheets programmatically | Aspose.Cells page setup from configuration file
-// Developer Intent: Read a JSON configuration that maps worksheet identifiers to FitToPagesWide/Tall values and programmatically apply those print‑scaling settings to the matching sheets in an Excel workbook.
-// Use Cases: Adjust the print layout of generated reports automatically based on a configurable JSON template. | Integrate the utility into a CI/CD pipeline to ensure consistent page scaling across all worksheets before distribution. | Extend the JSON schema to include additional PageSetup options (e.g., PrintArea, Orientation) and apply them in a single pass.
-// AI Prompts: Write C# code that parses a JSON file and sets FitToPagesWide and FitToPagesTall for each worksheet in an Aspose.Cells workbook, supporting lookup by name or index. | Show how to add a PrintArea field to the JSON model and update the utility to apply it alongside FitToPages settings. | Suggest robust error‑handling strategies for missing or duplicate worksheet references when applying page‑setup configurations.
+// Title: C# CLI utility to set per‑sheet FitToPagesWide/FitToPagesTall from JSON with Aspose.Cells
+// Description: A command‑line tool that loads an Excel workbook, reads a JSON file containing worksheet names with FitToPagesWide and FitToPagesTall values, applies PageSetup.SetFitToPages (case‑insensitive), disables percent scaling, and saves the updated file.
+// Keywords: Aspose.Cells | C# | FitToPagesWide | FitToPagesTall | JSON configuration | page setup | command line utility | Excel print scaling | batch worksheet settings | GitHub example
+// Common Searches: set FitToPagesWide per worksheet Aspose.Cells C# | apply FitToPagesTall from JSON to Excel sheets | C# program to configure page setup using JSON | Aspose.Cells command line tool for print scaling | case insensitive worksheet name matching JSON Aspose
+// Developer Intent: Create a reusable CLI program that reads a JSON map of worksheet names to FitToPagesWide/FitToPagesTall values and applies those page‑setup settings to an Excel workbook via Aspose.Cells.
+// Use Cases: Automate print‑layout adjustments for dozens of workbooks based on a central JSON template. | Generate printable reports where each sheet requires a distinct page count without hard‑coding values. | Integrate into CI/CD pipelines to enforce consistent page‑setup standards before distribution.
+// AI Prompts: Generate code to validate that FitToPagesWide and FitToPagesTall are positive integers before applying them. | Write unit tests that confirm sheets matching the JSON receive the correct settings while others remain unchanged. | Add logging that warns when a worksheet exists in the workbook but has no entry in the JSON configuration.
 
 using System;
 using System.Collections.Generic;
@@ -14,83 +14,69 @@ using Aspose.Cells;
 
 namespace FitToPagesUtility
 {
-    // Model representing the JSON configuration for a worksheet
-    // A C# console utility that loads an Excel workbook, reads a JSON file describing worksheet names or indexes with desired FitToPagesWide and FitToPagesTall values, disables percent scaling, applies the settings via PageSetup.SetFitToPages, and saves the updated file.
-    public class WorksheetFitConfig
+    // Represents the configuration for a single worksheet
+    // A command‑line tool that loads an Excel workbook, reads a JSON file containing worksheet names with FitToPagesWide and FitToPagesTall values, applies PageSetup.SetFitToPages (case‑insensitive), disables percent scaling, and saves the updated file.
+    public class SheetFitConfig
     {
-        public string Name { get; set; }               // Worksheet name (optional, can be null)
-        public int? Index { get; set; }                // Worksheet index (optional, can be null)
-        public int FitToPagesWide { get; set; }        // Desired pages wide
-        public int FitToPagesTall { get; set; }        // Desired pages tall
+        public string Name { get; set; }          // Worksheet name (case‑insensitive)
+        public int FitToPagesWide { get; set; }   // Number of pages wide
+        public int FitToPagesTall { get; set; }   // Number of pages tall
     }
 
-    // Root object for deserialization
-    public class FitConfigRoot
+    // Root object of the JSON configuration
+    public class FitToPagesConfig
     {
-        public List<WorksheetFitConfig> Worksheets { get; set; }
+        public List<SheetFitConfig> Sheets { get; set; }
     }
 
-    public static class Program
+    class Program
     {
-        // Entry point
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            // Expect two arguments: input workbook path and configuration JSON path
-            if (args.Length < 2)
+            // Expect three arguments: input workbook path, config json path, output workbook path
+            if (args.Length != 3)
             {
-                Console.WriteLine("Usage: FitToPagesUtility <inputWorkbook> <configJson> [outputWorkbook]");
+                Console.WriteLine("Usage: FitToPagesUtility <input.xlsx> <config.json> <output.xlsx>");
                 return;
             }
 
-            string inputWorkbookPath = args[0];
-            string configJsonPath = args[1];
-            string outputWorkbookPath = args.Length > 2 ? args[2] : "output.xlsx";
+            string workbookPath = args[0];
+            string configPath   = args[1];
+            string outputPath   = args[2];
 
-            // Load the workbook (lifecycle rule: load)
-            Workbook workbook = new Workbook(inputWorkbookPath);
+            // Load the workbook (creation / loading rule)
+            Workbook workbook = new Workbook(workbookPath);
 
             // Read and deserialize the JSON configuration
-            string jsonContent = File.ReadAllText(configJsonPath);
-            FitConfigRoot configRoot = JsonSerializer.Deserialize<FitConfigRoot>(jsonContent);
+            string json = File.ReadAllText(configPath);
+            FitToPagesConfig config = JsonSerializer.Deserialize<FitToPagesConfig>(json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            if (configRoot?.Worksheets == null)
+            if (config?.Sheets == null || config.Sheets.Count == 0)
             {
-                Console.WriteLine("Invalid configuration file.");
+                Console.WriteLine("No sheet configuration found in the JSON file.");
                 return;
             }
 
             // Apply FitToPages settings per worksheet
-            foreach (var wsConfig in configRoot.Worksheets)
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Worksheet worksheet = null;
+                // Find matching configuration by worksheet name (ignore case)
+                SheetFitConfig match = config.Sheets.Find(s =>
+                    string.Equals(s.Name, sheet.Name, StringComparison.OrdinalIgnoreCase));
 
-                // Resolve worksheet by name if provided
-                if (!string.IsNullOrEmpty(wsConfig.Name))
+                if (match != null)
                 {
-                    worksheet = workbook.Worksheets[wsConfig.Name];
+                    // Use PageSetup.SetFitToPages method (method rule)
+                    sheet.PageSetup.SetFitToPages(match.FitToPagesWide, match.FitToPagesTall);
+                    // Ensure scaling is based on FitToPages rather than percent scale
+                    sheet.PageSetup.IsPercentScale = false;
                 }
-                // Otherwise resolve by index if provided
-                else if (wsConfig.Index.HasValue && wsConfig.Index.Value >= 0 && wsConfig.Index.Value < workbook.Worksheets.Count)
-                {
-                    worksheet = workbook.Worksheets[wsConfig.Index.Value];
-                }
-
-                if (worksheet == null)
-                {
-                    Console.WriteLine($"Worksheet not found (Name='{wsConfig.Name}', Index={wsConfig.Index}). Skipping.");
-                    continue;
-                }
-
-                // Ensure scaling uses FitToPages rather than percent scale
-                worksheet.PageSetup.IsPercentScale = false;
-
-                // Apply the fit-to-pages settings (rule: SetFitToPages)
-                worksheet.PageSetup.SetFitToPages(wsConfig.FitToPagesWide, wsConfig.FitToPagesTall);
             }
 
-            // Save the modified workbook (lifecycle rule: save)
-            workbook.Save(outputWorkbookPath);
-            Console.WriteLine($"Workbook saved to '{outputWorkbookPath}'.");
+            // Save the modified workbook (save rule)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
     }
 }

@@ -1,42 +1,40 @@
-// Title: C# – Add a Digital Signature to a PDF Exported from an Excel Workbook with Aspose.Cells
-// Description: Learn how to create an Excel workbook, attach an X509Certificate2 digital signature, and export the signed workbook as a PDF using Aspose.Cells for .NET. The example also shows how to verify the signature before saving.
-// Keywords: Aspose.Cells digital signature PDF | C# sign PDF from Excel | X509Certificate2 Aspose.Cells | Workbook.SetDigitalSignature | Export signed Excel to PDF | IsDigitallySigned property | PDF authenticity .NET
-// Common Searches: how to digitally sign a PDF generated from Excel using Aspose.Cells | C# code for adding X509 certificate signature to Aspose.Cells PDF export | verify workbook digital signature before PDF conversion Aspose.Cells | add multiple digital signatures to an Excel workbook and save as PDF .NET | Aspose.Cells PDF signing example
-// Developer Intent: Apply an X509 certificate‑based digital signature to an Excel workbook and produce a signed PDF with Aspose.Cells.
-// Use Cases: Securely sign financial statements before distributing them as PDFs. | Automate QA approval stamps on nightly report PDFs generated from Excel. | Meet regulatory requirements by confirming a workbook is signed prior to PDF export.
-// AI Prompts: Generate C# code that loads a .pfx certificate and adds a digital signature to an Aspose.Cells workbook before saving it as PDF. | Show how to check the IsDigitallySigned flag after attaching a DigitalSignatureCollection and before PDF conversion. | Provide an example of adding several DigitalSignature objects with different reasons to a workbook and exporting the signed document as PDF.
+// Title: C# – Add an X509 digital signature to a PDF created from an Excel workbook with Aspose.Cells
+// Description: Demonstrates how to load an X509Certificate2 (.pfx), create a DigitalSignature, attach it to a Workbook, and export the signed workbook as a PDF using Aspose.Cells for .NET, ensuring document authenticity and compliance.
+// Keywords: Aspose.Cells digital signature PDF | C# sign PDF from Excel | X509Certificate2 Aspose.Cells | Workbook.SetDigitalSignature example | PDF authenticity Aspose | convert signed workbook to PDF
+// Common Searches: how to digitally sign a PDF generated from Excel using Aspose.Cells | Aspose.Cells add X509 certificate before saving as PDF | C# code to embed digital signature in PDF with Aspose | sign Excel workbook and export to signed PDF | Aspose.Cells PDF signing tutorial
+// Developer Intent: Apply an X509 digital signature to an Excel workbook and produce a signed PDF with Aspose.Cells for .NET.
+// Use Cases: Secure financial statements before distribution to meet regulatory standards. | Authenticate contract PDFs generated from spreadsheet data. | Automate batch signing of invoices exported from Excel.
+// AI Prompts: Write C# code that loads a .pfx certificate, creates a DigitalSignature, attaches it to an Aspose.Cells Workbook, and saves the result as a signed PDF. | Explain how to verify the digital signature in a PDF produced by Aspose.Cells after conversion. | Provide a loop example that signs multiple workbooks and generates corresponding signed PDFs using Aspose.Cells.
 
 using System;
 using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
 using Aspose.Cells.DigitalSignatures;
-using Aspose.Cells.Rendering; // For SaveFormat
 
-// Learn how to create an Excel workbook, attach an X509Certificate2 digital signature, and export the signed workbook as a PDF using Aspose.Cells for .NET. The example also shows how to verify the signature before saving.
-class AddDigitalSignatureToPdf
+// Demonstrates how to load an X509Certificate2 (.pfx), create a DigitalSignature, attach it to a Workbook, and export the signed workbook as a PDF using Aspose.Cells for .NET, ensuring document authenticity and compliance.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some sample data
+        // Create a new workbook and add some data
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Document requiring digital signature");
+        workbook.Worksheets[0].Cells["A1"].PutValue("Document signed before PDF conversion");
 
         // Load the signing certificate (replace with your own .pfx file and password)
-        X509Certificate2 certificate = new X509Certificate2("myCertificate.pfx", "certPassword");
+        X509Certificate2 certificate = new X509Certificate2("mycert.pfx", "password");
 
-        // Create a digital signature instance
-        DigitalSignature signature = new DigitalSignature(certificate, "Approved by QA", DateTime.UtcNow);
+        // Create a digital signature using the certificate
+        DigitalSignature digitalSignature = new DigitalSignature(
+            certificate,               // certificate containing private key
+            "PDF Generation Signature", // comment/description
+            DateTime.Now);              // signing time
 
         // Add the signature to a collection and attach it to the workbook
-        DigitalSignatureCollection signatures = new DigitalSignatureCollection();
-        signatures.Add(signature);
-        workbook.SetDigitalSignature(signatures); // or workbook.AddDigitalSignature(signatures);
+        DigitalSignatureCollection signatureCollection = new DigitalSignatureCollection();
+        signatureCollection.Add(digitalSignature);
+        workbook.SetDigitalSignature(signatureCollection);
 
-        // Save the signed workbook as a PDF file
+        // Convert the signed workbook to PDF
         workbook.Save("SignedDocument.pdf", SaveFormat.Pdf);
-
-        // Optional: verify that the workbook is digitally signed before conversion
-        Console.WriteLine("Workbook digitally signed: " + workbook.IsDigitallySigned);
     }
 }

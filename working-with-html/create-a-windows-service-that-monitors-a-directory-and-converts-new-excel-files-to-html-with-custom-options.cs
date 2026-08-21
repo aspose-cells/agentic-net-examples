@@ -1,143 +1,153 @@
-// Title: C# Windows Service to Watch a Folder and Convert Excel Workbooks to Single‑File HTML with Aspose.Cells
-// Description: A self‑contained Windows service that uses FileSystemWatcher to detect new Excel files (.xlsx, .xls, .xlsm, .xlsb) in a specified directory, loads each workbook with Aspose.Cells, applies HtmlSaveOptions (HTML5, gridlines, export all worksheets, single‑file output, custom page title), and writes the resulting HTML to a target folder. The service can be started and stopped programmatically and includes retry logic for file‑access readiness.
-// Keywords: Aspose.Cells Excel to HTML conversion | C# FileSystemWatcher folder monitor | Windows service convert Excel to HTML | HtmlSaveOptions single file Aspose | Export gridlines HTML5 Aspose.Cells | automatic Excel HTML generation | C# background service Excel conversion
-// Common Searches: how to create a Windows service that converts Excel to HTML using Aspose.Cells | C# folder watcher that converts .xlsx files to single HTML file | Aspose.Cells HtmlSaveOptions example for HTML5 and gridlines | automated Excel to HTML conversion service .NET | file system watcher retry logic for Excel file processing
-// Developer Intent: Build a background Windows service that continuously watches a folder and transforms any newly added Excel workbook into a single HTML file with custom formatting options.
-// Use Cases: Generate web‑ready reports instantly when users drop Excel files into a shared drop folder. | Publish financial or operational spreadsheets as intranet HTML pages without manual steps. | Provide on‑the‑fly HTML previews for a document‑management system by converting uploaded Excel files.
-// AI Prompts: Create a C# Windows Service that monitors a directory and uses Aspose.Cells to convert new Excel files to a single HTML5 file with gridlines and a custom page title. | Write unit tests for the ConvertToHtml method to verify HtmlSaveOptions settings and confirm the HTML output is created in the correct location. | Explain how to enhance the FileSystemWatcher to ignore temporary Office files (e.g., ~$.xlsx) and safely handle rename and change events.
+// Title: Windows Service that Monitors a Folder and Converts Excel to HTML with Aspose.Cells
+// Description: A C# Windows service that watches a designated directory, detects newly added Excel workbooks (xlsx, xls, xlsm, xlsb), and instantly converts them to a single HTML5 file using Aspose.Cells. The conversion applies custom HtmlSaveOptions such as grid‑line display, base‑64 image embedding, and export of all worksheets, while providing start/stop control and basic error handling.
+// Keywords: Aspose.Cells | C# | Excel to HTML conversion | FileSystemWatcher | Windows Service | HtmlSaveOptions | HTML5 output | embed images base64 | export grid lines | background file conversion
+// Common Searches: C# Windows service to convert Excel files to HTML | Aspose.Cells HtmlSaveOptions single file with embedded images | FileSystemWatcher trigger Excel to HTML conversion | automate Excel to HTML conversion in .NET | monitor folder and generate HTML from Excel
+// Developer Intent: Create a background Windows service that automatically transforms incoming Excel files into self‑contained HTML pages using Aspose.Cells with specific formatting options.
+// Use Cases: Generate web‑ready reports as soon as users drop Excel files into a shared folder. | Archive Excel workbooks as single HTML5 pages for intranet publishing or email distribution. | Run a low‑maintenance service that converts batch Excel uploads into self‑contained HTML for downstream systems.
+// AI Prompts: Provide a complete Windows Service project template (including installer) that integrates the ExcelToHtmlService class and logs conversions with Serilog. | Write NUnit tests for ConvertExcelToHtml covering missing file, load failure, and save failure scenarios. | Suggest enhancements such as configurable watch paths via appsettings.json, retry logic for file locks, and optional PDF fallback conversion.
 
 using System;
 using System.IO;
 using System.Threading;
 using Aspose.Cells;
 
-namespace ExcelToHtmlService
+namespace ExcelToHtmlWindowsService
 {
-    // A self‑contained Windows service that uses FileSystemWatcher to detect new Excel files (.xlsx, .xls, .xlsm, .xlsb) in a specified directory, loads each workbook with Aspose.Cells, applies HtmlSaveOptions (HTML5, gridlines, export all worksheets, single‑file output, custom page title), and writes the resulting HTML to a target folder. The service can be started and stopped programmatically and includes retry logic for file‑access readiness.
-    public class ConverterService
+    // Simple class that watches a folder and converts new Excel files to HTML
+    // A C# Windows service that watches a designated directory, detects newly added Excel workbooks (xlsx, xls, xlsm, xlsb), and instantly converts them to a single HTML5 file using Aspose.Cells. The conversion applies custom HtmlSaveOptions such as grid‑line display, base‑64 image embedding, and export of all worksheets, while providing start/stop control and basic error handling.
+    public class ExcelToHtmlService
     {
         private FileSystemWatcher _watcher;
-        private readonly string _inputFolder = @"C:\WatchFolder";
+        private readonly string _sourceFolder = @"C:\WatchedFolder";
         private readonly string _outputFolder = @"C:\HtmlOutput";
 
-        // Starts the watcher and ensures output folder exists
-        public void OnStart(string[] args)
+        // Starts the watcher
+        public void Start(string[] args)
         {
-            try
-            {
+            // Ensure source and output directories exist
+            if (!Directory.Exists(_sourceFolder))
+                Directory.CreateDirectory(_sourceFolder);
+
+            if (!Directory.Exists(_outputFolder))
                 Directory.CreateDirectory(_outputFolder);
 
-                _watcher = new FileSystemWatcher(_inputFolder)
+            try
+            {
+                // Set up the file system watcher
+                _watcher = new FileSystemWatcher(_sourceFolder)
                 {
                     Filter = "*.*",
-                    EnableRaisingEvents = true,
-                    IncludeSubdirectories = false
+                    NotifyFilter = NotifyFilters.FileName | NotifyFilters.CreationTime,
+                    EnableRaisingEvents = true
                 };
+
+                // Subscribe to created event
                 _watcher.Created += OnCreated;
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Failed to start service: {ex.Message}");
+                Console.WriteLine($"Failed to start watcher: {ex.Message}");
+                throw;
             }
         }
 
         // Stops the watcher and releases resources
-        public void OnStop()
+        public void Stop()
         {
-            try
+            if (_watcher != null)
             {
-                if (_watcher != null)
-                {
-                    _watcher.EnableRaisingEvents = false;
-                    _watcher.Created -= OnCreated;
-                    _watcher.Dispose();
-                    _watcher = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Failed to stop service: {ex.Message}");
+                _watcher.EnableRaisingEvents = false;
+                _watcher.Created -= OnCreated;
+                _watcher.Dispose();
+                _watcher = null;
             }
         }
 
-        // Handles new files; retries until the file is ready
+        // Event handler for new files
         private void OnCreated(object sender, FileSystemEventArgs e)
         {
-            for (int i = 0; i < 5; i++)
-            {
-                try
-                {
-                    using (FileStream stream = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.None))
-                    {
-                        // File opened exclusively – ready for processing
-                        break;
-                    }
-                }
-                catch
-                {
-                    Thread.Sleep(500);
-                }
-            }
+            // Small delay to ensure the file is fully written
+            Thread.Sleep(500);
 
+            // Process only Excel files
             string ext = Path.GetExtension(e.FullPath).ToLowerInvariant();
             if (ext == ".xlsx" || ext == ".xls" || ext == ".xlsm" || ext == ".xlsb")
             {
                 try
                 {
-                    ConvertToHtml(e.FullPath);
+                    ConvertExcelToHtml(e.FullPath);
                 }
                 catch (Exception ex)
                 {
-                    Console.Error.WriteLine($"Error converting '{e.FullPath}': {ex.Message}");
+                    // Log or handle exception as needed
+                    Console.WriteLine($"Error converting '{e.Name}': {ex.Message}");
                 }
             }
         }
 
-        // Converts an Excel workbook to a single HTML file
-        private void ConvertToHtml(string sourcePath)
+        // Core conversion logic using Aspose.Cells APIs
+        private void ConvertExcelToHtml(string excelPath)
         {
-            if (!File.Exists(sourcePath))
-            {
-                Console.Error.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
+            // Verify the source file exists before loading
+            if (!File.Exists(excelPath))
+                throw new FileNotFoundException("Excel file not found.", excelPath);
 
+            Workbook workbook;
             try
             {
-                // Load workbook
-                Workbook workbook = new Workbook(sourcePath);
-
-                // Set HTML save options
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions
-                {
-                    ExportActiveWorksheetOnly = false,
-                    ExportGridLines = true,
-                    HtmlVersion = HtmlVersion.Html5,
-                    PageTitle = Path.GetFileNameWithoutExtension(sourcePath),
-                    SaveAsSingleFile = true
-                };
-
-                // Determine destination path
-                string destFileName = Path.GetFileNameWithoutExtension(sourcePath) + ".html";
-                string destPath = Path.Combine(_outputFolder, destFileName);
-
-                // Save as HTML
-                workbook.Save(destPath, saveOptions);
+                // Load the workbook
+                workbook = new Workbook(excelPath);
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Failed to convert '{sourcePath}': {ex.Message}");
+                throw new InvalidOperationException($"Failed to load workbook '{excelPath}'.", ex);
+            }
+
+            // Configure HTML save options
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            {
+                ExportActiveWorksheetOnly = false, // Export all worksheets
+                ExportGridLines = true,            // Show grid lines
+                HtmlVersion = HtmlVersion.Html5,   // Use HTML5 standard
+                SaveAsSingleFile = true,           // Single HTML file
+                ExportImagesAsBase64 = true        // Embed images
+            };
+
+            // Determine output file name
+            string fileNameWithoutExt = Path.GetFileNameWithoutExtension(excelPath);
+            string htmlPath = Path.Combine(_outputFolder, fileNameWithoutExt + ".html");
+
+            try
+            {
+                // Save the workbook as HTML
+                workbook.Save(htmlPath, saveOptions);
+                Console.WriteLine($"Converted '{excelPath}' to '{htmlPath}'.");
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to save HTML file '{htmlPath}'.", ex);
             }
         }
 
-        // Entry point – runs as a console application
+        // Entry point for debugging as console app
         public static void Main(string[] args)
         {
-            ConverterService service = new ConverterService();
-            service.OnStart(args);
-            Console.WriteLine("Service started. Press Enter to stop...");
-            Console.ReadLine();
-            service.OnStop();
+            ExcelToHtmlService service = new ExcelToHtmlService();
+            try
+            {
+                service.Start(args);
+                Console.WriteLine("Service started. Press Enter to stop...");
+                Console.ReadLine();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Service failed to start: {ex.Message}");
+            }
+            finally
+            {
+                service.Stop();
+                Console.WriteLine("Service stopped.");
+            }
         }
     }
 }

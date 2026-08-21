@@ -1,39 +1,42 @@
-// Title: Export Excel to HTML with Row/Column Headers and a Custom Table ID – Aspose.Cells for .NET (C#)
-// Description: This C# example creates a workbook, adds sample data with column headings, and uses Aspose.Cells HtmlSaveOptions to generate an HTML file that shows Excel row and column labels. The table element receives a custom CSS identifier via the TableCssId property, enabling scoped styling.
-// Keywords: Aspose.Cells HTML export C# | Export row and column headings | HtmlSaveOptions TableCssId | Excel to HTML with custom CSS id | C# Aspose.Cells sample
-// Common Searches: Aspose.Cells include row column headings in HTML | Set custom table id when saving Excel as HTML | HtmlSaveOptions ExportRowColumnHeadings C# example | How to add CSS identifier to Aspose.Cells HTML table | C# export worksheet to HTML with styled table
-// Developer Intent: Create an HTML version of a worksheet that displays Excel’s row/column labels and assigns a developer‑defined ID to the generated <table> for targeted styling.
-// Use Cases: Web dashboards that need visible spreadsheet coordinates for user reference. | Multi‑tenant portals where each exported table must have a unique CSS scope to prevent style clashes. | Automated UI tests that verify table structure using a known DOM ID.
-// AI Prompts: Show how to keep column widths in the HTML output while preserving the custom TableCssId. | Generate a C# snippet that reads the saved HTML file and injects additional CSS rules targeting #custom-table. | Explain how to hide gridlines in the exported HTML but still include row and column headings.
+// Title: C# – Export Excel to HTML with Row/Column Headings and Custom TableCssId using Aspose.Cells
+// Description: Demonstrates how to create a workbook, fill cells A1:B3, enable ExportRowColumnHeadings, set TableCssId to a custom prefix, and save the sheet as an HTML file with worksheet headings and prefixed CSS classes.
+// Keywords: Aspose.Cells HTML export | ExportRowColumnHeadings | TableCssId | custom CSS prefix | C# Excel to HTML | worksheet headings HTML | .NET Aspose.Cells example
+// Common Searches: Aspose.Cells include row and column headings in HTML export | Set custom CSS class prefix for tables in Aspose.Cells HTML output | HtmlSaveOptions ExportRowColumnHeadings C# example | Aspose.Cells TableCssId usage | Export Excel worksheet to HTML with headings .NET
+// Developer Intent: Generate an HTML representation of a workbook that shows Excel row/column labels and uses a developer‑defined CSS identifier for table styling.
+// Use Cases: Produce HTML reports that retain Excel’s A‑Z column and 1‑N row labels for clear data reference. | Embed exported tables into web pages and apply site‑specific styles by targeting the custom TableCssId selector. | Automate bulk conversion of multiple worksheets to HTML while maintaining consistent CSS class naming across all tables.
+// AI Prompts: Write C# code with Aspose.Cells to export a workbook to HTML, showing row/column headings and using TableCssId="custom-table-style". | Explain how HtmlSaveOptions.ExportRowColumnHeadings and TableCssId affect the generated HTML markup. | Provide a CSS snippet that styles tables whose class names start with the TableCssId "custom-table-style".
 
 using System;
 using Aspose.Cells;
 
-// This C# example creates a workbook, adds sample data with column headings, and uses Aspose.Cells HtmlSaveOptions to generate an HTML file that shows Excel row and column labels. The table element receives a custom CSS identifier via the TableCssId property, enabling scoped styling.
-class Program
+namespace AsposeCellsHtmlExport
 {
-    static void Main()
+    // Demonstrates how to create a workbook, fill cells A1:B3, enable ExportRowColumnHeadings, set TableCssId to a custom prefix, and save the sheet as an HTML file with worksheet headings and prefixed CSS classes.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add sample data with column headings
-        worksheet.Cells["A1"].PutValue("Product");
-        worksheet.Cells["B1"].PutValue("Price");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["B2"].PutValue(1.20);
-        worksheet.Cells["A3"].PutValue("Banana");
-        worksheet.Cells["B3"].PutValue(0.80);
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue("Item");
+            sheet.Cells["B1"].PutValue("Quantity");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("Orange");
+            sheet.Cells["B3"].PutValue(15);
 
-        // Configure HTML save options
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
-        // Include row and column headings in the HTML output
-        saveOptions.ExportRowColumnHeadings = true;
-        // Prefix table related CSS classes/ids with a custom identifier
-        saveOptions.TableCssId = "custom-table";
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Include row and column headings (A, B, 1, 2, …) in the HTML output
+            htmlOptions.ExportRowColumnHeadings = true;
+            // Prefix CSS class names for table elements with a custom identifier
+            htmlOptions.TableCssId = "custom-table-style";
 
-        // Save the workbook as HTML using the configured options
-        workbook.Save("output.html", saveOptions);
+            // Save the workbook as HTML using the configured options
+            workbook.Save("ExportedWithHeadings.html", htmlOptions);
+        }
     }
 }

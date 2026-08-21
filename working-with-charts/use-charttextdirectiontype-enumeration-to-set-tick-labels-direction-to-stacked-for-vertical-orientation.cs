@@ -1,68 +1,50 @@
-// Title: C# – Set Value Axis Tick Labels to Stacked Using ChartTextDirectionType in Aspose.Cells
-// Description: Creates a workbook, adds sample data, inserts a column chart, and applies ChartTextDirectionType.Stacked to the ValueAxis.TickLabels.DirectionType so the vertical axis labels are displayed in a stacked orientation before saving the file.
-// Keywords: Aspose.Cells | ChartTextDirectionType | stacked tick labels | value axis label orientation | .NET chart customization | C# Excel chart example
-// Common Searches: Aspose.Cells set tick label direction stacked | ChartTextDirectionType usage C# | how to stack vertical axis labels in Aspose.Cells | C# change chart axis label orientation Aspose | stacked tick labels column chart Aspose.Cells
-// Developer Intent: Apply the Stacked direction to the value‑axis tick labels of a chart using Aspose.Cells for .NET.
-// Use Cases: Generate Excel reports where long numeric labels on the value axis would overlap, improving readability by stacking them. | Standardize chart appearance across automated dashboards that require consistent label orientation. | Customize multi‑series column charts in financial or scientific workbooks to prevent label clipping on the vertical axis.
-// AI Prompts: Show a C# example that sets both value and category axes to Stacked using ChartTextDirectionType in Aspose.Cells. | Explain the impact of each ChartTextDirectionType enum value on axis label rendering. | Provide a step‑by‑step guide to change tick label direction for a line chart in Aspose.Cells for .NET.
+// Title: Aspose.Cells for .NET: Set Category Axis Tick Labels to Stacked (Vertical) Orientation
+// Description: Demonstrates how to create a workbook, add a column chart, and apply ChartTextDirectionType.Stacked to display the category axis tick labels in a vertical (stacked) layout before saving the file.
+// Keywords: Aspose.Cells | C# | .NET | ChartTextDirectionType | Stacked | vertical tick labels | category axis | chart label orientation | Excel chart formatting | example code
+// Common Searches: Aspose.Cells set tick label direction stacked | ChartTextDirectionType.Stacked usage .NET | vertical category axis labels Aspose.Cells | how to rotate chart tick labels in C# | Aspose.Cells chart label orientation example
+// Developer Intent: Apply ChartTextDirectionType.Stacked to rotate category axis tick labels vertically in an Aspose.Cells chart.
+// Use Cases: Improve readability of long category names in column charts by stacking labels vertically. | Generate Excel reports where chart labels must fit narrow columns without truncation. | Automate consistent vertical label formatting across multiple charts in a workbook.
+// AI Prompts: Show a C# example that sets chart tick labels to Stacked using Aspose.Cells. | Explain the effect of ChartTextDirectionType.Stacked on chart label orientation and how to implement it. | Provide step‑by‑step code to create a workbook, add a column chart, and apply vertical tick label direction.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data, inserts a column chart, and applies ChartTextDirectionType.Stacked to the ValueAxis.TickLabels.DirectionType so the vertical axis labels are displayed in a stacked orientation before saving the file.
-public class SetTickLabelsDirectionStacked
+namespace AsposeCellsTickLabelsStackedDemo
 {
-    public static void Run()
+    // Demonstrates how to create a workbook, add a column chart, and apply ChartTextDirectionType.Stacked to display the category axis tick labels in a vertical (stacked) layout before saving the file.
+    class Program
     {
-        try
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
+            // Populate sample data for the chart
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("A");
+            worksheet.Cells["A3"].PutValue("B");
+            worksheet.Cells["A4"].PutValue("C");
 
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["B2"].PutValue(10);
+            worksheet.Cells["B3"].PutValue(20);
+            worksheet.Cells["B4"].PutValue(30);
 
             // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = sheet.Charts[chartIndex];
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = worksheet.Charts[chartIndex];
 
             // Set the data source for the chart
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Set tick labels direction to Stacked for the vertical (value) axis
-            chart.ValueAxis.TickLabels.DirectionType = ChartTextDirectionType.Stacked;
+            // Set tick labels direction to Stacked (vertical orientation)
+            chart.CategoryAxis.TickLabels.DirectionType = ChartTextDirectionType.Stacked;
 
-            // Define output file path
-            string outputPath = "TickLabelsStackedDirection.xlsx";
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the workbook to a file
+            workbook.Save("TickLabelsStackedDemo.xlsx");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
-
-// Entry point for the application
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        SetTickLabelsDirectionStacked.Run();
     }
 }

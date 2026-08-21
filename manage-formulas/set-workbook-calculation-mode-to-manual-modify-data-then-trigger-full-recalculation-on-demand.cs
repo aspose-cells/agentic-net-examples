@@ -1,50 +1,45 @@
-// Title: Aspose.Cells for .NET – Manual Calculation Mode with Forced Full Recalculation
-// Description: Demonstrates how to switch a workbook to manual calculation (CalcModeType.Manual), modify cell values, enable ForceFullCalculation, and invoke workbook.CalculateFormula() to recompute all dependent formulas in a single pass. Includes performance tips for large spreadsheets and saving the result.
-// Keywords: Aspose.Cells | C# | .NET | manual calculation mode | CalcModeType.Manual | ForceFullCalculation | CalculateFormula | workbook.CalculateFormula | disable automatic calculation | performance optimization | large spreadsheet recalculation
-// Common Searches: Aspose.Cells set manual calculation mode | ForceFullCalculation example C# | How to recalculate workbook after data changes Aspose.Cells | CalculateFormula manual mode .NET | Improve performance by disabling auto calculation Aspose.Cells
-// Developer Intent: I need to turn off automatic formula evaluation, change cell data, and then recalculate the entire workbook on demand.
-// Use Cases: Batch‑update thousands of cells in a financial model, then run a single full calculation to obtain final results. | Generate a report where intermediate formulas are postponed until all input data is populated, ensuring consistent output. | Optimize performance of large Excel files by using manual mode during data import and forcing a final recalculation before saving.
-// AI Prompts: Show C# code that sets Aspose.Cells workbook to manual calculation, updates cells, enables ForceFullCalculation, and calls CalculateFormula. | Explain why manual calculation mode improves performance in Aspose.Cells and how to trigger a full recomputation. | Provide a step‑by‑step guide to batch modify data in a workbook and then force a complete recalculation using Aspose.Cells for .NET.
+// Title: Manual Calculation Mode with Forced Full Recalculation in Aspose.Cells for .NET (C#)
+// Description: Shows how to set a workbook’s FormulaSettings.CalculationMode to Manual, modify cell values, enable ForceFullCalculation, invoke CalculateFormula, and save the spreadsheet using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | .NET | manual calculation mode | CalcModeType.Manual | ForceFullCalculation | CalculateFormula | Excel formula recalculation | batch cell updates | performance optimization
+// Common Searches: Aspose.Cells set calculation mode manual | force full calculation Aspose.Cells C# | CalculateFormula after cell updates .NET | disable automatic formula evaluation Aspose.Cells | manual workbook recalculation example
+// Developer Intent: Configure a workbook to use manual calculation, change data without triggering automatic updates, then run a single full formula evaluation on demand.
+// Use Cases: Boost performance when generating large spreadsheets by postponing formula evaluation until all data is inserted. | Apply bulk data transformations and guarantee consistent results with one forced recalculation before exporting the file. | Produce deterministic Excel reports where formulas are evaluated only after all input cells have been set.
+// AI Prompts: Provide C# code that sets CalcModeType.Manual, updates cells A1 and A2, enables ForceFullCalculation, calls CalculateFormula, and saves the workbook as ManualCalcDemo.xlsx using Aspose.Cells. | Show an example that disables automatic calculation, performs batch updates on a worksheet, then triggers a full recalculation in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to switch a workbook to manual calculation (CalcModeType.Manual), modify cell values, enable ForceFullCalculation, and invoke workbook.CalculateFormula() to recompute all dependent formulas in a single pass. Includes performance tips for large spreadsheets and saving the result.
+// Shows how to set a workbook’s FormulaSettings.CalculationMode to Manual, modify cell values, enable ForceFullCalculation, invoke CalculateFormula, and save the spreadsheet using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook (lifecycle: create)
         Workbook workbook = new Workbook();
-
-        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
 
-        // Set calculation mode to Manual
+        // Set calculation mode to Manual (no automatic recalculation)
         workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
 
-        // Add some initial data and formulas
-        cells["A1"].PutValue(10);
-        cells["A2"].PutValue(20);
-        cells["B1"].Formula = "=A1+A2"; // B1 will be 30 after calculation
-        cells["C1"].Formula = "=B1*2";  // C1 will be 60 after calculation
+        // Add initial data and a formula that depends on the data
+        sheet.Cells["A1"].PutValue(10);
+        sheet.Cells["A2"].PutValue(20);
+        sheet.Cells["B1"].Formula = "=A1+A2"; // simple sum formula
 
-        // Modify data after setting Manual mode
-        cells["A1"].PutValue(15); // Change A1 from 10 to 15
-        cells["A2"].PutValue(25); // Change A2 from 20 to 25
+        // Modify the data after setting manual mode
+        sheet.Cells["A1"].PutValue(30);
+        sheet.Cells["A2"].PutValue(40);
 
-        // Ensure full calculation is performed when we trigger it
+        // Ensure a full calculation is performed each time we trigger it
         workbook.Settings.FormulaSettings.ForceFullCalculation = true;
 
         // Trigger full recalculation on demand
         workbook.CalculateFormula();
 
-        // Output results to verify calculation
-        Console.WriteLine("B1 = " + cells["B1"].Value); // Expected 40
-        Console.WriteLine("C1 = " + cells["C1"].Value); // Expected 80
+        // Verify the result of the formula after recalculation
+        Console.WriteLine("B1 value after recalculation: " + sheet.Cells["B1"].Value);
 
-        // Save the workbook (optional)
-        workbook.Save("ManualCalculationDemo.xlsx");
+        // Save the workbook (lifecycle: save)
+        workbook.Save("ManualCalcDemo.xlsx");
     }
 }

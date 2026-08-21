@@ -1,54 +1,64 @@
-// Title: Iterate Populated Cells in Aspose.Cells (C#) with MaxDataRow & MaxDataColumn
-// Description: This C# example creates a workbook, inserts sample data with an intentional blank row, retrieves the worksheet's MaxDataRow and MaxDataColumn a single time, and loops through the exact data region, outputting only cells that hold a value before saving the file. The technique reduces API calls and skips empty rows and columns for optimal performance.
-// Keywords: Aspose.Cells | C# | MaxDataRow | MaxDataColumn | iterate populated cells | skip empty rows | Excel performance tip | efficient cell iteration | Aspose.Cells API usage | Excel data extraction .NET
-// Common Searches: How to loop through only non‑empty cells in Aspose.Cells C# | Using MaxDataRow and MaxDataColumn to avoid blank rows in Excel | Best practice for iterating a data range with Aspose.Cells | Performance tip: cache MaxDataRow in Aspose.Cells | Aspose.Cells skip empty rows while reading worksheet
-// Developer Intent: I want to traverse only the cells that contain data in an Excel worksheet, ignoring blank rows and columns, by leveraging MaxDataRow and MaxDataColumn in Aspose.Cells for .NET.
-// Use Cases: Display values from a sheet while omitting empty rows for clean reporting. | Copy only rows with data to another worksheet or external database to reduce processing time. | Apply formatting, formulas, or calculations exclusively to populated cells in large workbooks.
-// AI Prompts: Write C# code that uses Aspose.Cells to iterate over the populated area of a worksheet with MaxDataRow and MaxDataColumn, skipping empty cells. | Show an example of copying only non‑blank rows from one worksheet to another using Aspose.Cells. | Explain why caching MaxDataRow and MaxDataColumn improves iteration speed in large Excel files with Aspose.Cells.
+// Title: Aspose.Cells .NET: Iterate Only Populated Cells with MaxDataRow & MaxDataColumn
+// Description: Creates a workbook, inserts data with gaps, obtains the zero‑based last‑filled row and column via MaxDataRow/MaxDataColumn, and loops through that range. The example processes only cells that contain a value, converts string entries to uppercase, and saves the modified file.
+// Keywords: Aspose.Cells | MaxDataRow | MaxDataColumn | C# worksheet iteration | skip empty rows | skip empty columns | populate range loop | convert string to uppercase | save workbook | GitHub example
+// Common Searches: Aspose.Cells iterate only filled cells | MaxDataRow vs MaxRow Aspose.Cells | skip empty rows and columns C# Aspose.Cells | process non‑empty cells Aspose.Cells .NET | example using MaxDataColumn in C#
+// Developer Intent: Loop through the actual data region of a worksheet while ignoring blank rows and columns.
+// Use Cases: Transform all textual data in the used range to uppercase. | Calculate aggregates (sum, average) on numeric cells without scanning empty cells. | Apply in‑place formatting or validation only to cells that contain values. | Export a cleaned data set after removing gaps.
+// AI Prompts: Provide C# code that uses MaxDataRow and MaxDataColumn to iterate only non‑empty cells and convert strings to uppercase with Aspose.Cells. | Generate a .NET example that reads a worksheet, skips blank rows/columns, processes each value, and saves the workbook. | Explain the difference between MaxDataRow/MaxDataColumn and MaxRow/MaxColumn in Aspose.Cells and when each should be used.
 
 using System;
 using Aspose.Cells;
 
-// This C# example creates a workbook, inserts sample data with an intentional blank row, retrieves the worksheet's MaxDataRow and MaxDataColumn a single time, and loops through the exact data region, outputting only cells that hold a value before saving the file. The technique reduces API calls and skips empty rows and columns for optimal performance.
-class Program
+namespace AsposeCellsMaxDataIteration
 {
-    static void Main()
+    // Creates a workbook, inserts data with gaps, obtains the zero‑based last‑filled row and column via MaxDataRow/MaxDataColumn, and loops through that range. The example processes only cells that contain a value, converts string entries to uppercase, and saves the modified file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate some sample data (including a deliberately empty row)
-        cells["A1"].PutValue("Name");
-        cells["B1"].PutValue("Score");
-        cells["A2"].PutValue("Alice");
-        cells["B2"].PutValue(85);
-        cells["A3"].PutValue("Bob");
-        cells["B3"].PutValue(92);
-        // Row 4 (index 3) left empty
-        cells["A5"].PutValue("Charlie");
-        cells["B5"].PutValue(78);
-
-        // Retrieve the limits only once – calling MaxDataRow/MaxDataColumn repeatedly is expensive
-        int maxRow = cells.MaxDataRow;       // zero‑based index of the last row that contains data
-        int maxCol = cells.MaxDataColumn;    // zero‑based index of the last column that contains data
-
-        // Iterate through the populated area only
-        for (int row = 0; row <= maxRow; row++)
+        static void Main(string[] args)
         {
-            for (int col = 0; col <= maxCol; col++)
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate some sample data with gaps (empty rows/columns)
+            cells["A1"].PutValue("Header1");
+            cells["B1"].PutValue("Header2");
+            cells["A2"].PutValue("Row1Col1");
+            cells["B2"].PutValue(100);
+            // Row 3 is intentionally left empty
+            cells["A4"].PutValue("Row4Col1");
+            cells["B4"].PutValue(400);
+            // Add data in a later column to test MaxDataColumn
+            cells["D2"].PutValue("ExtraColumn");
+
+            // Retrieve the maximum populated row and column indices
+            int maxRow = cells.MaxDataRow;       // zero‑based index of last row containing data
+            int maxCol = cells.MaxDataColumn;    // zero‑based index of last column containing data
+
+            Console.WriteLine($"Iterating rows 0..{maxRow}, columns 0..{maxCol}");
+
+            // Loop through only the populated area
+            for (int row = 0; row <= maxRow; row++)
             {
-                Cell cell = cells[row, col];
-                // Skip null cells or cells with no value
-                if (cell != null && cell.Value != null && !string.IsNullOrEmpty(cell.StringValue))
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    Console.WriteLine($"Cell {cell.Name} = {cell.Value}");
+                    Cell cell = cells[row, col];
+                    // Process only cells that actually contain a value
+                    if (cell.Value != null)
+                    {
+                        Console.WriteLine($"Cell {cell.Name}: {cell.Value}");
+                        // Example processing: convert string values to upper case
+                        if (cell.Type == CellValueType.IsString)
+                        {
+                            cell.PutValue(cell.StringValue.ToUpper());
+                        }
+                    }
                 }
             }
-        }
 
-        // Save the workbook (uses the provided save rule)
-        workbook.Save("IteratePopulatedCells.xlsx");
+            // Save the workbook to demonstrate that changes were applied
+            workbook.Save("ProcessedData.xlsx");
+        }
     }
 }

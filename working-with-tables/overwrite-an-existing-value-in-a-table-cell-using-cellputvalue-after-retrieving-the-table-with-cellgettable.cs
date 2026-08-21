@@ -1,10 +1,10 @@
-// Title: Overwrite a Table Cell with Cell.PutValue after Cell.GetTable in Aspose.Cells for .NET
-// Description: Demonstrates how to create an Excel table (ListObject), retrieve the containing table of a specific cell using Cell.GetTable, and replace the cell's existing value with Cell.PutValue before saving the workbook.
-// Keywords: Aspose.Cells | Cell.GetTable | Cell.PutValue | ListObject | C# Excel table example | overwrite table cell | retrieve table from cell | modify Excel table cell | Aspose.Cells .NET
-// Common Searches: Aspose.Cells get table from cell | how to change a cell value in an Excel table using Aspose.Cells | Cell.PutValue example for ListObject | C# overwrite value in Excel table Aspose | retrieve ListObject with Cell.GetTable
-// Developer Intent: Find the ListObject that contains a given cell and replace that cell’s value programmatically.
-// Use Cases: Correct a data entry mistake in a specific row of an Excel table by locating the cell and applying PutValue. | Update calculated results in a numeric column of a ListObject after processing external data. | Synchronize values in an Excel table with a database by iterating rows and overwriting cells as needed.
-// AI Prompts: Generate C# code that locates a cell inside a ListObject, uses Cell.GetTable to obtain its parent table, and overwrites the cell value with Cell.PutValue. | Show how to loop through all rows of a ListObject and set a new value for the 'Value' column using Cell.PutValue. | Provide an example that validates the retrieved ListObject matches the original table before modifying the cell.
+// Title: C# – Overwrite a Table Cell with Cell.PutValue after retrieving the ListObject via Cell.GetTable (Aspose.Cells)
+// Description: Shows how to create a workbook, add a ListObject, locate the table that contains a given cell using Cell.GetTable, compute the absolute cell address, replace its value with Cell.PutValue, and save the result.
+// Keywords: Aspose.Cells | C# | Cell.GetTable | Cell.PutValue | ListObject | overwrite table cell | update Excel table programmatically | Aspose.Cells example | modify ListObject cell | Excel table edit .NET
+// Common Searches: Aspose.Cells change value in ListObject cell | Cell.GetTable C# example | How to update Excel table cell using Aspose.Cells | Overwrite specific cell in Aspose.Cells table | Set value in table row column Aspose.Cells
+// Developer Intent: Replace the value of a specific cell inside an Excel table by retrieving the table with Cell.GetTable and writing the new data with Cell.PutValue.
+// Use Cases: Correct data‑entry mistakes in automatically generated reports. | Adjust price, quantity, or other numeric fields before exporting a financial workbook. | Synchronize primary‑key values after applying business‑logic transformations. | Recalculate a column value based on updated business rules within a table.
+// AI Prompts: Write C# code using Aspose.Cells to locate the table containing cell C4 and set the value of the fourth data row, third column to 2500. | Explain step‑by‑step how Cell.GetTable and ListObject.StartRow/StartColumn are used to compute the absolute address of a cell that needs to be overwritten. | Provide robust error‑handling patterns for scenarios where a cell does not belong to any ListObject when using Cell.GetTable.
 
 using System;
 using Aspose.Cells;
@@ -12,58 +12,73 @@ using Aspose.Cells.Tables;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to create an Excel table (ListObject), retrieve the containing table of a specific cell using Cell.GetTable, and replace the cell's existing value with Cell.PutValue before saving the workbook.
+    // Shows how to create a workbook, add a ListObject, locate the table that contains a given cell using Cell.GetTable, compute the absolute cell address, replace its value with Cell.PutValue, and save the result.
     public class OverwriteTableCellDemo
     {
         public static void Run()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook (lifecycle: create)
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
 
-                // Populate sample data that will become a table (list object)
-                worksheet.Cells["A1"].PutValue("ID");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["A2"].PutValue(1);
-                worksheet.Cells["B2"].PutValue(100);
-                worksheet.Cells["A3"].PutValue(2);
-                worksheet.Cells["B3"].PutValue(200);
+                // Populate sample data for the table
+                cells["A1"].PutValue("ID");
+                cells["B1"].PutValue("Name");
+                cells["A2"].PutValue(1);
+                cells["B2"].PutValue("John");
+                cells["A3"].PutValue(2);
+                cells["B3"].PutValue("Mary");
 
-                // Create a ListObject (Excel table) covering the data range A1:B3
+                // Create a ListObject (table) that covers the data range A1:B3
                 int tableIndex = worksheet.ListObjects.Add(0, 0, 2, 1, true);
                 ListObject table = worksheet.ListObjects[tableIndex];
 
-                // Retrieve a cell that belongs to the table
-                Cell cellInTable = worksheet.Cells["B2"]; // This cell is inside the table
+                // Choose a cell that belongs to the table (e.g., B2)
+                Cell sampleCell = cells["B2"];
 
-                // Get the table that contains this cell using Cell.GetTable()
-                ListObject retrievedTable = cellInTable.GetTable();
+                // Retrieve the table that contains this cell using Cell.GetTable()
+                ListObject retrievedTable = sampleCell.GetTable();
 
-                // Verify that the retrieved table is the same as the one we created
-                if (retrievedTable != null && retrievedTable == table)
+                // Verify that the table was retrieved
+                if (retrievedTable == null)
                 {
-                    // Overwrite the existing value in the cell using Cell.PutValue
-                    cellInTable.PutValue(999); // New value replaces the original 100
+                    Console.WriteLine("The cell does not belong to any table.");
+                    return;
                 }
 
-                // Save the workbook
-                workbook.Save("OverwriteTableCell.xlsx", SaveFormat.Xlsx);
+                // Define the row and column offsets within the table where we want to overwrite the value
+                // For example, overwrite the value at row offset 1 (second data row) and column offset 0 (first column)
+                int rowOffset = 1;    // corresponds to worksheet row 2 (zero‑based index)
+                int columnOffset = 0; // corresponds to column A
+
+                // Calculate the absolute cell coordinates using the table's start position
+                int targetRow = retrievedTable.StartRow + rowOffset;
+                int targetColumn = retrievedTable.StartColumn + columnOffset;
+
+                // Get the target cell from the worksheet
+                Cell targetCell = cells[targetRow, targetColumn];
+
+                // Overwrite the existing value using Cell.PutValue
+                targetCell.PutValue(999); // New value for the cell
+
+                // Save the workbook (lifecycle: save)
+                workbook.Save("OverwriteTableCellDemo.xlsx", SaveFormat.Xlsx);
+
+                Console.WriteLine("Cell value overwritten and workbook saved successfully.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
+        // Entry point for the application
         public static void Main(string[] args)
         {
-            OverwriteTableCellDemo.Run();
+            Run();
         }
     }
 }

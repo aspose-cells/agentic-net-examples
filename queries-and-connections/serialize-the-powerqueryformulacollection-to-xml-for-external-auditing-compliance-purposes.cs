@@ -1,102 +1,99 @@
+// Title: C# – Export PowerQueryFormulaCollection to XML with Aspose.Cells for Audit Compliance
+// Description: Loads an Excel workbook, accesses its DataMashup, iterates the PowerQueryFormulaCollection, builds a structured XML document with formula attributes and items, and saves the file for external audit and governance purposes.
+// Keywords: Aspose.Cells | PowerQueryFormulaCollection | C# XML export | DataMashup serialization | audit compliance | Excel Power Query export | XML audit file | Power Query governance | Aspose.Cells .NET example
+// Common Searches: export PowerQuery formulas to XML Aspose.Cells | serialize PowerQueryFormulaCollection C# | create audit XML from Excel Power Query | Aspose.Cells DataMashup XML output | C# code to save Power Query definitions as XML
+// Developer Intent: Generate an XML file that captures every Power Query formula and its items from an Excel workbook for compliance auditing.
+// Use Cases: Produce a regulatory audit report of Power Query transformations. | Create version‑controlled XML snapshots to compare workbook changes. | Feed exported XML into governance tools for automated policy validation.
+// AI Prompts: Write C# code using Aspose.Cells to export a PowerQueryFormulaCollection to XML with attributes Name, Description, Type, FormulaDefinition and child Item elements. | Add comprehensive error handling and logging for missing DataMashup, file‑system errors, and unexpected null values in the Power Query export sample. | Show how to deserialize the generated PowerQueryFormulasAudit.xml back into a PowerQueryFormulaCollection using Aspose.Cells.
+
 using System;
 using System.IO;
-using System.Xml;
+using System.Xml.Linq;
 using Aspose.Cells;
+using Aspose.Cells.QueryTables;
 
 namespace PowerQueryFormulaXmlExport
 {
+    // Loads an Excel workbook, accesses its DataMashup, iterates the PowerQueryFormulaCollection, builds a structured XML document with formula attributes and items, and saves the file for external audit and governance purposes.
     class Program
     {
         static void Main(string[] args)
         {
+            // Path to the source workbook that contains Power Query formulas
+            string sourcePath = "SourceWithPowerQuery.xlsx";
+
+            // Verify that the source file exists before attempting to load it
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Source file not found: {Path.GetFullPath(sourcePath)}");
+                return;
+            }
+
             try
             {
-                // Path to the source workbook that contains Power Query formulas
-                string workbookPath = "source_with_powerquery.xlsx";
+                // Load the workbook
+                Workbook workbook = new Workbook(sourcePath);
 
-                // Verify that the workbook file exists before attempting to load it
-                if (!File.Exists(workbookPath))
+                // Access the DataMashup object which holds the PowerQueryFormulaCollection
+                DataMashup mashup = workbook.DataMashup;
+
+                // Guard against null DataMashup (should not happen for a valid workbook)
+                if (mashup == null)
                 {
-                    Console.WriteLine($"Error: Workbook file '{workbookPath}' not found.");
+                    Console.WriteLine("The workbook does not contain mashup data.");
                     return;
                 }
 
-                // Load the workbook using Aspose.Cells
-                Workbook workbook = new Workbook(workbookPath);
+                // Retrieve the collection of Power Query formulas
+                PowerQueryFormulaCollection formulas = mashup.PowerQueryFormulas;
 
-                // Access the DataMashup object which holds the Power Query formulas collection
-                var mashup = workbook.DataMashup;
-                var formulas = mashup?.PowerQueryFormulas; // use var/dynamic to avoid compile‑time type dependency
+                // Create the root XML element
+                XElement root = new XElement("PowerQueryFormulas");
 
-                // Prepare an XML document to hold the serialized data
-                XmlDocument xmlDoc = new XmlDocument();
-
-                // Create XML declaration
-                XmlDeclaration xmlDecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", null);
-                xmlDoc.AppendChild(xmlDecl);
-
-                // Root element
-                XmlElement root = xmlDoc.CreateElement("PowerQueryFormulas");
-                xmlDoc.AppendChild(root);
-
-                if (formulas != null)
+                // Iterate through each formula and build XML representation
+                foreach (PowerQueryFormula formula in formulas)
                 {
-                    // Iterate through each PowerQueryFormula using dynamic typing
-                    foreach (dynamic formula in formulas)
+                    // Create an element for the formula with its main properties as attributes
+                    XElement formulaElement = new XElement("PowerQueryFormula",
+                        new XAttribute("Name", formula.Name ?? string.Empty),
+                        new XAttribute("Description", formula.Description ?? string.Empty),
+                        new XAttribute("Type", formula.Type.ToString()),
+                        new XAttribute("FormulaDefinition", formula.FormulaDefinition ?? string.Empty)
+                    );
+
+                    // Add child elements for each formula item (if any)
+                    PowerQueryFormulaItemCollection items = formula.PowerQueryFormulaItems;
+                    foreach (PowerQueryFormulaItem item in items)
                     {
-                        XmlElement formulaElem = xmlDoc.CreateElement("PowerQueryFormula");
-                        root.AppendChild(formulaElem);
-
-                        AppendTextElement(xmlDoc, formulaElem, "Name", formula.Name);
-                        AppendTextElement(xmlDoc, formulaElem, "Description", formula.Description);
-                        AppendTextElement(xmlDoc, formulaElem, "Type", formula.Type?.ToString());
-                        AppendTextElement(xmlDoc, formulaElem, "FormulaDefinition", formula.FormulaDefinition);
-
-                        // Serialize the collection of items belonging to the formula
-                        var items = formula.PowerQueryFormulaItems;
-                        XmlElement itemsElem = xmlDoc.CreateElement("Items");
-                        formulaElem.AppendChild(itemsElem);
-
-                        if (items != null)
-                        {
-                            foreach (dynamic item in items)
-                            {
-                                XmlElement itemElem = xmlDoc.CreateElement("Item");
-                                itemsElem.AppendChild(itemElem);
-
-                                AppendTextElement(xmlDoc, itemElem, "Name", item.Name);
-                                AppendTextElement(xmlDoc, itemElem, "Value", item.Value);
-                            }
-                        }
+                        XElement itemElement = new XElement("Item",
+                            new XAttribute("Name", item.Name ?? string.Empty),
+                            new XAttribute("Value", item.Value ?? string.Empty)
+                        );
+                        formulaElement.Add(itemElement);
                     }
-                }
-                else
-                {
-                    // No formulas found – add a placeholder comment node for clarity
-                    XmlComment comment = xmlDoc.CreateComment("No Power Query formulas found in the workbook.");
-                    root.AppendChild(comment);
+
+                    // Append the formula element to the root
+                    root.Add(formulaElement);
                 }
 
-                // Save the XML document to a file
+                // Build the final XML document
+                XDocument doc = new XDocument(
+                    new XDeclaration("1.0", "utf-8", "yes"),
+                    root
+                );
+
+                // Define the output XML file path
                 string xmlOutputPath = "PowerQueryFormulasAudit.xml";
-                xmlDoc.Save(xmlOutputPath);
 
-                Console.WriteLine($"Power Query formulas have been serialized to '{xmlOutputPath}'.");
+                // Save the XML document to file
+                doc.Save(xmlOutputPath);
+
+                Console.WriteLine($"Power Query formulas have been serialized to XML at: {Path.GetFullPath(xmlOutputPath)}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        /// <summary>
-        /// Helper method to create an element with inner text and append it to a parent node.
-        /// </summary>
-        private static void AppendTextElement(XmlDocument doc, XmlElement parent, string elementName, string innerText)
-        {
-            XmlElement elem = doc.CreateElement(elementName);
-            elem.InnerText = innerText ?? string.Empty;
-            parent.AppendChild(elem);
         }
     }
 }

@@ -1,53 +1,72 @@
-// Title: Log a Warning for Duplicate Worksheet TabId in Aspose.Cells (.NET)
-// Description: Creates a workbook with three worksheets, assigns TabId values, scans all sheets with a dictionary, writes a console warning when a TabId is reused, and saves the file.
-// Keywords: Aspose.Cells duplicate TabId | C# worksheet TabId conflict | detect duplicate sheet identifier | log warning Aspose.Cells | TabId uniqueness check
-// Common Searches: Aspose.Cells find duplicate TabId | C# log warning for repeated worksheet TabId | prevent sheet TabId clash in .NET | how to detect duplicate TabId in Excel workbook | validate worksheet identifiers before saving
-// Developer Intent: Identify worksheets that share the same TabId and output a warning to avoid identifier collisions.
-// Use Cases: Validate TabId uniqueness during automated report generation. | Detect and log duplicate TabId values in batch workbook processing. | Ensure UI tab navigation works correctly by preventing TabId conflicts before publishing.
-// AI Prompts: Generate a reusable C# method that returns all duplicate TabId pairs in a Workbook. | Rewrite the sample to throw an exception instead of logging when a duplicate TabId is found. | Create a utility class for Aspose.Cells that checks TabId uniqueness and logs detailed messages for each conflict.
+// Title: Detect and Log Duplicate Worksheet TabId Values with Aspose.Cells for .NET
+// Description: Creates a workbook, assigns explicit TabId values to three worksheets (including a duplicate), scans all sheets, logs a console warning for any TabId that appears on multiple worksheets, and saves the file.
+// Keywords: Aspose.Cells | C# | .NET | Worksheet TabId | duplicate TabId detection | log warning | workbook validation | sheet identifier conflict | Aspose.Cells example
+// Common Searches: Aspose.Cells duplicate TabId warning | how to check for duplicate worksheet TabId in C# | detect repeated TabId in Aspose.Cells workbook | log worksheet identifier conflicts Aspose.Cells | validate unique TabId across sheets .NET
+// Developer Intent: Identify and report worksheets that share the same TabId to prevent identifier conflicts.
+// Use Cases: Run a pre‑publish check that ensures every worksheet has a unique TabId and outputs warnings for any duplicates. | Generate a diagnostic list of sheets with colliding TabIds to troubleshoot navigation or macro issues. | Integrate duplicate TabId detection into automated build pipelines to avoid runtime errors in applications relying on unique identifiers.
+// AI Prompts: Create a reusable C# method that receives a Workbook and returns groups of worksheet names that share the same TabId. | Show how to replace the console warning with a custom exception that includes the duplicate TabId and the affected worksheet names. | Demonstrate logging duplicate TabId warnings to a file using Aspose.Cells together with Microsoft.Extensions.Logging.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-// Creates a workbook with three worksheets, assigns TabId values, scans all sheets with a dictionary, writes a console warning when a TabId is reused, and saves the file.
-class Program
+// Creates a workbook, assigns explicit TabId values to three worksheets (including a duplicate), scans all sheets, logs a console warning for any TabId that appears on multiple worksheets, and saves the file.
+public class DuplicateTabIdWarningDemo
 {
-    static void Main()
+    public static void Main()
+    {
+        try
+        {
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    public static void Run()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Access the default first worksheet and set a TabId
+        // Access the default first worksheet and set its TabId
         Worksheet ws1 = workbook.Worksheets[0];
         ws1.Name = "Sheet1";
         ws1.TabId = 101;
 
-        // Add a second worksheet with a different TabId
+        // Add a second worksheet with a unique TabId
         Worksheet ws2 = workbook.Worksheets.Add("Sheet2");
         ws2.TabId = 102;
 
-        // Add a third worksheet that intentionally uses a duplicate TabId
+        // Add a third worksheet that intentionally duplicates the TabId of the first sheet
         Worksheet ws3 = workbook.Worksheets.Add("Sheet3");
         ws3.TabId = 101; // Duplicate TabId
 
         // Detect duplicate TabId values across all worksheets
-        var tabIdLookup = new Dictionary<int, string>();
+        var tabIdMap = new Dictionary<int, List<string>>();
         foreach (Worksheet ws in workbook.Worksheets)
         {
-            int currentId = ws.TabId;
-            if (tabIdLookup.ContainsKey(currentId))
+            int id = ws.TabId;
+            if (!tabIdMap.ContainsKey(id))
             {
-                // Log a warning when a duplicate TabId is found
-                Console.WriteLine($"Warning: Worksheet \"{ws.Name}\" has duplicate TabId {currentId} (already used by \"{tabIdLookup[currentId]}\").");
+                tabIdMap[id] = new List<string>();
             }
-            else
+            tabIdMap[id].Add(ws.Name);
+        }
+
+        // Log a warning for each duplicate TabId found
+        foreach (var entry in tabIdMap)
+        {
+            if (entry.Value.Count > 1)
             {
-                tabIdLookup[currentId] = ws.Name;
+                Console.WriteLine($"Warning: Duplicate TabId {entry.Key} found in worksheets: {string.Join(", ", entry.Value)}");
             }
         }
 
         // Save the workbook
-        workbook.Save("DuplicateTabIdDemo.xlsx");
+        string outputPath = "DuplicateTabIdDemo.xlsx";
+        workbook.Save(outputPath);
+        Console.WriteLine($"Workbook saved to {outputPath}");
     }
 }

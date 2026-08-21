@@ -1,37 +1,39 @@
-// Title: Add a rectangle shape to a specific cell with Aspose.Cells for .NET
-// Description: Shows how to create a workbook, locate cell C5 (row 5, column C), and insert a rectangle whose top‑left corner aligns with that cell. The sample sets pixel‑based width and height, applies a solid fill, border style, and label text, then saves the file as RectangleAtCell.xlsx.
-// Keywords: Aspose.Cells rectangle shape | C# add shape to cell | shape anchoring Aspose.Cells | Excel drawing objects .NET | set shape fill color | shape dimensions pixels | AddRectangle method | Aspose.Cells worksheet graphics
-// Common Searches: Aspose.Cells add rectangle to cell | How to anchor a shape to a cell in C# | Set shape size and style with Aspose.Cells | Place drawing objects at exact cell coordinates | C# Aspose.Cells shape positioning example
-// Developer Intent: Insert a rectangle drawing object positioned at a given worksheet cell.
-// Use Cases: Highlight a data block by placing a colored rectangle over the top‑left cell of the range. | Design a template with visual sections by anchoring rectangles to predefined cells. | Generate reports that add callout boxes to specific cells, customizing size, fill, and border.
-// AI Prompts: Write C# code using Aspose.Cells to add a rectangle at cell D10 with a width of 200 px, height of 80 px, a red border, and the text "Important". | Show how to iterate over a list of cell addresses and attach a rectangle shape to each one with Aspose.Cells for .NET. | Explain the conversion from Excel cell references (e.g., "B3") to the topRow, leftColumn, top, and left parameters required by the AddRectangle method.
+// Title: Add a rectangle shape to a target cell with Aspose.Cells for .NET (C#)
+// Description: Creates a new workbook, selects the first worksheet, defines cell C5 as the anchor point, sets rectangle dimensions in pixels, adds a rectangle shape with zero offsets so it aligns to the cell's top‑left corner, applies fill and line colors, adds a label, and saves the file as RectangleAtCell.xlsx.
+// Keywords: Aspose.Cells rectangle shape C# | add shape to cell Aspose.Cells | shape positioning Aspose.Cells | Aspose.Cells rectangle fill color | Aspose.Cells shape example
+// Common Searches: how to add a rectangle shape to a specific cell using Aspose.Cells | Aspose.Cells place shape at cell C5 with no offset | set rectangle size and style in Aspose.Cells workbook | anchor drawing shape to worksheet cell C# | Aspose.Cells shape alignment tutorial
+// Developer Intent: Insert and style a rectangle shape that is anchored to a designated worksheet cell.
+// Use Cases: Highlight a key metric by surrounding its cell with a colored rectangle in an automated report. | Create a labeled box next to a data entry cell for visual guidance in generated spreadsheets. | Design a template where shapes are pre‑positioned to align with form fields for bulk document creation.
+// AI Prompts: Generate C# code with Aspose.Cells to insert a rectangle at cell D10, specifying custom width, height, fill, and line colors. | Show how to anchor multiple rectangle shapes to different cells in a worksheet using Aspose.Cells for .NET. | Provide an example that updates the text of an existing rectangle shape positioned at a given cell.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeDemo
+namespace AsposeCellsShapeExample
 {
-    // Shows how to create a workbook, locate cell C5 (row 5, column C), and insert a rectangle whose top‑left corner aligns with that cell. The sample sets pixel‑based width and height, applies a solid fill, border style, and label text, then saves the file as RectangleAtCell.xlsx.
+    // Creates a new workbook, selects the first worksheet, defines cell C5 as the anchor point, sets rectangle dimensions in pixels, adds a rectangle shape with zero offsets so it aligns to the cell's top‑left corner, applies fill and line colors, adds a label, and saves the file as RectangleAtCell.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Define the target cell (e.g., "C5")
-            // Row and column indexes are zero‑based
-            int targetRow = 4;    // Row 5 in Excel (C5)
-            int targetColumn = 2; // Column C in Excel
+            // Define the target cell (e.g., C5). 
+            // Row and column indices are zero‑based: C -> 2, 5 -> 4
+            int targetRow = 4;      // Row index for cell C5
+            int targetColumn = 2;   // Column index for cell C5
 
-            // Define shape dimensions (in pixels)
-            int shapeHeight = 100;
-            int shapeWidth = 150;
+            // Define shape size in pixels
+            int shapeHeight = 100;  // Height of the rectangle
+            int shapeWidth = 200;   // Width of the rectangle
 
-            // Add a rectangle shape anchored to the target cell
-            // top and left offsets are set to 0 (shape starts exactly at the cell's top‑left corner)
+            // Add a rectangle shape anchored to the target cell.
+            // Offsets (top, left) are set to 0 to align the shape with the cell's top‑left corner.
             RectangleShape rectangle = worksheet.Shapes.AddRectangle(
                 topRow: targetRow,
                 top: 0,
@@ -41,9 +43,8 @@ namespace AsposeCellsShapeDemo
                 width: shapeWidth);
 
             // Optional: set some visual properties
-            rectangle.Fill.FillType = FillType.Solid;
-            rectangle.Fill.SolidFill.Color = System.Drawing.Color.LightGreen;
-            rectangle.Line.DashStyle = MsoLineDashStyle.Solid;
+            rectangle.Fill.SolidFill.Color = System.Drawing.Color.LightBlue;
+            rectangle.Line.SolidFill.Color = System.Drawing.Color.DarkBlue;
             rectangle.Line.Weight = 2;
             rectangle.Text = "Sample Rectangle";
 

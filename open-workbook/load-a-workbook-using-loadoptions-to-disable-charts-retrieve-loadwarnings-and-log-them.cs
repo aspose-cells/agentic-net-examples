@@ -1,61 +1,58 @@
-// Title: Aspose.Cells .NET – Load workbook without charts and capture load warnings
-// Description: Demonstrates how to configure LoadOptions with a LoadFilter that excludes chart data, attach a custom IWarningCallback to collect WarningInfo objects, open an Excel file, and log each warning’s type and description.
-// Keywords: Aspose.Cells | .NET | LoadOptions | LoadFilter | disable charts | load warnings | IWarningCallback | Excel workbook loading | performance optimization | GitHub example
-// Common Searches: Aspose.Cells load workbook without charts | capture load warnings Aspose.Cells .NET | how to use LoadFilter to skip charts | custom warning callback Aspose.Cells | improve Excel load performance Aspose
-// Developer Intent: Open an Excel file while skipping chart loading and retrieve any load‑time warnings.
-// Use Cases: Speed up processing of large workbooks by omitting chart data. | Audit unsupported or altered features after import via collected warnings. | Trigger custom remediation when specific warning types (e.g., unknown chart types) are detected. | Log warning details to external systems for compliance reporting.
-// AI Prompts: Write C# code that opens an Excel workbook with Aspose.Cells, disables chart loading, and writes all load warnings to a CSV file. | Show how to implement an IWarningCallback that stores WarningInfo records in a SQL database after loading a workbook with a custom LoadFilter. | Create a script that uses LoadOptions to exclude charts, processes the collected WarningInfo objects, and generates a markdown summary report.
+// Title: Load an Excel workbook without charts and capture load warnings using Aspose.Cells for .NET
+// Description: Shows how to set LoadOptions with a LoadFilter that omits chart data, attach a custom IWarningCallback to gather WarningInfo objects, open the workbook, and write the warnings to the console. This approach speeds up loading of large files while providing full diagnostic information.
+// Keywords: Aspose.Cells | C# | LoadOptions | LoadFilter | exclude charts | load warnings | IWarningCallback | WarningInfo | Excel file loading | performance optimization
+// Common Searches: Aspose.Cells load workbook without charts | How to capture load warnings in Aspose.Cells .NET | Disable chart loading with LoadFilter | Implement IWarningCallback for Excel import | LoadOptions example for chart exclusion
+// Developer Intent: Open an Excel file while skipping chart objects and retrieve any warnings produced during the load operation.
+// Use Cases: Improve load time for massive spreadsheets by ignoring chart data and still monitor compatibility issues. | Validate user‑uploaded Excel files, logging unsupported features while deliberately omitting charts. | Create a centralized warning logger that stores WarningInfo for later reporting or automated quality checks.
+// AI Prompts: Modify the example to also exclude images and shapes using LoadFilter. | Write the collected warnings to a JSON file instead of printing them to the console. | Filter the WarningInfo list to show only unsupported formula warnings and summarize them.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsLoadOptionsDemo
+// Shows how to set LoadOptions with a LoadFilter that omits chart data, attach a custom IWarningCallback to gather WarningInfo objects, open the workbook, and write the warnings to the console. This approach speeds up loading of large files while providing full diagnostic information.
+class Program
 {
-    // Custom warning callback that stores warnings in a list
-    // Demonstrates how to configure LoadOptions with a LoadFilter that excludes chart data, attach a custom IWarningCallback to collect WarningInfo objects, open an Excel file, and log each warning’s type and description.
-    public class CollectingWarningCallback : IWarningCallback
+    static void Main()
     {
-        public List<WarningInfo> Warnings { get; } = new List<WarningInfo>();
+        // Collect warnings during loading
+        List<WarningInfo> warnings = new List<WarningInfo>();
+        IWarningCallback warningCallback = new CollectWarningCallback(warnings);
+
+        // Create load options
+        LoadOptions loadOptions = new LoadOptions();
+
+        // Disable loading of charts by using a LoadFilter without the Chart flag
+        loadOptions.LoadFilter = new LoadFilter(LoadDataFilterOptions.All & ~LoadDataFilterOptions.Chart);
+
+        // Assign the warning callback to capture load warnings
+        loadOptions.WarningCallback = warningCallback;
+
+        // Load the workbook with the specified options
+        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+
+        // Log all captured warnings
+        foreach (var warning in warnings)
+        {
+            Console.WriteLine($"Warning: {warning.Description}");
+        }
+
+        // Workbook is now loaded without charts; further processing can be done here
+    }
+
+    // Custom implementation of IWarningCallback that stores warnings in a list
+    private class CollectWarningCallback : IWarningCallback
+    {
+        private readonly List<WarningInfo> _warnings;
+
+        public CollectWarningCallback(List<WarningInfo> warnings)
+        {
+            _warnings = warnings;
+        }
 
         public void Warning(WarningInfo warningInfo)
         {
-            // Store each warning for later processing
-            Warnings.Add(warningInfo);
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            // Path to the source workbook
-            string inputPath = "input.xlsx";
-
-            // Create a warning collector
-            var warningCallback = new CollectingWarningCallback();
-
-            // Create LoadOptions and configure it:
-            // - Disable loading of charts by excluding the Chart flag
-            // - Attach the warning callback to capture load warnings
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.WarningCallback = warningCallback;
-            loadOptions.LoadFilter = new LoadFilter(
-                LoadDataFilterOptions.All & ~LoadDataFilterOptions.Chart);
-
-            // Load the workbook with the specified options
-            Workbook workbook = new Workbook(inputPath, loadOptions);
-
-            // Log all captured warnings
-            Console.WriteLine("Load warnings:");
-            foreach (var warning in warningCallback.Warnings)
-            {
-                Console.WriteLine($"- Type: {warning.WarningType}, Description: {warning.Description}");
-            }
-
-            // (Optional) Use the workbook as needed...
-            // For demonstration, output the number of worksheets loaded
-            Console.WriteLine($"Worksheets loaded: {workbook.Worksheets.Count}");
+            _warnings.Add(warningInfo);
         }
     }
 }

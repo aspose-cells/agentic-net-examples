@@ -1,86 +1,93 @@
-// Title: Batch generate pivot tables for multiple Excel workbooks using Aspose.Cells (.NET)
-// Description: C# program that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, creates a pivot table at E1 using the first two columns (or a single column when only one exists), refreshes all pivots, and saves the updated files to an output directory with error handling.
-// Keywords: Aspose.Cells pivot table C# | batch create pivot tables | process multiple Excel files .NET | automate pivot table generation | refresh pivot tables Aspose | iterate Excel files directory | C# Excel automation
-// Common Searches: how to add a pivot table to every workbook in a folder using Aspose.Cells | C# batch generate pivot tables for .xlsx files | Aspose.Cells create pivot table from used range | refresh all pivot tables programmatically Aspose | automate pivot table insertion across multiple Excel files
-// Developer Intent: Automatically add a standard pivot table to each Excel workbook in a specified directory and save the modified files.
-// Use Cases: Generate a uniform sales‑summary pivot in all regional workbooks before consolidating monthly reports. | Prepare data‑analysis templates by inserting a predefined pivot layout into every uploaded Excel file in a batch workflow. | Ensure financial models contain up‑to‑date pivot calculations by refreshing and persisting pivots across a collection of workbooks.
-// AI Prompts: Write C# code with Aspose.Cells that adds a pivot table to all .xlsx files in a folder, using the first two columns as row and data fields, and saves the results to an output directory. | Extend the batch pivot generator to log each processed file, skip non‑Excel files, and produce a summary of successes and failures. | Show how to set the pivot table name and placement dynamically based on each workbook’s filename when processing a directory with Aspose.Cells.
+// Title: Batch Create Pivot Tables in Multiple Excel Workbooks with Aspose.Cells for .NET (C#)
+// Description: Scans a folder for .xlsx files, loads each workbook with Aspose.Cells, determines the used range, adds a simple pivot table (first column as rows, second column as values), refreshes the pivot, and saves the updated file to a target directory. Includes basic error handling and folder creation.
+// Keywords: Aspose.Cells batch pivot table | C# generate pivot tables programmatically | process multiple Excel files .NET | automate pivot creation Aspose | refresh pivot tables C# | folder based Excel automation | add pivot table to each workbook
+// Common Searches: how to add a pivot table to every Excel file in a folder using Aspose.Cells | batch generate pivot tables C# | process all .xlsx files in a directory with Aspose.Cells | automate pivot table creation for multiple workbooks .NET | refresh pivot tables after adding them programmatically
+// Developer Intent: Automatically insert a standard pivot table into each workbook within a specified directory and save the modified files.
+// Use Cases: Generate a consistent sales‑summary pivot in all regional workbooks before monthly distribution. | Prepare analysis templates by adding a predefined pivot to a batch of blank Excel files stored on a shared drive. | Refresh and persist pivot tables in bulk so downstream reporting tools receive ready‑to‑use files without manual steps.
+// AI Prompts: Create a C# method that iterates over all .xlsx files in a folder, adds a pivot table with Aspose.Cells, and writes the results to an output directory. | Extend the sample to accept custom row‑field and data‑field column indexes as parameters for flexible pivot layouts. | Add robust logging that records successful and failed file operations to a CSV log while continuing batch processing.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace BatchPivotGenerator
+namespace BatchPivotProcessing
 {
-    // C# program that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, creates a pivot table at E1 using the first two columns (or a single column when only one exists), refreshes all pivots, and saves the updated files to an output directory with error handling.
-    class Program
+    // Alias to avoid ambiguity with System.Range
+    using AsposeRange = Aspose.Cells.Range;
+
+    // Scans a folder for .xlsx files, loads each workbook with Aspose.Cells, determines the used range, adds a simple pivot table (first column as rows, second column as values), refreshes the pivot, and saves the updated file to a target directory. Includes basic error handling and folder creation.
+    public class BatchPivotProcessor
     {
-        static void Main(string[] args)
+        /// <param name="inputDirectory">Folder containing source workbooks.</param>
+        /// <param name="outputDirectory">Folder where processed workbooks will be saved.</param>
+        public void ProcessDirectory(string inputDirectory, string outputDirectory)
         {
-            // Directory containing source workbooks
-            string inputDirectory = @"C:\InputWorkbooks";
-            // Directory where processed workbooks will be saved
-            string outputDirectory = @"C:\OutputWorkbooks";
-
-            // Ensure input directory exists
-            if (!Directory.Exists(inputDirectory))
-            {
-                Console.WriteLine($"Input directory does not exist: {inputDirectory}");
-                return;
-            }
-
-            // Ensure output directory exists
+            // Ensure output folder exists
             if (!Directory.Exists(outputDirectory))
                 Directory.CreateDirectory(outputDirectory);
 
-            // Process each .xlsx file in the input directory
-            foreach (string filePath in Directory.GetFiles(inputDirectory, "*.xlsx"))
+            // Get all .xlsx files in the input folder
+            string[] files = Directory.GetFiles(inputDirectory, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+            foreach (string filePath in files)
             {
+                // Verify the file exists before attempting to load
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found: {filePath}");
+                    continue;
+                }
+
                 try
                 {
-                    // Verify the file still exists before loading
-                    if (!File.Exists(filePath))
+                    // Load the workbook (lifecycle rule)
+                    Workbook workbook = new Workbook(filePath);
+
+                    // Assume the first worksheet contains the source data
+                    Worksheet sourceSheet = workbook.Worksheets[0];
+
+                    // Determine the used range of the worksheet
+                    AsposeRange usedRange = sourceSheet.Cells.MaxDisplayRange;
+                    if (usedRange == null)
                     {
-                        Console.WriteLine($"File not found: {filePath}");
+                        Console.WriteLine($"No data found in workbook: {filePath}");
                         continue;
                     }
 
-                    // Load the workbook
-                    Workbook workbook = new Workbook(filePath);
+                    int startRow = usedRange.FirstRow;
+                    int startCol = usedRange.FirstColumn;
+                    int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                    int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
 
-                    // Work with the first worksheet (assumed to contain the source data)
-                    Worksheet worksheet = workbook.Worksheets[0];
+                    // Build the source data address in A1 style (e.g., "A1:B10")
+                    string sourceAddress = sourceSheet.Cells[startRow, startCol].Name + ":" +
+                                           sourceSheet.Cells[endRow, endCol].Name;
 
-                    // Determine the used range of the worksheet to use as the pivot source
-                    Aspose.Cells.Range usedRange = worksheet.Cells.MaxDisplayRange;
+                    // Destination cell for the pivot table – place it a few rows below the data
+                    int destRow = endRow + 3;
+                    string destCellName = $"A{destRow + 1}";
 
-                    // Build the source data reference in A1 style (e.g., =Sheet1!A1:C10)
-                    string sourceData = $"={worksheet.Name}!{usedRange.Address}";
+                    // Add a new pivot table to the same worksheet
+                    int pivotIndex = sourceSheet.PivotTables.Add(sourceAddress, destCellName,
+                        "PivotTable_" + Path.GetFileNameWithoutExtension(filePath));
 
-                    // Add a new pivot table at cell E1 with a default name
-                    int pivotIndex = worksheet.PivotTables.Add(sourceData, "E1", "PivotTable1");
-                    PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+                    PivotTable pivotTable = sourceSheet.PivotTables[pivotIndex];
 
-                    // Configure the pivot table:
-                    // - First column as Row field
-                    // - Second column as Data field (if present)
-                    if (usedRange.ColumnCount >= 2)
+                    // Simple configuration: first column as row field, second column as data field
+                    if (pivotTable.RowFields.Count == 0 && pivotTable.DataFields.Count == 0)
                     {
-                        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // First column
-                        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Second column
-                    }
-                    else if (usedRange.ColumnCount == 1)
-                    {
-                        // If only one column exists, use it as both Row and Data
+                        // Add first column (index 0) to Row area
                         pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-                        pivotTable.AddFieldToArea(PivotFieldType.Data, 0);
+                        // Add second column (index 1) to Data area, if it exists
+                        if (endCol - startCol >= 1)
+                            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
                     }
 
-                    // Refresh all pivot tables in the workbook
+                    // Refresh all pivot tables in the workbook (lifecycle rule)
                     workbook.Worksheets.RefreshPivotTables();
 
-                    // Save the modified workbook to the output directory
+                    // Save the modified workbook to the output folder (lifecycle rule)
                     string outputPath = Path.Combine(outputDirectory, Path.GetFileName(filePath));
                     workbook.Save(outputPath);
                 }
@@ -89,6 +96,21 @@ namespace BatchPivotGenerator
                     Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
                 }
             }
+        }
+    }
+
+    // Example usage
+    class Program
+    {
+        static void Main()
+        {
+            string inputDir = @"C:\InputWorkbooks";
+            string outputDir = @"C:\ProcessedWorkbooks";
+
+            BatchPivotProcessor processor = new BatchPivotProcessor();
+            processor.ProcessDirectory(inputDir, outputDir);
+
+            Console.WriteLine("Batch pivot table processing completed.");
         }
     }
 }

@@ -1,41 +1,60 @@
-// Title: Export Aspose.Cells Workbook to Self‑Contained HTML with Inline CSS Using Custom Properties (C#)
-// Description: Demonstrates how to save an Aspose.Cells workbook as a single HTML file with all styling embedded inline. The example sets HtmlSaveOptions.DisableCss to true and EnableCssCustomProperties to true, eliminating external CSS files and using CSS custom properties for compact, self‑contained output.
-// Keywords: Aspose.Cells HtmlSaveOptions DisableCss | EnableCssCustomProperties C# | inline CSS Aspose.Cells HTML export | self‑contained HTML workbook | embed styles in HTML Aspose | no external CSS Aspose.Cells | custom CSS variables Excel to HTML
-// Common Searches: Aspose.Cells export to HTML without external CSS | How to embed CSS custom properties in Aspose.Cells HTML output | C# save workbook as single HTML file with inline styles | DisableCss option Aspose.Cells example | EnableCssCustomProperties usage in Aspose.Cells
-// Developer Intent: Export an Excel workbook to HTML where all formatting is included directly in the page, avoiding separate CSS files.
-// Use Cases: Email‑ready reports that must not reference external style sheets. | Single‑file documentation portals where extra HTTP requests are undesirable. | Embedding formatted spreadsheet data into web pages that need instant rendering.
-// AI Prompts: Show how to embed worksheet images as base64 strings in the generated HTML using Aspose.Cells. | Provide a snippet that defines a CSS variable for cell background color and applies it via custom properties. | Explain how to switch back to external CSS files while still using custom properties for selected styles.
+// Title: Aspose.Cells for .NET – Export Workbook to a Single HTML File with Embedded CSS and Custom Properties
+// Description: Shows how to configure HtmlSaveOptions in C# to generate a self‑contained HTML file from an Aspose.Cells workbook. The sample disables external CSS files, embeds all styles inside a <style> tag, and enables CSS custom properties for flexible theming.
+// Keywords: Aspose.Cells HTML export | C# embed CSS in HTML | HtmlSaveOptions SaveAsSingleFile | EnableCssCustomProperties | single file HTML Aspose.Cells | disable external stylesheet | embedded CSS Aspose.Cells .NET
+// Common Searches: Aspose.Cells export workbook to HTML with embedded CSS | How to disable external CSS files in Aspose.Cells HTML export | Enable CSS custom properties in Aspose.Cells C# | Save Aspose.Cells workbook as single HTML file | Aspose.Cells HtmlSaveOptions CSS settings
+// Developer Intent: Create a single HTML document from a workbook where all styling is included in the file itself, using CSS custom properties and without generating separate stylesheet files.
+// Use Cases: Email‑compatible HTML reports where external stylesheets are blocked. | Offline‑viewable HTML documents that retain spreadsheet formatting without extra files. | Web pages that rely on CSS variables for dynamic theming while keeping the markup portable.
+// AI Prompts: Generate C# code that saves an Aspose.Cells workbook as one HTML file with all CSS embedded and CSS custom properties enabled. | Explain the impact of EnableCssCustomProperties on the HTML output produced by Aspose.Cells. | Provide a step‑by‑step guide to disable external CSS generation and embed styles directly using HtmlSaveOptions in Aspose.Cells for .NET.
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 
-// Demonstrates how to save an Aspose.Cells workbook as a single HTML file with all styling embedded inline. The example sets HtmlSaveOptions.DisableCss to true and EnableCssCustomProperties to true, eliminating external CSS files and using CSS custom properties for compact, self‑contained output.
-class Program
+namespace AsposeCellsHtmlExport
 {
-    static void Main()
+    // Shows how to configure HtmlSaveOptions in C# to generate a self‑contained HTML file from an Aspose.Cells workbook. The sample disables external CSS files, embeds all styles inside a <style> tag, and enables CSS custom properties for flexible theming.
+    class Program
     {
-        // Create a new workbook (lifecycle create)
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add sample data with some formatting
-        worksheet.Cells["A1"].PutValue("Hello, Aspose!");
-        Style cellStyle = worksheet.Cells["A1"].GetStyle();
-        cellStyle.Font.IsBold = true;
-        cellStyle.Font.Color = Color.Blue;
-        worksheet.Cells["A1"].SetStyle(cellStyle);
+            // Add some sample data with formatting
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Price");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(1.2);
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue(0.8);
 
-        // Configure HTML save options
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // Apply bold font to header row
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.Font.IsBold = true;
+            headerStyle.Font.Color = System.Drawing.Color.Blue;
+            sheet.Cells["A1"].SetStyle(headerStyle);
+            sheet.Cells["B1"].SetStyle(headerStyle);
 
-        // Disable external CSS files; use only inline styles
-        htmlOptions.DisableCss = true;
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-        // Enable CSS custom properties to embed styles directly in the HTML
-        htmlOptions.EnableCssCustomProperties = true;
+            // Embed all CSS into the generated HTML (no external CSS files)
+            htmlOptions.SaveAsSingleFile = true;          // merges CSS into <style> tag
+            htmlOptions.DisableCss = false;              // allow CSS (inline or <style>)
+            htmlOptions.EnableCssCustomProperties = true; // use CSS custom properties for optimization
 
-        // Save the workbook as HTML (lifecycle save)
-        workbook.Save("output.html", htmlOptions);
+            // Optional: add additional CSS if needed
+            htmlOptions.CssStyles = @"
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                table { border-collapse: collapse; width: 50%; }
+                td, th { border: 1px solid #ddd; padding: 8px; }
+                th { background-color: var(--header-bg, #f2f2f2); }";
+
+            // Save the workbook as a single HTML file with embedded styles
+            string outputPath = "WorkbookWithEmbeddedCss.html";
+            workbook.Save(outputPath, htmlOptions);
+
+            Console.WriteLine($"HTML file saved to: {outputPath}");
+        }
     }
 }

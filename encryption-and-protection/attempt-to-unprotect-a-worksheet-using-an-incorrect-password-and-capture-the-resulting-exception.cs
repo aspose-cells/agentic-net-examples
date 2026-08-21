@@ -1,37 +1,37 @@
-// Title: Handle Wrong Password Exception When Unprotecting an Aspose.Cells Worksheet (C#)
-// Description: Demonstrates protecting a worksheet with a known password, attempting to unprotect it using an incorrect password, and capturing the resulting exception in a try‑catch block. The example also shows saving the workbook.
-// Keywords: Aspose.Cells unprotect worksheet | incorrect password exception | Worksheet.Unprotect try catch | C# Aspose.Cells protection error handling | catch Aspose.Cells unprotect error
-// Common Searches: Aspose.Cells unprotect worksheet with wrong password | exception thrown by Worksheet.Unprotect when password is invalid | how to catch unprotect error in Aspose.Cells C# | protect and unprotect sheet Aspose.Cells example
-// Developer Intent: Show how to attempt to unprotect a protected worksheet using an invalid password and retrieve the exception message without crashing the application.
-// Use Cases: Validate user‑entered passwords before calling Unprotect and log failures. | Prevent runtime crashes by wrapping Worksheet.Unprotect in a try‑catch block. | Display a user‑friendly error message when a wrong password is supplied for a protected sheet.
-// AI Prompts: Write C# code that protects an Aspose.Cells worksheet, then tries to unprotect it with an incorrect password and returns the caught exception message. | Explain which exception type Worksheet.Unprotect throws on a wrong password and suggest best practices for handling it in .NET.
+// Title: Catch the exception from an invalid worksheet Unprotect call with Aspose.Cells for .NET
+// Description: Demonstrates how to protect a worksheet, attempt to unprotect it with an incorrect password, capture the thrown exception, display the error message, and save the workbook using Aspose.Cells in C#.
+// Keywords: Aspose.Cells | C# | worksheet protection | Unprotect wrong password | exception handling | IsProtected | ProtectionType.All | catch invalid password | Aspose.Cells error message
+// Common Searches: Aspose.Cells catch exception invalid worksheet password | Unprotect worksheet with wrong password C# Aspose.Cells | What exception is thrown by Aspose.Cells Unprotect when password is incorrect | How to handle failed worksheet unprotect in Aspose.Cells
+// Developer Intent: Show how to detect and handle the error that occurs when Unprotect is called with an incorrect password.
+// Use Cases: Validate user‑entered passwords before calling Unprotect and log failures. | Prevent application crashes by catching the exception and showing a friendly message. | Record security audit entries whenever an unauthorized unprotect attempt is made.
+// AI Prompts: Generate C# code using Aspose.Cells that protects a worksheet, tries to unprotect it with a bad password, and logs the exception message. | Explain which exception type Aspose.Cells throws on a failed Unprotect call and how to extract detailed information. | Provide a robust pattern for checking IsProtected after a failed unprotect operation and recording the incident.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates protecting a worksheet with a known password, attempting to unprotect it using an incorrect password, and capturing the resulting exception in a try‑catch block. The example also shows saving the workbook.
-class Program
+// Demonstrates how to protect a worksheet, attempt to unprotect it with an incorrect password, capture the thrown exception, display the error message, and save the workbook using Aspose.Cells in C#.
+class UnprotectWorksheetDemo
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
         // Protect the worksheet with a known password
-        worksheet.Protect(ProtectionType.All, "correctPassword", null);
-        Console.WriteLine("Worksheet is protected: " + worksheet.IsProtected);
+        sheet.Protect(ProtectionType.All, "correctPassword", null);
+        Console.WriteLine("Worksheet protected: " + sheet.IsProtected);
 
+        // Try to unprotect using an incorrect password and capture the exception
         try
         {
-            // Attempt to unprotect the worksheet using an incorrect password
-            worksheet.Unprotect("wrongPassword");
-            Console.WriteLine("Worksheet unprotected: " + !worksheet.IsProtected);
+            sheet.Unprotect("wrongPassword");
+            Console.WriteLine("Worksheet unprotected (unexpected): " + !sheet.IsProtected);
         }
         catch (Exception ex)
         {
-            // Capture and display the exception thrown due to incorrect password
-            Console.WriteLine("Exception caught while unprotecting: " + ex.Message);
+            // Expected exception for incorrect password
+            Console.WriteLine("Exception caught while unprotecting with wrong password: " + ex.Message);
         }
 
         // Save the workbook (optional, demonstrates lifecycle usage)

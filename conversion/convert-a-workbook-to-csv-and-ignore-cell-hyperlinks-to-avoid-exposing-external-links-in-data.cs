@@ -1,32 +1,37 @@
-// Title: Convert Excel to CSV without Hyperlinks using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, removes all worksheet hyperlinks and external link references, then saves the first worksheet as a CSV file with Aspose.Cells for C#. This prevents URLs from appearing in the exported data.
-// Keywords: Aspose.Cells CSV export | remove hyperlinks C# | clear external links Aspose | Excel to CSV without URLs | Aspose.Cells workbook conversion
-// Common Searches: Aspose.Cells export to CSV without hyperlinks | C# remove Excel hyperlinks before CSV conversion | how to strip external links from workbook using Aspose | save first worksheet as CSV Aspose.Cells | CSV export ignoring Excel hyperlinks
-// Developer Intent: Generate a CSV file from an Excel workbook while ensuring that no hyperlink or external link data is included.
-// Use Cases: Produce clean CSV datasets for analytics pipelines that must not contain URLs. | Create CSV reports from Excel templates that embed links, avoiding accidental exposure of external resources. | Prepare data for systems that reject hyperlink fields by stripping them prior to CSV conversion.
-// AI Prompts: Write C# code with Aspose.Cells to export multiple selected worksheets to separate CSV files after removing all hyperlinks and external links. | Show how to keep numeric formatting and cell values intact while clearing hyperlinks before saving an Excel workbook as CSV. | Provide a snippet that logs the count of hyperlinks removed from each worksheet during CSV export.
+// Title: Export Excel to CSV without Hyperlinks using Aspose.Cells for .NET
+// Description: Load an Excel workbook, clear external links and worksheet hyperlink collections, then save it as a CSV file so the output contains no hyperlink data.
+// Keywords: Aspose.Cells CSV export | remove hyperlinks Aspose.Cells | clear external links .NET | Excel to CSV without links | Aspose.Cells hyperlink removal
+// Common Searches: Aspose.Cells export to CSV without hyperlinks | C# remove Excel hyperlinks before CSV conversion | How to clear external links in Aspose.Cells | Save workbook as CSV ignoring hyperlinks .NET | Strip hyperlinks from Excel when converting to CSV
+// Developer Intent: Generate a CSV file from an Excel workbook while ensuring that no hyperlink information is included in the exported data.
+// Use Cases: Sanitizing data for downstream analytics by removing clickable URLs. | Creating compliance‑ready CSV reports that must not expose external links. | Automating batch conversion of multiple workbooks to clean CSV files.
+// AI Prompts: Write C# code with Aspose.Cells to load an .xlsx, clear all external links and worksheet hyperlinks, and save as CSV. | Explain the impact of Workbook.Worksheets.ExternalLinks.Clear(true) and Worksheet.Hyperlinks.Clear() on CSV output. | Provide a step‑by‑step guide to batch‑process a folder of Excel files, stripping hyperlinks and exporting each to CSV using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Loads an Excel workbook, removes all worksheet hyperlinks and external link references, then saves the first worksheet as a CSV file with Aspose.Cells for C#. This prevents URLs from appearing in the exported data.
-class Program
+// Load an Excel workbook, clear external links and worksheet hyperlink collections, then save it as a CSV file so the output contains no hyperlink data.
+class WorkbookToCsvWithoutHyperlinks
 {
     static void Main()
     {
-        // Load the source workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Path to the source Excel file
+        string sourcePath = "input.xlsx";
 
-        // Remove all hyperlinks from each worksheet to prevent external links from being exported
+        // Load the workbook from the file
+        Workbook workbook = new Workbook(sourcePath);
+
+        // Remove all external links (including hyperlinks) from the workbook
+        // The boolean parameter updates references to local ones when possible
+        workbook.Worksheets.ExternalLinks.Clear(true);
+
+        // Additionally clear any hyperlink collections on each worksheet
         foreach (Worksheet sheet in workbook.Worksheets)
         {
             sheet.Hyperlinks.Clear();
         }
 
-        // Additionally clear any external link references that might exist
-        workbook.Worksheets.ExternalLinks.Clear(true);
-
-        // Save the workbook as CSV; only the first worksheet is saved in CSV format
-        workbook.Save("output.csv", SaveFormat.Csv);
+        // Save the workbook as CSV; hyperlinks will not be present in the output
+        string csvPath = "output.csv";
+        workbook.Save(csvPath, SaveFormat.Csv);
     }
 }

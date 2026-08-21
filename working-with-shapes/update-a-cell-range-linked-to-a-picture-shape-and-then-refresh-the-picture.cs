@@ -1,88 +1,59 @@
-// Title: Refresh a Picture Shape Linked to a Cell with Aspose.Cells for .NET (C#)
-// Description: Shows how to generate placeholder PNG files, insert a picture on a worksheet, link the picture to a cell, modify the cell to point to a new image file, invoke UpdateSelectedValue to refresh the picture, and save the workbook.
-// Keywords: Aspose.Cells | C# | .NET | picture shape | linked cell | UpdateSelectedValue | refresh image | dynamic picture | Excel automation | SetLinkedCell
-// Common Searches: Aspose.Cells change picture source via linked cell | UpdateSelectedValue example C# | link Excel picture to cell and refresh | replace image in picture shape programmatically | how to refresh linked picture in Aspose.Cells
-// Developer Intent: Refresh a picture shape after the value of its linked cell is updated.
-// Use Cases: Swap product photos in a generated report by storing file paths in cells. | Allow end‑users to edit image file names in a template and have the workbook automatically display the new images. | Create invoices where the company logo can be changed through a cell without recreating the picture object.
-// AI Prompts: Provide a C# example that links a picture to a cell and updates the picture after changing the cell value using Aspose.Cells. | Explain the purpose of picture.UpdateSelectedValue and the required format of the linked cell content. | Show step‑by‑step code to create placeholder PNG files, add a picture, set a linked cell, modify the cell, and refresh the image.
+// Title: C# – Update a Picture’s Linked Cell and Refresh the Image with Aspose.Cells
+// Description: Demonstrates how to add a picture to a worksheet, link it to a cell, change the cell value, and call Picture.UpdateSelectedValue() to refresh the image before saving the workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells picture linked cell | UpdateSelectedValue C# | refresh picture after cell change | Aspose.Cells .NET picture shape | link image to cell Aspose | C# workbook picture refresh | Aspose.Cells example
+// Common Searches: Aspose.Cells how to refresh a picture after updating linked cell | C# set linked cell for picture shape Aspose.Cells | Update picture linked to cell programmatically | Picture.UpdateSelectedValue example .NET | link image to cell and refresh in Aspose.Cells
+// Developer Intent: Refresh a picture shape after modifying the value of its linked cell in a .NET workbook.
+// Use Cases: Create a dynamic report where a logo image reflects a title stored in a cell and updates automatically when the title changes. | Display status icons that change based on cell values; after recalculating the status, update the cells and refresh the icons. | Generate a batch of charts or symbols, each linked to different cells, then modify those cells with calculated data and refresh all pictures in one pass.
+// AI Prompts: Generate C# code that links a picture to a specific cell using Aspose.Cells and refreshes the picture after the cell value is changed. | Show how to loop through multiple picture shapes, assign each a distinct linked cell, update the cells, and call UpdateSelectedValue for every picture. | Explain error handling for missing image files when adding pictures and ensure the picture is refreshed after cell updates in Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to generate placeholder PNG files, insert a picture on a worksheet, link the picture to a cell, modify the cell to point to a new image file, invoke UpdateSelectedValue to refresh the picture, and save the workbook.
+// Demonstrates how to add a picture to a worksheet, link it to a cell, change the cell value, and call Picture.UpdateSelectedValue() to refresh the image before saving the workbook using Aspose.Cells for .NET.
 class UpdatePictureLinkedCellExample
 {
     static void Main()
     {
         try
         {
-            // Minimal 1x1 PNG (transparent) used as placeholder image
-            byte[] pngData = new byte[]
-            {
-                0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,
-                0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,
-                0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,
-                0x08,0x06,0x00,0x00,0x00,0x1F,0x15,0xC4,
-                0x89,0x00,0x00,0x00,0x0A,0x49,0x44,0x41,
-                0x54,0x78,0x9C,0x63,0x60,0x00,0x00,0x00,
-                0x02,0x00,0x01,0xE2,0x21,0xBC,0x33,0x00,
-                0x00,0x00,0x00,0x49,0x45,0x4E,0x44,0xAE,
-                0x42,0x60,0x82
-            };
-
-            // Ensure placeholder image exists
-            string placeholderPath = "Aspose.Cells.png";
-            EnsureImageExists(placeholderPath, pngData);
-
-            // Ensure second image exists for update demonstration (reuse same PNG)
-            string secondImagePath = "Aspose.CellsLogo.png";
-            EnsureImageExists(secondImagePath, pngData);
-
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Put initial image file name into linked cell B2
-            sheet.Cells["B2"].PutValue(placeholderPath);
+            // Put an initial value into cell A1 (this will be linked to the picture)
+            worksheet.Cells["A1"].PutValue("Initial Value");
 
-            // Add picture using the placeholder image
-            int pictureIndex = sheet.Pictures.Add(5, 2, 100, 100, placeholderPath);
-            Picture picture = sheet.Pictures[pictureIndex];
+            // Path to the picture file
+            string picturePath = "sample.png";
 
-            // Link picture to cell B2
-            picture.SetLinkedCell("B2", false, false);
+            // Verify that the picture file exists before adding it
+            if (!File.Exists(picturePath))
+                throw new FileNotFoundException($"Picture file not found: {picturePath}");
 
-            // Change linked cell to second image file name
-            sheet.Cells["B2"].PutValue(secondImagePath);
+            // Add a picture to the worksheet at cell C3 (row index 2, column index 2)
+            int pictureIndex = worksheet.Pictures.Add(2, 2, picturePath);
+            Picture picture = worksheet.Pictures[pictureIndex];
 
-            // Refresh picture based on linked cell value
+            // Link the picture to cell A1
+            // Parameters: linked cell address, isRowAbsolute, isColumnAbsolute
+            picture.SetLinkedCell("A1", false, false);
+
+            // Change the linked cell's value; the picture will reflect this after refresh
+            worksheet.Cells["A1"].PutValue("Updated Value");
+
+            // Refresh the picture so it reflects the new linked cell value
             picture.UpdateSelectedValue();
 
             // Save the workbook
-            workbook.Save("UpdatedPictureLinkedCell.xlsx");
+            string outputPath = "UpdatedPictureLinkedCell.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
-        }
-    }
-
-    // Creates a PNG file at the specified path if it does not already exist
-    private static void EnsureImageExists(string path, byte[] pngBytes)
-    {
-        try
-        {
-            if (!File.Exists(path))
-            {
-                File.WriteAllBytes(path, pngBytes);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to create image '{path}': {ex.Message}");
-            throw;
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

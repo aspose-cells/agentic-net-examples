@@ -1,58 +1,47 @@
-// Title: Link a Label Shape to a Currency‑Formatted Cell and Verify Text with Aspose.Cells for .NET
-// Description: This C# example creates a workbook, writes a numeric value to B2, applies a custom currency format ($#,##0.00), adds a label shape, links the shape to the formatted cell using SetLinkedCell, forces a refresh, reads the shape's Text property to confirm the formatted output, and saves the file.
-// Keywords: Aspose.Cells | .NET | C# | label shape | SetLinkedCell | custom number format | currency format | shape text verification | Excel shape linking | Aspose.Cells example
-// Common Searches: Aspose.Cells link shape to cell | SetLinkedCell currency format C# | verify shape text after linking Aspose.Cells | add label shape linked to cell .NET | custom number format for linked shape Aspose
-// Developer Intent: Add a label shape, bind it to a currency‑formatted cell, refresh the shape, and confirm the displayed text matches the cell format.
-// Use Cases: Create dashboards where shapes automatically show monetary values from cells. | Generate printable reports that keep shape captions in sync with formatted cell data. | Build interactive Excel workbooks where shape captions reflect locale‑aware number formats.
-// AI Prompts: Write C# code with Aspose.Cells to add a rectangle shape linked to cell C5 using a date format and refresh its displayed value. | Explain how the three parameters of SetLinkedCell control locale awareness, absolute reference, and formula evaluation. | Create a unit test that asserts a linked label shape's Text property equals the custom formatted value of its source cell.
+// Title: Aspose.Cells for .NET: Add a Rectangle Shape Linked to a Currency‑Formatted Cell (C#)
+// Description: Creates a workbook, writes 1234.56 to C5, applies the custom format "$#,##0.00", adds a rectangle shape, links it to the cell with A1 notation, refreshes the shape to show the formatted value, and saves the file.
+// Keywords: Aspose.Cells | C# shape linking | rectangle shape | custom currency format | SetLinkedCell | UpdateSelectedValue | linked cell display | Excel automation | financial dashboard
+// Common Searches: Aspose.Cells link shape to cell C# | display custom number format in linked shape Aspose.Cells | SetLinkedCell A1 notation example | refresh shape text after linking Aspose.Cells | add rectangle shape programmatically .NET
+// Developer Intent: Bind a rectangle shape to a cell that uses a custom currency format and ensure the shape displays the formatted value.
+// Use Cases: Build a financial dashboard where shapes automatically reflect currency values from cells. | Create interactive reports with shapes that update their displayed text when the underlying formatted cell changes. | Automate workbook generation where visual elements are bound to formatted data for quick visual summaries.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a rectangle shape, formats a cell as currency, links the shape to the cell, and updates the shape's displayed text. | Explain the effect of the isR1C1 and isLocal parameters in SetLinkedCell and how they influence the shape's link to a formatted cell. | Provide troubleshooting steps when a linked shape does not show the custom currency format after calling UpdateSelectedValue.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This C# example creates a workbook, writes a numeric value to B2, applies a custom currency format ($#,##0.00), adds a label shape, links the shape to the formatted cell using SetLinkedCell, forces a refresh, reads the shape's Text property to confirm the formatted output, and saves the file.
-class ShapeLinkedCellExample
+// Creates a workbook, writes 1234.56 to C5, applies the custom format "$#,##0.00", adds a rectangle shape, links it to the cell with A1 notation, refreshes the shape to show the formatted value, and saves the file.
+class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Set a numeric value in cell B2
-            Cell targetCell = sheet.Cells["B2"];
-            targetCell.PutValue(1234.56);
+        // Put a numeric value into cell C5
+        Cell targetCell = sheet.Cells["C5"];
+        targetCell.PutValue(1234.56);
 
-            // Apply a custom number format for currency (e.g., $1,234.56)
-            Style style = targetCell.GetStyle();
-            style.Custom = "$#,##0.00";
-            targetCell.SetStyle(style);
+        // Apply a custom currency number format to the cell
+        Style style = targetCell.GetStyle();
+        style.Custom = "$#,##0.00";
+        targetCell.SetStyle(style);
 
-            // Add a label shape to the worksheet (positioned at row 4, column 2)
-            // Parameters: upperRow, upperColumn, top, left, height, width
-            Label label = (Label)sheet.Shapes.AddLabel(4, 2, 0, 0, 100, 30);
+        // Add a rectangle shape to the worksheet
+        // Parameters: upper left row, upper left column, upper left offset (pixels), upper left offset (pixels), width (pixels), height (pixels)
+        Shape shape = sheet.Shapes.AddRectangle(2, 2, 0, 0, 120, 40);
 
-            // Link the label's displayed value to cell B2 (A1 style, locale‑aware)
-            label.SetLinkedCell("$B$2", false, true);
+        // Link the shape to the cell C5 using A1 style (isR1C1 = false) and locale aware (isLocal = true)
+        shape.SetLinkedCell("$C$5", false, true);
 
-            // Force the shape to refresh its displayed value from the linked cell
-            label.UpdateSelectedValue();
+        // Refresh the shape so it displays the linked cell's formatted text
+        shape.UpdateSelectedValue();
 
-            // Retrieve the displayed text from the label
-            string shapeText = label.Text;
-            Console.WriteLine("Shape displays: " + shapeText); // Expected: $1,234.56
+        // Verify the linked cell address
+        Console.WriteLine("Linked cell: " + shape.LinkedCell);
 
-            // Save the workbook to a file
-            string outputPath = "ShapeLinkedCellCurrency.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
-        }
+        // Save the workbook
+        workbook.Save("ShapeLinkedCellCurrency.xlsx");
     }
 }

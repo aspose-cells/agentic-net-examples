@@ -1,44 +1,61 @@
-// Title: Abort workbook loading with SystemTimeInterruptMonitor timeout in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to attach a SystemTimeInterruptMonitor to LoadOptions, start a 2‑second timer, and abort the Workbook constructor when loading a large Excel file exceeds the limit. The sample catches the resulting exception and shows optional post‑load handling.
-// Keywords: Aspose.Cells | SystemTimeInterruptMonitor | interrupt monitor | load options timeout | abort workbook load | C# Excel timeout | large workbook performance | exception handling Aspose.Cells | Excel file load limit
-// Common Searches: Aspose.Cells interrupt monitor example C# | How to stop workbook loading after timeout | SystemTimeInterruptMonitor usage with LoadOptions | Cancel large Excel file load in Aspose.Cells | Exception thrown by InterruptMonitor in Aspose.Cells
-// Developer Intent: The developer needs to terminate the workbook loading process automatically when it exceeds a predefined time threshold.
-// Use Cases: Prevent server‑side request timeouts by limiting Excel import duration in web APIs. | Provide responsive UI in desktop apps by aborting long‑running file opens. | Implement user‑initiated cancelation by linking a monitor to a Cancel button or CancellationToken.
-// AI Prompts: Show how to replace SystemTimeInterruptMonitor with a custom monitor that checks a CancellationToken. | Write a try‑catch block that distinguishes a timeout interruption from other load errors. | Explain how to retrieve the elapsed time from SystemTimeInterruptMonitor after a successful load.
+// Title: Abort Aspose.Cells Workbook Load with SystemTimeInterruptMonitor Timeout (C#)
+// Description: Demonstrates how to use SystemTimeInterruptMonitor with LoadOptions to stop a workbook load if it exceeds a defined time (e.g., 2000 ms). The monitor throws an exception, which can be caught to handle the abort gracefully.
+// Keywords: Aspose.Cells | SystemTimeInterruptMonitor | Workbook load timeout | C# Excel loading | LoadOptions.InterruptMonitor | cancel large Excel file load | Aspose.Cells performance | .NET Excel processing
+// Common Searches: Aspose.Cells stop workbook loading after timeout | SystemTimeInterruptMonitor example C# | How to abort large Excel file load with Aspose.Cells | Set time limit for Workbook loading Aspose.Cells .NET | InterruptMonitor usage in Aspose.Cells
+// Developer Intent: Implement a time‑bound workbook loading operation that aborts automatically when the specified limit is exceeded.
+// Use Cases: Prevent UI freeze by limiting Excel load time in desktop applications. | Enforce request‑level timeouts for Excel processing in web APIs. | Provide a quick preview of a massive workbook when full load exceeds the allowed duration.
+// AI Prompts: Write C# code that loads an Excel file with SystemTimeInterruptMonitor set to a 5‑second timeout and logs a custom error message on abort. | Show how to retry workbook loading with a larger timeout after catching an interrupt exception. | Explain configuring LoadOptions.InterruptMonitor for asynchronous workbook loading in Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to attach a SystemTimeInterruptMonitor to LoadOptions, start a 2‑second timer, and abort the Workbook constructor when loading a large Excel file exceeds the limit. The sample catches the resulting exception and shows optional post‑load handling.
-class InterruptMonitorDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to use SystemTimeInterruptMonitor with LoadOptions to stop a workbook load if it exceeds a defined time (e.g., 2000 ms). The monitor throws an exception, which can be caught to handle the abort gracefully.
+    public class InterruptMonitorLoadingDemo
     {
-        // Create an interrupt monitor; false means an exception will be thrown on interruption
-        SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
-
-        // Attach the monitor to LoadOptions
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.InterruptMonitor = monitor;
-
-        // Start monitoring with a time limit (e.g., 2000 ms = 2 seconds)
-        monitor.StartMonitor(2000);
-
-        try
+        // Entry point for the application
+        public static void Main(string[] args)
         {
-            // Load the workbook using the LoadOptions that contain the monitor
-            Workbook wb = new Workbook("Large.xlsx", loadOptions);
-
-            // If loading completes within the time limit, execution continues here
-            Console.WriteLine("Workbook loaded successfully.");
-
-            // Example save (optional)
-            wb.Save("Result.xlsx");
+            Run();
         }
-        catch (Exception ex)
+
+        public static void Run()
         {
-            // Loading was interrupted because it exceeded the time limit
-            Console.WriteLine("Loading aborted: " + ex.Message);
+            // Path to the workbook file
+            const string filePath = "LargeFile.xlsx";
+
+            // Verify that the file exists to avoid FileNotFoundException
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
+
+            try
+            {
+                // Create a SystemTimeInterruptMonitor; false => throws exception when interrupted
+                SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
+
+                // Set up load options with the monitor
+                LoadOptions loadOptions = new LoadOptions
+                {
+                    InterruptMonitor = monitor
+                };
+
+                // Define a time limit (e.g., 2000 ms) for the loading operation
+                monitor.StartMonitor(2000);
+
+                // Load the workbook using the load options that contain the monitor
+                Workbook wb = new Workbook(filePath, loadOptions);
+                Console.WriteLine("Workbook loaded successfully.");
+            }
+            catch (Exception ex)
+            {
+                // Loading was aborted because it exceeded the time limit or another error occurred
+                Console.WriteLine("Loading aborted: " + ex.Message);
+            }
         }
     }
 }

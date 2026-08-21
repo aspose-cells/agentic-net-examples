@@ -1,10 +1,10 @@
-// Title: Set deterministic TabId for worksheets using a name‑based hash in Aspose.Cells for .NET
-// Description: Demonstrates how to compute a stable 32‑bit MD5 hash from each worksheet's name, assign it to the TabId property, and save the workbook. The approach guarantees identical TabId values for sheets with the same name across multiple workbooks.
-// Keywords: Aspose.Cells TabId | deterministic worksheet identifier | hash worksheet name | MD5 to TabId | C# Excel TabId | consistent TabId across workbooks | .NET Aspose.Cells example
-// Common Searches: Aspose.Cells set worksheet TabId by name | deterministic TabId for Excel sheets .NET | hash worksheet name for TabId Aspose.Cells | consistent TabId values across workbooks | C# compute integer hash for Excel tab
-// Developer Intent: Generate a repeatable TabId for each worksheet based on its name.
-// Use Cases: Synchronize sheets between separate workbooks by matching name‑derived TabId values. | Create a stable reference key for worksheets that survives file moves or format changes. | Enable fast lookup of specific tabs when loading large workbooks that use custom TabId identifiers.
-// AI Prompts: Write C# code with Aspose.Cells that assigns ws.TabId = MD5Hash(ws.Name) for every worksheet. | Explain why a name‑based hash provides deterministic TabId values in Excel files. | Show an end‑to‑end example that creates a workbook, sets TabId using a 32‑bit hash, and saves it as XLSX.
+// Title: Assign a deterministic TabId to worksheets by hashing their names – Aspose.Cells for .NET (C#)
+// Description: This example creates a workbook, adds worksheets with custom names, generates a stable 32‑bit MD5 hash for each name, assigns the hash to the worksheet's TabId property, outputs the mapping, and saves the file.
+// Keywords: Aspose.Cells TabId | deterministic worksheet identifier | hash worksheet name C# | stable TabId across workbooks | MD5 hash to int | C# .NET Excel automation
+// Common Searches: set worksheet TabId based on name Aspose.Cells | generate consistent TabId for Excel sheets in C# | hash worksheet name to integer TabId | deterministic TabId for multiple workbooks | Aspose.Cells assign TabId programmatically
+// Developer Intent: Create repeatable TabId values for worksheets by hashing their names.
+// Use Cases: Synchronize worksheets across merged workbooks using identical TabId keys. | Implement fast lookup of sheets in UI navigation or API calls. | Maintain stable identifiers in version‑controlled Excel files.
+// AI Prompts: Generate C# code that computes a 32‑bit MD5 hash of a worksheet name and sets ws.TabId in Aspose.Cells. | Explain how to guarantee the same TabId for a given worksheet name in different workbooks. | Show how to replace MD5 with SHA256 while still fitting the result into a 32‑bit TabId.
 
 using System;
 using System.Security.Cryptography;
@@ -13,17 +13,17 @@ using Aspose.Cells;
 
 namespace AsposeCellsTabIdDemo
 {
-    // Demonstrates how to compute a stable 32‑bit MD5 hash from each worksheet's name, assign it to the TabId property, and save the workbook. The approach guarantees identical TabId values for sheets with the same name across multiple workbooks.
+    // This example creates a workbook, adds worksheets with custom names, generates a stable 32‑bit MD5 hash for each name, assigns the hash to the worksheet's TabId property, outputs the mapping, and saves the file.
     class Program
     {
-        // Compute a deterministic 32‑bit hash from a string (worksheet name)
-        static int ComputeNameHash(string name)
+        // Compute a deterministic 32‑bit hash from a string (e.g., worksheet name)
+        static int GetDeterministicHash(string input)
         {
-            // Use MD5 to get a stable hash regardless of .NET version
+            // Use MD5 to get a stable hash across runs and platforms
             using (MD5 md5 = MD5.Create())
             {
-                byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(name));
-                // Take first 4 bytes and convert to Int32 (little‑endian)
+                byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+                // Take first 4 bytes and convert to int (little‑endian)
                 return BitConverter.ToInt32(hashBytes, 0);
             }
         }
@@ -33,21 +33,21 @@ namespace AsposeCellsTabIdDemo
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Example: add a few worksheets with specific names
+            // Add sample worksheets with specific names
             workbook.Worksheets[0].Name = "Summary";
             workbook.Worksheets.Add("Data");
             workbook.Worksheets.Add("Report");
 
-            // Set TabId for each worksheet based on the hash of its name
+            // Set TabId of each worksheet to a hash of its name
             foreach (Worksheet ws in workbook.Worksheets)
             {
-                ws.TabId = ComputeNameHash(ws.Name);
+                ws.TabId = GetDeterministicHash(ws.Name);
                 Console.WriteLine($"Worksheet \"{ws.Name}\" assigned TabId: {ws.TabId}");
             }
 
-            // Save the workbook (choose any format you need)
-            string outputPath = "TabIdDemo.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+            // Save the workbook
+            string outputPath = "DeterministicTabIdDemo.xlsx";
+            workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to {outputPath}");
         }
     }

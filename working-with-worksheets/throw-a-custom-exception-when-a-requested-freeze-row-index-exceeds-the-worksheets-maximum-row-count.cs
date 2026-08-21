@@ -1,66 +1,56 @@
-// Title: Throw a custom FreezeRowOutOfRangeException when a freeze‑pane row exceeds the worksheet's max row in Aspose.Cells for .NET
-// Description: The example creates a workbook, reads the maximum row index via Workbook.Settings.MaxRow, validates a requested freeze‑pane row, throws a user‑defined FreezeRowOutOfRangeException with a clear message if the index is out of bounds, and otherwise freezes the panes and saves the file.
-// Keywords: Aspose.Cells | C# | FreezePanes | custom exception | FreezeRowOutOfRangeException | worksheet max row | Workbook.Settings.MaxRow | row index validation | Excel freeze pane error handling | Aspose.Cells .NET example
-// Common Searches: validate freeze pane row index Aspose.Cells | custom exception for invalid freeze row in Aspose.Cells | maximum row count in Aspose.Cells workbook | C# freeze panes with range check | throw exception when freeze row exceeds max row Aspose.Cells
-// Developer Intent: Check that the requested freeze‑pane row is within the worksheet limits and raise a meaningful error if it is not.
-// Use Cases: Prevent runtime failures in reporting tools that programmatically freeze rows. | Provide end‑users with a precise error message when they attempt to freeze beyond the sheet size. | Integrate row‑index validation into automated Excel generation pipelines to enforce size constraints.
-// AI Prompts: Generate C# code that checks a freeze‑pane row against Workbook.Settings.MaxRow and throws a custom FreezeRowOutOfRangeException with a detailed message. | Show how to catch FreezeRowOutOfRangeException in a console app, log the error, and continue processing other tasks. | Explain how to extend the sample to also validate a freeze‑pane column index using a similar custom exception.
+// Title: Throw custom FreezeRowOutOfRangeException when freeze row index exceeds worksheet max rows – Aspose.Cells for .NET
+// Description: Demonstrates how to read the worksheet's maximum row index via Workbook.Settings.MaxRow, compare it with a user‑supplied freeze row index, and raise a custom FreezeRowOutOfRangeException if the index is out of range. If validation succeeds, FreezePanes is applied and the workbook is saved.
+// Keywords: Aspose.Cells freeze panes validation | custom exception FreezeRowOutOfRangeException | Settings.MaxRow Aspose.Cells | C# validate freeze row index | worksheet max row limit | Aspose.Cells .NET error handling
+// Common Searches: Aspose.Cells validate freeze row index | throw custom exception when freeze row exceeds max rows | Settings.MaxRow usage in C# | how to check freeze pane limits Aspose.Cells | custom FreezeRowOutOfRangeException example
+// Developer Intent: Check a requested freeze row index against the worksheet's maximum row count and throw a custom exception if it exceeds the limit.
+// Use Cases: Prevent runtime errors by validating freeze pane parameters before calling FreezePanes. | Provide developers with a clear, domain‑specific exception when users request an invalid freeze row. | Integrate row‑limit validation into automated spreadsheet generation pipelines that use Aspose.Cells.
+// AI Prompts: Generate C# code that validates a freeze row index with Aspose.Cells Settings.MaxRow and throws a custom FreezeRowOutOfRangeException. | Show how to catch FreezeRowOutOfRangeException around FreezePanes and log a detailed error message. | Extend the example to also validate freeze column index using Settings.MaxColumn and raise a corresponding custom exception.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace FreezeRowValidationDemo
 {
-    // Custom exception for invalid freeze row index
-    // The example creates a workbook, reads the maximum row index via Workbook.Settings.MaxRow, validates a requested freeze‑pane row, throws a user‑defined FreezeRowOutOfRangeException with a clear message if the index is out of bounds, and otherwise freezes the panes and saves the file.
+    // Custom exception to indicate that the requested freeze row index is out of range
+    // Demonstrates how to read the worksheet's maximum row index via Workbook.Settings.MaxRow, compare it with a user‑supplied freeze row index, and raise a custom FreezeRowOutOfRangeException if the index is out of range. If validation succeeds, FreezePanes is applied and the workbook is saved.
     public class FreezeRowOutOfRangeException : Exception
     {
         public FreezeRowOutOfRangeException(string message) : base(message) { }
-    }
-
-    public class FreezePanesWithValidation
-    {
-        public static void Run()
-        {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Example: request a freeze row index beyond the worksheet's maximum row
-            int requestedFreezeRow = workbook.Settings.MaxRow + 5; // intentionally out of range
-
-            // Validate the requested row against the maximum allowed row index
-            if (requestedFreezeRow > workbook.Settings.MaxRow)
-            {
-                // Throw custom exception if validation fails
-                throw new FreezeRowOutOfRangeException(
-                    $"Requested freeze row index {requestedFreezeRow} exceeds worksheet maximum row index {workbook.Settings.MaxRow}.");
-            }
-
-            // If validation passes, freeze panes (row, column, frozenRows, frozenColumns)
-            worksheet.FreezePanes(requestedFreezeRow, 0, requestedFreezeRow, 0);
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("FreezePanesValidated.xlsx");
-        }
     }
 
     class Program
     {
         static void Main()
         {
-            try
+            // Create a new workbook (uses Aspose.Cells create rule)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Example: requested freeze row index (zero‑based)
+            int requestedFreezeRow = 70000;   // Change this value to test different scenarios
+            int requestedFreezeColumn = 2;   // Example column index
+            int freezedRows = requestedFreezeRow + 1;   // Number of rows to freeze (must be <= requestedFreezeRow)
+            int freezedColumns = requestedFreezeColumn + 1; // Number of columns to freeze (must be <= requestedFreezeColumn)
+
+            // Validate the requested freeze row against the workbook's maximum row index
+            int maxRowIndex = workbook.Settings.MaxRow; // MaxRow is zero‑based
+
+            if (requestedFreezeRow > maxRowIndex)
             {
-                FreezePanesWithValidation.Run();
+                // Throw custom exception if the index exceeds the allowed range
+                throw new FreezeRowOutOfRangeException(
+                    $"Requested freeze row index ({requestedFreezeRow}) exceeds the worksheet's maximum row index ({maxRowIndex}).");
             }
-            catch (FreezeRowOutOfRangeException ex)
-            {
-                Console.WriteLine("Custom exception caught: " + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Unexpected error: " + ex.Message);
-            }
+
+            // If validation passes, apply the freeze panes
+            worksheet.FreezePanes(requestedFreezeRow, requestedFreezeColumn, freezedRows, freezedColumns);
+
+            // Save the workbook (uses Aspose.Cells save rule)
+            workbook.Save("FreezeRowValidationResult.xlsx");
+
+            Console.WriteLine("Workbook saved successfully.");
         }
     }
 }

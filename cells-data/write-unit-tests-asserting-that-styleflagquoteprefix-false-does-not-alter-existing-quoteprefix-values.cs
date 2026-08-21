@@ -1,10 +1,10 @@
-// Title: C# Unit Test: Verify StyleFlag.QuotePrefix = false Does Not Reset Existing Quote Prefix in Aspose.Cells
-// Description: Demonstrates a C# test that applies a QuotePrefix‑true style to a cell, then reapplies a style with StyleFlag.QuotePrefix disabled, confirming the original prefix remains unchanged and saving the workbook to a memory stream.
-// Keywords: Aspose.Cells | StyleFlag | QuotePrefix | C# unit test | SetStyle | style flag testing | .NET | workbook | cell formatting | regression test
-// Common Searches: Aspose.Cells StyleFlag QuotePrefix false unit test | preserve existing QuotePrefix when StyleFlag disabled | C# test SetStyle QuotePrefix flag behavior | how to verify QuotePrefix is not cleared in Aspose.Cells | unit testing cell style flags Aspose.Cells
-// Developer Intent: Create an automated test that ensures a false StyleFlag.QuotePrefix does not alter a cell's current QuotePrefix setting.
-// Use Cases: Validate that disabling the QuotePrefix flag leaves previously applied quote prefixes intact. | Prevent accidental loss of formatting when updating other style attributes on a cell. | Include in continuous‑integration pipelines to catch regressions related to style flag handling.
-// AI Prompts: Generate an MSTest/NUnit/xUnit test method that asserts StyleFlag.QuotePrefix set to false preserves an existing QuotePrefix in Aspose.Cells for .NET. | Explain how StyleFlag influences SetStyle in Aspose.Cells and provide sample code for isolated unit testing of the QuotePrefix behavior. | Write a C# test that applies a style with QuotePrefix true, then reapplies a style with QuotePrefix false while the flag is disabled, verifies the property remains true, and saves the workbook to a MemoryStream.
+// Title: C# Unit Test: StyleFlag.QuotePrefix = false Preserves Existing Quote‑Prefix in Aspose.Cells
+// Description: Demonstrates how to verify that setting StyleFlag.QuotePrefix to false does not modify a cell's existing QuotePrefix flag. The test creates a workbook, inserts a value with a leading single quote, confirms the flag is true, applies a new style with the flag disabled, saves to a memory stream, reloads the workbook, and asserts the flag remains true.
+// Keywords: Aspose.Cells | StyleFlag | QuotePrefix | unit test | .NET | C# | leading single quote | cell style flag | save load persistence | Aspose.Cells StyleFlag false
+// Common Searches: Aspose.Cells StyleFlag QuotePrefix false unit test | verify QuotePrefix flag remains after applying style in C# | preserve leading single quote Aspose.Cells after style change | C# test QuotePrefix persistence after workbook save | how to assert QuotePrefix flag in Aspose.Cells unit test
+// Developer Intent: Confirm that StyleFlag.QuotePrefix set to false leaves an existing QuotePrefix flag unchanged.
+// Use Cases: Automated regression test to ensure applying a style without QuotePrefix does not clear existing leading‑quote formatting. | Validate that the QuotePrefix flag survives workbook serialization and deserialization. | Guarantee consistent behavior when updating cell styles in bulk operations.
+// AI Prompts: Generate an MSTest method that asserts StyleFlag.QuotePrefix = false does not affect a cell's QuotePrefix flag in Aspose.Cells for .NET. | Write an xUnit test verifying QuotePrefix persistence after saving and loading a workbook using Aspose.Cells C# API. | Provide a NUnit example that checks the QuotePrefix flag remains true when a style is applied with StyleFlag.QuotePrefix set to false.
 
 using System;
 using System.IO;
@@ -12,67 +12,60 @@ using Aspose.Cells;
 
 namespace AsposeCellsTests
 {
-    // Demonstrates a C# test that applies a QuotePrefix‑true style to a cell, then reapplies a style with StyleFlag.QuotePrefix disabled, confirming the original prefix remains unchanged and saving the workbook to a memory stream.
-    public class StyleFlagQuotePrefixDemo
+    // Demonstrates how to verify that setting StyleFlag.QuotePrefix to false does not modify a cell's existing QuotePrefix flag. The test creates a workbook, inserts a value with a leading single quote, confirms the flag is true, applies a new style with the flag disabled, saves to a memory stream, reloads the workbook, and asserts the flag remains true.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
-                QuotePrefixFlagFalseDoesNotClearExistingQuotePrefix();
-                Console.WriteLine("Demo completed successfully.");
+                // Create a new workbook and access the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Put a value that starts with a single quote.
+                // Aspose.Cells treats the leading quote as a formatting flag.
+                Cell cell = sheet.Cells["A1"];
+                cell.PutValue("'12345");
+
+                // Verify that the cell's style has QuotePrefix set to true initially.
+                if (!cell.GetStyle().QuotePrefix)
+                    throw new Exception("Initial QuotePrefix should be true.");
+
+                // Create a style with QuotePrefix set to false (default) and a StyleFlag with QuotePrefix false.
+                Style style = workbook.CreateStyle();
+                style.QuotePrefix = false; // Explicitly set for clarity.
+
+                StyleFlag flag = new StyleFlag();
+                flag.QuotePrefix = false; // Ensure the flag does not apply QuotePrefix changes.
+
+                // Apply the style using the flag. Since the flag is false, the existing QuotePrefix should remain unchanged.
+                cell.SetStyle(style, flag);
+
+                // Assert that the QuotePrefix is still true after applying the style with the flag set to false.
+                if (!cell.GetStyle().QuotePrefix)
+                    throw new Exception("QuotePrefix should remain true when StyleFlag.QuotePrefix is false.");
+
+                // Save the workbook to a memory stream to test persistence.
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    workbook.Save(ms, SaveFormat.Xlsx);
+                    ms.Position = 0;
+
+                    // Load the workbook from the memory stream.
+                    Workbook loadedWorkbook = new Workbook(ms);
+                    Cell loadedCell = loadedWorkbook.Worksheets[0].Cells["A1"];
+
+                    // Verify that the loaded cell still retains the QuotePrefix flag.
+                    if (!loadedCell.GetStyle().QuotePrefix)
+                        throw new Exception("Loaded cell should retain QuotePrefix after save/load.");
+                }
+
+                Console.WriteLine("All checks passed successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-
-        // Demonstrates that when the StyleFlag.QuotePrefix is false,
-        // the existing QuotePrefix setting on a cell is not cleared.
-        private static void QuotePrefixFlagFalseDoesNotClearExistingQuotePrefix()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Access cell A1 and put a simple numeric string
-            Cell cell = sheet.Cells["A1"];
-            cell.PutValue("12345");
-
-            // Create a style with QuotePrefix set to true
-            Style style = workbook.CreateStyle();
-            style.QuotePrefix = true;
-
-            // Create a StyleFlag and enable the QuotePrefix flag
-            StyleFlag flag = new StyleFlag();
-            flag.QuotePrefix = true;
-
-            // Apply the style to the cell using SetStyle with the flag
-            cell.SetStyle(style, flag);
-
-            // Verify that the QuotePrefix is now true
-            if (!cell.GetStyle().QuotePrefix)
-                throw new InvalidOperationException("QuotePrefix should be true after first application.");
-
-            // Change the style to have QuotePrefix = false
-            style.QuotePrefix = false;
-
-            // Disable the QuotePrefix flag (set to false)
-            flag.QuotePrefix = false;
-
-            // Apply the style again; because the flag is false, the QuotePrefix setting should be ignored
-            cell.SetStyle(style, flag);
-
-            // Verify that the existing QuotePrefix value remains unchanged (still true)
-            if (!cell.GetStyle().QuotePrefix)
-                throw new InvalidOperationException("QuotePrefix should remain true when flag is false.");
-
-            // Optional: Save to a memory stream to satisfy lifecycle rules (no file I/O needed)
-            using (MemoryStream ms = new MemoryStream())
-            {
-                workbook.Save(ms, SaveFormat.Xlsx);
-                ms.Position = 0; // Reset stream position for potential further use
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

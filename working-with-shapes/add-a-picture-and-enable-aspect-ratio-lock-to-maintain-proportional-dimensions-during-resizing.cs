@@ -1,54 +1,59 @@
-// Title: C# – Insert a picture into an Aspose.Cells worksheet and lock its aspect ratio
-// Description: Creates a new Workbook, verifies the image file, inserts the picture into a defined cell range using a FileStream, enables IsAspectRatioLocked to keep proportions during resizing, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells add picture C# | lock aspect ratio Aspose.Cells | insert image Excel worksheet .NET | picture shape proportional scaling | FileStream picture Aspose.Cells
-// Common Searches: Aspose.Cells insert image keep aspect ratio | C# picture shape lock aspect ratio example | How to add a picture to Excel with Aspose.Cells | Proportional image resizing Aspose.Cells C#
-// Developer Intent: Add an image to a worksheet and ensure it retains its original proportions when the user resizes it.
-// Use Cases: Embedding a company logo in a generated report without distortion. | Adding product photos to a catalog where column width changes must not stretch the images. | Creating a template that lets end‑users drag picture corners while automatically preserving aspect ratio.
-// AI Prompts: Provide C# code that inserts a picture into an Aspose.Cells worksheet and locks its aspect ratio. | Show how to check for an image file before adding it as a shape in an Aspose.Cells workbook. | Demonstrate inserting a picture with a FileStream into specific rows and columns and enabling proportional resizing.
+// Title: C# – Insert a Picture into an Excel Worksheet and Preserve Its Aspect Ratio with Aspose.Cells
+// Description: This example demonstrates how to create a new workbook, confirm the image file exists, add the picture to cell B2, enable the aspect‑ratio lock so the image scales proportionally, and save the result as an XLSX file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells add image C# | lock picture aspect ratio .NET | insert picture Excel worksheet | maintain image proportions Aspose | C# Excel picture resizing | Aspose.Cells picture handling
+// Common Searches: Aspose.Cells insert image keep aspect ratio | C# lock picture size when resizing Excel | how to add a logo to Excel with Aspose.Cells | prevent picture distortion in generated workbook | Aspose.Cells picture aspect ratio example
+// Developer Intent: Add an image to a spreadsheet and ensure it scales without distortion.
+// Use Cases: Embedding a company logo in automated reports while retaining its shape. | Displaying product thumbnails in a catalog sheet without stretching. | Applying a watermark that keeps its original proportions across different page sizes.
+// AI Prompts: Write C# code that uses Aspose.Cells to place a PNG at cell B2 and enable proportional scaling. | Show how to toggle the IsAspectRatioLocked flag for an existing picture in a workbook. | Create robust error handling for missing image files when adding pictures with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new Workbook, verifies the image file, inserts the picture into a defined cell range using a FileStream, enables IsAspectRatioLocked to keep proportions during resizing, and saves the file as an Excel workbook.
-class AddPictureWithAspectRatioLock
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // This example demonstrates how to create a new workbook, confirm the image file exists, add the picture to cell B2, enable the aspect‑ratio lock so the image scales proportionally, and save the result as an XLSX file using Aspose.Cells for .NET.
+    public class AddPictureWithAspectRatioLock
     {
-        try
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
+            try
+            {
+                Run();
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            // Path to the image file
+            string imagePath = "image.jpg";
+
+            // Verify that the image file exists to avoid FileNotFoundException
+            if (!File.Exists(imagePath))
+            {
+                throw new FileNotFoundException($"Image file not found: {imagePath}");
+            }
+
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            string imagePath = "image.jpg";
+            // Add a picture to the worksheet
+            int pictureIndex = worksheet.Pictures.Add(1, 1, imagePath);
+            Picture picture = worksheet.Pictures[pictureIndex];
 
-            // Verify that the image file exists before attempting to load it
-            if (!File.Exists(imagePath))
-            {
-                Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
-            }
-            else
-            {
-                // Open the image file as a stream and add it to the worksheet
-                using (FileStream fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
-                {
-                    // Parameters: topRow, leftColumn, bottomRow, rightColumn, image stream
-                    Picture picture = worksheet.Shapes.AddPicture(2, 2, 10, 10, fs);
-                    // Lock aspect ratio so the picture maintains its proportions when resized
-                    picture.IsAspectRatioLocked = true;
-                }
-            }
+            // Lock the aspect ratio so the picture maintains its proportions when resized
+            picture.IsAspectRatioLocked = true;
 
-            // Save the workbook with the picture whose aspect ratio is locked
-            string outputPath = "OutputWithLockedAspectRatio.xlsx";
+            // Save the workbook
+            string outputPath = "PictureWithAspectRatioLock.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Queries and Connections Agent
 category: queries-and-connections
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: C# examples for inspecting external connections, updating connection metadata, QueryTables, Power Query formulas, DataMashup, and controlled refresh settings
 primary_apis: [Workbook.DataConnections, ExternalConnection, QueryTable, PowerQueryFormulaCollection, Workbook.DataMashup]
 search_intents: [list Excel data connections in C#, update Excel external connection, inspect Power Query formulas, remove workbook connection]
@@ -313,3 +313,4 @@ Interpret one developer intent
 ## Definition of done
 
 A `queries-and-connections` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
+

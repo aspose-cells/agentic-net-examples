@@ -1,9 +1,18 @@
+// Title: Aspose.Cells C# – Show Only Series Names in Chart Legend (Hide Category Entries)
+// Description: Creates a workbook, adds a column chart with two series, enables the legend, then uses the LegendEntry collection and the IsDeleted flag to remove any category legend items, leaving only the series names visible before saving the file.
+// Keywords: Aspose.Cells chart legend series only | hide category legend entries C# | Aspose.Cells LegendEntry.IsDeleted | customize chart legend Aspose.Cells | C# Aspose.Cells chart legend filtering
+// Common Searches: Aspose.Cells show only series names in legend | remove category entries from chart legend C# | Aspose.Cells hide legend categories | how to filter legend entries Aspose.Cells | C# chart legend customization Aspose.Cells
+// Developer Intent: Display a chart legend that contains only the series names by programmatically deleting category entries.
+// Use Cases: Generate clean reports where the legend should list only data series, not categories. | Automate dashboard creation with consistent legend formatting across multiple chart types. | Programmatically adjust legend content after adding dynamic series to a workbook.
+// AI Prompts: Write C# code with Aspose.Cells to hide all category entries in a line chart legend while keeping series entries visible. | Explain the purpose of LegendEntry.IsDeleted and how to calculate the number of series to retain in a chart legend. | Suggest an alternative method to exclude category items from a chart legend without iterating over LegendEntryCollection.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsLegendConfiguration
+namespace AsposeCellsLegendDemo
 {
+    // Creates a workbook, adds a column chart with two series, enables the legend, then uses the LegendEntry collection and the IsDeleted flag to remove any category legend items, leaving only the series names visible before saving the file.
     class Program
     {
         static void Main()
@@ -32,34 +41,30 @@ namespace AsposeCellsLegendConfiguration
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 15);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Add the two series to the chart
-            chart.NSeries.Add("B2:B4", true); // Series 1 values
-            chart.NSeries.Add("C2:C4", true); // Series 2 values
+            // Set data ranges: first series (B2:B4) and second series (C2:C4)
+            chart.NSeries.Add("B2:B4", true); // true => use first column as category data
+            chart.NSeries.Add("C2:C4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
             // Ensure the legend is displayed
             chart.ShowLegend = true;
 
-            // Show only series names in the legend:
-            // 1. Make sure each series' legend entry is visible.
-            // 2. Hide any additional legend entries (e.g., category entries) that may exist.
+            // Configure legend to show only series names.
+            // The legend entries collection may contain entries for series and, in some cases, for categories.
+            // We keep entries that correspond to series (first N entries) and hide the rest.
             int seriesCount = chart.NSeries.Count;
-            Legend legend = chart.Legend;
-            LegendEntryCollection legendEntries = legend.LegendEntries;
+            LegendEntryCollection legendEntries = chart.Legend.LegendEntries;
 
-            // Guard against null (some chart types may not support legend entries collection)
-            if (legendEntries != null)
+            for (int i = 0; i < legendEntries.Count; i++)
             {
-                // First, ensure series legend entries are not deleted
-                for (int i = 0; i < seriesCount && i < legendEntries.Count; i++)
+                // Keep series legend entries visible
+                if (i < seriesCount)
                 {
-                    legendEntries[i].IsDeleted = false; // show series name
+                    legendEntries[i].IsDeleted = false;
                 }
-
-                // Then, hide any remaining legend entries (commonly category entries)
-                for (int i = seriesCount; i < legendEntries.Count; i++)
+                else // Hide any additional entries (e.g., category entries)
                 {
-                    legendEntries[i].IsDeleted = true; // hide category entry
+                    legendEntries[i].IsDeleted = true;
                 }
             }
 

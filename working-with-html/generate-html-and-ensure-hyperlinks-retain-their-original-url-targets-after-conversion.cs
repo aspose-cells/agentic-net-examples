@@ -1,34 +1,34 @@
-// Title: C# Aspose.Cells – Export Excel to HTML with unchanged hyperlink URLs (LinkTargetType.Self)
-// Description: Demonstrates how to create a workbook, add a hyperlink, and save it as HTML using Aspose.Cells while keeping the original href unchanged and opening links in the same window.
-// Keywords: Aspose.Cells C# HTML export | preserve hyperlink URL Aspose | HtmlSaveOptions LinkTargetType Self | Excel to HTML without link modification | C# save workbook as HTML | hyperlink target self Aspose.Cells
-// Common Searches: Aspose.Cells keep hyperlink URL when saving to HTML | HtmlSaveOptions LinkTargetType Self example C# | export Excel as HTML with original links Aspose | C# Aspose.Cells hyperlink target self | how to prevent link rewriting in Aspose.Cells HTML output
-// Developer Intent: Generate HTML from an Excel workbook while ensuring hyperlinks retain their original URLs and open in the same window.
-// Use Cases: Publishing Excel‑based reports on a website where links must point to exact external pages. | Creating email‑ready HTML content from spreadsheets without altering destination URLs. | Building a web viewer that displays Excel data as HTML and requires accurate hyperlink navigation.
-// AI Prompts: Provide C# code using Aspose.Cells to export a workbook to HTML and keep all hyperlink URLs unchanged by setting HtmlSaveOptions.LinkTargetType to Self. | Explain how HtmlSaveOptions.LinkTargetType = Self influences the generated HTML anchor tags. | Show how to add multiple hyperlinks with different display texts and ensure each retains its original URL after HTML conversion.
+// Title: Export Excel to HTML with original hyperlink targets using Aspose.Cells for .NET (C#)
+// Description: Creates a new workbook, adds an external hyperlink with optional display text, sets HtmlSaveOptions.LinkTargetType to Self so the link keeps its original URL, and saves the workbook as an HTML file.
+// Keywords: Aspose.Cells | HtmlSaveOptions | LinkTargetType | Self | preserve hyperlink | C# | export Excel to HTML | hyperlink target | .NET | workbook HTML conversion
+// Common Searches: Aspose.Cells keep hyperlink target when saving as HTML | HtmlSaveOptions LinkTargetType Self C# example | Export Excel workbook to HTML with original URLs | Set hyperlink display text in Aspose.Cells | C# save workbook as HTML preserving external links
+// Developer Intent: Generate an HTML file from an Excel workbook while ensuring hyperlinks retain their original URLs and open in the same window.
+// Use Cases: Add external links to cells and export the sheet to HTML for web reporting. | Show custom link text in the HTML output without altering the underlying URL. | Control link behavior (same‑window vs. new tab) by configuring HtmlSaveOptions. | Create static HTML dashboards from Excel data that preserve navigation paths.
+// AI Prompts: Provide a C# example that exports an Aspose.Cells workbook to HTML with hyperlinks that keep their original targets. | Explain the effect of HtmlSaveOptions.LinkTargetType = Self on hyperlink behavior in the generated HTML. | Show how to add a hyperlink with custom display text to a cell and retain it during HTML conversion using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, add a hyperlink, and save it as HTML using Aspose.Cells while keeping the original href unchanged and opening links in the same window.
+// Creates a new workbook, adds an external hyperlink with optional display text, sets HtmlSaveOptions.LinkTargetType to Self so the link keeps its original URL, and saves the workbook as an HTML file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and obtain the first worksheet
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set display text for the hyperlink cell
-        sheet.Cells["A1"].PutValue("Visit Aspose");
+        // Add a hyperlink to cell A1 pointing to an external URL
+        worksheet.Hyperlinks.Add("A1", 1, 1, "https://www.example.com");
 
-        // Add a hyperlink to cell A1 with the original URL
-        sheet.Hyperlinks.Add("A1", 1, 1, "https://www.aspose.com");
+        // Set the display text for the hyperlink (optional)
+        worksheet.Cells["A1"].PutValue("Visit Example");
 
-        // Configure HTML save options to keep the original link target (open in the same window)
+        // Configure HTML save options to keep the original hyperlink target (open in the same window)
         HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-        saveOptions.LinkTargetType = HtmlLinkTargetType.Self; // ensures the href remains unchanged
+        saveOptions.LinkTargetType = HtmlLinkTargetType.Self; // retains original URL target
 
-        // Save the workbook as an HTML file
+        // Save the workbook as an HTML file with the specified options
         workbook.Save("output.html", saveOptions);
     }
 }

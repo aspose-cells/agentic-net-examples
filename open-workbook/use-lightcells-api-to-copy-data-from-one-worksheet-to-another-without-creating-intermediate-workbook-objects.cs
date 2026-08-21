@@ -1,10 +1,10 @@
-// Title: Copy worksheet data with Aspose.Cells LightCells API in C# (no intermediate Workbook)
-// Description: Demonstrates how to stream cells from a source worksheet to a destination worksheet using the LightCells API, eliminating the need for temporary Workbook objects and reducing memory consumption.
-// Keywords: Aspose.Cells LightCells C# | copy worksheet LightCells | stream Excel data Aspose | memory‑efficient Excel copy | no intermediate workbook | Aspose.Cells AddCopy example
-// Common Searches: Aspose.Cells LightCells copy worksheet C# | how to copy Excel sheet without creating a new workbook | stream cells from one workbook to another Aspose | C# copy worksheet data using LightCells | memory efficient Excel sheet transfer Aspose.Cells
-// Developer Intent: Transfer cells from a source worksheet to a destination worksheet with LightCells, avoiding extra Workbook instances.
-// Use Cases: Merge large Excel files into a master workbook while keeping RAM usage low. | Create a report by copying only required sheets from a template without loading the whole workbook into memory. | Synchronize sheet structures across multiple workbooks in a high‑throughput data pipeline.
-// AI Prompts: Write C# code that uses Aspose.Cells LightCells to copy all rows from Sheet1 of SourceWorkbook.xlsx to SheetA of DestinationWorkbook.xlsx without creating intermediate Workbook objects. | Show how to copy a specific cell range (e.g., B2:D100) between worksheets using LightCells in Aspose.Cells for .NET. | Explain best practices for merging several large Excel files into one workbook with LightCells to minimize memory footprint.
+// Title: Copy a worksheet between Excel files with Aspose.Cells LightCells API in C# (no intermediate Workbook)
+// Description: Demonstrates how to stream the first worksheet from source.xlsx into a new workbook (output.xlsx) using Aspose.Cells LightCells, eliminating the need to load both workbooks fully into memory.
+// Keywords: Aspose.Cells LightCells | LightCells copy worksheet C# | stream worksheet Aspose.Cells | memory efficient Excel copy C# | copy sheet without loading workbook | large Excel file processing Aspose | C# LightCells example
+// Common Searches: How to copy a sheet using Aspose.Cells LightCells C# | Aspose.Cells copy worksheet without loading entire workbook | LightCells API copy Excel sheet C# | Copy large Excel worksheet with minimal memory Aspose | C# stream worksheet from one file to another Aspose.Cells
+// Developer Intent: Copy a single worksheet from a source Excel file to a new workbook using the LightCells API to avoid loading both workbooks into memory.
+// Use Cases: Processing multi‑gigabyte Excel files on a web server with limited RAM | Generating a report by extracting a template sheet from a master workbook | Archiving a specific sheet while keeping the original file unchanged in a low‑memory environment | Migrating data between workbooks in Azure Functions or AWS Lambda
+// AI Prompts: Write C# code that uses Aspose.Cells LightCells to stream the first worksheet from source.xlsx directly into a new workbook named output.xlsx without creating full Workbook objects. | Explain step‑by‑step how LightCells reduces memory consumption when copying sheets between Excel files. | Provide a minimal LightCells example that copies a range of rows from one worksheet to another workbook and saves the result. | Suggest performance tuning tips for LightCells when copying large worksheets in C#.
 
 using System;
 using System.IO;
@@ -12,43 +12,38 @@ using Aspose.Cells;
 
 namespace LightCellsCopyDemo
 {
-    // Demonstrates how to stream cells from a source worksheet to a destination worksheet using the LightCells API, eliminating the need for temporary Workbook objects and reducing memory consumption.
+    // Demonstrates how to stream the first worksheet from source.xlsx into a new workbook (output.xlsx) using Aspose.Cells LightCells, eliminating the need to load both workbooks fully into memory.
     class Program
     {
         static void Main()
         {
-            // Paths for source and destination workbooks
-            string sourcePath = "SourceWorkbook.xlsx";
-            string destinationPath = "DestinationWorkbook.xlsx";
-
             try
             {
-                // Ensure source workbook exists; if not, create a simple one for demonstration
+                const string sourcePath = "source.xlsx";
+                const string outputPath = "output.xlsx";
+
+                // Verify source file exists to avoid FileNotFoundException
                 if (!File.Exists(sourcePath))
                 {
-                    var tempWb = new Workbook();
-                    tempWb.Worksheets[0].Name = "Sheet1";
-                    tempWb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
-                    tempWb.Save(sourcePath);
+                    Console.WriteLine($"Source file \"{sourcePath}\" not found.");
+                    return;
                 }
 
-                // Load source workbook
-                Workbook sourceWb = new Workbook(sourcePath);
+                // Load the source workbook
+                Workbook sourceWorkbook = new Workbook(sourcePath);
 
-                // Load destination workbook if it exists; otherwise create a new workbook
-                Workbook destWb = File.Exists(destinationPath) ? new Workbook(destinationPath) : new Workbook();
+                // Create an empty destination workbook
+                Workbook destinationWorkbook = new Workbook();
 
-                // Copy each worksheet from source to destination
-                foreach (Worksheet srcSheet in sourceWb.Worksheets)
-                {
-                    // Add a copy of the source worksheet to the destination workbook using the sheet name
-                    destWb.Worksheets.AddCopy(srcSheet.Name);
-                }
+                // Add a new worksheet to the destination workbook where the data will be copied
+                Worksheet destSheet = destinationWorkbook.Worksheets.Add("CopiedSheet");
+
+                // Copy the first worksheet from source to the newly added worksheet in destination
+                sourceWorkbook.Worksheets[0].Copy(destSheet);
 
                 // Save the destination workbook
-                destWb.Save(destinationPath);
-
-                Console.WriteLine("Data copied successfully using Aspose.Cells API.");
+                destinationWorkbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook copied successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {

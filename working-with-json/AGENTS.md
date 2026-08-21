@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells JSON Agent
 category: working-with-json
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Import JSON into Excel cells and export worksheet ranges to JSON in C#
 primary_apis: [JsonUtility.ImportData, JsonLayoutOptions, JsonUtility.ExportRangeToJson, JsonSaveOptions]
 search_intents: [JSON to Excel C#, Excel range to JSON, import JSON with Aspose.Cells, export worksheet data as JSON]
@@ -101,3 +101,4 @@ Use `ImportData` for JSON text to cells and `ExportRangeToJson` for cells to JSO
 ## Definition of done
 
 The example compiles, runs, uses current verified JSON APIs, checks exact imported or exported structure, limits the data scope, and contains no unrelated serializer or integration dependency.
+

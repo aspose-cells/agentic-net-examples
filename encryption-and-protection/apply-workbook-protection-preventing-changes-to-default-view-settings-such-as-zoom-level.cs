@@ -1,14 +1,14 @@
-// Title: Lock Excel Workbook View Settings (Zoom, Window) with Aspose.Cells for .NET
-// Description: Shows how to use Aspose.Cells' Protect method with ProtectionType.Windows and a password to block changes to a workbook's window options—such as zoom level and view layout—and then save the protected file.
-// Keywords: Aspose.Cells Protect Windows | C# lock Excel zoom level | prevent view changes Aspose.Cells | Workbook.Protect password | Excel workbook window protection | Aspose.Cells default view lock | C# Excel protection types | ProtectionType.Windows example
-// Common Searches: Aspose.Cells protect zoom level | C# lock Excel view settings with password | prevent users from changing Excel window options using Aspose.Cells | Workbook.Protect Windows example C# | secure Excel default view Aspose.Cells
-// Developer Intent: The developer wants to apply workbook protection that blocks modifications to default view settings such as zoom level and window layout.
-// Use Cases: Distribute a template where the visual layout must remain identical for every recipient. | Publish a financial report that always opens at a predefined zoom level to preserve formatting. | Enforce corporate presentation standards by locking window options in compliance‑focused workbooks.
-// AI Prompts: Provide C# code that protects only the window settings of an Aspose.Cells workbook with a password and later unprotects it. | Explain all ProtectionType values in Aspose.Cells and illustrate which one locks default view settings. | Show a combined example that applies both Windows and Structure protection to a workbook using Aspose.Cells.
+// Title: C# Aspose.Cells – Password‑protect Workbook Window (zoom) settings
+// Description: Creates a new Workbook, locks the default view (window) using ProtectionType.Windows with a password, and saves it as ProtectedDefaultView.xlsx.
+// Keywords: Aspose.Cells C# protect window | Excel zoom lock programmatically | Workbook view protection .NET | ProtectionType.Windows password | Secure default view settings
+// Common Searches: Aspose.Cells lock workbook zoom level | C# protect Excel window settings with password | Prevent view changes in Excel using Aspose | How to disable zoom editing in a .NET workbook | Password protect Excel default view options
+// Developer Intent: Apply a password to the workbook’s window settings so the default view (e.g., zoom) cannot be altered by end users.
+// Use Cases: Distribute a template that must always open at a predefined zoom for brand consistency. | Deliver a financial dashboard where layout integrity is critical and view changes are prohibited. | Enforce corporate policy that only authorized staff can modify workbook display options.
+// AI Prompts: Write C# code with Aspose.Cells to lock the workbook window (zoom) using a custom password and save the file. | Explain how to programmatically remove the window protection from a workbook in Aspose.Cells. | Show how to protect both the workbook structure and its window settings in one Aspose.Cells call.
 
 using Aspose.Cells;
 
-// Shows how to use Aspose.Cells' Protect method with ProtectionType.Windows and a password to block changes to a workbook's window options—such as zoom level and view layout—and then save the protected file.
+// Creates a new Workbook, locks the default view (window) using ProtectionType.Windows with a password, and saves it as ProtectedDefaultView.xlsx.
 class ProtectWorkbookDefaultView
 {
     static void Main()
@@ -16,7 +16,7 @@ class ProtectWorkbookDefaultView
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Protect the workbook's window settings (e.g., zoom level, view options)
+        // Protect the workbook's window (default view settings such as zoom level) with a password
         workbook.Protect(ProtectionType.Windows, "pwd123");
 
         // Save the protected workbook

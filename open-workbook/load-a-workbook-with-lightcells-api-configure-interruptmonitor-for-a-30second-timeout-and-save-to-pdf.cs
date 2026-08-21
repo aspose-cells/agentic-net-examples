@@ -1,42 +1,37 @@
-// Title: C# – Load Excel with LightCells API, apply a 30‑second SystemTimeInterruptMonitor, and export to PDF using Aspose.Cells
-// Description: Shows how to set up a SystemTimeInterruptMonitor (termination disabled) with a 30‑second limit, attach it to LoadOptions, load an Excel workbook via the LightCells API, and save the workbook as a PDF file in .NET.
-// Keywords: Aspose.Cells | LightCells API | SystemTimeInterruptMonitor | 30 second timeout | C# .NET | LoadOptions | Excel to PDF conversion | interrupt monitor example | prevent long load | GitHub sample
-// Common Searches: Aspose.Cells LightCells interrupt monitor C# | set timeout for workbook load Aspose.Cells .NET | convert Excel to PDF with timeout | cancel long running load Aspose.Cells | SystemTimeInterruptMonitor usage example | load large Excel file with 30 sec limit | Aspose.Cells PDF export with interrupt monitor
-// Developer Intent: Load an Excel workbook using LightCells with a 30‑second interrupt monitor and save it as a PDF.
-// Use Cases: Avoid hanging when processing massive spreadsheets by enforcing a 30‑second load limit before conversion. | Implement time‑bounded Excel‑to‑PDF conversion in web APIs or micro‑services. | Gracefully cancel a long‑running load operation without throwing exceptions while still allowing the file to be saved.
-// AI Prompts: Generate a C# snippet that stops a LightCells load after 20 seconds and logs the interruption before exporting to PDF. | Explain how to reuse a SystemTimeInterruptMonitor for both loading and saving steps in Aspose.Cells, including error handling. | Provide a step‑by‑step guide for configuring an interrupt monitor that terminates without exception and integrates with a CI/CD pipeline.
+// Title: C# – Load Excel with LightCells API, set a 30‑second SystemTimeInterruptMonitor, and save as PDF using Aspose.Cells
+// Description: Demonstrates how to configure a SystemTimeInterruptMonitor for a 30‑second timeout, attach it to LoadOptions, load an Excel workbook via the LightCells API, and export the workbook to PDF with Aspose.Cells for .NET. Ideal for server‑side scenarios where long‑running loads must be bounded.
+// Keywords: Aspose.Cells | LightCells API | SystemTimeInterruptMonitor | LoadOptions | C# | Excel to PDF conversion | timeout monitoring | workbook load timeout | server side Excel processing | .NET PDF export
+// Common Searches: Aspose.Cells LightCells interrupt monitor example | C# set timeout when loading Excel workbook | Convert Excel to PDF with LightCells and timeout | SystemTimeInterruptMonitor 30 seconds Aspose | LoadOptions InterruptMonitor usage C#
+// Developer Intent: Load an Excel file with LightCells while enforcing a 30‑second timeout, then convert the workbook to PDF.
+// Use Cases: Prevent runaway workbook loads in web services or background jobs. | Enforce execution‑time limits for user‑uploaded Excel files in multi‑tenant SaaS platforms. | Guarantee PDF conversion completes within a predefined window for batch processing pipelines.
+// AI Prompts: Show how to catch the timeout exception thrown by SystemTimeInterruptMonitor and return a custom error response. | Generate logging code that records when the interrupt monitor aborts a workbook load. | Explain how to replace the time‑based monitor with a CPU‑usage based InterruptMonitor in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsLightCellsInterruptDemo
+// Demonstrates how to configure a SystemTimeInterruptMonitor for a 30‑second timeout, attach it to LoadOptions, load an Excel workbook via the LightCells API, and export the workbook to PDF with Aspose.Cells for .NET. Ideal for server‑side scenarios where long‑running loads must be bounded.
+class LightCellsInterruptDemo
 {
-    // Shows how to set up a SystemTimeInterruptMonitor (termination disabled) with a 30‑second limit, attach it to LoadOptions, load an Excel workbook via the LightCells API, and save the workbook as a PDF file in .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a SystemTimeInterruptMonitor (false = do not terminate without exception)
+        SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
+
+        // Configure LoadOptions to use the interrupt monitor
+        LoadOptions loadOptions = new LoadOptions
         {
-            // Path to the source Excel file
-            string sourcePath = "input.xlsx";
+            InterruptMonitor = monitor
+        };
 
-            // Create a SystemTimeInterruptMonitor with terminateWithoutException = false
-            SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
+        // Start the monitor with a 30‑second (30000 ms) time limit
+        monitor.StartMonitor(30000);
 
-            // Configure LoadOptions to use the interrupt monitor
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.InterruptMonitor = monitor;
+        // Load the workbook using the LightCells API (enabled via LoadOptions)
+        // Replace "input.xlsx" with the path to your source Excel file
+        Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
-            // Start the monitor with a 30‑second (30000 ms) time limit
-            monitor.StartMonitor(30000);
-
-            // Load the workbook using LightCells API (via LoadOptions)
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-            // Optionally restart the monitor before the save operation
-            monitor.StartMonitor(30000);
-
-            // Save the workbook to PDF format
-            workbook.Save("output.pdf", SaveFormat.Pdf);
-        }
+        // Save the workbook as PDF
+        // Replace "output.pdf" with the desired output path
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

@@ -1,66 +1,64 @@
-// Title: Detect Encrypted XLSX Workbook Format Without a Password – Aspose.Cells for .NET
-// Description: C# example that uses Aspose.Cells FileFormatUtil.DetectFileFormat to identify the file type and encryption state of an OOXML workbook (XLSX) without providing a password. The script prints the detection details to the console and writes them to a text file for logging or audit purposes.
-// Keywords: Aspose.Cells | .NET | C# | detect encrypted XLSX | FileFormatUtil | OOXML workbook detection | no password | file format identification | encryption status | audit log
-// Common Searches: Aspose.Cells detect encrypted XLSX without password | FileFormatUtil DetectFileFormat example C# | how to check if an Excel file is password protected using Aspose | save workbook format detection result to a file | determine OOXML workbook encryption state programmatically
-// Developer Intent: Find out whether an XLSX file is encrypted and what format it uses without supplying a password, then record the information.
-// Use Cases: Pre‑process incoming Excel uploads in a web API and reject encrypted files before further handling. | Create an audit trail that logs workbook format and encryption flags for compliance reporting. | Route password‑protected spreadsheets to a secure decryption workflow based on detection results.
-// AI Prompts: Generate C# code that uses Aspose.Cells to detect if an XLSX file is encrypted without a password and output the file format. | Show how to extract FileFormatInfo properties (FileFormatType, IsEncrypted, IsProtectedByRMS, LoadFormat) and write them to a log file. | Explain error handling for missing files and unexpected exceptions when calling FileFormatUtil.DetectFileFormat.
+// Title: Detect Encryption of an OOXML (.xlsx) Workbook with Aspose.Cells (C#) Without a Password
+// Description: A C# example that uses Aspose.Cells FileFormatUtil.DetectFileFormat to identify the file format of an .xlsx workbook and determine whether it is encrypted, all without providing a password. The program writes the detection outcome to the console and saves it to a text file, with robust handling for missing files and unexpected errors.
+// Keywords: Aspose.Cells | C# | detect encrypted workbook | FileFormatUtil | OOXML | xlsx encryption detection | without password | file format detection | Excel password check | log encryption status
+// Common Searches: How to check if an .xlsx file is password protected using Aspose.Cells C# | Detect encrypted Excel workbook without opening it | FileFormatUtil DetectFileFormat encryption status example | Save Excel encryption detection result to a file | Aspose.Cells detect encrypted workbook in .NET
+// Developer Intent: Determine whether an OOXML Excel workbook is encrypted without supplying a password and record the result for downstream processing.
+// Use Cases: Validate incoming spreadsheet uploads and reject encrypted files before further processing. | Create audit logs that capture the encryption status of batch‑processed Excel files. | Route encrypted and unencrypted workbooks to separate workflows in an automated pipeline.
+// AI Prompts: Generate C# code that uses Aspose.Cells to detect if an .xlsx file is password protected without opening the workbook, and export the result to JSON. | Show how to handle exceptions from FileFormatUtil.DetectFileFormat when the file is corrupted or in an unsupported format. | Provide a sample ASP.NET Core controller that validates uploaded Excel files for encryption using Aspose.Cells and returns a clear error message if encrypted.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// A C# example that uses Aspose.Cells FileFormatUtil.DetectFileFormat to identify the file format of an .xlsx workbook and determine whether it is encrypted, all without providing a password. The program writes the detection outcome to the console and saves it to a text file, with robust handling for missing files and unexpected errors.
+public class DetectEncryptedWorkbook
 {
-    // C# example that uses Aspose.Cells FileFormatUtil.DetectFileFormat to identify the file type and encryption state of an OOXML workbook (XLSX) without providing a password. The script prints the detection details to the console and writes them to a text file for logging or audit purposes.
-    public class DetectEncryptedWorkbookFormat
+    public static void Run()
     {
-        public static void Run()
+        // Path to the OOXML workbook (encrypted or not)
+        string filePath = "encrypted.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            try
+            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Detect the file format without providing a password
+            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
+
+            // Output detection results to the console
+            Console.WriteLine($"File: {filePath}");
+            Console.WriteLine($"Detected Format: {formatInfo.FileFormatType}");
+            Console.WriteLine($"Is Encrypted: {formatInfo.IsEncrypted}");
+
+            // Record the results to a text file
+            string resultPath = "DetectionResult.txt";
+            using (StreamWriter writer = new StreamWriter(resultPath, false))
             {
-                // Path to the encrypted OOXML workbook (XLSX)
-                string filePath = "encrypted.xlsx";
-
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"Input file not found: {filePath}");
-                    return;
-                }
-
-                // Detect the file format without providing a password
-                FileFormatInfo info = FileFormatUtil.DetectFileFormat(filePath);
-
-                // Build a result string with the detection details
-                string result = $"File: {Path.GetFileName(filePath)}{Environment.NewLine}" +
-                                $"Detected Format: {info.FileFormatType}{Environment.NewLine}" +
-                                $"Is Encrypted: {info.IsEncrypted}{Environment.NewLine}" +
-                                $"Is Protected By RMS: {info.IsProtectedByRMS}{Environment.NewLine}" +
-                                $"Load Format: {info.LoadFormat}";
-
-                // Output the result to the console
-                Console.WriteLine(result);
-
-                // Record the result to a text file
-                string outputPath = "DetectionResult.txt";
-                File.WriteAllText(outputPath, result);
-                Console.WriteLine($"Detection result saved to {outputPath}");
+                writer.WriteLine($"File: {filePath}");
+                writer.WriteLine($"Detected Format: {formatInfo.FileFormatType}");
+                writer.WriteLine($"Is Encrypted: {formatInfo.IsEncrypted}");
             }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            Console.WriteLine($"Detection results saved to {resultPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors (e.g., format detection issues)
+            Console.WriteLine($"An error occurred during detection: {ex.Message}");
         }
     }
+}
 
-    // Entry point for the application
-    public class Program
+// Entry point required for the application
+public class Program
+{
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            DetectEncryptedWorkbookFormat.Run();
-        }
+        DetectEncryptedWorkbook.Run();
     }
 }

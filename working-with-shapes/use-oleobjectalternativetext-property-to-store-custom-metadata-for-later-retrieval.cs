@@ -1,71 +1,84 @@
-// Title: Embed and Retrieve JSON Metadata in an Excel OLE Object via AlternativeText – Aspose.Cells for .NET
-// Description: Demonstrates how to add an OLE object with a minimal placeholder image to a workbook, store a JSON string in the OleObject.AlternativeText property, save the file, reload it, and read back the embedded metadata using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | OleObject AlternativeText | store JSON metadata | retrieve OLE object data | C# Excel OLE example | embed custom data in Excel | AlternativeText limit | placeholder image for OLE
-// Common Searches: how to store JSON in OleObject AlternativeText Aspose.Cells | retrieve custom metadata from OLE object in Excel C# | Aspose.Cells embed data in OLE object | AlternativeText usage for OLE objects .NET | save and load OLE object metadata with Aspose.Cells
-// Developer Intent: The developer needs to attach custom JSON metadata to an OLE object via the AlternativeText property and later extract it without opening the embedded file.
-// Use Cases: Link a document ID to an embedded file for downstream processing. | Attach audit information (author, version) to an OLE‑embedded chart. | Persist configuration settings for a linked resource inside the workbook.
-// AI Prompts: Generate C# code that serializes a dictionary to JSON, assigns it to OleObject.AlternativeText, saves the workbook, then deserializes the JSON back into a typed object using Aspose.Cells. | Explain how to handle AlternativeText length limits when storing large JSON payloads in an OLE object. | Show an example of encrypting JSON metadata before setting OleObject.AlternativeText and decrypting it after retrieval.
+// Title: C# Example: Store and Retrieve JSON Metadata in an Excel OLE Object via OleObject.AlternativeText (Aspose.Cells)
+// Description: Demonstrates how to add an OLE object to a worksheet, embed a JSON string as custom metadata using the OleObject.AlternativeText property, save the workbook, and later reload it to read the stored metadata. Includes a helper that creates a 1×1 PNG icon for the OLE object.
+// Keywords: Aspose.Cells | C# | .NET | OleObject | AlternativeText | metadata | JSON | embed data in Excel | OLE object custom properties | sample code | GitHub example | Excel automation
+// Common Searches: Aspose.Cells store JSON in OleObject.AlternativeText | retrieve custom metadata from Excel OLE object C# | how to embed data in OLE object using Aspose.Cells | AlternativeText property size limit | C# example for saving metadata in Excel shape
+// Developer Intent: Persist custom JSON data inside an OLE object’s AlternativeText field and read it back after the workbook is saved.
+// Use Cases: Link a unique document ID to each embedded OLE object for quick lookup. | Save author, creation date, or version info with the object to avoid external databases. | Create a lightweight, self‑contained metadata store for embedded charts, diagrams, or files.
+// AI Prompts: Generate C# code that serializes any object to JSON and assigns it to OleObject.AlternativeText using Aspose.Cells. | Write a method that scans all OleObjects in a worksheet and returns a dictionary of their AlternativeText values. | Explain the character limit of the AlternativeText property and suggest ways to handle metadata that exceeds this limit.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing; // Required for OleObject
+using Aspose.Cells.Drawing;
 
-namespace OleObjectMetadataDemo
+// Demonstrates how to add an OLE object to a worksheet, embed a JSON string as custom metadata using the OleObject.AlternativeText property, save the workbook, and later reload it to read the stored metadata. Includes a helper that creates a 1×1 PNG icon for the OLE object.
+class OleObjectMetadataExample
 {
-    // Demonstrates how to add an OLE object with a minimal placeholder image to a workbook, store a JSON string in the OleObject.AlternativeText property, save the file, reload it, and read back the embedded metadata using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Generate a simple 1x1 pixel PNG image to use as the OLE object icon
+            byte[] iconImage = GeneratePngIcon();
+
+            // Add an OLE object to the worksheet at row 5, column 2 with size 150x150 pixels
+            int oleIndex = sheet.OleObjects.Add(5, 2, 150, 150, iconImage);
+            OleObject ole = sheet.OleObjects[oleIndex];
+
+            // Store custom metadata in the AlternativeText property (e.g., JSON string)
+            string customMetadata = "{\"DocumentId\":12345,\"Author\":\"John Doe\",\"Created\":\"2024-01-01\"}";
+            ole.AlternativeText = customMetadata;
+
+            // Save the workbook to a file
+            string filePath = "OleObjectWithMetadata.xlsx";
+            workbook.Save(filePath, SaveFormat.Xlsx);
+
+            // -------------------------------------------------
+            // Later: Load the workbook and retrieve the metadata
+            // -------------------------------------------------
+            if (File.Exists(filePath))
             {
-                // Path for the workbook
-                string filePath = "OleObjectMetadataDemo.xlsx";
+                Workbook loadedWorkbook = new Workbook(filePath);
+                Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
 
-                // -------------------- Create and configure workbook --------------------
-                Workbook workbook = new Workbook();                     // create a new workbook
-                Worksheet sheet = workbook.Worksheets[0];              // get the first worksheet
-
-                // Minimal 1x1 PNG image (transparent) required by Aspose.Cells for OLE objects
-                // This avoids the need for System.Drawing dependencies.
-                byte[] placeholderImage = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X5eUAAAAASUVORK5CYII=");
-
-                // Add an OLE object to the worksheet
-                int oleIndex = sheet.OleObjects.Add(5, 2, 150, 150, placeholderImage);
-                OleObject ole = sheet.OleObjects[oleIndex];
-
-                // Store custom metadata in the AlternativeText property (e.g., JSON string)
-                string customMetadata = "{\"DocumentId\":\"12345\",\"Author\":\"John Doe\",\"Version\":2}";
-                ole.AlternativeText = customMetadata;
-
-                // Save the workbook
-                workbook.Save(filePath, SaveFormat.Xlsx);
-
-                // -------------------- Load workbook and retrieve metadata --------------------
-                if (File.Exists(filePath))
+                // Assuming the OLE object is still at index 0 (first added)
+                if (loadedSheet.OleObjects.Count > 0)
                 {
-                    Workbook loadedWorkbook = new Workbook(filePath); // load the saved workbook
-                    OleObject loadedOle = loadedWorkbook.Worksheets[0].OleObjects[0];
+                    OleObject loadedOle = loadedSheet.OleObjects[0];
 
                     // Retrieve the stored metadata
                     string retrievedMetadata = loadedOle.AlternativeText;
 
                     // Output the metadata to the console
-                    Console.WriteLine("Retrieved OleObject AlternativeText:");
+                    Console.WriteLine("Retrieved metadata from OleObject.AlternativeText:");
                     Console.WriteLine(retrievedMetadata);
                 }
                 else
                 {
-                    Console.WriteLine($"Error: The file '{filePath}' was not found.");
+                    Console.WriteLine("No OLE objects found in the loaded worksheet.");
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("An error occurred:");
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"File not found: {filePath}");
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred:");
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    // Helper method to generate a minimal 1x1 transparent PNG image as a byte array
+    private static byte[] GeneratePngIcon()
+    {
+        // Base64-encoded 1x1 transparent PNG
+        const string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X2V8AAAAASUVORK5CYII=";
+        return Convert.FromBase64String(base64Png);
     }
 }

@@ -1,93 +1,75 @@
-// Title: C# – Detect Encrypted .xlsx and Retrieve Encryption Algorithm URI with Aspose.Cells
-// Description: A concise example that uses Aspose.Cells FileFormatUtil to check if an Excel workbook is encrypted, then opens the ZIP package, reads the EncryptionInfo part, and extracts the algorithm URI and key size for compliance auditing.
-// Keywords: Aspose.Cells encryption detection | C# read EncryptionInfo | encrypted xlsx algorithm URI | Office Open XML encryption audit | FileFormatUtil IsEncrypted | extract key size .NET | Excel file security compliance
-// Common Searches: How to detect encrypted Excel file with Aspose.Cells C# | Get encryption algorithm URI from encrypted .xlsx | Read EncryptionInfo part of Office Open XML | Audit Excel workbook encryption algorithm | C# extract key size from encrypted workbook
-// Developer Intent: Determine whether an .xlsx file is encrypted and obtain its encryption algorithm identifier and key length for security auditing.
-// Use Cases: Batch‑scan Excel files before archiving to ensure only approved encryption algorithms are used. | Log algorithm URI and key size of incoming workbooks for regulatory reporting. | Validate encrypted workbooks against corporate security policies during automated import processes.
-// AI Prompts: Write C# code that uses Aspose.Cells to detect encryption and extracts the algorithm URI and key size from the EncryptionInfo part of an .xlsx file. | Provide robust error handling for ZIP archive processing when the file is not a valid Office Open XML package. | Show how to extend this example to scan a directory of workbooks and output results to a CSV file.
+// Title: Detect encrypted OOXML Excel file and identify its encryption algorithm using Aspose.Cells for .NET
+// Description: This C# example shows how to verify a workbook's existence, detect whether an .xlsx file is encrypted with Aspose.Cells' FileFormatUtil, prompt for a password, and attempt to open the file via LoadOptions. It reports the encryption status and highlights that Aspose.Cells does not expose the encryption algorithm identifier directly, guiding auditors toward alternative strategies.
+// Keywords: Aspose.Cells | C# | .xlsx encryption detection | OOXML encryption algorithm | FileFormatUtil IsEncrypted | LoadOptions password | audit Excel encryption | encryption algorithm identifier | detect encrypted workbook | Excel security audit
+// Common Searches: How to check if an .xlsx file is encrypted with Aspose.Cells | Retrieve encryption algorithm of an encrypted Excel workbook in C# | Detect encrypted Office Open XML file using Aspose.Cells | Audit Excel file encryption with .NET | Aspose.Cells encryption algorithm identifier
+// Developer Intent: Determine whether an Excel .xlsx file is encrypted and obtain its encryption algorithm identifier for compliance auditing.
+// Use Cases: Validate incoming Excel documents for encryption before processing in an automated workflow. | Prompt users for a password, attempt to open an encrypted workbook, and handle invalid passwords gracefully. | Document the limitation that Aspose.Cells does not expose the encryption algorithm identifier, and suggest alternative auditing approaches.
+// AI Prompts: Write C# code with Aspose.Cells that detects if an .xlsx file is encrypted and returns the encryption algorithm identifier for audit purposes. | Create a method that loads an encrypted OOXML workbook using a supplied password and extracts the encryption algorithm name, handling cases where the API lacks direct support. | Suggest a strategy to audit the encryption algorithm of an encrypted Excel file when Aspose.Cells cannot retrieve it directly.
 
 using System;
 using System.IO;
-using System.IO.Compression;
-using System.Xml.Linq;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionAudit
+// This C# example shows how to verify a workbook's existence, detect whether an .xlsx file is encrypted with Aspose.Cells' FileFormatUtil, prompt for a password, and attempt to open the file via LoadOptions. It reports the encryption status and highlights that Aspose.Cells does not expose the encryption algorithm identifier directly, guiding auditors toward alternative strategies.
+class EncryptionAudit
 {
-    // A concise example that uses Aspose.Cells FileFormatUtil to check if an Excel workbook is encrypted, then opens the ZIP package, reads the EncryptionInfo part, and extracts the algorithm URI and key size for compliance auditing.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the Office Open XML file to be audited
-            string filePath = "encrypted.xlsx";
+        string filePath = "encrypted.xlsx";
 
-            // Ensure the file exists before proceeding
-            if (!File.Exists(filePath))
+        // Verify that the file exists before proceeding
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine($"File not found: {filePath}");
+            return;
+        }
+
+        try
+        {
+            // Detect file format and encryption status
+            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
+            Console.WriteLine($"Is Encrypted: {formatInfo.IsEncrypted}");
+
+            if (!formatInfo.IsEncrypted)
             {
-                Console.WriteLine($"File not found: {filePath}");
+                Console.WriteLine("The file is not encrypted.");
                 return;
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error detecting file format: {ex.Message}");
+            return;
+        }
 
-            try
+        // Prompt user for the password
+        Console.Write("Enter password to open the workbook: ");
+        string password = Console.ReadLine() ?? string.Empty;
+
+        try
+        {
+            // Load workbook with the supplied password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto)
             {
-                // Detect file format and encryption status using Aspose.Cells
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-                Console.WriteLine($"Is the file encrypted? {formatInfo.IsEncrypted}");
+                Password = password
+            };
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-                if (formatInfo.IsEncrypted)
-                {
-                    // Aspose.Cells does not expose detailed encryption info directly,
-                    // so we fall back to manual extraction of the EncryptionInfo part.
-                    Console.WriteLine("Attempting manual extraction of EncryptionInfo part...");
-
-                    try
-                    {
-                        using (FileStream fs = File.OpenRead(filePath))
-                        using (ZipArchive zip = new ZipArchive(fs, ZipArchiveMode.Read))
-                        {
-                            ZipArchiveEntry encryptionInfoEntry = zip.GetEntry("EncryptionInfo");
-                            if (encryptionInfoEntry != null)
-                            {
-                                using (Stream entryStream = encryptionInfoEntry.Open())
-                                {
-                                    XDocument encryptionDoc = XDocument.Load(entryStream);
-                                    XNamespace encNs = "http://schemas.microsoft.com/office/2006/encryption";
-
-                                    XElement algorithmElement = encryptionDoc.Root?.Element(encNs + "algorithm");
-                                    if (algorithmElement != null)
-                                    {
-                                        string algorithmUri = (string)algorithmElement.Attribute("uri");
-                                        string keySize = (string)algorithmElement.Attribute("keySize");
-
-                                        Console.WriteLine($"Encryption algorithm URI: {algorithmUri}");
-                                        Console.WriteLine($"Key size (bits): {keySize}");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Algorithm element not found in EncryptionInfo.");
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine("EncryptionInfo part not found; unable to determine algorithm.");
-                            }
-                        }
-                    }
-                    catch (InvalidDataException)
-                    {
-                        Console.WriteLine("The file is encrypted and cannot be treated as a standard ZIP archive.");
-                    }
-                    catch (Exception zipEx)
-                    {
-                        Console.WriteLine($"Error while processing ZIP archive: {zipEx.Message}");
-                    }
-                }
+            // Aspose.Cells does not expose the encryption algorithm directly after loading.
+            // Indicate that the workbook was opened successfully.
+            Console.WriteLine("Workbook opened successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Handle invalid password or other loading errors
+            if (!string.IsNullOrEmpty(ex.Message) &&
+                ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Console.WriteLine("Invalid password provided.");
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine($"An error occurred during processing: {e.Message}");
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
             }
         }
     }

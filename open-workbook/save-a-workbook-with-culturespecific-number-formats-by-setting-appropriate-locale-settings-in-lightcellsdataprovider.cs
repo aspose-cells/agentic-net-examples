@@ -1,44 +1,93 @@
-// Title: Save an Excel file with locale‑specific number formats using LightCellsDataProvider in Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, insert numeric values, set the workbook's CultureInfo to French (fr-FR) and Region to France, configure OoxmlSaveOptions with a custom LightCellsDataProvider that supplies no data, and save the file as CultureSpecificWorkbook.xlsx. The example shows that locale settings control decimal separators and other number formatting during a LightCells save.
-// Keywords: Aspose.Cells | C# | .NET | LightCellsDataProvider | OoxmlSaveOptions | CultureInfo | locale | French culture | fr-FR | number format | region settings | high‑performance Excel export | Excel workbook culture | save workbook with locale
-// Common Searches: Aspose.Cells set workbook culture before saving | How to apply French number format when exporting Excel with Aspose.Cells | LightCellsDataProvider custom save options example | Save Excel with locale‑specific formatting in .NET | Configure CultureInfo and Region for Aspose.Cells workbook
-// Developer Intent: Apply specific CultureInfo and Region to a workbook and save it using a custom LightCellsDataProvider for high‑performance, locale‑aware Excel export.
-// Use Cases: Generate a French‑localized financial report where decimals appear as commas. | Export large datasets quickly while preserving locale‑specific number formats. | Create multiple regional versions of the same workbook by switching CultureInfo (e.g., fr-FR, de-DE) before each save.
-// AI Prompts: Show code to save an Excel workbook with German (de-DE) culture settings using LightCellsDataProvider in Aspose.Cells for .NET. | Provide a C# example that changes CultureInfo and Region for several locales before exporting to XLSX with Aspose.Cells. | Explain the interaction between LightCellsDataProvider and workbook culture settings during the save process.
+// Title: Save Excel with locale‑specific number formats using a custom LightCellsDataProvider (Aspose.Cells for .NET)
+// Description: Shows how to assign Workbook.Settings.CultureInfo inside a custom LightCellsDataProvider, copy cell values and styles, and export the workbook with OoxmlSaveOptions in LightCells mode so numbers follow the chosen locale (e.g., German separators).
+// Keywords: Aspose.Cells | C# | LightCellsDataProvider | CultureInfo | locale number format | German decimal separator | Excel export options | OoxmlSaveOptions | culture‑aware Excel save | large workbook performance
+// Common Searches: Aspose.Cells set workbook culture before saving | LightCellsDataProvider example C# | Save Excel with German number format using Aspose | Apply CultureInfo to Excel export .NET | Locale specific number formatting in Aspose.Cells
+// Developer Intent: Apply a chosen CultureInfo during LightCells saving to generate locale‑aware numeric formatting.
+// Use Cases: Produce financial statements for different regions where decimal and thousand separators vary, without loading the whole file into memory. | Export massive data sets with high performance while automatically applying the correct regional number format. | Create Excel reports for international users that display numbers according to their local conventions.
+// AI Prompts: Extend the CultureAwareLightCellsDataProvider to support multiple worksheets, each with its own CultureInfo. | Explain how to combine Settings.CultureInfo with LightCellsDataProvider to format dates and currencies for a specific locale. | Provide a step‑by‑step guide to export a workbook to PDF while preserving locale‑specific number formatting using LightCells.
 
 using System;
 using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsCultureSpecificSave
 {
-    // Custom LightCellsDataProvider that does not supply any data.
-    // It is used here only to demonstrate setting the provider while
-    // applying culture-specific settings to the workbook.
-    // Demonstrates how to create a workbook, insert numeric values, set the workbook's CultureInfo to French (fr-FR) and Region to France, configure OoxmlSaveOptions with a custom LightCellsDataProvider that supplies no data, and save the file as CultureSpecificWorkbook.xlsx. The example shows that locale settings control decimal separators and other number formatting during a LightCells save.
-    public class CustomLightCellsDataProvider : LightCellsDataProvider
+    // Custom LightCellsDataProvider that sets the workbook's culture before saving
+    // and supplies cell data from the original workbook.
+    // Shows how to assign Workbook.Settings.CultureInfo inside a custom LightCellsDataProvider, copy cell values and styles, and export the workbook with OoxmlSaveOptions in LightCells mode so numbers follow the chosen locale (e.g., German separators).
+    public class CultureAwareLightCellsDataProvider : LightCellsDataProvider
     {
-        // No string gathering is required.
+        private readonly Workbook _sourceWorkbook;
+        private readonly CultureInfo _culture;
+        private int _currentRow = -1;
+        private int _currentColumn = -1;
+        private int _maxRow;
+        private int _maxColumn;
+
+        public CultureAwareLightCellsDataProvider(Workbook sourceWorkbook, CultureInfo culture)
+        {
+            _sourceWorkbook = sourceWorkbook;
+            _culture = culture;
+
+            // Determine the used range of the first worksheet.
+            Cells cells = _sourceWorkbook.Worksheets[0].Cells;
+            _maxRow = cells.MaxDataRow;
+            _maxColumn = cells.MaxDataColumn;
+        }
+
+        // No need to gather string data separately.
         public bool IsGatherString() => false;
 
-        // No sheets are processed by this provider.
-        public int SheetCount => 0;
+        // Only one sheet is processed.
+        public int SheetCount => 1;
 
-        // Return false to indicate that the sheet should be processed
-        // by the default saving mechanism.
-        public bool StartSheet(int sheetIndex) => false;
+        // Called before processing a sheet. Set the desired culture here.
+        public bool StartSheet(int sheetIndex)
+        {
+            // Apply the culture to the workbook settings.
+            _sourceWorkbook.Settings.CultureInfo = _culture;
+            // Reset row/column counters.
+            _currentRow = -1;
+            _currentColumn = -1;
+            // Process only the first sheet.
+            return sheetIndex == 0;
+        }
 
-        // No rows to iterate.
-        public int NextRow() => -1;
+        // Move to the next row. Return -1 when no more rows.
+        public int NextRow()
+        {
+            if (_currentRow < _maxRow)
+            {
+                _currentRow++;
+                _currentColumn = -1;
+                return _currentRow;
+            }
+            return -1;
+        }
 
-        // No special row handling.
-        public void StartRow(Row row) { }
+        // Called when a new row starts.
+        public void StartRow(Row row) => _currentColumn = -1;
 
-        // No cells to iterate.
-        public int NextCell() => -1;
+        // Move to the next cell in the current row. Return -1 when no more cells.
+        public int NextCell()
+        {
+            if (_currentColumn < _maxColumn)
+            {
+                _currentColumn++;
+                return _currentColumn;
+            }
+            return -1;
+        }
 
-        // No special cell handling.
-        public void StartCell(Cell cell) { }
+        // Populate the cell with the value from the source workbook.
+        public void StartCell(Cell cell)
+        {
+            Cell srcCell = _sourceWorkbook.Worksheets[0].Cells[_currentRow, _currentColumn];
+            // Preserve the original value and style.
+            cell.PutValue(srcCell.Value);
+            cell.SetStyle(srcCell.GetStyle());
+        }
     }
 
     public class Program
@@ -46,25 +95,30 @@ namespace AsposeCellsCultureSpecificSave
         public static void Main()
         {
             // Create a new workbook and add sample numeric data.
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue(12345.67);
-            sheet.Cells["A2"].PutValue(98765.43);
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            Cell cell = ws.Cells["A1"];
+            cell.PutValue(12345.67); // Sample number.
 
-            // Apply culture-specific settings.
-            // For example, French culture uses comma as decimal separator.
-            workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
-            // Optionally set the region as well.
-            workbook.Settings.Region = CountryCode.France;
+            // Apply a number format that will be affected by culture settings.
+            Style style = wb.CreateStyle();
+            style.Custom = "#,##0.00"; // Uses group and decimal separators.
+            cell.SetStyle(style);
 
-            // Create OoxmlSaveOptions and assign the custom LightCellsDataProvider.
+            // Define the target culture (e.g., German uses comma as decimal separator).
+            CultureInfo targetCulture = new CultureInfo("de-DE");
+
+            // Create save options for XLSX and assign the custom LightCellsDataProvider.
             OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx)
             {
-                LightCellsDataProvider = new CustomLightCellsDataProvider()
+                LightCellsDataProvider = new CultureAwareLightCellsDataProvider(wb, targetCulture)
             };
 
-            // Save the workbook using the save options.
-            workbook.Save("CultureSpecificWorkbook.xlsx", saveOptions);
+            // Save the workbook using the LightCells mode with culture‑specific formatting.
+            string outputPath = "CultureSpecificNumberFormat.xlsx";
+            wb.Save(outputPath, saveOptions);
+
+            Console.WriteLine($"Workbook saved to '{outputPath}' with culture '{targetCulture.Name}'.");
         }
     }
 }

@@ -4,7 +4,7 @@ description: C# examples for line, column, and win-loss sparklines, source range
 product: Aspose.Cells for .NET
 category: sparkline
 language: C#
-last_reviewed: 2026-07-30
+last_reviewed: 2026-08-14
 ---
 
 # Create Excel Sparklines in C# with Aspose.Cells for .NET

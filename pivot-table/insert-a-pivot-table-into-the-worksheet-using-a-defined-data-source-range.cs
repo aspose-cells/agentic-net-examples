@@ -1,70 +1,65 @@
-// Title: Create a Pivot Table from a Dynamic Data Range with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to generate a new workbook, populate a source sheet, use MaxDisplayRange to capture the full data area, add a second worksheet, insert a pivot table that references the dynamic range, assign "Category" to rows and "Value" to data, refresh and calculate the pivot, and save the file as PivotTableDemo.xlsx.
-// Keywords: Aspose.Cells pivot table C# | dynamic source range Aspose | MaxDisplayRange pivot | add pivot table .NET | Aspose.Cells example | Excel automation C# | programmatic pivot table
-// Common Searches: how to add a pivot table with Aspose.Cells C# | use MaxDisplayRange as pivot source in Aspose.Cells | Aspose.Cells create pivot table from range | C# code for inserting pivot table in new worksheet | Aspose.Cells refresh and calculate pivot table
-// Developer Intent: Programmatically create and save an Excel workbook that contains a pivot table built from a dynamically determined data range.
-// Use Cases: Generate summary reports that automatically adapt to changing data sizes. | Automate Excel dashboards where row and data fields are defined in code. | Build reusable utilities that add pivot tables to any worksheet without hard‑coding ranges.
-// AI Prompts: Write a reusable method that takes a worksheet name and adds a pivot table using its MaxDisplayRange as the source. | Show how to add multiple data fields to the pivot table and format the results as currency. | Explain the steps to refresh and recalculate a pivot table after updating the source data with Aspose.Cells.
+// Title: C# – Insert a Pivot Table with a Defined Source Range using Aspose.Cells for .NET
+// Description: Creates a new workbook, adds sample data to a "SourceData" sheet, builds a range string that includes the sheet name, inserts a pivot table on a separate "PivotTable" sheet, assigns "Category" to rows and "Value" to data, refreshes the cache, calculates results, and saves the file as PivotTableDemo.xlsx.
+// Keywords: Aspose.Cells | Aspose.Cells for .NET | C# pivot table | pivot table example | define source range | add pivot table programmatically | PivotTableCollection | PivotTable API | GitHub sample | Aspose.Cells tutorial
+// Common Searches: Aspose.Cells create pivot table from range C# | How to add pivot table to new worksheet using Aspose.Cells .NET | Refresh pivot table data Aspose.Cells C# | GitHub Aspose.Cells pivot table example | Dynamic source range pivot table Aspose.Cells
+// Developer Intent: Programmatically add and configure a pivot table in a .NET workbook using a specific source data range.
+// Use Cases: Generate a sales summary that groups categories and totals values automatically. | Automate financial consolidation by pivoting raw transaction data into aggregated rows and columns. | Build a dynamic dashboard workbook where the pivot table updates whenever the source data changes.
+// AI Prompts: Write C# code with Aspose.Cells to insert a pivot table that includes multiple data fields and a filter field. | Show how to change the source range of an existing pivot table and refresh its data using Aspose.Cells. | Provide an example of adding calculated fields to a pivot table created with Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsPivotDemo
+// Creates a new workbook, adds sample data to a "SourceData" sheet, builds a range string that includes the sheet name, inserts a pivot table on a separate "PivotTable" sheet, assigns "Category" to rows and "Value" to data, refreshes the cache, calculates results, and saves the file as PivotTableDemo.xlsx.
+class InsertPivotTable
 {
-    // Demonstrates how to generate a new workbook, populate a source sheet, use MaxDisplayRange to capture the full data area, add a second worksheet, insert a pivot table that references the dynamic range, assign "Category" to rows and "Value" to data, refresh and calculate the pivot, and save the file as PivotTableDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Get the first worksheet (source data)
-                Worksheet sourceSheet = workbook.Worksheets[0];
-                sourceSheet.Name = "SourceData";
+            // Prepare source data worksheet
+            Worksheet sourceSheet = workbook.Worksheets[0];
+            sourceSheet.Name = "SourceData";
 
-                // Populate sample data
-                sourceSheet.Cells["A1"].PutValue("Category");
-                sourceSheet.Cells["B1"].PutValue("Value");
-                sourceSheet.Cells["A2"].PutValue("A");
-                sourceSheet.Cells["B2"].PutValue(10);
-                sourceSheet.Cells["A3"].PutValue("B");
-                sourceSheet.Cells["B3"].PutValue(20);
-                sourceSheet.Cells["A4"].PutValue("A");
-                sourceSheet.Cells["B4"].PutValue(30);
+            // Add sample data
+            sourceSheet.Cells["A1"].PutValue("Category");
+            sourceSheet.Cells["B1"].PutValue("Value");
+            sourceSheet.Cells["A2"].PutValue("A");
+            sourceSheet.Cells["B2"].PutValue(10);
+            sourceSheet.Cells["A3"].PutValue("B");
+            sourceSheet.Cells["B3"].PutValue(20);
+            sourceSheet.Cells["A4"].PutValue("A");
+            sourceSheet.Cells["B4"].PutValue(30);
 
-                // Add a new worksheet to host the pivot table
-                Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+            // Add a worksheet that will contain the pivot table
+            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
 
-                // Determine the data range for the pivot table using MaxDisplayRange
-                AsposeRange dataRange = sourceSheet.Cells.MaxDisplayRange;
-                string sourceData = $"=SourceData!{dataRange.Address}";
+            // Build the source data range string (including sheet name)
+            var srcRange = sourceSheet.Cells.MaxDisplayRange;
+            string sourceData = $"{sourceSheet.Name}!{srcRange.Address}";
 
-                // Add the pivot table to the pivot sheet
-                PivotTableCollection pivotTables = pivotSheet.PivotTables;
-                int pivotIndex = pivotTables.Add(sourceData, "A1", "MyPivotTable");
+            // Insert the pivot table
+            PivotTableCollection pivots = pivotSheet.PivotTables;
+            int pivotIndex = pivots.Add(sourceData, "A1", "MyPivotTable");
 
-                // Configure the pivot table (add fields)
-                PivotTable pivotTable = pivotTables[pivotIndex];
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
+            // Configure the pivot table fields
+            PivotTable pivot = pivots[pivotIndex];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
 
-                // Refresh and calculate the pivot data
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
+            // Refresh the pivot cache and calculate data
+            pivot.RefreshData();   // refreshes source data
+            pivot.CalculateData(); // calculates the pivot values
 
-                // Save the workbook
-                workbook.Save("PivotTableDemo.xlsx");
-                Console.WriteLine("Pivot table created and saved as PivotTableDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("PivotTableDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

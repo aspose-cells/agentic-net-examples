@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Charts Agent
 category: working-with-charts
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Create, customize, inspect, and render Excel charts in C#
 primary_apis: [Worksheet.Charts, ChartCollection.Add, Chart, Chart.NSeries, Series, Axis, DataLabels]
 search_intents: [create Excel chart C#, add chart series Aspose.Cells, combo chart secondary axis, export Excel chart to PNG]
@@ -99,3 +99,4 @@ Use `Worksheet.Charts.Add` to create, `NSeries.Add` for values, and `NSeries.Cat
 ## Definition of done
 
 The example compiles, runs, binds the intended ranges, validates chart semantics and persisted output, and introduces no unrelated charting or UI library.
+

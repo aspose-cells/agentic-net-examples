@@ -1,10 +1,10 @@
-// Title: Export Aspose.Cells Chart to SVG and Generate a React TSX Component (C#)
-// Description: Creates a workbook with sample sales data, adds a line chart, renders it to SVG using Aspose.Cells with custom SvgImageOptions, removes the XML declaration, and writes a TypeScript React functional component that returns the SVG markup, ready for inclusion in web dashboards.
-// Keywords: Aspose.Cells | C# chart export | SVG rendering | React TSX component | JSX SVG | line chart | SvgImageOptions | embed SVG in React | frontend visualization | dashboard integration
-// Common Searches: Aspose.Cells export chart to SVG | C# generate SVG chart for React | Convert SVG to JSX component | React TSX component from Aspose.Cells | Remove XML declaration from SVG for JSX | How to embed Aspose.Cells SVG in React
-// Developer Intent: Generate a React TSX component that embeds an SVG chart produced by Aspose.Cells.
-// Use Cases: Automate creation of reusable chart components for React dashboards from .NET data | Integrate server‑side chart generation into CI/CD pipelines delivering ready‑to‑use TSX files | Provide front‑end developers with pre‑styled SVG visualizations without manual conversion
-// AI Prompts: Write C# code using Aspose.Cells to create a line chart, export it as SVG, strip the XML header, and output a .tsx React component containing the SVG markup. | Show a TypeScript React functional component that safely renders an SVG string received from a .NET API, handling JSX syntax rules. | Explain how to configure SvgImageOptions (FitToViewPort, CssPrefix, EmbeddedFontType) to produce SVG suitable for styling in a React application.
+// Title: Export Aspose.Cells Chart to SVG and Embed It in a React JSX Component
+// Description: C# code that creates a workbook, adds sample data, generates a line chart, renders the chart as an SVG file with Aspose.Cells, reads the SVG markup, and writes a React component (.jsx) that injects the SVG using dangerouslySetInnerHTML for instant use in web applications.
+// Keywords: Aspose.Cells SVG export | C# chart to SVG | React JSX SVG component | embed SVG in React | dangerouslySetInnerHTML chart | line chart rendering | web dashboard visualization | front‑end chart integration | image rendering with Aspose.Cells | auto‑generate React component
+// Common Searches: how to export Aspose.Cells chart as SVG | embed generated SVG chart in a React component | C# code to create React JSX from SVG file | Aspose.Cells line chart to React dashboard | convert workbook chart to JSX for React
+// Developer Intent: Generate an SVG chart from a workbook and produce a ready‑to‑use React JSX component that renders the SVG.
+// Use Cases: Display sales or KPI charts in a React dashboard without serving separate image files. | Automate creation of React components for multiple worksheets, each with its own SVG chart. | Integrate chart generation into CI/CD pipelines so updated SVG components are published whenever workbook data changes.
+// AI Prompts: Write a C# method that takes a Worksheet and returns a React component string with the chart SVG embedded via dangerouslySetInnerHTML. | Show how to modify the generated JSX to place the SVG markup directly inside a <svg> element instead of using dangerouslySetInnerHTML. | Explain how to safely escape backticks and special characters when inserting SVG markup into a JavaScript template literal.
 
 using System;
 using System.IO;
@@ -14,81 +14,73 @@ using Aspose.Cells.Rendering;
 
 namespace AsposeCellsSvgToReact
 {
-    // Creates a workbook with sample sales data, adds a line chart, renders it to SVG using Aspose.Cells with custom SvgImageOptions, removes the XML declaration, and writes a TypeScript React functional component that returns the SVG markup, ready for inclusion in web dashboards.
+    // C# code that creates a workbook, adds sample data, generates a line chart, renders the chart as an SVG file with Aspose.Cells, reads the SVG markup, and writes a React component (.jsx) that injects the SVG using dangerouslySetInnerHTML for instant use in web applications.
     class Program
     {
         static void Main()
         {
             try
             {
-                // 1. Create a workbook and add sample data
+                // Create a workbook and add sample data
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                sheet.Cells["A1"].PutValue("Month");
-                sheet.Cells["A2"].PutValue("Jan");
-                sheet.Cells["A3"].PutValue("Feb");
-                sheet.Cells["A4"].PutValue("Mar");
+                worksheet.Cells["A1"].PutValue("Month");
+                worksheet.Cells["A2"].PutValue("Jan");
+                worksheet.Cells["A3"].PutValue("Feb");
+                worksheet.Cells["A4"].PutValue("Mar");
 
-                sheet.Cells["B1"].PutValue("Sales");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["B3"].PutValue(210);
-                sheet.Cells["B4"].PutValue(150);
+                worksheet.Cells["B1"].PutValue("Sales");
+                worksheet.Cells["B2"].PutValue(120);
+                worksheet.Cells["B3"].PutValue(210);
+                worksheet.Cells["B4"].PutValue(150);
 
-                // 2. Add a line chart using the sample data
-                int chartIdx = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
-                Chart chart = sheet.Charts[chartIdx];
+                // Add a line chart that uses the data
+                int chartIndex = worksheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+                Chart chart = worksheet.Charts[chartIndex];
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // 3. Configure SVG rendering options
-                SvgImageOptions svgOpts = new SvgImageOptions
+                // Configure SVG rendering options (no explicit ImageFormat needed)
+                ImageOrPrintOptions svgOptions = new ImageOrPrintOptions
                 {
-                    FitToViewPort = true,               // Fit SVG to viewport
-                    CssPrefix = "chart-",                // Optional CSS prefix
-                    EmbeddedFontType = SvgEmbeddedFontType.Woff // Embed fonts if needed
+                    OnePagePerSheet = true // Render as a single page
                 };
 
-                // 4. Save the chart as an SVG file
+                // Save the chart as an SVG file
                 string svgPath = "chart.svg";
-                chart.ToImage(svgPath, svgOpts);
-                Console.WriteLine($"Chart saved as SVG to '{svgPath}'.");
-
-                // 5. Read the generated SVG content (ensure file exists)
-                if (!File.Exists(svgPath))
-                    throw new FileNotFoundException($"SVG file not found: {svgPath}");
-
-                string svgContent = File.ReadAllText(svgPath);
-
-                // 6. Remove XML declaration (not valid in JSX)
-                if (svgContent.StartsWith("<?xml"))
+                try
                 {
-                    int endIdx = svgContent.IndexOf("?>");
-                    if (endIdx > -1)
-                    {
-                        svgContent = svgContent.Substring(endIdx + 2).TrimStart('\r', '\n');
-                    }
+                    chart.ToImage(svgPath, svgOptions);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to render SVG: {ex.Message}");
+                    return;
                 }
 
-                // 7. Build a React functional component containing the SVG markup
-                string reactComponent =
-$@"import React from 'react';
+                // Read the generated SVG content (ensure file exists)
+                string svgContent = File.Exists(svgPath) ? File.ReadAllText(svgPath) : string.Empty;
 
-const ChartSvg = () => (
-{svgContent}
+                // Create a React component that embeds the SVG using dangerouslySetInnerHTML
+                string reactComponent = $@"import React from 'react';
+
+const ChartComponent = () => (
+  <div dangerouslySetInnerHTML={{{{ __html: `{svgContent}` }}}} />
 );
 
-export default ChartSvg;
+export default ChartComponent;
 ";
 
-                // 8. Write the component to a .tsx file
-                string tsxPath = "ChartSvg.tsx";
-                File.WriteAllText(tsxPath, reactComponent);
-                Console.WriteLine($"React component written to '{tsxPath}'.");
+                // Write the React component to a .jsx file
+                string jsxPath = "ChartComponent.jsx";
+                File.WriteAllText(jsxPath, reactComponent);
+
+                Console.WriteLine($"SVG chart saved to '{svgPath}' and React component generated at '{jsxPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

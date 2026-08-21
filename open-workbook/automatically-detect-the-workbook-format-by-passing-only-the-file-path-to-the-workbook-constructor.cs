@@ -1,32 +1,62 @@
-// Title: Auto‑detect Excel workbook format using Aspose.Cells Workbook(string path) in C#
-// Description: Demonstrates loading any supported Excel file with only a file path, letting Aspose.Cells infer the format, retrieving the FileFormat property, and optionally saving the workbook as PDF.
-// Keywords: Aspose.Cells | Workbook constructor | auto detect format | C# | load Excel file | FileFormat property | convert to PDF | xls | xlsx | csv
-// Common Searches: Aspose.Cells detect workbook format from path | C# open Excel file without specifying format | Workbook(string) auto format detection | How to get FileFormat after loading workbook | Convert Excel to PDF after auto‑detecting format
-// Developer Intent: Open a workbook by providing only its file path and let Aspose.Cells automatically determine the file type.
-// Use Cases: Read an unknown Excel, CSV, or XLSX file and identify its exact format. | Validate successful loading by checking the detected FileFormat before processing. | Convert a workbook loaded without explicit format to PDF or another supported type.
-// AI Prompts: Generate C# code that opens a workbook using Aspose.Cells with just a file path, prints the detected format, and saves it as PDF. | Explain which file extensions Aspose.Cells can auto‑detect when using the Workbook(string) constructor. | Show how to handle an exception when the constructor encounters an unsupported or corrupted file.
+// Title: Auto‑Detect Excel Workbook Format Using Aspose.Cells Workbook(filePath) in C#
+// Description: Shows how to load an Excel file of any supported type (XLSX, XLS, CSV, etc.) by passing only its path to the Aspose.Cells Workbook constructor. The library automatically identifies the format, accessible via Workbook.FileFormat, after confirming the file exists and reading the first worksheet.
+// Keywords: Aspose.Cells | C# workbook format detection | Workbook constructor file path | auto detect Excel type | Workbook.FileFormat | load XLSX XLS CSV Aspose | detect workbook format C#
+// Common Searches: Aspose.Cells detect file format from path | Load Excel file without specifying format C# | Workbook.FileFormat property example | Open unknown Excel extension Aspose.Cells | Check file exists before creating Workbook Aspose
+// Developer Intent: Open an Excel workbook by providing only its file path and let Aspose.Cells infer the file format.
+// Use Cases: Process incoming Excel files of unknown extensions in a batch job. | Log the detected format for auditing before further processing. | Validate file presence and safely load workbooks in automated ETL pipelines. | Read initial worksheet data after auto‑detection to confirm successful load.
+// AI Prompts: Write C# code that accepts a file path, verifies the file exists, creates an Aspose.Cells Workbook, prints the detected Workbook.FileFormat, and displays the first worksheet name and cell A1 value. | Create a method that loads multiple Excel files of varying extensions using a single Workbook constructor and returns a dictionary of file names to detected formats. | Generate error‑handling logic for loading a workbook with Aspose.Cells when the file path is invalid or the format is unsupported.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates loading any supported Excel file with only a file path, letting Aspose.Cells infer the format, retrieving the FileFormat property, and optionally saving the workbook as PDF.
-class DetectWorkbookFormatDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Shows how to load an Excel file of any supported type (XLSX, XLS, CSV, etc.) by passing only its path to the Aspose.Cells Workbook constructor. The library automatically identifies the format, accessible via Workbook.FileFormat, after confirming the file exists and reading the first worksheet.
+    public class DetectWorkbookFormatDemo
     {
-        // Path to the source workbook (any supported Excel format)
-        string inputPath = "sample.xlsx";
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+        }
 
-        // Load the workbook by providing only the file path.
-        // The constructor automatically detects the file format.
-        Workbook workbook = new Workbook(inputPath);
+        public static void Run()
+        {
+            // Path to the Excel file (any supported format: .xlsx, .xls, .csv, etc.)
+            string filePath = "sample.xlsx";
 
-        // Display the detected file format.
-        Console.WriteLine($"Detected file format: {workbook.FileFormat}");
+            // Verify that the file exists to prevent FileNotFoundException
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
 
-        // Example: save the workbook to a different format to verify loading succeeded.
-        string outputPath = "converted.pdf";
-        workbook.Save(outputPath, SaveFormat.Pdf);
-        Console.WriteLine($"Workbook saved as: {outputPath}");
+            try
+            {
+                // The Workbook constructor that takes a file path automatically detects the format.
+                Workbook workbook = new Workbook(filePath);
+
+                // After loading, the FileFormat property reflects the detected format.
+                Console.WriteLine($"Loaded file: {filePath}");
+                Console.WriteLine($"Detected workbook format: {workbook.FileFormat}");
+
+                // Example: access the first worksheet to prove the workbook is usable.
+                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"First worksheet name: {sheet.Name}");
+                Console.WriteLine($"Cell A1 value: {sheet.Cells["A1"].StringValue}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+            }
+        }
     }
 }

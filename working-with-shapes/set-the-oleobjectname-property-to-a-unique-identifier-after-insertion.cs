@@ -1,53 +1,66 @@
-// Title: Assign a Unique GUID Name to an OLE Object with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, insert an OLE object using a tiny PNG, generate a GUID, set the OleObject.Name property to that GUID for uniqueness, ensure the output folder exists, and save the file as an .xlsx document.
-// Keywords: Aspose.Cells OLE object name | C# set OleObject.Name | GUID OleObject property | add OLE object Aspose.Cells | unique identifier Excel OLE | .NET Excel OLE naming
-// Common Searches: how to set OleObject.Name in Aspose.Cells C# | assign GUID to OLE object Aspose.Cells | unique OLE object name Excel .NET | Aspose.Cells add OLE object with custom name | C# generate unique name for Excel OLE object
-// Developer Intent: Set the OleObject.Name property to a unique identifier after inserting the OLE object.
-// Use Cases: Insert a single OLE object and give it a GUID‑based name so it can be referenced later without collision. | Loop through multiple OLE insertions, assigning a new Guid to each OleObject.Name to guarantee distinct identifiers. | Save a workbook with uniquely named OLE objects and retrieve them by name for further manipulation or reporting.
-// AI Prompts: Generate C# code that adds an OLE object to a worksheet using Aspose.Cells and assigns a Guid string to OleObject.Name. | Show an example of inserting several OLE objects in a loop, each receiving a unique name via Guid.NewGuid(). | Explain how to locate an OLE object by its Name property after reopening the workbook with Aspose.Cells.
+// Title: How to Assign a Unique GUID Name to an OLE Object with Aspose.Cells for .NET
+// Description: Demonstrates creating a workbook, inserting an OLE object with a 1×1 PNG placeholder, generating a GUID, setting the OleObject.Name property to that GUID, optionally assigning a label, and saving the file as XLSX using Aspose.Cells for C#.
+// Keywords: Aspose.Cells OLE object name | set OleObject.Name C# | GUID for OLE object | placeholder image OLE Aspose | Aspose.Cells add OLE object | unique OLE object identifier | OleObject.Label property
+// Common Searches: Aspose.Cells set unique name for OLE object | C# assign GUID to OleObject.Name | add OLE object with placeholder image Aspose.Cells | how to label OLE objects in Excel using Aspose | retrieve OLE object by name Aspose.Cells
+// Developer Intent: Assign a globally unique name to an OleObject immediately after it is added to a worksheet.
+// Use Cases: Insert several OLE objects and give each a distinct GUID‑based name for later lookup or automation. | Generate Excel reports where embedded objects must be uniquely identifiable for downstream processing. | Add OLE objects with a temporary image and a user‑friendly label while preserving a unique internal name.
+// AI Prompts: Write C# code that adds multiple OLE objects to a worksheet with Aspose.Cells and assigns each a unique name using Guid.NewGuid(). | Show how to find an OleObject in a saved workbook by its Name property with Aspose.Cells for .NET. | Explain how to replace the placeholder image of an existing OleObject without changing its assigned GUID name.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, insert an OLE object using a tiny PNG, generate a GUID, set the OleObject.Name property to that GUID for uniqueness, ensure the output folder exists, and save the file as an .xlsx document.
-class SetOleObjectNameDemo
+namespace OleObjectNameDemo
 {
-    static void Main()
+    // Demonstrates creating a workbook, inserting an OLE object with a 1×1 PNG placeholder, generating a GUID, setting the OleObject.Name property to that GUID, optionally assigning a label, and saving the file as XLSX using Aspose.Cells for C#.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook.
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Minimal 1x1 transparent PNG (base64 encoded).
-            const string pngBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X2V8AAAAASUVORK5CYII=";
-            byte[] imageData = Convert.FromBase64String(pngBase64);
-
-            // Add an OLE object with the placeholder image.
-            int oleIndex = worksheet.OleObjects.Add(5, 2, 200, 150, imageData);
-            OleObject oleObject = worksheet.OleObjects[oleIndex];
-
-            // Assign a unique name to the OLE object.
-            oleObject.Name = "OleObject_" + Guid.NewGuid().ToString("N");
-
-            // Define output path and ensure directory exists.
-            string outputPath = "OleObjectWithUniqueName.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
+            try
             {
-                Directory.CreateDirectory(outputDir);
-            }
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Save the workbook.
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to: {Path.GetFullPath(outputPath)}");
+                // Create a simple placeholder image (1x1 pixel PNG) in memory
+                byte[] placeholderImage = CreatePlaceholderImage();
+
+                // Add an OLE object with the placeholder image
+                int oleIndex = worksheet.OleObjects.Add(5, 2, 200, 150, placeholderImage);
+                OleObject oleObject = worksheet.OleObjects[oleIndex];
+
+                // Assign a unique name to the OLE object
+                oleObject.Name = "OleObject_" + Guid.NewGuid().ToString("N");
+
+                // Optionally set a label for display purposes
+                oleObject.Label = "Sample OLE Object";
+
+                // Ensure the output directory exists
+                string outputPath = "OleObjectWithUniqueName.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        // Returns a 1x1 transparent PNG image as a byte array
+        private static byte[] CreatePlaceholderImage()
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Base64 representation of a 1x1 transparent PNG
+            const string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X0ZcAAAAASUVORK5CYII=";
+            return Convert.FromBase64String(base64Png);
         }
     }
 }

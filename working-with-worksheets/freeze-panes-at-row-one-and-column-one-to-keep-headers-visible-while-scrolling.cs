@@ -1,15 +1,15 @@
-// Title: Freeze the First Row and Column in Excel with Aspose.Cells for .NET (C#)
-// Description: Learn how to use Aspose.Cells for .NET to freeze the topmost row and leftmost column of a worksheet. The example creates a workbook, calls FreezePanes(1,1,1,1) to keep headers visible while scrolling, and saves the file as FreezePanesFirstRowColumn.xlsx.
-// Keywords: Aspose.Cells FreezePanes C# | freeze top row Excel C# | freeze first column Aspose.Cells | keep headers visible Excel | Aspose.Cells worksheet freeze panes | C# Excel freeze panes API | Aspose.Cells FreezePanes method
-// Common Searches: Aspose.Cells how to freeze first row and column | C# FreezePanes example for Excel | keep header row static while scrolling Aspose.Cells | freeze panes in Excel using Aspose.Cells for .NET | Aspose.Cells FreezePanes parameters explained
-// Developer Intent: Apply FreezePanes to lock the first row and first column so header labels stay in view during scrolling.
-// Use Cases: Create reporting workbooks where column and row headers remain visible in large data tables. | Export dynamic datasets to Excel with frozen panes to improve readability for end‑users. | Prepare a template workbook with frozen header rows/columns before populating it with data.
-// AI Prompts: Generate C# code to freeze multiple rows and columns with Aspose.Cells. | Show how to unfreeze panes and reset scrolling in an existing Excel file using Aspose.Cells for .NET. | Explain each parameter of the FreezePanes method and how they define the frozen area.
+// Title: Freeze first row and column in Excel using Aspose.Cells for .NET (C#)
+// Description: Creates a new Workbook, accesses the first Worksheet, calls FreezePanes(1,1,1,1) to lock the top row and leftmost column so headers remain visible while scrolling, and saves the file as FreezePanesFirstRowColumn.xlsx.
+// Keywords: Aspose.Cells | FreezePanes | C# Excel freeze panes | lock header row Aspose.Cells | freeze first column .NET | Excel freeze panes example | Aspose.Cells tutorial | GitHub Aspose.Cells code | global
+// Common Searches: Aspose.Cells freeze top row and first column C# | How to lock header row in Excel with Aspose.Cells .NET | Freeze panes example Aspose.Cells for .NET | C# code to keep first row and column visible in generated Excel | Aspose.Cells FreezePanes method usage
+// Developer Intent: Apply FreezePanes to keep the worksheet’s header row and left‑most column static while the user scrolls.
+// Use Cases: Generating large reports where column headers and row titles must stay in view. | Building a spreadsheet template that anchors the top‑left cell for easier data entry. | Exporting data tables with frozen headers to improve readability on desktop and web viewers.
+// AI Prompts: Write C# code with Aspose.Cells to freeze the first two rows and the first column of a worksheet. | Show how to unfreeze panes and then refreeze them at a new position using Aspose.Cells for .NET. | Create an example that determines the number of header rows at runtime and freezes panes accordingly.
 
 using System;
 using Aspose.Cells;
 
-// Learn how to use Aspose.Cells for .NET to freeze the topmost row and leftmost column of a worksheet. The example creates a workbook, calls FreezePanes(1,1,1,1) to keep headers visible while scrolling, and saves the file as FreezePanesFirstRowColumn.xlsx.
+// Creates a new Workbook, accesses the first Worksheet, calls FreezePanes(1,1,1,1) to lock the top row and leftmost column so headers remain visible while scrolling, and saves the file as FreezePanesFirstRowColumn.xlsx.
 class FreezePanesExample
 {
     static void Main()

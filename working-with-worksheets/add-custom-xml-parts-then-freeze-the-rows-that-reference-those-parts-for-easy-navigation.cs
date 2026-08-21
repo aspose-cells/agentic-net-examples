@@ -1,55 +1,47 @@
-// Title: Add Custom XML Parts and Freeze Header Row in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a new Workbook, embed two custom XML parts (one with an XSD schema, one without), write each part's ID and description into cells A2‑B3, freeze the first row to keep the header visible, and save the file as CustomXmlWithFreeze.xlsx using Aspose.Cells for C#.
-// Keywords: Aspose.Cells | custom XML parts | add XML part C# | XML schema Aspose.Cells | freeze panes | header row freeze | worksheet freeze top row | .NET Excel automation | Workbook custom XML | Excel ID column | global developers | USA C# examples
-// Common Searches: How to add a custom XML part with schema in Aspose.Cells C# | Freeze the top row in an Aspose.Cells worksheet after writing data | Display custom XML part IDs in Excel using Aspose.Cells .NET | C# example for embedding multiple XML parts in a workbook | Aspose.Cells freeze panes syntax
-// Developer Intent: Embed custom XML parts (with optional XSD), list their IDs in a worksheet table, and keep the header row fixed for easy navigation.
-// Use Cases: Store structured customer or order data as hidden XML parts while providing a visible reference table for auditors. | Create a documentation sheet that lists XML part identifiers alongside descriptions, with the header always in view. | Develop large Excel reports that include XML metadata and require stable column headings during scrolling.
-// AI Prompts: Write C# code that adds multiple custom XML parts (with and without XSD) to an Aspose.Cells workbook and records each part's ID and description in the first worksheet. | Show how to freeze the first row of an Aspose.Cells worksheet after populating header cells. | Explain how to retrieve a custom XML part by its ID from a saved workbook using Aspose.Cells for .NET.
+// Title: Add a Custom XML Part and Freeze the Header Row with Aspose.Cells for .NET (C#)
+// Description: Creates a new workbook, inserts a custom XML part (no schema), assigns a GUID as its ID, writes the ID into cells A1‑B1 of the first worksheet, freezes the top row so the reference stays visible while scrolling, and saves the file as CustomXmlWithFreeze.xlsx.
+// Keywords: Aspose.Cells custom XML part C# | add custom XML part Aspose.Cells | freeze first row Aspose.Cells | worksheet freeze panes .NET | store XML metadata in workbook | GUID custom XML part ID | Aspose.Cells example .NET | C# Excel custom XML part
+// Common Searches: how to add a custom XML part in Aspose.Cells .NET | freeze header row after writing data with Aspose.Cells | write custom XML part ID to a cell using Aspose.Cells | Aspose.Cells C# freeze panes example | retrieve custom XML part GUID in Aspose.Cells workbook
+// Developer Intent: Insert a custom XML part, display its GUID in a worksheet cell, and keep that row fixed for constant visibility.
+// Use Cases: Embed metadata as a custom XML part and show its ID in a frozen top row for quick reference. | Generate reports where each sheet lists its linked XML part ID in a non‑scrollable header. | Create an audit trail by recording XML part IDs in a frozen row, ensuring they remain visible during data review.
+// AI Prompts: Write C# code with Aspose.Cells that adds multiple custom XML parts, lists each part's GUID in separate rows, and freezes all header rows containing the IDs. | Show how to open a saved workbook and retrieve a custom XML part by its GUID using Aspose.Cells for .NET. | Provide an example that updates the content of a custom XML part, refreshes the displayed ID, and maintains the frozen header row.
 
 using System;
 using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Markup;
 
-// Demonstrates how to create a new Workbook, embed two custom XML parts (one with an XSD schema, one without), write each part's ID and description into cells A2‑B3, freeze the first row to keep the header visible, and save the file as CustomXmlWithFreeze.xlsx using Aspose.Cells for C#.
+// Creates a new workbook, inserts a custom XML part (no schema), assigns a GUID as its ID, writes the ID into cells A1‑B1 of the first worksheet, freezes the top row so the reference stays visible while scrolling, and saves the file as CustomXmlWithFreeze.xlsx.
 class Program
 {
     static void Main()
     {
         // Create a new workbook
-        Workbook wb = new Workbook();
+        Workbook workbook = new Workbook();
 
-        // Prepare XML data and optional schema for the first custom XML part
-        string xmlData1 = "<Customer><Name>John Doe</Name></Customer>";
-        string xmlSchema1 = "<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>" +
-                            "<xs:element name='Customer'><xs:complexType>" +
-                            "<xs:sequence><xs:element name='Name' type='xs:string'/></xs:sequence>" +
-                            "</xs:complexType></xs:element></xs:schema>";
+        // Prepare custom XML data (no schema in this example)
+        string xmlContent = "<MyData><Item>Sample Value</Item></MyData>";
+        byte[] xmlBytes = Encoding.UTF8.GetBytes(xmlContent);
+        byte[] schemaBytes = null; // schema is optional
 
-        // Add the first custom XML part to the workbook
-        int partIndex1 = wb.CustomXmlParts.Add(Encoding.UTF8.GetBytes(xmlData1), Encoding.UTF8.GetBytes(xmlSchema1));
+        // Add the custom XML part to the workbook
+        int partIndex = workbook.CustomXmlParts.Add(xmlBytes, schemaBytes);
 
-        // Prepare XML data for a second custom XML part (no schema needed)
-        string xmlData2 = "<Order><Id>12345</Id></Order>";
-
-        // Add the second custom XML part
-        int partIndex2 = wb.CustomXmlParts.Add(Encoding.UTF8.GetBytes(xmlData2), null);
+        // Assign a unique ID to the part for easy identification
+        workbook.CustomXmlParts[partIndex].ID = Guid.NewGuid().ToString();
 
         // Access the first worksheet
-        Worksheet ws = wb.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Write identifiers so users can see which rows reference which custom XML parts
-        ws.Cells["A1"].PutValue("Part ID");
-        ws.Cells["B1"].PutValue("Description");
-        ws.Cells["A2"].PutValue(wb.CustomXmlParts[partIndex1].ID);
-        ws.Cells["B2"].PutValue("Customer XML");
-        ws.Cells["A3"].PutValue(wb.CustomXmlParts[partIndex2].ID);
-        ws.Cells["B3"].PutValue("Order XML");
+        // Write the custom XML part ID into the first row (as a reference)
+        sheet.Cells["A1"].PutValue("Custom XML Part ID:");
+        sheet.Cells["B1"].PutValue(workbook.CustomXmlParts[partIndex].ID);
 
-        // Freeze the header row (row 1) to keep it visible while scrolling
-        ws.FreezePanes(1, 0, 1, 0); // Freeze first row, no columns
+        // Freeze the first row so the reference stays visible while scrolling
+        // Parameters: row index, column index, number of frozen rows, number of frozen columns
+        sheet.FreezePanes(1, 0, 1, 0); // Freeze row 1 (index 1) with 1 frozen row
 
         // Save the workbook
-        wb.Save("CustomXmlWithFreeze.xlsx");
+        workbook.Save("CustomXmlWithFreeze.xlsx");
     }
 }

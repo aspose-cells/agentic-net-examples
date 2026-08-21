@@ -1,47 +1,61 @@
-// Title: Apply Bold Red Font and Thin Borders to a Cell with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, defines a style with bold red text and thin black borders, applies it to cell B2, writes a value, and saves the file as StyledCell.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# cell style | set bold font Aspose.Cells | red text color Excel C# | thin borders Aspose.Cells | apply cell formatting .NET | Excel cell style programmatically
-// Common Searches: How to set bold red text and borders on a cell using Aspose.Cells | Aspose.Cells C# apply font color and border to a cell | Create reusable cell style in Aspose.Cells .NET | Set thin black borders with Aspose.Cells
-// Developer Intent: Define a reusable style that combines bold font, red text, and thin borders, then apply it to a specific cell.
-// Use Cases: Highlight header rows in generated reports with a striking red‑bold style. | Mark error rows in data exports by applying a distinct bordered style. | Design a styled title row for programmatically created Excel worksheets.
-// AI Prompts: Generate C# code with Aspose.Cells that creates a reusable style featuring bold red font and thin borders, then applies it to a range of cells. | Show how to apply the same bold‑red, thin‑border style to multiple worksheets in a single workbook using Aspose.Cells for .NET. | Provide an example that saves the styled workbook both as XLSX and PDF while preserving the cell formatting.
+// Title: Apply Bold Red Font and Thin Black Borders to a Cell Using Aspose.Cells for .NET (C#)
+// Description: This C# example demonstrates how to create a Workbook with Aspose.Cells, define a Style that makes the font bold and red, adds thin black borders on all sides, applies the style to cell B2, writes text, and saves the workbook as StyledCell.xlsx.
+// Keywords: Aspose.Cells C# style | bold red font Excel | thin borders Aspose.Cells | format cell programmatically .NET | Excel cell styling Aspose | C# Excel border color | Aspose.Cells workbook example
+// Common Searches: Aspose.Cells set bold red text with borders | C# apply thin border to Excel cell using Aspose | how to style a cell in Aspose.Cells .NET | change font color and border in Aspose.Cells
+// Developer Intent: Format a specific Excel cell with bold red text and thin black borders using Aspose.Cells for .NET.
+// Use Cases: Design header rows that stand out with bold red headings and thin borders. | Highlight critical values in financial dashboards by applying a consistent style. | Create pre‑formatted template cells for user input in generated reports.
+// AI Prompts: Write C# code that applies a bold, red font and thin black borders to a range of cells with Aspose.Cells. | Show how to create a reusable Style object in Aspose.Cells and assign it to multiple cells efficiently. | Explain how to modify only the border color of an existing bold red style in Aspose.Cells.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// Creates a workbook, defines a style with bold red text and thin black borders, applies it to cell B2, writes a value, and saves the file as StyledCell.xlsx using Aspose.Cells for .NET.
-class ApplyCellStyleDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // This C# example demonstrates how to create a Workbook with Aspose.Cells, define a Style that makes the font bold and red, adds thin black borders on all sides, applies the style to cell B2, writes text, and saves the workbook as StyledCell.xlsx.
+    public class ApplyBoldRedThinBorderStyle
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-        // Create a new style using the workbook's factory method
-        Style style = workbook.CreateStyle();
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Set bold font
-        style.Font.IsBold = true;
+            // Create a new style object
+            Style style = workbook.CreateStyle();
 
-        // Set red text color
-        style.Font.Color = Color.Red;
+            // Set the font to bold and red
+            style.Font.IsBold = true;
+            style.Font.Color = Color.Red;
 
-        // Apply thin borders on all four sides (using black color for visibility)
-        style.SetBorder(BorderType.LeftBorder, CellBorderType.Thin, Color.Black);
-        style.SetBorder(BorderType.RightBorder, CellBorderType.Thin, Color.Black);
-        style.SetBorder(BorderType.TopBorder, CellBorderType.Thin, Color.Black);
-        style.SetBorder(BorderType.BottomBorder, CellBorderType.Thin, Color.Black);
+            // Apply thin black borders on all four sides
+            style.SetBorder(BorderType.LeftBorder, CellBorderType.Thin, Color.Black);
+            style.SetBorder(BorderType.RightBorder, CellBorderType.Thin, Color.Black);
+            style.SetBorder(BorderType.TopBorder, CellBorderType.Thin, Color.Black);
+            style.SetBorder(BorderType.BottomBorder, CellBorderType.Thin, Color.Black);
 
-        // Get the target cell (B2) and put a sample value
-        Cell cell = worksheet.Cells[1, 1]; // Row 1, Column 1 (zero‑based)
-        cell.PutValue("Styled Text");
+            // Apply the style to a specific cell (B2)
+            Cell cell = cells["B2"];
+            cell.PutValue("Styled Text");
+            cell.SetStyle(style);
 
-        // Apply the created style to the cell
-        cell.SetStyle(style);
-
-        // Save the workbook to a file
-        workbook.Save("StyledCell.xlsx", SaveFormat.Xlsx);
+            // Save the workbook to a file
+            string outputPath = "StyledCell.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
     }
 }

@@ -1,17 +1,17 @@
 // Title: Validate Aspose.Cells NPV Function in C# – Net Present Value Calculation
-// Description: C# example that creates a workbook, writes cash‑flow data, applies Excel's NPV formula (including the initial investment), calculates the result, compares it with a manual .NET NPV computation, and saves the file.
-// Keywords: Aspose.Cells | NPV function | C# example | net present value | Excel NPV | discount rate | formula verification | financial calculations | Aspose.Cells API | NPV verification
-// Common Searches: Aspose.Cells NPV example C# | How to calculate NPV with Aspose.Cells | Verify Excel NPV result in .NET | Add initial cash flow to NPV formula Aspose.Cells | NPV tolerance check C# Aspose.Cells | Net present value calculation using Aspose.Cells
-// Developer Intent: Ensure the Aspose.Cells NPV implementation returns the correct net present value for a given series of cash flows.
-// Use Cases: Generate a workbook and populate cash‑flow values for financial analysis. | Apply the Excel NPV function via Aspose.Cells, adding the initial investment manually. | Programmatically compare the Aspose.Cells result with a hand‑calculated NPV to confirm accuracy. | Persist the workbook to demonstrate the full formula‑evaluation lifecycle.
-// AI Prompts: Write C# code using Aspose.Cells to compute NPV for a cash‑flow array and validate the result against a manual calculation. | Show how to include the initial investment in the Excel NPV formula when using Aspose.Cells. | Create a unit test in NUnit that verifies Aspose.Cells NPV output matches expected values within a 1e‑6 tolerance. | Explain the steps to debug mismatched NPV results in Aspose.Cells.
+// Description: C# sample that creates a workbook, writes a discount rate and cash‑flow series, applies the Excel =NPV formula, evaluates it via Worksheet.CalculateFormula and workbook.CalculateFormula, compares the result with a manual Math.Pow computation, and confirms the Aspose.Cells NPV implementation is supported and accurate.
+// Keywords: Aspose.Cells NPV | C# net present value | Excel NPV formula evaluation | Aspose.Cells formula API | calculate NPV with Aspose | financial functions .NET | verify Excel functions programmatically
+// Common Searches: how to use npv function in aspose.cells | aspnet verify npv calculation | c# aspose.cells net present value example | compare manual npv with aspose.cells result | excel npv formula in aspose.cells workbook
+// Developer Intent: Ensure the NPV function exists in Aspose.Cells and returns the correct net present value for a given discount rate and cash‑flow array.
+// Use Cases: Populate discount rate and cash‑flow values in cells, then assign =NPV to compute financial metrics. | Retrieve the NPV instantly with Worksheet.CalculateFormula(string) for on‑the‑fly validation. | Run workbook.CalculateFormula() to update the worksheet, read the cell value, and assert it matches a manually calculated reference.
+// AI Prompts: Write C# code using Aspose.Cells that calculates NPV for a cash‑flow list and verifies the result against a manual formula. | Explain the argument handling of the Excel NPV function inside Aspose.Cells and how to extract the computed value programmatically. | Create an MSTest unit test that asserts Aspose.Cells NPV output equals the expected value within a 1e-6 tolerance.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsNPVVerification
 {
-    // C# example that creates a workbook, writes cash‑flow data, applies Excel's NPV formula (including the initial investment), calculates the result, compares it with a manual .NET NPV computation, and saves the file.
+    // C# sample that creates a workbook, writes a discount rate and cash‑flow series, applies the Excel =NPV formula, evaluates it via Worksheet.CalculateFormula and workbook.CalculateFormula, compares the result with a manual Math.Pow computation, and confirms the Aspose.Cells NPV implementation is supported and accurate.
     class Program
     {
         static void Main()
@@ -22,54 +22,51 @@ namespace AsposeCellsNPVVerification
             Cells cells = sheet.Cells;
 
             // Sample data:
-            // B1 = initial investment (negative cash flow)
-            // B2:B5 = cash inflows for periods 1 to 4
-            double rate = 0.10; // Discount rate 10%
-            double[] cashFlows = { -1000, 300, 400, 500, 600 };
+            // A1 – discount rate
+            // A2:A4 – cash flow values (period 1 to 3)
+            // A5 – formula to calculate NPV
+            double discountRate = 0.10; // 10%
+            double[] cashFlows = { 300, 420, 680 };
 
-            // Populate the cells with the sample cash flows
+            // Populate the worksheet
+            cells["A1"].PutValue(discountRate);
             for (int i = 0; i < cashFlows.Length; i++)
             {
-                // Row index i (0‑based) corresponds to Excel rows 1‑based
-                cells[i, 1].PutValue(cashFlows[i]); // Column B (index 1)
+                // Cash flows start at row 2 (index 1)
+                cells[i + 1, 0].PutValue(cashFlows[i]);
             }
 
-            // Set the NPV formula in cell C1.
-            // Excel's NPV function does NOT include the initial cash flow,
-            // so we add it manually: =NPV(rate, B2:B5) + B1
-            string npvFormula = $"=NPV({rate},B2:B5)+B1";
-            cells["C1"].Formula = npvFormula;
+            // Set the NPV formula in cell A5.
+            // Note: Excel's NPV function assumes the first cash flow occurs at the end of period 1,
+            // so we only pass the range A2:A4.
+            cells["A5"].Formula = "=NPV(A1, A2:A4)";
 
-            // Calculate all formulas in the workbook
+            // Calculate the formula using the worksheet's CalculateFormula method.
+            // This returns the evaluated result directly.
+            object npvResult = sheet.CalculateFormula("=NPV(A1, A2:A4)");
+
+            // Also calculate all formulas in the workbook to ensure the cell value is updated.
             workbook.CalculateFormula();
 
-            // Retrieve the calculated NPV value
-            double calculatedNpv = cells["C1"].DoubleValue;
+            // Retrieve the value stored in cell A5 after calculation.
+            double npvFromCell = cells["A5"].DoubleValue;
 
-            // Compute the expected NPV using standard .NET arithmetic for verification
-            double expectedNpv = cashFlows[0]; // start with initial investment
-            for (int i = 1; i < cashFlows.Length; i++)
-            {
-                expectedNpv += cashFlows[i] / Math.Pow(1 + rate, i);
-            }
+            // Expected NPV calculated manually for verification.
+            double expectedNpv = cashFlows[0] / Math.Pow(1 + discountRate, 1) +
+                                 cashFlows[1] / Math.Pow(1 + discountRate, 2) +
+                                 cashFlows[2] / Math.Pow(1 + discountRate, 3);
 
-            // Output the results
-            Console.WriteLine($"NPV formula: {npvFormula}");
-            Console.WriteLine($"Calculated NPV (Aspose.Cells): {calculatedNpv}");
-            Console.WriteLine($"Expected NPV (manual calculation): {expectedNpv}");
+            // Output the results.
+            Console.WriteLine("Discount Rate (A1): " + discountRate);
+            Console.WriteLine("Cash Flows (A2:A4): " + string.Join(", ", cashFlows));
+            Console.WriteLine("NPV calculated via CalculateFormula(string): " + npvResult);
+            Console.WriteLine("NPV value stored in cell A5 after workbook.CalculateFormula(): " + npvFromCell);
+            Console.WriteLine("Expected NPV (manual calculation): " + expectedNpv);
+            Console.WriteLine("Verification: " + (Math.Abs(Convert.ToDouble(npvResult) - expectedNpv) < 1e-6
+                                                    ? "PASS"
+                                                    : "FAIL"));
 
-            // Verify that the values match within a small tolerance
-            double tolerance = 1e-6;
-            if (Math.Abs(calculatedNpv - expectedNpv) <= tolerance)
-            {
-                Console.WriteLine("Verification succeeded: NPV calculation is correct.");
-            }
-            else
-            {
-                Console.WriteLine("Verification failed: NPV calculation differs from expected value.");
-            }
-
-            // Save the workbook (optional, demonstrates the save lifecycle rule)
+            // Save the workbook (optional, demonstrates the save rule)
             workbook.Save("NPVVerification.xlsx");
         }
     }

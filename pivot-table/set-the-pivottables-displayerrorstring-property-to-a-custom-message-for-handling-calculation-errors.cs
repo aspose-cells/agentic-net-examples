@@ -1,10 +1,10 @@
-// Title: Set a Custom Calculation Error Message for an Aspose.Cells PivotTable (C#)
-// Description: Demonstrates how to enable the DisplayErrorString flag and assign a custom ErrorString to an Aspose.Cells PivotTable in C#. The example creates a workbook, adds sample data, builds a pivot table, configures the custom error message, recalculates, and saves the file, allowing you to replace default Excel error codes with a user‑defined text.
-// Keywords: Aspose.Cells PivotTable custom error message | DisplayErrorString property C# | ErrorString Aspose.Cells | pivot table calculation error handling | replace #DIV/0! with custom text | Aspose.Cells .NET pivot table example
-// Common Searches: Aspose.Cells set custom error string for PivotTable | DisplayErrorString example C# | How to change pivot table error text in Aspose.Cells | ErrorString property usage Aspose.Cells | C# pivot table custom error handling Aspose
-// Developer Intent: Configure a PivotTable to show a user‑defined message instead of default calculation errors.
-// Use Cases: Show a friendly message (e.g., "Data unavailable") instead of #DIV/0! in sales dashboards. | Standardize error text across multiple automatically generated reports. | Highlight data quality issues in Excel files produced by a .NET reporting service.
-// AI Prompts: Write C# code that creates a PivotTable with Aspose.Cells and sets DisplayErrorString to true with a custom ErrorString. | Explain how DisplayErrorString and ErrorString affect pivot table error display in Aspose.Cells. | List the verification steps to confirm the custom error message appears after recalculating the PivotTable.
+// Title: Aspose.Cells C# – Set a custom calculation error message for a PivotTable with DisplayErrorString
+// Description: Creates a workbook, adds sample data, builds a PivotTable, enables DisplayErrorString, assigns a custom ErrorString, recalculates the table, and saves the file. Shows how to replace default Excel errors with a user‑defined message in C#.
+// Keywords: Aspose.Cells PivotTable custom error | DisplayErrorString property | ErrorString Aspose.Cells | C# pivot table error handling | Aspose.Cells .NET example | Excel calculation error message | PivotTable DisplayErrorString C# | Aspose.Cells US developers
+// Common Searches: Aspose.Cells set custom error text for PivotTable | DisplayErrorString example C# | How to change #DIV/0! message in Aspose.Cells | PivotTable ErrorString property usage | C# code to show custom error in Excel pivot
+// Developer Intent: Apply a user‑defined error string to a PivotTable so calculation errors display a custom message.
+// Use Cases: Provide end‑users with friendly messages instead of Excel error codes in generated reports. | Standardize error handling across multiple pivot tables in a workbook. | Hide sensitive calculation details by substituting them with a custom placeholder.
+// AI Prompts: Write C# code that creates a PivotTable with Aspose.Cells and sets DisplayErrorString to true with a custom ErrorString. | Explain the impact of DisplayErrorString and ErrorString on PivotTable calculations and how to refresh the table after changes. | Give a step‑by‑step tutorial for adding a custom error message to an existing PivotTable in an Excel file using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
@@ -12,9 +12,10 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to enable the DisplayErrorString flag and assign a custom ErrorString to an Aspose.Cells PivotTable in C#. The example creates a workbook, adds sample data, builds a pivot table, configures the custom error message, recalculates, and saves the file, allowing you to replace default Excel error codes with a user‑defined text.
+    // Creates a workbook, adds sample data, builds a PivotTable, enables DisplayErrorString, assigns a custom ErrorString, recalculates the table, and saves the file. Shows how to replace default Excel errors with a user‑defined message in C#.
     public class PivotTableDisplayErrorStringDemo
     {
+        // Entry point required for console application
         public static void Main(string[] args)
         {
             try
@@ -52,7 +53,7 @@ namespace AsposeCellsExamples
 
             // Configure the pivot table (optional: add fields)
             pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product as row field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Sales as data field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales as data field
 
             // Enable custom error string display and set the custom message
             pivotTable.DisplayErrorString = true;
@@ -66,9 +67,7 @@ namespace AsposeCellsExamples
             Console.WriteLine("ErrorString: " + pivotTable.ErrorString);
 
             // Save the workbook to a file
-            string outputPath = "PivotTableDisplayErrorStringDemo_out.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine("Workbook saved to: " + outputPath);
+            workbook.Save("PivotTableDisplayErrorStringDemo_out.xlsx");
         }
     }
 }

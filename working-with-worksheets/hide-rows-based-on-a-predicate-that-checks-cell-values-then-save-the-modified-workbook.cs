@@ -1,15 +1,15 @@
-// Title: C# – Hide Rows in an Aspose.Cells Workbook by Cell Value and Save as XLSX
-// Description: Creates a workbook, populates column A with sample strings, hides every row whose cell equals "Hide", verifies hidden status, and saves the result as an XLSX file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells hide rows C# | conditional row hiding Aspose.Cells | save workbook after hiding rows | filter rows by cell value .NET | Aspose.Cells row visibility API
-// Common Searches: how to hide rows in Aspose.Cells based on cell content | C# hide worksheet rows when column value matches | Aspose.Cells save workbook after hiding rows | check if a row is hidden Aspose.Cells C#
-// Developer Intent: Programmatically conceal rows that meet a specific cell‑value condition and persist the modified workbook.
-// Use Cases: Prepare a financial report that automatically hides rows flagged as "Hide" before distribution. | Export data sets while suppressing rows marked with a status flag, keeping the original sheet intact. | Run a validation step that confirms hidden rows before finalizing the XLSX output.
-// AI Prompts: Generate C# code with Aspose.Cells to hide rows where column B contains "Inactive" and then save the file. | Explain how to toggle row hidden state in Aspose.Cells and retain it when reopening the workbook. | Show an example of using a custom predicate function to hide rows in Aspose.Cells for .NET.
+// Title: C# – Hide rows in an Aspose.Cells workbook based on cell values and save as XLSX
+// Description: Creates a new workbook, fills column A with sample strings, hides every row whose A‑cell equals a specified value (e.g., "Hide"), and saves the modified file. Demonstrates using Cells.HideRow with a simple predicate in Aspose.Cells for .NET.
+// Keywords: Aspose.Cells hide rows C# | hide Excel rows programmatically | Cells.HideRow example | filter rows by cell value Aspose | save workbook after hiding rows | C# Excel row visibility | Aspose.Cells conditional row hide
+// Common Searches: how to hide rows in Aspose.Cells when a cell contains specific text | C# code to hide rows based on column A value using Aspose.Cells | Aspose.Cells hide rows and save workbook example | programmatically hide Excel rows with Aspose.Cells .NET | hide rows predicate Aspose.Cells C#
+// Developer Intent: Programmatically conceal rows that meet a condition and persist the workbook.
+// Use Cases: Generate reports that automatically hide rows flagged as "Hide" before distribution. | Create a clean view of data by removing rows with a particular status without deleting them. | Build Excel templates that react to a flag column, hiding rows dynamically during runtime.
+// AI Prompts: Write C# code using Aspose.Cells to hide rows where column B contains the word "Inactive" and then save the workbook as XLSX. | Show an example that iterates through a worksheet and hides rows based on a custom predicate function with Aspose.Cells. | Provide a reusable method in C# that accepts a predicate and hides matching rows in an Aspose.Cells worksheet, then saves the file.
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, populates column A with sample strings, hides every row whose cell equals "Hide", verifies hidden status, and saves the result as an XLSX file using Aspose.Cells for .NET.
+// Creates a new workbook, fills column A with sample strings, hides every row whose A‑cell equals a specified value (e.g., "Hide"), and saves the modified file. Demonstrates using Cells.HideRow with a simple predicate in Aspose.Cells for .NET.
 class HideRowsBasedOnPredicate
 {
     static void Main()
@@ -23,25 +23,21 @@ class HideRowsBasedOnPredicate
         string[] values = { "Keep", "Hide", "Keep", "Hide", "Keep" };
         for (int i = 0; i < values.Length; i++)
         {
-            cells[i, 0].PutValue(values[i]); // Row i, Column A (0‑based index)
+            // Populate cells A1, A2, ... (zero‑based index)
+            cells[i, 0].PutValue(values[i]);
         }
 
         // Hide rows where the cell value equals "Hide"
-        for (int row = 0; row < values.Length; row++)
+        for (int i = 0; i < values.Length; i++)
         {
-            if (cells[row, 0].StringValue == "Hide")
+            if (cells[i, 0].StringValue == "Hide")
             {
-                cells.HideRow(row);
+                // Hide the row (zero‑based index)
+                cells.HideRow(i);
             }
         }
 
-        // Optional: display hidden status for verification
-        for (int row = 0; row < values.Length; row++)
-        {
-            Console.WriteLine($"Row {row + 1} hidden: {cells.IsRowHidden(row)}");
-        }
-
-        // Save the modified workbook
+        // Save the workbook with hidden rows applied
         workbook.Save("HiddenRowsExample.xlsx", SaveFormat.Xlsx);
     }
 }

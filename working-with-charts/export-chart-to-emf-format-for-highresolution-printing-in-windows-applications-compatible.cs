@@ -1,10 +1,10 @@
-// Title: Export Aspose.Cells Chart to High‑Resolution EMF (300 DPI) in C#
-// Description: Demonstrates how to create a workbook, add a column chart, configure ImageOrPrintOptions for 300 DPI EMF output with EmfOnly rendering, and export the chart to a vector EMF file suitable for Windows printing and embedding in Office documents.
-// Keywords: Aspose.Cells | C# | chart export | EMF | high resolution | 300 DPI | ImageOrPrintOptions | EmfRenderSetting | vector graphics | Windows printing | Excel chart to EMF
-// Common Searches: Aspose.Cells export chart to EMF C# | C# generate high DPI EMF from Excel chart | how to save Aspose.Cells chart as EMF | 300 DPI EMF export Aspose.Cells | EMF vector chart for Windows printing C#
-// Developer Intent: Create a 300 DPI EMF vector image of an Excel chart using Aspose.Cells in C#.
-// Use Cases: Produce printable, scalable charts for Windows‑based reports. | Embed high‑quality vector charts in Word or PowerPoint presentations. | Automate batch export of workbook charts to EMF files for a reporting pipeline. | Generate graphics for UI components that require resolution‑independent rendering.
-// AI Prompts: Write C# code to export a pie chart from an Aspose.Cells workbook to a 600 DPI EMF file. | Explain how to include chart background and borders when exporting to EMF with Aspose.Cells. | Provide a script that loops through all worksheets and saves each chart as a separate EMF file. | Show how to combine multiple EMF chart files into a single PDF using Aspose.Cells.
+// Title: Export Aspose.Cells Chart to High‑Resolution EMF (300 DPI) in C# for Windows Printing
+// Description: Learn how to create a workbook, add a column chart, configure ImageOrPrintOptions for 300 DPI EMF+ output, and save the chart as a vector EMF file suitable for high‑quality Windows desktop printing using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells chart export EMF | C# high resolution EMF | 300 DPI chart Aspose | EMF+ rendering Aspose.Cells | vector chart Windows printing | ImageOrPrintOptions EMF C# | export Excel chart to EMF
+// Common Searches: Aspose.Cells export chart to EMF C# | how to save chart as EMF with 300 DPI | C# generate high‑resolution EMF from Excel chart | EMF+ chart export Aspose.Cells example | set DPI for chart image Aspose.Cells
+// Developer Intent: Generate a high‑resolution EMF file from an Aspose.Cells chart for precise Windows printing.
+// Use Cases: Embedding scalable vector charts in Windows desktop reports. | Creating print‑ready graphics for Office documents or PDFs. | Supplying DPI‑controlled chart assets to .NET applications that require vector output.
+// AI Prompts: Provide C# code that exports an Aspose.Cells pie chart to EMF at 600 DPI. | Show how to force EmfRenderSetting.EmfPlusOnly when saving a chart as EMF. | Explain steps to embed an exported EMF chart into a WPF Image control.
 
 using System;
 using Aspose.Cells;
@@ -14,7 +14,7 @@ using Aspose.Cells.Rendering;
 
 namespace AsposeCellsChartToEmf
 {
-    // Demonstrates how to create a workbook, add a column chart, configure ImageOrPrintOptions for 300 DPI EMF output with EmfOnly rendering, and export the chart to a vector EMF file suitable for Windows printing and embedding in Office documents.
+    // Learn how to create a workbook, add a column chart, configure ImageOrPrintOptions for 300 DPI EMF+ output, and save the chart as a vector EMF file suitable for high‑quality Windows desktop printing using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
@@ -48,16 +48,16 @@ namespace AsposeCellsChartToEmf
                 ImageType = ImageType.Emf,                 // Export as EMF
                 HorizontalResolution = 300,                // 300 DPI horizontal
                 VerticalResolution = 300,                  // 300 DPI vertical
-                EmfRenderSetting = EmfRenderSetting.EmfOnly // Use EMF records only
+                EmfRenderSetting = EmfRenderSetting.EmfPlusPrefer // Prefer EMF+ records
             };
 
-            // Export the chart to an EMF file using the options above
-            chart.ToImage("ChartOutput.emf", imgOptions);
+            // Export the chart to an EMF file using the options
+            chart.ToImage("HighResChart.emf", imgOptions);
 
-            // Optionally save the workbook (not required for EMF export but follows lifecycle rule)
+            // (Optional) Save the workbook if you also need the Excel file
             workbook.Save("ChartWorkbook.xlsx");
 
-            Console.WriteLine("Chart successfully exported to EMF format with high resolution.");
+            Console.WriteLine("Chart exported to HighResChart.emf with 300 DPI.");
         }
     }
 }

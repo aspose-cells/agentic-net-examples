@@ -1,53 +1,49 @@
-// Title: C# – Export a Single‑Sheet Workbook to HTML with External CSS Folder using Aspose.Cells
-// Description: Creates a one‑worksheet workbook, adds sample cells, configures HtmlSaveOptions (ExportWorksheetCSSSeparately = true, CreateDirectory = true), saves the file to a desktop folder, and generates a separate CSS directory (Workbook_files) alongside the HTML page.
-// Keywords: Aspose.Cells HTML export | ExportWorksheetCSSSeparately | C# HtmlSaveOptions | external CSS folder Aspose | CreateDirectory option | save Excel as HTML .NET | Workbook_files folder | desktop export path | Aspose.Cells sample code | HTML with separate stylesheet
-// Common Searches: Aspose.Cells export HTML separate CSS folder | C# HtmlSaveOptions ExportWorksheetCSSSeparately example | How to create CSS directory when saving Excel as HTML | Save Excel workbook to HTML with external stylesheet .NET | Aspose.Cells HTML export to desktop folder
-// Developer Intent: Produce an HTML representation of a workbook while placing its stylesheet in an independent folder.
-// Use Cases: Web publishing of Excel reports where CSS needs to be cached separately | Generating static documentation from spreadsheets for intranet sites | Building a desktop tool that converts user‑selected Excel files to HTML with ready‑to‑deploy assets | Automating batch conversion of financial models to HTML for client portals
-// AI Prompts: Generate C# code that uses Aspose.Cells to save a workbook as HTML with ExportWorksheetCSSSeparately enabled and ensures the CSS folder is created automatically. | Describe the role of HtmlSaveOptions.CreateDirectory and ExportWorksheetCSSSeparately when exporting Excel to HTML. | Show how to modify the example to export each worksheet of a multi‑sheet workbook to its own HTML file with distinct CSS directories. | Provide a PowerShell script that calls the compiled program to batch‑process multiple Excel files into HTML with separate CSS folders.
+// Title: Export a Single‑Sheet Workbook to HTML with a Separate CSS Folder using Aspose.Cells for .NET
+// Description: Creates a desktop folder, builds a one‑worksheet workbook, adds sample data, and saves it as HTML with HtmlSaveOptions.ExportWorksheetCSSSeparately enabled. Aspose.Cells automatically generates a sub‑folder that contains the worksheet's CSS file.
+// Keywords: Aspose.Cells HTML export | ExportWorksheetCSSSeparately | CreateDirectory option | C# HTML save options | .NET workbook to HTML | separate CSS folder | Aspose.Cells CSS assets
+// Common Searches: Aspose.Cells export HTML separate CSS folder | How to use ExportWorksheetCSSSeparately in C# | Save Excel as HTML with external CSS using Aspose.Cells | Create CSS sub‑directory when exporting workbook to HTML | Aspose.Cells HtmlSaveOptions CreateDirectory example
+// Developer Intent: Generate HTML from an Excel workbook while placing the worksheet's CSS in its own directory.
+// Use Cases: Web‑ready reporting where styles are cached separately from HTML. | Batch conversion pipelines that need modular CSS per worksheet. | Desktop utilities that organize exported HTML and CSS assets on the user's desktop.
+// AI Prompts: Generate C# code to export a multi‑sheet workbook to HTML with ExportWorksheetCSSSeparately and a custom CSS folder name. | Show how to post‑process the CSS files created by Aspose.Cells after HTML export. | Add robust error handling for missing output paths when using HtmlSaveOptions with CreateDirectory.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a one‑worksheet workbook, adds sample cells, configures HtmlSaveOptions (ExportWorksheetCSSSeparately = true, CreateDirectory = true), saves the file to a desktop folder, and generates a separate CSS directory (Workbook_files) alongside the HTML page.
-class ExportHtmlWithSeparateCss
+namespace AsposeCellsHtmlExport
 {
-    static void Main()
+    // Creates a desktop folder, builds a one‑worksheet workbook, adds sample data, and saves it as HTML with HtmlSaveOptions.ExportWorksheetCSSSeparately enabled. Aspose.Cells automatically generates a sub‑folder that contains the worksheet's CSS file.
+    class Program
     {
-        // Create a new workbook with a single worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Name = "Sheet1";
-
-        // Add some sample data
-        sheet.Cells["A1"].PutValue("Hello World");
-        sheet.Cells["B2"].PutValue(12345);
-
-        // Configure HTML save options
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions
+        static void Main()
         {
-            // Export the worksheet CSS to a separate file
-            ExportWorksheetCSSSeparately = true,
-            // Automatically create the output directory if it does not exist
-            CreateDirectory = true
-        };
+            // Define output directory (desktop) and ensure it exists
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string outputDir = Path.Combine(desktopPath, "HtmlExport");
+            Directory.CreateDirectory(outputDir);
 
-        // Define the output folder (e.g., Desktop\HtmlExport) and ensure it exists
-        string outputFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-            "HtmlExport");
-        Directory.CreateDirectory(outputFolder);
+            // Path for the main HTML file
+            string htmlFilePath = Path.Combine(outputDir, "Workbook.html");
 
-        // Define the full path for the HTML file
-        string htmlFilePath = Path.Combine(outputFolder, "Workbook.html");
+            // Create a new workbook with a single worksheet and add some data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
+            sheet.Cells["A1"].PutValue("Hello, Aspose.Cells!");
+            sheet.Cells["B2"].PutValue(12345);
 
-        // Save the workbook as HTML using the configured options
-        workbook.Save(htmlFilePath, saveOptions);
+            // Configure HTML save options to export worksheet CSS separately
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            {
+                ExportWorksheetCSSSeparately = true, // enable separate CSS files per worksheet
+                CreateDirectory = true               // auto‑create directories if they don't exist
+            };
 
-        // The CSS file will be placed in a folder named "Workbook_files" next to the HTML file
-        string cssFolder = Path.Combine(outputFolder, "Workbook_files");
-        Console.WriteLine($"HTML saved to: {htmlFilePath}");
-        Console.WriteLine($"Separate CSS files are in: {cssFolder}");
+            // Save the workbook as HTML; Aspose.Cells will create a CSS folder alongside the HTML file
+            workbook.Save(htmlFilePath, saveOptions);
+
+            Console.WriteLine($"HTML exported to: {htmlFilePath}");
+            Console.WriteLine("Separate CSS files are stored in a sub‑folder next to the HTML file.");
+        }
     }
 }

@@ -1,59 +1,43 @@
-// Title: Adjust shape Z‑order to place one shape directly above another using Aspose.Cells for .NET
-// Description: Creates a workbook, adds two rectangle shapes, sets explicit ZOrderPosition values, moves the second shape to be just above the first, and saves the file.
-// Keywords: Aspose.Cells shape Z order | C# ZOrderPosition | move shape above another Aspose.Cells | Excel shape layering .NET | adjust shape Z index
-// Common Searches: Aspose.Cells change shape ZOrderPosition | place one shape above another in Excel with Aspose.Cells | reorder overlapping shapes .NET | how to set shape layering in Aspose.Cells | bring shape to front programmatically Aspose
-// Developer Intent: Set a shape's Z‑order so it appears directly above a specific existing shape.
-// Use Cases: Control visibility when rectangles overlap in a report. | Keep a watermark behind data while a callout stays on top. | Position a label shape immediately above a chart for clear annotation.
-// AI Prompts: Generate C# code that moves a given Aspose.Cells Shape to a ZOrderPosition just above another specified shape. | Show how to reorder multiple shapes in a worksheet so each shape is placed one level higher than the previous one. | Write a method that accepts two Shape objects and an offset, then adjusts the second shape's ZOrderPosition relative to the first using Aspose.Cells for .NET.
+// Title: C# – Move a shape just above another shape by adjusting ZOrderPosition in Aspose.Cells
+// Description: Demonstrates how to create a workbook, add two rectangle shapes, and set the ZOrderPosition of one shape to be one level higher than a reference shape so it renders directly above it, then saves the file.
+// Keywords: Aspose.Cells C# shape ZOrderPosition | adjust shape stacking order .NET | bring shape to front Aspose.Cells | Excel shape layering programmatically | change shape order Aspose.Cells
+// Common Searches: Aspose.Cells set shape above another shape | C# change ZOrderPosition of Excel shape | how to bring a shape forward in Aspose.Cells | move shape in front of another shape .NET | shape layering example Aspose.Cells
+// Developer Intent: Set shapeA's Z-order so it appears directly in front of shapeB.
+// Use Cases: Overlay a label on a chart to show dynamic titles. | Ensure comment or annotation shapes stay visible above data markers. | Display a custom tooltip shape above a selected cell range.
+// AI Prompts: Generate C# code that moves a specific shape above another without hard‑coding ZOrderPosition values. | Show how to programmatically bring a chosen shape to the front of all worksheet shapes using Aspose.Cells. | Explain how to swap the ZOrderPosition of two shapes in a .NET workbook.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsZOrderDemo
+namespace AsposeCellsZOrderExample
 {
-    // Creates a workbook, adds two rectangle shapes, sets explicit ZOrderPosition values, moves the second shape to be just above the first, and saves the file.
-    public class AdjustZOrder
+    // Demonstrates how to create a workbook, add two rectangle shapes, and set the ZOrderPosition of one shape to be one level higher than a reference shape so it renders directly above it, then saves the file.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add two rectangle shapes
-                Shape shapeA = worksheet.Shapes.AddRectangle(5, 5, 100, 100, 0, 0);   // Existing shape
-                Shape shapeB = worksheet.Shapes.AddRectangle(50, 50, 100, 100, 0, 0); // Shape to move
+            // Add two rectangle shapes
+            // shapeA will be the shape we want to move
+            Shape shapeA = worksheet.Shapes.AddRectangle(5, 5, 100, 100, 0, 0);
+            // shapeB is the reference shape
+            Shape shapeB = worksheet.Shapes.AddRectangle(50, 50, 100, 100, 0, 0);
 
-                // Ensure initial Z-order positions (optional, default is sequential)
-                shapeA.ZOrderPosition = 0; // bottom
-                shapeB.ZOrderPosition = 1; // top
+            // Initial Z-order (optional, just for clarity)
+            // Lower ZOrderPosition means closer to the back
+            shapeA.ZOrderPosition = 0; // back
+            shapeB.ZOrderPosition = 1; // front of shapeA
 
-                // Move shapeB to be just above shapeA
-                shapeB.ZOrderPosition = shapeA.ZOrderPosition + 1;
+            // Adjust shapeA to be just above shapeB
+            // Set shapeA's ZOrderPosition to shapeB's position + 1
+            shapeA.ZOrderPosition = shapeB.ZOrderPosition + 1;
 
-                // Define output file path
-                string outputPath = "ZOrderAdjusted.xlsx";
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            AdjustZOrder.Run();
+            // Save the workbook to verify the result
+            workbook.Save("ZOrderAdjusted.xlsx");
         }
     }
 }

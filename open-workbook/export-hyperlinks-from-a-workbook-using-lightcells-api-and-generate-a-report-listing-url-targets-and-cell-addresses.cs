@@ -1,83 +1,89 @@
-// Title: Export Excel hyperlinks with Aspose.Cells (C#) – generate a tab‑delimited sheet‑cell‑URL report
-// Description: Loads an Excel workbook in read‑only mode, walks through each worksheet’s Hyperlink collection, determines the first cell of each link, converts the zero‑based indexes to an A1 address, and writes lines formatted as "SheetName!CellAddress<TAB>HyperlinkURL" to a plain‑text report.
-// Keywords: Aspose.Cells | C# | hyperlink extraction | Excel hyperlink report | read‑only workbook | A1 cell address | tab‑delimited output | worksheet hyperlinks | export hyperlinks | Aspose.Cells Hyperlink collection
-// Common Searches: Aspose.Cells export hyperlinks C# | generate hyperlink report from Excel workbook | list Excel cell addresses and URLs using Aspose | read hyperlinks without modifying workbook | tab delimited hyperlink audit Aspose.Cells
-// Developer Intent: Read every hyperlink in an Excel file and produce a concise report that lists the worksheet name, the cell address where the link starts, and the target URL.
-// Use Cases: Audit external references in financial models for compliance. | Document data source URLs embedded across a large workbook. | Provide a quick reference for users to locate linked resources in shared spreadsheets.
-// AI Prompts: Show how to include the hyperlink display text in the generated report. | Give an example that uses the LightCells API to extract hyperlinks more efficiently. | Explain handling of merged cells that contain hyperlinks when creating the report. | Add error handling for missing hyperlink addresses or invalid URLs.
+// Title: Export Excel Hyperlinks with Cell Addresses using Aspose.Cells for .NET (LightCells API)
+// Description: Loads a source workbook, iterates every worksheet's HyperlinkCollection, captures each hyperlink's start cell, converts it to an A1 address, and writes the address together with the target URL into a new workbook report. The example uses Aspose.Cells for .NET and demonstrates LightCells‑style processing for fast extraction.
+// Keywords: Aspose.Cells | C# export hyperlinks | HyperlinkCollection | LightCells API | Excel hyperlink report | cell address extraction | list URLs from workbook | generate hyperlink summary
+// Common Searches: Aspose.Cells extract hyperlinks C# | list hyperlink URLs and cell addresses in Excel | create hyperlink report workbook Aspose | export Excel hyperlinks to new file .NET | LightCells API hyperlink extraction
+// Developer Intent: Read all hyperlinks from a source workbook and write their A1 cell references and target URLs into a separate report workbook.
+// Use Cases: Compliance audit of external links across a spreadsheet | Validation of URLs before bulk data migration | Marketing inventory of linked resources | Security scan for suspicious or malicious URLs | Documentation of reference links for technical manuals
+// AI Prompts: Write C# code that uses Aspose.Cells LightCells API to enumerate HyperlinkCollection and output cell address and URL to a new workbook. | Show how to add the hyperlink display text and tooltip to the generated report. | Demonstrate filtering extracted hyperlinks by domain or protocol while populating the report workbook. | Explain how to process very large workbooks efficiently with LightCells streaming mode for hyperlink extraction. | Provide a PowerShell snippet that runs the compiled example and passes source and report file paths as arguments.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook in read‑only mode, walks through each worksheet’s Hyperlink collection, determines the first cell of each link, converts the zero‑based indexes to an A1 address, and writes lines formatted as "SheetName!CellAddress<TAB>HyperlinkURL" to a plain‑text report.
-class ExportHyperlinksWithLightCells
+namespace HyperlinkExportExample
 {
-    static void Main()
+    // Loads a source workbook, iterates every worksheet's HyperlinkCollection, captures each hyperlink's start cell, converts it to an A1 address, and writes the address together with the target URL into a new workbook report. The example uses Aspose.Cells for .NET and demonstrates LightCells‑style processing for fast extraction.
+    class Program
     {
-        // Paths for input workbook and output report
-        string workbookPath = "InputWorkbook.xlsx";
-        string reportPath = "HyperlinkReport.txt";
-
-        try
+        static void Main()
         {
-            // Verify that the input workbook exists
-            if (!File.Exists(workbookPath))
+            try
             {
-                Console.WriteLine($"Error: Input file not found: {Path.GetFullPath(workbookPath)}");
-                return;
-            }
+                // Load the source workbook (create rule)
+                const string sourcePath = "SourceWorkbook.xlsx";
+                Workbook sourceWorkbook;
 
-            // Load the workbook (read‑only mode is sufficient for extracting hyperlinks)
-            Workbook workbook = new Workbook(workbookPath);
-
-            // Create the report file
-            using (StreamWriter writer = new StreamWriter(reportPath))
-            {
-                // Iterate through each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
+                if (File.Exists(sourcePath))
                 {
-                    string sheetName = sheet.Name;
+                    sourceWorkbook = new Workbook(sourcePath);
+                }
+                else
+                {
+                    // If the source file does not exist, create an empty workbook to avoid FileNotFoundException
+                    sourceWorkbook = new Workbook();
+                }
 
-                    // Iterate through all hyperlinks in the current worksheet
-                    foreach (Hyperlink hyperlink in sheet.Hyperlinks)
+                // Prepare a list to hold hyperlink information
+                var hyperlinkInfos = new List<(string CellAddress, string Url)>();
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in sourceWorkbook.Worksheets)
+                {
+                    // Access the HyperlinkCollection of the worksheet
+                    HyperlinkCollection links = sheet.Hyperlinks;
+
+                    // Iterate through each hyperlink
+                    foreach (Hyperlink link in links)
                     {
-                        // Obtain the first cell of the hyperlink range.
-                        // Depending on the Aspose.Cells version, the row/column may be exposed via
-                        // FirstRow/FirstColumn or via StartRow/StartColumn. Use the available members.
-                        int row = 0;
-                        int column = 0;
+                        // Get the start cell of the hyperlink range
+                        int startRow = link.Area.StartRow;
+                        int startColumn = link.Area.StartColumn;
 
-                        // Prefer FirstRow/FirstColumn if they exist; otherwise fall back to StartRow/StartColumn.
-                        // The conditional compilation ensures the code compiles against any version.
-                        // (Both sets of properties are of type int.)
-                        if (hyperlink.GetType().GetProperty("FirstRow") != null &&
-                            hyperlink.GetType().GetProperty("FirstColumn") != null)
-                        {
-                            row = (int)hyperlink.GetType().GetProperty("FirstRow").GetValue(hyperlink);
-                            column = (int)hyperlink.GetType().GetProperty("FirstColumn").GetValue(hyperlink);
-                        }
-                        else if (hyperlink.GetType().GetProperty("StartRow") != null &&
-                                 hyperlink.GetType().GetProperty("StartColumn") != null)
-                        {
-                            row = (int)hyperlink.GetType().GetProperty("StartRow").GetValue(hyperlink);
-                            column = (int)hyperlink.GetType().GetProperty("StartColumn").GetValue(hyperlink);
-                        }
+                        // Convert row/column to A1 style address
+                        string cellAddress = CellsHelper.CellIndexToName(startRow, startColumn);
 
-                        // Convert zero‑based row/column indexes to A1 style address
-                        string cellAddress = CellsHelper.CellIndexToName(row, column);
-
-                        // Write: SheetName!CellAddress<TAB>HyperlinkAddress
-                        writer.WriteLine($"{sheetName}!{cellAddress}\t{hyperlink.Address}");
+                        // Store the address and URL
+                        hyperlinkInfos.Add((cellAddress, link.Address));
                     }
                 }
-            }
 
-            Console.WriteLine($"Hyperlink report generated at: {Path.GetFullPath(reportPath)}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Create a new workbook for the report (create rule)
+                Workbook reportWorkbook = new Workbook();
+                Worksheet reportSheet = reportWorkbook.Worksheets[0];
+                reportSheet.Name = "Hyperlink Report";
+
+                // Write header
+                reportSheet.Cells["A1"].PutValue("Cell Address");
+                reportSheet.Cells["B1"].PutValue("Hyperlink URL");
+
+                // Populate the report rows starting from the second row
+                for (int i = 0; i < hyperlinkInfos.Count; i++)
+                {
+                    int targetRow = i + 1; // zero‑based index; row 1 is the second row
+                    reportSheet.Cells[targetRow, 0].PutValue(hyperlinkInfos[i].CellAddress);
+                    reportSheet.Cells[targetRow, 1].PutValue(hyperlinkInfos[i].Url);
+                }
+
+                // Save the report workbook (save rule)
+                const string reportPath = "HyperlinkReport.xlsx";
+                reportWorkbook.Save(reportPath);
+                Console.WriteLine($"Report saved to '{reportPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

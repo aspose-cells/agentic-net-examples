@@ -1,55 +1,72 @@
-// Title: C# – Enable Drill‑Through (EnableDrilldown) for an Aspose.Cells PivotTable
-// Description: Creates a workbook, adds sample data, inserts a PivotTable, assigns the Category field to rows and Amount to data, turns on the EnableDrilldown property, refreshes the pivot, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells PivotTable drill‑through C# | EnableDrilldown property .NET | Aspose.Cells pivot drilldown example | C# Excel pivot drill‑through | Aspose.Cells interactive reports
-// Common Searches: how to enable drill‑through in Aspose.Cells PivotTable C# | Aspose.Cells EnableDrilldown usage | C# code for pivot table drill‑down with Aspose.Cells | Aspose.Cells pivot drill‑through sample | enable drill‑through for Excel pivot in .NET
-// Developer Intent: Activate the drill‑through feature on a PivotTable so end‑users can double‑click a summary cell and see the underlying source rows in Excel.
-// Use Cases: Interactive financial dashboards where users can explore transaction details from aggregated totals. | Sales reports that let analysts drill down from region‑level summaries to individual order rows. | Automated workbook generation with pivot tables that retain drill‑through capability when opened in Excel.
-// AI Prompts: Generate C# code that builds a PivotTable with Aspose.Cells, enables drill‑through via EnableDrilldown, and saves the workbook. | Explain how to capture the rows returned by a drill‑through action from an Aspose.Cells PivotTable programmatically. | Show how to customize the target worksheet or formatting for drill‑through results after setting EnableDrilldown in Aspose.Cells.
+// Title: Enable Drill‑Through (Drilldown) in Aspose.Cells PivotTable – C# Example
+// Description: Creates a workbook, adds sample data, builds a PivotTable, places the Category field in rows and Amount in data, sets the EnableDrilldown property to true, refreshes the cache, calculates the pivot, and saves the file as EnableDrillthroughDemo.xlsx.
+// Keywords: Aspose.Cells drilldown | EnableDrilldown property | C# pivot table drill‑through | Aspose.Cells RefreshData | Aspose.Cells CalculateData | interactive Excel PivotTable | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells enable drill‑through pivot table C# | How to set EnableDrilldown in Aspose.Cells | C# code to add drilldown to Aspose.Cells PivotTable | Refresh pivot cache after enabling drilldown Aspose.Cells | Calculate pivot data with EnableDrilldown Aspose.Cells
+// Developer Intent: Add drill‑through capability to a PivotTable so users can double‑click a summary cell and view the underlying source rows.
+// Use Cases: Interactive Excel reports where clicking a pivot cell reveals detailed records. | Workbooks that need to refresh their pivot cache while preserving drill‑through functionality. | Self‑service analytics dashboards built with Aspose.Cells that allow end‑users to explore raw data from aggregated views.
+// AI Prompts: Generate C# code that creates a PivotTable with Aspose.Cells, enables drill‑through, refreshes the cache, calculates data, and saves the workbook. | Explain the steps required after setting EnableDrilldown to true in Aspose.Cells, including RefreshData and CalculateData. | Show an example of using EnableDrilldown together with RefreshData for an interactive pivot report in .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotDrillthroughDemo
+namespace AsposeCellsExamples
 {
-    // Creates a workbook, adds sample data, inserts a PivotTable, assigns the Category field to rows and Amount to data, turns on the EnableDrilldown property, refreshes the pivot, and saves the file as an Excel workbook.
-    class Program
+    // Creates a workbook, adds sample data, builds a PivotTable, places the Category field in rows and Amount in data, sets the EnableDrilldown property to true, refreshes the cache, calculates the pivot, and saves the file as EnableDrillthroughDemo.xlsx.
+    public class EnableDrillthroughDemo
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Get the first worksheet and add sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].Value = "Category";
-            sheet.Cells["B1"].Value = "Amount";
-            sheet.Cells["A2"].Value = "Food";
-            sheet.Cells["B2"].Value = 120;
-            sheet.Cells["A3"].Value = "Food";
-            sheet.Cells["B3"].Value = 80;
-            sheet.Cells["A4"].Value = "Drink";
-            sheet.Cells["B4"].Value = 150;
-            sheet.Cells["A5"].Value = "Drink";
-            sheet.Cells["B5"].Value = 200;
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // Populate sample data
+                sheet.Cells["A1"].Value = "Category";
+                sheet.Cells["B1"].Value = "Amount";
+                sheet.Cells["A2"].Value = "Food";
+                sheet.Cells["B2"].Value = 120;
+                sheet.Cells["A3"].Value = "Drink";
+                sheet.Cells["B3"].Value = 80;
+                sheet.Cells["A4"].Value = "Food";
+                sheet.Cells["B4"].Value = 150;
 
-            // Configure the pivot table fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+                // Add a pivot table covering the data range
+                int ptIndex = sheet.PivotTables.Add("A1:B4", "D3", "PivotTable1");
+                PivotTable pivot = sheet.PivotTables[ptIndex];
 
-            // Enable drill‑through (drilldown) functionality
-            pivotTable.EnableDrilldown = true;
+                // Configure pivot fields
+                pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+                pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-            // Refresh and calculate the pivot table data
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
+                // Enable drill‑through (drilldown) functionality
+                pivot.EnableDrilldown = true;
 
-            // Save the workbook to a file
-            workbook.Save("PivotTableDrillthroughDemo.xlsx");
+                // Refresh the pivot cache to reflect the source data
+                pivot.RefreshData();
+
+                // Calculate the pivot table
+                pivot.CalculateData();
+
+                // Save the workbook
+                workbook.Save("EnableDrillthroughDemo.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            EnableDrillthroughDemo.Run();
         }
     }
 }

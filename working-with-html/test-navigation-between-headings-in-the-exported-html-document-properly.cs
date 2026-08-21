@@ -1,63 +1,48 @@
-// Title: Export Excel to HTML with Row/Column Heading Anchors and Worksheet Hyperlink Navigation – Aspose.Cells for .NET
-// Description: This C# example builds a workbook with an index sheet and a Details sheet, adds a hyperlink from the index to the Details cell, and saves the file as HTML using HtmlSaveOptions (ExportRowColumnHeadings = true, ExportNamedRangeAnchors = true). The output contains anchor tags for row and column headings, enabling click‑through navigation between sections.
-// Keywords: Aspose.Cells | HTML export | ExportRowColumnHeadings | ExportNamedRangeAnchors | worksheet hyperlink | C# Excel to HTML | anchor navigation | row heading anchors | column heading anchors | cross‑sheet link
-// Common Searches: Aspose.Cells export workbook to HTML with navigation | How to add hyperlink between worksheets in HTML output | Enable row and column heading anchors in Aspose.Cells HTML | HtmlSaveOptions ExportNamedRangeAnchors example | C# create clickable index in exported HTML Excel
-// Developer Intent: Create an HTML representation of an Excel file where index entries link to detailed sections via anchors generated from row/column headings and worksheet hyperlinks.
-// Use Cases: Generate web‑ready reports that let users jump from a summary table to detailed pages. | Automate documentation where an index sheet provides quick navigation to content sheets. | Validate that exported HTML preserves Excel hyperlink behavior for QA testing.
-// AI Prompts: Write a C# unit test that loads the saved HTML and verifies the hyperlink target ID matches the Details sheet anchor. | Describe the HTML markup produced when ExportRowColumnHeadings and ExportNamedRangeAnchors are enabled. | Show how to rename the generated anchor IDs for rows and columns using HtmlSaveOptions callbacks.
+// Title: C# AspNet – Export Excel to HTML with Clickable Row/Column Headings and Named‑Range Anchors using Aspose.Cells
+// Description: Shows how to build a workbook, add row and column titles, assign named ranges, and save it as HTML with HtmlSaveOptions configured to turn those titles into intra‑page navigation anchors.
+// Keywords: Aspose.Cells | C# | HTML export | ExportRowColumnHeadings | ExportNamedRangeAnchors | named range anchors | clickable headings | Excel to HTML | navigation links | web‑friendly spreadsheet
+// Common Searches: Aspose.Cells export headings as links | HTML output with named range anchors Aspose | C# generate clickable row column headings in HTML | how to add navigation anchors when saving Excel as HTML | Aspose.Cells HTMLSaveOptions navigation example
+// Developer Intent: Create an HTML file from an Excel workbook where row and column titles serve as internal navigation links.
+// Use Cases: Build a report workbook, mark column titles with named ranges, and export to HTML so users can jump to sections by clicking headings. | Validate that the resulting HTML contains <a name="Heading1"> and corresponding <a href="#Heading1"> elements for quick navigation. | Integrate the export step into an automated pipeline that delivers web‑ready spreadsheets with built‑in navigation.
+// AI Prompts: Generate C# code with Aspose.Cells that exports a worksheet to HTML and makes row/column headings clickable. | Explain the effect of ExportRowColumnHeadings and ExportNamedRangeAnchors on the HTML markup produced by Aspose.Cells. | Write a unit test in C# that loads the exported HTML and asserts the presence of navigation anchors for the defined headings.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// This C# example builds a workbook with an index sheet and a Details sheet, adds a hyperlink from the index to the Details cell, and saves the file as HTML using HtmlSaveOptions (ExportRowColumnHeadings = true, ExportNamedRangeAnchors = true). The output contains anchor tags for row and column headings, enabling click‑through navigation between sections.
-class HtmlNavigationDemo
+// Shows how to build a workbook, add row and column titles, assign named ranges, and save it as HTML with HtmlSaveOptions configured to turn those titles into intra‑page navigation anchors.
+class TestNavigationBetweenHeadings
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and access the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet mainSheet = workbook.Worksheets[0];
-            mainSheet.Name = "Main";
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Sheet1";
 
-            // Add row and column headings
-            mainSheet.Cells["A1"].PutValue("Index");
-            mainSheet.Cells["B1"].PutValue("Section");
-            mainSheet.Cells["A2"].PutValue("1");
-            mainSheet.Cells["B2"].PutValue("Introduction");
-            mainSheet.Cells["A3"].PutValue("2");
-            mainSheet.Cells["B3"].PutValue("Details");
+        // Add column headings (these will become navigation anchors)
+        sheet.Cells["B1"].PutValue("Heading 1");
+        sheet.Cells["C1"].PutValue("Heading 2");
 
-            // Add a second worksheet that will be the target of a hyperlink
-            Worksheet detailsSheet = workbook.Worksheets.Add("Details");
-            detailsSheet.Cells["A1"].PutValue("Details Section");
-            detailsSheet.Cells["A2"].PutValue("More information here...");
+        // Add row headings (these will also be exported as navigation links)
+        sheet.Cells["A2"].PutValue("Row 1");
+        sheet.Cells["A3"].PutValue("Row 2");
 
-            // Create a hyperlink in the main sheet that points to the Details sheet
-            // Parameters: firstCell, totalRows, totalColumns, address
-            mainSheet.Hyperlinks.Add("B2", 1, 1, "Details!A1");
+        // Fill some sample data
+        sheet.Cells["B2"].PutValue("Data 1");
+        sheet.Cells["C2"].PutValue("Data 2");
+        sheet.Cells["B3"].PutValue("Data 3");
+        sheet.Cells["C3"].PutValue("Data 4");
 
-            // Configure HTML save options:
-            // - ExportRowColumnHeadings: exports row/column headings as anchors, enabling navigation
-            // - ExportNamedRangeAnchors: keeps anchor elements for named ranges (optional but safe)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                ExportRowColumnHeadings = true,
-                ExportNamedRangeAnchors = true
-            };
+        // Create named ranges for the column headings – they will be exported as <a> anchors
+        sheet.Cells.CreateRange("B1", "B1").Name = "Heading1";
+        sheet.Cells.CreateRange("C1", "C1").Name = "Heading2";
 
-            // Define output file path
-            string outputPath = "NavigationDemo.html";
+        // Configure HTML save options to export row/column headings and named‑range anchors
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.ExportRowColumnHeadings = true;   // export row/column headings as clickable links
+        htmlOptions.ExportNamedRangeAnchors = true;   // generate <a name="..."> anchors for named ranges
 
-            // Save the workbook as an HTML file
-            workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook as an HTML file
+        workbook.Save("NavigationHeadings.html", htmlOptions);
     }
 }

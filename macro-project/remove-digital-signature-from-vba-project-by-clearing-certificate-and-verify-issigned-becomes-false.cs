@@ -1,76 +1,41 @@
-// Title: C# – Remove Digital Signature from VBA Project and Verify IsSigned with Aspose.Cells
-// Description: Loads a signed .xlsm workbook, checks the VBA project's IsSigned flag, removes the macro (which clears the digital signature), saves the file as .xlsx, reloads it, and confirms that IsSigned is false using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells remove VBA signature | clear VBA digital certificate .NET | IsSigned property Aspose.Cells | remove macro workbook C# | verify unsigned VBA project | Aspose.Cells VBA project handling | C# workbook digital signature removal
-// Common Searches: how to delete digital signature from a signed VBA project using Aspose.Cells | C# remove VBA macro and clear certificate Aspose.Cells | check IsSigned flag after removing VBA project | Aspose.Cells remove macro unsigned workbook | verify VBA project is unsigned after RemoveMacro
-// Developer Intent: Strip the digital signature from a signed VBA project and ensure the workbook reports the VBA project as unsigned.
-// Use Cases: Automate compliance by batch‑processing .xlsm files to remove macros and their signatures before distribution. | Validate that a workbook no longer contains a signed VBA project after macro removal. | Convert signed macro‑enabled workbooks to unsigned .xlsx files for environments that prohibit macros.
-// AI Prompts: Generate C# code with Aspose.Cells that removes a VBA project's digital signature and verifies IsSigned becomes false. | Explain why the RemoveMacro method also clears the certificate of a signed VBA project in Aspose.Cells. | Provide robust error‑handling patterns for removing VBA signatures when the workbook may lack a VBA project.
+// Title: C# – Remove VBA Project Digital Signature from an .xlsm Workbook with Aspose.Cells
+// Description: Shows how to load a signed macro‑enabled workbook, clear its VBA digital certificate using VbaProject.Sign(null), save the file, reload it, and confirm that VbaProject.IsSigned returns false.
+// Keywords: Aspose.Cells | C# VBA signature removal | VbaProject.Sign null | clear VBA digital certificate | IsSigned false | macro-enabled workbook | remove VBA project signature | programmatic signature deletion | Aspose.Cells .NET example
+// Common Searches: how to delete VBA digital signature using Aspose.Cells | Aspose.Cells clear VBA project certificate C# | remove signature from .xlsm file programmatically | VbaProject.Sign null example | check if VBA project is signed Aspose.Cells
+// Developer Intent: Programmatically strip the digital signature from a VBA project in an .xlsm file and verify that the project is no longer signed.
+// Use Cases: Distribute a workbook without trust warnings by removing its VBA signature. | Prepare a macro‑enabled file for further editing after clearing the existing certificate. | Automate compliance checks by confirming that no VBA signatures remain after processing.
+// AI Prompts: Generate C# code using Aspose.Cells to clear a VBA project's digital signature and output the IsSigned status. | Explain the effect of calling VbaProject.Sign(null) on a signed workbook and which properties change. | Provide a step‑by‑step guide to remove a VBA signature, save the workbook, and validate removal with Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsExamples
+// Shows how to load a signed macro‑enabled workbook, clear its VBA digital certificate using VbaProject.Sign(null), save the file, reload it, and confirm that VbaProject.IsSigned returns false.
+class RemoveVbaSignatureDemo
 {
-    // Loads a signed .xlsm workbook, checks the VBA project's IsSigned flag, removes the macro (which clears the digital signature), saves the file as .xlsx, reloads it, and confirms that IsSigned is false using Aspose.Cells for .NET.
-    public class RemoveVbaSignatureDemo
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An unexpected error occurred: " + ex.Message);
-            }
-        }
+        // Path to a macro‑enabled workbook that already has a signed VBA project
+        string signedPath = "SignedVbaWorkbook.xlsm";
 
-        public static void Run()
-        {
-            // Path to a macro‑enabled workbook that already contains a signed VBA project
-            string signedPath = "SignedVbaWorkbook.xlsm";
+        // Load the signed workbook
+        Workbook workbook = new Workbook(signedPath);
 
-            // Verify the source file exists
-            if (!File.Exists(signedPath))
-            {
-                Console.WriteLine($"Source file not found: {signedPath}");
-                return;
-            }
+        // Access the VBA project
+        VbaProject vbaProject = workbook.VbaProject;
 
-            try
-            {
-                // Load the signed workbook
-                Workbook workbook = new Workbook(signedPath);
+        // Show the initial signature state
+        Console.WriteLine("Initially signed: " + vbaProject.IsSigned);
 
-                // Check if a VBA project exists before accessing its properties
-                bool isSigned = workbook.VbaProject != null && workbook.VbaProject.IsSigned;
-                Console.WriteLine("Before removal - VBA project signed: " + isSigned);
+        // Clear the VBA signature by passing null to the Sign method
+        vbaProject.Sign(null);
 
-                // Remove the VBA project (macro) from the workbook.
-                // This also clears any digital signature associated with the VBA project.
-                workbook.RemoveMacro();
+        // Save the workbook after removing the signature
+        string unsignedPath = "UnsignedVbaWorkbook.xlsm";
+        workbook.Save(unsignedPath, SaveFormat.Xlsm);
 
-                // Save the workbook without the VBA project (and without its signature)
-                string unsignedPath = "UnsignedVbaWorkbook.xlsx";
-                workbook.Save(unsignedPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved without VBA project: {unsignedPath}");
-
-                // Reload the saved file to confirm the signature state
-                Workbook reloaded = new Workbook(unsignedPath);
-                bool isSignedAfter = reloaded.VbaProject != null && reloaded.VbaProject.IsSigned;
-                Console.WriteLine("After removal - VBA project signed: " + isSignedAfter);
-            }
-            catch (FileNotFoundException fnfEx)
-            {
-                Console.WriteLine("File not found: " + fnfEx.FileName);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error processing workbook: " + ex.Message);
-            }
-        }
+        // Reload the saved file to verify that the signature has been removed
+        Workbook reloaded = new Workbook(unsignedPath);
+        Console.WriteLine("After removal, signed: " + reloaded.VbaProject.IsSigned);
     }
 }

@@ -1,10 +1,10 @@
-// Title: Aspose.Cells C# – Insert a SharePoint URL into an Excel Table Comment
-// Description: This C# example shows how to create a workbook with Aspose.Cells, add a ListObject (Excel table) over range A1:B3, set its DisplayName, assign a comment that contains a SharePoint document URL (Excel renders the URL as a clickable link), and save the file as TableWithCommentAndHyperlink.xlsx.
-// Keywords: Aspose.Cells C# | Excel table comment hyperlink | ListObject comment SharePoint | Add comment to Excel table .NET | Aspose.Cells table with URL | C# Excel comment hyperlink | SharePoint link in Excel table comment
-// Common Searches: Aspose.Cells add comment with URL | C# insert SharePoint link into Excel table comment | How to set ListObject comment Aspose.Cells | Excel table comment hyperlink using Aspose.Cells | Create Excel table and attach SharePoint reference in .NET
-// Developer Intent: Add a clickable SharePoint URL to an Excel table comment and save the workbook.
-// Use Cases: Provide end‑users with instant access to a specification document stored on SharePoint from within the table comment. | Maintain an audit trail by linking each data table to its governing policy document hosted on SharePoint. | Enable data‑validation teams to reference external guidelines directly from the Excel file without leaving the spreadsheet.
-// AI Prompts: Generate C# code using Aspose.Cells that creates a ListObject and sets its Comment property to include a SharePoint hyperlink. | Explain how the Comment property in Aspose.Cells automatically converts URLs into clickable links in Excel. | Show how to format a table comment so the displayed text is friendly while embedding a functional SharePoint URL.
+// Title: Add a SharePoint hyperlink to an Excel table comment with Aspose.Cells for .NET (C#)
+// Description: This example shows how to create a new workbook, fill a range with data, insert a ListObject (Excel table), assign a plain‑text comment that contains a SharePoint document URL, optionally add a visible cell hyperlink, and save the file as an XLSX workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# example | Excel table comment hyperlink | SharePoint URL in Aspose.Cells | ListObject comment .NET | C# add hyperlink to Excel table | Aspose.Cells GitHub sample | Excel automation SharePoint link | Aspose.Cells API tutorial | C# .NET Excel automation | Office Open XML hyperlink
+// Common Searches: how to set a comment with a SharePoint link on a ListObject using Aspose.Cells | Aspose.Cells C# add hyperlink inside an Excel table comment | example of Excel table comment containing a URL with Aspose.Cells | C# Aspose.Cells add SharePoint hyperlink to table comment | Aspose.Cells create table and attach reference link
+// Developer Intent: Insert a ListObject into a worksheet and embed a SharePoint document URL in its comment.
+// Use Cases: Automated reporting where the table comment points users to a detailed policy stored on SharePoint. | Building a reusable Excel template that includes a reference link to a corporate guideline hosted on SharePoint. | Generating workbooks that provide both a comment link and an in‑cell hyperlink for quick navigation to supporting documents.
+// AI Prompts: Generate C# code with Aspose.Cells that creates an Excel table, adds a comment containing a SharePoint document URL, and saves the workbook. | Show how to attach a plain‑text comment with a SharePoint hyperlink to a ListObject using Aspose.Cells for .NET. | Provide an Aspose.Cells example that adds both a table comment with a SharePoint link and a visible cell hyperlink in the same workbook.
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Tables;
 
 namespace AsposeCellsTableCommentWithHyperlink
 {
-    // This C# example shows how to create a workbook with Aspose.Cells, add a ListObject (Excel table) over range A1:B3, set its DisplayName, assign a comment that contains a SharePoint document URL (Excel renders the URL as a clickable link), and save the file as TableWithCommentAndHyperlink.xlsx.
+    // This example shows how to create a new workbook, fill a range with data, insert a ListObject (Excel table), assign a plain‑text comment that contains a SharePoint document URL, optionally add a visible cell hyperlink, and save the file as an XLSX workbook using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
@@ -21,24 +21,27 @@ namespace AsposeCellsTableCommentWithHyperlink
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some sample data for the table
+            // Populate sample data for the table (A1:B4)
             sheet.Cells["A1"].PutValue("ID");
             sheet.Cells["B1"].PutValue("Name");
             sheet.Cells["A2"].PutValue(1);
             sheet.Cells["B2"].PutValue("Alice");
             sheet.Cells["A3"].PutValue(2);
             sheet.Cells["B3"].PutValue("Bob");
+            sheet.Cells["A4"].PutValue(3);
+            sheet.Cells["B4"].PutValue("Charlie");
 
-            // Add a ListObject (Excel table) covering the data range A1:B3
+            // Add a ListObject (Excel table) covering the data range
             // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
-            int tableIndex = sheet.ListObjects.Add(0, 0, 2, 1, true);
+            int tableIndex = sheet.ListObjects.Add(0, 0, 3, 1, true);
             ListObject table = sheet.ListObjects[tableIndex];
-            table.DisplayName = "SampleTable";
 
-            // Attach a comment to the table that includes a SharePoint hyperlink
-            // The Comment property is plain text; embedding the URL makes it clickable in Excel.
-            string sharepointUrl = "https://sharepoint.company.com/sites/docs/ReferenceDoc.docx";
-            table.Comment = $"Reference document: {sharepointUrl}";
+            // Set a comment on the table that includes a SharePoint hyperlink
+            // The comment is plain text; the hyperlink is represented as a URL string.
+            table.Comment = "Reference document: https://sharepoint.example.com/sites/Docs/Reference.docx";
+
+            // Optionally, you could also add a visible hyperlink to a cell inside the table
+            // sheet.Hyperlinks.Add("B2", 1, 1, "https://sharepoint.example.com/sites/Docs/Reference.docx");
 
             // Save the workbook
             workbook.Save("TableWithCommentAndHyperlink.xlsx", SaveFormat.Xlsx);

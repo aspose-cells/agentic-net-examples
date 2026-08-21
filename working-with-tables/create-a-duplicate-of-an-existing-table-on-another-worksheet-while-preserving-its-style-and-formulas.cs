@@ -1,74 +1,67 @@
-// Title: Copy an Aspose.Cells ListObject to another worksheet while keeping style and formulas (C#)
-// Description: Demonstrates how to duplicate a ListObject (Excel table) from one worksheet to another using Aspose.Cells for .NET. The example creates a source table, defines a destination range, applies PasteOptions with KeepOldTables=true, and saves the workbook, ensuring all formatting and formulas are retained.
-// Keywords: Aspose.Cells copy table | duplicate ListObject C# | preserve table style Aspose.Cells | keep formulas when copying Excel table | PasteOptions KeepOldTables example | Aspose.Cells range copy across sheets | C# Excel table duplication | Aspose.Cells ListObject clone
-// Common Searches: how to copy a ListObject to another sheet in Aspose.Cells | Aspose.Cells preserve table formatting when copying | duplicate Excel table with formulas using Aspose.Cells .NET | PasteOptions KeepOldTables usage | copy Aspose.Cells table to a different worksheet
-// Developer Intent: Create an exact copy of an existing ListObject on a new worksheet, retaining its visual style and any embedded formulas.
-// Use Cases: Copy a product catalog table to a summary sheet without losing conditional formatting or calculated columns. | Replicate a financial data table across regional reports while preserving complex formulas. | Generate a template where a master table is cloned to each department sheet with identical styling and logic.
-// AI Prompts: Show C# code to duplicate an Aspose.Cells ListObject to another worksheet while keeping its style and formulas. | Explain how PasteOptions.KeepOldTables works when copying a table range in Aspose.Cells. | Provide step‑by‑step guidance for cloning an Excel table across sheets using Aspose.Cells for .NET.
+// Title: Copy an Excel table to a new worksheet with styles and formulas – Aspose.Cells C# example
+// Description: Loads a workbook, selects a table range, adds a destination sheet, and copies the range using PasteOptions.KeepOldTables so the table definition, formatting, and formulas are retained before saving.
+// Keywords: Aspose.Cells copy table C# | duplicate Excel table Aspose | preserve table formatting Aspose.Cells | PasteOptions KeepOldTables | copy range with formulas .NET
+// Common Searches: Aspose.Cells copy table to another sheet | C# duplicate Excel table preserving styles | PasteOptions KeepOldTables example | how to retain formulas when copying a table in Aspose.Cells | clone Excel table programmatically C#
+// Developer Intent: Replicate an existing Excel table on a different worksheet while keeping its style, formulas, and table metadata intact.
+// Use Cases: Create a styled snapshot of a data table on a summary sheet without breaking calculations. | Back up a worksheet‑level table on a separate tab for version control. | Generate a working copy of a table for further data manipulation while preserving original formulas.
+// AI Prompts: Write C# code with Aspose.Cells that copies a table from Sheet1 to a new sheet, preserving formatting and formulas. | Explain the effect of PasteOptions.KeepOldTables when duplicating a table range in Aspose.Cells. | Suggest how to programmatically locate a table’s boundaries and clone it to another worksheet while retaining all metadata.
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
 using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates how to duplicate a ListObject (Excel table) from one worksheet to another using Aspose.Cells for .NET. The example creates a source table, defines a destination range, applies PasteOptions with KeepOldTables=true, and saves the workbook, ensuring all formatting and formulas are retained.
-class DuplicateTableDemo
+// Loads a workbook, selects a table range, adds a destination sheet, and copies the range using PasteOptions.KeepOldTables so the table definition, formatting, and formulas are retained before saving.
+class DuplicateTable
 {
     static void Main()
     {
+        const string sourcePath = "source.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the source file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
+        {
+            Console.WriteLine($"Error: The file \"{sourcePath}\" was not found.");
+            return;
+        }
+
         try
         {
-            // Create a new workbook and get the first worksheet (source)
-            Workbook workbook = new Workbook();
-            Worksheet sourceSheet = workbook.Worksheets[0];
-            sourceSheet.Name = "Source";
+            // Load the workbook that contains the original table
+            Workbook sourceWorkbook = new Workbook(sourcePath);
 
-            // Populate sample data for the table
-            sourceSheet.Cells["A1"].PutValue("Product");
-            sourceSheet.Cells["B1"].PutValue("Quantity");
-            sourceSheet.Cells["A2"].PutValue("Apple");
-            sourceSheet.Cells["B2"].PutValue(10);
-            sourceSheet.Cells["A3"].PutValue("Banana");
-            sourceSheet.Cells["B3"].PutValue(20);
-            sourceSheet.Cells["A4"].PutValue("Orange");
-            sourceSheet.Cells["B4"].PutValue(15);
+            // Get the worksheet where the original table resides
+            Worksheet sourceSheet = sourceWorkbook.Worksheets["Sheet1"]; // adjust name as needed
 
-            // Create a table (ListObject) that includes the data range (A1:B4)
-            int tableIdx = sourceSheet.ListObjects.Add(0, 0, 4, 2, true);
-            ListObject sourceTable = sourceSheet.ListObjects[tableIdx];
-            sourceTable.DisplayName = "ProductsTable";
-            sourceTable.TableStyleType = TableStyleType.TableStyleMedium9;
+            // Define the range that represents the table (including header, data and style)
+            // Example range: A1:C5 – modify to match your actual table range
+            AsposeRange sourceRange = sourceSheet.Cells.CreateRange("A1:C5");
 
-            // Add a new worksheet where the table will be duplicated
-            Worksheet destSheet = workbook.Worksheets.Add("Copy");
+            // Add a new worksheet that will hold the duplicated table
+            Worksheet destinationSheet = sourceWorkbook.Worksheets.Add("DuplicatedTable");
 
-            // Define source range (including header) – same as the table range
-            AsposeRange srcRange = sourceSheet.Cells.CreateRange("A1:B4");
+            // Define the destination range where the table will be copied.
+            // Using the same size as the source ensures the table structure is preserved.
+            AsposeRange destinationRange = destinationSheet.Cells.CreateRange("A1:C5");
 
-            // Determine size of the source range
-            int rows = srcRange.RowCount;
-            int cols = srcRange.ColumnCount;
-
-            // Create a destination range of the same size starting at D1 (row 0, column 3)
-            AsposeRange destRange = destSheet.Cells.CreateRange(0, 3, rows, cols);
-
-            // Configure paste options to keep table objects during the copy
+            // Configure paste options:
+            // KeepOldTables = true ensures that the copied range retains its table definition.
             PasteOptions pasteOptions = new PasteOptions
             {
-                KeepOldTables = true // preserve table formatting and formulas
+                KeepOldTables = true
             };
 
-            // Copy the source table range to the destination range with the specified options
-            destRange.Copy(srcRange, pasteOptions);
+            // Perform the copy – this duplicates the table with its styles and formulas.
+            destinationRange.Copy(sourceRange, pasteOptions);
 
-            // Save the workbook containing the duplicated table
-            string outputPath = "DuplicateTable.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Save the workbook with the duplicated table.
+            sourceWorkbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully as \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

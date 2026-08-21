@@ -1,92 +1,105 @@
-// Title: C# – Export Workbook to HTML Excluding Hidden Sheets & Verify TableCssId Styles with Aspose.Cells
-// Description: Demonstrates how to save a workbook that contains both visible and hidden worksheets to HTML using Aspose.Cells. The example configures HtmlSaveOptions to skip hidden sheets, generate a separate CSS file per worksheet, and remove unused styles, then reads the CSS to confirm that only TableCssId‑prefixed styles from visible sheets are present.
-// Keywords: Aspose.Cells HTML export | C# export hidden worksheets | TableCssId style generation | ExportWorksheetCSSSeparately | ExcludeUnusedStyles | verify CSS content | Aspose.Cells HtmlSaveOptions | hidden sheet CSS exclusion
-// Common Searches: Aspose.Cells export hidden worksheets to HTML C# | TableCssId CSS only for visible sheets Aspose | HtmlSaveOptions exclude hidden sheets example | how to check generated CSS after HTML export Aspose.Cells | C# unit test Aspose.Cells HTML export hidden sheet
-// Developer Intent: Save a workbook as HTML while omitting hidden worksheets and ensure that TableCssId‑prefixed CSS is generated solely for visible sheets.
-// Use Cases: Create an HTML report from a workbook that contains confidential or auxiliary data on hidden sheets, preventing that data from being exposed in the output. | Reduce CSS payload by generating per‑worksheet styles and discarding unused definitions, improving page load performance. | Programmatically validate the exported CSS to guarantee compliance with styling policies or to support automated testing pipelines.
-// AI Prompts: Generate C# code using Aspose.Cells that exports a workbook to HTML, skips hidden worksheets, creates a separate CSS file, and verifies that TableCssId styles appear only for visible sheets. | Explain the impact of ExportHiddenWorksheet, ExportWorksheetCSSSeparately, and ExcludeUnusedStyles on the HTML and CSS files produced by Aspose.Cells. | Write a C# unit test that builds a workbook with a visible and a hidden sheet, saves it with the appropriate HtmlSaveOptions, and asserts that the resulting CSS contains TableCssId but not the hidden sheet's TableStyleMedium9.
+// Title: C# – Export Workbook to HTML Excluding Hidden Sheets and Validate TableCssId Styles for Visible Worksheets (Aspose.Cells)
+// Description: Creates a workbook with one visible and one hidden worksheet, adds a ListObject table to each with different built‑in styles, saves to HTML using HtmlSaveOptions that omit hidden sheets and generate CSS per sheet, then reads the HTML to confirm the hidden sheet name is absent and that TableCssId style blocks exist only for the visible worksheet.
+// Keywords: Aspose.Cells | C# HTML export | ExportHiddenWorksheet | HtmlSaveOptions | TableCssId | visible worksheet CSS | hidden sheet exclusion | ListObject HTML export | Aspose.Cells table style | HTML verification
+// Common Searches: Aspose.Cells export workbook to HTML without hidden sheets | How to prevent hidden worksheets from being saved in HTML | TableCssId CSS generated only for visible tables Aspose.Cells | HtmlSaveOptions ExportHiddenWorksheet example C# | Verify hidden worksheet is not in exported HTML Aspose
+// Developer Intent: Export a workbook to HTML while skipping hidden worksheets and ensure that TableCssId‑prefixed CSS is generated solely for tables on visible sheets.
+// Use Cases: Produce HTML reports that hide confidential or intermediate worksheets but retain table formatting for visible data. | Automate quality checks that confirm hidden worksheets are not present in the HTML output and that CSS identifiers correspond only to visible tables. | Create unit tests that load the generated HTML, assert the hidden sheet name is missing, and validate the count of TableCssId style blocks matches the number of visible tables.
+// AI Prompts: Generate C# code using Aspose.Cells to export a workbook to HTML, exclude hidden worksheets, and produce TableCssId styles only for visible tables. | Write a C# unit test that reads the exported HTML file, verifies the hidden sheet name does not appear, and checks that the TableCssId occurrence count equals the number of visible ListObjects. | Explain the impact of HtmlSaveOptions properties ExportHiddenWorksheet, ExportActiveWorksheetOnly, and ExportWorksheetCSSSeparately on HTML and CSS output for tables in Aspose.Cells.
 
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Tables;   // Required for ListObject and TableStyleType
 
-// Demonstrates how to save a workbook that contains both visible and hidden worksheets to HTML using Aspose.Cells. The example configures HtmlSaveOptions to skip hidden sheets, generate a separate CSS file per worksheet, and remove unused styles, then reads the CSS to confirm that only TableCssId‑prefixed styles from visible sheets are present.
-class ExportWorkbookHiddenSheetsDemo
+namespace AsposeCellsHiddenSheetDemo
 {
-    static void Main()
+    // Creates a workbook with one visible and one hidden worksheet, adds a ListObject table to each with different built‑in styles, saves to HTML using HtmlSaveOptions that omit hidden sheets and generate CSS per sheet, then reads the HTML to confirm the hidden sheet name is absent and that TableCssId style blocks exist only for the visible worksheet.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // ---------- Visible worksheet ----------
-            Worksheet visibleSheet = workbook.Worksheets[0];
-            visibleSheet.Name = "VisibleSheet";
-
-            // Add sample data
-            visibleSheet.Cells["A1"].PutValue("Header1");
-            visibleSheet.Cells["B1"].PutValue("Header2");
-            visibleSheet.Cells["A2"].PutValue("V1");
-            visibleSheet.Cells["B2"].PutValue("V2");
-
-            // Create a table (ListObject) and assign a style
-            int visibleTableIdx = visibleSheet.ListObjects.Add(0, 0, 2, 2, true);
-            ListObject visibleTable = visibleSheet.ListObjects[visibleTableIdx];
-            visibleTable.TableStyleName = "TableStyleMedium2";
-
-            // ---------- Hidden worksheet ----------
-            Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
-            hiddenSheet.IsVisible = false; // Hide the sheet
-
-            // Add sample data to hidden sheet
-            hiddenSheet.Cells["A1"].PutValue("Header1");
-            hiddenSheet.Cells["B1"].PutValue("Header2");
-            hiddenSheet.Cells["A2"].PutValue("H1");
-            hiddenSheet.Cells["B2"].PutValue("H2");
-
-            // Create a table on the hidden sheet with a different style
-            int hiddenTableIdx = hiddenSheet.ListObjects.Add(0, 0, 2, 2, true);
-            ListObject hiddenTable = hiddenSheet.ListObjects[hiddenTableIdx];
-            hiddenTable.TableStyleName = "TableStyleMedium9";
-
-            // ---------- HTML save options ----------
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            try
             {
-                ExportHiddenWorksheet = false,          // Do NOT export hidden worksheets
-                ExportWorksheetCSSSeparately = true,    // Generate CSS per worksheet
-                ExcludeUnusedStyles = true              // Remove styles not used in visible sheets
-            };
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Save the workbook as HTML (creates .html and .css files)
-            string htmlFilePath = "WorkbookExport.html";
-            workbook.Save(htmlFilePath, saveOptions);
+                // ---------- Visible worksheet ----------
+                Worksheet visibleSheet = workbook.Worksheets[0];
+                visibleSheet.Name = "VisibleSheet";
 
-            // ---------- Verify generated CSS ----------
-            // When ExportWorksheetCSSSeparately is true, a .css file is created alongside the .html file.
-            string cssFilePath = Path.ChangeExtension(htmlFilePath, ".css");
-            if (File.Exists(cssFilePath))
-            {
-                string cssContent = File.ReadAllText(cssFilePath);
+                // Populate data for a table
+                visibleSheet.Cells["A1"].PutValue("Header1");
+                visibleSheet.Cells["B1"].PutValue("Header2");
+                visibleSheet.Cells["A2"].PutValue("V1");
+                visibleSheet.Cells["B2"].PutValue("V2");
 
-                // TableCssId prefix is used for styles generated for visible sheets.
-                bool containsTableCssId = cssContent.Contains("TableCssId");
-                // The hidden sheet's style should not appear because ExportHiddenWorksheet is false.
-                bool containsHiddenSheetStyle = cssContent.Contains("TableStyleMedium9");
+                // Add a table (ListObject) and apply a built‑in style
+                int visibleTableIndex = visibleSheet.ListObjects.Add(0, 0, 2, 2, true);
+                ListObject visibleTable = visibleSheet.ListObjects[visibleTableIndex];
+                visibleTable.TableStyleType = TableStyleType.TableStyleMedium2; // any style
 
-                Console.WriteLine($"CSS contains TableCssId prefixed styles: {containsTableCssId}");
-                Console.WriteLine($"CSS contains hidden sheet style (should be false): {containsHiddenSheetStyle}");
+                // ---------- Hidden worksheet ----------
+                Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
+                hiddenSheet.IsVisible = false; // hide the sheet
+
+                // Populate data for a table on the hidden sheet
+                hiddenSheet.Cells["A1"].PutValue("Header1");
+                hiddenSheet.Cells["B1"].PutValue("Header2");
+                hiddenSheet.Cells["A2"].PutValue("H1");
+                hiddenSheet.Cells["B2"].PutValue("H2");
+
+                // Add a table and apply a different style
+                int hiddenTableIndex = hiddenSheet.ListObjects.Add(0, 0, 2, 2, true);
+                ListObject hiddenTable = hiddenSheet.ListObjects[hiddenTableIndex];
+                hiddenTable.TableStyleType = TableStyleType.TableStyleMedium4; // another style
+
+                // ---------- Save to HTML without exporting hidden worksheets ----------
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                {
+                    ExportHiddenWorksheet = false,          // do NOT export hidden sheets
+                    ExportActiveWorksheetOnly = false,      // export whole workbook (visible sheets only)
+                    ExportWorksheetCSSSeparately = true,    // generate CSS per sheet (helps inspection)
+                    ExcludeUnusedStyles = false             // keep all generated styles for verification
+                };
+
+                string htmlPath = "WorkbookWithHiddenSheet.html";
+                workbook.Save(htmlPath, saveOptions);
+
+                // ---------- Verify the generated HTML ----------
+                if (File.Exists(htmlPath))
+                {
+                    string htmlContent = File.ReadAllText(htmlPath);
+
+                    // Check that the hidden sheet name does NOT appear in the HTML
+                    bool hiddenSheetFound = htmlContent.Contains("HiddenSheet");
+
+                    // Count occurrences of TableCssId (Aspose.Cells prefixes table CSS with this)
+                    int tableCssIdCount = Regex.Matches(htmlContent, @"TableCssId").Count;
+
+                    Console.WriteLine($"Hidden sheet name present in HTML: {hiddenSheetFound}");
+                    Console.WriteLine($"Number of TableCssId style blocks in HTML: {tableCssIdCount}");
+
+                    // Expected: hiddenSheetFound == false, and TableCssId count corresponds only to visible sheet
+                    if (!hiddenSheetFound && tableCssIdCount > 0)
+                    {
+                        Console.WriteLine("Verification succeeded: only visible sheet generated TableCssId styles.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Verification failed: hidden sheet data or styles were exported.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Error: HTML file '{htmlPath}' was not created.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("CSS file was not generated.");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

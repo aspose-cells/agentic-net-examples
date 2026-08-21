@@ -1,29 +1,26 @@
-// Title: Create PDF/A‑2b compliant PDF from an Aspose.Cells workbook using C# PdfSaveOptions
-// Description: Shows how to build a Workbook, add sample data, set PdfSaveOptions.Compliance to PdfCompliance.PdfA2b, and save the file as a PDF/A‑2b‑compatible document (PdfA2bOutput.pdf) with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells PDF/A-2b | C# PdfSaveOptions | PDF/A-2b export .NET | PdfCompliance.PdfA2b | Excel to PDF/A-2b conversion | archival PDF generation | ISO 19005-2 compliance | Aspose.Cells PDF export | C# workbook to PDF/A-2b
-// Common Searches: Aspose.Cells export to PDF/A-2b C# | PdfSaveOptions compliance PDF/A-2b example | How to set PDF/A-2b in Aspose.Cells | C# generate archival PDF from Excel | PDF/A-2b conversion using Aspose.Cells .NET
-// Developer Intent: Generate a PDF that meets the PDF/A‑2b archival standard directly from an Aspose.Cells workbook in a C# application.
-// Use Cases: Long‑term preservation of financial or regulatory reports as PDF/A‑2b files. | Ensuring exported spreadsheets comply with document‑management policies that require ISO‑19005‑2. | Creating PDF/A‑2b documents for electronic filing systems that mandate archival‑grade PDFs.
-// AI Prompts: Provide C# code that saves an Aspose.Cells workbook as PDF/A‑2b with custom page size and orientation. | Explain how to programmatically verify that the generated PDF conforms to PDF/A‑2b standards using Aspose.PDF or third‑party validators. | Show a .NET script to batch convert a folder of Excel files to PDF/A‑2b using Aspose.Cells.
+// Title: Export Excel to PDF/A‑2b with Aspose.Cells C# PdfSaveOptions
+// Description: Creates a workbook, configures PdfSaveOptions.Compliance to PdfA2b, and saves the result as a PDF/A‑2b compliant document.
+// Keywords: Aspose.Cells PDF/A‑2b export | C# PdfSaveOptions compliance | Excel to PDF/A‑2b conversion | PdfA2b Aspose.Cells example | archival PDF generation C#
+// Common Searches: Aspose.Cells export Excel to PDF/A‑2b C# | set PDF compliance level PdfA2b Aspose | C# code for PDF/A‑2b compliant workbook | how to create PDF/A‑2b file with Aspose.Cells | PdfSaveOptions compliance property usage
+// Developer Intent: Generate a PDF/A‑2b archival‑ready file from an Excel workbook using Aspose.Cells in C#.
+// Use Cases: Long‑term storage of financial statements | Regulatory‑compliant invoice archiving | Batch conversion of reports for legal submission
+// AI Prompts: Show a C# snippet that saves an Aspose.Cells workbook as PDF/A‑2b and adds custom document metadata. | Explain how to embed fonts and set PDF/A‑2b conformance options with PdfSaveOptions. | Create code that converts a workbook to PDF/A‑2b and uploads the output to Azure Blob Storage.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Shows how to build a Workbook, add sample data, set PdfSaveOptions.Compliance to PdfCompliance.PdfA2b, and save the file as a PDF/A‑2b‑compatible document (PdfA2bOutput.pdf) with Aspose.Cells for .NET.
-class PdfA2bSaveDemo
+// Creates a workbook, configures PdfSaveOptions.Compliance to PdfA2b, and saves the result as a PDF/A‑2b compliant document.
+class PdfA2bSaveExample
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and add some sample data
         Workbook workbook = new Workbook();
-
-        // Add some sample data to the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("PDF/A-2b compliance demo");
-        sheet.Cells["A2"].PutValue(DateTime.Now);
+        sheet.Cells["A1"].PutValue("PDF/A-2b compliance example");
 
-        // Create PDF save options and set the compliance level to PDF/A-2b
+        // Initialize PDF save options and set the compliance level to PDF/A-2b
         PdfSaveOptions saveOptions = new PdfSaveOptions();
         saveOptions.Compliance = PdfCompliance.PdfA2b;
 

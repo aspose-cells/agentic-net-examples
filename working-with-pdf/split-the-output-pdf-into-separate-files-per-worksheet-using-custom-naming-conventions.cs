@@ -1,50 +1,43 @@
-// Title: C# – Split Excel Workbook into Separate PDFs per Worksheet with Custom Naming (Aspose.Cells)
-// Description: A C# example that loads or creates an Excel workbook, loops through its worksheets, and saves each one as an individual PDF using Aspose.Cells. PdfSaveOptions.SheetSet isolates the current sheet, OnePagePerSheet forces a single‑page PDF, and a dynamic filename such as "Sheet_1_Sheet1.pdf" is generated for every output file.
-// Keywords: Aspose.Cells | C# | .NET | PdfSaveOptions | SheetSet | OnePagePerSheet | export worksheet to PDF | split workbook PDF | custom PDF filename | Excel to PDF per sheet | programmatic PDF generation
-// Common Searches: export each Excel sheet to separate PDF Aspose.Cells | Aspose.Cells PDFSaveOptions SheetSet example | C# split workbook into multiple PDFs | custom file name for each PDF Aspose.Cells | OnePagePerSheet option .NET
-// Developer Intent: Generate an individual PDF file for every worksheet in a workbook, applying a custom naming convention.
-// Use Cases: Distribute department‑specific sheets of a financial report as separate PDFs. | Automate per‑sheet PDF creation for client‑tailored Excel workbooks. | Produce single‑page PDFs for each worksheet to embed in web portals or document management systems.
-// AI Prompts: Show how to add a timestamp to the PDF file name in this Aspose.Cells example. | Explain how to combine several worksheets into one PDF using PdfSaveOptions.SheetSet. | Provide code to save each worksheet as a password‑protected PDF with Aspose.Cells.
+// Title: C# – Split an Excel workbook into individual PDFs per worksheet with custom names using Aspose.Cells
+// Description: Loads an Excel file, loops through its worksheets, and uses Aspose.Cells PdfSaveOptions.SheetSet to render each sheet as a separate PDF. The output files are automatically named after the corresponding worksheet, producing one PDF per sheet.
+// Keywords: Aspose.Cells | C# | split workbook PDF | export worksheet to PDF | PdfSaveOptions SheetSet | custom PDF filename | Excel to PDF per sheet | batch PDF conversion | worksheet name file | .NET PDF generation
+// Common Searches: export each Excel sheet to a separate PDF C# | Aspose.Cells split workbook into PDFs | how to name PDF files by worksheet name Aspose | PdfSaveOptions SheetSet example | C# generate PDF per worksheet | batch convert Excel sheets to PDFs
+// Developer Intent: Produce a distinct PDF for every worksheet in an Excel workbook, using the sheet name as the PDF file name, with Aspose.Cells for .NET.
+// Use Cases: Distribute departmental reports where each department's data resides on its own worksheet. | Automate creation of individual invoice PDFs when each invoice is stored on a separate sheet. | Share chart or dashboard sheets as standalone PDFs without exposing the full workbook. | Generate PDF packages for regulatory submissions, separating data sections by worksheet.
+// AI Prompts: Write C# code with Aspose.Cells that converts each worksheet of an Excel file into a separate PDF named after the sheet. | Explain how PdfSaveOptions.SheetSet restricts PDF rendering to a single worksheet and how to apply it in a loop. | Provide a C# snippet that sanitizes worksheet names to create valid file names before saving PDFs. | Suggest performance optimizations for converting large workbooks with many sheets to PDFs using Aspose.Cells. | Create a PowerShell script that calls the compiled C# program to process multiple workbooks in a folder.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfSplitDemo
+namespace AsposeCellsPdfSplitExample
 {
-    // A C# example that loads or creates an Excel workbook, loops through its worksheets, and saves each one as an individual PDF using Aspose.Cells. PdfSaveOptions.SheetSet isolates the current sheet, OnePagePerSheet forces a single‑page PDF, and a dynamic filename such as "Sheet_1_Sheet1.pdf" is generated for every output file.
+    // Loads an Excel file, loops through its worksheets, and uses Aspose.Cells PdfSaveOptions.SheetSet to render each sheet as a separate PDF. The output files are automatically named after the corresponding worksheet, producing one PDF per sheet.
     class Program
     {
         static void Main()
         {
-            // Load or create a workbook
-            Workbook workbook = new Workbook(); // create a new workbook
+            // Load the source workbook (replace with your actual file path)
+            string sourceFile = "input.xlsx";
+            Workbook workbook = new Workbook(sourceFile);
 
-            // Add sample worksheets with data
-            for (int i = 0; i < 3; i++)
-            {
-                Worksheet sheet = i == 0 ? workbook.Worksheets[0] : workbook.Worksheets.Add($"Sheet{i + 1}");
-                sheet.Cells["A1"].PutValue($"Data for {sheet.Name}");
-                sheet.Cells["A2"].PutValue(DateTime.Now);
-            }
-
-            // Iterate through each worksheet and save it as an individual PDF
+            // Iterate through each worksheet in the workbook
             for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
-                // Prepare PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                Worksheet sheet = workbook.Worksheets[i];
 
-                // Configure the SheetSet to include only the current worksheet (zero‑based index)
-                pdfOptions.SheetSet = new SheetSet(new int[] { i });
+                // Create PDF save options and limit rendering to the current sheet only
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    // SheetSet accepts an array of zero‑based sheet indexes
+                    SheetSet = new SheetSet(new int[] { i })
+                };
 
-                // Optional: ensure each sheet is rendered on a single page
-                pdfOptions.OnePagePerSheet = true;
+                // Build a custom file name using the worksheet name
+                string outputFile = $"{sheet.Name}.pdf";
 
-                // Build a custom file name: "Sheet_{index}_{name}.pdf"
-                string fileName = $"Sheet_{i + 1}_{workbook.Worksheets[i].Name}.pdf";
-
-                // Save the workbook as PDF using the configured options
-                workbook.Save(fileName, pdfOptions);
+                // Save the single‑sheet PDF
+                workbook.Save(outputFile, pdfOptions);
             }
         }
     }

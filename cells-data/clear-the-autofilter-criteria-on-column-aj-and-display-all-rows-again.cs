@@ -1,31 +1,69 @@
+// Title: Clear AutoFilter on column AJ and show all rows with Aspose.Cells for .NET
+// Description: Loads an Excel file, ensures the AutoFilter range includes column AJ, calls worksheet.AutoFilter.ShowAll() and Refresh() to remove filter criteria, then saves the workbook with every row visible.
+// Keywords: Aspose.Cells | .NET | Clear AutoFilter | ShowAll | AutoFilter.Refresh | column AJ | remove Excel filter | display all rows | reset worksheet filter | Excel automation
+// Common Searches: Aspose.Cells clear filter column AJ | How to show all rows after AutoFilter in C# | Reset Excel AutoFilter programmatically | Aspose.Cells ShowAll example | Remove specific column filter with Aspose.Cells
+// Developer Intent: Remove any AutoFilter criteria applied to column AJ and make every worksheet row visible.
+// Use Cases: Prepare a report workbook for distribution by clearing hidden rows caused by filters. | Ensure data export includes the full dataset after temporary filtering. | Programmatically reset worksheet filters before performing bulk calculations or chart generation.
+// AI Prompts: Generate C# code using Aspose.Cells to clear the AutoFilter on column AJ while keeping other filters intact. | Explain how worksheet.AutoFilter.ShowAll() and Refresh() work together when resetting filters. | Show how to verify or set an AutoFilter range before calling ShowAll in Aspose.Cells.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 
-class ClearAutoFilterOnColumnAJ
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads an Excel file, ensures the AutoFilter range includes column AJ, calls worksheet.AutoFilter.ShowAll() and Refresh() to remove filter criteria, then saves the workbook with every row visible.
+    public class ClearAutoFilterOnColumnAJ
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        public static void Run()
+        {
+            string inputPath = "InputWorkbook.xlsx";
+            string outputPath = "OutputWorkbook.xlsx";
 
-        // Access the first worksheet (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
+            try
+            {
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        // Determine the last row that contains data
-        int lastDataRow = worksheet.Cells.MaxDataRow; // zero‑based index
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        // Ensure the AutoFilter range includes column AJ (column index 35)
-        // Build the range string like "A1:AJ{lastRow+1}"
-        string autoFilterRange = $"A1:AJ{lastDataRow + 1}";
-        worksheet.AutoFilter.Range = autoFilterRange;
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Clear any filter criteria on column AJ and display all rows again
-        worksheet.AutoFilter.ShowAll();
+                // Ensure an AutoFilter range is defined (optional)
+                if (string.IsNullOrEmpty(worksheet.AutoFilter?.Range))
+                {
+                    worksheet.AutoFilter.Range = "A1:AJ100";
+                }
 
-        // Refresh the filter to apply the change immediately
-        worksheet.AutoFilter.Refresh();
+                // Clear all filter criteria (including column AJ)
+                worksheet.AutoFilter.ShowAll();
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+                // Refresh to apply changes (optional after ShowAll)
+                worksheet.AutoFilter.Refresh();
+
+                // Save the modified workbook
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ClearAutoFilterOnColumnAJ.Run();
+        }
     }
 }

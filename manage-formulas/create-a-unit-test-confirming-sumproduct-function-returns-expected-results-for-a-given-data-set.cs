@@ -1,10 +1,10 @@
-// Title: C# Unit Test for Aspose.Cells SUMPRODUCT Formula Verification
-// Description: Creates a workbook, populates A1:A3 with 1‑3 and B1:B3 with 4‑6, applies =SUMPRODUCT(A1:A3,B1:B3) to C1, calculates formulas, asserts the result equals 32, and optionally saves the file.
-// Keywords: Aspose.Cells | C# | SUMPRODUCT unit test | formula calculation | Excel automation testing | assert SUMPRODUCT result | Aspose.Cells API | .NET spreadsheet testing
-// Common Searches: Aspose.Cells unit test SUMPRODUCT | C# verify Excel SUMPRODUCT with Aspose | how to assert formula result in Aspose.Cells | NUnit test for SUMPRODUCT using Aspose.Cells | automated testing of Excel formulas .NET
-// Developer Intent: Write an automated test that confirms the SUMPRODUCT function in Aspose.Cells returns the expected value for a predefined data set.
-// Use Cases: Continuous‑integration validation of financial models that rely on SUMPRODUCT. | Regression testing after upgrading Aspose.Cells to ensure formula integrity. | Automated quality checks for Excel templates before deployment.
-// AI Prompts: Generate an NUnit test that creates a workbook, fills A1:A3 and B1:B3, sets =SUMPRODUCT(A1:A3,B1:B3), calculates formulas, and asserts the result is 32 using Aspose.Cells. | Provide a MSTest example that verifies the SUMPRODUCT calculation, cleans up the temporary file, and logs the computed value. | Write a xUnit test that checks the SUMPRODUCT output and demonstrates how to mock workbook saving to avoid file I/O.
+// Title: C# Unit Test for SUMPRODUCT Formula Using Aspose.Cells
+// Description: Demonstrates how to create a workbook with Aspose.Cells, populate ranges A1:A3 (1‑3) and B1:B3 (4‑6), apply the =SUMPRODUCT(A1:A3,B1:B3) formula to C1, calculate all formulas, assert that the result equals 32, and save the file as SumProductFunctionTest.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | SUMPRODUCT unit test | formula calculation | spreadsheet testing | Excel automation | assert formula result
+// Common Searches: Aspose.Cells unit test SUMPRODUCT | C# verify SUMPRODUCT calculation | how to test Excel formulas with Aspose.Cells | assert SUMPRODUCT result in .NET | automated spreadsheet formula testing
+// Developer Intent: Write an automated test that confirms the SUMPRODUCT function returns the expected value when evaluated by Aspose.Cells.
+// Use Cases: Validate correctness of SUMPRODUCT after workbook calculation. | Include formula verification in continuous‑integration pipelines for spreadsheet‑related projects. | Detect regressions in custom Excel processing logic that relies on array formulas.
+// AI Prompts: Generate an MSTest method in C# that builds a workbook, inserts =SUMPRODUCT(A1:A3,B1:B3), runs CalculateFormula, and asserts the result is 32. | Create an xUnit test using Aspose.Cells to populate two ranges, apply the SUMPRODUCT formula, calculate, and verify the output equals 32 before cleaning up the file. | Provide a NUnit example that sets up a workbook, adds the SUMPRODUCT formula, executes calculation, checks the value, and handles any exceptions.
 
 using System;
 using System.IO;
@@ -12,7 +12,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsTests
 {
-    // Creates a workbook, populates A1:A3 with 1‑3 and B1:B3 with 4‑6, applies =SUMPRODUCT(A1:A3,B1:B3) to C1, calculates formulas, asserts the result equals 32, and optionally saves the file.
+    // Demonstrates how to create a workbook with Aspose.Cells, populate ranges A1:A3 (1‑3) and B1:B3 (4‑6), apply the =SUMPRODUCT(A1:A3,B1:B3) formula to C1, calculate all formulas, assert that the result equals 32, and save the file as SumProductFunctionTest.xlsx.
     public class SumProductFunctionDemo
     {
         public static void Main()
@@ -34,8 +34,7 @@ namespace AsposeCellsTests
                 cells["B2"].PutValue(5);
                 cells["B3"].PutValue(6);
 
-                // Set SUMPRODUCT formula in C1
-                // Expected result: 1*4 + 2*5 + 3*6 = 32
+                // Set SUMPRODUCT formula in C1 (expected result: 32)
                 cells["C1"].Formula = "=SUMPRODUCT(A1:A3,B1:B3)";
 
                 // Calculate all formulas in the workbook
@@ -47,23 +46,23 @@ namespace AsposeCellsTests
                 Console.WriteLine($"SUMPRODUCT result: {numericResult}");
 
                 // Verify the result is 32
-                if (Math.Abs(numericResult - 32.0) < 1e-9)
+                if (Math.Abs(numericResult - 32.0) > 0.0001)
                 {
-                    Console.WriteLine("Result is as expected.");
+                    Console.WriteLine("Verification failed: result is not 32.");
                 }
                 else
                 {
-                    Console.WriteLine($"Unexpected result: {numericResult}");
+                    Console.WriteLine("Verification succeeded: result is 32.");
                 }
 
-                // Save the workbook (optional)
-                string fileName = "SumProductFunctionDemo.xlsx";
+                // Save the workbook
+                string fileName = "SumProductFunctionTest.xlsx";
                 workbook.Save(fileName);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(fileName)}");
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(fileName)}");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

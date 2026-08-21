@@ -1,22 +1,22 @@
-// Title: C# – Add a rectangle shape with custom pixel dimensions and anchor it to a cell range using Aspose.Cells
-// Description: Creates a new workbook, adds a rectangle shape sized 200 px × 100 px, anchors it to the B2:D5 range with MoveToRange, and saves the file as AnchoredShape.xlsx.
-// Keywords: Aspose.Cells AddShape | C# shape width height pixels | MoveToRange anchor shape | Aspose.Cells rectangle shape example | Excel shape positioning .NET | custom sized shape Aspose.Cells
-// Common Searches: Aspose.Cells add rectangle shape with pixel size | How to anchor a shape to a cell range in C# | MoveToRange method usage Aspose.Cells | Set shape width and height in pixels Aspose.Cells | C# code to place a shape over B2:D5
-// Developer Intent: Insert a 200 px × 100 px rectangle and bind it to the B2:D5 range in a new Excel workbook.
-// Use Cases: Add a banner that stays aligned with a header block. | Place a logo with exact pixel dimensions over a designated cell area. | Overlay a colored shape on a table so it moves and resizes with the data range.
-// AI Prompts: Generate C# code to add an ellipse of 150 px width and 80 px height anchored to cells C3:E6 with Aspose.Cells. | Show how to modify the fill color and line style of a rectangle after anchoring it using MoveToRange. | Create a reusable method that accepts width, height, and a cell range, then adds a shape with those parameters to a worksheet.
+// Title: Add a rectangle shape with custom size and anchor it to a cell range using Aspose.Cells for .NET
+// Description: Creates a new workbook, inserts a rectangle shape with a 200 × 120 pixel size, and anchors it to the cell range B3:D5 (rows 2‑4, columns 1‑3) using the MoveToRange method before saving the file as XLSX.
+// Keywords: Aspose.Cells add rectangle shape | custom shape size Aspose.Cells .NET | MoveToRange anchor shape | shape dimensions pixels Aspose.Cells | C# Aspose.Cells shape example | anchor shape to cell range
+// Common Searches: Aspose.Cells add rectangle with specific width and height | How to anchor a shape to a range of cells in Aspose.Cells | MoveToRange method usage for shapes Aspose.Cells | Set shape size in pixels using Aspose.Cells C# | Aspose.Cells shape positioning example
+// Developer Intent: Insert a rectangle of defined pixel dimensions and attach it to a chosen cell range in an Excel workbook programmatically.
+// Use Cases: Overlay a colored box on a summary section (B3:D5) in an automated report. | Place a company logo sized 200 × 120 px and lock it to cells B2:D4 in a template. | Create a placeholder shape for user input that moves with cells C5:E7 when the sheet is edited.
+// AI Prompts: Generate C# code with Aspose.Cells that adds an ellipse of 150 × 100 pixels and anchors it to cells C2:E4. | Explain how MoveToRange translates row/column indices and pixel offsets into shape positioning. | Write a reusable method that receives width, height, and a cell range, then returns a rectangle shape anchored to that range using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeExample
+namespace AsposeCellsExample
 {
-    // Creates a new workbook, adds a rectangle shape sized 200 px × 100 px, anchors it to the B2:D5 range with MoveToRange, and saves the file as AnchoredShape.xlsx.
-    public class AddAnchoredShape
+    // Creates a new workbook, inserts a rectangle shape with a 200 × 120 pixel size, and anchors it to the cell range B3:D5 (rows 2‑4, columns 1‑3) using the MoveToRange method before saving the file as XLSX.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             try
             {
@@ -29,26 +29,32 @@ namespace AsposeCellsShapeExample
                 // Access the shape collection of the worksheet
                 ShapeCollection shapes = worksheet.Shapes;
 
-                // Add a rectangle shape with custom width (200 pixels) and height (100 pixels)
-                // Initial position offsets are set to 0; they will be adjusted by MoveToRange
-                Shape shape = shapes.AddShape(
-                    MsoDrawingType.Rectangle, // shape type
-                    0,   // topRow (temporary)
-                    0,   // top offset in pixels
-                    0,   // leftColumn (temporary)
-                    0,   // left offset in pixels
-                    100, // height in pixels
-                    200  // width in pixels
-                );
+                // Define custom dimensions (in pixels)
+                int customHeight = 120; // height of the shape
+                int customWidth = 200;  // width of the shape
 
-                // Anchor the shape to a specific cell range, e.g., B2:D5
-                // Rows and columns are zero‑based indexes: B2 -> row 1, column 1; D5 -> row 4, column 3
-                shape.MoveToRange(1, 1, 4, 3);
+                // Add a rectangle shape with temporary position (0,0) and the custom size
+                RectangleShape rectangle = shapes.AddRectangle(
+                    topRow: 0,
+                    top: 0,
+                    leftColumn: 0,
+                    left: 0,
+                    height: customHeight,
+                    width: customWidth);
 
-                // Define output file path
-                string outputPath = "AnchoredShape.xlsx";
+                // Define the cell range to which the shape should be anchored
+                int topRow = 2;    // upper‑left row index (zero‑based)
+                int leftCol = 1;   // upper‑left column index (zero‑based)
+                int bottomRow = 4; // lower‑right row index
+                int rightCol = 3;  // lower‑right column index
 
-                // Save the workbook with the added shape
+                // Anchor the shape to the specified cell range
+                rectangle.MoveToRange(topRow, leftCol, bottomRow, rightCol);
+
+                // Output file path
+                string outputPath = "ShapeAnchoredToRange.xlsx";
+
+                // Save the workbook
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
@@ -56,15 +62,6 @@ namespace AsposeCellsShapeExample
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            AddAnchoredShape.Run();
         }
     }
 }

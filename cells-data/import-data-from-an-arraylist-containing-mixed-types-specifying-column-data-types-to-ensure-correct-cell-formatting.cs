@@ -1,22 +1,21 @@
-// Title: Import a Mixed‑Type ArrayList into Excel with Aspose.Cells (C#)
-// Description: Creates a Workbook, converts an ArrayList that holds a string, int, double, DateTime and bool into an object array, and uses Cells.ImportObjectArray to write the values horizontally starting at A1 while preserving each data type. The workbook is then saved as an XLSX file.
-// Keywords: Aspose.Cells | ImportObjectArray | ArrayList to Excel | mixed data types | C# Excel export | preserve data types | DateTime cell formatting | boolean Excel value | numeric formatting | Excel worksheet import
-// Common Searches: Aspose.Cells import ArrayList mixed types C# | ImportObjectArray preserve DateTime and bool | How to export heterogeneous collection to Excel .NET | C# write string, int, double, DateTime to Excel in one row
-// Developer Intent: Write a heterogeneous ArrayList to an Excel worksheet while keeping each element’s native type.
-// Use Cases: Export a product catalog row (name, quantity, price, expiry date, in‑stock flag) in a single call. | Generate daily status reports that include dates and boolean flags directly from a collection. | Populate a template row with mixed‑type test data for QA or demo purposes.
-// AI Prompts: Show C# code that converts a List<object> containing strings, numbers, dates and booleans into an object array and imports it into a specific Excel range using Aspose.Cells ImportObjectArray, then applies appropriate number and date formats. | Explain how to use Aspose.Cells ImportObjectArray to write mixed‑type data to a worksheet while preserving each type, and how to save the workbook as XLSX.
+// Title: C# – Import Mixed‑Type ArrayList into Aspose.Cells with Column Number & Date Formatting
+// Description: Shows how to create a workbook, import a header and a data row from an ArrayList that holds strings, integers, doubles and DateTime values, then apply column‑specific styles—integer format for Age, two‑decimal format for Salary, and custom yyyy‑MM‑dd format for HireDate—before saving the file.
+// Keywords: Aspose.Cells | ImportArrayList | C# | mixed data types | column formatting | integer number format | double format | custom date format | Excel export | ArrayList to worksheet
+// Common Searches: Aspose.Cells import ArrayList C# | set column number format Aspose.Cells | apply custom date format to Excel column C# | preserve data types when importing to Aspose.Cells | format Age column as integer Aspose.Cells
+// Developer Intent: Load heterogeneous data from an ArrayList into an Excel sheet and enforce appropriate cell formatting for each column using Aspose.Cells.
+// Use Cases: Create a report where headers and rows are generated from collections containing mixed types. | Display numeric columns with specific precision—no decimals for integers, two decimals for doubles. | Show dates uniformly with a custom yyyy‑MM‑dd pattern. | Build templates that require exact column styling after bulk data import.
+// AI Prompts: Write C# code that uses Aspose.Cells to import an ArrayList with string, int, double, and DateTime values and set column styles for integer, double (two decimals), and custom date format. | Explain how ImportArrayList determines cell types and how column styles can override the default formatting in Aspose.Cells. | Extend the example to import multiple rows, auto‑fit all columns, and protect the worksheet before saving.
 
 using System;
 using System.Collections;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsArrayListImportDemo
 {
-    // Creates a Workbook, converts an ArrayList that holds a string, int, double, DateTime and bool into an object array, and uses Cells.ImportObjectArray to write the values horizontally starting at A1 while preserving each data type. The workbook is then saved as an XLSX file.
-    public class ImportArrayListWithMixedTypes
+    // Shows how to create a workbook, import a header and a data row from an ArrayList that holds strings, integers, doubles and DateTime values, then apply column‑specific styles—integer format for Age, two‑decimal format for Salary, and custom yyyy‑MM‑dd format for HireDate—before saving the file.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
@@ -24,42 +23,63 @@ namespace AsposeCellsExamples
                 Workbook workbook = new Workbook();
                 Cells cells = workbook.Worksheets[0].Cells;
 
-                // Prepare an ArrayList containing mixed data types
-                ArrayList mixedData = new ArrayList
+                // -----------------------------------------------------------------
+                // 1. Prepare an ArrayList with mixed data types (header row)
+                // -----------------------------------------------------------------
+                ArrayList header = new ArrayList
                 {
-                    "Product",                     // string
-                    150,                           // integer
-                    99.99,                         // double
-                    new DateTime(2023, 12, 31),    // DateTime
-                    true                           // boolean
+                    "Name",      // string
+                    "Age",       // integer
+                    "Salary",    // double
+                    "HireDate"   // DateTime
                 };
 
-                // Convert the ArrayList to an object array – ImportObjectArray preserves each value's type
-                object[] dataArray = (object[])mixedData.ToArray(typeof(object));
+                // Import the header horizontally starting at cell A1 (row 0, column 0)
+                cells.ImportArrayList(header, 0, 0, false);
 
-                // Import the data horizontally starting at cell A1 (row 0, column 0)
-                cells.ImportObjectArray(dataArray, 0, 0, false);
+                // -----------------------------------------------------------------
+                // 2. Prepare a data row with matching mixed types
+                // -----------------------------------------------------------------
+                ArrayList row = new ArrayList
+                {
+                    "John Doe",                     // string
+                    30,                             // integer
+                    55000.75,                       // double
+                    new DateTime(2022, 5, 1)        // DateTime
+                };
 
-                // Define output file path
-                string outputPath = "ImportArrayListMixedTypes.xlsx";
+                // Import the data row horizontally starting at cell A2 (row 1, column 0)
+                cells.ImportArrayList(row, 1, 0, false);
 
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                // -----------------------------------------------------------------
+                // 3. Define column-specific formatting to ensure correct cell types
+                // -----------------------------------------------------------------
+                // Column 0 (Name) – default string formatting (no special style needed)
+
+                // Column 1 (Age) – integer number format
+                Style intStyle = workbook.CreateStyle();
+                intStyle.Number = 0; // No decimal places
+                cells.Columns[1].SetStyle(intStyle);
+
+                // Column 2 (Salary) – double number format with two decimal places
+                Style doubleStyle = workbook.CreateStyle();
+                doubleStyle.Number = 2; // Two decimal places
+                cells.Columns[2].SetStyle(doubleStyle);
+
+                // Column 3 (HireDate) – custom date format
+                Style dateStyle = workbook.CreateStyle();
+                dateStyle.Custom = "yyyy-mm-dd";
+                cells.Columns[3].SetStyle(dateStyle);
+
+                // -----------------------------------------------------------------
+                // 4. Save the workbook
+                // -----------------------------------------------------------------
+                workbook.Save("ArrayListImportWithFormatting.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ImportArrayListWithMixedTypes.Run();
         }
     }
 }

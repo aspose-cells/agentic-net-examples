@@ -1,22 +1,22 @@
-// Title: C# – Verify Worksheet PageSetup.PrinterSettings Is Null After Clearing with Aspose.Cells
-// Description: This example creates a Workbook, accesses the first Worksheet's PageSetup, assigns a dummy byte array to the PrinterSettings property, prints a confirmation, sets the property to null, checks that it is null, outputs the result, and saves the file. It demonstrates how to validate that printer settings have been removed using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | Worksheet PageSetup | PrinterSettings null | clear printer settings | reset page setup | unit test printer settings
-// Common Searches: Aspose.Cells how to reset printer settings | PageSetup.PrinterSettings null check C# | remove worksheet printer configuration Aspose | verify printer settings cleared Aspose.Cells
-// Developer Intent: Ensure that the PageSetup.PrinterSettings property returns null after it has been cleared.
-// Use Cases: Unit‑test that printer settings are removed before saving a workbook. | Programmatically reset a worksheet's printer configuration to default. | Prevent unwanted printer data from being embedded in exported Excel files.
-// AI Prompts: Generate C# code using Aspose.Cells that clears a worksheet's printer settings and asserts the property is null. | Explain step‑by‑step how to verify PageSetup.PrinterSettings is null after assigning null in a .NET application. | Provide a sample that removes printer settings from a worksheet, logs the verification result, and saves the workbook.
+// Title: Verify PageSetup.PrinterSettings becomes null after clearing in Aspose.Cells for .NET
+// Description: This C# example creates a workbook, accesses the first worksheet's PageSetup, assigns a dummy byte array to the PrinterSettings property, confirms the assignment, clears the property by setting it to null, checks that it is now null, and saves the file.
+// Keywords: Aspose.Cells | .NET | C# | PageSetup.PrinterSettings | null check | clear printer settings | worksheet example | sample code | GitHub | API usage
+// Common Searches: Aspose.Cells check if PrinterSettings is null | How to clear PageSetup.PrinterSettings in .NET | Verify removal of printer settings Aspose.Cells | C# example for resetting worksheet printer settings | Aspose.Cells null PrinterSettings after assignment
+// Developer Intent: Confirm that assigning null to PageSetup.PrinterSettings removes the printer configuration and the property returns null.
+// Use Cases: Ensure no printer configuration is persisted when exporting a workbook. | Create unit tests that validate printer settings are cleared before saving. | Conditionally apply default printer settings only when the property is null.
+// AI Prompts: Write an NUnit test in C# that asserts PageSetup.PrinterSettings is null after setting it to null using Aspose.Cells. | Provide code to clear PrinterSettings on every worksheet in a workbook and verify the property is null for each sheet. | Explain how to programmatically reset printer settings in an Aspose.Cells workbook and confirm they are not saved.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsPrinterSettingsDemo
+namespace AsposeCellsPrinterSettingsCheck
 {
-    // This example creates a Workbook, accesses the first Worksheet's PageSetup, assigns a dummy byte array to the PrinterSettings property, prints a confirmation, sets the property to null, checks that it is null, outputs the result, and saves the file. It demonstrates how to validate that printer settings have been removed using Aspose.Cells for .NET.
+    // This C# example creates a workbook, accesses the first worksheet's PageSetup, assigns a dummy byte array to the PrinterSettings property, confirms the assignment, clears the property by setting it to null, checks that it is now null, and saves the file.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook (creation rule)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
@@ -25,22 +25,22 @@ namespace AsposeCellsPrinterSettingsDemo
             // Access the PageSetup object
             PageSetup pageSetup = worksheet.PageSetup;
 
-            // Set printer settings (example byte array)
-            byte[] initialSettings = new byte[5]; // dummy data
-            pageSetup.PrinterSettings = initialSettings;
+            // Set some dummy printer settings (byte array)
+            byte[] dummySettings = new byte[5];
+            pageSetup.PrinterSettings = dummySettings;
 
-            // Verify that printer settings are initially set
-            Console.WriteLine("PrinterSettings initially set: " + (pageSetup.PrinterSettings != null));
+            // Verify that the printer settings are set (should be non‑null)
+            Console.WriteLine("PrinterSettings set? " + (pageSetup.PrinterSettings != null));
 
-            // Remove printer settings by assigning null
+            // Remove the printer settings by assigning null
             pageSetup.PrinterSettings = null;
 
-            // Verify that PrinterSettings is now null
+            // Verify that the printer settings are now null
             bool isNull = pageSetup.PrinterSettings == null;
-            Console.WriteLine("PrinterSettings after removal is null: " + isNull);
+            Console.WriteLine("PrinterSettings after removal is null? " + isNull);
 
-            // Save the workbook (optional, just to demonstrate lifecycle usage)
-            workbook.Save("PrinterSettingsDemo.xlsx");
+            // Save the workbook (save rule)
+            workbook.Save("PrinterSettingsCheck.xlsx");
         }
     }
 }

@@ -1,10 +1,10 @@
-// Title: Validate and Truncate Label Shape Text (32,767 chars) with Aspose.Cells for .NET
-// Description: Creates a workbook, adds a label shape, checks a string against Excel's 32,767‑character limit for shape text, truncates if necessary, optionally disables restriction checking, and saves the file.
-// Keywords: Aspose.Cells label text limit | Excel shape text 32767 characters | truncate label text Aspose | validate shape text length .NET | CheckExcelRestriction Aspose.Cells
-// Common Searches: Aspose.Cells label shape text length limit | how to truncate long text for Excel shape using Aspose | disable Excel restriction checking Aspose.Cells | maximum characters for a shape in Excel .NET
-// Developer Intent: Ensure label shape text does not exceed Excel's 32,767‑character limit before assignment.
-// Use Cases: Validate user‑generated strings before adding them to a label shape to avoid runtime errors. | Automatically shorten oversized text when generating dynamic reports with Aspose.Cells. | Turn off Excel restriction checks when storing longer text for later processing.
-// AI Prompts: Write C# code with Aspose.Cells that checks a string's length against the 32,667‑character shape limit and truncates it if needed. | Show how to disable Excel restriction checking in Aspose.Cells while still saving the workbook. | Provide an example that validates and truncates text for multiple label shapes in a single worksheet.
+// Title: Validate and Truncate Label Text Length for Excel Shapes with Aspose.Cells (.NET)
+// Description: Shows how to create a workbook, add a label shape, verify the text against Excel's 32,767‑character limit, truncate or raise an error if exceeded, assign the safe text, and save the file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | .NET | label shape | text length limit | truncate label text | Excel maximum characters | shape text validation | workbook | Excel shape label
+// Common Searches: Aspose.Cells limit label text length | truncate Excel shape label Aspose | maximum characters for Excel shape label | validate label text before saving Aspose.Cells | C# check label text length Aspose.Cells
+// Developer Intent: Check and enforce Excel's 32,767‑character limit on shape label text before assigning it in a .NET application.
+// Use Cases: Prevent runtime exceptions when generating reports with overly long annotations. | Automatically shorten user‑provided comments in dashboards or chart labels. | Provide a reusable validation method for any shape (label, textbox) in Aspose.Cells. | Enforce corporate text‑length policies during data export processes.
+// AI Prompts: Generate C# code using Aspose.Cells that adds a label shape and trims its text to 32767 characters. | Show how to throw an ArgumentException when label text exceeds Excel's limit in Aspose.Cells. | Create a helper method ValidateLabelText(string text) that returns a safe string for any shape. | Write a unit test that verifies label text truncation logic with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
@@ -12,48 +12,48 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsLabelLengthValidation
 {
-    // Creates a workbook, adds a label shape, checks a string against Excel's 32,767‑character limit for shape text, truncates if necessary, optionally disables restriction checking, and saves the file.
+    // Shows how to create a workbook, add a label shape, verify the text against Excel's 32,767‑character limit, truncate or raise an error if exceeded, assign the safe text, and save the file using Aspose.Cells for .NET.
     class Program
     {
-        // Excel's maximum characters for a shape's text (including labels) is 32,767.
-        const int MaxLabelTextLength = 32767;
-
         static void Main()
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook (creation rule)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Add a label shape to the worksheet
-            // Parameters: upper left row, upper left column, top, left, height, width (in pixels)
-            Label labelShape = sheet.Shapes.AddLabel(2, 2, 50, 50, 200, 100);
+            // Parameters: upper left row, upper left column, top offset, left offset, height, width
+            int upperLeftRow = 2;
+            int upperLeftColumn = 2;
+            int top = 10;
+            int left = 10;
+            int height = 100;
+            int width = 300;
+            Label label = sheet.Shapes.AddLabel(upperLeftRow, upperLeftColumn, top, left, height, width);
 
-            // Example of a long string that exceeds Excel's limit
-            string longText = new string('A', 40000); // 40,000 characters
+            // Text to assign to the label
+            string labelText = new string('A', 35000); // Example long text
 
-            // Validate length before assigning to the label
-            if (longText.Length > MaxLabelTextLength)
+            // Excel's maximum character limit for a cell/label text is 32,767 characters
+            const int ExcelMaxTextLength = 32767;
+
+            // Validate length before assignment
+            if (labelText.Length > ExcelMaxTextLength)
             {
-                // Option 1: Truncate the text to the allowed maximum
-                string truncated = longText.Substring(0, MaxLabelTextLength);
-                labelShape.Text = truncated;
-
-                Console.WriteLine($"Input text was too long ({longText.Length} chars). Truncated to {MaxLabelTextLength} chars.");
-            }
-            else
-            {
-                // Length is within the limit; assign directly
-                labelShape.Text = longText;
-                Console.WriteLine($"Input text assigned successfully ({longText.Length} chars).");
+                // Option 1: Truncate the text to the maximum allowed length
+                labelText = labelText.Substring(0, ExcelMaxTextLength);
+                // Optionally, you could throw an exception instead:
+                // throw new ArgumentException($"Label text exceeds Excel's maximum length of {ExcelMaxTextLength} characters.");
             }
 
-            // Optional: Disable Excel restriction checking if you need to store longer text
-            // workbook.Settings.CheckExcelRestriction = false;
+            // Assign the validated (or truncated) text to the label
+            label.Text = labelText;
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("LabelWithValidatedText.xlsx");
+            // Save the workbook (save rule)
+            string outputPath = "LabelWithValidatedText.xlsx";
+            workbook.Save(outputPath);
         }
     }
 }

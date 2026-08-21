@@ -1,81 +1,60 @@
+// Title: Export a Pivot Table Slicer as PNG and embed it in a PDF report with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook with a pivot table and slicer, render the slicer to a PNG image, insert the image into a worksheet, and save the workbook as a PDF report using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells slicer export | C# render slicer to PNG | embed slicer image in PDF | pivot table slicer PDF report | Aspose.Cells PDFSaveOptions | SheetRender ToImage C# | Aspose.Cells tutorial
+// Common Searches: export slicer as image Aspose.Cells .NET | how to embed slicer PNG in PDF using Aspose.Cells | render worksheet with slicer to PNG C# | save workbook as PDF with slicer image | Aspose.Cells slicer to PDF example
+// Developer Intent: Create a PDF report that includes a static image of a pivot table slicer generated with Aspose.Cells.
+// Use Cases: Generate printable PDFs where interactive slicers are represented as static images for distribution. | Automate reporting pipelines that capture slicer visuals for archival or compliance purposes. | Customize the layout of PDF reports by positioning slicer images on dedicated worksheets.
+// AI Prompts: Provide C# code using Aspose.Cells to export a slicer to PNG and embed it in a PDF. | Explain how to render a worksheet containing a slicer to an image before converting the workbook to PDF. | Suggest ways to control the placement and size of the slicer image on the PDF page.
+
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Pivot;      // PivotTable and related enums
-using Aspose.Cells.Slicers;    // Slicer class
+using Aspose.Cells.Slicers;
+using Aspose.Cells.Pivot;
+using Aspose.Cells.Saving;
 
-namespace AsposeCellsSample
+// Demonstrates how to create a workbook with a pivot table and slicer, render the slicer to a PNG image, insert the image into a worksheet, and save the workbook as a PDF report using Aspose.Cells for .NET.
+class ExportSlicerToPdf
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet dataSheet = workbook.Worksheets[0];
-                dataSheet.Name = "Data";
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate data for a pivot table
-                dataSheet.Cells["A1"].PutValue("Category");
-                dataSheet.Cells["B1"].PutValue("Amount");
-                dataSheet.Cells["A2"].PutValue("Fruit");
-                dataSheet.Cells["B2"].PutValue(120);
-                dataSheet.Cells["A3"].PutValue("Vegetable");
-                dataSheet.Cells["B3"].PutValue(80);
-                dataSheet.Cells["A4"].PutValue("Fruit");
-                dataSheet.Cells["B4"].PutValue(150);
-                dataSheet.Cells["A5"].PutValue("Vegetable");
-                dataSheet.Cells["B5"].PutValue(70);
+        // Populate sample data for the pivot table
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("Fruit");
+        sheet.Cells["A3"].PutValue("Vegetable");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
 
-                // Create a pivot table based on the data range A1:B5
-                int pivotIdx = dataSheet.PivotTables.Add("A1:B5", "D1", "PivotTable1");
-                PivotTable pivot = dataSheet.PivotTables[pivotIdx];
-                pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-                pivot.AddFieldToArea(PivotFieldType.Data, 1); // Amount as data field
+        // Add a pivot table based on the data range
+        int pivotIdx = sheet.PivotTables.Add("A1:B3", "D1", "Pivot1");
+        PivotTable pivot = sheet.PivotTables[pivotIdx];
+        pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
+        pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
 
-                // Add a slicer linked to the pivot table (field index 0 = Category)
-                int slicerIdx = dataSheet.Slicers.Add(pivot, 20, 2, 0);
-                Slicer slicer = dataSheet.Slicers[slicerIdx];
+        // Add a slicer linked to the pivot table (field index 0 = Category)
+        int slicerIdx = sheet.Slicers.Add(pivot, 20, 0, 0);
+        Slicer slicer = sheet.Slicers[slicerIdx];
+        slicer.IsPrintable = true; // make slicer printable (optional)
 
-                // Render the worksheet that contains the slicer to an image (PNG)
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-                {
-                    ImageType = ImageType.Png,
-                    OnePagePerSheet = true // Render the whole sheet as a single page
-                };
+        // Render the worksheet (which now contains the slicer) to an image file
+        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
+        imgOptions.ImageType = Aspose.Cells.Drawing.ImageType.Png;
+        SheetRender sheetRender = new SheetRender(sheet, imgOptions);
+        string slicerImagePath = "slicer.png";
+        sheetRender.ToImage(0, slicerImagePath); // uses SheetRender.ToImage(int, string) rule
 
-                using (MemoryStream slicerImageStream = new MemoryStream())
-                {
-                    // Render the sheet to the memory stream
-                    SheetRender sheetRender = new SheetRender(dataSheet, imgOptions);
-                    sheetRender.ToImage(0, slicerImageStream);
-                    slicerImageStream.Position = 0; // Reset for reading
+        // Insert the rendered slicer image into a new worksheet for PDF embedding
+        Worksheet imageSheet = workbook.Worksheets.Add("SlicerImage");
+        imageSheet.Pictures.Add(0, 0, slicerImagePath); // place image at top‑left corner
 
-                    // Create a new worksheet to hold the slicer image
-                    Worksheet imageSheet = workbook.Worksheets[workbook.Worksheets.Add()];
-                    imageSheet.Name = "SlicerImage";
-
-                    // Insert the rendered image as a picture shape
-                    imageSheet.Pictures.Add(0, 0, slicerImageStream);
-
-                    // Save the workbook (including the picture) as a PDF report
-                    PdfSaveOptions pdfOptions = new PdfSaveOptions
-                    {
-                        ExportDocumentStructure = true
-                    };
-                    workbook.Save("SlicerReport.pdf", pdfOptions);
-                }
-
-                Console.WriteLine("PDF report generated successfully: SlicerReport.pdf");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Save the workbook as a PDF report, embedding the slicer image
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        pdfOptions.ExportDocumentStructure = true;
+        workbook.Save("ReportWithSlicer.pdf", pdfOptions);
     }
 }

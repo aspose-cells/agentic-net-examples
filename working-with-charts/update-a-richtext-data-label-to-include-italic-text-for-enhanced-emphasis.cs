@@ -1,10 +1,10 @@
-// Title: Add Italic Formatting to Chart Data Labels with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, insert a column chart, enable data labels, set custom label text, apply italic styling via the Font.IsItalic property and ApplyFont method, and save the file as an Excel workbook.
-// Keywords: Aspose.Cells | C# chart data label italic | rich text chart label | ApplyFont method | column chart example | Excel automation .NET | GitHub Aspose.Cells sample | US developers | European .NET community | India Excel charting
-// Common Searches: how to make chart data labels italic using Aspose.Cells | set custom text and italic font for Excel chart labels C# | Aspose.Cells rich text formatting for chart data points | apply italic style to all data labels in a column chart | Aspose.Cells example for formatting chart labels
-// Developer Intent: Apply italic styling to each chart point’s data label text.
-// Use Cases: Highlight key metrics in a sales chart by displaying values in italic. | Produce financial reports that follow corporate style guidelines requiring italic data labels. | Generate automated Excel dashboards where all chart labels share a consistent italic appearance.
-// AI Prompts: Generate C# code with Aspose.Cells that adds bold and italic formatting to chart data labels. | Show how to assign different font colors to individual data labels in an Aspose.Cells chart. | Explain how to combine regular and italic segments within a single chart data label using RichTextCollection.
+// Title: C# – Apply Italic Formatting to Rich‑Text Data Labels in Aspose.Cells Charts
+// Description: Shows how to create a workbook, insert a column chart, enable custom data labels, set a static label text, and apply italic (optionally blue) font styling via Font.IsItalic and ApplyFont() in Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# chart data label | italic font | rich text label | ApplyFont | column chart | custom data labels | font color | Aspose.Cells API | chart label formatting
+// Common Searches: Aspose.Cells make chart data labels italic C# | set rich text formatting for Aspose.Cells chart labels | apply font style to Aspose.Cells column chart data labels | change color and italicize data labels Aspose.Cells .NET | how to use ApplyFont with chart data labels Aspose
+// Developer Intent: Add italic (and optional color) styling to a chart’s rich‑text data label in an Aspose.Cells workbook using C#.
+// Use Cases: Highlight key points by rendering their chart labels in italic. | Combine italic style with a distinct color for better visual emphasis in reports. | Generate presentation‑ready spreadsheets where all data labels share a uniform italic appearance.
+// AI Prompts: Write C# code with Aspose.Cells that creates a column chart and sets all data label fonts to italic and blue. | Explain how to apply different font styles (italic, bold, underline) to portions of a rich‑text data label in Aspose.Cells. | Provide a snippet that updates an existing workbook’s chart data labels to italic without altering other label settings.
 
 using System;
 using Aspose.Cells;
@@ -13,47 +13,49 @@ using System.Drawing;
 
 namespace AsposeCellsRichTextDataLabel
 {
-    // Demonstrates how to create a workbook, insert a column chart, enable data labels, set custom label text, apply italic styling via the Font.IsItalic property and ApplyFont method, and save the file as an Excel workbook.
+    // Shows how to create a workbook, insert a column chart, enable custom data labels, set a static label text, and apply italic (optionally blue) font styling via Font.IsItalic and ApplyFont() in Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("Alpha");
-            sheet.Cells["B2"].PutValue(15);
-            sheet.Cells["A3"].PutValue("Beta");
-            sheet.Cells["B3"].PutValue(30);
-            sheet.Cells["A4"].PutValue("Gamma");
-            sheet.Cells["B4"].PutValue(45);
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["A5"].PutValue("D");
+            sheet.Cells["B5"].PutValue(40);
 
             // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 15);
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
             Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
 
-            // Enable data labels for the first series
+            // Set the data source for the chart
+            chart.NSeries.Add("B2:B5", true);
+            chart.NSeries.CategoryData = "A2:A5";
+
+            // Access the first series
             Series series = chart.NSeries[0];
-            series.DataLabels.ShowValue = true;
 
-            // Update each data label to include italic formatting
-            foreach (ChartPoint point in series.Points)
-            {
-                // Set custom text for the data label
-                point.DataLabels.Text = $"Value: {point.YValue}";
+            // Enable data labels and customize them
+            series.DataLabels.ShowValue = true;               // Show the numeric value
+            series.DataLabels.IsAutoText = false;             // Allow custom text
+            series.DataLabels.Text = "Custom Value";          // Set custom label text
 
-                // Apply italic style to the entire label
-                point.DataLabels.Font.IsItalic = true;
+            // Apply italic formatting to the entire data label
+            series.DataLabels.Font.IsItalic = true;           // Make the label italic
+            series.DataLabels.Font.Color = Color.Blue;        // Optional: change color for visibility
 
-                // Apply the font settings to the label
-                point.DataLabels.ApplyFont();
-            }
+            // Apply the font settings to all data label instances
+            series.DataLabels.ApplyFont();
 
             // Save the workbook
             workbook.Save("RichTextDataLabelItalic.xlsx");

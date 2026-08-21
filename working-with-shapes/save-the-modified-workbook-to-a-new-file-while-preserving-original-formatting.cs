@@ -1,32 +1,32 @@
-// Title: Save a Modified Excel Workbook in Its Original Format with Aspose.Cells for .NET
-// Description: Load an existing workbook, edit cells, determine the source file's format with FileFormatUtil, and save the workbook to a new file while preserving all original styles, layouts, and formatting using Aspose.Cells for C#.
-// Keywords: Aspose.Cells | C# save workbook | preserve formatting | original file format | FileFormatUtil | Workbook.Save | Excel copy | retain styles | save as same format | Aspose.Cells .NET
-// Common Searches: Aspose.Cells save workbook without losing formatting | How to keep original Excel format when saving with Aspose.Cells | Get original file format of a workbook Aspose.Cells | Save modified Excel file as same type Aspose.Cells C# | Copy Excel file and edit with Aspose.Cells preserving styles
-// Developer Intent: Save a modified workbook to a new file while keeping the original Excel format and all formatting intact.
-// Use Cases: Create a backup copy of a template after programmatic edits, preserving layout and styles. | Automate versioned reports where each iteration must retain the source file’s formatting. | Convert a .xls workbook to .xlsx (or vice‑versa) while maintaining cell styles and number formats. | Apply data updates to a shared workbook and output the result in the same file type as the source. | Batch‑process multiple workbooks, modify content, and save each with its original format.
-// AI Prompts: Write C# code using Aspose.Cells to load an Excel file, modify a cell, and save it preserving all original formatting. | Explain how FileFormatUtil.FileFormatToSaveFormat determines the correct SaveFormat for a workbook in Aspose.Cells. | Provide a step‑by‑step guide for copying an existing workbook, applying edits, and saving it without changing its original file type or styles using Aspose.Cells for .NET. | Generate a PowerShell snippet that calls a .NET assembly to perform the same load‑edit‑save operation while keeping the original format.
+// Title: Save a Modified Excel Workbook in Its Original Format with Aspose.Cells (C#)
+// Description: Load an existing workbook, change cell values, detect the source file's format via FileFormatUtil, and save the updated workbook to a new file while preserving all original styles, borders, and shapes.
+// Keywords: Aspose.Cells save original format | Workbook.Save same format | FileFormatUtil C# | preserve Excel formatting Aspose | copy workbook with changes
+// Common Searches: Aspose.Cells save workbook in original file type | keep original Excel formatting after edit .NET | detect source workbook format Aspose.Cells | save modified workbook without losing styles
+// Developer Intent: Export a changed workbook to a new file without altering its original file type or visual layout.
+// Use Cases: Update a legacy .xls template and save the result as .xls for older applications. | Apply batch edits to a .xlsx report and generate a copy in the same .xlsx format for downstream workflows. | Create versioned snapshots of a spreadsheet after modifications while retaining all cell styles, charts, and shapes.
+// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, modifies several cells, and saves the workbook using the same format as the source. | Show how to retrieve the original SaveFormat of a loaded workbook and pass it to Workbook.Save to keep all formatting intact. | Explain best practices for preserving cell styles, borders, and embedded objects when saving a modified workbook with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Load an existing workbook, edit cells, determine the source file's format with FileFormatUtil, and save the workbook to a new file while preserving all original styles, layouts, and formatting using Aspose.Cells for C#.
-class SaveWorkbookExample
+// Load an existing workbook, change cell values, detect the source file's format via FileFormatUtil, and save the updated workbook to a new file while preserving all original styles, borders, and shapes.
+class SaveModifiedWorkbook
 {
     static void Main()
     {
-        // Load an existing workbook
+        // Load the original workbook from disk
         string sourcePath = "input.xlsx";
         Workbook workbook = new Workbook(sourcePath);
 
-        // Example modification: change the value of cell A1 in the first worksheet
+        // Perform any modifications (example: change a cell value)
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Modified");
+        sheet.Cells["B2"].PutValue("Modified");
 
-        // Determine the original file format and convert it to a SaveFormat
+        // Get the original file format of the loaded workbook
         SaveFormat originalFormat = FileFormatUtil.FileFormatToSaveFormat(workbook.FileFormat);
 
-        // Save the modified workbook to a new file while preserving all original formatting
-        string destinationPath = "output.xlsx";
-        workbook.Save(destinationPath, originalFormat);
+        // Save the modified workbook to a new file using the same format
+        string destPath = "output_modified.xlsx";
+        workbook.Save(destPath, originalFormat);
     }
 }

@@ -1,124 +1,104 @@
-// Title: Resume an interrupted Aspose.Cells calculation and verify identical results (C#)
-// Description: Demonstrates how to pause a long‑running CalculateFormula operation with ThreadInterruptMonitor, catch the interruption, resume the calculation, and compare the resumed cell values with those from an uninterrupted run to ensure they match.
-// Keywords: Aspose.Cells resume calculation | ThreadInterruptMonitor C# | interrupt and continue formula evaluation | compare formula results Aspose.Cells | C# workbook calculation pause | validate resumed calculation
-// Common Searches: how to resume Aspose.Cells calculation after interruption | Aspose.Cells ThreadInterruptMonitor example | compare interrupted vs full calculation results C# | resume workbook formula evaluation Aspose.Cells | verify calculation consistency after pause
-// Developer Intent: Pause a formula calculation, resume it later, and confirm that the final values are the same as a full, uninterrupted calculation.
-// Use Cases: Implement a cancellable UI for large spreadsheet calculations that can be resumed without data loss. | Create automated tests that ensure interrupt‑resume logic does not alter formula outcomes. | Process massive worksheets in background threads, allowing graceful interruption and later continuation.
-// AI Prompts: Generate a C# snippet that uses Aspose.Cells ThreadInterruptMonitor to interrupt CalculateFormula after a set time, then resumes the calculation and returns true if all cell values match the original run. | Explain how to capture cell values before interruption and compare them after resuming, handling numeric and string type differences. | Suggest a unit‑test structure for verifying that an interrupted Aspose.Cells calculation produces identical results to an uninterrupted execution.
+// Title: Resume Interrupted Formula Calculation with Aspose.Cells .NET and Verify Results
+// Description: Demonstrates how to pause a long‑running calculation using ThreadInterruptMonitor, resume it, and compare the resumed result with an uninterrupted reference workbook in C#.
+// Keywords: Aspose.Cells resume calculation | ThreadInterruptMonitor .NET | interrupt and continue formula evaluation | verify calculation result | C# Aspose.Cells example
+// Common Searches: how to resume a paused calculation in Aspose.Cells | Aspose.Cells ThreadInterruptMonitor usage | compare interrupted vs uninterrupted formula results | C# resume workbook calculation after timeout | Aspose.Cells verify resumed calculation
+// Developer Intent: Pause a formula calculation, resume it later, and ensure the final value matches the original uninterrupted computation.
+// Use Cases: Free CPU resources by interrupting a heavy calculation and completing it when resources are available. | Validate data integrity after a calculation restart by comparing with a pre‑computed reference. | Automate workbook saving only after successful resumption and verification of formulas.
+// AI Prompts: Write C# code that uses Aspose.Cells ThreadInterruptMonitor to interrupt a calculation after 5 ms and then resume it with a longer timeout. | Create a method that catches the CellsException for an interrupted calculation, restarts the monitor, and checks the result against a reference workbook. | Explain best practices for handling interrupted calculations in Aspose.Cells, covering monitor configuration, exception handling, and result verification.
 
 using System;
-using System.Collections.Generic;
 using Aspose.Cells;
 
-// Demonstrates how to pause a long‑running CalculateFormula operation with ThreadInterruptMonitor, catch the interruption, resume the calculation, and compare the resumed cell values with those from an uninterrupted run to ensure they match.
-
-class ResumeCalculationDemo
+namespace AsposeCellsResumeCalculationDemo
 {
-    static void Main()
+    // Demonstrates how to pause a long‑running calculation using ThreadInterruptMonitor, resume it, and compare the resumed result with an uninterrupted reference workbook in C#.
+    class Program
     {
-        // -------------------------------------------------
-        // 1. Create a workbook with sample data and formulas
-        // -------------------------------------------------
-        Workbook wbFull = new Workbook();
-        Worksheet wsFull = wbFull.Worksheets[0];
-
-        // Populate cells A and B, and set formula in C
-        for (int i = 0; i < 100; i++)
+        static void Main()
         {
-            wsFull.Cells[i, 0].PutValue(i);          // A column
-            wsFull.Cells[i, 1].PutValue(i * 2);      // B column
-            wsFull.Cells[i, 2].Formula = $"=A{i}+B{i}"; // C column = A+B
-        }
-
-        // -------------------------------------------------
-        // 2. Perform uninterrupted calculation and store results
-        // -------------------------------------------------
-        wbFull.CalculateFormula();
-
-        var fullResults = new List<object>();
-        for (int i = 0; i < 100; i++)
-        {
-            fullResults.Add(wsFull.Cells[i, 2].Value);
-        }
-
-        // Save the workbook (used later for loading a fresh copy)
-        wbFull.Save("FullCalc.xlsx");
-
-        // -------------------------------------------------
-        // 3. Load a fresh copy and interrupt the calculation
-        // -------------------------------------------------
-        LoadOptions loadOptions = new LoadOptions();
-        Workbook wbInterrupted = new Workbook("FullCalc.xlsx", loadOptions);
-
-        // Set up a ThreadInterruptMonitor to request interruption quickly
-        ThreadInterruptMonitor monitor = new ThreadInterruptMonitor(false);
-        loadOptions.InterruptMonitor = monitor;
-        monitor.StartMonitor(10); // 10 ms limit forces an early interruption
-
-        try
-        {
-            wbInterrupted.CalculateFormula(); // This will be interrupted
-            // Create a workbook with data and formulas
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            for (int i = 0; i < 1000; i++)
+            try
             {
-                ws.Cells[i, 0].PutValue(i);               // Column A
-                ws.Cells[i, 1].PutValue(i * 2);           // Column B
-                ws.Cells[i, 2].Formula = $"=A{i + 1}+B{i + 1}"; // Column C = A+B
+                // -------------------------------------------------
+                // 1. Create a workbook with sample data and formulas
+                // -------------------------------------------------
+                Workbook referenceWb = new Workbook();
+                Worksheet refSheet = referenceWb.Worksheets[0];
+
+                // Fill column A with numbers 1..1000
+                for (int i = 0; i < 1000; i++)
+                    refSheet.Cells[i, 0].PutValue(i + 1);
+
+                // B1 = SUM(A1:A1000)
+                refSheet.Cells["B1"].Formula = "=SUM(A1:A1000)";
+
+                // Perform uninterrupted calculation
+                referenceWb.CalculateFormula();
+
+                // Store expected result
+                double expectedResult = refSheet.Cells["B1"].DoubleValue;
+                Console.WriteLine($"Expected result (uninterrupted): {expectedResult}");
+
+                // -------------------------------------------------
+                // 2. Create a second workbook with identical data
+                // -------------------------------------------------
+                Workbook wb = new Workbook();
+                Worksheet sheet = wb.Worksheets[0];
+
+                for (int i = 0; i < 1000; i++)
+                    sheet.Cells[i, 0].PutValue(i + 1);
+
+                sheet.Cells["B1"].Formula = "=SUM(A1:A1000)";
+
+                // -------------------------------------------------
+                // 3. Set up an interrupt monitor to pause calculation
+                // -------------------------------------------------
+                ThreadInterruptMonitor monitor = new ThreadInterruptMonitor(terminateWithoutException: false);
+                wb.InterruptMonitor = monitor;
+
+                // Start monitor with a very short time limit to force interruption
+                monitor.StartMonitor(5); // 5 ms
+
+                try
+                {
+                    // This calculation will be interrupted
+                    wb.CalculateFormula();
+                }
+                catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
+                {
+                    Console.WriteLine("Calculation was interrupted as expected.");
+                }
+
+                // -------------------------------------------------
+                // 4. Resume calculation by starting a longer monitor
+                // -------------------------------------------------
+                monitor.StartMonitor(10000); // 10 seconds – enough to finish
+
+                // Resume calculation
+                wb.CalculateFormula();
+
+                // -------------------------------------------------
+                // 5. Verify that the resumed result matches the reference
+                // -------------------------------------------------
+                double resumedResult = sheet.Cells["B1"].DoubleValue;
+                Console.WriteLine($"Resumed result: {resumedResult}");
+
+                if (Math.Abs(resumedResult - expectedResult) < 1e-9)
+                    Console.WriteLine("Verification succeeded: results match.");
+                else
+                    Console.WriteLine("Verification failed: results differ.");
+
+                // -------------------------------------------------
+                // 6. Save the workbook
+                // -------------------------------------------------
+                string outputPath = "ResumedCalculationResult.xlsx";
+                wb.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-
-            // Save the original workbook (unmodified)
-            wb.Save("Original.xlsx");
-
-            // Load the workbook with an interrupt monitor that will pause calculation
-            SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
-            LoadOptions loadOptions = new LoadOptions { InterruptMonitor = monitor };
-            Workbook wbInterrupted = new Workbook("Original.xlsx", loadOptions);
-
-            // Start monitoring with a very short time limit to force interruption
-            monitor.StartMonitor(10); // 10 milliseconds
-      
-        }
-        catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
-        {
-            Console.WriteLine("Calculation was interrupted as expected.");
-        }
-        finally
-        {
-            // Ensure the monitor thread is cleaned up
-            monitor.FinishMonitor();
-        }
-
-        // -------------------------------------------------
-        // 4. Resume calculation without any monitor
-        // -------------------------------------------------
-        wbInterrupted.CalculateFormula();
-
-        // -------------------------------------------------
-        // 5. Verify that resumed results match the uninterrupted ones
-        // -------------------------------------------------
-        bool match = true;
-        Worksheet wsInterrupted = wbInterrupted.Worksheets[0];
-
-        for (int i = 0; i < 100; i++)
-        {
-            object resumedValue = wsInterrupted.Cells[i, 2].Value;
-            object expectedValue = fullResults[i];
-
-            if (!object.Equals(resumedValue, expectedValue))
+            catch (Exception ex)
             {
-                match = false;
-                Console.WriteLine($"Mismatch at row {i}: expected {expectedValue}, got {resumedValue}");
-                break;
+                // General exception handling to avoid unexpected crashes
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        Console.WriteLine(match
-            ? "Resumed calculation matches uninterrupted results."
-            : "Results differ after resuming.");
-
-        // Save the workbook after successful resume
-        wbInterrupted.Save("ResumedCalc.xlsx");
     }
 }

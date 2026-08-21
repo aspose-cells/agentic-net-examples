@@ -1,18 +1,17 @@
-// Title: Aspose.Cells .NET: Create a Tornado (Stacked Bar) Chart with Custom Colors and Export to PNG
-// Description: C# example that builds a workbook, fills A1:B5 with region names and sales figures (including negative values), adds a stacked‑bar chart styled as a tornado diagram, assigns a unique solid‑fill color to each bar, recalculates the layout, exports the chart as a PNG image, and saves the workbook as XLSX.
-// Keywords: Aspose.Cells | C# | .NET | tornado chart | stacked bar chart | custom bar colors | export chart to PNG | chart image generation | sales data visualization | chart data range | GitHub example
-// Common Searches: Aspose.Cells create tornado chart C# | how to set individual bar colors in Aspose.Cells stacked bar chart | export Aspose.Cells chart as PNG image | set chart data range with headers Aspose.Cells | C# example for custom colored chart points Aspose.Cells
-// Developer Intent: Generate a tornado‑style stacked bar chart from sales data, color each bar separately, and save the chart as a PNG file (plus the workbook) using Aspose.Cells for .NET.
-// Use Cases: Show regional sales gaps in a management report with a side‑by‑side positive/negative bar layout. | Create color‑coded performance bars for a dashboard that instantly distinguishes gains from losses. | Automate production of chart images for newsletters or email alerts directly from workbook data.
-// AI Prompts: Write C# code using Aspose.Cells to build a tornado chart from range A1:B5, apply distinct solid‑fill colors to each point, and export the chart as a PNG file. | Explain how to add data labels, adjust chart dimensions, and improve image resolution before exporting the chart image in the provided Aspose.Cells sample. | Provide steps to switch the chart to a horizontal bar type and dynamically set bar colors based on whether sales values are positive or negative.
+// Title: Create a Tornado (Stacked Bar) Chart with Custom Colors and Export to PNG using Aspose.Cells for .NET (C#)
+// Description: This C# example shows how to build a workbook, add regional sales data, generate a stacked‑bar tornado chart, apply red and blue colors to the series, and export the chart as a PNG image with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells tornado chart C# | stacked bar chart custom colors .NET | export chart to PNG Aspose.Cells | sales data tornado diagram | ChartType.BarStacked Aspose.Cells | chart.ToImage example | C# Excel chart generation | regional sales comparison chart
+// Common Searches: how to create a tornado chart with Aspose.Cells | Aspose.Cells stacked bar chart custom colors | export Aspose.Cells chart as PNG in C# | sample code for tornado chart using Aspose.Cells | set chart data range Aspose.Cells .NET
+// Developer Intent: Generate a tornado‑style stacked bar chart from sales figures, color each series uniquely, and save the chart as a PNG image using Aspose.Cells for .NET.
+// Use Cases: Compare year‑over‑year sales across regions in a presentation‑ready tornado chart. | Produce colored comparative charts for quarterly performance reports that can be embedded in PDFs or PowerPoint. | Automate creation of PNG chart images for a web dashboard that visualizes regional sales trends.
+// AI Prompts: Add data labels to each bar of the tornado chart using Aspose.Cells in C#. | Show how to reverse the category axis order for a tornado chart with Aspose.Cells. | Provide code to export the chart to JPEG or SVG instead of PNG using Aspose.Cells.
 
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// C# example that builds a workbook, fills A1:B5 with region names and sales figures (including negative values), adds a stacked‑bar chart styled as a tornado diagram, assigns a unique solid‑fill color to each bar, recalculates the layout, exports the chart as a PNG image, and saves the workbook as XLSX.
+// This C# example shows how to build a workbook, add regional sales data, generate a stacked‑bar tornado chart, apply red and blue colors to the series, and export the chart as a PNG image with Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -23,50 +22,47 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sales data (positive and negative values to create a tornado effect)
+            // Add header row
             sheet.Cells["A1"].PutValue("Region");
-            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["B1"].PutValue("Sales 2022");
+            sheet.Cells["C1"].PutValue("Sales 2023");
 
+            // Sample data for a tornado chart (one series positive, one negative)
             string[] regions = { "North", "South", "East", "West" };
-            int[] sales = { 120, -80, 150, -60 };
+            double[] sales2022 = { 120, 150, 100, 130 };   // Positive values
+            double[] sales2023 = { -80, -110, -70, -90 };  // Negative values for opposite side
 
             for (int i = 0; i < regions.Length; i++)
             {
-                sheet.Cells[i + 1, 0].PutValue(regions[i]);   // Column A
-                sheet.Cells[i + 1, 1].PutValue(sales[i]);    // Column B
+                sheet.Cells[i + 2, 0].PutValue(regions[i]);          // Region name
+                sheet.Cells[i + 2, 1].PutValue(sales2022[i]);       // 2022 sales
+                sheet.Cells[i + 2, 2].PutValue(sales2023[i]);       // 2023 sales (negative)
             }
 
-            // Add a stacked bar chart (tornado style) to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 5, 0, 20, 10);
+            // Add a stacked bar chart (tornado style)
+            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 5, 0, 20, 8);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Define the data range for the chart (including headers)
-            chart.SetChartDataRange("A1:B5", true);
+            // Define the data range for the chart (including categories)
+            chart.SetChartDataRange("A1:C5", true);
+            chart.NSeries.CategoryData = "A2:A5";
 
-            // Apply custom colors to each data point
-            Color[] pointColors = { Color.Red, Color.Green, Color.Blue, Color.Orange };
-            for (int i = 0; i < chart.NSeries[0].Points.Count && i < pointColors.Length; i++)
-            {
-                ChartPoint point = chart.NSeries[0].Points[i];
-                point.Area.FillFormat.SolidFill.Color = pointColors[i];
-            }
+            // Apply custom colors to each series
+            chart.NSeries[0].Area.ForegroundColor = Color.Red;   // 2022 series
+            chart.NSeries[1].Area.ForegroundColor = Color.Blue;  // 2023 series (negative side)
 
-            // Recalculate the chart layout after modifications
-            chart.Calculate();
+            // (Optional) Reverse category order – not supported in this API version
+            // chart.CategoryAxis.IsInversed = true;
 
-            // Export the chart as a PNG image (default format is PNG)
-            string pngPath = "tornado_chart.png";
-            chart.ToImage(pngPath);
-            Console.WriteLine($"Chart image saved to: {Path.GetFullPath(pngPath)}");
+            // Export the chart as a PNG image
+            chart.ToImage("tornado_chart.png");
 
-            // Save the workbook containing the chart
-            string xlsxPath = "tornado_chart.xlsx";
-            workbook.Save(xlsxPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(xlsxPath)}");
+            // Save the workbook (optional, for verification)
+            workbook.Save("tornado_chart.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

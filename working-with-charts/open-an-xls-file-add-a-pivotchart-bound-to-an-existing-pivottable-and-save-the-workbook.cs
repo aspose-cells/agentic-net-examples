@@ -1,52 +1,73 @@
-// Title: Add a PivotChart to an Existing PivotTable in an XLS Workbook – Aspose.Cells for .NET
-// Description: Loads an XLS file, finds the first PivotTable on the first worksheet, creates a column PivotChart, links the chart to the PivotTable via the PivotSource property, refreshes both the table and the chart, and saves the result as an XLSX workbook using Aspose.Cells in C#.
-// Keywords: Aspose.Cells | C# | PivotChart | PivotTable | bind chart to pivot | refresh pivot data | add chart programmatically | XLS to XLSX conversion | column chart | Excel automation
-// Common Searches: Aspose.Cells create PivotChart from existing PivotTable | C# bind chart to PivotTable programmatically | refresh PivotTable and chart after adding PivotChart | convert XLS with PivotChart to XLSX using Aspose | how to add a column chart to a PivotTable with Aspose.Cells
-// Developer Intent: Programmatically attach a PivotChart to a pre‑existing PivotTable in a loaded XLS workbook and export the updated file.
-// Use Cases: Add a visual sales summary to a legacy XLS report before converting it to XLSX. | Automate monthly dashboards by generating column charts from PivotTables in bulk. | Refresh PivotTable calculations after data changes and ensure the chart reflects the latest values.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a line PivotChart to the second PivotTable in a workbook and sets a custom chart title. | Show how to bind a Pie chart to a PivotTable and export the workbook as a PDF using Aspose.Cells. | Explain the steps to update a PivotChart's source range after renaming the underlying PivotTable in C#.
+// Title: Add a PivotChart to an Existing PivotTable in an XLS Workbook and Save as XLSX – C# with Aspose.Cells
+// Description: Loads an XLS file, adds a column PivotChart linked to a PivotTable named "PivotTable1", refreshes the chart and pivot data, and saves the workbook as an XLSX file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# PivotChart | bind chart to pivot table Aspose | refresh pivot data Aspose.Cells | convert XLS to XLSX with chart | .NET add PivotChart to existing PivotTable | Aspose.Cells chart pivot source | C# Excel pivot chart automation
+// Common Searches: How to add a PivotChart to an existing PivotTable with Aspose.Cells | Aspose.Cells refresh pivot table after adding chart | Convert legacy XLS to XLSX and keep PivotChart in C# | C# code to bind chart to PivotTable using Aspose.Cells | Create column chart from PivotTable programmatically
+// Developer Intent: Create a column PivotChart bound to an existing PivotTable in an XLS workbook and export the result as an XLSX file using Aspose.Cells for .NET.
+// Use Cases: Enhance legacy Excel reports by adding a visual PivotChart before distribution. | Automate migration of old XLS files to XLSX while inserting a summary chart for quick insights. | Refresh pivot data after source updates and generate a ready‑to‑share XLSX workbook.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a line PivotChart to a PivotTable called "SalesPivot" in an XLS file and saves it as XLSX. | Explain the steps to bind a chart to a PivotTable and refresh its data using Aspose.Cells for .NET, including required properties and methods. | Provide a step‑by‑step tutorial for loading an XLS workbook, inserting a PivotChart, refreshing pivot data, and converting the file to XLSX with Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotChartDemo
+// Loads an XLS file, adds a column PivotChart linked to a PivotTable named "PivotTable1", refreshes the chart and pivot data, and saves the workbook as an XLSX file using Aspose.Cells for .NET.
+class Program
 {
-    // Loads an XLS file, finds the first PivotTable on the first worksheet, creates a column PivotChart, links the chart to the PivotTable via the PivotSource property, refreshes both the table and the chart, and saves the result as an XLSX workbook using Aspose.Cells in C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load the existing XLS workbook
-            Workbook workbook = new Workbook("input.xls");
+            const string inputPath = "input.xls";
+            const string outputPath = "output.xlsx";
 
-            // Assume the first worksheet contains the required PivotTable
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Retrieve the first PivotTable in the worksheet
-            if (worksheet.PivotTables.Count == 0)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine("No PivotTable found in the worksheet.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            PivotTable pivotTable = worksheet.PivotTables[0];
+            // Load the existing XLS workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a new chart (Column type) to the same worksheet
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Name of the existing pivot table to bind the chart to
+            string pivotTableName = "PivotTable1";
+
+            // Add a new column chart to the worksheet
             int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
             Chart chart = worksheet.Charts[chartIndex];
 
-            // Bind the chart to the existing PivotTable
-            chart.PivotSource = $"{worksheet.Name}!{pivotTable.Name}";
+            // Bind the chart to the existing pivot table
+            chart.PivotSource = $"{worksheet.Name}!{pivotTableName}";
 
-            // Refresh the PivotTable data and the chart
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
+            // Refresh the chart data from the pivot table
             chart.RefreshPivotData();
 
-            // Save the workbook with the new PivotChart
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Refresh the pivot table data itself, if the pivot table exists
+            PivotTable pivotTable = worksheet.PivotTables[pivotTableName];
+            if (pivotTable != null)
+            {
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
+            }
+            else
+            {
+                Console.WriteLine($"Pivot table '{pivotTableName}' not found in worksheet '{worksheet.Name}'.");
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

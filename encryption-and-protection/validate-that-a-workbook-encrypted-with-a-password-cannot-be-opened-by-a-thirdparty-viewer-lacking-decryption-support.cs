@@ -1,54 +1,61 @@
-// Title: Validate that a password‑protected Aspose.Cells workbook cannot be opened without the password (C#)
-// Description: The example creates an Excel workbook, applies Workbook.Settings.Password, saves it, confirms encryption via Workbook.Settings.IsEncrypted and FileFormatUtil.DetectFileFormat, attempts to load the file without a password (expecting an exception), then opens it with LoadOptions.Password and reads a cell value.
-// Keywords: Aspose.Cells C# encryption | Workbook.Settings.Password | Workbook.Settings.IsEncrypted | FileFormatUtil DetectFileFormat IsEncrypted | LoadOptions password protected workbook | verify encrypted Excel file | catch exception opening encrypted workbook | read cell from password protected workbook
-// Common Searches: Aspose.Cells check if workbook is encrypted | open password protected Excel file with Aspose.Cells | detect encrypted Excel file using FileFormatUtil | exception when opening encrypted workbook without password | C# Aspose.Cells load options password example
-// Developer Intent: Demonstrate that an Excel file encrypted with a password cannot be opened without supplying the password, and show the correct way to open it using LoadOptions.
-// Use Cases: Automated validation that confidential workbooks are properly encrypted before distribution. | Batch processing pipelines that need to flag or reject password‑protected Excel files lacking decryption support. | Testing third‑party viewers to ensure they reject encrypted workbooks, preserving data security.
-// AI Prompts: Generate C# code with Aspose.Cells that verifies an encrypted workbook throws an exception when opened without a password. | Show how to use FileFormatUtil.DetectFileFormat to read the IsEncrypted flag of a saved Excel file. | Explain how to open a password‑protected workbook using LoadOptions and retrieve a specific cell value.
+// Title: Validate that a password‑protected Aspose.Cells workbook cannot be opened without the correct password
+// Description: Creates a workbook, writes sensitive data, encrypts it with a password, saves the file, uses FileFormatUtil to confirm the encrypted flag, attempts to load the file without a password (expecting an exception), then opens it with LoadOptions using the correct password and reads the original cell value.
+// Keywords: Aspose.Cells password encryption | detect encrypted Excel file | open encrypted workbook exception | LoadOptions password Aspose.Cells | verify workbook IsEncrypted flag | C# Aspose.Cells encryption example
+// Common Searches: how to check if an Excel file is encrypted with Aspose.Cells | exception when opening password‑protected workbook without password Aspose.Cells .NET | load password‑protected workbook using LoadOptions Aspose.Cells | Aspose.Cells detect encrypted workbook before loading
+// Developer Intent: Ensure that a workbook protected by a password throws an error when accessed without the password and opens successfully when the correct password is supplied.
+// Use Cases: Programmatically confirm the encryption status of a saved workbook. | Validate exception handling for unauthorized access to a password‑protected file. | Read data from an encrypted workbook after providing the correct password.
+// AI Prompts: Show me C# code that verifies an Aspose.Cells workbook is encrypted and throws an exception when opened without a password. | How can I open a password‑protected Excel file with Aspose.Cells using LoadOptions and retrieve a cell value?
 
 using System;
-using Aspose.Cells;
 using System.IO;
+using Aspose.Cells;
 
-// The example creates an Excel workbook, applies Workbook.Settings.Password, saves it, confirms encryption via Workbook.Settings.IsEncrypted and FileFormatUtil.DetectFileFormat, attempts to load the file without a password (expecting an exception), then opens it with LoadOptions.Password and reads a cell value.
-class WorkbookEncryptionValidation
+namespace AsposeCellsEncryptionValidation
 {
-    static void Main()
+    // Creates a workbook, writes sensitive data, encrypts it with a password, saves the file, uses FileFormatUtil to confirm the encrypted flag, attempts to load the file without a password (expecting an exception), then opens it with LoadOptions using the correct password and reads the original cell value.
+    class Program
     {
-        // Create a new workbook and add some data
-        Workbook wb = new Workbook();
-        wb.Worksheets[0].Cells["A1"].PutValue("Secret Data");
-
-        // Encrypt the workbook with a password
-        wb.Settings.Password = "mySecret";
-
-        // Save the encrypted workbook
-        string encryptedPath = "encrypted.xlsx";
-        wb.Save(encryptedPath);
-
-        // Verify that the workbook reports itself as encrypted
-        Console.WriteLine("Workbook Settings.IsEncrypted: " + wb.Settings.IsEncrypted);
-
-        // Use FileFormatUtil to detect encryption at file level
-        FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(encryptedPath);
-        Console.WriteLine("FileFormatInfo.IsEncrypted: " + fileInfo.IsEncrypted);
-
-        // Simulate a third‑party viewer that does NOT provide a password
-        try
+        static void Main()
         {
-            // Attempt to open the encrypted file without a password
-            Workbook wbWithoutPassword = new Workbook(encryptedPath);
-            Console.WriteLine("Opened without password (unexpected).");
-        }
-        catch (Exception ex)
-        {
-            // Expected failure because the file is encrypted
-            Console.WriteLine("Failed to open without password as expected: " + ex.Message);
-        }
+            // Path for the encrypted workbook
+            string encryptedPath = "encrypted_workbook.xlsx";
 
-        // Open the workbook with the correct password
-        LoadOptions loadOptions = new LoadOptions { Password = "mySecret" };
-        Workbook wbWithPassword = new Workbook(encryptedPath, loadOptions);
-        Console.WriteLine("Opened with password, cell A1 value: " + wbWithPassword.Worksheets[0].Cells["A1"].StringValue);
+            // 1. Create a new workbook and add some data
+            Workbook wb = new Workbook();
+            Worksheet sheet = wb.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sensitive Data");
+
+            // 2. Set a password to encrypt the workbook
+            wb.Settings.Password = "Secret123";
+
+            // 3. Save the workbook (it will be encrypted)
+            wb.Save(encryptedPath);
+            Console.WriteLine($"Workbook saved and encrypted at: {encryptedPath}");
+
+            // 4. Verify that the file is reported as encrypted using FileFormatInfo
+            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(encryptedPath);
+            Console.WriteLine($"FileFormatInfo.IsEncrypted: {formatInfo.IsEncrypted}");
+
+            // 5. Attempt to open the encrypted workbook without providing a password
+            try
+            {
+                // This should throw an exception because the password is missing
+                Workbook wbNoPassword = new Workbook(encryptedPath);
+                Console.WriteLine("Unexpectedly opened encrypted workbook without password.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to open without password (expected): {ex.Message}");
+            }
+
+            // 6. Open the encrypted workbook with the correct password using LoadOptions
+            LoadOptions loadOptions = new LoadOptions { Password = "Secret123" };
+            Workbook wbWithPassword = new Workbook(encryptedPath, loadOptions);
+            Console.WriteLine($"Opened with password. Settings.IsEncrypted: {wbWithPassword.Settings.IsEncrypted}");
+
+            // 7. Verify that the data is accessible
+            string cellValue = wbWithPassword.Worksheets[0].Cells["A1"].StringValue;
+            Console.WriteLine($"Cell A1 value after decryption: {cellValue}");
+        }
     }
 }

@@ -1,38 +1,36 @@
-// Title: Export Excel to HTML with clickable hyperlinks using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, insert a cell value and a hyperlink, configure HtmlSaveOptions to set LinkTargetType to Blank, and save the file as HTML so the link opens in a new browser tab and remains functional.
-// Keywords: Aspose.Cells | C# | .NET | Excel to HTML | hyperlink export | HtmlSaveOptions | LinkTargetType | clickable links | browser-friendly HTML | preserve Excel hyperlinks
-// Common Searches: Aspose.Cells export Excel to HTML with links | C# save workbook as HTML clickable hyperlinks | HtmlSaveOptions LinkTargetType blank example | how to keep Excel hyperlinks in HTML output | Aspose.Cells HTML export hyperlink target
-// Developer Intent: Generate an HTML file from an Excel workbook where all cell hyperlinks stay active and open in a new tab.
-// Use Cases: Publish a product catalog with direct links to item pages as a web‑ready HTML file. | Distribute a data report that includes references to external documentation via clickable URLs. | Create an email‑compatible HTML version of a spreadsheet that retains functional hyperlinks.
-// AI Prompts: Write C# code with Aspose.Cells to add several hyperlinks to different cells and export the workbook to HTML, ensuring each link opens in a new window. | Explain the effect of HtmlSaveOptions.LinkTargetType on generated HTML and show how to switch between '_self' and '_blank' targets. | Provide a step‑by‑step tutorial for converting an Excel file to HTML while preserving all hyperlinks and customizing their target attributes.
+// Title: Export Excel to HTML with clickable hyperlinks using Aspose.Cells for .NET (C#)
+// Description: Learn how to convert an Excel workbook to an HTML page with Aspose.Cells while preserving hyperlinks. The example shows adding a link, configuring HtmlSaveOptions to open links in a new tab (LinkTargetType.Blank) and to use relative URLs (IsFullPathLink = false), then saving the result as a fully functional HTML file.
+// Keywords: Aspose.Cells export Excel to HTML | C# preserve hyperlinks HTML | HtmlSaveOptions LinkTargetType Blank | .NET convert Excel to HTML | relative hyperlink paths Aspose.Cells | open links in new browser tab
+// Common Searches: Aspose.Cells export Excel to HTML with clickable links | How to keep hyperlinks when saving Excel as HTML .NET | HtmlSaveOptions open hyperlink in new tab C# | relative vs absolute links Aspose.Cells HTML export | C# convert spreadsheet to web‑ready HTML
+// Developer Intent: Create an HTML version of an Excel file where all embedded hyperlinks stay active and open in a new browser tab.
+// Use Cases: Generate web‑ready reports that include external resource links. | Publish Excel‑based documentation as HTML with navigation links. | Provide intranet dashboards where cells link to internal pages.
+// AI Prompts: Show me C# code to export an Excel workbook to HTML with functional hyperlinks using Aspose.Cells, opening links in a new tab. | How do I configure HtmlSaveOptions in Aspose.Cells to use relative hyperlink paths and preserve clickability? | Explain the difference between HtmlLinkTargetType.Blank and other target types when saving Excel as HTML.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, insert a cell value and a hyperlink, configure HtmlSaveOptions to set LinkTargetType to Blank, and save the file as HTML so the link opens in a new browser tab and remains functional.
+// Learn how to convert an Excel workbook to an HTML page with Aspose.Cells while preserving hyperlinks. The example shows adding a link, configuring HtmlSaveOptions to open links in a new tab (LinkTargetType.Blank) and to use relative URLs (IsFullPathLink = false), then saving the result as a fully functional HTML file.
 class ExportExcelToHtml
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Load the source Excel file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Add sample data to a cell
-        worksheet.Cells["A1"].PutValue("Visit Google");
-
-        // Add a hyperlink to the same cell (display text will be the cell value)
+        // Ensure there is a hyperlink in the worksheet (optional example)
         // Parameters: firstRow, firstColumn, totalRows, totalColumns, hyperlink address
-        worksheet.Hyperlinks.Add(0, 0, 1, 1, "https://www.google.com");
+        workbook.Worksheets[0].Hyperlinks.Add(0, 0, 1, 1, "https://www.example.com");
 
         // Configure HTML save options
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-        // Ensure hyperlinks are functional in the browser.
-        // Setting the target type to "_blank" opens links in a new tab/window.
+        // Open hyperlinks in a new browser tab/window
         htmlOptions.LinkTargetType = HtmlLinkTargetType.Blank;
 
-        // Save the workbook as an HTML file with the specified options
-        workbook.Save("ExportedWorkbook.html", htmlOptions);
+        // Use relative links (default). Set to true if absolute paths are required.
+        htmlOptions.IsFullPathLink = false;
+
+        // Save the workbook as an HTML file with functional hyperlinks
+        workbook.Save("output.html", htmlOptions);
     }
 }

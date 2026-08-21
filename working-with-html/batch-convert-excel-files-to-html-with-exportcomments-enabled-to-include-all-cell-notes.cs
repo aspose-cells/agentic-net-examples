@@ -1,77 +1,81 @@
-// Title: Batch convert Excel files to HTML with comments using Aspose.Cells for .NET
-// Description: A C# utility that scans a given folder, loads each Excel workbook (xls, xlsx, xlsm, csv) and converts it to an HTML file. The conversion uses Aspose.Cells ConversionUtility with HtmlSaveOptions.IsExportComments enabled, ensuring all cell notes appear in the generated HTML.
-// Keywords: Aspose.Cells | C# batch Excel to HTML | ExportComments | HtmlSaveOptions | ConversionUtility | convert multiple workbooks | cell notes to HTML | Excel to web conversion | CSV to HTML Aspose | automated spreadsheet conversion
-// Common Searches: C# convert folder of Excel files to HTML with comments | Aspose.Cells batch export cell notes to HTML | How to use HtmlSaveOptions.IsExportComments | Convert xls xlsx csv to HTML programmatically | Aspose.Cells convert multiple workbooks to HTML
-// Developer Intent: Automatically transform every Excel workbook in a directory into an HTML page while preserving all cell comments.
-// Use Cases: Publish a collection of spreadsheets as web‑ready documentation that retains original reviewer notes. | Archive financial or audit reports in HTML format, keeping embedded comments for regulatory reference. | Provide instant HTML previews of uploaded CSV/XLSX files on a portal, showing cell notes alongside data.
-// AI Prompts: Generate C# code that uses Aspose.Cells to batch convert all Excel files in a directory to HTML with IsExportComments enabled and logs conversion failures. | Write a PowerShell script that calls the compiled .NET assembly to perform the same batch conversion, including error handling and progress output. | Explain how to extend the sample to also export cell formulas as HTML tooltips while still exporting comments.
+// Title: Batch convert Excel (.xlsx) to HTML with comments using Aspose.Cells for .NET
+// Description: A C# console utility that scans an "InputExcels" folder, creates an "OutputHtml" folder, and converts every .xlsx workbook to HTML. It uses Aspose.Cells ConversionUtility with HtmlSaveOptions.IsExportComments = true to retain all cell notes in the generated HTML files.
+// Keywords: Aspose.Cells | C# batch Excel to HTML | ExportComments | HtmlSaveOptions | ConversionUtility | convert multiple xlsx to HTML | preserve cell comments | console utility | automate Excel to HTML | Aspose.Cells .NET
+// Common Searches: batch convert excel files to html with comments aspose.cells | asp.net export cell notes to html for multiple workbooks | convert all xlsx in a folder to html using aspose.cells c# | htmlsaveoptions isexportcomments example | aspose.cells conversionutility batch processing
+// Developer Intent: Automatically transform each .xlsx file in a directory into an HTML page while keeping every cell comment visible in the output.
+// Use Cases: Generate web‑ready reports from a collection of spreadsheets, preserving analyst notes. | Add a step to CI/CD pipelines that publishes spreadsheet documentation as HTML with comments. | Deploy a lightweight console tool that watches a folder and converts newly added Excel files to HTML for immediate publishing.
+// AI Prompts: Write a C# console app that monitors a folder and uses Aspose.Cells ConversionUtility to convert new .xlsx files to HTML with IsExportComments enabled. | Explain how HtmlSaveOptions.IsExportComments works when exporting Excel to HTML with Aspose.Cells. | Provide robust error‑handling patterns for batch converting Excel workbooks to HTML in a C# console application.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-// A C# utility that scans a given folder, loads each Excel workbook (xls, xlsx, xlsm, csv) and converts it to an HTML file. The conversion uses Aspose.Cells ConversionUtility with HtmlSaveOptions.IsExportComments enabled, ensuring all cell notes appear in the generated HTML.
+// A C# console utility that scans an "InputExcels" folder, creates an "OutputHtml" folder, and converts every .xlsx workbook to HTML. It uses Aspose.Cells ConversionUtility with HtmlSaveOptions.IsExportComments = true to retain all cell notes in the generated HTML files.
 class BatchExcelToHtml
 {
     static void Main()
     {
-        // Folder containing source Excel files
-        string inputFolder = @"C:\InputExcel";
+        // Folder containing the source Excel files
+        string inputFolder = "InputExcels";
 
-        // Folder where HTML files will be saved
-        string outputFolder = @"C:\OutputHtml";
-
-        // Verify input folder exists
+        // Ensure the input directory exists; create it if missing
         if (!Directory.Exists(inputFolder))
         {
-            Console.WriteLine($"Input folder not found: {inputFolder}");
+            Console.WriteLine($"Input folder \"{inputFolder}\" does not exist. Creating it.");
+            Directory.CreateDirectory(inputFolder);
+            Console.WriteLine("Place Excel files in the input folder and rerun the program.");
             return;
         }
+
+        // Folder where the HTML files will be saved
+        string outputFolder = "OutputHtml";
 
         // Ensure the output directory exists
         Directory.CreateDirectory(outputFolder);
 
-        // Retrieve all Excel files in the input folder (xls, xlsx, xlsm, csv)
-        string[] excelFiles = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
+        // Get all Excel files (you can add more extensions if needed)
+        string[] excelFiles = Directory.GetFiles(inputFolder, "*.xlsx");
+
+        if (excelFiles.Length == 0)
+        {
+            Console.WriteLine("No Excel files found in the input folder.");
+            return;
+        }
+
         foreach (string sourcePath in excelFiles)
         {
-            string ext = Path.GetExtension(sourcePath).ToLowerInvariant();
-            if (ext != ".xls" && ext != ".xlsx" && ext != ".xlsm" && ext != ".csv")
-                continue; // Skip non‑Excel files
-
-            // Verify the source file still exists
+            // Verify the source file exists
             if (!File.Exists(sourcePath))
             {
-                Console.WriteLine($"File not found, skipping: {sourcePath}");
+                Console.WriteLine($"Source file not found: {sourcePath}");
                 continue;
             }
 
-            // Determine destination HTML file path
-            string htmlFileName = Path.GetFileNameWithoutExtension(sourcePath) + ".html";
-            string destPath = Path.Combine(outputFolder, htmlFileName);
+            // Build the destination HTML file path
+            string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
+            string destPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
 
             try
             {
-                // Load options (auto‑detect format)
+                // Load options – default settings are sufficient for most cases
                 LoadOptions loadOptions = new LoadOptions();
 
-                // HTML save options with comments export enabled
+                // HTML save options with ExportComments enabled to include cell notes
                 HtmlSaveOptions htmlOptions = new HtmlSaveOptions
                 {
                     IsExportComments = true
                 };
 
-                // Perform conversion using Aspose.Cells ConversionUtility
+                // Perform the conversion using Aspose.Cells ConversionUtility
                 ConversionUtility.Convert(sourcePath, loadOptions, destPath, htmlOptions);
-                Console.WriteLine($"Converted: {sourcePath} -> {destPath}");
+
+                Console.WriteLine($"Converted '{sourcePath}' to '{destPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error converting file '{sourcePath}': {ex.Message}");
+                Console.WriteLine($"Error converting '{sourcePath}': {ex.Message}");
             }
         }
-
-        Console.WriteLine("Batch conversion completed.");
     }
 }

@@ -1,20 +1,20 @@
-// Title: C# – Hide Columns D‑G in Excel and Export to PDF with Aspose.Cells
-// Description: Load an Excel workbook, hide columns D through G using Cells.HideColumns, and save the worksheet as a PDF with SaveFormat.Pdf in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | HideColumns | C# | Excel to PDF | hide columns D G | column visibility | worksheet PDF conversion | Aspose.Cells .NET
-// Common Searches: Aspose.Cells hide columns D to G | C# hide multiple columns before PDF export | How to hide Excel columns with Aspose.Cells | Export hidden columns to PDF using Aspose.Cells | Cells.HideColumns example C#
-// Developer Intent: Hide specific columns in a worksheet and generate a PDF of the modified sheet.
-// Use Cases: Remove confidential data columns before sharing a PDF report. | Create printable PDFs that display only the required data columns. | Produce different PDF versions of the same workbook for distinct audiences by toggling column visibility.
-// AI Prompts: Generate C# code that uses Aspose.Cells to hide columns D through G in an Excel file and save the result as a PDF. | Explain the zero‑based indexing used by Cells.HideColumns in Aspose.Cells and how it affects PDF export. | Provide a step‑by‑step tutorial for programmatically hiding a range of columns and converting the worksheet to PDF with Aspose.Cells for .NET.
+// Title: C# – Hide Columns D‑G in an Excel Worksheet and Export to PDF using Aspose.Cells
+// Description: Load an Excel file with Aspose.Cells, hide columns D through G (zero‑based indices 3‑6) on the first worksheet, and save the result directly as a PDF. The example demonstrates the Cells.HideColumns method and PDF export in .NET.
+// Keywords: Aspose.Cells hide columns C# | hide columns D to G | Excel to PDF conversion .NET | Cells.HideColumns example | export worksheet as PDF Aspose | C# Excel column visibility | Aspose.Cells PDF output
+// Common Searches: how to hide a range of columns in Aspose.Cells C# | Aspose.Cells hide columns D‑G and save as PDF | C# convert Excel to PDF after hiding columns | Aspose.Cells hide multiple columns before PDF export
+// Developer Intent: Hide a specific column range in an Excel sheet and generate a PDF of the modified worksheet.
+// Use Cases: Produce printable reports that exclude confidential columns. | Create clean PDF versions of spreadsheets for client distribution. | Automate batch processing to hide designated columns across many workbooks before PDF conversion.
+// AI Prompts: Show C# code that hides columns D‑G in an Aspose.Cells workbook and exports the sheet to PDF. | Give an Aspose.Cells example for hiding a dynamic column range based on letters and then saving as PDF. | Explain how to hide columns while preserving their widths during Excel‑to‑PDF conversion with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Load an Excel workbook, hide columns D through G using Cells.HideColumns, and save the worksheet as a PDF with SaveFormat.Pdf in Aspose.Cells for .NET.
+// Load an Excel file with Aspose.Cells, hide columns D through G (zero‑based indices 3‑6) on the first worksheet, and save the result directly as a PDF. The example demonstrates the Cells.HideColumns method and PDF export in .NET.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from an existing Excel file
+        // Load the workbook from a file
         Workbook workbook = new Workbook("input.xlsx");
 
         // Get the first worksheet and its cells collection
@@ -23,11 +23,11 @@ class Program
 
         // Hide columns D (index 3) through G (index 6)
         // Total columns to hide = 4 (D, E, F, G)
-        int startColumn = 3; // Column D (zero‑based)
-        int totalColumns = 4; // D, E, F, G
-        cells.HideColumns(startColumn, totalColumns);
+        int startColumn = 3;      // Column D (zero‑based)
+        int columnCount = 4;      // D, E, F, G
+        cells.HideColumns(startColumn, columnCount);
 
-        // Save the modified workbook as a PDF document
+        // Save the modified workbook as a PDF file
         workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

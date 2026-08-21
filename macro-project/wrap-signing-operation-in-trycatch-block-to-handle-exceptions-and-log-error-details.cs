@@ -1,51 +1,82 @@
-// Title: C# – Wrap Aspose.Cells Digital Signature in Try‑Catch and Log Errors
-// Description: Shows how to create a Workbook, add content, load an X509Certificate2, build a DigitalSignature, and apply it with Workbook.SetDigitalSignature inside a try‑catch block that records the exception type, message and stack trace before saving the file.
-// Keywords: Aspose.Cells digital signature C# | try catch Aspose.Cells | exception handling Aspose.Cells | log digital signature errors .NET | Workbook.SetDigitalSignature error handling | X509Certificate2 signing Aspose | C# workbook signing example | Aspose.Cells error logging | digital signature exception logging | C# try‑catch logging pattern
-// Common Searches: how to catch errors when using Aspose.Cells SetDigitalSignature in C# | Aspose.Cells digital signature exception handling example | log certificate signing failures with Aspose.Cells | C# try‑catch around Aspose.Cells digital signature | Aspose.Cells SetDigitalSignature stack trace logging
-// Developer Intent: Add robust try‑catch handling around the Aspose.Cells digital signing process and output detailed error information for troubleshooting.
-// Use Cases: Prevent application crashes if the certificate file is missing, corrupted, or the password is wrong. | Capture diagnostic data (exception type, message, stack trace) to speed up support and debugging. | Allow the workbook to be saved even when the signing step fails, preserving unsignaled content. | Integrate with existing logging frameworks (e.g., NLog, Serilog) by replacing console writes.
-// AI Prompts: Generate C# code that wraps Aspose.Cells SetDigitalSignature in a try‑catch block and logs exception details using a logging framework. | Suggest best practices for handling certificate loading errors and digital signature failures in Aspose.Cells. | Create a reusable method that signs a workbook with Aspose.Cells and returns a result object containing success status and error information.
+// Title: C# Example: Apply a Digital Signature to an Aspose.Cells Workbook with Robust Try‑Catch Error Handling
+// Description: The sample creates a new Workbook, inserts sample text, verifies the presence of an X509 certificate file, loads the certificate, builds a DigitalSignature, adds it to a DigitalSignatureCollection, applies the collection via SetDigitalSignature, and saves the signed file. Both the signing operation and the save step are wrapped in try‑catch blocks that output the exception type, message, and stack trace.
+// Keywords: Aspose.Cells digital signature C# | try catch exception handling | X509Certificate2 loading | SetDigitalSignature error logging | save signed Excel workbook exception | certificate file not found handling | console logging stack trace
+// Common Searches: Aspose.Cells digital signature try catch C# | How to handle errors when signing Excel with Aspose.Cells | C# catch exception SetDigitalSignature | Log stack trace for Aspose.Cells signing failures | Save signed workbook exception handling Aspose.Cells
+// Developer Intent: Show how to protect the signing and saving phases of an Aspose.Cells workbook with try‑catch blocks and detailed logging of any runtime errors.
+// Use Cases: Validate that the certificate file exists and throw a clear FileNotFoundException before attempting to sign. | Capture and log signing failures caused by an invalid or expired certificate. | Handle I/O exceptions when writing the signed workbook to disk. | Provide concise console feedback for automated build or CI pipelines.
+// AI Prompts: Generate C# code that signs an Excel workbook using Aspose.Cells, checks the certificate file, and logs exception type, message, and stack trace. | Refactor the signing logic into a reusable method that returns a boolean success flag and includes comprehensive error handling for both signing and saving. | Create a unit test that verifies the exception handling behavior when the certificate path is incorrect in the Aspose.Cells digital signature example.
 
 using System;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
 using Aspose.Cells.DigitalSignatures;
 
-// Shows how to create a Workbook, add content, load an X509Certificate2, build a DigitalSignature, and apply it with Workbook.SetDigitalSignature inside a try‑catch block that records the exception type, message and stack trace before saving the file.
-class DigitalSignatureDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The sample creates a new Workbook, inserts sample text, verifies the presence of an X509 certificate file, loads the certificate, builds a DigitalSignature, adds it to a DigitalSignatureCollection, applies the collection via SetDigitalSignature, and saves the signed file. Both the signing operation and the save step are wrapped in try‑catch blocks that output the exception type, message, and stack trace.
+    public class DigitalSignatureWithExceptionHandlingDemo
     {
-        // Create a new workbook and add sample content
-        Workbook workbook = new Workbook();
-        workbook.Worksheets[0].Cells["A1"].PutValue("Digitally Signed Document");
-
-        try
+        public static void Run()
         {
-            // Load the certificate (replace with actual path and password)
-            X509Certificate2 certificate = new X509Certificate2("mycert.pfx", "password");
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Create a digital signature using the certificate, comments, and sign time
-            DigitalSignature signature = new DigitalSignature(
-                certificate,
-                "Document approval",
-                DateTime.UtcNow);
+            // Add sample content
+            workbook.Worksheets[0].Cells["A1"].PutValue("Document requiring digital signature");
 
-            // Add the signature to a collection
-            DigitalSignatureCollection signatures = new DigitalSignatureCollection();
-            signatures.Add(signature);
+            try
+            {
+                // Path to certificate file
+                string certPath = "mycertificate.pfx";
+                string certPassword = "password";
 
-            // Apply the digital signature collection to the workbook
-            workbook.SetDigitalSignature(signatures);
+                // Verify certificate file exists
+                if (!File.Exists(certPath))
+                {
+                    throw new FileNotFoundException($"Certificate file not found: {certPath}");
+                }
+
+                // Load the certificate
+                X509Certificate2 certificate = new X509Certificate2(certPath, certPassword);
+
+                // Create digital signature
+                DigitalSignature signature = new DigitalSignature(
+                    certificate,
+                    "Approved by QA Team",
+                    DateTime.UtcNow);
+
+                // Add signature to collection
+                DigitalSignatureCollection signatures = new DigitalSignatureCollection();
+                signatures.Add(signature);
+
+                // Apply signature to workbook
+                workbook.SetDigitalSignature(signatures);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during digital signing: {ex.GetType().Name} - {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                return;
+            }
+
+            // Save signed workbook
+            string outputPath = "SignedWorkbook.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook signed and saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.GetType().Name} - {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        // Entry point
+        public static void Main(string[] args)
         {
-            // Log detailed error information
-            Console.WriteLine($"Error signing workbook: {ex.GetType().Name} - {ex.Message}");
-            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+            Run();
         }
-
-        // Save the workbook (signed if no exception occurred)
-        workbook.Save("signed_output.xlsx");
     }
 }

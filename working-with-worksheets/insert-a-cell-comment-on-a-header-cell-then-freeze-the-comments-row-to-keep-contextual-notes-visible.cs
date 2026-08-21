@@ -1,16 +1,16 @@
-// Title: Insert a visible comment on a header cell and freeze its row using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a visible comment with custom author and font to cell A1, freeze the first row so the comment stays in view while scrolling, and save the file as CommentWithFrozenHeader.xlsx.
-// Keywords: Aspose.Cells add comment C# | freeze row Aspose.Cells | visible comment Aspose.Cells | freeze panes header Aspose.Cells | set comment author Aspose.Cells | C# workbook comment freeze | Aspose.Cells comment formatting
-// Common Searches: Aspose.Cells add comment to cell A1 C# | How to keep a comment visible while scrolling in Aspose.Cells | Freeze header row with comment using Aspose.Cells .NET | Make comment always visible in Excel with Aspose.Cells | C# Aspose.Cells freeze panes based on comment row
-// Developer Intent: Add a persistent comment to a header cell and lock its row in the worksheet.
-// Use Cases: Provide on‑screen guidance for column headers in financial reports | Create a template where explanatory notes stay fixed for end‑users | Generate audit‑ready spreadsheets with author‑attributed comments that remain visible | Design dashboards where header comments are frozen for quick reference
-// AI Prompts: Generate C# Aspose.Cells code that adds a comment to cell B2, sets the author to 'Reviewer', makes it visible, and freezes rows up to that comment. | Show how to add multiple header comments and freeze the top two rows in an Aspose.Cells workbook using C#. | Explain the FreezePanes parameters and how they affect rows containing comments in Aspose.Cells.
+// Title: Add a visible comment to a header cell and freeze the top row with Aspose.Cells for .NET
+// Description: Shows how to create a workbook in C#, write a header in A1, attach a visible comment (author, autosize), freeze the first row via FreezePanes, and save the result as HeaderCommentWithFreeze.xlsx.
+// Keywords: Aspose.Cells comment visible | C# freeze panes | add comment to cell A1 | freeze top row programmatically | Aspose.Cells header note | .NET workbook comment author | auto‑size comment Aspose.Cells
+// Common Searches: Aspose.Cells add visible comment to header | freeze first row after adding comment C# | keep cell comment visible while scrolling Aspose.Cells | set comment author and autosize in .NET | FreezePanes example with comments
+// Developer Intent: Insert a comment on a header cell and ensure it stays visible by freezing the worksheet’s top row.
+// Use Cases: Provide explanatory notes on column headers that remain on‑screen during scrolling. | Create data‑entry templates where header comments describe required formats. | Generate reports with frozen header rows that include persistent reviewer comments.
+// AI Prompts: Generate C# code to add a visible comment to cell A1, set the author, enable autosize, and freeze the first row using Aspose.Cells. | Explain how to customize comment font, color, and background while keeping it visible after applying FreezePanes. | Show an example of adding comments to multiple header cells and freezing the top two rows in a .NET workbook.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, add a visible comment with custom author and font to cell A1, freeze the first row so the comment stays in view while scrolling, and save the file as CommentWithFrozenHeader.xlsx.
-class InsertCommentAndFreeze
+// Shows how to create a workbook in C#, write a header in A1, attach a visible comment (author, autosize), freeze the first row via FreezePanes, and save the result as HeaderCommentWithFreeze.xlsx.
+class Program
 {
     static void Main()
     {
@@ -18,21 +18,22 @@ class InsertCommentAndFreeze
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a comment to the header cell A1
+        // Put a header value in cell A1
+        worksheet.Cells["A1"].PutValue("Header");
+
+        // Add a comment to the header cell (A1)
         int commentIndex = worksheet.Comments.Add("A1");
         Comment comment = worksheet.Comments[commentIndex];
-        comment.Note = "Header note: This column contains sales data.";
-        comment.Author = "Analyst";
-        comment.Font.Name = "Calibri";
-        comment.Font.Size = 11;
-        comment.IsVisible = true;
+        comment.Note = "This is a header comment.";
+        comment.Author = "Admin";
+        comment.IsVisible = true;   // Make the comment visible by default
+        comment.AutoSize = true;    // Adjust size automatically
 
-        // Freeze the row that contains the comment (row 0, first row)
-        int commentRow = comment.Row; // zero‑based index
-        // Freeze panes so that rows up to and including the comment row are locked
-        worksheet.FreezePanes(commentRow + 1, 0, commentRow + 1, 0);
+        // Freeze the first row so the comment stays visible while scrolling
+        // Freeze at cell A2 (row index 1) with 1 frozen row and 0 frozen columns
+        worksheet.FreezePanes("A2", 1, 0);
 
         // Save the workbook
-        workbook.Save("CommentWithFrozenHeader.xlsx");
+        workbook.Save("HeaderCommentWithFreeze.xlsx");
     }
 }

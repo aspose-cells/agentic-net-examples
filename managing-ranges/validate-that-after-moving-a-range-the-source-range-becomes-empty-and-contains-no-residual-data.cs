@@ -1,66 +1,59 @@
-// Title: Aspose.Cells C# – Verify source range is empty after MoveTo
-// Description: This example creates a workbook, fills A1:B2 with data, moves the range to C3:D4 using Range.MoveTo, then uses Range.IsBlank to confirm the original cells are cleared. The result is printed and the workbook is saved.
-// Keywords: Aspose.Cells | C# | .NET | Range.MoveTo | Range.IsBlank | validate moved range | clear source cells | Excel automation | cell range relocation
-// Common Searches: Aspose.Cells check if source range is blank after MoveTo | C# verify cells cleared after moving a range | Range.IsBlank after moving range in Aspose.Cells | how to test range relocation in .NET Excel library
-// Developer Intent: Confirm that calling MoveTo removes all data from the original range.
-// Use Cases: Automated unit test to ensure range relocation does not leave duplicate data. | Data migration within a worksheet where the source area must be emptied. | Report generation that moves calculated blocks to a summary section and validates cleanup.
-// AI Prompts: Generate an NUnit test that moves a range with Aspose.Cells and asserts sourceRange.IsBlank() is true. | Provide a C# snippet that moves a range, logs source and destination values, and throws an exception if the source is not empty. | Explain how to use Aspose.Cells Range.IsBlank after MoveTo to confirm successful source clearance.
+// Title: Aspose.Cells .NET – Verify Source Range Is Empty After Range.MoveTo
+// Description: C# example that creates a workbook, fills A1:B2, moves the range to A3:B4 with Range.MoveTo, then uses Range.IsBlank to confirm the original cells are cleared and the destination holds the data before saving the file.
+// Keywords: Aspose.Cells | C# | .NET | Range.MoveTo | Range.IsBlank | validate moved range | source range empty | worksheet range verification | Aspose.Cells example
+// Common Searches: Aspose.Cells check if source range is blank after MoveTo | C# verify range move clears original cells | How to test Range.MoveTo in Aspose.Cells | Aspose.Cells .NET validate range relocation | Range.IsBlank after moving cells
+// Developer Intent: Confirm that calling Range.MoveTo removes all data from the original range.
+// Use Cases: Automated unit tests that assert data integrity after moving a range within a worksheet. | Debugging scripts to ensure no residual values remain in the source area after a range relocation. | Generating reports where ranges are repositioned and the original cells must be cleared before saving.
+// AI Prompts: Generate an xUnit test that moves a range with Aspose.Cells and asserts the source range is blank using Range.IsBlank. | Write a reusable C# method that moves any range to a new address and returns true if the original cells are empty. | Explain how Range.MoveTo handles merged cells and how to verify that merged source cells are cleared after the move.
 
 using System;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// This example creates a workbook, fills A1:B2 with data, moves the range to C3:D4 using Range.MoveTo, then uses Range.IsBlank to confirm the original cells are cleared. The result is printed and the workbook is saved.
-public class MoveRangeValidationDemo
+namespace AsposeCellsRangeMoveValidation
 {
-    public static void Run()
+    // C# example that creates a workbook, fills A1:B2, moves the range to A3:B4 with Range.MoveTo, then uses Range.IsBlank to confirm the original cells are cleared and the destination holds the data before saving the file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
 
-            // Populate the source range A1:B2 with sample data
-            cells["A1"].PutValue("Val1");
-            cells["B1"].PutValue("Val2");
-            cells["A2"].PutValue("Val3");
-            cells["B2"].PutValue("Val4");
+                // Create a source range A1:B2 and put sample data into it
+                AsposeRange sourceRange = cells.CreateRange("A1:B2");
+                sourceRange[0, 0].PutValue("A1");
+                sourceRange[0, 1].PutValue("B1");
+                sourceRange[1, 0].PutValue("A2");
+                sourceRange[1, 1].PutValue("B2");
 
-            // Create a Range object representing the source area
-            AsposeRange sourceRange = cells.CreateRange("A1:B2");
+                // Move the source range down by two rows to A3:B4
+                // MoveTo expects zero‑based row and column indices
+                sourceRange.MoveTo(sourceRange.FirstRow + 2, sourceRange.FirstColumn);
 
-            // Move the range to C3:D4 (zero‑based indices: row 2, column 2)
-            sourceRange.MoveTo(2, 2);
+                // Verify that the original location (A1:B2) is now empty
+                AsposeRange originalLocation = cells.CreateRange("A1:B2");
+                bool isBlank = originalLocation.IsBlank();
+                Console.WriteLine($"Original range A1:B2 is blank after move: {isBlank}");
 
-            // After moving, the original area should be empty.
-            // Create a new Range object for the original location and check if it is blank.
-            AsposeRange originalArea = cells.CreateRange("A1:B2");
-            bool isBlank = originalArea.IsBlank();
+                // Verify that the destination range contains the moved data
+                AsposeRange destinationRange = cells.CreateRange("A3:B4");
+                bool destHasData = !destinationRange.IsBlank();
+                Console.WriteLine($"Destination range A3:B4 has data after move: {destHasData}");
 
-            Console.WriteLine("Source range after move is blank: " + isBlank);
-
-            // Verify that the destination contains the moved data
-            Console.WriteLine("Destination C3 value: " + cells["C3"].StringValue);
-            Console.WriteLine("Destination D4 value: " + cells["D4"].StringValue);
-
-            // Save the workbook
-            string outputPath = "MoveRangeValidationOutput.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine("Workbook saved to " + outputPath);
+                // Save the workbook
+                string outputPath = "RangeMoveValidation.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main()
-    {
-        MoveRangeValidationDemo.Run();
     }
 }

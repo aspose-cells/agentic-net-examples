@@ -1,61 +1,46 @@
+// Title: Export Excel to PDF with OnePagePerSheet and a 10‑page limit using Aspose.Cells (C#)
+// Description: C# example that creates a workbook, fills it with data, and saves it as a PDF with PdfSaveOptions configured to render each worksheet on a single page (OnePagePerSheet = true) and stop after ten pages (PageCount = 10).
+// Keywords: Aspose.Cells PDF export | OnePagePerSheet true | limit PDF pages | PdfSaveOptions PageCount | C# Excel to PDF | Aspose.Cells pagination
+// Common Searches: Aspose.Cells set OnePagePerSheet in PDF | How to limit PDF page count with Aspose.Cells | C# export Excel to PDF with max pages | PdfSaveOptions PageCount example
+// Developer Intent: Generate a PDF from an Excel workbook where each sheet fits on one page and the output contains no more than ten pages.
+// Use Cases: Produce a printable summary where each worksheet occupies a single page. | Create a quick preview PDF that includes only the first ten pages of a large workbook. | Control file size by capping the PDF page count while preserving a one‑page‑per‑sheet layout.
+// AI Prompts: Write C# code that sets OnePagePerSheet = true and limits the PDF to 10 pages with Aspose.Cells. | Explain the interaction between OnePagePerSheet and PdfSaveOptions.PageCount in Aspose.Cells. | Show alternative methods to truncate an Aspose.Cells‑generated PDF after a specific number of pages.
+
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPdfExample
 {
-    // Author: Aspose.Cells .NET example – sets OnePagePerSheet and limits PDF to 10 pages
-    class OnePagePerSheetWithPageLimit
+    // C# example that creates a workbook, fills it with data, and saves it as a PDF with PdfSaveOptions configured to render each worksheet on a single page (OnePagePerSheet = true) and stop after ten pages (PageCount = 10).
+    class Program
     {
         static void Main()
         {
-            // Create a new workbook and add sample data
+            // Create a new workbook (you can also load an existing file using new Workbook("input.xlsx"))
             Workbook workbook = new Workbook();
+
+            // Add some sample data to demonstrate pagination
             Worksheet sheet = workbook.Worksheets[0];
-            for (int i = 0; i < 200; i++)
+            for (int row = 0; row < 200; row++)
             {
-                sheet.Cells[i, 0].Value = $"Row {i + 1}";
+                for (int col = 0; col < 10; col++)
+                {
+                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                }
             }
 
             // Configure PDF save options
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                OnePagePerSheet = true,                     // All content of a sheet fits on one page
-                PageSavingCallback = new MaxPageCallback(10) // Limit output to a maximum of 10 pages
+                // Ensure each worksheet is rendered on a single page
+                OnePagePerSheet = true,
+
+                // Limit the output to a maximum of 10 pages
+                PageCount = 10
             };
 
-            // Save the workbook as PDF
-            workbook.Save("OnePagePerSheet_Limited.pdf", pdfOptions);
-        }
-    }
-
-    // Callback that stops saving after a specified number of pages
-    internal class MaxPageCallback : IPageSavingCallback
-    {
-        private readonly int _maxPages;
-        private int _currentPage;
-
-        public MaxPageCallback(int maxPages)
-        {
-            _maxPages = maxPages;
-            _currentPage = 0;
-        }
-
-        public void PageStartSaving(PageStartSavingArgs args)
-        {
-            // No action needed before a page is saved
-        }
-
-        public void PageEndSaving(PageEndSavingArgs args)
-        {
-            // Increment page counter
-            _currentPage++;
-
-            // If the maximum page count is reached, prevent further pages
-            if (_currentPage >= _maxPages)
-            {
-                args.HasMorePages = false;
-            }
+            // Save the workbook as PDF with the specified options
+            workbook.Save("output.pdf", pdfOptions);
         }
     }
 }

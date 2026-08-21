@@ -1,66 +1,70 @@
-// Title: C# – Embed a Base64 PNG in a Merged Cell with Aspose.Cells HtmlString
-// Description: Demonstrates how to merge cells, assign a Base64‑encoded <img> tag to the top‑left cell via the HtmlString property, and save the workbook as HTML (images embedded) and XLSX (HTML markup retained) using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells HtmlString | embed Base64 image Excel | merged cell image C# | export workbook to HTML with images | preserve HTML tags in XLSX | Aspose.Cells .NET image handling
-// Common Searches: Aspose.Cells set HtmlString for merged cell | C# embed Base64 PNG in Excel cell | how to display image in merged Excel cells | export Aspose.Cells workbook to HTML with embedded images | keep <img> tag when saving XLSX with Aspose.Cells
-// Developer Intent: Insert an <img> tag into a merged cell so the picture appears after merging and is retained in HTML and XLSX outputs.
-// Use Cases: Add a logo or banner to a merged header row without external image files. | Generate HTML reports from spreadsheets that contain inline Base64 images. | Create XLSX files that preserve HTML image markup for downstream applications supporting HtmlString.
-// AI Prompts: Show C# code that merges cells, sets a Base64 PNG via HtmlString, and saves to HTML with images embedded. | Provide an Aspose.Cells example that keeps an <img> tag in a merged cell when exporting to XLSX. | Explain HtmlSaveOptions settings needed to retain Base64 images while exporting a workbook containing HtmlString content.
+// Title: Embed a Base64 PNG in a Merged Excel Cell using Aspose.Cells HtmlString (C#)
+// Description: Creates a workbook, merges B2:D2, reads a PNG, converts it to a Base64 data‑URI, assigns the <img> tag to the merged cell via HtmlString, and saves the file so the image appears inside the merged range when opened.
+// Keywords: Aspose.Cells HtmlString | C# embed image in Excel cell | Base64 data URI Excel | merged cells picture Aspose | insert PNG into merged cell | Excel image rendering C# | Aspose.Cells image merge
+// Common Searches: Aspose.Cells embed image in merged cell C# | HtmlString property base64 image Excel | display picture after merging cells Aspose | C# add PNG to merged Excel range | how to use data‑uri image in Aspose.Cells
+// Developer Intent: Insert an image that spans a merged cell range by setting the cell’s HtmlString to a Base64‑encoded <img> tag.
+// Use Cases: Add a company logo across a merged header row in automated reports. | Show product thumbnails in merged catalog cells generated programmatically. | Place dynamically created chart snapshots in merged dashboard sections for scheduled exports.
+// AI Prompts: Modify the example to embed a JPEG image and specify width/height attributes. | Show how to center the image within the merged cell using CSS styles in the HtmlString. | Provide error‑handling code that creates a placeholder cell when the image file is missing.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to merge cells, assign a Base64‑encoded <img> tag to the top‑left cell via the HtmlString property, and save the workbook as HTML (images embedded) and XLSX (HTML markup retained) using Aspose.Cells for .NET.
+    // Creates a workbook, merges B2:D2, reads a PNG, converts it to a Base64 data‑URI, assigns the <img> tag to the merged cell via HtmlString, and saves the file so the image appears inside the merged range when opened.
     public class HtmlImageInMergedCellDemo
     {
-        public static void Main(string[] args)
+        public static void Run()
         {
             try
             {
-                Run();
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Merge cells B2:D2 (row index 1, columns 1 to 3)
+                sheet.Cells.Merge(1, 1, 1, 3);
+
+                // Load an image file (replace with your image path)
+                string imagePath = "sample.png";
+                if (!File.Exists(imagePath))
+                {
+                    Console.WriteLine($"Image file not found: {Path.GetFullPath(imagePath)}");
+                    return;
+                }
+
+                byte[] imageBytes = File.ReadAllBytes(imagePath);
+
+                // Convert image bytes to a Base64 string
+                string base64 = Convert.ToBase64String(imageBytes);
+
+                // Build the HTML img tag using a data URI
+                string htmlImgTag = $"<img src=\"data:image/png;base64,{base64}\" />";
+
+                // Set the HTML string of the merged cell (top‑left cell of the range)
+                Cell mergedCell = sheet.Cells[1, 1]; // B2
+                mergedCell.HtmlString = htmlImgTag;
+
+                // Save the workbook; the image will be rendered inside the merged cell when opened
+                string outputPath = "HtmlImageInMergedCell.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
+    }
 
-        public static void Run()
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Merge a range of cells (A1:D2) – 2 rows, 4 columns
-            worksheet.Cells.Merge(0, 0, 2, 4);
-
-            // Small transparent PNG image encoded as Base64 (1x1 pixel)
-            const string pngBase64 =
-                "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO2b4ZcAAAAASUVORK5CYII=";
-
-            // Build the HTML img tag using the Base64 data
-            string imgTag = $"<img src=\"data:image/png;base64,{pngBase64}\" alt=\"Embedded\"/>";
-
-            // Set the HTML string of the merged cell (top‑left cell of the merged range)
-            Cell mergedCell = worksheet.Cells["A1"];
-            mergedCell.HtmlString = imgTag;
-
-            // Export the workbook to HTML to verify rendering
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                ExportImagesAsBase64 = true // keep images embedded in HTML
-            };
-            string htmlPath = "MergedCellWithImage.html";
-            workbook.Save(htmlPath, htmlOptions);
-            Console.WriteLine($"HTML file saved to: {Path.GetFullPath(htmlPath)}");
-
-            // Save the workbook in XLSX format (the HTML string is preserved)
-            string xlsxPath = "MergedCellWithImage.xlsx";
-            workbook.Save(xlsxPath);
-            Console.WriteLine($"XLSX file saved to: {Path.GetFullPath(xlsxPath)}");
+            HtmlImageInMergedCellDemo.Run();
         }
     }
 }

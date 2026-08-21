@@ -1,0 +1,48 @@
+{
+  "name": "Aspose.Cells for .NET Examples Agent",
+  "description": "AI agent that generates, compiles, and validates C# code examples for Aspose.Cells for .NET 26.7.0. 5,394 build-validated examples across 31 categories.",
+  "version": "26.7.0",
+  "url": "https://github.com/aspose-cells/agentic-net-examples.git",
+  "api_base_url": "http://faisalabad-examples-mcp.dynabic.com:7006",
+  "mcp_endpoint": "http://faisalabad-examples-mcp.dynabic.com:7006/generate",
+  "openapi_url": "http://faisalabad-examples-mcp.dynabic.com:7006/openapi.json",
+  "docs_url": "http://faisalabad-examples-mcp.dynabic.com:7006/docs",
+  "capabilities": [
+    "Generate verified C# code examples for Aspose.Cells for .NET",
+    "Browse build-validated examples organised by spreadsheet feature category",
+    "Look up category-specific API guidance via per-category AGENTS.md",
+    "Programmatically enumerate examples via index.json"
+  ],
+  "tools": [
+    {
+      "name": "generate",
+      "description": "Generate a C# Aspose.Cells example via /generate"
+    },
+    {
+      "name": "bulk_start",
+      "description": "Start bulk example processing via /bulk-start"
+    },
+    {
+      "name": "bulk_status",
+      "description": "Check bulk processing status via /bulk-status/{job_id}"
+    },
+    {
+      "name": "run_category",
+      "description": "Run examples for a category via /run-category"
+    }
+  ],
+  "product": {
+    "name": "Aspose.Cells for .NET",
+    "nuget_package": "Aspose.Cells",
+    "nuget_version": "26.7.0",
+    "target_framework": "net10.0"
+  },
+  "links": {
+    "github": "https://github.com/aspose-cells/agentic-net-examples.git",
+    "index": "https://github.com/aspose-cells/agentic-net-examples/blob/main/index.json",
+    "llms_txt": "https://github.com/aspose-cells/agentic-net-examples/blob/main/llms.txt",
+    "agents_md": "https://github.com/aspose-cells/agentic-net-examples/blob/main/AGENTS.md",
+    "documentation": "https://docs.aspose.com/cells/net/",
+    "api_reference": "https://reference.aspose.com/cells/net/"
+  }
+}

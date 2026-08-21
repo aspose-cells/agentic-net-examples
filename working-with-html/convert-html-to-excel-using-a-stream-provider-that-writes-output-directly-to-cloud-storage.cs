@@ -1,94 +1,118 @@
-// Title: Convert HTML to Excel and stream directly to cloud storage with Aspose.Cells for .NET
-// Description: Shows how to implement a custom IStreamProvider that creates a stream targeting cloud storage, load an HTML file into a Workbook using HtmlLoadOptions, and save the workbook as XLSX straight to the stream, avoiding intermediate local files.
-// Keywords: Aspose.Cells | HTML to Excel | C# stream provider | IStreamProvider | cloud storage | Azure Blob Storage | Amazon S3 | save workbook to stream | convert HTML to XLSX | custom stream provider
-// Common Searches: Aspose.Cells save workbook to cloud storage | C# convert HTML to XLSX using stream | How to use IStreamProvider with Aspose.Cells | Stream Aspose.Cells output to Azure Blob | Write Excel file directly to S3 from .NET
-// Developer Intent: Write C# code that converts an HTML document into an Excel workbook and stores it directly in a cloud storage location via a custom stream provider.
-// Use Cases: Generate Excel reports from HTML templates and store them in Azure Blob Storage without creating temporary files. | Expose a web API that receives HTML content, converts it to XLSX with Aspose.Cells, and streams the result to Amazon S3. | Batch‑process a directory of HTML files, converting each to XLSX and writing the outputs to a designated cloud folder using the same stream provider.
-// AI Prompts: Provide a C# example that modifies CloudStorageStreamProvider to upload the generated XLSX to Azure Blob Storage instead of a local file. | Show how to make the stream provider asynchronous for efficient handling of large HTML files. | Explain how to configure HtmlLoadOptions to preserve CSS styles and merged cells when converting HTML to Excel with Aspose.Cells.
+// Title: Convert HTML to Excel in C# and upload via stream to Azure, AWS or GCP using Aspose.Cells
+// Description: Load an HTML file into an Aspose.Cells Workbook, save it as XLSX to a MemoryStream, and upload the stream directly to cloud storage (Azure Blob, Amazon S3, Google Cloud Storage) without creating a local file. Includes a mock IStreamProvider example and guidance for real cloud SDK integration.
+// Keywords: Aspose.Cells | HTML to XLSX C# | MemoryStream upload | cloud storage upload | Azure Blob Storage | AWS S3 | Google Cloud Storage | IStreamProvider | in‑memory conversion | C# Excel export
+// Common Searches: convert html table to excel c# aspose.cells | aspose.cells save workbook to memorystream | upload excel stream to azure blob using c# | aspose.cells upload xlsx to amazon s3 | c# html to xlsx and store in google cloud storage | how to use istreamprovider with aspose.cells
+// Developer Intent: Create an Excel workbook from HTML and stream it directly to cloud storage without writing a temporary file.
+// Use Cases: Generate server‑side reports from HTML and store them in Azure Blob for downstream BI pipelines. | Transform user‑submitted HTML forms into XLSX files and archive them in Amazon S3. | Produce Excel files from HTML content in a Cloud Function and write them to Google Cloud Storage.
+// AI Prompts: Show how to replace the mock CloudStorageHelper with Azure Blob Storage SDK code for uploading the MemoryStream. | Provide an IStreamProvider implementation that writes Aspose.Cells output directly to an Amazon S3 stream using AWSSDK. | Explain how to modify the example to save the workbook as CSV while still uploading via the stream provider.
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Saving;
 
-// Custom stream provider that writes directly to a cloud storage location (simulated here with a file path)
-// Shows how to implement a custom IStreamProvider that creates a stream targeting cloud storage, load an HTML file into a Workbook using HtmlLoadOptions, and save the workbook as XLSX straight to the stream, avoiding intermediate local files.
-public class CloudStorageStreamProvider : IStreamProvider
+namespace AsposeCellsHtmlToExcel
 {
-    private readonly string _cloudFilePath;
-
-    public CloudStorageStreamProvider(string cloudFilePath)
+    // Placeholder helper that represents uploading a stream to a cloud storage service.
+    // In a real scenario replace the body of UploadAsync with actual SDK calls (e.g., Azure Blob, AWS S3, etc.).
+    // Load an HTML file into an Aspose.Cells Workbook, save it as XLSX to a MemoryStream, and upload the stream directly to cloud storage (Azure Blob, Amazon S3, Google Cloud Storage) without creating a local file. Includes a mock IStreamProvider example and guidance for real cloud SDK integration.
+    public static class CloudStorageHelper
     {
-        _cloudFilePath = cloudFilePath;
+        public static async Task UploadAsync(Stream dataStream, string cloudPath)
+        {
+            // Ensure the stream is positioned at the beginning.
+            dataStream.Position = 0;
+
+            // Simulate async upload operation.
+            await Task.Run(() =>
+            {
+                // For demonstration, write the stream to a local file that mimics cloud storage.
+                // Replace this block with real cloud SDK upload logic.
+                string localPath = Path.Combine(Path.GetTempPath(), cloudPath.Replace('/', Path.DirectorySeparatorChar));
+                Directory.CreateDirectory(Path.GetDirectoryName(localPath));
+                using (FileStream file = new FileStream(localPath, FileMode.Create, FileAccess.Write))
+                {
+                    dataStream.CopyTo(file);
+                }
+                Console.WriteLine($"[Mock Upload] Stream saved to local path: {localPath}");
+            });
+        }
     }
 
-    // Initializes the stream that will be used for writing.
-    public void InitStream(StreamProviderOptions options)
+    // Example implementation of IStreamProvider that could be used when saving HTML.
+    // Not required for the HTML‑to‑Excel conversion itself, but shown for completeness.
+    public class HtmlExportStreamProvider : IStreamProvider
     {
-        // Ensure the target directory exists.
-        string directory = Path.GetDirectoryName(_cloudFilePath);
-        if (!Directory.Exists(directory))
+        private readonly string _outputDirectory;
+
+        public HtmlExportStreamProvider(string outputDirectory)
         {
-            Directory.CreateDirectory(directory);
+            _outputDirectory = outputDirectory;
         }
 
-        // Create a file stream that represents the cloud storage destination.
-        options.Stream = new FileStream(_cloudFilePath, FileMode.Create, FileAccess.Write);
-        // CustomPath can be used by Aspose internally; set it to the file name.
-        options.CustomPath = Path.GetFileName(_cloudFilePath);
+        public void InitStream(StreamProviderOptions options)
+        {
+            // Determine the full path for the output file.
+            string filePath = Path.Combine(_outputDirectory, options.CustomPath ?? options.DefaultPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            options.Stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+        }
+
+        public void CloseStream(StreamProviderOptions options)
+        {
+            options.Stream?.Close();
+        }
     }
 
-    // Closes the stream after the operation is complete.
-    public void CloseStream(StreamProviderOptions options)
+    public class HtmlToExcelConverter
     {
-        options.Stream?.Close();
+        // Converts an HTML file to an Excel file and uploads the result directly to cloud storage.
+        public static async Task ConvertAndUploadAsync(string htmlFilePath, string cloudDestinationPath)
+        {
+            // Load the HTML file into a workbook.
+            // Aspose.Cells can load HTML directly via the Workbook constructor.
+            Workbook workbook = new Workbook(htmlFilePath);
+
+            // Save the workbook to a memory stream in XLSX format.
+            using (MemoryStream excelStream = new MemoryStream())
+            {
+                workbook.Save(excelStream, SaveFormat.Xlsx);
+
+                // Upload the generated Excel stream to cloud storage.
+                await CloudStorageHelper.UploadAsync(excelStream, cloudDestinationPath);
+            }
+
+            // Optional: clean up the workbook instance.
+            workbook.Dispose();
+        }
+
+        // Example usage.
+        public static async Task RunDemoAsync()
+        {
+            string htmlInput = "sample.html";               // Path to the source HTML file.
+            string cloudPath = "mycontainer/output.xlsx";   // Desired cloud storage path.
+
+            // Ensure the HTML file exists for the demo.
+            if (!File.Exists(htmlInput))
+            {
+                // Create a simple HTML file with a table for demonstration purposes.
+                File.WriteAllText(htmlInput,
+                    "<html><body><table><tr><th>Name</th><th>Age</th></tr>" +
+                    "<tr><td>Alice</td><td>30</td></tr>" +
+                    "<tr><td>Bob</td><td>25</td></tr></table></body></html>");
+            }
+
+            await ConvertAndUploadAsync(htmlInput, cloudPath);
+        }
     }
-}
 
-public class HtmlToExcelConverter
-{
-    public static void ConvertHtmlToExcel(string htmlFilePath, string cloudExcelPath)
+    // Entry point for the console application.
+    class Program
     {
-        // Load the HTML file into a workbook.
-        // HtmlLoadOptions can be customized if needed; using defaults here.
-        HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-        Workbook workbook = new Workbook(htmlFilePath, loadOptions);
-
-        // Prepare the custom stream provider for cloud storage.
-        CloudStorageStreamProvider streamProvider = new CloudStorageStreamProvider(cloudExcelPath);
-        StreamProviderOptions providerOptions = new StreamProviderOptions();
-
-        // Initialize the stream (creates the underlying file/stream).
-        streamProvider.InitStream(providerOptions);
-
-        // Save the workbook to the initialized stream in XLSX format.
-        // This writes the Excel file directly to the cloud storage location.
-        workbook.Save(providerOptions.Stream, SaveFormat.Xlsx);
-
-        // Close and clean up the stream.
-        streamProvider.CloseStream(providerOptions);
-    }
-
-    // Example usage.
-    public static void Run()
-    {
-        // Path to the source HTML file.
-        string sourceHtml = "input.html";
-
-        // Destination path representing cloud storage (replace with actual cloud SDK path if needed).
-        string cloudDestination = Path.Combine(Path.GetTempPath(), "CloudStorage", "output.xlsx");
-
-        ConvertHtmlToExcel(sourceHtml, cloudDestination);
-
-        Console.WriteLine($"HTML file '{sourceHtml}' has been converted and saved to cloud location '{cloudDestination}'.");
-    }
-}
-
-// Entry point for demonstration.
-class Program
-{
-    static void Main()
-    {
-        HtmlToExcelConverter.Run();
+        static async Task Main(string[] args)
+        {
+            await HtmlToExcelConverter.RunDemoAsync();
+        }
     }
 }

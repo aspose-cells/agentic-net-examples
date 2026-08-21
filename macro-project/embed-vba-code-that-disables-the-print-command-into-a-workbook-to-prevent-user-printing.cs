@@ -1,46 +1,76 @@
-// Title: Embed VBA to Block Printing in an Excel Workbook with Aspose.Cells for .NET
-// Description: This example shows how to create a macro‑enabled workbook, inject a VBA Workbook_BeforePrint routine that sets Cancel = True, optionally protect the VBA project with a password, and save the file as an .xlsm using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells embed VBA | disable Excel printing programmatically | Workbook_BeforePrint Aspose .NET | create macro enabled workbook C# | protect VBA project Aspose.Cells
-// Common Searches: add VBA code to prevent printing with Aspose.Cells | how to embed Workbook_BeforePrint event in .xlsm using C# | save macro‑enabled Excel file after inserting VBA via Aspose | protect VBA project when adding code programmatically
-// Developer Intent: Insert a VBA routine that cancels every print request and store the workbook as a macro‑enabled file.
-// Use Cases: Distribute confidential reports that cannot be printed. | Provide Excel templates that enforce a no‑print policy while allowing other macros. | Lock the VBA project after adding anti‑print code to reduce tampering.
-// AI Prompts: Write C# code with Aspose.Cells that adds a Workbook_BeforePrint handler to cancel printing and then protects the VBA project. | Show the steps to create an .xlsm file, embed anti‑print VBA, and save it using Aspose.Cells for .NET. | Explain how to test that the embedded VBA disables the Print command when the workbook is opened.
+// Title: Add VBA to Block Printing in an Excel Workbook with Aspose.Cells (C#)
+// Description: Creates a new workbook, injects a Workbook_BeforePrint handler that cancels the print job and shows a warning, optionally protects the VBA project, and saves the file as a macro‑enabled .xlsm workbook.
+// Keywords: Aspose.Cells C# VBA injection | Workbook_BeforePrint event | prevent Excel printing | macro‑enabled XLSM generation | protect VBA project programmatically | Excel security with Aspose
+// Common Searches: Aspose.Cells add VBA to stop printing | C# embed Workbook_BeforePrint macro | save macro enabled workbook with protected VBA | prevent users from printing Excel file using .NET | how to inject VBA code with Aspose.Cells
+// Developer Intent: Insert a VBA routine that blocks printing and save the workbook as a macro‑enabled file.
+// Use Cases: Enforce a no‑print policy for confidential spreadsheets. | Distribute Excel templates that automatically warn and block printing. | Generate reports that require VBA protection while disabling the print command.
+// AI Prompts: Write C# code using Aspose.Cells to add a Workbook_BeforePrint procedure that cancels printing and displays a message box. | Show how to protect the VBA project with a password while keeping the code accessible in a generated .xlsm file. | Explain how to verify that the ThisWorkbook module contains the expected VBA before saving the workbook.
 
 using System;
-using System.Text;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// This example shows how to create a macro‑enabled workbook, inject a VBA Workbook_BeforePrint routine that sets Cancel = True, optionally protect the VBA project with a password, and save the file as an .xlsm using Aspose.Cells for .NET.
-class EmbedVbaDisablePrint
+// Creates a new workbook, injects a Workbook_BeforePrint handler that cancels the print job and shows a warning, optionally protects the VBA project, and saves the file as a macro‑enabled .xlsm workbook.
+class DisablePrintVbaDemo
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook wb = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Ensure a VBA project exists by saving as a macro‑enabled file and reloading it
-        string tempPath = "temp.xlsm";
-        wb.Save(tempPath, SaveFormat.Xlsm);
-        wb = new Workbook(tempPath);
-        System.IO.File.Delete(tempPath);
+            // Get the existing ThisWorkbook class module (it is added by default)
+            VbaModule vbaModule = null;
+            foreach (VbaModule module in workbook.VbaProject.Modules)
+            {
+                if (module.Name.Equals("ThisWorkbook", StringComparison.OrdinalIgnoreCase))
+                {
+                    vbaModule = module;
+                    break;
+                }
+            }
 
-        // The first module in the VBA project is the ThisWorkbook module
-        VbaModule thisWorkbook = wb.VbaProject.Modules[0];
+            // If for some reason it does not exist, add it (fallback)
+            if (vbaModule == null)
+            {
+                int moduleIndex = workbook.VbaProject.Modules.Add(VbaModuleType.Class, "ThisWorkbook");
+                vbaModule = workbook.VbaProject.Modules[moduleIndex];
+            }
 
-        // VBA code that cancels any print operation
-        StringBuilder vbaCode = new StringBuilder();
-        vbaCode.AppendLine("Private Sub Workbook_BeforePrint(Cancel As Boolean)");
-        vbaCode.AppendLine("    Cancel = True");
-        vbaCode.AppendLine("End Sub");
+            // VBA code that cancels any print attempt
+            string vbaCode = @"
+Private Sub Workbook_BeforePrint(Cancel As Boolean)
+    Cancel = True
+    MsgBox ""Printing is disabled by VBA.""
+End Sub
+";
 
-        // Assign the code to the ThisWorkbook module
-        thisWorkbook.Codes = vbaCode.ToString();
+            // Assign the VBA code to the module
+            vbaModule.Codes = vbaCode;
 
-        // Protect the VBA project (optional, not locked for viewing)
-        wb.VbaProject.Protect(false, "vbaPassword");
+            // Optionally protect the VBA project (not locked for viewing)
+            workbook.VbaProject.Protect(false, "vbaPassword");
 
-        // Save the workbook as a macro‑enabled file
-        wb.Save("Workbook_NoPrint.xlsm", SaveFormat.Xlsm);
+            // Define output path
+            string outputPath = "DisablePrint.xlsm";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as a macro‑enabled file
+            workbook.Save(outputPath, SaveFormat.Xlsm);
+
+            Console.WriteLine($"Workbook saved to {outputPath} with VBA that disables printing.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

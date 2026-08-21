@@ -1,54 +1,40 @@
-// Title: Detect Deprecated Excel 97‑2003 Encryption with Aspose.Cells for .NET
-// Description: Uses Aspose.Cells FileFormatUtil to identify encrypted XLS files that rely on the legacy Excel 97‑2003 encryption algorithm and flags them for migration to a modern format without fully loading the workbook.
-// Keywords: Aspose.Cells encryption detection | detect encrypted XLS | legacy Excel 97-2003 encryption | deprecated encryption algorithm | FileFormatUtil C# | Excel workbook migration | modern encryption Aspose.Cells | C# Excel security check
-// Common Searches: how to check if an XLS file uses old encryption with Aspose.Cells | detect legacy Excel encryption without opening workbook .NET | flag encrypted Excel 97‑2003 files for migration | Aspose.Cells detect encrypted workbook example | C# identify deprecated Excel encryption algorithm
-// Developer Intent: Determine whether an Excel workbook is encrypted with a deprecated algorithm and mark it for upgrade.
-// Use Cases: Batch‑scan a directory of .xls files, log those using legacy encryption, and schedule conversion to .xlsx. | Add a pre‑deployment gate in CI/CD pipelines that blocks workbooks encrypted with outdated algorithms. | Automatically load flagged workbooks, re‑save them with modern encryption, and archive the original files.
-// AI Prompts: Generate a C# method that returns true if a given file path points to an XLS workbook encrypted with the deprecated Excel 97‑2003 algorithm using Aspose.Cells. | Create a script that iterates over all Excel files in a folder, detects deprecated encryption, and converts each to .xlsx with a strong password. | Write a PowerShell wrapper that calls a .NET utility to report encrypted legacy workbooks on a network share.
+// Title: Detect Deprecated Excel Encryption (XOR/Compatible) with Aspose.Cells for .NET
+// Description: Use Aspose.Cells' FileFormatUtil.DetectFileFormat to check if an Excel workbook is encrypted without loading it, then flag files that may rely on the obsolete XOR or Compatible encryption algorithms for migration to stronger protection.
+// Keywords: Aspose.Cells encryption detection | deprecated Excel encryption | XOR encryption Excel | Compatible encryption Excel | FileFormatUtil DetectFileFormat | C# check workbook encryption | Excel security migration .NET | weak encryption upgrade Aspose
+// Common Searches: How to detect deprecated XOR encryption in Excel with Aspose.Cells | Check if an XLSX file uses old Compatible encryption using C# | Aspose.Cells detect encrypted workbook without opening | Identify weak Excel encryption algorithms for migration | C# scan folder for Excel files with obsolete encryption
+// Developer Intent: Determine whether an Excel workbook is encrypted and, if so, flag it for re‑encryption because it might be using the legacy XOR or Compatible algorithms.
+// Use Cases: Quickly verify encryption status of incoming Excel files before processing them. | Generate alerts for security teams to re‑encrypt workbooks that rely on outdated algorithms. | Integrate into automated batch jobs that audit large collections of spreadsheets for compliance.
+// AI Prompts: Write a C# routine that scans a directory, uses Aspose.Cells to detect encrypted Excel files, and lists those that could be using XOR or Compatible encryption. | Provide a method signature that returns true when a workbook is encrypted and suggests migration when the algorithm is deprecated. | Explain the steps to re‑encrypt an Excel file with AES‑256 using Aspose.Cells after detecting a deprecated encryption method.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsEncryptionCheck
 {
-    // Uses Aspose.Cells FileFormatUtil to identify encrypted XLS files that rely on the legacy Excel 97‑2003 encryption algorithm and flags them for migration to a modern format without fully loading the workbook.
+    // Use Aspose.Cells' FileFormatUtil.DetectFileFormat to check if an Excel workbook is encrypted without loading it, then flag files that may rely on the obsolete XOR or Compatible encryption algorithms for migration to stronger protection.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Path to the workbook to be examined
-            string workbookPath = "sample.xls"; // Change to your file path
+            // Path to the workbook to be inspected
+            string filePath = "workbook.xlsx";
 
-            // Detect file format and encryption status without fully loading the workbook
-            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(workbookPath);
+            // Detect file format and encryption status without opening the workbook
+            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
 
-            // Determine if the workbook is encrypted
-            bool isEncrypted = formatInfo.IsEncrypted;
-
-            // Determine if the workbook uses the old Excel 97‑2003 format (XLS)
-            bool isLegacyFormat = formatInfo.LoadFormat == LoadFormat.Excel97To2003;
-
-            // Flag for migration if encrypted and using a legacy format (deprecated algorithms)
-            if (isEncrypted && isLegacyFormat)
+            // Flag if the workbook is encrypted
+            if (formatInfo.IsEncrypted)
             {
-                Console.WriteLine($"[ALERT] Workbook '{workbookPath}' is encrypted using a deprecated algorithm. Migration recommended.");
-            }
-            else if (isEncrypted)
-            {
-                Console.WriteLine($"Workbook '{workbookPath}' is encrypted with a modern algorithm.");
+                // NOTE: Aspose.Cells does not expose the exact encryption algorithm directly.
+                // Deprecated algorithms are XOR and Compatible (Excel 97/2000).
+                // If the workbook is encrypted, further analysis may be required to
+                // determine the algorithm. Here we flag it for migration.
+                Console.WriteLine($"[ALERT] The workbook \"{filePath}\" is encrypted. Verify if it uses a deprecated algorithm (XOR or Compatible) and migrate to a stronger encryption.");
             }
             else
             {
-                Console.WriteLine($"Workbook '{workbookPath}' is not encrypted.");
+                Console.WriteLine($"The workbook \"{filePath}\" is not encrypted.");
             }
-
-            // Example of loading the workbook (if further processing is needed)
-            // LoadOptions can include the password if known; here we assume no password for demonstration
-            LoadOptions loadOptions = new LoadOptions();
-            Workbook workbook = new Workbook(workbookPath, loadOptions);
-
-            // (Optional) Save a copy after migration steps – placeholder for actual migration logic
-            // workbook.Save("migrated_" + System.IO.Path.GetFileName(workbookPath), SaveFormat.Xlsx);
         }
     }
 }

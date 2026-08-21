@@ -1,53 +1,50 @@
-// Title: Disable "Number Stored as Text" error check in Aspose.Cells for .NET
-// Description: Demonstrates how to turn off the NumberStoredAsText warning on a worksheet using Aspose.Cells. The example creates a workbook, accesses the first sheet, retrieves the ErrorCheckOptionCollection, adds an ErrorCheckOption, disables the specific error type, defines the used cell area, applies the setting, and saves the file.
-// Keywords: Aspose.Cells disable NumberStoredAsText | ErrorCheckOptionCollection SetErrorCheck false | turn off number stored as text warning | .NET Excel error checking | worksheet error check configuration
-// Common Searches: how to disable number stored as text error in Aspose.Cells | Aspose.Cells C# turn off NumberStoredAsText for whole sheet | set error check options programmatically Aspose.Cells | disable Excel warning for numbers stored as text using .NET
-// Developer Intent: Programmatically suppress the "Number stored as text" error indicator for a worksheet (or a specific range) with Aspose.Cells.
-// Use Cases: Generate Excel reports where numeric values are intentionally stored as text without visual warnings. | Prepare data‑import templates that contain leading apostrophes and need to hide the error flag. | Apply the disabled check only to populated cells while leaving empty areas untouched.
-// AI Prompts: Show C# code to disable the NumberStoredAsText error check for a selected range with Aspose.Cells. | Give an example of enabling and disabling multiple error checks (e.g., NumberStoredAsText, InconsistentFormula) on a worksheet. | Explain how to read existing error‑check settings from a workbook and modify them using Aspose.Cells.
+// Title: C# – Disable “Number Stored as Text” Error Check with Aspose.Cells ErrorCheckOptions
+// Description: Creates an in‑memory workbook, accesses the first worksheet’s ErrorCheckOptionCollection, adds an ErrorCheckOption, disables the NumberStoredAsText check, optionally applies it to the used range, and saves the file as NumbersAsTextErrorCheckDisabled.xlsx.
+// Keywords: Aspose.Cells | ErrorCheckOptions | NumberStoredAsText | disable error check | C# | .NET | worksheet error checking | suppress green triangle | Excel warning suppression
+// Common Searches: disable number stored as text warning Aspose.Cells .NET | turn off NumbersAsText error check for a worksheet | Aspose.Cells ErrorCheckOptionCollection example | suppress NumberStoredAsText error in C# | how to hide green triangle in Excel using Aspose
+// Developer Intent: Turn off the NumberStoredAsText error check for a worksheet or a specific range using Aspose.Cells ErrorCheckOptions in C#.
+// Use Cases: Remove the green triangle indicator after programmatically populating numeric data. | Apply the disabled check only to the used area while keeping other error checks active. | Combine disabling of NumbersStoredAsText with other error types before distributing a workbook.
+// AI Prompts: Generate C# code that disables the NumberStoredAsText error check for the entire worksheet using Aspose.Cells. | Show how to disable multiple error checks, including NumbersStoredAsText, on a selected cell range with Aspose.Cells. | Explain the role of ErrorCheckOptionCollection and how to add ranges after configuring error checks in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsErrorCheckDemo
 {
-    // Demonstrates how to turn off the NumberStoredAsText warning on a worksheet using Aspose.Cells. The example creates a workbook, accesses the first sheet, retrieves the ErrorCheckOptionCollection, adds an ErrorCheckOption, disables the specific error type, defines the used cell area, applies the setting, and saves the file.
-    class DisableNumbersAsTextErrorCheck
+    // Creates an in‑memory workbook, accesses the first worksheet’s ErrorCheckOptionCollection, adds an ErrorCheckOption, disables the NumberStoredAsText check, optionally applies it to the used range, and saves the file as NumbersAsTextErrorCheckDisabled.xlsx.
+    class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook (in-memory)
                 Workbook workbook = new Workbook();
+
+                // Get the first worksheet
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Access the collection of error‑check options for the worksheet
+                // Access the ErrorCheckOptionCollection of the worksheet
                 ErrorCheckOptionCollection errorCheckOptions = worksheet.ErrorCheckOptions;
 
-                // Add a new error‑check option to the collection
+                // Add a new ErrorCheckOption to the collection
                 int optionIndex = errorCheckOptions.Add();
                 ErrorCheckOption errorCheckOption = errorCheckOptions[optionIndex];
 
                 // Disable the "Number stored as text" error check
                 errorCheckOption.SetErrorCheck(ErrorCheckType.NumberStoredAsText, false);
 
-                // Determine the used range; if the sheet is empty, use a single cell (A1)
-                int endRow = Math.Max(0, worksheet.Cells.MaxDataRow);
-                int endColumn = Math.Max(0, worksheet.Cells.MaxDataColumn);
-                CellArea usedArea = new CellArea
+                // Apply this setting to the used range of the worksheet (if any)
+                int maxRow = worksheet.Cells.MaxRow;
+                int maxCol = worksheet.Cells.MaxDataColumn;
+                if (maxRow >= 0 && maxCol >= 0)
                 {
-                    StartRow = 0,
-                    StartColumn = 0,
-                    EndRow = endRow,
-                    EndColumn = endColumn
-                };
+                    CellArea fullRange = CellArea.CreateCellArea(0, 0, maxRow, maxCol);
+                    errorCheckOption.AddRange(fullRange);
+                }
 
-                // Apply the setting to the determined range
-                errorCheckOption.AddRange(usedArea);
-
-                // Save the workbook
-                workbook.Save("DisableNumbersAsTextErrorCheck.xlsx");
+                // Save the workbook to a file
+                workbook.Save("NumbersAsTextErrorCheckDisabled.xlsx");
             }
             catch (Exception ex)
             {

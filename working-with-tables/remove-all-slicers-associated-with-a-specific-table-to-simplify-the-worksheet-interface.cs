@@ -1,46 +1,64 @@
-// Title: Remove all slicers from a specific table or worksheet with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, selects the first worksheet, checks for tables, accesses the worksheet's SlicerCollection, clears every slicer, and saves the updated file. Use this pattern to delete slicers tied to a table or the entire sheet.
-// Keywords: Aspose.Cells remove slicers | clear slicer collection .NET | delete Excel slicers programmatically | Aspose.Cells slicer Clear method | C# remove worksheet slicers
-// Common Searches: how to delete slicers in Aspose.Cells C# | clear all slicers from an Excel sheet using Aspose.Cells | remove slicers linked to a table with Aspose.Cells .NET | Aspose.Cells example for removing slicers | C# code to clear slicer collection in Excel
-// Developer Intent: Delete slicers associated with a table or the whole worksheet in an Excel file using Aspose.Cells.
-// Use Cases: Prepare a workbook for publishing by stripping interactive slicers that are no longer needed. | Reset UI filters after a data refresh to avoid stale selections before exporting. | Automate workbook cleanup for PDF or CSV conversion where slicers would not appear.
-// AI Prompts: Generate C# code with Aspose.Cells that removes only slicers belonging to a given ListObject instead of clearing the entire collection. | Show how to iterate through SlicerCollection and delete slicers whose TableName matches a specified table. | Explain how to verify the presence of slicers on a worksheet before invoking the Clear() method.
+// Title: C# Example: Remove All Table Slicers from a Worksheet Using Aspose.Cells
+// Description: Loads a workbook, checks for tables on the first worksheet, iterates the SlicerCollection in reverse, removes every slicer, and saves the cleaned file. Ideal for simplifying worksheets before distribution or reuse.
+// Keywords: Aspose.Cells C# remove slicers | delete worksheet slicers .NET | clear slicer collection Aspose | remove table slicers programmatically | Aspose.Cells example GitHub | C# workbook cleanup | Excel slicer removal code
+// Common Searches: how to delete all slicers with Aspose.Cells C# | remove slicers from a specific table using Aspose.Cells | Aspose.Cells C# clear slicer collection example | C# code to remove worksheet slicers Aspose | Aspose.Cells remove slicers before saving workbook
+// Developer Intent: Eliminate every slicer on the target worksheet to provide a clean, uncluttered interface.
+// Use Cases: Prepare a template workbook for reuse by stripping out all slicers added during prior analysis. | Clean up a report before sharing with stakeholders, ensuring no interactive slicers remain. | Reset the UI after dynamically modifying tables, preventing orphaned slicers from confusing users.
+// AI Prompts: Generate C# code with Aspose.Cells that removes only slicers linked to a given table name while preserving others. | Show how to log the names of removed slicers and keep slicers on other worksheets untouched. | Provide a reusable method that accepts a worksheet and optional table identifier to delete matching slicers.
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
 using Aspose.Cells.Tables;
 
-// Loads an Excel workbook, selects the first worksheet, checks for tables, accesses the worksheet's SlicerCollection, clears every slicer, and saves the updated file. Use this pattern to delete slicers tied to a table or the entire sheet.
-class Program
+// Loads a workbook, checks for tables on the first worksheet, iterates the SlicerCollection in reverse, removes every slicer, and saves the cleaned file. Ideal for simplifying worksheets before distribution or reuse.
+class RemoveTableSlicers
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "InputWorkbook.xlsx";
+        const string outputPath = "OutputWorkbook.xlsx";
 
-        // Access the worksheet that contains the target table
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Ensure the worksheet has at least one table
-        if (worksheet.ListObjects.Count == 0)
+        try
         {
-            // No tables – nothing to do
-            workbook.Save("output.xlsx");
-            return;
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one table
+            if (worksheet.ListObjects.Count == 0)
+            {
+                Console.WriteLine("No tables found in the worksheet.");
+                return;
+            }
+
+            // Access the slicer collection on the worksheet
+            SlicerCollection slicers = worksheet.Slicers;
+
+            // Iterate backwards to safely remove slicers
+            for (int i = slicers.Count - 1; i >= 0; i--)
+            {
+                // Remove each slicer (or add custom logic to filter specific slicers)
+                slicers.RemoveAt(i);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-
-        // Get the specific table (for example, the first one)
-        ListObject targetTable = worksheet.ListObjects[0];
-
-        // Obtain the slicer collection for the worksheet
-        SlicerCollection slicers = worksheet.Slicers;
-
-        // Remove all slicers that belong to the worksheet.
-        // If slicers are only associated with the target table, this effectively removes them.
-        // Otherwise, you could iterate and remove conditionally.
-        slicers.Clear();
-
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

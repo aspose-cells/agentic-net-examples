@@ -1,104 +1,95 @@
-// Title: C# – Export a Summary Sheet with Formula Function Counts Using Aspose.Cells
-// Description: Loads an existing workbook (or creates a new one), adds a "Summary" worksheet, scans all other sheets for formula cells, extracts each function name, tallies occurrences per function per sheet, writes the data (Worksheet, Function, Count) to the summary sheet, and saves the file.
-// Keywords: Aspose.Cells | C# | formula count | function usage | summary worksheet | Excel automation | aggregate formula statistics | count formulas by function | Excel workbook analysis
-// Common Searches: Aspose.Cells count formulas per function C# | create summary sheet with formula usage Aspose | how to list Excel functions used in each worksheet | C# code to aggregate formula counts in Excel | generate formula statistics workbook Aspose.Cells
-// Developer Intent: Generate a worksheet that reports how many times each formula function appears in every sheet of an Excel file.
-// Use Cases: Audit complex workbooks to understand the distribution of calculations. | Identify rarely used functions for performance tuning or refactoring. | Document calculation logic by summarizing function usage per worksheet.
-// AI Prompts: Write C# code with Aspose.Cells that adds a summary sheet counting each distinct formula function per worksheet. | Extend the sample to include a total formula count column for each worksheet in the summary. | Explain the function‑name extraction logic and suggest improvements for handling array formulas or nested functions.
+// Title: Create a Summary Sheet with Formula Counts by Function Using Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook, skips any existing "Summary" tab, scans each worksheet for formula cells, extracts the function name, tallies occurrences per sheet, adds a new "Summary" worksheet with columns for worksheet name, function, and count, auto‑fits columns, and saves the updated file.
+// Keywords: Aspose.Cells formula count | C# Excel function summary | aggregate formula usage | add summary worksheet .NET | Excel function statistics Aspose | count formulas per sheet | extract function name from formula
+// Common Searches: how to count Excel functions per worksheet using Aspose.Cells | create a summary tab that lists formula usage in C# | Aspose.Cells enumerate formula cells and group by function | generate formula statistics workbook Aspose .NET | add summary sheet with function counts in Excel
+// Developer Intent: Generate a new worksheet that lists, for every existing sheet, how many times each formula function appears.
+// Use Cases: Audit workbook to identify the most used functions on each sheet. | Produce documentation showing formula distribution across worksheets. | Spot sheets that heavily rely on specific functions for performance tuning or refactoring.
+// AI Prompts: Write C# code with Aspose.Cells that creates a "Summary" sheet reporting formula counts grouped by function name. | Modify the example to also include a total formula count per worksheet in the summary. | Explain how to handle nested formulas when extracting function names for counting with Aspose.Cells.
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-// Loads an existing workbook (or creates a new one), adds a "Summary" worksheet, scans all other sheets for formula cells, extracts each function name, tallies occurrences per function per sheet, writes the data (Worksheet, Function, Count) to the summary sheet, and saves the file.
+// Loads an Excel workbook, skips any existing "Summary" tab, scans each worksheet for formula cells, extracts the function name, tallies occurrences per sheet, adds a new "Summary" worksheet with columns for worksheet name, function, and count, auto‑fits columns, and saves the updated file.
 class FormulaSummaryExporter
 {
     static void Main()
     {
-        try
+        // Input and output file paths
+        string inputPath = "input.xlsx";
+        string outputPath = "output_with_summary.xlsx";
+
+        // Load the workbook
+        Workbook workbook = new Workbook(inputPath);
+
+        // Dictionary to hold counts: Worksheet -> (Function -> Count)
+        var summary = new Dictionary<string, Dictionary<string, int>>(StringComparer.OrdinalIgnoreCase);
+
+        // Iterate through each worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Skip the summary sheet if it already exists
+            if (sheet.Name.Equals("Summary", StringComparison.OrdinalIgnoreCase))
+                continue;
 
-            // Load existing workbook if it exists; otherwise create a new one.
-            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+            // Prepare inner dictionary for this worksheet
+            var funcCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            summary[sheet.Name] = funcCounts;
 
-            // Add a new worksheet for the summary.
-            int summaryIndex = workbook.Worksheets.Add();
-            Worksheet summarySheet = workbook.Worksheets[summaryIndex];
-            summarySheet.Name = "Summary";
-
-            // Dictionary: Worksheet name -> (Function name -> Count)
-            var summary = new Dictionary<string, Dictionary<string, int>>(StringComparer.OrdinalIgnoreCase);
-
-            // Iterate through all worksheets except the summary sheet.
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Enumerate all cells in the worksheet
+            foreach (Cell cell in sheet.Cells)
             {
-                if (ws.Name.Equals("Summary", StringComparison.OrdinalIgnoreCase))
-                    continue;
+                if (!cell.IsFormula) continue; // Only interested in formula cells
 
-                var funcCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+                string formula = cell.Formula; // e.g., "=SUM(A1:A10)"
+                if (string.IsNullOrEmpty(formula) || formula.Length < 2) continue;
 
-                // Determine used range to limit iteration.
-                int maxRow = ws.Cells.MaxDataRow;
-                int maxCol = ws.Cells.MaxDataColumn;
+                // Remove leading '=' and trim spaces
+                string trimmed = formula.Substring(1).TrimStart();
 
-                for (int r = 0; r <= maxRow; r++)
-                {
-                    for (int c = 0; c <= maxCol; c++)
-                    {
-                        Cell cell = ws.Cells[r, c];
-                        // Use Cell.IsFormula to identify formula cells.
-                        if (cell != null && cell.IsFormula)
-                        {
-                            string formula = cell.Formula;
-                            if (!string.IsNullOrEmpty(formula) && formula.StartsWith("="))
-                            {
-                                // Extract function name (text between '=' and first '(' ).
-                                int parenIdx = formula.IndexOf('(');
-                                string funcName = parenIdx > 1
-                                    ? formula.Substring(1, parenIdx - 1).Trim()
-                                    : formula.Substring(1).Trim(); // fallback: whole string after '='
+                // Extract function name (characters before first '(' or space)
+                int endIdx = trimmed.IndexOfAny(new char[] { '(', ' ' });
+                string funcName = endIdx > 0 ? trimmed.Substring(0, endIdx) : trimmed;
 
-                                if (!funcCounts.ContainsKey(funcName))
-                                    funcCounts[funcName] = 0;
-                                funcCounts[funcName]++;
-                            }
-                        }
-                    }
-                }
+                // Normalize to upper case for consistent grouping
+                funcName = funcName.ToUpperInvariant();
 
-                if (funcCounts.Count > 0)
-                    summary[ws.Name] = funcCounts;
+                // Update count
+                if (funcCounts.ContainsKey(funcName))
+                    funcCounts[funcName]++;
+                else
+                    funcCounts[funcName] = 1;
             }
-
-            // Write headers to the summary worksheet.
-            int rowIdx = 0;
-            summarySheet.Cells[rowIdx, 0].PutValue("Worksheet");
-            summarySheet.Cells[rowIdx, 1].PutValue("Function");
-            summarySheet.Cells[rowIdx, 2].PutValue("Count");
-            rowIdx++;
-
-            // Populate the summary data.
-            foreach (var wsEntry in summary)
-            {
-                string wsName = wsEntry.Key;
-                foreach (var funcEntry in wsEntry.Value)
-                {
-                    summarySheet.Cells[rowIdx, 0].PutValue(wsName);
-                    summarySheet.Cells[rowIdx, 1].PutValue(funcEntry.Key);
-                    summarySheet.Cells[rowIdx, 2].PutValue(funcEntry.Value);
-                    rowIdx++;
-                }
-            }
-
-            // Save the workbook with the new summary sheet.
-            workbook.Save(outputPath);
         }
-        catch (Exception ex)
+
+        // Add (or replace) a worksheet named "Summary"
+        Worksheet summarySheet = workbook.Worksheets[workbook.Worksheets.Add()];
+        summarySheet.Name = "Summary";
+
+        // Write header
+        summarySheet.Cells["A1"].PutValue("Worksheet");
+        summarySheet.Cells["B1"].PutValue("Function");
+        summarySheet.Cells["C1"].PutValue("Formula Count");
+
+        int rowIndex = 1; // zero‑based index; start after header
+
+        // Populate summary data
+        foreach (var wsEntry in summary)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            string wsName = wsEntry.Key;
+            foreach (var funcEntry in wsEntry.Value)
+            {
+                summarySheet.Cells[rowIndex, 0].PutValue(wsName);
+                summarySheet.Cells[rowIndex, 1].PutValue(funcEntry.Key);
+                summarySheet.Cells[rowIndex, 2].PutValue(funcEntry.Value);
+                rowIndex++;
+            }
         }
+
+        // Auto‑fit columns for better readability
+        summarySheet.AutoFitColumns();
+
+        // Save the workbook with the new summary sheet
+        workbook.Save(outputPath);
     }
 }

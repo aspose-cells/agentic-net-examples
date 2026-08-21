@@ -1,96 +1,100 @@
-// Title: Aspose.Cells C# – Scan Workbook for Volatile Formulas and Generate a Report Sheet
-// Description: Loads an Excel file with Aspose.Cells, walks every used cell in each worksheet, detects formulas that contain volatile functions (NOW, TODAY, RAND, RANDBETWEEN, OFFSET, INDIRECT, INFO, CELL), records the sheet name, cell address and formula, writes the findings to a new worksheet called "VolatileFormulasReport" and saves the workbook. Ideal for performance tuning and audit of large workbooks.
-// Keywords: Aspose.Cells volatile formula detection | C# scan Excel for volatile functions | list volatile Excel formulas Aspose | performance optimization Excel formulas | .NET identify volatile functions | generate volatile formula report | Aspose.Cells workbook audit | Excel volatile functions NOW OFFSET RAND
-// Common Searches: How to find volatile Excel functions with Aspose.Cells C# | Aspose.Cells scan workbook for NOW or OFFSET formulas | Create a report of cells that use volatile functions in .NET | Identify performance‑impacting formulas using Aspose.Cells | C# code to list volatile formulas in an Excel file
-// Developer Intent: Locate every cell that uses a volatile Excel function and log its sheet, address, and formula in a dedicated report worksheet for performance analysis.
-// Use Cases: Audit large spreadsheets to pinpoint volatile formulas that slow recalculation. | Document volatile functions before migrating workbooks to a new platform. | Automate a quality‑gate that flags volatile formulas for manual refactoring. | Generate a compliance report showing where volatile functions are used.
-// AI Prompts: Generate C# Aspose.Cells code that extracts volatile formulas and saves the result as CSV. | Show how to replace the simple string search with a regular‑expression matcher for exact volatile function names. | Explain how to exclude certain worksheets from the volatile‑function scan while still creating the report.
+// Title: C# – Scan Excel workbook for volatile formulas with Aspose.Cells
+// Description: Loads an .xlsx file using Aspose.Cells, iterates through every worksheet and cell, detects formulas that contain volatile Excel functions (NOW, TODAY, RAND, RANDBETWEEN, OFFSET, INDIRECT, INFO, CELL), logs the sheet name, cell address and formula, and optionally saves the workbook. Perfect for performance‑impact analysis.
+// Keywords: Aspose.Cells | C# | .NET | volatile Excel functions | formula scanner | performance optimization | NOW function | OFFSET function | Excel recalculation | scan workbook | detect volatile formulas
+// Common Searches: Aspose.Cells find volatile formulas | C# list cells with NOW or OFFSET | detect Excel volatile functions programmatically | performance audit Excel formulas .NET | scan workbook for volatile functions using Aspose
+// Developer Intent: Identify every formula that uses a volatile Excel function and capture its location for optimization.
+// Use Cases: Generate a performance‑audit report of all volatile formulas in a workbook. | Flag or replace volatile functions during automated workbook cleanup. | Integrate the scan into a CI pipeline to enforce formula‑performance standards. | Export the list of volatile formulas to CSV/JSON for further analysis.
+// AI Prompts: Create a method that returns a List of objects containing worksheet name, cell address, and formula for all volatile functions found. | Modify the sample to write the volatile‑formula report to a CSV file instead of the console. | Add a parameter that accepts a custom volatile‑function list and logs matches with line numbers. | Implement parallel processing to accelerate scanning of very large workbooks.
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsVolatileFormulaScanner
+namespace AsposeCellsExamples
 {
-    // Loads an Excel file with Aspose.Cells, walks every used cell in each worksheet, detects formulas that contain volatile functions (NOW, TODAY, RAND, RANDBETWEEN, OFFSET, INDIRECT, INFO, CELL), records the sheet name, cell address and formula, writes the findings to a new worksheet called "VolatileFormulasReport" and saves the workbook. Ideal for performance tuning and audit of large workbooks.
-    class Program
+    // Loads an .xlsx file using Aspose.Cells, iterates through every worksheet and cell, detects formulas that contain volatile Excel functions (NOW, TODAY, RAND, RANDBETWEEN, OFFSET, INDIRECT, INFO, CELL), logs the sheet name, cell address and formula, and optionally saves the workbook. Perfect for performance‑impact analysis.
+    public class VolatileFormulaScanner
     {
-        // List of known volatile Excel functions (case‑insensitive)
-        static readonly string[] VolatileFunctions = new[]
+        public static void Main(string[] args)
         {
-            "NOW", "TODAY", "RAND", "RANDBETWEEN", "OFFSET", "INDIRECT",
-            "INFO", "CELL", "NOW()", "TODAY()", "RAND()", "RANDBETWEEN()", 
-            "OFFSET()", "INDIRECT()", "INFO()", "CELL()"
-        };
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+        }
 
-        static void Main()
+        public static void Run()
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Prepare a list to hold information about volatile formulas
-            var volatileCells = new List<(string SheetName, string CellName, string Formula)>();
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            Workbook workbook;
+            try
+            {
+                // Load the existing workbook
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
+
+            // List of known volatile Excel functions
+            List<string> volatileFunctions = new List<string>
+            {
+                "NOW()", "TODAY()", "RAND()", "RANDBETWEEN()", "OFFSET()", "INDIRECT()", "INFO()", "CELL()",
+                "NOW", "TODAY", "RAND", "RANDBETWEEN", "OFFSET", "INDIRECT", "INFO", "CELL"
+            };
 
             // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 Cells cells = sheet.Cells;
-                // Determine the used range
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
 
-                // Scan each cell in the used range
-                for (int row = 0; row <= maxRow; row++)
+                // Iterate through all cells that contain data or formulas
+                foreach (Cell cell in cells)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    // Check if the cell has a formula
+                    if (!string.IsNullOrEmpty(cell.Formula))
                     {
-                        Cell cell = cells[row, col];
-                        if (cell.IsFormula)
+                        string formula = cell.Formula;
+
+                        // Detect presence of any volatile function (case‑insensitive)
+                        foreach (string volatileFunc in volatileFunctions)
                         {
-                            string formula = cell.Formula;
-                            // Simple check: does the formula contain any volatile function name?
-                            foreach (string vf in VolatileFunctions)
+                            if (formula.IndexOf(volatileFunc, StringComparison.OrdinalIgnoreCase) >= 0)
                             {
-                                // Use InvariantCultureIgnoreCase for case‑insensitive search
-                                if (formula.IndexOf(vf, StringComparison.InvariantCultureIgnoreCase) >= 0)
-                                {
-                                    volatileCells.Add((sheet.Name, cell.Name, formula));
-                                    break; // No need to check other volatile functions for this cell
-                                }
+                                Console.WriteLine($"Worksheet: {sheet.Name}, Cell: {cell.Name}, Formula: {formula}");
+                                break; // No need to check other volatile functions for this cell
                             }
                         }
                     }
                 }
             }
 
-            // Output results to console
-            Console.WriteLine("Volatile formulas found:");
-            foreach (var entry in volatileCells)
+            try
             {
-                Console.WriteLine($"Sheet: {entry.SheetName}, Cell: {entry.CellName}, Formula: {entry.Formula}");
+                // Save the workbook (optional, demonstrates lifecycle usage)
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Optionally, write the findings to a new worksheet for documentation
-            Worksheet reportSheet = workbook.Worksheets[workbook.Worksheets.Add()];
-            reportSheet.Name = "VolatileFormulasReport";
-            Cells reportCells = reportSheet.Cells;
-
-            // Header row
-            reportCells[0, 0].PutValue("Sheet");
-            reportCells[0, 1].PutValue("Cell");
-            reportCells[0, 2].PutValue("Formula");
-
-            // Populate rows
-            for (int i = 0; i < volatileCells.Count; i++)
+            catch (Exception ex)
             {
-                var v = volatileCells[i];
-                reportCells[i + 1, 0].PutValue(v.SheetName);
-                reportCells[i + 1, 1].PutValue(v.CellName);
-                reportCells[i + 1, 2].PutValue(v.Formula);
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
             }
-
-            // Save the workbook with the report (replace with your desired output path)
-            workbook.Save("output_with_volatile_report.xlsx");
         }
     }
 }

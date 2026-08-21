@@ -1,45 +1,44 @@
-// Title: Export Workbook to UTF‑16 CSV with Aspose.Cells (C#)
-// Description: Demonstrates how to create a workbook, add multilingual data, configure TxtSaveOptions for UTF‑16 encoding, and save the file as a CSV that preserves Unicode characters such as Chinese and Cyrillic.
-// Keywords: Aspose.Cells CSV UTF-16 | C# export workbook to CSV Unicode | TxtSaveOptions encoding Unicode | save Excel as UTF-16 CSV | multilingual CSV export .NET
-// Common Searches: Aspose.Cells save CSV with UTF-16 encoding C# | how to export Unicode characters to CSV using Aspose.Cells | TxtSaveOptions CSV Unicode example | C# export Excel to UTF-16 CSV | Aspose.Cells multilingual CSV export
-// Developer Intent: Generate a CSV file from an Aspose.Cells workbook using UTF‑16 to retain all Unicode characters.
-// Use Cases: Export multilingual reports (e.g., Chinese, Cyrillic) for systems that require UTF‑16 CSV files. | Archive every worksheet of an Excel workbook into a single Unicode‑compatible CSV. | Provide CSV output for legacy applications that only accept UTF‑16 encoded data.
-// AI Prompts: Create C# code that uses Aspose.Cells to save a workbook as a UTF‑16 CSV, including options for multiple sheets. | Show how to modify TxtSaveOptions to set a custom delimiter while keeping UTF‑16 encoding. | Explain the steps to read a UTF‑16 CSV produced by Aspose.Cells back into a .NET DataTable.
+// Title: Save Aspose.Cells Workbook as UTF-16 CSV in C#
+// Description: Shows how to create a workbook, add Unicode values (e.g., Chinese characters, emoji), set TxtSaveOptions.Encoding to Encoding.Unicode, and export the sheet to a UTF-16 encoded CSV file that preserves all characters.
+// Keywords: Aspose.Cells CSV UTF-16 | C# save workbook as Unicode CSV | TxtSaveOptions encoding | Export Excel to UTF-16 CSV .NET | Unicode CSV Aspose.Cells
+// Common Searches: Aspose.Cells save CSV UTF-16 C# | C# export Excel to CSV with Unicode support | How to set encoding for CSV in Aspose.Cells | CSV UTF-16 output using Aspose.Cells
+// Developer Intent: Generate a CSV file from an Aspose.Cells workbook using UTF-16 encoding to keep multilingual and emoji characters intact.
+// Use Cases: Export reports containing Asian scripts or emojis for downstream systems that require UTF‑16 CSV. | Create CSV files compatible with legacy Windows applications that expect Unicode (UTF‑16) input. | Automate data exchange where preserving exact character representation is critical.
+// AI Prompts: Write C# code with Aspose.Cells that saves a workbook as a UTF‑16 CSV, including the TxtSaveOptions configuration. | Provide an example exporting a worksheet containing Chinese text and emojis to a UTF‑16 encoded CSV using Aspose.Cells. | Explain how to switch the CSV export encoding from UTF‑16 to UTF‑8 or other code pages with Aspose.Cells.
 
 using System;
 using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsCsvUtf16Example
+namespace AsposeCellsCsvUtf16Demo
 {
-    // Demonstrates how to create a workbook, add multilingual data, configure TxtSaveOptions for UTF‑16 encoding, and save the file as a CSV that preserves Unicode characters such as Chinese and Cyrillic.
+    // Shows how to create a workbook, add Unicode values (e.g., Chinese characters, emoji), set TxtSaveOptions.Encoding to Encoding.Unicode, and export the sheet to a UTF-16 encoded CSV file that preserves all characters.
     public class Program
     {
         public static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet and add sample data
             Worksheet sheet = workbook.Worksheets[0];
+
+            // Add sample data that includes Unicode characters
             sheet.Cells["A1"].PutValue("ID");
             sheet.Cells["B1"].PutValue("Name");
             sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("张三"); // Unicode characters to demonstrate UTF‑16
+            sheet.Cells["B2"].PutValue("张三");   // Chinese characters
             sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Иван"); // Cyrillic characters
+            sheet.Cells["B3"].PutValue("😀");    // Emoji
 
-            // Configure CSV save options with UTF‑16 encoding
+            // Configure CSV save options with UTF-16 (Unicode) encoding
             TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
             {
-                Encoding = Encoding.Unicode, // UTF‑16
-                ExportAllSheets = true       // Export all worksheets (optional)
+                Encoding = Encoding.Unicode   // UTF-16 encoding
             };
 
-            // Save the workbook as CSV using the configured options
+            // Save the workbook as a CSV file using the specified options
             workbook.Save("output_utf16.csv", csvOptions);
 
-            Console.WriteLine("Workbook exported to CSV with UTF‑16 encoding.");
+            Console.WriteLine("Workbook exported to CSV with UTF-16 encoding.");
         }
     }
 }

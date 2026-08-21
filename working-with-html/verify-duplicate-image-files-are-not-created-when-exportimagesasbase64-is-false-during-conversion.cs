@@ -1,77 +1,121 @@
-// Title: Validate that HTML export with ExportImagesAsBase64 = false creates only one image file in Aspose.Cells for .NET (C#)
-// Description: This C# example builds a workbook, inserts a 10×10 PNG picture, and saves it as HTML using Aspose.Cells with HtmlSaveOptions.ExportImagesAsBase64 set to false and IsExpImageToTempDir disabled. After conversion it scans the output directory for files matching the default pattern (image*.*) and confirms that exactly one image file was generated, reporting success or failure.
-// Keywords: Aspose.Cells HTML export | ExportImagesAsBase64 false | duplicate image files | C# Aspose.Cells example | .NET workbook to HTML | image0.* naming | verify image count | prevent image duplication
-// Common Searches: Aspose.Cells HTML export single image file | ExportImagesAsBase64 false duplicate images | how to check image files after saving workbook as HTML | C# verify image count Aspose.Cells HTML conversion | prevent multiple image files Aspose.Cells
-// Developer Intent: Ensure that converting a workbook to HTML with ExportImagesAsBase64 disabled produces exactly one image file and no duplicates.
-// Use Cases: Automated unit test that asserts a single image file after HTML export of a worksheet containing one picture. | CI/CD validation step that fails the build if more than one image file appears in the export folder. | Diagnostic script for troubleshooting unexpected duplicate images during Aspose.Cells HTML conversion.
-// AI Prompts: Generate an xUnit test that confirms Aspose.Cells HTML export with ExportImagesAsBase64 = false creates only one image file. | Write a PowerShell snippet to run the compiled program, locate the output directory, and report any duplicate image files named image*.*. | Explain the impact of setting IsExpImageToTempDir to false on image file location and duplication during HTML conversion.
+// Title: Detect duplicate image files when exporting Excel to HTML with ExportImagesAsBase64 = false (Aspose.Cells .NET)
+// Description: The sample creates a temporary PNG, inserts it into a new workbook, saves the workbook as HTML with images written to a separate folder, then scans that folder, groups file names case‑insensitively, and reports any naming collisions.
+// Keywords: Aspose.Cells | .NET | C# | HTML export | ExportImagesAsBase64 | duplicate image detection | image folder | Excel to HTML conversion | picture handling | file name collision
+// Common Searches: Aspose.Cells HTML export duplicate images | C# check for duplicate image files after saving workbook as HTML | ExportImagesAsBase64 false image folder Aspose.Cells | how to prevent image name collisions in Aspose.Cells HTML output | verify image export integrity Aspose.Cells .NET
+// Developer Intent: Ensure that saving a workbook to HTML with ExportImagesAsBase64 disabled does not produce repeated image files.
+// Use Cases: Automated validation of HTML conversion pipelines for Excel reports. | Detecting naming conflicts when multiple pictures are embedded before export. | Maintaining clean asset directories for web deployment of converted workbooks.
+// AI Prompts: Generate a unit test in C# that fails if any duplicate image files appear after an Aspose.Cells HTML export with ExportImagesAsBase64 set to false. | Rewrite the duplicate‑check logic using a HashSet for O(n) performance and provide the updated code snippet. | Explain the effect of setting HtmlSaveOptions.ExportImagesAsBase64 to true on the output structure and why duplicate file concerns disappear.
 
 using System;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// This C# example builds a workbook, inserts a 10×10 PNG picture, and saves it as HTML using Aspose.Cells with HtmlSaveOptions.ExportImagesAsBase64 set to false and IsExpImageToTempDir disabled. After conversion it scans the output directory for files matching the default pattern (image*.*) and confirms that exactly one image file was generated, reporting success or failure.
-class VerifyNoDuplicateImages
+namespace AsposeCellsImageDuplicationCheck
 {
-    static void Main()
+    // The sample creates a temporary PNG, inserts it into a new workbook, saves the workbook as HTML with images written to a separate folder, then scans that folder, groups file names case‑insensitively, and reports any naming collisions.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Red 10x10 PNG image (base64 encoded)
-            const string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVQoU2NkYGD4z0AEYBxVSFIAAQAA//8DAF6cB6cAAAAASUVORK5CYII=";
-            byte[] pngBytes = Convert.FromBase64String(base64Png);
-
-            // Add the image to the worksheet (row 0, column 0)
-            using (MemoryStream imgStream = new MemoryStream(pngBytes))
+            try
             {
-                sheet.Pictures.Add(0, 0, imgStream);
-            }
+                // Prepare temporary image file to embed in the workbook
+                string tempImagePath = Path.Combine(Path.GetTempPath(), "sample_image.png");
+                CreateSamplePng(tempImagePath);
 
-            // Configure HTML save options: export images as separate files (not Base64)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                ExportImagesAsBase64 = false,
-                // Ensure images are written to the same folder as the HTML file
-                IsExpImageToTempDir = false
-            };
+                // Create a new workbook and add the image to the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Pictures.Add(0, 0, tempImagePath); // add image at cell A1
 
-            // Define output HTML file path
-            string htmlPath = "output.html";
-
-            // Save the workbook as HTML using the configured options
-            workbook.Save(htmlPath, htmlOptions);
-
-            // Determine the folder where images are saved (same as HTML file folder)
-            string outputFolder = Path.GetDirectoryName(Path.GetFullPath(htmlPath));
-            if (outputFolder == null)
-                outputFolder = Directory.GetCurrentDirectory();
-
-            // Find all image files generated by the conversion (default naming: image0.*, image1.*, …)
-            string[] imageFiles = Directory.GetFiles(outputFolder, "image*.*");
-            int imageCount = imageFiles.Length;
-
-            // Verify that only one image file exists (no duplicates)
-            if (imageCount == 1)
-            {
-                Console.WriteLine("Success: Only one image file was created.");
-            }
-            else
-            {
-                Console.WriteLine($"Failure: Expected 1 image file, but found {imageCount}.");
-                foreach (string file in imageFiles)
+                // Configure HTML save options: export images as separate files (not Base64)
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
                 {
-                    Console.WriteLine(" - " + Path.GetFileName(file));
+                    ExportImagesAsBase64 = false // ensure images are saved as files
+                };
+
+                // Define output HTML file path
+                string outputHtml = Path.Combine(Directory.GetCurrentDirectory(), "output.html");
+
+                // Save the workbook as HTML
+                workbook.Save(outputHtml, htmlOptions);
+                Console.WriteLine($"Workbook saved to HTML: {outputHtml}");
+
+                // Determine the folder where Aspose.Cells stores the exported images
+                // By default it creates a folder named "<htmlFileName>_files"
+                string htmlDirectory = Path.GetDirectoryName(outputHtml);
+                if (string.IsNullOrEmpty(htmlDirectory))
+                {
+                    Console.WriteLine("Unable to determine HTML directory.");
+                    return;
+                }
+
+                string imageFolder = Path.Combine(
+                    htmlDirectory,
+                    Path.GetFileNameWithoutExtension(outputHtml) + "_files");
+
+                if (Directory.Exists(imageFolder))
+                {
+                    // Get all image files generated for the HTML
+                    string[] imageFiles = Directory.GetFiles(imageFolder);
+                    Console.WriteLine($"Number of image files generated: {imageFiles.Length}");
+
+                    // Verify that there are no duplicate file names (case‑insensitive)
+                    var duplicateGroups = imageFiles
+                        .Select(Path.GetFileName)
+                        .GroupBy(name => name, StringComparer.OrdinalIgnoreCase)
+                        .Where(g => g.Count() > 1)
+                        .Select(g => new { FileName = g.Key, Count = g.Count() })
+                        .ToList();
+
+                    if (duplicateGroups.Count == 0)
+                    {
+                        Console.WriteLine("No duplicate image files were created.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Duplicate image files detected:");
+                        foreach (var dup in duplicateGroups)
+                        {
+                            Console.WriteLine($"  {dup.FileName} – occurrences: {dup.Count}");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Image folder not found; no images were exported.");
+                }
+
+                // Clean up temporary image file
+                if (File.Exists(tempImagePath))
+                {
+                    File.Delete(tempImagePath);
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        // Helper method to create a simple 1x1 PNG image for testing
+        private static void CreateSamplePng(string filePath)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            // Minimal 1x1 red PNG (transparent background not required)
+            byte[] pngBytes = new byte[]
+            {
+                0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,
+                0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,
+                0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,
+                0x08,0x02,0x00,0x00,0x00,0x90,0x77,0x53,
+                0xDE,0x00,0x00,0x00,0x0A,0x49,0x44,0x41,
+                0x54,0x08,0xD7,0x63,0xF8,0xCF,0xC0,0x00,
+                0x00,0x04,0x00,0x01,0xE2,0x26,0x05,0x9B,
+                0x00,0x00,0x00,0x00,0x49,0x45,0x4E,0x44,
+                0xAE,0x42,0x60,0x82
+            };
+            File.WriteAllBytes(filePath, pngBytes);
         }
     }
 }

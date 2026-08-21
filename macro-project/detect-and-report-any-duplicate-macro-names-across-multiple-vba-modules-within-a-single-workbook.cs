@@ -1,10 +1,10 @@
-// Title: C# – Find Duplicate VBA Module Names in an XLSM Workbook with Aspose.Cells
-// Description: Loads a macro‑enabled Excel file, verifies the presence of VBA, enumerates all VBA modules, counts module names case‑insensitively, and reports any names that appear more than once.
-// Keywords: Aspose.Cells duplicate VBA modules | C# detect repeated macro names | XLSM module name collision | VBA module uniqueness check | Excel macro validation .NET
-// Common Searches: how to list repeated VBA module names using Aspose.Cells | C# code to detect duplicate macro modules in an XLSM file | find colliding VBA module names in Excel workbook | Aspose.Cells check for duplicate macro identifiers
-// Developer Intent: Locate and list VBA module identifiers that are defined multiple times within a single macro‑enabled workbook.
-// Use Cases: Run a pre‑deployment scan to ensure each VBA module has a unique name. | Integrate into CI/CD pipelines for Excel add‑in quality assurance. | Generate a quick report for developers to refactor overlapping macro modules.
-// AI Prompts: Create a function that returns all repeated VBA module names from a Workbook object using Aspose.Cells. | Extend the example to process a folder of .xlsm files and output the file names that contain duplicate modules. | Write a PowerShell script that leverages Aspose.Cells to audit multiple workbooks for module‑name collisions and write results to a CSV.
+// Title: Detect Duplicate VBA Module Names in Excel with Aspose.Cells for .NET
+// Description: Loads a macro‑enabled workbook, verifies the presence of VBA code, enumerates all VBA modules, and uses a case‑insensitive LINQ grouping to report any module names that appear more than once.
+// Keywords: Aspose.Cells | C# VBA module duplicate | Excel macro project analysis | detect duplicate module names | VBA project inspection .NET | macro-enabled workbook validation | duplicate VBA module detection | Excel automation Aspose | C# LINQ duplicate detection
+// Common Searches: duplicate VBA module names Aspose.Cells | C# find repeated module names in Excel | how to check for duplicate macro modules .NET | identify duplicate VBA modules programmatically | Excel workbook duplicate module detection tool
+// Developer Intent: Find and list any VBA module names that occur more than once in a macro‑enabled Excel workbook.
+// Use Cases: Validate a workbook before distribution to guarantee unique module identifiers. | Integrate a quality‑gate in CI/CD pipelines that flags duplicate VBA modules in Excel add‑ins. | Generate audit reports for legacy workbooks that may contain conflicting module names.
+// AI Prompts: Write a method that returns a collection of duplicate VBA module names from a Workbook object using Aspose.Cells. | Extend the sample to scan a folder of workbooks and output the file paths that contain duplicate module names. | Create a PowerShell wrapper that calls the C# utility, aggregates results, and exports them to CSV.
 
 using System;
 using System.Collections.Generic;
@@ -13,74 +13,88 @@ using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsMacroDuplicateChecker
+namespace AsposeCellsExamples
 {
-    // Loads a macro‑enabled Excel file, verifies the presence of VBA, enumerates all VBA modules, counts module names case‑insensitively, and reports any names that appear more than once.
-    class Program
+    // Loads a macro‑enabled workbook, verifies the presence of VBA code, enumerates all VBA modules, and uses a case‑insensitive LINQ grouping to report any module names that appear more than once.
+    public class DetectDuplicateMacroNames
     {
-        static void Main(string[] args)
+        public static void Run(string workbookPath)
         {
-            // Path to the workbook (macro‑enabled file)
-            string workbookPath = "sample_with_macro.xlsm";
-
-            // Verify that the file exists before attempting to load it
-            if (!File.Exists(workbookPath))
-            {
-                Console.WriteLine($"File not found: {Path.GetFullPath(workbookPath)}");
-                return;
-            }
-
             try
             {
-                // Load the workbook
+                // Verify that the file exists before attempting to load it
+                if (!File.Exists(workbookPath))
+                {
+                    Console.WriteLine($"File not found: {workbookPath}");
+                    return;
+                }
+
+                // Load the workbook (macro-enabled or not)
                 Workbook workbook = new Workbook(workbookPath);
 
-                // Check if the workbook contains any macros/VBA
+                // Check if the workbook contains any VBA macros
                 if (!workbook.HasMacro)
                 {
                     Console.WriteLine("The workbook does not contain any macros.");
                     return;
                 }
 
-                // Get the collection of VBA modules
-                VbaModuleCollection modules = workbook.VbaProject.Modules;
+                // Access the VBA project and its modules
+                VbaProject vbaProject = workbook.VbaProject;
+                VbaModuleCollection modules = vbaProject.Modules;
 
-                // Count occurrences of each module name (case‑insensitive)
-                Dictionary<string, int> nameCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-                foreach (VbaModule module in modules)
+                // Collect module names
+                List<string> moduleNames = new List<string>();
+                for (int i = 0; i < modules.Count; i++)
                 {
-                    string name = module.Name ?? string.Empty;
-                    if (nameCounts.ContainsKey(name))
-                        nameCounts[name]++;
-                    else
-                        nameCounts[name] = 1;
+                    VbaModule module = modules[i];
+                    moduleNames.Add(module.Name);
                 }
 
-                // Identify duplicate module names
-                List<string> duplicateNames = nameCounts
-                    .Where(kv => kv.Value > 1)
-                    .Select(kv => kv.Key)
+                // Find duplicate names (case‑insensitive)
+                var duplicateGroups = moduleNames
+                    .GroupBy(name => name, StringComparer.OrdinalIgnoreCase)
+                    .Where(g => g.Count() > 1)
                     .ToList();
 
-                // Report the results
-                if (duplicateNames.Any())
+                if (duplicateGroups.Count == 0)
                 {
-                    Console.WriteLine("Duplicate macro (module) names found:");
-                    foreach (string dupName in duplicateNames)
-                    {
-                        Console.WriteLine($"- {dupName}");
-                    }
+                    Console.WriteLine("No duplicate macro names were found across VBA modules.");
                 }
                 else
                 {
-                    Console.WriteLine("No duplicate macro names were detected.");
+                    Console.WriteLine("Duplicate macro names detected:");
+                    foreach (var group in duplicateGroups)
+                    {
+                        Console.WriteLine($"- Name: \"{group.Key}\", Occurrences: {group.Count()}");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                // Handle any unexpected errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            string workbookPath;
+
+            if (args.Length > 0)
+            {
+                workbookPath = args[0];
+            }
+            else
+            {
+                Console.Write("Enter the full path to the workbook: ");
+                workbookPath = Console.ReadLine();
+            }
+
+            DetectDuplicateMacroNames.Run(workbookPath);
         }
     }
 }

@@ -1,55 +1,58 @@
-// Title: Benchmark Aspose.Cells chart rendering time after disabling data label wrapping (C#)
-// Description: C# example that creates a workbook, adds a column chart with data labels, turns off text wrapping, and measures the Chart.Calculate execution time using a Stopwatch. The elapsed milliseconds are printed and the workbook is saved.
-// Keywords: Aspose.Cells chart performance | disable data label wrapping | Chart.Calculate timing | measure chart rendering speed | .NET spreadsheet rendering benchmark | C# Aspose.Cells performance test | chart calculation time measurement | data label wrap impact | Aspose.Cells chart optimization | stopwatch chart rendering
-// Common Searches: how to time Aspose.Cells chart rendering in C# | does disabling data label wrap improve chart speed | benchmark Chart.Calculate method Aspose.Cells | measure spreadsheet chart performance .NET | Aspose.Cells chart rendering latency
-// Developer Intent: The developer wants to evaluate the performance gain of turning off data label text wrapping by timing chart calculation.
-// Use Cases: Compare rendering speed of charts with and without data label wrapping to choose the most efficient setting. | Integrate chart timing into CI pipelines for regression testing of spreadsheet generation performance. | Select the fastest chart type for large reports by measuring calculation time under different label configurations.
-// AI Prompts: Generate C# code that measures Aspose.Cells chart rendering time for both wrapped and unwrapped data labels and outputs the results side‑by‑side. | Explain how Chart.Calculate influences rendering performance and suggest best practices to minimize execution time. | Create a .NET unit test that asserts the chart calculation completes within a given threshold when data label wrapping is disabled.
+// Title: Measure Aspose.Cells Chart Calculation and Rendering Time After Disabling Data Label Text Wrap (C#)
+// Description: Creates a workbook with sample data, adds a column chart, enables data labels, turns off label text wrapping, and uses Stopwatch to record the duration of chart.Calculate() (layout) and Workbook.Save() (rendering). The output shows the elapsed milliseconds for each operation, helping assess the performance impact of disabling text wrap.
+// Keywords: Aspose.Cells chart performance | disable data label text wrap | chart.Calculate timing | Workbook.Save benchmark | C# Aspose.Cells rendering speed | chart layout measurement | performance testing Aspose.Cells
+// Common Searches: Aspose.Cells measure chart rendering time C# | How to benchmark chart.Calculate performance | Effect of DataLabels.IsTextWrapped on chart speed | Chart rendering latency Aspose.Cells .NET | Timing workbook save with charts
+// Developer Intent: The developer wants to benchmark how disabling data label text wrapping influences the time required to calculate a chart layout and to save a workbook containing that chart.
+// Use Cases: Compare chart generation speed with and without data label text wrapping to choose the optimal setting. | Profile chart calculation and workbook save times in high‑volume reporting scenarios. | Validate performance gains before deploying large workbooks that contain many charts.
+// AI Prompts: Generate C# code that measures chart.Calculate() and Workbook.Save() times for different DataLabels.IsTextWrapped values using Aspose.Cells. | Explain how to analyze the timing results and recommend further optimizations for Aspose.Cells chart rendering. | Create a unit test that asserts chart rendering completes within a defined threshold when text wrapping is disabled.
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// C# example that creates a workbook, adds a column chart with data labels, turns off text wrapping, and measures the Chart.Calculate execution time using a Stopwatch. The elapsed milliseconds are printed and the workbook is saved.
-class ChartRenderTiming
+// Creates a workbook with sample data, adds a column chart, enables data labels, turns off label text wrapping, and uses Stopwatch to record the duration of chart.Calculate() (layout) and Workbook.Save() (rendering). The output shows the elapsed milliseconds for each operation, helping assess the performance impact of disabling text wrap.
+class ChartRenderingTimeMeasurement
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Fill sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
+        // Populate sample data for the chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("Apple");
+        sheet.Cells["A3"].PutValue("Orange");
+        sheet.Cells["A4"].PutValue("Banana");
+        sheet.Cells["B1"].PutValue("Sales");
+        sheet.Cells["B2"].PutValue(120);
+        sheet.Cells["B3"].PutValue(85);
+        sheet.Cells["B4"].PutValue(65);
 
         // Add a column chart
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-        Chart chart = worksheet.Charts[chartIndex];
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+        Chart chart = sheet.Charts[chartIndex];
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Enable data labels and disable text wrapping (performance test)
-        DataLabels dataLabels = chart.NSeries[0].DataLabels;
-        dataLabels.ShowValue = true;
-        dataLabels.IsTextWrapped = false; // turn off wrapping
+        // Enable data labels and disable text wrapping for performance test
+        DataLabels labels = chart.NSeries[0].DataLabels;
+        labels.ShowValue = true;
+        labels.IsTextWrapped = false;   // Disable wrapping
 
-        // Measure the time taken to calculate (render) the chart
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-        chart.Calculate(); // forces layout and rendering calculations
-        stopwatch.Stop();
+        // Measure time taken to calculate the chart layout
+        Stopwatch calcTimer = Stopwatch.StartNew();
+        chart.Calculate();               // Forces layout calculation
+        calcTimer.Stop();
 
-        Console.WriteLine($"Chart calculation time: {stopwatch.ElapsedMilliseconds} ms");
+        // Measure time taken to render (save) the workbook containing the chart
+        Stopwatch renderTimer = Stopwatch.StartNew();
+        workbook.Save("ChartRenderingTime.xlsx", SaveFormat.Xlsx);
+        renderTimer.Stop();
 
-        // Save the workbook
-        workbook.Save("ChartRenderTiming.xlsx");
+        // Output the measured times
+        Console.WriteLine($"Chart.Calculate() time: {calcTimer.ElapsedMilliseconds} ms");
+        Console.WriteLine($"Workbook.Save() (render) time: {renderTimer.ElapsedMilliseconds} ms");
     }
 }

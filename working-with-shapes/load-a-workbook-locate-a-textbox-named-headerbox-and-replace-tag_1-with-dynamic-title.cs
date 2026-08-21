@@ -1,42 +1,40 @@
-// Title: Replace placeholder in a named TextBox of an Excel workbook using Aspose.Cells for .NET (C#)
-// Description: C# sample that loads an Excel workbook with Aspose.Cells, accesses the first worksheet, finds the TextBox called "HeaderBox", swaps the <TAG_1> token for a runtime title, and writes the modified file.
-// Keywords: Aspose.Cells | C# | Excel TextBox | named TextBox | replace placeholder | dynamic title | shape text update | Aspose.Cells TextBox replace | Excel shape manipulation | programmatic Excel editing
-// Common Searches: Aspose.Cells replace text in TextBox | C# change text of named TextBox in Excel | replace <TAG_1> in Excel shape using Aspose | update HeaderBox TextBox content Aspose.Cells | programmatically edit Excel TextBox text .NET | replace tag in Excel template Aspose.Cells
-// Developer Intent: Swap the <TAG_1> token inside the HeaderBox TextBox with a dynamic title and save the workbook.
-// Use Cases: Populate a quarterly‑report template by inserting the report title into a pre‑designed HeaderBox shape. | Automate branding of Excel templates by replacing placeholder tags in named TextBoxes with client‑specific values during generation. | Run a batch job that opens multiple workbooks, updates TextBox placeholders with runtime data, and saves each file.
-// AI Prompts: Generate C# code with Aspose.Cells that locates a TextBox named 'HeaderBox' on the first worksheet and replaces the placeholder '<TAG_1>' with a variable string. | Create a reusable method taking workbook path, TextBox name, placeholder tag, and replacement value, then updates the TextBox text and saves the file using Aspose.Cells. | Explain how to handle missing TextBox or absent placeholder safely when performing text replacement in Excel shapes with Aspose.Cells for .NET.
+// Title: Replace <TAG_1> in a named TextBox (HeaderBox) with a dynamic title using Aspose.Cells for .NET
+// Description: Loads an Excel workbook, accesses the first worksheet, retrieves the TextBox called "HeaderBox", substitutes the <TAG_1> placeholder with a runtime title, and saves the updated file.
+// Keywords: Aspose.Cells | C# | Excel TextBox | named shape | replace placeholder | dynamic title | HeaderBox | load workbook | save workbook | worksheet shape text
+// Common Searches: How to change the text of a TextBox named HeaderBox in Excel with Aspose.Cells | Aspose.Cells replace placeholder tag in Excel shape | C# replace <TAG_1> in an Excel TextBox | Update header title in an Excel template using Aspose.Cells | Get TextBox by name in Aspose.Cells .NET
+// Developer Intent: Swap the <TAG_1> tag inside the HeaderBox TextBox for a generated title and write the changes back to the workbook.
+// Use Cases: Automate quarterly report generation by inserting the report period into a pre‑designed header TextBox. | Populate invoice templates with customer‑specific data by replacing placeholder tags in shape text. | Refresh dashboard workbooks programmatically, updating the title TextBox across multiple files.
+// AI Prompts: Write C# code with Aspose.Cells that locates a TextBox named "HeaderBox" and replaces a <TAG_1> placeholder with a variable string. | Provide an example that iterates over all TextBoxes in a worksheet and substitutes any <TAG_*> placeholders using values from a dictionary. | Explain how to safely handle cases where the specified TextBox does not exist or its Text property is null when using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsTextBoxReplace
+// Loads an Excel workbook, accesses the first worksheet, retrieves the TextBox called "HeaderBox", substitutes the <TAG_1> placeholder with a runtime title, and saves the updated file.
+class Program
 {
-    // C# sample that loads an Excel workbook with Aspose.Cells, accesses the first worksheet, finds the TextBox called "HeaderBox", swaps the <TAG_1> token for a runtime title, and writes the modified file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Load the existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet (adjust index if needed)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Retrieve the TextBox named "HeaderBox" from the worksheet
+        TextBox headerBox = worksheet.TextBoxes["HeaderBox"];
+
+        // Ensure the TextBox exists and contains text
+        if (headerBox != null && headerBox.Text != null)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("InputWorkbook.xlsx");
+            // Define the dynamic title that will replace the placeholder
+            string dynamicTitle = "Quarterly Report 2026";
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Retrieve the TextBox named "HeaderBox"
-            TextBox headerBox = worksheet.TextBoxes["HeaderBox"];
-
-            if (headerBox != null && !string.IsNullOrEmpty(headerBox.Text))
-            {
-                // Dynamic title to replace the placeholder
-                string dynamicTitle = "Quarterly Report 2026";
-
-                // Replace the placeholder <TAG_1> with the dynamic title
-                headerBox.Text = headerBox.Text.Replace("<TAG_1>", dynamicTitle);
-            }
-
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("OutputWorkbook.xlsx");
+            // Replace the placeholder <TAG_1> with the dynamic title
+            headerBox.Text = headerBox.Text.Replace("<TAG_1>", dynamicTitle);
         }
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

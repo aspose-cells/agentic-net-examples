@@ -1,62 +1,61 @@
-// Title: Detect Excel encryption and read every sheet with Aspose.Cells for .NET
-// Description: A C# sample that uses Aspose.Cells' FileFormatUtil.DetectFileFormat to identify password‑protected workbooks, skips encrypted files, then loads the workbook and iterates through all worksheets, outputting each populated cell's address and value.
-// Keywords: Aspose.Cells encryption detection | FileFormatUtil DetectFileFormat C# | read non‑encrypted Excel .NET | bulk worksheet data extraction | skip password‑protected workbook | iterate all cells Aspose.Cells | Excel file validation before import
-// Common Searches: How to check if an Excel file is password protected using Aspose.Cells | C# detect encrypted workbook without opening it | Extract data from all sheets after confirming workbook is not encrypted | Skip encrypted Excel files in a batch process Aspose.Cells | FileFormatUtil DetectFileFormat example
-// Developer Intent: Confirm that an Excel file is not password‑protected before extracting data from every worksheet.
-// Use Cases: Validate user‑uploaded Excel files on a server and reject encrypted ones before import. | Perform a full data dump of all worksheets in a non‑encrypted workbook for migration or reporting. | Run a scheduled batch job that processes many Excel files, automatically bypassing any that are encrypted.
-// AI Prompts: Generate a reusable C# method that uses Aspose.Cells to detect workbook encryption and, if clear, returns a dictionary of sheet names mapped to lists of non‑empty cell addresses and values. | Create robust error‑handling code for a bulk Excel processing pipeline that logs encrypted files and continues with the remaining files using FileFormatUtil. | Refactor the provided example into two separate functions—one for encryption validation and one for data extraction—while preserving async support.
+// Title: C# – Verify Workbook Encryption Before Bulk Extraction with Aspose.Cells for .NET
+// Description: A concise C# example that loads an Excel file using Aspose.Cells, confirms the file exists, checks workbook.Settings.IsEncrypted, skips encrypted workbooks, and iterates every worksheet to read each used cell, outputting address and value with robust error handling.
+// Keywords: Aspose.Cells | C# | .NET | workbook encryption | IsEncrypted | bulk data extraction | multiple worksheets | read cell values | Excel password protection | batch processing | exception handling | GitHub example
+// Common Searches: How to check if an Excel workbook is encrypted with Aspose.Cells .NET | Skip password‑protected Excel files during bulk extraction using Aspose.Cells | Read all cells from every sheet after confirming workbook is not encrypted | Aspose.Cells C# example for validating encryption before processing | Batch import Excel files with encryption detection in .NET
+// Developer Intent: Validate that a workbook is not encrypted before extracting data from all its worksheets.
+// Use Cases: Prevent runtime errors in a batch import pipeline by ignoring password‑protected Excel files. | Log or migrate data from every sheet only when the workbook is confirmed unencrypted. | Integrate encryption checks into automated data‑migration or ETL processes that handle many Excel documents.
+// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, returns true if workbook.Settings.IsEncrypted is false, and logs the result. | Create a method to extract all cell values from each worksheet of an unencrypted workbook and store them in a DataTable using Aspose.Cells. | Provide best‑practice error handling for processing a folder of Excel files where some may be encrypted, using Aspose.Cells for .NET.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace WorkbookEncryptionValidatorApp
+namespace AsposeCellsExamples
 {
-    // A C# sample that uses Aspose.Cells' FileFormatUtil.DetectFileFormat to identify password‑protected workbooks, skips encrypted files, then loads the workbook and iterates through all worksheets, outputting each populated cell's address and value.
-    public class WorkbookEncryptionValidator
+    // A concise C# example that loads an Excel file using Aspose.Cells, confirms the file exists, checks workbook.Settings.IsEncrypted, skips encrypted workbooks, and iterates every worksheet to read each used cell, outputting address and value with robust error handling.
+    public class BulkDataExtractionValidator
     {
-        // Validates that the workbook is not encrypted and extracts data from all sheets.
-        public static void ExtractData(string filePath)
+        public static void Run(string filePath)
         {
+            // Verify that the file exists before attempting to load it
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
+
             try
             {
-                // Verify that the file exists before attempting to load it.
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    return;
-                }
-
-                // Detect file format and encryption status without loading the workbook.
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-                if (formatInfo.IsEncrypted)
-                {
-                    Console.WriteLine($"The workbook \"{filePath}\" is encrypted. Extraction aborted.");
-                    return;
-                }
-
-                // Load the workbook (no password required because it is not encrypted).
+                // Load the workbook without a password first
                 using (Workbook workbook = new Workbook(filePath))
                 {
-                    // Iterate through each worksheet in the workbook.
+                    // Check if the workbook is encrypted
+                    if (workbook.Settings.IsEncrypted)
+                    {
+                        Console.WriteLine($"The workbook \"{filePath}\" is encrypted and cannot be processed without a password.");
+                        return;
+                    }
+
+                    Console.WriteLine($"Extracting data from workbook \"{filePath}\"...");
+
+                    // Iterate through all worksheets
                     foreach (Worksheet sheet in workbook.Worksheets)
                     {
-                        Console.WriteLine($"--- Sheet: {sheet.Name} ---");
+                        Console.WriteLine($"Worksheet: {sheet.Name}");
 
-                        // Determine the used range.
-                        int maxRow = sheet.Cells.MaxDataRow;
-                        int maxCol = sheet.Cells.MaxDataColumn;
+                        var cells = sheet.Cells;
+                        int maxRow = cells.MaxDataRow;
+                        int maxCol = cells.MaxDataColumn;
 
-                        // Loop through all used cells and output their values.
+                        // Iterate through each cell in the used range
                         for (int row = 0; row <= maxRow; row++)
                         {
                             for (int col = 0; col <= maxCol; col++)
                             {
-                                Cell cell = sheet.Cells[row, col];
+                                var cell = cells[row, col];
                                 if (cell.Value != null)
                                 {
-                                    // Row and column numbers are 1‑based for readability.
-                                    Console.WriteLine($"R{row + 1}C{col + 1}: {cell.Value}");
+                                    Console.WriteLine($"{cell.Name}: {cell.Value}");
                                 }
                             }
                         }
@@ -65,15 +64,14 @@ namespace WorkbookEncryptionValidatorApp
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
+                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
             }
         }
     }
 
-    class Program
+    public class Program
     {
-        // Entry point of the application.
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             string filePath;
 
@@ -83,11 +81,11 @@ namespace WorkbookEncryptionValidatorApp
             }
             else
             {
-                Console.Write("Enter the path to the Excel file: ");
+                Console.Write("Enter the full path to the Excel file: ");
                 filePath = Console.ReadLine();
             }
 
-            WorkbookEncryptionValidator.ExtractData(filePath);
+            BulkDataExtractionValidator.Run(filePath);
         }
     }
 }

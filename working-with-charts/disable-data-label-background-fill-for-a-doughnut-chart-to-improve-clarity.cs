@@ -1,48 +1,53 @@
-// Title: Make doughnut chart data labels transparent in Aspose.Cells (C#)
-// Description: Shows how to create an Excel workbook, add a doughnut chart, enable data labels, set their background to Transparent with Aspose.Cells for .NET, and save the file as DoughnutNoLabelBackground.xlsx.
-// Keywords: Aspose.Cells | C# | doughnut chart | data labels | transparent background | BackgroundMode.Transparent | chart formatting | Excel label fill removal | chart visual clarity
-// Common Searches: Aspose.Cells set doughnut chart label background transparent C# | remove data label fill Aspose.Cells chart | transparent data labels in Excel chart using Aspose.Cells | how to hide label background in doughnut chart Aspose.Cells | C# Aspose.Cells chart label formatting example
-// Developer Intent: The developer wants to eliminate the colored fill behind data labels in a doughnut chart to produce a cleaner visual presentation.
-// Use Cases: Generate a financial report where doughnut chart labels have no background color for a minimalist look. | Create a presentation slide with Excel charts that require transparent data labels to avoid visual clutter. | Automate dashboard exports where chart readability is improved by removing label fills.
-// AI Prompts: Write C# code with Aspose.Cells that sets any chart's data label background to Transparent. | Explain the effect of BackgroundMode.Transparent on data label rendering in Aspose.Cells charts. | Provide a step‑by‑step guide to toggle the data label background fill on and off for a doughnut chart using Aspose.Cells.
+// Title: How to Remove Data Label Background Fill from a Doughnut Chart with Aspose.Cells for .NET (C#)
+// Description: This C# sample creates a workbook, adds a doughnut chart, enables value and percentage data labels, and sets the labels' BackgroundMode to Transparent to eliminate the fill before saving the file.
+// Keywords: Aspose.Cells | C# doughnut chart | data label background transparent | remove label fill | chart data labels | BackgroundMode Transparent | Excel chart customization | Aspose.Cells chart styling
+// Common Searches: Aspose.Cells set doughnut chart label fill to none | C# make chart data label background transparent | How to hide label background in Aspose.Cells chart | Remove doughnut chart label shading Aspose.Cells | Transparent data labels Aspose.Cells example
+// Developer Intent: Remove the fill color of data labels in a doughnut chart for clearer visualization.
+// Use Cases: Produce a sales report where doughnut chart labels have no background, keeping the visual clean. | Design an Excel dashboard with multiple doughnut charts that use transparent label backgrounds to avoid color clashes. | Export presentation‑ready charts with readable numeric and percentage labels by disabling label fill.
+// AI Prompts: Show me C# code to set a doughnut chart's data label BackgroundMode to Transparent using Aspose.Cells. | Give an example that disables label background fill for every series in an Aspose.Cells chart. | Explain other ways to style data labels in Aspose.Cells, such as changing font color or removing fill.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 
-// Shows how to create an Excel workbook, add a doughnut chart, enable data labels, set their background to Transparent with Aspose.Cells for .NET, and save the file as DoughnutNoLabelBackground.xlsx.
-class DisableDataLabelBackground
+namespace AsposeCellsDoughnutDataLabelBackground
 {
-    static void Main()
+    // This C# sample creates a workbook, adds a doughnut chart, enables value and percentage data labels, and sets the labels' BackgroundMode to Transparent to eliminate the fill before saving the file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate sample data for the doughnut chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["A3"].PutValue("Orange");
-        worksheet.Cells["A4"].PutValue("Banana");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(50);
-        worksheet.Cells["B3"].PutValue(30);
-        worksheet.Cells["B4"].PutValue(20);
+            // Populate sample data for the doughnut chart
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("Apple");
+            worksheet.Cells["A3"].PutValue("Orange");
+            worksheet.Cells["A4"].PutValue("Banana");
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["B2"].PutValue(50);
+            worksheet.Cells["B3"].PutValue(30);
+            worksheet.Cells["B4"].PutValue(20);
 
-        // Add a doughnut chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Doughnut, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);          // Set values
-        chart.NSeries.CategoryData = "A2:A4";      // Set categories
+            // Add a doughnut chart
+            int chartIndex = worksheet.Charts.Add(ChartType.Doughnut, 5, 0, 20, 8);
+            Chart chart = worksheet.Charts[chartIndex];
 
-        // Enable data labels for the series
-        Series series = chart.NSeries[0];
-        series.DataLabels.ShowValue = true;
+            // Set the data range for the chart
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-        // Disable the background fill of data labels for clarity
-        series.DataLabels.BackgroundMode = BackgroundMode.Transparent;
+            // Enable data labels for the first series
+            DataLabels dataLabels = chart.NSeries[0].DataLabels;
+            dataLabels.ShowValue = true;               // Show the numeric values
+            dataLabels.ShowPercentage = true;          // Show percentage values
+            dataLabels.BackgroundMode = BackgroundMode.Transparent; // Disable background fill
 
-        // Save the workbook
-        workbook.Save("DoughnutNoLabelBackground.xlsx");
+            // Save the workbook
+            workbook.Save("DoughnutChart_NoLabelBackground.xlsx");
+        }
     }
 }

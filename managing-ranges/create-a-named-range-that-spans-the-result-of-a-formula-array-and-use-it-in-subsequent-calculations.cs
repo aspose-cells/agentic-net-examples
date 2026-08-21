@@ -1,17 +1,17 @@
-// Title: Create a Named Range from a Dynamic Array Spill and Use It in Calculations – Aspose.Cells C#
-// Description: Demonstrates how to set a dynamic array formula in a workbook, retrieve its spill area with GetArrayRange, define a named range that points to the spilled cells, and reference that name in subsequent formulas such as SUM. The example populates sample data, refreshes the array, outputs the spill values, calculates the total, and saves the file.
-// Keywords: Aspose.Cells | C# | dynamic array formula | spill range | GetArrayRange | named range | SetDynamicArrayFormula | SUM formula | workbook automation | Excel array spill
-// Common Searches: Aspose.Cells create named range from array spill | GetArrayRange dynamic array C# | use spilled array as named range Aspose.Cells | sum named range that references dynamic array | refresh dynamic array formulas Aspose.Cells
-// Developer Intent: Define a named range that references the result of a dynamic array formula and use that range in later calculations.
-// Use Cases: Generate a dynamic array (e.g., =A1:A3*2) and capture its spill area programmatically. | Create a workbook‑level named range that points to the spilled cells for reuse. | Apply the named range in other formulas such as SUM, AVERAGE, or custom calculations. | Validate the spill values and aggregated results before saving the workbook.
-// AI Prompts: Write C# code with Aspose.Cells to set a dynamic array formula, obtain its spill range, create a named range for that range, and calculate the sum of the named range. | Explain how GetArrayRange and Workbook.Worksheets.Names work together to build a named range from a spilled array in Aspose.Cells. | Provide a step‑by‑step example that creates a named range from a dynamic array result, uses it in another formula, and saves the workbook.
+// Title: C# – Create a Named Range for a Dynamic Array Spill and Use It in Subsequent Formulas with Aspose.Cells
+// Description: Demonstrates how to set a dynamic array formula in Aspose.Cells, retrieve its spill area with GetArrayRange, define a workbook‑level named range that points to the spilled cells, and reference that name in later calculations such as SUM. The example builds the spill address, adds the name "MyArrayResult", recalculates formulas, and saves the workbook.
+// Keywords: Aspose.Cells | C# | .NET | dynamic array formula | spill range | GetArrayRange | named range | workbook‑level name | SUM formula | Excel automation
+// Common Searches: Aspose.Cells create named range from dynamic array spill | GetArrayRange example C# | how to reference spilled array result in Aspose.Cells | set dynamic array formula Aspose.Cells .NET | use named range in SUM formula Aspose.Cells
+// Developer Intent: Define a named range that automatically references the result area of a dynamic array formula and reuse it in other calculations.
+// Use Cases: Expose the spill area of a dynamic array as a reusable named range for aggregation functions. | Avoid hard‑coding cell addresses when the size of the array result may change. | Share the named range across multiple worksheets or external workbooks after saving.
+// AI Prompts: Generate C# code that applies a dynamic array formula, obtains its spill range with GetArrayRange, and creates a global named range in Aspose.Cells. | Show how to use the named range created from a dynamic array spill in formulas like AVERAGE, MAX, or custom calculations. | Explain how to update the named range automatically when the source data changes and the spill area expands or contracts.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsArrayNamedRangeDemo
 {
-    // Demonstrates how to set a dynamic array formula in a workbook, retrieve its spill area with GetArrayRange, define a named range that points to the spilled cells, and reference that name in subsequent formulas such as SUM. The example populates sample data, refreshes the array, outputs the spill values, calculates the total, and saves the file.
+    // Demonstrates how to set a dynamic array formula in Aspose.Cells, retrieve its spill area with GetArrayRange, define a workbook‑level named range that points to the spilled cells, and reference that name in later calculations such as SUM. The example builds the spill address, adds the name "MyArrayResult", recalculates formulas, and saves the workbook.
     class Program
     {
         static void Main()
@@ -21,54 +21,53 @@ namespace AsposeCellsArrayNamedRangeDemo
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // 2. Populate some sample data that will be used by the array formula
-            //    A1:A3 will contain numbers 1, 2, 3
+            // 2. Populate some source data that will be used by the dynamic array formula
+            //    Here we create a 3‑row, 2‑column matrix
             cells["A1"].PutValue(1);
             cells["A2"].PutValue(2);
             cells["A3"].PutValue(3);
+            cells["B1"].PutValue(10);
+            cells["B2"].PutValue(20);
+            cells["B3"].PutValue(30);
 
-            // 3. Set a dynamic array formula in cell B1.
-            //    The formula multiplies each value in A1:A3 by 2 and spills the results.
-            Cell formulaCell = cells["B1"];
-            formulaCell.SetDynamicArrayFormula("=A1:A3*2", new FormulaParseOptions(), true);
+            // 3. Set a dynamic array formula in cell C1.
+            //    The formula multiplies the matrix A1:B3 by 2 and spills into neighboring cells.
+            Cell formulaCell = cells["C1"];
+            string arrayFormula = "=A1:B3*2";
+            formulaCell.SetDynamicArrayFormula(arrayFormula, new FormulaParseOptions(), true);
 
-            // 4. Refresh dynamic array formulas so that the spill range is materialized
+            // 4. Refresh dynamic array formulas so that the spill range is materialized.
+            //    The 'true' flag also calculates the values.
             workbook.RefreshDynamicArrayFormulas(true);
 
-            // 5. Determine the spilled range of the dynamic array formula
-            //    GetArrayRange returns the area that the formula occupies.
+            // 5. Determine the actual spilled range of the dynamic array formula.
+            //    GetArrayRange returns a CellArea describing the top‑left and bottom‑right cells.
             CellArea spillArea = formulaCell.GetArrayRange();
 
-            // 6. Build the address string for the spilled range (e.g., Sheet1!$B$1:$B$3)
-            string startCell = cells[spillArea.StartRow, spillArea.StartColumn].Name;
-            string endCell   = cells[spillArea.EndRow,   spillArea.EndColumn].Name;
-            string refersTo  = $"={sheet.Name}!{startCell}:{endCell}";
+            // 6. Build the address string for the spilled range (e.g., "C1:D3").
+            string startAddress = cells[spillArea.StartRow, spillArea.StartColumn].Name;
+            string endAddress   = cells[spillArea.EndRow,   spillArea.EndColumn].Name;
+            string spilledRangeAddress = $"{startAddress}:{endAddress}";
 
-            // 7. Create a named range that refers to the spilled array result
-            int nameIndex = workbook.Worksheets.Names.Add("MyArray");
+            // 7. Create a named range that refers to the spilled array result.
+            //    The name will be scoped to the workbook (global name).
+            int nameIndex = workbook.Worksheets.Names.Add("MyArrayResult");
             Name namedRange = workbook.Worksheets.Names[nameIndex];
-            namedRange.RefersTo = refersTo;   // e.g., =Sheet1!$B$1:$B$3
+            // RefersTo must start with '=' and include the sheet name.
+            namedRange.RefersTo = $"={sheet.Name}!{spilledRangeAddress}";
 
-            // 8. Use the named range in a subsequent calculation (sum of the array)
-            cells["C1"].Formula = "=SUM(MyArray)";
+            // 8. Use the named range in a subsequent calculation.
+            //    For example, compute the sum of all values produced by the array formula.
+            cells["E1"].Formula = "=SUM(MyArrayResult)";
 
-            // 9. Calculate all formulas in the workbook
+            // 9. Calculate all formulas in the workbook.
             workbook.CalculateFormula();
 
-            // 10. Output the results to the console for verification
-            Console.WriteLine("Spill range address: " + refersTo);
-            Console.WriteLine("Values in spilled range:");
-            for (int r = spillArea.StartRow; r <= spillArea.EndRow; r++)
-            {
-                for (int c = spillArea.StartColumn; c <= spillArea.EndColumn; c++)
-                {
-                    Console.Write(cells[r, c].Value + "\t");
-                }
-                Console.WriteLine();
-            }
-            Console.WriteLine("Sum of named range (MyArray) in C1: " + cells["C1"].Value);
+            // 10. Output the result to the console (optional verification).
+            Console.WriteLine($"Spilled range address: {spilledRangeAddress}");
+            Console.WriteLine($"Sum of the array result (cell E1): {cells["E1"].Value}");
 
-            // 11. Save the workbook
+            // 11. Save the workbook.
             workbook.Save("ArrayNamedRangeDemo.xlsx");
         }
     }

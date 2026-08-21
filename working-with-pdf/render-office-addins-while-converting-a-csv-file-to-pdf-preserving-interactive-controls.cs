@@ -1,44 +1,50 @@
-// Title: C# – Convert CSV with Office Add‑In data to PDF while preserving clickable hyperlinks using Aspose.Cells
-// Description: Creates a temporary CSV that includes text, hyperlinks, and numbers, then uses Aspose.Cells LoadOptions (LoadFormat.Csv) and PdfSaveOptions with ConversionUtility.Convert to generate a PDF that retains interactive elements such as clickable links. The sample also removes the temporary file after conversion.
-// Keywords: Aspose.Cells CSV to PDF | clickable hyperlinks PDF conversion | Office Add‑In data export | C# Aspose.Cells ConversionUtility | PdfSaveOptions interactive elements | preserve interactivity .NET | CSV export to PDF example | Aspose.Cells LoadOptions CSV
-// Common Searches: Aspose.Cells keep hyperlinks when converting CSV to PDF | C# convert Office Add‑In CSV to PDF with clickable links | ConversionUtility CSV to PDF sample code | PdfSaveOptions settings for interactive PDF in .NET | How to preserve interactivity during CSV‑to‑PDF conversion
-// Developer Intent: Generate a PDF from a CSV produced by an Office Add‑In, ensuring that hyperlinks and other interactive controls remain functional.
-// Use Cases: Produce PDF reports from CSV exports that contain URLs, allowing end‑users to click directly in the document. | Automate batch conversion of Office Add‑In CSV files to PDFs without losing interactivity. | Integrate CSV‑to‑PDF conversion into a .NET backend service that serves downloadable PDFs with active links.
-// AI Prompts: Show how to set PDF page size and margins when converting a CSV to PDF with Aspose.Cells. | Demonstrate converting a CSV that includes embedded images to PDF while keeping the images clickable. | Explain how to add custom PDF metadata (title, author, keywords) during CSV‑to‑PDF conversion using ConversionUtility.
+// Title: Convert CSV to PDF in C# with Aspose.Cells ConversionUtility
+// Description: Demonstrates how to create a temporary CSV file, validate its presence, load it using LoadOptions (CSV format), convert it to a PDF with PdfSaveOptions via Aspose.Cells ConversionUtility, and clean up the source file—all in a single C# console program.
+// Keywords: Aspose.Cells | C# CSV to PDF | ConversionUtility | PdfSaveOptions | LoadOptions CSV | CSV to PDF conversion example | temporary file cleanup | Aspose.Cells API | office add‑ins rendering | interactive PDF controls
+// Common Searches: Aspose.Cells convert CSV to PDF C# | C# code sample for CSV to PDF using Aspose | How to use ConversionUtility with CSV input | LoadOptions CSV Aspose.Cells example | PdfSaveOptions usage in Aspose.Cells | Delete temporary CSV after conversion C#
+// Developer Intent: The developer needs a quick, reliable way to transform CSV data into a PDF document using Aspose.Cells in a C# application.
+// Use Cases: Generate printable PDF reports directly from exported CSV data. | Automate nightly batch conversion of CSV logs to PDF archives while removing the original files. | Create PDF attachments for email campaigns from dynamically generated CSV content.
+// AI Prompts: Show C# code that adds custom page margins and orientation when converting CSV to PDF with Aspose.Cells. | Explain how to embed clickable hyperlinks or form fields in the PDF generated from a CSV file. | Provide performance tips for converting large CSV files (100k+ rows) to PDF using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
+using Aspose.Cells.Saving;
 
-namespace AsposeCellsAddInConversion
+namespace CsvToPdfWithInteractiveControls
 {
-    // Creates a temporary CSV that includes text, hyperlinks, and numbers, then uses Aspose.Cells LoadOptions (LoadFormat.Csv) and PdfSaveOptions with ConversionUtility.Convert to generate a PDF that retains interactive elements such as clickable links. The sample also removes the temporary file after conversion.
+    // Demonstrates how to create a temporary CSV file, validate its presence, load it using LoadOptions (CSV format), convert it to a PDF with PdfSaveOptions via Aspose.Cells ConversionUtility, and clean up the source file—all in a single C# console program.
     class Program
     {
         static void Main()
         {
-            // Paths for the temporary CSV file and the final PDF output
+            // Paths for the source CSV and the resulting PDF
             string csvPath = "sample.csv";
             string pdfPath = "output.pdf";
 
-            // Create a simple CSV file that could contain Office Add‑In data (e.g., formulas, hyperlinks)
+            // Create a simple CSV file for demonstration
             File.WriteAllText(csvPath,
-                "Name,Link,Value\n" +
-                "Item1,https://example.com,100\n" +
-                "Item2,https://contoso.com,200");
+                "Name,Age,Score\n" +
+                "Alice,30,85\n" +
+                "Bob,25,92\n" +
+                "Charlie,28,78");
 
             try
             {
-                // LoadOptions tell Aspose.Cells to treat the source as a CSV file
+                // Verify that the CSV file exists before attempting conversion
+                if (!File.Exists(csvPath))
+                {
+                    throw new FileNotFoundException("The source CSV file was not found.", csvPath);
+                }
+
+                // LoadOptions specify that the source file is a CSV
                 LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
 
-                // SaveOptions for PDF output – PdfSaveOptions derives from SaveOptions
-                // (PdfSaveOptions is part of Aspose.Cells and does not require additional code)
+                // SaveOptions for PDF (no special properties needed for this conversion)
                 PdfSaveOptions saveOptions = new PdfSaveOptions();
 
-                // Convert CSV directly to PDF while preserving any interactive elements
-                // (e.g., hyperlinks become clickable in the PDF)
+                // Convert CSV directly to PDF using the utility method
                 ConversionUtility.Convert(csvPath, loadOptions, pdfPath, saveOptions);
 
                 Console.WriteLine($"CSV file successfully converted to PDF: {pdfPath}");
@@ -52,7 +58,14 @@ namespace AsposeCellsAddInConversion
                 // Clean up the temporary CSV file
                 if (File.Exists(csvPath))
                 {
-                    File.Delete(csvPath);
+                    try
+                    {
+                        File.Delete(csvPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to delete temporary CSV file: {ex.Message}");
+                    }
                 }
             }
         }

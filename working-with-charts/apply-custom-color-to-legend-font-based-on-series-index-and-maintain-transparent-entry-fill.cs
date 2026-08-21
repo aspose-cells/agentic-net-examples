@@ -1,70 +1,88 @@
-// Title: Set Legend Font Color per Series with Transparent Background in Aspose.Cells .NET
-// Description: Shows how to create a workbook, add a column chart with multiple series, and use Aspose.Cells for .NET to assign a distinct font color to each legend entry based on its series index while keeping the legend background transparent, then save the file as XLSX.
-// Keywords: Aspose.Cells | C# chart legend formatting | custom legend font color | transparent legend background | series index color | column chart Aspose.Cells | .NET Excel automation | legend entry styling
-// Common Searches: Aspose.Cells change legend font color per series | transparent legend entry background Aspose.Cells | set legend entry font color C# | custom legend colors Aspose.Cells chart | how to make legend background transparent in Excel using Aspose
-// Developer Intent: Apply a unique font color to each legend entry according to its series order and keep the legend entry background transparent.
-// Use Cases: Design a multi‑series column chart where each legend label uses a different color for quick visual identification. | Produce reports that require the legend to blend seamlessly with the worksheet background, necessitating a transparent fill. | Cycle through a predefined palette when the number of series exceeds available colors, ensuring consistent styling. | Create dashboards where legend text color matches series colors while the background remains unobtrusive.
-// AI Prompts: Generate C# code that applies a gradient of font colors to legend entries instead of a fixed color array using Aspose.Cells. | Explain how to modify legend entry font size, style, and weight together with custom colors in the provided example. | Show how to set a semi‑transparent background (e.g., 50% opacity) for legend entries and retrieve the current background mode.
+// Title: Set per-series legend font colors with transparent background in Aspose.Cells C# chart
+// Description: Demonstrates how to create a column chart in Aspose.Cells, then loop through each series to assign a distinct legend font color while keeping the legend entry background transparent and text fill enabled.
+// Keywords: Aspose.Cells legend font color | C# chart legend customization | transparent legend background | per series legend color Aspose | Excel chart legend styling | Aspose.Cells Chart API | LegendEntry Font.Color | BackgroundMode.Transparent
+// Common Searches: Aspose.Cells change legend font color by series | how to make legend background transparent in Aspose.Cells | set different colors for each legend entry C# | customize chart legend appearance Aspose.Cells | apply series index colors to legend Aspose
+// Developer Intent: Apply a specific font color to each legend entry based on its series index while preserving a transparent legend background.
+// Use Cases: Generate Excel reports where legend labels match series colors without obscuring underlying cell colors. | Create visually consistent dashboards that overlay charts on colored backgrounds. | Provide a reusable routine for dynamic charts with any number of series, ensuring each legend entry has a distinct font color and no background fill.
+// AI Prompts: Write a C# method that receives a Chart object and a Color[] and sets each series' LegendEntry.Font.Color and BackgroundMode to Transparent. | Explain the interaction between LegendEntry.Font.Color, BackgroundMode, and IsTextNoFill in Aspose.Cells. | Show how to handle more series than colors by cycling through a color array when customizing legend fonts.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Shows how to create a workbook, add a column chart with multiple series, and use Aspose.Cells for .NET to assign a distinct font color to each legend entry based on its series index while keeping the legend background transparent, then save the file as XLSX.
-class LegendCustomColorExample
+namespace AsposeCellsLegendCustomColor
 {
-    static void Main()
+    // Demonstrates how to create a column chart in Aspose.Cells, then loop through each series to assign a distinct legend font color while keeping the legend entry background transparent and text fill enabled.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Q1");
-        sheet.Cells["A3"].PutValue("Q2");
-        sheet.Cells["A4"].PutValue("Q3");
-        sheet.Cells["A5"].PutValue("Q4");
-
-        sheet.Cells["B1"].PutValue("Series 1");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
-        sheet.Cells["B5"].PutValue(40);
-
-        sheet.Cells["C1"].PutValue("Series 2");
-        sheet.Cells["C2"].PutValue(15);
-        sheet.Cells["C3"].PutValue(25);
-        sheet.Cells["C4"].PutValue(35);
-        sheet.Cells["C5"].PutValue(45);
-
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 20, 15);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Add two series to the chart
-        chart.NSeries.Add("B2:B5", true); // Series 1
-        chart.NSeries.Add("C2:C5", true); // Series 2
-        chart.NSeries.CategoryData = "A2:A5";
-
-        // Define custom colors for legend entries (one per series)
-        Color[] legendColors = new Color[] { Color.Red, Color.Green, Color.Blue, Color.Orange };
-
-        // Apply custom font color and transparent background to each legend entry
-        for (int i = 0; i < chart.NSeries.Count; i++)
+        static void Main()
         {
-            LegendEntry entry = chart.NSeries[i].LegendEntry;
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Set transparent background for the legend entry
-            entry.BackgroundMode = BackgroundMode.Transparent;
+            // Populate sample data for three series
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("Q1");
+            sheet.Cells["A3"].PutValue("Q2");
+            sheet.Cells["A4"].PutValue("Q3");
 
-            // Choose a color based on the series index (cycle if more series than colors)
-            Color fontColor = legendColors[i % legendColors.Length];
-            entry.Font.Color = fontColor;
+            // Series 1
+            sheet.Cells["B1"].PutValue("Series 1");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
+
+            // Series 2
+            sheet.Cells["C1"].PutValue("Series 2");
+            sheet.Cells["C2"].PutValue(15);
+            sheet.Cells["C3"].PutValue(25);
+            sheet.Cells["C4"].PutValue(35);
+
+            // Series 3
+            sheet.Cells["D1"].PutValue("Series 3");
+            sheet.Cells["D2"].PutValue(12);
+            sheet.Cells["D3"].PutValue(22);
+            sheet.Cells["D4"].PutValue(32);
+
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 15);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.ShowLegend = true;
+
+            // Add the three series to the chart
+            chart.NSeries.Add("B2:B4", true); // Series 1
+            chart.NSeries.Add("C2:C4", true); // Series 2
+            chart.NSeries.Add("D2:D4", true); // Series 3
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // Define a set of colors to apply per series index
+            Color[] seriesColors = new Color[]
+            {
+                Color.Red,
+                Color.Green,
+                Color.Blue
+            };
+
+            // Iterate over each series and customize its legend entry
+            for (int i = 0; i < chart.NSeries.Count; i++)
+            {
+                Series series = chart.NSeries[i];
+                LegendEntry legendEntry = series.LegendEntry;
+
+                // Apply custom font color based on series index
+                legendEntry.Font.Color = seriesColors[i % seriesColors.Length];
+
+                // Keep the legend entry background transparent
+                legendEntry.BackgroundMode = BackgroundMode.Transparent;
+
+                // Ensure the text itself is not set to "no fill"
+                legendEntry.IsTextNoFill = false;
+            }
+
+            // Save the workbook
+            workbook.Save("ChartWithCustomLegendColors.xlsx");
         }
-
-        // Save the workbook
-        workbook.Save("LegendCustomColorExample.xlsx");
     }
 }

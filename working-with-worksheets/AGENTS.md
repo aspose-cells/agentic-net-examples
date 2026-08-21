@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Worksheet Operations Agent
 category: working-with-worksheets
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-02
+last_reviewed: 2026-08-21
 primary_intent: Create, access, copy, organize, configure, and protect Excel worksheets in C#
 primary_apis:
   - Workbook.Worksheets
@@ -400,3 +400,4 @@ Useful aliases:
 ## Final authority
 
 The installed Aspose.Cells package and official API reference are authoritative. Existing generated files may contain speculative, version-sensitive, third-party, or externally dependent scenarios. Validate API signatures, compile, execute, and inspect the claimed result before accepting or featuring any example.
+

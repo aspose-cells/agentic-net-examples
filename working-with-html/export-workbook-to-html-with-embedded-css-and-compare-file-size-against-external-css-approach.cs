@@ -1,10 +1,10 @@
-// Title: Export Aspose.Cells Workbook to HTML with Embedded CSS vs External CSS and Compare File Sizes (C#)
-// Description: Shows how to save an Aspose.Cells workbook as a single HTML file with embedded CSS and as separate HTML/CSS files, then reads and prints the sizes of the generated files using C#.
-// Keywords: Aspose.Cells | C# | HTML export | embedded CSS | external CSS | HtmlSaveOptions | ExportWorksheetCSSSeparately | single HTML file | file size comparison | performance optimization
-// Common Searches: Aspose.Cells export workbook to HTML with embedded CSS | Aspose.Cells generate external CSS file when saving as HTML | compare HTML file size with embedded CSS versus external CSS Aspose | HtmlSaveOptions SaveAsSingleFile true example | ExportWorksheetCSSSeparately false C# sample
-// Developer Intent: Produce HTML output from a workbook in two formats—embedded CSS and external CSS—and programmatically compare their file sizes to evaluate storage and bandwidth impact.
-// Use Cases: Create a self‑contained HTML report that can be emailed or viewed offline without additional files. | Generate HTML with a linked stylesheet for web applications to enable browser caching and reduce HTML payload. | Measure the size difference between embedded and external CSS to guide performance‑related decisions for large spreadsheets. | Automate size reporting in CI/CD pipelines for document‑to‑HTML conversion processes.
-// AI Prompts: Write C# code that saves an Aspose.Cells workbook as a single HTML file with embedded CSS and returns the file size in bytes. | Show how to compress the generated HTML and CSS files using GZip after saving with Aspose.Cells. | Explain how to read the external CSS file produced by Aspose.Cells and inline its contents into the HTML for a custom combined output. | Create a PowerShell script that runs the compiled program and logs the size differences to a CSV file. | Generate a unit test that asserts the embedded HTML size is smaller than the combined size of external HTML plus CSS.
+// Title: Aspose.Cells C# Export Workbook to HTML – Embedded vs External CSS with File‑Size Comparison
+// Description: Demonstrates how to save an Aspose.Cells workbook as HTML using the default embedded CSS and using external CSS via HtmlSaveOptions.ExportWorksheetCSSSeparately. The sample measures the HTML and CSS file sizes, prints a side‑by‑side comparison, and indicates which approach yields a smaller total payload.
+// Keywords: Aspose.Cells HTML export | C# HtmlSaveOptions | ExportWorksheetCSSSeparately | embedded CSS vs external CSS | HTML file size comparison | Aspose.Cells CSS optimization | Excel to HTML conversion .NET
+// Common Searches: Aspose.Cells export HTML with embedded CSS C# | How to generate external CSS file when saving Excel as HTML using Aspose.Cells | Compare HTML file size with embedded and external CSS in Aspose.Cells | HtmlSaveOptions ExportWorksheetCSSSeparately example | C# code to measure size of Aspose.Cells HTML output
+// Developer Intent: Create HTML from a workbook with both embedded and external CSS, then evaluate which method produces a smaller overall file size.
+// Use Cases: Determine the most efficient CSS strategy for small reports to minimize HTTP requests. | Generate reusable stylesheet files for large workbooks so browsers can cache the CSS across pages. | Integrate an automated size‑comparison step into a reporting pipeline to select the optimal export option.
+// AI Prompts: Provide C# code that saves an Aspose.Cells workbook to HTML with embedded CSS and outputs the file size. | Show how to configure HtmlSaveOptions to export CSS to a separate file and calculate the combined size of HTML and CSS. | Explain how to extend the example to log the size comparison results to a CSV file for later analysis.
 
 using System;
 using System.IO;
@@ -12,16 +12,16 @@ using Aspose.Cells;
 
 namespace AsposeCellsHtmlExportDemo
 {
-    // Shows how to save an Aspose.Cells workbook as a single HTML file with embedded CSS and as separate HTML/CSS files, then reads and prints the sizes of the generated files using C#.
+    // Demonstrates how to save an Aspose.Cells workbook as HTML using the default embedded CSS and using external CSS via HtmlSaveOptions.ExportWorksheetCSSSeparately. The sample measures the HTML and CSS file sizes, prints a side‑by‑side comparison, and indicates which approach yields a smaller total payload.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and add some formatted data
+            // Create a sample workbook with styled data
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Sample data with different styles to generate CSS rules
+            // Populate cells with different styles to generate CSS rules
             sheet.Cells["A1"].PutValue("Header");
             Style headerStyle = workbook.CreateStyle();
             headerStyle.Font.IsBold = true;
@@ -32,51 +32,63 @@ namespace AsposeCellsHtmlExportDemo
 
             sheet.Cells["A2"].PutValue("Item 1");
             sheet.Cells["B2"].PutValue(123);
-            Style dataStyle = workbook.CreateStyle();
-            dataStyle.Font.Color = System.Drawing.Color.Green;
-            sheet.Cells["A2"].SetStyle(dataStyle);
-            sheet.Cells["B2"].SetStyle(dataStyle);
-
             sheet.Cells["A3"].PutValue("Item 2");
             sheet.Cells["B3"].PutValue(456);
-            sheet.Cells["A3"].SetStyle(dataStyle);
-            sheet.Cells["B3"].SetStyle(dataStyle);
+
+            // Apply a different style to the numeric column
+            Style numberStyle = workbook.CreateStyle();
+            numberStyle.Font.Color = System.Drawing.Color.Green;
+            numberStyle.Number = 3; // "#,##0"
+            sheet.Cells["B2"].SetStyle(numberStyle);
+            sheet.Cells["B3"].SetStyle(numberStyle);
 
             // -----------------------------------------------------------------
-            // Export with embedded CSS (all CSS inside the HTML file)
+            // 1) Export with embedded CSS (default behavior)
             // -----------------------------------------------------------------
             HtmlSaveOptions embeddedOptions = new HtmlSaveOptions();
-            embeddedOptions.ExportWorksheetCSSSeparately = false; // embed CSS
-            embeddedOptions.SaveAsSingleFile = true; // single HTML file
-            string embeddedHtmlPath = "EmbeddedCss.html";
+            // ExportWorksheetCSSSeparately defaults to false, so CSS will be embedded
+            string embeddedHtmlPath = "EmbeddedCssOutput.html";
             workbook.Save(embeddedHtmlPath, embeddedOptions);
 
+            // Get size of the HTML file with embedded CSS
+            long embeddedHtmlSize = new FileInfo(embeddedHtmlPath).Length;
+
             // -----------------------------------------------------------------
-            // Export with external CSS (CSS written to a separate .css file)
+            // 2) Export with external CSS (ExportWorksheetCSSSeparately = true)
             // -----------------------------------------------------------------
+            // Define a folder where the external CSS file will be written
+            string externalFolder = "ExternalCssFiles";
+            Directory.CreateDirectory(externalFolder);
+
             HtmlSaveOptions externalOptions = new HtmlSaveOptions();
-            externalOptions.ExportWorksheetCSSSeparately = true; // separate CSS file
-            externalOptions.SaveAsSingleFile = false; // default behavior
-            string externalHtmlPath = "ExternalCss.html";
+            externalOptions.ExportWorksheetCSSSeparately = true;
+            externalOptions.AttachedFilesDirectory = externalFolder; // folder for CSS file
+            string externalHtmlPath = Path.Combine(externalFolder, "ExternalCssOutput.html");
             workbook.Save(externalHtmlPath, externalOptions);
-            // The CSS file will be generated alongside the HTML (e.g., sheet0.css)
+
+            // Get size of the HTML file (without CSS) and the generated CSS file
+            long externalHtmlSize = new FileInfo(externalHtmlPath).Length;
+
+            // The CSS file name follows the pattern "sheet0.css"
+            string externalCssPath = Path.Combine(externalFolder, "sheet0.css");
+            long externalCssSize = File.Exists(externalCssPath) ? new FileInfo(externalCssPath).Length : 0;
 
             // -----------------------------------------------------------------
-            // Compare file sizes
+            // Output comparison results
             // -----------------------------------------------------------------
-            long embeddedSize = new FileInfo(embeddedHtmlPath).Length;
-            long externalSize = new FileInfo(externalHtmlPath).Length;
+            Console.WriteLine("File size comparison:");
+            Console.WriteLine($"Embedded CSS HTML size : {embeddedHtmlSize} bytes");
+            Console.WriteLine($"External CSS HTML size : {externalHtmlSize} bytes");
+            Console.WriteLine($"External CSS file size : {externalCssSize} bytes");
+            Console.WriteLine($"Total size (HTML + CSS) : {externalHtmlSize + externalCssSize} bytes");
 
-            Console.WriteLine($"Embedded HTML size: {embeddedSize} bytes");
-            Console.WriteLine($"External CSS HTML size: {externalSize} bytes");
-
-            // If needed, also display the size of the generated CSS file
-            string cssFilePath = Path.Combine(Path.GetDirectoryName(externalHtmlPath) ?? "", "sheet0.css");
-            if (File.Exists(cssFilePath))
-            {
-                long cssSize = new FileInfo(cssFilePath).Length;
-                Console.WriteLine($"External CSS file size (sheet0.css): {cssSize} bytes");
-            }
+            // Simple decision output
+            if (embeddedHtmlSize < externalHtmlSize + externalCssSize)
+                Console.WriteLine("Embedded CSS approach results in a smaller overall file size.");
+            else if (embeddedHtmlSize > externalHtmlSize + externalCssSize)
+                Console.WriteLine("External CSS approach results in a smaller overall file size.");
+            else
+                Console.WriteLine("Both approaches produce the same total file size.");
         }
     }
 }

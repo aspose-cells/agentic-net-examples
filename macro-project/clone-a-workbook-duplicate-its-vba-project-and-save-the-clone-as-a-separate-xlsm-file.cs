@@ -1,52 +1,54 @@
-// Title: Clone a macro‑enabled XLSM workbook and copy its VBA project with Aspose.Cells for .NET (C#)
-// Description: C# example that loads a source XLSM file, creates an empty workbook, uses CopyOptions.KeepMacros to copy all worksheets, duplicates the VbaProject via VbaProject.Copy, and saves the clone as a new macro‑enabled workbook. Includes file‑existence checks and exception handling.
-// Keywords: Aspose.Cells clone XLSM | CopyOptions KeepMacros C# | VbaProject.Copy Aspose | macro enabled workbook duplicate | C# Aspose.Cells VBA cloning | save as Xlsm Aspose
-// Common Searches: how to copy an XLSM workbook with macros using Aspose.Cells | Aspose.Cells duplicate VBA project C# | clone macro‑enabled Excel file .NET | copy worksheets and VBA code with Aspose.Cells | C# example for preserving macros when cloning Excel
-// Developer Intent: Create an exact copy of a macro‑enabled Excel workbook, including its VBA project, and store the clone as a separate XLSM file.
-// Use Cases: Backup a macro‑enabled workbook before applying automated changes. | Generate a reusable template that contains the same VBA macros for distribution. | Implement version control for Excel files with embedded VBA by cloning the original for each release.
-// AI Prompts: Write C# code that clones an XLSM workbook, copies its VBA project, and saves the result as a new XLSM file using Aspose.Cells, with error handling for missing source files. | Explain how CopyOptions.KeepMacros and VbaProject.Copy work together to preserve VBA code when duplicating a workbook in Aspose.Cells. | Show how to modify the cloning process to skip selected worksheets while still copying the full VBA project.
+// Title: Clone a macro‑enabled XLSM workbook and copy its VBA project with Aspose.Cells for .NET
+// Description: Loads a source XLSM file, creates an empty workbook, copies all worksheets and VBA macros using CopyOptions.KeepMacros, optionally duplicates the VbaProject, and saves the clone as a new macro‑enabled XLSM file.
+// Keywords: Aspose.Cells | .NET | C# | clone workbook | macro enabled | XLSM | VBA project | CopyOptions | KeepMacros | duplicate macros | Excel automation
+// Common Searches: Aspose.Cells clone XLSM workbook with macros | Copy VBA project when duplicating Excel file in C# | Save cloned workbook as .xlsm using Aspose.Cells | KeepMacros option example Aspose.Cells .NET | How to duplicate a macro‑enabled workbook programmatically
+// Developer Intent: Create an exact copy of a macro‑enabled workbook, preserving its VBA code, and store it as a separate XLSM file.
+// Use Cases: Backing up a macro‑enabled workbook before automated processing. | Generating a reusable template that contains the same macros for multiple users. | Migrating VBA macros from one workbook to another within a data‑pipeline.
+// AI Prompts: Generate C# code that clones an XLSM workbook and retains all VBA macros using Aspose.Cells. | Explain how CopyOptions.KeepMacros works and how to duplicate a VbaProject with Aspose.Cells. | Provide error‑handling best practices for missing source files and macro copy failures when cloning a macro‑enabled workbook.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsCloneDemo
+namespace AsposeCellsCloneVba
 {
-    // C# example that loads a source XLSM file, creates an empty workbook, uses CopyOptions.KeepMacros to copy all worksheets, duplicates the VbaProject via VbaProject.Copy, and saves the clone as a new macro‑enabled workbook. Includes file‑existence checks and exception handling.
+    // Loads a source XLSM file, creates an empty workbook, copies all worksheets and VBA macros using CopyOptions.KeepMacros, optionally duplicates the VbaProject, and saves the clone as a new macro‑enabled XLSM file.
     class Program
     {
         static void Main()
         {
-            // Paths for source and cloned workbooks
+            // Path to the source macro‑enabled workbook
             string sourcePath = "source.xlsm";
+
+            // Path where the cloned workbook will be saved
             string clonePath = "clone.xlsm";
 
             try
             {
-                // Verify that the source file exists before loading
+                // Verify that the source file exists to avoid FileNotFoundException
                 if (!File.Exists(sourcePath))
                 {
-                    Console.WriteLine($"Source file not found: {Path.GetFullPath(sourcePath)}");
+                    Console.WriteLine($"Error: Source file '{sourcePath}' not found.");
                     return;
                 }
 
-                // Load the source macro‑enabled workbook
+                // Load the source workbook (contains VBA macros)
                 Workbook sourceWorkbook = new Workbook(sourcePath);
 
-                // Create an empty workbook for the clone
+                // Create an empty workbook that will receive the clone
                 Workbook clonedWorkbook = new Workbook();
 
-                // Set copy options to retain macros/VBA code
+                // Configure copy options to keep macros/VBA project
                 CopyOptions copyOptions = new CopyOptions
                 {
                     KeepMacros = true
                 };
 
-                // Copy the entire content of the source workbook into the clone
-                sourceWorkbook.Copy(clonedWorkbook, copyOptions);
+                // Copy the entire content of the source workbook, including macros
+                clonedWorkbook.Copy(sourceWorkbook, copyOptions);
 
-                // Duplicate the VBA project from source to clone
+                // Explicitly duplicate the VBA project (optional, reinforces the copy)
                 if (sourceWorkbook.VbaProject != null && clonedWorkbook.VbaProject != null)
                 {
                     clonedWorkbook.VbaProject.Copy(sourceWorkbook.VbaProject);
@@ -54,11 +56,11 @@ namespace AsposeCellsCloneDemo
 
                 // Save the cloned workbook as a macro‑enabled file
                 clonedWorkbook.Save(clonePath, SaveFormat.Xlsm);
-                Console.WriteLine($"Cloned workbook saved to: {Path.GetFullPath(clonePath)}");
+
+                Console.WriteLine($"Workbook cloned successfully to '{clonePath}'.");
             }
             catch (Exception ex)
             {
-                // Handle any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

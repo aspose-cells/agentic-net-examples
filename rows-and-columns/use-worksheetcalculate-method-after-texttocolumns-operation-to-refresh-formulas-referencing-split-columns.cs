@@ -1,15 +1,15 @@
-// Title: Refresh formulas after TextToColumns split using Worksheet.Calculate in Aspose.Cells for .NET
-// Description: Demonstrates how to split comma‑separated values with TextToColumns, then invoke Worksheet.Calculate (or Workbook.CalculateFormula) to update formulas that reference the newly created columns, and finally save the workbook.
-// Keywords: Aspose.Cells TextToColumns | Worksheet.Calculate | Workbook.CalculateFormula | C# refresh formulas | update dependent formulas after split | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells recalculate formulas after TextToColumns | Worksheet.Calculate after column split C# | How to refresh formulas in Aspose.Cells .NET | Update dependent cells after TextToColumns operation | C# Aspose.Cells calculate workbook after data split
-// Developer Intent: Run a calculation pass so formulas that depend on columns created by TextToColumns return correct results.
-// Use Cases: Import raw CSV strings, split them into separate columns, and automatically adjust summary formulas. | Process user‑entered text data, separate fields with TextToColumns, then recalculate totals or derived values. | Perform data cleansing on a worksheet and ensure all downstream calculations reflect the new layout before exporting.
-// AI Prompts: Show C# code that uses TextToColumns and then calls Worksheet.Calculate to update formulas in Aspose.Cells. | Explain when to use Worksheet.Calculate versus Workbook.CalculateFormula after splitting columns. | Generate an Aspose.Cells example that recalculates only the cells affected by a TextToColumns operation.
+// Title: Refresh formulas after TextToColumns split with Worksheet.Calculate in Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to split a delimited column using TextToColumns, then invoke Worksheet.Calculate (or Workbook.CalculateFormula) to update any formulas that reference the newly created cells, and finally save the workbook.
+// Keywords: Aspose.Cells | TextToColumns | Worksheet.Calculate | Workbook.CalculateFormula | recalculate formulas | C# | .NET | split column | calculation options | update dependent cells
+// Common Searches: How to recalculate formulas after TextToColumns in Aspose.Cells C# | Worksheet.Calculate after splitting columns Aspose.Cells | Refresh dependent cells after TextToColumns operation .NET | Aspose.Cells recalc formulas after column split
+// Developer Intent: Update worksheet formulas so they reflect data created by a TextToColumns operation.
+// Use Cases: Split a CSV field into separate columns and automatically adjust sum or average formulas that reference the new columns. | Import a delimited text file, separate its fields with TextToColumns, then recalculate totals, averages, or custom calculations. | Parse address components into distinct columns and refresh distance or cost formulas that depend on those components.
+// AI Prompts: Generate C# code that uses Aspose.Cells to split a column with TextToColumns and then calls Worksheet.Calculate to refresh all formulas. | Show how to configure CalculationOptions and invoke Workbook.CalculateFormula after a TextToColumns operation in Aspose.Cells for .NET. | Explain the steps required to ensure formulas referencing newly split columns are updated automatically in an Aspose.Cells workbook.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to split comma‑separated values with TextToColumns, then invoke Worksheet.Calculate (or Workbook.CalculateFormula) to update formulas that reference the newly created columns, and finally save the workbook.
+// Demonstrates how to split a delimited column using TextToColumns, then invoke Worksheet.Calculate (or Workbook.CalculateFormula) to update any formulas that reference the newly created cells, and finally save the workbook.
 class Program
 {
     static void Main()
@@ -20,15 +20,14 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Sample data: comma‑separated values in column A
+            // Populate column A with comma‑separated values
             sheet.Cells["A1"].PutValue("John,Doe,30");
             sheet.Cells["A2"].PutValue("Jane,Smith,28");
 
-            // Formula that depends on the column that will be created by TextToColumns
-            // After splitting, the age will be in column C, so this formula adds 5 to it
-            sheet.Cells["D1"].Formula = "=C1+5";
+            // Add a formula that will reference the split columns (age will end up in column C)
+            sheet.Cells["D1"].Formula = "=C1+C2";
 
-            // Configure TextToColumns to split on comma
+            // Configure TextToColumns to split on commas
             TxtLoadOptions options = new TxtLoadOptions
             {
                 Separator = ','
@@ -37,19 +36,16 @@ class Program
             // Perform the split on the first two rows of column A
             sheet.Cells.TextToColumns(0, 0, 2, options);
 
-            // Refresh all formulas in the workbook after the split operation
-            workbook.CalculateFormula();
+            // Recalculate formulas so they reflect the newly split data
+            CalculationOptions calcOptions = new CalculationOptions();
+            workbook.CalculateFormula(calcOptions);
 
-            // Display the results to verify that the formula was recalculated
-            Console.WriteLine("C1 (Age): " + sheet.Cells["C1"].StringValue);
-            Console.WriteLine("D1 (Age + 5): " + sheet.Cells["D1"].StringValue);
-
-            // Save the workbook
-            workbook.Save("TextToColumns_With_Calculation.xlsx");
+            // Save the result
+            workbook.Save("TextToColumns_Calc.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

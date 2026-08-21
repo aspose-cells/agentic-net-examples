@@ -1,57 +1,27 @@
 // Title: C# – Remove All External Links from an Excel Workbook with Aspose.Cells
-// Description: Loads or creates a workbook, clears every external reference using Workbook.Worksheets.ExternalLinks.Clear(true) so formulas stay valid, and saves a self‑contained file.
-// Keywords: Aspose.Cells | C# | remove external links | clear external references | self‑contained Excel | Workbook.Worksheets.ExternalLinks.Clear | Excel automation
-// Common Searches: how to delete external links in Excel using Aspose.Cells C# | make Excel file independent of other workbooks | Aspose.Cells clear external references programmatically | remove external hyperlinks from worksheets .NET
-// Developer Intent: Eliminate all external references so the saved workbook has no links to other files.
-// Use Cases: Prepare a spreadsheet for distribution without exposing source paths. | Maintain formula integrity after stripping external data connections. | Batch‑process multiple workbooks to ensure they are fully self‑contained.
-// AI Prompts: Generate C# code that lists every external link in a workbook before removing them with Aspose.Cells. | Show how to replace external‑link formulas with their calculated values when clearing links. | Explain the effect of the Clear(true) argument on formula recalculation in Aspose.Cells.
+// Description: Loads an Excel file, clears every external link (optionally updating formulas to refer to the current workbook), and saves a self‑contained workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# external links | clear external links | remove external references | self-contained Excel file | update formulas after clearing links | Workbook.ExternalLinks.Clear | Excel data connections | .NET Excel security
+// Common Searches: Aspose.Cells remove external links C# | How to clear external references in Excel using .NET | Make Excel workbook self‑contained with Aspose | Workbook.ExternalLinks.Clear example | Delete external data connections programmatically
+// Developer Intent: Delete every external link in a workbook so the file no longer depends on outside sources.
+// Use Cases: Prepare a distribution‑ready workbook that must not contain external data connections. | Enforce compliance by stripping external references from corporate templates. | Automate conversion of user‑uploaded Excel files into secure, self‑contained documents.
+// AI Prompts: Write C# code with Aspose.Cells that lists all external links before removing them. | Show how to call Workbook.Worksheets.ExternalLinks.Clear(false) to keep original formulas unchanged. | Explain how to verify that no external links remain after calling Clear(true).
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads an Excel file, clears every external link (optionally updating formulas to refer to the current workbook), and saves a self‑contained workbook using Aspose.Cells for .NET.
+class RemoveExternalLinksDemo
 {
-    // Loads or creates a workbook, clears every external reference using Workbook.Worksheets.ExternalLinks.Clear(true) so formulas stay valid, and saves a self‑contained file.
-    public class RemoveExternalLinksDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
 
-                // Ensure the input file exists; create a simple workbook if it doesn't.
-                if (!File.Exists(inputPath))
-                {
-                    var wb = new Workbook();
-                    wb.Worksheets[0].Name = "Sheet1";
-                    wb.Save(inputPath);
-                }
+        // Remove all external links.
+        // The boolean parameter updates formulas to refer to the current workbook when possible.
+        workbook.Worksheets.ExternalLinks.Clear(true);
 
-                // Load the workbook from the existing file.
-                Workbook workbook = new Workbook(inputPath);
-
-                // Remove all external links, updating formulas where possible.
-                workbook.Worksheets.ExternalLinks.Clear(true);
-
-                // Save the workbook; it is now self‑contained with no external links.
-                workbook.Save(outputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Application entry point.
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            RemoveExternalLinksDemo.Run();
-        }
+        // Save the modified workbook to a new file
+        workbook.Save("output.xlsx");
     }
 }

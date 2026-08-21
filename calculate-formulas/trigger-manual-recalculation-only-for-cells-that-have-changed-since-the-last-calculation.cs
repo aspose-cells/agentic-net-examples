@@ -1,39 +1,28 @@
-// Title: Aspose.Cells for .NET – Manual Recalculation of Only Changed Cells with a Custom CalculationMonitor (C#)
-// Description: Shows how to set Aspose.Cells to manual calculation mode, change a source value, and run CalculateFormula with a custom CalculationMonitor that logs only the cells whose values actually changed. Includes an initial full calculation, dependent updates, and saving without automatic recalculation.
-// Keywords: Aspose.Cells | C# | .NET | manual calculation mode | CalculationMonitor | changed cells detection | recalculate dependent cells | CalculateFormula | custom monitor | workbook formula evaluation
-// Common Searches: Aspose.Cells manual calculation mode C# | how to recalculate only changed cells Aspose.Cells | custom CalculationMonitor example Aspose.Cells | detect changed cell values after formula calculation .NET | skip full workbook recalculation Aspose.Cells
-// Developer Intent: The developer needs to perform a manual recalculation that updates and reports only the cells whose values have changed since the previous calculation.
-// Use Cases: Log each cell that changed after modifying a source value, showing old and new results. | Reduce processing time by avoiding a full workbook recalculation and updating only dependent cells. | Collect changed cell addresses and values into a collection for change‑report generation before saving the file.
-// AI Prompts: Generate C# code that switches Aspose.Cells to manual calculation mode, modifies a source cell, and uses a custom AbstractCalculationMonitor to output only cells with changed values. | Explain step‑by‑step how to configure CalculationOptions with a custom CalculationMonitor to capture changed cell references during a manual recalculation in Aspose.Cells. | Provide a sample that iterates over the cells reported by the monitor, stores their A1 addresses and new values in a list, and writes the list to a CSV file.
+// Title: Aspose.Cells for .NET – Manual Calculation with ChangeMonitor to Recalculate Only Modified Cells
+// Description: Demonstrates how to set Aspose.Cells to manual calculation mode, use a custom AbstractCalculationMonitor (ChangeMonitor) to log cells whose values actually change, update a source cell, trigger selective recalculation of dependent formulas, and save the workbook.
+// Keywords: Aspose.Cells manual calculation | C# Aspose.Cells ChangeMonitor | recalculate only changed cells .NET | AbstractCalculationMonitor example | track cell value changes Aspose.Cells | selective formula recalculation | Aspose.Cells CalculationOptions | Workbook.CalculateFormula manual mode | Aspose.Cells sample code GitHub
+// Common Searches: Aspose.Cells manual calculation mode C# example | How to recalculate only changed cells with Aspose.Cells | Aspose.Cells ChangeMonitor to detect updated cells | Selective formula recalculation Aspose.Cells .NET | Custom CalculationMonitor Aspose.Cells tutorial
+// Developer Intent: The developer wants to perform manual formula recalculation, detect which cells changed after each calculation, and update only those dependent cells.
+// Use Cases: Switch workbook to manual calculation (CalcModeType.Manual) and invoke Workbook.CalculateFormula only when needed. | Implement a subclass of AbstractCalculationMonitor to capture the A1 reference, original value, and new value of each cell that changes during calculation. | Update one or more source cells, run CalculateFormula with a CalculationMonitor, and let Aspose.Cells automatically refresh only the affected dependent cells. | Log changed cells for auditing or debugging, then save the workbook with the updated results.
+// AI Prompts: Generate C# code that configures Aspose.Cells for manual calculation, updates a source cell, and uses a custom ChangeMonitor to log only cells whose values changed. | Explain how Aspose.Cells determines which cells need recalculation in manual mode and how to retrieve changed cell references via CalculationOptions and a CalculationMonitor. | Provide a step‑by‑step guide to modify multiple source cells, trigger selective recalculation, log changed cells, and save the workbook using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using System.Collections;
 
-namespace AsposeCellsRecalcDemo
+// Demonstrates how to set Aspose.Cells to manual calculation mode, use a custom AbstractCalculationMonitor (ChangeMonitor) to log cells whose values actually change, update a source cell, trigger selective recalculation of dependent formulas, and save the workbook.
+public class ManualRecalculationDemo
 {
-    // Custom monitor to detect cells whose values changed after calculation
-    // Shows how to set Aspose.Cells to manual calculation mode, change a source value, and run CalculateFormula with a custom CalculationMonitor that logs only the cells whose values actually changed. Includes an initial full calculation, dependent updates, and saving without automatic recalculation.
-
-namespace AsposeCellsExamples
-{
-    // Custom monitor to report cells whose values changed after calculation
-    public class ChangedCellMonitor : AbstractCalculationMonitor
+    // Custom monitor to report cells whose value actually changed after a calculation
+    private class ChangeMonitor : AbstractCalculationMonitor
     {
         public override void AfterCalculate(int sheetIndex, int rowIndex, int colIndex)
         {
-            // Report only cells whose value actually changed
-
-            // ValueChanged is true only when the cell's value differs from the previous value
             if (ValueChanged)
             {
                 Console.WriteLine($"Cell {CellReference(rowIndex, colIndex)} changed from [{OriginalValue}] to [{CalculatedValue}]");
             }
         }
-
-        // Helper to convert row/column indexes to A1 style reference
-        private string CellReference(int row, int col)
-        {
 
         private string CellReference(int row, int col)
         {
@@ -42,68 +31,56 @@ namespace AsposeCellsExamples
         }
     }
 
-    public class Program
+    public static void Main()
     {
-        public static void Main()
+        // -------------------------------------------------
+        // 1. Create a new workbook and set manual calculation mode
+        // -------------------------------------------------
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Manual mode ensures that calculations are performed only when we explicitly call them
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+
+        // -------------------------------------------------
+        // 2. Populate initial data and formulas
+        // -------------------------------------------------
+        cells["A1"].PutValue(10);               // source value
+        cells["A2"].PutValue(20);               // source value
+        cells["B1"].Formula = "=A1+A2";         // depends on A1 and A2
+        cells["C1"].Formula = "=B1*2";          // depends on B1
+
+        // -------------------------------------------------
+        // 3. First full calculation
+        // -------------------------------------------------
+        CalculationOptions firstCalcOpts = new CalculationOptions
         {
-            // -------------------------------------------------
-            // 1. Create a new workbook and set up data/formulas
-            // -------------------------------------------------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            CalculationMonitor = new ChangeMonitor()
+        };
+        workbook.CalculateFormula(firstCalcOpts);
 
-            // Source values
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
+        Console.WriteLine($"After first calculation: B1 = {cells["B1"].Value}, C1 = {cells["C1"].Value}");
 
-            // Formulas that depend on the source values
-            cells["B1"].Formula = "=A1 + A2";          // Sum of A1 and A2
-            cells["C1"].Formula = "=B1 * 2";           // Double the sum
-            cells["D1"].Formula = "=C1 + 5";           // Add constant
+        // -------------------------------------------------
+        // 4. Modify only one source cell (A1)
+        // -------------------------------------------------
+        cells["A1"].PutValue(30);   // change triggers dependent recalculation
 
-            // -------------------------------------------------
-            // 2. Perform the initial calculation (full)
-            // -------------------------------------------------
-            workbook.CalculateFormula();
+        // -------------------------------------------------
+        // 5. Recalculate – only cells that depend on changed cells are updated
+        // -------------------------------------------------
+        CalculationOptions secondCalcOpts = new CalculationOptions
+        {
+            CalculationMonitor = new ChangeMonitor()
+        };
+        workbook.CalculateFormula(secondCalcOpts);
 
-            Console.WriteLine("Initial calculation results:");
-            Console.WriteLine($"B1 = {cells["B1"].Value}");
-            Console.WriteLine($"C1 = {cells["C1"].Value}");
-            Console.WriteLine($"D1 = {cells["D1"].Value}");
-            Console.WriteLine();
+        Console.WriteLine($"After changing A1: B1 = {cells["B1"].Value}, C1 = {cells["C1"].Value}");
 
-            // -------------------------------------------------
-            // 3. Change a source cell (A1) – only dependent cells should recalc
-            // -------------------------------------------------
-            cells["A1"].PutValue(30); // Modify source value
-
-            // Set calculation mode to Manual to avoid automatic recalculation on save
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-
-            // Prepare calculation options with the custom monitor
-            CalculationOptions options = new CalculationOptions
-            {
-                CalculationMonitor = new ChangedCellMonitor(),
-                // Keep default Recursive = true so dependents are updated
-                // IgnoreError = false (default) – keep errors visible
-            };
-
-            // -------------------------------------------------
-            // 4. Recalculate – only cells whose values changed will be reported
-            // -------------------------------------------------
-            workbook.CalculateFormula(options);
-
-            Console.WriteLine();
-            Console.WriteLine("After modifying A1 and recalculating:");
-            Console.WriteLine($"B1 = {cells["B1"].Value}");
-            Console.WriteLine($"C1 = {cells["C1"].Value}");
-            Console.WriteLine($"D1 = {cells["D1"].Value}");
-
-            // -------------------------------------------------
-            // 5. Save the workbook (no automatic recalculation on save)
-            // -------------------------------------------------
-            workbook.Save("RecalcDemo.xlsx");
-        }
+        // -------------------------------------------------
+        // 6. Save the workbook
+        // -------------------------------------------------
+        workbook.Save("ManualRecalculationDemo.xlsx");
     }
 }

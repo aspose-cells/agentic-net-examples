@@ -1,45 +1,40 @@
-// Title: Aspose.Cells for .NET – Log a warning when MaxDataRow = 0 and MaxDataColumn > 0
-// Description: Demonstrates how to create a workbook, add data only to the first row across multiple columns, read the Cells.MaxDataRow and Cells.MaxDataColumn properties, and output a console warning if MaxDataRow is zero while MaxDataColumn is greater than zero, then save the file.
-// Keywords: Aspose.Cells MaxDataRow | MaxDataColumn check | worksheet warning .NET | detect empty rows with data columns | Excel data range validation | log warning Aspose.Cells | C# worksheet data check
-// Common Searches: Aspose.Cells log warning when MaxDataRow is zero | check MaxDataColumn greater than zero in .NET | validate worksheet data range Aspose.Cells | detect header‑only rows using MaxDataRow | C# Aspose.Cells MaxDataRow MaxDataColumn example
-// Developer Intent: Emit a warning for worksheets that have no data rows but contain one or more populated columns.
-// Use Cases: Flag Excel sheets that appear empty because only header columns are present, preventing downstream processing errors. | Validate imported workbooks before calculations by ensuring both row and column data exist. | Generate logs for worksheets with header rows only, helping data quality audits.
-// AI Prompts: Create a method that scans all worksheets in a workbook and logs a warning for any sheet where MaxDataRow == 0 and MaxDataColumn > 0 using Aspose.Cells. | Show how to throw a custom exception instead of a console warning when MaxDataRow is zero but MaxDataColumn exceeds zero. | Integrate the MaxDataRow/MaxDataColumn check into a multi‑sheet validation routine that aggregates warnings and writes them to a log file.
+// Title: Log warning for worksheets where MaxDataRow = 0 and MaxDataColumn > 0 – Aspose.Cells for .NET (C#)
+// Description: Creates or loads a Workbook, iterates each Worksheet, reads Cells.MaxDataRow and Cells.MaxDataColumn, and writes a console warning when the row index is zero while the column index is greater than zero, then saves the file.
+// Keywords: Aspose.Cells | MaxDataRow | MaxDataColumn | C# | .NET | worksheet validation | empty rows | column‑only sheet | warning log | Excel data range | cells.MaxDataRow | cells.MaxDataColumn
+// Common Searches: Aspose.Cells check MaxDataRow zero | C# detect worksheet with columns but no rows | log warning when MaxDataColumn > 0 and MaxDataRow = 0 | validate Excel sheet data extents Aspose.Cells | how to use Cells.MaxDataRow and MaxDataColumn
+// Developer Intent: Identify worksheets that contain column data without any data rows and output a warning message.
+// Use Cases: Pre‑process uploaded Excel files to confirm at least one data row exists. | Flag header‑only sheets before importing data into a database. | Prevent downstream errors in reporting pipelines caused by missing rows. | Automate quality checks in ETL workflows that consume Excel sources.
+// AI Prompts: Write C# code using Aspose.Cells that prints a warning when a worksheet's MaxDataRow is 0 while MaxDataColumn is greater than 0. | Explain the behavior of Cells.MaxDataRow and Cells.MaxDataColumn when a sheet contains only column headers. | Suggest alternative handling (e.g., skip sheet, add placeholder row) for worksheets with columns but no rows in Aspose.Cells. | Generate unit tests for the warning logic in a .NET project.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsWarningDemo
+// Creates or loads a Workbook, iterates each Worksheet, reads Cells.MaxDataRow and Cells.MaxDataColumn, and writes a console warning when the row index is zero while the column index is greater than zero, then saves the file.
+class Program
 {
-    // Demonstrates how to create a workbook, add data only to the first row across multiple columns, read the Cells.MaxDataRow and Cells.MaxDataColumn properties, and output a console warning if MaxDataRow is zero while MaxDataColumn is greater than zero, then save the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
+        // Example of loading: workbook = new Workbook("input.xlsx");
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            Cells cells = sheet.Cells;
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Retrieve the maximum data row and column indices
+            int maxDataRow = cells.MaxDataRow;       // Zero‑based, -1 if no data
+            int maxDataColumn = cells.MaxDataColumn; // Zero‑based, -1 if no data
 
-            // Add data only to the first row but across multiple columns
-            cells["A1"].PutValue("FirstColumn");
-            cells["B1"].PutValue("SecondColumn"); // This makes MaxDataColumn > 0
-
-            // Check the condition: MaxDataRow == 0 && MaxDataColumn > 0
-            int maxDataRow = cells.MaxDataRow;       // Zero‑based index of the last row containing data
-            int maxDataColumn = cells.MaxDataColumn; // Zero‑based index of the last column containing data
-
+            // Log a warning when MaxDataRow is zero but MaxDataColumn is greater than zero
             if (maxDataRow == 0 && maxDataColumn > 0)
             {
-                // Log a warning
-                Console.WriteLine("Warning: Worksheet '{0}' has MaxDataRow = 0 but MaxDataColumn = {1}.",
-                                  worksheet.Name, maxDataColumn);
+                Console.WriteLine($"Warning: Worksheet \"{sheet.Name}\" has MaxDataRow = 0 but MaxDataColumn = {maxDataColumn}.");
             }
-
-            // Save the workbook (adjust the path as needed)
-            workbook.Save("WarningDemo.xlsx");
         }
+
+        // Save the workbook to a file
+        workbook.Save("output.xlsx");
     }
 }

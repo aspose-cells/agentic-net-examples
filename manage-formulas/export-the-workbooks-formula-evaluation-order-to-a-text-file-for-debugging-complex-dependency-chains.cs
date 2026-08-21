@@ -1,78 +1,72 @@
-// Title: Export Formula Evaluation Order with Aspose.Cells (C#) for Debugging
-// Description: Shows how to enable the calculation chain, attach a custom AbstractCalculationMonitor, run CalculateFormula, and write the resulting cell‑calculation sequence to a text file using Aspose.Cells.
-// Keywords: Aspose.Cells | C# | formula evaluation order | calculation monitor | AbstractCalculationMonitor | EnableCalculationChain | export to text | debug formulas | dependency chain | workbook calculation logging
-// Common Searches: Aspose.Cells get formula calculation order | log cell evaluation sequence Aspose | export calculation monitor output to file | enable calculation chain for debugging | write formula evaluation order C#
-// Developer Intent: Create a text file that lists the exact order in which formulas are evaluated in an Aspose.Cells workbook.
-// Use Cases: Diagnose complex inter‑dependent formulas and locate circular references. | Generate audit logs of calculation steps for performance analysis. | Validate expected calculation order in automated unit tests. | Document the calculation flow for end‑users or support teams.
-// AI Prompts: Add timestamps to each entry in the evaluation log. | Convert the exported FormulaEvaluationOrder.txt into a GraphViz dependency diagram. | Show how to disable EnableCalculationChain after debugging to improve runtime speed. | Explain how to capture the evaluation order for a single worksheet only. | Provide a PowerShell script that parses FormulaEvaluationOrder.txt and summarizes cell counts per sheet.
+// Title: Export Formula Evaluation Order to a Text File with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds sample formulas, enables the calculation chain, runs a full calculation, extracts each formula cell's precedents using GetPrecedentsInCalculation, and writes the dependency list to a plain‑text file while optionally saving the workbook.
+// Keywords: Aspose.Cells C# export formula precedents | GetPrecedentsInCalculation example | calculation chain .NET | formula dependency debugging | write formula evaluation order to file | Aspose.Cells workbook analysis | C# spreadsheet formula trace
+// Common Searches: Aspose.Cells retrieve formula precedents C# | export calculation chain to text file Aspose.Cells | how to get formula evaluation order .NET | debug spreadsheet dependencies with Aspose.Cells | write formula dependency list to file C#
+// Developer Intent: Generate a text report of each formula cell’s precedents to help debug complex dependency chains in an Aspose.Cells workbook.
+// Use Cases: Produce a readable log of formula dependencies for troubleshooting circular references or unexpected results. | Track changes in the calculation chain over time by comparing exported reports before and after formula edits. | Supply auditors or compliance teams with a plain‑text list of spreadsheet formula relationships.
+// AI Prompts: Create C# code using Aspose.Cells that lists all formula cells with their precedents and saves the output as a CSV file. | Explain step‑by‑step how to enable the calculation chain in Aspose.Cells and retrieve the evaluation order for a specific worksheet. | Show how to handle cells without precedents when exporting formula dependency information to a text file in C#.
 
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using Aspose.Cells;
 
-// Custom monitor to capture the order in which cells are calculated
-// Shows how to enable the calculation chain, attach a custom AbstractCalculationMonitor, run CalculateFormula, and write the resulting cell‑calculation sequence to a text file using Aspose.Cells.
-class FormulaEvaluationMonitor : AbstractCalculationMonitor
-{
-    // List to store cell addresses in the order they are processed
-    public List<string> EvaluationOrder { get; } = new List<string>();
-
-    // Called before each cell calculation
-    public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
-    {
-        // Convert row/column indices to Excel cell name (e.g., A1)
-        string cellName = CellsHelper.CellIndexToName(rowIndex, columnIndex);
-        EvaluationOrder.Add($"{sheetIndex}:{cellName}");
-    }
-
-    // AfterCalculate can be left empty or used for additional logging
-    public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex) { }
-}
-
+// Creates a workbook, adds sample formulas, enables the calculation chain, runs a full calculation, extracts each formula cell's precedents using GetPrecedentsInCalculation, and writes the dependency list to a plain‑text file while optionally saving the workbook.
 class ExportFormulaEvaluationOrder
 {
     static void Main()
     {
-        // -------------------------------------------------
-        // 1. Create a workbook and add sample data/formulas
-        // -------------------------------------------------
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-        // Sample values
+        // Add sample data and formulas to demonstrate dependencies
         cells["A1"].PutValue(10);
         cells["A2"].PutValue(20);
-        cells["A3"].Formula = "=A1+A2";          // Depends on A1 and A2
-        cells["B1"].Formula = "=A3*2";           // Depends on A3
-        cells["B2"].Formula = "=SUM(A1:A3)";     // Depends on A1, A2, A3
+        cells["B1"].Formula = "=A1+A2";          // B1 depends on A1 and A2
+        cells["B2"].Formula = "=B1*2";           // B2 depends on B1
+        cells["C1"].Formula = "=SUM(A1:A2)";     // C1 depends on A1 and A2
+        cells["C2"].Formula = "=B2+C1";          // C2 depends on B2 and C1
 
-        // -------------------------------------------------
-        // 2. Enable calculation chain (required for monitoring)
-        // -------------------------------------------------
+        // Enable the calculation chain so dependency information can be retrieved
         workbook.Settings.FormulaSettings.EnableCalculationChain = true;
 
-        // -------------------------------------------------
-        // 3. Set up calculation options with the custom monitor
-        // -------------------------------------------------
-        var monitor = new FormulaEvaluationMonitor();
-        var calcOptions = new CalculationOptions
+        // Perform a full calculation to build the chain
+        workbook.CalculateFormula();
+
+        // Export the evaluation order (precedents) to a text file
+        using (StreamWriter writer = new StreamWriter("FormulaEvaluationOrder.txt"))
         {
-            CalculationMonitor = monitor
-        };
+            // Iterate through all cells in the worksheet
+            foreach (Cell cell in cells)
+            {
+                // Process only cells that contain formulas
+                if (cell.IsFormula)
+                {
+                    writer.WriteLine($"Cell {cell.Name} depends on:");
 
-        // -------------------------------------------------
-        // 4. Perform calculation (this will populate the monitor)
-        // -------------------------------------------------
-        workbook.CalculateFormula(calcOptions);
+                    // Get the precedents for the current formula cell
+                    IEnumerator precedents = cell.GetPrecedentsInCalculation();
 
-        // -------------------------------------------------
-        // 5. Export the captured evaluation order to a text file
-        // -------------------------------------------------
-        string outputPath = "FormulaEvaluationOrder.txt";
-        File.WriteAllLines(outputPath, monitor.EvaluationOrder);
+                    if (precedents != null)
+                    {
+                        while (precedents.MoveNext())
+                        {
+                            // Each item is a ReferredArea describing a range of precedent cells
+                            ReferredArea area = (ReferredArea)precedents.Current;
+                            writer.WriteLine($"  {area}");
+                        }
+                    }
+                    else
+                    {
+                        writer.WriteLine("  (no precedents)");
+                    }
+                }
+            }
+        }
 
-        Console.WriteLine($"Formula evaluation order exported to: {outputPath}");
+        // Optionally save the workbook for reference
+        workbook.Save("SampleWorkbook.xlsx");
     }
 }

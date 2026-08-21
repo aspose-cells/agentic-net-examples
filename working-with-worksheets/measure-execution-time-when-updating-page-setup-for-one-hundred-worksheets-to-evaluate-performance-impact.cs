@@ -1,47 +1,55 @@
-// Title: C# Benchmark: Measure PageSetup Update Time for 100 Worksheets with Aspose.Cells
-// Description: Creates a workbook with 100 sheets, uses Stopwatch to time setting FitToPagesWide, FitToPagesTall, and Landscape orientation on each worksheet's PageSetup, outputs elapsed milliseconds, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | PageSetup performance | worksheet benchmark | Stopwatch timing | bulk page layout | execution time measurement
-// Common Searches: Aspose.Cells how long to set page setup for many sheets | benchmark page layout changes in .NET workbook | measure performance of PageSetup across worksheets | C# timing Aspose.Cells page setup | speed test updating worksheet page settings
-// Developer Intent: The developer wants to benchmark how quickly page setup properties can be applied to a large number of worksheets.
-// Use Cases: Establish a baseline before optimizing bulk page setup operations | Validate that page layout changes meet UI latency requirements in large workbooks | Compare performance of different batch update strategies or workbook compression settings
-// AI Prompts: Provide a C# example that records the time taken to apply margin settings to all worksheets using Aspose.Cells. | Suggest performance‑tuning tips for bulk PageSetup modifications in Aspose.Cells. | Generate a unit test that asserts the PageSetup update for 100 sheets completes within a specified duration.
+// Title: C# – Measure PageSetup Update Time for 100 Worksheets with Aspose.Cells
+// Description: Creates a workbook, adds 100 worksheets, sets FitToPagesWide = 1 and FitToPagesTall = 0 for each sheet while timing the loop with Stopwatch, prints the elapsed milliseconds, and saves the workbook.
+// Keywords: Aspose.Cells | C# | .NET | PageSetup performance | Stopwatch benchmark | worksheet loop timing | FitToPagesWide | FitToPagesTall | large workbook speed | API execution time
+// Common Searches: Aspose.Cells how long to set PageSetup for many sheets | benchmark worksheet PageSetup changes .NET | measure performance of FitToPagesWide update | time taken to modify PageSetup across 100 worksheets | Aspose.Cells page setup speed test
+// Developer Intent: Find out how many milliseconds it takes to apply PageSetup settings to a hundred worksheets.
+// Use Cases: Validate that page‑setup modifications won’t bottleneck batch report generation. | Compare sequential versus optimized (e.g., parallel) updates for large workbooks. | Establish a baseline before implementing custom page‑layout logic in enterprise solutions.
+// AI Prompts: Generate a C# example that measures PageSetup update time for 200 worksheets using Aspose.Cells. | Suggest ways to reduce the elapsed time when changing PageSetup properties on many sheets. | Show how to apply Parallel.ForEach to update PageSetup for a large worksheet collection and capture the duration. | Create a performance test that logs both CPU and memory usage while modifying PageSetup across 500 worksheets.
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-// Creates a workbook with 100 sheets, uses Stopwatch to time setting FitToPagesWide, FitToPagesTall, and Landscape orientation on each worksheet's PageSetup, outputs elapsed milliseconds, and saves the file.
-class PageSetupPerformanceDemo
+namespace AsposeCellsPerformanceDemo
 {
-    static void Main()
+    // Creates a workbook, adds 100 worksheets, sets FitToPagesWide = 1 and FitToPagesTall = 0 for each sheet while timing the loop with Stopwatch, prints the elapsed milliseconds, and saves the workbook.
+    class Program
     {
-        // Create a new workbook (starts with one worksheet)
-        Workbook workbook = new Workbook();
-
-        // Add worksheets so the workbook has 100 sheets in total
-        for (int i = 1; i < 100; i++)
+        static void Main()
         {
-            workbook.Worksheets.Add();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Ensure the workbook has 100 worksheets
+            // The first worksheet already exists, so add 99 more
+            for (int i = 1; i < 100; i++)
+            {
+                workbook.Worksheets.Add();
+            }
+
+            // Prepare a stopwatch to measure the time taken to update page setup
+            Stopwatch sw = new Stopwatch();
+
+            // Start timing
+            sw.Start();
+
+            // Update a page setup property for each worksheet
+            // Here we set FitToPagesWide = 1 for demonstration
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                sheet.PageSetup.FitToPagesWide = 1;
+                // Optionally, also set FitToPagesTall = 0 to let height adjust automatically
+                sheet.PageSetup.FitToPagesTall = 0;
+            }
+
+            // Stop timing
+            sw.Stop();
+
+            // Output the elapsed time
+            Console.WriteLine($"Time taken to update page setup for 100 worksheets: {sw.ElapsedMilliseconds} ms");
+
+            // Save the workbook (optional, demonstrates usage of the save API)
+            workbook.Save("PageSetupPerformance.xlsx");
         }
-
-        // Start measuring time
-        Stopwatch stopwatch = Stopwatch.StartNew();
-
-        // Update page setup for each worksheet
-        foreach (Worksheet sheet in workbook.Worksheets)
-        {
-            // Example settings: fit to one page wide and tall, landscape orientation
-            sheet.PageSetup.FitToPagesWide = 1;
-            sheet.PageSetup.FitToPagesTall = 1;
-            sheet.PageSetup.Orientation = PageOrientationType.Landscape;
-        }
-
-        // Stop measuring
-        stopwatch.Stop();
-
-        Console.WriteLine($"Updating page setup for 100 worksheets took {stopwatch.ElapsedMilliseconds} ms.");
-
-        // Save the workbook (optional, demonstrates normal save workflow)
-        workbook.Save("PageSetupPerformance.xlsx");
     }
 }

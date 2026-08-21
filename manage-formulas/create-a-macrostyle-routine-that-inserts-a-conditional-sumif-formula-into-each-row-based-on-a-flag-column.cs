@@ -1,18 +1,18 @@
-// Title: C# Aspose.Cells macro‑style routine to insert a conditional SUMIF in each row
-// Description: Creates a new workbook, fills column A with numbers and column B with Boolean flags, builds absolute A and B ranges, and loops through every row to place an IF‑wrapped SUMIF formula in column C that sums column A only when the flag in column B is TRUE. The routine then calculates all formulas, writes results to the console, and saves the file as ConditionalSumIfDemo.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | conditional SUMIF | macro style routine | insert formula programmatically | IF SUMIF Excel | range strings Aspose | calculate formulas | flag column aggregation
-// Common Searches: How to add a conditional SUMIF formula to each row with Aspose.Cells C# | Aspose.Cells macro‑style code to insert IF‑SUMIF based on a flag column | Programmatically create absolute range strings for SUMIF in Aspose.Cells | Calculate and retrieve results of inserted formulas using Aspose.Cells .NET | Insert row‑wise conditional aggregation formula in Excel via C#
-// Developer Intent: Programmatically place an IF‑wrapped SUMIF formula in column C for every row, using a Boolean flag in column B, with Aspose.Cells.
-// Use Cases: Generate a dynamic total column that adds values from column A only when a corresponding flag in column B is TRUE. | Apply the same conditional aggregation logic to any worksheet without manual Excel editing. | Export a workbook that already contains calculated results for downstream reporting or analytics.
-// AI Prompts: Write a C# method using Aspose.Cells that inserts an IF‑SUMIF formula into each row based on a flag column and then calculates the workbook. | Adapt the routine to accept a custom start row and allow the flag criteria to be a user‑defined string instead of the hard‑coded TRUE. | Explain how to modify the absolute range strings when the data begins at a different row or includes header rows.
+// Title: Insert a Conditional SUMIF Formula per Row with Aspose.Cells in C# (Macro‑Style Routine)
+// Description: A C# macro‑style example that creates a workbook, fills column A with values 1‑10 and column B with TRUE/FALSE flags, then writes an IF‑SUMIF formula into column C for every row. The formula returns the sum of all A‑column values where B is TRUE only when the current row's flag is TRUE; otherwise the cell stays blank. The routine calculates the formulas, prints results to the console, and saves the file as ConditionalSumIfDemo.xlsx.
+// Keywords: Aspose.Cells C# conditional SUMIF | insert IF SUMIF formula Aspose.Cells | macro style routine Excel formulas .NET | set formula for each row Aspose.Cells | calculate formulas programmatically Aspose.Cells | dynamic Excel formulas C# | flag column conditional sum | Excel automation Aspose.Cells
+// Common Searches: How to add an IF‑SUMIF formula to every row using Aspose.Cells C# | Aspose.Cells macro‑style routine for conditional formulas | Programmatically set and evaluate Excel formulas with Aspose.Cells | C# code to insert conditional SUMIF based on a flag column | Aspose.Cells example for dynamic row formulas
+// Developer Intent: Programmatically add an IF‑SUMIF formula to each worksheet row that depends on a Boolean flag column, using Aspose.Cells for .NET.
+// Use Cases: Create a summary column that shows the total of flagged values only when the current row is flagged. | Automate generation of workbooks where each row contains a dynamic formula referencing a data range, then evaluate the formulas before saving. | Produce Excel reports with pre‑calculated conditional totals for downstream analysis or BI tools.
+// AI Prompts: Generate C# code with Aspose.Cells that writes an IF‑SUMIF formula to column C for each row, using column B as a TRUE/FALSE flag and column A as the source values. | Show how to trigger formula calculation in Aspose.Cells and retrieve the evaluated results for each row. | Explain how to modify the routine to detect the last data row automatically instead of using a hard‑coded count.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsMacroStyleRoutine
 {
-    // Creates a new workbook, fills column A with numbers and column B with Boolean flags, builds absolute A and B ranges, and loops through every row to place an IF‑wrapped SUMIF formula in column C that sums column A only when the flag in column B is TRUE. The routine then calculates all formulas, writes results to the console, and saves the file as ConditionalSumIfDemo.xlsx.
-    public class ConditionalSumIfRoutine
+    // A C# macro‑style example that creates a workbook, fills column A with values 1‑10 and column B with TRUE/FALSE flags, then writes an IF‑SUMIF formula into column C for every row. The formula returns the sum of all A‑column values where B is TRUE only when the current row's flag is TRUE; otherwise the cell stays blank. The routine calculates the formulas, prints results to the console, and saves the file as ConditionalSumIfDemo.xlsx.
+    public class InsertConditionalSumIf
     {
         public static void Run()
         {
@@ -20,44 +20,42 @@ namespace AsposeCellsMacroStyleRoutine
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // Populate sample data (10 rows)
-                for (int row = 0; row < 10; row++)
+                // Sample data: Column A = values, Column B = flag (TRUE/FALSE)
+                int totalRows = 10;
+                for (int i = 0; i < totalRows; i++)
                 {
-                    // Column A: numeric value
-                    cells[row, 0].PutValue(10 * (row + 1));
+                    // Value column (A)
+                    cells[i, 0].PutValue(i + 1); // A1..A10 = 1..10
 
-                    // Column B: flag (TRUE for even rows, FALSE for odd rows)
-                    bool flag = (row % 2 == 0);
-                    cells[row, 1].PutValue(flag);
+                    // Flag column (B) – TRUE for even rows, FALSE for odd rows
+                    bool flag = (i % 2 == 0);
+                    cells[i, 1].PutValue(flag);
                 }
 
-                // Determine the last data row (zero‑based index)
-                int lastRow = cells.MaxDataRow;
+                // Determine the last data row (1‑based index for Excel formulas)
+                int lastRowNumber = totalRows; // rows are 0‑based in API
 
-                // Build absolute ranges for SUMIF (Excel rows are 1‑based)
-                string aRange = $"$A$2:$A${lastRow + 1}";
-                string bRange = $"$B$2:$B${lastRow + 1}";
-
-                // Insert conditional SUMIF formula into column C for each row
-                for (int row = 0; row <= lastRow; row++)
+                // Insert conditional SUMIF formula into Column C for each row
+                for (int i = 0; i < totalRows; i++)
                 {
-                    int excelRow = row + 1; // Excel row number (1‑based)
-                    string conditionCell = $"$B${excelRow}";
-                    string formula = $"=IF({conditionCell}=TRUE, SUMIF({bRange},TRUE,{aRange}), 0)";
-                    cells[row, 2].Formula = formula;
+                    // Build the formula string for the current row (Excel rows start at 1)
+                    string formula = $"=IF($B{i + 1},SUMIF($B$2:$B${lastRowNumber + 1},TRUE,$A$2:$A${lastRowNumber + 1}),\"\")";
+
+                    // Set the formula in column C (index 2)
+                    cells[i, 2].Formula = formula;
                 }
 
-                // Calculate all formulas
+                // Calculate all formulas so that results are visible
                 workbook.CalculateFormula();
 
-                // Output results to console for verification
-                Console.WriteLine("Row\tValue(A)\tFlag(B)\tConditionalSum(C)");
-                for (int row = 0; row <= lastRow; row++)
+                // Display results in console for verification
+                Console.WriteLine("Row\tValue(A)\tFlag(B)\tResult(C)");
+                for (int i = 0; i < totalRows; i++)
                 {
-                    Console.WriteLine($"{row + 1}\t{cells[row, 0].Value}\t{cells[row, 1].Value}\t{cells[row, 2].Value}");
+                    Console.WriteLine($"{i + 1}\t{cells[i, 0].Value}\t{cells[i, 1].Value}\t{cells[i, 2].Value}");
                 }
 
                 // Save the workbook
@@ -65,7 +63,7 @@ namespace AsposeCellsMacroStyleRoutine
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }
@@ -75,7 +73,7 @@ namespace AsposeCellsMacroStyleRoutine
     {
         public static void Main(string[] args)
         {
-            ConditionalSumIfRoutine.Run();
+            InsertConditionalSumIf.Run();
         }
     }
 }

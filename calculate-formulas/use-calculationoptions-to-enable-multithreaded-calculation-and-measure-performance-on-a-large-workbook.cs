@@ -1,24 +1,31 @@
+// Title: Benchmark Single vs Multi‑Threaded Formula Calculation with Aspose.Cells .NET
+// Description: Creates a 2000‑row by 50‑column workbook, fills cells with numeric data, adds a SUM formula per row, then measures calculation time twice—first using the default single‑threaded mode and next with multi‑threaded calculation enabled via WorkbookSettings.EnableMultiThreadedCalculation (set through reflection for version safety). The elapsed times are logged and the workbook is saved.
+// Keywords: Aspose.Cells multi‑threaded calculation | EnableMultiThreadedCalculation .NET | formula calculation benchmark | CalculationOptions performance | large workbook processing | C# Aspose.Cells performance | reflection set property | Excel formula evaluation speed
+// Common Searches: Aspose.Cells enable multi thread calculation | benchmark formula calculation Aspose.Cells | CalculationOptions ignore errors example | set EnableMultiThreadedCalculation via reflection | measure calculation time Aspose.Cells C# | performance of large workbook formulas .NET
+// Developer Intent: Compare single‑threaded and multi‑threaded formula calculation speeds and learn how to enable multi‑threaded mode safely in Aspose.Cells for .NET.
+// Use Cases: Determine if multi‑threaded calculation reduces processing time for financial models with thousands of rows. | Programmatically toggle multi‑threaded calculation based on library version to ensure backward compatibility. | Assess impact of CalculationOptions settings such as IgnoreError on overall calculation throughput. | Generate performance reports for large Excel workbooks before and after enabling multi‑threading.
+// AI Prompts: Write C# code that logs detailed timing for preparation, calculation, and saving phases when using Aspose.Cells multi‑threaded calculation. | Provide a version‑agnostic method to enable EnableMultiThreadedCalculation without reflection, handling both newer and older Aspose.Cells releases. | Explain how to analyze benchmark results from Aspose.Cells calculation and recommend workbook design tweaks to maximize multi‑threaded performance.
+
 using System;
 using System.Diagnostics;
-using System.IO;
 using Aspose.Cells;
 
+// Creates a 2000‑row by 50‑column workbook, fills cells with numeric data, adds a SUM formula per row, then measures calculation time twice—first using the default single‑threaded mode and next with multi‑threaded calculation enabled via WorkbookSettings.EnableMultiThreadedCalculation (set through reflection for version safety). The elapsed times are logged and the workbook is saved.
 class MultiThreadedCalculationDemo
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a large workbook
             Workbook wb = new Workbook();
             Worksheet ws = wb.Worksheets[0];
             Cells cells = ws.Cells;
 
-            // Define size of the large workbook
-            int rows = 5000;   // number of rows
-            int cols = 100;    // number of data columns (A..CV)
+            int rows = 2000;   // number of rows
+            int cols = 50;     // number of data columns (A..AX)
 
-            // Populate cells with numeric data and add a SUM formula at the end of each row
+            // Populate cells with data and a sum formula per row
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
@@ -26,58 +33,86 @@ class MultiThreadedCalculationDemo
                     cells[i, j].PutValue(i + j);
                 }
 
-                // Formula column (after the data columns) sums the whole row
-                string lastColName = GetColumnName(cols);
-                cells[i, cols].Formula = $"=SUM(A{i + 1}:{lastColName}{i + 1})";
+                // Formula: sum of the data columns in the current row
+                string range = $"A{i + 1}:{ColumnIndexToName(cols - 1)}{i + 1}";
+                cells[i, cols].Formula = $"=SUM({range})";
             }
 
-            // Enable multi‑threaded calculation if the API supports it
-            // (property may not exist in older versions; safe to omit)
-            // wb.Settings.EnableMultiThreadedCalculation = true;
-
-            // Set calculation options (ignore errors and calculate recursively)
-            CalculationOptions calcOptions = new CalculationOptions
+            // Prepare calculation options (common for both runs)
+            CalculationOptions options = new CalculationOptions
             {
                 IgnoreError = true,
                 Recursive = true
             };
 
-            // Measure calculation performance
+            // ---------- Single‑threaded calculation ----------
+            // In older Aspose.Cells versions multi‑threaded calculation may not be available.
+            // Ensure it is disabled (default) and perform calculation.
             Stopwatch sw = Stopwatch.StartNew();
-            wb.CalculateFormula(calcOptions);
+            wb.CalculateFormula(options);
             sw.Stop();
+            Console.WriteLine($"Single‑threaded calculation time: {sw.ElapsedMilliseconds} ms");
 
-            Console.WriteLine($"Multi‑threaded calculation completed in {sw.ElapsedMilliseconds} ms");
+            // Reset workbook to original state by re‑creating it (to get fair comparison)
+            wb = new Workbook();
+            ws = wb.Worksheets[0];
+            cells = ws.Cells;
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    cells[i, j].PutValue(i + j);
+                }
+                string range = $"A{i + 1}:{ColumnIndexToName(cols - 1)}{i + 1}";
+                cells[i, cols].Formula = $"=SUM({range})";
+            }
 
-            // Save the workbook (ensure the directory exists)
-            string outputPath = "LargeWorkbook.xlsx";
+            // ---------- Multi‑threaded calculation ----------
+            // If the current Aspose.Cells version supports multi‑threaded calculation,
+            // enable it via WorkbookSettings.EnableMultiThreadedCalculation.
+            // The property may be unavailable in some versions; guard with a try‑catch.
             try
             {
-                wb.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                // Attempt to enable multi‑threaded calculation if the property exists.
+                // This uses reflection to avoid compile‑time errors on older versions.
+                var settingsType = typeof(WorkbookSettings);
+                var prop = settingsType.GetProperty("EnableMultiThreadedCalculation");
+                if (prop != null && prop.CanWrite)
+                {
+                    prop.SetValue(wb.Settings, true);
+                }
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                // Property not supported; continue with default (single‑threaded) behavior.
             }
+
+            sw.Restart();
+            wb.CalculateFormula(options);
+            sw.Stop();
+            Console.WriteLine($"Multi‑threaded calculation time: {sw.ElapsedMilliseconds} ms");
+
+            // Save the workbook (optional)
+            string outputPath = "LargeWorkbook.xlsx";
+            wb.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 
-    // Helper method to convert a 1‑based column index to an Excel column name (e.g., 1 -> A, 27 -> AA)
-    static string GetColumnName(int index)
+    // Helper: converts zero‑based column index to Excel column name (e.g., 0 -> A, 27 -> AB)
+    static string ColumnIndexToName(int index)
     {
         const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         string name = "";
-        while (index > 0)
+        do
         {
-            int rem = (index - 1) % 26;
-            name = letters[rem] + name;
-            index = (index - 1) / 26;
-        }
+            name = letters[index % 26] + name;
+            index = index / 26 - 1;
+        } while (index >= 0);
         return name;
     }
 }

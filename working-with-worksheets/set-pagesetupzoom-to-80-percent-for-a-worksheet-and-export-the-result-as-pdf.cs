@@ -1,34 +1,54 @@
-// Title: Set Worksheet Page Zoom to 80% and Export as PDF with Aspose.Cells for .NET
-// Description: Demonstrates how to set PageSetup.Zoom to 80 % (with IsPercentScale enabled) on a worksheet and save the workbook directly to a PDF file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | PageSetup.Zoom | IsPercentScale | PDF export | worksheet zoom | set page zoom 80 percent | save workbook as PDF
-// Common Searches: Aspose.Cells set worksheet zoom before PDF export | C# PageSetup.Zoom 80 percent Aspose.Cells | How to enable percent scaling in Aspose.Cells | Export workbook to PDF with custom zoom Aspose | Aspose.Cells PDF scaling options
-// Developer Intent: Apply an 80 % page zoom to a worksheet and generate a PDF document.
-// Use Cases: Create a new workbook, configure PageSetup.Zoom = 80 and PageSetup.IsPercentScale = true, then call Workbook.Save with SaveFormat.Pdf to produce a scaled PDF. | Add sample data to verify that the 80 % zoom is reflected in the exported PDF. | Batch process multiple worksheets, each with a different zoom level, before combining them into a single PDF.
-// AI Prompts: Write C# code that sets a worksheet's page zoom to a specific percentage and saves the workbook as a PDF using Aspose.Cells. | Show how to enable percent scaling (IsPercentScale) and adjust Zoom for PDF output in Aspose.Cells for .NET. | Explain how to apply different zoom levels to several worksheets and export them as one PDF file with Aspose.Cells.
+// Title: Set Worksheet Zoom to 80% and Export as PDF using Aspose.Cells for .NET
+// Description: Creates a workbook, sets the first worksheet's PageSetup.Zoom to 80 % with percent‑based scaling, and saves the workbook as a PDF. The resulting PDF reflects the specified zoom level.
+// Keywords: Aspose.Cells | C# worksheet zoom | PageSetup.Zoom | IsPercentScale | PDF export | custom page scaling | Aspose.Cells PDF options | .NET spreadsheet to PDF
+// Common Searches: Aspose.Cells set worksheet zoom 80 percent | export worksheet to PDF with custom scaling .NET | PageSetup.IsPercentScale true Aspose.Cells | C# change page zoom before PDF conversion | how to adjust worksheet scaling for PDF output
+// Developer Intent: Apply an 80 % page zoom to a worksheet and generate a PDF file.
+// Use Cases: Print reports where more rows fit on each PDF page by scaling to 80 %. | Create brand‑consistent PDFs with a custom zoom while leaving other sheets at default scaling. | Improve readability of a summary sheet by reducing its zoom before exporting the workbook to PDF.
+// AI Prompts: Generate C# code that sets PageSetup.Zoom to 80% and saves the workbook as a PDF with Aspose.Cells. | Explain how PageSetup.IsPercentScale influences PDF rendering in Aspose.Cells for .NET. | Show an example that exports multiple worksheets, each with a different zoom level, to separate PDF files.
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Demonstrates how to set PageSetup.Zoom to 80 % (with IsPercentScale enabled) on a worksheet and save the workbook directly to a PDF file using Aspose.Cells for .NET.
-class SetZoomAndExportPdf
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Creates a workbook, sets the first worksheet's PageSetup.Zoom to 80 % with percent‑based scaling, and saves the workbook as a PDF. The resulting PDF reflects the specified zoom level.
+    public class SetZoomAndExportPdf
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook (default contains one worksheet)
+                Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set the page setup zoom to 80%
-        worksheet.PageSetup.Zoom = 80;
-        // Ensure the zoom is interpreted as a percent scale
-        worksheet.PageSetup.IsPercentScale = true;
+                // Set the page scaling (zoom) to 80%
+                worksheet.PageSetup.Zoom = 80;
+                // Ensure the scaling mode is percent‑based
+                worksheet.PageSetup.IsPercentScale = true;
 
-        // (Optional) Add some sample data to visualize the scaling
-        worksheet.Cells["A1"].PutValue("Worksheet with 80% zoom");
+                // Prepare PDF save options (default options are sufficient)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Export the workbook to PDF
-        workbook.Save("Zoom80.pdf", SaveFormat.Pdf);
+                // Save the workbook as PDF; the zoom setting will be applied to the output
+                string outputPath = "Worksheet_Zoom80.pdf";
+                workbook.Save(outputPath, pdfOptions);
+
+                Console.WriteLine($"Workbook saved as PDF with 80% zoom: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            Run();
+        }
     }
 }

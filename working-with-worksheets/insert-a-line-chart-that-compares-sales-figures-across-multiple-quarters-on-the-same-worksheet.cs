@@ -1,16 +1,16 @@
-// Title: C# – Insert a Multi‑Series Line Chart for Quarterly Sales Using Aspose.Cells
-// Description: Creates a new workbook, fills A1:D5 with quarter labels and sales data for three products, adds a Line chart (rows 7‑25, cols 1‑10), binds series to A2:D5 with headers, sets quarters as the X‑axis, adds a title, and saves as QuarterlySalesLineChart.xlsx.
-// Keywords: Aspose.Cells C# line chart | multi series chart .NET | quarterly sales Excel chart | add chart to worksheet Aspose | Aspose.Cells sample code | GitHub Aspose.Cells example | Excel chart automation C#
-// Common Searches: Aspose.Cells add line chart C# | multi series line chart example .NET | set category axis to quarters Aspose.Cells | create quarterly sales chart with Aspose.Cells | Aspose.Cells chart data range with headers
-// Developer Intent: Generate a line chart that compares sales figures of several products across quarters on a single worksheet using Aspose.Cells for .NET.
-// Use Cases: Automated quarterly sales reports with visual trends | Financial dashboards that plot product performance over time | Exporting sales trend charts to Excel for client presentations | Embedding line charts in .NET applications that produce Excel workbooks
-// AI Prompts: Add data markers and a legend to the line chart in the Aspose.Cells example. | Show how to export the generated chart as a PNG image instead of embedding it. | Explain configuring a secondary Y‑axis for one series in an Aspose.Cells line chart.
+// Title: Add a multi‑series line chart for quarterly sales with Aspose.Cells for .NET (C#)
+// Description: Creates a new workbook, writes quarter labels and sales figures for two products, inserts a line chart spanning rows 6‑20 and columns A‑J, defines series (B2:C5) and categories (A2:A5), sets a chart title, and saves the file as QuarterlyLineChart.xlsx.
+// Keywords: Aspose.Cells | C# | line chart | quarterly sales | multiple series | chart series range | category axis | save as xlsx | Excel chart automation
+// Common Searches: asp.net add line chart Aspose.Cells | asp.net line chart multiple series | asp.net set category axis Aspose.Cells | asp.net create quarterly sales chart | asp.net export chart to pdf Aspose.Cells
+// Developer Intent: Insert a line chart that visualizes Product A and Product B sales across four quarters on the same worksheet.
+// Use Cases: Build a sales performance report that shows quarterly trends for several products. | Automate financial dashboards by programmatically generating line charts from worksheet data. | Create reusable chart templates that pull category and series values directly from cells.
+// AI Prompts: Generate C# code to add a line chart with two series from columns B and C and set the category axis to column A using Aspose.Cells. | Show how to customize line colors, markers, and legend entries for a chart created with Aspose.Cells for .NET. | Explain how to export a workbook that contains a line chart to PDF using Aspose.Cells.
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a new workbook, fills A1:D5 with quarter labels and sales data for three products, adds a Line chart (rows 7‑25, cols 1‑10), binds series to A2:D5 with headers, sets quarters as the X‑axis, adds a title, and saves as QuarterlySalesLineChart.xlsx.
-class InsertLineChart
+// Creates a new workbook, writes quarter labels and sales figures for two products, inserts a line chart spanning rows 6‑20 and columns A‑J, defines series (B2:C5) and categories (A2:A5), sets a chart title, and saves the file as QuarterlyLineChart.xlsx.
+class Program
 {
     static void Main()
     {
@@ -18,50 +18,38 @@ class InsertLineChart
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample sales data for four quarters
-        // Header row
+        // Add header row
         sheet.Cells["A1"].PutValue("Quarter");
         sheet.Cells["B1"].PutValue("Product A");
         sheet.Cells["C1"].PutValue("Product B");
-        sheet.Cells["D1"].PutValue("Product C");
 
-        // Quarter labels
-        sheet.Cells["A2"].PutValue("Q1");
-        sheet.Cells["A3"].PutValue("Q2");
-        sheet.Cells["A4"].PutValue("Q3");
-        sheet.Cells["A5"].PutValue("Q4");
+        // Sample data for four quarters
+        string[] quarters = { "Q1", "Q2", "Q3", "Q4" };
+        double[] salesA = { 12000, 15000, 13000, 17000 };
+        double[] salesB = { 10000, 14000, 11000, 16000 };
 
-        // Sales figures for Product A
-        sheet.Cells["B2"].PutValue(120);
-        sheet.Cells["B3"].PutValue(150);
-        sheet.Cells["B4"].PutValue(170);
-        sheet.Cells["B5"].PutValue(200);
+        // Fill the worksheet with the data
+        for (int i = 0; i < quarters.Length; i++)
+        {
+            int row = i + 2; // Data starts at row 2 (index 1)
+            sheet.Cells[row, 0].PutValue(quarters[i]); // Column A
+            sheet.Cells[row, 1].PutValue(salesA[i]);   // Column B
+            sheet.Cells[row, 2].PutValue(salesB[i]);   // Column C
+        }
 
-        // Sales figures for Product B
-        sheet.Cells["C2"].PutValue(80);
-        sheet.Cells["C3"].PutValue(130);
-        sheet.Cells["C4"].PutValue(160);
-        sheet.Cells["C5"].PutValue(190);
-
-        // Sales figures for Product C
-        sheet.Cells["D2"].PutValue(100);
-        sheet.Cells["D3"].PutValue(140);
-        sheet.Cells["D4"].PutValue(180);
-        sheet.Cells["D5"].PutValue(210);
-
-        // Add a line chart to the worksheet (rows 7‑25, columns 1‑10)
-        int chartIndex = sheet.Charts.Add(ChartType.Line, 7, 1, 25, 10);
+        // Add a line chart to the worksheet (rows 6‑20, columns 1‑10)
+        int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 9);
         Chart chart = sheet.Charts[chartIndex];
 
-        // Define the data range for the chart (including headers)
-        chart.NSeries.Add("A2:D5", true);
-        // Set the category (X‑axis) data to the quarter labels
+        // Define the series data (Product A and Product B) – series are taken by column
+        chart.NSeries.Add("B2:C5", true);
+        // Define the category axis data (quarters)
         chart.NSeries.CategoryData = "A2:A5";
 
-        // Optional: set a chart title
+        // Set a descriptive title
         chart.Title.Text = "Quarterly Sales Comparison";
 
         // Save the workbook with the chart
-        workbook.Save("QuarterlySalesLineChart.xlsx");
+        workbook.Save("QuarterlyLineChart.xlsx", SaveFormat.Xlsx);
     }
 }

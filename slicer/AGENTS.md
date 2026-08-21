@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Slicers Agent
 category: slicer
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: C# examples for creating table and PivotTable slicers, connecting caches, selecting items, formatting, positioning, removing, and rendering slicers
 primary_apis: [Worksheet.Slicers, SlicerCollection.Add, Slicer, SlicerCache, ListObject, PivotTable]
 search_intents: [create Excel slicer in C#, add slicer to PivotTable, select slicer items, remove Excel slicer]
@@ -323,3 +323,4 @@ Interpret one developer intent
 ## Definition of done
 
 A `slicer` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
+

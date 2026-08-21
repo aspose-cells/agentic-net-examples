@@ -1,26 +1,29 @@
 // Title: Get Workbook Calculation Mode (CalcModeType) with Aspose.Cells for .NET
-// Description: Demonstrates how to read the current calculation mode of a workbook via Settings.FormulaSettings.CalculationMode and write the CalcModeType enum value to the console.
-// Keywords: Aspose.Cells calculation mode | CalcModeType | Workbook Settings FormulaSettings | C# read calculation mode | Aspose.Cells .NET get CalcModeType | retrieve workbook calculation mode | FormulaSettings.CalculationMode API
-// Common Searches: Aspose.Cells get calculation mode | How to read CalcModeType in C# | Workbook Settings FormulaSettings CalculationMode example | Aspose.Cells current calculation mode | Retrieve workbook calculation mode programmatically
-// Developer Intent: Read the workbook's current calculation mode and display the enum value.
-// Use Cases: Log the calculation mode when loading a template to confirm Automatic or Manual setting. | Determine if a switch to Manual mode is needed before performing bulk cell updates. | Debug formula evaluation by outputting the CalcModeType after opening a workbook.
-// AI Prompts: Generate C# code using Aspose.Cells that reads the workbook's CalculationMode and prints the enum. | Show how to compare the retrieved CalcModeType with Automatic, Manual, and AutomaticExceptTables and modify it if required. | Explain how to log the current calculation mode for troubleshooting formula evaluation in Aspose.Cells.
+// Description: Demonstrates how to read the current CalcModeType enum from a workbook's FormulaSettings and print it to the console using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells calculation mode | CalcModeType enum | C# workbook formula settings | read workbook calculation mode | Aspose.Cells console output
+// Common Searches: Aspose.Cells get current calculation mode C# | How to read CalcModeType from workbook | Display workbook formula calculation mode | Aspose.Cells formula settings example | C# retrieve workbook calculation mode
+// Developer Intent: Read the workbook's current calculation mode and output the enum value.
+// Use Cases: Confirm that a workbook uses Automatic calculation before bulk updates. | Log the calculation mode of imported workbooks for troubleshooting formula evaluation. | Switch to Manual mode programmatically after checking the current setting to improve performance.
+// AI Prompts: Generate C# code with Aspose.Cells that prints the workbook's CalcModeType to the console. | Create a method that returns the current calculation mode of a given Workbook and logs it. | Show how to detect Automatic calculation mode and change it to Manual using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to read the current calculation mode of a workbook via Settings.FormulaSettings.CalculationMode and write the CalcModeType enum value to the console.
-class Program
+namespace AsposeCellsCalculationModeDemo
 {
-    static void Main()
+    // Demonstrates how to read the current CalcModeType enum from a workbook's FormulaSettings and print it to the console using Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook instance
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook (default settings)
+            Workbook workbook = new Workbook();
 
-        // Get the current calculation mode from the workbook's formula settings
-        CalcModeType currentMode = workbook.Settings.FormulaSettings.CalculationMode;
+            // Retrieve the current calculation mode from the workbook's formula settings
+            CalcModeType currentMode = workbook.Settings.FormulaSettings.CalculationMode;
 
-        // Output the enum value to the console
-        Console.WriteLine("Current Calculation Mode: " + currentMode);
+            // Output the enum value to the console
+            Console.WriteLine("Current Calculation Mode: " + currentMode);
+        }
     }
 }

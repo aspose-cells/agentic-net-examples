@@ -1,10 +1,10 @@
-// Title: Load Excel workbook from UNC share, enable compatibility & ISO‑29500 strict, and save locally with Aspose.Cells for .NET
-// Description: C# sample that loads an Excel file from a network UNC path using Aspose.Cells, activates Settings.CheckCompatibility, applies ISO‑29500:2008 strict compliance, creates the destination folder if needed, and saves the workbook as XLSX for distribution.
-// Keywords: Aspose.Cells UNC path | load workbook from network share | Settings.CheckCompatibility | OoxmlCompliance Iso29500_2008_Strict | save workbook locally | C# Aspose.Cells example | create output directory programmatically | fallback workbook if file missing
-// Common Searches: Aspose.Cells open Excel from network share C# | Enable compatibility check when saving workbook Aspose.Cells | Set ISO 29500 strict compliance with Aspose.Cells | Save workbook to local folder after loading from UNC | Create missing directory before saving Aspose.Cells
-// Developer Intent: Load a workbook from a UNC network location, apply compatibility and strict OOXML settings, and write the file to a local distribution folder.
-// Use Cases: Read an existing workbook located at \\ServerName\SharedFolder\SourceWorkbook.xlsx and, if absent, generate a new workbook. | Turn on Settings.CheckCompatibility to ensure backward compatibility with older Excel versions. | Apply Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict for ISO‑29500 strict output. | Automatically create the target directory (e.g., C:\Distribution) before saving the file.
-// AI Prompts: Write C# code that opens an Excel file from a UNC path with Aspose.Cells, enables compatibility checking, sets ISO‑29500 strict compliance, creates the output folder if it doesn't exist, and saves the workbook as XLSX. | Explain the impact of Settings.CheckCompatibility and Settings.Compliance on the generated Excel file and how to use them for maximum compatibility. | Provide best‑practice error handling for loading workbooks from network shares using Aspose.Cells in .NET.
+// Title: Load Excel from UNC share, set compatibility, and save locally using Aspose.Cells (C#)
+// Description: C# example that checks a workbook's existence on a UNC network share, loads it with Aspose.Cells, enables the CheckCompatibility flag for older Excel versions, creates the target folder if needed, and saves the file as XLSX to a local path while handling errors.
+// Keywords: Aspose.Cells UNC path | load workbook from network share C# | CheckCompatibility Aspose.Cells | save Excel locally Aspose.Cells | C# Excel file network share example | Aspose.Cells file existence check | Create directory before saving Aspose.Cells
+// Common Searches: How to open an Excel file from a UNC path with Aspose.Cells | Aspose.Cells enable compatibility check before saving | Save Aspose.Cells workbook to a specific local folder | C# verify network file exists before loading Excel | Create missing directory when saving Aspose.Cells workbook
+// Developer Intent: Open an Excel workbook located on a network share, turn on compatibility checking, and write the modified file to a local directory.
+// Use Cases: Distribute a company‑wide template stored on a shared drive, ensuring it remains compatible with Excel 97‑2003 before sending copies to users. | Automate nightly processing that reads workbooks from a file server, applies compatibility settings, and stages them in a local folder for downstream workflows. | Prevent runtime errors in a server application by confirming the network file exists and the output folder is present before using Aspose.Cells.
+// AI Prompts: Generate C# code that loads an Excel workbook from a UNC path with Aspose.Cells, sets workbook.Settings.CheckCompatibility = true, creates the destination folder if missing, and saves the file locally. | Show how to handle FileNotFound and other exceptions when opening a workbook from a network share using Aspose.Cells. | Explain the purpose of the CheckCompatibility property in Aspose.Cells and when to apply it before saving a workbook.
 
 using System;
 using System.IO;
@@ -12,58 +12,46 @@ using Aspose.Cells;
 
 namespace AsposeCellsNetworkExample
 {
-    // C# sample that loads an Excel file from a network UNC path using Aspose.Cells, activates Settings.CheckCompatibility, applies ISO‑29500:2008 strict compliance, creates the destination folder if needed, and saves the workbook as XLSX for distribution.
+    // C# example that checks a workbook's existence on a UNC network share, loads it with Aspose.Cells, enables the CheckCompatibility flag for older Excel versions, creates the target folder if needed, and saves the file as XLSX to a local path while handling errors.
     class Program
     {
         static void Main()
         {
-            // Path to the workbook on a network share (UNC path)
-            string networkPath = @"\\ServerName\SharedFolder\SourceWorkbook.xlsx";
+            // Path to the workbook on a network share
+            string networkFilePath = @"\\ServerName\ShareFolder\SourceWorkbook.xlsx";
 
-            // Local path where the modified workbook will be saved for distribution
-            string localPath = @"C:\Distribution\ModifiedWorkbook.xlsx";
+            // Verify that the source file exists before attempting to load it
+            if (!File.Exists(networkFilePath))
+            {
+                Console.WriteLine($"Source workbook not found at: {networkFilePath}");
+                return;
+            }
 
             try
             {
-                Workbook workbook;
+                // Load the workbook from the network location
+                Workbook workbook = new Workbook(networkFilePath);
 
-                // Verify that the source workbook exists before attempting to load it
-                if (File.Exists(networkPath))
-                {
-                    // Load the workbook from the network location
-                    workbook = new Workbook(networkPath);
-                }
-                else
-                {
-                    // If the source file is missing, create a new workbook as a fallback
-                    Console.WriteLine($"Source workbook not found at '{networkPath}'. Creating a new workbook.");
-                    workbook = new Workbook();
-                }
-
-                // Enable compatibility check with earlier Excel versions
+                // Enable compatibility checks for older Excel versions
                 workbook.Settings.CheckCompatibility = true;
 
-                // Set OOXML compliance level (strict ISO compliance)
-                workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
+                // Define local path for the modified workbook
+                string localSavePath = @"C:\Temp\ModifiedWorkbook.xlsx";
 
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(localPath);
-                if (!Directory.Exists(outputDir))
+                // Ensure the target directory exists
+                string localDir = Path.GetDirectoryName(localSavePath);
+                if (!Directory.Exists(localDir))
                 {
-                    Directory.CreateDirectory(outputDir);
+                    Directory.CreateDirectory(localDir);
                 }
 
-                // Save the workbook locally in XLSX format
-                workbook.Save(localPath, SaveFormat.Xlsx);
+                // Save the modified workbook locally
+                workbook.Save(localSavePath, SaveFormat.Xlsx);
 
-                // Clean up resources
-                workbook.Dispose();
-
-                Console.WriteLine("Workbook processed and saved successfully.");
+                Console.WriteLine($"Workbook loaded, compatibility modified, and saved to: {localSavePath}");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

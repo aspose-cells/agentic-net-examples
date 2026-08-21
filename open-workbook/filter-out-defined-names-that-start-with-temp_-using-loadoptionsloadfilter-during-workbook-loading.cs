@@ -1,69 +1,46 @@
-// Title: Remove temporary defined names (temp_*) from an Excel workbook using Aspose.Cells LoadOptions and a custom LoadFilter (C#)
-// Description: Shows how to configure LoadOptions with a custom LoadFilter that loads all worksheet data, open a workbook, iterate its NameCollection, and delete any defined name whose text starts with "temp_" before saving the file.
-// Keywords: Aspose.Cells | LoadOptions | LoadFilter | defined names | temporary named ranges | C# | Excel | remove temp_ | NameCollection
-// Common Searches: Aspose.Cells remove defined names starting with temp_ | C# LoadFilter exclude temporary named ranges | LoadOptions filter defined names Aspose.Cells | How to delete temp_ named ranges in Excel using Aspose | Custom LoadFilter to clean up workbook
-// Developer Intent: Load an Excel workbook and automatically discard any defined names that begin with the prefix "temp_".
-// Use Cases: Clean up helper named ranges imported from third‑party systems before further processing. | Prepare a workbook for distribution by stripping internal temporary names that users should not see. | Lower memory usage and improve performance by omitting unnecessary defined names during initial load.
-// AI Prompts: Generate a C# example that uses Aspose.Cells LoadOptions with a custom LoadFilter to delete defined names starting with "temp_" after the workbook is loaded. | Refactor the provided code so the temporary defined names are removed inside the LoadFilter instead of iterating the NameCollection later. | Explain how LoadDataFilterOptions and a custom LoadFilter can be combined to selectively load worksheet content and exclude specific defined names in Aspose.Cells.
+// Title: Filter out defined names prefixed with "temp_" using Aspose.Cells LoadFilter (C#)
+// Description: Demonstrates how to create a custom LoadFilter, load an Excel workbook with LoadOptions, and delete every defined name that begins with the "temp_" prefix before saving the file.
+// Keywords: Aspose.Cells LoadFilter | LoadOptions C# | remove defined names | temporary named ranges | filter named ranges | temp_ prefix | Excel workbook cleanup | C# Aspose.Cells example
+// Common Searches: Aspose.Cells delete defined names with prefix | C# load Excel file and skip temporary named ranges | How to use LoadFilter to filter named ranges in Aspose.Cells | Remove "temp_" named ranges from workbook using Aspose | LoadOptions LoadFilter example for named ranges
+// Developer Intent: Remove all defined names that start with "temp_" from a workbook during or after loading.
+// Use Cases: Strip placeholder named ranges before publishing a report. | Reduce file size by eliminating temporary names generated during data processing. | Prepare a clean workbook for downstream analytics that require only permanent named ranges.
+// AI Prompts: Show C# code that uses Aspose.Cells LoadOptions with a custom LoadFilter to exclude defined names beginning with "temp_". | Explain how to iterate through Workbook.Worksheets.Names and delete entries that match a specific prefix. | Provide a step‑by‑step guide for cleaning up temporary named ranges in an Excel file using Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Shows how to configure LoadOptions with a custom LoadFilter that loads all worksheet data, open a workbook, iterate its NameCollection, and delete any defined name whose text starts with "temp_" before saving the file.
+// Demonstrates how to create a custom LoadFilter, load an Excel workbook with LoadOptions, and delete every defined name that begins with the "temp_" prefix before saving the file.
+class CustomLoadFilter : LoadFilter
+{
+    // Load all data for each worksheet.
+    public override void StartSheet(Worksheet sheet)
+    {
+        LoadDataFilterOptions = LoadDataFilterOptions.All;
+    }
+}
+
 class Program
 {
     static void Main()
     {
-        try
-        {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+        // Prepare load options and assign the custom filter.
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.LoadFilter = new CustomLoadFilter();
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+        // Load the workbook using the specified options.
+        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+
+        // Remove defined names that start with "temp_".
+        for (int i = workbook.Worksheets.Names.Count - 1; i >= 0; i--)
+        {
+            Name definedName = workbook.Worksheets.Names[i];
+            if (definedName.Text.StartsWith("temp_", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                workbook.Worksheets.Names.RemoveAt(i);
             }
-
-            // Create LoadOptions and assign a custom LoadFilter
-            LoadOptions loadOptions = new LoadOptions
-            {
-                LoadFilter = new TempNameFilter()
-            };
-
-            // Load the workbook with the specified options
-            Workbook workbook = new Workbook(inputPath, loadOptions);
-
-            // Remove defined names that start with "temp_"
-            NameCollection definedNames = workbook.Worksheets.Names;
-            for (int i = definedNames.Count - 1; i >= 0; i--)
-            {
-                Name definedName = definedNames[i];
-                if (definedName.Text.StartsWith("temp_", StringComparison.OrdinalIgnoreCase))
-                {
-                    definedNames.RemoveAt(i);
-                }
-            }
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
 
-    // Custom LoadFilter that loads all data for each worksheet
-    private class TempNameFilter : LoadFilter
-    {
-        public override void StartSheet(Worksheet sheet)
-        {
-            // Ensure all data (including defined names) are loaded
-            this.LoadDataFilterOptions = LoadDataFilterOptions.All;
-        }
+        // Save the filtered workbook.
+        workbook.Save("output.xlsx");
     }
 }

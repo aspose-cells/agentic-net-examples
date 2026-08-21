@@ -1,42 +1,36 @@
+// Title: Remove a Worksheet and Export Remaining Sheets to PDF with Aspose.Cells (C#)
+// Description: Shows how to delete a specific worksheet from an Aspose.Cells workbook using Worksheets.RemoveAt and then save the workbook as a PDF, guaranteeing the removed sheet is omitted from the final document.
+// Keywords: Aspose.Cells | C# | remove worksheet | delete sheet | PDF export | exclude sheet from PDF | Worksheets.RemoveAt | Aspose.Cells .NET | remove sheet before PDF conversion
+// Common Searches: Aspose.Cells delete worksheet before PDF export C# | How to exclude a sheet from PDF using Aspose.Cells | Remove specific worksheet and save as PDF in .NET | Worksheets.RemoveAt example for PDF generation
+// Developer Intent: Delete a designated worksheet so it is not included in the generated PDF file.
+// Use Cases: Create client‑specific PDFs that hide confidential worksheets. | Generate summary reports that contain only selected sheets. | Automate batch conversions where temporary sheets are stripped before PDF output.
+// AI Prompts: Provide C# code that removes a worksheet by name with Aspose.Cells and then saves the workbook as a PDF. | Show how to delete multiple worksheets matching a pattern before exporting to PDF using Aspose.Cells. | Explain how to confirm that a removed worksheet does not appear in the resulting PDF.
+
 using System;
 using Aspose.Cells;
 
-class Program
+// Shows how to delete a specific worksheet from an Aspose.Cells workbook using Worksheets.RemoveAt and then save the workbook as a PDF, guaranteeing the removed sheet is omitted from the final document.
+class RemoveWorksheetAndSavePdf
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook wb = new Workbook("input.xlsx");
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-        // Name of the worksheet that should be excluded from the PDF
-        string sheetNameToRemove = "SecretSheet";
+        // Rename the default sheet and add two more sheets
+        workbook.Worksheets[0].Name = "SheetToKeep";
+        workbook.Worksheets.Add("SheetToRemove");
+        workbook.Worksheets.Add("AnotherSheet");
 
-        // Find the index of the worksheet with the specified name
-        int sheetIndex = -1;
-        for (int i = 0; i < wb.Worksheets.Count; i++)
-        {
-            if (wb.Worksheets[i].Name.Equals(sheetNameToRemove, StringComparison.OrdinalIgnoreCase))
-            {
-                sheetIndex = i;
-                break;
-            }
-        }
+        // Fill some data in each sheet
+        workbook.Worksheets["SheetToKeep"].Cells["A1"].PutValue("This sheet will be kept");
+        workbook.Worksheets["SheetToRemove"].Cells["A1"].PutValue("This sheet will be removed");
+        workbook.Worksheets["AnotherSheet"].Cells["A1"].PutValue("This sheet will also be kept");
 
-        // If the worksheet exists, remove it from the collection
-        if (sheetIndex >= 0)
-        {
-            wb.Worksheets.RemoveAt(sheetIndex);
-        }
+        // Remove the unwanted worksheet by its name
+        workbook.Worksheets.RemoveAt("SheetToRemove");
 
-        // Configure PDF save options (optional: ignore completely blank pages)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            PrintingPageType = PrintingPageType.IgnoreBlank
-        };
-
-        // Save the workbook as PDF; the removed sheet will not appear in the output
-        wb.Save("output.pdf", pdfOptions);
+        // Save the workbook as PDF; only the remaining sheets are rendered
+        workbook.Save("Result.pdf", SaveFormat.Pdf);
     }
 }
-
-// Author: Aspose.Cells .NET example – removes a specific worksheet before PDF export.

@@ -1,50 +1,51 @@
-// Title: Apply Custom RGB Font Color to Part of Text in a TextBox Shape with Aspose.Cells for .NET
-// Description: Shows how to color a specific word inside a textbox shape using a custom RGB value via Style, StyleFlag, and TextBody.Format in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | .NET | textbox shape | partial text color | custom RGB | StyleFlag | TextBody.Format | font color substring | Excel shape formatting | generated report styling
-// Common Searches: Aspose.Cells change color of part of textbox text | partial text formatting in Excel shape .NET | custom RGB font color textbox Aspose.Cells | how to color a word in a shape using Aspose.Cells | TextBody.Format example Aspose.Cells
-// Developer Intent: Set a custom RGB font color for a selected substring inside a textbox shape in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Highlight a keyword in a generated report to draw reader attention. | Display a brand name in a distinct color within a marketing worksheet. | Differentiate label sections by applying unique RGB colors to each part.
-// AI Prompts: Provide C# code that changes the word "Aspose" in a textbox to RGB #800080 using Aspose.Cells. | Show how to apply multiple custom RGB colors to different substrings within a textbox shape with Aspose.Cells for .NET. | Explain the role of StyleFlag and TextBody.Format when formatting partial text in a shape.
+// Title: Apply a Custom RGB Font Color to Specific Characters in a TextBox Shape – Aspose.Cells for .NET
+// Description: Creates a workbook, adds a textbox shape, defines a zero‑based character range, sets a Font with a custom RGB value, enables only the FontColor flag, and uses FormatCharacters to color that substring before saving the file.
+// Keywords: Aspose.Cells partial text color | textbox shape format characters .NET | custom RGB font color Aspose.Cells | StyleFlag FontColor example | Excel shape text styling
+// Common Searches: Aspose.Cells change color of part of textbox text | format specific characters in a shape using .NET | set RGB font color for substring in Excel textbox | partial text formatting Aspose.Cells
+// Developer Intent: Color a selected range of characters inside a textbox shape with a custom RGB value.
+// Use Cases: Highlight key terms in a generated report textbox. | Show status indicators like "Pass" or "Fail" in different colors within a shape. | Create a legend where particular words are uniquely colored for clarity.
+// AI Prompts: Generate code to apply bold, italic, and a custom RGB color to a character range in an Aspose.Cells textbox. | Explain how to retrieve a textbox's existing Font, modify its color, and apply it to selected characters using StyleFlag. | Show how to change the background color of specific characters in a shape with Aspose.Cells.
 
+using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Shows how to color a specific word inside a textbox shape using a custom RGB value via Style, StyleFlag, and TextBody.Format in Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsPartialTextColor
 {
-    static void Main()
+    // Creates a workbook, adds a textbox shape, defines a zero‑based character range, sets a Font with a custom RGB value, enables only the FontColor flag, and uses FormatCharacters to color that substring before saving the file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a text box shape to the worksheet
-        // Parameters: upper left row, upper left column, top, left, width, height
-        Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 100, 100, 300, 100);
-        textBox.Text = "Hello Aspose.Cells!";
+            // Add a text box shape to the worksheet
+            // Parameters: upper left row, upper left column, upper left offset, upper left offset,
+            // width, height (all in points)
+            Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 200, 50);
+            textBox.Text = "Partial color change example";
 
-        // Define a custom RGB color (e.g., purple: 128, 0, 128)
-        Color customRgb = Color.FromArgb(128, 0, 128);
+            // Define the range of characters to format (e.g., characters 8 to 13 -> "color")
+            int startIndex = 8;   // zero‑based index
+            int length = 5;       // number of characters to format
 
-        // Create a style and set its font color to the custom RGB value
-        Style style = workbook.CreateStyle();
-        style.Font.Color = customRgb;
+            // Prepare a Font object with the desired custom RGB color
+            // Here we use a teal color (R=0, G=128, B=128)
+            Font font = textBox.Font;
+            font.Color = Color.FromArgb(0, 128, 128);
 
-        // Create a StyleFlag indicating that only the font color should be applied
-        StyleFlag flag = new StyleFlag();
-        flag.FontColor = true;
+            // Create a StyleFlag indicating that only the font color should be applied
+            StyleFlag flag = new StyleFlag();
+            flag.FontColor = true;
 
-        // Determine the start index and length of the text segment to color
-        // Here we color the word "Aspose"
-        int startIndex = textBox.Text.IndexOf("Aspose");
-        int length = "Aspose".Length;
+            // Apply the formatting to the specified character range
+            textBox.FormatCharacters(startIndex, length, font, flag);
 
-        // Apply the formatting to the selected characters using the TextBody.Format method
-        textBox.TextBody.Format(startIndex, length, style.Font, flag);
-
-        // Save the workbook (output file will contain the textbox with partially colored text)
-        workbook.Save("TextboxPartialColor.xlsx");
+            // Save the workbook to a file
+            workbook.Save("PartialTextColor.xlsx");
+        }
     }
 }

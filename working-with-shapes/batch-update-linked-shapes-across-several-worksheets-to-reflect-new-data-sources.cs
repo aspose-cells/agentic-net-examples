@@ -1,73 +1,63 @@
-// Title: C# – Batch update linked shapes and external data sources with Aspose.Cells
-// Description: Loads a primary workbook, replaces its linked data sources with specified external workbooks, refreshes every shape (dropdowns, list boxes, etc.) on all worksheets using UpdateSelectedValue, recalculates formulas, and saves the updated file.
-// Keywords: Aspose.Cells | C# | linked shapes | external data source | refresh dropdown | batch shape update | Excel workbook automation | UpdateSelectedValue | recalculate formulas | .NET Excel example | GitHub sample
-// Common Searches: Aspose.Cells update linked shapes C# | Refresh Excel dropdowns programmatically | Batch replace external data source in workbook | How to recalculate formulas after linked data change | C# code to update linked shapes across worksheets
-// Developer Intent: Refresh all linked shapes to reflect new external workbooks and ensure dependent formulas are recalculated.
-// Use Cases: Automatically refresh dropdown lists that reference external workbooks after source files are modified. | Synchronize list box selections across multiple sheets when data sources change. | Maintain data integrity by recalculating formulas after batch updating linked shapes. | Prepare a workbook for distribution with updated linked data without opening Excel.
-// AI Prompts: Generate C# Aspose.Cells code that loads a main workbook, replaces its linked data sources with an array of external workbooks, updates every shape on all worksheets, recalculates formulas, and saves the file. | Explain error handling for shapes that do not support UpdateSelectedValue in a batch refresh scenario. | Show how to verify that each linked shape’s source range matches the new external workbook before saving.
+// Title: Batch update linked shapes across worksheets after changing external data sources – Aspose.Cells for .NET
+// Description: Loads a primary workbook, replaces its external links with new source workbooks using UpdateLinkedDataSource, refreshes every linked shape (dropdowns, list boxes, etc.) on all worksheets via Shapes.UpdateSelectedValue, optionally updates dependent pivot tables and charts with RefreshAll, and saves the result.
+// Keywords: Aspose.Cells | C# | UpdateLinkedDataSource | Shapes.UpdateSelectedValue | linked shapes refresh | external workbook links | batch update workbook | refresh dropdown lists | refresh list boxes | refresh charts and pivots | automate Excel workbook | Excel automation .NET
+// Common Searches: Aspose.Cells refresh linked shapes after changing source workbook | C# batch update external links and linked dropdowns | How to use UpdateLinkedDataSource with multiple worksheets | Refresh all linked objects in an Excel file using Aspose.Cells | Automate linked shape update across many sheets
+// Developer Intent: Replace the external data sources of a workbook, refresh every linked shape on all worksheets, and save the updated file programmatically.
+// Use Cases: Migrate a financial model to new source files and automatically update all dropdown lists, charts, and pivot tables. | Consolidate reporting data from several workbooks and refresh linked shapes across dozens of sheets in one operation. | Create a nightly job that swaps old data files with fresh extracts, ensuring all linked objects reflect the latest values.
+// AI Prompts: Write C# code that loads a main workbook, swaps its external links with new workbooks, calls Shapes.UpdateSelectedValue on each worksheet, and saves the updated file using Aspose.Cells. | Explain the relationship between UpdateLinkedDataSource and Shapes.UpdateSelectedValue and why both are required for a complete refresh. | Suggest robust error‑handling patterns for missing or corrupted external workbooks when performing a batch linked‑shape update.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace LinkedShapeBatchUpdate
+namespace LinkedShapeBatchUpdateDemo
 {
-    // Loads a primary workbook, replaces its linked data sources with specified external workbooks, refreshes every shape (dropdowns, list boxes, etc.) on all worksheets using UpdateSelectedValue, recalculates formulas, and saves the updated file.
+    // Loads a primary workbook, replaces its external links with new source workbooks using UpdateLinkedDataSource, refreshes every linked shape (dropdowns, list boxes, etc.) on all worksheets via Shapes.UpdateSelectedValue, optionally updates dependent pivot tables and charts with RefreshAll, and saves the result.
     class Program
     {
         static void Main()
         {
             try
             {
+                // Load the main workbook that contains linked shapes and external links
                 const string mainPath = "MainWorkbook.xlsx";
-
-                // Verify main workbook exists
                 if (!File.Exists(mainPath))
                 {
                     Console.WriteLine($"Main workbook not found: {mainPath}");
                     return;
                 }
-
-                // Load the main workbook that contains linked shapes and external references
                 Workbook mainWorkbook = new Workbook(mainPath);
 
-                // Load external workbooks that serve as data sources for the links
+                // Prepare external workbooks that provide the new data sources
                 string[] externalPaths = { "ExternalData1.xlsx", "ExternalData2.xlsx" };
-                Workbook[] externalWorkbooks = new Workbook[externalPaths.Length];
+                var externalWorkbooks = new System.Collections.Generic.List<Workbook>();
 
-                for (int i = 0; i < externalPaths.Length; i++)
+                foreach (string path in externalPaths)
                 {
-                    if (!File.Exists(externalPaths[i]))
+                    if (File.Exists(path))
                     {
-                        Console.WriteLine($"External workbook not found: {externalPaths[i]}");
-                        return;
+                        externalWorkbooks.Add(new Workbook(path));
                     }
-
-                    externalWorkbooks[i] = new Workbook(externalPaths[i]);
+                    else
+                    {
+                        Console.WriteLine($"External workbook not found and will be skipped: {path}");
+                    }
                 }
 
-                // Update all external links in the main workbook with the loaded data sources
-                mainWorkbook.UpdateLinkedDataSource(externalWorkbooks);
+                // Update all external links in the main workbook with the new data sources
+                if (externalWorkbooks.Count > 0)
+                {
+                    mainWorkbook.UpdateLinkedDataSource(externalWorkbooks.ToArray());
+                }
 
-                // Refresh linked shapes (e.g., dropdowns, list boxes) in every worksheet
+                // Refresh all linked shapes (e.g., dropdowns, list boxes) in every worksheet
                 foreach (Worksheet sheet in mainWorkbook.Worksheets)
                 {
-                    foreach (Shape shape in sheet.Shapes)
-                    {
-                        try
-                        {
-                            shape.UpdateSelectedValue();
-                        }
-                        catch
-                        {
-                            // Ignore shapes that do not support UpdateSelectedValue
-                        }
-                    }
+                    sheet.Shapes.UpdateSelectedValue();
                 }
 
-                // Recalculate formulas to reflect the updated linked data
-                mainWorkbook.CalculateFormula();
+                // Optionally refresh all pivot tables and charts that depend on the updated data
+                mainWorkbook.Worksheets.RefreshAll();
 
                 // Save the updated workbook
                 const string outputPath = "MainWorkbook_Updated.xlsx";

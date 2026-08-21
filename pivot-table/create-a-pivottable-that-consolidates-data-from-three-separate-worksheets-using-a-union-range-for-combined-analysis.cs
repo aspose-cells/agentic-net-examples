@@ -1,113 +1,84 @@
-// Title: C# – Build a Consolidated PivotTable from Multiple Worksheets Using Union Ranges (Aspose.Cells)
-// Description: Creates a workbook with three worksheets, defines a union of their A1:B4 ranges, adds a pivot table on a fourth sheet, sets "Category" as a row field and "Value" as a summed data field, refreshes and calculates the pivot, then saves the file as ConsolidatedPivot.xlsx.
-// Keywords: Aspose.Cells | C# PivotTable | union range | multiple worksheets | consolidated pivot | PivotTables.Add | Aspose.Cells example | Excel pivot from several sheets | .NET data consolidation | pivot table source ranges
-// Common Searches: Aspose.Cells create pivot table from multiple sheets | C# union range pivot example | how to combine worksheets into one pivot using Aspose.Cells | PivotTables.Add with multiple source ranges .NET | consolidate data across sheets in Aspose.Cells
-// Developer Intent: Create a pivot table that aggregates data from three separate worksheets by using a union range as the source.
-// Use Cases: Summarize sales categories across regional worksheets in a single report. | Combine departmental expense data into a unified financial dashboard. | Merge product inventory lists from several sheets for a consolidated analysis.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a pivot table using a list of union ranges across multiple worksheets. | Explain how to add page fields to the union‑range pivot for interactive filtering. | Show how to change the data field aggregation from Sum to Average in the consolidated pivot table.
+// Title: Create a Consolidated PivotTable from Multiple Worksheets with Union Ranges – Aspose.Cells for .NET (C#)
+// Description: A complete C# example that builds a new workbook, adds three worksheets with sample data, defines a union range (A1:B5 on each sheet), and creates a PivotTable on a fourth sheet using Aspose.Cells' multiple‑consolidation‑range feature. The pivot shows "Category" as rows and the summed "Value" as data, then refreshes, calculates, and saves the file as ConsolidatedPivot.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | PivotTable | multiple consolidation range | union range | combine worksheets | data consolidation | Excel automation | pivot example | sample code | GitHub | Aspose.Cells tutorial
+// Common Searches: Aspose.Cells create pivot table from several sheets | multiple consolidation range pivot C# | union range pivot Aspose.Cells .NET | combine data from multiple worksheets into one pivot | Aspose.Cells sample code for consolidated pivot
+// Developer Intent: Generate a PivotTable that aggregates data from three worksheets using a union (multiple‑consolidation) range.
+// Use Cases: Merge regional sales sheets into a single executive‑level pivot report. | Consolidate monthly budget worksheets for a company‑wide financial overview. | Aggregate inventory lists from multiple warehouse tabs for unified stock analysis.
+// AI Prompts: Add a column field to the consolidated pivot table in this Aspose.Cells example. | Generate code that builds the union range dynamically from an array of worksheet names. | Explain how to disable the auto‑page option and specify custom page fields for a multiple‑consolidation pivot.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotUnionExample
+namespace ConsolidatedPivotExample
 {
-    // Creates a workbook with three worksheets, defines a union of their A1:B4 ranges, adds a pivot table on a fourth sheet, sets "Category" as a row field and "Value" as a summed data field, refreshes and calculates the pivot, then saves the file as ConsolidatedPivot.xlsx.
+    // A complete C# example that builds a new workbook, adds three worksheets with sample data, defines a union range (A1:B5 on each sheet), and creates a PivotTable on a fourth sheet using Aspose.Cells' multiple‑consolidation‑range feature. The pivot shows "Category" as rows and the summed "Value" as data, then refreshes, calculates, and saves the file as ConsolidatedPivot.xlsx.
     class Program
     {
         static void Main()
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // -------------------- Prepare source worksheets --------------------
+            // Worksheet 1
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "Sheet1";
+            FillData(sheet1);
+
+            // Worksheet 2
+            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+            FillData(sheet2);
+
+            // Worksheet 3
+            Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
+            FillData(sheet3);
+
+            // -------------------- Create worksheet for the PivotTable --------------------
+            Worksheet pivotSheet = workbook.Worksheets.Add("ConsolidatedPivot");
+            PivotTableCollection pivotTables = pivotSheet.PivotTables;
+
+            // Define the union (consolidation) ranges from the three source sheets
+            string[] sourceRanges = new string[]
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                "=Sheet1!A1:B5",
+                "=Sheet2!A1:B5",
+                "=Sheet3!A1:B5"
+            };
 
-                // -----------------------------
-                // 1. Prepare three source sheets
-                // -----------------------------
-                // Sheet1
-                Worksheet sheet1 = workbook.Worksheets[0];
-                sheet1.Name = "Sheet1";
-                FillSourceData(sheet1, new[] { "A", "B", "C" }, new[] { 10, 20, 30 });
+            // Add a PivotTable using the multiple consolidation ranges.
+            // isAutoPage = true (auto creates a single page field, pageFields ignored)
+            int pivotIndex = pivotTables.Add(sourceRanges, true, null, "A1", "CombinedPivot");
+            PivotTable pivot = pivotTables[pivotIndex];
 
-                // Sheet2
-                Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-                FillSourceData(sheet2, new[] { "A", "B", "D" }, new[] { 15, 25, 35 });
+            // Configure the PivotTable fields
+            pivot.AddFieldToArea(PivotFieldType.Row, "Category");   // Row field
+            pivot.AddFieldToArea(PivotFieldType.Data, "Value");    // Data field (sum)
 
-                // Sheet3
-                Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
-                FillSourceData(sheet3, new[] { "B", "C", "D" }, new[] { 12, 22, 32 });
+            // Refresh and calculate the PivotTable data
+            pivot.RefreshData();
+            pivot.CalculateData();
 
-                // ---------------------------------
-                // 2. Create a worksheet for the pivot
-                // ---------------------------------
-                Worksheet pivotSheet = workbook.Worksheets.Add("ConsolidatedPivot");
-
-                // -------------------------------------------------
-                // 3. Define the union (multiple consolidation) ranges
-                // -------------------------------------------------
-                string[] sourceRanges = new string[]
-                {
-                    "=Sheet1!A1:B4",
-                    "=Sheet2!A1:B4",
-                    "=Sheet3!A1:B4"
-                };
-
-                // No auto page fields; create an empty PivotPageFields object
-                PivotPageFields pageFields = new PivotPageFields();
-
-                // Add the pivot table using the overload that accepts multiple ranges.
-                // Destination cell A1 corresponds to row = 0, column = 0.
-                int pivotIndex = pivotSheet.PivotTables.Add(
-                    sourceRanges,          // sourceData (union ranges)
-                    false,                // isAutoPage
-                    pageFields,           // pageFields (empty)
-                    0,                    // start row (A1)
-                    0,                    // start column (A1)
-                    "UnionPivotTable");   // pivot table name
-
-                // -------------------------------------------------
-                // 4. Configure the pivot table fields
-                // -------------------------------------------------
-                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-                // Add "Category" as Row field
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-
-                // Add "Value" as Data field (sum)
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
-
-                // Refresh and calculate the pivot data
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // -------------------------------------------------
-                // 5. Save the workbook
-                // -------------------------------------------------
-                string outputPath = "ConsolidatedPivot.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Save the workbook
+            workbook.Save("ConsolidatedPivot.xlsx");
         }
 
-        // Helper method to populate a worksheet with sample data
-        private static void FillSourceData(Worksheet sheet, string[] categories, int[] values)
+        // Helper method to populate a worksheet with identical sample data
+        private static void FillData(Worksheet sheet)
         {
             Cells cells = sheet.Cells;
             // Header
             cells["A1"].PutValue("Category");
             cells["B1"].PutValue("Value");
 
-            // Data rows
+            // Sample rows
+            string[] categories = { "A", "B", "A", "C", "B" };
+            int[] values = { 100, 200, 150, 300, 250 };
+
             for (int i = 0; i < categories.Length; i++)
             {
-                cells[i + 1, 0].PutValue(categories[i]); // Column A (row index starts at 0)
-                cells[i + 1, 1].PutValue(values[i]);    // Column B
+                cells[i + 2, 0].PutValue(categories[i]); // Column A
+                cells[i + 2, 1].PutValue(values[i]);    // Column B
             }
         }
     }

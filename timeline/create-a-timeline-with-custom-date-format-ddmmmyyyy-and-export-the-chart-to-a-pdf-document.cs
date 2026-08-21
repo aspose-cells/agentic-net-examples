@@ -1,99 +1,97 @@
-// Title: C# Aspose.Cells: Timeline with dd‑MMM‑yyyy Format and Export Chart to PDF
-// Description: Creates a workbook, adds dates and values, applies the custom format dd‑MMM‑yyyy, builds a pivot table, inserts a timeline, draws a line chart, and saves the chart as a PDF using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells timeline | custom date format dd-MMM-yyyy | C# chart to PDF | Aspose.Cells pivot table | export chart as PDF | .NET timeline chart | line chart X‑axis date format | Aspose.Cells PDF export | timeline filter Aspose | C# Aspose.Cells example
-// Common Searches: Aspose.Cells timeline custom date format C# | Export Aspose.Cells chart to PDF | Create timeline linked to pivot table Aspose.Cells | Set X axis date format Aspose.Cells chart | C# example timeline PDF export
-// Developer Intent: Generate a timeline tied to a pivot table, format its dates as dd‑MMM‑yyyy, and export the associated chart to a PDF file.
-// Use Cases: Financial dashboards where the timeline shows dates like 01‑Jan‑2021 and the chart is shared as a PDF report. | Project schedule visualizations with a timeline filter, custom date labels, and printable PDF output for stakeholders.
-// AI Prompts: Write C# code using Aspose.Cells to create a timeline with the date format dd‑MMM‑yyyy, link it to a pivot table, and export the chart to PDF. | Explain how to set the X‑axis date format for a line chart in Aspose.Cells and use TimelineCollection for data filtering. | Give best practices for handling exceptions when converting an Aspose.Cells chart to a PDF document.
+// Title: Aspose.Cells for .NET: Create a Timeline with dd‑MMM‑yyyy Format and Export Its Chart to PDF (C#)
+// Description: A C# sample that builds a workbook, applies the custom date pattern dd‑MMM‑yyyy to cells, creates a PivotTable, adds a Timeline bound to the Date field, generates a line chart using the same data, formats the chart’s X‑axis with the custom date pattern, and exports the chart directly to a PDF file.
+// Keywords: Aspose.Cells | C# | Timeline | custom date format | dd-MMM-yyyy | PivotTable | chart to PDF | export chart PDF | Aspose.Cells timeline | Aspose.Cells chart PDF | Aspose.Cells example
+// Common Searches: Aspose.Cells timeline custom date format | Export chart to PDF Aspose.Cells C# | Create timeline from pivot table Aspose.Cells | Set X axis date format Aspose chart | C# Aspose.Cells generate PDF from chart
+// Developer Intent: Generate a timeline with dd‑MMM‑yyyy dates, link it to a pivot table, create a line chart, and save the chart as a PDF using Aspose.Cells for .NET.
+// Use Cases: Interactive sales dashboard where a timeline filters data and the chart is exported as a PDF for periodic reporting. | Automated financial statements that require uniform date formatting and PDF chart snapshots for distribution. | Producing printable chart PDFs from Excel workbooks for client presentations or archival purposes.
+// AI Prompts: Write C# code with Aspose.Cells to create a timeline using the date format dd‑MMM‑yyyy, bind it to a pivot table, add a line chart, and export the chart to a PDF file. | Explain how to set a custom X‑axis date format for a chart in Aspose.Cells and connect the chart to a timeline for synchronized filtering. | Provide step‑by‑step instructions to generate a PDF of a chart that reflects the selected date range of a timeline using Aspose.Cells for .NET.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Timelines;
 
-// Creates a workbook, adds dates and values, applies the custom format dd‑MMM‑yyyy, builds a pivot table, inserts a timeline, draws a line chart, and saves the chart as a PDF using Aspose.Cells for .NET.
-public class TimelineChartPdfDemo
+namespace AsposeCellsTimelinePdfDemo
 {
-    public static void Main()
+    // A C# sample that builds a workbook, applies the custom date pattern dd‑MMM‑yyyy to cells, creates a PivotTable, adds a Timeline bound to the Date field, generates a line chart using the same data, formats the chart’s X‑axis with the custom date pattern, and exports the chart directly to a PDF file.
+    class Program
     {
-        try
+        static void Main()
         {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Unhandled exception: " + ex.Message);
-        }
-    }
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+            // ----- Populate worksheet with sample date and value data -----
+            cells["A1"].PutValue("Date");
+            cells["B1"].PutValue("Value");
 
-        // Populate worksheet with dates and values
-        cells["A1"].PutValue("Date");
-        cells["B1"].PutValue("Value");
+            DateTime[] dates = {
+                new DateTime(2021, 1, 5),
+                new DateTime(2021, 2, 12),
+                new DateTime(2021, 3, 20),
+                new DateTime(2021, 4, 15)
+            };
+            int[] values = { 100, 150, 130, 170 };
 
-        DateTime[] dates = new DateTime[]
-        {
-            new DateTime(2021, 1, 1),
-            new DateTime(2021, 2, 1),
-            new DateTime(2021, 3, 1),
-            new DateTime(2021, 4, 1)
-        };
-        double[] values = { 10, 20, 30, 40 };
+            for (int i = 0; i < dates.Length; i++)
+            {
+                // Row index starts at 1 because row 0 holds headers
+                int row = i + 1;
+                cells[$"A{row + 1}"].PutValue(dates[i]);   // A2, A3, ...
+                cells[$"B{row + 1}"].PutValue(values[i]); // B2, B3, ...
 
-        for (int i = 0; i < dates.Length; i++)
-        {
-            cells[i + 1, 0].PutValue(dates[i]);   // Column A
-            cells[i + 1, 1].PutValue(values[i]); // Column B
-        }
+                // Apply custom date format "dd-MMM-yyyy" to the date cells
+                Style dateStyle = workbook.CreateStyle();
+                dateStyle.Custom = "dd-MMM-yyyy";
+                cells[$"A{row + 1}"].SetStyle(dateStyle);
+            }
 
-        // Apply custom date format "dd-MMM-yyyy" to the date column
-        Style dateStyle = workbook.CreateStyle();
-        dateStyle.Custom = "dd-MMM-yyyy";
-        for (int i = 1; i <= dates.Length; i++)
-        {
-            cells[i, 0].SetStyle(dateStyle);
-        }
+            // ----- Create a PivotTable (required as data source for Timeline) -----
+            // Define the source range (including headers)
+            string sourceRange = "A1:B5";
+            // Destination cell for the pivot table
+            string pivotDest = "D1";
+            int pivotIndex = sheet.PivotTables.Add(sourceRange, pivotDest, "PivotTable1");
+            PivotTable pivot = sheet.PivotTables[pivotIndex];
 
-        // Create a pivot table (required as a data source for the timeline)
-        PivotTableCollection pivots = sheet.PivotTables;
-        int pivotIndex = pivots.Add("A1:B5", "D1", "Pivot1");
-        PivotTable pivot = pivots[pivotIndex];
-        pivot.AddFieldToArea(PivotFieldType.Row, "Date");
-        pivot.AddFieldToArea(PivotFieldType.Data, "Value");
-        pivot.RefreshData();
-        pivot.CalculateData();
+            // Add fields to the pivot table
+            pivot.AddFieldToArea(PivotFieldType.Row, "Date");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
 
-        // Add a timeline linked to the pivot table using the "Date" field
-        TimelineCollection timelines = sheet.Timelines;
-        timelines.Add(pivot, "F1", "Date");
+            // Refresh and calculate the pivot data
+            pivot.RefreshData();
+            pivot.CalculateData();
 
-        // Create a line chart that uses the same data range
-        int chartIndex = sheet.Charts.Add(ChartType.Line, 10, 0, 25, 15);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B5", true);          // Values
-        chart.NSeries.CategoryData = "A2:A5";      // Dates
+            // ----- Add a Timeline linked to the PivotTable -----
+            // Place the Timeline starting at cell E1 and bind it to the "Date" field
+            int timelineIndex = sheet.Timelines.Add(pivot, "E1", "Date");
+            Timeline timeline = sheet.Timelines[timelineIndex];
+            timeline.Caption = "Sales Timeline";
 
-        // Set the X‑axis (category) values format to the custom date format
-        chart.NSeries[0].XValuesFormatCode = "dd-MMM-yyyy";
+            // ----- Create a chart that uses the same data -----
+            int chartIndex = sheet.Charts.Add(ChartType.Line, 10, 0, 25, 12);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Export the chart to a PDF file
-        string outputPath = "TimelineChart.pdf";
-        try
-        {
-            chart.ToPdf(outputPath);
-            Console.WriteLine($"Chart exported to {Path.GetFullPath(outputPath)}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Failed to export PDF: " + ex.Message);
+            // Set the data range for the chart
+            chart.NSeries.Add("B2:B5", true);          // Values
+            chart.NSeries.CategoryData = "A2:A5";     // Dates
+
+            // Ensure the X‑axis (category axis) displays dates with the custom format
+            // This can be done by setting the XValues format code directly
+            chart.NSeries[0].XValuesFormatCode = "dd-MMM-yyyy";
+
+            // Optional: give the chart a title
+            chart.Title.Text = "Monthly Sales";
+
+            // ----- Export the chart to a PDF file -----
+            // The ToPdf method is part of Aspose.Cells.Charts.Chart
+            chart.ToPdf("TimelineChart.pdf");
+
+            // (Optional) Save the workbook to verify the timeline and chart in Excel format
+            workbook.Save("TimelineWithChart.xlsx");
         }
     }
 }

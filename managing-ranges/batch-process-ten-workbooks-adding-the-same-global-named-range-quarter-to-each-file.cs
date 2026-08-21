@@ -1,72 +1,78 @@
+// Title: C# – Batch add a workbook‑level named range “Quarter” to multiple Excel files with Aspose.Cells
+// Description: Iterates through ten Excel workbooks, loads each with Aspose.Cells, creates the global named range “Quarter” (refers to Sheet1!$A$1:$B$4) only if it does not exist, optionally sorts the name collection, and saves the modified files to a “Processed” folder while handling missing files and runtime errors.
+// Keywords: Aspose.Cells | C# | .NET | global named range | workbook‑level name | batch process Excel files | NameCollection | add named range programmatically | multiple workbooks automation | Excel error handling
+// Common Searches: add a workbook level named range to many Excel files using Aspose.Cells | C# batch create global named range in multiple workbooks | Aspose.Cells loop through files to add same named range | how to check and add a named range only if missing in Excel with Aspose | sort name collection before saving workbook Aspose.Cells
+// Developer Intent: Create the global named range "Quarter" in each of ten Excel workbooks, adding it only when absent.
+// Use Cases: Standardize a quarterly data reference across all monthly report workbooks before consolidation. | Prepare a set of template spreadsheets for a financial model that requires a common named range for downstream calculations. | Automate the migration of legacy Excel files to include a required global named range for a new reporting engine.
+// AI Prompts: Write C# code with Aspose.Cells that adds a global named range to every Excel file in a folder, skipping files that already contain the name. | Explain how to verify the existence of a workbook‑level named range across multiple workbooks and add it if missing, including best‑practice error handling. | Provide a script that processes a list of Excel files, creates a named range, sorts the NameCollection, and saves the results to a separate directory.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
+// Iterates through ten Excel workbooks, loads each with Aspose.Cells, creates the global named range “Quarter” (refers to Sheet1!$A$1:$B$4) only if it does not exist, optionally sorts the name collection, and saves the modified files to a “Processed” folder while handling missing files and runtime errors.
 class BatchAddGlobalNamedRange
 {
     static void Main()
     {
-        // Define the list of workbook file paths to process (10 files)
-        string[] workbookFiles = new string[]
+        // Paths of the ten workbooks to process
+        string[] inputFiles = new string[10]
         {
-            @"C:\Workbooks\Book1.xlsx",
-            @"C:\Workbooks\Book2.xlsx",
-            @"C:\Workbooks\Book3.xlsx",
-            @"C:\Workbooks\Book4.xlsx",
-            @"C:\Workbooks\Book5.xlsx",
-            @"C:\Workbooks\Book6.xlsx",
-            @"C:\Workbooks\Book7.xlsx",
-            @"C:\Workbooks\Book8.xlsx",
-            @"C:\Workbooks\Book9.xlsx",
-            @"C:\Workbooks\Book10.xlsx"
+            "file1.xlsx",
+            "file2.xlsx",
+            "file3.xlsx",
+            "file4.xlsx",
+            "file5.xlsx",
+            "file6.xlsx",
+            "file7.xlsx",
+            "file8.xlsx",
+            "file9.xlsx",
+            "file10.xlsx"
         };
 
-        // The global named range to add
-        const string globalName = "Quarter";
-        // Example reference – adjust as needed
-        const string refersToFormula = "=Sheet1!$A$1:$A$4";
+        // Folder where processed workbooks will be saved
+        string outputFolder = "Processed";
+        Directory.CreateDirectory(outputFolder);
 
-        foreach (string filePath in workbookFiles)
+        foreach (string inputPath in inputFiles)
         {
-            // Ensure the file exists before processing
-            if (!File.Exists(filePath))
+            try
             {
-                Console.WriteLine($"File not found: {filePath}");
-                continue;
-            }
+                // Verify that the source file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}. Skipping.");
+                    continue;
+                }
 
-            // Load the workbook (using the constructor that accepts a file path)
-            using (Workbook workbook = new Workbook(filePath))
-            {
-                // Access the global names collection
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the global name collection
                 NameCollection names = workbook.Worksheets.Names;
 
-                // Check if the global name already exists
-                bool exists = false;
-                foreach (Name n in names)
+                // Add the global named range "Quarter" if it does not already exist
+                if (names["Quarter"] == null)
                 {
-                    if (n.Text.Equals(globalName, StringComparison.OrdinalIgnoreCase) && n.SheetIndex == 0)
-                    {
-                        exists = true;
-                        break;
-                    }
+                    int index = names.Add("Quarter");          // Define a new name
+                    Name quarterName = names[index];
+                    quarterName.RefersTo = "=Sheet1!$A$1:$B$4"; // Example reference
+                    quarterName.SheetIndex = 0;                // 0 = global (workbook‑level) scope
                 }
 
-                // Add the global named range if it does not exist
-                if (!exists)
-                {
-                    int index = names.Add(globalName);          // Define the name
-                    Name name = names[index];
-                    name.RefersTo = refersToFormula;            // Set the reference
-                    name.SheetIndex = 0;                        // Ensure workbook scope (0 = global)
-                }
-
-                // Optional: sort names for better organization
+                // Optional: sort names for better performance before saving
                 workbook.Worksheets.SortNames();
 
-                // Save the workbook back to the same file (overwrites original)
-                workbook.Save(filePath);
-                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
+                // Save the modified workbook to the output folder
+                string fileName = Path.GetFileName(inputPath);
+                string outputPath = Path.Combine(outputFolder, fileName);
+                workbook.Save(outputPath);
+                Console.WriteLine($"Processed and saved: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors and continue with the next file
+                Console.WriteLine($"Error processing '{inputPath}': {ex.Message}");
             }
         }
     }

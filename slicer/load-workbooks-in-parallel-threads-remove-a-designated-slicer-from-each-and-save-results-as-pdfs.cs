@@ -1,107 +1,89 @@
+// Title: Parallel removal of slicers from multiple Excel workbooks and PDF export using Aspose.Cells for .NET (C#)
+// Description: A C# console app that loads a list of Excel files, runs each workbook on a separate thread, deletes the first slicer on every worksheet (if present), and saves the modified workbook as a PDF with Aspose.Cells PdfSaveOptions. Includes file‑existence checks, exception handling, and a final summary message.
+// Keywords: Aspose.Cells | C# parallel Excel processing | remove slicer programmatically | Excel slicer collection | batch Excel to PDF conversion | multi‑threaded workbook conversion | PdfSaveOptions Aspose.Cells | delete slicers from worksheets | Aspose.Cells SlicerCollection | Excel to PDF C#
+// Common Searches: how to delete slicers from Excel using Aspose.Cells C# | parallel processing of multiple workbooks with Aspose.Cells | batch convert Excel files to PDF in .NET | remove first slicer from each sheet before PDF export | Aspose.Cells multi‑threaded PDF conversion example
+// Developer Intent: The developer needs to strip a specific slicer from every worksheet of several Excel workbooks concurrently and generate PDF versions of the cleaned files.
+// Use Cases: Automated cleanup of reporting workbooks by removing slicers before publishing PDFs. | High‑throughput service that receives Excel uploads, removes slicer UI elements, and returns PDF archives. | CI/CD pipeline step that converts Excel templates to PDF after programmatically deleting slicers.
+// AI Prompts: Write a reusable C# method that accepts a collection of Excel file paths, removes all slicers from each worksheet using Aspose.Cells, and returns the generated PDF file paths. | Show sample code for processing Excel workbooks in parallel, deleting the first slicer on each sheet, and saving each workbook as a PDF with custom PdfSaveOptions. | Explain best practices for exception handling, logging, and thread safety when removing slicers and converting workbooks to PDF with Aspose.Cells in a multi‑threaded application.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Aspose.Cells;
-using Aspose.Cells.Rendering; // For PdfSaveOptions
-using Aspose.Cells.Slicers;   // For SlicerCollection
+using Aspose.Cells.Rendering;
+using Aspose.Cells.Slicers; // Required for SlicerCollection
 
 namespace AsposeCellsParallelSlicerRemoval
 {
+    // A C# console app that loads a list of Excel files, runs each workbook on a separate thread, deletes the first slicer on every worksheet (if present), and saves the modified workbook as a PDF with Aspose.Cells PdfSaveOptions. Includes file‑existence checks, exception handling, and a final summary message.
     class Program
     {
         static void Main()
         {
-            // List of input Excel files to process
+            // Input Excel files to process
             List<string> inputFiles = new List<string>
             {
-                "Workbook1.xlsx",
-                "Workbook2.xlsx",
-                "Workbook3.xlsx"
+                @"C:\Input\Workbook1.xlsx",
+                @"C:\Input\Workbook2.xlsx",
+                @"C:\Input\Workbook3.xlsx"
+                // Add more file paths as needed
             };
 
-            // Corresponding output PDF files
-            List<string> outputFiles = new List<string>
-            {
-                "Workbook1.pdf",
-                "Workbook2.pdf",
-                "Workbook3.pdf"
-            };
-
-            // Index of the slicer to remove from each worksheet (0‑based)
-            int slicerIndexToRemove = 0;
+            // Output directory for PDF files
+            string outputDir = @"C:\Output\PDFs";
+            Directory.CreateDirectory(outputDir);
 
             // Process each workbook in parallel
-            Parallel.ForEach(
-                Enumerable.Range(0, inputFiles.Count),
-                index =>
+            List<Task> tasks = new List<Task>();
+            foreach (string inputPath in inputFiles)
+            {
+                tasks.Add(Task.Run(() =>
                 {
                     try
                     {
-                        string inputPath = inputFiles[index];
-                        string outputPath = outputFiles[index];
-                        ProcessWorkbook(inputPath, outputPath, slicerIndexToRemove);
+                        // Verify the input file exists
+                        if (!File.Exists(inputPath))
+                        {
+                            Console.WriteLine($"Input file not found: {inputPath}");
+                            return;
+                        }
+
+                        // Load the workbook from file
+                        Workbook workbook = new Workbook(inputPath);
+
+                        // Iterate through all worksheets and remove the first slicer if present
+                        foreach (Worksheet sheet in workbook.Worksheets)
+                        {
+                            SlicerCollection slicers = sheet.Slicers;
+                            if (slicers != null && slicers.Count > 0)
+                            {
+                                slicers.RemoveAt(0);
+                            }
+                        }
+
+                        // Prepare PDF save options
+                        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                        // Determine output PDF file name
+                        string fileNameWithoutExt = Path.GetFileNameWithoutExtension(inputPath);
+                        string pdfPath = Path.Combine(outputDir, fileNameWithoutExt + ".pdf");
+
+                        // Save the modified workbook as PDF
+                        workbook.Save(pdfPath, pdfOptions);
+                        Console.WriteLine($"Processed and saved PDF: {pdfPath}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error processing file pair #{index}: {ex.Message}");
+                        Console.WriteLine($"Error processing file '{inputPath}': {ex.Message}");
                     }
-                });
-        }
-
-        /// <summary>
-        /// Loads a workbook, removes the slicer at the specified index from every worksheet,
-        /// and saves the result as a PDF.
-        /// </summary>
-        /// <param name="inputPath">Path to the source Excel file.</param>
-        /// <param name="outputPath">Path where the PDF will be saved.</param>
-        /// <param name="slicerIndex">Zero‑based index of the slicer to remove.</param>
-        private static void ProcessWorkbook(string inputPath, string outputPath, int slicerIndex)
-        {
-            try
-            {
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook from file
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Access the slicer collection of the worksheet
-                    SlicerCollection slicers = sheet.Slicers;
-
-                    // Remove the slicer if the collection contains enough items
-                    if (slicers.Count > slicerIndex)
-                    {
-                        slicers.RemoveAt(slicerIndex);
-                    }
-                }
-
-                // Prepare PDF save options (default options are sufficient)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the modified workbook as PDF
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"Successfully saved PDF: {outputPath}");
+                }));
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to process workbook '{inputPath}': {ex.Message}");
-            }
+
+            // Wait for all parallel tasks to complete
+            Task.WaitAll(tasks.ToArray());
+
+            Console.WriteLine("All workbooks have been processed and saved as PDFs.");
         }
     }
 }

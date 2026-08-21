@@ -1,103 +1,74 @@
-// Title: Proportionally Resize Aspose.Cells Chart Data Label Shapes After Expanding Chart Width (.NET)
-// Description: Demonstrates how to create a workbook with a column chart, capture each data label's original pixel size, double the chart's width, calculate a scaling factor, and apply the factor to the labels' WidthPixel and HeightPixel properties while disabling auto‑fit, ensuring label shapes stay proportional after the chart is resized.
-// Keywords: Aspose.Cells resize chart data labels | proportional label scaling Aspose.Cells | chart width change data label size .NET | disable auto‑fit data labels Aspose.Cells | WidthPixel HeightPixel chart label | Aspose.Cells chart manipulation C# | Excel chart data label dimensions
-// Common Searches: how to keep chart data label size proportional in Aspose.Cells | resize data label shapes after changing chart width .NET | Aspose.Cells set data label WidthPixel HeightPixel | scale chart labels with chart size Aspose.Cells | disable auto‑fit for chart data labels C#
-// Developer Intent: Adjust the dimensions of chart data label shapes so they remain proportionally sized when the chart width is increased.
-// Use Cases: Generating Excel reports where column charts are widened for better readability while preserving the visual balance of data labels. | Applying corporate design guidelines that require fixed‑pixel label dimensions regardless of chart scaling. | Automating chart layout adjustments in bulk processing scripts that modify chart sizes programmatically.
-// AI Prompts: Show C# code using Aspose.Cells to proportionally resize data label shapes after expanding a chart's width, including steps to disable auto‑fit and compute a scaling factor. | Explain how to retrieve original pixel dimensions of chart data labels, calculate a width‑based scale factor, and update WidthPixel and HeightPixel values in Aspose.Cells. | Provide a step‑by‑step tutorial for maintaining consistent data label sizes when programmatically enlarging an Excel chart with Aspose.Cells for .NET.
+// Title: Resize Chart Data Label Shapes Proportionally After Expanding Width – Aspose.Cells for .NET
+// Description: Demonstrates how to double a column chart's width, compute a scaling factor, disable auto‑fit, and set WidthPixel/HeightPixel on data labels so they stay proportional before saving the workbook.
+// Keywords: Aspose.Cells chart resize | data label shape scaling | WidthPixel HeightPixel Aspose.Cells | disable auto‑fit chart labels | C# chart label proportional size
+// Common Searches: Aspose.Cells resize data label after chart width change | set data label WidthPixel HeightPixel in .NET | disable auto fit for chart labels Aspose.Cells | calculate scaling factor for chart labels C# | proportional label size when expanding chart Aspose
+// Developer Intent: Adjust the dimensions of chart data label shapes so they remain proportional after the chart’s width is increased.
+// Use Cases: Enlarge a dashboard chart while keeping label readability consistent. | Prepare a wide printable chart without distorting label appearance. | Batch‑process multiple charts to maintain uniform label sizing after scaling.
+// AI Prompts: Generate C# code using Aspose.Cells that resizes data label shapes proportionally after changing a chart's width. | Explain how to turn off auto‑fit and assign explicit WidthPixel and HeightPixel values to chart data labels in Aspose.Cells. | Show the formula for computing a width‑based scaling factor and applying it to data label dimensions.
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 
 namespace AsposeCellsChartLabelResizeDemo
 {
-    // Demonstrates how to create a workbook with a column chart, capture each data label's original pixel size, double the chart's width, calculate a scaling factor, and apply the factor to the labels' WidthPixel and HeightPixel properties while disabling auto‑fit, ensuring label shapes stay proportional after the chart is resized.
+    // Demonstrates how to double a column chart's width, compute a scaling factor, disable auto‑fit, and set WidthPixel/HeightPixel on data labels so they stay proportional before saving the workbook.
     class Program
     {
         static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-                // Add a column chart
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = sheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-                // Enable data labels for the first series
-                Series series = chart.NSeries[0];
-                series.DataLabels.ShowValue = true;
-                series.DataLabels.Position = LabelPositionType.Center;
+            // Enable data labels for the first series
+            Series series = chart.NSeries[0];
+            series.DataLabels.ShowValue = true;
+            series.DataLabels.Position = LabelPositionType.Center;
 
-                // Calculate once to obtain original shape sizes
-                chart.Calculate();
+            // Calculate the chart so that shape dimensions become available
+            chart.Calculate();
 
-                // Store original chart width and each data label's pixel dimensions
-                double originalChartWidth = chart.ChartObject.Width;
-                var originalLabelSizes = new List<(int widthPx, int heightPx)>();
+            // Store original chart width and original data label size (in pixels)
+            int originalChartWidth = chart.ChartObject.Width;
+            int originalLabelWidth = series.DataLabels.WidthPixel;
+            int originalLabelHeight = series.DataLabels.HeightPixel;
 
-                foreach (ChartPoint point in series.Points)
-                {
-                    // Disable auto‑fit so we can control the shape size manually
-                    point.DataLabels.IsResizeShapeToFitText = false;
+            // Increase the chart width (e.g., double it)
+            chart.ChartObject.Width = originalChartWidth * 2;
 
-                    // Record current pixel dimensions
-                    originalLabelSizes.Add((point.DataLabels.WidthPixel, point.DataLabels.HeightPixel));
-                }
+            // Recalculate after resizing the chart
+            chart.Calculate();
 
-                // Increase the chart width (e.g., double it)
-                // Cast to int if the Width property expects an integer value
-                chart.ChartObject.Width = (int)(originalChartWidth * 2.0);
+            // Compute scaling factor based on chart width change
+            double widthScale = (double)chart.ChartObject.Width / originalChartWidth;
 
-                // Re‑calculate to reflect the new chart size
-                chart.Calculate();
+            // Disable auto‑fit so we can set explicit dimensions
+            series.DataLabels.IsResizeShapeToFitText = false;
 
-                // Determine scaling factor based on chart width change
-                double scaleFactor = chart.ChartObject.Width / originalChartWidth;
+            // Apply proportional size to the data label shape
+            series.DataLabels.WidthPixel = (int)(originalLabelWidth * widthScale);
+            series.DataLabels.HeightPixel = (int)(originalLabelHeight * widthScale);
 
-                // Apply proportional resizing to each data label shape
-                int idx = 0;
-                foreach (ChartPoint point in series.Points)
-                {
-                    var (origWidthPx, origHeightPx) = originalLabelSizes[idx++];
-                    point.DataLabels.WidthPixel = (int)(origWidthPx * scaleFactor);
-                    point.DataLabels.HeightPixel = (int)(origHeightPx * scaleFactor);
-                }
-
-                // Save the workbook
-                string outputPath = "ChartLabelResizeDemo.xlsx";
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("ChartLabelResizeDemo.xlsx");
         }
     }
 }

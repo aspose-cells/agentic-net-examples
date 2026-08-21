@@ -1,92 +1,72 @@
-// Title: Load an Excel workbook from a MemoryStream, modify its pivot table, and save with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook with a pivot table, save it to a MemoryStream, reload it, disable automatic refresh, manually refresh the pivot data, and write the updated file back to a new stream using Aspose.Cells for C#.
-// Keywords: Aspose.Cells load workbook from memory stream | C# pivot table manipulation | refresh pivot data programmatically | disable pivot auto refresh Aspose | save workbook to stream .NET | memory stream Excel example | Aspose.Cells pivot table API
-// Common Searches: Aspose.Cells open Excel from MemoryStream | how to refresh pivot table after loading from stream | save modified workbook to MemoryStream C# | disable RefreshDataOnOpeningFile Aspose.Cells | pivot table programmatic update Aspose
-// Developer Intent: Read an Excel file from a MemoryStream, adjust pivot‑table settings, refresh its data, and output the result to another stream without touching the file system.
-// Use Cases: Web API endpoint that receives an uploaded XLSX as a byte array, updates pivot tables in‑memory, and returns the modified file as a response stream. | Batch processing of dozens of workbooks stored in a message queue, where each file is edited in memory to avoid disk I/O and then forwarded to downstream services. | Server‑side automation that generates a report, adds a pivot table, saves the workbook to a MemoryStream, and streams it directly to a client browser.
-// AI Prompts: Write C# code using Aspose.Cells to load an Excel workbook from a MemoryStream, turn off RefreshDataOnOpeningFile for all pivot tables, call RefreshData, and save the workbook to a new MemoryStream. | Explain the steps required to programmatically refresh a pivot table after loading a workbook from a stream with Aspose.Cells, including any necessary property configurations. | Provide an ASP.NET Core controller example that accepts an Excel file as a byte array, updates its pivot table fields with Aspose.Cells, and returns the edited file as a byte array.
+// Title: Load an Excel workbook from a MemoryStream and edit its PivotTable with Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, save it to a MemoryStream, reload it, modify the first PivotTable (disable automatic refresh, refresh data, recalculate), and save the result to a file using Aspose.Cells for C#.
+// Keywords: Aspose.Cells MemoryStream | C# load workbook from stream | modify PivotTable programmatically | RefreshDataOnOpeningFile | PivotTable RefreshData | PivotTable CalculateData | save workbook after stream manipulation | Excel pivot table .NET
+// Common Searches: Aspose.Cells load workbook from MemoryStream | C# edit PivotTable after loading from stream | disable pivot refresh on opening file Aspose.Cells | refresh and calculate pivot data programmatically | save modified Excel file after stream processing
+// Developer Intent: Load a workbook from a MemoryStream, change PivotTable settings, refresh its data, and write the updated file.
+// Use Cases: Transfer an Excel file between services via a MemoryStream, adjust PivotTable behavior, and persist the changes. | Prevent automatic PivotTable refresh for large workbooks to improve load performance. | Programmatically recalculate PivotTable data after modifying the source range in memory.
+// AI Prompts: Generate C# code that opens an Excel workbook from a MemoryStream, disables the PivotTable's RefreshDataOnOpeningFile, calls RefreshData and CalculateData, and saves the file. | Show how to reset a MemoryStream position before loading a workbook with Aspose.Cells and then update a PivotTable. | Explain why disabling automatic pivot refresh is useful for large Excel files when using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Demonstrates how to create a workbook with a pivot table, save it to a MemoryStream, reload it, disable automatic refresh, manually refresh the pivot data, and write the updated file back to a new stream using Aspose.Cells for C#.
-public class PivotTableMemoryStreamDemo
+// Demonstrates how to create a workbook, save it to a MemoryStream, reload it, modify the first PivotTable (disable automatic refresh, refresh data, recalculate), and save the result to a file using Aspose.Cells for C#.
+class Program
 {
-    public static void Main()
-    {
-        try
-        {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    public static void Run()
+    static void Main()
     {
         // ------------------------------------------------------------
-        // 1. Create a sample workbook that contains a pivot table.
+        // 1. Create a workbook with sample data and a pivot table.
         // ------------------------------------------------------------
-        Workbook sourceWorkbook = new Workbook();
-        Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+        Workbook sourceWb = new Workbook();
+        Worksheet ws = sourceWb.Worksheets[0];
 
-        // Populate source data.
-        sourceSheet.Cells["A1"].PutValue("Category");
-        sourceSheet.Cells["B1"].PutValue("Amount");
-        sourceSheet.Cells["A2"].PutValue("Food");
-        sourceSheet.Cells["B2"].PutValue(100);
-        sourceSheet.Cells["A3"].PutValue("Drink");
-        sourceSheet.Cells["B3"].PutValue(150);
-        sourceSheet.Cells["A4"].PutValue("Food");
-        sourceSheet.Cells["B4"].PutValue(200);
+        ws.Cells["A1"].PutValue("Category");
+        ws.Cells["B1"].PutValue("Amount");
+        ws.Cells["A2"].PutValue("Food");
+        ws.Cells["B2"].PutValue(100);
+        ws.Cells["A3"].PutValue("Drink");
+        ws.Cells["B3"].PutValue(150);
+        ws.Cells["A4"].PutValue("Food");
+        ws.Cells["B4"].PutValue(200);
 
         // Add a pivot table based on the data range.
-        int pivotIndex = sourceSheet.PivotTables.Add("A1:B4", "D1", "SalesPivot");
-        PivotTable pivot = sourceSheet.PivotTables[pivotIndex];
-        pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-        pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Amount as data field
+        int ptIndex = ws.PivotTables.Add("A1:B4", "D1", "SalesPivot");
+        PivotTable pt = ws.PivotTables[ptIndex];
+        pt.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
+        pt.AddFieldToArea(PivotFieldType.Data, 1);  // Amount as data field
 
         // ------------------------------------------------------------
-        // 2. Save the workbook into a MemoryStream (XLSX format).
+        // 2. Save the workbook into a MemoryStream.
         // ------------------------------------------------------------
-        using (MemoryStream memoryStream = new MemoryStream())
+        using (MemoryStream ms = new MemoryStream())
         {
-            sourceWorkbook.Save(memoryStream, SaveFormat.Xlsx);
-            memoryStream.Position = 0; // Reset stream position for reading.
+            sourceWb.Save(ms, SaveFormat.Xlsx);
+            ms.Position = 0; // Reset stream position for reading.
 
             // ------------------------------------------------------------
             // 3. Load the workbook from the MemoryStream.
             // ------------------------------------------------------------
-            Workbook loadedWorkbook = new Workbook(memoryStream);
+            Workbook wb = new Workbook(ms);
 
             // ------------------------------------------------------------
-            // 4. Manipulate pivot tables programmatically.
+            // 4. Manipulate the pivot table in the loaded workbook.
             // ------------------------------------------------------------
-            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-            if (loadedSheet.PivotTables.Count > 0)
-            {
-                PivotTable loadedPivot = loadedSheet.PivotTables[0];
+            Worksheet loadedWs = wb.Worksheets[0];
+            PivotTable loadedPt = loadedWs.PivotTables[0];
 
-                // Disable automatic refresh on opening.
-                loadedPivot.RefreshDataOnOpeningFile = false;
+            // Example: prevent automatic refresh when the file is opened.
+            loadedPt.RefreshDataOnOpeningFile = false;
 
-                // Manually refresh the pivot data.
-                loadedPivot.RefreshData();
-            }
+            // Refresh and recalculate the pivot table to reflect any data changes.
+            loadedPt.RefreshData();
+            loadedPt.CalculateData();
 
             // ------------------------------------------------------------
-            // 5. Save the modified workbook back to a new MemoryStream.
+            // 5. Save the modified workbook to a physical file.
             // ------------------------------------------------------------
-            using (MemoryStream outStream = loadedWorkbook.SaveToStream())
-            {
-                string outputPath = "ModifiedFromStream.xlsx";
-                File.WriteAllBytes(outputPath, outStream.ToArray());
-                Console.WriteLine($"Modified workbook saved to {outputPath}");
-            }
+            wb.Save("ModifiedFromStream.xlsx", SaveFormat.Xlsx);
         }
     }
 }

@@ -1,47 +1,40 @@
-// Title: Export Excel to HTML with German (de‑DE) Number Formatting using Aspose.Cells for .NET
-// Description: Demonstrates how to set a workbook's CultureInfo to de‑DE, apply a locale‑aware numeric style, configure HtmlSaveOptions with ExportDataOptions.All, and save the sheet as an HTML file that displays German‑style separators.
-// Keywords: Aspose.Cells | HTML export | locale specific number format | workbook culture | de-DE | C# .NET | HtmlSaveOptions | ExportDataOptions.All | custom numeric format | Excel to HTML
-// Common Searches: Aspose.Cells export Excel to HTML with German formatting | set workbook culture de-DE Aspose.Cells | locale aware number format in HTML export .NET | HtmlSaveOptions ExportDataOptions.All example | preserve Excel culture in HTML output
-// Developer Intent: Create an HTML representation of an Excel workbook that automatically uses German numeric separators.
-// Use Cases: Produce web‑ready reports for German audiences where currency and decimal values follow local conventions. | Render an Excel worksheet as HTML while keeping hidden rows/columns visible via ExportDataOptions.All. | Automate batch conversion of localized Excel files to HTML for multilingual portals.
-// AI Prompts: Show how to export an Excel workbook to HTML with French (fr‑FR) culture using Aspose.Cells. | Provide C# code to apply a locale‑aware custom number format to a range before saving as HTML. | Explain the impact of HtmlSaveOptions.ExportDataOptions on the generated HTML in Aspose.Cells.
+// Title: Export Excel to HTML with French locale number formatting using Aspose.Cells for .NET
+// Description: Demonstrates how to set a workbook's CultureInfo to French (fr-FR) in Aspose.Cells, apply a built‑in numeric format, configure HtmlSaveOptions, and save the sheet as HTML so numbers appear with French thousand and decimal separators.
+// Keywords: Aspose.Cells | HTML export | locale number formatting | French culture | C# | Workbook CultureInfo | HtmlSaveOptions | Excel to HTML | number format #,##0.00 | .NET
+// Common Searches: Aspose.Cells export Excel to HTML with French formatting | set workbook culture for HTML output Aspose.Cells | locale specific number format in HTML export .NET | how to apply French number format when saving as HTML | HtmlSaveOptions culture info Aspose.Cells
+// Developer Intent: Generate an HTML file from an Excel workbook where numeric cells follow the French (fr-FR) number formatting rules.
+// Use Cases: Create web‑ready financial reports for French‑speaking audiences. | Automate multi‑regional dashboards that display numbers with correct local separators. | Produce HTML versions of spreadsheets while preserving culture‑aware numeric formatting.
+// AI Prompts: Show me C# code to export an Aspose.Cells workbook to HTML using German (de-DE) number formatting. | How can I keep custom number formats when saving an Excel sheet as HTML with Aspose.Cells? | Explain the steps to change a workbook's culture to Japanese and export it to HTML in .NET.
 
-using System;
 using System.Globalization;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+// Demonstrates how to set a workbook's CultureInfo to French (fr-FR) in Aspose.Cells, apply a built‑in numeric format, configure HtmlSaveOptions, and save the sheet as HTML so numbers appear with French thousand and decimal separators.
+class ExportExcelToHtmlWithLocale
 {
-    // Demonstrates how to set a workbook's CultureInfo to de‑DE, apply a locale‑aware numeric style, configure HtmlSaveOptions with ExportDataOptions.All, and save the sheet as an HTML file that displays German‑style separators.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Set the workbook culture to German (Germany) – this will affect number formatting
-            workbook.Settings.CultureInfo = new CultureInfo("de-DE");
+        // Set the workbook culture to French (France) – this will affect number formatting
+        workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Get the first worksheet and put a numeric value
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue(1234.56);
 
-            // Put a numeric value into a cell
-            sheet.Cells["A1"].PutValue(12345.67);
+        // Apply a number format that uses thousand separator and two decimal places
+        // Built‑in format 10 corresponds to "#,##0.00"
+        Style style = sheet.Cells["A1"].GetStyle();
+        style.Number = 10;
+        sheet.Cells["A1"].SetStyle(style);
 
-            // Apply a numeric format that respects the culture (e.g., thousand separator, decimal separator)
-            Style style = sheet.Cells["A1"].GetStyle();
-            style.Custom = "#,##0.00";   // Custom format; separators will follow the set culture
-            sheet.Cells["A1"].SetStyle(style);
+        // Configure HTML save options (export all data)
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.ExportDataOptions = HtmlExportDataOptions.All;
 
-            // Configure HTML save options (export all data)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                ExportDataOptions = HtmlExportDataOptions.All
-            };
-
-            // Save the workbook as an HTML file
-            workbook.Save("ExportedWithLocale.html", htmlOptions);
-        }
+        // Save the workbook as HTML; the numbers will be formatted according to the French locale
+        workbook.Save("ExportedWithLocale.html", htmlOptions);
     }
 }

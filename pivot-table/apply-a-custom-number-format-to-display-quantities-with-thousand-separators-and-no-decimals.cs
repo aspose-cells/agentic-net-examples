@@ -1,10 +1,10 @@
-// Title: C# Aspose.Cells Example – Set "#,##0" Number Format on Chart Data Labels (Thousand Separator, No Decimals)
-// Description: This .NET sample builds a workbook, inserts category and quantity rows, creates a column chart, turns on data‑label values, and applies the number format "#,##0" so the labels show commas as thousand separators and omit decimal places, then saves the file as NumberFormatWithThousandSeparator.xlsx.
-// Keywords: Aspose.Cells | C# .NET | custom number format | thousand separator | #,##0 | chart data labels | column chart | Excel export | format numbers in chart | Aspose.Cells number formatting
-// Common Searches: Aspose.Cells set number format for chart labels | C# apply thousand separator to Excel chart data labels | How to use "#,##0" format in Aspose.Cells | format chart values without decimals Aspose.Cells .NET | custom number format for series data labels C#
-// Developer Intent: The developer wants chart data‑label values to display with commas as thousand separators and without any decimal digits.
-// Use Cases: Financial summary workbook where column chart labels need comma‑separated amounts for clarity. | Inventory report exporting to Excel with readable quantity labels on charts. | Sales dashboard that presents large numbers in charts without fractional parts. | Automated reporting tool that standardizes number appearance across generated spreadsheets.
-// AI Prompts: Generate C# code using Aspose.Cells to apply the "#,##0" format to column chart data labels. | Show how to enable data labels and set a thousand‑separator number format in an Aspose.Cells workbook. | Explain the steps to customize chart label formatting in Aspose.Cells for .NET.
+// Title: C# – Apply "#,##0" number format to chart data labels with Aspose.Cells
+// Description: Creates a workbook, fills a Category‑Quantity table, adds a column chart, enables data‑label values and sets the NumberFormat property to "#,##0" so quantities appear with thousand separators and no decimal places, then saves the file as NumberFormatChart.xlsx.
+// Keywords: Aspose.Cells chart number format | C# thousand separator format | Excel chart data labels formatting | remove decimals from chart values | .NET Aspose.Cells custom format | NumberFormat property chart series
+// Common Searches: Aspose.Cells set chart data label number format | C# format chart values with commas | How to hide decimals in Aspose.Cells chart labels | Apply custom number format to Excel chart using Aspose.Cells | Thousand separator for chart data labels .NET
+// Developer Intent: Format chart data‑label numbers with commas and no decimal places using Aspose.Cells for .NET.
+// Use Cases: Improve readability of large numeric values in column charts. | Generate Excel reports where chart labels show whole numbers only. | Maintain consistent numeric presentation across multiple charts programmatically.
+// AI Prompts: Write C# code that creates a line chart with Aspose.Cells and applies the "#,##0" format to its data labels. | Show how to change the number format of pie‑chart data labels to include thousand separators using Aspose.Cells for .NET. | Provide an example of setting a custom number format for a chart series and exporting the workbook with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
@@ -12,12 +12,12 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsNumberFormatDemo
 {
-    // This .NET sample builds a workbook, inserts category and quantity rows, creates a column chart, turns on data‑label values, and applies the number format "#,##0" so the labels show commas as thousand separators and omit decimal places, then saves the file as NumberFormatWithThousandSeparator.xlsx.
+    // Creates a workbook, fills a Category‑Quantity table, adds a column chart, enables data‑label values and sets the NumberFormat property to "#,##0" so quantities appear with thousand separators and no decimal places, then saves the file as NumberFormatChart.xlsx.
     public class Program
     {
         public static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
@@ -45,7 +45,7 @@ namespace AsposeCellsNumberFormatDemo
             series.DataLabels.NumberFormat = "#,##0";
 
             // Save the workbook
-            workbook.Save("NumberFormatWithThousandSeparator.xlsx");
+            workbook.Save("NumberFormatChart.xlsx");
         }
     }
 }

@@ -1,38 +1,42 @@
-// Title: Move a worksheet shape to the back (Z‑order) with Aspose.Cells for .NET (C#)
-// Description: This C# example creates a new Workbook, adds a rectangle shape to the first worksheet, uses shape.ToFrontOrBack(1) to send the shape to the back of the Z‑order so underlying cells become visible, and saves the file as ShapeBackDemo.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | shape Z-order | ToFrontOrBack | send shape to back | move shape behind cells | worksheet shape ordering | Aspose.Cells example | shape layering
-// Common Searches: Aspose.Cells move shape to back | How to send a shape behind cells in Aspose.Cells C# | Z‑order shape Aspose.Cells .NET | shape.ToFrontOrBack usage | place shape behind worksheet data Aspose
-// Developer Intent: Place a worksheet shape behind the cell grid so the cells are visible through or above the shape.
-// Use Cases: Add a semi‑transparent watermark rectangle behind data rows. | Insert a background image that stays behind all cell content. | Create layered graphics where a shape must appear behind charts, tables, or other shapes.
-// AI Prompts: Generate C# code that moves any worksheet shape to the back using Aspose.Cells ToFrontOrBack method. | Explain the possible values for ToFrontOrBack and show how to bring a shape to the front after it has been sent to the back. | Provide a C# example that adds a picture shape, sends it to the back, and then adjusts its opacity for a watermark effect.
+// Title: C# – Move a Shape to the Back (Z‑Order) in Aspose.Cells so Cells Appear Through It
+// Description: Demonstrates how to create a workbook, add a rectangle shape, set its ZOrderPosition to 0 to send it to the back of the Z‑order hierarchy, and save the file, making the cells underneath visible.
+// Keywords: Aspose.Cells C# shape ZOrderPosition | send shape to back Aspose.Cells | shape layering worksheet | reveal cells behind shape | Aspose.Cells shape order example
+// Common Searches: Aspose.Cells move shape to back C# | how to set ZOrderPosition in Aspose.Cells | make cells visible through shape Aspose.Cells | change shape Z‑order worksheet Aspose.Cells
+// Developer Intent: The developer needs to place a worksheet shape behind other objects so that the underlying cells become visible.
+// Use Cases: Add a watermark shape behind data without obscuring it. | Insert a background image shape while keeping cell values readable. | Reorder overlapping shapes to control visual hierarchy on a sheet.
+// AI Prompts: Write C# code using Aspose.Cells to add a rectangle and send it to the back of the Z‑order. | Explain the purpose of the ZOrderPosition property and how to read or modify it for worksheet shapes. | Provide a sample that adjusts Z‑order positions for multiple shapes in a single worksheet.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This C# example creates a new Workbook, adds a rectangle shape to the first worksheet, uses shape.ToFrontOrBack(1) to send the shape to the back of the Z‑order so underlying cells become visible, and saves the file as ShapeBackDemo.xlsx.
-class MoveShapeToBack
+// Demonstrates how to create a workbook, add a rectangle shape, set its ZOrderPosition to 0 to send it to the back of the Z‑order hierarchy, and save the file, making the cells underneath visible.
+class MoveShapeToBackExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape to the worksheet
-            Shape shape = worksheet.Shapes.AddRectangle(5, 5, 200, 100, 0, 0);
+            // Add a rectangle shape that will cover some cells
+            // Parameters: upper left row, upper left column, upper left row offset (in pixels),
+            // upper left column offset (in pixels), height (in pixels), width (in pixels)
+            Shape shape = worksheet.Shapes.AddRectangle(5, 5, 0, 0, 100, 200);
 
-            // Send the shape to the back of the Z‑order hierarchy (1 = back)
-            shape.ToFrontOrBack(1);
+            // Send the shape to the back of the Z‑order so cells underneath become visible
+            // In Aspose.Cells the Z‑order is controlled by the ZOrderPosition property.
+            // Setting it to 0 places the shape at the back.
+            shape.ZOrderPosition = 0;
 
             // Save the workbook
-            workbook.Save("ShapeBackDemo.xlsx");
+            workbook.Save("ShapeMovedToBack.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

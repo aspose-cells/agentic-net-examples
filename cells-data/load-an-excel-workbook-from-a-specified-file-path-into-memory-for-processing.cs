@@ -1,40 +1,71 @@
-// Title: C# – Load an Excel Workbook from a File Path using Aspose.Cells
-// Description: Demonstrates how to instantiate an Aspose.Cells Workbook in .NET by passing a full file path to the Workbook constructor. The example shows loading the workbook into memory, accessing the first worksheet, and reading cell A1 without locking the source file.
-// Keywords: Aspose.Cells load workbook C# | open Excel file .NET | Workbook constructor file path | read Excel cell A1 Aspose | load Excel into memory C#
-// Common Searches: How to open an .xlsx file with Aspose.Cells in C# | Load workbook from specific path Aspose.Cells .NET | Get worksheet name after loading Excel file Aspose | Read cell value after opening workbook Aspose.Cells
-// Developer Intent: Create a Workbook object from a local Excel file for further manipulation.
-// Use Cases: Read data from a known .xlsx file on disk. | Iterate through worksheets after loading a workbook. | Apply formatting, formulas, or calculations to a workbook that has just been opened.
-// AI Prompts: Show C# code that loads an Excel workbook from a path with Aspose.Cells and catches file‑not‑found errors. | Provide an example that opens a workbook, prints the first worksheet name, and returns the value of cell A1. | Explain how to load a workbook into memory without keeping the source file locked using Aspose.Cells.
+// Title: Load an Excel workbook from a file path using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to open an Excel file with Aspose.Cells by passing a full file path to the Workbook constructor, validate the file's existence, handle loading errors, and retrieve basic worksheet information such as the first sheet name and total sheet count.
+// Keywords: Aspose.Cells load workbook | C# open Excel file | Workbook constructor file path | validate Excel file existence | exception handling Aspose.Cells | read worksheet names C# | Aspose.Cells .NET example
+// Common Searches: How to open an Excel file with Aspose.Cells in C# | Aspose.Cells load workbook from path | C# read first worksheet name using Aspose.Cells | Count worksheets after loading workbook Aspose | Aspose.Cells error handling when file not found
+// Developer Intent: Load an Excel workbook from a specified path into memory so it can be processed programmatically.
+// Use Cases: Open a user‑provided Excel file for data extraction or transformation. | Verify that the target file exists before creating a Workbook object. | Capture and log exceptions that occur during workbook initialization. | Retrieve the name of the first worksheet and the total number of sheets for quick validation.
+// AI Prompts: Write C# code that uses Aspose.Cells to load an Excel file from a given path, prints all worksheet names, and gracefully handles missing‑file or corrupted‑file errors. | Provide a reusable method in C# for opening an Excel workbook with Aspose.Cells that includes file‑existence checks and detailed exception logging.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to instantiate an Aspose.Cells Workbook in .NET by passing a full file path to the Workbook constructor. The example shows loading the workbook into memory, accessing the first worksheet, and reading cell A1 without locking the source file.
-public class WorkbookLoader
+namespace AsposeCellsExamples
 {
-    /// <param name="filePath">Full path to the Excel file.</param>
-    /// <returns>Instance of <see cref="Workbook"/> representing the loaded file.</returns>
-    public Workbook LoadWorkbook(string filePath)
+    // Demonstrates how to open an Excel file with Aspose.Cells by passing a full file path to the Workbook constructor, validate the file's existence, handle loading errors, and retrieve basic worksheet information such as the first sheet name and total sheet count.
+    public class LoadWorkbookDemo
     {
-        // Use the Workbook(string) constructor which opens the file directly.
-        Workbook workbook = new Workbook(filePath);
-        return workbook;
+        /// <param name="filePath">Full path to the Excel file to load.</param>
+        public static void Run(string filePath)
+        {
+            try
+            {
+                // Load the workbook using the constructor that accepts a file path.
+                Workbook workbook = new Workbook(filePath);
+
+                // Example processing: display the name of the first worksheet and total sheet count.
+                Worksheet firstSheet = workbook.Worksheets[0];
+                Console.WriteLine($"First worksheet name: {firstSheet.Name}");
+                Console.WriteLine($"Total worksheets: {workbook.Worksheets.Count}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+            }
+        }
     }
-}
 
-// Example usage
-class Program
-{
-    static void Main()
+    public class Program
     {
-        string excelPath = @"C:\Data\Sample.xlsx";
+        public static void Main(string[] args)
+        {
+            string filePath;
 
-        WorkbookLoader loader = new WorkbookLoader();
-        Workbook wb = loader.LoadWorkbook(excelPath);
+            if (args.Length > 0)
+            {
+                filePath = args[0];
+            }
+            else
+            {
+                // Provide a default path or prompt the user.
+                Console.Write("Enter the full path to the Excel file: ");
+                filePath = Console.ReadLine();
+            }
 
-        // Access the first worksheet to demonstrate that the workbook is loaded.
-        Worksheet sheet = wb.Worksheets[0];
-        Console.WriteLine($"Loaded worksheet name: {sheet.Name}");
-        Console.WriteLine($"Cell A1 value: {sheet.Cells["A1"].StringValue}");
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                Console.WriteLine("No file path provided.");
+                return;
+            }
+
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
+
+            // Run the demo with the validated file path.
+            LoadWorkbookDemo.Run(filePath);
+        }
     }
 }

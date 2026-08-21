@@ -1,15 +1,15 @@
-// Title: Apply Conditional Freeze Panes to Worksheets Starting with “Report” (Aspose.Cells C#)
-// Description: Shows how to generate a workbook, add multiple sheets, and programmatically freeze the top row and left column (cell B2) only on worksheets whose names begin with the prefix “Report”, using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | FreezePanes | conditional freeze | worksheet name prefix | Report sheet | top row left column | B2 freeze | programmatic freeze panes
-// Common Searches: Aspose.Cells freeze panes based on sheet name | C# conditional FreezePanes example | Freeze top row and column only on certain worksheets | How to apply FreezePanes to sheets starting with Report | Conditional worksheet freeze in .NET
-// Developer Intent: Freeze the first row and column exclusively on sheets whose titles start with “Report”.
-// Use Cases: Automated monthly reports where each report tab stays anchored for quick navigation while data tabs scroll freely. | Financial statement exports that lock header rows on report sheets but leave raw data sheets fully scrollable. | Dashboard workbooks that apply a frozen pane to every analysis view prefixed with “Report” to improve readability.
-// AI Prompts: Generate C# code with Aspose.Cells that freezes at B2 on every worksheet whose name starts with “Report”, ignoring case. | Provide a .NET example that conditionally calls FreezePanes based on a worksheet name prefix. | Explain how to change the freeze location to C3 for sheets matching the “Report” prefix in the given Aspose.Cells snippet.
+// Title: Conditional Freeze Panes on Worksheets Starting with “Report” – Aspose.Cells for .NET
+// Description: C# example that creates a workbook, adds three sheets (two named with the "Report" prefix), loops through all worksheets, and applies FreezePanes at cell C3 (3 rows × 3 columns) only to sheets whose names begin with "Report" before saving the file.
+// Keywords: Aspose.Cells | .NET | C# | freeze panes | conditional freeze | worksheet name prefix | FreezePanes method | Excel automation | Report sheet | Excel workbook generation
+// Common Searches: Aspose.Cells freeze panes based on sheet name | How to apply FreezePanes only to worksheets starting with Report | Conditional FreezePanes C# Aspose.Cells | Freeze rows and columns on specific Excel sheets using Aspose | Apply FreezePanes to multiple sheets in .NET
+// Developer Intent: Apply FreezePanes to every worksheet whose name starts with "Report" while leaving other sheets unchanged.
+// Use Cases: Automated monthly reports where each report tab needs header rows and columns frozen for quick navigation. | Exported data workbooks where only the report sheets receive frozen panes, keeping data sheets fully scrollable. | Template generation that automatically adds a predefined freeze layout to any sheet prefixed with "Report".
+// AI Prompts: Generate Aspose.Cells C# code to freeze panes at D4 on all worksheets whose name contains "Summary". | Create a reusable method that accepts a Workbook, a name prefix, a cell address, and row/column counts, then applies FreezePanes to matching sheets. | Show how to apply different freeze pane settings to worksheets based on multiple naming patterns (e.g., "Report", "Data", "Summary") using Aspose.Cells.
 
 using Aspose.Cells;
 using System;
 
-// Shows how to generate a workbook, add multiple sheets, and programmatically freeze the top row and left column (cell B2) only on worksheets whose names begin with the prefix “Report”, using Aspose.Cells for .NET.
+// C# example that creates a workbook, adds three sheets (two named with the "Report" prefix), loops through all worksheets, and applies FreezePanes at cell C3 (3 rows × 3 columns) only to sheets whose names begin with "Report" before saving the file.
 class ConditionalFreezeDemo
 {
     static void Main()
@@ -27,8 +27,8 @@ class ConditionalFreezeDemo
         {
             if (sheet.Name.StartsWith("Report", StringComparison.OrdinalIgnoreCase))
             {
-                // Freeze the top row and left column (freeze at cell B2)
-                sheet.FreezePanes("B2", 1, 1);
+                // Freeze panes at cell C3 with 3 frozen rows and 3 frozen columns
+                sheet.FreezePanes("C3", 3, 3);
             }
         }
 

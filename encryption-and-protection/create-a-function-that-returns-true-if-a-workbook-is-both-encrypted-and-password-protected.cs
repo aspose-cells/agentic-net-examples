@@ -1,76 +1,63 @@
-// Title: C# – Check if an Excel workbook is encrypted and password‑protected with Aspose.Cells
-// Description: A C# helper method that validates the file path, detects encryption via FileFormatUtil.DetectFileFormat, loads the workbook with LoadOptions when required, and uses Workbook.IsWorkbookProtectedWithPassword to return true only when the workbook is both encrypted and password‑protected.
-// Keywords: Aspose.Cells | C# workbook encryption detection | FileFormatUtil DetectFileFormat | Workbook.IsWorkbookProtectedWithPassword | encrypted Excel file check | password protected workbook .NET | Excel security validation Aspose | load encrypted workbook Aspose.Cells
-// Common Searches: Aspose.Cells detect encrypted Excel file | C# check if workbook is password protected | IsWorkbookProtectedWithPassword example | determine if Excel file is encrypted and protected using Aspose.Cells | detect encryption before loading workbook Aspose.Cells .NET
-// Developer Intent: The developer wants to know whether a given workbook file is both encrypted and protected with a password.
-// Use Cases: Validate security of uploaded Excel files before processing them in a web service. | Reject or flag workbooks that lack encryption or password protection in compliance‑driven applications. | Log encryption and protection status for a batch of workbooks during nightly audits.
-// AI Prompts: Write unit tests for IsWorkbookEncryptedAndProtected covering encrypted‑protected, encrypted‑unprotected, unencrypted‑protected, and missing file scenarios. | Generate C# code that scans a directory, calls IsWorkbookEncryptedAndProtected for each file, and writes the results to a CSV log. | Explain the difference between Workbook.IsWorkbookProtectedWithPassword and individual worksheet protection settings in Aspose.Cells.
+// Title: C# – Verify Excel Workbook Is Encrypted and Password‑Protected with Aspose.Cells
+// Description: A C# utility that loads an Excel file using Aspose.Cells LoadOptions, checks Workbook.Settings.IsEncrypted and Workbook.IsWorkbookProtectedWithPassword, and returns true only when the workbook is both encrypted and password‑protected. Includes file‑existence validation and exception handling.
+// Keywords: Aspose.Cells C# encryption check | Workbook.IsWorkbookProtectedWithPassword example | LoadOptions password Excel .NET | detect encrypted Excel file | verify workbook protection status | C# Excel security validation | Aspose.Cells encrypted workbook detection
+// Common Searches: how to check if Excel file is encrypted with Aspose.Cells | Aspose.Cells determine workbook password protection | C# load encrypted workbook using password | IsWorkbookProtectedWithPassword usage | verify both encryption and password protection in Excel .NET
+// Developer Intent: Determine whether a given Excel workbook is simultaneously encrypted and protected by a password using Aspose.Cells for .NET.
+// Use Cases: Screen uploaded spreadsheets in a web service to ensure they meet corporate encryption policies. | Automate acceptance criteria for secure data pipelines that require both encryption and password protection. | Log or reject Excel files that lack either encryption or password protection before further processing.
+// AI Prompts: Generate unit tests for IsEncryptedAndPasswordProtected covering correct password, wrong password, and unprotected files. | Extend the method to return an enum indicating none, encrypted only, password only, or both. | Create detailed error messages that differentiate missing file, invalid password, and corrupted workbook scenarios.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace Example
+// A C# utility that loads an Excel file using Aspose.Cells LoadOptions, checks Workbook.Settings.IsEncrypted and Workbook.IsWorkbookProtectedWithPassword, and returns true only when the workbook is both encrypted and password‑protected. Includes file‑existence validation and exception handling.
+public class WorkbookProtectionChecker
 {
-    // A C# helper method that validates the file path, detects encryption via FileFormatUtil.DetectFileFormat, loads the workbook with LoadOptions when required, and uses Workbook.IsWorkbookProtectedWithPassword to return true only when the workbook is both encrypted and password‑protected.
-    public static class WorkbookProtectionHelper
+    /// <param name="filePath">Full path to the workbook file.</param>
+    /// <param name="openPassword">Password used to open the workbook (if it is encrypted).</param>
+    /// <returns>True if the workbook is encrypted and also protected with a password; otherwise false.</returns>
+    public static bool IsEncryptedAndPasswordProtected(string filePath, string openPassword)
     {
-        /// <param name="filePath">Full path to the workbook file.</param>
-        /// <param name="password">
-        /// Password to open the workbook if it is encrypted.
-        /// Pass null or empty string if the workbook is not encrypted.
-        /// </param>
-        /// <returns>True when both conditions are met; otherwise false.</returns>
-        public static bool IsWorkbookEncryptedAndProtected(string filePath, string password = null)
+        // Verify that the file exists to avoid FileNotFoundException.
+        if (!File.Exists(filePath))
         {
-            // Ensure the file exists before attempting any operation.
-            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
-                return false;
+            Console.WriteLine($"File not found: {filePath}");
+            return false;
+        }
 
-            try
+        try
+        {
+            // Load the workbook using the provided password (if any).
+            LoadOptions loadOptions = new LoadOptions
             {
-                // Detect whether the file is encrypted without loading the workbook.
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-                bool isEncrypted = formatInfo.IsEncrypted;
+                Password = openPassword
+            };
 
-                // Load the workbook. Supply the password if it is encrypted.
-                Workbook workbook;
-                if (isEncrypted)
-                {
-                    var loadOptions = new LoadOptions { Password = password };
-                    workbook = new Workbook(filePath, loadOptions);
-                }
-                else
-                {
-                    workbook = new Workbook(filePath);
-                }
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-                // Check if the workbook structure or window is protected with a password.
-                bool isProtected = workbook.IsWorkbookProtectedWithPassword;
+            // Check encryption status.
+            bool isEncrypted = workbook.Settings.IsEncrypted;
 
-                // Return true only when both conditions are satisfied.
-                return isEncrypted && isProtected;
-            }
-            catch (Exception ex)
-            {
-                // Log the exception and return false to indicate failure.
-                Console.Error.WriteLine($"Error processing workbook: {ex.Message}");
-                return false;
-            }
+            // Check workbook protection status.
+            bool isProtectedWithPassword = workbook.IsWorkbookProtectedWithPassword;
+
+            return isEncrypted && isProtectedWithPassword;
+        }
+        catch (Exception ex)
+        {
+            // Handle any errors that occur during loading or checking.
+            Console.WriteLine($"Error processing workbook: {ex.Message}");
+            return false;
         }
     }
 
-    class Program
+    // Example usage
+    public static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Example usage:
-            // args[0] = path to workbook, args[1] = optional password
-            string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
-            string password = args.Length > 1 ? args[1] : null;
+        string path = "protected_encrypted.xlsx";
+        string password = "myPassword";
 
-            bool result = WorkbookProtectionHelper.IsWorkbookEncryptedAndProtected(filePath, password);
-            Console.WriteLine($"Workbook encrypted and protected: {result}");
-        }
+        bool result = IsEncryptedAndPasswordProtected(path, password);
+        Console.WriteLine($"Workbook is both encrypted and password protected: {result}");
     }
 }

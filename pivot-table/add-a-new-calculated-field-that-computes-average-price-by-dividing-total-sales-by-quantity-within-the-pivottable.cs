@@ -1,15 +1,15 @@
-// Title: C# – Add an Average Price calculated field (Sales ÷ Quantity) to an Aspose.Cells PivotTable
-// Description: Creates a workbook with product, sales, and quantity data, builds a PivotTable, adds Product as rows, Sales and Quantity as data fields, defines a calculated field named "AveragePrice" using the formula "=Sales/Quantity", refreshes the cache, recalculates, and saves the result as an Excel file.
-// Keywords: Aspose.Cells | C# | .NET | PivotTable | calculated field | average price | sales divided by quantity | Excel automation | data analysis | RefreshData | CalculateData
-// Common Searches: Aspose.Cells add calculated field to pivot table | C# average price pivot table Aspose.Cells | how to divide sales by quantity in Aspose.Cells pivot | Aspose.Cells refresh pivot after calculated field | create pivot table with custom formula using Aspose.Cells
-// Developer Intent: Generate a PivotTable and insert a calculated field that returns Sales ÷ Quantity.
-// Use Cases: Produce a sales report that shows total sales, total units, and unit price per product. | Build a live dashboard where the average price updates automatically when source data changes. | Export an Excel workbook with a pre‑calculated average price for downstream financial analysis.
-// AI Prompts: Write C# code with Aspose.Cells to add a calculated field called 'AveragePrice' that computes Sales divided by Quantity in a PivotTable. | Explain how to refresh and recalculate a PivotTable after adding a custom calculated field using Aspose.Cells. | Suggest ways to handle division‑by‑zero scenarios for the AveragePrice calculated field in the generated workbook.
+// Title: Create an Average Price Calculated Field (Sales/Quantity) in an Aspose.Cells PivotTable – C#
+// Description: Learn how to use Aspose.Cells for .NET to build a PivotTable, add a calculated field named AveragePrice that divides total Sales by Quantity, format it to two decimal places, refresh the pivot cache, recalculate the data, and save the workbook.
+// Keywords: Aspose.Cells calculated field | C# PivotTable average price | Aspose.Cells format number | Refresh pivot data Aspose.Cells | Add calculated field PivotTable C# | Aspose.Cells PivotTable example | Average price formula Sales/Quantity
+// Common Searches: Aspose.Cells add calculated field to PivotTable | C# calculate average price in PivotTable using Aspose.Cells | format calculated field two decimal places Aspose.Cells | refresh pivot cache after adding calculated field Aspose.Cells | Aspose.Cells PivotTable average price example
+// Developer Intent: Add a calculated field that divides total sales by quantity to display average price in a PivotTable using Aspose.Cells for .NET.
+// Use Cases: Insert a calculated field called AveragePrice with the formula =Sales/Quantity into an existing PivotTable. | Apply the numeric format "#,##0.00" to the calculated field so results show two decimal places. | Refresh the pivot cache and recalculate the PivotTable after adding the calculated field. | Save the workbook to a file (e.g., PivotTable_AveragePrice.xlsx).
+// AI Prompts: Generate C# code with Aspose.Cells that creates a PivotTable and adds a calculated field named AveragePrice (Sales divided by Quantity). | Show how to set a two‑decimal‑place number format for a calculated field in an Aspose.Cells PivotTable using C#. | Explain the steps to refresh pivot data and recalculate after adding a calculated field in Aspose.Cells for .NET.
 
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Creates a workbook with product, sales, and quantity data, builds a PivotTable, adds Product as rows, Sales and Quantity as data fields, defines a calculated field named "AveragePrice" using the formula "=Sales/Quantity", refreshes the cache, recalculates, and saves the result as an Excel file.
+// Learn how to use Aspose.Cells for .NET to build a PivotTable, add a calculated field named AveragePrice that divides total Sales by Quantity, format it to two decimal places, refresh the pivot cache, recalculate the data, and save the workbook.
 class Program
 {
     static void Main()
@@ -40,18 +40,21 @@ class Program
         PivotTable pivot = sheet.PivotTables[pivotIndex];
 
         // Add fields to the pivot table
-        pivot.AddFieldToArea(PivotFieldType.Row, "Product");
-        pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-        pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
+        pivot.AddFieldToArea(PivotFieldType.Row, "Product");          // Row field
+        pivot.AddFieldToArea(PivotFieldType.Data, "Sales");          // Data field 1
+        pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");       // Data field 2
 
-        // Add a calculated field that computes average price (Sales / Quantity)
-        pivot.AddCalculatedField("AveragePrice", "=Sales/Quantity", true);
+        // Add a calculated field that computes average price = Sales / Quantity
+        pivot.AddCalculatedField("AveragePrice", "=Sales/Quantity");
 
-        // Refresh the pivot cache and calculate the data
+        // Format the calculated field (last added data field) to show two decimal places
+        pivot.DataFields[pivot.DataFields.Count - 1].NumberFormat = "#,##0.00";
+
+        // Refresh the pivot cache and calculate the pivot data
         pivot.RefreshData();
         pivot.CalculateData();
 
-        // Save the workbook with the pivot table and calculated field
+        // Save the workbook
         workbook.Save("PivotTable_AveragePrice.xlsx");
     }
 }

@@ -1,46 +1,35 @@
-// Title: Handle Missing Header Background Image Safely with Aspose.Cells PageSetup (C#)
-// Description: Demonstrates how to create a workbook, verify the existence of a PNG file, read its bytes safely, and call PageSetup.SetPicture only when valid data is available. If the image is absent or unreadable, a text header is applied. All steps—including file I/O, picture insertion, and workbook saving—are wrapped in try/catch blocks to prevent unhandled exceptions.
-// Keywords: Aspose.Cells | C# | PageSetup.SetPicture | header background image | missing image file | error handling | fallback header text | exception safe workbook | byte array image load | worksheet header picture
-// Common Searches: Aspose.Cells set header image missing file | PageSetup SetPicture error handling C# | fallback to text header Aspose.Cells | avoid exception when background image not found | how to check image existence before SetPicture
-// Developer Intent: Add robust error handling to prevent exceptions when the background image stream is missing or cannot be read while configuring a worksheet header picture with Aspose.Cells.
-// Use Cases: Validate the image path before attempting to load it. | Read the image into a byte array inside a try/catch block and return null on failure. | Invoke PageSetup.SetPicture only when a non‑empty byte array is present. | Provide a default text header as a graceful fallback when the image is unavailable. | Log or display informative messages for missing files, read errors, picture‑setting failures, and save issues.
-// AI Prompts: Create a reusable C# method that loads an image file into a byte[] with full exception handling and returns null on failure for use with Aspose.Cells PageSetup.SetPicture. | Show how to replace the hard‑coded fallback header text with a configurable template that can include workbook metadata. | Generate code that writes detailed error information to a log file instead of the console while handling missing background images in Aspose.Cells page setup.
+// Title: Safely Set Header Image in Aspose.Cells .NET – Handle Missing Files and Avoid Exceptions
+// Description: Demonstrates how to create a workbook, verify the existence of a header image, load its bytes safely, and apply PageSetup.SetPicture only when valid data is available. The example clears the header placeholder when the image is absent and includes comprehensive try/catch blocks to ensure the workbook saves without runtime errors.
+// Keywords: Aspose.Cells header image | SetPicture safe usage | missing image handling .NET | page setup header picture error handling | prevent exception Aspose.Cells | C# workbook header graphic | conditional header image Aspose
+// Common Searches: Aspose.Cells set header picture only if file exists | avoid exception when image not found in PageSetup.SetPicture | C# check for image before adding to worksheet header | how to skip header graphic in Aspose.Cells if missing | error handling for background image in Aspose.Cells
+// Developer Intent: Add robust logic that sets a worksheet header picture only when a valid image stream is present, otherwise clears the placeholder to prevent runtime exceptions.
+// Use Cases: Generating reports with an optional company logo that may not be deployed on every server. | Creating workbook templates that conditionally include a header graphic without crashing if the file is absent. | Running batch workbook creation where missing images are logged and processing continues uninterrupted.
+// AI Prompts: Write C# code using Aspose.Cells to add a footer picture after confirming the image file exists and handling any I/O errors. | Refactor the sample to extract image loading into a reusable method while guaranteeing the workbook saves even when the image is missing. | Create unit tests for the safe header image handling logic in an Aspose.Cells workbook, covering scenarios with existing and missing image files.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsBackgroundImageHandling
 {
-    // Demonstrates how to create a workbook, verify the existence of a PNG file, read its bytes safely, and call PageSetup.SetPicture only when valid data is available. If the image is absent or unreadable, a text header is applied. All steps—including file I/O, picture insertion, and workbook saving—are wrapped in try/catch blocks to prevent unhandled exceptions.
-    public class PageSetupBackgroundImageErrorHandlingDemo
+    // Demonstrates how to create a workbook, verify the existence of a header image, load its bytes safely, and apply PageSetup.SetPicture only when valid data is available. The example clears the header placeholder when the image is absent and includes comprehensive try/catch blocks to ensure the workbook saves without runtime errors.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
-            PageSetup pageSetup = worksheet.PageSetup;
 
-            // Path to the background image (could be missing)
-            string imagePath = "header_background.png";
+            // Add some sample data
+            worksheet.Cells["A1"].PutValue("Demo of safe background image handling");
 
+            // Path to the header image (can be missing)
+            string imagePath = "header.png";
+
+            // Load image data safely
             byte[] imageData = null;
-
-            // Attempt to read the image file safely
             if (File.Exists(imagePath))
             {
                 try
@@ -49,47 +38,48 @@ namespace AsposeCellsExamples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error reading image file: {ex.Message}");
+                    Console.WriteLine($"Failed to read image file: {ex.Message}");
                 }
             }
             else
             {
-                Console.WriteLine($"Image file not found: {imagePath}");
+                Console.WriteLine($"Image file \"{imagePath}\" not found. Header picture will be skipped.");
             }
 
-            // Only set the picture if we have valid image data
+            // Configure page setup
+            PageSetup pageSetup = worksheet.PageSetup;
+
+            // If image data is valid, set it as a header picture; otherwise, avoid calling SetPicture
             if (imageData != null && imageData.Length > 0)
             {
                 try
                 {
-                    // Set picture in the center section of the header (isFirst=false, isEven=false, isHeader=true, section=1)
-                    Picture picture = pageSetup.SetPicture(false, false, true, 1, imageData);
-                    // Use the picture placeholder in the header
-                    pageSetup.SetHeader(1, "&G"); // &G prints the picture
-                    Console.WriteLine("Header background image set successfully.");
+                    // Parameters: isFirstPage, isEvenPage, isHeader, section (1 = center), image bytes
+                    pageSetup.SetPicture(false, false, true, 1, imageData);
+                    // Insert picture placeholder into the header
+                    pageSetup.SetHeader(1, "&G");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error setting header picture: {ex.Message}");
+                    Console.WriteLine($"Error while setting header picture: {ex.Message}");
                 }
             }
             else
             {
-                // Fallback: set simple text header when image is unavailable
-                pageSetup.SetHeader(1, "Sample Header Text");
-                Console.WriteLine("Header picture not set; using text header instead.");
+                // Ensure header does not contain a picture placeholder that could cause an exception
+                pageSetup.SetHeader(1, string.Empty);
             }
 
             // Save the workbook
-            string outputPath = "PageSetupBackgroundImageDemo.xlsx";
+            string outputPath = "WorkbookWithHeader.xlsx";
             try
             {
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
             }
         }
     }

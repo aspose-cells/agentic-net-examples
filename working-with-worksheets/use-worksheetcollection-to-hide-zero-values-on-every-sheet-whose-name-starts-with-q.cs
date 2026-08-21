@@ -1,34 +1,75 @@
-// Title: Aspose.Cells C# – Hide Zero Values on Worksheets Starting with “Q” via WorksheetCollection
-// Description: Load an Excel file, iterate its WorksheetCollection, and set DisplayZeros = false on every sheet whose name begins with "Q" (case‑insensitive). The workbook is then saved with the zero values hidden on the selected worksheets.
-// Keywords: Aspose.Cells hide zeros C# | WorksheetCollection iterate | DisplayZeros property | conditional worksheet formatting | hide zero values Excel .NET | filter worksheets by name | case‑insensitive sheet prefix
-// Common Searches: Aspose.Cells hide zero values on specific sheets | C# hide zeros on worksheets that start with Q | set DisplayZeros for selected worksheets Aspose | iterate worksheets and apply display settings | how to suppress zero values in Aspose.Cells workbook
-// Developer Intent: Programmatically suppress zero values on every worksheet whose name starts with the letter “Q”.
-// Use Cases: Quarterly financial reports (Q1, Q2, …) where zero amounts should be invisible. | Dashboard workbooks that use Q‑prefixed tabs and need a cleaner visual layout. | Automated workbook preparation before distribution, removing zero clutter from targeted sheets.
-// AI Prompts: Generate C# code using Aspose.Cells to hide zero values on all worksheets whose names start with "Q" and save the result. | Explain the DisplayZeros property and demonstrate how to apply it conditionally based on worksheet names. | Show a case‑insensitive example of filtering worksheets by prefix and disabling zero display in Aspose.Cells for .NET.
+// Title: Hide Zero Values on Worksheets Starting with “Q” Using Aspose.Cells (C#)
+// Description: Loads an Excel workbook, iterates its WorksheetCollection, and disables the DisplayZeros property on every sheet whose name begins with "Q" (case‑insensitive). The modified workbook is saved as an XLSX file.
+// Keywords: Aspose.Cells | C# | Hide zero values | DisplayZeros | WorksheetCollection | filter worksheets by name | Excel zero suppression | quarterly sheets | batch workbook processing
+// Common Searches: Aspose.Cells hide zeros on specific worksheets | set DisplayZeros false for sheets starting with Q | C# iterate worksheets and suppress zero values | how to hide zero values in quarterly Excel sheets using Aspose | filter worksheets by prefix and change display settings
+// Developer Intent: Programmatically hide zero values on every worksheet whose name starts with the letter "Q".
+// Use Cases: Prepare quarterly reports (Q1, Q2, Q3, Q4) so that cells containing 0 are not displayed, improving readability for stakeholders. | Create a reusable Excel template where all Q‑prefixed sheets automatically suppress zero values before distribution. | Automate a nightly job that processes multiple workbooks, turning off zero display on every sheet whose name begins with "Q".
+// AI Prompts: Generate C# code with Aspose.Cells that hides zero values on all worksheets whose names start with "Q" and saves the result as XLSX. | Explain how the DisplayZeros property works and how to apply it selectively to worksheets in a workbook. | Provide robust error‑handling patterns for loading a workbook, iterating its WorksheetCollection, and updating display settings with Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Load an Excel file, iterate its WorksheetCollection, and set DisplayZeros = false on every sheet whose name begins with "Q" (case‑insensitive). The workbook is then saved with the zero values hidden on the selected worksheets.
-class HideZeroValues
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads an Excel workbook, iterates its WorksheetCollection, and disables the DisplayZeros property on every sheet whose name begins with "Q" (case‑insensitive). The modified workbook is saved as an XLSX file.
+    public class HideZeroValuesInQSheets
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through all worksheets in the collection
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Entry point for the console application
+        public static void Main(string[] args)
         {
-            // If the worksheet name starts with "Q" (case‑insensitive)
-            if (sheet.Name.StartsWith("Q", StringComparison.OrdinalIgnoreCase))
+            try
             {
-                // Hide zero values on this sheet
-                sheet.DisplayZeros = false;
+                // Expect input and output file paths as command‑line arguments
+                if (args.Length < 2)
+                {
+                    Console.WriteLine("Usage: HideZeroValuesInQSheets <inputFilePath> <outputFilePath>");
+                    return;
+                }
+
+                string inputFilePath = args[0];
+                string outputFilePath = args[1];
+
+                // Verify that the input file exists before attempting to load it
+                if (!File.Exists(inputFilePath))
+                    throw new FileNotFoundException($"Input file not found: {inputFilePath}");
+
+                Run(inputFilePath, outputFilePath);
+                Console.WriteLine($"Workbook processed and saved to: {outputFilePath}");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
-        // Save the workbook with the changes applied
-        workbook.Save("output.xlsx");
+        // Core logic to hide zero values in worksheets whose names start with "Q"
+        public static void Run(string inputFilePath, string outputFilePath)
+        {
+            try
+            {
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(inputFilePath);
+
+                // Iterate through all worksheets in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Hide zero values if the worksheet name starts with "Q"
+                    if (sheet.Name.StartsWith("Q", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sheet.DisplayZeros = false;
+                    }
+                }
+
+                // Save the modified workbook to the desired output file
+                workbook.Save(outputFilePath, SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                // Propagate errors to the caller
+                throw new ApplicationException("Failed to process the workbook.", ex);
+            }
+        }
     }
 }

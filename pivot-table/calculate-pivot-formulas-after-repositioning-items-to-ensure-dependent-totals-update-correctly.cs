@@ -1,58 +1,78 @@
+// Title: Update Pivot Table Totals After Relocating It with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to move a pivot table from one cell range to another using Aspose.Cells for .NET, then invoke CalculateRange, RefreshData, and CalculateData to recalculate totals and keep dependent formulas accurate before saving the workbook.
+// Keywords: Aspose.Cells | C# | .NET | pivot table move | PivotTable.MoveTo | CalculateRange | RefreshData | CalculateData | recalculate pivot | update pivot totals | reposition pivot table | Excel automation | workbook save
+// Common Searches: how to refresh a pivot table after moving it with Aspose.Cells | Aspose.Cells recalculate totals after pivot relocation | C# move pivot table and update formulas | refresh all pivot tables in a workbook Aspose | update dependent totals when pivot address changes
+// Developer Intent: Programmatically move a pivot table to a new address and recalculate its data so that all subtotals and grand totals remain correct.
+// Use Cases: Shift a sales pivot from C3 to E5 in a financial report and ensure totals reflect the new position. | Refresh multiple pivots after a dynamic layout change in a dashboard workbook. | Automate pivot repositioning based on user input while preserving accurate calculations.
+// AI Prompts: Generate C# code that moves an Aspose.Cells pivot table to a specified cell and then refreshes its calculations. | Explain why CalculateRange, RefreshData, and CalculateData are required after PivotTable.MoveTo. | Create a reusable method that accepts a pivot name and target address, moves the pivot, and updates all dependent totals.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotRefreshDemo
+// Demonstrates how to move a pivot table from one cell range to another using Aspose.Cells for .NET, then invoke CalculateRange, RefreshData, and CalculateData to recalculate totals and keep dependent formulas accurate before saving the workbook.
+class Program
 {
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        // -------------------------------------------------
+        // 1. Create a new workbook and add sample data
+        // -------------------------------------------------
+        Workbook workbook = new Workbook();
+        Worksheet dataSheet = workbook.Worksheets[0];
+
+        // Header
+        dataSheet.Cells["A1"].PutValue("Category");
+        dataSheet.Cells["B1"].PutValue("Amount");
+
+        // Sample rows
+        string[] categories = { "A", "B", "A", "C", "B", "C", "A" };
+        for (int i = 0; i < categories.Length; i++)
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet and add sample source data
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Amount");
-            dataSheet.Cells["A2"].PutValue("Fruit");
-            dataSheet.Cells["B2"].PutValue(1200);
-            dataSheet.Cells["A3"].PutValue("Vegetable");
-            dataSheet.Cells["B3"].PutValue(800);
-            dataSheet.Cells["A4"].PutValue("Fruit");
-            dataSheet.Cells["B4"].PutValue(1500);
-            dataSheet.Cells["A5"].PutValue("Vegetable");
-            dataSheet.Cells["B5"].PutValue(900);
-
-            // Add a second worksheet that will host the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-
-            // Create the pivot table (source range, destination cell, name)
-            int pivotIndex = pivotSheet.PivotTables.Add("A1:B5", "C3", "SalesPivot");
-            PivotTable pivot = pivotSheet.PivotTables[pivotIndex];
-
-            // Add fields: Category to rows, Amount to data
-            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-            // Initial calculation of the pivot table range and data
-            pivot.CalculateRange();   // Ensure the range reflects the source data
-            pivot.RefreshData();      // Pull latest source data into the pivot cache
-            pivot.CalculateData();    // Populate the pivot table cells
-
-            // Move the pivot table to a new location (repositioning items)
-            pivot.MoveTo("E10");      // New top‑left cell for the pivot table
-
-            // After moving, recalculate range and data so dependent totals update correctly
-            pivot.CalculateRange();   // Re‑evaluate the pivot's range after relocation
-            pivot.RefreshData();      // Refresh cache in case source data changed
-            pivot.CalculateData();    // Re‑calculate totals and formulas
-
-            // Optionally refresh all pivot tables in the workbook (covers any other pivots)
-            workbook.Worksheets.RefreshPivotTables();
-
-            // Save the workbook (lifecycle: save)
-            workbook.Save("PivotRefreshAfterMove.xlsx");
+            dataSheet.Cells[i + 1, 0].PutValue(categories[i]);          // Column A
+            dataSheet.Cells[i + 1, 1].PutValue((i + 1) * 100);        // Column B
         }
+
+        // -------------------------------------------------
+        // 2. Create a pivot table on a separate sheet
+        // -------------------------------------------------
+        Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+        // Define source range (including header row)
+        string sourceRange = $"A1:B{categories.Length + 1}";
+        // Place pivot table initially at C3
+        int pivotIndex = pivotSheet.PivotTables.Add(sourceRange, "C3", "SalesPivot");
+        PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+
+        // Add fields: Category as row, Amount as data
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+
+        // -------------------------------------------------
+        // 3. Initial calculation of the pivot table
+        // -------------------------------------------------
+        pivotTable.CalculateRange();   // Ensure the pivot range is correct
+        pivotTable.RefreshData();      // Pull data from the source
+        pivotTable.CalculateData();    // Compute totals, subtotals, etc.
+
+        // -------------------------------------------------
+        // 4. Reposition the pivot table to a new location
+        // -------------------------------------------------
+        // Move the whole pivot table to cell E5
+        pivotTable.MoveTo("E5");
+
+        // -------------------------------------------------
+        // 5. Re‑calculate after moving to update dependent totals
+        // -------------------------------------------------
+        pivotTable.CalculateRange();   // Re‑evaluate the pivot's range after move
+        pivotTable.RefreshData();      // Refresh data source (necessary after move)
+        pivotTable.CalculateData();    // Re‑calculate totals so dependent formulas are correct
+
+        // Optional: refresh all pivot tables in the workbook (covers any other pivots)
+        workbook.Worksheets.RefreshPivotTables();
+
+        // -------------------------------------------------
+        // 6. Save the workbook
+        // -------------------------------------------------
+        workbook.Save("PivotRepositioned.xlsx");
     }
 }

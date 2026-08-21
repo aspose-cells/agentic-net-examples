@@ -1,71 +1,44 @@
-// Title: C# – Export a Single Worksheet to a Tab‑Delimited UTF‑8 TXT File with Aspose.Cells
-// Description: Shows how to pick a worksheet, copy it into a temporary workbook, configure TxtSaveOptions for a tab separator and UTF‑8 encoding, and write the sheet to a .txt file.
-// Keywords: Aspose.Cells | C# export worksheet to txt | tab delimited text | UTF-8 encoding | TxtSaveOptions | single sheet export | Excel to txt conversion | .NET Aspose.Cells example | save worksheet as text file
-// Common Searches: Aspose.Cells export specific sheet to txt | C# save worksheet as tab separated values | TxtSaveOptions tab delimiter example | how to export only one worksheet to UTF‑8 text file | Aspose.Cells .NET export active sheet to txt
-// Developer Intent: Save a selected worksheet as a UTF‑8 encoded, tab‑separated text file.
-// Use Cases: Create a plain‑text report of product data from a particular sheet for downstream analytics. | Generate a tab‑separated feed for a legacy system that accepts only UTF‑8 text files. | Extract a single sheet from a large workbook to share with non‑Excel users.
-// AI Prompts: Write C# code using Aspose.Cells that exports the active worksheet to a .txt file with tab delimiters and UTF‑8 encoding, ensuring only that sheet is saved. | Provide an Aspose.Cells for .NET example that copies a specific worksheet into a new workbook and saves it as a tab‑delimited UTF‑8 text file. | Explain how to set TxtSaveOptions for tab separation and UTF‑8 encoding when converting a worksheet to a TXT file.
+// Title: Export a single worksheet to a UTF‑8 tab‑delimited TXT file using Aspose.Cells for .NET
+// Description: Demonstrates how to set a worksheet as active, configure TxtSaveOptions with a tab separator and UTF‑8 encoding, and save only that sheet as a TSV‑style text file.
+// Keywords: Aspose.Cells export worksheet txt | C# TxtSaveOptions tab delimiter | UTF-8 TSV export Aspose.Cells | .NET save active sheet as text | worksheet to tab delimited file
+// Common Searches: Aspose.Cells save active worksheet as txt | C# export sheet to tab delimited file UTF-8 | TxtSaveOptions separator tab example | How to export a single sheet to TSV with Aspose.Cells | Set encoding UTF-8 when saving worksheet to text
+// Developer Intent: Save only the chosen worksheet as a UTF‑8 encoded, tab‑separated text file.
+// Use Cases: Create a TSV report from a specific sheet for data exchange with third‑party applications. | Generate a UTF‑8 text dump of a worksheet for bulk import into a database or analytics platform. | Automate per‑sheet exports in a scheduled job where each sheet must be delivered as a separate text file.
+// AI Prompts: Show C# code that exports a selected worksheet to a UTF‑8 tab‑delimited TXT file with Aspose.Cells, ensuring only that sheet is saved. | Explain how to configure TxtSaveOptions for a custom separator and UTF‑8 encoding when saving a worksheet as text. | Provide step‑by‑step instructions to export multiple worksheets individually to separate TSV files using Aspose.Cells.
 
 using System;
 using System.Text;
 using Aspose.Cells;
-using System.IO;
 
-// Shows how to pick a worksheet, copy it into a temporary workbook, configure TxtSaveOptions for a tab separator and UTF‑8 encoding, and write the sheet to a .txt file.
+// Demonstrates how to set a worksheet as active, configure TxtSaveOptions with a tab separator and UTF‑8 encoding, and save only that sheet as a TSV‑style text file.
 class ExportWorksheetToTxt
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and populate it with sample data
-            Workbook workbook = new Workbook();
+        // Create a new workbook and add a second worksheet
+        Workbook workbook = new Workbook();
+        workbook.Worksheets.Add("SecondSheet");
 
-            // First worksheet (will not be exported)
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "FirstSheet";
-            sheet1.Cells["A1"].PutValue("Name");
-            sheet1.Cells["B1"].PutValue("Age");
-            sheet1.Cells["A2"].PutValue("John");
-            sheet1.Cells["B2"].PutValue(30);
+        // Fill data in the first worksheet
+        Worksheet sheet1 = workbook.Worksheets[0];
+        sheet1.Cells["A1"].PutValue("Sheet1");
+        sheet1.Cells["A2"].PutValue(1);
 
-            // Second worksheet (the one we want to export)
-            Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
-            sheet2.Cells["A1"].PutValue("Product");
-            sheet2.Cells["B1"].PutValue("Price");
-            sheet2.Cells["A2"].PutValue("Laptop");
-            sheet2.Cells["B2"].PutValue(999.99);
+        // Fill data in the second worksheet (the one we will export)
+        Worksheet sheet2 = workbook.Worksheets[1];
+        sheet2.Cells["A1"].PutValue("Sheet2");
+        sheet2.Cells["A2"].PutValue(2);
 
-            // Set the second worksheet as the active sheet
-            workbook.Worksheets.ActiveSheetIndex = sheet2.Index;
+        // Make the second worksheet the active sheet so only it will be exported
+        workbook.Worksheets.ActiveSheetIndex = 1; // index of "SecondSheet"
 
-            // Create a temporary workbook containing only the active worksheet
-            Workbook exportWb = new Workbook();
-            exportWb.Worksheets.Clear();                     // remove default sheet
-            exportWb.Worksheets.AddCopy(sheet2.Name);        // copy the active sheet by name
+        // Configure TxtSaveOptions for tab‑delimited UTF‑8 output
+        TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Tsv);
+        saveOptions.Separator = '\t';          // tab delimiter
+        saveOptions.Encoding = Encoding.UTF8; // UTF‑8 encoding
+        // ExportAllSheets remains false (default), so only the active sheet is saved
 
-            // Configure TxtSaveOptions: tab delimiter, UTF‑8 encoding
-            TxtSaveOptions saveOptions = new TxtSaveOptions
-            {
-                Separator = '\t',               // use tab as delimiter
-                Encoding = Encoding.UTF8        // UTF‑8 encoding
-            };
-
-            // Define output path and ensure the directory exists
-            string outputPath = "SecondSheet.txt";
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the active worksheet to a TXT file
-            exportWb.Save(outputPath, saveOptions);
-            Console.WriteLine($"Worksheet exported successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the active worksheet to a TXT file
+        workbook.Save("SecondSheet.txt", saveOptions);
     }
 }

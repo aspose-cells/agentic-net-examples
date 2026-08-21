@@ -1,35 +1,36 @@
-// Title: C# – Export Formula Errors to CSV with Cell Address, Error Type and Timestamp using Aspose.Cells
-// Description: Loads an Excel workbook, calculates all formulas, scans each used cell for error values via CellRichValue, and writes a CSV file that records the cell address, the Aspose.Cells error enum, and an ISO‑8601 timestamp for every formula error. The workbook can then be saved after processing.
-// Keywords: Aspose.Cells | .NET | C# | formula error log | CSV export | cell address | error type | timestamp | calculate formulas | CellRichValue | Excel automation
-// Common Searches: Aspose.Cells export formula errors to CSV | C# get Excel formula error type and cell address | How to log formula errors with timestamp using Aspose.Cells | Generate error report for Excel workbook .NET | Aspose.Cells calculate formulas and detect errors
-// Developer Intent: Create a CSV report that lists every formula error in a workbook, showing the cell reference, the specific error enum, and the time the report was generated.
-// Use Cases: Audit large spreadsheets for invalid formulas before publishing. | Run a scheduled job that processes uploaded workbooks and stores an error‑log CSV for monitoring. | Provide end‑users a downloadable error report after their Excel files are processed.
-// AI Prompts: Write C# code with Aspose.Cells that iterates all cells, detects formula errors, and writes a CSV containing cell address, error enum, and ISO‑8601 timestamp. | Extend the program to include the worksheet name in each row of the error log. | Add a command‑line option to exclude specific error types (e.g., #DIV/0!) from the CSV report.
+// Title: Export a Timestamped Formula Error Log (Cell Address & Error Type) with Aspose.Cells for .NET
+// Description: Loads an Excel workbook, calculates all formulas while ignoring errors, scans each worksheet's used range, extracts error details from CellRichValue, and writes a CSV‑style file that records the cell address, the error enum, and an ISO‑8601 timestamp before optionally saving the updated workbook.
+// Keywords: Aspose.Cells | C# formula error logging | Excel calculation errors | CellRichValue | CalculationOptions IgnoreError | export error log CSV | timestamped error report | Aspose.Cells .NET | Excel audit | error enum
+// Common Searches: Aspose.Cells log formula errors | export cell error type to CSV C# | retrieve formula error timestamp Aspose | calculate workbook ignoring errors Aspose | get error enum from CellRichValue
+// Developer Intent: Create a CSV (or text) report that lists every formula error in a workbook, including the cell address, the error enum, and the detection timestamp.
+// Use Cases: Generate an audit file after bulk calculations to pinpoint cells that failed. | Provide end‑users with a clear error report for troubleshooting spreadsheet issues. | Automate CI/CD quality gates that abort builds when unexpected formula errors appear. | Archive error history for regulatory compliance or audit trails. | Feed error data into monitoring dashboards to track spreadsheet health over time.
+// AI Prompts: Write C# code using Aspose.Cells to calculate all formulas, ignore errors, and produce a CSV log with cell address, error enum, and ISO‑8601 timestamp. | Show how to iterate through each worksheet's used range, retrieve CellRichValue, and export formula error details to a text file. | Explain configuring CalculationOptions.IgnoreError to continue processing despite errors, then saving both the updated workbook and an error report.
 
 using System;
-using System.Text;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace FormulaErrorLogger
+namespace AsposeCellsFormulaErrorLog
 {
-    // Loads an Excel workbook, calculates all formulas, scans each used cell for error values via CellRichValue, and writes a CSV file that records the cell address, the Aspose.Cells error enum, and an ISO‑8601 timestamp for every formula error. The workbook can then be saved after processing.
+    // Loads an Excel workbook, calculates all formulas while ignoring errors, scans each worksheet's used range, extracts error details from CellRichValue, and writes a CSV‑style file that records the cell address, the error enum, and an ISO‑8601 timestamp before optionally saving the updated workbook.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Path to the workbook to be processed
+            // Path to the source workbook
             string workbookPath = "input.xlsx";
 
-            // Load the workbook (uses the provided load rule)
+            // Load the workbook (create/load rule)
             Workbook workbook = new Workbook(workbookPath);
 
-            // Calculate all formulas so that errors are evaluated
-            workbook.CalculateFormula();
+            // Calculate all formulas, storing errors in cells (ignore errors = true so calculation continues)
+            CalculationOptions calcOptions = new CalculationOptions { IgnoreError = true };
+            workbook.CalculateFormula(calcOptions);
 
-            // Prepare a StringBuilder for the CSV log
-            StringBuilder logBuilder = new StringBuilder();
-            logBuilder.AppendLine("CellAddress,ErrorType,Timestamp");
+            // Prepare a list to hold log entries
+            List<string> errorLog = new List<string>();
+            errorLog.Add("CellAddress,ErrorType,Timestamp");
 
             // Iterate through each worksheet
             foreach (Worksheet sheet in workbook.Worksheets)
@@ -46,28 +47,28 @@ namespace FormulaErrorLogger
                     {
                         Cell cell = cells[row, col];
 
-                        // Retrieve the rich value to check for an error
+                        // Retrieve rich value which contains error information
                         CellRichValue richValue = cell.GetRichValue();
 
                         // If the cell contains an error, log it
-                        if (richValue != null && richValue.ErrorValue != null)
+                        if (richValue != null && richValue.ErrorValue != 0)
                         {
-                            string cellAddress = cell.Name; // e.g., "A1"
-                            string errorType = richValue.ErrorValue.ToString(); // Enum name
+                            string address = cell.Name; // e.g., "A1"
+                            string errorType = richValue.ErrorValue.ToString(); // enum name
                             string timestamp = DateTime.Now.ToString("o"); // ISO 8601 format
 
-                            logBuilder.AppendLine($"{cellAddress},{errorType},{timestamp}");
+                            errorLog.Add($"{address},{errorType},{timestamp}");
                         }
                     }
                 }
             }
 
-            // Write the log to a CSV file
-            string logPath = "FormulaErrorLog.csv";
-            File.WriteAllText(logPath, logBuilder.ToString());
+            // Write the log to a text file
+            string logPath = "FormulaErrorLog.txt";
+            File.WriteAllLines(logPath, errorLog);
 
-            // Optionally, save the workbook (uses the provided save rule)
-            workbook.Save("ProcessedWorkbook.xlsx");
+            // Optionally, save the workbook after calculation (save rule)
+            workbook.Save("output.xlsx");
         }
     }
 }

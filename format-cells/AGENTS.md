@@ -1,11 +1,11 @@
----
+﻿---
 name: Aspose.Cells Cell Formatting Agent
 category: format-cells
 product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Format Excel cells, rows, columns, and ranges in C#
 primary_apis: [Style, Cell.GetStyle, Cell.SetStyle, Workbook.CreateStyle, StyleFlag, Cells.ApplyStyle]
 related_categories: [../cells-data/, ../managing-ranges/, ../rows-and-columns/, ../globalization-and-localization/]
@@ -89,3 +89,4 @@ Verify exact style properties and enums against the installed package. Compile, 
 ## Definition of done
 
 The example is done when target, style attributes, underlying value, expected appearance, persistence, and performance implications are explicit and verified.
+

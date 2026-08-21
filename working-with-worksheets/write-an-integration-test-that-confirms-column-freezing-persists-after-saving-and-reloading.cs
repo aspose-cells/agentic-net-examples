@@ -1,45 +1,58 @@
-// Title: Integration Test: Verify Freeze Panes Persistence After Save/Load with Aspose.Cells for .NET
-// Description: Demonstrates how to create a C# integration test that freezes panes at cell C2, saves the workbook, reloads it, and asserts that the frozen rows and columns are retained using Aspose.Cells' GetFreezedPanes method.
-// Keywords: Aspose.Cells freeze panes test | C# Excel freeze panes persistence | GetFreezedPanes integration test | Aspose.Cells save and reload verification | Excel workbook freeze pane unit test | Aspose.Cells .NET testing
-// Common Searches: Aspose.Cells verify frozen panes after saving | C# integration test for freeze panes persistence | GetFreezedPanes example after workbook reload | How to test freeze pane settings with Aspose.Cells | Aspose.Cells unit test freeze rows and columns
-// Developer Intent: Confirm that frozen rows and columns remain unchanged after a workbook is saved and reopened.
-// Use Cases: Automated regression test to ensure freeze pane settings survive file I/O. | CI pipeline validation for reports that require header rows to stay frozen. | Unit testing of grid components that depend on persistent frozen panes.
-// AI Prompts: Generate an MSTest method that asserts frozen pane properties after saving and loading an Aspose.Cells workbook. | Convert the freeze pane persistence test to xUnit with proper disposal of temporary files. | Create a PowerShell script to compile the project, execute the freeze pane test, and output a pass/fail result.
+// Title: C# Integration Test: Verify FreezePanes Persistence in Aspose.Cells Workbook
+// Description: Creates a temporary workbook, applies FreezePanes to columns A‑C, saves the file, reloads it, and uses GetFreezedPanes to assert that the frozen rows and columns remain unchanged, confirming persistence of pane settings after a save‑load cycle.
+// Keywords: Aspose.Cells | FreezePanes | GetFreezedPanes | C# integration test | worksheet freeze persistence | .NET Excel automation | save and reload workbook | unit test Aspose.Cells
+// Common Searches: Aspose.Cells test frozen columns after save | C# verify FreezePanes persistence | GetFreezedPanes example after reload | integration test for Excel pane freezing | Aspose.Cells FreezePanes unit test
+// Developer Intent: Confirm that column freeze settings survive saving and reloading a workbook using Aspose.Cells for .NET.
+// Use Cases: Automated CI validation that FreezePanes(0,3) is retained in generated reports. | Regression test for Excel exports that rely on frozen columns for user navigation. | Quality‑gate check in a data pipeline to ensure pane freezing is not lost during file serialization.
+// AI Prompts: Generate an MSTest method that creates a workbook, freezes columns A‑C with FreezePanes, saves, reloads, and asserts GetFreezedPanes values. | Write a NUnit test for Aspose.Cells that verifies frozen rows and columns persist after a save‑load operation. | Provide an xUnit example that checks FreezePanes persistence in a temporary Excel file using Aspose.Cells for .NET.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a C# integration test that freezes panes at cell C2, saves the workbook, reloads it, and asserts that the frozen rows and columns are retained using Aspose.Cells' GetFreezedPanes method.
-class FreezePanesIntegrationTest
+namespace AsposeCellsIntegrationTests
 {
-    static void Main()
+    // Creates a temporary workbook, applies FreezePanes to columns A‑C, saves the file, reloads it, and uses GetFreezedPanes to assert that the frozen rows and columns remain unchanged, confirming persistence of pane settings after a save‑load cycle.
+    class FreezePanesPersistenceTest
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a temporary file path for the workbook
+            string tempFile = Path.Combine(Path.GetTempPath(), "FreezePanesTest.xlsx");
 
-        // Freeze panes at cell C2 (row index 1, column index 2) with 1 frozen row and 2 frozen columns
-        sheet.FreezePanes(1, 2, 1, 2);
+            // ---------- Create workbook and freeze columns ----------
+            Workbook workbook = new Workbook();                     // create new workbook
+            Worksheet sheet = workbook.Worksheets[0];               // get first worksheet
 
-        // Save the workbook to a temporary file
-        string tempFile = Path.Combine(Path.GetTempPath(), "FreezePanesTest.xlsx");
-        workbook.Save(tempFile);
+            // Freeze the first three columns (A, B, C). Row index = 0, column index = 3 (D)
+            // frozenRows = 0 (no rows frozen), frozenColumns = 3 (columns A‑C frozen)
+            sheet.FreezePanes(0, 3, 0, 3);
 
-        // Load the workbook back from the file
-        Workbook loadedWorkbook = new Workbook(tempFile);
-        Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
+            // Save the workbook to the temporary file
+            workbook.Save(tempFile);
 
-        // Retrieve freeze pane information from the loaded worksheet
-        bool hasFreeze = loadedSheet.GetFreezedPanes(out int row, out int column, out int frozenRows, out int frozenColumns);
+            // ---------- Load workbook and verify freeze panes ----------
+            Workbook loadedWorkbook = new Workbook(tempFile);       // load saved workbook
+            Worksheet loadedSheet = loadedWorkbook.Worksheets[0]; // get first worksheet
 
-        // Verify that freeze panes were persisted
-        if (!hasFreeze)
-            throw new Exception("Freeze panes were not persisted after reloading the workbook.");
+            // Retrieve freeze pane information
+            bool hasFreeze = loadedSheet.GetFreezedPanes(
+                out int row, out int column, out int frozenRows, out int frozenColumns);
 
-        if (row != 1 || column != 2 || frozenRows != 1 || frozenColumns != 2)
-            throw new Exception($"Freeze pane values mismatch. Expected (1,2,1,2) but got ({row},{column},{frozenRows},{frozenColumns}).");
+            // Validate that the freeze settings persisted
+            if (!hasFreeze)
+                throw new Exception("Freeze panes were not detected after reloading the workbook.");
 
-        Console.WriteLine("Freeze panes persisted correctly after save and reload.");
+            if (row != 0 || column != 3)
+                throw new Exception($"Unexpected freeze position. Expected row=0, column=3 but got row={row}, column={column}.");
+
+            if (frozenRows != 0 || frozenColumns != 3)
+                throw new Exception($"Unexpected frozen size. Expected frozenRows=0, frozenColumns=3 but got frozenRows={frozenRows}, frozenColumns={frozenColumns}.");
+
+            Console.WriteLine("Freeze panes persisted correctly after save and reload.");
+
+            // Clean up temporary file (optional)
+            try { File.Delete(tempFile); } catch { /* ignore cleanup errors */ }
+        }
     }
 }

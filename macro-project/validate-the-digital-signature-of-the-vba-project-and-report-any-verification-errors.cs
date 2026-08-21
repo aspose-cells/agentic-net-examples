@@ -1,40 +1,85 @@
-// Title: Validate VBA Project Digital Signature and Detect Errors with Aspose.Cells for .NET (C#)
-// Description: Loads an .xlsm workbook, determines whether its VBA project is signed, validates the digital signature using Workbook.VbaProject.IsValidSigned, and outputs status or error messages when the signature is invalid or the file has been altered.
-// Keywords: Aspose.Cells | C# VBA signature validation | Workbook.VbaProject.IsSigned | Workbook.VbaProject.IsValidSigned | Excel macro digital signature | detect tampered VBA | signed .xlsm verification | macro security Aspose
-// Common Searches: How to check VBA project signature with Aspose.Cells C# | Validate digital signature of Excel macro using Aspose.Cells | Detect tampered VBA macros in .xlsm files .NET | Aspose.Cells IsSigned vs IsValidSigned | Report VBA signature errors in C#
-// Developer Intent: The developer wants to determine whether a VBA project in an Excel workbook is signed, verify the signature’s validity, and report any verification errors.
-// Use Cases: Prevent processing of workbooks whose VBA macros have been tampered with by validating the digital signature first. | Log signing status and validation results for compliance auditing of macro‑enabled Excel files. | Display user‑friendly messages or halt execution when an unsigned or invalidly signed VBA project is detected. | Integrate signature checks into automated security scans of incoming .xlsm files.
-// AI Prompts: Generate C# code using Aspose.Cells that loads a workbook, checks Workbook.VbaProject.IsSigned, validates the signature with IsValidSigned, and outputs detailed error information if the signature is invalid. | Explain the difference between Workbook.VbaProject.IsSigned and Workbook.VbaProject.IsValidSigned properties and show how to handle unsigned, valid, and invalid VBA projects in a .NET application. | Provide best practices for reporting VBA signature verification errors and integrating signature checks into a macro processing workflow with Aspose.Cells.
+// Title: Validate VBA Project Digital Signature in an Excel .xlsm Workbook with Aspose.Cells for .NET (C#)
+// Description: Loads a signed .xlsm file, confirms a VBA project exists, checks the IsSigned flag, evaluates Workbook.VbaProject.IsValidSigned, and reports verification errors when the signature is invalid or the file has been altered. Includes robust exception handling.
+// Keywords: Aspose.Cells VBA signature validation | C# verify Excel macro digital signature | Workbook.VbaProject.IsSigned | Workbook.VbaProject.IsValidSigned example | detect tampered VBA project | Excel macro security check .NET
+// Common Searches: how to verify VBA project signature using Aspose.Cells C# | check if Excel macro is signed with Aspose.Cells for .NET | detect invalid VBA digital signature in .xlsm file | Aspose.Cells example for VBA signature validation | C# code to report VBA project verification errors
+// Developer Intent: Determine whether a workbook’s VBA project is signed and whether the signature is still valid, then surface any verification errors.
+// Use Cases: Pre‑execution security check to ensure macros come from a trusted source. | Batch audit of .xlsm files to flag workbooks with unsigned or tampered VBA projects. | Logging signature validation results for compliance reporting in automated pipelines.
+// AI Prompts: Generate C# code that opens an .xlsm file with Aspose.Cells, checks workbook.VbaProject.IsSigned, evaluates IsValidSigned, and prints clear status messages with error handling. | Show how to extract and log detailed verification error information when a VBA project's digital signature fails validation using Aspose.Cells. | Create a reusable method that returns a boolean for VBA signature validity and writes the failure reason to a log file.
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Vba;
 
-// Loads an .xlsm workbook, determines whether its VBA project is signed, validates the digital signature using Workbook.VbaProject.IsValidSigned, and outputs status or error messages when the signature is invalid or the file has been altered.
-class ValidateVbaSignature
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads a signed .xlsm file, confirms a VBA project exists, checks the IsSigned flag, evaluates Workbook.VbaProject.IsValidSigned, and reports verification errors when the signature is invalid or the file has been altered. Includes robust exception handling.
+    public class ValidateVbaSignatureDemo
     {
-        // Load the workbook that contains a VBA project.
-        Workbook workbook = new Workbook("SignedWorkbook.xlsm");
-
-        // Determine whether the VBA project is signed.
-        if (workbook.VbaProject.IsSigned)
+        // Entry point required for console application
+        public static void Main(string[] args)
         {
-            Console.WriteLine("VBA project is signed.");
-
-            // Verify the validity of the signature.
-            bool isSignatureValid = workbook.VbaProject.IsValidSigned;
-            Console.WriteLine("Signature valid: " + isSignatureValid);
-
-            // Report any verification errors.
-            if (!isSignatureValid)
+            try
             {
-                Console.WriteLine("Error: The VBA project signature is invalid or the document has been tampered with.");
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
-        else
+
+        public static void Run()
         {
-            Console.WriteLine("VBA project is not signed.");
+            const string filePath = "signedWorkbook.xlsm";
+
+            // Verify that the workbook file exists before attempting to load it
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
+
+            try
+            {
+                // Load the workbook that contains a VBA project
+                Workbook workbook = new Workbook(filePath);
+
+                // Ensure the workbook actually has a VBA project
+                if (workbook.VbaProject == null)
+                {
+                    Console.WriteLine("The workbook does not contain a VBA project.");
+                    return;
+                }
+
+                // Determine whether the VBA project is signed
+                if (workbook.VbaProject.IsSigned)
+                {
+                    Console.WriteLine("VBA project is signed.");
+
+                    // Check if the signature is valid
+                    bool isValid = workbook.VbaProject.IsValidSigned;
+                    Console.WriteLine("Signature valid: " + isValid);
+
+                    // Report verification error if the signature is not valid
+                    if (!isValid)
+                    {
+                        Console.WriteLine("Verification error: VBA project signature is invalid or the document has been tampered with.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("VBA project is not signed.");
+                }
+            }
+            catch (FileNotFoundException fnfEx)
+            {
+                Console.WriteLine($"File not found error: {fnfEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing workbook: {ex.Message}");
+            }
         }
     }
 }

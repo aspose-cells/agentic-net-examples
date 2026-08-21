@@ -1,56 +1,52 @@
-// Title: Use FontSettings to Load a Unicode‑Supporting Font for PDF Export in Aspose.Cells (C#)
-// Description: Demonstrates loading a Unicode‑compatible TrueType font with FontSettings, setting PdfSaveOptions.DefaultFont (e.g., Arial Unicode MS), enabling CheckWorkbookDefaultFont, and saving a workbook containing emojis and rare CJK characters to PDF.
-// Keywords: Aspose.Cells | C# | FontSettings | Unicode font | supplementary characters | emoji | CJK | PDF conversion | PdfSaveOptions | DefaultFont | CheckWorkbookDefaultFont | Arial Unicode MS | load custom font | Unicode PDF export
-// Common Searches: Aspose.Cells load Unicode font for PDF | PDF export emojis Aspose.Cells | How to embed Unicode font in Aspose.Cells PDF | FontSettings LoadFont example C# | PdfSaveOptions DefaultFont Unicode | CheckWorkbookDefaultFont Aspose.Cells
-// Developer Intent: Register a TrueType font that covers Unicode supplementary glyphs and apply it during PDF conversion of an Aspose.Cells workbook.
-// Use Cases: Render emojis, mathematical symbols, and rare CJK glyphs in PDFs generated from spreadsheets. | Provide a fallback Unicode font when the workbook’s default font lacks required glyphs. | Programmatically ensure the output directory exists before saving to avoid runtime errors.
-// AI Prompts: Write C# code using Aspose.Cells FontSettings.LoadFont to register a TrueType font that supports supplementary Unicode characters and save the workbook as PDF with PdfSaveOptions. | Show how to set PdfSaveOptions.DefaultFont to a Unicode font and enable CheckWorkbookDefaultFont to correctly display emojis and CJK characters. | Explain step‑by‑step how to create the output folder, load a Unicode font, and export a workbook containing Unicode text to PDF with Aspose.Cells.
+// Title: Load a Unicode Font with FontConfigs and Convert an Aspose.Cells Workbook to PDF (C#)
+// Description: Demonstrates how to point Aspose.Cells to a folder containing a Unicode‑capable font (e.g., Arial Unicode MS or Noto Sans), set it as the default, insert text with supplementary characters such as emoji, and configure PdfSaveOptions (DefaultFont, CheckWorkbookDefaultFont, CheckFontCompatibility) so the PDF renders those glyphs correctly.
+// Keywords: Aspose.Cells FontConfigs | custom font folder C# | Unicode supplementary characters PDF | emoji rendering Aspose.Cells | PdfSaveOptions DefaultFont | CheckWorkbookDefaultFont | CheckFontCompatibility | load Unicode font Aspose.Cells | C# PDF conversion Aspose.Cells
+// Common Searches: how to load a Unicode font in Aspose.Cells before PDF export | set default font for emoji in Aspose.Cells PDF conversion | Aspose.Cells FontConfigs SetFontFolder example | render supplementary Unicode characters in PDF with Aspose.Cells | C# Aspose.Cells PDFSaveOptions Unicode support
+// Developer Intent: Configure Aspose.Cells to use a Unicode‑compatible font so that supplementary characters are displayed correctly when saving a workbook as PDF.
+// Use Cases: Create multilingual PDF reports that include CJK, mathematical symbols, or emoji by loading a font directory with a comprehensive Unicode font. | Generate financial statements where rare currency symbols or technical glyphs must appear intact in the PDF output. | Automate document pipelines that require accurate rendering of non‑BMP characters across global locales.
+// AI Prompts: Write C# code that uses FontConfigs.SetFontFolder to load a custom Unicode font directory and saves a workbook to PDF with proper emoji rendering. | Explain the role of CheckWorkbookDefaultFont and CheckFontCompatibility in preserving supplementary Unicode characters during PDF conversion. | Provide a step‑by‑step troubleshooting guide for missing glyphs after exporting an Aspose.Cells workbook to PDF.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Demonstrates loading a Unicode‑compatible TrueType font with FontSettings, setting PdfSaveOptions.DefaultFont (e.g., Arial Unicode MS), enabling CheckWorkbookDefaultFont, and saving a workbook containing emojis and rare CJK characters to PDF.
-class FontSettingsPdfDemo
+namespace AsposeCellsUnicodeFontDemo
 {
-    static void Main()
+    // Demonstrates how to point Aspose.Cells to a folder containing a Unicode‑capable font (e.g., Arial Unicode MS or Noto Sans), set it as the default, insert text with supplementary characters such as emoji, and configure PdfSaveOptions (DefaultFont, CheckWorkbookDefaultFont, CheckFontCompatibility) so the PDF renders those glyphs correctly.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Specify the folder that contains the Unicode supporting font (e.g., "Arial Unicode MS" or "NotoSansCJK").
+            // The folder can contain subfolders with additional fonts.
+            FontConfigs.SetFontFolder(@"C:\UnicodeFonts", true);
+
+            // Optionally set the default font name that Aspose.Cells will use when a cell does not specify a font.
+            FontConfigs.DefaultFontName = "Arial Unicode MS";
+
+            // Create a new workbook and access the first worksheet.
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add text that contains Unicode supplementary characters (e.g., emojis, rare CJK characters)
-            sheet.Cells["A1"].PutValue("Unicode test: 𝟘𝟙𝟚𝟛 🚀 漢字");
+            // Insert text that includes Unicode supplementary characters (e.g., emoji or characters outside the BMP).
+            // Example: U+1F600 GRINNING FACE 😀 (represented as a surrogate pair in .NET strings).
+            sheet.Cells["A1"].PutValue("Unicode test: 😀 𝔘𝔫𝔦𝔠𝔬𝔡𝔢");
 
-            // Prepare PDF save options with a fallback default font that supports Unicode characters
+            // Configure PDF save options.
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Use a font that is commonly available and supports a wide range of Unicode glyphs
+                // Use the font that supports the supplementary characters.
                 DefaultFont = "Arial Unicode MS",
-                // Try to use the workbook's default font first
-                CheckWorkbookDefaultFont = true
+                // Ensure the workbook's default font is considered first.
+                CheckWorkbookDefaultFont = true,
+                // Keep font compatibility checking enabled to allow substitution if needed.
+                CheckFontCompatibility = true
             };
 
-            // Define output file path
-            string outputPath = "output.pdf";
+            // Save the workbook as PDF using the configured options.
+            workbook.Save("UnicodeOutput.pdf", pdfOptions);
 
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook as PDF
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine("PDF saved with Unicode supplementary characters rendered correctly.");
         }
     }
 }

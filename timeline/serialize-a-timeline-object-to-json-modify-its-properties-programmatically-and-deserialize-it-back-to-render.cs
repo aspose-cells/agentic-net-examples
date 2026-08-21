@@ -1,10 +1,10 @@
-// Title: C# – Serialize Aspose.Cells Timeline to JSON, modify it, and deserialize to update the workbook
-// Description: Creates a workbook with sample data, builds a PivotTable, adds a Timeline, captures its layout in a DTO, serializes to indented JSON, edits the JSON, deserializes back, and reapplies the changes before saving the file.
-// Keywords: Aspose.Cells C# timeline JSON serialization | timeline DTO System.Text.Json | modify Aspose.Cells timeline properties programmatically | deserialize timeline JSON Aspose.Cells | C# workbook timeline example | GitHub Aspose.Cells timeline demo | export timeline layout to JSON | reapply timeline settings from JSON
-// Common Searches: how to serialize an Aspose.Cells timeline to JSON in C# | change timeline caption and size using JSON Aspose.Cells | deserialize timeline DTO and apply to workbook | Aspose.Cells timeline JSON example | C# code to export timeline properties to JSON
-// Developer Intent: Export a Timeline's visual settings to JSON, edit the JSON, then import the changes back into the same Aspose.Cells workbook.
-// Use Cases: Store timeline layout in a database as JSON for later reuse in automated report generation. | Allow non‑technical users to adjust timeline caption, position, or size via a simple JSON file. | Batch‑process multiple workbooks by applying a shared timeline configuration delivered through a web API.
-// AI Prompts: Generate C# code that reads a TimelineDto JSON file and updates an existing Aspose.Cells timeline. | Explain strategies for handling missing or extra JSON properties when deserializing a TimelineDto. | Show how to serialize all timelines in a workbook into a JSON array using System.Text.Json.
+// Title: C# Aspose.Cells: Serialize, Modify, and Deserialize Timeline Settings with System.Text.Json
+// Description: Demonstrates how to create a workbook, add a PivotTable, attach a Timeline, map its properties to a DTO, serialize the DTO to indented JSON, programmatically change values, deserialize the JSON, and reapply the settings to the Timeline before saving the file.
+// Keywords: Aspose.Cells | Timeline | C# | System.Text.Json | serialize timeline | deserialize timeline | JSON round‑trip | pivot table | workbook automation | configuration DTO
+// Common Searches: Aspose.Cells serialize timeline to JSON C# | modify timeline properties programmatically Aspose.Cells | deserialize timeline JSON and apply to workbook | timeline JSON round‑trip example Aspose.Cells | C# Aspose.Cells timeline configuration file
+// Developer Intent: Export a Timeline's settings to JSON, edit them, and import the changes back into the workbook.
+// Use Cases: Store and reuse Timeline layout across multiple reports via a JSON configuration file. | Allow non‑technical users to adjust Timeline captions, size, and visibility by editing a JSON file. | Synchronize Timeline appearance between a master workbook and generated dashboards through a JSON round‑trip.
+// AI Prompts: Write C# code that reads a TimelineDto JSON file and applies the values to an existing Aspose.Cells Timeline object. | Extend the TimelineDto to include filter criteria and show how to serialize those additional settings. | Provide robust error‑handling patterns for deserializing Timeline JSON and updating the Timeline in Aspose.Cells.
 
 using System;
 using System.IO;
@@ -14,113 +14,142 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Timelines;
 
-// Creates a workbook with sample data, builds a PivotTable, adds a Timeline, captures its layout in a DTO, serializes to indented JSON, edits the JSON, deserializes back, and reapplies the changes before saving the file.
-public class TimelineDto
+namespace AsposeCellsTimelineJsonDemo
 {
-    public string Caption { get; set; }
-    public string Name { get; set; }
-    public int LeftPixel { get; set; }
-    public int TopPixel { get; set; }
-    public int WidthPixel { get; set; }
-    public int HeightPixel { get; set; }
-}
-
-public class TimelineJsonDemo
-{
-    public static void Run()
+    // DTO that mirrors the properties we want to persist for a Timeline
+    // Demonstrates how to create a workbook, add a PivotTable, attach a Timeline, map its properties to a DTO, serialize the DTO to indented JSON, programmatically change values, deserialize the JSON, and reapply the settings to the Timeline before saving the file.
+    public class TimelineDto
     {
-        try
-        {
-            // ---------- Create a new workbook ----------
-            var workbook = new Workbook();
-            var sheet = workbook.Worksheets[0];
-            var cells = sheet.Cells;
-
-            // ---------- Populate worksheet with sample data ----------
-            cells["A1"].Value = "Date";
-            cells["B1"].Value = "Sales";
-
-            cells["A2"].Value = new DateTime(2023, 1, 1);
-            cells["B2"].Value = 1000;
-
-            cells["A3"].Value = new DateTime(2023, 2, 1);
-            cells["B3"].Value = 1500;
-
-            cells["A4"].Value = new DateTime(2023, 3, 1);
-            cells["B4"].Value = 2000;
-
-            // ---------- Create a PivotTable that will be the data source for the Timeline ----------
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-            var pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, "Date");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // ---------- Add a Timeline linked to the PivotTable ----------
-            int timelineIdx = sheet.Timelines.Add(pivot, 0, 0, "Date");
-            var timeline = sheet.Timelines[timelineIdx];
-
-            // ---------- Capture current Timeline properties into DTO ----------
-            var dto = new TimelineDto
-            {
-                Caption = timeline.Caption,
-                Name = timeline.Name,
-                LeftPixel = timeline.LeftPixel,
-                TopPixel = timeline.TopPixel,
-                WidthPixel = timeline.WidthPixel,
-                HeightPixel = timeline.HeightPixel
-            };
-
-            // ---------- Serialize DTO to JSON ----------
-            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
-            string json = JsonSerializer.Serialize(dto, jsonOptions);
-            Console.WriteLine("Serialized Timeline JSON:");
-            Console.WriteLine(json);
-
-            // ---------- Modify JSON (demo) ----------
-            dto.Caption = "Updated Sales Timeline";
-            dto.Name = "MyTimeline";
-            dto.LeftPixel = 120;
-            dto.TopPixel = 80;
-            dto.WidthPixel = 400;
-            dto.HeightPixel = 150;
-
-            // ---------- Serialize modified DTO back to JSON (optional) ----------
-            string modifiedJson = JsonSerializer.Serialize(dto, jsonOptions);
-            Console.WriteLine("\nModified Timeline JSON:");
-            Console.WriteLine(modifiedJson);
-
-            // ---------- Deserialize JSON back to DTO ----------
-            var deserializedDto = JsonSerializer.Deserialize<TimelineDto>(modifiedJson, jsonOptions);
-
-            // ---------- Apply deserialized properties to the Timeline ----------
-            if (deserializedDto != null)
-            {
-                timeline.Caption = deserializedDto.Caption;
-                timeline.Name = deserializedDto.Name;
-                timeline.LeftPixel = deserializedDto.LeftPixel;
-                timeline.TopPixel = deserializedDto.TopPixel;
-                timeline.WidthPixel = deserializedDto.WidthPixel;
-                timeline.HeightPixel = deserializedDto.HeightPixel;
-            }
-
-            // ---------- Save the workbook ----------
-            string outputPath = "TimelineJsonDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"\nWorkbook saved as '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        public string Caption { get; set; }
+        public string Name { get; set; }
+        public int LeftPixel { get; set; }
+        public int TopPixel { get; set; }
+        public int WidthPixel { get; set; }
+        public int HeightPixel { get; set; }
+        public bool ShowHeader { get; set; }
+        public bool ShowHorizontalScrollbar { get; set; }
+        public bool ShowSelectionLabel { get; set; }
+        public bool ShowTimeLevel { get; set; }
+        public DateTime? StartDate { get; set; }
     }
-}
 
-class Program
-{
-    static void Main()
+    public class Program
     {
-        TimelineJsonDemo.Run();
+        public static void Main()
+        {
+            try
+            {
+                // ---------- Create a workbook and populate sample data ----------
+                Workbook workbook = new Workbook(); // create new workbook
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Sample data: fruit, date, amount
+                sheet.Cells["A1"].Value = "fruit";
+                sheet.Cells["B1"].Value = "date";
+                sheet.Cells["C1"].Value = "amount";
+
+                sheet.Cells["A2"].Value = "Apple";
+                sheet.Cells["B2"].Value = new DateTime(2023, 1, 5);
+                sheet.Cells["C2"].Value = 120;
+
+                sheet.Cells["A3"].Value = "Banana";
+                sheet.Cells["B3"].Value = new DateTime(2023, 2, 10);
+                sheet.Cells["C3"].Value = 150;
+
+                sheet.Cells["A4"].Value = "Cherry";
+                sheet.Cells["B4"].Value = new DateTime(2023, 3, 15);
+                sheet.Cells["C4"].Value = 180;
+
+                // ---------- Create a PivotTable (data source for the Timeline) ----------
+                int pivotIdx = sheet.PivotTables.Add("A1:C4", "E1", "FruitPivot");
+                PivotTable pivot = sheet.PivotTables[pivotIdx];
+                pivot.AddFieldToArea(PivotFieldType.Row, "fruit");
+                pivot.AddFieldToArea(PivotFieldType.Column, "date");
+                pivot.AddFieldToArea(PivotFieldType.Data, "amount");
+                pivot.RefreshData();
+                pivot.CalculateData();
+
+                // ---------- Add a Timeline linked to the PivotTable ----------
+                int timelineIdx = sheet.Timelines.Add(pivot, 0, 0, "date");
+                Timeline timeline = sheet.Timelines[timelineIdx];
+
+                // Set initial properties
+                timeline.Caption = "Sales Timeline";
+                timeline.Name = "SalesTimeline";
+                timeline.LeftPixel = 50;
+                timeline.TopPixel = 30;
+                timeline.WidthPixel = 400;
+                timeline.HeightPixel = 120;
+                timeline.ShowHeader = true;
+                timeline.ShowHorizontalScrollbar = true;
+                timeline.ShowSelectionLabel = true;
+                timeline.ShowTimeLevel = true;
+                timeline.StartDate = new DateTime(2023, 1, 1);
+
+                // ---------- Serialize Timeline properties to JSON ----------
+                TimelineDto dto = new TimelineDto
+                {
+                    Caption = timeline.Caption,
+                    Name = timeline.Name,
+                    LeftPixel = timeline.LeftPixel,
+                    TopPixel = timeline.TopPixel,
+                    WidthPixel = timeline.WidthPixel,
+                    HeightPixel = timeline.HeightPixel,
+                    ShowHeader = timeline.ShowHeader,
+                    ShowHorizontalScrollbar = timeline.ShowHorizontalScrollbar,
+                    ShowSelectionLabel = timeline.ShowSelectionLabel,
+                    ShowTimeLevel = timeline.ShowTimeLevel,
+                    StartDate = timeline.StartDate
+                };
+
+                var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(dto, jsonOptions);
+                Console.WriteLine("Serialized Timeline JSON:");
+                Console.WriteLine(json);
+
+                // ---------- Programmatically modify JSON (simulating external change) ----------
+                // For demonstration, we'll change some values directly in the DTO and re‑serialize.
+                dto.Caption = "Updated Sales Timeline";
+                dto.Name = "UpdatedTimeline";
+                dto.LeftPixel = 100;
+                dto.TopPixel = 80;
+                dto.WidthPixel = 500;
+                dto.HeightPixel = 150;
+                dto.ShowHeader = false; // hide header
+                string modifiedJson = JsonSerializer.Serialize(dto, jsonOptions);
+                Console.WriteLine("\nModified Timeline JSON:");
+                Console.WriteLine(modifiedJson);
+
+                // ---------- Deserialize JSON back into a DTO ----------
+                TimelineDto deserializedDto = JsonSerializer.Deserialize<TimelineDto>(modifiedJson, jsonOptions);
+
+                // ---------- Apply deserialized values back to the Timeline object ----------
+                if (deserializedDto != null)
+                {
+                    timeline.Caption = deserializedDto.Caption;
+                    timeline.Name = deserializedDto.Name;
+                    timeline.LeftPixel = deserializedDto.LeftPixel;
+                    timeline.TopPixel = deserializedDto.TopPixel;
+                    timeline.WidthPixel = deserializedDto.WidthPixel;
+                    timeline.HeightPixel = deserializedDto.HeightPixel;
+                    timeline.ShowHeader = deserializedDto.ShowHeader;
+                    timeline.ShowHorizontalScrollbar = deserializedDto.ShowHorizontalScrollbar;
+                    timeline.ShowSelectionLabel = deserializedDto.ShowSelectionLabel;
+                    timeline.ShowTimeLevel = deserializedDto.ShowTimeLevel;
+                    if (deserializedDto.StartDate.HasValue)
+                        timeline.StartDate = deserializedDto.StartDate.Value;
+                }
+
+                // ---------- Save the workbook to verify the rendered Timeline ----------
+                string outputPath = "TimelineJsonDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"\nWorkbook saved to '{Path.GetFullPath(outputPath)}'");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+                Console.Error.WriteLine(ex.StackTrace);
+            }
+        }
     }
 }

@@ -1,56 +1,37 @@
-// Title: C# – Set Worksheet Default Column Width to 15 Characters with Aspose.Cells
-// Description: This C# snippet creates a new Workbook, selects the first Worksheet, assigns a 15‑character width to all columns via the Cells.StandardWidth property, prints the applied value, and saves the file as DefaultColumnWidth.xlsx.
-// Keywords: Aspose.Cells | C# | StandardWidth | worksheet column width | set column width 15 | Excel export | save workbook | column width property
-// Common Searches: Aspose.Cells set default column width | How to change column width for all columns in .NET | StandardWidth property example C# | Set column width to 15 characters Aspose.Cells | C# worksheet column width Aspose.Cells
-// Developer Intent: Apply a 15‑character width to every column in a worksheet and persist the workbook.
-// Use Cases: Initialize a fresh workbook and enforce a uniform column width before populating data. | Adjust the column width of an existing sheet to maintain consistent layout when generating Excel reports. | Validate the applied width by reading Cells.StandardWidth and the actual width of a specific column.
-// AI Prompts: Write C# code using Aspose.Cells that sets Cells.StandardWidth to 15 for a worksheet and saves the workbook. | Explain the impact of the StandardWidth property on column sizing and how to retrieve the actual width of a column after setting it. | Provide a step‑by‑step guide to change the default column width for all worksheets in a workbook with Aspose.Cells for .NET.
+// Title: C# – Set default column width to 15 characters for an entire worksheet with Aspose.Cells
+// Description: This .NET example creates a new Workbook, accesses the first Worksheet, and sets the worksheet's default column width to 15 characters by assigning 15.0 to the Cells.StandardWidth property. The code prints the applied width, verifies the first column's actual width, and saves the file as "DefaultColumnWidth.xlsx".
+// Keywords: Aspose.Cells default column width | Cells.StandardWidth C# | set worksheet column width characters | Aspose.Cells column width example | C# spreadsheet default width
+// Common Searches: Aspose.Cells set default column width .NET | How to use Cells.StandardWidth in C# | Set column width for all columns Aspose.Cells | Default column width in characters Aspose.Cells
+// Developer Intent: Set the worksheet’s default column width to 15 characters using Aspose.Cells for .NET.
+// Use Cases: Create a template where every column starts with a uniform width before applying custom adjustments. | Generate reports that require consistent column sizing for readability and printing. | Prepare spreadsheets for export to other systems that expect a predefined column width.
+// AI Prompts: Show how to change the default column width to 20 characters and then set column B to 30 characters using Aspose.Cells for .NET. | Write code that reads the current StandardWidth from a workbook, asks the user for a new width, and updates the worksheet accordingly. | Explain the relationship between the StandardWidth property and pixel units, including how to convert character width to pixels for different DPI settings.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // This C# snippet creates a new Workbook, selects the first Worksheet, assigns a 15‑character width to all columns via the Cells.StandardWidth property, prints the applied value, and saves the file as DefaultColumnWidth.xlsx.
+    // This .NET example creates a new Workbook, accesses the first Worksheet, and sets the worksheet's default column width to 15 characters by assigning 15.0 to the Cells.StandardWidth property. The code prints the applied width, verifies the first column's actual width, and saves the file as "DefaultColumnWidth.xlsx".
     public class SetDefaultColumnWidth
     {
-        public static void Run()
+        public static void Main()
         {
-            try
-            {
-                // Create a new workbook (default contains one worksheet)
-                Workbook workbook = new Workbook();
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Set the default column width for the entire worksheet to 15 characters
-                worksheet.Cells.StandardWidth = 15.0;
+            // Set the default column width for the entire worksheet to 15 characters
+            // This uses the Cells.StandardWidth property which defines the default width in character units
+            worksheet.Cells.StandardWidth = 15.0;
 
-                // Optional: verify the setting
-                Console.WriteLine("Standard Width set to: " + worksheet.Cells.StandardWidth);
-                Console.WriteLine("Column 0 actual width: " + worksheet.Cells.GetColumnWidth(0));
+            // Optional: verify the setting
+            Console.WriteLine("Standard Width set to: " + worksheet.Cells.StandardWidth);
+            Console.WriteLine("Column 0 actual width: " + worksheet.Cells.GetColumnWidth(0));
 
-                // Determine output file path
-                string outputFile = Path.Combine(Directory.GetCurrentDirectory(), "DefaultColumnWidth.xlsx");
-
-                // Save the workbook to a file
-                workbook.Save(outputFile);
-                Console.WriteLine("Workbook saved to: " + outputFile);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SetDefaultColumnWidth.Run();
+            // Save the workbook (lifecycle: save)
+            workbook.Save("DefaultColumnWidth.xlsx");
         }
     }
 }

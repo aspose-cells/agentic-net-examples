@@ -1,69 +1,56 @@
-// Title: Copy a Range with Values and Formatting to a New Workbook using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a source workbook, style a range (A1:C3), and copy both the cell values and the applied style to a matching range in a new workbook using Aspose.Cells' CopyData and CopyStyle methods, then save the result as CopiedRange.xlsx.
-// Keywords: Aspose.Cells copy range C# | CopyData Aspose.Cells | CopyStyle Aspose.Cells | preserve formatting when copying cells | .NET Excel range transfer | copy styled cells between workbooks | Aspose.Cells example copy range with style
-// Common Searches: Aspose.Cells copy range with formatting | How to preserve cell style when copying between workbooks in C# | CopyData vs CopyStyle Aspose.Cells | Copy styled range to new workbook Aspose.Cells .NET | Transfer Excel range values and styles programmatically
-// Developer Intent: Copy a defined cell range from one workbook to another while keeping both the data and the original formatting intact.
-// Use Cases: Generate a formatted report section in a separate workbook for client delivery. | Build a template workbook by reusing styled data blocks from an existing file. | Migrate specific styled tables during a data‑migration project without losing appearance.
-// AI Prompts: Write C# code that copies the range A1:D5 from a source workbook to a destination workbook using Aspose.Cells, preserving values and all formatting. | Explain when to use CopyData, CopyStyle, or the combined Copy method in Aspose.Cells and the impact on performance. | Provide a step‑by‑step guide for copying multiple non‑contiguous ranges with their styles into a new workbook using Aspose.Cells for .NET.
+// Title: Copy an Excel range with values and formatting to a new workbook using Aspose.Cells for .NET (C#)
+// Description: Loads a source workbook, creates an empty destination workbook, defines matching ranges (e.g., A1:C5), copies both cell contents and style information with the Range.Copy method, and saves the result as a new file. Includes basic file‑existence checking and exception handling.
+// Keywords: Aspose.Cells C# copy range | preserve Excel cell formatting | Range.Copy example | copy range to new workbook | .NET Excel style transfer | Aspose.Cells tutorial
+// Common Searches: Aspose.Cells copy range with formatting | C# copy Excel cells to another workbook preserving styles | Range.Copy method Aspose.Cells .NET | how to duplicate a styled table in a new Excel file
+// Developer Intent: Transfer a defined cell block from an existing workbook to a fresh workbook while retaining all formatting and values.
+// Use Cases: Create a report workbook by reusing a styled template section. | Export a formatted data table from a master file for client distribution. | Clone a chart data range into a separate workbook for independent analysis.
+// AI Prompts: Show C# code that copies a range with its styles to a new workbook using Aspose.Cells, including a check for a missing source file. | Provide an Aspose.Cells example that copies a range and then auto‑fits the destination columns to match the source widths. | Explain how to copy multiple non‑contiguous ranges with formatting into a new workbook in C#.
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates how to create a source workbook, style a range (A1:C3), and copy both the cell values and the applied style to a matching range in a new workbook using Aspose.Cells' CopyData and CopyStyle methods, then save the result as CopiedRange.xlsx.
-class Program
+// Loads a source workbook, creates an empty destination workbook, defines matching ranges (e.g., A1:C5), copies both cell contents and style information with the Range.Copy method, and saves the result as a new file. Includes basic file‑existence checking and exception handling.
+class CopyRangeWithStyleDemo
 {
     static void Main()
     {
         try
         {
-            // ---------- Create source workbook and populate a range ----------
-            Workbook srcWorkbook = new Workbook();
-            Worksheet srcSheet = srcWorkbook.Worksheets[0];
-            Cells srcCells = srcSheet.Cells;
+            string srcPath = "source.xlsx";
+            string destPath = "copied.xlsx";
 
-            // Fill A1:C3 with sample values
-            for (int row = 0; row < 3; row++)
+            // Verify source file exists
+            if (!File.Exists(srcPath))
             {
-                for (int col = 0; col < 3; col++)
-                {
-                    srcCells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                }
+                Console.WriteLine($"Source file '{srcPath}' not found.");
+                return;
             }
 
-            // Apply a style to the source range
-            Style srcStyle = srcWorkbook.CreateStyle();
-            srcStyle.Font.Name = "Arial";
-            srcStyle.Font.Size = 12;
-            srcStyle.Font.IsBold = true;
-            srcStyle.ForegroundColor = Color.LightBlue;
-            srcStyle.Pattern = BackgroundType.Solid;
-            srcCells.CreateRange("A1:C3").SetStyle(srcStyle);
+            // Load the source workbook
+            Workbook srcWorkbook = new Workbook(srcPath);
 
-            // ---------- Create destination workbook ----------
+            // Create a new (empty) destination workbook
             Workbook destWorkbook = new Workbook();
+
+            // Define the source range
+            Worksheet srcSheet = srcWorkbook.Worksheets[0];
+            Aspose.Cells.Range srcRange = srcSheet.Cells.CreateRange("A1:C5");
+
+            // Define the destination range in the new workbook
             Worksheet destSheet = destWorkbook.Worksheets[0];
-            Cells destCells = destSheet.Cells;
+            Aspose.Cells.Range destRange = destSheet.Cells.CreateRange("A1:C5");
 
-            // Define source and destination ranges using the Aspose.Cells.Range alias
-            AsposeRange sourceRange = srcCells.CreateRange("A1:C3");
-            AsposeRange destinationRange = destCells.CreateRange("A1:C3");
+            // Copy both values and formatting from source to destination
+            srcRange.Copy(destRange);
 
-            // Copy cell values from source to destination
-            destinationRange.CopyData(sourceRange);
-
-            // Copy formatting (style) from source to destination
-            destinationRange.CopyStyle(sourceRange);
-
-            // ---------- Save the destination workbook ----------
-            string outputPath = "CopiedRange.xlsx";
-            destWorkbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Save the destination workbook
+            destWorkbook.Save(destPath);
+            Console.WriteLine($"Range copied successfully to '{destPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

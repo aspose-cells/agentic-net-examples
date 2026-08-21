@@ -1,10 +1,10 @@
-// Title: Center Legend Text in Aspose.Cells Chart (C#) with Transparent Background
-// Description: Creates a workbook, adds a column chart, centers the legend text horizontally and vertically, sets the legend background to transparent to confirm alignment is unchanged, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells | C# chart legend alignment | center legend text | transparent legend background | legend text alignment .NET | Excel chart legend | Aspose.Cells legend properties
-// Common Searches: Aspose.Cells center legend text | how to align chart legend horizontally and vertically in C# | transparent legend background Aspose.Cells | does legend background affect alignment in Aspose.Cells charts | C# example for chart legend alignment Aspose.Cells
-// Developer Intent: Align chart legend text to the center on both axes while using a transparent background to ensure alignment remains consistent.
-// Use Cases: Generate reports with column charts that have a centrally aligned legend for a clean visual layout. | Apply a transparent legend background when the chart overlays colored cells, preserving text positioning. | Create reusable chart templates where legend alignment is predefined, simplifying automated Excel generation.
-// AI Prompts: Write C# code using Aspose.Cells to add a chart and set the legend text alignment to center with a transparent background. | Explain how a transparent legend background impacts (or does not impact) text alignment in Aspose.Cells charts and how to test it. | Provide step‑by‑step instructions to center legend text horizontally and vertically and verify alignment after changing the legend's background mode.
+// Title: Center Chart Legend Text and Apply Transparent Background with Aspose.Cells (C#)
+// Description: The sample builds a workbook, inserts a column chart, and shows how to set the legend's horizontal and vertical text alignment to Center while using a Transparent background. It also guarantees the legend stays visible and saves the result as LegendAlignmentTransparentFill.xlsx.
+// Keywords: Aspose.Cells | C# chart legend alignment | center legend text | transparent legend background | TextHorizontalAlignment | TextVerticalAlignment | BackgroundMode.Transparent | column chart generation | Excel file creation .NET | chart formatting Aspose.Cells
+// Common Searches: Aspose.Cells set legend alignment C# | transparent legend background Aspose.Cells chart | center legend horizontally and vertically .NET | verify legend positioning after background change | chart legend formatting example Aspose.Cells
+// Developer Intent: Align the legend text to the middle of the box and ensure a transparent fill does not alter that positioning.
+// Use Cases: Produce reports where the legend appears centered for a balanced visual layout. | Overlay charts on colored sheets without a solid legend box, keeping text centered. | Automate Excel generation where legend alignment must remain stable regardless of fill settings.
+// AI Prompts: Generate C# code that centers both the horizontal and vertical text of a chart legend in Aspose.Cells and saves the workbook. | Show how to set the legend's background to Transparent in Aspose.Cells while preserving its alignment. | Explain steps to test that legend alignment stays unchanged after applying a transparent fill in an Aspose.Cells chart.
 
 using System;
 using Aspose.Cells;
@@ -13,7 +13,7 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsLegendAlignmentDemo
 {
-    // Creates a workbook, adds a column chart, centers the legend text horizontally and vertically, sets the legend background to transparent to confirm alignment is unchanged, and saves the file as an Excel workbook.
+    // The sample builds a workbook, inserts a column chart, and shows how to set the legend's horizontal and vertical text alignment to Center while using a Transparent background. It also guarantees the legend stays visible and saves the result as LegendAlignmentTransparentFill.xlsx.
     class Program
     {
         static void Main()
@@ -28,13 +28,13 @@ namespace AsposeCellsLegendAlignmentDemo
             sheet.Cells["A3"].PutValue("Q2");
             sheet.Cells["A4"].PutValue("Q3");
 
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["B4"].PutValue(180);
+            sheet.Cells["B1"].PutValue("Series 1");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["B3"].PutValue(50);
+            sheet.Cells["B4"].PutValue(70);
 
             // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
             Chart chart = sheet.Charts[chartIndex];
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
@@ -46,11 +46,14 @@ namespace AsposeCellsLegendAlignmentDemo
             legend.TextHorizontalAlignment = TextAlignmentType.Center;
             legend.TextVerticalAlignment = TextAlignmentType.Center;
 
-            // Make the legend background transparent to verify it does not affect alignment
+            // Set the legend background to transparent to verify it does not affect alignment
             legend.BackgroundMode = BackgroundMode.Transparent;
 
+            // Optionally, ensure the legend is visible
+            chart.ShowLegend = true;
+
             // Save the workbook
-            workbook.Save("LegendAlignmentTransparentDemo.xlsx");
+            workbook.Save("LegendAlignmentTransparentFill.xlsx");
         }
     }
 }

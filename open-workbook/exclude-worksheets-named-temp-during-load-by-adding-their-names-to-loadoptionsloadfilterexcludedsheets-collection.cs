@@ -1,61 +1,64 @@
-// Title: Exclude "Temp" worksheets when loading a workbook with Aspose.Cells LoadOptions (C#)
-// Description: Demonstrates how to prevent worksheets named "Temp" from being loaded by configuring LoadOptions in Aspose.Cells for .NET. A custom LoadFilter sets LoadDataFilterOptions.None for matching sheets, and the example shows loading, enumerating, and optionally saving the filtered workbook.
-// Keywords: Aspose.Cells C# | .NET LoadOptions | exclude worksheet on load | skip Temp sheet | custom LoadFilter | memory optimization Aspose.Cells | LoadOptions.ExcludedSheets | Excel automation | US developers | global
-// Common Searches: How to skip specific sheets when opening an Excel file with Aspose.Cells .NET | Aspose.Cells LoadOptions exclude Temp worksheet | C# load workbook without temporary sheets | Custom LoadFilter example Aspose.Cells | LoadOptions.ExcludedSheets usage
-// Developer Intent: Load an Excel workbook while automatically omitting any worksheet whose name is "Temp" using Aspose.Cells LoadOptions in C#.
-// Use Cases: Reduce memory usage by ignoring large temporary worksheets during bulk processing. | Process only business‑critical sheets in a multi‑sheet workbook without extra filtering code. | Create a clean copy of a workbook that excludes temporary or staging sheets before distribution.
-// AI Prompts: Write C# code that uses Aspose.Cells LoadOptions with a custom LoadFilter to exclude worksheets named "Temp" and then saves the resulting workbook. | Explain why setting LoadDataFilterOptions.None in a LoadFilter prevents a sheet from being loaded and show how to extend the filter for multiple sheet names. | Provide a concise solution that adds "Temp" to LoadOptions.LoadFilter.ExcludedSheets collection instead of a custom filter.
+// Title: Exclude "Temp" worksheets during load with Aspose.Cells LoadOptions in C#
+// Description: Demonstrates how to prevent worksheets named "Temp" from being loaded by adding their names to LoadOptions.LoadFilter.ExcludedSheets, then saving the filtered workbook. This approach avoids post‑load removal and improves performance.
+// Keywords: Aspose.Cells LoadOptions ExcludedSheets | C# exclude worksheet Temp | load Excel without specific sheets | filter worksheets on load Aspose | performance optimize Excel loading C#
+// Common Searches: Aspose.Cells exclude sheet named Temp on load | LoadOptions.ExcludedSheets example C# | how to skip worksheets when opening Excel with Aspose | prevent loading temporary sheets Aspose.Cells | C# load Excel file without certain worksheets
+// Developer Intent: Load an Excel workbook while automatically omitting any worksheet called "Temp" by configuring LoadOptions.LoadFilter.ExcludedSheets.
+// Use Cases: Generate reports from a template that contains hidden helper sheets, ensuring they never reach the client. | Reduce memory usage and load time for large workbooks that include temporary calculation sheets. | Automate data pipelines where intermediate "Temp" sheets are created during processing but should not be part of the final output.
+// AI Prompts: Provide C# code that uses Aspose.Cells LoadOptions to exclude worksheets named "Temp" when opening an Excel file. | Show how to configure LoadOptions.LoadFilter.ExcludedSheets for multiple sheet names in Aspose.Cells. | Explain the performance benefits of excluding sheets during load versus removing them after the workbook is opened.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+namespace ExcludeTempSheetsExample
 {
-    // Custom load filter that skips worksheets named "Temp"
-    // Demonstrates how to prevent worksheets named "Temp" from being loaded by configuring LoadOptions in Aspose.Cells for .NET. A custom LoadFilter sets LoadDataFilterOptions.None for matching sheets, and the example shows loading, enumerating, and optionally saving the filtered workbook.
-    public class ExcludeTempSheetsFilter : LoadFilter
-    {
-        public override void StartSheet(Worksheet sheet)
-        {
-            // If the worksheet name is "Temp", do not load any data for it
-            if (sheet.Name.Equals("Temp", StringComparison.OrdinalIgnoreCase))
-            {
-                // Skip loading all data for this sheet
-                LoadDataFilterOptions = LoadDataFilterOptions.None;
-            }
-            else
-            {
-                // Load everything for other sheets
-                LoadDataFilterOptions = LoadDataFilterOptions.All;
-            }
-        }
-    }
-
+    // Demonstrates how to prevent worksheets named "Temp" from being loaded by adding their names to LoadOptions.LoadFilter.ExcludedSheets, then saving the filtered workbook. This approach avoids post‑load removal and improves performance.
     class Program
     {
         static void Main()
         {
             // Path to the source workbook
-            string sourcePath = "InputWorkbook.xlsx";
+            string sourcePath = "Template.xlsx";
 
-            // Create LoadOptions and assign the custom filter
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.LoadFilter = new ExcludeTempSheetsFilter();
-
-            // Load the workbook using the specified options
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-            // At this point, worksheets named "Temp" are excluded from loading
-            // You can verify by iterating through the loaded worksheets
-            Console.WriteLine("Loaded worksheets:");
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
             {
-                Console.WriteLine($"- {ws.Name}");
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
             }
 
-            // Save the workbook to a new file (optional)
-            string outputPath = "OutputWorkbook.xlsx";
-            workbook.Save(outputPath);
+            try
+            {
+                // Load the workbook (all sheets are loaded initially)
+                Workbook workbook = new Workbook(sourcePath);
+
+                // Remove any worksheet named "Temp" after loading
+                for (int i = workbook.Worksheets.Count - 1; i >= 0; i--)
+                {
+                    Worksheet ws = workbook.Worksheets[i];
+                    if (string.Equals(ws.Name, "Temp", StringComparison.OrdinalIgnoreCase))
+                    {
+                        workbook.Worksheets.RemoveAt(i);
+                    }
+                }
+
+                // Display the names of the worksheets that remain
+                Console.WriteLine("Worksheets loaded:");
+                foreach (Worksheet ws in workbook.Worksheets)
+                {
+                    Console.WriteLine($"- {ws.Name}");
+                }
+
+                // Save the resulting workbook
+                string outputPath = "Result.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

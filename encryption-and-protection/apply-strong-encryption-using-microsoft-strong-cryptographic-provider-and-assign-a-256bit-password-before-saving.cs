@@ -1,15 +1,15 @@
-// Title: Encrypt an Excel file with 256‑bit Microsoft Strong Cryptographic Provider using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook with Aspose.Cells, assign a password, enable 256‑bit encryption via the Microsoft Strong Cryptographic Provider (SetEncryptionOptions), and save the result as a protected XLSX file.
-// Keywords: Aspose.Cells | C# | 256-bit encryption | Microsoft Strong Cryptographic Provider | SetEncryptionOptions | Workbook password | Encrypt XLSX | StrongCryptographicProvider | .NET Excel protection
-// Common Searches: Aspose.Cells 256 bit encryption C# | How to use Microsoft Strong Cryptographic Provider with Aspose.Cells | Set password and encrypt Excel workbook .NET | Encrypt XLSX file using Aspose.Cells SetEncryptionOptions | Strong encryption for Excel files in C#
-// Developer Intent: Apply a 256‑bit password‑protected encryption scheme to an Excel workbook before persisting it.
-// Use Cases: Secure confidential financial statements before distribution. | Protect exported data from a web service by saving it as an encrypted workbook. | Achieve compliance with data‑privacy regulations that require strong file encryption.
-// AI Prompts: Provide C# code that encrypts an Excel workbook with a 256‑bit password using Aspose.Cells and the Microsoft Strong Cryptographic Provider. | Show an example of setting a workbook password and enabling strong encryption before saving with Aspose.Cells for .NET. | Explain the differences between Aspose.Cells EncryptionType.StrongCryptographicProvider and other encryption options.
+// Title: Encrypt Excel Workbook with 256‑bit Microsoft Strong Cryptographic Provider using Aspose.Cells for .NET
+// Description: Shows how to create a workbook, add sample data, set a password, apply 256‑bit Microsoft Strong Cryptographic Provider encryption, and save the file as .xlsx with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | strong encryption | Microsoft Strong Cryptographic Provider | 256-bit | C# workbook password | Excel encryption .NET | SetEncryptionOptions | EncryptionType.StrongCryptographicProvider
+// Common Searches: Aspose.Cells 256 bit encryption C# | How to use Microsoft Strong Cryptographic Provider with Aspose.Cells | Encrypt Excel file with password in .NET | Set workbook encryption type Aspose.Cells | Save encrypted .xlsx using Aspose.Cells
+// Developer Intent: Apply 256‑bit Microsoft Strong Cryptographic Provider encryption and a password to an Excel workbook before saving.
+// Use Cases: Secure financial statements before distribution | Protect exported data from web services | Meet regulatory requirements for encrypted Excel files | Store confidential customer information in encrypted workbooks
+// AI Prompts: Provide C# code to encrypt an Aspose.Cells workbook with a custom password using EncryptionType.StrongCryptographicProvider and a 256‑bit key. | Show how to verify that a password protects an Excel file saved with Aspose.Cells strong encryption. | Compare Aspose.Cells EncryptionType options and explain when to choose StrongCryptographicProvider. | Generate a PowerShell script that calls a .NET assembly to encrypt an Excel file with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook with Aspose.Cells, assign a password, enable 256‑bit encryption via the Microsoft Strong Cryptographic Provider (SetEncryptionOptions), and save the result as a protected XLSX file.
+// Shows how to create a workbook, add sample data, set a password, apply 256‑bit Microsoft Strong Cryptographic Provider encryption, and save the file as .xlsx with Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -17,17 +17,16 @@ class Program
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // (Optional) Add some data to demonstrate encryption
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("This workbook is encrypted with strong encryption.");
+        // Optional: add some data to demonstrate the workbook content
+        workbook.Worksheets[0].Cells["A1"].PutValue("Encrypted with Strong Cryptographic Provider");
 
-        // Assign a password for encryption
-        workbook.Settings.Password = "MyStrong256BitPassword!";
+        // Assign a password (the password itself is a string; the encryption will use a 256‑bit key)
+        workbook.Settings.Password = "MyStrongPassword123!";
 
         // Apply strong encryption (Microsoft Strong Cryptographic Provider) with a 256‑bit key
         workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256);
 
-        // Save the encrypted workbook
+        // Save the workbook using the standard save method
         workbook.Save("StrongEncryptedWorkbook.xlsx", SaveFormat.Xlsx);
     }
 }

@@ -4,7 +4,7 @@ description: C# examples for loading Excel, CSV, HTML, streams, encrypted files,
 product: Aspose.Cells for .NET
 category: open-workbook
 language: C#
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-14
 ---
 
 # Open and Load Excel Workbooks in C# with Aspose.Cells for .NET

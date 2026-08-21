@@ -1,37 +1,34 @@
-// Title: Set default workbook date format to dd‑MMM‑yyyy using Aspose.Cells for .NET
-// Description: Creates a new Workbook, modifies its DefaultStyle.Custom property to "dd-MMM-yyyy", optionally applies the style to a sample cell, and saves the file. This changes the global date display for all new cells in the workbook.
-// Keywords: Aspose.Cells default date format | C# set workbook date style | custom date format dd-MMM-yyyy | global date format Aspose.Cells | .NET workbook default style | change default date pattern
-// Common Searches: Aspose.Cells change default date format | set workbook default style to dd-MMM-yyyy .NET | global date format for all cells Aspose.Cells | how to apply custom date format to new workbook | default date pattern Aspose.Cells C#
-// Developer Intent: Change the workbook’s default date format to dd‑MMM‑yyyy so every new date cell uses this pattern automatically.
-// Use Cases: Generate a template where all dates appear as dd‑MMM‑yyyy without per‑cell styling. | Create financial reports that enforce a consistent date representation across sheets. | Distribute a shared workbook that guarantees downstream users see dates in the required format.
-// AI Prompts: Provide C# code that sets Aspose.Cells Workbook.DefaultStyle.Custom to "dd-MMM-yyyy" and demonstrates the result in a cell. | Explain step‑by‑step how to change the global date format of a workbook using Aspose.Cells for .NET. | Show how to update existing worksheets after modifying the default date style in an Aspose.Cells workbook.
+// Title: Set Global Workbook Date Format to dd-MMM-yyyy with Aspose.Cells for .NET (C#)
+// Description: Shows how to modify a workbook's DefaultStyle in Aspose.Cells for .NET so every new cell automatically uses the custom date format dd-MMM-yyyy, then saves the workbook.
+// Keywords: Aspose.Cells default date format C# | global Excel date style Aspose | custom date format dd-MMM-yyyy .NET | set workbook default style Aspose.Cells | C# Excel date formatting Aspose
+// Common Searches: Aspose.Cells set default date format C# | How to apply a global date style in an Excel workbook using Aspose.Cells | Change default cell format to dd-MMM-yyyy with Aspose.Cells .NET | C# Aspose.Cells default style custom date format example
+// Developer Intent: Configure the workbook’s default style so all cells inherit the dd-MMM-yyyy date format without per‑cell styling.
+// Use Cases: Create a template where every date appears as dd-MMM-yyyy across all worksheets. | Generate periodic reports that require a consistent date appearance without manual formatting. | Load an existing workbook and enforce a new global date format before adding further data.
+// AI Prompts: Write C# code using Aspose.Cells to set the workbook’s default date format to "dd-MMM-yyyy" and save the file. | Explain how the DefaultStyle.Custom property affects date formatting for newly added cells in Aspose.Cells. | Show how to apply a global custom date format and then override it for a specific column or range in an Excel workbook.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsDateFormatDemo
+// Shows how to modify a workbook's DefaultStyle in Aspose.Cells for .NET so every new cell automatically uses the custom date format dd-MMM-yyyy, then saves the workbook.
+class Program
 {
-    // Creates a new Workbook, modifies its DefaultStyle.Custom property to "dd-MMM-yyyy", optionally applies the style to a sample cell, and saves the file. This changes the global date display for all new cells in the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Get the workbook's default style and set a custom date format
-            Style defaultStyle = workbook.DefaultStyle;
-            defaultStyle.Custom = "dd-mmm-yyyy";
-            workbook.DefaultStyle = defaultStyle; // apply the modified default style
+        // Set the workbook's default style to use the custom date format "dd-mmm-yyyy"
+        Style defaultStyle = workbook.DefaultStyle;
+        defaultStyle.Custom = "dd-mmm-yyyy";
+        workbook.DefaultStyle = defaultStyle;
 
-            // Demonstrate the default format by inserting a date into a cell
-            Worksheet sheet = workbook.Worksheets[0];
-            Cell cell = sheet.Cells["A1"];
-            cell.PutValue(DateTime.Now);
-            cell.SetStyle(defaultStyle); // optional: apply explicitly to the cell
+        // Optional: demonstrate the format by putting a date into a cell
+        Worksheet sheet = workbook.Worksheets[0];
+        Cell dateCell = sheet.Cells["A1"];
+        dateCell.PutValue(DateTime.Now);
+        // The cell will inherit the default style, so no need to set the style explicitly
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("DefaultDateFormat.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("output.xlsx");
     }
 }

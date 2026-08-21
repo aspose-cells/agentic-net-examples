@@ -1,55 +1,50 @@
-// Title: Aspose.Cells C# – Treat Division‑by‑Zero as Blank Cell Using CalculationOptions
-// Description: Shows how to set CalculationOptions.IgnoreError, calculate formulas that divide by zero, and replace resulting #DIV/0! error cells with empty values before saving the workbook.
-// Keywords: Aspose.Cells | C# | CalculationOptions | IgnoreError | division by zero | blank cell | #DIV/0! error | error handling | Excel formula calculation | replace error with empty
-// Common Searches: Aspose.Cells ignore #DIV/0! error | C# Aspose.Cells treat division by zero as blank | CalculationOptions.IgnoreError example | replace error cells with empty Aspose.Cells | Aspose.Cells calculate formula without error
-// Developer Intent: Configure Aspose.Cells to return an empty cell instead of a #DIV/0! error when a formula divides by zero.
-// Use Cases: Generate Excel reports where division‑by‑zero errors appear as blank cells for a cleaner layout. | Run bulk calculations on worksheets that may contain invalid divisions and automatically clear error values. | Prepare data exports where downstream systems cannot handle Excel error codes. | Create templates that hide #DIV/0! errors without raising exceptions during calculation.
-// AI Prompts: Write C# code with Aspose.Cells that calculates formulas and converts any #DIV/0! errors to blank cells. | Show how to enable CalculationOptions.IgnoreError and clear error cells after workbook.CalculateFormula. | Provide an Aspose.Cells example that handles division‑by‑zero without throwing exceptions and saves the result.
+// Title: Aspose.Cells .NET – Convert Division‑by‑Zero Errors to Blank Cells
+// Description: Demonstrates how to configure Aspose.Cells CalculationOptions to ignore errors, run Workbook.CalculateFormula, detect #DIV/0! results, replace them with an empty string, and save the workbook.
+// Keywords: Aspose.Cells division by zero | Aspose.Cells ignore error | CalculationOptions IgnoreError | C# replace #DIV/0! with blank | .NET Excel formula error handling
+// Common Searches: Aspose.Cells hide #DIV/0! error | C# Aspose.Cells treat division by zero as empty cell | Aspose.Cells CalculationOptions ignore errors example | How to clear error values after CalculateFormula in Aspose.Cells | Replace Excel formula errors with blank using Aspose.Cells .NET
+// Developer Intent: Replace a division‑by‑zero error in an Aspose.Cells workbook with an empty cell instead of #DIV/0!.
+// Use Cases: Financial reports where invalid ratios should appear blank for readability. | Automated Excel generation that must hide calculation errors before distribution. | Templates that automatically clear error cells to prevent confusing end‑users.
+// AI Prompts: Provide C# code that sets CalculationOptions.IgnoreError, runs CalculateFormula, and clears #DIV/0! cells in Aspose.Cells. | Show a method to scan a worksheet after calculation and replace any error value with an empty string using Aspose.Cells. | Explain alternative ways to suppress division‑by‑zero errors in Aspose.Cells without manual string checks.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to set CalculationOptions.IgnoreError, calculate formulas that divide by zero, and replace resulting #DIV/0! error cells with empty values before saving the workbook.
-class DivisionByZeroBlankDemo
+namespace AsposeCellsDivisionByZeroDemo
 {
-    static void Main()
+    // Demonstrates how to configure Aspose.Cells CalculationOptions to ignore errors, run Workbook.CalculateFormula, detect #DIV/0! results, replace them with an empty string, and save the workbook.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate a cell with a numeric value
-            worksheet.Cells["A1"].PutValue(10);
+            // Set a formula that causes division by zero
+            cells["A1"].Formula = "=10/0";
 
-            // Set a formula that will cause division by zero
-            worksheet.Cells["B1"].Formula = "=A1/0";
-
-            // Configure calculation options to ignore errors (e.g., #DIV/0!)
+            // Configure calculation options:
+            // - IgnoreError = true suppresses exceptions during calculation.
+            // - The result of the error will still be an error value, so we replace it with a blank.
             CalculationOptions calcOptions = new CalculationOptions
             {
                 IgnoreError = true
             };
 
-            // Perform calculation with the specified options
+            // Perform calculation with the configured options
             workbook.CalculateFormula(calcOptions);
 
-            // After calculation, replace any error cells with a blank value
-            foreach (Cell cell in worksheet.Cells)
+            // After calculation, check if the cell contains a division‑by‑zero error
+            // (error values are represented as strings starting with "#").
+            if (cells["A1"].StringValue.StartsWith("#"))
             {
-                if (cell.Type == CellValueType.IsError)
-                {
-                    cell.PutValue(string.Empty); // Treat as blank
-                }
+                // Treat the error as a blank cell
+                cells["A1"].PutValue(string.Empty);
             }
 
-            // Save the workbook
-            workbook.Save("DivisionByZeroBlank.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Save the workbook to verify the result
+            workbook.Save("DivisionByZeroHandled.xlsx");
         }
     }
 }

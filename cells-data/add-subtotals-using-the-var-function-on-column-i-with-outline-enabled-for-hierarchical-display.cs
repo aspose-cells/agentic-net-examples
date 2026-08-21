@@ -1,57 +1,78 @@
+// Title: C# – Add variance subtotals with outline hierarchy using Aspose.Cells
+// Description: Shows how to create a workbook, fill Category (H) and Value (I) columns, define a CellArea, and call Cells.Subtotal with ConsolidationFunction.Var to calculate variance subtotals grouped by Category. The example enables outline view, places summary rows below detail rows, inserts page breaks, and saves the file as SubtotalVarOutlineDemo.xlsx.
+// Keywords: Aspose.Cells C# subtotal | variance subtotal Aspose | ConsolidationFunction.Var example | .NET Excel outline view | group by column subtotal | summary row below outline | page break between groups | CellArea Subtotal method
+// Common Searches: Aspose.Cells subtotal Var function C# | enable outline view for subtotals Aspose.Cells | how to add variance subtotals in Excel with Aspose | group data by category and calculate variance using Aspose.Cells | C# code for hierarchical subtotals with page breaks
+// Developer Intent: Generate an Excel workbook that groups rows by Category, computes variance subtotals for the Value column, and presents the results in an expandable outline.
+// Use Cases: Financial statements that need variance analysis per department with collapsible sections. | Inventory reports showing variance of stock levels for each product category. | Sales dashboards that automatically calculate and hide variance subtotals for regional groups.
+// AI Prompts: Write C# code with Aspose.Cells to add variance subtotals on column I and enable outline view with summary rows below the data. | Explain how to modify the Subtotal method parameters to place summary rows above the detail rows while still using the Var function. | Provide a step‑by‑step guide to insert page breaks between groups when creating variance subtotals with Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsSubtotalVarExample
+namespace AsposeCellsSubtotalVarOutlineDemo
 {
+    // Shows how to create a workbook, fill Category (H) and Value (I) columns, define a CellArea, and call Cells.Subtotal with ConsolidationFunction.Var to calculate variance subtotals grouped by Category. The example enables outline view, places summary rows below detail rows, inserts page breaks, and saves the file as SubtotalVarOutlineDemo.xlsx.
     class Program
     {
         static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Populate sample data (including column I which is index 8)
+            // Populate sample data in columns H (index 7) and I (index 8)
             // Header row
-            cells["A1"].PutValue("Group");
-            cells["I1"].PutValue("Value");
+            cells[0, 7].PutValue("Category");   // Column H
+            cells[0, 8].PutValue("Value");      // Column I
 
             // Sample data rows
-            // Group column (A) will be used for grouping
-            // Column I will contain numeric values for which we calculate variance
-            string[] groups = { "Alpha", "Alpha", "Beta", "Beta", "Beta", "Gamma", "Gamma" };
-            double[] values = { 10, 12, 20, 22, 24, 30, 32 };
-
-            for (int i = 0; i < groups.Length; i++)
+            object[,] data = new object[,]
             {
-                cells[i + 1, 0].PutValue(groups[i]);   // Column A (index 0)
-                cells[i + 1, 8].PutValue(values[i]);  // Column I (index 8)
+                { "A", 10 },
+                { "A", 20 },
+                { "B", 30 },
+                { "B", 40 },
+                { "C", 50 },
+                { "C", 60 }
+            };
+
+            for (int r = 0; r < data.GetLength(0); r++)
+            {
+                cells[r + 1, 7].PutValue(data[r, 0]); // Category
+                cells[r + 1, 8].PutValue(data[r, 1]); // Value
             }
 
-            // Define the range that includes the header and all data rows
-            // From A1 to I{lastRow}
-            int lastRow = groups.Length; // because rows are 1-based after header
+            // Define the cell area that contains the data (including headers)
+            // StartRow = 0, StartColumn = 7 (H), EndRow = data rows count, EndColumn = 8 (I)
             CellArea area = new CellArea
             {
                 StartRow = 0,
-                StartColumn = 0,
-                EndRow = lastRow,
+                StartColumn = 7,
+                EndRow = data.GetLength(0),
                 EndColumn = 8
             };
 
             // Add subtotals:
-            // - Group by column A (index 0)
-            // - Use Var function (variance)
-            // - Apply subtotal to column I (index 8)
+            // - Group by the first column in the area (Category) => groupBy = 0
+            // - Use Var function for variance calculation
+            // - Apply subtotal to the second column in the area (Value) => totalList = {1}
             // - Replace existing subtotals, add page breaks, place summary below data
-            cells.Subtotal(area, 0, ConsolidationFunction.Var, new int[] { 8 }, true, true, true);
+            cells.Subtotal(
+                area,
+                0,
+                ConsolidationFunction.Var,
+                new int[] { 1 },
+                true,   // replace existing subtotals
+                true,   // add page breaks between groups
+                true    // summary below data (hierarchical outline)
+            );
 
-            // Enable outline display (summary rows positioned below the detail rows)
-            sheet.Outline.SummaryRowBelow = true;
+            // Enable outline view and ensure summary rows appear below detail rows
+            worksheet.Outline.SummaryRowBelow = true;
 
             // Save the workbook
-            workbook.Save("SubtotalVarOutline.xlsx");
+            workbook.Save("SubtotalVarOutlineDemo.xlsx");
         }
     }
 }

@@ -1,49 +1,53 @@
-// Title: Export Aspose.Cells Workbook to CSV with Line‑Breaks Replaced by Spaces (C#)
-// Description: Creates a workbook, inserts sample text containing \n and \r\n, scans every string cell to substitute newline characters with a single space, and saves the result as a CSV file using TxtSaveOptions and a comma delimiter.
-// Keywords: Aspose.Cells CSV export | C# remove newline from cells | replace line break Aspose | TxtSaveOptions CSV | Excel to flat file | single‑line CSV output | data cleaning before export
-// Common Searches: Aspose.Cells replace newline before CSV | C# export Excel to CSV without line breaks | remove \r\n from cells Aspose.Cells | CSV export with space instead of line break | how to clean multi‑line cells for CSV
-// Developer Intent: Strip newline characters from all string cells and generate a CSV file that contains only single‑line values.
-// Use Cases: Prepare Excel reports for systems that reject embedded line breaks in CSV files. | Normalize user‑entered multi‑line data before feeding it into a data‑migration pipeline. | Create clean, one‑row‑per‑record CSVs for downstream analytics or import tools.
-// AI Prompts: Write C# code with Aspose.Cells that replaces every \r, \n, or \r\n in string cells with a space and then saves the workbook as a CSV. | Show how to configure TxtSaveOptions for CSV export while ensuring no line‑break characters appear in the output. | Explain how to adapt the example to use a semicolon delimiter and keep numeric formatting unchanged during CSV generation.
+// Title: Export Workbook to CSV with Line Breaks Replaced by Spaces using Aspose.Cells (C#)
+// Description: Creates a workbook, inserts cells containing LF, CRLF, or CR, replaces newline characters in all string cells with a single space, and saves the result as a CSV file using TxtSaveOptions.
+// Keywords: Aspose.Cells | C# | CSV export | remove line breaks | replace newline characters | TxtSaveOptions | SaveFormat.Csv | Excel to CSV conversion | clean cell values | CRLF handling
+// Common Searches: Aspose.Cells replace line breaks before CSV export | C# export Excel to CSV without newlines | remove CRLF from cells when saving as CSV | how to clean multi‑line text for CSV using Aspose.Cells | save workbook as CSV with spaces instead of line breaks
+// Developer Intent: Strip newline characters from every string cell and generate a CSV file that contains only single‑line values.
+// Use Cases: Prepare Excel data for systems that reject line breaks in CSV fields | Create clean, single‑line CSV reports from worksheets with wrapped text | Sanitize user‑generated comments or notes before bulk data export
+// AI Prompts: Show how to replace line breaks with a custom delimiter (e.g., '|') instead of a space. | Demonstrate applying the newline removal only to selected columns while exporting to CSV. | Explain how to preserve quoted fields using CsvSaveOptions after cleaning newline characters.
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, inserts sample text containing \n and \r\n, scans every string cell to substitute newline characters with a single space, and saves the result as a CSV file using TxtSaveOptions and a comma delimiter.
-class ExportCsvWithLineBreakHandling
+// Creates a workbook, inserts cells containing LF, CRLF, or CR, replaces newline characters in all string cells with a single space, and saves the result as a CSV file using TxtSaveOptions.
+class ExportCsvWithLineBreaksHandled
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook and add sample data containing line breaks
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
-
-        // Sample data containing line breaks
         sheet.Cells["A1"].PutValue("First line\nSecond line");
         sheet.Cells["B1"].PutValue("Hello\r\nWorld");
         sheet.Cells["C1"].PutValue("NoBreaksHere");
 
-        // Replace line breaks in all string cells with a space
-        foreach (Cell cell in sheet.Cells)
+        // Iterate through all worksheets and cells to replace line breaks with spaces
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            if (cell.Type == CellValueType.IsString)
+            Cells cells = ws.Cells;
+            foreach (Cell cell in cells)
             {
-                string text = cell.StringValue;
-                if (text.Contains("\n") || text.Contains("\r"))
+                // Process only string cells
+                if (cell.Type == CellValueType.IsString)
                 {
-                    string cleaned = text.Replace("\r\n", " ")
-                                         .Replace("\n", " ")
-                                         .Replace("\r", " ");
-                    cell.PutValue(cleaned);
+                    string original = cell.StringValue;
+                    if (original.Contains("\n") || original.Contains("\r"))
+                    {
+                        // Replace CRLF, LF, and CR with a single space
+                        string cleaned = original.Replace("\r\n", " ")
+                                                .Replace("\n", " ")
+                                                .Replace("\r", " ");
+                        cell.PutValue(cleaned);
+                    }
                 }
             }
         }
 
-        // Set up CSV save options
-        TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv);
-        saveOptions.Separator = ','; // default separator
+        // Configure CSV save options (using TxtSaveOptions)
+        TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv);
+        csvOptions.Separator = ','; // default separator for CSV
 
-        // Export the workbook to CSV
-        workbook.Save("output.csv", saveOptions);
+        // Save the workbook to a CSV file using the Save(string, SaveOptions) method
+        workbook.Save("output.csv", csvOptions);
     }
 }

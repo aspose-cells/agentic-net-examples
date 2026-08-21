@@ -1,47 +1,40 @@
-// Title: Aspose.Cells for .NET – Repeat Rows 1‑2 as Print Titles on Every Page
-// Description: The C# sample builds a new workbook, selects the first sheet, assigns "$1:$2" to PageSetup.PrintTitleRows so that rows 1‑2 are printed at the top of each page, and writes the result to PrintTitleRows_1_2.xlsx.
-// Keywords: Aspose.Cells PrintTitleRows | C# repeat header rows printing | Aspose.Cells PageSetup example | set worksheet print titles .NET | repeat rows on each printed page
-// Common Searches: how to repeat header rows with Aspose.Cells .NET | C# set print title rows Aspose.Cells | Aspose.Cells repeat rows on every page | PageSetup.PrintTitleRows usage example
-// Developer Intent: Configure a worksheet so specific rows are printed as titles on every page.
-// Use Cases: Printing large reports where the first two rows contain column headings. | Creating multi‑page invoices that need a static title block. | Generating data sheets with fixed header rows for consistent printouts.
-// AI Prompts: Show me C# code to set rows 1‑2 as repeating print titles using Aspose.Cells. | Give a complete Aspose.Cells example that saves a workbook after defining print title rows. | Explain how to change or clear the PrintTitleRows setting in an existing worksheet.
+// Title: C# – Set Print Title Rows (Rows 1‑2) in Aspose.Cells Worksheet
+// Description: Creates a new workbook, adds optional data, assigns rows 1 and 2 as repeating print titles via Worksheet.PageSetup.PrintTitleRows, and saves the file as PrintTitleRowsRows1to2.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells PrintTitleRows | repeat header rows C# | Worksheet.PageSetup.PrintTitleRows example | Aspose.Cells set print titles | Excel repeat rows on each page .NET
+// Common Searches: Aspose.Cells repeat rows on each printed page | C# set PrintTitleRows property | how to set print title rows in Aspose.Cells | Aspose.Cells worksheet print titles example | repeat first two rows when printing Excel with Aspose
+// Developer Intent: Configure a worksheet so that rows 1‑2 appear as print titles on every printed page.
+// Use Cases: Add static header rows to a multi‑page report and ensure they repeat on each printed sheet. | Automate generation of printable Excel files where column headings must appear on every page. | Create a workbook programmatically and set repeat rows without opening Excel manually.
+// AI Prompts: Generate C# code that sets rows 1‑2 as print titles in an Aspose.Cells worksheet and saves the workbook. | Explain the purpose of Worksheet.PageSetup.PrintTitleRows and how to modify or clear it. | Show an example that adds dynamic data to a worksheet while keeping the first two rows as repeating print titles.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPrintTitleRowsDemo
 {
-    // The C# sample builds a new workbook, selects the first sheet, assigns "$1:$2" to PageSetup.PrintTitleRows so that rows 1‑2 are printed at the top of each page, and writes the result to PrintTitleRows_1_2.xlsx.
-    public class SetPrintTitleRowsDemo
-    {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Repeat rows 1 through 2 at the top of each printed page
-                worksheet.PageSetup.PrintTitleRows = "$1:$2";
-
-                // Save the workbook
-                workbook.Save("PrintTitleRows_1_2.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
+    // Creates a new workbook, adds optional data, assigns rows 1 and 2 as repeating print titles via Worksheet.PageSetup.PrintTitleRows, and saves the file as PrintTitleRowsRows1to2.xlsx using Aspose.Cells for .NET.
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            SetPrintTitleRowsDemo.Run();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add sample data (optional, just for illustration)
+            worksheet.Cells["A1"].PutValue("Header Row 1");
+            worksheet.Cells["A2"].PutValue("Header Row 2");
+            for (int i = 3; i <= 20; i++)
+            {
+                worksheet.Cells[$"A{i}"].PutValue($"Data {i - 2}");
+            }
+
+            // Set rows 1 and 2 to repeat at the top of each printed page
+            worksheet.PageSetup.PrintTitleRows = "$1:$2";
+
+            // Save the workbook
+            workbook.Save("PrintTitleRowsRows1to2.xlsx");
         }
     }
 }

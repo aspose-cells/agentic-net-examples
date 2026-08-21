@@ -1,110 +1,116 @@
-// Title: Runtime Locale Loading and Localization with Aspose.Cells (C#)
-// Description: A console app that reads a locale code from the user, maps it to a full CultureInfo, configures LoadOptions, optionally loads an existing workbook, sets Workbook.Settings.LanguageCode, writes the selected locale to a cell, and saves the file as a localized Excel document.
-// Keywords: Aspose.Cells CultureInfo | LoadOptions locale | Workbook Settings LanguageCode | C# Excel localization | dynamic locale mapping | runtime culture Excel | Aspose.Cells internationalization
-// Common Searches: Aspose.Cells load workbook with specific CultureInfo | set workbook language code based on user locale | C# map locale to CountryCode Aspose.Cells | create new workbook when file missing Aspose.Cells | apply runtime localization to Excel with Aspose
-// Developer Intent: Read a user‑provided locale at runtime, apply it to Aspose.Cells LoadOptions and WorkbookSettings, and produce a localized Excel file.
-// Use Cases: Load an existing spreadsheet so dates, numbers, and currency follow the user’s culture. | Generate a fresh workbook when the source file is absent and assign the correct LanguageCode for formula behavior. | Record the applied locale in a worksheet cell for audit trails or downstream processing.
-// AI Prompts: Write C# code that accepts a locale string, creates a CultureInfo, sets LoadOptions.CultureInfo, and updates Workbook.Settings.LanguageCode using Aspose.Cells. | Show how to extend the locale‑to‑CountryCode dictionary with additional languages and handle unknown locales gracefully. | Explain how Aspose.Cells formats dates, numbers, and currencies according to the CultureInfo supplied in LoadOptions.
+// Title: Load Runtime Locale from Config and Apply Aspose.Cells Localization in C#
+// Description: Read a locale string from a config.txt file, create the matching CultureInfo, configure Aspose.Cells LoadOptions, set the workbook's UI language via CountryCode, and save the localized Excel file. Includes fallback to invariant culture for unsupported locales.
+// Keywords: Aspose.Cells C# | LoadOptions CultureInfo | runtime locale configuration | Excel workbook localization | CountryCode mapping | CultureInfo fallback | dynamic language settings | config file locale
+// Common Searches: Aspose.Cells load workbook with cultureinfo from config | C# set workbook language code using Aspose.Cells | How to map locale string to Aspose.Cells CountryCode | LoadOptions CultureInfo example Aspose.Cells | Read locale from text file and apply to Excel workbook C#
+// Developer Intent: Read a locale at runtime, convert it to .NET CultureInfo and Aspose.Cells CountryCode, apply these settings to LoadOptions and workbook UI language, and save the localized workbook.
+// Use Cases: Automatically format numbers, dates, and currencies according to a user‑selected region when loading Excel files. | Display workbook UI elements (menus, messages) in the language defined by a configuration file. | Provide a safe fallback to invariant culture for unknown or misspelled locale codes, preventing runtime errors.
+// AI Prompts: Generate C# code that reads a locale from a JSON configuration file and applies it to Aspose.Cells LoadOptions and workbook Settings.LanguageCode. | Extend GetCountryCodeFromLocale to include "pt-BR", "it", and "nl" with appropriate CountryCode values. | Explain best practices for validating and sanitizing locale strings before creating a CultureInfo object in Aspose.Cells.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
-// A console app that reads a locale code from the user, maps it to a full CultureInfo, configures LoadOptions, optionally loads an existing workbook, sets Workbook.Settings.LanguageCode, writes the selected locale to a cell, and saves the file as a localized Excel document.
-public class LocalizationDemo
+// Read a locale string from a config.txt file, create the matching CultureInfo, configure Aspose.Cells LoadOptions, set the workbook's UI language via CountryCode, and save the localized Excel file. Includes fallback to invariant culture for unsupported locales.
+static class Config
 {
-    public static void Main()
+    // Holds the locale string for the application
+    public static string Locale { get; set; } = "en";
+}
+
+class Program
+{
+    static void Main()
     {
+        // Load locale setting from a simple configuration file at runtime
+        string configPath = "config.txt";
+        string locale = "en"; // Default locale
+
+        if (File.Exists(configPath))
+        {
+            // Read the locale code (e.g., "en", "de", "zh-hant") and trim whitespace
+            locale = File.ReadAllText(configPath).Trim();
+        }
+
+        // Assign the loaded locale to the static Config.Locale field
+        Config.Locale = locale;
+
+        // Create a CultureInfo instance based on the locale string
+        CultureInfo culture = GetCultureInfoFromLocale(locale);
+
+        // Prepare LoadOptions with the selected CultureInfo
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+        {
+            CultureInfo = culture
+        };
+
+        const string inputFile = "input.xlsx";
+        const string outputFile = "output.xlsx";
+
+        if (!File.Exists(inputFile))
+        {
+            Console.WriteLine($"Input file \"{inputFile}\" not found.");
+            return;
+        }
+
         try
         {
-            // Prompt user for locale code (e.g., "en", "de", "fr")
-            Console.Write("Enter locale code (e.g., en, de, fr): ");
-            string userLocale = Console.ReadLine()?.Trim().ToLower();
+            // Load an existing workbook using the configured LoadOptions
+            Workbook workbook = new Workbook(inputFile, loadOptions);
 
-            // Validate input
-            if (string.IsNullOrEmpty(userLocale))
-            {
-                Console.WriteLine("No locale provided. Exiting.");
-                return;
-            }
+            // Optionally set the workbook's UI language based on the locale
+            workbook.Settings.LanguageCode = GetCountryCodeFromLocale(locale);
 
-            // Map simple locale identifiers to full CultureInfo names
-            var localeToCulture = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "ar", "ar-SA" }, { "bg", "bg-BG" }, { "ca", "ca-ES" }, { "cs", "cs-CZ" },
-                { "da", "da-DK" }, { "de", "de-DE" }, { "el", "el-GR" }, { "en", "en-US" },
-                { "es", "es-ES" }, { "fa", "fa-IR" }, { "fr", "fr-FR" }, { "he", "he-IL" },
-                { "hi", "hi-IN" }, { "hr", "hr-HR" }, { "hu", "hu-HU" }, { "id", "id-ID" },
-                { "it", "it-IT" }, { "ja", "ja-JP" }, { "ka", "ka-GE" }, { "ko", "ko-KR" },
-                { "lt", "lt-LT" }, { "ms", "ms-MY" }, { "nl", "nl-NL" }, { "pl", "pl-PL" },
-                { "pt", "pt-PT" }, { "ro", "ro-RO" }, { "ru", "ru-RU" }, { "sk", "sk-SK" },
-                { "th", "th-TH" }, { "tr", "tr-TR" }, { "uk", "uk-UA" }, { "vi", "vi-VN" },
-                { "zh", "zh-CN" }, { "zh-hant", "zh-TW" }
-            };
-
-            // Determine CultureInfo based on user input; fallback to invariant culture if unknown
-            CultureInfo cultureInfo;
-            if (localeToCulture.TryGetValue(userLocale, out string cultureName))
-            {
-                cultureInfo = new CultureInfo(cultureName);
-            }
-            else
-            {
-                Console.WriteLine($"Locale '{userLocale}' not recognized. Using invariant culture.");
-                cultureInfo = CultureInfo.InvariantCulture;
-            }
-
-            // Prepare LoadOptions with the selected CultureInfo
-            var loadOptions = new LoadOptions(LoadFormat.Xlsx)
-            {
-                CultureInfo = cultureInfo
-            };
-
-            // Load an existing workbook if it exists; otherwise create a new one
-            string inputPath = "input.xlsx";
-            Workbook workbook;
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath, loadOptions);
-            }
-            else
-            {
-                Console.WriteLine($"Input file '{inputPath}' not found. Creating a new workbook.");
-                workbook = new Workbook();
-            }
-
-            // Map locale to CountryCode for WorkbookSettings.LanguageCode
-            var localeToCountryCode = new Dictionary<string, CountryCode>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "en", CountryCode.USA },
-                { "de", CountryCode.Germany },
-                { "fr", CountryCode.France },
-                { "es", CountryCode.Spain },
-                { "zh", CountryCode.China },
-                { "ja", CountryCode.Japan },
-                { "ru", CountryCode.Russia }
-                // Add more mappings as needed
-            };
-
-            if (localeToCountryCode.TryGetValue(userLocale, out CountryCode countryCode))
-            {
-                workbook.Settings.LanguageCode = countryCode;
-            }
-
-            // Example modification: write the selected locale into a cell
-            workbook.Worksheets[0].Cells["A1"].PutValue($"Locale: {userLocale}");
-
-            // Save the workbook with a new name
-            string outputPath = "output_localized.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Workbook saved to '{outputPath}' with locale '{userLocale}'.");
+            // Save the workbook after applying localization settings
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Converts a locale code (e.g., "en", "zh-hant") to a .NET CultureInfo
+    static CultureInfo GetCultureInfoFromLocale(string locale)
+    {
+        try
+        {
+            // Replace underscores with hyphens to match .NET culture naming
+            string cultureName = locale.Replace('_', '-');
+            return new CultureInfo(cultureName);
+        }
+        catch
+        {
+            // Fallback to invariant culture if the locale is not recognized
+            return CultureInfo.InvariantCulture;
+        }
+    }
+
+    // Maps a locale code to the corresponding Aspose.Cells CountryCode enum value
+    static CountryCode GetCountryCodeFromLocale(string locale)
+    {
+        switch (locale)
+        {
+            case "en":
+                return CountryCode.USA;
+            case "de":
+                return CountryCode.Germany;
+            case "fr":
+                return CountryCode.France;
+            case "es":
+                return CountryCode.Spain;
+            case "zh":
+                return CountryCode.China;
+            case "zh-hant":
+                return CountryCode.Taiwan;
+            case "ja":
+                return CountryCode.Japan;
+            case "ru":
+                return CountryCode.Russia;
+            default:
+                // Default to English (USA) if no specific mapping exists
+                return CountryCode.USA;
         }
     }
 }

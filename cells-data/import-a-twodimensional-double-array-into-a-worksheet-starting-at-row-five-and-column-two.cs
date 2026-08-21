@@ -1,48 +1,55 @@
-// Title: Import a 2D double[,] array into an Aspose.Cells worksheet at row 5, column 2 (C#)
-// Description: Creates a double[,] matrix, defines zero‑based start indices (row 4, column 1) for Excel row 5/column 2, loops through the matrix and writes each value with Cells[row, col].PutValue, then saves the workbook as TwoDimArrayImport.xlsx. The example also notes that Cells.ImportArray can perform the same operation in a single call.
-// Keywords: Aspose.Cells C# import double array | double[,] to Excel | write 2D array Aspose.Cells | Cells.PutValue loop | Cells.ImportArray example | start row column Aspose.Cells | Excel row 5 column 2 | C# Excel matrix export | Aspose.Cells worksheet data import | GitHub Aspose.Cells sample
-// Common Searches: How to import a 2D double array into Aspose.Cells C# | Aspose.Cells putvalue starting at row 5 column 2 | Write double[,] data to Excel worksheet with Aspose.Cells | Cells.ImportArray with custom start position | C# export numeric matrix to Excel using Aspose.Cells
-// Developer Intent: Write the contents of a two‑dimensional double[,] matrix into a worksheet beginning at Excel row 5, column 2.
-// Use Cases: Populate a financial model where the matrix must start after header rows. | Export simulation results stored in a double[,] matrix to a predefined area of an Excel report. | Generate data for a chart by writing a numeric matrix to a worksheet with a fixed offset.
-// AI Prompts: Show a C# example that imports a 2D double[,] into an Aspose.Cells worksheet at a given start row and column using a loop. | Provide code that uses Cells.ImportArray to place a double[,] matrix starting at row 5, column 2. | Explain how to adapt the sample for variable start positions and large matrices while keeping performance optimal.
+// Title: C# – Import a 2‑D double[,] array into Aspose.Cells starting at row 5, column 2
+// Description: Shows how to create a Workbook, extract each row from a double[,] matrix, and write it horizontally into a worksheet with Cells.ImportArray, beginning at the fifth row (index 4) and second column (index 1), then save as TwoDimensionalArrayImport.xlsx.
+// Keywords: Aspose.Cells | C# import double array | Cells.ImportArray | double[,] to worksheet | 2D array Excel | start row column | Aspose.Cells C# example | import matrix Aspose | Excel automation .NET | write numeric array
+// Common Searches: Aspose.Cells import double[,] array C# | How to write a 2D double array to Excel with Aspose | Cells.ImportArray start at specific cell | C# write matrix to Excel starting at row 5 column 2 | Aspose.Cells place data after header rows
+// Developer Intent: Insert a two‑dimensional double[,] matrix into a worksheet at a defined offset (row 5, column 2) using Aspose.Cells.
+// Use Cases: Add sensor measurements after four header rows in a template. | Populate a financial matrix in a pre‑formatted report without overwriting titles. | Load simulation results into an existing workbook, aligning with layout by offsetting the start cell. | Export statistical tables into a workbook that already contains charts and headings. | Insert data for a chart series beginning at a specific cell range.
+// AI Prompts: Generate C# code that uses Aspose.Cells to import a double[,] array into a worksheet starting at row 5, column 2. | Explain the Cells.ImportArray parameters for horizontal versus vertical import. | Modify the example to import the array vertically while keeping the same start cell. | Show how to import a jagged double[] array instead of a 2D array with Aspose.Cells. | Provide code that imports the array and applies numeric formatting to the cells.
 
 using System;
 using Aspose.Cells;
 
-// Creates a double[,] matrix, defines zero‑based start indices (row 4, column 1) for Excel row 5/column 2, loops through the matrix and writes each value with Cells[row, col].PutValue, then saves the workbook as TwoDimArrayImport.xlsx. The example also notes that Cells.ImportArray can perform the same operation in a single call.
-class Program
+// Shows how to create a Workbook, extract each row from a double[,] matrix, and write it horizontally into a worksheet with Cells.ImportArray, beginning at the fifth row (index 4) and second column (index 1), then save as TwoDimensionalArrayImport.xlsx.
+class ImportTwoDimensionalDoubleArray
 {
     static void Main()
     {
-        // Sample two‑dimensional double array
-        double[,] data = new double[,]
-        {
-            { 1.1, 2.2, 3.3 },
-            { 4.4, 5.5, 6.6 },
-            { 7.7, 8.8, 9.9 }
-        };
-
-        // Starting position: row 5 (zero‑based index 4), column 2 (zero‑based index 1)
-        int startRow = 4;
-        int startCol = 1;
-
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
         Cells cells = worksheet.Cells;
 
-        // Import the array values cell by cell
-        int rows = data.GetLength(0);
-        int cols = data.GetLength(1);
-        for (int i = 0; i < rows; i++)
+        // Sample two‑dimensional double array (5 rows × 3 columns)
+        double[,] data = new double[,]
         {
-            for (int j = 0; j < cols; j++)
+            { 1.1, 2.2, 3.3 },
+            { 4.4, 5.5, 6.6 },
+            { 7.7, 8.8, 9.9 },
+            { 10.1, 11.2, 12.3 },
+            { 13.4, 14.5, 15.6 }
+        };
+
+        // Define the starting position: row 5 (index 4), column 2 (index 1)
+        int startRow = 4;    // zero‑based index for the 5th row
+        int startColumn = 1; // zero‑based index for the 2nd column
+
+        // Import each row of the 2‑D array horizontally
+        int totalRows = data.GetLength(0);
+        int totalCols = data.GetLength(1);
+        for (int r = 0; r < totalRows; r++)
+        {
+            // Extract a single row into a one‑dimensional double array
+            double[] rowValues = new double[totalCols];
+            for (int c = 0; c < totalCols; c++)
             {
-                cells[startRow + i, startCol + j].PutValue(data[i, j]);
+                rowValues[c] = data[r, c];
             }
+
+            // Import the row horizontally (isVertical = false)
+            cells.ImportArray(rowValues, startRow + r, startColumn, false);
         }
 
-        // Save the workbook
-        workbook.Save("TwoDimArrayImport.xlsx");
+        // Save the workbook to a file
+        workbook.Save("TwoDimensionalArrayImport.xlsx");
     }
 }

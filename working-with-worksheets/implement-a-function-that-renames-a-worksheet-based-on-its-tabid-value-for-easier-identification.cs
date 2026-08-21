@@ -1,81 +1,67 @@
-// Title: C# – Rename Excel worksheets by TabId using Aspose.Cells for .NET
-// Description: A console utility that loads an Excel workbook, iterates through all worksheets, builds a name like "Sheet_<TabId>", sanitizes it with CellsHelper.CreateSafeSheetName, assigns the new name, and saves the file. Includes error handling for missing files and runtime exceptions.
-// Keywords: Aspose.Cells rename worksheet | TabId sheet name .NET | CreateSafeSheetName example | C# programmatic Excel sheet rename | Excel worksheet safe name | Aspose.Cells command line tool | Workbook worksheet renaming
-// Common Searches: how to rename worksheets by TabId Aspose.Cells | C# rename Excel sheet to safe name | Aspose.Cells CreateSafeSheetName usage | rename all sheets in a workbook programmatically | command line tool to change Excel sheet names
-// Developer Intent: Automatically give each worksheet a unique, Excel‑compliant name that incorporates its internal TabId.
-// Use Cases: Standardize sheet names after importing workbooks from external sources. | Create deterministic identifiers for sheets used in data pipelines or reporting. | Ensure all worksheet names meet Excel length and character restrictions before distribution.
-// AI Prompts: Write a C# method that renames every worksheet to "Sheet_<TabId>" using Aspose.Cells and returns a map of old to new names. | Explain why the TabId property is useful for generating unique sheet names in Aspose.Cells. | Generate a PowerShell script that calls the compiled WorksheetRenamer executable with input and output paths.
+// Title: Rename Excel worksheets by TabId using Aspose.Cells for .NET
+// Description: C# code that loads a workbook, iterates through each worksheet, builds a name containing the sheet's TabId (e.g., "Sheet_5"), sanitizes it with CellsHelper.CreateSafeSheetName to meet Excel naming rules, assigns the new name, and saves the file.
+// Keywords: Aspose.Cells rename worksheet TabId | C# rename Excel sheets by TabId | CreateSafeSheetName Aspose.Cells | worksheet naming rules Excel .NET | programmatic sheet renaming Aspose
+// Common Searches: how to rename worksheets by TabId Aspose.Cells | Aspose.Cells C# change sheet name to include TabId | safe sheet name generation Aspose.Cells | rename all Excel sheets programmatically .NET | Excel TabId based sheet naming example
+// Developer Intent: Update every worksheet name to include its TabId while ensuring the name complies with Excel constraints.
+// Use Cases: Standardize sheet identifiers for automated processing pipelines. | Create traceable workbook versions where sheet order is reflected in the name. | Guarantee compliance with Excel's 31‑character limit and prohibited characters after bulk renaming.
+// AI Prompts: Write C# code with Aspose.Cells that renames each worksheet to "Sheet_{TabId}" and logs the original and new names. | Show how to handle duplicate names when using CellsHelper.CreateSafeSheetName while renaming sheets by TabId. | Explain the sanitization steps performed by CellsHelper.CreateSafeSheetName and which characters are removed.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A console utility that loads an Excel workbook, iterates through all worksheets, builds a name like "Sheet_<TabId>", sanitizes it with CellsHelper.CreateSafeSheetName, assigns the new name, and saves the file. Includes error handling for missing files and runtime exceptions.
-public class WorksheetRenamer
+namespace AsposeCellsExamples
 {
-    // Entry point for the console application.
-    public static void Main(string[] args)
+    // C# code that loads a workbook, iterates through each worksheet, builds a name containing the sheet's TabId (e.g., "Sheet_5"), sanitizes it with CellsHelper.CreateSafeSheetName to meet Excel naming rules, assigns the new name, and saves the file.
+    public static class WorksheetRenamer
     {
-        // Expect input and output file paths as command‑line arguments.
-        if (args.Length < 2)
+        /// <param name="filePath">Full path of the workbook to process.</param>
+        public static void RenameWorksheetsByTabId(string filePath)
         {
-            Console.WriteLine("Usage: WorksheetRenamer <inputPath> <outputPath>");
-            return;
-        }
-
-        string inputPath = args[0];
-        string outputPath = args[1];
-
-        try
-        {
-            // Verify that the input workbook exists before attempting to load it.
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Error: Input file not found – {inputPath}");
-                return;
-            }
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found: {filePath}");
+                    return;
+                }
 
-            // Perform the renaming operation.
-            RenameWorksheetsByTabId(inputPath, outputPath);
-            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors and display a friendly message.
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Load the existing workbook from the specified file.
+                Workbook workbook = new Workbook(filePath);
+
+                // Iterate through all worksheets in the collection.
+                foreach (Worksheet ws in workbook.Worksheets)
+                {
+                    // Build a name that contains the TabId.
+                    string proposedName = $"Sheet_{ws.TabId}";
+
+                    // Ensure the name is valid for Excel (max 31 chars, no illegal characters).
+                    string safeName = CellsHelper.CreateSafeSheetName(proposedName);
+
+                    // Assign the safe name to the worksheet.
+                    ws.Name = safeName;
+                }
+
+                // Save the workbook, overwriting the original file.
+                workbook.Save(filePath);
+                Console.WriteLine("Worksheet names updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing workbook: {ex.Message}");
+            }
         }
     }
 
-    // Renames each worksheet in the workbook to "Sheet_<TabId>"
-    // The new name is passed through CellsHelper.CreateSafeSheetName to guarantee it is a valid Excel sheet name.
-    public static void RenameWorksheetsByTabId(string inputPath, string outputPath)
+    // Entry point for the console application.
+    public class Program
     {
-        try
+        public static void Main(string[] args)
         {
-            // Load the existing workbook from the specified file.
-            Workbook workbook = new Workbook(inputPath);
+            // Expect a file path argument; otherwise use a default placeholder.
+            string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
 
-            // Iterate over all worksheets in the workbook.
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                // Create a name based on the internal TabId.
-                string proposedName = $"Sheet_{ws.TabId}";
-
-                // Convert to a safe sheet name (handles length limits and illegal characters).
-                string safeName = CellsHelper.CreateSafeSheetName(proposedName);
-
-                // Apply the new name.
-                ws.Name = safeName;
-            }
-
-            // Save the workbook with the updated worksheet names.
-            workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            // Propagate the exception to the caller after logging.
-            Console.WriteLine($"Failed to rename worksheets: {ex.Message}");
-            throw;
+            WorksheetRenamer.RenameWorksheetsByTabId(filePath);
         }
     }
 }

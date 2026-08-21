@@ -1,52 +1,63 @@
-// Title: Export Merged Cells to HTML and Validate Layout with Aspose.Cells for .NET
-// Description: This C# example creates a workbook, merges range A1:C2, saves it to HTML using HtmlSaveOptions with ValidateMergedAreas enabled, reloads the HTML file, extracts merged areas via GetMergedAreas, and prints their coordinates to confirm that the merged layout is preserved.
-// Keywords: Aspose.Cells | C# | HTML export | merged cells | ValidateMergedAreas | round‑trip conversion | load HTML workbook | CellArea | Excel to HTML | preserve layout
-// Common Searches: Aspose.Cells keep merged cells when exporting to HTML | HtmlSaveOptions ValidateMergedAreas usage .NET | How to read merged ranges after loading HTML with Aspose.Cells | C# export Excel merged header to HTML | Verify merged cell coordinates after HTML round‑trip
-// Developer Intent: Generate an HTML file from a workbook that contains merged cells and ensure the merged structure remains intact after re‑import.
-// Use Cases: Publish Excel reports with merged headers on web pages without losing formatting | Perform a round‑trip Excel → HTML → Excel conversion while checking merged regions | Detect layout issues before HTML export by enabling ValidateMergedAreas | Automate validation of merged cell ranges in server‑side document pipelines
-// AI Prompts: Write C# code that merges A1:C2, saves the workbook to HTML with ValidateMergedAreas, reloads the HTML, and lists merged areas using Aspose.Cells. | Explain the purpose of HtmlSaveOptions.ValidateMergedAreas and demonstrate how to verify merged cell coordinates after loading an HTML file. | Provide a step‑by‑step tutorial for preserving merged cells during Excel‑to‑HTML conversion and validating them on re‑import with Aspose.Cells for .NET.
+// Title: Export Merged Cells to HTML and Verify colspan/rowspan with Aspose.Cells for .NET
+// Description: Creates a workbook, merges range A1:C2, saves it as HTML using Aspose.Cells, then checks the generated markup for colspan="3" and rowspan="2" to confirm that the merged layout is preserved.
+// Keywords: Aspose.Cells HTML export | merged cells to HTML | colspan rowspan verification | C# Aspose.Cells HtmlSaveOptions | Excel to HTML conversion | preserve merged layout | automated HTML validation
+// Common Searches: Aspose.Cells export merged cells to HTML | verify colspan and rowspan in Aspose.Cells HTML output | C# merge A1:C2 and save as HTML | how to keep merged cells when converting Excel to HTML | Aspose.Cells HtmlSaveOptions merged cell settings
+// Developer Intent: Generate an HTML file from a workbook that contains merged cells and programmatically confirm that the merged structure appears correctly in the markup.
+// Use Cases: Publish spreadsheet reports with header rows that span multiple columns on a website. | Create web‑ready Excel exports where merged titles must render with proper colspan/rowspan tags. | Automate regression tests that validate HTML output after Excel‑to‑HTML conversion.
+// AI Prompts: Write C# code using Aspose.Cells to merge cells A1:C2, export the workbook to HTML, and assert that the HTML contains colspan="3" and rowspan="2". | Explain how HtmlSaveOptions handles merged cells during HTML conversion and how to adjust settings if the default behavior changes. | Generate a C# unit test that loads a workbook with merged cells, saves it as HTML, and verifies the presence of correct colspan and rowspan attributes.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// This C# example creates a workbook, merges range A1:C2, saves it to HTML using HtmlSaveOptions with ValidateMergedAreas enabled, reloads the HTML file, extracts merged areas via GetMergedAreas, and prints their coordinates to confirm that the merged layout is preserved.
-class MergedCellsHtmlDemo
+namespace AsposeCellsMergedHtmlDemo
 {
-    static void Main()
+    // Creates a workbook, merges range A1:C2, saves it as HTML using Aspose.Cells, then checks the generated markup for colspan="3" and rowspan="2" to confirm that the merged layout is preserved.
+    class Program
     {
-        // -------------------- Create workbook with merged cells --------------------
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Merge cells A1:C2 (rows 0-1, columns 0-2)
-        worksheet.Cells.Merge(0, 0, 2, 3);
-        worksheet.Cells["A1"].PutValue("Merged Header");
-
-        // -------------------- Save workbook to HTML --------------------
-        string htmlFile = "merged_cells.html";
-
-        // HtmlSaveOptions inherits from SaveOptions, allowing ValidateMergedAreas
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+        static void Main()
         {
-            // Validate merged areas before saving (optional but ensures layout correctness)
-            ValidateMergedAreas = true
-            // MergeEmptyTdType left as default to keep Excel‑like grid lines
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        workbook.Save(htmlFile, htmlOptions);
+            // Put a value in the top-left cell of the merged area
+            cells["A1"].PutValue("Merged Header");
 
-        // -------------------- Load HTML back and verify merged layout --------------------
-        Workbook loadedWorkbook = new Workbook(htmlFile);
-        Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
+            // Merge cells A1:C2 (rows 0-1, columns 0-2)
+            // firstRow = 0, firstColumn = 0, totalRows = 2, totalColumns = 3
+            cells.Merge(0, 0, 2, 3);
 
-        // Retrieve merged areas from the loaded worksheet
-        CellArea[] mergedAreas = loadedWorksheet.Cells.GetMergedAreas();
+            // Verify merged areas before saving
+            CellArea[] mergedAreas = cells.GetMergedAreas();
+            Console.WriteLine($"Number of merged areas: {mergedAreas.Length}");
+            foreach (CellArea area in mergedAreas)
+            {
+                Console.WriteLine($"Merged area: StartRow={area.StartRow}, StartColumn={area.StartColumn}, " +
+                                  $"EndRow={area.EndRow}, EndColumn={area.EndColumn}");
+            }
 
-        // Output verification results
-        Console.WriteLine($"Number of merged areas after loading HTML: {mergedAreas.Length}");
-        foreach (CellArea area in mergedAreas)
-        {
-            Console.WriteLine($"Merged area: StartRow={area.StartRow}, StartColumn={area.StartColumn}, EndRow={area.EndRow}, EndColumn={area.EndColumn}");
+            // Configure HTML save options (default settings preserve merged cells)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            {
+                // Keep default behavior; can explicitly set if needed
+                MergeEmptyTdType = MergeEmptyTdType.Default
+            };
+
+            // Save the workbook to HTML
+            string htmlPath = "MergedCells.html";
+            workbook.Save(htmlPath, htmlOptions);
+            Console.WriteLine($"Workbook saved to HTML: {htmlPath}");
+
+            // Simple verification: check the generated HTML for colspan/rowspan attributes
+            string htmlContent = File.ReadAllText(htmlPath);
+            bool hasColSpan = htmlContent.Contains("colspan=\"3\"");
+            bool hasRowSpan = htmlContent.Contains("rowspan=\"2\"");
+
+            Console.WriteLine("Verification of merged layout in HTML:");
+            Console.WriteLine($"  colspan=\"3\" found: {hasColSpan}");
+            Console.WriteLine($"  rowspan=\"2\" found: {hasRowSpan}");
         }
     }
 }

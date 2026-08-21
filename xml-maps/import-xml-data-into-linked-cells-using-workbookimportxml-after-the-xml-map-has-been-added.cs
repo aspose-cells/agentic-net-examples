@@ -1,72 +1,67 @@
-// Title: Import XML into linked cells with Workbook.ImportXml after adding an XML map (Aspose.Cells for .NET C#)
-// Description: Demonstrates how to create a workbook, add an XSD‑based XML map, link cell A1 to the "/Root/Item" path, import XML data with Workbook.ImportXml, save the result, and clean up temporary files.
-// Keywords: Aspose.Cells | C# | .NET | ImportXml | XML map | LinkToXmlMap | linked cells | XSD schema | XML import to Excel | Excel automation | data migration
-// Common Searches: Aspose.Cells import XML linked cells C# | Workbook.ImportXml after adding XML map | LinkToXmlMap example .NET | How to map XML to Excel cells using Aspose | Import XML into Excel template with Aspose.Cells
-// Developer Intent: Add an XML map, link worksheet cells to schema paths, import XML data, and generate a populated XLSX file.
-// Use Cases: Populate a template where each <Item> element fills successive rows in column A. | Migrate XML‑based configuration data into predefined Excel reports. | Automate financial models by linking specific XML elements to calculation cells.
-// AI Prompts: Show how to map multiple XML elements to different columns using linked cells. | Provide a version that reads the XSD and XML from streams instead of files. | Explain handling of XML namespaces when linking cells with Aspose.Cells.
+// Title: C# – Import XML into linked cells with Workbook.ImportXml after adding an XML map (Aspose.Cells .NET)
+// Description: Demonstrates how to create a Workbook, add an XML map from an XSD schema, bind cell A1 to an XPath using LinkToXmlMap, import XML data with Workbook.ImportXml, and save the populated worksheet.
+// Keywords: Aspose.Cells ImportXml C# | XML map workbook Aspose.Cells | LinkToXmlMap example .NET | import XML to Excel cells | XSD schema Aspose.Cells
+// Common Searches: Aspose.Cells link cell to XML map and import data | C# Workbook.ImportXml after adding XML map | How to use LinkToXmlMap with ImportXml in Aspose.Cells | Import XML file into Excel using Aspose.Cells .NET
+// Developer Intent: Load XML data into a workbook and fill cells that are bound to an XML map.
+// Use Cases: Generate a financial statement by binding specific cells to XML elements defined in an XSD and importing the XML file at runtime. | Keep an Excel dashboard synchronized with an external XML feed by linking cells to XML nodes and refreshing data via ImportXml. | Create a reusable Excel template where placeholders are linked to XML paths, allowing different XML files to populate the same layout without code changes.
+// AI Prompts: Write C# code that adds an XML map from a schema file, links cells to XPath expressions, and imports XML data using Aspose.Cells Workbook.ImportXml. | Explain the interaction between Workbook.ImportXml and cells linked via LinkToXmlMap, including the effect of start row and column parameters. | Provide a checklist for troubleshooting empty linked cells after ImportXml, covering schema validation, XPath accuracy, file paths, and map naming.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, add an XSD‑based XML map, link cell A1 to the "/Root/Item" path, import XML data with Workbook.ImportXml, save the result, and clean up temporary files.
-class ImportXmlWithLinkedCells
+// Demonstrates how to create a Workbook, add an XML map from an XSD schema, bind cell A1 to an XPath using LinkToXmlMap, import XML data with Workbook.ImportXml, and save the populated worksheet.
+class ImportXmlWithMapDemo
+{
+    public static void Run()
+    {
+        try
+        {
+            // Paths to required files
+            const string schemaPath = "schema.xsd";
+            const string xmlDataPath = "data.xml";
+
+            // Verify that the schema file exists
+            if (!File.Exists(schemaPath))
+                throw new FileNotFoundException($"Schema file not found: {schemaPath}");
+
+            // Verify that the XML data file exists
+            if (!File.Exists(xmlDataPath))
+                throw new FileNotFoundException($"XML data file not found: {xmlDataPath}");
+
+            // Create a new workbook
+            Workbook wb = new Workbook();
+
+            // Add an XML map to the workbook using the schema file
+            int mapIndex = wb.Worksheets.XmlMaps.Add(schemaPath);
+            XmlMap xmlMap = wb.Worksheets.XmlMaps[mapIndex];
+            xmlMap.Name = "MyXmlMap";
+
+            // Get the first worksheet and its cells collection
+            Worksheet sheet = wb.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Link cell A1 to a specific XML element path in the map
+            // Adjust the XPath "/Root/Element" to match your XML structure
+            cells.LinkToXmlMap(xmlMap.Name, 0, 0, "/Root/Element");
+
+            // Import XML data into the worksheet starting at cell A1
+            wb.ImportXml(xmlDataPath, sheet.Name, 0, 0);
+
+            // Save the workbook with the linked cells populated from the XML
+            wb.Save("LinkedXmlOutput.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}
+
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Prepare a simple XML schema (XSD) and XML data for the demo
-        string xsdContent = @"<?xml version='1.0' encoding='utf-8'?>
-<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-  <xs:element name='Root'>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name='Item' type='xs:string' maxOccurs='unbounded'/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-</xs:schema>";
-
-        string xmlContent = @"<?xml version='1.0' encoding='utf-8'?>
-<Root>
-  <Item>First</Item>
-  <Item>Second</Item>
-  <Item>Third</Item>
-</Root>";
-
-        // Write the schema and XML to temporary files
-        string schemaPath = Path.Combine(Path.GetTempPath(), "sample.xsd");
-        string xmlPath = Path.Combine(Path.GetTempPath(), "sample.xml");
-        File.WriteAllText(schemaPath, xsdContent);
-        File.WriteAllText(xmlPath, xmlContent);
-
-        // Add the XML map to the workbook using the schema file
-        int mapIndex = workbook.Worksheets.XmlMaps.Add(schemaPath);
-        XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-        xmlMap.Name = "SampleMap";
-
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Link cell A1 to the XML map path "/Root/Item"
-        // This creates a linked cell that will be populated when XML is imported
-        sheet.Cells.LinkToXmlMap(xmlMap.Name, 0, 0, "/Root/Item");
-
-        // Import the XML data into the worksheet starting at cell A1
-        // The ImportXml method will fill the linked cells according to the map
-        workbook.ImportXml(xmlPath, sheet.Name, 0, 0);
-
-        // Save the resulting workbook
-        string outputPath = "LinkedXmlOutput.xlsx";
-        workbook.Save(outputPath);
-
-        // Clean up temporary files
-        File.Delete(schemaPath);
-        File.Delete(xmlPath);
-
-        Console.WriteLine($"Workbook saved to '{outputPath}'. Linked cells have been populated from XML.");
+        ImportXmlWithMapDemo.Run();
     }
 }

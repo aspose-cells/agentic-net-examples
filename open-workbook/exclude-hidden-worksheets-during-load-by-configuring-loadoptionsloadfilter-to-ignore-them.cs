@@ -1,50 +1,80 @@
-// Title: Exclude Hidden Worksheets When Loading a Workbook with Aspose.Cells (C#)
-// Description: Demonstrates how to configure Aspose.Cells LoadOptions with a custom LoadFilter that loads only visible worksheets. The example creates a VisibleSheetLoadFilter, applies it to LoadOptions, opens the workbook, lists the loaded sheets, and saves the result, reducing memory usage and processing time.
-// Keywords: Aspose.Cells | LoadOptions | LoadFilter | visible worksheets | skip hidden sheets | C# Excel loading | exclude hidden tabs | .NET Excel API | performance optimization
-// Common Searches: Aspose.Cells load workbook without hidden sheets | How to ignore hidden worksheets in C# Aspose.Cells | Load only visible worksheets using LoadFilter | Skip hidden tabs when opening Excel with Aspose.Cells | Custom LoadFilter example Aspose.Cells .NET
-// Developer Intent: Load an Excel file while automatically omitting hidden worksheets.
-// Use Cases: Process only visible sheets for reporting or analytics to improve speed. | Create a lightweight copy of a workbook that contains just the visible tabs. | Export or validate data from visible worksheets while ignoring hidden ones.
-// AI Prompts: Write a C# snippet that uses Aspose.Cells LoadOptions with a custom LoadFilter to load only visible worksheets and then saves the workbook. | Explain how the VisibleSheetLoadFilter overrides StartSheet to skip hidden sheets and extend it to also ignore very hidden sheets. | Generate a unit test in C# that confirms hidden worksheets are not loaded when the custom LoadFilter is applied.
+// Title: Exclude Hidden Worksheets on Load with Aspose.Cells .NET LoadFilter
+// Description: Shows how to load an Excel workbook while skipping hidden worksheets by implementing a custom LoadFilter that overrides StartSheet, assigning it to LoadOptions, and saving a new file that contains only the visible sheets.
+// Keywords: Aspose.Cells LoadFilter | exclude hidden worksheets | load workbook visible sheets only | C# Aspose.Cells custom LoadFilter | skip hidden sheets Aspose.Cells | LoadOptions visible worksheets | filter worksheets on load .NET | Aspose.Cells performance hidden sheets | Excel hidden sheet loading Aspose
+// Common Searches: Aspose.Cells load workbook without hidden sheets | How to ignore hidden worksheets using LoadFilter | C# load only visible worksheets Aspose.Cells | Custom LoadFilter example Aspose.Cells .NET | Skip very hidden sheets Aspose.Cells
+// Developer Intent: Load an Excel file and automatically omit hidden worksheets.
+// Use Cases: Process large workbooks faster by loading only visible sheets. | Create a distribution copy that contains just the visible worksheets. | Generate a list of visible worksheet names for reporting purposes.
+// AI Prompts: Write C# code with Aspose.Cells that loads an Excel workbook while ignoring hidden worksheets by using a custom LoadFilter. | Provide an example of configuring LoadOptions with a LoadFilter to load only visible sheets and then save the filtered workbook. | Explain how to extend the custom LoadFilter to also exclude very‑hidden sheets (IsVeryHidden) in Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to configure Aspose.Cells LoadOptions with a custom LoadFilter that loads only visible worksheets. The example creates a VisibleSheetLoadFilter, applies it to LoadOptions, opens the workbook, lists the loaded sheets, and saves the result, reducing memory usage and processing time.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Shows how to load an Excel workbook while skipping hidden worksheets by implementing a custom LoadFilter that overrides StartSheet, assigning it to LoadOptions, and saving a new file that contains only the visible sheets.
+    public class ExcludeHiddenSheetsDemo
     {
-        // Path to the workbook to be loaded
-        string filePath = "input.xlsx";
-
-        // Create LoadOptions and assign a custom LoadFilter that skips hidden sheets
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LoadFilter = new VisibleSheetLoadFilter();
-
-        // Load the workbook using the configured options
-        Workbook workbook = new Workbook(filePath, loadOptions);
-
-        // Verify that only visible worksheets were loaded
-        Console.WriteLine("Loaded worksheets:");
-        foreach (Worksheet ws in workbook.Worksheets)
+        // Custom LoadFilter that loads only visible worksheets
+        private class VisibleSheetLoadFilter : LoadFilter
         {
-            Console.WriteLine($"- {ws.Name} (Visible = {ws.IsVisible})");
+            public override void StartSheet(Worksheet sheet)
+            {
+                // Load data for the sheet only if it is visible
+                if (sheet.IsVisible)
+                {
+                    base.StartSheet(sheet);
+                }
+            }
         }
 
-        // Save the workbook if further processing is required
-        workbook.Save("output.xlsx");
+        public static void Run()
+        {
+            // Path to the workbook to be loaded
+            string inputFile = "InputWorkbook.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Input file not found: {inputFile}");
+                return;
+            }
+
+            try
+            {
+                // Set up LoadOptions with the custom filter
+                LoadOptions options = new LoadOptions
+                {
+                    LoadFilter = new VisibleSheetLoadFilter()
+                };
+
+                // Load the workbook; hidden worksheets will be ignored
+                Workbook workbook = new Workbook(inputFile, options);
+
+                // List the worksheets that were loaded (should be only visible ones)
+                Console.WriteLine("Loaded worksheets:");
+                foreach (Worksheet ws in workbook.Worksheets)
+                {
+                    Console.WriteLine($"- {ws.Name} (Visible = {ws.IsVisible})");
+                }
+
+                // Save the filtered workbook
+                string outputFile = "FilteredWorkbook.xlsx";
+                workbook.Save(outputFile);
+                Console.WriteLine($"Filtered workbook saved as: {outputFile}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 
-    // Custom LoadFilter implementation that loads data only for visible worksheets
-    private class VisibleSheetLoadFilter : LoadFilter
+    public class Program
     {
-        public override void StartSheet(Worksheet sheet)
+        public static void Main(string[] args)
         {
-            // Load the sheet only when it is visible; otherwise skip loading its data
-            if (sheet.IsVisible)
-            {
-                base.StartSheet(sheet);
-            }
+            ExcludeHiddenSheetsDemo.Run();
         }
     }
 }

@@ -1,79 +1,106 @@
-// Title: Aspose.Cells .NET: Load Workbook from MemoryStream, Apply Tiled Texture to a Shape, and Save Back to MemoryStream
-// Description: Demonstrates how to create or load an Excel workbook in a MemoryStream, add a rectangle shape, set its fill to a built‑in tiled texture (BlueTissuePaper), and write the updated workbook to another MemoryStream without touching the file system. Ideal for web APIs, cloud functions, and any in‑memory Excel processing scenario.
-// Keywords: Aspose.Cells load workbook from MemoryStream | Aspose.Cells texture fill shape | tiled texture fill Aspose.Cells | C# in‑memory Excel manipulation | save Excel to MemoryStream .NET | rectangle shape fill Aspose.Cells | Aspose.Cells without disk I/O | Aspose.Cells FillType.Texture | TextureFill.IsTiling
-// Common Searches: load excel from memorystream asp.net | apply tiled texture fill to shape aspose.cells | save workbook to memory stream c# | asp.net api return excel as byte array | aspose.cells shape fill texture in memory
-// Developer Intent: Read or create an Excel workbook from a MemoryStream, set a shape’s texture fill to tiled, and output the modified workbook to another MemoryStream without creating any files.
-// Use Cases: Generate a styled Excel report in a web API, add a tiled‑texture rectangle, and stream the file directly to the client. | Process uploaded Excel files in a serverless function, modify shape textures, and store the result as a BLOB or byte array. | Create an in‑memory Excel template, apply visual styling with tiled textures, and pass the workbook to downstream services without disk I/O.
-// AI Prompts: Show C# code that loads a workbook from a MemoryStream, adds a rectangle shape with a tiled BlueTissuePaper texture, and saves the workbook to a new MemoryStream using Aspose.Cells. | Provide an Aspose.Cells example that reads an Excel file from a byte array, sets Fill.TextureFill.IsTiling = true for all rectangle shapes, and returns the updated workbook as a MemoryStream. | Explain how to preserve texture‑fill settings when re‑loading a workbook from a MemoryStream with Aspose.Cells for .NET.
+// Title: C# – Load Workbook from MemoryStream, Add Chart with Tiled Texture, Render to Image Stream (Aspose.Cells)
+// Description: Creates an XLSX workbook in memory, reloads it from a MemoryStream, inserts a column chart, applies a tiled BlueTissuePaper texture to the plot area, renders the first worksheet to an image stored in another MemoryStream, and finally obtains the workbook as a stream—all without touching the file system.
+// Keywords: Aspose.Cells | C# | MemoryStream workbook | chart texture tiling | render worksheet to image stream | in‑memory Excel processing | no disk I/O | BlueTissuePaper texture | WorkbookRender | ImageOrPrintOptions
+// Common Searches: Aspose.Cells load workbook from MemoryStream C# | apply tiled texture to chart plot area Aspose.Cells | render Excel sheet to image stream without saving file | save workbook to stream instead of file Aspose.Cells | how to use TextureFill.IsTiling in Aspose.Cells
+// Developer Intent: Load an Excel file from a MemoryStream, style a chart with a tiled texture, and generate an image stream without writing any files.
+// Use Cases: Web API that receives an Excel byte array, decorates charts, and returns PNG/JPEG images on the fly. | Server‑less function that processes uploaded workbooks, adds textured visualizations, and streams the result to downstream services. | In‑memory report generation where temporary files are prohibited for security or performance reasons.
+// AI Prompts: Show how to switch the chart texture to another TextureType and toggle tiling at runtime. | Provide code to convert the rendered image MemoryStream to a Base64 string for JSON responses. | Explain how to loop through all worksheets, render each to a separate MemoryStream, and collect the streams in a dictionary.
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
 
-// Demonstrates how to create or load an Excel workbook in a MemoryStream, add a rectangle shape, set its fill to a built‑in tiled texture (BlueTissuePaper), and write the updated workbook to another MemoryStream without touching the file system. Ideal for web APIs, cloud functions, and any in‑memory Excel processing scenario.
-class Program
+// Creates an XLSX workbook in memory, reloads it from a MemoryStream, inserts a column chart, applies a tiled BlueTissuePaper texture to the plot area, renders the first worksheet to an image stored in another MemoryStream, and finally obtains the workbook as a stream—all without touching the file system.
+public class LoadWorkbookApplyTiledTextureDemo
 {
-    static void Main()
+    public static void Main(string[] args)
+    {
+        try
+        {
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unhandled exception: {ex.Message}");
+        }
+    }
+
+    public static void Run()
     {
         try
         {
             // ------------------------------------------------------------
-            // 1. Create a sample workbook and store it in a memory stream.
+            // 1. Create a sample workbook and save it into a memory stream
             // ------------------------------------------------------------
-            using (var sourceStream = new MemoryStream())
+            Workbook originalWorkbook = new Workbook();
+            Worksheet originalSheet = originalWorkbook.Worksheets[0];
+            originalSheet.Cells["A1"].PutValue("Sample Data");
+            originalSheet.Cells["A2"].PutValue(123);
+            originalSheet.Cells["A3"].PutValue(456);
+
+            // Save the workbook to a MemoryStream (XLSX format)
+            using (MemoryStream sourceStream = new MemoryStream())
             {
-                var tempWorkbook = new Workbook();
-                var tempSheet = tempWorkbook.Worksheets[0];
-                tempSheet.Cells["A1"].PutValue("Sample Data");
-
-                // Add a rectangle shape to demonstrate texture fill.
-                // AddRectangle returns the created RectangleShape directly.
-                var rectShape = tempSheet.Shapes.AddRectangle(1, 0, 1, 100, 150, 200) as RectangleShape;
-                if (rectShape == null)
-                    throw new InvalidOperationException("Failed to create rectangle shape.");
-
-                // Set the fill type to texture and choose a built‑in texture.
-                rectShape.Fill.FillType = FillType.Texture;
-                rectShape.Fill.Texture = TextureType.BlueTissuePaper;
-
-                // Apply tiled texture.
-                rectShape.Fill.TextureFill.IsTiling = true;
-
-                // Save the workbook into the memory stream (XLSX format).
-                tempWorkbook.Save(sourceStream, SaveFormat.Xlsx);
-                sourceStream.Position = 0; // Reset for reading.
+                originalWorkbook.Save(sourceStream, SaveFormat.Xlsx);
+                sourceStream.Position = 0; // Reset for reading
 
                 // ------------------------------------------------------------
-                // 2. Load the workbook from the memory stream.
+                // 2. Load the workbook from the memory stream
                 // ------------------------------------------------------------
-                var workbook = new Workbook(sourceStream);
-                var sheet = workbook.Worksheets[0];
+                Workbook workbook = new Workbook(sourceStream); // uses Workbook(Stream) ctor
 
-                // Ensure the shape still has tiled texture (re‑apply if needed).
-                var loadedShape = sheet.Shapes[0] as RectangleShape;
-                if (loadedShape != null)
+                // ------------------------------------------------------------
+                // 3. Add a chart and apply a tiled texture fill
+                // ------------------------------------------------------------
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Add a column chart
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Provide data range for the chart
+                chart.NSeries.Add("A1:A3", true);
+
+                // Set a texture type for the plot area
+                chart.PlotArea.Area.FillFormat.Texture = TextureType.BlueTissuePaper;
+
+                // Enable tiling of the texture
+                chart.PlotArea.Area.FillFormat.TextureFill.IsTiling = true;
+
+                // ------------------------------------------------------------
+                // 4. Render the first page of the workbook to an image stream (no disk I/O)
+                // ------------------------------------------------------------
+                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
                 {
-                    loadedShape.Fill.TextureFill.IsTiling = true;
+                    OnePagePerSheet = true
+                };
+
+                WorkbookRender renderer = new WorkbookRender(workbook, imgOptions);
+
+                using (MemoryStream imageStream = new MemoryStream())
+                {
+                    // Render page 0 (first sheet) to the memory stream
+                    renderer.ToImage(0, imageStream);
+
+                    // Output the size of the generated image
+                    Console.WriteLine($"Rendered image size: {imageStream.Length} bytes");
                 }
 
                 // ------------------------------------------------------------
-                // 3. Obtain the modified workbook as a new memory stream.
-                //    No file is written to disk.
+                // 5. (Optional) Keep the workbook in memory without saving to disk
                 // ------------------------------------------------------------
-                using (var resultStream = new MemoryStream())
-                {
-                    workbook.Save(resultStream, SaveFormat.Xlsx);
-                    resultStream.Position = 0; // Reset for any further reading.
-
-                    // Demonstrate that the stream contains data.
-                    Console.WriteLine($"Result stream length: {resultStream.Length} bytes");
-                }
+                // Obtain a stream of the workbook itself.
+                MemoryStream workbookStream = workbook.SaveToStream(); // default format (XLSX)
+                Console.WriteLine($"Workbook stream size (XLSX): {workbookStream.Length} bytes");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error during processing: {ex.Message}");
+            throw;
         }
     }
 }

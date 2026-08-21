@@ -1,31 +1,36 @@
-// Title: Export Excel to Responsive HTML (exclude hidden sheets) – Aspose.Cells .NET
-// Description: Demonstrates how to save a workbook as HTML with hidden worksheets omitted (ExportHiddenWorksheet = false) and column widths set to scale responsively (WidthScalable = true) using Aspose.Cells for C#.
-// Keywords: Aspose.Cells HtmlSaveOptions ExportHiddenWorksheet false | WidthScalable responsive HTML Aspose.Cells | C# export Excel to HTML without hidden sheets | Aspose.Cells responsive column widths | HTML export hidden worksheet exclusion
-// Common Searches: Aspose.Cells export hidden worksheets false C# | How to make HTML columns responsive with Aspose.Cells | Save Excel as HTML without hidden sheets Aspose | WidthScalable true example Aspose.Cells | Responsive HTML output from Excel using Aspose.Cells
-// Developer Intent: Generate an HTML file from a workbook that hides any hidden worksheets and uses scalable column widths for a mobile‑friendly layout.
-// Use Cases: Create web reports that display only visible data while keeping configuration sheets private. | Build responsive HTML tables that adapt to different screen sizes without manual CSS. | Produce dashboard components where hidden worksheets must not be exposed to end users.
-// AI Prompts: Show C# code to embed images inline while keeping ExportHiddenWorksheet false. | Generate separate responsive HTML files for each visible worksheet using Aspose.Cells. | Explain how WidthScalable converts Excel column widths to percentage‑based HTML styles.
+// Title: C# – Export Excel to Responsive HTML without Hidden Sheets using Aspose.Cells (ExportHiddenWorksheet = false, WidthScalable = true)
+// Description: Demonstrates how to create a workbook with a visible and a hidden worksheet, then save it as HTML while omitting hidden sheets (ExportHiddenWorksheet = false) and enabling column‑width scaling (WidthScalable = true) for a responsive layout.
+// Keywords: Aspose.Cells HTML export | ExportHiddenWorksheet false | WidthScalable true | responsive HTML from Excel | C# Aspose.Cells example | exclude hidden worksheets HTML | scalable column widths
+// Common Searches: Aspose.Cells export HTML without hidden worksheets | How to make HTML columns responsive with Aspose.Cells | HtmlSaveOptions ExportHiddenWorksheet example C# | WidthScalable option Aspose.Cells HTML export | C# code to hide sheets when saving Excel as HTML
+// Developer Intent: Generate an HTML file from an Excel workbook that excludes any hidden worksheets and automatically adjusts column widths for different screen sizes.
+// Use Cases: Publishing web‑ready reports that hide internal worksheets while keeping tables fluid on mobile devices. | Embedding Excel data in portals where column widths must adapt to varying container widths. | Creating public HTML exports that protect confidential data stored in hidden sheets.
+// AI Prompts: Show C# code to export an Aspose.Cells workbook to HTML with ExportHiddenWorksheet set to false and WidthScalable enabled. | Explain how ExportHiddenWorksheet and WidthScalable affect the HTML output in Aspose.Cells. | Give a step‑by‑step guide for creating responsive HTML from Excel while omitting hidden worksheets using Aspose.Cells .NET.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlExport
 {
-    // Demonstrates how to save a workbook as HTML with hidden worksheets omitted (ExportHiddenWorksheet = false) and column widths set to scale responsively (WidthScalable = true) using Aspose.Cells for C#.
+    // Demonstrates how to create a workbook with a visible and a hidden worksheet, then save it as HTML while omitting hidden sheets (ExportHiddenWorksheet = false) and enabling column‑width scaling (WidthScalable = true) for a responsive layout.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and add sample data
+            // Create a new workbook and access the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet visibleSheet = workbook.Worksheets[0];
-            visibleSheet.Name = "VisibleSheet";
-            visibleSheet.Cells["A1"].PutValue("Visible Data");
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "VisibleSheet";
 
-            // Add a hidden worksheet
+            // Add some sample data
+            sheet.Cells["A1"].PutValue("Header 1");
+            sheet.Cells["B1"].PutValue("Header 2");
+            sheet.Cells["A2"].PutValue("Data 1");
+            sheet.Cells["B2"].PutValue("Data 2");
+
+            // Add a hidden worksheet to demonstrate ExportHiddenWorksheet = false
             Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
             hiddenSheet.Cells["A1"].PutValue("Hidden Data");
-            hiddenSheet.IsVisible = false; // Mark worksheet as hidden
+            hiddenSheet.IsVisible = false;
 
             // Configure HTML save options:
             // - Do not export hidden worksheets
@@ -36,7 +41,7 @@ namespace AsposeCellsHtmlExport
                 WidthScalable = true
             };
 
-            // Save the workbook to HTML using the configured options
+            // Save the workbook as HTML with the specified options
             workbook.Save("output_responsive.html", saveOptions);
         }
     }

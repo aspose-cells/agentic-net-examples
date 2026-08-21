@@ -1,62 +1,70 @@
+// Title: Skip Corrupted Excel Workbooks in Batch Processing with Aspose.Cells for .NET
+// Description: Shows how to load multiple Excel files using Aspose.Cells, catch CellsException (FileCorrupted) and generic errors, log the issue, optionally enable RepairLoad, and continue processing the remaining workbooks.
+// Keywords: Aspose.Cells | C# | .NET | batch workbook processing | error handling | corrupted Excel file | CellsException | FileCorrupted | RepairLoad | continue loop | Excel automation
+// Common Searches: Aspose.Cells ignore corrupted file | C# batch process Excel workbooks with error handling | skip bad Excel files Aspose | continue after CellsException | repair load Aspose.Cells example
+// Developer Intent: Add try‑catch logic so a failed workbook load does not abort the entire batch operation.
+// Use Cases: Automated reporting pipelines that handle dozens of spreadsheets. | Data migration where some source files may be damaged. | Scheduled server jobs that must finish even if individual files are unreadable. | Applying RepairLoad to attempt recovery before moving on to the next file.
+// AI Prompts: Write C# code that iterates over a list of .xlsx paths, loads each with Aspose.Cells, catches CellsException with ExceptionType.FileCorrupted, logs a warning, and proceeds to the next file. | Show how to enable Workbook.Settings.RepairLoad and handle generic exceptions during batch Excel processing.
+
 using System;
-using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-public class BatchWorkbookProcessor
+namespace AsposeCellsBatchProcessing
 {
-    // Processes a collection of Excel files, attempting to load each one.
-    // If a file is corrupted, the error is logged and processing continues with the next file.
-    public void ProcessWorkbooks(string[] inputFiles, string outputDirectory)
+    // Shows how to load multiple Excel files using Aspose.Cells, catch CellsException (FileCorrupted) and generic errors, log the issue, optionally enable RepairLoad, and continue processing the remaining workbooks.
+    class Program
     {
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputDirectory);
-
-        foreach (string filePath in inputFiles)
+        static void Main()
         {
-            try
+            // List of workbook file paths to process
+            List<string> workbookFiles = new List<string>
             {
-                // Attempt to load the workbook
-                Workbook workbook = new Workbook(filePath);
+                "Workbook1.xlsx",
+                "Workbook2.xlsx",
+                "CorruptedWorkbook.xlsx", // Example of a corrupted file
+                "Workbook3.xlsx"
+            };
 
-                // Optional: indicate that the workbook was loaded in repair mode (if needed later)
-                workbook.Settings.RepairLoad = true;
+            // Output directory for processed workbooks
+            string outputDir = "ProcessedWorkbooks";
 
-                // Example processing: simply save a copy to the output folder
-                string outputPath = Path.Combine(outputDirectory, Path.GetFileName(filePath));
-                workbook.Save(outputPath);
+            // Ensure the output directory exists
+            System.IO.Directory.CreateDirectory(outputDir);
 
-                Console.WriteLine($"Successfully processed: {filePath}");
-            }
-            catch (CellsException ex) when (ex.Code == ExceptionType.FileCorrupted)
+            foreach (string filePath in workbookFiles)
             {
-                // Specific handling for corrupted files – log and continue
-                Console.WriteLine($"Corrupted file skipped: {filePath} (Reason: {ex.Message})");
+                try
+                {
+                    // Load the workbook (uses the Workbook(string) constructor)
+                    Workbook workbook = new Workbook(filePath);
+
+                    // Enable repair mode for future operations (optional but demonstrates usage)
+                    workbook.Settings.RepairLoad = true;
+
+                    // Example processing: write the number of worksheets to console
+                    Console.WriteLine($"Loaded '{filePath}' successfully. Worksheets count: {workbook.Worksheets.Count}");
+
+                    // Save the processed workbook to the output folder (uses Workbook.Save(string))
+                    string outputPath = System.IO.Path.Combine(outputDir, System.IO.Path.GetFileName(filePath));
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Saved processed workbook to '{outputPath}'.");
+                }
+                catch (CellsException ex) when (ex.Code == ExceptionType.FileCorrupted)
+                {
+                    // Specific handling for corrupted files – log and continue with next file
+                    Console.WriteLine($"[Warning] The file '{filePath}' is corrupted (ExceptionType.FileCorrupted). Skipping this workbook.");
+                    continue;
+                }
+                catch (Exception ex)
+                {
+                    // General error handling – log and continue
+                    Console.WriteLine($"[Error] Failed to process '{filePath}'. Reason: {ex.Message}");
+                    continue;
+                }
             }
-            catch (Exception ex)
-            {
-                // General error handling – log and continue
-                Console.WriteLine($"Error processing file {filePath}: {ex.Message}");
-            }
+
+            Console.WriteLine("Batch processing completed.");
         }
-    }
-}
-
-// Example usage
-public class Program
-{
-    public static void Main()
-    {
-        string[] filesToProcess = new string[]
-        {
-            @"C:\Data\Workbook1.xlsx",
-            @"C:\Data\Workbook2.xlsx",
-            @"C:\Data\CorruptedWorkbook.xlsx",
-            @"C:\Data\Workbook3.xlsx"
-        };
-
-        string outputFolder = @"C:\Data\Processed";
-
-        BatchWorkbookProcessor processor = new BatchWorkbookProcessor();
-        processor.ProcessWorkbooks(filesToProcess, outputFolder);
     }
 }

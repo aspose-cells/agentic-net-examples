@@ -1,10 +1,10 @@
-// Title: Embed MP4 Video as a PDF Attachment with Aspose.Cells (C#)
-// Description: Demonstrates how to read an MP4 file, add an OLE object placeholder in a workbook, embed the video bytes, enable attachment embedding via PdfSaveOptions, and export the workbook to a PDF that contains the video as an attached file.
-// Keywords: Aspose.Cells embed video PDF | C# OLE object video attachment | PdfSaveOptions EmbedAttachments | MP4 attachment Aspose.Cells | export Excel to PDF with video
-// Common Searches: Aspose.Cells add video attachment to PDF | C# embed MP4 in PDF using Aspose.Cells | How to use PdfSaveOptions to embed files | Create PDF with embedded video from Excel | OLE object video export Aspose.Cells .NET
-// Developer Intent: Add a video file as an embedded attachment in a PDF generated from an Aspose.Cells workbook.
-// Use Cases: Product catalog PDFs where each item links to a demo video. | Training manuals that include tutorial videos accessible from the worksheet. | Sales presentations with promotional videos attached and shown as icons.
-// AI Prompts: Provide C# code to embed an MP4 as an OLE object in an Aspose.Cells workbook and save it as a PDF with the video attached. | Explain how to configure PdfSaveOptions to embed attachments when exporting a workbook to PDF with Aspose.Cells. | Show an example of adding multiple video attachments to a worksheet and exporting them into a single PDF file.
+// Title: Embed a Video File as an OLE Attachment in a PDF with Aspose.Cells (C#)
+// Description: This example creates a workbook, adds a text label, reads an MP4 file into a byte array, inserts an OLE placeholder, embeds the video bytes as an OLE object with an icon, enables the EmbedAttachments flag in PdfSaveOptions, and saves the workbook as a PDF that contains the video as an attachment.
+// Keywords: Aspose.Cells | C# | embed video PDF | OLE object | PdfSaveOptions | EmbedAttachments | MP4 attachment | PDF generation | Aspose.Cells tutorial
+// Common Searches: Aspose.Cells embed video in PDF C# | How to add MP4 as attachment using Aspose.Cells | SetEmbeddedObject video OLE Aspose.Cells | Enable EmbedAttachments in PdfSaveOptions | C# code to attach video to PDF with Aspose
+// Developer Intent: The developer wants to attach a video file to a PDF generated from an Aspose.Cells workbook and make the attachment accessible from the document.
+// Use Cases: Product catalogs where each item includes a demonstration video embedded in the PDF. | Training manuals that provide video tutorials linked to specific worksheet sections. | Compliance reports that need to bundle video evidence as PDF attachments.
+// AI Prompts: Generate C# code that embeds multiple MP4 files as OLE attachments in one PDF using Aspose.Cells, with robust error handling for missing files. | Explain how to extract and play a video attachment from a PDF created with Aspose.Cells' EmbedAttachments option. | Show how to customize the icon and label of an embedded video OLE object before saving the workbook to PDF.
 
 using System;
 using System.IO;
@@ -14,60 +14,57 @@ using Aspose.Cells.Rendering;
 
 namespace AsposeCellsVideoAttachmentDemo
 {
-    // Demonstrates how to read an MP4 file, add an OLE object placeholder in a workbook, embed the video bytes, enable attachment embedding via PdfSaveOptions, and export the workbook to a PDF that contains the video as an attached file.
-    class Program
+    // This example creates a workbook, adds a text label, reads an MP4 file into a byte array, inserts an OLE placeholder, embeds the video bytes as an OLE object with an icon, enables the EmbedAttachments flag in PdfSaveOptions, and saves the workbook as a PDF that contains the video as an attachment.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Path to the video file to embed
-            string videoPath = "sample.mp4";
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Verify video file exists
+            // Add a descriptive text in the worksheet
+            worksheet.Cells["A1"].PutValue("Embedded Video Attachment Demo");
+
+            // Path to the video file to embed (ensure the file exists)
+            string videoPath = "sample_video.mp4";
+
             if (!File.Exists(videoPath))
             {
                 Console.WriteLine($"Video file not found: {videoPath}");
                 return;
             }
 
-            // Read video bytes
+            // Read video file bytes
             byte[] videoBytes = File.ReadAllBytes(videoPath);
 
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Add an OLE object placeholder (empty image data) to the worksheet
+            // The placeholder size is 200x200 pixels at row 5, column 2
+            int oleIndex = worksheet.OleObjects.Add(5, 2, 200, 200, new byte[0]);
 
-            // Put a label in the worksheet
-            sheet.Cells["A1"].PutValue("Embedded Video Attachment");
-
-            // Add an OLE object placeholder (empty image data)
-            int oleIndex = sheet.OleObjects.Add(5, 1, 200, 200, new byte[0]);
-
-            // Get the OLE object reference
-            OleObject oleObject = sheet.OleObjects[oleIndex];
+            // Get the added OleObject
+            OleObject oleObject = worksheet.OleObjects[oleIndex];
 
             // Embed the video file into the OLE object
-            // Parameters: linkToFile = false (embed), objectData = videoBytes,
-            // sourceFileName = "sample.mp4", displayAsIcon = true, label = "Video",
-            // updateIcon = false (keep default icon)
+            // linkToFile = false (embed the data), displayAsIcon = true, label = "Video"
             oleObject.SetEmbeddedObject(
                 linkToFile: false,
                 objectData: videoBytes,
-                sourceFileName: "sample.mp4",
+                sourceFileName: Path.GetFileName(videoPath),
                 displayAsIcon: true,
-                label: "Video",
-                updateIcon: false);
+                label: "Sample Video");
 
             // Configure PDF save options to embed attachments
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                EmbedAttachments = true
+                EmbedAttachments = true // Enable embedding of OLE attachments in the PDF
             };
 
-            // Save the workbook as PDF with the embedded video attachment
-            string outputPdf = "WorkbookWithVideo.pdf";
+            // Save the workbook as PDF; the video will be embedded as an attachment
+            string outputPdf = "Workbook_With_Video.pdf";
             workbook.Save(outputPdf, pdfOptions);
 
-            Console.WriteLine($"PDF saved successfully: {outputPdf}");
+            Console.WriteLine($"PDF saved with embedded video: {outputPdf}");
         }
     }
 }

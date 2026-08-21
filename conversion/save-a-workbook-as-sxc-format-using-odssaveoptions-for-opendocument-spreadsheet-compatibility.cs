@@ -1,26 +1,29 @@
 // Title: C# – Save Workbook as StarOffice Calc (.sxc) with Aspose.Cells OdsSaveOptions
-// Description: Shows how to create a workbook, configure OdsSaveOptions with SaveFormat.Sxc, optionally set the LibreOffice generator type, and save the result as a StarOffice Calc (.sxc) OpenDocument Spreadsheet using Aspose.Cells.
-// Keywords: Aspose.Cells | C# | OdsSaveOptions | SaveFormat.Sxc | StarOffice Calc | SXC export | OpenDocument Spreadsheet | LibreOffice generator | Excel to SXC conversion | C# workbook save as sxc
-// Common Searches: Aspose.Cells save as .sxc C# | How to export Excel to StarOffice Calc using Aspose | OdsSaveOptions Sxc format example | C# convert .xlsx to .sxc with Aspose | Set generator type LibreOffice when saving SXC | OpenDocument spreadsheet conversion .NET
-// Developer Intent: Generate a StarOffice Calc (.sxc) file from a .NET workbook via Aspose.Cells.
-// Use Cases: Create cross‑platform .sxc reports directly from a C# application. | Produce LibreOffice‑compatible spreadsheets by specifying the LibreOffice generator type. | Automate bulk conversion of existing Excel files to the SXC OpenDocument format.
-// AI Prompts: Write C# code that converts an existing .xlsx file to .sxc using Aspose.Cells and sets the LibreOffice generator type. | Provide a reusable method that accepts a Workbook object and optional OdsSaveOptions, then saves it as .sxc. | Explain which OdsSaveOptions properties affect compatibility when exporting to the SXC format.
+// Description: Shows how to create a workbook, add sample data, configure OdsSaveOptions for SaveFormat.Sxc (StarOffice Calc), optionally set the LibreOffice generator, and save the file as .sxc for OpenDocument Spreadsheet compatibility.
+// Keywords: Aspose.Cells | C# | Save as SXC | OdsSaveOptions | SaveFormat.Sxc | StarOffice Calc | OpenDocument Spreadsheet | LibreOffice generator | export to .sxc | spreadsheet conversion C#
+// Common Searches: Aspose.Cells save as sxc c# | How to export workbook to .sxc using OdsSaveOptions | C# convert Excel to StarOffice Calc format | Set LibreOffice generator type when saving as SXC | OpenDocument spreadsheet conversion with Aspose.Cells
+// Developer Intent: Generate a .sxc file from a workbook using Aspose.Cells OdsSaveOptions in C#.
+// Use Cases: Provide .sxc files for users of LibreOffice or Apache OpenOffice. | Create legacy StarOffice Calc reports from .NET applications. | Batch‑export Excel workbooks to OpenDocument Spreadsheet format with specific generator settings.
+// AI Prompts: Write C# code that loads an existing .xlsx file and saves it as .sxc using Aspose.Cells OdsSaveOptions. | Explain how to customize fonts, styles, and other OdsSaveOptions properties when exporting to SXC. | Show a C# example that converts multiple workbooks to .sxc files with progress reporting.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Ods;
 
-// Shows how to create a workbook, configure OdsSaveOptions with SaveFormat.Sxc, optionally set the LibreOffice generator type, and save the result as a StarOffice Calc (.sxc) OpenDocument Spreadsheet using Aspose.Cells.
+// Shows how to create a workbook, add sample data, configure OdsSaveOptions for SaveFormat.Sxc (StarOffice Calc), optionally set the LibreOffice generator, and save the file as .sxc for OpenDocument Spreadsheet compatibility.
 class SaveAsSxcDemo
 {
     static void Main()
     {
-        // Create a new workbook and add some data
+        // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["A1"].PutValue("Hello SXC");
 
-        // Create ODS save options specifying the SXC format
+        // Add some sample data
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Hello");
+        sheet.Cells["B1"].PutValue("World");
+
+        // Create OdsSaveOptions specifying the SXC format
         OdsSaveOptions saveOptions = new OdsSaveOptions(SaveFormat.Sxc);
         // Optional: set the generator type for better compatibility
         saveOptions.GeneratorType = OdsGeneratorType.LibreOffice;

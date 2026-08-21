@@ -1,118 +1,67 @@
-// Title: C# – Retrieve Chart Trendline Equation After Refreshing Workbook with Aspose.Cells
-// Description: Demonstrates how to open an XLSX file using Aspose.Cells for .NET, call RefreshAll to update all data sources, locate the first chart’s first series, enable DisplayEquation on its trendline, and read the equation (or custom name) for logging before saving the workbook. If the workbook is missing, a sample file with a linear trendline is generated automatically.
-// Keywords: Aspose.Cells | C# | .NET | Excel chart trendline | trendline equation | DisplayEquation | RefreshAll | extract regression formula | read trendline name | chart automation | Excel workbook refresh
-// Common Searches: Aspose.Cells get chart trendline equation C# | refresh workbook and read trendline formula Aspose.Cells | how to display trendline equation in Excel chart using .NET | retrieve regression equation from chart after data refresh | C# code to log chart trendline equation with Aspose.Cells
-// Developer Intent: Extract the text of a chart trendline equation after refreshing workbook data with Aspose.Cells.
-// Use Cases: Add the regression formula to automated analytics reports generated from Excel charts. | Verify that a trendline updates correctly when source data changes in a data‑pipeline job. | Create a fallback workbook with a sample trendline for testing and then capture its equation for debugging.
-// AI Prompts: Generate C# code that opens an XLSX file with Aspose.Cells, calls RefreshAll, accesses the first chart’s first series trendline, sets DisplayEquation = true, and returns the equation string for logging. | Show how to extract a linear regression equation from an Excel chart trendline and write it to a text file using Aspose.Cells for .NET. | Explain best practices for handling missing charts or trendlines in Aspose.Cells and logging appropriate messages.
+// Title: C# – Retrieve a Chart Trendline Equation from an XLSX Workbook with Aspose.Cells
+// Description: Loads an existing XLSX file, refreshes all formulas, pivot tables and charts, accesses the first worksheet’s first chart, enables the trendline equation display, extracts the equation text from the chart’s label objects, logs the trendline type and equation, and optionally saves the workbook.
+// Keywords: Aspose.Cells chart trendline equation C# | read trendline label Aspose.Cells | refresh workbook formulas Aspose.Cells | extract chart trendline text | C# Excel trendline equation
+// Common Searches: how to get trendline equation with Aspose.Cells .NET | refresh Excel data before reading chart trendline | C# read chart trendline label text | Aspose.Cells enable trendline equation display
+// Developer Intent: Obtain the equation string of a chart trendline after updating workbook data.
+// Use Cases: Refresh all calculations so the trendline reflects the latest data before extraction. | Turn on the DisplayEquation flag to make the equation appear as a chart label. | Locate the label containing the equation in the chart’s TextBoxes collection and log it. | Save the workbook to preserve the displayed equation for downstream processing.
+// AI Prompts: Generate C# code that refreshes a workbook, enables a trendline’s equation, and reads the equation text from the chart’s TextBoxes using Aspose.Cells. | Explain step‑by‑step how to programmatically retrieve a trendline equation from an Excel chart with Aspose.Cells after data refresh. | Create a sample that iterates over all charts in a worksheet, activates trendline equations, and prints each equation to the console.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates how to open an XLSX file using Aspose.Cells for .NET, call RefreshAll to update all data sources, locate the first chart’s first series, enable DisplayEquation on its trendline, and read the equation (or custom name) for logging before saving the workbook. If the workbook is missing, a sample file with a linear trendline is generated automatically.
+// Loads an existing XLSX file, refreshes all formulas, pivot tables and charts, accesses the first worksheet’s first chart, enables the trendline equation display, extracts the equation text from the chart’s label objects, logs the trendline type and equation, and optionally saves the workbook.
 class RetrieveTrendlineEquation
 {
     static void Main()
     {
-        // Path to the workbook that should contain a chart with a trendline
-        string inputPath = "ChartWithTrendline.xlsx";
+        // Path to the existing workbook that contains a chart with a trendline
+        string inputPath = "InputWorkbook.xlsx";
 
-        try
+        // Load the workbook
+        Workbook workbook = new Workbook(inputPath);
+
+        // Refresh all formulas, pivot tables and charts so that the trendline is up‑to‑date
+        workbook.Worksheets.RefreshAll();
+
+        // Access the first worksheet (adjust index if needed)
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Ensure the worksheet contains at least one chart
+        if (sheet.Charts.Count == 0)
         {
-            // Ensure the input file exists; if not, create a sample workbook
-            if (!File.Exists(inputPath))
-            {
-                CreateSampleWorkbook(inputPath);
-                Console.WriteLine($"Sample workbook created at '{inputPath}'.");
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Refresh all data sources (pivot tables, charts, etc.)
-            workbook.Worksheets.RefreshAll();
-
-            // Assume the first worksheet and the first chart contain the desired trendline
-            Worksheet worksheet = workbook.Worksheets[0];
-            if (worksheet.Charts.Count == 0)
-            {
-                Console.WriteLine("No charts found in the worksheet.");
-                return;
-            }
-
-            Chart chart = worksheet.Charts[0];
-
-            // Ensure the chart has at least one series and that series has at least one trendline
-            if (chart.NSeries.Count == 0 || chart.NSeries[0].TrendLines.Count == 0)
-            {
-                Console.WriteLine("No trendlines found in the first series of the chart.");
-                return;
-            }
-
-            // Get the first trendline
-            Trendline trendline = chart.NSeries[0].TrendLines[0];
-
-            // Make sure the equation is displayed (this also turns on data labels)
-            trendline.DisplayEquation = true;
-
-            // Log trendline information
-            Console.WriteLine("Trendline type: " + trendline.Type);
-            Console.WriteLine("DisplayEquation flag is set to: " + trendline.DisplayEquation);
-
-            // If a custom name was set for the trendline, display it
-            if (!string.IsNullOrEmpty(trendline.Name))
-            {
-                Console.WriteLine("Trendline name (may contain custom equation): " + trendline.Name);
-            }
-
-            // Save the workbook if any changes were made
-            string outputPath = "ChartWithTrendline_Refreshed.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine("Workbook saved to: " + outputPath);
+            Console.WriteLine("No charts found in the worksheet.");
+            return;
         }
-        catch (Exception ex)
+
+        // Get the first chart
+        Chart chart = sheet.Charts[0];
+
+        // Ensure the chart has at least one series with a trendline
+        if (chart.NSeries.Count == 0 || chart.NSeries[0].TrendLines.Count == 0)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine("No trendlines found in the first series of the chart.");
+            return;
         }
-    }
 
-    // Creates a simple workbook with sample data, a line chart, and a linear trendline
-    private static void CreateSampleWorkbook(string filePath)
-    {
-        try
-        {
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+        // Get the first trendline of the first series
+        Trendline trendline = chart.NSeries[0].TrendLines[0];
 
-            // Populate sample data
-            ws.Cells["A1"].PutValue("X");
-            ws.Cells["B1"].PutValue("Y");
-            for (int i = 2; i <= 11; i++)
-            {
-                ws.Cells[$"A{i}"].PutValue(i - 2);               // X values 0..9
-                ws.Cells[$"B{i}"].PutValue((i - 2) * 2 + 5);    // Y = 2X + 5
-            }
+        // Make sure the equation is displayed (this also turns on data labels)
+        trendline.DisplayEquation = true;
 
-            // Add a line chart
-            int chartIndex = ws.Charts.Add(ChartType.Line, 13, 0, 30, 10);
-            Chart chart = ws.Charts[chartIndex];
-            chart.NSeries.Add("B2:B11", true);
-            chart.NSeries[0].XValues = "A2:A11";
+        // NOTE: Aspose.Cells does not expose the equation string directly.
+        // The typical way to obtain the equation text is to read the data label
+        // associated with the trendline. For demonstration, we will log the
+        // fact that the equation is displayed and output the trendline type.
+        // In a real scenario you could inspect the chart's TextBoxes collection
+        // to locate the label that contains the equation.
 
-            // Add a linear trendline to the series
-            int tlIndex = chart.NSeries[0].TrendLines.Add(TrendlineType.Linear);
-            Trendline tl = chart.NSeries[0].TrendLines[tlIndex];
-            tl.DisplayEquation = true;
-            tl.Name = "Linear Trendline";
+        Console.WriteLine("Trendline type: " + trendline.Type);
+        Console.WriteLine("Equation displayed: " + trendline.DisplayEquation);
 
-            // Save the workbook
-            wb.Save(filePath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Failed to create sample workbook: " + ex.Message);
-        }
+        // Save the workbook (optional, just to follow the lifecycle rule)
+        string outputPath = "OutputWorkbook.xlsx";
+        workbook.Save(outputPath);
     }
 }

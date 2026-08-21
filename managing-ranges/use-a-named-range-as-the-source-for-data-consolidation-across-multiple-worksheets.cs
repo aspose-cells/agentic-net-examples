@@ -1,82 +1,56 @@
-// Title: Consolidate Data from Multiple Worksheets into a Pivot Table Using Named Ranges – Aspose.Cells for .NET
-// Description: This example creates a workbook with two sheets, defines named ranges (Data1, Data2) that point to each sheet's A1:B4 area, and builds a single pivot table on Sheet1 using those ranges as the source. The pivot groups by "Category" and sums "Value", then saves the file as ConsolidatedPivot.xlsx.
-// Keywords: Aspose.Cells | C# | named range | pivot table | multiple worksheets | data consolidation | Excel automation | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells named range pivot source | consolidate worksheets into one pivot table .NET | use named ranges for pivot table Aspose | pivot table from multiple sheets Aspose.Cells | C# Aspose.Cells data consolidation example
-// Developer Intent: Generate a pivot table that pulls data from several worksheets by referencing named ranges.
-// Use Cases: Merge regional sales sheets into a single pivot report using named ranges. | Create a financial summary that aggregates quarterly figures stored on separate tabs. | Build an inventory dashboard that consolidates stock counts from multiple department sheets.
-// AI Prompts: Add more named ranges to the source array for the consolidated pivot table in Aspose.Cells. | Change the pivot calculation from Sum to Average for the "Value" field using Aspose.Cells. | Show how to refresh the consolidated pivot after modifying the source worksheets.
+// Title: Define a multi‑sheet named range and sum its values with Aspose.Cells for .NET (C#)
+// Description: This example creates a workbook, adds two worksheets with numeric data, defines a named range that spans both sheets, inserts a SUM formula on a third sheet that references the named range, calculates the formula, outputs the result, and saves the file as NamedRangeConsolidation.xlsx.
+// Keywords: Aspose.Cells named range multiple worksheets | C# multi‑area named range | sum across sheets Aspose.Cells | consolidate data Aspose.Cells .NET | named range formula Aspose.Cells
+// Common Searches: Aspose.Cells create named range across sheets | C# sum values from multiple worksheets using named range | multi‑sheet named range example Aspose.Cells | how to use SUM with a named range in Aspose.Cells
+// Developer Intent: Create a named range that includes cells from several worksheets and use it in a formula to calculate a consolidated total.
+// Use Cases: Combine monthly sales numbers from department sheets into a single total on a summary sheet. | Aggregate inventory counts from regional worksheets without writing individual cell references. | Apply other aggregate functions (AVERAGE, COUNT, MAX) to the same multi‑sheet range for dynamic reporting.
+// AI Prompts: Generate C# code that defines a named range covering A1:A10 on SheetA and SheetB, then uses the AVERAGE function on a third sheet. | Show how to create a multi‑area named range in Aspose.Cells and apply a COUNT formula to count non‑empty cells across the referenced sheets. | Provide an example that updates the named range to include additional worksheets before recalculating a SUM on a summary sheet.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-// This example creates a workbook with two sheets, defines named ranges (Data1, Data2) that point to each sheet's A1:B4 area, and builds a single pivot table on Sheet1 using those ranges as the source. The pivot groups by "Category" and sums "Value", then saves the file as ConsolidatedPivot.xlsx.
-class ConsolidateUsingNamedRanges
+namespace AsposeCellsNamedRangeConsolidation
 {
-    static void Main()
+    // This example creates a workbook, adds two worksheets with numeric data, defines a named range that spans both sheets, inserts a SUM formula on a third sheet that references the named range, calculates the formula, outputs the result, and saves the file as NamedRangeConsolidation.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook
-            Workbook wb = new Workbook();
+            // ---------- Create a new workbook ----------
+            Workbook workbook = new Workbook();
 
-            // ---------- Worksheet 1 ----------
-            Worksheet ws1 = wb.Worksheets[0];
-            ws1.Name = "Sheet1";
+            // ---------- Add two worksheets and populate them ----------
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "Sheet1";
+            sheet1.Cells["A1"].PutValue(10);
+            sheet1.Cells["A2"].PutValue(20);
+            sheet1.Cells["A3"].PutValue(30);
 
-            // Populate data in Sheet1
-            ws1.Cells["A1"].PutValue("Category");
-            ws1.Cells["B1"].PutValue("Value");
-            ws1.Cells["A2"].PutValue("A");
-            ws1.Cells["B2"].PutValue(10);
-            ws1.Cells["A3"].PutValue("B");
-            ws1.Cells["B3"].PutValue(20);
-            ws1.Cells["A4"].PutValue("C");
-            ws1.Cells["B4"].PutValue(30);
+            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+            sheet2.Cells["A1"].PutValue(5);
+            sheet2.Cells["A2"].PutValue(15);
+            sheet2.Cells["A3"].PutValue(25);
 
-            // ---------- Worksheet 2 ----------
-            Worksheet ws2 = wb.Worksheets.Add("Sheet2");
+            // ---------- Define a named range that spans both worksheets ----------
+            // The RefersTo string can contain multiple areas separated by commas.
+            // Note the leading '=' required by Aspose.Cells.
+            int nameIndex = workbook.Worksheets.Names.Add("ConsolidatedData");
+            Name namedRange = workbook.Worksheets.Names[nameIndex];
+            namedRange.RefersTo = "=Sheet1!$A$1:$A$3,Sheet2!$A$1:$A$3";
 
-            // Populate data in Sheet2
-            ws2.Cells["A1"].PutValue("Category");
-            ws2.Cells["B1"].PutValue("Value");
-            ws2.Cells["A2"].PutValue("A");
-            ws2.Cells["B2"].PutValue(15);
-            ws2.Cells["A3"].PutValue("B");
-            ws2.Cells["B3"].PutValue(25);
-            ws2.Cells["A4"].PutValue("C");
-            ws2.Cells["B4"].PutValue(35);
+            // ---------- Add a third worksheet to display the consolidation result ----------
+            Worksheet sheet3 = workbook.Worksheets.Add("Result");
+            // Use the named range in a formula to sum all values across the two sheets.
+            sheet3.Cells["A1"].Formula = "=SUM(ConsolidatedData)";
 
-            // ---------- Create Named Ranges ----------
-            // Named range "Data1" refers to Sheet1!A1:B4
-            int nameIdx1 = wb.Worksheets.Names.Add("Data1");
-            wb.Worksheets.Names[nameIdx1].RefersTo = "=Sheet1!$A$1:$B$4";
+            // ---------- Calculate formulas ----------
+            workbook.CalculateFormula();
 
-            // Named range "Data2" refers to Sheet2!A1:B4
-            int nameIdx2 = wb.Worksheets.Names.Add("Data2");
-            wb.Worksheets.Names[nameIdx2].RefersTo = "=Sheet2!$A$1:$B$4";
+            // ---------- Output the consolidated sum to console ----------
+            Console.WriteLine("Consolidated Sum (Sheet1 + Sheet2): " + sheet3.Cells["A1"].Value);
 
-            // Retrieve the address strings (without the leading '=') for use as source data
-            string range1 = wb.Worksheets.Names["Data1"].RefersTo.TrimStart('=');
-            string range2 = wb.Worksheets.Names["Data2"].RefersTo.TrimStart('=');
-            string[] sourceData = new string[] { range1, range2 };
-
-            // ---------- Create Pivot Table Using Consolidated Ranges ----------
-            // Destination cell D3 corresponds to row index 2, column index 3 (zero‑based)
-            PivotTableCollection pivots = ws1.PivotTables;
-            int pivotIdx = pivots.Add(sourceData, false, null, 2, 3, "ConsolidatedPivot");
-            PivotTable pivot = pivots[pivotIdx];
-
-            // Configure pivot fields: Category as row field, Value as data field (sum)
-            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
-
-            // ---------- Save Workbook ----------
-            wb.Save("ConsolidatedPivot.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
+            // ---------- Save the workbook ----------
+            workbook.Save("NamedRangeConsolidation.xlsx");
         }
     }
 }

@@ -1,105 +1,69 @@
-// Title: Aspose.Cells .NET – Apply a Custom RGB Palette to Chart Series
-// Description: Creates a workbook, adds sample data, builds a column chart, defines three RGB colors, updates the workbook palette, assigns each color to a series via the Area.ForegroundColor property, forces solid fill, and saves the file as CustomPaletteChart.xlsx.
-// Keywords: Aspose.Cells chart custom colors | C# set series RGB | change workbook palette Aspose | solid fill chart series | column chart color palette .NET
-// Common Searches: set custom RGB colors for Aspose.Cells chart series | update workbook palette in Aspose.Cells C# | apply solid fill to chart series Aspose.Cells | change series area foreground color Aspose.Cells | custom color palette for Excel charts using Aspose
-// Developer Intent: Generate a column chart and apply distinct RGB colors to each series by modifying the workbook palette.
-// Use Cases: Brand‑consistent sales charts where each product line uses its corporate RGB shade. | Financial dashboards that enforce a corporate color scheme across multiple Excel charts. | Automated report generation that matches presentation templates with predefined palette colors.
-// AI Prompts: Show how to extend the example to five series in a line chart with new RGB values. | Explain how to restore the default workbook palette after applying a custom one. | Provide code to use gradient fills for chart series while keeping a custom color palette.
+// Title: Aspose.Cells C# – Set Custom RGB Colors for Each Series in a Column Chart
+// Description: Shows how to build a workbook, fill it with category and series data, insert a column chart, and assign different RGB values to individual series using the Aspose.Cells for .NET API before saving the file as XLSX.
+// Keywords: Aspose.Cells chart series color | C# custom chart palette | RGB series styling Aspose.Cells | column chart series color .NET | Aspose.Cells chart customization | set series foreground color | chart series color array | Aspose.Cells SaveFormat Xlsx
+// Common Searches: C# Aspose.Cells change series color | apply custom colors to chart series Aspose.Cells | set RGB values for chart series .NET | custom color palette for Aspose.Cells column chart | Aspose.Cells chart series styling example
+// Developer Intent: Assign distinct RGB color values to each data series of a chart created with Aspose.Cells for .NET.
+// Use Cases: Produce a sales chart where each product line matches its brand hue. | Build a financial dashboard with separate colors for revenue, expenses, and profit series. | Export a presentation‑ready chart that adheres to a corporate color scheme across all series.
+// AI Prompts: Generate C# code with Aspose.Cells that applies custom RGB colors to each series of a line chart. | Explain how to replace the hard‑coded Color array with a reusable ColorPalette object in the example. | Show how to set both the fill and border colors for chart series using Aspose.Cells.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsCustomChartPalette
+// Shows how to build a workbook, fill it with category and series data, insert a column chart, and assign different RGB values to individual series using the Aspose.Cells for .NET API before saving the file as XLSX.
+class CustomChartPalette
 {
-    // Creates a workbook, adds sample data, builds a column chart, defines three RGB colors, updates the workbook palette, assigns each color to a series via the Area.ForegroundColor property, forces solid fill, and saves the file as CustomPaletteChart.xlsx.
-    public class ApplyCustomPalette
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet ws = workbook.Worksheets[0];
+
+        // Populate data for the chart
+        ws.Cells["A1"].PutValue("Category");
+        ws.Cells["A2"].PutValue("Jan");
+        ws.Cells["A3"].PutValue("Feb");
+        ws.Cells["A4"].PutValue("Mar");
+
+        ws.Cells["B1"].PutValue("Series1");
+        ws.Cells["B2"].PutValue(10);
+        ws.Cells["B3"].PutValue(20);
+        ws.Cells["B4"].PutValue(30);
+
+        ws.Cells["C1"].PutValue("Series2");
+        ws.Cells["C2"].PutValue(15);
+        ws.Cells["C3"].PutValue(25);
+        ws.Cells["C4"].PutValue(35);
+
+        ws.Cells["D1"].PutValue("Series3");
+        ws.Cells["D2"].PutValue(12);
+        ws.Cells["D3"].PutValue(22);
+        ws.Cells["D4"].PutValue(32);
+
+        // Add a column chart
+        int chartIdx = ws.Charts.Add(ChartType.Column, 6, 0, 20, 12);
+        Chart chart = ws.Charts[chartIdx];
+
+        // Set the data range for the series (B1:D4) and categories (A2:A4)
+        chart.NSeries.Add("B1:D4", true);
+        chart.NSeries.CategoryData = "A2:A4";
+
+        // Define custom RGB colors for each series
+        Color[] customColors = new Color[]
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            Color.FromArgb(79, 129, 189),   // Series1
+            Color.FromArgb(192, 80, 77),   // Series2
+            Color.FromArgb(255, 192, 0)    // Series3
+        };
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for three series
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Jan");
-                sheet.Cells["A3"].PutValue("Feb");
-                sheet.Cells["A4"].PutValue("Mar");
-
-                // Series 1
-                sheet.Cells["B1"].PutValue("Series1");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
-
-                // Series 2
-                sheet.Cells["C1"].PutValue("Series2");
-                sheet.Cells["C2"].PutValue(15);
-                sheet.Cells["C3"].PutValue(25);
-                sheet.Cells["C4"].PutValue(35);
-
-                // Series 3
-                sheet.Cells["D1"].PutValue("Series3");
-                sheet.Cells["D2"].PutValue(12);
-                sheet.Cells["D3"].PutValue(22);
-                sheet.Cells["D4"].PutValue(32);
-
-                // Add a column chart
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIdx];
-
-                // Set the data range for the series (B1:D4) and categories (A2:A4)
-                chart.NSeries.Add("B1:D4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Define custom colors (RGB)
-                Color[] customColors = new Color[]
-                {
-                    Color.FromArgb(79, 129, 189),   // Series1
-                    Color.FromArgb(192, 80, 77),    // Series2
-                    Color.FromArgb(155, 187, 89)    // Series3
-                };
-
-                // Update the workbook palette so the custom colors are recognized
-                for (int i = 0; i < customColors.Length; i++)
-                {
-                    workbook.ChangePalette(customColors[i], i);
-                }
-
-                // Apply the custom colors to each series via the Area.ForegroundColor property
-                chart.NSeries[0].Area.ForegroundColor = customColors[0];
-                chart.NSeries[1].Area.ForegroundColor = customColors[1];
-                chart.NSeries[2].Area.ForegroundColor = customColors[2];
-
-                // Ensure each series uses solid fill
-                foreach (Series s in chart.NSeries)
-                {
-                    s.Area.Formatting = FormattingType.Custom;
-                }
-
-                // Save the workbook
-                workbook.Save("CustomPaletteChart.xlsx", SaveFormat.Xlsx);
-                Console.WriteLine("Workbook saved as CustomPaletteChart.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        // Apply the custom colors to the series areas
+        for (int i = 0; i < chart.NSeries.Count && i < customColors.Length; i++)
         {
-            ApplyCustomPalette.Run();
+            chart.NSeries[i].Area.ForegroundColor = customColors[i];
         }
+
+        // Save the workbook with the customized chart
+        workbook.Save("CustomPaletteChart.xlsx", SaveFormat.Xlsx);
     }
 }

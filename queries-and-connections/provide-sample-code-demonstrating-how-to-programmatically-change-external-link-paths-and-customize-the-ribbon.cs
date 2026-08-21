@@ -1,53 +1,55 @@
+// Title: Aspose.Cells for .NET – Update External Link URLs & Add a Custom Ribbon Tab (C#)
+// Description: C# example that creates a workbook, replaces old SharePoint URLs in all ExternalLinks, injects custom Ribbon XML to add a new tab, and saves the file as a macro‑enabled workbook using Aspose.Cells.
+// Keywords: Aspose.Cells external link path | modify external links C# | RibbonXml Aspose.Cells | custom Excel ribbon .NET | sharepoint url replace Aspose | save workbook as xlsm | Aspose.Cells API example
+// Common Searches: how to change external link URL in Aspose.Cells | add custom ribbon tab with Aspose.Cells for .NET | replace SharePoint base address in Excel workbook programmatically | set RibbonXml property in C# Aspose.Cells | update workbook external links before saving
+// Developer Intent: Programmatically rewrite external link paths and embed a custom Ribbon UI before persisting the workbook.
+// Use Cases: Migrate Excel files to a new SharePoint site by updating every external data source URL. | Introduce a company‑specific ribbon tab with custom commands without using VBA. | Generate macro‑enabled (.xlsm) reports that retain UI customizations across deployments.
+// AI Prompts: Write C# code with Aspose.Cells that iterates over Workbook.Worksheets.ExternalLinks and replaces a given domain in OriginalDataSource. | Show how to assign a custom RibbonXml string to a Workbook object to create a new ribbon tab, then save as .xlsm. | Explain how to verify that external link URLs were updated and that RibbonXml is present after modifications.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExternalLinkAndRibbonDemo
 {
-    public class ExternalLinkAndRibbonDemo
+    // C# example that creates a workbook, replaces old SharePoint URLs in all ExternalLinks, injects custom Ribbon XML to add a new tab, and saves the file as a macro‑enabled workbook using Aspose.Cells.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook
+            // -------------------------------------------------
+            // 1. Create a new workbook (creation rule)
+            // -------------------------------------------------
             Workbook workbook = new Workbook();
 
-            // Add a sample external link that we will later modify
+            // -------------------------------------------------
+            // 2. Add an external link to the workbook
+            // -------------------------------------------------
+            // The external file "SourceData.xlsx" contains sheets "Sheet1" and "Sheet2"
             int linkIndex = workbook.Worksheets.ExternalLinks.Add(
-                "https://oldserver.com/SharedDocs/Folder/Source.xlsx",
-                new string[] { "Sheet1" });
+                "https://oldsharepoint.com/Projects/SourceData.xlsx",
+                new string[] { "Sheet1", "Sheet2" });
 
-            // Show the original external link path
-            Console.WriteLine("Original External Link: " +
-                workbook.Worksheets.ExternalLinks[linkIndex].OriginalDataSource);
-
-            // Programmatically change external link paths
+            // -------------------------------------------------
+            // 3. Change the external link path(s)
+            // -------------------------------------------------
+            // Iterate through all external links and replace the old base URL with a new one
             for (int i = 0; i < workbook.Worksheets.ExternalLinks.Count; i++)
             {
                 ExternalLink link = workbook.Worksheets.ExternalLinks[i];
-                string original = link.OriginalDataSource;
 
-                // Replace old server URL with a new one
-                string modified = original.Replace(
-                    "https://oldserver.com/SharedDocs/Folder/",
-                    "https://newserver.com/Docs/");
+                // OriginalDataSource holds the stored path; modify it as needed
+                string originalPath = link.OriginalDataSource;
+                string updatedPath = originalPath.Replace(
+                    "https://oldsharepoint.com/Projects/",
+                    "https://newsharepoint.com/Shared/");
 
-                link.OriginalDataSource = modified;
-                Console.WriteLine($"Modified Link [{i}]: {link.OriginalDataSource}");
+                // Apply the modified path back to the link
+                link.OriginalDataSource = updatedPath;
             }
 
-            // Custom Ribbon UI XML
+            // -------------------------------------------------
+            // 4. Customize the Ribbon UI using RibbonXml property
+            // -------------------------------------------------
             string ribbonXml =
                 "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
                 "  <ribbon>" +
@@ -61,15 +63,26 @@ namespace AsposeCellsExamples
                 "  </ribbon>" +
                 "</customUI>";
 
+            // Assign the custom Ribbon XML to the workbook
             workbook.RibbonXml = ribbonXml;
 
-            // Define output file path
-            string outputPath = "ExternalLinkAndRibbonDemo.xlsm";
+            // -------------------------------------------------
+            // 5. Save the workbook (save rule)
+            // -------------------------------------------------
+            // The workbook is saved as a macro-enabled file to preserve the Ribbon customization
+            workbook.Save("ExternalLinkAndRibbonDemo.xlsm");
 
-            // Save the workbook (macro-enabled format preserves Ribbon XML)
-            workbook.Save(outputPath);
+            // -------------------------------------------------
+            // 6. Verify changes (optional console output)
+            // -------------------------------------------------
+            Console.WriteLine("External link paths after modification:");
+            foreach (ExternalLink link in workbook.Worksheets.ExternalLinks)
+            {
+                Console.WriteLine($" - {link.OriginalDataSource}");
+            }
 
-            Console.WriteLine($"Workbook saved to '{outputPath}' with updated external links and custom Ribbon.");
+            Console.WriteLine($"Ribbon XML set: {(string.IsNullOrEmpty(workbook.RibbonXml) ? "No" : "Yes")}");
+            Console.WriteLine("Workbook saved as 'ExternalLinkAndRibbonDemo.xlsm'.");
         }
     }
 }

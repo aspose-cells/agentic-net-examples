@@ -1,33 +1,39 @@
-// Title: C# – Insert Two Rows at Row 51 and Export Excel to PDF with Aspose.Cells
-// Description: Loads an existing .xlsx file, inserts two rows at zero‑based index 50 (row 51) while keeping default formatting, and saves the updated workbook directly as a PDF using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# insert rows | InsertRows method | Excel to PDF conversion | SaveFormat.Pdf | default row formatting | zero‑based row index | programmatic Excel manipulation
-// Common Searches: Aspose.Cells insert rows at specific position | C# add rows to Excel and save as PDF | InsertRows method example Aspose.Cells | Convert modified workbook to PDF using Aspose.Cells | preserve formatting when inserting rows with Aspose.Cells
-// Developer Intent: Add two rows at row 51 in an Excel worksheet and export the workbook as a PDF using Aspose.Cells for .NET.
-// Use Cases: Insert blank rows before a summary section in a financial report, then generate a PDF for client delivery. | Adjust a template layout programmatically by adding rows and produce a print‑ready PDF. | Create a PDF version of a spreadsheet after expanding it with additional data rows.
-// AI Prompts: Write C# code that uses Aspose.Cells to insert three rows at row 10 and then save the workbook as a PDF. | Show how to insert rows with custom formatting before exporting an Excel workbook to PDF using Aspose.Cells for .NET. | Provide an example that reads an existing .xlsx file, inserts rows at a given index, and converts the modified workbook to PDF.
+// Title: C# – Insert Two Blank Rows at Row 51 and Convert Excel to PDF with Aspose.Cells
+// Description: Loads an existing .xlsx file, inserts two empty rows at the zero‑based index 50 (row 51) using Aspose.Cells’ InsertRows method with default formatting, then saves the workbook directly as a PDF.
+// Keywords: Aspose.Cells InsertRows C# | worksheet.Cells.InsertRows | Excel to PDF conversion .NET | SaveFormat.Pdf Aspose.Cells | add blank rows Aspose.Cells | zero‑based row index Excel | C# Excel row insertion example
+// Common Searches: Aspose.Cells insert rows at specific position C# | How to add blank rows before exporting to PDF with Aspose.Cells | Insert rows at row 51 using Aspose.Cells .NET | Convert modified Excel workbook to PDF in C# | Default formatting when inserting rows with Aspose.Cells
+// Developer Intent: Add two empty rows at row 51 in a worksheet and immediately generate a PDF version of the workbook.
+// Use Cases: Create space for new data entries in a financial report before producing a PDF for stakeholders. | Insert placeholder rows in a template, then export the finalized sheet as a printable PDF. | Add spacing in a schedule worksheet to improve readability in the generated PDF document.
+// AI Prompts: Write C# code that inserts a configurable number of rows at a given zero‑based index with default formatting using Aspose.Cells and then saves the workbook as a PDF. | Show how to verify row insertion (e.g., row count or cell values) before converting the workbook to PDF with Aspose.Cells. | Provide an example that includes page‑setup options when exporting an Excel sheet with newly inserted rows to PDF.
 
 using System;
 using Aspose.Cells;
 
-// Loads an existing .xlsx file, inserts two rows at zero‑based index 50 (row 51) while keeping default formatting, and saves the updated workbook directly as a PDF using Aspose.Cells for .NET.
-class InsertRowsAndConvertToPdf
+namespace AsposeCellsInsertRowsAndPdf
 {
-    static void Main()
+    // Loads an existing .xlsx file, inserts two empty rows at the zero‑based index 50 (row 51) using Aspose.Cells’ InsertRows method with default formatting, then saves the workbook directly as a PDF.
+    class Program
     {
-        // Path to the existing Excel file
-        string inputFile = "input.xlsx";
+        static void Main()
+        {
+            // Path to the existing Excel file
+            string inputFile = "input.xlsx";
 
-        // Load the workbook (lifecycle: create via constructor with file path)
-        Workbook workbook = new Workbook(inputFile);
+            // Path for the generated PDF file
+            string outputFile = "output.pdf";
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Load the workbook from the file (uses the Workbook(string) constructor)
+            Workbook workbook = new Workbook(inputFile);
 
-        // Insert two rows at index 50 (zero‑based). This uses the InsertRows method.
-        worksheet.Cells.InsertRows(50, 2);
+            // Access the first worksheet (you can change the index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Save the modified workbook as a PDF (lifecycle: save with format)
-        string outputPdf = "output.pdf";
-        workbook.Save(outputPdf, SaveFormat.Pdf);
+            // Insert two rows at index 50 (zero‑based). This uses the default InsertRows method,
+            // which creates empty rows with default formatting.
+            worksheet.Cells.InsertRows(50, 2);
+
+            // Save the modified workbook as a PDF (uses the Save method with SaveFormat.Pdf)
+            workbook.Save(outputFile, SaveFormat.Pdf);
+        }
     }
 }

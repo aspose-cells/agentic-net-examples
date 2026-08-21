@@ -1,84 +1,69 @@
-using Aspose.Cells;
+// Title: C# Example: Log Every SetVariable Call While Processing Aspose.Cells Smart Markers
+// Description: Demonstrates a helper method that writes the variable name and value to the console before invoking WorkbookDesigner.SetDataSource, then creates a template workbook with a smart‑marker, assigns variables, processes the markers, and saves the result. The pattern can be extended to file or database logging for debugging and audit purposes.
+// Keywords: Aspose.Cells | C# | .NET | smart markers | WorkbookDesigner | SetDataSource | SetVariable | logging | debugging | variable tracing | console output | code example | GitHub sample
+// Common Searches: Aspose.Cells log SetDataSource calls | debug smart marker variables C# | trace variable values in Aspose.Cells | how to log SetVariable in .NET | smart marker debugging example
+// Developer Intent: Add runtime logging that records each variable name and its value when it is supplied to WorkbookDesigner.SetDataSource during smart‑marker processing.
+// Use Cases: Verify that the correct data is bound to smart markers before generation. | Create an audit trail of all variables used in a report for compliance or troubleshooting. | Switch from console logging to a structured logger (e.g., NLog, Serilog) without changing business logic.
+// AI Prompts: Generate a C# extension method for WorkbookDesigner that logs variable assignments to a file and then calls SetDataSource. | Provide code that captures SetVariable calls into a JSON log file while still processing smart markers. | Refactor the SetVariable helper to use Serilog for asynchronous logging of variable names and values.
+
 using System;
-using System.Collections.Generic;
+using Aspose.Cells;
 
-class VariableLoggingDesigner
+namespace AsposeCellsVariableLoggingDemo
 {
-    private readonly WorkbookDesigner _designer;
-
-    public VariableLoggingDesigner(Workbook workbook)
+    // Demonstrates a helper method that writes the variable name and value to the console before invoking WorkbookDesigner.SetDataSource, then creates a template workbook with a smart‑marker, assigns variables, processes the markers, and saves the result. The pattern can be extended to file or database logging for debugging and audit purposes.
+    class Program
     {
-        // Initialize WorkbookDesigner with the provided workbook
-        _designer = new WorkbookDesigner(workbook);
-
-        // Attach a callback to log each smart‑marker processing event
-        _designer.CallBack = new SmartMarkerLogger();
-    }
-
-    // Wrapper that logs the variable name/value and forwards the call to SetDataSource
-    public void SetVariable(string name, object value)
-    {
-        Console.WriteLine($"SetVariable called: Name = {name}, Value = {value}");
-        _designer.SetDataSource(name, value);
-    }
-
-    public void Process()
-    {
-        _designer.Process();
-    }
-
-    public void Save(string filePath)
-    {
-        _designer.Workbook.Save(filePath);
-    }
-}
-
-// Implementation of ISmartMarkerCallBack that logs processing details
-class SmartMarkerLogger : ISmartMarkerCallBack
-{
-    public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
-    {
-        Console.WriteLine($"SmartMarker processed - Sheet:{sheetIndex}, Row:{rowIndex}, Column:{colIndex}, Table:{tableName}, Column:{columnName}");
-    }
-}
-
-// Sample data class used as a data source
-class Employee
-{
-    public string Name { get; set; }
-}
-
-// Demonstration of logging variable assignments and smart‑marker processing
-class Program
-{
-    static void Main()
-    {
-        // Create a new workbook that will serve as the template
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Insert a variable smart marker and a data smart marker
-        sheet.Cells["A1"].PutValue("&=$MyVar");
-        sheet.Cells["A2"].PutValue("&=Employees.Name");
-
-        // Initialize the designer with logging capabilities
-        var designer = new VariableLoggingDesigner(workbook);
-
-        // Log and set a simple variable
-        designer.SetVariable("MyVar", "VariableValue");
-
-        // Log and set a collection data source
-        var employees = new List<Employee>
+        // Helper method that logs the variable name and value before setting it as a data source.
+        static void SetVariable(WorkbookDesigner designer, string variableName, object value)
         {
-            new Employee { Name = "John" },
-            new Employee { Name = "Jane" }
-        };
-        designer.SetVariable("Employees", employees);
+            // Log the variable assignment.
+            Console.WriteLine($"SetVariable called - Name: \"{variableName}\", Value: \"{value}\"");
 
-        // Process all smart markers
-        designer.Process();
+            // Set the variable (smart marker data source) on the designer.
+            designer.SetDataSource(variableName, value);
+        }
 
-        // Save the resulting workbook
-        designer.Save("LoggedSmartMarkers.xlsx");
+        static void Main(string[] args)
+        {
+            // -----------------------------------------------------------------
+            // 1. Create a new workbook that will act as the template.
+            // -----------------------------------------------------------------
+            Workbook workbook = new Workbook();
+
+            // Add a worksheet that will contain the smart marker referencing a variable.
+            Worksheet templateSheet = workbook.Worksheets[0];
+            templateSheet.Name = "Template";
+
+            // Place a smart marker that uses a variable named "ReportTitle".
+            // The syntax "&=$VariableName" tells Aspose.Cells to replace it with the variable's value.
+            templateSheet.Cells["A1"].PutValue("&=$ReportTitle");
+
+            // -----------------------------------------------------------------
+            // 2. Initialize WorkbookDesigner with the template workbook.
+            // -----------------------------------------------------------------
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+            // -----------------------------------------------------------------
+            // 3. Set variables using the logging helper.
+            // -----------------------------------------------------------------
+            SetVariable(designer, "ReportTitle", "Quarterly Sales Report");
+
+            // You can set additional variables in the same way.
+            SetVariable(designer, "GeneratedOn", DateTime.Now);
+
+            // -----------------------------------------------------------------
+            // 4. Process the smart markers – variables will be replaced with the logged values.
+            // -----------------------------------------------------------------
+            designer.Process();
+
+            // -----------------------------------------------------------------
+            // 5. Save the resulting workbook.
+            // -----------------------------------------------------------------
+            // The save operation follows the standard Aspose.Cells pattern.
+            workbook.Save("VariableLoggingResult.xlsx");
+
+            Console.WriteLine("Workbook saved as VariableLoggingResult.xlsx");
+        }
     }
 }

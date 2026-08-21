@@ -1,16 +1,16 @@
-// Title: C# Aspose.Cells Example: Line Chart with Markers – Hide Markers on First Series
-// Description: Creates a workbook, adds category and two data series, inserts a LineWithDataMarkers chart, shows circular markers only on the second series, hides markers on the first series, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells line chart C# | LineWithDataMarkers | chart markers Aspose.Cells | hide series markers | ChartMarkerType.None | .NET Excel chart example | selective marker visibility | Aspose.Cells API sample
-// Common Searches: Aspose.Cells hide markers for a specific series | C# line chart with markers Aspose.Cells | set ChartMarkerType.None Aspose.Cells .NET | example of selective markers in Excel chart | how to display markers only on one series using Aspose.Cells
-// Developer Intent: Generate a line chart where markers appear only on the second data series while the first series is rendered without markers.
-// Use Cases: Highlight a key product’s trend in a sales dashboard by adding markers only to its line series. | Create a clean performance chart that shows raw data points for one metric and a plain line for another. | Produce an Excel report that emphasizes specific data series through visible markers while keeping other series uncluttered.
-// AI Prompts: Write C# code with Aspose.Cells to add a LineWithDataMarkers chart and hide markers on the first series. | Show how to apply different ChartMarkerType values to multiple series in an Aspose.Cells line chart. | Explain the effect of setting ChartMarkerType.None on a series in an Aspose.Cells-generated Excel chart.
+// Title: C# – Create a Line Chart with Selective Markers (hide first series) using Aspose.Cells
+// Description: This example builds a workbook, adds category data and two series, inserts a LineWithDataMarkers chart, hides markers for the first series, customizes markers for the second series, and saves the file as an Excel workbook.
+// Keywords: Aspose.Cells line chart C# | hide markers first series | custom chart markers Aspose.Cells | .NET chart series marker style | LineWithDataMarkers Aspose | Excel chart marker customization
+// Common Searches: Aspose.Cells hide markers for a specific series | C# line chart marker style none Aspose | how to customize chart markers in Aspose.Cells | selective marker visibility in Excel chart .NET | LineWithDataMarkers example Aspose
+// Developer Intent: Generate a line chart with data markers, suppress markers for the first series, and apply custom marker styling to the second series using Aspose.Cells for .NET.
+// Use Cases: Display a baseline trend line without markers while highlighting a comparison series with colored circles. | Create a performance dashboard where only key data points are emphasized with custom markers. | Export Excel reports that require different marker visibility per series to match corporate presentation standards.
+// AI Prompts: Show C# code to hide markers for the first series of a line chart while keeping markers for other series in Aspose.Cells. | Provide an Aspose.Cells example that customizes marker shape, size, and colors for a specific series. | Explain how to add a LineWithDataMarkers chart, set the first series marker style to None, and style the second series markers programmatically.
 
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds category and two data series, inserts a LineWithDataMarkers chart, shows circular markers only on the second series, hides markers on the first series, and saves the file as an XLSX document.
+// This example builds a workbook, adds category data and two series, inserts a LineWithDataMarkers chart, hides markers for the first series, customizes markers for the second series, and saves the file as an Excel workbook.
 class LineChartWithSelectiveMarkers
 {
     static void Main()
@@ -19,40 +19,49 @@ class LineChartWithSelectiveMarkers
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data
+        // Populate sample data for two series
+        // Category (X axis)
         sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
+        sheet.Cells["A2"].PutValue("Jan");
+        sheet.Cells["A3"].PutValue("Feb");
+        sheet.Cells["A4"].PutValue("Mar");
+        sheet.Cells["A5"].PutValue("Apr");
 
+        // First series values
         sheet.Cells["B1"].PutValue("Series 1");
         sheet.Cells["B2"].PutValue(10);
         sheet.Cells["B3"].PutValue(20);
         sheet.Cells["B4"].PutValue(30);
+        sheet.Cells["B5"].PutValue(40);
 
+        // Second series values
         sheet.Cells["C1"].PutValue("Series 2");
         sheet.Cells["C2"].PutValue(15);
         sheet.Cells["C3"].PutValue(25);
         sheet.Cells["C4"].PutValue(35);
+        sheet.Cells["C5"].PutValue(45);
 
-        // Add a line chart that supports data markers
-        int chartIndex = sheet.Charts.Add(ChartType.LineWithDataMarkers, 5, 0, 20, 10);
+        // Add a line chart that includes data markers by default
+        int chartIndex = sheet.Charts.Add(ChartType.LineWithDataMarkers, 7, 0, 25, 15);
         Chart chart = sheet.Charts[chartIndex];
 
-        // Set the data ranges for the two series
-        chart.NSeries.Add("B2:B4", true); // Series 1
-        chart.NSeries.Add("C2:C4", true); // Series 2
-        chart.NSeries.CategoryData = "A2:A4";
+        // Set data ranges for the two series
+        chart.NSeries.Add("B2:B5", true); // Series 1
+        chart.NSeries.Add("C2:C5", true); // Series 2
+        chart.NSeries.CategoryData = "A2:A5";
 
-        // Configure markers for the second series (visible)
-        chart.NSeries[1].Marker.MarkerStyle = ChartMarkerType.Circle;
-        chart.NSeries[1].Marker.MarkerSize = 8;
-        chart.NSeries[1].Marker.ForegroundColor = Color.Blue;
+        // Customize markers for the second series (keep default style or set explicitly)
+        Series secondSeries = chart.NSeries[1];
+        secondSeries.Marker.MarkerStyle = ChartMarkerType.Circle;
+        secondSeries.Marker.MarkerSize = 8;
+        secondSeries.Marker.ForegroundColor = Color.Blue;
+        secondSeries.Marker.BackgroundColor = Color.LightBlue;
 
-        // Hide markers for the first series
-        chart.NSeries[0].Marker.MarkerStyle = ChartMarkerType.None;
+        // Hide markers for the first series by setting marker style to None
+        Series firstSeries = chart.NSeries[0];
+        firstSeries.Marker.MarkerStyle = ChartMarkerType.None;
 
         // Save the workbook
-        workbook.Save("LineChartSelectiveMarkers.xlsx", SaveFormat.Xlsx);
+        workbook.Save("LineChartSelectiveMarkers.xlsx");
     }
 }

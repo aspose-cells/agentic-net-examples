@@ -1,48 +1,68 @@
+// Title: Unprotect Excel workbook structure with a recovered password and log the event using Aspose.Cells for .NET
+// Description: Loads a password‑protected .xlsx file, calls Workbook.Unprotect with the recovered password (no‑op if already unprotected), writes a UTC timestamped audit entry to the console, and saves the workbook as an unprotected copy.
+// Keywords: Aspose.Cells unprotect workbook | C# remove Excel structure protection | recover password Excel file | audit log workbook unprotection | save unprotected workbook Aspose | .NET Excel security | Workbook.Unprotect example
+// Common Searches: how to unprotect an Excel workbook with Aspose.Cells | unprotect workbook structure using recovered password C# | log workbook unprotection for compliance | Aspose.Cells example to remove workbook protection | save unprotected Excel file after password removal
+// Developer Intent: Remove structure protection from an Excel workbook using a known password and record the action for audit purposes.
+// Use Cases: Automated processing of secured Excel files where the password is known or recovered. | Compliance‑driven environments that require a timestamped log whenever protection is removed. | Creating an unprotected copy of a workbook for downstream analysis or distribution.
+// AI Prompts: Generate C# code with Aspose.Cells that loads a protected workbook, unprotects it using a given password, logs the operation with a UTC timestamp, and saves the result. | Show how to handle exceptions when loading, unprotecting, and saving an Excel file with Aspose.Cells in .NET. | Explain how to verify workbook protection status before calling Unprotect and how to produce an audit‑ready log entry.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace WorkbookUnprotectAudit
+// Loads a password‑protected .xlsx file, calls Workbook.Unprotect with the recovered password (no‑op if already unprotected), writes a UTC timestamped audit entry to the console, and saves the workbook as an unprotected copy.
+class UnprotectWorkbookDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Path to the protected workbook
+        string inputPath = "protected_workbook.xlsx";
+        // Path where the unprotected workbook will be saved
+        string outputPath = "unprotected_workbook.xlsx";
+        // Recovered password used to unprotect the workbook
+        string recoveredPassword = "recoveredPassword";
+
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
         {
-            // Paths to the protected and the resulting unprotected workbook
-            string protectedFilePath = "ProtectedWorkbook.xlsx";
-            string unprotectedFilePath = "UnprotectedWorkbook.xlsx";
+            Console.WriteLine($"Input file '{inputPath}' not found.");
+            return;
+        }
 
-            // Recovered password for the workbook structure protection
-            string password = "recoveredPassword";
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
 
-            try
-            {
-                // Load the protected workbook
-                Workbook workbook = new Workbook(protectedFilePath);
+        try
+        {
+            // Attempt to unprotect using the recovered password.
+            // If the workbook is not password‑protected, Unprotect does nothing.
+            workbook.Unprotect(recoveredPassword);
+            Console.WriteLine($"[{DateTime.UtcNow:u}] Workbook '{inputPath}' was unprotected (or was not protected).");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during unprotecting workbook: {ex.Message}");
+            return;
+        }
 
-                // Check if the workbook is actually protected with a password
-                if (workbook.IsWorkbookProtectedWithPassword)
-                {
-                    // Unprotect the workbook using the recovered password
-                    workbook.Unprotect(password);
-
-                    // Log the successful unprotection event
-                    Console.WriteLine($"[{DateTime.UtcNow:u}] Workbook '{protectedFilePath}' was unprotected using the provided password.");
-                }
-                else
-                {
-                    // Log that the workbook was not password‑protected
-                    Console.WriteLine($"[{DateTime.UtcNow:u}] Workbook '{protectedFilePath}' is not protected with a password; no unprotection needed.");
-                }
-
-                // Save the unprotected workbook
-                workbook.Save(unprotectedFilePath);
-                Console.WriteLine($"Workbook saved as '{unprotectedFilePath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Log any errors that occur during the process
-                Console.WriteLine($"[{DateTime.UtcNow:u}] Error unprotecting workbook: {ex.Message}");
-            }
+        try
+        {
+            // Save the (now) unprotected workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Unprotected workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
         }
     }
 }

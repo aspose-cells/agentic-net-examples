@@ -1,10 +1,10 @@
-// Title: Aspose.Cells for .NET: Position Chart Legend at Bottom and Show Its Border
-// Description: This C# example creates a workbook, adds a column chart with sample data, moves the legend to the bottom using Legend.Position = Bottom, enables the legend border with Legend.Border.IsVisible = true, and saves the result as ChartLegendBottomWithBorder.xlsx.
-// Keywords: Aspose.Cells | C# chart legend position | legend bottom Aspose.Cells | show legend border | Legend.Position Bottom | Legend.Border.IsVisible | Excel chart formatting .NET | Aspose.Cells chart customization | column chart legend styling | Aspose.Cells API
-// Common Searches: Aspose.Cells set legend to bottom | Enable legend border in Aspose.Cells chart | C# move chart legend below chart | Aspose.Cells legend formatting example | How to show legend border in Excel using Aspose.Cells
-// Developer Intent: Place the chart legend at the bottom of a chart and make its border visible using Aspose.Cells for .NET.
-// Use Cases: Generate Excel reports where the legend is positioned beneath the chart for better layout. | Create dashboards that require a visible legend border to separate legend items from the chart area. | Apply consistent legend placement and border styling across multiple charts in a workbook.
-// AI Prompts: Write C# code with Aspose.Cells to set a chart legend at the bottom and enable its border. | Show how to customize the legend border color and thickness after making it visible in an Aspose.Cells chart. | Explain how to apply the same bottom legend position and border settings to all charts in a workbook using Aspose.Cells for .NET.
+// Title: Aspose.Cells for .NET – Position Chart Legend at Bottom and Show Border
+// Description: Creates a workbook, adds a column chart, moves the legend to the bottom, makes the legend border visible, and saves the file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | chart legend position | legend border visibility | LegendPositionType.Bottom | Excel chart styling | Aspose.Cells chart API
+// Common Searches: Aspose.Cells set legend bottom | show legend border C# | chart legend position .NET | enable legend border Aspose.Cells | Aspose.Cells legend formatting
+// Developer Intent: Move the chart legend to the bottom of the chart and enable its border using Aspose.Cells for .NET.
+// Use Cases: Standardize Excel reports where the legend must appear below the chart for a clean layout. | Generate dashboards that require a visible legend outline to improve data readability. | Apply corporate style guidelines that dictate legend placement and border styling across multiple charts.
+// AI Prompts: Provide C# code with Aspose.Cells that positions a chart legend at the bottom and turns on its border. | Show how to configure legend placement, border visibility, and basic styling for any chart type in Aspose.Cells. | Explain the steps to adjust legend position and enable its border in an Aspose.Cells workbook using .NET.
 
 using System;
 using Aspose.Cells;
@@ -13,12 +13,12 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsLegendDemo
 {
-    // This C# example creates a workbook, adds a column chart with sample data, moves the legend to the bottom using Legend.Position = Bottom, enables the legend border with Legend.Border.IsVisible = true, and saves the result as ChartLegendBottomWithBorder.xlsx.
+    // Creates a workbook, adds a column chart, moves the legend to the bottom, makes the legend border visible, and saves the file using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -44,11 +44,10 @@ namespace AsposeCellsLegendDemo
             chart.Legend.Position = LegendPositionType.Bottom;
 
             // Make the legend border visible
-            // The Border property returns a Line object; set its visibility to true
             chart.Legend.Border.IsVisible = true;
 
             // Save the workbook
-            workbook.Save("ChartLegendBottomWithBorder.xlsx");
+            workbook.Save("ChartWithBottomLegendAndBorder.xlsx");
         }
     }
 }

@@ -1,10 +1,10 @@
-// Title: C# – Update QueryTable SQL Command and Refresh Data with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, accesses the first worksheet, retrieves the first QueryTable, changes the SQL statement of its ExternalConnection, optionally refreshes the data, and saves the workbook with the updated command.
-// Keywords: Aspose.Cells | C# | .NET | QueryTable | ExternalConnection | SQL command update | modify command text | refresh query table | Excel workbook automation | GitHub sample
-// Common Searches: Aspose.Cells change QueryTable command text | Update SQL statement of external connection in Excel using C# | Refresh QueryTable after modifying command Aspose.Cells | Set new SELECT query for QueryTable with Aspose.Cells | C# code to modify QueryTable external connection
-// Developer Intent: Change the SQL command of an existing QueryTable’s external connection and persist the workbook, with optional data refresh.
-// Use Cases: Replace a static SELECT clause with a dynamic query to filter data per region before distributing the file. | Programmatically adjust linked table sources in a template workbook for multiple deployments. | Automate batch updates of QueryTables across many workbooks to point to new database views.
-// AI Prompts: Generate C# code using Aspose.Cells that updates a QueryTable’s ExternalConnection Command property to a new SQL query and saves the workbook. | Show how to invoke QueryTable.RefreshData (or an alternative) after changing the command text in Aspose.Cells for .NET. | Explain fallback methods when QueryTable.RefreshData is unavailable and how to re‑execute the external connection manually.
+// Title: Change Query Table SQL Command and Refresh Data with Aspose.Cells for .NET
+// Description: Loads an existing workbook, accesses its first worksheet, retrieves the first query table and its external connection, replaces the command text with a new SQL SELECT statement, sets the command type to SqlStatement, refreshes all connections to re‑run the query, and saves the updated file.
+// Keywords: Aspose.Cells query table | update SQL command Excel | refresh external connection .NET | OLEDBCommandType SqlStatement | C# Excel data refresh | modify query table command
+// Common Searches: how to change sql command of a query table using Aspose.Cells | refresh query table after updating command text c# | aspnet update external connection command in excel workbook | set OLEDB command type for query table Aspose.Cells
+// Developer Intent: Replace the SQL command of an existing query table and re‑execute it to refresh the worksheet data.
+// Use Cases: Swap a static query in a template workbook with a dynamic filter before distribution. | Automate monthly reports by adjusting the WHERE clause of a query table, refreshing, and saving the result. | Programmatically change data sources for dashboard workbooks, refresh linked queries, and export the updated file.
+// AI Prompts: Generate C# code with Aspose.Cells that updates a query table's command text to a parameterized SQL statement and refreshes the workbook. | Show how to set OLEDBCommandType to SqlStatement after modifying an external connection for a query table. | Explain how to iterate over multiple query tables in a worksheet, assign different SQL commands, and refresh each one.
 
 using System;
 using System.IO;
@@ -13,10 +13,10 @@ using Aspose.Cells.ExternalConnections;
 
 namespace AsposeCellsExamples
 {
-    // Loads an Excel workbook, accesses the first worksheet, retrieves the first QueryTable, changes the SQL statement of its ExternalConnection, optionally refreshes the data, and saves the workbook with the updated command.
+    // Loads an existing workbook, accesses its first worksheet, retrieves the first query table and its external connection, replaces the command text with a new SQL SELECT statement, sets the command type to SqlStatement, refreshes all connections to re‑run the query, and saves the updated file.
     public class UpdateQueryTableCommandDemo
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
             try
             {
@@ -30,55 +30,55 @@ namespace AsposeCellsExamples
 
         public static void Run()
         {
-            const string inputPath = "InputWithQueryTable.xlsx";
-            const string outputPath = "OutputUpdatedQueryTable.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            try
+            // Load the workbook that contains a query table
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one query table in the worksheet
+            if (worksheet.QueryTables.Count == 0)
             {
-                // Load an existing workbook that contains a query table
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Ensure there is at least one query table in the worksheet
-                if (worksheet.QueryTables.Count == 0)
-                {
-                    Console.WriteLine("No query tables found in the worksheet.");
-                    return;
-                }
-
-                // Get the first query table
-                QueryTable queryTable = worksheet.QueryTables[0];
-
-                // Retrieve the external connection associated with the query table
-                ExternalConnection connection = queryTable.ExternalConnection;
-
-                // Update the command (SQL statement) of the connection
-                string newSql = "SELECT CustomerID, CompanyName FROM Customers WHERE Country = 'USA'";
-                connection.Command = newSql;
-                Console.WriteLine("Updated command text: " + connection.Command);
-
-                // Refresh the query table data (if supported by the library version)
-                // In some Aspose.Cells versions, QueryTable does not expose a RefreshData method.
-                // The data can be refreshed by re‑executing the external connection manually if needed.
-                // For demonstration, we omit the refresh step to keep the code compilable.
-
-                // Save the workbook with the (potentially) updated data
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved as {outputPath}");
+                Console.WriteLine("No query tables found in the worksheet.");
+                return;
             }
-            catch (Exception ex)
+
+            // Get the first query table
+            QueryTable queryTable = worksheet.QueryTables[0];
+
+            // Retrieve the external connection associated with the query table
+            ExternalConnection extConn = queryTable.ExternalConnection;
+
+            if (extConn == null)
             {
-                Console.WriteLine($"Runtime error: {ex.Message}");
+                Console.WriteLine("The query table does not have an associated external connection.");
+                return;
             }
+
+            // Set a new SQL command text
+            string newSql = "SELECT CustomerID, CompanyName FROM Customers WHERE Country = 'USA'";
+            extConn.Command = newSql;
+            Console.WriteLine("Updated command text to: " + extConn.Command);
+
+            // Ensure the command type is set to SQL statement
+            extConn.CommandType = OLEDBCommandType.SqlStatement;
+
+            // Refresh all external connections (including the query table) to fetch data with the new command
+            workbook.RefreshAll();
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved as {outputPath}");
         }
     }
 }

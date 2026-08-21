@@ -1,21 +1,33 @@
-// Title: C# – Add a Calculated Field to an Aspose.Cells Pivot Table to Categorize Sales (High, Medium, Low)
-// Description: This example creates a workbook, fills a small sales dataset, builds a pivot table on A1:C5, adds Region and Product as row/column fields, includes Sales as a data field, and defines a calculated field named **SalesCategory** using a nested IF formula ("=IF(Sales>1000,\"High\",IF(Sales>500,\"Medium\",\"Low\"))"). The pivot is refreshed, calculated, and saved as an Excel file.
-// Keywords: Aspose.Cells calculated field | pivot table IF formula C# | AddCalculatedField Aspose.Cells | sales categorization pivot | .NET Excel pivot table | nested IF Excel formula | regional sales report C# | Excel dashboard Aspose.Cells
-// Common Searches: how to add a calculated field in Aspose.Cells pivot table | C# Aspose.Cells IF formula for sales categories | Aspose.Cells AddCalculatedField example | pivot table sales tier classification .NET | create sales category field in Excel using Aspose
-// Developer Intent: Generate a pivot table and attach a calculated field that classifies each sales value as High, Medium, or Low.
-// Use Cases: Produce a regional sales summary where each amount is tagged with a performance tier for quick decision‑making. | Build an interactive Excel dashboard that shows product‑region sales alongside categorical labels for conditional formatting. | Export a workbook that can be consumed by BI tools, with a pre‑calculated sales‑category field for downstream analysis.
-// AI Prompts: Write C# code with Aspose.Cells to add a calculated field called 'SalesCategory' to a pivot table using a nested IF formula that returns High, Medium, or Low. | Explain the steps required to refresh and recalculate a pivot table after adding a calculated field with Aspose.Cells. | Show how to adjust the threshold values in the IF formula to create custom sales categories in an Aspose.Cells pivot table.
+// Title: Aspose.Cells C# – Add IF‑Based Calculated Field to Pivot Table for Sales Category (High, Medium, Low)
+// Description: Demonstrates how to create a workbook with region‑sales data, build a pivot table, and programmatically add a calculated field named **SalesCategory** using the IF formula `=IF(Sales>200,"High",IF(Sales>100,"Medium","Low"))`. The example shows adding the field to the data area, refreshing the pivot, recalculating, and saving the file as an Excel workbook.
+// Keywords: Aspose.Cells calculated field | C# pivot table IF formula | sales category pivot | add calculated field Aspose.Cells | .NET Excel pivot table example | IF function in pivot table | categorize sales high medium low
+// Common Searches: Aspose.Cells add calculated field with IF | C# pivot table sales category example | how to use IF formula in Aspose.Cells pivot | refresh pivot table after adding calculated field Aspose.Cells | programmatically create pivot table in .NET
+// Developer Intent: Create a pivot table in Aspose.Cells and attach an IF‑based calculated field that classifies each sales value as High, Medium, or Low.
+// Use Cases: Generate regional sales reports where analysts can filter by High, Medium, or Low sales categories. | Automate workbook production for multiple datasets, applying the same SalesCategory field to each pivot table. | Export Excel workbooks with pre‑calculated sales tiers for downstream BI tools.
+// AI Prompts: Write C# code using Aspose.Cells to add a calculated field called 'SalesCategory' with the formula IF(Sales>200,"High",IF(Sales>100,"Medium","Low")) to an existing pivot table and refresh it. | Show how to change the threshold values in the SalesCategory IF formula for different business rules in Aspose.Cells. | Provide a step‑by‑step guide to read back the values of the 'SalesCategory' calculated field after the pivot table is calculated.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotCalculatedFieldDemo
+namespace AsposeCellsExamples
 {
-    // This example creates a workbook, fills a small sales dataset, builds a pivot table on A1:C5, adds Region and Product as row/column fields, includes Sales as a data field, and defines a calculated field named **SalesCategory** using a nested IF formula ("=IF(Sales>1000,\"High\",IF(Sales>500,\"Medium\",\"Low\"))"). The pivot is refreshed, calculated, and saved as an Excel file.
-    public class Program
+    // Demonstrates how to create a workbook with region‑sales data, build a pivot table, and programmatically add a calculated field named **SalesCategory** using the IF formula `=IF(Sales>200,"High",IF(Sales>100,"Medium","Low"))`. The example shows adding the field to the data area, refreshing the pivot, recalculating, and saving the file as an Excel workbook.
+    public class PivotTableCalculatedFieldDemo
     {
-        public static void Main()
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -23,52 +35,46 @@ namespace AsposeCellsPivotCalculatedFieldDemo
             Cells cells = sheet.Cells;
 
             // Populate sample data for the pivot table
-            // Header row
             cells["A1"].Value = "Region";
-            cells["B1"].Value = "Product";
-            cells["C1"].Value = "Sales";
+            cells["B1"].Value = "Sales";
 
-            // Data rows
             cells["A2"].Value = "North";
-            cells["B2"].Value = "Widget";
-            cells["C2"].Value = 1200;
-
+            cells["B2"].Value = 250;   // High
             cells["A3"].Value = "North";
-            cells["B3"].Value = "Gadget";
-            cells["C3"].Value = 800;
-
+            cells["B3"].Value = 150;   // Medium
             cells["A4"].Value = "South";
-            cells["B4"].Value = "Widget";
-            cells["C4"].Value = 450;
-
+            cells["B4"].Value = 80;    // Low
             cells["A5"].Value = "South";
-            cells["B5"].Value = "Gadget";
-            cells["C5"].Value = 1500;
+            cells["B5"].Value = 300;   // High
+            cells["A6"].Value = "East";
+            cells["B6"].Value = 120;   // Medium
+            cells["A7"].Value = "West";
+            cells["B7"].Value = 60;    // Low
 
-            // Create a pivot table based on the data range
-            // Place the pivot table starting at cell E3
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
+            // Add a pivot table based on the data range A1:B7, place it at E3
+            int pivotIndex = sheet.PivotTables.Add("A1:B7", "E3", "SalesPivot");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
             // Add fields to the pivot table
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Region");
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Add a calculated field that categorizes sales:
-            // High  : Sales > 1000
-            // Medium: 500 < Sales <= 1000
-            // Low   : Sales <= 500
-            // The IF function in Excel syntax is used.
-            string formula = "=IF(Sales>1000,\"High\",IF(Sales>500,\"Medium\",\"Low\"))";
-            pivotTable.AddCalculatedField("SalesCategory", formula, true);
+            // Add a calculated field that categorizes sales using IF
+            // Formula: IF(Sales>200,"High",IF(Sales>100,"Medium","Low"))
+            string calcFieldName = "SalesCategory";
+            string calcFormula = "=IF(Sales>200,\"High\",IF(Sales>100,\"Medium\",\"Low\"))";
 
-            // Refresh and calculate the pivot table to apply the new field
+            // Drag the calculated field to the data area immediately
+            pivotTable.AddCalculatedField(calcFieldName, calcFormula, true);
+
+            // Refresh the pivot table data to apply the new calculated field
             pivotTable.RefreshData();
+
+            // Recalculate the pivot table to apply changes
             pivotTable.CalculateData();
 
             // Save the workbook
-            workbook.Save("PivotTable_With_CalculatedField.xlsx");
+            workbook.Save("PivotTableWithSalesCategory.xlsx");
         }
     }
 }

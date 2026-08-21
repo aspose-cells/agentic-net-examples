@@ -1,10 +1,10 @@
-// Title: Detect Tables Missing Headers and Insert Default Column Names with Aspose.Cells (C#/.NET)
-// Description: A C#/.NET example that opens or creates an Excel workbook, scans every worksheet for ListObject tables without a header row, inserts a top row filled with generic names (Column1, Column2, …), rebuilds the table with the header flag enabled, and saves the updated file. Header presence is inferred by checking the first row for string values.
-// Keywords: Aspose.Cells | C# | .NET | Excel ListObject | detect missing table header | add default header row | generic column names | programmatic table header | workbook automation | Excel table without header | US developers | European developers
-// Common Searches: How to add a header row to an Aspose.Cells ListObject | Detect tables without headers using Aspose.Cells C# | Add default column names to Excel tables programmatically | Aspose.Cells replace table after inserting header | C# code to insert generic column headers in Excel | Aspose.Cells table header detection heuristic
-// Developer Intent: Automatically add a default header row to any Excel table that lacks one.
-// Use Cases: Standardize imported spreadsheets before data analysis by ensuring every table has column names. | Prepare workbooks for BI or reporting systems that require explicit headers. | Clean up user‑generated Excel files that contain tables without headers while preserving formatting. | Automate bulk workbook cleanup in enterprise environments.
-// AI Prompts: Write C# code using Aspose.Cells to scan all worksheets, find ListObjects without a header row, insert a header row with Column1, Column2… and update the table definition. | Suggest an alternative method to detect missing table headers in Aspose.Cells that does not rely on cell type heuristics. | Explain how to retain existing table styles and formatting when adding a new header row with Aspose.Cells. | Provide a PowerShell script that invokes the compiled .NET assembly to process multiple workbooks for missing table headers.
+// Title: C# – Detect Tables Without Headers and Add Generic Column Names Using AspNet.Cells for .NET
+// Description: This example creates a workbook, adds a ListObject (Excel table) without a header row, scans every worksheet, inserts a new top row for each header‑less table, fills it with generic names (Column1, Column2, …), calls ListObject.UpdateColumnName to sync the table definition, and saves the result as an .xlsx file.
+// Keywords: Aspose.Cells C# | Aspose.Cells .NET | detect missing table header | add default header row | generic column names Excel | ListObject UpdateColumnName | programmatically add table header | Excel table without headers | C# Excel automation | Aspose.Cells sample code
+// Common Searches: how to add a header row to an Aspose.Cells ListObject | detect tables without headers in a workbook using Aspose.Cells | insert generic column names into Excel tables C# | Aspose.Cells update column names after inserting header | C# code to add default headers to all tables in Excel file
+// Developer Intent: Automatically insert a default header row with generic column names into any ListObject that lacks one.
+// Use Cases: Ensure every table in a generated report has a header before publishing. | Standardize imported spreadsheets that miss header rows by adding Column1, Column2, … automatically. | Prepare workbooks for downstream analytics that require defined column names for each table.
+// AI Prompts: Write C# code with Aspose.Cells that scans a workbook, finds ListObjects without headers, inserts a header row named Column1, Column2, etc., and updates the table definition. | Explain why ListObject.UpdateColumnName must be called after adding a header row in Aspose.Cells. | Create a reusable method that accepts a Workbook object, adds generic headers to any header‑less table, and returns the modified workbook.
 
 using System;
 using System.IO;
@@ -13,88 +13,58 @@ using Aspose.Cells.Tables;
 
 namespace AsposeCellsExamples
 {
-    // A C#/.NET example that opens or creates an Excel workbook, scans every worksheet for ListObject tables without a header row, inserts a top row filled with generic names (Column1, Column2, …), rebuilds the table with the header flag enabled, and saves the updated file. Header presence is inferred by checking the first row for string values.
+    // This example creates a workbook, adds a ListObject (Excel table) without a header row, scans every worksheet, inserts a new top row for each header‑less table, fills it with generic names (Column1, Column2, …), calls ListObject.UpdateColumnName to sync the table definition, and saves the result as an .xlsx file.
     class DetectAndAddTableHeaders
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook (or load an existing one)
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Sample data: create a worksheet with a table that has no header row
-                Worksheet ws = workbook.Worksheets[0];
-                ws.Cells["A1"].PutValue(1);
-                ws.Cells["B1"].PutValue(2);
-                ws.Cells["A2"].PutValue(3);
-                ws.Cells["B2"].PutValue(4);
+                // Sample data without a header row (table starts at A1)
+                worksheet.Cells["A1"].PutValue("Apple");
+                worksheet.Cells["B1"].PutValue(10);
+                worksheet.Cells["A2"].PutValue("Orange");
+                worksheet.Cells["B2"].PutValue(15);
+                worksheet.Cells["A3"].PutValue("Banana");
+                worksheet.Cells["B3"].PutValue(8);
 
-                // Add a ListObject (table) without headers (hasHeaders = false)
-                int tableIndex = ws.ListObjects.Add(0, 0, 1, 1, false);
-                ListObject table = ws.ListObjects[tableIndex];
-                table.DisplayName = "DataTable";
+                // Add a ListObject (table) without headers (showHeaders = false)
+                int tableIndex = worksheet.ListObjects.Add(0, 0, 2, 1, false);
+                ListObject table = worksheet.ListObjects[tableIndex];
+                table.DisplayName = "FruitTable";
 
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Iterate through all worksheets and their tables
+                foreach (Worksheet ws in workbook.Worksheets)
                 {
-                    // Work on a copy of the ListObjects collection because we may modify it inside the loop
-                    ListObject[] tables = new ListObject[sheet.ListObjects.Count];
-                    sheet.ListObjects.CopyTo(tables, 0);
-
-                    foreach (ListObject lo in tables)
+                    foreach (ListObject lo in ws.ListObjects)
                     {
-                        // Determine if the table already has a header row.
-                        // Aspose.Cells ListObject does not expose a direct property for this in older versions,
-                        // so we infer it by checking the first row of the table for string values.
-                        bool hasHeader = false;
+                        // Determine the range of the table
                         int startRow = lo.StartRow;
-                        int startCol = lo.StartColumn;
-                        int endRow = lo.EndRow;
-                        int endCol = lo.EndColumn;
+                        int startColumn = lo.StartColumn;
+                        int columnCount = lo.EndColumn - lo.StartColumn + 1;
 
-                        // Simple heuristic: if any cell in the first row of the table contains a string, treat it as a header.
-                        for (int c = startCol; c <= endCol; c++)
+                        // Insert a new row at the beginning of the table range
+                        ws.Cells.InsertRow(startRow);
+
+                        // Populate generic column names: Column1, Column2, ...
+                        for (int c = 0; c < columnCount; c++)
                         {
-                            if (sheet.Cells[startRow, c].Type == CellValueType.IsString)
-                            {
-                                hasHeader = true;
-                                break;
-                            }
+                            ws.Cells[startRow, startColumn + c].PutValue($"Column{c + 1}");
                         }
 
-                        if (!hasHeader)
-                        {
-                            // Insert a new row at the top of the table to serve as header
-                            sheet.Cells.InsertRows(startRow, 1);
-
-                            // Fill the inserted row with generic column names: Column1, Column2, ...
-                            int colCount = endCol - startCol + 1;
-                            for (int c = 0; c < colCount; c++)
-                            {
-                                sheet.Cells[startRow, startCol + c].PutValue($"Column{c + 1}");
-                            }
-
-                            // Remove the old table definition using its index
-                            int loIndex = sheet.ListObjects.IndexOf(lo);
-                            if (loIndex >= 0)
-                            {
-                                sheet.ListObjects.RemoveAt(loIndex);
-                            }
-
-                            // Re‑create the table with the new range and indicate that it now has headers
-                            int newTableIndex = sheet.ListObjects.Add(startRow, startCol, endRow - startRow + 2, colCount, true);
-                            ListObject newTable = sheet.ListObjects[newTableIndex];
-                            newTable.DisplayName = lo.DisplayName;
-
-                            // Update column names to match the header cells
-                            newTable.UpdateColumnName();
-                        }
+                        // Update the ListObject's column names to match the new header cells
+                        lo.UpdateColumnName();
                     }
                 }
 
-                // Save the workbook with the updated tables
-                string outputPath = "OutputWithHeaders.xlsx";
+                // Define output file path
+                string outputPath = "TablesWithHeaders.xlsx";
+
+                // Save the workbook
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }

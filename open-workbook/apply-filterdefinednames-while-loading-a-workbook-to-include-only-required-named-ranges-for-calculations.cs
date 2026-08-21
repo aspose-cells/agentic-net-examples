@@ -1,82 +1,53 @@
-// Title: Aspose.Cells for .NET – Load a workbook with a custom LoadFilter to include only needed defined names
-// Description: Shows how to configure LoadOptions with a custom LoadFilter that loads defined names solely for selected worksheets (e.g., Sheet1) while loading just the structure for the rest. The sample counts workbook‑ and worksheet‑scoped names, accesses a named range, and saves the workbook, helping to cut load time and memory usage.
-// Keywords: Aspose.Cells | .NET | LoadFilter | LoadOptions | defined names | named ranges | selective loading | Excel performance | Workbook scoped names | Worksheet scoped names
-// Common Searches: Aspose.Cells load only specific named ranges | custom LoadFilter example .NET | how to load workbook structure without named ranges | filter defined names when opening Excel with Aspose | improve Excel load performance Aspose.Cells
-// Developer Intent: Open an Excel file while loading only the required named ranges for calculations.
-// Use Cases: Reduce memory consumption by loading defined names only for sheets that need them | Count and enumerate workbook‑scoped and worksheet‑scoped names after selective loading | Retrieve the address of a loaded named range for further processing | Save a workbook after trimming unnecessary name definitions
-// AI Prompts: Generate code to extend RequiredNamesLoadFilter to handle multiple worksheets with different name loading strategies. | Show how to use LoadOptions.FilterDefinedNames property to specify an explicit list of named ranges to load. | Explain error handling when a required named range is absent while using a custom LoadFilter in Aspose.Cells. | Provide guidance on measuring performance gains from selective named‑range loading.
+// Title: Load a workbook with Aspose.Cells .NET using LoadFilter to keep only specific defined names
+// Description: Demonstrates how to create a LoadFilter that includes defined names and cell data, load a workbook, whitelist required named ranges (e.g., "SalesData" and "Expenses"), remove all other names, optionally sort the remaining names, and save the filtered file.
+// Keywords: Aspose.Cells LoadFilter defined names | C# load specific named ranges | remove unwanted named ranges .NET | filter defined names Aspose.Cells | sort workbook names Aspose.Cells | memory optimization workbook loading | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells load only selected named ranges | How to filter defined names when opening a workbook in C# | Remove unused named ranges after loading workbook Aspose.Cells | Sort named ranges after filtering Aspose.Cells .NET | Reduce memory usage by loading specific defined names
+// Developer Intent: Load a workbook and retain only the required named ranges while discarding all others.
+// Use Cases: Load a template workbook and keep only the "SalesData" and "Expenses" ranges needed for calculations. | Minimize memory consumption by loading just the necessary defined names together with cell data. | Clean up a workbook before distribution by deleting unused named ranges and ordering the remaining ones.
+// AI Prompts: Show me a C# example that uses Aspose.Cells LoadFilter to load only certain defined names and delete the rest. | Provide code to whitelist specific named ranges, remove all others, sort the names, and save the workbook with Aspose.Cells .NET. | Explain how combining LoadDataFilterOptions.DefinedNames and LoadDataFilterOptions.CellData improves performance when opening large workbooks.
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-// Shows how to configure LoadOptions with a custom LoadFilter that loads defined names solely for selected worksheets (e.g., Sheet1) while loading just the structure for the rest. The sample counts workbook‑ and worksheet‑scoped names, accesses a named range, and saves the workbook, helping to cut load time and memory usage.
+// Demonstrates how to create a LoadFilter that includes defined names and cell data, load a workbook, whitelist required named ranges (e.g., "SalesData" and "Expenses"), remove all other names, optionally sort the remaining names, and save the filtered file.
 class Program
 {
     static void Main()
     {
-        try
+        // Define the names of the ranges that must be kept after loading
+        var requiredNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            // Path to the source workbook (template) that contains many defined names
-            string sourcePath = "TemplateWithNames.xlsx";
+            "SalesData",
+            "Expenses"
+        };
 
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Error: The file \"{sourcePath}\" was not found.");
-                return;
-            }
+        // Create a LoadFilter that loads defined names (and cell data if needed)
+        LoadFilter loadFilter = new LoadFilter(LoadDataFilterOptions.DefinedNames | LoadDataFilterOptions.CellData);
 
-            // Create LoadOptions and assign a custom LoadFilter
-            LoadOptions loadOptions = new LoadOptions
-            {
-                LoadFilter = new RequiredNamesLoadFilter()
-            };
+        // Assign the filter to LoadOptions
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.LoadFilter = loadFilter;
 
-            // Load the workbook using the specified LoadOptions
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
+        // Load the workbook using the specified options
+        Workbook workbook = new Workbook("Template.xlsx", loadOptions);
 
-            // Retrieve all workbook‑scoped defined names that were loaded
-            Name[] workbookScopeNames = workbook.Worksheets.Names.Filter(NameScopeType.Workbook, -1);
-            Console.WriteLine($"Workbook‑scoped names loaded: {workbookScopeNames.Length}");
+        // Retrieve all defined names (workbook‑scoped and worksheet‑scoped)
+        Name[] allNames = workbook.Worksheets.Names.Filter(NameScopeType.All, -1);
 
-            // Retrieve worksheet‑scoped names for the first sheet (index 0)
-            Name[] sheet1Names = workbook.Worksheets.Names.Filter(NameScopeType.Worksheet, 0);
-            Console.WriteLine($"Sheet1 names loaded: {sheet1Names.Length}");
-
-            // Demonstrate using a loaded name (if any) to obtain its range
-            if (sheet1Names.Length > 0)
-            {
-                // Resolve ambiguity between Aspose.Cells.Range and System.Range
-                Aspose.Cells.Range range = sheet1Names[0].GetRange();
-                Console.WriteLine($"First name range address: {range.Address}");
-            }
-
-            // Save the workbook after processing
-            string outputPath = "ProcessedWorkbook.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
+        // Remove any name that is not in the required list
+        foreach (Name name in allNames)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-
-    // Custom LoadFilter that loads only defined names for required sheets
-    class RequiredNamesLoadFilter : LoadFilter
-    {
-        public override void StartSheet(Worksheet sheet)
-        {
-            // Load only defined names for "Sheet1"; other sheets load structure only
-            if (sheet.Name == "Sheet1")
+            if (!requiredNames.Contains(name.Text))
             {
-                LoadDataFilterOptions = LoadDataFilterOptions.DefinedNames;
-            }
-            else
-            {
-                LoadDataFilterOptions = LoadDataFilterOptions.Structure;
+                workbook.Worksheets.Names.Remove(name.Text);
             }
         }
+
+        // Optional: sort the remaining names for consistency
+        workbook.Worksheets.SortNames();
+
+        // Save the filtered workbook
+        workbook.Save("FilteredWorkbook.xlsx");
     }
 }

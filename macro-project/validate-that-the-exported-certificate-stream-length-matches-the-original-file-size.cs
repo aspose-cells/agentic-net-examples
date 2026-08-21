@@ -1,87 +1,58 @@
-// Title: Validate Exported Certificate Size Against Original PFX in Aspose.Cells (C#)
-// Description: Loads a .pfx certificate, records its byte length, signs an Aspose.Cells workbook, saves it to a MemoryStream, reloads the file, extracts the embedded certificate, and checks that the exported certificate size matches the original file size.
-// Keywords: Aspose.Cells digital signature | C# certificate size validation | exported certificate length | compare PFX byte size | Excel workbook signing | Aspose.Cells certificate export | certificate byte count check
-// Common Searches: Aspose.Cells verify exported certificate size | C# compare original pfx size with signed workbook certificate | digital signature certificate length mismatch Aspose.Cells | how to validate certificate byte count after signing Excel file
-// Developer Intent: Ensure that the certificate extracted from a signed workbook has the identical byte length as the original .pfx file.
-// Use Cases: Sign an Excel workbook with a .pfx certificate using Aspose.Cells. | Persist the signed workbook to a MemoryStream and reload it for verification. | Export the embedded certificate from the loaded workbook and compare its size to the source file. | Log or handle cases where the certificate size does not match, indicating potential corruption.
-// AI Prompts: Write C# code that signs an Aspose.Cells workbook with a .pfx certificate and confirms the exported certificate size equals the original file size. | Create a reusable function that takes a certificate path and a Workbook, applies a digital signature, reloads the workbook, and returns true if the certificate byte count matches. | Explain steps to troubleshoot a size mismatch when validating an exported certificate from a signed Excel file using Aspose.Cells.
+// Title: C# – Verify VBA Project Certificate Stream Length Matches Workbook Size Using Aspose.Cells
+// Description: Loads a signed .xlsm workbook with Aspose.Cells, reads the original file size, extracts the raw VBA project certificate via workbook.VbaProject.CertRawData, compares the byte‑array length to the workbook size, and reports whether the lengths are identical.
+// Keywords: Aspose.Cells VBA certificate | C# workbook size validation | VbaProject CertRawData length | signed .xlsm verification | certificate stream size check
+// Common Searches: Aspose.Cells compare certificate length to file size | C# verify signed VBA project size | how to get VBA certificate raw data Aspose | check if workbook certificate matches original size | validate signed Excel macro file integrity
+// Developer Intent: Confirm that the exported VBA certificate byte count equals the original workbook file size.
+// Use Cases: Detect tampered or corrupted signed workbooks by flagging size mismatches. | Automate compliance logs that record certificate‑to‑file size verification results. | Gate downstream processing to only accept workbooks that pass the certificate size check.
+// AI Prompts: Write a C# method using Aspose.Cells that returns true when workbook.VbaProject.CertRawData.Length matches the .xlsm file size. | Generate code that throws a custom exception if the VBA certificate stream length differs from the original workbook size. | Create a logging snippet that records both the workbook size and certificate length and issues a warning on mismatch.
 
 using System;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
-using Aspose.Cells.DigitalSignatures;
+using Aspose.Cells.Vba;
 
 namespace AsposeCellsCertificateValidation
 {
-    // Loads a .pfx certificate, records its byte length, signs an Aspose.Cells workbook, saves it to a MemoryStream, reloads the file, extracts the embedded certificate, and checks that the exported certificate size matches the original file size.
+    // Loads a signed .xlsm workbook with Aspose.Cells, reads the original file size, extracts the raw VBA project certificate via workbook.VbaProject.CertRawData, compares the byte‑array length to the workbook size, and reports whether the lengths are identical.
     class Program
     {
         static void Main()
         {
-            try
+            // Path to the workbook that contains a signed VBA project
+            string workbookPath = "signedWorkbook.xlsm";
+
+            // Get the original file size in bytes
+            long originalFileSize = new FileInfo(workbookPath).Length;
+
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Check if the VBA project is signed
+            if (workbook.VbaProject.IsSigned)
             {
-                // Path to the original certificate file (e.g., .pfx)
-                string certPath = "certificate.pfx";
+                // Retrieve the raw certificate data
+                byte[] certData = workbook.VbaProject.CertRawData;
 
-                // Ensure the certificate file exists
-                if (!File.Exists(certPath))
+                // Determine the length of the exported certificate stream
+                long certLength = certData?.Length ?? 0;
+
+                // Output the sizes
+                Console.WriteLine($"Original workbook size: {originalFileSize} bytes");
+                Console.WriteLine($"Exported certificate stream length: {certLength} bytes");
+
+                // Validate that the lengths match
+                if (certLength == originalFileSize)
                 {
-                    Console.WriteLine($"Certificate file not found: {certPath}");
-                    return;
+                    Console.WriteLine("Validation succeeded: lengths match.");
                 }
-
-                // Load the original certificate bytes and get its size
-                byte[] originalCertBytes = File.ReadAllBytes(certPath);
-                long originalSize = originalCertBytes.Length;
-                Console.WriteLine($"Original certificate size: {originalSize} bytes");
-
-                // Create a new workbook and add some data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Demo for certificate validation");
-
-                // Create a digital signature collection and add a signature using the certificate
-                DigitalSignatureCollection signatures = new DigitalSignatureCollection();
-                DigitalSignature signature = new DigitalSignature(
-                    originalCertBytes,   // certificate data
-                    "certPassword",      // certificate password (if any)
-                    "Demo Signature",    // signature comment
-                    DateTime.Now);       // signing time
-                signatures.Add(signature);
-
-                // Apply the digital signature to the workbook
-                workbook.SetDigitalSignature(signatures);
-
-                // Save to a memory stream and reload to verify the signature
-                using (MemoryStream ms = new MemoryStream())
+                else
                 {
-                    workbook.Save(ms, SaveFormat.Xlsx);
-                    ms.Position = 0; // reset stream position for reading
-
-                    // Load the workbook back from the memory stream
-                    Workbook loadedWorkbook = new Workbook(ms);
-
-                    // Retrieve the digital signatures from the loaded workbook
-                    DigitalSignatureCollection loadedSignatures = loadedWorkbook.GetDigitalSignature();
-
-                    // Iterate through signatures and compare certificate sizes
-                    foreach (DigitalSignature loadedSignature in loadedSignatures)
-                    {
-                        // Export the certificate from the loaded signature (PKCS#12 format)
-                        byte[] exportedCertBytes = loadedSignature.Certificate?.Export(X509ContentType.Pkcs12) ?? Array.Empty<byte>();
-                        long exportedSize = exportedCertBytes.Length;
-                        Console.WriteLine($"Exported certificate size: {exportedSize} bytes");
-
-                        // Validate that the exported size matches the original size
-                        bool isSizeMatch = exportedSize == originalSize;
-                        Console.WriteLine($"Size match: {isSizeMatch}");
-                    }
+                    Console.WriteLine("Validation failed: lengths do not match.");
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("The workbook does not contain a signed VBA project.");
             }
         }
     }

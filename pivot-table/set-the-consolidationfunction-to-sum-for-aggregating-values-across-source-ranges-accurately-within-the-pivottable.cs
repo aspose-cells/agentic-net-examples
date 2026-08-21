@@ -1,54 +1,74 @@
-// Title: Set PivotTable Data Field to Sum with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, fills a simple data set, adds a PivotTable at D3, assigns "Category" as a row field, adds "Amount" as a data field, configures its ConsolidationFunction to Sum, refreshes and calculates the pivot, then saves the file as PivotTableWithSumFunction.xlsx.
-// Keywords: Aspose.Cells PivotTable Sum C# | ConsolidationFunction.Sum example | Aspose.Cells set data field aggregation | C# pivot table sum function | Aspose.Cells .NET pivot table tutorial
-// Common Searches: Aspose.Cells set pivot table consolidation function to sum | C# example for summing values in Aspose.Cells pivot table | How to use ConsolidationFunction.Sum in Aspose.Cells | PivotTable data field aggregation Aspose.Cells .NET
-// Developer Intent: Configure a PivotTable data field to aggregate values using the Sum function in Aspose.Cells for .NET.
-// Use Cases: Generate sales reports that total amounts per category automatically. | Create financial dashboards that sum transaction values without manual formulas. | Build dynamic Excel exports where pivot tables summarize large data sets with a single Sum aggregation.
-// AI Prompts: Write C# code with Aspose.Cells to add a PivotTable and set its data field's ConsolidationFunction to Sum. | Explain the effect of ConsolidationFunction.Sum on PivotTable calculations and the required refresh steps in Aspose.Cells. | Provide a step‑by‑step guide for creating a PivotTable in Aspose.Cells and configuring a data field for summation.
+// Title: Aspose.Cells C# – Set PivotTable Data Field ConsolidationFunction to Sum
+// Description: C# code that builds a workbook with product‑sales rows, creates a PivotTable on A1:B5, adds "Product" as a row field, assigns "Sales" as a data field, changes its ConsolidationFunction to Sum, refreshes the cache, calculates the results, and saves the file as PivotFieldFunctionSum.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | .NET | PivotTable | ConsolidationFunction.Sum | set pivot field function | sum aggregation | Excel pivot programmatically | pivot cache refresh | data field function
+// Common Searches: How to set ConsolidationFunction.Sum for a PivotTable in Aspose.Cells C# | Aspose.Cells example for summing pivot table values | Change pivot data field aggregation to Sum using .NET | C# code to configure PivotTable sum function with Aspose.Cells | Programmatic Excel pivot table sum aggregation Aspose
+// Developer Intent: Configure a PivotTable’s data field to use the Sum aggregation so numeric entries are totaled correctly.
+// Use Cases: Generate sales reports that total revenue per product automatically. | Create financial dashboards where expense categories are summed across periods. | Build Excel workbooks that summarize large data sets with a single‑click sum pivot. | Automate data‑analysis pipelines that require summed metrics in pivot tables.
+// AI Prompts: Write C# code with Aspose.Cells to create a PivotTable and set its data field function to Sum. | Explain the effect of ConsolidationFunction.Sum on PivotTable calculations in Aspose.Cells. | Show how to modify an existing Aspose.Cells PivotTable to change the aggregation method to Sum.
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Creates a workbook, fills a simple data set, adds a PivotTable at D3, assigns "Category" as a row field, adds "Amount" as a data field, configures its ConsolidationFunction to Sum, refreshes and calculates the pivot, then saves the file as PivotTableWithSumFunction.xlsx.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // C# code that builds a workbook with product‑sales rows, creates a PivotTable on A1:B5, adds "Product" as a row field, assigns "Sales" as a data field, changes its ConsolidationFunction to Sum, refreshes the cache, calculates the results, and saves the file as PivotFieldFunctionSum.xlsx using Aspose.Cells for .NET.
+    class SetPivotFieldFunctionSum
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-        // Populate sample data for the pivot table
-        cells["A1"].Value = "Category";
-        cells["B1"].Value = "Amount";
-        cells["A2"].Value = "A";
-        cells["B2"].Value = 100;
-        cells["A3"].Value = "B";
-        cells["B3"].Value = 150;
-        cells["A4"].Value = "A";
-        cells["B4"].Value = 200;
-        cells["A5"].Value = "B";
-        cells["B5"].Value = 120;
+                // Populate sample data for the pivot table
+                cells["A1"].Value = "Product";
+                cells["B1"].Value = "Sales";
+                cells["A2"].Value = "A";
+                cells["B2"].Value = 100;
+                cells["A3"].Value = "B";
+                cells["B3"].Value = 120;
+                cells["A4"].Value = "A";
+                cells["B4"].Value = 80;
+                cells["A5"].Value = "B";
+                cells["B5"].Value = 60;
 
-        // Add a pivot table using the data range A1:B5, placing it at D3
-        PivotTableCollection pivotTables = worksheet.PivotTables;
-        int pivotIndex = pivotTables.Add("A1:B5", "D3", "PivotTableSum");
-        PivotTable pivotTable = pivotTables[pivotIndex];
+                // Add a pivot table using the data range A1:B5, place it at E3, and name it "PivotTable1"
+                int pivotIndex = sheet.PivotTables.Add("A1:B5", "E3", "PivotTable1");
+                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        // Add the Category field as a row field
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+                // Add "Product" as a row field
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
 
-        // Add the Amount field as a data field and set its consolidation function to Sum
-        int dataFieldIndex = pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-        PivotField amountField = pivotTable.DataFields[dataFieldIndex];
-        amountField.Function = ConsolidationFunction.Sum; // Set aggregation to Sum
+                // Add "Sales" as a data field and retrieve the created PivotField object
+                int dataFieldIndex = pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+                PivotField dataField = pivotTable.DataFields[dataFieldIndex];
 
-        // Refresh the pivot table data and calculate the results
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
+                // Set the consolidation function of the data field to Sum
+                dataField.Function = ConsolidationFunction.Sum;
 
-        // Save the workbook with the configured pivot table
-        workbook.Save("PivotTableWithSumFunction.xlsx");
+                // Refresh pivot cache data and calculate the results
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
+
+                // Save the workbook with the configured pivot table
+                workbook.Save("PivotFieldFunctionSum.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            SetPivotFieldFunctionSum.Run();
+        }
     }
 }

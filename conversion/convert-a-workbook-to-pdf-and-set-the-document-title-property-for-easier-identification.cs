@@ -1,56 +1,31 @@
-// Title: C# – Convert Aspose.Cells Workbook to PDF with a Custom Document Title
-// Description: Creates a workbook, sets the built‑in Title property, enables DisplayDocTitle in PdfSaveOptions, and saves the file as a PDF so the title appears in PDF viewers and metadata.
-// Keywords: Aspose.Cells PDF conversion C# | set PDF document title Aspose.Cells | PdfSaveOptions DisplayDocTitle | Workbook built‑in document properties | export workbook to PDF with metadata | C# PDF generation Aspose.Cells | document title property PDF | Aspose.Cells PDF metadata
-// Common Searches: Aspose.Cells set PDF title C# | DisplayDocTitle option example | How to add document title when saving PDF with Aspose.Cells | C# export Excel to PDF with metadata | Aspose.Cells PDFSaveOptions title property
-// Developer Intent: Convert an Excel workbook to PDF and embed a custom title so the file can be identified easily in PDF viewers and document management systems.
-// Use Cases: Generating PDF reports where each file carries a meaningful title for indexing. | Creating searchable PDFs for archiving with the title displayed in viewer properties. | Automating batch conversion of multiple workbooks, assigning distinct titles to each PDF.
-// AI Prompts: Show C# code using Aspose.Cells to save a workbook as PDF and set the document title with DisplayDocTitle. | Explain how PdfSaveOptions.DisplayDocTitle affects PDF metadata and viewer display. | Give examples of setting other built‑in properties (Author, Subject) before PDF export with Aspose.Cells.
+// Title: C# – Convert Aspose.Cells Workbook to PDF and Embed Document Title (DisplayDocTitle)
+// Description: Demonstrates how to create or load a Workbook, set its built‑in Title property, enable the DisplayDocTitle flag in PdfSaveOptions, and save the workbook as a PDF where the viewer’s title bar reflects the specified document title.
+// Keywords: Aspose.Cells PDF conversion C# | Set PDF document title Aspose.Cells | PdfSaveOptions DisplayDocTitle | Workbook built‑in Title property | C# Excel to PDF metadata
+// Common Searches: Aspose.Cells set PDF title C# | DisplayDocTitle option PdfSaveOptions | How to add document title to PDF from Excel using Aspose.Cells | C# convert workbook to PDF with title metadata | Enable PDF viewer title bar in Aspose.Cells
+// Developer Intent: Add a title to the PDF generated from a workbook by assigning the workbook’s Title property and turning on DisplayDocTitle.
+// Use Cases: Generate report PDFs where the viewer’s title bar matches the report name for quick identification. | Automate batch conversion of Excel files to PDFs with consistent title metadata for document management systems. | Create client‑facing documents that carry branding information through the PDF title property.
+// AI Prompts: Write C# code using Aspose.Cells to load an existing Excel file, set its built‑in Title, enable DisplayDocTitle, and save it as a PDF. | Explain the effect of the DisplayDocTitle flag in PdfSaveOptions on PDF viewers and how to toggle it. | Show how to set additional built‑in properties (author, subject, keywords) before exporting a workbook to PDF with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Rendering; // Required for PdfSaveOptions
 
-namespace AsposeCellsPdfExport
+// Demonstrates how to create or load a Workbook, set its built‑in Title property, enable the DisplayDocTitle flag in PdfSaveOptions, and save the workbook as a PDF where the viewer’s title bar reflects the specified document title.
+class WorkbookToPdfWithTitle
 {
-    // Creates a workbook, sets the built‑in Title property, enables DisplayDocTitle in PdfSaveOptions, and saves the file as a PDF so the title appears in PDF viewers and metadata.
-    public class ConvertToPdfWithTitle
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
 
-                // Add sample data
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Sample content for PDF export");
+        // Set the built‑in document title property
+        workbook.BuiltInDocumentProperties.Title = "Sample Document Title";
 
-                // Set document title property
-                workbook.BuiltInDocumentProperties.Title = "My Sample Document";
+        // Configure PDF save options to display the document title in the PDF viewer title bar
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        pdfOptions.DisplayDocTitle = true;
 
-                // Configure PDF save options to display document title
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    DisplayDocTitle = true
-                };
-
-                // Save as PDF
-                workbook.Save("SampleDocument.pdf", pdfOptions);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error during PDF conversion: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ConvertToPdfWithTitle.Run();
-        }
+        // Save the workbook as a PDF file using the specified options
+        workbook.Save("SampleDocument.pdf", pdfOptions);
     }
 }

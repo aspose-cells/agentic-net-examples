@@ -1,16 +1,16 @@
-// Title: Log a warning for duplicate shape lock attempts with Aspose.Cells in C#
-// Description: Demonstrates how to add error handling that checks a shape's IsLocked property before locking it. If the shape is already locked, a warning is written to the console; otherwise the shape is locked and the workbook is saved.
-// Keywords: Aspose.Cells shape lock | C# Shape.IsLocked | duplicate lock warning | error handling Aspose.Cells | worksheet shape protection
-// Common Searches: Aspose.Cells check if shape is locked before locking | log warning when locking an already locked shape C# | prevent double locking of worksheet shapes Aspose | shape lock validation example Aspose.Cells .NET
-// Developer Intent: Add logic that detects an already‑locked shape and logs a warning instead of re‑applying the lock.
-// Use Cases: Ensure idempotent shape‑locking in automated workbook generation. | Provide clear diagnostics when user actions attempt to lock a shape twice. | Integrate shape lock checks into batch processing pipelines to avoid redundant operations.
-// AI Prompts: Create a C# method using Aspose.Cells that locks a Shape and returns a boolean, logging a warning if the shape is already locked. | Write unit tests for the LockShape method that verify console output for the second lock attempt and successful lock for the first. | Show how to replace Console.WriteLine with a structured logger like NLog or Serilog for duplicate lock warnings.
+// Title: Aspose.Cells for .NET – Warn When Locking an Already Locked Shape (C#)
+// Description: This C# sample creates a workbook, adds a rectangle shape, and demonstrates safe locking with the Shape.IsLocked property. The helper method checks the current lock state, writes a warning to the console if the shape is already locked, otherwise sets the lock, and finally saves the file as ShapeLockDemo.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | shape lock | IsLocked | warning log | error handling | worksheet shape | AddRectangle | Aspose.Cells tutorial
+// Common Searches: Aspose.Cells lock shape warning | C# check if shape is already locked | prevent duplicate shape lock Aspose.Cells | log warning when locking shape .NET | Shape.IsLocked usage Aspose.Cells
+// Developer Intent: Add logic that logs a warning instead of re‑locking a shape that is already locked.
+// Use Cases: Maintain workbook integrity by avoiding redundant lock calls on shapes | Provide immediate feedback in console or UI when a lock operation is unnecessary | Encapsulate shape‑locking logic in a reusable method for larger projects
+// AI Prompts: Generate a C# utility class for Aspose.Cells that includes methods to lock, unlock, and log status of worksheet shapes. | Write unit tests using xUnit to verify that the lock method logs a warning on a second call and does not change the shape state. | Create a PowerShell script that runs the ShapeLockDemo and captures console output for CI validation.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add error handling that checks a shape's IsLocked property before locking it. If the shape is already locked, a warning is written to the console; otherwise the shape is locked and the workbook is saved.
+// This C# sample creates a workbook, adds a rectangle shape, and demonstrates safe locking with the Shape.IsLocked property. The helper method checks the current lock state, writes a warning to the console if the shape is already locked, otherwise sets the lock, and finally saves the file as ShapeLockDemo.xlsx.
 class ShapeLockDemo
 {
     static void Main()
@@ -22,13 +22,16 @@ class ShapeLockDemo
         // Add a rectangle shape to the worksheet
         Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 100, 100, 100);
 
+        // Display the initial lock state
+        Console.WriteLine($"Initial IsLocked: {shape.IsLocked}");
+
         // First attempt to lock the shape
         LockShape(shape);
 
-        // Second attempt should trigger the warning
+        // Second attempt to lock the same shape (should log a warning)
         LockShape(shape);
 
-        // Save the workbook
+        // Save the workbook (lifecycle rule)
         workbook.Save("ShapeLockDemo.xlsx");
     }
 
@@ -44,6 +47,6 @@ class ShapeLockDemo
 
         // Lock the shape
         shape.IsLocked = true;
-        Console.WriteLine("Shape locked successfully.");
+        Console.WriteLine("Shape has been locked successfully.");
     }
 }

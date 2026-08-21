@@ -1,103 +1,86 @@
-// Title: Merge Multiple Excel Files to a MemoryStream with Aspose.Cells for .NET
-// Description: C# code that validates an array of Excel paths, loads each workbook with Aspose.Cells, combines them using the Combine method, saves the result to a MemoryStream in XLSX format, resets the stream position, and returns it for immediate use in a web API or other downstream services.
-// Keywords: Aspose.Cells merge workbooks C# | combine Excel files memory stream | Aspose.Cells SaveFormat.Xlsx | return merged workbook as stream | .NET Excel merge API | in‑memory Excel consolidation
-// Common Searches: how to merge several Excel files into one workbook using Aspose.Cells | Aspose.Cells combine workbooks and get MemoryStream | C# save merged Excel workbook to stream for HTTP response | Aspose.Cells merge files without writing to disk | memory stream output of combined Excel sheets .NET
-// Developer Intent: Provide a reusable method that merges multiple Excel files into a single workbook and returns the result as a MemoryStream for immediate transmission.
-// Use Cases: Expose an ASP.NET Core endpoint that receives uploaded Excel files, merges them with ExcelMerger.MergeFiles, and streams the combined XLSX back to the client. | Create a scheduled service that consolidates departmental spreadsheets, stores the MemoryStream in cloud blob storage, and avoids temporary files on the server. | Implement a microservice that aggregates reporting data from several sources and returns the merged workbook directly over HTTP.
-// AI Prompts: Generate an ASP.NET Core controller action that calls ExcelMerger.MergeFiles and returns the MemoryStream as a FileResult with the correct XLSX content type. | Add structured logging to the MergeFiles method and throw a custom MergeException that includes the problematic file path. | Refactor MergeFiles to accept an IEnumerable<IFormFile>, merge the uploads in memory, and output the combined workbook as a stream.
+// Title: Merge Excel workbooks and return the result as a MemoryStream using Aspose.Cells for .NET
+// Description: C# example that validates two XLSX files, loads them with Aspose.Cells, uses the Combine method to merge the source workbook into the destination workbook, saves the merged workbook to a MemoryStream in XLSX format, resets the stream position, and returns the stream for instant use in a web API or micro‑service.
+// Keywords: Aspose.Cells | C# | .NET | merge workbooks | Combine method | MemoryStream | in‑memory Excel | XLSX stream | web API response | file download | streaming Excel
+// Common Searches: Aspose.Cells merge two workbooks to memory stream | C# combine Excel files and return stream | save merged workbook to MemoryStream for API | Aspose.Cells Combine example .NET | return Excel file as byte array using Aspose
+// Developer Intent: Create a merged Excel workbook from two files and obtain it as a MemoryStream for immediate transmission via an API.
+// Use Cases: Combine user‑uploaded Excel reports on a server and send the merged file back as an HTTP response without writing to disk. | Aggregate monthly financial workbooks in a cloud function, keep the result in memory, and pass it to downstream services. | Implement a microservice that merges multiple spreadsheets and returns the result as a byte array for further processing.
+// AI Prompts: Generate C# code that merges several workbooks with Aspose.Cells and returns the combined file as a MemoryStream for an ASP.NET Core file download. | Show how to modify the method to output CSV instead of XLSX while still returning a MemoryStream. | Explain strategies for handling very large Excel files during merging and streaming with Aspose.Cells to minimize memory consumption.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace MyApi
+// C# example that validates two XLSX files, loads them with Aspose.Cells, uses the Combine method to merge the source workbook into the destination workbook, saves the merged workbook to a MemoryStream in XLSX format, resets the stream position, and returns the stream for instant use in a web API or micro‑service.
+public class WorkbookMergeService
 {
-    // C# code that validates an array of Excel paths, loads each workbook with Aspose.Cells, combines them using the Combine method, saves the result to a MemoryStream in XLSX format, resets the stream position, and returns it for immediate use in a web API or other downstream services.
-    public static class ExcelMerger
+    /// <param name="firstFilePath">Full path to the first workbook.</param>
+    /// <param name="secondFilePath">Full path to the second workbook.</param>
+    /// <returns>A MemoryStream containing the merged workbook in XLSX format.</returns>
+    public MemoryStream MergeWorkbooksAndGetStream(string firstFilePath, string secondFilePath)
     {
-        /// <param name="filePaths">Array of full file paths to the source Excel files.</param>
-        /// <returns>MemoryStream containing the merged workbook.</returns>
-        /// <exception cref="ArgumentException">Thrown when no file paths are provided.</exception>
-        /// <exception cref="FileNotFoundException">Thrown when any of the specified files do not exist.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when a file cannot be processed.</exception>
-        public static MemoryStream MergeFiles(string[] filePaths)
+        try
         {
-            if (filePaths == null || filePaths.Length == 0)
-                throw new ArgumentException("No file paths provided.", nameof(filePaths));
+            // Verify that both input files exist
+            if (!File.Exists(firstFilePath))
+                throw new FileNotFoundException($"The file '{firstFilePath}' was not found.", firstFilePath);
+            if (!File.Exists(secondFilePath))
+                throw new FileNotFoundException($"The file '{secondFilePath}' was not found.", secondFilePath);
 
-            // Destination workbook that will hold the merged content.
-            var mergedWorkbook = new Workbook();
+            // Load the destination workbook (the one that will receive the other workbook's content)
+            Workbook destWorkbook = new Workbook(firstFilePath);
 
-            foreach (var path in filePaths)
-            {
-                // Ensure the source file exists before attempting to load it.
-                if (!File.Exists(path))
-                    throw new FileNotFoundException($"File not found: {path}");
+            // Load the source workbook (the one to be combined into the destination)
+            Workbook sourceWorkbook = new Workbook(secondFilePath);
 
-                try
-                {
-                    // Load the source workbook.
-                    var sourceWorkbook = new Workbook(path);
+            // Combine the source workbook into the destination workbook
+            destWorkbook.Combine(sourceWorkbook);
 
-                    // Merge the source workbook into the destination workbook.
-                    mergedWorkbook.Combine(sourceWorkbook);
-                }
-                catch (Exception ex)
-                {
-                    // Wrap any exception with context about the file that caused it.
-                    throw new InvalidOperationException($"Failed to process file '{path}'.", ex);
-                }
-            }
+            // Create a memory stream to hold the merged workbook
+            MemoryStream mergedStream = new MemoryStream();
 
-            // Save the merged workbook to a memory stream in XLSX format.
-            var stream = new MemoryStream();
-            mergedWorkbook.Save(stream, SaveFormat.Xlsx);
-            stream.Position = 0; // Reset position for downstream consumers.
+            // Save the combined workbook into the memory stream using XLSX format
+            destWorkbook.Save(mergedStream, SaveFormat.Xlsx);
 
-            return stream;
+            // Reset the stream position so that consumers can read from the beginning
+            mergedStream.Position = 0;
+
+            // Return the prepared stream
+            return mergedStream;
+        }
+        catch (Exception ex)
+        {
+            // Log or rethrow as needed; here we wrap in an ApplicationException for clarity
+            throw new ApplicationException("An error occurred while merging workbooks.", ex);
         }
     }
+}
 
-    internal class Program
+public class Program
+{
+    public static void Main(string[] args)
     {
-        // Entry point for the console application.
-        private static void Main(string[] args)
+        // Example usage:
+        // Provide two existing Excel file paths as command‑line arguments or modify the paths below.
+        string firstPath = args.Length > 0 ? args[0] : "FirstWorkbook.xlsx";
+        string secondPath = args.Length > 1 ? args[1] : "SecondWorkbook.xlsx";
+
+        try
         {
-            // Expected usage: dotnet run <outputFilePath> <inputFilePath1> <inputFilePath2> [...]
-            if (args.Length < 2)
+            var service = new WorkbookMergeService();
+            using (MemoryStream mergedStream = service.MergeWorkbooksAndGetStream(firstPath, secondPath))
             {
-                Console.WriteLine("Usage: <outputFilePath> <inputFilePath1> [<inputFilePath2> ...]");
-                return;
-            }
-
-            string outputPath = args[0];
-            string[] inputPaths = new string[args.Length - 1];
-            Array.Copy(args, 1, inputPaths, 0, inputPaths.Length);
-
-            try
-            {
-                using (MemoryStream mergedStream = ExcelMerger.MergeFiles(inputPaths))
+                // Save the merged stream to a file for verification
+                string outputPath = "MergedWorkbook.xlsx";
+                using (FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
                 {
-                    // Ensure the output directory exists.
-                    string outputDir = Path.GetDirectoryName(outputPath);
-                    if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                    {
-                        Directory.CreateDirectory(outputDir);
-                    }
-
-                    // Write the merged workbook to the specified output file.
-                    using (FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-                    {
-                        mergedStream.CopyTo(fileStream);
-                    }
-
-                    Console.WriteLine($"Merged workbook saved to: {outputPath}");
+                    mergedStream.CopyTo(fileStream);
                 }
+                Console.WriteLine($"Merged workbook saved to '{outputPath}'.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

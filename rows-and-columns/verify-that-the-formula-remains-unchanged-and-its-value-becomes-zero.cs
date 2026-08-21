@@ -1,46 +1,50 @@
-// Title: Aspose.Cells .NET – Preserve Formula while Forcing Displayed Value to Zero
-// Description: Demonstrates how to keep a cell's formula unchanged (e.g., =SUM(1,2,3)) and assign a temporary displayed value of zero using the SetFormula(string, object) overload. The example verifies the formula string, checks the pre‑calculation value, runs workbook.CalculateFormula() to reveal the original result, and saves the workbook.
-// Keywords: Aspose.Cells SetFormula overload | C# keep formula unchanged | force zero value cell | displayed value override | Aspose.Cells .NET example | cell formula preservation | temporary cell value
-// Common Searches: Aspose.Cells set cell value without changing formula | SetFormula overload zero value .NET | keep formula unchanged and set displayed value | override cell value temporarily Aspose.Cells | how to force zero in a formula cell
-// Developer Intent: Assign a zero displayed value to a cell while leaving its original formula intact.
-// Use Cases: Show a placeholder zero in a formula cell before the workbook is calculated. | Create templates where formulas are retained but initial values are forced to zero for reporting or UI purposes. | Write unit tests that need to mock a cell's value without altering the underlying calculation logic.
-// AI Prompts: Write C# code that uses Aspose.Cells SetFormula overload to set a custom value while preserving the original formula. | Explain how to confirm that a cell's formula string remains unchanged after assigning a zero value with SetFormula. | Show the steps to temporarily set a cell's displayed value to zero, then calculate the workbook to retrieve the actual formula result.
+// Title: Aspose.Cells C# – Verify Formula Text Remains Unchanged While Forcing Cell Value to Zero
+// Description: Shows how to use Aspose.Cells' SetFormula overload to assign "=SUM(1,2)" to A1, set its cached result to 0, confirm the Formula property is unchanged, and then recalculate the workbook to reveal the true result before saving.
+// Keywords: Aspose.Cells | C# | .NET | SetFormula overload | custom cell result | force cell value zero | preserve formula text | formula verification | Workbook.CalculateFormula | Excel automation
+// Common Searches: Aspose.Cells set formula and custom result | keep formula string unchanged after SetFormula | force cell value to zero in Aspose.Cells | C# verify formula text after manual value assignment | calculate workbook after overriding cell result
+// Developer Intent: Confirm that a cell’s formula string stays intact while its cached value is manually set to zero.
+// Use Cases: Display a placeholder (e.g., zero) for a formula‑driven cell without altering the underlying expression. | Create test workbooks where formulas are preserved but results are overridden for validation pipelines. | Prepare spreadsheets with dummy results before performing a full calculation to speed up downstream processing.
+// AI Prompts: Generate C# code that sets a formula with Aspose.Cells, forces the cell value to zero, verifies the formula text, then recalculates to obtain the actual result. | Explain how Aspose.Cells' SetFormula(string, object) overload can be used to assign a custom result while keeping the original formula unchanged. | Provide a step‑by‑step guide for asserting that a cell’s Formula property is unchanged after manually setting its Value in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to keep a cell's formula unchanged (e.g., =SUM(1,2,3)) and assign a temporary displayed value of zero using the SetFormula(string, object) overload. The example verifies the formula string, checks the pre‑calculation value, runs workbook.CalculateFormula() to reveal the original result, and saves the workbook.
-class Program
+namespace AsposeCellsFormulaVerification
 {
-    static void Main()
+    // Shows how to use Aspose.Cells' SetFormula overload to assign "=SUM(1,2)" to A1, set its cached result to 0, confirm the Formula property is unchanged, and then recalculate the workbook to reveal the true result before saving.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Access cell A1
-        Cell cell = worksheet.Cells["A1"];
+            // Define a formula
+            string formula = "=SUM(1,2)";
 
-        // Set a normal formula (e.g., sum of constants)
-        cell.Formula = "=SUM(1,2,3)"; // Expected result is 6
+            // Set the formula and explicitly set its calculated result to zero
+            // This uses the SetFormula(string, object) overload.
+            cells["A1"].SetFormula(formula, 0);
 
-        // Keep the formula unchanged but set its displayed/calculated value to zero
-        // This uses the SetFormula(string formula, object value) overload
-        cell.SetFormula(cell.Formula, 0);
+            // Verify that the formula text has not changed
+            bool formulaUnchanged = cells["A1"].Formula == formula;
 
-        // Verify that the formula string is still the same
-        Console.WriteLine("Formula after SetFormula: " + cell.Formula);
+            // Verify that the cell's value is zero (as we set it)
+            bool valueIsZero = cells["A1"].Value is double d && d == 0.0;
 
-        // Verify that the cell's value is zero before any calculation
-        Console.WriteLine("Value before calculation: " + cell.Value);
+            Console.WriteLine($"Formula unchanged: {formulaUnchanged}");
+            Console.WriteLine($"Value is zero: {valueIsZero}");
 
-        // Optionally calculate the workbook to see the actual result of the formula
-        workbook.CalculateFormula();
+            // Optionally calculate the workbook to see the real result after calculation
+            workbook.CalculateFormula();
 
-        // Verify the value after calculation (should be 6, showing that the formula was unchanged)
-        Console.WriteLine("Value after calculation: " + cell.Value);
+            // After calculation the value should reflect the actual formula result (3)
+            Console.WriteLine($"Value after calculation: {cells["A1"].Value}");
 
-        // Save the workbook (lifecycle rule)
-        workbook.Save("FormulaZeroDemo.xlsx");
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("FormulaVerification.xlsx");
+        }
     }
 }

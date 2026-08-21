@@ -1,66 +1,74 @@
-// Title: Create a named range from a ListObject (Excel table) and use it in formulas – Aspose.Cells for .NET
-// Description: This example builds a workbook, adds a ListObject covering A1:B6, extracts the table's DataRange, defines a workbook‑level named range that points to that address, inserts a SUM formula that references the named range, calculates the result, and saves the file.
-// Keywords: Aspose.Cells ListObject named range | C# retrieve table address range | Excel table DataRange Aspose | programmatic named range .NET | SUM formula using table range
-// Common Searches: Aspose.Cells get ListObject address | create named range from Excel table C# | use table DataRange in formula Aspose | define workbook named range programmatically | sum table range with named range Aspose.Cells
-// Developer Intent: Programmatically obtain the address of a ListObject, create a named range that references that address, and use the named range in worksheet formulas.
-// Use Cases: Reference a table in multiple calculations without hard‑coding cell coordinates. | Provide a dynamic data source for charts or pivot tables that expands with the table. | Standardize formulas (SUM, AVERAGE, etc.) across worksheets by using a single named range.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a ListObject, extracts its DataRange, creates a named range, and applies a SUM formula referencing it. | Explain how to keep a named range synchronized with a ListObject when rows are inserted or deleted using Aspose.Cells. | Show how to use a table‑based named range as the source series for a chart created with Aspose.Cells for .NET.
+// Title: Create a Named Range from an Excel Table’s Address Using Aspose.Cells for .NET (C#)
+// Description: This example shows how to add a ListObject (Excel table) to a worksheet, retrieve its address range, define a workbook‑level named range that points to that table, and use the named range in a SUM formula with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# table address | Excel ListObject named range | create named range from table Aspose.Cells | DataRange to named range .NET | Aspose.Cells formula using table column
+// Common Searches: Aspose.Cells get ListObject address | define named range from Excel table C# | use table column in SUM formula Aspose.Cells | programmatically create named range in .NET | Aspose.Cells table DataRange example
+// Developer Intent: Retrieve the address of an Excel table (ListObject) and create a named range that can be referenced in formulas.
+// Use Cases: Simplify formulas by referencing the whole table through a named range. | Perform column‑wise calculations (e.g., SUM, AVERAGE) using the named range. | Ensure formulas stay accurate when the table size changes, as the named range follows the table’s DataRange.
+// AI Prompts: Provide C# code that extracts a ListObject's address and creates a named range with Aspose.Cells. | Show an example of adding an Excel table, converting its DataRange to a named range, and using it in a SUM formula. | Explain how to keep a named range synchronized with a table when rows are added or removed in Aspose.Cells for .NET.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
-using AsposeRange = Aspose.Cells.Range;
+using Aspose.Cells.Tables; // For ListObject
 
-namespace AsposeCellsTableNamedRangeDemo
+namespace AsposeCellsTableToNamedRange
 {
-    // This example builds a workbook, adds a ListObject covering A1:B6, extracts the table's DataRange, defines a workbook‑level named range that points to that address, inserts a SUM formula that references the named range, calculates the result, and saves the file.
+    // This example shows how to add a ListObject (Excel table) to a worksheet, retrieve its address range, define a workbook‑level named range that points to that table, and use the named range in a SUM formula with Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
                 sheet.Name = "DataSheet";
 
-                // Populate sample data that will become a table
+                // Populate sample data for the table (3 columns, 4 rows including header)
                 sheet.Cells["A1"].PutValue("ID");
-                sheet.Cells["B1"].PutValue("Value");
-                for (int i = 0; i < 5; i++)
-                {
-                    sheet.Cells[i + 1, 0].PutValue(i + 1);               // Column A: IDs 1..5
-                    sheet.Cells[i + 1, 1].PutValue((i + 1) * 10);      // Column B: Values 10,20,...
-                }
+                sheet.Cells["B1"].PutValue("Product");
+                sheet.Cells["C1"].PutValue("Price");
 
-                // Add a ListObject (Excel Table) covering the data range A1:B6
-                int tableIndex = sheet.ListObjects.Add(0, 0, 5, 1, true);
+                sheet.Cells["A2"].PutValue(1);
+                sheet.Cells["B2"].PutValue("Apple");
+                sheet.Cells["C2"].PutValue(0.5);
+
+                sheet.Cells["A3"].PutValue(2);
+                sheet.Cells["B3"].PutValue("Banana");
+                sheet.Cells["C3"].PutValue(0.3);
+
+                sheet.Cells["A4"].PutValue(3);
+                sheet.Cells["B4"].PutValue("Cherry");
+                sheet.Cells["C4"].PutValue(0.8);
+
+                // Add a ListObject (Excel Table) covering the data range A1:C4
+                int tableIndex = sheet.ListObjects.Add(0, 0, 3, 2, true);
                 ListObject table = sheet.ListObjects[tableIndex];
-                table.DisplayName = "MyTable";
+                table.DisplayName = "ProductTable";
 
                 // Retrieve the data range of the table (including header)
-                AsposeRange dataRange = table.DataRange;
+                Aspose.Cells.Range dataRange = table.DataRange;
 
                 // Create a named range that refers to the table's data range
-                const string namedRangeName = "TableRange";
-                int nameIdx = workbook.Worksheets.Names.Add(namedRangeName);
-                Name namedRange = workbook.Worksheets.Names[nameIdx];
+                int nameIndex = workbook.Worksheets.Names.Add("ProductData");
+                Name namedRange = workbook.Worksheets.Names[nameIndex];
+                // RefersTo must start with '=' and include sheet name
                 namedRange.RefersTo = $"={sheet.Name}!{dataRange.Address}";
 
-                // Use the named range in a formula (sum of the table range)
-                sheet.Cells["D1"].Formula = $"=SUM({namedRangeName})";
+                // Use the named range in a formula (e.g., total price)
+                sheet.Cells["E1"].Formula = "=SUM(ProductData[Price])";
 
-                // Calculate formulas so the result is available
+                // Calculate formulas to get the result
                 workbook.CalculateFormula();
 
-                // Output the result to console
-                Console.WriteLine($"Named range '{namedRangeName}' refers to: {namedRange.RefersTo}");
-                Console.WriteLine($"Sum of the table range: {sheet.Cells["D1"].Value}");
+                // Output the result to console (optional)
+                Console.WriteLine($"Sum of ProductData range ({dataRange.Address}) = {sheet.Cells["E1"].Value}");
 
                 // Save the workbook
-                string outputPath = "TableNamedRangeDemo.xlsx";
+                string outputPath = "TableToNamedRange.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'");
             }

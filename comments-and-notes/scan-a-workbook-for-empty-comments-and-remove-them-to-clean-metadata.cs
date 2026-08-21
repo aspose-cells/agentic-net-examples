@@ -1,48 +1,69 @@
-// Title: Remove Empty Comments from an Excel Workbook Using Aspose.Cells for .NET (C#)
-// Description: Loads an .xlsx file, scans every worksheet for comments whose Note is null, empty, or whitespace, deletes those comments by cell address, and saves a cleaned copy. Ideal for reducing file size and eliminating placeholder notes.
-// Keywords: Aspose.Cells | C# | remove empty comments | delete blank notes Excel | comment cleanup Aspose | Excel workbook preprocessing | remove placeholder comments | Aspose.Cells API comment removal
-// Common Searches: how to delete empty comments in Excel using Aspose.Cells C# | remove blank notes from all worksheets Aspose.Cells | Aspose.Cells code to clean up comments with no text | C# script to purge empty Excel comments | Aspose.Cells remove comments without content
-// Developer Intent: Identify and delete every comment that contains no visible text across all worksheets in an Excel workbook.
-// Use Cases: Prepare a distribution‑ready workbook by stripping placeholder or accidental empty comments. | Automate preprocessing of user‑generated spreadsheets to keep file size minimal. | Standardize reporting pipelines by ensuring no blank notes remain before archiving or publishing.
-// AI Prompts: Write C# code with Aspose.Cells that removes comments whose Note property is empty or whitespace on all worksheets. | Extend the sample to also delete comments that consist only of line‑break characters or invisible Unicode spaces. | Provide a step‑by‑step guide to log the cell addresses of removed comments before saving the workbook.
+// Title: C# – Delete Blank Comments in Excel with Aspose.Cells
+// Description: Loads an .xlsx file with Aspose.Cells, scans every worksheet’s CommentCollection, and eliminates comments whose Note is null, empty or only whitespace, then writes the cleaned workbook to a new file.
+// Keywords: Aspose.Cells C# remove blank comments | delete empty Excel notes .NET | clean workbook comment metadata | iterate worksheet comments Aspose | strip whitespace comments C# | Excel comment cleanup Aspose.Cells
+// Common Searches: How to delete blank comments in an Excel file using Aspose.Cells C# | Remove empty notes from all sheets with Aspose.Cells .NET | Aspose.Cells example for cleaning comment collection | C# code to purge whitespace‑only comments from a workbook
+// Developer Intent: Remove every comment that contains no visible text from all worksheets in an Excel workbook.
+// Use Cases: Prepare a report for distribution by stripping placeholder comments. | Minimize file size and improve performance by discarding unnecessary comment metadata. | Ensure data migration scripts only transfer meaningful annotations.
+// AI Prompts: Generate C# code that uses Aspose.Cells to iterate through each worksheet and delete comments whose Note property is null, empty, or whitespace, then save the workbook. | Show how to safely remove empty comments from a CommentCollection by looping backwards to avoid index errors.
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an .xlsx file, scans every worksheet for comments whose Note is null, empty, or whitespace, deletes those comments by cell address, and saves a cleaned copy. Ideal for reducing file size and eliminating placeholder notes.
-class RemoveEmptyComments
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads an .xlsx file with Aspose.Cells, scans every worksheet’s CommentCollection, and eliminates comments whose Note is null, empty or only whitespace, then writes the cleaned workbook to a new file.
+    public class RemoveEmptyComments
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet worksheet in workbook.Worksheets)
+        public static void Main()
         {
-            CommentCollection comments = worksheet.Comments;
-            List<string> emptyCommentCellNames = new List<string>();
-
-            // Identify comments whose Note (text) is empty or whitespace
-            foreach (Comment comment in comments)
+            try
             {
-                if (string.IsNullOrWhiteSpace(comment.Note))
-                {
-                    // Convert row/column indices to cell name (e.g., "A1")
-                    string cellName = CellsHelper.CellIndexToName(comment.Row, comment.Column);
-                    emptyCommentCellNames.Add(cellName);
-                }
+                Run();
             }
-
-            // Remove the empty comments using their cell names
-            foreach (string cellName in emptyCommentCellNames)
+            catch (Exception ex)
             {
-                comments.RemoveAt(cellName);
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
-        // Save the cleaned workbook
-        workbook.Save("output_cleaned.xlsx", SaveFormat.Xlsx);
+        public static void Run()
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet worksheet in workbook.Worksheets)
+            {
+                // Get the comments collection of the current worksheet
+                CommentCollection comments = worksheet.Comments;
+
+                // Iterate backwards so that removal does not affect the loop index
+                for (int i = comments.Count - 1; i >= 0; i--)
+                {
+                    Comment comment = comments[i];
+
+                    // Remove comment if its text is null, empty, or whitespace
+                    if (string.IsNullOrWhiteSpace(comment.Note))
+                    {
+                        comments.RemoveAt(i);
+                    }
+                }
+            }
+
+            // Save the cleaned workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
     }
 }

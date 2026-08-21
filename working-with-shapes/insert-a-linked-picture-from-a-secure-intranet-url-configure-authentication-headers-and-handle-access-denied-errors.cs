@@ -1,73 +1,70 @@
-// Title: Add a Linked Picture from a Secure Intranet URL with Authentication Headers and Fallback Embedding – Aspose.Cells for .NET
-// Description: Demonstrates how to insert a linked picture from a protected intranet URL into an Excel worksheet using Aspose.Cells. The example shows how to supply an Authorization header with HttpClient, catch access‑denied errors from Shapes.AddLinkedPicture, download the image manually, and embed it from a stream as a fallback before saving the workbook.
-// Keywords: Aspose.Cells linked picture authentication | C# add linked picture from secure URL | HttpClient Authorization header Excel | fallback embed image Aspose.Cells | handle access denied linked picture | intranet image Excel workbook | .NET Aspose.Cells Shapes.AddLinkedPicture
-// Common Searches: Aspose.Cells add linked picture with bearer token | C# insert picture from protected URL in Excel | How to handle access denied when adding linked picture Aspose.Cells | Download image with HttpClient for Aspose.Cells | Fallback to embed picture if linked picture fails
-// Developer Intent: Insert a picture from a secured intranet URL into an Excel sheet, providing authentication headers and automatically falling back to embedding the image when the linked picture cannot be accessed.
-// Use Cases: Corporate dashboards that reference images stored behind an authentication gateway. | Automated report generation where the source image requires an OAuth2 bearer token. | Scenarios where network policies block external linking, requiring the image to be embedded locally. | Logging HTTP status codes for failed image retrieval while still producing a valid workbook.
-// AI Prompts: Write C# code using Aspose.Cells to add a linked picture from a URL that needs a Bearer token, with error handling that falls back to embedding the image from a stream. | Explain how to configure HttpClient default request headers for authentication when downloading an image for Aspose.Cells, and how to detect and handle 401/403 responses. | Provide a step‑by‑step guide to test linked picture insertion against a mock secure server and verify that the fallback embedding works correctly.
+// Title: Embed a Secured Intranet Image into Excel with Aspose.Cells (.NET) – Auth Headers & 403 Handling
+// Description: Download a JPEG from a protected intranet URL using HttpClient with Bearer and custom headers, detect 403 Forbidden, embed the image into a worksheet via a MemoryStream, and save the workbook with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells insert picture | C# download image with bearer token | secure intranet image Excel | handle 403 forbidden Aspose.Cells | embed image worksheet Aspose.Cells | HttpClient authentication headers | linked picture vs embedded Aspose.Cells
+// Common Searches: How to add a picture from a protected intranet URL using Aspose.Cells .NET | Aspose.Cells download image with bearer token | Insert image into Excel workbook with custom HTTP headers | Handle 403 Forbidden when embedding picture in Aspose.Cells | Embed versus link picture in Aspose.Cells
+// Developer Intent: Retrieve an image from a secured intranet endpoint with required authentication, embed it into an Excel worksheet, and gracefully handle access‑denied responses.
+// Use Cases: Use HttpClient to request the image, add Authorization and any custom headers, and check for a 403 status before proceeding. | Create a MemoryStream from the downloaded byte array and call worksheet.Pictures.Add(row, column, stream) to place the picture at a specific cell. | Save the workbook after embedding the picture, producing an .xlsx file that contains the secured image.
+// AI Prompts: Generate C# code that uses Aspose.Cells to embed a picture from a secure intranet URL with a Bearer token and custom headers, including 403 error handling. | Show an example of downloading an image via HttpClient, adding authentication headers, and inserting it into an Excel worksheet with Aspose.Cells. | Explain how to switch from an embedded picture to a linked picture in Aspose.Cells while preserving authentication requirements.
 
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to insert a linked picture from a protected intranet URL into an Excel worksheet using Aspose.Cells. The example shows how to supply an Authorization header with HttpClient, catch access‑denied errors from Shapes.AddLinkedPicture, download the image manually, and embed it from a stream as a fallback before saving the workbook.
-class InsertLinkedPictureWithAuth
+// Download a JPEG from a protected intranet URL using HttpClient with Bearer and custom headers, detect 403 Forbidden, embed the image into a worksheet via a MemoryStream, and save the workbook with Aspose.Cells for .NET.
+class Program
 {
-    static void Main()
+    static async Task Main()
     {
+        // Secure intranet image URL
+        string imageUrl = "https://intranet.example.com/secure/image.jpg";
+
+        // Configure HttpClient with required authentication headers
+        using var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_ACCESS_TOKEN");
+        httpClient.DefaultRequestHeaders.Add("Custom-Header", "CustomValue");
+
+        byte[] imageBytes;
+
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Attempt to download the image
+            HttpResponseMessage response = await httpClient.GetAsync(imageUrl);
 
-            // Secure intranet image URL
-            string imageUrl = "https://intranet.example.com/secure/image.jpg";
-
-            // Authentication header (example uses Bearer token)
-            const string authHeaderName = "Authorization";
-            const string authHeaderValue = "Bearer YOUR_ACCESS_TOKEN";
-
-            // Try to add a linked picture directly
-            try
+            // Handle access denied (403) explicitly
+            if (response.StatusCode == HttpStatusCode.Forbidden)
             {
-                // AddLinkedPicture uses row/column indices (0‑based) and pixel dimensions
-                worksheet.Shapes.AddLinkedPicture(2, 2, 150, 150, imageUrl);
-            }
-            catch (Exception ex) when (ex is WebException || ex is CellsException)
-            {
-                // If the linked picture cannot be created (e.g., access denied), download the image manually
-                using (HttpClient client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Add(authHeaderName, authHeaderValue);
-                    HttpResponseMessage response = client.GetAsync(imageUrl).Result;
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        using (Stream imageStream = response.Content.ReadAsStreamAsync().Result)
-                        {
-                            // Embed the picture from the downloaded stream as a fallback
-                            worksheet.Pictures.Add(2, 2, imageStream);
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Failed to retrieve image. HTTP status: {response.StatusCode}");
-                    }
-                }
+                Console.WriteLine("Access denied: unable to retrieve the image from the intranet URL.");
+                return;
             }
 
-            // Save the workbook
-            string outputPath = "LinkedPictureDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            response.EnsureSuccessStatusCode(); // Throw if not successful
+            imageBytes = await response.Content.ReadAsByteArrayAsync();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {e.Message}");
+            // General error handling for network issues, timeouts, etc.
+            Console.WriteLine($"Error retrieving image: {ex.Message}");
+            return;
         }
+
+        // Create a new workbook (lifecycle rule)
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Insert the image into the worksheet.
+        // Since linked pictures cannot carry custom HTTP headers, we embed the downloaded image.
+        using (MemoryStream ms = new MemoryStream(imageBytes))
+        {
+            // Add picture at row 2, column 2 (zero‑based indices)
+            worksheet.Pictures.Add(2, 2, ms);
+        }
+
+        // Save the workbook (lifecycle rule)
+        workbook.Save("IntranetLinkedPicture.xlsx");
+        Console.WriteLine("Workbook saved with the image embedded.");
     }
 }

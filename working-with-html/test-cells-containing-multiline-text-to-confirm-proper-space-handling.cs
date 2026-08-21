@@ -1,47 +1,50 @@
+// Title: Test Multi‑Line Cell Whitespace Preservation with Aspose.Cells for .NET
+// Description: Creates an Excel workbook, writes a cell containing newline characters and multiple spaces, enables text wrapping, auto‑fits the row, saves the file, reloads it, and verifies that line breaks and extra spaces are retained unchanged.
+// Keywords: Aspose.Cells | C# | .NET | multi‑line cell | whitespace preservation | extra spaces | text wrapping | Excel round‑trip test | cell StringValue verification
+// Common Searches: Aspose.Cells preserve spaces in Excel cell | verify multi‑line text after saving with Aspose.Cells | check whitespace retention in loaded workbook cell | C# test line breaks and spaces in Excel using Aspose
+// Developer Intent: Confirm that multi‑line cell content with intentional extra spaces remains identical after a save‑load cycle using Aspose.Cells for .NET.
+// Use Cases: Automated unit test that writes a string with line breaks and multiple spaces to a cell, saves the workbook, reloads it, and asserts exact whitespace equality. | Generating reports where user‑entered multi‑line text must keep its original spacing, with programmatic validation of the output. | Debugging scenarios where Excel rendering appears to collapse spaces, using Aspose.Cells to inspect the raw cell value.
+// AI Prompts: Generate an NUnit test in C# that uses Aspose.Cells to assert that a cell containing multi‑line text with extra spaces retains the exact whitespace after saving and loading. | Provide C# code that compares the original multi‑line string with the loaded cell's StringValue and logs any differences in spaces or line breaks. | Suggest Aspose.Cells style settings to ensure leading, trailing, and internal spaces are preserved when exporting to Excel.
+
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsMultiLineCellTest
+namespace AsposeCellsMultiLineSpaceTest
 {
-    // Author: Aspose.Cells .NET example – testing multi‑line text handling in cells
-    class Program
+    // Creates an Excel workbook, writes a cell containing newline characters and multiple spaces, enables text wrapping, auto‑fits the row, saves the file, reloads it, and verifies that line breaks and extra spaces are retained unchanged.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Create a new workbook (create rule)
+            // Create a new workbook (creation rule)
             Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Set multi‑line text with intentional extra spaces
+            Cell cell = cells["A1"];
+            cell.PutValue("First line   with spaces\nSecond line    more spaces");
 
-            // Define a cell that contains multi‑line text using '\n'
-            Cell multiLineCell = sheet.Cells["A1"];
-            multiLineCell.Value = "First line\nSecond line\nThird line";
+            // Enable text wrapping so the line break is respected
+            Style style = cell.GetStyle();
+            style.IsTextWrapped = true;
+            cell.SetStyle(style);
 
-            // Enable text wrapping so the newlines are respected when displayed
-            Style wrapStyle = multiLineCell.GetStyle();
-            wrapStyle.IsTextWrapped = true;
-            multiLineCell.SetStyle(wrapStyle);
-
-            // Auto‑fit the row height to accommodate the wrapped text
-            sheet.AutoFitRow(0);
+            // Adjust row height to display wrapped text
+            worksheet.AutoFitRow(0);
 
             // Save the workbook (save rule)
-            string filePath = "MultiLineCellTest.xlsx";
+            string filePath = "MultiLineSpaceDemo.xlsx";
             workbook.Save(filePath);
 
-            // Reload the workbook to verify persistence (load rule)
+            // Load the workbook back (load rule) to verify the content
             Workbook loadedWorkbook = new Workbook(filePath);
-            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-            Cell loadedCell = loadedSheet.Cells["A1"];
+            Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
+            string loadedText = loadedWorksheet.Cells["A1"].StringValue;
 
-            // Verify that the cell still contains the newline characters
-            string cellText = loadedCell.StringValue;
-            Console.WriteLine("Cell text contains {0} lines.", cellText.Split('\n').Length);
-
-            // Verify that text wrapping is still enabled
-            bool isWrapped = loadedCell.GetStyle().IsTextWrapped;
-            Console.WriteLine("Text wrapping enabled: " + isWrapped);
+            // Output the loaded text to confirm spaces and line breaks are preserved
+            Console.WriteLine("Loaded cell text:");
+            Console.WriteLine(loadedText);
         }
     }
 }

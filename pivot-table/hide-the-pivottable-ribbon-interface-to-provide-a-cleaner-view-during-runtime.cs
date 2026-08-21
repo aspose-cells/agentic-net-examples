@@ -1,45 +1,61 @@
+// Title: Hide PivotTable Field List Ribbon at Runtime with Aspose.Cells for .NET (C#)
+// Description: Shows how to create a workbook, add sample data, build a PivotTable on a separate sheet, and disable the PivotTable field‑list ribbon using Workbook.Settings.HidePivotFieldList so the Excel file opens with a clean interface.
+// Keywords: Aspose.Cells | C# | .NET | PivotTable | HidePivotFieldList | hide pivot field list | disable pivot ribbon | runtime hide pivot UI | Excel pivot table UI | Aspose.Cells API | Workbook.Settings.HidePivotFieldList
+// Common Searches: Aspose.Cells hide PivotTable field list ribbon | disable PivotTable UI in generated Excel using C# | runtime hide PivotTable ribbon Aspose.Cells | how to suppress PivotTable field list with Aspose.Cells | remove PivotTable ribbon interface programmatically
+// Developer Intent: Programmatically suppress the PivotTable field‑list ribbon so the generated workbook opens without the PivotTable UI.
+// Use Cases: Create a reporting workbook where the PivotTable layout must stay unchanged for end users. | Generate a dashboard Excel file that displays a clean view without the PivotTable controls. | Distribute a template with a pre‑configured PivotTable while preventing users from accessing the field list.
+// AI Prompts: Show C# code to hide the PivotTable field list ribbon in an Aspose.Cells workbook. | Provide an example that creates a PivotTable and disables its UI at runtime using Aspose.Cells. | Explain the effect of Workbook.Settings.HidePivotFieldList and how to re‑enable the field list later.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace HidePivotTableRibbonDemo
+namespace AsposeCellsExamples
 {
-    class Program
+    // Shows how to create a workbook, add sample data, build a PivotTable on a separate sheet, and disable the PivotTable field‑list ribbon using Workbook.Settings.HidePivotFieldList so the Excel file opens with a clean interface.
+    public class HidePivotTableRibbonDemo
     {
-        static void Main()
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the pivot table
+            // Add sample data for the pivot table
             sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Amount");
-            sheet.Cells["A2"].PutValue("Food");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["A3"].PutValue("Beverage");
-            sheet.Cells["B3"].PutValue(80);
-            sheet.Cells["A4"].PutValue("Food");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(100);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(200);
+            sheet.Cells["A4"].PutValue("A");
             sheet.Cells["B4"].PutValue(150);
-            sheet.Cells["A5"].PutValue("Beverage");
-            sheet.Cells["B5"].PutValue(70);
 
-            // Add a new worksheet to host the pivot table
+            // Create a separate worksheet for the pivot table
             int pivotSheetIndex = workbook.Worksheets.Add(SheetType.Worksheet);
             Worksheet pivotSheet = workbook.Worksheets[pivotSheetIndex];
             pivotSheet.Name = "PivotTable";
 
-            // Create the pivot table
-            int pivotIndex = pivotSheet.PivotTables.Add("=Sheet1!A1:B5", "C3", "PivotTable1");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+            // Add the pivot table
+            int pivotTableIndex = pivotSheet.PivotTables.Add("A1:B4", "C3", "PivotTable1");
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotTableIndex];
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Value as data field
 
-            // Hide the PivotTable field list (ribbon interface) for the whole workbook
+            // Hide the PivotTable field list (ribbon interface) at runtime
             workbook.Settings.HidePivotFieldList = true;
-
-            // Additionally, disable the field list for this specific pivot table
-            pivotTable.EnableFieldList = false;
 
             // Save the workbook
             workbook.Save("HidePivotTableRibbonDemo.xlsx");

@@ -1,44 +1,43 @@
-// Title: C# – Add an audit comment with author and timestamp to cell F7 using Aspose.Cells
-// Description: Demonstrates how to create a new workbook, access the first worksheet, insert a visible comment into cell F7, set the author to "AuditSystem", embed the current date‑time (yyyy‑MM‑dd HH:mm:ss) in the note, and save the file as AuditComment.xlsx with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells add comment C# | timestamped Excel comment | audit comment Aspose.Cells | set comment author .NET | make comment visible Excel | save workbook with comment
-// Common Searches: how to add a comment with author and date to a cell using Aspose.Cells | Aspose.Cells C# insert timestamped comment | make Excel comment visible programmatically | audit trail comment in Excel with Aspose.Cells | add comment to cell F7 Aspose.Cells
-// Developer Intent: Insert a visible comment that records the author name and current timestamp into cell F7 for auditing purposes.
-// Use Cases: Embed an audit trail directly in a worksheet by adding a timestamped comment to a key cell. | Provide data‑entry verification in financial or regulatory reports through visible author/date notes. | Automate compliance documentation by programmatically stamping cells with author and creation time.
-// AI Prompts: Write C# code with Aspose.Cells that adds a visible comment to cell F7, sets the author, includes the current datetime, and saves the workbook. | Create a reusable method that accepts an author string, cell address, and workbook, then adds a timestamped comment using Aspose.Cells. | Explain how to format a datetime string for a comment note and ensure the comment remains visible in Aspose.Cells.
+// Title: Add an audit comment with author and timestamp to cell F7 using Aspose.Cells for .NET
+// Description: Demonstrates how to create a new workbook, insert a visible comment into cell F7, set the comment's author, embed the current date‑time (yyyy‑MM‑dd HH:mm:ss) and a custom audit note, then save the file as CommentWithAuditInfo.xlsx. Ideal for building an audit trail directly in Excel worksheets.
+// Keywords: Aspose.Cells add comment C# | Excel audit comment timestamp | set comment author Aspose.Cells | visible comment cell F7 | save workbook with comment | audit trail Excel .NET | Aspose.Cells comment visibility
+// Common Searches: Aspose.Cells add comment with date and author | C# insert audit comment into Excel cell | How to make a comment visible in Aspose.Cells | Add timestamp to Excel comment using .NET | Create audit trail in Excel with Aspose.Cells
+// Developer Intent: Insert a visible comment that records the reviewer’s name and the current timestamp into cell F7 for audit tracking.
+// Use Cases: Log review actions directly in the worksheet for compliance reporting. | Mark validated cells with reviewer identity and time of validation. | Provide an immutable audit trail in financial or regulatory Excel reports.
+// AI Prompts: Generate C# code that uses Aspose.Cells to add a visible comment with author "John Doe" and the current timestamp to cell F7, then save the workbook. | Show how to update an existing comment in cell F7 to append a new timestamp each time the file is saved with Aspose.Cells for .NET. | Explain how to customize the comment note format, author name, and visibility settings for audit purposes in an Aspose.Cells workbook.
 
 using System;
 using Aspose.Cells;
 
-namespace AuditCommentExample
+namespace AsposeCellsCommentExample
 {
-    // Demonstrates how to create a new workbook, access the first worksheet, insert a visible comment into cell F7, set the author to "AuditSystem", embed the current date‑time (yyyy‑MM‑dd HH:mm:ss) in the note, and save the file as AuditComment.xlsx with Aspose.Cells for .NET.
+    // Demonstrates how to create a new workbook, insert a visible comment into cell F7, set the comment's author, embed the current date‑time (yyyy‑MM‑dd HH:mm:ss) and a custom audit note, then save the file as CommentWithAuditInfo.xlsx. Ideal for building an audit trail directly in Excel worksheets.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook (lifecycle rule)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a comment to cell F7 (row 7, column F)
-            // Using the string overload for clarity
+            // Add a comment to cell F7 using the CommentCollection.Add(string) method (feature rule)
             int commentIndex = worksheet.Comments.Add("F7");
             Comment comment = worksheet.Comments[commentIndex];
 
-            // Set author name
-            comment.Author = "AuditSystem";
+            // Set author information
+            comment.Author = "John Doe";
 
-            // Build the comment note with timestamp
+            // Build the comment note with author and current timestamp
             string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            comment.Note = $"Record created by {comment.Author} on {timestamp}.";
+            comment.Note = $"Author: {comment.Author}\nTimestamp: {timestamp}\nThis cell was reviewed.";
 
             // Optionally make the comment visible
             comment.IsVisible = true;
 
-            // Save the workbook
-            workbook.Save("AuditComment.xlsx");
+            // Save the workbook (lifecycle rule)
+            workbook.Save("CommentWithAuditInfo.xlsx");
         }
     }
 }

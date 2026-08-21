@@ -1,10 +1,10 @@
-// Title: C# – Highlight Intersection of Two Named Ranges with Yellow Fill using Aspose.Cells
-// Description: Creates a workbook, defines two named ranges (A1:C3 and B2:D4), computes their overlapping area with the Range.Intersect method, applies a solid yellow background to the intersected cells, and saves the result as an Excel file.
-// Keywords: Aspose.Cells C# intersect named ranges | Range.Intersect method | highlight overlapping cells | apply yellow fill style | Excel workbook styling Aspose
-// Common Searches: Aspose.Cells find intersecting cells between named ranges | C# highlight overlapping area in Excel with Aspose | Range.Intersect usage example | apply background color to intersected range Aspose.Cells | how to style intersected cells in .NET Excel library
-// Developer Intent: Locate the cells where two named ranges overlap and color that region yellow.
-// Use Cases: Visually mark the common area of two data blocks for quick analysis. | Validate range overlap before performing calculations that depend on shared cells. | Generate reports that automatically highlight intersecting sections of named ranges.
-// AI Prompts: Generate C# code with Aspose.Cells that finds the intersection of two named ranges and fills the intersected cells with yellow. | Show how to retrieve Range objects from Name objects and use Range.Intersect to style the overlapping area. | Explain step‑by‑step how to create named ranges, compute their intersection, and apply a solid fill color in Aspose.Cells for .NET.
+// Title: Aspose.Cells .NET – Highlight Intersection of Two Named Ranges with Yellow Fill
+// Description: Creates a workbook, defines two named ranges (A1:B3 and B2:C4), uses the Range.Intersect method to locate overlapping cells, applies a solid yellow background style to the intersected area, and saves the result as an XLSX file.
+// Keywords: Aspose.Cells intersect named ranges | Range.Intersect C# | highlight overlapping cells Aspose | apply yellow fill Aspose.Cells | C# Excel range styling | named range intersection example
+// Common Searches: Aspose.Cells find intersection of named ranges | C# highlight intersecting cells Excel | how to use Range.Intersect in Aspose.Cells | apply background color to intersected range Aspose | example code for named range overlap .NET
+// Developer Intent: Detect overlapping cells of two named ranges and color them yellow.
+// Use Cases: Visualize data overlap by shading the intersecting region of two named ranges. | Validate range relationships before performing calculations or reporting. | Generate formatted Excel reports where intersected cells need emphasis.
+// AI Prompts: Generate C# code with Aspose.Cells that retrieves two named ranges, computes their intersection, and fills the intersected cells with a yellow background. | Provide a robust Aspose.Cells example that checks for a null intersection before applying any style and saves the workbook.
 
 using System;
 using System.Drawing;
@@ -13,7 +13,7 @@ using AsposeRange = Aspose.Cells.Range;
 
 namespace IntersectNamedRangesDemo
 {
-    // Creates a workbook, defines two named ranges (A1:C3 and B2:D4), computes their overlapping area with the Range.Intersect method, applies a solid yellow background to the intersected cells, and saves the result as an Excel file.
+    // Creates a workbook, defines two named ranges (A1:B3 and B2:C4), uses the Range.Intersect method to locate overlapping cells, applies a solid yellow background style to the intersected area, and saves the result as an XLSX file.
     class Program
     {
         static void Main()
@@ -25,52 +25,57 @@ namespace IntersectNamedRangesDemo
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // Populate sample data
-                for (int i = 0; i < 5; i++)
-                {
-                    for (int j = 0; j < 5; j++)
-                    {
-                        cells[i, j].PutValue($"R{i}C{j}");
-                    }
-                }
+                // Populate some sample data
+                cells["A1"].PutValue("A1");
+                cells["B1"].PutValue("B1");
+                cells["C1"].PutValue("C1");
+                cells["A2"].PutValue("A2");
+                cells["B2"].PutValue("B2");
+                cells["C2"].PutValue("C2");
+                cells["A3"].PutValue("A3");
+                cells["B3"].PutValue("B3");
+                cells["C3"].PutValue("C3");
 
-                // Define first named range: A1:C3
-                int idx1 = workbook.Worksheets.Names.Add("FirstRange");
+                // Define two named ranges
+                // Range1: A1:B3
+                int idx1 = workbook.Worksheets.Names.Add("Range1");
                 Name name1 = workbook.Worksheets.Names[idx1];
-                name1.RefersTo = "=Sheet1!$A$1:$C$3";
+                name1.RefersTo = "=Sheet1!$A$1:$B$3";
 
-                // Define second named range: B2:D4
-                int idx2 = workbook.Worksheets.Names.Add("SecondRange");
+                // Range2: B2:C4 (C4 will be empty but still part of the range)
+                int idx2 = workbook.Worksheets.Names.Add("Range2");
                 Name name2 = workbook.Worksheets.Names[idx2];
-                name2.RefersTo = "=Sheet1!$B$2:$D$4";
+                name2.RefersTo = "=Sheet1!$B$2:$C$4";
 
                 // Retrieve the actual Range objects from the names
                 AsposeRange[] ranges1 = name1.GetRanges(); // should contain one range
                 AsposeRange[] ranges2 = name2.GetRanges();
 
+                // Ensure both named ranges have at least one range defined
                 if (ranges1.Length == 0 || ranges2.Length == 0)
                 {
-                    Console.WriteLine("One of the named ranges does not contain any cells.");
+                    Console.WriteLine("One of the named ranges does not refer to a valid range.");
                     return;
                 }
 
+                // Get the first (and only) range from each name
                 AsposeRange rangeA = ranges1[0];
                 AsposeRange rangeB = ranges2[0];
 
                 // Compute the intersection of the two ranges
-                AsposeRange intersect = rangeA.Intersect(rangeB);
+                AsposeRange intersectRange = rangeA.Intersect(rangeB);
 
-                if (intersect != null)
+                if (intersectRange != null)
                 {
-                    // Create a style with yellow fill
+                    // Create a style with yellow background
                     Style yellowStyle = workbook.CreateStyle();
                     yellowStyle.ForegroundColor = Color.Yellow;
                     yellowStyle.Pattern = BackgroundType.Solid;
 
-                    // Apply the style to the intersected area
-                    intersect.SetStyle(yellowStyle);
+                    // Apply the style to the intersected cells
+                    intersectRange.SetStyle(yellowStyle);
 
-                    Console.WriteLine($"Intersection found: {intersect.Address}");
+                    Console.WriteLine($"Intersection found: {intersectRange.Address}");
                 }
                 else
                 {
@@ -78,9 +83,9 @@ namespace IntersectNamedRangesDemo
                 }
 
                 // Save the workbook
-                string outputPath = "IntersectedNamedRanges.xlsx";
+                string outputPath = "IntersectNamedRangesDemo.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {

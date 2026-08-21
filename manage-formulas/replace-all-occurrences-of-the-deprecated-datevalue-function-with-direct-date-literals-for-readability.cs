@@ -1,10 +1,10 @@
-// Title: Replace DATEVALUE with literal dates in Aspose.Cells for .NET (C#)
-// Description: C# example that creates a workbook, inserts DATEVALUE formulas, scans all cells, evaluates each DATEVALUE expression, substitutes the formula with the resulting Excel date serial number, applies a standard date format, and saves the file. Ideal for modernising legacy spreadsheets using Aspose.Cells.
-// Keywords: Aspose.Cells C# | Aspose.Cells .NET | replace DATEVALUE | date serial number | convert DATEVALUE to literal date | calculate formula Aspose.Cells | Excel date format | legacy spreadsheet migration | GitHub Aspose.Cells example | Excel compatibility
-// Common Searches: how to remove DATEVALUE function with Aspose.Cells | Aspose.Cells replace DATEVALUE with date value | C# convert DATEVALUE formula to serial number | Aspose.Cells calculate and replace formulas | update old Excel sheets that use DATEVALUE
-// Developer Intent: Detect DATEVALUE formulas, evaluate them, write the resulting serial number as a plain value, and format the cell as a date.
-// Use Cases: Modernise workbooks that contain deprecated DATEVALUE functions for better compatibility with newer Excel versions. | Improve calculation performance by storing dates as static serial numbers instead of formulas. | Prepare spreadsheets for export to systems that do not support Excel functions such as DATEVALUE.
-// AI Prompts: Show C# code using Aspose.Cells to find and replace DATEVALUE formulas with their evaluated serial numbers. | Explain how to handle multiple date string formats when converting DATEVALUE formulas in Aspose.Cells. | Provide a step‑by‑step guide to apply a date number format after replacing DATEVALUE in a workbook.
+// Title: Replace DATEVALUE with native date literals in Excel using Aspose.Cells for .NET (C#)
+// Description: Loads a workbook, scans every worksheet for cells that contain the DATEVALUE function, parses the date string argument, converts it to an Excel serial number (honoring the 1904 date system), writes the serial value back, applies a built‑in date format, and saves the file. Includes error handling for malformed formulas and unparsable dates.
+// Keywords: Aspose.Cells | C# | DATEVALUE replacement | Excel date serial | 1904 date system | formula conversion | native date literal | Excel automation | batch date update | Excel workbook processing
+// Common Searches: how to remove DATEVALUE function with Aspose.Cells | convert DATEVALUE to serial date in .NET | replace Excel DATEVALUE formulas programmatically | Aspose.Cells change DATEVALUE to date literal | C# update Excel dates without DATEVALUE
+// Developer Intent: Automatically substitute all DATEVALUE formulas with actual date serial values for clearer, calculation‑free worksheets.
+// Use Cases: Migrate legacy spreadsheets that rely on DATEVALUE to static dates before sharing with users who lack formula support. | Batch‑process large workbooks to improve performance by eliminating volatile DATEVALUE calls. | Preserve the original 1904/1900 date system while converting date strings to native Excel dates. | Generate a report of cells where the DATEVALUE argument could not be parsed.
+// AI Prompts: Create C# code with Aspose.Cells that finds DATEVALUE formulas, parses the argument, converts it to a serial date respecting the workbook's 1904 setting, writes the value back, and applies a standard date format. | Write a method that scans an Excel file, replaces DATEVALUE calls with literal dates, skips malformed formulas, logs parsing failures, and saves the updated workbook.
 
 using System;
 using System.IO;
@@ -12,66 +12,78 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // C# example that creates a workbook, inserts DATEVALUE formulas, scans all cells, evaluates each DATEVALUE expression, substitutes the formula with the resulting Excel date serial number, applies a standard date format, and saves the file. Ideal for modernising legacy spreadsheets using Aspose.Cells.
-    public class ReplaceDateValueFunctionDemo
+    // Loads a workbook, scans every worksheet for cells that contain the DATEVALUE function, parses the date string argument, converts it to an Excel serial number (honoring the 1904 date system), writes the serial value back, applies a built‑in date format, and saves the file. Includes error handling for malformed formulas and unparsable dates.
+    public class ReplaceDateValueFunction
     {
-        public static void Main(string[] args)
+        public static void Run()
         {
             try
             {
-                Run();
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Verify the input file exists before loading
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+                bool use1904 = workbook.Settings.Date1904;
+
+                // Iterate through worksheets and cells
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    foreach (Cell cell in sheet.Cells)
+                    {
+                        // Process cells containing a DATEVALUE formula
+                        if (cell.IsFormula && cell.Formula.IndexOf("DATEVALUE", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            int startIdx = cell.Formula.IndexOf('(');
+                            int endIdx = cell.Formula.LastIndexOf(')');
+                            if (startIdx < 0 || endIdx < 0 || endIdx <= startIdx + 1)
+                                continue; // malformed formula
+
+                            string argument = cell.Formula.Substring(startIdx + 1, endIdx - startIdx - 1).Trim();
+
+                            // Strip surrounding quotes
+                            if (argument.StartsWith("\"") && argument.EndsWith("\"") && argument.Length >= 2)
+                                argument = argument.Substring(1, argument.Length - 2);
+
+                            // Parse the date string
+                            if (DateTime.TryParse(argument, out DateTime dt))
+                            {
+                                double serial = CellsHelper.GetDoubleFromDateTime(dt, use1904);
+                                cell.PutValue(serial);
+
+                                // Apply a built‑in date format for readability
+                                Style style = cell.GetStyle();
+                                style.Number = 14;
+                                cell.SetStyle(style);
+                            }
+                        }
+                    }
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
+    }
 
-        public static void Run()
+    // Application entry point
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Sample data: formulas that use the deprecated DATEVALUE function
-            // =DATEVALUE("2021-01-01")  -> should become the serial number for 2021-01-01
-            // =DATEVALUE("12/31/2022")  -> should become the serial number for 31-Dec-2022
-            cells["A1"].Formula = "=DATEVALUE(\"2021-01-01\")";
-            cells["A2"].Formula = "=DATEVALUE(\"12/31/2022\")";
-
-            // Iterate through all used cells in the worksheet
-            foreach (Cell cell in cells)
-            {
-                // Process only cells that contain a formula with DATEVALUE
-                if (cell.IsFormula && cell.Formula.IndexOf("DATEVALUE", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    // Calculate the result of the existing DATEVALUE formula
-                    object result = sheet.CalculateFormula(cell.Formula);
-
-                    // Replace the formula with the calculated result (Excel date serial number)
-                    cell.PutValue(result);
-
-                    // Apply a built‑in date format for readability
-                    Style style = cell.GetStyle();
-                    style.Number = 14; // mm/dd/yyyy
-                    cell.SetStyle(style);
-                }
-            }
-
-            // Define output file path
-            string outputPath = "ReplaceDateValueDemo.xlsx";
-
-            // Ensure the directory exists before saving
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            ReplaceDateValueFunction.Run();
         }
     }
 }

@@ -1,116 +1,51 @@
-// Title: Copy VBA UserForm 'InputForm' Between .xlsm Workbooks with Aspose.Cells for .NET
-// Description: Demonstrates how to load a macro‑enabled workbook, locate the VbaModule named InputForm, extract its code, create an empty .xlsm file, copy VBA references, add the UserForm (including designer storage) with AddUserForm, and save the destination workbook while preserving all controls and logic.
-// Keywords: Aspose.Cells | C# | VBA UserForm copy | AddUserForm | macro-enabled workbook | transfer VBA form | preserve VBA controls | copy .xlsm UserForm | VbaModule example | Excel automation
-// Common Searches: copy VBA UserForm from one .xlsm to another using Aspose.Cells | Aspose.Cells add existing UserForm to new workbook | transfer UserForm code and designer storage C# | how to move a macro-enabled UserForm with Aspose.Cells | clone VBA UserForm across Excel files programmatically
-// Developer Intent: Move the InputForm UserForm, together with its VBA code and designer data, from a source macro‑enabled workbook to a target workbook using Aspose.Cells for .NET.
-// Use Cases: Reuse a custom data‑entry form from a template workbook in newly generated reports. | Create a fresh macro‑enabled file that inherits an existing UserForm for batch processing. | Duplicate a VBA UserForm and its project references when building a suite of automated Excel tools.
-// AI Prompts: Generate C# code with Aspose.Cells to copy a VBA UserForm named 'InputForm' from one .xlsm file to another, preserving code and designer storage. | Show how to create an empty macro‑enabled workbook, copy VBA references, and add a UserForm using the AddUserForm method. | Explain error handling for missing source workbook or absent UserForm when transferring VBA modules with Aspose.Cells.
+// Title: Copy a VBA UserForm (InputForm) between macro‑enabled workbooks using Aspose.Cells for .NET
+// Description: Loads a source .xlsm file, creates a new workbook, copies the entire VBA project—including the InputForm userform, its controls, and code—via VbaProject.Copy, and saves the destination as a macro‑enabled file. Includes basic file‑existence checking and error reporting.
+// Keywords: Aspose.Cells | C# copy VBA project | transfer VBA UserForm | InputForm | macro-enabled workbook | VbaProject.Copy | .NET Excel automation | preserve VBA controls | Excel VBA form migration
+// Common Searches: copy VBA UserForm between .xlsm files Aspose.Cells | Aspose.Cells transfer UserForm InputForm .NET | how to duplicate VBA project in C# Excel | preserve VBA controls when moving workbooks | macro‑enabled workbook copy using Aspose.Cells
+// Developer Intent: Duplicate the VBA project that contains the InputForm userform from a source workbook to a new macro‑enabled workbook using Aspose.Cells for .NET.
+// Use Cases: Deploy a standard InputForm to multiple generated reports while retaining all macro functionality. | Create a clean workbook that inherits macros and userforms from a template for consistent data entry. | Automate the distribution of a custom VBA userform across a batch of workbooks in a deployment pipeline.
+// AI Prompts: Generate C# code with Aspose.Cells that copies only the InputForm userform, leaving other VBA modules untouched. | Add robust error handling to verify the presence of InputForm before copying and log detailed status messages. | Explain how to adjust reference paths inside the transferred InputForm code after moving it to a new workbook.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsUserFormTransfer
 {
-    // Demonstrates how to load a macro‑enabled workbook, locate the VbaModule named InputForm, extract its code, create an empty .xlsm file, copy VBA references, add the UserForm (including designer storage) with AddUserForm, and save the destination workbook while preserving all controls and logic.
-    public class TransferUserForm
+    // Loads a source .xlsm file, creates a new workbook, copies the entire VBA project—including the InputForm userform, its controls, and code—via VbaProject.Copy, and saves the destination as a macro‑enabled file. Includes basic file‑existence checking and error reporting.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+                const string sourcePath = "SourceWithForm.xlsm";
+                const string destinationPath = "DestinationWithInputForm.xlsm";
 
-        public static void Run()
-        {
-            // Paths to the source and destination workbooks
-            string sourcePath = "SourceWorkbook.xlsm";
-            string destinationPath = "DestinationWorkbook.xlsm";
+                // Verify that the source workbook exists before attempting to load it
+                if (!File.Exists(sourcePath))
+                {
+                    Console.WriteLine($"Source file not found: {Path.GetFullPath(sourcePath)}");
+                    return;
+                }
 
-            // Verify source file exists
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
-
-            try
-            {
-                // Load the source workbook (must be macro-enabled)
+                // Load the source workbook that contains the UserForm "InputForm"
                 Workbook sourceWorkbook = new Workbook(sourcePath);
 
-                // Ensure the source workbook actually contains a VBA project
-                if (sourceWorkbook.VbaProject == null || sourceWorkbook.VbaProject.Modules.Count == 0)
-                {
-                    Console.WriteLine("Source workbook does not contain any VBA modules.");
-                    return;
-                }
+                // Create a new empty workbook for the destination
+                Workbook destinationWorkbook = new Workbook();
 
-                // Find the UserForm named "InputForm" in the source VBA modules
-                VbaModule sourceUserForm = null;
-                foreach (VbaModule module in sourceWorkbook.VbaProject.Modules)
-                {
-                    // UserForm modules are identified by name; type check omitted for compatibility
-                    if (module.Name.Equals("InputForm", StringComparison.OrdinalIgnoreCase))
-                    {
-                        sourceUserForm = module;
-                        break;
-                    }
-                }
+                // Copy the entire VBA project (including user forms, modules, etc.) from source to destination
+                destinationWorkbook.VbaProject.Copy(sourceWorkbook.VbaProject);
 
-                if (sourceUserForm == null)
-                {
-                    Console.WriteLine("UserForm 'InputForm' not found in the source workbook.");
-                    return;
-                }
+                // Save the destination workbook as a macro‑enabled file
+                destinationWorkbook.Save(destinationPath, SaveFormat.Xlsm);
 
-                // Extract the VBA code from the source UserForm
-                string formCode = sourceUserForm.Codes;
-
-                // Designer storage (binary .frx data). Use empty array to satisfy non‑null requirement.
-                byte[] designerStorage = new byte[0];
-
-                // ------------------------------------------------------------
-                // Create the destination workbook (empty workbook)
-                // ------------------------------------------------------------
-                Workbook destWorkbook = new Workbook();
-
-                // Save as a macro‑enabled workbook to create an empty VBA project, then reload it.
-                string tempMacroPath = Path.Combine(Path.GetTempPath(),
-                    Guid.NewGuid().ToString("N") + ".xlsm");
-                destWorkbook.Save(tempMacroPath, SaveFormat.Xlsm);
-                destWorkbook = new Workbook(tempMacroPath);
-                File.Delete(tempMacroPath);
-
-                // Copy VBA references from source to destination (optional but recommended)
-                destWorkbook.VbaProject.References.Copy(sourceWorkbook.VbaProject.References);
-
-                // Add the UserForm to the destination VBA project
-                VbaModuleCollection destModules = destWorkbook.VbaProject.Modules;
-                int newModuleIndex = destModules.AddUserForm("InputForm", formCode, designerStorage);
-                Console.WriteLine($"UserForm added to destination workbook at index: {newModuleIndex}");
-
-                // Ensure the directory for the destination file exists
-                string destDir = Path.GetDirectoryName(destinationPath);
-                if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
-                {
-                    Directory.CreateDirectory(destDir);
-                }
-
-                // Save the destination workbook with the transferred UserForm
-                destWorkbook.Save(destinationPath, SaveFormat.Xlsm);
-                Console.WriteLine($"UserForm 'InputForm' transferred successfully to '{destinationPath}'.");
+                Console.WriteLine("UserForm 'InputForm' transferred successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Runtime error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

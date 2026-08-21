@@ -1,73 +1,70 @@
-// Title: Aspose.Cells .NET – Adjust Shape Shadow Colors to Match Workbook Theme Palette
-// Description: A C# routine that loads or creates a workbook, adds a sample shape, then walks through every worksheet and shape, reads each shape's shadow color, finds the nearest theme‑palette color using Workbook.GetMatchingColor, applies the matched color, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | shape shadow color | theme palette | Workbook.GetMatchingColor | Excel shape formatting | color matching | adjust shadow color | Excel automation
-// Common Searches: Aspose.Cells change shape shadow to theme color | GetMatchingColor for shape shadow Aspose.Cells | Iterate shapes and update shadow colors .NET | Align shape shadow with workbook theme palette | C# code to normalize Excel shape shadows
-// Developer Intent: Replace each shape's shadow color with the closest color from the workbook's theme palette.
-// Use Cases: Ensure visual consistency after applying a corporate theme by normalizing all shape shadows. | Convert custom RGB shadow values in imported workbooks to theme‑compatible colors for branding compliance. | Automate cleanup of legacy Excel files that contain non‑theme shadow colors before publishing.
-// AI Prompts: Write C# code with Aspose.Cells that iterates all shapes in a workbook and sets each shadow color to the nearest theme palette color. | Show how to safely skip shapes that lack a shadow effect while performing color matching. | Explain Workbook.GetMatchingColor and demonstrate its role in aligning shape shadow colors with the workbook theme.
+// Title: C# – Adjust Shape Shadow Colors to Workbook Theme Using Aspose.Cells
+// Description: Loads an Excel file, walks through every worksheet and shape, reads each shape's shadow color, replaces it with the nearest color from the workbook's theme palette via Workbook.GetMatchingColor, and saves the updated workbook.
+// Keywords: Aspose.Cells | C# shape shadow | theme palette | GetMatchingColor | CellsColor | Excel shape formatting | shadow color adjustment
+// Common Searches: Aspose.Cells change shape shadow to theme color | C# set shape shadow from workbook palette | match Excel shape shadow with theme colors | GetMatchingColor example for shadows | adjust all shape shadows in a workbook
+// Developer Intent: Replace every shape's shadow color with the closest theme palette entry.
+// Use Cases: Ensure brand‑consistent shadow hues across all graphics in a corporate report. | Prepare legacy workbooks for distribution by aligning visual effects with the current Excel theme. | Automate cleanup of imported spreadsheets where custom shadow colors no longer match the document's theme.
+// AI Prompts: Generate a C# method that iterates through all shapes in a workbook and sets each shadow to the nearest theme color using Aspose.Cells. | Explain the purpose of Workbook.GetMatchingColor and show how to apply its result to a shape's ShadowEffect. | Create error‑handling code for shapes lacking a shadow effect or having null colors while updating shadow colors.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// Loads an Excel file, walks through every worksheet and shape, reads each shape's shadow color, replaces it with the nearest color from the workbook's theme palette via Workbook.GetMatchingColor, and saves the updated workbook.
+public class ShapeShadowThemeAdjuster
 {
-    // A C# routine that loads or creates a workbook, adds a sample shape, then walks through every worksheet and shape, reads each shape's shadow color, finds the nearest theme‑palette color using Workbook.GetMatchingColor, applies the matched color, and saves the file.
-    public class AdjustShapeShadowToThemePalette
+    // Adjusts each shape's shadow color to the closest color in the workbook's theme palette.
+    public static void AdjustShapeShadowColors(string inputFilePath, string outputFilePath)
     {
-        public static void Run()
+        // Load the workbook (lifecycle rule: load)
+        Workbook workbook = new Workbook(inputFilePath);
+
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
+            // Iterate through all shapes in the worksheet
+            foreach (Shape shape in sheet.Shapes)
             {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook(); // lifecycle: create
+                // Access the shape's shadow effect
+                ShadowEffect shadow = shape.ShadowEffect;
 
-                // Example: add a shape with a custom shadow color to demonstrate the adjustment
-                Worksheet sheet = workbook.Worksheets[0];
-                Shape demoShape = sheet.Shapes.AddRectangle(1, 0, 1, 0, 150, 100);
-                ShadowEffect demoShadow = demoShape.ShadowEffect;
-                // Set an arbitrary shadow color (e.g., a custom RGB value)
-                demoShadow.Color.Color = Color.FromArgb(123, 200, 150);
-
-                // Iterate through all worksheets
-                foreach (Worksheet ws in workbook.Worksheets)
+                // Ensure the shadow effect and its color are available
+                if (shadow != null && shadow.Color != null)
                 {
-                    // Iterate through all shapes in the worksheet
-                    foreach (Shape shape in ws.Shapes)
-                    {
-                        // Access the shape's shadow effect
-                        ShadowEffect shadow = shape.ShadowEffect;
-                        if (shadow == null) continue; // safety check
+                    // Get the current shadow color (System.Drawing.Color)
+                    Color currentColor = shadow.Color.Color;
 
-                        // Retrieve the current shadow color (System.Drawing.Color)
-                        Color currentColor = shadow.Color.Color;
+                    // Find the best matching color in the workbook's palette/theme
+                    Color matchedColor = workbook.GetMatchingColor(currentColor);
 
-                        // Find the closest matching color in the workbook's palette/theme
-                        Color matchedColor = workbook.GetMatchingColor(currentColor);
+                    // Create a new CellsColor instance (lifecycle rule: create)
+                    CellsColor cellsColor = workbook.CreateCellsColor();
 
-                        // Apply the matched color back to the shadow effect
-                        shadow.Color.Color = matchedColor;
-                    }
+                    // Mark it as a shape color to ensure correct handling
+                    cellsColor.IsShapeColor = true;
+
+                    // Assign the matched color
+                    cellsColor.Color = matchedColor;
+
+                    // Apply the new color to the shadow effect
+                    shadow.Color = cellsColor;
                 }
-
-                // Save the workbook (lifecycle: save)
-                string outputPath = "AdjustedShadowColors.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+
+        // Save the modified workbook (lifecycle rule: save)
+        workbook.Save(outputFilePath);
     }
 
-    public class Program
+    // Example usage
+    public static void Main()
     {
-        public static void Main(string[] args)
-        {
-            AdjustShapeShadowToThemePalette.Run();
-        }
+        string inputPath = "InputWorkbook.xlsx";
+        string outputPath = "AdjustedShadowWorkbook.xlsx";
+
+        AdjustShapeShadowColors(inputPath, outputPath);
+
+        Console.WriteLine("Shadow colors adjusted and workbook saved to: " + outputPath);
     }
 }

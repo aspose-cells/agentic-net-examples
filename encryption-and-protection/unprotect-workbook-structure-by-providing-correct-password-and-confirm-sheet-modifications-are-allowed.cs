@@ -1,39 +1,47 @@
-// Title: C# – Unprotect Aspose.Cells workbook structure with password and allow sheet editing
-// Description: Demonstrates how to protect a workbook's structure with a password, verify protection via IsWorkbookProtectedWithPassword, remove the protection using Workbook.Unprotect, confirm the workbook is unprotected, add a new worksheet, and save the resulting file.
-// Keywords: Aspose.Cells unprotect workbook C# | remove workbook structure protection | Workbook.Unprotect password | IsWorkbookProtectedWithPassword check | add worksheet after unprotect | protect workbook structure Aspose.Cells | Excel file password protection .NET | C# Aspose.Cells protect and unprotect
-// Common Searches: how to unprotect workbook structure using Aspose.Cells for .NET | remove password protection from an Aspose.Cells workbook | verify workbook protection status after Unprotect in C# | add new sheet after unprotecting an Aspose.Cells workbook | Aspose.Cells C# example for protecting and unprotecting workbook structure
-// Developer Intent: Remove the workbook's structure protection with the correct password so that sheets can be edited or added.
-// Use Cases: Programmatically lift structure protection before inserting, renaming, or deleting worksheets. | Validate that a workbook is no longer protected after calling Unprotect to ensure further modifications are allowed. | Create an unprotected copy of a password‑protected workbook for downstream processing or distribution.
-// AI Prompts: Generate C# code that uses Aspose.Cells to unprotect a workbook structure with a known password, then adds a new worksheet and saves the file. | Write a method that logs the value of IsWorkbookProtectedWithPassword before and after calling Workbook.Unprotect, handling any exceptions. | Provide an example that catches an incorrect‑password exception when calling Workbook.Unprotect in Aspose.Cells.
+// Title: Unprotect Excel workbook structure with password using Aspose.Cells for .NET
+// Description: Demonstrates how to protect a workbook's structure, save it, reload it, verify the protection flag, remove the structure protection with the correct password, add a new worksheet, and save the unprotected file using Aspose.Cells in C#.
+// Keywords: Aspose.Cells unprotect workbook | C# remove workbook structure protection | IsWorkbookProtectedWithPassword | Excel workbook password protection .NET | add worksheet after unprotect
+// Common Searches: Aspose.Cells unprotect workbook structure C# | check workbook protection status Aspose.Cells | add sheet after removing Excel protection .NET | how to use Unprotect method with password
+// Developer Intent: Programmatically remove structure protection from an Excel workbook by providing the correct password and verify that further sheet modifications are allowed.
+// Use Cases: Load a password‑protected workbook, call Unprotect with the password, and save the editable file. | Read the IsWorkbookProtectedWithPassword property before and after unprotecting to confirm the protection state. | Automate a process that initially locks a workbook for distribution and later unlocks it for data manipulation.
+// AI Prompts: Write C# code with Aspose.Cells that unprotects a workbook's structure using a given password, adds a new worksheet, and saves the result. | Explain the purpose of IsWorkbookProtectedWithPassword and how to use it to validate protection status around an Unprotect call. | Show error‑handling patterns for an incorrect password when calling Workbook.Unprotect in Aspose.Cells.
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// Demonstrates how to protect a workbook's structure with a password, verify protection via IsWorkbookProtectedWithPassword, remove the protection using Workbook.Unprotect, confirm the workbook is unprotected, add a new worksheet, and save the resulting file.
-class UnprotectWorkbookDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to protect a workbook's structure, save it, reload it, verify the protection flag, remove the structure protection with the correct password, add a new worksheet, and save the unprotected file using Aspose.Cells in C#.
+    class UnprotectWorkbookStructureDemo
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook and protect its structure with a password
+            Workbook wb = new Workbook();
+            wb.Protect(ProtectionType.Structure, "mySecretPwd");
+            // Save the protected workbook
+            wb.Save("protected_workbook.xlsx");
 
-        // Protect the workbook structure with a password
-        workbook.Protect(ProtectionType.Structure, "myPassword");
+            // Load the protected workbook
+            Workbook protectedWb = new Workbook("protected_workbook.xlsx");
 
-        // Confirm that the workbook is protected with a password
-        Console.WriteLine("Workbook protected with password: " + workbook.IsWorkbookProtectedWithPassword);
+            // Verify that the workbook is indeed protected with a password
+            Console.WriteLine("Is workbook protected with password? " + protectedWb.IsWorkbookProtectedWithPassword);
 
-        // Unprotect the workbook using the correct password
-        workbook.Unprotect("myPassword");
+            // Unprotect the workbook structure using the correct password
+            protectedWb.Unprotect("mySecretPwd");
 
-        // Confirm that the workbook is no longer protected
-        Console.WriteLine("Workbook protected after unprotect: " + workbook.IsWorkbookProtectedWithPassword);
+            // Confirm that the workbook is no longer protected
+            Console.WriteLine("Is workbook still protected? " + protectedWb.IsWorkbookProtectedWithPassword);
 
-        // Verify that sheet modifications are now allowed by adding a new worksheet
-        int newSheetIndex = workbook.Worksheets.Add();
-        workbook.Worksheets[newSheetIndex].Name = "NewSheet";
+            // Perform a modification to ensure changes are now allowed (e.g., add a new worksheet)
+            Worksheet newSheet = protectedWb.Worksheets.Add("NewSheet");
+            newSheet.Cells["A1"].PutValue("Modification after unprotect");
 
-        // Save the unprotected workbook
-        workbook.Save("UnprotectedWorkbook.xlsx");
+            // Save the unprotected workbook
+            protectedWb.Save("unprotected_workbook.xlsx");
+
+            Console.WriteLine("Workbook unprotected and modified successfully.");
+        }
     }
 }

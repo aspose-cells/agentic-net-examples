@@ -1,10 +1,19 @@
+// Title: Aspose.Cells C# – Boost 3D Chart Depth (DepthPercent) for Sparkline‑style Visuals
+// Description: C# example that creates a workbook, fills sample data, adds a 3‑D column chart, and increases the chart's DepthPercent to 300 % (with Perspective 40 and Elevation 30) to give sparkline‑style charts a stronger visual depth before saving as XLSX.
+// Keywords: Aspose.Cells | C# 3D chart depth | DepthPercent property | sparkline 3D chart | chart perspective Aspose.Cells | chart elevation Aspose.Cells | Excel 3D column chart | visual depth enhancement | .NET Excel chart example | GitHub Aspose.Cells sample
+// Common Searches: how to set DepthPercent in Aspose.Cells C# | increase 3D chart depth Aspose.Cells | adjust perspective and elevation for 3D chart Aspose.Cells | sparkline style 3D chart depth example | Aspose.Cells 3D column chart depth percent
+// Developer Intent: Apply a higher DepthPercent value to a 3‑D chart in Aspose.Cells to make the visual depth more pronounced.
+// Use Cases: Financial reporting workbook where a 3‑D column chart needs a deeper appearance for clearer trend emphasis. | Sales dashboard that uses sparkline‑style 3‑D charts with customized depth, perspective, and elevation for better readability. | Automated Excel generation that creates multiple 3‑D charts, each with distinct DepthPercent settings to highlight key metrics.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a 3‑D column chart and sets DepthPercent to 400, Perspective to 45, and Elevation to 35. | Explain the impact of DepthPercent, Perspective, and Elevation on the rendering of 3‑D charts in Aspose.Cells. | Provide step‑by‑step instructions to increase the depth of sparkline‑style 3‑D charts using Aspose.Cells in a .NET console app.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    public class Sparkline3DDepthDemo
+    // C# example that creates a workbook, fills sample data, adds a 3‑D column chart, and increases the chart's DepthPercent to 300 % (with Perspective 40 and Elevation 30) to give sparkline‑style charts a stronger visual depth before saving as XLSX.
+    public class SparklineDepthDemo
     {
         public static void Run()
         {
@@ -36,31 +45,31 @@ namespace AsposeCellsExamples
                 chart.NSeries.Add("B2:C4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // Increase the depth perception of the 3‑D chart
-                chart.DepthPercent = 300; // deeper effect
+                // Increase the depth of the 3‑D chart to enhance visual depth perception
+                // DepthPercent is a percentage of the chart width (20‑2000). Setting a higher value makes the chart appear deeper.
+                chart.DepthPercent = 300; // Example: 300% depth
 
-                // Adjust other 3‑D properties
-                chart.Perspective = 40;
-                chart.Elevation = 25;
+                // Optionally adjust other 3‑D properties for better visual effect
+                chart.Perspective = 40;   // Perspective angle (0‑100)
+                chart.Elevation = 30;     // Elevation angle (degrees)
 
                 // Save the workbook
-                string outputPath = "Sparkline3DDepthDemo.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                workbook.Save("SparklineDepthDemo.xlsx", SaveFormat.Xlsx);
+                Console.WriteLine("Workbook saved as SparklineDepthDemo.xlsx");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }
 
-    // Entry point for the application
+    // Entry point for the console application
     public class Program
     {
         public static void Main(string[] args)
         {
-            Sparkline3DDepthDemo.Run();
+            SparklineDepthDemo.Run();
         }
     }
 }

@@ -1,45 +1,36 @@
-// Title: C# AspNet Aspose.Cells: Insert a SUM formula in G10 to total B2:B9
-// Description: Demonstrates how to create a workbook with Aspose.Cells, populate cells B2‑B9, assign the formula "=SUM(B2:B9)" to cell G10, recalculate the sheet, save the file, and read the computed result.
-// Keywords: Aspose.Cells C# formula example | insert SUM formula Aspose.Cells | set cell formula .NET | calculate range total programmatically | G10 SUM B2:B9 Aspose | C# workbook automation | Aspose.Cells calculate formulas | save workbook after formula
-// Common Searches: how to add a SUM formula to a cell using Aspose.Cells C# | Aspose.Cells set formula and recalculate workbook | C# code to sum a range in Excel with Aspose | write and evaluate Excel formula with Aspose.Cells .NET | save Excel file after inserting formula Aspose
-// Developer Intent: Place a SUM expression in G10 that adds values from B2 through B9 and obtain the calculated total.
-// Use Cases: Automatically compute totals for dynamically generated data tables. | Create financial statements where subtotals are derived via formulas before export. | Validate numeric results by reading the evaluated value after formula execution.
-// AI Prompts: Generate C# Aspose.Cells code that writes "=SUM(B2:B9)" to G10, triggers calculation, and returns the result. | Show how to assign a formula to a cell, recalculate the workbook, and save it using Aspose.Cells for .NET.
+// Title: Insert SUM Formula in G10 (B2:B9) Using Aspose.Cells for .NET (C#)
+// Description: Creates a new workbook, fills cells B2‑B9 with sample numbers, assigns the formula "=SUM(B2:B9)" to cell G10 via the Cell.Formula property, forces a full recalculation, and saves the result as output.xlsx.
+// Keywords: Aspose.Cells C# formula | set cell formula Aspose.Cells | SUM function .NET | calculate formulas Aspose.Cells | save workbook C# | programmatic Excel formula
+// Common Searches: how to add a SUM formula with Aspose.Cells C# | set formula in a specific cell using Aspose.Cells | recalculate workbook after inserting formulas Aspose.Cells | Aspose.Cells example insert formula G10
+// Developer Intent: Add a SUM formula to G10 that totals B2:B9, recalculate the workbook, and save the file.
+// Use Cases: Generate a totals row for financial data after loading transaction values. | Create summary calculations automatically when importing CSV data into Excel. | Prepare aggregated metrics in a report workbook before distribution.
+// AI Prompts: Write C# code that inserts an AVERAGE formula for range C2:C10 with Aspose.Cells and triggers calculation. | Explain how to apply the same formula to multiple cells dynamically using Aspose.Cells for .NET. | Show how to use absolute and relative references when setting formulas programmatically with Aspose.Cells.
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaDemo
+// Creates a new workbook, fills cells B2‑B9 with sample numbers, assigns the formula "=SUM(B2:B9)" to cell G10 via the Cell.Formula property, forces a full recalculation, and saves the result as output.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook with Aspose.Cells, populate cells B2‑B9, assign the formula "=SUM(B2:B9)" to cell G10, recalculate the sheet, save the file, and read the computed result.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Create a new workbook (lifecycle: create)
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate B2:B9 with sample data (optional, just for demonstration)
+        for (int i = 0; i < 8; i++)
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Optionally put some sample values in B2:B9
-            for (int i = 2; i <= 9; i++)
-            {
-                // Cells are zero‑based; column B is index 1
-                worksheet.Cells[i - 1, 1].PutValue(i * 10); // Example values: 20,30,...,90
-            }
-
-            // Insert the SUM formula into cell G10 (column G = index 6, row 10 = index 9)
-            worksheet.Cells[9, 6].Formula = "=SUM(B2:B9)";
-
-            // Calculate all formulas in the workbook
-            workbook.CalculateFormula();
-
-            // Save the workbook to a file (lifecycle: save)
-            workbook.Save("FormulaDemo.xlsx");
-
-            // Output the result of the formula for verification
-            Console.WriteLine("Result in G10: " + worksheet.Cells[9, 6].Value);
+            // B2 is row index 1, column index 1 (zero‑based)
+            worksheet.Cells[i + 1, 1].PutValue(i + 1);
         }
+
+        // Insert the SUM formula into cell G10 (uses Cell.Formula property)
+        worksheet.Cells["G10"].Formula = "=SUM(B2:B9)";
+
+        // Recalculate all formulas in the workbook
+        workbook.CalculateFormula();
+
+        // Save the workbook to disk (lifecycle: save)
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,38 +1,57 @@
-// Title: Set printer paper size and save a workbook with LightCells API in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to assign PaperSizeType.PaperA5 to Workbook.Settings.PaperSize and to the first worksheet's PageSetup, then persist the workbook using Aspose.Cells' saving mechanisms (compatible with LightCells) so the printed output matches the A5 layout.
-// Keywords: Aspose.Cells | C# | set paper size | Workbook.Settings.PaperSize | Worksheet PageSetup paper size | LightCells API | save Excel workbook | A5 print layout | Excel printer settings | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells set A5 paper size C# | How to change default printer paper size in an Excel workbook using Aspose.Cells | Save Excel file with specific page size using LightCells | Workbook.Settings.PaperSize example Aspose.Cells | PageSetup paper size before saving workbook Aspose.Cells .NET
-// Developer Intent: Configure the workbook’s default printer paper size (and optionally the first sheet’s page setup) and save the file so that the printed result uses the defined size.
-// Use Cases: Generating invoices that must print on A5 paper while keeping layout intact across all sheets. | Creating multi‑sheet reports where each sheet shares a common A5 page configuration before distribution. | Preparing printable forms or labels that require a consistent A5 size throughout the workbook.
-// AI Prompts: Write C# code that sets the default paper size to Letter in an Aspose.Cells workbook and saves it using the LightCells API. | Show how to assign different paper sizes to several worksheets and export each sheet to PDF while preserving its layout with Aspose.Cells. | Explain how to read and verify the paper size setting of an existing Excel file after loading it with Aspose.Cells.
+// Title: Set Workbook Default Paper Size (A5) with LightCells API – Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, add data, configure the default printer paper size to A5 using the LightCells API, verify the setting via PageSetup, and save the file as an XLSX document.
+// Keywords: Aspose.Cells | C# | LightCells API | paper size | A5 | default printer settings | page setup | save workbook | Excel export | print layout
+// Common Searches: Aspose.Cells set default paper size C# | LightCells API A5 page setup example | How to configure workbook printer paper size with Aspose.Cells | Save Excel file with A5 layout using Aspose.Cells .NET | Verify worksheet paper size after setting workbook default
+// Developer Intent: Configure the workbook’s default printer paper size to A5 and save the workbook.
+// Use Cases: Generate multi‑sheet reports that must print on A5 paper without per‑sheet configuration. | Create invoices or receipts pre‑formatted for standard A5 stationery before distribution. | Export data for mobile or compact printing, ensuring every worksheet conforms to A5 dimensions.
+// AI Prompts: Show C# code to set the default paper size for an Aspose.Cells workbook using LightCells API. | Provide an example that overrides the default paper size for a single worksheet while keeping A5 for others. | Explain how to confirm the applied paper size after saving an Excel file with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPaperSizeDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to assign PaperSizeType.PaperA5 to Workbook.Settings.PaperSize and to the first worksheet's PageSetup, then persist the workbook using Aspose.Cells' saving mechanisms (compatible with LightCells) so the printed output matches the A5 layout.
-    class Program
+    // Demonstrates how to create a workbook, add data, configure the default printer paper size to A5 using the LightCells API, verify the setting via PageSetup, and save the file as an XLSX document.
+    public class LightCellsPaperSizeDemo
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook (uses the standard creation rule)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook using the standard API.
+                Workbook workbook = new Workbook();
 
-            // Set the default print paper size for the workbook (WorkbookSettings.PaperSize)
-            // This ensures that when the workbook is printed, the specified size is used.
-            workbook.Settings.PaperSize = PaperSizeType.PaperA5; // Example: A5 size
+                // Access the first worksheet.
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Optionally, also set the paper size on the first worksheet's PageSetup
-            // (useful if individual sheets need explicit settings)
-            workbook.Worksheets[0].PageSetup.PaperSize = PaperSizeType.PaperA5;
+                // Add some sample data.
+                sheet.Cells["A1"].PutValue("Print layout demo");
+                sheet.Cells["A2"].PutValue(DateTime.Now);
 
-            // Save the workbook to disk using the provided Save method rule
-            workbook.Save("Workbook_With_A5_PaperSize.xlsx", SaveFormat.Xlsx);
+                // Set the default printer paper size for the whole workbook.
+                // This influences the PageSetup of each worksheet unless overridden.
+                workbook.Settings.PaperSize = PaperSizeType.PaperA5; // A5 size (148 mm x 210 mm)
 
-            // Output confirmation
-            Console.WriteLine("Workbook saved with A5 paper size setting.");
+                // Verify that the setting is applied to the first worksheet.
+                Console.WriteLine("Worksheet paper size: " + sheet.PageSetup.PaperSize);
+
+                // Save the workbook.
+                string outputPath = "LightCellsPaperSizeDemo.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            LightCellsPaperSizeDemo.Run();
         }
     }
 }

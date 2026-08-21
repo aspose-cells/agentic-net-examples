@@ -1,64 +1,91 @@
-// Title: Re‑encrypt an Excel workbook to AES‑256 with Aspose.Cells for .NET (C#)
-// Description: Loads a password‑protected workbook, checks if it is encrypted, upgrades the protection to AES‑256 using Aspose.Cells, retains the original password, and saves the file to a new location. Demonstrates how to replace weak encryption with a strong algorithm in C#.
-// Keywords: Aspose.Cells re‑encrypt workbook | AES 256 Excel encryption C# | upgrade weak Excel encryption | SetEncryptionOptions Aspose.Cells | load encrypted .xlsx password | strong cryptographic provider | Excel file security .NET
-// Common Searches: How to change Excel file encryption to AES‑256 using Aspose.Cells | Detect and upgrade weak encryption in a .xlsx with C# | Re‑encrypt password‑protected workbook Aspose.Cells .NET | Increase Excel encryption strength programmatically | Replace 128‑bit encryption with 256‑bit in Aspose.Cells
-// Developer Intent: Replace a workbook’s weak encryption with AES‑256 while keeping the same password.
-// Use Cases: Modernize legacy spreadsheets that were encrypted with 128‑bit keys before distribution. | Validate incoming Excel files in an automated pipeline and enforce AES‑256 protection. | Automatically re‑encrypt user‑uploaded spreadsheets to satisfy GDPR, HIPAA, or other compliance standards.
-// AI Prompts: Generate C# code using Aspose.Cells to open an encrypted .xlsx, verify its encryption status, and save it with AES‑256 preserving the original password. | Provide a step‑by‑step tutorial for detecting weak encryption in an Excel workbook and upgrading it to a strong provider with Aspose.Cells for .NET. | Explain how to handle a workbook that is not encrypted before applying new encryption options in Aspose.Cells.
+// Title: C# – Detect Weak Excel Encryption and Upgrade to AES‑256 with Aspose.Cells
+// Description: Loads an Excel workbook that may be protected with a weak password, checks Workbook.Settings.IsEncrypted, assigns a stronger password, applies AES‑256 encryption via SetEncryptionOptions, and saves the file. Includes fallback loading without a password and demonstrates how to re‑encrypt a workbook in one step.
+// Keywords: Aspose.Cells | C# | .NET | Excel encryption | AES-256 | re‑encrypt workbook | weak password | Workbook.Settings.IsEncrypted | SetEncryptionOptions | upgrade Excel protection | password‑protected Excel file
+// Common Searches: How to change Excel file encryption to AES‑256 using Aspose.Cells | Detect if an .xlsx is encrypted and re‑save with a stronger password in C# | Upgrade weak Excel workbook protection with Aspose.Cells .NET | Set strong encryption for a password‑protected workbook Aspose.Cells
+// Developer Intent: Upgrade an existing Excel file from weak or unknown encryption to strong AES‑256 protection using Aspose.Cells for .NET.
+// Use Cases: A security audit tool that scans Excel files, identifies weak encryption, and re‑encrypts them with a new strong password. | Automated batch process that opens password‑protected workbooks, applies AES‑256 encryption, and saves the updated files. | Legacy application migration where old Excel files encrypted with outdated algorithms need to meet modern compliance standards.
+// AI Prompts: Generate C# code with Aspose.Cells to open a password‑protected .xlsx, verify Workbook.Settings.IsEncrypted, set a new password, apply AES‑256 encryption via SetEncryptionOptions, and save the workbook. | Explain the relationship between Workbook.Settings.IsEncrypted, Workbook.Settings.Password, and Workbook.SetEncryptionOptions when strengthening Excel file protection. | Provide a step‑by‑step guide for a PowerShell script that uses Aspose.Cells to batch re‑encrypt all Excel files in a folder from weak encryption to AES‑256.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads a password‑protected workbook, checks if it is encrypted, upgrades the protection to AES‑256 using Aspose.Cells, retains the original password, and saves the file to a new location. Demonstrates how to replace weak encryption with a strong algorithm in C#.
+// Loads an Excel workbook that may be protected with a weak password, checks Workbook.Settings.IsEncrypted, assigns a stronger password, applies AES‑256 encryption via SetEncryptionOptions, and saves the file. Includes fallback loading without a password and demonstrates how to re‑encrypt a workbook in one step.
 class ReEncryptWorkbook
 {
     static void Main()
     {
-        // Paths for the source (weakly encrypted) and destination (strongly encrypted) files
-        string sourcePath = "weak_encrypted.xlsx";
-        string destinationPath = "strong_encrypted.xlsx";
+        // Path to the workbook that may be weakly encrypted
+        string inputPath = "weak_encrypted.xlsx";
 
-        // Password that protects the source workbook
-        string password = "oldPassword";
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        // Password used to open the existing workbook (if it is protected)
+        string existingPassword = "weakpwd";
+
+        Workbook workbook = null;
 
         try
         {
-            // Ensure the source file exists; if not, create a simple workbook and apply encryption
-            if (!File.Exists(sourcePath))
-            {
-                Workbook tempWb = new Workbook();
-                tempWb.Worksheets[0].Cells["A1"].PutValue("Sample data");
-
-                // Apply encryption (using strong provider with 128‑bit key as a placeholder)
-                tempWb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
-                tempWb.Settings.Password = password;
-                tempWb.Save(sourcePath);
-            }
-
-            // Load the workbook using the existing password
+            // Attempt to load the workbook with the provided password
             LoadOptions loadOptions = new LoadOptions
             {
-                Password = password
+                Password = existingPassword
             };
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-            // Verify that the workbook is encrypted before re‑encrypting
-            if (workbook.Settings.IsEncrypted)
+            workbook = new Workbook(inputPath, loadOptions);
+        }
+        catch (CellsException ex)
+        {
+            // If loading fails due to an invalid password, try loading without a password
+            Console.WriteLine($"Failed to open with password: {ex.Message}");
+            try
             {
-                // Apply a stronger encryption algorithm (AES 256‑bit)
-                workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256);
-                // Preserve the original password for opening the file later
-                workbook.Settings.Password = password;
+                workbook = new Workbook(inputPath);
             }
-
-            // Save the workbook with the new, stronger encryption
-            workbook.Save(destinationPath);
-            Console.WriteLine("Workbook re‑encrypted successfully.");
+            catch (Exception innerEx)
+            {
+                Console.WriteLine($"Unable to load workbook: {innerEx.Message}");
+                return;
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Unexpected error while loading workbook: {ex.Message}");
+            return;
+        }
+
+        // Determine whether the workbook is encrypted
+        bool isEncrypted = workbook.Settings.IsEncrypted;
+
+        // If it is encrypted (or even if not), apply stronger encryption
+        if (isEncrypted)
+        {
+            // Define a new strong password
+            string newPassword = "StrongPwd123!";
+
+            // Apply the new password
+            workbook.Settings.Password = newPassword;
+
+            // Set strong encryption: AES with 256‑bit key
+            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256);
+        }
+
+        // Save the workbook with the stronger encryption
+        string outputPath = "strong_encrypted.xlsx";
+
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
     }
 }

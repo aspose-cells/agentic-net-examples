@@ -1,36 +1,41 @@
+// Title: Resize an Excel worksheet to an 800×600 PNG image using Aspose.Cells for .NET
+// Description: Loads an Excel workbook, selects a worksheet, configures ImageOrPrintOptions for PNG output, sets the exact pixel size to 800 × 600 (ignoring aspect ratio), renders the first page with SheetRender, saves it as "output.png", and releases resources.
+// Keywords: Aspose.Cells resize worksheet image | SetDesiredSize 800 600 | export worksheet as PNG | SheetRender PNG output | ImageOrPrintOptions pixel dimensions
+// Common Searches: Aspose.Cells export worksheet to PNG 800x600 | C# SetDesiredSize example Aspose.Cells | render Excel sheet as fixed size image | how to resize worksheet image with Aspose.Cells
+// Developer Intent: Create a PNG snapshot of a worksheet with exact dimensions of 800 × 600 pixels.
+// Use Cases: Generate uniform thumbnail previews for a web‑based workbook gallery. | Embed fixed‑size worksheet screenshots in reports, presentations, or documentation. | Provide consistent image assets for automated UI tests that require specific pixel dimensions.
+// AI Prompts: Show how to keep the original aspect ratio while fitting the worksheet inside a maximum size of 800 × 600 pixels. | Provide code that batch converts every worksheet in a workbook to separate 800 × 600 PNG files using Aspose.Cells. | Explain how to adjust DPI in ImageOrPrintOptions to improve quality of the 800 × 600 PNG output.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsResizeWorksheetImage
+// Loads an Excel workbook, selects a worksheet, configures ImageOrPrintOptions for PNG output, sets the exact pixel size to 800 × 600 (ignoring aspect ratio), renders the first page with SheetRender, saves it as "output.png", and releases resources.
+class ResizeWorksheetImage
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook(); // creates a new workbook
-            Worksheet sheet = workbook.Worksheets[0];
+        // Load the source workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Add some sample data to the worksheet (optional)
-            sheet.Cells["A1"].PutValue("Sample Data");
-            sheet.Cells["A2"].PutValue(123);
-            sheet.Cells["B1"].PutValue(DateTime.Now);
+        // Access the first worksheet (or any specific worksheet)
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Configure image rendering options
-            ImageOrPrintOptions options = new ImageOrPrintOptions();
-            options.ImageType = ImageType.Png;                 // output format PNG
-            options.SetDesiredSize(800, 600, false);           // resize to 800x600, do not keep aspect ratio
+        // Configure image rendering options
+        ImageOrPrintOptions options = new ImageOrPrintOptions();
+        options.ImageType = ImageType.Png;                     // Output format PNG
+        options.SetDesiredSize(800, 600, false);               // Resize to 800x600 without keeping aspect ratio
 
-            // Render the worksheet to an image file with the specified size
-            SheetRender renderer = new SheetRender(sheet, options);
-            renderer.ToImage(0, "Worksheet_800x600.png");      // page index 0 (first page)
+        // Create a SheetRender instance for the worksheet with the specified options
+        SheetRender sheetRender = new SheetRender(worksheet, options);
 
-            // Optionally, save the workbook itself
-            workbook.Save("Workbook.xlsx");
+        // Render the first page of the worksheet to an image file with the desired size
+        sheetRender.ToImage(0, "output.png");
 
-            Console.WriteLine("Worksheet rendered to 800x600 PNG successfully.");
-        }
+        // Clean up resources
+        sheetRender.Dispose();
+
+        Console.WriteLine("Worksheet image generated with size 800x600 pixels.");
     }
 }

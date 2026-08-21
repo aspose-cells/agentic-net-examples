@@ -1,34 +1,63 @@
-// Title: Load an Existing Excel Workbook and Retrieve Worksheet Details with Aspose.Cells (C#)
-// Description: Shows how to create a Workbook from a local .xlsx file using Aspose.Cells for .NET, access the first worksheet, and output the total number of sheets and the first sheet's name to the console.
-// Keywords: Aspose.Cells load workbook C# | open Excel file Aspose.Cells | read worksheet count Aspose.Cells | first worksheet name C# | Aspose.Cells .NET example | load Excel from file path | C# console Aspose.Cells
-// Common Searches: C# Aspose.Cells open existing .xlsx | How to get number of sheets after loading workbook Aspose.Cells | Retrieve first worksheet name using Aspose.Cells C# | Aspose.Cells load workbook from disk example | Read Excel workbook metadata with Aspose.Cells
-// Developer Intent: Open a local Excel file as a Workbook and extract basic sheet metadata.
-// Use Cases: Initialize a template workbook for data population before saving. | Iterate through sheet names to drive dynamic report generation. | Validate workbook structure (sheet count, names) prior to import operations.
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells and prints all worksheet names. | Show how to catch and handle FileNotFoundException when creating a Workbook from a path. | Demonstrate loading an Excel workbook from a MemoryStream using Aspose.Cells in C#. | Explain how to load a password‑protected workbook with Aspose.Cells.
+// Title: Load an Existing Excel File into an Aspose.Cells Workbook (C#)
+// Description: C# example that checks for a .xlsx file, creates a simple workbook with sample data if missing, then loads the file with Aspose.Cells, accesses the first worksheet, and prints its name and data row count.
+// Keywords: Aspose.Cells load workbook C# | read Excel file Aspose.Cells | open existing .xlsx C# | first worksheet name Aspose | create placeholder workbook Aspose | FileNotFoundException handling Aspose.Cells
+// Common Searches: how to open an existing Excel file with Aspose.Cells in C# | Aspose.Cells create workbook if file not found | get first sheet name and row count using Aspose.Cells | C# load .xlsx and handle missing file Aspose
+// Developer Intent: Load a spreadsheet from disk into a Workbook object and retrieve basic information from its first worksheet.
+// Use Cases: Display the name and row count of the first sheet in a user‑provided Excel file. | Automatically generate a default workbook with sample data when the expected file is absent. | Validate and safely open Excel files in .NET applications using Aspose.Cells.
+// AI Prompts: Generate C# code that uses Aspose.Cells to open a .xlsx file, creates it with sample data if it does not exist, and prints the first worksheet name and number of data rows. | Show how to catch FileNotFoundException when loading an Excel workbook with Aspose.Cells in C#. | Demonstrate creating a new workbook, adding sample data, saving it, and then reloading it using Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsLoadExample
 {
-    // Shows how to create a Workbook from a local .xlsx file using Aspose.Cells for .NET, access the first worksheet, and output the total number of sheets and the first sheet's name to the console.
+    // C# example that checks for a .xlsx file, creates a simple workbook with sample data if missing, then loads the file with Aspose.Cells, accesses the first worksheet, and prints its name and data row count.
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the existing Excel file on disk
-            string filePath = "input.xlsx";
+            // Path to the Excel file
+            string filePath = @"C:\Data\Sample.xlsx";
 
-            // Load the workbook using the constructor that accepts a file path
-            Workbook workbook = new Workbook(filePath);
+            try
+            {
+                // Ensure the file exists; create a simple workbook if it does not
+                if (!File.Exists(filePath))
+                {
+                    // Create directory if needed
+                    string dir = Path.GetDirectoryName(filePath);
+                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
 
-            // Access the first worksheet
-            Worksheet firstSheet = workbook.Worksheets[0];
+                    // Create a new workbook with a default sheet and sample data
+                    Workbook newWb = new Workbook();
+                    Worksheet newSheet = newWb.Worksheets[0];
+                    newSheet.Name = "Sheet1";
+                    newSheet.Cells["A1"].PutValue("Sample Data");
+                    newWb.Save(filePath);
+                    Console.WriteLine($"Created sample workbook at: {filePath}");
+                }
 
-            // Output basic information about the loaded workbook
-            Console.WriteLine($"Workbook loaded successfully.");
-            Console.WriteLine($"Number of worksheets: {workbook.Worksheets.Count}");
-            Console.WriteLine($"First worksheet name: {firstSheet.Name}");
+                // Load the workbook
+                Workbook workbook = new Workbook(filePath);
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"Loaded workbook: {filePath}");
+                Console.WriteLine($"First worksheet name: {sheet.Name}");
+                Console.WriteLine($"Number of rows with data: {sheet.Cells.MaxDataRow + 1}");
+            }
+            catch (FileNotFoundException fnfEx)
+            {
+                Console.WriteLine($"File not found: {fnfEx.FileName}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

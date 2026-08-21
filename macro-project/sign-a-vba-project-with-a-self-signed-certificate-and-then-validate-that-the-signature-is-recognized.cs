@@ -1,10 +1,10 @@
-// Title: Sign and Verify a VBA Project with a Self‑Signed Certificate using Aspose.Cells for .NET
-// Description: Demonstrates how to create a macro‑enabled workbook, generate a self‑signed X509Certificate2, apply a DigitalSignature to the workbook's VbaProject, save the file, and programmatically confirm the signature status with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells VBA signing | self signed certificate C# | digital signature Excel macro | verify VBA project signature | C# Aspose.Cells example | sign .xlsm file programmatically | VbaProject.Sign Aspose
-// Common Searches: how to sign a VBA project with Aspose.Cells | C# self‑signed certificate for Excel macros | validate VBA digital signature after saving | Aspose.Cells example for signing .xlsm | check if VBA project is signed in .NET
-// Developer Intent: Programmatically sign a VBA project in an Excel workbook with a self‑signed certificate and verify that the signature is recognized as valid.
-// Use Cases: Secure macro code before distribution by applying a digital signature. | Automate integrity checks for macro‑enabled workbooks in CI pipelines. | Batch‑sign multiple .xlsm files in a server‑side .NET application.
-// AI Prompts: Generate C# code that creates a self‑signed X509Certificate2 and uses Aspose.Cells to sign a VBA project in a .xlsm file. | Explain step‑by‑step how to verify a VBA project's digital signature after saving the workbook with Aspose.Cells. | Provide guidance on handling certificate expiration and re‑signing VBA projects automatically in a .NET service.
+// Title: C# – Sign and Verify a VBA Project in an XLSM Workbook with a Self‑Signed Certificate using Aspose.Cells
+// Description: Shows how to create a macro‑enabled workbook, generate a 2048‑bit RSA self‑signed certificate, apply it to the workbook’s VbaProject via Aspose.Cells DigitalSignature, save the file, and validate the signature using VbaProject.IsSigned and IsValidSigned.
+// Keywords: Aspose.Cells | VBA project signing | self‑signed certificate | C# digital signature | macro‑enabled workbook | VbaProject.Sign | VbaProject.IsSigned | VbaProject.IsValidSigned | Excel macro security | programmatic certificate generation
+// Common Searches: sign VBA project Aspose.Cells C# | verify VBA digital signature Aspose.Cells | generate self signed certificate in C# for Excel macro | check IsSigned property Aspose.Cells | programmatically sign macro workbook .NET | Aspose.Cells digital signature example
+// Developer Intent: Programmatically sign a VBA project in an XLSM file with a self‑signed certificate and confirm that the signature is recognized.
+// Use Cases: Automated CI/CD pipelines that test macro security by signing and verifying VBA projects before release. | Bulk signing of internal macro workbooks with a temporary certificate to meet corporate policy before distribution. | Compliance checks that ensure every VBA project in a workbook is signed and the signature is valid prior to deployment.
+// AI Prompts: Provide C# code using Aspose.Cells to sign a VBA project with an existing PFX certificate and handle certificate expiration. | Show how to extract the certificate thumbprint from a signed VbaProject and compare it against a trusted list using Aspose.Cells. | Write error‑handling logic for VbaProject.Sign when the workbook lacks a VBA project or the DigitalSignature is invalid.
 
 using System;
 using System.IO;
@@ -14,78 +14,68 @@ using Aspose.Cells;
 using Aspose.Cells.Vba;
 using Aspose.Cells.DigitalSignatures;
 
-// Demonstrates how to create a macro‑enabled workbook, generate a self‑signed X509Certificate2, apply a DigitalSignature to the workbook's VbaProject, save the file, and programmatically confirm the signature status with Aspose.Cells for .NET.
-class VbaProjectSignDemo
+namespace AsposeCellsVbaSignatureDemo
 {
-    public static void Main()
+    // Shows how to create a macro‑enabled workbook, generate a 2048‑bit RSA self‑signed certificate, apply it to the workbook’s VbaProject via Aspose.Cells DigitalSignature, save the file, and validate the signature using VbaProject.IsSigned and IsValidSigned.
+    class Program
     {
-        // Create a new workbook and save it as a macro‑enabled file to ensure a VBA project exists
-        Workbook initialWb = new Workbook();
-        string tempPath = Path.Combine(Path.GetTempPath(), "temp.xlsm");
-        initialWb.Save(tempPath, SaveFormat.Xlsm);
-
-        // Load the workbook that now contains a VBA project
-        Workbook workbook = new Workbook(tempPath);
-        VbaProject vbaProject = workbook.VbaProject;
-        if (vbaProject == null)
+        static void Main()
         {
-            Console.WriteLine("No VBA project found in the workbook.");
-            return;
-        }
+            // Step 1: Create a new workbook (initially without VBA project)
+            Workbook wb = new Workbook();
 
-        // Generate a self‑signed certificate with a private key
-        X509Certificate2 certificate;
-        using (RSA rsa = RSA.Create(2048))
-        {
-            var request = new CertificateRequest(
-                "CN=AsposeSelfSigned",
-                rsa,
-                HashAlgorithmName.SHA256,
-                RSASignaturePadding.Pkcs1);
+            // Step 2: Save as macro-enabled workbook to create a VBA project container
+            string tempPath = Path.Combine(Path.GetTempPath(), "temp.xlsm");
+            wb.Save(tempPath, SaveFormat.Xlsm);
 
-            // Add basic constraints (not a CA)
-            request.CertificateExtensions.Add(
-                new X509BasicConstraintsExtension(false, false, 0, false));
+            // Step 3: Load the workbook back – now it contains a VbaProject object
+            Workbook macroWb = new Workbook(tempPath);
 
-            // Add key usage for digital signatures
-            request.CertificateExtensions.Add(
-                new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature, false));
+            // Step 4: Generate a self‑signed certificate (RSA 2048 bits, valid for 1 hour)
+            X509Certificate2 certificate;
+            using (RSA rsa = RSA.Create(2048))
+            {
+                var request = new CertificateRequest(
+                    new X500DistinguishedName("CN=AsposeSelfSigned"),
+                    rsa,
+                    HashAlgorithmName.SHA256,
+                    RSASignaturePadding.Pkcs1);
 
-            // Add subject key identifier
-            request.CertificateExtensions.Add(
-                new X509SubjectKeyIdentifierExtension(request.PublicKey, false));
+                // Create a self‑signed certificate
+                certificate = request.CreateSelfSigned(
+                    DateTimeOffset.Now,
+                    DateTimeOffset.Now.AddHours(1));
+            }
 
-            // Create a self‑signed certificate valid for 1 hour
-            certificate = request.CreateSelfSigned(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(1));
-        }
+            // Step 5: Create a DigitalSignature object using the certificate
+            DigitalSignature vbaSignature = new DigitalSignature(
+                certificate,
+                "Signed by Aspose demo",
+                DateTime.Now);
 
-        // Create a DigitalSignature object from the certificate
-        DigitalSignature digitalSignature = new DigitalSignature(
-            certificate,
-            "Self‑signed VBA signature",
-            DateTime.Now);
+            // Step 6: Sign the VBA project
+            VbaProject vbaProject = macroWb.VbaProject;
+            if (vbaProject != null)
+            {
+                vbaProject.Sign(vbaSignature);
+            }
+            else
+            {
+                Console.WriteLine("VBA project not found.");
+                return;
+            }
 
-        // Sign the VBA project with the digital signature
-        vbaProject.Sign(digitalSignature);
+            // Step 7: Save the signed workbook
+            string signedPath = Path.Combine(Environment.CurrentDirectory, "SignedVbaWorkbook.xlsm");
+            macroWb.Save(signedPath, SaveFormat.Xlsm);
+            Console.WriteLine($"Signed workbook saved to: {signedPath}");
 
-        // Save the signed workbook to a memory stream
-        using (MemoryStream ms = new MemoryStream())
-        {
-            workbook.Save(ms, SaveFormat.Xlsm);
-            ms.Position = 0; // Reset stream position for reading
+            // Step 8: Reload the workbook to verify the signature
+            Workbook verifyWb = new Workbook(signedPath);
+            VbaProject verifyProject = verifyWb.VbaProject;
 
-            // Reload the workbook to verify the signature
-            Workbook verifyWb = new Workbook(ms);
-            VbaProject verifyVba = verifyWb.VbaProject;
-
-            Console.WriteLine("Is VBA Project Signed: " + verifyVba.IsSigned);
-            Console.WriteLine("Is VBA Signature Valid: " + verifyVba.IsValidSigned);
-        }
-
-        // Clean up temporary file
-        if (File.Exists(tempPath))
-        {
-            File.Delete(tempPath);
+            Console.WriteLine("VBA Project IsSigned: " + verifyProject.IsSigned);
+            Console.WriteLine("VBA Project IsValidSigned: " + verifyProject.IsValidSigned);
         }
     }
 }

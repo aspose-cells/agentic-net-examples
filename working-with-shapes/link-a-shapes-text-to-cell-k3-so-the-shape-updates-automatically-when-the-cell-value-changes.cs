@@ -1,16 +1,15 @@
-// Title: C# – Link Shape Text to Cell K3 Using Aspose.Cells (LinkedCell Property)
-// Description: Demonstrates how to add a shape to a worksheet with Aspose.Cells for .NET, set its LinkedCell property to the absolute reference "$K$3", and have the shape’s displayed text automatically reflect any changes made to cell K3. The example saves the workbook as LinkedShapeDemo.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | LinkedCell | shape text binding | Excel shape to cell | dynamic shape caption | cell K3 | automatic update | worksheet shape | API example
-// Common Searches: Aspose.Cells link shape text to cell | C# set shape LinkedCell to K3 | update Excel shape caption from cell value | Aspose.Cells shape text binding example | how to bind a shape to a worksheet cell in .NET
-// Developer Intent: Bind a shape’s displayed text to cell K3 so it updates automatically when the cell value changes.
-// Use Cases: Create a live dashboard where a shape shows the current total stored in K3 and refreshes with each calculation. | Replace static labels on report graphics with dynamic values by linking each shape to its result cell. | Build interactive templates that automatically propagate formula results into shape captions without manual editing.
-// AI Prompts: Write C# code using Aspose.Cells that links a shape’s text to cell K3 and keeps it synchronized with cell changes. | Show how to bind multiple shapes to different cells (e.g., K3, L5, M7) using the LinkedCell property in Aspose.Cells. | Explain the LinkedCell property behavior, supported shape types, and any limitations when linking shape text to worksheet cells.
+// Title: C# – Link a shape’s text to cell K3 with automatic refresh using Aspose.Cells
+// Description: Demonstrates how to add a rectangle shape to a worksheet, bind its text to the absolute cell reference K3, trigger an update so the shape reflects the current cell value, and save the workbook with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# shape linked cell | shape.LinkedCell property | auto‑refresh shape text | bind shape to Excel cell | dynamic shape label Aspose | .NET Excel automation example | update shape value from cell
+// Common Searches: Aspose.Cells link shape to cell K3 C# | how to bind shape text to worksheet cell using Aspose | shape.UpdateSelectedValue after linking cell | C# example for dynamic shape text in Excel | Aspose.Cells shape linkedcell usage
+// Developer Intent: The developer needs a shape whose displayed text automatically mirrors the value of cell K3 whenever that cell changes.
+// Use Cases: KPI dashboards where shapes show live metric values from specific cells. | Report templates with dynamic labels inside shapes that stay in sync with worksheet data. | Excel‑based forms that use shapes as visual placeholders for cell content.
+// AI Prompts: Provide C# code that links a shape’s text to a cell and keeps it updated with Aspose.Cells. | Show how to bind multiple shapes to different cells and refresh them automatically in a .NET workbook. | Explain the difference between using shape.LinkedCell and setting shape.Text directly in Aspose.Cells.
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a shape to a worksheet with Aspose.Cells for .NET, set its LinkedCell property to the absolute reference "$K$3", and have the shape’s displayed text automatically reflect any changes made to cell K3. The example saves the workbook as LinkedShapeDemo.xlsx.
+// Demonstrates how to add a rectangle shape to a worksheet, bind its text to the absolute cell reference K3, trigger an update so the shape reflects the current cell value, and save the workbook with Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -19,17 +18,17 @@ class Program
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a rectangle shape (you can choose any shape type)
-        // Parameters: upper left row, upper left column, top, left, height, width
+        // Add a rectangle shape to the worksheet
+        // Parameters: upper left row, upper left column, upper left offset (pixels), upper left offset (pixels), height, width
         Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 100);
 
         // Link the shape's text to cell K3 (absolute reference)
         shape.LinkedCell = "$K$3";
 
-        // Optionally set some initial text (will be overridden by the linked cell value)
-        shape.Text = "Linked to K3";
+        // Refresh the shape so it displays the current cell value
+        shape.UpdateSelectedValue();
 
         // Save the workbook
-        workbook.Save("LinkedShapeDemo.xlsx");
+        workbook.Save("LinkedShape.xlsx");
     }
 }

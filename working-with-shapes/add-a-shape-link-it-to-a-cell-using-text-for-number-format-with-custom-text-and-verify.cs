@@ -1,50 +1,57 @@
-// Title: Aspose.Cells for .NET – Add a Rectangle Shape Linked to a Cell with a Custom TEXT Number Format
-// Description: Demonstrates how to create a workbook, write a numeric value to A1, apply a custom number format that prefixes the value (e.g., "Order #: 12345"), insert a rectangle shape, link the shape to the cell, refresh the shape to show the formatted text, and save the file.
-// Keywords: Aspose.Cells C# shape linked cell | custom number format TEXT Aspose.Cells | update shape text from linked cell | AddRectangle Aspose.Cells example | LinkedCell property C#
-// Common Searches: link shape to cell Aspose.Cells .NET | display custom formatted value in shape Aspose.Cells | Aspose.Cells rectangle shape linked cell example | how to use TEXT number format with linked shape
-// Developer Intent: Create a rectangle shape, bind it to a worksheet cell that uses a custom TEXT number format, and verify that the shape reflects the formatted cell value.
-// Use Cases: Dynamic order numbers on a dashboard shape that update automatically when the source cell changes. | Customer ID badges in a report where the shape shows a prefixed ID (e.g., "Customer #: 00123"). | Invoice templates that display a formatted invoice number inside a shape, keeping the visual layout in sync with cell data.
-// AI Prompts: Generate C# code using Aspose.Cells to add a rectangle shape linked to cell A1 with a custom TEXT number format and ensure the shape displays the formatted value. | Explain the role of Shape.UpdateSelectedValue when a shape is linked to a cell that has a custom number format in Aspose.Cells. | Provide step‑by‑step instructions to verify the LinkedCell property of a shape and save the workbook after linking.
+// Title: Add a label shape linked to a custom‑formatted cell with Aspose.Cells for .NET
+// Description: Creates a workbook, writes a numeric value to A1, applies a custom number format (e.g., 0.00 "USD"), adds a label shape at B2, links the shape to the formatted cell, updates the shape to show the formatted text, prints verification details, and saves the file as ShapeLinkedCell.xlsx.
+// Keywords: Aspose.Cells label shape | link shape to cell | custom number format | display formatted value in shape | LinkedCell property | C# Aspose.Cells example | Excel shape verification
+// Common Searches: Aspose.Cells link textbox to cell with custom format | How to display formatted cell value in a shape using Aspose.Cells | Update linked shape after applying number format Aspose.Cells | C# Aspose.Cells add label shape linked to cell
+// Developer Intent: Add a label shape, bind it to a cell that uses a custom number format, refresh the shape to reflect the formatted value, and confirm the link works.
+// Use Cases: Financial reports where a shape shows a formatted total amount. | Excel dashboards that use shapes to display live, formatted metrics. | Automated workbook generation with linked shapes for printable summaries.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a rectangle shape linked to cell B5 and formats the cell as "dd-MMM-yyyy". | Show how to link multiple shapes to different cells, each with its own custom number format, and verify the displayed values. | Explain how to programmatically confirm that a shape's displayed text matches the cell's formatted string in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, write a numeric value to A1, apply a custom number format that prefixes the value (e.g., "Order #: 12345"), insert a rectangle shape, link the shape to the cell, refresh the shape to show the formatted text, and save the file.
-class ShapeLinkedCellExample
+// Creates a workbook, writes a numeric value to A1, applies a custom number format (e.g., 0.00 "USD"), adds a label shape at B2, links the shape to the formatted cell, updates the shape to show the formatted text, prints verification details, and saves the file as ShapeLinkedCell.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule: create)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set a numeric value in cell A1
-        Cell targetCell = sheet.Cells["A1"];
-        targetCell.PutValue(12345);
+            // Put a numeric value into cell A1
+            worksheet.Cells["A1"].PutValue(1234.56);
 
-        // Apply a custom number format that uses TEXT (e.g., display as "Order #: 12345")
-        Style style = targetCell.GetStyle();
-        style.Custom = "\"Order #: \"0";
-        targetCell.SetStyle(style);
+            // Apply a custom number format (e.g., 0.00 "USD")
+            Style customStyle = workbook.CreateStyle();
+            customStyle.Custom = "0.00\" USD\"";
+            worksheet.Cells["A1"].SetStyle(customStyle);
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, upper left offset (pixels), upper left offset (pixels), width, height
-        Shape shape = sheet.Shapes.AddRectangle(2, 1, 0, 0, 150, 50);
+            // Add a label (text box) shape positioned at cell B2
+            // Parameters: upperLeftRow, upperLeftColumn, top, left, height, width
+            // Height and width are in pixels; adjust as needed.
+            Label shape = worksheet.Shapes.AddLabel(1, 1, 0, 0, 30, 150);
 
-        // Link the shape to cell A1
-        shape.LinkedCell = "$A$1";
+            // Link the shape to the formatted cell A1
+            shape.LinkedCell = "$A$1";
 
-        // Ensure the shape displays the linked cell's formatted value
-        shape.UpdateSelectedValue();
+            // Refresh the shape so it displays the linked cell's value
+            shape.UpdateSelectedValue();
 
-        // Optional: set some placeholder text (will be replaced by linked cell value after UpdateSelectedValue)
-        shape.Text = "Placeholder";
+            // Verification output
+            Console.WriteLine("Shape's LinkedCell: " + shape.LinkedCell);
+            Console.WriteLine("Cell A1 formatted text: " + worksheet.Cells["A1"].StringValue);
 
-        // Verify the linked cell address
-        Console.WriteLine("Shape is linked to cell: " + shape.LinkedCell);
-
-        // Save the workbook (lifecycle rule: save)
-        workbook.Save("ShapeLinkedCellExample.xlsx");
+            // Save the workbook
+            string outputPath = "ShapeLinkedCell.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine("Workbook saved to: " + outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

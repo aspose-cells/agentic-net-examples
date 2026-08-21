@@ -1,59 +1,52 @@
-// Title: Set Dynamic Freeze Panes in Aspose.Cells for .NET Using Environment Variables
-// Description: Creates a workbook, populates a 20×10 sample grid, reads the FREEZE_ROWS and FREEZE_COLUMNS environment variables, validates the values, and calls Worksheet.FreezePanes to freeze the specified rows and columns before saving as DynamicFreezeDemo.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | FreezePanes | environment variables | dynamic freeze rows | dynamic freeze columns | runtime configuration | Excel export | worksheet freeze panes
-// Common Searches: Aspose.Cells freeze panes from environment variable | C# set freeze rows and columns at runtime | How to use FreezePanes with variables in .NET | Dynamic freeze panes Aspose.Cells example | Read FREEZE_ROWS FREEZE_COLUMNS in C# Excel
-// Developer Intent: Read FREEZE_ROWS and FREEZE_COLUMNS environment variables and apply them to Worksheet.FreezePanes so the worksheet freezes the requested rows and/or columns.
-// Use Cases: Generate Excel reports where the number of frozen header rows or columns is controlled by deployment‑time environment settings. | Adjust worksheet freeze panes in a CI/CD pipeline without changing source code. | Support multi‑tenant exports where each tenant’s preferred frozen rows/columns are supplied via environment variables.
-// AI Prompts: Show how to extend the sample to accept freeze settings from command‑line arguments instead of environment variables. | Provide code that validates freeze values against the worksheet size and logs a warning for out‑of‑range inputs. | Explain how to read freeze configuration from a JSON file and apply it with Aspose.Cells.
+// Title: Dynamic column freeze in Aspose.Cells via environment variable (C#)
+// Description: Creates a new Workbook, reads the FREEZE_COLUMNS environment variable, validates it as a non‑negative integer, and freezes that many columns (no rows) on every worksheet using FreezePanes. If the variable is missing, zero, or invalid, panes are left unfrozen before the file is saved.
+// Keywords: Aspose.Cells | FreezePanes | C# | .NET | environment variable | dynamic column freeze | unfreeze panes | Excel automation | read env variable C#
+// Common Searches: Aspose.Cells freeze columns from environment variable | C# set FreezePanes using env var | How to unfreeze panes in Aspose.Cells | Apply FreezePanes to all worksheets Aspose.Cells | Dynamic column freeze Aspose.Cells .NET
+// Developer Intent: Read an environment variable and use its value to freeze that many columns in every worksheet of an Aspose.Cells workbook.
+// Use Cases: Configure column freezing per deployment environment without code changes | Disable freezing by leaving FREEZE_COLUMNS unset or setting it to 0 | Apply identical freeze settings across all worksheets in a newly created workbook | Toggle freeze behavior in CI/CD pipelines via environment configuration
+// AI Prompts: Generate C# code that reads an environment variable named FREEZE_COLUMNS and applies FreezePanes to each worksheet in an Aspose.Cells workbook, handling invalid values gracefully. | Show how to extend the example to also freeze rows based on a separate environment variable. | Explain how to unit‑test the dynamic column‑freeze logic with Aspose.Cells in a .NET test project. | Provide a PowerShell script that sets the FREEZE_COLUMNS variable before running the C# application.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsDynamicFreezeDemo
+namespace FreezeColumnsFromEnv
 {
-    // Creates a workbook, populates a 20×10 sample grid, reads the FREEZE_ROWS and FREEZE_COLUMNS environment variables, validates the values, and calls Worksheet.FreezePanes to freeze the specified rows and columns before saving as DynamicFreezeDemo.xlsx.
+    // Creates a new Workbook, reads the FREEZE_COLUMNS environment variable, validates it as a non‑negative integer, and freezes that many columns (no rows) on every worksheet using FreezePanes. If the variable is missing, zero, or invalid, panes are left unfrozen before the file is saved.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook (empty)
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some sample data so the effect of freezing can be seen
-            for (int row = 0; row < 20; row++)
+            // Read the environment variable that specifies how many columns to freeze.
+            // If the variable is not set or is invalid, default to 0 (no freezing).
+            string envValue = Environment.GetEnvironmentVariable("FREEZE_COLUMNS");
+            int freezeColumns = 0;
+            if (!string.IsNullOrEmpty(envValue) && int.TryParse(envValue, out int parsed))
             {
-                for (int col = 0; col < 10; col++)
+                // Ensure the value is non‑negative.
+                freezeColumns = Math.Max(0, parsed);
+            }
+
+            // Apply the freeze setting to each worksheet in the workbook.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                if (freezeColumns > 0)
                 {
-                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                    // Freeze panes at row index 0 and the specified column index.
+                    // freezedRows = 0 (no frozen rows), freezedColumns = freezeColumns.
+                    sheet.FreezePanes(0, freezeColumns, 0, freezeColumns);
+                }
+                else
+                {
+                    // Ensure panes are not frozen when the count is zero.
+                    sheet.UnFreezePanes();
                 }
             }
 
-            // Read environment variables that specify how many rows and columns to freeze
-            // If the variables are not set or cannot be parsed, default to 0 (no freeze)
-            int freezeRows = 0;
-            int freezeColumns = 0;
-
-            string rowsEnv = Environment.GetEnvironmentVariable("FREEZE_ROWS");
-            string colsEnv = Environment.GetEnvironmentVariable("FREEZE_COLUMNS");
-
-            if (!string.IsNullOrWhiteSpace(rowsEnv) && int.TryParse(rowsEnv, out int parsedRows) && parsedRows > 0)
-                freezeRows = parsedRows;
-
-            if (!string.IsNullOrWhiteSpace(colsEnv) && int.TryParse(colsEnv, out int parsedCols) && parsedCols > 0)
-                freezeColumns = parsedCols;
-
-            // Apply freeze panes only when at least one dimension is greater than zero
-            // FreezePanes(row, column, freezedRows, freezedColumns)
-            // The first two parameters define the cell where the split occurs.
-            // Using the same values for row/column and freezedRows/freezeColumns creates the desired freeze.
-            if (freezeRows > 0 || freezeColumns > 0)
-            {
-                sheet.FreezePanes(freezeRows, freezeColumns, freezeRows, freezeColumns);
-            }
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("DynamicFreezeDemo.xlsx");
+            // Save the workbook to a file.
+            workbook.Save("FreezeColumnsResult.xlsx");
         }
     }
 }

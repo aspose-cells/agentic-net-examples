@@ -1,49 +1,44 @@
-// Title: C# – Create a dynamic named range that expands with filled rows in column A using Aspose.Cells
-// Description: Demonstrates how to generate a workbook, populate A1:A5, add a named range "MyDynamicRange" defined by an OFFSET‑COUNTA formula, use it in a SUM formula (B1), calculate the result, output 15, and save the file as DynamicNamedRange.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | dynamic named range | OFFSET formula | COUNTA function | auto‑expanding range | Excel named range | sum formula | workbook calculation
-// Common Searches: Aspose.Cells create dynamic named range | C# OFFSET COUNTA named range example | auto expanding range column A Aspose.Cells | how to use named range in Aspose.Cells formula | calculate sum of dynamic range with Aspose.Cells
-// Developer Intent: Add a named range that automatically adjusts its size to the number of non‑empty rows in column A.
-// Use Cases: Define a self‑adjusting range for column A and reference it in aggregate formulas such as SUM or AVERAGE. | Reuse the same dynamic range in lookup functions (e.g., VLOOKUP, MATCH) without hard‑coding the row count. | Link the dynamic range to chart data sources so the chart expands as new rows are added.
-// AI Prompts: Write C# code with Aspose.Cells that creates a dynamic named range based on non‑empty cells in column A and uses it in a SUM formula. | Show how to modify the OFFSET/CounTA expression to start from B2 and include columns B‑C. | Provide an example of binding a chart series to the dynamic named range created with Aspose.Cells.
+// Title: C# Aspose.Cells: Create a Dynamic Named Range that Expands with Column A Data
+// Description: Shows how to use Aspose.Cells for .NET to add a workbook‑level named range defined with an OFFSET‑COUNTA formula, automatically adjusting to the count of filled rows in column A. The sample populates data, sets the RefersTo property, recalculates formulas, refreshes dynamic arrays, and saves the workbook.
+// Keywords: Aspose.Cells | C# dynamic named range | OFFSET formula | COUNTA | .NET Excel automation | auto‑expanding range | named range column A | refresh dynamic array formulas | Excel workbook programmatic
+// Common Searches: Aspose.Cells create dynamic named range C# | OFFSET COUNTA named range .NET | auto expanding range column A Aspose | programmatically set RefersTo property | refresh dynamic array formulas Aspose.Cells | C# Excel named range that grows with data
+// Developer Intent: Programmatically define a workbook named range whose size updates automatically based on the number of non‑empty cells in column A.
+// Use Cases: Drive chart data series that grow as new items are added to column A. | Populate data‑validation lists that stay current without manual range changes. | Feed formulas such as SUM or VLOOKUP with a range that always reflects the full column A dataset. | Create a pivot‑table source that expands with incoming rows. | Generate reports where the source range must adapt to varying data lengths.
+// AI Prompts: Write C# Aspose.Cells code to create a dynamic named range that starts at B2 and expands across two columns. | Explain how to modify the OFFSET formula to ignore blank cells in the middle of column A. | Show how to update an existing named range after rows are inserted or deleted using Aspose.Cells. | Provide steps to refresh all dynamic array formulas after changing a named range in a workbook. | Generate a PowerShell script that uses Aspose.Cells to add a dynamic named range to an existing Excel file.
 
 using System;
 using Aspose.Cells;
 
-namespace DynamicNamedRangeDemo
+// Shows how to use Aspose.Cells for .NET to add a workbook‑level named range defined with an OFFSET‑COUNTA formula, automatically adjusting to the count of filled rows in column A. The sample populates data, sets the RefersTo property, recalculates formulas, refreshes dynamic arrays, and saves the workbook.
+class Program
 {
-    // Demonstrates how to generate a workbook, populate A1:A5, add a named range "MyDynamicRange" defined by an OFFSET‑COUNTA formula, use it in a SUM formula (B1), calculate the result, output 15, and save the file as DynamicNamedRange.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+        Cells cells = ws.Cells;
+
+        // Sample data in column A (optional, demonstrates the dynamic behavior)
+        for (int i = 0; i < 5; i++)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate column A with sample data (filled rows)
-            for (int i = 0; i < 5; i++)
-            {
-                cells[i, 0].PutValue(i + 1); // A1:A5 = 1,2,3,4,5
-            }
-
-            // Add a dynamic named range that expands based on the number of non‑empty rows in column A
-            // Formula: =OFFSET(Sheet1!$A$1,0,0,COUNTA(Sheet1!$A:$A),1)
-            int nameIdx = workbook.Worksheets.Names.Add("MyDynamicRange");
-            Name dynamicName = workbook.Worksheets.Names[nameIdx];
-            dynamicName.RefersTo = "=OFFSET(Sheet1!$A$1,0,0,COUNTA(Sheet1!$A:$A),1)";
-
-            // Use the dynamic named range in a formula (e.g., sum of the range)
-            cells["B1"].Formula = "=SUM(MyDynamicRange)";
-
-            // Calculate formulas to obtain the result
-            workbook.CalculateFormula();
-
-            // Output the calculated sum (should be 1+2+3+4+5 = 15)
-            Console.WriteLine("Sum of dynamic range: " + cells["B1"].Value);
-
-            // Save the workbook
-            workbook.Save("DynamicNamedRange.xlsx");
+            cells[i, 0].PutValue($"Item{i + 1}");
         }
+
+        // Add a named range to the workbook
+        int nameIdx = wb.Worksheets.Names.Add("DynamicRange");
+        Name dynamicName = wb.Worksheets.Names[nameIdx];
+
+        // Define the dynamic range using OFFSET and COUNTA so it expands with filled rows in column A
+        // Formula: =OFFSET(Sheet1!$A$1,0,0,COUNTA(Sheet1!$A:$A),1)
+        string dynamicFormula = $"=OFFSET({ws.Name}!$A$1,0,0,COUNTA({ws.Name}!$A:$A),1)";
+        dynamicName.RefersTo = dynamicFormula;
+
+        // Recalculate formulas and refresh any dynamic array formulas (good practice after changes)
+        wb.CalculateFormula();
+        wb.RefreshDynamicArrayFormulas(true);
+
+        // Save the workbook
+        wb.Save("DynamicNamedRange.xlsx");
     }
 }

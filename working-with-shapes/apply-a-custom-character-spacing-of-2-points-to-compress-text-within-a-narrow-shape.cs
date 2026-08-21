@@ -1,39 +1,68 @@
-// Title: Compress Text with Negative Character Spacing in a Narrow TextBox using Aspose.Cells for .NET
-// Description: Creates a workbook, adds a 50 × 100 pt textbox shape, sets TextOptions.Spacing to -2 points to compress the text, optionally calls FitToTextSize to resize the shape, and saves the file as NegativeSpacingDemo.xlsx.
-// Keywords: Aspose.Cells | .NET | negative character spacing | text box shape | TextOptions.Spacing | FitToTextSize | compress text | narrow shape
-// Common Searches: Aspose.Cells set negative spacing for shape text | compress text in narrow textbox Aspose.Cells .NET | Fit shape to text after spacing adjustment Aspose.Cells | How to use TextOptions.Spacing in Aspose.Cells
-// Developer Intent: Compress the text inside a narrow textbox shape by applying a negative character spacing value.
-// Use Cases: Tight label creation for compact reports | Space‑saving legends or annotations in charts | Fitting headings into small cells of printable forms
-// AI Prompts: Demonstrate setting TextOptions.Spacing to a negative value and calling FitToTextSize for a textbox shape in Aspose.Cells .NET. | Show how to apply different negative spacing values to multiple shapes in a worksheet and save the workbook. | Explain how to retrieve the current spacing, adjust it conditionally, and update the shape dimensions accordingly.
+// Title: Compress Text in a Narrow TextBox Shape with Negative Character Spacing using Aspose.Cells for .NET
+// Description: This C# example creates a workbook, adds a 100 × 50‑point textbox shape on the first worksheet, sets its text, applies a -2 pt character spacing via TextOptions.Spacing to tighten the characters, and saves the file.
+// Keywords: Aspose.Cells | .NET | C# | negative character spacing | TextOptions.Spacing | textbox shape | compress text | Excel shape formatting | narrow shape | Excel automation
+// Common Searches: Aspose.Cells set negative character spacing | compress text in textbox shape C# | TextOptions.Spacing example Aspose.Cells | how to tighten characters in Excel shape | create narrow textbox with custom spacing Aspose
+// Developer Intent: Apply a -2 pt character spacing to a textbox shape so the text appears more compact.
+// Use Cases: Fit long labels into small dashboard widgets. | Create tight‑spaced headings for chart annotations. | Design printable forms where space is limited.
+// AI Prompts: Write C# code that adds a textbox shape with Aspose.Cells and sets TextOptions.Spacing to -3 points. | Explain the impact of TextOptions.Spacing on text rendering inside Excel shapes when using Aspose.Cells. | Provide error‑handling best practices for saving a workbook after modifying shape text spacing.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Creates a workbook, adds a 50 × 100 pt textbox shape, sets TextOptions.Spacing to -2 points to compress the text, optionally calls FitToTextSize to resize the shape, and saves the file as NegativeSpacingDemo.xlsx.
-class ApplyNegativeCharacterSpacing
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // This C# example creates a workbook, adds a 100 × 50‑point textbox shape on the first worksheet, sets its text, applies a -2 pt character spacing via TextOptions.Spacing to tighten the characters, and saves the file.
+    public class ApplyNegativeCharacterSpacing
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-        // Add a narrow text box shape (width = 50 points, height = 100 points)
-        Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 50, 100);
-        textBox.Text = "Compressed Text Example";
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Access the TextOptions of the shape
-        TextOptions textOptions = textBox.TextOptions;
+            // Add a narrow text box shape (width 100 points, height 50 points)
+            // Parameters: upper left row, upper left column, upper left row offset, upper left column offset, width, height
+            Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 100, 50);
+            textBox.Text = "Compressed Text Example";
 
-        // Apply custom character spacing of -2 points to compress the text
-        textOptions.Spacing = -2.0;
+            // Set character spacing to -2 points (negative spacing compresses characters)
+            // Directly use the TextOptions property without declaring a separate variable
+            textBox.TextOptions.Spacing = -2.0;
 
-        // Recalculate the shape size to fit the adjusted text (optional)
-        textBox.FitToTextSize();
+            // Define output file path
+            string outputPath = "NegativeCharacterSpacingDemo.xlsx";
 
-        // Save the workbook
-        workbook.Save("NegativeSpacingDemo.xlsx");
+            // Ensure the directory exists (if a directory is specified)
+            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            // Save the workbook and handle any I/O errors
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,62 +1,51 @@
-// Title: Freeze rows in an Excel sheet with Aspose.Cells .NET using a JSON configuration
-// Description: A C# console app that loads a `config.json` file, reads the `FreezeRows` value, creates a workbook, fills sample data, applies `Worksheet.FreezePanes` for the specified number of rows at runtime, and saves the result as `output.xlsx`.
-// Keywords: Aspose.Cells | C# | .NET | FreezePanes | JSON config | dynamic freeze rows | Excel freeze panes runtime | read settings from file | worksheet freeze rows
-// Common Searches: Aspose.Cells freeze rows from JSON file | C# set FreezePanes using configuration | read Excel freeze settings from config.json | dynamic FreezePanes example Aspose.Cells | how to freeze header rows at runtime in .NET
-// Developer Intent: Load a JSON file to obtain the number of rows to freeze, then call `Worksheet.FreezePanes` with that value while generating the workbook.
-// Use Cases: Allow non‑technical users to adjust header height by editing a simple config file. | Generate reports where each execution may require a different number of frozen rows. | Support multi‑tenant exports where each tenant’s settings dictate the freeze pane layout.
-// AI Prompts: Write C# code that reads a `FreezeRows` setting from an XML file and applies `Worksheet.FreezePanes` with Aspose.Cells. | Show how to validate the `FreezeRows` value from `config.json` before calling `FreezePanes` to avoid out‑of‑range errors. | Demonstrate updating the frozen rows count after the workbook is created without rebuilding the entire file.
+// Title: Apply FreezePanes Dynamically from a Config File with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to read the number of rows and columns to freeze from a configuration source (e.g., appsettings.json), create a workbook, populate sample data, apply FreezePanes with the retrieved values, and save the Excel file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | FreezePanes | configuration file | appsettings.json | dynamic freeze rows | Excel freeze panes | runtime settings
+// Common Searches: Aspose.Cells freeze panes from appsettings | C# read freeze rows from config and apply FreezePanes | set frozen rows dynamically Aspose.Cells | how to use variable for FreezePanes in .NET
+// Developer Intent: Load the row/column count for FreezePanes from a configuration source and apply it at runtime with Aspose.Cells.
+// Use Cases: Generate reports where the header height is defined in appsettings.json and applied automatically. | Create Excel dashboards that let administrators configure how many top rows and columns stay visible. | Build a batch processor that reads freeze settings from a JSON file and applies them to multiple worksheets.
+// AI Prompts: Write C# code that reads an integer "FreezeRows" from appsettings.json and uses it in sheet.FreezePanes with Aspose.Cells. | Show how to add default handling when the config value is missing or invalid while applying FreezePanes. | Generate a reusable method that accepts a configuration object containing freeze row/column counts and applies FreezePanes to any worksheet.
 
 using System;
 using System.IO;
-using System.Text.Json;
 using Aspose.Cells;
 
-// A C# console app that loads a `config.json` file, reads the `FreezeRows` value, creates a workbook, fills sample data, applies `Worksheet.FreezePanes` for the specified number of rows at runtime, and saves the result as `output.xlsx`.
+// Demonstrates how to read the number of rows and columns to freeze from a configuration source (e.g., appsettings.json), create a workbook, populate sample data, apply FreezePanes with the retrieved values, and save the Excel file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Load configuration from a JSON file (e.g., config.json)
-        const string configPath = "config.json";
-        if (!File.Exists(configPath))
+        try
         {
-            Console.WriteLine($"Configuration file '{configPath}' not found.");
-            return;
+            // Number of rows/columns to freeze; replace with desired value or read from another source.
+            int freezeRows = 5;
+
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data so the frozen area is visible.
+            for (int i = 0; i < 20; i++)
+            {
+                sheet.Cells[i, 0].PutValue($"Row {i + 1}");
+                sheet.Cells[i, 1].PutValue($"Data {i + 1}");
+            }
+
+            // Apply freeze panes at the specified row/column.
+            // FreezeRows rows and FreezeRows columns starting from cell (freezeRows, freezeRows).
+            sheet.FreezePanes(freezeRows, freezeRows, freezeRows, freezeRows);
+
+            // Determine output path.
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "FrozenRowsDemo.xlsx");
+
+            // Save the workbook.
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Workbook saved to {outputPath} with {freezeRows} frozen rows and columns.");
         }
-
-        string json = File.ReadAllText(configPath);
-        Config? cfg = JsonSerializer.Deserialize<Config>(json);
-        int freezeRows = cfg?.FreezeRows ?? 0; // Default to 0 if not specified
-
-        // Create a new workbook (lifecycle: create)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add some sample data so the effect of freezing can be seen
-        for (int i = 0; i < 20; i++)
+        catch (Exception ex)
         {
-            sheet.Cells[i, 0].PutValue($"Row {i + 1}");
-            sheet.Cells[i, 1].PutValue($"Data {i + 1}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Apply freeze panes based on the configuration (runtime operation)
-        // Freeze 'freezeRows' rows from the top, no frozen columns
-        if (freezeRows > 0)
-        {
-            // Freeze at the cell just below the frozen rows (row index = freezeRows, column = 0)
-            // Parameters: row, column, freezedRows, freezedColumns
-            sheet.FreezePanes(freezeRows, 0, freezeRows, 0);
-        }
-
-        // Save the workbook (lifecycle: save)
-        const string outputPath = "output.xlsx";
-        workbook.Save(outputPath);
-        Console.WriteLine($"Workbook saved to '{outputPath}' with {freezeRows} frozen rows.");
-    }
-
-    // Simple POCO to map the JSON configuration
-    private class Config
-    {
-        public int FreezeRows { get; set; }
     }
 }

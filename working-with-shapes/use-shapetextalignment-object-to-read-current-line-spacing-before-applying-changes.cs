@@ -1,57 +1,54 @@
-// Title: C# – Read and Adjust TextBox Line Spacing and Margins with Aspose.Cells ShapeTextAlignment
-// Description: Demonstrates how to retrieve the current LineSpace and LineSpaceSizeType of a textbox shape's first TextParagraph, change the line spacing, modify top/bottom margins via ShapeTextAlignment, and verify the settings after saving the workbook.
-// Keywords: Aspose.Cells C# | ShapeTextAlignment | TextParagraph LineSpace | textbox line spacing | modify shape margins | .NET spreadsheet shape formatting | read line spacing Aspose.Cells | set TopMarginPt BottomMarginPt
-// Common Searches: Aspose.Cells read textbox line spacing C# | change shape text margins with ShapeTextAlignment | how to get LineSpaceSizeType in Aspose.Cells | modify multiline textbox line spacing .NET | persist shape text formatting after save Aspose.Cells
-// Developer Intent: Retrieve a shape's existing line spacing, then apply new line spacing and margin values using ShapeTextAlignment.
-// Use Cases: Inspect the current LineSpace and its size type before applying formatting changes. | Set a specific point value for line spacing of multiline text inside a textbox shape. | Adjust top and bottom margins of a shape's text body via ShapeTextAlignment and confirm persistence after workbook save/load.
-// AI Prompts: Generate C# code that reads the LineSpace and LineSpaceSizeType of a textbox shape's first TextParagraph, then sets LineSpace to 12 points and updates ShapeTextAlignment.TopMarginPt and BottomMarginPt to 15 points. | Provide a snippet that creates a textbox shape, prints its default line spacing, changes the spacing to 8 points, adjusts top/bottom margins, saves the workbook, reloads it, and outputs the verified values. | Explain how TextParagraph line‑spacing properties interact with ShapeTextAlignment margins in Aspose.Cells and how to ensure those changes are saved in the workbook.
+// Title: C# – Read a shape's paragraph line spacing before modifying ShapeTextAlignment with Aspose.Cells
+// Description: Demonstrates how to retrieve the current line‑spacing value of a text box paragraph, then adjust wrapping and margin settings via the ShapeTextAlignment object, save the workbook, and confirm that the original spacing is retained after reload.
+// Keywords: Aspose.Cells C# shape line spacing | ShapeTextAlignment margins | read paragraph line space Aspose.Cells | preserve line spacing shape | text box formatting .NET
+// Common Searches: Aspose.Cells get line spacing of shape text | C# read paragraph line space before ShapeTextAlignment | How to check line spacing of a text box shape in Aspose.Cells | Retrieve and keep shape line spacing after formatting
+// Developer Intent: Obtain the existing line‑spacing value of a shape's text paragraph before applying ShapeTextAlignment properties.
+// Use Cases: Log original line spacing before applying alignment changes. | Copy shapes between worksheets while maintaining paragraph spacing. | Validate that margin adjustments do not alter line spacing after saving.
+// AI Prompts: Generate C# code that reads the line spacing of the first paragraph in a text box shape, then sets ShapeTextAlignment margins and enables wrapping using Aspose.Cells. | Show how to compare the paragraph line spacing before and after saving a workbook that contains a formatted shape. | Explain best practices for preserving paragraph line spacing when programmatically updating shape alignment in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// Demonstrates how to retrieve the current LineSpace and LineSpaceSizeType of a textbox shape's first TextParagraph, change the line spacing, modify top/bottom margins via ShapeTextAlignment, and verify the settings after saving the workbook.
-class ShapeTextAlignmentLineSpacingDemo
+// Demonstrates how to retrieve the current line‑spacing value of a text box paragraph, then adjust wrapping and margin settings via the ShapeTextAlignment object, save the workbook, and confirm that the original spacing is retained after reload.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook (creation rule)
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a text box shape with some multiline text
-        Shape shape = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 300, 200);
+        // Add a text box shape to the worksheet
+        Shape shape = sheet.Shapes.AddTextBox(0, 0, 0, 0, 300, 100);
         shape.Text = "First line\nSecond line";
 
         // Access the first paragraph of the shape's text body
         TextParagraph paragraph = shape.TextBody.TextParagraphs[0];
-
-        // Read and display the current line spacing and its size type
-        double currentLineSpace = paragraph.LineSpace;
-        LineSpaceSizeType currentSizeType = paragraph.LineSpaceSizeType;
-        Console.WriteLine($"Current LineSpace: {currentLineSpace}, SizeType: {currentSizeType}");
-
-        // Apply new line spacing settings
+        // Ensure the line space unit is points
         paragraph.LineSpaceSizeType = LineSpaceSizeType.Points;
-        paragraph.LineSpace = 10; // Set line spacing to 10 points
 
-        // Access the ShapeTextAlignment object to read and modify margin settings
+        // Read the current line spacing value before making any changes
+        double currentLineSpace = paragraph.LineSpace;
+        Console.WriteLine("Current line spacing (points): " + currentLineSpace);
+
+        // Modify shape's text alignment using the ShapeTextAlignment object
         ShapeTextAlignment textAlignment = shape.TextBody.TextAlignment;
-        Console.WriteLine($"Default TopMarginPt: {textAlignment.TopMarginPt}");
-        textAlignment.TopMarginPt = 20;
-        textAlignment.BottomMarginPt = 20;
+        textAlignment.IsTextWrapped = true;          // enable text wrapping
+        textAlignment.TopMarginPt = 12;              // set top margin in points
+        textAlignment.BottomMarginPt = 12;           // set bottom margin in points
+        textAlignment.LeftMarginPt = 6;              // set left margin in points
+        textAlignment.RightMarginPt = 6;             // set right margin in points
 
-        // Save the workbook
-        string outputPath = "ShapeTextAlignmentLineSpacingDemo.xlsx";
-        workbook.Save(outputPath);
+        // Save the workbook (save rule)
+        string filePath = "ShapeTextAlignmentLineSpaceDemo.xlsx";
+        workbook.Save(filePath);
 
-        // Load the workbook to verify the applied settings
-        Workbook loadedWorkbook = new Workbook(outputPath);
+        // Load the workbook back (load rule) to verify the saved settings
+        Workbook loadedWorkbook = new Workbook(filePath);
         Shape loadedShape = loadedWorkbook.Worksheets[0].Shapes[0];
-        TextParagraph loadedParagraph = loadedShape.TextBody.TextParagraphs[0];
-        Console.WriteLine($"Loaded LineSpace: {loadedParagraph.LineSpace}");
-        ShapeTextAlignment loadedAlignment = loadedShape.TextBody.TextAlignment;
-        Console.WriteLine($"Loaded TopMarginPt: {loadedAlignment.TopMarginPt}");
+        double loadedLineSpace = loadedShape.TextBody.TextParagraphs[0].LineSpace;
+        Console.WriteLine("Loaded line spacing (points): " + loadedLineSpace);
     }
 }

@@ -1,10 +1,10 @@
-// Title: Protect All Worksheets with One Password Using Aspose.Cells for .NET (C#)
-// Description: Load an existing Excel file (or create a new workbook), loop through each worksheet, apply full protection with a single password, keep all cell styles intact, and save the protected workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# worksheet protection | Excel password protection .NET | protect multiple sheets programmatically | preserve Excel formatting | sheet-level security Aspose | protect all worksheets C#
-// Common Searches: Aspose.Cells protect all sheets C# | C# protect Excel worksheets with same password | apply sheet protection without losing formatting .NET | programmatically set password for every worksheet | protect workbook worksheets using Aspose.Cells
-// Developer Intent: Apply the same password to every worksheet in a workbook while preserving all existing formatting and styles.
-// Use Cases: Secure a template before distribution by locking every sheet with a single password. | Automate protection of generated reports to prevent edits while keeping the original layout. | Batch‑process multiple workbooks to enforce sheet‑level security without altering cell formatting.
-// AI Prompts: Write C# code with Aspose.Cells that opens an Excel file, iterates over all worksheets, protects each one with a given password, and saves the file without changing any formatting. | Show an example of using Aspose.Cells for .NET to apply identical password protection to every sheet in a workbook while keeping all styles and formulas unchanged.
+// Title: Protect all worksheets with one password using Aspose.Cells for .NET
+// Description: Loads an existing workbook, loops through every Worksheet, applies ProtectionType.All with a shared password, and saves the file while keeping all cell, row, column, and style formatting intact. Includes file‑existence check and exception handling.
+// Keywords: Aspose.Cells worksheet protection | C# protect all sheets | Excel password protection .NET | preserve formatting Aspose | bulk sheet protect Aspose.Cells | ProtectionType.All example
+// Common Searches: protect every sheet in an Excel file with Aspose.Cells | apply same password to all worksheets .NET | keep formatting when protecting Excel sheets programmatically | Aspose.Cells protect multiple worksheets example
+// Developer Intent: Add identical password protection to every worksheet in a workbook without modifying any existing formatting.
+// Use Cases: Lock all tabs of a financial report before sending to clients while preserving the visual layout. | Automate organization‑wide policy that enforces sheet protection on generated workbooks. | Create a template where users can view formatting but cannot edit cell contents on any sheet.
+// AI Prompts: Write C# code with Aspose.Cells that protects all worksheets in a workbook using a single password and retains all formatting. | Show how to add robust error handling around worksheet protection for multiple Excel files. | Modify the example to protect only formulas and objects while leaving cell editing allowed.
 
 using System;
 using System.IO;
@@ -12,51 +12,52 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Load an existing Excel file (or create a new workbook), loop through each worksheet, apply full protection with a single password, keep all cell styles intact, and save the protected workbook using Aspose.Cells for .NET.
+    // Loads an existing workbook, loops through every Worksheet, applies ProtectionType.All with a shared password, and saves the file while keeping all cell, row, column, and style formatting intact. Includes file‑existence check and exception handling.
     public class ProtectAllWorksheets
     {
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            Run();
+        }
+
         public static void Run()
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output_protected.xlsx";
-            string password = "myPassword123";
+            // Define the password to be applied to every worksheet
+            const string password = "SecurePassword123";
+
+            // Input and output file paths
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output_protected.xlsx";
+
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                return;
+            }
 
             try
             {
-                Workbook workbook;
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Load existing workbook if it exists; otherwise create a new one
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    workbook = new Workbook(); // creates a workbook with a default sheet
-                }
-
-                // Protect each worksheet with the specified password
+                // Iterate through each worksheet and protect it with all protection types
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
+                    // The third parameter (oldPassword) is set to null because the sheets are not previously password‑protected
                     sheet.Protect(ProtectionType.All, password, null);
                 }
 
-                // Save the protected workbook
+                // Save the protected workbook; formatting of cells, rows, columns, etc., remains unchanged
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Catch any runtime exceptions (e.g., Aspose.Cells errors, IO issues)
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ProtectAllWorksheets.Run();
         }
     }
 }

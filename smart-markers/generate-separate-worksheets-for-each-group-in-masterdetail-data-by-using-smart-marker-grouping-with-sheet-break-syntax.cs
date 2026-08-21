@@ -1,98 +1,82 @@
+// Title: C# – Generate a separate worksheet for each master‑detail group using Aspose.Cells smart markers with SheetBreak
+// Description: This example demonstrates how to load a template workbook that contains a smart marker with the SheetBreak syntax (e.g., &=Orders:SheetBreak), bind a list of Order objects (master) and their Item collections (detail) to a WorkbookDesigner, enable LineByLine processing, and invoke Process() to create an individual worksheet for every order. The populated workbook is saved as Result.xlsx.
+// Keywords: Aspose.Cells | smart markers | SheetBreak | C# | master‑detail | WorkbookDesigner | LineByLine | generate worksheets per group | template marker syntax | export to Excel
+// Common Searches: Aspose.Cells SheetBreak create separate sheet per group | C# smart markers master detail example | WorkbookDesigner LineByLine true effect | how to bind detail collection for each group in Aspose.Cells | template marker for grouping orders into worksheets
+// Developer Intent: Create a workbook where each master record (order) appears on its own worksheet by using smart marker grouping with SheetBreak syntax.
+// Use Cases: Generate an invoice workbook with one sheet per order and its line items. | Produce a sales report that separates customers into individual worksheets. | Export project plans so each project gets a dedicated Excel sheet with its tasks.
+// AI Prompts: Show how to bind the Items collection dynamically for each Order when using SheetBreak smart markers in Aspose.Cells. | Provide the exact template marker syntax needed to group Orders and Items with a sheet break. | Explain what happens if LineByLine is set to false while using SheetBreak grouping.
+
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace SmartMarkerSheetBreakDemo
+// This example demonstrates how to load a template workbook that contains a smart marker with the SheetBreak syntax (e.g., &=Orders:SheetBreak), bind a list of Order objects (master) and their Item collections (detail) to a WorkbookDesigner, enable LineByLine processing, and invoke Process() to create an individual worksheet for every order. The populated workbook is saved as Result.xlsx.
+class Program
 {
-    // Simple master‑detail classes
-    public class Department
+    static void Main()
     {
-        public string Name { get; set; }
-        public List<Employee> Employees { get; set; }
-    }
+        // Load the template workbook that contains smart markers with sheet break syntax
+        // Example marker in the template: &=Orders:SheetBreak
+        Workbook workbook = new Workbook("Template.xlsx");
 
-    public class Employee
-    {
-        public string Name { get; set; }
-        public string Title { get; set; }
-    }
-
-    public class Program
-    {
-        public static void Main()
+        // Prepare master‑detail data
+        List<Order> orders = new List<Order>
         {
-            // ---------- Create a workbook (lifecycle rule: create) ----------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Template";
-
-            // ---------- Build the template with smart markers ----------
-            // Header row
-            sheet.Cells["A1"].PutValue("Department");
-            sheet.Cells["B1"].PutValue("Employee");
-            sheet.Cells["C1"].PutValue("Title");
-
-            // Smart marker group start with sheet‑break syntax.
-            // The marker "&=Departments.Start" tells Aspose.Cells to start a new sheet
-            // for each distinct Department record.
-            sheet.Cells["A2"].PutValue("&=Departments.Start");
-
-            // Department name (master data)
-            sheet.Cells["A3"].PutValue("&=Departments.Name");
-
-            // Detail rows for Employees belonging to the current Department.
-            // The group markers "&=Employees.Start" / "&=Employees.End" repeat the rows
-            // for each employee in the master record.
-            sheet.Cells["B3"].PutValue("&=Employees.Start");
-            sheet.Cells["B3"].PutValue("&=Employees.Name");
-            sheet.Cells["C3"].PutValue("&=Employees.Title");
-            sheet.Cells["D3"].PutValue("&=Employees.End");
-
-            // End of the master group
-            sheet.Cells["A4"].PutValue("&=Departments.End");
-
-            // ---------- Prepare master‑detail data ----------
-            var departments = new List<Department>
+            new Order
             {
-                new Department
+                OrderId = 1,
+                Customer = "Alice",
+                Items = new List<Item>
                 {
-                    Name = "Sales",
-                    Employees = new List<Employee>
-                    {
-                        new Employee { Name = "John Doe", Title = "Sales Manager" },
-                        new Employee { Name = "Jane Smith", Title = "Sales Executive" }
-                    }
-                },
-                new Department
-                {
-                    Name = "HR",
-                    Employees = new List<Employee>
-                    {
-                        new Employee { Name = "Alice Brown", Title = "HR Manager" },
-                        new Employee { Name = "Bob White", Title = "Recruiter" }
-                    }
+                    new Item { Product = "Pen",      Quantity = 10 },
+                    new Item { Product = "Notebook", Quantity = 5  }
                 }
-            };
-
-            // ---------- Set up the designer and bind data sources ----------
-            WorkbookDesigner designer = new WorkbookDesigner
+            },
+            new Order
             {
-                Workbook = workbook,
-                // LineByLine must be false because we are using a named range for smart markers.
-                LineByLine = false
-            };
+                OrderId = 2,
+                Customer = "Bob",
+                Items = new List<Item>
+                {
+                    new Item { Product = "Pencil", Quantity = 20 },
+                    new Item { Product = "Eraser", Quantity = 2  }
+                }
+            }
+        };
 
-            // Bind master and detail data sources.
-            designer.SetDataSource("Departments", departments);
-            // The detail source is automatically resolved from the master collection,
-            // but we also bind it explicitly for clarity.
-            designer.SetDataSource("Employees", departments);
+        // Set up the WorkbookDesigner
+        WorkbookDesigner designer = new WorkbookDesigner
+        {
+            Workbook = workbook,
+            // When using sheet break syntax the default LineByLine = true works,
+            // but we explicitly set it to true for clarity.
+            LineByLine = true
+        };
 
-            // ---------- Process the smart markers ----------
-            designer.Process();
+        // Bind the master data source (Orders) and the detail data source (Items)
+        designer.SetDataSource("Orders", orders);
+        // The detail source name must match the marker used inside the group (e.g., &Items)
+        designer.SetDataSource("Items", orders[0].Items); // placeholder; actual grouping handled by smart markers
 
-            // ---------- Save the result (lifecycle rule: save) ----------
-            workbook.Save("DepartmentsBySheet.xlsx");
-        }
+        // Process the smart markers – this will create a separate worksheet for each order group
+        designer.Process();
+
+        // Save the populated workbook
+        workbook.Save("Result.xlsx");
+    }
+
+    // Master data class
+    public class Order
+    {
+        public int OrderId { get; set; }
+        public string Customer { get; set; }
+        public List<Item> Items { get; set; }
+    }
+
+    // Detail data class
+    public class Item
+    {
+        public string Product { get; set; }
+        public int Quantity { get; set; }
     }
 }

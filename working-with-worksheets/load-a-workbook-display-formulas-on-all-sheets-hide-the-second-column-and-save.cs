@@ -1,33 +1,36 @@
-// Title: Show Formulas & Hide Column B on Every Worksheet Using Aspose.Cells for .NET
-// Description: Load an Excel workbook, set each worksheet to display formulas (ShowFormulas = true), hide the second column (B) across all sheets, and save the modified file with Aspose.Cells in C#.
-// Keywords: Aspose.Cells C# | show formulas Excel | hide column B | iterate worksheets | modify Excel workbook | save workbook Aspose | batch worksheet settings | Excel column hide .NET | display formulas Aspose.Cells | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells hide column in all worksheets | Show formulas in Excel using Aspose.Cells .NET | Set ShowFormulas for every sheet programmatically | Batch hide column B with Aspose.Cells | Modify multiple worksheets Aspose.Cells C#
-// Developer Intent: Load a workbook, make formulas visible on every sheet, hide column B, and save the updated file.
-// Use Cases: Create an audit‑ready copy where all formulas are visible while confidential data in column B is concealed. | Prepare a distribution version that shows calculation logic for transparency but hides internal identifiers. | Apply consistent view settings before exporting the workbook to PDF or other formats.
-// AI Prompts: Generate C# code with Aspose.Cells that loads a workbook, sets ShowFormulas = true for each worksheet, hides column index 1, and saves the file. | Explain how to iterate over all worksheets in an Excel file using Aspose.Cells to display formulas and hide a specific column. | Provide troubleshooting steps if hiding column B does not appear in the saved workbook when using Aspose.Cells for .NET.
+// Title: Show Formulas on Every Worksheet and Hide Column B Using Aspose.Cells for .NET (C#)
+// Description: C# sample that opens an Excel workbook with Aspose.Cells, enables formula display on each sheet, hides column B (index 1) throughout the file, and writes the changes to a new workbook.
+// Keywords: Aspose.Cells C# show formulas | hide column B Aspose.Cells | iterate worksheets Aspose.Cells | save modified workbook Aspose.Cells | Excel formula view .NET | column visibility Aspose.Cells | bulk worksheet operations Aspose.Cells | Excel auditing C#
+// Common Searches: Aspose.Cells display formulas in all sheets | How to hide a column in every worksheet using Aspose.Cells | Set ShowFormulas property for a workbook in C# | C# hide column B across an Excel file with Aspose.Cells | Export workbook with formulas visible Aspose.Cells
+// Developer Intent: Load an existing workbook, make formulas visible on all sheets, conceal column B, and save the updated file.
+// Use Cases: Auditing: produce a copy of a spreadsheet where formulas are shown for review while sensitive data in column B is hidden. | Debugging: generate a version of a workbook that reveals all calculations and removes column B to simplify troubleshooting. | Documentation: create a printable Excel file that lists formulas for reference and omits column B to reduce visual clutter.
+// AI Prompts: Generate C# code with Aspose.Cells that toggles ShowFormulas for every worksheet and hides column C before saving. | Provide an example that loads an Excel file, displays formulas, hides a list of specified columns on all sheets, and outputs a new workbook. | Explain how to programmatically control formula visibility and column hiding based on user input using Aspose.Cells in a .NET application.
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// Load an Excel workbook, set each worksheet to display formulas (ShowFormulas = true), hide the second column (B) across all sheets, and save the modified file with Aspose.Cells in C#.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // C# sample that opens an Excel workbook with Aspose.Cells, enables formula display on each sheet, hides column B (index 1) throughout the file, and writes the changes to a new workbook.
+    class ShowFormulasAndHideColumn
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Apply settings to each worksheet
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            // Show formulas instead of their results
-            sheet.ShowFormulas = true;
+            // Load an existing workbook from file
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Hide the second column (zero‑based index 1)
-            sheet.Cells.HideColumn(1);
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Show formulas instead of calculated values
+                sheet.ShowFormulas = true;
+
+                // Hide the second column (index 1, column B)
+                sheet.Cells.HideColumn(1);
+            }
+
+            // Save the modified workbook to a new file
+            workbook.Save("output.xlsx");
         }
-
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
     }
 }

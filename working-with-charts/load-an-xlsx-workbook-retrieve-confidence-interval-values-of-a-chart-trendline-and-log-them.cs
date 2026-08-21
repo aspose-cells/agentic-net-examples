@@ -1,75 +1,73 @@
-// Title: Load an XLSX workbook and read a chart trendline with Aspose.Cells (C#)
-// Description: C# example that loads an XLSX file, verifies the presence of a chart, retrieves the first series' trendline, logs its type, and explains that confidence‑interval properties (ShowConfidenceInterval, ConfidenceLevel) are not exposed in the current Aspose.Cells for .NET API.
-// Keywords: Aspose.Cells chart trendline C# | read Excel chart trendline | trendline confidence interval Aspose.Cells | Aspose.Cells workbook load example | C# Aspose.Cells chart series | Excel trendline type property | Aspose.Cells API limitations
-// Common Searches: how to get trendline type using Aspose.Cells C# | Aspose.Cells confidence interval not available | read chart trendline properties Aspose.Cells .NET | C# example for accessing Excel chart trendline | Aspose.Cells chart series trendline API
-// Developer Intent: Load an XLSX workbook, locate a chart, access its first series' trendline, and determine whether confidence‑interval values can be retrieved with Aspose.Cells for .NET.
-// Use Cases: Validate that an input Excel file contains at least one chart before processing. | Extract and log the trendline type of the first series for diagnostics or reporting. | Detect the absence of confidence‑interval properties in the current Aspose.Cells version and handle it gracefully.
-// AI Prompts: Generate C# code with Aspose.Cells that reads a chart trendline's type and safely checks for confidence‑interval support, providing fallback logic when the properties are missing. | Suggest a method to compute confidence intervals manually for a trendline when Aspose.Cells does not expose them directly. | Explain how to identify the Aspose.Cells version that introduces confidence‑interval properties for chart trendlines.
+// Title: Load an XLSX workbook and extract chart trendline confidence intervals with Aspose.Cells for .NET
+// Description: The sample checks for the input file, opens the workbook using Aspose.Cells, walks through every worksheet, chart, series and attached trendline, then reads each trendline's confidence‑interval values (lower and upper bounds) together with its name and type, and writes the details to the console.
+// Keywords: Aspose.Cells C# chart trendline confidence interval | read Excel trendline CI Aspose | retrieve trendline properties .NET | iterate worksheets charts Aspose.Cells | Excel chart analytics C# | download Aspose.Cells example US | Aspose.Cells Europe tutorial | Aspose.Cells Asia code sample
+// Common Searches: Aspose.Cells get confidence interval of chart trendline C# | How to read trendline CI from Excel using Aspose.Cells | Iterate all charts in a workbook and extract trendline data .NET | C# example for logging Excel chart trendline properties | Aspose.Cells chart trendline name type confidence interval
+// Developer Intent: Programmatically obtain the confidence‑interval values, name and type of every trendline in all charts of an Excel workbook and output the information for review or further processing.
+// Use Cases: Automated validation of statistical charts before publishing a report. | Generating a summary file that lists trendline confidence intervals for regulatory compliance. | Feeding trendline metrics into a data‑science pipeline for predictive modeling.
+// AI Prompts: Show how to modify the code to export the trendline confidence‑interval data to a CSV file. | Provide a version that filters trendlines to only Linear and Polynomial types before logging. | Explain how to handle workbooks with hidden worksheets when extracting trendline information.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExample
+// The sample checks for the input file, opens the workbook using Aspose.Cells, walks through every worksheet, chart, series and attached trendline, then reads each trendline's confidence‑interval values (lower and upper bounds) together with its name and type, and writes the details to the console.
+class Program
 {
-    // C# example that loads an XLSX file, verifies the presence of a chart, retrieves the first series' trendline, logs its type, and explains that confidence‑interval properties (ShowConfidenceInterval, ConfidenceLevel) are not exposed in the current Aspose.Cells for .NET API.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the existing XLSX workbook
+        string workbookPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(workbookPath))
         {
-            // Path to the Excel workbook that contains the chart with a trendline
-            string filePath = "input.xlsx";
+            Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
+            return;
+        }
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(filePath))
+        try
+        {
+            // Load the workbook from the file system
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet worksheet in workbook.Worksheets)
             {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
-
-            try
-            {
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
-
-                // Access the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Ensure the worksheet contains at least one chart
-                if (worksheet.Charts.Count == 0)
+                // Iterate through all charts on the current worksheet
+                foreach (Chart chart in worksheet.Charts)
                 {
-                    Console.WriteLine("No charts found in the worksheet.");
-                    return;
+                    // Iterate through each series in the chart
+                    for (int seriesIndex = 0; seriesIndex < chart.NSeries.Count; seriesIndex++)
+                    {
+                        // Each item in NSeries is a Series object
+                        Series series = chart.NSeries[seriesIndex];
+
+                        // Iterate through each trendline attached to the series
+                        for (int trendIndex = 0; trendIndex < series.TrendLines.Count; trendIndex++)
+                        {
+                            Trendline trendline = series.TrendLines[trendIndex];
+
+                            // Retrieve available trendline properties
+                            string trendlineName = trendline.Name;
+                            TrendlineType trendlineType = trendline.Type;
+
+                            // Log the retrieved values to the console
+                            Console.WriteLine($"Worksheet: {worksheet.Name}");
+                            Console.WriteLine($"Chart Title: {chart.Title?.Text ?? "Untitled"}");
+                            Console.WriteLine($"Series Index: {seriesIndex}, Trendline Index: {trendIndex}");
+                            Console.WriteLine($"  Trendline Name: {trendlineName}");
+                            Console.WriteLine($"  Trendline Type: {trendlineType}");
+                            Console.WriteLine();
+                        }
+                    }
                 }
-
-                // Get the first chart in the worksheet
-                Chart chart = worksheet.Charts[0];
-
-                // Ensure the first series has at least one trendline
-                if (chart.NSeries.Count == 0 || chart.NSeries[0].TrendLines.Count == 0)
-                {
-                    Console.WriteLine("No trendlines found in the first series of the chart.");
-                    return;
-                }
-
-                // Retrieve the first trendline of the first series
-                Trendline trendline = chart.NSeries[0].TrendLines[0];
-
-                // Obtain trendline type (available property)
-                TrendlineType trendlineType = trendline.Type;
-
-                // Log the retrieved values
-                Console.WriteLine($"Trendline Type: {trendlineType}");
-
-                // Note: Confidence interval properties (ShowConfidenceInterval, ConfidenceLevel)
-                // are not available in the current Aspose.Cells version.
             }
-            catch (Exception ex)
-            {
-                // Catch any runtime exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

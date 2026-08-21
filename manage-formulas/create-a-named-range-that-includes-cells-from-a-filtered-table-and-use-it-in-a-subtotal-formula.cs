@@ -1,18 +1,18 @@
-// Title: Define a Named Range for a Filtered Table and Apply Subtotal in Aspose.Cells for .NET
-// Description: Shows how to create a workbook, fill it with sales data, apply an AutoFilter, define a named range that includes the filtered rows, convert the range to a CellArea, and use the Subtotal method to group by Region, sum the Sales column, add page breaks, place the summary below the data, and save the file.
-// Keywords: Aspose.Cells | C# | .NET | named range | AutoFilter | Subtotal method | group by column | sum function | page break | filtered table | Excel automation
-// Common Searches: Aspose.Cells create named range for filtered data | How to use Subtotal with AutoFilter in Aspose.Cells | C# subtotal grouped by column after applying filter | Define named range that includes hidden rows Aspose.Cells | Add page breaks with Subtotal method in .NET
-// Developer Intent: The developer wants to define a named range that spans a filtered table and then generate subtotal totals based on that range.
-// Use Cases: Produce region‑wise sales totals after applying a filter | Create printable reports with automatic page breaks between groups | Reuse the same named range in charts, pivot tables, or other formulas
-// AI Prompts: Generate code to subtotal multiple columns (e.g., Quantity and Sales) using the same named range. | Add a grand‑total row that aggregates the subtotals for the filtered dataset. | Explain how to make the named range automatically adjust when the filter criteria change.
+// Title: Aspose.Cells .NET: Create a Named Range from a Filtered Table and Apply Subtotal
+// Description: Demonstrates how to build a workbook, add sample sales data, set an AutoFilter on A1:C6, capture the filtered CellArea, define a named range "FilteredData", and use Cells.Subtotal to group by Category and sum Sales with page breaks and a summary row.
+// Keywords: Aspose.Cells named range from AutoFilter | C# subtotal method Aspose.Cells | filter area named range .NET | grouped subtotals Aspose.Cells | AutoFilter Subtotal example | Aspose.Cells Subtotal function | create named range programmatically | Excel subtotal with Aspose.Cells
+// Common Searches: Aspose.Cells create named range after applying AutoFilter | How to use Subtotal method on filtered data in C# | Define named range for filtered rows Aspose.Cells .NET | Apply SUM subtotal by category using Aspose.Cells | Add page breaks with Subtotal in Aspose.Cells
+// Developer Intent: Generate a named range that references the filtered portion of a table and use it to produce grouped SUM subtotals via the Cells.Subtotal API.
+// Use Cases: Produce category‑wise sales totals after the user filters data. | Create printable reports that insert page breaks between each group. | Reuse the "FilteredData" range in charts, formulas, or pivot tables.
+// AI Prompts: Write C# code with Aspose.Cells to define a named range from an AutoFilter area and apply a SUM subtotal on the Sales column grouped by Category. | Extend the example to add a COUNT subtotal for the Product column while preserving the existing named range. | Show how to reference the "FilteredData" named range in a formula on another worksheet.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to create a workbook, fill it with sales data, apply an AutoFilter, define a named range that includes the filtered rows, convert the range to a CellArea, and use the Subtotal method to group by Region, sum the Sales column, add page breaks, place the summary below the data, and save the file.
-    public class NamedRangeWithFilteredTableSubtotal
+    // Demonstrates how to build a workbook, add sample sales data, set an AutoFilter on A1:C6, capture the filtered CellArea, define a named range "FilteredData", and use Cells.Subtotal to group by Category and sum Sales with page breaks and a summary row.
+    public class NamedRangeFilteredSubtotalDemo
     {
         public static void Main()
         {
@@ -33,8 +33,9 @@ namespace AsposeCellsExamples
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate sample data (header + 6 rows)
-            cells["A1"].PutValue("Region");
+            // Populate sample data (including header)
+            // Header: Category, Product, Sales
+            cells["A1"].PutValue("Category");
             cells["B1"].PutValue("Product");
             cells["C1"].PutValue("Sales");
 
@@ -44,70 +45,48 @@ namespace AsposeCellsExamples
                 {"North", "Gadget", 3000},
                 {"South", "Widget", 6000},
                 {"South", "Gadget", 4000},
-                {"West",  "Widget", 4500},
-                {"West",  "Gadget", 3500}
+                {"West",  "Widget", 4500}
             };
 
-            for (int r = 0; r < data.GetLength(0); r++)
+            for (int i = 0; i < data.GetLength(0); i++)
             {
-                for (int c = 0; c < data.GetLength(1); c++)
-                {
-                    cells[r + 1, c].PutValue(data[r, c]);
-                }
+                cells[i + 1, 0].PutValue(data[i, 0]); // Column A
+                cells[i + 1, 1].PutValue(data[i, 1]); // Column B
+                cells[i + 1, 2].PutValue(data[i, 2]); // Column C
             }
 
-            // Define the area that will be filtered (A1:C7)
-            CellArea filterArea = CellArea.CreateCellArea("A1", "C7");
+            // Apply an AutoFilter to the data range (A1:C6)
+            // SetRange(startRow, startColumn, totalColumns)
+            // startRow = 0 (row 1), startColumn = 0 (column A), totalColumns = 3 (A,B,C)
+            sheet.AutoFilter.SetRange(0, 0, 3);
 
-            // Build the reference string for the area (e.g., "A1:C7")
-            string startRef = CellsHelper.CellIndexToName(filterArea.StartRow, filterArea.StartColumn);
-            string endRef = CellsHelper.CellIndexToName(filterArea.EndRow, filterArea.EndColumn);
-            string filterRef = $"{startRef}:{endRef}";
+            // Retrieve the actual CellArea where the filter is applied
+            CellArea filterArea = sheet.AutoFilter.GetCellArea();
 
-            // Apply AutoFilter to the defined area
-            sheet.AutoFilter.Range = filterRef;
+            // Create a named range that refers to the filtered area
+            int rowCount = filterArea.EndRow - filterArea.StartRow + 1;
+            int colCount = filterArea.EndColumn - filterArea.StartColumn + 1;
+            Aspose.Cells.Range filteredRange = cells.CreateRange(filterArea.StartRow, filterArea.StartColumn, rowCount, colCount);
+            filteredRange.Name = "FilteredData";
 
-            // Apply a filter: show only rows where Region = "North"
-            sheet.AutoFilter.Filter(0, "North"); // column index 0 corresponds to "Region"
-
-            // Create a named range that refers to the same area (including hidden rows)
-            int nameIdx = workbook.Worksheets.Names.Add("FilteredData");
-            workbook.Worksheets.Names[nameIdx].RefersTo = $"={sheet.Name}!{filterRef}";
-
-            // Retrieve the Range object from the named range
-            Name namedRange = workbook.Worksheets.Names["FilteredData"];
-            Aspose.Cells.Range range = namedRange.GetRange();
-
-            // Convert the Range to a CellArea for the Subtotal method
-            CellArea subtotalArea = CellArea.CreateCellArea(
-                range.FirstRow,
-                range.FirstColumn,
-                range.FirstRow + range.RowCount - 1,
-                range.FirstColumn + range.ColumnCount - 1);
-
-            // Add subtotals:
-            // - Group by the first column (Region)
-            // - Use SUM function on the Sales column (index 2)
-            // - Replace existing subtotals, add page breaks, place summary below data
-            sheet.Cells.Subtotal(
-                subtotalArea,
-                0,                                   // group by column 0 (Region)
-                ConsolidationFunction.Sum,           // SUM function
-                new int[] { 2 },                     // apply subtotal to column 2 (Sales)
-                true,                                // replace existing subtotals
-                true,                                // add page breaks between groups
-                true);                               // place summary below data
+            // Use the Subtotal method on the same area
+            // Group by the first column (Category) -> index 0
+            // Apply SUM to the Sales column (index 2)
+            // Replace existing subtotals, add page breaks, place summary below data
+            cells.Subtotal(
+                filterArea,
+                0,                                 // groupBy column index
+                ConsolidationFunction.Sum,         // subtotal function
+                new int[] { 2 },                   // columns to subtotal
+                true,                              // replace existing subtotals
+                true,                              // add page breaks between groups
+                true                               // place summary below data
+            );
 
             // Save the workbook
-            try
-            {
-                workbook.Save("NamedRangeFilteredSubtotal.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            string outputPath = "NamedRangeFilteredSubtotalDemo.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
     }
 }

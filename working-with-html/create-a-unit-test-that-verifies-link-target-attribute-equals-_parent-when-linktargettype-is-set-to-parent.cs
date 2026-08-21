@@ -1,79 +1,67 @@
-// Title: C# Unit Test: Verify HtmlLinkTargetType.Parent Generates target="_parent" in Aspose.Cells HTML Export
-// Description: Creates a Workbook, adds a hyperlink, sets HtmlSaveOptions.LinkTargetType to Parent, saves to a temporary HTML file, reads the output, and asserts that the <a> tag contains target="_parent". The test reports success or failure and removes the temporary file.
-// Keywords: Aspose.Cells | HtmlLinkTargetType | Parent target | C# unit test | HTML export verification | hyperlink target attribute | HtmlSaveOptions test | Aspose.Cells HTML output | automated regression test
-// Common Searches: Aspose.Cells unit test for link target parent | verify target=_parent in exported HTML Aspose.Cells | C# test HtmlSaveOptions LinkTargetType Parent | how to assert hyperlink target attribute in Aspose.Cells HTML | Aspose.Cells HTML export link target verification
-// Developer Intent: Write an automated test that confirms the HTML produced by Aspose.Cells uses target="_parent" when HtmlLinkTargetType is set to Parent.
-// Use Cases: Ensure HTML reports from Excel workbooks open links in the parent frame as required by UI design. | Validate compliance with navigation policies by testing Aspose.Cells HTML export settings. | Detect regressions in hyperlink rendering across Aspose.Cells library updates.
-// AI Prompts: Generate an MSTest method that creates a Workbook, adds a hyperlink, sets HtmlSaveOptions.LinkTargetType to Parent, saves to a temporary HTML file, and asserts the presence of target="_parent". | Provide an xUnit test for Aspose.Cells that verifies HtmlLinkTargetType.Parent produces the correct <a> tag attribute in the saved HTML. | Show code to clean up temporary HTML files after running a unit test for Aspose.Cells HtmlLinkTargetType Parent.
+// Title: Unit Test: Verify HtmlLinkTargetType.Parent Generates target="_parent" in Aspose.Cells HTML Export
+// Description: Creates a workbook, adds a hyperlink, sets HtmlSaveOptions.LinkTargetType to Parent, saves as HTML to a memory stream, and asserts that the generated anchor tag contains the target="_parent" attribute.
+// Keywords: Aspose.Cells | HtmlSaveOptions | LinkTargetType | Parent | _parent | hyperlink target attribute | C# unit test | HTML export validation | MSTest | xUnit | NUnit
+// Common Searches: Aspose.Cells unit test for hyperlink target | HtmlLinkTargetType Parent example | verify target=_parent in generated HTML | C# test HtmlSaveOptions LinkTargetType | Aspose.Cells HTML export hyperlink target
+// Developer Intent: Write an automated test that confirms the HTML output from Aspose.Cells includes target="_parent" when HtmlSaveOptions.LinkTargetType is set to Parent.
+// Use Cases: Continuous‑integration regression test for HTML export behavior | Ensuring frame navigation works correctly after library updates | Validating custom hyperlink target settings in multi‑frame web applications
+// AI Prompts: Generate an MSTest method that creates a workbook, adds a hyperlink, sets HtmlSaveOptions.LinkTargetType to Parent, saves to a MemoryStream, and asserts the HTML contains target="_parent". | Provide an xUnit test for Aspose.Cells that verifies the anchor tag includes target="_parent" when using HtmlLinkTargetType.Parent. | Write a NUnit test example that checks Aspose.Cells HTML output for the correct target attribute based on the selected LinkTargetType.
 
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Text;
 using Aspose.Cells;
 
 namespace AsposeCellsTests
 {
-    // Creates a Workbook, adds a hyperlink, sets HtmlSaveOptions.LinkTargetType to Parent, saves to a temporary HTML file, reads the output, and asserts that the <a> tag contains target="_parent". The test reports success or failure and removes the temporary file.
-    public class HtmlLinkTargetTypeDemo
+    // Creates a workbook, adds a hyperlink, sets HtmlSaveOptions.LinkTargetType to Parent, saves as HTML to a memory stream, and asserts that the generated anchor tag contains the target="_parent" attribute.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Define a temporary HTML file path
-            string tempHtmlPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".html");
-
             try
             {
-                // Create a workbook and add a hyperlink
+                // Create a new workbook and get the first worksheet
                 var workbook = new Workbook();
                 var worksheet = workbook.Worksheets[0];
+
+                // Add some text and a hyperlink to cell A1
                 worksheet.Cells["A1"].PutValue("Aspose");
                 worksheet.Hyperlinks.Add("A1", 1, 1, "https://www.aspose.com");
 
-                // Set HTML save options to use Parent target (target="_parent")
+                // Set HTML save options to use Parent target type (target="_parent")
                 var saveOptions = new HtmlSaveOptions
                 {
                     LinkTargetType = HtmlLinkTargetType.Parent
                 };
 
-                // Save the workbook as HTML
-                workbook.Save(tempHtmlPath, saveOptions);
-
-                // Read the generated HTML content
-                string htmlContent = File.ReadAllText(tempHtmlPath);
-
-                // Verify that the hyperlink contains target="_parent"
-                var match = Regex.Match(
-                    htmlContent,
-                    @"<a\s+[^>]*target\s*=\s*[""']_parent[""'][^>]*>",
-                    RegexOptions.IgnoreCase);
-
-                if (match.Success)
+                // Save the workbook to a memory stream as HTML
+                using (var stream = new MemoryStream())
                 {
-                    Console.WriteLine("Test passed: hyperlink contains target=\"_parent\".");
-                }
-                else
-                {
-                    Console.WriteLine("Test failed: hyperlink does not contain target=\"_parent\".");
+                    workbook.Save(stream, saveOptions);
+                    stream.Position = 0;
+
+                    // Read the generated HTML content
+                    string htmlContent;
+                    using (var reader = new StreamReader(stream, Encoding.UTF8))
+                    {
+                        htmlContent = reader.ReadToEnd();
+                    }
+
+                    // Verify that the anchor tag contains target="_parent"
+                    if (htmlContent.Contains("target=\"_parent\""))
+                    {
+                        Console.WriteLine("Success: target=\"_parent\" attribute found in generated HTML.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failure: target=\"_parent\" attribute not found in generated HTML.");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred: {ex.Message}");
-            }
-            finally
-            {
-                // Clean up the temporary file
-                if (File.Exists(tempHtmlPath))
-                {
-                    try
-                    {
-                        File.Delete(tempHtmlPath);
-                    }
-                    catch
-                    {
-                        // Ignore any errors during cleanup
-                    }
-                }
+                // Runtime safety: report any unexpected errors
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

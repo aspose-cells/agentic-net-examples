@@ -1,49 +1,79 @@
-// Title: Export Excel to PDF with Aspose.Cells – omit hidden rows & columns (C#)
-// Description: Demonstrates how to create a workbook, hide specific rows and columns, and save it as a PDF using Aspose.Cells. Hidden rows and columns are automatically excluded from the PDF output, delivering a clean report without extra configuration.
-// Keywords: Aspose.Cells PDF export C# | hide rows PDF Aspose | exclude hidden columns PDF | clean Excel PDF report | PdfSaveOptions hidden rows | C# Aspose.Cells generate PDF | Excel to PDF without hidden cells
-// Common Searches: Aspose.Cells export PDF hidden rows C# | C# hide column then save as PDF Aspose | skip hidden rows when converting Excel to PDF using Aspose | generate PDF report from Excel ignoring hidden cells | PdfSaveOptions hide rows Aspose.Cells
-// Developer Intent: Create a PDF from an Excel workbook that includes only the visible rows and columns.
-// Use Cases: Produce a financial summary PDF where calculation rows are hidden before export. | Generate printable invoices that omit helper columns and rows for a tidy layout. | Automate batch conversion of multiple Excel files to PDFs while ensuring hidden data is never rendered.
-// AI Prompts: Write C# code with Aspose.Cells to export a workbook to PDF, guaranteeing hidden rows and columns are not rendered. | Show how to use PdfSaveOptions to control page handling while confirming hidden cells are automatically excluded. | Explain how to programmatically verify that hidden rows and columns are omitted from the generated PDF using Aspose.Cells.
+// Title: Export Visible Cells to PDF with Aspose.Cells for .NET (exclude hidden rows/columns)
+// Description: Creates a workbook, hides selected rows and columns, uses ExportTableOptions (PlotVisibleRows, PlotVisibleColumns, PlotVisibleCells) to extract only visible data, copies that data into a new workbook, and saves it as a PDF. The result is a clean PDF report that omits any hidden rows or columns.
+// Keywords: Aspose.Cells PDF export | exclude hidden rows Aspose | hide columns PDF .NET | ExportTableOptions visible cells | clean Excel PDF report | C# Aspose.Cells PDF conversion | visible data to PDF
+// Common Searches: Aspose.Cells export PDF without hidden rows | C# hide rows columns then save as PDF | Export only visible cells to PDF using Aspose | Generate clean PDF report from Excel in .NET | PlotVisibleRows PlotVisibleColumns Aspose example
+// Developer Intent: Produce a PDF that contains only the rows and columns currently visible in an Excel workbook.
+// Use Cases: Financial statements where summary rows are hidden before PDF generation. | Printable reports that must not show user‑hidden helper columns. | Automated invoice PDFs created from Excel templates while omitting hidden calculation fields.
+// AI Prompts: Show C# code to export only visible cells of an Aspose.Cells workbook to PDF. | How can I hide specific rows and columns and then save the remaining data as a PDF with Aspose.Cells? | Explain the role of ExportTableOptions PlotVisibleRows/Columns/Cells for creating a clean PDF report.
 
 using System;
+using System.Data;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering; // Required for SheetSet if needed
 
-// Demonstrates how to create a workbook, hide specific rows and columns, and save it as a PDF using Aspose.Cells. Hidden rows and columns are automatically excluded from the PDF output, delivering a clean report without extra configuration.
+// Creates a workbook, hides selected rows and columns, uses ExportTableOptions (PlotVisibleRows, PlotVisibleColumns, PlotVisibleCells) to extract only visible data, copies that data into a new workbook, and saves it as a PDF. The result is a clean PDF report that omits any hidden rows or columns.
 class ExportPdfExcludingHidden
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Fill the worksheet with sample data
-        worksheet.Cells["A1"].PutValue("Header1");
-        worksheet.Cells["B1"].PutValue("Header2");
-        worksheet.Cells["C1"].PutValue("Header3");
-        worksheet.Cells["A2"].PutValue("Data1");
-        worksheet.Cells["B2"].PutValue("Data2");
-        worksheet.Cells["C2"].PutValue("Data3");
-        worksheet.Cells["A3"].PutValue("Data4");
-        worksheet.Cells["B3"].PutValue("Data5");
-        worksheet.Cells["C3"].PutValue("Data6");
-
-        // Hide a row (row index 1 -> second row) and a column (column index 1 -> column B)
-        worksheet.Cells.HideRow(1);
-        worksheet.Cells.HideColumn(1);
-
-        // Configure PDF save options.
-        // Hidden rows and columns are automatically omitted during PDF rendering,
-        // so no special option is required beyond the standard save.
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        try
         {
-            // Optional: control page handling (default prints all pages)
-            PrintingPageType = PrintingPageType.Default
-        };
+            // Create a workbook and fill it with sample data
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Save the workbook to PDF. The resulting file will contain only the visible rows and columns.
-        workbook.Save("CleanReport.pdf", pdfOptions);
+            for (int r = 0; r < 10; r++)
+            {
+                for (int c = 0; c < 5; c++)
+                {
+                    cells[r, c].PutValue($"R{r + 1}C{c + 1}");
+                }
+            }
+
+            // Hide specific rows and columns
+            worksheet.Cells.HideRow(2);   // hide row index 2 (third row)
+            worksheet.Cells.HideRow(5);   // hide row index 5 (sixth row)
+            worksheet.Cells.HideColumn(1); // hide column index 1 (second column)
+            worksheet.Cells.HideColumn(3); // hide column index 3 (fourth column)
+
+            // Export only the visible cells to a DataTable
+            ExportTableOptions exportOptions = new ExportTableOptions
+            {
+                PlotVisibleRows = true,
+                PlotVisibleColumns = true,
+                PlotVisibleCells = true
+            };
+            DataTable visibleData = worksheet.Cells.ExportDataTable(
+                0, 0,
+                worksheet.Cells.MaxDataRow + 1,
+                worksheet.Cells.MaxDataColumn + 1,
+                exportOptions);
+
+            // Create a new workbook that contains only the visible data
+            Workbook cleanWorkbook = new Workbook();
+            Worksheet cleanSheet = cleanWorkbook.Worksheets[0];
+            Cells cleanCells = cleanSheet.Cells;
+
+            // Manually import the DataTable because ImportDataTable may not be available in all versions
+            for (int i = 0; i < visibleData.Rows.Count; i++)
+            {
+                for (int j = 0; j < visibleData.Columns.Count; j++)
+                {
+                    cleanCells[i, j].PutValue(visibleData.Rows[i][j]);
+                }
+            }
+
+            // Save the clean workbook to PDF
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            string outputPath = "CleanReport.pdf";
+            cleanWorkbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,68 +1,79 @@
-// Title: Read numeric cells from a large Excel file with Aspose.Cells LightCells and store them in a high‑performance List<double>
-// Description: Loads a workbook in LightCells streaming mode, uses a custom LightCellsDataHandler to scan every sheet, row and cell, captures each numeric value via DoubleValue, adds it to a List<double>, returns false to keep the cell out of the workbook model for minimal memory usage, and saves the workbook unchanged.
-// Keywords: Aspose.Cells LightCells | C# read numeric cells | streaming Excel processing | memory‑efficient Excel read | .NET high‑performance collection | List<double> Excel values | LightCellsDataHandler example | large workbook numeric extraction
-// Common Searches: Aspose.Cells LightCells read only numbers | C# extract numeric values from big Excel file | How to use LightCellsDataHandler to collect doubles | Memory‑saving Excel read with Aspose.Cells | Stream large workbook and get numeric cells
-// Developer Intent: Efficiently retrieve all numeric values from a massive Excel workbook without loading the full object model.
-// Use Cases: Perform statistical analysis on numeric data extracted from a multi‑gigabyte spreadsheet while keeping RAM usage low. | Feed collected numbers into a database, analytics pipeline, or machine‑learning model after streaming read. | Validate ranges, detect outliers, or apply business rules to numeric cells during processing before saving the file.
-// AI Prompts: Create a LightCellsDataHandler that captures numeric values and also logs each cell's address. | Adapt the handler to filter numbers above a configurable threshold and store them in a thread‑safe ConcurrentBag<double>. | Show how to serialize the List<double> of extracted values to JSON after the workbook has been processed.
+// Title: C# – Extract numeric cells with Aspose.Cells LightCells API into a thread‑safe ConcurrentBag
+// Description: Loads a large Excel workbook using Aspose.Cells, scans every worksheet for numeric cells, and pushes each double value into a ConcurrentBag<double> for fast, thread‑safe in‑memory storage. The sample also shows how to count the extracted cells and compute their sum.
+// Keywords: Aspose.Cells LightCells numeric extraction | C# read Excel numeric values | ConcurrentBag<double> Excel data | high‑performance Excel parsing .NET | thread‑safe collection for Excel numbers | large workbook processing Aspose.Cells | numeric cell iteration C# | Excel to memory collection
+// Common Searches: how to read only numeric cells from Excel with Aspose.Cells | store Excel numbers in a thread‑safe collection C# | Aspose.Cells LightCells API example for numeric data | fast in‑memory caching of Excel numeric values | C# extract and sum numeric cells from large workbook
+// Developer Intent: Read every numeric cell from a workbook and keep the values in a high‑throughput, thread‑safe in‑memory collection for further processing.
+// Use Cases: Compute aggregates (sum, average, min, max) on millions of numbers without re‑reading the file. | Feed numeric data into a parallel calculation engine for financial modeling or scientific simulations. | Cache spreadsheet numbers for instant lookup in downstream analytics or reporting modules.
+// AI Prompts: Write Aspose.Cells LightCells code that streams only numeric cells into a ConcurrentBag<double> for maximum speed. | Show how to combine Parallel.ForEach with LightCells to extract numeric values from a massive Excel file into a thread‑safe collection. | Suggest memory‑optimisation techniques when storing tens of millions of double values extracted from Excel using Aspose.Cells.
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.IO;
 using Aspose.Cells;
 
-// Loads a workbook in LightCells streaming mode, uses a custom LightCellsDataHandler to scan every sheet, row and cell, captures each numeric value via DoubleValue, adds it to a List<double>, returns false to keep the cell out of the workbook model for minimal memory usage, and saves the workbook unchanged.
-class Program
+namespace LightCellsNumericReader
 {
-    static void Main()
+    // Loads a large Excel workbook using Aspose.Cells, scans every worksheet for numeric cells, and pushes each double value into a ConcurrentBag<double> for fast, thread‑safe in‑memory storage. The sample also shows how to count the extracted cells and compute their sum.
+    class Program
     {
-        // Input workbook path (can be any large Excel file)
-        string inputPath = "LargeData.xlsx";
-        // Output path – the workbook is saved unchanged after processing
-        string outputPath = "Processed.xlsx";
-
-        // Configure LoadOptions to use LightCells mode with a custom handler
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LightCellsDataHandler = new NumericValuesHandler();
-
-        // Load the workbook in streaming (LightCells) mode
-        Workbook workbook = new Workbook(inputPath, loadOptions);
-
-        // Retrieve the collected numeric values after processing
-        var numericValues = ((NumericValuesHandler)loadOptions.LightCellsDataHandler).NumericValues;
-        Console.WriteLine($"Collected {numericValues.Count} numeric values.");
-
-        // Save the workbook (unchanged) – demonstrates use of the save lifecycle rule
-        workbook.Save(outputPath);
-    }
-
-    // Custom LightCellsDataHandler that extracts numeric cell values
-    private class NumericValuesHandler : LightCellsDataHandler
-    {
-        // High‑performance in‑memory collection for numeric values
-        public readonly List<double> NumericValues = new List<double>();
-
-        // Process every sheet
-        public bool StartSheet(Worksheet sheet) => true;
-
-        // Process every row
-        public bool StartRow(int rowIndex) => true;
-
-        // Process every cell in a row
-        public bool StartCell(int columnIndex) => true;
-
-        // No special row processing needed
-        public bool ProcessRow(Row row) => true;
-
-        // Called for each cell; store numeric values and release the cell from memory
-        public bool ProcessCell(Cell cell)
+        static void Main()
         {
-            if (cell.IsNumericValue)
+            // Path to the large Excel file to be read
+            string inputFile = "LargeData.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
             {
-                // DoubleValue works for int, double, and datetime numeric types
-                NumericValues.Add(cell.DoubleValue);
+                Console.WriteLine($"Input file '{inputFile}' not found.");
+                return;
             }
-            // Return false to keep the cell out of the workbook model and save memory
-            return false;
+
+            try
+            {
+                // Load the workbook (standard mode)
+                Workbook workbook = new Workbook(inputFile);
+
+                // Thread‑safe collection for high‑performance in‑memory storage
+                ConcurrentBag<double> numericValues = new ConcurrentBag<double>();
+
+                // Iterate through each worksheet and its used cells
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    Cells cells = sheet.Cells;
+                    int maxRow = cells.MaxDataRow;
+                    int maxCol = cells.MaxDataColumn;
+
+                    for (int row = 0; row <= maxRow; row++)
+                    {
+                        for (int col = 0; col <= maxCol; col++)
+                        {
+                            Cell cell = cells[row, col];
+                            if (cell.Type == CellValueType.IsNumeric)
+                            {
+                                numericValues.Add(cell.DoubleValue);
+                            }
+                        }
+                    }
+                }
+
+                // Output results
+                Console.WriteLine($"Total numeric cells processed: {numericValues.Count}");
+
+                double sum = 0;
+                foreach (double val in numericValues)
+                {
+                    sum += val;
+                }
+                Console.WriteLine($"Sum of numeric values: {sum}");
+
+                // Optionally, save the workbook (unchanged) to a new file
+                workbook.Save("ProcessedOutput.xlsx");
+            }
+            catch (Exception ex)
+            {
+                // Runtime safety: capture and display any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

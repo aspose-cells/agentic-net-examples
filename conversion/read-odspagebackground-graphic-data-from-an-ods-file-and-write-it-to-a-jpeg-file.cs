@@ -1,58 +1,55 @@
-// Title: Extract ODS Page Background Image to JPEG with Aspose.Cells for .NET (C#)
-// Description: Loads an ODS workbook using Aspose.Cells, accesses a worksheet's OdsPageBackground, verifies the graphic type, and writes the raw image bytes to a JPEG file. Includes error handling for missing files or non‑graphic backgrounds.
-// Keywords: Aspose.Cells ODS background extraction | C# OdsPageBackground graphic data | save ODS page background as JPEG | extract ODS background image .NET | Aspose.Cells read ODS page background | ODS to JPEG conversion C# | Aspose.Cells ODSPageBackgroundType Graphic
-// Common Searches: how to extract background image from ODS using Aspose.Cells | C# code to save ODS page background as JPEG | Aspose.Cells OdsPageBackground example | read ODS page background graphic data in .NET | convert ODS background to image with Aspose
-// Developer Intent: Retrieve the graphic page background from an ODS worksheet and write it to a JPEG file using Aspose.Cells.
-// Use Cases: Create thumbnail previews of ODS sheets by extracting embedded background graphics. | Migrate ODS background images to other formats or content management systems. | Validate the presence of a background image before processing ODS documents.
-// AI Prompts: Generate C# code that extracts an ODS worksheet's page background and saves it as PNG using Aspose.Cells. | Explain how to handle OdsPageBackground types other than Graphic when extracting images. | Show how to extract the background from a specific worksheet index and return it as a MemoryStream.
+// Title: Extract ODS Page Background Image to JPEG with Aspose.Cells for .NET
+// Description: Loads an ODS workbook, reads the first worksheet's ODSPageBackground graphic data, and writes the bytes to a JPEG file while handling missing files and absent backgrounds.
+// Keywords: Aspose.Cells ODS page background | extract ODS background image | save ODS graphic as JPEG | OdsPageBackground GraphicData .NET | convert ODS background to image
+// Common Searches: Aspose.Cells read ODS page background image | C# extract ODS worksheet background to JPEG | How to get OdsPageBackground graphic data | Save ODS background as picture using .NET | Extract ODS background image with Aspose
+// Developer Intent: Retrieve the background graphic from an ODS sheet and store it as a JPEG file.
+// Use Cases: Create thumbnails of ODS worksheets by extracting their background images. | Archive original ODS page graphics for documentation or compliance. | Generate reports that embed the exact ODS background as a standalone image.
+// AI Prompts: Write C# code that uses Aspose.Cells to read OdsPageBackground.GraphicData from an ODS file and save it as a JPEG, including error handling for missing backgrounds. | Explain how to check for null or empty GraphicData before writing to disk and how to extend the code to support PNG or BMP output. | Show a loop that processes every worksheet in a workbook, extracting each ODS page background to separate image files with unique names.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Ods;
 
-// Loads an ODS workbook using Aspose.Cells, accesses a worksheet's OdsPageBackground, verifies the graphic type, and writes the raw image bytes to a JPEG file. Includes error handling for missing files or non‑graphic backgrounds.
+// Loads an ODS workbook, reads the first worksheet's ODSPageBackground graphic data, and writes the bytes to a JPEG file while handling missing files and absent backgrounds.
 class ExtractOdsPageBackground
 {
     static void Main()
     {
-        // Path to the source ODS file
-        string odsFilePath = "input.ods";
-
-        // Path where the extracted JPEG will be saved
-        string jpegOutputPath = "background.jpg";
-
         try
         {
-            // Verify that the input ODS file exists
-            if (!File.Exists(odsFilePath))
+            // Input ODS file path
+            string odsPath = "input.ods";
+
+            // Output JPEG file path
+            string jpegPath = "background.jpg";
+
+            // Verify input file exists
+            if (!File.Exists(odsPath))
             {
-                Console.WriteLine($"Input file not found: {odsFilePath}");
+                Console.WriteLine($"Input file not found: {odsPath}");
                 return;
             }
 
             // Load the ODS workbook
-            Workbook workbook = new Workbook(odsFilePath);
+            Workbook workbook = new Workbook(odsPath);
 
-            // Access the first worksheet (you can choose any worksheet)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet's ODS page background
+            OdsPageBackground background = workbook.Worksheets[0].PageSetup.ODSPageBackground;
 
-            // Get the ODS page background object
-            OdsPageBackground pageBackground = worksheet.PageSetup.ODSPageBackground;
+            // Retrieve the graphic data (image bytes)
+            byte[] graphicData = background?.GraphicData;
 
-            // Verify that the background is a graphic and that data exists
-            if (pageBackground.Type == OdsPageBackgroundType.Graphic &&
-                pageBackground.GraphicData != null &&
-                pageBackground.GraphicData.Length > 0)
+            if (graphicData == null || graphicData.Length == 0)
             {
-                // Write the raw graphic data directly to a file
-                File.WriteAllBytes(jpegOutputPath, pageBackground.GraphicData);
-                Console.WriteLine($"Background image extracted successfully to: {jpegOutputPath}");
+                Console.WriteLine("No graphic background found in the ODS file.");
+                return;
             }
-            else
-            {
-                Console.WriteLine("The ODS file does not contain a graphic page background.");
-            }
+
+            // Save the image bytes directly to a file
+            File.WriteAllBytes(jpegPath, graphicData);
+
+            Console.WriteLine($"Graphic background extracted to: {jpegPath}");
         }
         catch (Exception ex)
         {

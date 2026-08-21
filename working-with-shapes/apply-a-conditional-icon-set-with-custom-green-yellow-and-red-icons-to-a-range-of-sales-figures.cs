@@ -1,67 +1,73 @@
-// Title: C# – Apply a Green‑Yellow‑Red Icon Set with Aspose.Cells Conditional Formatting
-// Description: Creates a workbook, fills cells A1:A6 with sales figures, defines the range, adds an IconSet conditional format based on the built‑in TrafficLights31 set, customizes the three icons (green, yellow, red), shows values alongside icons, and saves the file as SalesIconSet.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# conditional formatting | icon set | TrafficLights31 | green yellow red icons | sales dashboard | Excel icon set programmatically | Aspose.Cells example
-// Common Searches: Aspose.Cells add traffic lights icon set C# | customize icon set conditional formatting Aspose.Cells | apply green yellow red icons to a range with Aspose.Cells | how to use IconSetType in Aspose.Cells .NET
-// Developer Intent: Add a three‑color (green, yellow, red) traffic‑light icon set to cells A1:A6 to visually rank sales figures.
-// Use Cases: Highlight high, medium, and low sales values with green, yellow, and red icons in a worksheet. | Build a compact dashboard where icons replace numbers for quick performance assessment. | Generate a formatted report that automatically flags low‑selling items in red and top‑selling items in green.
-// AI Prompts: Generate C# code using Aspose.Cells to apply a custom green‑yellow‑red icon set to a specified cell range. | Explain how to switch the icon indices to use a different built‑in icon set in Aspose.Cells conditional formatting. | Show the steps to export a workbook containing conditional icon sets to PDF while preserving the icons.
+// Title: Apply a Traffic‑Lights (green‑yellow‑red) Icon Set with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, fills cells A1:A10 with incremental sales values, defines a conditional‑formatting rule, adds the built‑in TrafficLights31 icon set, optionally displays cell values, keeps the default green‑yellow‑red order, customizes each icon's type and index, and saves the result as SalesIconSet.xlsx.
+// Keywords: Aspose.Cells | C# conditional formatting | icon set | TrafficLights31 | Excel icon set programmatically | conditional icons | sales dashboard | Excel automation | Aspose.Cells API | conditional formatting icons
+// Common Searches: Aspose.Cells add traffic lights icon set C# | conditional icon set Excel using Aspose.Cells .NET | customize icon indices Aspose.Cells | apply three‑color icon set to range Aspose.Cells | show values with icon set Aspose.Cells
+// Developer Intent: Add a three‑color traffic‑lights icon set to cells A1:A10 to visually rank sales figures.
+// Use Cases: Visualize low, medium, and high sales in a report with green, yellow, and red icons. | Build KPI dashboards where icon sets flag threshold breaches. | Generate automated Excel reports that include conditional icon formatting for quick visual analysis.
+// AI Prompts: Write C# code using Aspose.Cells to apply a custom three‑icon set to a specified cell range and save the workbook. | Explain how to modify icon order or replace the built‑in TrafficLights31 set with custom images in Aspose.Cells conditional formatting. | Show how to add multiple icon‑set rules to different ranges within the same worksheet using Aspose.Cells for .NET.
 
+using System;
 using Aspose.Cells;
 
-// Creates a workbook, fills cells A1:A6 with sales figures, defines the range, adds an IconSet conditional format based on the built‑in TrafficLights31 set, customizes the three icons (green, yellow, red), shows values alongside icons, and saves the file as SalesIconSet.xlsx using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsIconSetExample
 {
-    static void Main()
+    // Creates a workbook, fills cells A1:A10 with incremental sales values, defines a conditional‑formatting rule, adds the built‑in TrafficLights31 icon set, optionally displays cell values, keeps the default green‑yellow‑red order, customizes each icon's type and index, and saves the result as SalesIconSet.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate sample sales figures in column A (A1:A6)
-        double[] sales = { 1200, 800, 500, 1500, 300, 950 };
-        for (int i = 0; i < sales.Length; i++)
+        static void Main()
         {
-            worksheet.Cells[i, 0].PutValue(sales[i]);
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample sales figures in column A (rows 1‑10)
+            for (int i = 0; i < 10; i++)
+            {
+                // Example values ranging from low to high
+                sheet.Cells[i, 0].PutValue((i + 1) * 10);
+            }
+
+            // Get the conditional formatting collection of the worksheet
+            ConditionalFormattingCollection cfCollection = sheet.ConditionalFormattings;
+
+            // Add a new conditional formatting rule container
+            int cfIndex = cfCollection.Add();
+            FormatConditionCollection fcCollection = cfCollection[cfIndex];
+
+            // Define the cell area (A1:A10) to which the icon set will be applied
+            CellArea area = new CellArea
+            {
+                StartRow = 0,
+                EndRow = 9,
+                StartColumn = 0,
+                EndColumn = 0
+            };
+            fcCollection.AddArea(area);
+
+            // Add an IconSet condition
+            int conditionIndex = fcCollection.AddCondition(FormatConditionType.IconSet);
+            FormatCondition condition = fcCollection[conditionIndex];
+
+            // Use the built‑in TrafficLights31 set (green, yellow, red)
+            condition.IconSet.Type = IconSetType.TrafficLights31;
+            condition.IconSet.ShowValue = true;   // optional: display cell values alongside icons
+            condition.IconSet.Reverse = false;    // keep default order (green → yellow → red)
+
+            // Customize individual icons if needed (here we explicitly set each icon's type and index)
+            ConditionalFormattingIcon icon0 = condition.IconSet.CfIcons[0];
+            icon0.Type = IconSetType.TrafficLights31; // green icon
+            icon0.Index = 0;
+
+            ConditionalFormattingIcon icon1 = condition.IconSet.CfIcons[1];
+            icon1.Type = IconSetType.TrafficLights31; // yellow icon
+            icon1.Index = 1;
+
+            ConditionalFormattingIcon icon2 = condition.IconSet.CfIcons[2];
+            icon2.Type = IconSetType.TrafficLights31; // red icon
+            icon2.Index = 2;
+
+            // Save the workbook with the applied conditional icon set
+            workbook.Save("SalesIconSet.xlsx");
         }
-
-        // Add a new conditional formatting collection to the worksheet
-        int cfIndex = worksheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcc = worksheet.ConditionalFormattings[cfIndex];
-
-        // Define the range A1:A6 for the conditional formatting
-        CellArea area = new CellArea
-        {
-            StartRow = 0,
-            EndRow = sales.Length - 1,
-            StartColumn = 0,
-            EndColumn = 0
-        };
-        fcc.AddArea(area);
-
-        // Add an IconSet condition
-        int conditionIndex = fcc.AddCondition(FormatConditionType.IconSet);
-        FormatCondition condition = fcc[conditionIndex];
-
-        // Use the built‑in TrafficLights31 set as the base (green, yellow, red)
-        condition.IconSet.Type = IconSetType.TrafficLights31;
-        condition.IconSet.ShowValue = true;   // display cell values alongside icons
-        condition.IconSet.Reverse = false;    // keep default order
-
-        // Customize individual icons (green, yellow, red)
-        // Index 0 = green, 1 = yellow, 2 = red in TrafficLights31
-        ConditionalFormattingIcon icon0 = condition.IconSet.CfIcons[0];
-        icon0.Type = IconSetType.TrafficLights31;
-        icon0.Index = 0; // green
-
-        ConditionalFormattingIcon icon1 = condition.IconSet.CfIcons[1];
-        icon1.Type = IconSetType.TrafficLights31;
-        icon1.Index = 1; // yellow
-
-        ConditionalFormattingIcon icon2 = condition.IconSet.CfIcons[2];
-        icon2.Type = IconSetType.TrafficLights31;
-        icon2.Index = 2; // red
-
-        // Save the workbook with the applied conditional icon set
-        workbook.Save("SalesIconSet.xlsx");
     }
 }

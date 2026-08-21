@@ -1,19 +1,19 @@
-// Title: Set a Solid Blue ODS Page Background with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, access the first worksheet, configure the OdsPageBackground to a solid blue color, and save the result as an ODS file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | ODS page background | solid color background | OdsPageBackground | Color.Blue | save ODS file | OpenDocument Spreadsheet | programmatic ODS styling | Excel to ODS conversion
-// Common Searches: Aspose.Cells set ODS page background color C# | how to apply solid color background to ODS with Aspose | OdsPageBackground blue example .NET | save workbook as ODS with custom background | programmatically change ODS page background
-// Developer Intent: Apply a solid blue background to an ODS worksheet and save the file using Aspose.Cells for .NET.
-// Use Cases: Generate branded ODS reports by applying a corporate color to the page background before export. | Create a template workbook where the first sheet automatically uses a blue background for visual emphasis. | Update existing ODS documents to match a new visual style by programmatically changing the page background color.
-// AI Prompts: Write C# code with Aspose.Cells that sets the ODS page background to a custom RGB value and saves the workbook as an ODS file. | Explain the relationship between OdsPageBackground.Type and OdsPageBackground.Color when applying a solid color background in an ODS document. | Provide a sample that iterates through all worksheets in a workbook and assigns each a different solid background color before saving as ODS.
+// Title: Set a Solid Blue Page Background in an ODS File with Aspise.Cells for .NET
+// Description: Demonstrates how to create a workbook, access the first worksheet's PageSetup, configure OdsPageBackground to a solid blue color, and save the result as an ODS document using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells ODS background | C# OdsPageBackground | solid color ODS page | save ODS with background | Aspose.Cells .NET example
+// Common Searches: how to set page background color in ODS using Aspose.Cells | C# code for solid blue ODS background | Aspose.Cells OdsPageBackground Type Color example | save ODS file with custom background .NET
+// Developer Intent: Apply a solid blue page background to an ODS workbook and persist the file.
+// Use Cases: Brand‑consistent ODS reports with a corporate blue background. | Automated generation of printable ODS sheets that need a highlighted background color. | Creating reusable ODS templates pre‑styled with a solid color for downstream data exports.
+// AI Prompts: Generate C# code to apply a gradient background to an ODS page with Aspose.Cells. | Show how to change the ODS page background color dynamically based on user input. | Explain the steps to add a background image to an ODS workbook using Aspose.Cells for .NET.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Ods;
 
-namespace OdsPageBackgroundExample
+namespace AsposeCellsOdsBackgroundDemo
 {
-    // Demonstrates how to create a workbook, access the first worksheet, configure the OdsPageBackground to a solid blue color, and save the result as an ODS file using Aspose.Cells for .NET.
+    // Demonstrates how to create a workbook, access the first worksheet's PageSetup, configure OdsPageBackground to a solid blue color, and save the result as an ODS document using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
@@ -21,18 +21,20 @@ namespace OdsPageBackgroundExample
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet's page setup
+            PageSetup pageSetup = workbook.Worksheets[0].PageSetup;
 
-            // Get the ODS page background object from the worksheet's page setup
-            OdsPageBackground background = sheet.PageSetup.ODSPageBackground;
+            // Get the ODS page background object
+            OdsPageBackground background = pageSetup.ODSPageBackground;
 
-            // Set the background type to Color and apply a solid blue color
+            // Set the background type to solid color
             background.Type = OdsPageBackgroundType.Color;
+
+            // Apply solid blue color
             background.Color = Color.Blue;
 
-            // Save the workbook as an ODS file with the background applied
-            workbook.Save("OdsPageBackgroundBlue.ods");
+            // Save the workbook as ODS with the background applied
+            workbook.Save("BlueBackground.ods");
         }
     }
 }

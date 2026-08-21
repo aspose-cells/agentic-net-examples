@@ -1,27 +1,33 @@
-// Title: C# – Apply a Preset Shadow to All Text Boxes in an Aspose.Cells Worksheet
-// Description: Demonstrates how to iterate through a worksheet's Shapes collection and set the ShadowEffect.PresetType for every text box using Aspose.Cells. The sample creates a workbook, adds three text boxes, applies the OffsetBottom preset (or any PresetShadowType), and saves the file as an XLSX document.
-// Keywords: Aspose.Cells C# shadow effect | preset shadow text box | Worksheet.Shapes shadow preset | Apply ShadowEffect to shapes | PresetShadowType OffsetBottom | Excel text box styling | batch shape formatting Aspose
-// Common Searches: how to set a preset shadow for all text boxes in Aspose.Cells C# | Aspose.Cells apply shadow effect to shapes worksheet | C# iterate worksheet shapes and change ShadowEffect | apply OffsetBottom shadow to multiple text boxes Excel | Aspose.Cells batch format text box shadows
-// Developer Intent: Apply a uniform preset shadow to every text box in a worksheet programmatically.
-// Use Cases: Standardize the appearance of callout boxes in auto‑generated reports. | Create a template where all annotation text boxes share the same shadow style for brand consistency. | Update existing Excel files in bulk to ensure every text box uses the same shadow preset.
-// AI Prompts: Generate C# code that applies a chosen PresetShadowType only to text box shapes in an Aspose.Cells worksheet, ignoring other shape types. | Show how to call ApplyShadowToAllTextBoxes with different PresetShadowType values (e.g., OffsetBottom, OuterShadow) and export the workbook to PDF. | Explain how to modify ApplyShadowToAllTextBoxes to accept an array of shape IDs for selective shadow application.
+// Title: Apply a Preset Shadow to Every Text Box in an Aspose.Cells Worksheet (C#)
+// Description: Provides a reusable C# method that scans all shapes on a worksheet, detects text boxes via the TextBody property, and assigns a chosen PresetShadowType to each shape's ShadowEffect. The example adds two text boxes and a rectangle, applies the OffsetBottom preset to the text boxes only, and saves the workbook.
+// Keywords: Aspose.Cells | C# | text box shadow | PresetShadowType | ShadowEffect | apply shadow to shapes | iterate worksheet shapes | Excel workbook styling | OffsetBottom preset | custom shape helper
+// Common Searches: Aspose.Cells set preset shadow for all text boxes C# | how to apply shadow effect only to text boxes in Excel using Aspose.Cells | C# iterate worksheet shapes and change ShadowEffect | apply OffsetBottom shadow to text boxes Aspose.Cells | sample code for text box shadow preset Aspose.Cells
+// Developer Intent: Assign a specific preset shadow to every text box on a worksheet while preserving other shape formats.
+// Use Cases: Standardize call‑out box appearance in automated reports by applying a uniform shadow preset. | Create a template where newly added text boxes inherit a predefined shadow without affecting rectangles or charts. | Batch‑process workbooks to visually separate text boxes from other shapes through consistent shadow styling.
+// AI Prompts: Generate C# code that defines a method to apply any PresetShadowType to all text boxes in an Aspose.Cells worksheet, including null checks and error handling. | Show how to invoke ApplyShadowPresetToAllTextBoxes with a user‑selected shadow type and log the names of modified shapes. | Explain how to extend the helper to skip text boxes that already have a shadow preset or to assign different presets based on the box content.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing.Texts;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to iterate through a worksheet's Shapes collection and set the ShadowEffect.PresetType for every text box using Aspose.Cells. The sample creates a workbook, adds three text boxes, applies the OffsetBottom preset (or any PresetShadowType), and saves the file as an XLSX document.
+    // Provides a reusable C# method that scans all shapes on a worksheet, detects text boxes via the TextBody property, and assigns a chosen PresetShadowType to each shape's ShadowEffect. The example adds two text boxes and a rectangle, applies the OffsetBottom preset to the text boxes only, and saves the workbook.
     public class TextBoxShadowHelper
     {
-        // Applies the given preset shadow type to every shape (including text boxes) in the specified worksheet.
-        public static void ApplyShadowToAllTextBoxes(Worksheet sheet, PresetShadowType preset)
+        // Applies the given preset shadow type to every text box on the specified worksheet.
+        public static void ApplyShadowPresetToAllTextBoxes(Worksheet sheet, PresetShadowType preset)
         {
+            // Iterate through all shapes in the worksheet.
             foreach (Shape shape in sheet.Shapes)
             {
-                // Apply the shadow preset to the shape.
-                shape.ShadowEffect.PresetType = preset;
+                // Text boxes have a TextBody (FontSettingCollection). If it exists, treat the shape as a text box.
+                if (shape.TextBody != null)
+                {
+                    // Set the shadow preset for the shape.
+                    shape.ShadowEffect.PresetType = preset;
+                }
             }
         }
 
@@ -33,27 +39,35 @@ namespace AsposeCellsExamples
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a few text boxes for demonstration.
-                sheet.Shapes.AddTextBox(1, 0, 1, 0, 150, 50);
-                sheet.Shapes.AddTextBox(4, 0, 4, 0, 150, 50);
-                sheet.Shapes.AddTextBox(7, 0, 7, 0, 150, 50);
+                // Add a few sample text boxes.
+                Shape tb1 = sheet.Shapes.AddTextBox(1, 1, 100, 100, 200, 50);
+                tb1.TextBody.Text = "First Box";
+
+                Shape tb2 = sheet.Shapes.AddTextBox(5, 2, 300, 150, 200, 50);
+                tb2.TextBody.Text = "Second Box";
+
+                // Add a non‑text‑box shape for contrast.
+                Shape rect = sheet.Shapes.AddRectangle(8, 1, 500, 200, 100, 60);
+                rect.TextBody.Text = "Rectangle";
 
                 // Apply the desired shadow preset to all text boxes.
-                ApplyShadowToAllTextBoxes(sheet, PresetShadowType.OffsetBottom);
+                ApplyShadowPresetToAllTextBoxes(sheet, PresetShadowType.OffsetBottom);
 
                 // Save the workbook.
-                workbook.Save("TextBoxShadowDemo.xlsx", SaveFormat.Xlsx);
+                workbook.Save("TextBoxesWithShadow.xlsx", SaveFormat.Xlsx);
+                Console.WriteLine("Workbook saved successfully as TextBoxesWithShadow.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }
 
-    class Program
+    // Entry point for the application.
+    public class Program
     {
-        static void Main()
+        public static void Main(string[] args)
         {
             TextBoxShadowHelper.Run();
         }

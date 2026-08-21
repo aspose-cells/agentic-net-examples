@@ -1,43 +1,43 @@
-// Title: Aspose.Cells .NET: Verify HtmlSaveOptions.WidthScalable Affects Only HTML Export
-// Description: C# sample that creates a workbook, sets column widths, enables HtmlSaveOptions.WidthScalable, and saves to HTML, PDF, and XLSX. Demonstrates that scalable column widths apply only to HTML while PDF and XLSX files stay unchanged.
-// Keywords: Aspose.Cells | .NET | C# | HtmlSaveOptions | WidthScalable | HTML export | PDF export | XLSX export | column width scaling | responsive HTML | non‑HTML formats | save options testing
-// Common Searches: Does HtmlSaveOptions.WidthScalable affect PDF output in Aspose.Cells? | How to test WidthScalable only works for HTML export in C# | Aspose.Cells HTML export with scalable column widths | WidthScalable property impact on XLSX files | Aspose.Cells save workbook as HTML, PDF, XLSX simultaneously
-// Developer Intent: Confirm that setting HtmlSaveOptions.WidthScalable changes column rendering only for HTML files and leaves PDF and XLSX exports untouched.
-// Use Cases: Create responsive HTML reports while preserving original column sizes in PDF and XLSX. | Add an automated regression test to ensure WidthScalable does not alter non‑HTML save options. | Build a multi‑format export pipeline where HTML uses scalable widths for web display and other formats use default layout.
-// AI Prompts: Generate a C# NUnit test that verifies column widths in PDF and XLSX remain unchanged when HtmlSaveOptions.WidthScalable is true. | Provide code to compare rendered column widths between HTML (WidthScalable enabled) and PDF outputs using Aspose.Cells. | Explain how to configure HtmlSaveOptions.WidthScalable for responsive HTML while keeping PDF and XLSX exports unaffected.
+// Title: HtmlSaveOptions.WidthScalable impacts only HTML export – PDF and XLSX stay unchanged (Aspose.Cells for .NET)
+// Description: The example creates a workbook with narrow columns, enables HtmlSaveOptions.WidthScalable, saves the file as HTML, then exports the same workbook to PDF and XLSX using default settings. It demonstrates that the WidthScalable flag modifies only the HTML output while the PDF and Excel files retain their original layout.
+// Keywords: Aspose.Cells | HtmlSaveOptions.WidthScalable | HTML export | PDF export | XLSX export | C# .NET | column width scaling | non‑HTML formats | unit test | Aspose.Cells for .NET
+// Common Searches: HtmlSaveOptions WidthScalable affect PDF | Does WidthScalable change XLSX output | Aspose.Cells test column width scaling | How to export HTML with scalable columns using Aspose.Cells | Verify WidthScalable only for HTML in .NET
+// Developer Intent: Confirm that enabling HtmlSaveOptions.WidthScalable changes the HTML file but leaves PDF and XLSX exports untouched.
+// Use Cases: Generate HTML reports with auto‑adjusting column widths while preserving original layout in PDF and Excel files. | Run automated regression tests to ensure HTML‑specific options do not leak into other export formats. | Provide end‑users both web‑viewable HTML and printable PDF without extra configuration.
+// AI Prompts: Generate an xUnit test that compares the PDF produced with and without HtmlSaveOptions.WidthScalable and asserts they are identical. | Show C# code that reads column widths from a saved XLSX file before and after enabling WidthScalable to confirm they match. | Explain the internal workflow of HtmlSaveOptions.WidthScalable and why it is limited to HTML rendering in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
-// C# sample that creates a workbook, sets column widths, enables HtmlSaveOptions.WidthScalable, and saves to HTML, PDF, and XLSX. Demonstrates that scalable column widths apply only to HTML while PDF and XLSX files stay unchanged.
-class Program
+// The example creates a workbook with narrow columns, enables HtmlSaveOptions.WidthScalable, saves the file as HTML, then exports the same workbook to PDF and XLSX using default settings. It demonstrates that the WidthScalable flag modifies only the HTML output while the PDF and Excel files retain their original layout.
+class WidthScalableNonHtmlTest
 {
     static void Main()
     {
         // Create a new workbook and add sample data
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["A1"].PutValue("Test WidthScalable Property");
-        worksheet.Cells["B1"].PutValue(123.45);
-        // Set column widths so the effect of WidthScalable can be observed in HTML
-        worksheet.Cells.SetColumnWidth(0, 20);
-        worksheet.Cells.SetColumnWidth(1, 20);
+        Worksheet ws = workbook.Worksheets[0];
+        ws.Cells["A1"].PutValue("Header");
+        ws.Cells["B1"].PutValue("Value");
+        ws.Cells["A2"].PutValue("Long text that will be truncated if column width is narrow");
+        ws.Cells["B2"].PutValue(12345);
 
-        // Configure HTML save options with WidthScalable enabled
+        // Set narrow column widths to make the effect of WidthScalable visible in HTML
+        ws.Cells.SetColumnWidth(0, 5);
+        ws.Cells.SetColumnWidth(1, 5);
+
+        // Configure HtmlSaveOptions with WidthScalable enabled
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.WidthScalable = true; // Enable scalable column width for HTML
+        htmlOptions.WidthScalable = true; // Enable scalable column width for HTML export
 
-        // Save the workbook as HTML (WidthScalable should take effect here)
-        workbook.Save("output_scalable.html", htmlOptions);
+        // Save as HTML (WidthScalable influences this output)
+        workbook.Save("output_widthscalable.html", htmlOptions);
 
-        // Save the same workbook as PDF – WidthScalable is irrelevant for PDF
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        workbook.Save("output.pdf", pdfOptions);
+        // Save the same workbook to PDF and XLSX without using HtmlSaveOptions
+        // These formats should not be affected by the WidthScalable setting
+        workbook.Save("output.pdf", SaveFormat.Pdf);
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
 
-        // Save the workbook as XLSX – again, WidthScalable has no impact
-        workbook.Save("output.xlsx");
-
-        Console.WriteLine("Saved HTML, PDF, and XLSX files. WidthScalable only influences HTML output.");
+        Console.WriteLine("Files saved. Verify that PDF and XLSX are unchanged by WidthScalable.");
     }
 }

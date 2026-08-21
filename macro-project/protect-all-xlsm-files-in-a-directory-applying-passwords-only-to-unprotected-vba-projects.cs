@@ -1,69 +1,71 @@
-// Title: Protect VBA Projects in All XLSM Files in a Folder – Aspose.Cells C# Example
-// Description: A C# script that scans a specified folder, loads each *.xlsm workbook with Aspose.Cells, checks if the VBA project is unprotected, applies a password, and saves the file back in place.
-// Keywords: Aspose.Cells | C# | .NET | VBA project protection | XLSM batch processing | Excel macro password | directory file iteration | Excel automation | macro security | protect unprotected VBA
-// Common Searches: batch protect VBA projects in XLSM files C# | Aspose.Cells protect VBA macro password | apply password to all VBA projects in a folder | C# script to secure macro‑enabled Excel workbooks | iterate XLSM files and protect VBA using Aspose
-// Developer Intent: Loop through every XLSM file in a given directory, detect VBA projects without a password, protect them with a specified password, and overwrite the original files.
-// Use Cases: Enforce macro security across corporate Excel templates before distribution. | Integrate into CI/CD pipelines to guarantee all generated reports have protected VBA code. | Run a maintenance job on shared drives that adds passwords to any unprotected VBA projects.
-// AI Prompts: Write C# code using Aspose.Cells that protects only unprotected VBA projects in all XLSM files of a folder. | Show how to extend the script to process subfolders recursively while keeping the same protection logic. | Suggest a logging strategy that records files already protected versus those newly password‑protected.
+// Title: C# – Batch Protect VBA Projects in XLSM Files with Aspose.Cells
+// Description: Scans a folder for *.xlsm workbooks, loads each file with Aspose.Cells, detects unprotected VBA projects and applies a password, then saves the workbook back in XLSM format. Ideal for automating macro security across multiple Excel files.
+// Keywords: Aspose.Cells VBA protection | C# protect VBA project | batch password VBA macros | secure XLSM files programmatically | apply VBA password .NET | automate macro security | Excel VBA project encryption
+// Common Searches: how to add a password to VBA projects in multiple xlsm files c# | batch protect unprotected VBA macros using Aspose.Cells | set VBA project password for all workbooks in a folder | check VBA project protection before applying password aspnet | automate VBA project encryption with Aspose.Cells
+// Developer Intent: Automatically add a password to every unprotected VBA project in each XLSM workbook within a specified directory.
+// Use Cases: Enforce macro security before distributing a library of Excel reports. | Meet compliance requirements by ensuring all macro‑enabled files have a VBA password. | Integrate into CI/CD pipelines to validate and protect VBA projects during build or release.
+// AI Prompts: Write C# code that uses Aspose.Cells to protect VBA projects in all .xlsm files in a directory, skipping already protected projects. | Show how to extend the sample to also set a workbook opening password together with VBA protection. | Suggest advanced error handling, logging, and progress reporting for batch VBA project protection with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// A C# script that scans a specified folder, loads each *.xlsm workbook with Aspose.Cells, checks if the VBA project is unprotected, applies a password, and saves the file back in place.
-class ProtectVbaProjectsInDirectory
+namespace ProtectVbaProjects
 {
-    static void Main()
+    // Scans a folder for *.xlsm workbooks, loads each file with Aspose.Cells, detects unprotected VBA projects and applies a password, then saves the workbook back in XLSM format. Ideal for automating macro security across multiple Excel files.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Directory containing the XLSM files
+            // Folder containing the XLSM files
             string folderPath = @"C:\Path\To\XlsmFolder";
 
-            // Verify that the directory exists
+            // Verify that the folder exists
             if (!Directory.Exists(folderPath))
             {
-                Console.WriteLine($"Directory not found: {folderPath}");
+                Console.WriteLine($"Folder not found: {folderPath}");
                 return;
             }
 
             // Password to apply to unprotected VBA projects
             const string vbaPassword = "MyVbaPassword";
 
-            // Get all .xlsm files in the directory (non‑recursive)
-            string[] xlsmFiles = Directory.GetFiles(folderPath, "*.xlsm", SearchOption.TopDirectoryOnly);
-
-            foreach (string filePath in xlsmFiles)
+            // Iterate through all .xlsm files in the directory
+            foreach (string filePath in Directory.GetFiles(folderPath, "*.xlsm"))
             {
-                // Ensure the file still exists before loading
+                // Ensure the file actually exists
                 if (!File.Exists(filePath))
                 {
-                    Console.WriteLine($"File not found (skipped): {filePath}");
                     continue;
                 }
 
-                // Load the workbook (lifecycle rule: load)
-                Workbook workbook = new Workbook(filePath);
-
-                // Access the VBA project
-                VbaProject vbaProject = workbook.VbaProject;
-
-                // If the VBA project is not protected, protect it with the specified password
-                if (!vbaProject.IsProtected)
+                try
                 {
-                    // Protect without locking for viewing (islockedForViewing = false)
-                    vbaProject.Protect(false, vbaPassword);
-                }
+                    // Load the workbook from the file
+                    using (Workbook workbook = new Workbook(filePath))
+                    {
+                        // Access the VBA project associated with the workbook
+                        VbaProject vbaProject = workbook.VbaProject;
 
-                // Save the workbook back to the same file (lifecycle rule: save)
-                workbook.Save(filePath, SaveFormat.Xlsm);
-                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
+                        // Protect the VBA project if it is not already protected
+                        if (vbaProject != null && !vbaProject.IsProtected)
+                        {
+                            // Protect the VBA project without locking it for viewing
+                            vbaProject.Protect(false, vbaPassword);
+
+                            // Save the workbook, overwriting the original file
+                            workbook.Save(filePath, SaveFormat.Xlsm);
+                            Console.WriteLine($"Protected VBA project in: {Path.GetFileName(filePath)}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log any errors that occur while processing the file
+                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,48 +1,80 @@
-// Title: Disable PivotTable ShowReportFilterPages in Aspose.Cells for .NET (C#) using reflection
-// Description: Shows how to load a workbook, locate the first PivotTable, and set its ShowReportFilterPages property to false via reflection, keeping all report filters on a single worksheet and preserving compatibility with older Aspose.Cells releases.
-// Keywords: Aspose.Cells | C# | .NET | PivotTable | ShowReportFilterPages | disable report filter pages | reflection | consolidate pivot filters | single worksheet | legacy Aspose.Cells versions | Workbook.Save
-// Common Searches: Aspose.Cells set ShowReportFilterPages false | How to turn off pivot report filter pages in C# | Reflection to modify PivotTable property Aspose.Cells | Consolidate pivot filters onto one sheet Aspose.Cells | ShowReportFilterPages property missing Aspose.Cells
-// Developer Intent: Turn off the ShowReportFilterPages option so a PivotTable’s report filters appear on the same sheet instead of separate pages.
-// Use Cases: Preparing a report for distribution where extra filter worksheets increase file size. | Processing legacy workbooks created with earlier Aspose.Cells releases that lack the ShowReportFilterPages property. | Automating batch conversion of multiple workbooks to a uniform layout before publishing.
-// AI Prompts: Generate C# code that iterates through all PivotTables in a workbook and disables ShowReportFilterPages using reflection. | Create a utility method for Aspose.Cells that checks for the ShowReportFilterPages property and safely sets it to false. | Explain how to handle missing PivotTable properties in older Aspose.Cells versions when customizing pivot layouts.
+// Title: Consolidate Pivot Table Report Filters onto One Worksheet (ShowReportFilterPages = false) – Aspose.Cells for .NET
+// Description: Loads a workbook, finds the first pivot table, uses reflection to set its ShowReportFilterPages property to false (when supported), and saves the file so all report‑filter pages are merged into a single sheet.
+// Keywords: Aspose.Cells ShowReportFilterPages false | pivot table consolidate filters .NET | disable pivot report filter pages | Aspose.Cells reflection property | single worksheet pivot filters | C# Aspose.Cells pivot table settings
+// Common Searches: how to turn off ShowReportFilterPages in Aspose.Cells | merge pivot report filter pages into one sheet C# | set ShowReportFilterPages property via reflection | remove extra pivot filter worksheets Aspose.Cells | consolidate pivot table filters .NET
+// Developer Intent: Set ShowReportFilterPages to false so a pivot table’s report filters are kept on a single worksheet instead of generating separate pages.
+// Use Cases: Update an existing workbook to prevent pivot report filters from creating extra worksheets. | Maintain compatibility across Aspose.Cells versions by checking for the ShowReportFilterPages property at runtime. | Provide clear console messages when the workbook is missing, no pivot tables exist, or the property is unavailable.
+// AI Prompts: Generate C# code that disables ShowReportFilterPages for every pivot table in a workbook, with version‑safe reflection handling. | Explain step‑by‑step how to use reflection to modify the ShowReportFilterPages property of a PivotTable in Aspose.Cells. | Create a reusable method that consolidates pivot report filter pages onto one sheet and logs detailed status messages for missing files or tables.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using System.Reflection;
 
-// Shows how to load a workbook, locate the first PivotTable, and set its ShowReportFilterPages property to false via reflection, keeping all report filters on a single worksheet and preserving compatibility with older Aspose.Cells releases.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads a workbook, finds the first pivot table, uses reflection to set its ShowReportFilterPages property to false (when supported), and saves the file so all report‑filter pages are merged into a single sheet.
+    public class ConsolidatePivotReportFilters
     {
-        // Load the workbook that contains the pivot table
-        Workbook workbook = new Workbook("source.xlsx");
-
-        // Access the first worksheet (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Ensure the worksheet has at least one pivot table
-        if (worksheet.PivotTables.Count > 0)
+        public static void Run()
         {
-            // Get the first pivot table
-            PivotTable pivotTable = worksheet.PivotTables[0];
+            const string inputPath = "source.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Attempt to set the ShowReportFilterPages property to false.
-            // This property may not exist in older versions, so use reflection as a safe fallback.
-            PropertyInfo prop = typeof(PivotTable).GetProperty("ShowReportFilterPages");
-            if (prop != null && prop.CanWrite)
+            // Ensure the source file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                prop.SetValue(pivotTable, false);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            else
+
+            try
             {
-                // If the property is unavailable, simply avoid calling any ShowReportFilterPage methods.
-                // The pivot table will remain on a single worksheet.
+                // Load the workbook containing the pivot table
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Verify that at least one pivot table exists
+                if (worksheet.PivotTables.Count > 0)
+                {
+                    PivotTable pivotTable = worksheet.PivotTables[0];
+
+                    // Consolidate report filter pages onto a single sheet.
+                    // Use reflection to set ShowReportFilterPages if the property exists in the current Aspose.Cells version.
+                    var prop = pivotTable.GetType().GetProperty("ShowReportFilterPages");
+                    if (prop != null && prop.CanWrite)
+                    {
+                        prop.SetValue(pivotTable, false);
+                    }
+                    else
+                    {
+                        Console.WriteLine("ShowReportFilterPages property is not available in this Aspose.Cells version.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No pivot tables found in the worksheet.");
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+    }
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ConsolidatePivotReportFilters.Run();
+        }
     }
 }

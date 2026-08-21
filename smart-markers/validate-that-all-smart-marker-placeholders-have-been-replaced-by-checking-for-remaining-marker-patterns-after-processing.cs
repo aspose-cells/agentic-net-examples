@@ -1,76 +1,60 @@
+// Title: C# – Verify All Smart Markers Are Replaced Using WorkbookDesigner.GetSmartMarkers in Aspose.Cells
+// Description: Shows how to load an Excel template containing smart markers, bind a DataTable as the data source, run WorkbookDesigner.Process, retrieve any leftover tokens with GetSmartMarkers, report the outcome, and save the completed workbook.
+// Keywords: Aspose.Cells | smart markers | WorkbookDesigner | GetSmartMarkers | .NET | C# example | validate marker replacement | detect unreplaced placeholders | Excel template processing | automated reporting
+// Common Searches: Aspose.Cells GetSmartMarkers example | check smart marker replacement C# | validate smart markers after Process | find remaining smart markers in Excel | C# Aspose.Cells smart marker validation
+// Developer Intent: Ensure that no smart‑marker placeholders remain after processing the workbook.
+// Use Cases: Load a pre‑designed template, bind data, process markers, then confirm replacement before publishing the file. | Add validation to a nightly report generator that throws an exception if any markers are left unreplaced. | Log unreplaced smart markers to a diagnostics file to aid debugging of dynamic document creation.
+// AI Prompts: Generate C# code that processes smart markers with WorkbookDesigner and raises an InvalidOperationException when GetSmartMarkers returns any items. | Explain the behavior of GetSmartMarkers after calling Process and how to interpret its string array result. | Provide a snippet that writes each remaining smart marker to a log file instead of the console in an Aspose.Cells workflow.
+
 using System;
 using System.Data;
-using System.IO;
 using Aspose.Cells;
 
-namespace SmartMarkerValidationDemo
+// Shows how to load an Excel template containing smart markers, bind a DataTable as the data source, run WorkbookDesigner.Process, retrieve any leftover tokens with GetSmartMarkers, report the outcome, and save the completed workbook.
+class SmartMarkerValidation
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the template workbook that contains smart markers
+        Workbook workbook = new Workbook("template.xlsx");
+
+        // Initialize the WorkbookDesigner with the loaded workbook
+        WorkbookDesigner designer = new WorkbookDesigner();
+        designer.Workbook = workbook;
+
+        // Prepare a data source that matches the smart markers in the template
+        DataTable dt = new DataTable("Employees");
+        dt.Columns.Add("Name", typeof(string));
+        dt.Columns.Add("Age", typeof(int));
+        dt.Rows.Add("John Doe", 30);
+        dt.Rows.Add("Jane Smith", 28);
+
+        // Bind the data source to the designer
+        designer.SetDataSource(dt);
+
+        // Process all smart markers in the workbook
+        designer.Process();
+
+        // Retrieve any remaining smart markers after processing
+        string[] remainingMarkers = designer.GetSmartMarkers();
+
+        // Validate that no placeholders remain
+        if (remainingMarkers.Length == 0)
         {
-            // ------------------------------------------------------------
-            // 1. Create a template workbook with smart markers in memory
-            // ------------------------------------------------------------
-            Workbook templateWorkbook = new Workbook();
-            Worksheet sheet = templateWorkbook.Worksheets[0];
-            // Smart markers using the old syntax (will be processed)
-            sheet.Cells["A1"].PutValue("&=Employees.Name");
-            sheet.Cells["B1"].PutValue("&=Employees.Age");
-
-            // Save the template to a memory stream (simulating a file load)
-            using (MemoryStream templateStream = new MemoryStream())
-            {
-                templateWorkbook.Save(templateStream, SaveFormat.Xlsx);
-                templateStream.Position = 0; // Reset stream for reading
-
-                // ------------------------------------------------------------
-                // 2. Load the template into a WorkbookDesigner
-                // ------------------------------------------------------------
-                WorkbookDesigner designer = new WorkbookDesigner();
-                designer.Workbook = new Workbook(templateStream);
-
-                // ------------------------------------------------------------
-                // 3. Prepare a data source matching the smart markers
-                // ------------------------------------------------------------
-                DataTable employeeTable = new DataTable("Employees");
-                employeeTable.Columns.Add("Name", typeof(string));
-                employeeTable.Columns.Add("Age", typeof(int));
-                employeeTable.Rows.Add("John Doe", 30);
-                employeeTable.Rows.Add("Jane Smith", 28);
-
-                // Bind the data source to the designer
-                designer.SetDataSource(employeeTable);
-
-                // ------------------------------------------------------------
-                // 4. Process the smart markers (replace placeholders)
-                // ------------------------------------------------------------
-                designer.Process();
-
-                // ------------------------------------------------------------
-                // 5. Validate that no smart marker placeholders remain
-                // ------------------------------------------------------------
-                string[] remainingMarkers = designer.GetSmartMarkers();
-
-                if (remainingMarkers.Length == 0)
-                {
-                    Console.WriteLine("All smart markers have been successfully replaced.");
-                }
-                else
-                {
-                    Console.WriteLine("The following smart markers were not replaced:");
-                    foreach (string marker in remainingMarkers)
-                    {
-                        Console.WriteLine(marker);
-                    }
-                }
-
-                // ------------------------------------------------------------
-                // 6. Save the processed workbook
-                // ------------------------------------------------------------
-                designer.Workbook.Save("ProcessedOutput.xlsx");
-                Console.WriteLine("Processed workbook saved as 'ProcessedOutput.xlsx'.");
-            }
+            Console.WriteLine("All smart markers have been successfully replaced.");
         }
+        else
+        {
+            Console.WriteLine("Unreplaced smart markers found:");
+            foreach (string marker in remainingMarkers)
+            {
+                Console.WriteLine(marker);
+            }
+            // Optionally, you could throw an exception here
+            // throw new InvalidOperationException("Smart marker replacement incomplete.");
+        }
+
+        // Save the processed workbook
+        workbook.Save("output.xlsx");
     }
 }

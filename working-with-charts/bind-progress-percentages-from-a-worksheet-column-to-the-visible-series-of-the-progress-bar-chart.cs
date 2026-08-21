@@ -1,55 +1,49 @@
-// Title: Bind Worksheet Column Values to a Stacked Bar Progress Bar Chart with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, fills column A with task names and column B with numeric progress percentages, adds a stacked bar chart, binds the B2:B10 range to the first series, assigns A2:A10 as category labels, disables series filtering, and sets Overlap = -100 and GapWidth = 0 to render a classic progress‑bar look before saving as an XLSX file.
-// Keywords: Aspose.Cells bind column to chart series | C# progress bar chart Aspose.Cells | stacked bar chart progress percentages .NET | chart series visibility Aspose.Cells | Overlap GapWidth progress bar styling
-// Common Searches: Aspose.Cells bind column B to stacked bar series | Create progress bar chart from worksheet data in C# | Set IsFiltered false for chart series Aspose.Cells | Adjust Overlap and GapWidth for progress bar appearance | Generate Excel progress bar chart programmatically
-// Developer Intent: Generate a stacked bar chart that visualizes worksheet column values as visible progress bars using Aspose.Cells for .NET.
-// Use Cases: Project status reports showing each task’s completion as a compact progress bar. | Automated KPI dashboards where percentages are rendered with no gaps for a dense visual. | Printable Excel sheets that display task progress without manual chart configuration.
-// AI Prompts: How do I bind a range of cells to a chart series and keep the series visible in Aspose.Cells for .NET? | Provide C# code to style a stacked bar chart as a progress bar by setting Overlap to -100 and GapWidth to 0. | Explain how to assign category labels from column A while binding progress values from column B in an Aspose.Cells chart.
+// Title: Create a Progress Bar Chart in C# with Aspose.Cells by Binding Worksheet Columns to a Stacked Bar Series
+// Description: This example shows how to generate an Excel workbook with Aspose.Cells, fill column A with task names and column B with fractional progress values, add a stacked bar chart, bind B2:B5 as the series data and A2:A5 as the category axis, configure the series to display as a progress bar, and save the file as ProgressBarChart.xlsx.
+// Keywords: Aspose.Cells C# progress bar chart | bind series to chart Aspose.Cells | stacked bar chart from worksheet data | set category axis Aspose.Cells | chart data range C# | visualize percentages Aspose.Cells | Excel progress bar automation
+// Common Searches: Aspose.Cells bind column to chart series C# | Create progress bar chart from Excel data using Aspose.Cells | How to set category labels from a worksheet column in Aspose.Cells | Stacked bar chart as progress indicator Aspose.Cells | C# code for dynamic progress bars in Excel with Aspose
+// Developer Intent: Generate a stacked bar chart that acts as a progress bar by linking percentage values from a worksheet column to the chart’s visible series.
+// Use Cases: Project status reports that display each task’s completion as a visual progress bar. | Automated dashboards that render multiple progress indicators without manual chart editing. | Weekly update sheets that export task names and dynamically drawn progress bars directly from data.
+// AI Prompts: Write C# code using Aspose.Cells to bind a numeric column to a stacked bar chart series and assign category labels from another column. | Explain how to customize bar colors, add data labels, and format percentages for a progress bar chart created with Aspose.Cells. | Show how to keep raw fractional values in the worksheet while displaying them as percentages on the chart.
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace ProgressBarChartExample
+// This example shows how to generate an Excel workbook with Aspose.Cells, fill column A with task names and column B with fractional progress values, add a stacked bar chart, bind B2:B5 as the series data and A2:A5 as the category axis, configure the series to display as a progress bar, and save the file as ProgressBarChart.xlsx.
+class ProgressBarChartDemo
 {
-    // This example creates a workbook, fills column A with task names and column B with numeric progress percentages, adds a stacked bar chart, binds the B2:B10 range to the first series, assigns A2:A10 as category labels, disables series filtering, and sets Overlap = -100 and GapWidth = 0 to render a classic progress‑bar look before saving as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Populate sample data: task names in column A and progress percentages in column B
+        sheet.Cells["A1"].PutValue("Task");
+        sheet.Cells["B1"].PutValue("Progress");
+        string[] tasks = { "Design", "Development", "Testing", "Deployment" };
+        double[] progresses = { 0.25, 0.5, 0.75, 0.9 }; // values as fractions (25%, 50%, etc.)
+
+        for (int i = 0; i < tasks.Length; i++)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data: categories in column A, progress percentages in column B
-            sheet.Cells["A1"].PutValue("Task");
-            sheet.Cells["B1"].PutValue("Progress");
-            for (int i = 2; i <= 10; i++)
-            {
-                sheet.Cells[$"A{i}"].PutValue($"Task {i - 1}");
-                // Example progress values (0% to 100%)
-                sheet.Cells[$"B{i}"].PutValue((i - 1) * 10); // 10,20,...,90
-            }
-
-            // Add a stacked bar chart that will act as a progress bar
-            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 12, 0, 30, 15);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Bind the progress percentages to the first (and only) visible series
-            // Add the series values from column B
-            chart.NSeries.Add("B2:B10", true);
-            // Set the category (task names) for the series
-            chart.NSeries.CategoryData = "A2:A10";
-
-            // Ensure the series is visible (not filtered)
-            chart.NSeries[0].IsFiltered = false;
-
-            // Optional: adjust appearance for a classic progress bar look
-            chart.NSeries[0].Overlap = -100; // bars fully overlap
-            chart.NSeries[0].GapWidth = 0;   // no gap between bars
-
-            // Save the workbook
-            workbook.Save("ProgressBarChart.xlsx", SaveFormat.Xlsx);
+            sheet.Cells[i + 2, 0].PutValue(tasks[i]);      // A column (category)
+            sheet.Cells[i + 2, 1].PutValue(progresses[i]); // B column (values)
         }
+
+        // Add a bar chart that will act as a progress bar
+        int chartIndex = sheet.Charts.Add(ChartType.Bar, 5, 0, 20, 12);
+        Chart chart = sheet.Charts[chartIndex];
+
+        // Bind the progress percentages (B2:B5) to the visible series of the chart
+        // Add the series data range (vertical) and set the category (task names)
+        chart.NSeries.Add("B2:B5", true);
+        chart.NSeries.CategoryData = "A2:A5";
+
+        // Ensure the series is displayed (not filtered) and use a stacked bar for visual effect
+        chart.NSeries[0].IsFiltered = false;
+        chart.NSeries[0].Type = ChartType.BarStacked;
+
+        // Save the workbook to a file
+        workbook.Save("ProgressBarChart.xlsx");
     }
 }

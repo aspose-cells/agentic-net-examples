@@ -1,117 +1,91 @@
-// Title: Aspose.Cells for .NET – Replace “N/A” Formula Results with Blank Cells in a Named Range
-// Description: Load an Excel workbook, locate a named range, calculate all formulas, and clear any cell whose evaluated value is the text "N/A". The modified workbook is saved as a new file, eliminating placeholder text from the specified range.
-// Keywords: Aspose.Cells C# replace N/A | clear N/A cells named range | blank cells formula result Aspose | .NET Excel clean up N/A | Aspose.Cells range iteration
-// Common Searches: Aspose.Cells replace N/A with blank in named range | C# clear cells that show N/A after calculation | How to remove N/A text from a specific range using Aspose.Cells | Excel formula result N/A to empty cell .NET
-// Developer Intent: Remove cells that display the string "N/A" after formula evaluation within a defined named range.
-// Use Cases: Prepare a client‑ready report by erasing placeholder N/A values from a designated area. | Clean data before exporting to analytics tools, ensuring no literal "N/A" strings remain. | Standardize financial models so cells that evaluate to N/A appear empty in the final workbook.
-// AI Prompts: Write C# code with Aspose.Cells that clears cells showing "N/A" inside a named range. | Explain how to extend the loop to also clear cells that return the error #N/A while preserving other results. | Show an alternative approach using Aspose.Cells range operations to replace "N/A" text with blanks.
+// Title: Aspose.Cells for .NET – Replace "N/A" Formula Results with Blank Cells in a Named Range
+// Description: Loads an Excel workbook, forces formula calculation, locates a named range (e.g., MyRange), iterates through its cells and clears any that display the text "N/A", then saves the modified file. Ideal for cleaning up reports or preparing data for downstream processing.
+// Keywords: Aspose.Cells | C# | replace N/A | blank cells | named range | formula result | clear N/A values | Excel automation | Workbook.CalculateFormula | range iteration
+// Common Searches: Aspose.Cells replace N/A with empty cell in named range | C# clear N/A values from Excel named range using Aspose | How to remove N/A text returned by formulas in Aspose.Cells
+// Developer Intent: Identify cells that return the string "N/A" within a specific named range and convert them to empty cells.
+// Use Cases: Sanitize a financial report by removing placeholder N/A values before publishing. | Prepare data for import into another system that cannot handle the N/A string. | Automate workbook cleanup in a scheduled task that processes multiple files.
+// AI Prompts: Generate C# code with Aspose.Cells that finds a named range and replaces any cell showing "N/A" with an empty string, handling missing files and missing ranges. | Create a reusable method that accepts a workbook path and a range name, clears N/A results, and returns the updated workbook.
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads an Excel workbook, forces formula calculation, locates a named range (e.g., MyRange), iterates through its cells and clears any that display the text "N/A", then saves the modified file. Ideal for cleaning up reports or preparing data for downstream processing.
+class ReplaceNAWithBlank
 {
-    // Load an Excel workbook, locate a named range, calculate all formulas, and clear any cell whose evaluated value is the text "N/A". The modified workbook is saved as a new file, eliminating placeholder text from the specified range.
-    public class ReplaceNaFormulasWithBlank
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Name of the range to process
             const string rangeName = "MyRange";
 
-            // Retrieve the named range object
+            // Load existing workbook or create a new one if the file is missing
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+            }
+
+            // Ensure formulas are calculated so we can read their results
+            workbook.CalculateFormula();
+
+            // Retrieve the named range; if it does not exist, exit after saving (or create a new workbook)
             Name namedRange = workbook.Worksheets.Names[rangeName];
             if (namedRange == null)
             {
-                Console.WriteLine($"Named range \"{rangeName}\" not found.");
+                Console.WriteLine($"Named range \"{rangeName}\" does not exist.");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
                 return;
             }
 
-            // Get the address the name refers to (e.g., "=Sheet1!$A$1:$C$10")
-            string refersTo = namedRange.RefersTo;
-            if (string.IsNullOrEmpty(refersTo))
+            // Get the range reference in A1 style (e.g., Sheet1!$A$1:$B$10)
+            string refersTo = namedRange.GetRefersTo(false, false);
+            if (refersTo.StartsWith("="))
+                refersTo = refersTo.Substring(1); // Remove leading '='
+
+            // Separate sheet name and address
+            Worksheet sheet;
+            string address;
+            int exclPos = refersTo.IndexOf('!');
+            if (exclPos >= 0)
             {
-                Console.WriteLine($"Named range \"{rangeName}\" does not have a valid reference.");
-                return;
+                string sheetName = refersTo.Substring(0, exclPos);
+                sheet = workbook.Worksheets[sheetName];
+                address = refersTo.Substring(exclPos + 1);
+            }
+            else
+            {
+                sheet = workbook.Worksheets[0];
+                address = refersTo;
             }
 
-            // Remove leading '=' if present
-            string address = refersTo.TrimStart('=');
+            // Create a Range object for the address
+            Aspose.Cells.Range range = sheet.Cells.CreateRange(address);
 
-            // Split worksheet name and cell range (e.g., "Sheet1!$A$1:$C$10")
-            int exclPos = address.IndexOf('!');
-            if (exclPos < 0)
+            // Iterate through each cell in the range and replace "N/A" with blank
+            foreach (Cell cell in range)
             {
-                Console.WriteLine($"Invalid reference format for named range \"{rangeName}\".");
-                return;
-            }
-
-            string sheetName = address.Substring(0, exclPos);
-            string cellRange = address.Substring(exclPos + 1);
-
-            // Access the worksheet
-            Worksheet worksheet = workbook.Worksheets[sheetName];
-            if (worksheet == null)
-            {
-                Console.WriteLine($"Worksheet \"{sheetName}\" not found.");
-                return;
-            }
-
-            // Ensure all formulas are calculated before inspection
-            workbook.CalculateFormula();
-
-            // Create a Range object for the specified address (fully qualified to avoid ambiguity)
-            Aspose.Cells.Range range = worksheet.Cells.CreateRange(cellRange);
-
-            // Iterate through each cell in the range
-            for (int row = range.FirstRow; row <= range.FirstRow + range.RowCount - 1; row++)
-            {
-                for (int col = range.FirstColumn; col <= range.FirstColumn + range.ColumnCount - 1; col++)
+                if (cell.StringValue == "N/A")
                 {
-                    Cell cell = worksheet.Cells[row, col];
-
-                    // Process only cells that contain a formula
-                    if (cell.IsFormula)
-                    {
-                        // After calculation, check if the displayed value is the text "N/A"
-                        if (cell.StringValue == "N/A")
-                        {
-                            // Replace the cell content with a blank (clear the cell)
-                            cell.PutValue(string.Empty);
-                        }
-                    }
+                    cell.PutValue(string.Empty); // Clears the formula/value
                 }
             }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Processing complete. Workbook saved as \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

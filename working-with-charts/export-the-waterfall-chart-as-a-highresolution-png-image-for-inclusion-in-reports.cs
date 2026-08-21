@@ -1,47 +1,70 @@
+// Title: Export Waterfall Chart to High‑Resolution PNG with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to build a workbook, populate it with waterfall data, add a Waterfall chart, configure ImageOrPrintOptions for 300 DPI PNG output, and save the chart as a high‑quality image while optionally keeping the workbook for later use.
+// Keywords: Aspose.Cells | C# | Waterfall chart export | PNG image | high resolution | 300 DPI | ImageOrPrintOptions | chart to image | .NET
+// Common Searches: Aspose.Cells export waterfall chart png | C# save chart as high DPI PNG | set chart resolution Aspose.Cells | export specific chart to image .NET | waterfall chart image options Aspose.Cells
+// Developer Intent: Generate a 300 DPI PNG file of a Waterfall chart created in an Aspose.Cells workbook.
+// Use Cases: Include a crisp waterfall graphic in a financial presentation or report. | Print chart images on high‑quality paper without loss of detail. | Automate batch export of charts for documentation pipelines.
+// AI Prompts: Provide C# code to export a Waterfall chart as a 600 DPI PNG using Aspose.Cells. | Show how to loop through all charts on a worksheet and save each as a high‑resolution PNG. | Explain how to adjust image dimensions and DPI when converting a chart to PNG with Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-class ExportWaterfallChart
+namespace WaterfallChartExport
 {
-    static void Main()
+    // Demonstrates how to build a workbook, populate it with waterfall data, add a Waterfall chart, configure ImageOrPrintOptions for 300 DPI PNG output, and save the chart as a high‑quality image while optionally keeping the workbook for later use.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Populate sample data for the waterfall chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["A2"].PutValue("Start");
-        worksheet.Cells["B2"].PutValue(100);
-        worksheet.Cells["A3"].PutValue("Increase");
-        worksheet.Cells["B3"].PutValue(30);
-        worksheet.Cells["A4"].PutValue("Decrease");
-        worksheet.Cells["B4"].PutValue(-20);
-        worksheet.Cells["A5"].PutValue("End");
-        worksheet.Cells["B5"].PutValue(110);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a Waterfall chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 10);
-        Chart chart = worksheet.Charts[chartIndex];
+            // Populate sample data for a waterfall chart
+            // Column A – Categories, Column B – Values
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("Start");
+            sheet.Cells["A3"].PutValue("Increase");
+            sheet.Cells["A4"].PutValue("Decrease");
+            sheet.Cells["A5"].PutValue("End");
 
-        // Set the data range for the chart
-        chart.SetChartDataRange("A1:B5", true);
-        chart.Title.Text = "Waterfall Chart Example";
+            sheet.Cells["B1"].PutValue("Amount");
+            sheet.Cells["B2"].PutValue(5000);
+            sheet.Cells["B3"].PutValue(2000);
+            sheet.Cells["B4"].PutValue(-1500);
+            sheet.Cells["B5"].PutValue(5500);
 
-        // Configure high‑resolution image options (300 DPI PNG)
-        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
-        imgOptions.ImageType = ImageType.Png;
-        imgOptions.HorizontalResolution = 300;
-        imgOptions.VerticalResolution = 300;
+            // Add a Waterfall chart (ChartType.Waterfall)
+            int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 15);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Export the chart to a high‑resolution PNG file
-        string outputFile = "WaterfallChart.png";
-        chart.ToImage(outputFile, imgOptions);
+            // Set the data range for the chart (including headers)
+            chart.SetChartDataRange("A1:B5", true);
 
-        Console.WriteLine($"Waterfall chart exported successfully to '{outputFile}' with 300 DPI.");
+            // Optional: set a title
+            chart.Title.Text = "Waterfall Chart Example";
+
+            // Configure high‑resolution image options (e.g., 300 DPI)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                ImageType = ImageType.Png,          // Output format
+                HorizontalResolution = 300,         // 300 DPI horizontal
+                VerticalResolution = 300            // 300 DPI vertical
+            };
+
+            // Export the chart to a high‑resolution PNG file
+            string imagePath = "WaterfallChart.png";
+            chart.ToImage(imagePath, imgOptions);
+
+            // (Optional) Save the workbook for reference
+            workbook.Save("WaterfallChartWorkbook.xlsx");
+
+            Console.WriteLine($"Waterfall chart exported to '{imagePath}' with 300 DPI resolution.");
+        }
     }
 }

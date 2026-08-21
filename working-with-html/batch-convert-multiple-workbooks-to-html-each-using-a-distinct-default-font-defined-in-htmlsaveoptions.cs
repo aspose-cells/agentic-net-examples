@@ -1,71 +1,47 @@
-// Title: Batch convert Excel workbooks to HTML with individual default fonts using Aspose.Cells for .NET
-// Description: A C# console app that iterates over a list of Excel files, assigns a specific DefaultFontName via HtmlSaveOptions for each workbook, and saves them as HTML files. Includes validation, error handling, and logging of conversion results.
-// Keywords: Aspose.Cells | C# HTML conversion | DefaultFontName | HtmlSaveOptions | batch Excel to HTML | multiple workbook export | set default font for HTML | Excel to HTML automation | Aspose.Cells example
-// Common Searches: Aspose.Cells batch convert Excel to HTML C# | set default font per workbook HtmlSaveOptions | convert multiple Excel files to HTML with different fonts | C# export Excel as HTML Aspose.Cells default font | automate Excel to HTML conversion Aspose
-// Developer Intent: Automatically export a collection of Excel workbooks to HTML, applying a unique default font to each file.
-// Use Cases: Create web‑ready reports where each spreadsheet follows a distinct corporate typeface. | Generate documentation portals that require different font styles per source workbook. | Integrate into a CI/CD pipeline to batch‑process Excel assets into HTML with custom typography.
-// AI Prompts: Generate C# code that uses Aspose.Cells to batch convert a set of Excel files to HTML, assigning a specific DefaultFontName to each file. | Add comprehensive logging and exception handling to the batch HTML conversion script, writing results to a log file. | Refactor the example to output all HTML files into a dedicated folder while preserving original filenames.
+// Title: Batch convert Excel workbooks to HTML with per‑file default fonts using Aspose.Cells for .NET
+// Description: This C# example shows how to map each Excel file to a specific default font, load the workbook with Aspose.Cells, configure HtmlSaveOptions.DefaultFontName, and save the result as an HTML page. The loop processes a dictionary of file‑font pairs, producing individually styled HTML outputs in a single run.
+// Keywords: Aspose.Cells batch HTML export | HtmlSaveOptions DefaultFontName | C# convert Excel to HTML | per workbook custom font | multiple Excel to HTML .NET | automated spreadsheet conversion | Aspose.Cells HTML conversion example | custom font HTML export | dictionary driven file processing | Excel to web‑ready HTML
+// Common Searches: Aspose.Cells batch convert Excel to HTML with different fonts | C# set default font for each HTML export using Aspose | How to use HtmlSaveOptions.DefaultFontName in a loop | Convert multiple .xlsx files to .html with custom fonts | Aspose.Cells example for per‑file HTML styling
+// Developer Intent: Generate HTML files from a set of Excel workbooks, applying a distinct default font to each output in a single automated process.
+// Use Cases: Produce branded HTML reports where each report follows a different corporate typeface. | Offer a web service that converts user‑uploaded spreadsheets to HTML, respecting the user’s preferred font. | Run a nightly job that archives legacy Excel files as HTML, assigning readable fonts based on file categories.
+// AI Prompts: Write a C# script that reads a JSON array of {filePath, fontName} objects and converts each workbook to HTML with Aspose.Cells, using HtmlSaveOptions.DefaultFontName. | Explain how to modify the batch conversion to store all HTML files in a dedicated output folder while preserving the per‑file font settings. | Suggest error‑handling strategies for missing or unsupported font names during batch HTML export with Aspose.Cells.
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace BatchHtmlConversion
+// This C# example shows how to map each Excel file to a specific default font, load the workbook with Aspose.Cells, configure HtmlSaveOptions.DefaultFontName, and save the result as an HTML page. The loop processes a dictionary of file‑font pairs, producing individually styled HTML outputs in a single run.
+class BatchHtmlConversion
 {
-    // A C# console app that iterates over a list of Excel files, assigns a specific DefaultFontName via HtmlSaveOptions for each workbook, and saves them as HTML files. Includes validation, error handling, and logging of conversion results.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Define source Excel files and the default font to use for each HTML output
+        var filesAndFonts = new Dictionary<string, string>
         {
-            // Define source workbook files and the corresponding default fonts
-            string[] sourceFiles = { "Workbook1.xlsx", "Workbook2.xlsx", "Workbook3.xlsx" };
-            string[] defaultFonts = { "Arial", "Courier New", "Times New Roman" };
+            { "Book1.xlsx", "Arial" },
+            { "Book2.xlsx", "Courier New" },
+            { "Book3.xlsx", "Times New Roman" }
+        };
 
-            // Ensure the arrays have the same length
-            if (sourceFiles.Length != defaultFonts.Length)
-            {
-                Console.WriteLine("The number of source files must match the number of fonts.");
-                return;
-            }
+        foreach (var entry in filesAndFonts)
+        {
+            string sourcePath = entry.Key;      // Path to the Excel workbook
+            string defaultFont = entry.Value;   // Desired default font for HTML
 
-            // Process each workbook
-            for (int i = 0; i < sourceFiles.Length; i++)
-            {
-                string sourcePath = sourceFiles[i];
-                string fontName = defaultFonts[i];
+            // Load the workbook (load lifecycle)
+            Workbook workbook = new Workbook(sourcePath);
 
-                // Verify that the source file exists before attempting to load it
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file not found: '{sourcePath}'. Skipping this file.");
-                    continue;
-                }
+            // Create HTML save options and set the distinct default font (create lifecycle)
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+            saveOptions.DefaultFontName = defaultFont;
 
-                try
-                {
-                    // Load the workbook (load rule)
-                    Workbook workbook = new Workbook(sourcePath);
+            // Build the output HTML file name
+            string outputPath = System.IO.Path.ChangeExtension(sourcePath, ".html");
 
-                    // Create HTML save options (create rule)
-                    HtmlSaveOptions saveOptions = new HtmlSaveOptions
-                    {
-                        // Set a distinct default font for this conversion (feature rule)
-                        DefaultFontName = fontName
-                    };
+            // Save the workbook as HTML using the configured options (save lifecycle)
+            workbook.Save(outputPath, saveOptions);
 
-                    // Determine the output HTML file name
-                    string outputPath = Path.ChangeExtension(sourcePath, ".html");
-
-                    // Save the workbook as HTML using the configured options (save rule)
-                    workbook.Save(outputPath, saveOptions);
-
-                    Console.WriteLine($"Converted '{sourcePath}' to HTML with default font '{fontName}'. Output: {outputPath}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing '{sourcePath}': {ex.Message}");
-                }
-            }
+            Console.WriteLine($"Converted '{sourcePath}' to HTML with default font '{defaultFont}'.");
         }
     }
 }

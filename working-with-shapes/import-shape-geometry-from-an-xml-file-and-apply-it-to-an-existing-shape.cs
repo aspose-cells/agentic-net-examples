@@ -1,103 +1,115 @@
-// Title: Import Shape Geometry from XML into an Aspose.Cells AutoShape (C#)
-// Description: Creates a workbook, adds a non‑primitive AutoShape, casts its Geometry to CustomGeometry, reads an XML file with <Path> elements, translates MoveTo, LineTo, CurveTo and Close commands into ShapePath instructions, and saves the workbook with the new geometry.
-// Keywords: Aspose.Cells | C# | Import shape geometry | CustomGeometry | AutoShape XML | ShapePath MoveTo | ShapePath LineTo | CubicBezierTo | Excel vector shape
-// Common Searches: Aspose.Cells import shape geometry from XML | C# add custom geometry to AutoShape | How to parse XML shape paths in Aspose.Cells | Load XML path commands into Excel shape | Custom shape from XML using Aspose.Cells
-// Developer Intent: Read vector path data defined in an XML file and apply it to a custom‑geometry AutoShape in an Excel workbook using Aspose.Cells for C#.
-// Use Cases: Convert external SVG‑like XML definitions into precise Excel shapes for reporting dashboards. | Replace placeholder symbols in templates with geometry supplied by configuration files. | Build a migration tool that reproduces proprietary vector graphics in Excel workbooks.
-// AI Prompts: Generate a reusable C# method that accepts an XML file path and a CustomGeometry object, parses <Path> elements, and populates MoveTo, LineTo, CubicBezierTo, and Close commands. | Create code to translate SVG path data (M, L, C, Z) into Aspose.Cells ShapePath calls for bulk shape import. | Suggest comprehensive error‑handling for missing or malformed XML attributes when importing shape geometry into Aspose.Cells.
+// Title: Import Shape Geometry from XML into a NotPrimitive AutoShape with Aspose.Cells for .NET (C#)
+// Description: Shows how to create a workbook, add a NotPrimitive auto shape, read an XML file that contains <Path> elements with MoveTo, LineTo, CurveTo and Close commands, translate the XML into a CustomGeometry object, replace the shape’s existing paths, and save the workbook.
+// Keywords: Aspose.Cells | C# | shape geometry import | XML to CustomGeometry | NotPrimitive AutoShape | Excel shape programming | .NET workbook | MoveTo LineTo CurveTo | custom shape paths | programmatic Excel drawing
+// Common Searches: Aspose.Cells import shape geometry from XML | C# load custom shape paths into Excel | How to use CustomGeometry with NotPrimitive auto shape | Convert XML path data to Aspose.Cells shape | Add SVG‑like shape to Excel using Aspose.Cells
+// Developer Intent: Read an XML definition of a shape’s geometry and assign it to a NotPrimitive auto shape in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Generate reusable custom symbols (badges, icons) stored as XML and inject them into multiple reports. | Create complex diagram elements on the fly by importing external geometry definitions. | Standardize corporate branding shapes across workbooks by maintaining a central XML library.
+// AI Prompts: Write C# code that parses an XML file with <Path> elements (MoveTo, LineTo, CurveTo, Close) and builds a CustomGeometry for an Aspose.Cells shape. | Explain strategies for validating XML attributes and handling conversion errors when importing shape geometry into Aspose.Cells. | Provide an example XML schema that maps to the Aspose.Cells CustomGeometry API for defining custom shapes.
 
 using System;
-using System.Globalization;
 using System.IO;
-using System.Xml.Linq;
+using System.Xml;
+using System.Globalization;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeGeometryImport
+namespace ShapeGeometryImportDemo
 {
-    // Creates a workbook, adds a non‑primitive AutoShape, casts its Geometry to CustomGeometry, reads an XML file with <Path> elements, translates MoveTo, LineTo, CurveTo and Close commands into ShapePath instructions, and saves the workbook with the new geometry.
+    // Shows how to create a workbook, add a NotPrimitive auto shape, read an XML file that contains <Path> elements with MoveTo, LineTo, CurveTo and Close commands, translate the XML into a CustomGeometry object, replace the shape’s existing paths, and save the workbook.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a non‑primitive auto shape (custom geometry placeholder)
-                // Parameters: shape type, upper left row/col, upper left offset, width, height
+                // Add a non‑primitive autoshape (initially empty)
+                // Parameters: type, upperLeftRow, upperLeftColumn, upperLeftPixelX, upperLeftPixelY, height, width
                 Shape shape = sheet.Shapes.AddAutoShape(
-                    AutoShapeType.NotPrimitive, // custom geometry shape
-                    1, 1,   // upper left row, column
-                    0, 0,   // offset within the cell
-                    200, 200); // width, height in pixels
+                    AutoShapeType.NotPrimitive,
+                    2,          // upperLeftRow
+                    2,          // upperLeftColumn
+                    0,          // upperLeftPixelX
+                    0,          // upperLeftPixelY
+                    200,        // height (pixels)
+                    300);       // width (pixels)
 
-                // Cast the shape's geometry to CustomGeometry to access the Paths collection
-                CustomGeometry? customGeometry = shape.Geometry as CustomGeometry;
+                // Path to the XML file that defines the geometry
+                string xmlFilePath = "shapeGeometry.xml";
+
+                // Ensure the XML file exists before loading
+                if (!File.Exists(xmlFilePath))
+                {
+                    Console.WriteLine($"XML file not found: {xmlFilePath}");
+                    return;
+                }
+
+                // Load and parse the XML
+                XmlDocument doc = new XmlDocument();
+                doc.Load(xmlFilePath);
+
+                // Cast the shape's geometry to CustomGeometry to access Paths
+                CustomGeometry customGeometry = shape.Geometry as CustomGeometry;
                 if (customGeometry == null)
                 {
                     Console.WriteLine("The shape does not support custom geometry.");
                     return;
                 }
 
-                // Load the XML that defines the geometry.
-                string xmlPath = "shapeGeometry.xml";
-                if (!File.Exists(xmlPath))
-                {
-                    Console.WriteLine($"File not found: {xmlPath}");
-                    return;
-                }
-
-                XDocument doc = XDocument.Load(xmlPath);
+                // Clear any existing paths
+                customGeometry.Paths.Clear();
 
                 // Iterate over each <Path> element in the XML
-                foreach (XElement pathElement in doc.Root?.Elements("Path") ?? Array.Empty<XElement>())
+                XmlNodeList? pathNodes = doc.SelectNodes("//Geometry/Path");
+                if (pathNodes == null) return;
+
+                foreach (XmlNode pathNode in pathNodes)
                 {
-                    // Add a new path to the shape's geometry
+                    // Create a new path in the collection
                     int pathIndex = customGeometry.Paths.Add();
                     ShapePath path = customGeometry.Paths[pathIndex];
 
-                    // Process child commands of the path (MoveTo, LineTo, CurveTo, Close, etc.)
-                    foreach (XElement cmd in pathElement.Elements())
+                    // Process child commands (MoveTo, LineTo, CurveTo, Close)
+                    foreach (XmlNode cmdNode in pathNode.ChildNodes)
                     {
-                        switch (cmd.Name.LocalName)
+                        switch (cmdNode.Name)
                         {
                             case "MoveTo":
-                                // MoveTo X="value" Y="value"
-                                float moveX = float.Parse(cmd.Attribute("X")?.Value ?? "0", CultureInfo.InvariantCulture);
-                                float moveY = float.Parse(cmd.Attribute("Y")?.Value ?? "0", CultureInfo.InvariantCulture);
-                                path.MoveTo(moveX, moveY);
-                                break;
-
+                                {
+                                    float x = float.Parse(cmdNode.Attributes["X"]?.Value ?? "0", CultureInfo.InvariantCulture);
+                                    float y = float.Parse(cmdNode.Attributes["Y"]?.Value ?? "0", CultureInfo.InvariantCulture);
+                                    path.MoveTo(x, y);
+                                    break;
+                                }
                             case "LineTo":
-                                // LineTo X="value" Y="value"
-                                float lineX = float.Parse(cmd.Attribute("X")?.Value ?? "0", CultureInfo.InvariantCulture);
-                                float lineY = float.Parse(cmd.Attribute("Y")?.Value ?? "0", CultureInfo.InvariantCulture);
-                                path.LineTo(lineX, lineY);
-                                break;
-
+                                {
+                                    float x = float.Parse(cmdNode.Attributes["X"]?.Value ?? "0", CultureInfo.InvariantCulture);
+                                    float y = float.Parse(cmdNode.Attributes["Y"]?.Value ?? "0", CultureInfo.InvariantCulture);
+                                    path.LineTo(x, y);
+                                    break;
+                                }
                             case "CurveTo":
-                                // CurveTo X1=".." Y1=".." X2=".." Y2=".." X3=".." Y3=".."
-                                float x1 = float.Parse(cmd.Attribute("X1")?.Value ?? "0", CultureInfo.InvariantCulture);
-                                float y1 = float.Parse(cmd.Attribute("Y1")?.Value ?? "0", CultureInfo.InvariantCulture);
-                                float x2 = float.Parse(cmd.Attribute("X2")?.Value ?? "0", CultureInfo.InvariantCulture);
-                                float y2 = float.Parse(cmd.Attribute("Y2")?.Value ?? "0", CultureInfo.InvariantCulture);
-                                float x3 = float.Parse(cmd.Attribute("X3")?.Value ?? "0", CultureInfo.InvariantCulture);
-                                float y3 = float.Parse(cmd.Attribute("Y3")?.Value ?? "0", CultureInfo.InvariantCulture);
-                                // Use CubicBezierTo if CurveTo is unavailable
-                                path.CubicBezierTo(x1, y1, x2, y2, x3, y3);
-                                break;
-
+                                {
+                                    float x1 = float.Parse(cmdNode.Attributes["X1"]?.Value ?? "0", CultureInfo.InvariantCulture);
+                                    float y1 = float.Parse(cmdNode.Attributes["Y1"]?.Value ?? "0", CultureInfo.InvariantCulture);
+                                    float x2 = float.Parse(cmdNode.Attributes["X2"]?.Value ?? "0", CultureInfo.InvariantCulture);
+                                    float y2 = float.Parse(cmdNode.Attributes["Y2"]?.Value ?? "0", CultureInfo.InvariantCulture);
+                                    float x3 = float.Parse(cmdNode.Attributes["X3"]?.Value ?? "0", CultureInfo.InvariantCulture);
+                                    float y3 = float.Parse(cmdNode.Attributes["Y3"]?.Value ?? "0", CultureInfo.InvariantCulture);
+                                    // Use CubicBezierTo for custom geometry curves
+                                    path.CubicBezierTo(x1, y1, x2, y2, x3, y3);
+                                    break;
+                                }
                             case "Close":
-                                // Close the current path
-                                path.Close();
-                                break;
-
-                            default:
-                                Console.WriteLine($"Unsupported command: {cmd.Name}");
-                                break;
+                                {
+                                    path.Close();
+                                    break;
+                                }
                         }
                     }
                 }
@@ -105,11 +117,11 @@ namespace AsposeCellsShapeGeometryImport
                 // Save the workbook with the updated shape geometry
                 string outputPath = "ShapeWithImportedGeometry.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Shape geometry imported and workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

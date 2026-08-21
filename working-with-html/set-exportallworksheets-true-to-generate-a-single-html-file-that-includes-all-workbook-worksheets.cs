@@ -1,37 +1,50 @@
-// Title: Export All Worksheets to One HTML File with Aspose.Cells for .NET
-// Description: Shows how to configure Aspose.Cells HtmlSaveOptions (SaveAsSingleFile = true, ShowAllSheets = true) to convert a multi‑sheet workbook into a single HTML document.
-// Keywords: Aspose.Cells | C# | .NET | HtmlSaveOptions | SaveAsSingleFile | ShowAllSheets | export all worksheets to HTML | single HTML output | multi‑sheet HTML export | spreadsheet to HTML conversion
-// Common Searches: Aspose.Cells export all sheets to single HTML | C# HtmlSaveOptions ShowAllSheets example | Save workbook as one HTML page Aspose | How to generate single HTML file from multiple worksheets .NET | Aspose.Cells SaveAsSingleFile true
-// Developer Intent: Generate one HTML file that includes every worksheet from a workbook.
-// Use Cases: Create a web‑ready report that consolidates data from several sheets into a single page. | Provide a printable HTML version of a complete workbook for distribution. | Embed a full workbook preview in a web application without loading multiple files.
-// AI Prompts: How can I add a custom CSS stylesheet when exporting all worksheets to a single HTML file with Aspose.Cells? | Show an example of exporting only selected worksheets to one HTML document using HtmlSaveOptions. | Explain how to embed cell images while saving the entire workbook as a single HTML page. | What options are available to control table layout and fonts when generating a single HTML file from multiple sheets?
+// Title: Aspose.Cells C# – Export All Worksheets to a Single HTML File
+// Description: This example builds a workbook with three sheets, configures HtmlSaveOptions with SaveAsSingleFile = true and ShowAllSheets = true, and saves the result as AllWorksheets.html – a single HTML page that displays every worksheet.
+// Keywords: Aspose.Cells C# HTML export | SaveAsSingleFile true | ShowAllSheets option | export multiple worksheets to HTML | single HTML file Aspose.Cells | HtmlSaveOptions example | C# generate HTML from workbook
+// Common Searches: Aspose.Cells export all sheets to one HTML | C# HtmlSaveOptions SaveAsSingleFile example | include every worksheet in HTML export using Aspose.Cells | generate single HTML page from multi‑sheet workbook C# | Aspose.Cells ShowAllSheets usage
+// Developer Intent: Create one HTML document that contains every worksheet from a workbook.
+// Use Cases: Publish a multi‑sheet financial report as a single web‑ready HTML page. | Send a complete workbook via email without attaching separate files. | Embed all worksheet data into a portal dashboard using one HTML file.
+// AI Prompts: Provide C# code that saves an Aspose.Cells workbook with all worksheets into one HTML file. | Explain how SaveAsSingleFile and ShowAllSheets work together in HtmlSaveOptions. | Show a step‑by‑step example of generating a single HTML document from a multi‑sheet workbook with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to configure Aspose.Cells HtmlSaveOptions (SaveAsSingleFile = true, ShowAllSheets = true) to convert a multi‑sheet workbook into a single HTML document.
-class Program
+namespace AsposeCellsExportAllWorksheets
 {
-    static void Main()
+    // This example builds a workbook with three sheets, configures HtmlSaveOptions with SaveAsSingleFile = true and ShowAllSheets = true, and saves the result as AllWorksheets.html – a single HTML page that displays every worksheet.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook with default first worksheet
+            Workbook workbook = new Workbook();
 
-        // Add data to the first worksheet
-        Worksheet sheet1 = workbook.Worksheets[0];
-        sheet1.Name = "FirstSheet";
-        sheet1.Cells["A1"].PutValue("Content of Sheet 1");
+            // Populate first worksheet
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "FirstSheet";
+            sheet1.Cells["A1"].PutValue("Data in Sheet 1");
 
-        // Add a second worksheet
-        Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
-        sheet2.Cells["A1"].PutValue("Content of Sheet 2");
+            // Add a second worksheet and populate it
+            Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
+            sheet2.Cells["B2"].PutValue("Data in Sheet 2");
 
-        // Configure HTML save options to generate a single file with all sheets
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-        saveOptions.SaveAsSingleFile = true;   // Save as a single HTML file
-        saveOptions.ShowAllSheets = true;      // Include all worksheets in the output
+            // Add a third worksheet and populate it
+            Worksheet sheet3 = workbook.Worksheets.Add("ThirdSheet");
+            sheet3.Cells["C3"].PutValue("Data in Sheet 3");
 
-        // Save the workbook as HTML
-        workbook.Save("AllSheets.html", saveOptions);
+            // Configure HTML save options to generate a single HTML file
+            // that includes all worksheets.
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            {
+                SaveAsSingleFile = true,   // Save as one HTML file
+                ShowAllSheets = true       // Include all worksheets in the output
+            };
+
+            // Save the workbook as a single HTML file with all sheets visible
+            string outputPath = "AllWorksheets.html";
+            workbook.Save(outputPath, saveOptions);
+
+            Console.WriteLine($"Workbook saved to '{outputPath}' with all worksheets included.");
+        }
     }
 }

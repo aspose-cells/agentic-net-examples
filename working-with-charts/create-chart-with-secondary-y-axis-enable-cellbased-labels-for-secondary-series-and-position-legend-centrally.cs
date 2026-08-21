@@ -1,111 +1,77 @@
-// Title: Aspose.Cells .NET Example: Column Chart with Secondary Y‑Axis, Cell‑Based Data Labels, and Centered Legend (C#)
-// Description: A complete C# sample that creates a new workbook, fills cells with categories and two data series, adds a column chart, plots the second series on a secondary Y‑axis with a custom title and range, shows value labels taken from cells, overlays the legend at the bottom and centers it horizontally, then saves the file. Ideal for developers needing dual‑axis charts and precise legend placement using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells secondary axis chart C# | column chart dual Y axis Aspose.Cells | cell based data labels Aspose.Cells | centered legend Aspose.Cells .NET | Aspose.Cells chart customization example | GitHub Aspose.Cells chart sample | C# Aspose.Cells chart tutorial
-// Common Searches: Aspose.Cells plot series on secondary Y axis | how to add data labels from cells in Aspose.Cells | center legend bottom Aspose.Cells chart | dual axis column chart Aspose.Cells .NET | Aspose.Cells chart example GitHub
-// Developer Intent: Generate a column chart where one series uses a secondary Y‑axis, display its values as cell‑based data labels, and place the legend centered at the bottom of the chart.
-// Use Cases: Compare monthly sales (primary axis) with profit margin percentages (secondary axis) while showing margin values directly on the chart. | Create a financial dashboard that plots revenue and expense ratios on separate axes, with the ratios labeled from worksheet cells for quick reference. | Design a presentation slide where a dual‑axis chart needs a balanced look, achieved by centering the legend at the bottom of the chart area.
-// AI Prompts: Write C# code using Aspose.Cells to add a line series on the secondary Y‑axis and format its data labels as percentages. | Show how to calculate the optimal major unit for a secondary axis based on the data range and apply it in Aspose.Cells. | Provide an Aspose.Cells example that positions the chart legend at the top‑right corner without overlay.
+// Title: Aspose.Cells C# – Create Column Chart with Secondary Y‑Axis, Data Labels and Centered Bottom Legend
+// Description: This example shows how to build an Excel workbook with Aspose.Cells, add a column chart, define primary and secondary series, plot the second series on a secondary Y‑axis, customize its range and title, enable value data labels for that series, and place a centered legend at the bottom before saving the file.
+// Keywords: Aspose.Cells secondary axis chart C# | column chart with legend center Aspose | enable data labels secondary series .NET | custom secondary value axis Aspose.Cells | chart legend position bottom Aspose
+// Common Searches: Aspose.Cells plot series on secondary Y axis | how to center legend at bottom in Aspose.Cells chart | enable data labels for specific series Aspose.Cells | set secondary axis min max Aspose.Cells | C# create chart with two Y axes using Aspose
+// Developer Intent: Generate an Excel column chart where one series uses a secondary Y‑axis, display its values as data labels, and show a horizontally centered legend at the bottom, all via Aspose.Cells for .NET.
+// Use Cases: Compare revenue (primary axis) and profit margin (secondary axis) in a single column chart. | Show temperature on the primary axis and humidity on a secondary axis with distinct scales and labels. | Create a financial dashboard that plots sales volume and expense ratio together, using a centered legend for quick reference.
+// AI Prompts: Write C# code with Aspose.Cells to add a line series to the secondary Y‑axis and format its data labels as percentages. | Demonstrate how to bind data labels to cell values instead of raw numbers for a chart series in Aspose.Cells. | Explain how to change the font style of the secondary axis title and move the legend to the top‑right corner using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// This example shows how to build an Excel workbook with Aspose.Cells, add a column chart, define primary and secondary series, plot the second series on a secondary Y‑axis, customize its range and title, enable value data labels for that series, and place a centered legend at the bottom before saving the file.
+class CreateChartWithSecondaryAxis
 {
-    // A complete C# sample that creates a new workbook, fills cells with categories and two data series, adds a column chart, plots the second series on a secondary Y‑axis with a custom title and range, shows value labels taken from cells, overlays the legend at the bottom and centers it horizontally, then saves the file. Ideal for developers needing dual‑axis charts and precise legend placement using Aspose.Cells for .NET.
-    public class ChartWithSecondaryAxisAndCentralLegend
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // -------------------------------------------------
-                // Populate sample data
-                // -------------------------------------------------
-                // Primary categories
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
+            // Fill sample data
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
 
-                // Primary series (plotted on primary Y axis)
-                sheet.Cells["B1"].PutValue("Primary");
-                sheet.Cells["B2"].PutValue(100);
-                sheet.Cells["B3"].PutValue(200);
-                sheet.Cells["B4"].PutValue(300);
+            sheet.Cells["B1"].PutValue("Primary");
+            sheet.Cells["B2"].PutValue(100);
+            sheet.Cells["B3"].PutValue(200);
+            sheet.Cells["B4"].PutValue(300);
 
-                // Secondary series (plotted on secondary Y axis)
-                sheet.Cells["C1"].PutValue("Secondary");
-                sheet.Cells["C2"].PutValue(5000);
-                sheet.Cells["C3"].PutValue(3000);
-                sheet.Cells["C4"].PutValue(1000);
+            sheet.Cells["C1"].PutValue("Secondary");
+            sheet.Cells["C2"].PutValue(5000);
+            sheet.Cells["C3"].PutValue(3000);
+            sheet.Cells["C4"].PutValue(1000);
 
-                // -------------------------------------------------
-                // Add a column chart
-                // -------------------------------------------------
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIdx];
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
+            Chart chart = sheet.Charts[chartIndex];
 
-                // Add the two series
-                chart.NSeries.Add("B2:B4", true); // primary series
-                chart.NSeries.Add("C2:C4", true); // secondary series
-                chart.NSeries.CategoryData = "A2:A4";
+            // Add two series: primary and secondary
+            chart.NSeries.Add("B2:B4", true); // primary series
+            chart.NSeries.Add("C2:C4", true); // secondary series
+            chart.NSeries.CategoryData = "A2:A4";
 
-                // -------------------------------------------------
-                // Configure secondary Y axis for the second series
-                // -------------------------------------------------
-                chart.NSeries[1].PlotOnSecondAxis = true;
+            // Plot the second series on the secondary Y axis
+            chart.NSeries[1].PlotOnSecondAxis = true;
 
-                // Optional: give the secondary axis a title and range
-                Axis secAxis = chart.SecondValueAxis;
-                secAxis.Title.Text = "Secondary Axis";
-                secAxis.MinValue = 0;
-                secAxis.MaxValue = 6000;
-                secAxis.MajorUnit = 1000;
+            // Customize the secondary Y axis
+            Axis secondaryAxis = chart.SecondValueAxis;
+            secondaryAxis.Title.Text = "Secondary Axis";
+            secondaryAxis.MinValue = 0;
+            secondaryAxis.MaxValue = 6000;
+            secondaryAxis.MajorUnit = 1000;
 
-                // -------------------------------------------------
-                // Enable cell‑based data labels for the secondary series
-                // -------------------------------------------------
-                chart.NSeries[1].DataLabels.ShowValue = true;
+            // Enable data labels for the secondary series
+            chart.NSeries[1].DataLabels.ShowValue = true;
 
-                // -------------------------------------------------
-                // Position the legend at the centre of the chart area
-                // -------------------------------------------------
-                chart.Legend.IsOverLay = true;
-                chart.Legend.Position = LegendPositionType.Bottom;
+            // Position the legend at the bottom and center it horizontally
+            chart.Legend.Position = LegendPositionType.Bottom;
+            chart.Legend.XRatioToChart = 0.5; // center horizontally
 
-                // Center the legend horizontally by using the chart area width
-                chart.Legend.X = (chart.ChartArea.Width - chart.Legend.Width) / 2;
+            // Recalculate chart layout
+            chart.Calculate();
 
-                // -------------------------------------------------
-                // Recalculate the chart to apply all settings
-                // -------------------------------------------------
-                chart.Calculate();
-
-                // -------------------------------------------------
-                // Save the workbook
-                // -------------------------------------------------
-                string outputPath = "ChartWithSecondaryAxisAndCentralLegend.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("ChartWithSecondaryAxis.xlsx");
         }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ChartWithSecondaryAxisAndCentralLegend.Run();
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

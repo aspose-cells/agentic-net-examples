@@ -1,40 +1,50 @@
-// Title: C# – Load Only the First Worksheet from a Large Excel Workbook Using Aspose.Cells LoadFilter
-// Description: Demonstrates how to create a custom LoadFilter that loads just the first sheet (index 0) of a massive Excel file, reducing memory usage. The filter is applied via LoadOptions, the workbook is opened, and the single‑sheet result can be saved if needed.
-// Keywords: Aspose.Cells LoadFilter C# | load first worksheet only | load specific sheet Aspose.Cells | memory‑efficient Excel loading .NET | exclude worksheets on load | large workbook performance Aspose | SheetsInLoadingOrder example
-// Common Searches: Aspose.Cells load only first sheet | C# LoadFilter to read single worksheet | how to avoid loading all sheets in Aspose.Cells | reduce memory when opening big Excel file .NET | load specific worksheet by index Aspose
-// Developer Intent: Open an Excel workbook while loading only the first worksheet into memory.
-// Use Cases: Minimize RAM consumption for applications that process huge workbooks but need data from only the first sheet. | Create a lightweight copy of the initial worksheet for quick analysis or transformation. | Speed up application startup when the first sheet contains all required information.
-// AI Prompts: Provide a C# example that loads a worksheet by its name using Aspose.Cells LoadFilter. | Show how to modify the LoadFirstSheetFilter to load multiple sheets, such as indexes 0 and 2. | Explain how to combine LoadFilter with LoadDataFilterOptions.None to retrieve only sheet metadata without cell values.
+// Title: Load Only the First Worksheet from a Large Excel File with Aspose.Cells (C#)
+// Description: Shows how to implement a custom LoadFilter that loads just the first worksheet (index 0) via LoadOptions, creates a Workbook with this filter, and saves the resulting single‑sheet file.
+// Keywords: Aspose.Cells | C# | LoadFilter | first worksheet | partial workbook loading | large Excel file | memory optimization | exclude sheets
+// Common Searches: Aspose.Cells load first sheet only | C# load specific worksheet without loading whole workbook | How to use LoadFilter to load selected sheets | Reduce memory when opening large Excel with Aspose | Save workbook after loading selected worksheets
+// Developer Intent: Load only the first worksheet from a large workbook and save it as a new file while minimizing memory consumption.
+// Use Cases: Process massive workbooks by loading just the first sheet to lower RAM usage. | Create a lightweight copy that contains only the initial worksheet for downstream analysis. | Quickly preview or export the first sheet of a multi‑sheet file without the overhead of loading the rest.
+// AI Prompts: Generate C# code that loads the first three worksheets using a custom LoadFilter. | Show how to load a worksheet by its name with Aspose.Cells LoadFilter in C#. | Explain how to combine LoadFilter and LoadOptions to load selected sheets and export them to PDF.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a custom LoadFilter that loads just the first sheet (index 0) of a massive Excel file, reducing memory usage. The filter is applied via LoadOptions, the workbook is opened, and the single‑sheet result can be saved if needed.
-class LoadFirstSheetFilter : LoadFilter
+namespace LoadFirstWorksheetExample
 {
-    // Load all data for the sheets that are loaded
-    public LoadFirstSheetFilter() : base(LoadDataFilterOptions.All) { }
-
-    // Specify that only the sheet at index 0 should be loaded
-    public override int[] SheetsInLoadingOrder => new int[] { 0 };
-}
-
-class Program
-{
-    static void Main()
+    // Custom LoadFilter that loads only the first worksheet (index 0)
+    // Shows how to implement a custom LoadFilter that loads just the first worksheet (index 0) via LoadOptions, creates a Workbook with this filter, and saves the resulting single‑sheet file.
+    public class FirstSheetOnlyLoadFilter : LoadFilter
     {
-        // Set up load options with the custom filter
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LoadFilter = new LoadFirstSheetFilter();
+        // Define the order of sheets to load – only the first sheet
+        private readonly int[] _sheetsOrder = new int[] { 0 };
 
-        // Load the workbook; only the first worksheet will be loaded
-        Workbook workbook = new Workbook("largeWorkbook.xlsx", loadOptions);
+        // Override the read‑only property to return our custom order
+        public override int[] SheetsInLoadingOrder => _sheetsOrder;
+    }
 
-        // Verify that only one worksheet is present
-        Console.WriteLine("Worksheets loaded: " + workbook.Worksheets.Count);
-        Console.WriteLine("First sheet name: " + workbook.Worksheets[0].Name);
+    class Program
+    {
+        static void Main()
+        {
+            // Path to the source workbook (large file with many sheets)
+            string sourcePath = "LargeWorkbook.xlsx";
 
-        // Save the workbook containing only the first sheet (optional)
-        workbook.Save("firstSheetOnly.xlsx");
+            // Configure LoadOptions with the custom filter
+            LoadOptions loadOptions = new LoadOptions();
+            loadOptions.LoadFilter = new FirstSheetOnlyLoadFilter();
+
+            // Load the workbook using the constructor that accepts a file name and LoadOptions
+            Workbook workbook = new Workbook(sourcePath, loadOptions);
+
+            // At this point only the first worksheet is loaded; other sheets are absent
+            Console.WriteLine("Loaded worksheets count: " + workbook.Worksheets.Count);
+            Console.WriteLine("First worksheet name: " + workbook.Worksheets[0].Name);
+
+            // Save the trimmed workbook to a new file
+            string outputPath = "FirstSheetOnly.xlsx";
+            workbook.Save(outputPath);
+
+            Console.WriteLine("Workbook saved with only the first sheet to: " + outputPath);
+        }
     }
 }

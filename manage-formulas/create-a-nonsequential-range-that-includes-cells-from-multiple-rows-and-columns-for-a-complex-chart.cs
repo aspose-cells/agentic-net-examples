@@ -1,59 +1,64 @@
-// Title: Create a Union (non‑sequential) Range for a Column Chart with Aspose.Cells .NET
-// Description: Demonstrates how to build a workbook, fill column A with categories and column C with values, combine the two ranges into a UnionRange, assign it to a column chart using SetChartDataRange, add a title, and save the file as XLSX.
-// Keywords: Aspose.Cells UnionRange | non‑contiguous chart data .NET | SetChartDataRange example | column chart from multiple columns | Aspose.Cells chart data source
-// Common Searches: Aspose.Cells combine A1:A5 and C1:C5 for chart | create union range for chart Aspose .NET | SetChartDataRange non‑contiguous cells | column chart using multiple columns Aspose.Cells
-// Developer Intent: Generate a non‑sequential range that merges cells from different columns and use it as the data source for a column chart.
-// Use Cases: Display categories in column A and values in column C on a single column chart. | Produce financial or sales reports that pull data from separate columns into one visual chart. | Reuse the same UnionRange to feed several chart types (e.g., column, line, pie) within the same worksheet.
-// AI Prompts: Show C# code to create a UnionRange from A1:A5 and C1:C5 and bind it to a column chart with Aspose.Cells. | Provide an example of adding a line chart that uses a non‑contiguous data range in Aspose.Cells for .NET. | Explain how to control series plotting direction when using SetChartDataRange with a UnionRange.
+// Title: Aspose.Cells .NET: Build a Non‑Contiguous Range and Apply It to a Column Chart
+// Description: Demonstrates how to create two separate ranges (A1:B5 and D1:E5), merge them with the UnionRanges method into a non‑sequential range, and use the combined address (e.g., "A1:B5,D1:E5") as the data source for a column chart in a workbook saved as an Excel file.
+// Keywords: Aspose.Cells UnionRanges | non‑contiguous range .NET | Aspose.Cells chart data source | column chart from multiple ranges | C# Aspose.Cells example | Excel non‑sequential range | Aspose.Cells chart series address
+// Common Searches: Aspose.Cells create non‑contiguous range for chart | UnionRanges method C# example | how to bind multiple ranges to a chart in Aspose.Cells | column chart with A1:B5 and D1:E5 data | Aspose.Cells combine separate data blocks
+// Developer Intent: Merge distinct cell blocks into a single non‑contiguous range and use that range as the series source for a column chart.
+// Use Cases: Combine sales data stored in separate tables (e.g., columns A‑B and D‑E) into one visual chart without moving cells. | Create a dashboard where category labels and values are placed in different sections but need a unified chart representation. | Generate Excel reports that pull data from scattered ranges and display them together in a single chart.
+// AI Prompts: Show how to use Aspose.Cells UnionRanges to merge A1:B5 and D1:E5 and assign the result to a chart series in C#. | Provide a C# snippet that creates a non‑contiguous range, adds a column chart, and sets the series formula using the union range address. | Explain how to retrieve the address string of a UnionRange and use it with Chart.NSeries.Add in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsComplexChartDemo
+namespace AsposeCellsComplexChart
 {
-    // Demonstrates how to build a workbook, fill column A with categories and column C with values, combine the two ranges into a UnionRange, assign it to a column chart using SetChartDataRange, add a title, and save the file as XLSX.
-    public class Program
+    // Demonstrates how to create two separate ranges (A1:B5 and D1:E5), merge them with the UnionRanges method into a non‑sequential range, and use the combined address (e.g., "A1:B5,D1:E5") as the data source for a column chart in a workbook saved as an Excel file.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet dataSheet = workbook.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // Populate sample data in two non‑contiguous columns (A and C)
-                // Column A will be categories, Column C will be values
-                for (int i = 0; i < 5; i++)
+                // Populate first data block (A1:B5)
+                for (int row = 0; row < 5; row++)
                 {
-                    // Category labels in A1:A5
-                    dataSheet.Cells[i, 0].PutValue($"Cat {i + 1}");
-                    // Corresponding values in C1:C5
-                    dataSheet.Cells[i, 2].PutValue((i + 1) * 10);
+                    cells[row, 0].PutValue($"Item {row + 1}");   // Column A - categories
+                    cells[row, 1].PutValue((row + 1) * 10);     // Column B - values
                 }
 
-                // Create two separate ranges: A1:A5 and C1:C5
-                AsposeRange rangeA = dataSheet.Cells.CreateRange("A1", "A5");
-                AsposeRange rangeC = dataSheet.Cells.CreateRange("C1", "C5");
+                // Populate second data block (D1:E5) – non‑sequential with respect to the first block
+                for (int row = 0; row < 5; row++)
+                {
+                    cells[row, 3].PutValue($"Group {row + 1}"); // Column D - categories
+                    cells[row, 4].PutValue((row + 1) * 15);     // Column E - values
+                }
 
-                // Combine the two ranges into a non‑sequential (union) range
-                UnionRange unionRange = rangeA.UnionRanges(new AsposeRange[] { rangeC });
+                // Create two separate ranges
+                AsposeRange range1 = cells.CreateRange("A1", "B5"); // First block
+                AsposeRange range2 = cells.CreateRange("D1", "E5"); // Second block
 
-                // Add a column chart to the same worksheet
-                int chartIndex = dataSheet.Charts.Add(ChartType.Column, 7, 0, 25, 10);
-                Chart chart = dataSheet.Charts[chartIndex];
+                // Union the two ranges into a non‑sequential range
+                UnionRange unionRange = range1.UnionRanges(new AsposeRange[] { range2 });
 
-                // Set the chart's data source to the union range.
-                // The second parameter (true) indicates that series are plotted by column.
-                chart.SetChartDataRange(unionRange.RefersTo, true);
+                // Add a column chart to the worksheet (positioned below the data)
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-                // Optionally set chart title
-                chart.Title.Text = "Complex Chart with Non‑Sequential Range";
+                // Use the union range as the data source for the chart
+                // unionRange.RefersTo returns the address string like "A1:B5,D1:E5"
+                chart.NSeries.Add(unionRange.RefersTo, true);
+
+                // Optional: set a title for clarity
+                chart.Title.Text = "Complex Chart with Non‑Sequential Data";
 
                 // Save the workbook
-                workbook.Save("ComplexChartWithUnionRange.xlsx", SaveFormat.Xlsx);
+                workbook.Save("ComplexChartWithNonSequentialRange.xlsx");
             }
             catch (Exception ex)
             {

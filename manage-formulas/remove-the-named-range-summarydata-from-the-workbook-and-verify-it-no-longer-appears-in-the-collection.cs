@@ -1,20 +1,20 @@
-// Title: Remove the "SummaryData" named range from an Aspose.Cells workbook (C#)
-// Description: Creates a workbook, adds a named range called SummaryData that points to A1:B2 on the first sheet, confirms its presence, deletes it with Worksheets.Names.Remove, verifies the removal, and saves the file.
-// Keywords: Aspose.Cells remove named range C# | delete named range Aspose.Cells | Worksheets.Names.Remove example | verify named range deletion | C# workbook named range management
-// Common Searches: how to delete a named range in Aspose.Cells .NET | C# remove specific named range Aspose.Cells | check if named range exists after removal Aspose.Cells | Aspose.Cells remove SummaryData range
-// Developer Intent: Programmatically delete the "SummaryData" named range and ensure it no longer appears in the workbook's Names collection.
-// Use Cases: Clean up temporary named ranges before exporting a report. | Prevent formula errors by removing dynamically created ranges after processing data. | Keep generated workbooks lightweight by pruning unused named ranges.
-// AI Prompts: Generate C# code using Aspose.Cells that removes a named range called "SummaryData" and confirms the deletion. | Explain how to test for a named range's existence before and after calling Worksheets.Names.Remove in Aspose.Cells. | Show how to iterate through all named ranges in a workbook and delete those matching a given pattern.
+// Title: Remove a named range (SummaryData) from an Aspose.Cells workbook using C#
+// Description: Demonstrates how to add a named range called "SummaryData" to a new workbook, display the named‑range count, delete the range with NameCollection.Remove, verify its absence by iterating the collection, and save the file. Includes basic error handling for robust execution.
+// Keywords: Aspose.Cells remove named range C# | delete defined name SummaryData | NameCollection.Remove example | verify named range deletion | Aspose.Cells workbook cleanup | C# Aspose.Cells named range management | check named range count after removal
+// Common Searches: How to delete a named range in Aspose.Cells .NET | Verify removal of a defined name in Aspose.Cells | Aspose.Cells C# remove specific named range | Count named ranges before and after deletion Aspose.Cells | Programmatically clean up named ranges with Aspose.Cells
+// Developer Intent: Delete the "SummaryData" named range from a workbook and confirm that it no longer exists.
+// Use Cases: Remove temporary named ranges after generating a report to keep the workbook tidy. | Ensure no leftover defined names remain before distributing a template. | Automate cleanup of obsolete named ranges when updating data sources in a CI/CD pipeline.
+// AI Prompts: Generate C# code that uses Aspose.Cells to remove a named range called "SummaryData" and confirm its deletion. | Show how to iterate through a NameCollection in Aspose.Cells to verify a specific named range is absent after removal. | Explain best practices for exception handling when deleting named ranges in an Aspose.Cells workbook.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, adds a named range called SummaryData that points to A1:B2 on the first sheet, confirms its presence, deletes it with Worksheets.Names.Remove, verifies the removal, and saves the file.
+    // Demonstrates how to add a named range called "SummaryData" to a new workbook, display the named‑range count, delete the range with NameCollection.Remove, verify its absence by iterating the collection, and save the file. Includes basic error handling for robust execution.
     public class RemoveNamedRangeDemo
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
             try
             {
@@ -22,7 +22,7 @@ namespace AsposeCellsExamples
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
 
@@ -31,28 +31,35 @@ namespace AsposeCellsExamples
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet (default sheet)
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the collection of defined names
+            NameCollection names = workbook.Worksheets.Names;
 
-            // Define a named range "SummaryData" referring to A1:B2
-            int nameIndex = workbook.Worksheets.Names.Add("SummaryData");
-            workbook.Worksheets.Names[nameIndex].RefersTo = $"={sheet.Name}!$A$1:$B$2";
+            // Add a named range called "SummaryData" for demonstration purposes
+            int nameIndex = names.Add("SummaryData");
+            names[nameIndex].RefersTo = "=Sheet1!$A$1:$B$10";
 
-            // Verify the named range exists before removal
-            Name beforeRemoval = workbook.Worksheets.Names["SummaryData"];
-            Console.WriteLine("Before removal, named range exists: " + (beforeRemoval != null));
+            // Display count before removal
+            Console.WriteLine("Named ranges count before removal: " + names.Count);
 
-            // Remove the named range using the Remove(string) method
-            workbook.Worksheets.Names.Remove("SummaryData");
+            // Remove the named range "SummaryData"
+            names.Remove("SummaryData");
 
-            // Verify the named range no longer exists
-            Name afterRemoval = workbook.Worksheets.Names["SummaryData"];
-            Console.WriteLine("After removal, named range exists: " + (afterRemoval != null));
+            // Verify that "SummaryData" no longer exists in the collection
+            bool exists = false;
+            foreach (Name n in names)
+            {
+                if (n.Text == "SummaryData")
+                {
+                    exists = true;
+                    break;
+                }
+            }
 
-            // Save the workbook (optional, demonstrates lifecycle rule)
-            string outputPath = "RemoveNamedRangeDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine("Does 'SummaryData' still exist? " + exists);
+            Console.WriteLine("Named ranges count after removal: " + names.Count);
+
+            // Save the workbook
+            workbook.Save("RemoveSummaryDataDemo.xlsx");
         }
     }
 }

@@ -1,69 +1,94 @@
+// Title: C# Example: Master‑Detail Excel Report Using Aspose.Cells Smart Markers
+// Description: This self‑contained C# sample creates a DataSet with Orders and OrderDetails tables, defines a relation on OrderID, builds a workbook template with smart markers, marks the range as "_CellsSmartMarkers", binds the DataSet to a WorkbookDesigner, processes the markers to repeat detail rows for each order, and saves the result as MasterDetailReport.xlsx.
+// Keywords: Aspose.Cells | C# | smart markers | master detail report | Excel generation | WorkbookDesigner | DataSet relation | _CellsSmartMarkers | GitHub example | code sample
+// Common Searches: Aspose.Cells master detail smart markers C# | How to use _CellsSmartMarkers range | Create Excel report from DataSet with relations | C# Aspose.Cells example for master‑detail | Generate Excel with repeating rows using smart markers
+// Developer Intent: Generate an Excel file that lists each order followed by its related line items using smart markers.
+// Use Cases: Automated invoice creation where each invoice header is followed by its item rows. | Sales dashboards that group product quantities under each customer order without manual loops. | Exporting relational database query results to a formatted Excel workbook with hierarchical layout.
+// AI Prompts: Add a subtotal row for each order in the smart‑marker template. | Include a second detail table (e.g., shipments) in the same master‑detail report. | Insert a page break after every master record when generating the Excel file.
+
 using System;
 using System.Data;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace MasterDetailSmartMarkers
+namespace MasterDetailSmartMarkersDemo
 {
+    // This self‑contained C# sample creates a DataSet with Orders and OrderDetails tables, defines a relation on OrderID, builds a workbook template with smart markers, marks the range as "_CellsSmartMarkers", binds the DataSet to a WorkbookDesigner, processes the markers to repeat detail rows for each order, and saves the result as MasterDetailReport.xlsx.
     class Program
     {
         static void Main()
         {
-            // ----- Create a template workbook in memory -----
-            Workbook template = new Workbook();
-            Worksheet sheet = template.Worksheets[0];
-            Cells cells = sheet.Cells;
+            try
+            {
+                // ---------- 1. Prepare master‑detail data ----------
+                DataSet ds = new DataSet();
 
-            // Master table header (smart marker for master records)
-            // &="Orders" tells Aspose.Cells to repeat this row for each master row
-            cells["A1"].PutValue("&=\"Orders\"");
-            cells["A2"].PutValue("Order ID");
-            cells["B2"].PutValue("Order Date");
-            // Master data row
-            cells["A3"].PutValue("&=Orders.OrderID");
-            cells["B3"].PutValue("&=Orders.OrderDate");
+                // Master table: Orders
+                DataTable orders = new DataTable("Orders");
+                orders.Columns.Add("OrderID", typeof(int));
+                orders.Columns.Add("CustomerName", typeof(string));
+                orders.Rows.Add(1, "Alice");
+                orders.Rows.Add(2, "Bob");
+                ds.Tables.Add(orders);
 
-            // Detail table header (smart marker for child records)
-            // &="Orders.Details" repeats this block for each master row's child rows
-            cells["A5"].PutValue("&=\"Orders.Details\"");
-            cells["A6"].PutValue("Product");
-            cells["B6"].PutValue("Quantity");
-            // Detail data rows
-            cells["A7"].PutValue("&=Orders.Details.ProductName");
-            cells["B7"].PutValue("&=Orders.Details.Quantity");
+                // Detail table: OrderDetails
+                DataTable orderDetails = new DataTable("OrderDetails");
+                orderDetails.Columns.Add("OrderID", typeof(int));
+                orderDetails.Columns.Add("Product", typeof(string));
+                orderDetails.Columns.Add("Quantity", typeof(int));
+                orderDetails.Rows.Add(1, "Apple", 10);
+                orderDetails.Rows.Add(1, "Banana", 5);
+                orderDetails.Rows.Add(2, "Orange", 7);
+                orderDetails.Rows.Add(2, "Grape", 3);
+                ds.Tables.Add(orderDetails);
 
-            // ----- Prepare master‑detail data in a DataSet -----
-            DataSet ds = new DataSet();
+                // Define relation between master and detail
+                ds.Relations.Add(
+                    "Orders_Details",
+                    orders.Columns["OrderID"]!,
+                    orderDetails.Columns["OrderID"]!);
 
-            // Master table
-            DataTable orders = new DataTable("Orders");
-            orders.Columns.Add("OrderID", typeof(int));
-            orders.Columns.Add("OrderDate", typeof(DateTime));
-            orders.Rows.Add(1, DateTime.Today.AddDays(-2));
-            orders.Rows.Add(2, DateTime.Today.AddDays(-1));
-            ds.Tables.Add(orders);
+                // ---------- 2. Build a template workbook with smart markers ----------
+                Workbook wb = new Workbook();
+                Worksheet ws = wb.Worksheets[0];
+                Cells cells = ws.Cells;
 
-            // Detail table
-            DataTable details = new DataTable("Details");
-            details.Columns.Add("OrderID", typeof(int)); // foreign key
-            details.Columns.Add("ProductName", typeof(string));
-            details.Columns.Add("Quantity", typeof(int));
-            details.Rows.Add(1, "Apple", 10);
-            details.Rows.Add(1, "Banana", 5);
-            details.Rows.Add(2, "Orange", 8);
-            details.Rows.Add(2, "Grape", 12);
-            ds.Tables.Add(details);
+                // Header row
+                cells["A1"].PutValue("Order ID");
+                cells["B1"].PutValue("Customer");
+                cells["C1"].PutValue("Product");
+                cells["D1"].PutValue("Quantity");
 
-            // Define relation between master and detail
-            ds.Relations.Add("Orders_Details", orders.Columns["OrderID"], details.Columns["OrderID"]);
+                // Master smart markers (first two columns)
+                cells["A2"].PutValue("&=Orders.OrderID");
+                cells["B2"].PutValue("&=Orders.CustomerName");
 
-            // ----- Process the template with smart markers -----
-            WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = template;
-            designer.SetDataSource(ds);
-            designer.Process();
+                // Detail smart markers (next two columns)
+                // The detail markers are placed in the same row; Aspose will repeat the row for each related detail record.
+                cells["C2"].PutValue("&=OrderDetails.Product");
+                cells["D2"].PutValue("&=OrderDetails.Quantity");
 
-            // ----- Save the result -----
-            designer.Workbook.Save("MasterDetailReport.xlsx");
+                // Define the range that contains smart markers.
+                // Naming the range as "_CellsSmartMarkers" tells the designer to process it as a block.
+                AsposeRange smartRange = cells.CreateRange("A2:D2");
+                smartRange.Name = "_CellsSmartMarkers";
+
+                // ---------- 3. Process the template with the data source ----------
+                WorkbookDesigner designer = new WorkbookDesigner
+                {
+                    Workbook = wb // assign the template workbook
+                };
+                designer.SetDataSource(ds); // bind the DataSet (master + detail)
+                designer.Process();         // populate smart markers
+
+                // ---------- 4. Save the result ----------
+                wb.Save("MasterDetailReport.xlsx");
+                Console.WriteLine("Report generated successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

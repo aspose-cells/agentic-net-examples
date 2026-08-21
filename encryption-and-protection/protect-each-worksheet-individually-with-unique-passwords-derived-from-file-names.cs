@@ -1,47 +1,74 @@
-// Title: Protect Each Excel Worksheet with Unique Passwords Using Aspose.Cells for .NET
-// Description: Loads an XLSX file, derives a base password from the workbook name, then iterates through all worksheets and applies ProtectionType.All with a distinct password (e.g., "Report_1", "Report_2"). The protected workbook is saved as a new file.
-// Keywords: Aspose.Cells | C# worksheet protection | Excel password per sheet | generate sheet passwords | ProtectionType.All | file‑name based password | .NET Excel security | Worksheet.Protect overload
-// Common Searches: Aspose.Cells protect each sheet with different password | C# set individual passwords for Excel worksheets | generate worksheet passwords from file name Aspose | protect all worksheets programmatically .NET | Worksheet.Protect password example
-// Developer Intent: Programmatically assign a separate password to every worksheet in a workbook, using the workbook's filename as the password seed.
-// Use Cases: Secure sections of a financial model so that only authorized users can edit specific sheets. | Automate batch processing of multiple reports, ensuring each sheet is locked with a distinct password derived from its source file. | Distribute a template where departmental tabs are protected with passwords like "Template_1", "Template_2" to control access.
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, creates a base password from the file name, protects each worksheet using ProtectionType.All with passwords formatted as '<filename>_<sheetIndex>', and saves the result. | Write a reusable Aspose.Cells method named ProtectSheets(string path) that applies per‑sheet passwords based on the workbook name and returns the path of the protected file.
+// Title: C# – Protect Each Excel Worksheet with a Distinct Password Using Aspose.Cells
+// Description: The sample loads a workbook, derives a base key from the source file name, builds a separate password for every worksheet by appending its index, applies full sheet protection (ProtectionType.All) with that key, and writes the secured file to the target path.
+// Keywords: Aspose.Cells C# worksheet protection | Excel sheet password per sheet | distinct sheet passwords .NET | protect workbook sheets individually | file‑name based password generation | ProtectionType.All usage | C# Excel security example | batch workbook protection Aspose | Excel encryption .NET | Aspose.Cells API password
+// Common Searches: C# protect individual Excel sheets with Aspose.Cells | generate different passwords for each worksheet programmatically | use file name to create worksheet passwords in .NET | apply ProtectionType.All to all sheets Aspose | save workbook after sheet protection C# | how to set per‑sheet password in Aspose.Cells | Excel sheet security using C# and Aspose
+// Developer Intent: Add per‑sheet password protection to an Excel workbook via Aspose.Cells.
+// Use Cases: Distribute a multi‑department workbook where each department's tab is locked with its own credential. | Comply with data‑privacy policies by encrypting every sheet before sending the file to external partners. | Automate processing of dozens of workbooks, assigning sheet‑specific passwords derived from each file's name.
+// AI Prompts: Write C# code with Aspose.Cells that secures every worksheet using a password that combines the workbook name and sheet index. | Show how to replace the file‑name‑based password pattern with a custom format, such as "Dept_{SheetName}_{Date}". | Explain how to programmatically verify the password of a particular worksheet after it has been protected with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsWorksheetProtection
+namespace AsposeCellsExamples
 {
-    // Loads an XLSX file, derives a base password from the workbook name, then iterates through all worksheets and applies ProtectionType.All with a distinct password (e.g., "Report_1", "Report_2"). The protected workbook is saved as a new file.
-    class Program
+    // The sample loads a workbook, derives a base key from the source file name, builds a separate password for every worksheet by appending its index, applies full sheet protection (ProtectionType.All) with that key, and writes the secured file to the target path.
+    class ProtectWorksheets
     {
-        static void Main()
+        public static void Run(string inputFilePath, string outputFilePath)
         {
-            // Path to the source workbook
-            string sourcePath = "input.xlsx";
+            // Verify input file exists
+            if (!File.Exists(inputFilePath))
+                throw new FileNotFoundException($"Input file not found: {inputFilePath}");
 
-            // Load the workbook (lifecycle rule: load)
-            Workbook workbook = new Workbook(sourcePath);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputFilePath);
 
-            // Derive a base password from the file name (without extension)
-            string basePassword = Path.GetFileNameWithoutExtension(sourcePath);
+            // Base password derived from the file name (without extension)
+            string basePassword = Path.GetFileNameWithoutExtension(inputFilePath);
 
             // Protect each worksheet with a unique password
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Worksheet sheet = workbook.Worksheets[i];
+                // Create a unique password for the current worksheet
+                string sheetPassword = $"{basePassword}_Sheet{sheet.Index}";
 
-                // Create a unique password for the worksheet (e.g., "input_1", "input_2", ...)
-                string worksheetPassword = $"{basePassword}_{i + 1}";
-
-                // Protect the worksheet with all protection types and the generated password
-                // Using the overload Protect(ProtectionType, string, string)
-                sheet.Protect(ProtectionType.All, worksheetPassword, null);
+                // Protect the worksheet with all protection types using the unique password
+                sheet.Protect(ProtectionType.All, sheetPassword, null);
             }
 
-            // Save the protected workbook (lifecycle rule: save)
-            string outputPath = "output_protected.xlsx";
-            workbook.Save(outputPath);
+            // Save the workbook with protected worksheets
+            workbook.Save(outputFilePath);
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Expecting two arguments: input file path and output file path
+                if (args.Length < 2)
+                {
+                    Console.WriteLine("Usage: AsposeCellsExamples <inputFilePath> <outputFilePath>");
+                    return;
+                }
+
+                string inputPath = args[0];
+                string outputPath = args[1];
+
+                ProtectWorksheets.Run(inputPath, outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine($"File error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

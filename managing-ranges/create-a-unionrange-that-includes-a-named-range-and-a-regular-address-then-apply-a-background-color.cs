@@ -1,19 +1,18 @@
-// Title: Aspose.Cells .NET – Build a UnionRange from a named range and a cell address and apply a background color
-// Description: Demonstrates how to create a named range (MyRange = A1:A3), combine it with a regular address (C5:D6) into a UnionRange, and apply a solid LightGreen background using C# and Aspose.Cells. The workbook is saved as UnionRangeNamedDemo.xlsx.
-// Keywords: Aspose.Cells UnionRange C# | named range Aspose.Cells | apply background color UnionRange | CreateUnionRange named range | .NET spreadsheet formatting | UnionRange style flag
-// Common Searches: Aspose.Cells combine named range with cell range | UnionRange background color C# | How to use CreateUnionRange in Aspose.Cells .NET | Apply solid fill to multiple ranges Aspose.Cells
-// Developer Intent: Generate a UnionRange that merges a named range and a standard address, then format the whole range with a solid fill.
-// Use Cases: Highlight a header defined by a named range together with adjacent summary cells. | Apply uniform styling to a dynamic named range and fixed template cells in a report. | Group related sections of a worksheet by giving them a shared background color.
-// AI Prompts: Provide C# code that creates a UnionRange from the named range MyRange and the address C5:D6, then sets a LightGreen background using Aspose.Cells. | Show an example of defining a named range, merging it with another range via CreateUnionRange, and applying a solid fill with StyleFlag.All in Aspose.Cells for .NET. | Explain the steps to format all parts of a UnionRange that includes both a named range and a regular cell block.
+// Title: Aspose.Cells .NET – Build a UnionRange from a named range and a cell address and set a solid background color
+// Description: Demonstrates how to create a workbook, define a named range (A1:A5), populate it, combine it with another range (C1:C5) using Workbook.Worksheets.CreateUnionRange, and apply a solid light‑green fill to the entire UnionRange with a StyleFlag. The result is saved as UnionRangeNamedDemo.xlsx.
+// Keywords: Aspose.Cells UnionRange C# | named range union Aspose.Cells | apply background color UnionRange | CreateUnionRange example | .NET Excel styling | solid fill style Aspose.Cells
+// Common Searches: Aspose.Cells create UnionRange from named range and address | how to apply background color to UnionRange in C# | combine named range with another range Aspose.Cells | style entire UnionRange Aspose.Cells .NET
+// Developer Intent: Combine a predefined named range with an additional cell range into a UnionRange and apply uniform formatting.
+// Use Cases: Apply the same highlight to non‑contiguous sections (e.g., a named range and a separate column) in a generated report. | Quickly format multiple disjoint ranges with a single style when exporting data to Excel. | Maintain consistent visual cues across named and ad‑hoc ranges in automated spreadsheet creation.
+// AI Prompts: Generate C# code that builds a UnionRange from a named range and a regular address and fills it with a solid light‑green background using Aspose.Cells. | Explain step‑by‑step how Workbook.Worksheets.CreateUnionRange can merge a named range and a cell range, then style the whole area with a StyleFlag. | Provide instructions to define a named range, create a UnionRange that includes another range, and apply a solid fill to all cells in the UnionRange.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsUnionRangeDemo
 {
-    // Demonstrates how to create a named range (MyRange = A1:A3), combine it with a regular address (C5:D6) into a UnionRange, and apply a solid LightGreen background using C# and Aspose.Cells. The workbook is saved as UnionRangeNamedDemo.xlsx.
+    // Demonstrates how to create a workbook, define a named range (A1:A5), populate it, combine it with another range (C1:C5) using Workbook.Worksheets.CreateUnionRange, and apply a solid light‑green fill to the entire UnionRange with a StyleFlag. The result is saved as UnionRangeNamedDemo.xlsx.
     class Program
     {
         static void Main()
@@ -24,49 +23,33 @@ namespace AsposeCellsUnionRangeDemo
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // ------------------------------------------------------------
-                // 1. Create a named range "MyRange" that covers cells A1:A3
-                // ------------------------------------------------------------
-                AsposeRange rangeA = worksheet.Cells.CreateRange("A1:A3");
-                rangeA.Name = "MyRange";
+                // Define a regular range (A1:A5) and give it a name
+                Aspose.Cells.Range namedRange = worksheet.Cells.CreateRange("A1:A5");
+                namedRange.Name = "MyRange";
 
-                // Populate the named range with sample data (optional)
-                rangeA[0, 0].PutValue("Item 1");
-                rangeA[1, 0].PutValue("Item 2");
-                rangeA[2, 0].PutValue("Item 3");
+                // Populate the named range with sample data
+                for (int i = 0; i < namedRange.RowCount; i++)
+                {
+                    namedRange[i, 0].PutValue($"Item {i + 1}");
+                }
 
-                // ------------------------------------------------------------
-                // 2. Create a UnionRange that includes the named range and a
-                //    regular address (C5:D6)
-                // ------------------------------------------------------------
-                // The address string can contain both a named range and normal
-                // cell addresses separated by commas.
-                UnionRange unionRange = workbook.Worksheets.CreateUnionRange("MyRange,C5:D6", 0);
+                // Create a union range that includes the named range and another address (C1:C5)
+                UnionRange unionRange = workbook.Worksheets.CreateUnionRange("MyRange,C1:C5", 0);
 
-                // Populate the regular address part with sample data (optional)
-                worksheet.Cells["C5"].PutValue("Data C5");
-                worksheet.Cells["D6"].PutValue("Data D6");
-
-                // ------------------------------------------------------------
-                // 3. Apply a background color to the entire union range
-                // ------------------------------------------------------------
+                // Apply a solid background color to the entire union range
                 Style style = workbook.CreateStyle();
                 style.Pattern = BackgroundType.Solid;
-                style.ForegroundColor = Color.LightGreen; // desired background color
+                style.ForegroundColor = Color.LightGreen;
 
                 // Apply the style to all formatting aspects of the union range
                 unionRange.ApplyStyle(style, new StyleFlag { All = true });
 
-                // ------------------------------------------------------------
-                // 4. Save the workbook
-                // ------------------------------------------------------------
-                string outputPath = "UnionRangeNamedDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // Save the workbook
+                workbook.Save("UnionRangeNamedDemo.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

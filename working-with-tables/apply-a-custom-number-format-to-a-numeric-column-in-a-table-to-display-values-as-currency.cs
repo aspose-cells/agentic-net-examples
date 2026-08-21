@@ -1,10 +1,10 @@
-// Title: Apply Currency Number Format to a Table Column with Aspose.Cells for .NET
-// Description: Creates a workbook, adds a ListObject (table) over A1:B4, defines a "$#,##0.00" style, selects the Price column cells, and applies only the number format using StyleFlag before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | custom number format | currency format | table column styling | ListObject | StyleFlag | Excel export | financial reporting
-// Common Searches: Aspose.Cells set currency format for table column | C# apply custom number format to ListObject column | StyleFlag only number format Aspose.Cells | format price column as $ in Excel using Aspose
-// Developer Intent: Display numeric values in a table column as formatted currency without altering other cell styles.
-// Use Cases: Generate product price lists where the Price column shows dollar values with two decimals. | Create financial statements that automatically format monetary columns for readability. | Export invoice data to Excel with the amount column pre‑formatted as currency.
-// AI Prompts: Show C# code that applies the "$#,##0.00" number format to a specific column of an Aspose.Cells ListObject using StyleFlag. | Explain how to format only the numeric cells of a table column as currency while preserving existing cell formatting in Aspose.Cells for .NET.
+// Title: Format a Table Column as Currency with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds a ListObject table, defines a style with the custom format "$#,##0.00", uses a StyleFlag to apply only the number‑format to the price column, and saves the file as an XLSX workbook.
+// Keywords: Aspose.Cells | C# | custom number format | currency format | ListObject | ListColumn | ApplyStyle | StyleFlag | Excel table column formatting | Aspose.Cells .NET
+// Common Searches: Aspose.Cells set currency format for table column | C# apply custom number format to ListColumn | StyleFlag only number format Aspose.Cells | How to format price column in Excel table using Aspose.Cells | ApplyStyle currency format ListObject column
+// Developer Intent: Apply a custom currency number format to the numeric column of an Excel table without affecting other cell styles.
+// Use Cases: Generate product price lists where the price column shows values with a dollar sign and two decimals. | Produce financial reports that automatically display amount columns as currency. | Export invoices from an application with the total column pre‑formatted as currency in the resulting Excel file.
+// AI Prompts: Show how to format a ListColumn as currency in Aspose.Cells while preserving other styles. | Provide a C# example that uses StyleFlag to change only the number format of a table column. | Explain the steps to create a custom currency style and apply it to a specific column of a ListObject in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
@@ -12,68 +12,60 @@ using Aspose.Cells.Tables;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, adds a ListObject (table) over A1:B4, defines a "$#,##0.00" style, selects the Price column cells, and applies only the number format using StyleFlag before saving the file.
-    public class TableColumnCurrencyFormatDemo
+    // Creates a workbook, adds a ListObject table, defines a style with the custom format "$#,##0.00", uses a StyleFlag to apply only the number‑format to the price column, and saves the file as an XLSX workbook.
+    public class TableColumnCurrencyFormat
     {
-        public static void Main()
+        public static void Run()
         {
             try
             {
-                Run();
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data: first column is product name, second column is price
+                sheet.Cells["A1"].PutValue("Product");
+                sheet.Cells["B1"].PutValue("Price");
+                sheet.Cells["A2"].PutValue("Apple");
+                sheet.Cells["B2"].PutValue(1.25);
+                sheet.Cells["A3"].PutValue("Orange");
+                sheet.Cells["B3"].PutValue(0.85);
+                sheet.Cells["A4"].PutValue("Banana");
+                sheet.Cells["B4"].PutValue(0.60);
+
+                // Create a table that includes the data range (including headers)
+                int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
+                ListObject table = sheet.ListObjects[tableIndex];
+                table.DisplayName = "ProductsTable";
+
+                // Prepare a style with a custom currency number format
+                Style currencyStyle = workbook.CreateStyle();
+                currencyStyle.Custom = "$#,##0.00";
+
+                // Use StyleFlag to apply only the number format part of the style
+                StyleFlag flag = new StyleFlag();
+                flag.NumberFormat = true;
+
+                // Apply the style to the numeric column (second column, index 1) of the table
+                ListColumn priceColumn = table.ListColumns[1];
+                priceColumn.Range.ApplyStyle(currencyStyle, flag);
+
+                // Save the workbook to a file
+                workbook.Save("TableColumnCurrencyFormat.xlsx");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
+    }
 
-        public static void Run()
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the table
-            sheet.Cells["A1"].PutValue("Item");
-            sheet.Cells["B1"].PutValue("Price");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(1.25);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(0.75);
-            sheet.Cells["A4"].PutValue("Cherry");
-            sheet.Cells["B4"].PutValue(2.50);
-
-            // Create a table (ListObject) that includes the data range A1:B4
-            int tableIndex = sheet.ListObjects.Add(0, 0, 3, 1, true);
-            ListObject table = sheet.ListObjects[tableIndex];
-            // Set table name (use DisplayName if Name property is unavailable)
-            table.DisplayName = "ProductsTable";
-
-            // Define a custom currency number format
-            Style currencyStyle = workbook.CreateStyle();
-            currencyStyle.Custom = "$#,##0.00";
-
-            // Determine the data rows range for the Price column (excluding header)
-            int firstDataRow = table.DataRange.FirstRow + 1; // row after header
-            int lastDataRow = table.DataRange.FirstRow + table.DataRange.RowCount - 1;
-            int columnIndex = table.DataRange.FirstColumn + 1; // Price column (B)
-
-            // Create the range for the price column data cells
-            Aspose.Cells.Range priceRange = sheet.Cells.CreateRange(
-                firstDataRow,
-                columnIndex,
-                lastDataRow - firstDataRow + 1,
-                1);
-
-            // Apply only the number format using StyleFlag
-            StyleFlag flag = new StyleFlag();
-            flag.NumberFormat = true;
-            priceRange.ApplyStyle(currencyStyle, flag);
-
-            // Save the workbook
-            string outputPath = "TableColumnCurrencyFormatDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            TableColumnCurrencyFormat.Run();
         }
     }
 }

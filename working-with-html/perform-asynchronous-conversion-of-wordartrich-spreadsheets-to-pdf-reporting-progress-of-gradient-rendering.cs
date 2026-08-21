@@ -1,10 +1,10 @@
-// Title: Async Convert WordArt‑Heavy Excel to PDF with Page‑Level Progress (Aspose.Cells C#)
-// Description: Loads an .xlsx workbook that contains WordArt and gradient fills, configures PdfSaveOptions (IgnoreError and IPageSavingCallback), and saves it to PDF on a background thread via Task.Run, reporting the start and end of each page rendering.
-// Keywords: Aspose.Cells async PDF conversion | C# Excel to PDF WordArt | gradient rendering progress callback | IPageSavingCallback example | PdfSaveOptions IgnoreError | background thread Excel export | per‑page PDF save progress | asynchronous workbook conversion
-// Common Searches: asynchronous Excel to PDF conversion Aspose.Cells | how to get page progress when saving PDF with gradients | ignore shape errors during PDF export Aspose.Cells | C# convert WordArt workbook to PDF async | IPageSavingCallback usage example
-// Developer Intent: Convert a WordArt‑rich Excel workbook to PDF asynchronously while receiving per‑page rendering progress callbacks.
-// Use Cases: Batch‑process large, graphic‑intensive reports in a Windows service without blocking the UI. | Log start and completion times for each PDF page to identify slow‑rendering gradients. | Suppress shape and gradient rendering errors to ensure the conversion finishes without exceptions.
-// AI Prompts: Write C# code that uses Aspose.Cells to asynchronously convert an Excel file containing WordArt to PDF and logs page start/end via IPageSavingCallback. | Show how to configure PdfSaveOptions with IgnoreError and attach a custom progress callback for PDF saving in Aspose.Cells. | Explain how to extend the async conversion method to accept a CancellationToken and report progress through IProgress<T>.
+// Title: Async Excel‑to‑PDF Conversion with WordArt Support and Page‑Rendering Progress (Aspose.Cells C#)
+// Description: Demonstrates how to load an Excel workbook that may contain WordArt, configure PdfSaveOptions with a custom IPageSavingCallback to report page‑start and page‑end events, and save the workbook to PDF on a background thread using Task.Run. The async method can be awaited, keeping UI or service threads responsive while tracking gradient rendering progress.
+// Keywords: Aspose.Cells async PDF conversion | C# Excel to PDF WordArt | IPageSavingCallback progress | PdfSaveOptions page callback | Task.Run background conversion | .NET async workbook conversion | gradient rendering progress | Excel WordArt PDF export | page rendering notifications
+// Common Searches: async convert Excel with WordArt to PDF Aspose.Cells | track page rendering progress when saving PDF with Aspose.Cells | IPageSavingCallback example C# | run Aspose.Cells PDF conversion on background thread | how to report PDF page save progress Aspose
+// Developer Intent: Convert an Excel workbook that contains WordArt to PDF without blocking the caller and receive real‑time notifications for each page rendered.
+// Use Cases: Embed the async converter in a WPF or WinForms app to keep the UI responsive while showing per‑page progress for large, WordArt‑rich spreadsheets. | Process bulk Excel‑to‑PDF jobs in a Windows service, logging start/end of each page via the custom callback for audit or monitoring purposes. | Expose the conversion through an ASP.NET Core Web API endpoint that accepts an uploaded workbook and returns the generated PDF, handling errors and progress internally.
+// AI Prompts: Generate a xUnit test that verifies ConvertWorkbookToPdfAsync invokes GradientRenderingProgressCallback for every page of a multi‑sheet workbook. | Rewrite GradientRenderingProgressCallback to compute and display overall conversion percentage based on total pages. | Show how to call ConvertWorkbookToPdfAsync from an ASP.NET Core controller and return the PDF as a FileResult. | Create a WPF MVVM example that binds the async conversion task to a progress bar using the page‑saving callbacks. | Provide a PowerShell script that uses the compiled DLL to convert a folder of Excel files with WordArt to PDFs asynchronously.
 
 using System;
 using System.IO;
@@ -12,74 +12,84 @@ using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Loads an .xlsx workbook that contains WordArt and gradient fills, configures PdfSaveOptions (IgnoreError and IPageSavingCallback), and saves it to PDF on a background thread via Task.Run, reporting the start and end of each page rendering.
-public class GradientPdfConverter
+// Demonstrates how to load an Excel workbook that may contain WordArt, configure PdfSaveOptions with a custom IPageSavingCallback to report page‑start and page‑end events, and save the workbook to PDF on a background thread using Task.Run. The async method can be awaited, keeping UI or service threads responsive while tracking gradient rendering progress.
+public class WorkbookPdfConverter
 {
-    // Callback to report progress of each page being saved.
-    private class PageProgressCallback : IPageSavingCallback
+    // Asynchronous method to convert an Excel workbook (which may contain WordArt) to PDF.
+    // It reports progress of each page being rendered via a custom PageSavingCallback.
+    public async Task ConvertWorkbookToPdfAsync(string sourceFilePath, string destinationPdfPath)
     {
-        public void PageStartSaving(PageStartSavingArgs args)
-        {
-            // Report start of page rendering
-            Console.WriteLine($"[Progress] Starting to render page {args.PageIndex + 1}");
-        }
+        // Validate input file existence.
+        if (!File.Exists(sourceFilePath))
+            throw new FileNotFoundException($"Source file not found: {sourceFilePath}");
 
-        public void PageEndSaving(PageEndSavingArgs args)
+        // Run the conversion on a background thread to avoid blocking the caller.
+        await Task.Run(() =>
         {
-            // Report end of page rendering
-            Console.WriteLine($"[Progress] Finished rendering page {args.PageIndex + 1}");
-        }
+            try
+            {
+                // Load the workbook from the specified source file.
+                Workbook workbook = new Workbook(sourceFilePath);
+
+                // Configure PDF save options.
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    // Attach a custom callback to receive page‑saving progress notifications.
+                    PageSavingCallback = new GradientRenderingProgressCallback()
+                };
+
+                // Save the workbook as PDF using the configured options.
+                workbook.Save(destinationPdfPath, pdfOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Error] Conversion failed: {ex.Message}");
+                throw;
+            }
+        });
     }
 
-    /// <param name="sourcePath">Full path of the source .xlsx file.</param>
-    /// <param name="destPath">Full path where the resulting PDF will be saved.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public static async Task ConvertToPdfAsync(string sourcePath, string destPath)
+    // Custom implementation of IPageSavingCallback to report rendering progress.
+    private class GradientRenderingProgressCallback : IPageSavingCallback
+    {
+        // Called before a page starts being saved.
+        public void PageStartSaving(PageStartSavingArgs args)
+        {
+            // TotalPages may not be available in some versions; fallback to unknown total.
+            Console.WriteLine($"[Progress] Starting to render page {args.PageIndex + 1}.");
+        }
+
+        // Called after a page has been saved.
+        public void PageEndSaving(PageEndSavingArgs args)
+        {
+            Console.WriteLine($"[Progress] Finished rendering page {args.PageIndex + 1}.");
+            if (args.HasMorePages)
+            {
+                Console.WriteLine("[Progress] More pages remain to be processed...");
+            }
+        }
+    }
+}
+
+// Simple console entry point to demonstrate usage.
+public class Program
+{
+    public static async Task Main(string[] args)
     {
         try
         {
-            // Verify that the source file exists to avoid FileNotFoundException.
-            if (!File.Exists(sourcePath))
-                throw new FileNotFoundException($"Source file not found: {sourcePath}");
+            // Example file paths (adjust as needed).
+            string inputPath = "input_with_wordart.xlsx";
+            string outputPath = "output.pdf";
 
-            // Load the workbook.
-            Workbook workbook = new Workbook(sourcePath);
-
-            // Configure PDF save options.
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Hide rendering errors (e.g., shape or gradient issues).
-                IgnoreError = true,
-
-                // Attach the progress callback.
-                PageSavingCallback = new PageProgressCallback()
-            };
-
-            // Perform the save operation on a background thread.
-            await Task.Run(() => workbook.Save(destPath, pdfOptions));
+            var converter = new WorkbookPdfConverter();
+            await converter.ConvertWorkbookToPdfAsync(inputPath, outputPath);
 
             Console.WriteLine("Conversion completed successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during conversion: {ex.Message}");
-            throw;
-        }
-    }
-
-    // Example usage.
-    public static async Task Main()
-    {
-        try
-        {
-            string sourceFile = "WordArtSample.xlsx";   // Input workbook containing WordArt/gradients
-            string outputPdf = "WordArtSample.pdf";     // Desired PDF output
-
-            await ConvertToPdfAsync(sourceFile, outputPdf);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unhandled exception: {ex.Message}");
+            Console.WriteLine($"[Fatal] {ex.Message}");
         }
     }
 }

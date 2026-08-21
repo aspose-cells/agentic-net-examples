@@ -1,19 +1,18 @@
-// Title: Set default row height to 20 points in Aspose.Cells for .NET
-// Description: Creates a new Workbook, accesses the first Worksheet, sets its StandardHeight to 20 points, writes a sample value, and saves the file as DefaultRowHeight.xlsx using C#.
-// Keywords: Aspose.Cells default row height | C# set worksheet StandardHeight | Excel row height 20 points | Aspose.Cells .NET row height | global row height Aspose
-// Common Searches: Aspose.Cells set default row height .NET | C# change worksheet standard height | How to set global row height in Excel using Aspose | Set row height for all rows Aspose.Cells | Adjust default row height in a new workbook
-// Developer Intent: Configure the worksheet’s global row height to 20 points.
-// Use Cases: Generate a workbook template where every row starts with a readable 20‑point height. | Export tabular reports that require consistent row spacing without manually adjusting each row. | Create data‑entry forms in Excel where the default row height improves usability.
-// AI Prompts: Write C# code with Aspose.Cells that sets the worksheet default row height to 20 points and saves the workbook. | Explain how to modify the StandardHeight of an existing worksheet without changing rows that already have custom heights. | Show how to apply a global default row height and then override it for specific rows using Aspose.Cells.
+// Title: C# – Set default row height to 20 points with Aspose.Cells
+// Description: Creates a new Workbook, accesses the first Worksheet, sets worksheet.Cells.StandardHeight to 20 points (affecting rows without custom heights), adds sample text, and saves the file as DefaultRowHeightDemo.xlsx.
+// Keywords: Aspose.Cells | C# set row height | StandardHeight property | default row height 20 | worksheet row height | Aspose.Cells example | Excel row height .NET
+// Common Searches: Aspose.Cells set default row height .NET | C# StandardHeight property example | How to change row height for all rows in Aspose.Cells | Increase Excel row height using Aspose.Cells C#
+// Developer Intent: Apply a 20‑point default height to all rows of a worksheet using Aspose.Cells for .NET.
+// Use Cases: Generate reports with consistent row spacing before populating data. | Adjust existing workbooks to improve readability when exporting to PDF. | Standardize row height across multiple worksheets in a template workbook.
+// AI Prompts: Write C# code that sets worksheet.Cells.StandardHeight to 20 for every sheet in a workbook and saves it as an .xlsx file. | Show how to override the default row height for specific rows after setting a global 20‑point height with Aspose.Cells. | Explain the precedence between worksheet.Cells.StandardHeight and individual row height settings in Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Creates a new Workbook, accesses the first Worksheet, sets its StandardHeight to 20 points, writes a sample value, and saves the file as DefaultRowHeight.xlsx using C#.
-    public class SetDefaultRowHeight
+    // Creates a new Workbook, accesses the first Worksheet, sets worksheet.Cells.StandardHeight to 20 points (affecting rows without custom heights), adds sample text, and saves the file as DefaultRowHeightDemo.xlsx.
+    public class SetDefaultRowHeightDemo
     {
         public static void Run()
         {
@@ -25,18 +24,17 @@ namespace AsposeCellsExamples
                 // Access the first worksheet
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Set the default row height to 20 points (standard height)
+                // Set the default row height for the worksheet to 20 points
+                // This affects all rows that do not have a custom height
                 worksheet.Cells.StandardHeight = 20;
 
-                // Optional: add a sample value to see the effect
-                worksheet.Cells["A1"].PutValue("Row height set to 20 points");
-
-                // Define output file path
-                string outputPath = "DefaultRowHeight.xlsx";
+                // Optional: add some sample data to verify the height visually
+                worksheet.Cells["A1"].PutValue("Row 1 with default height");
+                worksheet.Cells["A2"].PutValue("Row 2 with default height");
+                worksheet.Cells["A3"].PutValue("Row 3 with default height");
 
                 // Save the workbook (lifecycle rule: save)
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                workbook.Save("DefaultRowHeightDemo.xlsx");
             }
             catch (Exception ex)
             {
@@ -49,7 +47,7 @@ namespace AsposeCellsExamples
     {
         public static void Main(string[] args)
         {
-            SetDefaultRowHeight.Run();
+            SetDefaultRowHeightDemo.Run();
         }
     }
 }

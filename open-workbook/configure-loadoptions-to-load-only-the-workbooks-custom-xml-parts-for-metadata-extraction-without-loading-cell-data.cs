@@ -1,55 +1,56 @@
-// Title: Load only custom XML parts from an Excel workbook using Aspose.Cells LoadOptions (C#)
-// Description: Demonstrates how to configure Aspose.Cells LoadOptions with a Structure LoadFilter and KeepUnparsedData disabled so the workbook opens without cell data, allowing fast extraction of embedded custom XML parts for metadata processing.
-// Keywords: Aspose.Cells | LoadOptions | LoadFilter.Structure | custom XML parts | Excel metadata extraction | C# | skip cell data | performance optimization
-// Common Searches: Aspose.Cells load only custom XML parts | Read Excel custom XML without loading worksheets | LoadOptions Structure option C# | Extract embedded XML from Excel file | How to avoid loading cell data in Aspose.Cells
-// Developer Intent: Open an Excel file solely to access its custom XML parts while preventing worksheet cell data from being loaded into memory.
-// Use Cases: Index embedded XML metadata from large workbooks without the overhead of loading sheet contents. | Validate or transform custom XML schemas in Excel files while keeping memory usage minimal. | Batch‑process many spreadsheets to generate a catalog of their custom XML parts.
-// AI Prompts: Generate C# code that uses Aspose.Cells LoadOptions with LoadFilter.Structure to read only custom XML parts from an Excel workbook. | Explain the impact of the KeepUnparsedData flag on loading custom XML parts and recommend the optimal setting for metadata extraction. | Show how to stream each custom XML part directly to a file instead of converting it to a string.
+// Title: Load custom XML parts only with Aspose.Cells LoadOptions (C#) – skip cell data
+// Description: Demonstrates how to configure LoadOptions with a Structure filter and KeepUnparsedData disabled so that only the workbook's custom XML parts are loaded. The example opens the file, enumerates the CustomXmlParts collection, converts each part to a UTF‑8 string, and prints the XML without loading any worksheet cells, delivering fast metadata extraction.
+// Keywords: Aspose.Cells LoadOptions C# | custom XML parts Excel | load workbook structure only | skip cell data Aspose | .NET Excel metadata extraction | performance optimization Aspose.Cells
+// Common Searches: Aspose.Cells load only custom XML parts | C# load workbook structure without cells | extract Excel custom XML metadata using Aspose | how to avoid loading cell data in Aspose.Cells | read custom XML parts from .xlsx in .NET
+// Developer Intent: Open an Excel file just to read its custom XML parts while preventing any cell data from being loaded.
+// Use Cases: Indexing document metadata for search engines without the overhead of full workbook parsing. | Transforming embedded XML schemas into JSON or other formats for integration pipelines. | Validating the presence and structure of custom XML parts in automated quality checks.
+// AI Prompts: Write C# code that uses Aspose.Cells LoadOptions with a Structure filter to read only custom XML parts from an Excel workbook. | Explain the impact of setting KeepUnparsedData to false when loading a workbook for metadata extraction. | Show how to iterate through the CustomXmlParts collection and output each part as a UTF‑8 string after loading the workbook without cell data.
 
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Loading;
 
-namespace AsposeCellsCustomXmlLoad
+namespace LoadCustomXmlOnly
 {
-    // Demonstrates how to configure Aspose.Cells LoadOptions with a Structure LoadFilter and KeepUnparsedData disabled so the workbook opens without cell data, allowing fast extraction of embedded custom XML parts for metadata processing.
+    // Demonstrates how to configure LoadOptions with a Structure filter and KeepUnparsedData disabled so that only the workbook's custom XML parts are loaded. The example opens the file, enumerates the CustomXmlParts collection, converts each part to a UTF‑8 string, and prints the XML without loading any worksheet cells, delivering fast metadata extraction.
     class Program
     {
         static void Main()
         {
-            // Path to the workbook that contains custom XML parts
-            string inputPath = "WorkbookWithCustomXml.xlsx";
+            // Path to the source workbook that contains custom XML parts
+            string sourcePath = "WorkbookWithCustomXml.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Error: The file \"{sourcePath}\" was not found.");
                 return;
             }
 
             try
             {
-                // Create LoadOptions instance and configure it to load only the workbook structure
+                // Load only the workbook structure (no cell data) to improve performance
                 LoadOptions loadOptions = new LoadOptions
                 {
                     LoadFilter = new LoadFilter(LoadDataFilterOptions.Structure),
                     KeepUnparsedData = false
                 };
 
-                // Load the workbook using the configured options
-                Workbook workbook = new Workbook(inputPath, loadOptions);
+                // Load the workbook with the specified options
+                Workbook workbook = new Workbook(sourcePath, loadOptions);
 
-                // Access and enumerate the custom XML parts
-                Console.WriteLine($"Number of custom XML parts: {workbook.CustomXmlParts.Count}");
-                for (int i = 0; i < workbook.CustomXmlParts.Count; i++)
+                // Access the collection of custom XML parts
+                var customXmlParts = workbook.CustomXmlParts;
+
+                // Output information about the loaded custom XML parts
+                Console.WriteLine($"Number of custom XML parts loaded: {customXmlParts.Count}");
+                for (int i = 0; i < customXmlParts.Count; i++)
                 {
-                    // Retrieve the XML data as a string (UTF-8 encoding assumed)
-                    byte[] xmlData = workbook.CustomXmlParts[i].Data;
-                    string xmlString = System.Text.Encoding.UTF8.GetString(xmlData);
-                    Console.WriteLine($"Custom XML Part {i + 1} content:");
-                    Console.WriteLine(xmlString);
-                    Console.WriteLine(new string('-', 40));
+                    // Retrieve the XML data as a string for demonstration
+                    string xmlData = Encoding.UTF8.GetString(customXmlParts[i].Data);
+                    Console.WriteLine($"--- Custom XML Part {i + 1} ---");
+                    Console.WriteLine(xmlData);
                 }
             }
             catch (Exception ex)
@@ -57,6 +58,8 @@ namespace AsposeCellsCustomXmlLoad
                 // Handle any unexpected errors gracefully
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
+
+            // No need to save the workbook since we only needed metadata extraction
         }
     }
 }

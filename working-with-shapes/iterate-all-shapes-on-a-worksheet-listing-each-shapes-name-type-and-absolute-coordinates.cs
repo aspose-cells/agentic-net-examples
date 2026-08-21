@@ -1,10 +1,10 @@
-// Title: C# – Enumerate Worksheet Shapes and Get Name, Type, and Absolute Coordinates with Aspose.Cells
-// Description: This example creates a workbook, adds a rectangle, an oval, and a textbox, then loops through the worksheet's Shapes collection. For each shape it reads the Name, Type, UpperLeftRow, UpperLeftColumn, Top, Left, Height and Width properties, prints the details to the console, and saves the file as ShapesInfo.xlsx.
-// Keywords: Aspose.Cells shape enumeration | C# iterate worksheet shapes | Excel shape coordinates .NET | retrieve shape name and type | shape absolute position Aspose.Cells | Aspose.Cells drawing objects | C# Excel shape properties
-// Common Searches: how to list all shapes in an Aspose.Cells worksheet | get shape row column offsets with Aspose.Cells C# | enumerate drawing objects in Excel using Aspose.Cells | retrieve shape dimensions and type in .NET Excel file
-// Developer Intent: List every shape on a worksheet and display its identifier, category, and exact location/size information.
-// Use Cases: Create an audit of all graphics in a spreadsheet for compliance reporting. | Validate that charts, images, or text boxes are positioned in the correct cells before publishing. | Map shapes to data rows for dynamic visual updates driven by cell values.
-// AI Prompts: Generate C# code with Aspose.Cells that exports each shape's name, type, row, column, top offset, left offset, height, and width to a CSV file. | Show how to filter the shape enumeration to process only rectangles and ovals while ignoring other shape types. | Explain how to assign custom names to shapes before iterating so the output contains meaningful identifiers.
+// Title: Enumerate Worksheet Shapes and Retrieve Name, Type, and Absolute Coordinates with Aspose.Cells for .NET (C#)
+// Description: This example creates a workbook, adds a rectangle, oval, and textbox, then iterates the worksheet's Shapes collection. For each shape it extracts the Name, MsoDrawingType, Left, Top, Width, and Height properties and writes the information to the console before optionally saving the file.
+// Keywords: Aspose.Cells | C# | .NET | shape enumeration | worksheet shapes | shape coordinates | MsoDrawingType | Excel drawing objects | list shape properties | shape left top width height
+// Common Searches: Aspose.Cells iterate shapes C# | how to list shape name and type in Excel using Aspose | retrieve shape coordinates with Aspose.Cells for .NET | enumerate all drawing objects in a worksheet Aspose | get left top width height of shapes in Aspose.Cells
+// Developer Intent: Extract every shape’s identifier, drawing type, and pixel position/size from a worksheet.
+// Use Cases: Generate an inventory of all drawing objects for documentation or compliance audits. | Export shape layout data to external systems that require exact positioning information. | Validate shape placement against design guidelines before producing printable reports.
+// AI Prompts: Write C# code using Aspose.Cells to loop through all worksheet shapes and print each shape's Name, MsoDrawingType, Left, Top, Width, and Height. | Show how to collect shape metadata into a DataTable or List for further processing with Aspose.Cells for .NET. | Provide an example that saves the enumerated shape details to a CSV file after iterating the Shapes collection.
 
 using System;
 using Aspose.Cells;
@@ -12,51 +12,48 @@ using Aspose.Cells.Drawing;
 
 namespace ShapeIterationDemo
 {
-    // This example creates a workbook, adds a rectangle, an oval, and a textbox, then loops through the worksheet's Shapes collection. For each shape it reads the Name, Type, UpperLeftRow, UpperLeftColumn, Top, Left, Height and Width properties, prints the details to the console, and saves the file as ShapesInfo.xlsx.
+    // This example creates a workbook, adds a rectangle, oval, and textbox, then iterates the worksheet's Shapes collection. For each shape it extracts the Name, MsoDrawingType, Left, Top, Width, and Height properties and writes the information to the console before optionally saving the file.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Add sample shapes to demonstrate the iteration
-            // Rectangle at row 2, column 2, height 100, width 200
-            sheet.Shapes.AddRectangle(2, 0, 2, 0, 100, 200);
-            // Oval at row 5, column 5, height 80, width 120
-            sheet.Shapes.AddOval(5, 0, 5, 0, 80, 120);
-            // TextBox at row 8, column 3, height 60, width 150
-            sheet.Shapes.AddTextBox(8, 0, 3, 0, 60, 150);
+            // Rectangle shape
+            Shape rect = sheet.Shapes.AddRectangle(2, 0, 2, 0, 100, 200);
+            rect.Name = "MyRectangle";
+
+            // Oval shape
+            Shape oval = sheet.Shapes.AddOval(5, 0, 5, 0, 80, 120);
+            oval.Name = "MyOval";
+
+            // TextBox shape
+            Shape txtBox = sheet.Shapes.AddShape(MsoDrawingType.TextBox, 8, 0, 8, 0, 150, 60);
+            txtBox.Name = "MyTextBox";
 
             // Iterate all shapes on the worksheet
-            foreach (Shape shape in sheet.Shapes)
+            for (int i = 0; i < sheet.Shapes.Count; i++)
             {
-                // Shape name (may be empty if not set)
+                Shape shape = sheet.Shapes[i];
+
+                // Retrieve shape properties
                 string name = shape.Name;
+                MsoDrawingType type = shape.MsoDrawingType;
+                int left = shape.Left;     // X coordinate (pixels) from the left edge of the worksheet
+                int top = shape.Top;       // Y coordinate (pixels) from the top edge of the worksheet
+                int width = shape.Width;   // Width in pixels
+                int height = shape.Height; // Height in pixels
 
-                // Shape type (auto shape type)
-                string type = shape.Type.ToString();
-
-                // Absolute coordinates: upper-left cell row/column and pixel offsets
-                int upperLeftRow = shape.UpperLeftRow;
-                int upperLeftColumn = shape.UpperLeftColumn;
-                int topOffset = shape.Top;      // pixel offset from the top of the upper-left cell
-                int leftOffset = shape.Left;    // pixel offset from the left of the upper-left cell
-                int height = shape.Height;      // height in pixels
-                int width = shape.Width;        // width in pixels
-
-                Console.WriteLine($"Shape Name: {name}");
-                Console.WriteLine($"Shape Type: {type}");
-                Console.WriteLine($"Location: Row {upperLeftRow}, Column {upperLeftColumn}");
-                Console.WriteLine($"Offset: Top {topOffset}px, Left {leftOffset}px");
-                Console.WriteLine($"Size: Height {height}px, Width {width}px");
-                Console.WriteLine(new string('-', 40));
+                // Output the details
+                Console.WriteLine($"Shape {i}: Name=\"{name}\", Type={type}, Left={left}, Top={top}, Width={width}, Height={height}");
             }
 
-            // Save the workbook (lifecycle rule: save)
+            // Save the workbook (optional, just to keep the file valid)
             workbook.Save("ShapesInfo.xlsx");
         }
     }

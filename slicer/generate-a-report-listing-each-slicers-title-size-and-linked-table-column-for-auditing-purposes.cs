@@ -1,89 +1,84 @@
+// Title: C# – Aspose.Cells – Create Slicer Audit Report (title, size, linked column)
+// Description: Loads an existing workbook, adds a "SlicerReport" worksheet, writes headers, then scans every worksheet (except the report) to capture each slicer's name, title, width (px), height (px) and the column it is linked to via the slicer cache. The collected data is written row‑by‑row and the workbook is saved as "SlicerAuditReport.xlsx".
+// Keywords: Aspose.Cells | C# | slicer audit | slicer title extraction | slicer dimensions | linked column retrieval | Excel automation | listobject slicer cache | dashboard validation | generate slicer report
+// Common Searches: Aspose.Cells list all slicers in a workbook | C# get slicer width and height using Aspose.Cells | retrieve slicer linked column Aspose.Cells .NET | create Excel report of slicer metadata C# | how to audit slicer settings with Aspose.Cells
+// Developer Intent: Produce an Excel file that enumerates every slicer’s worksheet, name, title, pixel dimensions, and associated table column.
+// Use Cases: Validate slicer titles and sizes across a multi‑sheet dashboard for UI consistency. | Document which table columns are bound to slicers to ensure data integrity before publishing. | Generate a quick inventory of slicer configurations for compliance or audit trails.
+// AI Prompts: Write C# code with Aspose.Cells that extracts slicer title, width, height, and linked column into a new worksheet. | Explain safe methods to obtain the linked column name from a slicer’s cache and how to handle missing information. | Suggest additional columns for the slicer audit report, such as slicer style, position, or current filter state.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
-using Aspose.Cells.Tables;
 using Aspose.Cells.Pivot;
+using Aspose.Cells.Tables;
 
-namespace SlicerAuditReport
+// Loads an existing workbook, adds a "SlicerReport" worksheet, writes headers, then scans every worksheet (except the report) to capture each slicer's name, title, width (px), height (px) and the column it is linked to via the slicer cache. The collected data is written row‑by‑row and the workbook is saved as "SlicerAuditReport.xlsx".
+class SlicerAuditReport
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook that contains slicers
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Add a new worksheet for the report
+        int reportIndex = workbook.Worksheets.Add();
+        Worksheet reportSheet = workbook.Worksheets[reportIndex];
+        reportSheet.Name = "SlicerReport";
+
+        // Write header row
+        Cells reportCells = reportSheet.Cells;
+        reportCells[0, 0].PutValue("Worksheet");
+        reportCells[0, 1].PutValue("Slicer Name");
+        reportCells[0, 2].PutValue("Title");
+        reportCells[0, 3].PutValue("Width (px)");
+        reportCells[0, 4].PutValue("Height (px)");
+        reportCells[0, 5].PutValue("Linked Column");
+
+        int currentRow = 1;
+
+        // Iterate through all worksheets and their slicers
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Skip the report sheet itself
+            if (ws.Name == reportSheet.Name) continue;
 
-            // -----------------------------
-            // Sample data and slicer setup
-            // -----------------------------
-            // Populate sample data
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("A");
-            sheet.Cells["B4"].PutValue(30);
-
-            // Add a table based on the data
-            int tableIdx = sheet.ListObjects.Add(0, 0, 3, 1, true);
-            ListObject table = sheet.ListObjects[tableIdx];
-
-            // Add a slicer linked to the first column of the table
-            int slicerIdx = sheet.Slicers.Add(table, 0, "D2");
-            Slicer slicer = sheet.Slicers[slicerIdx];
-            slicer.Caption = "Category Slicer";
-
-            // ---------------------------------
-            // Create a worksheet for the audit report
-            // ---------------------------------
-            Worksheet reportSheet = workbook.Worksheets.Add("SlicerReport");
-
-            // Write header row
-            reportSheet.Cells["A1"].PutValue("Worksheet");
-            reportSheet.Cells["B1"].PutValue("Slicer Name");
-            reportSheet.Cells["C1"].PutValue("Caption");
-            reportSheet.Cells["D1"].PutValue("Width (px)");
-            reportSheet.Cells["E1"].PutValue("Height (px)");
-            reportSheet.Cells["F1"].PutValue("Source Name");
-
-            int reportRow = 1; // zero‑based index; row 1 is the second row (after headers)
-
-            // Iterate through all worksheets (except the report sheet itself)
-            for (int wsIdx = 0; wsIdx < workbook.Worksheets.Count; wsIdx++)
+            SlicerCollection slicers = ws.Slicers;
+            for (int i = 0; i < slicers.Count; i++)
             {
-                Worksheet ws = workbook.Worksheets[wsIdx];
-                if (ws.Name == reportSheet.Name) continue; // skip the report sheet
+                Slicer slicer = slicers[i];
 
-                SlicerCollection slicers = ws.Slicers;
-                for (int i = 0; i < slicers.Count; i++)
+                // Basic slicer information
+                string worksheetName = ws.Name;
+                string slicerName = slicer.Name;
+                string title = slicer.Title;               // Title (may be empty if not set)
+                int widthPx = slicer.WidthPixel;
+                int heightPx = slicer.HeightPixel;
+
+                // Attempt to retrieve the linked column name via the slicer cache
+                string linkedColumn = string.Empty;
+                try
                 {
-                    Slicer s = slicers[i];
-
-                    // Gather required information
-                    string worksheetName = ws.Name;
-                    string slicerName = s.Name;
-                    string caption = s.Caption;
-                    int widthPx = s.WidthPixel;
-                    int heightPx = s.HeightPixel;
-                    string sourceName = s.SlicerCache?.SourceName ?? "N/A";
-
-                    // Write data to the report sheet
-                    reportSheet.Cells[reportRow, 0].PutValue(worksheetName);
-                    reportSheet.Cells[reportRow, 1].PutValue(slicerName);
-                    reportSheet.Cells[reportRow, 2].PutValue(caption);
-                    reportSheet.Cells[reportRow, 3].PutValue(widthPx);
-                    reportSheet.Cells[reportRow, 4].PutValue(heightPx);
-                    reportSheet.Cells[reportRow, 5].PutValue(sourceName);
-
-                    reportRow++;
+                    // For slicers based on a ListObject, SourceName usually contains the column name
+                    linkedColumn = slicer.SlicerCache.SourceName;
                 }
-            }
+                catch
+                {
+                    // If unavailable, leave the field empty
+                }
 
-            // Save the workbook with the audit report
-            workbook.Save("SlicerAuditReport.xlsx");
+                // Write the data to the report sheet
+                reportCells[currentRow, 0].PutValue(worksheetName);
+                reportCells[currentRow, 1].PutValue(slicerName);
+                reportCells[currentRow, 2].PutValue(title);
+                reportCells[currentRow, 3].PutValue(widthPx);
+                reportCells[currentRow, 4].PutValue(heightPx);
+                reportCells[currentRow, 5].PutValue(linkedColumn);
+
+                currentRow++;
+            }
         }
+
+        // Save the workbook with the new report
+        workbook.Save("SlicerAuditReport.xlsx");
     }
 }

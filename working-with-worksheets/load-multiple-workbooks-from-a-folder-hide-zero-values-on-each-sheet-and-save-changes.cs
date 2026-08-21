@@ -1,67 +1,68 @@
-// Title: C# batch hide zero values in all worksheets of multiple Excel workbooks with Aspose.Cells
-// Description: Scans a folder for .xlsx files, loads each workbook with Aspose.Cells, sets Worksheet.DisplayZeros = false for every sheet, and overwrites the files. Includes folder validation, file‑existence checks, and exception handling.
-// Keywords: Aspose.Cells | C# | .NET | DisplayZeros | hide zero values | batch process Excel | multiple workbooks | folder iteration | Excel automation | worksheet settings
-// Common Searches: Aspose.Cells hide zeros in all worksheets | C# batch process Excel files to disable zero display | set DisplayZeros false for every sheet using Aspose.Cells | iterate over folder of .xlsx files and modify worksheets | bulk update Excel workbooks Aspose.Cells
-// Developer Intent: Load each workbook in a directory, disable zero display on every worksheet, and save the changes back to the original files.
-// Use Cases: Standardizing financial statements where zero amounts should not appear | Preparing large sets of report templates for client delivery | Nightly cleanup of Excel data exports to improve visual clarity | Automating data‑cleaning pipelines for BI dashboards
-// AI Prompts: Write C# code that uses Aspose.Cells to iterate through all .xlsx files in a given folder, set Worksheet.DisplayZeros = false for each sheet, and save the workbook. | Show how to add robust logging and continue‑on‑error handling when batch‑processing Excel workbooks with Aspose.Cells. | Explain how to make the folder path and file pattern configurable via appsettings in a .NET console app that hides zero values.
+// Title: Batch hide zero values in all worksheets of multiple Excel workbooks using Aspose.Cells for .NET
+// Description: A C# console app that scans a folder for *.xlsx files, loads each workbook with Aspose.Cells, disables zero display on every worksheet via the DisplayZeros property, and overwrites the original files. Includes folder validation, file existence checks, and robust exception handling.
+// Keywords: Aspose.Cells | C# hide zeros | batch process Excel workbooks | .NET Excel automation | DisplayZeros false | multiple workbook processing | Excel zero suppression | folder iteration Excel files
+// Common Searches: How to hide zero values in all sheets of multiple Excel files using Aspose.Cells | C# batch hide zeros in Excel workbooks | Aspose.Cells set DisplayZeros false for many workbooks | Programmatically remove zero display from Excel worksheets .NET | Iterate through folder of .xlsx files and hide zeros
+// Developer Intent: Load every .xlsx file in a specified directory, set DisplayZeros = false on each worksheet, and save the changes.
+// Use Cases: Clean up generated reports by removing visible zeros across all sheets before distribution. | Prepare data packages for dashboards where zero values should be invisible. | Integrate into CI/CD pipelines to enforce zero‑value hiding on Excel artifacts automatically.
+// AI Prompts: Generate C# code that uses Aspose.Cells to iterate over all Excel files in a folder, hide zero values on every worksheet, and overwrite the originals. | Explain best practices for exception handling and resource disposal when batch‑processing workbooks with Aspose.Cells in .NET. | Modify the sample to save the processed workbooks to a separate output directory while preserving the original files.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsBatchProcessing
+namespace HideZeroValuesInWorkbooks
 {
-    // Scans a folder for .xlsx files, loads each workbook with Aspose.Cells, sets Worksheet.DisplayZeros = false for every sheet, and overwrites the files. Includes folder validation, file‑existence checks, and exception handling.
+    // A C# console app that scans a folder for *.xlsx files, loads each workbook with Aspose.Cells, disables zero display on every worksheet via the DisplayZeros property, and overwrites the original files. Includes folder validation, file existence checks, and robust exception handling.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Specify the folder containing the Excel workbooks
-            string folderPath = @"C:\ExcelFiles";
-
-            // Verify that the folder exists
-            if (!Directory.Exists(folderPath))
+            try
             {
-                Console.WriteLine($"Folder not found: {folderPath}");
-                return;
-            }
+                // Path to the folder containing the Excel files.
+                // Adjust this path as needed or pass it via command‑line arguments.
+                string folderPath = @"C:\Path\To\Your\Folder";
 
-            // Get all Excel files in the folder (adjust the pattern as needed)
-            string[] excelFiles = Directory.GetFiles(folderPath, "*.xlsx");
-
-            foreach (string filePath in excelFiles)
-            {
-                // Ensure the file still exists before processing
-                if (!File.Exists(filePath))
+                // Verify that the folder exists before attempting to enumerate files.
+                if (!Directory.Exists(folderPath))
                 {
-                    Console.WriteLine($"File not found (skipped): {filePath}");
-                    continue;
+                    Console.WriteLine($"Folder not found: {folderPath}");
+                    return;
                 }
 
-                try
-                {
-                    // Load the workbook from the file
-                    Workbook workbook = new Workbook(filePath);
+                // Get all Excel files in the folder (you can adjust the pattern as needed).
+                string[] excelFiles = Directory.GetFiles(folderPath, "*.xlsx");
 
-                    // Hide zero values in each worksheet
-                    foreach (Worksheet sheet in workbook.Worksheets)
+                foreach (string filePath in excelFiles)
+                {
+                    // Ensure the file still exists before loading.
+                    if (!File.Exists(filePath))
                     {
-                        sheet.DisplayZeros = false;
+                        Console.WriteLine($"File not found (skipped): {filePath}");
+                        continue;
                     }
 
-                    // Save the modified workbook back to the same file
-                    workbook.Save(filePath);
-                    Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
-                }
-                catch (Exception ex)
-                {
-                    // Log any errors but continue processing other files
-                    Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
-                }
-            }
+                    // Load the workbook inside a using block to guarantee disposal.
+                    using (Workbook workbook = new Workbook(filePath))
+                    {
+                        // Iterate through each worksheet and hide zero values.
+                        foreach (Worksheet sheet in workbook.Worksheets)
+                        {
+                            sheet.DisplayZeros = false; // Hide zero values on this sheet.
+                        }
 
-            Console.WriteLine("Processing completed for all workbooks in the folder.");
+                        // Save the workbook back to the same file (overwrites the original).
+                        workbook.Save(filePath);
+                    }
+                }
+
+                Console.WriteLine("Zero values hidden and workbooks saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected exceptions and display a friendly message.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

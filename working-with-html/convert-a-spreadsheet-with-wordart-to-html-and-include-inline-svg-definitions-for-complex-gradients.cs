@@ -1,50 +1,67 @@
-// Title: C# – Export Excel WordArt with Gradient to a Single HTML5 File Using Inline SVG (Aspose.Cells)
-// Description: This C# example loads an Excel workbook, adds a WordArt shape with a preset gradient, and saves the sheet as a single HTML5 document. HtmlSaveOptions embed all resources as Base64 and render the WordArt as inline SVG, preserving complex gradient fills.
-// Keywords: Aspose.Cells | C# Excel to HTML | WordArt gradient export | inline SVG HTML5 | single file HTML | ExportImagesAsBase64 | HtmlSaveOptions | preserve WordArt styling | Aspose.Cells for .NET | Excel WordArt to HTML
-// Common Searches: Aspose.Cells export WordArt to HTML5 | C# convert Excel WordArt gradient to inline SVG | Save Excel as single HTML file with embedded images | How to preserve WordArt gradients when exporting to HTML | Inline SVG for Excel shapes Aspose.Cells | Base64 images in HTML export Aspose.Cells
-// Developer Intent: Create a self‑contained HTML5 page where Excel WordArt with gradients is rendered as inline SVG.
-// Use Cases: Generate web‑ready reports that keep WordArt visual fidelity. | Embed Excel dashboards in web pages without external assets. | Build HTML email templates that include complex WordArt graphics. | Automate documentation of Excel files with styled WordArt for offline viewing.
-// AI Prompts: Provide C# code using Aspose.Cells to convert an Excel worksheet containing gradient WordArt into a single HTML5 file with inline SVG and Base64 images. | Explain the impact of HtmlVersion, ExportImagesAsBase64, SaveAsSingleFile, and EnableCssCustomProperties on WordArt gradient rendering in the exported HTML. | Show how to add a WordArt shape with a gradient preset in Aspose.Cells before exporting to HTML. | Describe how to ensure the generated HTML works in major browsers when using inline SVG for WordArt.
+// Title: Export WordArt with Gradient and Inline SVG to HTML5 using Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, add a gradient WordArt shape, embed an SVG that defines a multi‑stop linear gradient, configure HtmlSaveOptions for HTML5, and save the file so the SVG appears inline in the generated HTML.
+// Keywords: Aspose.Cells | C# | WordArt export | inline SVG | HTML5 conversion | gradient shape | HtmlSaveOptions | Excel to HTML | SVG shape in Excel
+// Common Searches: Aspose.Cells export WordArt to HTML5 | inline SVG with Aspose.Cells C# | save Excel workbook as HTML with gradient graphics | add SVG shape to worksheet and convert to HTML | preserve WordArt styling in HTML export
+// Developer Intent: Generate an HTML5 file that contains both a gradient WordArt object and an embedded SVG definition without external image files.
+// Use Cases: Web‑ready reports that keep Excel‑designed WordArt and custom SVG gradients. | Interactive dashboards where graphics are rendered directly in the browser via inline SVG. | Automated conversion of design‑heavy Excel templates into single‑page HTML for newsletters or intranet portals.
+// AI Prompts: Write C# code with Aspose.Cells to add a gradient WordArt shape, embed an SVG with a multi‑stop linear gradient, and export the workbook to HTML5 with the SVG inline. | Explain the effect of HtmlSaveOptions properties HtmlVersion, ExportImagesAsBase64, and EnableCssCustomProperties on the output when exporting WordArt and SVG. | Show how to replace the linear gradient in the SVG with a radial gradient while keeping the shape inline after HTML export.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-// This C# example loads an Excel workbook, adds a WordArt shape with a preset gradient, and saves the sheet as a single HTML5 document. HtmlSaveOptions embed all resources as Base64 and render the WordArt as inline SVG, preserving complex gradient fills.
-class ConvertWordArtToHtml
+// Demonstrates how to create a workbook, add a gradient WordArt shape, embed an SVG that defines a multi‑stop linear gradient, configure HtmlSaveOptions for HTML5, and save the file so the SVG appears inline in the generated HTML.
+class Program
 {
     static void Main()
     {
-        // Load the existing workbook that contains WordArt (or create a new one if needed)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the first worksheet
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a WordArt shape with a gradient preset (WordArtStyle6) to demonstrate complex gradients
-        // Parameters: style, text, topRow, top (pixel offset), leftColumn, left (pixel offset), height, width
-        Shape wordArt = worksheet.Shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle6, // Gradient Fill - Gray
-            "Gradient WordArt",
-            2,   // topRow
-            0,   // top offset in pixels
-            2,   // leftColumn
-            0,   // left offset in pixels
-            100, // height in pixels
-            400  // width in pixels
-        );
+        // Add a WordArt shape with a gradient preset (WordArtStyle6)
+        ShapeCollection shapes = worksheet.Shapes;
+        Shape wordArt = shapes.AddWordArt(
+            PresetWordArtStyle.WordArtStyle6, // gradient fill style
+            "Gradient WordArt",               // text
+            2, 0,                             // topRow, top offset (pixels)
+            2, 0,                             // leftColumn, left offset (pixels)
+            100, 400);                        // height, width (pixels)
 
-        // Configure HTML save options to embed all resources inline and use HTML5 (supports inline SVG)
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-        {
-            HtmlVersion = HtmlVersion.Html5,          // Use HTML5 for native SVG support
-            ExportImagesAsBase64 = true,              // Embed images (including shape renders) as Base64
-            SaveAsSingleFile = true,                  // Produce a single HTML file with inline resources
-            EnableCssCustomProperties = true          // Optional: reduce duplicate data via CSS custom properties
-        };
+        // Define an SVG image that contains a complex linear gradient
+        string svgContent = @"
+<svg xmlns='http://www.w3.org/2000/svg' width='200' height='100'>
+  <defs>
+    <linearGradient id='grad1' x1='0%' y1='0%' x2='100%' y2='0%'>
+      <stop offset='0%'   style='stop-color:#ff0000;stop-opacity:1' />
+      <stop offset='50%'  style='stop-color:#00ff00;stop-opacity:1' />
+      <stop offset='100%' style='stop-color:#0000ff;stop-opacity:1' />
+    </linearGradient>
+  </defs>
+  <rect width='200' height='100' fill='url(#grad1)' />
+</svg>";
+        byte[] svgBytes = System.Text.Encoding.UTF8.GetBytes(svgContent);
 
-        // Save the workbook as HTML; the WordArt will be rendered as an inline SVG preserving its gradient
-        workbook.Save("output.html", htmlOptions);
+        // Add the SVG shape to the worksheet (compatibleImageData is null for modern Excel versions)
+        shapes.AddSvg(
+            topRow: 5, top: 0,
+            leftColumn: 5, left: 0,
+            height: -1, width: -1,          // -1 lets Excel auto‑size the shape
+            svgData: svgBytes,
+            compatibleImageData: null);
+
+        // Configure HTML save options
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.HtmlVersion = HtmlVersion.Html5;          // Enable HTML5 for inline SVG support
+        htmlOptions.ExportImagesAsBase64 = false;            // Keep images as separate files (SVG will be inline)
+        htmlOptions.EnableCssCustomProperties = true;        // Optional: reduce duplicate resources
+        htmlOptions.ExportWorksheetCSSSeparately = false;    // Keep CSS in the same file
+
+        // Save the workbook as an HTML file
+        string outputHtml = "WordArtWithSvg.html";
+        workbook.Save(outputHtml, htmlOptions);
+
+        Console.WriteLine($"HTML file saved to: {Path.GetFullPath(outputHtml)}");
     }
 }

@@ -1,59 +1,34 @@
 // Title: Hide the Second Worksheet in an Excel Workbook with Aspose.Cells for .NET
-// Description: Loads an existing Excel file, checks for a second worksheet, sets its IsVisible property to false to hide it, and saves the modified workbook to a new file using Aspose.Cells for C#.
-// Keywords: Aspose.Cells hide worksheet C# | hide second sheet Aspose.Cells | C# hide Excel worksheet | Workbook.Save after hiding sheet | Aspose.Cells set IsVisible false | Excel sheet visibility .NET
-// Common Searches: how to hide a specific worksheet using Aspose.Cells for .NET | C# code to hide the second sheet in an Excel file with Aspose.Cells | set worksheet visibility to hidden programmatically Aspose.Cells | Aspose.Cells hide worksheet and save workbook example | hide Excel sheet without opening Excel UI C#
-// Developer Intent: Hide the second worksheet of an existing workbook and save the updated file.
-// Use Cases: Publish a report where only the main sheet is visible while calculation sheets stay hidden. | Distribute a template that contains hidden helper sheets, exposing only the user‑editable sheet. | Prepare a workbook for external sharing by programmatically hiding auxiliary worksheets before saving.
-// AI Prompts: Write C# code with Aspose.Cells to hide the third worksheet while leaving other sheets visible. | Show how to toggle worksheet visibility based on a runtime condition using Aspose.Cells for .NET. | Provide an example that loops through multiple worksheets, hides each one, and then saves the workbook.
+// Description: Load an existing Excel file, verify a second worksheet exists, set its IsVisible property to false to hide it, and save the workbook using Aspose.Cells for C#.
+// Keywords: Aspose.Cells hide worksheet C# | hide second sheet Aspose.Cells | programmatically hide Excel sheet .NET | Workbook.Save after hiding sheet | C# Excel worksheet visibility | Aspose.Cells hide sheet example
+// Common Searches: how to hide a specific worksheet with Aspose.Cells | C# hide second worksheet in Excel file | Aspose.Cells hide sheet and save workbook | hide Excel sheet programmatically .NET | make a worksheet invisible using Aspose.Cells
+// Developer Intent: Load an existing workbook, hide the second worksheet if it exists, and save the modified file.
+// Use Cases: Protect confidential data by hiding internal calculation sheets before distribution. | Create a clean user‑facing workbook where only the primary sheet is visible. | Automate report generation that conceals intermediate worksheets to simplify navigation.
+// AI Prompts: Generate C# code with Aspose.Cells that hides the second worksheet of a given workbook and saves it as a new file. | Provide a reusable method that accepts a file path and sheet index, hides the sheet if present, logs a warning for invalid indexes, and returns the output path. | Show how to hide multiple worksheets based on a list of indices using Aspose.Cells for .NET, then save the workbook.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Load an existing Excel file, verify a second worksheet exists, set its IsVisible property to false to hide it, and save the workbook using Aspose.Cells for C#.
+class HideSecondWorksheet
 {
-    // Loads an existing Excel file, checks for a second worksheet, sets its IsVisible property to false to hide it, and saves the modified workbook to a new file using Aspose.Cells for C#.
-    public class HideSecondWorksheet
+    static void Main()
     {
-        public static void Run()
+        // Path to the existing workbook
+        string inputPath = "input.xlsx";
+
+        // Load the workbook from the file
+        Workbook workbook = new Workbook(inputPath);
+
+        // Ensure there is a second worksheet before attempting to hide it
+        if (workbook.Worksheets.Count > 1)
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            try
-            {
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Hide the second worksheet if it exists
-                if (workbook.Worksheets.Count > 1)
-                {
-                    workbook.Worksheets[1].IsVisible = false;
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Hide the second worksheet (index 1)
+            workbook.Worksheets[1].IsVisible = false;
         }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            HideSecondWorksheet.Run();
-        }
+        // Save the workbook with the hidden sheet
+        string outputPath = "output.xlsx";
+        workbook.Save(outputPath);
     }
 }

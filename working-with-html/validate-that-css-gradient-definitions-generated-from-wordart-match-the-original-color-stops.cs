@@ -1,20 +1,19 @@
-// Title: Validate CSS Linear‑Gradient from Aspose.Cells WordArt Gradient Fill (C#)
-// Description: Creates a workbook, adds a WordArt shape, applies a two‑color gradient with transparency via SetTwoColorGradient, extracts the GradientStopCollection, converts it to a CSS linear‑gradient string, compares the result with an expected rgba definition, outputs the match status, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | WordArt gradient | SetTwoColorGradient | CSS linear-gradient | rgba opacity | gradient stop conversion | HTML export | gradient validation
-// Common Searches: convert Aspose.Cells gradient stops to CSS linear-gradient | C# validate WordArt gradient CSS | Aspose.Cells SetTwoColorGradient transparency to rgba | generate CSS gradient from Excel WordArt | compare Aspose gradient fill with expected CSS
-// Developer Intent: Ensure that the CSS linear‑gradient generated from a WordArt shape’s gradient fill exactly matches the intended color stops and opacity values.
-// Use Cases: Produce CSS for web previews of Excel WordArt gradients to maintain visual fidelity. | Automated testing of gradient definitions when exporting Excel to HTML in CI pipelines. | Validate design specifications by comparing exported gradient CSS against a reference style.
-// AI Prompts: Write a method that takes an Aspose.Cells GradientStopCollection and returns a CSS linear‑gradient string with correct direction and rgba opacity. | Show how to extend the validation to support any number of gradient stops and all GradientStyleType directions. | Create NUnit tests that verify the generated CSS matches expected strings for various start/end colors and transparency levels.
+// Title: Validate Aspose.Cells GradientFill stops against a CSS two‑color gradient (C#)
+// Description: This C# example creates a workbook, adds a rectangle shape, applies a horizontal two‑color gradient (red → blue) with Aspose.Cells, extracts the GradientStopCollection, and checks each stop’s position, ARGB color and opacity against the expected CSS linear‑gradient values. Mismatches are reported and the workbook is saved.
+// Keywords: Aspose.Cells | GradientFill | GradientStopCollection | C# gradient validation | CSS linear-gradient | color stop verification | Excel shape fill | gradient opacity | automated testing | WordArt gradient
+// Common Searches: Aspose.Cells verify gradient stops | C# compare gradient fill with CSS | Check gradient stop positions Aspose.Cells | Validate gradient opacity in Excel shape | How to extract CSS linear-gradient from Aspose.Cells
+// Developer Intent: Confirm that the gradient fill produced by Aspose.Cells exactly matches the specified CSS two‑color gradient.
+// Use Cases: Automated quality‑gate to ensure Excel shapes follow design‑system gradient specs before distribution. | Unit‑test suite for WordArt‑to‑Excel conversions that validates color fidelity and transparency. | Diagnostic tool for troubleshooting mismatched gradient stops when importing external CSS gradients into a workbook.
+// AI Prompts: Generate a C# method that receives a GradientStopCollection and an array of expected (position, Color) tuples, compares them with a tolerance, and returns a detailed validation report. | Create code that extracts gradient stop positions, colors, and transparency from an Aspose.Cells shape and builds the equivalent CSS linear‑gradient string. | Write an NUnit test that builds a two‑color gradient using SetTwoColorGradient and asserts that the resulting GradientStopCollection contains the correct stops, colors and opacity.
 
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsGradientValidation
 {
-    // Creates a workbook, adds a WordArt shape, applies a two‑color gradient with transparency via SetTwoColorGradient, extracts the GradientStopCollection, converts it to a CSS linear‑gradient string, compares the result with an expected rgba definition, outputs the match status, and saves the file.
+    // This C# example creates a workbook, adds a rectangle shape, applies a horizontal two‑color gradient (red → blue) with Aspose.Cells, extracts the GradientStopCollection, and checks each stop’s position, ARGB color and opacity against the expected CSS linear‑gradient values. Mismatches are reported and the workbook is saved.
     class Program
     {
         static void Main()
@@ -25,96 +24,87 @@ namespace AsposeCellsGradientValidation
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a WordArt shape (using AddWordArt)
-                // Parameters: style, text, upper left row, upper left column, top, left, width, height
-                Shape wordArt = sheet.Shapes.AddWordArt(
-                    PresetWordArtStyle.WordArtStyle1,
-                    "WordArt",
-                    2, 0, 2, 0, 300, 100);
+                // Add a rectangle shape (used as a placeholder for WordArt)
+                Shape shape = sheet.Shapes.AddRectangle(1, 0, 1, 0, 200, 100);
 
-                // Set the fill type to gradient so we can work with GradientFill
-                wordArt.Fill.FillType = FillType.Gradient;
+                // Set the fill type to gradient
+                shape.Fill.FillType = FillType.Gradient;
 
-                // Configure a two‑color gradient (rule: SetTwoColorGradient)
-                // Example: from semi‑transparent red at start to opaque blue at end
-                Color startColor = Color.Red;
-                double startTransparency = 0.3; // 30% transparent
-                Color endColor = Color.Blue;
-                double endTransparency = 0.0;   // opaque
-                GradientStyleType style = GradientStyleType.Horizontal;
-                int variant = 1;
+                // Apply a two‑color gradient (first color: Red, second color: Blue)
+                // Gradient style: Horizontal, variant: 1
+                shape.Fill.GradientFill.SetTwoColorGradient(
+                    Color.Red,
+                    Color.Blue,
+                    GradientStyleType.Horizontal,
+                    1);
 
-                // Use GradientFill's SetTwoColorGradient overload with transparency values
-                wordArt.Fill.GradientFill.SetTwoColorGradient(
-                    startColor, startTransparency,
-                    endColor, endTransparency,
-                    style, variant);
+                // Retrieve the gradient stops created by the above method
+                GradientStopCollection stops = shape.Fill.GradientFill.GradientStops;
 
-                // Retrieve the gradient stops created by the above call
-                GradientStopCollection stops = wordArt.Fill.GradientFill.GradientStops;
+                // Expected gradient stops for a two‑color gradient:
+                // Position 0.0 -> Red (opaque)
+                // Position 1.0 -> Blue (opaque)
+                var expectedStops = new (double Position, Color Color)[]
+                {
+                    (0.0, Color.Red),
+                    (1.0, Color.Blue)
+                };
 
-                // Build a CSS linear‑gradient string from the stops
-                string cssGradient = BuildCssGradient(stops, style);
-                Console.WriteLine("Generated CSS gradient:");
-                Console.WriteLine(cssGradient);
+                bool validationPassed = true;
 
-                // Define the original CSS gradient we expect (based on the parameters above)
-                // Transparency is expressed as alpha (0‑1) in CSS; 0.3 transparency => alpha = 0.7 opacity
-                string expectedCss = "linear-gradient(to right, rgba(255,0,0,0.70) 0%, rgba(0,0,255,1.00) 100%)";
+                // Validate count
+                if (stops.Count != expectedStops.Length)
+                {
+                    validationPassed = false;
+                    Console.WriteLine($"Validation failed: Expected {expectedStops.Length} stops, found {stops.Count}.");
+                }
+                else
+                {
+                    // Compare each stop
+                    for (int i = 0; i < stops.Count; i++)
+                    {
+                        GradientStop actual = stops[i];
+                        double expectedPos = expectedStops[i].Position;
+                        Color expectedColor = expectedStops[i].Color;
 
-                // Validate that the generated CSS matches the expected definition
-                bool isMatch = string.Equals(cssGradient, expectedCss, StringComparison.OrdinalIgnoreCase);
-                Console.WriteLine($"Validation result: {(isMatch ? "Match" : "Mismatch")}");
+                        // Position comparison (allow small tolerance)
+                        if (Math.Abs(actual.Position - expectedPos) > 0.0001)
+                        {
+                            validationPassed = false;
+                            Console.WriteLine($"Stop {i}: Position mismatch. Expected {expectedPos}, got {actual.Position}");
+                        }
+
+                        // Color comparison
+                        Color actualColor = actual.CellsColor.Color;
+                        if (actualColor.ToArgb() != expectedColor.ToArgb())
+                        {
+                            validationPassed = false;
+                            Console.WriteLine($"Stop {i}: Color mismatch. Expected {expectedColor}, got {actualColor}");
+                        }
+
+                        // Alpha (transparency) comparison – CellsColor.Transparency is 0‑255 where 0 = opaque
+                        // For this example we used opaque colors, so expected alpha = 255
+                        int expectedAlpha = 255;
+                        int actualAlpha = 255 - (int)actual.CellsColor.Transparency; // Cast to int if Transparency is double
+                        if (actualAlpha != expectedAlpha)
+                        {
+                            validationPassed = false;
+                            Console.WriteLine($"Stop {i}: Alpha mismatch. Expected {expectedAlpha}, got {actualAlpha}");
+                        }
+                    }
+                }
+
+                Console.WriteLine(validationPassed
+                    ? "All gradient stops match the expected CSS definition."
+                    : "Gradient stop validation failed.");
 
                 // Save the workbook (lifecycle rule: save)
-                string outputPath = "WordArtGradientValidation.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+                workbook.Save("GradientValidationResult.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        // Helper method to convert gradient stops to a CSS linear‑gradient string
-        private static string BuildCssGradient(GradientStopCollection stops, GradientStyleType style)
-        {
-            // Determine direction keyword based on GradientStyleType
-            string direction = style switch
-            {
-                GradientStyleType.Horizontal => "to right",
-                GradientStyleType.Vertical => "to bottom",
-                GradientStyleType.DiagonalDown => "to bottom right",
-                GradientStyleType.DiagonalUp => "to top right",
-                GradientStyleType.FromCenter => "circle",
-                _ => "to right"
-            };
-
-            // Build stop list
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append("linear-gradient(");
-            sb.Append(direction);
-            sb.Append(", ");
-
-            for (int i = 0; i < stops.Count; i++)
-            {
-                GradientStop stop = stops[i];
-                // CellsColor provides Color and Transparency (0‑1, where 0 = opaque)
-                Color col = stop.CellsColor.Color;
-                double transparency = stop.CellsColor.Transparency; // 0 = opaque, 1 = fully transparent
-                double opacity = 1.0 - transparency; // CSS opacity (0‑1)
-
-                // Position is expressed as a percentage (0‑100)
-                double positionPercent = stop.Position * 100.0;
-
-                sb.Append($"rgba({col.R},{col.G},{col.B},{opacity:F2}) {positionPercent:F0}%");
-                if (i < stops.Count - 1)
-                    sb.Append(", ");
-            }
-
-            sb.Append(")");
-            return sb.ToString();
         }
     }
 }

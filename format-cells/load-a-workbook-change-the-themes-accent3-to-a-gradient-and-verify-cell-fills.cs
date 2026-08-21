@@ -1,50 +1,48 @@
-// Title: Set Accent3 Theme Gradient on a Shape and Verify Fill Type with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, reads the current Accent3 theme color, adds a rectangle shape, applies a preset Accent3 gradient fill, confirms the shape's FillType is Gradient, and saves the updated file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | theme gradient | Accent3 | preset theme gradient | shape fill gradient | GradientFill | SetPresetThemeGradient | Excel workbook theme color | AddRectangle shape
-// Common Searches: Aspose.Cells set Accent3 gradient | apply preset theme gradient Aspose.Cells .NET | check shape fill type Aspose.Cells | retrieve theme colors Aspose.Cells | add rectangle shape with gradient fill Aspose.Cells
-// Developer Intent: Programmatically apply a preset Accent3 gradient to a shape, verify the fill type, and persist the changes in an Excel workbook.
-// Use Cases: Demonstrate the Accent3 theme color by applying a preset gradient to a rectangle shape. | Log the original Accent3 color before modification for audit or comparison. | Validate that a shape’s FillType is Gradient before finalizing the workbook.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a shape and sets its fill to a custom gradient based on the Accent3 theme color. | Create a method to change the workbook’s Accent3 theme color to a specific RGB value and automatically update all existing gradient fills. | Explain how to iterate through all shapes in a worksheet, verify each shape’s FillType, and log the results using Aspose.Cells.
+// Title: C# Example: Change Accent3 Theme Color, Apply a Preset Theme Gradient to a Shape, and Verify Fill with Aspose.Cells
+// Description: Demonstrates how to load an Excel workbook using Aspose.Cells for .NET, set the Accent3 theme color to orange, add a rectangle shape, apply a medium preset theme gradient that references Accent3, confirm the shape uses a gradient fill, add text, and save the modified file.
+// Keywords: Aspose.Cells | C# theme color | Accent3 | preset theme gradient | gradient fill shape | Excel workbook theme | Aspose.Cells .NET example | shape fill verification | SetThemeColor | GetThemeColor
+// Common Searches: how to change Accent3 theme color Aspose.Cells C# | apply preset theme gradient to shape Aspose.Cells | verify gradient fill type of a shape in Aspose.Cells | load and save workbook after theme modification Aspose.Cells | C# Aspose.Cells example for theme gradients
+// Developer Intent: Update the workbook’s Accent3 theme color, apply a preset gradient that follows the theme, and confirm the shape’s fill type before saving.
+// Use Cases: Enforce corporate branding by programmatically adjusting theme colors across multiple workbooks. | Create theme‑aware shapes that automatically adopt consistent gradient styles for reports and dashboards. | Automated quality checks to ensure visual elements reflect theme changes before distribution.
+// AI Prompts: Generate C# code with Aspose.Cells to set the Accent2 theme color to a custom RGB value and apply a two‑color linear gradient to an ellipse shape. | Write a unit test that loads a workbook, changes Accent3, adds a rectangle with a preset theme gradient, and asserts that FillType equals Gradient. | Provide a step‑by‑step guide for updating several theme colors and assigning matching preset gradients to different shapes in an Aspose.Cells workbook.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook, reads the current Accent3 theme color, adds a rectangle shape, applies a preset Accent3 gradient fill, confirms the shape's FillType is Gradient, and saves the updated file using Aspose.Cells for .NET.
-class ThemeAccent3GradientDemo
+// Demonstrates how to load an Excel workbook using Aspose.Cells for .NET, set the Accent3 theme color to orange, add a rectangle shape, apply a medium preset theme gradient that references Accent3, confirm the shape uses a gradient fill, add text, and save the modified file.
+class ThemeGradientDemo
 {
     static void Main()
     {
         // Load an existing workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Retrieve and display the current Accent3 theme color
-        Color originalAccent3 = workbook.GetThemeColor(ThemeColorType.Accent3);
-        Console.WriteLine($"Original Accent3 color: {originalAccent3}");
+        // Change the theme's Accent3 color to a solid base color (e.g., Orange)
+        workbook.SetThemeColor(ThemeColorType.Accent3, Color.Orange);
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        // Verify that the theme color was updated
+        Color accent3Color = workbook.GetThemeColor(ThemeColorType.Accent3);
+        Console.WriteLine($"Accent3 theme color set to: {accent3Color}");
 
-        // Add a rectangle shape that will demonstrate the gradient fill
-        // Parameters: upper left row, upper left column, upper left offsetX, upper left offsetY, width, height
-        Shape rect = sheet.Shapes.AddRectangle(2, 1, 0, 0, 200, 100);
-
-        // Set the shape's fill type to Gradient so we can work with GradientFill
+        // Add a rectangle shape to demonstrate a gradient that uses the Accent3 theme color
+        Shape rect = worksheet.Shapes.AddRectangle(2, 0, 2, 0, 200, 100);
+        // Set the fill type to gradient so we can access GradientFill
         rect.Fill.FillType = FillType.Gradient;
 
-        // Obtain the GradientFill object
-        GradientFill gradientFill = rect.Fill.GradientFill;
+        // Apply a preset theme gradient that references Accent3
+        rect.Fill.GradientFill.SetPresetThemeGradient(
+            PresetThemeGradientType.MediumGradient,   // gradient type
+            ThemeColorType.Accent3);                  // theme color to base the gradient on
 
-        // Apply a preset theme gradient that uses the Accent3 theme color
-        // Here we choose a MediumGradient; you can select any PresetThemeGradientType value
-        gradientFill.SetPresetThemeGradient(
-            PresetThemeGradientType.MediumGradient,
-            ThemeColorType.Accent3);
+        // Verify that the shape's fill is a gradient
+        bool isShapeGradient = rect.Fill.FillType == FillType.Gradient;
+        Console.WriteLine($"Rectangle shape uses gradient fill: {isShapeGradient}");
 
-        // Verify that the shape's fill is indeed a gradient
-        bool isGradient = rect.Fill.FillType == FillType.Gradient;
-        Console.WriteLine($"Shape fill is gradient: {isGradient}");
+        // Optionally, write some text inside the shape to see the effect
+        rect.Text = "Accent3 Gradient";
 
         // Save the modified workbook
         workbook.Save("output.xlsx");

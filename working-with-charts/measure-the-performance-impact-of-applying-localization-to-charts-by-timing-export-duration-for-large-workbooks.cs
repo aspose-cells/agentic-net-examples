@@ -1,10 +1,10 @@
-// Title: Benchmark Chart Localization Performance on Large Workbooks with Aspose.Cells for .NET
-// Description: Creates a workbook with 10,000 rows, adds a column chart, measures PDF export time, then applies a custom ChartGlobalizationSettings that localizes axis unit names, recalculates the chart, and measures the export time again. The two durations are printed for direct comparison.
-// Keywords: Aspose.Cells | C# chart localization | ChartGlobalizationSettings | PDF export performance | large workbook benchmark | measure export time | custom axis unit names | Aspose.Cells performance testing
-// Common Searches: Aspose.Cells chart localization performance test | How to measure PDF export time with localized charts in .NET | Benchmark Aspose.Cells export with custom ChartGlobalizationSettings | Performance impact of chart globalization in large Excel files | Timing Aspose.Cells PDF generation for 10,000 rows
-// Developer Intent: Compare the PDF export duration of a large workbook before and after applying chart localization via ChartGlobalizationSettings.
-// Use Cases: Determine if custom axis labels affect PDF generation speed in high‑volume reports | Validate localization of chart elements while monitoring performance thresholds | Create automated regression tests for chart globalization impact on export time | Optimize large‑scale reporting pipelines that require localized charts
-// AI Prompts: Generate a C# example that records export times for PDF and XLSX with and without ChartGlobalizationSettings using Aspose.Cells. | Explain how to interpret the timing results and suggest optimization techniques for chart localization performance. | Write a unit test that asserts the localized export time does not exceed a configurable percentage of the non‑localized export time.
+// Title: Chart Localization Performance Test – Export Large Workbook to PDF with Aspose.Cells for .NET
+// Description: C# sample that builds a 10,000‑row workbook with a column chart, applies a custom ChartGlobalizationSettings to localize axis unit names, and measures PDF export time with and without the localization using Stopwatch, reporting the elapsed milliseconds for each run.
+// Keywords: Aspose.Cells | C# chart localization | performance benchmarking | PDF export timing | large workbook | ChartGlobalizationSettings | globalization impact | export speed test
+// Common Searches: Aspose.Cells chart localization performance | measure PDF export time for large workbook | benchmark Aspose.Cells chart globalization | how long does chart localization add to export | timing Aspose.Cells PDF save with custom chart settings
+// Developer Intent: Find out how custom chart globalization settings affect the time required to export a large workbook to PDF using Aspose.Cells.
+// Use Cases: Compare export duration of a 10k‑row workbook with and without custom ChartGlobalizationSettings. | Validate that applying localized axis labels does not cause unacceptable slowdown in PDF generation. | Profile Aspose.Cells export performance for datasets that include charts and globalization overrides.
+// AI Prompts: Create C# code that logs PDF and XPS export times for a 20,000‑row workbook with and without ChartGlobalizationSettings. | Suggest optimization techniques to minimize the overhead introduced by custom chart localization in Aspose.Cells. | Write a unit test in C# that asserts the export time difference between localized and non‑localized charts stays under a defined threshold.
 
 using System;
 using System.Diagnostics;
@@ -13,24 +13,20 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsPerformanceDemo
 {
-    // Custom chart globalization settings to simulate localization impact
-    // Creates a workbook with 10,000 rows, adds a column chart, measures PDF export time, then applies a custom ChartGlobalizationSettings that localizes axis unit names, recalculates the chart, and measures the export time again. The two durations are printed for direct comparison.
+    // Custom globalization settings for charts (e.g., localized axis unit names)
+    // C# sample that builds a 10,000‑row workbook with a column chart, applies a custom ChartGlobalizationSettings to localize axis unit names, and measures PDF export time with and without the localization using Stopwatch, reporting the elapsed milliseconds for each run.
     public class CustomChartGlobalizationSettings : ChartGlobalizationSettings
     {
-        // Example: change axis unit names to localized strings
         public override string GetAxisUnitName(DisplayUnitType type)
         {
-            switch (type)
+            // Example: localize display unit names to Chinese
+            return type switch
             {
-                case DisplayUnitType.Hundreds:
-                    return "百"; // Chinese for hundreds
-                case DisplayUnitType.Thousands:
-                    return "千"; // Chinese for thousands
-                case DisplayUnitType.TenThousands:
-                    return "万"; // Chinese for ten‑thousands
-                default:
-                    return base.GetAxisUnitName(type);
-            }
+                DisplayUnitType.Hundreds => "百",
+                DisplayUnitType.Thousands => "千",
+                DisplayUnitType.TenThousands => "万",
+                _ => base.GetAxisUnitName(type),
+            };
         }
     }
 
@@ -38,64 +34,68 @@ namespace AsposeCellsPerformanceDemo
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook wb = new Workbook();
+            // -----------------------------------------------------------------
+            // 1. Create a large workbook with sample data and a chart
+            // -----------------------------------------------------------------
+            Workbook wb = new Workbook();                     // create workbook
+            Worksheet ws = wb.Worksheets[0];
+            Cells cells = ws.Cells;
 
-            // Access the first worksheet
-            Worksheet sheet = wb.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate a large dataset (e.g., 10,000 rows)
-            int rowCount = 10000;
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Value");
-            for (int i = 0; i < rowCount; i++)
+            // Populate a large dataset (e.g., 10000 rows)
+            int rows = 10000;
+            cells[0, 0].PutValue("Category");
+            cells[0, 1].PutValue("Value");
+            for (int i = 1; i <= rows; i++)
             {
-                cells[i + 1, 0].PutValue("Item " + (i + 1));
-                cells[i + 1, 1].PutValue(i % 1000 + 1); // sample numeric data
+                cells[i, 0].PutValue($"Item {i}");
+                cells[i, 1].PutValue(i % 1000 + 1); // some varying values
             }
 
-            // Add a column chart covering the data range
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 5, 25, 15);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B" + (rowCount + 1), true);
-            chart.NSeries.CategoryData = "A2:A" + (rowCount + 1);
+            // Add a column chart covering the whole data range
+            int chartIndex = ws.Charts.Add(ChartType.Column, 5, 0, 30, 10);
+            Chart chart = ws.Charts[chartIndex];
+            chart.NSeries.Add($"B2:B{rows + 1}", true);          // values
+            chart.NSeries.CategoryData = $"A2:A{rows + 1}";     // categories
             chart.Title.Text = "Large Data Chart";
 
-            // Ensure chart layout is calculated before export
-            chart.Calculate();
-
-            // ------------------- Export without localization -------------------
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-            // Export to PDF (lifecycle: save)
-            wb.Save("LargeWorkbook_NoLocalization.pdf", SaveFormat.Pdf);
-
-            sw.Stop();
-            Console.WriteLine($"Export without localization took: {sw.ElapsedMilliseconds} ms");
-
-            // ------------------- Apply localization to charts -------------------
-            // Set custom chart globalization settings
+            // -----------------------------------------------------------------
+            // 2. Apply localization (globalization) to the chart
+            // -----------------------------------------------------------------
             wb.Settings.GlobalizationSettings = new GlobalizationSettings
             {
                 ChartSettings = new CustomChartGlobalizationSettings()
             };
 
-            // Recalculate chart after applying localization (required for updated labels)
+            // Force chart to recalculate layout after changing globalization
             chart.Calculate();
 
-            // ------------------- Export with localization -------------------
-            sw.Restart();
+            // -----------------------------------------------------------------
+            // 3. Measure export duration (e.g., to PDF) without localization
+            // -----------------------------------------------------------------
+            // Clone workbook to have a version without localization for comparison
+            Workbook wbNoLocalization = new Workbook();
+            wbNoLocalization.Copy(wb);
+            // Remove localization from the clone
+            wbNoLocalization.Settings.GlobalizationSettings = new GlobalizationSettings();
 
-            // Export to PDF again
-            wb.Save("LargeWorkbook_WithLocalization.pdf", SaveFormat.Pdf);
-
+            // Export without localization
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            wbNoLocalization.Save("LargeWorkbook_NoLocalization.pdf", SaveFormat.Pdf);
             sw.Stop();
-            Console.WriteLine($"Export with localization took: {sw.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Export without localization: {sw.ElapsedMilliseconds} ms");
 
-            // Clean up
+            // -----------------------------------------------------------------
+            // 4. Measure export duration with localization applied
+            // -----------------------------------------------------------------
+            sw.Restart();
+            wb.Save("LargeWorkbook_WithLocalization.pdf", SaveFormat.Pdf);
+            sw.Stop();
+            Console.WriteLine($"Export with localization: {sw.ElapsedMilliseconds} ms");
+
+            // Cleanup
             wb.Dispose();
+            wbNoLocalization.Dispose();
         }
     }
 }

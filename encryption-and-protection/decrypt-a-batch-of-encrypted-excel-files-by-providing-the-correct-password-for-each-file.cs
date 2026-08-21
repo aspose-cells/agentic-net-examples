@@ -1,132 +1,119 @@
-// Title: C# Batch Decrypt Encrypted Excel Files with Aspose.Cells – Per‑File Passwords
-// Description: A complete C# utility that scans a folder, detects encrypted Excel workbooks, opens each file with its specific password from a dictionary, removes the protection, and saves the decrypted copy to a target directory. Unprotected files are copied unchanged. Uses Aspose.Cells for .NET to handle .xls, .xlsx, .xlsm and .ods formats.
-// Keywords: Aspose.Cells batch decrypt | C# decrypt encrypted Excel | remove Excel password programmatically | load password‑protected workbook Aspose | detect encrypted Excel file .NET | bulk Excel decryption C# | per‑file password Excel decryption | Aspose.Cells file format detection
-// Common Searches: batch decrypt password protected Excel files C# | Aspose.Cells decrypt multiple .xlsx files with different passwords | how to detect encrypted Excel workbook before opening | C# script to copy unencrypted Excel files and decrypt protected ones | remove protection from a folder of Excel files using Aspose
-// Developer Intent: Automatically open each encrypted Excel workbook with its assigned password, strip the workbook protection, and write the decrypted file to a separate folder while leaving non‑encrypted files untouched.
-// Use Cases: Process nightly financial reports that arrive password‑protected, decrypt them for downstream analytics, and archive the clear copies. | Migrate a legacy collection of secured spreadsheets to an unprotected repository for migration to a data warehouse. | Create a pre‑processing step in an ETL pipeline that normalizes a mixed set of encrypted and plain Excel files before further transformation.
-// AI Prompts: Write C# code using Aspose.Cells to batch decrypt Excel files from a folder, using a dictionary of filenames and passwords, and log results to a CSV file. | Show how to extend the utility to retry opening a workbook with an alternate password list when the first password fails. | Generate a PowerShell wrapper that calls the C# batch decryption executable and passes the source and destination paths as parameters.
+// Title: C# Batch Decrypt Password‑Protected Excel Files with Aspose.Cells
+// Description: A C# utility that iterates a dictionary of encrypted Excel file paths and passwords, detects each workbook’s format, opens it with LoadOptions, clears the password, and saves an unencrypted copy (preserving the original extension) to a target folder. Supports XLSX, XLS, CSV, PDF, ODS and can be extended for additional formats.
+// Keywords: Aspose.Cells | C# batch decrypt Excel | remove Excel password .NET | detect Excel file format | save unencrypted workbook | Excel encryption removal | bulk Excel decryption | LoadOptions password | SaveFormat mapping | Aspose.Cells example GitHub
+// Common Searches: how to remove password from multiple Excel files using Aspose.Cells | C# code to batch decrypt .xlsx and .xls files | Aspose.Cells bulk decryption tutorial | detect Excel file type before saving Aspose.Cells | save decrypted workbook with original extension C# | Aspose.Cells password removal for CSV files | batch Excel decryption script .NET
+// Developer Intent: Decrypt many password‑protected Excel workbooks and write unprotected copies to a chosen directory.
+// Use Cases: Automate nightly processing of archived encrypted reports before analytics. | Prepare a set of client‑provided protected spreadsheets for data migration. | Integrate into a document‑management workflow that requires password‑free files for OCR or conversion. | Extend to convert decrypted files to other formats (PDF, CSV) in bulk.
+// AI Prompts: Write C# code using Aspose.Cells to bulk decrypt Excel files given a file‑path‑to‑password map and save them with a '_decrypted' suffix. | Show how to add support for Xlsb and Ooxml formats in the GetSaveFormat method while keeping original extensions. | Create robust error handling for missing files, wrong passwords, and unsupported formats in the batch decryption routine. | Generate a PowerShell wrapper that calls the C# batch decryptor for scheduled tasks. | Explain the performance impact of loading many encrypted workbooks and suggest optimizations.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
 
-namespace AsposeCellsBatchDecrypt
+// A C# utility that iterates a dictionary of encrypted Excel file paths and passwords, detects each workbook’s format, opens it with LoadOptions, clears the password, and saves an unencrypted copy (preserving the original extension) to a target folder. Supports XLSX, XLS, CSV, PDF, ODS and can be extended for additional formats.
+public class ExcelBatchDecryptor
 {
-    // A complete C# utility that scans a folder, detects encrypted Excel workbooks, opens each file with its specific password from a dictionary, removes the protection, and saves the decrypted copy to a target directory. Unprotected files are copied unchanged. Uses Aspose.Cells for .NET to handle .xls, .xlsx, .xlsm and .ods formats.
-    class Program
+    // Decrypts a batch of encrypted Excel files.
+    // filePasswordMap: key = full path of encrypted file, value = password for that file.
+    // outputFolder: folder where decrypted files will be saved.
+    public void DecryptFiles(Dictionary<string, string> filePasswordMap, string outputFolder)
     {
-        static void Main(string[] args)
+        // Ensure output directory exists
+        if (!Directory.Exists(outputFolder))
+            Directory.CreateDirectory(outputFolder);
+
+        foreach (var kvp in filePasswordMap)
         {
+            string encryptedPath = kvp.Key;
+            string password = kvp.Value;
+
             try
             {
-                // Folder containing encrypted Excel files
-                string sourceFolder = @"C:\EncryptedFiles";
-
-                // Folder where decrypted files will be saved
-                string outputFolder = @"C:\DecryptedFiles";
-
-                // Mapping of file names (or full paths) to their passwords
-                var passwordMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                // Verify source file exists
+                if (!File.Exists(encryptedPath))
                 {
-                    // Example entries
-                    // { "Report1.xlsx", "Password123" },
-                    // { "FinanceData.xls", "Secret!" }
-                };
-
-                // Verify source folder exists before proceeding
-                if (!Directory.Exists(sourceFolder))
-                {
-                    Console.WriteLine($"Source folder does not exist: {sourceFolder}");
-                    return;
+                    Console.WriteLine($"Source file not found: {encryptedPath}");
+                    continue;
                 }
 
-                DecryptBatch(sourceFolder, outputFolder, passwordMap);
+                // Detect the original file format (needed for correct SaveFormat)
+                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(encryptedPath);
+                SaveFormat saveFormat = GetSaveFormat(formatInfo.FileFormatType);
+
+                // Load the encrypted workbook using the password
+                LoadOptions loadOptions = new LoadOptions
+                {
+                    Password = password
+                };
+                Workbook workbook = new Workbook(encryptedPath, loadOptions);
+
+                // Remove encryption by clearing the password property
+                workbook.Settings.Password = null;
+
+                // Build output file name (same name with "_decrypted" suffix)
+                string fileName = Path.GetFileNameWithoutExtension(encryptedPath);
+                string extension = Path.GetExtension(encryptedPath);
+                string decryptedPath = Path.Combine(outputFolder, $"{fileName}_decrypted{extension}");
+
+                // Save the workbook without password
+                workbook.Save(decryptedPath, saveFormat);
+                Console.WriteLine($"Decrypted file saved: {decryptedPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"Error processing file '{encryptedPath}': {ex.Message}");
             }
         }
+    }
 
-        /// <param name="sourceFolder">Folder containing the encrypted files.</param>
-        /// <param name="outputFolder">Folder where decrypted files will be written.</param>
-        /// <param name="passwordMap">Dictionary that maps a file name to its password.</param>
-        static void DecryptBatch(string sourceFolder, string outputFolder, Dictionary<string, string> passwordMap)
+    // Maps FileFormatType to corresponding SaveFormat enum value.
+    private SaveFormat GetSaveFormat(FileFormatType fileFormatType)
+    {
+        // Most common mappings; extend as needed.
+        switch (fileFormatType)
         {
-            // Ensure output directory exists
-            Directory.CreateDirectory(outputFolder);
+            case FileFormatType.Xlsx:
+                return SaveFormat.Xlsx;
+            case FileFormatType.Csv:
+                return SaveFormat.Csv;
+            case FileFormatType.Pdf:
+                return SaveFormat.Pdf;
+            case FileFormatType.Ods:
+                return SaveFormat.Ods;
+            // For older Excel formats (e.g., .xls) fall back to Excel97To2003
+            default:
+                return SaveFormat.Excel97To2003;
+        }
+    }
+}
 
-            // Get all Excel files (common extensions) in the source folder
-            string[] excelFiles = Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly);
-            foreach (string filePath in excelFiles)
+// Example usage
+public class Program
+{
+    public static void Main()
+    {
+        try
+        {
+            // Map of encrypted files and their passwords
+            var files = new Dictionary<string, string>
             {
-                string extension = Path.GetExtension(filePath).ToLowerInvariant();
-                if (extension != ".xls" && extension != ".xlsx" && extension != ".xlsm" && extension != ".ods")
-                    continue; // Skip non‑Excel files
+                { @"C:\Encrypted\Report1.xlsx", "Pass123" },
+                { @"C:\Encrypted\Report2.xls", "Secret!" },
+                { @"C:\Encrypted\Data.csv", "CsvPwd" }
+            };
 
-                // Detect file format and encryption status
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-                Console.WriteLine($"Processing '{Path.GetFileName(filePath)}' - Encrypted: {formatInfo.IsEncrypted}");
+            string outputFolder = @"C:\Decrypted";
 
-                if (!formatInfo.IsEncrypted)
-                {
-                    // If not encrypted, simply copy the file to the output folder
-                    string destPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-                    try
-                    {
-                        File.Copy(filePath, destPath, overwrite: true);
-                        Console.WriteLine($"  Copied unencrypted file to '{destPath}'.");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"  Failed to copy file: {ex.Message}");
-                    }
-                    continue;
-                }
+            var decryptor = new ExcelBatchDecryptor();
+            decryptor.DecryptFiles(files, outputFolder);
 
-                // Retrieve the password for this file
-                if (!passwordMap.TryGetValue(Path.GetFileName(filePath), out string password))
-                {
-                    Console.WriteLine($"  No password supplied for '{Path.GetFileName(filePath)}'. Skipping.");
-                    continue;
-                }
-
-                // Verify the file still exists before attempting to load
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"  File not found: {filePath}. Skipping.");
-                    continue;
-                }
-
-                // Load the workbook with the password
-                var loadOptions = new LoadOptions(LoadFormat.Auto) { Password = password };
-                Workbook workbook;
-                try
-                {
-                    workbook = new Workbook(filePath, loadOptions);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"  Failed to open '{Path.GetFileName(filePath)}' with provided password: {ex.Message}");
-                    continue;
-                }
-
-                // Remove encryption by clearing the password setting
-                workbook.Settings.Password = null; // Null or empty removes protection
-
-                // Save the decrypted workbook
-                string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-                try
-                {
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"  Decrypted and saved to '{outputPath}'.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"  Failed to save decrypted file: {ex.Message}");
-                }
-            }
+            Console.WriteLine("Decryption completed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

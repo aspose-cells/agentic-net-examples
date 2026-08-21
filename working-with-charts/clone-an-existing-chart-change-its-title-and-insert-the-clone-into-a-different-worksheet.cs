@@ -1,68 +1,83 @@
-// Title: Clone a chart, rename it, and place on another worksheet with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add a source worksheet with sample data and a column chart, duplicate the chart on a different worksheet, change the cloned chart's title, and save the file as an Excel workbook using Aspose.Cells for C#.
-// Keywords: Aspose.Cells clone chart | copy chart to another sheet | change chart title Aspose.Cells | SetChartDataRange C# | duplicate Excel chart programmatically | Aspose.Cells chart manipulation
-// Common Searches: how to duplicate a chart in Aspose.Cells | clone chart to another worksheet .NET | change title of copied chart Aspose.Cells | set chart data range after cloning | Aspose.Cells copy chart example
-// Developer Intent: The developer needs to replicate an existing chart, assign a new title, and insert the copy into a different worksheet using Aspose.Cells for .NET.
-// Use Cases: Create a dashboard sheet that aggregates charts from multiple source sheets with custom titles. | Generate department‑specific reports by copying a master chart to each department's worksheet and renaming it. | Programmatically reuse a chart layout for a new data set while preserving its type and series.
-// AI Prompts: Write C# code with Aspose.Cells to clone a chart from one worksheet to another and set a new title. | Show how to copy a chart, adjust its data range, and save the workbook using Aspose.Cells. | Explain how to extract the cell range from a chart's full data range string for reuse in a cloned chart.
+// Title: Clone a Chart, Update Its Title, and Insert It into Another Worksheet with AspNet.Cells for .NET
+// Description: Shows how to create a workbook, add sample data, build a column chart, copy the chart to a new worksheet, reuse its data range, change the cloned chart title, and save the file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | chart cloning | copy chart to another worksheet | change chart title | GetChartDataRange | SetChartDataRange | Excel chart duplication .NET | Aspose.Cells API example
+// Common Searches: Aspose.Cells copy chart to another sheet | How to clone an Excel chart with Aspose.Cells | Change chart title after cloning Aspose.Cells | SetChartDataRange usage Aspose.Cells | C# duplicate chart programmatically | Aspose.Cells chart clone example
+// Developer Intent: Copy an existing chart, modify its title, and place the copy on a different worksheet programmatically.
+// Use Cases: Create a dashboard sheet that aggregates identical charts from multiple source sheets, each with a custom heading. | Generate a multi‑section report where the same chart layout is reused, only the title varies per section. | Automate the migration of a chart to a summary worksheet while preserving its data source and chart type.
+// AI Prompts: Provide C# code to clone an Aspose.Cells chart, keep its data range, and set a new title on a different worksheet. | Explain how GetChartDataRange and SetChartDataRange work when moving a chart between sheets in Aspose.Cells. | Show an example of copying a column chart to another sheet without affecting the original chart in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates how to create a workbook, add a source worksheet with sample data and a column chart, duplicate the chart on a different worksheet, change the cloned chart's title, and save the file as an Excel workbook using Aspose.Cells for C#.
-class CloneChartDemo
+namespace AsposeCellsChartCloneDemo
 {
-    static void Main()
+    // Shows how to create a workbook, add sample data, build a column chart, copy the chart to a new worksheet, reuse its data range, change the cloned chart title, and save the file using Aspose.Cells for .NET.
+    public class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        public static void Main()
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // ---------- Source worksheet with original chart ----------
-        Worksheet sourceSheet = workbook.Worksheets[0];
-        sourceSheet.Name = "SourceSheet";
+                // ---------- Source worksheet with original chart ----------
+                Worksheet sourceSheet = workbook.Worksheets[0];
+                sourceSheet.Name = "SourceSheet";
 
-        // Populate sample data
-        sourceSheet.Cells["A1"].PutValue("Category");
-        sourceSheet.Cells["A2"].PutValue("A");
-        sourceSheet.Cells["A3"].PutValue("B");
-        sourceSheet.Cells["A4"].PutValue("C");
-        sourceSheet.Cells["B1"].PutValue("Value");
-        sourceSheet.Cells["B2"].PutValue(10);
-        sourceSheet.Cells["B3"].PutValue(20);
-        sourceSheet.Cells["B4"].PutValue(30);
+                // Populate sample data
+                sourceSheet.Cells["A1"].PutValue("Category");
+                sourceSheet.Cells["B1"].PutValue("Value");
+                sourceSheet.Cells["A2"].PutValue("A");
+                sourceSheet.Cells["B2"].PutValue(10);
+                sourceSheet.Cells["A3"].PutValue("B");
+                sourceSheet.Cells["B3"].PutValue(20);
+                sourceSheet.Cells["A4"].PutValue("C");
+                sourceSheet.Cells["B4"].PutValue(30);
 
-        // Add a chart to the source sheet
-        int srcChartIdx = sourceSheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart srcChart = sourceSheet.Charts[srcChartIdx];
-        srcChart.NSeries.Add("B2:B4", true);
-        srcChart.NSeries.CategoryData = "A2:A4";
-        srcChart.Title.Text = "Original Chart";
+                // Add a chart to the source sheet
+                int srcUpperLeftRow = 5;
+                int srcUpperLeftColumn = 0;
+                int srcBottomRightRow = 15;
+                int srcBottomRightColumn = 5;
 
-        // ---------- Target worksheet where the cloned chart will be placed ----------
-        Worksheet targetSheet = workbook.Worksheets.Add("TargetSheet");
+                // Add returns the index of the newly created chart
+                int srcChartIndex = sourceSheet.Charts.Add(ChartType.Column,
+                                                          srcUpperLeftRow,
+                                                          srcUpperLeftColumn,
+                                                          srcBottomRightRow,
+                                                          srcBottomRightColumn);
+                Chart srcChart = sourceSheet.Charts[srcChartIndex];
+                srcChart.NSeries.Add("B2:B4", true);
+                srcChart.NSeries.CategoryData = "A2:A4";
+                srcChart.Title.Text = "Original Chart Title";
 
-        // Clone the chart: replicate type and data range
-        ChartType chartType = srcChart.Type;
-        string fullRange = srcChart.GetChartDataRange(); // e.g., "SourceSheet!A1:B4"
+                // ---------- Target worksheet where the chart will be cloned ----------
+                Worksheet targetSheet = workbook.Worksheets.Add("TargetSheet");
 
-        // Extract only the cell range part (after '!')
-        string rangeOnly = fullRange;
-        int exclPos = fullRange.IndexOf('!');
-        if (exclPos >= 0 && exclPos < fullRange.Length - 1)
-            rangeOnly = fullRange.Substring(exclPos + 1);
+                // Add a new chart with the same type and position on the target sheet
+                int clonedChartIndex = targetSheet.Charts.Add(srcChart.Type,
+                                                             srcUpperLeftRow,
+                                                             srcUpperLeftColumn,
+                                                             srcBottomRightRow,
+                                                             srcBottomRightColumn);
+                Chart clonedChart = targetSheet.Charts[clonedChartIndex];
 
-        // Add a new chart to the target sheet
-        int clonedChartIdx = targetSheet.Charts.Add(chartType, 5, 0, 15, 5);
-        Chart clonedChart = targetSheet.Charts[clonedChartIdx];
+                // Copy the data range from the source chart
+                string dataRange = srcChart.GetChartDataRange(); // e.g., "SourceSheet!$B$2:$B$4"
+                clonedChart.SetChartDataRange(dataRange, true);
 
-        // Set the same data range for the cloned chart
-        clonedChart.SetChartDataRange(rangeOnly, true);
+                // Change the title of the cloned chart
+                clonedChart.Title.Text = "Cloned Chart Title";
 
-        // Change the title of the cloned chart
-        clonedChart.Title.Text = "Cloned Chart Title";
-
-        // Save the workbook
-        workbook.Save("ClonedChartDemo.xlsx");
+                // Save the workbook
+                workbook.Save("ChartCloneResult.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

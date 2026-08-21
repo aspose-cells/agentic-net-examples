@@ -1,65 +1,56 @@
+// Title: Register a Custom Add‑In Function (ICustomFunction) in Aspose.Cells Workbook – C# Example
+// Description: Demonstrates how to create a Workbook, register a custom Excel add‑in (.xlam) with RegisterAddInFunction, optionally add an alias, use the function in a cell formula, recalculate all formulas, and save the result as an .xlsx file.
+// Keywords: Aspose.Cells | C# | .NET | RegisterAddInFunction | custom add‑in | ICustomFunction | Excel custom function | formula calculation | add‑in alias | Workbook
+// Common Searches: How to register a custom add‑in function in Aspose.Cells for .NET | RegisterAddInFunction C# example with .xlam file | Create an alias for a custom Excel function using Aspose.Cells | Calculate formulas after adding a custom function in Aspose.Cells | ICustomFunction implementation registration Aspose.Cells
+// Developer Intent: Register an ICustomFunction (Excel add‑in) with a workbook so it can be called directly in cell formulas.
+// Use Cases: Expose proprietary calculations as a reusable Excel function and invoke it from workbook formulas. | Maintain backward compatibility by assigning an alias to a newly registered custom function. | Register the function once and reuse it across multiple worksheets or workbooks without re‑implementation.
+// AI Prompts: Generate C# code that registers a custom add‑in (.xlam) using RegisterAddInFunction and applies it in a worksheet formula with Aspose.Cells. | Explain how to retrieve the function ID from RegisterAddInFunction and create an alias for the same custom function. | Provide error‑handling patterns for missing or invalid add‑in files when registering a custom function in Aspose.Cells.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomFunctionDemo
+namespace CustomFunctionDemo
 {
-    // Custom calculation engine that implements a user‑defined function named MYFUNC
-    public class MyCustomFunctionEngine : AbstractCalculationEngine
+    // Demonstrates registering a custom function (add‑in) with a workbook
+    // and using it in cell formulas.
+    // Demonstrates how to create a Workbook, register a custom Excel add‑in (.xlam) with RegisterAddInFunction, optionally add an alias, use the function in a cell formula, recalculate all formulas, and save the result as an .xlsx file.
+    class Program
     {
-        // This method is called for every function encountered during calculation
-        public override void Calculate(CalculationData data)
+        static void Main()
         {
-            // Check if the function name matches our custom function (case‑insensitive)
-            if (string.Equals(data.FunctionName, "MYFUNC", StringComparison.OrdinalIgnoreCase))
-            {
-                // Expecting exactly two parameters; retrieve their values
-                // GetParamValue returns the evaluated value of the parameter
-                object param0 = data.GetParamValue(0);
-                object param1 = data.GetParamValue(1);
+            // Create a new workbook (uses the provided creation rule)
+            Workbook workbook = new Workbook();
 
-                // Convert parameters to double (handle possible nulls)
-                double val0 = param0 != null ? Convert.ToDouble(param0) : 0.0;
-                double val1 = param1 != null ? Convert.ToDouble(param1) : 0.0;
+            // Path to the add‑in file that contains the custom function implementation.
+            // The file must exist; adjust the path as needed for your environment.
+            string addInFile = Path.Combine("AddIns", "MyCustomAddIn.xlam");
 
-                // Example logic: return the sum of the two parameters multiplied by 2
-                data.CalculatedValue = (val0 + val1) * 2;
-            }
-            // For any other function, do nothing – the default engine will handle it
-        }
-    }
+            // Register the add‑in function with the workbook.
+            // Parameters:
+            //   addInFile   – the .xlam file containing the function.
+            //   "MYFUNC"    – the name of the function as it will be used in formulas.
+            //   false       – the path is relative to the workbook, not the add‑in library.
+            int functionId = workbook.Worksheets.RegisterAddInFunction(addInFile, "MYFUNC", false);
 
-    public class Program
-    {
-        public static void Main()
-        {
-            // Create a new workbook (lifecycle rule: use provided creation method)
-            Workbook wb = new Workbook();
+            // Optionally register an alias for the same function using the returned ID.
+            workbook.Worksheets.RegisterAddInFunction(functionId, "MYFUNC_ALIAS");
 
-            // Access the first worksheet
-            Worksheet sheet = wb.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some sample data that the custom function will use
-            cells["A1"].PutValue(5);
-            cells["A2"].PutValue(7);
+            // Populate some sample data.
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
 
-            // Set a formula that uses the custom function MYFUNC
-            cells["A3"].Formula = "=MYFUNC(A1, A2)";
+            // Use the registered custom function in a formula.
+            sheet.Cells["B1"].Formula = "=MYFUNC(A1, A2)";
 
-            // Configure calculation options to use our custom engine
-            CalculationOptions options = new CalculationOptions
-            {
-                CustomEngine = new MyCustomFunctionEngine()
-            };
+            // Calculate all formulas in the workbook.
+            workbook.CalculateFormula();
 
-            // Calculate all formulas in the workbook using the custom engine
-            wb.CalculateFormula(options);
-
-            // Output the result of the custom function
-            Console.WriteLine("Result of MYFUNC(A1, A2): " + cells["A3"].Value);
-
-            // Save the workbook (lifecycle rule: use provided save method)
-            wb.Save("CustomFunctionDemo.xlsx", SaveFormat.Xlsx);
+            // Save the workbook (uses the provided save rule).
+            workbook.Save("CustomFunctionDemo.xlsx", SaveFormat.Xlsx);
         }
     }
 }

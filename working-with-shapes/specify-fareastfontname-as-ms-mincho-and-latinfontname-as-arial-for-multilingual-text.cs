@@ -1,35 +1,55 @@
-// Title: Set FarEast (CJK) and Latin Font Names for Shape Text in Aspose.Cells .NET
-// Description: Shows how to add a rectangle shape to a worksheet, assign multilingual text, set the FarEast font to MS Mincho and the Latin font to Arial via Shape.TextOptions, and save the workbook.
-// Keywords: Aspose.Cells | C# shape font | FarEastName | LatinName | MS Mincho | Arial | multilingual text | Excel shape | TextOptions | CJK font
-// Common Searches: Aspose.Cells set CJK font for shape | How to use FarEastName in Aspose.Cells C# | Specify different fonts for Japanese and English text in Excel shape | Shape.TextOptions LatinName example | Change font of shape text Aspose.Cells .NET
-// Developer Intent: Apply separate FarEast (CJK) and Latin fonts to the text of a shape in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Create a rectangle shape with Japanese characters displayed in MS Mincho and English characters in Arial. | Generate multilingual reports where shape labels need appropriate East Asian and Western fonts for readability. | Automate workbook creation that includes shapes containing mixed‑language text with font control per script.
-// AI Prompts: Provide C# code to set FarEastName to MS Mincho and LatinName to Arial for a shape's text in Aspose.Cells. | Explain how Shape.TextOptions influences multilingual rendering in Excel shapes with Aspose.Cells .NET. | Show an example of applying different fonts to CJK and Latin characters inside a rectangle shape using Aspose.Cells.
+// Title: Set FarEast and Latin fonts for multilingual shape text with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds a rectangle shape, inserts English‑Chinese‑Japanese text, and uses TextOptions.FarEastName = "MS Mincho" and TextOptions.LatinName = "Arial" to render CJK characters and Latin characters with appropriate fonts before saving.
+// Keywords: Aspose.Cells | C# | .NET | shape text font | FarEastName | LatinName | multilingual Excel | MS Mincho | Arial | CJK font in Excel
+// Common Searches: Aspose.Cells set FarEastName for Japanese text | How to apply different fonts to CJK and Latin characters in a shape | C# Aspose.Cells multilingual shape example | Change font of Chinese characters in Excel shape | Rectangle shape font settings Aspose.Cells .NET
+// Developer Intent: Apply distinct fonts to Far‑East (CJK) and Latin scripts within a shape’s text using Aspose.Cells.
+// Use Cases: Generate a report where a shape displays English headings in Arial and Japanese subtitles in MS Mincho. | Create marketing dashboards with mixed English and Chinese labels, each rendered in its native font. | Automate Excel templates that require proper font rendering for multilingual annotations inside shapes.
+// AI Prompts: Write C# code with Aspose.Cells to set FarEastName to "SimSun" and LatinName to "Calibri" for a shape containing mixed Chinese and English text. | Show how to assign different fonts to Latin and CJK scripts for multiple shapes across a worksheet using Aspose.Cells for .NET. | Explain the impact of TextOptions.FarEastName and TextOptions.LatinName on rendering multilingual text in Excel shapes.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to add a rectangle shape to a worksheet, assign multilingual text, set the FarEast font to MS Mincho and the Latin font to Arial via Shape.TextOptions, and save the workbook.
-class SetMultilingualFontDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Creates a workbook, adds a rectangle shape, inserts English‑Chinese‑Japanese text, and uses TextOptions.FarEastName = "MS Mincho" and TextOptions.LatinName = "Arial" to render CJK characters and Latin characters with appropriate fonts before saving.
+    public class MultilingualFontDemo
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a rectangle shape to the worksheet
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 200, 100);
-        shape.Text = "Sample multilingual text";
+                // Add a rectangle shape to the worksheet
+                // Parameters: upper left row, upper left column, lower right row, lower right column, width, height
+                Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 200, 100);
 
-        // Specify the FarEast (CJK) font name
-        shape.TextOptions.FarEastName = "MS Mincho";
+                // Set multilingual text (Latin + CJK characters)
+                shape.Text = "English 中文 日本語";
 
-        // Specify the Latin (Western) font name
-        shape.TextOptions.LatinName = "Arial";
+                // Specify fonts for different script types
+                shape.TextOptions.FarEastName = "MS Mincho"; // Font for Far East (CJK) characters
+                shape.TextOptions.LatinName = "Arial";      // Font for Latin characters
 
-        // Save the workbook to a file
-        workbook.Save("MultilingualFontDemo.xlsx");
+                // Save the workbook
+                workbook.Save("MultilingualFontDemo.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            MultilingualFontDemo.Run();
+        }
     }
 }

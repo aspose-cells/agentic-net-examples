@@ -1,79 +1,60 @@
-// Title: C# – Enable WorkbookDesigner.LineByLine for line‑by‑line smart‑marker list merging in Aspose.Cells
-// Description: Demonstrates how to create an Excel template with smart markers, bind a List<Employee> to the "Employees" marker, activate WorkbookDesigner.LineByLine, process the markers so each employee occupies a separate row, and save the result while preserving any master markers.
-// Keywords: Aspose.Cells | WorkbookDesigner | LineByLine | smart markers | C# list merging | Excel template population | SetDataSource | List<T> to Excel | .NET
-// Common Searches: Aspose.Cells WorkbookDesigner LineByLine example | How to merge a list into Excel using smart markers C# | Preserve master markers when processing smart markers line by line | Smart marker list merging Aspose.Cells .NET | WorkbookDesigner SetDataSource List<T>
-// Developer Intent: Activate WorkbookDesigner.LineByLine to insert each item of a simple list into consecutive rows while keeping existing master markers intact.
-// Use Cases: Generate an employee roster where each employee appears on a new row using a List<Employee>. | Create invoices that add line‑items from a collection without overwriting the invoice header markers. | Build multi‑section reports that sequentially merge several data tables while retaining section titles.
-// AI Prompts: Convert the List<Employee> data source to a DataTable while keeping LineByLine enabled. | Explain how WorkbookDesigner.LineByLine changes marker processing and how to switch back to the default mode. | Provide troubleshooting steps when LineByLine processing does not add rows as expected.
+// Title: Aspose.Cells for .NET: Use WorkbookDesigner.LineByLine to merge a list with smart markers (C#)
+// Description: Demonstrates enabling WorkbookDesigner.LineByLine in C# so each smart‑marker row is processed individually, binding a List<Employee> to markers and generating an Excel file with one row per employee.
+// Keywords: Aspose.Cells | WorkbookDesigner | LineByLine | smart markers | C# example | list merging | Excel export | Aspose.Cells for .NET | populate rows from collection | template processing
+// Common Searches: WorkbookDesigner LineByLine example C# | Aspose.Cells smart markers list merging | How to bind List<T> to smart markers Aspose.Cells | Generate Excel rows from collection using Aspose.Cells | LineByLine property usage Aspose.Cells .NET
+// Developer Intent: Enable line‑by‑line processing to merge each item of a collection into separate rows using smart markers.
+// Use Cases: Create an employee directory where each employee occupies its own row. | Produce a sales ledger that lists each transaction from a List<Sale>. | Generate invoices with line‑item details from a List<Product> while keeping header rows intact. | Export project task lists from a List<Task> into Excel for reporting.
+// AI Prompts: Write C# code that adds a formatted header above the smart‑marker rows while keeping LineByLine true. | Show how to bind multiple collections (e.g., Employees and Departments) to the same worksheet using WorkbookDesigner with LineByLine enabled. | Compare the output of LineByLine true versus false for master‑detail smart markers and advise when to use each mode. | Provide a step‑by‑step guide to debug smart‑marker processing when LineByLine is set.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+namespace AsposeCellsLineByLineDemo
 {
-    // Demonstrates how to create an Excel template with smart markers, bind a List<Employee> to the "Employees" marker, activate WorkbookDesigner.LineByLine, process the markers so each employee occupies a separate row, and save the result while preserving any master markers.
-    public class SimpleListMergeDemo
+    // Simple data class for demonstration
+    // Demonstrates enabling WorkbookDesigner.LineByLine in C# so each smart‑marker row is processed individually, binding a List<Employee> to markers and generating an Excel file with one row per employee.
+    public class Employee
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook that will act as the template
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Define smart markers for a simple list (one row per list item)
-                sheet.Cells["A1"].PutValue("&=Employees.Name");
-                sheet.Cells["B1"].PutValue("&=Employees.Age");
-                sheet.Cells["C1"].PutValue("&=Employees.Department");
-
-                // Sample data source: a list of employee objects
-                List<Employee> employees = new List<Employee>
-                {
-                    new Employee { Name = "John Doe", Age = 30, Department = "Sales" },
-                    new Employee { Name = "Jane Smith", Age = 28, Department = "HR" },
-                    new Employee { Name = "Bob Johnson", Age = 35, Department = "IT" }
-                };
-
-                // Initialize the WorkbookDesigner, assign the workbook, and enable line‑by‑line processing
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook,
-                    LineByLine = true // Obsolete, kept for compatibility
-                };
-
-                // Bind the data source to the smart marker name used in the template
-                designer.SetDataSource("Employees", employees);
-
-                // Process the smart markers to populate the worksheet
-                designer.Process();
-
-                // Save the populated workbook
-                string outputPath = "SimpleListMerge_Output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error during processing: {ex.Message}");
-            }
-        }
-
-        // POCO class representing an employee record
-        public class Employee
-        {
-            public string? Name { get; set; }
-            public int Age { get; set; }
-            public string? Department { get; set; }
-        }
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Department { get; set; }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
-            SimpleListMergeDemo.Run();
+            // 1. Create a new workbook and add smart markers for a simple list
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Smart markers placed line by line (each row will be repeated for each list item)
+            sheet.Cells["A1"].PutValue("&Employees.Name");
+            sheet.Cells["B1"].PutValue("&Employees.Age");
+            sheet.Cells["C1"].PutValue("&Employees.Department");
+
+            // 2. Prepare sample data source (a list of Employee objects)
+            List<Employee> employees = new List<Employee>
+            {
+                new Employee { Name = "John Doe", Age = 35, Department = "Sales" },
+                new Employee { Name = "Jane Smith", Age = 28, Department = "Marketing" },
+                new Employee { Name = "Bob Johnson", Age = 42, Department = "HR" }
+            };
+
+            // 3. Initialize WorkbookDesigner, assign the workbook, and enable line‑by‑line processing
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = workbook;
+            designer.LineByLine = true; // Ensures each smart marker line is processed individually
+
+            // 4. Bind the data source to the marker name used in the template
+            designer.SetDataSource("Employees", employees);
+
+            // 5. Process the smart markers to populate the worksheet
+            designer.Process();
+
+            // 6. Save the resulting workbook
+            workbook.Save("Employees_LineByLine.xlsx", SaveFormat.Xlsx);
         }
     }
 }

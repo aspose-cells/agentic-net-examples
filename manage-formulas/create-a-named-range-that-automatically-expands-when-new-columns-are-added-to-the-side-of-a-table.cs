@@ -1,85 +1,99 @@
-// Title: Aspose.Cells C# – Define a Dynamically Expanding Named Range for an Excel Table
-// Description: Shows how to create a workbook, add a ListObject (Excel table), define a named range with the structured reference =MyTable[#All], insert a new column, and verify that the named range automatically reflects the expanded column count before and after the insertion. The workbook is saved as ExpandingNamedRangeDemo.xlsx.
-// Keywords: Aspose.Cells | C# | named range | dynamic range | structured reference | ListObject | Excel table | auto‑expand range | add column programmatically | Excel automation | range expansion
-// Common Searches: Aspose.Cells create expanding named range | C# structured reference dynamic range Excel | auto update named range after inserting column Aspose.Cells | ListObject named range expands with new columns | how to make a named range grow automatically in Aspose.Cells
-// Developer Intent: Create a named range that automatically expands when new columns are added to an Excel table using Aspose.Cells for .NET.
-// Use Cases: Keep formulas, charts, or pivot tables in sync with a table that may gain additional columns. | Reference a single range across worksheets so any horizontal growth is captured without manual edits. | Build reusable templates where the data area adapts to added metrics or attributes.
-// AI Prompts: Generate C# code with Aspose.Cells that defines a named range using =MyTable[#All] and prints the column count before and after adding a column. | Explain why a structured reference like =MyTable[#All] causes a named range to expand automatically when the underlying ListObject changes. | Provide best‑practice error handling for retrieving an updated range after modifying a table’s structure in Aspose.Cells.
+// Title: Aspose.Cells C# – Create a Named Range That Auto‑Expands When Adding Columns to a Table
+// Description: Demonstrates how to build a workbook, define a ListObject (Excel table), create a named range using the structured reference TableName[#All], insert a new column, and verify that the named range automatically includes the added column before saving the file.
+// Keywords: Aspose.Cells | C# | .NET | dynamic named range | structured reference | Table[#All] | Excel table | ListObject | auto‑expand range | add column to table | workbook automation
+// Common Searches: Aspose.Cells create named range that expands with new columns | C# structured reference Table[#All] auto update | dynamic range for Excel table using Aspose.Cells | how to make a named range follow table schema changes | add column to ListObject and keep named range current
+// Developer Intent: Generate a named range that automatically grows to include any columns added to an Excel table.
+// Use Cases: Maintain a single reference for all table columns in formulas, charts, or data validations that adapts to schema changes. | Add new data fields to a table without manually updating named ranges in downstream reports. | Export workbooks where external processes rely on a consistent named range that reflects the latest table structure.
+// AI Prompts: Write C# code with Aspose.Cells that creates an Excel table, defines a named range using TableName[#All], inserts a new column, and shows the updated range address. | Explain how Table[#All] structured references keep named ranges dynamic in Aspose.Cells when columns are added. | Provide a step‑by‑step tutorial for building a dynamic named range for a ListObject in Aspose.Cells, including verification after column insertion.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsDynamicNamedRange
 {
-    // Shows how to create a workbook, add a ListObject (Excel table), define a named range with the structured reference =MyTable[#All], insert a new column, and verify that the named range automatically reflects the expanded column count before and after the insertion. The workbook is saved as ExpandingNamedRangeDemo.xlsx.
-    public class ExpandingNamedRangeDemo
+    // Demonstrates how to build a workbook, define a ListObject (Excel table), create a named range using the structured reference TableName[#All], insert a new column, and verify that the named range automatically includes the added column before saving the file.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook (lifecycle: create)
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
 
-                // Populate initial data for the table (3 rows, 2 columns)
-                cells["A1"].PutValue("ID");
-                cells["B1"].PutValue("Value");
-                cells["A2"].PutValue(1);
-                cells["B2"].PutValue(10);
-                cells["A3"].PutValue(2);
-                cells["B3"].PutValue(20);
-                cells["A4"].PutValue(3);
-                cells["B4"].PutValue(30);
+                // Populate sample data that will become a table (ListObject)
+                // A1:D5 with headers in the first row
+                sheet.Cells["A1"].PutValue("ID");
+                sheet.Cells["B1"].PutValue("Name");
+                sheet.Cells["C1"].PutValue("Qty");
+                sheet.Cells["D1"].PutValue("Price");
 
-                // Add a ListObject (Excel Table) covering the data range A1:B4
-                int tableIndex = sheet.ListObjects.Add("A1", "B4", true);
+                sheet.Cells["A2"].PutValue(1);
+                sheet.Cells["B2"].PutValue("Apple");
+                sheet.Cells["C2"].PutValue(10);
+                sheet.Cells["D2"].PutValue(0.5);
+
+                sheet.Cells["A3"].PutValue(2);
+                sheet.Cells["B3"].PutValue("Banana");
+                sheet.Cells["C3"].PutValue(20);
+                sheet.Cells["D3"].PutValue(0.3);
+
+                sheet.Cells["A4"].PutValue(3);
+                sheet.Cells["B4"].PutValue("Cherry");
+                sheet.Cells["C4"].PutValue(15);
+                sheet.Cells["D4"].PutValue(0.8);
+
+                sheet.Cells["A5"].PutValue(4);
+                sheet.Cells["B5"].PutValue("Date");
+                sheet.Cells["C5"].PutValue(5);
+                sheet.Cells["D5"].PutValue(1.2);
+
+                // Add a ListObject (Excel Table) covering the data range A1:D5
+                // Parameters: startRow, startColumn, endRow, endColumn, hasHeaders
+                int tableIndex = sheet.ListObjects.Add(0, 0, 4, 3, true);
                 ListObject table = sheet.ListObjects[tableIndex];
-                table.DisplayName = "MyTable";
+                table.DisplayName = "SalesTable"; // Optional: give the table a friendly name
 
                 // Create a named range that refers to the whole table using a structured reference.
-                int nameIdx = workbook.Worksheets.Names.Add("ExpandedRange");
-                Name namedRange = workbook.Worksheets.Names[nameIdx];
-                namedRange.RefersTo = "=MyTable[#All]";
+                // Structured references like TableName[#All] automatically expand when columns are added.
+                int nameIndex = workbook.Worksheets.Names.Add("SalesTableRange");
+                Name namedRange = workbook.Worksheets.Names[nameIndex];
+                namedRange.RefersTo = "=SalesTable[#All]";
 
-                // Verify the initial size of the named range
-                AsposeRange rangeBefore = namedRange.GetRange();
-                Console.WriteLine($"Before adding column: Columns = {rangeBefore.ColumnCount}, Rows = {rangeBefore.RowCount}");
+                // Verify the initial address of the named range
+                AsposeRange initialRange = namedRange.GetRange();
+                Console.WriteLine("Initial named range address: " + initialRange.Address); // Expected: SalesTable[#All]
 
-                // Insert a new column to the right side of the table (after column B)
-                sheet.Cells.InsertColumn(2); // Column index 2 corresponds to column C
+                // Insert a new column to the right of the table (e.g., after column D)
+                // The table will automatically expand to include the new column.
+                sheet.Cells.InsertColumn(4); // Inserts before column E (0‑based index)
 
-                // Add header and data for the new column
-                cells["C1"].PutValue("Extra");
-                cells["C2"].PutValue(100);
-                cells["C3"].PutValue(200);
-                cells["C4"].PutValue(300);
+                // Add a header for the new column and some sample data
+                sheet.Cells["E1"].PutValue("Discount");
+                sheet.Cells["E2"].PutValue(0.05);
+                sheet.Cells["E3"].PutValue(0.10);
+                sheet.Cells["E4"].PutValue(0.00);
+                sheet.Cells["E5"].PutValue(0.07);
 
-                // Retrieve the named range again; it should now reflect the expanded table
-                AsposeRange rangeAfter = namedRange.GetRange();
-                Console.WriteLine($"After adding column: Columns = {rangeAfter.ColumnCount}, Rows = {rangeAfter.RowCount}");
+                // After inserting the column, the structured reference should now include column E.
+                // Retrieve the range again to see the updated address.
+                AsposeRange updatedRange = namedRange.GetRange();
+                Console.WriteLine("Updated named range address after column insertion: " + updatedRange.Address);
 
-                // Save the workbook
-                string outputPath = "ExpandingNamedRangeDemo.xlsx";
+                // Save the workbook (lifecycle: save)
+                string outputPath = "DynamicNamedRange.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ExpandingNamedRangeDemo.Run();
         }
     }
 }

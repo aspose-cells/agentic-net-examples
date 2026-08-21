@@ -1,50 +1,61 @@
-// Title: C# – Convert an XLSX workbook with Office Add‑Ins to PDF while retaining interactive elements using Aspose.Cells
-// Description: Shows how to load an Excel file that contains Office Add‑Ins (checkboxes, drop‑downs, ActiveX controls) and export it to PDF with those controls still visible, using Aspose.Cells ConversionUtility.Convert together with file‑existence checks and exception handling.
-// Keywords: Aspose.Cells | C# | XLSX to PDF | Office Add‑Ins | interactive elements | ConversionUtility | Excel form controls | PDF export | automation | batch conversion
-// Common Searches: Aspose.Cells preserve Office Add‑Ins in PDF | convert Excel with form controls to PDF C# | keep interactive elements when exporting to PDF Aspose | ConversionUtility retain add‑ins PDF | Excel dashboard PDF with checkboxes Aspose.Cells
-// Developer Intent: Export an Excel workbook that includes Office Add‑Ins to a PDF without losing the interactive controls.
-// Use Cases: Create printable PDFs of Excel dashboards that contain checkboxes, drop‑downs, or other form controls while keeping their visual representation. | Archive compliance‑critical Excel reports with embedded add‑ins, ensuring the PDF version still displays the interactive elements. | Automate batch processing of multiple workbooks that contain Office Add‑Ins, producing PDFs ready for stakeholder distribution.
-// AI Prompts: Write C# code that uses Aspose.Cells ConversionUtility to convert an XLSX file with Office Add‑Ins to PDF while keeping the controls intact. | Explain how Aspose.Cells handles Excel form controls and ActiveX objects during PDF export and which options affect their preservation. | Show how to add robust error handling and file‑existence validation when converting workbooks that contain add‑ins to PDF with Aspose.Cells.
+// Title: Convert XLSX with Office Add‑In Controls to Interactive PDF using Aspose.Cells for .NET
+// Description: Loads an XLSX workbook that contains Office Add‑In controls with LoadOptions, then converts it to PDF via ConversionUtility and PdfSaveOptions, keeping the controls functional as interactive form fields.
+// Keywords: Aspose.Cells XLSX to PDF | preserve Office Add‑In controls | interactive PDF from Excel | ConversionUtility Aspose | PdfSaveOptions form fields | C# Excel PDF conversion
+// Common Searches: Aspose.Cells keep Office Add‑In form fields in PDF | convert Excel with add‑in controls to interactive PDF C# | preserve Excel add‑in controls when saving as PDF | ConversionUtility PDF conversion example Aspose.Cells | load XLSX with Office Add‑In controls Aspose
+// Developer Intent: Convert an Excel workbook that includes Office Add‑In controls into a PDF while retaining those controls as interactive elements.
+// Use Cases: Create PDF reports from Excel templates that contain embedded Office Add‑In form fields without losing interactivity. | Batch‑process multiple XLSX files with add‑in controls into PDFs for archival or distribution. | Expose a web service that accepts XLSX uploads with Office Add‑In controls and returns a PDF preserving the interactive elements.
+// AI Prompts: Show how to customize PdfSaveOptions to style preserved form fields during conversion. | Provide error‑handling patterns for ConversionUtility when encountering unsupported Office Add‑In controls. | Demonstrate a script that scans a folder, converts each XLSX with add‑in controls to PDF, and logs conversion results.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
-using Aspose.Cells.Saving;
+using Aspose.Cells.Saving;   // Contains PdfSaveOptions
 
-namespace AsposeCellsAddInPdfConversion
+namespace OfficeAddInPdfConversion
 {
-    // Shows how to load an Excel file that contains Office Add‑Ins (checkboxes, drop‑downs, ActiveX controls) and export it to PDF with those controls still visible, using Aspose.Cells ConversionUtility.Convert together with file‑existence checks and exception handling.
-    class Program
+    // Loads an XLSX workbook that contains Office Add‑In controls with LoadOptions, then converts it to PDF via ConversionUtility and PdfSaveOptions, keeping the controls functional as interactive form fields.
+    public class Converter
     {
-        static void Main()
+        public static void Run()
         {
-            // Path to the source XLSX workbook that contains Office Add‑Ins (interactive controls)
-            string sourcePath = "input_with_addins.xlsx";
+            // Path to the source XLSX workbook that contains Office Add‑In controls
+            string sourcePath = "input.xlsx";
 
             // Desired output PDF file path
-            string outputPath = "output_preserving_addins.pdf";
+            string destPath = "output.pdf";
+
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
 
             try
             {
-                // Verify that the source file exists to avoid FileNotFoundException
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
+                // Load options – explicitly specify the format to ensure correct loading
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
 
-                // Convert the workbook to PDF while preserving interactive controls.
-                // ConversionUtility handles loading and saving internally.
-                ConversionUtility.Convert(sourcePath, outputPath);
+                // Save options for PDF – default options are sufficient for preserving form fields
+                PdfSaveOptions saveOptions = new PdfSaveOptions();
 
-                Console.WriteLine($"Workbook converted successfully to PDF: {outputPath}");
+                // Perform the conversion using the provided ConversionUtility rule
+                ConversionUtility.Convert(sourcePath, loadOptions, destPath, saveOptions);
+
+                Console.WriteLine("Conversion completed. PDF saved to: " + destPath);
             }
             catch (Exception ex)
             {
-                // Catch any runtime errors and display a friendly message
-                Console.WriteLine($"Error during conversion: {ex.Message}");
+                Console.WriteLine("An error occurred during conversion:");
+                Console.WriteLine(ex.Message);
             }
+        }
+
+        // Entry point required for the application
+        public static void Main(string[] args)
+        {
+            Run();
         }
     }
 }

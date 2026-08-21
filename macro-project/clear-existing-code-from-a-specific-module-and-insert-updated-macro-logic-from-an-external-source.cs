@@ -1,100 +1,72 @@
-// Title: Update or Add a VBA Module in an .xlsm Workbook with Aspose.Cells for .NET (C#)
-// Description: Loads a macro‑enabled workbook, reads VBA source from an external .bas file, checks for a VBA project, replaces the code of a named module or creates a new procedural module, and saves the result as an updated .xlsm file using Aspose.Cells.
-// Keywords: Aspose.Cells VBA module update | C# replace macro code | add procedural module .xlsm | external .bas file Aspose | macro‑enabled workbook .NET | update VBA project Aspose.Cells | automate Excel macros C# | load and save .xlsm Aspose
-// Common Searches: replace VBA code in a specific module using Aspose.Cells | add new VBA module to an .xlsm file with C# | update macro module from .bas file Aspose.Cells .NET | check for VBA project before modifying workbook Aspose | save updated macro‑enabled workbook programmatically
-// Developer Intent: Replace the code of an existing VBA module or create the module if it does not exist, pulling the source from an external .bas file and saving the workbook as a macro‑enabled file.
-// Use Cases: Refresh a template workbook by injecting the latest business‑logic macro before distribution. | Deploy a standard macro across dozens of workbooks, adding the module only when it is missing. | Modernize legacy spreadsheets by swapping outdated VBA code with a new .bas implementation to meet compliance requirements.
-// AI Prompts: Write C# code that uses Aspose.Cells to replace the contents of a VBA module named "MyModule" in an .xlsm workbook with a .bas file, creating the module if it is absent. | Enhance the macro‑update routine with detailed error handling and logging for missing files, absent VBA projects, and save failures. | Show how to loop through all VBA modules in a workbook and update each one from matching .bas files located in a folder, using Aspose.Cells. | Generate a PowerShell script that calls a compiled .NET executable to batch‑process multiple .xlsm files, updating or adding a specified VBA module.
+// Title: Update a VBA module in an .xlsm workbook from a .bas file using Aspose.Cells C#
+// Description: Loads a macro‑enabled workbook, removes a specified VBA module, adds a new procedural module with the same name, injects code from an external .bas file, and saves the workbook as a new .xlsm file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# update VBA module | replace VBA module .xlsm | load .bas file into workbook | macro-enabled workbook automation | remove and add VBA module Aspose | C# Excel macro manipulation | Aspose.Cells VBA project
+// Common Searches: How to replace a VBA module in an .xlsm using Aspose.Cells | C# load .bas file into Excel workbook VBA project | Delete and add VBA module programmatically with Aspose.Cells | Update macro code in macro-enabled workbook C# | Aspose.Cells replace VBA module example
+// Developer Intent: Replace an existing VBA module in a macro‑enabled workbook with new code from an external .bas file using Aspose.Cells for .NET.
+// Use Cases: Refresh a shared utility VBA module across multiple generated reports after a code revision. | Automate deployment of updated macros to workbooks produced by a nightly build pipeline. | Swap out a legacy macro with a new implementation during migration to a new Excel template.
+// AI Prompts: Generate C# code with Aspose.Cells that removes a specific VBA module, adds a new procedural module, loads macro code from a .bas file, and saves the workbook as .xlsm. | Explain robust error‑handling for missing source workbook, absent .bas file, or a workbook without a VBA project when updating macros with Aspose.Cells. | Provide a step‑by‑step guide to batch‑process a folder of .xlsm files, replacing the same VBA module in each workbook with updated code.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsMacroUpdate
+// Loads a macro‑enabled workbook, removes a specified VBA module, adds a new procedural module with the same name, injects code from an external .bas file, and saves the workbook as a new .xlsm file using Aspose.Cells for .NET.
+class UpdateMacroModule
 {
-    // Loads a macro‑enabled workbook, reads VBA source from an external .bas file, checks for a VBA project, replaces the code of a named module or creates a new procedural module, and saves the result as an updated .xlsm file using Aspose.Cells.
-    public class MacroUpdater
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Path to the source macro‑enabled workbook
+            string sourcePath = "input.xlsm";
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"Source workbook not found: {sourcePath}");
+
+            // Load the workbook
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Name of the VBA module to refresh
+            string moduleName = "MyModule";
+
+            // Access the VBA project
+            VbaProject vbaProject = workbook.VbaProject;
+
+            // Remove existing module with the same name, if it exists
+            int existingIndex = -1;
+            for (int i = 0; i < vbaProject.Modules.Count; i++)
             {
-                // Paths for workbook and new macro code
-                string workbookPath = "source.xlsm";
-                string newMacroFilePath = "NewMacro.bas";
-                string targetModuleName = "MyModule";
-
-                // Verify required files exist
-                if (!File.Exists(workbookPath))
+                if (vbaProject.Modules[i].Name.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.WriteLine($"Workbook file not found: {workbookPath}");
-                    return;
+                    existingIndex = i;
+                    break;
                 }
-
-                if (!File.Exists(newMacroFilePath))
-                {
-                    Console.WriteLine($"Macro source file not found: {newMacroFilePath}");
-                    return;
-                }
-
-                // Load the macro‑enabled workbook
-                Workbook workbook = new Workbook(workbookPath);
-
-                // Read new VBA code
-                string newMacroCode = File.ReadAllText(newMacroFilePath);
-
-                // Ensure the workbook contains a VBA project
-                VbaProject vbaProject = workbook.VbaProject;
-                if (vbaProject == null)
-                {
-                    Console.WriteLine("The workbook does not contain a VBA project.");
-                    return;
-                }
-
-                VbaModuleCollection modules = vbaProject.Modules;
-
-                // Locate the target module by name
-                int moduleIndex = -1;
-                for (int i = 0; i < modules.Count; i++)
-                {
-                    if (modules[i].Name.Equals(targetModuleName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        moduleIndex = i;
-                        break;
-                    }
-                }
-
-                if (moduleIndex >= 0)
-                {
-                    // Update existing module
-                    modules[moduleIndex].Codes = newMacroCode;
-                }
-                else
-                {
-                    // Add a new procedural module
-                    int newIndex = modules.Add(VbaModuleType.Procedural, targetModuleName);
-                    modules[newIndex].Codes = newMacroCode;
-                }
-
-                // Save the updated workbook as macro‑enabled
-                string outputPath = "updated.xlsm";
-                workbook.Save(outputPath, SaveFormat.Xlsm);
-
-                Console.WriteLine($"Macro module '{targetModuleName}' has been updated and saved to '{outputPath}'.");
             }
-            catch (Exception ex)
+            if (existingIndex != -1)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                vbaProject.Modules.RemoveAt(existingIndex);
             }
+
+            // Add a new procedural module
+            int newIndex = vbaProject.Modules.Add(VbaModuleType.Procedural, moduleName);
+            VbaModule newModule = vbaProject.Modules[newIndex];
+
+            // Load updated macro code from external file
+            string externalMacroPath = "UpdatedMacro.bas";
+            if (!File.Exists(externalMacroPath))
+                throw new FileNotFoundException($"Macro file not found: {externalMacroPath}");
+
+            string macroCode = File.ReadAllText(externalMacroPath);
+            newModule.Codes = macroCode;
+
+            // Save the workbook as macro‑enabled
+            string outputPath = "output.xlsm";
+            workbook.Save(outputPath, SaveFormat.Xlsm);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            MacroUpdater.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

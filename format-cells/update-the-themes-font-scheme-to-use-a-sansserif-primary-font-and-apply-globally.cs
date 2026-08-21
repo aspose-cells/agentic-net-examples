@@ -1,36 +1,50 @@
-// Title: Set Workbook Theme Font to Sans‑Serif (Arial) Globally with Aspose.Cells for .NET
-// Description: Creates a new Workbook, accesses its DefaultStyle, and uses Font.SetName with FontSchemeType.Major and FontSchemeType.Minor to apply the Arial sans‑serif font to the entire workbook theme before saving.
-// Keywords: Aspose.Cells | .NET | C# | Excel theme font | global font change | Arial | FontSchemeType | DefaultStyle | major font | minor font
-// Common Searches: Aspose.Cells change workbook theme font to Arial | C# set global default font in Excel using Aspose.Cells | How to apply sans‑serif font to all cells with Aspose.Cells | Update major and minor font scheme in Aspose.Cells workbook
-// Developer Intent: Apply a sans‑serif font to both major and minor theme schemes across the whole workbook.
-// Use Cases: Generate brand‑compliant reports where the corporate sans‑serif font (e.g., Arial) is enforced for every cell. | Initialize new workbooks with a predefined theme font to maintain consistent styling in automated document pipelines.
-// AI Prompts: Write C# code that changes the workbook theme font to Calibri for both major and minor schemes using Aspose.Cells and saves the file. | Explain the difference between FontSchemeType.Major and FontSchemeType.Minor in Aspose.Cells and how they affect Excel themes. | Create a reusable function that accepts any font name and applies it to the workbook's default style for both major and minor font schemes.
+// Title: Apply a Global Sans‑Serif Font (Arial) to an Aspose.Cells Workbook in C#
+// Description: Shows how to change the workbook's default style to Arial (12 pt) using Aspose.Cells for .NET, apply the style to a cell, and save the file, providing a quick way to enforce a consistent font across all worksheets.
+// Keywords: Aspose.Cells default font C# | global font scheme Aspose.Cells | set workbook default style .NET | Arial font Excel Aspose | apply sans-serif font workbook | theme font update Aspose.Cells | C# Excel default style | change workbook font programmatically
+// Common Searches: change default font in Aspose.Cells workbook C# | set global font for all cells Aspose.Cells .NET | apply Arial as default style in Excel using Aspose | update theme font scheme in Aspose.Cells C# | C# code to set workbook default font
+// Developer Intent: Configure the workbook so every cell automatically uses a specified sans‑serif font.
+// Use Cases: Create reports that must follow a corporate Arial style without manual formatting. | Build a template workbook where any added data inherits the chosen font. | Generate Excel files for publishing where a consistent sans‑serif appearance is required.
+// AI Prompts: Generate C# code to change an Aspose.Cells workbook’s default font to Helvetica and apply it to existing cells. | Explain how to modify the ThemeFontScheme in Aspose.Cells so both primary and secondary fonts become a custom sans‑serif typeface. | Provide a step‑by‑step guide for setting a global font in an Excel file using Aspose.Cells for .NET without styling each cell individually.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsThemeFontDemo
+namespace ThemeFontSchemeExample
 {
-    // Creates a new Workbook, accesses its DefaultStyle, and uses Font.SetName with FontSchemeType.Major and FontSchemeType.Minor to apply the Arial sans‑serif font to the entire workbook theme before saving.
+    // Shows how to change the workbook's default style to Arial (12 pt) using Aspose.Cells for .NET, apply the style to a cell, and save the file, providing a quick way to enforce a consistent font across all worksheets.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Access the default style which is applied globally to all cells
-            Style defaultStyle = workbook.DefaultStyle;
+                // Set the global default font for the workbook
+                workbook.DefaultStyle.Font.Name = "Arial";
+                workbook.DefaultStyle.Font.Size = 12;
 
-            // Set a sans‑serif font (e.g., Arial) and assign it to the Major font scheme
-            // The SetName method updates both the font name and its scheme type.
-            defaultStyle.Font.SetName("Arial", FontSchemeType.Major);
+                // Create a style that uses the desired font (optional, same as default)
+                Style globalStyle = workbook.CreateStyle();
+                globalStyle.Font.Name = "Arial";
+                globalStyle.Font.Size = 12;
 
-            // Optionally, ensure the Minor scheme also uses a sans‑serif font
-            defaultStyle.Font.SetName("Arial", FontSchemeType.Minor);
+                // Apply the style to a sample cell
+                Worksheet sheet = workbook.Worksheets[0];
+                Cell sampleCell = sheet.Cells["A1"];
+                sampleCell.PutValue("Text using the global sans‑serif theme font");
+                sampleCell.SetStyle(globalStyle);
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("ThemeFontUpdated.xlsx");
+                // Save the workbook
+                string outputPath = "ThemeFontSchemeUpdated.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

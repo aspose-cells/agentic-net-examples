@@ -1,66 +1,68 @@
-// Title: C# – Convert Excel Workbook to PDF with Layout & Formatting Preservation using Aspose.Cells
-// Description: Shows how to turn an .xlsx into a PDF in C# with Aspose.Cells while keeping cell styles, column widths, and document structure. Includes a quick ConversionUtility call and a detailed Workbook.Save using PdfSaveOptions (ExportDocumentStructure, CheckWorkbookDefaultFont, OnePagePerSheet = false).
-// Keywords: Aspose.Cells PDF conversion C# | Excel to PDF preserving layout | PdfSaveOptions ExportDocumentStructure | ConversionUtility Convert example | Workbook.Save PDF options | calculate formulas before export | C# Excel PDF export
-// Common Searches: Aspose.Cells convert xlsx to pdf preserving formatting | C# PdfSaveOptions keep original layout Excel | Difference between ConversionUtility.Convert and Workbook.Save for PDF | How to export Excel as multi‑page PDF with Aspose.Cells | Preserve column widths when saving Excel to PDF C#
-// Developer Intent: Create a PDF from an Excel workbook that exactly mirrors the original worksheet’s layout and formatting.
-// Use Cases: Rapid conversion when default PDF layout is sufficient – use ConversionUtility.Convert. | Fine‑tuned export that retains document hierarchy, default fonts, and multi‑page sheet layout – use Workbook.Save with customized PdfSaveOptions. | Ensure formulas are up‑to‑date before export by calling Workbook.CalculateFormula.
-// AI Prompts: Generate C# code to convert an .xlsx to PDF with Aspose.Cells, keeping column widths and row heights unchanged. | Provide a snippet that uses PdfSaveOptions to export an Excel workbook to a multi‑page PDF while preserving document structure and default fonts. | Explain the impact of OnePagePerSheet and AllColumnsInOnePagePerSheet settings on PDF layout in Aspose.Cells.
+// Title: Convert an Excel workbook to PDF while preserving layout, formatting, and pagination with Aspose.Cells for .NET
+// Description: This C# example demonstrates how to load an .xlsx file using Aspose.Cells, configure PdfSaveOptions (ExportDocumentStructure, CheckWorkbookDefaultFont, OnePagePerSheet) to keep the original workbook appearance, and save it as a PDF. The code also includes file‑existence checks and exception handling for robust conversion.
+// Keywords: Aspose.Cells | Excel to PDF conversion | preserve Excel layout | preserve cell formatting | PDF pagination | OnePagePerSheet | ExportDocumentStructure | CheckWorkbookDefaultFont | .NET PDF export | C# Aspose.Cells example | multi‑sheet PDF | Excel bookmarks PDF
+// Common Searches: Aspose.Cells keep Excel formatting when saving as PDF | PDF conversion options to retain page breaks in Aspose.Cells | How to export each worksheet to a separate PDF page using Aspose.Cells .NET | Enable bookmarks in PDF generated from Excel with Aspose.Cells | C# code for Excel to PDF with layout preservation
+// Developer Intent: Generate a PDF from an Excel workbook that looks identical to the source, including fonts, cell styles, page breaks, and document structure.
+// Use Cases: Produce printable PDF reports from financial workbooks where each sheet starts on a new page. | Create searchable PDFs with bookmarks for multi‑sheet project documentation. | Integrate Excel‑to‑PDF conversion into a web service while ensuring fonts and cell formatting are retained.
+// AI Prompts: Write C# code using Aspose.Cells to convert an .xlsx file to PDF with ExportDocumentStructure, CheckWorkbookDefaultFont, and OnePagePerSheet enabled. | Explain how ExportDocumentStructure and CheckWorkbookDefaultFont affect the visual fidelity of PDFs generated from Excel files. | Show best practices for handling missing source files and logging errors during Excel‑to‑PDF conversion with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-namespace AsposeCellsExample
+namespace AsposeCellsExamples
 {
-    // Shows how to turn an .xlsx into a PDF in C# with Aspose.Cells while keeping cell styles, column widths, and document structure. Includes a quick ConversionUtility call and a detailed Workbook.Save using PdfSaveOptions (ExportDocumentStructure, CheckWorkbookDefaultFont, OnePagePerSheet = false).
-    class WorkbookToPdfConverter
+    // This C# example demonstrates how to load an .xlsx file using Aspose.Cells, configure PdfSaveOptions (ExportDocumentStructure, CheckWorkbookDefaultFont, OnePagePerSheet) to keep the original workbook appearance, and save it as a PDF. The code also includes file‑existence checks and exception handling for robust conversion.
+    public class WorkbookToPdfConverter
     {
+        public static void Main(string[] args)
+        {
+            Run();
+        }
+
         public static void Run()
         {
-            string sourcePath = "input.xlsx";
-            string destPath = "output.pdf";
+            // Path to the source Excel workbook
+            string sourceFile = "input.xlsx";
+
+            // Desired path for the output PDF file
+            string pdfFile = "output.pdf";
+
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourceFile))
+            {
+                Console.WriteLine($"Error: Source file '{sourceFile}' not found.");
+                return;
+            }
 
             try
             {
-                // Verify source file exists
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
+                // Load the workbook from the file
+                Workbook workbook = new Workbook(sourceFile);
 
-                // 1. Quick conversion using the utility method
-                ConversionUtility.Convert(sourcePath, destPath);
-                Console.WriteLine("ConversionUtility: Workbook converted to PDF.");
-
-                // 2. Precise conversion with full control over PDF options
-                Workbook workbook = new Workbook(sourcePath);
-                workbook.CalculateFormula(); // Ensure formulas are up‑to‑date
-
+                // Configure PDF save options to retain layout and formatting
                 PdfSaveOptions pdfOptions = new PdfSaveOptions
                 {
+                    // Preserve document structure such as bookmarks and headings
                     ExportDocumentStructure = true,
+
+                    // Use the workbook's default font when a specific font is missing
                     CheckWorkbookDefaultFont = true,
-                    OnePagePerSheet = false,
-                    AllColumnsInOnePagePerSheet = false
+
+                    // Ensure each worksheet starts on a new page (helps keep original pagination)
+                    OnePagePerSheet = true
                 };
 
-                workbook.Save(destPath, pdfOptions);
-                Console.WriteLine("Workbook.Save: Workbook saved to PDF with layout preserved.");
+                // Save the workbook as PDF with the specified options
+                workbook.Save(pdfFile, pdfOptions);
+
+                Console.WriteLine($"Conversion completed: '{sourceFile}' → '{pdfFile}'");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error during conversion: {ex.Message}");
+                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
             }
-        }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            WorkbookToPdfConverter.Run();
         }
     }
 }

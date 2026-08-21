@@ -1,59 +1,43 @@
-// Title: C# – Export Excel to HTML with 200 DPI Images Using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, optionally add a PNG picture, configure HtmlSaveOptions and ImageOrPrintOptions to export HTML with 200 dpi images saved as separate files (Base64 disabled), and save the result as a high‑resolution HTML document.
-// Keywords: Aspose.Cells | HtmlSaveOptions | ImageOrPrintOptions | 200 DPI | high resolution HTML export | C# | .NET | export Excel to HTML | separate image files | disable Base64
-// Common Searches: Aspose.Cells set image DPI for HTML export | C# export Excel as HTML with high‑resolution images | HtmlSaveOptions 200 dpi images | How to save HTML images as files instead of Base64 in Aspose.Cells | Increase image quality when converting Excel to HTML
-// Developer Intent: Configure Aspose.Cells to generate HTML where embedded images are rendered at 200 dpi and stored as external image files.
-// Use Cases: Producing printable web reports that require 200 dpi PNGs for charts and diagrams. | Creating e‑learning or documentation pages where image clarity is critical after Excel‑to‑HTML conversion. | Exporting interactive dashboards to HTML while preserving zoom‑ready image quality.
-// AI Prompts: Show how to export images as JPEG with 300 dpi using Aspose.Cells in C#. | Provide code that sets different horizontal and vertical DPI values for HTML export. | Explain how to embed the generated HTML and its external image files into a responsive web page.
+// Title: Aspose.Cells C# – Export Excel to HTML with 200 DPI Images
+// Description: Demonstrates how to configure HtmlSaveOptions.ImageOptions to 200 DPI for both axes, optionally embed images as Base64, and save a workbook as a high‑resolution HTML file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells HTML export DPI | C# set image resolution Aspose.Cells | HtmlSaveOptions ImageOptions 200 DPI | high resolution HTML images Excel | embed images Base64 Aspose.Cells | export workbook to HTML C# | Aspose.Cells image quality settings
+// Common Searches: Aspose.Cells set image DPI when saving as HTML | C# export Excel to HTML with high‑resolution images | HtmlSaveOptions ImageOptions horizontal vertical DPI | how to embed images as Base64 in Aspose.Cells HTML output | increase image clarity in HTML export Aspose.Cells
+// Developer Intent: Configure image DPI to 200 and generate an HTML file with high‑resolution graphics from an Excel workbook.
+// Use Cases: Publish web‑ready reports where charts and graphics retain sharpness. | Create single‑file HTML emails with embedded high‑resolution images. | Produce printable HTML versions of spreadsheets that require detailed visuals.
+// AI Prompts: Provide C# code to export an Aspose.Cells workbook to HTML with 300 DPI images and Base64 embedding. | Show how to set both horizontal and vertical DPI in HtmlSaveOptions.ImageOptions and save to a custom folder. | Explain strategies to balance high‑resolution HTML images and file size when using Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Demonstrates how to create a workbook, optionally add a PNG picture, configure HtmlSaveOptions and ImageOrPrintOptions to export HTML with 200 dpi images saved as separate files (Base64 disabled), and save the result as a high‑resolution HTML document.
-class Program
+namespace AsposeCellsHtmlExport
 {
-    static void Main()
+    // Demonstrates how to configure HtmlSaveOptions.ImageOptions to 200 DPI for both axes, optionally embed images as Base64, and save a workbook as a high‑resolution HTML file using Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and add some sample content
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("High‑DPI HTML Export");
-
-            // Add an image to the worksheet if the file exists
-            string imagePath = "example.png";
-            if (File.Exists(imagePath))
-            {
-                // topRow=2, leftColumn=0 corresponds to cell A3
-                sheet.Pictures.Add(2, 0, imagePath);
-            }
-            else
-            {
-                Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
-            }
+            sheet.Cells["A1"].PutValue("High‑resolution HTML export example");
 
             // Configure HTML save options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-            // Set high DPI for exported images
-            ImageOrPrintOptions imgOptions = htmlOptions.ImageOptions;
-            imgOptions.HorizontalResolution = 200;
-            imgOptions.VerticalResolution = 200;
+            // Set image DPI to 200 for both horizontal and vertical resolution
+            // HtmlSaveOptions.ImageOptions provides the ImageOrPrintOptions object
+            htmlOptions.ImageOptions.HorizontalResolution = 200;
+            htmlOptions.ImageOptions.VerticalResolution = 200;
 
-            // Export images as separate files (not Base64) to preserve high resolution
-            htmlOptions.ExportImagesAsBase64 = false;
+            // Optional: embed images as Base64 to keep a single HTML file
+            // htmlOptions.ExportImagesAsBase64 = true;
 
-            // Save the workbook as HTML
-            string outputPath = "HighDPI_Output.html";
+            // Save the workbook as HTML with the specified high‑resolution image settings
+            string outputPath = "HighResolutionOutput.html";
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+
+            Console.WriteLine($"HTML file saved to '{outputPath}' with image DPI set to 200.");
         }
     }
 }

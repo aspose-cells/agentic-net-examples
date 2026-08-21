@@ -1,30 +1,30 @@
-// Title: C# .NET CLI Tool to Batch‑Encrypt Excel Workbooks with Aspose.Cells and Generate a Summary Report
-// Description: A command‑line utility written in C# that accepts a directory path, recursively scans for Excel files (.xlsx, .xls, .xlsm, .xlsb), skips files already password‑protected, applies a strong password via Aspose.Cells Workbook.Settings and SetEncryptionOptions, saves the workbooks in place, verifies encryption, and creates a detailed text report of successes, skips and errors.
-// Keywords: Aspose.Cells | C# encrypt Excel files | batch Excel encryption | CLI Excel password protection | strong encryption .NET | Excel workbook encryption report | detect encrypted Excel C# | set encryption options Aspose | command line Excel security | GDPR Excel encryption | HIPAA Excel protection
-// Common Searches: how to encrypt all Excel files in a folder using Aspose.Cells C# | batch encrypt Excel workbooks from the command line .NET | C# utility to generate encryption report for Excel files | skip already encrypted Excel files when processing C# | set strong password for multiple Excel workbooks Aspose
-// Developer Intent: Encrypt every Excel workbook in a specified folder with a consistent password and produce a comprehensive log of the operation.
-// Use Cases: Secure confidential spreadsheets before archiving by running the tool on the archive directory. | Automate regulatory compliance (e.g., GDPR, HIPAA) by encrypting all Excel files on a shared drive each night. | Create an audit trail that records which files were encrypted, which were already protected, and any processing errors.
-// AI Prompts: Add a command‑line option to accept a custom password and allow the user to choose encryption strength (128‑bit or 256‑bit). | Write a PowerShell wrapper that executes the utility for multiple directories, merges the generated reports, and emails the consolidated summary. | Extend the program with a decryption mode that takes a password, decrypts matching files, and updates the report accordingly.
+// Title: C# CLI tool to batch‑encrypt Excel workbooks with Aspose.Cells and create a summary report
+// Description: A console application that receives a folder path, scans for .xls, .xlsx, .xlsb and .xlsm files, skips those already password‑protected, applies a default password using Aspose.Cells, saves the workbooks in place, verifies encryption, and writes a detailed report to the console and to EncryptionReport.txt in the target directory.
+// Keywords: Aspose.Cells encrypt Excel C# | batch Excel password protection | C# command line Excel encryption | detect encrypted workbook Aspose | Excel encryption summary report
+// Common Searches: C# program to encrypt all Excel files in a folder | Aspose.Cells command line password protection example | how to generate encryption report for Excel workbooks | skip already encrypted Excel files C#
+// Developer Intent: Secure every Excel file in a specified directory with a default password and produce a concise audit log of the operation.
+// Use Cases: Mass‑protect confidential spreadsheets before uploading to a shared drive. | Automate compliance checks by ensuring all departmental Excel files are password‑locked. | Maintain an audit trail that records encrypted, skipped, and failed files for governance reporting.
+// AI Prompts: Generate a C# method that encrypts a workbook with a given password using Aspose.Cells and returns true on success. | Modify the utility to walk subdirectories recursively and accept a custom password argument from the command line. | Explain why FileFormatUtil.DetectFileFormat is used to verify encryption status after saving a workbook.
 
 using System;
 using System.IO;
-using System.Text;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace ExcelEncryptionUtility
+namespace ExcelEncryptor
 {
-    // A command‑line utility written in C# that accepts a directory path, recursively scans for Excel files (.xlsx, .xls, .xlsm, .xlsb), skips files already password‑protected, applies a strong password via Aspose.Cells Workbook.Settings and SetEncryptionOptions, saves the workbooks in place, verifies encryption, and creates a detailed text report of successes, skips and errors.
+    // A console application that receives a folder path, scans for .xls, .xlsx, .xlsb and .xlsm files, skips those already password‑protected, applies a default password using Aspose.Cells, saves the workbooks in place, verifies encryption, and writes a detailed report to the console and to EncryptionReport.txt in the target directory.
     class Program
     {
-        // Password used for encrypting workbooks
-        private const string EncryptionPassword = "StrongPassword123";
+        // Default password used for encryption
+        private const string DefaultPassword = "Password123";
 
         static void Main(string[] args)
         {
-            // Validate command‑line arguments
+            // Validate input arguments
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage: ExcelEncryptionUtility <directoryPath>");
+                Console.WriteLine("Usage: ExcelEncryptor <directoryPath>");
                 return;
             }
 
@@ -32,24 +32,24 @@ namespace ExcelEncryptionUtility
 
             if (!Directory.Exists(directoryPath))
             {
-                Console.WriteLine($"Error: Directory \"{directoryPath}\" does not exist.");
+                Console.WriteLine($"Error: Directory '{directoryPath}' does not exist.");
                 return;
             }
 
-            // Prepare a StringBuilder for the summary report
-            StringBuilder reportBuilder = new StringBuilder();
-            reportBuilder.AppendLine($"Encryption Report - {DateTime.Now}");
-            reportBuilder.AppendLine($"Target Directory: {directoryPath}");
-            reportBuilder.AppendLine();
+            // Supported Excel extensions
+            string[] extensions = new[] { ".xls", ".xlsx", ".xlsb", ".xlsm" };
 
-            // Define supported Excel extensions
-            string[] excelExtensions = new[] { ".xlsx", ".xls", ".xlsm", ".xlsb" };
+            // Collect summary information
+            List<string> reportLines = new List<string>();
+            reportLines.Add($"Encryption Report - {DateTime.Now}");
+            reportLines.Add($"Target Directory: {directoryPath}");
+            reportLines.Add("");
 
-            // Enumerate all files with supported extensions
-            foreach (string filePath in Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories))
+            // Process each Excel file in the directory (non-recursive)
+            foreach (string filePath in Directory.GetFiles(directoryPath))
             {
-                if (Array.IndexOf(excelExtensions, Path.GetExtension(filePath).ToLowerInvariant()) < 0)
-                    continue; // Skip non‑Excel files
+                if (Array.IndexOf(extensions, Path.GetExtension(filePath).ToLower()) < 0)
+                    continue; // Skip non-Excel files
 
                 try
                 {
@@ -59,42 +59,45 @@ namespace ExcelEncryptionUtility
 
                     if (alreadyEncrypted)
                     {
-                        reportBuilder.AppendLine($"{Path.GetFileName(filePath)} - Already encrypted, skipped.");
+                        reportLines.Add($"{Path.GetFileName(filePath)} - Already encrypted, skipped.");
                         continue;
                     }
 
-                    // Load the workbook (no password needed because it's not encrypted)
+                    // Load the workbook
                     Workbook workbook = new Workbook(filePath);
 
-                    // Set the password to protect the workbook
-                    workbook.Settings.Password = EncryptionPassword;
+                    // Set password protection
+                    workbook.Settings.Password = DefaultPassword;
 
-                    // Apply strong encryption options (optional but recommended)
+                    // Optionally set stronger encryption options (ignored for .xlsx/.xlsm but harmless)
                     workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
 
-                    // Save the workbook, overwriting the original file
+                    // Save back to the same file (overwrites original)
                     workbook.Save(filePath);
 
                     // Verify encryption status after saving
                     FileFormatInfo postInfo = FileFormatUtil.DetectFileFormat(filePath);
-                    bool encryptionSucceeded = postInfo.IsEncrypted;
+                    bool isNowEncrypted = postInfo.IsEncrypted;
 
-                    reportBuilder.AppendLine($"{Path.GetFileName(filePath)} - Encryption {(encryptionSucceeded ? "succeeded" : "failed")}.");
+                    reportLines.Add($"{Path.GetFileName(filePath)} - Encryption {(isNowEncrypted ? "succeeded" : "failed")}.");
                 }
                 catch (Exception ex)
                 {
-                    // Record any errors for this file
-                    reportBuilder.AppendLine($"{Path.GetFileName(filePath)} - Error: {ex.Message}");
+                    reportLines.Add($"{Path.GetFileName(filePath)} - Error: {ex.Message}");
                 }
             }
 
-            // Output the report to console
-            Console.WriteLine(reportBuilder.ToString());
+            // Output the summary report to console
+            Console.WriteLine();
+            foreach (string line in reportLines)
+            {
+                Console.WriteLine(line);
+            }
 
-            // Write the report to a text file in the target directory
+            // Optionally write the report to a text file in the target directory
             string reportPath = Path.Combine(directoryPath, "EncryptionReport.txt");
-            File.WriteAllText(reportPath, reportBuilder.ToString());
-
+            File.WriteAllLines(reportPath, reportLines);
+            Console.WriteLine();
             Console.WriteLine($"Report saved to: {reportPath}");
         }
     }

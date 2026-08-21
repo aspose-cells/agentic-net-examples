@@ -1,84 +1,80 @@
-// Title: C# Aspose.Cells – Add fiscal‑year date validation to a table column
-// Description: The sample builds a new workbook, defines a CellArea for column B (rows 2‑100), adds a Validation object, sets it to Date with a Between operator, calculates the current fiscal year (July 1 – June 30), assigns the start and end dates as OADate strings, configures input and error messages, and saves the worksheet.
-// Keywords: Aspose.Cells | C# date validation | Excel fiscal year validation | data validation between dates | set validation for table column | OADate | current fiscal year | Excel worksheet validation .NET
-// Common Searches: Aspose.Cells set date validation for fiscal year | C# restrict Excel column to fiscal year dates | How to add date range validation in Aspose.Cells | Excel data validation July to June using Aspose.Cells | Apply data validation to a table column in .NET
-// Developer Intent: Create a validation rule that permits only dates falling within the active fiscal year for a designated worksheet column.
-// Use Cases: Ensure expense entries in a financial report belong to the current fiscal year. | Limit project start dates in a schedule to the active fiscal year. | Prevent out‑of‑range dates in a budgeting table column. | Validate timesheet dates so they align with the organization’s fiscal calendar.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a date validation for column C rows 5‑200, restricting entries to the current fiscal year. | Explain how to modify the example to use a custom fiscal‑year start month instead of July. | Provide a snippet that reads fiscal start and end dates from a JSON configuration file and applies them to an Aspose.Cells validation rule.
+// Title: C# – Add fiscal‑year date validation to an Excel table column with Aspose.Cells
+// Description: Creates a workbook, defines a ListObject named "DateTable", calculates the start and end dates of the current fiscal year (Jan 1‑Dec 31), and applies a Date validation (Operator: Between) to the table's data column. Includes optional input and error messages, then saves the file as FiscalYearDateValidation.xlsx.
+// Keywords: Aspose.Cells date validation C# | Excel table column validation | fiscal year date restriction | ListObject data validation | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells set date validation for table column | C# restrict Excel column to current fiscal year dates | Add date range validation to ListObject using Aspose.Cells | Excel fiscal year validation Aspose.Cells .NET
+// Developer Intent: Apply a data‑validation rule to a table column so that only dates falling within the current fiscal year are allowed.
+// Use Cases: Enforce fiscal‑year dates in financial reporting templates. | Prevent out‑of‑range dates in project schedule tables. | Provide a ready‑to‑use Excel template with built‑in date constraints for data entry.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a date validation to a ListObject column limited to the current fiscal year. | Show how to change the fiscal year start month from January to a custom month in the validation logic. | Demonstrate applying the same fiscal‑year date validation to multiple columns of the same table.
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-namespace FiscalYearDateValidationApp
+// Creates a workbook, defines a ListObject named "DateTable", calculates the start and end dates of the current fiscal year (Jan 1‑Dec 31), and applies a Date validation (Operator: Between) to the table's data column. Includes optional input and error messages, then saves the file as FiscalYearDateValidation.xlsx.
+class Program
 {
-    // The sample builds a new workbook, defines a CellArea for column B (rows 2‑100), adds a Validation object, sets it to Date with a Between operator, calculates the current fiscal year (July 1 – June 30), assigns the start and end dates as OADate strings, configures input and error messages, and saves the worksheet.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a header and some sample dates (rows 2‑10)
+            sheet.Cells["A1"].PutValue("Date");
+            for (int i = 2; i <= 10; i++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Define the data‑validation range (column B, rows 2‑100)
-                CellArea dateColumnArea = new CellArea
-                {
-                    StartRow = 1,      // Row 2 (zero‑based)
-                    EndRow = 99,       // Row 100
-                    StartColumn = 1,   // Column B
-                    EndColumn = 1
-                };
-
-                // Add a validation object for the defined area
-                int validationIndex = sheet.Validations.Add(dateColumnArea);
-                Validation dateValidation = sheet.Validations[validationIndex];
-
-                // Set validation to Date type with Between operator
-                dateValidation.Type = ValidationType.Date;
-                dateValidation.Operator = OperatorType.Between;
-
-                // Determine the current fiscal year (July 1 – June 30)
-                DateTime today = DateTime.Today;
-                DateTime fiscalStart;
-                DateTime fiscalEnd;
-
-                if (today.Month >= 7) // July or later
-                {
-                    fiscalStart = new DateTime(today.Year, 7, 1);
-                    fiscalEnd   = new DateTime(today.Year + 1, 6, 30);
-                }
-                else // before July
-                {
-                    fiscalStart = new DateTime(today.Year - 1, 7, 1);
-                    fiscalEnd   = new DateTime(today.Year, 6, 30);
-                }
-
-                // Assign lower and upper bounds as OADate literals (Excel numeric dates)
-                dateValidation.Formula1 = fiscalStart.ToOADate()
-                    .ToString(System.Globalization.CultureInfo.InvariantCulture);
-                dateValidation.Formula2 = fiscalEnd.ToOADate()
-                    .ToString(System.Globalization.CultureInfo.InvariantCulture);
-
-                // Optional user messages
-                dateValidation.InputTitle = "Fiscal Year Date";
-                dateValidation.InputMessage = $"Enter a date between {fiscalStart:yyyy-MM-dd} and {fiscalEnd:yyyy-MM-dd}.";
-                dateValidation.ErrorTitle = "Invalid Date";
-                dateValidation.ErrorMessage = "The date is outside the current fiscal year.";
-                dateValidation.ShowInput = true;
-                dateValidation.ShowError = true;
-
-                // Save the workbook
-                string outputPath = "FiscalYearDateValidation.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // Sample dates around today
+                sheet.Cells[i - 1, 0].PutValue(DateTime.Now.AddDays(i - 5));
             }
-            catch (Exception ex)
+
+            // Convert the range A1:A10 into a table (ListObject)
+            // Use overload with hasHeaders parameter (true because A1 is a header)
+            int tableIdx = sheet.ListObjects.Add(0, 0, 10, 1, true);
+            ListObject table = sheet.ListObjects[tableIdx];
+            // Set the display name of the table
+            table.DisplayName = "DateTable";
+
+            // Determine the start and end dates of the current fiscal year (Jan 1 – Dec 31)
+            DateTime now = DateTime.Now;
+            int fiscalYear = now.Year;
+            DateTime fiscalStart = new DateTime(fiscalYear, 1, 1);
+            DateTime fiscalEnd   = new DateTime(fiscalYear, 12, 31);
+
+            // Define the validation area: the data column of the table (exclude header)
+            CellArea dateColumnArea = new CellArea
             {
-                Console.WriteLine("An error occurred while creating the workbook:");
-                Console.WriteLine(ex.Message);
-            }
+                StartRow = 1, // Row 2 in Excel (zero‑based index)
+                EndRow   = 9, // Row 10
+                StartColumn = 0,
+                EndColumn   = 0
+            };
+
+            // Add a validation rule to the worksheet for the defined area
+            int validationIdx = sheet.Validations.Add(dateColumnArea);
+            Validation validation = sheet.Validations[validationIdx];
+
+            // Configure the validation to allow only dates within the fiscal year
+            validation.Type = ValidationType.Date;
+            validation.Operator = OperatorType.Between;
+            validation.Formula1 = fiscalStart.ToString("yyyy-MM-dd"); // lower bound
+            validation.Formula2 = fiscalEnd.ToString("yyyy-MM-dd");   // upper bound
+
+            // Optional UI messages
+            validation.ShowInput = true;
+            validation.InputTitle = "Fiscal Year Date";
+            validation.InputMessage = $"Enter a date between {fiscalStart:yyyy-MM-dd} and {fiscalEnd:yyyy-MM-dd}.";
+            validation.ShowError = true;
+            validation.ErrorTitle = "Invalid Date";
+            validation.ErrorMessage = "The date is outside the current fiscal year.";
+
+            // Save the workbook
+            workbook.Save("FiscalYearDateValidation.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

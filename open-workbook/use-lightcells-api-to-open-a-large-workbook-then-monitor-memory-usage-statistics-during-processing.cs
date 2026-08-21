@@ -1,102 +1,73 @@
-// Title: C# – Monitor Memory While Loading Large Excel Files with Aspose.Cells LightCells API
-// Description: Demonstrates how to extend LightCellsDataHandler with a custom MemoryMonitoringHandler that logs managed (GC.GetTotalMemory) and private (Process.PrivateMemorySize64) memory at each sheet, row, and cell step. The example sets MemorySetting.MemoryPreference, loads a large workbook in LightCells mode, and saves the result, providing a clear pattern for profiling memory consumption during high‑volume Excel processing.
-// Keywords: Aspose.Cells | LightCells API | C# memory monitoring | large Excel workbook | GC.GetTotalMemory | Process.PrivateMemorySize64 | MemorySetting.MemoryPreference | Excel performance profiling | LightCellsDataHandler example | low‑memory Excel processing
-// Common Searches: how to track memory usage with Aspose.Cells LightCells | lightcells memory monitoring C# example | log managed and private memory during Excel processing | reduce memory consumption when loading big XLSX files | Aspose.Cells MemorySetting.MemoryPreference usage
-// Developer Intent: The developer needs to process a massive Excel workbook using LightCells and capture detailed memory statistics at each processing stage to identify and mitigate memory spikes.
-// Use Cases: Profile memory consumption of each sheet, row, and cell while loading a large workbook in LightCells mode. | Compare memory footprints between default loading and MemorySetting.MemoryPreference for large files. | Validate that the LightCells workflow stays within memory limits before saving the processed workbook.
-// AI Prompts: Generate a C# version of the MemoryMonitoringHandler that writes memory metrics to a CSV file instead of the console. | Show how to integrate Windows Performance Counters with the handler to record peak memory and CPU usage during workbook processing. | Explain how to modify the handler to abort processing of rows when memory usage exceeds a configurable threshold.
+// Title: C# – Monitor memory while loading a large workbook with Aspose.Cells LightCells API
+// Description: A .NET example that creates a custom LightCellsDataHandler to log the process's private memory (MB) at the start of each worksheet and row. The workbook is opened in LightCells mode with MemorySetting.MemoryPreference, then saved, demonstrating low‑memory processing of huge Excel files.
+// Keywords: Aspose.Cells | LightCells | memory monitoring | C# | .NET | large Excel workbook | MemorySetting.MemoryPreference | LoadOptions | custom LightCellsDataHandler | Process.GetCurrentProcess | PrivateMemorySize64 | performance optimization | GitHub example | Excel file loading
+// Common Searches: Aspose.Cells LightCells memory logging example | C# track memory usage when loading big Excel file | How to use MemorySetting.MemoryPreference with LightCells | Custom LightCellsDataHandler to monitor RAM consumption | Load large workbook in .NET with low memory footprint
+// Developer Intent: I need to load a massive Excel workbook using LightCells and capture memory consumption at key processing points.
+// Use Cases: Identify memory spikes during sheet‑level processing of a huge workbook. | Diagnose rows that cause unexpected RAM growth while streaming data. | Combine MemoryPreference mode with a custom handler to keep the footprint under control for server‑side batch jobs.
+// AI Prompts: Generate a LightCellsDataHandler that writes memory metrics to a CSV file instead of the console. | Show how to add a progress bar that updates together with memory logs during LightCells loading. | Explain trade‑offs between MemoryPreference, MemorySetting.Default, and MemorySetting.Performance for very large workbooks.
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace LightCellsMemoryMonitoring
+// A .NET example that creates a custom LightCellsDataHandler to log the process's private memory (MB) at the start of each worksheet and row. The workbook is opened in LightCells mode with MemorySetting.MemoryPreference, then saved, demonstrating low‑memory processing of huge Excel files.
+class MemoryMonitoringHandler : LightCellsDataHandler
 {
-    // Custom handler that processes cells using LightCells API
-    // and reports memory usage statistics during processing.
-    // Demonstrates how to extend LightCellsDataHandler with a custom MemoryMonitoringHandler that logs managed (GC.GetTotalMemory) and private (Process.PrivateMemorySize64) memory at each sheet, row, and cell step. The example sets MemorySetting.MemoryPreference, loads a large workbook in LightCells mode, and saves the result, providing a clear pattern for profiling memory consumption during high‑volume Excel processing.
-    public class MemoryMonitoringHandler : LightCellsDataHandler
+    // Called when a worksheet starts processing
+    public bool StartSheet(Worksheet sheet)
     {
-        // Called when a worksheet starts to be processed.
-        public bool StartSheet(Worksheet sheet)
-        {
-            ReportMemory("StartSheet", sheet.Name);
-            // Continue processing this sheet.
-            return true;
-        }
-
-        // Called before a row is processed.
-        public bool StartRow(int rowIndex)
-        {
-            ReportMemory("StartRow", $"Row {rowIndex}");
-            // Continue processing this row.
-            return true;
-        }
-
-        // Called after a row object is created; can be used to read row properties.
-        public bool ProcessRow(Row row)
-        {
-            ReportMemory("ProcessRow", $"Row {row.Index}");
-            // Continue processing cells in this row.
-            return true;
-        }
-
-        // Called before a cell is processed.
-        public bool StartCell(int columnIndex)
-        {
-            ReportMemory("StartCell", $"Column {columnIndex}");
-            // Continue processing this cell.
-            return true;
-        }
-
-        // Called after a cell object is created; can be used to read cell data.
-        public bool ProcessCell(Cell cell)
-        {
-            ReportMemory("ProcessCell", $"Cell {cell.Name}");
-            // Example: just output the cell value (optional).
-            // Console.WriteLine($"Value: {cell.Value}");
-            return true;
-        }
-
-        // Helper method to output memory usage.
-        private void ReportMemory(string stage, string context)
-        {
-            // Get managed memory used by the CLR.
-            long managedBytes = GC.GetTotalMemory(forceFullCollection: false);
-            // Get total private memory used by the process.
-            long privateBytes = Process.GetCurrentProcess().PrivateMemorySize64;
-
-            Console.WriteLine($"{stage} - {context}: Managed = {managedBytes / (1024 * 1024)} MB, " +
-                              $"Private = {privateBytes / (1024 * 1024)} MB");
-        }
+        Console.WriteLine($"Start processing sheet: {sheet.Name}");
+        LogMemory("StartSheet");
+        return true; // Continue processing this sheet
     }
 
-    class Program
+    // Called before a row is processed
+    public bool StartRow(int rowIndex)
     {
-        static void Main()
-        {
-            // Path to the large workbook to be processed.
-            string inputPath = "LargeFile_original.xlsx";
-            // Path where the processed workbook will be saved.
-            string outputPath = "ProcessedLargeFile.xlsx";
+        Console.WriteLine($"Start processing row: {rowIndex}");
+        LogMemory($"StartRow {rowIndex}");
+        return true; // Continue processing this row
+    }
 
-            // Create load options and assign the custom LightCellsDataHandler.
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.LightCellsDataHandler = new MemoryMonitoringHandler();
+    // Optional: process row data (not used here)
+    public bool ProcessRow(Row row) => true;
 
-            // Optional: set memory mode to reduce memory consumption while loading.
-            loadOptions.MemorySetting = MemorySetting.MemoryPreference;
+    // Optional: called before a cell is processed
+    public bool StartCell(int columnIndex) => true;
 
-            // Load the workbook using LightCells mode.
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+    // Optional: process cell data (not used here)
+    public bool ProcessCell(Cell cell) => true;
 
-            // At this point the handler has already processed the workbook
-            // and reported memory usage for each step.
+    // Helper to output current memory usage in MB
+    private void LogMemory(string stage)
+    {
+        long memoryMb = Process.GetCurrentProcess().PrivateMemorySize64 / (1024 * 1024);
+        Console.WriteLine($"{stage} - Memory usage: {memoryMb} MB");
+    }
+}
 
-            // Save the workbook to demonstrate the complete workflow.
-            workbook.Save(outputPath);
+class Program
+{
+    static void Main()
+    {
+        // Paths to the input large workbook and the output file
+        string inputPath = "LargeWorkbook.xlsx";
+        string outputPath = "ProcessedWorkbook.xlsx";
 
-            Console.WriteLine("Processing completed. Workbook saved to: " + outputPath);
-        }
+        // Create load options and assign the custom LightCellsDataHandler
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.LightCellsDataHandler = new MemoryMonitoringHandler();
+
+        // Optionally set a memory‑optimized mode for loading
+        loadOptions.MemorySetting = MemorySetting.MemoryPreference;
+
+        // Load the workbook using LightCells mode (uses the provided rule)
+        Workbook workbook = new Workbook(inputPath, loadOptions);
+
+        // After loading, you can perform additional operations if needed.
+        // For demonstration, simply save the workbook.
+        workbook.Save(outputPath);
+
+        Console.WriteLine("Workbook processing completed.");
     }
 }

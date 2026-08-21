@@ -1,96 +1,99 @@
-// Title: Export Workbook with Three‑Color Scale Conditional Formatting to HTML and Verify Gradient Colors (C#)
-// Description: Demonstrates how to create a workbook, fill A1:A10 with values, apply a red‑yellow‑green three‑color‑scale conditional format, save the file as HTML using Aspose.Cells for .NET, and programmatically confirm that the gradient colors appear in the generated HTML.
-// Keywords: Aspose.Cells | C# export to HTML | conditional formatting | three color scale | color scale HTML | HtmlSaveOptions | gradient verification | heat map HTML | CellArea | FormatConditionType.ColorScale
-// Common Searches: Aspose.Cells export three color scale to HTML | How to save conditional formatting colors in HTML with Aspose.Cells | Verify color scale gradient in generated HTML Aspose | C# Aspose.Cells HTMLSaveOptions keep styles | Check red yellow green colors in HTML output
-// Developer Intent: Generate an HTML file from a workbook that retains a three‑color‑scale conditional format and programmatically confirm the red, yellow, and green gradient colors are present.
-// Use Cases: Create heat‑map reports that can be viewed in browsers with accurate color‑scale rendering. | Automated testing of Aspose.Cells HTML export to ensure conditional formatting is preserved. | Produce web‑ready documentation of spreadsheets where color scales convey data insights.
-// AI Prompts: Provide C# code using Aspose.Cells to apply a red‑yellow‑green three‑color scale to A1:A10 and save the workbook as HTML with separate CSS. | Show how to read the saved HTML file and assert that #FF0000, #FFFF00, and #008000 (or equivalent rgb values) exist. | Explain HtmlSaveOptions settings needed to retain all conditional‑formatting styles for inspection.
+// Title: Export Workbook with 3‑Color Scale Conditional Formatting to HTML and Validate Gradient Colors (C# Aspose.Cells)
+// Description: Creates a 10×10 multiplication table, applies a red‑yellow‑green three‑color scale conditional formatting to A1:J10, saves the workbook as HTML with separate CSS and retained unused styles, then reads the HTML file to confirm the presence of the gradient hex codes #FF0000, #FFFF00 and #008000.
+// Keywords: Aspose.Cells | C# | HTML export | conditional formatting | three color scale | color scale gradient | HtmlSaveOptions | ExportWorksheetCSSSeparately | ExcludeUnusedStyles | verify HTML colors | gradient hex codes | web reporting
+// Common Searches: Aspose.Cells export three color scale to HTML | C# verify gradient colors in exported HTML | keep color scale definitions when saving workbook as HTML Aspose.Cells | HtmlSaveOptions.ExcludeUnusedStyles effect on conditional formatting | read generated HTML and check hex colors Aspose.Cells
+// Developer Intent: Generate an HTML file from a workbook that preserves a three‑color scale conditional formatting and programmatically confirm that the gradient colors are embedded in the output.
+// Use Cases: Create web‑ready reports that display heat‑map style visualisation using a red‑yellow‑green scale. | Automated testing to ensure conditional formatting survives HTML conversion. | Produce dashboards with CSS‑separated output for easier styling and maintenance. | Validate migration of Excel workbooks to HTML for compliance or archival purposes.
+// AI Prompts: Write C# code with Aspose.Cells to apply a red‑yellow‑green three‑color scale to range A1:J10 and save the workbook as HTML with separate CSS and unused styles retained. | Provide a C# method that reads the saved HTML file and returns true only if the hex codes #FF0000, #FFFF00, and #008000 are present. | Explain how HtmlSaveOptions.ExportWorksheetCSSSeparately and ExcludeUnusedStyles influence the export of gradient definitions for color scales. | Generate a unit‑test that asserts the presence of the three gradient colors in the HTML output produced by Aspose.Cells.
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsConditionalFormattingHtmlDemo
+namespace AsposeCellsColorScaleHtmlDemo
 {
-    // Demonstrates how to create a workbook, fill A1:A10 with values, apply a red‑yellow‑green three‑color‑scale conditional format, save the file as HTML using Aspose.Cells for .NET, and programmatically confirm that the gradient colors appear in the generated HTML.
+    // Creates a 10×10 multiplication table, applies a red‑yellow‑green three‑color scale conditional formatting to A1:J10, saves the workbook as HTML with separate CSS and retained unused styles, then reads the HTML file to confirm the presence of the gradient hex codes #FF0000, #FFFF00 and #008000.
     class Program
     {
         static void Main()
         {
-            // 1. Create a new workbook and get the first worksheet
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // 2. Populate sample data (0..9) in a 10x1 range
-            for (int i = 0; i < 10; i++)
+            // Populate the worksheet with sample data (10x10 multiplication table)
+            for (int row = 0; row < 10; row++)
             {
-                sheet.Cells[i, 0].PutValue(i + 1);
+                for (int col = 0; col < 10; col++)
+                {
+                    sheet.Cells[row, col].PutValue(row * col);
+                }
             }
 
-            // 3. Add a three‑color scale conditional formatting to the range A1:A10
-            int cfIndex = sheet.ConditionalFormattings.Add();                     // create a new ConditionalFormatting collection
-            FormatConditionCollection fcs = sheet.ConditionalFormattings[cfIndex]; // get the collection
+            // Add a three‑color scale conditional formatting to the range A1:J10
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection fcs = sheet.ConditionalFormattings[cfIndex];
 
-            // Define the area the formatting applies to (A1:A10)
+            // Define the area for the conditional formatting
             CellArea area = new CellArea
             {
                 StartRow = 0,
                 EndRow = 9,
                 StartColumn = 0,
-                EndColumn = 0
+                EndColumn = 9
             };
             fcs.AddArea(area);
 
-            // Add a ColorScale condition
+            // Add the ColorScale condition
             int conditionIdx = fcs.AddCondition(FormatConditionType.ColorScale);
-            FormatCondition condition = fcs[conditionIdx];
+            FormatCondition fc = fcs[conditionIdx];
 
             // Configure the three‑color scale (Red → Yellow → Green)
-            condition.ColorScale.Is3ColorScale = true;
-            condition.ColorScale.MinCfvo.Type = FormatConditionValueType.Min;
-            condition.ColorScale.MinColor = Color.Red;
+            fc.ColorScale.Is3ColorScale = true;
 
-            condition.ColorScale.MidCfvo.Type = FormatConditionValueType.Percentile;
-            condition.ColorScale.MidCfvo.Value = 50; // 50th percentile (median)
-            condition.ColorScale.MidColor = Color.Yellow;
+            fc.ColorScale.MinCfvo.Type = FormatConditionValueType.Min;
+            fc.ColorScale.MinColor = Color.Red;
 
-            condition.ColorScale.MaxCfvo.Type = FormatConditionValueType.Max;
-            condition.ColorScale.MaxColor = Color.Green;
+            fc.ColorScale.MidCfvo.Type = FormatConditionValueType.Percentile;
+            fc.ColorScale.MidCfvo.Value = 50;
+            fc.ColorScale.MidColor = Color.Yellow;
 
-            // 4. Save the workbook as HTML with separate CSS (easier to inspect)
-            string htmlPath = Path.Combine(Environment.CurrentDirectory, "ColorScaleDemo.html");
+            fc.ColorScale.MaxCfvo.Type = FormatConditionValueType.Max;
+            fc.ColorScale.MaxColor = Color.Green;
+
+            // Save the workbook as HTML
+            string htmlFile = "ColorScale.html";
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
+                // Export CSS separately to make it easier to inspect the generated styles
                 ExportWorksheetCSSSeparately = true,
-                ExcludeUnusedStyles = false   // keep all styles for verification
+                // Keep unused styles to ensure all gradient definitions are present
+                ExcludeUnusedStyles = false
             };
-            workbook.Save(htmlPath, htmlOptions);
+            workbook.Save(htmlFile, htmlOptions);
 
-            // 5. Verify that the generated HTML contains the gradient colors
-            //    The colors may appear as hex strings (#FF0000, #FFFF00, #008000) or as rgb(...)
-            string htmlContent = File.ReadAllText(htmlPath);
+            // Verify that the gradient colors are present in the generated HTML
+            string htmlContent = File.ReadAllText(htmlFile);
 
-            bool containsRed = htmlContent.IndexOf("#FF0000", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                               htmlContent.IndexOf("rgb(255,0,0)", StringComparison.OrdinalIgnoreCase) >= 0;
+            bool hasRed = htmlContent.IndexOf("#FF0000", StringComparison.OrdinalIgnoreCase) >= 0;
+            bool hasYellow = htmlContent.IndexOf("#FFFF00", StringComparison.OrdinalIgnoreCase) >= 0;
+            bool hasGreen = htmlContent.IndexOf("#008000", StringComparison.OrdinalIgnoreCase) >= 0;
 
-            bool containsYellow = htmlContent.IndexOf("#FFFF00", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                  htmlContent.IndexOf("rgb(255,255,0)", StringComparison.OrdinalIgnoreCase) >= 0;
-
-            bool containsGreen = htmlContent.IndexOf("#008000", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                 htmlContent.IndexOf("rgb(0,128,0)", StringComparison.OrdinalIgnoreCase) >= 0;
-
-            Console.WriteLine("HTML file saved to: " + htmlPath);
             Console.WriteLine("Verification of gradient colors in HTML:");
-            Console.WriteLine($" - Red color present:   {(containsRed ? "YES" : "NO")}");
-            Console.WriteLine($" - Yellow color present: {(containsYellow ? "YES" : "NO")}");
-            Console.WriteLine($" - Green color present: {(containsGreen ? "YES" : "NO")}");
+            Console.WriteLine($"Red color found:   {hasRed}");
+            Console.WriteLine($"Yellow color found:{hasYellow}");
+            Console.WriteLine($"Green color found: {hasGreen}");
 
-            // Optional: indicate overall result
-            if (containsRed && containsYellow && containsGreen)
-                Console.WriteLine("All three gradient colors were found in the HTML output.");
+            // Simple result output
+            if (hasRed && hasYellow && hasGreen)
+            {
+                Console.WriteLine("All gradient colors are present in the HTML output.");
+            }
             else
+            {
                 Console.WriteLine("One or more gradient colors are missing in the HTML output.");
+            }
         }
     }
 }

@@ -1,77 +1,66 @@
+// Title: Aspose.Cells .NET – AutomaticExceptTable mode, add a ListObject, and calculate a SUM formula
+// Description: Create a workbook, set FormulaSettings.CalculationMode to AutomaticExceptTable, populate data, add a ListObject table, insert a SUM formula that references the table column, manually run CalculateFormula, and save the file.
+// Keywords: Aspose.Cells AutomaticExceptTable | CalcModeType.AutomaticExceptTable | Add ListObject table C# | Aspose.Cells CalculateFormula | SUM formula table column | manual formula recalculation Aspose.Cells | .NET Excel table example | Workbook calculation mode Aspose
+// Common Searches: Aspose.Cells set AutomaticExceptTable mode | how to add ListObject table with Aspose.Cells .NET | calculate formulas manually after adding a table Aspose | SUM formula referencing table column in Aspose.Cells | why AutomaticExceptTable requires CalculateFormula
+// Developer Intent: Enable AutomaticExceptTable calculation mode, create an Excel table (ListObject), add a SUM formula that uses the table column, and trigger manual calculation to obtain the result.
+// Use Cases: Generate reports where large tables are excluded from automatic recalculation until explicitly invoked. | Build financial models that add structured tables and compute totals only after data entry is complete. | Validate formula outcomes in automated tests by manually invoking CalculateFormula when AutomaticExceptTable is active.
+// AI Prompts: Write C# code that sets CalcModeType.AutomaticExceptTable, adds a ListObject over a data range, inserts a SUM formula referencing the table column, and calls workbook.CalculateFormula(). | Explain why Aspose.Cells does not auto‑recalculate formulas in AutomaticExceptTable mode and how to retrieve the computed value. | Show how to access the result of a SUM formula that references a ListObject after calling CalculateFormula in Aspose.Cells.
+
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Tables;   // Required for ListObject
 
-namespace AsposeCellsCalculationModeDemo
+// Create a workbook, set FormulaSettings.CalculationMode to AutomaticExceptTable, populate data, add a ListObject table, insert a SUM formula that references the table column, manually run CalculateFormula, and save the file.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Set calculation mode to AutomaticExceptTable
-                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
+            // Set calculation mode to AutomaticExceptTable.
+            // Excel will recalculate automatically except for tables,
+            // but Aspose.Cells does not perform automatic calculation,
+            // so we will invoke CalculateFormula manually.
+            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet and its cells
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-                // Populate data (including a header row)
-                sheet.Cells["A1"].PutValue("Item");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["B4"].PutValue(30);
-                sheet.Cells["A5"].PutValue("D");
-                sheet.Cells["B5"].PutValue(40);
+            // Populate sample data (including header row)
+            cells["A1"].PutValue("Item");
+            cells["B1"].PutValue("Value");
+            cells["A2"].PutValue("A");
+            cells["A3"].PutValue("B");
+            cells["A4"].PutValue("C");
+            cells["B2"].PutValue(10);
+            cells["B3"].PutValue(20);
+            cells["B4"].PutValue(30);
 
-                // Add a table that covers the data range (including header)
-                // Correct overload: Add(string name, string source, bool hasHeaders)
-                sheet.ListObjects.Add("Table1", "A1:B5", true);
+            // Add an Excel table (ListObject) over the range A1:B4
+            // Older Aspose.Cells versions return the index of the added table.
+            int tableIndex = sheet.ListObjects.Add(0, 0, 4, 2, true);
+            ListObject table = sheet.ListObjects[tableIndex];
+            table.DisplayName = "SalesTable";
 
-                // Place a formula outside the table that sums the values column
-                sheet.Cells["D1"].Formula = "=SUM(B2:B5)";
+            // Insert a formula that sums the "Value" column of the table
+            cells["C2"].Formula = "=SUM(SalesTable[Value])";
 
-                // Initial calculation so the formula has a value
-                workbook.CalculateFormula();
+            // Manually calculate formulas (Aspose.Cells does not auto‑calculate)
+            workbook.CalculateFormula();
 
-                Console.WriteLine("Initial sum (D1): " + sheet.Cells["D1"].IntValue);
+            // Observe the recalculated result
+            Console.WriteLine("Sum of Value column: " + cells["C2"].Value);
 
-                // Change a value inside the table
-                sheet.Cells["B3"].PutValue(100); // B3 is inside the table
-
-                // Without recalculation, the formula result stays the same
-                Console.WriteLine("After changing B3 (no recalculation) sum (D1): " + sheet.Cells["D1"].IntValue);
-
-                // Manually trigger calculation
-                workbook.CalculateFormula();
-
-                // Now the formula reflects the updated table data
-                Console.WriteLine("After manual CalculateFormula() sum (D1): " + sheet.Cells["D1"].IntValue);
-
-                // Save the workbook
-                string outputPath = "CalculationModeDemo.xlsx";
-
-                // Ensure the directory exists before saving
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Save the workbook
+            workbook.Save("CalculationModeDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,46 +1,56 @@
+// Title: Add a PDF bookmark to a named cell range with Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, define a named range (MyRange) covering B2:C3, and attach a PdfBookmarkEntry that references the named destination. The bookmark is added to PdfSaveOptions and the workbook is saved as a PDF with a clickable bookmark that jumps to the specified range.
+// Keywords: Aspose.Cells PDF bookmark | named destination Aspose.Cells | PdfBookmarkEntry C# | save workbook as PDF with bookmark | .NET Excel to PDF navigation | named range PDF link
+// Common Searches: Aspose.Cells add PDF bookmark to named range | PdfBookmarkEntry DestinationName example | C# create PDF bookmark for specific cells | Aspose.Cells PDF navigation using named destinations | how to link PDF bookmark to Excel range
+// Developer Intent: Create a PDF bookmark that points to a predefined cell range using a named destination.
+// Use Cases: Generate a PDF report where a bookmark opens directly to a summary table defined as a named range. | Provide quick navigation in large spreadsheet PDFs by linking bookmarks to key data sections. | Add multiple bookmarks, each referencing a different named range, for fast access to various worksheet areas.
+// AI Prompts: Show C# code to add several PDF bookmarks, each using a different named range, with Aspose.Cells. | Explain how the DestinationName property works for PDF bookmarks in Aspose.Cells and how to reference a named range. | Generate a sample that saves a workbook as PDF with a bookmark that opens at the first cell of a named range.
+
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Saving;   // PdfSaveOptions resides in this namespace
+using Aspose.Cells.Rendering;
 
-// Author: Aspose.Cells .NET example – creates a PDF bookmark that points to a named range.
-class PdfBookmarkExample
+namespace AsposeCellsPdfBookmarkNamedDestination
 {
-    static void Main()
+    // Demonstrates how to create a workbook, define a named range (MyRange) covering B2:C3, and attach a PdfBookmarkEntry that references the named destination. The bookmark is added to PdfSaveOptions and the workbook is saved as a PDF with a clickable bookmark that jumps to the specified range.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Name = "Sheet1";
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
 
-        // Fill some sample data
-        sheet.Cells["A1"].PutValue("Item");
-        sheet.Cells["B1"].PutValue("Quantity");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["A3"].PutValue("Banana");
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["A4"].PutValue("Cherry");
-        sheet.Cells["B4"].PutValue(30);
+            // Populate some cells that will be part of the named range
+            sheet.Cells["B2"].PutValue("Start of Range");
+            sheet.Cells["C3"].PutValue("End of Range");
 
-        // Define a named range that covers the data table (A1:B4)
-        int nameIndex = workbook.Worksheets.Names.Add("DataTable");
-        // RefersTo must be a valid Excel address; the leading '=' is required.
-        workbook.Worksheets.Names[nameIndex].RefersTo = "=Sheet1!$A$1:$B$4";
+            // Define a named range that covers B2:C3
+            int nameIndex = workbook.Worksheets.Names.Add("MyRange");
+            Name namedRange = workbook.Worksheets.Names[nameIndex];
+            // The RefersTo formula must start with '='
+            namedRange.RefersTo = "=Sheet1!$B$2:$C$3";
 
-        // Prepare PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Create a PDF bookmark entry that uses the named destination
+            PdfBookmarkEntry bookmark = new PdfBookmarkEntry
+            {
+                Text = "Bookmark to MyRange",
+                // Destination can be any cell within the range; here we use the first cell
+                Destination = sheet.Cells["B2"],
+                // Set the named destination reference
+                DestinationName = "MyRange",
+                IsOpen = true
+            };
 
-        // ------------------------------------------------------------
-        // NOTE: The Aspose.Cells API provides a PdfBookmarkCollection
-        // accessible via PdfSaveOptions.Bookmarks. The Add method typically
-        // accepts the bookmark title and a destination string (named range).
-        // The exact signature may vary between library versions.
-        // ------------------------------------------------------------
-        // Placeholder for adding a bookmark that points to the named range.
-        // Uncomment and adjust the following line when the correct API is known:
-        // pdfOptions.Bookmarks.Add("Data Table", "DataTable"); // Destination = named range
+            // Configure PDF save options with the bookmark
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                Bookmark = bookmark
+            };
 
-        // Save the workbook as PDF
-        workbook.Save("Output.pdf", pdfOptions);
+            // Save the workbook as a PDF with the bookmark
+            workbook.Save("BookmarkNamedDestination.pdf", pdfOptions);
+        }
     }
 }

@@ -1,29 +1,31 @@
-// Title: C# Aspose.Cells – Master‑Detail Smart Markers with Collapsible Detail Rows
-// Description: This example shows how to build an Excel workbook in C# using Aspose.Cells smart markers where a parent marker (OrderId) sits above a child marker block (Product, Qty). The marker range is named, fed with master (Orders) and detail (Items) collections, processed with WorkbookDesigner, and then the generated detail rows are programmatically grouped and collapsed under each master row before saving the file.
-// Keywords: Aspose.Cells | C# | smart markers | master detail | row grouping | collapse rows | WorkbookDesigner | named range | Excel export | hierarchical data
-// Common Searches: Aspose.Cells master detail smart markers C# example | group child rows under a parent marker in Excel using Aspose | process a specific smart‑marker range with WorkbookDesigner | collapse detail rows after smart marker processing | create expandable sections in Excel with Aspose.Cells
-// Developer Intent: Create an Excel file where each order header appears as a master row and its line items are hidden under a collapsible group, using smart markers and programmatic row grouping.
-// Use Cases: Generating invoices where each order header can be expanded to reveal line items. | Building sales dashboards that let users drill down from region totals to individual product sales. | Exporting nested .NET objects (e.g., orders and items) to a readable, collapsible Excel report.
-// AI Prompts: Modify the code to determine rowsPerOrder dynamically based on the actual item count for each order. | Show how to rename the child data source (e.g., to OrderItems) while keeping the same smart‑marker template. | Demonstrate applying a custom style to master rows after the smart‑marker processing completes.
+// Title: C# – Group Master‑Detail Rows with Aspose.Cells Smart Markers (Parent Above Child)
+// Description: Creates an Excel workbook, sets a parent smart marker above a child range, processes a hierarchical List<Order> with WorkbookDesigner, then uses Cells.GroupRows to collapse each order's detail rows for a tidy master‑detail view.
+// Keywords: Aspose.Cells | C# | smart markers | master detail | row grouping | hierarchical data source | WorkbookDesigner | Excel export | parent smart marker | child range
+// Common Searches: Aspose.Cells group master detail rows C# | smart markers parent above child range | process child range only Aspose.Cells | how to collapse detail rows with Aspose.Cells | hierarchical data source smart markers example
+// Developer Intent: Generate an Excel file that lists orders with expandable/collapsible detail rows by using smart markers and row grouping in C#.
+// Use Cases: Invoice reports where each invoice header can expand to show line items. | Sales shipment sheets that group product shipments under each shipment ID. | Project task lists with subtasks grouped under their parent tasks for easy navigation.
+// AI Prompts: Write C# code using Aspose.Cells to create a master‑detail Excel sheet with a parent smart marker above the child range and group the detail rows. | Explain how to bind a hierarchical List<Order> to smart markers, process only the child range, and then apply row grouping in Aspose.Cells. | Provide step‑by‑step instructions to add a subtotal row for each order while keeping the detail rows grouped with smart markers.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsMasterDetailSmartMarkers
+namespace AsposeCellsMasterDetailExample
 {
-    // Simple data models for master‑detail relationship
-    // This example shows how to build an Excel workbook in C# using Aspose.Cells smart markers where a parent marker (OrderId) sits above a child marker block (Product, Qty). The marker range is named, fed with master (Orders) and detail (Items) collections, processed with WorkbookDesigner, and then the generated detail rows are programmatically grouped and collapsed under each master row before saving the file.
+    // Master class
+    // Creates an Excel workbook, sets a parent smart marker above a child range, processes a hierarchical List<Order> with WorkbookDesigner, then uses Cells.GroupRows to collapse each order's detail rows for a tidy master‑detail view.
     public class Order
     {
-        public string OrderId { get; set; } = string.Empty;
-        public List<Item> Items { get; set; } = new();
+        public int OrderID { get; set; }
+        public DateTime OrderDate { get; set; }
+        public List<Detail> Details { get; set; } = new List<Detail>();
     }
 
-    public class Item
+    // Detail class
+    public class Detail
     {
         public string Product { get; set; } = string.Empty;
-        public int Qty { get; set; }
+        public int Quantity { get; set; }
     }
 
     public class Program
@@ -32,81 +34,79 @@ namespace AsposeCellsMasterDetailSmartMarkers
         {
             try
             {
-                // 1. Create a new workbook and get the first worksheet
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
 
-                // 2. Build a template with smart markers
-                // Row 0 – parent smart marker (master)
-                cells["A1"].PutValue("&=Orders.OrderId");
-                // Row 1‑2 – child smart markers (detail)
-                cells["A2"].PutValue("&=Items.Product");
-                cells["B2"].PutValue("&=Items.Qty");
-                cells["A3"].PutValue("&=Items.Product");
-                cells["B3"].PutValue("&=Items.Qty");
+                // ----- Set up smart markers -----
+                // Parent (master) smart markers
+                sheet.Cells["A1"].PutValue("&=Orders.OrderID");
+                sheet.Cells["B1"].PutValue("&=Orders.OrderDate");
 
-                // Define the range that contains the smart markers and give it the required name
-                // This tells the designer to treat the whole block as a smart‑marker range
-                Aspose.Cells.Range smartRange = cells.CreateRange("A1:B3");
-                smartRange.Name = "_CellsSmartMarkers";
+                // Child (detail) smart markers – placed below the parent row
+                sheet.Cells["A2"].PutValue("&=Orders.Details.Product");
+                sheet.Cells["B2"].PutValue("&=Orders.Details.Quantity");
 
-                // 3. Prepare sample master‑detail data
-                var orders = new List<Order>
+                // Define a range that contains the child markers.
+                // This range will be processed repeatedly for each master record.
+                Aspose.Cells.Range childRange = sheet.Cells.CreateRange("A2:B5");
+                childRange.Name = "_CellsSmartMarkers";
+
+                // ----- Prepare hierarchical data source -----
+                List<Order> orders = new List<Order>
                 {
                     new Order
                     {
-                        OrderId = "ORD001",
-                        Items = new List<Item>
+                        OrderID = 1001,
+                        OrderDate = new DateTime(2023, 1, 10),
+                        Details = new List<Detail>
                         {
-                            new Item { Product = "Apple",  Qty = 10 },
-                            new Item { Product = "Banana", Qty = 20 }
+                            new Detail { Product = "Apple",  Quantity = 10 },
+                            new Detail { Product = "Banana", Quantity = 5 }
                         }
                     },
                     new Order
                     {
-                        OrderId = "ORD002",
-                        Items = new List<Item>
+                        OrderID = 1002,
+                        OrderDate = new DateTime(2023, 2, 15),
+                        Details = new List<Detail>
                         {
-                            new Item { Product = "Orange", Qty = 15 },
-                            new Item { Product = "Grape",  Qty = 25 }
+                            new Detail { Product = "Orange", Quantity = 8 },
+                            new Detail { Product = "Grapes", Quantity = 12 },
+                            new Detail { Product = "Mango",  Quantity = 7 }
                         }
                     }
                 };
 
-                // 4. Set up the WorkbookDesigner
+                // ----- Apply smart markers -----
                 WorkbookDesigner designer = new WorkbookDesigner
                 {
                     Workbook = workbook
                 };
-                // Set data sources for master and detail
+                // Set the hierarchical data source
                 designer.SetDataSource("Orders", orders);
-                // The detail source name must match the child marker prefix (Items)
-                // Using the first order's items as a placeholder; the designer will repeat the detail rows per master row
-                designer.SetDataSource("Items", orders[0].Items);
+                // Process only the child range (true = process this range only)
+                designer.Process(childRange, true);
 
-                // 5. Process the smart markers – only the defined range is processed
-                designer.Process(smartRange, true);
+                // ----- Group detail rows under each master row -----
+                // After processing, the rows are laid out as:
+                // Row 0 : Master 1
+                // Row 1-2 : Details of Master 1
+                // Row 3 : Master 2
+                // Row 4-6 : Details of Master 2
+                // Group rows 1-2 (detail of first order)
+                sheet.Cells.GroupRows(1, 2, true);
+                // Group rows 4-6 (detail of second order)
+                sheet.Cells.GroupRows(4, 6, true);
 
-                // 6. After processing, group detail rows under each master row
-                // The processed rows start at index 0 (Excel row 1)
-                // Each order expands to 1 master row + 2 detail rows (as defined in the template)
-                int rowsPerOrder = 3; // 1 master + 2 detail
-                for (int orderIndex = 0; orderIndex < orders.Count; orderIndex++)
-                {
-                    int masterRow = orderIndex * rowsPerOrder;               // zero‑based index of master row
-                    int firstDetailRow = masterRow + 1;                      // first detail row
-                    int lastDetailRow = masterRow + rowsPerOrder - 1;        // last detail row
-                    // Group the detail rows and hide them (collapsed view)
-                    cells.GroupRows(firstDetailRow, lastDetailRow, true);
-                }
-
-                // 7. Save the resulting workbook
-                workbook.Save("MasterDetailSmartMarkers.xlsx");
+                // Save the result
+                string outputPath = "MasterDetailGrouped.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

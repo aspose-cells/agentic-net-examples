@@ -1,10 +1,10 @@
-// Title: C# – Extract All Embedded Excel Charts as PNG Images with Aspose.Cells
-// Description: Load an Excel workbook using Aspose.Cells, loop through each worksheet and its charts, and export every chart to a separate PNG file via the Chart.ToImage method.
-// Keywords: Aspose.Cells chart export C# | save Excel chart as PNG | extract embedded charts .NET | Chart.ToImage example | batch export Excel charts
-// Common Searches: how to export all charts from an Excel file to PNG using Aspose.Cells | C# code to save each worksheet chart as an image | Aspose.Cells extract chart images programmatically
-// Developer Intent: Programmatically retrieve every chart in a workbook and write each one to an individual PNG file.
-// Use Cases: Create thumbnail previews of workbook charts for a web portal. | Generate image assets for documentation, reports, or presentations. | Automate batch conversion of Excel charts to PNG for archival purposes.
-// AI Prompts: Write C# code that uses Aspose.Cells to iterate through all worksheets in a workbook and save each chart as a PNG image. | Provide a reusable method that accepts a workbook path and an output folder, extracts all chart images, and returns the list of saved file paths. | Explain how to adjust PNG export settings such as resolution and background color when using Chart.ToImage in Aspose.Cells.
+// Title: Extract Embedded Excel Chart Images to PNG with Aspose.Cells for .NET
+// Description: Loads an .xlsx file, creates an output folder, loops through each worksheet and its charts, and saves every chart as a uniquely‑named PNG using Chart.ToImage, while reporting the total count.
+// Keywords: Aspose.Cells | C# | extract chart images | Excel chart to PNG | Chart.ToImage | export all charts | save chart as image | workbook chart extraction | Aspose.Cells example | GitHub
+// Common Searches: export all charts from Excel to PNG C# | Aspose.Cells save chart as image example | how to extract chart images from .xlsx using .NET | C# code to loop worksheets and export charts | Aspose.Cells Chart.ToImage usage
+// Developer Intent: Programmatically retrieve every chart in an Excel workbook and write each one to a separate PNG file.
+// Use Cases: Create image assets for reports or presentations from workbook charts. | Build a thumbnail gallery of all charts for a dashboard or documentation site. | Archive visual representations of charts before performing bulk workbook modifications.
+// AI Prompts: Generate C# code with Aspose.Cells that extracts all workbook charts and saves them as PNG files using a custom naming pattern. | Show how to modify the sample to export charts in JPEG format and prepend the chart title to the filename. | Explain how to add error handling for workbooks that contain no charts or unsupported chart types.
 
 using System;
 using System.IO;
@@ -12,44 +12,42 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsChartImageExtractor
+// Loads an .xlsx file, creates an output folder, loops through each worksheet and its charts, and saves every chart as a uniquely‑named PNG using Chart.ToImage, while reporting the total count.
+class ExtractChartImages
 {
-    // Load an Excel workbook using Aspose.Cells, loop through each worksheet and its charts, and export every chart to a separate PNG file via the Chart.ToImage method.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Path to the source workbook
+        string workbookPath = "input.xlsx";
+
+        // Directory where extracted chart images will be saved
+        string outputFolder = "ChartImages";
+        Directory.CreateDirectory(outputFolder);
+
+        // Load the workbook (uses the provided load rule)
+        Workbook workbook = new Workbook(workbookPath);
+
+        int extractedCount = 0;
+
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Input workbook path (replace with your actual file)
-            string workbookPath = "input.xlsx";
-
-            // Output directory for extracted chart images
-            string outputDir = "ExtractedCharts";
-            Directory.CreateDirectory(outputDir);
-
-            // Load the workbook (using Aspose.Cells load rule)
-            Workbook workbook = new Workbook(workbookPath);
-
-            // Iterate through all worksheets
-            for (int wsIndex = 0; wsIndex < workbook.Worksheets.Count; wsIndex++)
+            // Iterate through all charts in the current worksheet
+            for (int chartIndex = 0; chartIndex < sheet.Charts.Count; chartIndex++)
             {
-                Worksheet sheet = workbook.Worksheets[wsIndex];
-                // Iterate through all charts in the current worksheet
-                for (int chartIndex = 0; chartIndex < sheet.Charts.Count; chartIndex++)
-                {
-                    Chart chart = sheet.Charts[chartIndex];
+                Chart chart = sheet.Charts[chartIndex];
 
-                    // Build a unique file name for each chart image
-                    string chartFileName = $"{sheet.Name}_Chart{chartIndex}.png";
-                    string chartFilePath = Path.Combine(outputDir, chartFileName);
+                // Build a unique file name for each chart image
+                string imageFileName = $"Chart_{sheet.Name}_{chartIndex}.png";
+                string imagePath = Path.Combine(outputFolder, imageFileName);
 
-                    // Save the chart as PNG (using Chart.ToImage(string, ImageType) rule)
-                    chart.ToImage(chartFilePath, ImageType.Png);
+                // Save the chart as a PNG image (uses the provided ToImage rule)
+                chart.ToImage(imagePath, ImageType.Png);
 
-                    Console.WriteLine($"Saved chart image: {chartFilePath}");
-                }
+                extractedCount++;
             }
-
-            Console.WriteLine("All chart images have been extracted.");
         }
+
+        Console.WriteLine($"Total chart images extracted: {extractedCount}");
     }
 }

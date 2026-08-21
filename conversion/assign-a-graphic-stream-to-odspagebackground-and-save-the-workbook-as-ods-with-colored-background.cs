@@ -1,10 +1,10 @@
-// Title: Set a tiled graphic and background color for ODS worksheets using Aspose.Cells C#
-// Description: Demonstrates how to create a workbook, access the ODSPageBackground of the first worksheet, assign a PNG image as a tiled graphic, set a background color, and save the file as an ODS document with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells ODS background image | C# OdsPageBackground graphic | tile graphic ODS worksheet | ODS page background color | save workbook as ODS | Aspose.Cells .NET example
-// Common Searches: How to add an image background to an ODS file with Aspose.Cells | C# set tiled graphic on ODS worksheet page background | Assign background color and image to ODSPageBackground | Save ODS with custom page background using Aspose.Cells
-// Developer Intent: The developer wants to programmatically apply a graphic (e.g., PNG) as a tiled page background, optionally add a solid background color, and export the workbook to ODS format using Aspose.Cells for .NET.
-// Use Cases: Branding reports with a repeated logo behind data in ODS spreadsheets. | Creating ODS templates that include a light-colored watermark for visual hierarchy. | Generating financial statements where a corporate color scheme is applied to every page.
-// AI Prompts: Write C# code with Aspose.Cells to set a JPEG image as a stretched, centered background for an ODS worksheet and save the file. | Show how to change the ODS page background color based on a cell value and apply a tiled PNG graphic. | Explain how to load a background image from a memory stream instead of a file and assign it to OdsPageBackground.
+// Title: C# – Assign a graphic stream to ODS page background and save workbook with solid color using AspNet Cells
+// Description: Demonstrates how to create a Workbook, set a LightGreen page color, load an image via FileStream into a byte array, apply it as a tiled graphic background on the ODS page, and export the file as an ODS document with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells ODS background image | C# OdsPageBackground graphic stream | set ODS page color Aspose.Cells | tile background image ODS | save workbook as ODS .NET
+// Common Searches: how to add image background to ODS with Aspose.Cells C# | assign graphic data to OdsPageBackground in .NET | ODS page background color and tiled image example | export Excel to ODS with custom background
+// Developer Intent: Apply a bitmap graphic (from a stream) as the tiled page background of an ODS worksheet while also defining a solid fill color, then generate the ODS file.
+// Use Cases: Design printable ODS reports that include a company logo repeated across the page. | Create template spreadsheets with a corporate color scheme and watermark background. | Generate ODS files for distribution where a light‑green fill and centered graphic improve visual branding.
+// AI Prompts: Provide C# code that reads an image file into a byte array and sets OdsPageBackground.GraphicData in Aspose.Cells. | Show an example of configuring OdsPageBackground.Type, GraphicType, and GraphicPositionType for a tiled background. | Explain how to combine a solid page color with a graphic background and save the result as an ODS file.
 
 using System;
 using System.IO;
@@ -12,8 +12,8 @@ using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Ods;
 
-// Demonstrates how to create a workbook, access the ODSPageBackground of the first worksheet, assign a PNG image as a tiled graphic, set a background color, and save the file as an ODS document with Aspose.Cells for .NET.
-class OdsPageBackgroundGraphicDemo
+// Demonstrates how to create a Workbook, set a LightGreen page color, load an image via FileStream into a byte array, apply it as a tiled graphic background on the ODS page, and export the file as an ODS document with Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
@@ -24,22 +24,29 @@ class OdsPageBackgroundGraphicDemo
         // Access the ODS page background object
         OdsPageBackground background = sheet.PageSetup.ODSPageBackground;
 
-        // Set the background type to graphic
-        background.Type = OdsPageBackgroundType.Graphic;
+        // Set a solid background color (e.g., LightGreen)
+        background.Color = Color.LightGreen;
 
-        // Load an image file into a byte array and assign it as the graphic data
+        // Path to the image that will be used as a graphic background
         string imagePath = "background.png"; // Replace with your image file path
+
         if (File.Exists(imagePath))
         {
-            background.GraphicData = File.ReadAllBytes(imagePath);
+            // Load the image into a byte array using a stream
+            byte[] imageData;
+            using (FileStream fileStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                fileStream.CopyTo(memoryStream);
+                imageData = memoryStream.ToArray();
+            }
+
+            // Configure the page background to use the graphic data
+            background.Type = OdsPageBackgroundType.Graphic;          // Use graphic background
+            background.GraphicData = imageData;                      // Assign the image bytes
+            background.GraphicType = OdsPageBackgroundGraphicType.Tile; // Tile the image
+            background.GraphicPositionType = OdsPageBackgroundGraphicPositionType.CenterCenter; // Center the tiles
         }
-
-        // Define how the graphic should be displayed
-        background.GraphicType = OdsPageBackgroundGraphicType.Tile;
-        background.GraphicPositionType = OdsPageBackgroundGraphicPositionType.CenterCenter;
-
-        // Optionally set a background color that will appear behind the graphic
-        background.Color = Color.LightYellow;
 
         // Save the workbook as an ODS file
         workbook.Save("WorkbookWithGraphicBackground.ods");

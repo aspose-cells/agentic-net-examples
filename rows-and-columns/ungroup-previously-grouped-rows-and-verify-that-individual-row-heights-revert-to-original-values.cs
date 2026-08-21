@@ -1,66 +1,83 @@
-// Title: C# – Ungroup Rows and Restore Original Row Heights with Aspose.Cells for .NET
-// Description: Demonstrates how to set custom heights for rows, group them, ungroup them, and verify that each row returns to its original height using Aspose.Cells. The workbook is saved after the validation.
-// Keywords: Aspose.Cells ungroup rows C# | restore row height after grouping | verify row height Aspose.Cells | GroupRows UngroupRows .NET | row height preservation Excel | Aspose.Cells Workbook example | C# Excel row formatting | Aspose.Cells API row height | UngroupRowsDemo GitHub
-// Common Searches: how to ungroup rows with Aspose.Cells .NET | check row height after ungrouping in C# | Aspose.Cells restore original row height | group and ungroup rows Excel using Aspose.Cells | C# code to verify row heights after ungrouping
-// Developer Intent: Remove grouping from a range of rows and confirm that their heights revert to the values set before grouping.
-// Use Cases: Create a worksheet, assign distinct heights to rows, temporarily group them for printing, then ungroup while ensuring formatting is unchanged. | Automate a data‑processing routine that collapses rows for batch operations and validates that ungrouping does not modify row height settings. | Generate Excel reports where rows are collapsed for layout purposes and later expanded without losing custom row height definitions.
-// AI Prompts: Write C# code using Aspose.Cells to set custom heights for rows 2‑4, group them, ungroup them, and assert that each row height matches the pre‑grouping value. | Provide a reusable method that accepts a worksheet and a row range, groups the rows, ungroups them, and returns a boolean indicating whether all row heights were restored. | Explain the behavior of Aspose.Cells when rows are grouped and later ungrouped, focusing on how original row heights are preserved.
+// Title: Ungroup rows and restore original row heights with Aspose.Cells for .NET
+// Description: This C# example creates a workbook, assigns custom heights to rows 2‑4, groups the rows, then uses Cells.UngroupRows to remove the group and verifies that each row's height matches the values saved before grouping. The result is printed to the console and the workbook is saved.
+// Keywords: Aspose.Cells | C# ungroup rows | row height restoration | Cells.UngroupRows | group rows Aspose.Cells | verify row height | Excel outline rows | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells ungroup rows C# | restore row height after grouping Aspose.Cells | check row height after ungrouping Excel | C# code to group and ungroup rows Aspose.Cells | verify row heights in Aspose.Cells workbook
+// Developer Intent: The developer needs to remove a previously created row group and confirm that each row’s height reverts to the original values set before grouping.
+// Use Cases: Apply custom heights to a set of rows, group them for outline display, then ungroup while preserving the original formatting. | Generate an Excel report where rows are temporarily collapsed for presentation and later expanded without altering row dimensions. | Automate a regression test to ensure that grouping and ungrouping operations do not modify row height properties in generated files.
+// AI Prompts: Write a C# snippet using Aspose.Cells that groups rows 5‑10, then ungroups them and asserts that the row heights are identical to the pre‑group values. | Explain how Aspose.Cells manages row height preservation during grouping and ungrouping, and outline best practices for validating this behavior. | Create an MSTest unit test that sets distinct heights for rows, groups and ungroups them with Aspose.Cells, and verifies that the heights are restored.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsUngroupRowsDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to set custom heights for rows, group them, ungroup them, and verify that each row returns to its original height using Aspose.Cells. The workbook is saved after the validation.
-    public class Program
+    // This C# example creates a workbook, assigns custom heights to rows 2‑4, groups the rows, then uses Cells.UngroupRows to remove the group and verifies that each row's height matches the values saved before grouping. The result is printed to the console and the workbook is saved.
+    public class UngroupRowsVerificationDemo
     {
-        public static void Main()
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        public static void Run()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Populate rows 1 to 5 with sample data
-            for (int i = 0; i < 5; i++)
+            // Define the rows to work with (zero‑based indices 1 to 3 correspond to Excel rows 2‑4)
+            int firstRow = 1;
+            int lastRow = 3;
+
+            // Set distinct heights for each row and store the original heights
+            double[] originalHeights = new double[lastRow - firstRow + 1];
+            double[] newHeights = new double[] { 20.0, 25.0, 30.0 };
+
+            for (int i = firstRow; i <= lastRow; i++)
             {
-                cells[i, 0].PutValue($"Row {i + 1}");
+                int idx = i - firstRow;
+                cells.SetRowHeight(i, newHeights[idx]);          // Apply a custom height
+                originalHeights[idx] = cells.GetRowHeight(i);   // Store the height (should be the same as newHeights)
+                cells[i, 0].PutValue($"Row {i + 1}");           // Add some data for visibility
             }
 
-            // Set distinct heights for rows 2, 3, and 4 (zero‑based indices 1‑3)
-            double[] originalHeights = new double[3];
-            for (int i = 1; i <= 3; i++)
-            {
-                double height = 15 + i * 2;               // example heights: 17, 19, 21
-                cells.SetRowHeight(i, height);
-                originalHeights[i - 1] = height;          // store for later verification
-            }
+            // Group the rows (the grouping itself does not alter row heights)
+            cells.GroupRows(firstRow, lastRow, false);
 
-            // Group rows 2‑4 (indices 1‑3) and hide them
-            cells.GroupRows(1, 3, true);
+            // Ungroup the rows using the UngroupRows method
+            cells.UngroupRows(firstRow, lastRow);
 
-            // Ungroup the same rows, removing all grouping levels
-            cells.UngroupRows(1, 3, true);
-
-            // Verify that each row's height has reverted to the original value
+            // Verify that each row's height matches the original height after ungrouping
             bool allMatch = true;
-            for (int i = 1; i <= 3; i++)
+            for (int i = firstRow; i <= lastRow; i++)
             {
+                int idx = i - firstRow;
                 double currentHeight = cells.GetRowHeight(i);
-                double expectedHeight = originalHeights[i - 1];
-                Console.WriteLine($"Row {i + 1}: Expected Height = {expectedHeight}, Current Height = {currentHeight}");
-                if (Math.Abs(currentHeight - expectedHeight) > 0.001)
+                if (Math.Abs(currentHeight - originalHeights[idx]) > 0.001)
                 {
                     allMatch = false;
+                    Console.WriteLine($"Row {i + 1} height mismatch. Expected: {originalHeights[idx]}, Actual: {currentHeight}");
+                }
+                else
+                {
+                    Console.WriteLine($"Row {i + 1} height correctly restored to {currentHeight}");
                 }
             }
 
             Console.WriteLine(allMatch
-                ? "All row heights have reverted to their original values after ungrouping."
-                : "Row heights differ after ungrouping.");
+                ? "All row heights reverted to original values after ungrouping."
+                : "Some row heights did not revert to original values.");
 
-            // Save the workbook to demonstrate the final state
-            workbook.Save("UngroupRowsResult.xlsx");
+            // Save the workbook to demonstrate the final state (optional)
+            workbook.Save("UngroupRowsVerificationDemo.xlsx");
         }
     }
 }

@@ -1,47 +1,77 @@
-// Title: Clone Excel Workbook, Reassign Worksheet TabIds, Preserve Shapes – Aspose.Cells C# Example
-// Description: Demonstrates how to copy a workbook with Aspose.Cells for .NET, assign new sequential TabId values to each worksheet in the cloned file, and retain all original shape collections (charts, images, drawings) before saving the result.
-// Keywords: Aspose.Cells copy workbook C# | Worksheet TabId property | preserve shapes Aspose.Cells | clone Excel file .NET | duplicate workbook with drawings | reset worksheet TabId | Aspose.Cells workbook cloning
-// Common Searches: how to clone a workbook and change TabId with Aspose.Cells | preserve charts and images when copying Excel file in .NET | assign new TabId to worksheets after workbook copy | Aspose.Cells copy workbook keep drawings | reset worksheet TabId after cloning
-// Developer Intent: Create an exact copy of an existing workbook, give each sheet a fresh TabId, and keep all embedded shapes unchanged.
-// Use Cases: Generate client‑specific reports from a master template while avoiding TabId conflicts. | Automate versioned workbook creation where sheet identifiers must be renumbered but charts and images stay intact. | Batch‑process multiple Excel files, duplicating them and normalizing TabIds for downstream systems.
-// AI Prompts: Write C# code using Aspose.Cells to copy a workbook, assign sequential TabId values to each worksheet, and confirm shape counts match the source. | Explain the impact of Worksheet.TabId on Excel files and best practices for modifying it after cloning with Aspose.Cells. | Show how to clone a workbook, preserve all shape collections, and rename worksheets based on their new TabId values.
+// Title: Clone an Excel workbook, preserve shapes, and assign new TabId values with Aspose.Cells for .NET (C#)
+// Description: Load a source workbook, create an empty workbook, copy all worksheets, manually duplicate each shape to keep drawings, assign sequential TabId numbers (starting at 1000) to every cloned sheet, and save the result using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# workbook clone | copy shapes Aspose.Cells | Worksheet TabId | preserve drawings Excel | Workbook.Copy | clone workbook with shapes | assign TabId programmatically
+// Common Searches: Aspose.Cells clone workbook with shapes C# | How to copy worksheets and keep drawings Aspose.Cells | Set custom TabId for worksheets after cloning | Preserve shape collections when copying Excel file using Aspose.Cells | C# assign sequential TabId to cloned sheets
+// Developer Intent: Duplicate an existing Excel file, retain all embedded shapes, and give each copied worksheet a unique TabId.
+// Use Cases: Generate client‑specific reports by cloning a master template, keeping charts and images intact, and assigning distinct TabId values to avoid identifier conflicts. | Automate versioned copies of a financial model where each copy preserves drawings and receives a new TabId range for change tracking. | Create multiple workbooks from a single source for batch processing, ensuring embedded objects remain and each sheet has a sequential TabId for downstream APIs.
+// AI Prompts: Provide C# code using Aspose.Cells to clone a workbook, copy all shapes, and set new TabId values for each worksheet. | Show an example of copying worksheets from one Excel file to another while preserving drawings and assigning sequential TabId numbers starting at a custom base. | Explain how Aspose.Cells handles shape duplication and TabId assignment when using Workbook.Copy in a .NET application.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsCloneExample
 {
-    // Demonstrates how to copy a workbook with Aspose.Cells for .NET, assign new sequential TabId values to each worksheet in the cloned file, and retain all original shape collections (charts, images, drawings) before saving the result.
+    // Load a source workbook, create an empty workbook, copy all worksheets, manually duplicate each shape to keep drawings, assign sequential TabId numbers (starting at 1000) to every cloned sheet, and save the result using Aspose.Cells for .NET.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Load the source workbook (replace with your actual file path)
-            Workbook sourceWorkbook = new Workbook("source.xlsx");
-
-            // Create a new empty workbook that will hold the clone
-            Workbook clonedWorkbook = new Workbook();
-
-            // Clone the entire workbook (includes worksheets, data, formats, and shapes)
-            clonedWorkbook.Copy(sourceWorkbook);
-
-            // Assign new TabId values to each worksheet in the cloned workbook
-            int newTabId = 1;
-            foreach (Worksheet ws in clonedWorkbook.Worksheets)
+            try
             {
-                ws.TabId = newTabId++;
+                const string sourcePath = "SourceWorkbook.xlsx";
+                const string outputPath = "ClonedWorkbook.xlsx";
+
+                // Verify source file exists
+                if (!File.Exists(sourcePath))
+                {
+                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    return;
+                }
+
+                // Load the source workbook
+                Workbook sourceWorkbook = new Workbook(sourcePath);
+
+                // Create a new empty workbook for the clone
+                Workbook clonedWorkbook = new Workbook();
+
+                // Copy all contents (worksheets, data, formulas, styles, etc.)
+                clonedWorkbook.Copy(sourceWorkbook);
+
+                // Preserve original shape collections by copying each shape manually
+                for (int i = 0; i < sourceWorkbook.Worksheets.Count; i++)
+                {
+                    Worksheet sourceSheet = sourceWorkbook.Worksheets[i];
+                    Worksheet destSheet = clonedWorkbook.Worksheets[i];
+
+                    foreach (Shape sourceShape in sourceSheet.Shapes)
+                    {
+                        // Copy shape using its bounding rows and columns
+                        destSheet.Shapes.AddCopy(
+                            sourceShape,
+                            sourceShape.UpperLeftRow,
+                            sourceShape.UpperLeftColumn,
+                            sourceShape.LowerRightRow,
+                            sourceShape.LowerRightColumn);
+                    }
+                }
+
+                // Assign new TabId values to all sheets in the cloned workbook
+                const int tabIdBase = 1000;
+                for (int i = 0; i < clonedWorkbook.Worksheets.Count; i++)
+                {
+                    clonedWorkbook.Worksheets[i].TabId = tabIdBase + i;
+                }
+
+                // Save the cloned workbook
+                clonedWorkbook.Save(outputPath);
+                Console.WriteLine($"Cloned workbook saved to: {outputPath}");
             }
-
-            // At this point the shape collections are already preserved by the Copy method.
-            // If you need to verify, you can compare the shape counts:
-            // for (int i = 0; i < sourceWorkbook.Worksheets.Count; i++)
-            // {
-            //     Console.WriteLine($"Sheet {i}: Source shapes = {sourceWorkbook.Worksheets[i].Shapes.Count}, Cloned shapes = {clonedWorkbook.Worksheets[i].Shapes.Count}");
-            // }
-
-            // Save the cloned workbook
-            clonedWorkbook.Save("cloned.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,9 +1,18 @@
+// Title: C# – Add Column to Aspose.Cells Table and Apply List Validation from Another Column
+// Description: Shows how to create a workbook, define a ListObject for A1:B4, insert a new header, expand the table to include the extra column, and configure an in‑cell drop‑down list for the new cells using the values from the Category column (B2:B4). The file is saved as TableWithValidation.xlsx.
+// Keywords: Aspose.Cells C# add column to table | Aspose.Cells list validation from column | ListObject resize Aspose.Cells | in‑cell drop‑down Aspose.Cells | C# workbook table validation | TableWithValidation.xlsx example | Aspose.Cells data validation list
+// Common Searches: add column to Aspose.Cells ListObject C# | Aspose.Cells set data validation list from another column | resize Aspose.Cells table after adding column | C# create drop‑down list validation in table | Aspose.Cells example for table validation
+// Developer Intent: Expand an existing ListObject with an extra column and attach a list‑type validation that references a different column on the same sheet.
+// Use Cases: Build a product sheet where the new "Option" column offers selectable values drawn from the "Category" column. | Generate a template that programmatically grows a table and enforces consistent entries via a drop‑down list. | Create a reporting form that lets users pick values from a dynamically maintained source list.
+// AI Prompts: Write C# code with Aspose.Cells to insert a column into a ListObject, resize the table, and add a list validation that pulls items from another column. | Explain step‑by‑step how to set up an in‑cell drop‑down validation after expanding an Aspose.Cells table. | Provide guidance on linking a validation list to a column range within the same worksheet using Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;   // Required for ListObject
 
 namespace AsposeCellsTableValidationDemo
 {
+    // Shows how to create a workbook, define a ListObject for A1:B4, insert a new header, expand the table to include the extra column, and configure an in‑cell drop‑down list for the new cells using the values from the Category column (B2:B4). The file is saved as TableWithValidation.xlsx.
     class Program
     {
         static void Main()
@@ -13,48 +22,44 @@ namespace AsposeCellsTableValidationDemo
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
 
-                // Populate sample data (including the source list column)
-                // Header row
-                cells["A1"].PutValue("ID");
-                cells["B1"].PutValue("Options");   // This column will be the source list
-                cells["C1"].PutValue("Value");
-                cells["D1"].PutValue("Choice");    // Column that will have validation
+                // Populate sample data for the initial table (Item and Category columns)
+                sheet.Cells["A1"].PutValue("Item");
+                sheet.Cells["B1"].PutValue("Category");
+                sheet.Cells["A2"].PutValue("Apple");
+                sheet.Cells["A3"].PutValue("Banana");
+                sheet.Cells["A4"].PutValue("Cherry");
+                sheet.Cells["B2"].PutValue("Fruit");
+                sheet.Cells["B3"].PutValue("Fruit");
+                sheet.Cells["B4"].PutValue("Fruit");
 
-                // Data rows
-                for (int i = 2; i <= 5; i++)
-                {
-                    cells[$"A{i}"].PutValue(i - 1);                 // ID
-                    cells[$"B{i}"].PutValue($"Option{i - 1}");      // Options (source list)
-                    cells[$"C{i}"].PutValue((i - 1) * 10);          // Some other value
-                    // D column left empty – will receive validation
-                }
+                // Add a ListObject (table) that covers the range A1:B4
+                int tableIdx = sheet.ListObjects.Add("A1", "B4", true);
+                ListObject table = sheet.ListObjects[tableIdx];
 
-                // Add a ListObject (table) that includes the new column D
-                // Table range: A1:D5, hasHeaders = true
-                int tableIndex = sheet.ListObjects.Add("A1", "D5", true);
-                ListObject table = sheet.ListObjects[tableIndex];
-                // Use DisplayName to set the table name (Name property not available in some versions)
-                table.DisplayName = "SampleTable";
+                // Add a new column header for the column that will hold the validation list
+                sheet.Cells["C1"].PutValue("Option");
 
-                // Define the area for validation: column D (index 3), rows 2‑5 (excluding header)
-                CellArea validationArea = CellArea.CreateCellArea(1, 3, 4, 3); // rows 1‑4 zero‑based, column 3
+                // Expand the table to include the new column (C)
+                // New area: rows 0‑3 (A‑D), columns 0‑2 (A‑C)
+                // Resize(firstRow, firstColumn, totalRows, totalColumns, expandRows)
+                table.Resize(0, 0, 4, 3, false);
 
-                // Add validation to the worksheet
-                ValidationCollection validations = sheet.Validations;
-                int validationIndex = validations.Add(validationArea);
-                Validation validation = validations[validationIndex];
+                // Define the validation area: column C (index 2), rows 2‑4 (indexes 1‑3)
+                CellArea validationArea = CellArea.CreateCellArea(1, 2, 3, 2);
 
-                // Configure validation as a list sourced from the "Options" column (B2:B5)
+                // Add a validation to the defined area
+                int validationIdx = sheet.Validations.Add(validationArea);
+                Validation validation = sheet.Validations[validationIdx];
+
+                // Configure the validation as a drop‑down list sourced from the Category column (B2:B4)
                 validation.Type = ValidationType.List;
                 validation.InCellDropDown = true;
-                validation.Formula1 = "$B$2:$B$5"; // absolute reference to source list range
+                validation.Formula1 = "$B$2:$B$4";
 
                 // Save the workbook
-                string outputPath = "TableWithDropdownValidation.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                workbook.Save("TableWithValidation.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)
             {

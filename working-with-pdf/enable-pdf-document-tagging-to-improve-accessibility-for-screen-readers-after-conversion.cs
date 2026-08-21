@@ -1,52 +1,51 @@
-// Title: Create an Accessible Tagged PDF from Excel with Aspose.Cells for .NET
-// Description: This example builds a workbook, populates it with sample data, and saves it as a PDF with document‑structure tags (ExportDocumentStructure = true). It also configures PdfSecurityOptions so screen readers can extract content while other extraction permissions are disabled, producing a PDF that meets accessibility standards.
-// Keywords: Aspose.Cells PDF tagging | ExportDocumentStructure | PDF accessibility .NET | screen reader friendly PDF | PdfSecurityOptions AccessibilityExtractContent | tagged PDF generation | accessible PDF from Excel
-// Common Searches: how to enable PDF tags with Aspose.Cells | Aspose.Cells ExportDocumentStructure true example | set AccessibilityExtractContent in Aspose.Cells PDF | create accessible PDF from workbook .NET | Aspose.Cells PDF security options for screen readers
-// Developer Intent: Add PDF document tags so the generated file is accessible to screen‑reading software.
-// Use Cases: Produce compliance‑ready PDFs for reports that require WCAG‑AA accessibility. | Export Excel tables to PDFs that preserve logical structure for assistive technologies. | Distribute PDFs that allow text extraction for screen readers while restricting other content copying.
-// AI Prompts: Show how to add custom PDF tags for table headings using Aspose.Cells. | Demonstrate setting additional PdfSecurityOptions (e.g., printing or editing permissions) while keeping document tagging enabled. | Explain how to validate the presence of accessibility tags in the output PDF with common PDF accessibility checkers.
+// Title: Create a Tagged PDF with Accessibility for Screen Readers using Aspose.Cells .NET (C#)
+// Description: C# example that generates a PDF from an Excel workbook with PDF tags enabled (ExportDocumentStructure), sets the document title, and configures security to allow accessibility extraction while restricting other content copying.
+// Keywords: Aspose.Cells | C# | PDF tagging | ExportDocumentStructure | PDF accessibility | screen reader | PdfSaveOptions | PdfSecurityOptions | PDF/UA | document title
+// Common Searches: Aspose.Cells enable PDF tags | How to create accessible PDF from Excel C# | ExportDocumentStructure Aspose.Cells example | Allow screen readers in PDF saved with Aspose.Cells | Set PDF document title using Aspose.Cells | Restrict PDF content extraction while keeping accessibility
+// Developer Intent: Generate a PDF with structural tags and accessibility settings so screen readers can read the content.
+// Use Cases: Produce PDF/UA‑compliant documents from Excel for compliance audits | Distribute accessible reports to visually impaired users | Create PDFs with a visible title bar while preventing unauthorized content copying | Automate generation of tagged PDFs in enterprise reporting pipelines
+// AI Prompts: Give a step‑by‑step guide to add custom PDF tags for tables in Aspose.Cells. | Show how to combine PDF/A‑2u compliance with ExportDocumentStructure in Aspose.Cells. | Demonstrate how to validate PDF accessibility tags using open‑source tools after saving with Aspose.Cells. | Explain how to set different security permissions for accessibility versus editing in Aspose.Cells PDF export.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Rendering.PdfSecurity;
 
-namespace AsposeCellsPdfTaggingExample
+// C# example that generates a PDF from an Excel workbook with PDF tags enabled (ExportDocumentStructure), sets the document title, and configures security to allow accessibility extraction while restricting other content copying.
+class Program
 {
-    // This example builds a workbook, populates it with sample data, and saves it as a PDF with document‑structure tags (ExportDocumentStructure = true). It also configures PdfSecurityOptions so screen readers can extract content while other extraction permissions are disabled, producing a PDF that meets accessibility standards.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
+
+        // Add some sample data to demonstrate accessibility tagging
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Title");
+        sheet.Cells["A2"].PutValue("This text will be accessible to screen readers after PDF conversion.");
+
+        // Configure PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+        // Enable export of document structure (PDF tags) for accessibility
+        pdfOptions.ExportDocumentStructure = true;
+
+        // Optional: display the document title in the PDF viewer's title bar
+        pdfOptions.DisplayDocTitle = true;
+
+        // Configure security options to allow accessibility extraction
+        PdfSecurityOptions security = new PdfSecurityOptions
         {
-            // Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Employee");
-            sheet.Cells["B1"].PutValue("Salary");
-            sheet.Cells["A2"].PutValue("John");
-            sheet.Cells["B2"].PutValue(50000);
-            sheet.Cells["A3"].PutValue("Alice");
-            sheet.Cells["B3"].PutValue(62000);
+            // Allow screen readers to extract text and graphics
+            AccessibilityExtractContent = true,
+            // Prevent other content extraction if desired
+            ExtractContentPermission = false
+        };
 
-            // Configure PDF save options to enable document tagging (structure)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // ExportDocumentStructure adds PDF tags for accessibility
-                ExportDocumentStructure = true
-            };
+        // Assign the security options to the PDF save options
+        pdfOptions.SecurityOptions = security;
 
-            // Configure security options to allow accessibility extraction
-            PdfSecurityOptions security = new PdfSecurityOptions
-            {
-                // Enables screen readers to extract text/graphics
-                AccessibilityExtractContent = true,
-                // Optional: prevent other content extraction if desired
-                ExtractContentPermission = false
-            };
-            pdfOptions.SecurityOptions = security;
-
-            // Save the workbook as a tagged PDF
-            workbook.Save("TaggedOutput.pdf", pdfOptions);
-        }
+        // Save the workbook as a tagged PDF
+        workbook.Save("TaggedDocument.pdf", pdfOptions);
     }
 }

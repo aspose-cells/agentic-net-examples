@@ -1,41 +1,67 @@
-// Title: C# – Update Accent5 Theme Color and Refresh All Charts with Aspose.Cells for .NET
-// Description: Demonstrates how to set the workbook's Accent5 theme color to a user‑selected value using Aspose.Cells, trigger an internal refresh of every chart so they adopt the new theme, and save the updated file.
-// Keywords: Aspose.Cells | SetThemeColor | Accent5 | theme color | refresh charts | C# | .NET | Excel workbook | chart update | user selected palette | Workbook.Save | Chart.Title | theme refresh
-// Common Searches: change Accent5 color Aspose.Cells C# | refresh Excel charts after theme change .NET | set workbook theme color programmatically | Aspose.Cells update theme and charts | apply user palette to Excel workbook using Aspose
-// Developer Intent: Set the Accent5 theme color to a custom RGB value and ensure every existing chart reflects the change without recreating the charts.
-// Use Cases: Apply a corporate orange palette by updating Accent5 and automatically recoloring chart series across all worksheets. | Load an existing Excel file, modify its Accent5 theme color, trigger chart refresh, and save the file for distribution. | Batch‑process multiple workbooks to enforce a consistent theme and refresh all dependent visualizations.
-// AI Prompts: Generate C# code with Aspose.Cells that changes the Accent5 theme color based on an RGB input and forces all charts to refresh. | Show how to update multiple theme accents (Accent1‑Accent6) in a workbook and make charts pick up the new colors. | Explain the mechanism for programmatically refreshing charts after a theme color change in Aspose.Cells.
+// Title: Change Accent5 Theme Color and Refresh All Charts with Aspose.Cells for .NET (C#)
+// Description: C# example that loads or creates an Excel workbook, sets the Accent5 theme color using Workbook.SetThemeColor, ensures chart series inherit the new theme, and saves the updated file. The theme change propagates automatically to all charts.
+// Keywords: Aspose.Cells | C# | SetThemeColor | Accent5 | Excel theme color | update chart colors | refresh charts programmatically | Excel workbook theme | change Excel palette .NET | Aspose.Cells chart fill
+// Common Searches: how to change Accent5 theme color with Aspose.Cells | update Excel theme color and refresh charts C# | Aspose.Cells SetThemeColor example | programmatically change Excel palette .NET | apply new theme color to existing charts Aspose
+// Developer Intent: Set a custom Accent5 theme color in an Excel workbook and make all existing charts reflect the change automatically.
+// Use Cases: Apply a corporate brand color (e.g., orange) to the Accent5 slot across multiple reports before distribution. | Standardize the Accent5 color in a batch of client workbooks to meet branding guidelines. | Create a template that updates the theme color on the fly and regenerates charts with the new palette.
+// AI Prompts: Generate C# code using Aspose.Cells to change the Accent5 theme color to a variable Color and automatically update all chart series. | Show how to load a workbook, set multiple theme colors (Accent5, Accent2, etc.), and ensure charts inherit the new colors without manual fill assignments.
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 
-// Demonstrates how to set the workbook's Accent5 theme color to a user‑selected value using Aspose.Cells, trigger an internal refresh of every chart so they adopt the new theme, and save the updated file.
+// C# example that loads or creates an Excel workbook, sets the Accent5 theme color using Workbook.SetThemeColor, ensures chart series inherit the new theme, and saves the updated file. The theme change propagates automatically to all charts.
 class UpdateAccent5Theme
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook(); // new Workbook("input.xlsx");
-
-        // Example user‑selected color for Accent5
-        Color userSelectedColor = Color.FromArgb(255, 128, 0); // orange
-
-        // Update the theme's Accent5 color
-        workbook.SetThemeColor(ThemeColorType.Accent5, userSelectedColor);
-
-        // Iterate through all worksheets and charts to ensure they pick up the new theme color
-        foreach (Worksheet ws in workbook.Worksheets)
+        try
         {
-            foreach (Chart chart in ws.Charts)
-            {
-                // Accessing a property forces internal refresh (no explicit refresh method)
-                var _ = chart.Title.Text;
-            }
-        }
+            // Load an existing workbook if needed; otherwise create a new one.
+            Workbook workbook;
+            string inputPath = "input.xlsx";
 
-        // Save the modified workbook
-        workbook.Save("UpdatedAccent5Theme.xlsx", SaveFormat.Xlsx);
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a blank workbook
+            }
+
+            // User‑selected color for Accent5 (example: orange)
+            Color userSelectedColor = Color.FromArgb(255, 165, 0);
+
+            // Update the theme's Accent5 color
+            workbook.SetThemeColor(ThemeColorType.Accent5, userSelectedColor);
+
+            // Refresh charts so they reflect the new Accent5 color.
+            // The theme change automatically propagates; explicit fill updates are not required.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Chart chart in sheet.Charts)
+                {
+                    foreach (Series series in chart.NSeries)
+                    {
+                        // Ensure the series uses the theme color (no additional code needed).
+                        // If custom fill was previously set, it can be cleared by resetting the fill type.
+                        series.Area.FillFormat.FillType = FillType.Solid;
+                    }
+                }
+            }
+
+            // Save the modified workbook
+            string outputPath = "UpdatedAccent5Theme.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

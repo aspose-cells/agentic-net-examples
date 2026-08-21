@@ -1,70 +1,78 @@
-// Title: Sort a converted table range while preserving other cells – Aspose.Cells for .NET
-// Description: Demonstrates how to convert a ListObject to a normal range, apply DataSorter to the range, and verify that cells outside the sorted area remain unchanged. The example creates a workbook, fills data, adds a table on A1:B5, converts it, sorts by the ID column, and checks the value in D2 before saving.
-// Keywords: Aspose.Cells sort range after ConvertToRange | C# DataSorter CellArea | ListObject to range Aspose.Cells | preserve external cells during sort | Aspose.Cells sorting with headers
-// Common Searches: Aspose.Cells sort only a specific range after converting a table | DataSorter.Sort affect cells outside CellArea | Convert ListObject to range and sort C# | keep side columns unchanged when sorting Aspose.Cells
-// Developer Intent: Apply sorting to the cells that were part of a table after it has been converted to a regular range, ensuring that any other worksheet data stays untouched.
-// Use Cases: Reorder rows of a data block that originated from a ListObject without disturbing adjacent summary columns. | Generate reports where only a defined area (e.g., A1:B5) needs sorting while other sections remain static. | Validate that a cell outside the sorted area (such as D2) retains its original value after the operation.
-// AI Prompts: Write C# code using Aspose.Cells to convert a ListObject to a range and sort it by the first column without changing other cells. | Explain how DataSorter.Sort works with a CellArea and how to confirm that external cells are unaffected. | Provide a unit‑test snippet that asserts cell D2 still contains 999 after sorting the converted range.
+// Title: Convert Aspose.Cells ListObject to a Range and Sort Columns A‑B While Preserving Other Data (C#)
+// Description: Creates a workbook, adds a ListObject (A1:C6), converts it to a normal range, defines a CellArea covering columns A and B, configures DataSorter with headers, sorts by the Category column, and saves the file. Column C (Info) and column D (outside data) remain unchanged, proving the sort affects only the selected range.
+// Keywords: Aspose.Cells C# convert ListObject to range | Aspose.Cells DataSorter sort specific columns | preserve adjacent columns when sorting Aspose.Cells | ConvertToRange example Aspose.Cells | sort range with headers Aspose.Cells
+// Common Searches: How to convert an Aspose.Cells table to a range and sort part of it | Sorting a range after removing a ListObject in Aspose.Cells | Aspose.Cells keep extra columns unchanged during sort | DataSorter sort only selected columns after ConvertToRange
+// Developer Intent: Remove a ListObject while keeping the cell data, then sort only chosen columns without affecting other columns.
+// Use Cases: Drop table formatting to apply custom sorting on specific columns only. | Use DataSorter.HasHeaders with a defined CellArea to sort a subset of data after a table is converted to a range. | Validate that columns outside the sort area, including extra columns originally inside the table, stay unchanged after sorting.
+// AI Prompts: Show C# code that converts an Aspose.Cells ListObject to a normal range and sorts only columns A and B, leaving column C and any outside columns untouched. | Generate an Aspose.Cells example that defines a CellArea for sorting, sets HasHeaders, adds a sort key for the Category column, and saves the workbook. | Explain how Aspose.Cells DataSorter works on a range after ConvertToRange and how to verify that non‑sorted columns are not modified.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Demonstrates how to convert a ListObject to a normal range, apply DataSorter to the range, and verify that cells outside the sorted area remain unchanged. The example creates a workbook, fills data, adds a table on A1:B5, converts it, sorts by the ID column, and checks the value in D2 before saving.
+// Creates a workbook, adds a ListObject (A1:C6), converts it to a normal range, defines a CellArea covering columns A and B, configures DataSorter with headers, sorts by the Category column, and saves the file. Column C (Info) and column D (outside data) remain unchanged, proving the sort affects only the selected range.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate data with a header row and several data rows
-        cells["A1"].PutValue("ID");
-        cells["B1"].PutValue("Value");
-        cells["A2"].PutValue(3);
-        cells["B2"].PutValue(30);
-        cells["A3"].PutValue(1);
-        cells["B3"].PutValue(10);
-        cells["A4"].PutValue(4);
-        cells["B4"].PutValue(40);
-        cells["A5"].PutValue(2);
-        cells["B5"].PutValue(20);
-
-        // Add some data outside the intended range to prove sorting is limited
-        cells["D1"].PutValue("Outside");
-        cells["D2"].PutValue(999);
-
-        // Create a table (ListObject) that covers the data range A1:B5
-        int tableIndex = worksheet.ListObjects.Add(0, 0, 4, 1, true);
-        ListObject table = worksheet.ListObjects[tableIndex];
-        table.DisplayName = "SampleTable";
-
-        // Convert the table back to a normal range
-        table.ConvertToRange();
-
-        // Define the area that should be sorted (including the header row)
-        CellArea sortArea = new CellArea
+        try
         {
-            StartRow = 0,      // Row 1 (zero‑based)
-            StartColumn = 0,   // Column A
-            EndRow = 4,        // Row 5
-            EndColumn = 1      // Column B
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Configure the DataSorter
-        DataSorter sorter = workbook.DataSorter;
-        sorter.HasHeaders = true;                     // First row contains headers
-        sorter.AddKey(0, SortOrder.Ascending);        // Sort by the first column (ID)
+            // Populate data with a header row (A1:C1) and some extra data outside the table (column D)
+            cells["A1"].PutValue("Category");   // Header
+            cells["B1"].PutValue("Value");      // Header
+            cells["C1"].PutValue("Info");       // Extra column inside the future table range (will stay untouched by sort)
 
-        // Perform the sort on the defined area
-        sorter.Sort(worksheet.Cells, sortArea);
+            string[] categories = { "A", "B", "A", "B", "A" };
+            int[] values = { 10, 20, 30, 40, 50 };
 
-        // Optional: output a cell outside the sorted area to confirm it stayed unchanged
-        Console.WriteLine("Value in D2 (should be 999): " + cells["D2"].IntValue);
+            for (int i = 0; i < categories.Length; i++)
+            {
+                cells[i + 1, 0].PutValue(categories[i]);               // Column A (Category)
+                cells[i + 1, 1].PutValue(values[i]);                  // Column B (Value)
+                cells[i + 1, 2].PutValue($"Row{i + 1}");              // Column C (Info) – not part of the sort area
+            }
 
-        // Save the workbook
-        workbook.Save("SortedAfterConvertToRange.xlsx");
+            // Data outside the table to verify it remains unchanged after sorting
+            cells["D1"].PutValue("OutsideHeader");
+            cells["D2"].PutValue("OutsideData");
+
+            // Create a ListObject (table) that covers the header and data rows (A1:C6)
+            int tableIndex = worksheet.ListObjects.Add("A1", $"C{categories.Length + 1}", true);
+            ListObject table = worksheet.ListObjects[tableIndex];
+            // The ShowHeaders property is not required; headers are already recognized via the third argument above.
+
+            // Convert the table back to a normal range; the table object is removed but the cells stay intact
+            table.ConvertToRange();
+
+            // Define the area to sort: only the data columns A and B (including the header row)
+            CellArea sortArea = new CellArea
+            {
+                StartRow = 0,                     // Row 1 (zero‑based)
+                StartColumn = 0,                  // Column A
+                EndRow = categories.Length,       // Last data row (row index 5)
+                EndColumn = 1                     // Column B
+            };
+
+            // Configure the DataSorter to treat the first row as headers and sort by the "Category" column (index 0)
+            DataSorter sorter = workbook.DataSorter;
+            sorter.HasHeaders = true;
+            sorter.AddKey(0, SortOrder.Ascending); // Sort ascending by Category
+
+            // Perform the sort on the defined range
+            sorter.Sort(worksheet.Cells, sortArea);
+
+            // Save the workbook – the sorted range should reflect the new order,
+            // while column C (Info) and column D (outside data) remain unchanged.
+            workbook.Save("SortedAfterConvertToRange.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

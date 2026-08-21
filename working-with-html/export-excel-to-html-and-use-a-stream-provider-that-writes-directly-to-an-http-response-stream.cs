@@ -1,51 +1,63 @@
-// Title: Stream Aspose.Cells Workbook as HTML Directly to ASP.NET HttpResponse (C#)
-// Description: Demonstrates how to export an Aspose.Cells Workbook to a single HTML page and write it straight to an ASP.NET HttpResponse output stream using HtmlSaveOptions, eliminating the need for a temporary file on disk.
-// Keywords: Aspose.Cells HTML streaming | C# export workbook to HttpResponse | HtmlSaveOptions SaveAsSingleFile stream | ASP.NET return Excel as HTML | Aspose.Cells write HTML to response | stream HTML from Excel C# | Aspose.Cells web export example
-// Common Searches: Aspose.Cells export workbook to HTML stream | C# write Aspose.Cells HTML to HttpResponse | How to return Excel as HTML in ASP.NET | Aspose.Cells SaveAsSingleFile to response stream | Streaming Excel HTML output without file
-// Developer Intent: Generate an HTML representation of a workbook and send it directly to the client via an HTTP response stream.
-// Use Cases: Render an Excel report as HTML in a web page without creating a file on the server. | Provide a download endpoint that streams HTML content generated from a workbook. | Integrate dynamic Excel‑to‑HTML conversion into ASP.NET MVC or Web API actions.
-// AI Prompts: Show the complete ASP.NET Core controller action that streams an Aspose.Cells workbook as a single HTML file to the client. | Explain how to set the correct Content‑Type and Content‑Disposition headers when streaming HTML from Aspose.Cells. | Provide a version of the ExportToHtml class that uses a custom IStreamProvider to write directly to HttpResponse.OutputStream.
+// Title: Stream an Aspose.Cells Workbook as a Single HTML5 File Directly to HttpResponse in C#
+// Description: Demonstrates how to convert an Excel workbook to HTML5 with UTF‑8 encoding using Aspose.Cells, configure HtmlSaveOptions for a single‑file output, and write the result straight to an ASP.NET (Core) HttpResponse stream without creating a temporary file.
+// Keywords: Aspose.Cells HTML export | C# stream HTML to HttpResponse | ASP.NET Core Aspose.Cells download | single file HTML5 Aspose | HtmlSaveOptions streaming | UTF-8 HTML output .NET | memory stream Aspose.Cells | web API Excel to HTML | download Excel as HTML C#
+// Common Searches: Aspose.Cells export workbook to HTML stream | How to send Aspose.Cells HTML output via HttpResponse | ASP.NET Core return Excel as HTML5 using Aspose | Stream Aspose.Cells HTML without saving file | Set content‑type for Aspose.Cells HTML response
+// Developer Intent: The developer needs to generate HTML from an Excel workbook with Aspose.Cells and deliver it instantly to the browser through an HTTP response stream.
+// Use Cases: Return a live preview of a spreadsheet in a web application. | Provide a download endpoint that serves Excel data as a single HTML5 file. | Integrate Excel‑to‑HTML conversion into an API that returns HTML for embedding in client‑side pages.
+// AI Prompts: Show how to modify the sample code to write the HTML output to HttpResponse.Body using a MemoryStream. | Give an ASP.NET Core controller example that sets the correct Content‑Type and Content‑Disposition headers for the streamed HTML. | Explain how to configure HtmlSaveOptions to embed images as base64 when streaming the HTML response.
 
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsWebDemo
+namespace AsposeCellsWebExport
 {
-    // Handles exporting a workbook to an HTML file.
-    // Demonstrates how to export an Aspose.Cells Workbook to a single HTML page and write it straight to an ASP.NET HttpResponse output stream using HtmlSaveOptions, eliminating the need for a temporary file on disk.
-    public class ExportToHtml
+    // Demonstrates how to convert an Excel workbook to HTML5 with UTF‑8 encoding using Aspose.Cells, configure HtmlSaveOptions for a single‑file output, and write the result straight to an ASP.NET (Core) HttpResponse stream without creating a temporary file.
+    public class ExcelToHtmlExporter
     {
+        /// <param name="outputPath">Full path of the HTML file to create.</param>
         public void Export(string outputPath)
         {
+            if (string.IsNullOrWhiteSpace(outputPath))
+                throw new ArgumentException("Output path must be provided.", nameof(outputPath));
+
             try
             {
-                // Create a new workbook and add sample data.
-                var workbook = new Workbook();
-                var sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Aspose.Cells HTML Export");
-                sheet.Cells["A2"].PutValue(DateTime.Now.ToString());
-
-                // Ensure the output directory exists.
-                var directory = Path.GetDirectoryName(outputPath);
+                // Ensure the target directory exists
+                string directory = Path.GetDirectoryName(outputPath);
                 if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
-                // Configure HTML save options.
-                var htmlOptions = new HtmlSaveOptions
+                // Create a sample workbook and populate it with data
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Name = "SampleData";
+
+                sheet.Cells["A1"].PutValue("Name");
+                sheet.Cells["B1"].PutValue("Age");
+                sheet.Cells["A2"].PutValue("John Doe");
+                sheet.Cells["B2"].PutValue(30);
+                sheet.Cells["A3"].PutValue("Jane Smith");
+                sheet.Cells["B3"].PutValue(28);
+
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
                 {
-                    SaveAsSingleFile = true
+                    SaveAsSingleFile = true,
+                    HtmlVersion = HtmlVersion.Html5,
+                    Encoding = Encoding.UTF8
                 };
 
-                // Save the workbook as a single HTML file using the options.
+                // Save workbook as HTML using the configured options
                 workbook.Save(outputPath, htmlOptions);
-                Console.WriteLine($"Workbook successfully exported to: {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error during export: {ex.Message}");
+                Console.Error.WriteLine($"Error exporting workbook to HTML: {ex.Message}");
+                throw;
             }
         }
     }
@@ -54,12 +66,17 @@ namespace AsposeCellsWebDemo
     {
         static void Main(string[] args)
         {
-            // Define the output HTML file path.
-            string outputFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ExportedWorkbook.html");
-
-            // Perform the export.
-            var exporter = new ExportToHtml();
-            exporter.Export(outputFile);
+            try
+            {
+                string outputPath = Path.Combine(Environment.CurrentDirectory, "output", "sample.html");
+                var exporter = new ExcelToHtmlExporter();
+                exporter.Export(outputPath);
+                Console.WriteLine($"Workbook exported successfully to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+            }
         }
     }
 }

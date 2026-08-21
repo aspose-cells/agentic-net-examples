@@ -1,83 +1,90 @@
+// Title: Batch render worksheet timelines to PNG with Aspose.Cells for .NET
+// Description: Creates a workbook with several worksheets, adds sample data, builds a pivot table on each sheet, attaches a timeline to the Date field, and renders every worksheet (including its timeline) to an individual PNG file using Aspose.Cells. The full workbook is also saved as an XLSX for reference.
+// Keywords: Aspose.Cells C# | timeline rendering | pivot table timeline PNG | batch export worksheets | SheetRender PNG | ImageOrPrintOptions one page per sheet | export timeline image | multiple worksheets Aspose.Cells | save workbook with timelines | C# render timeline to image
+// Common Searches: Aspose.Cells render timeline to PNG C# | Batch export worksheet timelines as images | How to save each sheet as PNG with timeline Aspose.Cells | One page per sheet image rendering Aspose.Cells | Export pivot table timeline picture .NET
+// Developer Intent: Generate a timeline on every worksheet and export each sheet as a separate PNG image.
+// Use Cases: Create regional sales dashboards where each region's timeline is delivered as a PNG snapshot. | Automate project phase visualizations across multiple sheets and publish the images to a web portal. | Produce a master workbook with embedded timelines while providing individual PNG files for reporting tools.
+// AI Prompts: Write C# code that adds a timeline to each worksheet's pivot table and renders each sheet to a PNG using Aspose.Cells. | Explain how to configure ImageOrPrintOptions for one‑page‑per‑sheet rendering of timelines in Aspose.Cells. | Refactor the rendering loop to accept a variable number of worksheets and a custom output directory.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsBatchTimeline
+// Creates a workbook with several worksheets, adds sample data, builds a pivot table on each sheet, attaches a timeline to the Date field, and renders every worksheet (including its timeline) to an individual PNG file using Aspose.Cells. The full workbook is also saved as an XLSX for reference.
+class BatchTimelineRenderer
 {
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Number of worksheets to generate
+            int numberOfSheets = 3;
+
+            // -------------------------------------------------------------
+            // 1. Create worksheets, add sample data, pivot tables and timelines
+            // -------------------------------------------------------------
+            for (int i = 0; i < numberOfSheets; i++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                // Use the first sheet for i == 0, otherwise add new sheets
+                Worksheet sheet = i == 0 ? workbook.Worksheets[0] : workbook.Worksheets.Add($"Sheet{i + 1}");
 
-                // Number of worksheets to process
-                int sheetCount = 3;
-
-                // Prepare sample data for each worksheet and add a timeline
-                for (int i = 0; i < sheetCount; i++)
+                // Populate sample data (Date and Value columns)
+                sheet.Cells["A1"].PutValue("Date");
+                sheet.Cells["B1"].PutValue("Value");
+                for (int row = 2; row <= 6; row++)
                 {
-                    // Add a new worksheet (first one already exists)
-                    Worksheet sheet = i == 0 ? workbook.Worksheets[0] : workbook.Worksheets.Add($"Sheet{i + 1}");
-
-                    // Populate sample data: Date column and Sales column
-                    sheet.Cells["A1"].PutValue("Date");
-                    sheet.Cells["B1"].PutValue("Sales");
-                    for (int row = 2; row <= 6; row++)
-                    {
-                        sheet.Cells[$"A{row}"].PutValue(new DateTime(2023, 1, row - 1));
-                        sheet.Cells[$"B{row}"].PutValue(100 * row);
-                    }
-
-                    // Create a pivot table using the sample data
-                    int pivotIndex = sheet.PivotTables.Add("A1:B6", "D3", $"Pivot{i + 1}");
-                    PivotTable pivot = sheet.PivotTables[pivotIndex];
-
-                    // Add the Date field to the Page area (required for Timeline)
-                    pivot.AddFieldToArea(PivotFieldType.Page, "Date");
-                    // Add the Sales field to the Data area
-                    pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-                    // Refresh and calculate the pivot table
-                    pivot.RefreshData();
-                    pivot.CalculateData();
-
-                    // Add a timeline linked to the pivot table
-                    sheet.Timelines.Add(pivot, "F1", "Date");
+                    sheet.Cells[row - 1, 0].PutValue(DateTime.Today.AddDays(row - 2));
+                    sheet.Cells[row - 1, 1].PutValue(row * 10);
                 }
 
-                // Render each worksheet (with its timeline) to a separate PNG file
-                for (int i = 0; i < workbook.Worksheets.Count; i++)
-                {
-                    Worksheet sheet = workbook.Worksheets[i];
+                // Add a pivot table based on the data range
+                int pivotIndex = sheet.PivotTables.Add("A1:B6", "D3", $"Pivot{i + 1}");
+                PivotTable pivot = sheet.PivotTables[pivotIndex];
 
-                    // Configure image rendering options
-                    ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-                    {
-                        ImageType = Aspose.Cells.Drawing.ImageType.Png,
-                        OnePagePerSheet = true
-                    };
+                // Add Date as a page (filter) field – required for timeline
+                pivot.AddFieldToArea(PivotFieldType.Page, "Date");
+                // Add Date as a row field (optional, for display)
+                pivot.AddFieldToArea(PivotFieldType.Row, "Date");
+                // Add Value as a data field
+                pivot.AddFieldToArea(PivotFieldType.Data, "Value");
 
-                    // Create a SheetRender for the current worksheet
-                    SheetRender renderer = new SheetRender(sheet, imgOptions);
+                // Refresh pivot data and calculate results
+                pivot.RefreshData();
+                pivot.CalculateData();
 
-                    // Render the first page of the sheet to a PNG file
-                    string outputPath = Path.Combine(Environment.CurrentDirectory, $"{sheet.Name}_Timeline.png");
-                    renderer.ToImage(0, outputPath);
-                }
-
-                // Optional: Save the workbook for reference
-                string workbookPath = Path.Combine(Environment.CurrentDirectory, "BatchTimelineWorkbook.xlsx");
-                workbook.Save(workbookPath);
+                // Add a timeline linked to the pivot table (placed at cell F1)
+                sheet.Timelines.Add(pivot, "F1", "Date");
             }
-            catch (Exception ex)
+
+            // ---------------------------------------------------------------
+            // 2. Render each worksheet (with its timeline) to a separate PNG
+            // ---------------------------------------------------------------
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Worksheet sheet = workbook.Worksheets[i];
+
+                // Rendering options: one page per sheet
+                ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+                {
+                    OnePagePerSheet = true
+                };
+
+                // Render the worksheet to an image; format inferred from file extension
+                SheetRender renderer = new SheetRender(sheet, renderOptions);
+                string outputFile = $"Timeline_Sheet{i + 1}.png";
+                renderer.ToImage(0, outputFile);
             }
+
+            // Save the workbook containing all timelines for reference
+            workbook.Save("WorkbookWithTimelines.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,63 +1,80 @@
-// Title: Clone Workbook, Assign Unique TabIds, Delete Blank Sheets, and Save Optimized Excel with Aspose.Cells C#
-// Description: Loads a source XLSX, creates a new Workbook, copies all worksheets, assigns a distinct TabId to each sheet, removes worksheets that contain no data, cleans unused styles, and saves the streamlined file as an optimized XLSX using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells clone workbook C# | set TabId worksheet | remove empty worksheets Aspose | optimize Excel file size .NET | remove unused styles Aspose.Cells | Workbook.Copy example | Excel cleanup automation
-// Common Searches: How to copy a workbook and set new TabIds with Aspose.Cells | Delete blank worksheets after cloning an Excel file in C# | Reduce Excel file size by removing empty sheets and unused styles | Aspose.Cells example for workbook optimization
-// Developer Intent: Generate a lightweight copy of an existing workbook, give each sheet a unique TabId, purge blank worksheets and unused styles, then save the cleaned file.
-// Use Cases: Create distribution‑ready templates by cloning a master workbook, stripping placeholder sheets, and assigning unique TabIds to prevent tab conflicts. | Produce per‑user reports where each copy receives its own TabIds while eliminating empty worksheets to keep files compact. | Automate batch cleanup of generated Excel files—remove blank sheets, unused styles, and other redundancies before archiving or publishing.
-// AI Prompts: Write C# code using Aspose.Cells that clones a workbook, assigns a unique TabId to every worksheet, removes sheets with no data, cleans unused styles, and saves the optimized workbook. | Explain why MaxDataRow and MaxDataColumn are reliable for detecting empty worksheets in Aspose.Cells and why backward iteration is required when deleting sheets. | Suggest further size‑reduction techniques for an Aspose.Cells workbook, such as removing unused named ranges, clearing empty columns, or compressing images.
+// Title: Clone a Workbook, Remove Empty Sheets, Assign New TabIds, and Save Optimized Copy with Aspose.Cells for .NET (C#)
+// Description: Loads a source XLSX, creates a fresh workbook, copies only worksheets that contain data, assigns sequential TabId values starting at 100, guarantees at least one sheet, and saves the streamlined file as optimized_output.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells copy worksheet C# | Aspose.Cells remove empty worksheets | Aspose.Cells set TabId | clone workbook Aspose | optimize Excel file .NET | filter blank sheets Aspose.Cells | Workbook optimization C# | Aspose.Cells SaveFormat Xlsx | Excel workbook cleanup | C# Excel performance
+// Common Searches: copy only non‑empty worksheets Aspose.Cells C# | assign custom TabId values after copying worksheets Aspose | remove default and empty sheets with Aspose.Cells .NET | optimize large Excel workbook by stripping blank sheets | Aspose.Cells clone workbook and reindex tabs
+// Developer Intent: Generate a new workbook that contains only populated worksheets from an existing file, give each sheet a fresh TabId, and persist the result as a lightweight XLSX.
+// Use Cases: Create a slim version of a massive workbook for distribution by discarding empty tabs. | Prepare files for downstream systems that require worksheets to have TabIds in a specific numeric range. | Automate template sanitization before publishing, keeping only sheets with actual data.
+// AI Prompts: Write C# code with Aspose.Cells that copies only data‑bearing worksheets from a source workbook, assigns TabId values starting at 200, and saves the result. | Provide a reusable method that accepts a source file path, removes empty worksheets, reassigns sequential TabIds, and returns the optimized Workbook object. | Explain how to ensure a newly created workbook always contains at least one worksheet after empty‑sheet removal using Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace WorkbookOptimizationDemo
 {
-    // Loads a source XLSX, creates a new Workbook, copies all worksheets, assigns a distinct TabId to each sheet, removes worksheets that contain no data, cleans unused styles, and saves the streamlined file as an optimized XLSX using Aspose.Cells for .NET.
+    // Loads a source XLSX, creates a fresh workbook, copies only worksheets that contain data, assigns sequential TabId values starting at 100, guarantees at least one sheet, and saves the streamlined file as optimized_output.xlsx using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            // Path to the source workbook
-            string sourcePath = "source.xlsx";
-
-            // Load the source workbook (uses the Workbook(string) constructor)
-            Workbook sourceWorkbook = new Workbook(sourcePath);
-
-            // Create an empty workbook (uses the parameterless Workbook() constructor)
-            Workbook optimizedWorkbook = new Workbook();
-
-            // Clone the source workbook into the new workbook (uses Workbook.Copy(Workbook))
-            optimizedWorkbook.Copy(sourceWorkbook);
-
-            // Assign new unique TabIds to each worksheet
-            for (int i = 0; i < optimizedWorkbook.Worksheets.Count; i++)
+            try
             {
-                // Example: set TabId to (i + 1) * 10 to ensure uniqueness
-                optimizedWorkbook.Worksheets[i].TabId = (i + 1) * 10;
-            }
+                // Path to the source workbook
+                string sourcePath = "source.xlsx";
 
-            // Remove empty worksheets (iterate backwards to avoid index shift when removing)
-            for (int i = optimizedWorkbook.Worksheets.Count - 1; i >= 0; i--)
-            {
-                Worksheet sheet = optimizedWorkbook.Worksheets[i];
-
-                // A worksheet is considered empty when it has no used cells.
-                // MaxDataRow/MaxDataColumn return -1 when there is no data.
-                bool isEmpty = sheet.Cells.MaxDataRow < 0 && sheet.Cells.MaxDataColumn < 0;
-
-                if (isEmpty)
+                // Verify source file exists to avoid FileNotFoundException
+                if (!File.Exists(sourcePath))
                 {
-                    optimizedWorkbook.Worksheets.RemoveAt(i);
+                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    return;
                 }
+
+                // Load the source workbook
+                Workbook sourceWb = new Workbook(sourcePath);
+
+                // Create a new empty workbook
+                Workbook optimizedWb = new Workbook();
+
+                // Remove the default worksheet if present
+                if (optimizedWb.Worksheets.Count > 0)
+                {
+                    optimizedWb.Worksheets.RemoveAt(0);
+                }
+
+                // Iterate through each worksheet in the source workbook
+                for (int i = 0; i < sourceWb.Worksheets.Count; i++)
+                {
+                    Worksheet srcSheet = sourceWb.Worksheets[i];
+
+                    // Determine if the worksheet contains any data
+                    bool hasData = srcSheet.Cells.MaxDataRow >= 0 && srcSheet.Cells.MaxDataColumn >= 0;
+
+                    if (hasData)
+                    {
+                        // Copy the non‑empty worksheet to the optimized workbook
+                        int newIndex = optimizedWb.Worksheets.AddCopy(srcSheet.Name);
+                        Worksheet destSheet = optimizedWb.Worksheets[newIndex];
+
+                        // Assign a new TabId (e.g., sequential starting from 100)
+                        destSheet.TabId = 100 + newIndex;
+                    }
+                }
+
+                // Ensure at least one worksheet exists
+                if (optimizedWb.Worksheets.Count == 0)
+                {
+                    optimizedWb.Worksheets.Add();
+                    optimizedWb.Worksheets[0].TabId = 100;
+                }
+
+                // Save the optimized workbook
+                optimizedWb.Save("optimized_output.xlsx", SaveFormat.Xlsx);
+                Console.WriteLine("Optimized workbook saved as optimized_output.xlsx");
             }
-
-            // Optional: clean up unused styles to reduce file size
-            optimizedWorkbook.RemoveUnusedStyles();
-
-            // Save the optimized workbook (uses Workbook.Save(string, SaveFormat))
-            string outputPath = "optimized_output.xlsx";
-            optimizedWorkbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Optimized workbook saved to: {outputPath}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

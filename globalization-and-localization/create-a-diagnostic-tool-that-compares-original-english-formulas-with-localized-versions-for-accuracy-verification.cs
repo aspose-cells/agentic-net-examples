@@ -1,136 +1,81 @@
-// Title: C# Diagnostic Tool to Compare English Formula and FormulaLocal in Excel with Aspose.Cells
-// Description: A C# program that loads an Excel workbook, adds a "FormulaComparison" sheet, scans every cell, extracts the standard English formula (Formula) and the locale‑specific formula (FormulaLocal), checks for equality, records the cell address, both formulas, and a match flag, then saves the workbook with the diagnostic report.
-// Keywords: Aspose.Cells | C# | .NET | Formula | FormulaLocal | Excel formula localization | globalization | localization QA | diagnostic report | workbook comparison
-// Common Searches: Aspose.Cells compare Formula and FormulaLocal | C# generate formula localization report | verify localized formulas in Excel using Aspose.Cells | Excel formula localization diagnostic .NET | check FormulaLocal vs Formula with Aspose.Cells
-// Developer Intent: Generate a workbook that lists each formula cell and shows whether its English and localized formulas match.
-// Use Cases: Detect translation errors where FormulaLocal differs from the original Formula during localization QA. | Provide language engineers with a ready‑to‑review report of formula consistency across all worksheets. | Automate pre‑release verification of formula localization in Excel templates.
-// AI Prompts: Show how to highlight mismatched cells with a red background in the diagnostic report. | Provide code to export the comparison results to a CSV file instead of adding a new worksheet. | Explain how to handle cells that raise errors when comparing Formula and FormulaLocal while still logging the discrepancy.
+// Title: C# Tool to Compare English and Localized Excel Formulas with Aspose.Cells
+// Description: Loads an Excel file, sets a target region (e.g., Germany), scans every formula cell and prints the standard English formula (Formula) together with its locale‑specific version (FormulaLocal). The sample also extracts the localized function name and converts it to the English equivalent via Aspose.Cells globalization settings, then optionally saves the workbook.
+// Keywords: Aspose.Cells | C# formula localization | Formula vs FormulaLocal | Excel function translation | globalization settings | localized Excel formulas | QA Excel multilingual | German Excel functions
+// Common Searches: compare Formula and FormulaLocal Aspose.Cells C# | map German Excel function name to English with Aspose | list localized formulas in a workbook using Aspose.Cells | verify Excel formula translation programmatically | extract function name from Excel formula C#
+// Developer Intent: Provide a quick diagnostic utility that enumerates each cell’s English formula and its localized counterpart, and optionally resolves the localized function name back to the standard English name.
+// Use Cases: Validate that a German‑localized workbook uses the correct English functions before release. | Generate a QA report showing cell address, English formula, localized formula, and mapped standard function. | Detect unsupported or mismatched localized functions across multilingual Excel templates.
+// AI Prompts: Create C# code that logs differences between cell.Formula and cell.FormulaLocal for every formula cell in a workbook. | Demonstrate how to use Aspose.Cells.GlobalizationSettings.GetStandardFunctionName to translate a German function like 'SUMME' to its English name. | Write a method that exports cell address, English formula, localized formula, and mapped standard function to a CSV file.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace FormulaLocalizationDiagnostic
+// Loads an Excel file, sets a target region (e.g., Germany), scans every formula cell and prints the standard English formula (Formula) together with its locale‑specific version (FormulaLocal). The sample also extracts the localized function name and converts it to the English equivalent via Aspose.Cells globalization settings, then optionally saves the workbook.
+class FormulaLocalizationDiagnostic
 {
-    // A C# program that loads an Excel workbook, adds a "FormulaComparison" sheet, scans every cell, extracts the standard English formula (Formula) and the locale‑specific formula (FormulaLocal), checks for equality, records the cell address, both formulas, and a match flag, then saves the workbook with the diagnostic report.
-    public class DiagnosticTool
+    static void Main()
     {
-        private readonly string _inputPath;
-        private readonly string _outputPath;
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx"); // load rule
 
-        public DiagnosticTool(string inputPath, string outputPath)
-        {
-            _inputPath = inputPath;
-            _outputPath = outputPath;
-        }
+        // Set a locale to demonstrate localized formulas (e.g., German)
+        workbook.Settings.Region = CountryCode.Germany;
 
-        public void Run()
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Determine the used range of the worksheet
+        int maxRow = worksheet.Cells.MaxDataRow;
+        int maxCol = worksheet.Cells.MaxDataColumn;
+
+        // Iterate through all cells that contain data
+        for (int row = 0; row <= maxRow; row++)
         {
-            try
+            for (int col = 0; col <= maxCol; col++)
             {
-                // Verify input file exists
-                if (!File.Exists(_inputPath))
-                    throw new FileNotFoundException($"Input workbook not found: {_inputPath}");
+                Cell cell = worksheet.Cells[row, col];
 
-                // Ensure output directory exists
-                string outDir = Path.GetDirectoryName(_outputPath);
-                if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
-                    Directory.CreateDirectory(outDir);
-
-                // Load workbook (lifecycle rule: load)
-                Workbook workbook = new Workbook(_inputPath);
-
-                // Add report worksheet
-                int reportIndex = workbook.Worksheets.Add();
-                Worksheet reportSheet = workbook.Worksheets[reportIndex];
-                reportSheet.Name = "FormulaComparison";
-
-                // Write header row
-                reportSheet.Cells["A1"].PutValue("Cell");
-                reportSheet.Cells["B1"].PutValue("English Formula (Formula)");
-                reportSheet.Cells["C1"].PutValue("Localized Formula (FormulaLocal)");
-                reportSheet.Cells["D1"].PutValue("Match?");
-
-                int reportRow = 1; // zero‑based index (row 2 in Excel)
-
-                // Iterate through all worksheets and cells
-                foreach (Worksheet ws in workbook.Worksheets)
+                // Process only cells that have a formula
+                if (cell.IsFormula)
                 {
-                    // Skip the report sheet itself
-                    if (ws.Name == "FormulaComparison") continue;
+                    // English (standard) formula
+                    string englishFormula = cell.Formula;
 
-                    int maxRow = ws.Cells.MaxDataRow;
-                    int maxCol = ws.Cells.MaxDataColumn;
+                    // Localized formula according to the workbook's region
+                    string localFormula = cell.FormulaLocal;
 
-                    for (int row = 0; row <= maxRow; row++)
+                    Console.WriteLine($"Cell {cell.Name}:");
+                    Console.WriteLine($"  English Formula : {englishFormula}");
+                    Console.WriteLine($"  Localized Formula: {localFormula}");
+
+                    // Optional verification: map the localized function name back to the standard name
+                    string localFunc = ExtractFunctionName(localFormula);
+                    if (!string.IsNullOrEmpty(localFunc))
                     {
-                        for (int col = 0; col <= maxCol; col++)
-                        {
-                            Cell cell = ws.Cells[row, col];
-                            if (cell.IsFormula)
-                            {
-                                string englishFormula = cell.Formula;          // Standard (en‑US) formula
-                                string localizedFormula = cell.FormulaLocal;   // Locale‑specific formula
-
-                                // Simple verification: if both strings are equal after trimming, consider it a match.
-                                bool isMatch = string.Equals(
-                                    englishFormula?.Trim(),
-                                    localizedFormula?.Trim(),
-                                    StringComparison.OrdinalIgnoreCase);
-
-                                // Write the comparison result to the report sheet
-                                reportSheet.Cells[reportRow, 0].PutValue($"{ws.Name}!{cell.Name}");
-                                reportSheet.Cells[reportRow, 1].PutValue(englishFormula);
-                                reportSheet.Cells[reportRow, 2].PutValue(localizedFormula);
-                                reportSheet.Cells[reportRow, 3].PutValue(isMatch ? "Yes" : "No");
-
-                                reportRow++;
-                            }
-                        }
+                        string standardFunc = workbook.Settings.GlobalizationSettings.GetStandardFunctionName(localFunc);
+                        Console.WriteLine($"  Mapped Standard Function: {standardFunc}");
                     }
                 }
-
-                // Save the workbook with the diagnostic report (lifecycle rule: save)
-                workbook.Save(_outputPath);
-                Console.WriteLine($"Diagnostic report saved to {_outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions (log, rethrow, or display as needed)
-                Console.Error.WriteLine($"Error during diagnostic run: {ex.Message}");
-                throw;
             }
         }
+
+        // Save the workbook after processing (optional)
+        workbook.Save("output.xlsx"); // save rule
     }
 
-    public class Program
+    // Helper method to extract the function name from a formula string (e.g., "=SUMME(A1:A2)" -> "SUMME")
+    static string ExtractFunctionName(string formula)
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                string inputPath;
-                string outputPath;
+        if (string.IsNullOrEmpty(formula))
+            return null;
 
-                if (args.Length >= 2)
-                {
-                    inputPath = args[0];
-                    outputPath = args[1];
-                }
-                else
-                {
-                    // Default paths for quick testing
-                    inputPath = "input.xlsx";
-                    outputPath = "output_with_report.xlsx";
-                }
+        // Remove leading '=' if present
+        string trimmed = formula.TrimStart('=');
 
-                var tool = new DiagnosticTool(inputPath, outputPath);
-                tool.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
-            }
-        }
+        // Function name ends at the first '(' character
+        int idx = trimmed.IndexOf('(');
+        if (idx > 0)
+            return trimmed.Substring(0, idx);
+
+        // If no '(' found, the whole string is considered the function name
+        return trimmed;
     }
 }

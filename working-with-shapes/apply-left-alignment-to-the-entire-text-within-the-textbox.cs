@@ -1,10 +1,10 @@
-// Title: Aspose.Cells C# Example – Left Align Text in a TextBox Shape
-// Description: Shows how to create a workbook, add a TextBox shape, insert multiline text, set each paragraph’s AlignmentType to TextAlignmentType.Left with Aspose.Cells for .NET, and save the workbook as an .xlsx file.
-// Keywords: Aspose.Cells | C# textbox alignment | TextBox left alignment | TextParagraph AlignmentType | Aspose.Cells .NET example | shape text formatting | Excel left aligned text | Aspose.Cells GitHub | coding example | Aspose.Cells API
-// Common Searches: left align text in Aspose.Cells textbox C# | Aspose.Cells set paragraph alignment .NET | how to align text inside a shape using Aspose.Cells | Aspose.Cells TextBox alignment example | C# code to left‑justify textbox paragraphs in Excel
-// Developer Intent: Apply left alignment to every paragraph inside a TextBox shape when generating an Excel file with Aspose.Cells for .NET.
-// Use Cases: Generating reports where notes in a textbox must be left‑aligned for readability. | Creating invoice templates with description fields inside a textbox that require consistent left alignment. | Automating formatting of user comments placed in a textbox to maintain a uniform appearance across exported workbooks.
-// AI Prompts: Provide a C# snippet that left‑aligns all paragraphs in an Aspose.Cells TextBox shape and saves the workbook. | Explain how to modify the example to use center alignment instead of left alignment for textbox paragraphs. | Show how to retrieve the TextParagraphCollection from a Shape and set AlignmentType for each paragraph using Aspose.Cells.
+// Title: Left‑align all paragraphs in a textbox shape using Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds a textbox shape, inserts multiline text, iterates through the TextParagraphCollection, sets each paragraph's AlignmentType to TextAlignmentType.Left, and saves the file as an .xlsx document.
+// Keywords: Aspose.Cells C# textbox alignment | set left alignment Aspose.Cells | TextParagraph AlignmentType Left | Excel shape text formatting .NET | Aspose.Cells TextBox example
+// Common Searches: Aspose.Cells left align textbox text C# | How to set paragraph alignment in an Excel shape using Aspose.Cells | C# code to left‑justify text in a textbox shape | Change textbox paragraph alignment Aspose.Cells .NET
+// Developer Intent: The developer needs to left‑align every paragraph inside a textbox shape in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Design reports where textbox captions must be left‑justified for readability. | Build invoice templates with left‑aligned notes inside multiline textboxes. | Automate worksheet templates that require consistent left alignment of textbox content.
+// AI Prompts: Show how to left‑align all paragraphs in a textbox shape with Aspose.Cells for .NET (C#). | Provide a C# snippet to change a textbox's text alignment to right or center using Aspose.Cells. | Explain how to access and modify TextParagraph objects in a shape's TextBody with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
@@ -13,54 +13,51 @@ using Aspose.Cells.Drawing.Texts;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to create a workbook, add a TextBox shape, insert multiline text, set each paragraph’s AlignmentType to TextAlignmentType.Left with Aspose.Cells for .NET, and save the workbook as an .xlsx file.
+    // Creates a workbook, adds a textbox shape, inserts multiline text, iterates through the TextParagraphCollection, sets each paragraph's AlignmentType to TextAlignmentType.Left, and saves the file as an .xlsx document.
     public class TextBoxLeftAlignmentDemo
-    {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add a text box shape to the worksheet
-                // Parameters: upper left row, upper left column, top, left, width, height (in points)
-                Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 100, 300, 200, 100);
-
-                // Set multiline text in the text box
-                textBox.Text = "First Line\nSecond Line\nThird Line";
-
-                // Retrieve all paragraphs in the text box
-                TextParagraphCollection paragraphs = textBox.TextBody.TextParagraphs;
-
-                // Apply left alignment to each paragraph
-                foreach (TextParagraph paragraph in paragraphs)
-                {
-                    paragraph.AlignmentType = TextAlignmentType.Left;
-                }
-
-                // Save the workbook to a file
-                string outputPath = "TextBoxLeftAlignmentDemo.xlsx";
-                workbook.Save(outputPath);
-
-                Console.WriteLine($"Text box with left-aligned text saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
     {
         public static void Main(string[] args)
         {
-            TextBoxLeftAlignmentDemo.Run();
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add a text box shape to the worksheet
+            // Parameters: upper left row, upper left column, upper left offset (pixels),
+            // lower right row, lower right column, lower right offset (pixels)
+            Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 100, 300, 200, 100);
+
+            // Set multiline text inside the text box
+            textBox.Text = "First Line\nSecond Line\nThird Line";
+
+            // Retrieve all paragraphs of the text box
+            TextParagraphCollection paragraphs = textBox.TextBody.TextParagraphs;
+
+            // Apply left alignment to each paragraph
+            foreach (TextParagraph paragraph in paragraphs)
+            {
+                paragraph.AlignmentType = TextAlignmentType.Left;
+            }
+
+            // Save the workbook
+            string outputPath = "TextBoxLeftAlignmentDemo.xlsx";
+            workbook.Save(outputPath);
+
+            Console.WriteLine($"Text box with left-aligned text saved successfully to '{outputPath}'.");
         }
     }
 }

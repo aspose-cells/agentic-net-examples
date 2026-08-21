@@ -1,47 +1,45 @@
-// Title: Set left alignment for the first line and center alignment for the second line of a TextBox in Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds a TextBox shape with two lines, retrieves the TextParagraphCollection, applies left alignment to the first paragraph and center alignment to the second, then saves the workbook as an XLSX file.
-// Keywords: Aspose.Cells | C# | TextBox | paragraph alignment | TextAlignmentType | left alignment | center alignment | shape text formatting | Aspose.Cells .NET | TextParagraphCollection
-// Common Searches: Aspose.Cells align first line left second line center | C# set paragraph alignment in TextBox Aspose.Cells | How to change text alignment inside a shape using Aspose.Cells | TextBox paragraph alignment .NET | Apply different alignments to lines in Aspose.Cells textbox
-// Developer Intent: Apply distinct horizontal alignments to individual paragraphs within a TextBox shape using Aspose.Cells for .NET.
-// Use Cases: Generate a report where the title line is left‑aligned and the subtitle is centered inside a textbox for visual hierarchy. | Create a dashboard sheet with a textbox that contains a header left‑aligned and a description centered to improve readability. | Automate spreadsheet templates that require different alignments for multiple lines within a shape.
-// AI Prompts: Show C# code that sets left alignment for the first paragraph and center alignment for the second paragraph of a TextBox using Aspose.Cells. | Explain how to access a TextBox's TextParagraphCollection and modify the AlignmentType of specific lines in Aspose.Cells for .NET. | Provide an example of applying different horizontal alignments to multiple lines inside a textbox shape in a workbook.
+// Title: Align TextBox Paragraphs in Aspose.Cells for .NET – Left‑align First Line, Center‑align Second Line
+// Description: Creates a workbook, adds a TextBox shape, inserts two lines of text, and sets the first paragraph to left alignment and the second paragraph to center alignment using Aspose.Cells for .NET before saving the file.
+// Keywords: Aspose.Cells TextBox alignment | C# paragraph alignment Aspose.Cells | left align first line Aspose.Cells | center align second line Aspose.Cells | multiline textbox shape .NET | Excel shape text formatting | Aspose.Cells example C#
+// Common Searches: Aspose.Cells set left alignment for first line of textbox | center align second paragraph in Aspose.Cells textbox | C# Aspose.Cells multiline textbox alignment | how to change paragraph alignment inside a shape Aspose.Cells | Aspose.Cells TextBox paragraph formatting example
+// Developer Intent: Apply distinct alignments to individual paragraphs within a TextBox shape.
+// Use Cases: Design a report header where the title is centered and the subtitle is left‑aligned in the same textbox. | Create a data‑entry form with instructions left‑aligned and a section heading centered inside one textbox. | Generate an invoice note with a left‑aligned thank‑you line and a centered follow‑up line.
+// AI Prompts: Show C# code that sets left alignment for the first paragraph and center alignment for the second paragraph of a TextBox using Aspose.Cells. | Provide an Aspose.Cells for .NET example that formats multiline textbox text with different paragraph alignments. | Explain how to safely check the paragraph count before applying alignment changes to a TextBox shape in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// Creates a workbook, adds a TextBox shape with two lines, retrieves the TextParagraphCollection, applies left alignment to the first paragraph and center alignment to the second, then saves the workbook as an XLSX file.
-class TextBoxParagraphAlignmentDemo
+// Creates a workbook, adds a TextBox shape, inserts two lines of text, and sets the first paragraph to left alignment and the second paragraph to center alignment using Aspose.Cells for .NET before saving the file.
+class Program
 {
     static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Add a textbox shape to the worksheet
+        // Parameters: upper left row, upper left column, upper left X offset, upper left Y offset, width, height
+        Shape textBox = sheet.Shapes.AddTextBox(0, 0, 100, 300, 200, 100);
 
-        // Add a text box shape
-        // Parameters: upper left row, upper left column, top, left, height, width
-        Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 100, 300, 200, 100);
-
-        // Set the text with two lines
+        // Set multiline text (first line and second line)
         textBox.Text = "First line\nSecond line";
 
-        // Get the collection of paragraphs inside the text box
+        // Get the collection of paragraphs inside the textbox
         TextParagraphCollection paragraphs = textBox.TextBody.TextParagraphs;
 
-        // Apply left alignment to the first line (paragraph)
+        // Apply left alignment to the first line (first paragraph)
         paragraphs[0].AlignmentType = TextAlignmentType.Left;
 
-        // Apply center alignment to the second line (paragraph)
+        // Apply center alignment to the second line (second paragraph) if it exists
         if (paragraphs.Count > 1)
         {
             paragraphs[1].AlignmentType = TextAlignmentType.Center;
         }
 
-        // Save the workbook
-        workbook.Save("TextBoxParagraphAlignmentDemo.xlsx");
+        // Save the workbook to a file
+        workbook.Save("TextBoxAlignmentDemo.xlsx");
     }
 }

@@ -1,25 +1,24 @@
-// Title: Export Workbook to Separate HTML Files with Relative Paths Using IFilePathProvider (Aspose.Cells for .NET)
-// Description: Demonstrates how to implement a custom IFilePathProvider that returns "{SheetName}.html" and configure HtmlSaveOptions (ExportActiveWorksheetOnly = false, IsFullPathLink = false) so each worksheet is saved as an individual HTML file linked relatively to the main workbook page, enabling offline browsing.
-// Keywords: Aspose.Cells IFilePathProvider | C# HTML export relative links | Export workbook to multiple HTML files | .NET offline HTML workbook | HtmlSaveOptions IsFullPathLink false | Aspose.Cells custom file path provider | C# Aspose.Cells example | global developers | USA .NET community
-// Common Searches: Aspose.Cells how to use IFilePathProvider for relative HTML links | Export each worksheet to its own HTML file in C# | Generate offline HTML workbook with Aspose.Cells | Relative paths in Aspose.Cells HTML export | C# save workbook as separate HTML pages
-// Developer Intent: Create a multi‑sheet workbook export where every worksheet is saved as an individual HTML file linked via relative paths for portable, offline use.
-// Use Cases: Produce a self‑contained HTML report that can be opened on any device without internet access. | Integrate the RelativePathProvider into a web service that generates downloadable workbook snapshots. | Customize file naming (e.g., add timestamps or subfolders) while preserving correct relative navigation between pages.
-// AI Prompts: Show how to modify RelativePathProvider to place worksheet HTML files in a "Sheets" subfolder while keeping links functional. | Generate C# code that appends a timestamp to each sheet's HTML filename using IFilePathProvider. | Explain the effect of setting IsFullPathLink to false on hyperlink generation in Aspose.Cells HTML export.
+// Title: Export Aspose.Cells Workbook to Separate HTML Files with Relative Paths Using IFilePathProvider (.NET)
+// Description: Demonstrates a custom IFilePathProvider that returns sheet‑name based HTML file names, configures HtmlSaveOptions with IsFullPathLink = false, and saves each worksheet as an independent HTML file (e.g., Sheet1.html, Data.html) for portable offline browsing.
+// Keywords: Aspose.Cells IFilePathProvider | relative HTML links | HtmlSaveOptions IsFullPathLink false | export workbook to multiple HTML files | C# Aspose.Cells HTML export | .NET offline HTML reports | custom file path provider
+// Common Searches: Aspose.Cells generate relative HTML file names per worksheet | How to export Excel sheets to separate HTML files in C# | IFilePathProvider example for offline HTML output | Set IsFullPathLink false Aspose.Cells | Aspose.Cells HTML export without absolute paths
+// Developer Intent: Create independent, locally viewable HTML files for each worksheet by customizing the file naming logic.
+// Use Cases: Produce self‑contained HTML reports for each sheet that can be zipped and shared without internet access. | Integrate a relative path provider in a web service that delivers workbook exports as portable HTML files. | Automate generation of multi‑sheet documentation where each sheet appears as its own HTML page with relative navigation.
+// AI Prompts: Show a C# implementation of IFilePathProvider that returns safe relative file names for Aspose.Cells HTML export. | Explain step‑by‑step how to configure HtmlSaveOptions to generate offline‑compatible HTML files for every worksheet. | Provide a complete Aspose.Cells example that saves a workbook to separate HTML files with relative links and describe each setting.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlExport
 {
-    // Custom implementation of IFilePathProvider that returns relative file names
-    // Demonstrates how to implement a custom IFilePathProvider that returns "{SheetName}.html" and configure HtmlSaveOptions (ExportActiveWorksheetOnly = false, IsFullPathLink = false) so each worksheet is saved as an individual HTML file linked relatively to the main workbook page, enabling offline browsing.
+    // Custom implementation of IFilePathProvider that generates relative file names
+    // Demonstrates a custom IFilePathProvider that returns sheet‑name based HTML file names, configures HtmlSaveOptions with IsFullPathLink = false, and saves each worksheet as an independent HTML file (e.g., Sheet1.html, Data.html) for portable offline browsing.
     public class RelativePathProvider : IFilePathProvider
     {
-        // Returns a relative path for each worksheet based on its name
+        // Returns a relative path for each worksheet HTML file (e.g., "Sheet1.html")
         public string GetFullName(string sheetName)
         {
-            // Example: "Sheet1.html" – a relative file in the same folder as the main HTML file
+            // Ensure the file name is safe and uses a .html extension
             return $"{sheetName}.html";
         }
     }
@@ -28,35 +27,30 @@ namespace AsposeCellsHtmlExport
     {
         static void Main()
         {
-            // Create a workbook with multiple worksheets
+            // Create a new workbook and add some sample data
             Workbook workbook = new Workbook();
-            workbook.Worksheets[0].Name = "Sheet1";
-            workbook.Worksheets[0].Cells["A1"].PutValue("Data in Sheet1");
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
+            sheet.Cells["A1"].PutValue("Hello");
+            sheet.Cells["A2"].PutValue("World");
 
-            // Add a second worksheet
-            int sheetIndex = workbook.Worksheets.Add();
-            workbook.Worksheets[sheetIndex].Name = "Sheet2";
-            workbook.Worksheets[sheetIndex].Cells["A1"].PutValue("Data in Sheet2");
+            // Add a second worksheet to demonstrate multiple files
+            Worksheet sheet2 = workbook.Worksheets.Add("Data");
+            sheet2.Cells["B1"].PutValue(123);
+            sheet2.Cells["B2"].PutValue(456);
 
             // Configure HTML save options
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
-            {
-                // Export all worksheets separately (not only the active one)
-                ExportActiveWorksheetOnly = false,
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+            // Use relative links (default is false, set explicitly for clarity)
+            saveOptions.IsFullPathLink = false;
+            // Assign the custom relative path provider
+            saveOptions.FilePathProvider = new RelativePathProvider();
 
-                // Use relative links between the main HTML file and the sheet files
-                IsFullPathLink = false,
+            // Save the workbook; each worksheet will be exported to a separate HTML file
+            // with relative links such as "Sheet1.html" and "Data.html"
+            workbook.Save("Workbook.html", saveOptions);
 
-                // Assign the custom file path provider
-                FilePathProvider = new RelativePathProvider()
-            };
-
-            // Save the workbook to HTML. The main file will be "Workbook.html"
-            // and each worksheet will be saved as "Sheet1.html", "Sheet2.html", etc.
-            string outputPath = Path.Combine(Environment.CurrentDirectory, "Workbook.html");
-            workbook.Save(outputPath, saveOptions);
-
-            Console.WriteLine($"Workbook exported to HTML with relative links at: {outputPath}");
+            Console.WriteLine("Workbook exported to HTML with relative paths.");
         }
     }
 }

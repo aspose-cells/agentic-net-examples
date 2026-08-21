@@ -1,10 +1,10 @@
-// Title: C# – Add a Legend to a Column Chart and Freeze Its Rows Using Aspose.Cells for .NET
-// Description: This Aspose.Cells for .NET example creates a workbook, populates sample data, inserts a column chart, displays and customizes the legend (bottom position, fixed width/height, bold font), then freezes the first 20 rows so the chart and legend stay visible while scrolling, and saves the file as ChartWithLegendAndFrozenRows.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | add chart legend | column chart | freeze panes | FreezePanes | chart legend position | legend size | custom legend font | Excel automation | chart formatting | worksheet freeze rows
-// Common Searches: Aspose.Cells add legend to chart | How to freeze rows with a chart in Aspose.Cells | Set legend width and height Aspose.Cells C# | FreezePanes example Aspose.Cells .NET | Customize chart legend position Aspose.Cells
-// Developer Intent: Add a visible legend to a column chart and lock the rows that contain the chart so they remain in view.
-// Use Cases: Generate a sales report where the column chart legend must stay on screen while users scroll through data rows. | Build an Excel dashboard that keeps the chart legend fixed by freezing the top rows after inserting and styling the chart.
-// AI Prompts: Write C# code with Aspose.Cells to add a bottom‑positioned legend to a column chart, set its width, height, and bold font, then freeze the first 20 rows so the chart and legend stay visible. | Show an Aspose.Cells .NET example that inserts a column chart, customizes the legend appearance, and uses FreezePanes to lock the rows containing the chart.
+// Title: Add a Chart Legend and Freeze Rows with Aspose.Cells for .NET
+// Description: Creates a workbook, inserts sample data, builds a column chart, shows a bottom legend with custom width, height and bold 12‑pt font, freezes rows 1‑20 so the legend stays visible while scrolling, and saves the file as ChartWithLegendAndFrozenRows.xlsx.
+// Keywords: Aspose.Cells chart legend | C# freeze panes Aspose.Cells | customize chart legend .NET | FreezePanes example Aspose.Cells | set legend size programmatically | Aspose.Cells column chart tutorial | Excel legend positioning C#
+// Common Searches: how to add a legend to a chart using Aspose.Cells C# | freeze rows that contain a chart legend Aspose.Cells | set legend width and height Aspose.Cells .NET | Aspose.Cells FreezePanes to keep header visible | customize chart legend font Aspose.Cells
+// Developer Intent: Display a legend on a chart and keep it in view by freezing the rows that include the legend.
+// Use Cases: Generate a column chart with a bottom legend that has a fixed size and bold font, then lock the first 20 rows so the legend never scrolls out of sight. | Build an Excel report where the legend acts as a persistent header for large data tables, ensuring readers always see the series identifiers. | Create a dashboard workbook with multiple charts sharing a common legend area that remains static while users navigate through extensive worksheets.
+// AI Prompts: Write C# code with Aspose.Cells to add a bottom legend to a column chart, set its width, height, and bold 12‑pt font, then freeze rows 1‑20. | Show an Aspose.Cells example that uses FreezePanes to keep the first 20 rows visible while allowing horizontal scrolling. | Explain how to configure Legend.IsOverlay, Legend.IsAutomaticSize, and font properties for charts in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsLegendFreezeDemo
 {
-    // This Aspose.Cells for .NET example creates a workbook, populates sample data, inserts a column chart, displays and customizes the legend (bottom position, fixed width/height, bold font), then freezes the first 20 rows so the chart and legend stay visible while scrolling, and saves the file as ChartWithLegendAndFrozenRows.xlsx.
+    // Creates a workbook, inserts sample data, builds a column chart, shows a bottom legend with custom width, height and bold 12‑pt font, freezes rows 1‑20 so the legend stays visible while scrolling, and saves the file as ChartWithLegendAndFrozenRows.xlsx.
     class Program
     {
         static void Main()
@@ -31,7 +31,7 @@ namespace AsposeCellsLegendFreezeDemo
             sheet.Cells["B3"].PutValue(20);
             sheet.Cells["B4"].PutValue(30);
 
-            // Add a column chart (positioned from row 5 to row 20)
+            // Add a column chart (rows 5‑20, columns 0‑8)
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
             Chart chart = sheet.Charts[chartIndex];
 
@@ -40,16 +40,17 @@ namespace AsposeCellsLegendFreezeDemo
             chart.NSeries.CategoryData = "A2:A4";
 
             // Ensure the legend is displayed and customize its appearance
-            chart.ShowLegend = true;                                 // Show the legend
-            chart.Legend.Position = LegendPositionType.Bottom;       // Place legend at the bottom of the chart
-            chart.Legend.IsAutomaticSize = false;                    // Disable automatic sizing
-            chart.Legend.Width = 400;                                // Set legend width (pixels)
-            chart.Legend.Height = 50;                                // Set legend height (pixels)
-            chart.Legend.Font.Size = 12;                             // Optional: adjust font size
-            chart.Legend.Font.IsBold = true;                         // Optional: make font bold
+            chart.ShowLegend = true;                     // make sure legend is visible
+            chart.Legend.Position = LegendPositionType.Bottom; // place legend below the plot area
+            chart.Legend.IsOverLay = false;              // legend will not overlap the chart
+            chart.Legend.IsAutomaticSize = false;        // allow manual sizing
+            chart.Legend.Width = 400;                    // width in pixels
+            chart.Legend.Height = 30;                    // height in pixels
+            chart.Legend.Font.Size = 12;                 // font size
+            chart.Legend.Font.IsBold = true;             // bold font
 
-            // Freeze the rows that contain the chart (including the legend) so they stay visible while scrolling
-            // Freeze the top 20 rows (rows 0‑19) and no columns
+            // Freeze the rows that contain the legend so it stays visible while scrolling.
+            // The legend is positioned at the bottom of the chart (row 20). Freeze rows 1‑20.
             sheet.FreezePanes(20, 0, 20, 0);
 
             // Save the workbook

@@ -1,85 +1,49 @@
+// Title: C# – Catch malformed JSON errors when loading a workbook with Aspose.Cells JsonLoadOptions
+// Description: Demonstrates how to load a JSON file into an Aspose.Cells Workbook using JsonLoadOptions, then save it as Excel while handling malformed‑JSON scenarios. The example catches CellsException for FileCorrupted and InvalidData and provides a generic fallback for other errors.
+// Keywords: Aspose.Cells JsonLoadOptions | C# JSON to Excel error handling | CellsException FileCorrupted | InvalidData exception Aspose | malformed JSON Aspose.Cells | load JSON workbook C# | exception handling Aspose.Cells | JSON parsing error C#
+// Common Searches: how to catch malformed JSON with Aspose.Cells C# | Aspose.Cells JsonLoadOptions exception types | C# example catching CellsException for JSON load | error handling when converting JSON to Excel using Aspose | Aspose.Cells JSON file corrupted error
+// Developer Intent: Add robust try‑catch logic to capture JsonUtility.Load failures caused by malformed JSON when creating a Workbook with Aspose.Cells.
+// Use Cases: Validate a JSON source before conversion and show a clear message if the file is corrupted. | Log detailed CellsException information to aid troubleshooting of data import problems. | Switch to an alternative data source automatically when the primary JSON cannot be parsed.
+// AI Prompts: Write a reusable C# method that loads JSON into an Aspose.Cells Workbook with JsonLoadOptions and returns detailed error information for malformed files. | Generate code to log CellsException details (code, message, stack trace) to a file when JSON loading fails. | Explain the difference between CellsException codes FileCorrupted and InvalidData in the context of JSON import.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
+using Aspose.Cells; // for ExceptionType
 
-namespace AsposeCellsJsonErrorHandling
+// Demonstrates how to load a JSON file into an Aspose.Cells Workbook using JsonLoadOptions, then save it as Excel while handling malformed‑JSON scenarios. The example catches CellsException for FileCorrupted and InvalidData and provides a generic fallback for other errors.
+class JsonLoadWithErrorHandling
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the source JSON file
+        string jsonPath = "data.json";
+
+        // Create JSON load options (customize as needed)
+        JsonLoadOptions loadOptions = new JsonLoadOptions
         {
-            // Path to the source JSON file (may be malformed)
-            string jsonFilePath = "data.json";
+            KeptSchema = true
+        };
 
-            // Ensure the file exists for demonstration purposes
-            if (!File.Exists(jsonFilePath))
-            {
-                // Create a deliberately malformed JSON file
-                File.WriteAllText(jsonFilePath, "{ \"Name\": \"John\", \"Age\": 30, "); // missing closing brace
-            }
+        try
+        {
+            // Attempt to load the JSON file into a workbook
+            Workbook workbook = new Workbook(jsonPath, loadOptions);
 
-            // Create JSON load options (optional configuration)
-            JsonLoadOptions loadOptions = new JsonLoadOptions
-            {
-                // KeepSchema property does not exist; using default options
-                StartCell = "A1"
-            };
-
-            try
-            {
-                // Verify the JSON file exists before attempting to load it
-                if (!File.Exists(jsonFilePath))
-                {
-                    Console.WriteLine($"File not found: {jsonFilePath}");
-                    return;
-                }
-
-                // Load the JSON file into a workbook using the specified options
-                Workbook workbook = new Workbook(jsonFilePath, loadOptions);
-                workbook.Save("output.xlsx");
-                Console.WriteLine("JSON loaded and workbook saved successfully.");
-            }
-            catch (CellsException ex) when (ex.Code == ExceptionType.FileCorrupted ||
-                                            ex.Code == ExceptionType.InvalidData ||
-                                            ex.Code == ExceptionType.IO)
-            {
-                // Specific handling for JSON parsing related errors.
-                Console.WriteLine($"Failed to load JSON file: {ex.Message}");
-                Console.WriteLine($"Error Code: {ex.Code}");
-            }
-            catch (Exception ex)
-            {
-                // General fallback for any other unexpected exceptions.
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
-
-            // Alternative approach using JsonUtility.ImportData with a JSON string.
-            string malformedJson = "[{ \"Name\": \"Alice\", \"Age\": 25 }, { \"Name\": \"Bob\", \"Age\": } ]"; // Age value missing
-
-            try
-            {
-                Workbook wb = new Workbook();
-                Worksheet ws = wb.Worksheets[0];
-
-                // Import the JSON string into the worksheet.
-                JsonUtility.ImportData(malformedJson, ws.Cells, 0, 0, new JsonLayoutOptions());
-
-                // Save if import succeeds.
-                wb.Save("imported_output.xlsx");
-                Console.WriteLine("JSON string imported and workbook saved successfully.");
-            }
-            catch (CellsException ex) when (ex.Code == ExceptionType.FileCorrupted ||
-                                            ex.Code == ExceptionType.InvalidData ||
-                                            ex.Code == ExceptionType.IO)
-            {
-                Console.WriteLine($"Failed to import JSON string: {ex.Message}");
-                Console.WriteLine($"Error Code: {ex.Code}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An unexpected error occurred during import: {ex.Message}");
-            }
+            // If loading succeeds, save the workbook to an Excel file
+            workbook.Save("output.xlsx");
+            Console.WriteLine("JSON loaded and saved successfully.");
+        }
+        // Catch Aspose.Cells specific exceptions that indicate malformed JSON
+        catch (CellsException ex) when (ex.Code == ExceptionType.FileCorrupted ||
+                                        ex.Code == ExceptionType.InvalidData)
+        {
+            Console.WriteLine($"Malformed JSON file: {ex.Message}");
+        }
+        // Fallback for any other unexpected exceptions
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading JSON: {ex.Message}");
         }
     }
 }

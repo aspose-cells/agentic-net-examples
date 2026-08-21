@@ -1,17 +1,17 @@
-// Title: C# – Load an Excel workbook with Aspose.Cells, preserve formatting and disable formula evaluation (LoadOptions)
-// Description: Demonstrates how to create a LoadOptions object, set ParsingFormulaOnOpen to false, open an XLSX file while keeping all cell styles, colors, and fonts intact, and save the workbook without calculating any formulas.
-// Keywords: Aspose.Cells LoadOptions | ParsingFormulaOnOpen false | load Excel without formula calculation | preserve cell formatting Aspose | C# Excel workbook loading example | skip formula evaluation Aspose.Cells
-// Common Searches: Aspose.Cells open workbook without evaluating formulas | keep original Excel styles when loading with Aspose | LoadOptions to ignore formulas in C# | preserve formatting while disabling formula parsing Aspose.Cells
-// Developer Intent: Open an Excel file, retain its visual formatting, and prevent any formula calculations during the load process.
-// Use Cases: Render a template workbook for reporting where only layout matters, not formula results. | Safely ingest user‑uploaded spreadsheets to extract raw data without triggering volatile or external formulas. | Copy styling from a source workbook to a new file while leaving formula outcomes untouched for later processing.
-// AI Prompts: Write C# code that loads an XLSX file with Aspose.Cells, disables formula evaluation using LoadOptions, and saves it preserving all styles. | Explain how the ParsingFormulaOnOpen property impacts performance and memory consumption when loading large workbooks. | Suggest alternative approaches in Aspose.Cells to read cell values without evaluating formulas.
+// Title: Load an Excel workbook with Aspose.Cells while preserving formatting and disabling formula evaluation (LoadOptions)
+// Description: Shows C# code that creates a LoadOptions object, sets ParsingFormulaOnOpen = false, loads an XLSX file without calculating formulas, keeps the original cell styles, displays the raw formula/value of A1, and saves the workbook.
+// Keywords: Aspose.Cells LoadOptions | ParsingFormulaOnOpen | preserve cell formatting | disable formula calculation | load workbook without evaluating formulas | C# Excel loading example | .NET Aspose.Cells raw formulas | keep original styles Aspose | Excel template loading | skip formula parsing
+// Common Searches: Aspose.Cells load workbook without calculating formulas | How to keep original formatting when opening Excel with Aspose | ParsingFormulaOnOpen C# example | LoadOptions preserve cell styles Aspose.Cells | Open Excel file as raw data Aspose .NET
+// Developer Intent: Open an Excel file with Aspose.Cells, retain every original cell style, and prevent any formula from being evaluated during the load operation.
+// Use Cases: Load a pre‑formatted template, modify only data cells, and save without altering existing formulas or styles. | Extract raw formula strings for auditing or migration while leaving the workbook unchanged. | Read a workbook in a data‑processing pipeline where calculation results are irrelevant but formatting must stay intact.
+// AI Prompts: Write C# code that loads an XLSX file with Aspose.Cells, sets ParsingFormulaOnOpen to false, and saves it preserving all formatting. | Explain how to read raw formulas from a workbook after disabling formula parsing with LoadOptions. | Combine LoadOptions with other Aspose.Cells settings to maintain number formats, conditional formatting, and cell styles while skipping calculations.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsLoadOptionsDemo
 {
-    // Demonstrates how to create a LoadOptions object, set ParsingFormulaOnOpen to false, open an XLSX file while keeping all cell styles, colors, and fonts intact, and save the workbook without calculating any formulas.
+    // Shows C# code that creates a LoadOptions object, sets ParsingFormulaOnOpen = false, loads an XLSX file without calculating formulas, keeps the original cell styles, displays the raw formula/value of A1, and saves the workbook.
     class Program
     {
         static void Main()
@@ -19,24 +19,27 @@ namespace AsposeCellsLoadOptionsDemo
             // Path to the source workbook
             string sourcePath = "input.xlsx";
 
-            // Path for the resulting workbook
-            string outputPath = "output.xlsx";
-
             // Create LoadOptions instance
             LoadOptions loadOptions = new LoadOptions();
 
-            // Preserve original cell formatting (default behavior) and ignore formula parsing
-            // Setting ParsingFormulaOnOpen to false skips formula evaluation during load
+            // Do not parse formulas on load – this keeps the original formula strings
+            // and prevents calculation of their results.
             loadOptions.ParsingFormulaOnOpen = false;
 
-            // Load the workbook with the specified options
+            // Load the workbook with the specified options.
+            // This preserves original cell formatting and skips formula evaluation.
             Workbook workbook = new Workbook(sourcePath, loadOptions);
 
-            // At this point, cell values for formulas are not calculated,
-            // but formatting (styles, colors, fonts, etc.) is retained.
+            // Example: display a formula and its (unchanged) value in the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+            Cell cell = sheet.Cells["A1"];
+            Console.WriteLine("Cell A1 Formula: " + cell.Formula);
+            Console.WriteLine("Cell A1 Value (raw): " + cell.Value);
 
-            // Save the workbook to verify the result
+            // Save the workbook to a new file.
+            string outputPath = "output_preserve_format.xlsx";
             workbook.Save(outputPath);
+            Console.WriteLine("Workbook saved to: " + outputPath);
         }
     }
 }

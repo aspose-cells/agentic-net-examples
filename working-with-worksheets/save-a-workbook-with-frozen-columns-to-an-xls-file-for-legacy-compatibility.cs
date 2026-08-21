@@ -1,42 +1,44 @@
-// Title: Freeze the first column and export to Excel 97‑2003 .xls with Aspose.Cells for .NET
-// Description: Demonstrates creating a Workbook in C#, adding sample data, applying FreezePanes at cell B1 to lock column A, configuring XlsSaveOptions for the 97‑2003 format, and saving the file as FrozenColumns.xls for legacy Excel compatibility.
-// Keywords: Aspose.Cells | C# | FreezePanes | freeze column | XlsSaveOptions | legacy Excel | Excel 97-2003 | save as .xls | frozen panes export | Aspose.Cells .NET
-// Common Searches: Aspose.Cells freeze column C# example | Save workbook as .xls with frozen panes using Aspose.Cells | How to use XlsSaveOptions for legacy Excel format | Freeze first column before exporting to Excel 97-2003 | C# code to apply FreezePanes and save as .xls
-// Developer Intent: Need to lock a worksheet column and generate an .xls file that works with older Excel versions.
-// Use Cases: Generating client‑facing reports where the ID column must stay visible while scrolling, and the recipient uses Excel 2003. | Automating data extracts for legacy ERP systems that only accept .xls files with frozen panes. | Creating email‑ready spreadsheets with frozen header columns for quick review on older Office installations.
-// AI Prompts: Provide C# code to freeze multiple columns and save the workbook as .xls with Aspose.Cells. | Show how to preserve frozen panes when converting an .xlsx file to .xls using Aspose.Cells. | Explain the XlsSaveOptions settings required to keep FreezePanes during export.
+// Title: Save a workbook with frozen columns to XLS using Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, populate data, freeze the first two columns with FreezePanes, and save it as an XLS file using XlsSaveOptions for Excel 97‑2003 compatibility.
+// Keywords: Aspose.Cells FreezePanes C# | save workbook as XLS | XlsSaveOptions legacy Excel | freeze columns Aspose.Cells | .NET export frozen panes | Excel 97-2003 compatibility Aspose
+// Common Searches: Aspose.Cells freeze first two columns and save as xls | How to use FreezePanes with XlsSaveOptions in C# | Export workbook with frozen panes to legacy Excel format | C# code to freeze columns and save to .xls using Aspose.Cells
+// Developer Intent: Generate an XLS file that retains frozen columns by applying FreezePanes and XlsSaveOptions in Aspose.Cells for .NET.
+// Use Cases: Create reports where ID and Name columns stay visible while scrolling horizontally, then distribute them to users with older Excel versions. | Export data from a .NET application to a legacy system that only accepts .xls files, preserving pane freezing for readability. | Automate spreadsheet generation with frozen columns for dashboards that must be opened in Excel 97‑2003.
+// AI Prompts: Show C# code to freeze the first three columns in an Aspose.Cells workbook and save it as an XLS file. | Explain how XlsSaveOptions works with FreezePanes to keep frozen panes when exporting to legacy Excel format. | Provide a step‑by‑step guide for saving a workbook with frozen columns to .xls using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates creating a Workbook in C#, adding sample data, applying FreezePanes at cell B1 to lock column A, configuring XlsSaveOptions for the 97‑2003 format, and saving the file as FrozenColumns.xls for legacy Excel compatibility.
-class FreezeColumnsToXls
+// Demonstrates how to create a workbook, populate data, freeze the first two columns with FreezePanes, and save it as an XLS file using XlsSaveOptions for Excel 97‑2003 compatibility.
+class Program
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add some sample data
-        sheet.Cells["A1"].PutValue("ID");
-        sheet.Cells["B1"].PutValue("Name");
-        sheet.Cells["C1"].PutValue("Score");
-        sheet.Cells["A2"].PutValue(1);
-        sheet.Cells["B2"].PutValue("Alice");
-        sheet.Cells["C2"].PutValue(85);
-        sheet.Cells["A3"].PutValue(2);
-        sheet.Cells["B3"].PutValue("Bob");
-        sheet.Cells["C3"].PutValue(92);
+        // Fill some sample data
+        worksheet.Cells["A1"].PutValue("ID");
+        worksheet.Cells["B1"].PutValue("Name");
+        worksheet.Cells["C1"].PutValue("Score");
+        for (int i = 2; i <= 10; i++)
+        {
+            worksheet.Cells[i, 0].PutValue(i - 1);               // ID
+            worksheet.Cells[i, 1].PutValue($"Item {i - 1}");    // Name
+            worksheet.Cells[i, 2].PutValue((i - 1) * 10);       // Score
+        }
 
-        // Freeze the first column (column A)
-        // Freeze panes at cell B1, with 0 frozen rows and 1 frozen column
-        sheet.FreezePanes("B1", 0, 1);
+        // Freeze the first two columns (A and B)
+        // Freeze at column C (index 2) with 0 frozen rows and 2 frozen columns
+        worksheet.FreezePanes(0, 2, 0, 2);
+        // Alternative using cell name:
+        // worksheet.FreezePanes("C1", 0, 2);
 
         // Create XLS save options for legacy compatibility
         XlsSaveOptions saveOptions = new XlsSaveOptions();
 
-        // Save the workbook as an Excel 97-2003 .xls file
+        // Save the workbook as an XLS file
         workbook.Save("FrozenColumns.xls", saveOptions);
     }
 }

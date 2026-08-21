@@ -1,69 +1,62 @@
-// Title: Aspose.Cells C# – Retrieve a Single Cell Value from a Formula’s Referenced Range with ReferredArea.GetValue
-// Description: This example creates a workbook, fills cells A1‑B2, assigns a SUM formula to C1, calculates all formulas, obtains the precedent range via GetPrecedents, and uses ReferredArea.GetValue(0,1) to read the value of cell B1 inside that range. The retrieved value is printed and the workbook is saved.
-// Keywords: Aspose.Cells ReferredArea.GetValue | C# get cell value from formula precedent | Aspose.Cells GetPrecedents example | read cell by offset Aspose.Cells | calculate formulas Aspose.Cells | extract single cell value .NET | Aspose.Cells workbook example
-// Common Searches: Aspose.Cells C# get value from referenced range | How to use ReferredArea.GetValue in .NET | Read B1 from SUM(A1:B2) with Aspose.Cells | GetPrecedents and GetValue example C# | Retrieve single cell value from formula precedent
-// Developer Intent: Fetch the value of a specific cell inside a formula’s referenced range using ReferredArea.GetValue after the workbook has been calculated.
-// Use Cases: Debugging: display individual precedent values to verify formula inputs. | Reporting: extract particular cells from a summed range for custom summaries. | Conditional logic: feed a single precedent value into further .NET processing after calculation.
-// AI Prompts: Generate C# code that uses Aspose.Cells to obtain the value of cell B2 from a SUM(A1:B2) formula with ReferredArea.GetValue. | Write a snippet that loops through all ReferredArea objects of a formula cell and prints each cell’s value using GetValue. | Explain how to cast and handle different data types returned by ReferredArea.GetValue in Aspose.Cells for .NET.
+// Title: Aspose.Cells C# – Retrieve a Single Precedent Cell Value Using ReferredArea.GetValue
+// Description: Demonstrates how to calculate formulas, obtain a cell's precedents with GetPrecedents, and read the referenced value via ReferredArea.GetValue(0,0) in a .NET workbook.
+// Keywords: Aspose.Cells ReferredArea.GetValue | C# get precedent cell value | Aspose.Cells formula precedents | Read referenced cell Aspose.Cells | GetPrecedents example .NET | Aspose.Cells offset cell retrieval
+// Common Searches: how to read a precedent cell in Aspose.Cells | Aspose.Cells GetValue row offset column offset | C# example for GetPrecedents and GetValue | retrieve formula reference value Aspose.Cells | Aspose.Cells single cell value from referenced area
+// Developer Intent: Extract the value of a cell referenced by a formula by accessing its ReferredArea and calling GetValue with the appropriate offsets.
+// Use Cases: Validate a precedent cell's content before performing custom business logic. | Log or audit all cells that a formula depends on for debugging complex spreadsheets. | Iterate over a multi‑cell precedent range and collect each cell's value using different offsets.
+// AI Prompts: Write C# code that takes a formula cell, gets its first ReferredArea, and returns the value at offset (0,0) with error handling for missing precedents. | Create a method that enumerates all ReferredArea objects of a formula cell and builds a dictionary of (rowOffset, colOffset) → cell value using GetValue. | Show how to safely call ReferredArea.GetValue only when the requested offset exists, returning null or a default value otherwise.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace ReferredAreaGetValueDemo
 {
-    // This example creates a workbook, fills cells A1‑B2, assigns a SUM formula to C1, calculates all formulas, obtains the precedent range via GetPrecedents, and uses ReferredArea.GetValue(0,1) to read the value of cell B1 inside that range. The retrieved value is printed and the workbook is saved.
-    public class ReferredAreaGetValueDemo
+    // Demonstrates how to calculate formulas, obtain a cell's precedents with GetPrecedents, and read the referenced value via ReferredArea.GetValue(0,0) in a .NET workbook.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate some cells that will be referenced by a formula
+            sheet.Cells["A1"].PutValue(10);   // First value
+            sheet.Cells["B1"].PutValue(20);   // Second value
+            sheet.Cells["A2"].PutValue(30);
+            sheet.Cells["B2"].PutValue(40);
+
+            // Set a formula that references cell A1
+            Cell formulaCell = sheet.Cells["C1"];
+            formulaCell.Formula = "=A1";
+
+            // Calculate formulas so that the referenced value is up‑to‑date
+            workbook.CalculateFormula();
+
+            // Get the collection of areas that the formula cell depends on
+            ReferredAreaCollection precedents = formulaCell.GetPrecedents();
+
+            if (precedents != null && precedents.Count > 0)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                // Take the first referred area (in this case it is a single cell A1)
+                ReferredArea area = precedents[0];
 
-                // Populate some cells with values
-                sheet.Cells["A1"].PutValue(10);
-                sheet.Cells["A2"].PutValue(20);
-                sheet.Cells["B1"].PutValue(30);
-                sheet.Cells["B2"].PutValue(40);
+                // Obtain the value at offset (0,0) – the top‑left cell of the area
+                object valueAt00 = area.GetValue(0, 0);
+                Console.WriteLine($"Value at offset (0,0): {valueAt00}");
 
-                // Set a formula that references the range A1:B2
-                Cell formulaCell = sheet.Cells["C1"];
-                formulaCell.Formula = "=SUM(A1:B2)";
-
-                // Calculate all formulas so that precedents are up‑to‑date
-                workbook.CalculateFormula();
-
-                // Retrieve the collection of referred areas (precedents) for the formula cell
-                ReferredAreaCollection precedents = formulaCell.GetPrecedents();
-
-                if (precedents != null && precedents.Count > 0)
-                {
-                    // Use the first referred area (which corresponds to A1:B2)
-                    ReferredArea area = precedents[0];
-
-                    // Get the value of the cell at row offset 0, column offset 1 within the area (i.e., B1)
-                    object value = area.GetValue(0, 1);
-
-                    Console.WriteLine($"Value at offset (0,1) within the referred area: {value}");
-                }
-
-                // Save the workbook (optional)
-                workbook.Save("ReferredAreaGetValueDemo.xlsx");
+                // If the area were larger, you could retrieve other cells by changing offsets
+                // Example: get value at row offset 0, column offset 1 (B1) – only works if the area includes it
+                // object valueAt01 = area.GetValue(0, 1);
+                // Console.WriteLine($"Value at offset (0,1): {valueAt01}");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("No precedents found for the formula cell.");
             }
-        }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ReferredAreaGetValueDemo.Run();
+            // Save the workbook (optional, demonstrates lifecycle compliance)
+            workbook.Save("ReferredAreaGetValueDemo.xlsx");
         }
     }
 }

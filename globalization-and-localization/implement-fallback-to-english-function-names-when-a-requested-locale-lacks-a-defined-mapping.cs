@@ -1,98 +1,91 @@
+// Title: Aspose.Cells C# – Fallback to English Function Names in Custom GlobalizationSettings
+// Description: Demonstrates a C# CustomGlobalizationSettings class that maps German Excel functions (e.g., SUMME, MITTELWERT) to their English equivalents and automatically falls back to the original English name when no mapping exists. The example applies the settings to a workbook, evaluates formulas with both localized and fallback names, and saves the result.
+// Keywords: Aspose.Cells | C# | GlobalizationSettings | function name localization | fallback to English | German Excel functions | SUMME | MITTELWERT | CalcEngineSettings | custom globalization | Excel formula translation
+// Common Searches: Aspose.Cells custom GlobalizationSettings fallback English | map German Excel functions to English in Aspose.Cells | override GetLocalFunctionName for unknown locales | use localized function names with Aspose.Cells C# | Excel formula localization Aspose.Cells example | how to enable function name fallback in Aspose.Cells
+// Developer Intent: Implement a GlobalizationSettings subclass that returns English function names when a locale lacks a specific mapping.
+// Use Cases: Translate known German functions (SUMME, MITTELWERT) while allowing unmapped functions to run in English. | Mix localized and standard function names in the same worksheet without calculation errors. | Ensure workbook compatibility across different language settings by providing a reliable fallback mechanism.
+// AI Prompts: Create a C# CustomGlobalizationSettings class for Aspose.Cells that falls back to English for any unmapped function name and show its usage in a workbook. | Extend the fallback logic to support multiple locales such as German and French while preserving English as the default. | Write unit tests for GetLocalFunctionName and GetStandardFunctionName that verify correct translation and fallback behavior.
+
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
-using Aspose.Cells.Settings;
 
-namespace AsposeCellsExamples
+// Demonstrates a C# CustomGlobalizationSettings class that maps German Excel functions (e.g., SUMME, MITTELWERT) to their English equivalents and automatically falls back to the original English name when no mapping exists. The example applies the settings to a workbook, evaluates formulas with both localized and fallback names, and saves the result.
+public class CustomGlobalizationSettings : GlobalizationSettings
 {
-    // Custom globalization settings that fall back to English (standard) names
-    // when a locale‑specific mapping is not defined.
-    public class FallbackGlobalizationSettings : SettableGlobalizationSettings
+    // Mapping of standard (English) function names to their localized equivalents.
+    private readonly Dictionary<string, string> _standardToLocal = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
     {
-        // Return the localized name if it exists; otherwise return the standard name.
-        public override string GetLocalFunctionName(string standardName)
-        {
-            string local = base.GetLocalFunctionName(standardName);
-            // If the base implementation could not find a mapping it returns the same name.
-            if (string.Equals(local, standardName, StringComparison.OrdinalIgnoreCase))
-            {
-                // Fallback to the English (standard) name.
-                return standardName;
-            }
-            return local;
-        }
+        { "SUM", "SUMME" },        // German example
+        { "AVERAGE", "MITTELWERT" } // German example
+    };
 
-        // Return the standard name if it exists; otherwise assume the supplied name is already English.
-        public override string GetStandardFunctionName(string localName)
-        {
-            string standard = base.GetStandardFunctionName(localName);
-            if (string.Equals(standard, localName, StringComparison.OrdinalIgnoreCase))
-            {
-                // No locale mapping – treat the provided name as the English name.
-                return localName;
-            }
-            return standard;
-        }
+    // Return the localized name if it exists; otherwise fall back to the standard English name.
+    public override string GetLocalFunctionName(string standardName)
+    {
+        if (_standardToLocal.TryGetValue(standardName, out var localName))
+            return localName;
+
+        // Fallback to English (standard) name when no mapping is defined.
+        return standardName;
     }
 
-    public class FallbackFunctionNameDemo
+    // Convert a localized name back to the standard name; fallback to the provided name if unknown.
+    public override string GetStandardFunctionName(string localName)
     {
-        public static void Run()
+        foreach (var kvp in _standardToLocal)
         {
-            // Create a new workbook.
+            if (kvp.Value.Equals(localName, StringComparison.OrdinalIgnoreCase))
+                return kvp.Key;
+        }
+
+        // Fallback to the input assuming it is already a standard name.
+        return localName;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        try
+        {
+            // Create a new workbook and get the first worksheet.
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Prepare sample data.
-            sheet.Cells["B1"].PutValue(5);
-            sheet.Cells["B2"].PutValue(15);
-            sheet.Cells["B3"].PutValue(25);
-            sheet.Cells["B4"].PutValue(35);
+            // Populate sample data.
+            worksheet.Cells["B1"].PutValue(5);
+            worksheet.Cells["B2"].PutValue(15);
 
-            // Create custom globalization settings.
-            FallbackGlobalizationSettings settings = new FallbackGlobalizationSettings();
+            // Apply the custom globalization settings to the workbook.
+            workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
 
-            // Map only the SUM function to a locale‑specific name.
-            // All other functions will rely on the fallback logic.
-            settings.SetLocalFunctionName("SUM", "LOCALSUM", true);
+            // NOTE: In recent Aspose.Cells versions, custom function names are enabled by default
+            // when a custom GlobalizationSettings implementation is provided.
+            // If needed, you can enable it via CalcEngineSettings (available in newer releases).
 
-            // Apply the settings to the workbook.
-            workbook.Settings.GlobalizationSettings = settings;
+            // Formula using a localized function name that exists in the mapping.
+            worksheet.Cells["B3"].Formula = "=SUMME(B1:B2)";
 
-            // Use the localized name – this works because we defined the mapping.
-            Cell cellLocalizedSum = sheet.Cells["C1"];
-            cellLocalizedSum.Formula = "=LOCALSUM(B1:B4)";
-
-            // Use a standard English function name – works without any mapping.
-            Cell cellStandardAvg = sheet.Cells["C2"];
-            cellStandardAvg.Formula = "=AVERAGE(B1:B4)";
-
-            // Attempt to use a localized name that has no mapping.
-            // The fallback will treat "LOCALAVERAGE" as the English name "AVERAGE".
-            Cell cellFallbackAvg = sheet.Cells["C3"];
-            // Manually obtain the standard name using the fallback logic.
-            string standardForLocalAvg = settings.GetStandardFunctionName("LOCALAVERAGE");
-            // Build the formula with the resolved standard name.
-            cellFallbackAvg.Formula = $"={standardForLocalAvg}(B1:B4)";
+            // Formula using a function name that is NOT mapped; should fall back to English "SUM".
+            worksheet.Cells["B4"].Formula = "=SUM(B1:B2)";
 
             // Calculate all formulas.
             workbook.CalculateFormula();
 
-            // Output results.
-            Console.WriteLine($"Result of LOCALSUM (localized): {cellLocalizedSum.Value}");
-            Console.WriteLine($"Result of AVERAGE (standard): {cellStandardAvg.Value}");
-            Console.WriteLine($"Result of LOCALAVERAGE (fallback to standard): {cellFallbackAvg.Value}");
+            // Output results to verify correct behavior.
+            Console.WriteLine($"Result with localized name (SUMME): {worksheet.Cells["B3"].DoubleValue}");
+            Console.WriteLine($"Result with fallback name (SUM): {worksheet.Cells["B4"].DoubleValue}");
 
             // Save the workbook.
-            workbook.Save("FallbackFunctionNameDemo.xlsx");
+            string outputPath = "FallbackLocalizationDemo.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-    }
-
-    // Entry point for demonstration.
-    class Program
-    {
-        static void Main()
+        catch (Exception ex)
         {
-            FallbackFunctionNameDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

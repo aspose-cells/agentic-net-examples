@@ -1,120 +1,90 @@
 // Title: Delete a Table Row by Primary Key with Aspose.Cells for .NET (C#)
-// Description: A C# sample that opens an Excel workbook, accesses the first ListObject on the initial sheet, determines the column containing the primary key, searches the data rows for a matching key value, deletes the located row using Cells.DeleteRow (shifting cells upward), and saves the modified file. Includes validation for missing files, absent tables, and undefined key columns.
-// Keywords: Aspose.Cells delete row | C# Excel table row removal | ListObject delete by ID | primary key row deletion | Aspose.Cells .NET example | Excel worksheet DeleteRow method | remove record from Excel table | delete row by column value C# | Aspose.Cells table manipulation
-// Common Searches: Aspose.Cells C# delete row where ID equals value | How to remove a record from an Excel ListObject using a key column | C# code to find and delete a table row in Excel with Aspose.Cells | Delete specific row in Excel table based on cell content
-// Developer Intent: Identify and eliminate the row in an Excel table whose primary‑key column matches a given value.
-// Use Cases: Purging a customer entry (ID = 5) from a sales report before distribution. | Removing an outdated product SKU from an inventory table during data cleanup. | Eliminating duplicate rows that share the same unique identifier in a generated analytics workbook.
-// AI Prompts: Write C# code with Aspose.Cells that deletes a ListObject row where the 'ID' column equals a supplied integer and saves the workbook. | Enhance the sample with comprehensive error handling for scenarios such as missing workbook, no tables on the sheet, or non‑existent primary‑key column. | Show how to delete multiple rows that match a collection of primary‑key values using Aspose.Cells in C#.
+// Description: Loads an Excel workbook, accesses the first worksheet and its ListObject, scans the primary‑key column for a specified value, removes the matching data row using Cells.DeleteRow, and saves the updated file.
+// Keywords: Aspose.Cells delete row | C# delete Excel table row | ListObject remove row by key | Aspose.Cells primary key | Excel table row deletion .NET | Cells.DeleteRow example | Aspose.Cells find row by value
+// Common Searches: Aspose.Cells delete row by primary key C# | How to remove a specific row from an Excel ListObject using Aspose.Cells | C# code to delete table row based on ID column | Delete Excel table row programmatically with Aspose.Cells | Find and delete row in Excel table using primary key value
+// Developer Intent: Locate the row that matches a given primary‑key value in an Excel table and delete it.
+// Use Cases: Purging obsolete records from a master data table | Applying a physical delete after confirming record existence | Synchronizing two spreadsheets by eliminating rows absent in the source file | User‑initiated removal of a selected entry in a data‑entry form | Automated cleanup of temporary rows generated during import
+// AI Prompts: Write C# code using Aspose.Cells to locate a row in a ListObject where a specified column equals a given key and delete that row. | Show an Aspose.Cells example that scans a table for a primary‑key value, removes the matching row, and updates the table range. | Explain how to adapt the deletion logic when the primary‑key column is not the first column in the table. | Provide error‑handling code for missing tables or absent key values when deleting rows with Aspose.Cells. | Demonstrate how to delete multiple rows that match a list of primary‑key values in an Excel worksheet.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsTableRowDeletion
+namespace AsposeCellsDeleteRowByPrimaryKey
 {
-    // A C# sample that opens an Excel workbook, accesses the first ListObject on the initial sheet, determines the column containing the primary key, searches the data rows for a matching key value, deletes the located row using Cells.DeleteRow (shifting cells upward), and saves the modified file. Includes validation for missing files, absent tables, and undefined key columns.
+    // Loads an Excel workbook, accesses the first worksheet and its ListObject, scans the primary‑key column for a specified value, removes the matching data row using Cells.DeleteRow, and saves the updated file.
     class Program
     {
         static void Main()
         {
-            // Paths for input and output workbooks
-            string inputPath = "InputWorkbook.xlsx";
-            string outputPath = "OutputWorkbook.xlsx";
-
-            // Primary key value to locate the row that should be deleted
-            var primaryKeyValue = 5; // example: delete row where ID = 5
-
-            // Name of the column that holds the primary key (case‑insensitive)
-            string primaryKeyColumnName = "ID";
-
             try
             {
-                // Verify that the input file exists
+                string inputPath = "input.xlsx";
+
+                // Verify input file exists
                 if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                    Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
                 // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
-                Worksheet worksheet = workbook.Worksheets[0]; // assuming the table is on the first sheet
 
-                // Get the first table (ListObject) on the worksheet
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Ensure the worksheet contains at least one table (ListObject)
                 if (worksheet.ListObjects.Count == 0)
                 {
-                    Console.WriteLine("No tables found on the worksheet.");
+                    Console.WriteLine("No tables (ListObjects) found in the worksheet.");
                     return;
                 }
+
+                // Retrieve the first table; you can also get by name: worksheet.ListObjects["TableName"]
                 ListObject table = worksheet.ListObjects[0];
 
-                // Determine the zero‑based index of the primary key column within the table
-                int pkColumnIndex = -1;
-                for (int col = 0; col < table.ListColumns.Count; col++)
-                {
-                    if (string.Equals(table.ListColumns[col].Name, primaryKeyColumnName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        pkColumnIndex = col;
-                        break;
-                    }
-                }
+                // Define the primary key value you want to delete
+                object primaryKeyToDelete = 5; // example primary key value
 
-                if (pkColumnIndex == -1)
-                {
-                    Console.WriteLine($"Primary key column \"{primaryKeyColumnName}\" not found in the table.");
-                    return;
-                }
+                // Determine the column index of the primary key (assumed first column of the table)
+                int primaryKeyColumnIndex = table.StartColumn;
 
-                // Calculate the first and last data row indices (skip header if present)
-                int dataStartRow = table.StartRow + (table.ShowHeaderRow ? 1 : 0);
-                int dataEndRow = table.EndRow; // inclusive
-
-                // Locate the row that matches the primary key value
+                // Determine the first data row index (skip header if present)
+                int firstDataRow = table.StartRow + (table.ShowHeaderRow ? 1 : 0);
                 int rowToDelete = -1;
-                for (int row = dataStartRow; row <= dataEndRow; row++)
+
+                // Scan the table rows to locate the row with the matching primary key
+                for (int row = firstDataRow; row <= table.EndRow; row++)
                 {
-                    Cell pkCell = worksheet.Cells[row, table.StartColumn + pkColumnIndex];
-
-                    if (pkCell.Value != null && pkCell.Value.Equals(primaryKeyValue))
-                    {
-                        rowToDelete = row;
-                        break;
-                    }
-
-                    // Fallback: compare as string (handles mismatched types)
-                    if (pkCell.Value != null && pkCell.Value.ToString().Equals(primaryKeyValue.ToString(), StringComparison.OrdinalIgnoreCase))
+                    object cellValue = worksheet.Cells[row, primaryKeyColumnIndex].Value;
+                    if (cellValue != null && cellValue.Equals(primaryKeyToDelete))
                     {
                         rowToDelete = row;
                         break;
                     }
                 }
 
-                if (rowToDelete == -1)
+                // If a matching row was found, delete it and update references
+                if (rowToDelete != -1)
                 {
-                    Console.WriteLine($"No row with primary key value \"{primaryKeyValue}\" was found.");
+                    worksheet.Cells.DeleteRow(rowToDelete, true);
+                    Console.WriteLine($"Row {rowToDelete + 1} (primary key = {primaryKeyToDelete}) deleted.");
                 }
                 else
                 {
-                    // Delete the identified row and shift cells up
-                    worksheet.Cells.DeleteRow(rowToDelete, true);
-                    Console.WriteLine($"Row {rowToDelete + 1} (primary key = {primaryKeyValue}) deleted.");
-                }
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
+                    Console.WriteLine($"No row found with primary key = {primaryKeyToDelete}.");
                 }
 
                 // Save the modified workbook
+                string outputPath = "output.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

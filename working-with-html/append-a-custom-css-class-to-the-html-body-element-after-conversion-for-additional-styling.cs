@@ -1,18 +1,18 @@
-// Title: Add a Custom CSS Class to the <body> Tag After Converting an Aspose.Cells Workbook to HTML (C#)
-// Description: This example creates a workbook, saves it as a single HTML file with a custom CSS definition, then reads the generated file and injects or appends a "custom-body" class to the <body> element, handling existing class attributes safely.
-// Keywords: Aspose.Cells | C# | HTML conversion | custom CSS class | body tag | post‑process HTML | HtmlSaveOptions | single file export | inject class attribute | modify generated HTML
-// Common Searches: Aspose.Cells add class to body after HTML export | C# append CSS class to <body> in generated HTML | how to modify Aspose.Cells HTML output | inject custom CSS into Aspose.Cells HTML file | add custom-body class to HTML produced by Aspose.Cells
-// Developer Intent: Inject or append a custom CSS class to the <body> element of HTML produced by Aspose.Cells.
-// Use Cases: Standardize styling of Excel‑to‑HTML reports across an application. | Apply a theme or dark‑mode class without altering the original workbook. | Combine with existing body classes for responsive or mobile layouts. | Enable client‑side scripts that target a specific body class after export.
-// AI Prompts: Generate a C# method that adds a specified CSS class to the <body> tag of an Aspose.Cells HTML file, preserving any existing classes. | Write a utility that reads an Aspose.Cells HTML output, inserts multiple CSS classes into the body element, and ensures no duplicate entries. | Create a reusable function to post‑process Aspose.Cells HTML, apply a custom stylesheet defined in HtmlSaveOptions, and return the updated HTML content.
+// Title: Add a Custom CSS Class to the <body> After Exporting an Aspose.Cells Workbook to HTML (C#)
+// Description: C# example that creates a workbook, saves it as a single HTML file with embedded CssStyles, then injects a custom class into the <body> tag to apply additional styling.
+// Keywords: Aspose.Cells | C# | HtmlSaveOptions | SaveAsSingleFile | CssStyles | add body class | inject CSS into exported HTML | post‑export HTML manipulation | custom CSS class | HTML workbook export
+// Common Searches: how to add a CSS class to body after Aspose.Cells HTML export | Aspose.Cells C# add body class to generated HTML | inject custom CSS into single HTML file saved by Aspose.Cells | modify <body> tag in Aspose.Cells HTML output | post‑save HTML editing Aspose.Cells
+// Developer Intent: Insert a custom CSS class into the <body> tag of the HTML file produced by Aspose.Cells to enable additional styling.
+// Use Cases: Apply corporate branding by attaching a specific class to the body of exported reports. | Enable responsive layout or theme switching through a body class that CSS frameworks can target. | Allow JavaScript modules to locate the exported document via a known body class. | Combine embedded CssStyles with external stylesheet references for layered styling.
+// AI Prompts: Write C# code that saves an Aspose.Cells workbook as a single HTML file and then adds a custom class attribute to the <body> tag without breaking the existing content. | Show how to use HtmlAgilityPack in C# to programmatically add a CSS class to the <body> element of an Aspose.Cells‑generated HTML file. | Explain how to merge Aspose.Cells CssStyles with a post‑save body‑class injection to support both inline styles and external CSS frameworks. | Provide a PowerShell script that automates adding a body class to multiple HTML files exported from Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlCustomBodyClass
+namespace AsposeCellsHtmlExport
 {
-    // This example creates a workbook, saves it as a single HTML file with a custom CSS definition, then reads the generated file and injects or appends a "custom-body" class to the <body> element, handling existing class attributes safely.
+    // C# example that creates a workbook, saves it as a single HTML file with embedded CssStyles, then injects a custom class into the <body> tag to apply additional styling.
     class Program
     {
         static void Main()
@@ -23,59 +23,38 @@ namespace AsposeCellsHtmlCustomBodyClass
             sheet.Cells["A1"].PutValue("Hello World");
 
             // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-            // Save as a single HTML file so that CssStyles can be applied
-            htmlOptions.SaveAsSingleFile = true;
-
-            // Define additional CSS styles (optional, can be empty)
-            // Here we define a CSS class that can be used for the body element
-            htmlOptions.CssStyles = @"
-                .custom-body {
-                    font-family: Arial, sans-serif;
-                    background-color: #f0f0f0;
-                    padding: 10px;
-                }";
-
-            // Save the workbook to an HTML file
-            string htmlPath = "output.html";
-            workbook.Save(htmlPath, htmlOptions);
-
-            // After conversion, read the generated HTML and append the custom CSS class to the <body> tag
-            string htmlContent = File.ReadAllText(htmlPath);
-
-            // Replace the opening <body> tag with one that includes the custom class
-            // Handles possible whitespace after <body> (e.g., <body>, <body >, <body id="...">)
-            // Simple approach: find the first occurrence of "<body" and insert the class attribute
-            int bodyTagStart = htmlContent.IndexOf("<body", StringComparison.OrdinalIgnoreCase);
-            if (bodyTagStart >= 0)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
-                int bodyTagEnd = htmlContent.IndexOf('>', bodyTagStart);
-                if (bodyTagEnd > bodyTagStart)
-                {
-                    // Check if a class attribute already exists
-                    string bodyTag = htmlContent.Substring(bodyTagStart, bodyTagEnd - bodyTagStart + 1);
-                    if (bodyTag.IndexOf("class=", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        // Append the custom class to the existing class attribute
-                        htmlContent = htmlContent.Replace(
-                            "class=\"",
-                            "class=\"custom-body ");
-                    }
-                    else
-                    {
-                        // Insert a new class attribute before the closing '>'
-                        string newBodyTag = bodyTag.Insert(bodyTag.Length - 1, " class=\"custom-body\"");
-                        htmlContent = htmlContent.Remove(bodyTagStart, bodyTag.Length)
-                                                 .Insert(bodyTagStart, newBodyTag);
-                    }
-                }
-            }
+                // Save as a single HTML file so that CssStyles are applied
+                SaveAsSingleFile = true,
 
-            // Write the modified HTML back to the file
-            File.WriteAllText(htmlPath, htmlContent);
+                // Define additional CSS that targets a custom class on the body element
+                CssStyles = @"
+                    body.my-custom-class {
+                        font-family: Arial, sans-serif;
+                        background-color: #f0f0f0;
+                        padding: 10px;
+                    }"
+            };
 
-            Console.WriteLine("HTML file generated with custom CSS class applied to the <body> element.");
+            // Path for the intermediate HTML file
+            string tempHtmlPath = Path.Combine(Path.GetTempPath(), "temp_output.html");
+
+            // Save the workbook as HTML
+            workbook.Save(tempHtmlPath, htmlOptions);
+
+            // Read the generated HTML content
+            string htmlContent = File.ReadAllText(tempHtmlPath);
+
+            // Insert the custom CSS class into the <body> tag
+            // This simple replace works because the file is saved as a single HTML document
+            string updatedHtml = htmlContent.Replace("<body>", "<body class=\"my-custom-class\">");
+
+            // Write the modified HTML back to the same file (or a new file if preferred)
+            File.WriteAllText(tempHtmlPath, updatedHtml);
+
+            Console.WriteLine("HTML file with custom body class created at:");
+            Console.WriteLine(tempHtmlPath);
         }
     }
 }

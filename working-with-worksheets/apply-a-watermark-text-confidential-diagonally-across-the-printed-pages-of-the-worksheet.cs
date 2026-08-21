@@ -1,57 +1,64 @@
-// Title: C# – Add a Diagonal CONFIDENTIAL Text Watermark When Saving a Worksheet to PDF with Aspose.Cells
-// Description: Creates a new workbook, defines a RenderingWatermark with the text "CONFIDENTIAL", sets a 45° rotation, 30% opacity, background placement, centered alignment, and full‑page scaling, then assigns the watermark to PdfSaveOptions and saves the worksheet as a printable PDF.
-// Keywords: Aspose.Cells C# watermark PDF | RenderingWatermark rotation | diagonal text watermark Aspose | PdfSaveOptions watermark | confidential watermark worksheet | Aspose.Cells print watermark
-// Common Searches: how to add a diagonal watermark to a worksheet PDF using Aspose.Cells | Aspose.Cells set watermark opacity and rotation | C# export worksheet to PDF with background text watermark | Aspose.Cells RenderingWatermark example
-// Developer Intent: Apply a diagonal CONFIDENTIAL text watermark to the printed pages of a worksheet during PDF export.
-// Use Cases: Produce legal or internal reports that display a semi‑transparent confidential label on every printed page. | Brand printable worksheets with a company logo or slogan across the page diagonal. | Automate batch generation of PDFs that require a consistent watermark for compliance.
-// AI Prompts: Generate code to change the watermark text, font size, and color based on worksheet cell values in Aspose.Cells. | Show how to assign a different watermark to each sheet when exporting a multi‑sheet workbook to PDF. | Explain how to add a watermark only to the PDF output without affecting the workbook view in the Aspose.Cells UI.
+// Title: Add a Diagonal “Confidential” Text Watermark to PDF Exported from Aspose.Cells (.NET)
+// Description: Demonstrates how to create a workbook, define a RenderingFont and RenderingWatermark with the text "Confidential", set a 45° rotation, 30% opacity, background placement, centered alignment, and full‑page scaling, then assign the watermark to PdfSaveOptions and save the worksheet as a PDF where the watermark appears on every printed page.
+// Keywords: Aspose.Cells PDF watermark | C# diagonal text watermark | RenderingWatermark rotation | PDFSaveOptions background watermark | Aspose.Cells .NET example | confidential watermark worksheet
+// Common Searches: Aspose.Cells add diagonal watermark to PDF | How to set RenderingWatermark opacity in C# | Save worksheet as PDF with background text using Aspose.Cells | C# code for confidential watermark on exported Excel
+// Developer Intent: Apply a semi‑transparent diagonal "Confidential" watermark to every page of a PDF generated from an Aspose.Cells worksheet.
+// Use Cases: Protect sensitive reports by embedding a discreet diagonal watermark before distribution. | Mark draft or internal documents with a light‑gray background label without altering cell data. | Add branding or legal notices to printed worksheets while keeping the original workbook unchanged.
+// AI Prompts: Generate C# code that uses Aspose.Cells to add a semi‑transparent diagonal watermark with custom text and export the worksheet as a PDF. | Explain the RenderingWatermark properties needed to rotate, set opacity, align, and scale a text watermark for PDF output in Aspose.Cells. | Provide step‑by‑step instructions to apply a background watermark only to printed pages while preserving worksheet content.
 
+using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Creates a new workbook, defines a RenderingWatermark with the text "CONFIDENTIAL", sets a 45° rotation, 30% opacity, background placement, centered alignment, and full‑page scaling, then assigns the watermark to PdfSaveOptions and saves the worksheet as a printable PDF.
-class Program
+namespace AsposeCellsWatermarkDemo
 {
-    static void Main()
+    // Demonstrates how to create a workbook, define a RenderingFont and RenderingWatermark with the text "Confidential", set a 45° rotation, 30% opacity, background placement, centered alignment, and full‑page scaling, then assign the watermark to PdfSaveOptions and save the worksheet as a PDF where the watermark appears on every printed page.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add some sample data (optional, just to have visible content)
-        worksheet.Cells["A1"].PutValue("Sample data for printing with watermark.");
-
-        // Create a rendering font for the watermark text
-        RenderingFont font = new RenderingFont("Arial", 48)
+        static void Main()
         {
-            Bold = true,
-            Color = Color.LightGray
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Create the text watermark with the desired text and font
-        RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
-        {
-            // Position the watermark diagonally across the page
-            Rotation = 45f,
-            // Make it semi‑transparent
-            Opacity = 0.3f,
-            // Place it behind the worksheet content
-            IsBackground = true,
-            // Center it horizontally and vertically
-            HAlignment = TextAlignmentType.Center,
-            VAlignment = TextAlignmentType.Center,
-            // Scale to fit the page
-            ScaleToPagePercent = 100
-        };
+            // Add some sample data to visualize the watermark effect
+            sheet.Cells["A1"].PutValue("Sample Data");
+            sheet.Cells["A2"].PutValue("This worksheet will have a diagonal \"Confidential\" watermark.");
 
-        // Configure PDF save options to include the watermark
-        PdfSaveOptions saveOptions = new PdfSaveOptions
-        {
-            Watermark = watermark
-        };
+            // Create a rendering font for the watermark text
+            RenderingFont font = new RenderingFont("Arial", 48)
+            {
+                Bold = true,
+                Color = Color.LightGray
+            };
 
-        // Save the workbook as a PDF (the PDF can be printed with the watermark)
-        workbook.Save("WorksheetWithWatermark.pdf", saveOptions);
+            // Create a text watermark with the desired text and font
+            RenderingWatermark watermark = new RenderingWatermark("Confidential", font)
+            {
+                // Position the watermark diagonally across the page
+                Rotation = 45f,
+                // Make the watermark semi‑transparent
+                Opacity = 0.3f,
+                // Place it behind the worksheet content
+                IsBackground = true,
+                // Center it horizontally and vertically
+                HAlignment = TextAlignmentType.Center,
+                VAlignment = TextAlignmentType.Center,
+                // Scale it to cover most of the page
+                ScaleToPagePercent = 100
+            };
+
+            // Configure PDF save options and assign the watermark
+            PdfSaveOptions saveOptions = new PdfSaveOptions
+            {
+                Watermark = watermark
+            };
+
+            // Save the workbook as a PDF; the watermark will appear on every printed page
+            workbook.Save("ConfidentialWatermarked.pdf", saveOptions);
+
+            Console.WriteLine("Workbook saved with diagonal \"Confidential\" watermark.");
+        }
     }
 }

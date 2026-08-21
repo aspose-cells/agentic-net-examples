@@ -1,46 +1,40 @@
-// Title: Detect Excel format, confirm it is not encrypted, and load the workbook with Aspose.Cells for .NET
-// Description: C# example that uses Aspose.Cells FileFormatUtil.DetectFileFormat to identify a spreadsheet's format, checks the IsEncrypted flag, logs the detected LoadFormat, loads the workbook only when it is unencrypted, and prints confirmation messages to the console.
-// Keywords: Aspose.Cells FileFormatUtil | detect Excel file format .NET | check workbook encryption C# | load unencrypted workbook Aspose.Cells | Workbook.Settings.IsEncrypted example | C# Excel format detection | Aspose.Cells console logging
-// Common Searches: Aspose.Cells detect file format before loading | how to check if Excel file is encrypted using Aspose.Cells | load workbook only when not password protected C# | FileFormatUtil DetectFileFormat example | verify workbook encryption status Aspose.Cells
-// Developer Intent: Identify the spreadsheet type, ensure it is not password‑protected, and then open it with Aspose.Cells while providing clear console feedback.
-// Use Cases: Validate user‑uploaded Excel files for encryption before processing in a web service. | Log format and encryption details in an automated ETL pipeline that handles multiple spreadsheet sources. | Implement conditional logic based on file type (XLSX, XLS, CSV) only when the file is unencrypted.
-// AI Prompts: Generate C# code that uses Aspose.Cells to detect an Excel file's format, verify it is not encrypted, and load it with console logging. | Show how to handle an encrypted workbook by prompting for a password and then opening it with Aspose.Cells. | Create a reusable method that returns format, encryption status, and load result for any spreadsheet using Aspose.Cells.
+// Title: Detect Excel file format and encryption with Aspose.Cells in C# before loading
+// Description: Demonstrates using Aspose.Cells FileFormatUtil.DetectFileFormat to read an Excel file’s LoadFormat and encryption flag, log the information, and instantiate a Workbook only when the file is not password‑protected.
+// Keywords: Aspose.Cells FileFormatUtil | detect Excel format C# | check workbook encryption C# | load unencrypted workbook Aspose | Excel password protection detection | C# Aspose.Cells example | DetectFileFormat usage
+// Common Searches: Aspose.Cells detect if Excel file is encrypted | C# check Excel password protection before opening | How to get LoadFormat of Excel file using Aspose | FileFormatUtil DetectFileFormat example | Prevent exception when loading encrypted workbook Aspose.Cells
+// Developer Intent: Identify the Excel file type and encryption status, then load the workbook only if it is not password‑protected.
+// Use Cases: Validate incoming user‑uploaded spreadsheets to ensure they are unencrypted before processing. | Log file format and worksheet count for audit trails in automated data‑import pipelines. | Avoid runtime errors by pre‑checking encryption status prior to creating a Workbook object.
+// AI Prompts: Generate C# code that uses Aspose.Cells to detect an Excel file’s format and encryption flag, then opens it only when it is not password‑protected. | Explain how FileFormatUtil.DetectFileFormat works and why checking IsEncrypted prevents exceptions when loading workbooks. | Provide a sample that prompts for a password and opens an encrypted workbook with Aspose.Cells in C#.
 
 using System;
 using Aspose.Cells;
 
-// C# example that uses Aspose.Cells FileFormatUtil.DetectFileFormat to identify a spreadsheet's format, checks the IsEncrypted flag, logs the detected LoadFormat, loads the workbook only when it is unencrypted, and prints confirmation messages to the console.
+// Demonstrates using Aspose.Cells FileFormatUtil.DetectFileFormat to read an Excel file’s LoadFormat and encryption flag, log the information, and instantiate a Workbook only when the file is not password‑protected.
 class Program
 {
     static void Main()
     {
-        // Path to the workbook file (adjust as needed)
+        // Path to the workbook file (replace with your actual file path)
         string filePath = "sample.xlsx";
 
-        // Detect the file format without fully loading the workbook
+        // Detect the file format and encryption status without loading the workbook
         FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-
-        // Verify that the file is not encrypted
-        if (formatInfo.IsEncrypted)
-        {
-            Console.WriteLine("The workbook is encrypted. Unable to proceed without a password.");
-            return;
-        }
-
-        // Optionally display the detected load format
         Console.WriteLine($"Detected LoadFormat: {formatInfo.LoadFormat}");
+        Console.WriteLine($"Is Encrypted: {formatInfo.IsEncrypted}");
 
-        // Load the unencrypted workbook
-        using (Workbook workbook = new Workbook(filePath))
+        // Verify that the workbook is not encrypted before loading
+        if (!formatInfo.IsEncrypted)
         {
-            // Confirm successful loading
+            // Load the unencrypted workbook
+            Workbook workbook = new Workbook(filePath);
             Console.WriteLine("Workbook loaded successfully.");
 
-            // Additional check using workbook settings
-            Console.WriteLine($"Workbook Settings IsEncrypted: {workbook.Settings.IsEncrypted}");
+            // Additional confirmation (e.g., number of worksheets)
+            Console.WriteLine($"Worksheet count: {workbook.Worksheets.Count}");
         }
-
-        // Final confirmation
-        Console.WriteLine("File format verification completed.");
+        else
+        {
+            Console.WriteLine("The workbook is encrypted and cannot be opened without a password.");
+        }
     }
 }

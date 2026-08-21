@@ -1,59 +1,56 @@
-// Title: Aspose.Cells for .NET – Create a Multi‑Selection Slicer Tied to a Table Column (C#)
-// Description: Demonstrates how to generate a workbook, define a ListObject, insert a slicer that references the first column, and configure it for multi‑selection, two‑column layout, movable positioning, and a custom caption before saving as SlicerWithMultiSelection.xlsx.
-// Keywords: Aspose.Cells slicer C# | add slicer to ListObject | multi selection slicer .NET | configure slicer properties | table column filter Aspose | Excel slicer programmatic | Workbook with slicer | Aspose.Cells example
-// Common Searches: Aspose.Cells add slicer to table column C# | Enable multi‑selection on slicer using Aspose.Cells | Set slicer NumberOfColumns property .NET | Move or resize slicer programmatically Aspose | Save workbook with slicer Aspose.Cells
-// Developer Intent: Programmatically attach a slicer to a table column and set it up for flexible multi‑selection filtering.
-// Use Cases: Interactive dashboard where users filter sales categories simultaneously. | Dynamic reporting workbook that lets analysts pick multiple product groups. | Customizable Excel view with a movable slicer for on‑the‑fly data exploration.
-// AI Prompts: Write C# code with Aspose.Cells to add a slicer linked to the first ListObject column and enable multi‑selection. | Show how to adjust slicer properties such as NumberOfColumns, ShowAllItems, and LockedPosition in Aspose.Cells. | Explain steps to verify that the slicer correctly filters the table when several items are selected.
+// Title: Aspose.Cells for .NET – Add a Table Slicer with Multi‑Selection and Custom Layout (C#)
+// Description: A complete C# example that creates a workbook, converts a range to a ListObject, inserts a slicer linked to the "Category" column, enables multi‑selection, sets a two‑column layout, shows all items, and allows the slicer to be moved before saving the file.
+// Keywords: Aspose.Cells | C# slicer example | table slicer Aspose.Cells | multi‑select slicer | ListObject slicer | Excel filtering with slicer | NumberOfColumns property | ShowAllItems slicer | locked position slicer | GitHub Aspose.Cells sample
+// Common Searches: how to add a slicer to a ListObject using Aspose.Cells .NET | Aspose.Cells multi‑select slicer C# example | set slicer NumberOfColumns Aspose.Cells | show all items in Aspose.Cells slicer | move or resize slicer programmatically Aspose.Cells | GitHub Aspose.Cells table slicer demo
+// Developer Intent: Insert a slicer linked to a table column and configure it for multi‑selection with a custom layout.
+// Use Cases: Enable end‑users to filter a sales summary by multiple categories directly in the workbook. | Create an interactive dashboard where selecting several items updates linked charts and pivot tables. | Provide a reusable method that adds a configurable slicer to any ListObject for dynamic reporting.
+// AI Prompts: Write C# code with Aspose.Cells that adds a slicer to a ListObject, enables multi‑selection, sets NumberOfColumns to 3, and locks its position. | Explain the effect of ShowAllItems and NumberOfColumns on slicer behavior in an Aspose.Cells workbook. | Refactor the slicer creation into a method that accepts worksheet, table name, column name, column count, and lock flag.
 
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsSlicerExample
+// A complete C# example that creates a workbook, converts a range to a ListObject, inserts a slicer linked to the "Category" column, enables multi‑selection, sets a two‑column layout, shows all items, and allows the slicer to be moved before saving the file.
+class SlicerMultiSelectDemo
 {
-    // Demonstrates how to generate a workbook, define a ListObject, insert a slicer that references the first column, and configure it for multi‑selection, two‑column layout, movable positioning, and a custom caption before saving as SlicerWithMultiSelection.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the table
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(30);
-            sheet.Cells["A5"].PutValue("A");
-            sheet.Cells["B5"].PutValue(40);
-            sheet.Cells["A6"].PutValue("B");
-            sheet.Cells["B6"].PutValue(50);
+        // Populate sample data that will become a table
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["B1"].PutValue("Amount");
+        sheet.Cells["A2"].PutValue("Food");
+        sheet.Cells["B2"].PutValue(120);
+        sheet.Cells["A3"].PutValue("Drink");
+        sheet.Cells["B3"].PutValue(80);
+        sheet.Cells["A4"].PutValue("Food");
+        sheet.Cells["B4"].PutValue(150);
+        sheet.Cells["A5"].PutValue("Snack");
+        sheet.Cells["B5"].PutValue(60);
 
-            // Add a table that covers the data range
-            int tableIndex = sheet.ListObjects.Add(0, 0, 5, 1, true);
-            ListObject table = sheet.ListObjects[tableIndex];
-            table.TableStyleType = TableStyleType.TableStyleMedium2;
+        // Add a ListObject (table) that covers the data range
+        int tableIndex = sheet.ListObjects.Add("A1", "B5", true);
+        ListObject table = sheet.ListObjects[tableIndex];
+        table.TableStyleType = TableStyleType.TableStyleMedium2;
 
-            // Add a slicer linked to the first column ("Category") of the table
-            // Place the slicer starting at row 8, column 1 (cell A8)
-            SlicerCollection slicers = sheet.Slicers;
-            int slicerIndex = slicers.Add(table, table.ListColumns[0], 8, 1);
-            Slicer slicer = slicers[slicerIndex];
+        // Add a slicer linked to the "Category" column of the table
+        // Use the overload Add(ListObject, ListColumn, int row, int column)
+        // The slicer will be placed starting at cell D2 (row index 1, column index 3)
+        SlicerCollection slicers = sheet.Slicers;
+        int slicerIndex = slicers.Add(table, table.ListColumns[0], 1, 3);
+        Slicer slicer = slicers[slicerIndex];
 
-            // Configure the slicer for flexible multi‑selection filtering
-            slicer.NumberOfColumns = 2;          // Show items in two columns
-            slicer.ShowAllItems = true;          // Ensure all items are visible
-            slicer.LockedPosition = false;       // Allow the user to move/resize the slicer
-            slicer.Caption = "Category Filter";  // Optional caption
+        // Configure slicer to allow flexible multi‑selection
+        // In a table slicer multi‑selection is enabled by default,
+        // but we can adjust visual layout and ensure all items are shown.
+        slicer.NumberOfColumns = 2;          // Show items in two columns for easier selection
+        slicer.ShowAllItems = true;          // Ensure all items appear even if they have no data
+        slicer.LockedPosition = false;       // Allow the user to move/resize the slicer
 
-            // Save the workbook
-            workbook.Save("SlicerWithMultiSelection.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("SlicerMultiSelectDemo.xlsx");
     }
 }

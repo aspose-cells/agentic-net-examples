@@ -1,44 +1,47 @@
-// Title: Aspose.Cells for .NET – Replace Light2 Theme Background with a Pattern Fill (C#)
-// Description: Demonstrates how to change the Light2 (Background2) theme color of a cell to a patterned fill such as DiagonalStripe while keeping theme references. The example creates a workbook, adds text to A1, sets BackgroundThemeColor and ForegroundThemeColor, applies the style, and saves the file as ThemePatternFill.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | Excel pattern fill | Light2 theme background | BackgroundThemeColor | ForegroundThemeColor | BackgroundType DiagonalStripe | theme color fill | replace solid background with pattern | Excel styling example
-// Common Searches: Aspose.Cells replace Light2 background with pattern | C# set patterned fill using theme colors in Excel | BackgroundThemeColor DiagonalStripe Aspose.Cells | How to use theme colors for pattern fill in .NET workbook | Excel pattern fill preserving theme colors Aspose
-// Developer Intent: Apply a patterned fill to a cell while preserving the workbook’s Light2 (Background2) theme color using Aspose.Cells for .NET.
-// Use Cases: Design reports where theme colors are maintained but cells need visual distinction via patterns. | Create Excel templates that replace solid theme backgrounds with diagonal stripe or other patterns. | Generate export files that stay consistent with corporate Light2 theme while adding patterned styling.
-// AI Prompts: Show C# code to replace the Light2 theme background with a diagonal stripe pattern using Aspose.Cells. | How can I apply a pattern fill while keeping theme color references in an Aspose.Cells workbook? | Provide an Aspose.Cells example that sets BackgroundThemeColor and ForegroundThemeColor for a patterned cell style.
+// Title: Aspose.Cells .NET – Apply a Pattern Fill While Preserving the Light2 Theme Background
+// Description: Shows how to create a workbook, define a diagonal‑stripe pattern style, set a red foreground, keep the Light2 theme background using BackgroundThemeColor, apply the style to cell B2, and save the file as XLSX.
+// Keywords: Aspose.Cells | .NET | pattern fill | BackgroundThemeColor | Light2 theme | ThemeColorType.Background2 | diagonal stripe | cell style | workbook theme | preserve theme colors
+// Common Searches: Aspose.Cells pattern fill with Light2 theme background | set BackgroundThemeColor for patterned style .NET | how to keep theme colors when using pattern fill Aspose.Cells | apply diagonal stripe pattern to a cell in C# | preserve workbook theme while styling cells
+// Developer Intent: Add a patterned fill to a cell while retaining the Light2 theme background reference.
+// Use Cases: Design reports that combine visual patterns with theme‑based colors for consistent branding. | Create reusable templates where pattern fills respect the workbook’s Light2 theme across multiple sheets. | Enhance accessibility by using theme colors for background while highlighting cells with patterned overlays.
+// AI Prompts: Generate C# code that applies a diagonal‑stripe pattern to a cell and uses BackgroundThemeColor to keep the Light2 theme background in Aspose.Cells. | Explain how to combine ForegroundColor and BackgroundThemeColor to create a theme‑aware patterned fill in a .NET workbook. | Show an example of applying the same Light2‑based pattern style to a range of cells using Aspose.Cells.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// Demonstrates how to change the Light2 (Background2) theme color of a cell to a patterned fill such as DiagonalStripe while keeping theme references. The example creates a workbook, adds text to A1, sets BackgroundThemeColor and ForegroundThemeColor, applies the style, and saves the file as ThemePatternFill.xlsx.
-class ReplaceThemeBackground
+namespace AsposeCellsThemePatternDemo
 {
-    static void Main()
+    // Shows how to create a workbook, define a diagonal‑stripe pattern style, set a red foreground, keep the Light2 theme background using BackgroundThemeColor, apply the style to cell B2, and save the file as XLSX.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Put a sample value in a cell that will use the themed background
-        Cell cell = worksheet.Cells["A1"];
-        cell.PutValue("Themed Pattern Fill");
+            // Define a style that uses a pattern fill
+            Style patternStyle = workbook.CreateStyle();
 
-        // Create a new style
-        Style style = workbook.CreateStyle();
+            // Set the pattern type (e.g., diagonal stripe)
+            patternStyle.Pattern = BackgroundType.DiagonalStripe;
 
-        // Set a pattern type (e.g., DiagonalStripe) instead of a solid background
-        style.Pattern = BackgroundType.DiagonalStripe;
+            // Set the foreground color of the pattern (regular Color)
+            patternStyle.ForegroundColor = Color.Red;
 
-        // Preserve the original theme background color (Light2 corresponds to Background2)
-        style.BackgroundThemeColor = new ThemeColor(ThemeColorType.Background2, 0);
+            // Preserve the theme reference for the background by using BackgroundThemeColor
+            // ThemeColorType.Background2 corresponds to the Light2 background color of the theme
+            patternStyle.BackgroundThemeColor = new ThemeColor(ThemeColorType.Background2, 0);
 
-        // Optionally set a foreground theme color for the pattern (e.g., Accent1)
-        style.ForegroundThemeColor = new ThemeColor(ThemeColorType.Accent1, 0);
+            // Apply the style to a cell
+            Cell targetCell = sheet.Cells["B2"];
+            targetCell.PutValue("Pattern with Light2 background");
+            targetCell.SetStyle(patternStyle);
 
-        // Apply the style to the cell
-        cell.SetStyle(style);
-
-        // Save the workbook
-        workbook.Save("ThemePatternFill.xlsx", SaveFormat.Xlsx);
+            // Save the workbook (lifecycle: save)
+            workbook.Save("ThemePatternFillDemo.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

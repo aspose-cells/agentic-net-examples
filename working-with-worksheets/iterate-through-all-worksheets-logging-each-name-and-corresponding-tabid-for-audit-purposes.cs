@@ -1,34 +1,45 @@
-// Title: Audit Worksheet Names and TabIds with Aspose.Cells for .NET
-// Description: Shows how to loop through all worksheets in an Aspose.Cells workbook, output each worksheet's Name and TabId, and optionally save the file—ideal for creating audit logs, validating identifiers, or generating reports.
-// Keywords: Aspose.Cells | .NET | C# | Worksheet TabId | enumerate worksheets | audit worksheet identifiers | log worksheet names | retrieve TabId | worksheet metadata | Aspose.Cells API
-// Common Searches: Aspose.Cells get TabId for each worksheet C# | iterate worksheets and log names Aspose.Cells | how to audit worksheet identifiers with Aspose.Cells | retrieve worksheet TabId property .NET | list all worksheet names and TabIds Aspose.Cells
-// Developer Intent: The developer needs to enumerate every worksheet in a workbook and record its Name and TabId for auditing, validation, or reporting purposes.
-// Use Cases: Create an audit trail of worksheet identifiers before sharing a workbook. | Verify that TabId values are unique to avoid navigation conflicts. | Generate a version‑control report showing worksheet order and IDs.
-// AI Prompts: Write a reusable method that returns a dictionary of worksheet names and TabId values using Aspose.Cells for .NET. | Add robust error handling so that a null workbook or missing worksheets are logged to a file instead of the console. | Show how to filter worksheets by a naming pattern while still logging their TabId for selective auditing.
+// Title: Enumerate all worksheets in an Aspose.Cells workbook and log each Name and TabId (C#)
+// Description: This C# example creates a workbook, assigns custom names and TabId values to worksheets, then iterates through the Worksheets collection, writing each sheet’s Name and TabId to the console before saving the file as AuditWorkbook.xlsx.
+// Keywords: Aspose.Cells | C# | worksheet TabId | list worksheet names | audit workbook | enumerate worksheets | Aspose.Cells .NET | Worksheet TabId property | iterate worksheets
+// Common Searches: Aspose.Cells get worksheet TabId | How to loop through worksheets in Aspose.Cells C# | Retrieve worksheet names and TabIds Aspose.Cells | Audit worksheet identifiers Aspose.Cells | Save workbook after enumerating worksheets
+// Developer Intent: The developer needs to enumerate every worksheet in a workbook and capture its Name and TabId for auditing, validation, or reporting purposes.
+// Use Cases: Create an audit log of worksheet identifiers before distribution | Verify worksheet presence and correct TabId in automated tests | Generate compliance documentation of workbook structure | Export worksheet metadata to external systems
+// AI Prompts: Generate C# code that writes worksheet names and TabIds to a CSV using Aspose.Cells | Show how to filter worksheets by a range of TabId values while iterating | Explain best practices for handling missing TabId or access errors in Aspose.Cells | Provide example of logging worksheet metadata to a file instead of the console
 
 using System;
 using Aspose.Cells;
 
-// Shows how to loop through all worksheets in an Aspose.Cells workbook, output each worksheet's Name and TabId, and optionally save the file—ideal for creating audit logs, validating identifiers, or generating reports.
+// This C# example creates a workbook, assigns custom names and TabId values to worksheets, then iterates through the Worksheets collection, writing each sheet’s Name and TabId to the console before saving the file as AuditWorkbook.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (you can replace this with loading an existing file if needed)
-        Workbook workbook = new Workbook();
-
-        // Example: add/rename worksheets to demonstrate the audit logging
-        workbook.Worksheets[0].Name = "SheetOne";
-        workbook.Worksheets.Add("SheetTwo");
-        workbook.Worksheets.Add("SheetThree");
-
-        // Iterate through all worksheets and log their Name and TabId
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            Console.WriteLine($"Worksheet Name: {sheet.Name}, TabId: {sheet.TabId}");
-        }
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
 
-        // Save the workbook (optional, based on your workflow)
-        workbook.Save("AuditLogWorkbook.xlsx");
+            // Example setup: assign names and TabIds to worksheets
+            Worksheet first = workbook.Worksheets[0];
+            first.Name = "FirstSheet";
+            first.TabId = 101;
+
+            // Add a second worksheet and set its TabId
+            Worksheet second = workbook.Worksheets.Add("SecondSheet"); // Add returns the new worksheet
+            second.TabId = 102;
+
+            // Iterate through all worksheets and log their Name and TabId
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Console.WriteLine($"Worksheet Name: {sheet.Name}, TabId: {sheet.TabId}");
+            }
+
+            // Save the workbook (lifecycle: save)
+            workbook.Save("AuditWorkbook.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

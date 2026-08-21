@@ -1,36 +1,40 @@
-// Title: Aspose.Cells .NET: Merge H1:H4, set light‑blue fill, export to ODS
-// Description: C# example that creates a new Workbook, merges cells H1 through H4 on the first worksheet, applies a solid light‑blue background to the merged range, and saves the result as an ODS file with OdsSaveOptions.
-// Keywords: Aspose.Cells C# | merge cells | cell background color | light blue fill | ODS export .NET | OdsSaveOptions | style merged cells | Aspose.Cells example
-// Common Searches: Aspose.Cells merge cells H1:H4 | Set background color for merged cells Aspose.Cells C# | Save workbook as ODS using Aspose.Cells .NET | Apply solid fill to merged range Aspose.Cells | C# ODS export with cell styling Aspose
-// Developer Intent: Create a workbook, merge H1:H4, color the merged cell light blue, and export it as an ODS document using Aspose.Cells for .NET.
-// Use Cases: Generate a multi‑row header with a light‑blue background for reports that need to be opened in LibreOffice. | Build a reusable template where the title cell spans H1:H4, is styled with a blue fill, and is saved as ODS for cross‑platform distribution.
-// AI Prompts: Write C# code with Aspose.Cells to merge cells A1:C1, apply a yellow solid fill, and save the workbook as an ODS file. | Explain how to set a custom background color on a merged cell range and export the worksheet to ODS using Aspose.Cells for .NET.
+// Title: C# – Merge H1:H4, apply light‑blue fill, and save as ODS using Aspose.Cells
+// Description: Shows how to create a new workbook with Aspose.Cells for .NET, merge the range H1:H4, set a solid light‑blue background on the merged cell, and export the result as an ODS file via OdsSaveOptions (LibreOffice generator).
+// Keywords: Aspose.Cells | C# | merge cells | cell background color | light blue fill | ODS export | OdsSaveOptions | LibreOffice generator | worksheet styling | Excel to ODS conversion
+// Common Searches: Aspose.Cells merge cells C# example | Set background color for merged cells Aspose.Cells | Save workbook as ODS using Aspose.Cells .NET | Apply solid fill to a cell range in ODS with Aspose | C# code to create ODS file with styled header
+// Developer Intent: Create a workbook, merge H1:H4, color it light blue, and save as ODS.
+// Use Cases: Generate a branded ODS report where the title spans H1:H4 with a colored background for visual emphasis. | Automate production of spreadsheet templates that require a merged, colored header before distribution as ODS files. | Export data from a .NET application to ODS while preserving custom cell styling for downstream analysis.
+// AI Prompts: Provide C# code to merge cells H1:H4, set a solid light‑blue background, and save the workbook as ODS with Aspose.Cells. | How do I use OdsSaveOptions to export a styled worksheet to ODS in Aspose.Cells for .NET? | Explain the steps to apply a background color to a merged cell range and generate an ODS file using Aspose.Cells.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Ods;
 
-// C# example that creates a new Workbook, merges cells H1 through H4 on the first worksheet, applies a solid light‑blue background to the merged range, and saves the result as an ODS file with OdsSaveOptions.
-class MergeAndStyleExample
+// Shows how to create a new workbook with Aspose.Cells for .NET, merge the range H1:H4, set a solid light‑blue background on the merged cell, and export the result as an ODS file via OdsSaveOptions (LibreOffice generator).
+class Program
 {
     static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
         // Merge cells H1:H4 (zero‑based indices: row 0, column 7, 4 rows, 1 column)
-        worksheet.Cells.Merge(0, 7, 4, 1);
+        cells.Merge(0, 7, 4, 1);
 
-        // Apply light blue background to the merged cell
-        Style style = worksheet.Cells[0, 7].GetStyle();
+        // Set the background color of the merged cell to light blue
+        Style style = cells[0, 7].GetStyle();
         style.ForegroundColor = Color.LightBlue;
         style.Pattern = BackgroundType.Solid;
-        worksheet.Cells[0, 7].SetStyle(style);
+        cells[0, 7].SetStyle(style);
 
         // Save the workbook as ODS using OdsSaveOptions
-        OdsSaveOptions saveOptions = new OdsSaveOptions();
-        workbook.Save("MergedCellsLightBlue.ods", saveOptions);
+        OdsSaveOptions saveOptions = new OdsSaveOptions
+        {
+            GeneratorType = OdsGeneratorType.LibreOffice
+        };
+        workbook.Save("MergedLightBlue.ods", saveOptions);
     }
 }

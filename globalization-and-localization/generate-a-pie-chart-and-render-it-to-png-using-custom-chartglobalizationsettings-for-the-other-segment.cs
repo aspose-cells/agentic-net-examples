@@ -1,19 +1,20 @@
-// Title: Aspose.Cells C# – Pie Chart with Custom “Other” Label and PNG Export using ChartGlobalizationSettings
-// Description: Creates a workbook, fills sample data, adds a pie chart, sets ChartSplitType.PercentValue to group small slices, applies SettableChartGlobalizationSettings to rename the aggregated “Other” segment, renders the chart directly to a PNG file, and saves the workbook as an Excel file.
-// Keywords: Aspose.Cells | C# pie chart | ChartGlobalizationSettings | custom other label | ChartSplitType.PercentValue | render chart to PNG | Excel chart export .NET | localization of chart labels | split small values pie chart | Aspose.Cells PNG rendering
-// Common Searches: Aspose.Cells change "Other" slice label in pie chart | render Aspose.Cells pie chart to PNG C# | ChartSplitType.PercentValue example Aspose.Cells | apply ChartGlobalizationSettings workbook Aspose.Cells | group small values into "Other" segment Aspose.Cells
-// Developer Intent: Generate a pie chart that groups low‑percentage categories under a custom‑named “Other” slice and export the chart as a PNG image.
-// Use Cases: Display sales distribution where categories below a threshold are combined under a localized “Other” label and embed the PNG in a PDF report. | Create multilingual dashboards that automatically rename the “Other” segment based on culture‑specific globalization settings. | Produce lightweight PNG thumbnails of Excel charts for web previews without opening the workbook.
-// AI Prompts: Write C# code with Aspose.Cells to set a custom name for the "Other" segment in a pie chart and save the chart as PNG. | Explain how ChartSplitType.PercentValue and SplitPosition work to aggregate small values into an "Other" slice in Aspose.Cells. | Show how to configure SettableChartGlobalizationSettings for a workbook and verify the custom "Other" label appears in the rendered PNG.
+// Title: C# – Create a Pie Chart with a Custom “Other” Slice and Export to PNG using Aspose.Cells
+// Description: This example shows how to build a workbook, fill it with category data, add a pie chart, group slices that represent less than 15 % of the total into an “Other” segment, rename that segment with SettableChartGlobalizationSettings, and render the chart as a high‑resolution PNG file. The workbook is also saved for reference.
+// Keywords: Aspose.Cells pie chart C# | custom Other slice name | ChartSplitType PercentValue | ChartGlobalizationSettings | export chart to PNG | render Aspose.Cells chart | .NET spreadsheet chart image | localize Other segment Aspose
+// Common Searches: rename Other slice in Aspose.Cells pie chart | set custom label for Other segment Aspose.Cells | group small values into Other slice C# | render Aspose.Cells pie chart as PNG | ChartGlobalizationSettings example .NET
+// Developer Intent: Create a pie chart, combine minor categories into a custom‑named “Other” slice, and save the chart as a PNG image.
+// Use Cases: Generate a sales‑distribution pie chart where categories below 15 % are merged into a “Miscellaneous Items” slice and embed the PNG in a quarterly report. | Produce a dashboard thumbnail that displays a localized “Other” segment, rendering the chart to PNG for web or mobile consumption. | Automate workbook creation that includes a pie chart with a custom “Other” label and export the chart image for email summaries or documentation.
+// AI Prompts: Write C# code with Aspose.Cells to create a pie chart, set ChartSplitType.PercentValue, rename the Other slice to "Miscellaneous Items", and save the chart as a PNG file. | Explain how SettableChartGlobalizationSettings changes the label of the Other segment in Aspose.Cells pie charts and demonstrate its usage in a workbook. | Show how to configure ImageOrPrintOptions for 96 DPI resolution when rendering an Aspose.Cells chart to PNG.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
 namespace AsposeCellsPieChartExample
 {
-    // Creates a workbook, fills sample data, adds a pie chart, sets ChartSplitType.PercentValue to group small slices, applies SettableChartGlobalizationSettings to rename the aggregated “Other” segment, renders the chart directly to a PNG file, and saves the workbook as an Excel file.
+    // This example shows how to build a workbook, fill it with category data, add a pie chart, group slices that represent less than 15 % of the total into an “Other” segment, rename that segment with SettableChartGlobalizationSettings, and render the chart as a high‑resolution PNG file. The workbook is also saved for reference.
     class Program
     {
         static void Main()
@@ -40,42 +41,36 @@ namespace AsposeCellsPieChartExample
                 // Add a pie chart
                 int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 15);
                 Chart chart = sheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B5", true);          // Values
-                chart.NSeries.CategoryData = "A2:A5";     // Categories
 
-                // Optional: split small values into an "Other" segment
+                // Set the data range for the chart
+                chart.NSeries.Add("B2:B5", true);
+                chart.NSeries.CategoryData = "A2:A5";
+
+                // Group small values into an "Other" segment (less than 15%)
                 chart.NSeries[0].SplitType = ChartSplitType.PercentValue;
-                // If SplitPosition is supported, uncomment the following line:
-                // chart.NSeries[0].SplitPosition = 15; // values <15% go to "Other"
 
-                // Create custom globalization settings for the chart
+                // Customize the label for the "Other" segment
                 SettableChartGlobalizationSettings chartSettings = new SettableChartGlobalizationSettings();
-                chartSettings.SetOtherName("Custom Other"); // custom label for the "Other" segment
-
-                // Apply the globalization settings to the workbook
+                chartSettings.SetOtherName("Miscellaneous Items");
                 workbook.Settings.GlobalizationSettings = new GlobalizationSettings
                 {
                     ChartSettings = chartSettings
                 };
 
-                // Render the chart directly to a PNG file
+                // Prepare image rendering options (resolution)
                 ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
                 {
-                    OnePagePerSheet = true
+                    HorizontalResolution = 96,
+                    VerticalResolution = 96
                 };
 
-                try
-                {
-                    // In older Aspose.Cells versions, ToImage accepts a file path and options.
-                    chart.ToImage("PieChart.png", imgOptions);
-                }
-                catch (Exception renderEx)
-                {
-                    Console.WriteLine($"Chart rendering error: {renderEx.Message}");
-                }
+                // Render the chart to a PNG file
+                string chartImagePath = "PieChart.png";
+                chart.ToImage(chartImagePath, imgOptions);
 
-                // Save the workbook as an Excel file
-                workbook.Save("PieChartWorkbook.xlsx");
+                // Save the workbook for reference
+                string workbookPath = "PieChartWorkbook.xlsx";
+                workbook.Save(workbookPath);
             }
             catch (Exception ex)
             {

@@ -1,19 +1,18 @@
 // Title: Count non‑empty cells in a worksheet range with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, populates sample data, defines a range (e.g., A1:C5), iterates each cell, checks that the Value is not null or empty, counts the populated cells, prints the total and optionally saves the file.
-// Keywords: Aspose.Cells count non empty cells | C# Aspose.Cells range enumeration | non‑blank cell count Aspose.Cells | Aspose.Cells worksheet range | C# iterate cells Aspose.Cells
-// Common Searches: Aspose.Cells count non empty cells in range | C# count filled cells Aspose.Cells | How to get number of non‑blank cells using Aspose.Cells | Count cells with data in A1:C5 Aspose.Cells | Aspose.Cells enumerate range and count
-// Developer Intent: Determine how many cells contain data within a given worksheet range.
-// Use Cases: Validate that a data entry block meets a minimum populated‑cell threshold before processing. | Calculate data density for reporting or conditional formatting decisions. | Skip completely empty rows or columns when exporting a selected range.
-// AI Prompts: Generate a reusable C# method that receives an Aspose.Cells.Range and returns the count of non‑empty cells. | Show how to use LINQ with Aspose.Cells to count cells whose Value is neither null nor an empty string. | Explain handling of formula cells that evaluate to an empty string when counting non‑blank cells.
+// Description: A concise C# example that creates a workbook, fills selected cells, defines a range (e.g., "A1:C5"), iterates the Aspose.Cells.Range collection, checks each Cell.Value for null or empty string, increments a counter for populated cells, writes the total to the console, and optionally saves the file.
+// Keywords: Aspose.Cells count non empty cells | C# count cells in range Aspose.Cells | Aspose.Cells iterate range | check empty cell Aspose.Cells | worksheet cell count Aspose.Cells | Aspose.Cells .NET range enumeration
+// Common Searches: count non empty cells Aspose.Cells C# | how to count filled cells in Excel range using Aspose.Cells | Aspose.Cells iterate over range and count values | determine number of populated cells in a worksheet range Aspose.Cells | C# Aspose.Cells count cells ignoring blanks
+// Developer Intent: The developer wants to know how many cells in a specified worksheet range contain data.
+// Use Cases: Validate that a data entry block contains the expected number of filled cells before further processing. | Create a summary of populated cells to drive conditional formatting or reporting. | Skip empty rows when exporting worksheet data to CSV, JSON, or other formats. | Calculate occupancy of a dynamic range for data‑quality checks.
+// AI Prompts: Write a reusable C# method that takes a Worksheet object and a range address string and returns the count of non‑empty cells using Aspose.Cells. | Show how to modify the loop so cells containing only whitespace are treated as empty while counting. | Explain how to use Cells.MaxDataRow and Cells.MaxDataColumn to determine the used range automatically and then count non‑empty cells. | Provide an example that logs the count and saves the workbook with a custom filename.
 
 using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsNonEmptyCountDemo
+namespace AsposeCellsExamples
 {
-    // Creates a workbook, populates sample data, defines a range (e.g., A1:C5), iterates each cell, checks that the Value is not null or empty, counts the populated cells, prints the total and optionally saves the file.
-    class Program
+    // A concise C# example that creates a workbook, fills selected cells, defines a range (e.g., "A1:C5"), iterates the Aspose.Cells.Range collection, checks each Cell.Value for null or empty string, increments a counter for populated cells, writes the total to the console, and optionally saves the file.
+    class CountNonEmptyCellsInRange
     {
         static void Main()
         {
@@ -24,31 +23,34 @@ namespace AsposeCellsNonEmptyCountDemo
                 Worksheet worksheet = workbook.Worksheets[0];
                 Cells cells = worksheet.Cells;
 
-                // Populate some sample data (some cells left empty)
-                cells["A1"].PutValue("Alpha");
+                // Populate some sample data (mix of empty and non‑empty cells)
+                cells["A1"].PutValue("Hello");
                 cells["B2"].PutValue(123);
-                cells["C3"].PutValue("Gamma");
-                // Cells D4, E5 remain empty
+                cells["C3"].PutValue("World");
+                // A2, B1, B3, etc. remain empty
 
-                // Define the range to evaluate (e.g., A1:C5)
-                AsposeRange range = cells.CreateRange("A1:C5");
+                // Define the range to examine
+                string rangeAddress = "A1:C5";
 
-                // Count non‑empty cells within the range
+                // Use fully qualified Aspose.Cells.Range to avoid conflict with System.Range
+                Aspose.Cells.Range range = cells.CreateRange(rangeAddress);
+
+                // Count non‑empty cells in the range
                 int nonEmptyCount = 0;
                 foreach (Cell cell in range)
                 {
-                    // A cell is considered non‑empty if its Value is not null
-                    // and its string representation is not an empty string
+                    // Cell.Value is null for empty cells; also check for empty string after conversion
                     if (cell.Value != null && !string.IsNullOrEmpty(cell.Value.ToString()))
                     {
                         nonEmptyCount++;
                     }
                 }
 
-                Console.WriteLine($"Total non‑empty cells in range {range.Address}: {nonEmptyCount}");
+                // Output the result
+                Console.WriteLine($"Non‑empty cells in range {rangeAddress}: {nonEmptyCount}");
 
-                // Save the workbook (optional, just to demonstrate lifecycle usage)
-                workbook.Save("NonEmptyCountDemo.xlsx");
+                // Save the workbook (optional, just to demonstrate lifecycle compliance)
+                workbook.Save("CountNonEmptyCellsInRange.xlsx");
             }
             catch (Exception ex)
             {

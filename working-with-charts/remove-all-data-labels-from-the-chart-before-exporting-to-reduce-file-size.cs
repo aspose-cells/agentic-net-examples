@@ -1,56 +1,59 @@
-// Title: Remove Data Labels from an Aspose.Cells Chart (.NET) to Reduce Workbook Size
-// Description: Creates a workbook, adds sample data, inserts a column chart, enables data labels for demonstration, then deletes all series‑ and point‑level data labels using the IsDeleted flag before saving the file as XLSX.
-// Keywords: Aspose.Cells remove chart data labels | delete chart labels .NET | Aspose.Cells IsDeleted property | reduce Excel file size chart labels | clear data labels Aspose.Cells
-// Common Searches: how to delete data labels from a chart using Aspose.Cells for .NET | Aspose.Cells remove point data labels to shrink workbook | chart IsDeleted property Aspose.Cells example | disable chart data labels before saving Excel with Aspose.Cells
-// Developer Intent: Eliminate all data labels from a chart so the generated Excel file is smaller and visually cleaner.
-// Use Cases: Export a sales column chart without labels to keep the XLSX lightweight. | Prepare a dashboard workbook where charts are label‑free for a cleaner look. | Programmatically clean existing template charts by removing series and point labels before distribution.
-// AI Prompts: Generate C# code with Aspose.Cells that removes all data labels from every series in a chart and saves the workbook. | Explain the effect of the IsDeleted flag on series and point data labels in Aspose.Cells charts. | Suggest additional techniques to minimize Excel file size when charts contain data labels using Aspose.Cells.
+// Title: C# – Remove All Chart Data Labels with AspNet.Cells to Reduce Workbook Size
+// Description: Demonstrates how to create a workbook, add a column chart, enable data labels for illustration, then delete every label by setting Series.DataLabels.IsDeleted = true, and finally save the file as a compact XLSX.
+// Keywords: Aspose.Cells remove chart data labels | C# delete chart data labels | Aspose.Cells reduce Excel file size | Series.DataLabels.IsDeleted | chart export optimization .NET
+// Common Searches: how to delete data labels from a chart using Aspose.Cells C# | remove chart labels to shrink workbook size | Aspose.Cells Series.DataLabels.IsDeleted example | C# chart data labels removal Aspose | optimize Excel file size by removing chart labels
+// Developer Intent: Eliminate every data label from a chart before saving to minimize the workbook’s size.
+// Use Cases: Generate a clean chart for client distribution without visible values. | Iterate through all series in a multi‑series chart and turn off labels to meet reporting standards. | Compress an Excel file containing many charts by removing unnecessary label data.
+// AI Prompts: Write C# code that removes data labels from all series in an existing Aspose.Cells chart while preserving other formatting. | Explain the effect of setting Series.DataLabels.IsDeleted = true on the saved XLSX file size and when this technique is appropriate. | Show how to selectively delete data labels from specific series in a chart using Aspose.Cells.
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data, inserts a column chart, enables data labels for demonstration, then deletes all series‑ and point‑level data labels using the IsDeleted flag before saving the file as XLSX.
-class RemoveDataLabelsDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to create a workbook, add a column chart, enable data labels for illustration, then delete every label by setting Series.DataLabels.IsDeleted = true, and finally save the file as a compact XLSX.
+    class RemoveDataLabelsDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
-
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // (Optional) Enable data labels to demonstrate removal
-        chart.NSeries[0].DataLabels.ShowValue = true;
-
-        // Remove all data labels from the chart
-        foreach (Series series in chart.NSeries)
+        static void Main()
         {
-            // Mark the series-level data labels as deleted
-            series.DataLabels.IsDeleted = true;
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Also ensure any point-level data labels are deleted
-            foreach (ChartPoint point in series.Points)
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
+
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the data range for the chart
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // Enable data labels initially (optional, just to demonstrate removal)
+            chart.NSeries[0].DataLabels.ShowValue = true;
+
+            // Remove all data labels from every series in the chart
+            foreach (Series series in chart.NSeries)
             {
-                point.DataLabels.IsDeleted = true;
+                // Mark the DataLabels object as deleted – this removes the labels completely
+                series.DataLabels.IsDeleted = true;
             }
-        }
 
-        // Save the workbook with the chart that no longer contains data labels
-        workbook.Save("ChartWithoutDataLabels.xlsx", SaveFormat.Xlsx);
+            // Save the workbook with the chart (data labels removed)
+            workbook.Save("ChartWithoutDataLabels.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

@@ -1,78 +1,57 @@
-// Title: Update a ListBox shape after changing its linked cell with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, populate cells A1:A5, add a ListBox shape, set its input range, link it to cell B1, modify the linked cell value, call UpdateSelectedValue to refresh the shape's selection, and save the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# ListBox shape | UpdateSelectedValue | linked cell refresh | SetLinkedCell | SetInputRange | shape synchronization | Aspose.Cells .NET example | programmatic ListBox selection
-// Common Searches: Aspose.Cells refresh ListBox after linked cell change | UpdateSelectedValue usage in Aspose.Cells | How to sync ListBox shape with cell value in C# | SetLinkedCell and UpdateSelectedValue example | Aspose.Cells shape linked cell update
-// Developer Intent: Synchronize a ListBox shape's selected item with a new value in its linked cell using Aspose.Cells for .NET.
-// Use Cases: Select a ListBox item based on a calculation or formula result. | Keep form controls (ListBox, ComboBox) in sync with dynamic worksheet data. | Programmatically verify that a shape reflects the current linked cell value after updates.
-// AI Prompts: Write C# code that changes the linked cell of a ListBox shape and calls UpdateSelectedValue to refresh the selection with Aspose.Cells. | Explain when and why UpdateSelectedValue must be invoked after modifying a linked cell in Aspose.Cells. | Provide an example of linking a ComboBox shape to a cell and updating its selected value using Aspose.Cells for .NET.
+// Title: Update a linked ListBox shape after changing a source cell formula with Aspose.Cells for .NET
+// Description: Demonstrates how to refresh a ListBox shape linked to a cell after a source cell formula is modified. The example sets an input range, links the shape to a cell, recalculates formulas, updates the linked cell value, and calls UpdateSelectedValue to keep the shape in sync before saving the workbook.
+// Keywords: Aspose.Cells | C# | .NET | ListBox shape | linked cell | UpdateSelectedValue | SetLinkedCell | SetInputRange | formula recalculation | Excel shape synchronization | Refresh linked shape
+// Common Searches: Aspose.Cells refresh ListBox after formula change | Update linked shape after recalculating workbook | C# Aspose.Cells UpdateSelectedValue example | How to sync ListBox with calculated cell in Aspose.Cells | SetLinkedCell and UpdateSelectedValue usage
+// Developer Intent: Synchronize a ListBox shape’s selected item with a new value after the source cell’s formula is changed and the workbook is recalculated.
+// Use Cases: Keep form controls in generated Excel reports aligned with dynamic calculations. | Maintain consistency between dashboard shapes and underlying formula‑driven data. | Automate the refresh of linked shapes when source values are updated programmatically.
+// AI Prompts: Generate C# code that updates a ListBox shape after a source cell formula is changed using Aspose.Cells. | Show how to use SetLinkedCell and UpdateSelectedValue to keep a shape synchronized with a calculated cell value. | Explain the steps to refresh a linked shape when its input range contains formula results.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// Demonstrates how to refresh a ListBox shape linked to a cell after a source cell formula is modified. The example sets an input range, links the shape to a cell, recalculates formulas, updates the linked cell value, and calls UpdateSelectedValue to keep the shape in sync before saving the workbook.
+class UpdateLinkedShapeDemo
 {
-    // Demonstrates how to create a workbook, populate cells A1:A5, add a ListBox shape, set its input range, link it to cell B1, modify the linked cell value, call UpdateSelectedValue to refresh the shape's selection, and save the file using Aspose.Cells for .NET.
-    public class UpdateLinkedShapeDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate source data for the ListBox (A1:A5)
-                for (int i = 0; i < 5; i++)
-                {
-                    sheet.Cells[i, 0].Value = $"Item {i + 1}";
-                }
+        // Populate some source data that will be used by the shape
+        sheet.Cells["A1"].Value = 10;
+        sheet.Cells["A2"].Value = 20;
+        sheet.Cells["A3"].Value = 30;
 
-                // Add a ListBox shape to the worksheet
-                // Parameters: upperRow, upperColumn, lowerRow, lowerColumn, width, height
-                ListBox listBoxShape = sheet.Shapes.AddListBox(6, 0, 6, 0, 120, 120);
+        // Add a ListBox shape to the worksheet
+        Shape listBoxShape = sheet.Shapes.AddListBox(2, 0, 2, 0, 130, 130);
 
-                // Set the range that provides the list items
-                listBoxShape.SetInputRange("$A$1:$A$5", false, false);
+        // Set the range that provides the list items for the ListBox
+        listBoxShape.SetInputRange("$A$1:$A$3", false, false);
 
-                // Link the ListBox selected value to cell B1
-                listBoxShape.SetLinkedCell("$B$1", false, true);
+        // Link the selected value of the ListBox to cell B1
+        listBoxShape.SetLinkedCell("$B$1", false, true);
 
-                // Initially set the linked cell value to the first item (index 0)
-                sheet.Cells["B1"].Value = 0;
-                // Update the shape so it reflects the linked cell value
-                listBoxShape.UpdateSelectedValue();
+        // Set an initial value in the linked cell (select the second item, value 20)
+        sheet.Cells["B1"].Value = 20;
 
-                // Change the linked cell value to select the third item (index 2)
-                sheet.Cells["B1"].Value = 2;
+        // Update the shape so that its selected item reflects the linked cell value
+        listBoxShape.UpdateSelectedValue();
 
-                // After changing the source cell, refresh the shape selection
-                listBoxShape.UpdateSelectedValue();
+        // Change the source data by assigning a formula to A2
+        sheet.Cells["A2"].Formula = "=A1*3"; // A2 will become 30 after calculation
 
-                // Optional: verify the selection programmatically
-                if (listBoxShape.IsSelected(2))
-                {
-                    Console.WriteLine("Third option is now selected after updating the linked cell.");
-                }
+        // Recalculate all formulas in the workbook
+        workbook.CalculateFormula();
 
-                // Save the workbook
-                string outputPath = "UpdateLinkedShapeDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
+        // Update the linked cell to the new value (select the third item, value 30)
+        sheet.Cells["B1"].Value = 30;
 
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            UpdateLinkedShapeDemo.Run();
-        }
+        // Refresh the shape selection after the source change
+        listBoxShape.UpdateSelectedValue();
+
+        // Save the workbook with the updated shape
+        workbook.Save("UpdatedLinkedShape.xlsx");
     }
 }

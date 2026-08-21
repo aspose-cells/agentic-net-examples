@@ -1,135 +1,111 @@
-// Title: Import CSV with quoted fields into Aspose.Cells using a custom ICellsDataTable (C#)
-// Description: Reads a CSV file, parses commas and double‑quoted values with a custom method, builds an ICellsDataTable via CellsDataTableFactory, imports the table into a worksheet using ImportData, and saves the result as an XLSX workbook.
-// Keywords: Aspose.Cells CSV import | ICellsDataTable | CellsDataTableFactory | ParseCsvLine C# | ImportData ImportTableOptions | C# CSV parsing quotes | Excel workbook from CSV | Aspose.Cells .NET
-// Common Searches: Aspose.Cells import CSV with quotes | Create ICellsDataTable from list of rows | C# parse CSV line with double quotes | ImportData example Aspose.Cells | Handle commas inside CSV fields using Aspose.Cells
-// Developer Intent: Read a CSV file, convert each line to a row collection, build an ICellsDataTable, and import it into an Excel worksheet.
-// Use Cases: Load a sales‑report CSV where product names contain commas or quotes, convert numeric strings, and generate an analysis workbook. | Transform a configuration CSV with mixed data types into an XLSX file for distribution to non‑technical stakeholders. | Process a small in‑memory CSV, apply custom parsing rules, and preserve original formatting when creating a formatted report workbook.
-// AI Prompts: Show how to stream a large CSV into an ICellsDataTable without loading the entire file into memory. | Provide code to set column widths and header styles via ImportTableOptions while importing CSV data. | Explain how to modify ParseCsvLine to support a semicolon delimiter and still use CellsDataTableFactory.
+// Title: Import CSV with commas and quoted fields into Aspose.Cells using ICellsDataTable (C#)
+// Description: Demonstrates a lightweight C# CSV parser that correctly handles commas, double quotes, and escaped quotes, builds an ICellsDataTable from the parsed rows (using the first row as a header), imports the table into a worksheet with numeric conversion and visible field names, and saves the result as an XLSX file.
+// Keywords: Aspose.Cells | CSV import | quoted commas | ICellsDataTable | ImportTableOptions | ConvertNumericData | custom CSV parser | C# Excel export | .NET | Excel workbook creation
+// Common Searches: How to import CSV with quoted commas into Aspose.Cells | Aspose.Cells ICellsDataTable from CSV string | ImportTableOptions ConvertNumericData example | C# parse CSV with escaped quotes for Excel | Load CSV data directly into Aspose.Cells worksheet
+// Developer Intent: Parse CSV text that contains commas and quoted fields, create an ICellsDataTable from the parsed rows, and import it into an Aspose.Cells worksheet with proper data types and column headers.
+// Use Cases: Convert API‑returned CSV strings into Excel files while preserving embedded commas and quotes. | Generate reports from log files stored as CSV without writing intermediate files. | Create Excel worksheets from user‑uploaded CSV data, automatically converting numeric strings and displaying column names.
+// AI Prompts: Write a C# method that reads a CSV file with escaped double quotes and returns an ICellsDataTable ready for Aspose.Cells import. | Show how to set ImportTableOptions to display field names and convert numeric strings when importing CSV data into a worksheet. | Provide an example of using CellsDataTableFactory to build a data table from a list of object arrays parsed from CSV.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsCsvImportExample
+// Demonstrates a lightweight C# CSV parser that correctly handles commas, double quotes, and escaped quotes, builds an ICellsDataTable from the parsed rows (using the first row as a header), imports the table into a worksheet with numeric conversion and visible field names, and saves the result as an XLSX file.
+class Program
 {
-    // Reads a CSV file, parses commas and double‑quoted values with a custom method, builds an ICellsDataTable via CellsDataTableFactory, imports the table into a worksheet using ImportData, and saves the result as an XLSX workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Sample CSV content containing commas and quoted fields
+        string csv = "Name,Age,Comment\n\"Doe, John\",30,\"He said, \"\"Hello!\"\"\"\n\"Smith, Jane\",25,\"New employee\"";
+
+        // Parse the CSV into a list of object arrays (each array represents a row)
+        List<object[]> rows = ParseCsv(csv);
+
+        // Create a new workbook and get the first worksheet's cells
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Build an ICellsDataTable from the parsed rows.
+        // The first row is treated as a header (hasHeader = true).
+        ICellsDataTable dataTable = workbook.CellsDataTableFactory.GetInstance(
+            rows.ToArray(),          // all rows including header
+            true,                    // first row is header
+            null);                   // column names are taken from the header row
+
+        // Set import options: convert numeric strings to numbers and show field names.
+        ImportTableOptions importOptions = new ImportTableOptions
         {
-            try
-            {
-                // Path to the CSV file (replace with your actual file path)
-                string csvPath = "sample.csv";
+            ConvertNumericData = true,
+            IsFieldNameShown = true
+        };
 
-                // Verify that the CSV file exists to avoid FileNotFoundException
-                if (!File.Exists(csvPath))
-                {
-                    Console.WriteLine($"CSV file not found: {Path.GetFullPath(csvPath)}");
-                    return;
-                }
+        // Import the data table into the worksheet starting at cell A1 (row 0, column 0)
+        cells.ImportData(dataTable, 0, 0, importOptions);
 
-                // Read all lines from the CSV file
-                string[] lines = File.ReadAllLines(csvPath);
+        // Save the workbook
+        workbook.Save("CsvImported.xlsx", SaveFormat.Xlsx);
+    }
 
-                // Prepare a collection of rows, each row is an ArrayList of objects
-                ArrayList dataLists = new ArrayList();
-
-                foreach (string line in lines)
-                {
-                    // Parse a single CSV line handling commas and double quotes
-                    ArrayList fields = ParseCsvLine(line);
-                    dataLists.Add(fields);
-                }
-
-                // Create a new workbook (creation rule)
-                Workbook workbook = new Workbook();
-
-                // Obtain a CellsDataTableFactory from the workbook
-                CellsDataTableFactory factory = workbook.CellsDataTableFactory;
-
-                // Build an ICellsDataTable from the parsed data (custom data table rule)
-                ICellsDataTable dataTable = factory.GetInstance(dataLists, true);
-
-                // Import the data table into the first worksheet starting at cell A1
-                Worksheet worksheet = workbook.Worksheets[0];
-                worksheet.Cells.ImportData(dataTable, 0, 0, new ImportTableOptions());
-
-                // Save the workbook (save rule)
-                string outputPath = "ImportedFromCsv.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-
-        // Parses a CSV line respecting commas and double‑quoted fields.
-        // Returns an ArrayList where each element is a string (or numeric if convertible).
-        private static ArrayList ParseCsvLine(string line)
+    // Simple CSV parser that handles commas, double quotes and escaped quotes.
+    static List<object[]> ParseCsv(string csvContent)
+    {
+        var result = new List<object[]>();
+        using (StringReader reader = new StringReader(csvContent))
         {
-            ArrayList result = new ArrayList();
-            int i = 0;
-            while (i < line.Length)
+            string line;
+            while ((line = reader.ReadLine()) != null)
             {
-                // Skip leading whitespace (optional)
-                while (i < line.Length && char.IsWhiteSpace(line[i]))
-                    i++;
-
-                string field;
-                if (i < line.Length && line[i] == '\"')
+                var fields = new List<object>();
+                int i = 0;
+                while (i < line.Length)
                 {
-                    // Quoted field
-                    i++; // skip opening quote
-                    int start = i;
-                    while (i < line.Length)
+                    if (line[i] == '\"')
                     {
-                        // Look for closing quote; double quotes inside are escaped by another quote
-                        if (line[i] == '\"')
+                        // Quoted field
+                        i++; // skip opening quote
+                        var sb = new StringBuilder();
+                        while (i < line.Length)
                         {
-                            if (i + 1 < line.Length && line[i + 1] == '\"')
+                            if (line[i] == '\"')
                             {
-                                // Escaped quote, skip one and continue
-                                i += 2;
+                                // Check for escaped double quote
+                                if (i + 1 < line.Length && line[i + 1] == '\"')
+                                {
+                                    sb.Append('\"');
+                                    i += 2;
+                                }
+                                else
+                                {
+                                    i++; // skip closing quote
+                                    break;
+                                }
                             }
                             else
                             {
-                                // End of quoted field
-                                break;
+                                sb.Append(line[i]);
+                                i++;
                             }
                         }
-                        else
-                        {
-                            i++;
-                        }
+                        fields.Add(sb.ToString());
+                        // Skip delimiter if present
+                        if (i < line.Length && line[i] == ',') i++;
                     }
-                    field = line.Substring(start, i - start).Replace("\"\"", "\"");
-                    i++; // skip closing quote
+                    else
+                    {
+                        // Unquoted field
+                        int start = i;
+                        while (i < line.Length && line[i] != ',') i++;
+                        string token = line.Substring(start, i - start);
+                        fields.Add(token);
+                        if (i < line.Length && line[i] == ',') i++;
+                    }
                 }
-                else
-                {
-                    // Unquoted field
-                    int start = i;
-                    while (i < line.Length && line[i] != ',')
-                        i++;
-                    field = line.Substring(start, i - start);
-                }
-
-                // Add the field (attempt numeric conversion)
-                if (double.TryParse(field, out double num))
-                    result.Add(num);
-                else
-                    result.Add(field);
-
-                // Skip delimiter
-                if (i < line.Length && line[i] == ',')
-                    i++;
+                result.Add(fields.ToArray());
             }
-
-            return result;
         }
+        return result;
     }
 }

@@ -1,44 +1,44 @@
-// Title: Aspose.Cells .NET: FitToPagesTall = 1 to print all rows on a single page (C# example)
-// Description: C# sample that creates a workbook, populates 200 rows, defines a print area, sets PageSetup.FitToPagesTall to 1 (height limited to one page) and FitToPagesWide to 0 (auto width), then saves the workbook.
-// Keywords: Aspose.Cells | FitToPagesTall | C# page setup | print area | single page print | Excel to PDF | worksheet printing | .NET Excel export
-// Common Searches: Aspose.Cells fit all rows on one page | Set FitToPagesTall in C# Aspose.Cells | FitToPagesTall = 1 example | PrintArea and FitToPagesWide usage Aspose.Cells | Aspose.Cells page setup single page height
-// Developer Intent: Configure a worksheet so its printed output fits all rows on one page tall.
-// Use Cases: Generate a multi‑row report that must fit on a single printed page for PDF generation. | Create an invoice list where rows stay together on one page while column width adjusts automatically. | Prepare a data dump for printing where height is constrained to one page but column count may vary.
-// AI Prompts: Show how to set FitToPagesTall to 1 while keeping width unrestricted using Aspose.Cells for .NET. | Provide a C# example that prints a large worksheet on a single page tall, including PrintArea and PDF export. | Explain the impact of setting FitToPagesWide = 0 when FitToPagesTall = 1 in Aspose.Cells page setup.
+// Title: Fit all worksheet rows on a single printed page with Aspose.Cells for .NET (C#)
+// Description: Shows how to configure Aspose.Cells PageSetup in C# to set FitToPagesTall = 1 and FitToPagesWide = 0, optionally define a print area, and save the workbook so every row prints on one page.
+// Keywords: Aspose.Cells | .NET | C# | FitToPagesTall | FitToPagesWide | page scaling | single page print | worksheet print area | Excel printing | PageSetup
+// Common Searches: Aspose.Cells fit all rows on one page | FitToPagesTall 1 C# Aspose.Cells example | Print worksheet on a single page using Aspose.Cells | Set FitToPagesWide to 0 Aspose.Cells .NET | Define print area Aspose.Cells PageSetup
+// Developer Intent: Configure the worksheet’s PageSetup to limit height only, forcing all rows onto one printed page while allowing unlimited width.
+// Use Cases: Create printable reports where the entire data set must appear on a single vertical page. | Generate invoices or receipts that require all line items on one page regardless of column count. | Export large tables to Excel with height‑only scaling for consistent print layouts.
+// AI Prompts: Provide a C# code snippet that sets FitToPagesTall to 1 and FitToPagesWide to 0 with Aspose.Cells, including an optional print area. | Explain how to use Aspose.Cells PageSetup to force all rows onto one printed page while preserving column widths. | Show how to calculate the appropriate FitToPagesTall value dynamically based on the number of rows in a worksheet.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFitToPagesTallDemo
+// Shows how to configure Aspose.Cells PageSetup in C# to set FitToPagesTall = 1 and FitToPagesWide = 0, optionally define a print area, and save the workbook so every row prints on one page.
+class FitToPagesTallDemo
 {
-    // C# sample that creates a workbook, populates 200 rows, defines a print area, sets PageSetup.FitToPagesTall to 1 (height limited to one page) and FitToPagesWide to 0 (auto width), then saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Add sample data to make the sheet span many rows
+        for (int i = 0; i < 200; i++)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate the worksheet with sample data that spans many rows
-            for (int row = 0; row < 200; row++)
-            {
-                for (int col = 0; col < 5; col++)
-                {
-                    worksheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                }
-            }
-
-            // Configure page setup to fit all rows on a single printed page
-            PageSetup pageSetup = worksheet.PageSetup;
-            pageSetup.PrintArea = "A1:E200";   // Define the area to be printed
-            pageSetup.FitToPagesTall = 1;     // Fit all rows into one page tall
-            pageSetup.FitToPagesWide = 0;     // Zero means width is unrestricted (auto‑adjust)
-
-            // Save the workbook to a file
-            workbook.Save("FitToPagesTallDemo.xlsx");
+            worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
         }
+
+        // Get the PageSetup object for the worksheet
+        PageSetup pageSetup = worksheet.PageSetup;
+
+        // Define the print area (optional, but helps illustrate the scaling)
+        pageSetup.PrintArea = "A1:A200";
+
+        // Fit all rows onto a single printed page (tall)
+        pageSetup.FitToPagesTall = 1;
+
+        // Set FitToPagesWide to 0 so that only the height is constrained
+        pageSetup.FitToPagesWide = 0;
+
+        // Save the workbook to a file
+        workbook.Save("FitToPagesTallDemo.xlsx");
     }
 }

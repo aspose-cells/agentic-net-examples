@@ -1,19 +1,17 @@
-// Title: Link a Rectangle Shape to a Bold Red Formatted Cell and Show Its Text – Aspose.Cells for .NET (C#)
-// Description: Step‑by‑step C# example that creates a workbook, writes "Hello World" to B2, applies a bold red font style, adds a rectangle shape, links the shape to the styled cell, updates the shape’s displayed value, and prints verification details before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | shape linked cell | rectangle shape | UpdateSelectedValue | formatted cell text | bold red font | Excel shape text styling | link shape to cell Aspose
-// Common Searches: Aspose.Cells link shape to cell with formatting | display cell style in linked shape .NET | rectangle shape shows bold red text Aspose.Cells | how to preserve cell formatting in linked shape | UpdateSelectedValue after styling cell
-// Developer Intent: Create a rectangle shape, bind it to a styled cell, and verify that the shape displays the cell’s formatting.
-// Use Cases: Dynamic dashboards where shapes reflect styled status labels from data cells. | Automated report templates that use linked shapes for highlighted headings. | Excel‑based UI elements that need to mirror bold, colored text defined in worksheet cells.
-// AI Prompts: Show me C# code to link a rectangle shape to a cell and keep the cell’s bold red formatting visible in the shape using Aspose.Cells. | How can I verify that a shape displays the formatted text of its linked cell after applying a style in Aspose.Cells for .NET?
+// Title: C# – Add a Rectangle Shape, Link It to a Text‑Formatted Cell, and Display the Formatted Text with Aspose.Cells
+// Description: Creates a new workbook, sets cell B2 to Text format (Number format 49), inserts a rectangle shape, links the shape to B2 using an absolute reference, updates the shape to show the cell's string value, retrieves the linked address, and saves the file. Demonstrates how to verify that the shape reflects the formatted text.
+// Keywords: Aspose.Cells C# | add rectangle shape | link shape to cell | text number format 49 | display cell value in shape | linked cell address | update shape value | Excel automation Aspose.Cells | shape linked cell absolute reference | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells link shape to text formatted cell | C# rectangle shape shows cell value | set cell number format to text and link shape | retrieve linked cell address from shape Aspose.Cells | update shape caption from cell value .NET
+// Developer Intent: Find a step‑by‑step C# example that binds a shape to a cell formatted as text and ensures the shape displays the exact formatted string.
+// Use Cases: Design a dynamic dashboard where shape captions automatically reflect labels stored in text‑formatted cells. | Generate reports that need shape titles to stay in sync with cell values that use custom text formatting. | Build an Excel template that links multiple shapes to formatted cells for real‑time caption updates.
+// AI Prompts: Show me C# code to add a rectangle shape, link it to a text‑formatted cell, and update the shape's displayed value using Aspose.Cells. | How can I retrieve the absolute linked cell address from a shape and read its string value in Aspose.Cells for .NET? | Explain the steps to set a cell's number format to Text (code 49), link a shape to that cell, and verify the shape shows the formatted text.
 
 using System;
-using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Step‑by‑step C# example that creates a workbook, writes "Hello World" to B2, applies a bold red font style, adds a rectangle shape, links the shape to the styled cell, updates the shape’s displayed value, and prints verification details before saving the file.
-class ShapeLinkedCellFormattedDemo
+// Creates a new workbook, sets cell B2 to Text format (Number format 49), inserts a rectangle shape, links the shape to B2 using an absolute reference, updates the shape to show the cell's string value, retrieves the linked address, and saves the file. Demonstrates how to verify that the shape reflects the formatted text.
+class Program
 {
     static void Main()
     {
@@ -21,49 +19,42 @@ class ShapeLinkedCellFormattedDemo
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Put formatted text into cell B2
-            Cell linkedCell = worksheet.Cells["B2"];
-            linkedCell.PutValue("Hello World");
-
-            // Create a style with bold and red font and apply it to the cell
-            Style style = workbook.CreateStyle();
-            style.Font.IsBold = true;
-            style.Font.Color = Color.Red;
-            linkedCell.SetStyle(style);
+            // Set cell B2 with text format and a sample value
+            Cell cell = sheet.Cells["B2"];
+            Style style = cell.GetStyle();
+            style.Number = 49; // Text format code
+            cell.SetStyle(style);
+            cell.PutValue("Hello Aspose!");
 
             // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, row offset (pixels), column offset (pixels), width (pixels), height (pixels)
-            Shape rectangle = worksheet.Shapes.AddRectangle(2, 1, 0, 0, 150, 40);
+            // Parameters: upper left row, upper left column, upper left offset (pixels), upper left offset (pixels), height (pixels), width (pixels)
+            Shape rect = sheet.Shapes.AddRectangle(1, 1, 0, 0, 100, 200);
 
-            // Link the shape's value to cell B2
-            rectangle.SetLinkedCell("$B$2", false, false);
+            // Link the shape to the formatted text cell B2 (use absolute reference)
+            rect.SetLinkedCell("B2", true, true);
 
-            // Update the shape's displayed text from the linked cell
-            rectangle.UpdateSelectedValue();
+            // Update the shape's displayed value based on the linked cell
+            rect.UpdateSelectedValue();
 
-            // Output verification information
-            Console.WriteLine("Shape's LinkedCell: " + rectangle.LinkedCell);
-            Console.WriteLine("Cell B2 value: " + linkedCell.StringValue);
-            Console.WriteLine("Cell B2 font bold: " + linkedCell.GetStyle().Font.IsBold);
-            Console.WriteLine("Cell B2 font color (ARGB): " + linkedCell.GetStyle().Font.Color.ToArgb());
+            // Retrieve the linked cell address (absolute) and its value
+            string linkedAddress = rect.GetLinkedCell(true, true); // returns "$B$2"
+            // Remove any leading '$' characters to obtain a valid cell name for indexing
+            string cleanAddress = linkedAddress.Replace("$", string.Empty);
+            string linkedValue = sheet.Cells[cleanAddress].StringValue;
 
-            // Ensure the output directory exists
-            string outputPath = "ShapeLinkedCellFormatted.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            Console.WriteLine("Shape's linked cell: " + linkedAddress);
+            Console.WriteLine("Value in linked cell: " + linkedValue);
 
-            // Save the workbook
+            // Save the workbook (optional)
+            string outputPath = "ShapeLinkedCellDemo.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine("Workbook saved to: " + Path.GetFullPath(outputPath));
+            Console.WriteLine("Workbook saved to: " + outputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

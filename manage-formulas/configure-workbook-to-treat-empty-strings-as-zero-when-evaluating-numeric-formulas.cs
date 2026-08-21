@@ -1,50 +1,47 @@
-// Title: C# – Use WorkbookDesigner.UpdateEmptyStringAsNull to Treat Empty Strings as Zero in Aspose.Cells Formulas
-// Description: Demonstrates how to bind a DataSet containing empty strings to a worksheet, set WorkbookDesigner.UpdateEmptyStringAsNull so blank cells are treated as zero, process the designer, recalculate formulas (e.g., =A1*B1), and obtain a numeric result of 0.
-// Keywords: Aspose.Cells | WorkbookDesigner | UpdateEmptyStringAsNull | empty string as zero | blank cell handling | numeric formula evaluation | C# example | data binding | DataSet to worksheet | calculate formula
-// Common Searches: Aspose.Cells treat empty string as zero | WorkbookDesigner.UpdateEmptyStringAsNull C# | blank cells evaluate to zero in formulas Aspose | how to ignore empty strings in Aspose.Cells calculations | set empty string to null Aspose.Cells
-// Developer Intent: Configure Aspose.Cells to interpret empty‑string cells as zero when evaluating numeric formulas after data binding.
-// Use Cases: Import CSV or database tables that may contain missing numeric values and ensure calculations like totals or subtotals return zero instead of errors. | Generate financial or inventory reports where quantity or price fields can be empty, but formulas must still produce valid results. | Automate spreadsheet creation from user‑provided data where optional numeric fields are left blank, requiring graceful handling in formulas.
-// AI Prompts: Show how to enable WorkbookDesigner.UpdateEmptyStringAsNull so empty strings become zero in Aspose.Cells formulas (C#). | Provide a C# code snippet that binds a DataTable with empty numeric strings, processes the workbook, and recalculates formulas correctly. | Explain the effect of UpdateEmptyStringAsNull on formula evaluation and the steps needed to recalculate after processing.
+// Title: Treat Empty Strings as Zero in Aspose.Cells Formula Calculations (C#)
+// Description: Creates a workbook, inserts an empty string in A1, sets B1 = A1+5, enables WorkbookDesigner.UpdateEmptyStringAsNull so the empty string is treated as a blank (zero), processes the designer, calculates the formula (result 5), and saves the file.
+// Keywords: Aspose.Cells | WorkbookDesigner | UpdateEmptyStringAsNull | empty string zero | numeric formula | calculate formula | C# example | blank cell handling
+// Common Searches: Aspose.Cells treat empty string as zero | WorkbookDesigner UpdateEmptyStringAsNull C# | how to make blank cells evaluate to zero in Aspose.Cells | calculate formula with empty string Aspose.Cells | Aspose.Cells convert empty string to null
+// Developer Intent: Configure a workbook so that cells containing empty strings are interpreted as zero during formula evaluation.
+// Use Cases: Convert empty strings to null before calling CalculateFormula to ensure numeric operations treat them as zero. | Apply WorkbookDesigner globally to enforce the empty‑string‑as‑zero rule across the workbook. | Generate Excel reports where user‑entered blank inputs must be counted as zero in calculations. | Preserve zero‑treated behavior when exporting the workbook to other formats.
+// AI Prompts: Write C# code using Aspose.Cells that treats empty strings as zero when evaluating formulas. | Explain how WorkbookDesigner.UpdateEmptyStringAsNull influences formula calculation in Aspose.Cells. | Show an alternative method to handle empty strings in numeric formulas without using WorkbookDesigner.
 
 using System;
-using System.Data;
 using Aspose.Cells;
 
-// Demonstrates how to bind a DataSet containing empty strings to a worksheet, set WorkbookDesigner.UpdateEmptyStringAsNull so blank cells are treated as zero, process the designer, recalculate formulas (e.g., =A1*B1), and obtain a numeric result of 0.
-class Program
+namespace AsposeCellsEmptyStringAsZeroDemo
 {
-    static void Main()
+    // Creates a workbook, inserts an empty string in A1, sets B1 = A1+5, enables WorkbookDesigner.UpdateEmptyStringAsNull so the empty string is treated as a blank (zero), processes the designer, calculates the formula (result 5), and saves the file.
+    class Program
     {
-        // Prepare a DataSet that contains empty strings in numeric columns
-        DataSet ds = new DataSet();
-        DataTable dt = new DataTable("Products");
-        dt.Columns.Add("Qty");   // intended numeric column
-        dt.Columns.Add("Price"); // intended numeric column
-        dt.Rows.Add("", "10");   // Qty is empty string
-        dt.Rows.Add("5", "");    // Price is empty string
-        ds.Tables.Add(dt);
+        static void Main()
+        {
+            // ---------- Create a new workbook ----------
+            Workbook workbook = new Workbook();                     // create
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Create a workbook with designer markers for data binding
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-        ws.Cells["A1"].PutValue("&=$Products.Qty");   // bind Qty
-        ws.Cells["B1"].PutValue("&=$Products.Price"); // bind Price
-        ws.Cells["C1"].Formula = "=A1*B1";            // numeric formula
+            // Place an empty string in a cell that will be used in a numeric formula
+            sheet.Cells["A1"].PutValue("");                        // empty string
 
-        // Configure WorkbookDesigner to treat empty strings as null (blank)
-        // Blank cells are interpreted as zero in numeric formulas
-        WorkbookDesigner designer = new WorkbookDesigner();
-        designer.Workbook = wb;
-        designer.UpdateEmptyStringAsNull = true; // key property
-        designer.SetDataSource(ds.Tables["Products"]);
-        designer.Process();
+            // Formula that adds 5 to the value in A1
+            sheet.Cells["B1"].Formula = "=A1+5";
 
-        // Recalculate formulas after data has been inserted
-        wb.CalculateFormula();
+            // ---------- Configure WorkbookDesigner to treat empty strings as null ----------
+            // When an empty string is converted to null, Excel treats the cell as blank.
+            // Blank cells are considered zero in numeric calculations.
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = workbook;
+            designer.UpdateEmptyStringAsNull = true;               // key setting
+            designer.Process();                                    // apply the setting
 
-        // Display the results
-        Console.WriteLine("A1 (Qty): '" + ws.Cells["A1"].StringValue + "'"); // empty
-        Console.WriteLine("B1 (Price): '" + ws.Cells["B1"].StringValue + "'"); // empty
-        Console.WriteLine("C1 (Qty*Price): " + ws.Cells["C1"].StringValue); // should be 0
+            // ---------- Calculate formulas ----------
+            workbook.CalculateFormula();                            // evaluate the formula in B1
+
+            // Output the result (should be 5 because empty string is treated as zero)
+            Console.WriteLine("Result of B1: " + sheet.Cells["B1"].Value);
+
+            // ---------- Save the workbook ----------
+            workbook.Save("EmptyStringAsZero_Output.xlsx");        // save
+        }
     }
 }

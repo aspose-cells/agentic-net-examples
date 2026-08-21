@@ -1,10 +1,10 @@
-// Title: Generate a Theme Accent Contrast Ratio Matrix in Excel with Aspose.Cells for .NET (C#)
-// Description: This example creates a new workbook, extracts the six Excel theme accent colors, calculates the WCAG contrast ratio for every color pair, and writes the values into a formatted matrix with bold headers. Ratios are rounded to two decimals and the file is saved as ThemeAccentContrastMatrix.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | Excel theme colors | contrast ratio | WCAG accessibility | theme accent matrix | GetThemeColor | ThemeColorType | relative luminance | color contrast analysis
-// Common Searches: Aspose.Cells calculate contrast ratio between theme accent colors | C# generate Excel matrix of theme color contrast | WCAG contrast matrix for Excel theme colors using Aspose | How to compute color contrast in Aspose.Cells .NET
-// Developer Intent: Create an Excel sheet that lists WCAG contrast ratios for all pairs of workbook theme accent colors.
-// Use Cases: Check whether a workbook’s theme colors satisfy accessibility contrast standards before distribution. | Provide designers with a quick reference to select accent colors that achieve sufficient contrast. | Integrate color‑contrast validation into automated build or CI pipelines for multiple Excel files.
-// AI Prompts: Highlight cells in red when the contrast ratio is below 4.5 to flag non‑compliant pairs. | Add a summary row that counts how many color pairs fail the WCAG AA threshold. | Export the generated contrast matrix to a CSV file in addition to the Excel workbook.
+// Title: Create a Theme Accent Contrast‑Ratio Matrix in Excel with Aspose.Cells for .NET
+// Description: C# example that creates a workbook, extracts the six theme accent colors using GetThemeColor, computes WCAG luminance and contrast ratios for each color pair, writes the results into a styled matrix with row/column headers, auto‑fits columns, and saves the file as ThemeAccentContrastMatrix.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | contrast ratio | WCAG | theme accent colors | Excel matrix | GetThemeColor | accessibility | color contrast calculation
+// Common Searches: Aspose.Cells compute contrast ratio between theme colors | C# generate contrast matrix for Excel theme accents | how to calculate WCAG contrast in Aspose.Cells | Excel theme accent color contrast table example
+// Developer Intent: Generate an Excel worksheet that lists WCAG contrast ratios for every combination of the workbook’s theme accent colors.
+// Use Cases: Verify that a workbook’s default accent palette complies with accessibility contrast standards. | Provide designers with a numeric view of color relationships for branding decisions. | Automate contrast‑ratio reporting across multiple workbooks to maintain consistent visual quality.
+// AI Prompts: Add conditional formatting to the matrix that highlights ratios below 4.5 with a red fill using Aspose.Cells. | Extend the program to export the contrast‑ratio matrix to CSV while preserving header labels. | Include the theme’s background and text colors in the matrix and flag any pairs that fail WCAG AA requirements.
 
 using System;
 using System.Drawing;
@@ -12,135 +12,105 @@ using Aspose.Cells;
 
 namespace AsposeCellsThemeContrastMatrix
 {
-    // This example creates a new workbook, extracts the six Excel theme accent colors, calculates the WCAG contrast ratio for every color pair, and writes the values into a formatted matrix with bold headers. Ratios are rounded to two decimals and the file is saved as ThemeAccentContrastMatrix.xlsx.
-    public class ContrastMatrixGenerator
+    // C# example that creates a workbook, extracts the six theme accent colors using GetThemeColor, computes WCAG luminance and contrast ratios for each color pair, writes the results into a styled matrix with row/column headers, auto‑fits columns, and saves the file as ThemeAccentContrastMatrix.xlsx.
+    class Program
     {
-        public static void Run()
+        // Compute relative luminance of a color according to WCAG definition
+        static double GetLuminance(Color color)
         {
-            try
+            // Convert RGB components to linear sRGB (0..1)
+            double R = color.R / 255.0;
+            double G = color.G / 255.0;
+            double B = color.B / 255.0;
+
+            double Linear(double channel)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Define the six accent theme color types
-                ThemeColorType[] accents = new ThemeColorType[]
-                {
-                    ThemeColorType.Accent1,
-                    ThemeColorType.Accent2,
-                    ThemeColorType.Accent3,
-                    ThemeColorType.Accent4,
-                    ThemeColorType.Accent5,
-                    ThemeColorType.Accent6
-                };
-
-                // Write header row (column titles)
-                for (int col = 0; col < accents.Length; col++)
-                {
-                    cells[0, col + 1].PutValue(accents[col].ToString());
-                    cells[0, col + 1].SetStyle(CreateHeaderStyle(workbook));
-                }
-
-                // Write header column (row titles)
-                for (int row = 0; row < accents.Length; row++)
-                {
-                    cells[row + 1, 0].PutValue(accents[row].ToString());
-                    cells[row + 1, 0].SetStyle(CreateHeaderStyle(workbook));
-                }
-
-                // Compute contrast ratios for each pair and fill the matrix
-                for (int i = 0; i < accents.Length; i++)
-                {
-                    Color colorA = workbook.GetThemeColor(accents[i]);
-
-                    for (int j = 0; j < accents.Length; j++)
-                    {
-                        Color colorB = workbook.GetThemeColor(accents[j]);
-
-                        double ratio = CalculateContrastRatio(colorA, colorB);
-
-                        // Write the ratio with two decimal places
-                        Cell cell = cells[i + 1, j + 1];
-                        cell.PutValue(Math.Round(ratio, 2));
-
-                        // Apply number format style
-                        cell.SetStyle(CreateNumberStyle(workbook));
-                    }
-                }
-
-                // Adjust column widths for readability
-                sheet.AutoFitColumns();
-
-                // Save the workbook
-                workbook.Save("ThemeAccentContrastMatrix.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while generating the contrast matrix: {ex.Message}");
-            }
-        }
-
-        // Creates a simple style for header cells (bold, centered)
-        private static Style CreateHeaderStyle(Workbook wb)
-        {
-            Style style = wb.CreateStyle();
-            style.Font.IsBold = true;
-            style.HorizontalAlignment = TextAlignmentType.Center;
-            style.VerticalAlignment = TextAlignmentType.Center;
-            return style;
-        }
-
-        // Creates a style that formats numbers with two decimal places
-        private static Style CreateNumberStyle(Workbook wb)
-        {
-            Style style = wb.CreateStyle();
-            style.Custom = "0.00";
-            style.HorizontalAlignment = TextAlignmentType.Center;
-            style.VerticalAlignment = TextAlignmentType.Center;
-            return style;
-        }
-
-        // Calculates the WCAG contrast ratio between two colors
-        private static double CalculateContrastRatio(Color c1, Color c2)
-        {
-            double L1 = GetRelativeLuminance(c1);
-            double L2 = GetRelativeLuminance(c2);
-
-            // Ensure L1 is the lighter luminance
-            if (L1 < L2)
-            {
-                double temp = L1;
-                L1 = L2;
-                L2 = temp;
+                return (channel <= 0.03928) ? channel / 12.92 : Math.Pow((channel + 0.055) / 1.055, 2.4);
             }
 
+            double r = Linear(R);
+            double g = Linear(G);
+            double b = Linear(B);
+
+            // Relative luminance
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        }
+
+        // Compute contrast ratio between two colors
+        static double GetContrastRatio(Color c1, Color c2)
+        {
+            double L1 = GetLuminance(c1);
+            double L2 = GetLuminance(c2);
+            // Ensure L1 is the lighter color
+            if (L2 > L1) (L1, L2) = (L2, L1);
             return (L1 + 0.05) / (L2 + 0.05);
         }
 
-        // Computes the relative luminance of a color per WCAG definition
-        private static double GetRelativeLuminance(Color color)
+        static void Main()
         {
-            // Convert sRGB components to linear values (0..1)
-            double RsRGB = color.R / 255.0;
-            double GsRGB = color.G / 255.0;
-            double BsRGB = color.B / 255.0;
+            // Create a new workbook (lifecycle rule)
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            double R = (RsRGB <= 0.03928) ? RsRGB / 12.92 : Math.Pow((RsRGB + 0.055) / 1.055, 2.4);
-            double G = (GsRGB <= 0.03928) ? GsRGB / 12.92 : Math.Pow((GsRGB + 0.055) / 1.055, 2.4);
-            double B = (BsRGB <= 0.03928) ? BsRGB / 12.92 : Math.Pow((BsRGB + 0.055) / 1.055, 2.4);
+            // Retrieve the six accent theme colors
+            ThemeColorType[] accentTypes = new ThemeColorType[]
+            {
+                ThemeColorType.Accent1,
+                ThemeColorType.Accent2,
+                ThemeColorType.Accent3,
+                ThemeColorType.Accent4,
+                ThemeColorType.Accent5,
+                ThemeColorType.Accent6
+            };
 
-            // Relative luminance formula
-            return 0.2126 * R + 0.7152 * G + 0.0722 * B;
-        }
-    }
+            Color[] accentColors = new Color[accentTypes.Length];
+            for (int i = 0; i < accentTypes.Length; i++)
+            {
+                accentColors[i] = workbook.GetThemeColor(accentTypes[i]);
+            }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ContrastMatrixGenerator.Run();
+            // Write headers (Accent names)
+            for (int i = 0; i < accentTypes.Length; i++)
+            {
+                // Column headers (row 2, starting from column C)
+                sheet.Cells[1, i + 2].PutValue(accentTypes[i].ToString());
+                // Row headers (column B, starting from row 3)
+                sheet.Cells[i + 2, 1].PutValue(accentTypes[i].ToString());
+            }
+
+            // Compute and fill contrast ratios
+            for (int row = 0; row < accentColors.Length; row++)
+            {
+                for (int col = 0; col < accentColors.Length; col++)
+                {
+                    double ratio = GetContrastRatio(accentColors[row], accentColors[col]);
+                    // Round to two decimal places for readability
+                    double rounded = Math.Round(ratio, 2);
+                    // Place value in matrix (starting at cell C3)
+                    sheet.Cells[row + 2, col + 2].PutValue(rounded);
+                }
+            }
+
+            // Optional: format the matrix for better visual appearance
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.Font.IsBold = true;
+            headerStyle.HorizontalAlignment = TextAlignmentType.Center;
+            headerStyle.VerticalAlignment = TextAlignmentType.Center;
+            headerStyle.Pattern = BackgroundType.Solid;
+            headerStyle.ForegroundColor = Color.LightGray;
+
+            // Apply header style to top row and left column
+            for (int i = 0; i < accentTypes.Length; i++)
+            {
+                sheet.Cells[1, i + 2].SetStyle(headerStyle); // column headers
+                sheet.Cells[i + 2, 1].SetStyle(headerStyle); // row headers
+            }
+
+            // Auto-fit columns for readability
+            sheet.AutoFitColumns();
+
+            // Save the workbook (lifecycle rule)
+            workbook.Save("ThemeAccentContrastMatrix.xlsx");
         }
     }
 }

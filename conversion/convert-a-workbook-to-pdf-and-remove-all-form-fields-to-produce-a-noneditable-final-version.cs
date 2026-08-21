@@ -1,56 +1,45 @@
-// Title: C# – Convert Excel to Secure PDF without Editable Form Fields using Aspose.Cells
-// Description: Load or create a Workbook, optionally strip personal information, configure PdfSaveOptions with PdfSecurityOptions (owner/user passwords, disable modification and form filling, allow printing) and save the workbook as a locked PDF.
-// Keywords: Aspose.Cells PDF conversion C# | secure PDF from Excel | disable form filling Aspose | PdfSecurityOptions example | remove personal information Excel PDF
-// Common Searches: Aspose.Cells save Excel as PDF with password protection | how to lock form fields in PDF generated from Excel | remove metadata when converting Excel to PDF using C# | prevent editing of PDF created with Aspose.Cells
-// Developer Intent: Create a PDF from an Excel workbook that is read‑only and blocks form‑field editing.
-// Use Cases: Distribute read‑only reports that contain embedded data‑entry forms. | Send contracts as PDFs that retain original content but cannot be altered. | Automate generation of regulatory PDFs where form fields must be locked and only printing is permitted.
-// AI Prompts: Show C# code with Aspose.Cells to export an Excel file to a password‑protected PDF that disables form filling. | Explain how to strip personal information and set PDF security options to block editing in Aspose.Cells. | Provide an example of PdfSecurityOptions that allows printing but prevents document modification and form filling.
+// Title: C# – Convert Excel to a Secure Non‑Editable PDF with Aspose.Cells (remove form fields)
+// Description: Load an Excel workbook, strip personal information, and save it as a PDF using Aspose.Cells. PdfSaveOptions together with PdfSecurityOptions apply owner/user passwords, allow printing, and block editing, form filling, annotations, and content extraction, delivering a tamper‑proof, read‑only PDF.
+// Keywords: Aspose.Cells PDF conversion .NET | secure PDF from Excel C# | disable form fields Aspose.Cells | remove personal information PDF | PdfSecurityOptions example | non editable PDF Aspose | Excel to PDF with permissions
+// Common Searches: how to create a read‑only PDF from Excel using Aspose.Cells | Aspose.Cells C# disable editing and form filling in PDF | remove personal data and protect PDF generated from workbook | set owner and user passwords for PDF in Aspose.Cells | export Excel to secured PDF .NET
+// Developer Intent: Produce a PDF from an Excel file that is protected against editing, form filling, annotations, and content extraction.
+// Use Cases: Distribute client‑ready reports that must remain unchanged. | Archive regulatory spreadsheets as tamper‑proof PDFs for compliance audits. | Convert filled Excel forms into locked PDFs to prevent further modifications.
+// AI Prompts: Generate C# code that uses Aspose.Cells to convert an Excel workbook to PDF, removes personal information, and applies PdfSecurityOptions to block editing, form filling, annotations, and extraction while allowing printing. | Show an example of protecting a PDF with owner and user passwords in Aspose.Cells, ensuring the document is non‑editable and form fields are disabled.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering.PdfSecurity;
 
-namespace AsposeCellsPdfConversion
+// Load an Excel workbook, strip personal information, and save it as a PDF using Aspose.Cells. PdfSaveOptions together with PdfSecurityOptions apply owner/user passwords, allow printing, and block editing, form filling, annotations, and content extraction, delivering a tamper‑proof, read‑only PDF.
+class ConvertToPdfNonEditable
 {
-    // Load or create a Workbook, optionally strip personal information, configure PdfSaveOptions with PdfSecurityOptions (owner/user passwords, disable modification and form filling, allow printing) and save the workbook as a locked PDF.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the source Excel workbook
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Remove any personal information (author names, comments, etc.)
+        workbook.RemovePersonalInformation();
+
+        // Create PDF save options
+        PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
+
+        // Configure security options to make the PDF non‑editable
+        PdfSecurityOptions securityOptions = new PdfSecurityOptions
         {
-            // Create or load the workbook
-            // Here we create a new workbook; replace with new Workbook("input.xlsx") to load an existing file
-            Workbook workbook = new Workbook();
+            OwnerPassword = "owner123",          // Owner password (can be any value)
+            UserPassword = "user123",            // User password (can be any value)
+            PrintPermission = true,              // Allow printing
+            ModifyDocumentPermission = false,    // Disallow document modifications
+            FillFormsPermission = false,         // Disallow filling form fields
+            AnnotationsPermission = false,       // Disallow adding/modifying annotations
+            ExtractContentPermission = false     // Disallow content extraction
+        };
 
-            // Example data – in real scenario the workbook would already contain form fields
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample data for PDF conversion");
+        // Assign the security options to the PDF save options
+        pdfSaveOptions.SecurityOptions = securityOptions;
 
-            // Remove personal information (author names, comments, etc.) if needed
-            workbook.RemovePersonalInformation();
-
-            // Configure PDF save options with security settings to disable form editing
-            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
-
-            // Set security options to make the PDF non‑editable
-            PdfSecurityOptions securityOptions = new PdfSecurityOptions
-            {
-                // Optional passwords – can be omitted if not required
-                OwnerPassword = "owner123",
-                UserPassword = "user123",
-
-                // Disallow modifications and form filling
-                ModifyDocumentPermission = false,
-                FillFormsPermission = false,
-
-                // Allow printing (adjust as needed)
-                PrintPermission = true
-            };
-
-            // Assign the security options to the PDF save options
-            pdfSaveOptions.SecurityOptions = securityOptions;
-
-            // Save the workbook as a PDF with the specified security settings
-            workbook.Save("output.pdf", pdfSaveOptions);
-        }
+        // Save the workbook as a PDF with the specified options
+        workbook.Save("output.pdf", pdfSaveOptions);
     }
 }

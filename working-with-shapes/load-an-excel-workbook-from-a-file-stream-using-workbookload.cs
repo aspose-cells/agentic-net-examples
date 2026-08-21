@@ -1,43 +1,35 @@
-// Title: Load an Excel Workbook from a Stream with Aspose.Cells (C#)
-// Description: Shows how to create a workbook in memory, write data, save it to a MemoryStream, reset the position, load it using the Workbook(Stream) constructor, verify cell content, and finally write the workbook to a file—all with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | load workbook from stream | MemoryStream Excel | Workbook(Stream) constructor | read Excel from stream .NET | in‑memory Excel processing | Aspose.Cells file stream example | load Excel without disk | Aspose.Cells API
-// Common Searches: Aspose.Cells load workbook from MemoryStream C# | How to read an Excel file from a stream using Aspose.Cells | Workbook(Stream) constructor usage example | C# load Excel from stream without saving to disk | Aspose.Cells read uploaded Excel stream
-// Developer Intent: Load an Excel workbook directly from a stream into a Workbook object, avoiding temporary files.
-// Use Cases: Process an Excel file received via an HTTP upload (IFormFile) entirely in memory. | Read and modify an Excel document streamed from a cloud storage service before saving or converting it. | Convert a streamed Excel workbook to PDF or another format without creating intermediate files on disk.
-// AI Prompts: Provide C# code that loads an Excel workbook from a Stream with Aspose.Cells, changes cell B2, and saves to a new file. | Explain why resetting the stream position is required before calling the Workbook(Stream) constructor. | Show how to load an uploaded Excel stream, rename the first worksheet, and export the workbook to PDF using Aspose.Cells.
+// Title: Load an Excel workbook from a FileStream using Aspose.Cells in C#
+// Description: Demonstrates how to open an Excel file with a FileStream, instantiate a Workbook via the Workbook(Stream) constructor, read the value of cell A1 on the first worksheet, and save the workbook to a new file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# load from stream | Workbook(Stream) constructor | read cell value Excel C# | save workbook Aspose.Cells | file stream Excel processing
+// Common Searches: Aspose.Cells load workbook from FileStream | C# read Excel cell after stream load | how to save workbook after loading from stream Aspose | Workbook constructor with stream example
+// Developer Intent: Open an Excel file from a stream, access cell data, and write the workbook back to disk.
+// Use Cases: Process Excel files received over a network or API without creating temporary files. | Extract specific cell values for reporting or data migration after streaming the workbook. | Apply transformations (e.g., formulas, formatting) to a streamed workbook before saving the updated version.
+// AI Prompts: Generate C# code that loads an Excel file from a MemoryStream with Aspose.Cells, reads several cells, and saves the result. | Show how to implement robust error handling and using‑statements when opening a workbook from a FileStream in Aspose.Cells. | Create an example that loads a workbook from a stream, inserts a shape into the first worksheet, and then saves the file.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Shows how to create a workbook in memory, write data, save it to a MemoryStream, reset the position, load it using the Workbook(Stream) constructor, verify cell content, and finally write the workbook to a file—all with Aspose.Cells for .NET.
-class LoadWorkbookFromStream
+// Demonstrates how to open an Excel file with a FileStream, instantiate a Workbook via the Workbook(Stream) constructor, read the value of cell A1 on the first worksheet, and save the workbook to a new file using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // ------------------------------------------------------------
-        // Create a sample workbook in memory and write it to a stream.
-        // ------------------------------------------------------------
-        MemoryStream memoryStream = new MemoryStream();
-        Workbook sampleWorkbook = new Workbook();                     // create a new workbook
-        sampleWorkbook.Worksheets[0].Cells["A1"].PutValue("Hello from stream");
-        sampleWorkbook.Save(memoryStream, SaveFormat.Xlsx);          // save to the memory stream
-        memoryStream.Position = 0;                                   // reset stream position for reading
+        // Path to the Excel file that will be loaded
+        string sourcePath = "input.xlsx";
 
-        // ------------------------------------------------------------
-        // Load the workbook from the stream using the Workbook(Stream) ctor.
-        // ------------------------------------------------------------
-        Workbook loadedWorkbook = new Workbook(memoryStream);        // load from stream
+        // Load the workbook from a file stream using the Workbook(Stream) constructor
+        Workbook workbook;
+        using (FileStream stream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read))
+        {
+            workbook = new Workbook(stream);
+        }
 
-        // ------------------------------------------------------------
-        // Demonstrate that the data was loaded correctly.
-        // ------------------------------------------------------------
-        string cellValue = loadedWorkbook.Worksheets[0].Cells["A1"].StringValue;
-        Console.WriteLine($"Loaded cell A1 value: {cellValue}");
+        // Access the first worksheet and read a sample cell value
+        Worksheet sheet = workbook.Worksheets[0];
+        Console.WriteLine("Value of A1: " + sheet.Cells["A1"].StringValue);
 
-        // ------------------------------------------------------------
-        // Save the loaded workbook to a physical file.
-        // ------------------------------------------------------------
-        loadedWorkbook.Save("LoadedFromStream.xlsx", SaveFormat.Xlsx);
+        // Save the loaded workbook to a new file (demonstrates the Save method)
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

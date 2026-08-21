@@ -1,38 +1,32 @@
-// Title: Save a Modified Workbook to XLSX with Aspose.Cells Workbook.Save (C#)
-// Description: Demonstrates how to create a Workbook, change cell values (string, numeric, date) and persist the changes by calling Workbook.Save with SaveFormat.Xlsx and the default save options.
-// Keywords: Aspose.Cells C# save workbook | Workbook.Save default options | SaveFormat.Xlsx example | modify cell values Aspose.Cells | export Excel to XLSX C# | Aspose.Cells Save method | C# Excel file generation
-// Common Searches: Aspose.Cells save workbook as XLSX C# | Workbook.Save overload default options example | how to write changes to Excel file using Aspose.Cells | C# code to modify cells and save as XLSX | Aspose.Cells default save settings
-// Developer Intent: Persist edited cell data by saving the workbook to an XLSX file using the default save configuration.
-// Use Cases: Create a new workbook, populate cells with different data types, and generate an XLSX report. | Update an existing workbook's content and overwrite the original file without custom save parameters. | Automate simple data entry tasks where values are written to specific cells and the file is saved in standard Excel format.
-// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, updates several cells, and saves it as XLSX using Workbook.Save with default options. | Explain the steps to use Workbook.Save and SaveFormat.Xlsx to export a modified workbook after changing string, numeric, and date cells. | Show how to overwrite an existing XLSX file after editing cell values with Aspose.Cells in C#.
+// Title: Save a Modified Workbook to XLSX with Aspose.Cells (C#) Using Default Options
+// Description: Demonstrates how to create a new Workbook, write text, a date, and a number to cells A1, B1, A2, and B2, and then persist the changes by calling Workbook.Save with SaveFormat.Xlsx and the library's default settings.
+// Keywords: Aspose.Cells C# save workbook | Workbook.Save default options | export to XLSX Aspose.Cells | modify cells Aspose.Cells | C# Excel file generation
+// Common Searches: Aspose.Cells save workbook as XLSX C# | How to use Workbook.Save with default settings | C# write values to Excel and save with Aspose | Save modified spreadsheet using Aspose.Cells
+// Developer Intent: Persist a workbook after updating cell values without specifying custom save parameters.
+// Use Cases: Generate a quick report by filling header and data cells and exporting to XLSX. | Update an existing spreadsheet with the current timestamp and an identifier, then save the result. | Create a simple data dump from a .NET application and store it as a standard Excel file.
+// AI Prompts: Show C# code that opens an existing XLSX file, changes several cells, and saves it without overwriting the original. | Explain how to customize Workbook.Save with SaveOptions for compression, password protection, or macro preservation. | Provide examples of converting a workbook to PDF, CSV, and HTML using Aspose.Cells in C#.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsSaveExample
+// Demonstrates how to create a new Workbook, write text, a date, and a number to cells A1, B1, A2, and B2, and then persist the changes by calling Workbook.Save with SaveFormat.Xlsx and the library's default settings.
+class Program
 {
-    // Demonstrates how to create a Workbook, change cell values (string, numeric, date) and persist the changes by calling Workbook.Save with SaveFormat.Xlsx and the default save options.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (uses Workbook() constructor rule)
-            Workbook workbook = new Workbook();
+        // Create a new workbook (default format is Xlsx)
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Modify some cell values
-            sheet.Cells["A1"].PutValue("First");
-            sheet.Cells["B2"].PutValue(123);
-            sheet.Cells["C3"].PutValue(DateTime.Now);
+        // Modify cell values
+        worksheet.Cells["A1"].PutValue("Hello");
+        worksheet.Cells["B1"].PutValue("World");
+        worksheet.Cells["A2"].PutValue(DateTime.Now);
+        worksheet.Cells["B2"].PutValue(12345);
 
-            // Save the workbook back to XLSX format using default options
-            // The Save(string, SaveFormat) overload follows the provided rule.
-            workbook.Save("ModifiedWorkbook.xlsx", SaveFormat.Xlsx);
-
-            // Optional: inform the user
-            Console.WriteLine("Workbook saved as ModifiedWorkbook.xlsx");
-        }
+        // Save the workbook back to XLSX format using default save options
+        workbook.Save("ModifiedWorkbook.xlsx", SaveFormat.Xlsx);
     }
 }

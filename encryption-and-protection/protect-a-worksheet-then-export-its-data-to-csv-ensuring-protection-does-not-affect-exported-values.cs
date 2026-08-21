@@ -1,26 +1,23 @@
 // Title: Protect an Excel worksheet with Aspose.Cells for .NET and export to CSV
-// Description: Shows how to apply full worksheet protection (without a password) using Aspose.Cells for .NET and then save the workbook as a CSV file, confirming that protection does not change the exported data.
-// Keywords: Aspose.Cells worksheet protection | export protected sheet to CSV | Aspose.Cells .NET CSV export | Excel sheet protection Aspose | save workbook as CSV Aspose.Cells | ProtectionType.All Aspose.Cells | worksheet protection impact on CSV
-// Common Searches: Aspose.Cells protect worksheet and export CSV | Does worksheet protection affect CSV output in Aspose.Cells | Save protected Excel sheet as CSV using C# | Export data from a protected worksheet with Aspose.Cells | How to keep cell values when saving protected sheet to CSV
-// Developer Intent: Apply worksheet protection and generate a CSV file that contains the original cell values unchanged.
-// Use Cases: Secure an Excel file for internal distribution while still producing CSV reports for downstream systems. | Create a read‑only workbook and automate CSV extraction for data migration without disabling protection. | Programmatically lock a sheet before archiving, then export its contents for analytics or backup.
-// AI Prompts: Write C# code with Aspose.Cells that protects a worksheet with a password and exports it to CSV, ensuring the password does not block the export. | Demonstrate how to protect only formatting or editing features of a sheet and then save it as CSV using Aspose.Cells. | Explain the relationship between worksheet protection settings and different save formats in Aspose.Cells.
+// Description: Creates a workbook, fills cells A1:B3, applies full worksheet protection (no password) using ProtectionType.All, and saves the sheet as a CSV file. The protection setting does not modify the exported CSV content.
+// Keywords: Aspose.Cells | worksheet protection | ProtectionType.All | export to CSV | SaveFormat.Csv | .NET Excel | protected worksheet export | no password protection | Excel to CSV conversion
+// Common Searches: Aspose.Cells protect worksheet and export CSV | Does worksheet protection affect CSV output in Aspose.Cells | Save protected Excel sheet as CSV .NET | Export protected worksheet to CSV without password | How to keep cell values when saving protected sheet as CSV
+// Developer Intent: Apply worksheet protection and generate a CSV file that retains all original cell values.
+// Use Cases: Lock a sheet to prevent editing in Excel while still providing a CSV report for downstream systems. | Distribute a protected workbook to users but automate CSV extraction for data pipelines. | Secure worksheet layout without a password and produce unchanged CSV files for integration with third‑party tools.
+// AI Prompts: Show C# code that protects an Excel worksheet with Aspose.Cells and then saves it as CSV. | Explain whether worksheet protection influences the CSV result when using SaveFormat.Csv in Aspose.Cells. | Provide an example of protecting a worksheet with a password and ensuring the CSV export includes all cell values.
 
-using System;
 using Aspose.Cells;
 
-// Shows how to apply full worksheet protection (without a password) using Aspose.Cells for .NET and then save the workbook as a CSV file, confirming that protection does not change the exported data.
-class ProtectAndExportCsv
+// Creates a workbook, fills cells A1:B3, applies full worksheet protection (no password) using ProtectionType.All, and saves the sheet as a CSV file. The protection setting does not modify the exported CSV content.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-
-        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Fill some sample data
+        // Populate some sample data
         sheet.Cells["A1"].PutValue("Name");
         sheet.Cells["B1"].PutValue("Age");
         sheet.Cells["A2"].PutValue("Alice");
@@ -31,10 +28,8 @@ class ProtectAndExportCsv
         // Protect the worksheet (all protection types, no password)
         sheet.Protect(ProtectionType.All);
 
-        // Export the worksheet data to CSV; protection does not affect the exported values
-        workbook.Save("ProtectedData.csv", SaveFormat.Csv);
-
-        // Optional: display protection status
-        Console.WriteLine("Worksheet protected: " + sheet.IsProtected);
+        // Export the worksheet data to CSV.
+        // The protection setting does not affect the exported values.
+        workbook.Save("ProtectedWorksheet.csv", SaveFormat.Csv);
     }
 }

@@ -1,84 +1,65 @@
-// Title: C# – Distinguish Wrong Password from Corrupted Encrypted Excel Workbook using Aspose.Cells
-// Description: Demonstrates how to detect an encrypted Excel file, verify a user‑provided password without loading the workbook, and load it only when the password is correct. The sample catches a CellsException with ExceptionType.FileCorrupted to report a damaged file and provides a generic fallback for other errors.
-// Keywords: Aspose.Cells C# | encrypted Excel workbook | verify password Aspose.Cells | FileCorrupted exception | CellsException handling | LoadOptions password | Excel file corruption detection | error handling Aspose.Cells
-// Common Searches: Aspose.Cells differentiate wrong password and corrupted file | C# verify encrypted Excel password before opening | catch CellsException FileCorrupted Aspose.Cells | how to detect corrupted encrypted workbook with Aspose | load encrypted xlsx with password validation Aspose
-// Developer Intent: Add robust error handling that separately reports an incorrect password and a corrupted encrypted workbook when opening an Excel file with Aspose.Cells.
-// Use Cases: Validate a password entered by a user without loading the workbook and show a clear "Incorrect password" message. | Identify a damaged encrypted file by catching CellsException with ExceptionType.FileCorrupted and inform the user. | Provide a generic catch‑all for unexpected exceptions during encrypted file processing.
-// AI Prompts: Generate C# code that opens an encrypted Excel file with Aspose.Cells, verifies the password first, and returns distinct messages for wrong password and corrupted file. | Show how to catch CellsException with ExceptionType.FileCorrupted when loading an encrypted workbook and log detailed error information. | Write a method that returns status codes for password failure, file corruption, and successful load using Aspose.Cells in C#.
+// Title: Aspose.Cells .NET – Distinguish Wrong Password from Corrupted Encrypted Excel Workbook
+// Description: Shows how to detect an encrypted Excel file, verify the user‑supplied password with FileFormatUtil.VerifyPassword, and load the workbook using LoadOptions. The sample catches a CellsException with ExceptionType.FileCorrupted to signal a damaged file, while a false password result triggers an "Incorrect password" message. All other errors are handled generically.
+// Keywords: Aspose.Cells encrypted workbook .NET | verify password Aspose.Cells | FileFormatUtil VerifyPassword example | detect corrupted encrypted Excel file | ExceptionType.FileCorrupted handling | wrong password vs file corruption
+// Common Searches: Aspose.Cells differentiate wrong password from corrupted file | catch FileCorrupted exception for encrypted Excel workbook | verify password before opening encrypted workbook Aspose.Cells | handle corrupted encrypted Excel file in C#
+// Developer Intent: Identify whether an encrypted Excel file fails to open because the password is incorrect or because the file itself is corrupted.
+// Use Cases: Validate a user‑entered password and show a specific "Incorrect password" alert. | Open an encrypted workbook safely and report a "File is corrupted" message when the content is damaged. | Return distinct error codes for password mismatch and file corruption in an automated import pipeline.
+// AI Prompts: Create a reusable C# method that uses Aspose.Cells to verify a password, load an encrypted workbook, and return separate status codes for wrong password and corrupted file. | Show how to log detailed diagnostics when a CellsException with ExceptionType.FileCorrupted is thrown while opening an encrypted Excel file. | Provide example code that wraps password verification and workbook loading in try‑catch blocks and displays user‑friendly messages for wrong password, corrupted file, and unexpected errors.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to detect an encrypted Excel file, verify a user‑provided password without loading the workbook, and load it only when the password is correct. The sample catches a CellsException with ExceptionType.FileCorrupted to report a damaged file and provides a generic fallback for other errors.
-public class EncryptedFileHandler
+// Shows how to detect an encrypted Excel file, verify the user‑supplied password with FileFormatUtil.VerifyPassword, and load the workbook using LoadOptions. The sample catches a CellsException with ExceptionType.FileCorrupted to signal a damaged file, while a false password result triggers an "Incorrect password" message. All other errors are handled generically.
+class EncryptedFileHandler
 {
-    public static void Run()
+    static void Main()
     {
-        // Path to the encrypted workbook and the password to test
+        // Path to the Excel file
         string filePath = "encrypted.xlsx";
-        string password = "userProvidedPassword";
 
-        // Ensure the file exists before proceeding
-        if (!File.Exists(filePath))
+        // Password supplied by the user
+        string password = "userPassword";
+
+        // Detect file format and check if the file is encrypted
+        FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
+        if (!fileInfo.IsEncrypted)
         {
-            Console.WriteLine($"File not found: {filePath}");
+            Console.WriteLine("The file is not encrypted.");
             return;
         }
 
+        // Verify whether the supplied password is correct
+        bool isPasswordCorrect;
+        using (FileStream stream = File.OpenRead(filePath))
+        {
+            isPasswordCorrect = FileFormatUtil.VerifyPassword(stream, password);
+        }
+
+        if (!isPasswordCorrect)
+        {
+            // Password does not match the encryption password
+            Console.WriteLine("Incorrect password.");
+            return;
+        }
+
+        // Password is correct – attempt to load the workbook
         try
         {
-            // Detect file format and check if the file is encrypted
-            FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
-            if (!fileInfo.IsEncrypted)
-            {
-                Console.WriteLine("The file is not encrypted.");
-                return;
-            }
-
-            // Verify the password without loading the workbook
-            bool passwordIsCorrect;
-            using (Stream stream = File.OpenRead(filePath))
-            {
-                passwordIsCorrect = FileFormatUtil.VerifyPassword(stream, password);
-            }
-
-            if (!passwordIsCorrect)
-            {
-                Console.WriteLine("Incorrect password.");
-                return;
-            }
-
-            // Password is correct – attempt to load the workbook
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = password };
+            LoadOptions loadOptions = new LoadOptions { Password = password };
             Workbook workbook = new Workbook(filePath, loadOptions);
             Console.WriteLine("Workbook loaded successfully.");
-            // Further processing can be done here
+            // Perform further processing with 'workbook' as needed
         }
         catch (CellsException ex) when (ex.Code == ExceptionType.FileCorrupted)
         {
-            // Corrupted encrypted file scenario
-            Console.WriteLine("The encrypted file appears to be corrupted.");
+            // The file is encrypted but its content is corrupted
+            Console.WriteLine("The encrypted file is corrupted.");
         }
         catch (Exception ex)
         {
-            // Any other unexpected errors
+            // Handle any other unexpected errors
             Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        try
-        {
-            EncryptedFileHandler.Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Fatal error: {ex.Message}");
         }
     }
 }

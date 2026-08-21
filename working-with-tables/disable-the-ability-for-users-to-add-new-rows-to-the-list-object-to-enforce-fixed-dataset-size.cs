@@ -1,39 +1,60 @@
+// Title: Aspose.Cells .NET – Disable Row Insertion in a ListObject (Table) via Worksheet Protection
+// Description: Creates an Excel workbook, defines a ListObject over a range, and locks the table size by setting worksheet protection AllowInsertingRow to false with a password. The resulting file is a fixed‑size table that end‑users cannot expand.
+// Keywords: Aspose.Cells disable row insertion | ListObject protection .NET | prevent adding rows Aspose.Cells | AllowInsertingRow false | Excel table lock Aspose | worksheet protection Aspose.Cells
+// Common Searches: how to stop users adding rows to a ListObject in Aspose.Cells | Aspose.Cells set AllowInsertingRow false | protect worksheet to block row insertion .NET | fixed size table Aspose.Cells example | disable table row addition programmatically
+// Developer Intent: The developer needs to prevent end‑users from inserting new rows into an Excel ListObject while keeping the rest of the worksheet editable.
+// Use Cases: Distribute a template where the data range must remain unchanged. | Enforce data integrity by locking table size in a shared workbook. | Create a reporting sheet that allows edits but forbids row expansion.
+// AI Prompts: Show how to lock a ListObject size in Aspose.Cells for .NET without disabling other edits. | Provide code that protects a worksheet and sets AllowInsertingRow to false for a specific table. | Explain how to create a fixed‑size Excel table using Aspose.Cells and prevent row insertion.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-class DisableListObjectRowInsertion
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Creates an Excel workbook, defines a ListObject over a range, and locks the table size by setting worksheet protection AllowInsertingRow to false with a password. The resulting file is a fixed‑size table that end‑users cannot expand.
+    public class DisableListObjectRowInsertion
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+                Console.WriteLine("Workbook created successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-        // Populate sample data that will become the list object (table)
-        sheet.Cells["A1"].PutValue("ID");
-        sheet.Cells["B1"].PutValue("Name");
-        sheet.Cells["A2"].PutValue(1);
-        sheet.Cells["B2"].PutValue("Alice");
-        sheet.Cells["A3"].PutValue(2);
-        sheet.Cells["B3"].PutValue("Bob");
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a ListObject covering the data range (A1:B3) with headers
-        int listIndex = sheet.ListObjects.Add("A1", "B3", true);
-        ListObject table = sheet.ListObjects[listIndex];
+            // Populate sample data for the list object (table)
+            worksheet.Cells["A1"].PutValue("ID");
+            worksheet.Cells["B1"].PutValue("Name");
+            worksheet.Cells["A2"].PutValue(1);
+            worksheet.Cells["B2"].PutValue("Alice");
+            worksheet.Cells["A3"].PutValue(2);
+            worksheet.Cells["B3"].PutValue("Bob");
 
-        // Access the protection settings of the worksheet
-        Protection protection = sheet.Protection;
+            // Add a ListObject (table) covering the data range A1:B3, with headers
+            int listIndex = worksheet.ListObjects.Add("A1", "B3", true);
+            ListObject table = worksheet.ListObjects[listIndex];
 
-        // Disable insertion and deletion of rows while the sheet is protected
-        protection.AllowInsertingRow = false; // users cannot add rows
-        protection.AllowDeletingRow = false;  // users cannot delete rows
+            // Protect the worksheet and disallow row insertion while protected
+            Protection protection = worksheet.Protection;
+            protection.AllowInsertingRow = false; // Disable adding new rows
+            protection.Password = "securePassword";
+            worksheet.Protect(ProtectionType.All);
 
-        // Set a password (optional) and protect the worksheet with all protections
-        protection.Password = "pwd123";
-        sheet.Protect(ProtectionType.All);
-
-        // Save the workbook
-        workbook.Save("FixedSizeTable.xlsx", SaveFormat.Xlsx);
+            // Save the workbook
+            workbook.Save("FixedSizeListObject.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

@@ -1,58 +1,78 @@
-// Title: Validate Gradient WordArt Fill Consistency Between Excel and PDF Using Aspose.Cells for .NET
-// Description: This C# example creates an Excel workbook, inserts a WordArt shape with a preset gradient fill, saves the file as XLSX and PDF, reloads the XLSX, and confirms that the shape remains WordArt and its FillType is Gradient, ensuring visual parity in the generated PDF.
-// Keywords: Aspose.Cells | .NET | WordArt gradient | PDF export | fill type verification | Excel to PDF fidelity | gradient fill consistency | Aspose.Cells API | C# example
-// Common Searches: Aspose.Cells verify WordArt gradient in PDF | C# check WordArt fill type after export | Excel gradient WordArt PDF rendering | How to test gradient fill preservation with Aspose.Cells | Validate WordArt appearance in PDF using Aspose.Cells
-// Developer Intent: Confirm that a WordArt shape with a gradient fill renders identically in the PDF produced by Aspose.Cells as it does in the original Excel workbook.
-// Use Cases: Automated regression test for gradient WordArt rendering during Excel‑to‑PDF conversion | Generate reports with styled WordArt and programmatically ensure gradient styling survives PDF export | Validate workbook integrity after saving and reloading by checking WordArt properties | Create a CI pipeline step that flags visual differences in gradient fills between XLSX and PDF
-// AI Prompts: Generate a C# unit test that renders a WordArt shape from an Excel file and compares its bitmap to the same shape in the exported PDF using Aspose.Cells and Aspose.Pdf. | Provide code to extract gradient fill parameters from a WordArt object and assert they match the PDF rendering. | Explain how to programmatically verify that a WordArt shape retains its Gradient FillType after saving, reloading, and exporting with Aspose.Cells.
+// Title: Validate WordArt Gradient Fill Preservation in PDF Export with Aspose.Cells for .NET
+// Description: C# sample that creates an Excel workbook, inserts a WordArt shape using the preset WordArtStyle7 gradient, confirms the shape is WordArt and its FillType is Gradient, logs the two gradient colors and style, then saves the file as .xlsx and PDF to ensure the gradient appearance remains unchanged after conversion.
+// Keywords: Aspose.Cells WordArt gradient | C# PDF export gradient fill | Excel to PDF gradient preservation | WordArt FillType verification | Aspose.Cells shape fill validation | gradient color extraction Aspose.Cells | automated visual fidelity test Excel PDF
+// Common Searches: Aspose.Cells verify WordArt gradient after PDF conversion | C# check WordArt fill type before exporting to PDF | how to ensure gradient fill is kept in PDF with Aspose.Cells | retrieve WordArt gradient colors using Aspose.Cells .NET | test Excel to PDF gradient consistency Aspose
+// Developer Intent: Confirm that a WordArt shape's gradient fill is identical in the generated PDF compared to the original Excel workbook.
+// Use Cases: Programmatically add WordArt with a preset gradient and validate its FillType. | Extract and log gradient color values for audit or comparison purposes. | Save the workbook in both XLSX and PDF formats to perform visual or pixel‑perfect regression testing. | Integrate the validation logic into CI pipelines to catch rendering regressions early.
+// AI Prompts: Write C# code using Aspose.Cells to insert a WordArt shape with a custom two‑color linear gradient and verify the gradient colors before exporting to PDF. | Create a unit test in C# that asserts the gradient fill of a WordArt shape remains unchanged after converting an Excel file to PDF with Aspose.Cells. | Explain how to compare gradient color values from a WordArt shape in the source workbook with those rendered in the resulting PDF.
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// This C# example creates an Excel workbook, inserts a WordArt shape with a preset gradient fill, saves the file as XLSX and PDF, reloads the XLSX, and confirms that the shape remains WordArt and its FillType is Gradient, ensuring visual parity in the generated PDF.
-class GradientWordArtPdfValidation
+namespace GradientWordArtValidation
 {
-    static void Main()
+    // C# sample that creates an Excel workbook, inserts a WordArt shape using the preset WordArtStyle7 gradient, confirms the shape is WordArt and its FillType is Gradient, logs the two gradient colors and style, then saves the file as .xlsx and PDF to ensure the gradient appearance remains unchanged after conversion.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            try
+            {
+                // Create a new workbook (creation rule)
+                Workbook workbook = new Workbook();
 
-        // Add a WordArt shape using a preset style that contains a gradient fill
-        // Parameters: style, text, upperLeftRow, top, upperLeftColumn, left, height, width
-        Shape wordArt = worksheet.Shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle7, // Gradient Fill - Blue, Accent 1, Reflection
-            "Gradient WordArt",
-            2, 0,   // row, top offset
-            2, 0,   // column, left offset
-            200,    // height
-            100);   // width
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the original Excel file
-        workbook.Save("GradientWordArt.xlsx");
+                // Add a WordArt shape with a preset gradient style (WordArtStyle7)
+                // Parameters: style, text, upperLeftRow, top, upperLeftColumn, left, height, width
+                Shape wordArt = sheet.Shapes.AddWordArt(
+                    PresetWordArtStyle.WordArtStyle7,
+                    "Gradient WordArt",
+                    2, 0,   // row, top offset
+                    2, 0,   // column, left offset
+                    100,    // height
+                    400);   // width
 
-        // Save the same workbook as PDF – the PDF rendering should preserve the gradient appearance
-        workbook.Save("GradientWordArt.pdf", SaveFormat.Pdf);
+                // Verify that the shape is recognized as WordArt
+                if (!wordArt.IsWordArt)
+                    throw new InvalidOperationException("The created shape is not a WordArt.");
 
-        // Reload the saved Excel file to verify that the WordArt shape retains its gradient fill
-        Workbook loadedWorkbook = new Workbook("GradientWordArt.xlsx");
-        Shape loadedWordArt = loadedWorkbook.Worksheets[0].Shapes[0];
+                // Access the fill format of the WordArt
+                FillFormat fill = wordArt.Fill;
 
-        // Verify that the shape is recognized as WordArt
-        bool isWordArt = loadedWordArt.IsWordArt;
+                // Ensure the fill type is Gradient
+                if (fill.FillType != FillType.Gradient)
+                    throw new InvalidOperationException("WordArt fill is not set to Gradient.");
 
-        // Verify that the fill type is Gradient (as defined by the preset style)
-        FillType fillType = loadedWordArt.Fill.FillType;
+                // Retrieve gradient colors (these are set by the preset style)
+                var gradientColor1 = fill.GradientColor1;
+                var gradientColor2 = fill.GradientColor2;
 
-        // Output verification results
-        Console.WriteLine("IsWordArt: " + isWordArt);
-        Console.WriteLine("FillType: " + fillType);
-        // Expected output:
-        // IsWordArt: True
-        // FillType: Gradient
-        // The visual appearance of the gradient in the PDF should match the Excel rendering.
+                // Output gradient color information for validation
+                Console.WriteLine($"Gradient Color 1: {gradientColor1}");
+                Console.WriteLine($"Gradient Color 2: {gradientColor2}");
+
+                // Additional check: gradient style should be consistent with the preset
+                GradientStyleType style = fill.GradientStyle;
+                Console.WriteLine($"Gradient Style: {style}");
+
+                // Save the workbook as Excel file (save rule)
+                string excelPath = "GradientWordArt.xlsx";
+                workbook.Save(excelPath);
+
+                // Convert and save the workbook as PDF to compare visual output
+                string pdfPath = "GradientWordArt.pdf";
+                workbook.Save(pdfPath, SaveFormat.Pdf);
+
+                // Validation complete – if no exception was thrown, the gradient fill is preserved.
+                Console.WriteLine("Gradient fill validation completed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,61 +1,58 @@
-// Title: C# – Extract Excel Theme Accent Colors and Validate Against Corporate Style Guide with Aspose.Cells
-// Description: Loads an Excel workbook, retrieves the six theme accent colors via Aspose.Cells GetThemeColor, compares each ARGB value to a predefined corporate palette, reports compliance per accent, and saves the file unchanged.
-// Keywords: Aspose.Cells | C# | GetThemeColor | ThemeColorType | Excel theme colors | corporate color compliance | color palette validation | branding check | programmatic theme extraction
-// Common Searches: Aspose.Cells GetThemeColor example C# | How to read Excel theme accent colors in .NET | Validate Excel workbook theme colors against corporate palette | Check Excel theme compliance programmatically | C# code to compare Excel theme colors
-// Developer Intent: Identify the workbook’s theme accent colors and determine if they match the organization’s approved color scheme.
-// Use Cases: Generate a compliance report for multiple workbooks by iterating through each ThemeColorType and logging mismatches. | Automate brand enforcement by flagging or rejecting Excel files whose theme colors differ from the approved corporate guide. | Integrate the check into a CI/CD pipeline to ensure generated reports use mandated theme colors before release.
-// AI Prompts: Write a C# method that returns a list of non‑compliant theme accent colors given a Workbook and an array of corporate colors using Aspose.Cells. | Provide code to batch‑process a folder of Excel files, checking each file’s theme accent colors against a corporate style guide and outputting a summary CSV. | Explain how to add a tolerance range for color differences when validating theme compliance with Aspose.Cells.
+// Title: Validate Excel Theme Accent Colors Against a Corporate Style Guide Using Aspose.Cells (C#)
+// Description: Creates a workbook, defines a corporate palette of six accent colors, reads each theme accent with GetThemeColor, compares ARGB values, logs PASS/FAIL for compliance, and saves the file.
+// Keywords: Aspose.Cells GetThemeColor | Excel theme accent colors C# | corporate color compliance | validate Excel theme palette | theme color comparison .NET
+// Common Searches: read Excel theme accent colors with Aspose.Cells | compare workbook theme colors to corporate palette C# | Aspose.Cells validate Excel theme against style guide | example GetThemeColor usage Aspose.Cells
+// Developer Intent: Extract the workbook’s theme accent colors and verify they exactly match a predefined corporate color set.
+// Use Cases: Batch‑process multiple workbooks to produce a branding compliance report. | Add the check to a CI/CD pipeline that blocks non‑conforming Excel files. | Create a UI that highlights cells using non‑standard theme colors.
+// AI Prompts: Generate a method that returns all ThemeColorType values that fail compliance for a given workbook and corporate palette. | Adjust the comparison to allow a ±5 tolerance per ARGB channel when determining compliance. | Write an NUnit test that applies a custom theme to a workbook and asserts the expected PASS/FAIL results.
 
 using System;
 using System.Drawing;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace ThemeComplianceCheck
+// Creates a workbook, defines a corporate palette of six accent colors, reads each theme accent with GetThemeColor, compares ARGB values, logs PASS/FAIL for compliance, and saves the file.
+class ThemeComplianceChecker
 {
-    // Loads an Excel workbook, retrieves the six theme accent colors via Aspose.Cells GetThemeColor, compares each ARGB value to a predefined corporate palette, reports compliance per accent, and saves the file unchanged.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (default theme will be used)
+        Workbook workbook = new Workbook();
+
+        // Corporate style guide: expected accent colors (example ARGB values)
+        var corporateAccentColors = new Dictionary<ThemeColorType, Color>
         {
-            // Load an existing workbook (replace with actual path)
-            Workbook workbook = new Workbook("input.xlsx");
+            { ThemeColorType.Accent1, Color.FromArgb(255, 0, 112, 192) },   // Example: corporate blue
+            { ThemeColorType.Accent2, Color.FromArgb(255, 255, 192, 0) },   // Example: corporate orange
+            { ThemeColorType.Accent3, Color.FromArgb(255, 112, 173, 71) },  // Example: corporate green
+            { ThemeColorType.Accent4, Color.FromArgb(255, 237, 125, 49) },  // Example: corporate red‑orange
+            { ThemeColorType.Accent5, Color.FromArgb(255, 255, 0, 0) },     // Example: corporate red
+            { ThemeColorType.Accent6, Color.FromArgb(255, 0, 176, 80) }     // Example: corporate dark green
+        };
 
-            // Corporate style guide accent colors (example values)
-            Color[] corporateAccentColors = new Color[6]
-            {
-                Color.FromArgb(255, 0, 112, 192),   // Accent1
-                Color.FromArgb(255, 255, 192, 0),   // Accent2
-                Color.FromArgb(255, 112, 173, 71),  // Accent3
-                Color.FromArgb(255, 237, 125, 49),  // Accent4
-                Color.FromArgb(255, 191, 0, 0),     // Accent5
-                Color.FromArgb(255, 112, 48, 160)   // Accent6
-            };
+        // Accent types to evaluate
+        ThemeColorType[] accentTypes = new ThemeColorType[]
+        {
+            ThemeColorType.Accent1,
+            ThemeColorType.Accent2,
+            ThemeColorType.Accent3,
+            ThemeColorType.Accent4,
+            ThemeColorType.Accent5,
+            ThemeColorType.Accent6
+        };
 
-            // Array of ThemeColorType values for accents
-            ThemeColorType[] accentTypes = new ThemeColorType[]
-            {
-                ThemeColorType.Accent1,
-                ThemeColorType.Accent2,
-                ThemeColorType.Accent3,
-                ThemeColorType.Accent4,
-                ThemeColorType.Accent5,
-                ThemeColorType.Accent6
-            };
+        // Compare each workbook accent color with the corporate guide
+        foreach (var accent in accentTypes)
+        {
+            Color workbookColor = workbook.GetThemeColor(accent);
+            Color expectedColor = corporateAccentColors[accent];
 
-            // Check each accent color against the corporate guide
-            for (int i = 0; i < accentTypes.Length; i++)
-            {
-                ThemeColorType type = accentTypes[i];
-                Color workbookColor = workbook.GetThemeColor(type);
-                Color corporateColor = corporateAccentColors[i];
+            bool isCompliant = workbookColor.ToArgb() == expectedColor.ToArgb();
 
-                bool isMatch = workbookColor.ToArgb() == corporateColor.ToArgb();
-
-                Console.WriteLine($"{type}: Workbook Color = {workbookColor}, Corporate Expected = {corporateColor} => {(isMatch ? "Compliant" : "Non‑compliant")}");
-            }
-
-            // Save the workbook (no modifications made, just demonstrating lifecycle)
-            workbook.Save("output.xlsx");
+            Console.WriteLine($"{accent}: Workbook={workbookColor} Expected={expectedColor} Compliance={(isCompliant ? "PASS" : "FAIL")}");
         }
+
+        // Save the workbook (required lifecycle step)
+        workbook.Save("ThemeComplianceCheck.xlsx");
     }
 }

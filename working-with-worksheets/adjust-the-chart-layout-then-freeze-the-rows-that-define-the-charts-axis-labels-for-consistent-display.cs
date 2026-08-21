@@ -1,10 +1,10 @@
-// Title: C# Aspose.Cells – Set Chart Placement to MoveAndSize and Freeze Header Rows with Axis Labels
-// Description: Demonstrates how to create a workbook, add sample data, insert a column chart, configure the chart to move and resize with cells (Placement = MoveAndSize), recalculate its layout, reposition it, and then freeze the top rows that contain the chart's axis labels using FreezePanes, before saving the file.
-// Keywords: Aspose.Cells chart placement | MoveAndSize placement | freeze top rows Aspose.Cells | FreezePanes axis labels | C# Excel chart layout | recalculate chart layout Aspose | programmatic chart reposition | Excel freeze panes C# | Aspose.Cells worksheet formatting
-// Common Searches: Aspose.Cells set chart to move and size with cells | How to freeze rows that contain chart axis labels in .NET | C# code to reposition an Excel chart using Aspose.Cells | FreezePanes example for header rows in Aspose.Cells | Adjust chart layout and freeze panes Aspose.Cells
-// Developer Intent: Configure a chart to stay aligned with its cells and keep the axis‑label rows visible by freezing them in the worksheet.
-// Use Cases: Create a column chart, set its Placement to MoveAndSize, call Calculate, and move it to a new cell range. | Freeze the first four rows (the category and value headers that serve as axis labels) while leaving columns scrollable. | Maintain consistent display of chart axis labels during vertical scrolling in generated Excel files.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a chart's Placement to MoveAndSize, recalculates its layout, moves the chart to a specific range, and freezes the top N rows. | Show an example of using FreezePanes in Aspose.Cells to lock header rows without freezing columns. | Explain how to combine chart layout adjustments and FreezePanes to keep axis labels visible when scrolling in an Excel worksheet.
+// Title: C# Aspose.Cells: Relocate a Chart with MoveAndSize Placement and Freeze Axis‑Label Rows
+// Description: This example creates a workbook, fills columns A and B with sample categories and values, adds a column chart, sets its placement to MoveAndSize so it follows cell changes, recalculates the chart, moves it to rows 12‑22 and columns 2‑10, then freezes the first six rows (the axis‑label rows) using FreezePanes at cell A7, and finally saves the file as ChartLayoutAndFreeze.xlsx.
+// Keywords: Aspose.Cells chart placement | MoveAndSize | chart.Move C# | FreezePanes Aspose.Cells | freeze worksheet rows | axis label rows | C# Aspose.Cells example | adjust chart layout programmatically | worksheet freeze panes .NET | column chart Aspose.Cells
+// Common Searches: Aspose.Cells move chart with cells .NET | Set chart placement to MoveAndSize in C# | How to relocate a chart programmatically using Aspose.Cells | Freeze specific rows in an Aspose.Cells worksheet | Freeze panes below chart axis labels Aspose.Cells | C# example for chart.Calculate and chart.Move | Aspose.Cells FreezePanes at a given cell
+// Developer Intent: The developer wants to move a chart so it follows cell modifications and then keep the rows used for axis labels fixed while scrolling.
+// Use Cases: Align a chart with dynamic data ranges by using MoveAndSize placement. | Shift a chart to a different area of the sheet after inserting new rows or columns. | Keep header rows that serve as chart axis labels frozen for better readability in large reports. | Ensure consistent chart appearance across different screen sizes by recalculating its position before moving. | Generate Excel reports where both the chart and its axis labels remain static during navigation.
+// AI Prompts: Generate C# code that sets an Aspose.Cells chart’s Placement to MoveAndSize, calls Calculate, and moves it to a specific cell range. | Show how to use Worksheet.FreezePanes to lock the first N rows while leaving columns unfrozen in Aspose.Cells for .NET. | Explain the steps to adjust a chart’s layout and then freeze the rows containing its axis labels using Aspose.Cells. | Provide a complete Aspose.Cells example that creates data, adds a column chart, relocates it, and freezes the axis‑label rows.
 
 using System;
 using Aspose.Cells;
@@ -13,44 +13,40 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsChartLayoutAndFreeze
 {
-    // Demonstrates how to create a workbook, add sample data, insert a column chart, configure the chart to move and resize with cells (Placement = MoveAndSize), recalculate its layout, reposition it, and then freeze the top rows that contain the chart's axis labels using FreezePanes, before saving the file.
-    class Program
+    // This example creates a workbook, fills columns A and B with sample categories and values, adds a column chart, sets its placement to MoveAndSize so it follows cell changes, recalculates the chart, moves it to rows 12‑22 and columns 2‑10, then freezes the first six rows (the axis‑label rows) using FreezePanes at cell A7, and finally saves the file as ChartLayoutAndFreeze.xlsx.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data (category labels in column A, values in column B)
+            // Populate sample data (categories in column A, values in column B)
             worksheet.Cells["A1"].PutValue("Category");
             worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["A4"].PutValue("C");
-            worksheet.Cells["B4"].PutValue(30);
+            for (int i = 2; i <= 6; i++)
+            {
+                worksheet.Cells[$"A{i}"].PutValue($"Item {i - 1}");
+                worksheet.Cells[$"B{i}"].PutValue(i * 10);
+            }
 
-            // Add a column chart covering rows 5‑20 and columns 0‑8
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            // Add a column chart and set its data range
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 8, 0, 20, 8);
             Chart chart = worksheet.Charts[chartIndex];
-
-            // Set the data range for the chart
-            chart.SetChartDataRange("A1:B4", true);
+            chart.SetChartDataRange("A1:B6", true);
 
             // Adjust chart layout:
             // 1. Ensure the chart moves and resizes with cells
             chart.Placement = PlacementType.MoveAndSize;
-            // 2. Recalculate automatic positions (plot area, axes, etc.)
+            // 2. Recalculate positions (use Calculate method)
             chart.Calculate();
-            // 3. Optionally move the chart to a different area (example)
-            chart.Move(10, 2, 22, 10);
+            // 3. Move the chart to a new location (rows 12‑22, columns 2‑10)
+            chart.Move(12, 2, 22, 10);
 
-            // Freeze the rows that contain the axis labels (rows 1‑4)
-            // Freeze at the first unfrozen row (row index 5, column index 0)
-            // This freezes the top 4 rows while leaving columns unfrozen
-            worksheet.FreezePanes(5, 0, 4, 0);
+            // Freeze the rows that contain the axis labels (rows 1‑6)
+            // Freeze panes just below row 6 (cell A7) with 6 frozen rows and 0 frozen columns
+            worksheet.FreezePanes("A7", 6, 0);
 
             // Save the workbook
             workbook.Save("ChartLayoutAndFreeze.xlsx");

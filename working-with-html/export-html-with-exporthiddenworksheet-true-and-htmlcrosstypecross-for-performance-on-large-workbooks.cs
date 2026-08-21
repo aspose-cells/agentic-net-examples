@@ -1,50 +1,42 @@
-// Title: Export hidden worksheets to HTML with HtmlCrossType.Cross for high‑performance large workbooks (Aspose.Cells .NET)
-// Description: Shows how to save an Aspose.Cells workbook as a single HTML file that includes hidden sheets (ExportHiddenWorksheet = true) and leverages HtmlCrossType.Cross to accelerate export of massive workbooks.
-// Keywords: Aspose.Cells HTML export | ExportHiddenWorksheet true | HtmlCrossType.Cross performance | large workbook to HTML | C# Aspose.Cells HtmlSaveOptions | hidden worksheet HTML conversion | .NET Excel to HTML | cross‑cell string optimization
-// Common Searches: Aspose.Cells export hidden sheet to HTML | HtmlCrossType.Cross usage example | How to improve HTML export speed for big Excel files | Save entire workbook as one HTML file Aspose.Cells | C# HtmlSaveOptions ExportHiddenWorksheet
-// Developer Intent: Generate a single HTML document that contains all worksheets—including hidden ones—and uses the Cross string type to reduce processing time for large Excel files.
-// Use Cases: Create a web‑ready audit report that shows data from both visible and hidden worksheets. | Accelerate conversion of workbooks with thousands of rows/columns for online preview. | Produce a single‑file HTML export for archiving or sharing without iterating over each sheet.
-// AI Prompts: Provide C# code that exports an Aspose.Cells workbook to HTML, includes hidden worksheets, and sets HtmlCrossType.Cross for performance. | Explain how ExportHiddenWorksheet and HtmlCrossType.Cross affect HTML size and conversion speed in Aspose.Cells. | Show an example of HtmlSaveOptions configuration for large Excel files to minimize memory usage.
+// Title: Export Hidden Worksheets to HTML with HtmlCrossType.Cross – Aspose.Cells C# Example
+// Description: C# sample that saves an Aspose.Cells workbook as HTML, includes hidden sheets (ExportHiddenWorksheet = true) and accelerates conversion of large workbooks using HtmlCrossType.Cross.
+// Keywords: Aspose.Cells | C# | ExportHiddenWorksheet | HtmlCrossType.Cross | HTML export | hidden worksheet | large workbook performance | HtmlSaveOptions | Aspose.Cells HTML conversion | optimize HTML export
+// Common Searches: Aspose.Cells export hidden worksheet to HTML | HtmlCrossType.Cross for large workbooks | How to include hidden sheets in HTML output Aspose.Cells | Improve HTML export speed Aspose.Cells C# | Export workbook as HTML with hidden sheets
+// Developer Intent: Generate an HTML file from a workbook that contains hidden worksheets while maximizing performance for large files.
+// Use Cases: Create a web‑ready report that shows data from both visible and hidden sheets for compliance audits. | Publish a massive Excel workbook on a website, ensuring hidden tabs are visible to end users. | Reduce conversion time when rendering large Excel files to HTML by using the Cross string type.
+// AI Prompts: Write C# code that saves an Aspose.Cells workbook to HTML with ExportHiddenWorksheet enabled and HtmlCrossType.Cross, and describe the performance benefits. | Explain the internal mechanism of HtmlCrossType.Cross and when it should be chosen for large Excel files. | Show how to modify the example to export only specific hidden worksheets while leaving others excluded.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+// C# sample that saves an Aspose.Cells workbook as HTML, includes hidden sheets (ExportHiddenWorksheet = true) and accelerates conversion of large workbooks using HtmlCrossType.Cross.
+class ExportHtmlExample
 {
-    // Shows how to save an Aspose.Cells workbook as a single HTML file that includes hidden sheets (ExportHiddenWorksheet = true) and leverages HtmlCrossType.Cross to accelerate export of massive workbooks.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
+
+        // Add data to the first (visible) worksheet
+        Worksheet visibleSheet = workbook.Worksheets[0];
+        visibleSheet.Name = "VisibleSheet";
+        visibleSheet.Cells["A1"].PutValue("Visible Data");
+
+        // Add a hidden worksheet with some data
+        Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
+        hiddenSheet.Cells["A1"].PutValue("Hidden Data");
+        hiddenSheet.IsVisible = false; // mark the sheet as hidden
+
+        // Configure HTML save options:
+        // - ExportHiddenWorksheet = true ensures hidden sheets are included in the output.
+        // - HtmlCrossStringType = HtmlCrossType.Cross improves performance for large workbooks.
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
         {
-            // Create a new workbook and add some data
-            Workbook workbook = new Workbook();
-            Worksheet visibleSheet = workbook.Worksheets[0];
-            visibleSheet.Name = "VisibleSheet";
-            visibleSheet.Cells["A1"].PutValue("Visible Data");
+            ExportHiddenWorksheet = true,
+            HtmlCrossStringType = HtmlCrossType.Cross
+        };
 
-            // Add a hidden worksheet with data
-            Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
-            hiddenSheet.Cells["A1"].PutValue("Hidden Data");
-            hiddenSheet.IsVisible = false; // Mark the sheet as hidden
-
-            // Configure HTML save options
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
-            {
-                // Ensure hidden worksheets are exported
-                ExportHiddenWorksheet = true,
-
-                // Use the Cross type for cross‑cell strings to improve performance on large workbooks
-                HtmlCrossStringType = HtmlCrossType.Cross,
-
-                // Export the entire workbook (not only the active sheet)
-                ExportActiveWorksheetOnly = false
-            };
-
-            // Save the workbook as HTML with the specified options
-            string outputPath = "ExportedWorkbook.html";
-            workbook.Save(outputPath, saveOptions);
-
-            Console.WriteLine($"Workbook exported to HTML at: {outputPath}");
-        }
+        // Save the workbook as an HTML file using the configured options
+        workbook.Save("output.html", htmlOptions);
     }
 }

@@ -1,62 +1,54 @@
-// Title: Insert Excel Worksheet PNG into a Word Document with OpenXML SDK using Aspose.Cells (C#)
-// Description: A C# walkthrough that renders an Excel worksheet to a PNG image with Aspose.Cells, then embeds the image into a .docx file via the OpenXML SDK, providing a ready‑to‑use solution for automated reporting.
-// Keywords: Aspose.Cells render worksheet PNG | OpenXML SDK insert picture Word | C# embed Excel image into Word document | automated report generation Excel to Word | SheetRender PNG output | ImageOrPrintOptions PNG Aspose.Cells | WordprocessingDocument add image | C# create Word report with spreadsheet snapshot
-// Common Searches: how to add a PNG from Excel to a Word file using C# | Aspose.Cells render worksheet as image and insert into docx | OpenXML SDK embed picture programmatically | C# generate Word report from Excel data | export Excel sheet to PNG and place in Word document
-// Developer Intent: Generate a PNG snapshot of an Excel worksheet and programmatically embed it into a Word document for automated reporting.
-// Use Cases: Create visual summaries of spreadsheet data inside corporate Word reports. | Automate the production of client‑facing documents that combine Excel calculations with formatted Word layouts. | Generate PDF or DOCX deliverables where Excel charts or tables must appear as static images.
-// AI Prompts: Write C# code that uses Aspose.Cells to render the first worksheet page to a PNG stream and then inserts the image into a new Word document using the OpenXML SDK. | Show how to configure ImageOrPrintOptions for PNG output, create a MemoryStream for the image, and add the picture to a WordprocessingDocument with proper relationship IDs. | Provide an end‑to‑end example that saves the Word file to disk after embedding the worksheet image, handling folder creation and exception management.
+// Title: Insert an Aspose.Cells‑generated PNG worksheet image into a Word document with OpenXML SDK (C#)
+// Description: Learn how to render an Excel worksheet to a PNG image using Aspose.Cells, then embed that image into a Word (.docx) file with the OpenXML SDK for fully automated reporting in .NET. The example shows creating a workbook, converting the first sheet to a memory stream PNG, and inserting the image into a Word body part without manual file handling.
+// Keywords: Aspose.Cells PNG export | OpenXML SDK insert image | C# embed Excel snapshot in Word | automated report generation .NET | Excel to Word image conversion | Office Open XML image insertion | render worksheet as PNG | Word document automation C# | Aspose.Cells SheetRender example | programmatic Word report
+// Common Searches: how to add a PNG from Aspose.Cells to a Word document using C# | render Excel sheet to image and embed in docx OpenXML | C# code to insert worksheet snapshot into Word for reporting | Aspose.Cells export to PNG then OpenXML insert | automate Word report with Excel image C#
+// Developer Intent: Generate a PNG snapshot of an Excel worksheet with Aspose.Cells and programmatically embed it into a Word document using the OpenXML SDK for automated report creation.
+// Use Cases: Create monthly financial reports that combine Excel calculations with Word formatting. | Embed visual previews of spreadsheet data in client‑facing proposals generated on the fly. | Produce documentation that includes exact worksheet layouts without requiring Excel on the target machine. | Automate email attachments that contain both data tables (Excel) and narrative (Word) with embedded images.
+// AI Prompts: Provide a complete C# example that renders each worksheet page to separate PNG files and inserts them into a multi‑section Word report using OpenXML. | Explain how to control image resolution and scaling when converting an Excel sheet to PNG with Aspose.Cells. | Show how to add a caption and alt text to the inserted PNG in the Word document for accessibility. | Give code to replace an existing placeholder image in a Word template with the generated worksheet PNG.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// A C# walkthrough that renders an Excel worksheet to a PNG image with Aspose.Cells, then embeds the image into a .docx file via the OpenXML SDK, providing a ready‑to‑use solution for automated reporting.
-class InsertWorksheetImageIntoWord
+// Learn how to render an Excel worksheet to a PNG image using Aspose.Cells, then embed that image into a Word (.docx) file with the OpenXML SDK for fully automated reporting in .NET. The example shows creating a workbook, converting the first sheet to a memory stream PNG, and inserting the image into a Word body part without manual file handling.
+class InsertWorksheetImageToWord
 {
     static void Main()
     {
         try
         {
-            // 1. Create a new workbook and add sample data
+            // Create a workbook and add some data
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample data for image");
+            Worksheet worksheet = workbook.Worksheets[0];
+            worksheet.Cells["A1"].PutValue("Sample Data");
+            worksheet.Cells["B2"].PutValue(12345);
 
-            // 2. Render the worksheet to a PNG image in memory
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            // Render the worksheet to a PNG image in memory
+            ImageOrPrintOptions options = new ImageOrPrintOptions
             {
-                ImageType = Aspose.Cells.Drawing.ImageType.Png,
-                OnePagePerSheet = true
+                ImageType = Aspose.Cells.Drawing.ImageType.Png
             };
-            SheetRender sheetRender = new SheetRender(sheet, imgOptions);
+            SheetRender sheetRender = new SheetRender(worksheet, options);
 
-            // 3. Save the rendered image to a file
-            string imagePath = "WorksheetImage.png";
-            using (MemoryStream imgStream = new MemoryStream())
+            using (MemoryStream imageStream = new MemoryStream())
             {
-                sheetRender.ToImage(0, imgStream);
-                imgStream.Position = 0;
+                sheetRender.ToImage(0, imageStream); // Render first sheet page
+                imageStream.Position = 0; // Reset stream for reading
 
-                // Ensure the directory exists
-                string directory = Path.GetDirectoryName(Path.GetFullPath(imagePath));
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // Write the image to disk
+                // Save the image to a file
+                string imagePath = "WorksheetImage.png";
                 using (FileStream fileStream = new FileStream(imagePath, FileMode.Create, FileAccess.Write))
                 {
-                    imgStream.CopyTo(fileStream);
+                    imageStream.CopyTo(fileStream);
                 }
-            }
 
-            Console.WriteLine($"Worksheet image saved at: {Path.GetFullPath(imagePath)}");
+                Console.WriteLine($"Image saved to '{Path.GetFullPath(imagePath)}'.");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,20 +1,19 @@
-// Title: Show Hidden PivotTable Column Field in Aspose.Cells (C#) by Toggling ShowAllItems
-// Description: Creates a workbook, builds a PivotTable with Product rows, Region columns, and Sales values, hides the Region column using ShowAllItems = false, then reveals it by setting ShowAllItems = true and refreshing the PivotTable before saving the file.
-// Keywords: Aspose.Cells PivotTable hide column C# | show hidden pivot column Aspose.Cells | ShowAllItems property C# | toggle pivot column visibility .NET | refresh pivot after visibility change | Aspose.Cells Excel automation | C# Excel PivotTable example
-// Common Searches: Aspose.Cells unhide pivot column C# | ShowAllItems example for PivotTable column | C# toggle visibility of PivotTable field | refresh Aspose.Cells pivot after ShowAllItems change | how to display hidden pivot column Aspose.Cells
-// Developer Intent: Make a previously hidden PivotTable column field visible by resetting its ShowAllItems flag and refreshing the table.
-// Use Cases: Generate a summary report with hidden region columns, then expand to detailed view. | Implement a UI button that shows or hides specific PivotTable columns on demand. | Automate Excel exports that initially conceal certain pivot columns and later reveal them after calculations.
-// AI Prompts: Write C# code using Aspose.Cells to hide a PivotTable column field and later show it by setting ShowAllItems to true. | Provide an Aspose.Cells example that toggles a PivotTable column's visibility based on a boolean variable. | Explain the steps to refresh and recalculate a PivotTable after changing the ShowAllItems property of a column field in C#.
+// Title: C# – Unhide a PivotTable Column Field with Aspose.Cells (ShowAllItems)
+// Description: Creates a workbook, builds a PivotTable, then makes a hidden column field visible by setting ShowAllItems = true, refreshes the cache, recalculates data, and saves the file.
+// Keywords: Aspose.Cells C# PivotTable hide column | unhide pivot column field Aspose | ShowAllItems property | PivotField visibility .NET | refresh pivot data Aspose.Cells | calculate pivot Aspose.Cells | C# Excel pivot programmatically
+// Common Searches: Aspose.Cells unhide pivot column C# | ShowAllItems column field Aspose.Cells | make hidden pivot field visible .NET | refresh pivot after changing visibility Aspose | C# code to show all items in pivot column
+// Developer Intent: Programmatically reveal a hidden column field in an Aspose.Cells PivotTable.
+// Use Cases: Ensure every region appears as a column after creating a PivotTable by setting the first ColumnField's ShowAllItems to true. | Toggle column visibility based on user selection by updating the PivotField's ShowAllItems (or Visible) flag and then refreshing the pivot cache. | Prepare a report workbook where hidden pivot columns are automatically shown before exporting to Excel.
+// AI Prompts: Generate C# code using Aspose.Cells to unhide a hidden column field in an existing PivotTable and refresh the data. | Show how to set the Visible/ShowAllItems property of a PivotField, recalculate the pivot, and save the workbook. | Explain the steps to programmatically display all items of a PivotTable column field with Aspose.Cells for .NET.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotDemo
+namespace AsposeCellsExamples
 {
-    // Creates a workbook, builds a PivotTable with Product rows, Region columns, and Sales values, hides the Region column using ShowAllItems = false, then reveals it by setting ShowAllItems = true and refreshing the PivotTable before saving the file.
-    public class ShowHiddenColumnField
+    // Creates a workbook, builds a PivotTable, then makes a hidden column field visible by setting ShowAllItems = true, refreshes the cache, recalculates data, and saves the file.
+    public class ShowHiddenColumnFieldDemo
     {
         public static void Run()
         {
@@ -22,71 +21,70 @@ namespace AsposeCellsPivotDemo
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
 
                 // Populate sample data for the pivot table
-                sheet.Cells["A1"].Value = "Product";
-                sheet.Cells["B1"].Value = "Region";
-                sheet.Cells["C1"].Value = "Sales";
+                cells["A1"].Value = "Product";
+                cells["B1"].Value = "Region";
+                cells["C1"].Value = "Sales";
 
-                sheet.Cells["A2"].Value = "Bike";
-                sheet.Cells["B2"].Value = "North";
-                sheet.Cells["C2"].Value = 1200;
+                cells["A2"].Value = "Bike";
+                cells["B2"].Value = "North";
+                cells["C2"].Value = 1200;
 
-                sheet.Cells["A3"].Value = "Bike";
-                sheet.Cells["B3"].Value = "South";
-                sheet.Cells["C3"].Value = 1500;
+                cells["A3"].Value = "Bike";
+                cells["B3"].Value = "South";
+                cells["C3"].Value = 1500;
 
-                sheet.Cells["A4"].Value = "Car";
-                sheet.Cells["B4"].Value = "North";
-                sheet.Cells["C4"].Value = 2000;
+                cells["A4"].Value = "Car";
+                cells["B4"].Value = "North";
+                cells["C4"].Value = 2000;
 
-                sheet.Cells["A5"].Value = "Car";
-                sheet.Cells["B5"].Value = "South";
-                sheet.Cells["C5"].Value = 2500;
+                cells["A5"].Value = "Car";
+                cells["B5"].Value = "South";
+                cells["C5"].Value = 2500;
 
                 // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-                PivotTable pivot = sheet.PivotTables[pivotIndex];
+                int pivotIndex = worksheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
+                PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
 
-                // Add fields: Product as row, Region as column, Sales as data
-                pivot.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivot.AddFieldToArea(PivotFieldType.Column, "Region");
-                pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+                // Add a row field (Product) and a column field (Region)
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+                pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
 
-                // Initially hide the column field (Region) by setting ShowAllItems to false
-                PivotField columnField = pivot.ColumnFields[0];
-                columnField.ShowAllItems = false; // Hide the column field
+                // Add a data field (Sales) and set its aggregation function
+                int dataFieldPos = pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+                pivotTable.DataFields[dataFieldPos].Function = ConsolidationFunction.Sum;
 
-                // Refresh and calculate to apply the hide operation
-                pivot.RefreshData();
-                pivot.CalculateData();
+                // Ensure the column field "Region" is visible
+                if (pivotTable.ColumnFields.Count > 0)
+                {
+                    PivotField columnField = pivotTable.ColumnFields[0]; // "Region"
+                    columnField.ShowAllItems = true; // Make all items visible
+                }
 
-                // Now show the previously hidden column field by toggling ShowAllItems back to true
-                columnField.ShowAllItems = true; // Show the column field again
+                // Refresh pivot cache and recalculate data
+                pivotTable.RefreshData();      // Correct method to refresh the cache
+                pivotTable.CalculateData();   // Recalculate the pivot table values
 
-                // Refresh and calculate to reflect the change
-                pivot.RefreshData();
-                pivot.CalculateData();
-
-                // Determine output path and ensure directory exists
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ShowHiddenColumnFieldDemo.xlsx");
+                // Save the workbook with the updated pivot table
+                string outputPath = "ShowHiddenColumnFieldDemo.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error during pivot table processing: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }
 
-    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)
         {
-            ShowHiddenColumnField.Run();
+            ShowHiddenColumnFieldDemo.Run();
         }
     }
 }

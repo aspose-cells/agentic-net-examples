@@ -1,61 +1,61 @@
-// Title: Aspose.Cells for .NET: Get the absolute Position of a PivotItem in a row field (C#)
-// Description: C# code that creates a workbook, adds sample data, builds a pivot table, puts the "Product" column in the Row area, refreshes the table, then accesses the first PivotItem of that row field and reads its Position property (the absolute index). The position is written to the console and the workbook is saved.
-// Keywords: Aspose.Cells | C# | .NET | PivotItem.Position | pivot table row field | absolute position | retrieve pivot item index | Aspose.Cells PivotTable API | read pivot item position | PivotItem property
-// Common Searches: Aspose.Cells get pivot item position C# | how to read PivotItem.Position in .NET | retrieve absolute index of row field item Aspose.Cells | pivot table item position property Aspose | C# Aspose.Cells PivotItem.Position example
-// Developer Intent: Read the Position property of a specific PivotItem from a row field in an Aspose.Cells pivot table.
-// Use Cases: Determine the exact order of row items for custom sorting logic. | Map pivot row items to external data structures using a stable index. | Debug pivot table layout by printing each PivotItem's absolute position.
-// AI Prompts: Generate C# code that loops through all PivotItems in a row field of an Aspose.Cells pivot table and prints each item's Position. | Show how to manually reorder pivot row items by using the Position property of PivotItem in Aspose.Cells for .NET. | Explain the difference between PivotItem.Position and the displayed order when filters are applied in an Aspose.Cells pivot table.
+// Title: Aspose.Cells for .NET (C#) – Get a PivotItem’s absolute Position from a row field
+// Description: Creates a workbook, builds a pivot table, adds a row field, retrieves the first PivotItem, reads its Position (absolute index) and writes the value to the console before saving the file.
+// Keywords: Aspose.Cells | C# | .NET | PivotTable | PivotItem.Position | row field index | absolute position | retrieve pivot item | pivot item index example | Aspose.Cells tutorial
+// Common Searches: Aspose.Cells get PivotItem position C# | how to read PivotItem absolute index in .NET | retrieve row field item position Aspose.Cells | PivotItem.Position property example | C# code to get pivot item order
+// Developer Intent: Read the absolute Position of a specific PivotItem in a row field of an Aspose.Cells PivotTable.
+// Use Cases: Custom sort row items based on their original order. | Validate the sequence of pivot items when generating automated reports. | Synchronize pivot item positions with external data structures or APIs.
+// AI Prompts: Generate C# code with Aspose.Cells that accesses the first PivotItem of a row field and prints its Position. | Explain how the Position property of a PivotItem represents its absolute index within the row field hierarchy. | Show an example that loops through all PivotItems in a row field and outputs each item's Name and Position.
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
 
-namespace AsposeCellsPivotItemPositionDemo
+// Creates a workbook, builds a pivot table, adds a row field, retrieves the first PivotItem, reads its Position (absolute index) and writes the value to the console before saving the file.
+class RetrievePivotItemPosition
 {
-    // C# code that creates a workbook, adds sample data, builds a pivot table, puts the "Product" column in the Row area, refreshes the table, then accesses the first PivotItem of that row field and reads its Position property (the absolute index). The position is written to the console and the workbook is saved.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(1000);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(2000);
-            sheet.Cells["A4"].PutValue("Orange");
-            sheet.Cells["B4"].PutValue(3000);
+        // Populate sample data for the pivot table
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["B1"].PutValue("Amount");
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["B2"].PutValue(100);
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["B3"].PutValue(200);
+        sheet.Cells["A4"].PutValue("A");
+        sheet.Cells["B4"].PutValue(150);
+        sheet.Cells["A5"].PutValue("B");
+        sheet.Cells["B5"].PutValue(250);
 
-            // Add a pivot table based on the data range
-            int ptIndex = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[ptIndex];
+        // Add a pivot table to the worksheet
+        int ptIndex = sheet.PivotTables.Add("A1:B5", "E3", "PivotTable1");
+        PivotTable pivotTable = sheet.PivotTables[ptIndex];
 
-            // Add the "Product" column as a row field
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+        // Add a row field and a data field
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-            // Refresh and calculate the pivot table to ensure items are generated
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
+        // Refresh and calculate the pivot table
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
 
-            // Retrieve the first row field
-            PivotField rowField = pivotTable.RowFields[0];
+        // Access the first row field
+        PivotField rowField = pivotTable.RowFields[0];
 
-            // Retrieve a specific PivotItem from the row field (e.g., the first item)
-            PivotItem pivotItem = rowField.PivotItems[0];
+        // Retrieve a specific PivotItem (e.g., the first item)
+        PivotItem pivotItem = rowField.PivotItems[0];
 
-            // Read the absolute Position property of the PivotItem
-            int absolutePosition = pivotItem.Position;
+        // Read its absolute Position property
+        int absolutePosition = pivotItem.Position;
 
-            // Output the Position value
-            Console.WriteLine("Absolute Position of the first PivotItem: " + absolutePosition);
+        // Display the result
+        Console.WriteLine($"PivotItem '{pivotItem.Name}' absolute Position: {absolutePosition}");
 
-            // Save the workbook (optional, demonstrates lifecycle rule)
-            workbook.Save("PivotItemPositionDemo_out.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("RetrievePivotItemPosition_out.xlsx");
     }
 }

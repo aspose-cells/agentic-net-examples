@@ -1,66 +1,73 @@
-// Title: Aspose.Cells C# Benchmark: HTML Export of Active Worksheet vs Full Workbook
-// Description: A C# program that creates a workbook with two large worksheets, fills them with dummy data, and uses HtmlSaveOptions (ExportActiveWorksheetOnly = true, optional ExportSingleTab) to measure the time required to save only the active sheet to HTML. It then repeats the save with ExportActiveWorksheetOnly disabled to compare the duration for exporting the entire workbook.
-// Keywords: Aspose.Cells | C# HTML export benchmark | ExportActiveWorksheetOnly | single sheet HTML conversion | performance measurement Aspose.Cells | HtmlSaveOptions timing | ExportSingleTab | Excel to HTML speed
-// Common Searches: Aspose.Cells benchmark HTML export single sheet | measure ExportActiveWorksheetOnly performance C# | HTML export speed Aspose.Cells active worksheet | compare active sheet vs all sheets export time | C# code to time Aspose.Cells HTML save
-// Developer Intent: Measure and compare the time required to export only the active worksheet versus the entire workbook to HTML using Aspose.Cells.
-// Use Cases: Identify the fastest export configuration for large Excel files | Validate performance gains of ExportActiveWorksheetOnly and ExportSingleTab | Provide timing data for reporting or monitoring tools | Optimize server‑side Excel‑to‑HTML conversion pipelines
-// AI Prompts: Write a C# script that logs both execution time and memory consumption when exporting a single worksheet to HTML with Aspose.Cells. | Suggest additional HtmlSaveOptions that can further reduce HTML export time for large worksheets. | Create an automated test that asserts the active‑sheet export completes at least 30% faster than exporting all sheets. | Explain how to integrate the benchmark into a CI pipeline for continuous performance tracking.
+// Title: C# Benchmark of Aspose.Cells HTML Export – Active Worksheet Only (ExportActiveWorksheetOnly)
+// Description: A console program creates a 5,000‑row by 50‑column workbook, adds a second sheet, sets the first sheet active, and uses HtmlSaveOptions with ExportActiveWorksheetOnly = true (and ExportSingleTab) to time the HTML export of a single sheet. It then repeats the save with ExportActiveWorksheetOnly = false to compare full‑workbook export speed.
+// Keywords: Aspose.Cells HTML export benchmark | ExportActiveWorksheetOnly performance | C# Aspose.Cells timing | single sheet HTML save speed | Aspose.Cells .NET HTMLSaveOptions
+// Common Searches: Aspose.Cells benchmark active worksheet HTML export | measure Aspose.Cells HTML save time C# | ExportActiveWorksheetOnly vs full workbook speed | how fast is Aspose.Cells HTML export for one sheet | C# performance test Aspose.Cells HtmlSaveOptions
+// Developer Intent: Determine the execution time required to export only the active worksheet to HTML with Aspose.Cells and compare it against exporting the entire workbook.
+// Use Cases: Assess whether ExportActiveWorksheetOnly reduces export latency for large workbooks. | Validate that the generated HTML contains only the active sheet. | Provide data for selecting optimal HTML export settings in high‑throughput .NET applications.
+// AI Prompts: Write a C# loop that runs the single‑sheet HTML export ten times and returns the average elapsed milliseconds using Aspose.Cells. | Suggest ways to accelerate Aspose.Cells HTML export for large worksheets, including alternative options or multi‑threading techniques. | Create a sample report that compares ExportActiveWorksheetOnly true vs false across workbook sizes of 1k, 5k, and 10k rows.
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
 namespace AsposeCellsBenchmark
 {
-    // A C# program that creates a workbook with two large worksheets, fills them with dummy data, and uses HtmlSaveOptions (ExportActiveWorksheetOnly = true, optional ExportSingleTab) to measure the time required to save only the active sheet to HTML. It then repeats the save with ExportActiveWorksheetOnly disabled to compare the duration for exporting the entire workbook.
+    // A console program creates a 5,000‑row by 50‑column workbook, adds a second sheet, sets the first sheet active, and uses HtmlSaveOptions with ExportActiveWorksheetOnly = true (and ExportSingleTab) to time the HTML export of a single sheet. It then repeats the save with ExportActiveWorksheetOnly = false to compare full‑workbook export speed.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook with two worksheets
+            // Create a workbook with a large amount of data to simulate a realistic scenario
             Workbook workbook = new Workbook();
-            workbook.Worksheets.Add("Sheet2");
+            Worksheet sheet = workbook.Worksheets[0];
+            const int rows = 5000;
+            const int cols = 50;
 
-            // Populate both sheets with a large amount of data to make the conversion noticeable
-            PopulateSheet(workbook.Worksheets[0], 2000, 50); // Sheet1
-            PopulateSheet(workbook.Worksheets[1], 2000, 50); // Sheet2
+            // Populate the worksheet with sample data
+            for (int r = 0; r < rows; r++)
+            {
+                for (int c = 0; c < cols; c++)
+                {
+                    sheet.Cells[r, c].PutValue($"R{r + 1}C{c + 1}");
+                }
+            }
 
-            // Set the first worksheet as the active sheet
+            // Add a second sheet to ensure ExportActiveWorksheetOnly actually limits the export
+            Worksheet secondSheet = workbook.Worksheets.Add("SecondSheet");
+            secondSheet.Cells["A1"].PutValue("This sheet should NOT be exported.");
+
+            // Set the first sheet as the active sheet
             workbook.Worksheets.ActiveSheetIndex = 0;
 
             // Configure HTML save options to export only the active worksheet
             HtmlSaveOptions saveOptions = new HtmlSaveOptions
             {
                 ExportActiveWorksheetOnly = true,
-                ExportSingleTab = true // optional, improves output for single‑sheet files
+                ExportSingleTab = true // optional, improves output when only one sheet is exported
             };
 
-            // Measure the time taken to save the active sheet only
+            // Warm‑up run (not measured) to mitigate JIT overhead
+            workbook.Save("warmup.html", saveOptions);
+
+            // Measure the time taken to save the workbook with the active‑sheet‑only option
             Stopwatch sw = Stopwatch.StartNew();
-            workbook.Save("ActiveSheetOnly.html", saveOptions);
+            workbook.Save("single_sheet_output.html", saveOptions);
             sw.Stop();
 
             Console.WriteLine($"Time to export active worksheet only: {sw.ElapsedMilliseconds} ms");
 
-            // For comparison, export the whole workbook (all sheets)
-            saveOptions.ExportActiveWorksheetOnly = false;
+            // For comparison, measure exporting the whole workbook
+            HtmlSaveOptions fullSaveOptions = new HtmlSaveOptions
+            {
+                ExportActiveWorksheetOnly = false
+            };
+
             sw.Restart();
-            workbook.Save("AllSheets.html", saveOptions);
+            workbook.Save("full_workbook_output.html", fullSaveOptions);
             sw.Stop();
 
-            Console.WriteLine($"Time to export all worksheets: {sw.ElapsedMilliseconds} ms");
-        }
-
-        // Helper method to fill a worksheet with dummy data
-        private static void PopulateSheet(Worksheet sheet, int rows, int columns)
-        {
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < columns; c++)
-                {
-                    sheet.Cells[r, c].PutValue($"R{r + 1}C{c + 1}");
-                }
-            }
+            Console.WriteLine($"Time to export full workbook: {sw.ElapsedMilliseconds} ms");
         }
     }
 }

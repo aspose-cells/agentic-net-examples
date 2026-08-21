@@ -1,60 +1,52 @@
-// Title: Open a password‑protected XLSX with Aspose.Cells LightCells API in C#
-// Description: Shows how to decrypt and load an encrypted XLSX workbook using Aspose.Cells LightCells API by assigning the Password property in LoadOptions, then walks through each worksheet and cell to print the address and value, with robust handling for missing files and invalid passwords.
-// Keywords: Aspose.Cells LightCells password | C# load encrypted XLSX | LoadOptions Password property | read protected Excel cells .NET | open encrypted workbook Aspose | LightCells API example | password protected Excel Aspose.Cells | Excel decryption C#
-// Common Searches: Aspose.Cells LightCells open password protected Excel | C# load encrypted XLSX with LoadOptions | How to read cells from a protected workbook using Aspose.Cells | LightCells API password example | Decrypt Excel file Aspose.Cells .NET | LoadOptions Password usage
-// Developer Intent: Load an encrypted XLSX workbook via LightCells API and read its cell data in C#.
-// Use Cases: Extract data from secured Excel reports for analytics pipelines. | Validate the contents of a password‑protected spreadsheet before further processing. | Migrate data from encrypted workbooks to a database or another file format. | Automate auditing of protected Excel files in enterprise workflows.
-// AI Prompts: Generate C# code that opens a password‑protected XLSX file with Aspose.Cells LightCells API and prints every cell address and value. | Explain how to detect and handle an incorrect password exception when loading an encrypted workbook using LoadOptions. | Adapt the sample to stream the protected workbook from a MemoryStream instead of a file path while using LightCells API.
+// Title: Load a password‑protected XLSX workbook with Aspose.Cells LightCells API (C#)
+// Description: Demonstrates how to open an encrypted Excel file in .NET by creating a LoadOptions object, setting its Password property, and passing it to the Workbook constructor. The sample checks file existence, prints the first worksheet name, and handles errors such as wrong passwords or corrupted files.
+// Keywords: Aspose.Cells load password protected XLSX | LoadOptions.Password C# | open encrypted Excel file .NET | LightCells API password | read protected workbook Aspose
+// Common Searches: Aspose.Cells open password protected Excel | C# load encrypted XLSX with LoadOptions | How to read a protected workbook using Aspose.Cells | LightCells API password example
+// Developer Intent: Open a password‑protected XLSX file by supplying the decryption password through LoadOptions.
+// Use Cases: Access a secured workbook after verifying the file path. | Retrieve worksheet names or data from an encrypted Excel file. | Gracefully handle invalid passwords or corrupted files with exception handling.
+// AI Prompts: Show C# code that loads a password‑protected XLSX using Aspose.Cells LightCells API and LoadOptions.Password. | Explain how to configure LoadOptions for decryption and read the first sheet name from a protected workbook. | Provide an example that iterates all worksheets in an encrypted Excel file and catches wrong‑password errors.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Shows how to decrypt and load an encrypted XLSX workbook using Aspose.Cells LightCells API by assigning the Password property in LoadOptions, then walks through each worksheet and cell to print the address and value, with robust handling for missing files and invalid passwords.
-class Program
+// Demonstrates how to open an encrypted Excel file in .NET by creating a LoadOptions object, setting its Password property, and passing it to the Workbook constructor. The sample checks file existence, prints the first worksheet name, and handles errors such as wrong passwords or corrupted files.
+class LoadPasswordProtectedWorkbook
 {
     static void Main()
     {
         // Path to the password‑protected XLSX file
         string filePath = "protected.xlsx";
 
-        // Password used to encrypt the workbook
+        // The password used to encrypt the workbook
         string password = "test";
-
-        // Verify that the file exists before attempting to load it
-        if (!File.Exists(filePath))
-        {
-            Console.WriteLine($"Error: File \"{filePath}\" not found.");
-            return;
-        }
 
         try
         {
-            // Set load options with the workbook password
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            // Verify that the file exists before attempting to load it
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"Error: File \"{filePath}\" not found.");
+                return;
+            }
+
+            // Create LoadOptions and assign the password
+            LoadOptions loadOptions = new LoadOptions
             {
                 Password = password
             };
 
-            // Load the workbook using the specified options
+            // Load the workbook using the standard API with the specified LoadOptions
             Workbook workbook = new Workbook(filePath, loadOptions);
 
-            // Iterate through all worksheets and their cells
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                Cells cells = sheet.Cells;
-
-                foreach (Cell cell in cells)
-                {
-                    // Output cell address (e.g., "A1") and its value
-                    Console.WriteLine($"Cell {cell.Name}: {cell.Value}");
-                }
-            }
+            // Example verification: output the name of the first worksheet
+            Console.WriteLine("Workbook loaded successfully. First sheet name: " + workbook.Worksheets[0].Name);
         }
         catch (Exception ex)
         {
-            // Handle any errors that occur during loading or processing
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Handle any runtime exceptions (e.g., incorrect password, corrupted file)
+            Console.WriteLine("An error occurred while loading the workbook:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

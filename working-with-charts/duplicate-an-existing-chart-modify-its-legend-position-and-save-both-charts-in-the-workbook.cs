@@ -1,16 +1,15 @@
-// Title: Duplicate a Chart, Change Its Legend Position, and Save the Workbook with Aspose.Cells (C#)
-// Description: Creates a workbook, adds a column chart from sample data, clones the chart to a new location, moves the cloned chart's legend to the left, and saves the file containing both charts.
-// Keywords: Aspose.Cells | C# | .NET | duplicate chart | clone chart | chart legend position | set legend left | add multiple charts | Excel chart manipulation | save workbook with charts
-// Common Searches: Aspose.Cells copy chart C# | How to duplicate a chart in Aspose.Cells | Set legend position left Aspose.Cells | Add two charts with same data range Aspose.Cells | Clone Excel chart using Aspose.Cells .NET
-// Developer Intent: Copy an existing chart, adjust the legend placement of the copy, and persist both charts in the same workbook.
-// Use Cases: Show a summary chart alongside a detailed version for side‑by‑side comparison. | Reuse a chart template in different report sections while customizing legend orientation. | Generate a workbook that contains the original chart and a duplicated chart with a left‑aligned legend for presentation.
-// AI Prompts: Generate C# code with Aspose.Cells to duplicate a chart and keep its data range. | Show how to set the legend position to left for a cloned chart in Aspose.Cells. | Explain adding multiple charts from the same source and saving the workbook using Aspose.Cells.
+// Title: Duplicate a Column Chart, Change Legend Position, and Save Workbook – Aspose.Cells C# Example
+// Description: Demonstrates how to create a workbook with sample data, add a column chart, duplicate the chart, set a different legend position for the copy, and save the file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# chart example | duplicate chart Aspose.Cells | chart legend position .NET | column chart Excel | copy chart workbook | Aspose.Cells tutorial | Excel chart manipulation | Aspose.Cells legend bottom | save multiple charts
+// Common Searches: Aspose.Cells duplicate chart C# | how to change chart legend position Aspose.Cells | copy chart and modify legend Aspose.Cells .NET | create two charts with same data range Aspose.Cells | Aspose.Cells example for chart duplication
+// Developer Intent: Copy an existing chart, assign a new legend placement, and persist both charts in the same Excel workbook.
+// Use Cases: Financial reports that need a primary chart with a right‑hand legend and a summary chart with a bottom legend. | Side‑by‑side visual comparisons where the duplicated chart uses a different legend layout for clearer presentation. | Automated Excel generation that includes both original and duplicated charts with distinct legend positions.
+// AI Prompts: Generate C# code with Aspose.Cells to clone a column chart, set the duplicate's legend to Bottom, and save the workbook. | Show an Aspose.Cells example that copies a chart, moves it to a new location, changes its legend position, and writes the file to disk.
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds a column chart from sample data, clones the chart to a new location, moves the cloned chart's legend to the left, and saves the file containing both charts.
+// Demonstrates how to create a workbook with sample data, add a column chart, duplicate the chart, set a different legend position for the copy, and save the file using Aspose.Cells for .NET.
 class DuplicateChartExample
 {
     static void Main()
@@ -29,33 +28,21 @@ class DuplicateChartExample
         sheet.Cells["B3"].PutValue(20);
         sheet.Cells["B4"].PutValue(30);
 
-        // -----------------------------------------------------------------
-        // 1. Add the original chart
-        // -----------------------------------------------------------------
-        int originalChartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+        // Add the original chart
+        int originalChartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
         Chart originalChart = sheet.Charts[originalChartIndex];
-        originalChart.NSeries.Add("B2:B4", true);          // Values
-        originalChart.NSeries.CategoryData = "A2:A4";     // Categories
+        originalChart.SetChartDataRange("A1:B4", true);
+        // Keep the default legend position (right)
+        originalChart.Legend.Position = LegendPositionType.Right;
 
-        // -----------------------------------------------------------------
-        // 2. Duplicate the original chart
-        // -----------------------------------------------------------------
-        // Retrieve the type and data range of the original chart
-        ChartType chartType = originalChart.Type;
-        string dataRange = originalChart.GetChartDataRange(); // e.g., "A1:B4"
+        // Duplicate the chart by adding a new chart with the same data range
+        int duplicateChartIndex = sheet.Charts.Add(ChartType.Column, 22, 0, 37, 8);
+        Chart duplicateChart = sheet.Charts[duplicateChartIndex];
+        duplicateChart.SetChartDataRange("A1:B4", true);
+        // Modify the legend position of the duplicated chart
+        duplicateChart.Legend.Position = LegendPositionType.Bottom;
 
-        // Add a new chart with the same type and data range at a different position
-        int duplicatedChartIndex = sheet.Charts.Add(chartType, dataRange, true, 16, 0, 26, 5);
-        Chart duplicatedChart = sheet.Charts[duplicatedChartIndex];
-
-        // -----------------------------------------------------------------
-        // 3. Modify the legend position of the duplicated chart
-        // -----------------------------------------------------------------
-        duplicatedChart.Legend.Position = LegendPositionType.Left; // Move legend to the left side
-
-        // -----------------------------------------------------------------
-        // 4. Save the workbook containing both charts
-        // -----------------------------------------------------------------
+        // Save the workbook containing both charts
         workbook.Save("DuplicatedChart.xlsx");
     }
 }

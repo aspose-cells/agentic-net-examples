@@ -1,22 +1,22 @@
-// Title: Auto‑Fit Excel Column Widths with Aspose.Cells for .NET (C#)
-// Description: Demonstrates creating a workbook, inserting short, medium, and long text plus a numeric value, invoking Worksheet.AutoFitColumns() to size each column to its longest cell, and saving the file as AutoFitColumnsResult.xlsx.
-// Keywords: Aspose.Cells AutoFitColumns C# | auto fit column width Aspose.Cells | C# set Excel column width automatically | Worksheet.AutoFitColumns example | auto‑size Excel columns .NET | Aspose.Cells column width based on content | fit columns to text Aspose | auto adjust Excel column width C# | Aspose.Cells column autosizing | Excel column auto‑fit using Aspose
-// Common Searches: How to auto‑fit columns in an Aspose.Cells workbook using C# | C# code to automatically adjust Excel column width with Aspose.Cells | Aspose.Cells AutoFitColumns method usage | Set column width dynamically based on cell values in Aspose.Cells for .NET | Auto‑size specific column range Aspose.Cells C# | Maximum column width with AutoFitColumns Aspose.Cells | Auto‑fit columns after merging cells Aspose.Cells C#
-// Developer Intent: Automatically resize worksheet columns so each fits the longest content in its column.
-// Use Cases: Create printable Excel reports where column widths adapt to content | Export DataGrid or DataTable to Excel with columns auto‑sized for readability | Generate Excel files for end‑users without manual formatting | Prepare spreadsheets for API consumers ensuring no truncated data
-// AI Prompts: Show C# code to auto‑fit columns for a selected range (e.g., A1:C10) using Aspose.Cells. | Provide an example that auto‑fits columns after applying cell styles and merged cells in C#. | Explain how to limit the maximum column width while still using AutoFitColumns in Aspose.Cells. | Give a snippet to auto‑fit columns based on content after inserting images in a worksheet.
+// Title: Auto‑Fit Excel Column Widths Using Aspose.Cells for .NET (C#)
+// Description: Shows how to create a Workbook, add short, medium and long text plus numeric values, invoke Worksheet.AutoFitColumns() to automatically size all columns to the widest entry, and save the result as AutoFitColumnsResult.xlsx.
+// Keywords: Aspose.Cells AutoFitColumns | C# Excel column auto fit | adjust Excel column width programmatically | auto resize columns Aspose .NET | worksheet.AutoFitColumns example | Excel column width based on content
+// Common Searches: Aspose.Cells auto fit column width C# | How to auto‑fit columns in an Excel file using Aspose.Cells | Worksheet.AutoFitColumns method usage | Resize Excel columns to fit content with .NET | C# code to automatically adjust column width in Aspose.Cells
+// Developer Intent: Automatically resize every column in a worksheet so the longest cell value fits without truncation.
+// Use Cases: Generating reports with variable‑length strings where each column must display full text. | Exporting numeric datasets that include large numbers requiring wider columns. | Creating a template, populating data via code, applying AutoFitColumns, and delivering a ready‑to‑view workbook.
+// AI Prompts: Write C# code that uses Aspose.Cells to auto‑fit all columns after filling a worksheet with mixed text and numbers. | Explain the behavior of Worksheet.AutoFitColumns and how to limit its effect to specific columns. | Show how to combine AutoFitColumns with a maximum column width constraint in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsAutoFitColumnDemo
+namespace AutoFitColumnDemo
 {
-    // Demonstrates creating a workbook, inserting short, medium, and long text plus a numeric value, invoking Worksheet.AutoFitColumns() to size each column to its longest cell, and saving the file as AutoFitColumnsResult.xlsx.
+    // Shows how to create a Workbook, add short, medium and long text plus numeric values, invoke Worksheet.AutoFitColumns() to automatically size all columns to the widest entry, and save the result as AutoFitColumnsResult.xlsx.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook (create rule)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
@@ -24,15 +24,16 @@ namespace AsposeCellsAutoFitColumnDemo
 
             // Populate cells with varying length text to demonstrate auto‑fit
             worksheet.Cells["A1"].PutValue("Short");
+            worksheet.Cells["A2"].PutValue("This is a considerably longer piece of text that should cause the column to expand.");
             worksheet.Cells["B1"].PutValue("Medium length text");
-            worksheet.Cells["C1"].PutValue("This is a much longer piece of text that should cause the column to expand automatically");
-            worksheet.Cells["D1"].PutValue(12345.6789);
-            worksheet.Cells["E1"].PutValue("Another long text entry to test the auto‑fit functionality");
+            worksheet.Cells["B2"].PutValue("Another long text entry to test column width adjustment automatically.");
+            worksheet.Cells["C1"].PutValue(12345);
+            worksheet.Cells["C2"].PutValue(9876543210);
 
-            // Auto‑fit all columns based on the content in the worksheet
+            // Auto‑fit all columns based on the content (auto‑fit rule)
             worksheet.AutoFitColumns();
 
-            // Save the workbook to a file
+            // Save the workbook (save rule)
             workbook.Save("AutoFitColumnsResult.xlsx");
         }
     }

@@ -1,17 +1,17 @@
-// Title: C# – Apply a Corporate Custom Theme to a Waterfall Chart using Aspose.Cells
-// Description: Demonstrates how to create a workbook, add sample financial data, generate a Waterfall chart, define a 12‑color corporate palette, apply it as a custom theme with Aspose.Cells for .NET, and save the Excel file with branding‑consistent chart colors.
-// Keywords: Aspose.Cells | C# | .NET | Waterfall chart | custom theme | corporate colors | Excel branding | CustomTheme method | chart styling | financial waterfall | example code
-// Common Searches: Aspose.Cells apply custom theme to chart | C# Waterfall chart corporate branding | How to set Excel theme colors with Aspose.Cells | CustomTheme example for Waterfall chart .NET | Apply corporate palette to Excel chart programmatically
-// Developer Intent: Add a predefined corporate color palette to a Waterfall chart and save the themed workbook.
-// Use Cases: Produce quarterly financial waterfall charts that match company brand guidelines. | Create multiple Excel charts in one workbook that share a unified corporate theme for presentations. | Automate generation of branded Excel reports for distribution to stakeholders.
-// AI Prompts: Show how to change the corporate theme colors after the chart is created. | Provide code to reuse the same custom theme for column, line, and pie charts with Aspose.Cells. | Explain how to retrieve, edit, or replace an existing custom theme in a workbook.
+// Title: Apply a Corporate Custom Theme to a Waterfall Chart with Aspose.Cells for .NET (C#)
+// Description: Creates a new workbook, adds sample waterfall data, inserts a Waterfall chart, defines its data range, builds a 12‑color corporate palette, applies it via workbook.CustomTheme, and saves the Excel file with the branded chart.
+// Keywords: Aspose.Cells | C# | Waterfall chart | custom theme | corporate branding | Excel workbook | CustomTheme API | chart colors | Excel automation | sample code
+// Common Searches: Aspose.Cells apply custom theme to chart | C# set corporate colors for Excel Waterfall chart | How to use CustomTheme with Aspose.Cells .NET | Branding Excel charts programmatically | Waterfall chart theme example Aspose.Cells
+// Developer Intent: Apply a predefined corporate color palette to a Waterfall chart in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Generate financial waterfall reports that automatically follow company branding. | Create a batch of Excel workbooks with a consistent corporate theme for all embedded charts. | Automate production of presentation‑ready charts that use the organization’s official color set.
+// AI Prompts: Show C# code to apply the same corporate CustomTheme to a Column chart with Aspose.Cells. | Demonstrate loading theme colors from a JSON file and applying them via workbook.CustomTheme. | Explain how to modify an existing theme after a chart has been created without rebuilding the workbook. | Provide a GitHub‑style README snippet describing this example for the Aspose.Cells repository.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates how to create a workbook, add sample financial data, generate a Waterfall chart, define a 12‑color corporate palette, apply it as a custom theme with Aspose.Cells for .NET, and save the Excel file with branding‑consistent chart colors.
+// Creates a new workbook, adds sample waterfall data, inserts a Waterfall chart, defines its data range, builds a 12‑color corporate palette, applies it via workbook.CustomTheme, and saves the Excel file with the branded chart.
 class ApplyCorporateThemeToWaterfallChart
 {
     static void Main()
@@ -20,65 +20,52 @@ class ApplyCorporateThemeToWaterfallChart
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // -------------------------------------------------
-        // 1. Prepare sample data for the Waterfall chart
-        // -------------------------------------------------
-        // Header row
+        // Populate sample data for a Waterfall chart
+        // Column A: Categories, Column B: Values
         sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["A2"].PutValue("Start");
+        sheet.Cells["A3"].PutValue("Increase");
+        sheet.Cells["A4"].PutValue("Decrease");
+        sheet.Cells["A5"].PutValue("End");
 
-        // Sample categories and values
-        string[] categories = { "Start", "Revenue", "Cost", "Profit", "End" };
-        double[] values = { 0, 120, -40, 80, 0 };
+        sheet.Cells["B1"].PutValue("Amount");
+        sheet.Cells["B2"].PutValue(5000);
+        sheet.Cells["B3"].PutValue(2000);
+        sheet.Cells["B4"].PutValue(-1500);
+        sheet.Cells["B5"].PutValue(5500);
 
-        for (int i = 0; i < categories.Length; i++)
-        {
-            sheet.Cells[i + 2, 0].PutValue(categories[i]);   // Column A
-            sheet.Cells[i + 2, 1].PutValue(values[i]);      // Column B
-        }
-
-        // -------------------------------------------------
-        // 2. Add a Waterfall chart and bind the data range
-        // -------------------------------------------------
+        // Add a Waterfall chart
         int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 10);
         Chart chart = sheet.Charts[chartIndex];
 
-        // Set the data range for the series (values) and categories
-        chart.NSeries.Add("B2:B6", false);
-        chart.NSeries.CategoryData = "A2:A6";
-
-        // Optional: give the series a name
-        chart.NSeries[0].Name = "Financial Flow";
+        // Set the data range for the chart (including headers)
+        chart.SetChartDataRange("A1:B5", true);
+        // Define the category (X) axis data
+        chart.NSeries.CategoryData = "A2:A5";
 
         // -------------------------------------------------
-        // 3. Define a corporate custom theme (12 colors)
+        // Apply a corporate custom theme (12 colors required)
         // -------------------------------------------------
-        // The order of colors follows the ThemeColorType index:
-        // 0-Background1, 1-Text1, 2-Background2, 3-Text2,
-        // 4-Accent1, 5-Accent2, 6-Accent3, 7-Accent4,
-        // 8-Accent5, 9-Accent6, 10-Hyperlink, 11-FollowedHyperlink
         Color[] corporateColors = new Color[]
         {
-            Color.FromArgb(255, 255, 255), // Background1 – White
-            Color.FromArgb(0, 0, 0),       // Text1 – Black
-            Color.FromArgb(240, 240, 240), // Background2 – Light Gray
-            Color.FromArgb(80, 80, 80),    // Text2 – Dark Gray
-            Color.FromArgb(0, 112, 192),   // Accent1 – Corporate Blue
-            Color.FromArgb(255, 192, 0),   // Accent2 – Corporate Gold
-            Color.FromArgb(0, 176, 80),    // Accent3 – Corporate Green
-            Color.FromArgb(192, 0, 0),     // Accent4 – Corporate Red
-            Color.FromArgb(112, 48, 160),  // Accent5 – Corporate Purple
-            Color.FromArgb(255, 0, 255),   // Accent6 – Corporate Magenta
-            Color.FromArgb(0, 0, 255),     // Hyperlink – Blue
-            Color.FromArgb(128, 0, 128)    // FollowedHyperlink – Purple
+            Color.FromArgb(255, 255, 255), // Background1 (white)
+            Color.FromArgb(0, 0, 0),       // Text1 (black)
+            Color.FromArgb(240, 240, 240), // Background2 (light gray)
+            Color.FromArgb(80, 80, 80),    // Text2 (dark gray)
+            Color.FromArgb(0, 112, 192),   // Accent1 (corporate blue)
+            Color.FromArgb(255, 192, 0),   // Accent2 (corporate orange)
+            Color.FromArgb(112, 173, 71),  // Accent3 (corporate green)
+            Color.FromArgb(191, 0, 0),     // Accent4 (corporate red)
+            Color.FromArgb(255, 0, 255),   // Accent5 (magenta)
+            Color.FromArgb(0, 176, 80),    // Accent6 (secondary green)
+            Color.FromArgb(0, 0, 255),     // Hyperlink (blue)
+            Color.FromArgb(128, 0, 128)    // Followed Hyperlink (purple)
         };
 
         // Apply the custom theme to the workbook
-        workbook.CustomTheme("CorporateTheme", corporateColors);
+        workbook.CustomTheme("CorporateBranding", corporateColors);
 
-        // -------------------------------------------------
-        // 4. Save the workbook with the themed Waterfall chart
-        // -------------------------------------------------
-        workbook.Save("WaterfallChart_CorporateTheme.xlsx");
+        // Save the workbook with the themed Waterfall chart
+        workbook.Save("WaterfallChartWithCorporateTheme.xlsx");
     }
 }

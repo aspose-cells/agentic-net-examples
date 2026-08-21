@@ -1,10 +1,10 @@
-// Title: Hide a PivotField in an Aspose.Cells PivotTable (C#) – Set Items to Hidden
-// Description: Demonstrates how to hide a specific PivotField in an Aspose.Cells PivotTable by iterating its items and calling HideItem(index, true). The example creates a workbook, adds sample data, builds a pivot table, hides the row field "Category", refreshes the table, and saves the result.
-// Keywords: Aspose.Cells hide pivot field C# | PivotTable HideItem method | set pivot field hidden Aspose | C# hide row field in pivot table | Aspose.Cells PivotField visibility
-// Common Searches: how to hide a pivot field in Aspose.Cells C# | Aspose.Cells hide row items in pivot table | C# hide specific field in Aspose pivot table | Aspose.Cells PivotTable hide field programmatically
-// Developer Intent: Programmatically hide a specific PivotField so it does not appear in the generated PivotTable.
-// Use Cases: Exclude confidential categories from a sales summary while keeping totals. | Create a clean report view by removing unnecessary row fields on the fly. | Allow end‑users to toggle visibility of pivot fields based on preferences in a .NET dashboard.
-// AI Prompts: Generate C# code using Aspose.Cells to hide a column PivotField by setting each item's hidden flag. | Show how to toggle visibility of multiple PivotFields in an Aspose.Cells workbook at runtime. | Provide an example that hides a PivotField and then reveals it again using Aspose.Cells API.
+// Title: Hide a PivotField item in Aspose.Cells for .NET using PivotField.HideItem
+// Description: Creates a workbook, adds sample data, builds a pivot table, and hides the row‑field item "Apple" by calling PivotField.HideItem("Apple", true) before refreshing and saving the file.
+// Keywords: Aspose.Cells | PivotTable | HideItem | C# | .NET | hide pivot item | row field | Excel export | programmatic pivot manipulation
+// Common Searches: Aspose.Cells hide pivot item C# | How to hide a row field value in a pivot table using Aspose.Cells | PivotField.HideItem example .NET | Hide specific category in Aspose.Cells pivot table | Aspose.Cells hide low volume items programmatically
+// Developer Intent: Programmatically hide a specific item (e.g., "Apple") in a pivot table row field with Aspose.Cells for .NET.
+// Use Cases: Exclude a particular category from a sales summary generated as an Excel pivot report. | Suppress low‑volume or confidential items before exporting a pivot table to end users. | Apply business rules to dynamically hide or show row labels in automated reporting pipelines.
+// AI Prompts: Show how to hide multiple pivot items in a loop with Aspose.Cells for .NET. | Provide code to toggle the hidden state of a pivot field item based on a boolean flag. | Explain the steps to unhide a previously hidden pivot item using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
@@ -12,27 +12,27 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotHideFieldDemo
 {
-    // Demonstrates how to hide a specific PivotField in an Aspose.Cells PivotTable by iterating its items and calling HideItem(index, true). The example creates a workbook, adds sample data, builds a pivot table, hides the row field "Category", refreshes the table, and saves the result.
+    // Creates a workbook, adds sample data, builds a pivot table, and hides the row‑field item "Apple" by calling PivotField.HideItem("Apple", true) before refreshing and saving the file.
     public class Program
     {
         public static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the pivot table
             sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Fruit");
-            sheet.Cells["A3"].PutValue("Fruit");
-            sheet.Cells["A4"].PutValue("Vegetable");
-            sheet.Cells["A5"].PutValue("Vegetable");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["A3"].PutValue("Orange");
+            sheet.Cells["A4"].PutValue("Apple");
+            sheet.Cells["A5"].PutValue("Banana");
 
             sheet.Cells["B1"].PutValue("Quantity");
             sheet.Cells["B2"].PutValue(10);
             sheet.Cells["B3"].PutValue(15);
             sheet.Cells["B4"].PutValue(20);
-            sheet.Cells["B5"].PutValue(25);
+            sheet.Cells["B5"].PutValue(5);
 
             // Add a pivot table based on the data range
             int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
@@ -44,23 +44,19 @@ namespace AsposeCellsPivotHideFieldDemo
             // Add the "Quantity" field to the data area
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");
 
-            // Get the pivot field that we want to hide (the row field "Category")
-            PivotField fieldToHide = pivotTable.RowFields[0];
+            // Get the row field (the one we want to hide a specific item from)
+            PivotField rowField = pivotTable.RowFields[0];
 
-            // Hide all items of this field by setting each item's hidden flag to true
-            // This effectively hides the entire field from the pivot view
-            for (int i = 0; i < fieldToHide.ItemCount; i++)
-            {
-                // Use the HideItem method (int index, bool isHidden) as defined in the API
-                fieldToHide.HideItem(i, true);
-            }
+            // Hide the pivot item "Apple" within this field
+            // Using the HideItem(string itemValue, bool isHidden) method
+            rowField.HideItem("Apple", true);
 
-            // Refresh and calculate the pivot table after modifying visibility
+            // Refresh and calculate the pivot table to apply changes
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // Save the workbook with the hidden field
-            workbook.Save("PivotFieldHiddenDemo.xlsx");
+            // Save the workbook
+            workbook.Save("PivotFieldItemHiddenDemo.xlsx");
         }
     }
 }

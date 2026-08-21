@@ -1,85 +1,74 @@
-// Title: Detect Top‑Left Cells of Merged Ranges While Enumerating Worksheets – Aspose.Cells for .NET
-// Description: C# example that creates a workbook, merges A1:B2 and C3:D4, then loops through cells up to MaxDataRow/MaxDataColumn. It uses IsMerged and GetMergedRange to process only the first (top‑left) cell of each merged area and skips the rest, finally saving the file.
-// Keywords: Aspose.Cells C# merged cells detection | GetMergedRange | IsMerged | top left merged cell | enumerate worksheet cells | skip inner merged cells | Excel merge detection .NET | Aspose.Cells sample code
-// Common Searches: Aspose.Cells get first cell of merged range C# | how to ignore inner cells of a merged area in Aspose.Cells | enumerate worksheet data and skip duplicate merged cells | detect merged cells with GetMergedRange Aspose.Cells
-// Developer Intent: Identify merged regions during worksheet iteration and handle only their top‑left cells.
-// Use Cases: Export Excel data to CSV without duplicate values from merged cells. | Apply calculations or formatting exclusively to the leading cell of each merged block. | Generate a list of all merged ranges together with the value stored in their top‑left cell.
-// AI Prompts: Write a C# method that returns a dictionary of top‑left merged cells and their values from a Worksheet using Aspose.Cells. | Provide code to copy only the top‑left cells of merged ranges from one worksheet to another, preserving formatting. | Explain how to modify the enumeration loop to skip empty rows while still detecting merged cells efficiently.
+// Title: Aspose.Cells .NET – Detect merged cells and handle only the top‑left cell of each range
+// Description: Creates a workbook, merges sample ranges, then iterates the used cells. By checking Cell.IsMerged and using GetMergedRange, the code processes only the first cell (FirstRow/FirstColumn) of each merged area, logs its address and value, and saves the file.
+// Keywords: Aspose.Cells detect merged cells | C# merged range top left cell | Cell.IsMerged property | GetMergedRange example | enumerate used range Aspose.Cells | skip duplicate merged cells | Aspose.Cells .NET tutorial | global Aspose.Cells guide
+// Common Searches: how to find merged cells in Aspose.Cells C# | process only the first cell of a merged range Aspose.Cells | skip duplicate cells in merged areas Aspose.Cells .NET | enumerate worksheet cells and detect merges Aspose | Aspose.Cells GetMergedRange top‑left cell
+// Developer Intent: Identify merged cells while looping through a worksheet and execute logic only for the primary (top‑left) cell of each merged block.
+// Use Cases: Log or export the address and value of each merged region’s leading cell. | Apply formatting, formulas, or calculations exclusively to the top‑left cell of merged areas. | Generate clean CSV/JSON output where merged cells are represented by their primary cell value.
+// AI Prompts: Write C# code with Aspose.Cells that iterates a worksheet, detects merged cells, and runs an action only on the top‑left cell of each merged range. | Show how to use Cell.IsMerged and GetMergedRange to filter out duplicate cells in merged areas in Aspose.Cells for .NET. | Explain an efficient pattern for processing merged cells without redundant iterations in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsMergedCellDetection
+// Creates a workbook, merges sample ranges, then iterates the used cells. By checking Cell.IsMerged and using GetMergedRange, the code processes only the first cell (FirstRow/FirstColumn) of each merged area, logs its address and value, and saves the file.
+class DetectMergedCells
 {
-    // C# example that creates a workbook, merges A1:B2 and C3:D4, then loops through cells up to MaxDataRow/MaxDataColumn. It uses IsMerged and GetMergedRange to process only the first (top‑left) cell of each merged area and skips the rest, finally saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Merge some sample ranges
+            cells.Merge(0, 0, 2, 2); // A1:B2
+            cells[0, 0].PutValue("Merged A1");
+            cells.Merge(2, 3, 3, 2); // D3:E5
+            cells[2, 3].PutValue("Merged D3");
+
+            // Determine the used range limits
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+
+            // Enumerate all cells in the used range
+            for (int row = 0; row <= maxRow; row++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Sample merged ranges for demonstration
-                // Merge A1:B2 (top‑left cell is A1)
-                cells.Merge(0, 0, 2, 2);
-                cells[0, 0].PutValue("Merged A1:B2");
-
-                // Merge C3:D4 (top‑left cell is C3)
-                cells.Merge(2, 2, 2, 2);
-                cells[2, 2].PutValue("Merged C3:D4");
-
-                // Put some normal (non‑merged) data
-                cells[4, 0].PutValue("Normal Cell");
-
-                // Enumerate all cells that contain data
-                for (int row = 0; row <= cells.MaxDataRow; row++)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    for (int col = 0; col <= cells.MaxDataColumn; col++)
+                    Cell cell = cells[row, col];
+
+                    if (cell.IsMerged)
                     {
-                        Cell cell = cells[row, col];
+                        // Retrieve the merged range that this cell belongs to
+                        AsposeRange mergedRange = cell.GetMergedRange();
 
-                        // Skip empty cells
-                        if (cell.Value == null) continue;
-
-                        // Process only the top‑left cell of a merged area
-                        if (cell.IsMerged)
+                        // Process only the top‑left cell of the merged area
+                        if (mergedRange != null &&
+                            mergedRange.FirstRow == row &&
+                            mergedRange.FirstColumn == col)
                         {
-                            // Get the merged range that this cell belongs to
-                            AsposeRange mergedRange = cell.GetMergedRange();
-
-                            // If the current cell is the first cell of the merged range, handle it
-                            if (mergedRange != null &&
-                                mergedRange.FirstRow == row &&
-                                mergedRange.FirstColumn == col)
-                            {
-                                Console.WriteLine($"Top‑left merged cell {cell.Name}: {cell.Value}");
-                                // Add custom processing logic here (e.g., export, modify, etc.)
-                            }
-                            // Otherwise, ignore the rest of the cells in the merged area
-                        }
-                        else
-                        {
-                            // Handle normal (non‑merged) cells
-                            Console.WriteLine($"Normal cell {cell.Name}: {cell.Value}");
-                            // Add custom processing logic here
+                            // Example processing: output address and value
+                            Console.WriteLine($"Top‑left merged cell: {cell.Name}, Value: {cell.StringValue}");
                         }
                     }
+                    else
+                    {
+                        // Example processing for non‑merged cells
+                        Console.WriteLine($"Normal cell: {cell.Name}, Value: {cell.StringValue}");
+                    }
                 }
+            }
 
-                // Save the workbook (demonstrates that the code compiles and runs)
-                workbook.Save("MergedCellDetectionResult.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            string outputPath = "MergedCellsProcessed.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

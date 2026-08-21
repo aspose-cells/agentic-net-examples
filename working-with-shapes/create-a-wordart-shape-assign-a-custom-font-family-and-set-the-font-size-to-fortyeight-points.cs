@@ -1,62 +1,54 @@
 // Title: Add WordArt with a custom font and 48‑pt size using Aspose.Cells for .NET (C#)
-// Description: This example shows how to create a new Workbook, add a WordArt shape via ShapeCollection.AddTextEffect, assign the custom font "MyCustomFont" at 48 points, adjust the TextEffectFormat, and save the file as WordArtCustomFont48pt.xlsx.
-// Keywords: Aspose.Cells C# WordArt | Add WordArt shape | custom font WordArt Aspose.Cells | 48 point font size | TextEffectFormat API | Excel shape collection .NET | Aspose.Cells example GitHub | C# Excel WordArt code
-// Common Searches: How to create WordArt in Excel with Aspose.Cells C# | Aspose.Cells set WordArt font size to 48 points | WordArt custom font example Aspose.Cells .NET | AddTextEffect usage C# | Change WordArt text effect programmatically
-// Developer Intent: Insert a WordArt shape into an Excel worksheet using a specific custom font family and a 48‑point font size.
-// Use Cases: Generate branded report titles with the company’s custom font for consistent visual identity. | Add decorative headings to spreadsheet templates where a large, eye‑catching font is required. | Automate placement of WordArt across multiple worksheets while preserving exact font styling.
-// AI Prompts: Provide C# code to change the fill and outline colors of a WordArt shape created with Aspose.Cells. | Show how to align a WordArt shape to the center of a given cell range in an Excel worksheet. | Explain how to list all MsoPresetTextEffect values and select one based on user input in C#.
+// Description: Demonstrates how to create a new workbook, insert a WordArt shape with AddTextEffect, change its FontName to a custom family (e.g., Comic Sans MS) and set FontSize to 48 points via TextEffectFormat, then save the file as CustomWordArt.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | WordArt shape | AddTextEffect | TextEffectFormat | custom font | font size 48 pt | Comic Sans MS | shape formatting | worksheet graphics | example code
+// Common Searches: Aspose.Cells add WordArt C# | set custom font for WordArt Aspose.Cells | change WordArt font size .NET | TextEffectFormat font name example | how to use AddTextEffect in Aspose.Cells
+// Developer Intent: Insert a WordArt shape, assign a specific font family, and set its size to 48 points in a worksheet.
+// Use Cases: Create a decorative title banner with a brand‑specific font for reports. | Add eye‑catching labels to charts or tables using WordArt with precise sizing. | Automate workbook branding by applying the company’s font to WordArt across multiple files.
+// AI Prompts: Generate C# code with Aspose.Cells to add a WordArt shape using the "Arial Black" font at 60 pt positioned at row 5, column 3. | Explain how to modify the TextEffectFormat of an existing WordArt shape to change its color, outline, and shadow in Aspose.Cells. | Provide a step‑by‑step tutorial for creating a WordArt shape, setting a custom font, and exporting the workbook to PDF with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsWordArtDemo
+// Demonstrates how to create a new workbook, insert a WordArt shape with AddTextEffect, change its FontName to a custom family (e.g., Comic Sans MS) and set FontSize to 48 points via TextEffectFormat, then save the file as CustomWordArt.xlsx.
+class WordArtExample
 {
-    // This example shows how to create a new Workbook, add a WordArt shape via ShapeCollection.AddTextEffect, assign the custom font "MyCustomFont" at 48 points, adjust the TextEffectFormat, and save the file as WordArtCustomFont48pt.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Get the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Get the shape collection of the worksheet
-            ShapeCollection shapes = worksheet.Shapes;
+        // Access the shape collection of the worksheet
+        ShapeCollection shapes = worksheet.Shapes;
 
-            // Add a WordArt shape using AddTextEffect.
-            // Parameters:
-            //   effect: preset text effect (choose any, e.g., TextEffect1)
-            //   text: the WordArt text
-            //   fontName: custom font family
-            //   size: initial font size (set to 48)
-            //   fontBold, fontItalic: false
-            //   topRow, top, leftColumn, left: position in cells/pixels
-            //   height, width: size of the shape in pixels
-            Shape wordArt = shapes.AddTextEffect(
-                MsoPresetTextEffect.TextEffect1,
-                "Custom WordArt",
-                "MyCustomFont",   // custom font family
-                48,               // font size in points
-                false,
-                false,
-                2,    // top row index
-                0,    // vertical offset (pixels)
-                2,    // left column index
-                0,    // horizontal offset (pixels)
-                200,  // height (pixels)
-                400   // width (pixels)
-            );
+        // Add a WordArt shape using AddTextEffect
+        // Parameters: effect, text, fontName, size, bold, italic,
+        // topRow, top (pixel offset), leftColumn, left (pixel offset), height, width
+        Shape wordArt = shapes.AddTextEffect(
+            MsoPresetTextEffect.TextEffect1,   // preset effect
+            "Custom WordArt",                  // displayed text
+            "Times New Roman",                 // initial font name (will be overridden below)
+            12,                                // initial size (will be overridden below)
+            false,                             // not bold
+            false,                             // not italic
+            2, 0,                              // top row and pixel offset
+            2, 0,                              // left column and pixel offset
+            200,                               // height in pixels
+            400);                              // width in pixels
 
-            // If further adjustments are needed, modify the TextEffect properties
-            TextEffectFormat textEffect = wordArt.TextEffect;
-            textEffect.FontName = "MyCustomFont";
-            textEffect.FontSize = 48;
+        // Retrieve the TextEffectFormat to customize font properties
+        TextEffectFormat textEffect = wordArt.TextEffect;
 
-            // Save the workbook with the WordArt shape
-            workbook.Save("WordArtCustomFont48pt.xlsx");
-        }
+        // Set the custom font family
+        textEffect.FontName = "Comic Sans MS";
+
+        // Set the font size to 48 points
+        textEffect.FontSize = 48;
+
+        // Save the workbook to a file
+        workbook.Save("CustomWordArt.xlsx");
     }
 }

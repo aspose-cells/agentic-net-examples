@@ -1,87 +1,83 @@
-// Title: Export Modified SmartArt Shapes to PDF with Aspose.Cells for .NET (C#)
-// Description: Loads an .xlsx file, iterates through all worksheets and shapes, updates each shape's alternative text, converts SmartArt to grouped shapes to edit inner text, sets PdfSaveOptions (UpdateSmartArt and ExportDocumentStructure), and saves the workbook as a PDF with the changes reflected.
-// Keywords: Aspose.Cells C# PDF export | SmartArt to PDF Aspose | UpdateSmartArt option | modify shape alternative text | convert SmartArt to group shapes | PdfSaveOptions ExportDocumentStructure | Excel to PDF Aspose .NET | Aspose.Cells shape manipulation
-// Common Searches: Aspose.Cells export SmartArt to PDF C# | How to update SmartArt text before PDF conversion Aspose | PdfSaveOptions UpdateSmartArt example | Convert SmartArt to grouped shapes Aspose.Cells | Save Excel as PDF with document structure Aspose
-// Developer Intent: Create a PDF from an Excel workbook after programmatically modifying SmartArt and other shape attributes using Aspose.Cells for .NET.
-// Use Cases: Refresh all shape alternative texts and produce a PDF that reflects the new metadata. | Break down each SmartArt object into its component shapes, change their displayed text, and export the workbook while preserving the updated SmartArt layout. | Generate a PDF that retains the workbook's document structure and ensures SmartArt graphics are re‑rendered with the latest changes.
-// AI Prompts: Write C# code that loads an .xlsx file, changes the AlternativeText of every shape, updates the text of SmartArt components, and saves the workbook as a PDF using PdfSaveOptions.UpdateSmartArt. | Explain how the PdfSaveOptions.UpdateSmartArt flag influences SmartArt rendering during PDF conversion in Aspose.Cells. | Show how to retrieve grouped shapes from a SmartArt object with GetResultOfSmartArt() and modify each shape's Text property.
+// Title: Export Modified SmartArt Shapes to PDF with Aspose.Cells for .NET
+// Description: Loads an Excel workbook, iterates through all worksheets and shapes, updates each shape's alternative text, converts SmartArt shapes to GroupShape objects, modifies the text of inner shapes, configures PdfSaveOptions to refresh SmartArt and preserve document structure, and saves the result as a PDF.
+// Keywords: Aspose.Cells | C# | SmartArt export to PDF | PdfSaveOptions UpdateSmartArt | GroupShape manipulation | Excel to PDF conversion | modify shape alternative text | preserve PDF document structure
+// Common Searches: Aspose.Cells update SmartArt before PDF export | C# convert SmartArt to GroupShape and save as PDF | PdfSaveOptions.UpdateSmartArt example | change shape alternative text in Excel with Aspose.Cells | export Excel workbook with modified SmartArt to PDF
+// Developer Intent: Generate a PDF from an Excel file after programmatically editing SmartArt shapes using Aspose.Cells for .NET.
+// Use Cases: Refresh all SmartArt graphics after changing their text or properties and produce an up‑to‑date PDF. | Batch‑process workbooks to replace alternative text on every shape and ensure the changes appear in the exported PDF. | Maintain the logical document structure in the PDF while applying SmartArt modifications for accessibility compliance.
+// AI Prompts: Provide C# code that loads an .xlsx file, updates SmartArt node text, and saves the workbook as a PDF with UpdateSmartArt enabled. | Explain how PdfSaveOptions.UpdateSmartArt and ExportDocumentStructure affect the PDF output when using Aspose.Cells. | Show how to iterate through shapes, detect SmartArt, convert it to a GroupShape, and modify inner shapes in Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsSmartArtPdfExport
+// Loads an Excel workbook, iterates through all worksheets and shapes, updates each shape's alternative text, converts SmartArt shapes to GroupShape objects, modifies the text of inner shapes, configures PdfSaveOptions to refresh SmartArt and preserve document structure, and saves the result as a PDF.
+public class ExportSmartArtToPdf
 {
-    // Loads an .xlsx file, iterates through all worksheets and shapes, updates each shape's alternative text, converts SmartArt to grouped shapes to edit inner text, sets PdfSaveOptions (UpdateSmartArt and ExportDocumentStructure), and saves the workbook as a PDF with the changes reflected.
-    public class ExportSmartArtToPdf
+    public static void Main(string[] args)
     {
-        public static void Run()
+        try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
-
-            try
-            {
-                // Load the workbook that contains SmartArt shapes
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets and their shapes
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    foreach (Shape shape in sheet.Shapes)
-                    {
-                        // Example modification: change alternative text for every shape
-                        shape.AlternativeText = "ModifiedAltText";
-
-                        // If the shape is a SmartArt, convert it to grouped shapes and modify the text
-                        if (shape.IsSmartArt)
-                        {
-                            // Convert SmartArt to a group of shapes
-                            GroupShape group = shape.GetResultOfSmartArt();
-
-                            // Iterate through each shape inside the group and change its text
-                            foreach (Shape smartArtShape in group.GetGroupedShapes())
-                            {
-                                smartArtShape.Text = "ModifiedSmartArtText";
-                            }
-                        }
-                    }
-                }
-
-                // Configure PDF save options to update SmartArt during saving
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    UpdateSmartArt = true,               // Ensure SmartArt is refreshed
-                    ExportDocumentStructure = true       // Retain document structure in PDF (optional)
-                };
-
-                // Save the modified workbook as a PDF
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF successfully saved to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors during processing
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 
-    // Entry point for the application
-    public class Program
+    public static void Run()
     {
-        public static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            ExportSmartArtToPdf.Run();
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
+
+        // Load the source workbook
+        Workbook workbook = new Workbook(inputPath);
+
+        // Iterate through all worksheets and their shapes
+        foreach (Worksheet worksheet in workbook.Worksheets)
+        {
+            foreach (Shape shape in worksheet.Shapes)
+            {
+                // Example modification: change the alternative text of every shape
+                shape.AlternativeText = "ModifiedAltText";
+
+                // Process only SmartArt shapes
+                if (shape.IsSmartArt)
+                {
+                    // Convert the SmartArt to a grouped shape collection
+                    GroupShape groupShape = shape.GetResultOfSmartArt();
+
+                    if (groupShape != null)
+                    {
+                        // Modify each inner shape within the SmartArt group
+                        foreach (Shape innerShape in groupShape.GetGroupedShapes())
+                        {
+                            // Example modification: set new text for each inner shape
+                            innerShape.Text = "ModifiedSmartArtText";
+                        }
+                    }
+                }
+            }
+        }
+
+        // Configure PDF save options and enable SmartArt updating
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            UpdateSmartArt = true,               // Ensure SmartArt changes are reflected
+            ExportDocumentStructure = true       // Optional: retain document structure in PDF
+        };
+
+        // Save the modified workbook as a PDF using the specified options
+        workbook.Save(outputPath, pdfOptions);
+
+        Console.WriteLine($"PDF saved successfully to {outputPath}");
     }
 }

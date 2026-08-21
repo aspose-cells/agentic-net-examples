@@ -1,108 +1,125 @@
+// Title: C# – Flatten Nested Order Objects and Export to Excel with Aspose.Cells ImportCustomObjects
+// Description: Demonstrates how to convert hierarchical Order, Customer, and Item models into a flat list using LINQ SelectMany, define a custom column order, and write the data to an Excel worksheet with header rows, date formatting, and automatic numeric conversion via Cells.ImportCustomObjects. The workbook is saved as FlattenedOrders.xlsx.
+// Keywords: Aspose.Cells | ImportCustomObjects | C# Excel export | flatten nested collections | .NET data export to Excel | LINQ SelectMany | custom column mapping | Excel workbook generation | order report automation | Excel automation .NET
+// Common Searches: flatten nested C# objects for Excel using Aspose.Cells | ImportCustomObjects custom column order date format | export order and item list to Excel with Aspose.Cells | convert hierarchical data to flat rows for Excel in .NET | Aspose.Cells import list of objects with header row
+// Developer Intent: The developer needs to transform hierarchical order data into a flat structure and write it to an Excel file using Aspose.Cells' ImportCustomObjects method.
+// Use Cases: Create an order‑by‑item spreadsheet where each product line appears on its own row with customer and order details. | Generate a sales export file for ERP or accounting systems that requires flat rows and numeric/date formatting. | Produce a daily transaction report with ready‑to‑analyze data, including formatted dates and numeric values.
+// AI Prompts: Show how to apply a custom currency format to the Price column in the ImportCustomObjects call. | Provide code that adds a summary row calculating total Quantity and total sales amount after the import. | Explain strategies for handling nullable fields when flattening nested objects for ImportCustomObjects.
+
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsCustomImportDemo
 {
-    // Original nested object model
+    // Original nested data models
+    // Demonstrates how to convert hierarchical Order, Customer, and Item models into a flat list using LINQ SelectMany, define a custom column order, and write the data to an Excel worksheet with header rows, date formatting, and automatic numeric conversion via Cells.ImportCustomObjects. The workbook is saved as FlattenedOrders.xlsx.
     public class Order
     {
         public int OrderId { get; set; }
-        public string CustomerName { get; set; }
-        public List<OrderItem> Items { get; set; }
+        public Customer Customer { get; set; } = null!;
+        public List<Item> Items { get; set; } = new();
+        public DateTime OrderDate { get; set; }
     }
 
-    public class OrderItem
+    public class Customer
     {
-        public string ProductName { get; set; }
-        public int Quantity { get; set; }
-        public decimal UnitPrice { get; set; }
+        public string Name { get; set; } = null!;
+        public string Email { get; set; } = null!;
     }
 
-    // Flattened DTO used for import
-    public class FlatOrderItem
+    public class Item
+    {
+        public string ProductName { get; set; } = null!;
+        public int Quantity { get; set; }
+        public decimal Price { get; set; }
+    }
+
+    // Flattened representation for import
+    public class OrderFlat
     {
         public int OrderId { get; set; }
-        public string CustomerName { get; set; }
-        public string ProductName { get; set; }
+        public string CustomerName { get; set; } = null!;
+        public string CustomerEmail { get; set; } = null!;
+        public DateTime OrderDate { get; set; }
+        public string ProductName { get; set; } = null!;
         public int Quantity { get; set; }
-        public decimal UnitPrice { get; set; }
+        public decimal Price { get; set; }
     }
 
-    public class ImportNestedObjectsDemo
+    public static class Demo
     {
         public static void Run()
         {
-            // Prepare sample data with nested collections
+            // Prepare sample nested data
             var orders = new List<Order>
             {
                 new Order
                 {
                     OrderId = 1001,
-                    CustomerName = "Alice",
-                    Items = new List<OrderItem>
+                    OrderDate = new DateTime(2024, 1, 15),
+                    Customer = new Customer { Name = "Alice", Email = "alice@example.com" },
+                    Items = new List<Item>
                     {
-                        new OrderItem { ProductName = "Apple", Quantity = 10, UnitPrice = 0.5m },
-                        new OrderItem { ProductName = "Banana", Quantity = 5, UnitPrice = 0.3m }
+                        new Item { ProductName = "Laptop", Quantity = 1, Price = 1200.00m },
+                        new Item { ProductName = "Mouse", Quantity = 2, Price = 25.50m }
                     }
                 },
                 new Order
                 {
                     OrderId = 1002,
-                    CustomerName = "Bob",
-                    Items = new List<OrderItem>
+                    OrderDate = new DateTime(2024, 2, 3),
+                    Customer = new Customer { Name = "Bob", Email = "bob@example.com" },
+                    Items = new List<Item>
                     {
-                        new OrderItem { ProductName = "Orange", Quantity = 8, UnitPrice = 0.4m },
-                        new OrderItem { ProductName = "Grapes", Quantity = 3, UnitPrice = 1.2m }
+                        new Item { ProductName = "Keyboard", Quantity = 1, Price = 75.00m }
                     }
                 }
             };
 
-            // Flatten nested collections into a list of simple objects
-            var flatItems = new List<FlatOrderItem>();
-            foreach (var order in orders)
-            {
-                foreach (var item in order.Items)
+            // Flatten nested collections into a list of OrderFlat objects
+            List<OrderFlat> flatList = orders
+                .SelectMany(o => o.Items, (o, i) => new OrderFlat
                 {
-                    flatItems.Add(new FlatOrderItem
-                    {
-                        OrderId = order.OrderId,
-                        CustomerName = order.CustomerName,
-                        ProductName = item.ProductName,
-                        Quantity = item.Quantity,
-                        UnitPrice = item.UnitPrice
-                    });
-                }
-            }
+                    OrderId = o.OrderId,
+                    OrderDate = o.OrderDate,
+                    CustomerName = o.Customer.Name,
+                    CustomerEmail = o.Customer.Email,
+                    ProductName = i.ProductName,
+                    Quantity = i.Quantity,
+                    Price = i.Price
+                })
+                .ToList();
 
             // Define the order of columns to be imported
-            string[] propertyNames = { "OrderId", "CustomerName", "ProductName", "Quantity", "UnitPrice" };
+            string[] propertyNames = new[]
+            {
+                "OrderId",
+                "OrderDate",
+                "CustomerName",
+                "CustomerEmail",
+                "ProductName",
+                "Quantity",
+                "Price"
+            };
 
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook and get the first worksheet's cells collection
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
             // Import the flattened data into the worksheet
-            // Parameters:
-            //   list               : flatItems
-            //   propertyNames      : propertyNames (null would import all properties)
-            //   isPropertyNameShown: true (adds header row)
-            //   firstRow           : 0 (start at first row)
-            //   firstColumn        : 0 (start at first column)
-            //   rowNumber          : flatItems.Count
-            //   insertRows         : true (adds rows if needed)
-            //   dateFormatString   : "yyyy-MM-dd" (not used here but required)
-            //   convertStringToNumber: true (convert numeric strings)
-            worksheet.Cells.ImportCustomObjects(
-                flatItems,
+            cells.ImportCustomObjects(
+                flatList,
                 propertyNames,
-                true,
-                0,
-                0,
-                flatItems.Count,
-                true,
+                true,   // include header row
+                0,      // start at first row (A1)
+                0,      // start at first column
+                flatList.Count,
+                true,   // insert rows if needed
                 "yyyy-MM-dd",
-                true
+                true    // convert string to number where possible
             );
 
             // Save the workbook to a file
@@ -110,12 +127,20 @@ namespace AsposeCellsExamples
         }
     }
 
-    // Entry point for demonstration
-    class Program
+    // Entry point for the console application
+    public static class Program
     {
-        static void Main()
+        public static void Main()
         {
-            ImportNestedObjectsDemo.Run();
+            try
+            {
+                Demo.Run();
+                Console.WriteLine("Workbook created successfully: FlattenedOrders.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

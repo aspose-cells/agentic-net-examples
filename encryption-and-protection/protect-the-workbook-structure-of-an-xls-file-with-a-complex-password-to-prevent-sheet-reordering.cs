@@ -1,49 +1,32 @@
-// Title: Protect Excel Workbook Structure with a Complex Password using Aspose.Cells for .NET (C#)
-// Description: Load an existing XLS file, apply structure‑only protection with a strong password to stop sheet reordering, and save the result as an XLSX file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | workbook structure protection | complex password | prevent sheet reordering | XLS to XLSX conversion | Excel security .NET | ProtectionType.Structure
-// Common Searches: Aspose.Cells protect workbook structure C# | Set strong password for Excel workbook using .NET | Prevent sheet order changes in XLS file Aspose.Cells | Convert protected XLS to XLSX with Aspose.Cells | Apply only structure protection to Excel via C#
-// Developer Intent: Add structure‑only protection with a strong password to an existing XLS workbook and export it as XLSX.
-// Use Cases: Distribute a template where users must keep the original sheet order. | Secure legacy XLS reports before sharing them in the more compatible XLSX format. | Lock the layout of a multi‑sheet financial model to enforce a fixed sequence across a team.
-// AI Prompts: Generate C# code that protects both workbook structure and windows with a complex password using Aspose.Cells. | Show how to verify if a workbook already has structure protection before applying a new password. | Explain the steps to change the password of an already protected workbook structure with Aspose.Cells.
+// Title: Protect Excel Workbook Structure with a Complex Password using Aspose.Cells for .NET
+// Description: Shows how to create or load a workbook, apply structure‑only protection with a strong password via Workbook.Protect, block sheet reordering, addition or deletion, and save the result as an .xlsx file.
+// Keywords: Aspose.Cells | Workbook.Protect | structure protection | complex password | C# Excel security | prevent sheet reordering | Excel workbook protection .NET
+// Common Searches: Aspose.Cells protect workbook structure C# | set complex password for Excel workbook .NET | prevent sheet reordering Aspose.Cells | structure only protection Excel file | lock workbook structure programmatically
+// Developer Intent: Apply structure‑only protection to an Excel workbook with a robust password using Aspose.Cells for .NET.
+// Use Cases: Distribute a template workbook that cannot be altered, added to, or have its sheets rearranged. | Secure automatically generated reports so recipients can view data but cannot modify sheet order or create new worksheets. | Enforce integrity in batch export pipelines by locking the workbook structure with a strong password.
+// AI Prompts: Write C# code that uses Aspose.Cells to protect only the workbook structure with a given complex password and saves the file as .xlsx. | Show how to verify whether a workbook's structure is protected and retrieve its protection settings using Aspose.Cells for .NET. | Provide an example of unprotecting a workbook structure by supplying the same complex password with Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Load an existing XLS file, apply structure‑only protection with a strong password to stop sheet reordering, and save the result as an XLSX file using Aspose.Cells for .NET.
-class Program
+// Shows how to create or load a workbook, apply structure‑only protection with a strong password via Workbook.Protect, block sheet reordering, addition or deletion, and save the result as an .xlsx file.
+class ProtectWorkbookStructure
 {
     static void Main()
     {
-        const string inputPath = "input.xls";
-        const string outputPath = "protected_output.xlsx";
-        const string complexPassword = "C0mpl3xP@ssw0rd!#2026";
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
-            return;
-        }
+        // Define a complex password to protect the workbook structure
+        string complexPassword = "P@55w0rd!#2026$%^&*()_+|~`";
 
-        try
-        {
-            // Load the workbook; Auto format detection handles .xls files
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
-            using (Workbook workbook = new Workbook(inputPath, loadOptions))
-            {
-                // Protect only the workbook structure (prevents sheet reordering)
-                workbook.Protect(ProtectionType.Structure, complexPassword);
+        // Protect only the workbook structure (prevents sheet reordering, addition, deletion)
+        workbook.Protect(ProtectionType.Structure, complexPassword);
 
-                // Save the protected workbook in XLSX format (widely supported)
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-            }
+        // Save the protected workbook
+        workbook.Save("ProtectedWorkbook.xlsx", SaveFormat.Xlsx);
 
-            Console.WriteLine($"Workbook protected and saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Release resources
+        workbook.Dispose();
     }
 }

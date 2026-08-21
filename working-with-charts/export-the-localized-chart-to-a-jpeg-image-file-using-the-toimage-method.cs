@@ -1,55 +1,49 @@
-// Title: Export an Aspose.Cells Chart to JPEG with C# Using the ToImage Method
-// Description: The example creates a workbook, fills cells A1:B4 with category and sales data, adds a column chart, and calls chart.ToImage(path, ImageType.Jpeg) to produce a JPEG file of the chart. The workbook is then saved for reference.
-// Keywords: Aspose.Cells chart JPEG export | C# ToImage chart image | save Excel chart as image | ImageType.Jpeg Aspose.Cells | export column chart C# | chart snapshot generation | Excel chart to JPEG
-// Common Searches: Aspose.Cells export chart as JPEG C# | How to save an Excel chart to image using Aspose.Cells | C# ToImage method example for chart | Convert Excel chart to JPEG with Aspose.Cells | Generate chart image from workbook C#
-// Developer Intent: Create a JPEG image of a worksheet chart by invoking Aspose.Cells' ToImage method in C#.
-// Use Cases: Embed chart images in web dashboards or reporting portals. | Attach chart snapshots to email newsletters or automated alerts. | Batch‑export localized charts from multi‑language workbooks. | Produce static visuals for documentation or slide decks.
-// AI Prompts: Write C# code that builds a pie chart from worksheet data and saves it as a PNG using Aspose.Cells ToImage. | Show how to loop through all charts in a workbook and export each to a separate JPEG file with custom filenames. | Explain how to adjust resolution and compression quality when exporting a chart to JPEG with Aspose.Cells.
+// Title: Export an Aspose.Cells chart to JPEG in C# using the ToImage method
+// Description: Creates a workbook, fills cells A1:B4 with sample data, adds a column chart, and saves the chart as a JPEG file (ChartImage.jpeg) by calling Chart.ToImage with ImageType.Jpeg.
+// Keywords: Aspose.Cells chart export | C# ToImage JPEG | save Aspose chart as image | export Excel chart to JPEG | .NET chart to image | Aspose.Cells image conversion | chart ToImage example | Aspose.Cells C# tutorial | Excel chart image generation
+// Common Searches: Aspose.Cells export chart to JPEG C# | How to save a chart as JPEG using Aspose.Cells | ToImage method example for chart export | C# code to convert Excel chart to JPEG | Aspose.Cells chart image output
+// Developer Intent: Generate a JPEG file from a chart created with Aspose.Cells.
+// Use Cases: Embed sales charts as JPEG images in PDF reports. | Attach chart snapshots to automated email alerts. | Create thumbnail images for web dashboards that display Excel‑derived charts.
+// AI Prompts: Show how to export the same chart as PNG instead of JPEG using ToImage. | Add a title and legend to the chart before saving it as a JPEG. | Write code that iterates over all charts in a worksheet and saves each as a separate JPEG file.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsChartToJpeg
+// Creates a workbook, fills cells A1:B4 with sample data, adds a column chart, and saves the chart as a JPEG file (ChartImage.jpeg) by calling Chart.ToImage with ImageType.Jpeg.
+class ExportChartToJpeg
 {
-    // The example creates a workbook, fills cells A1:B4 with category and sales data, adds a column chart, and calls chart.ToImage(path, ImageType.Jpeg) to produce a JPEG file of the chart. The workbook is then saved for reference.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["A3"].PutValue("Orange");
-            sheet.Cells["A4"].PutValue("Banana");
+        // Populate sample data for the chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("Apple");
+        sheet.Cells["A3"].PutValue("Orange");
+        sheet.Cells["A4"].PutValue("Banana");
 
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["B2"].PutValue(1200);
-            sheet.Cells["B3"].PutValue(800);
-            sheet.Cells["B4"].PutValue(1500);
+        sheet.Cells["B1"].PutValue("Sales");
+        sheet.Cells["B2"].PutValue(1200);
+        sheet.Cells["B3"].PutValue(800);
+        sheet.Cells["B4"].PutValue(1500);
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
+        // Add a column chart
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+        Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the chart
-            chart.SetChartDataRange("A1:B4", true);
+        // Set the data range for the chart
+        chart.SetChartDataRange("A1:B4", true);
 
-            // Export the chart to a JPEG image file using ToImage(string, ImageType)
-            string imagePath = "ChartOutput.jpeg";
-            chart.ToImage(imagePath, ImageType.Jpeg);
+        // Export the chart to a JPEG image file
+        string imagePath = "ChartImage.jpeg";
+        chart.ToImage(imagePath, ImageType.Jpeg);
 
-            Console.WriteLine($"Chart has been exported to JPEG image at: {imagePath}");
-
-            // Optionally save the workbook for reference
-            workbook.Save("ChartWorkbook.xlsx");
-        }
+        Console.WriteLine($"Chart exported successfully to {imagePath}");
     }
 }

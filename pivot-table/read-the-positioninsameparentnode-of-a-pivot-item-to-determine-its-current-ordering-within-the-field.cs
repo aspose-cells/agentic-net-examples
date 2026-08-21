@@ -1,86 +1,78 @@
-// Title: Read PivotItem.PositionInSameParentNode to Determine Item Order in an Aspose.Cells PivotTable (C#)
-// Description: Loads a workbook, accesses the first pivot table on the "PivotTable" sheet, retrieves the row field "Item", iterates its PivotItems, and reads each item's PositionInSameParentNode property to reveal the current ordering within the parent node. The example prints the name and position and saves the workbook.
-// Keywords: Aspose.Cells read pivot item position | PivotItem PositionInSameParentNode C# | Aspose.Cells pivot item order | C# Aspose.Cells get item sequence | pivot table item ranking Aspose | Aspose.Cells .NET pivot item position
-// Common Searches: How to get pivot item order with Aspose.Cells for .NET | Read PositionInSameParentNode of a PivotItem in C# | Determine row field item sequence in Aspose.Cells | Retrieve pivot item positions from existing workbook Aspose.Cells | Aspose.Cells C# pivot item sorting example
-// Developer Intent: Obtain the PositionInSameParentNode value for each PivotItem to identify its current placement within the row field hierarchy.
-// Use Cases: Display or log the current ordering of row‑field items for debugging or audit trails. | Compare the existing item order with a custom sort and programmatically rearrange items if needed. | Export a mapping of item names to their positions for integration with external reporting tools.
-// AI Prompts: Generate C# code that reorders pivot items in an Aspose.Cells PivotTable based on their PositionInSameParentNode values. | Create a method that returns a dictionary of PivotItem names and their PositionInSameParentNode for a specified row field. | Write a script that logs each PivotItem's PositionInSameParentNode and then moves items to match a predefined sequence.
+// Title: C# – Read PivotItem.PositionInSameParentNode to Get Item Order in an Aspose.Cells Pivot Table
+// Description: Loads a workbook, finds the first pivot table, selects a row field, iterates its PivotItemCollection and prints each item's Name with the PositionInSameParentNode value, which indicates the item's current order within the same parent node.
+// Keywords: Aspose.Cells | C# | PivotTable | PivotItem | PositionInSameParentNode | item order | read pivot item index | pivot field position | Aspose.Cells example | Excel automation
+// Common Searches: Aspose.Cells get pivot item order C# | PositionInSameParentNode property example | how to read pivot item position with Aspose.Cells | C# retrieve pivot item index Aspose | determine pivot row field item sequence
+// Developer Intent: Obtain the PositionInSameParentNode of each PivotItem to identify its current sequence within the selected pivot field.
+// Use Cases: Log or display pivot item names alongside their order for debugging. | Compare item positions before and after applying a custom sort. | Programmatically reorder pivot items or apply conditional logic based on their sequence.
+// AI Prompts: Write C# code that sorts pivot items by a custom rule and then reads their PositionInSameParentNode using Aspose.Cells. | Show how to move a specific pivot item to a target PositionInSameParentNode in an Aspose.Cells pivot table. | Explain how to synchronize item ordering across multiple pivot tables by comparing PositionInSameParentNode values.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPivotDemo
 {
-    // Loads a workbook, accesses the first pivot table on the "PivotTable" sheet, retrieves the row field "Item", iterates its PivotItems, and reads each item's PositionInSameParentNode property to reveal the current ordering within the parent node. The example prints the name and position and saves the workbook.
-    public class ReadPivotItemPositionInSameParentNode
+    // Loads a workbook, finds the first pivot table, selects a row field, iterates its PivotItemCollection and prints each item's Name with the PositionInSameParentNode value, which indicates the item's current order within the same parent node.
+    class ReadPivotItemPosition
     {
-        public static void Main(string[] args)
+        static void Main()
         {
+            const string inputFile = "PivotData.xlsx";
+            const string outputFile = "PivotData_Output.xlsx";
+
             try
             {
-                Run();
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file '{inputFile}' not found. Please ensure the file exists in the application directory.");
+                    return;
+                }
+
+                // Load the workbook that contains a pivot table
+                Workbook workbook = new Workbook(inputFile);
+
+                // Assume the pivot table is on the first worksheet (adjust as needed)
+                Worksheet pivotSheet = workbook.Worksheets[0];
+
+                // Get the first pivot table on the sheet
+                if (pivotSheet.PivotTables.Count == 0)
+                {
+                    Console.WriteLine("No pivot tables found on the first worksheet.");
+                    return;
+                }
+
+                PivotTable pivotTable = pivotSheet.PivotTables[0];
+
+                // Choose the pivot field whose items' ordering you want to inspect.
+                // Here we use the field named "Item". Replace with your actual field name.
+                PivotField targetField = pivotTable.RowFields["Item"];
+                if (targetField == null)
+                {
+                    Console.WriteLine("The specified pivot field 'Item' was not found in the row fields.");
+                    return;
+                }
+
+                // Access the collection of pivot items for the chosen field
+                PivotItemCollection items = targetField.PivotItems;
+
+                // Iterate through each pivot item and read its PositionInSameParentNode property
+                foreach (PivotItem item in items)
+                {
+                    int positionInSameParent = item.PositionInSameParentNode;
+                    Console.WriteLine($"Pivot Item: {item.Name}, PositionInSameParentNode: {positionInSameParent}");
+                }
+
+                // Save the workbook (no changes made to the pivot table in this example)
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved as '{outputFile}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Catch any unexpected exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        public static void Run()
-        {
-            const string inputFile = "PivotTest3.xlsx";
-            const string outputFile = "PivotItemPositionsRead.xlsx";
-
-            // Verify that the input workbook exists
-            if (!File.Exists(inputFile))
-            {
-                Console.WriteLine($"Input file \"{inputFile}\" not found.");
-                return;
-            }
-
-            // Load the workbook containing the pivot table
-            Workbook workbook = new Workbook(inputFile);
-
-            // Try to get the worksheet named "PivotTable"
-            Worksheet pivotSheet = workbook.Worksheets["PivotTable"];
-            if (pivotSheet == null)
-            {
-                // If not found, use the first worksheet as a fallback
-                pivotSheet = workbook.Worksheets[0];
-                Console.WriteLine("Worksheet \"PivotTable\" not found. Using the first worksheet instead.");
-            }
-
-            // Ensure there is at least one pivot table on the sheet
-            if (pivotSheet.PivotTables.Count == 0)
-            {
-                Console.WriteLine("No pivot tables found on the selected worksheet.");
-                return;
-            }
-
-            // Get the first pivot table (adjust index if needed)
-            PivotTable pivotTable = pivotSheet.PivotTables[0];
-
-            // Access the row field named "Item"
-            PivotField itemField = pivotTable.RowFields["Item"];
-            if (itemField == null)
-            {
-                Console.WriteLine("Row field \"Item\" not found in the pivot table.");
-                return;
-            }
-
-            // Iterate through pivot items and display their PositionInSameParentNode
-            Console.WriteLine("Pivot Item positions within the same parent node:");
-            foreach (PivotItem item in itemField.PivotItems)
-            {
-                int position = item.PositionInSameParentNode;
-                Console.WriteLine($"Item Name: {item.Name}, PositionInSameParentNode: {position}");
-            }
-
-            // Save the workbook (optional)
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved as \"{outputFile}\".");
         }
     }
 }

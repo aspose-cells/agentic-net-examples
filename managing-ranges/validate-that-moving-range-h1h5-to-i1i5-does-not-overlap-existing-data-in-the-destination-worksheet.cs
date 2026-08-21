@@ -1,67 +1,66 @@
-// Title: Check destination emptiness before moving range H1:H5 to I1:I5 with Aspose.Cells for .NET
-// Description: C# example that creates a workbook, fills H1:H5, optionally populates I1:I5, then uses Aspose.Cells.Range.IsBlank to verify the target cells are empty before moving the source range. The program reports success or aborts to prevent overlapping data and saves the file.
-// Keywords: Aspose.Cells | C# range move | IsBlank method | prevent overlapping cells | validate destination range | .NET spreadsheet manipulation | move range safely
-// Common Searches: Aspose.Cells verify destination range is empty | C# move cells without overwriting data | How to check if a range is blank in Aspose.Cells | Prevent overlap when moving Excel range using Aspose | Validate range move before copying in .NET
-// Developer Intent: Move H1:H5 to I1:I5 only when I1:I5 contains no data, otherwise abort the operation.
-// Use Cases: Shift a column of values to the next column only if the target column is clear. | Automate data migration in spreadsheets while safeguarding existing information. | Log a warning and skip the move when the destination range already holds values.
-// AI Prompts: Generate C# code that moves a range after confirming the destination is blank using Aspose.Cells. | Create a reusable method that takes source and destination range addresses and returns a boolean indicating whether the move is safe. | Provide an example that logs each overlapping cell before aborting a range move in Aspose.Cells.
+// Title: Validate Overlap Before Moving H1:H5 to I1:I5 with Aspose.Cells for .NET
+// Description: This C# example creates a workbook, fills H1:H5, optionally places data in I3 to simulate a blocked target, defines source and destination ranges, uses the IsIntersect method to detect any overlap, moves the range only when the destination is clear, and saves the file as an XLSX document.
+// Keywords: Aspose.Cells range overlap | C# IsIntersect example | move range validation Aspose.Cells | prevent data overwrite Excel | range intersect detection .NET | Aspose.Cells move range safely | Excel worksheet range move C# | Aspose.Cells range move check
+// Common Searches: Aspose.Cells check if range overlaps before moving | C# move Excel range only when destination is empty | IsIntersect method usage Aspose.Cells | how to prevent overwriting cells with Aspose.Cells | validate destination range in Aspose.Cells .NET
+// Developer Intent: Confirm that moving the source range H1:H5 to I1:I5 will not overwrite any existing cells in the target worksheet.
+// Use Cases: Ensure a column of values can be shifted without destroying data in the adjacent column. | Safely relocate formulas or formatted cells in automated report generation. | Programmatically verify a clear target area before bulk copy‑paste operations.
+// AI Prompts: Generate C# code that checks whether moving range A1:A10 to B1:B10 intersects existing data using Aspose.Cells and performs the move only if safe. | Create a reusable method that accepts source and destination addresses and returns a boolean indicating overlap via Aspose.Cells IsIntersect. | Provide an example that logs a warning instead of moving when overlap is detected, then saves the workbook.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// C# example that creates a workbook, fills H1:H5, optionally populates I1:I5, then uses Aspose.Cells.Range.IsBlank to verify the target cells are empty before moving the source range. The program reports success or aborts to prevent overlapping data and saves the file.
-class ValidateMoveRange
+namespace AsposeCellsRangeMoveValidation
 {
-    static void Main()
+    // This C# example creates a workbook, fills H1:H5, optionally places data in I3 to simulate a blocked target, defines source and destination ranges, uses the IsIntersect method to detect any overlap, moves the range only when the destination is clear, and saves the file as an XLSX document.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Fill the source range H1:H5 with sample data
-            for (int i = 0; i < 5; i++)
+            try
             {
-                // Column index 7 corresponds to column H (0‑based)
-                cells[i, 7].PutValue($"Src{i + 1}");
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
+
+                // Populate source range H1:H5 with sample data
+                for (int i = 0; i < 5; i++)
+                {
+                    // Column index 7 corresponds to column H (0‑based)
+                    cells[0 + i, 7].PutValue($"H{i + 1}");
+                }
+
+                // Example: populate destination cell I3 to demonstrate overlap detection
+                // Comment out the following line if you want the destination to be empty
+                cells[2, 8].PutValue("ExistingData"); // Row 2 = third row, Column 8 = I
+
+                // Define source and destination ranges
+                AsposeRange sourceRange = cells.CreateRange("H1:H5");
+                AsposeRange destinationRange = cells.CreateRange("I1:I5");
+
+                // Check if the source range intersects the destination range
+                bool isOverlap = sourceRange.IsIntersect(destinationRange);
+
+                if (isOverlap)
+                {
+                    Console.WriteLine("Cannot move the range because the destination overlaps existing data.");
+                }
+                else
+                {
+                    // Move the source range to the destination start cell (I1)
+                    sourceRange.MoveTo(destinationRange.FirstRow, destinationRange.FirstColumn);
+                    Console.WriteLine("Range moved successfully.");
+                }
+
+                // Save the workbook
+                workbook.Save("RangeMoveValidationResult.xlsx");
+                Console.WriteLine("Workbook saved as RangeMoveValidationResult.xlsx");
             }
-
-            // OPTIONAL: Uncomment the following block to simulate existing data in the destination
-            // for (int i = 0; i < 5; i++)
-            // {
-            //     // Column index 8 corresponds to column I
-            //     cells[i, 8].PutValue($"Dest{i + 1}");
-            // }
-
-            // Define source and destination ranges using the Aspose.Cells.Range alias
-            AsposeRange sourceRange = cells.CreateRange("H1:H5");
-            AsposeRange destRange   = cells.CreateRange("I1:I5");
-
-            // Validate that the destination range is empty (no overlapping data)
-            if (destRange.IsBlank())
+            catch (Exception ex)
             {
-                // Destination is clear, perform the move
-                sourceRange.MoveTo(destRange.FirstRow, destRange.FirstColumn);
-                Console.WriteLine("Range moved successfully.");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-            else
-            {
-                // Destination contains data, abort the move to avoid overlap
-                Console.WriteLine("Destination range contains data. Move aborted to avoid overlap.");
-            }
-
-            // Save the workbook (ensure the directory is writable)
-            string outputPath = "ValidateMoveRange.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

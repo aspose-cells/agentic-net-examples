@@ -1,42 +1,35 @@
-// Title: C# – Evaluate all formulas in an Excel workbook and read the value of cell G10 with Aspose.Cells
-// Description: Load an existing workbook, recalculate every formula using Workbook.CalculateFormula(), retrieve the evaluated result of cell G10, display it, and save the updated file—all with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | Workbook.CalculateFormula | evaluate Excel formulas | read cell value | cell G10 | Excel automation .NET | save workbook after calculation | formula evaluation example
-// Common Searches: Aspose.Cells calculate formulas C# | Get calculated value of a cell after Workbook.CalculateFormula | Read cell G10 after recalculating workbook with Aspose | C# code to evaluate all formulas in Excel using Aspose.Cells | Save workbook after formula evaluation Aspose.Cells
-// Developer Intent: The developer wants to recalculate all formulas in an existing Excel file and obtain the computed value of cell G10 using Aspose.Cells for .NET.
-// Use Cases: Refresh a financial model, then extract the final metric located in G10 for downstream processing. | Automate a reporting pipeline that requires all workbook formulas to be up‑to‑date before reading a summary figure from G10. | Validate that a generated Excel report produces the expected result in G10 before distribution. | Integrate Excel calculations into a C# service that logs the G10 output after each batch run.
-// AI Prompts: Provide a C# snippet that loads an Excel file with Aspose.Cells, runs Workbook.CalculateFormula(), reads the value of cell G10 (handling nulls), prints it, and saves the workbook. | Explain how to recalculate all formulas in a workbook using Aspose.Cells for .NET and then retrieve the evaluated result of a specific cell such as G10.
+// Title: Recalculate all formulas and get the computed value of cell G10 with Aspose.Cells for .NET
+// Description: Loads an Excel workbook using Aspose.Cells, triggers Workbook.CalculateFormula to evaluate every formula, reads cell G10 from the first worksheet, and prints its calculated result. Perfect for .NET developers who need to extract values after a full formula refresh.
+// Keywords: Aspose.Cells | Workbook.CalculateFormula | evaluate Excel formulas .NET | read calculated cell value | G10 result | C# Excel automation | formula recalculation | extract computed cell
+// Common Searches: Aspose.Cells calculate all formulas | Get value of G10 after recalculation | C# read calculated cell in Excel | Workbook.CalculateFormula example | Force formula evaluation in Aspose.Cells
+// Developer Intent: Recalculate every formula in a workbook and retrieve the resulting value of cell G10.
+// Use Cases: Refresh dependent calculations before converting the workbook to PDF or CSV. | Validate financial or statistical outcomes stored in G10 during automated testing. | Extract a computed metric from G10 to include in a summary report or log file.
+// AI Prompts: Provide C# code that loads an Excel file with Aspose.Cells, runs Workbook.CalculateFormula, and returns the value of cell G10, handling null or error results. | Show an example of using Aspose.Cells to recalculate all formulas and then write the calculated G10 value to a text file or database.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsFormulaEvaluation
 {
-    // Load an existing workbook, recalculate every formula using Workbook.CalculateFormula(), retrieve the evaluated result of cell G10, display it, and save the updated file—all with Aspose.Cells for .NET.
+    // Loads an Excel workbook using Aspose.Cells, triggers Workbook.CalculateFormula to evaluate every formula, reads cell G10 from the first worksheet, and prints its calculated result. Perfect for .NET developers who need to extract values after a full formula refresh.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook instance (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            // Load an existing workbook (replace with your actual file path)
+            string inputPath = "input.xlsx";
+            Workbook workbook = new Workbook(inputPath);
 
-            // Load an existing workbook from file (lifecycle rule: load)
-            // Replace "input.xlsx" with the actual path to your workbook
-            workbook = new Workbook("input.xlsx");
-
-            // Calculate all formulas in the workbook (feature rule: Workbook.CalculateFormula())
+            // Calculate all formulas in the workbook
             workbook.CalculateFormula();
 
             // Retrieve the calculated value of cell G10 from the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             Cell targetCell = sheet.Cells["G10"];
-            object calculatedValue = targetCell.Value; // Value holds the evaluated result
+            object calculatedValue = targetCell.Value;
 
-            // Output the result to the console
-            Console.WriteLine("Calculated value of G10: " + (calculatedValue ?? "null"));
-
-            // Save the workbook after calculation (lifecycle rule: save)
-            // Replace "output.xlsx" with the desired output file path
-            workbook.Save("output.xlsx");
+            // Display the result
+            Console.WriteLine($"Calculated value of G10: {calculatedValue}");
         }
     }
 }

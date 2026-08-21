@@ -1,23 +1,23 @@
-// Title: C# – Append a Percent Sign to Pie Chart Data Labels with Aspose.Cells
-// Description: Creates a workbook, fills cells A1:B4 with categories and values, adds a pie chart, binds the series, enables data labels, shows only percentages, hides raw values, and applies the number format "0%" so each label ends with a percent sign before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | pie chart data labels | percentage format | custom number format | DataLabels.ShowPercentage | DataLabels.NumberFormat | Excel chart automation
-// Common Searches: Aspose.Cells add percent sign to pie chart labels | C# set custom data label format for Excel chart | show only percentages on pie chart using Aspose.Cells | how to hide values and display percentages in chart labels .NET | custom number format for chart data labels Aspose
-// Developer Intent: Configure a pie chart so each data label displays a formatted percentage with a trailing % sign.
-// Use Cases: Generate Excel reports where pie chart labels show only percentages for clearer visualization. | Create automated dashboards that require custom‑formatted chart labels without raw numeric values. | Prepare financial summaries where chart labels must conform to a specific "0%" format.
-// AI Prompts: Write C# code with Aspose.Cells to create a pie chart and set DataLabels to show percentages using the "0%" number format. | Show how to hide raw values and display only formatted percentages on a pie chart in .NET. | Explain the steps to apply a custom data label formatter that appends a percent sign to each label in an Aspose.Cells chart.
+// Title: C# – Append a Percent Sign to Pie Chart Data Labels Using Aspose.Cells
+// Description: This example creates a workbook, adds sample categories and values, inserts a pie chart, binds the series to the data range, and configures the series’ data labels to display only percentages with a trailing “%” by setting the NumberFormat to "0%" and disabling raw values. The workbook is then saved as an Excel file.
+// Keywords: Aspose.Cells | C# pie chart | data label formatting | percentage label | custom number format | Excel chart labels | Aspose.Cells .NET | chart data labels | show percentage | hide values
+// Common Searches: Aspose.Cells show percentage on pie chart | C# set chart data label format Aspose.Cells | add % sign to pie chart labels .NET | custom data label formatter Aspose.Cells | how to hide values in chart labels Aspose.Cells
+// Developer Intent: Configure pie chart data labels to show percentages with a % sign and omit raw values.
+// Use Cases: Generate a pie chart where each slice label shows a formatted percentage | Create Excel reports with clean percentage-only labels on charts | Standardize chart label appearance across multiple workbooks using Aspose.Cells
+// AI Prompts: Write C# code with Aspose.Cells that creates a pie chart and formats data labels to display only percentages followed by a percent sign. | Show how to set NumberFormat = "0%" for chart data labels and hide the underlying values in Aspose.Cells. | Explain the steps to enable percentage labels and apply a custom formatter to a pie chart using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsCustomDataLabelFormatter
+namespace AsposeCellsCustomDataLabel
 {
-    // Creates a workbook, fills cells A1:B4 with categories and values, adds a pie chart, binds the series, enables data labels, shows only percentages, hides raw values, and applies the number format "0%" so each label ends with a percent sign before saving the file.
+    // This example creates a workbook, adds sample categories and values, inserts a pie chart, binds the series to the data range, and configures the series’ data labels to display only percentages with a trailing “%” by setting the NumberFormat to "0%" and disabling raw values. The workbook is then saved as an Excel file.
     public class Program
     {
         public static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -32,7 +32,7 @@ namespace AsposeCellsCustomDataLabelFormatter
             sheet.Cells["B3"].PutValue(20);
             sheet.Cells["B4"].PutValue(30);
 
-            // Add a pie chart
+            // Add a pie chart to the worksheet
             int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 8);
             Chart chart = sheet.Charts[chartIndex];
 
@@ -40,14 +40,14 @@ namespace AsposeCellsCustomDataLabelFormatter
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Enable data labels and configure custom formatting
+            // Enable data labels for the first series
             DataLabels dataLabels = chart.NSeries[0].DataLabels;
-            dataLabels.ShowPercentage = true;          // Show percentage values
-            dataLabels.ShowValue = false;              // Hide raw values
-            dataLabels.NumberFormat = "0%";            // Append a percent sign (custom formatter)
+            dataLabels.ShowPercentage = true;          // Show the percentage value
+            dataLabels.ShowValue = false;              // Hide the raw value (optional)
+            dataLabels.NumberFormat = "0%";            // Custom format that appends a percent sign
 
             // Save the workbook
-            workbook.Save("PieChartWithCustomDataLabels.xlsx");
+            workbook.Save("PieChartCustomDataLabels.xlsx");
         }
     }
 }

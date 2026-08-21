@@ -1,28 +1,36 @@
-// Title: Hide Columns 5‑8, Unhide 6‑7 with Width, and Export to PDF using Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, hides columns 5‑8, unhides columns 6‑7 while setting their width to 15 points, and saves the worksheet as a PDF file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells hide columns C# | Aspose.Cells unhide columns with width | export worksheet to PDF Aspose.Cells | set column width Aspose.Cells | column visibility PDF export
-// Common Searches: Aspose.Cells hide columns 5 to 8 C# | how to unhide columns 6 and 7 and set width Aspose.Cells | export Excel to PDF after changing column visibility .NET | C# code to hide and unhide columns with Aspose.Cells | set column width when unhiding columns Aspose.Cells
-// Developer Intent: Hide columns 5‑8, then unhide columns 6‑7 with a specific width, and generate a PDF.
-// Use Cases: Create a printable PDF where sensitive columns are hidden but selected columns remain visible with a defined width. | Automate report generation that requires temporary column hiding before exporting to PDF. | Adjust column layout programmatically for consistent PDF formatting in financial or inventory reports.
-// AI Prompts: Generate C# code using Aspose.Cells to hide columns 5‑8, unhide columns 6‑7 with a width of 15 points, and save the workbook as a PDF. | Explain how HideColumns and UnhideColumns work in Aspose.Cells and how to specify column width when unhiding. | Show an example of exporting a worksheet to PDF after modifying column visibility and widths with Aspose.Cells for .NET.
+// Title: C# – Hide Columns 5‑8, Unhide 6‑7 with Width, Export to PDF using Aspose.Cells
+// Description: Loads a workbook with Aspose.Cells for .NET, hides columns E‑H, unhides columns F‑G while setting a 15‑point width, and saves the worksheet as a PDF file.
+// Keywords: Aspose.Cells | C# | .NET spreadsheet | hide columns | unhide columns | set column width | export to PDF | worksheet PDF conversion | column visibility | Aspose.Cells PDF export
+// Common Searches: Aspose.Cells hide columns C# | unhide columns with width Aspose.Cells | export worksheet to PDF Aspose.Cells | set column width after unhiding Aspose.Cells | C# hide columns E to H Aspose.Cells
+// Developer Intent: Hide columns 5‑8, unhide columns 6‑7 with a 15‑point width, then export the sheet as a PDF.
+// Use Cases: Create a printable PDF where sensitive columns are hidden but key columns retain a custom width. | Generate a report that omits intermediate columns while preserving layout for selected columns. | Prepare a PDF export after adjusting column visibility and widths to meet specific formatting standards.
+// AI Prompts: Write C# code with Aspose.Cells to hide columns E‑H, unhide columns F‑G with a width of 15 points, and save the workbook as a PDF. | Show an Aspose.Cells example that demonstrates hiding a range of columns, setting the width of selected columns, and exporting the worksheet to PDF.
 
+using System;
 using Aspose.Cells;
 
-// Loads an Excel workbook, hides columns 5‑8, unhides columns 6‑7 while setting their width to 15 points, and saves the worksheet as a PDF file with Aspose.Cells for .NET.
+// Loads a workbook with Aspose.Cells for .NET, hides columns E‑H, unhides columns F‑G while setting a 15‑point width, and saves the worksheet as a PDF file.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook
+        // Load an existing workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
         Cells cells = worksheet.Cells;
 
-        // Hide columns 5 through 8 (human numbers) -> zero‑based indices 4 to 7
-        cells.HideColumns(4, 4); // start at index 4, hide 4 columns
+        // Hide columns 5 through 8 (zero‑based indices 4‑7)
+        int startHideColumn = 4;      // Column E (5th column)
+        int hideColumnCount = 4;      // Columns E, F, G, H
+        cells.HideColumns(startHideColumn, hideColumnCount);
 
-        // Unhide columns 6 and 7 (human numbers) -> indices 5 and 6, total 2 columns, set width to 15.0
-        cells.UnhideColumns(5, 2, 15.0);
+        // Unhide columns 6 and 7 (zero‑based indices 5‑6) and set their width
+        int startUnhideColumn = 5;    // Column F (6th column)
+        int unhideColumnCount = 2;    // Columns F and G
+        double columnWidth = 15.0;    // Desired width for the unhidden columns
+        cells.UnhideColumns(startUnhideColumn, unhideColumnCount, columnWidth);
 
         // Export the worksheet to PDF
         workbook.Save("output.pdf", SaveFormat.Pdf);

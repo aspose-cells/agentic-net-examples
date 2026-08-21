@@ -1,26 +1,27 @@
 // Title: Export Visible Worksheet Names to JSON with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook using Aspose.Cells, filters worksheets by the IsVisible flag, collects their names, and serializes the list to a JSON array with System.Text.Json. The JSON string is written to the console (or can be saved to a file).
-// Keywords: Aspose.Cells | C# export worksheet names | visible Excel sheets | JSON serialization .NET | System.Text.Json Excel | list visible worksheets | Excel workbook to JSON | Aspose.Cells GetVisibleSheets | .NET Excel automation
-// Common Searches: Aspose.Cells get visible sheet names C# | serialize Excel worksheet names to JSON | C# export visible worksheets as JSON array | how to list only visible sheets in an Excel file using Aspose | convert Excel sheet names to JSON with .NET
-// Developer Intent: Extract the names of all visible worksheets from an Excel file and return them as a JSON array.
-// Use Cases: Populate a web UI with tabs that correspond only to visible sheets. | Send a JSON payload of visible sheet names to a downstream service for selective processing. | Create audit logs that record visible worksheet names in a machine‑readable format.
-// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells and returns a JSON array of visible worksheet names. | Write a method that accepts a file path, extracts visible sheet names using Aspose.Cells, and returns a JSON string with error handling. | Provide an example that writes the JSON array of visible sheet names to a file instead of the console, using Aspose.Cells and System.Text.Json.
+// Description: Loads an Excel workbook using Aspose.Cells, iterates through its worksheets, collects the names of those marked as visible, serializes the list to a JSON array with System.Text.Json, and writes the result to a file. Ideal for downstream processing or UI generation.
+// Keywords: Aspose.Cells | C# | .NET | export visible sheet names | Excel workbook JSON | worksheet visibility | System.Text.Json | serialize worksheet list | write JSON file | sample code
+// Common Searches: Aspose.Cells get visible sheet names C# | export Excel sheet names to JSON .NET | list visible worksheets using Aspose.Cells | C# serialize worksheet names to JSON array | write visible sheet names to file Aspose
+// Developer Intent: Retrieve the names of all visible worksheets from an Excel file and save them as a JSON array.
+// Use Cases: Provide a JSON payload of visible sheet names to a web service that processes only user‑visible worksheets. | Dynamically generate UI tabs or navigation menus based on the visible worksheets in a user‑uploaded Excel file. | Create an audit log of visible worksheets by storing their names in a JSON file for later review.
+// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, extracts visible worksheet names, and returns a JSON array string. | Write a reusable method that accepts an input path, uses Aspose.Cells to collect visible sheet names, and writes the JSON array to a specified output file. | Explain how to extend the example to filter worksheets by a custom attribute before serializing their names to JSON.
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
 
-// Loads an Excel workbook using Aspose.Cells, filters worksheets by the IsVisible flag, collects their names, and serializes the list to a JSON array with System.Text.Json. The JSON string is written to the console (or can be saved to a file).
+// Loads an Excel workbook using Aspose.Cells, iterates through its worksheets, collects the names of those marked as visible, serializes the list to a JSON array with System.Text.Json, and writes the result to a file. Ideal for downstream processing or UI generation.
 class ExportVisibleSheetNames
 {
     static void Main()
     {
-        // Load the workbook from a file
+        // Load the workbook from a file (replace with your actual file path)
         string workbookPath = "input.xlsx";
         Workbook workbook = new Workbook(workbookPath);
 
-        // Gather the names of all visible worksheets
+        // Gather names of all visible worksheets
         List<string> visibleSheetNames = new List<string>();
         foreach (Worksheet sheet in workbook.Worksheets)
         {
@@ -33,7 +34,12 @@ class ExportVisibleSheetNames
         // Convert the list of names to a JSON array string
         string jsonArray = JsonSerializer.Serialize(visibleSheetNames);
 
-        // Output the JSON (or write to a file as needed)
+        // Write the JSON array to a file (or use the string directly downstream)
+        string jsonOutputPath = "visibleSheets.json";
+        File.WriteAllText(jsonOutputPath, jsonArray);
+
+        // Optional: display the result
+        Console.WriteLine("Visible sheet names exported to JSON:");
         Console.WriteLine(jsonArray);
     }
 }

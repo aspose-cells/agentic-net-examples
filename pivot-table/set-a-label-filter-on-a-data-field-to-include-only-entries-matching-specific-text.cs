@@ -1,77 +1,57 @@
-// Title: C# – Apply a PivotField Label Filter (CaptionEqual) in Aspose.Cells to Show Only "Fruit" Rows
-// Description: Demonstrates how to create a workbook, add a pivot table, place the "Category" field in the row area, and use PivotField.FilterByLabel with PivotFilterType.CaptionEqual to keep only rows where the category equals "Fruit". The example refreshes the pivot, calculates data, and saves the file.
-// Keywords: Aspose.Cells C# pivot table filter | PivotField.FilterByLabel example | CaptionEqual label filter Aspose.Cells | filter pivot rows by text C# | Aspose.Cells .NET label filter tutorial | GitHub Aspose.Cells pivot filter sample | Excel pivot table label filter code
-// Common Searches: How to filter pivot table rows by exact text using Aspose.Cells C# | Aspose.Cells FilterByLabel CaptionEqual "Fruit" example | Set label filter on pivot row field in .NET | C# code to show only specific categories in a pivot table | Aspose.Cells pivot table label filter GitHub
-// Developer Intent: Filter a pivot table so that only rows with the category "Fruit" are displayed.
-// Use Cases: Create a sales report that lists amounts exclusively for the selected product category. | Build an interactive workbook where users can view pivot data limited to predefined labels such as "Fruit" or "Vegetable". | Export a filtered pivot view to Excel for downstream analysis, showing only rows that match a given caption.
-// AI Prompts: Generate C# code with Aspose.Cells to add a label filter to a pivot table row field for the value "Fruit". | Explain the behavior of PivotField.FilterByLabel when using PivotFilterType.CaptionEqual in Aspose.Cells. | Show how to apply multiple label filters to different pivot fields in a single Aspose.Cells workbook.
+// Title: Aspose.Cells for .NET – Apply a CaptionEqual label filter to a pivot table row field
+// Description: Demonstrates creating a workbook, adding a pivot table, and using PivotField.FilterByLabel with PivotFilterType.CaptionEqual to show only rows labeled "Apple", then refreshing and saving the file.
+// Keywords: Aspose.Cells | .NET | pivot table label filter | PivotField.FilterByLabel | CaptionEqual | C# example | filter pivot rows | Aspose.Cells API | Excel automation
+// Common Searches: Aspose.Cells filter pivot rows by label C# | PivotField.FilterByLabel example .NET | How to apply CaptionEqual filter in Aspose.Cells | Show only specific items in Aspose.Cells pivot table | C# Aspose.Cells label filter pivot table
+// Developer Intent: Filter pivot table rows to include only entries with a specific label.
+// Use Cases: Generate a sales report that displays only the "Apple" product. | Build an interactive dashboard where users select a product name to filter pivot rows. | Create automated Excel exports that pre‑filter data for predefined categories.
+// AI Prompts: Write C# code using Aspose.Cells to apply a CaptionEqual filter for "Banana" on a pivot table row field. | Show how to add multiple label filters (e.g., "Apple" and "Cherry") to a pivot table with Aspose.Cells. | Explain the steps to refresh and recalculate a pivot table after applying a label filter in Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsLabelFilterDemo
 {
-    // Demonstrates how to create a workbook, add a pivot table, place the "Category" field in the row area, and use PivotField.FilterByLabel with PivotFilterType.CaptionEqual to keep only rows where the category equals "Fruit". The example refreshes the pivot, calculates data, and saves the file.
-    public class SetLabelFilterDemo
+    // Demonstrates creating a workbook, adding a pivot table, and using PivotField.FilterByLabel with PivotFilterType.CaptionEqual to show only rows labeled "Apple", then refreshing and saving the file.
+    public class Program
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        public static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Fruit");
-            sheet.Cells["A3"].PutValue("Vegetable");
-            sheet.Cells["A4"].PutValue("Fruit");
-            sheet.Cells["A5"].PutValue("Grain");
+            // Populate sample data
+            cells["A1"].PutValue("Product");
+            cells["B1"].PutValue("Sales");
+            cells["A2"].PutValue("Apple");
+            cells["B2"].PutValue(120);
+            cells["A3"].PutValue("Banana");
+            cells["B3"].PutValue(80);
+            cells["A4"].PutValue("Apple");
+            cells["B4"].PutValue(150);
+            cells["A5"].PutValue("Cherry");
+            cells["B5"].PutValue(200);
 
-            sheet.Cells["B1"].PutValue("Amount");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(80);
-            sheet.Cells["B4"].PutValue(150);
-            sheet.Cells["B5"].PutValue(60);
-
-            // Add a pivot table covering the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D1", "SalesPivot");
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D1", "ProductPivot");
             PivotTable pivot = sheet.PivotTables[pivotIndex];
 
-            // Add the "Category" field to the row area
-            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+            // Add the "Product" field to the row area and "Sales" to the data area
+            pivot.AddFieldToArea(PivotFieldType.Row, "Product");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Add the "Amount" field to the data area
-            pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
+            // Get the row field (Product) and apply a label filter to include only "Apple"
+            PivotField productField = pivot.RowFields[0];
+            productField.FilterByLabel(PivotFilterType.CaptionEqual, "Apple", null);
 
-            // Retrieve the row field (first row field) to apply a label filter
-            PivotField rowField = pivot.RowFields[0];
-
-            // Apply a label filter to include only rows where the category equals "Fruit"
-            // PivotFilterType.CaptionEqual filters by exact caption match
-            rowField.FilterByLabel(PivotFilterType.CaptionEqual, "Fruit", null);
-
-            // Refresh and calculate the pivot table to reflect the filter
+            // Refresh and calculate the pivot table to apply the filter
             pivot.RefreshData();
             pivot.CalculateData();
 
-            // Save the workbook to the current directory
-            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "SetLabelFilterDemo.xlsx");
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to: {outputPath}");
+            // Save the workbook
+            workbook.Save("LabelFilterPivotDemo.xlsx");
         }
     }
 }

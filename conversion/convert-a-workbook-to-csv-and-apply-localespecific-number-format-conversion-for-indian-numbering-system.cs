@@ -1,44 +1,38 @@
-// Title: C# – Convert Excel to CSV with Indian Number Formatting using Aspose.Cells
-// Description: Loads an .xlsx workbook with the Indian culture (en‑IN), sets the region to India, defines ',' as the group separator and '.' as the decimal separator, creates a custom style "#,##,###.00" for lakh/crrore grouping, applies it to every numeric cell in the first worksheet, and saves the result as a CSV file.
-// Keywords: Aspose.Cells | C# | Excel to CSV | Indian number format | en-IN culture | custom number grouping | lakh format | crrore format | SaveFormat.Csv | region India
-// Common Searches: Aspose.Cells export Excel to CSV Indian format | C# convert workbook to CSV with Indian numbering | Apply '#,##,###.00' format in Aspose.Cells | Set Indian locale when saving CSV using Aspose.Cells | CSV output with lakh grouping .NET
-// Developer Intent: Generate a CSV file from an Excel workbook while displaying numeric values according to the Indian numbering system.
-// Use Cases: Produce CSV reports for Indian financial statements where numbers must appear in lakh/crrore format. | Create localized CSV exports for Indian users that require commas placed per Indian conventions. | Automate batch conversion of multiple workbooks to CSV while preserving Indian number formatting for downstream analytics.
-// AI Prompts: Write C# code with Aspose.Cells to convert an Excel file to CSV using Indian number grouping and custom separators. | Explain how to apply the custom number format "#,##,###.00" to all numeric cells before saving as CSV with Aspose.Cells. | Suggest changes to process every worksheet in a workbook and generate separate CSV files that retain Indian formatting.
+// Title: Aspose.Cells .NET: Convert Excel to CSV with Indian numbering format
+// Description: Loads an Excel workbook, sets the region to India, defines the Indian grouping pattern "#,##,##0.00", applies the style to every numeric cell in the first worksheet, and saves the result as a CSV file.
+// Keywords: Aspose.Cells | C# | .NET | Excel to CSV conversion | Indian number format | lakh crore grouping | custom number style | region India | SaveFormat.Csv | locale specific formatting
+// Common Searches: Aspose.Cells export Excel as CSV with Indian grouping | C# apply '#,##,##0.00' format to all numbers before CSV export | set workbook region to India in Aspose.Cells | convert Excel to CSV using Indian number system | Aspose.Cells custom number style for India
+// Developer Intent: Create a CSV file from an Excel workbook where all numeric values follow the Indian lakh‑crore grouping convention.
+// Use Cases: Generate CSV reports for Indian financial statements with proper lakh/crore separators. | Prepare data extracts for Indian tax or accounting software that expects Indian number formatting. | Supply CSV feeds to dashboards that display figures in the Indian numbering style.
+// AI Prompts: Show how to preserve formulas while applying the Indian number format before exporting to CSV. | Demonstrate writing the CSV to a MemoryStream instead of a file, keeping the Indian formatting intact. | Explain how to apply the Indian number style to a specific range of cells rather than the entire sheet.
 
 using System;
-using System.Globalization;
 using Aspose.Cells;
 
-// Loads an .xlsx workbook with the Indian culture (en‑IN), sets the region to India, defines ',' as the group separator and '.' as the decimal separator, creates a custom style "#,##,###.00" for lakh/crrore grouping, applies it to every numeric cell in the first worksheet, and saves the result as a CSV file.
-class ConvertWorkbookToCsvIndian
+// Loads an Excel workbook, sets the region to India, defines the Indian grouping pattern "#,##,##0.00", applies the style to every numeric cell in the first worksheet, and saves the result as a CSV file.
+class ConvertToCsvIndianNumberFormat
 {
     static void Main()
     {
         // Paths for source workbook and destination CSV
         string sourcePath = "input.xlsx";
-        string csvPath = "output.csv";
+        string outputPath = "output.csv";
 
-        // Load the workbook with Indian culture settings
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.CultureInfo = new CultureInfo("en-IN"); // Indian locale
+        // Load the workbook from the source file
+        Workbook workbook = new Workbook(sourcePath);
 
-        // Load the workbook using the provided LoadOptions constructor
-        Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-        // Apply Indian regional settings to the workbook
+        // Set regional settings to India to influence number formatting
         workbook.Settings.Region = CountryCode.India;
-        workbook.Settings.NumberGroupSeparator = ',';   // Group separator
-        workbook.Settings.NumberDecimalSeparator = '.'; // Decimal separator
+        workbook.Settings.NumberDecimalSeparator = '.';
+        workbook.Settings.NumberGroupSeparator = ',';
 
-        // Create a style that uses Indian number grouping (e.g., 1,00,000)
-        Style indianStyle = workbook.CreateStyle();
-        indianStyle.Custom = "#,##,###.00";
+        // Define Indian numbering format (e.g., 1,23,45,678.90)
+        Style indianNumberStyle = workbook.CreateStyle();
+        indianNumberStyle.Custom = "#,##,##0.00";
 
-        // Apply the Indian number format to all numeric cells in the first worksheet
+        // Apply the style to all numeric cells in the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
         Cells cells = sheet.Cells;
-
         int maxRow = cells.MaxDataRow;
         int maxCol = cells.MaxDataColumn;
 
@@ -49,12 +43,12 @@ class ConvertWorkbookToCsvIndian
                 Cell cell = cells[row, col];
                 if (cell.Type == CellValueType.IsNumeric)
                 {
-                    cell.SetStyle(indianStyle);
+                    cell.SetStyle(indianNumberStyle);
                 }
             }
         }
 
-        // Save the workbook as CSV using the provided Save method and SaveFormat enum
-        workbook.Save(csvPath, SaveFormat.Csv);
+        // Save the workbook as CSV using the provided Save method
+        workbook.Save(outputPath, SaveFormat.Csv);
     }
 }

@@ -1,18 +1,18 @@
-// Title: Aspose.Cells .NET: Copy a range three columns left with Range.GetOffset
-// Description: Demonstrates how to create a workbook, define a range (D1:F3), obtain an offset range three columns to the left (A1:C3) using GetOffset(0, -3), copy the original values with CopyValue, and save the file.
-// Keywords: Aspose.Cells Range GetOffset | CopyValue offset range | C# Aspose.Cells example | move range left Aspose.Cells | CreateRange CopyValue .NET
-// Common Searches: Aspose.Cells offset range left | Copy values to another range C# | GetOffset example Aspose.Cells | How to shift a range in Aspose.Cells | Range.CopyValue usage
-// Developer Intent: Generate a new range positioned three columns left of an existing range and duplicate its values.
-// Use Cases: Create a backup copy of a data block next to the original for quick comparison. | Populate a summary area by re‑using source data at a calculated offset. | Adjust a template layout by moving a table left without altering the source cells.
-// AI Prompts: Show how to use Aspose.Cells Range.GetOffset to create a range three columns left and copy its values in C#. | Provide a C# code snippet that defines range D1:F3, offsets it by -3 columns, copies the data, and saves the workbook. | Explain the behavior of Range.CopyValue when copying between non‑overlapping ranges in Aspose.Cells.
+// Title: Copy values to a range three columns left using Range.Offset in Aspose.Cells for .NET
+// Description: Demonstrates creating a workbook, defining a source range, offsetting it three columns left with Range.GetOffset(0, -3), copying values via CopyValue, and saving the file.
+// Keywords: Aspose.Cells Range.Offset example | CopyValue with offset range | C# Aspose.Cells move data left | Range.GetOffset negative column | Aspose.Cells .NET tutorial
+// Common Searches: Aspose.Cells copy range three columns left | Range.GetOffset usage C# | How to shift a range left in Aspose.Cells | CopyValue offset range example | Aspose.Cells offset range tutorial
+// Developer Intent: Create an offset range three columns left of an existing range and copy the original values into it.
+// Use Cases: Generate a summary column adjacent to a data table by shifting values left. | Create a side‑by‑side copy of a table for comparison in a report. | Populate legacy columns with the same data as a newly added table.
+// AI Prompts: Write C# code that uses Aspose.Cells to copy a range to a location three columns left using Range.GetOffset and CopyValue. | Explain how Range.GetOffset handles negative column offsets and how to match the size of the offset range with the source range. | Provide a step‑by‑step guide to create a source range, offset it, copy its values, and save the workbook using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsOffsetCopyDemo
+namespace AsposeCellsOffsetExample
 {
-    // Demonstrates how to create a workbook, define a range (D1:F3), obtain an offset range three columns to the left (A1:C3) using GetOffset(0, -3), copy the original values with CopyValue, and save the file.
+    // Demonstrates creating a workbook, defining a source range, offsetting it three columns left with Range.GetOffset(0, -3), copying values via CopyValue, and saving the file.
     class Program
     {
         static void Main()
@@ -22,35 +22,33 @@ namespace AsposeCellsOffsetCopyDemo
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
-
-                // Fill sample data in the original range (D1:F3)
                 Cells cells = sheet.Cells;
-                cells["D1"].PutValue("A");
-                cells["E1"].PutValue("B");
-                cells["F1"].PutValue("C");
-                cells["D2"].PutValue(1);
-                cells["E2"].PutValue(2);
-                cells["F2"].PutValue(3);
-                cells["D3"].PutValue(4);
-                cells["E3"].PutValue(5);
-                cells["F3"].PutValue(6);
 
-                // Create the original range object
-                AsposeRange originalRange = cells.CreateRange("D1:F3");
+                // Populate a source range (e.g., D5:F7) with sample data
+                AsposeRange sourceRange = cells.CreateRange("D5", "F7");
+                for (int i = 0; i < sourceRange.RowCount; i++)
+                {
+                    for (int j = 0; j < sourceRange.ColumnCount; j++)
+                    {
+                        sourceRange[i, j].PutValue($"R{i + 5}C{j + 4}");
+                    }
+                }
 
-                // Get a new range that is three columns to the left of the original range
+                // Get a new range that is three columns to the left of the source range
                 // Row offset = 0 (same rows), Column offset = -3 (three columns left)
-                AsposeRange offsetRange = originalRange.GetOffset(0, -3); // This will be A1:C3
+                AsposeRange offsetRange = sourceRange.GetOffset(0, -3);
 
-                // Copy the values from the original range to the offset range
-                offsetRange.CopyValue(originalRange);
+                // Copy the values from the source range to the offset range
+                offsetRange.CopyValue(sourceRange);
 
-                // Save the workbook to a file
-                workbook.Save("OffsetCopyDemo.xlsx");
+                // Save the workbook
+                string outputPath = "OffsetCopyDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

@@ -1,85 +1,92 @@
-// Title: ASP.NET MVC: Return Excel as HTML FileResult using Aspose.Cells
-// Description: Loads an Excel workbook from App_Data, configures HtmlSaveOptions (single file, active sheet, Base64‑encoded images), saves to a MemoryStream, and streams the HTML bytes back to the client as a FileResult.
-// Keywords: Aspose.Cells | HTML export | ASP.NET MVC | FileResult | HtmlSaveOptions | Base64 images | Excel to HTML | downloadable HTML | streaming HTML | single HTML file
-// Common Searches: asp.net mvc return excel as html fileresult | aspose.cells export workbook to html in mvc | download html version of excel worksheet asp.net | embed images base64 asp.net mvc export | stream excel html response asp.net
-// Developer Intent: Implement an MVC action that converts an Excel workbook to HTML with Aspose.Cells and sends it to the client as a FileResult.
-// Use Cases: Download a spreadsheet as a single HTML page from a web endpoint | Display worksheet content in the browser without creating temporary files | Provide an API that streams HTML for a specific sheet to front‑end components | Integrate Excel‑to‑HTML conversion in reporting dashboards
-// AI Prompts: Write an ASP.NET MVC controller action that calls the ToHtml method, returns File(htmlBytes, "text/html", "Report.html"), and handles empty results gracefully. | Create unit tests for ExportController.ToHtml and the MVC action that returns the FileResult. | Add ILogger‑based logging for Aspose.Cells export errors and return a 500 status with a user‑friendly message. | Show how to register a route and a view that triggers the HTML export and opens the result in a new browser tab.
+// Title: ASP.NET MVC FileResult – Export Excel to HTML using Aspose.Cells
+// Description: Shows how to load an Excel workbook, apply HtmlSaveOptions for a single, mobile‑friendly HTML file, write the result to a MemoryStream, and stream the HTML bytes from an MVC controller as a FileResult.
+// Keywords: Aspose.Cells | Excel to HTML | ASP.NET MVC | FileResult | HtmlSaveOptions | MemoryStream | C# export workbook | download HTML | controller action | streaming response
+// Common Searches: Aspose.Cells export Excel to HTML MVC | ASP.NET MVC return HTML file from controller | download Excel as HTML using Aspose.Cells | FileResult streaming HTML bytes C# | convert workbook to HTML in ASP.NET MVC
+// Developer Intent: Create an MVC controller action that converts an Excel file to HTML with Aspose.Cells and returns the generated content as a downloadable FileResult.
+// Use Cases: Expose an ExportHtml endpoint that calls ExcelExporter.ExportToHtml() and returns File(htmlBytes, "text/html", "report.html"). | Convert an uploaded Excel workbook to HTML on the fly and embed the markup in an email while also offering a download link. | Generate HTML reports server‑side, save them to disk with SaveHtmlToFile, and serve the saved files via FilePathResult for archival access.
+// AI Prompts: Write an ASP.NET MVC controller action named ExportHtml that uses the provided ExcelExporter class to convert sample.xlsx to HTML and returns a FileResult with the appropriate content type and filename. | Show how to modify HtmlSaveOptions to embed images as base64 strings and stream the resulting HTML through a FileResult in MVC. | Create a unit test for the ExportHtml action that verifies the returned FileResult contains non‑empty HTML bytes and the expected file name.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace MyMvcApp.Controllers
+namespace MyMvcApp
 {
-    // Loads an Excel workbook from App_Data, configures HtmlSaveOptions (single file, active sheet, Base64‑encoded images), saves to a MemoryStream, and streams the HTML bytes back to the client as a FileResult.
-    public class ExportController
+    // Shows how to load an Excel workbook, apply HtmlSaveOptions for a single, mobile‑friendly HTML file, write the result to a MemoryStream, and stream the HTML bytes from an MVC controller as a FileResult.
+    public class ExcelExporter
     {
-        // Export the workbook to HTML and return the HTML content as a byte array.
-        public byte[] ToHtml()
+        /// <returns>Byte array containing the HTML content.</returns>
+        public byte[] ExportToHtml()
         {
             try
             {
-                // Build the full path to the workbook file.
-                var workbookPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", "Sample.xlsx");
+                // Build the full path to the Excel file (adjust if needed)
+                string excelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", "sample.xlsx");
 
-                // Ensure the workbook file exists to avoid FileNotFoundException.
-                if (!File.Exists(workbookPath))
-                    throw new FileNotFoundException("Workbook file not found.", workbookPath);
-
-                // Load the workbook.
-                var workbook = new Workbook(workbookPath);
-
-                // Configure HTML save options.
-                var htmlOptions = new HtmlSaveOptions
+                // Ensure the source file exists to avoid FileNotFoundException
+                if (!File.Exists(excelPath))
                 {
-                    SaveAsSingleFile = true,               // generate a single HTML file
-                    ExportActiveWorksheetOnly = true,      // export only the active sheet
-                    ExportImagesAsBase64 = true            // embed images as Base64
+                    throw new FileNotFoundException("The Excel file was not found.", excelPath);
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(excelPath);
+
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    SaveAsSingleFile = true,               // Export as a single HTML file
+                    ExportActiveWorksheetOnly = true,      // Export only the active sheet (optional)
+                    IsMobileCompatible = true              // Make the output mobile‑friendly (optional)
                 };
 
-                // Save the workbook to a memory stream using the HTML options.
-                using (var stream = new MemoryStream())
+                // Save the workbook to a memory stream using the HTML options
+                using (MemoryStream htmlStream = new MemoryStream())
                 {
-                    workbook.Save(stream, htmlOptions);
-                    // Return the HTML content.
-                    return stream.ToArray();
+                    workbook.Save(htmlStream, htmlOptions);
+                    return htmlStream.ToArray(); // Return the HTML content as a byte array
                 }
             }
             catch (Exception ex)
             {
-                // Handle or log the exception as needed.
-                Console.Error.WriteLine($"Error exporting workbook to HTML: {ex.Message}");
-                return Array.Empty<byte>();
+                // Wrap and rethrow for higher‑level handling or logging
+                throw new ApplicationException("Failed to export Excel to HTML.", ex);
+            }
+        }
+
+        /// <param name="outputPath">Full path where the HTML file will be saved.</param>
+        public void SaveHtmlToFile(string outputPath)
+        {
+            try
+            {
+                byte[] htmlBytes = ExportToHtml();
+                File.WriteAllBytes(outputPath, htmlBytes);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Failed to save HTML to '{outputPath}'.", ex);
             }
         }
     }
 
-    // Entry point for console execution.
+    // Simple console entry point for demonstration/testing
     public class Program
     {
         public static void Main(string[] args)
         {
             try
             {
-                var controller = new ExportController();
-                var htmlBytes = controller.ToHtml();
+                // Determine output path (same folder as executable)
+                string outputHtml = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sample.html");
 
-                if (htmlBytes.Length > 0)
-                {
-                    // Write the HTML output to a file for verification.
-                    var outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", "Sample.html");
-                    File.WriteAllBytes(outputPath, htmlBytes);
-                    Console.WriteLine($"HTML exported successfully to: {outputPath}");
-                }
-                else
-                {
-                    Console.WriteLine("No HTML content was generated.");
-                }
+                ExcelExporter exporter = new ExcelExporter();
+                exporter.SaveHtmlToFile(outputHtml);
+
+                Console.WriteLine($"HTML file successfully saved to: {outputHtml}");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
     }

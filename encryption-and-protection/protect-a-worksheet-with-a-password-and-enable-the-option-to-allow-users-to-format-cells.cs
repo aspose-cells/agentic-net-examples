@@ -1,17 +1,17 @@
-// Title: C# – Protect an Excel worksheet with a password and allow cell formatting using Aspose.Cells
-// Description: Shows how to create a workbook, set AllowFormattingCell to true, protect the first worksheet with a password and all protection types, and save the file as ProtectedWorksheet.xlsx.
-// Keywords: Aspose.Cells | C# protect worksheet | Excel password protection | AllowFormattingCell | ProtectionType.All | worksheet protection options | Aspose.Cells example | protect sheet while allowing formatting
-// Common Searches: Aspose.Cells protect worksheet password C# | AllowFormattingCell example Aspose.Cells | How to enable cell formatting on a protected sheet using Aspose.Cells | Protect Excel sheet with password but allow formatting Aspose | C# code to protect worksheet and allow formatting
-// Developer Intent: Add password protection to a worksheet while keeping cell‑formatting enabled.
-// Use Cases: Lock a financial report worksheet with a password but let analysts change fonts, colors, or borders for better readability. | Distribute a template that is read‑only except for header rows where users can adjust styling to match their branding. | Share a data sheet with external partners where the data is secured, yet they can highlight their own notes by formatting cells.
-// AI Prompts: Generate C# code using Aspose.Cells to protect a worksheet with a password and enable AllowFormattingCell. | Explain how to protect only selected protection types while still allowing cell formatting in Aspose.Cells for .NET. | Show the steps to unprotect a worksheet, modify the AllowFormattingCell property, and re‑apply protection programmatically.
+// Title: C# – Protect an Excel worksheet with a password while allowing cell formatting using Aspose.Cells
+// Description: Shows how to set AllowFormattingCell, apply password protection (ProtectionType.All) to a worksheet, and save the workbook as an .xlsx file with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | worksheet protection | password protection | AllowFormattingCell | protect sheet programmatically | cell formatting on protected sheet | ProtectionType.All | Excel security | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells protect worksheet password C# | allow cell formatting on a protected Excel sheet Aspose | set AllowFormattingCell before sheet.Protect | C# code to protect Excel sheet but keep formatting enabled | Aspose.Cells worksheet protection options
+// Developer Intent: Apply password protection to a worksheet while keeping cell‑formatting features available to end users.
+// Use Cases: Create a new workbook, protect the first sheet with a password, and let users change cell styles without unprotecting the sheet. | Add password security to an existing worksheet while selectively enabling actions such as formatting cells, inserting rows, or editing objects. | Generate a distributable Excel file that enforces data integrity yet permits visual formatting adjustments by recipients.
+// AI Prompts: Generate C# code that protects an Excel worksheet with a password and enables only cell formatting using Aspose.Cells. | Explain how to combine multiple Allow* properties (e.g., AllowFormattingCell, AllowInsertingRows) before calling sheet.Protect. | Show the steps to change the password of a protected worksheet while preserving previously set AllowFormattingCell settings.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to create a workbook, set AllowFormattingCell to true, protect the first worksheet with a password and all protection types, and save the file as ProtectedWorksheet.xlsx.
+    // Shows how to set AllowFormattingCell, apply password protection (ProtectionType.All) to a worksheet, and save the workbook as an .xlsx file with Aspose.Cells for .NET.
     public class ProtectWorksheetAllowFormattingCell
     {
         public static void Run()
@@ -27,13 +27,14 @@ namespace AsposeCellsExamples
                 // Get the protection object for the worksheet
                 Protection protection = sheet.Protection;
 
-                // Enable formatting of cells even when the sheet is protected
+                // Allow users to format cells even when the sheet is protected
                 protection.AllowFormattingCell = true;
 
-                // Protect the worksheet with a password and all protection types
-                sheet.Protect(ProtectionType.All, "myPassword", null);
+                // Protect the worksheet with a password and enable all protection types
+                // The third parameter (oldPassword) is null because the sheet is not previously protected
+                sheet.Protect(ProtectionType.All, "MySecretPassword", null);
 
-                // Save the workbook
+                // Save the workbook to a file
                 workbook.Save("ProtectedWorksheet.xlsx");
             }
             catch (Exception ex)

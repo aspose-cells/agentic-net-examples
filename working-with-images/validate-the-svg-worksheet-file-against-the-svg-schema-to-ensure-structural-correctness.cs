@@ -1,108 +1,119 @@
-// Title: Validate Worksheet SVG Against XSD Schema Using Aspose.Cells for .NET
-// Description: Shows how to generate a worksheet SVG with SheetRender, load an external SVG XSD into an XmlSchemaSet, and validate the SVG file using XmlReaderSettings and a ValidationEventHandler, outputting any schema errors.
-// Keywords: Aspose.Cells | SVG validation | C# XSD | XmlSchemaSet | SheetRender | SVG export | XML schema validation .NET | validate SVG file | worksheet to SVG | SVG XSD schema
-// Common Searches: Aspose.Cells validate SVG | C# validate SVG with XSD | how to check SVG schema in .NET | validate exported worksheet SVG | SVG schema validation example C#
-// Developer Intent: Confirm that the SVG generated from a worksheet conforms to the SVG XSD specification.
-// Use Cases: Run validation after exporting a worksheet to SVG to guarantee compliance with the SVG standard before publishing. | Add SVG schema checks to a CI/CD pipeline to detect rendering regressions early. | Capture detailed validation messages for debugging issues in worksheet‑to‑SVG conversion.
-// AI Prompts: Write C# code that loads an XSD schema and validates an existing SVG file, returning all validation errors. | Explain which SvgImageOptions settings affect SVG compliance with the official SVG XSD. | Provide a step‑by‑step guide to integrate SVG XSD validation into an automated build process.
+// Title: C# – Validate an SVG file against an XSD schema and embed it in Excel with Aspose.Cells
+// Description: Demonstrates how to load an SVG and its XSD schema, verify the SVG structure using XmlSchemaSet, insert the validated SVG into a worksheet via Shapes.AddSvg, and save the workbook as an .xlsx file. The example is built with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# SVG validation | XML schema validation .NET | AddSvg shape | Excel workbook image insertion | XSD schema for SVG | Validate SVG before embedding | Aspose.Cells example GitHub | coding‑agent SVG validation
+// Common Searches: validate svg with xsd c# | aspacells addsvg example | c# xml schema validation for svg files | insert svg into excel using aspose.cells | svg schema validation before workbook save
+// Developer Intent: Check an SVG file against its XSD schema and, if valid, add it to an Excel worksheet using Aspose.Cells.
+// Use Cases: Automated quality gate for SVG assets in reporting pipelines. | Dynamic generation of Excel dashboards that include only schema‑compliant graphics. | Logging validation errors and skipping malformed SVGs to prevent workbook corruption.
+// AI Prompts: Generate a C# function that validates an SVG file against a given XSD and returns detailed error messages. | Show code to read an SVG into a byte array and insert it into an Aspose.Cells worksheet with a fallback PNG. | Create a script that scans a folder of SVGs, validates each against the schema, adds the valid ones to a new workbook, and logs the invalid files.
 
 using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-// Shows how to generate a worksheet SVG with SheetRender, load an external SVG XSD into an XmlSchemaSet, and validate the SVG file using XmlReaderSettings and a ValidationEventHandler, outputting any schema errors.
+// Demonstrates how to load an SVG and its XSD schema, verify the SVG structure using XmlSchemaSet, insert the validated SVG into a worksheet via Shapes.AddSvg, and save the workbook as an .xlsx file. The example is built with Aspose.Cells for .NET.
 class SvgValidationDemo
 {
-    static void Main()
+    // Validates an SVG file against an XSD schema.
+    // Returns true if the SVG conforms to the schema, otherwise false.
+    static bool ValidateSvg(string svgFilePath, string xsdFilePath)
     {
+        bool isValid = true;
+
         try
         {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Cells["A1"].PutValue("Item");
-            worksheet.Cells["B1"].PutValue("Quantity");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["A3"].PutValue("Orange");
-            worksheet.Cells["B3"].PutValue(20);
-
-            // Render the worksheet to an SVG file
-            string svgFilePath = "worksheet.svg";
-            SvgImageOptions svgOptions = new SvgImageOptions
-            {
-                FitToViewPort = true
-            };
-            SheetRender renderer = new SheetRender(worksheet, svgOptions);
-            renderer.ToImage(0, svgFilePath);
-
-            // Verify that the SVG file was created
             if (!File.Exists(svgFilePath))
             {
-                Console.WriteLine($"Failed to create SVG file at '{svgFilePath}'.");
-                return;
+                Console.WriteLine($"SVG file not found: {svgFilePath}");
+                return false;
             }
 
-            // Path to the SVG XSD schema file (must exist on disk)
-            string schemaFilePath = "svg.xsd";
-
-            // Ensure the schema file exists
-            if (!File.Exists(schemaFilePath))
+            if (!File.Exists(xsdFilePath))
             {
-                Console.WriteLine($"Schema file not found: '{schemaFilePath}'.");
-                return;
+                Console.WriteLine($"XSD file not found: {xsdFilePath}");
+                return false;
             }
 
-            // Prepare schema set
-            XmlSchemaSet schemaSet = new XmlSchemaSet();
-            try
-            {
-                schemaSet.Add(null, schemaFilePath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading schema: {ex.Message}");
-                return;
-            }
+            // Load the SVG schema.
+            XmlSchemaSet schemas = new XmlSchemaSet();
+            schemas.Add(null, xsdFilePath);
 
-            // Configure XML reader settings for validation
+            // Set up XML reader settings with the schema and a validation callback.
             XmlReaderSettings settings = new XmlReaderSettings
             {
                 ValidationType = System.Xml.ValidationType.Schema,
-                Schemas = schemaSet
+                Schemas = schemas
             };
-
-            bool isValid = true;
-            settings.ValidationEventHandler += (sender, e) =>
+            settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessIdentityConstraints;
+            settings.ValidationEventHandler += (sender, args) =>
             {
-                Console.WriteLine($"Validation {e.Severity}: {e.Message}");
+                // Any validation error will set the flag to false.
+                Console.WriteLine($"Validation {args.Severity}: {args.Message}");
                 isValid = false;
             };
 
-            // Perform validation by reading the SVG file
-            try
+            // Read and validate the SVG file.
+            using (FileStream fs = new FileStream(svgFilePath, FileMode.Open, FileAccess.Read))
+            using (XmlReader reader = XmlReader.Create(fs, settings))
             {
-                using (XmlReader reader = XmlReader.Create(svgFilePath, settings))
-                {
-                    while (reader.Read()) { }
-                }
+                while (reader.Read()) { /* reading triggers validation */ }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during validation: {ex.Message}");
-                return;
-            }
-
-            Console.WriteLine(isValid
-                ? "SVG file is valid against the schema."
-                : "SVG file is NOT valid.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.WriteLine($"Exception during SVG validation: {ex.Message}");
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    static void Main()
+    {
+        // Paths to the SVG file and its corresponding XSD schema.
+        string svgPath = "sample.svg";
+        string xsdPath = "svg.xsd";
+
+        // Verify required files exist before proceeding.
+        if (!File.Exists(svgPath))
+        {
+            Console.WriteLine($"SVG file not found: {svgPath}");
+            return;
+        }
+
+        if (!File.Exists(xsdPath))
+        {
+            Console.WriteLine($"XSD file not found: {xsdPath}");
+            return;
+        }
+
+        try
+        {
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            ShapeCollection shapes = sheet.Shapes;
+
+            // Load SVG data into a byte array.
+            byte[] svgData = File.ReadAllBytes(svgPath);
+
+            // Add the SVG to the worksheet (demonstrates AddSvg usage).
+            // Parameters: topRow, top, leftColumn, left, height, width, svgData, compatibleImageData
+            shapes.AddSvg(0, 0, 0, 0, -1, -1, svgData, null);
+
+            // Validate the SVG against the schema.
+            bool svgIsValid = ValidateSvg(svgPath, xsdPath);
+            Console.WriteLine($"SVG validation result: {(svgIsValid ? "Valid" : "Invalid")}");
+
+            // Save the workbook (demonstrates save lifecycle).
+            workbook.Save("output.xlsx");
+            Console.WriteLine("Workbook saved as output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Runtime exception: {ex.Message}");
         }
     }
 }

@@ -1,10 +1,10 @@
-// Title: Ensure Unique Shape.Name for ActiveX Controls in Aspose.Cells (C#)
-// Description: This C# example creates a workbook, adds ActiveX controls with duplicate shape names, and runs a routine that scans every worksheet, collects existing names case‑insensitively, and renames conflicts by appending a numeric suffix. The workbook is saved with each ActiveX control having a distinct Shape.Name, preventing reference errors.
-// Keywords: Aspose.Cells ActiveX unique name | C# duplicate ActiveX shape name | validate ActiveX control names | rename Excel ActiveX controls | Shape.Name uniqueness Aspose
-// Common Searches: how to make ActiveX control names unique in Aspose.Cells | duplicate ActiveX shape names .NET | ensure distinct Shape.Name for Excel ActiveX controls | Aspose.Cells rename duplicate ActiveX controls | C# validate ActiveX control names before saving
-// Developer Intent: Guarantee that every ActiveX control in an Aspose.Cells workbook has a unique Shape.Name prior to saving the file.
-// Use Cases: Automated report generation where programmatically added ActiveX controls must be uniquely addressable. | Pre‑deployment validation of workbooks containing multiple ActiveX controls across sheets. | Refactoring legacy spreadsheets that have overlapping control identifiers.
-// AI Prompts: Generate a C# method for Aspose.Cells that iterates all worksheets and makes ActiveX Shape.Name values unique by adding a suffix. | Write code that throws an exception when duplicate ActiveX control names are detected in an Aspose.Cells workbook. | Create an xUnit test that confirms the EnsureUniqueActiveXNames function correctly renames duplicate control names.
+// Title: Validate Unique ActiveX Control Names in Aspose.Cells (C#) Before Saving
+// Description: C# example that creates a workbook, adds ActiveX checkboxes, then scans all worksheets to ensure each ActiveX control has a distinct Name. Empty names get a default, duplicates are resolved with a numeric suffix using a case‑insensitive HashSet, and the file is saved.
+// Keywords: Aspose.Cells | C# | ActiveX control naming | duplicate shape names | unique name validation | Excel workbook | HashSet | case‑insensitive | shape renaming | GitHub example
+// Common Searches: Aspose.Cells ensure unique ActiveX control names | C# rename duplicate ActiveX shapes in Excel | how to prevent ActiveX name collisions with Aspose | validate shape names before saving workbook | case insensitive ActiveX name check Aspose.Cells
+// Developer Intent: Guarantee that every ActiveX control in an Aspose.Cells workbook has a unique Name property prior to saving.
+// Use Cases: Detect and rename duplicate ActiveX control names across all worksheets. | Assign a default name based on the control type when the Name property is empty. | Automatically append a numeric suffix to conflicting names to maintain uniqueness.
+// AI Prompts: Generate a C# method for Aspose.Cells that enforces unique Name values on all ActiveX controls, adding numeric suffixes for duplicates. | Show code that assigns default names to ActiveX controls with blank names and resolves naming conflicts using a case‑insensitive HashSet. | Explain how to extend the EnsureUniqueActiveXControlNames routine to support custom naming patterns and locale‑specific case rules.
 
 using System;
 using System.Collections.Generic;
@@ -12,77 +12,77 @@ using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.ActiveXControls;
 
-// This C# example creates a workbook, adds ActiveX controls with duplicate shape names, and runs a routine that scans every worksheet, collects existing names case‑insensitively, and renames conflicts by appending a numeric suffix. The workbook is saved with each ActiveX control having a distinct Shape.Name, preventing reference errors.
-class ActiveXUniqueNameValidator
+namespace AsposeCellsActiveXValidation
 {
-    static void Main()
+    // C# example that creates a workbook, adds ActiveX checkboxes, then scans all worksheets to ensure each ActiveX control has a distinct Name. Empty names get a default, duplicates are resolved with a numeric suffix using a case‑insensitive HashSet, and the file is saved.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add some ActiveX controls with intentional duplicate names
-        AddActiveXControl(sheet, ControlType.CheckBox, "MyControl", 1, 1);
-        AddActiveXControl(sheet, ControlType.CommandButton, "MyControl", 3, 1);
-        AddActiveXControl(sheet, ControlType.ComboBox, "AnotherControl", 5, 1);
-
-        // Validate and make ActiveX control names unique before saving
-        EnsureUniqueActiveXNames(workbook);
-
-        // Save the workbook
-        workbook.Save("UniqueActiveXNames.xlsx");
-    }
-
-    // Helper method to add an ActiveX control and assign an initial shape name
-    private static void AddActiveXControl(Worksheet sheet, ControlType type, string shapeName, int row, int column)
-    {
-        // Add the ActiveX control to the worksheet
-        Shape shape = sheet.Shapes.AddActiveXControl(type, row, 0, column, 0, 100, 30);
-        // Set the shape's name (may be duplicate)
-        shape.Name = shapeName;
-
-        // Set a simple property so the control is functional
-        if (type == ControlType.CheckBox)
+        static void Main()
         {
-            ((CheckBoxActiveXControl)shape.ActiveXControl).Caption = "Check";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add two ActiveX controls with the same default name to demonstrate validation
+            Shape shape1 = sheet.Shapes.AddActiveXControl(ControlType.CheckBox, 2, 0, 2, 0, 100, 30);
+            Shape shape2 = sheet.Shapes.AddActiveXControl(ControlType.CheckBox, 5, 0, 5, 0, 100, 30);
+
+            // Both shapes receive the same default name ("CheckBox 1") – we will fix this
+            Console.WriteLine($"Before validation: Shape1.Name = {shape1.Name}, Shape2.Name = {shape2.Name}");
+
+            // Validate and ensure unique names for all ActiveX controls
+            EnsureUniqueActiveXControlNames(workbook);
+
+            // After validation, duplicate names are resolved
+            Console.WriteLine($"After validation: Shape1.Name = {shape1.Name}, Shape2.Name = {shape2.Name}");
+
+            // Save the workbook (using the standard Save method as required by lifecycle rules)
+            workbook.Save("ValidatedActiveXControls.xlsx");
         }
-        else if (type == ControlType.CommandButton)
-        {
-            shape.ActiveXControl.IsEnabled = true;
-        }
-    }
 
-    // Ensures each ActiveX control's Shape.Name is unique across the entire workbook
-    private static void EnsureUniqueActiveXNames(Workbook workbook)
-    {
-        // Track names that have already been used
-        HashSet<string> existingNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (Worksheet ws in workbook.Worksheets)
+        /// <param name="workbook">The workbook to validate.</param>
+        static void EnsureUniqueActiveXControlNames(Workbook workbook)
         {
-            foreach (Shape shape in ws.Shapes)
+            // Keep track of names that have already been used
+            HashSet<string> usedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            // Iterate through all worksheets
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                // Process only shapes that host an ActiveX control
-                if (shape.ActiveXControl != null)
+                // Iterate through all shapes in the worksheet
+                foreach (Shape shape in ws.Shapes)
                 {
-                    string originalName = shape.Name;
-                    // If the shape has no name, start with a default base name
-                    if (string.IsNullOrEmpty(originalName))
+                    // Only process shapes that host an ActiveX control
+                    if (shape.ActiveXControl != null)
                     {
-                        originalName = "ActiveXControl";
-                    }
+                        string originalName = shape.Name;
 
-                    string uniqueName = originalName;
-                    int suffix = 1;
-                    // Append a numeric suffix until the name becomes unique
-                    while (!existingNames.Add(uniqueName))
-                    {
-                        uniqueName = $"{originalName}_{suffix}";
-                        suffix++;
-                    }
+                        // If the name is empty, assign a default based on control type
+                        if (string.IsNullOrWhiteSpace(originalName))
+                        {
+                            originalName = shape.ActiveXControl.Type.ToString();
+                            shape.Name = originalName;
+                        }
 
-                    // Assign the unique name back to the shape
-                    shape.Name = uniqueName;
+                        string uniqueName = originalName;
+                        int suffix = 1;
+
+                        // Resolve duplicates by appending a numeric suffix
+                        while (usedNames.Contains(uniqueName))
+                        {
+                            uniqueName = $"{originalName}_{suffix}";
+                            suffix++;
+                        }
+
+                        // Update the shape's name if it was changed
+                        if (!uniqueName.Equals(shape.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            shape.Name = uniqueName;
+                        }
+
+                        // Record the name as used
+                        usedNames.Add(shape.Name);
+                    }
                 }
             }
         }

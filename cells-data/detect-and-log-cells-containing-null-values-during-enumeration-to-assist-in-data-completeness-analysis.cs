@@ -1,47 +1,72 @@
-// Title: Detect Null or Empty Cells While Enumerating Worksheet Cells – Aspose.Cells for .NET (C#)
-// Description: C# example that creates a workbook, inserts intentional blank cells, iterates through all worksheet cells with Cells.GetEnumerator(), checks each Cell.Value for null, logs the address of every empty cell, and saves the file. Ideal for data‑completeness checks in Excel automation.
-// Keywords: Aspose.Cells C# null cell detection | enumerate worksheet cells .NET | detect empty Excel cells Aspose | Cell.Value null check | data completeness Aspose.Cells | Excel blank cell logging | GetEnumerator example | Aspose.Cells sample code | C# Excel data validation | Aspose.Cells API usage
-// Common Searches: how to find blank cells with Aspose.Cells | enumerate cells and detect null values in C# | Aspose.Cells log empty cells during iteration | detect missing data in Excel using Aspose.Cells | C# code to list null cells in a worksheet
-// Developer Intent: Identify every cell that contains a null (or missing) value while iterating through a worksheet and record its address.
-// Use Cases: Audit imported spreadsheets for missing entries before processing. | Generate a report of all empty cells to improve data quality. | Skip or replace null cells in bulk calculations to avoid runtime errors.
-// AI Prompts: Write C# code using Aspose.Cells that collects the addresses of all null cells into a List<string>. | Show how to extend the enumeration loop to treat empty strings and whitespace as null‑like values and log them. | Provide an example that writes detected null cell addresses to a text file instead of the console.
+// Title: Detect Null or Missing Cells in an Aspose.Cells Worksheet (.NET)
+// Description: Creates a workbook, populates sample data, determines the used range with Cells.MaxDataRow/MaxDataColumn, iterates each cell using Cells.CheckCell, logs addresses of cells that are absent or have a null value, and saves the file. Ideal for data‑quality checks in C# projects.
+// Keywords: Aspose.Cells null cell detection | C# enumerate worksheet cells | CheckCell missing cell Aspose | log empty cells Aspose.Cells | CellsHelper.CellIndexToName example | used range iteration Aspose.Cells
+// Common Searches: how to find empty cells with Aspose.Cells .NET | Aspose.Cells iterate used range and detect null values | log addresses of missing cells Aspose.Cells | CheckCell vs GetCell null handling in Aspose | C# Aspose.Cells data completeness audit
+// Developer Intent: Identify and record every blank or non‑existent cell while looping through a worksheet’s used area.
+// Use Cases: Perform a data‑quality audit that lists all blank cells before exporting a spreadsheet. | Skip null cells during bulk calculations to reduce processing time. | Generate a report of missing values for downstream validation or ETL pipelines.
+// AI Prompts: Write C# code using Aspose.Cells that collects null cell addresses into a List<string> instead of printing them. | Show how to modify the loop to stop at the first null cell and throw a custom DataIntegrityException. | Explain how Cells.MaxDataRow and Cells.MaxDataColumn define safe iteration bounds for large worksheets when detecting empty cells.
 
 using System;
-using System.Collections;
 using Aspose.Cells;
 
-// C# example that creates a workbook, inserts intentional blank cells, iterates through all worksheet cells with Cells.GetEnumerator(), checks each Cell.Value for null, logs the address of every empty cell, and saves the file. Ideal for data‑completeness checks in Excel automation.
-class DetectNullCells
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Creates a workbook, populates sample data, determines the used range with Cells.MaxDataRow/MaxDataColumn, iterates each cell using Cells.CheckCell, logs addresses of cells that are absent or have a null value, and saves the file. Ideal for data‑quality checks in C# projects.
+    public class DetectNullCellsDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Add sample data with intentional empty (null) cells
-        cells["A1"].PutValue("Header1");
-        cells["B1"].PutValue("Header2");
-        cells["A2"].PutValue(100);
-        // B2 left empty – will be null
-        cells["A3"].PutValue(null); // explicit null assignment
-        cells["B3"].PutValue(300);
-
-        // Enumerate all cells in the worksheet
-        IEnumerator enumerator = cells.GetEnumerator();
-        while (enumerator.MoveNext())
+        public static void Run()
         {
-            Cell cell = (Cell)enumerator.Current;
-
-            // Log cells whose value is null
-            if (cell.Value == null)
+            try
             {
-                Console.WriteLine($"Null cell detected at {cell.Name}");
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
+
+                // Populate sample data with some empty (null) cells
+                cells["A1"].PutValue("Header1");
+                cells["B1"].PutValue("Header2");
+                cells["A2"].PutValue(100);
+                // B2 is left empty intentionally (null)
+
+                // Determine the used range boundaries
+                int maxRow = cells.MaxDataRow;       // zero‑based index of the last row with data
+                int maxColumn = cells.MaxDataColumn; // zero‑based index of the last column with data
+
+                // Iterate through the used range and log cells that are null or missing
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    for (int col = 0; col <= maxColumn; col++)
+                    {
+                        // CheckCell returns null if the cell does not exist
+                        Cell cell = cells.CheckCell(row, col);
+
+                        // If the cell is missing or its value is null, log its address
+                        if (cell == null || cell.Value == null)
+                        {
+                            string address = CellsHelper.CellIndexToName(row, col);
+                            Console.WriteLine($"Null or missing cell detected at {address}");
+                        }
+                    }
+                }
+
+                // Save the workbook (the file will contain the sample data)
+                string outputPath = "DetectNullCellsDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
+    }
 
-        // Save the workbook (optional, demonstrates lifecycle usage)
-        workbook.Save("NullCellDetection.xlsx");
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            DetectNullCellsDemo.Run();
+        }
     }
 }

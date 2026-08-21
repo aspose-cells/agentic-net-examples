@@ -1,63 +1,45 @@
-// Title: C# – Apply Write‑Protection with Author and Audit Comment in Aspose.Cells
-// Description: Demonstrates how to create an Aspose.Cells workbook, add a cell value, insert an audit comment with a specific author, configure write‑protection (author, password, RecommendReadOnly), save the file, and reload it to verify protection settings and comment details.
-// Keywords: Aspose.Cells write protection C# | set workbook author Aspose.Cells | add comment Aspose.Cells | recommend read‑only Excel | password protect Excel file .NET | audit trail workbook protection | WriteProtection API Aspose.Cells | C# Excel security example
-// Common Searches: Aspose.Cells set write protection author | C# add audit comment to Excel workbook | How to recommend read‑only mode with Aspose.Cells | Verify write protection status after saving workbook | Protect Excel file with password using Aspose.Cells .NET
-// Developer Intent: Enable write‑protection on a workbook while recording the protecting author and an audit comment for traceability.
-// Use Cases: Lock a financial report after an auditor adds a review comment, allowing only authorized users with a password to edit. | Distribute a compliance template that includes a reviewer’s note and is opened as read‑only until the correct password is entered. | Maintain an audit trail in a shared spreadsheet by embedding the protection author and comment, then enforcing write‑protection.
-// AI Prompts: Generate code that reads the write‑protection password from appsettings.json and applies it to an Aspose.Cells workbook. | Show how to programmatically check if a loaded workbook is write‑protected before permitting edits. | Explain how to set the audit comment author dynamically based on the current Windows user.
+// Title: Write‑protect an Excel workbook with author, password and read‑only recommendation using Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, assign an audit author, set a protection password, enable a read‑only recommendation, save the file, reload it, and read back the protection properties with Aspose.Cells for C#.
+// Keywords: Aspose.Cells | write protection | Excel author metadata | password protected workbook | recommend read only | C# | .NET | audit tracking | global compliance | protect Excel file
+// Common Searches: Aspose.Cells set workbook author for write protection | C# protect Excel file with password and read‑only flag | verify write protection settings after saving workbook | add audit information to protected Excel workbook | how to enable recommend read only in Aspose.Cells
+// Developer Intent: Enable write‑protection on an Excel workbook, record the protecting team as the author for audit purposes, require a password for edits, and suggest opening the file as read‑only.
+// Use Cases: Distribute financial or regulatory reports that must stay unchanged unless an authorized user supplies a password. | Create template files for internal teams where the protection author logs responsibility and compliance. | Implement audit‑ready Excel documents that automatically expose the author and protection status when opened.
+// AI Prompts: Write C# code with Aspose.Cells to apply write‑protection, set an author, add a password, enable read‑only recommendation, and then display the protection details. | Explain the purpose of WriteProtection.Author, Password, RecommendReadOnly, and IsWriteProtected in Aspose.Cells and how to read them after loading a workbook. | Show how to modify the author and password of an already protected workbook using Aspose.Cells without losing existing data.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsWriteProtectionDemo
 {
-    // Demonstrates how to create an Aspose.Cells workbook, add a cell value, insert an audit comment with a specific author, configure write‑protection (author, password, RecommendReadOnly), save the file, and reload it to verify protection settings and comment details.
-    class Program
+    // Demonstrates how to create a workbook, assign an audit author, set a protection password, enable a read‑only recommendation, save the file, reload it, and read back the protection properties with Aspose.Cells for C#.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook();                     // create
-            Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Add some sample data
-            sheet.Cells["A1"].PutValue("Audit Data");
-
-            // Add a comment for audit tracking
-            int commentIndex = sheet.Comments.Add("A1");
-            sheet.Comments[commentIndex].Note = "Reviewed and approved.";
-            sheet.Comments[commentIndex].Author = "Audit Team";
-
-            // ---------- Configure write‑protection ----------
-            // Set the author of the protection (audit author)
+            // Set write‑protection options
+            // Author for audit tracking
             workbook.Settings.WriteProtection.Author = "Audit Team";
 
-            // Set a password required to modify the workbook
+            // Password required to modify the workbook
             workbook.Settings.WriteProtection.Password = "SecurePass123";
 
             // Recommend opening the file as read‑only
             workbook.Settings.WriteProtection.RecommendReadOnly = true;
 
-            // ---------- Save the protected workbook ----------
-            string outputPath = "WriteProtectedAuditWorkbook.xlsx";
-            workbook.Save(outputPath);                              // save
+            // Save the protected workbook
+            string outputPath = "WriteProtectedWorkbook.xlsx";
+            workbook.Save(outputPath);
 
-            // ---------- Load the workbook to verify protection ----------
-            Workbook loadedWorkbook = new Workbook(outputPath);     // load
-            WriteProtection wp = loadedWorkbook.Settings.WriteProtection;
+            // Load the saved workbook to verify protection settings
+            Workbook loadedWorkbook = new Workbook(outputPath);
 
-            Console.WriteLine("Write Protection Author: " + wp.Author);
-            Console.WriteLine("Is Write Protected: " + wp.IsWriteProtected);
-            Console.WriteLine("Recommend Read‑Only: " + wp.RecommendReadOnly);
-
-            // Verify the audit comment
-            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-            if (loadedSheet.Comments.Count > 0)
-            {
-                var comment = loadedSheet.Comments[0];
-                Console.WriteLine("Comment Author: " + comment.Author);
-                Console.WriteLine("Comment Text: " + comment.Note);
-            }
+            // Output verification information
+            Console.WriteLine("Author: " + loadedWorkbook.Settings.WriteProtection.Author);
+            Console.WriteLine("Is Write Protected: " + loadedWorkbook.Settings.WriteProtection.IsWriteProtected);
+            Console.WriteLine("Read‑Only Recommended: " + loadedWorkbook.Settings.WriteProtection.RecommendReadOnly);
         }
     }
 }

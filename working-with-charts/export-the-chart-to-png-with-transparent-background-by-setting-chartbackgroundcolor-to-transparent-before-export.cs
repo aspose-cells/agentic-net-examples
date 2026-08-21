@@ -1,67 +1,53 @@
 // Title: Export Aspose.Cells Chart to Transparent PNG in C# (.NET)
-// Description: This C# example creates a workbook, adds sample data, builds a column chart, sets the chart area to transparent, enables transparent rendering via ImageOrPrintOptions, and saves the chart as a PNG with no background.
-// Keywords: Aspose.Cells | C# | .NET | chart export | transparent PNG | ChartArea.BackgroundMode | ImageOrPrintOptions.Transparent | chart to image | transparent background | Aspose.Cells chart PNG
-// Common Searches: Aspose.Cells export chart transparent PNG C# | How to make chart background transparent in Aspose.Cells | ImageOrPrintOptions Transparent true Aspose.Cells | ChartArea.BackgroundMode Transparent example | Save Aspose.Cells chart as PNG with no background
-// Developer Intent: Generate a chart image with a transparent background using Aspose.Cells.
-// Use Cases: Embedding chart PNGs over custom UI backgrounds in web applications. | Creating overlay graphics for dashboards without white borders. | Producing chart assets for PDF reports where the background should blend with the page color. | Automating batch export of multiple charts as transparent PNG files.
-// AI Prompts: Write C# code that creates a pie chart with Aspose.Cells and exports it to a transparent PNG. | Explain the difference between ChartArea.BackgroundMode and ImageOrPrintOptions.Transparent when exporting charts. | Show how to export multiple Aspose.Cells charts to transparent PNG files in a loop. | Provide troubleshooting steps if the exported PNG still has a white background.
+// Description: Creates a workbook, adds sample data and a column chart, sets ChartArea.BackgroundMode to Transparent, configures ImageOrPrintOptions for PNG with transparency, and saves the chart as a PNG file with a transparent background using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells chart export PNG | transparent chart background C# | ChartArea.BackgroundMode Transparent | ImageOrPrintOptions Transparent PNG | Aspose.Cells .NET chart image
+// Common Searches: Aspose.Cells export chart as PNG with transparent background | C# make chart background transparent before saving | How to save Aspose.Cells chart to PNG with no background | Transparent PNG chart Aspose.Cells example
+// Developer Intent: Generate a PNG image of a chart with a transparent background using Aspose.Cells for .NET.
+// Use Cases: Embedding chart images on web pages where the page background should show through. | Creating overlay graphics for presentations or PDFs without a white box. | Producing theme‑aware chart assets for UI components that support transparency.
+// AI Prompts: Provide a C# code sample that sets ChartArea.BackgroundMode to Transparent and exports the chart as a PNG using Aspose.Cells. | Explain how to enable transparent PNG output when saving a chart with ImageOrPrintOptions in Aspose.Cells. | Show step‑by‑step instructions to create a chart, make its background transparent, and save it as a PNG file in .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsTransparentChartExport
+// Creates a workbook, adds sample data and a column chart, sets ChartArea.BackgroundMode to Transparent, configures ImageOrPrintOptions for PNG with transparency, and saves the chart as a PNG file with a transparent background using Aspose.Cells for .NET.
+class ExportChartTransparent
 {
-    // This C# example creates a workbook, adds sample data, builds a column chart, sets the chart area to transparent, enables transparent rendering via ImageOrPrintOptions, and saves the chart as a PNG with no background.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("Apple");
-                worksheet.Cells["A3"].PutValue("Orange");
-                worksheet.Cells["A4"].PutValue("Banana");
+        // Fill sample data for the chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("Apple");
+        sheet.Cells["A3"].PutValue("Orange");
+        sheet.Cells["A4"].PutValue("Banana");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(120);
+        sheet.Cells["B3"].PutValue(80);
+        sheet.Cells["B4"].PutValue(150);
 
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["B3"].PutValue(15);
-                worksheet.Cells["B4"].PutValue(7);
+        // Add a column chart to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+        Chart chart = sheet.Charts[chartIndex];
 
-                // Add a column chart to the worksheet
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
+        // Set the data range for the chart
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
 
-                // Set the data range for the chart
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
+        // Make the chart background transparent
+        chart.ChartArea.BackgroundMode = BackgroundMode.Transparent;
 
-                // Make the chart area transparent (if supported)
-                chart.ChartArea.BackgroundMode = BackgroundMode.Transparent;
+        // Configure image options: PNG format with transparent background
+        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
+        imgOptions.ImageType = ImageType.Png;   // Ensure PNG output
+        imgOptions.Transparent = true;         // Enable transparent background
 
-                // Configure image export options for PNG with transparent background
-                ImageOrPrintOptions options = new ImageOrPrintOptions
-                {
-                    // Default image format is PNG; no need to set explicitly
-                    Transparent = true // Enable transparent background
-                };
-
-                // Export the chart to a PNG file using the configured options
-                chart.ToImage("TransparentChart.png", options);
-
-                Console.WriteLine("Chart exported to TransparentChart.png with transparent background.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Export the chart to a PNG file with transparent background
+        chart.ToImage("transparent_chart.png", imgOptions);
     }
 }

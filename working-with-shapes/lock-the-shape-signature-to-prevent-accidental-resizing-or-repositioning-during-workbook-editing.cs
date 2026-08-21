@@ -1,17 +1,17 @@
-// Title: Lock a shape to prevent moving or resizing in Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add a rectangle shape as a signature placeholder, set IsLocked and specific ShapeLockType flags for movement and resizing, protect the worksheet, and save the file so the shape stays fixed during editing.
-// Keywords: Aspose.Cells lock shape | C# lock Excel shape | ShapeLockType Move | ShapeLockType Resize | IsLocked property Aspose.Cells | protect worksheet Aspose.Cells | signature placeholder Excel | prevent shape editing Aspose.Cells | global
-// Common Searches: How to lock a shape in Aspose.Cells C# | Aspose.Cells prevent shape resizing | Lock signature shape in Excel using Aspose.Cells | Set shape lock properties .NET | Worksheet protection lock shapes Aspose
-// Developer Intent: Prevent a shape from being moved or resized after the worksheet is protected in an Aspose.Cells workbook.
-// Use Cases: Create a fixed‑position signature placeholder that cannot be altered by end users. | Secure a company logo or watermark shape so its size and location remain unchanged in a protected sheet. | Lock form‑field shapes in a data‑entry worksheet to maintain layout integrity.
-// AI Prompts: Generate C# code that locks a shape's movement and resizing in Aspose.Cells and protects the worksheet. | Explain the difference between IsLocked and ShapeLockType settings for shapes in Aspose.Cells. | Provide an example of locking multiple shapes with different lock types using Aspose.Cells for .NET.
+// Title: Lock a Signature Shape in Aspose.Cells for .NET to Prevent Moving or Resizing
+// Description: Demonstrates how to add a rectangular signature shape to a worksheet, set its IsLocked flag, apply move and resize locks with ShapeLockType, protect the sheet, and save the workbook so the signature cannot be altered unintentionally.
+// Keywords: Aspose.Cells lock shape | C# lock signature shape | prevent shape resizing Aspose.Cells | worksheet protection shape lock | ShapeLockType Move Resize | .NET Excel shape security | lock shape after adding Aspose.Cells
+// Common Searches: how to lock a shape in Aspose.Cells | prevent moving of a rectangle in Aspose.Cells C# | lock signature shape when protecting worksheet | Aspose.Cells SetLockedProperty example | protect Excel sheet shape from resizing .NET
+// Developer Intent: Secure a signature shape so it cannot be moved or resized when the worksheet is protected.
+// Use Cases: Add a signature rectangle to a financial report and lock it to preserve its position. | Enforce document integrity by disabling shape manipulation before sharing a protected workbook. | Apply different lock types (move, resize) to multiple shapes in a compliance‑focused spreadsheet.
+// AI Prompts: Generate C# code using Aspose.Cells to insert a signature shape and lock it against moving and resizing while protecting the worksheet. | Show how to lock several shapes with distinct ShapeLockType settings in a single Aspose.Cells workbook. | Explain the relationship between Shape.IsLocked, ShapeLockType, and Worksheet.Protect in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to create a workbook, add a rectangle shape as a signature placeholder, set IsLocked and specific ShapeLockType flags for movement and resizing, protect the worksheet, and save the file so the shape stays fixed during editing.
-class LockSignatureShapeDemo
+// Demonstrates how to add a rectangular signature shape to a worksheet, set its IsLocked flag, apply move and resize locks with ShapeLockType, protect the sheet, and save the workbook so the signature cannot be altered unintentionally.
+class LockSignatureShape
 {
     static void Main()
     {
@@ -19,21 +19,21 @@ class LockSignatureShapeDemo
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a rectangle shape that will act as the signature placeholder
-        // Parameters: upper left row, upper left column, top offset, left offset, height, width
-        Shape signatureShape = worksheet.Shapes.AddRectangle(2, 1, 0, 0, 100, 200);
-        signatureShape.Name = "Signature";
-        signatureShape.Text = "Signature";
+        // Add a shape that represents the signature (example: a rectangle)
+        // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
+        Shape signature = worksheet.Shapes.AddRectangle(5, 2, 0, 0, 200, 100);
 
-        // Lock the shape so it cannot be moved or resized when the sheet is protected
-        signatureShape.IsLocked = true; // General lock
-        signatureShape.SetLockedProperty(ShapeLockType.Move, true);    // Prevent moving
-        signatureShape.SetLockedProperty(ShapeLockType.Resize, true);  // Prevent resizing
+        // Lock the shape so it cannot be modified when the sheet is protected
+        signature.IsLocked = true;
 
-        // Protect the worksheet (all protection types) to enforce the lock
+        // Additionally lock specific actions: moving and resizing
+        signature.SetLockedProperty(ShapeLockType.Move, true);
+        signature.SetLockedProperty(ShapeLockType.Resize, true);
+
+        // Protect the worksheet to enforce the lock
         worksheet.Protect(ProtectionType.All);
 
         // Save the workbook
-        workbook.Save("LockedSignatureShape.xlsx");
+        workbook.Save("SignatureLocked.xlsx");
     }
 }

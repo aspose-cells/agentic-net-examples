@@ -1,46 +1,43 @@
-// Title: C# – Set Custom Print Area Excluding Hidden Rows and Columns with Aspose.Cells
-// Description: Demonstrates how to hide rows/columns, detect the first and last visible cells, build an Excel‑style range, assign it to Worksheet.PageSetup.PrintArea, and save the workbook so only visible data is printed.
-// Keywords: Aspose.Cells print area C# | exclude hidden rows Aspose.Cells | exclude hidden columns Aspose.Cells | dynamic print range .NET | Worksheet.PageSetup.PrintArea example
-// Common Searches: Aspose.Cells set print area without hidden rows | C# get visible range for Excel print area | how to skip hidden columns when printing with Aspose.Cells | dynamic print area based on visible cells .NET
-// Developer Intent: Create a print area that contains only the visible rows and columns to reduce page count and improve rendering speed.
-// Use Cases: Generate printable reports that omit user‑hidden data. | Export worksheets to PDF while preserving layout of visible cells. | Automatically adjust the print range after interactive hide/show actions.
-// AI Prompts: Write C# code using Aspose.Cells to define a print area that automatically skips hidden rows and columns. | Provide a reusable method that returns the Excel range string for the visible portion of a worksheet. | Explain why limiting the print area to visible cells can boost performance in Aspose.Cells.
+// Title: Aspose.Cells for .NET – Set Print Area Excluding Hidden Rows & Columns (C#)
+// Description: C# example that creates a workbook, hides selected rows and columns, determines the first and last visible cells, builds a range address, assigns it to Worksheet.PageSetup.PrintArea, and saves the file. The dynamic print area improves printing speed by omitting hidden data.
+// Keywords: Aspose.Cells print area C# | exclude hidden rows Aspose.Cells | custom print range .NET | Worksheet.PageSetup.PrintArea | dynamic print area visible cells | C# Excel hide rows columns | Aspose.Cells performance printing
+// Common Searches: how to set print area in Aspose.Cells ignoring hidden rows | Aspose.Cells C# set print area based on visible cells | exclude hidden columns from print area Aspose.Cells | dynamic print range for worksheet Aspose.Cells | C# Aspose.Cells print area after hiding rows
+// Developer Intent: Create a print area that contains only the visible rows and columns to reduce file size and speed up printing.
+// Use Cases: Generate printable reports that automatically skip hidden sections. | Prepare workbooks for batch printing where hidden data should not appear. | Design templates that adapt their print range after users hide rows or columns.
+// AI Prompts: Modify the code to also ignore rows and columns hidden by auto‑filter when setting the print area. | Show how to apply the same visible‑range logic to every worksheet in a multi‑sheet workbook. | Replace the manual loops with Worksheet.Cells.MaxDisplayRange (or a similar API) to compute the visible range for PrintArea.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsPrintAreaDemo
 {
-    // Demonstrates how to hide rows/columns, detect the first and last visible cells, build an Excel‑style range, assign it to Worksheet.PageSetup.PrintArea, and save the workbook so only visible data is printed.
+    // C# example that creates a workbook, hides selected rows and columns, determines the first and last visible cells, builds a range address, assigns it to Worksheet.PageSetup.PrintArea, and saves the file. The dynamic print area improves printing speed by omitting hidden data.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (creation rule)
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate sample data (10 rows x 5 columns)
+            // Populate sample data (A1 to E10)
             for (int row = 0; row < 10; row++)
             {
                 for (int col = 0; col < 5; col++)
                 {
-                    cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
                 }
             }
 
             // Hide some rows and columns to simulate a sparse sheet
-            // Hide rows 3 and 7 (zero‑based indices 2 and 6)
-            sheet.Cells.HideRow(2);
-            sheet.Cells.HideRow(6);
-            // Hide columns B and D (zero‑based indices 1 and 3)
-            sheet.Cells.HideColumn(1);
-            sheet.Cells.HideColumn(3);
+            sheet.Cells.HideRow(2);   // hide row 3 (zero‑based index)
+            sheet.Cells.HideRow(5);   // hide row 6
+            sheet.Cells.HideColumn(1); // hide column B
+            sheet.Cells.HideColumn(3); // hide column D
 
             // Determine the first and last visible rows
             int firstVisibleRow = -1, lastVisibleRow = -1;
-            for (int r = 0; r < cells.MaxDataRow + 1; r++)
+            for (int r = 0; r < sheet.Cells.MaxDataRow + 1; r++)
             {
                 if (!sheet.Cells.IsRowHidden(r))
                 {
@@ -51,7 +48,7 @@ namespace AsposeCellsPrintAreaDemo
 
             // Determine the first and last visible columns
             int firstVisibleCol = -1, lastVisibleCol = -1;
-            for (int c = 0; c < cells.MaxDataColumn + 1; c++)
+            for (int c = 0; c < sheet.Cells.MaxDataColumn + 1; c++)
             {
                 if (!sheet.Cells.IsColumnHidden(c))
                 {
@@ -60,27 +57,43 @@ namespace AsposeCellsPrintAreaDemo
                 }
             }
 
-            // Guard against the case where everything is hidden
+            // Guard against completely hidden sheet
             if (firstVisibleRow == -1 || firstVisibleCol == -1)
             {
-                Console.WriteLine("All rows or columns are hidden; no print area can be set.");
+                Console.WriteLine("All rows or columns are hidden. No print area will be set.");
                 return;
             }
 
-            // Convert column indices to Excel column letters
-            string startColLetter = CellsHelper.ColumnIndexToName(firstVisibleCol);
-            string endColLetter   = CellsHelper.ColumnIndexToName(lastVisibleCol);
+            // Build the address string for the print area (e.g., "A1:E10")
+            string startCell = GetCellName(firstVisibleRow, firstVisibleCol);
+            string endCell   = GetCellName(lastVisibleRow, lastVisibleCol);
+            string printArea = $"{startCell}:{endCell}";
 
-            // Build the print area string (Excel uses 1‑based row numbers)
-            string printArea = $"{startColLetter}{firstVisibleRow + 1}:{endColLetter}{lastVisibleRow + 1}";
-
-            // Assign the custom print area to the worksheet
+            // Set the custom print area (property rule)
             sheet.PageSetup.PrintArea = printArea;
 
-            // Save the workbook (the print area will be respected when printing or exporting)
+            // Save the workbook (save rule)
             workbook.Save("CustomPrintArea.xlsx");
 
-            Console.WriteLine($"Custom print area set to {printArea} and workbook saved.");
+            Console.WriteLine($"Print area set to {printArea} and workbook saved.");
+        }
+
+        // Helper: converts zero‑based row/column indexes to Excel cell name (e.g., 0,0 -> "A1")
+        private static string GetCellName(int rowIndex, int columnIndex)
+        {
+            // Convert column index to letters
+            string columnName = "";
+            int dividend = columnIndex + 1;
+            while (dividend > 0)
+            {
+                int modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar('A' + modulo) + columnName;
+                dividend = (dividend - modulo) / 26;
+            }
+
+            // Row index is zero‑based; Excel rows start at 1
+            int rowNumber = rowIndex + 1;
+            return $"{columnName}{rowNumber}";
         }
     }
 }

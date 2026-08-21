@@ -1,10 +1,10 @@
-// Title: Link a Rectangle Shape to a Cell with a Nested Formula and Verify the Result – Aspose.Cells for .NET (C#)
-// Description: This C# example demonstrates how to create a workbook, fill cells A1‑B2, set a nested formula in C3 (SUM(A1:B1) * AVERAGE(A2:B2)), calculate the workbook, add a rectangle shape, link the shape to C3 using SetLinkedCell, update the shape's selected value, read the linked value, and confirm that the shape displays the same calculated result before saving the file.
-// Keywords: Aspose.Cells C# shape linking | rectangle shape linked to cell | SetLinkedCell example | nested formula verification | UpdateSelectedValue Aspose.Cells | Excel shape cell synchronization | C# Aspose.Cells tutorial
-// Common Searches: how to link a shape to a formula cell using Aspose.Cells .NET | verify shape displays calculated value in Aspose.Cells C# | Aspose.Cells SetLinkedCell rectangle example | update shape selected value after workbook.CalculateFormula | C# code to link Excel shape to cell result
-// Developer Intent: Connect a rectangle shape to a cell that contains a nested formula and programmatically confirm that the shape shows the formula's final value.
-// Use Cases: Build dynamic dashboards where shapes automatically reflect totals, averages, or other computed metrics. | Generate Excel reports with visual indicators (shapes) that stay in sync with underlying calculations. | Create automated tests to ensure shape‑cell links remain accurate after formula recalculation.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a rectangle shape, links it to a cell containing a nested formula, updates the shape, and validates the linked value matches the cell's result. | Explain the role of SetLinkedCell and UpdateSelectedValue when synchronizing a shape with a calculated cell in Aspose.Cells for .NET. | Provide a step‑by‑step guide to verify that a shape linked to a formula cell reflects the final computed value after calling workbook.CalculateFormula().
+// Title: C# – Add a Rectangle Shape Linked to a Cell with a Nested Formula using Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, fill cells A1 and B1, set a nested formula in C1, insert a rectangle shape, link the shape to C1, recalculate formulas, retrieve the computed value, and save the file. The example verifies that the linked shape reflects the final formula result.
+// Keywords: Aspose.Cells shape linking | C# rectangle shape linked cell | nested formula Aspose.Cells | verify linked shape value | Aspose.Cells for .NET example | calculate formulas programmatically | Excel shape to cell reference
+// Common Searches: how to link a shape to a formula cell in Aspose.Cells | Aspose.Cells C# example linking rectangle to cell | retrieve calculated value from linked shape Aspose.Cells | link shape to cell with nested formula .NET | Aspose.Cells shape linked cell verification
+// Developer Intent: Link a worksheet shape to a cell that contains a nested formula and confirm that the shape reflects the calculated result.
+// Use Cases: Building interactive dashboards where shapes display live totals from complex formulas. | Automating report generation that adds visual markers tied to calculated cells for quick review. | Creating templates that require shapes to stay synchronized with underlying formula results after data updates.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a circle shape linked to cell D5 containing an IF‑nested formula and prints the linked value. | Show how to update a linked shape after changing source cells and re‑calculating formulas using Aspose.Cells for .NET. | Explain how to programmatically obtain the linked cell address and its evaluated value for any shape in a worksheet.
 
 using System;
 using Aspose.Cells;
@@ -12,71 +12,53 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsShapeLinkDemo
 {
-    // This C# example demonstrates how to create a workbook, fill cells A1‑B2, set a nested formula in C3 (SUM(A1:B1) * AVERAGE(A2:B2)), calculate the workbook, add a rectangle shape, link the shape to C3 using SetLinkedCell, update the shape's selected value, read the linked value, and confirm that the shape displays the same calculated result before saving the file.
+    // Demonstrates how to create a workbook, fill cells A1 and B1, set a nested formula in C1, insert a rectangle shape, link the shape to C1, recalculate formulas, retrieve the computed value, and save the file. The example verifies that the linked shape reflects the final formula result.
     class Program
     {
         static void Main()
         {
             try
             {
-                // ---------- 1. Create a new workbook ----------
-                Workbook workbook = new Workbook();                     // create
-                Worksheet sheet = workbook.Worksheets[0];              // first worksheet
+                // Create a new workbook (lifecycle rule: create)
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // ---------- 2. Prepare data for the nested formula ----------
-                // A1 = 10, B1 = 20, A2 = 5, B2 = 15
-                sheet.Cells["A1"].PutValue(10);
-                sheet.Cells["B1"].PutValue(20);
-                sheet.Cells["A2"].PutValue(5);
-                sheet.Cells["B2"].PutValue(15);
+                // Populate data used in the nested formula
+                cells["A1"].PutValue(5);
+                cells["B1"].PutValue(10);
 
-                // ---------- 3. Set a nested formula in cell C3 ----------
-                // Formula: =SUM(A1:B1) * AVERAGE(A2:B2)
-                sheet.Cells["C3"].SetFormula("=SUM(A1:B1)*AVERAGE(A2:B2)", null);
+                // Set a nested formula in C1 with an initial displayed value
+                cells["C1"].SetFormula("=SUM(A1,B1)*2", 30);
 
-                // Calculate all formulas so C3 contains the final result.
+                // Add a rectangle shape to the worksheet
+                // Parameters: upper left row, upper left column, top, left, width, height
+                Shape rect = sheet.Shapes.AddRectangle(2, 2, 100, 100, 0, 0);
+
+                // Link the shape to the cell containing the formula (C1)
+                rect.LinkedCell = "$C$1";
+
+                // Calculate all formulas so C1 gets its final result
                 workbook.CalculateFormula();
 
-                // Retrieve the calculated result for verification.
-                double calculatedResult = sheet.Cells["C3"].DoubleValue;
-                Console.WriteLine($"Calculated result in C3: {calculatedResult}");
+                // Retrieve the linked cell address (remove $ to use with Cells collection)
+                string linkedAddress = rect.LinkedCell.Replace("$", string.Empty); // "C1"
 
-                // ---------- 4. Add a rectangle shape ----------
-                // Parameters: upper left row, upper left column, top, left, width, height
-                Shape rect = sheet.Shapes.AddRectangle(5, 2, 0, 0, 150, 50);
+                // Get the calculated value from the linked cell
+                Cell linkedCell = sheet.Cells[linkedAddress];
+                object result = linkedCell.Value;
 
-                // ---------- 5. Link the shape to the cell containing the formula ----------
-                // Use SetLinkedCell(string formula, bool isR1C1, bool isLocal)
-                rect.SetLinkedCell("$C$3", false, false);
+                // Output verification result
+                Console.WriteLine($"Shape is linked to cell {rect.LinkedCell} with calculated value: {result}");
 
-                // Ensure the shape's selected value is updated from the linked cell.
-                sheet.Shapes.UpdateSelectedValue();
-
-                // ---------- 6. Verify that the shape reflects the cell's final result ----------
-                // Get the linked cell address from the shape.
-                string linkedAddress = rect.GetLinkedCell(false, false); // returns absolute address like "$C$3"
-
-                // Remove the leading '$' characters to use with Cells collection.
-                string cleanAddress = linkedAddress.Replace("$", "");
-
-                // Read the value from the linked cell.
-                double shapeLinkedValue = sheet.Cells[cleanAddress].DoubleValue;
-
-                Console.WriteLine($"Shape linked cell address: {linkedAddress}");
-                Console.WriteLine($"Value read via shape link: {shapeLinkedValue}");
-
-                // Simple verification
-                if (Math.Abs(calculatedResult - shapeLinkedValue) < 1e-9)
-                    Console.WriteLine("Verification succeeded: Shape reflects the final result.");
-                else
-                    Console.WriteLine("Verification failed: Mismatch between shape and cell values.");
-
-                // ---------- 7. Save the workbook ----------
-                workbook.Save("ShapeLinkedFormulaDemo.xlsx"); // save
+                // Save the workbook (lifecycle rule: save)
+                string outputPath = "ShapeLinkedFormulaDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

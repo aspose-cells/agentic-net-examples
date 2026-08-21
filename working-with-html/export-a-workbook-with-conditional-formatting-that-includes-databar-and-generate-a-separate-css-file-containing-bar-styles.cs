@@ -1,16 +1,16 @@
-// Title: Export Excel with DataBar Conditional Formatting to HTML and External CSS using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, apply an orange DataBar conditional format with a solid black border to cells A1:A10, and save the sheet as HTML while generating a separate CSS stylesheet via HtmlSaveOptions.ExportWorksheetCSSSeparately.
-// Keywords: Aspose.Cells | C# | HTML export | external CSS | DataBar conditional formatting | ExportWorksheetCSSSeparately | Excel to HTML | worksheet CSS file | conditional formatting to HTML | Aspose.Cells example
-// Common Searches: Aspose.Cells export DataBar to HTML | C# save Excel as HTML with external stylesheet | HtmlSaveOptions ExportWorksheetCSSSeparately example | How to generate separate CSS file from Aspose.Cells | DataBar conditional formatting HTML output
-// Developer Intent: Export a workbook that contains a DataBar conditional format to HTML while writing the styling to an external CSS file.
-// Use Cases: Build web reports that reuse a single CSS file for multiple worksheets with DataBar visuals. | Create HTML email templates where conditional formatting is applied via external styles for better client compatibility. | Develop dashboards that separate content (HTML) from presentation (CSS) for caching and faster page loads.
-// AI Prompts: Generate C# code that adds a gradient DataBar to a range and saves the worksheet as HTML with an external CSS file using Aspose.Cells. | Explain how to edit the generated CSS file to change the DataBar color after the HTML export. | Show the steps to load an existing workbook, apply a DataBar conditional format to a specific range, and export it to HTML with a separate stylesheet.
+// Title: Export Excel with DataBar Conditional Formatting to HTML and Separate CSS using Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, fills column A with numeric values, applies an orange DataBar with a black solid border to A1:A10, and saves the sheet as HTML. HtmlSaveOptions.ExportWorksheetCSSSeparately generates an external CSS file that contains the DataBar styles.
+// Keywords: Aspose.Cells HTML export | DataBar conditional formatting C# | ExportWorksheetCSSSeparately | separate CSS file Aspose.Cells | Excel to HTML with DataBar
+// Common Searches: Aspose.Cells export DataBar to HTML | C# generate external CSS for Excel conditional formatting | HtmlSaveOptions ExportWorksheetCSSSeparately example | How to save Excel as HTML with separate stylesheet | DataBar style CSS Aspose.Cells .NET
+// Developer Intent: Generate HTML from an Excel workbook that includes a DataBar conditional format and output the visual styles into a dedicated CSS file.
+// Use Cases: Build web‑based reports where DataBars are rendered in HTML and styling is maintained in an external stylesheet for easy updates. | Create reusable CSS assets for conditional formatting across multiple exported worksheets. | Automate HTML dashboards that visualize numeric trends with DataBars while keeping design separation between markup and style.
+// AI Prompts: Write C# code with Aspose.Cells to add an orange DataBar to a range and export the worksheet to HTML with an external CSS file. | Show how to modify the generated CSS to change the DataBar color after the HTML export. | Explain how to configure HtmlSaveOptions to include only the styles actually used in the exported HTML.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, apply an orange DataBar conditional format with a solid black border to cells A1:A10, and save the sheet as HTML while generating a separate CSS stylesheet via HtmlSaveOptions.ExportWorksheetCSSSeparately.
+// Creates a workbook, fills column A with numeric values, applies an orange DataBar with a black solid border to A1:A10, and saves the sheet as HTML. HtmlSaveOptions.ExportWorksheetCSSSeparately generates an external CSS file that contains the DataBar styles.
 class ExportDataBarWithSeparateCss
 {
     static void Main()
@@ -19,17 +19,17 @@ class ExportDataBarWithSeparateCss
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate column A with sample numeric data
+        // Populate sample numeric data in column A (A1:A10)
         for (int i = 0; i < 10; i++)
         {
-            worksheet.Cells[i, 0].PutValue(i * 10); // A1..A10
+            worksheet.Cells[i, 0].PutValue(i * 10);
         }
 
-        // Add an empty conditional formatting collection to the worksheet
+        // Add a DataBar conditional formatting rule to the range A1:A10
         int cfIndex = worksheet.ConditionalFormattings.Add();
         FormatConditionCollection cfCollection = worksheet.ConditionalFormattings[cfIndex];
 
-        // Define the cell area (A1:A10) for the DataBar conditional formatting
+        // Define the cell area for the conditional formatting
         CellArea area = new CellArea
         {
             StartRow = 0,
@@ -39,26 +39,31 @@ class ExportDataBarWithSeparateCss
         };
         cfCollection.AddArea(area);
 
-        // Add a DataBar condition to the collection
+        // Add the DataBar condition
         int conditionIndex = cfCollection.AddCondition(FormatConditionType.DataBar);
         FormatCondition condition = cfCollection[conditionIndex];
 
-        // Configure the DataBar properties
+        // Configure the DataBar appearance
         DataBar dataBar = condition.DataBar;
-        dataBar.Color = Color.Orange;                         // Bar color
-        dataBar.MinCfvo.Type = FormatConditionValueType.AutomaticMin; // Minimum automatically
-        dataBar.MaxCfvo.Type = FormatConditionValueType.AutomaticMax; // Maximum automatically
-        dataBar.ShowValue = true;                             // Show cell values
-        dataBar.BarBorder.Type = DataBarBorderType.Solid;     // Solid border
-        dataBar.BarBorder.Color = Color.Black;                // Border color
-        dataBar.BarFillType = DataBarFillType.Solid;          // Solid fill
+        dataBar.Color = Color.Orange;                                 // Bar color
+        dataBar.MinCfvo.Type = FormatConditionValueType.AutomaticMin; // Minimum value
+        dataBar.MaxCfvo.Type = FormatConditionValueType.AutomaticMax; // Maximum value
+        dataBar.ShowValue = true;                                     // Show cell value
+        dataBar.BarBorder.Type = DataBarBorderType.Solid;             // Solid border
+        dataBar.BarBorder.Color = Color.Black;                        // Border color
+        dataBar.BarFillType = DataBarFillType.Solid;                  // Fill type
 
         // Set HTML save options to export worksheet CSS separately
         HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-        saveOptions.ExportWorksheetCSSSeparately = true;      // Generates a separate CSS file
+        saveOptions.ExportWorksheetCSSSeparately = true; // Generates a separate .css file
+        // Optional: keep all styles (set to false if you want to exclude unused styles)
+        saveOptions.ExcludeUnusedStyles = false;
 
-        // Save the workbook as HTML; the CSS file will be created alongside the HTML file
-        string htmlPath = "DataBarOutput.html";
-        workbook.Save(htmlPath, saveOptions);
+        // Save the workbook as HTML; a corresponding CSS file will be created automatically
+        string htmlFilePath = "DataBarExport.html";
+        workbook.Save(htmlFilePath, saveOptions);
+
+        Console.WriteLine($"HTML file saved to: {htmlFilePath}");
+        Console.WriteLine("A separate CSS file containing the DataBar styles has been generated.");
     }
 }

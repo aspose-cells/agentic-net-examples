@@ -1,45 +1,37 @@
-// Title: Export Excel to PDF with Custom Document Properties using AspNet.Cells (C#)
-// Description: Demonstrates how to create a workbook, add string, date, integer and boolean custom document properties, configure PdfSaveOptions.CustomPropertiesExport = Standard, and save the file as a PDF that carries those properties in the PDF Info dictionary.
-// Keywords: Aspose.Cells PDF export | custom document properties | PdfSaveOptions | C# Excel to PDF | PDF metadata | Standard custom properties export | Add DateTime property Aspose.Cells | .NET workbook to PDF | Excel metadata in PDF | automated PDF generation
-// Common Searches: Aspose.Cells export workbook to PDF with custom metadata | C# add custom document properties to PDF using Aspose.Cells | PdfSaveOptions.CustomPropertiesExport Standard example | How to embed Excel custom properties in PDF Info dictionary | Save Excel as PDF with author and revision data
-// Developer Intent: Convert an Excel workbook to PDF while embedding custom document properties as PDF metadata.
-// Use Cases: Produce audit‑ready PDFs that include project name, author, and generation timestamp for indexing systems. | Create version‑controlled reports with revision numbers and approval flags to meet compliance requirements. | Automate document pipelines where a DateTime property records the exact moment of PDF generation.
-// AI Prompts: Generate C# code that uses Aspose.Cells to export a workbook to PDF and embed custom properties like Project, Author, GeneratedOn, Revision, and Approved. | Explain the effect of setting PdfSaveOptions.CustomPropertiesExport to Standard on the PDF Info dictionary. | Show how to add a Boolean and a DateTime custom document property to a workbook and have them appear as PDF metadata.
+// Title: C# – Convert Aspose.Cells Workbook to PDF and Embed Custom Document Properties
+// Description: The sample builds a workbook, writes a cell value, adds three custom properties (Project, Reviewed, Version), configures PdfSaveOptions.CustomPropertiesExport = Standard so the properties are stored in the PDF’s Info dictionary, and saves the result as Output.pdf.
+// Keywords: Aspose.Cells | C# | PDF conversion | custom properties | PdfSaveOptions | PdfCustomPropertiesExport | metadata export | Workbook to PDF | Excel to PDF with metadata | Aspose.Cells PDF metadata
+// Common Searches: Aspose.Cells add custom properties to PDF | C# export workbook as PDF with metadata | PdfSaveOptions CustomPropertiesExport example | embed custom document properties in PDF using Aspose.Cells | convert Excel to PDF preserving custom metadata
+// Developer Intent: Generate a PDF from an Excel workbook while embedding application‑specific metadata directly into the PDF file.
+// Use Cases: Produce PDF reports that carry project identifiers and version numbers for downstream indexing. | Create audit‑ready PDFs that include a reviewed flag and other compliance data. | Export spreadsheets to a document‑management system while retaining custom metadata for search and classification.
+// AI Prompts: Show how to export an Aspose.Cells workbook to PDF with custom metadata in C#. | Explain the effect of PdfCustomPropertiesExport.Standard on the PDF Info dictionary. | Give example code that adds string, boolean, and numeric custom properties before PDF conversion.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfExportWithCustomProperties
+// The sample builds a workbook, writes a cell value, adds three custom properties (Project, Reviewed, Version), configures PdfSaveOptions.CustomPropertiesExport = Standard so the properties are stored in the PDF’s Info dictionary, and saves the result as Output.pdf.
+class Program
 {
-    // Demonstrates how to create a workbook, add string, date, integer and boolean custom document properties, configure PdfSaveOptions.CustomPropertiesExport = Standard, and save the file as a PDF that carries those properties in the PDF Info dictionary.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (uses the Workbook() constructor rule)
-            Workbook workbook = new Workbook();
+        // Create a new workbook instance
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet and put some sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Aspose.Cells PDF Export Demo");
-            sheet.Cells["A2"].PutValue("Custom document properties will be included.");
+        // Add sample data to the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sample data for PDF export");
 
-            // Add custom document properties (uses CustomDocumentPropertyCollection.Add rules)
-            workbook.CustomDocumentProperties.Add("Project", "PDF Export");
-            workbook.CustomDocumentProperties.Add("Author", "John Doe");
-            workbook.CustomDocumentProperties.Add("GeneratedOn", DateTime.Now);
-            workbook.CustomDocumentProperties.Add("Revision", 3);
-            workbook.CustomDocumentProperties.Add("Approved", true);
+        // Add custom document properties that will be exported to the PDF
+        workbook.CustomDocumentProperties.Add("Project", "Alpha");
+        workbook.CustomDocumentProperties.Add("Reviewed", true);
+        workbook.CustomDocumentProperties.Add("Version", 2);
 
-            // Create PDF save options (uses PdfSaveOptions constructor rule)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        // Configure PDF save options to include custom properties in the PDF's Info dictionary
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        pdfOptions.CustomPropertiesExport = PdfCustomPropertiesExport.Standard;
 
-            // Export custom properties as standard entries in the PDF Info dictionary
-            pdfOptions.CustomPropertiesExport = PdfCustomPropertiesExport.Standard;
-
-            // Save the workbook to PDF with the specified options (uses Workbook.Save(string, SaveOptions) rule)
-            workbook.Save("ExportedWithCustomProperties.pdf", pdfOptions);
-        }
+        // Save the workbook as a PDF file using the configured options
+        workbook.Save("Output.pdf", pdfOptions);
     }
 }

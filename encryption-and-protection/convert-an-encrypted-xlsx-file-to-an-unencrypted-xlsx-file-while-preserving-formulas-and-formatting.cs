@@ -1,27 +1,31 @@
-// Title: Decrypt an Encrypted XLSX and Save Unencrypted with Aspose.Cells for .NET
-// Description: Detects whether an XLSX file is password‑protected, prompts for the required password, loads the workbook with LoadOptions, removes any workbook‑level protection, and saves a new file without encryption while keeping all formulas, styles, and data intact.
-// Keywords: Aspose.Cells decrypt XLSX | remove Excel password .NET | detect encrypted workbook Aspose | LoadOptions.Password example | Workbook.Unprotect usage | preserve formulas when saving Excel | C# Excel decryption Aspose
-// Common Searches: how to open encrypted xlsx with Aspose.Cells | remove password from Excel file using C# | detect if Excel workbook is encrypted before loading | save unprotected workbook after decryption Aspose | preserve formulas when converting encrypted Excel
-// Developer Intent: Load a password‑protected XLSX, optionally unprotect the workbook, and write an unencrypted copy that retains all content and formatting.
-// Use Cases: Automated batch conversion of secured reports to plain XLSX for downstream analytics. | Processing user‑uploaded encrypted spreadsheets, decrypting them, and storing the clean version for further manipulation. | Removing workbook‑level protection after validation to enable editing in other tools.
-// AI Prompts: Generate C# code that uses Aspose.Cells to detect an encrypted Excel file, ask for the password, load it, unprotect the workbook if needed, and save an unencrypted copy preserving formulas and formatting. | Create a reusable method `DecryptWorkbook(string sourcePath, string destPath)` that handles missing files, encryption detection, password input, and saves the decrypted workbook. | Explain the interaction between `LoadOptions.Password` and `Workbook.Unprotect` for removing file encryption and workbook protection in Aspose.Cells.
+// Title: Remove Password from an XLSX with Aspose.Cells (.NET) – Preserve Formulas & Formatting
+// Description: Shows how to load a password‑protected workbook using Aspose.Cells LoadOptions, optionally unprotect the sheet structure, and save it as a plain XLSX file that keeps all formulas, styles, and other formatting intact.
+// Keywords: Aspose.Cells decrypt XLSX | C# remove Excel password | load encrypted workbook Aspose | save unprotected workbook | preserve Excel formulas | Excel encryption .NET | Workbook.Unprotect | LoadOptions.Password
+// Common Searches: asp.net strip password from excel file | c# decrypt encrypted xlsx using aspose.cells | open password protected excel and save without password | keep formulas when removing excel encryption | batch decrypt xlsx files Aspose.Cells
+// Developer Intent: Open a secured Excel file and write a new version without encryption while leaving all content unchanged.
+// Use Cases: Automated decryption of daily financial reports before data extraction | Pre‑processing step for Excel‑based ETL pipelines that require unprotected workbooks | Desktop utility that removes passwords from shared spreadsheets without altering formatting
+// AI Prompts: Generate C# code with Aspose.Cells to open an encrypted XLSX, optionally unprotect the workbook structure, and save a plain copy preserving formulas and styles. | Explain the role of LoadOptions.Password in Aspose.Cells and demonstrate handling of an incorrect password exception. | Adapt the example to iterate over all .xlsx files in a folder, decrypt each one, and write the results to a target directory.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// Detects whether an XLSX file is password‑protected, prompts for the required password, loads the workbook with LoadOptions, removes any workbook‑level protection, and saves a new file without encryption while keeping all formulas, styles, and data intact.
-class DecryptExcel
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Shows how to load a password‑protected workbook using Aspose.Cells LoadOptions, optionally unprotect the sheet structure, and save it as a plain XLSX file that keeps all formulas, styles, and other formatting intact.
+    public class DecryptWorkbook
     {
-        // Paths for the encrypted source file and the unencrypted destination file
-        string sourcePath = "encrypted.xlsx";
-        string destPath = "decrypted.xlsx";
-
-        try
+        public static void Run()
         {
+            // Path to the encrypted XLSX file
+            string sourcePath = "encrypted.xlsx";
+
+            // Path for the unencrypted output file
+            string destPath = "decrypted.xlsx";
+
+            // Password used to open the encrypted workbook
+            string password = "yourPassword";
+
             // Verify that the source file exists
             if (!File.Exists(sourcePath))
             {
@@ -29,47 +33,32 @@ class DecryptExcel
                 return;
             }
 
-            // Detect file format and encryption status
-            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(sourcePath);
-            Console.WriteLine($"Is encrypted: {formatInfo.IsEncrypted}");
-
-            // Load the workbook with appropriate options
-            Workbook workbook;
-            if (formatInfo.IsEncrypted)
+            try
             {
-                // Prompt for the password required to open the encrypted file
-                Console.Write("Enter password for the encrypted workbook: ");
-                string password = Console.ReadLine() ?? string.Empty;
+                // Load the encrypted workbook using LoadOptions with the password
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto) { Password = password };
+                Workbook workbook = new Workbook(sourcePath, loadOptions);
 
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto)
-                {
-                    Password = password
-                };
+                // If the workbook structure is also protected, unprotect it (optional)
+                // workbook.Unprotect(password);
 
-                // Load using the constructor that accepts a file path and LoadOptions
-                workbook = new Workbook(sourcePath, loadOptions);
+                // Save the workbook without setting a password – this creates an unencrypted file
+                workbook.Save(destPath, SaveFormat.Xlsx);
+
+                Console.WriteLine($"Decryption completed. Unencrypted file saved to: {destPath}");
             }
-            else
+            catch (Exception ex)
             {
-                // No encryption, load normally
-                workbook = new Workbook(sourcePath);
+                Console.WriteLine($"Error during decryption: {ex.Message}");
             }
-
-            // If the workbook itself is protected with a password, remove it
-            if (workbook.IsWorkbookProtectedWithPassword)
-            {
-                Console.Write("Enter password to unprotect the workbook (if any): ");
-                string protectPassword = Console.ReadLine() ?? string.Empty;
-                workbook.Unprotect(protectPassword);
-            }
-
-            // Save the workbook without any encryption settings
-            workbook.Save(destPath);
-            Console.WriteLine($"Decrypted file saved to: {destPath}");
         }
-        catch (Exception ex)
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            DecryptWorkbook.Run();
         }
     }
 }

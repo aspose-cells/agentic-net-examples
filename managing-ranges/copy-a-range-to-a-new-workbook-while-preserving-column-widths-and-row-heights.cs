@@ -1,87 +1,101 @@
-// Title: C# – Copy a Range to a New Workbook While Preserving Column Widths and Row Heights with Aspose.Cells
-// Description: Shows how to load a source .xlsx file, define a range (e.g., A1:C10), and copy it into a fresh workbook using Aspose.Cells for .NET. The sample leverages CopyOptions.ColumnCharacterWidth together with CopyRows and CopyColumns to retain original column widths, row heights, and cell formatting before saving the result as an Xlsx file.
-// Keywords: Aspose.Cells | C# | copy range | new workbook | preserve column width | preserve row height | CopyOptions | CopyRows | CopyColumns | Excel automation | Aspose.Cells .NET | Excel file manipulation | US developers | UK developers
-// Common Searches: Aspose.Cells copy range to another workbook preserving column width | How to keep row heights when copying cells with Aspose.Cells C# | Copy A1:C10 to a new Excel file using Aspose.Cells .NET | C# example for copying a range with formatting Aspose.Cells | Preserve Excel layout while extracting a table with Aspose.Cells
-// Developer Intent: Transfer a defined block of cells from an existing workbook into a separate workbook without losing layout or formatting.
-// Use Cases: Create a standalone template from a formatted table in a master workbook. | Generate a report that reuses a specific data block with exact column and row dimensions. | Split a large spreadsheet into multiple files, each containing a particular range with its original layout intact.
-// AI Prompts: Write C# code that copies range A1:D20 from source.xlsx to a new workbook, keeping column widths and row heights using Aspose.Cells. | Explain the role of CopyOptions.ColumnCharacterWidth in Aspose.Cells and give a short code snippet that demonstrates its effect. | Create a reusable C# method accepting source path, range address, and destination path, then copies the range with all formatting and dimensions via Aspose.Cells.
+// Title: Copy Excel Range to a New Workbook while Preserving Column Widths & Row Heights – Aspose.Cells C#
+// Description: Load a source workbook, define a range (e.g., A1:C5), create an empty destination workbook, and use `Range.Copy` to transfer data, formulas, and formatting. Then copy each source column width with `SetColumnWidth` and each row height with `SetRowHeight` so the new file matches the original layout before saving.
+// Keywords: Aspose.Cells copy range C# | preserve column width Aspose.Cells | preserve row height Aspose.Cells | copy range to new workbook .NET | Excel range dimensions copy | Range.Copy with formatting | C# Excel export preserving layout
+// Common Searches: Aspose.Cells copy range to another workbook keep column width | C# preserve row height when copying Excel cells | How to duplicate a table in a new Excel file with original dimensions | Copy range A1:C5 to new workbook Aspose.Cells .NET | Transfer Excel range preserving layout using Aspose
+// Developer Intent: Duplicate a specific cell range from an existing workbook into a fresh workbook while retaining the original column widths, row heights, and formatting.
+// Use Cases: Create a standalone report by extracting a table from a master workbook without losing its visual layout. | Split a large worksheet into multiple files, each containing a segment that looks identical to the source. | Automate the generation of printable sheets where exact column and row dimensions are required.
+// AI Prompts: Write C# code with Aspose.Cells that copies a range to a new workbook and keeps column widths and row heights. | Explain how to use SetColumnWidth and SetRowHeight after Range.Copy to maintain dimensions in Aspose.Cells. | Provide an example that copies a range with formulas, styles, and merged cells to another workbook while preserving layout.
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsRangeCopy
+// Load a source workbook, define a range (e.g., A1:C5), create an empty destination workbook, and use `Range.Copy` to transfer data, formulas, and formatting. Then copy each source column width with `SetColumnWidth` and each row height with `SetRowHeight` so the new file matches the original layout before saving.
+class CopyRangePreserveDimensions
 {
-    // Shows how to load a source .xlsx file, define a range (e.g., A1:C10), and copy it into a fresh workbook using Aspose.Cells for .NET. The sample leverages CopyOptions.ColumnCharacterWidth together with CopyRows and CopyColumns to retain original column widths, row heights, and cell formatting before saving the result as an Xlsx file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                const string sourcePath = "Source.xlsx";
-                const string destinationPath = "Destination.xlsx";
+            const string sourcePath = "source.xlsx";
+            const string destinationPath = "destination.xlsx";
 
-                // Verify source file exists to avoid FileNotFoundException
-                if (!File.Exists(sourcePath))
+            // Ensure source file exists; create a simple workbook if missing
+            if (!File.Exists(sourcePath))
+            {
+                var tempWb = new Workbook();
+                var tempSheet = tempWb.Worksheets[0];
+                // Populate some sample data
+                tempSheet.Cells["A1"].PutValue("Header1");
+                tempSheet.Cells["B1"].PutValue("Header2");
+                tempSheet.Cells["C1"].PutValue("Header3");
+                for (int r = 2; r <= 5; r++)
                 {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
+                    tempSheet.Cells[$"A{r}"].PutValue($"R{r - 1}C1");
+                    tempSheet.Cells[$"B{r}"].PutValue($"R{r - 1}C2");
+                    tempSheet.Cells[$"C{r}"].PutValue($"R{r - 1}C3");
                 }
-
-                // Load the source workbook
-                Workbook srcWorkbook = new Workbook(sourcePath);
-                Worksheet srcSheet = srcWorkbook.Worksheets[0];
-
-                // Define the range to copy (e.g., A1:C10)
-                AsposeRange srcRange = srcSheet.Cells.CreateRange("A1:C10");
-
-                // Get range boundaries
-                int srcFirstRow = srcRange.FirstRow;          // 0‑based index
-                int srcFirstColumn = srcRange.FirstColumn;    // 0‑based index
-                int rowCount = srcRange.RowCount;
-                int columnCount = srcRange.ColumnCount;
-
-                // Create a new (empty) destination workbook
-                Workbook destWorkbook = new Workbook();
-                Worksheet destSheet = destWorkbook.Worksheets[0];
-
-                // Configure copy options to preserve column widths (in character units)
-                CopyOptions copyOptions = new CopyOptions
-                {
-                    ColumnCharacterWidth = true   // ensures column widths are copied
-                };
-
-                // -----------------------------------------------------------------
-                // 1. Copy rows (including row heights and cell data/formats)
-                //    Destination rows start at index 0.
-                // -----------------------------------------------------------------
-                destSheet.Cells.CopyRows(
-                    srcSheet.Cells,          // source cells
-                    srcFirstRow,            // source start row
-                    0,                      // destination start row
-                    rowCount,               // number of rows to copy
-                    copyOptions);           // copy options (preserve column widths)
-
-                // -----------------------------------------------------------------
-                // 2. Copy columns (including column widths and cell data/formats)
-                //    Destination columns start at index 0.
-                // -----------------------------------------------------------------
-                destSheet.Cells.CopyColumns(
-                    srcSheet.Cells,          // source cells
-                    srcFirstColumn,         // source start column
-                    0,                      // destination start column
-                    columnCount);           // number of columns to copy
-
-                // Save the destination workbook
-                destWorkbook.Save(destinationPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Destination workbook saved to {destinationPath}");
+                tempWb.Save(sourcePath, SaveFormat.Xlsx);
             }
-            catch (Exception ex)
+
+            // Load the source workbook
+            Workbook srcWorkbook = new Workbook(sourcePath);
+            Worksheet srcSheet = srcWorkbook.Worksheets[0];
+
+            // Define the source range to copy
+            const string sourceRangeAddress = "A1:C5";
+            Aspose.Cells.Range srcRange = srcSheet.Cells.CreateRange(sourceRangeAddress);
+
+            // Create a new (empty) destination workbook
+            Workbook destWorkbook = new Workbook();
+            Worksheet destSheet = destWorkbook.Worksheets[0];
+
+            // Destination start position (top‑left cell where the range will be placed)
+            int destStartRow = 0;   // row index (0‑based)
+            int destStartCol = 0;   // column index (0‑based)
+
+            // Create a destination range with the same size as the source range
+            Aspose.Cells.Range destRange = destSheet.Cells.CreateRange(
+                destStartRow,
+                destStartCol,
+                srcRange.RowCount,
+                srcRange.ColumnCount);
+
+            // Copy data, formulas, formatting, etc. from source to destination
+            destRange.Copy(srcRange);
+
+            // ----- Preserve column widths -----
+            for (int i = 0; i < srcRange.ColumnCount; i++)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                int srcColIndex = srcRange.FirstColumn + i;
+                double colWidth = srcSheet.Cells.GetColumnWidth(srcColIndex); // width in characters
+                int destColIndex = destStartCol + i;
+                destSheet.Cells.SetColumnWidth(destColIndex, colWidth);
             }
+
+            // ----- Preserve row heights -----
+            for (int i = 0; i < srcRange.RowCount; i++)
+            {
+                int srcRowIndex = srcRange.FirstRow + i;
+                double rowHeight = srcSheet.Cells.GetRowHeight(srcRowIndex); // height in points
+                int destRowIndex = destStartRow + i;
+                destSheet.Cells.SetRowHeight(destRowIndex, rowHeight);
+            }
+
+            // Ensure the directory for the destination file exists
+            string destDir = Path.GetDirectoryName(Path.GetFullPath(destinationPath));
+            if (!Directory.Exists(destDir))
+            {
+                Directory.CreateDirectory(destDir);
+            }
+
+            // Save the new workbook
+            destWorkbook.Save(destinationPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook copied successfully to '{destinationPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

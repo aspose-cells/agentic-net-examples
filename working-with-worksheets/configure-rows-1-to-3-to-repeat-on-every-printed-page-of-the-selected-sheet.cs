@@ -1,35 +1,50 @@
-// Title: Set rows 1‑3 as repeatable print titles on every page with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, fills sample data, and uses Worksheet.PageSetup.PrintTitleRows = "$1:$3" so that rows 1‑3 repeat on each printed page. Saves the file as RepeatRowsDemo.xlsx.
-// Keywords: Aspose.Cells | C# | PrintTitleRows | repeat rows on printed page | Excel header rows | page setup print titles | worksheet print titles | Excel to PDF printing | Aspose.Cells API
-// Common Searches: Aspose.Cells repeat rows on each printed page | How to set PrintTitleRows in C# | Configure page setup to repeat header rows in Excel using Aspose | Aspose.Cells print titles rows example | C# code for repeating rows when printing Excel
-// Developer Intent: Apply the PrintTitleRows property so rows 1‑3 are printed as titles on every page of the worksheet.
-// Use Cases: Generate multi‑page reports where the first three rows contain titles or column headings that must appear on each printed sheet. | Create printable Excel invoices with consistent header rows across all pages. | Automate workbook creation for PDF conversion while preserving repeated header rows.
-// AI Prompts: Show C# code to repeat rows 1‑5 and columns A‑C on each printed page with Aspose.Cells. | Explain how to validate the PrintTitleRows setting after saving a workbook. | Provide a full example that configures both PrintTitleRows and PrintTitleColumns for a worksheet.
+// Title: Set rows 1‑3 as repeating print titles in an Excel worksheet with Aspose.Cells for .NET
+// Description: Shows how to create a workbook, select the first worksheet, assign rows 1‑3 to repeat on every printed page via PageSetup.PrintTitleRows, and save the workbook.
+// Keywords: Aspose.Cells | C# | .NET | PrintTitleRows | repeat rows on printed page | Excel header rows | worksheet PageSetup | programmatic Excel printing | repeat print titles | Aspose.Cells example
+// Common Searches: Aspose.Cells repeat header rows C# | How to set PrintTitleRows in Aspose.Cells .NET | Rows 1 to 3 repeat on each printed page Excel Aspose | PageSetup.PrintTitleRows example | Set repeating rows in Excel using Aspose.Cells
+// Developer Intent: Configure rows 1‑3 to act as print titles that appear on every printed page of the selected worksheet.
+// Use Cases: Generate multi‑page reports where the first three rows contain column headings that stay visible when printed. | Create printable invoice or statement templates with static header rows across all pages. | Automate Excel workbook creation for dashboards that require repeated header rows in hard‑copy output.
+// AI Prompts: Write C# code with Aspose.Cells to set rows 2‑5 as repeating print titles and save the file. | Explain the effect of the PrintTitleRows property and how to remove previously set titles. | Provide a sample that configures both PrintTitleRows and PrintTitleColumns for a worksheet.
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, fills sample data, and uses Worksheet.PageSetup.PrintTitleRows = "$1:$3" so that rows 1‑3 repeat on each printed page. Saves the file as RepeatRowsDemo.xlsx.
-class RepeatRowsPrintTitle
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Shows how to create a workbook, select the first worksheet, assign rows 1‑3 to repeat on every printed page via PageSetup.PrintTitleRows, and save the workbook.
+    public class RepeatRowsDemo
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add sample data (optional, just to illustrate the effect)
-        for (int i = 0; i < 20; i++)
+        public static void Run()
         {
-            worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet (selected sheet)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Configure rows 1 to 3 to repeat on every printed page
+                worksheet.PageSetup.PrintTitleRows = "$1:$3";
+
+                // Save the workbook
+                string outputPath = "RepeatRowsDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
+    }
 
-        // Configure rows 1 to 3 to repeat on every printed page
-        worksheet.PageSetup.PrintTitleRows = "$1:$3";
-
-        // Save the workbook
-        workbook.Save("RepeatRowsDemo.xlsx");
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            RepeatRowsDemo.Run();
+        }
     }
 }

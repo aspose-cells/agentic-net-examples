@@ -1,44 +1,47 @@
-// Title: Get Spilled Range of a Dynamic Array Formula in Cell C3 with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, accesses cell C3, verifies the presence of a dynamic array formula using IsDynamicArrayFormula, obtains the spill area via GetArrayRange, converts the resulting CellArea to a standard address (e.g., "C3:E5"), and outputs the range.
-// Keywords: Aspose.Cells | GetArrayRange | dynamic array | spilled range | C# Excel | CellArea | IsDynamicArrayFormula | .NET
-// Common Searches: Aspose.Cells get spilled range | C# retrieve dynamic array spill area | GetArrayRange example Aspose | find spilled range of Excel dynamic array using Aspose | Cell.IsDynamicArrayFormula usage
-// Developer Intent: Determine the address of the range that a dynamic array formula in cell C3 expands to.
-// Use Cases: Confirm that a dynamic array formula produced the expected spill area before further processing. | Log or display the spill address for debugging or reporting. | Apply formatting, validation, or additional calculations to the entire spilled range.
-// AI Prompts: Write C# code with Aspose.Cells to check if cell C3 contains a dynamic array formula and return its spilled range address. | Create a reusable method that accepts any cell reference and returns the spilled range string for a dynamic array formula. | Explain how GetArrayRange and CellArea work together to retrieve spill addresses in Aspose.Cells for .NET.
+// Title: Aspose.Cells .NET – Retrieve spilled range of a dynamic array formula in C3
+// Description: C# example that creates a workbook, inserts a dynamic array formula (e.g., =SEQUENCE(3,2)) into cell C3, forces calculation, and uses GetArrayRange together with CellsHelper.CellIndexToName to return the full A1‑style spill address.
+// Keywords: Aspose.Cells GetArrayRange | dynamic array spill address | C# Aspose.Cells dynamic array | SEQUENCE formula spill range | CellsHelper CellIndexToName | retrieve spilled range .NET | Excel dynamic array Aspose
+// Common Searches: how to get spilled range of a dynamic array formula using Aspose.Cells | Aspose.Cells GetArrayRange example C# | retrieve A1 address of SEQUENCE spill in C3 | Aspose.Cells dynamic array spill range code
+// Developer Intent: Obtain the A1‑style address of the range that a dynamic array formula occupies when placed in cell C3.
+// Use Cases: Apply formatting or borders to the exact area produced by a SEQUENCE formula. | Validate that a dynamic array output stays within worksheet limits before saving. | Reference the spill range in subsequent calculations or data‑processing logic.
+// AI Prompts: Generate C# code with Aspose.Cells that returns the spilled range address of a dynamic array formula in cell C3. | Explain how GetArrayRange and CellsHelper.CellIndexToName combine to produce an A1‑style spill address. | Show how to change the formula to =SORT(A1:A10) and retrieve its spill range using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Loads an Excel workbook, accesses cell C3, verifies the presence of a dynamic array formula using IsDynamicArrayFormula, obtains the spill area via GetArrayRange, converts the resulting CellArea to a standard address (e.g., "C3:E5"), and outputs the range.
-class Program
+namespace AsposeCellsDynamicArraySpill
 {
-    static void Main()
+    // C# example that creates a workbook, inserts a dynamic array formula (e.g., =SEQUENCE(3,2)) into cell C3, forces calculation, and uses GetArrayRange together with CellsHelper.CellIndexToName to return the full A1‑style spill address.
+    class Program
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the first worksheet (or specify the appropriate one)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Get the cell C3 which contains the dynamic array formula
-        Cell dynamicCell = worksheet.Cells["C3"];
-
-        // Verify that the cell indeed holds a dynamic array formula
-        if (dynamicCell.IsDynamicArrayFormula)
+        static void Main()
         {
-            // Retrieve the spilled range of the dynamic array formula
-            CellArea spillArea = dynamicCell.GetArrayRange();
+            // Create a new workbook (lifecycle rule)
+            Workbook wb = new Workbook();
+            Worksheet sheet = wb.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Convert the CellArea to a readable address (e.g., "C3:E5")
-            string startAddress = worksheet.Cells[spillArea.StartRow, spillArea.StartColumn].Name;
-            string endAddress   = worksheet.Cells[spillArea.EndRow,   spillArea.EndColumn].Name;
+            // Set a dynamic array formula in cell C3 (example: SEQUENCE(3,2))
+            Cell targetCell = cells["C3"];
+            string formula = "=SEQUENCE(3,2)";
+            targetCell.SetDynamicArrayFormula(formula, new FormulaParseOptions(), true);
+
+            // Calculate formulas so the spill range is materialized
+            wb.CalculateFormula();
+
+            // Retrieve the spilled range of the dynamic array formula
+            CellArea spillArea = targetCell.GetArrayRange();
+
+            // Convert the start and end coordinates to A1 style addresses
+            string startAddress = CellsHelper.CellIndexToName(spillArea.StartRow, spillArea.StartColumn);
+            string endAddress   = CellsHelper.CellIndexToName(spillArea.EndRow,   spillArea.EndColumn);
             string spilledRange = $"{startAddress}:{endAddress}";
 
-            Console.WriteLine($"Spilled range for C3: {spilledRange}");
-        }
-        else
-        {
-            Console.WriteLine("Cell C3 does not contain a dynamic array formula.");
+            // Output the spilled range address
+            Console.WriteLine($"Spilled range for dynamic array formula in C3: {spilledRange}");
+
+            // (Optional) Save the workbook to verify the result
+            wb.Save("DynamicArraySpillDemo.xlsx");
         }
     }
 }

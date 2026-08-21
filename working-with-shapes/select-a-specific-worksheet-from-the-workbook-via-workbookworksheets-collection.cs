@@ -1,44 +1,43 @@
 // Title: Select a Worksheet by Index or Name with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to retrieve a specific worksheet from an Aspose.Cells workbook using the Worksheets collection—either by its zero‑based index or by its sheet name—then writes data to the selected sheets and saves the workbook.
-// Keywords: Aspose.Cells select worksheet C# | Workbook.Worksheets index | Workbook.Worksheets name | .NET spreadsheet API | C# get worksheet by name | C# get worksheet by index | Aspose.Cells example
-// Common Searches: Aspose.Cells get worksheet by index C# | Aspose.Cells access worksheet by name | How to select a sheet in Aspose.Cells .NET | Retrieve specific worksheet Aspose.Cells | C# Aspose.Cells worksheet selection example
-// Developer Intent: Retrieve a particular worksheet from a workbook using either its index or its name.
-// Use Cases: Write data to a known sheet without searching by name. | Apply formatting, formulas, or protection to a sheet identified by its tab name. | Validate worksheet properties (Name, Index) before performing further operations.
-// AI Prompts: Show C# code that selects a worksheet by index and writes a value using Aspose.Cells. | Provide an Aspose.Cells example that accesses a worksheet by name and changes its tab color in .NET. | Explain how to loop through workbook.Worksheets to locate a sheet by name and then protect it with Aspose.Cells.
+// Description: Demonstrates how to create a Workbook, add sheets, access a sheet using its zero‑based position or its assigned name, rename a sheet, write values to cells, and save the result as an XLSX file using Aspose.Cells for C#.
+// Keywords: Aspose.Cells | C# | select worksheet | worksheet index | worksheet name | Workbook.Worksheets | rename sheet | write cell values | save XLSX
+// Common Searches: Aspose.Cells get worksheet by index C# | Aspose.Cells retrieve worksheet by name .NET | how to rename a worksheet using Aspose.Cells | write data to a specific sheet Aspose.Cells C# | save workbook as XLSX with Aspose.Cells
+// Developer Intent: Retrieve a specific worksheet from a workbook via the Worksheets collection.
+// Use Cases: Populate header rows on the first sheet (index 0) before importing data. | Insert a generation timestamp into a "Summary" sheet identified by its name. | Rename a newly added sheet to reflect its purpose before exporting the file.
+// AI Prompts: Show C# code that accesses a worksheet by index and writes header values with Aspose.Cells. | Provide an example of selecting a worksheet by its name, updating cells, and saving the workbook as XLSX using Aspose.Cells for .NET. | Explain how to loop through all worksheets in a workbook and perform custom actions on each with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to retrieve a specific worksheet from an Aspose.Cells workbook using the Worksheets collection—either by its zero‑based index or by its sheet name—then writes data to the selected sheets and saves the workbook.
+// Demonstrates how to create a Workbook, add sheets, access a sheet using its zero‑based position or its assigned name, rename a sheet, write values to cells, and save the result as an XLSX file using Aspose.Cells for C#.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook (default contains one worksheet)
         Workbook workbook = new Workbook();
 
-        // Rename the default first worksheet
-        workbook.Worksheets[0].Name = "FirstSheet";
-
         // Add additional worksheets with specific names
-        Worksheet secondSheet = workbook.Worksheets.Add("SecondSheet");
-        Worksheet thirdSheet = workbook.Worksheets.Add("ThirdSheet");
+        workbook.Worksheets.Add("SalesData");
+        workbook.Worksheets.Add("Summary");
 
-        // Select a worksheet by its zero‑based index
-        Worksheet sheetByIndex = workbook.Worksheets[1]; // This is "SecondSheet"
+        // ---- Select a worksheet by index ----
+        // Index is zero‑based; this gets the first worksheet (original one)
+        Worksheet firstSheet = workbook.Worksheets[0];
+        firstSheet.Name = "Data"; // rename for clarity
 
-        // Select a worksheet by its name
-        Worksheet sheetByName = workbook.Worksheets["ThirdSheet"]; // This is "ThirdSheet"
+        // ---- Select a worksheet by name ----
+        // Retrieves the worksheet whose Name property matches "Summary"
+        Worksheet summarySheet = workbook.Worksheets["Summary"];
 
-        // Verify the selections
-        Console.WriteLine($"Selected by index: Name={sheetByIndex.Name}, Index={sheetByIndex.Index}");
-        Console.WriteLine($"Selected by name:  Name={sheetByName.Name}, Index={sheetByName.Index}");
+        // Demonstrate that the correct sheets are accessed by writing data
+        firstSheet.Cells["A1"].PutValue("Item");
+        firstSheet.Cells["B1"].PutValue("Quantity");
 
-        // Write some data to the selected worksheets
-        sheetByIndex.Cells["A1"].PutValue("Accessed via index");
-        sheetByName.Cells["A1"].PutValue("Accessed via name");
+        summarySheet.Cells["A1"].PutValue("Report generated on:");
+        summarySheet.Cells["B1"].PutValue(DateTime.Now);
 
-        // Save the workbook to a file
-        workbook.Save("SelectWorksheetDemo.xlsx");
+        // Save the workbook to disk
+        workbook.Save("SelectedSheetsDemo.xlsx", SaveFormat.Xlsx);
     }
 }

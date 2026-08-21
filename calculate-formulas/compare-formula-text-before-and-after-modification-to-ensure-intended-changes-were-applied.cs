@@ -1,91 +1,75 @@
-// Title: Compare Original and Modified Cell Formulas Using Aspose.Cells Revision Logs in C#
-// Description: This example creates an Excel workbook, assigns an initial formula to cell A1, updates the formula, saves the file, and then reloads it to read the RevisionLogCollection. It extracts the old and new formulas for the cell‑change revision and verifies that the new formula matches the expected expression.
-// Keywords: Aspose.Cells | C# | revision log | formula change tracking | compare Excel formulas | cell revision audit | RevisionLogCollection | track cell edits | Excel automation .NET | formula verification
-// Common Searches: Aspose.Cells get old formula from revision log | compare original and updated formula C# Aspose.Cells | read cell change revisions in Excel workbook | verify formula modification using Aspose.Cells | audit formula edits with Aspose.Cells .NET
-// Developer Intent: Confirm that a cell's formula was changed to the intended expression by reading revision logs.
-// Use Cases: Log the original formula before a user edits a cell and later retrieve it for compliance reporting. | After programmatically updating a formula, load the saved workbook and extract both old and new formulas from the revision entries. | Automatically compare the captured new formula with an expected value and trigger custom logic on match or mismatch.
-// AI Prompts: How do I enable cell revision tracking in Aspose.Cells and retrieve old and new formulas for a specific cell using C#? | Provide C# code that reads the RevisionLogCollection from a saved workbook and validates that a modified formula equals a given string.
+// Title: Track and Compare Excel Formula Changes with Aspose.Cells Revision Logs in C#
+// Description: This example creates a workbook, writes a SUM formula to cell A1, updates it to AVERAGE, saves the file, reloads it, and reads the revision logs. It locates the RevisionCellChange for A1, extracts the OldFormula and NewFormula values, and confirms that the change matches the expected expressions.
+// Keywords: Aspose.Cells | C# | .NET | revision log | formula change | RevisionCellChange | OldFormula | NewFormula | audit Excel formulas | track cell edits
+// Common Searches: Aspose.Cells read old and new formulas from revision log | How to detect formula changes in an Excel workbook using C# | Audit Excel cell formula modifications with Aspose.Cells | Retrieve RevisionCellChange details in .NET
+// Developer Intent: Read a workbook’s revision history, locate a specific cell’s change entry, and compare its previous and current formulas.
+// Use Cases: Identify unauthorized formula edits by scanning revision logs for critical cells. | Generate compliance reports that list every formula modification in a spreadsheet. | Validate automated formula updates before publishing the workbook.
+// AI Prompts: Write C# code that opens an existing Excel file and prints the OldFormula and NewFormula for a given cell using Aspose.Cells revision logs. | Create a method that accepts a cell address, expected old formula, and expected new formula, then returns true if a matching RevisionCellChange exists. | Show how to iterate over all RevisionCellChange objects in a workbook and build a dictionary mapping cell addresses to their formula change history.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Revisions;
 
-namespace AsposeCellsFormulaComparisonDemo
+namespace AsposeCellsExamples
 {
-    // This example creates an Excel workbook, assigns an initial formula to cell A1, updates the formula, saves the file, and then reloads it to read the RevisionLogCollection. It extracts the old and new formulas for the cell‑change revision and verifies that the new formula matches the expected expression.
-    public class Program
+    // This example creates a workbook, writes a SUM formula to cell A1, updates it to AVERAGE, saves the file, reloads it, and reads the revision logs. It locates the RevisionCellChange for A1, extracts the OldFormula and NewFormula values, and confirms that the change matches the expected expressions.
+    public class FormulaComparisonDemo
     {
-        public static void Main()
+        public static void Run()
         {
             try
             {
-                // Path for the temporary workbook that will store revisions
-                string filePath = "FormulaComparisonDemo.xlsx";
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // ---------- Create workbook and set initial formula ----------
-                Workbook workbook = new Workbook(); // create workbook
+                // Set initial formula in cell A1 and populate referenced cells
+                worksheet.Cells["A1"].Formula = "=SUM(B1:B3)";
+                worksheet.Cells["B1"].PutValue(10);
+                worksheet.Cells["B2"].PutValue(20);
+                worksheet.Cells["B3"].PutValue(30);
 
-                // NOTE: In some versions of Aspose.Cells the EnableCellRevision property may not be available.
-                // If supported, uncomment the following line to enable revision tracking:
-                // workbook.Settings.EnableCellRevision = true;
+                // Change the formula in A1 to generate a revision entry
+                worksheet.Cells["A1"].Formula = "=AVERAGE(B1:B3)";
 
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Set the original formula in cell A1
-                sheet.Cells["A1"].Formula = "=SUM(B1:B3)";
-
-                // Populate referenced cells with sample values
-                sheet.Cells["B1"].PutValue(10);
-                sheet.Cells["B2"].PutValue(20);
-                sheet.Cells["B3"].PutValue(30);
-
-                // ---------- Modify the formula ----------
-                // This change will generate a revision entry
-                string newFormula = "=AVERAGE(B1:B3)";
-                sheet.Cells["A1"].Formula = newFormula;
-
-                // Save the workbook to persist the revision information
+                // Save the workbook to persist revision information
+                string filePath = "FormulaRevisionDemo.xlsx";
                 workbook.Save(filePath);
 
-                // ---------- Load workbook and examine revisions ----------
+                // Ensure the file exists before attempting to reopen
                 if (!File.Exists(filePath))
                 {
                     Console.WriteLine($"File not found: {filePath}");
                     return;
                 }
 
-                Workbook revWorkbook = new Workbook(filePath);
-                RevisionLogCollection logs = revWorkbook.Worksheets.RevisionLogs;
+                // Reopen the workbook to read revision logs
+                Workbook revisionWorkbook = new Workbook(filePath);
 
-                if (logs == null || logs.Count == 0)
+                // Iterate through revision logs to find the cell change for A1
+                foreach (RevisionLog log in revisionWorkbook.Worksheets.RevisionLogs)
                 {
-                    Console.WriteLine("No revision logs were found in the workbook.");
-                    return;
-                }
-
-                foreach (RevisionLog log in logs)
-                {
-                    foreach (Revision rev in log.Revisions)
+                    foreach (Revision revision in log.Revisions)
                     {
-                        // Look for cell change revisions
-                        if (rev is RevisionCellChange cellChange && cellChange.CellName == "A1")
+                        if (revision is RevisionCellChange cellChange && cellChange.CellName == "A1")
                         {
+                            // Retrieve old and new formulas from the revision entry
                             string oldFormula = cellChange.OldFormula;
-                            string capturedNewFormula = cellChange.NewFormula;
+                            string newFormula = cellChange.NewFormula;
 
-                            Console.WriteLine($"Cell: {cellChange.CellName}");
+                            Console.WriteLine($"Cell {cellChange.CellName} formula changed.");
                             Console.WriteLine($"Old Formula: {oldFormula}");
-                            Console.WriteLine($"New Formula (from revision): {capturedNewFormula}");
+                            Console.WriteLine($"New Formula: {newFormula}");
 
-                            // Compare the captured new formula with the expected one
-                            if (string.Equals(capturedNewFormula, newFormula, StringComparison.OrdinalIgnoreCase))
+                            // Verify the formulas match expected values
+                            if (oldFormula == "=SUM(B1:B3)" && newFormula == "=AVERAGE(B1:B3)")
                             {
-                                Console.WriteLine("Verification succeeded: The new formula matches the intended change.");
+                                Console.WriteLine("Formula change verified successfully.");
                             }
                             else
                             {
-                                Console.WriteLine("Verification failed: The new formula does NOT match the intended change.");
+                                Console.WriteLine("Formula change does not match expected values.");
                             }
                         }
                     }
@@ -95,6 +79,15 @@ namespace AsposeCellsFormulaComparisonDemo
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            FormulaComparisonDemo.Run();
         }
     }
 }

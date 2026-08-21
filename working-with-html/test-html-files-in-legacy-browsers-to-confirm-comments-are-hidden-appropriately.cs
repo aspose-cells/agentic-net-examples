@@ -1,58 +1,40 @@
-// Title: Export Excel Comments to HTML with Aspose.Cells while Hiding Them in Legacy Browsers
-// Description: Creates a workbook, adds a comment to cell A1, marks it invisible, and saves the file as HTML using HtmlSaveOptions (IsExportComments = true, DisableDownlevelRevealedComments = true). The code then reads the output to verify that the comment text is not rendered in older browsers.
-// Keywords: Aspose.Cells | HtmlSaveOptions | DisableDownlevelRevealedComments | hide comments HTML | legacy browsers | export comments | C# Excel to HTML | conditional comments | workbook to HTML | cell comment visibility
-// Common Searches: Aspose.Cells hide Excel comments in HTML for old browsers | HtmlSaveOptions DisableDownlevelRevealedComments example C# | Export comments but keep them invisible in generated HTML | Verify comment text is absent in Aspose.Cells HTML output | C# save workbook as HTML without showing cell comments
-// Developer Intent: Generate an HTML representation of an Excel workbook where comments are exported but remain invisible to users of legacy browsers.
-// Use Cases: Produce HTML reports for intranet sites that must support IE8 or earlier without displaying cell comments. | Automate a validation step that confirms comment text is omitted from the final HTML markup. | Create archival HTML snapshots that retain comment data for future processing while keeping the UI clean for end‑users.
-// AI Prompts: Show how to use Aspose.Cells HtmlSaveOptions to export comments and disable downlevel‑revealed conditional comments for legacy browsers. | Write a C# unit test that asserts the generated HTML does not contain a specific comment when DisableDownlevelRevealedComments is true. | Explain the impact of the DisableDownlevelRevealedComments flag on the HTML markup produced by Aspose.Cells.
+// Title: Export Excel Cell Comments to HTML While Suppressing Them in Legacy Browsers – Aspose.Cells for .NET
+// Description: C# sample that adds a comment to cell A1, then saves the workbook as HTML with HtmlSaveOptions.IsExportComments = true and DisableDownlevelRevealedComments = true, preventing the comment from appearing in old browsers like IE6/7.
+// Keywords: Aspose.Cells | C# | HtmlSaveOptions | ExportComments | DisableDownlevelRevealedComments | legacy browsers | IE6 | HTML export | Excel comments | conditional comments
+// Common Searches: Aspose.Cells hide Excel comments in old browsers | HtmlSaveOptions DisableDownlevelRevealedComments example | export workbook to HTML without conditional comments | C# generate HTML from Excel with hidden comments | test comment visibility in legacy browsers Aspose
+// Developer Intent: Generate HTML from an Excel file where cell comments are stored but not rendered in outdated browsers.
+// Use Cases: Create web‑ready reports that keep internal notes invisible to IE6/7 users. | Automate CI checks to verify that exported HTML lacks downlevel‑revealed comment markup. | Produce documentation where comments are only visible in modern browsers supporting standard conditional comments.
+// AI Prompts: Modify the code to also hide comments in current browsers using CSS. | Write a unit test that asserts the HTML output contains no downlevel‑revealed comment tags when DisableDownlevelRevealedComments is true. | Explain the difference between downlevel‑revealed and downlevel‑hidden conditional comments and how Aspose.Cells processes each.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsLegacyCommentTest
+// C# sample that adds a comment to cell A1, then saves the workbook as HTML with HtmlSaveOptions.IsExportComments = true and DisableDownlevelRevealedComments = true, preventing the comment from appearing in old browsers like IE6/7.
+class TestLegacyBrowserComments
 {
-    // Creates a workbook, adds a comment to cell A1, marks it invisible, and saves the file as HTML using HtmlSaveOptions (IsExportComments = true, DisableDownlevelRevealedComments = true). The code then reads the output to verify that the comment text is not rendered in older browsers.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Add a comment to cell A1
+        int commentIndex = worksheet.Comments.Add("A1");
+        Comment comment = worksheet.Comments[commentIndex];
+        comment.Note = "This comment should be hidden in legacy browsers";
+
+        // Configure HTML save options
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Export comments to the HTML output
+            IsExportComments = true,
+            // Disable downlevel‑revealed conditional comments so they are not shown in legacy browsers
+            DisableDownlevelRevealedComments = true
+        };
 
-            // Add a comment to cell A1
-            int commentIndex = sheet.Comments.Add("A1");
-            Comment comment = sheet.Comments[commentIndex];
-            comment.Note = "Legacy browser test comment";
+        // Save the workbook as an HTML file with the specified options
+        workbook.Save("LegacyBrowserComment.html", htmlOptions);
 
-            // Ensure the comment is not visible in the worksheet (optional)
-            comment.IsVisible = false;
-
-            // Configure HTML save options:
-            // - Export comments so they are written to the HTML.
-            // - Disable downlevel‑revealed conditional comments to hide them in legacy browsers.
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                IsExportComments = true,
-                DisableDownlevelRevealedComments = true
-            };
-
-            // Save the workbook as HTML
-            string htmlPath = "LegacyCommentTest.html";
-            workbook.Save(htmlPath, htmlOptions);
-            Console.WriteLine($"Workbook saved to '{htmlPath}' with comments hidden for legacy browsers.");
-
-            // Simple verification: read the generated HTML and check that the comment text does not appear
-            string htmlContent = File.ReadAllText(htmlPath);
-            if (htmlContent.Contains("Legacy browser test comment"))
-            {
-                Console.WriteLine("Warning: Comment text is still present in the HTML output.");
-            }
-            else
-            {
-                Console.WriteLine("Success: Comment text is not present in the HTML output.");
-            }
-        }
+        Console.WriteLine("HTML file saved with comments hidden for legacy browsers.");
     }
 }

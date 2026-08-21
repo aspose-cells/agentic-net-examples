@@ -1,15 +1,16 @@
-// Title: C# – Set a Dynamic Print Area in Aspose.Cells Using the Worksheet’s Used Range
-// Description: This example creates a workbook, populates the first worksheet with sample data, retrieves the worksheet’s MaxDisplayRange, converts the range to A1 notation, assigns it to PageSetup.PrintArea, and saves the file. The print area automatically expands whenever new rows or columns are added.
-// Keywords: Aspose.Cells | C# | .NET | dynamic print area | worksheet print area | MaxDisplayRange | PageSetup.PrintArea | used range | auto‑expand print area | Excel export sample | GitHub example
-// Common Searches: Aspose.Cells set dynamic print area C# | How to use MaxDisplayRange for print area in .NET | Automatically expand Excel print area with Aspose.Cells | PageSetup.PrintArea from used range C# | Sample code for dynamic print area Aspose.Cells
-// Developer Intent: Configure the worksheet’s print area so it automatically includes all existing and future data cells.
-// Use Cases: Monthly sales reports that grow as new rows are appended. | Invoices where only populated cells should be printed, avoiding blank pages. | Exported data tables that need precise pagination without manual range adjustments.
-// AI Prompts: Generate C# code that sets PageSetup.PrintArea to the worksheet’s MaxDisplayRange using Aspose.Cells. | Explain how to recalculate and update the print area after adding rows to an existing Aspose.Cells workbook. | Show a step‑by‑step example of retrieving a worksheet’s used range and assigning it to PrintArea in .NET.
+// Title: C# – Dynamically Set Excel Print Area with Aspose.Cells Using MaxDisplayRange
+// Description: Demonstrates how to programmatically set and refresh a worksheet's print area to its current MaxDisplayRange in Aspose.Cells for .NET, handling growing data and empty sheets.
+// Keywords: Aspose.Cells | C# | .NET | Excel print area | MaxDisplayRange | dynamic range | worksheet print area | set print area programmatically | update print area after adding rows | Excel automation
+// Common Searches: Aspose.Cells set print area to used range C# | How to update Excel print area when rows are added using Aspose.Cells | MaxDisplayRange example for print area in .NET | C# code to automatically adjust worksheet print area | Aspose.Cells dynamic print area tutorial
+// Developer Intent: Programmatically define and keep the worksheet's print area aligned with the populated cells as data grows.
+// Use Cases: Create periodic reports that append rows and need accurate printing without manual area changes. | Build an Excel template where users can add entries and the print layout automatically expands. | Automate batch generation of invoices where each sheet's print area must reflect the final row count. | Integrate into a data‑export service that produces printable Excel files with variable row counts.
+// AI Prompts: Generate C# code that sets the print area to include only visible rows while ignoring hidden ones. | Show how to limit the print area to columns A‑D based on MaxDisplayRange. | Provide error‑handling patterns for an empty worksheet when assigning PrintArea. | Explain how to combine MaxDisplayRange with custom margins for printing. | Suggest a way to store the calculated print range in a named range for later reuse.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// This example creates a workbook, populates the first worksheet with sample data, retrieves the worksheet’s MaxDisplayRange, converts the range to A1 notation, assigns it to PageSetup.PrintArea, and saves the file. The print area automatically expands whenever new rows or columns are added.
+// Demonstrates how to programmatically set and refresh a worksheet's print area to its current MaxDisplayRange in Aspose.Cells for .NET, handling growing data and empty sheets.
 class DynamicPrintAreaDemo
 {
     static void Main()
@@ -20,36 +21,70 @@ class DynamicPrintAreaDemo
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate the worksheet with sample data (replace with any dynamic data source)
-            for (int row = 0; row < 30; row++)
+            // Initial data population (simulating existing data)
+            for (int i = 0; i < 10; i++)
             {
-                worksheet.Cells[row, 0].PutValue($"Item {row + 1}");
-                worksheet.Cells[row, 1].PutValue((row + 1) * 10);
+                worksheet.Cells[i, 0].PutValue($"Item {i + 1}");
+                worksheet.Cells[i, 1].PutValue((i + 1) * 10);
             }
 
-            // Determine the current used range (including data, merged cells and shapes)
-            Aspose.Cells.Range maxDisplayRange = worksheet.Cells.MaxDisplayRange;
+            // Set the print area based on the current used range
+            SetPrintAreaToMaxDisplayRange(worksheet);
 
-            if (maxDisplayRange != null)
+            // Add more rows later (simulating dynamic data entry)
+            for (int i = 10; i < 20; i++)
             {
-                // Calculate the last row/column indices
-                int lastRow = maxDisplayRange.FirstRow + maxDisplayRange.RowCount - 1;
-                int lastColumn = maxDisplayRange.FirstColumn + maxDisplayRange.ColumnCount - 1;
-
-                // Convert the range indices to A1 style addresses
-                string startAddress = CellsHelper.CellIndexToName(maxDisplayRange.FirstRow, maxDisplayRange.FirstColumn);
-                string endAddress   = CellsHelper.CellIndexToName(lastRow, lastColumn);
-
-                // Set the print area to the determined range so it expands automatically when new data is added
-                worksheet.PageSetup.PrintArea = $"{startAddress}:{endAddress}";
+                worksheet.Cells[i, 0].PutValue($"Item {i + 1}");
+                worksheet.Cells[i, 1].PutValue((i + 1) * 10);
             }
 
-            // Save the workbook with the dynamic print area applied
-            workbook.Save("DynamicPrintArea.xlsx");
+            // Update the print area to include the newly added rows
+            SetPrintAreaToMaxDisplayRange(worksheet);
+
+            // Save the workbook
+            string outputPath = "DynamicPrintArea.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    // Helper method: sets the worksheet's print area to its MaxDisplayRange
+    static void SetPrintAreaToMaxDisplayRange(Worksheet ws)
+    {
+        // MaxDisplayRange returns null for an empty sheet (Aspose.Cells 21.5.2+)
+        var maxRange = ws.Cells.MaxDisplayRange;
+        if (maxRange != null)
+        {
+            int startRow = maxRange.FirstRow;
+            int startCol = maxRange.FirstColumn;
+            int endRow = maxRange.FirstRow + maxRange.RowCount - 1;
+            int endCol = maxRange.FirstColumn + maxRange.ColumnCount - 1;
+
+            string startAddress = CellIndexToAddress(startRow, startCol);
+            string endAddress   = CellIndexToAddress(endRow,   endCol);
+            ws.PageSetup.PrintArea = $"{startAddress}:{endAddress}";
+        }
+    }
+
+    // Converts zero‑based row/column indices to an Excel cell address (e.g., A1)
+    static string CellIndexToAddress(int rowIndex, int columnIndex)
+    {
+        // Convert column index to letters (A, B, ..., Z, AA, AB, ...)
+        string columnName = "";
+        int dividend = columnIndex + 1;
+        while (dividend > 0)
+        {
+            int modulo = (dividend - 1) % 26;
+            columnName = Convert.ToChar('A' + modulo) + columnName;
+            dividend = (dividend - modulo) / 26;
+        }
+
+        // Excel rows are 1‑based
+        int rowNumber = rowIndex + 1;
+        return $"{columnName}{rowNumber}";
     }
 }

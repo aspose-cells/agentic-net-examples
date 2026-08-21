@@ -1,75 +1,98 @@
-// Title: Replace old domain URLs in the named range "Links" using Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, accesses the named range "Links", scans each string cell, swaps the legacy domain (http://old.example.com) with the new domain (https://new.example.com), and saves the updated file.
-// Keywords: Aspose.Cells | C# | replace text in Excel | named range | URL batch update | hyperlink migration | workbook cell iteration | domain change
-// Common Searches: Aspose.Cells replace URLs in a named range | C# batch update Excel hyperlinks | How to change domain in Excel cells using Aspose | Replace old website links in Excel with new domain
-// Developer Intent: Update every occurrence of an outdated domain within the "Links" named range of an Excel workbook using Aspose.Cells.
-// Use Cases: Migrate all hyperlinks after a website rebranding by updating the domain in a predefined named range. | Prepare a report for external distribution by converting internal URLs to public‑facing ones in bulk. | Fix broken links in a financial model where every source URL shares the same obsolete domain.
-// AI Prompts: Generate C# code with Aspose.Cells that replaces a substring in all string cells of a specified named range, handling missing ranges gracefully. | Provide an Aspose.Cells snippet that validates the existence of a named range before performing a batch URL replacement and then saves the workbook. | Write a reusable C# method that accepts old and new domain strings and updates every matching URL within a given named range using Aspose.Cells.
+// Title: Batch replace domain URLs in a named range using Aspose.Cells for .NET (C#)
+// Description: Load an Excel workbook, locate the named range "Links", iterate through its string cells, replace every occurrence of an old domain with a new one, and save the updated file—all with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# replace text | named range URL update | batch replace domain Excel | C# Excel string replace Aspose | update hyperlinks programmatically | .NET Excel bulk edit | Aspose.Cells named range manipulation | Excel URL migration C#
+// Common Searches: How to change a domain in all cells of a named range with Aspose.Cells | C# code to batch replace URLs in Excel named range | Aspose.Cells get and edit named range values | Replace old website links with new ones in an Excel file using .NET | Bulk update hyperlinks in Excel via Aspose.Cells
+// Developer Intent: Replace every occurrence of a specified old domain with a new domain inside the string cells of the named range "Links".
+// Use Cases: Migrate marketing URLs after a domain rebrand across a template workbook. | Swap placeholder test links with production URLs in automated report generation. | Correct outdated hyperlinks in financial models without manual editing.
+// AI Prompts: Write C# code that uses Aspose.Cells to find the named range "Links" in an Excel file and replace all instances of "old.example.com" with "new.example.com". | Explain step‑by‑step how to retrieve a named range reference, parse its sheet and address, create a Range object, and perform string replacement on its cells with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsReplaceInNamedRange
+namespace ReplaceUrlsInNamedRange
 {
-    // Loads an Excel workbook, accesses the named range "Links", scans each string cell, swaps the legacy domain (http://old.example.com) with the new domain (https://new.example.com), and saves the updated file.
+    // Load an Excel workbook, locate the named range "Links", iterate through its string cells, replace every occurrence of an old domain with a new one, and save the updated file—all with Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
             try
             {
-                const string inputPath = "InputWorkbook.xlsx";
-                const string outputPath = "OutputWorkbook.xlsx";
+                const string inputPath = "Input.xlsx";
+                const string outputPath = "Output.xlsx";
 
-                // Verify that the input workbook exists
+                // Verify that the input file exists
                 if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
                     return;
                 }
 
-                // Load the existing workbook
+                // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Define the old and new domain strings to be replaced
-                string oldDomain = "http://old.example.com";
-                string newDomain = "https://new.example.com";
+                // Named range and domain settings
+                const string namedRangeName = "Links";
+                const string oldDomain = "old.example.com";
+                const string newDomain = "new.example.com";
 
-                // Retrieve the named range "Links"
-                AsposeRange linksRange = workbook.Worksheets.GetRangeByName("Links");
-
-                // If the named range does not exist, exit gracefully
-                if (linksRange == null)
+                // Retrieve the named range
+                Name namedRange = workbook.Worksheets.Names[namedRangeName];
+                if (namedRange == null)
                 {
-                    Console.WriteLine("Named range 'Links' not found.");
+                    Console.WriteLine($"Named range \"{namedRangeName}\" not found.");
                     return;
                 }
 
-                // Iterate through each cell in the range and replace occurrences of the old domain
-                foreach (Cell cell in linksRange)
+                // Get the reference string without leading '='
+                string refersTo = namedRange.GetRefersTo(false, false);
+                if (refersTo.StartsWith("="))
+                    refersTo = refersTo.Substring(1);
+
+                // Split into sheet name and range address
+                string[] parts = refersTo.Split('!');
+                if (parts.Length != 2)
                 {
-                    // Process only cells that contain string values
+                    Console.WriteLine("Unable to parse the range reference.");
+                    return;
+                }
+
+                string sheetName = parts[0];
+                string rangeAddress = parts[1];
+
+                // Get the worksheet
+                Worksheet sheet = workbook.Worksheets[sheetName];
+                if (sheet == null)
+                {
+                    Console.WriteLine($"Worksheet \"{sheetName}\" not found.");
+                    return;
+                }
+
+                // Create the Aspose.Cells.Range explicitly to avoid ambiguity
+                Aspose.Cells.Range range = sheet.Cells.CreateRange(rangeAddress);
+
+                // Replace old domain with new domain in string cells
+                foreach (Cell cell in range)
+                {
                     if (cell.Type == CellValueType.IsString)
                     {
-                        string originalText = cell.StringValue;
-                        if (!string.IsNullOrEmpty(originalText) && originalText.Contains(oldDomain))
+                        string original = cell.StringValue;
+                        if (!string.IsNullOrEmpty(original) && original.Contains(oldDomain))
                         {
-                            string updatedText = originalText.Replace(oldDomain, newDomain);
-                            cell.PutValue(updatedText);
+                            string updated = original.Replace(oldDomain, newDomain);
+                            cell.PutValue(updated);
                         }
                     }
                 }
 
                 // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

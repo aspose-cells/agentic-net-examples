@@ -1,92 +1,52 @@
-// Title: Aspose.Cells .NET: Delete CheckBox Controls Linked to Zero‑Valued Cells in All Worksheets
-// Description: Loads an Excel workbook, scans every worksheet for CheckBox form controls, checks the value of each control's LinkedCell, and removes the CheckBox when the linked cell contains the numeric value 0. The updated workbook is then saved.
-// Keywords: Aspose.Cells delete checkboxes | remove zero linked checkbox .NET | iterate worksheets Aspose.Cells | Excel form control removal | C# Aspose.Cells shape manipulation | check box linked cell value | Aspose.Cells API example
-// Common Searches: how to remove checkboxes linked to zero in Excel using Aspose.Cells | Aspose.Cells delete form controls based on cell value | C# iterate all worksheets and delete specific shapes | remove zero‑linked check boxes programmatically | Aspose.Cells example for cleaning up check box controls
-// Developer Intent: Programmatically delete every CheckBox whose LinkedCell contains the numeric value zero across all worksheets in an Excel file.
-// Use Cases: Clean a template before distribution by stripping unchecked (zero‑linked) check boxes. | Generate a final report without visual clutter from disabled options. | Automate workbook sanitization in data pipelines where zero‑linked controls are irrelevant.
-// AI Prompts: Write C# code with Aspose.Cells that removes all check boxes linked to cells equal to 0 in every worksheet. | Show how to log the addresses of deleted check boxes while processing a workbook with Aspose.Cells. | Extend the example to also delete radio buttons whose linked cells contain zero.
+// Title: Remove CheckBox Controls Linked to Zero Cells in All Worksheets (Aspose.Cells for .NET)
+// Description: Loads a workbook, walks through every worksheet’s CheckBoxCollection, and deletes each CheckBox whose LinkedCell holds the numeric value 0. The backward iteration prevents index errors, and the workbook is saved after cleanup.
+// Keywords: Aspose.Cells | C# | CheckBoxCollection | delete checkboxes | linked cell zero | iterate worksheets | Excel form controls | remove shapes | Excel automation | Aspose.Cells example
+// Common Searches: Aspose.Cells delete checkboxes linked to zero | remove check box controls from all sheets C# | how to filter check boxes by linked cell value in Excel | iterate worksheets and delete specific shapes Aspose.Cells | C# code to clean up zero‑linked check boxes
+// Developer Intent: Programmatically eliminate every CheckBox whose LinkedCell contains the numeric value 0 from all worksheets in an Excel workbook.
+// Use Cases: Sanitize a shared template by stripping false‑flag check boxes before distribution. | Reduce visual clutter in financial reports by removing check boxes tied to zero amounts. | Prepare workbooks for publishing or archiving, ensuring no zero‑linked form controls remain.
+// AI Prompts: Generate C# code with Aspose.Cells that deletes all CheckBox shapes whose LinkedCell equals 0 across every worksheet. | Show an alternative approach to remove zero‑linked check boxes without using a reverse loop, while keeping collection integrity. | Explain how to log the address and sheet name of each removed CheckBox for audit tracking.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// Loads a workbook, walks through every worksheet’s CheckBoxCollection, and deletes each CheckBox whose LinkedCell holds the numeric value 0. The backward iteration prevents index errors, and the workbook is saved after cleanup.
+class DeleteZeroLinkedCheckBoxes
 {
-    // Loads an Excel workbook, scans every worksheet for CheckBox form controls, checks the value of each control's LinkedCell, and removes the CheckBox when the linked cell contains the numeric value 0. The updated workbook is then saved.
-    public class DeleteZeroLinkedCheckBoxes
+    static void Main()
     {
-        // Entry point required for console application
-        public static void Main(string[] args)
+        // Load an existing workbook (replace with actual path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
-            {
-                // Determine input and output file paths (allow overrides via command‑line)
-                string inputPath = args.Length > 0 ? args[0] : "input.xlsx";
-                string outputPath = args.Length > 1 ? args[1] : "output.xlsx";
+            // Get the collection of check boxes on the current worksheet
+            CheckBoxCollection checkBoxes = sheet.CheckBoxes;
 
-                // Verify that the input file exists before attempting to load it
-                if (!File.Exists(inputPath))
+            // Iterate backwards so that removal does not affect the loop index
+            for (int i = checkBoxes.Count - 1; i >= 0; i--)
+            {
+                CheckBox cb = checkBoxes[i];
+
+                // Only process check boxes that are linked to a cell
+                string linkedCell = cb.LinkedCell;
+                if (string.IsNullOrEmpty(linkedCell))
+                    continue;
+
+                // Retrieve the linked cell
+                Cell cell = sheet.Cells[linkedCell];
+
+                // Determine if the cell contains a numeric zero
+                if (cell.Value != null && double.TryParse(cell.Value.ToString(), out double numericValue) && numericValue == 0)
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
+                    // Remove the check box from the collection
+                    checkBoxes.RemoveAt(i);
                 }
-
-                Run(inputPath, outputPath);
-                Console.WriteLine($"Processing completed. Output saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 
-        // Core logic moved to a method that accepts file paths
-        public static void Run(string inputFile, string outputFile)
-        {
-            // Load the workbook from the specified input file
-            Workbook workbook = new Workbook(inputFile);
-
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Get the collection of check boxes on the current worksheet
-                CheckBoxCollection checkBoxes = sheet.CheckBoxes;
-
-                // Iterate backwards because we will be removing items
-                for (int i = checkBoxes.Count - 1; i >= 0; i--)
-                {
-                    CheckBox checkBox = checkBoxes[i];
-
-                    // Get the cell address linked to the check box
-                    string linkedCell = checkBox.LinkedCell;
-
-                    // Proceed only if the check box is linked to a cell
-                    if (!string.IsNullOrEmpty(linkedCell))
-                    {
-                        // Retrieve the cell object
-                        Cell cell = sheet.Cells[linkedCell];
-
-                        // Ensure the cell has a value that can be interpreted as a number
-                        if (cell != null && cell.Value != null)
-                        {
-                            // Try to parse the cell value to a double
-                            if (double.TryParse(cell.Value.ToString(), out double numericValue))
-                            {
-                                // If the linked cell contains zero, remove the check box
-                                if (numericValue == 0)
-                                {
-                                    checkBoxes.RemoveAt(i);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Save the modified workbook to the specified output file
-            workbook.Save(outputFile, SaveFormat.Xlsx);
-        }
+        // Save the modified workbook (replace with desired output path)
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

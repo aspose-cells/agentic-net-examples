@@ -1,51 +1,41 @@
-// Title: C# – Convert Every Table to a Range with TableToRangeOptions Using Aspose.Cells
-// Description: Loads a workbook, walks through each worksheet, retrieves all ListObjects, and converts every table to a normal cell range with a custom TableToRangeOptions (e.g., setting LastRow). The conversion runs backward to keep the collection stable, then the workbook is saved.
-// Keywords: Aspose.Cells C# convert table to range | TableToRangeOptions LastRow | ListObjectCollection iteration | convert ListObjects Aspose.Cells | batch table conversion .NET | Aspose.Cells workbook tables | C# Excel table to range
-// Common Searches: Aspose.Cells convert all tables to ranges C# | TableToRangeOptions example Aspose.Cells | Iterate worksheets and ListObjects Aspose.Cells | How to remove tables after conversion Aspose.Cells | Backward loop ListObjectCollection ConvertToRange
-// Developer Intent: Transform each ListObject in a workbook into a plain range using custom conversion options.
-// Use Cases: Strip table formatting while preserving data before exporting to CSV or plain‑text formats. | Limit the converted area to the actual last row of each table to avoid trailing blanks. | Prepare workbooks for older Excel versions that do not support structured tables.
-// AI Prompts: Write C# code that loops through all worksheets in a workbook and converts each ListObject to a range with TableToRangeOptions, setting LastRow to the table's EndRow. | Explain why a reverse for‑loop is required when calling ConvertToRange on a ListObjectCollection and show how to also configure FirstColumn in TableToRangeOptions. | Provide a sample that converts tables to ranges, keeps formulas and formatting intact, and then saves the workbook.
+// Title: Batch Convert Excel Tables to Ranges with TableToRangeOptions (Aspose.Cells C#)
+// Description: Loads a workbook, loops through every worksheet and each ListObject (Excel table), creates a TableToRangeOptions object with the table's EndRow, converts the table to a plain range, and saves the updated file. Ideal for bulk table‑to‑range transformations while keeping data intact.
+// Keywords: Aspose.Cells convert table to range C# | TableToRangeOptions example | ListObject to range Aspose.Cells | batch table conversion Excel C# | iterate worksheets tables Aspose | Excel table to plain range | Aspose.Cells LastRow option | C# Aspose.Cells table conversion
+// Common Searches: Aspose.Cells convert all tables to ranges | TableToRangeOptions LastRow C# example | Iterate worksheets and ListObjects Aspose.Cells | Batch convert Excel tables using Aspose | How to change Excel tables to ranges in .NET
+// Developer Intent: Programmatically change every ListObject in a workbook into a regular range using custom TableToRangeOptions.
+// Use Cases: Strip table formatting before exporting to CSV or PDF. | Prepare workbooks for third‑party engines that only recognize plain ranges. | Apply a uniform conversion rule (e.g., fixing the last row) after dynamically resizing tables.
+// AI Prompts: Write C# code that logs each table name while converting it to a range with TableToRangeOptions. | Show how to preserve cell styles and formulas when using TableToRangeOptions in a batch conversion. | Explain additional TableToRangeOptions properties such as FirstRow, PreserveFormatting, and how to combine them in a loop.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsTableConversion
+// Loads a workbook, loops through every worksheet and each ListObject (Excel table), creates a TableToRangeOptions object with the table's EndRow, converts the table to a plain range, and saves the updated file. Ideal for bulk table‑to‑range transformations while keeping data intact.
+class ConvertTablesToRanges
 {
-    // Loads a workbook, walks through each worksheet, retrieves all ListObjects, and converts every table to a normal cell range with a custom TableToRangeOptions (e.g., setting LastRow). The conversion runs backward to keep the collection stable, then the workbook is saved.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet worksheet in workbook.Worksheets)
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("InputWorkbook.xlsx");
-
-            // Iterate through each worksheet in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Iterate through each table (ListObject) in the current worksheet
+            foreach (ListObject table in worksheet.ListObjects)
             {
-                // Get the collection of tables (ListObjects) on the current worksheet
-                ListObjectCollection tables = sheet.ListObjects;
-
-                // Iterate backwards because ConvertToRange removes the table from the collection
-                for (int i = tables.Count - 1; i >= 0; i--)
+                // Create conversion options and set the last row to the table's current end row
+                TableToRangeOptions options = new TableToRangeOptions
                 {
-                    ListObject table = tables[i];
+                    LastRow = table.EndRow
+                };
 
-                    // Create custom options for conversion
-                    TableToRangeOptions options = new TableToRangeOptions
-                    {
-                        // Example: convert only up to the current last row of the table
-                        // (you can set any row index you need)
-                        LastRow = table.EndRow
-                    };
-
-                    // Convert the table to a normal range using the custom options
-                    table.ConvertToRange(options);
-                }
+                // Convert the table to a regular range using the specified options
+                table.ConvertToRange(options);
             }
-
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("OutputWorkbook.xlsx");
         }
+
+        // Save the workbook after all tables have been converted
+        workbook.Save("output.xlsx");
     }
 }

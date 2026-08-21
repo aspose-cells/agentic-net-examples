@@ -1,49 +1,51 @@
-// Title: Aspose.Cells for .NET: Loop through column A and set row‑specific multiplication formulas in column B (C#)
-// Description: Creates a workbook, fills A1‑A10 with 1‑10, then uses a C# loop to write a formula in column B that multiplies each A‑cell by its row number (e.g., =A1*1, =A2*2). The workbook calculates the formulas, prints the results, and saves the file as MultiplicationFormulaDemo.xlsx.
-// Keywords: Aspose.Cells C# example | set Excel formula programmatically | loop through rows Aspose.Cells | multiply cell by row number | calculate formulas .NET | save workbook with formulas | Excel automation Aspose | dynamic formula assignment | C# Excel API
-// Common Searches: How to assign a formula to each row with Aspose.Cells | C# loop to create multiplication formulas in Excel | Aspose.Cells calculate formulas after setting them | Programmatically write row‑based formulas in .NET | Save Excel workbook after formula evaluation Aspose
-// Developer Intent: Programmatically generate a row‑specific multiplication formula in column B that references column A and the current row index, evaluate the formulas, and persist the results in an Excel file.
-// Use Cases: Bulk compute products of a value column and its row number without manual entry. | Generate dynamic reports where each row requires a custom calculation based on its position. | Automate data‑driven spreadsheets that need to be saved with pre‑calculated results for downstream systems.
-// AI Prompts: Generate C# code using Aspose.Cells to fill column A with numbers 1‑100 and place =A{row}*{row} formulas in column B, then calculate and save the workbook. | Show how to modify the loop so column B multiplies column A by a constant factor or by another column while still using Aspose.Cells. | Explain how to detect the last used row in column A and apply the same multiplication formula to the entire used range with Aspose.Cells.
+// Title: C# Aspose.Cells example: Loop column A and assign row‑based multiplication formulas to column B
+// Description: Creates a workbook, fills A1‑A10 with 1‑10, loops each row to set B cells with =A{row}*{row}, calculates all formulas, and saves the file as MultiplicationResults.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# | set cell formula Aspose.Cells | loop rows Excel C# | row based multiplication formula | calculate formulas Aspose.Cells | save workbook Aspose.Cells | Excel automation .NET | dynamic formula assignment
+// Common Searches: Aspose.Cells set formula in C# loop rows | how to apply multiplication formula per row Aspose.Cells | calculate and save Excel workbook with formulas C# | loop through column A and write formulas to column B Aspose
+// Developer Intent: Generate a workbook, populate column A, apply a row‑specific multiplication formula to column B, evaluate the formulas, and persist the result.
+// Use Cases: Create a numeric list and automatically compute each value's square in the adjacent column. | Apply a custom calculation that incorporates the current row number for per‑row analytics. | Automate Excel reporting where formulas are generated programmatically and saved without manual editing.
+// AI Prompts: Write C# code with Aspose.Cells that fills column A with numbers 1‑N, sets column B formulas as =Arow*row, calculates all formulas, and saves the workbook. | Generate a reusable method that receives a worksheet and target column index, iterates over used rows, and assigns a row‑based multiplication formula using the Formula property. | Explain the differences between the Formula property and the SetFormula method when assigning formulas in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, fills A1‑A10 with 1‑10, then uses a C# loop to write a formula in column B that multiplies each A‑cell by its row number (e.g., =A1*1, =A2*2). The workbook calculates the formulas, prints the results, and saves the file as MultiplicationFormulaDemo.xlsx.
+// Creates a workbook, fills A1‑A10 with 1‑10, loops each row to set B cells with =A{row}*{row}, calculates all formulas, and saves the file as MultiplicationResults.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate column A with sample values (1 to 10)
-        for (int i = 0; i < 10; i++)
+        try
         {
-            cells[i, 0].PutValue(i + 1); // A1..A10
-        }
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Loop through column A and set a multiplication formula in column B.
-        // Formula: =A{row}*{row}
-        for (int i = 0; i < 10; i++)
+            // Populate column A with sample values (1, 2, 3, ...)
+            for (int i = 0; i < 10; i++)
+            {
+                cells[i, 0].PutValue(i + 1); // A1..A10
+            }
+
+            // Loop through each used row in column A
+            // For each row, set a multiplication formula in column B:
+            //   =A{rowNumber}*{rowNumber}
+            for (int row = 0; row < 10; row++)
+            {
+                string formula = $"=A{row + 1}*{row + 1}";
+                // Set the formula; using the Formula property avoids null options issue
+                cells[row, 1].Formula = formula;
+            }
+
+            // Calculate all formulas so that column B contains the results
+            workbook.CalculateFormula();
+
+            // Save the workbook with the computed results (lifecycle: save)
+            workbook.Save("MultiplicationResults.xlsx");
+        }
+        catch (Exception ex)
         {
-            int rowNumber = i + 1; // Excel rows are 1‑based
-            string formula = $"=A{rowNumber}*{rowNumber}";
-            cells[i, 1].Formula = formula; // B column
+            Console.WriteLine($"Error: {ex.Message}");
         }
-
-        // Calculate all formulas so that results are stored
-        workbook.CalculateFormula();
-
-        // Optional: display results in console
-        for (int i = 0; i < 10; i++)
-        {
-            Console.WriteLine($"Row {i + 1}: A={cells[i, 0].Value}, B (A*row)={cells[i, 1].Value}");
-        }
-
-        // Save the workbook to a file
-        workbook.Save("MultiplicationFormulaDemo.xlsx");
     }
 }

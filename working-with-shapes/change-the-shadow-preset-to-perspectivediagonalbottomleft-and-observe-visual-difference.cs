@@ -1,10 +1,10 @@
-// Title: Set PerspectiveDiagonalBottomLeft Shadow Preset on a Rectangle Shape with Aspose.Cells for .NET
-// Description: This example creates a new workbook, adds two rectangle shapes, applies identical shadow settings (transparency, blur, distance) and assigns different presets—OffsetDiagonalBottomRight to the first shape and PerspectiveDiagonalBottomLeft to the second. The workbook is saved so you can see the visual impact of the PerspectiveDiagonalBottomLeft preset.
-// Keywords: Aspose.Cells | C# | .NET | shape shadow preset | PerspectiveDiagonalBottomLeft | OffsetDiagonalBottomRight | Excel rectangle shadow | visual comparison | shadow effect | Excel shape formatting
-// Common Searches: Aspose.Cells set shape shadow preset C# | PerspectiveDiagonalBottomLeft example Aspose.Cells | compare shadow presets Aspose.Cells | how to change shape shadow in Excel using Aspose.Cells | C# code for rectangle shadow effect Aspose.Cells
-// Developer Intent: Show how to apply the PerspectiveDiagonalBottomLeft shadow preset to a rectangle shape and compare its appearance with another preset.
-// Use Cases: Create a design reference sheet that illustrates different shadow styles for Excel shapes. | Generate a template where specific shadow presets are applied automatically for brand‑consistent reports. | Test visual impact of shadow presets before finalizing workbook styling. | Document shape‑formatting guidelines for team members using Aspose.Cells.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a rectangle's ShadowEffect.PresetType to PerspectiveDiagonalBottomLeft and saves the workbook. | Explain the visual differences between OffsetDiagonalBottomRight and PerspectiveDiagonalBottomLeft shadow presets in an Excel file created with Aspose.Cells. | Provide a C# snippet that loops through multiple shapes, applies various shadow presets—including PerspectiveDiagonalBottomLeft—and outputs a workbook for side‑by‑side comparison.
+// Title: Apply the PerspectiveDiagonalBottomLeft Shadow Preset to a Shape using Aspose.Cells for .NET
+// Description: Demonstrates how to create an Excel workbook, add a rectangle shape, apply the OffsetBottom shadow preset, then switch to the PerspectiveDiagonalBottomLeft preset (via PresetShadowType.PerspectiveDiagonalLowerLeft), save both versions, and read back the preset to confirm the change.
+// Keywords: Aspose.Cells | C# | shape shadow preset | PerspectiveDiagonalBottomLeft | PresetShadowType | Excel shadow effect | compare shadow presets | OffsetBottom | Aspose.Cells API | Excel workbook styling
+// Common Searches: Aspose.Cells set shape shadow to PerspectiveDiagonalBottomLeft | C# change shape shadow preset in Excel | How to use PresetShadowType in Aspose.Cells | Compare OffsetBottom and PerspectiveDiagonalBottomLeft shadows | Save Excel file after modifying shape shadow
+// Developer Intent: Show how to assign the PerspectiveDiagonalBottomLeft shadow preset to a shape, persist the change, and verify the applied preset.
+// Use Cases: Generate side‑by‑side screenshots for documentation that illustrate different shadow styles. | Create Excel reports where key shapes are highlighted with a PerspectiveDiagonalBottomLeft shadow. | Build an interactive UI that lets end‑users pick a shadow preset and instantly preview the result in an Excel file.
+// AI Prompts: Write C# code with Aspose.Cells to set a rectangle's shadow preset to PerspectiveDiagonalBottomLeft and save the workbook. | Provide an example that switches a shape's shadow from OffsetBottom to PerspectiveDiagonalBottomLeft, then reads the preset type to confirm the update. | Explain how to compare multiple shadow presets on a shape in Aspose.Cells and output the resulting preset names.
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsShadowDemo
 {
-    // This example creates a new workbook, adds two rectangle shapes, applies identical shadow settings (transparency, blur, distance) and assigns different presets—OffsetDiagonalBottomRight to the first shape and PerspectiveDiagonalBottomLeft to the second. The workbook is saved so you can see the visual impact of the PerspectiveDiagonalBottomLeft preset.
+    // Demonstrates how to create an Excel workbook, add a rectangle shape, apply the OffsetBottom shadow preset, then switch to the PerspectiveDiagonalBottomLeft preset (via PresetShadowType.PerspectiveDiagonalLowerLeft), save both versions, and read back the preset to confirm the change.
     class Program
     {
         static void Main()
@@ -21,22 +21,24 @@ namespace AsposeCellsShadowDemo
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add first rectangle shape with an initial shadow preset
-            Shape shape1 = sheet.Shapes.AddRectangle(1, 0, 1, 0, 150, 100);
-            shape1.ShadowEffect.PresetType = PresetShadowType.OffsetDiagonalBottomRight; // initial preset
-            shape1.ShadowEffect.Transparency = 0.3;
-            shape1.ShadowEffect.Blur = 15;
-            shape1.ShadowEffect.Distance = 10;
+            // Add a rectangle shape to demonstrate shadow effects
+            Shape shape = sheet.Shapes.AddRectangle(2, 2, 2, 2, 150, 100);
 
-            // Add second rectangle shape to demonstrate the PerspectiveDiagonalLowerLeft preset
-            Shape shape2 = sheet.Shapes.AddRectangle(4, 0, 4, 0, 150, 100);
-            shape2.ShadowEffect.PresetType = PresetShadowType.PerspectiveDiagonalLowerLeft; // target preset
-            shape2.ShadowEffect.Transparency = 0.3;
-            shape2.ShadowEffect.Blur = 15;
-            shape2.ShadowEffect.Distance = 10;
+            // Set an initial preset shadow type (e.g., OffsetBottom) and save the result
+            shape.ShadowEffect.PresetType = PresetShadowType.OffsetBottom;
+            workbook.Save("Shadow_Initial.xlsx");
 
-            // Save the workbook to view the visual difference between the two shadow presets
-            workbook.Save("ShadowPresetComparison.xlsx");
+            // Change the preset shadow type to PerspectiveDiagonalLowerLeft
+            // (Corresponds to the requested "PerspectiveDiagonalBottomLeft")
+            shape.ShadowEffect.PresetType = PresetShadowType.PerspectiveDiagonalLowerLeft;
+
+            // Save the workbook again to observe the visual difference
+            workbook.Save("Shadow_PerspectiveDiagonalLowerLeft.xlsx");
+
+            // Optional: Load the saved file to verify the preset type
+            Workbook loaded = new Workbook("Shadow_PerspectiveDiagonalLowerLeft.xlsx");
+            Shape loadedShape = loaded.Worksheets[0].Shapes[0];
+            Console.WriteLine("Current PresetType: " + loadedShape.ShadowEffect.PresetType);
         }
     }
 }

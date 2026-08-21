@@ -1,33 +1,48 @@
-// Title: C# – Convert HTML with Formulas to Excel and Enable Automatic Calculation using Aspose.Cells
-// Description: Shows how to load an HTML file that contains formulas with Aspose.Cells HtmlLoadOptions (LoadFormulas = true), set the workbook's calculation mode to Automatic, and save the output as an .xlsx file so formulas recalculate on open.
-// Keywords: Aspose.Cells | HTML to Excel conversion | C# HtmlLoadOptions | LoadFormulas | automatic calculation mode | CalcModeType.Automatic | formula evaluation | convert HTML tables to XLSX | Aspose.Cells .NET | Excel workbook settings
-// Common Searches: Aspose.Cells load HTML with formulas C# | set calculation mode automatic Aspose.Cells .NET | convert HTML table to Excel preserving formulas | C# example HTML to XLSX Aspose.Cells | enable automatic formula calculation after HTML import
-// Developer Intent: Load an HTML document containing formulas, configure the workbook to recalculate automatically, and export it as an Excel workbook.
-// Use Cases: Transform web‑generated reports that embed HTML tables with formulas into Excel files that update calculations instantly. | Batch‑process HTML invoices or statements that include embedded calculations, producing ready‑to‑analyze XLSX files. | Build a data‑ingestion pipeline that reads multiple HTML sources, sets automatic formula evaluation, and delivers Excel workbooks for downstream analytics.
-// AI Prompts: Generate C# code using Aspose.Cells to load an HTML file with formulas, set the workbook's calculation mode to Automatic, and save it as an .xlsx file. | Explain how HtmlLoadOptions.LoadFormulas and Workbook.Settings.FormulaSettings.CalculationMode work together when converting HTML to Excel with Aspose.Cells. | Provide a step‑by‑step guide for converting a folder of HTML files to Excel workbooks that automatically evaluate formulas, using Aspose.Cells for .NET.
+// Title: C# – Convert HTML to Excel with Automatic Formula Evaluation using Aspise.Cells
+// Description: Loads an HTML file with Aspose.Cells, preserves embedded formulas, switches the workbook to automatic calculation mode, optionally forces an immediate recalculation, and saves the result as an XLSX file.
+// Keywords: Aspose.Cells HTML to Excel | C# convert HTML to XLSX | load formulas from HTML | automatic formula calculation | CalcModeType.Automatic | Aspose.Cells workbook settings
+// Common Searches: Aspose.Cells load HTML with formulas C# | set workbook calculation mode to automatic Aspose.Cells | convert HTML report to Excel preserving formulas | how to recalculate formulas after HTML import Aspose
+// Developer Intent: Import an HTML document, keep its formulas intact, enable auto‑recalculation, and export to Excel.
+// Use Cases: Transform web‑based reports that contain formulas into editable Excel workbooks. | Batch‑process multiple HTML files, preserving calculations for downstream analysis. | Create a data‑pipeline that converts HTML tables with embedded formulas into ready‑to‑use XLSX files.
+// AI Prompts: Write C# code with Aspose.Cells that loads an HTML file, retains its formulas, sets automatic calculation, and saves as .xlsx. | Explain how to enable auto‑recalculation in Aspose.Cells after importing HTML and how to trigger an immediate formula evaluation. | Provide a step‑by‑step tutorial for converting HTML reports to Excel in C#, ensuring formulas are preserved and evaluated automatically.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlToExcel
 {
-    // Shows how to load an HTML file that contains formulas with Aspose.Cells HtmlLoadOptions (LoadFormulas = true), set the workbook's calculation mode to Automatic, and save the output as an .xlsx file so formulas recalculate on open.
+    // Loads an HTML file with Aspose.Cells, preserves embedded formulas, switches the workbook to automatic calculation mode, optionally forces an immediate recalculation, and saves the result as an XLSX file.
     class Program
     {
         static void Main()
         {
-            // Load the HTML file and import any formulas it contains
+            // Path to the source HTML file
+            string htmlPath = "input.html";
+
+            // Path for the resulting Excel file
+            string excelPath = "output.xlsx";
+
+            // Load the HTML file with options that import formulas
             HtmlLoadOptions loadOptions = new HtmlLoadOptions
             {
-                LoadFormulas = true // ensure formulas are recognized during load
+                // Ensure that any formulas present in the HTML are loaded as formulas
+                LoadFormulas = true
             };
-            Workbook workbook = new Workbook("input.html", loadOptions);
 
-            // Set the workbook calculation mode to Automatic so formulas are evaluated when needed
+            // Create a workbook from the HTML source using the specified load options
+            Workbook workbook = new Workbook(htmlPath, loadOptions);
+
+            // Set the workbook calculation mode to Automatic so that formulas are evaluated
             workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
 
+            // Optionally calculate all formulas immediately (not required for the mode,
+            // but ensures values are up‑to‑date before saving)
+            workbook.CalculateFormula();
+
             // Save the workbook as an Excel file
-            workbook.Save("output.xlsx");
+            workbook.Save(excelPath);
+
+            Console.WriteLine($"HTML file '{htmlPath}' has been converted to Excel '{excelPath}' with automatic calculation mode.");
         }
     }
 }

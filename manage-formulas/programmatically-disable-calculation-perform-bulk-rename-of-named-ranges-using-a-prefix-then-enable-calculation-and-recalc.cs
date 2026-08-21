@@ -1,70 +1,55 @@
-// Title: C# – Bulk prepend a prefix to all named ranges, toggle calculation, and recalc with Aspose.Cells
-// Description: Loads a workbook, disables automatic calculation, adds a custom prefix to every defined name while preserving its RefersTo reference, sorts the NameCollection, re‑enables calculation, forces a full formula recalculation, and saves the result to a new file.
-// Keywords: Aspose.Cells C# rename named ranges | bulk add prefix to Excel defined names | disable calculation Aspose.Cells | enable calculation and recalc | NameCollection sort | programmatic Excel range renaming | formula recalculation after rename
-// Common Searches: Aspose.Cells add prefix to all named ranges C# | disable calculation then rename named ranges Aspose.Cells | recalculate formulas after bulk renaming Excel names | C# code to rename Excel defined names with Aspose.Cells | how to sort NameCollection after renaming
-// Developer Intent: Rename every defined name with a common prefix, temporarily suspend calculation, then recalculate all formulas.
-// Use Cases: Standardize naming conventions across a workbook before distribution. | Prevent name collisions when merging multiple workbooks by bulk‑renaming ranges. | Integrate into CI/CD pipelines to update named ranges and verify workbook integrity with a forced recalculation.
-// AI Prompts: Write C# code using Aspose.Cells that disables automatic calculation, prepends "New_" to each defined name, re‑enables calculation, and forces a full formula recalculation. | Show how to keep the RefersTo property unchanged while renaming named ranges in a workbook with Aspose.Cells for .NET. | Provide an example that sorts the renamed NameCollection, saves the workbook, and logs success messages.
+// Title: Bulk rename named ranges with a prefix and control calculation in Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to temporarily suspend formula calculation, prepend a custom prefix to every defined name in a workbook, then re‑enable calculation and run a full recalc before saving the file.
+// Keywords: Aspose.Cells C# | named ranges bulk rename | prefix defined names | disable calculation Aspose.Cells | Workbook.CalculateFormula | Excel automation rename names | formula engine suspend | bulk update named ranges | Excel workbook recalc
+// Common Searches: Aspose.Cells add prefix to all named ranges | temporarily turn off calculation while renaming names in Aspose.Cells | force full recalculation after bulk rename of defined names | C# bulk rename Excel named ranges Aspose.Cells | disable formula evaluation Aspose.Cells .NET
+// Developer Intent: Rename every defined name with a specified prefix without triggering intermediate calculations, then reactivate the formula engine and recalculate the workbook.
+// Use Cases: Standardize naming conventions in legacy workbooks before integration with other systems. | Update hundreds of named ranges in a template without incurring performance penalties from repeated recalculations. | Prepare a report workbook for distribution, ensuring all formulas reflect the new range names.
+// AI Prompts: Show C# code that disables calculation, adds a prefix to all Workbook.Worksheets.Names, re‑enables calculation and calls CalculateFormula in Aspose.Cells. | Explain step‑by‑step how to bulk rename defined names in an Aspose.Cells workbook while preventing intermediate formula evaluation. | Provide a concise example of suspending formula evaluation, renaming named ranges with a custom prefix, and performing a full recalc in Aspose.Cells for .NET.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads a workbook, disables automatic calculation, adds a custom prefix to every defined name while preserving its RefersTo reference, sorts the NameCollection, re‑enables calculation, forces a full formula recalculation, and saves the result to a new file.
+// Demonstrates how to temporarily suspend formula calculation, prepend a custom prefix to every defined name in a workbook, then re‑enable calculation and run a full recalc before saving the file.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Create a new workbook (lifecycle rule)
+            Workbook workbook = new Workbook();
 
-            // Prefix to be added to each named range
-            string prefix = "New_";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the collection of all defined names in the workbook
-            NameCollection names = workbook.Worksheets.Names;
+            // Add some sample data
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["B1"].PutValue(30);
+            sheet.Cells["B2"].PutValue(40);
 
-            // Rename each named range by adding the prefix
-            foreach (Name name in names)
+            // Create a couple of named ranges
+            int idx1 = workbook.Worksheets.Names.Add("Range1");
+            workbook.Worksheets.Names[idx1].RefersTo = "=Sheet1!$A$1:$A$2";
+
+            int idx2 = workbook.Worksheets.Names.Add("Range2");
+            workbook.Worksheets.Names[idx2].RefersTo = "=Sheet1!$B$1:$B$2";
+
+            // Bulk rename all defined names with a prefix
+            const string prefix = "New_";
+            foreach (Name name in workbook.Worksheets.Names)
             {
-                // Preserve the original reference so it is not altered unintentionally
-                string originalRef = name.RefersTo;
-
-                // Update the name text with the desired prefix
                 name.Text = prefix + name.Text;
-
-                // Reassign the original reference (ensures the range stays the same)
-                name.RefersTo = originalRef;
             }
 
-            // Optional: sort the names after renaming for better organization
-            names.Sort();
-
-            // Force a full recalculation after renaming
+            // Force a full recalculation
             workbook.CalculateFormula();
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the modified workbook
+            // Save the workbook (lifecycle rule)
+            string outputPath = "RenamedNames.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

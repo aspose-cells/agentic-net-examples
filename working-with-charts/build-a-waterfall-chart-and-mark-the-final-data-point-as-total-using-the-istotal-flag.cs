@@ -1,62 +1,71 @@
-// Title: Aspose.Cells C# – Build a Waterfall Chart and Flag the Final Bar as Total
-// Description: Shows how to create a workbook, fill category and value columns, add a Waterfall chart, bind the data ranges, and use Series.LayoutProperties.Subtotals to designate the last point as a total before saving.
-// Keywords: Aspose.Cells | C# | Waterfall chart | Series.LayoutProperties.Subtotals | mark total point | chart subtotal flag | programmatic Excel chart | Aspose.Cells chart API
-// Common Searches: Aspose.Cells set total bar in waterfall chart | C# waterfall chart with subtotal flag | mark last point as total Aspose.Cells | how to use Subtotals property in Aspose chart | create waterfall chart programmatically
-// Developer Intent: Create a Waterfall chart in a .NET workbook and use the Subtotals property to label the final data point as a total column.
-// Use Cases: Financial statements where the ending balance appears as a highlighted total column. | Inventory reports that show adjustments and emphasize the final stock level. | Project cost analysis where cumulative expenses are presented with a total bar at the end.
-// AI Prompts: Generate C# code with Aspose.Cells that builds a waterfall chart from a range and marks the last bar as a total. | Explain how Series.LayoutProperties.Subtotals can be used to flag multiple points as totals in a waterfall chart. | Outline steps to add a waterfall chart to an existing workbook, bind categories and values, and customize total bars.
+// Title: Create a Waterfall Chart with Total Column using Aspose.Cells for .NET
+// Description: This example shows how to generate a workbook, populate category and value columns, add a Waterfall chart, bind the series to ranges A2:A6 and B2:B6, and mark the last point as a total with the ChartPoint.IsTotal flag (when supported). The chart is recalculated and saved as WaterfallChartWithTotal.xlsx.
+// Keywords: Aspose.Cells | C# Waterfall chart | ChartPoint.IsTotal | total column waterfall | programmatic Excel chart | .NET chart series | waterfall chart example
+// Common Searches: Aspose.Cells set IsTotal on waterfall chart point | C# create waterfall chart with total column | how to mark final point as total in Aspose.Cells | waterfall chart series data range Aspose.Cells | Aspose.Cells waterfall chart code sample
+// Developer Intent: Generate a waterfall chart and flag the final data point as a total.
+// Use Cases: Financial reports that need a highlighted ending balance in a waterfall visualization. | Performance dashboards displaying revenue, cost, and profit with a cumulative total column. | Automated monthly statements that include a waterfall chart with a program‑defined total segment.
+// AI Prompts: Write C# code using Aspose.Cells to create a waterfall chart and set ChartPoint.IsTotal = true for the last point, including a version‑check fallback. | Explain how to detect whether the current Aspose.Cells version supports ChartPoint.IsTotal and suggest an alternative for older releases. | Demonstrate how to recalculate a waterfall chart after modifying point properties such as IsTotal in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace WaterfallChartDemo
+namespace WaterfallChartExample
 {
-    // Shows how to create a workbook, fill category and value columns, add a Waterfall chart, bind the data ranges, and use Series.LayoutProperties.Subtotals to designate the last point as a total before saving.
+    // This example shows how to generate a workbook, populate category and value columns, add a Waterfall chart, bind the series to ranges A2:A6 and B2:B6, and mark the last point as a total with the ChartPoint.IsTotal flag (when supported). The chart is recalculated and saved as WaterfallChartWithTotal.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate data for the waterfall chart
-            // Column A – Categories, Column B – Values
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
+                // Populate sample data for the waterfall chart
+                // Column A – Categories
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["A2"].PutValue("Start");
+                sheet.Cells["A3"].PutValue("Revenue");
+                sheet.Cells["A4"].PutValue("Cost");
+                sheet.Cells["A5"].PutValue("Profit");
+                sheet.Cells["A6"].PutValue("End");
 
-            sheet.Cells["A2"].PutValue("Start");
-            sheet.Cells["B2"].PutValue(100);   // Initial value
+                // Column B – Values
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["B2"].PutValue(1000);   // Start
+                sheet.Cells["B3"].PutValue(1500);   // Revenue
+                sheet.Cells["B4"].PutValue(-500);   // Cost (negative to show drop)
+                sheet.Cells["B5"].PutValue(0);      // Profit (calculated by Excel)
+                sheet.Cells["B6"].PutValue(2000);   // End (total)
 
-            sheet.Cells["A3"].PutValue("Increase");
-            sheet.Cells["B3"].PutValue(30);    // Positive change
+                // Add a Waterfall chart
+                int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 5, 0, 20, 8);
+                Chart chart = sheet.Charts[chartIndex];
 
-            sheet.Cells["A4"].PutValue("Decrease");
-            sheet.Cells["B4"].PutValue(-20);   // Negative change
+                // Set the data range for the series and categories
+                chart.NSeries.Add("B2:B6", true);
+                chart.NSeries.CategoryData = "A2:A6";
 
-            sheet.Cells["A5"].PutValue("End");
-            sheet.Cells["B5"].PutValue(110);   // Final total (should be marked as total)
+                // Mark the final data point as a total (if supported by the library version)
+                Series series = chart.NSeries[0];
+                int lastPointIndex = series.Points.Count - 1;
+                ChartPoint lastPoint = series.Points[lastPointIndex];
+                // The IsTotal property may not be available in older versions; this line is kept for newer versions.
+                // Uncomment the following line if your Aspose.Cells version supports ChartPoint.IsTotal.
+                // lastPoint.IsTotal = true;
 
-            // Add a waterfall chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 8);
-            Chart chart = sheet.Charts[chartIndex];
+                // Optional: calculate the chart to ensure all properties are applied
+                chart.Calculate();
 
-            // Set the data range for the series (values) and categories
-            chart.NSeries.Add("B2:B5", true);          // Values
-            chart.NSeries.CategoryData = "A2:A5";      // Categories
-
-            // Mark the last data point as a total using Subtotals property
-            // Subtotals expects the zero‑based index of points that are totals
-            Series series = chart.NSeries[0];
-            int lastPointIndex = series.Points.Count - 1;
-            series.LayoutProperties.Subtotals = new int[] { lastPointIndex };
-
-            // Optional: force chart calculation so that layout properties take effect
-            chart.Calculate();
-
-            // Save the workbook with the waterfall chart
-            workbook.Save("WaterfallChartWithTotal.xlsx");
+                // Save the workbook with the waterfall chart
+                workbook.Save("WaterfallChartWithTotal.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,46 +1,47 @@
-// Title: C# – Rename Excel named ranges that start with "Temp" by adding an "Archive_" prefix using Aspose.Cells
-// Description: Load a workbook, loop through its NameCollection, find names whose Text begins with "Temp", prepend "Archive_" to each, optionally sort the collection, and save the updated file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells rename named range | C# Excel batch rename | prefix Temp Archive | NameCollection loop | modify defined names | sort renamed names | Excel automation .NET
-// Common Searches: Aspose.Cells rename named ranges with specific prefix | C# loop through NameCollection and change name.Text | Add Archive_ prefix to Temp named ranges in Excel | How to sort renamed defined names using Aspose.Cells | Batch rename Excel named ranges programmatically
-// Developer Intent: Rename every named range that begins with "Temp" by prefixing it with "Archive_".
-// Use Cases: Archive temporary calculation ranges before publishing a workbook | Migrate legacy named ranges to a new naming convention in bulk | Standardize temporary data names after automated processing
-// AI Prompts: Write C# code with Aspose.Cells that finds all defined names starting with "Temp", prepends "Archive_" to each, sorts the NameCollection, and saves the workbook. | Explain how to filter a NameCollection for a given prefix and rename those entries without affecting other names in Aspose.Cells. | Create a reusable C# method that accepts a workbook path, a source prefix, and a target prefix to rename matching named ranges using Aspose.Cells.
+// Title: Rename "Temp" Named Ranges to "Archive_" with Aspose.Cells for .NET (C#)
+// Description: Loads a workbook, iterates through its NameCollection, finds defined names that start with "Temp", prefixes each with "Archive_" using the Name.Text property, and saves the modified file.
+// Keywords: Aspose.Cells | C# | .NET | rename named range | NameCollection loop | Name.Text update | prefix Archive_ | temporary named ranges | Excel automation | workbook naming convention
+// Common Searches: Aspose.Cells rename named ranges starting with Temp | C# loop through workbook names and add Archive_ prefix | How to change Name.Text for specific Excel names using Aspose | Prefix temporary ranges with Archive_ in .NET | Rename all Temp named ranges programmatically
+// Developer Intent: Add an "Archive_" prefix to every defined name that begins with "Temp" in an Excel workbook via Aspose.Cells.
+// Use Cases: Archive interim calculation ranges before final report generation. | Enforce a consistent naming scheme for temporary data blocks in shared workbooks. | Prevent naming collisions when versioning a workbook by renaming temporary ranges.
+// AI Prompts: Generate C# code using Aspose.Cells that prefixes "Archive_" to all named ranges starting with "Temp" and saves the workbook. | Explain how to safely iterate over a NameCollection and rename entries without triggering collection modification errors. | Provide a logging pattern that records each renamed range and handles null or empty Name.Text values during the process.
 
-using Aspose.Cells;
 using System;
-using System.Collections.Generic;
+using Aspose.Cells;
 
-// Load a workbook, loop through its NameCollection, find names whose Text begins with "Temp", prepend "Archive_" to each, optionally sort the collection, and save the updated file with Aspose.Cells for .NET.
-class RenameTempNames
+namespace RenameTempNamedRanges
 {
-    static void Main()
+    // Loads a workbook, iterates through its NameCollection, finds defined names that start with "Temp", prefixes each with "Archive_" using the Name.Text property, and saves the modified file.
+    class Program
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Get the collection of defined names in the workbook
-        NameCollection names = workbook.Worksheets.Names;
-
-        // Collect the names that start with "Temp"
-        List<Name> namesToRename = new List<Name>();
-        foreach (Name name in names)
+        static void Main()
         {
-            if (!string.IsNullOrEmpty(name.Text) && name.Text.StartsWith("Temp"))
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
+
+            // Get the collection of defined names in the workbook
+            NameCollection names = workbook.Worksheets.Names;
+
+            // Iterate through all names
+            for (int i = 0; i < names.Count; i++)
             {
-                namesToRename.Add(name);
+                Name name = names[i];
+
+                // Check if the name starts with "Temp"
+                if (name.Text != null && name.Text.StartsWith("Temp", StringComparison.Ordinal))
+                {
+                    // Prefix with "Archive_"
+                    string newName = "Archive_" + name.Text;
+
+                    // Update the name text
+                    name.Text = newName;
+
+                    Console.WriteLine($"Renamed '{name.Text}' to '{newName}'");
+                }
             }
+
+            // Save the modified workbook (replace with your desired output path)
+            workbook.Save("output.xlsx");
         }
-
-        // Rename each collected name by prefixing "Archive_"
-        foreach (Name name in namesToRename)
-        {
-            name.Text = "Archive_" + name.Text;
-        }
-
-        // Optional: sort the names after renaming
-        names.Sort();
-
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
     }
 }

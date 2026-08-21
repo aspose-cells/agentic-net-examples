@@ -1,67 +1,50 @@
-// Title: C# – Transpose CSV rows and columns using Aspose.Cells and save as new CSV
-// Description: Loads a CSV into an Aspose.Cells workbook, applies Range.Transpose to swap rows with columns, and writes the transposed matrix back to a CSV file. The sample validates the input file and handles runtime errors.
-// Keywords: Aspose.Cells CSV transpose C# | Range.Transpose Aspose.Cells | ImportCSV to workbook | SaveFormat.Csv Aspose | C# transpose rows to columns | .NET CSV data rotation | Excel library CSV manipulation | programmatic CSV matrix flip
-// Common Searches: how to transpose a csv with Aspose.Cells in C# | c# transpose rows and columns csv file | aspocells importcsv and transpose example | save transposed worksheet as csv using Aspose | range.transpose method usage .net
-// Developer Intent: Read an existing CSV, exchange its rows and columns programmatically, and output the result as a new CSV using the Aspose.Cells for .NET API.
-// Use Cases: Re‑orienting data for reporting tools that expect the opposite axis layout. | Preparing matrix‑style CSVs for legacy systems that require rows as columns. | Automating a lightweight ETL step where CSV orientation must be flipped without Excel UI.
-// AI Prompts: Write C# code that uses Aspose.Cells to load a CSV, transpose the data, and save it as another CSV. | Explain the limitations of Range.Transpose in Aspose.Cells, such as maximum worksheet size and memory impact. | Create robust error handling for the CSV transposition sample, covering missing files, empty inputs, and unsupported delimiters.
+// Title: Transpose a CSV file with Aspose.Cells in C# and save as a new CSV
+// AI Prompts: Write C# code that loads a CSV into an Aspose.Cells Workbook, transposes the data range, and writes the result to another CSV file. | Show how to check for the existence of the source CSV and handle empty‑file scenarios before performing a transpose with Aspose.Cells. | Provide example error handling for file‑not‑found and invalid data errors when transposing CSV data using Aspose.Cells.
+// Common Searches: Aspose.Cells transpose CSV C# | C# transpose rows and columns of a CSV file | How to save transposed data to CSV with Aspose.Cells | Validate CSV file before processing with Aspose.Cells | Range.Transpose example in Aspose.Cells
+// Tags: Aspose.Cells | C# | CSV transpose | Range.Transpose | Error handling
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsTransposeCsv
+// The program checks that the input CSV exists, loads it into an Aspose.Cells Workbook using CSV load options, transposes the populated range, and saves the transformed matrix to a new CSV file while handling missing‑file and empty‑data errors.
+class CsvTranspose
 {
-    // Loads a CSV into an Aspose.Cells workbook, applies Range.Transpose to swap rows with columns, and writes the transposed matrix back to a CSV file. The sample validates the input file and handles runtime errors.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths for input and output CSV files
+        string inputCsv = "input.csv";
+        string outputCsv = "transposed.csv";
+
+        try
         {
-            // Paths for input and output CSV files
-            string inputCsv = "input.csv";
-            string outputCsv = "transposed.csv";
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputCsv))
+                throw new FileNotFoundException($"Input file not found: {inputCsv}");
 
-            try
-            {
-                // Verify that the input CSV file exists
-                if (!File.Exists(inputCsv))
-                {
-                    Console.WriteLine($"Error: Input file '{inputCsv}' not found.");
-                    return;
-                }
+            // Load the CSV file into a workbook using CSV load options
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+            Workbook workbook = new Workbook(inputCsv, loadOptions);
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-                // 1. Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
+            // Get the range that contains all populated cells
+            Aspose.Cells.Range dataRange = cells.MaxDisplayRange;
 
-                // 2. Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+            // Ensure there is data to transpose
+            if (dataRange == null || dataRange.RowCount == 0 || dataRange.ColumnCount == 0)
+                throw new InvalidOperationException("The input CSV does not contain any data to transpose.");
 
-                // 3. Import the CSV data starting at cell A1 (row 0, column 0)
-                //    Using comma as delimiter and converting numeric data
-                cells.ImportCSV(inputCsv, ",", true, 0, 0);
+            // Transpose the data (swap rows and columns)
+            dataRange.Transpose();
 
-                // 4. Determine the size of the imported data
-                //    MaxDataRow/MaxDataColumn give zero‑based indexes of the last used cell
-                int lastRow = cells.MaxDataRow;      // zero‑based
-                int lastCol = cells.MaxDataColumn;   // zero‑based
-
-                // 5. Create a range that covers the entire imported area
-                //    CreateRange(firstRow, firstColumn, totalRows, totalColumns)
-                Aspose.Cells.Range dataRange = cells.CreateRange(0, 0, lastRow + 1, lastCol + 1);
-
-                // 6. Transpose the range (rotate rows ↔ columns)
-                dataRange.Transpose();
-
-                // 7. Save the workbook as a CSV file (lifecycle rule: save)
-                workbook.Save(outputCsv, SaveFormat.Csv);
-
-                Console.WriteLine($"CSV file has been transposed and saved to '{outputCsv}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the transposed data back to a CSV file
+            workbook.Save(outputCsv, SaveFormat.Csv);
+            Console.WriteLine($"Transposition completed. Output saved to '{outputCsv}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

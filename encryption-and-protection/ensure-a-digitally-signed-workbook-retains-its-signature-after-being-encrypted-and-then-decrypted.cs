@@ -1,94 +1,122 @@
-// Title: Keep a Digital Signature Intact When Encrypting and Decrypting an Excel Workbook with Aspose.Cells for .NET
-// Description: Demonstrates how to sign an Excel workbook using an X509 certificate, protect it with a password, load the encrypted file to verify the signature, remove the password, and confirm that the digital signature remains after decryption using Aspose.Cells for C#.
-// Keywords: Aspose.Cells digital signature encryption | C# sign Excel workbook | password protect Excel Aspose.Cells | IsDigitallySigned after decryption | X509Certificate2 Aspose.Cells example | preserve signature encrypted workbook | load encrypted Excel with password | remove password from signed workbook
-// Common Searches: how to retain digital signature after password protecting Excel with Aspose.Cells | verify IsDigitallySigned on encrypted workbook .NET | decrypt signed Excel file without losing signature Aspose.Cells | Aspose.Cells example: sign, encrypt, and decrypt workbook | remove password from signed workbook Aspose.Cells C#
-// Developer Intent: Ensure a workbook that has been digitally signed stays signed after applying password protection and after the password is removed.
-// Use Cases: Create and digitally sign a new workbook, then apply password protection while keeping the signature valid. | Load a password‑protected workbook using LoadOptions, check Workbook.IsDigitallySigned, and confirm the signature is still present. | Remove the password from a signed workbook, save the decrypted file, and verify that the digital signature persists.
-// AI Prompts: Generate C# code that signs an Excel file with Aspose.Cells, encrypts it with a password, then decrypts it while preserving the digital signature. | Explain the steps Aspose.Cells performs to maintain a digital signature during password protection and subsequent decryption. | Provide troubleshooting tips if Workbook.IsDigitallySigned returns false after decrypting a previously signed workbook.
+// Title: C# – Preserve Digital Signature When Encrypting & Decrypting an Excel Workbook with Aspose.Cells
+// Description: Demonstrates how to sign an Excel file using an X509 certificate, apply password protection with Aspose.Cells for .NET, remove the password later, and confirm that the digital signature remains intact and valid.
+// Keywords: Aspose.Cells digital signature encryption | C# preserve Excel signature after password protection | remove password from signed workbook Aspose | validate X509 signature after decryption | Excel workbook encryption Aspose.Cells | keep digital signature after encrypting Excel | C# Aspose.Cells LoadOptions password
+// Common Searches: how to keep a digital signature after encrypting an Excel file with Aspose.Cells | remove password from a signed workbook without losing the signature | verify Excel digital signature after decryption C# | Aspose.Cells encrypt signed workbook and retain signature | C# example for password‑protecting a digitally signed Excel file
+// Developer Intent: Ensure a workbook signed with an X509 certificate stays digitally signed after password‑based encryption and subsequent decryption using Aspose.Cells for .NET.
+// Use Cases: Securely transmit a compliance report: sign it, encrypt with a password, then decrypt for audit while the signature stays verifiable. | Archive financially signed statements in encrypted storage and later retrieve them for regulatory review without losing signature integrity. | Automate a workflow that encrypts signed Excel files for backup, then restores them for processing, confirming the original digital signature is still present.
+// AI Prompts: Show C# code that encrypts a digitally signed Excel workbook with a password and then removes the password while preserving the signature using Aspose.Cells. | Explain how to check that a digital signature remains valid after decrypting a password‑protected workbook in .NET. | Provide a step‑by‑step guide for handling missing X509 certificates when adding a digital signature but still needing to encrypt and decrypt the file.
 
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
 using Aspose.Cells.DigitalSignatures;
 
-namespace AsposeCellsDigitalSignatureEncryptionDemo
+namespace AsposeCellsSignatureEncryptionDemo
 {
-    // Demonstrates how to sign an Excel workbook using an X509 certificate, protect it with a password, load the encrypted file to verify the signature, remove the password, and confirm that the digital signature remains after decryption using Aspose.Cells for C#.
+    // Demonstrates how to sign an Excel file using an X509 certificate, apply password protection with Aspose.Cells for .NET, remove the password later, and confirm that the digital signature remains intact and valid.
     class Program
     {
         static void Main()
         {
-            // Paths (replace with actual paths as needed)
-            string certificatePath = "certificate.pfx";
-            string certificatePassword = "certpwd";
+            // Paths (replace with actual paths on your environment)
+            string certificatePath = "mycert.pfx";
+            string certificatePassword = "certPassword";
             string signedPath = "SignedWorkbook.xlsx";
-            string encryptedPath = "EncryptedWorkbook.xlsx";
-            string decryptedPath = "DecryptedWorkbook.xlsx";
+            string encryptedPath = "EncryptedSignedWorkbook.xlsx";
+            string decryptedPath = "DecryptedSignedWorkbook.xlsx";
 
             try
             {
-                // -------------------------------------------------
-                // 1. Create a workbook and add a digital signature
-                // -------------------------------------------------
+                // -----------------------------------------------------------------
+                // 1. Create a workbook and add some sample data
+                // -----------------------------------------------------------------
                 Workbook workbook = new Workbook();
-                workbook.Worksheets[0].Cells["A1"].PutValue("Digitally signed content");
+                workbook.Worksheets[0].Cells["A1"].PutValue("Digital Signature Test");
 
-                // Verify certificate file exists before loading
-                if (!File.Exists(certificatePath))
+                // -----------------------------------------------------------------
+                // 2. Create a digital signature using an X509 certificate (if available)
+                // -----------------------------------------------------------------
+                if (File.Exists(certificatePath))
                 {
-                    Console.WriteLine($"Certificate file not found: {certificatePath}");
-                    return;
+                    try
+                    {
+                        X509Certificate2 cert = new X509Certificate2(certificatePath, certificatePassword);
+                        DigitalSignature signature = new DigitalSignature(cert, "Test Signature", DateTime.Now);
+
+                        // -----------------------------------------------------------------
+                        // 3. Attach the signature to the workbook
+                        // -----------------------------------------------------------------
+                        DigitalSignatureCollection signatures = new DigitalSignatureCollection();
+                        signatures.Add(signature);
+                        workbook.SetDigitalSignature(signatures);
+                    }
+                    catch (CryptographicException ex)
+                    {
+                        Console.WriteLine($"Warning: Unable to load certificate. Digital signature will be skipped. Details: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Warning: Certificate file not found. Digital signature will be skipped.");
                 }
 
-                // Load certificate and create a digital signature
-                X509Certificate2 cert = new X509Certificate2(certificatePath, certificatePassword);
-                DigitalSignature signature = new DigitalSignature(cert, "Demo Signature", DateTime.Now);
-                DigitalSignatureCollection signatures = new DigitalSignatureCollection { signature };
-
-                // Apply the signature to the workbook
-                workbook.SetDigitalSignature(signatures);
-
-                // Save the signed workbook
+                // -----------------------------------------------------------------
+                // 4. Save the signed workbook
+                // -----------------------------------------------------------------
                 workbook.Save(signedPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Signed workbook saved to: {signedPath}");
+                if (File.Exists(signedPath))
+                {
+                    Console.WriteLine($"Signed workbook saved. IsDigitallySigned = {new Workbook(signedPath).IsDigitallySigned}");
+                }
 
-                // -------------------------------------------------
-                // 2. Verify the workbook is digitally signed
-                // -------------------------------------------------
-                Workbook signedWorkbook = new Workbook(signedPath);
-                Console.WriteLine("Initially signed? " + signedWorkbook.IsDigitallySigned); // Expected: True
+                // -----------------------------------------------------------------
+                // 5. Encrypt the signed workbook with a password
+                // -----------------------------------------------------------------
+                workbook.Settings.Password = "encryptionPwd";
+                workbook.Save(encryptedPath, SaveFormat.Xlsx);
+                if (File.Exists(encryptedPath))
+                {
+                    Console.WriteLine($"Encrypted workbook saved. IsEncrypted = {new Workbook(encryptedPath, new LoadOptions { Password = "encryptionPwd" }).Settings.IsEncrypted}");
+                }
 
-                // -------------------------------------------------
-                // 3. Encrypt the signed workbook with a password
-                // -------------------------------------------------
-                signedWorkbook.Settings.Password = "encryptionPwd";
-                signedWorkbook.Save(encryptedPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Encrypted workbook saved to: {encryptedPath}");
-
-                // -------------------------------------------------
-                // 4. Load the encrypted workbook (providing password) and verify signature
-                // -------------------------------------------------
+                // -----------------------------------------------------------------
+                // 6. Load the encrypted workbook (providing the password)
+                // -----------------------------------------------------------------
                 LoadOptions loadOptions = new LoadOptions { Password = "encryptionPwd" };
                 Workbook encryptedWorkbook = new Workbook(encryptedPath, loadOptions);
-                Console.WriteLine("After encryption, signed? " + encryptedWorkbook.IsDigitallySigned); // Expected: True
+                Console.WriteLine($"Loaded encrypted workbook. IsDigitallySigned = {encryptedWorkbook.IsDigitallySigned}");
 
-                // -------------------------------------------------
-                // 5. Decrypt the workbook (remove password) and save
-                // -------------------------------------------------
-                encryptedWorkbook.Settings.Password = null; // Removing encryption
+                // -----------------------------------------------------------------
+                // 7. Remove encryption by clearing the password and save again
+                // -----------------------------------------------------------------
+                encryptedWorkbook.Settings.Password = null; // clears encryption
                 encryptedWorkbook.Save(decryptedPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Decrypted workbook saved to: {decryptedPath}");
+                if (File.Exists(decryptedPath))
+                {
+                    Console.WriteLine($"Decrypted workbook saved. IsEncrypted = {new Workbook(decryptedPath).Settings.IsEncrypted}");
+                }
 
-                // -------------------------------------------------
-                // 6. Load the decrypted workbook and confirm signature persists
-                // -------------------------------------------------
-                Workbook decryptedWorkbook = new Workbook(decryptedPath);
-                Console.WriteLine("After decryption, signed? " + decryptedWorkbook.IsDigitallySigned); // Expected: True
+                // -----------------------------------------------------------------
+                // 8. Verify that the digital signature is still present after decryption
+                // -----------------------------------------------------------------
+                Workbook finalWorkbook = new Workbook(decryptedPath);
+                Console.WriteLine($"Final workbook IsDigitallySigned = {finalWorkbook.IsDigitallySigned}");
+
+                // Optional: iterate signatures and display validity
+                DigitalSignatureCollection finalSignatures = finalWorkbook.GetDigitalSignature();
+                if (finalSignatures != null)
+                {
+                    foreach (DigitalSignature ds in finalSignatures)
+                    {
+                        Console.WriteLine($"Signature Comment: {ds.Comments}, IsValid: {ds.IsValid}");
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

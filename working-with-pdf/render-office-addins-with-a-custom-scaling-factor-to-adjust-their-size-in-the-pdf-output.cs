@@ -1,55 +1,75 @@
-// Title: Scale an Office Add‑In Worksheet for PDF Export with Aspose.Cells for .NET
-// Description: C# example that creates a workbook, fills it with data, enables percent‑based scaling, sets a custom Zoom (e.g., 150%), optionally reads the effective PageScale via SheetRender, and saves the sheet to PDF using PdfSaveOptions. The resulting PDF reflects the specified scaling factor without altering the original layout.
-// Keywords: Aspose.Cells PDF scaling | C# worksheet zoom export | PageSetup.Zoom Aspose.Cells | Office Add‑In PDF size | custom page scale PDF | SheetRender PageScale | PdfSaveOptions scaling | Aspose.Cells .NET example
-// Common Searches: how to set worksheet zoom before PDF export Aspose.Cells | custom scaling factor for Office Add‑In PDF output C# | increase PDF page size using PageSetup.Zoom Aspose.Cells | retrieve actual page scale after zoom Aspose.Cells | export Excel sheet to PDF with 150% scaling
-// Developer Intent: Apply a custom scaling factor to an Office Add‑In worksheet so that the exported PDF appears larger, using Aspose.Cells for .NET.
-// Use Cases: Generate printable reports where charts and tables need to be enlarged without changing the source workbook. | Create PDF versions of Office Add‑In worksheets at a specific zoom level (e.g., 150% or 200%). | Validate the effective page scale before saving by reading SheetRender.PageScale.
-// AI Prompts: Write C# code that sets a 200% zoom on a worksheet and exports it to PDF with Aspose.Cells. | Explain the impact of PageSetup.IsPercentScale and Zoom on PDF rendering in Aspose.Cells. | Show how to obtain the actual page scale after applying Zoom using SheetRender before PDF export.
+// Title: Render Office Add‑In with Custom Scaling When Saving to PDF using AspNet Aspose.Cells
+// Description: Demonstrates how to set a worksheet's percent scaling (e.g., 150%) via PageSetup, verify the effective scale with SheetRender.PageScale, and export the workbook to PDF with PdfSaveOptions so the Add‑In UI appears larger.
+// Keywords: Aspose.Cells PDF scaling | worksheet zoom Aspose.Cells | Office Add-In PDF export | SheetRender PageScale | PdfSaveOptions custom size | C# Aspose.Cells example
+// Common Searches: Aspose.Cells set worksheet zoom before PDF export | how to apply percent scaling to PDF output in Aspose.Cells | retrieve page scale after setting PageSetup.Zoom | render Office Add‑In content to PDF with custom size
+// Developer Intent: Apply a custom percent scaling factor to a worksheet that contains Office Add‑In content and generate a PDF that reflects the adjusted size.
+// Use Cases: Increase worksheet scale to 150% so UI elements from an Office Add‑In are larger in the exported PDF. | Programmatically read the actual page scale after applying PageSetup.Zoom for logging or validation. | Create consistently sized PDF reports from Add‑In data across multiple pages using PdfSaveOptions.
+// AI Prompts: Show C# code to set a worksheet's percent scaling and export it to PDF with Aspose.Cells. | How can I read the calculated page scale after applying PageSetup.Zoom in Aspose.Cells? | Explain the relationship between ImageOrPrintOptions, SheetRender, and PdfSaveOptions when scaling Office Add‑In content.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Saving;
 
-namespace AsposeCellsAddInPdfScalingDemo
+namespace AsposeCellsAddInScalingDemo
 {
-    // C# example that creates a workbook, fills it with data, enables percent‑based scaling, sets a custom Zoom (e.g., 150%), optionally reads the effective PageScale via SheetRender, and saves the sheet to PDF using PdfSaveOptions. The resulting PDF reflects the specified scaling factor without altering the original layout.
+    // Demonstrates how to set a worksheet's percent scaling (e.g., 150%) via PageSetup, verify the effective scale with SheetRender.PageScale, and export the workbook to PDF with PdfSaveOptions so the Add‑In UI appears larger.
     public class Program
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate the worksheet with sample data
-            for (int row = 0; row < 20; row++)
+            try
             {
-                sheet.Cells[row, 0].PutValue($"Item {row + 1}");
-                sheet.Cells[row, 1].PutValue((row + 1) * 5);
+                RenderAddInWithCustomScale.Run();
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
+            }
+        }
+    }
 
-            // Define a custom scaling factor (e.g., 150% of original size)
-            double customScaleFactor = 1.5; // 150%
+    public class RenderAddInWithCustomScale
+    {
+        public static void Run()
+        {
+            try
+            {
+                // 1. Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Apply the scaling factor via PageSetup.Zoom (value is in percent)
-            sheet.PageSetup.IsPercentScale = true;               // Ensure percent scaling is used
-            sheet.PageSetup.Zoom = (int)(customScaleFactor * 100); // Set zoom to 150%
+                // 2. Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Optional: verify the calculated page scale using SheetRender
-            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions();
-            SheetRender renderer = new SheetRender(sheet, renderOptions);
-            double calculatedScale = renderer.PageScale; // Should reflect the Zoom setting
-            Console.WriteLine($"Calculated Page Scale after Zoom: {calculatedScale * 100}%");
+                // 3. Populate some sample data (simulating an Office Add‑In content)
+                for (int row = 0; row < 10; row++)
+                {
+                    sheet.Cells[row, 0].PutValue($"Item {row + 1}");
+                    sheet.Cells[row, 1].PutValue((row + 1) * 10);
+                }
 
-            // Prepare PDF save options (no additional scaling needed here)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // 4. Set a custom scaling factor for printing/PDF output (150%)
+                sheet.PageSetup.IsPercentScale = true;   // Use percent scaling
+                sheet.PageSetup.Zoom = 150;              // 150% scaling
 
-            // Save the workbook to PDF with the custom scaling applied
-            string outputPath = "AddInScaledOutput.pdf";
-            workbook.Save(outputPath, pdfOptions);
+                // 5. Verify the calculated page scale using SheetRender
+                ImageOrPrintOptions renderOptions = new ImageOrPrintOptions();
+                SheetRender renderer = new SheetRender(sheet, renderOptions);
+                double calculatedScale = renderer.PageScale; // Reflects the 150% zoom
+                Console.WriteLine($"Calculated page scale: {calculatedScale * 100}%");
 
-            Console.WriteLine($"Workbook saved to PDF with custom scaling at: {outputPath}");
+                // 6. Prepare PDF save options (no extra scaling needed – the PageSetup.Zoom controls size)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                // 7. Save the workbook as PDF with the custom scaling applied
+                string pdfPath = "AddInScaledOutput.pdf";
+                workbook.Save(pdfPath, pdfOptions);
+                Console.WriteLine($"Workbook saved to PDF with custom scaling at: {pdfPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred in Run: {ex.Message}");
+            }
         }
     }
 }

@@ -1,21 +1,21 @@
-// Title: Aspose.Cells C# – Create a Column Chart and Dynamically Resize Its Legend
-// Description: This example shows how to build a workbook, add a column chart, turn off automatic legend sizing, calculate the chart to obtain legend labels, compute the required pixel width and height based on label length and count, and then apply those dimensions before saving the file.
-// Keywords: Aspose.Cells chart legend resize | C# dynamic legend size | GetLegendLabels Aspose.Cells | chart legend WidthPixel HeightPixel | disable automatic legend sizing | column chart Aspose.Cells .NET
-// Common Searches: Aspose.Cells resize chart legend programmatically | C# calculate legend width from label length | How to get legend labels in Aspose.Cells | Set fixed legend size then adjust in .NET | Dynamic legend dimensions for Excel chart
-// Developer Intent: Adjust a chart legend so its width and height automatically fit the longest label and total entries.
-// Use Cases: Generate Excel reports where the bottom legend expands to accommodate long series names without truncation. | Create dashboards that automatically increase legend height to prevent overlap when many series are displayed. | Build reusable chart components that start with a placeholder legend size and resize after data is known.
-// AI Prompts: Write C# code using Aspose.Cells to create a column chart and set the legend size based on the maximum label length returned by GetLegendLabels. | Provide a helper method that accepts a Chart object, calculates required WidthPixel and HeightPixel for the legend, and applies the values. | Explain the steps to disable automatic legend sizing, retrieve legend labels, and compute pixel dimensions for dynamic resizing in Aspose.Cells.
+// Title: Aspose.Cells for .NET: Create a Column Chart with Fixed Legend Size and Dynamically Adjust Width & Height
+// Description: This example shows how to build a column chart in an Excel workbook using Aspose.Cells, disable the automatic legend sizing, set an initial width and height, then programmatically enlarge the legend based on the longest series name and the number of series before saving the file.
+// Keywords: Aspose.Cells | .NET | C# | chart legend size | fixed legend size | dynamic legend resizing | column chart | Excel chart legend width | Excel chart legend height | disable automatic legend sizing | programmatic legend adjustment
+// Common Searches: Aspose.Cells change legend width C# | Resize Excel chart legend programmatically .NET | Set fixed legend size then auto expand Aspose.Cells | Calculate legend height based on series count Aspose.Cells | Disable automatic legend sizing in Aspose.Cells chart
+// Developer Intent: The developer wants to generate a column chart and ensure the legend automatically expands to accommodate the longest series label and the total number of series.
+// Use Cases: Create a chart with a preset legend size and automatically widen it when a series name exceeds the initial width. | Increase legend height on the fly when the chart contains more series than the original legend can display. | Recalculate the chart after resizing the legend so the final workbook reflects the updated dimensions.
+// AI Prompts: Write C# code with Aspose.Cells that adds a column chart, disables automatic legend sizing, and expands the legend width based on the longest series name. | Provide an Aspose.Cells example that computes the required legend height from the series count and updates both width and height before saving the workbook. | Explain how to set a fixed legend size and then programmatically adjust its dimensions in an Excel chart using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsLegendDynamicSize
+// This example shows how to build a column chart in an Excel workbook using Aspose.Cells, disable the automatic legend sizing, set an initial width and height, then programmatically enlarge the legend based on the longest series name and the number of series before saving the file.
+class Program
 {
-    // This example shows how to build a workbook, add a column chart, turn off automatic legend sizing, calculate the chart to obtain legend labels, compute the required pixel width and height based on label length and count, and then apply those dimensions before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -23,9 +23,9 @@ namespace AsposeCellsLegendDynamicSize
 
             // Populate sample data for the chart
             sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["A2"].PutValue("Alpha");
+            sheet.Cells["A3"].PutValue("Beta");
+            sheet.Cells["A4"].PutValue("Gamma");
             sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["B2"].PutValue(10);
             sheet.Cells["B3"].PutValue(20);
@@ -34,40 +34,45 @@ namespace AsposeCellsLegendDynamicSize
             // Add a column chart
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
             Chart chart = sheet.Charts[chartIndex];
-            chart.SetChartDataRange("A1:B4", true);
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-            // Set legend to a fixed size initially
-            chart.Legend.IsAutomaticSize = false;               // disable automatic sizing
-            chart.Legend.Position = LegendPositionType.Bottom;  // place legend at bottom
-            chart.Legend.WidthPixel = 200;                      // provisional width
-            chart.Legend.HeightPixel = 50;                      // provisional height
+            // Set legend to a fixed size (disable automatic sizing)
+            chart.Legend.IsAutomaticSize = false;
+            chart.Legend.Position = LegendPositionType.Right;
+            chart.Legend.WidthPixel = 150;   // initial width
+            chart.Legend.HeightPixel = 100;  // initial height
 
-            // Calculate the chart so that legend labels are generated
-            chart.Calculate();
+            // ---- Programmatically adjust legend size based on its content ----
 
-            // Retrieve legend labels after calculation
-            string[] legendLabels = chart.Legend.GetLegendLabels();
-
-            // Determine the maximum label length
-            int maxLabelLength = 0;
-            foreach (string label in legendLabels)
+            // Determine the longest legend entry text (use series names)
+            int maxTextLength = 0;
+            foreach (Series series in chart.NSeries)
             {
-                if (label != null && label.Length > maxLabelLength)
-                    maxLabelLength = label.Length;
+                string name = series.Name ?? string.Empty;
+                if (name.Length > maxTextLength)
+                    maxTextLength = name.Length;
             }
 
-            // Approximate required width (7 pixels per character + padding)
-            int requiredWidth = maxLabelLength * 7 + 20;
+            // Approximate required width (7 pixels per character) + padding
+            int requiredWidth = maxTextLength * 7 + 20;
+            if (requiredWidth > chart.Legend.WidthPixel)
+                chart.Legend.WidthPixel = requiredWidth;
 
-            // Approximate required height (15 pixels per entry + padding)
-            int requiredHeight = legendLabels.Length * 15 + 10;
+            // Approximate required height (20 pixels per entry) + padding
+            int requiredHeight = chart.NSeries.Count * 20 + 20;
+            if (requiredHeight > chart.Legend.HeightPixel)
+                chart.Legend.HeightPixel = requiredHeight;
 
-            // Adjust legend size based on content
-            chart.Legend.WidthPixel = requiredWidth;
-            chart.Legend.HeightPixel = requiredHeight;
+            // Recalculate the chart to apply layout changes
+            chart.Calculate();
 
             // Save the workbook
             workbook.Save("ChartLegendDynamicSize.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

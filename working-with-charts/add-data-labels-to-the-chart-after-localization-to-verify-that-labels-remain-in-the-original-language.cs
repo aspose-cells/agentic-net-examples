@@ -1,10 +1,10 @@
-// Title: C# – Add Data Labels to an Aspose.Cells Chart After Localization (SettableChartGlobalizationSettings)
-// Description: Creates a workbook, fills it with category/value data, inserts a column chart, changes the chart’s OtherName label to Spanish using SettableChartGlobalizationSettings, then adds value data labels per point and saves the file. Demonstrates that labels stay in the original language after localization.
-// Keywords: Aspose.Cells C# chart data labels | SettableChartGlobalizationSettings | chart localization Spanish | OtherName localization Aspose.Cells | add data labels after localization | Excel column chart custom labels | verify chart language after globalization
-// Common Searches: Aspose.Cells add data labels after localization | C# chart globalization OtherName Spanish | how to keep chart labels in original language Aspose.Cells | custom point labels after SettableChartGlobalizationSettings | verify data labels language in Aspose.Cells chart
-// Developer Intent: Add value data labels to a chart after applying SettableChartGlobalizationSettings and confirm the labels retain the source language.
-// Use Cases: Generate an Excel report with a Spanish UI while showing numeric values on each column. | Test that chart data labels are unaffected by globalization changes. | Create per‑point custom labels after modifying chart globalization settings.
-// AI Prompts: Show a C# example that sets OtherName to Spanish with SettableChartGlobalizationSettings, then adds value data labels to each series. | Explain how to verify that chart data labels keep their original language after applying localization in Aspose.Cells. | Provide code to customize point labels after changing chart globalization settings in Aspose.Cells.
+// Title: C# – Add Data Labels to an Aspose.Cells Chart After Applying Localization
+// Description: The sample creates a workbook, populates it with category and numeric data, configures chart globalization so the “Other” category appears in Japanese, inserts a column chart, enables value and category data labels, prefixes each point label with Japanese text, and saves the file as DataLabelsAfterLocalization.xlsx. It shows how to confirm that data‑label text remains in the original language after localization.
+// Keywords: Aspose.Cells data labels | chart localization | SettableChartGlobalizationSettings | C# column chart | custom point label | Japanese Other label | verify chart labels | Aspose.Cells .NET example | Excel chart globalization | data label prefix
+// Common Searches: Aspose.Cells add data labels after globalization | C# chart localization with custom Other label | keep data label language after chart globalization | Aspose.Cells verify localized chart labels | set Japanese Other label in Aspose.Cells chart
+// Developer Intent: Create a column chart, apply a Japanese “Other” label via chart globalization, turn on value and category data labels, add a Japanese prefix to each point’s label, and save the workbook to verify the labels stay in the source language.
+// Use Cases: Produce a sales‑report workbook where the “Other” category is shown in Japanese and each column displays both the numeric value and a Japanese‑prefixed label. | Build a localized dashboard that programmatically adds data labels after setting chart globalization, ensuring the labels retain their original language for end‑users. | Automate regression testing of chart localization by assigning custom label text post‑globalization and exporting the workbook for visual inspection.
+// AI Prompts: Generate C# code with Aspose.Cells that creates a column chart, sets the 'Other' category name to Japanese using SettableChartGlobalizationSettings, enables data labels, and adds a Japanese prefix to each point's label. | Explain how Aspose.Cells preserves custom data‑label text after applying chart globalization settings and demonstrate verification by saving the workbook. | Provide a step‑by‑step guide for adding data labels to an Aspose.Cells chart after localization, covering ShowValue, ShowCategoryName, and custom point label text in .NET.
 
 using System;
 using Aspose.Cells;
@@ -12,8 +12,8 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, fills it with category/value data, inserts a column chart, changes the chart’s OtherName label to Spanish using SettableChartGlobalizationSettings, then adds value data labels per point and saves the file. Demonstrates that labels stay in the original language after localization.
-    public class AddDataLabelsAfterLocalization
+    // The sample creates a workbook, populates it with category and numeric data, configures chart globalization so the “Other” category appears in Japanese, inserts a column chart, enables value and category data labels, prefixes each point label with Japanese text, and saves the file as DataLabelsAfterLocalization.xlsx. It shows how to confirm that data‑label text remains in the original language after localization.
+    public class DataLabelsAfterLocalization
     {
         public static void Run()
         {
@@ -23,51 +23,60 @@ namespace AsposeCellsExamples
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data (Category and Value)
+                // -------------------------------------------------
+                // 1. Populate sample data for the chart
+                // -------------------------------------------------
                 sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Item 1");
-                sheet.Cells["A3"].PutValue("Item 2");
-                sheet.Cells["A4"].PutValue("Item 3");
+                sheet.Cells["A2"].PutValue("Alpha");
+                sheet.Cells["A3"].PutValue("Beta");
+                sheet.Cells["A4"].PutValue("Gamma");
 
                 sheet.Cells["B1"].PutValue("Value");
                 sheet.Cells["B2"].PutValue(120);
                 sheet.Cells["B3"].PutValue(250);
-                sheet.Cells["B4"].PutValue(370);
+                sheet.Cells["B4"].PutValue(180);
 
-                // Add a column chart
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
+                // -------------------------------------------------
+                // 2. Apply chart globalization settings (e.g., set "Other" label)
+                // -------------------------------------------------
+                SettableChartGlobalizationSettings globalizationSettings = new SettableChartGlobalizationSettings();
+                // Set a custom name for the "Other" label in the original language (e.g., Japanese)
+                globalizationSettings.SetOtherName("その他"); // "Other" in Japanese
+
+                // -------------------------------------------------
+                // 3. Add a column chart and bind the data
+                // -------------------------------------------------
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
                 Chart chart = sheet.Charts[chartIndex];
-
-                // Set the data range for the chart
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // Localization step: change a globalization label
-                SettableChartGlobalizationSettings localization = new SettableChartGlobalizationSettings();
-                localization.SetOtherName("Otros"); // Spanish for "Other"
-
-                // Add data labels AFTER the localization step.
+                // -------------------------------------------------
+                // 4. Enable data labels for each series
+                // -------------------------------------------------
                 foreach (Series series in chart.NSeries)
                 {
-                    // Show the value in each data label
-                    series.DataLabels.ShowValue = true;
+                    series.DataLabels.ShowValue = true;          // Show the numeric value
+                    series.DataLabels.ShowCategoryName = true;   // Show the category name
 
-                    // Optionally customize each point's label text
-                    for (int i = 0; i < series.Points.Count; i++)
+                    // -------------------------------------------------
+                    // 5. After localization, set custom text for each point
+                    // -------------------------------------------------
+                    foreach (ChartPoint point in series.Points)
                     {
-                        ChartPoint point = series.Points[i];
-                        point.DataLabels.Text = $"Value: {point.YValue}";
+                        // Prepend a label in the original language
+                        point.DataLabels.Text = $"元の: {point.YValue}";
                     }
                 }
 
-                // Save the workbook
-                string outputPath = "AddDataLabelsAfterLocalization.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                // -------------------------------------------------
+                // 6. Save the workbook
+                // -------------------------------------------------
+                workbook.Save("DataLabelsAfterLocalization.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }
@@ -77,7 +86,7 @@ namespace AsposeCellsExamples
     {
         public static void Main(string[] args)
         {
-            AddDataLabelsAfterLocalization.Run();
+            DataLabelsAfterLocalization.Run();
         }
     }
 }

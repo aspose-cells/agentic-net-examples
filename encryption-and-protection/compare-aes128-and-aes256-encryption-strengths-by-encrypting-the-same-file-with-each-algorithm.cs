@@ -1,98 +1,73 @@
-// Title: AES‑128 vs AES‑256 Encryption of Excel Files with Aspose.Cells for .NET
-// Description: This C# example creates a workbook, applies a password, encrypts one copy with a 128‑bit key and another with a 256‑bit key using Aspose.Cells' StrongCryptographicProvider, saves both files, and then reloads them with LoadOptions to confirm successful protection and highlight the stronger security of AES‑256.
-// Keywords: Aspose.Cells AES encryption | C# Excel AES-128 | C# Excel AES-256 | SetEncryptionOptions key length | LoadOptions password protected workbook | compare AES strength .NET | StrongCryptographicProvider example | Excel file encryption Aspose | AES key length comparison | secure Excel workbook C#
-// Common Searches: how to encrypt Excel with AES‑128 using Aspose.Cells | encrypt Excel workbook with AES‑256 in C# | Aspose.Cells SetEncryptionOptions example | load password protected Excel file Aspose.Cells | AES‑128 vs AES‑256 performance in .NET | compare Excel encryption strengths Aspose
-// Developer Intent: The developer wants to protect the same Excel workbook with two different AES key sizes, verify that both files open with the same password, and understand the security difference between AES‑128 and AES‑256.
-// Use Cases: Generate two versions of a confidential report to evaluate compliance requirements for different encryption standards. | Automate validation of password‑protected workbooks in a CI pipeline by loading them with LoadOptions. | Showcase how to switch key length without altering workbook content for security policy testing.
-// AI Prompts: Write C# code that measures encryption and decryption time for AES‑128 and AES‑256 Excel files using Aspose.Cells. | Explain how file size and memory usage differ between AES‑128 and AES‑256 protected workbooks created with Aspose.Cells. | Provide best‑practice recommendations for selecting AES key length when securing Excel files in enterprise .NET applications.
+// Title: Compare AES‑128 vs AES‑256 Encryption of Excel Workbooks with Aspose.Cells for .NET
+// Description: Creates a sample workbook, then encrypts the same file twice—once with a 128‑bit AES key and once with a 256‑bit AES key—using Aspose.Cells' StrongCryptographicProvider. Each file is saved, reopened with the password to confirm encryption, and the paths are printed for easy comparison.
+// Keywords: Aspose.Cells | C# | AES 128 encryption | AES 256 encryption | Excel workbook encryption | StrongCryptographicProvider | SetEncryptionOptions | Password‑protected Excel file | compare encryption strength | .NET encryption example
+// Common Searches: encrypt Excel file with AES‑128 using Aspose.Cells | AES‑256 workbook protection Aspose.Cells .NET | difference between AES‑128 and AES‑256 in Excel | verify password‑protected workbook Aspose.Cells | set encryption key length Aspose.Cells C#
+// Developer Intent: Encrypt the same Excel workbook with 128‑bit and 256‑bit AES keys using Aspose.Cells and validate that both files open with the password.
+// Use Cases: Generate a moderately secured workbook (AES‑128) for internal distribution. | Create a highly secured workbook (AES‑256) for confidential data exchange. | Programmatically confirm that the selected encryption level was applied correctly.
+// AI Prompts: Write C# code that encrypts an existing Excel file with AES‑256 using Aspose.Cells and saves it with a password. | Show how to compare the file sizes of AES‑128 and AES‑256 encrypted workbooks created with Aspose.Cells. | Provide a try‑catch example for handling exceptions when opening a password‑protected workbook encrypted with Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsEncryptionComparison
 {
-    // This C# example creates a workbook, applies a password, encrypts one copy with a 128‑bit key and another with a 256‑bit key using Aspose.Cells' StrongCryptographicProvider, saves both files, and then reloads them with LoadOptions to confirm successful protection and highlight the stronger security of AES‑256.
+    // Creates a sample workbook, then encrypts the same file twice—once with a 128‑bit AES key and once with a 256‑bit AES key—using Aspose.Cells' StrongCryptographicProvider. Each file is saved, reopened with the password to confirm encryption, and the paths are printed for easy comparison.
     class Program
     {
         static void Main()
         {
-            try
-            {
-                // Common password for both encrypted files
-                const string password = "StrongPassword123";
+            // Path for the original workbook (unencrypted)
+            string originalPath = "OriginalWorkbook.xlsx";
 
-                // -----------------------------------------------------------------
-                // Create a sample workbook with some data (shared for both encryptions)
-                // -----------------------------------------------------------------
-                Workbook workbookTemplate = new Workbook();
-                Worksheet sheet = workbookTemplate.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Encryption Strength Comparison");
-                sheet.Cells["A2"].PutValue("AES-128 vs AES-256");
-                sheet.Cells["A3"].PutValue(DateTime.Now);
+            // Create a workbook and add sample data
+            Workbook originalWorkbook = new Workbook();
+            Worksheet sheet = originalWorkbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Encryption Strength Comparison");
+            sheet.Cells["A2"].PutValue("AES-128 vs AES-256");
+            sheet.Cells["A3"].PutValue(DateTime.Now);
 
-                // -----------------------------------------------------------------
-                // Encrypt with AES-128 (key length = 128 bits)
-                // -----------------------------------------------------------------
-                // Clone the template to keep the original data unchanged
-                Workbook workbook128 = new Workbook();
-                workbookTemplate.Copy(workbook128);
-                workbook128.Settings.Password = password;
-                // Apply encryption options: StrongCryptographicProvider with 128‑bit key
-                workbook128.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
-                // Save the encrypted workbook
-                string file128 = "Encrypted_AES128.xlsx";
-                workbook128.Save(file128);
+            // Save the original workbook (optional, for reference)
+            originalWorkbook.Save(originalPath, SaveFormat.Xlsx);
 
-                // -----------------------------------------------------------------
-                // Encrypt with AES-256 (key length = 256 bits)
-                // -----------------------------------------------------------------
-                Workbook workbook256 = new Workbook();
-                workbookTemplate.Copy(workbook256);
-                workbook256.Settings.Password = password;
-                // Apply encryption options: StrongCryptographicProvider with 256‑bit key
-                workbook256.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256);
-                string file256 = "Encrypted_AES256.xlsx";
-                workbook256.Save(file256);
+            // Password to protect the workbooks
+            string password = "StrongPassword123";
 
-                // -----------------------------------------------------------------
-                // Verify encryption by loading each file with the password
-                // -----------------------------------------------------------------
-                LoadOptions loadOptions = new LoadOptions { Password = password };
+            // ---------- AES-128 Encryption ----------
+            // Load the original workbook to ensure identical content
+            Workbook workbook128 = new Workbook(originalPath);
+            // Set password required to open the workbook
+            workbook128.Settings.Password = password;
+            // Apply encryption options: StrongCryptographicProvider with 128‑bit key
+            workbook128.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+            // Save the AES‑128 encrypted workbook
+            string encrypted128Path = "Encrypted_AES128.xlsx";
+            workbook128.Save(encrypted128Path, SaveFormat.Xlsx);
 
-                if (File.Exists(file128))
-                {
-                    Workbook loaded128 = new Workbook(file128, loadOptions);
-                    bool isEncrypted128 = loaded128.Settings.IsEncrypted;
-                    Console.WriteLine($"{file128} loaded. IsEncrypted = {isEncrypted128}");
-                }
-                else
-                {
-                    Console.WriteLine($"File not found: {file128}");
-                }
+            // Verify AES‑128 encrypted file can be opened
+            LoadOptions loadOptions128 = new LoadOptions { Password = password };
+            Workbook loaded128 = new Workbook(encrypted128Path, loadOptions128);
+            Console.WriteLine($"AES‑128 encrypted file loaded. IsEncrypted: {loaded128.Settings.IsEncrypted}");
 
-                if (File.Exists(file256))
-                {
-                    Workbook loaded256 = new Workbook(file256, loadOptions);
-                    bool isEncrypted256 = loaded256.Settings.IsEncrypted;
-                    Console.WriteLine($"{file256} loaded. IsEncrypted = {isEncrypted256}");
-                }
-                else
-                {
-                    Console.WriteLine($"File not found: {file256}");
-                }
+            // ---------- AES-256 Encryption ----------
+            // Load the original workbook again for identical content
+            Workbook workbook256 = new Workbook(originalPath);
+            // Set password required to open the workbook
+            workbook256.Settings.Password = password;
+            // Apply encryption options: StrongCryptographicProvider with 256‑bit key
+            workbook256.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256);
+            // Save the AES‑256 encrypted workbook
+            string encrypted256Path = "Encrypted_AES256.xlsx";
+            workbook256.Save(encrypted256Path, SaveFormat.Xlsx);
 
-                // -----------------------------------------------------------------
-                // Output simple comparison result
-                // -----------------------------------------------------------------
-                Console.WriteLine("Encryption comparison completed.");
-                Console.WriteLine("Both files are encrypted and can be opened with the same password.");
-                Console.WriteLine("AES-256 uses a longer key and is considered stronger than AES-128.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Verify AES‑256 encrypted file can be opened
+            LoadOptions loadOptions256 = new LoadOptions { Password = password };
+            Workbook loaded256 = new Workbook(encrypted256Path, loadOptions256);
+            Console.WriteLine($"AES‑256 encrypted file loaded. IsEncrypted: {loaded256.Settings.IsEncrypted}");
+
+            // Comparison output (both files contain the same data, but use different key lengths)
+            Console.WriteLine("Encryption comparison completed:");
+            Console.WriteLine($"- AES‑128 file: {encrypted128Path}");
+            Console.WriteLine($"- AES‑256 file: {encrypted256Path}");
         }
     }
 }

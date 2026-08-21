@@ -1,29 +1,54 @@
-// Title: C# – Load an Excel file by path and get the first worksheet with Aspose.Cells
-// Description: Shows how to create a Workbook from a file path, access the first worksheet (index 0) and print its name using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells load workbook C# | open Excel file Aspose.Cells | first worksheet index Aspose.Cells | read worksheet name C# | Aspose.Cells .NET example | load workbook from file path
-// Common Searches: Aspose.Cells open existing workbook C# | how to read first sheet name Aspose.Cells | C# Aspose.Cells get worksheet by index | load Excel file from disk Aspose.Cells
-// Developer Intent: Open an existing Excel workbook and obtain a reference to its first worksheet.
-// Use Cases: Display the name of the first sheet after a user uploads an Excel file. | Iterate rows of the first worksheet to import data into a database. | Copy the first worksheet into a new workbook for a custom report. | Validate that the expected sheet exists before processing.
-// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells and returns the name of the first worksheet. | Show how to handle FileNotFoundException and other I/O errors when loading a workbook with Aspose.Cells. | Demonstrate loading a workbook from a MemoryStream instead of a file path using Aspose.Cells.
+// Title: C# Load Excel workbook from file path and retrieve first worksheet using Aspose.Cells
+// Description: Demonstrates how to verify a file’s existence, create a Workbook from a given path, access the first worksheet (index 0), and print its name to the console, with robust exception handling.
+// Keywords: Aspose.Cells | C# load workbook | open Excel file | first worksheet | file existence check | Workbook constructor | console output
+// Common Searches: Aspose.Cells open Excel file C# | Get first sheet name Aspose.Cells | Check if Excel file exists before loading C# | Load workbook and read worksheet name .NET
+// Developer Intent: Open an Excel file by path and obtain the name of its first worksheet.
+// Use Cases: Log the first sheet name when processing uploaded Excel files. | Use the first worksheet as a data source for import routines. | Validate template structure before generating reports.
+// AI Prompts: Generate C# code that safely opens an Excel file with Aspose.Cells, checks for existence, and prints the first worksheet name. | Create a robust error‑handling pattern for loading a workbook when the file may be missing or corrupted. | Show how to load a workbook, access the first worksheet, and append a row of data using Aspose.Cells in C#.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to create a Workbook from a file path, access the first worksheet (index 0) and print its name using Aspose.Cells for .NET.
-class Program
+// Demonstrates how to verify a file’s existence, create a Workbook from a given path, access the first worksheet (index 0), and print its name to the console, with robust exception handling.
+public class LoadWorkbookExample
 {
-    static void Main()
+    public static void Run(string filePath)
     {
-        // Specify the path to the Excel file to be loaded
-        string filePath = "input.xlsx";
+        try
+        {
+            // Ensure the file exists before attempting to load
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
 
-        // Load the workbook from the given file path using the string constructor
-        Workbook workbook = new Workbook(filePath);
+            // Load the workbook from the specified file path
+            Workbook workbook = new Workbook(filePath);
 
-        // Access the first worksheet in the workbook (zero‑based index)
-        Worksheet firstWorksheet = workbook.Worksheets[0];
+            // Access the first worksheet (zero‑based index)
+            Worksheet firstWorksheet = workbook.Worksheets[0];
 
-        // Example usage: output the name of the first worksheet
-        Console.WriteLine("First worksheet name: " + firstWorksheet.Name);
+            // Display the name of the first worksheet
+            Console.WriteLine("First worksheet name: " + firstWorksheet.Name);
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred while loading the workbook: {ex.Message}");
+        }
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        // Determine the workbook path: use argument if provided, otherwise a default placeholder
+        string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
+
+        // Execute the example with safety checks
+        LoadWorkbookExample.Run(filePath);
     }
 }

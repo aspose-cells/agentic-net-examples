@@ -1,73 +1,54 @@
+// Title: Apply a Built‑in Workbook Theme to All Cells with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, set a built‑in style (e.g., Good) as Workbook.DefaultStyle, iterate through every worksheet and populated cell, apply the default style, and save the result as an Excel file using Aspose.Cells for C#.
+// Keywords: Aspose.Cells C# | set built‑in theme | BuiltinStyleType | Workbook.DefaultStyle | apply style to all cells | Excel theme Aspose | cell formatting C# | Aspose.Cells API | default workbook style | iterate cells Aspose
+// Common Searches: How to set a built‑in theme in Aspose.Cells C# | Apply default workbook style to every cell using Aspose.Cells | Change Excel workbook theme to Good style with Aspose.Cells | C# Aspose.Cells update all cell styles after changing theme | Set Workbook.DefaultStyle and refresh formatting in all worksheets
+// Developer Intent: Assign a built‑in theme to a workbook and propagate the style to every existing cell.
+// Use Cases: Create a new report where the Good built‑in style is applied uniformly to all cells after data entry. | Retheme an existing spreadsheet by switching Workbook.DefaultStyle to another BuiltinStyleType and re‑applying it across all worksheets. | Automate consistent branding for generated Excel files by enforcing a single default style on every cell programmatically.
+// AI Prompts: Generate C# code with Aspose.Cells that changes the workbook theme to the 'Bad' built‑in style and updates all cells in every worksheet. | Write a reusable method for Aspose.Cells that accepts a BuiltinStyleType parameter, sets Workbook.DefaultStyle, and reapplies the style to all cells in a given workbook. | Provide a step‑by‑step guide for applying a custom theme to an existing Excel file using Aspose.Cells, including style propagation and saving the file.
+
 using System;
-using System.Drawing;
 using Aspose.Cells;
-using CellsRange = Aspose.Cells.Range;   // Alias to avoid conflict with System.Range
 
 namespace AsposeCellsThemeDemo
 {
+    // Demonstrates how to create a workbook, set a built‑in style (e.g., Good) as Workbook.DefaultStyle, iterate through every worksheet and populated cell, apply the default style, and save the result as an Excel file using Aspose.Cells for C#.
     class Program
     {
         static void Main()
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Add sample data to the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample Text 1");
+            sheet.Cells["B2"].PutValue("Sample Text 2");
+            sheet.Cells["C3"].PutValue("Sample Text 3");
+
+            // Create a built‑in style (e.g., Good) and set it as the default style
+            Style builtinStyle = workbook.CreateBuiltinStyle(BuiltinStyleType.Good);
+            workbook.DefaultStyle = builtinStyle;
+
+            // Apply the default style to all existing cells in all worksheets
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
+                Cells cells = ws.Cells;
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
 
-                // -----------------------------------------------------------------
-                // 1. Set a built‑in theme color (e.g., change Accent1 to a custom blue)
-                // -----------------------------------------------------------------
-                workbook.SetThemeColor(ThemeColorType.Accent1, Color.Blue);
-
-                // -----------------------------------------------------------------
-                // 2. Update the default style to use the new theme color.
-                //    This makes the theme affect all cells that use the default style.
-                // -----------------------------------------------------------------
-                Style defaultStyle = workbook.DefaultStyle;
-                defaultStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0);
-                defaultStyle.Font.Name = "Calibri";
-                defaultStyle.Font.Size = 11;
-                workbook.DefaultStyle = defaultStyle; // assign back (lifecycle rule)
-
-                // -----------------------------------------------------------------
-                // 3. Apply the updated default style to existing cells.
-                //    Iterate through each worksheet and its used range.
-                // -----------------------------------------------------------------
-                foreach (Worksheet sheet in workbook.Worksheets)
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    // Get the used range of the worksheet.
-                    CellsRange usedRange = sheet.Cells.MaxDisplayRange;
-                    if (usedRange == null) continue;
-
-                    int firstRow = usedRange.FirstRow;
-                    int lastRow = firstRow + usedRange.RowCount - 1;
-                    int firstCol = usedRange.FirstColumn;
-                    int lastCol = firstCol + usedRange.ColumnCount - 1;
-
-                    for (int row = firstRow; row <= lastRow; row++)
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        for (int col = firstCol; col <= lastCol; col++)
-                        {
-                            Cell cell = sheet.Cells[row, col];
-                            Style cellStyle = cell.GetStyle();
-                            // Apply the theme color from the default style.
-                            cellStyle.Font.ThemeColor = defaultStyle.Font.ThemeColor;
-                            cell.SetStyle(cellStyle);
-                        }
+                        Cell cell = cells[row, col];
+                        // Apply the default (built‑in) style to each cell
+                        cell.SetStyle(workbook.DefaultStyle);
                     }
                 }
+            }
 
-                // -----------------------------------------------------------------
-                // 4. Save the workbook (lifecycle rule: save)
-                // -----------------------------------------------------------------
-                string outputPath = "WorkbookWithBuiltInTheme.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("BuiltInThemeDemo.xlsx");
         }
     }
 }

@@ -1,24 +1,34 @@
-// Title: Apply Dotted‑Grid Fill Pattern to an AutoShape Placeholder in Aspose.Cells for .NET
-// Description: Creates a new workbook, inserts a rectangle AutoShape as a placeholder cell, sets its text, applies a dotted‑grid pattern fill (light‑gray dots on white), optionally styles the text, and saves the file as XLSX using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells pattern fill | dotted grid AutoShape | placeholder shape Excel | C# fill pattern Aspose | custom shape fill color | Excel template placeholder | Aspose.Cells .NET example
-// Common Searches: how to add dotted grid fill to AutoShape Aspose.Cells | set pattern fill for placeholder shape in C# | Aspose.Cells custom fill pattern example | change foreground/background colors of shape fill | format placeholder cell with pattern in Excel
-// Developer Intent: Add a rectangle AutoShape, assign placeholder text, and apply a small‑dot (dotted‑grid) fill pattern.
-// Use Cases: Design Excel templates where input fields are highlighted with a dotted‑grid background. | Generate reports that separate sections using patterned rectangle shapes. | Create form‑style worksheets with placeholder shapes that visually indicate empty cells.
-// AI Prompts: Write C# code with Aspose.Cells to insert a rectangle AutoShape, set placeholder text, and apply a dotted‑grid fill pattern. | Show how to apply the same pattern fill to multiple AutoShapes and customize their foreground and background colors. | Explain step‑by‑step how to change an AutoShape's FillType to Pattern and configure FillPattern.DottedGrid in Aspose.Cells for .NET.
+// Title: C# – Apply a Dotted‑Grid Pattern Fill to a Rectangle Shape Behind Placeholder Cells with Aspose.Cells
+// Description: This example creates a new workbook, writes "Placeholder" into cells A1:C3, adds a rectangle shape that exactly covers that range, sets the shape's FillType to a dotted‑grid pattern (black dots on light‑yellow), sends the shape to the back so the cell text stays visible, and saves the result as PlaceholderCellPatternDemo.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# pattern fill | FillPattern.DottedGrid | rectangle shape behind cells | placeholder cell background | shape Z‑order Aspose.Cells | .NET spreadsheet pattern fill | custom fill pattern Aspose.Cells | cell range background shape | Aspose.Cells shape fill type | C# Aspose.Cells example
+// Common Searches: how to add a dotted grid fill to a shape in Aspose.Cells | place a rectangle shape behind cell text Aspose.Cells .NET | Aspose.Cells pattern fill for a cell range | C# Aspose.Cells shape Z‑order back | create placeholder background in Excel with Aspose
+// Developer Intent: Add a rectangle shape behind a specific cell range and apply a dotted‑grid pattern fill while keeping the cell content readable.
+// Use Cases: Design printable forms where a subtle dotted background marks data‑entry zones without covering labels. | Generate templates that visually indicate where users should insert values, using a patterned backdrop for guidance. | Add decorative or instructional backgrounds to selected ranges in automated reports while preserving text clarity.
+// AI Prompts: Generate C# code using Aspose.Cells to cover cells A1:C3 with a rectangle shape, set its FillType to Pattern, choose FillPattern.DottedGrid, define foreground and background colors, and send the shape to the back. | Show how to compute the pixel width and height of a multi‑row, multi‑column range in Aspose.Cells for sizing a shape. | Provide an Aspose.Cells example that creates a placeholder area with a dotted‑grid background while keeping the cell text on top.
 
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsExample
+namespace AsposeCellsExamples
 {
-    // Creates a new workbook, inserts a rectangle AutoShape as a placeholder cell, sets its text, applies a dotted‑grid pattern fill (light‑gray dots on white), optionally styles the text, and saves the file as XLSX using Aspose.Cells for .NET.
-    class Program
+    // This example creates a new workbook, writes "Placeholder" into cells A1:C3, adds a rectangle shape that exactly covers that range, sets the shape's FillType to a dotted‑grid pattern (black dots on light‑yellow), sends the shape to the back so the cell text stays visible, and saves the result as PlaceholderCellPatternDemo.xlsx using Aspose.Cells for .NET.
+    public class PlaceholderCellPatternDemo
     {
-        static void Main(string[] args)
+        public static void Main()
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
         {
             try
             {
@@ -26,49 +36,44 @@ namespace AsposeCellsExample
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a rectangle AutoShape that will act as a placeholder text cell
-                // Parameters: type, upperLeftRow, upperLeftColumn, upperLeftRowOffset, upperLeftColumnOffset, height, width
-                Shape placeholder = sheet.Shapes.AddAutoShape(
-                    AutoShapeType.Rectangle,
-                    5,          // Upper‑left row index
-                    5,          // Upper‑left column index
-                    0,          // Row offset (in pixels)
-                    0,          // Column offset (in pixels)
-                    50,         // Height in points
-                    200         // Width in points
-                );
-
-                // Set placeholder text
-                placeholder.Text = "Placeholder Text";
-
-                // Apply a small‑dot (dotted grid) fill pattern to the shape
-                placeholder.Fill.FillType = FillType.Pattern;
-                placeholder.Fill.PatternFill.Pattern = FillPattern.DottedGrid;
-                placeholder.Fill.PatternFill.ForegroundColor = Color.LightGray; // Dot color
-                placeholder.Fill.PatternFill.BackgroundColor = Color.White;     // Background color
-
-                // Optional: format the placeholder text
-                FontSetting fontSetting = placeholder.Characters(0, placeholder.Text.Length);
-                TextOptions textOpts = fontSetting.TextOptions;
-                textOpts.Name = "Arial";
-                textOpts.Size = 12;
-                textOpts.IsBold = true;
-
-                // Determine output file path
-                string outputFile = "PlaceholderPattern.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile));
-                if (!Directory.Exists(outputDir))
+                // Fill the range A1:C3 with placeholder text
+                for (int row = 0; row < 3; row++)
                 {
-                    Directory.CreateDirectory(outputDir);
+                    for (int col = 0; col < 3; col++)
+                    {
+                        sheet.Cells[row, col].PutValue("Placeholder");
+                    }
                 }
 
+                // Calculate shape size in pixels (width = 3 columns, height = 3 rows)
+                int shapeWidth = sheet.Cells.GetColumnWidthPixel(0) * 3;
+                int shapeHeight = sheet.Cells.GetRowHeightPixel(0) * 3;
+
+                // Add a rectangle shape that covers the same range as the placeholder cells
+                // Overload: AddRectangle(row, column, rowOffset, columnOffset, width, height)
+                Shape backgroundShape = sheet.Shapes.AddRectangle(0, 0, 0, 0, shapeWidth, shapeHeight);
+
+                // Position the shape exactly over cells A1:C3
+                backgroundShape.Placement = PlacementType.FreeFloating;
+                backgroundShape.Top = 0;   // top aligns with row 0
+                backgroundShape.Left = 0;  // left aligns with column 0
+
+                // Set the fill type to pattern and define the pattern
+                backgroundShape.Fill.FillType = FillType.Pattern;
+                backgroundShape.Fill.PatternFill.Pattern = FillPattern.DottedGrid;
+                backgroundShape.Fill.PatternFill.ForegroundColor = Color.Black;          // dot color
+                backgroundShape.Fill.PatternFill.BackgroundColor = Color.LightYellow;   // background color
+
+                // Send the shape to the back so cell text remains visible
+                backgroundShape.ZOrderPosition = 0;
+
                 // Save the workbook
-                workbook.Save(outputFile, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
+                workbook.Save("PlaceholderCellPatternDemo.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Run error: {ex.Message}");
+                throw;
             }
         }
     }

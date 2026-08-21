@@ -1,49 +1,46 @@
-// Title: Add date range validation to column E (E1:E1000) with Aspose.Cells for .NET
-// Description: Shows how to create a Workbook, define a CellArea for rows 1‑1000 of column E, add a Validation object, set its type to Date with the Between operator, specify start (1/1/2023) and end (12/31/2023) dates, configure optional input and error messages, and save the file as ColumnEDateValidation.xlsx.
-// Keywords: Aspose.Cells C# date validation | Excel column E data validation .NET | set date range Aspose.Cells | ValidationType.Date Between operator | custom input error messages Aspose.Cells | C# Excel validation example | apply validation to column E
-// Common Searches: Aspose.Cells set date validation for column E | C# restrict Excel column to dates between Jan 1 and Dec 31 | How to add date range validation in Aspose.Cells .NET | Excel data validation column E Aspose.Cells example | Custom error message for date validation Aspose.Cells
-// Developer Intent: Add a data‑validation rule that permits only dates from January 1 to December 31 in column E of an Excel worksheet.
-// Use Cases: Ensure dates entered in a financial template fall within the fiscal year. | Prevent out‑of‑range dates when users upload scheduling data. | Create a guided entry form with clear prompts and error alerts for date fields.
-// AI Prompts: Generate C# code using Aspose.Cells to apply a date‑range validation to column F for 2024, including custom input and error messages. | Show how to modify the validation to allow only weekdays between two dates in Aspose.Cells. | Provide an example of removing an existing validation from a column and replacing it with a new date‑range rule.
+// Title: C# – Add Date‑Range Validation to Column E in an Aspose.Cells Workbook
+// Description: Demonstrates how to create a new Workbook with Aspose.Cells for .NET, define a CellArea covering column E, add a Validation object, set its type to Date with a Between operator, specify start and end dates (e.g., 1/1/2023 to 12/31/2023), configure optional input/error messages, and save the file as DateValidationColumnE.xlsx.
+// Keywords: Aspose.Cells C# date validation | Excel column E data validation .NET | set date range validation Aspose.Cells | ValidationType.Date example C# | apply data validation to a column Aspose | Aspose.Cells workbook validation tutorial
+// Common Searches: Aspose.Cells how to restrict column E to dates | C# add date range validation in Excel with Aspose | set data validation for specific column using Aspose.Cells | date between validation Aspose.Cells .NET | example of ValidationType.Date in C#
+// Developer Intent: Create a validation rule that permits only dates between January 1 and December 31 in column E of an Excel worksheet using Aspose.Cells for .NET.
+// Use Cases: Ensure users enter only dates within the current year in a data‑entry column. | Prevent out‑of‑range dates when importing external records into a template. | Programmatically apply the same yearly date restriction across multiple sheets.
+// AI Prompts: Generate C# code with Aspose.Cells to enforce a 2024 date range in columns F‑H. | Show how to duplicate an existing Validation object and assign it to another column. | Provide an example of custom input and error messages for a date validation rule in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsValidationExample
+// Demonstrates how to create a new Workbook with Aspose.Cells for .NET, define a CellArea covering column E, add a Validation object, set its type to Date with a Between operator, specify start and end dates (e.g., 1/1/2023 to 12/31/2023), configure optional input/error messages, and save the file as DateValidationColumnE.xlsx.
+class Program
 {
-    // Shows how to create a Workbook, define a CellArea for rows 1‑1000 of column E, add a Validation object, set its type to Date with the Between operator, specify start (1/1/2023) and end (12/31/2023) dates, configure optional input and error messages, and save the file as ColumnEDateValidation.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Define the validation area for column E (zero‑based column index 4)
-            // Here we apply the validation to rows 0 through 999 (E1:E1000)
-            CellArea validationArea = CellArea.CreateCellArea(0, 4, 999, 4);
+        // Define the validation area for column E (zero‑based column index 4)
+        // Here we apply it to rows 0 through 1000; adjust as needed
+        CellArea validationArea = CellArea.CreateCellArea(0, 4, 1000, 4);
 
-            // Add a new validation to the worksheet
-            int validationIndex = worksheet.Validations.Add(validationArea);
-            Validation validation = worksheet.Validations[validationIndex];
+        // Add the validation to the worksheet
+        int validationIndex = worksheet.Validations.Add(validationArea);
+        Validation validation = worksheet.Validations[validationIndex];
 
-            // Configure the validation to allow only dates between Jan 1 and Dec 31
-            validation.Type = ValidationType.Date;                     // Date validation
-            validation.Operator = OperatorType.Between;                // Between two dates
-            validation.Formula1 = "1/1/2023";                           // Start date (Jan 1)
-            validation.Formula2 = "12/31/2023";                         // End date (Dec 31)
+        // Configure the validation to allow only dates between Jan 1 and Dec 31
+        validation.Type = ValidationType.Date;
+        validation.Operator = OperatorType.Between;
+        validation.Formula1 = "1/1/2023";   // start date
+        validation.Formula2 = "12/31/2023"; // end date
 
-            // Optional: user-friendly messages
-            validation.InputTitle = "Date Required";
-            validation.InputMessage = "Enter a date between Jan 1 and Dec 31.";
-            validation.ErrorTitle = "Invalid Date";
-            validation.ErrorMessage = "The date must be within the year 2023.";
-            validation.ShowInput = true;
-            validation.ShowError = true;
+        // Optional user messages
+        validation.InputTitle = "Date Entry";
+        validation.InputMessage = "Please enter a date between Jan 1 and Dec 31, 2023.";
+        validation.ErrorTitle = "Invalid Date";
+        validation.ErrorMessage = "The date must be within the year 2023.";
+        validation.ShowInput = true;
+        validation.ShowError = true;
 
-            // Save the workbook
-            workbook.Save("ColumnEDateValidation.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("DateValidationColumnE.xlsx");
     }
 }

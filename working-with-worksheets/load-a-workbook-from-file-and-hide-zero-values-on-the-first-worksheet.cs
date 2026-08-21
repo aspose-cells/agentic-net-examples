@@ -1,27 +1,29 @@
-// Title: Hide Zero Values on the First Worksheet When Loading an Excel File with Aspose.Cells for .NET (C#)
-// Description: Loads a workbook from a file, disables zero display on the first worksheet by setting Worksheet.DisplayZeros to false, and saves the modified workbook.
-// Keywords: Aspose.Cells C# hide zeros | Worksheet.DisplayZeros | load workbook Aspose.Cells | Excel zero values suppression | C# Excel file manipulation | Aspose.Cells display settings
-// Common Searches: Aspose.Cells hide zeros C# | Set DisplayZeros false Aspose.Cells | Load Excel workbook and hide zero values .NET | Suppress zero values in Excel using Aspose | C# code to hide zero values in first sheet
-// Developer Intent: Disable the display of zero values on the first worksheet of a workbook loaded from disk using Aspose.Cells for .NET.
-// Use Cases: Prepare client‑ready financial statements where zero amounts should be invisible. | Generate report templates that automatically hide empty cells when populated. | Automate batch processing of multiple workbooks to standardize display settings before publishing.
-// AI Prompts: Write C# code using Aspose.Cells to open an .xlsx file, set DisplayZeros = false on the first worksheet, and save the file. | Explain how Worksheet.DisplayZeros influences cell rendering and demonstrate how to apply it to all worksheets in a workbook. | Create a script that iterates over a folder of Excel files, hides zero values on each first sheet, and logs the processed files.
+// Title: Hide Zero Values on the First Worksheet When Loading an Excel File with Aspose.Cells for .NET
+// Description: Load an existing workbook, disable zero display on the first worksheet using the DisplayZeros property, and save the updated file. This Aspose.Cells for .NET example demonstrates how to hide zero values without altering other sheets.
+// Keywords: Aspose.Cells hide zeros C# | DisplayZeros property | load workbook Aspose.Cells | first worksheet zero values | save modified Excel file .NET | Excel zero display Aspose | C# Aspose.Cells example
+// Common Searches: how to hide zero values in Excel using Aspose.Cells C# | Aspose.Cells DisplayZeros first sheet | load workbook and disable zeros Aspose .NET | save workbook after changing DisplayZeros property | C# code to hide zeros on a specific worksheet
+// Developer Intent: Load an existing Excel workbook, turn off zero display for the first worksheet, and write the changes to a new file.
+// Use Cases: Financial dashboards where zero amounts clutter the summary sheet. | Data‑cleaning pipelines that suppress placeholder zeros before distribution. | Template files that automatically hide zeros on the primary sheet when opened.
+// AI Prompts: Generate C# code with Aspose.Cells to open a workbook, set DisplayZeros = false on the first worksheet, and save it as a new file. | Explain the effect of the DisplayZeros property on cell rendering in Aspose.Cells. | Show how to hide zeros on multiple worksheets by iterating over a list of worksheet indices using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-// Loads a workbook from a file, disables zero display on the first worksheet by setting Worksheet.DisplayZeros to false, and saves the modified workbook.
+// Load an existing workbook, disable zero display on the first worksheet using the DisplayZeros property, and save the updated file. This Aspose.Cells for .NET example demonstrates how to hide zero values without altering other sheets.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook from a file (uses the Workbook(string) constructor)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Load the workbook from an existing file
+        string inputFile = "input.xlsx";
+        Workbook workbook = new Workbook(inputFile);
 
-        // Hide zero values on the first worksheet by setting DisplayZeros to false
+        // Access the first worksheet and hide zero values
         Worksheet firstSheet = workbook.Worksheets[0];
         firstSheet.DisplayZeros = false;
 
-        // Save the modified workbook back to disk (uses the Save(string) method)
-        workbook.Save("output.xlsx");
+        // Save the changes to a new file
+        string outputFile = "output.xlsx";
+        workbook.Save(outputFile);
     }
 }

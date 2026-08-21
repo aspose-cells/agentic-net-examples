@@ -1,124 +1,103 @@
+// Title: Clone a SparklineGroup to Another Worksheet with Aspose.Cells for .NET (C#)
+// Description: This C# example shows how to duplicate an existing SparklineGroup, preserve its visual settings (high‑point, low‑point, colors, line weight), and place the clone on a different worksheet using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | SparklineGroup | clone sparkline | copy sparkline group | worksheet | preserve formatting | line sparkline | duplicate sparklines | Aspose.Cells Sparkline
+// Common Searches: Aspose.Cells clone sparkline group C# | copy sparkline group to another worksheet Aspose.Cells | duplicate sparklines across sheets .NET | preserve sparkline formatting Aspose.Cells | how to replicate SparklineGroup in C#
+// Developer Intent: Duplicate a SparklineGroup from one worksheet to another while keeping its data range and visual properties intact.
+// Use Cases: Generate a summary sheet that mirrors sparklines from a source sheet with identical markers and colors. | Apply a consistent sparkline style across multiple report tabs without manual re‑creation. | Automate batch reporting where the same sparkline visualisation is needed on several worksheets.
+// AI Prompts: Write C# code using Aspose.Cells to clone a SparklineGroup from a source worksheet to a destination worksheet, copying all visual settings and adjusting the location. | Create a method that accepts a source SparklineGroup, a target Worksheet, and a CellArea, then replicates the group with correct row/column offsets. | Show how to transfer high‑point, low‑point, series color, and line weight of a sparkline group to another sheet with Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
 namespace SparklineCloneDemo
 {
+    // This C# example shows how to duplicate an existing SparklineGroup, preserve its visual settings (high‑point, low‑point, colors, line weight), and place the clone on a different worksheet using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the source worksheet
+            // ---------- Create a workbook and populate source worksheet ----------
             Workbook workbook = new Workbook();
-            Worksheet sourceSheet = workbook.Worksheets[0];
-            sourceSheet.Name = "Source";
+            Worksheet srcSheet = workbook.Worksheets[0];
+            srcSheet.Name = "Source";
 
-            // Populate sample data for the sparkline
-            sourceSheet.Cells["A1"].PutValue(5);
-            sourceSheet.Cells["B1"].PutValue(2);
-            sourceSheet.Cells["C1"].PutValue(1);
-            sourceSheet.Cells["D1"].PutValue(3);
+            // Sample data for sparklines
+            srcSheet.Cells["A1"].PutValue(5);
+            srcSheet.Cells["A2"].PutValue(3);
+            srcSheet.Cells["A3"].PutValue(7);
+            srcSheet.Cells["A4"].PutValue(2);
+            srcSheet.Cells["A5"].PutValue(9);
 
-            // Define the location where the sparkline will be placed
-            CellArea sourceLocation = new CellArea
+            // Define where the sparkline will be placed (column F, rows 1‑5)
+            CellArea srcLocation = new CellArea
             {
                 StartRow = 0,
-                EndRow = 0,
-                StartColumn = 4,
-                EndColumn = 4
+                EndRow = 4,
+                StartColumn = 5,
+                EndColumn = 5
             };
 
             // Add a sparkline group to the source sheet
-            int sourceGroupIndex = sourceSheet.SparklineGroups.Add(
-                SparklineType.Line,          // type
-                "A1:D1",                     // data range
-                false,                       // isVertical
-                sourceLocation);             // location range
+            int srcGroupIdx = srcSheet.SparklineGroups.Add(
+                SparklineType.Line,
+                srcSheet.Name + "!A1:A5",   // data range
+                false,                      // horizontal (by row)
+                srcLocation);               // location range
 
-            SparklineGroup sourceGroup = sourceSheet.SparklineGroups[sourceGroupIndex];
+            SparklineGroup srcGroup = srcSheet.SparklineGroups[srcGroupIdx];
 
-            // Add a sparkline item to the group (required to have at least one)
-            sourceGroup.Sparklines.Add(sourceSheet.Name + "!A1:D1", 0, 4);
+            // Add the sparkline itself (the Add method of SparklineCollection creates the item)
+            srcGroup.Sparklines.Add(srcSheet.Name + "!A1:A5", 0, 5);
 
-            // Customize some visual properties (optional, will be cloned later)
-            CellsColor seriesColor = workbook.CreateCellsColor();
-            seriesColor.Color = Color.Orange;
-            sourceGroup.SeriesColor = seriesColor;
-            sourceGroup.ShowHighPoint = true;
-            sourceGroup.ShowLowPoint = true;
-            CellsColor highColor = workbook.CreateCellsColor();
-            highColor.Color = Color.Green;
-            sourceGroup.HighPointColor = highColor;
-            CellsColor lowColor = workbook.CreateCellsColor();
-            lowColor.Color = Color.Red;
-            sourceGroup.LowPointColor = lowColor;
+            // Optional: customize the source group (demonstrates that settings are copied)
+            srcGroup.ShowHighPoint = true;
+            srcGroup.ShowLowPoint = true;
 
-            // -------------------------------------------------
-            // Clone the sparkline group into a new worksheet
-            // -------------------------------------------------
+            // ---------- Create destination worksheet ----------
+            Worksheet destSheet = workbook.Worksheets.Add("Destination");
 
-            // Add a new worksheet that will receive the cloned group
-            Worksheet targetSheet = workbook.Worksheets.Add("Clone");
-            
-            // Define the location for the cloned sparkline group in the target sheet
-            // Here we use the same cell coordinates as the source for simplicity
-            CellArea targetLocation = new CellArea
+            // Define destination location (column H, rows 1‑5)
+            CellArea destLocation = new CellArea
             {
-                StartRow = sourceLocation.StartRow,
-                EndRow = sourceLocation.EndRow,
-                StartColumn = sourceLocation.StartColumn,
-                EndColumn = sourceLocation.EndColumn
+                StartRow = 0,
+                EndRow = 4,
+                StartColumn = 7,
+                EndColumn = 7
             };
 
-            // Create a new sparkline group in the target sheet with the same type,
-            // data range, orientation and location as the source group
-            int targetGroupIndex = targetSheet.SparklineGroups.Add(
-                sourceGroup.Type,            // same sparkline type
-                "A1:D1",                     // same data range (relative to target sheet)
-                false,                       // same orientation
-                targetLocation);             // location in target sheet
+            // Clone the sparkline group:
+            // 1. Add a new group with the same type, data range and orientation.
+            int destGroupIdx = destSheet.SparklineGroups.Add(
+                srcGroup.Type,
+                srcGroup.Sparklines[0].DataRange, // same data range string
+                false,                             // same orientation as source
+                destLocation);                     // new location range
 
-            SparklineGroup targetGroup = targetSheet.SparklineGroups[targetGroupIndex];
+            SparklineGroup destGroup = destSheet.SparklineGroups[destGroupIdx];
 
-            // Copy visual properties from the source group to the target group
-            targetGroup.SeriesColor = sourceGroup.SeriesColor;
-            targetGroup.ShowHighPoint = sourceGroup.ShowHighPoint;
-            targetGroup.ShowLowPoint = sourceGroup.ShowLowPoint;
-            targetGroup.HighPointColor = sourceGroup.HighPointColor;
-            targetGroup.LowPointColor = sourceGroup.LowPointColor;
-            targetGroup.LineWeight = sourceGroup.LineWeight;
-            targetGroup.PresetStyle = sourceGroup.PresetStyle;
-            targetGroup.PlotEmptyCellsType = sourceGroup.PlotEmptyCellsType;
-            targetGroup.DisplayHidden = sourceGroup.DisplayHidden;
-            targetGroup.ShowNegativePoints = sourceGroup.ShowNegativePoints;
-            targetGroup.NegativePointsColor = sourceGroup.NegativePointsColor;
-            targetGroup.ShowFirstPoint = sourceGroup.ShowFirstPoint;
-            targetGroup.FirstPointColor = sourceGroup.FirstPointColor;
-            targetGroup.ShowLastPoint = sourceGroup.ShowLastPoint;
-            targetGroup.LastPointColor = sourceGroup.LastPointColor;
-            targetGroup.ShowMarkers = sourceGroup.ShowMarkers;
-            targetGroup.MarkersColor = sourceGroup.MarkersColor;
-            targetGroup.ShowHorizontalAxis = sourceGroup.ShowHorizontalAxis;
-            targetGroup.HorizontalAxisColor = sourceGroup.HorizontalAxisColor;
-            targetGroup.HorizontalAxisDateRange = sourceGroup.HorizontalAxisDateRange;
-            targetGroup.VerticalAxisMaxValue = sourceGroup.VerticalAxisMaxValue;
-            targetGroup.VerticalAxisMaxValueType = sourceGroup.VerticalAxisMaxValueType;
-            targetGroup.VerticalAxisMinValue = sourceGroup.VerticalAxisMinValue;
-            targetGroup.VerticalAxisMinValueType = sourceGroup.VerticalAxisMinValueType;
-            targetGroup.PlotRightToLeft = sourceGroup.PlotRightToLeft;
+            // 2. Copy visual settings from source group to destination group.
+            destGroup.ShowHighPoint = srcGroup.ShowHighPoint;
+            destGroup.ShowLowPoint = srcGroup.ShowLowPoint;
+            destGroup.SeriesColor = srcGroup.SeriesColor;
+            destGroup.HighPointColor = srcGroup.HighPointColor;
+            destGroup.LowPointColor = srcGroup.LowPointColor;
+            destGroup.LineWeight = srcGroup.LineWeight;
 
-            // Clone each sparkline item from the source group to the target group
-            foreach (Sparkline spark in sourceGroup.Sparklines)
+            // 3. Replicate each sparkline in the source group.
+            //    Adjust the row/column indices so they point to the destination location.
+            int rowOffset = destLocation.StartRow - srcLocation.StartRow;
+            int colOffset = destLocation.StartColumn - srcLocation.StartColumn;
+
+            foreach (Sparkline srcSparkline in srcGroup.Sparklines)
             {
-                // The DataRange string can be used directly; it refers to the source sheet name,
-                // so replace it with the target sheet name to point to the same cells in the target sheet.
-                string clonedDataRange = spark.DataRange.Replace(sourceSheet.Name, targetSheet.Name);
-                targetGroup.Sparklines.Add(clonedDataRange, spark.Row, spark.Column);
+                int newRow = srcSparkline.Row + rowOffset;
+                int newCol = srcSparkline.Column + colOffset;
+                destGroup.Sparklines.Add(srcSparkline.DataRange, newRow, newCol);
             }
 
-            // Save the workbook with both the original and cloned sparkline groups
-            workbook.Save("SparklineGroupCloneDemo.xlsx");
+            // ---------- Save the workbook ----------
+            workbook.Save("ClonedSparklineGroup.xlsx");
         }
     }
 }

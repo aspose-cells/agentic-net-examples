@@ -1,101 +1,92 @@
-// Title: C# – Verify Exported VBA Project Certificate Size with Aspose.Cells for .NET
-// Description: Loads a signed XLSM workbook, extracts the VBA project's raw certificate data (CertRawData), saves it as a .cer file, and checks that the exported file size matches the original byte array length.
-// Keywords: Aspose.Cells VBA certificate export | C# verify certificate file size | CertRawData length comparison | export .cer from signed workbook | .NET VBA project signing validation | Aspose.Cells VbaProject IsSigned | file size integrity check
-// Common Searches: How to export a VBA project's certificate with Aspose.Cells and confirm its size | C# compare CertRawData length to exported .cer file size | Aspose.Cells verify signed VBA project before exporting certificate | Check exported certificate file size matches original bytes Aspose.Cells | Export VBA certificate and validate integrity .NET
-// Developer Intent: Confirm that the .cer file created from a signed VBA project has exactly the same byte length as the embedded certificate data.
-// Use Cases: Automated integrity verification of exported VBA certificates in deployment pipelines. | Compliance testing to ensure no data loss when extracting certificates from signed workbooks. | Diagnostic tool for detecting corrupted or incomplete certificate exports.
-// AI Prompts: Generate a C# method that loads a signed workbook, extracts CertRawData, writes it to a .cer file, and returns a boolean indicating size match. | Create robust error handling for missing files, unsigned VBA projects, or empty certificate data when exporting a VBA certificate with Aspose.Cells. | Write an MSTest unit test that asserts the exported certificate file size equals the CertRawData length for a given signed XLSM file.
+// Title: Verify Exported X509 Certificate Size Using Aspose.Cells (C#)
+// Description: Loads an Excel workbook, extracts the first digital signature's X509Certificate2, exports it to a .cer file, and confirms that the file size matches the original certificate byte array.
+// Keywords: Aspose.Cells export certificate | C# digital signature size check | X509Certificate2 file length verification | Excel workbook certificate export | compare .cer file size
+// Common Searches: Aspose.Cells export X509 certificate and verify size | C# compare exported .cer file length with certificate bytes | how to check certificate file size after export from Excel | validate digital signature certificate size using Aspose.Cells
+// Developer Intent: Ensure the .cer file created from a workbook's digital signature has the same byte length as the original certificate data.
+// Use Cases: Automated integrity check of exported certificates before transmission to external services. | CI/CD validation step that flags corrupted or incomplete certificate exports. | Logging and alerting when file‑system issues cause size mismatches during export.
+// AI Prompts: Create a reusable C# method that loads a workbook, extracts the first digital signature certificate with Aspose.Cells, writes it to a .cer file, and returns true if the file size equals the certificate byte array length. | Add comprehensive error handling and structured logging to each step of the certificate export and size verification process. | Write unit tests that mock a signed Workbook, export the certificate, and verify both matching and mismatching size scenarios.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
+using Aspose.Cells.DigitalSignatures;
+using System.Security.Cryptography.X509Certificates;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsCertificateSizeCheck
 {
-    // Loads a signed XLSM workbook, extracts the VBA project's raw certificate data (CertRawData), saves it as a .cer file, and checks that the exported file size matches the original byte array length.
-    public class VerifyExportedCertificateSize
-    {
-        public static void Run()
-        {
-            // Path to the workbook that contains a signed VBA project
-            string signedWorkbookPath = "SignedWithVba.xlsm";
-
-            // Ensure the workbook file exists
-            if (!File.Exists(signedWorkbookPath))
-            {
-                Console.WriteLine($"Workbook file not found: {signedWorkbookPath}");
-                return;
-            }
-
-            Workbook workbook;
-            try
-            {
-                // Load the workbook (uses the load rule)
-                workbook = new Workbook(signedWorkbookPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
-                return;
-            }
-
-            // Access the VBA project
-            VbaProject vbaProject = workbook.VbaProject;
-
-            // Ensure the VBA project is signed
-            if (!vbaProject.IsSigned)
-            {
-                Console.WriteLine("The VBA project is not signed. No certificate to export.");
-                return;
-            }
-
-            // Get the raw certificate data (byte array)
-            byte[] certData = vbaProject.CertRawData;
-
-            if (certData == null || certData.Length == 0)
-            {
-                Console.WriteLine("Certificate raw data is empty.");
-                return;
-            }
-
-            // Export the certificate to a file
-            string exportedCertPath = "ExportedCertificate.cer";
-            try
-            {
-                File.WriteAllBytes(exportedCertPath, certData);
-                Console.WriteLine($"Certificate exported to: {exportedCertPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to write certificate file: {ex.Message}");
-                return;
-            }
-
-            // Get the file size of the exported certificate
-            long fileSize = new FileInfo(exportedCertPath).Length;
-
-            // Compare the file size with the original byte array length
-            bool sizeMatches = fileSize == certData.Length;
-
-            Console.WriteLine($"Original certificate byte length: {certData.Length}");
-            Console.WriteLine($"Exported file size (bytes): {fileSize}");
-            Console.WriteLine($"Size matches expected length: {sizeMatches}");
-        }
-    }
-
-    // Entry point for the application
+    // Loads an Excel workbook, extracts the first digital signature's X509Certificate2, exports it to a .cer file, and confirms that the file size matches the original certificate byte array.
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             try
             {
-                VerifyExportedCertificateSize.Run();
+                // Path to the workbook that contains a digital signature
+                string workbookPath = "SignedWorkbook.xlsx";
+
+                // Ensure the workbook file exists before loading
+                if (!File.Exists(workbookPath))
+                {
+                    Console.WriteLine($"Workbook file not found: {workbookPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(workbookPath);
+
+                // Retrieve the digital signatures collection
+                DigitalSignatureCollection signatures = workbook.GetDigitalSignature();
+
+                // Get the first signature if any exist
+                DigitalSignature signature = null;
+                if (signatures != null)
+                {
+                    foreach (DigitalSignature ds in signatures)
+                    {
+                        signature = ds;
+                        break; // only need the first one
+                    }
+                }
+
+                if (signature == null)
+                {
+                    Console.WriteLine("No digital signatures found in the workbook.");
+                    return;
+                }
+
+                // Get the X509Certificate2 object used for signing
+                X509Certificate2 cert = signature.Certificate;
+
+                // Export the certificate to a byte array (raw certificate data)
+                byte[] certBytes = cert.Export(X509ContentType.Cert);
+
+                // Define the output file for the exported certificate
+                string exportedCertPath = "ExportedCertificate.cer";
+
+                // Write the certificate bytes to the file
+                try
+                {
+                    File.WriteAllBytes(exportedCertPath, certBytes);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to write certificate file: {ex.Message}");
+                    return;
+                }
+
+                // Get the file size in bytes
+                long fileSize = new FileInfo(exportedCertPath).Length;
+
+                // Compare the file size with the original byte array length
+                bool sizeMatches = fileSize == certBytes.Length;
+
+                Console.WriteLine($"Exported certificate file size: {fileSize} bytes");
+                Console.WriteLine($"Original certificate byte array length: {certBytes.Length} bytes");
+                Console.WriteLine($"Size matches expected length: {sizeMatches}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

@@ -1,10 +1,10 @@
-// Title: Import data into a named range from another workbook using Aspose.Cells (C#)
-// Description: C# sample that loads a source and destination workbook, ensures a named range exists, clears its contents, copies matching data (values, formulas, formatting) from the source range, and saves the updated file.
-// Keywords: Aspose.Cells C# import named range | copy data between workbooks Aspose.Cells | clear range before paste Aspose.Cells | create named range programmatically | .NET Excel range overwrite | Excel workbook merge Aspose | copy formulas formatting Aspose.Cells | named range data refresh | Excel automation Aspose.Cells | C# Excel range copy example
-// Common Searches: Aspose.Cells copy data to a named range | How to overwrite a named range from another workbook in C# | Clear existing cells before copying with Aspose.Cells | Create a missing named range programmatically Aspose.Cells | Copy values, formulas and formatting between Excel files using Aspose
-// Developer Intent: Import data from a source workbook into a specific named range of a destination workbook, safely replacing any existing content.
-// Use Cases: Refresh a reporting table by pulling the latest calculations into its predefined named range. | Update a chart source in a template workbook by copying new metric values into the chart's named range. | Replace dashboard data while preserving cell styles by overwriting the associated named range.
-// AI Prompts: Write C# code with Aspose.Cells that checks for a named range, creates it if missing, clears its cells, and copies a matching source range from another workbook. | Show how to build a source address based on the dimensions of a destination named range and copy values, formulas, and formatting safely. | Explain strategies for handling size mismatches between source data and a destination named range when using Aspose.Cells.
+// Title: Import data into a named range from another workbook using Aspose.Cells for .NET
+// Description: C# example that loads source.xlsx and dest.xlsx, ensures the named range "MyRange" exists (creates A1:D5 on the first sheet if needed), clears its current content, copies values, formulas and formatting from the source range, and saves the result as dest_updated.xlsx.
+// Keywords: Aspose.Cells import named range | C# copy range between workbooks | create named range programmatically | clear range before copy Aspose.Cells | overwrite cells safely .NET
+// Common Searches: Aspose.Cells copy data to a named range in another workbook | how to create a named range if it does not exist using Aspose.Cells | clear existing cells before copying with Aspose.Cells | overwrite named range safely Aspose.Cells C#
+// Developer Intent: Copy a source range into a destination named range, creating the range when missing and removing previous content.
+// Use Cases: Refresh a template workbook by importing the latest dataset into a predefined named range. | Populate a financial model with master‑sheet data while guaranteeing the target range exists and is clean. | Automate dashboard updates by overwriting a named range with calculations from a separate workbook.
+// AI Prompts: Write C# code with Aspose.Cells that copies a range from source.xlsx to a named range "MyRange" in dest.xlsx, creating the range if absent and clearing existing cells first. | Explain error handling for missing source or destination files when importing data into a named range with Aspose.Cells. | Provide a step‑by‑step tutorial for copying values, formulas, and formatting between workbooks using Aspose.Cells for .NET.
 
 using System;
 using System.IO;
@@ -12,94 +12,67 @@ using Aspose.Cells;
 
 namespace AsposeCellsImportIntoNamedRange
 {
-    // C# sample that loads a source and destination workbook, ensures a named range exists, clears its contents, copies matching data (values, formulas, formatting) from the source range, and saves the updated file.
+    // C# example that loads source.xlsx and dest.xlsx, ensures the named range "MyRange" exists (creates A1:D5 on the first sheet if needed), clears its current content, copies values, formulas and formatting from the source range, and saves the result as dest_updated.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                const string sourcePath = "Source.xlsx";
-                const string destPath = "Destination.xlsx";
-                const string outputPath = "Destination_Updated.xlsx";
+                const string sourcePath = "source.xlsx";
+                const string destPath = "dest.xlsx";
 
-                // Verify source file exists
+                // Verify that the required files exist
                 if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
-
-                // Verify destination file exists
+                    throw new FileNotFoundException($"Source file not found: {sourcePath}");
                 if (!File.Exists(destPath))
+                    throw new FileNotFoundException($"Destination file not found: {destPath}");
+
+                // Load workbooks
+                Workbook sourceWb = new Workbook(sourcePath);
+                Workbook destWb = new Workbook(destPath);
+
+                const string rangeName = "MyRange";
+                Name namedRange = destWb.Worksheets.Names[rangeName];
+
+                // Create the named range if it does not exist
+                if (namedRange == null)
                 {
-                    Console.WriteLine($"Destination file not found: {destPath}");
-                    return;
+                    // Define the address (e.g., A1:D5) on the first worksheet
+                    string address = $"={destWb.Worksheets[0].Name}!$A$1:$D$5";
+                    int idx = destWb.Worksheets.Names.Add(rangeName);
+                    destWb.Worksheets.Names[idx].RefersTo = address;
+                    namedRange = destWb.Worksheets.Names[rangeName];
                 }
 
-                // Load the source workbook that contains the data to be copied
-                Workbook sourceWorkbook = new Workbook(sourcePath);
+                // Get the Range object that the name refers to
+                Aspose.Cells.Range destRange = namedRange.GetRange();
 
-                // Load the destination workbook where the named range resides
-                Workbook destWorkbook = new Workbook(destPath);
-
-                // ------------------------------------------------------------
-                // Ensure the destination workbook has a named range called "MyRange"
-                // If it does not exist, create it and point it to a default area
-                // ------------------------------------------------------------
-                Name myRangeName;
-                if (destWorkbook.Worksheets.Names["MyRange"] == null)
-                {
-                    // Add a new named range to the first worksheet (adjust as needed)
-                    int nameIndex = destWorkbook.Worksheets.Names.Add("MyRange");
-                    myRangeName = destWorkbook.Worksheets.Names[nameIndex];
-                    // Example reference – you can change the address to suit your scenario
-                    myRangeName.RefersTo = "=Sheet1!A1:B2";
-                }
-                else
-                {
-                    myRangeName = destWorkbook.Worksheets.Names["MyRange"];
-                }
-
-                // Retrieve the actual Range object that the name refers to
-                Aspose.Cells.Range destRange = myRangeName.GetRange();
-
-                // ------------------------------------------------------------
-                // Safely clear any existing data in the destination range
-                // (clears both contents and formatting)
-                // ------------------------------------------------------------
+                // Clear existing contents in the destination range
                 destRange.Worksheet.Cells.ClearRange(
                     destRange.FirstRow,
                     destRange.FirstColumn,
                     destRange.RowCount,
                     destRange.ColumnCount);
 
-                // ------------------------------------------------------------
-                // Define the source range that holds the data to be imported.
-                // For this example we assume the source data occupies the same
-                // size as the destination named range.
-                // ------------------------------------------------------------
-                // Build address like "A1:Z10" based on destination dimensions
-                string lastColumnName = CellsHelper.ColumnIndexToName(destRange.ColumnCount - 1);
-                int lastRowNumber = destRange.RowCount; // because rows are 1‑based in address
-                string sourceAddress = $"A1:{lastColumnName}{lastRowNumber}";
-                Aspose.Cells.Range sourceRange = sourceWorkbook.Worksheets[0].Cells.CreateRange(sourceAddress);
+                // Create a source range of the same size
+                Worksheet srcSheet = sourceWb.Worksheets[0];
+                Aspose.Cells.Range srcRange = srcSheet.Cells.CreateRange(
+                    destRange.FirstRow,
+                    destRange.FirstColumn,
+                    destRange.RowCount,
+                    destRange.ColumnCount);
 
-                // ------------------------------------------------------------
-                // Copy the data (including values, formulas, and formatting) from
-                // the source range into the cleared destination range.
-                // ------------------------------------------------------------
-                destRange.CopyData(sourceRange);
+                // Copy data (values, formulas, formatting) from source to destination
+                destRange.CopyData(srcRange);
 
-                // ------------------------------------------------------------
-                // Save the destination workbook with the imported data
-                // ------------------------------------------------------------
-                destWorkbook.Save(outputPath);
-                Console.WriteLine($"Data imported successfully. Saved as {outputPath}");
+                // Save the updated destination workbook
+                destWb.Save("dest_updated.xlsx");
+                Console.WriteLine("Data imported successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

@@ -1,10 +1,10 @@
-// Title: Apply Custom Reflection Gradient to a Picture Shape with Aspose.Cells for .NET
-// Description: Shows how to add an image to an Excel worksheet using Aspose.Cells, retrieve its Shape, set the ReflectionEffect to Custom, and adjust opacity, size, blur, distance, direction and other reflection parameters before saving the workbook.
-// Keywords: Aspose.Cells | C# | .NET | ReflectionEffect | custom reflection | picture shape | image opacity | reflection transparency | reflection size | gradient reflection | Excel workbook | add picture to worksheet | shape formatting | reflection blur | reflection distance | reflection direction
-// Common Searches: Aspose.Cells set custom reflection opacity | C# picture shape reflection size Aspose.Cells | how to adjust reflection blur distance direction in Excel using Aspose | apply gradient reflection to image shape Aspose.Cells .NET | save workbook after modifying picture reflection
-// Developer Intent: Add a picture to an Excel sheet and apply a custom reflection effect, controlling its transparency, size and other visual attributes via Aspose.Cells.
-// Use Cases: Design marketing dashboards where product photos have a subtle reflective finish. | Generate product catalogs with images that mimic a glossy surface using custom reflections. | Create slide‑style Excel presentations where each picture includes a tailored reflection to match branding guidelines.
-// AI Prompts: Write C# code with Aspose.Cells that inserts a picture and sets a custom reflection with 40% transparency and 70% size, then saves the file. | Show how to modify reflection blur, distance, and direction for a picture shape in Aspose.Cells for .NET. | Explain how to read and update the ReflectionEffect properties of an existing picture shape in a saved workbook.
+// Title: C# – Apply a Custom Reflection Gradient to a Picture Shape with Aspose.Cells
+// Description: Creates a workbook, inserts a JPEG picture, and configures Aspose.Cells' ReflectionEffect (Custom) – size, opacity, blur, distance, direction and fade direction – before saving the file as XLSX.
+// Keywords: Aspose.Cells picture reflection | custom reflection gradient C# | set picture opacity Aspose.Cells | reflection size blur distance Aspose.Cells | Excel image reflection .NET | Aspose.Cells ReflectionEffect
+// Common Searches: how to add a custom reflection to an image in Aspose.Cells C# | Aspose.Cells set picture reflection size and opacity | configure blur and distance for picture reflection in Excel using .NET | Aspose.Cells reflection direction and fade direction example | C# code for custom picture reflection gradient in Aspose.Cells
+// Developer Intent: Add a picture to a worksheet and apply a custom reflection gradient with precise opacity, size, blur, distance, and direction settings using Aspose.Cells for .NET.
+// Use Cases: Product catalogs where each product image has a subtle, uniform reflection for visual depth. | Marketing reports that automatically style inserted images with a consistent reflection effect. | Automated presentation‑style Excel sheets where pictures appear to float using the same reflection parameters.
+// AI Prompts: Generate C# code that changes the reflection gradient to vertical and sets opacity to 50 % for a picture in Aspose.Cells. | Show how to load reflection settings from a JSON file and apply them to multiple pictures in a workbook with Aspose.Cells for .NET. | Explain how to combine a custom reflection gradient with a shadow effect on a picture shape using Aspose.Cells.
 
 using System;
 using System.IO;
@@ -13,72 +13,51 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsReflectionDemo
 {
-    // Shows how to add an image to an Excel worksheet using Aspose.Cells, retrieve its Shape, set the ReflectionEffect to Custom, and adjust opacity, size, blur, distance, direction and other reflection parameters before saving the workbook.
-    public class ApplyCustomReflectionToPicture
+    // Creates a workbook, inserts a JPEG picture, and configures Aspose.Cells' ReflectionEffect (Custom) – size, opacity, blur, distance, direction and fade direction – before saving the file as XLSX.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Verify that the source image exists
-                const string imagePath = "sample.jpg";
-                if (!File.Exists(imagePath))
-                {
-                    Console.WriteLine($"Image file '{imagePath}' not found. Operation aborted.");
-                    return;
-                }
-
-                // Create a new workbook (lifecycle: create)
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add a picture to the worksheet
-                // Parameters: upper left row, upper left column, picture file name
-                int pictureIndex = worksheet.Pictures.Add(2, 2, imagePath);
-                Picture picture = worksheet.Pictures[pictureIndex];
+                // Path to the image file to be inserted
+                string imagePath = "sample.jpg";
 
-                // Access the shape that represents the picture
-                Shape pictureShape = picture;
+                // Verify that the image file exists before adding it
+                if (File.Exists(imagePath))
+                {
+                    // Add the picture to the worksheet (row 2, column 2)
+                    int pictureIndex = worksheet.Pictures.Add(2, 2, imagePath);
+                    Picture picture = worksheet.Pictures[pictureIndex];
 
-                // Obtain the ReflectionEffect object for the picture shape
-                ReflectionEffect reflection = pictureShape.Reflection;
+                    // Access and configure the reflection effect
+                    ReflectionEffect reflection = picture.Reflection;
+                    reflection.Type = ReflectionEffectType.Custom;
+                    reflection.Size = 85;               // 85% of the shape height
+                    reflection.Transparency = 0.25;    // 25% transparent (75% opaque)
+                    reflection.Blur = 5;               // slight blur
+                    reflection.Distance = 8;           // distance from the shape
+                    reflection.Direction = 90;         // gradient direction
+                    reflection.FadeDirection = 90;
+                }
+                else
+                {
+                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
+                }
 
-                // Set the reflection type to Custom to allow manual adjustment of properties
-                reflection.Type = ReflectionEffectType.Custom;
-
-                // Adjust opacity (Transparency) – 0.0 = fully opaque, 1.0 = fully transparent
-                reflection.Transparency = 0.3; // 30% transparent (70% opaque)
-
-                // Adjust the size of the reflection – value is a percentage (0‑100)
-                reflection.Size = 80; // 80% of the original shape height
-
-                // Optional: fine‑tune other visual aspects
-                reflection.Blur = 5;          // Softens the reflection edges
-                reflection.Distance = 10;     // Moves the reflection away from the shape
-                reflection.Direction = 90;    // Gradient direction (degrees)
-                reflection.FadeDirection = 90;
-                reflection.RotWithShape = true;
-
-                // Save the workbook (lifecycle: save)
-                const string outputPath = "PictureWithCustomReflection.xlsx";
+                // Save the workbook with the applied (or skipped) reflection effect
+                string outputPath = "PictureWithCustomReflection.xlsx";
                 workbook.Save(outputPath);
-
-                // Output confirmation
-                Console.WriteLine($"Custom reflection applied and workbook saved as '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ApplyCustomReflectionToPicture.Run();
         }
     }
 }

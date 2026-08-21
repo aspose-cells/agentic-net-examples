@@ -1,10 +1,10 @@
-// Title: C# – Batch Convert All XLSX Files in a Folder to HTML with Aspose.Cells ConversionUtility
-// Description: A C# console program that scans a specified directory for *.xlsx files, creates an output folder when needed, and uses Aspose.Cells.Utility.ConversionUtility.Convert (default settings) to produce matching .html files while logging successes and errors.
-// Keywords: Aspose.Cells batch conversion | C# convert xlsx to html | ConversionUtility.Convert example | bulk Excel to HTML | default HTML export Aspose.Cells | process multiple Excel files | directory conversion Aspose.Cells | C# console batch convert | Aspose.Cells HTML export | convert folder of Excel files
-// Common Searches: batch convert xlsx to html c# | Aspose.Cells convert multiple Excel files to HTML | C# code to export all workbooks in a folder as HTML | how to use ConversionUtility.Convert for batch processing | Aspose.Cells default HTML export example
-// Developer Intent: Create HTML versions of every Excel workbook in a given folder using Aspose.Cells default conversion settings.
-// Use Cases: Publish a set of Excel‑based reports on a website without manual conversion. | Automate archival of spreadsheet data as web‑ready HTML snapshots. | Generate static HTML documentation from a collection of template workbooks stored on a server.
-// AI Prompts: Show how to extend the sample to process subfolders recursively while preserving the folder hierarchy in the output. | Demonstrate adding custom CSS or a stylesheet link to each generated HTML file during batch conversion. | Explain techniques for monitoring progress and handling very large Excel files in a high‑volume batch conversion loop.
+// Title: Batch Convert All XLSX Files in a Folder to HTML Using Aspose.Cells (C#)
+// Description: A C# console app that scans a specified directory, creates matching .html files in an output folder, and uses Aspose.Cells.Utility.ConversionUtility.Convert with default settings to transform each workbook to HTML. Includes folder validation and error handling.
+// Keywords: Aspose.Cells batch conversion | C# XLSX to HTML | ConversionUtility Convert example | automate Excel to HTML | process multiple Excel files | default conversion settings | .NET Excel HTML export | folder based spreadsheet conversion
+// Common Searches: convert all Excel files in a folder to HTML C# | Aspose.Cells batch convert XLSX to HTML example | C# code for converting multiple spreadsheets to web pages | default Aspose.Cells HTML export for many workbooks | how to automate Excel to HTML conversion with Aspose
+// Developer Intent: Programmatically transform every .xlsx workbook in a given directory into an .html file using Aspose.Cells default conversion options.
+// Use Cases: Publish a collection of financial models as static web pages for intranet access. | Generate web‑ready reports from daily Excel exports stored on a server. | Create archival HTML snapshots of spreadsheet data without manual steps.
+// AI Prompts: Show a C# snippet that logs each conversion result to a CSV file while batch processing XLSX to HTML with Aspose.Cells. | Modify the code to recursively process subfolders and preserve the original folder hierarchy in the HTML output. | Explain how to apply custom CSS or embed styles in the generated HTML using Aspose.Cells conversion options.
 
 using System;
 using System.IO;
@@ -12,62 +12,53 @@ using Aspose.Cells.Utility;
 
 namespace AsposeCellsBatchConversion
 {
-    // A C# console program that scans a specified directory for *.xlsx files, creates an output folder when needed, and uses Aspose.Cells.Utility.ConversionUtility.Convert (default settings) to produce matching .html files while logging successes and errors.
+    // A C# console app that scans a specified directory, creates matching .html files in an output folder, and uses Aspose.Cells.Utility.ConversionUtility.Convert with default settings to transform each workbook to HTML. Includes folder validation and error handling.
     class Program
     {
         static void Main(string[] args)
         {
-            // Directory containing the XLSX files.
-            // Change this path as needed.
-            string sourceDirectory = @"C:\InputXlsxFiles";
+            // Folder containing the XLSX files.
+            string sourceFolder = @"C:\InputXlsxFiles";
 
-            // Directory where the HTML files will be saved.
-            // It will be created automatically if it does not exist.
-            string outputDirectory = @"C:\OutputHtmlFiles";
+            // Folder where the HTML files will be saved.
+            string outputFolder = @"C:\OutputHtmlFiles";
 
-            // Verify source directory exists.
-            if (!Directory.Exists(sourceDirectory))
+            // Verify source folder exists.
+            if (!Directory.Exists(sourceFolder))
             {
-                Console.WriteLine($"Source directory '{sourceDirectory}' does not exist.");
+                Console.WriteLine($"Source folder not found: {sourceFolder}");
                 return;
             }
 
             // Ensure the output directory exists.
-            if (!Directory.Exists(outputDirectory))
+            if (!Directory.Exists(outputFolder))
             {
-                Directory.CreateDirectory(outputDirectory);
+                Directory.CreateDirectory(outputFolder);
             }
 
-            try
-            {
-                // Get all .xlsx files in the source directory (non‑recursive).
-                string[] xlsxFiles = Directory.GetFiles(sourceDirectory, "*.xlsx", SearchOption.TopDirectoryOnly);
+            // Get all .xlsx files in the source folder.
+            string[] xlsxFiles = Directory.GetFiles(sourceFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
 
-                foreach (string xlsxPath in xlsxFiles)
+            foreach (string xlsxPath in xlsxFiles)
+            {
+                try
                 {
-                    // Determine the output HTML file name.
+                    // Build the output HTML file path.
                     string fileNameWithoutExt = Path.GetFileNameWithoutExtension(xlsxPath);
-                    string htmlPath = Path.Combine(outputDirectory, fileNameWithoutExt + ".html");
+                    string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
 
-                    try
-                    {
-                        // Convert the XLSX file to HTML using default conversion settings.
-                        // The ConversionUtility.Convert method handles loading and saving internally.
-                        ConversionUtility.Convert(xlsxPath, htmlPath);
-                        Console.WriteLine($"Converted '{xlsxPath}' to '{htmlPath}'.");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to convert '{xlsxPath}': {ex.Message}");
-                    }
+                    // Convert the Excel file to HTML using default settings.
+                    ConversionUtility.Convert(xlsxPath, htmlPath);
+
+                    Console.WriteLine($"Converted: {xlsxPath} -> {htmlPath}");
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error converting '{xlsxPath}': {ex.Message}");
+                }
+            }
 
-                Console.WriteLine("Batch conversion completed.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred during batch processing: {ex.Message}");
-            }
+            Console.WriteLine("Batch conversion completed.");
         }
     }
 }

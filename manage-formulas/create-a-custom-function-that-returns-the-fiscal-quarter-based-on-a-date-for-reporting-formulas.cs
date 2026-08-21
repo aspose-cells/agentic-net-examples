@@ -1,124 +1,123 @@
-// Title: Custom FISCALQUARTER UDF in Aspose.Cells for .NET – Return Fiscal Quarter from a Date
-// Description: Demonstrates how to build a user‑defined function called FISCALQUARTER by extending Aspose.Cells' AbstractCalculationEngine. The engine extracts a single date argument (cell reference, Excel serial number, or string), converts it to DateTime, computes the calendar quarter, and returns the quarter as a numeric value. The example creates a workbook, inserts a sample date, applies =FISCALQUARTER(A1), configures CalculationOptions with the custom engine, calculates formulas, prints the result, and saves the file.
-// Keywords: Aspose.Cells | C# | custom function | user defined function | UDF | FiscalQuarter | quarter calculation | AbstractCalculationEngine | Excel formula | date to quarter | financial reporting | custom calculation engine | Excel serial date | OADate
-// Common Searches: Aspose.Cells custom function example | How to create user defined function in Aspose.Cells C# | Fiscal quarter function Aspose.Cells | Calculate quarter from date using Aspose.Cells | Custom calculation engine Aspose.Cells .NET
-// Developer Intent: Implement a user‑defined Excel function named FISCALQUARTER that returns the fiscal quarter for a given date using Aspose.Cells for .NET.
-// Use Cases: Generate quarterly financial reports by converting transaction dates to fiscal quarters without altering source data. | Create dynamic dashboards that group sales or expenses by quarter using the =FISCALQUARTER formula across multiple worksheets. | Automate KPI aggregation where quarter‑level summaries are required for budgeting or forecasting. | Support custom fiscal calendars by extending the function to shift the quarter start month.
-// AI Prompts: Write a C# class that extends AbstractCalculationEngine to add a user‑defined function FISCALQUARTER handling cell references, OLE Automation dates, and string dates, returning the calendar quarter as a double. | Provide sample code that sets CalculationOptions.CustomEngine to the custom engine, inserts a date into cell A1, uses =FISCALQUARTER(A1) in cell B1, calculates the workbook, prints the results, and saves the file. | Explain how to modify the FISCALQUARTER function to support a fiscal year that starts in July instead of January. | Generate unit tests for the FiscalQuarterEngine covering valid dates, invalid inputs, and edge cases such as leap years.
+// Title: Create a custom FISCALQUARTER function in Aspose.Cells for .NET
+// Description: Demonstrates how to extend Aspose.Cells.AbstractCalculationEngine to implement a user‑defined FISCALQUARTER function. The engine validates a single date argument (DateTime, Excel OLE Automation double, or ReferredArea), shifts the month according to a fiscal year start month (April), computes the fiscal quarter, and returns it as a numeric value. The example shows registering the engine via CalculationOptions, applying the formula =FISCALQUARTER(A1) in a worksheet, calculating formulas, and saving the workbook.
+// Keywords: Aspose.Cells custom function | Fiscal quarter C# | AbstractCalculationEngine example | Excel user‑defined function .NET | Fiscal year start month | Date to quarter conversion | C# Excel formula extension
+// Common Searches: custom fiscal quarter function Aspose.Cells | how to create user defined function in Aspose.Cells C# | calculate fiscal quarter from date .NET | Aspose.Cells AbstractCalculationEngine tutorial | handle Excel serial dates in custom Aspose.Cells function
+// Developer Intent: Add a user‑defined function that returns the fiscal quarter for a given date, respecting a configurable fiscal year start month, and use it in workbook formulas.
+// Use Cases: Insert =FISCALQUARTER(date) in financial reports to derive quarter numbers automatically. | Apply the custom engine across multiple worksheets or named ranges that contain transaction dates. | Generate quarterly summaries by dragging the FISCALQUARTER formula down a column of dates.
+// AI Prompts: Write a C# class that inherits Aspose.Cells.AbstractCalculationEngine and implements a FISCALQUARTER function returning the fiscal quarter based on a date, with the fiscal year starting in April. | Show how to register the custom calculation engine in CalculationOptions and use the =FISCALQUARTER formula in a worksheet. | Explain how to detect and convert DateTime, Excel OLE Automation serial numbers, and ReferredArea parameters inside a custom Aspose.Cells function.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsCustomFunctionDemo
 {
-    // Custom calculation engine that implements a user‑defined function FISCALQUARTER(date)
-    // Demonstrates how to build a user‑defined function called FISCALQUARTER by extending Aspose.Cells' AbstractCalculationEngine. The engine extracts a single date argument (cell reference, Excel serial number, or string), converts it to DateTime, computes the calendar quarter, and returns the quarter as a numeric value. The example creates a workbook, inserts a sample date, applies =FISCALQUARTER(A1), configures CalculationOptions with the custom engine, calculates formulas, prints the result, and saves the file.
+    // Custom calculation engine that implements the FISCALQUARTER function
+    // Demonstrates how to extend Aspose.Cells.AbstractCalculationEngine to implement a user‑defined FISCALQUARTER function. The engine validates a single date argument (DateTime, Excel OLE Automation double, or ReferredArea), shifts the month according to a fiscal year start month (April), computes the fiscal quarter, and returns it as a numeric value. The example shows registering the engine via CalculationOptions, applying the formula =FISCALQUARTER(A1) in a worksheet, calculating formulas, and saving the workbook.
     public class FiscalQuarterEngine : AbstractCalculationEngine
     {
+        // Define the fiscal year start month (e.g., April = 4)
+        private const int FiscalYearStartMonth = 4;
+
         public override void Calculate(CalculationData data)
         {
-            // Check if the called function is our custom one (case‑insensitive)
-            if (string.Equals(data.FunctionName, "FISCALQUARTER", StringComparison.OrdinalIgnoreCase))
+            // Check if the function being called is our custom function
+            if (data.FunctionName.Equals("FISCALQUARTER", StringComparison.OrdinalIgnoreCase))
             {
-                // Expect exactly one argument – the date value
-                if (data.ParamCount == 1)
+                // Expect exactly one parameter (a date)
+                if (data.ParamCount != 1)
                 {
-                    object param = data.GetParamValue(0);
-                    DateTime date;
-
-                    // The argument may be a ReferredArea (cell reference) or a direct double (Excel serial date)
-                    if (param is ReferredArea area)
-                    {
-                        // Get the underlying value from the referenced cell
-                        object val = area.GetValue(0, 0);
-                        date = ConvertToDate(val);
-                    }
-                    else
-                    {
-                        // Direct value (likely a double representing OLE Automation date)
-                        date = ConvertToDate(param);
-                    }
-
-                    // Compute fiscal quarter (standard calendar quarters)
-                    int quarter = ((date.Month - 1) / 3) + 1;
-
-                    // Return the quarter as a numeric value
-                    data.CalculatedValue = (double)quarter;
+                    // Return a #VALUE! error (using NaN as a placeholder)
+                    data.CalculatedValue = double.NaN;
                     return;
                 }
 
-                // If the argument count is wrong, return a NaN to indicate an error
-                data.CalculatedValue = double.NaN;
-                return;
+                // Retrieve the parameter value
+                object param = data.GetParamValue(0);
+                DateTime date;
+
+                // Parameter may be a DateTime, a double (Excel serial date), or a ReferredArea
+                if (param is DateTime dt)
+                {
+                    date = dt;
+                }
+                else if (param is double oaDate)
+                {
+                    // Excel stores dates as OLE Automation dates
+                    date = DateTime.FromOADate(oaDate);
+                }
+                else if (param is ReferredArea area)
+                {
+                    // Get the first cell value from the referred area
+                    object val = area.GetValue(0, 0);
+                    if (val is DateTime dt2)
+                    {
+                        date = dt2;
+                    }
+                    else if (val is double oaDate2)
+                    {
+                        date = DateTime.FromOADate(oaDate2);
+                    }
+                    else
+                    {
+                        data.CalculatedValue = double.NaN;
+                        return;
+                    }
+                }
+                else
+                {
+                    data.CalculatedValue = double.NaN;
+                    return;
+                }
+
+                // Compute fiscal quarter
+                int month = date.Month;
+                // Shift month based on fiscal year start
+                int shiftedMonth = (month - FiscalYearStartMonth + 12) % 12 + 1;
+                int quarter = ((shiftedMonth - 1) / 3) + 1;
+
+                // Return quarter as a numeric value
+                data.CalculatedValue = (double)quarter;
             }
-
-            // For any other function, defer to the base implementation (or leave unhandled)
-        }
-
-        // Helper to convert various possible Excel value types to DateTime
-        private DateTime ConvertToDate(object value)
-        {
-            if (value is DateTime dt)
-                return dt;
-
-            // Excel stores dates as double (OLE Automation date)
-            if (value is double d)
-                return DateTime.FromOADate(d);
-
-            // Try parsing a string representation
-            if (value is string s && DateTime.TryParse(s, out DateTime parsed))
-                return parsed;
-
-            // Fallback to today if conversion fails
-            return DateTime.Today;
         }
     }
 
-    public class FiscalQuarterFunctionDemo
+    public class Program
     {
-        public static void Run()
+        public static void Main()
         {
             try
             {
-                // ---------- Create a new workbook ----------
+                // Create a new workbook
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // Place a sample date in cell A1 (e.g., 2023‑08‑15)
-                sheet.Cells["A1"].PutValue(new DateTime(2023, 8, 15));
+                // Put a sample date in A1 (e.g., 2023-05-15)
+                cells["A1"].PutValue(new DateTime(2023, 5, 15));
 
-                // Use the custom function in cell B1
-                sheet.Cells["B1"].Formula = "=FISCALQUARTER(A1)";
+                // Use the custom function in B1
+                cells["B1"].Formula = "=FISCALQUARTER(A1)";
 
-                // Set up calculation options to use our custom engine
+                // Set up calculation options with the custom engine
                 CalculationOptions options = new CalculationOptions
                 {
                     CustomEngine = new FiscalQuarterEngine()
                 };
 
-                // Calculate all formulas in the workbook using the custom engine
-                workbook.CalculateFormula(options);
+                // Calculate all formulas using the custom engine
+                sheet.CalculateFormula(options, true);
 
-                // Output the result to the console
-                Console.WriteLine("Date in A1: " + sheet.Cells["A1"].StringValue);
-                Console.WriteLine("Fiscal Quarter (B1): " + sheet.Cells["B1"].StringValue);
+                // Output the result to console
+                Console.WriteLine($"Date in A1: {cells["A1"].StringValue}");
+                Console.WriteLine($"Fiscal Quarter (custom function) in B1: {cells["B1"].StringValue}");
 
-                // ---------- Save the workbook ----------
+                // Save the workbook
                 workbook.Save("FiscalQuarterDemo.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for demonstration
-    class Program
-    {
-        static void Main()
-        {
-            FiscalQuarterFunctionDemo.Run();
         }
     }
 }

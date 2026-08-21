@@ -1,37 +1,31 @@
-// Title: Protect Workbook Structure and All Sheets with a Strong Password using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, optionally add data, protect every worksheet with ProtectionType.All, secure the workbook's structure with ProtectionType.Structure, and save the file as an .xlsx using a strong password in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells protect workbook structure | protect all worksheets password .NET | Aspose.Cells workbook protection example | set strong password Excel file Aspose | disable sheet editing Aspose.Cells | ProtectionType.All Aspose.Cells | ProtectionType.Structure Aspose.Cells
-// Common Searches: Aspose.Cells protect workbook structure with password | C# code to lock all worksheets in Excel using Aspose | How to prevent adding or moving sheets in Aspose.Cells | Secure Excel file with strong password in .NET | Aspose.Cells example for workbook and sheet protection
-// Developer Intent: Apply a strong password to lock every worksheet and the workbook's structure, preventing cell edits and sheet modifications.
-// Use Cases: Distribute a read‑only financial report that cannot be altered or rearranged. | Provide a template where only specific ranges are editable while the rest of the workbook remains locked. | Protect confidential data before publishing an Excel file to external stakeholders.
-// AI Prompts: Generate C# code with Aspose.Cells that protects all worksheets using ProtectionType.All and secures the workbook structure with the same password. | Explain the difference between ProtectionType.All and ProtectionType.Structure in Aspose.Cells for .NET and how they combine to block editing and sheet management.
+// Title: Protect Excel Workbook Structure with a Password using Aspose.Cells for .NET (C#)
+// Description: Shows how to lock an entire workbook’s structure—blocking sheet addition, deletion, renaming, moving, or viewing hidden sheets—by applying a strong password with Aspose.Cells for .NET and saving the result.
+// Keywords: Aspose.Cells | C# workbook protection | Excel structure password | Protect workbook structure .NET | Workbook.Protect | Excel file security | disable sheet editing | Aspose.Cells encryption | strong password protection | save protected workbook
+// Common Searches: Aspose.Cells protect workbook structure C# | How to set password for Excel workbook using Aspose.Cells | Disable sheet addition and deletion in Excel with Aspose | C# code to lock workbook structure Aspose.Cells | Set strong password for Excel file Aspose .NET
+// Developer Intent: Apply a password to the workbook’s structure so users cannot add, delete, rename, move, or view hidden worksheets.
+// Use Cases: Distribute a template that must remain unchanged by end‑users. | Secure financial or HR reports before emailing to clients. | Prevent accidental sheet modifications in automated Excel generation pipelines.
+// AI Prompts: Generate C# code that protects an Aspose.Cells workbook’s structure with a password and also protects the workbook windows. | Provide an example that checks whether a workbook is already structure‑protected before applying a new password. | Explain how to change or remove the workbook structure password using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, optionally add data, protect every worksheet with ProtectionType.All, secure the workbook's structure with ProtectionType.Structure, and save the file as an .xlsx using a strong password in Aspose.Cells for .NET.
+// Shows how to lock an entire workbook’s structure—blocking sheet addition, deletion, renaming, moving, or viewing hidden sheets—by applying a strong password with Aspose.Cells for .NET and saving the result.
 class ProtectWorkbookDemo
 {
-    public static void Main()
+    static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook instance
         Workbook workbook = new Workbook();
 
         // (Optional) Add sample data to the first worksheet
-        Worksheet firstSheet = workbook.Worksheets[0];
-        firstSheet.Cells["A1"].PutValue("Sample Data");
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sample Data");
 
-        // Protect every worksheet to prevent editing of cells, formulas, etc.
-        foreach (Worksheet sheet in workbook.Worksheets)
-        {
-            // Protect with all protection types and a strong password
-            sheet.Protect(ProtectionType.All, "StrongPassword!@#123", null);
-        }
+        // Protect the entire workbook structure with a strong password
+        // This disables adding, deleting, renaming, moving, or viewing hidden sheets
+        workbook.Protect(ProtectionType.Structure, "Str0ngP@ssw0rd!");
 
-        // Protect the workbook structure (add/delete/move sheets) with the same strong password
-        workbook.Protect(ProtectionType.Structure, "StrongPassword!@#123");
-
-        // Save the workbook; the structure and sheets are now protected
+        // Save the protected workbook to a file
         workbook.Save("ProtectedWorkbook.xlsx", SaveFormat.Xlsx);
 
         // Release resources

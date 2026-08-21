@@ -1,52 +1,51 @@
-// Title: Fast HTML Export of Large Workbooks with Aspose.Cells Using HtmlCrossType.Cross (C#)
-// Description: This example builds a 5,000‑row by 20‑column workbook, sets HtmlSaveOptions.HtmlCrossStringType to HtmlCrossType.Cross, optionally adds a page title, and saves the file as a single HTML document. It demonstrates how to achieve high‑speed, low‑memory HTML conversion for massive spreadsheets in C#.
-// Keywords: Aspose.Cells HTML export | HtmlCrossType.Cross | HtmlCrossStringType performance | large workbook to HTML C# | high‑speed Excel to HTML conversion | low memory HTML export Aspose | generate HTML from Excel | Aspose.Cells C# example
-// Common Searches: Aspose.Cells HtmlCrossType.Cross example | export large Excel file to HTML quickly | HtmlSaveOptions HtmlCrossStringType usage | C# high performance HTML export for big spreadsheets | reduce memory usage when converting Excel to HTML
-// Developer Intent: Export a massive workbook to HTML quickly by enabling HtmlCrossType.Cross in Aspose.Cells.
-// Use Cases: Create a single‑page HTML report from a 5,000‑row worksheet with minimal memory overhead. | Integrate fast HTML conversion into a web service that processes large Excel uploads. | Generate HTML previews for massive data sets where cell values span multiple columns.
-// AI Prompts: Write C# code that streams a 10,000‑row workbook to an HTTP response as HTML using HtmlCrossType.Cross. | Explain the performance benefits of HtmlCrossStringType.Cross and when to prefer other HtmlCrossType values. | Show how to add custom CSS and a header to the HTML output while keeping the export fast for large workbooks.
+// Title: High‑Performance HTML Export of Large Workbooks with HtmlCrossType.Cross (Aspose.Cells for .NET)
+// Description: Demonstrates creating a workbook with 5,000 rows, configuring HtmlSaveOptions to use HtmlCrossType.Cross, optionally disabling CSS, and saving the data as a single HTML file for fast, low‑memory conversion.
+// Keywords: Aspose.Cells | HtmlCrossType.Cross | HTML export | large workbook | .NET | C# | performance | HtmlSaveOptions | disable CSS
+// Common Searches: Aspose.Cells HtmlCrossType.Cross example | export large Excel to HTML .NET | speed up HTML conversion Aspose.Cells | disable CSS in HtmlSaveOptions | high performance HTML export C#
+// Developer Intent: Generate a single HTML file from a massive workbook quickly and with minimal memory usage by using HtmlCrossType.Cross.
+// Use Cases: Render extensive data sets on a web page without loading the full Excel file. | Accelerate reporting pipelines by turning off CSS generation during HTML conversion. | Provide on‑the‑fly HTML previews in ASP.NET Core APIs for large spreadsheets.
+// AI Prompts: Write C# code that creates a 10,000‑row workbook and exports it to HTML using HtmlCrossType.Cross with Aspose.Cells. | Explain how HtmlCrossStringType.Cross reduces memory consumption and improves export speed in Aspose.Cells. | Show how to stream the HTML output directly to an ASP.NET Core response using HtmlSaveOptions.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlCrossDemo
 {
-    // This example builds a 5,000‑row by 20‑column workbook, sets HtmlSaveOptions.HtmlCrossStringType to HtmlCrossType.Cross, optionally adds a page title, and saves the file as a single HTML document. It demonstrates how to achieve high‑speed, low‑memory HTML conversion for massive spreadsheets in C#.
+    // Demonstrates creating a workbook with 5,000 rows, configuring HtmlSaveOptions to use HtmlCrossType.Cross, optionally disabling CSS, and saving the data as a single HTML file for fast, low‑memory conversion.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (uses the default constructor rule)
+            // Create a new workbook (lifecycle rule)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate a large amount of data to demonstrate high‑performance HTML export
+            // Populate the worksheet with a large amount of sample data
+            // (In a real scenario this could be loaded from a source or generated)
             for (int row = 0; row < 5000; row++)
             {
                 for (int col = 0; col < 20; col++)
                 {
-                    // Put a sample string that will span across cells
-                    sheet.Cells[row, col].PutValue($"Row{row}_Col{col}");
+                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
                 }
             }
 
-            // Create HTML save options (uses the HtmlSaveOptions() constructor rule)
+            // Create HTML save options (lifecycle rule)
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-            // Set the cross‑cell string type to Cross for faster large‑file generation
-            // (uses the HtmlCrossStringType property rule)
+            // Set the cross‑cell string handling to Cross for high‑performance export
+            // (uses HtmlSaveOptions.HtmlCrossStringType property)
             htmlOptions.HtmlCrossStringType = HtmlCrossType.Cross;
 
-            // Optional: set a page title for the generated HTML
-            htmlOptions.PageTitle = "Large Workbook Export with HtmlCrossType.Cross";
+            // Optional: improve performance further by disabling CSS (if desired)
+            // htmlOptions.DisableCss = true;
 
-            // Save the workbook as HTML using the configured options
-            // (uses the Workbook.Save method with options)
+            // Save the workbook as HTML using the configured options (lifecycle rule)
             workbook.Save("LargeWorkbook.html", htmlOptions);
 
-            Console.WriteLine("HTML file generated with HtmlCrossType.Cross for high‑performance export.");
+            Console.WriteLine("HTML export completed with HtmlCrossType.Cross.");
         }
     }
 }

@@ -1,49 +1,58 @@
+// Title: C# – Replace Smart Marker in Merged Cells with Aspose.Cells while Keeping Merge Layout
+// Description: Demonstrates how to merge a range (A1:B2), insert a smart marker "&=Data.Name", bind a List<Person> as the data source, process the marker with WorkbookDesigner, and save the workbook, all while preserving the original merged‑cell formatting.
+// Keywords: Aspose.Cells smart markers C# | replace placeholder merged cells | preserve merge settings Aspose | WorkbookDesigner merge range | dynamic header with smart marker
+// Common Searches: Aspose.Cells keep merged cells after smart marker processing | C# replace smart marker inside merged range | how to preserve cell merge when using smart markers | smart marker merge example Aspose.Cells .NET
+// Developer Intent: Insert a smart marker into a merged cell, bind data, process the marker, and retain the original merged‑cell configuration.
+// Use Cases: Generate personalized reports where a merged header cell displays a name or title via a smart marker. | Create invoice or certificate templates with merged title rows that automatically fill with dynamic data without breaking layout.
+// AI Prompts: Write C# code that merges A1:B2, adds the smart marker '&=Employee.FullName', binds a List<Employee>, processes the markers with WorkbookDesigner, and saves the file while preserving the merge. | Explain how WorkbookDesigner maintains merged cell ranges when processing smart markers and list any properties that affect this behavior. | Provide a step‑by‑step tutorial for replacing placeholder text in merged cells using Aspose.Cells smart markers, including loading an existing workbook and handling multiple data rows.
+
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace ReplacePlaceholderInMergedCells
+namespace AsposeCellsSmartMarkerMergeDemo
 {
-    // Simple data class used as a smart marker data source
+    // Simple data class for the smart marker
+    // Demonstrates how to merge a range (A1:B2), insert a smart marker "&=Data.Name", bind a List<Person> as the data source, process the marker with WorkbookDesigner, and save the workbook, all while preserving the original merged‑cell formatting.
     public class Person
     {
         public string Name { get; set; }
     }
 
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // 1. Create a new workbook and access the first worksheet
+            // Load or create a workbook (here we create a new one)
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // 2. Merge a range of cells (A1:B2). The merge settings will be preserved after processing.
-            cells.Merge(firstRow: 0, firstColumn: 0, totalRows: 2, totalColumns: 2);
+            // Merge a range of cells (A1:B2) – this will be the placeholder area
+            cells.Merge(0, 0, 2, 2); // rows are zero‑based, totalRows/totalColumns are 1‑based
 
-            // 3. Insert a smart marker placeholder inside the merged cell.
-            //    The placeholder follows the smart marker syntax: &=DataSourceName.FieldName
-            cells["A1"].PutValue("&=Person.Name");
+            // Put a smart marker inside the merged cell.
+            // The marker syntax "&=Data.Name" tells the designer to replace it with the Name property of the data source named "Data".
+            cells["A1"].PutValue("&=Data.Name");
 
-            // 4. Prepare the data source that will replace the placeholder.
+            // Prepare the data source – a list with a single Person object
             List<Person> data = new List<Person>
             {
                 new Person { Name = "John Doe" }
             };
 
-            // 5. Set up the WorkbookDesigner, assign the workbook, and bind the data source.
+            // Set up the WorkbookDesigner, assign the workbook and the data source
             WorkbookDesigner designer = new WorkbookDesigner
             {
                 Workbook = workbook
             };
-            designer.SetDataSource("Person", data);
+            designer.SetDataSource("Data", data);
 
-            // 6. Process the smart markers. The merged cell remains merged after processing.
+            // Process the smart markers. The merge settings are preserved automatically.
             designer.Process();
 
-            // 7. Save the resulting workbook.
-            workbook.Save("MergedCellPlaceholderReplaced.xlsx");
+            // Save the result
+            workbook.Save("MergedSmartMarkerResult.xlsx");
         }
     }
 }

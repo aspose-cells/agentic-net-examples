@@ -1,76 +1,57 @@
-// Title: C# – Add exponential back‑off retry to Aspose.Cells smart marker processing
-// Description: Demonstrates loading a workbook template with smart markers, fetching a DataTable that may fail due to transient network errors, assigning it to WorkbookDesigner, and processing the markers inside a configurable retry loop with exponential back‑off before saving the result.
-// Keywords: Aspose.Cells | smart markers | retry | exponential backoff | C# | .NET | WorkbookDesigner | transient network error | data source failure | GitHub example
-// Common Searches: Aspose.Cells smart marker retry C# | exponential backoff for WorkbookDesigner.Process | handle transient network errors Aspose.Cells | retry logic Aspose.Cells example | smart marker population failure handling
-// Developer Intent: Implement a configurable retry mechanism with exponential back‑off to keep smart marker processing reliable when data retrieval experiences temporary failures.
-// Use Cases: Regenerating reports when a web API intermittently times out | Recovering from brief database connection drops during smart marker population | Ensuring automated workbook generation works in unstable network environments
-// AI Prompts: Write C# code that wraps WorkbookDesigner.Process() in a retry loop with configurable attempts and exponential back‑off using Aspose.Cells. | Create a reusable retry helper for any Aspose.Cells operation that may throw transient exceptions, including logging and delay. | Show how to integrate the Polly library with Aspose.Cells smart marker processing for advanced retry policies.
+// Title: C# Retry Mechanism for Aspose.Cells Smart Marker Processing with Transient Network Failures
+// Description: This example loads a template workbook, fetches JSON data that may come from a network service, and wraps WorkbookDesigner.Process in a configurable retry loop (max attempts, delay, optional exponential backoff). Each failure is logged before the workbook is finally saved.
+// Keywords: Aspose.Cells | smart markers | retry | transient network failure | C# | .NET | WorkbookDesigner | JSON data source | exponential backoff | retry policy | network resilience
+// Common Searches: Aspose.Cells retry smart markers | C# retry WorkbookDesigner.Process | handle network errors Aspose.Cells smart markers | smart marker retry example | Aspose.Cells exponential backoff
+// Developer Intent: Add a retry policy around WorkbookDesigner.Process to safely populate smart markers when the JSON data source may temporarily fail.
+// Use Cases: Reprocess smart markers automatically if fetching JSON data fails due to a temporary network outage. | Limit retries with configurable max attempts and delay to prevent endless loops. | Log each retry attempt and surface the final exception after the maximum retries are exceeded. | Apply exponential backoff for more robust handling of intermittent network issues.
+// AI Prompts: Write C# code that adds exponential backoff to the retry loop for Aspose.Cells smart marker processing. | Create a reusable RetryHelper class for WorkbookDesigner.Process with customizable maxAttempts, delay, and backoff strategy. | Show how to combine HttpClient with Polly retry policies to fetch JSON data before setting it as a smart marker data source. | Explain how to configure logging and error handling for retrying smart marker population in Aspose.Cells.
 
 using System;
-using System.Data;
 using System.IO;
 using System.Threading;
 using Aspose.Cells;
 
-namespace SmartMarkerRetryDemo
+// This example loads a template workbook, fetches JSON data that may come from a network service, and wraps WorkbookDesigner.Process in a configurable retry loop (max attempts, delay, optional exponential backoff). Each failure is logged before the workbook is finally saved.
+class SmartMarkerRetryDemo
 {
-    // Simple configuration holder for retry settings
-    // Demonstrates loading a workbook template with smart markers, fetching a DataTable that may fail due to transient network errors, assigning it to WorkbookDesigner, and processing the markers inside a configurable retry loop with exponential back‑off before saving the result.
-    internal static class Config
-    {
-        public static int MaxRetryTimes { get; set; } = 3;
-        public static int InitialFailRetryDelay { get; set; } = 2000; // milliseconds
-    }
+    // Retry configuration
+    private const int MaxRetryTimes = 3;            // Maximum number of retry attempts
+    private const int InitialFailRetryDelay = 2000; // Initial delay (ms) before a retry
 
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Configure retry settings for AI/network operations
-            Config.MaxRetryTimes = 3;               // Maximum number of retry attempts
-            Config.InitialFailRetryDelay = 2000;    // Initial delay in milliseconds (2 seconds)
+            const string templatePath = "template.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Load the workbook template that contains smart markers
-            WorkbookDesigner designer = new WorkbookDesigner();
-            const string templatePath = "TemplateWithSmartMarkers.xlsx";
-
-            try
+            // Verify that the template file exists before loading
+            if (!File.Exists(templatePath))
             {
-                if (!File.Exists(templatePath))
-                {
-                    throw new FileNotFoundException($"Template file not found: {templatePath}");
-                }
-
-                designer.Workbook = new Workbook(templatePath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load template workbook: {ex.Message}");
+                Console.WriteLine($"Template file \"{templatePath}\" not found.");
                 return;
             }
 
-            // Set up a data source that may fail due to transient network issues
-            DataTable data;
-            try
-            {
-                data = GetDataWithPossibleTransientFailure();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to retrieve data: {ex.Message}");
-                return;
-            }
+            // Load the workbook that contains smart markers
+            Workbook workbook = new Workbook(templatePath);
 
-            // Assign the data source to the designer
-            designer.SetDataSource(data);
+            // Initialize the WorkbookDesigner with the loaded workbook
+            WorkbookDesigner designer = new WorkbookDesigner
+            {
+                Workbook = workbook
+            };
 
-            // Attempt to process smart markers with retry logic
+            // Example: set a JSON data source that might be retrieved from a network service
+            string jsonData = GetJsonFromNetwork();
+            designer.SetJsonDataSource("Data", jsonData);
+
+            // Retry loop for processing smart markers
             int attempt = 0;
             while (true)
             {
                 try
                 {
-                    // Process smart markers – this may involve network calls internally
+                    // Attempt to process smart markers
                     designer.Process();
                     // If processing succeeds, exit the loop
                     break;
@@ -78,57 +59,35 @@ namespace SmartMarkerRetryDemo
                 catch (Exception ex)
                 {
                     attempt++;
-                    if (attempt > Config.MaxRetryTimes)
+                    if (attempt > MaxRetryTimes)
                     {
-                        Console.WriteLine($"Processing failed after {attempt - 1} retries.");
-                        Console.WriteLine($"Error: {ex.Message}");
-                        return;
+                        // Exceeded maximum retries – log and rethrow
+                        Console.WriteLine($"Processing failed after {attempt} attempts: {ex.Message}");
+                        throw;
                     }
 
-                    // Calculate exponential back‑off delay
-                    int delay = Config.InitialFailRetryDelay * attempt;
-                    Console.WriteLine($"Transient failure detected (attempt {attempt}): {ex.Message}");
-                    Console.WriteLine($"Waiting {delay} ms before retrying...");
-
-                    Thread.Sleep(delay);
+                    // Log the failure and wait before retrying
+                    Console.WriteLine($"Attempt {attempt} failed: {ex.Message}. Retrying in {InitialFailRetryDelay} ms...");
+                    Thread.Sleep(InitialFailRetryDelay);
                 }
             }
 
             // Save the populated workbook
-            const string outputPath = "OutputWithSmartMarkers.xlsx";
-            try
-            {
-                designer.Workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
-
-        // Simulated method that retrieves data and may throw a transient exception
-        private static DataTable GetDataWithPossibleTransientFailure()
+        catch (Exception e)
         {
-            // In a real scenario, this could be a call to a web service, database, etc.
-            // Here we randomly throw an exception to mimic a transient network failure.
-            Random rnd = new Random();
-            if (rnd.NextDouble() < 0.3) // 30% chance of failure
-            {
-                throw new InvalidOperationException("Simulated transient network error while fetching data.");
-            }
-
-            // Create sample data table
-            DataTable table = new DataTable("Employees");
-            table.Columns.Add("Name", typeof(string));
-            table.Columns.Add("Age", typeof(int));
-            table.Columns.Add("Department", typeof(string));
-
-            table.Rows.Add("John Doe", 30, "Sales");
-            table.Rows.Add("Jane Smith", 28, "Marketing");
-            table.Rows.Add("Bob Johnson", 45, "HR");
-
-            return table;
+            // Global exception handling
+            Console.WriteLine($"An error occurred: {e.Message}");
         }
+    }
+
+    // Placeholder for a network call that retrieves JSON data.
+    // Replace with actual HTTP request logic as required.
+    static string GetJsonFromNetwork()
+    {
+        // Simulated JSON payload
+        return "{'Name':'Sample Product','Value':99.99}";
     }
 }

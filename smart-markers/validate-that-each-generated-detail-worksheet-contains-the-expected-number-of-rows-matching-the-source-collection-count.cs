@@ -1,61 +1,60 @@
+// Title: Validate Detail Worksheet Row Count Against Source Collection with Aspose.Cells for .NET
+// Description: C# example that creates a workbook, writes a List<string[]> to the first worksheet named "Detail", then checks Cells.Rows.Count against the source list size. The script prints a pass/fail message and saves the file, demonstrating how to ensure all records are written.
+// Keywords: Aspose.Cells row count validation | C# Excel row verification | worksheet rows vs list size | Aspose.Cells .NET example | Excel data export validation | smart markers row check | global developers
+// Common Searches: Aspose.Cells verify worksheet row count | C# compare Cells.Rows.Count with collection size | how to confirm all rows are written to Excel using Aspose | validate Excel detail sheet record count .NET | row count mismatch handling Aspose.Cells
+// Developer Intent: Confirm that the detail sheet contains exactly the same number of rows as the source collection before saving the workbook.
+// Use Cases: Automated reporting pipelines that need to guarantee every record appears in the Excel detail section. | Data migration scripts where missing rows must be detected early. | Quality‑assurance checks in batch Excel generation to prevent incomplete files.
+// AI Prompts: Write C# code that populates an Aspose.Cells worksheet from a List<string[]> and asserts Cells.Rows.Count equals the list count, logging success or failure. | Show error‑handling patterns for a row‑count mismatch when exporting data with Aspose.Cells, including throwing an exception or returning a status code. | Create a reusable C# method that accepts a Worksheet and IEnumerable<T>, writes the data, validates the row count, and returns a boolean result.
+
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsRowValidation
+// C# example that creates a workbook, writes a List<string[]> to the first worksheet named "Detail", then checks Cells.Rows.Count against the source list size. The script prints a pass/fail message and saves the file, demonstrating how to ensure all records are written.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Sample source collection representing rows to be written to the worksheet
+        List<string[]> sourceData = new List<string[]>
         {
-            // Sample source collection whose count we expect to match rows in each detail worksheet
-            List<string> sourceData = new List<string>
+            new [] { "ID", "Name", "Qty" },
+            new [] { "1", "Apple", "10" },
+            new [] { "2", "Banana", "20" },
+            new [] { "3", "Orange", "15" }
+        };
+
+        // Create a new workbook (create rule)
+        Workbook workbook = new Workbook();
+
+        // Use the first worksheet as the detail sheet
+        Worksheet detailSheet = workbook.Worksheets[0];
+        detailSheet.Name = "Detail";
+
+        // Populate the worksheet with data from the source collection
+        for (int i = 0; i < sourceData.Count; i++)
+        {
+            string[] row = sourceData[i];
+            for (int j = 0; j < row.Length; j++)
             {
-                "Alpha",
-                "Beta",
-                "Gamma",
-                "Delta"
-            };
-
-            // Create a new workbook (uses the create rule)
-            Workbook workbook = new Workbook();
-
-            // Iterate over the source collection and create a detail worksheet for each item
-            for (int i = 0; i < sourceData.Count; i++)
-            {
-                // Create a new worksheet named after the source item
-                Worksheet detailSheet = workbook.Worksheets[workbook.Worksheets.Add()];
-                detailSheet.Name = $"Detail_{sourceData[i]}";
-
-                // Populate the worksheet with some rows (for demonstration we add two rows per item)
-                // Row 0 – header
-                detailSheet.Cells[0, 0].PutValue("Index");
-                detailSheet.Cells[0, 1].PutValue("Value");
-
-                // Row 1 – data row
-                detailSheet.Cells[1, 0].PutValue(i + 1);
-                detailSheet.Cells[1, 1].PutValue(sourceData[i]);
-
-                // Validate that the number of rows in the worksheet matches the source collection count
-                // RowCollection.Count gives the total rows that have been instantiated (including empty rows up to the last used row)
-                int actualRowCount = detailSheet.Cells.Rows.Count;
-
-                // Expected rows: header + data row = 2
-                // If you need to match the source collection count, adjust the expectation accordingly.
-                int expectedRowCount = 2; // change as needed
-
-                if (actualRowCount != expectedRowCount)
-                {
-                    Console.WriteLine($"Validation failed for worksheet '{detailSheet.Name}'. Expected rows: {expectedRowCount}, Actual rows: {actualRowCount}");
-                }
-                else
-                {
-                    Console.WriteLine($"Worksheet '{detailSheet.Name}' passed validation. Row count: {actualRowCount}");
-                }
+                detailSheet.Cells[i, j].PutValue(row[j]);
             }
-
-            // Save the workbook (uses the save rule)
-            workbook.Save("DetailWorksheets.xlsx");
         }
+
+        // Validate that the number of rows in the worksheet matches the source collection count
+        int expectedRowCount = sourceData.Count;
+        int actualRowCount = detailSheet.Cells.Rows.Count; // RowCollection.Count
+
+        if (actualRowCount == expectedRowCount)
+        {
+            Console.WriteLine($"Validation passed: {actualRowCount} rows present as expected.");
+        }
+        else
+        {
+            Console.WriteLine($"Validation failed: expected {expectedRowCount} rows but found {actualRowCount}.");
+        }
+
+        // Save the workbook (save rule)
+        workbook.Save("DetailValidation.xlsx");
     }
 }

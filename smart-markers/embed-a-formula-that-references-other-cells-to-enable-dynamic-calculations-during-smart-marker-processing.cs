@@ -1,10 +1,10 @@
-// Title: Add a Formula that References Smart Marker Cells for Dynamic Calculations in Aspose.Cells (C#)
-// Description: This example shows how to create a workbook, place smart markers in cells A2 and B2, embed a formula in C2 that multiplies those cells, bind a List<DataItem> as the data source, process the markers with WorkbookDesigner, recalculate formulas, and save the file as SmartMarkerWithFormula.xlsx.
-// Keywords: Aspose.Cells smart marker formula | C# embed Excel formula after smart markers | WorkbookDesigner calculate formulas | dynamic calculation Aspose.Cells .NET | smart marker data source list | Excel formula referencing smart marker cells | Aspose.Cells example C# | global Aspose.Cells tutorial
-// Common Searches: how to set a formula that uses smart marker values in Aspose.Cells C# | calculate formulas after WorkbookDesigner.Process() | embed Excel formula with smart markers Aspose.Cells | C# Aspose.Cells dynamic calculations with smart markers | force formula evaluation after smart marker processing
-// Developer Intent: I need to embed an Excel formula that automatically uses the values filled by smart markers and have it recomputed after the markers are processed.
-// Use Cases: Generate a pricing sheet where each row’s total = quantity × unit price, with quantity and price supplied by smart markers. | Create a financial summary that calculates subtotals and grand totals after expense categories and amounts are populated via smart markers. | Build an inventory report that multiplies stock count and unit cost (both from smart markers) to show total value per item.
-// AI Prompts: Provide C# code that adds a formula referencing smart‑marker cells and ensures the formula is evaluated after WorkbookDesigner.Process() in Aspose.Cells. | Show how to apply the same formula to multiple rows when using a list as a smart‑marker data source. | Explain the steps to force formula recalculation and save the workbook with computed results after smart marker processing.
+// Title: C# Example – Embed a Formula in Aspose.Cells Smart Markers for Dynamic Totals
+// Description: This Aspose.Cells .NET sample creates a workbook, adds smart markers for product data, inserts a formula (Price × Quantity) into the Total column, processes the markers with WorkbookDesigner, recalculates the formula, and saves the result as an Excel file.
+// Keywords: Aspose.Cells C# smart markers formula | embed Excel formula Aspose.Cells | dynamic calculation smart markers .NET | WorkbookDesigner Process CalculateFormula | C# Excel total column example | Aspose.Cells sample GitHub
+// Common Searches: how to add a formula that uses smart marker values in Aspose.Cells C# | calculate totals after processing smart markers .NET | embed Excel formulas with Aspose.Cells smart markers | Aspose.Cells dynamic calculations example | C# smart marker formula without leading equals
+// Developer Intent: Insert a cell formula that references smart‑marker fields so totals are computed automatically after the data is populated.
+// Use Cases: Place a formula (e.g., B2*C2) in a cell before calling WorkbookDesigner.Process so it automatically uses the values filled by smart markers. | Bind a collection of objects as the smart‑marker data source, run Process, then invoke Workbook.CalculateFormula to evaluate all embedded formulas. | Generate an Excel report where the Total column shows calculated results for each product row without manual post‑processing.
+// AI Prompts: Generate C# code that adds a formula referencing smart‑marker cells and evaluates it after processing with Aspose.Cells. | Explain step‑by‑step how to embed and recalculate an Excel formula when using smart markers in Aspose.Cells for .NET. | Provide a complete Aspose.Cells example that creates a workbook, inserts smart markers, embeds a dependent formula, processes the data source, and saves the calculated file.
 
 using System;
 using System.Collections.Generic;
@@ -12,52 +12,60 @@ using Aspose.Cells;
 
 namespace SmartMarkerFormulaDemo
 {
-    // Simple data class used as a data source for smart markers
-    // This example shows how to create a workbook, place smart markers in cells A2 and B2, embed a formula in C2 that multiplies those cells, bind a List<DataItem> as the data source, process the markers with WorkbookDesigner, recalculate formulas, and save the file as SmartMarkerWithFormula.xlsx.
-    public class DataItem
+    // Simple data class for the smart marker data source
+    // This Aspose.Cells .NET sample creates a workbook, adds smart markers for product data, inserts a formula (Price × Quantity) into the Total column, processes the markers with WorkbookDesigner, recalculates the formula, and saves the result as an Excel file.
+    public class Product
     {
         public string Name { get; set; } = string.Empty;
-        public double Value { get; set; }
+        public double Price { get; set; }
+        public int Qty { get; set; }
     }
 
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                // 1. Create a new workbook (lifecycle rule: create)
+                // ---------- Create a new workbook ----------
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // 2. Define smart markers that will be replaced by data source values
-                //    & = indicates a smart marker; the marker name is "Data"
-                cells["A2"].PutValue("&=Data.Name");
-                cells["B2"].PutValue("&=Data.Value");
+                // ---------- Define header row ----------
+                cells["A1"].PutValue("Product");
+                cells["B1"].PutValue("Price");
+                cells["C1"].PutValue("Quantity");
+                cells["D1"].PutValue("Total");
 
-                // 3. Embed a formula that references the cells populated by smart markers.
-                //    The formula will be evaluated after the smart markers are processed.
-                cells["C2"].Formula = "=A2*B2";
+                // ---------- Insert smart markers ----------
+                // These markers will be replaced by the data source during processing
+                cells["A2"].PutValue("&=Products.Name");
+                cells["B2"].PutValue("&=Products.Price");
+                cells["C2"].PutValue("&=Products.Qty");
 
-                // 4. Prepare a data source (list of DataItem objects)
-                List<DataItem> data = new List<DataItem>
+                // Embed a formula that references the cells filled by smart markers.
+                // The formula calculates Total = Price * Quantity.
+                cells["D2"].Formula = "B2*C2"; // Set formula without leading '='
+
+                // ---------- Prepare data source ----------
+                List<Product> productList = new List<Product>
                 {
-                    new DataItem { Name = "ProductA", Value = 12.5 },
-                    new DataItem { Name = "ProductB", Value = 8.0 }
+                    new Product { Name = "Apple",  Price = 1.20, Qty = 10 },
+                    new Product { Name = "Banana", Price = 0.80, Qty = 15 },
+                    new Product { Name = "Cherry", Price = 2.50, Qty = 5 }
                 };
 
-                // 5. Create a WorkbookDesigner, assign the workbook and set the data source
+                // ---------- Process smart markers ----------
                 WorkbookDesigner designer = new WorkbookDesigner(workbook);
-                designer.SetDataSource("Data", data);
+                designer.SetDataSource("Products", productList);
+                designer.Process(); // Populate smart markers with data
 
-                // 6. Process the smart markers (populate A2 and B2 with data)
-                designer.Process();
-
-                // 7. Calculate all formulas so that C2 reflects the computed result
+                // ---------- Calculate formulas ----------
+                // After the data is populated, calculate the embedded formula.
                 workbook.CalculateFormula();
 
-                // 8. Save the workbook (lifecycle rule: save)
+                // ---------- Save the result ----------
                 workbook.Save("SmartMarkerWithFormula.xlsx");
             }
             catch (Exception ex)

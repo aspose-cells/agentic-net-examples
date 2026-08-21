@@ -1,45 +1,46 @@
-// Title: Export Print Area to HTML with Inline Styles – Aspose.Cells for .NET
-// Description: Shows how to define a worksheet's print area (B2:F10) and save it as HTML using Aspose.Cells, with ExportPrintAreaOnly enabled and CSS generation disabled so the output contains only the selected range styled inline.
-// Keywords: Aspose.Cells | C# HTML export | ExportPrintAreaOnly | DisableCss | print area HTML | inline styles | .NET | Workbook to HTML | save specific range | HtmlSaveOptions
-// Common Searches: Aspose.Cells export specific range to HTML | How to disable CSS when saving workbook as HTML | Export print area only Aspose.Cells C# | HtmlSaveOptions ExportPrintAreaOnly example | Generate HTML preview of Excel range without external stylesheet
-// Developer Intent: Create an HTML file that contains only a worksheet's print area with all styling applied inline, avoiding external CSS files.
-// Use Cases: Embedding a concise Excel section in a web page without extra stylesheet files. | Sending a formatted table in an email where all styling must be inline. | Providing a lightweight printable preview of a report segment for browsers.
-// AI Prompts: Show C# code to export a worksheet's print area to HTML using Aspose.Cells while turning off CSS files. | Give an example of HtmlSaveOptions with ExportPrintAreaOnly and DisableCss set to true. | Explain how to verify that the generated HTML includes only the defined range and uses inline styling.
+// Title: Export a worksheet's print area to HTML with inline styles using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to set a print area (B2:F10) in an Aspose.Cells workbook, configure HtmlSaveOptions to export only that range (ExportPrintAreaOnly = true) and suppress external CSS (DisableCss = true), and save the result as a lightweight HTML file with inline styling.
+// Keywords: Aspose.Cells HTML export | ExportPrintAreaOnly | DisableCss | inline styles | C# Excel to HTML | print area only | Aspose.Cells .NET example | HTMLSaveOptions | Excel print area HTML | no external CSS Aspose
+// Common Searches: Aspose.Cells export only print area to HTML | HtmlSaveOptions DisableCss C# example | ExportPrintAreaOnly true Aspose.Cells | how to generate HTML without CSS using Aspose.Cells | C# convert Excel range to HTML inline styles
+// Developer Intent: Generate an HTML file that contains only the defined print area and uses inline styling, avoiding external CSS files.
+// Use Cases: Creating compact HTML reports that show a specific cell range. | Embedding Excel data in email bodies where external CSS is blocked. | Producing printable web previews that match the Excel print layout. | Building lightweight web dashboards that load only necessary cells.
+// AI Prompts: Provide C# code with Aspose.Cells to export a worksheet's print area to HTML using only inline styles. | Show how to set HtmlSaveOptions.DisableCss = true and ExportPrintAreaOnly = true in Aspose.Cells. | Explain the steps to define a print area and save it as CSS‑free HTML with Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to define a worksheet's print area (B2:F10) and save it as HTML using Aspose.Cells, with ExportPrintAreaOnly enabled and CSS generation disabled so the output contains only the selected range styled inline.
-class ExportPrintAreaHtml
+namespace AsposeCellsPrintAreaExport
 {
-    static void Main()
+    // Demonstrates how to set a print area (B2:F10) in an Aspose.Cells workbook, configure HtmlSaveOptions to export only that range (ExportPrintAreaOnly = true) and suppress external CSS (DisableCss = true), and save the result as a lightweight HTML file with inline styling.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate the worksheet with sample data
-        for (int row = 0; row < 20; row++)
+        static void Main()
         {
-            for (int col = 0; col < 10; col++)
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Populate sample data (optional, demonstrates the print area)
+            for (int row = 0; row < 20; row++)
             {
-                worksheet.Cells[row, col].PutValue($"Cell {row + 1},{col + 1}");
+                for (int col = 0; col < 10; col++)
+                {
+                    worksheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                }
             }
+
+            // Define the print area that will be exported
+            worksheet.PageSetup.PrintArea = "B2:F10";
+
+            // Configure HTML save options:
+            // - ExportPrintAreaOnly = true  => only the defined print area is saved
+            // - DisableCss = true           => use only inline styles, no external CSS
+            HtmlSaveOptions options = new HtmlSaveOptions();
+            options.ExportPrintAreaOnly = true;
+            options.DisableCss = true;
+
+            // Save the workbook as HTML using the configured options
+            workbook.Save("PrintAreaOnly.html", options);
         }
-
-        // Define the print area that should be exported
-        worksheet.PageSetup.PrintArea = "B2:F10";
-
-        // Set up HTML save options:
-        // - ExportPrintAreaOnly = true  => only the defined print area is saved
-        // - DisableCss = true           => use only inline styles, no external CSS
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-        {
-            ExportPrintAreaOnly = true,
-            DisableCss = true
-        };
-
-        // Save the workbook as an HTML file using the configured options
-        workbook.Save("PrintAreaOnly.html", htmlOptions);
     }
 }

@@ -1,45 +1,47 @@
-// Title: C# – Replace Substring in All Text Cells of a CSV and Save Cleaned File with Aspose.Cells
-// Description: Loads a CSV into a workbook, replaces every occurrence of a given substring in text cells, and exports the result as a new CSV using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells CSV replace | C# replace substring CSV | Import CSV Aspose.Cells | Export cleaned CSV C# | Workbook.Replace example | CSV data cleansing Aspose
-// Common Searches: replace text in all CSV cells using Aspose.Cells | C# import CSV, replace string, save file | Aspose.Cells replace substring across workbook | how to clean CSV data with Aspose.Cells .NET
-// Developer Intent: Load a CSV, substitute a specific substring in every text cell, and write the cleaned data back to a new CSV file using Aspose.Cells for .NET.
-// Use Cases: Update legacy codes or terminology across large CSV exports. | Standardize values before importing the file into downstream systems. | Perform bulk data sanitization for reporting or analytics pipelines.
-// AI Prompts: Generate C# code that uses Aspose.Cells to replace multiple substrings in a CSV and save the result. | Show how to do a case‑insensitive replacement of a substring in all text cells of a CSV with Aspose.Cells. | Explain how to keep numeric values unchanged while performing text replacement in a CSV using Aspose.Cells.
+// Title: C# – Import CSV, Replace Substring in All Cells, Export Clean CSV with Aspose.Cells
+// Description: Load a CSV into an Aspose.Cells Workbook, replace every occurrence of a given substring in text cells using Workbook.Replace, report the replacement count, and save the cleaned data as a new CSV file.
+// Keywords: Aspose.Cells CSV import | Aspose.Cells replace text | C# CSV cleaning | Workbook.Replace .NET | export CSV Aspose | data sanitization C# | text substitution Excel library
+// Common Searches: Aspose.Cells replace string in CSV C# | How to clean CSV data with Aspose.Cells | C# import CSV and replace values Aspose | Workbook.Replace example for CSV files | Export modified CSV using Aspose.Cells .NET
+// Developer Intent: Replace a target substring in every text cell of a CSV file and write the sanitized result to a new CSV.
+// Use Cases: Remove confidential identifiers before sharing CSV exports. | Standardize terminology across legacy data sets. | Prepare CSV files for ETL pipelines by eliminating outdated values.
+// AI Prompts: Write C# code that uses Aspose.Cells to load a CSV, replace "oldValue" with "newValue" in all cells, and save the output as a new CSV. | Explain the behavior of Workbook.Replace on numeric versus text cells after importing a CSV with Aspose.Cells. | Create a script that processes multiple CSV files, applying the same substring replacement using Aspose.Cells in a loop.
 
 using System;
 using Aspose.Cells;
 
-namespace CsvCleanExample
+namespace CsvCleaner
 {
-    // Loads a CSV into a workbook, replaces every occurrence of a given substring in text cells, and exports the result as a new CSV using Aspose.Cells for .NET.
+    // Load a CSV into an Aspose.Cells Workbook, replace every occurrence of a given substring in text cells using Workbook.Replace, report the replacement count, and save the cleaned data as a new CSV file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Paths for input and output CSV files
+            // Input CSV file path
             string inputCsvPath = "input.csv";
-            string outputCsvPath = "cleaned_output.csv";
+
+            // Output CSV file path (cleaned)
+            string outputCsvPath = "cleaned.csv";
 
             // Substring to find and its replacement
-            string oldSubstring = "OldValue";
-            string newSubstring = "NewValue";
+            string oldSubstring = "oldValue";
+            string newSubstring = "newValue";
 
-            // Create a new workbook (lifecycle rule: use provided creation)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Access the first worksheet and its cells collection
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Import the CSV file into the worksheet.
-            // Using comma as delimiter, keep data as strings (convertNumericData = false)
-            cells.ImportCSV(inputCsvPath, ",", false, 0, 0);
+            // Import the CSV data into the worksheet starting at cell A1 (row 0, column 0)
+            // Using comma as delimiter and converting numeric data where possible
+            cells.ImportCSV(inputCsvPath, ",", true, 0, 0);
 
-            // Replace all occurrences of the specified substring in text cells
-            // (Workbook.Replace method handles the replacement across the whole workbook)
-            workbook.Replace(oldSubstring, newSubstring);
+            // Replace all occurrences of the specified substring in all text cells
+            int replacedCount = workbook.Replace(oldSubstring, newSubstring);
+            Console.WriteLine($"Total replacements made: {replacedCount}");
 
-            // Save the cleaned data back to a CSV file (lifecycle rule: use provided saving)
+            // Save the cleaned data back to a CSV file
             workbook.Save(outputCsvPath, SaveFormat.Csv);
         }
     }

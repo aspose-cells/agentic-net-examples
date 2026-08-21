@@ -1,66 +1,67 @@
-// Title: C# – Verify that an Aspose.Cells encrypted workbook rejects an incorrect password
-// Description: Creates a workbook, applies a password with strong encryption, saves it, then uses FileFormatUtil.VerifyPassword to confirm the correct password returns true while a similar wrong password returns false. Demonstrates handling the exception when loading with the wrong password and shows successful decryption with the right password.
-// Keywords: Aspose.Cells password verification | C# workbook encryption | FileFormatUtil.VerifyPassword example | LoadOptions incorrect password | StrongCryptographicProvider | Excel file protection C# | Aspose.Cells encryption validation
-// Common Searches: Aspose.Cells verify workbook password C# | How to check Excel file password with Aspose | Load encrypted workbook with wrong password exception | C# validate Excel encryption using Aspose.Cells | FileFormatUtil.VerifyPassword usage
-// Developer Intent: Ensure that a workbook protected with a specific password cannot be opened with any other similar password.
-// Use Cases: Pre‑validate a supplied password before opening an encrypted workbook to avoid unnecessary I/O. | Catch and handle the exception thrown when LoadOptions uses an incorrect password, preventing unauthorized access. | Confirm successful decryption by reading cell data after opening with the correct password.
-// AI Prompts: Generate C# code that creates an Aspose.Cells workbook, encrypts it with a password, and verifies the password using FileFormatUtil.VerifyPassword. | Show how to catch the exception when loading an encrypted workbook with an incorrect password using LoadOptions in Aspose.Cells. | Explain how to confirm that decryption succeeded by reading a cell value after opening the workbook with the correct password.
+// Title: Validate that an Aspose.Cells workbook encrypted with a password cannot be opened with another password (C#)
+// Description: C# sample that creates an Excel workbook, sets a password via Workbook.Settings.Password, saves it, verifies the IsEncrypted flag, uses FileFormatUtil.VerifyPassword to confirm the correct password succeeds and a similar wrong password fails, attempts to load the file with the wrong password (expecting an exception), and finally loads it with the correct password to read a cell value.
+// Keywords: Aspose.Cells | .NET | C# | Workbook encryption | Password protection | FileFormatUtil.VerifyPassword | LoadOptions.Password | Excel encryption validation | IsEncrypted flag | incorrect password handling
+// Common Searches: How to verify an encrypted Excel workbook password with Aspose.Cells | Aspose.Cells verify password example C# | Exception thrown when loading a password‑protected workbook with wrong password | Check if workbook is encrypted after saving using Aspose.Cells | Validate Excel file password using Aspose.Cells .NET
+// Developer Intent: Confirm that a workbook protected with a specific password rejects any other password.
+// Use Cases: Programmatically validate passwords with FileFormatUtil.VerifyPassword – true for the correct password, false for a similar incorrect one. | Attempt to open an encrypted workbook using LoadOptions.Password set to a wrong value and handle the resulting exception. | Load the workbook with the correct password to ensure successful decryption and access to cell data.
+// AI Prompts: Provide C# code that demonstrates how to verify that an Aspose.Cells workbook encrypted with one password cannot be opened with another password. | Explain the interaction between FileFormatUtil.VerifyPassword and LoadOptions.Password for workbook encryption validation in Aspose.Cells. | Show how to catch and handle the exception thrown when loading a password‑protected workbook with an incorrect password using Aspose.Cells for .NET.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, applies a password with strong encryption, saves it, then uses FileFormatUtil.VerifyPassword to confirm the correct password returns true while a similar wrong password returns false. Demonstrates handling the exception when loading with the wrong password and shows successful decryption with the right password.
-class WorkbookEncryptionValidation
+// C# sample that creates an Excel workbook, sets a password via Workbook.Settings.Password, saves it, verifies the IsEncrypted flag, uses FileFormatUtil.VerifyPassword to confirm the correct password succeeds and a similar wrong password fails, attempts to load the file with the wrong password (expecting an exception), and finally loads it with the correct password to read a cell value.
+class WorkbookPasswordValidationDemo
 {
     static void Main()
     {
         // Create a new workbook and add some data
         Workbook wb = new Workbook();
-        wb.Worksheets[0].Cells["A1"].PutValue("Encrypted data");
+        wb.Worksheets[0].Cells["A1"].PutValue("Sensitive Data");
 
         // Set the encryption password
         string correctPassword = "Secret123";
         wb.Settings.Password = correctPassword;
 
-        // Optionally set stronger encryption options
-        wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
-
         // Save the encrypted workbook
         string filePath = "EncryptedWorkbook.xlsx";
         wb.Save(filePath);
 
-        // Verify the password using FileFormatUtil.VerifyPassword (correct password)
+        // Verify that the workbook is marked as encrypted
+        Console.WriteLine("Workbook IsEncrypted after save: " + wb.Settings.IsEncrypted);
+
+        // Use FileFormatUtil.VerifyPassword to check the correct password
         using (FileStream stream = File.OpenRead(filePath))
         {
-            bool isCorrect = FileFormatUtil.VerifyPassword(stream, correctPassword);
-            Console.WriteLine($"Correct password validation: {isCorrect}");
+            bool isValid = FileFormatUtil.VerifyPassword(stream, correctPassword);
+            Console.WriteLine($"Password '{correctPassword}' validation result: {isValid}");
         }
 
-        // Verify the password using FileFormatUtil.VerifyPassword (similar wrong password)
+        // Use FileFormatUtil.VerifyPassword to check an incorrect, similar password
         using (FileStream stream = File.OpenRead(filePath))
         {
-            bool isWrong = FileFormatUtil.VerifyPassword(stream, "Secret124");
-            Console.WriteLine($"Wrong password validation: {isWrong}");
+            string wrongPassword = "Secret124";
+            bool isValid = FileFormatUtil.VerifyPassword(stream, wrongPassword);
+            Console.WriteLine($"Password '{wrongPassword}' validation result: {isValid}");
         }
 
-        // Attempt to load the workbook with the wrong password and expect failure
+        // Attempt to load the workbook with the wrong password (should fail)
         try
         {
-            LoadOptions loadOptionsWrong = new LoadOptions();
-            loadOptionsWrong.Password = "Secret124";
-            Workbook wbWrong = new Workbook(filePath, loadOptionsWrong);
+            LoadOptions wrongLoad = new LoadOptions();
+            wrongLoad.Password = "Secret124";
+            Workbook wbWrong = new Workbook(filePath, wrongLoad);
             Console.WriteLine("Loaded with wrong password (unexpected).");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to load with wrong password as expected: {ex.Message}");
+            Console.WriteLine("Failed to load with wrong password as expected: " + ex.Message);
         }
 
-        // Load the workbook with the correct password to confirm successful decryption
-        LoadOptions loadOptionsCorrect = new LoadOptions();
-        loadOptionsCorrect.Password = correctPassword;
-        Workbook wbCorrect = new Workbook(filePath, loadOptionsCorrect);
-        Console.WriteLine($"Loaded with correct password, cell A1 value: {wbCorrect.Worksheets[0].Cells["A1"].StringValue}");
+        // Load the workbook with the correct password
+        LoadOptions correctLoad = new LoadOptions();
+        correctLoad.Password = correctPassword;
+        Workbook wbLoaded = new Workbook(filePath, correctLoad);
+        Console.WriteLine("Loaded with correct password successfully. Cell A1 value: " + wbLoaded.Worksheets[0].Cells["A1"].StringValue);
     }
 }

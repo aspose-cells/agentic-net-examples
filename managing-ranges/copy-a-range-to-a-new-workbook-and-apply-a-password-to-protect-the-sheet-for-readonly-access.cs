@@ -1,66 +1,63 @@
-// Title: Copy a Range to a New Workbook and Apply a Read‑Only Password with Aspose.Cells (C#)
-// Description: Loads a source workbook, defines a cell range (e.g., A1:C5), copies that range into an empty workbook, protects the destination worksheet with a read‑only password, and saves the result as a separate file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells copy range | C# copy range to new workbook | Aspose.Cells worksheet protection | read‑only password Excel .NET | Range.Copy Aspose.Cells | Protect worksheet Aspose.Cells | Excel automation C# | Aspose.Cells .NET example
-// Common Searches: copy range from one Excel file to another Aspose.Cells C# | set read‑only password on worksheet Aspose.Cells | how to protect copied sheet with password using Aspose.Cells | Aspose.Cells example copy cells and lock sheet | C# Aspose.Cells protect worksheet read only
-// Developer Intent: Copy a defined cell block from an existing workbook into a new workbook and lock the new sheet with a password that permits only read‑only access.
-// Use Cases: Create a distribution‑ready report by extracting a data block from a master file and preventing edits. | Generate a snapshot of a summary range for archival, ensuring the copied content cannot be modified. | Automate the production of a protected workbook for external stakeholders who need view‑only access.
-// AI Prompts: Write C# code with Aspose.Cells that copies range A1:C5 from source.xlsx to a new workbook and protects the sheet with password 'ReadOnlyPwd' for read‑only access. | Show an Aspose.Cells example that copies a named range, handles missing source files, and applies worksheet protection with a custom password. | Explain how to copy multiple ranges into separate worksheets and assign different passwords to each using Aspose.Cells for .NET.
+// Title: Copy a Range to a New Workbook and Set Password‑Protected Read‑Only Sheet with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a source workbook, copy cells A1:C3 to a new workbook, protect the destination worksheet with a password for read‑only access, and save the file as CopiedAndProtected.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells copy range C# | protect worksheet password .NET | read‑only Excel sheet Aspose | copy cells between workbooks | Aspose.Cells range example | C# Excel protection Aspose
+// Common Searches: Aspose.Cells copy range to another workbook | How to password‑protect a sheet with Aspose.Cells | C# code to create read‑only Excel file using Aspose | Copy and protect Excel range programmatically | Aspose.Cells example for sheet protection
+// Developer Intent: Transfer a specific cell block into a fresh workbook and enforce password‑based read‑only protection on the target worksheet.
+// Use Cases: Generate a client‑ready report by copying a data table from a template and locking the sheet to prevent edits. | Distribute chart source data in a separate file while safeguarding the original values with sheet protection. | Automate creation of secure Excel deliverables for external partners, copying only required ranges and applying a password.
+// AI Prompts: Provide C# Aspose.Cells code that copies cells A1:C3 to a new workbook and protects the sheet with a password for read‑only access. | Show how to set different protection options after copying a range using Aspose.Cells for .NET. | Explain how to programmatically change the password or protection type on a worksheet created with Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// Loads a source workbook, defines a cell range (e.g., A1:C5), copies that range into an empty workbook, protects the destination worksheet with a read‑only password, and saves the result as a separate file using Aspose.Cells for .NET.
-class Program
+// Demonstrates how to create a source workbook, copy cells A1:C3 to a new workbook, protect the destination worksheet with a password for read‑only access, and save the file as CopiedAndProtected.xlsx using Aspose.Cells for .NET.
+public class CopyRangeAndProtectSheet
 {
-    static void Main()
+    public static void Main()
     {
         try
         {
-            const string sourcePath = "source.xlsx";
-            const string destPath = "copied_protected.xlsx";
-
-            // Verify source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
-
-            // Load the source workbook
-            Workbook sourceWorkbook = new Workbook(sourcePath);
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-
-            // Define the range to copy (e.g., A1:C5)
-            int startRow = 0;          // Row index (0‑based)
-            int startColumn = 0;       // Column index (0‑based)
-            int rowCount = 5;          // Number of rows in the range
-            int columnCount = 3;       // Number of columns in the range
-
-            // Create the source range object
-            AsposeRange sourceRange = sourceSheet.Cells.CreateRange(startRow, startColumn, rowCount, columnCount);
-
-            // Create a new (empty) workbook for the destination
-            Workbook destinationWorkbook = new Workbook();
-            Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
-
-            // Create a destination range of the same size
-            AsposeRange destinationRange = destinationSheet.Cells.CreateRange(startRow, startColumn, rowCount, columnCount);
-
-            // Copy the source range into the destination range
-            sourceRange.Copy(destinationRange);
-
-            // Protect the destination worksheet with a password (read‑only access)
-            destinationSheet.Protect(ProtectionType.All, "ReadOnlyPwd", null);
-
-            // Save the new workbook
-            destinationWorkbook.Save(destPath);
-            Console.WriteLine($"Workbook saved successfully to {destPath}");
+            Run();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    public static void Run()
+    {
+        // Create the source workbook and populate a sample range (A1:C3)
+        Workbook sourceWorkbook = new Workbook();
+        Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+        for (int row = 0; row < 3; row++)
+        {
+            for (int col = 0; col < 3; col++)
+            {
+                sourceSheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+            }
+        }
+
+        // Define the source range to copy (A1:C3)
+        AsposeRange sourceRange = sourceSheet.Cells.CreateRange(0, 0, 3, 3);
+
+        // Create the destination workbook
+        Workbook destinationWorkbook = new Workbook();
+        Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
+
+        // Define the destination range (starting at A1)
+        AsposeRange destinationRange = destinationSheet.Cells.CreateRange(0, 0, 3, 3);
+
+        // Copy the source range into the destination range
+        destinationRange.Copy(sourceRange);
+
+        // Protect the destination worksheet with a password (read‑only access)
+        string sheetPassword = "ReadOnly123";
+        destinationSheet.Protect(ProtectionType.All, sheetPassword, null);
+
+        // Save the new workbook
+        string outputPath = "CopiedAndProtected.xlsx";
+        destinationWorkbook.Save(outputPath);
+        Console.WriteLine($"Workbook saved to {outputPath}");
     }
 }

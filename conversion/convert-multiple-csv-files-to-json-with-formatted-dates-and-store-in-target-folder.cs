@@ -1,98 +1,102 @@
-// Title: Batch Convert CSV to JSON with Exact Date Formatting using Aspose.Cells for .NET (C#)
-// Description: C# utility that scans a source folder, loads each *.csv file into an Aspose.Cells workbook with TxtLoadOptions (ConvertDateTimeData, ConvertNumericData, ExactFormat), and exports the used range to a JSON file. The JSON preserves the original date strings, includes a header row, skips empty cells, and is saved to a target directory with the same base name.
-// Keywords: Aspose.Cells CSV to JSON | C# batch CSV conversion | ExactFormat date preservation | TxtLoadOptions ConvertDateTimeData | .NET CSV to JSON utility | JsonSaveOptions header row | folder based CSV processing | Aspose.Cells JsonExport
-// Common Searches: How to convert multiple CSV files to JSON with Aspose.Cells | C# preserve original date format when exporting CSV to JSON | Batch CSV to JSON conversion using Aspose.Cells .NET | Export CSV data to JSON with header row and no empty cells | Aspose.Cells ExactFormat example C#
-// Developer Intent: The developer needs a reliable way to batch‑process CSV files into JSON while keeping the original date representation and proper data types.
-// Use Cases: Convert daily CSV logs into JSON payloads for a REST API without altering date strings. | Migrate legacy configuration CSVs to JSON for a .NET microservice, ensuring numeric and date values are correctly typed. | Generate front‑end friendly JSON reports from CSV datasets, exporting only populated cells with column headers.
-// AI Prompts: Write C# code that uses Aspose.Cells to read a CSV, keep its date format, and output JSON with a header row. | Show how to add robust error handling and logging for a batch CSV‑to‑JSON conversion using Aspose.Cells. | Demonstrate modifying the export to produce a nested JSON structure instead of a flat array with Aspose.Cells.
+// Title: Batch convert CSV to JSON with ISO‑8601 dates using Aspose.Cells for .NET
+// Description: Scans a source folder for *.csv files, loads each with TxtLoadOptions (auto‑convert dates and numbers), applies a uniform "yyyy-MM-dd" style to every DateTime cell, and saves the workbook as a flat JSON file (header row kept, empty cells omitted) in a target directory.
+// Keywords: Aspose.Cells | C# | CSV to JSON conversion | batch processing | date formatting ISO 8601 | TxtLoadOptions ConvertDateTimeData | JsonSaveOptions | folder based conversion | skip empty cells | flat JSON structure
+// Common Searches: C# batch convert csv files to json aspocells | Aspose.Cells export csv with custom date format | how to apply yyyy-MM-dd to dates when saving json | convert multiple csv to json in a folder .NET | skip empty cells Aspose.Cells JsonSaveOptions
+// Developer Intent: Read each CSV in a directory, enforce a consistent date format, and write the result as JSON to a specified output folder.
+// Use Cases: Convert daily CSV logs into ISO‑8601 JSON for API ingestion while preserving numeric types. | Generate configuration JSON from CSV templates, automatically formatting dates and removing blanks. | Migrate legacy CSV datasets to NoSQL stores by producing flat JSON files with uniform date representation.
+// AI Prompts: Write a reusable C# method that takes source and target folder paths and uses Aspose.Cells to batch‑convert CSV files to JSON with a custom date format. | Explain how TxtLoadOptions.ConvertDateTimeData and JsonSaveOptions.HasHeaderRow affect the structure and content of the exported JSON. | Suggest robust error‑handling and logging strategies for the conversion loop, including how to capture files that fail and why.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
-using AsposeRange = Aspose.Cells.Range;
 
-// C# utility that scans a source folder, loads each *.csv file into an Aspose.Cells workbook with TxtLoadOptions (ConvertDateTimeData, ConvertNumericData, ExactFormat), and exports the used range to a JSON file. The JSON preserves the original date strings, includes a header row, skips empty cells, and is saved to a target directory with the same base name.
-public class CsvToJsonConverter
+namespace CsvToJsonConverter
 {
-    // Converts all CSV files in a source folder to JSON files in a target folder.
-    // Dates are preserved using ExactFormat style so the original format appears in JSON.
-    public static void ConvertFolder(string sourceFolder, string targetFolder)
+    // Scans a source folder for *.csv files, loads each with TxtLoadOptions (auto‑convert dates and numbers), applies a uniform "yyyy-MM-dd" style to every DateTime cell, and saves the workbook as a flat JSON file (header row kept, empty cells omitted) in a target directory.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Verify source folder exists.
+            // Folder containing source CSV files
+            string sourceFolder = @"C:\SourceCsv";
+
+            // Folder where JSON files will be saved
+            string targetFolder = @"C:\TargetJson";
+
+            // Verify source folder exists
             if (!Directory.Exists(sourceFolder))
-                throw new DirectoryNotFoundException($"Source folder not found: {sourceFolder}");
-
-            // Ensure the target directory exists.
-            if (!Directory.Exists(targetFolder))
-                Directory.CreateDirectory(targetFolder);
-
-            // Get all CSV files in the source folder.
-            string[] csvFiles = Directory.GetFiles(sourceFolder, "*.csv", SearchOption.TopDirectoryOnly);
-
-            foreach (string csvPath in csvFiles)
             {
-                try
+                Console.WriteLine($"Source folder not found: {sourceFolder}");
+                return;
+            }
+
+            // Ensure the target folder exists
+            Directory.CreateDirectory(targetFolder);
+
+            try
+            {
+                // Process each CSV file in the source folder
+                foreach (string csvPath in Directory.GetFiles(sourceFolder, "*.csv"))
                 {
-                    // Create a new workbook and get its first worksheet.
-                    Workbook workbook = new Workbook();
-                    Worksheet worksheet = workbook.Worksheets[0];
-                    Cells cells = worksheet.Cells;
-
-                    // Configure load options for CSV import.
-                    TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv)
+                    try
                     {
-                        ConvertDateTimeData = true,   // Convert date strings to DateTime.
-                        ConvertNumericData = true,    // Convert numeric strings to numbers.
-                        LoadStyleStrategy = TxtLoadStyleStrategy.ExactFormat // Preserve original format.
-                    };
+                        // Determine output JSON file name
+                        string jsonFileName = Path.GetFileNameWithoutExtension(csvPath) + ".json";
+                        string jsonPath = Path.Combine(targetFolder, jsonFileName);
 
-                    // Import the CSV data starting at cell A1 (row 0, column 0).
-                    cells.ImportCSV(csvPath, loadOptions, 0, 0);
+                        // Load options for CSV: convert dates and numbers automatically
+                        TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv)
+                        {
+                            ConvertDateTimeData = true,
+                            ConvertNumericData = true
+                        };
 
-                    // Determine the used range of the worksheet.
-                    int maxRow = cells.MaxDataRow;
-                    int maxColumn = cells.MaxDataColumn;
-                    AsposeRange usedRange = cells.CreateRange(0, 0, maxRow + 1, maxColumn + 1);
+                        // Load the CSV file into a workbook
+                        Workbook workbook = new Workbook(csvPath, loadOptions);
 
-                    // Configure JSON export options.
-                    JsonSaveOptions jsonOptions = new JsonSaveOptions
+                        // Apply a uniform date format to all cells that contain DateTime values
+                        Worksheet sheet = workbook.Worksheets[0];
+                        Cells cells = sheet.Cells;
+                        for (int row = 0; row <= cells.MaxDataRow; row++)
+                        {
+                            for (int col = 0; col <= cells.MaxDataColumn; col++)
+                            {
+                                Cell cell = cells[row, col];
+                                if (cell.Type == CellValueType.IsDateTime)
+                                {
+                                    Style style = cell.GetStyle();
+                                    style.Custom = "yyyy-MM-dd"; // Desired date format
+                                    cell.SetStyle(style);
+                                }
+                            }
+                        }
+
+                        // Configure JSON save options
+                        JsonSaveOptions jsonOptions = new JsonSaveOptions
+                        {
+                            HasHeaderRow = true,          // First row contains column names
+                            ExportEmptyCells = false,     // Skip empty cells
+                            ExportNestedStructure = false // Flat structure
+                        };
+
+                        // Save the workbook as a JSON file
+                        workbook.Save(jsonPath, jsonOptions);
+
+                        Console.WriteLine($"Converted '{Path.GetFileName(csvPath)}' to '{jsonFileName}'.");
+                    }
+                    catch (Exception exFile)
                     {
-                        HasHeaderRow = true,          // First row contains column names.
-                        ExportEmptyCells = false,     // Do not include empty cells.
-                        ExportNestedStructure = false // Flat structure.
-                    };
-
-                    // Export the range to a JSON string.
-                    string json = JsonUtility.ExportRangeToJson(usedRange, jsonOptions);
-
-                    // Write the JSON string to a file with the same base name as the CSV.
-                    string jsonFileName = Path.GetFileNameWithoutExtension(csvPath) + ".json";
-                    string jsonPath = Path.Combine(targetFolder, jsonFileName);
-                    File.WriteAllText(jsonPath, json);
+                        Console.WriteLine($"Error processing file '{csvPath}': {exFile.Message}");
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{csvPath}': {ex.Message}");
-                }
+
+                Console.WriteLine("All files have been processed.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Conversion failed: {ex.Message}");
-        }
-    }
-
-    // Example usage.
-    public static void Main()
-    {
-        string sourceFolder = @"C:\Data\CsvFiles";
-        string targetFolder = @"C:\Data\JsonOutput";
-
-        ConvertFolder(sourceFolder, targetFolder);
-
-        Console.WriteLine("Conversion completed.");
     }
 }

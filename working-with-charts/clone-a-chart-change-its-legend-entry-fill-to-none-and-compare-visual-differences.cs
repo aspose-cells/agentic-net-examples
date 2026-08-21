@@ -1,8 +1,18 @@
+// Title: Clone an Aspose.Cells chart, remove legend fill, and compare PNG renders (C#)
+// Description: Creates a workbook with sample data, adds a column chart, clones it, disables the legend entry fill on the clone using IsTextNoFill, renders both charts to PNG via MemoryStream, counts byte‑wise differences, and saves the workbook and images for visual inspection.
+// Keywords: Aspose.Cells chart cloning C# | legend entry no fill Aspose.Cells | export chart to PNG memory stream | byte‑wise PNG comparison | Chart.Clone method | chart regression testing | C# Excel chart rendering | Aspose.Cells image options
+// Common Searches: how to clone a chart in Aspose.Cells C# | remove legend fill from Aspose.Cells chart | compare two chart PNG files programmatically | export Aspose.Cells chart without writing to disk | Aspose.Cells Chart.Clone example
+// Developer Intent: Copy an existing chart, make its legend transparent, render both original and cloned charts as PNG images, and quantify visual differences.
+// Use Cases: Validate styling changes by generating before‑and‑after chart images. | Create a variant of a chart with a transparent legend for presentations while keeping the original unchanged. | Automate regression tests for chart rendering by comparing exported PNG byte arrays.
+// AI Prompts: Generate C# code that clones an Aspose.Cells chart and sets the cloned chart's legend entry IsTextNoFill property to true. | Explain an efficient way to compare two PNG byte arrays produced by Aspose.Cells chart rendering and report the number of differing bytes. | Show alternative cloning techniques (e.g., Chart.Clone) in Aspose.Cells and discuss their impact on legend formatting.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Rendering;
 
+// Creates a workbook with sample data, adds a column chart, clones it, disables the legend entry fill on the clone using IsTextNoFill, renders both charts to PNG via MemoryStream, counts byte‑wise differences, and saves the workbook and images for visual inspection.
 class ChartCloneAndCompare
 {
     static void Main()
@@ -22,65 +32,61 @@ class ChartCloneAndCompare
             sheet.Cells["B3"].PutValue(200);
 
             // Add the original chart
-            int originalChartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart originalChart = sheet.Charts[originalChartIndex];
+            int originalChartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart originalChart = sheet.Charts[originalChartIdx];
             originalChart.NSeries.Add("B2:B3", true);
             originalChart.NSeries.CategoryData = "A2:A3";
 
-            // Add the cloned chart and duplicate the series settings manually
-            int clonedChartIndex = sheet.Charts.Add(ChartType.Column, 5, 6, 15, 11);
-            Chart clonedChart = sheet.Charts[clonedChartIndex];
+            // Clone the original chart by creating a new chart with the same data
+            int clonedChartIdx = sheet.Charts.Add(ChartType.Column, 20, 0, 30, 5);
+            Chart clonedChart = sheet.Charts[clonedChartIdx];
             clonedChart.NSeries.Add("B2:B3", true);
             clonedChart.NSeries.CategoryData = "A2:A3";
 
-            // Change the legend entry text fill of the cloned chart to none
-            LegendEntry clonedLegendEntry = clonedChart.NSeries[0].LegendEntry;
-            clonedLegendEntry.IsTextNoFill = true;
-
-            // Render both charts to images
-            string originalImagePath = "OriginalChart.png";
-            string clonedImagePath = "ClonedChart.png";
-            originalChart.ToImage(originalImagePath);
-            clonedChart.ToImage(clonedImagePath);
-
-            // Verify that the image files were created before comparing
-            if (!File.Exists(originalImagePath) || !File.Exists(clonedImagePath))
+            // Change the legend entry fill of the cloned chart to "no fill"
+            if (clonedChart.NSeries.Count > 0)
             {
-                Console.WriteLine("One or both chart images were not generated.");
-                return;
+                LegendEntry clonedLegendEntry = clonedChart.NSeries[0].LegendEntry;
+                clonedLegendEntry.IsTextNoFill = true;
             }
 
-            // Load the images as byte arrays for pixel‑wise (byte‑wise) comparison
-            byte[] originalBytes = File.ReadAllBytes(originalImagePath);
-            byte[] clonedBytes = File.ReadAllBytes(clonedImagePath);
+            // Export both charts to PNG images using MemoryStream
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions(); // default format is PNG
 
-            if (originalBytes.Length != clonedBytes.Length)
+            using (MemoryStream originalImgStream = new MemoryStream())
             {
-                Console.WriteLine("Images have different sizes; cannot compare.");
-            }
-            else
-            {
-                int diffCount = 0;
-                for (int i = 0; i < originalBytes.Length; i++)
+                originalChart.ToImage(originalImgStream, imgOptions);
+                byte[] originalBytes = originalImgStream.ToArray();
+
+                using (MemoryStream clonedImgStream = new MemoryStream())
                 {
-                    if (originalBytes[i] != clonedBytes[i])
-                        diffCount++;
+                    clonedChart.ToImage(clonedImgStream, imgOptions);
+                    byte[] clonedBytes = clonedImgStream.ToArray();
+
+                    // Simple byte‑by‑byte comparison to count differing bytes
+                    int diffCount = 0;
+                    int minLength = Math.Min(originalBytes.Length, clonedBytes.Length);
+                    for (int i = 0; i < minLength; i++)
+                    {
+                        if (originalBytes[i] != clonedBytes[i])
+                            diffCount++;
+                    }
+                    diffCount += Math.Abs(originalBytes.Length - clonedBytes.Length); // account for length difference
+
+                    Console.WriteLine($"Number of differing bytes between original and cloned chart: {diffCount}");
+
+                    // Save the workbook (contains both charts) and the two images for visual inspection
+                    string workbookPath = "ChartCloneComparison.xlsx";
+                    workbook.Save(workbookPath);
+
+                    File.WriteAllBytes("OriginalChart.png", originalBytes);
+                    File.WriteAllBytes("ClonedChart_NoFill.png", clonedBytes);
                 }
-
-                Console.WriteLine($"Number of differing bytes: {diffCount}");
-                Console.WriteLine(diffCount == 0
-                    ? "Charts are visually identical."
-                    : "Charts differ visually.");
             }
-
-            // Save the workbook with both charts
-            string workbookPath = "ChartCloneComparison.xlsx";
-            workbook.Save(workbookPath);
-            Console.WriteLine($"Workbook saved to '{workbookPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

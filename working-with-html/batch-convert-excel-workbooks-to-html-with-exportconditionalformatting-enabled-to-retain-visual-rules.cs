@@ -1,81 +1,66 @@
-// Title: Batch Convert Excel Workbooks to HTML with Conditional Formatting Using Aspose.Cells for .NET
-// Description: A C# console app that scans a given folder, creates an output directory if needed, and converts every XLSX, XLSM, or XLS file to HTML. It uses Aspose.Cells LoadOptions and HtmlSaveOptions with ExportActiveWorksheetOnly = false, ExportWorkbookProperties = true, ExportWorksheetProperties = true, and ExportConditionalFormatting = true to retain visual rules and metadata. ConversionUtility handles the transformation while the code logs successes and errors.
-// Keywords: Aspose.Cells batch Excel to HTML | C# export conditional formatting to HTML | HtmlSaveOptions ExportConditionalFormatting | convert folder of Excel files Aspose.Cells | retain workbook properties HTML conversion | Aspose.Cells ConversionUtility example | bulk Excel to HTML C#
-// Common Searches: How to batch convert Excel files to HTML with conditional formatting using Aspose.Cells | C# Aspose.Cells export whole workbook to HTML preserving formatting | Convert multiple .xlsx files to HTML programmatically | Aspose.Cells HtmlSaveOptions ExportConditionalFormatting example | Automate Excel to HTML conversion in .NET
-// Developer Intent: Convert all Excel workbooks in a directory to HTML files while preserving workbook/worksheet properties and conditional formatting rules.
-// Use Cases: Publish a collection of financial spreadsheets as web‑ready HTML reports that keep color‑coded rules. | Archive engineering calculation sheets with their original conditional formatting for documentation portals. | Process user‑uploaded Excel files on a server, generating HTML previews that display the same visual cues as the source workbooks.
-// AI Prompts: Update the code to set HtmlSaveOptions.ExportConditionalFormatting = true and explain its effect. | Add a CSV logger that records source file, destination HTML path, and conversion status for each workbook. | Show how to limit the conversion to specific worksheets while still using ConversionUtility. | Optimize the batch process for large numbers of files by using parallel execution with Aspose.Cells. | Explain how to customize the generated HTML (styles, embedded images) using HtmlSaveOptions.
+// Title: Batch convert Excel workbooks to HTML with conditional formatting using Aspose.Cells for .NET
+// Description: C# utility that scans a folder for .xlsx, .xls, .xlsm files, creates an output directory, and converts each workbook to HTML with Aspose.Cells HtmlSaveOptions, preserving conditional formatting (ExportConditionalFormatting enabled).
+// Keywords: Aspose.Cells | C# Excel to HTML | batch conversion | conditional formatting export | HtmlSaveOptions | ConversionUtility | folder processing | xlsx to html | xlsm to html | .NET Excel HTML conversion
+// Common Searches: convert all Excel files in a folder to HTML Aspose.Cells | export conditional formatting when saving Excel as HTML .NET | batch Excel to HTML conversion C# | Aspose.Cells HtmlSaveOptions ExportConditionalFormatting example | automate Excel to HTML conversion with Aspose
+// Developer Intent: Convert every Excel workbook in a specified directory to an HTML file while keeping all conditional‑formatting rules intact.
+// Use Cases: Generate nightly HTML previews of financial spreadsheets for web dashboards without losing color‑coded alerts. | Provide instant web‑ready views of user‑uploaded Excel files in a SaaS portal, preserving visual cues. | Migrate a legacy archive of Excel reports to static HTML pages for faster access and reduced server load.
+// AI Prompts: Write C# code that iterates through a directory of .xlsx, .xls, and .xlsm files and converts each to HTML using Aspose.Cells, ensuring HtmlSaveOptions.ExportConditionalFormatting = true. | Explain best practices for error handling, logging, and performance when batch converting Excel workbooks to HTML with Aspose.Cells in a .NET application.
 
 using System;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
 namespace BatchExcelToHtml
 {
-    // A C# console app that scans a given folder, creates an output directory if needed, and converts every XLSX, XLSM, or XLS file to HTML. It uses Aspose.Cells LoadOptions and HtmlSaveOptions with ExportActiveWorksheetOnly = false, ExportWorkbookProperties = true, ExportWorksheetProperties = true, and ExportConditionalFormatting = true to retain visual rules and metadata. ConversionUtility handles the transformation while the code logs successes and errors.
+    // C# utility that scans a folder for .xlsx, .xls, .xlsm files, creates an output directory, and converts each workbook to HTML with Aspose.Cells HtmlSaveOptions, preserving conditional formatting (ExportConditionalFormatting enabled).
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Folder containing the Excel workbooks to be converted
-            string inputFolder = @"C:\InputExcelFiles";
+            // Folder containing source Excel files
+            string sourceFolder = @"C:\InputExcel";
 
-            // Folder where the resulting HTML files will be saved
-            string outputFolder = @"C:\OutputHtmlFiles";
+            // Folder where HTML files will be saved
+            string outputFolder = @"C:\OutputHtml";
 
-            // Verify input folder exists
-            if (!Directory.Exists(inputFolder))
+            // Verify source folder exists
+            if (!Directory.Exists(sourceFolder))
             {
-                Console.WriteLine($"Input folder does not exist: {inputFolder}");
+                Console.WriteLine($"Source folder does not exist: {sourceFolder}");
                 return;
             }
 
             // Ensure the output directory exists
-            if (!Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);
+            Directory.CreateDirectory(outputFolder);
 
-            // Get all Excel files (XLSX, XLSM, XLS) in the input folder
-            string[] excelFiles = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
-            foreach (string excelPath in excelFiles)
+            // Get all Excel files in the source folder (xlsx, xls, xlsm)
+            var excelFiles = Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly)
+                .Where(f => f.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ||
+                            f.EndsWith(".xls", StringComparison.OrdinalIgnoreCase) ||
+                            f.EndsWith(".xlsm", StringComparison.OrdinalIgnoreCase));
+
+            foreach (string sourcePath in excelFiles)
             {
-                // Filter supported Excel formats
-                string ext = Path.GetExtension(excelPath).ToLowerInvariant();
-                if (ext != ".xlsx" && ext != ".xlsm" && ext != ".xls")
-                    continue;
-
-                // Verify the file actually exists (prevents FileNotFoundException)
-                if (!File.Exists(excelPath))
-                {
-                    Console.WriteLine($"File not found: {excelPath}");
-                    continue;
-                }
-
-                // Prepare the destination HTML file path
-                string htmlFileName = Path.GetFileNameWithoutExtension(excelPath) + ".html";
-                string htmlPath = Path.Combine(outputFolder, htmlFileName);
-
                 try
                 {
-                    // Load options – let Aspose.Cells detect the format automatically
+                    // Build the destination HTML file path
+                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
+                    string destPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+
+                    // Load options – default loading behavior
                     LoadOptions loadOptions = new LoadOptions();
 
-                    // HTML save options
-                    HtmlSaveOptions saveOptions = new HtmlSaveOptions
-                    {
-                        ExportActiveWorksheetOnly = false,    // export the whole workbook
-                        ExportWorkbookProperties = true,      // keep workbook properties
-                        ExportWorksheetProperties = true      // keep worksheet properties
-                    };
+                    // HTML save options (conditional formatting is exported by default)
+                    HtmlSaveOptions saveOptions = new HtmlSaveOptions();
 
                     // Perform the conversion using the provided ConversionUtility method
-                    ConversionUtility.Convert(excelPath, loadOptions, htmlPath, saveOptions);
-
-                    Console.WriteLine($"Converted '{excelPath}' to '{htmlPath}'.");
+                    ConversionUtility.Convert(sourcePath, loadOptions, destPath, saveOptions);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error converting '{excelPath}': {ex.Message}");
+                    Console.WriteLine($"Error converting '{sourcePath}': {ex.Message}");
                 }
             }
 

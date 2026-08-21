@@ -1,52 +1,40 @@
-// Title: Export Excel to PDF without Hidden Rows or Columns using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, hide specific rows and columns, configure PdfSaveOptions with IgnoreHiddenRows and IgnoreHiddenColumns, and save the file as a PDF that excludes hidden data. Includes version‑check guidance for Aspose.Cells features.
-// Keywords: Aspose.Cells PDF export | IgnoreHiddenRows | IgnoreHiddenColumns | hide rows PDF Aspose | hide columns PDF Aspose | C# Excel to PDF | Aspose.Cells PdfSaveOptions | export hidden rows Excel PDF | export hidden columns Excel PDF
-// Common Searches: Aspose.Cells hide hidden rows when saving to PDF | IgnoreHiddenColumns property Aspose.Cells | Export Excel to PDF without hidden columns C# | PdfSaveOptions IgnoreHiddenRows example | How to omit hidden rows in PDF using Aspose.Cells
-// Developer Intent: Generate a PDF from an Excel workbook that automatically omits any rows or columns marked as hidden.
-// Use Cases: Produce client‑facing reports that respect user‑hidden sections in the source sheet. | Create invoices where internal notes are hidden and should not appear in the PDF. | Automate template‑based PDF generation while preserving layout by skipping hidden rows and columns.
-// AI Prompts: Show C# code that sets PdfSaveOptions.IgnoreHiddenRows and IgnoreHiddenColumns before saving a workbook to PDF with Aspose.Cells. | Provide a version‑check snippet that enables hidden‑row/column exclusion only when the Aspose.Cells library supports those options. | Explain how to verify that hidden rows and columns are excluded from the generated PDF using Aspose.Cells.
+// Title: Aspose.Cells for .NET – Export Excel to PDF while omitting hidden rows and columns
+// Description: Demonstrates how to create a workbook, hide specific rows and columns with Cells.HideRow/HideColumn, and save it as a PDF using PdfSaveOptions. Hidden rows and columns are automatically excluded from the PDF output unless the IncludeHiddenSheets option is enabled.
+// Keywords: Aspose.Cells PDF export hidden rows | hide columns Aspose.Cells C# | Excel to PDF without hidden data | PdfSaveOptions IncludeHiddenSheets | C# Aspose.Cells export PDF | exclude hidden rows columns PDF | Aspose.Cells .NET PDF generation
+// Common Searches: Aspose.Cells hide row column when saving to PDF | C# export Excel to PDF ignoring hidden rows | How to exclude hidden columns in PDF with Aspose.Cells | Include hidden sheets in PDF Aspose.Cells option | Aspose.Cells PDF export hidden cells default behavior
+// Developer Intent: Generate a PDF from an Excel workbook where any rows or columns marked as hidden are automatically left out of the PDF file.
+// Use Cases: Produce client‑ready reports that hide confidential rows or helper columns. | Automate PDF creation from templates that use hidden rows/columns for calculations. | Create clean printable versions of dashboards without displaying internal data.
+// AI Prompts: Show C# code to hide multiple rows and columns before exporting a workbook to PDF with Aspose.Cells. | Explain how to verify that hidden rows and columns are omitted in the PDF output using PdfSaveOptions. | Provide the setting to include hidden rows/columns in the PDF if I need to override the default behavior.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Saving; // PdfSaveOptions namespace
 
-// Demonstrates how to create a workbook, hide specific rows and columns, configure PdfSaveOptions with IgnoreHiddenRows and IgnoreHiddenColumns, and save the file as a PDF that excludes hidden data. Includes version‑check guidance for Aspose.Cells features.
+// Demonstrates how to create a workbook, hide specific rows and columns with Cells.HideRow/HideColumn, and save it as a PDF using PdfSaveOptions. Hidden rows and columns are automatically excluded from the PDF output unless the IncludeHiddenSheets option is enabled.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add sample data
-            worksheet.Cells["A1"].PutValue("Visible Row 1");
-            worksheet.Cells["A2"].PutValue("Hidden Row");
-            worksheet.Cells["A3"].PutValue("Visible Row 2");
-            worksheet.Cells["B1"].PutValue("Visible Column 1");
-            worksheet.Cells["B2"].PutValue("Hidden Column");
-            worksheet.Cells["B3"].PutValue("Visible Column 2");
+        // Populate some sample data
+        worksheet.Cells["A1"].PutValue("Visible Row 1");
+        worksheet.Cells["A2"].PutValue("Hidden Row");
+        worksheet.Cells["A3"].PutValue("Visible Row 2");
 
-            // Hide the second row (index 1) and the second column (index 1)
-            worksheet.Cells.HideRow(1);
-            worksheet.Cells.HideColumn(1);
+        worksheet.Cells["B1"].PutValue("Visible Column 1");
+        worksheet.Cells["B2"].PutValue("Hidden Column");
+        worksheet.Cells["B3"].PutValue("Visible Column 2");
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        // Hide the second row (index 1) and the second column (index 1)
+        worksheet.Cells.HideRow(1);
+        worksheet.Cells.HideColumn(1);
 
-            // If the current Aspose.Cells version supports these properties,
-            // uncomment the lines below to ignore hidden rows/columns.
-            // pdfOptions.IgnoreHiddenRows = true;
-            // pdfOptions.IgnoreHiddenColumns = true;
+        // Set PDF save options (no special option needed; hidden rows/columns are omitted by default)
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Save the workbook as PDF; hidden rows/columns will be omitted if supported
-            workbook.Save("output.pdf", pdfOptions);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook as PDF; hidden rows and columns will not appear in the output
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

@@ -1,106 +1,95 @@
-// Title: Audit PDF Bookmarks When Exporting a Workbook to PDF with Aspose.Cells for .NET
-// Description: This C# example creates a workbook, builds a hierarchical PdfBookmarkEntry structure, recursively logs each bookmark title, assigns the hierarchy to PdfSaveOptions.Bookmark, and saves the file as PDF, giving you a complete audit trail of every PDF bookmark generated during export.
-// Keywords: Aspose.Cells | PDF bookmarks | C# | .NET | PdfBookmarkEntry | export workbook to PDF | bookmark audit | log bookmark names | hierarchical bookmarks | PDF conversion
-// Common Searches: Aspose.Cells log PDF bookmark names C# | How to retrieve PDF bookmarks during workbook export | Audit PDF bookmark hierarchy Aspose.Cells .NET | Capture list of PDF bookmarks before saving | Get PdfBookmarkEntry titles in Aspose.Cells
-// Developer Intent: Collect the titles of all PDF bookmarks created during a workbook‑to‑PDF conversion for auditing, validation, or compliance reporting.
-// Use Cases: Print the full bookmark hierarchy to the console for quick verification. | Write bookmark titles to a log file or database to satisfy regulatory audit requirements. | Compare the generated bookmark list with an expected set to detect missing or extra entries before saving. | Integrate bookmark logging into a CI/CD pipeline to ensure consistent PDF navigation structures.
-// AI Prompts: Generate C# code that traverses a PdfBookmarkEntry tree and writes each bookmark title to a text file for audit purposes. | Show how to capture PDF bookmark names after calling Workbook.Save with PdfSaveOptions in Aspose.Cells and store them in a JSON report. | Provide an example that uses StringBuilder to collect bookmark titles and includes timestamps for compliance logging.
+// Title: Audit PDF Bookmark Names When Exporting an Aspose.Cells Workbook to PDF (C#)
+// Description: This example creates a workbook with three worksheets, builds a hierarchical PdfBookmarkEntry (root with sub‑bookmarks), recursively logs each bookmark's Text to the console, assigns the hierarchy to PdfSaveOptions.Bookmark, and saves the workbook as a PDF while handling errors. Use it to capture an audit trail of all PDF bookmarks generated during export.
+// Keywords: Aspose.Cells PDF bookmarks | C# PdfBookmarkEntry recursion | log PDF bookmark titles | audit PDF bookmarks Aspose | export workbook to PDF with bookmarks | PdfSaveOptions Bookmark | Aspose.Cells example C# | PDF bookmark hierarchy
+// Common Searches: how to list PDF bookmarks created by Aspose.Cells | C# code to log bookmark titles during PDF export | traverse PdfBookmarkEntry hierarchy Aspose.Cells | audit PDF bookmarks after workbook.Save | Aspose.Cells export workbook to PDF with bookmarks
+// Developer Intent: Capture and record the titles of every PDF bookmark generated while saving a workbook to PDF with Aspose.Cells.
+// Use Cases: Create an audit log of bookmark names before distributing the PDF for compliance verification. | Generate documentation that enumerates all worksheet bookmarks included in the exported PDF. | Perform quality‑assurance checks to ensure expected worksheets appear as PDF bookmarks.
+// AI Prompts: Provide a method that returns all PDF bookmark titles as a List<string> instead of printing them. | Show how to write bookmark names to a timestamped log file while preserving exception handling. | Explain how to add page numbers to each PdfBookmarkEntry and include that data in the audit log.
 
 using System;
 using System.Collections;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsBookmarkAudit
+// This example creates a workbook with three worksheets, builds a hierarchical PdfBookmarkEntry (root with sub‑bookmarks), recursively logs each bookmark's Text to the console, assigns the hierarchy to PdfSaveOptions.Bookmark, and saves the workbook as a PDF while handling errors. Use it to capture an audit trail of all PDF bookmarks generated during export.
+class PdfBookmarkLogger
 {
-    // This C# example creates a workbook, builds a hierarchical PdfBookmarkEntry structure, recursively logs each bookmark title, assigns the hierarchy to PdfSaveOptions.Bookmark, and saves the file as PDF, giving you a complete audit trail of every PDF bookmark generated during export.
-    class Program
+    // Recursively logs bookmark titles (Text) to the console.
+    static void LogBookmarks(PdfBookmarkEntry entry)
     {
-        static void Main()
+        if (entry == null) return;
+
+        if (!string.IsNullOrEmpty(entry.Text))
         {
-            try
-            {
-                // Create a new workbook (contains a default sheet)
-                Workbook workbook = new Workbook();
-
-                // Remove the default worksheet to avoid duplicate name errors
-                if (workbook.Worksheets.Count > 0)
-                {
-                    workbook.Worksheets.RemoveAt(0);
-                }
-
-                // Add three worksheets with unique names
-                Worksheet sheet1 = workbook.Worksheets.Add("Sheet1");
-                Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-                Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
-
-                // Set values that will serve as bookmark destinations
-                sheet1.Cells["A1"].PutValue("Content of Sheet1");
-                sheet2.Cells["A1"].PutValue("Content of Sheet2");
-                sheet3.Cells["A1"].PutValue("Content of Sheet3");
-
-                // Build bookmark hierarchy
-                PdfBookmarkEntry rootBookmark = new PdfBookmarkEntry
-                {
-                    Text = "Root",
-                    Destination = sheet1.Cells["A1"],
-                    IsOpen = true,
-                    SubEntry = new ArrayList()
-                };
-
-                PdfBookmarkEntry subBookmark1 = new PdfBookmarkEntry
-                {
-                    Text = "Sheet2",
-                    Destination = sheet2.Cells["A1"]
-                };
-
-                PdfBookmarkEntry subBookmark2 = new PdfBookmarkEntry
-                {
-                    Text = "Sheet3",
-                    Destination = sheet3.Cells["A1"]
-                };
-
-                // Attach sub‑bookmarks to the root
-                rootBookmark.SubEntry.Add(subBookmark1);
-                rootBookmark.SubEntry.Add(subBookmark2);
-
-                // Log all bookmark names before exporting
-                Console.WriteLine("PDF Bookmarks to be created:");
-                LogBookmarkNames(rootBookmark, 0);
-
-                // Configure PDF save options with the bookmark hierarchy
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    Bookmark = rootBookmark
-                };
-
-                // Save the workbook as PDF
-                workbook.Save("output.pdf", pdfOptions);
-                Console.WriteLine("PDF saved successfully as output.pdf");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Bookmark: {entry.Text}");
         }
 
-        // Recursively traverses the PdfBookmarkEntry tree and writes each bookmark's Text
-        static void LogBookmarkNames(PdfBookmarkEntry entry, int level)
+        if (entry.SubEntry != null)
         {
-            if (entry == null) return;
-
-            // Indent according to hierarchy level for readability
-            string indent = new string(' ', level * 2);
-            Console.WriteLine($"{indent}- {entry.Text}");
-
-            // Process child entries if any
-            if (entry.SubEntry != null)
+            foreach (PdfBookmarkEntry child in entry.SubEntry)
             {
-                foreach (PdfBookmarkEntry child in entry.SubEntry)
-                {
-                    LogBookmarkNames(child, level + 1);
-                }
+                LogBookmarks(child);
             }
+        }
+    }
+
+    static void Main()
+    {
+        try
+        {
+            // Create a new workbook and clear the default worksheet.
+            Workbook workbook = new Workbook();
+            workbook.Worksheets.Clear();
+
+            // Add three worksheets with unique names.
+            Worksheet sheet1 = workbook.Worksheets.Add("Sheet1");
+            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+            Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
+
+            // Set values in cells that will be bookmark destinations.
+            sheet1.Cells["A1"].PutValue("Sheet1 Content");
+            sheet2.Cells["A1"].PutValue("Sheet2 Content");
+            sheet3.Cells["A1"].PutValue("Sheet3 Content");
+
+            // Create root bookmark.
+            PdfBookmarkEntry rootBookmark = new PdfBookmarkEntry
+            {
+                Text = "Root",
+                Destination = sheet1.Cells["A1"],
+                IsOpen = true
+            };
+
+            // Create sub‑bookmarks.
+            PdfBookmarkEntry subBookmark1 = new PdfBookmarkEntry
+            {
+                Text = "Sheet2",
+                Destination = sheet2.Cells["A1"]
+            };
+
+            PdfBookmarkEntry subBookmark2 = new PdfBookmarkEntry
+            {
+                Text = "Sheet3",
+                Destination = sheet3.Cells["A1"]
+            };
+
+            // Attach sub‑bookmarks to the root.
+            rootBookmark.SubEntry = new ArrayList { subBookmark1, subBookmark2 };
+
+            // Log all bookmark names for audit.
+            LogBookmarks(rootBookmark);
+
+            // Configure PDF save options with the bookmark hierarchy.
+            PdfSaveOptions options = new PdfSaveOptions
+            {
+                Bookmark = rootBookmark
+            };
+
+            // Save the workbook as PDF.
+            workbook.Save("output.pdf", options);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

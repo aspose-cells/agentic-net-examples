@@ -1,50 +1,66 @@
-// Title: Export Excel to HTML with Aspose.Cells and Apply a Custom CSS Class to Header Rows (C#)
-// Description: Creates a workbook, adds sample data, configures HtmlSaveOptions with a CSS rule, saves as HTML, then replaces the first <tr> tag with <tr class="my‑header"> to style the header row before writing the file back.
-// Keywords: Aspose.Cells | C# | .NET | export Excel to HTML | HtmlSaveOptions | custom CSS class | header row styling | modify generated HTML | table row class injection | Excel web report
-// Common Searches: Aspose.Cells add CSS class to header row | C# export Excel as HTML with custom styles | How to style header rows in Aspose.Cells HTML output | Replace <tr> tag in Aspose.Cells generated HTML | Add custom CSS to Aspose.Cells HTML export
-// Developer Intent: Apply a custom CSS class to the header row of the HTML file produced by Aspose.Cells in a C# application.
-// Use Cases: Generate web‑ready reports from Excel where the header row needs distinct visual emphasis. | Create HTML email templates from workbooks with highlighted column titles. | Batch‑convert multiple worksheets to HTML while enforcing a consistent header style across all pages. | Integrate Excel‑derived tables into existing web pages that use a shared CSS framework.
-// AI Prompts: Write C# code that uses Aspose.Cells to export a workbook to HTML and inject a custom CSS class into the first table row. | Show how to read the HTML output from Aspose.Cells, locate header <tr> elements, and add a specified CSS class to each. | Explain configuring HtmlSaveOptions to embed custom CSS and then post‑process the generated HTML to apply a class to header rows.
+// Title: C# – Export Aspose.Cells Workbook to HTML and Add a Custom CSS Class to Header Cells
+// Description: Creates a workbook, marks the first row as headers, saves it to HTML with ExportRowColumnHeadings, injects a <style> block for a custom‑header class, replaces every <th> with <th class="custom-header">, and writes the modified file.
+// Keywords: Aspose.Cells HTML export | C# add CSS class to th | ExportRowColumnHeadings | custom header styling | modify generated HTML | Aspose.Cells HtmlSaveOptions | inject CSS into Aspose.Cells output
+// Common Searches: how to add a CSS class to table headers after Aspose.Cells HTML export | Aspose.Cells C# inject custom style into <th> elements | add custom-header class to Aspose.Cells generated HTML | modify Aspose.Cells HTML output with custom CSS | export workbook to HTML with styled header cells
+// Developer Intent: Apply a custom CSS class to all <th> elements in the HTML produced by Aspose.Cells, enabling consistent header styling.
+// Use Cases: Brand HTML reports with company colors by styling table headers. | Improve readability of spreadsheet‑derived tables on web pages. | Enable JavaScript libraries to target header cells for sorting or filtering.
+// AI Prompts: Write C# code that saves an Aspose.Cells workbook to HTML, then adds a <style> block defining a custom header class and injects that class into every <th> tag. | Show how to use HtmlSaveOptions.ExportRowColumnHeadings to export header rows as <th> before applying custom CSS. | Provide a method to read the generated HTML file, insert a CSS rule for a custom header, replace <th> tags with a class attribute, and save the updated file.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, adds sample data, configures HtmlSaveOptions with a CSS rule, saves as HTML, then replaces the first <tr> tag with <tr class="my‑header"> to style the header row before writing the file back.
-class Program
+namespace AsposeCellsHtmlHeaderClassDemo
 {
-    static void Main()
+    // Creates a workbook, marks the first row as headers, saves it to HTML with ExportRowColumnHeadings, injects a <style> block for a custom‑header class, replaces every <th> with <th class="custom-header">, and writes the modified file.
+    class Program
     {
-        // Create a new workbook and add sample data
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["A1"].PutValue("Header1");
-        worksheet.Cells["B1"].PutValue("Header2");
-        worksheet.Cells["A2"].PutValue("Data1");
-        worksheet.Cells["B2"].PutValue("Data2");
-
-        // Configure HTML save options with a custom CSS rule for header rows
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-        saveOptions.CssStyles = ".my-header { background-color:#e0e0e0; font-weight:bold; }";
-
-        // Save the workbook as HTML
-        string htmlFilePath = "output.html";
-        workbook.Save(htmlFilePath, saveOptions);
-
-        // Load the generated HTML content
-        string htmlContent = File.ReadAllText(htmlFilePath);
-
-        // Add a custom CSS class to the first <tr> element (assumed header row)
-        int firstTrIndex = htmlContent.IndexOf("<tr>", StringComparison.Ordinal);
-        if (firstTrIndex >= 0)
+        static void Main()
         {
-            htmlContent = htmlContent.Remove(firstTrIndex, 4)
-                                     .Insert(firstTrIndex, "<tr class=\"my-header\">");
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate header row (row 0) and some data rows
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Quantity");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("Orange");
+            sheet.Cells["B3"].PutValue(15);
+
+            // Configure HTML save options to export row/column headings
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            {
+                ExportRowColumnHeadings = true   // ensure header cells are exported as <th>
+            };
+
+            // First save the workbook to HTML
+            string htmlPath = "output.html";
+            workbook.Save(htmlPath, saveOptions);
+
+            // Load the generated HTML, add a custom CSS class to all header cells (<th>)
+            string htmlContent = File.ReadAllText(htmlPath);
+            // Insert a custom CSS rule for the new class
+            string customCss = @"
+                <style>
+                    th.custom-header { background-color:#f0f0f0; font-weight:bold; }
+                </style>";
+            // Place the custom CSS just before the closing </head> tag (or after <head>)
+            if (htmlContent.Contains("</head>"))
+                htmlContent = htmlContent.Replace("</head>", customCss + "\n</head>");
+            else
+                htmlContent = customCss + "\n" + htmlContent;
+
+            // Add the class attribute to every <th> element
+            htmlContent = htmlContent.Replace("<th>", "<th class=\"custom-header\">");
+
+            // Save the modified HTML to a new file
+            string modifiedHtmlPath = "output_with_custom_header.html";
+            File.WriteAllText(modifiedHtmlPath, htmlContent);
+
+            Console.WriteLine("HTML saved to: " + htmlPath);
+            Console.WriteLine("Modified HTML with custom header class saved to: " + modifiedHtmlPath);
         }
-
-        // Write the modified HTML back to the file
-        File.WriteAllText(htmlFilePath, htmlContent);
-
-        Console.WriteLine("HTML file created with custom header class.");
     }
 }

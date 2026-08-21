@@ -1,40 +1,36 @@
-// Title: Show Formulas Instead of Values in Aspose.Cells Worksheet (C#/.NET)
-// Description: Shows how to enable Worksheet.ShowFormulas in Aspose.Cells for .NET so cells display their formula strings rather than evaluated results. The example creates a workbook, writes a formula, optionally calculates it, toggles formula view, and saves the file.
-// Keywords: Aspose.Cells | Worksheet.ShowFormulas | display formulas | C# .NET | debug Excel formulas | show formulas in workbook | Excel formula view | toggle formula display | programmatic Excel debugging | Aspose.Cells example
-// Common Searches: Aspose.Cells show formulas | Worksheet.ShowFormulas property C# | display formula text instead of value Aspose.Cells | debug Excel formulas with Aspose.Cells | how to view formulas in generated Excel file using Aspose.Cells | C# enable formula view in workbook
-// Developer Intent: Activate formula view for a worksheet so cells reveal their formula strings rather than computed values, facilitating debugging and verification.
-// Use Cases: Inspect formulas while building spreadsheet automation scripts. | Generate an Excel file where formulas are visible for reviewers or auditors. | Toggle between formula view and normal value view before distributing the workbook. | Validate that a formula calculates correctly by comparing its text with the result.
-// AI Prompts: Generate C# code that creates a workbook, adds a formula to a cell, enables Worksheet.ShowFormulas, and saves the file. | Explain how Worksheet.ShowFormulas changes cell rendering and how to revert to normal value display. | Provide a snippet that switches ShowFormulas on for debugging and off for final output in the same workbook.
+// Title: ShowFormulas Property – Display Formulas Instead of Values in Aspose.Cells for .NET
+// Description: Demonstrates how to toggle the Worksheet.ShowFormulas flag in Aspose.Cells (C#) to show the formula text rather than the evaluated result, useful for debugging. The example creates a workbook, assigns a formula to A1, prints the value with ShowFormulas off, enables it, prints the formula, and saves the file.
+// Keywords: Aspose.Cells ShowFormulas | display Excel formulas .NET | Worksheet.ShowFormulas property | debug Excel formulas C# | toggle formula view Aspose.Cells | C# Aspose.Cells example
+// Common Searches: how to view formulas in Aspose.Cells workbook | Aspose.Cells show formulas for debugging | Worksheet.ShowFormulas C# example | display formula text instead of value Aspose.Cells | toggle ShowFormulas property in .NET
+// Developer Intent: Enable a worksheet to show formula strings rather than calculated results for debugging purposes.
+// Use Cases: Verify that formulas are correctly written before publishing a report. | Create a debugging copy of a workbook that reveals all formulas. | Switch between formula view and value view dynamically during development.
+// AI Prompts: Generate C# code that sets Worksheet.ShowFormulas to true for all sheets in a workbook and saves a debug version. | Explain the impact of Worksheet.ShowFormulas on cell.StringValue and how to retrieve the original formula. | Provide a script that toggles ShowFormulas on a specific worksheet, prints both the value and the formula, and then restores the original setting.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsShowFormulasDemo
+// Demonstrates how to toggle the Worksheet.ShowFormulas flag in Aspose.Cells (C#) to show the formula text rather than the evaluated result, useful for debugging. The example creates a workbook, assigns a formula to A1, prints the value with ShowFormulas off, enables it, prints the formula, and saves the file.
+class Program
 {
-    // Shows how to enable Worksheet.ShowFormulas in Aspose.Cells for .NET so cells display their formula strings rather than evaluated results. The example creates a workbook, writes a formula, optionally calculates it, toggles formula view, and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-            // Set a formula in cell A1
-            cells["A1"].Formula = "=1+2+3";
+        // Set a formula in cell A1
+        cells["A1"].Formula = "=1+2+3";
 
-            // Calculate formulas so that the workbook has a valid result (optional)
-            workbook.CalculateFormula();
+        // Show the calculated result (default behavior)
+        worksheet.ShowFormulas = false;
+        Console.WriteLine("ShowFormulas OFF: " + cells["A1"].StringValue);
 
-            // Enable formula display for debugging purposes
-            worksheet.ShowFormulas = true;
+        // Enable formula display for debugging purposes
+        worksheet.ShowFormulas = true;
+        Console.WriteLine("ShowFormulas ON: " + cells["A1"].StringValue);
 
-            // The cell now shows the formula text instead of the calculated value
-            Console.WriteLine("Displayed in A1: " + cells["A1"].StringValue);
-
-            // Save the workbook (optional, to view in Excel)
-            workbook.Save("ShowFormulasDemo.xlsx");
-        }
+        // Save the workbook (optional)
+        workbook.Save("FormulaDebug.xlsx");
     }
 }

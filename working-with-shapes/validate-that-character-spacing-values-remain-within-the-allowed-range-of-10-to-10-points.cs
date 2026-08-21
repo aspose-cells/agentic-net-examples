@@ -1,74 +1,50 @@
-// Title: Validate TextBox Character Spacing (‑10 to 10 pt) in Aspose.Cells for .NET
-// Description: C# example that creates a workbook, adds a TextBox shape, checks a character‑spacing value against the allowed -10 to 10 point range, throws an ArgumentOutOfRangeException for invalid values, and saves the file when the spacing is valid.
-// Keywords: Aspose.Cells | character spacing | TextBox shape | .NET | validation | ArgumentOutOfRangeException | font spacing range | C# Excel example | shape formatting | spacing limits
-// Common Searches: Aspose.Cells validate character spacing | TextBox spacing range Aspose.Cells .NET | how to limit font spacing to -10 to 10 points | catch ArgumentOutOfRangeException for shape spacing | C# example checking text box character spacing
-// Developer Intent: Confirm that a character‑spacing value for a TextBox shape falls within the supported -10 to 10 point interval before applying it.
-// Use Cases: Pre‑validate spacing to prevent runtime errors when formatting shapes. | Provide user‑friendly error messages for out‑of‑range spacing inputs. | Integrate spacing checks into reusable utility methods for any Aspose.Cells shape.
-// AI Prompts: Write C# code that verifies a character spacing value is between -10 and 10 points before assigning it to a TextBox in Aspose.Cells. | Show how to handle ArgumentOutOfRangeException when an invalid spacing value is supplied to a shape. | Create a generic method that validates character spacing for all shape types in Aspose.Cells and returns a boolean result.
+// Title: C# Example: Validate and Clamp TextBox Character Spacing (-10 to 10) with Aspose.Cells
+// Description: This Aspose.Cells for .NET sample creates a workbook, adds a TextBox shape, sets its TextOptions.Spacing property, checks whether the value lies between -10 and 10 points, automatically clamps out‑of‑range values to the nearest limit, and saves the file. It demonstrates proper handling of character‑spacing constraints for shape text.
+// Keywords: Aspose.Cells TextBox spacing | C# TextOptions.Spacing range | character spacing validation .NET | clamp shape spacing Aspose | Aspose.Cells example GitHub | Excel shape text spacing | adjust TextBox character spacing | Aspose.Cells API usage | range check -10 to 10 points | C# workbook shape validation
+// Common Searches: How to limit TextBox character spacing in Aspose.Cells? | Validate TextOptions.Spacing range in C# | Clamp out‑of‑range spacing for Excel shapes using Aspose | What is the allowed spacing range for Aspose.Cells TextBox? | Example code for correcting shape spacing in .NET
+// Developer Intent: Ensure a TextBox's character spacing stays within the supported -10 to 10 point interval and automatically correct values that fall outside this range.
+// Use Cases: Sanitize user‑provided spacing values before applying them to report templates. | Batch‑process worksheets to enforce spacing limits on all TextBox shapes. | Integrate spacing validation into a CI pipeline that generates Excel files with dynamic text styling.
+// AI Prompts: Generate a C# method that receives a TextOptions object and clamps its Spacing property to the -10..10 point range. | Write code that iterates over every shape in a worksheet and ensures each TextBox's character spacing complies with Aspose.Cells limits. | Provide a logging snippet that warns when a TextBox spacing value is out of range, then corrects it before saving the workbook.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsExamples
+// This Aspose.Cells for .NET sample creates a workbook, adds a TextBox shape, sets its TextOptions.Spacing property, checks whether the value lies between -10 and 10 points, automatically clamps out‑of‑range values to the nearest limit, and saves the file. It demonstrates proper handling of character‑spacing constraints for shape text.
+class ValidateCharacterSpacing
 {
-    // C# example that creates a workbook, adds a TextBox shape, checks a character‑spacing value against the allowed -10 to 10 point range, throws an ArgumentOutOfRangeException for invalid values, and saves the file when the spacing is valid.
-    public class ValidateCharacterSpacing
+    static void Main()
     {
-        // Allowed spacing range in points
-        private const double MinSpacing = -10.0;
-        private const double MaxSpacing = 10.0;
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-        public static void Run()
+        // Add a text box shape to the worksheet
+        TextBox textBox = sheet.Shapes.AddTextBox(0, 0, 2, 0, 200, 100);
+        textBox.Text = "Sample Text";
+
+        // Access the TextOptions of the text box
+        TextOptions textOptions = textBox.TextOptions;
+
+        // Set a spacing value (example value that may be out of range)
+        textOptions.Spacing = 12.5; // Points
+
+        // Validate that the spacing is within the allowed range of -10 to 10 points
+        double spacing = textOptions.Spacing;
+        if (spacing < -10.0 || spacing > 10.0)
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add a text box shape to the worksheet
-                TextBox textBox = worksheet.Shapes.AddTextBox(0, 0, 2, 0, 200, 100);
-                textBox.Text = "Sample Text for Spacing Validation";
-
-                // Example spacing value to validate (intentionally out of range)
-                double spacingToSet = 12.5;
-
-                // Validate the spacing value
-                if (spacingToSet < MinSpacing || spacingToSet > MaxSpacing)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        nameof(spacingToSet),
-                        spacingToSet,
-                        $"Spacing must be between {MinSpacing} and {MaxSpacing} points.");
-                }
-
-                // NOTE: Aspose.Cells Font does not expose a CharacterSpacing property.
-                // If needed, implement custom handling here. For now, we simply acknowledge the valid value.
-                // Example: textBox.Font.Size = (float)(textBox.Font.Size + spacingToSet * 0.1);
-
-                // Save the workbook
-                string outputPath = "ValidatedSpacing.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                Console.WriteLine($"Invalid spacing value: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Adjust to the nearest allowed value
+            double corrected = Math.Max(-10.0, Math.Min(10.0, spacing));
+            Console.WriteLine($"Spacing {spacing} is out of range. Adjusting to {corrected}.");
+            textOptions.Spacing = corrected;
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        else
         {
-            ValidateCharacterSpacing.Run();
+            Console.WriteLine($"Spacing {spacing} is within the allowed range.");
         }
+
+        // Save the workbook
+        workbook.Save("ValidatedSpacing.xlsx");
     }
 }

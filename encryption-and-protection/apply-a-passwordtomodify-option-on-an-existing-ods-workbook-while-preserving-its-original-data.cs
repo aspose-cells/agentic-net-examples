@@ -1,56 +1,58 @@
-// Title: C# – Add Write‑Protection Password to an Existing ODS Workbook with Aspose.Cells
-// Description: Load an existing ODS file using Aspose.Cells for .NET, assign a modify password via Workbook.Settings.WriteProtection, and save the workbook unchanged so the original data stays intact.
-// Keywords: Aspose.Cells C# ODS write protection | set modify password ODS .NET | protect ODS workbook Aspose | Workbook.Settings.WriteProtection example | C# ODS encryption | GitHub Aspose.Cells ODS protection | global spreadsheet security | EU GDPR ODS password
-// Common Searches: How to set a modify password on an ODS file with Aspose.Cells C# | Aspose.Cells protect ODS workbook from editing .NET | C# code to add write protection to an existing ODS spreadsheet | Apply password to ODS using Aspose.Cells example | Write‑protect ODS in US compliance
-// Developer Intent: Apply a password that blocks editing of an existing ODS workbook while keeping its content unchanged.
-// Use Cases: Secure a financial report in ODS format before distributing it to external auditors. | Prevent accidental edits to a shared ODS template used by a multinational team. | Enforce read‑only distribution of a product specification sheet while allowing authorized users to modify it with a password.
-// AI Prompts: Generate C# code that loads an existing ODS workbook with Aspose.Cells, sets a write‑protection password, and saves the file preserving all data. | Explain how to programmatically verify that write protection has been applied to an ODS file using Aspose.Cells for .NET.
+// Title: Apply Modify‑Password Write Protection to an Existing ODS Workbook with Aspose.Cells for .NET
+// Description: Loads an existing ODS workbook (or creates one if missing), sets a password‑to‑modify via Workbook.Settings.WriteProtection, optionally adds author and read‑only recommendation, and saves the file while preserving all original data.
+// Keywords: Aspose.Cells | C# | ODS workbook protection | write protection | modify password | set password to modify ODS | preserve spreadsheet data | load existing ODS | save protected ODS | author attribute write protection
+// Common Searches: Aspose.Cells C# add modify password to ODS file | how to protect existing ODS workbook with password to modify | set write protection on ODS spreadsheet using Aspose.Cells | preserve data while applying password protection to ODS in .NET | add author and read‑only recommendation to ODS write protection
+// Developer Intent: Add a password‑to‑modify protection to an existing ODS workbook without altering its content.
+// Use Cases: Secure an existing ODS spreadsheet by requiring a password before edits can be made. | Generate a new ODS file when the source is unavailable, apply write protection, and distribute it safely. | Include metadata such as author name and a read‑only recommendation alongside the modify password for enhanced protection.
+// AI Prompts: Write C# code using Aspose.Cells to open an ODS file, set a modify password, and save the protected workbook. | Show how to add author information and a recommend‑read‑only flag to ODS write protection with Aspose.Cells. | Explain handling of a missing input ODS file by creating a new workbook, applying password protection, and saving it.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace ApplyWriteProtectionToOdsDemo
+// Loads an existing ODS workbook (or creates one if missing), sets a password‑to‑modify via Workbook.Settings.WriteProtection, optionally adds author and read‑only recommendation, and saves the file while preserving all original data.
+class ApplyWriteProtection
 {
-    // Load an existing ODS file using Aspose.Cells for .NET, assign a modify password via Workbook.Settings.WriteProtection, and save the workbook unchanged so the original data stays intact.
-    class ApplyWriteProtectionToOds
+    static void Main()
     {
-        static void Main()
+        // Path to the existing ODS workbook
+        string inputPath = "ExistingWorkbook.ods";
+
+        // Path for the protected output workbook
+        string outputPath = "ProtectedWorkbook.ods";
+
+        try
         {
-            // Path to the existing ODS workbook
-            string inputPath = "ExistingWorkbook.ods";
-            string outputPath = "ProtectedWorkbook.ods";
+            Workbook workbook;
 
-            try
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
             {
-                Workbook workbook;
-
-                if (File.Exists(inputPath))
-                {
-                    // Load the existing workbook
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    // Create a new workbook as a fallback
-                    workbook = new Workbook();
-                    Worksheet sheet = workbook.Worksheets[0];
-                    sheet.Name = "Sheet1";
-                    sheet.Cells["A1"].PutValue("Sample data");
-                }
-
-                // Apply write‑protection password
-                workbook.Settings.WriteProtection.Password = "ModifyPassword123";
-
-                // Save the workbook with write‑protection applied
-                workbook.Save(outputPath, SaveFormat.Ods);
-
-                Console.WriteLine($"Write protection applied and workbook saved to: {outputPath}");
+                workbook = new Workbook(inputPath);
+                Console.WriteLine($"Loaded workbook from \"{inputPath}\".");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
+                workbook.Worksheets[0].Cells["A1"].PutValue("Sample data");
+                Console.WriteLine($"Input file not found. Created a new workbook.");
             }
+
+            // Apply write‑protection (password‑to‑modify)
+            workbook.Settings.WriteProtection.Password = "ModifyPassword123";
+
+            // Optional settings (uncomment if needed)
+            // workbook.Settings.WriteProtection.Author = "John Doe";
+            // workbook.Settings.WriteProtection.RecommendReadOnly = true;
+
+            // Save the workbook with write‑protection applied
+            workbook.Save(outputPath, SaveFormat.Ods);
+            Console.WriteLine($"Workbook saved with write‑protection to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

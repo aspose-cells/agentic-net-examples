@@ -1,40 +1,47 @@
-// Title: C# – Set Workbook Default Font to Arial 10 and Apply to All Cells with Aspose.Cells
-// Description: C# example that creates a Workbook, changes Workbook.DefaultStyle font to Arial 10, uses StyleFlag to apply the style to every cell in the first worksheet, adds sample data, and saves as XLSX.
-// Keywords: Aspose.Cells | C# | default font | Arial 10 | Workbook.DefaultStyle | StyleFlag | ApplyStyle | apply font to all cells | Excel formatting | XLSX export
-// Common Searches: Aspose.Cells set default font C# | apply default style to entire worksheet Aspose.Cells | change workbook font to Arial 10 .NET | C# code to set default workbook font Aspose | StyleFlag Font property Aspose.Cells example
-// Developer Intent: Set the workbook’s default font to Arial 10 and ensure every cell inherits that formatting.
-// Use Cases: Generate a new Excel report where all cells use the corporate Arial 10 font by default. | Retrofit an existing worksheet to enforce a uniform font without iterating each cell. | Create a template workbook that automatically applies the required font to any added data.
-// AI Prompts: Provide C# code that sets Aspose.Cells Workbook.DefaultStyle font to Arial 10 and applies it to all cells. | Explain how StyleFlag.Font works with Worksheet.Cells.ApplyStyle to update the whole sheet. | Show how to change the default font to Times New Roman 12 for a specific range using Aspose.Cells in C#.
+// Title: Set Workbook Default Font to Arial 10 for All Cells with Aspose.Cells for .NET (C#)
+// Description: Shows how to modify a workbook’s default style to Arial 10, apply the font to every cell in the first worksheet, and save the workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells default font | C# set workbook font | apply style to all cells | Excel default style Arial | StyleFlag All true | Aspose.Cells workbook default style | C# Excel formatting
+// Common Searches: Aspose.Cells set default font | C# change workbook default style | apply Arial font to entire worksheet Aspose.Cells | how to use StyleFlag to format all cells | set default font for new Excel file using Aspose.Cells
+// Developer Intent: Change the workbook’s default font to Arial 10 and ensure every cell uses that font.
+// Use Cases: Create a new workbook where all cells start with Arial 10 before data entry. | Update an existing workbook’s default style to Arial 10 and propagate the change across the first worksheet. | Generate a template that enforces a consistent Arial 10 font for any future worksheets added to the file.
+// AI Prompts: Provide a C# example that sets the default font to Calibri 11 and applies it to all cells with Aspose.Cells. | Show how to change the default style to Times New Roman 12 and propagate it across an entire worksheet using Aspose.Cells for .NET. | Explain the use of StyleFlag to apply multiple formatting attributes to a range of cells in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace DefaultFontExample
+// Shows how to modify a workbook’s default style to Arial 10, apply the font to every cell in the first worksheet, and save the workbook using Aspose.Cells for .NET.
+class Program
 {
-    // C# example that creates a Workbook, changes Workbook.DefaultStyle font to Arial 10, uses StyleFlag to apply the style to every cell in the first worksheet, adds sample data, and saves as XLSX.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Set the workbook's default font to Arial, size 10
-            workbook.DefaultStyle.Font.Name = "Arial";
-            workbook.DefaultStyle.Font.Size = 10;
+        // ----- Set the workbook's default font -----
+        // Retrieve the current default style
+        Style defaultStyle = workbook.DefaultStyle;
+        // Modify the font properties
+        defaultStyle.Font.Name = "Arial";
+        defaultStyle.Font.Size = 10;
+        // Assign the modified style back as the workbook's default
+        workbook.DefaultStyle = defaultStyle;
 
-            // Apply the default style to all existing cells in the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            StyleFlag flag = new StyleFlag();
-            flag.Font = true;               // Apply only font-related settings
-            sheet.Cells.ApplyStyle(workbook.DefaultStyle, flag);
+        // ----- Apply the default font to all existing cells -----
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Add some sample data to verify the font is applied
-            sheet.Cells["A1"].PutValue("Cell A1 uses Arial 10");
-            sheet.Cells["B2"].PutValue("Cell B2 also uses Arial 10");
+        // Create a style that matches the default font
+        Style style = workbook.CreateStyle();
+        style.Font.Name = "Arial";
+        style.Font.Size = 10;
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("DefaultFontWorkbook.xlsx", SaveFormat.Xlsx);
-        }
+        // Create a StyleFlag that indicates all style attributes should be applied
+        StyleFlag flag = new StyleFlag();
+        flag.All = true;
+
+        // Apply the style to the entire worksheet
+        sheet.Cells.ApplyStyle(style, flag);
+
+        // Save the workbook
+        workbook.Save("DefaultFont.xlsx");
     }
 }

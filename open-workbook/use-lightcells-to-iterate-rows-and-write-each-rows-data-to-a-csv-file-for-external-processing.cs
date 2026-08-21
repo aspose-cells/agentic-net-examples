@@ -1,116 +1,117 @@
+// Title: C# Export Excel to CSV with Aspose.Cells LightCellsDataHandler (row‑by‑row streaming)
+// Description: Demonstrates a custom CsvExportHandler that inherits from LightCellsDataHandler to stream each worksheet row directly to a CSV file, handling commas, quotes and line breaks while keeping memory usage low.
+// Keywords: Aspose.Cells LightCellsDataHandler | C# CSV export | stream Excel to CSV | row by row processing | large worksheet export | .NET Excel to CSV | memory‑efficient CSV generation
+// Common Searches: How to export Excel to CSV using LightCells in Aspose.Cells C# | LightCellsDataHandler example for CSV output | Stream rows from a workbook to a CSV file with Aspose.Cells | C# write Excel cells to CSV without loading whole file
+// Developer Intent: Generate a CSV file from an Excel workbook by iterating rows with LightCellsDataHandler, avoiding full workbook loading.
+// Use Cases: Export massive worksheets to CSV without exhausting memory. | Create a real‑time CSV pipeline for downstream analytics or ETL processes. | Apply custom escaping rules for commas, quotes and new‑line characters during export.
+// AI Prompts: Write a LightCellsDataHandler in C# that streams worksheet rows to a CSV file with proper escaping. | Show how to configure LoadOptions.LightCellsDataHandler to export an Excel file to CSV without fully loading it. | Explain how to modify the CsvExportHandler to skip empty rows and write a single header line.
+
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-namespace LightCellsCsvExport
+// Custom LightCellsDataHandler that writes each processed cell to a CSV file.
+// Demonstrates a custom CsvExportHandler that inherits from LightCellsDataHandler to stream each worksheet row directly to a CSV file, handling commas, quotes and line breaks while keeping memory usage low.
+class CsvExportHandler : LightCellsDataHandler
 {
-    // Custom LightCellsDataHandler that writes each processed row to a CSV file.
-    class CsvExportHandler : LightCellsDataHandler
+    private readonly StreamWriter _writer;
+    private bool _firstRow = true;
+    private int _currentColumn = -1;
+
+    public CsvExportHandler(string outputPath)
     {
-        private readonly StreamWriter _writer;
-        private readonly StringBuilder _rowBuilder = new StringBuilder();
-        private int _currentRowIndex = -1;
-
-        public CsvExportHandler(string csvFilePath)
-        {
-            // Initialize the writer (overwrite if exists)
-            _writer = new StreamWriter(csvFilePath, false, Encoding.UTF8);
-        }
-
-        // Called when a worksheet starts processing.
-        public bool StartSheet(Worksheet sheet)
-        {
-            // Process all sheets.
-            return true;
-        }
-
-        // Called before processing a row. Return true to process the row.
-        public bool StartRow(int rowIndex)
-        {
-            // If we have data from the previous row, write it out before starting a new one.
-            if (_rowBuilder.Length > 0)
-            {
-                _writer.WriteLine(_rowBuilder.ToString().TrimEnd(',')); // Remove trailing comma
-                _rowBuilder.Clear();
-            }
-
-            _currentRowIndex = rowIndex;
-            return true; // Continue processing this row
-        }
-
-        // Called after a row is started. Not needed for CSV export, just return true.
-        public bool ProcessRow(Row row)
-        {
-            return true;
-        }
-
-        // Called before each cell in the current row. Return true to process the cell.
-        public bool StartCell(int columnIndex)
-        {
-            // Always process every cell.
-            return true;
-        }
-
-        // Called for each cell that needs to be processed.
-        public bool ProcessCell(Cell cell)
-        {
-            // Retrieve the cell value as string, handling nulls.
-            string value = cell.Value?.ToString() ?? string.Empty;
-
-            // Escape double quotes by doubling them and wrap the value in quotes if it contains commas or quotes.
-            if (value.Contains(",") || value.Contains("\""))
-            {
-                value = $"\"{value.Replace("\"", "\"\"")}\"";
-            }
-
-            // Append the value and a comma separator.
-            _rowBuilder.Append(value).Append(',');
-
-            // Return false to avoid keeping the cell in memory after processing.
-            return false;
-        }
-
-        // Dispose the writer and flush any remaining data.
-        public void Close()
-        {
-            if (_rowBuilder.Length > 0)
-            {
-                _writer.WriteLine(_rowBuilder.ToString().TrimEnd(','));
-                _rowBuilder.Clear();
-            }
-
-            _writer.Flush();
-            _writer.Dispose();
-        }
+        _writer = new StreamWriter(outputPath);
     }
 
-    class Program
+    // Process all sheets.
+    public bool StartSheet(Worksheet sheet) => true;
+
+    // Called before processing a row.
+    public bool StartRow(int rowIndex)
     {
-        static void Main()
-        {
-            // Path to the source workbook (can be any supported format, e.g., .xlsx, .csv, etc.)
-            string sourceFile = "LargeData.xlsx";
+        // Write line break before every row except the first.
+        if (!_firstRow)
+            _writer.WriteLine();
+        else
+            _firstRow = false;
 
-            // Path where the extracted CSV will be saved.
-            string outputCsv = "ExtractedData.csv";
+        _currentColumn = -1;
+        return true; // Continue processing this row.
+    }
 
-            // Create the custom handler.
-            var csvHandler = new CsvExportHandler(outputCsv);
+    // Not used for CSV export, just continue.
+    public bool ProcessRow(Row row) => true;
 
-            // Set load options to use LightCells mode with our handler.
-            LoadOptions loadOptions = new LoadOptions
-            {
-                LightCellsDataHandler = csvHandler
-            };
+    // Called before each cell in the current row.
+    public bool StartCell(int columnIndex)
+    {
+        _currentColumn = columnIndex;
+        return true; // Process this cell.
+    }
 
-            // Load the workbook using LightCells. The handler will be invoked during loading.
-            Workbook workbook = new Workbook(sourceFile, loadOptions);
+    // Write cell value to CSV, handling commas and quotes.
+    public bool ProcessCell(Cell cell)
+    {
+        if (_currentColumn > 0)
+            _writer.Write(",");
 
-            // After loading is complete, close the handler to flush remaining data.
-            csvHandler.Close();
+        string value = cell.StringValue ?? string.Empty;
 
-            Console.WriteLine($"CSV export completed: {outputCsv}");
-        }
+        // Escape double quotes.
+        if (value.Contains("\""))
+            value = value.Replace("\"", "\"\"");
+
+        // Enclose in quotes if needed.
+        if (value.Contains(",") || value.Contains("\"") || value.Contains("\n") || value.Contains("\r"))
+            value = $"\"{value}\"";
+
+        _writer.Write(value);
+        return true; // Keep processing.
+    }
+
+    // Flush and close the writer when done.
+    public void Close()
+    {
+        _writer.Flush();
+        _writer.Dispose();
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // -------------------------------------------------
+        // 1. Create a sample workbook with some data.
+        // -------------------------------------------------
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+        ws.Cells["A1"].PutValue("Name");
+        ws.Cells["B1"].PutValue("Age");
+        ws.Cells["A2"].PutValue("John");
+        ws.Cells["B2"].PutValue(30);
+        ws.Cells["A3"].PutValue("Alice");
+        ws.Cells["B3"].PutValue(25);
+
+        // Save the workbook to a temporary file (required for loading with LightCells).
+        string tempPath = "temp.xlsx";
+        wb.Save(tempPath, SaveFormat.Xlsx);
+
+        // -------------------------------------------------
+        // 2. Export the workbook to CSV using LightCellsDataHandler.
+        // -------------------------------------------------
+        string csvPath = "output.csv";
+        var handler = new CsvExportHandler(csvPath);
+
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.LightCellsDataHandler = handler;
+
+        // Loading triggers the handler; data is written to CSV during this call.
+        Workbook loadedWb = new Workbook(tempPath, loadOptions);
+
+        // Finalize CSV file.
+        handler.Close();
+
+        Console.WriteLine($"CSV file has been created at: {csvPath}");
     }
 }

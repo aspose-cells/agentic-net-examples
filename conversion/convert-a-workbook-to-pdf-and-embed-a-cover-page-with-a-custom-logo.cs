@@ -1,10 +1,10 @@
-// Title: Add a Custom Logo Cover Page and Convert an Aspose.Cells Workbook to PDF (C#)
-// Description: Creates a workbook, inserts a centered logo, title and subtitle on a cover worksheet, then saves all visible sheets to a PDF using Aspose.Cells PdfSaveOptions.
-// Keywords: Aspose.Cells | C# | PDF conversion | cover page | logo insertion | workbook to PDF | PdfSaveOptions | SheetSet.Visible | Excel to PDF | .NET | image positioning | page setup
-// Common Searches: Aspose.Cells add cover page with logo before PDF export | C# convert Excel workbook to PDF with custom title page | How to insert and center an image in an Aspose.Cells worksheet | PdfSaveOptions include only visible sheets Aspose.Cells | Create PDF report with branding using Aspose.Cells C#
-// Developer Intent: Generate a PDF that starts with a branded cover sheet containing a logo, title and subtitle, followed by the workbook’s data sheets.
-// Use Cases: Corporate annual reports that need a branded first page | Automated PDF brochures with a designed cover before data tables | Standardized PDF exports from multiple workbooks with consistent branding
-// AI Prompts: Show C# code to add a background image to the cover sheet and adjust margins before PDF conversion with Aspose.Cells. | Explain how to hide gridlines on the cover page while keeping them visible on data sheets using PdfSaveOptions. | Provide an example of loading a logo from a URL at runtime and embedding it in the cover worksheet.
+// Title: Add a Cover Sheet with Logo and Title, then Export Workbook to PDF/A‑1b using Aspose.Cells for .NET (C#)
+// Description: Shows how to create or load an Excel workbook, insert a cover worksheet as the first sheet, embed a PNG logo, add a centered bold title, adjust column width and page setup, add a data sheet, configure PdfSaveOptions for PDF/A‑1b compliance and default‑font checking, and save the file as a PDF where the cover page appears first.
+// Keywords: Aspose.Cells C# PDF conversion | cover page Excel Aspose | embed image Excel worksheet | PDF/A-1b Aspose.Cells | PdfSaveOptions OnePagePerSheet | add logo to Excel | export workbook to PDF | custom cover sheet PDF | Aspose.Cells page setup | C# Excel to PDF with logo
+// Common Searches: Aspose.Cells add cover page before PDF export | C# embed logo in Excel and save as PDF/A | How to create PDF/A‑1b from Excel with Aspose.Cells | Set first worksheet as cover sheet in Aspose.Cells | Configure PdfSaveOptions for PDF/A compliance in .NET | Insert image into Excel cell using Aspose.Cells C#
+// Developer Intent: Create a workbook with a branded cover sheet and export it as a PDF/A‑1b document.
+// Use Cases: Branding corporate reports with a logo‑filled cover page | Generating compliant PDF/A‑1b archives of financial spreadsheets | Automating multi‑sheet PDF creation where the first page is a custom title page | Producing printable reports that require a separate cover sheet layout
+// AI Prompts: Generate C# code that uses Aspose.Cells to insert a PNG logo into the first worksheet, add a centered bold title, and save the workbook as a PDF/A‑1b file. | Show how to set PdfSaveOptions such as Compliance = PdfA1b, CheckWorkbookDefaultFont = true, and OnePagePerSheet = false when converting Excel to PDF with Aspose.Cells. | Provide a complete example that creates a cover sheet, adds sample data, handles a missing logo file, and exports the workbook to PDF with proper page setup.
 
 using System;
 using System.IO;
@@ -12,108 +12,86 @@ using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsCoverPdfDemo
+// Shows how to create or load an Excel workbook, insert a cover worksheet as the first sheet, embed a PNG logo, add a centered bold title, adjust column width and page setup, add a data sheet, configure PdfSaveOptions for PDF/A‑1b compliance and default‑font checking, and save the file as a PDF where the cover page appears first.
+class Program
 {
-    // Creates a workbook, inserts a centered logo, title and subtitle on a cover worksheet, then saves all visible sheets to a PDF using Aspose.Cells PdfSaveOptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // 1. Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
+
+            // 2. Add a cover sheet as the first worksheet
+            // Insert a new empty worksheet at index 0 (first position)
+            workbook.Worksheets.Insert(0, SheetType.Worksheet); // Correct overload
+            Worksheet coverSheet = workbook.Worksheets[0];
+            coverSheet.Name = "Cover";
+
+            // 3. Insert a custom logo image into the cover sheet
+            string logoPath = "logo.png";
+            if (!File.Exists(logoPath))
             {
-                // Path to the custom logo image (ensure the file exists)
-                string logoPath = "logo.png";
-
-                // Output PDF file path
-                string outputPdf = "WorkbookWithCover.pdf";
-
-                // -------------------- Create a new workbook --------------------
-                Workbook workbook = new Workbook();
-
-                // -------------------- Add cover page (first worksheet) --------------------
-                Worksheet coverSheet = workbook.Worksheets[0];
-                coverSheet.Name = "Cover";
-
-                // Insert the logo picture if the file exists
-                if (File.Exists(logoPath))
-                {
-                    int pictureIndex = coverSheet.Pictures.Add(0, 0, logoPath);
-                    Picture logo = coverSheet.Pictures[pictureIndex];
-                    // Set picture size (in points)
-                    logo.Width = 200;
-                    logo.Height = 100;
-                    // Approximate centering of the picture
-                    logo.Left = (coverSheet.Cells.MaxColumn + 1) * 64 / 2 - logo.Width / 2;
-                }
-                else
-                {
-                    Console.WriteLine($"Warning: Logo file '{logoPath}' not found. Skipping logo insertion.");
-                }
-
-                // Add title text below the logo
-                Cell titleCell = coverSheet.Cells["A5"];
-                titleCell.PutValue("Annual Report 2026");
-                Style titleStyle = workbook.CreateStyle();
-                titleStyle.Font.Size = 24;
-                titleStyle.Font.IsBold = true;
-                titleStyle.HorizontalAlignment = TextAlignmentType.Center;
-                titleCell.SetStyle(titleStyle);
-                // Merge cells for the title to span across columns (A5:F5)
-                coverSheet.Cells.Merge(4, 0, 1, 5);
-
-                // Optionally add subtitle or date
-                Cell subtitleCell = coverSheet.Cells["A7"];
-                subtitleCell.PutValue($"Generated on {DateTime.Now:MMMM dd, yyyy}");
-                Style subStyle = workbook.CreateStyle();
-                subStyle.Font.Size = 12;
-                subStyle.HorizontalAlignment = TextAlignmentType.Center;
-                subtitleCell.SetStyle(subStyle);
-                // Merge cells for the subtitle (A7:F7)
-                coverSheet.Cells.Merge(6, 0, 1, 5);
-
-                // Set page setup for cover sheet (fit to one page)
-                coverSheet.PageSetup.FitToPagesWide = 1;
-                coverSheet.PageSetup.FitToPagesTall = 1;
-
-                // -------------------- Add main content sheet --------------------
-                int dataSheetIndex = workbook.Worksheets.Add();
-                Worksheet dataSheet = workbook.Worksheets[dataSheetIndex];
-                dataSheet.Name = "Data";
-
-                // Populate sample data
-                dataSheet.Cells["A1"].PutValue("Item");
-                dataSheet.Cells["B1"].PutValue("Quantity");
-                dataSheet.Cells["A2"].PutValue("Apples");
-                dataSheet.Cells["B2"].PutValue(150);
-                dataSheet.Cells["A3"].PutValue("Bananas");
-                dataSheet.Cells["B3"].PutValue(200);
-                dataSheet.Cells["A4"].PutValue("Cherries");
-                dataSheet.Cells["B4"].PutValue(75);
-
-                // Apply simple table style to header row
-                Style tableStyle = workbook.CreateStyle();
-                tableStyle.Font.IsBold = true;
-                dataSheet.Cells["A1:B1"].SetStyle(tableStyle);
-                dataSheet.AutoFitColumns();
-
-                // -------------------- Save workbook as PDF with options --------------------
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    // Save all visible sheets; cover sheet is first
-                    SheetSet = SheetSet.Visible,
-                    // Allow normal pagination for data sheet
-                    OnePagePerSheet = false
-                };
-
-                // Save to PDF
-                workbook.Save(outputPdf, pdfOptions);
-
-                Console.WriteLine($"Workbook successfully saved to PDF with cover page: {outputPdf}");
+                Console.WriteLine($"Logo file not found: {logoPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the image into a stream and add it to cell A1
+            using (FileStream logoStream = File.OpenRead(logoPath))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                coverSheet.Pictures.Add(0, 0, logoStream);
             }
+
+            // 4. Add title text (or any other cover page content)
+            Cell titleCell = coverSheet.Cells["A5"];
+            titleCell.PutValue("Annual Report");
+
+            // Apply style to the title cell
+            Style titleStyle = titleCell.GetStyle();
+            titleStyle.Font.IsBold = true;
+            titleStyle.Font.Size = 24;
+            titleStyle.HorizontalAlignment = TextAlignmentType.Center;
+            titleCell.SetStyle(titleStyle);
+
+            // Widen column A for better appearance
+            coverSheet.Cells.SetColumnWidth(0, 30);
+
+            // 5. (Optional) Configure page setup for the cover sheet
+            coverSheet.PageSetup.FitToPagesWide = 1;
+            coverSheet.PageSetup.FitToPagesTall = 1;
+
+            // 6. Add a regular data worksheet (example content)
+            Worksheet dataSheet = workbook.Worksheets[1];
+            dataSheet.Name = "Data";
+            dataSheet.Cells["A1"].PutValue("Item");
+            dataSheet.Cells["B1"].PutValue("Quantity");
+            dataSheet.Cells["A2"].PutValue("Apples");
+            dataSheet.Cells["B2"].PutValue(150);
+            dataSheet.Cells["A3"].PutValue("Oranges");
+            dataSheet.Cells["B3"].PutValue(200);
+
+            // 7. Set PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Keep each worksheet on its own page(s)
+                OnePagePerSheet = false,
+
+                // Ensure default font handling for Unicode characters
+                CheckWorkbookDefaultFont = true,
+
+                // Produce PDF/A‑1b compliant file
+                Compliance = PdfCompliance.PdfA1b
+            };
+
+            // 8. Save the workbook as a PDF file; the cover sheet will be the first page(s)
+            string outputPdf = "ReportWithCover.pdf";
+            workbook.Save(outputPdf, pdfOptions);
+
+            Console.WriteLine($"Workbook successfully converted to PDF: {outputPdf}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

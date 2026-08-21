@@ -1,130 +1,80 @@
-// Title: Batch convert Excel to HTML with conditional grid lines – Aspose.Cells .NET
-// Description: Scans a folder for .xlsx/.xls/.xlsm files, detects any cell borders in each workbook, and saves the files as HTML. HtmlSaveOptions.ExportGridLines is turned on only when borders are found, ensuring the generated pages keep the original visual layout while avoiding unnecessary grid lines.
-// Keywords: Aspose.Cells batch conversion | Excel to HTML C# | ExportGridLines conditional | detect cell borders Aspose | HtmlSaveOptions grid lines | process multiple workbooks | .NET Excel HTML export
-// Common Searches: Aspose.Cells export Excel to HTML with grid lines only when borders exist | batch convert Excel files to HTML C# Aspose | how to toggle ExportGridLines based on workbook borders | detect borders in Excel workbook using Aspose.Cells | save multiple workbooks as HTML with conditional grid lines
-// Developer Intent: Automatically convert every Excel file in a directory to HTML, enabling grid lines only if any worksheet contains cell borders.
-// Use Cases: Generate web‑ready reports from a library of spreadsheets while preserving border styling for readability. | Automate nightly conversion of uploaded Excel documents to HTML, showing grid lines only when borders are present to reduce visual clutter. | Create a command‑line utility that processes large batches of workbooks for publishing on intranet portals.
-// AI Prompts: Write a C# function that returns true when any cell in an Aspose.Cells workbook has a non‑none border. | Provide code to batch convert .xlsx, .xls, and .xlsm files in a folder to HTML, setting HtmlSaveOptions.ExportGridLines based on border detection. | Explain the effect of HtmlSaveOptions.ExportGridLines on the HTML output when cell borders are present versus absent.
+// Title: Batch convert Excel workbooks to HTML with conditional gridlines using Aspose.Cells for .NET
+// Description: A C# console app that scans every worksheet in each .xlsx file of a folder for cell borders. It saves the workbook as HTML, enabling HtmlSaveOptions.ExportGridLines only when no borders are detected, and processes all files in one run.
+// Keywords: Aspose.Cells HTML export | ExportGridLines conditional | detect cell borders C# | batch Excel to HTML | Aspose.Cells .NET example | gridlines toggle based on borders | C# Excel automation | global .NET developers | USA .NET community | GitHub Aspose.Cells sample
+// Common Searches: Aspose.Cells export Excel to HTML with gridlines only when no borders | C# batch convert .xlsx files to HTML and disable gridlines if borders exist | how to detect cell borders before saving as HTML using Aspose.Cells | set ExportGridLines dynamically for each workbook in .NET | Aspose.Cells example for conditional HTML save options
+// Developer Intent: Automatically convert a directory of Excel workbooks to HTML, turning on gridlines only for workbooks that have no cell borders.
+// Use Cases: Generate web‑ready reports from a library of Excel templates while preserving original styling. | Build a server‑side service that receives user spreadsheets, converts them to HTML, and avoids double borders by disabling gridlines when borders are present. | Create an automated publishing pipeline that processes large batches of workbooks and applies visual‑consistency rules without manual intervention.
+// AI Prompts: Write a C# function that returns true if any cell in a Workbook has a top, bottom, left, or right border. | Provide an Aspose.Cells .NET snippet that batch converts all .xlsx files in a folder to HTML, setting ExportGridLines based on border detection. | Explain how to extend the code to also toggle ExportColumnHeaders when the first worksheet row contains header text.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using Aspose.Cells.Rendering;
 
-namespace BatchConvertWithGridLines
+// A C# console app that scans every worksheet in each .xlsx file of a folder for cell borders. It saves the workbook as HTML, enabling HtmlSaveOptions.ExportGridLines only when no borders are detected, and processes all files in one run.
+class BatchConvertWithGridlineToggle
 {
-    // Scans a folder for .xlsx/.xls/.xlsm files, detects any cell borders in each workbook, and saves the files as HTML. HtmlSaveOptions.ExportGridLines is turned on only when borders are found, ensuring the generated pages keep the original visual layout while avoiding unnecessary grid lines.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Input and output directories
+        string inputFolder = @"C:\InputWorkbooks";
+        string outputFolder = @"C:\OutputHtml";
+
+        // Ensure output folder exists
+        Directory.CreateDirectory(outputFolder);
+
+        // Process each Excel file in the input folder
+        foreach (string sourcePath in Directory.GetFiles(inputFolder, "*.xlsx"))
         {
-            // Example usage:
-            // Source folder containing Excel files
-            string sourceFolder = @"C:\InputWorkbooks";
-            // Destination folder for converted HTML files
-            string destFolder = @"C:\OutputHtml";
+            // Load the workbook (lifecycle create/load rule)
+            Workbook workbook = new Workbook(sourcePath);
 
-            ConvertWorkbooks(sourceFolder, destFolder);
-        }
+            bool hasBorders = false;
 
-        /// <param name="sourceFolder">Folder with source .xlsx/.xls/.xlsm files.</param>
-        /// <param name="destFolder">Folder where HTML files will be saved.</param>
-        static void ConvertWorkbooks(string sourceFolder, string destFolder)
-        {
-            // Ensure destination folder exists
-            Directory.CreateDirectory(destFolder);
-
-            string[] files;
-            try
+            // Scan all worksheets for any cell border
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                // Get all files in the source folder
-                files = Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error accessing source folder '{sourceFolder}': {ex.Message}");
-                return;
-            }
+                // Determine the used range to limit the scan
+                int maxRow = ws.Cells.MaxDataRow;
+                int maxCol = ws.Cells.MaxDataColumn;
 
-            foreach (string filePath in files)
-            {
-                string extension = Path.GetExtension(filePath).ToLowerInvariant();
-                if (extension != ".xlsx" && extension != ".xls" && extension != ".xlsm")
-                    continue; // Skip non‑Excel files
-
-                // Verify the file exists before attempting to load
-                if (!File.Exists(filePath))
+                for (int row = 0; row <= maxRow && !hasBorders; row++)
                 {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
-                }
-
-                try
-                {
-                    // Load the workbook
-                    Workbook workbook = new Workbook(filePath);
-
-                    // Determine if any worksheet contains borders
-                    bool hasBorders = WorkbookContainsBorders(workbook);
-
-                    // Prepare HTML save options and set ExportGridLines accordingly
-                    HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                    for (int col = 0; col <= maxCol && !hasBorders; col++)
                     {
-                        ExportGridLines = hasBorders,
-                        ExportActiveWorksheetOnly = false // export all worksheets
-                    };
+                        // Get the style of the current cell
+                        Style style = ws.Cells[row, col].GetStyle();
 
-                    // Build output file name (same base name with .html extension)
-                    string outputFileName = Path.GetFileNameWithoutExtension(filePath) + ".html";
-                    string outputPath = Path.Combine(destFolder, outputFileName);
-
-                    // Save the workbook as HTML using the prepared options
-                    workbook.Save(outputPath, htmlOptions);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-                }
-            }
-        }
-
-        /// <param name="workbook">The workbook to inspect.</param>
-        /// <returns>True if a border is found; otherwise false.</returns>
-        static bool WorkbookContainsBorders(Workbook workbook)
-        {
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Get the used range to limit iteration
-                AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
-
-                // If the sheet is empty, skip it
-                if (usedRange == null || usedRange.RowCount == 0 || usedRange.ColumnCount == 0)
-                    continue;
-
-                int startRow = usedRange.FirstRow;
-                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-                int startCol = usedRange.FirstColumn;
-                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
-
-                for (int row = startRow; row <= endRow; row++)
-                {
-                    for (int col = startCol; col <= endCol; col++)
-                    {
-                        // Retrieve the style of the current cell
-                        Style style = sheet.Cells[row, col].GetStyle();
-
-                        // Check each border side for a non‑none line style
+                        // Check each border side for a non‑None line style
                         if (style.Borders[BorderType.TopBorder].LineStyle != CellBorderType.None ||
                             style.Borders[BorderType.BottomBorder].LineStyle != CellBorderType.None ||
                             style.Borders[BorderType.LeftBorder].LineStyle != CellBorderType.None ||
                             style.Borders[BorderType.RightBorder].LineStyle != CellBorderType.None)
                         {
-                            return true; // Border found, no need to continue
+                            hasBorders = true;
                         }
                     }
                 }
+
+                if (hasBorders) break;
             }
-            return false; // No borders detected in any worksheet
+
+            // Prepare HTML save options and toggle ExportGridLines
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            {
+                // Export gridlines only when the source does NOT contain borders
+                ExportGridLines = !hasBorders,
+                ExportActiveWorksheetOnly = false
+            };
+
+            // Build output file path (same name with .html extension)
+            string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
+            string destPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+
+            // Save the workbook as HTML with the configured options (lifecycle save rule)
+            workbook.Save(destPath, htmlOptions);
         }
+
+        Console.WriteLine("Batch conversion completed.");
     }
 }

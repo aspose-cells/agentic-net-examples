@@ -1,101 +1,67 @@
-// Title: C# Example: Extract OLE Objects from Excel with Aspose.Cells – Robust Error Handling for Corrupted and Unsupported Formats
-// Description: Loads an Excel file, iterates all worksheets and their OleObjects, extracts each object's FullObjectBin to a separate .bin file, and catches CellsException for FileCorrupted and UnsupportedFeature while logging unexpected errors. The workbook is saved after processing, ensuring the program continues even when some OLE objects are damaged or unsupported.
-// Keywords: Aspose.Cells OLE extraction C# | extract OLE objects Excel | handle corrupted OLE Aspose | unsupported OLE format exception | FullObjectBin error handling | C# Excel OLE binary export | Aspose.Cells try catch example | Excel embedded file extraction | robust OLE processing .NET | GitHub Aspose.Cells OLE sample
-// Common Searches: how to extract OLE objects from Excel using Aspose.Cells C# | catch CellsException for corrupted OLE objects | unsupported OLE format handling Aspose.Cells | save OLE binary data to file C# | Aspose.Cells example for OLE extraction with error handling
-// Developer Intent: Implement try‑catch blocks to safely extract OLE objects from a workbook, handle corrupted or unsupported OLE data, and continue processing without interruption.
-// Use Cases: Batch‑process spreadsheets to pull embedded Word, PDF, or image files while skipping damaged OLE objects. | Create an audit log of all extracted OLE binaries for compliance reporting, with graceful handling of unsupported formats. | Integrate OLE extraction into a data‑migration pipeline that must not fail when encountering corrupted embedded objects.
-// AI Prompts: Write C# code that uses Aspose.Cells to extract OLE objects from an Excel file and logs FileCorrupted and UnsupportedFeature exceptions to a text file. | Refactor the provided program to use a configurable logger (e.g., NLog) instead of console output while preserving error‑handling logic. | Suggest a retry strategy for transient I/O errors when reading FullObjectBin data from OLE objects in Aspose.Cells.
+// Title: C# – Extract and Safely Handle Corrupted or Unsupported OLE Objects with Aspose.Cells
+// Description: Demonstrates how to load an Excel workbook, iterate through each worksheet's OLE objects, extract the embedded data to files, and apply robust exception handling for corrupted, unsupported, or stream‑related OLE objects using Aspose.Cells for .NET. The sample logs errors, skips failing objects, and ensures the workbook is saved after processing.
+// Keywords: Aspose.Cells OLE extraction | C# OLE object handling | catch CellsException | unsupported OLE data | corrupted OLE object | exception handling Aspose.Cells | extract embedded OLE from Excel | Aspose.Cells .NET error handling
+// Common Searches: Aspose.Cells extract OLE object C# | how to handle corrupted OLE objects in Excel | catch CellsException for unsupported OLE data | C# code to save embedded OLE files from workbook | error handling when reading OLE objects with Aspose
+// Developer Intent: Add comprehensive try‑catch blocks to extract OLE objects while gracefully handling corrupted or unsupported data without aborting the whole operation.
+// Use Cases: Bulk extraction of all embedded OLE objects from a workbook, saving each to a uniquely named file. | Logging detailed CellsException information for objects that cannot be read, enabling later analysis. | Continuing worksheet processing after an extraction failure, ensuring the final workbook is still saved.
+// AI Prompts: Write a reusable C# method that extracts OLE objects with Aspose.Cells and returns a status report for each object. | Create a PowerShell script that calls the provided C# code to batch‑process multiple Excel files and aggregate extraction logs. | Suggest how to implement retry logic for transient OLE extraction errors while preserving existing CellsException handling.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace OleObjectExtractionWithErrorHandling
+// Demonstrates how to load an Excel workbook, iterate through each worksheet's OLE objects, extract the embedded data to files, and apply robust exception handling for corrupted, unsupported, or stream‑related OLE objects using Aspose.Cells for .NET. The sample logs errors, skips failing objects, and ensures the workbook is saved after processing.
+class ExtractOleObjects
 {
-    // Loads an Excel file, iterates all worksheets and their OleObjects, extracts each object's FullObjectBin to a separate .bin file, and catches CellsException for FileCorrupted and UnsupportedFeature while logging unexpected errors. The workbook is saved after processing, ensuring the program continues even when some OLE objects are damaged or unsupported.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through each worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            const string inputPath = "InputWithOleObjects.xlsx";
-            const string outputWorkbookPath = "ProcessedWorkbook.xlsx";
-
-            // Verify that the input file exists before attempting to load it
-            if (!File.Exists(inputPath))
+            // Iterate through each OLE object in the worksheet
+            for (int i = 0; i < sheet.OleObjects.Count; i++)
             {
-                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
-                return;
-            }
-
-            Workbook workbook;
-            try
-            {
-                // Load the workbook
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
-                return;
-            }
-
-            int oleCounter = 0;
-
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Iterate through all OLE objects in the current worksheet
-                foreach (OleObject ole in sheet.OleObjects)
+                OleObject ole = sheet.OleObjects[i];
+                try
                 {
-                    try
-                    {
-                        // Retrieve the binary data of the OLE object
-                        byte[] oleData = ole.FullObjectBin;
+                    // Attempt to retrieve the embedded OLE data.
+                    // This may throw if the object is corrupted or unsupported.
+                    byte[] data = ole.ObjectData;
 
-                        if (oleData != null && oleData.Length > 0)
-                        {
-                            string outputPath = $"OleObject_{oleCounter}_Data.bin";
-                            File.WriteAllBytes(outputPath, oleData);
-                            Console.WriteLine($"Successfully extracted OLE object #{oleCounter} to '{outputPath}'.");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"OLE object #{oleCounter} contains no data.");
-                        }
-                    }
-                    catch (CellsException ex) when (ex.Code == ExceptionType.FileCorrupted)
+                    if (data != null && data.Length > 0)
                     {
-                        // Handle corrupted OLE object data
-                        Console.WriteLine($"Error: OLE object #{oleCounter} is corrupted. Details: {ex.Message}");
-                    }
-                    catch (CellsException ex) when (ex.Code == ExceptionType.UnsupportedFeature)
-                    {
-                        // Handle unsupported OLE object formats
-                        Console.WriteLine($"Error: OLE object #{oleCounter} format is unsupported. Details: {ex.Message}");
-                    }
-                    catch (Exception ex)
-                    {
-                        // General fallback for any other unexpected errors
-                        Console.WriteLine($"Unexpected error while processing OLE object #{oleCounter}: {ex.Message}");
-                    }
+                        // Determine a file name for the extracted data.
+                        string extension = Path.GetExtension(ole.ObjectSourceFullName);
+                        if (string.IsNullOrEmpty(extension))
+                            extension = ".bin";
 
-                    oleCounter++;
+                        string outPath = $"OleObject_{sheet.Name}_{i}{extension}";
+
+                        // Write the extracted bytes to disk.
+                        File.WriteAllBytes(outPath, data);
+                        Console.WriteLine($"Extracted OLE object to {outPath}");
+                    }
+                }
+                // Handle known Aspose.Cells exceptions related to corrupted or unsupported OLE data.
+                catch (CellsException ex) when (ex.Code == ExceptionType.FileCorrupted ||
+                                               ex.Code == ExceptionType.UnsupportedFeature ||
+                                               ex.Code == ExceptionType.UnsupportedStream)
+                {
+                    Console.WriteLine($"Failed to extract OLE object at index {i} on sheet '{sheet.Name}': {ex.Message} (Code: {ex.Code})");
+                }
+                // Fallback for any other unexpected errors.
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unexpected error extracting OLE object at index {i} on sheet '{sheet.Name}': {ex.Message}");
                 }
             }
-
-            // Save the workbook (if any modifications were made)
-            try
-            {
-                workbook.Save(outputWorkbookPath);
-                Console.WriteLine($"Workbook saved as '{outputWorkbookPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
-
-            Console.WriteLine("Processing completed.");
         }
+
+        // Optionally save the workbook after processing.
+        workbook.Save("output.xlsx");
     }
 }

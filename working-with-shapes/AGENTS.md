@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Shapes Agent
 category: working-with-shapes
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Create and manage Excel drawing shapes in C# without Microsoft Excel
 primary_apis: [Worksheet.Shapes, ShapeCollection, Shape, TextBox, Picture, MsoDrawingType]
 search_intents: [add Excel shape C#, create text box in Excel, format or position worksheet shape, add alternative text to Excel shape]
@@ -90,3 +90,4 @@ Use `Worksheet.Shapes` for generic shapes, `Worksheet.TextBoxes` for text boxes,
 ## Definition of done
 
 The example compiles, runs, creates or changes the claimed drawing object, verifies semantic state and persisted output, and performs no unsafe activation or unrelated integration.
+

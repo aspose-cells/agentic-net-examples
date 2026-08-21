@@ -1,21 +1,21 @@
-// Title: Retrieve and Log Worksheet UniqueId with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, accesses the first worksheet, reads its UniqueId property, writes the ID and sheet name to the console for audit tracking, and optionally saves the file. It demonstrates how to use Aspose.Cells for .NET to capture a worksheet's immutable identifier.
-// Keywords: Aspose.Cells | C# | .NET | Worksheet UniqueId | get worksheet id | log worksheet identifier | audit tracking | worksheet immutable ID | save workbook Aspose | compliance logging
-// Common Searches: How to get a worksheet UniqueId using Aspose.Cells C# | Log worksheet ID for audit with Aspose.Cells .NET | Aspose.Cells UniqueId property example | Retrieve worksheet identifier for compliance reporting | Save workbook after reading worksheet UniqueId
-// Developer Intent: Obtain a worksheet's UniqueId and output it for auditing purposes.
-// Use Cases: Record the UniqueId when a workbook is generated to maintain an immutable audit trail. | Log the ID before performing bulk edits so changes can be traced back to the original sheet. | Store worksheet UniqueIds in a database for later verification or compliance checks.
-// AI Prompts: Generate C# code that iterates through all worksheets in an Aspose.Cells workbook and writes each sheet's UniqueId to a log file. | Explain how to compare stored UniqueId values with current worksheet IDs to detect replacements or renames. | Show how to integrate worksheet UniqueId logging into a .NET microservice for real‑time audit monitoring.
+// Title: Get and Log Worksheet UniqueId (SheetId) with Aspose.Cells for .NET
+// Description: Demonstrates how to assign a GUID‑based UniqueId to a worksheet, save the workbook, reload it, retrieve the identifier, and write the worksheet name and UniqueId to the console for audit tracking.
+// Keywords: Aspose.Cells | C# | .NET | Worksheet UniqueId | SheetId | audit log | GUID identifier | persist worksheet ID | read worksheet UniqueId | Excel workbook tracking
+// Common Searches: Aspose.Cells get worksheet UniqueId | How to log worksheet SheetId in .NET | Persist worksheet identifier after saving | Retrieve worksheet UniqueId for audit | C# Aspose.Cells worksheet ID tracking
+// Developer Intent: Extract a worksheet's UniqueId and record it for compliance or change‑tracking purposes.
+// Use Cases: Assign a GUID as the UniqueId of a newly created worksheet and store it in the Excel file. | Reload a saved workbook to verify that the persisted UniqueId matches the original value. | Generate an audit report that lists each worksheet name alongside its UniqueId.
+// AI Prompts: Write C# code that sets a worksheet's UniqueId to a GUID, saves the workbook, reloads it, and prints the UniqueId for auditing. | Create a reusable method that accepts a workbook path and returns a dictionary of worksheet names and their UniqueIds for compliance reporting. | Explain how Aspose.Cells' UniqueId property can be used to uniquely identify worksheets across sessions and best practices for secure logging.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // This example creates a workbook, accesses the first worksheet, reads its UniqueId property, writes the ID and sheet name to the console for audit tracking, and optionally saves the file. It demonstrates how to use Aspose.Cells for .NET to capture a worksheet's immutable identifier.
-    public class WorksheetUniqueIdAudit
+    // Demonstrates how to assign a GUID‑based UniqueId to a worksheet, save the workbook, reload it, retrieve the identifier, and write the worksheet name and UniqueId to the console for audit tracking.
+    public class WorksheetUniqueIdAuditDemo
     {
-        // Entry point for the application
-        public static void Main(string[] args)
+        public static void Main()
         {
             try
             {
@@ -23,28 +23,48 @@ namespace AsposeCellsExamples
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
         public static void Run()
         {
-            // Create a new workbook (lifecycle: create)
+            // Create a new workbook (contains a default worksheet)
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Generate and assign a unique identifier to the first worksheet
+            string generatedId = "{" + Guid.NewGuid().ToString() + "}";
             Worksheet worksheet = workbook.Worksheets[0];
+            worksheet.UniqueId = generatedId;
 
-            // Retrieve the worksheet's unique identifier
-            string uniqueId = worksheet.UniqueId;
+            // Define the output file path
+            string filePath = "WorksheetUniqueIdAudit.xlsx";
+
+            // Ensure the directory exists before saving
+            string directory = Path.GetDirectoryName(Path.GetFullPath(filePath));
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            // Save the workbook so the UniqueId is persisted
+            workbook.Save(filePath);
+
+            // Verify the file exists before loading
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"The file '{filePath}' was not found after saving.");
+            }
+
+            // Reload the workbook to verify the UniqueId was saved correctly
+            Workbook loadedWorkbook = new Workbook(filePath);
+            Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
+
+            // Retrieve the UniqueId (acts as the unique SheetId)
+            string sheetUniqueId = loadedWorksheet.UniqueId;
 
             // Log the UniqueId for audit tracking
-            Console.WriteLine($"Worksheet '{worksheet.Name}' UniqueId: {uniqueId}");
-
-            // Save the workbook (lifecycle: save) – optional if you need to persist changes
-            string outputPath = "WorksheetUniqueIdAudit.xlsx";
-            workbook.Save(outputPath);
+            Console.WriteLine($"Audit Log - Worksheet Name: {loadedWorksheet.Name}, UniqueId: {sheetUniqueId}");
         }
     }
 }

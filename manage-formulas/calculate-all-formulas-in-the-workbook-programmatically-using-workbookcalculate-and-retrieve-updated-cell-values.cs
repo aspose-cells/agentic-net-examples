@@ -1,40 +1,79 @@
-// Title: C# – Calculate All Formulas in an Aspose.Cells Workbook and Retrieve Updated Values
-// Description: Shows how to create a workbook, assign plain values and formulas, call Workbook.CalculateFormula to evaluate every formula, read the resulting cell values, and optionally save the file.
-// Keywords: Aspose.Cells C# calculate formulas | Workbook.CalculateFormula example | evaluate all formulas programmatically | retrieve calculated cell values | recalculate dependent formulas | Aspose.Cells example C# | calculate workbook formulas | read cell values after calculation
-// Common Searches: Aspose.Cells calculate all formulas C# | How to use Workbook.CalculateFormula in C# | Get cell value after recalculation Aspose.Cells | Refresh formulas before saving workbook Aspose | Programmatically evaluate Excel formulas with Aspose.Cells
-// Developer Intent: The developer wants to trigger a full recalculation of every formula in a workbook and access the computed results via C#.
-// Use Cases: Re‑evaluate a financial model after bulk input changes before exporting to PDF. | Validate data integrity by ensuring all dependent formulas are up‑to‑date after data import. | Save a workbook with static values so downstream systems can read numbers without formula evaluation.
-// AI Prompts: Generate C# code that modifies several cells, runs Workbook.CalculateFormula, and returns a dictionary of cell addresses with their calculated values. | Show how to load an existing workbook, recalculate all formulas, and export the updated values to a CSV file using Aspose.Cells. | Provide an example that uses Workbook.CalculateFormula to guarantee all formulas are current before calling workbook.Save.
+// Title: Calculate all formulas in an Aspose.Cells workbook (C#) and read updated cell values
+// Description: Demonstrates how to create a workbook, insert numbers and formulas, invoke Workbook.CalculateFormula() to evaluate every formula, read the resulting .Value of each cell, save the file, reload it, recalculate if needed, and display selected results using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# calculate formulas | Workbook.CalculateFormula | retrieve calculated cell values | save workbook Aspose | load workbook Aspose | recalculate formulas | Excel formula evaluation .NET
+// Common Searches: Aspose.Cells calculate all formulas C# | Get formula result after Workbook.CalculateFormula | Recalculate a loaded workbook with Aspose.Cells | Read cell value after calculation Aspose.Cells | Workbook.CalculateFormula vs Workbook.Calculate
+// Developer Intent: Evaluate every formula in a workbook programmatically and obtain the computed values.
+// Use Cases: Populate cells with raw data and formulas, call Workbook.CalculateFormula(), then read .Value for further processing. | Generate a report by calculating formulas in memory, printing results to the console, and exporting the workbook to XLSX. | Save a calculated workbook, later load it, recalculate to reflect changes, and retrieve specific cell results.
+// AI Prompts: Write C# code using Aspose.Cells that creates a workbook, adds numbers and formulas, runs Workbook.CalculateFormula(), and prints each calculated value. | Show how to load an existing .xlsx file with Aspose.Cells, recalculate all formulas, and return the values of cells B1 and C2. | Explain when to use Workbook.CalculateFormula versus Workbook.Calculate in Aspose.Cells and the impact on performance.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to create a workbook, assign plain values and formulas, call Workbook.CalculateFormula to evaluate every formula, read the resulting cell values, and optionally save the file.
-class Program
+namespace AsposeCellsFormulaCalculationDemo
 {
-    static void Main()
+    // Demonstrates how to create a workbook, insert numbers and formulas, invoke Workbook.CalculateFormula() to evaluate every formula, read the resulting .Value of each cell, save the file, reload it, recalculate if needed, and display selected results using Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook (lifecycle rule: create)
-        Workbook workbook = new Workbook();
+        static void Main(string[] args)
+        {
+            // -------------------------------------------------
+            // 1. Create a new workbook (lifecycle: create)
+            // -------------------------------------------------
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet and its cells
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+            // Access the first worksheet and its cells
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Set some initial values and formulas
-        cells["A1"].PutValue(5);               // Plain value
-        cells["B1"].Formula = "=A1*2";         // Formula dependent on A1
-        cells["C1"].Formula = "=B1+10";        // Formula dependent on B1
+            // -------------------------------------------------
+            // 2. Populate some data and formulas
+            // -------------------------------------------------
+            // Simple values
+            cells["A1"].PutValue(5);               // A1 = 5
+            cells["A2"].PutValue(10);              // A2 = 10
 
-        // Calculate all formulas in the workbook (feature rule: Workbook.CalculateFormula)
-        workbook.CalculateFormula();
+            // Formulas that depend on the above values
+            cells["B1"].Formula = "=A1*2";          // B1 = 5 * 2 = 10
+            cells["B2"].Formula = "=A2+20";        // B2 = 10 + 20 = 30
+            cells["C1"].Formula = "=SUM(A1:A2)";   // C1 = 5 + 10 = 15
+            cells["C2"].Formula = "=B1+B2";        // C2 = 10 + 30 = 40
 
-        // Retrieve and display the updated cell values after calculation
-        Console.WriteLine("A1 value: " + cells["A1"].Value);
-        Console.WriteLine("B1 value (A1*2): " + cells["B1"].Value);
-        Console.WriteLine("C1 value (B1+10): " + cells["C1"].Value);
+            // -------------------------------------------------
+            // 3. Calculate all formulas in the workbook
+            //    (using the rule Workbook.CalculateFormula())
+            // -------------------------------------------------
+            workbook.CalculateFormula();
 
-        // Save the workbook if needed (lifecycle rule: save)
-        workbook.Save("CalculatedWorkbook.xlsx");
+            // -------------------------------------------------
+            // 4. Retrieve and display the updated cell values
+            // -------------------------------------------------
+            Console.WriteLine("After calculation:");
+            Console.WriteLine($"A1 = {cells["A1"].Value}");
+            Console.WriteLine($"A2 = {cells["A2"].Value}");
+            Console.WriteLine($"B1 (formula '=A1*2') = {cells["B1"].Value}");
+            Console.WriteLine($"B2 (formula '=A2+20') = {cells["B2"].Value}");
+            Console.WriteLine($"C1 (formula '=SUM(A1:A2)') = {cells["C1"].Value}");
+            Console.WriteLine($"C2 (formula '=B1+B2') = {cells["C2"].Value}");
+
+            // -------------------------------------------------
+            // 5. Save the workbook to a file (lifecycle: save)
+            // -------------------------------------------------
+            string outputPath = "FormulaCalculationResult.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+
+            // -------------------------------------------------
+            // 6. Demonstrate loading an existing workbook,
+            //    recalculating, and retrieving values.
+            // -------------------------------------------------
+            Workbook loadedWorkbook = new Workbook(outputPath); // lifecycle: load
+            loadedWorkbook.CalculateFormula(); // recalculate in case data changed
+            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
+            Cells loadedCells = loadedSheet.Cells;
+
+            Console.WriteLine("\nValues from the loaded workbook after recalculation:");
+            Console.WriteLine($"B1 = {loadedCells["B1"].Value}");
+            Console.WriteLine($"C2 = {loadedCells["C2"].Value}");
+        }
     }
 }

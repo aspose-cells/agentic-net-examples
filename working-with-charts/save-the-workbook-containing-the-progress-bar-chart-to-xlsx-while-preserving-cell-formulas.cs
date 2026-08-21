@@ -1,61 +1,80 @@
-// Title: Save XLSX with a Progress‑Bar Chart while Preserving Formulas using Aspose.Cells for .NET (C#)
-// Description: Creates a new Workbook, fills columns A and B with task labels and percentage values, adds a Bar chart that mimics a progress bar, disables formula recalculation by setting CalculateOnSave = false, and saves the file as XLSX so the original cell formulas remain unchanged.
-// Keywords: Aspose.Cells C# save workbook | preserve formulas Aspose.Cells | progress bar chart Aspose.Cells | CalculateOnSave false | export chart to XLSX | .NET chart example | Aspose.Cells Bar chart
-// Common Searches: save Aspose.Cells workbook without recalculating formulas | create progress bar chart in Aspose.Cells C# | disable CalculateOnSave Aspose.Cells .NET | export Aspose.Cells chart to XLSX | keep formulas when saving Excel with Aspose.Cells
-// Developer Intent: Generate an XLSX file that contains a progress‑bar chart and retains the original cell formulas.
-// Use Cases: Produce a project‑status report with a visual progress bar that can be updated later because formulas stay intact. | Automate batch creation of task‑tracking workbooks for a team, each with a progress chart that preserves calculation logic. | Expose a web API that returns a ready‑to‑download XLSX containing a progress bar, without triggering formula recalculation on the server.
-// AI Prompts: Show how to apply custom colors to the progress‑bar chart while keeping CalculateOnSave disabled. | Provide code to open an existing workbook, modify the progress values, and save without recalculating formulas. | Explain how to export the progress‑bar chart as an image and embed it in the same workbook without affecting formulas.
+// Title: Save a Progress Bar Chart Workbook to XLSX with Formulas Using Aspose.Cells for .NET
+// Description: C# example that creates a workbook, adds task names, completed percentages and a formula‑based remaining column, builds a stacked bar chart to act as a progress bar, and saves the file as XLSX while keeping all cell formulas intact.
+// Keywords: Aspose.Cells | C# | .NET | SaveFormat.Xlsx | stacked bar chart | progress bar chart | preserve formulas | workbook export | Excel automation | chart example
+// Common Searches: Aspose.Cells save workbook to xlsx with formulas | C# stacked progress bar chart Aspose.Cells | export chart workbook without losing formulas | how to keep formulas when saving Aspose.Cells file | create progress bar chart in Excel using Aspose.Cells
+// Developer Intent: Generate an Excel workbook that contains a stacked progress‑bar chart and save it as an XLSX file while ensuring all formulas remain functional.
+// Use Cases: Automated project status reports that include editable progress‑bar visuals. | Weekly task‑tracking sheets where remaining work is calculated by formulas and displayed in a chart. | Dashboards that combine formula‑driven data with stacked bar charts for end‑user interaction in Excel.
+// AI Prompts: Write C# code with Aspose.Cells to add a stacked progress‑bar chart and save the workbook as XLSX preserving formulas. | Show how to modify the chart type or data range in the example without breaking formula references. | Suggest ways to apply conditional formatting to the progress‑bar cells before exporting the workbook.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsProgressBarChart
+namespace ProgressBarChartSaveExample
 {
-    // Creates a new Workbook, fills columns A and B with task labels and percentage values, adds a Bar chart that mimics a progress bar, disables formula recalculation by setting CalculateOnSave = false, and saves the file as XLSX so the original cell formulas remain unchanged.
+    // C# example that creates a workbook, adds task names, completed percentages and a formula‑based remaining column, builds a stacked bar chart to act as a progress bar, and saves the file as XLSX while keeping all cell formulas intact.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook (lifecycle: create)
+                // Create a new workbook
                 Workbook workbook = new Workbook();
 
                 // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
 
-                // Populate sample data that will be used by the progress‑bar chart
-                // Column A – Labels, Column B – Values (percentage)
-                cells["A1"].PutValue("Task 1");
-                cells["A2"].PutValue("Task 2");
-                cells["A3"].PutValue("Task 3");
-                cells["B1"].PutValue(0.4); // 40 %
-                cells["B2"].PutValue(0.7); // 70 %
-                cells["B3"].PutValue(0.9); // 90 %
+                // -------------------------------------------------
+                // Prepare data for a simple progress bar chart
+                // -------------------------------------------------
+                // Column A: Task names
+                sheet.Cells["A1"].PutValue("Task");
+                sheet.Cells["A2"].PutValue("Design");
+                sheet.Cells["A3"].PutValue("Development");
+                sheet.Cells["A4"].PutValue("Testing");
 
-                // Add a bar chart that will act as a progress bar
-                int chartIndex = sheet.Charts.Add(ChartType.Bar, 5, 0, 20, 10);
+                // Column B: Completed percentage (as numbers)
+                sheet.Cells["B1"].PutValue("Completed");
+                sheet.Cells["B2"].PutValue(30);
+                sheet.Cells["B3"].PutValue(60);
+                sheet.Cells["B4"].PutValue(90);
+
+                // Column C: Remaining percentage calculated by a formula
+                sheet.Cells["C1"].PutValue("Remaining");
+                // Formula: =100-B2 (and copy down)
+                sheet.Cells["C2"].Formula = "=100-B2";
+                sheet.Cells["C3"].Formula = "=100-B3";
+                sheet.Cells["C4"].Formula = "=100-B4";
+
+                // -------------------------------------------------
+                // Add a stacked bar chart to represent progress
+                // -------------------------------------------------
+                // Use BarStacked (correct enum value) for a stacked bar chart
+                int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 6, 0, 20, 10);
                 Chart chart = sheet.Charts[chartIndex];
 
-                // Set the data series (values) and category (labels)
-                chart.NSeries.Add("B1:B3", true);
-                chart.NSeries.CategoryData = "A1:A3";
+                // Add Completed series (first part of the bar)
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries[0].Name = "Completed";
+
+                // Add Remaining series (second part of the bar)
+                chart.NSeries.Add("C2:C4", true);
+                chart.NSeries[1].Name = "Remaining";
+
+                // Set category (task names)
+                chart.NSeries.CategoryData = "A2:A4";
 
                 // Optional: format the chart to look like a progress bar
-                chart.Title.Text = "Progress Bar";
-                chart.ShowDataTable = false;               // corrected property
+                chart.Title.Text = "Project Progress";
                 chart.Legend.Position = LegendPositionType.Bottom;
 
-                // Ensure formulas are not recalculated on save (preserve original formulas)
-                workbook.Settings.FormulaSettings.CalculateOnSave = false;
-
-                // Save the workbook to XLSX format (lifecycle: save)
+                // -------------------------------------------------
+                // Save the workbook to XLSX while preserving formulas
+                // -------------------------------------------------
                 string outputPath = "ProgressBarChart.xlsx";
                 workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {

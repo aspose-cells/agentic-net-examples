@@ -1,59 +1,74 @@
-// Title: Add a Digital Signature Image to Every PDF Page from Excel with Aspose.Cells (C#)
-// Description: C# example that loads an Excel workbook, inserts a PNG signature picture into each worksheet, adjusts the bottom margin, and saves the workbook as a PDF so the signature appears at the bottom of every PDF page.
-// Keywords: Aspose.Cells | C# | PDF | digital signature | add picture to worksheet | bottom margin | export Excel to PDF | overlay image on PDF | signature image | page setup
-// Common Searches: Aspose.Cells add signature to PDF | C# overlay image on each PDF page from Excel | How to place a picture at the bottom of PDF pages using Aspose.Cells | Set bottom margin and insert logo in Aspose.Cells PDF export | Add same image to all worksheets before PDF conversion
-// Developer Intent: Insert the same signature image onto the bottom of every page of a PDF generated from an Excel workbook.
-// Use Cases: Brand reports with company logo on each page | Legal documents requiring a signed stamp on every page | Automated invoice generation with authorized signature footer | Batch processing of workbooks to embed a compliance watermark before PDF export
-// AI Prompts: Generate C# code using Aspose.Cells to add a PNG signature at the bottom of each PDF page after converting from Excel. | Explain how to calculate picture coordinates relative to the page bottom margin in Aspose.Cells. | Show how to apply a picture to all worksheets and export a single multi‑sheet PDF with the image on every page.
+// Title: Add a digital signature image to the footer of each PDF page when converting Excel to PDF with Aspose.Cells for .NET
+// Description: C# sample that loads an Excel workbook, verifies a PNG signature file, inserts the image a few rows below the last used row on every worksheet, scales it to the width of ten columns while keeping the original aspect ratio, and saves the workbook as a PDF so the signature appears in the footer of each generated page.
+// Keywords: Aspose.Cells add image | digital signature footer PDF | Excel to PDF with picture | C# Aspose.Cells image scaling | place image at bottom of worksheet | preserve aspect ratio Aspose.Cells | PDF footer image automation
+// Common Searches: how to add a signature image to each PDF page using Aspose.Cells | Aspose.Cells insert picture at worksheet bottom before PDF export | scale inserted image to column width in Aspose.Cells C# | preserve image aspect ratio when adding footer in Excel to PDF conversion | automate PDF footer logo with Aspose.Cells
+// Developer Intent: Insert a digital signature (or any footer image) into every worksheet so it appears at the bottom of each page when the workbook is saved as a PDF.
+// Use Cases: Brand every exported report with a company logo in the PDF footer. | Attach a handwritten signature to invoices before PDF generation for compliance. | Add a security seal or certification badge to all pages of a generated statement.
+// AI Prompts: Write C# code using Aspose.Cells to place an image a few rows below the last data row on each worksheet, fit it to ten column widths, keep its aspect ratio, and export the workbook to PDF. | Explain how to calculate printable width from column widths in Aspose.Cells and apply it to a footer picture. | Provide error‑handling patterns for missing Excel files or signature images when adding a footer image before PDF conversion.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// C# example that loads an Excel workbook, inserts a PNG signature picture into each worksheet, adjusts the bottom margin, and saves the workbook as a PDF so the signature appears at the bottom of every PDF page.
-class OverlaySignatureOnPdf
+// C# sample that loads an Excel workbook, verifies a PNG signature file, inserts the image a few rows below the last used row on every worksheet, scales it to the width of ten columns while keeping the original aspect ratio, and saves the workbook as a PDF so the signature appears in the footer of each generated page.
+class Program
 {
     static void Main()
     {
-        // Paths for source Excel file, signature image, and output PDF
-        string sourceExcelPath = "input.xlsx";
-        string signatureImagePath = "signature.png";
-        string outputPdfPath = "output.pdf";
-
         try
         {
-            // Verify that the input files exist
-            if (!File.Exists(sourceExcelPath))
-                throw new FileNotFoundException($"Source Excel file not found: {sourceExcelPath}");
-            if (!File.Exists(signatureImagePath))
-                throw new FileNotFoundException($"Signature image file not found: {signatureImagePath}");
+            // Path to the source workbook
+            string sourcePath = "input.xlsx";
 
-            // Load the workbook
-            Workbook workbook = new Workbook(sourceExcelPath);
-
-            // Read the signature image into a byte array
-            byte[] signatureImageBytes = File.ReadAllBytes(signatureImagePath);
-
-            // Apply the signature image to each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the source file exists
+            if (!File.Exists(sourcePath))
             {
-                // Add the signature picture to the worksheet (positioned at cell A1)
-                using (MemoryStream ms = new MemoryStream(signatureImageBytes))
-                {
-                    sheet.Pictures.Add(0, 0, ms);
-                }
-
-                // Adjust bottom margin to ensure the image is visible
-                sheet.PageSetup.BottomMargin = 20; // 20 points (~0.28 inch)
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
             }
 
-            // Save the workbook as PDF
-            workbook.Save(outputPdfPath, SaveFormat.Pdf);
+            // Load the workbook
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Path to the digital signature image
+            string signatureImagePath = "signature.png";
+
+            // Verify that the signature image exists
+            if (!File.Exists(signatureImagePath))
+            {
+                Console.WriteLine($"Signature image not found: {signatureImagePath}");
+                return;
+            }
+
+            // Add the signature image to the bottom of each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Determine a row near the bottom of the used range
+                int lastUsedRow = sheet.Cells.MaxDataRow;
+                int targetRow = lastUsedRow + 2; // a couple of rows below the data
+
+                // Insert the picture anchored to the calculated cell (column 0 = A)
+                int pictureIndex = sheet.Pictures.Add(targetRow, 0, signatureImagePath);
+                Picture picture = sheet.Pictures[pictureIndex];
+
+                // Approximate printable width using the width of several columns (e.g., 10 columns)
+                int printableWidth = sheet.Cells.GetColumnWidthPixel(0) * 10;
+                picture.Width = printableWidth;
+
+                // Preserve aspect ratio
+                double aspectRatio = (double)picture.OriginalHeight / picture.OriginalWidth;
+                picture.Height = (int)(picture.Width * aspectRatio);
+            }
+
+            // Save the workbook as PDF; the signature image will appear at the bottom of each page
+            string outputPath = "output.pdf";
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook saved as PDF: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

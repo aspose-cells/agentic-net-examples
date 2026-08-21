@@ -1,77 +1,77 @@
-// Title: Generate a Gantt‑style stacked bar chart with Aspose.Cells C# from worksheet data
-// Description: Creates a new workbook, writes task names, start dates and durations into cells, adds a stacked bar chart, binds the duration range as series values, uses the start‑date range as XValues, sets task names as category labels, and saves the file as an Excel Gantt‑style timeline.
-// Keywords: Aspose.Cells | C# | Gantt chart | stacked bar chart | XValues | CategoryData | project timeline | Excel automation | populate chart series | date axis
-// Common Searches: Aspose.Cells C# Gantt chart example | How to bind start dates to X axis in Aspose.Cells chart | Create stacked bar chart with dates using Aspose.Cells | Set category labels for chart series Aspose.Cells | Generate project timeline Excel with Aspose.Cells
-// Developer Intent: Build an Excel workbook that displays a project schedule as a Gantt‑style stacked bar chart by reading task data from worksheet cells.
-// Use Cases: Automatically produce visual project schedules for multiple initiatives directly from Excel data. | Export a printable timeline report for stakeholders without manual chart configuration. | Integrate Gantt chart generation into CI/CD pipelines that deliver project status updates in Excel format.
-// AI Prompts: Add a second series to show completed work and color it differently in the Gantt chart. | Format the X‑axis to display calendar dates instead of serial numbers in Aspose.Cells. | Create conditional formatting that changes bar colors based on task status (e.g., completed, in‑progress). | Generate a dynamic Gantt chart that expands when new rows are added to the task table.
+// Title: Aspose.Cells C# – Build a Gantt chart from worksheet start dates and durations
+// Description: Creates a new workbook, writes task names, start dates and duration values, adds a stacked‑bar chart, uses the start‑date range as a hidden series and the duration range as the visible series, sets the task names as the category axis, and saves the file as an Excel Gantt chart.
+// Keywords: Aspose.Cells Gantt chart C# | stacked bar Gantt Aspose.Cells | populate chart series from cells | hide start series Aspose.Cells | set category axis task names | Excel project schedule C# | Aspose.Cells chart series example
+// Common Searches: Aspose.Cells create Gantt chart C# | how to add start date series to stacked bar chart Aspose.Cells | hide start series in Gantt chart Aspose.Cells | set task names as Y axis in Aspose.Cells chart | C# example Gantt chart Aspose.Cells
+// Developer Intent: Generate an Excel Gantt chart by reading task name, start date, and duration from worksheet cells and mapping them to a stacked‑bar chart.
+// Use Cases: Automatically visualize project timelines directly from Excel data. | Export task schedules for stakeholder reports without manual charting. | Batch‑process multiple projects to produce consistent Gantt charts.
+// AI Prompts: Show me how to hide the start‑date series so only duration bars appear in the Gantt chart. | Provide C# code to format the date axis with month/day labels in an Aspose.Cells Gantt chart. | Explain how to add data labels that display duration values on each bar of the chart. | Suggest ways to style the Gantt chart (colors, bar height, axis fonts) using Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace GanttChartDemo
+// Creates a new workbook, writes task names, start dates and duration values, adds a stacked‑bar chart, uses the start‑date range as a hidden series and the duration range as the visible series, sets the task names as the category axis, and saves the file as an Excel Gantt chart.
+class GanttChartExample
 {
-    // Creates a new workbook, writes task names, start dates and durations into cells, adds a stacked bar chart, binds the duration range as series values, uses the start‑date range as XValues, sets task names as category labels, and saves the file as an Excel Gantt‑style timeline.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Header row
-                sheet.Cells["A1"].PutValue("Task");
-                sheet.Cells["B1"].PutValue("Start Date");
-                sheet.Cells["C1"].PutValue("Duration");
+            // ----- Sample data for Gantt chart -----
+            // Column A : Task names
+            // Column B : Start dates (as DateTime)
+            // Column C : Duration (in days)
+            sheet.Cells["A1"].PutValue("Task");
+            sheet.Cells["B1"].PutValue("Start");
+            sheet.Cells["C1"].PutValue("Duration");
 
-                // Sample tasks
-                sheet.Cells["A2"].PutValue("Design");
-                sheet.Cells["B2"].PutValue(new DateTime(2023, 1, 1));
-                sheet.Cells["C2"].PutValue(10);
+            sheet.Cells["A2"].PutValue("Planning");
+            sheet.Cells["B2"].PutValue(new DateTime(2023, 1, 1));
+            sheet.Cells["C2"].PutValue(5);
 
-                sheet.Cells["A3"].PutValue("Development");
-                sheet.Cells["B3"].PutValue(new DateTime(2023, 1, 12));
-                sheet.Cells["C3"].PutValue(20);
+            sheet.Cells["A3"].PutValue("Design");
+            sheet.Cells["B3"].PutValue(new DateTime(2023, 1, 6));
+            sheet.Cells["C3"].PutValue(8);
 
-                sheet.Cells["A4"].PutValue("Testing");
-                sheet.Cells["B4"].PutValue(new DateTime(2023, 2, 5));
-                sheet.Cells["C4"].PutValue(8);
+            sheet.Cells["A4"].PutValue("Implementation");
+            sheet.Cells["B4"].PutValue(new DateTime(2023, 1, 14));
+            sheet.Cells["C4"].PutValue(12);
 
-                sheet.Cells["A5"].PutValue("Deployment");
-                sheet.Cells["B5"].PutValue(new DateTime(2023, 2, 15));
-                sheet.Cells["C5"].PutValue(4);
+            sheet.Cells["A5"].PutValue("Testing");
+            sheet.Cells["B5"].PutValue(new DateTime(2023, 1, 26));
+            sheet.Cells["C5"].PutValue(6);
 
-                // Add a stacked bar chart (used to simulate a Gantt chart)
-                int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 7, 0, 25, 15);
-                Chart chart = sheet.Charts[chartIndex];
+            // Determine the last row of data
+            int lastRow = 5;
 
-                // Add series for durations (Y values)
-                int seriesIdx = chart.NSeries.Add("C2:C5", true);
-                Series series = chart.NSeries[seriesIdx];
+            // ----- Add a Gantt chart -----
+            // Use a stacked bar chart to simulate a Gantt chart
+            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 7, 0, 25, 15);
+            Chart chart = sheet.Charts[chartIndex];
 
-                // Set start dates as X values
-                series.XValues = "B2:B5";
+            // Series for start dates (will be hidden by not displaying its legend)
+            int startSeriesIdx = chart.NSeries.Add($"=Sheet1!$B$2:$B${lastRow}", true);
 
-                // Set task names as category (Y‑axis) labels
-                chart.NSeries.CategoryData = "A2:A5";
+            // Series for task durations (visible bars)
+            int durationSeriesIdx = chart.NSeries.Add($"=Sheet1!$C$2:$C${lastRow}", true);
 
-                // Optional series name
-                series.Name = "Project Timeline";
+            // Set the category (Y) axis to the task names
+            chart.NSeries.CategoryData = $"=Sheet1!$A$2:$A${lastRow}";
 
-                // Save the workbook
-                string outputPath = "GanttChartDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Optional: give a name to the duration series
+            Series durationSeries = chart.NSeries[durationSeriesIdx];
+            durationSeries.Name = "Duration";
+
+            // Save the workbook
+            workbook.Save("GanttChartExample.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

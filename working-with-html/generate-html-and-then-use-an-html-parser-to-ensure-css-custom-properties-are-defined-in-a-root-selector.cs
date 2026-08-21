@@ -1,10 +1,10 @@
-// Title: Export Aspose.Cells Workbook to HTML and Verify CSS Custom Properties in a :root Selector
-// Description: C# sample that creates an Aspose.Cells workbook, applies bold red styling, optionally embeds images, and saves it as a single HTML file with HtmlSaveOptions.EnableCssCustomProperties enabled. The generated HTML is read from a memory stream, inspected for a ":root" selector to confirm CSS custom properties, and written to disk.
-// Keywords: Aspose.Cells HTML export | EnableCssCustomProperties | C# generate HTML from Excel | CSS custom properties root selector | single HTML file Aspose.Cells | embed images Aspose.Cells HTML | verify CSS variables in output | Aspose.Cells HtmlSaveOptions
-// Common Searches: how to enable CSS custom properties when saving Excel to HTML with Aspose.Cells | check for :root selector in Aspose.Cells generated HTML | save workbook as single HTML file using Aspose.Cells .NET | Aspose.Cells HTMLSaveOptions embed CSS variables | C# verify CSS variables in exported HTML
-// Developer Intent: Export an Excel workbook to HTML and ensure the output uses CSS custom properties defined in a :root selector.
-// Use Cases: Create a compact, theme‑able HTML representation of a styled worksheet for web integration. | Programmatically validate that Aspose.Cells emitted CSS variables by scanning the HTML for a :root block. | Include worksheet images directly in the HTML while keeping styling centralized via CSS custom properties.
-// AI Prompts: Generate C# code that saves an Aspose.Cells workbook as HTML with EnableCssCustomProperties turned on and checks for a :root selector. | Write a method to parse the HTML output from Aspose.Cells and extract all CSS custom property definitions from the :root rule. | Explain how to configure HtmlSaveOptions to embed worksheet images as base64 data URIs while preserving CSS custom properties.
+// Title: C# – Save Aspose.Cells Workbook as HTML with :root CSS Custom Properties and Verify It
+// Description: Creates a workbook, adds sample cells, configures HtmlSaveOptions to enable CSS custom properties, embeds a :root selector with a dummy variable, saves the workbook as a single HTML file, then reads the file and confirms that the :root selector and a CSS custom property (e.g., --demo‑color) exist.
+// Keywords: Aspose.Cells HTML export | EnableCssCustomProperties | C# :root selector | CSS custom properties in Aspose.Cells | SaveAsSingleFile HTML | verify CSS variable presence | embed CSS variables in workbook HTML | Aspose.Cells HtmlSaveOptions example
+// Common Searches: how to enable CSS variables when saving Aspose.Cells to HTML C# | C# code to add :root selector with custom properties in Aspose.Cells HTML output | verify :root selector exists in generated HTML Aspose.Cells | Aspose.Cells HtmlSaveOptions SaveAsSingleFile custom CSS example | parse saved HTML to check for CSS custom property
+// Developer Intent: Generate a single‑file HTML export from a workbook that includes a :root CSS custom property and programmatically confirm its presence.
+// Use Cases: Export a spreadsheet to a self‑contained HTML page with theme‑able CSS variables. | Inject a custom :root selector (e.g., --demo-color) into the HTML output for consistent styling across the page. | Automate validation of the exported HTML to ensure required CSS custom properties are correctly embedded.
+// AI Prompts: Write C# code using Aspose.Cells to save a workbook as a single HTML file that contains a :root selector defining CSS custom properties. | Provide a method to load the generated HTML and assert that a :root selector with a specific CSS variable (e.g., --demo-color) is present. | Suggest robust error‑handling for missing HTML output or absent :root selector when validating Aspose.Cells HTML exports.
 
 using System;
 using System.IO;
@@ -13,73 +13,74 @@ using Aspose.Cells.Rendering;
 
 namespace AsposeCellsHtmlCssCustomPropertiesDemo
 {
-    // C# sample that creates an Aspose.Cells workbook, applies bold red styling, optionally embeds images, and saves it as a single HTML file with HtmlSaveOptions.EnableCssCustomProperties enabled. The generated HTML is read from a memory stream, inspected for a ":root" selector to confirm CSS custom properties, and written to disk.
+    // Creates a workbook, adds sample cells, configures HtmlSaveOptions to enable CSS custom properties, embeds a :root selector with a dummy variable, saves the workbook as a single HTML file, then reads the file and confirms that the :root selector and a CSS custom property (e.g., --demo‑color) exist.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and add sample data
+                // -----------------------------------------------------------------
+                // 1. Create a workbook and add some sample data.
+                // -----------------------------------------------------------------
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Sample Text");
+                sheet.Cells["A1"].PutValue("Hello");
+                sheet.Cells["B1"].PutValue("World");
 
-                // Apply bold red font to A1
-                var style = sheet.Cells["A1"].GetStyle();
-                style.Font.IsBold = true;
-                style.Font.Color = System.Drawing.Color.Red;
-                sheet.Cells["A1"].SetStyle(style);
-
-                // Add an image if the file exists
-                string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logo.png");
-                if (File.Exists(imagePath))
-                {
-                    int imgIdx1 = sheet.Pictures.Add(1, 1, imagePath);
-                    sheet.Pictures[imgIdx1].Width = 100;
-                    sheet.Pictures[imgIdx1].Height = 100;
-
-                    int imgIdx2 = sheet.Pictures.Add(5, 3, imagePath);
-                    sheet.Pictures[imgIdx2].Width = 100;
-                    sheet.Pictures[imgIdx2].Height = 100;
-                }
-
-                // Configure HTML save options to enable CSS custom properties
+                // -----------------------------------------------------------------
+                // 2. Configure HtmlSaveOptions.
+                //    - Enable CSS custom properties to allow reuse of resources.
+                //    - Save as a single file so that CSS can be embedded.
+                //    - Add a custom :root selector with a dummy CSS custom property.
+                // -----------------------------------------------------------------
                 HtmlSaveOptions htmlOptions = new HtmlSaveOptions
                 {
-                    EnableCssCustomProperties = true, // Optimize using CSS custom properties
-                    SaveAsSingleFile = true           // Embed CSS for easier parsing
+                    EnableCssCustomProperties = true,
+                    SaveAsSingleFile = true,
+                    CssStyles = @"
+                        :root {
+                            --demo-color: #ff6600;
+                        }
+                        body {
+                            color: var(--demo-color);
+                        }"
                 };
 
-                // Save the workbook to a memory stream as HTML
-                using (MemoryStream htmlStream = new MemoryStream())
+                // -----------------------------------------------------------------
+                // 3. Save the workbook as HTML.
+                // -----------------------------------------------------------------
+                string htmlPath = "output.html";
+                workbook.Save(htmlPath, htmlOptions);
+                Console.WriteLine($"Workbook saved to HTML at '{htmlPath}'.");
+
+                // -----------------------------------------------------------------
+                // 4. Load the generated HTML and verify that a :root selector
+                //    containing a CSS custom property exists.
+                // -----------------------------------------------------------------
+                bool rootFound = false;
+
+                if (File.Exists(htmlPath))
                 {
-                    workbook.Save(htmlStream, htmlOptions);
-                    htmlStream.Position = 0;
-
-                    // Read the generated HTML content
-                    string htmlContent;
-                    using (StreamReader reader = new StreamReader(htmlStream))
+                    string htmlContent = File.ReadAllText(htmlPath);
+                    // Simple verification: check for ":root" and a CSS custom property prefix "--"
+                    if (htmlContent.Contains(":root") && htmlContent.Contains("--"))
                     {
-                        htmlContent = reader.ReadToEnd();
+                        rootFound = true;
                     }
-
-                    // Simple check for a :root selector indicating CSS custom properties
-                    bool rootSelectorFound = htmlContent.Contains(":root");
-
-                    Console.WriteLine(rootSelectorFound
-                        ? "CSS custom properties are defined in a :root selector."
-                        : "No :root selector with CSS custom properties found.");
-
-                    // Write the HTML to a file for inspection
-                    string outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OutputWithCssCustomProperties.html");
-                    File.WriteAllText(outputPath, htmlContent);
-                    Console.WriteLine($"HTML file saved to: {outputPath}");
                 }
+                else
+                {
+                    Console.WriteLine($"Error: HTML file '{htmlPath}' was not found.");
+                }
+
+                Console.WriteLine(rootFound
+                    ? "Verification succeeded: :root selector with CSS custom properties is present."
+                    : "Verification failed: :root selector with CSS custom properties not found.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

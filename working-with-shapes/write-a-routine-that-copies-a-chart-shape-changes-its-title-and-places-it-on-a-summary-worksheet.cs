@@ -1,91 +1,99 @@
-// Title: Copy a ChartShape, rename its title, and place it on a summary sheet with Aspose.Cells for .NET
-// Description: Creates a workbook, adds sample data and a column chart, retrieves the chart's ChartShape, copies it to a new "Summary" worksheet using ShapeCollection.AddCopy, changes the copied chart's title, and saves the file as ChartCopySummary.xlsx.
-// Keywords: Aspose.Cells | .NET | ChartShape | AddCopy | copy chart | change chart title | summary worksheet | C# example
-// Common Searches: Aspose.Cells copy chart to another worksheet | duplicate chart shape C# Aspose.Cells | set title of copied chart Aspose.Cells | ShapeCollection.AddCopy ChartShape example | copy and rename chart in Aspose.Cells
-// Developer Intent: Duplicate an existing chart shape, modify its title, and store it on a summary worksheet.
-// Use Cases: Build a dashboard that consolidates source charts onto a single summary page with uniform titles. | Generate a financial report that reuses charts from multiple sheets without recreating them. | Automate chart reuse across worksheets while applying custom titles for each copy.
-// AI Prompts: Show C# code using Aspose.Cells to copy a ChartShape from one worksheet to another and set a new title. | Explain how ShapeCollection.AddCopy works for ChartShape objects and how to access the copied chart for property changes. | Provide a loop that copies several charts to a summary sheet and assigns distinct titles programmatically.
+// Title: Copy and Rename a Chart Shape to a Summary Worksheet with Aspose.Cells for .NET
+// Description: Loads a workbook, ensures a chart exists on the first sheet, copies its ChartShape to a "Summary" worksheet, updates the copied shape's title, and saves the result. Includes fallback chart creation and position control.
+// Keywords: Aspose.Cells copy chart shape | C# chart duplication | change chart title Aspose | add chart to summary sheet | ChartShape AddCopy | .NET Excel chart automation
+// Common Searches: Aspose.Cells copy chart to another worksheet | C# change chart title after copying | How to add a chart to a Summary sheet with Aspose | Duplicate Excel chart programmatically .NET | Copy first chart and rename it using Aspose.Cells
+// Developer Intent: Duplicate the first chart in a workbook, modify its title, and place the copy on a dedicated Summary worksheet using Aspose.Cells for .NET.
+// Use Cases: Create a consolidated report that gathers key charts onto a single Summary sheet. | Automate chart replication for presentation decks while reflecting a new context in the title. | Build a workbook template that always includes a pre‑positioned chart on a Summary tab.
+// AI Prompts: Generate C# code with Aspose.Cells to copy a ChartShape from one worksheet to another and set a new title. | Explain how to check for existing charts on a sheet and create a default chart if none are found before copying. | Show how to position a copied chart shape at specific rows and columns on the target worksheet using Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data and a column chart, retrieves the chart's ChartShape, copies it to a new "Summary" worksheet using ShapeCollection.AddCopy, changes the copied chart's title, and saves the file as ChartCopySummary.xlsx.
-public class ChartCopyRoutine
+// Loads a workbook, ensures a chart exists on the first sheet, copies its ChartShape to a "Summary" worksheet, updates the copied shape's title, and saves the result. Includes fallback chart creation and position control.
+public class ChartCopyUtility
 {
-    public static void Run()
+    // Copies the first chart from the first worksheet, changes its title,
+    // and places the copied chart shape on a worksheet named "Summary".
+    public static void CopyChartToSummary(string sourceFilePath, string outputFilePath)
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // -------------------------------------------------
-            // 1. Prepare source worksheet with a sample chart
-            // -------------------------------------------------
-            Worksheet sourceSheet = workbook.Worksheets[0];
-            sourceSheet.Name = "Data";
-
-            // Populate some data for the chart
-            sourceSheet.Cells["A1"].PutValue("Category");
-            sourceSheet.Cells["A2"].PutValue("A");
-            sourceSheet.Cells["A3"].PutValue("B");
-            sourceSheet.Cells["A4"].PutValue("C");
-            sourceSheet.Cells["B1"].PutValue("Value");
-            sourceSheet.Cells["B2"].PutValue(10);
-            sourceSheet.Cells["B3"].PutValue(20);
-            sourceSheet.Cells["B4"].PutValue(30);
-
-            // Add a column chart
-            int chartIndex = sourceSheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = sourceSheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // -------------------------------------------------
-            // 2. Access the ChartShape (the visual object of the chart)
-            // -------------------------------------------------
-            ChartShape sourceChartShape = chart.ChartObject; // ChartObject returns ChartShape
-
-            // -------------------------------------------------
-            // 3. Create (or get) a summary worksheet where the copy will be placed
-            // -------------------------------------------------
-            Worksheet summarySheet = workbook.Worksheets.Add("Summary");
-
-            // -------------------------------------------------
-            // 4. Copy the chart shape to the summary worksheet
-            //    Using ShapeCollection.AddCopy(sourceShape, topRow, top, leftColumn, left)
-            // -------------------------------------------------
-            ShapeCollection summaryShapes = summarySheet.Shapes;
-            // Position the copied chart at row 2, column 2 (pixel offsets set to 0)
-            Shape copiedShape = summaryShapes.AddCopy(sourceChartShape, 2, 0, 2, 0);
-
-            // -------------------------------------------------
-            // 5. Change the title of the copied chart shape
-            //    The returned Shape is actually a ChartShape, so cast it
-            // -------------------------------------------------
-            if (copiedShape is ChartShape copiedChartShape)
+            // Ensure source file exists; if not, create a minimal workbook.
+            if (!File.Exists(sourceFilePath))
             {
-                copiedChartShape.Title = "Summary Chart";
+                var wb = new Workbook();
+                wb.Worksheets[0].Name = "Sheet1";
+                wb.Save(sourceFilePath);
             }
 
-            // -------------------------------------------------
-            // 6. Save the workbook
-            // -------------------------------------------------
-            workbook.Save("ChartCopySummary.xlsx");
+            // Load the workbook (load rule)
+            Workbook workbook = new Workbook(sourceFilePath);
+
+            // Ensure there is at least one worksheet with a chart
+            Worksheet sourceSheet = workbook.Worksheets[0];
+            if (sourceSheet.Charts.Count == 0)
+            {
+                // Create a simple chart if none exists (create rule)
+                int chartIdx = sourceSheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                Chart chart = sourceSheet.Charts[chartIdx];
+                sourceSheet.Cells["A1"].PutValue("Category");
+                sourceSheet.Cells["A2"].PutValue("A");
+                sourceSheet.Cells["A3"].PutValue("B");
+                sourceSheet.Cells["B2"].PutValue(10);
+                sourceSheet.Cells["B3"].PutValue(20);
+                chart.NSeries.Add("B2:B3", true);
+                chart.NSeries.CategoryData = "A2:A3";
+            }
+
+            // Get the first chart's ChartShape (source shape)
+            Chart sourceChart = sourceSheet.Charts[0];
+            ChartShape sourceChartShape = sourceChart.ChartObject;
+
+            // Get or create the summary worksheet
+            Worksheet summarySheet = workbook.Worksheets["Summary"];
+            if (summarySheet == null)
+            {
+                summarySheet = workbook.Worksheets.Add("Summary");
+            }
+
+            // Copy the chart shape to the summary sheet at a desired position
+            // Parameters: topRow, top (pixel offset), leftColumn, left (pixel offset)
+            Shape copiedShape = summarySheet.Shapes.AddCopy(sourceChartShape, 2, 0, 2, 0);
+
+            // Change the title of the copied shape
+            copiedShape.Title = "Summary Chart";
+
+            // Save the workbook (save rule)
+            workbook.Save(outputFilePath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error during chart copy operation: {ex.Message}");
         }
     }
 }
 
 public class Program
 {
+    // Entry point required for compilation
     public static void Main(string[] args)
     {
-        ChartCopyRoutine.Run();
+        try
+        {
+            // Example file paths; adjust as needed.
+            string sourcePath = "SourceWorkbook.xlsx";
+            string outputPath = "OutputWorkbook.xlsx";
+
+            ChartCopyUtility.CopyChartToSummary(sourcePath, outputPath);
+
+            Console.WriteLine("Chart copy operation completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unhandled exception: {ex.Message}");
+        }
     }
 }

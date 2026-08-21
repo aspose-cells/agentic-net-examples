@@ -1,55 +1,43 @@
+// Title: Convert culture‑specific numeric strings to numbers in Aspose.Cells for .NET
+// Description: Demonstrates how to set workbook decimal and group separators (e.g., German format), insert strings like "1,23" and "4.567,89", run ConvertStringToNumericValue to turn convertible text into numeric values, verify the results, and save the workbook.
+// Keywords: Aspose.Cells ConvertStringToNumericValue | culture specific number parsing .NET | German decimal separator | NumberDecimalSeparator Aspose.Cells | NumberGroupSeparator Aspose.Cells | C# spreadsheet numeric conversion | localized number format Excel | parse European numbers Aspose
+// Common Searches: Aspose.Cells parse German numbers | Convert string cells to numeric with custom separators .NET | Set NumberDecimalSeparator in Aspose.Cells workbook | ConvertStringToNumericValue not handling group separator | C# example for culture specific numeric conversion in Excel
+// Developer Intent: The developer needs to transform text cells that use locale‑specific decimal and thousands separators into true numeric values without affecting non‑numeric entries.
+// Use Cases: Import CSV files containing European number formats and convert them for calculations. | Load a workbook created in a localized environment, apply custom separators, and ensure formulas evaluate correctly. | Validate user‑entered numeric strings in a spreadsheet, converting only valid entries while preserving invalid text.
+// AI Prompts: Show C# code that converts culture‑specific numeric strings to numbers after setting custom decimal and group separators in Aspose.Cells. | Explain how to detect and convert only convertible string cells while leaving non‑numeric values unchanged. | Provide guidance on handling conversion failures or exceptions when using ConvertStringToNumericValue.
+
 using System;
 using Aspose.Cells;
 
-class ConvertNumericStringsDemo
+// Demonstrates how to set workbook decimal and group separators (e.g., German format), insert strings like "1,23" and "4.567,89", run ConvertStringToNumericValue to turn convertible text into numeric values, verify the results, and save the workbook.
+class Program
 {
     static void Main()
     {
         // Create a new workbook
         Workbook wb = new Workbook();
 
-        // Set culture‑specific separators (comma as decimal, dot as group)
+        // Set culture‑specific decimal and group separators (e.g., German format)
         wb.Settings.NumberDecimalSeparator = ',';
         wb.Settings.NumberGroupSeparator = '.';
 
-        // Get the cells collection of the first worksheet
+        // Access the first worksheet's cells
         Cells cells = wb.Worksheets[0].Cells;
 
-        // Populate a range with numeric strings that use the comma decimal separator
-        cells["A1"].PutValue("1,23");
-        cells["A2"].PutValue("4,567");
-        cells["A3"].PutValue("12,34");
-        cells["A4"].PutValue("7,89");
-        cells["A5"].PutValue("0,001");
+        // Insert numeric strings that use the specified separators
+        cells["A1"].PutValue("1,23");          // Simple decimal
+        cells["A2"].PutValue("4.567,89");      // Group separator with decimal
+        cells["A3"].PutValue("not a number"); // Non‑numeric string
 
-        // Populate another range with strings that use a dot decimal separator (will stay as strings)
-        cells["B1"].PutValue("5.67");
-        cells["B2"].PutValue("8.90");
-        cells["B3"].PutValue("3.1415");
-        cells["B4"].PutValue("2.718");
-        cells["B5"].PutValue("6.022e23");
-
-        // Convert string values to numeric where possible, respecting the workbook's separators
+        // Convert all convertible string values to numeric values
         cells.ConvertStringToNumericValue();
 
-        // Display the conversion results
-        for (int row = 0; row < 5; row++)
-        {
-            Cell cellA = cells[row, 0]; // Column A
-            Cell cellB = cells[row, 1]; // Column B
+        // Output the converted values to verify correct parsing
+        Console.WriteLine("A1 numeric value: " + cells["A1"].DoubleValue);
+        Console.WriteLine("A2 numeric value: " + cells["A2"].DoubleValue);
+        Console.WriteLine("A3 type after conversion: " + cells["A3"].Value.GetType());
 
-            string valueA = cellA.Type == CellValueType.IsNumeric
-                ? cellA.DoubleValue.ToString()
-                : cellA.StringValue;
-
-            string valueB = cellB.Type == CellValueType.IsNumeric
-                ? cellB.DoubleValue.ToString()
-                : cellB.StringValue;
-
-            Console.WriteLine($"A{row + 1}: {valueA}   B{row + 1}: {valueB}");
-        }
-
-        // Save the workbook to verify the result in Excel
+        // Save the workbook
         wb.Save("ConvertedNumbers.xlsx");
     }
 }

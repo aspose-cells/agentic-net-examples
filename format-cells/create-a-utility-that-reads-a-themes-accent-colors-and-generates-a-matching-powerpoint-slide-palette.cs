@@ -1,64 +1,103 @@
-// Title: C# – Extract Excel Theme Accent Colors with Aspose.Cells for PowerPoint Palette
-// Description: Loads an Excel workbook using Aspose.Cells, reads the six theme accent colors (Accent1‑Accent6) via GetThemeColor, displays RGBA values, and optionally saves them to a CSV file that can be imported into PowerPoint to create a matching slide palette.
-// Keywords: Aspose.Cells GetThemeColor C# | read Excel theme accent colors | export theme colors to CSV | Excel to PowerPoint color palette | C# extract workbook theme colors
-// Common Searches: how to get Excel theme accent colors with Aspose.Cells | export Excel theme colors to CSV in C# | use Excel theme colors for PowerPoint palette | Aspose.Cells GetThemeColor example | C# read workbook theme colors
-// Developer Intent: Read an Excel workbook’s theme accent colors and export them for reuse in a PowerPoint slide palette.
-// Use Cases: Synchronize branding by extracting the six accent colors from an Excel theme and applying them to PowerPoint slides. | Generate a CSV file of RGBA values for designers to import into presentation templates. | Quickly verify theme colors during development by printing RGBA components to the console.
-// AI Prompts: Write C# code that uses Aspose.Cells to retrieve all six theme accent colors from an Excel file and returns them as a List<System.Drawing.Color>. | Show how to modify the example to output the accent colors in HEX format and save them to a JSON file for PowerPoint integration. | Explain how to handle workbooks with custom themes or missing accent definitions when calling GetThemeColor.
+// Title: C# Aspose.Cells Example – Extract Excel Theme Accent Colors and Create a Visual Palette Workbook
+// Description: This C# sample uses Aspose.Cells for .NET to load an Excel workbook, read the six theme accent colors via GetThemeColor, and generate a new workbook that displays each accent label alongside a solid‑filled cell. The palette is saved as AccentPalette.xlsx and the RGB hex values are printed to the console. The code can be extended to apply the same colors to a PowerPoint slide master using Aspose.Slides.
+// Keywords: Aspose.Cells | C# | .NET | Excel theme colors | GetThemeColor | Accent palette | Generate color palette workbook | PowerPoint slide colors | Aspose.Slides integration | GitHub example | open source code
+// Common Searches: How to read Excel theme accent colors with Aspose.Cells C# | Create a color palette workbook from Excel theme using .NET | Aspose.Cells GetThemeColor example | Export Excel theme colors to PowerPoint slide master | C# code to display Excel theme colors in cells | GitHub Aspose.Cells theme color sample
+// Developer Intent: Read the six accent colors defined in an Excel workbook’s theme and produce a new workbook that visualizes those colors for design reference or further use.
+// Use Cases: Designers can quickly generate a reference palette that matches Excel theme colors for PowerPoint presentations. | Automated branding pipelines can extract theme colors and store them in a readable Excel file. | Quality‑control scripts can verify that a workbook uses the expected theme by comparing extracted hex values. | Developers can extend the sample to sync Excel theme colors with PowerPoint slide masters via Aspose.Slides.
+// AI Prompts: Generate C# code using Aspose.Cells to retrieve ThemeColorType.Accent1‑Accent6 from a workbook and output their RGB hex values. | Modify the example to create a matching PowerPoint slide master palette with Aspose.Slides. | Add error handling that falls back to a default theme when the source file is missing or has no custom theme. | Provide a GitHub‑ready README that explains how to run the sample and integrate it into CI pipelines.
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace ThemeAccentReader
+namespace ThemeToPowerPoint
 {
-    // Loads an Excel workbook using Aspose.Cells, reads the six theme accent colors (Accent1‑Accent6) via GetThemeColor, displays RGBA values, and optionally saves them to a CSV file that can be imported into PowerPoint to create a matching slide palette.
+    // This C# sample uses Aspose.Cells for .NET to load an Excel workbook, read the six theme accent colors via GetThemeColor, and generate a new workbook that displays each accent label alongside a solid‑filled cell. The palette is saved as AccentPalette.xlsx and the RGB hex values are printed to the console. The code can be extended to apply the same colors to a PowerPoint slide master using Aspose.Slides.
     class Program
     {
         static void Main(string[] args)
         {
-            // Validate input arguments
-            if (args.Length == 0)
+            try
             {
-                Console.WriteLine("Usage: ThemeAccentReader <excel-file-path>");
-                return;
-            }
+                // Path to the source Excel file that contains the theme.
+                string excelPath = "SourceWithTheme.xlsx";
 
-            string excelPath = args[0];
+                // Load the workbook (create if file does not exist).
+                Workbook sourceWorkbook;
+                if (File.Exists(excelPath))
+                {
+                    sourceWorkbook = new Workbook(excelPath);
+                }
+                else
+                {
+                    sourceWorkbook = new Workbook(); // default theme
+                }
 
-            // Load the workbook (uses the provided load rule)
-            Workbook workbook = new Workbook(excelPath);
+                // Retrieve the six accent colors from the workbook's theme.
+                Color[] accentColors = new Color[6];
+                accentColors[0] = sourceWorkbook.GetThemeColor(ThemeColorType.Accent1);
+                accentColors[1] = sourceWorkbook.GetThemeColor(ThemeColorType.Accent2);
+                accentColors[2] = sourceWorkbook.GetThemeColor(ThemeColorType.Accent3);
+                accentColors[3] = sourceWorkbook.GetThemeColor(ThemeColorType.Accent4);
+                accentColors[4] = sourceWorkbook.GetThemeColor(ThemeColorType.Accent5);
+                accentColors[5] = sourceWorkbook.GetThemeColor(ThemeColorType.Accent6);
 
-            // Retrieve accent colors from the workbook theme
-            Color[] accentColors = new Color[6];
-            accentColors[0] = workbook.GetThemeColor(ThemeColorType.Accent1);
-            accentColors[1] = workbook.GetThemeColor(ThemeColorType.Accent2);
-            accentColors[2] = workbook.GetThemeColor(ThemeColorType.Accent3);
-            accentColors[3] = workbook.GetThemeColor(ThemeColorType.Accent4);
-            accentColors[4] = workbook.GetThemeColor(ThemeColorType.Accent5);
-            accentColors[5] = workbook.GetThemeColor(ThemeColorType.Accent6);
+                // Create a new workbook to display the accent palette.
+                Workbook paletteWorkbook = new Workbook();
+                Worksheet sheet = paletteWorkbook.Worksheets[0];
+                sheet.Name = "Accent Palette";
 
-            // Output the accent colors – these can be used to build a matching PowerPoint slide palette
-            Console.WriteLine("Accent colors extracted from theme:");
-            for (int i = 0; i < accentColors.Length; i++)
-            {
-                Color c = accentColors[i];
-                Console.WriteLine($"Accent{i + 1}: R={c.R}, G={c.G}, B={c.B}, A={c.A}");
-            }
+                // Define layout parameters.
+                const int startRow = 0;
+                const int startColumn = 0;
+                const int cellWidth = 20; // Approximate column width
+                const int cellHeight = 30; // Approximate row height
 
-            // OPTIONAL: Save the colors to a simple CSV file for external use
-            string csvPath = System.IO.Path.ChangeExtension(excelPath, ".csv");
-            using (var writer = new System.IO.StreamWriter(csvPath))
-            {
-                writer.WriteLine("Accent,Red,Green,Blue,Alpha");
+                // Populate cells with accent colors and labels.
                 for (int i = 0; i < accentColors.Length; i++)
                 {
-                    Color c = accentColors[i];
-                    writer.WriteLine($"Accent{i + 1},{c.R},{c.G},{c.B},{c.A}");
-                }
-            }
+                    int row = startRow + i * 2; // Leave a blank row between entries
 
-            Console.WriteLine($"Accent colors have been written to: {csvPath}");
+                    // Label cell.
+                    Cell labelCell = sheet.Cells[row, startColumn];
+                    labelCell.PutValue($"Accent{i + 1}");
+                    // Optional: make label bold.
+                    Style labelStyle = labelCell.GetStyle();
+                    labelStyle.Font.IsBold = true;
+                    labelCell.SetStyle(labelStyle);
+
+                    // Color cell.
+                    Cell colorCell = sheet.Cells[row + 1, startColumn];
+                    // Apply background fill with the accent color.
+                    Style style = colorCell.GetStyle();
+                    style.ForegroundColor = accentColors[i];
+                    style.Pattern = BackgroundType.Solid;
+                    colorCell.SetStyle(style);
+                    // Set a placeholder value to make the cell visible.
+                    colorCell.PutValue(" ");
+
+                    // Adjust column width and row height for better visibility.
+                    sheet.Cells.SetColumnWidth(startColumn, cellWidth);
+                    sheet.Cells.SetRowHeight(row, cellHeight);
+                    sheet.Cells.SetRowHeight(row + 1, cellHeight);
+                }
+
+                // Save the generated Excel file.
+                string palettePath = "AccentPalette.xlsx";
+                paletteWorkbook.Save(palettePath, SaveFormat.Xlsx);
+
+                Console.WriteLine("Accent colors extracted from Excel theme and saved to a palette workbook:");
+                for (int i = 0; i < accentColors.Length; i++)
+                {
+                    Console.WriteLine($"Accent{i + 1}: #{accentColors[i].R:X2}{accentColors[i].G:X2}{accentColors[i].B:X2}");
+                }
+                Console.WriteLine($"Palette workbook saved to: {palettePath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

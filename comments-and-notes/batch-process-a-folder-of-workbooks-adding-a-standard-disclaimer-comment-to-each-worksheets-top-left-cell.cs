@@ -1,65 +1,96 @@
-// Title: Batch add a disclaimer comment to every worksheet (A1) in multiple Excel files using Aspose.Cells for .NET (C#)
-// Description: Scans a given directory for Excel workbooks (.xlsx, .xls, .xlsm, .xlsb), loads each file with Aspose.Cells, iterates through all worksheets, inserts a confidentiality comment into cell A1, saves the workbook in place, and writes processing results to the console.
-// Keywords: Aspose.Cells batch comment | C# add Excel comment programmatically | disclaimer note A1 multiple workbooks | iterate worksheets Aspose.Cells | automate Excel disclaimer C#
-// Common Searches: how to add the same comment to all sheets in many Excel files using Aspose.Cells | C# batch process Excel workbooks to insert a disclaimer comment | Aspose.Cells loop through worksheets and add notes automatically
-// Developer Intent: Insert a standard disclaimer comment into cell A1 of every worksheet across all Excel files in a specified folder.
-// Use Cases: Automatically embed a confidentiality notice before distributing a batch of reports. | Enforce compliance by adding a legal disclaimer to every sheet in shared Excel templates. | Prepare financial workbooks with a uniform audit comment in a single automated step.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a custom comment to cell A1 of every worksheet in all Excel files within a folder, supporting .xlsx, .xls, .xlsm, and .xlsb extensions. | Explain how to modify the batch script to place the disclaimer in a different cell, set the comment author, or control comment visibility using Aspose.Cells.
+// Title: Batch add a disclaimer comment to every worksheet in a folder of Excel files with Aspose.Cells (C#)
+// Description: C# program that scans a directory for .xlsx, .xls, .xlsm and .xlsb workbooks, opens each file with Aspose.Cells, inserts a visible comment containing a custom disclaimer into cell A1 of every worksheet, and saves the changes back to the original files.
+// Keywords: Aspose.Cells | C# Excel comment | batch add comment | disclaimer comment Excel | process multiple workbooks | add comment to A1 | iterate worksheets | Excel file batch processing | Aspose.Cells .NET | visible comment
+// Common Searches: asp​ose.cells add same comment to all sheets in a folder | c# batch insert disclaimer into Excel workbooks | add visible comment to cell A1 for every worksheet | process all excel files in a directory with Aspose.Cells | automate comment insertion across multiple Excel files
+// Developer Intent: Insert an identical visible disclaimer comment into cell A1 of each worksheet across all Excel files located in a given folder using Aspose.Cells for .NET.
+// Use Cases: Automatically tag internal reports with a confidentiality notice before distribution. | Apply a legal disclaimer to every template stored in a shared repository to ensure compliance. | Provide end‑user guidance by adding a standard instruction comment to each sheet of batch‑generated workbooks.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a custom comment to cell A1 of every worksheet in all Excel files of a folder, supporting .xlsx, .xls, .xlsm, and .xlsb formats. | Enhance the batch disclaimer script with robust error handling, logging of processed and failed files, and skipping of read‑only workbooks. | Show how to create the disclaimer comment as hidden by default and later toggle its visibility via a macro or additional Aspose.Cells code.
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-// Scans a given directory for Excel workbooks (.xlsx, .xls, .xlsm, .xlsb), loads each file with Aspose.Cells, iterates through all worksheets, inserts a confidentiality comment into cell A1, saves the workbook in place, and writes processing results to the console.
-class BatchAddDisclaimer
+namespace BatchWorkbookProcessor
 {
-    // Standard disclaimer text to be added as a comment
-    private const string Disclaimer = "Confidential: This workbook contains proprietary information.";
-
-    static void Main()
+    // C# program that scans a directory for .xlsx, .xls, .xlsm and .xlsb workbooks, opens each file with Aspose.Cells, inserts a visible comment containing a custom disclaimer into cell A1 of every worksheet, and saves the changes back to the original files.
+    public static class DisclaimerAdder
     {
-        // Folder containing the Excel workbooks to process
-        string inputFolder = @"C:\InputWorkbooks";
-
-        // Validate folder existence
-        if (!Directory.Exists(inputFolder))
+        /// <param name="folderPath">Path to the folder containing Excel files.</param>
+        /// <param name="disclaimer">The disclaimer text to insert as a comment.</param>
+        public static void AddDisclaimerToFolder(string folderPath, string disclaimer)
         {
-            Console.WriteLine($"Folder not found: {inputFolder}");
-            return;
-        }
-
-        // Process each Excel file in the folder (supports common extensions)
-        foreach (string filePath in Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly))
-        {
-            string ext = Path.GetExtension(filePath).ToLowerInvariant();
-            if (ext != ".xlsx" && ext != ".xls" && ext != ".xlsm" && ext != ".xlsb")
-                continue; // Skip non‑Excel files
-
-            try
+            if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
             {
-                // Load the workbook using the provided constructor
-                using (Workbook workbook = new Workbook(filePath))
+                Console.WriteLine($"Folder not found: {folderPath}");
+                return;
+            }
+
+            // Supported Excel extensions
+            string[] extensions = new[] { "*.xlsx", "*.xls", "*.xlsm", "*.xlsb" };
+
+            // Gather all matching files from the folder (non‑recursive)
+            List<string> files = new List<string>();
+            foreach (var ext in extensions)
+            {
+                files.AddRange(Directory.GetFiles(folderPath, ext, SearchOption.TopDirectoryOnly));
+            }
+
+            foreach (var filePath in files)
+            {
+                try
                 {
-                    // Iterate through all worksheets
-                    foreach (Worksheet sheet in workbook.Worksheets)
+                    if (!File.Exists(filePath))
                     {
-                        // Add a comment to the top‑left cell (A1)
-                        int commentIndex = sheet.Comments.Add("A1");
-                        sheet.Comments[commentIndex].Note = Disclaimer;
+                        Console.WriteLine($"File not found (skipped): {filePath}");
+                        continue;
                     }
 
-                    // Save the modified workbook back to the same file using the provided Save method
-                    workbook.Save(filePath);
-                }
+                    // Load the workbook using the constructor that accepts a file path
+                    using (Workbook workbook = new Workbook(filePath))
+                    {
+                        // Iterate through all worksheets
+                        foreach (Worksheet sheet in workbook.Worksheets)
+                        {
+                            // Add a comment to cell A1 (top‑left cell)
+                            int commentIndex = sheet.Comments.Add("A1");
+                            Comment comment = sheet.Comments[commentIndex];
+                            comment.Note = disclaimer;
+                            comment.Author = "System";
 
-                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
+                            // Make the comment visible
+                            comment.IsVisible = true;
+                        }
+
+                        // Save the modified workbook back to the original file
+                        workbook.Save(filePath);
+                    }
+
+                    Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                }
+            }
+        }
+
+        // Example usage
+        public static void Main()
+        {
+            try
+            {
+                string folder = @"C:\ExcelFiles"; // Change to your folder path
+                string disclaimerText = "Confidential: This document is for internal use only.";
+
+                AddDisclaimerToFolder(folder, disclaimerText);
+
+                Console.WriteLine("Disclaimer added to all workbooks in the folder.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing {Path.GetFileName(filePath)}: {ex.Message}");
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
-
-        Console.WriteLine("Batch processing completed.");
     }
 }

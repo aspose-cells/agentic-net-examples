@@ -1,45 +1,43 @@
-// Title: Export Workbook to PDF with Cell Background Colors using Aspose.Cells (C#)
-// Description: Creates a workbook, applies solid red and green background fills to cells, configures PdfSaveOptions, and saves the file as a PDF that keeps the cell colors intact.
-// Keywords: Aspose.Cells PDF export | preserve cell background color | C# Excel to PDF | PdfSaveOptions fill color | retain formatting in PDF | solid background fill Aspose | Excel PDF conversion C#
-// Common Searches: Aspose.Cells keep cell fill color when converting to PDF | C# export Excel to PDF with background colors | PdfSaveOptions preserve formatting Aspose | how to retain cell background in PDF using Aspose.Cells | export colored Excel cells to PDF C#
-// Developer Intent: Export an Excel workbook to PDF while preserving the cells’ background colors.
-// Use Cases: Generate printable reports where colored cells highlight status or priority. | Create invoices with colored header rows that must appear in the PDF version. | Produce marketing sheets that use background colors to differentiate product categories.
-// AI Prompts: Show how to export multiple worksheets to a single PDF while keeping each sheet’s cell colors. | Demonstrate applying gradient fills to cells and ensuring they render correctly in the PDF output. | Explain which PdfSaveOptions settings improve the visual quality of colored cells in the exported PDF.
+// Title: Export Workbook to PDF with Cell Background Colors using Aspose.Cells C#
+// Description: Demonstrates how to create an Excel workbook, apply solid red and green background styles to cells, configure PdfSaveOptions (ExportDocumentStructure), and save the file as a PDF that retains the original cell shading.
+// Keywords: Aspose.Cells PDF export C# | preserve cell shading in PDF | PdfSaveOptions ExportDocumentStructure | Excel to PDF background colors | Aspose.Cells visual fidelity
+// Common Searches: Aspose.Cells keep cell colors when converting to PDF | C# export Excel workbook to PDF with background shading | PdfSaveOptions settings for visual consistency | How to retain cell background in PDF using Aspose.Cells
+// Developer Intent: Create a PDF from an Excel workbook that maintains the cells' background colors.
+// Use Cases: Generating status dashboards where colored cells indicate progress and must appear unchanged in printable PDFs. | Producing invoices that highlight discounted rows with background fills that need to survive PDF conversion. | Designing marketing sheets with brand‑specific cell shading that should be visible in the final PDF document.
+// AI Prompts: Provide C# code that uses Aspose.Cells to export a workbook to PDF while preserving cell background colors, including the required PdfSaveOptions configuration. | Explain which PdfSaveOptions properties influence visual fidelity, especially background colors, during Excel‑to‑PDF conversion with Aspose.Cells. | Show a step‑by‑step example of applying solid background styles to cells and saving the workbook as a PDF that keeps those colors intact.
 
 using System;
-using Aspose.Cells;
 using System.Drawing;
+using Aspose.Cells;
 
-// Creates a workbook, applies solid red and green background fills to cells, configures PdfSaveOptions, and saves the file as a PDF that keeps the cell colors intact.
+// Demonstrates how to create an Excel workbook, apply solid red and green background styles to cells, configure PdfSaveOptions (ExportDocumentStructure), and save the file as a PDF that retains the original cell shading.
 class ExportWorkbookToPdf
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // ---------- Apply background colors ----------
-        // Red background for cell A1
+        // Add data to cell A1 and set its background to red
+        sheet.Cells["A1"].PutValue("Red Background");
         Style redStyle = workbook.CreateStyle();
         redStyle.ForegroundColor = Color.Red;
         redStyle.Pattern = BackgroundType.Solid;
-        worksheet.Cells["A1"].PutValue("Red Cell");
-        worksheet.Cells["A1"].SetStyle(redStyle);
+        sheet.Cells["A1"].SetStyle(redStyle);
 
-        // Green background for cell B2
+        // Add data to cell B2 and set its background to green
+        sheet.Cells["B2"].PutValue("Green Background");
         Style greenStyle = workbook.CreateStyle();
         greenStyle.ForegroundColor = Color.Green;
         greenStyle.Pattern = BackgroundType.Solid;
-        worksheet.Cells["B2"].PutValue("Green Cell");
-        worksheet.Cells["B2"].SetStyle(greenStyle);
+        sheet.Cells["B2"].SetStyle(greenStyle);
 
-        // ---------- Configure PDF save options ----------
+        // Configure PDF save options to retain document structure (helps preserve visual layout)
         PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        // Preserve document structure (optional, does not affect colors)
         pdfOptions.ExportDocumentStructure = true;
 
-        // ---------- Save workbook as PDF ----------
-        workbook.Save("WorkbookWithBackgroundColors.pdf", pdfOptions);
+        // Export the workbook to PDF while preserving cell background colors
+        workbook.Save("WorkbookWithColors.pdf", pdfOptions);
     }
 }

@@ -1,20 +1,19 @@
-// Title: C# – Load CSV, skip custom comment lines, and export clean data to TSV with Aspose.Cells
-// Description: Shows how to read a CSV file, filter out rows that start with a user‑defined comment character (e.g., '#'), import the filtered content into an Aspose.Cells workbook via a MemoryStream using TxtLoadOptions, and save it as a tab‑delimited TSV file with TxtSaveOptions.
-// Keywords: Aspose.Cells | C# CSV to TSV | ignore comment lines | custom comment character | TxtLoadOptions | TxtSaveOptions | MemoryStream CSV import | CSV preprocessing | tab delimited export
-// Common Searches: Aspose.Cells ignore commented rows when loading CSV | C# convert CSV to TSV with Aspose.Cells | filter # comments from CSV before saving as TSV | load CSV from MemoryStream Aspose.Cells .NET | custom separator CSV Aspose.Cells example
-// Developer Intent: Read a CSV, discard lines that begin with a specified comment marker, and write the remaining data to a TSV file using Aspose.Cells for .NET.
-// Use Cases: Cleaning log or data files that contain comment lines before analysis. | Automating CSV‑to‑TSV conversion in ETL pipelines where only non‑comment rows are required. | Preparing tab‑delimited files for import into databases or BI tools after removing metadata comments.
-// AI Prompts: Generate C# code that uses Aspose.Cells to load a CSV from a MemoryStream, ignore rows starting with a given comment character, and save the result as a TSV file. | Explain how TxtLoadOptions and TxtSaveOptions can be configured to handle custom separators and comment filtering during CSV‑to‑TSV conversion with Aspose.Cells. | Suggest alternative methods (e.g., StreamReader, custom parser) for removing comment lines before importing a CSV into Aspose.Cells.
+// Title: C# – Load CSV with custom comment character, filter comments, and export to TSV using Aspose.Cells
+// Description: A concise example that reads a CSV file, removes empty rows and any line whose first non‑space character matches a user‑defined comment marker (e.g., '#'), imports the cleaned data into an Aspose.Cells workbook with TxtLoadOptions, and saves the worksheet as a UTF‑8 TSV file using TxtSaveOptions.
+// Keywords: Aspose.Cells CSV import C# | custom comment character CSV | skip commented lines Aspose | CSV to TSV conversion .NET | TxtLoadOptions comment filter | TxtSaveOptions TSV export | C# read CSV ignore # lines | Aspose.Cells data cleaning
+// Common Searches: How to ignore comment lines when loading CSV with Aspose.Cells | Convert CSV to TSV in C# while skipping # rows | Aspose.Cells load CSV with custom comment character | C# filter commented rows before TSV export | Aspose.Cells TxtLoadOptions comment handling
+// Developer Intent: Read a CSV, discard lines that start with a specified comment character, and write the remaining data to a TSV file using Aspose.Cells.
+// Use Cases: Pre‑process configuration or log files that contain comment rows before feeding them to analytics pipelines. | Clean exported data sets by removing header comments prior to bulk import into databases. | Automate transformation of comment‑annotated CSV reports into tab‑delimited format for spreadsheet or BI tools.
+// AI Prompts: Generate C# code with Aspose.Cells to load a CSV, skip lines beginning with '#', and save the result as a TSV file. | Explain how TxtLoadOptions and TxtSaveOptions can be set to handle custom comment characters and delimiters in Aspose.Cells. | Suggest memory‑efficient techniques for filtering large CSV files with comment lines before importing them with Aspose.Cells.
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using Aspose.Cells;
 
 namespace AsposeCellsCsvToTsv
 {
-    // Shows how to read a CSV file, filter out rows that start with a user‑defined comment character (e.g., '#'), import the filtered content into an Aspose.Cells workbook via a MemoryStream using TxtLoadOptions, and save it as a tab‑delimited TSV file with TxtSaveOptions.
+    // A concise example that reads a CSV file, removes empty rows and any line whose first non‑space character matches a user‑defined comment marker (e.g., '#'), imports the cleaned data into an Aspose.Cells workbook with TxtLoadOptions, and saves the worksheet as a UTF‑8 TSV file using TxtSaveOptions.
     class Program
     {
         static void Main()
@@ -22,36 +21,48 @@ namespace AsposeCellsCsvToTsv
             // Path to the source CSV file
             string csvPath = "input.csv";
 
-            // Define the comment character (lines starting with this will be ignored)
+            // Define the custom comment character (e.g., '#')
             char commentChar = '#';
 
-            // Read all lines, filter out commented lines, and rebuild the CSV content
+            // Read the CSV file, filter out commented lines, and build a clean CSV string
             string[] allLines = File.ReadAllLines(csvPath);
-            string[] dataLines = allLines
-                .Where(line => !line.TrimStart().StartsWith(commentChar.ToString()))
-                .ToArray();
-            string filteredCsv = string.Join(Environment.NewLine, dataLines);
-
-            // Load the filtered CSV data into a memory stream
-            using (MemoryStream csvStream = new MemoryStream(Encoding.UTF8.GetBytes(filteredCsv)))
+            StringBuilder cleanBuilder = new StringBuilder();
+            foreach (string line in allLines)
             {
-                // Configure load options for CSV (comma as separator)
-                TxtLoadOptions loadOptions = new TxtLoadOptions();
-                loadOptions.Separator = ',';
-                loadOptions.ConvertNumericData = true; // optional: convert numbers
+                // Trim leading spaces before checking the comment character
+                string trimmed = line.TrimStart();
+                if (trimmed.Length == 0) continue;               // Skip empty lines
+                if (trimmed[0] == commentChar) continue;         // Skip comment lines
+                cleanBuilder.AppendLine(line);
+            }
 
-                // Create a new workbook and import the CSV data
+            // Convert the cleaned CSV content to a memory stream
+            byte[] cleanBytes = Encoding.UTF8.GetBytes(cleanBuilder.ToString());
+            using (MemoryStream cleanStream = new MemoryStream(cleanBytes))
+            {
+                // Create a new workbook and get the first worksheet's cells collection
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
-                worksheet.Cells.ImportCSV(csvStream, loadOptions, 0, 0);
+                Cells cells = worksheet.Cells;
 
-                // Prepare save options for TSV (tab as separator)
+                // Configure load options for CSV (comma separator, convert numeric data)
+                TxtLoadOptions loadOptions = new TxtLoadOptions();
+                loadOptions.Separator = ',';          // CSV delimiter
+                loadOptions.ConvertNumericData = true;
+
+                // Import the cleaned CSV data starting at cell A1 (row 0, column 0)
+                cells.ImportCSV(cleanStream, loadOptions, 0, 0);
+
+                // Prepare save options for TSV (tab delimiter)
                 TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Tsv);
-                saveOptions.Separator = '\t';
+                saveOptions.Separator = '\t';         // TSV delimiter
+                saveOptions.Encoding = Encoding.UTF8;
 
-                // Save the cleaned data as TSV
+                // Save the workbook as a TSV file
                 workbook.Save("output.tsv", saveOptions);
             }
+
+            Console.WriteLine("CSV imported (comments ignored) and saved as TSV successfully.");
         }
     }
 }

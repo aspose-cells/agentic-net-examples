@@ -1,46 +1,52 @@
+// Title: Export a Workbook to TIFF on a UNC Network Share with Aspose.Cells (C#)
+// Description: Demonstrates how to create a Workbook, set ImageOrPrintOptions, render a worksheet with SheetRender, and save the output as a multi‑page TIFF directly to a UNC network share using the ToTiff method, including basic error handling.
+// Keywords: Aspose.Cells | C# | .NET | TIFF export | UNC path | network share | SheetRender | ToTiff | ImageOrPrintOptions | save TIFF to shared folder | export workbook to TIFF
+// Common Searches: Aspose.Cells export TIFF to UNC path | C# save TIFF on network share | SheetRender ToTiff example | How to write TIFF file to shared folder using Aspose.Cells | Export Excel as TIFF to remote folder .NET
+// Developer Intent: Save the generated TIFF file directly to a network share path.
+// Use Cases: Automatically archive daily reports as TIFF images on a file server for compliance. | Provide a centralized print queue by storing multi‑page TIFFs in a shared folder accessible to multiple workstations. | Create snapshot images of spreadsheets for offline review and store them on a network drive.
+// AI Prompts: Generate C# code that uses Aspose.Cells to render a workbook to a multi‑page TIFF and saves it to a UNC network share with exception handling. | Explain how ImageOrPrintOptions.OnePagePerSheet affects TIFF output when exporting to a remote folder. | Show how to modify the sample to loop through all worksheets and save each as an individual TIFF file in a shared directory.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-class SaveTiffToNetworkShare
+namespace AsposeCellsNetworkTiffDemo
 {
-    static void Main()
+    // Demonstrates how to create a Workbook, set ImageOrPrintOptions, render a worksheet with SheetRender, and save the output as a multi‑page TIFF directly to a UNC network share using the ToTiff method, including basic error handling.
+    public class Program
     {
-        try
+        public static void Main()
         {
-            // Create a new workbook and add sample data
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Cells["A1"].PutValue("Aspose.Cells TIFF Export Demo");
 
-            // Configure rendering options (optional settings)
+            // Access the first worksheet and add sample content
+            Worksheet worksheet = workbook.Worksheets[0];
+            worksheet.Cells["A1"].PutValue("Network Share TIFF Demo");
+
+            // Configure rendering options (optional, but demonstrates usage)
             ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
             {
-                OnePagePerSheet = true // Render the whole sheet on a single page
+                OnePagePerSheet = true // render each sheet as a separate page
             };
 
-            // Initialize the sheet renderer with the worksheet and options
+            // Initialize the sheet renderer (lifecycle rule: create)
             SheetRender sheetRenderer = new SheetRender(worksheet, renderOptions);
 
-            // Define the network share path where the TIFF will be saved
-            string networkSharePath = @"\\Server\Share\Folder\output.tiff";
+            // Define the UNC network share path where the TIFF will be saved
+            string networkSharePath = @"\\MyServer\SharedFolder\DemoOutput.tiff";
 
-            // Ensure the target directory exists; create it if necessary
-            string targetDir = Path.GetDirectoryName(networkSharePath);
-            if (!Directory.Exists(targetDir))
+            try
             {
-                Directory.CreateDirectory(targetDir);
+                // Render the worksheet to a TIFF file directly on the network share
+                // (lifecycle rule: save using ToTiff(string))
+                sheetRenderer.ToTiff(networkSharePath);
+                Console.WriteLine($"TIFF successfully saved to network share: {networkSharePath}");
             }
-
-            // Render the worksheet directly to a TIFF file on the network share
-            sheetRenderer.ToTiff(networkSharePath);
-
-            Console.WriteLine($"TIFF file successfully saved to: {networkSharePath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving TIFF to network share: {ex.Message}");
+            }
         }
     }
 }

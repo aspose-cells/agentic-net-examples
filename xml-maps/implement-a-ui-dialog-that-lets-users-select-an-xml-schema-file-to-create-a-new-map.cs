@@ -1,96 +1,57 @@
+// Title: Add an XML Schema (XSD) as an XmlMap to a New Workbook via Console UI – Aspose.Cells for .NET
+// Description: A C# console program that creates a Workbook, prompts the user for an XSD or XML schema file, validates the path, adds the schema as an XmlMap with a friendly name, and saves the workbook as WorkbookWithXmlMap.xlsx while handling errors.
+// Keywords: Aspose.Cells XmlMap | C# add XSD to workbook | XML schema map Excel | console UI select XSD | save workbook with XmlMap | Aspose.Cells .NET example | XmlMaps.Add usage
+// Common Searches: how to add an XSD as an XmlMap using Aspose.Cells | C# console app to import XML schema into Excel | Aspose.Cells XmlMaps.Add example code | create Excel workbook with XML map from file path | validate schema file before adding to Aspose.Cells workbook
+// Developer Intent: Prompt the user for an XML schema file, add it as an XmlMap to a new workbook, and save the workbook.
+// Use Cases: Enable end‑users to link custom XML schemas to Excel templates at runtime. | Automate generation of workbooks that require predefined XML‑Excel mappings for data exchange. | Build lightweight console utilities for batch creation of Excel files with embedded XmlMaps.
+// AI Prompts: Generate a WinForms file‑picker dialog that lets users browse for an XSD and adds it as an XmlMap with Aspose.Cells. | Modify the console program to accept multiple schema paths and create a separate XmlMap for each before saving. | Provide detailed exception handling that distinguishes file‑not‑found, invalid XSD format, and Aspose.Cells mapping errors.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace XmlMapCreator
+namespace AsposeCellsXmlMapDialog
 {
-    // Console application that asks for an XML schema (XSD) file path,
-    // creates a new Excel workbook with an XML map based on the schema,
-    // and saves the workbook to a user‑specified location.
+    // A C# console program that creates a Workbook, prompts the user for an XSD or XML schema file, validates the path, adds the schema as an XmlMap with a friendly name, and saves the workbook as WorkbookWithXmlMap.xlsx while handling errors.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
-                // Prompt the user to enter the XML schema file path
-                string schemaPath = PromptForExistingFile("Enter full path to the XML Schema (XSD) file:");
-                if (string.IsNullOrEmpty(schemaPath))
+                // Create a new workbook (document creation)
+                Workbook workbook = new Workbook();
+
+                // Prompt user to enter the path of the XML schema (XSD) file
+                Console.WriteLine("Enter the full path to the XML Schema file (XSD or XML):");
+                string schemaPath = Console.ReadLine()?.Trim();
+
+                // Validate the input
+                if (string.IsNullOrEmpty(schemaPath) || !File.Exists(schemaPath))
                 {
-                    Console.WriteLine("No schema file provided. Exiting.");
+                    Console.WriteLine("The specified schema file does not exist. Exiting.");
                     return;
                 }
 
-                // Create a new workbook (lifecycle: create)
-                Workbook workbook = new Workbook();
-
-                // Add the selected XML schema as a map to the workbook (lifecycle: modify)
+                // Add the selected schema as an XmlMap to the workbook
                 int mapIndex = workbook.Worksheets.XmlMaps.Add(schemaPath);
                 XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
 
-                // Set a friendly name for the map (file name without extension)
+                // Optionally set a friendly name for the map (using file name without extension)
                 xmlMap.Name = Path.GetFileNameWithoutExtension(schemaPath);
-                Console.WriteLine($"XML map '{xmlMap.Name}' added successfully.");
 
-                // Prompt the user to enter the output Excel file path
-                string savePath = PromptForSavePath("Enter full path where the workbook should be saved (including .xlsx):");
-                if (string.IsNullOrEmpty(savePath))
-                {
-                    Console.WriteLine("No save location provided. Exiting without saving.");
-                    return;
-                }
+                Console.WriteLine($"XML schema added as map '{xmlMap.Name}' (Index: {mapIndex}).");
 
-                // Ensure the target directory exists
-                string? directory = Path.GetDirectoryName(savePath);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // Save the workbook with the new XML map (lifecycle: save)
-                workbook.Save(savePath);
-                Console.WriteLine($"Workbook saved to: {savePath}");
+                // Save the workbook to a file (document saving)
+                string outputPath = Path.Combine(Environment.CurrentDirectory, "WorkbookWithXmlMap.xlsx");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {outputPath}");
             }
             catch (Exception ex)
             {
+                // Log unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        // Prompts the user for a file path and verifies that the file exists.
-        private static string PromptForExistingFile(string message)
-        {
-            Console.WriteLine(message);
-            string? path = Console.ReadLine()?.Trim('"').Trim();
-
-            if (string.IsNullOrEmpty(path) || !File.Exists(path))
-            {
-                Console.WriteLine("File not found.");
-                return string.Empty;
-            }
-
-            return path;
-        }
-
-        // Prompts the user for a save path (does not need to exist beforehand).
-        private static string PromptForSavePath(string message)
-        {
-            Console.WriteLine(message);
-            string? path = Console.ReadLine()?.Trim('"').Trim();
-
-            if (string.IsNullOrEmpty(path))
-            {
-                Console.WriteLine("Invalid path.");
-                return string.Empty;
-            }
-
-            // Ensure the file has an .xlsx extension
-            if (!Path.GetExtension(path).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-            {
-                path = Path.ChangeExtension(path, ".xlsx");
-            }
-
-            return path;
         }
     }
 }

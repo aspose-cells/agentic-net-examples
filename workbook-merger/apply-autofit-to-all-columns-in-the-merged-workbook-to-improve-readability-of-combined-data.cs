@@ -1,57 +1,35 @@
-// Title: C# – Merge Excel workbooks and AutoFit all columns using Aspose.Cells
-// Description: Loads two Excel files, combines the second workbook into the first with Workbook.Combine, auto‑fits every column in each worksheet via Worksheet.AutoFitColumns, and saves the merged workbook. Includes file‑existence checks and error handling.
-// Keywords: Aspose.Cells merge workbooks | C# combine Excel files | AutoFitColumns after combine | adjust column width Aspose.Cells | .NET Excel workbook merge | auto fit columns C# | Workbook.Combine example
-// Common Searches: how to merge two Excel workbooks in C# with Aspose.Cells | auto fit columns after combining workbooks Aspose.Cells .NET | C# code to combine Excel files and adjust column widths automatically | Aspose.Cells Workbook.Combine with AutoFitColumns | merge multiple Excel sheets and auto‑size columns using Aspose
-// Developer Intent: Combine several Excel workbooks into one and automatically size all columns for optimal readability.
-// Use Cases: Consolidate monthly sales reports into a single workbook with columns sized to content. | Create a master data file from multiple source templates, ensuring each sheet is properly formatted. | Automate generation of a combined financial statement where column widths adapt to the merged data.
-// AI Prompts: Generate C# code that merges an arbitrary number of Excel workbooks with Aspose.Cells and applies AutoFitColumns to every worksheet. | Explain performance considerations when combining large workbooks and auto‑fitting columns in Aspose.Cells. | Show how to log the original and new column widths after merging workbooks with Aspose.Cells.
+// Title: Auto‑Fit All Columns After Merging Workbooks with Aspose.Cells for .NET (C#)
+// Description: Loads two Excel files, merges them using Workbook.Combine, auto‑fits every column in each worksheet, and saves the resulting workbook.
+// Keywords: Aspose.Cells combine workbooks | AutoFitColumns C# | merge Excel files .NET | adjust column width after combine | auto size columns Aspose | C# Excel workbook merge
+// Common Searches: Aspose.Cells auto fit columns after combine | C# merge two Excel workbooks and auto size columns | How to auto‑fit all sheets after Workbook.Combine | AutoFitColumns for merged workbook Aspose | Combine workbooks and adjust column widths C#
+// Developer Intent: Combine multiple Excel workbooks and automatically size columns for readability.
+// Use Cases: Consolidate monthly reports into a single workbook with columns sized for clear presentation. | Create a unified financial statement from departmental files, ensuring consistent column widths after merging. | Prepare a merged dataset for analysis where each sheet’s columns are automatically optimized.
+// AI Prompts: Generate C# code that merges three Excel workbooks with Aspose.Cells and applies AutoFitColumns to every worksheet before saving. | Explain how to auto‑fit a specific column range after using Workbook.Combine in Aspose.Cells. | Provide a step‑by‑step guide to merge workbooks, auto‑adjust column widths, and handle hidden sheets using Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Loads two Excel files, combines the second workbook into the first with Workbook.Combine, auto‑fits every column in each worksheet via Worksheet.AutoFitColumns, and saves the merged workbook. Includes file‑existence checks and error handling.
+// Loads two Excel files, merges them using Workbook.Combine, auto‑fits every column in each worksheet, and saves the resulting workbook.
 class Program
 {
     static void Main()
     {
-        const string firstPath = "InputWorkbook1.xlsx";
-        const string secondPath = "InputWorkbook2.xlsx";
-        const string outputPath = "MergedWorkbook_AutoFitted.xlsx";
+        // Load the first workbook (source)
+        Workbook mergedWorkbook = new Workbook("FirstWorkbook.xlsx");
 
-        // Verify that the input files exist before attempting to load them
-        if (!File.Exists(firstPath) || !File.Exists(secondPath))
+        // Load the second workbook to be combined
+        Workbook secondWorkbook = new Workbook("SecondWorkbook.xlsx");
+
+        // Merge the second workbook into the first one
+        mergedWorkbook.Combine(secondWorkbook);
+
+        // Auto‑fit all columns in every worksheet of the merged workbook
+        foreach (Worksheet sheet in mergedWorkbook.Worksheets)
         {
-            Console.WriteLine("One or both input workbook files were not found.");
-            Console.WriteLine($"Expected: {firstPath} and {secondPath}");
-            return;
+            sheet.AutoFitColumns();
         }
 
-        try
-        {
-            // Load the first workbook (source)
-            Workbook mergedWorkbook = new Workbook(firstPath);
-
-            // Load the second workbook to be merged
-            Workbook secondWorkbook = new Workbook(secondPath);
-
-            // Combine the second workbook into the first one
-            mergedWorkbook.Combine(secondWorkbook);
-
-            // AutoFit all columns in every worksheet of the merged workbook
-            foreach (Worksheet sheet in mergedWorkbook.Worksheets)
-            {
-                sheet.AutoFitColumns(); // Adjust column widths based on content
-            }
-
-            // Save the resulting merged workbook
-            mergedWorkbook.Save(outputPath);
-            Console.WriteLine($"Merged workbook saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the resulting workbook
+        mergedWorkbook.Save("MergedWorkbook_AutoFit.xlsx");
     }
 }

@@ -1,57 +1,54 @@
-// Title: Set Worksheet Paper Size Sequentially to A3, A4, and Letter with Aspose.Cells for .NET
-// Description: This example creates a new Workbook, accesses the first Worksheet, changes its PageSetup.PaperSize to A3, then A4, then Letter, records each size in a list, prints the sequence to the console, and saves the file as PaperSizeSequence.xlsx.
-// Keywords: Aspose.Cells C# set paper size | Worksheet PageSetup PaperSizeType | change worksheet paper size A3 A4 Letter | record paper size changes Aspose.Cells | save workbook after page setup update
-// Common Searches: Aspose.Cells change worksheet paper size to A3 then A4 then Letter | how to record paper size after setting it in Aspose.Cells | C# Aspose.Cells multiple paper size settings on one sheet | retrieve current PaperSizeType value in Aspose.Cells
-// Developer Intent: Set the worksheet’s paper size to A3, then A4, then Letter while capturing each size in a collection.
-// Use Cases: Generate a multi‑section report where each section must be printed on a different paper format and log the applied format for audit. | Validate that PageSetup changes take effect by logging the PaperSize after each assignment during automated UI testing. | Create a test matrix that cycles through common paper sizes to verify print preview rendering in a CI pipeline.
-// AI Prompts: Write C# code that changes a worksheet’s paper size to A5, stores the previous size, and restores it after exporting to PDF using Aspose.Cells. | Explain how to map each PaperSizeType enum value to its physical dimensions in inches and millimeters. | Show how to serialize a List<PaperSizeType> to JSON and write it to a file for later analysis.
+// Title: Aspose.Cells C# – Change a Worksheet’s Paper Size to A3, A4, then Letter and Log the Sequence
+// Description: Creates a new Workbook, accesses the first Worksheet, sets PageSetup.PaperSize to A3, A4, and Letter in order, records each size in a List, outputs the log to the console, and saves the file as PaperSizeSequence.xlsx.
+// Keywords: Aspose.Cells C# | worksheet paper size | PageSetup PaperSize | PaperSizeType A3 | PaperSizeType A4 | PaperSizeType Letter | record paper size sequence | save workbook after page setup | C# Excel automation
+// Common Searches: Aspose.Cells change worksheet paper size to A3 | set worksheet paper size to A4 using C# | how to log paper size changes with Aspose.Cells | C# example for sequential PaperSizeType values | save Excel file after modifying page setup Aspose
+// Developer Intent: Set a worksheet’s PaperSize to A3, then A4, then Letter while capturing each value in a collection.
+// Use Cases: Generate a multi‑section report where each section requires a different standard paper size. | Automate printer‑setting validation by cycling through common formats and storing the results for quality checks. | Create an audit trail of page‑setup changes during workbook generation for compliance or debugging.
+// AI Prompts: Show how to reset the worksheet’s paper size to the default after logging the sequence. | Provide code to export the recorded PaperSizeType values to a CSV file with Aspose.Cells. | Explain how to apply the A3‑A4‑Letter paper size sequence to every worksheet in a workbook.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace PaperSizeSequenceDemo
+namespace AsposeCellsPaperSizeDemo
 {
-    // This example creates a new Workbook, accesses the first Worksheet, changes its PageSetup.PaperSize to A3, then A4, then Letter, records each size in a list, prints the sequence to the console, and saves the file as PaperSizeSequence.xlsx.
+    // Creates a new Workbook, accesses the first Worksheet, sets PageSetup.PaperSize to A3, A4, and Letter in order, records each size in a List, outputs the log to the console, and saves the file as PaperSizeSequence.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle create)
+            // Create a new workbook (using the standard Aspose.Cells creation rule)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the PageSetup object for the worksheet
-            PageSetup pageSetup = worksheet.PageSetup;
-
-            // List to record the paper sizes after each change
+            // List to record the paper sizes applied
             List<PaperSizeType> recordedSizes = new List<PaperSizeType>();
 
-            // Change to A3 and record
-            pageSetup.PaperSize = PaperSizeType.PaperA3;
-            recordedSizes.Add(pageSetup.PaperSize);
-            Console.WriteLine("Set paper size to A3");
+            // 1. Set paper size to A3 and record
+            sheet.PageSetup.PaperSize = PaperSizeType.PaperA3;
+            recordedSizes.Add(sheet.PageSetup.PaperSize);
+            Console.WriteLine("Paper size set to: " + sheet.PageSetup.PaperSize);
 
-            // Change to A4 and record
-            pageSetup.PaperSize = PaperSizeType.PaperA4;
-            recordedSizes.Add(pageSetup.PaperSize);
-            Console.WriteLine("Set paper size to A4");
+            // 2. Set paper size to A4 and record
+            sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
+            recordedSizes.Add(sheet.PageSetup.PaperSize);
+            Console.WriteLine("Paper size set to: " + sheet.PageSetup.PaperSize);
 
-            // Change to Letter and record
-            pageSetup.PaperSize = PaperSizeType.PaperLetter;
-            recordedSizes.Add(pageSetup.PaperSize);
-            Console.WriteLine("Set paper size to Letter");
+            // 3. Set paper size to Letter and record
+            sheet.PageSetup.PaperSize = PaperSizeType.PaperLetter;
+            recordedSizes.Add(sheet.PageSetup.PaperSize);
+            Console.WriteLine("Paper size set to: " + sheet.PageSetup.PaperSize);
 
-            // Output the recorded paper sizes
-            Console.WriteLine("\nRecorded paper sizes in sequence:");
-            foreach (PaperSizeType size in recordedSizes)
+            // Output the recorded sequence
+            Console.WriteLine("\nRecorded paper sizes in order:");
+            foreach (var size in recordedSizes)
             {
                 Console.WriteLine("- " + size);
             }
 
-            // Save the workbook (lifecycle save)
+            // Save the workbook (using the standard Aspose.Cells save rule)
             workbook.Save("PaperSizeSequence.xlsx");
         }
     }

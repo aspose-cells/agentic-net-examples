@@ -1,68 +1,84 @@
-// Title: Hide chart legend when a chart has more than 10 data points with Aspose.Cells for .NET
-// Description: C# example that loads an Excel workbook, walks through every worksheet and chart, totals the points in all series, disables the chart's ShowLegend property if the count exceeds ten, and saves the updated file. Demonstrates conditional legend control using Aspose.Cells.
-// Keywords: Aspose.Cells | C# chart legend hide | conditional legend visibility | count chart data points | ShowLegend property | Excel chart manipulation | large data set chart | automate legend settings
-// Common Searches: Aspose.Cells hide legend based on data points | C# count points in Excel chart series | conditional chart legend .NET | iterate charts in workbook Aspose.Cells | remove legend from complex Excel charts programmatically
-// Developer Intent: Automatically suppress the legend of any Excel chart that contains more than ten data points when generating or processing workbooks with Aspose.Cells.
-// Use Cases: Clean up dashboards by removing legends from densely populated charts. | Apply a uniform rule across all sheets in a report to avoid visual clutter. | Prepare Excel files for presentation where legends are unnecessary for large data sets.
-// AI Prompts: Generate C# code using Aspose.Cells that hides a chart legend when the total number of points across all series exceeds a configurable limit. | Explain how to retrieve the point count for each series in an Aspose.Cells chart and use it to set ShowLegend conditionally. | Suggest ways to improve performance when processing many worksheets and charts for legend visibility rules.
+// Title: Hide Chart Legend in Aspose.Cells (C#) When a Series Has More Than 10 Data Points
+// Description: C# example that opens an Excel workbook, scans every worksheet and chart, counts non‑empty cells in the first series range, disables the legend if the count exceeds ten, and saves the modified file. Ideal for batch‑processing reports where large charts need a cleaner look.
+// Keywords: Aspose.Cells | C# chart legend | hide legend conditionally | Excel chart data point count | series values range | disable legend Aspose.Cells | .NET Excel automation | chart formatting | batch workbook processing | Excel reporting
+// Common Searches: Aspose.Cells hide legend for large chart C# | how to hide Excel chart legend when data points > 10 using .NET | count non‑empty cells in chart series Aspose.Cells | conditional legend visibility in Excel with Aspose.Cells | C# example to remove chart legend based on series size
+// Developer Intent: Automatically suppress the legend of any chart whose first series contains more than ten data points.
+// Use Cases: Generate financial or scientific reports where dense charts are displayed without legends to avoid clutter. | Create dashboards that show legends only for simple charts, improving readability for end users. | Process multiple workbooks in a scheduled job, adjusting chart appearance based on data volume.
+// AI Prompts: Write Aspose.Cells C# code that hides the legend for every chart whose first series has over ten non‑empty cells across all worksheets. | Suggest a faster way to determine the number of data points in a chart series without looping through each cell. | Explain how to extend the logic to evaluate all series in a chart and hide the legend when the total data points exceed ten.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsLegendControl
+namespace HideLegendForLargeCharts
 {
-    // C# example that loads an Excel workbook, walks through every worksheet and chart, totals the points in all series, disables the chart's ShowLegend property if the count exceeds ten, and saves the updated file. Demonstrates conditional legend control using Aspose.Cells.
+    // C# example that opens an Excel workbook, scans every worksheet and chart, counts non‑empty cells in the first series range, disables the legend if the count exceeds ten, and saves the modified file. Ideal for batch‑processing reports where large charts need a cleaner look.
     class Program
     {
         static void Main()
         {
-            const string inputPath = "InputData.xlsx";
-            const string outputPath = "OutputData.xlsx";
-
             try
             {
-                // Verify that the input workbook exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
-                    return;
-                }
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
+                // Ensure the input file exists; create a blank workbook if it does not.
+                Workbook workbook;
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    workbook = new Workbook();
+                    workbook.Worksheets[0].Name = "Sheet1";
+                }
 
                 // Iterate through all worksheets
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Iterate through all charts in the worksheet
+                    // Iterate through all charts on the worksheet
                     foreach (Chart chart in sheet.Charts)
                     {
-                        int totalDataPoints = 0;
-
-                        // Sum data points across all series of the chart
-                        foreach (Series series in chart.NSeries)
+                        // Ensure the chart has at least one series
+                        if (chart.NSeries.Count > 0)
                         {
-                            // Use series.Points.Count to get the number of points in the series
-                            totalDataPoints += series.Points.Count;
-                        }
+                            // Get the first series (extend as needed)
+                            Series series = chart.NSeries[0];
 
-                        // Hide legend if the chart has more than ten data points
-                        if (totalDataPoints > 10)
-                        {
-                            chart.ShowLegend = false;
+                            // The data range used for the series values (e.g., "B2:B15")
+                            string valuesRange = series.Values;
+
+                            // Obtain the range object from the worksheet
+                            AsposeRange range = sheet.Cells.CreateRange(valuesRange);
+
+                            // Count non‑empty data points in the range
+                            int dataPointCount = 0;
+                            foreach (Cell cell in range)
+                            {
+                                // Consider a cell as a data point if it contains a value
+                                if (cell.Value != null && !string.IsNullOrEmpty(cell.StringValue))
+                                {
+                                    dataPointCount++;
+                                }
+                            }
+
+                            // Hide the legend if the chart contains more than ten data points
+                            if (dataPointCount > 10)
+                            {
+                                chart.ShowLegend = false;
+                            }
                         }
                     }
                 }
 
                 // Save the modified workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+                workbook.Save(outputPath);
             }
             catch (Exception ex)
             {
-                // Catch any unexpected errors and display a friendly message
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

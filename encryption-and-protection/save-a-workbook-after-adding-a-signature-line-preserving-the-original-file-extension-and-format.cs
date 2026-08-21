@@ -1,55 +1,66 @@
-// Title: Add a Signature Line and Save Workbook with Original Format using Aspose.Cells for .NET
-// Description: Loads an existing workbook, inserts a SignatureLine shape at a chosen cell, detects the source file extension, maps it to the correct SaveFormat via FileFormatUtil, and saves the signed workbook while preserving the original file type.
-// Keywords: Aspose.Cells | C# signature line | Excel digital signature | preserve file format | FileFormatUtil | ExtensionToSaveFormat | save workbook same extension | add signature line C# | Aspose.Cells encryption protection | Excel workbook signing
-// Common Searches: how to add a signature line to an Excel file with Aspose.Cells | save signed workbook with original .xlsx/.xls format using Aspose.Cells | convert file extension to SaveFormat enum Aspose.Cells | preserve original Excel file type when saving with Aspose.Cells | C# Aspose.Cells add digital signature placeholder
-// Developer Intent: Insert a SignatureLine into a workbook and save it using the same extension and format as the source file.
-// Use Cases: Create a signed copy of a compliance‑critical spreadsheet without changing its .xlsx, .xls, or .csv format. | Batch‑process multiple workbooks to add signature placeholders while keeping each file’s native format for downstream systems. | Generate signed financial or legal reports that retain the original file type to ensure compatibility with existing workflows.
-// AI Prompts: Show C# code that adds a SignatureLine to the first worksheet with Aspose.Cells and saves the file preserving the original extension. | Explain how FileFormatUtil.ExtensionToSaveFormat maps extensions to SaveFormat values and how to use it when saving a workbook. | Provide an example of properly disposing the Workbook object after adding a signature line and saving the signed file.
+// Title: Add a Signature Line to an Excel Workbook and Preserve Its Original Format with Aspose.Cells for .NET
+// Description: Learn how to load an existing workbook, insert a SignatureLine shape at a chosen cell, detect the file's original extension, map it to the correct SaveFormat via FileFormatUtil, and save the workbook back without changing its format. The example includes file‑existence checks, optional signer details, and robust exception handling for .xlsx, .xls, .csv, and other supported types.
+// Keywords: Aspose.Cells SignatureLine C# | preserve original file extension | FileFormatUtil ExtensionToSaveFormat | save workbook same format | add digital signature Excel | C# Excel shape insertion | Aspose.Cells save format detection | overwrite Excel file Aspose | Excel workbook protection .NET
+// Common Searches: how to add a signature line to an Excel file using Aspose.Cells | save modified workbook with original extension Aspose.Cells | C# Aspose.Cells preserve file format when saving | insert SignatureLine shape in Excel with .NET | detect workbook format before saving Aspose
+// Developer Intent: Insert a digital signature line into an existing Excel workbook and write the changes back using the same file type as the source.
+// Use Cases: Add a SignatureLine to the first worksheet of a .xlsx file and overwrite the file while keeping the .xlsx format. | Process legacy .xls or .csv workbooks, embed a signature placeholder, and save without converting to a different format. | Validate the workbook path, optionally set signer name and email, and handle runtime errors during the save operation.
+// AI Prompts: Generate C# code that loads an Excel workbook, adds a SignatureLine at cell B2, determines the original file extension, and saves the file preserving its format using Aspose.Cells. | Explain step‑by‑step how FileFormatUtil.ExtensionToSaveFormat maps file extensions to Aspose.Cells SaveFormat enums. | Create robust error‑handling logic for adding a signature line when the source file may be missing or the Aspose.Cells version lacks certain SignatureLine properties.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSignatureDemo
+// Learn how to load an existing workbook, insert a SignatureLine shape at a chosen cell, detect the file's original extension, map it to the correct SaveFormat via FileFormatUtil, and save the workbook back without changing its format. The example includes file‑existence checks, optional signer details, and robust exception handling for .xlsx, .xls, .csv, and other supported types.
+class AddSignatureAndSave
 {
-    // Loads an existing workbook, inserts a SignatureLine shape at a chosen cell, detects the source file extension, maps it to the correct SaveFormat via FileFormatUtil, and saves the signed workbook while preserving the original file type.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the existing workbook (replace with your actual file)
+        string workbookPath = "SampleWorkbook.xlsx";
+
+        // Verify that the workbook file exists to avoid FileNotFoundException
+        if (!File.Exists(workbookPath))
         {
-            // Path to the existing workbook (any supported format)
-            string sourcePath = "InputWorkbook.xlsx";
+            Console.WriteLine($"Workbook file not found: {workbookPath}");
+            return;
+        }
 
-            // Path where the signed workbook will be saved
-            string signedPath = "SignedWorkbook.xlsx";
+        try
+        {
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(workbookPath);
 
-            // Load the workbook (uses the Workbook(string) constructor – lifecycle rule)
-            Workbook workbook = new Workbook(sourcePath);
-
-            // Add a signature line to the first worksheet
+            // Access the first worksheet (or any worksheet you need)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a SignatureLine object with default settings
+            // Create a signature line object
             SignatureLine signatureLine = new SignatureLine();
 
-            // Add the signature line shape at row 5, column 2 (zero‑based indices)
-            // The AddSignatureLine method is part of the Shapes collection.
-            sheet.Shapes.AddSignatureLine(5, 2, signatureLine);
+            // (Optional) Set additional properties on the signature line if supported
+            // Note: Some older Aspose.Cells versions may not expose these properties.
+            // Uncomment the lines below if your version supports them.
+            // signatureLine.SuggestedSigner = "John Doe";
+            // signatureLine.SuggestedSignerEmail = "john.doe@example.com";
 
-            // Determine the original file extension to preserve format
-            string originalExtension = Path.GetExtension(sourcePath); // e.g. ".xlsx"
+            // Add the signature line to the worksheet at row 2, column 2 (zero‑based indexes)
+            // Adjust the row/column as needed
+            Picture signaturePicture = sheet.Shapes.AddSignatureLine(1, 1, signatureLine);
 
-            // Convert the extension to a SaveFormat enum value (FileFormatUtil rule)
-            SaveFormat saveFormat = FileFormatUtil.ExtensionToSaveFormat(originalExtension);
+            // Determine the original file extension
+            string extension = Path.GetExtension(workbookPath);
 
-            // Save the workbook using the detected SaveFormat (Save(string, SaveFormat) rule)
-            workbook.Save(signedPath, saveFormat);
+            // Convert the extension to the corresponding SaveFormat enum value
+            SaveFormat saveFormat = FileFormatUtil.ExtensionToSaveFormat(extension);
 
-            // Clean up
-            workbook.Dispose();
+            // Save the workbook back to the original file, preserving its format
+            workbook.Save(workbookPath, saveFormat);
 
-            Console.WriteLine($"Workbook signed and saved as '{signedPath}' with format {saveFormat}.");
+            Console.WriteLine("Signature line added and workbook saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

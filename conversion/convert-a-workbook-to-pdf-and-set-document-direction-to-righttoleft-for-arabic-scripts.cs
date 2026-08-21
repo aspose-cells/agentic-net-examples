@@ -1,32 +1,47 @@
-// Title: C# – Convert Aspose.Cells Workbook to PDF with Right‑to‑Left Layout for Arabic
-// Description: Demonstrates how to create a workbook, enable the DisplayRightToLeft property for Arabic scripts, insert sample Arabic text, and save the sheet as a PDF using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells PDF conversion C# | right‑to‑left Excel PDF | Arabic RTL PDF Aspose | DisplayRightToLeft property | .NET workbook to PDF | Arabic Excel export | C# Aspose.Cells example
-// Common Searches: Aspose.Cells convert Excel to PDF RTL Arabic | C# set worksheet right‑to‑left before PDF export | DisplayRightToLeft Aspose.Cells PDF output | Generate Arabic PDF from Excel using .NET | How to export Arabic sheet as PDF with Aspose
-// Developer Intent: Create a PDF from an Excel workbook while forcing right‑to‑left rendering for Arabic content.
-// Use Cases: Produce Arabic reports or invoices in PDF with correct RTL orientation. | Automate multilingual document generation where Arabic sheets require RTL layout. | Integrate PDF export into web portals serving Middle‑East users.
-// AI Prompts: Write C# code that opens an existing Excel file, sets DisplayRightToLeft on a specific worksheet, and saves it as a PDF with Aspose.Cells. | Explain whether additional font embedding is needed when exporting Arabic text to PDF with Aspose.Cells. | Provide a script to batch‑process a folder of workbooks, applying RTL layout to each sheet and exporting PDFs.
+// Title: Aspose.Cells C# – Convert Workbook to PDF with Right‑to‑Left Layout for Arabic
+// Description: Creates a workbook, enables the DisplayRightToLeft flag on the worksheet, adds Arabic text, configures PdfSaveOptions with an Arabic‑compatible font, and saves the file as a right‑to‑left PDF. Demonstrates proper RTL rendering for Arabic scripts in .NET.
+// Keywords: Aspose.Cells | C# | .NET | PDF conversion | right to left | RTL | Arabic | DisplayRightToLeft | PdfSaveOptions | Arabic font | Middle East | Saudi Arabia | UAE
+// Common Searches: Aspose.Cells set RTL when exporting to PDF | C# convert Excel to PDF with Arabic right‑to‑left layout | DisplayRightToLeft property PDF Aspose.Cells | PdfSaveOptions Arabic font missing glyphs | How to generate RTL PDF for Arabic using Aspose.Cells
+// Developer Intent: Export an Excel workbook to a PDF that displays Arabic content in a right‑to‑left orientation.
+// Use Cases: Generate Arabic reports or invoices with correct RTL formatting. | Create multilingual PDFs where Arabic sheets need RTL layout. | Automate batch conversion of Excel files to RTL PDFs for Middle Eastern markets.
+// AI Prompts: Write C# code using Aspose.Cells to export a workbook to PDF with RTL layout and an Arabic‑compatible font. | Explain how DisplayRightToLeft and PdfSaveOptions interact to produce right‑to‑left PDFs in Aspose.Cells. | Provide a script that iterates through all worksheets, sets each to RTL, and saves each as a separate PDF.
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Demonstrates how to create a workbook, enable the DisplayRightToLeft property for Arabic scripts, insert sample Arabic text, and save the sheet as a PDF using Aspose.Cells for .NET.
-class ConvertWorkbookToPdfRtl
+namespace AsposeCellsArabicRtlPdf
 {
-    static void Main()
+    // Creates a workbook, enables the DisplayRightToLeft flag on the worksheet, adds Arabic text, configures PdfSaveOptions with an Arabic‑compatible font, and saves the file as a right‑to‑left PDF. Demonstrates proper RTL rendering for Arabic scripts in .NET.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook (lifecycle rule: Workbook constructor)
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Enable right‑to‑left display for Arabic scripts
-        worksheet.DisplayRightToLeft = true;
+            // Set the worksheet to display from right to left (Arabic script direction)
+            worksheet.DisplayRightToLeft = true;
 
-        // Add sample Arabic text
-        worksheet.Cells["A1"].PutValue("مرحبا بالعالم"); // "Hello World" in Arabic
+            // Add some Arabic sample text
+            worksheet.Cells["A1"].PutValue("مرحبا بالعالم"); // "Hello World" in Arabic
 
-        // Save the workbook as PDF
-        workbook.Save("ArabicRtlOutput.pdf", SaveFormat.Pdf);
+            // Configure PDF save options (optional: set a font that supports Arabic)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Use a font that contains Arabic glyphs
+                DefaultFont = "Arial",
+                // Ensure the default workbook font is checked for missing glyphs
+                CheckWorkbookDefaultFont = true
+            };
+
+            // Save the workbook as PDF using the save options (lifecycle rule: Save with SaveOptions)
+            workbook.Save("ArabicRightToLeft.pdf", pdfOptions);
+
+            Console.WriteLine("Workbook has been saved to PDF with right‑to‑left direction.");
+        }
     }
 }

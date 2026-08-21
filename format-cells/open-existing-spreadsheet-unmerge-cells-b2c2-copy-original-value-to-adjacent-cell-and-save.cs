@@ -1,64 +1,38 @@
-// Title: C# Aspose.Cells example: Unmerge B2:C2, copy its value to C2, and save the workbook
-// Description: Loads an Excel file (or creates a sample), reads the value from the merged range B2:C2, unmerges the cells, writes the original value into C2, and saves the result as a new workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells unmerge cells C# | copy merged cell value Aspose.Cells | C# unmerge B2:C2 | Aspose.Cells save workbook after unmerge | .NET Excel unmerge range | Aspose.Cells sample code GitHub | Excel merged cells handling
-// Common Searches: how to unmerge a merged range with Aspose.Cells .NET | copy value from merged Excel cells using C# | Aspose.Cells example to split B2:C2 and keep the text | C# code to unmerge cells and duplicate value in adjacent cell | Aspose.Cells unmerge and preserve data
-// Developer Intent: Unmerge the merged range B2:C2, duplicate its original value into C2, and save the updated workbook.
-// Use Cases: Cleaning user‑uploaded spreadsheets that contain merged headers before importing into a database. | Preparing Excel files for CSV export where merged cells are not supported. | Automating report generation that requires individual cells for formula calculations after extracting merged cell values.
-// AI Prompts: Generate C# code with Aspose.Cells to unmerge a specific range (e.g., B2:C2) and copy the original value to the right‑hand cell. | Show an Aspose.Cells snippet that detects a merged range, retrieves its top‑left value, unmerges the cells, and writes the value to an adjacent cell. | Explain how to preserve merged cell values when converting an Excel workbook to CSV using Aspose.Cells in .NET.
+// Title: C# – Unmerge B2:C2, copy merged value to D2, and save workbook with Aspose.Cells
+// Description: Load an existing Excel file, retrieve the value from the merged range B2:C2, unmerge the cells, copy the original value to D2, and save the updated workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | unmerge cells | merged cell value | copy cell value | Excel range B2:C2 | write to D2 | Workbook.Save | Excel automation | Aspose.Cells API
+// Common Searches: Aspose.Cells unmerge specific range and keep value | C# copy value from merged cell after unmerge | How to move merged cell content to another cell with Aspose.Cells | Unmerge B2:C2 and write value to D2 in .NET | Save edited Excel workbook using Aspose.Cells
+// Developer Intent: Extract the original value from B2:C2, unmerge the range, place that value into D2, and persist the changes.
+// Use Cases: Cleaning imported spreadsheets that contain merged headers before data import. | Preparing Excel files for systems that reject merged cells while preserving header text. | Generating a version of a report where each column has its own cell with the original merged content.
+// AI Prompts: Generate C# code with Aspose.Cells to unmerge a given range and copy its original value to another cell. | Explain how to preserve merged‑cell values when converting an Aspose.Cells workbook to CSV. | Provide a step‑by‑step tutorial for unmerging cells, duplicating their content, and saving the workbook under a new name using Aspose.Cells for .NET.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace UnmergeAndCopyExample
+// Load an existing Excel file, retrieve the value from the merged range B2:C2, unmerge the cells, copy the original value to D2, and save the updated workbook using Aspose.Cells for .NET.
+class UnmergeAndCopy
 {
-    // Loads an Excel file (or creates a sample), reads the value from the merged range B2:C2, unmerges the cells, writes the original value into C2, and saves the result as a new workbook using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+        // Load the existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-            try
-            {
-                // Ensure the input file exists; create a simple workbook if it does not.
-                if (!File.Exists(inputPath))
-                {
-                    var sampleWb = new Workbook();
-                    Worksheet sampleWs = sampleWb.Worksheets[0];
-                    // Put a value in B2 and merge B2:C2 for demonstration.
-                    sampleWs.Cells["B2"].PutValue("Sample");
-                    sampleWs.Cells.CreateRange("B2", "C2").Merge();
-                    sampleWb.Save(inputPath);
-                }
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-                // Load the existing workbook.
-                Workbook workbook = new Workbook(inputPath);
+        // Get the value from the merged cell (top‑left cell of the range B2:C2)
+        Cell mergedCell = cells["B2"];
+        object originalValue = mergedCell.Value;
 
-                // Access the first worksheet.
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Unmerge the range B2:C2
+        // B2 is row 1, column 1 (zero‑based). The range spans 1 row and 2 columns.
+        cells.UnMerge(1, 1, 1, 2);
 
-                // Create a range that represents the merged cells B2:C2.
-                Aspose.Cells.Range mergedRange = worksheet.Cells.CreateRange("B2", "C2");
+        // Copy the original value to the adjacent cell D2 (row 1, column 3)
+        cells["D2"].PutValue(originalValue);
 
-                // Store the original value (the merged cell keeps its value in the top‑left cell B2).
-                object originalValue = worksheet.Cells["B2"].Value;
-
-                // Unmerge the range.
-                mergedRange.UnMerge();
-
-                // Copy the original value to an adjacent cell (C2 in this case).
-                worksheet.Cells["C2"].PutValue(originalValue);
-
-                // Save the modified workbook.
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook processed successfully. Output saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

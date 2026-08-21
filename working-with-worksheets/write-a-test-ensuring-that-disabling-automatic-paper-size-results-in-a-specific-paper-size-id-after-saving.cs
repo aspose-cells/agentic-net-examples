@@ -1,48 +1,42 @@
-// Title: Verify PaperSize ID Persistence After Disabling Automatic Paper Size in Aspose.Cells (.NET)
-// Description: A C# example that sets Worksheet.PageSetup.PaperSize to PaperA5 (which turns off automatic sizing), saves the workbook, reloads it, and confirms that IsAutomaticPaperSize remains false and the PaperSize ID is still PaperA5.
-// Keywords: Aspose.Cells | .NET | PaperSize | AutomaticPaperSize | PageSetup | Workbook save load | unit test | PaperA5 | paper size persistence
-// Common Searches: Aspose.Cells disable automatic paper size | verify paper size after saving workbook | PageSetup.IsAutomaticPaperSize false | PaperSize ID persistence Aspose.Cells | unit test for worksheet page setup
-// Developer Intent: Ensure that setting a specific PaperSize disables automatic sizing and that the chosen size ID survives a save‑load cycle.
-// Use Cases: Create a workbook, set PageSetup.PaperSize to PaperA5, assert IsAutomaticPaperSize is false, save, reload, and verify PaperSize remains PaperA5. | Repeat the test with other PaperSizeType values (e.g., PaperLetter, PaperLegal) to confirm consistent behavior across formats. | Integrate the verification into CI pipelines to detect regressions in PageSetup serialization.
-// AI Prompts: Generate an MSTest method that checks IsAutomaticPaperSize is false and PaperSize ID persists after saving a workbook with Aspose.Cells. | Write a NUnit test that sets Worksheet.PageSetup.PaperSize to PaperA5, saves the file, reloads it, and asserts the PaperSize ID and automatic flag. | Create an xUnit test that validates PaperSize persistence and automatic paper size disabling for Aspose.Cells .NET workbooks.
+// Title: C# unit test: verify explicit paper size persists after saving with Aspose.Cells
+// Description: Creates a workbook, sets Worksheet.PageSetup.PaperSize to PaperA5 (disabling automatic sizing), saves to XLSX, reloads, and asserts IsAutomaticPaperSize is false and PaperSize equals PaperA5. Throws an exception if the values differ.
+// Keywords: Aspose.Cells | C# | PaperSize | IsAutomaticPaperSize | unit test | XLSX | PageSetup | PaperA5 | paper size ID 11 | save and reload | regression test
+// Common Searches: Aspose.Cells unit test paper size | C# verify PaperSize after save | IsAutomaticPaperSize false Aspose.Cells | persist paper size XLSX Aspose | PageSetup PaperSize test .NET
+// Developer Intent: Confirm that disabling automatic paper size stores the chosen PaperSize ID and remains unchanged after workbook serialization.
+// Use Cases: Automated regression testing for printing layout consistency | CI validation that custom paper dimensions are retained across save/load cycles | Ensuring PDF generation uses a fixed paper size defined in the workbook | Quality assurance for workbook templates with predefined page‑setup settings
+// AI Prompts: Generate an NUnit test that asserts IsAutomaticPaperSize is false and PaperSize equals PaperA5 after saving and loading an XLSX with Aspose.Cells. | Create a MSTest method to verify explicit paper size persistence in a workbook using Aspose.Cells for .NET. | Write a xUnit test checking that PaperSize ID 11 remains after reloading a workbook where automatic paper size was disabled.
 
 using System;
-using System.Diagnostics;
-using System.IO;
 using Aspose.Cells;
 
-// A C# example that sets Worksheet.PageSetup.PaperSize to PaperA5 (which turns off automatic sizing), saves the workbook, reloads it, and confirms that IsAutomaticPaperSize remains false and the PaperSize ID is still PaperA5.
-class DisableAutomaticPaperSizeTest
+// Creates a workbook, sets Worksheet.PageSetup.PaperSize to PaperA5 (disabling automatic sizing), saves to XLSX, reloads, and asserts IsAutomaticPaperSize is false and PaperSize equals PaperA5. Throws an exception if the values differ.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Path for the temporary workbook
+        string filePath = "TestPaperSize.xlsx";
+
+        // Create a new workbook and set an explicit paper size (disables automatic size)
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        PageSetup pageSetup = worksheet.PageSetup;
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.PageSetup.PaperSize = PaperSizeType.PaperA5; // PaperSize ID = 11
 
-        // Set a specific paper size (A5). This disables automatic paper size.
-        pageSetup.PaperSize = PaperSizeType.PaperA5;
+        // Save the workbook
+        workbook.Save(filePath, SaveFormat.Xlsx);
 
-        // Verify that automatic paper size is now disabled
-        Debug.Assert(!pageSetup.IsAutomaticPaperSize, "IsAutomaticPaperSize should be false after setting PaperSize.");
-        Debug.Assert(pageSetup.PaperSize == PaperSizeType.PaperA5, "PaperSize should be PaperA5.");
+        // Load the saved workbook
+        Workbook loadedWorkbook = new Workbook(filePath);
+        PageSetup pageSetup = loadedWorkbook.Worksheets[0].PageSetup;
 
-        // Save the workbook to a temporary file
-        string tempFile = Path.Combine(Path.GetTempPath(), "PaperSizeTest.xlsx");
-        workbook.Save(tempFile, SaveFormat.Xlsx);
+        // Verify that automatic paper size is disabled
+        if (pageSetup.IsAutomaticPaperSize)
+            throw new Exception("IsAutomaticPaperSize should be false after setting explicit paper size.");
 
-        // Load the workbook back
-        Workbook loadedWorkbook = new Workbook(tempFile);
-        PageSetup loadedPageSetup = loadedWorkbook.Worksheets[0].PageSetup;
+        // Verify that the paper size ID matches the expected value
+        if (pageSetup.PaperSize != PaperSizeType.PaperA5)
+            throw new Exception($"Expected PaperSize ID {PaperSizeType.PaperA5}, but got {pageSetup.PaperSize}.");
 
-        // Verify that the paper size remains the same and automatic size is still disabled
-        if (loadedPageSetup.IsAutomaticPaperSize)
-            throw new Exception("Automatic paper size should be disabled after loading.");
-
-        if (loadedPageSetup.PaperSize != PaperSizeType.PaperA5)
-            throw new Exception($"Expected PaperSize ID {(int)PaperSizeType.PaperA5}, but got {(int)loadedPageSetup.PaperSize}.");
-
-        Console.WriteLine("Test passed. PaperSize ID after loading: " + (int)loadedPageSetup.PaperSize);
+        Console.WriteLine("Test passed: Automatic paper size disabled and PaperSize ID is correct.");
     }
 }

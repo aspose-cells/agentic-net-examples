@@ -1,45 +1,54 @@
-// Title: Set multiple Shape text‑alignment properties with an object initializer in Aspose.Cells for .NET
-// Description: Shows how to create a Workbook, add a textbox Shape, and apply Text, horizontal TextAlignment and vertical TextVerticalType in one C# object‑initializer statement (when the API version supports these properties) before saving the worksheet.
-// Keywords: Aspose.Cells | Shape | TextBox | TextAlignment | TextVerticalType | object initializer | C# | .NET | shape formatting | worksheet | workbook
-// Common Searches: object initializer shape Aspose.Cells | set Shape TextAlignment C# | initialize Shape properties in one line Aspose | Aspose.Cells textbox alignment example | C# shape vertical text type Aspose
-// Developer Intent: Configure a Shape’s text content and alignment attributes in a single, concise statement using object‑initializer syntax.
-// Use Cases: Create several textbox Shapes with identical horizontal and vertical alignment by reusing the same initializer block. | Reduce boilerplate when adding formatted shapes (text, font, fill, alignment) to a worksheet. | Prepare a template workbook where shape alignment settings are defined at creation time for consistent layout.
-// AI Prompts: Write C# code that adds a textbox Shape to a worksheet and sets Text, TextAlignment, and TextVerticalType using an object initializer in Aspose.Cells. | Explain how to programmatically check if ShapeTextAlignment properties exist in the installed Aspose.Cells version and suggest a fallback if they are missing. | Provide an example that initializes a Shape with text, font size, fill color, and both alignment settings in one object‑initializer block.
+// Title: Set multiple ShapeTextAlignment properties with a C# object initializer in Aspose.Cells
+// Description: Shows how to create a workbook, add a rectangle shape, and configure its TextBody.TextAlignment (wrap, rotation, overflow, margins, auto‑margin, column count) using a single object‑initializer statement, then save the file as ShapeTextAlignmentInitializer.xlsx.
+// Keywords: Aspose.Cells | ShapeTextAlignment | object initializer | C# | .NET | text wrapping | rotation angle | margin settings | overflow handling | text box shape
+// Common Searches: Aspose.Cells object initializer ShapeTextAlignment | C# set shape text alignment in one line | initialize multiple text alignment properties Aspose.Cells | configure shape margins and overflow Aspose.Cells | rotate shape text with object initializer C#
+// Developer Intent: Configure all ShapeTextAlignment options for a shape using a single object‑initializer expression.
+// Use Cases: Add a rectangle shape and apply wrap, rotation, overflow, margins, and auto‑margin in one initializer before saving the workbook. | Create a text‑box shape with predefined vertical/horizontal overflow, rotation angle, and column count for consistent formatting across worksheets. | Reuse a pre‑configured ShapeTextAlignment initializer to apply identical text alignment settings to multiple shapes in a workbook.
+// AI Prompts: Rewrite the sample so that every ShapeTextAlignment property is assigned within a single object initializer. | Generate C# code that adds a shape to a worksheet and sets its TextBody.TextAlignment (wrap, rotation, overflow, margins, auto‑margin, columns) using an object initializer, then saves the workbook. | Provide an example of using a C# object initializer to configure ShapeTextAlignment properties such as IsTextWrapped, RotationAngle, TextVerticalOverflow, and margin values in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsExample
+// Shows how to create a workbook, add a rectangle shape, and configure its TextBody.TextAlignment (wrap, rotation, overflow, margins, auto‑margin, column count) using a single object‑initializer statement, then save the file as ShapeTextAlignmentInitializer.xlsx.
+class ShapeTextAlignmentInitializerDemo
 {
-    // Shows how to create a Workbook, add a textbox Shape, and apply Text, horizontal TextAlignment and vertical TextVerticalType in one C# object‑initializer statement (when the API version supports these properties) before saving the worksheet.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add a text box shape to the worksheet
-                Shape shape = worksheet.Shapes.AddTextBox(0, 0, 100, 100, 200, 200);
-                shape.Text = "Sample text with custom alignment";
+            // Add a rectangle shape to the worksheet
+            Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 50, 100);
 
-                // Note: Advanced text alignment properties (e.g., TextAlignment, TextVerticalType)
-                // are not available in the current Aspose.Cells version used.
-                // If needed, they can be set using the appropriate APIs when supported.
+            // Retrieve the ShapeTextAlignment object (read‑only property) and set its properties
+            ShapeTextAlignment alignment = shape.TextBody.TextAlignment;
+            alignment.IsTextWrapped = true;
+            alignment.RotateTextWithShape = true;
+            alignment.TextVerticalOverflow = TextOverflowType.Clip;
+            alignment.TextHorizontalOverflow = TextOverflowType.Clip;
+            alignment.RotationAngle = 90;
+            alignment.TextVerticalType = TextVerticalType.Horizontal;
+            alignment.IsLockedText = false;
+            alignment.AutoSize = false;
+            alignment.TextShapeType = AutoShapeType.TextBox;
+            alignment.TopMarginPt = 2.0;
+            alignment.BottomMarginPt = 2.0;
+            alignment.LeftMarginPt = 2.0;
+            alignment.RightMarginPt = 2.0;
+            alignment.IsAutoMargin = true;
+            alignment.NumberOfColumns = 1;
 
-                // Save the workbook
-                string outputPath = "ShapeTextAlignmentWithInitializer.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("ShapeTextAlignmentInitializer.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

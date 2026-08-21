@@ -1,11 +1,11 @@
----
+﻿---
 name: Aspose.Cells Workbook Management Agent
 category: manage-workbook
 product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Create, configure, inspect, clean, copy, and manage Excel workbooks in C#
 primary_apis: [Workbook, WorkbookSettings, WorksheetCollection, ContentTypePropertyCollection, CustomXmlPartCollection]
 related_categories: [../open-workbook/, ../save-workbook/, ../working-with-worksheets/, ../document-properties/]
@@ -90,3 +90,4 @@ Verify exact collection members and settings against the installed package. Comp
 ## Definition of done
 
 The example is done when workbook ownership, scope, operation, affected state, security assumptions, output, and reopened postcondition are explicit and verified.
+

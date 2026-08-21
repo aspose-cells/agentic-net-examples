@@ -1,10 +1,10 @@
-// Title: C# – Expand Only the First Level of a Hierarchical PivotTable with Aspose.Cells for .NET
-// Description: This Aspose.Cells for .NET example creates a workbook with Category → SubCategory → Amount data, builds a hierarchical PivotTable, enables drill‑down, and uses the PivotField.HideDetail(true) method to collapse the SubCategory level so that only the top‑level Category rows are visible when the file is opened.
-// Keywords: Aspose.Cells C# PivotTable first level | hide subcategory rows Aspose.Cells | expand first level hierarchical pivot | PivotField.HideDetail Aspose | drilldown collapse pivot .NET | Aspose.Cells sample code | Excel pivot hierarchy programmatic | C# Excel pivot collapse
-// Common Searches: Aspose.Cells hide detail rows in pivot | C# expand only first level of pivot table | programmatically collapse subcategory in Aspose pivot | how to start a pivot table collapsed using Aspose.Cells | Aspose.Cells .NET pivot drilldown example
-// Developer Intent: Programmatically collapse the SubCategory level of a hierarchical PivotTable so that only the top‑level Category rows are displayed initially.
-// Use Cases: Generate a summary report that shows totals per Category without overwhelming users with SubCategory details. | Create an Excel dashboard where the pivot starts collapsed for a cleaner first view and lets users drill down on demand. | Export data to Excel from an application and deliver a workbook that opens with a concise, top‑level view.
-// AI Prompts: Write C# code using Aspose.Cells to build a hierarchical PivotTable and hide the detail rows of the first row field. | Show how to set PivotField.HideDetail(true) after enabling drill‑down to collapse sub‑levels in a pivot table. | Provide a complete Aspose.Cells example that expands only the first level of a pivot hierarchy and saves the workbook.
+// Title: C# Example: Expand First Level of a Hierarchical PivotTable with Aspose.Cells for .NET
+// Description: This Aspose.Cells for .NET sample builds a workbook containing Category and SubCategory data, creates a PivotTable on a separate sheet, enables drill‑down buttons, applies outline layout, and then programmatically collapses all sub‑level rows so that only the top‑level Category items remain expanded. The pivot is refreshed, calculated, and saved as PivotTableFirstLevelExpanded.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | PivotTable | hierarchical pivot | first level expand | collapse detail rows | HideDetail | ShowDrill | outline form | row field API | Excel automation | sample code | GitHub example | Excel report generation
+// Common Searches: Aspose.Cells expand first level of hierarchical pivot table C# | How to hide subcategory rows in Aspose.Cells PivotTable | Show drill‑down buttons but collapse detail rows in .NET PivotTable | Programmatically collapse PivotTable row field using Aspose.Cells | C# code to display only top‑level rows in an Excel pivot
+// Developer Intent: Display only the top‑level row items of a hierarchical PivotTable while keeping drill‑down controls active.
+// Use Cases: Create a summary workbook that initially shows only categories, letting users expand subcategories on demand. | Build a fast‑loading dashboard where detailed rows are hidden until the viewer chooses to explore them. | Generate a printable pivot view that lists primary groups without inner items for a clean layout.
+// AI Prompts: Provide C# code that expands only the first level of a hierarchical PivotTable using Aspose.Cells and keeps drill‑down buttons visible. | Show how to programmatically collapse all detail rows of a specific row field in an Aspose.Cells PivotTable. | Explain how to toggle sub‑level visibility in an Aspose.Cells PivotTable after refreshing the data.
 
 using System;
 using Aspose.Cells;
@@ -12,62 +12,63 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotExpandFirstLevel
 {
-    // This Aspose.Cells for .NET example creates a workbook with Category → SubCategory → Amount data, builds a hierarchical PivotTable, enables drill‑down, and uses the PivotField.HideDetail(true) method to collapse the SubCategory level so that only the top‑level Category rows are visible when the file is opened.
+    // This Aspose.Cells for .NET sample builds a workbook containing Category and SubCategory data, creates a PivotTable on a separate sheet, enables drill‑down buttons, applies outline layout, and then programmatically collapses all sub‑level rows so that only the top‑level Category items remain expanded. The pivot is refreshed, calculated, and saved as PivotTableFirstLevelExpanded.xlsx.
     public class Program
     {
         public static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Get the first worksheet (data source)
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
             // Populate sample hierarchical data
-            // Category -> SubCategory -> Amount
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("SubCategory");
-            dataSheet.Cells["C1"].PutValue("Amount");
+            // Row fields: Category (Level 1) and SubCategory (Level 2)
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("SubCategory");
+            sheet.Cells["C1"].PutValue("Amount");
 
-            dataSheet.Cells["A2"].PutValue("Fruit");
-            dataSheet.Cells["B2"].PutValue("Apple");
-            dataSheet.Cells["C2"].PutValue(120);
+            sheet.Cells["A2"].PutValue("Food");
+            sheet.Cells["B2"].PutValue("Fruit");
+            sheet.Cells["C2"].PutValue(120);
 
-            dataSheet.Cells["A3"].PutValue("Fruit");
-            dataSheet.Cells["B3"].PutValue("Banana");
-            dataSheet.Cells["C3"].PutValue(80);
+            sheet.Cells["A3"].PutValue("Food");
+            sheet.Cells["B3"].PutValue("Vegetable");
+            sheet.Cells["C3"].PutValue(80);
 
-            dataSheet.Cells["A4"].PutValue("Vegetable");
-            dataSheet.Cells["B4"].PutValue("Carrot");
-            dataSheet.Cells["C4"].PutValue(50);
+            sheet.Cells["A4"].PutValue("Beverage");
+            sheet.Cells["B4"].PutValue("Tea");
+            sheet.Cells["C4"].PutValue(50);
 
-            dataSheet.Cells["A5"].PutValue("Vegetable");
-            dataSheet.Cells["B5"].PutValue("Potato");
-            dataSheet.Cells["C5"].PutValue(70);
+            sheet.Cells["A5"].PutValue("Beverage");
+            sheet.Cells["B5"].PutValue("Coffee");
+            sheet.Cells["C5"].PutValue(70);
 
-            // Add a new worksheet to host the pivot table
+            // Add a new worksheet for the pivot table
             Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
 
-            // Add the pivot table (source range, destination cell, name)
+            // Create the pivot table using the data range
             int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:C5", "A3", "PivotTable1");
             PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-            // Add fields: Category as row, SubCategory as row (to create hierarchy), Amount as data
+            // Add hierarchical row fields (Category -> SubCategory)
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
             pivotTable.AddFieldToArea(PivotFieldType.Row, "SubCategory");
+
+            // Add a data field
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-            // Enable drilldown and show drill buttons (optional, improves UI)
-            pivotTable.EnableDrilldown = true;
+            // Show expand/collapse buttons
             pivotTable.ShowDrill = true;
+            // Layout the pivot in outline form (makes hierarchy visible)
+            pivotTable.ShowInOutlineForm();
 
-            // Collapse details for the first row field (Category) so that only the first level is visible.
-            // This hides the SubCategory items under each Category, achieving the desired concise view.
-            PivotField categoryField = pivotTable.RowFields[0];
-            categoryField.HideDetail(true);
+            // Collapse all detail under the first row field (Category)
+            // This leaves only the first level (Category) expanded.
+            PivotField firstRowField = pivotTable.RowFields[0];
+            firstRowField.HideDetail(true);
 
-            // Refresh data and calculate the pivot table
+            // Refresh and calculate the pivot table data
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 

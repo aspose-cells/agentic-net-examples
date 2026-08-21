@@ -1,11 +1,11 @@
----
+﻿---
 name: Aspose.Cells Document Properties Agent
 category: document-properties
 product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Read, add, update, remove, copy, and audit Excel workbook metadata in C#
 primary_apis: [BuiltInDocumentPropertyCollection, CustomDocumentPropertyCollection, DocumentProperty]
 related_categories: [../manage-workbook/, ../open-workbook/, ../save-workbook/]
@@ -75,3 +75,4 @@ Verify collection members and property conversions against the installed package
 ## Definition of done
 
 The example is done when collection, property name/type, privacy treatment, and persisted result are explicit and verified.
+

@@ -1,94 +1,84 @@
-// Title: C# – Build a case‑insensitive header‑to‑column index dictionary with Aspose.Cells
-// Description: Learn how to use Aspose.Cells for .NET to map column headers from the first worksheet row to zero‑based column indexes. The sample creates a Workbook, fills a header row, uses Cells.MaxDataColumn, iterates the row, skips empty cells, stores the mapping in a case‑insensitive Dictionary<string,int>, shows a lookup for "Price", and saves the file.
-// Keywords: Aspose.Cells header mapping C# | column index dictionary .NET | iterate header row Aspose.Cells | MaxDataColumn property | case insensitive dictionary Excel | C# Excel header to index | Aspose.Cells example USA | Aspose.Cells tutorial UK | Aspose.Cells guide India
-// Common Searches: Aspose.Cells map header to column index | C# get column number by header name | How to create header lookup dictionary in Aspose.Cells | Skip empty header cells Aspose.Cells | Retrieve column index for "Price" using Aspose.Cells
-// Developer Intent: Generate a fast, case‑insensitive lookup that converts each non‑empty header in the first row of an Excel worksheet into its zero‑based column index using Aspose.Cells for .NET.
-// Use Cases: Read data rows after locating the "Price" column to compute totals without hard‑coding column numbers. | Import CSV or user‑supplied Excel files where column order varies, by dynamically building a header‑to‑index map. | Write values back to specific columns (e.g., update inventory) using the dictionary instead of fixed indexes.
-// AI Prompts: Write C# code that creates a case‑insensitive Dictionary<string,int> of header names to column indexes with Aspose.Cells, handling empty cells and using Cells.MaxDataColumn. | Show how to retrieve a column index for a given header and then read all cells under that column using Aspose.Cells in .NET. | Explain how to extend the header mapping to support duplicate header names by storing a List<int> for each header.
+// Title: Create a case‑insensitive header‑to‑column index map with Aspose.Cells for .NET (C#)
+// Description: This example shows how to load or create an Excel workbook, write sample headers, and iterate the first row to build a Dictionary<string,int> that links each non‑empty header (trimmed and case‑insensitive) to its zero‑based column index. The mapping is printed to the console and the workbook is saved.
+// Keywords: Aspose.Cells header index mapping | C# Excel column lookup | case insensitive header dictionary | iterate first row Aspose.Cells | Excel header to column number .NET | dynamic column reference C# | Aspose.Cells sample code
+// Common Searches: how to map Excel headers to column numbers using Aspose.Cells C# | retrieve column index by header name Aspose.Cells .NET | create dictionary of sheet headers Aspose.Cells | skip empty header cells Aspose.Cells example | case‑insensitive header lookup in Excel with C#
+// Developer Intent: Generate a fast, case‑insensitive lookup that returns the column index for any header in the first worksheet row.
+// Use Cases: Read rows by referencing cells through header names instead of hard‑coded indexes. | Validate required columns before processing and raise errors for missing headers. | Construct dynamic SQL statements or data‑transfer objects by translating header names to positions at runtime.
+// AI Prompts: Write C# code using Aspose.Cells that builds a case‑insensitive dictionary of header names to column indices, ignoring blank cells and handling duplicate headers. | Extend the example to combine multiple header rows into a single lookup dictionary, preserving hierarchy and allowing composite keys.
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHeaderLookup
+namespace AsposeCellsHeaderMapping
 {
-    // Learn how to use Aspose.Cells for .NET to map column headers from the first worksheet row to zero‑based column indexes. The sample creates a Workbook, fills a header row, uses Cells.MaxDataColumn, iterates the row, skips empty cells, stores the mapping in a case‑insensitive Dictionary<string,int>, shows a lookup for "Price", and saves the file.
-    public class HeaderMapper
+    // This example shows how to load or create an Excel workbook, write sample headers, and iterate the first row to build a Dictionary<string,int> that links each non‑empty header (trimmed and case‑insensitive) to its zero‑based column index. The mapping is printed to the console and the workbook is saved.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook(); // replace with new Workbook("input.xlsx") to load
                 Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
 
-                // Populate a sample header row (row index 0)
-                cells[0, 0].PutValue("ID");
-                cells[0, 1].PutValue("Name");
-                cells[0, 2].PutValue("Price");
-                cells[0, 3].PutValue("Quantity");
+                // Sample data: add header row for demonstration
+                worksheet.Cells["A1"].PutValue("ID");
+                worksheet.Cells["B1"].PutValue("Name");
+                worksheet.Cells["C1"].PutValue("Price");
+                worksheet.Cells["D1"].PutValue("Quantity");
 
-                // Add some sample data rows (optional, just for completeness)
-                cells[1, 0].PutValue(1);
-                cells[1, 1].PutValue("Apple");
-                cells[1, 2].PutValue(0.5);
-                cells[1, 3].PutValue(100);
-
-                cells[2, 0].PutValue(2);
-                cells[2, 1].PutValue("Banana");
-                cells[2, 2].PutValue(0.3);
-                cells[2, 3].PutValue(150);
-
-                // Create a dictionary to map header names to their column indices
+                // Dictionary to hold header name -> column index mapping
                 Dictionary<string, int> headerToIndex = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-                // Determine the last column that contains data in the header row
-                int lastColumn = cells.MaxDataColumn; // correct Aspose.Cells property
+                // Assume the header row is the first row (index 0)
+                int headerRowIndex = 0;
+                Cells cells = worksheet.Cells;
+
+                // Determine the last column with data in the worksheet (fallback if specific row method unavailable)
+                int lastColumn = cells.MaxColumn;
 
                 // Iterate through each column in the header row
                 for (int col = 0; col <= lastColumn; col++)
                 {
-                    string header = cells[0, col].StringValue?.Trim();
+                    string? header = cells[headerRowIndex, col].StringValue;
 
-                    // Skip empty headers
-                    if (string.IsNullOrEmpty(header))
+                    // Skip empty or whitespace header cells
+                    if (string.IsNullOrWhiteSpace(header))
                         continue;
 
-                    // Add or update the mapping
+                    header = header.Trim();
+
+                    // Add to dictionary (if duplicate header, later one overwrites)
                     headerToIndex[header] = col;
                 }
 
-                // Demonstrate the lookup dictionary
+                // Example usage: print the mapping
                 Console.WriteLine("Header to Column Index Mapping:");
                 foreach (var kvp in headerToIndex)
                 {
                     Console.WriteLine($"Header \"{kvp.Key}\" => Column Index {kvp.Value}");
                 }
 
-                // Example: retrieve the column index for a specific header
-                if (headerToIndex.TryGetValue("Price", out int priceColumn))
+                // Save the workbook if needed
+                string outputPath = "HeaderMappingDemo.xlsx";
+
+                // Ensure the directory exists before saving
+                string? directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                 {
-                    Console.WriteLine($"\nThe \"Price\" column is at index {priceColumn}.");
+                    Directory.CreateDirectory(directory);
                 }
 
-                // Save the workbook (optional, just to illustrate lifecycle usage)
-                workbook.Save("HeaderLookupDemo.xlsx");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for testing
-    class Program
-    {
-        static void Main()
-        {
-            HeaderMapper.Run();
         }
     }
 }

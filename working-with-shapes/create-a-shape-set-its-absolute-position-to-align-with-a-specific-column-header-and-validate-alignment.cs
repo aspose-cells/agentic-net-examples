@@ -1,17 +1,17 @@
-// Title: Align a Rectangle Shape to a Column Header with Aspose.Cells for .NET
-// Description: This C# example creates a workbook, writes a header in cell B1, adds a rectangle shape, positions the shape by setting UpperLeftColumn and UpperLeftRow to the header's coordinates, clears any pixel offsets, verifies the placement, and saves the file as AlignedShape.xlsx.
-// Keywords: Aspose.Cells shape positioning | C# rectangle shape alignment | UpperLeftColumn property | UpperLeftRow property | reset shape pixel offset | Excel shape alignment example | Aspose.Cells .NET tutorial | shape placement validation
-// Common Searches: how to align a shape with a column header using Aspose.Cells | set shape UpperLeftColumn and UpperLeftRow in C# | reset shape pixel offsets Aspose.Cells | verify shape location after moving in Aspose.Cells | Aspose.Cells align rectangle to cell B1
-// Developer Intent: Place a rectangle so its top‑left corner matches the exact cell of a column header and programmatically confirm that the coordinates are correct.
-// Use Cases: Designing custom report headers where graphics must line up with column titles | Building interactive Excel dashboards that anchor shapes to specific data columns | Automating quality checks for generated spreadsheets to ensure visual elements are correctly positioned
-// AI Prompts: Write C# code with Aspose.Cells that adds a shape and aligns its UpperLeftColumn/UpperLeftRow to a given header cell, then confirms the alignment. | Show how to move an existing shape to cell C3, clearing UpperDeltaX and UpperDeltaY for precise placement. | Explain the steps to programmatically validate that a shape’s column and row indices correspond to a target cell in Aspose.Cells.
+// Title: Align a Rectangle Shape to a Column Header Cell with Aspose.Cells for .NET
+// Description: Creates a workbook, writes a header in column C (row 0), adds a rectangle shape, sets UpperLeftRow and UpperLeftColumn to the header cell, clears horizontal offset with UpperDeltaX, verifies the placement, and saves the file as AlignedShape.xlsx.
+// Keywords: Aspose.Cells shape alignment | C# set shape position cell | UpperLeftRow UpperLeftColumn | remove shape offset Aspose | validate shape placement | rectangle shape worksheet | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells align shape to specific cell | set shape UpperLeftRow UpperLeftColumn C# | remove shape offset Aspose.Cells | check if shape is aligned with header cell | position rectangle shape in Excel using Aspose
+// Developer Intent: Place a rectangle shape so its upper‑left corner matches a column header cell and confirm the alignment programmatically.
+// Use Cases: Add a visual marker next to a column title in a generated report. | Synchronize shapes with dynamic headers for interactive dashboards. | Automated layout verification before exporting an Excel workbook.
+// AI Prompts: Write C# code with Aspose.Cells that aligns any shape to a given cell and ensures zero offset. | Show how to adjust UpperDeltaY for vertical alignment of a shape to a header cell. | Create a reusable method that receives a worksheet, row, column, and shape, then returns a boolean indicating correct alignment.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This C# example creates a workbook, writes a header in cell B1, adds a rectangle shape, positions the shape by setting UpperLeftColumn and UpperLeftRow to the header's coordinates, clears any pixel offsets, verifies the placement, and saves the file as AlignedShape.xlsx.
-class AlignShapeToColumnHeader
+// Creates a workbook, writes a header in column C (row 0), adds a rectangle shape, sets UpperLeftRow and UpperLeftColumn to the header cell, clears horizontal offset with UpperDeltaX, verifies the placement, and saves the file as AlignedShape.xlsx.
+class AlignShapeToHeader
 {
     static void Main()
     {
@@ -19,30 +19,22 @@ class AlignShapeToColumnHeader
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Write a column header in cell B1 (row 0, column 1)
-        worksheet.Cells[0, 1].PutValue("Header");
+        // Write a header in column C (index 2) of the first row
+        worksheet.Cells[0, 2].PutValue("Header");
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upperLeftRow, upperLeftColumn, upperLeftPixel, upperLeftPixel2, height, width
-        Shape shape = worksheet.Shapes.AddRectangle(0, 0, 0, 0, 100, 100);
+        // Add a rectangle shape with arbitrary initial parameters
+        Shape shape = worksheet.Shapes.AddRectangle(0, 0, 0, 100, 50, 0);
 
-        // Align the shape's upper‑left corner with the column header (column B, row 1)
-        shape.UpperLeftColumn = 1; // Column index (0‑based)
-        shape.UpperLeftRow = 0;    // Row index (0‑based)
+        // Align the shape's upper‑left corner to the header cell (row 0, column 2)
+        shape.UpperLeftRow = 0;      // top row index
+        shape.UpperLeftColumn = 2;   // column index of the header
 
-        // Optional: reset any pixel offsets
+        // Ensure there is no offset from the cell
         shape.UpperDeltaX = 0;
-        shape.UpperDeltaY = 0; // UpperDeltaY property exists similarly; set to 0 for exact alignment
 
-        // Validate that the shape is aligned with the intended column header
-        if (shape.UpperLeftColumn == 1 && shape.UpperLeftRow == 0)
-        {
-            Console.WriteLine("Shape successfully aligned with the column header.");
-        }
-        else
-        {
-            Console.WriteLine("Shape alignment validation failed.");
-        }
+        // Validate that the shape is positioned at the intended cell
+        bool isAligned = shape.UpperLeftRow == 0 && shape.UpperLeftColumn == 2;
+        Console.WriteLine("Shape aligned to header cell: " + isAligned);
 
         // Save the workbook
         workbook.Save("AlignedShape.xlsx");

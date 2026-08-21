@@ -1,73 +1,90 @@
-// Title: Export a Named Range to CSV with Aspose.Cells for .NET (C# Sample)
-// Description: C# example that loads an .xlsx workbook, retrieves the "EmployeeList" named range, defines its cell area, configures TxtSaveOptions with a comma separator, and saves only that range to a CSV file. Includes checks for missing files and undefined ranges.
-// Keywords: Aspose.Cells | C# | .NET | CSV export | named range | EmployeeList | TxtSaveOptions | ExportArea | Excel to CSV | code sample | GitHub example
-// Common Searches: Aspose.Cells export named range to CSV C# | How to save a specific Excel range as CSV using Aspose.Cells | TxtSaveOptions ExportArea example | C# code to extract EmployeeList range to CSV | Aspose.Cells CSV export for a single range
-// Developer Intent: Generate a CSV file that contains only the data from the "EmployeeList" named range in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Create a lightweight CSV report of employee records for external analytics. | Provide a data feed to payroll or HR systems that require only the employee list. | Extract a specific worksheet region for auditing without exposing the full workbook.
-// AI Prompts: Write C# code with Aspose.Cells to export the "EmployeeList" named range to a CSV file using a comma separator. | Explain how TxtSaveOptions.ExportArea restricts CSV output to a defined range in Aspose.Cells and show a code snippet. | Add robust error handling for missing workbook files or undefined named ranges when exporting to CSV with Aspose.Cells.
+// Title: Export a Named Range to CSV with Aspose.Cells for .NET (C#)
+// Description: Load an Excel workbook, retrieve the "EmployeeList" named range using GetRangeByName, convert it to a DataTable with ExportDataTable, and write the data to a CSV file. The example handles header creation, proper escaping of commas and quotes, and includes error handling for missing files or ranges.
+// Keywords: Aspose.Cells export named range | C# export named range to CSV | GetRangeByName Aspose.Cells | ExportDataTable to CSV | Excel named range CSV conversion | .NET write DataTable as CSV | EmployeeList named range export | Aspose.Cells CSV output | flat file export from Excel | C# Excel to CSV example
+// Common Searches: how to export a named range from Excel to CSV using Aspose.Cells C# | Aspose.Cells GetRangeByName example for CSV | C# convert Excel named range to CSV file | export EmployeeList range to CSV with Aspose.Cells | write DataTable to CSV in .NET
+// Developer Intent: Generate a CSV file that contains only the data from the "EmployeeList" named range in an Excel workbook.
+// Use Cases: Produce a lightweight CSV report of employee records for HR analytics. | Supply a flat‑file feed to an external system that requires only the EmployeeList data. | Create a backup of a specific worksheet segment for data archiving or migration.
+// AI Prompts: Write C# code using Aspose.Cells to export any named range to a CSV file with a custom delimiter and UTF‑8 encoding. | Modify the example to add a UTF‑8 BOM, handle null values, and allow the delimiter to be passed as a parameter. | Create a reusable method that takes workbook path, named range name, output CSV path, and returns a success flag with detailed logging.
 
 using System;
+using System.Data;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
-// C# example that loads an .xlsx workbook, retrieves the "EmployeeList" named range, defines its cell area, configures TxtSaveOptions with a comma separator, and saves only that range to a CSV file. Includes checks for missing files and undefined ranges.
-class ExportNamedRangeToCsv
+namespace ExportNamedRangeToCsv
 {
-    static void Main()
+    // Load an Excel workbook, retrieve the "EmployeeList" named range using GetRangeByName, convert it to a DataTable with ExportDataTable, and write the data to a CSV file. The example handles header creation, proper escaping of commas and quotes, and includes error handling for missing files or ranges.
+    class Program
     {
-        try
+        static void Main()
         {
-            const string inputFile = "InputWorkbook.xlsx";
-            const string outputFile = "EmployeeList.csv";
+            // Path to the source Excel file containing the named range "EmployeeList"
+            string excelPath = "EmployeeData.xlsx";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
+            // Path for the resulting CSV file
+            string csvPath = "EmployeeList.csv";
+
+            // Verify that the source Excel file exists
+            if (!File.Exists(excelPath))
             {
-                Console.WriteLine($"Error: Input file '{inputFile}' not found.");
+                Console.WriteLine($"Error: The file \"{excelPath}\" was not found.");
                 return;
             }
 
-            // Load the workbook that contains the named range "EmployeeList"
-            Workbook workbook = new Workbook(inputFile);
-
-            // Retrieve the named range object via the Name collection
-            Name namedRange = workbook.Worksheets.Names["EmployeeList"];
-            if (namedRange == null)
+            try
             {
-                Console.WriteLine("Error: Named range 'EmployeeList' does not exist in the workbook.");
-                return;
-            }
+                // Load the workbook
+                Workbook workbook = new Workbook(excelPath);
 
-            // Get the actual cell range represented by the named range
-            Aspose.Cells.Range employeeRange = namedRange.GetRange();
-
-            // Determine the exact cell area of the named range
-            int startRow = employeeRange.FirstRow;
-            int startColumn = employeeRange.FirstColumn;
-            int endRow = startRow + employeeRange.RowCount - 1;
-            int endColumn = startColumn + employeeRange.ColumnCount - 1;
-
-            // Configure TxtSaveOptions for CSV export (comma separator) limited to the range area
-            TxtSaveOptions saveOptions = new TxtSaveOptions
-            {
-                Separator = ',', // CSV separator
-                ExportArea = new CellArea
+                // Retrieve the named range "EmployeeList"
+                // GetRangeByName returns an Aspose.Cells.Range object.
+                Aspose.Cells.Range employeeRange = workbook.Worksheets.GetRangeByName("EmployeeList");
+                if (employeeRange == null)
                 {
-                    StartRow = startRow,
-                    EndRow = endRow,
-                    StartColumn = startColumn,
-                    EndColumn = endColumn
+                    Console.WriteLine("Error: Named range \"EmployeeList\" was not found in the workbook.");
+                    return;
                 }
-            };
 
-            // Save the selected range as a CSV file
-            workbook.Save(outputFile, saveOptions);
-            Console.WriteLine($"Named range exported successfully to '{outputFile}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                // Export the range data to a DataTable
+                DataTable dataTable = employeeRange.ExportDataTable();
+
+                // Write the DataTable contents to a CSV file
+                using (StreamWriter writer = new StreamWriter(csvPath))
+                {
+                    // Write header row
+                    for (int col = 0; col < dataTable.Columns.Count; col++)
+                    {
+                        writer.Write(dataTable.Columns[col].ColumnName);
+                        if (col < dataTable.Columns.Count - 1)
+                            writer.Write(",");
+                    }
+                    writer.WriteLine();
+
+                    // Write data rows
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        for (int col = 0; col < dataTable.Columns.Count; col++)
+                        {
+                            // Escape commas and quotes in field values
+                            string field = row[col]?.ToString() ?? string.Empty;
+                            if (field.Contains(",") || field.Contains("\""))
+                            {
+                                field = $"\"{field.Replace("\"", "\"\"")}\"";
+                            }
+                            writer.Write(field);
+                            if (col < dataTable.Columns.Count - 1)
+                                writer.Write(",");
+                        }
+                        writer.WriteLine();
+                    }
+                }
+
+                Console.WriteLine($"Named range \"EmployeeList\" has been exported to CSV at: {csvPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

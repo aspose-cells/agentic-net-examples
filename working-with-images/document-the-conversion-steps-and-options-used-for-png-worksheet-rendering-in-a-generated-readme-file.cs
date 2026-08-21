@@ -1,94 +1,65 @@
+// Title: C# – Export Excel Worksheet to PNG and Auto‑Generate README with Aspose.Cells
+// Description: Creates a workbook, fills sample data, configures ImageOrPrintOptions for high‑resolution PNG (300 DPI, one page per sheet), renders the first sheet page with SheetRender, and writes a README.txt that documents each conversion step and the option values.
+// Keywords: Aspose.Cells PNG export C# | ImageOrPrintOptions DPI | SheetRender ToImage example | auto‑generate README from code | Excel to PNG conversion .NET | high‑resolution worksheet image
+// Common Searches: export Excel worksheet as PNG using Aspose.Cells C# | set DPI for PNG export with ImageOrPrintOptions | how to create a README that logs Excel image conversion | C# code to render worksheet to PNG with Aspose.Cells | one page per sheet PNG rendering Aspose.Cells
+// Developer Intent: Generate a PNG snapshot of a worksheet and produce a README that records the rendering configuration and results.
+// Use Cases: Create high‑resolution PNG images of Excel reports for documentation or web publishing. | Maintain an audit trail of export settings (image type, DPI, pagination) by automatically generating a README. | Integrate PNG rendering into CI pipelines where each build logs its conversion parameters for reproducibility.
+// AI Prompts: Show a C# script that loops through all worksheets in a workbook and saves each as a 300 DPI PNG using Aspose.Cells. | Provide a markdown README template that lists ImageOrPrintOptions, output file names, and page counts for worksheet‑to‑PNG conversions. | Explain how to modify the example to render every page of a multi‑page worksheet to separate PNG files instead of only the first page.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsReadmeGenerator
+// Creates a workbook, fills sample data, configures ImageOrPrintOptions for high‑resolution PNG (300 DPI, one page per sheet), renders the first sheet page with SheetRender, and writes a README.txt that documents each conversion step and the option values.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // -----------------------------------------------------------------
-            // Step 1: Create a new workbook and add sample data.
-            // -----------------------------------------------------------------
-            Workbook workbook = new Workbook();                     // Create a workbook (provided constructor)
-            Worksheet sheet = workbook.Worksheets[0];              // Get the first worksheet
+        // Step 1: Create a workbook and add sample data.
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        worksheet.Cells["A1"].PutValue("Name");
+        worksheet.Cells["B1"].PutValue("Age");
+        worksheet.Cells["A2"].PutValue("John");
+        worksheet.Cells["B2"].PutValue(30);
+        worksheet.Cells["A3"].PutValue("Alice");
+        worksheet.Cells["B3"].PutValue(25);
 
-            // Populate some cells with data
-            sheet.Cells["A1"].PutValue("Name");
-            sheet.Cells["B1"].PutValue("Age");
-            sheet.Cells["A2"].PutValue("John");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["A3"].PutValue("Alice");
-            sheet.Cells["B3"].PutValue(25);
+        // Step 2: Configure ImageOrPrintOptions for PNG output.
+        ImageOrPrintOptions options = new ImageOrPrintOptions();
+        options.ImageType = Aspose.Cells.Drawing.ImageType.Png;   // PNG format
+        options.OnePagePerSheet = true;                         // Optional: one page per sheet
+        options.HorizontalResolution = 300;                     // Optional: 300 DPI
+        options.VerticalResolution = 300;                       // Optional: 300 DPI
 
-            // -----------------------------------------------------------------
-            // Step 2: Configure ImageOrPrintOptions for PNG rendering.
-            // -----------------------------------------------------------------
-            ImageOrPrintOptions options = new ImageOrPrintOptions(); // Provided constructor
-            options.ImageType = ImageType.Png;                       // Set output image type to PNG
-            options.OnePagePerSheet = true;                         // Render each sheet as a single page
-            options.HorizontalResolution = 300;                     // Optional: set DPI for higher quality
-            options.VerticalResolution = 300;                       // Optional: set DPI for higher quality
+        // Step 3: Create SheetRender with the worksheet and the options.
+        SheetRender sheetRender = new SheetRender(worksheet, options);
 
-            // -----------------------------------------------------------------
-            // Step 3: Create SheetRender using the worksheet and options.
-            // -----------------------------------------------------------------
-            SheetRender renderer = new SheetRender(sheet, options); // Provided constructor
+        // Step 4: Render the first page of the worksheet to a PNG file.
+        string pngFile = "SheetPage0.png";
+        sheetRender.ToImage(0, pngFile);
 
-            // Retrieve page count (useful information for the README)
-            int pageCount = renderer.PageCount;
+        // Step 5: Build README content that documents the conversion steps and options.
+        string readmeContent = "PNG Worksheet Rendering Guide\n";
+        readmeContent += "--------------------------------\n";
+        readmeContent += "1. Create a Workbook and populate cells with data.\n";
+        readmeContent += "2. Create ImageOrPrintOptions and set the following properties:\n";
+        readmeContent += "   - ImageType = Png\n";
+        readmeContent += "   - OnePagePerSheet = true (forces a single page per sheet)\n";
+        readmeContent += "   - HorizontalResolution = 300 DPI (optional)\n";
+        readmeContent += "   - VerticalResolution = 300 DPI (optional)\n";
+        readmeContent += "3. Instantiate SheetRender using the worksheet and the options.\n";
+        readmeContent += "4. Call SheetRender.ToImage(pageIndex, fileName) to generate the PNG.\n";
+        readmeContent += $"   Example output file: {pngFile}\n";
+        readmeContent += $"   Total pages rendered: {sheetRender.PageCount}\n";
 
-            // Render the first page to a PNG file (demonstrates the rendering process)
-            string imagePath = "RenderedSheet.png";
-            renderer.ToImage(0, imagePath);                         // Provided method overload
+        // Step 6: Write the README file.
+        File.WriteAllText("README.txt", readmeContent);
 
-            // -----------------------------------------------------------------
-            // Step 4: Build README content describing the conversion steps.
-            // -----------------------------------------------------------------
-            string readmeContent =
-$@"# PNG Worksheet Rendering with Aspose.Cells
+        // Clean up resources.
+        sheetRender.Dispose();
 
-This README documents the steps and options used to convert an Excel worksheet to a PNG image.
-
-## Steps Performed
-
-1. **Create Workbook**
-   - `Workbook workbook = new Workbook();`
-   - Added sample data to cells A1:B3.
-
-2. **Configure ImageOrPrintOptions**
-   - `options.ImageType = ImageType.Png;`   // Output format
-   - `options.OnePagePerSheet = true;`     // Render whole sheet on one page
-   - `options.HorizontalResolution = 300;` // DPI (optional)
-   - `options.VerticalResolution = 300;`   // DPI (optional)
-
-3. **Create SheetRender**
-   - `SheetRender renderer = new SheetRender(sheet, options);`
-
-4. **Render to PNG**
-   - `renderer.ToImage(0, ""{imagePath}"");`
-   - The workbook contains **{pageCount}** page(s); page index `0` was rendered.
-
-## Result
-
-- PNG image saved at: `{Path.GetFullPath(imagePath)}`
-- README file generated at: `{Path.GetFullPath("README.txt")}`
-
-Feel free to modify the `ImageOrPrintOptions` properties to suit your rendering requirements (e.g., change DPI, enable/disable `OnePagePerSheet`, etc.).";
-
-            // -----------------------------------------------------------------
-            // Step 5: Write the README file to disk.
-            // -----------------------------------------------------------------
-            string readmePath = "README.txt";
-            File.WriteAllText(readmePath, readmeContent); // Standard .NET file write
-
-            // Clean up resources
-            renderer.Dispose();
-
-            Console.WriteLine("PNG rendering completed and README generated.");
-        }
+        Console.WriteLine("PNG rendering completed and README.txt generated.");
     }
 }

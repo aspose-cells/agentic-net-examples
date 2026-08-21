@@ -1,38 +1,61 @@
-// Title: C# – Load an Excel workbook without pictures using Aspose.Cells for faster performance
-// Description: Demonstrates how to create a LoadOptions object, apply a LoadFilter that excludes picture data (LoadDataFilterOptions.All & ~LoadDataFilterOptions.Picture), open a large workbook, verify that the Pictures collection is empty, and save the file without any embedded images. This reduces memory usage and speeds up processing of big spreadsheets.
-// Keywords: Aspose.Cells load workbook without pictures | C# exclude images Excel load | LoadFilter picture flag | Improve Excel loading performance | LoadDataFilterOptions picture removal | memory efficient Excel processing
-// Common Searches: how to skip pictures when loading Excel with Aspose.Cells | load large workbook without images C# | Aspose.Cells LoadFilter exclude pictures | optimize Excel file loading performance .NET | remove picture objects during workbook load
-// Developer Intent: Open an Excel file while omitting all picture objects to lower memory consumption and accelerate processing.
-// Use Cases: Run calculations on massive financial reports where only cell data matters. | Generate data extracts on low‑memory servers without the overhead of embedded graphics. | Perform batch data transformations on large workbooks in cloud services where image data is unnecessary.
-// AI Prompts: Show me C# code to load an Excel workbook with Aspose.Cells while ignoring all pictures and then save it. | Provide an example of using LoadDataFilterOptions to exclude pictures when opening a workbook in .NET. | Explain how to confirm that no pictures were loaded after applying a LoadFilter in Aspose.Cells.
+// Title: C# – Load an Excel workbook without pictures using Aspose.Cells LoadFilter
+// Description: Demonstrates how to create a LoadOptions object with a LoadFilter that excludes pictures (LoadDataFilterOptions.All & ~LoadDataFilterOptions.Picture), load a large workbook efficiently, verify picture collections are empty, and optionally save the picture‑free file.
+// Keywords: Aspose.Cells LoadFilter picture exclusion | C# load Excel without images | skip pictures Aspose.Cells | improve Excel load performance | LoadDataFilterOptions picture | large workbook memory optimization | Aspose.Cells GitHub example
+// Common Searches: Aspose.Cells load workbook without pictures | exclude images when opening Excel in .NET | speed up loading large Excel files Aspose | C# LoadFilter to ignore pictures | remove pictures during workbook load
+// Developer Intent: Load an Excel file while omitting all embedded pictures to reduce memory consumption and accelerate processing.
+// Use Cases: Data‑only analysis of massive spreadsheets where graphics are irrelevant. | Batch conversion of Excel files to other formats without carrying over images. | Generating lightweight reports from source workbooks that contain many pictures.
+// AI Prompts: Show C# code to open an Excel workbook with Aspose.Cells while skipping all pictures. | Explain how to use LoadDataFilterOptions to exclude pictures and load only values and formulas. | Provide a method to confirm that no pictures were loaded after applying a LoadFilter.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a LoadOptions object, apply a LoadFilter that excludes picture data (LoadDataFilterOptions.All & ~LoadDataFilterOptions.Picture), open a large workbook, verify that the Pictures collection is empty, and save the file without any embedded images. This reduces memory usage and speeds up processing of big spreadsheets.
-class FilterPicturesDemo
+namespace AsposeCellsPictureFilterDemo
 {
-    static void Main()
+    // Demonstrates how to create a LoadOptions object with a LoadFilter that excludes pictures (LoadDataFilterOptions.All & ~LoadDataFilterOptions.Picture), load a large workbook efficiently, verify picture collections are empty, and optionally save the picture‑free file.
+    class Program
     {
-        // Input and output file paths
-        string inputFile = "largeWorkbook.xlsx";
-        string outputFile = "largeWorkbook_NoPictures.xlsx";
+        static void Main()
+        {
+            // Path to the source workbook (large spreadsheet with many pictures)
+            string sourcePath = "LargeWorkbookWithPictures.xlsx";
 
-        // Create LoadOptions instance
-        LoadOptions loadOptions = new LoadOptions();
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
 
-        // Configure LoadFilter to load everything except pictures
-        // LoadDataFilterOptions.All includes all data; we remove the Picture flag using bitwise AND NOT
-        LoadDataFilterOptions filter = LoadDataFilterOptions.All & ~LoadDataFilterOptions.Picture;
-        loadOptions.LoadFilter = new LoadFilter(filter);
+            try
+            {
+                // Create LoadOptions instance
+                LoadOptions loadOptions = new LoadOptions();
 
-        // Load the workbook with the configured options
-        Workbook workbook = new Workbook(inputFile, loadOptions);
+                // Configure a LoadFilter to load everything except pictures
+                // LoadDataFilterOptions.All includes all data; we remove the Picture flag
+                LoadDataFilterOptions filterOptions = LoadDataFilterOptions.All & ~LoadDataFilterOptions.Picture;
+                loadOptions.LoadFilter = new LoadFilter(filterOptions);
 
-        // Verify that pictures are not loaded (should be 0)
-        Console.WriteLine("Pictures count after load: " + workbook.Worksheets[0].Pictures.Count);
+                // Load the workbook with the specified options
+                Workbook workbook = new Workbook(sourcePath, loadOptions);
 
-        // Save the workbook; it will be saved without any picture objects
-        workbook.Save(outputFile, SaveFormat.Xlsx);
+                // Verify that pictures are not loaded
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    Console.WriteLine($"Worksheet '{sheet.Name}' picture count: {sheet.Pictures.Count}");
+                }
+
+                // Save the workbook (optional, to a new file)
+                string outputPath = "WorkbookWithoutPictures.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+
+                Console.WriteLine("Workbook loaded without pictures and saved to: " + outputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
     }
 }

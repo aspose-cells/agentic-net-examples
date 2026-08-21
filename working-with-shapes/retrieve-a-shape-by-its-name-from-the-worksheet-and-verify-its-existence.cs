@@ -1,42 +1,45 @@
-// Title: Retrieve a Shape by Name in Aspose.Cells (C#) and Verify Its Presence
-// Description: Demonstrates how to add a rectangle to a worksheet, assign a custom name, fetch the shape using the Shapes collection indexer, and confirm its existence with a null‑check before optionally saving the workbook.
-// Keywords: Aspose.Cells get shape by name C# | retrieve worksheet shape Aspose.Cells | check shape existence Aspose.Cells | Shapes collection indexer Aspose.Cells | named shape lookup Aspose.Cells
-// Common Searches: Aspose.Cells retrieve shape by name | C# find shape in worksheet Aspose.Cells | verify shape exists Aspose.Cells | how to get a named rectangle Aspose.Cells | shape collection indexer example Aspose.Cells
-// Developer Intent: Locate a shape using its assigned name and ensure it is available before further processing.
-// Use Cases: Modify formatting of a specific chart or image identified by name. | Validate placeholder shapes before inserting dynamic content. | Extract a particular shape for export or metadata attachment.
-// AI Prompts: Generate C# code that retrieves a shape by name with Aspose.Cells and handles a missing shape gracefully. | Show how to loop through all worksheet shapes and return the one matching a given name. | Explain how to rename a shape after obtaining it via the Shapes collection indexer.
+// Title: Get a Worksheet Shape by Name and Verify Its Presence with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds a rectangle named "MyRectangle" to the first worksheet, retrieves the shape using the ShapeCollection indexer (worksheet.Shapes["MyRectangle"]), checks for null, prints the shape's name and type, and saves the file.
+// Keywords: Aspose.Cells | C# | shape by name | ShapeCollection indexer | retrieve worksheet shape | check shape existence | worksheet shapes API
+// Common Searches: Aspose.Cells get shape by name C# | retrieve worksheet shape Aspose.Cells | check if shape exists Aspose.Cells .NET | ShapeCollection indexer example | find named shape in Excel using Aspose.Cells
+// Developer Intent: Locate a shape on a worksheet using its assigned name and confirm that it is present before further processing.
+// Use Cases: Modify properties of a specific named shape after it has been added. | Validate that required graphics are present before exporting or printing a workbook. | Attach additional formatting or data to a shape identified by its name.
+// AI Prompts: Demonstrate safe retrieval of a worksheet shape by name in Aspose.Cells for .NET and handle the case when the shape is missing. | Show how to iterate through all shapes, find one with a given name, and then change its size or style using C#. | Explain whether the ShapeCollection indexer throws an exception for a non‑existent name and how to prevent errors.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a rectangle to a worksheet, assign a custom name, fetch the shape using the Shapes collection indexer, and confirm its existence with a null‑check before optionally saving the workbook.
-class RetrieveShapeByName
+namespace AsposeCellsShapeRetrievalDemo
 {
-    static void Main()
+    // Creates a workbook, adds a rectangle named "MyRectangle" to the first worksheet, retrieves the shape using the ShapeCollection indexer (worksheet.Shapes["MyRectangle"]), checks for null, prints the shape's name and type, and saves the file.
+    public class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add a rectangle shape and assign a name to it
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 0, 0, 100, 100);
-        shape.Name = "MyRectangle";
-
-        // Retrieve the shape by its name
-        Shape retrievedShape = worksheet.Shapes["MyRectangle"];
-
-        // Verify that the shape exists
-        if (retrievedShape != null)
+        public static void Main()
         {
-            Console.WriteLine("Shape found: " + retrievedShape.Name);
-        }
-        else
-        {
-            Console.WriteLine("Shape not found.");
-        }
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Save the workbook (optional)
-        workbook.Save("RetrieveShapeDemo.xlsx");
+            // Add a rectangle shape and assign a custom name
+            Shape addedShape = worksheet.Shapes.AddRectangle(1, 0, 0, 100, 100, 100);
+            addedShape.Name = "MyRectangle";
+
+            // Retrieve the shape by its name using the ShapeCollection indexer
+            Shape retrievedShape = worksheet.Shapes["MyRectangle"];
+
+            // Verify existence and output result
+            if (retrievedShape != null)
+            {
+                Console.WriteLine($"Shape found: Name = {retrievedShape.Name}, Type = {retrievedShape.Type}");
+            }
+            else
+            {
+                Console.WriteLine("Shape with the specified name does not exist.");
+            }
+
+            // Save the workbook (optional, demonstrates lifecycle usage)
+            workbook.Save("ShapeRetrievalDemo.xlsx");
+        }
     }
 }

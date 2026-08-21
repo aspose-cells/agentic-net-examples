@@ -1,46 +1,74 @@
-// Title: Export Excel WordArt with Gradient Fill to High‑Resolution PNG using Aspose.Cells for .NET
-// Description: Shows how to load an .xlsx workbook that contains WordArt with gradient fill, configure 300 DPI PNG options, and render the first worksheet to a PNG image while preserving gradient quality using Aspose.Cells WorkbookRender in C#.
-// Keywords: Aspose.Cells | C# | .NET | Excel to PNG | WordArt export | gradient fill | high DPI image | WorkbookRender | image rendering options | preserve gradient quality
-// Common Searches: Aspose.Cells export WordArt to PNG | How to keep gradient colors when converting Excel to PNG | C# render Excel worksheet as high resolution PNG | Save Excel WordArt as image with Aspose.Cells | Convert Excel file with gradient WordArt to PNG .NET
-// Developer Intent: Render an Excel worksheet that contains WordArt with gradient fill to a high‑resolution PNG image while maintaining the original gradient appearance.
-// Use Cases: Create product catalog thumbnails from Excel templates that include stylized WordArt, ensuring the gradient look is retained. | Generate printable marketing assets by converting Excel reports with decorative WordArt into PNG files for web publishing. | Automate batch conversion of multiple .xlsx files with WordArt to high‑DPI PNG images for archival or distribution.
-// AI Prompts: Write C# code using Aspose.Cells to convert an Excel sheet containing WordArt with gradient fill to a 300 DPI PNG while preserving gradient colors. | Explain how ImageOrPrintOptions settings influence the quality of WordArt gradients when rendering to PNG with Aspose.Cells. | Provide a script that processes all .xlsx files in a directory, rendering each first worksheet with WordArt to high‑resolution PNG images.
+// Title: Export Excel WordArt with Gradient Fill to PNG using Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook, adds a WordArt shape with a two‑color horizontal gradient, sets 300 DPI PNG rendering options, and saves the worksheet as a single high‑quality PNG while keeping the gradient intact.
+// Keywords: Aspose.Cells | C# | Excel WordArt export | gradient fill PNG | high DPI image rendering | WorkbookRender | ImageOrPrintOptions | preserve WordArt colors | convert Excel to PNG | Office automation
+// Common Searches: Aspose.Cells export WordArt to PNG | C# render Excel gradient WordArt as image | high resolution PNG from Excel workbook | preserve WordArt gradient when converting to PNG | how to save Excel sheet with WordArt as PNG
+// Developer Intent: Generate a PNG image from an Excel sheet that contains gradient‑filled WordArt, ensuring the gradient is rendered accurately.
+// Use Cases: Create web‑ready graphics from Excel‑based marketing designs without losing gradient effects. | Produce printable, high‑DPI PNG assets from reports that include WordArt for inclusion in PDFs or slide decks. | Automate batch conversion of multiple workbooks containing WordArt into PNG files for archival or distribution.
+// AI Prompts: Show how to export each worksheet to its own PNG file while preserving WordArt gradients. | Demonstrate applying a multi‑stop gradient to WordArt before rendering to PNG with Aspose.Cells. | Explain how to change DPI and image size for optimal PNG output of gradient WordArt using ImageOrPrintOptions.
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
 
-// Shows how to load an .xlsx workbook that contains WordArt with gradient fill, configure 300 DPI PNG options, and render the first worksheet to a PNG image while preserving gradient quality using Aspose.Cells WorkbookRender in C#.
-class WordArtToPng
+// Loads an Excel workbook, adds a WordArt shape with a two‑color horizontal gradient, sets 300 DPI PNG rendering options, and saves the worksheet as a single high‑quality PNG while keeping the gradient intact.
+class ConvertWordArtToPng
 {
     static void Main()
     {
-        // Path to the Excel file that contains WordArt with gradient fill
-        string sourcePath = "WordArtSample.xlsx";
-
-        // Path where the PNG image will be saved
-        string outputPath = "WordArtSample.png";
+        // Path to the source Excel file that contains WordArt (or create a new one)
+        string sourcePath = "WordArtWorkbook.xlsx";
 
         // Load the workbook
         Workbook workbook = new Workbook(sourcePath);
 
-        // Set up image rendering options
-        ImageOrPrintOptions options = new ImageOrPrintOptions
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Get the shape collection of the worksheet
+        ShapeCollection shapes = worksheet.Shapes;
+
+        // Add a WordArt shape with a preset gradient style (WordArtStyle7)
+        // Parameters: style, text, topRow, top (pixels), leftColumn, left (pixels), height (pixels), width (pixels)
+        Shape wordArt = shapes.AddWordArt(
+            PresetWordArtStyle.WordArtStyle7,
+            "Gradient WordArt",
+            2,          // topRow
+            0,          // top offset in pixels
+            2,          // leftColumn
+            0,          // left offset in pixels
+            100,        // height in pixels
+            400);       // width in pixels
+
+        // Ensure the fill type is set to gradient and define a custom two‑color gradient
+        wordArt.Fill.FillType = FillType.Gradient;
+        GradientFill gradientFill = wordArt.Fill.GradientFill;
+        if (gradientFill != null)
         {
-            ImageType = ImageType.Png,          // Output format
-            HorizontalResolution = 300,         // High DPI to keep gradient quality
-            VerticalResolution = 300,
+            // Create a horizontal gradient from blue to light blue
+            gradientFill.SetTwoColorGradient(
+                Color.Blue,          // first color
+                Color.LightBlue,     // second color
+                GradientStyleType.Horizontal,
+                1);                  // variant
+        }
+
+        // Configure image rendering options for high‑quality PNG output
+        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+        {
+            ImageType = ImageType.Png,          // PNG format
+            HorizontalResolution = 300,         // 300 DPI horizontal
+            VerticalResolution = 300,           // 300 DPI vertical
             OnePagePerSheet = true              // Render each sheet as a single page
         };
 
-        // Use WorkbookRender (preserves all drawing objects, including WordArt gradients)
-        WorkbookRender renderer = new WorkbookRender(workbook, options);
+        // Render the entire workbook to a PNG file
+        string outputPath = "WordArtRendered.png";
+        WorkbookRender renderer = new WorkbookRender(workbook, imgOptions);
+        renderer.ToImage(outputPath); // Uses WorkbookRender.ToImage(string) overload
 
-        // Render the first sheet (page index 0) to a PNG file
-        renderer.ToImage(0, outputPath);
-
-        Console.WriteLine($"WordArt successfully rendered to PNG: {outputPath}");
+        Console.WriteLine($"Workbook with WordArt successfully rendered to PNG: {outputPath}");
     }
 }

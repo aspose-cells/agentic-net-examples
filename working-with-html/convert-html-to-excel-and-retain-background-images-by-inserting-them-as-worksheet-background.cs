@@ -1,68 +1,101 @@
-// Title: C# – Convert HTML to Excel and Preserve Worksheet Background Image with Aspose.Cells
-// Description: Loads an HTML file into an Aspose.Cells workbook, reads a PNG file as a byte array, assigns it to each worksheet's BackgroundImage property, and saves the result as an XLSX file, keeping the original background on every sheet.
-// Keywords: Aspose.Cells HTML to XLSX conversion | C# set worksheet background image | load HTML Aspose.Cells .NET | apply PNG background to Excel sheet | save workbook with background image
-// Common Searches: how to add a background image after converting HTML to Excel with Aspose.Cells | Aspose.Cells .NET load HTML and set worksheet background | preserve HTML background graphics in Excel using Aspose.Cells | C# convert HTML to XLSX and keep background picture
-// Developer Intent: Add the same background picture to every worksheet after converting an HTML document to an Excel workbook using Aspose.Cells.
-// Use Cases: Create branded reports from HTML templates where the corporate logo appears as a sheet background. | Automate conversion of HTML newsletters to Excel while retaining the original design elements. | Generate multi‑sheet workbooks from a single HTML source and apply a uniform background for visual consistency.
-// AI Prompts: Write C# code that loads an HTML file with Aspose.Cells, reads a PNG file, sets it as the BackgroundImage for all worksheets, and saves the workbook as XLSX. | Explain how to handle missing image files gracefully when applying worksheet backgrounds in Aspose.Cells. | Show how to assign different background images to individual worksheets after loading HTML with Aspose.Cells.
+// Title: C# – Convert HTML to Excel with Aspose.Cells and keep the body background image as worksheet background
+// Description: A complete C# example that loads an HTML file into an Aspose.Cells Workbook, extracts the <body> background image (from a background attribute or CSS background‑image style), resolves relative paths, inserts the image as a picture on each worksheet, and saves the workbook as an XLSX file.
+// Keywords: Aspose.Cells | HTML to Excel conversion | C# | .NET | worksheet background image | preserve HTML background | LoadOptions Html | SaveFormat Xlsx | regular expression image extraction | batch HTML to XLSX
+// Common Searches: Aspose.Cells keep HTML body background when converting to XLSX | C# add worksheet background picture after loading HTML | extract background-image URL from HTML for Excel workbook | convert HTML to Excel with background image using Aspose.Cells | load HTML with background attribute in Aspose.Cells .NET
+// Developer Intent: Insert the HTML page’s background image into every worksheet of the generated Excel file.
+// Use Cases: Create branded Excel reports that retain a logo or watermark defined as a page background in an HTML template. | Generate printable spreadsheets that visually match a web form by preserving its background image during conversion. | Automate batch conversion of multiple HTML files to Excel while automatically applying detected background images to each worksheet.
+// AI Prompts: Write C# code with Aspose.Cells to load an HTML file, detect the <body> background image (attribute or CSS), and add it as a worksheet background before saving as XLSX. | Explain how to resolve relative image paths when converting HTML to Excel using Aspose.Cells so the picture appears on all worksheets. | Provide a step‑by‑step guide for extracting a background‑image URL from HTML using regular expressions and applying it to a workbook with Aspose.Cells.
 
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace HtmlToExcelWithBackground
+// A complete C# example that loads an HTML file into an Aspose.Cells Workbook, extracts the <body> background image (from a background attribute or CSS background‑image style), resolves relative paths, inserts the image as a picture on each worksheet, and saves the workbook as an XLSX file.
+class HtmlToExcelWithBackground
 {
-    // Loads an HTML file into an Aspose.Cells workbook, reads a PNG file as a byte array, assigns it to each worksheet's BackgroundImage property, and saves the result as an XLSX file, keeping the original background on every sheet.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths for input HTML and output Excel files
+        string htmlFilePath = "input.html";
+        string excelFilePath = "output.xlsx";
+
+        try
         {
-            try
+            // Verify that the HTML file exists
+            if (!File.Exists(htmlFilePath))
             {
-                // Path to the source HTML file
-                string htmlPath = "input.html";
-
-                // Verify HTML file exists
-                if (!File.Exists(htmlPath))
-                {
-                    Console.WriteLine($"HTML file not found: {htmlPath}");
-                    return;
-                }
-
-                // Load the HTML file into a workbook
-                var loadOptions = new LoadOptions(LoadFormat.Html);
-                var workbook = new Workbook(htmlPath, loadOptions);
-
-                // Path to the background image
-                string backgroundImagePath = "background.png";
-
-                // Verify background image exists
-                if (!File.Exists(backgroundImagePath))
-                {
-                    Console.WriteLine($"Background image not found: {backgroundImagePath}");
-                    return;
-                }
-
-                // Read background image bytes once
-                byte[] backgroundBytes = File.ReadAllBytes(backgroundImagePath);
-
-                // Apply the background image to each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Set the worksheet's background image
-                    sheet.BackgroundImage = backgroundBytes;
-                }
-
-                // Save the workbook as an Excel file
-                string excelPath = "output.xlsx";
-                workbook.Save(excelPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"HTML converted to Excel with background images saved at: {excelPath}");
+                Console.WriteLine($"HTML file not found: {htmlFilePath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the HTML file into a workbook
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+            Workbook workbook = new Workbook(htmlFilePath, loadOptions);
+
+            // ------------------------------------------------------------
+            // Extract background image URL from the HTML file (simple approach)
+            // Supports <body background="image.jpg"> or CSS style:
+            //   <body style="background-image:url('image.jpg')">
+            // ------------------------------------------------------------
+            string htmlContent = File.ReadAllText(htmlFilePath);
+            string bgImagePath = null;
+
+            // Try <body background="...">
+            Match match = Regex.Match(
+                htmlContent,
+                @"<body[^>]*\sbackground\s*=\s*[""']([^""']+)[""']",
+                RegexOptions.IgnoreCase);
+            if (match.Success)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                bgImagePath = match.Groups[1].Value;
             }
+            else
+            {
+                // Try CSS background-image in style attribute
+                match = Regex.Match(
+                    htmlContent,
+                    @"<body[^>]*\sstyle\s*=\s*[""'][^""']*background-image\s*:\s*url\(['""]?([^'"")]+)['""]?\)[^""']*[""']",
+                    RegexOptions.IgnoreCase);
+                if (match.Success)
+                {
+                    bgImagePath = match.Groups[1].Value;
+                }
+            }
+
+            // If a background image was found, insert it into each worksheet
+            if (!string.IsNullOrEmpty(bgImagePath))
+            {
+                // Resolve relative paths based on the HTML file location
+                string resolvedPath = Path.IsPathRooted(bgImagePath)
+                    ? bgImagePath
+                    : Path.Combine(Path.GetDirectoryName(htmlFilePath) ?? string.Empty, bgImagePath);
+
+                if (File.Exists(resolvedPath))
+                {
+                    foreach (Worksheet sheet in workbook.Worksheets)
+                    {
+                        // Insert the image as a picture covering the sheet (top‑left cell 0,0)
+                        sheet.Pictures.Add(0, 0, resolvedPath);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Background image file not found: {resolvedPath}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No background image detected in the HTML file.");
+            }
+
+            // Save the workbook as an Excel file
+            workbook.Save(excelFilePath, SaveFormat.Xlsx);
+            Console.WriteLine($"Conversion completed. Excel saved to: {excelFilePath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

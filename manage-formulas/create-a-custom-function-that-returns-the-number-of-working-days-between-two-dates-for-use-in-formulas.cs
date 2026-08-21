@@ -1,95 +1,106 @@
-// Title: Custom WORKDAYS function in Aspose.Cells for .NET – count business days in formulas
-// Description: Demonstrates how to create a WorkDaysEngine that inherits AbstractCalculationEngine, intercepts the WORKDAYS function, converts Excel serial dates to DateTime, swaps out‑of‑order dates, iterates over the range counting only Monday‑Friday days, and returns the total as a double. The engine is attached to CalculationOptions, the formula "=WORKDAYS(A1,B1)" is placed in a cell, wb.CalculateFormula evaluates it, and the result is printed and saved to an XLSX file.
-// Keywords: Aspose.Cells custom function | WORKDAYS .NET | business days calculation | custom calculation engine C# | Excel formula extension | date serial conversion | weekday count algorithm
-// Common Searches: Aspose.Cells how to add a custom WORKDAYS function | calculate weekdays between two dates in C# using Aspose.Cells | implement custom Excel function with AbstractCalculationEngine | count business days in a workbook formula | extend Aspose.Cells with user‑defined functions
-// Developer Intent: Create a reusable WORKDAYS user‑defined function that returns the number of Monday‑to‑Friday days between two dates for use in Aspose.Cells formulas.
-// Use Cases: Enable end‑users to enter start and end dates in cells and obtain the business‑day count with =WORKDAYS(start,end). | Integrate the custom engine into existing calculation pipelines so all formulas, including the new function, are evaluated automatically. | Persist the calculated result by saving the workbook after calling wb.CalculateFormula with the custom engine.
-// AI Prompts: Write C# code that registers a custom calculation engine in Aspose.Cells to implement a WORKDAYS function that excludes weekends. | Show how to call the custom WORKDAYS function from a worksheet formula and retrieve its numeric result programmatically. | Explain how to extend WorkDaysEngine to accept an optional holiday range and subtract those dates from the business‑day total.
+// Title: C# – Add a custom WORKDAYS function in Aspose.Cells to count business days
+// Description: Shows how to create a user‑defined WORKDAYS function in Aspose.Cells for .NET by extending AbstractCalculationEngine. The sample inserts start and end dates, applies =WORKDAYS(A1,B1) in a cell, converts parameters, swaps dates if needed, excludes Saturdays and Sundays, returns the weekday count, calculates the workbook, and saves the file.
+// Keywords: Aspose.Cells | custom function | WORKDAYS | business days | C# | .NET | AbstractCalculationEngine | user defined function | Excel formula | calculate weekdays | NETWORKDAYS alternative | date calculation | GitHub example
+// Common Searches: Aspose.Cells custom WORKDAYS function | C# calculate business days with Aspose.Cells | how to add user defined function in Aspose.Cells | Aspose.Cells count weekdays between dates | implement NETWORKDAYS equivalent in .NET
+// Developer Intent: Create a user‑defined WORKDAYS function that returns the number of weekdays between two dates inside an Aspose.Cells workbook.
+// Use Cases: Project scheduling – compute duration while ignoring weekends | Payroll processing – determine work days in a pay period | Resource planning – calculate billable days for staff | Replace Excel's NETWORKDAYS in server‑side .NET reports | Automate SLA calculations that exclude weekend days
+// AI Prompts: Write C# code that registers a WORKDAYS UDF in Aspose.Cells using AbstractCalculationEngine, handling date conversion and weekend exclusion. | Show how to call =WORKDAYS(A1,B1) in a worksheet and retrieve the result after wb.CalculateFormula. | Extend the WORKDAYS engine to accept an optional holiday list as a third parameter and skip those dates. | Generate unit tests for the custom WORKDAYS function covering reversed dates, same‑day inputs, and edge cases.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomFunctionDemo
+// Shows how to create a user‑defined WORKDAYS function in Aspose.Cells for .NET by extending AbstractCalculationEngine. The sample inserts start and end dates, applies =WORKDAYS(A1,B1) in a cell, converts parameters, swaps dates if needed, excludes Saturdays and Sundays, returns the weekday count, calculates the workbook, and saves the file.
+class Program
 {
+    static void Main()
+    {
+        // Create a new workbook and get the first worksheet
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+        Cells cells = ws.Cells;
+
+        // Sample start and end dates (Excel stores dates as OLE Automation dates)
+        cells["A1"].PutValue(new DateTime(2023, 7, 24)); // Monday
+        cells["B1"].PutValue(new DateTime(2023, 7, 31)); // Next Monday
+
+        // Use the custom function WORKDAYS in a formula
+        cells["C1"].Formula = "=WORKDAYS(A1,B1)";
+
+        // Set calculation options to use the custom engine
+        CalculationOptions opts = new CalculationOptions
+        {
+            CustomEngine = new WorkDaysEngine()
+        };
+
+        // Calculate all formulas in the workbook using the custom engine
+        wb.CalculateFormula(opts);
+
+        // Output the result of the custom function
+        Console.WriteLine("Working days between A1 and B1: " + cells["C1"].Value);
+
+        // Save the workbook (lifecycle rule: use provided save method)
+        wb.Save("WorkDaysDemo.xlsx");
+    }
+
     // Custom calculation engine that implements the WORKDAYS function
-    // Demonstrates how to create a WorkDaysEngine that inherits AbstractCalculationEngine, intercepts the WORKDAYS function, converts Excel serial dates to DateTime, swaps out‑of‑order dates, iterates over the range counting only Monday‑Friday days, and returns the total as a double. The engine is attached to CalculationOptions, the formula "=WORKDAYS(A1,B1)" is placed in a cell, wb.CalculateFormula evaluates it, and the result is printed and saved to an XLSX file.
-    public class WorkDaysEngine : AbstractCalculationEngine
+    class WorkDaysEngine : AbstractCalculationEngine
     {
         public override void Calculate(CalculationData data)
         {
             // Check if the function being evaluated is our custom function
-            if (data.FunctionName != null && data.FunctionName.Equals("WORKDAYS", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(data.FunctionName, "WORKDAYS", StringComparison.OrdinalIgnoreCase))
             {
-                // Ensure we have at least two parameters (start date and end date)
-                if (data.ParamCount < 2)
+                // Ensure we have at least two parameters (start date, end date)
+                if (data.ParamCount >= 2)
                 {
-                    data.CalculatedValue = 0;
-                    return;
-                }
+                    object startObj = data.GetParamValue(0);
+                    object endObj   = data.GetParamValue(1);
 
-                // Retrieve the first two parameters (Excel serial numbers)
-                object startObj = data.GetParamValue(0);
-                object endObj   = data.GetParamValue(1);
+                    DateTime startDate = ConvertToDate(startObj);
+                    DateTime endDate   = ConvertToDate(endObj);
 
-                // Convert parameters to DateTime. Excel stores dates as double (OADate)
-                DateTime startDate = Convert.ToDouble(startObj) == 0 ? DateTime.MinValue : DateTime.FromOADate(Convert.ToDouble(startObj));
-                DateTime endDate   = Convert.ToDouble(endObj)   == 0 ? DateTime.MinValue : DateTime.FromOADate(Convert.ToDouble(endObj));
-
-                // If start date is after end date, swap them
-                if (startDate > endDate)
-                {
-                    var temp = startDate;
-                    startDate = endDate;
-                    endDate = temp;
-                }
-
-                int workDays = 0;
-                for (DateTime dt = startDate; dt <= endDate; dt = dt.AddDays(1))
-                {
-                    // Weekday values: Monday = 1, ..., Sunday = 0 (or 7)
-                    DayOfWeek dow = dt.DayOfWeek;
-                    if (dow != DayOfWeek.Saturday && dow != DayOfWeek.Sunday)
+                    // If dates are reversed, swap them
+                    if (startDate > endDate)
                     {
-                        workDays++;
+                        DateTime tmp = startDate;
+                        startDate = endDate;
+                        endDate = tmp;
                     }
-                }
 
-                // Return the count as a double (Aspose.Cells expects numeric results)
-                data.CalculatedValue = (double)workDays;
+                    // Compute working days (exclude Saturday and Sunday)
+                    int workDays = CountWorkDays(startDate, endDate);
+                    data.CalculatedValue = workDays;
+                }
+                else
+                {
+                    // Not enough parameters – return 0
+                    data.CalculatedValue = 0;
+                }
             }
         }
-    }
 
-    class Program
-    {
-        static void Main()
+        // Helper to convert Excel parameter values to DateTime
+        private DateTime ConvertToDate(object value)
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook wb = new Workbook();
-            Worksheet sheet = wb.Worksheets[0];
-            Cells cells = sheet.Cells;
+            if (value is double d)               // Excel serial date
+                return DateTime.FromOADate(d);
+            if (value is DateTime dt)            // Already a DateTime
+                return dt;
+            if (value != null && DateTime.TryParse(value.ToString(), out DateTime parsed))
+                return parsed;                    // Parse from string if possible
+            return DateTime.MinValue;            // Fallback
+        }
 
-            // Populate start and end dates (Excel serial dates are automatically handled)
-            cells["A1"].PutValue(new DateTime(2023, 7, 24)); // Monday
-            cells["B1"].PutValue(new DateTime(2023, 7, 31)); // Next Monday
-
-            // Set the custom formula using the WORKDAYS function
-            cells["C1"].Formula = "=WORKDAYS(A1,B1)";
-
-            // Prepare calculation options with our custom engine
-            CalculationOptions opts = new CalculationOptions
+        // Helper to count weekdays between two dates inclusive
+        private int CountWorkDays(DateTime start, DateTime end)
+        {
+            int count = 0;
+            for (DateTime d = start; d <= end; d = d.AddDays(1))
             {
-                CustomEngine = new WorkDaysEngine()
-            };
-
-            // Calculate all formulas in the workbook using the custom engine
-            wb.CalculateFormula(opts);
-
-            // Output the result of the custom function
-            Console.WriteLine("Working days between A1 and B1: " + cells["C1"].Value);
-
-            // Save the workbook (lifecycle rule: save)
-            wb.Save("WorkDaysCustomFunctionDemo.xlsx");
+                if (d.DayOfWeek != DayOfWeek.Saturday && d.DayOfWeek != DayOfWeek.Sunday)
+                    count++;
+            }
+            return count;
         }
     }
 }

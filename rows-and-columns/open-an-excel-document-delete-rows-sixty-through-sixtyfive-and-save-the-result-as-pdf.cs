@@ -1,26 +1,37 @@
-// Title: C# – Delete rows 60‑65 in an Excel file and convert to PDF with Aspose.Cells
-// Description: Loads input.xlsx using Aspose.Cells, removes rows 60‑65 (zero‑based index 59, count 6) from the first worksheet, and saves the modified workbook directly as output.pdf via the Pdf SaveFormat.
-// Keywords: Aspose.Cells DeleteRows | C# Excel delete rows | Aspose.Cells PDF conversion | remove rows 60-65 | SaveFormat.Pdf | Excel to PDF C#
-// Common Searches: Aspose.Cells delete rows 60 to 65 C# | Convert Excel to PDF after removing rows with Aspose.Cells | How to delete a range of rows in Excel using Aspose.Cells .NET | C# Aspose.Cells remove rows and save as PDF
-// Developer Intent: Remove rows 60‑65 from an Excel worksheet and export the updated workbook as a PDF file.
-// Use Cases: Generate a clean PDF report by stripping out temporary or summary rows before conversion. | Exclude confidential or irrelevant rows from a financial sheet prior to archiving as PDF. | Prepare a printable version of a dataset after deleting blank or placeholder rows.
-// AI Prompts: Write C# code with Aspose.Cells that deletes rows 60‑65 from the first worksheet and saves the workbook as a PDF. | Explain how to calculate the zero‑based index for a given Excel row number when using DeleteRows in Aspose.Cells. | Show error‑handling patterns for missing input files or out‑of‑range row deletions in Aspose.Cells PDF export.
+// Title: C# – Delete rows 60‑65 in an Excel workbook and export to PDF with Aspose.Cells
+// Description: Load an XLSX file using Aspose.Cells for .NET, remove rows 60‑65 from the first worksheet, and generate a PDF of the updated sheet. The example shows both a temporary XLSX save and direct PDF conversion via PdfSaveOptions or ConversionUtility.
+// Keywords: Aspose.Cells C# | .NET Excel row deletion | delete rows 60-65 | Excel to PDF conversion | Workbook.Save PDF | PdfSaveOptions | ConversionUtility | programmatic Excel editing | remove specific rows Aspose | export worksheet to PDF
+// Common Searches: Aspose.Cells delete rows 60 to 65 C# | Convert modified Excel to PDF using Aspose.Cells | How to remove specific rows from an Excel file in .NET | Aspose.Cells example for row deletion and PDF export | C# code to delete rows and save workbook as PDF
+// Developer Intent: Programmatically strip rows 60‑65 from an Excel sheet and produce a PDF of the cleaned worksheet.
+// Use Cases: Prepare financial reports by eliminating placeholder rows before publishing as PDF. | Automate data‑cleaning pipelines where certain rows must be removed prior to archiving. | Create printable PDF snapshots of worksheets after trimming excess rows for documentation.
+// AI Prompts: Generate C# code that deletes rows 60‑65 with Aspose.Cells and saves directly to PDF without an intermediate file. | Add robust error handling for missing rows when using Workbook.Worksheets[0].Cells.DeleteRows. | Explain how to use PdfSaveOptions to control PDF output quality after row deletion.
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-// Loads input.xlsx using Aspose.Cells, removes rows 60‑65 (zero‑based index 59, count 6) from the first worksheet, and saves the modified workbook directly as output.pdf via the Pdf SaveFormat.
-class Program
+// Load an XLSX file using Aspose.Cells for .NET, remove rows 60‑65 from the first worksheet, and generate a PDF of the updated sheet. The example shows both a temporary XLSX save and direct PDF conversion via PdfSaveOptions or ConversionUtility.
+class DeleteRowsAndConvertToPdf
 {
     static void Main()
     {
-        // Load the existing Excel file
-        Workbook workbook = new Workbook("input.xlsx");
+        // Paths for the original Excel file, the intermediate modified file, and the final PDF.
+        string inputExcelPath = "input.xlsx";
+        string modifiedExcelPath = "modified.xlsx";
+        string outputPdfPath = "output.pdf";
 
-        // Delete rows 60 through 65 (zero‑based index 59, total 6 rows)
+        // Load the existing workbook.
+        Workbook workbook = new Workbook(inputExcelPath);
+
+        // Delete rows 60 through 65 (zero‑based index: start at 59, delete 6 rows).
         workbook.Worksheets[0].Cells.DeleteRows(59, 6);
 
-        // Save the result directly as a PDF file
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+        // Save the modified workbook to a temporary XLSX file.
+        workbook.Save(modifiedExcelPath, SaveFormat.Xlsx);
+
+        // Convert the modified Excel file to PDF using the provided ConversionUtility rule.
+        ConversionUtility.Convert(modifiedExcelPath, outputPdfPath);
+
+        Console.WriteLine("Rows deleted and PDF saved successfully.");
     }
 }

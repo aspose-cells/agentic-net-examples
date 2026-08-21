@@ -1,10 +1,10 @@
-// Title: Create a Green Data Bar Conditional Format for a Named Range with Aspose.Cells (.NET)
-// Description: Demonstrates how to generate a workbook, fill cells A1‑A10, define a named range "MyData", and apply a DataBar rule that uses automatic minimum/maximum values, solid green fill, and displays cell values. The workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells C# data bar | conditional formatting named range | automatic min max Excel bar | CellArea conditional format | DataBarFillType.Solid example | programmatic Excel data bar | Aspose.Cells workbook generation
-// Common Searches: how to add a data bar to a named range using Aspose.Cells | Aspose.Cells conditional formatting with automatic scaling | C# create named range and apply data bar | set data bar color and show values in Aspose.Cells | retrieve named range for conditional formatting Aspose
-// Developer Intent: Apply a DataBar rule to every cell in a defined range so each bar reflects the cell’s relative value within that range.
-// Use Cases: Show performance metrics in column A with green bars that auto‑scale to the dataset. | Reuse a named block across multiple sheets and keep visual consistency with a single formatting rule. | Produce reports where bars update automatically when the underlying numbers change.
-// AI Prompts: Write C# code with Aspose.Cells to add a red data bar to a named range "SalesData" using custom min and max thresholds. | Explain how to change the axis position and fill pattern of a DataBar applied to a named range in Aspose.Cells. | Provide steps to locate an existing named range and switch its data bar color to blue while preserving automatic scaling.
+// Title: C# – Add a Data Bar Conditional Formatting to a Named Range using Aspose.Cells
+// Description: This example creates a workbook, fills cells A1:A10 with numeric values, defines a named range "MyRange", extracts its coordinates, applies a green data‑bar conditional format with automatic minimum and maximum values to the entire range, and saves the file as an Excel workbook.
+// Keywords: Aspose.Cells C# data bar | conditional formatting named range .NET | add data bar programmatically | named range coordinates Aspose | Excel data bar example C# | Aspose.Cells conditional formatting API | GitHub Aspose.Cells sample
+// Common Searches: how to apply data bar to a named range in Aspose.Cells | Aspose.Cells C# data bar conditional formatting example | create and use named ranges with conditional formatting .NET | Aspose.Cells add data bar to cells defined by a name | C# code for data bar conditional format in Excel
+// Developer Intent: Apply a data‑bar conditional format to every cell inside a predefined named range.
+// Use Cases: Show progress bars for task completion percentages stored in a named range. | Highlight monthly sales figures with green data bars to compare performance. | Build a KPI dashboard where data‑bars automatically adjust as the underlying named range updates.
+// AI Prompts: Generate C# code with Aspose.Cells to add a red data bar (min 0, max 100) to the named range B2:B20. | Explain how to retrieve a named range’s start row, end row, start column, and end column for use in a CellArea. | Provide a sample that applies three conditional formats—including a data bar—to the same named range in a workbook.
 
 using System;
 using System.Drawing;
@@ -13,7 +13,7 @@ using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsDataBarNamedRange
 {
-    // Demonstrates how to generate a workbook, fill cells A1‑A10, define a named range "MyData", and apply a DataBar rule that uses automatic minimum/maximum values, solid green fill, and displays cell values. The workbook is saved as an XLSX file.
+    // This example creates a workbook, fills cells A1:A10 with numeric values, defines a named range "MyRange", extracts its coordinates, applies a green data‑bar conditional format with automatic minimum and maximum values to the entire range, and saves the file as an Excel workbook.
     class Program
     {
         static void Main()
@@ -23,28 +23,26 @@ namespace AsposeCellsDataBarNamedRange
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
 
-                // Populate sample data in column A (A1:A10)
+                // Populate sample data in column A (rows 1-10)
                 for (int i = 0; i < 10; i++)
                 {
-                    cells[i, 0].PutValue(i + 1); // Values 1..10
+                    sheet.Cells[i, 0].PutValue(i + 1);
                 }
 
-                // Create a range object for A1:A10 and assign a name "MyData"
-                AsposeRange dataRange = cells.CreateRange("A1", "A10");
-                dataRange.Name = "MyData";
+                // Define a named range that covers the populated cells (A1:A10)
+                int nameIndex = workbook.Worksheets.Names.Add("MyRange");
+                workbook.Worksheets.Names[nameIndex].RefersTo = $"={sheet.Name}!$A$1:$A$10";
 
-                // Retrieve the named range using the Name object
-                Name namedRange = workbook.Worksheets.Names["MyData"];
-                // Get the actual Range object (this will reflect the current address)
+                // Retrieve the Range object for the named range
+                Name namedRange = workbook.Worksheets.Names[nameIndex];
                 AsposeRange range = namedRange.GetRange();
 
                 // Add a new conditional formatting collection to the worksheet
                 int cfIndex = sheet.ConditionalFormattings.Add();
                 FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
 
-                // Define the area for the conditional formatting using the range's boundaries
+                // Define the area for the conditional formatting using the range's coordinates
                 CellArea area = new CellArea
                 {
                     StartRow = range.FirstRow,
@@ -55,26 +53,24 @@ namespace AsposeCellsDataBarNamedRange
                 cfCollection.AddArea(area);
 
                 // Add a DataBar condition
-                int conditionIndex = cfCollection.AddCondition(FormatConditionType.DataBar);
-                FormatCondition condition = cfCollection[conditionIndex];
+                int conditionIdx = cfCollection.AddCondition(FormatConditionType.DataBar);
+                FormatCondition condition = cfCollection[conditionIdx];
 
-                // Configure the DataBar properties
+                // Configure the DataBar (automatic min/max, green color)
                 DataBar dataBar = condition.DataBar;
-                dataBar.MinCfvo.Type = FormatConditionValueType.AutomaticMin; // Minimum based on range
-                dataBar.MaxCfvo.Type = FormatConditionValueType.AutomaticMax; // Maximum based on range
-                dataBar.Color = Color.Green;                                   // Bar color
-                dataBar.ShowValue = true;                                      // Show cell values
-                dataBar.BarFillType = DataBarFillType.Solid;                   // Solid fill
-                dataBar.AxisPosition = DataBarAxisPosition.Automatic;         // Default axis handling
+                dataBar.MinCfvo.Type = FormatConditionValueType.AutomaticMin;
+                dataBar.MaxCfvo.Type = FormatConditionValueType.AutomaticMax;
+                dataBar.Color = Color.Green;
+                dataBar.ShowValue = true;
 
                 // Save the workbook
                 string outputPath = "DataBar_NamedRange.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

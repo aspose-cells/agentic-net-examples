@@ -1,10 +1,10 @@
-// Title: C# – Load JSON from REST API and Fill Excel Template with Aspose.Cells Smart Markers
-// Description: This example shows how to fetch JSON from a REST endpoint (with a fallback sample), optionally deserialize it into a C# model, load an Excel workbook that contains smart markers, assign the JSON string as a data source using WorkbookDesigner.SetJsonDataSource, process the markers, and save the populated file. Robust error handling for HTTP failures and deserialization is included.
-// Keywords: Aspose.Cells | C# smart markers | WorkbookDesigner SetJsonDataSource | load JSON from web service | populate Excel from REST API | JSON deserialization C# | Excel template automation | Aspose.Cells example GitHub
-// Common Searches: How to bind REST API JSON to Aspose.Cells smart markers C# | Aspose.Cells WorkbookDesigner SetJsonDataSource example | C# load JSON and fill Excel template | Smart markers JSON data source Aspose.Cells | Aspose.Cells JSON fallback sample
-// Developer Intent: Retrieve JSON from a web service, optionally map it to a C# object, and merge the data into an Excel workbook using Aspose.Cells smart markers.
-// Use Cases: Generate personalized employee reports by pulling employee JSON from an API and filling a pre‑designed Excel template. | Automate invoice creation by fetching order details in JSON format from a service and applying them to a smart‑marker invoice workbook. | Create city‑level demographic sheets by loading city JSON data and populating a reusable Excel template.
-// AI Prompts: Write a C# method that fetches JSON from a URL, returns a fallback sample on failure, and sets it as a data source for WorkbookDesigner. | Show how to design smart markers in an Excel template that reference fields from a JSON data source named "DataSource". | Provide error‑handling code for HTTP request failures and JSON deserialization when using Aspose.Cells smart markers.
+// Title: C# – Load JSON from a Web Service and Populate Excel Smart Markers with Aspose.Cells
+// Description: Fetch JSON via HttpClient, optionally deserialize to a C# model, set it as a JSON data source for WorkbookDesigner, process smart markers in an Excel template (auto‑created if missing), and save the populated workbook.
+// Keywords: Aspose.Cells | WorkbookDesigner | SetJsonDataSource | smart markers | C# JSON web service | HttpClient | JSON deserialization | Excel template | fallback JSON | .NET
+// Common Searches: Aspose.Cells set JSON data source example | C# smart markers from web service | WorkbookDesigner populate Excel from JSON | Create Excel template with smart markers programmatically | Handle HTTP errors with fallback JSON Aspose.Cells
+// Developer Intent: Retrieve JSON from a URL, map it to a .NET object, and merge the data into Excel smart markers using Aspose.Cells.
+// Use Cases: Generate employee or customer reports by pulling data from a REST API and filling an Excel template with smart markers. | Automatically create a minimal Excel template with smart markers when the expected file is missing, then populate it with live JSON data. | Provide a resilient workflow that falls back to a hard‑coded JSON payload if the web request fails, ensuring the workbook is still produced.
+// AI Prompts: Write C# code that uses Aspose.Cells WorkbookDesigner to set a JSON data source from an HttpClient response and process smart markers. | Show how to programmatically create a simple Excel template containing smart markers when the template file does not exist. | Explain how to deserialize a JSON response into a strongly‑typed C# class and then use SetJsonDataSource to fill smart markers.
 
 using System;
 using System.IO;
@@ -13,10 +13,10 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerJsonExample
+namespace AsposeCellsJsonSmartMarkerDemo
 {
-    // Sample data model matching the expected JSON structure
-    // This example shows how to fetch JSON from a REST endpoint (with a fallback sample), optionally deserialize it into a C# model, load an Excel workbook that contains smart markers, assign the JSON string as a data source using WorkbookDesigner.SetJsonDataSource, process the markers, and save the populated file. Robust error handling for HTTP failures and deserialization is included.
+    // Sample data model matching the JSON structure
+    // Fetch JSON via HttpClient, optionally deserialize to a C# model, set it as a JSON data source for WorkbookDesigner, process smart markers in an Excel template (auto‑created if missing), and save the populated workbook.
     public class Person
     {
         public string Name { get; set; }
@@ -29,77 +29,84 @@ namespace AsposeCellsSmartMarkerJsonExample
         // Entry point – async to allow awaiting the HTTP call
         static async Task Main(string[] args)
         {
-            try
-            {
-                // 1. Retrieve JSON from a web service (fallback to sample JSON on failure)
-                string jsonUrl = "https://example.com/api/person"; // replace with actual endpoint
-                string jsonString = await GetJsonAsync(jsonUrl) ?? GetSampleJson();
+            // URL of the web service returning JSON data
+            const string jsonUrl = "https://example.com/api/person";
 
-                // 2. (Optional) Map JSON to a C# object – demonstrates deserialization
-                Person person = JsonSerializer.Deserialize<Person>(jsonString);
+            string jsonData = string.Empty;
 
-                // 3. Load the Excel template that contains smart markers
-                //    The template should have a marker like: &=$DataSource.Name
-                const string templatePath = "Template.xlsx";
-                if (!File.Exists(templatePath))
-                {
-                    Console.WriteLine($"Template file not found: {templatePath}");
-                    return;
-                }
-
-                Workbook workbook = new Workbook(templatePath);
-
-                // 4. Initialize WorkbookDesigner with the loaded workbook
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook
-                };
-
-                // 5. Set the JSON string as a data source for smart markers
-                //    The name \"DataSource\" must match the marker prefix in the template
-                designer.SetJsonDataSource("DataSource", jsonString);
-
-                // 6. Process the smart markers – they will be replaced with JSON values
-                designer.Process();
-
-                // 7. Save the populated workbook
-                const string resultPath = "Result.xlsx";
-                workbook.Save(resultPath);
-                Console.WriteLine($"Workbook saved successfully to {resultPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-
-        // Helper method to perform an HTTP GET and return the response body as a string
-        private static async Task<string?> GetJsonAsync(string requestUri)
-        {
+            // Retrieve JSON string from the web service with error handling
             try
             {
                 using HttpClient client = new HttpClient();
-                HttpResponseMessage response = await client.GetAsync(requestUri);
-                response.EnsureSuccessStatusCode();
-                return await response.Content.ReadAsStringAsync();
+                jsonData = await client.GetStringAsync(jsonUrl);
             }
-            catch (HttpRequestException httpEx)
+            catch (HttpRequestException ex)
             {
-                Console.WriteLine($"HTTP request failed: {httpEx.Message}");
-                return null; // Signal caller to use fallback JSON
+                Console.WriteLine($"Warning: Unable to retrieve JSON from '{jsonUrl}'. {ex.Message}");
+                // Fallback to a sample JSON payload
+                var samplePerson = new Person { Name = "John Doe", Age = 30, City = "New York" };
+                jsonData = JsonSerializer.Serialize(samplePerson);
+                Console.WriteLine("Using fallback JSON data.");
             }
-        }
 
-        // Provides a simple JSON sample when the web request fails
-        private static string GetSampleJson()
-        {
-            var sample = new Person
+            // Optional: map JSON to a strongly‑typed object (demonstration purpose)
+            try
             {
-                Name = "John Doe",
-                Age = 30,
-                City = "New York"
-            };
-            return JsonSerializer.Serialize(sample);
+                Person person = JsonSerializer.Deserialize<Person>(jsonData);
+                Console.WriteLine($"Deserialized Person: {person?.Name}, {person?.Age}, {person?.City}");
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Error deserializing JSON: {ex.Message}");
+            }
+
+            const string templatePath = "Template.xlsx";
+
+            // Ensure the template file exists; if not, create a minimal workbook with a smart marker
+            if (!File.Exists(templatePath))
+            {
+                Console.WriteLine($"Template file '{templatePath}' not found. Creating a default template.");
+                Workbook tempWb = new Workbook();
+                Worksheet sheet = tempWb.Worksheets[0];
+                // Insert a smart marker that matches the data source name ("DataSource")
+                sheet.Cells["A1"].PutValue("&=$DataSource.Name");
+                sheet.Cells["A2"].PutValue("&=$DataSource.Age");
+                sheet.Cells["A3"].PutValue("&=$DataSource.City");
+                tempWb.Save(templatePath);
+            }
+
+            // Load the Excel template that contains smart markers
+            Workbook workbook = new Workbook(templatePath);
+
+            // Initialize WorkbookDesigner with the loaded workbook
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+            // Set the JSON string as a data source for smart markers.
+            // The name "DataSource" must match the marker prefix used in the template.
+            designer.SetJsonDataSource("DataSource", jsonData);
+
+            // Process all smart markers in the workbook
+            try
+            {
+                designer.Process();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing smart markers: {ex.Message}");
+                return;
+            }
+
+            // Save the populated workbook
+            const string resultPath = "Result.xlsx";
+            try
+            {
+                workbook.Save(resultPath);
+                Console.WriteLine($"Workbook saved successfully to '{resultPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
+            }
         }
     }
 }

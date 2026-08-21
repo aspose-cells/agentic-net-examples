@@ -1,10 +1,10 @@
-// Title: Batch convert Excel workbooks to HTML with Aspose.Cells – PresentationPreference (BestFit) in C#
-// Description: C# utility that scans a folder, loads each .xlsx, .xls, .xlsm, or .xlsb workbook with Aspose.Cells, and saves it as HTML using HtmlSaveOptions.PresentationPreference = true for a best‑fit web layout. The program creates the output directory, skips unsupported files, and logs errors.
-// Keywords: Aspose.Cells batch Excel to HTML | C# convert Excel folder to HTML | PresentationPreference BestFit | HtmlSaveOptions PresentationPreference | automated Excel to web preview | Excel workbook HTML export C# | convert multiple Excel files to HTML | Aspose.Cells HTML export options | C# file system batch processing | Excel to static HTML conversion
-// Common Searches: Aspose.Cells convert all Excel files in a directory to HTML C# | PresentationPreference BestFit example Aspose.Cells | batch Excel to HTML conversion using Aspose.Cells | C# code to export multiple workbooks as HTML | how to enable best‑fit layout when saving Excel as HTML Aspose
-// Developer Intent: Convert every Excel workbook in a specified directory to an HTML file using Aspose.Cells with PresentationPreference set to BestFit.
-// Use Cases: Generate web‑ready previews of uploaded Excel reports for an intranet portal. | Create static HTML archives of financial spreadsheets for documentation sites. | Automate nightly conversion of a bulk dump of Excel files to HTML for searchable archives.
-// AI Prompts: Write a C# method that receives source and destination folder paths and converts all Excel files to HTML with Aspose.Cells, using PresentationPreference = true. | Add comprehensive error handling and logging to the batch conversion code, recording skipped or failed files while continuing the process. | Show how to modify the example to generate separate CSS files for each HTML output using HtmlSaveOptions.
+// Title: Batch convert Excel workbooks to HTML with BestFit using Aspose.Cells for .NET (C#)
+// Description: A C# console utility that scans a source folder, loads each .xls, .xlsx, .xlsm or .xlsb workbook with Aspose.Cells, sets HtmlSaveOptions.PresentationPreference to true (BestFit), and saves the result as an .html file in a target directory, including folder validation and error handling.
+// Keywords: Aspose.Cells batch HTML conversion | C# Excel to HTML BestFit | HtmlSaveOptions PresentationPreference | convert multiple workbooks to HTML | automated Excel to web HTML | Aspose.Cells .NET example | folder based Excel conversion | HTML export with column auto‑fit
+// Common Searches: batch Excel to HTML Aspose.Cells C# | PresentationPreference BestFit Aspose example | convert all .xlsx files in folder to HTML | C# program to export Excel workbooks as HTML | Aspose.Cells HtmlSaveOptions usage
+// Developer Intent: Automatically transform every Excel file in a specified directory into an HTML page using Aspose.Cells with column‑width auto‑fit.
+// Use Cases: Publish a collection of financial spreadsheets as web‑ready HTML reports with preserved layout. | Automate the generation of dashboard pages from Excel files for intranet portals. | Create an offline HTML archive of legacy Excel documents for long‑term storage.
+// AI Prompts: Generate a C# method that receives input and output folder paths and batch converts supported Excel files to HTML with PresentationPreference enabled, including comprehensive error handling. | Refactor the sample to log conversion progress and failures to a text file while continuing the batch process. | Explain how to extend HtmlSaveOptions to embed images and apply a custom CSS stylesheet while keeping the BestFit presentation setting.
 
 using System;
 using System.IO;
@@ -12,16 +12,15 @@ using Aspose.Cells;
 
 namespace BatchExcelToHtml
 {
-    // C# utility that scans a folder, loads each .xlsx, .xls, .xlsm, or .xlsb workbook with Aspose.Cells, and saves it as HTML using HtmlSaveOptions.PresentationPreference = true for a best‑fit web layout. The program creates the output directory, skips unsupported files, and logs errors.
+    // A C# console utility that scans a source folder, loads each .xls, .xlsx, .xlsm or .xlsb workbook with Aspose.Cells, sets HtmlSaveOptions.PresentationPreference to true (BestFit), and saves the result as an .html file in a target directory, including folder validation and error handling.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Folder containing source Excel files
-            string sourceFolder = @"C:\ExcelFiles";
-
+            string sourceFolder = @"C:\InputExcel";
             // Folder where HTML files will be saved
-            string outputFolder = @"C:\HtmlOutput";
+            string outputFolder = @"C:\OutputHtml";
 
             // Verify source folder exists
             if (!Directory.Exists(sourceFolder))
@@ -33,16 +32,26 @@ namespace BatchExcelToHtml
             // Ensure the output directory exists
             Directory.CreateDirectory(outputFolder);
 
-            // Get all Excel files in the source folder (top‑level only)
-            string[] excelFiles = Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly);
+            string[] excelFiles;
+            try
+            {
+                // Get all files in the source folder
+                excelFiles = Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error accessing source folder: {ex.Message}");
+                return;
+            }
+
             foreach (string filePath in excelFiles)
             {
-                // Process only supported Excel extensions
-                string ext = Path.GetExtension(filePath).ToLowerInvariant();
-                if (ext != ".xlsx" && ext != ".xls" && ext != ".xlsm" && ext != ".xlsb")
+                // Process only supported Excel formats
+                string extension = Path.GetExtension(filePath).ToLowerInvariant();
+                if (extension != ".xlsx" && extension != ".xls" && extension != ".xlsm" && extension != ".xlsb")
                     continue;
 
-                // Verify the file actually exists before loading
+                // Verify the file still exists before loading
                 if (!File.Exists(filePath))
                 {
                     Console.WriteLine($"File not found (skipped): {filePath}");
@@ -54,25 +63,24 @@ namespace BatchExcelToHtml
                     // Load the workbook from the file
                     Workbook workbook = new Workbook(filePath);
 
-                    // Create HTML save options
-                    HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                    // Create HTML save options and enable PresentationPreference (BestFit)
+                    HtmlSaveOptions saveOptions = new HtmlSaveOptions
                     {
-                        // Enable PresentationPreference for a better looking HTML output
                         PresentationPreference = true
                     };
 
-                    // Determine the output HTML file name
-                    string htmlFileName = Path.GetFileNameWithoutExtension(filePath) + ".html";
-                    string htmlPath = Path.Combine(outputFolder, htmlFileName);
+                    // Build the output HTML file path (same name, .html extension)
+                    string outputFileName = Path.GetFileNameWithoutExtension(filePath) + ".html";
+                    string outputPath = Path.Combine(outputFolder, outputFileName);
 
-                    // Save the workbook as HTML using the options
-                    workbook.Save(htmlPath, htmlOptions);
+                    // Save the workbook as HTML using the specified options
+                    workbook.Save(outputPath, saveOptions);
 
-                    Console.WriteLine($"Converted '{filePath}' to '{htmlPath}'.");
+                    Console.WriteLine($"Converted: {filePath} -> {outputPath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
+                    Console.WriteLine($"Error converting '{filePath}': {ex.Message}");
                 }
             }
 

@@ -1,92 +1,102 @@
-// Title: C# – Load Defined Names Starting with “Report” and Export Their Ranges to PDF with Aspose.Cells
-// Description: Demonstrates how to use Aspose.Cells for .NET LoadOptions to load only cell data and defined names, filter names whose text begins with "Report", copy each referenced range into a new worksheet, and save the consolidated result as a PDF file.
-// Keywords: Aspose.Cells | LoadOptions | defined names | named ranges | prefix filter | Report | C# .NET | export to PDF | copy range | Excel to PDF | filter named ranges
-// Common Searches: Aspose.Cells load only defined names with prefix | C# filter named ranges starting with Report | Export selected named ranges to PDF using Aspose.Cells | How to copy named ranges to a new workbook in .NET | Generate PDF from specific defined names in Excel
-// Developer Intent: Load only defined names that begin with "Report" and create a PDF containing the data from those ranges.
-// Use Cases: Create a single printable PDF that summarizes all report sections (e.g., ReportSales, ReportInventory) defined in a financial workbook. | Automate extraction of specific report ranges for distribution to stakeholders as one consolidated PDF. | Generate archival PDFs of named report ranges to satisfy compliance or record‑keeping requirements. | Produce a dashboard PDF that includes only the named ranges needed for executive review. | Combine multiple report worksheets into one PDF without loading the entire workbook into memory.
-// AI Prompts: Provide C# code using Aspose.Cells to open an Excel file with LoadOptions that load only cell data and defined names, filter names that start with "Report", copy each range to a new worksheet, and save as PDF. | Rewrite the example to use async/await for file I/O and reduce memory usage when processing large workbooks. | Show how to add a styled header containing the defined name above each copied range in the generated PDF. | Explain how to modify the code to include only visible cells from each named range. | Suggest logging strategies for processed names and graceful handling of missing or invalid ranges.
+// Title: C# – Load Defined Names Starting with “Report” and Export Their Ranges to PDF using Aspose.Cells
+// Description: Demonstrates how to create LoadOptions with a LoadFilter that loads only defined names and cell data, open an Excel workbook, select named ranges whose names begin with "Report", copy each range into a new worksheet, and save the assembled workbook as a PDF. The approach reduces memory usage and speeds up processing by loading only the required data.
+// Keywords: Aspose.Cells LoadOptions | LoadFilter DefinedNames | named ranges PDF export C# | extract Report named ranges | Excel to PDF selective export | .NET performance optimization | load only defined names Aspose
+// Common Searches: Aspose.Cells load only defined names with prefix | Export named ranges to PDF C# Aspose.Cells | LoadFilter DefinedNames CellData example | Create PDF from specific Excel named ranges | How to filter defined names when opening a workbook
+// Developer Intent: Load an Excel workbook using LoadOptions that includes only defined names beginning with "Report" and generate a PDF containing those selected ranges.
+// Use Cases: Produce a compact PDF summary of all report sections identified by named ranges in a financial model. | Automate generation of lightweight PDFs that contain only data blocks following a naming convention, minimizing memory consumption. | Provide end‑users with a printable PDF of specific report areas without loading the full workbook.
+// AI Prompts: Write C# code with Aspose.Cells to open a workbook using LoadOptions that loads only defined names and cell data, then export ranges whose names start with "Report" to a PDF. | Show how to filter defined names by a prefix, copy each corresponding range into a new workbook, and save the result as a PDF using Aspose.Cells for .NET. | Explain why using LoadFilter with LoadDataFilterOptions.DefinedNames | LoadDataFilterOptions.CellData improves performance when exporting selected named ranges to PDF.
 
 using System;
+using System.Data;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsDefinedNamesPdf
+// Demonstrates how to create LoadOptions with a LoadFilter that loads only defined names and cell data, open an Excel workbook, select named ranges whose names begin with "Report", copy each range into a new worksheet, and save the assembled workbook as a PDF. The approach reduces memory usage and speeds up processing by loading only the required data.
+class ReportRangesToPdf
 {
-    // Demonstrates how to use Aspose.Cells for .NET LoadOptions to load only cell data and defined names, filter names whose text begins with "Report", copy each referenced range into a new worksheet, and save the consolidated result as a PDF file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Path to the source Excel file
+            string sourcePath = "SourceWorkbook.xlsx";
+
+            // Ensure the source file exists
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"Source file not found: {sourcePath}");
+
+            // ---------- Load only Defined Names and Cell Data ----------
+            // Create LoadOptions and set a LoadFilter that loads defined names and cell data.
+            LoadOptions loadOptions = new LoadOptions
             {
-                // Path to the source Excel file
-                string sourcePath = "SourceWorkbook.xlsx";
+                LoadFilter = new LoadFilter(LoadDataFilterOptions.DefinedNames | LoadDataFilterOptions.CellData)
+            };
 
-                // Verify that the source file exists
-                if (!File.Exists(sourcePath))
+            // Load the workbook with the specified options
+            Workbook sourceWorkbook = new Workbook(sourcePath, loadOptions);
+
+            // ---------- Create a new workbook to hold the selected ranges ----------
+            Workbook resultWorkbook = new Workbook();
+
+            // Remove the default empty sheet if it exists
+            if (resultWorkbook.Worksheets.Count > 0)
+                resultWorkbook.Worksheets.RemoveAt(0);
+
+            // Iterate through all defined names in the source workbook
+            foreach (Name definedName in sourceWorkbook.Worksheets.Names)
+            {
+                // Process only names that start with "Report"
+                if (!string.IsNullOrEmpty(definedName.Text) &&
+                    definedName.Text.StartsWith("Report", StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.WriteLine($"Source file not found: {Path.GetFullPath(sourcePath)}");
-                    return;
-                }
+                    // Get the range that the defined name refers to
+                    Aspose.Cells.Range srcRange = definedName.GetRange();
 
-                // Load the workbook with only cell data and defined names
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    LoadFilter = new LoadFilter(LoadDataFilterOptions.CellData | LoadDataFilterOptions.DefinedNames)
-                };
+                    // Export the range to a DataTable (preserves values and types)
+                    DataTable dt = srcRange.ExportDataTable();
 
-                using (Workbook sourceWorkbook = new Workbook(sourcePath, loadOptions))
-                {
-                    // Create a new workbook that will contain only the matching ranges
-                    using (Workbook resultWorkbook = new Workbook())
-                    {
-                        // Remove the default sheet and add a fresh one
-                        resultWorkbook.Worksheets.Clear();
-                        Worksheet resultSheet = resultWorkbook.Worksheets.Add("ReportRanges");
+                    // Add a new worksheet to the result workbook; name it after the defined name
+                    Worksheet destSheet = resultWorkbook.Worksheets.Add(definedName.Text);
 
-                        int destRow = 0; // Row index where the next range will be placed
-
-                        // Iterate through all defined names in the source workbook
-                        foreach (Name definedName in sourceWorkbook.Worksheets.Names)
-                        {
-                            // Check if the defined name starts with "Report" (case‑insensitive)
-                            if (definedName.Text.StartsWith("Report", StringComparison.OrdinalIgnoreCase))
-                            {
-                                // Get the range that the defined name refers to
-                                Aspose.Cells.Range srcRange = definedName.GetRange();
-
-                                // Determine size of the source range
-                                int rowCount = srcRange.RowCount;
-                                int colCount = srcRange.ColumnCount;
-
-                                // Create a destination range on the result sheet
-                                Aspose.Cells.Range destRange = resultSheet.Cells.CreateRange(destRow, 0, rowCount, colCount);
-
-                                // Copy the source range into the destination range
-                                srcRange.Copy(destRange);
-
-                                // Write the name of the range to the right of the copied data
-                                resultSheet.Cells[destRow, colCount + 1].PutValue(definedName.Text);
-
-                                // Move the destination row pointer below the copied block (add one empty row as separator)
-                                destRow += rowCount + 2;
-                            }
-                        }
-
-                        // Save the result workbook as PDF
-                        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-                        string pdfPath = "ReportRanges.pdf";
-                        resultWorkbook.Save(pdfPath, pdfOptions);
-
-                        Console.WriteLine($"PDF generated successfully at: {Path.GetFullPath(pdfPath)}");
-                    }
+                    // Import the DataTable into the new worksheet starting at cell A1
+                    ImportDataTableToWorksheet(destSheet, dt);
                 }
             }
-            catch (Exception ex)
+
+            // Ensure there is at least one worksheet before saving to PDF
+            if (resultWorkbook.Worksheets.Count == 0)
+                resultWorkbook.Worksheets.Add("Empty");
+
+            // ---------- Save the result workbook as PDF ----------
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            string outputPdf = "ReportRanges.pdf";
+            resultWorkbook.Save(outputPdf, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to '{outputPdf}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Helper method to import a DataTable into a worksheet cell-by-cell
+    private static void ImportDataTableToWorksheet(Worksheet sheet, DataTable dt)
+    {
+        try
+        {
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    sheet.Cells[i, j].PutValue(dt.Rows[i][j]);
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to import DataTable to worksheet '{sheet.Name}': {ex.Message}");
         }
     }
 }

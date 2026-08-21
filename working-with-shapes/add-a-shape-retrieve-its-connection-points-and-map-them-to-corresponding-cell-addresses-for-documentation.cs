@@ -1,17 +1,17 @@
-// Title: C# – Add a Rectangle Shape, Retrieve Its Connection Points, and Map Them to Excel Cell Addresses with Aspose.Cells
-// Description: This example creates a new workbook, inserts a rectangle shape on the first worksheet, calls GetConnectionPoints() to obtain the shape's anchor points, converts each X/Y coordinate from points to column and row indices using column‑width and row‑height pixel helpers, translates the indices to standard cell names via CellsHelper, prints the mapping, and saves the file.
-// Keywords: Aspose.Cells C# shape connection points | map shape coordinates to Excel cells | GetConnectionPoints Aspose.Cells | convert shape points to cell address | rectangle shape Aspose.Cells example
-// Common Searches: Aspose.Cells get shape connection points C# | convert shape point to Excel cell name | map rectangle anchor to cell address Aspose | C# Aspose.Cells shape geometry to cell reference | retrieve and document shape connection points
-// Developer Intent: Add a shape, extract its connection points, and translate those points into the corresponding Excel cell references.
-// Use Cases: Document each anchor point of a diagram shape alongside its cell location for design reviews. | Programmatically align data cells with shape anchors when generating dynamic reports. | Store shape geometry in a worksheet to enable later reconstruction or positional analysis.
-// AI Prompts: Generate C# code using Aspose.Cells that adds a rectangle shape, reads its connection points, and outputs the nearest cell address for each point. | Explain how to convert shape point coordinates to Excel cell names using column‑width and row‑height pixel helpers in Aspose.Cells. | Suggest a technique for more precise mapping of connection points when columns and rows have variable sizes.
+// Title: C# – Add a Rectangle Shape, Retrieve Connection Points, and Map to Excel Cell Addresses with Aspose.Cells
+// Description: This Aspose.Cells for .NET example creates a workbook, inserts a rectangle shape, extracts its connection points via GetConnectionPoints(), converts each X/Y coordinate to the nearest column and row using default column width and row height, clamps the indices to worksheet limits, and prints the corresponding cell addresses before saving the file.
+// Keywords: Aspose.Cells C# shape connection points | GetConnectionPoints Aspose.Cells | map shape points to Excel cells | convert shape coordinates to cell address | Aspose.Cells shape anchor mapping | C# Excel shape example
+// Common Searches: Aspose.Cells get shape connection points C# | map shape connection points to worksheet cells | convert shape coordinates to Excel cell address .NET | retrieve and display shape connection points Aspose.Cells | C# example for shape anchor mapping in Excel
+// Developer Intent: Add a shape to a worksheet, obtain its connection points, and determine the exact cell addresses that correspond to those points.
+// Use Cases: Generate a documentation sheet that lists each shape's connection points alongside their cell references. | Create a mapping table for downstream processes that need to align shape anchors with spreadsheet grid locations. | Validate shape placement by comparing connection point addresses with expected cell ranges.
+// AI Prompts: Write C# code using Aspose.Cells to add a shape, retrieve its connection points, and precisely convert each point to the exact cell address. | Explain how to calculate row and column indices from shape point coordinates using default column width and row height in Aspose.Cells. | Suggest a more accurate method for mapping shape connection points to cells, leveraging worksheet column width and row height properties.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using System.IO;
 
-// This example creates a new workbook, inserts a rectangle shape on the first worksheet, calls GetConnectionPoints() to obtain the shape's anchor points, converts each X/Y coordinate from points to column and row indices using column‑width and row‑height pixel helpers, translates the indices to standard cell names via CellsHelper, prints the mapping, and saves the file.
+// This Aspose.Cells for .NET example creates a workbook, inserts a rectangle shape, extracts its connection points via GetConnectionPoints(), converts each X/Y coordinate to the nearest column and row using default column width and row height, clamps the indices to worksheet limits, and prints the corresponding cell addresses before saving the file.
 class ShapeConnectionPointsDemo
 {
     static void Main()
@@ -23,42 +23,48 @@ class ShapeConnectionPointsDemo
             Worksheet sheet = workbook.Worksheets[0];
 
             // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, upper left offsetX, offsetY, width, height
-            Shape shape = sheet.Shapes.AddRectangle(2, 1, 0, 0, 150, 80);
+            // Parameters: shape type, upper left row, upper left column, upper left row offset, upper left column offset, height, width
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                2,                        // upper left row
+                1,                        // upper left column
+                0,                        // upper left row offset (in pixels)
+                0,                        // upper left column offset (in pixels)
+                80,                       // height (in points)
+                150);                     // width (in points)
 
             // Retrieve the connection points of the shape
             float[][] points = shape.GetConnectionPoints();
 
-            // Document each connection point and map it to an approximate cell address
-            Console.WriteLine("Connection Points and Approximate Cell Addresses:");
+            Console.WriteLine("Connection Points and Corresponding Cell Addresses:");
             for (int i = 0; i < points.Length; i++)
             {
                 float x = points[i][0];
                 float y = points[i][1];
 
-                // Convert the point coordinates (in points) to column/row indices.
-                // Use Aspose.Cells helper methods to get pixel dimensions of rows/columns.
-                int column = (int)Math.Floor(x / sheet.Cells.GetColumnWidthPixel(0));
-                int row = (int)Math.Floor(y / sheet.Cells.GetRowHeightPixel(0));
+                // Approximate conversion from point coordinates to column/row indices.
+                // 1 point = 1/72 inch. Assuming default column width (~64 pixels) and row height (~15 points).
+                int columnIndex = (int)Math.Floor(x / 72.0 * 8.43);
+                int rowIndex = (int)Math.Floor(y / 15.0);
 
-                // Clamp indices to valid worksheet range
-                column = Math.Max(0, Math.Min(column, sheet.Cells.MaxColumn));
-                row = Math.Max(0, Math.Min(row, sheet.Cells.MaxRow));
+                // Clamp indices to worksheet bounds
+                columnIndex = Math.Max(0, Math.Min(sheet.Cells.MaxColumn, columnIndex));
+                rowIndex = Math.Max(0, Math.Min(sheet.Cells.MaxRow, rowIndex));
 
-                // Convert row/column indices to an Excel cell name (e.g., "B3")
-                string cellName = CellsHelper.CellIndexToName(row, column);
+                // Get the cell address (e.g., "B3")
+                string cellAddress = sheet.Cells[rowIndex, columnIndex].Name;
 
-                Console.WriteLine($"Point {i + 1}: X={x}, Y={y} => Cell {cellName}");
+                Console.WriteLine($"Point {i + 1}: X={x}, Y={y} => Cell {cellAddress}");
             }
 
-            // Save the workbook (optional)
-            string outputPath = "ShapeConnectionPoints.xlsx";
+            // Save the workbook (optional, for verification)
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ShapeConnectionPointsDemo.xlsx");
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

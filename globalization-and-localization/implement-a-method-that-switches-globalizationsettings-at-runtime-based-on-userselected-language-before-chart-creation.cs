@@ -1,94 +1,144 @@
+// Title: Runtime Switch of GlobalizationSettings for Localized Charts in Aspose.Cells for .NET
+// Description: This example reads a language code from the command line, creates a Workbook, builds a SettableChartGlobalizationSettings object with culture‑specific strings, assigns it to workbook.Settings.GlobalizationSettings, adds sample data, generates a column chart, and saves the file. The chart titles, series names, and legend entries appear in the selected language because the globalization settings are applied before the chart is created.
+// Keywords: Aspose.Cells | .NET | chart globalization | runtime localization | SettableChartGlobalizationSettings | Excel chart language | globalization settings | multi‑language Excel | chart title localization | culture code
+// Common Searches: Aspose.Cells change chart language at runtime | set chart globalization settings programmatically | localize Excel chart titles with Aspose.Cells | dynamic chart localization .NET | apply SettableGlobalizationSettings before creating chart
+// Developer Intent: The developer needs to modify the workbook’s GlobalizationSettings at runtime based on a user‑selected locale so that chart labels are generated in the appropriate language before the chart is added.
+// Use Cases: Produce Excel reports with charts that automatically display titles, series names, and legends in the end‑user’s language. | Integrate multi‑language chart generation into a web or desktop application by passing a locale identifier to the chart‑creation routine. | Extend the language‑mapping method to support additional cultures and reuse it for any chart type (column, line, pie, etc.) across the solution.
+// AI Prompts: Add Japanese and Chinese entries to GetChartSettingsForLanguage and demonstrate the updated chart localization. | Refactor the switch‑based language mapping to use a dictionary of culture codes and string resources, eliminating the hard‑coded switch. | Show how to retrieve existing GlobalizationSettings from a workbook, modify only the ChartSettings, and keep other localization options unchanged.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartGlobalizationDemo
+// This example reads a language code from the command line, creates a Workbook, builds a SettableChartGlobalizationSettings object with culture‑specific strings, assigns it to workbook.Settings.GlobalizationSettings, adds sample data, generates a column chart, and saves the file. The chart titles, series names, and legend entries appear in the selected language because the globalization settings are applied before the chart is created.
+public class ChartLocalizationHelper
 {
-    // Helper class to configure chart globalization settings based on language
-    public static class ChartGlobalizationHelper
+    // Entry point required for console application
+    public static void Main(string[] args)
     {
-        // Creates a workbook, applies language‑specific chart globalization, adds data and a chart
-        public static Workbook CreateChartWithLanguage(string language)
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Determine language code and output path (use defaults if not provided)
+            string languageCode = args.Length > 0 ? args[0] : "en";
+            string outputPath = args.Length > 1 ? args[1] : "LocalizedChart.xlsx";
 
-            // Prepare sample data for the chart
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Create the workbook with localized chart settings
+            CreateChartWithLocalization(languageCode, outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Creates a workbook, applies language‑specific chart globalization settings,
+    // adds a simple column chart and saves the file.
+    public static void CreateChartWithLocalization(string languageCode, string outputPath)
+    {
+        try
+        {
+            // ---------- Create ----------
+            Workbook workbook = new Workbook();                     // create a new workbook
+            Worksheet sheet = workbook.Worksheets[0];               // get the first worksheet
+
+            // ---------- Apply Globalization Settings ----------
+            // Build chart globalization settings based on the selected language.
+            SettableChartGlobalizationSettings chartSettings = GetChartSettingsForLanguage(languageCode);
+
+            // Wrap the chart settings into a SettableGlobalizationSettings instance
+            // and assign it to the workbook's globalization settings.
+            SettableGlobalizationSettings globalSettings = new SettableGlobalizationSettings
+            {
+                ChartSettings = chartSettings
+            };
+            workbook.Settings.GlobalizationSettings = globalSettings;
+
+            // ---------- Populate Sample Data ----------
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["A2"].PutValue("Q1");
             sheet.Cells["A3"].PutValue("Q2");
             sheet.Cells["A4"].PutValue("Q3");
+
             sheet.Cells["B1"].PutValue("Series");
             sheet.Cells["B2"].PutValue(120);
             sheet.Cells["B3"].PutValue(150);
             sheet.Cells["B4"].PutValue(180);
 
-            // Create language‑specific chart globalization settings
-            SettableChartGlobalizationSettings chartSettings = new SettableChartGlobalizationSettings();
-
-            switch (language?.ToLowerInvariant())
-            {
-                case "fr": // French
-                    chartSettings.SetChartTitleName("Titre du graphique");
-                    chartSettings.SetSeriesName("Série");
-                    chartSettings.SetLegendIncreaseName("Augmenter");
-                    chartSettings.SetLegendDecreaseName("Diminuer");
-                    chartSettings.SetOtherName("Autre");
-                    break;
-
-                case "zh": // Chinese
-                    chartSettings.SetChartTitleName("图表标题");
-                    chartSettings.SetSeriesName("系列");
-                    chartSettings.SetLegendIncreaseName("增加");
-                    chartSettings.SetLegendDecreaseName("减少");
-                    chartSettings.SetOtherName("其他");
-                    break;
-
-                default: // Default (English) – no custom text needed
-                    // Optionally you could set English explicitly
-                    chartSettings.SetChartTitleName("Chart Title");
-                    chartSettings.SetSeriesName("Series");
-                    chartSettings.SetLegendIncreaseName("Increase");
-                    chartSettings.SetLegendDecreaseName("Decrease");
-                    chartSettings.SetOtherName("Other");
-                    break;
-            }
-
-            // Apply the chart globalization settings to the workbook
-            GlobalizationSettings globalization = new GlobalizationSettings
-            {
-                ChartSettings = chartSettings
-            };
-            workbook.Settings.GlobalizationSettings = globalization;
-
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
+            // ---------- Create Chart ----------
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
             Chart chart = sheet.Charts[chartIndex];
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // The chart will automatically use the localized strings set above
-            return workbook;
+            // ---------- Save ----------
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            // Propagate exception to caller after logging
+            Console.Error.WriteLine($"Failed to create chart: {ex.Message}");
+            throw;
         }
     }
 
-    // Demo program
-    class Program
+    // Returns a SettableChartGlobalizationSettings instance populated with
+    // language‑specific strings. Extend this method with additional languages as needed.
+    private static SettableChartGlobalizationSettings GetChartSettingsForLanguage(string languageCode)
     {
-        static void Main()
+        var settings = new SettableChartGlobalizationSettings();
+
+        switch (languageCode.ToLowerInvariant())
         {
-            // Example: create charts for English, French and Chinese
-            Workbook wbEn = ChartGlobalizationHelper.CreateChartWithLanguage("en");
-            wbEn.Save("Chart_English.xlsx");
+            case "en": // English (default)
+                settings.SetChartTitleName("Chart Title");
+                settings.SetSeriesName("Series");
+                settings.SetLegendIncreaseName("Increase");
+                settings.SetLegendDecreaseName("Decrease");
+                settings.SetOtherName("Other");
+                break;
 
-            Workbook wbFr = ChartGlobalizationHelper.CreateChartWithLanguage("fr");
-            wbFr.Save("Chart_French.xlsx");
+            case "fr": // French
+                settings.SetChartTitleName("Titre du graphique");
+                settings.SetSeriesName("Série");
+                settings.SetLegendIncreaseName("Augmenter");
+                settings.SetLegendDecreaseName("Diminuer");
+                settings.SetOtherName("Autre");
+                break;
 
-            Workbook wbZh = ChartGlobalizationHelper.CreateChartWithLanguage("zh");
-            wbZh.Save("Chart_Chinese.xlsx");
+            case "de": // German
+                settings.SetChartTitleName("Diagrammtitel");
+                settings.SetSeriesName("Serie");
+                settings.SetLegendIncreaseName("Zunahme");
+                settings.SetLegendDecreaseName("Abnahme");
+                settings.SetOtherName("Andere");
+                break;
 
-            Console.WriteLine("Workbooks saved with language‑specific chart globalization.");
+            case "es": // Spanish
+                settings.SetChartTitleName("Título del gráfico");
+                settings.SetSeriesName("Serie");
+                settings.SetLegendIncreaseName("Incrementar");
+                settings.SetLegendDecreaseName("Disminuir");
+                settings.SetOtherName("Otro");
+                break;
+
+            default: // Fallback to English
+                settings.SetChartTitleName("Chart Title");
+                settings.SetSeriesName("Series");
+                settings.SetLegendIncreaseName("Increase");
+                settings.SetLegendDecreaseName("Decrease");
+                settings.SetOtherName("Other");
+                break;
         }
+
+        return settings;
     }
 }

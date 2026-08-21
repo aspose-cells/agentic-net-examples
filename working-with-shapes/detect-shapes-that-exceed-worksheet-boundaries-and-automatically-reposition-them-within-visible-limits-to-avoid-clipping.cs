@@ -1,94 +1,95 @@
-// Title: C# Example: Detect and Reposition Shapes Outside Worksheet Boundaries with Aspose.Cells
-// Description: Loads an Excel workbook, scans each worksheet for shapes that lie beyond the used range, calculates the rows and columns a shape occupies, and automatically moves the shape inside the visible area before saving the file.
-// Keywords: Aspose.Cells shape reposition | C# Excel shape boundary | move shapes within worksheet limits | prevent shape clipping Aspose.Cells | .NET Excel shape adjustment | shape overflow correction | Aspose.Cells example GitHub
-// Common Searches: Aspose.Cells move shape inside worksheet | C# reposition Excel shapes that exceed sheet size | detect shapes outside used range Aspose.Cells | adjust shape location to avoid clipping in Excel | sample code for shape boundary correction Aspose.Cells
-// Developer Intent: Identify shapes that extend past the worksheet edges and automatically shift them so the entire shape remains visible within the sheet.
-// Use Cases: Fixing charts or images that are placed off‑sheet by automated generation tools. | Cleaning up workbooks before printing or converting to PDF to avoid cut‑off graphics. | Ensuring consistent layout when importing external Excel files that contain mis‑aligned shapes.
-// AI Prompts: Create a reusable method that accepts a Worksheet and repositions any out‑of‑bounds shapes using Aspose.Cells. | Rewrite the shape‑size calculation to use pixel dimensions instead of row height and column width. | Explain how to handle shape repositioning when the worksheet contains merged cells or hidden rows.
+// Title: Auto‑Adjust Out‑Of‑Bounds Shapes in Aspose.Cells (C#)
+// Description: C# example that creates a workbook, adds a shape placed beyond the last row/column, detects any shape whose UpperLeftRow or UpperLeftColumn exceeds MaxRow/MaxColumn, and repositions it inside the visible area using MoveToRange before saving.
+// Keywords: Aspose.Cells | C# | shape boundary detection | out of bounds shape | move shape to worksheet limits | MaxRow MaxColumn | MoveToRange | Excel automation | adjust shape position | prevent shape clipping
+// Common Searches: Aspose.Cells detect shape outside worksheet | C# move Excel shape back into visible area | adjust out‑of‑bounds shapes Aspose.Cells | prevent shape clipping in generated Excel file | reposition shapes beyond last row column Aspose
+// Developer Intent: Automatically find shapes that lie outside the worksheet’s usable range and relocate them so they remain visible in the final Excel file.
+// Use Cases: Guarantee that programmatically added charts, images, or diagrams are not hidden when the sheet size changes. | Correct imported drawings that were positioned beyond the sheet’s maximum rows or columns before saving. | Create templates where every shape must stay inside the printable or viewable area of the worksheet.
+// AI Prompts: Write a C# method that scans all shapes in a worksheet and moves any shape whose UpperLeftRow or UpperLeftColumn is greater than the sheet’s MaxRow/MaxColumn using Aspose.Cells. | Show how to log original and new coordinates for each adjusted shape and optionally resize it to fit within target cells. | Explain how to handle shapes placed on merged cells when repositioning them within worksheet boundaries.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace ShapeBoundaryAdjustment
+// C# example that creates a workbook, adds a shape placed beyond the last row/column, detects any shape whose UpperLeftRow or UpperLeftColumn exceeds MaxRow/MaxColumn, and repositions it inside the visible area using MoveToRange before saving.
+class ShapeBoundaryAdjuster
 {
-    // Loads an Excel workbook, scans each worksheet for shapes that lie beyond the used range, calculates the rows and columns a shape occupies, and automatically moves the shape inside the visible area before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Input and output file paths
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a rectangle shape placed far outside typical worksheet limits
+            int outOfBoundsRow = 5000;
+            int outOfBoundsColumn = 5000;
+            int shapeHeight = 100; // points
+            int shapeWidth = 200;  // points
+
+            Shape outOfBoundsShape = sheet.Shapes.AddRectangle(
+                outOfBoundsRow, outOfBoundsColumn, 0, 0, shapeHeight, shapeWidth);
+            outOfBoundsShape.Name = "OutOfBoundsRect";
+
+            // -----------------------------------------------------------------
+            // Detect and reposition shapes that exceed worksheet boundaries
+            // -----------------------------------------------------------------
+
+            // Maximum allowed row and column indices (zero‑based)
+            int maxRow = sheet.Cells.MaxRow;
+            int maxColumn = sheet.Cells.MaxColumn;
+
+            // Iterate through all shapes in the worksheet
+            for (int i = 0; i < sheet.Shapes.Count; i++)
+            {
+                Shape shape = sheet.Shapes[i];
+
+                // Current position of the shape
+                int shapeRow = shape.UpperLeftRow;
+                int shapeColumn = shape.UpperLeftColumn;
+
+                bool needsReposition = false;
+
+                // If the shape starts beyond the last row, move it to the last permissible row
+                if (shapeRow > maxRow)
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
+                    shapeRow = maxRow;
+                    needsReposition = true;
                 }
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // If the shape starts beyond the last column, move it to the last permissible column
+                if (shapeColumn > maxColumn)
                 {
-                    // Determine the last used row and column indexes (zero‑based)
-                    int maxRow = sheet.Cells.MaxRow;
-                    int maxCol = sheet.Cells.MaxColumn;
-
-                    // Iterate through each shape on the current worksheet
-                    foreach (Shape shape in sheet.Shapes)
-                    {
-                        // Ensure the shape's top‑left corner is inside the worksheet bounds
-                        if (shape.UpperLeftRow > maxRow)
-                            shape.UpperLeftRow = maxRow;
-
-                        if (shape.UpperLeftColumn > maxCol)
-                            shape.UpperLeftColumn = maxCol;
-
-                        // Approximate rows/columns occupied based on shape size
-                        double rowHeight = sheet.Cells.GetRowHeight(shape.UpperLeftRow); // height in points
-                        int rowsOccupied = (int)Math.Ceiling(shape.Height / rowHeight);
-
-                        double columnWidth = sheet.Cells.GetColumnWidth(shape.UpperLeftColumn); // width in characters
-                        // Convert column width (characters) to points using a typical conversion factor (approx. 7 points per character)
-                        double columnWidthInPoints = columnWidth * 7.0;
-                        int colsOccupied = (int)Math.Ceiling(shape.Width / columnWidthInPoints);
-
-                        // Adjust if the shape would exceed the bottom edge
-                        if (shape.UpperLeftRow + rowsOccupied - 1 > maxRow)
-                        {
-                            int newTopRow = Math.Max(0, maxRow - rowsOccupied + 1);
-                            shape.UpperLeftRow = newTopRow;
-                        }
-
-                        // Adjust if the shape would exceed the right edge
-                        if (shape.UpperLeftColumn + colsOccupied - 1 > maxCol)
-                        {
-                            int newLeftCol = Math.Max(0, maxCol - colsOccupied + 1);
-                            shape.UpperLeftColumn = newLeftCol;
-                        }
-                    }
+                    shapeColumn = maxColumn;
+                    needsReposition = true;
                 }
 
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                    Directory.CreateDirectory(outputDir);
+                if (needsReposition)
+                {
+                    // Reposition the shape within visible limits (offsets set to 0)
+                    shape.MoveToRange(shapeRow, shapeColumn, 0, 0);
+                    Console.WriteLine($"Shape '{shape.Name}' repositioned to Row={shapeRow}, Column={shapeColumn}");
+                }
+            }
 
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
+            // Ensure the output directory exists
+            string outputPath = "AdjustedShapes.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the workbook with the adjusted shapes
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved as '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

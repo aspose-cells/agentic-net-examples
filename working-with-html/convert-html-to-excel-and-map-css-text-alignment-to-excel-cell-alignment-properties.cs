@@ -1,104 +1,107 @@
-// Title: C# – Convert HTML Table to Excel with Aspose.Cells while preserving CSS text‑align
-// Description: Loads an HTML file using Aspose.Cells, reads the inline style of each <td>, extracts the text‑align property, translates it to Aspose.Cells TextAlignmentType, applies the horizontal alignment to the matching worksheet cell, and saves the result as an XLSX workbook.
-// Keywords: Aspose.Cells HTML to Excel | C# HTML table conversion | preserve CSS alignment in Excel | text-align to cell style mapping | loadOptions LoadFormat.Html | extract inline style attribute | horizontal alignment Aspose.Cells | convert HTML report to XLSX
-// Common Searches: how to keep CSS text-align when converting HTML to Excel with Aspose.Cells | C# read td style attribute and set cell alignment | Aspose.Cells map inline CSS to Excel cell formatting | convert HTML table to XLSX preserving column alignment
-// Developer Intent: Translate CSS text‑align values from HTML table cells into the corresponding horizontal alignment of Excel cells using Aspose.Cells.
-// Use Cases: Migrate a web‑based report that uses left, center, and right aligned columns into a spreadsheet that looks identical. | Generate an analysis‑ready Excel file from an HTML email template while keeping the original cell alignment. | Automate bulk conversion of legacy HTML tables to XLSX files without losing visual layout defined by inline CSS.
-// AI Prompts: Write C# code that loads an HTML file with Aspose.Cells, extracts the text‑align style from each <td>, maps it to TextAlignmentType, and applies it to the worksheet cells. | Enhance the converter to safely handle missing style attributes and add support for CSS values such as 'start', 'end', and 'inherit'. | Explain how extending MapCssAlignmentToTextAlignment to include 'justify' and 'initial' affects the resulting Excel cell formatting.
+// Title: C# – Convert HTML to Excel and map CSS text‑align to Aspose.Cells cell alignment
+// Description: Loads an HTML file into an Aspose.Cells Workbook, reads each cell's HtmlString, extracts the inline CSS text‑align value with a regex, maps it to the appropriate TextAlignmentType enum, applies the horizontal alignment to the cell style, and saves the result as an XLSX workbook. Includes basic error handling for missing files and unsupported alignments.
+// Keywords: Aspose.Cells HTML to Excel conversion C# | CSS text-align to Excel alignment | extract inline CSS from HtmlString | TextAlignmentType mapping | preserve cell alignment during HTML‑to‑XLSX | C# regular expression CSS parsing | horizontal alignment in Aspose.Cells | batch HTML to Excel conversion | global web‑to‑spreadsheet export
+// Common Searches: Aspose.Cells preserve CSS text-align when converting HTML to Excel | C# extract text-align from cell HtmlString | map CSS alignment values to Aspose.Cells TextAlignmentType | convert HTML tables to XLSX with original alignment | how to keep left center right justification in Excel after HTML import
+// Developer Intent: Generate an Excel workbook from an HTML source while retaining the original CSS text‑align styling for each cell using Aspose.Cells in C#.
+// Use Cases: Convert web‑based reports or dashboards into Excel files that keep the same left, center, right, justify, or distributed alignment. | Process HTML email templates or scraped web tables and produce XLSX files with matching visual alignment. | Automate bulk conversion of multiple HTML documents to Excel, ensuring inline text‑align styles are reflected in the spreadsheet.
+// AI Prompts: Write C# code with Aspose.Cells that loads an HTML file, extracts the text‑align CSS property from each cell's HtmlString, maps it to TextAlignmentType, sets the cell's HorizontalAlignment, and saves the workbook as XLSX. | Show how to extend the CssToAlignmentMap dictionary to support additional CSS values such as 'start', 'end', and 'inherit' and handle them gracefully in Aspose.Cells. | Provide robust error‑handling patterns for missing input files, empty HtmlString values, and unsupported CSS alignment values during HTML‑to‑Excel conversion.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Xml.Linq;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// Loads an HTML file using Aspose.Cells, reads the inline style of each <td>, extracts the text‑align property, translates it to Aspose.Cells TextAlignmentType, applies the horizontal alignment to the matching worksheet cell, and saves the result as an XLSX workbook.
-class HtmlToExcelConverter
+namespace HtmlToExcelAlignment
 {
-    static void Main()
+    // Loads an HTML file into an Aspose.Cells Workbook, reads each cell's HtmlString, extracts the inline CSS text‑align value with a regex, maps it to the appropriate TextAlignmentType enum, applies the horizontal alignment to the cell style, and saves the result as an XLSX workbook. Includes basic error handling for missing files and unsupported alignments.
+    class Program
     {
-        try
+        // Maps CSS text-align values to Aspose.Cells TextAlignmentType enum
+        private static readonly Dictionary<string, TextAlignmentType> CssToAlignmentMap = new Dictionary<string, TextAlignmentType>(StringComparer.OrdinalIgnoreCase)
         {
-            // Path to the source HTML file
-            string htmlPath = "input.html";
-
-            // Verify that the HTML file exists to avoid FileNotFoundException
-            if (!File.Exists(htmlPath))
-            {
-                Console.WriteLine($"Error: The file '{htmlPath}' was not found.");
-                return;
-            }
-
-            // Load the HTML file into a workbook using Aspose.Cells LoadOptions for HTML format
-            var loadOptions = new Aspose.Cells.LoadOptions(LoadFormat.Html);
-            Workbook workbook = new Workbook(htmlPath, loadOptions);
-
-            // Parse the HTML to extract CSS text‑align values from <td> elements
-            XDocument doc = XDocument.Load(htmlPath);
-            var rows = doc.Descendants("tr").ToList();
-
-            // Iterate through rows and cells in the same order as they appear in the worksheet
-            for (int rowIndex = 0; rowIndex < rows.Count; rowIndex++)
-            {
-                var cellsInRow = rows[rowIndex].Descendants("td").ToList();
-                for (int colIndex = 0; colIndex < cellsInRow.Count; colIndex++)
-                {
-                    // Get the style attribute of the current <td>
-                    string styleAttr = cellsInRow[colIndex].Attribute("style")?.Value ?? string.Empty;
-
-                    // Extract the value of text-align if present
-                    string alignValue = ExtractTextAlign(styleAttr);
-
-                    // Map CSS alignment to Aspose.Cells TextAlignmentType
-                    TextAlignmentType alignment = MapCssAlignmentToTextAlignment(alignValue);
-
-                    // Apply the alignment to the corresponding cell in the worksheet
-                    Cell cell = workbook.Worksheets[0].Cells[rowIndex, colIndex];
-                    Style cellStyle = cell.GetStyle();
-                    cellStyle.HorizontalAlignment = alignment;
-                    cell.SetStyle(cellStyle);
-                }
-            }
-
-            // Save the workbook as an Excel file
-            string excelPath = "output.xlsx";
-            workbook.Save(excelPath);
-            Console.WriteLine($"Conversion completed successfully. Excel file saved as '{excelPath}'.");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-
-    // Helper method to extract the value of text-align from a style string
-    private static string ExtractTextAlign(string style)
-    {
-        // Example style: "color:#000000; text-align:center; font-weight:bold;"
-        if (string.IsNullOrEmpty(style))
-            return string.Empty;
-
-        var parts = style.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-        foreach (var part in parts)
-        {
-            var kv = part.Split(new[] { ':' }, 2);
-            if (kv.Length == 2 && kv[0].Trim().Equals("text-align", StringComparison.OrdinalIgnoreCase))
-                return kv[1].Trim().ToLowerInvariant();
-        }
-        return string.Empty;
-    }
-
-    // Helper method to map CSS alignment strings to Aspose.Cells TextAlignmentType
-    private static TextAlignmentType MapCssAlignmentToTextAlignment(string cssAlign)
-    {
-        return cssAlign switch
-        {
-            "left" => TextAlignmentType.Left,
-            "center" => TextAlignmentType.Center,
-            "right" => TextAlignmentType.Right,
-            "justify" => TextAlignmentType.Justify,
-            _ => TextAlignmentType.General,
+            { "left", TextAlignmentType.Left },
+            { "center", TextAlignmentType.Center },
+            { "right", TextAlignmentType.Right },
+            { "justify", TextAlignmentType.Justify },
+            { "distributed", TextAlignmentType.Distributed }
         };
+
+        // Extracts the CSS text-align value from a cell's HTML representation
+        private static string? ExtractCssTextAlign(string? html)
+        {
+            if (string.IsNullOrEmpty(html))
+                return null;
+
+            // Look for "text-align: value;" inside a style attribute
+            var match = Regex.Match(html, @"text-align\s*:\s*([^;""']+)", RegexOptions.IgnoreCase);
+            return match.Success ? match.Groups[1].Value.Trim() : null;
+        }
+
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Path to the source HTML file
+                string htmlPath = "input.html";
+
+                // Ensure the input file exists
+                if (!File.Exists(htmlPath))
+                {
+                    Console.WriteLine($"Input file '{htmlPath}' not found.");
+                    return;
+                }
+
+                // Load the HTML file into a Workbook
+                Workbook workbook = new Workbook(htmlPath, new LoadOptions(LoadFormat.Html));
+
+                // Iterate through all worksheets and cells
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    Cells cells = sheet.Cells;
+                    int maxRow = cells.MaxDataRow;
+                    int maxCol = cells.MaxDataColumn;
+
+                    for (int row = 0; row <= maxRow; row++)
+                    {
+                        for (int col = 0; col <= maxCol; col++)
+                        {
+                            Cell cell = cells[row, col];
+
+                            // Skip empty cells
+                            if (cell == null || cell.Type == CellValueType.IsNull)
+                                continue;
+
+                            // Obtain the HTML string of the cell (contains inline CSS)
+                            string? cellHtml = cell.HtmlString;
+
+                            // Extract CSS text-align value
+                            string? cssAlign = ExtractCssTextAlign(cellHtml);
+                            if (string.IsNullOrEmpty(cssAlign))
+                                continue; // No alignment defined in CSS
+
+                            // Map CSS alignment to Aspose.Cells alignment enum
+                            if (CssToAlignmentMap.TryGetValue(cssAlign, out TextAlignmentType alignment))
+                            {
+                                // Apply the alignment to the cell's style
+                                Style style = cell.GetStyle();
+                                style.HorizontalAlignment = alignment;
+                                cell.SetStyle(style);
+                            }
+                        }
+                    }
+                }
+
+                // Save the workbook as an Excel file
+                string excelPath = "output.xlsx";
+                workbook.Save(excelPath, SaveFormat.Xlsx);
+
+                Console.WriteLine($"HTML file '{htmlPath}' has been converted to Excel '{excelPath}' with CSS text-align mapped to cell alignment.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

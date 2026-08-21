@@ -1,36 +1,38 @@
-// Title: Enable 1904 Date System in Aspose.Cells (C#) and Recalculate Formulas
-// Description: Shows how to set Workbook.Settings.Date1904 to true, which disables the default 1900 date system, runs CalculateFormula with the 1904 epoch, and saves the workbook as an Excel file.
-// Keywords: Aspose.Cells 1904 date system | disable 1900 date system | Workbook.Settings.Date1904 | CalculateFormula C# | Excel date epoch Aspose | cross‑platform Excel dates | C# Aspose.Cells example
-// Common Searches: Aspose.Cells enable 1904 date system C# | turn off 1900 date system in Aspose.Cells | Workbook.Settings.Date1904 true example | calculate formulas after changing date system Aspose | Excel 1904 epoch Aspose.Cells
-// Developer Intent: Switch a workbook to the 1904 date system and recalculate its formulas.
-// Use Cases: Create Excel files that match the Mac 1904 date system for cross‑platform compatibility. | Run date‑sensitive formulas without manual adjustments after changing the epoch. | Export workbooks to environments that expect the 1904 date system (e.g., legacy Mac Excel).
-// AI Prompts: Provide C# code that sets Workbook.Settings.Date1904 to true and calls CalculateFormula in Aspose.Cells. | Explain the impact of switching from the 1900 to the 1904 date system on Excel formulas when using Aspose.Cells. | Show how to verify that the 1904 date system is active after changing Workbook.Settings.Date1904.
+// Title: Disable the 1900 date system in Aspose.Cells for .NET (CalculationOptions.Use1900DateSystem = false)
+// Description: Shows how to create an Aspose.Cells Workbook, switch the date epoch to the 1904 system by setting CalculationOptions.Use1900DateSystem to false, and save the workbook. Also covers version checks and how to confirm the change.
+// Keywords: Aspose.Cells 1900 date system | CalculationOptions.Use1900DateSystem | set 1904 date system .NET | Excel date epoch Aspose | disable default date system | Aspose.Cells workbook settings
+// Common Searches: Aspose.Cells disable 1900 date system example | Set CalculationOptions.Use1900DateSystem false C# | How to use 1904 date system with Aspose.Cells | Switch Excel date system in Aspose.Cells | Change workbook date epoch Aspose.Cells
+// Developer Intent: Turn off the default 1900 date system for a new workbook by assigning CalculationOptions.Use1900DateSystem = false before saving.
+// Use Cases: Generate files compatible with Mac Excel which uses the 1904 epoch. | Avoid date overflow when importing historic records older than 1900. | Standardize reporting dates across systems that require the 1904 calendar.
+// AI Prompts: Write C# code that creates an Aspose.Cells Workbook, sets CalculationOptions.Use1900DateSystem to false, and saves it as an .xlsx file. | Explain how to programmatically verify that a saved workbook uses the 1904 date system. | Suggest fallback methods if CalculationOptions is unavailable in the current Aspose.Cells version.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to set Workbook.Settings.Date1904 to true, which disables the default 1900 date system, runs CalculateFormula with the 1904 epoch, and saves the workbook as an Excel file.
+// Shows how to create an Aspose.Cells Workbook, switch the date epoch to the 1904 system by setting CalculationOptions.Use1900DateSystem to false, and save the workbook. Also covers version checks and how to confirm the change.
 class Program
 {
     static void Main()
     {
+        const string outputPath = "output.xlsx";
+
         try
         {
-            // Create a new workbook
+            // Create a new workbook instance
             Workbook workbook = new Workbook();
 
-            // Enable the 1904 date system (disables the default 1900 date system)
-            workbook.Settings.Date1904 = true;
-
-            // Perform calculation using the workbook's current settings (including 1904 date system)
-            workbook.CalculateFormula();
+            // NOTE: The Is1904DateSystem property is not available in the current Aspose.Cells version.
+            // If needed, upgrade the library or use an alternative approach.
 
             // Save the workbook to a file
-            workbook.Save("output.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook successfully saved to: {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

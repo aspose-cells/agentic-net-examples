@@ -1,10 +1,10 @@
-// Title: Save a Digitally Signed Excel Workbook as an Audit Copy Using Aspose.Cells for .NET
-// Description: This sample loads an Excel file that includes a digital signature, validates the signature via the IsDigitallySigned property, and writes the workbook to a different filename. The source file stays untouched, creating an immutable audit trail while keeping the signature intact. Basic handling for missing files and runtime errors is also shown.
-// Keywords: Aspose.Cells | C# | .NET | digital signature | Excel workbook | audit copy | preserve signature | Workbook.Save | file backup | IsDigitallySigned | error handling | file integrity
-// Common Searches: Aspose.Cells save signed workbook C# | create audit copy of signed Excel file .NET | preserve digital signature when copying Excel | how to verify workbook signature Aspose.Cells | C# load and re‑save digitally signed Excel
-// Developer Intent: Generate a read‑only backup of a signed Excel document without modifying the original.
-// Use Cases: Archiving financial statements that must retain their original digital signature. | Automating compliance‑driven duplication of signed reports to a secure repository. | Implementing a version‑controlled audit log for contract documents stored as Excel files. | Providing a safe way to distribute signed spreadsheets to external partners while keeping the source file intact.
-// AI Prompts: Write C# code that loads an Excel workbook, checks for a digital signature using Aspose.Cells, and saves it under a new name without losing the signature. | Explain how Aspose.Cells determines the output format when calling Workbook.Save with a filename. | Show error‑handling patterns for missing source files and signature verification failures in Aspose.Cells examples. | Describe best practices for creating immutable audit copies of signed Excel files in .NET.
+// Title: Save a Digitally Signed Excel Workbook as a New Copy with Aspose.Cells for .NET
+// Description: Loads a signed Excel file, verifies the digital signature via Workbook.IsDigitallySigned, and saves it to a different filename using SaveFormat.Xlsx. The signature is retained and the source workbook stays untouched, enabling an audit‑trail copy.
+// Keywords: Aspose.Cells | C# | .NET | digital signature | signed workbook copy | Workbook.IsDigitallySigned | SaveFormat.Xlsx | preserve signature | audit trail Excel | copy Excel file
+// Common Searches: Aspose.Cells save signed workbook as copy | C# preserve digital signature when copying Excel file | how to create audit trail for signed Excel workbook .NET | check Workbook.IsDigitallySigned before saving | duplicate signed Excel file using Aspose.Cells
+// Developer Intent: Create a duplicate of a digitally signed workbook while keeping the original unchanged and retaining its signature.
+// Use Cases: Archive a signed financial statement by saving a timestamped copy without altering the source file. | Generate versioned backups of contract workbooks that require a verifiable digital signature. | Integrate signature verification and copy creation into a document‑management system that mandates immutable originals.
+// AI Prompts: Generate C# code with Aspose.Cells that loads a signed workbook, confirms its digital signature, and saves it under a new name preserving the signature. | Show how to add comprehensive error handling for missing files and save failures when copying a signed Excel workbook in .NET. | Explain the role of Workbook.IsDigitallySigned and why SaveFormat.Xlsx maintains the digital signature in the copied file.
 
 using System;
 using System.IO;
@@ -12,59 +12,49 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // This sample loads an Excel file that includes a digital signature, validates the signature via the IsDigitallySigned property, and writes the workbook to a different filename. The source file stays untouched, creating an immutable audit trail while keeping the signature intact. Basic handling for missing files and runtime errors is also shown.
-    public class SaveSignedWorkbookDemo
+    // Loads a signed Excel file, verifies the digital signature via Workbook.IsDigitallySigned, and saves it to a different filename using SaveFormat.Xlsx. The signature is retained and the source workbook stays untouched, enabling an audit‑trail copy.
+    public class SaveSignedWorkbookCopy
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
-
         public static void Run()
         {
             // Path to the original signed workbook
-            string originalPath = "SignedOriginal.xlsx";
+            string originalPath = "SignedWorkbook.xlsx";
 
-            // Verify that the source file exists to avoid FileNotFoundException
+            // Verify that the source file exists
             if (!File.Exists(originalPath))
             {
-                Console.WriteLine($"Error: The file '{originalPath}' was not found.");
+                Console.WriteLine($"Error: The file \"{originalPath}\" was not found.");
                 return;
             }
 
             try
             {
                 // Load the signed workbook
-                Workbook signedWorkbook = new Workbook(originalPath);
+                Workbook workbook = new Workbook(originalPath);
 
                 // Verify that the workbook is digitally signed
-                bool isSigned = signedWorkbook.IsDigitallySigned;
+                bool isSigned = workbook.IsDigitallySigned;
                 Console.WriteLine($"Original workbook is digitally signed: {isSigned}");
 
-                // Define a new filename for the audit copy
-                string auditCopyPath = "SignedAuditCopy.xlsx";
+                // Define a new filename to preserve the original file (audit trail)
+                string copyPath = "SignedWorkbook_Copy.xlsx";
 
-                // Save the workbook under the new filename.
-                // The Save(string) overload automatically selects the format based on the file extension.
-                signedWorkbook.Save(auditCopyPath);
-
-                Console.WriteLine($"Signed workbook saved as audit copy: {auditCopyPath}");
-            }
-            catch (FileNotFoundException fnfEx)
-            {
-                Console.WriteLine($"File not found: {fnfEx.FileName}");
+                // Save the workbook to the new file (signature is preserved)
+                workbook.Save(copyPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved as a copy to: {copyPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
+                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
             }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            SaveSignedWorkbookCopy.Run();
         }
     }
 }

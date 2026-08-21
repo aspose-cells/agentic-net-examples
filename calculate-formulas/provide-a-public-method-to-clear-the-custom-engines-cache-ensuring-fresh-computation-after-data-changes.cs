@@ -1,128 +1,127 @@
-// Title: C# ClearCache method for Aspose.Cells custom calculation engine to reset cached formula results
-// Description: Shows how to extend AbstractCalculationEngine with a public ClearCache() method that empties the in‑memory dictionary used by a custom SUMCACHED function, guaranteeing fresh computation after workbook data changes.
-// Keywords: Aspose.Cells | C# | .NET | custom calculation engine | cache invalidation | ClearCache method | reset cached formulas | SUMCACHED function | ForceRecalculate | workbook recalculation | in‑memory cache
-// Common Searches: Aspose.Cells clear custom engine cache | reset cached custom function C# | how to invalidate calculation cache Aspose.Cells | ClearCache example Aspose.Cells | force recalc custom function Aspose.Cells
-// Developer Intent: Add a public method that clears the internal cache of a custom Aspose.Cells calculation engine so formulas are recomputed with up‑to‑date cell values.
-// Use Cases: After modifying source cells, call engine.ClearCache() before wb.CalculateFormula(opts) to obtain correct SUMCACHED results. | In a long‑running service that processes many workbooks, invoke ClearCache periodically to free memory and avoid stale values. | Hook engine.ClearCache() to a workbook change event to automatically invalidate cached custom function results.
-// AI Prompts: Generate C# code that implements a ClearCache() method for an Aspose.Cells custom calculation engine and demonstrates its usage in a workbook recalculation workflow. | Explain the interaction between ForceRecalculate and ClearCache in a custom engine and outline best practices for cache invalidation. | Create a sample that clears the custom engine cache, updates cell values, recalculates, and verifies the new formula output.
+// Title: ClearCache method for resetting a custom calculation engine cache in Aspose.Cells .NET
+// Description: Shows how to implement a public ClearCache() method in a CachingCustomEngine that inherits AbstractCalculationEngine. The method clears the internal Dictionary that stores results of custom functions such as MYSUM, so after changing source cells a fresh wb.CalculateFormula call returns updated values.
+// Keywords: Aspose.Cells | .NET | C# | custom calculation engine | cache clearing | ClearCache method | MYSUM function | recalculate formulas | dictionary cache | Excel automation | US developers | global
+// Common Searches: how to clear cache in Aspose.Cells custom engine | reset custom function results before recalculation .NET | Aspose.Cells C# clear internal cache of calculation engine | force formula recompute after data change Aspose.Cells | C# example for clearing custom engine cache in Aspose.Cells
+// Developer Intent: Provide a simple public method that empties the custom engine’s cache so formulas are recomputed after any data modifications.
+// Use Cases: Call engine.ClearCache() after user edits a cell, then recalculate the workbook to display correct custom function results. | Integrate ClearCache into a batch‑processing routine that updates many worksheets before final calculation. | Invoke ClearCache before saving a workbook to guarantee that all cached custom function values are up‑to‑date.
+// AI Prompts: Generate a C# ClearCache() implementation for a class derived from AbstractCalculationEngine that uses a Dictionary cache. | Write unit tests that verify ClearCache removes all cached entries and forces a new calculation of the MYSUM custom function. | Create a step‑by‑step guide on incorporating ClearCache into an Aspose.Cells workbook recalculation workflow with CalculationOptions.
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-// Shows how to extend AbstractCalculationEngine with a public ClearCache() method that empties the in‑memory dictionary used by a custom SUMCACHED function, guaranteeing fresh computation after workbook data changes.
-public class CachedCustomEngine : AbstractCalculationEngine
+namespace CustomEngineDemo
 {
-    // Simple in‑memory cache for demonstration purposes
-    private readonly Dictionary<string, object> _cache = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-
-    public override void Calculate(CalculationData data)
+    // Custom calculation engine that caches results of custom functions.
+    // Shows how to implement a public ClearCache() method in a CachingCustomEngine that inherits AbstractCalculationEngine. The method clears the internal Dictionary that stores results of custom functions such as MYSUM, so after changing source cells a fresh wb.CalculateFormula call returns updated values.
+    public class CachingCustomEngine : AbstractCalculationEngine
     {
-        // Build a cache key based on function name and number of parameters
-        string key = data.FunctionName + "_" + data.ParamCount;
+        // Simple in‑memory cache: key = function name + parameters, value = calculated result.
+        private readonly Dictionary<string, object> _cache = new Dictionary<string, object>();
 
-        // Return cached result if it exists
-        if (_cache.TryGetValue(key, out var cachedValue))
+        // Public method to clear the cache. Call this after data changes to force fresh computation.
+        public void ClearCache()
         {
-            data.CalculatedValue = cachedValue;
-            return;
+            _cache.Clear();
         }
 
-        // Example custom function: SUMCACHED
-        if (data.FunctionName.Equals("SUMCACHED", StringComparison.OrdinalIgnoreCase))
+        // Example implementation of a custom function "MYSUM".
+        public override void Calculate(CalculationData data)
         {
-            double sum = 0;
+            if (data.FunctionName.Equals("MYSUM", StringComparison.OrdinalIgnoreCase))
+            {
+                // Build a cache key based on the function name and its parameters.
+                string cacheKey = BuildCacheKey(data);
+
+                // If we have a cached value, reuse it.
+                if (_cache.TryGetValue(cacheKey, out object cachedResult))
+                {
+                    data.CalculatedValue = cachedResult;
+                    return;
+                }
+
+                // Otherwise compute the result.
+                double sum = 0;
+                for (int i = 0; i < data.ParamCount; i++)
+                {
+                    // Get each parameter as a ReferredArea (range or single cell).
+                    ReferredArea area = (ReferredArea)data.GetParamValue(i);
+                    // For simplicity, assume each area is a single cell.
+                    object val = area.GetValue(0, 0);
+                    if (val != null && double.TryParse(val.ToString(), out double d))
+                    {
+                        sum += d;
+                    }
+                }
+
+                // Store the result in the cache and set it as the calculated value.
+                _cache[cacheKey] = sum;
+                data.CalculatedValue = sum;
+            }
+            else
+            {
+                // For all other functions let the default engine handle them.
+                // No action needed because this method is abstract; simply do nothing.
+            }
+        }
+
+        // Helper to create a deterministic cache key.
+        private string BuildCacheKey(CalculationData data)
+        {
+            var parts = new List<string> { data.FunctionName.ToUpperInvariant() };
             for (int i = 0; i < data.ParamCount; i++)
             {
-                // Parameters are passed as ReferredArea objects
                 ReferredArea area = (ReferredArea)data.GetParamValue(i);
-                sum += Convert.ToDouble(area.GetValue(0, 0));
+                // Include the address of the area; for a single cell this is enough.
+                parts.Add($"{area.StartRow}:{area.StartColumn}-{area.EndRow}:{area.EndColumn}");
             }
-
-            data.CalculatedValue = sum;
-            _cache[key] = sum; // Store result in cache
+            return string.Join("|", parts);
         }
-        else
+
+        // Force recalculation for the custom function so that shared formulas are evaluated per cell.
+        public override bool ForceRecalculate(string functionName)
         {
-            // For other functions let the default engine handle them
-            data.CalculatedValue = data.GetParamValue(0);
+            return functionName.Equals("MYSUM", StringComparison.OrdinalIgnoreCase);
         }
     }
 
-    // Force recalculation for the custom function so that changes in source data are detected
-    public override bool ForceRecalculate(string functionName)
+    public static class Program
     {
-        return functionName.Equals("SUMCACHED", StringComparison.OrdinalIgnoreCase);
-    }
-
-    // Public method to clear the internal cache, ensuring fresh computation after data changes
-    public void ClearCache()
-    {
-        _cache.Clear();
-    }
-}
-
-public class CustomEngineCacheDemo
-{
-    public static void Test()
-    {
-        try
+        public static void Main()
         {
-            // Create a new workbook and populate some data
+            // Create a workbook and fill some data.
             Workbook wb = new Workbook();
             Worksheet ws = wb.Worksheets[0];
-            ws.Cells["A1"].PutValue(5);
-            ws.Cells["A2"].PutValue(10);
-            ws.Cells["A3"].Formula = "=SUMCACHED(A1,A2)";
+            ws.Cells["A1"].PutValue(10);
+            ws.Cells["A2"].PutValue(20);
+            ws.Cells["A3"].Formula = "=MYSUM(A1,A2)";
 
-            // Instantiate the custom engine with caching
-            CachedCustomEngine engine = new CachedCustomEngine();
+            // Instantiate the custom engine.
+            var engine = new CachingCustomEngine();
 
-            // Set calculation options to use the custom engine
+            // Set calculation options to use the custom engine.
             CalculationOptions opts = new CalculationOptions { CustomEngine = engine };
 
-            // First calculation – cache will be populated
+            // First calculation – result will be computed and cached.
             wb.CalculateFormula(opts);
-            Console.WriteLine("First result: " + ws.Cells["A3"].Value); // Expected 15
+            Console.WriteLine($"First result: {ws.Cells["A3"].Value}"); // Expected 30
 
-            // Modify source data
-            ws.Cells["A1"].PutValue(20);
+            // Change one of the source cells.
+            ws.Cells["A1"].PutValue(100);
 
-            // Recalculate – ForceRecalculate forces a new calculation, but cache would still be used if not cleared
+            // Without clearing the cache the old result would be returned.
             wb.CalculateFormula(opts);
-            Console.WriteLine("After data change without clearing cache: " + ws.Cells["A3"].Value); // Expected 30
+            Console.WriteLine($"Result without clearing cache: {ws.Cells["A3"].Value}"); // Still 30 (cached)
 
-            // Clear the engine's cache explicitly
+            // Clear the engine's cache to force fresh computation.
             engine.ClearCache();
 
-            // Recalculate again – now the engine recomputes without any cached value
+            // Re‑calculate after clearing cache – now the new value is used.
             wb.CalculateFormula(opts);
-            Console.WriteLine("After clearing cache: " + ws.Cells["A3"].Value); // Expected 30
+            Console.WriteLine($"Result after clearing cache: {ws.Cells["A3"].Value}"); // Expected 120
 
-            // Ensure output directory exists before saving
-            string outputPath = "CustomEngineCacheDemo.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook
-            wb.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Save the workbook if needed.
+            wb.Save("CustomEngineCacheDemo.xlsx");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred during the demo: " + ex.Message);
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main()
-    {
-        CustomEngineCacheDemo.Test();
     }
 }

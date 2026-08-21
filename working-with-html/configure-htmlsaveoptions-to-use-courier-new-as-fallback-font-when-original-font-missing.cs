@@ -1,16 +1,16 @@
-// Title: Configure HtmlSaveOptions.DefaultFontName to "Courier New" for missing fonts in AspNet Aspose.Cells HTML export (C#)
-// Description: This C# example creates a workbook, applies a non‑existent font to a cell, and sets HtmlSaveOptions.DefaultFontName to "Courier New" so the generated HTML uses this font whenever the original font cannot be found, then saves the file as output.html.
-// Keywords: Aspose.Cells HtmlSaveOptions | DefaultFontName | fallback font HTML export | C# Aspose.Cells example | missing font handling | Courier New fallback | Excel to HTML conversion
-// Common Searches: Aspose.Cells set default font for HTML export | HtmlSaveOptions fallback font C# | use Courier New when font missing Aspose.Cells | how to handle missing fonts in Aspose.Cells HTML output | default font name Aspose.Cells HtmlSaveOptions
-// Developer Intent: Define a default font that Aspose.Cells will use in the HTML output when the workbook references fonts that are not installed on the server.
-// Use Cases: Ensure consistent appearance of exported HTML reports when source spreadsheets contain custom or unavailable fonts. | Prevent browser warnings about missing fonts by providing a reliable fallback such as Courier New. | Simplify styling of generated HTML by applying a single fallback font across all cells with unknown fonts.
-// AI Prompts: Write C# code that saves an Aspose.Cells workbook to HTML using "Courier New" as the fallback font for any missing fonts. | Explain the role of HtmlSaveOptions.DefaultFontName and how to configure it for HTML export in Aspose.Cells for .NET. | Provide a complete Aspose.Cells example that sets a default fallback font and also enables CSS embedding and cell formatting preservation.
+// Title: Aspose.Cells .NET – Use HtmlSaveOptions.DefaultFontName "Courier New" as fallback for missing fonts
+// Description: Demonstrates how to configure HtmlSaveOptions.DefaultFontName to "Courier New" so that any unavailable fonts in a workbook are automatically replaced when exporting to HTML with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells HtmlSaveOptions default font | fallback font HTML export .NET | Courier New Aspose.Cells | HtmlSaveOptions.DefaultFontName example | export Excel to HTML missing font
+// Common Searches: Aspose.Cells set default font for HTML export | HtmlSaveOptions.DefaultFontName usage | fallback font when saving workbook as HTML | how to replace missing fonts in Aspose.Cells HTML output | use Courier New as default font in Aspose.Cells
+// Developer Intent: Configure HtmlSaveOptions so that HTML output uses "Courier New" when the original cell font cannot be found.
+// Use Cases: Create HTML reports from Excel files that contain custom fonts not installed on the server. | Build an automated conversion pipeline that guarantees consistent text rendering across browsers by applying a web‑safe fallback font. | Support multi‑user environments where client machines have different font libraries, ensuring uniform appearance of exported HTML.
+// AI Prompts: Show me C# code to set HtmlSaveOptions.DefaultFontName to "Courier New" in Aspose.Cells. | How can I export a workbook to HTML with a fallback font for missing typefaces using Aspose.Cells .NET? | Explain the impact of HtmlSaveOptions.DefaultFontName on font handling during HTML conversion.
 
 using System;
 using Aspose.Cells;
 
-// This C# example creates a workbook, applies a non‑existent font to a cell, and sets HtmlSaveOptions.DefaultFontName to "Courier New" so the generated HTML uses this font whenever the original font cannot be found, then saves the file as output.html.
-class Program
+// Demonstrates how to configure HtmlSaveOptions.DefaultFontName to "Courier New" so that any unavailable fonts in a workbook are automatically replaced when exporting to HTML with Aspose.Cells for .NET.
+class HtmlFallbackFontDemo
 {
     static void Main()
     {
@@ -18,15 +18,15 @@ class Program
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add sample text and assign a font that likely does not exist on the system
+        // Add sample text and assign a font that is unlikely to be installed
         Cell cell = worksheet.Cells["A1"];
         cell.PutValue("Text with a missing font");
         Style style = workbook.CreateStyle();
         style.Font.Name = "NonExistentFont";
         cell.SetStyle(style);
 
-        // Configure HTML save options to use "Courier New" when the original font is unavailable
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        // Configure HtmlSaveOptions to use "Courier New" when the original font is not found
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
         htmlOptions.DefaultFontName = "Courier New";
 
         // Save the workbook as HTML using the configured options

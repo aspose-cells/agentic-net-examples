@@ -1,33 +1,34 @@
-// Title: Apply Green Background Conditional Formatting for Values >1000 with Aspose.Cells for .NET (C#)
-// Description: C# example that creates a workbook, defines the range A1:A20, adds a conditional formatting rule, and sets a green fill for any cell whose numeric value is greater than 1000. The workbook is saved as ConditionalFormatting_GreaterThan1000.xlsx.
-// Keywords: Aspose.Cells | C# conditional formatting | green background | value greater than 1000 | .NET spreadsheet | FormatCondition | CellArea | Excel conditional formatting example
-// Common Searches: Aspose.Cells conditional formatting example C# | how to set cell background color based on value Aspose.Cells | C# highlight cells greater than 1000 in Excel | apply green fill when value exceeds threshold Aspose.Cells | conditional formatting range A1:A20 Aspose.Cells
+// Title: Apply Green Background Conditional Formatting for Values > 1000 with Aspose.Cells (.NET)
+// Description: This C# example creates a workbook, defines range A1:A20, adds a CellValue conditional formatting rule that flags numbers greater than 1000, sets the cell background to green, and saves the file as an XLSX document using Aspose.Cells.
+// Keywords: Aspose.Cells conditional formatting C# | highlight cells > 1000 | green background rule Aspose.Cells | CellValue condition greater than | apply conditional formatting programmatically | .NET Excel styling
+// Common Searches: Aspose.Cells C# conditional formatting example | set green background for cells greater than 1000 | how to add CellValue condition in Aspose.Cells | apply conditional formatting to a range in .NET | Aspose.Cells format condition greater than operator
 // Developer Intent: Create a conditional formatting rule that colors cells green when their numeric value exceeds 1000.
-// Use Cases: Flag high‑value sales figures in financial dashboards. | Mark budget overruns in expense tracking sheets. | Highlight safety‑critical measurements that surpass a defined limit.
-// AI Prompts: Generate C# code using Aspose.Cells to apply a red background to cells in column B when the value is below 200. | Show how to add multiple conditional formatting rules with different colors for low, medium, and high value ranges in a worksheet. | Explain how to replace the constant "1000" with a cell‑referenced formula in an Aspose.Cells conditional formatting rule.
+// Use Cases: Highlight expense entries that surpass a budget limit in financial reports. | Mark sales figures that exceed target thresholds on a dashboard worksheet. | Flag inventory counts that go beyond maximum stock levels for quick review.
+// AI Prompts: Generate C# code with Aspose.Cells to apply a red background when a cell value is less than 0. | Show how to add multiple conditional formatting rules to the same range, each with a different color and operator. | Explain how to reuse an existing conditional formatting collection on another worksheet in the same workbook.
 
-using System;
 using System.Drawing;
 using Aspose.Cells;
 
 namespace ConditionalFormattingExample
 {
-    // C# example that creates a workbook, defines the range A1:A20, adds a conditional formatting rule, and sets a green fill for any cell whose numeric value is greater than 1000. The workbook is saved as ConditionalFormatting_GreaterThan1000.xlsx.
-    class Program
+    // This C# example creates a workbook, defines range A1:A20, adds a CellValue conditional formatting rule that flags numbers greater than 1000, sets the cell background to green, and saves the file as an XLSX document using Aspose.Cells.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Define the range to which the conditional formatting will be applied (e.g., A1:A20)
             CellArea range = new CellArea
             {
-                StartRow = 0,    // Row 1 (zero‑based index)
-                EndRow = 19,     // Row 20
+                StartRow = 0,   // Row 1 (zero‑based)
+                EndRow = 19,    // Row 20
                 StartColumn = 0, // Column A
-                EndColumn = 0    // Column A
+                EndColumn = 0   // Column A
             };
 
             // Add a new conditional formatting collection to the worksheet
@@ -47,12 +48,6 @@ namespace ConditionalFormattingExample
             // Retrieve the created condition and set its style (green background)
             FormatCondition condition = conditions[conditionIndex];
             condition.Style.BackgroundColor = Color.Green;
-
-            // (Optional) Populate some sample data to demonstrate the rule
-            for (int i = 0; i < 20; i++)
-            {
-                worksheet.Cells[i, 0].PutValue(i * 150); // Values: 0,150,300,...,2850
-            }
 
             // Save the workbook
             workbook.Save("ConditionalFormatting_GreaterThan1000.xlsx");

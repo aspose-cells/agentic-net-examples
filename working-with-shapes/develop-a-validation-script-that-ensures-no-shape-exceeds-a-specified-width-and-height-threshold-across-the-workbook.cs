@@ -1,75 +1,83 @@
-// Title: C# script to validate and resize Excel shape dimensions using Aspose.Cells
-// Description: Loads an Excel workbook, walks through every worksheet and its ShapeCollection, checks each shape's Width and Height against configurable pixel limits, logs any oversized shapes, optionally reduces them to the maximum allowed size, and saves the result to a new file.
-// Keywords: Aspose.Cells shape validation | C# resize Excel shapes | shape width limit Aspose | shape height limit Aspose | Excel shape size enforcement | bulk shape resizing .NET | programmatic shape dimension check
-// Common Searches: how to limit shape size in Excel with Aspose.Cells | C# script to find and resize oversized shapes in a workbook | Aspose.Cells iterate shapes and enforce width height constraints | validate Excel shape dimensions programmatically
-// Developer Intent: Identify shapes that exceed defined width or height thresholds in an Excel file and automatically adjust them to comply with the limits.
-// Use Cases: Audit and correct shape sizes before distributing a report to maintain layout consistency. | Automatically shrink images, charts, or SmartArt that violate corporate formatting standards. | Process large batches of workbooks to enforce uniform shape dimensions across all files.
-// AI Prompts: Create a reusable C# method that receives a workbook path, max width, and max height, then returns a list of shapes that exceed those dimensions. | Show how to preserve aspect ratio while scaling down oversized shapes using Aspose.Cells. | Write unit tests for shape size validation that mock a workbook containing shapes of various widths and heights.
+// Title: C# Script to Validate and Resize Oversized Shapes in an Excel Workbook with Aspose.Cells
+// Description: Loads an Excel file, iterates through each worksheet’s ShapeCollection, identifies shapes whose Width or Height exceed user‑defined pixel limits, logs the violations, resizes the shapes to the allowed dimensions, and saves the updated workbook.
+// Keywords: Aspose.Cells shape validation | C# resize Excel shapes | limit shape width height | shape dimension check Aspose | automated shape resizing .NET | Excel workbook shape size enforcement | shape collection iteration Aspose.Cells
+// Common Searches: how to enforce maximum shape size in Excel using Aspose.Cells | C# script to resize shapes that are too large in a workbook | validate shape dimensions across all worksheets with Aspose.Cells | restrict shape width and height in Excel programmatically | detect and adjust oversized images in Excel files .NET
+// Developer Intent: Detect any shape that exceeds the specified width or height and automatically resize it to comply with the defined limits.
+// Use Cases: Ensure template consistency by preventing shapes from breaking layout boundaries. | Automate compliance with corporate branding rules that cap image dimensions. | Pre‑process user‑generated workbooks to avoid printing or rendering issues caused by large shapes. | Integrate shape size checks into a CI pipeline for Excel report generation.
+// AI Prompts: Create a version of ShapeValidator that writes adjustment details to a CSV log file. | Modify the script to keep the original aspect ratio when only one dimension exceeds the limit. | Generate unit tests that verify shapes are correctly resized when they surpass the maximum width or height. | Adapt the code to accept size limits in points instead of pixels. | Provide a PowerShell wrapper that runs the ShapeValidator on multiple files in a folder.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace ShapeSizeValidator
+namespace ShapeValidationDemo
 {
-    // Loads an Excel workbook, walks through every worksheet and its ShapeCollection, checks each shape's Width and Height against configurable pixel limits, logs any oversized shapes, optionally reduces them to the maximum allowed size, and saves the result to a new file.
-    class Program
+    // Loads an Excel file, iterates through each worksheet’s ShapeCollection, identifies shapes whose Width or Height exceed user‑defined pixel limits, logs the violations, resizes the shapes to the allowed dimensions, and saves the updated workbook.
+    public class ShapeValidator
     {
-        // Define maximum allowed dimensions (in pixels)
-        const int MaxWidth = 300;   // example: 300 pixels
-        const int MaxHeight = 200;  // example: 200 pixels
-
-        static void Main(string[] args)
+        /// <param name="inputFile">Path to the source Excel file.</param>
+        /// <param name="outputFile">Path where the validated workbook will be saved.</param>
+        /// <param name="maxWidth">Maximum allowed width in pixels.</param>
+        /// <param name="maxHeight">Maximum allowed height in pixels.</param>
+        public static void Run(string inputFile, string outputFile, int maxWidth, int maxHeight)
         {
-            // Input workbook path (change as needed or pass via command line)
-            string inputPath = "input.xlsx";
-            // Output workbook path (optional, if you want to save adjustments)
-            string outputPath = "output_validated.xlsx";
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Load the workbook using the standard constructor (lifecycle rule)
+            Workbook workbook = new Workbook(inputFile, new LoadOptions());
 
             // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Get the collection of shapes on the current worksheet
+                // Access the collection of shapes on the current worksheet
                 ShapeCollection shapes = sheet.Shapes;
 
-                // Examine each shape
+                // Examine each shape individually
                 for (int i = 0; i < shapes.Count; i++)
                 {
                     Shape shape = shapes[i];
 
-                    // Check width and height against thresholds
-                    bool widthExceeds = shape.Width > MaxWidth;
-                    bool heightExceeds = shape.Height > MaxHeight;
+                    // Check width and height against the thresholds
+                    bool widthExceeded = shape.Width > maxWidth;
+                    bool heightExceeded = shape.Height > maxHeight;
 
-                    if (widthExceeds || heightExceeds)
+                    if (widthExceeded || heightExceeded)
                     {
-                        Console.WriteLine($"Worksheet '{sheet.Name}', Shape #{i} (Type={shape.Type}, Name={shape.Name}) exceeds limits.");
-
-                        // Report current dimensions
+                        // Output diagnostic information
+                        Console.WriteLine($"Worksheet '{sheet.Name}', Shape {i} ('{shape.Name}') exceeds limits:");
                         Console.WriteLine($"  Current Size -> Width: {shape.Width}px, Height: {shape.Height}px");
+                        Console.WriteLine($"  Limits        -> Max Width: {maxWidth}px, Max Height: {maxHeight}px");
 
-                        // Optionally adjust the shape to fit within limits
-                        if (widthExceeds)
+                        // Resize the shape to fit within the allowed dimensions
+                        if (widthExceeded)
                         {
-                            shape.Width = MaxWidth;
-                            Console.WriteLine($"  Width adjusted to {MaxWidth}px");
+                            shape.Width = maxWidth;
                         }
 
-                        if (heightExceeds)
+                        if (heightExceeded)
                         {
-                            shape.Height = MaxHeight;
-                            Console.WriteLine($"  Height adjusted to {MaxHeight}px");
+                            shape.Height = maxHeight;
                         }
+
+                        Console.WriteLine($"  Adjusted Size -> Width: {shape.Width}px, Height: {shape.Height}px");
                     }
                 }
             }
 
-            // Save the workbook (if any adjustments were made)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Validation complete. Workbook saved as '{outputPath}'.");
+            // Save the validated workbook using the standard Save method (lifecycle rule)
+            workbook.Save(outputFile);
+        }
+    }
+
+    // Example usage
+    class Program
+    {
+        static void Main()
+        {
+            string sourcePath = "InputWorkbook.xlsx";
+            string destinationPath = "ValidatedWorkbook.xlsx";
+            int allowedWidth = 300;   // pixels
+            int allowedHeight = 200;  // pixels
+
+            ShapeValidator.Run(sourcePath, destinationPath, allowedWidth, allowedHeight);
         }
     }
 }

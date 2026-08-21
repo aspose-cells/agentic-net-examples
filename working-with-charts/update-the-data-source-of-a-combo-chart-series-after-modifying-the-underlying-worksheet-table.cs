@@ -1,111 +1,112 @@
-// Title: Refresh a Combo Chart After Expanding a ListObject Table – Aspose.Cells for .NET
-// Description: Demonstrates how to bind a column‑line combo chart to a ListObject, add a new row, resize the table, and refresh the chart using Calculate while checking the IsChartDataChanged flag. The workbook is saved as an updated Excel file.
-// Keywords: Aspose.Cells | C# combo chart update | ListObject resize | refresh chart after table change | IsChartDataChanged | .NET Excel chart recalculation | structured table chart binding | add row to Excel table Aspose
-// Common Searches: how to refresh a combo chart after adding rows in Aspose.Cells | Aspose.Cells update chart data source when ListObject grows | C# recalculate chart after table resize Aspose | check chart data changed flag Aspose.Cells | bind combo chart series to table column .NET
-// Developer Intent: Update an existing combo chart so it automatically reflects rows added to the underlying ListObject without recreating the series.
-// Use Cases: Automatically extend a sales chart when new records are appended to a structured table. | Detect changes in chart data after table modifications and trigger a recalculation only when needed. | Maintain chart formatting and series types while the source table size changes.
-// AI Prompts: Write C# code with Aspose.Cells that adds multiple rows to a ListObject and refreshes all linked chart series. | Explain the purpose of IsChartDataChanged and show how to use it to conditionally recalculate a chart after a table resize. | Provide a step‑by‑step tutorial for binding a combo chart to a ListObject column and keeping it synchronized when the table expands.
+// Title: C# – Update Combo Chart Series After Expanding an Excel Table Using Aspose.Cells
+// Description: Demonstrates how to create a ListObject (Excel table), add a column‑line combo chart that uses a structured reference for the sales series and a range reference for a target series, append new rows, resize the table, rebuild the chart series to include the new data, force chart recalculation, and save both the original and updated workbooks.
+// Keywords: Aspose.Cells | .NET | C# | combo chart | update chart series | Excel table resize | ListObject | structured reference | chart recalculation | dynamic data source
+// Common Searches: Aspose.Cells update chart after adding rows to ListObject | C# refresh combo chart data range when Excel table grows | Resize Excel table and keep chart linked Aspose.Cells | Change chart series source to structured reference .NET | Recalculate chart after modifying worksheet data Aspose
+// Developer Intent: Refresh the combo chart so its series automatically include rows added to the underlying Excel table.
+// Use Cases: Add new monthly records to a ListObject and keep the column series linked via a structured reference. | Extend a hidden target column, update the line series range, and recalculate the chart to display new target values. | Resize an Excel table after data insertion, clear existing NSeries, re‑add them with updated ranges, and save the workbook.
+// AI Prompts: Generate C# code with Aspose.Cells that appends rows to a ListObject and updates a combo chart’s series ranges. | Explain how structured references keep a chart series linked after resizing an Excel table in Aspose.Cells. | Show the steps to clear and rebuild chart series in Aspose.Cells after modifying worksheet data.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Tables;   // Required for ListObject
 
 namespace AsposeCellsComboChartUpdate
 {
-    // Demonstrates how to bind a column‑line combo chart to a ListObject, add a new row, resize the table, and refresh the chart using Calculate while checking the IsChartDataChanged flag. The workbook is saved as an updated Excel file.
+    // Demonstrates how to create a ListObject (Excel table), add a column‑line combo chart that uses a structured reference for the sales series and a range reference for a target series, append new rows, resize the table, rebuild the chart series to include the new data, force chart recalculation, and save both the original and updated workbooks.
     class Program
     {
         static void Main()
         {
             try
             {
-                // ------------------------------------------------------------
-                // 1. Create a new workbook and get the first worksheet
-                // ------------------------------------------------------------
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // ------------------------------------------------------------
-                // 2. Populate sample data (Category / Value) in cells A1:B5
-                // ------------------------------------------------------------
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["B4"].PutValue(30);
-                sheet.Cells["A5"].PutValue("D");
-                sheet.Cells["B5"].PutValue(40);
+                // Populate initial data (A1:B6) – this will be the source table
+                sheet.Cells["A1"].PutValue("Month");
+                sheet.Cells["B1"].PutValue("Sales");
+                string[] months = { "Jan", "Feb", "Mar", "Apr", "May" };
+                int[] sales = { 120, 150, 180, 200, 170 };
+                for (int i = 0; i < months.Length; i++)
+                {
+                    sheet.Cells[i + 1, 0].PutValue(months[i]);   // Column A (zero‑based row index)
+                    sheet.Cells[i + 1, 1].PutValue(sales[i]);   // Column B
+                }
 
-                // ------------------------------------------------------------
-                // 3. Convert the range into a structured table (ListObject)
-                // ------------------------------------------------------------
-                int firstRow = 0; // zero‑based index
-                int firstColumn = 0;
-                int totalRows = 5;   // includes header row
-                int totalColumns = 2;
-                ListObject table = sheet.ListObjects[sheet.ListObjects.Add(firstRow, firstColumn,
-                    firstRow + totalRows - 1, firstColumn + totalColumns - 1, true)];
+                // Convert the range into a ListObject (Excel Table) for easier reference
+                int tableIndex = sheet.ListObjects.Add(0, 0, 6, 2, true);
+                ListObject table = sheet.ListObjects[tableIndex];
+                // Set the table name (use DisplayName for compatibility)
                 table.DisplayName = "SalesTable";
 
-                // ------------------------------------------------------------
-                // 4. Add a Combo chart (Column + Line) to the worksheet
-                // ------------------------------------------------------------
+                // Add a Combo chart (Column + Line) to the worksheet
                 int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 15);
-                Chart comboChart = sheet.Charts[chartIndex];
-                comboChart.Title.Text = "Sales Combo Chart";
+                Chart chart = sheet.Charts[chartIndex];
+                chart.Title.Text = "Monthly Sales (Combo)";
+
+                // First series – Column (Sales) using structured reference
+                chart.NSeries.Add("=Sheet1!SalesTable[Sales]", true);
+                chart.NSeries[0].Name = "Sales";
+
+                // Second series – Line (Target values placed in hidden column C)
+                for (int i = 0; i < sales.Length; i++)
+                {
+                    sheet.Cells[i + 1, 2].PutValue(sales[i] * 1.1);
+                }
+                chart.NSeries.Add("=Sheet1!C2:C6", true);
+                chart.NSeries[1].Name = "Target";
+                chart.NSeries[1].Type = ChartType.Line;
+
+                // Save the initial workbook
+                string initialPath = "ComboChart_Initial.xlsx";
+                workbook.Save(initialPath);
+                Console.WriteLine($"Saved: {Path.GetFullPath(initialPath)}");
 
                 // ------------------------------------------------------------
-                // 5. Add the first series (Column) using the table's data range
+                // MODIFY THE UNDERLYING TABLE: add new month data
                 // ------------------------------------------------------------
-                string columnValuesRef = "SalesTable[Value]";
-                string categoryRef = "SalesTable[Category]";
+                // Determine the first empty row after the existing table data
+                int firstNewRow = sheet.Cells.MaxDataRow + 1; // zero‑based index
 
-                comboChart.NSeries.Add($"={sheet.Name}!{columnValuesRef}", true);
-                comboChart.NSeries[0].XValues = $"={sheet.Name}!{categoryRef}";
-                comboChart.NSeries[0].Type = ChartType.Column;
+                // Add June
+                sheet.Cells[firstNewRow, 0].PutValue("Jun");
+                sheet.Cells[firstNewRow, 1].PutValue(190);
+                sheet.Cells[firstNewRow, 2].PutValue(190 * 1.1);
 
-                // ------------------------------------------------------------
-                // 6. Add the second series (Line) using the same data range
-                // ------------------------------------------------------------
-                comboChart.NSeries.Add($"={sheet.Name}!{columnValuesRef}", true);
-                comboChart.NSeries[1].XValues = $"={sheet.Name}!{categoryRef}";
-                comboChart.NSeries[1].Type = ChartType.Line;
+                // Add July
+                sheet.Cells[firstNewRow + 1, 0].PutValue("Jul");
+                sheet.Cells[firstNewRow + 1, 1].PutValue(210);
+                sheet.Cells[firstNewRow + 1, 2].PutValue(210 * 1.1);
 
-                // ------------------------------------------------------------
-                // 7. Initial calculation of the chart (renders it with the original data)
-                // ------------------------------------------------------------
-                comboChart.Calculate();
+                // Resize the table to include the new rows (header + 7 data rows = 8 total rows)
+                // hasHeaders = true because the first row contains column names
+                table.Resize(0, 0, 8, 2, true);
 
                 // ------------------------------------------------------------
-                // 8. Modify the underlying table – add a new row (E, 50)
+                // UPDATE CHART SERIES DATA RANGES to reflect the expanded table
                 // ------------------------------------------------------------
-                int newRowIndex = sheet.Cells.MaxDataRow + 1; // next empty row
-                sheet.Cells[newRowIndex, 0].PutValue("E");    // Category
-                sheet.Cells[newRowIndex, 1].PutValue(50);    // Value
+                chart.NSeries.Clear();
 
-                // Resize the table to include the new row.
-                // Using the overload that takes row/column indices.
-                table.Resize(0, 0, newRowIndex + 1, 2, true);
+                // Sales series (column) – still uses structured reference
+                chart.NSeries.Add("=Sheet1!SalesTable[Sales]", true);
+                chart.NSeries[0].Name = "Sales";
 
-                // ------------------------------------------------------------
-                // 9. Refresh the chart data source after the table change
-                // ------------------------------------------------------------
-                bool dataChangedBefore = comboChart.IsChartDataChanged(); // expected false
-                comboChart.Calculate(); // re‑calculate chart with updated table
-                bool dataChangedAfter = comboChart.IsChartDataChanged(); // expected true
+                // Target series (line) – updated range includes new rows
+                int lastTargetRowNumber = firstNewRow + 2; // Excel row number (1‑based)
+                chart.NSeries.Add($"=Sheet1!C2:C{lastTargetRowNumber}", true);
+                chart.NSeries[1].Name = "Target";
+                chart.NSeries[1].Type = ChartType.Line;
 
-                Console.WriteLine($"Chart data changed flag before refresh: {dataChangedBefore}");
-                Console.WriteLine($"Chart data changed flag after refresh: {dataChangedAfter}");
+                // Force chart recalculation
+                chart.Calculate();
 
-                // ------------------------------------------------------------
-                // 10. Save the workbook
-                // ------------------------------------------------------------
-                workbook.Save("ComboChartUpdated.xlsx");
-                Console.WriteLine("Workbook saved as ComboChartUpdated.xlsx");
+                // Save the workbook after updating the chart
+                string updatedPath = "ComboChart_Updated.xlsx";
+                workbook.Save(updatedPath);
+                Console.WriteLine($"Saved: {Path.GetFullPath(updatedPath)}");
             }
             catch (Exception ex)
             {

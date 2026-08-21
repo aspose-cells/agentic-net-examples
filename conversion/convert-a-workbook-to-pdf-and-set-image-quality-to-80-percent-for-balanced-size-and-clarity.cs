@@ -1,46 +1,32 @@
-// Title: C# – Convert Aspose.Cells Workbook to PDF with 80% JPEG Image Quality
-// Description: Demonstrates how to save an Aspose.Cells workbook as a PDF while resampling images to 150 PPI and applying 80 % JPEG compression using PdfSaveOptions.SetImageResample.
-// Keywords: Aspose.Cells PDF conversion C# | PdfSaveOptions SetImageResample | 80% JPEG quality PDF | image resampling 150 PPI | reduce PDF size Aspose | C# workbook to PDF example | Aspose.Cells image compression
-// Common Searches: Aspose.Cells set JPEG quality when saving PDF | PdfSaveOptions image resample C# | convert Excel to PDF with reduced image size | Aspose.Cells PDF image compression 80 percent | how to control PDF file size Aspose.Cells
-// Developer Intent: Export a workbook to PDF while controlling image resolution and JPEG compression for a balanced file size and visual clarity.
-// Use Cases: Generate email‑friendly PDF reports from dynamically created spreadsheets. | Export large spreadsheets to PDF with predictable file size limits. | Batch‑process workbooks with consistent image quality across all PDFs.
-// AI Prompts: Show how to change the image resolution to 200 PPI while keeping JPEG quality at 80 %. | Provide code that writes the PDF to a MemoryStream instead of a file using the same PdfSaveOptions. | Explain how to calculate the JPEG quality value needed to target a specific PDF size.
+// Title: Aspose.Cells C# – Convert Excel to PDF with 80% JPEG Image Quality
+// Description: Demonstrates how to load or create a workbook, configure PdfSaveOptions with 150 DPI and 80 % JPEG quality via SetImageResample, and save the file as a PDF that balances file size and visual clarity.
+// Keywords: Aspose.Cells | C# PDF conversion | Excel to PDF | SetImageResample | image quality 80% | JPEG compression | 150 DPI | PdfSaveOptions | workbook export .NET | balanced file size
+// Common Searches: Aspose.Cells set JPEG quality when saving PDF | C# PdfSaveOptions SetImageResample example | export Excel as PDF with reduced image size | adjust DPI and compression in Aspose.Cells PDF output | how to limit PDF file size from Excel in .NET
+// Developer Intent: Generate a PDF from an Excel workbook while applying 80 % JPEG compression to keep the document lightweight without sacrificing readability.
+// Use Cases: Create email‑ready PDF reports from spreadsheets with controlled image size. | Batch‑process multiple workbooks to PDF using a uniform 80 % image quality setting for storage limits. | Export charts and embedded pictures to PDF while preserving clarity through DPI and compression tuning.
+// AI Prompts: Show a C# snippet that loads an Excel file, sets PdfSaveOptions to 150 DPI and 80 % JPEG quality, and saves it as PDF using Aspose.Cells. | Explain how SetImageResample affects PDF output size and image clarity in Aspose.Cells. | Provide step‑by‑step instructions to convert a workbook to PDF with custom image quality parameters in .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Demonstrates how to save an Aspose.Cells workbook as a PDF while resampling images to 150 PPI and applying 80 % JPEG compression using PdfSaveOptions.SetImageResample.
-public class WorkbookToPdfConverter
+// Demonstrates how to load or create a workbook, configure PdfSaveOptions with 150 DPI and 80 % JPEG quality via SetImageResample, and save the file as a PDF that balances file size and visual clarity.
+class Program
 {
-    public static void Run()
+    static void Main()
     {
-        try
-        {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample data for PDF conversion");
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sample data for PDF conversion");
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        // Configure PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Set image resampling: 150 PPI for reasonable resolution
-            // and JPEG quality to 80% for balanced size and clarity
-            pdfOptions.SetImageResample(150, 80);
+        // Set image resampling: desired PPI (e.g., 150) and JPEG quality to 80%
+        pdfOptions.SetImageResample(150, 80);
 
-            // Save the workbook as a PDF using the configured options
-            workbook.Save("ConvertedWorkbook.pdf", pdfOptions);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during PDF conversion: {ex.Message}");
-        }
-    }
-
-    // Entry point required for console application
-    public static void Main(string[] args)
-    {
-        Run();
+        // Save the workbook as PDF with the specified image quality
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

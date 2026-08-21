@@ -1,44 +1,43 @@
-// Title: C# – Insert Rows with Formatting and Export Excel to PDF using Aspose.Cells
-// Description: Load an existing workbook, insert five rows at zero‑based index 20 while copying the style from the row above and updating formulas, then save the result directly as a PDF.
-// Keywords: Aspose.Cells InsertRows | CopyFormatType SameAsAbove | C# Excel to PDF conversion | update formula references Aspose.Cells | zero based row index | Aspose.Cells SaveFormat.Pdf
-// Common Searches: Aspose.Cells insert multiple rows at a specific position | preserve row formatting when inserting rows in .NET | convert modified Excel workbook to PDF with Aspose.Cells | how to update formulas after inserting rows in Excel using C#
-// Developer Intent: Add five rows at row 21, inherit the formatting of the preceding row, adjust any dependent formulas, and generate a PDF from the updated worksheet.
-// Use Cases: Add placeholder rows in a report template before populating data while keeping the original style. | Insert rows in a financial model and automatically shift formula references to maintain calculations. | Produce a PDF snapshot of a worksheet after structural changes such as row insertion, ensuring visual consistency.
-// AI Prompts: Generate C# code with Aspose.Cells to insert rows at index 20, copy the above row's formatting, update references, and save as PDF. | Explain the effect of InsertOptions.CopyFormatType.SameAsAbove on PDF rendering in Aspose.Cells. | Step‑by‑step guide: load an Excel file, insert rows with formatting preservation, and convert the workbook to PDF using Aspose.Cells for .NET.
+// Title: Insert Row at Index 20 with Same‑Above Formatting and Export to PDF using Aspose.Cells for .NET
+// Description: Loads an Excel workbook, inserts a single row at zero‑based index 20 on the first worksheet while copying the formatting of the row above and updating formula references, saves the change to a temporary file, and converts the result to PDF with Aspose.Cells ConversionUtility.
+// Keywords: Aspose.Cells InsertRows C# | CopyFormatType.SameAsAbove | insert row at specific index Aspose.Cells | update formulas after row insertion | Excel to PDF conversion Aspose.Cells | .NET Excel row formatting | ConversionUtility Convert example
+// Common Searches: How to insert a row at a specific index and keep formatting in Aspose.Cells .NET | Aspose.Cells InsertRows with CopyFormatType.SameAsAbove example | Convert modified Excel workbook to PDF after inserting rows | Update cell references when inserting rows using Aspose.Cells | C# code to add a row and export Excel to PDF with Aspose
+// Developer Intent: Add a row at position 20, preserve the above row’s style and formulas, then generate a PDF from the updated workbook.
+// Use Cases: Add a header row to a report template before creating a PDF for distribution. | Insert a blank data row in a financial sheet while keeping cell styles and formulas, then produce a PDF for stakeholder review. | Adjust an invoice layout by inserting rows with inherited formatting and export the final version to PDF for client delivery.
+// AI Prompts: Write C# code that inserts multiple rows at a given index, copies formatting from the preceding rows, and converts the workbook to PDF using Aspose.Cells. | Explain how InsertOptions.CopyFormatType.SameAsAbove works and how to ensure formulas are updated after inserting rows in Aspose.Cells. | Provide a step‑by‑step tutorial for inserting rows, saving a temporary workbook, and converting it to PDF with ConversionUtility in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-// Load an existing workbook, insert five rows at zero‑based index 20 while copying the style from the row above and updating formulas, then save the result directly as a PDF.
-class InsertRowsAndConvertToPdf
+// Loads an Excel workbook, inserts a single row at zero‑based index 20 on the first worksheet while copying the formatting of the row above and updating formula references, saves the change to a temporary file, and converts the result to PDF with Aspose.Cells ConversionUtility.
+class Program
 {
     static void Main()
     {
-        // Path to the existing Excel file
+        // Paths for the original Excel file, a temporary modified file, and the final PDF.
         string inputFile = "input.xlsx";
+        string tempFile = "modified.xlsx";
+        string pdfFile = "output.pdf";
 
-        // Path for the resulting PDF file
-        string outputPdf = "output.pdf";
-
-        // Load the workbook (lifecycle rule: load)
+        // Load the existing workbook (lifecycle rule: use Workbook(string) constructor).
         Workbook workbook = new Workbook(inputFile);
 
-        // Access the first worksheet (you can change the index as needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Prepare insert options to copy formatting from the row above
+        // Prepare insert options to copy the formatting from the row above the insertion point.
         InsertOptions insertOptions = new InsertOptions
         {
-            CopyFormatType = CopyFormatType.SameAsAbove, // copy format from the row above
-            UpdateReference = true                       // update formulas/references if any
+            CopyFormatType = CopyFormatType.SameAsAbove, // copy formatting from the row above
+            UpdateReference = true                       // update any formulas/references
         };
 
-        // Insert 5 rows starting at row index 20 (zero‑based) with the specified options
-        // Adjust the second parameter to the number of rows you need to insert
-        worksheet.Cells.InsertRows(20, 5, insertOptions);
+        // Insert a single row at index 20 (zero‑based) with the specified options.
+        // This uses the InsertRows(int, int, InsertOptions) method.
+        workbook.Worksheets[0].Cells.InsertRows(20, 1, insertOptions);
 
-        // Save the workbook directly as PDF (lifecycle rule: save)
-        workbook.Save(outputPdf, SaveFormat.Pdf);
+        // Save the modified workbook to a temporary file (lifecycle rule: use Workbook.Save(string)).
+        workbook.Save(tempFile);
+
+        // Convert the modified Excel file to PDF (utility rule: ConversionUtility.Convert(string, string)).
+        ConversionUtility.Convert(tempFile, pdfFile);
     }
 }

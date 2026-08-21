@@ -1,78 +1,113 @@
-// Title: Aspose.Cells for .NET – Auto‑Refresh PivotTable Summary Sheet (Macro‑Style)
-// Description: C# example that builds a workbook with a data worksheet, adds a PivotTable on a separate Summary sheet, sets ManualUpdate = false for automatic refresh, modifies source cells, calls RefreshPivotTables and CalculateFormula, and saves both the initial and updated files.
-// Keywords: Aspose.Cells | .NET PivotTable | auto refresh pivot | ManualUpdate false | RefreshPivotTables | summary sheet | Excel macro replacement | programmatic pivot refresh | C# workbook example | dynamic summary table
-// Common Searches: Aspose.Cells auto refresh pivot table .NET | How to update PivotTable after data change using Aspose.Cells | Set ManualUpdate property in Aspose.Cells PivotTable | Refresh all pivot tables in a workbook C# | Create summary sheet with PivotTable programmatically
-// Developer Intent: Create a PivotTable that updates automatically when its source data is edited.
-// Use Cases: Financial reporting workbook where expense totals adjust instantly as rows are edited. | Inventory dashboard that reflects real‑time stock levels after batch data imports. | Excel macro‑free solution that keeps charts and formulas synchronized after programmatic data changes.
-// AI Prompts: Generate C# code with Aspose.Cells to build a PivotTable that auto‑refreshes when source data changes, including ManualUpdate configuration and RefreshPivotTables call. | Show how to modify cells in a worksheet and then refresh the associated PivotTable and recalculate formulas using Aspose.Cells for .NET. | Explain how to mimic an Excel macro that updates a summary sheet by configuring a PivotTable for automatic refresh in Aspose.Cells.
+// Title: C# Aspose.Cells macro to auto‑refresh a PivotTable summary when source data changes
+// Description: Creates a workbook with a source data sheet, adds a PivotTable summary on a separate sheet with ManualUpdate enabled, modifies source cells and adds rows, then programmatically calls RefreshData and CalculateData to keep the summary up‑to‑date before saving the file.
+// Keywords: Aspose.Cells | C# | .NET | PivotTable refresh | ManualUpdate | auto update summary table | programmatic pivot refresh | Excel macro alternative | dynamic summary sheet | Aspose.Cells API
+// Common Searches: Aspose.Cells refresh pivot after data change | C# example manual update pivot Aspose.Cells | auto‑refresh summary sheet Aspose.Cells macro | how to recalculate PivotTable programmatically Aspose.Cells | Aspose.Cells pivot table dynamic update
+// Developer Intent: Programmatically refresh a PivotTable summary whenever the underlying worksheet data is edited, using Aspose.Cells in C#.
+// Use Cases: Generate a sales‑by‑category report that instantly reflects inventory adjustments. | Add new product rows to a data sheet and have category totals update without manual interaction. | Build a batch‑processing workbook where bulk edits trigger automatic recalculation of all aggregated fields.
+// AI Prompts: Write C# code with Aspose.Cells that creates a PivotTable, sets ManualUpdate to true, modifies source data, and then refreshes the pivot. | Provide an Aspose.Cells macro that detects changes in a worksheet and automatically calls RefreshData and CalculateData on related PivotTables. | Explain how to configure a workbook so a summary PivotTable reflects newly added rows without user intervention.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// C# example that builds a workbook with a data worksheet, adds a PivotTable on a separate Summary sheet, sets ManualUpdate = false for automatic refresh, modifies source cells, calls RefreshPivotTables and CalculateFormula, and saves both the initial and updated files.
-class SummaryUpdater
+namespace AsposeCellsMacroDemo
 {
-    static void Main()
+    // Creates a workbook with a source data sheet, adds a PivotTable summary on a separate sheet with ManualUpdate enabled, modifies source cells and adds rows, then programmatically calls RefreshData and CalculateData to keep the summary up‑to‑date before saving the file.
+    public class SummaryTableUpdater
     {
-        // Create a new workbook
-        Workbook wb = new Workbook();
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // -----------------------------------------------------------------
-        // 1. Prepare source data sheet
-        // -----------------------------------------------------------------
-        Worksheet dataSheet = wb.Worksheets[0];
-        dataSheet.Name = "Data";
+                // -------------------------------------------------
+                // 1. Prepare source data on the first worksheet
+                // -------------------------------------------------
+                Worksheet dataSheet = workbook.Worksheets[0];
+                dataSheet.Name = "SourceData";
 
-        // Header
-        dataSheet.Cells["A1"].PutValue("Category");
-        dataSheet.Cells["B1"].PutValue("Amount");
+                // Header row
+                dataSheet.Cells["A1"].PutValue("Category");
+                dataSheet.Cells["B1"].PutValue("Item");
+                dataSheet.Cells["C1"].PutValue("Quantity");
+                dataSheet.Cells["D1"].PutValue("Price");
 
-        // Sample rows
-        dataSheet.Cells["A2"].PutValue("Food");
-        dataSheet.Cells["B2"].PutValue(100);
-        dataSheet.Cells["A3"].PutValue("Transport");
-        dataSheet.Cells["B3"].PutValue(50);
-        dataSheet.Cells["A4"].PutValue("Food");
-        dataSheet.Cells["B4"].PutValue(150);
-        dataSheet.Cells["A5"].PutValue("Utilities");
-        dataSheet.Cells["B5"].PutValue(80);
+                // Sample data rows
+                object[,] data = new object[,]
+                {
+                    {"Fruit", "Apple",  10, 1.20},
+                    {"Fruit", "Banana", 15, 0.80},
+                    {"Fruit", "Orange", 12, 1.00},
+                    {"Veg",   "Carrot", 20, 0.50},
+                    {"Veg",   "Tomato", 18, 0.70},
+                    {"Veg",   "Pepper", 10, 1.10}
+                };
 
-        // -----------------------------------------------------------------
-        // 2. Create a summary sheet with a PivotTable (acts as the macro)
-        // -----------------------------------------------------------------
-        Worksheet summarySheet = wb.Worksheets.Add("Summary");
+                for (int r = 0; r < data.GetLength(0); r++)
+                    for (int c = 0; c < data.GetLength(1); c++)
+                        dataSheet.Cells[r + 1, c].PutValue(data[r, c]);
 
-        // Define the source range for the pivot table
-        string sourceRange = "Data!A1:B5";
+                // -------------------------------------------------
+                // 2. Create a summary table (PivotTable) on a new sheet
+                // -------------------------------------------------
+                Worksheet summarySheet = workbook.Worksheets.Add("Summary");
+                // Define the source range (including headers)
+                string sourceRange = $"=SourceData!{dataSheet.Cells.MaxDisplayRange.Address}";
+                // Add the pivot table; it will be placed starting at cell A3
+                int pivotIndex = summarySheet.PivotTables.Add(sourceRange, "A3", "SalesSummary");
+                PivotTable pivot = summarySheet.PivotTables[pivotIndex];
 
-        // Add the pivot table to the summary sheet, top‑left cell is A1
-        int pivotIdx = summarySheet.PivotTables.Add(sourceRange, "A1", "SummaryPivot");
-        PivotTable pivot = summarySheet.PivotTables[pivotIdx];
+                // Configure the pivot: Category as row, Item as column, Sum of Quantity and Price as data
+                pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+                pivot.AddFieldToArea(PivotFieldType.Column, "Item");
+                pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
+                pivot.AddFieldToArea(PivotFieldType.Data, "Price");
 
-        // Configure the pivot: rows = Category, data = Sum of Amount
-        pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-        pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
+                // Enable manual update so the pivot does NOT refresh automatically
+                pivot.ManualUpdate = true;
 
-        // Ensure the pivot updates automatically when source data changes
-        // (ManualUpdate = false is the default, set explicitly for clarity)
-        pivot.ManualUpdate = false;
+                // Initial refresh to populate the summary table
+                pivot.RefreshData();
+                pivot.CalculateData();
 
-        // Save the workbook with the initial summary
-        wb.Save("SummaryWorkbook.xlsx");
+                // -------------------------------------------------
+                // 3. Simulate a change in the source data
+                // -------------------------------------------------
+                // For example, increase the quantity of Apples and add a new row
+                dataSheet.Cells["C2"].PutValue(25); // Apple quantity from 10 to 25
+                int newRow = dataSheet.Cells.MaxDataRow + 1;
+                dataSheet.Cells[newRow, 0].PutValue("Fruit");   // Category
+                dataSheet.Cells[newRow, 1].PutValue("Grapes");  // Item
+                dataSheet.Cells[newRow, 2].PutValue(8);        // Quantity
+                dataSheet.Cells[newRow, 3].PutValue(2.00);     // Price
 
-        // -----------------------------------------------------------------
-        // 3. Simulate a change in the source data
-        // -----------------------------------------------------------------
-        dataSheet.Cells["B3"].PutValue(70); // Updated Transport amount
+                // -------------------------------------------------
+                // 4. Refresh the summary table to reflect changes
+                // -------------------------------------------------
+                // Since ManualUpdate is true, we need to refresh explicitly
+                pivot.RefreshData();
+                pivot.CalculateData();
 
-        // Refresh all pivot tables so the summary reflects the new data
-        wb.Worksheets.RefreshPivotTables();
+                // -------------------------------------------------
+                // 5. Save the workbook
+                // -------------------------------------------------
+                workbook.Save("SummaryTableUpdated.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
 
-        // Recalculate any other formulas that might exist
-        wb.CalculateFormula();
-
-        // Save the workbook after the automatic update
-        wb.Save("SummaryWorkbook_Updated.xlsx");
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            SummaryTableUpdater.Run();
+        }
     }
 }

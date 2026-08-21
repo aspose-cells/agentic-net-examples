@@ -1,16 +1,16 @@
-// Title: C# – Add Linked Data Labels to Every Point of a Line Chart with Aspose.Cells
-// Description: Creates a workbook, fills category and value ranges, inserts a line chart, enables data labels, then links each point's label to a specific cell (e.g., C2‑C4). The labels inherit the cell's number format, are positioned above the points, and the workbook is saved as an Excel file.
-// Keywords: Aspose.Cells line chart data labels C# | link chart label to cell Aspose.Cells | add point labels line chart .NET | chart data label position Aspose | Excel line chart label linking
-// Common Searches: Aspose.Cells link data label to worksheet cell | C# add individual labels to line chart points | set label position above line chart points Aspose | inherit number format for chart data labels Aspose.Cells | save line chart with linked labels in .NET
-// Developer Intent: Add a data label to each point of a line chart and bind each label to a corresponding worksheet cell.
-// Use Cases: Display custom target names (e.g., Q1 Target) beside each data point in a sales trend line chart. | Keep chart labels automatically updated when the source cells change. | Improve readability by positioning labels above points in multi‑series line charts.
-// AI Prompts: Write C# code using Aspose.Cells to add a data label to every point of a line chart and link each label to cells in column C. | Explain how to change the position of chart point labels and enable number‑format linking in Aspose.Cells. | Show how to update linked label cells dynamically after modifying the chart data series.
+// Title: Add Linked Data Labels to Each Point of a Line Chart with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, fills columns with categories, values and custom text, adds a line chart, enables data labels for the series, then links each point's label to the corresponding cell in column C, applies the source cell's number format, positions the label above the point, and saves the file.
+// Keywords: Aspose.Cells line chart data labels | C# link chart label to cell | Aspose.Cells LinkedSource property | chart point label position above | set number format linked Aspose.Cells | add data labels to chart series | Aspose.Cells chart example C#
+// Common Searches: How to link chart data labels to worksheet cells using Aspose.Cells | Aspose.Cells C# add data labels to each point of a line chart | Set label position above points in Aspose.Cells line chart | Link data label to cell and keep number format in Aspose.Cells | Create line chart with custom labels from a column in C#
+// Developer Intent: Generate a line chart, enable data labels for every point, and bind each label to a specific worksheet cell.
+// Use Cases: Sales trend line chart where each point shows a performance tag stored in a separate column. | Project timeline chart with milestone descriptions linked to data labels for automatic updates. | Financial line chart that mirrors the source cell's number formatting in its data labels.
+// AI Prompts: Write C# code with Aspose.Cells to add a line chart, turn on data labels for each point, and link each label to a cell in column C, preserving the cell's number format and placing the label above the point. | Explain how to use the LinkedSource property to bind chart point data labels to worksheet cells and adjust label positioning in Aspose.Cells. | Provide a step‑by‑step tutorial for creating a line chart with custom text labels sourced from a range, including saving the workbook as an .xlsx file.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, fills category and value ranges, inserts a line chart, enables data labels, then links each point's label to a specific cell (e.g., C2‑C4). The labels inherit the cell's number format, are positioned above the points, and the workbook is saved as an Excel file.
+// Creates a workbook, fills columns with categories, values and custom text, adds a line chart, enables data labels for the series, then links each point's label to the corresponding cell in column C, applies the source cell's number format, positions the label above the point, and saves the file.
 class AddDataLabelsToLineChart
 {
     static void Main()
@@ -20,42 +20,52 @@ class AddDataLabelsToLineChart
         Worksheet sheet = workbook.Worksheets[0];
 
         // Populate sample data
-        // Categories
-        sheet.Cells["A2"].PutValue("Jan");
-        sheet.Cells["A3"].PutValue("Feb");
-        sheet.Cells["A4"].PutValue("Mar");
+        // Column A: Categories
+        // Column B: Values for the line chart
+        // Column C: Text to be linked to each data label
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["C1"].PutValue("Label");
+        string[] categories = { "Jan", "Feb", "Mar", "Apr" };
+        double[] values = { 10, 20, 15, 25 };
+        string[] labels = { "Low", "Medium", "Medium-High", "High" };
 
-        // Values for the line series
-        sheet.Cells["B2"].PutValue(120);
-        sheet.Cells["B3"].PutValue(150);
-        sheet.Cells["B4"].PutValue(180);
-
-        // Cells that will be linked to data labels
-        sheet.Cells["C2"].PutValue("Q1 Target");
-        sheet.Cells["C3"].PutValue("Q2 Target");
-        sheet.Cells["C4"].PutValue("Q3 Target");
+        for (int i = 0; i < categories.Length; i++)
+        {
+            int row = i + 2; // Data starts from row 2
+            sheet.Cells[$"A{row}"].PutValue(categories[i]);
+            sheet.Cells[$"B{row}"].PutValue(values[i]);
+            sheet.Cells[$"C{row}"].PutValue(labels[i]);
+        }
 
         // Add a line chart
-        int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+        int chartIndex = sheet.Charts.Add(ChartType.Line, 6, 0, 20, 15);
         Chart chart = sheet.Charts[chartIndex];
 
         // Set the data source for the series
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+        chart.NSeries.Add("B2:B5", true);
+        chart.NSeries.CategoryData = "A2:A5";
 
         // Enable data labels for the series (required to access point labels)
         chart.NSeries[0].DataLabels.ShowValue = true;
 
-        // Iterate through each point and link its label to the corresponding cell in column C
+        // Iterate through each point and link its data label to the corresponding cell in column C
         Series series = chart.NSeries[0];
         for (int i = 0; i < series.Points.Count; i++)
         {
             ChartPoint point = series.Points[i];
-            // Link the data label to the cell (e.g., C2, C3, C4)
-            string cellAddress = $"C{2 + i}";
-            point.DataLabels.LinkedSource = cellAddress;
-            point.DataLabels.NumberFormatLinked = true; // keep number format in sync if needed
-            point.DataLabels.Position = LabelPositionType.Above; // position suitable for line chart
+            // Show the value (optional, can be turned off if only linked text is needed)
+            point.DataLabels.ShowValue = true;
+
+            // Link the data label to the cell in column C of the same row
+            string linkedCell = $"C{i + 2}";
+            point.DataLabels.LinkedSource = linkedCell;
+
+            // Ensure the label reflects the cell's number format (if any)
+            point.DataLabels.NumberFormatLinked = true;
+
+            // Position the label above the point (typical for line charts)
+            point.DataLabels.Position = LabelPositionType.Above;
         }
 
         // Save the workbook

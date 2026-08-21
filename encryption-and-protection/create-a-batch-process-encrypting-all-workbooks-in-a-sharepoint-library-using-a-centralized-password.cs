@@ -1,71 +1,110 @@
-// Title: Batch encrypt Excel workbooks in a SharePoint library with a single password using Aspose.Cells for .NET
-// Description: A C# console utility that scans a folder mapped to a SharePoint document library, loads each .xlsx file with Aspose.Cells, assigns a common password via Workbook.Settings.Password, and overwrites the file. Includes progress messages and robust error handling for large‑scale encryption.
-// Keywords: Aspose.Cells | C# Excel encryption | SharePoint document library | batch workbook password | Workbook.Settings.Password | automated Excel protection | encrypt multiple .xlsx files | console app | file system traversal | compliance security
-// Common Searches: encrypt all Excel files in SharePoint using Aspose.Cells | C# batch password protection for .xlsx | apply same password to multiple workbooks .NET | automate Excel encryption in SharePoint library | Aspose.Cells bulk workbook encryption example
-// Developer Intent: Apply a uniform password to every Excel workbook stored in a SharePoint library.
-// Use Cases: Protect confidential financial statements stored centrally before external sharing. | Run nightly job that secures newly uploaded Excel reports to meet regulatory standards. | Distribute corporate templates with a predefined password to enforce consistent access control.
-// AI Prompts: Write a C# script that iterates through a SharePoint‑mapped directory and encrypts each .xlsx file with a given password using Aspose.Cells. | Show how to detect already‑protected workbooks and skip them during bulk encryption. | Add logging to the process that records successes, failures, and timestamps for audit purposes.
+// Title: Batch encrypt Excel and ODS workbooks in a SharePoint library with Aspose.Cells for .NET
+// Description: C# utility that scans a SharePoint (or local) document library, loads each workbook (xls, xlsx, xlsm, xlsb, ods) via Aspose.Cells, applies a single strong password, and saves the file back in its original format. Includes recursive folder search and robust error handling.
+// Keywords: Aspose.Cells | C# | .NET | batch workbook encryption | Excel password protection | SharePoint document library | StrongCryptographicProvider | 128‑bit encryption | ODS encryption | automated compliance | file‑level security
+// Common Searches: C# batch encrypt Excel files in SharePoint | Aspose.Cells set same password for multiple workbooks | How to encrypt all spreadsheets in a folder using .NET | Encrypt SharePoint library Excel and ODS files programmatically | Apply 128‑bit encryption to Excel workbooks with Aspose.Cells
+// Developer Intent: Programmatically protect every workbook in a SharePoint document library with a unified password using Aspose.Cells for .NET.
+// Use Cases: Secure confidential financial reports stored in SharePoint before distribution. | Run a nightly job that automatically password‑protects all newly uploaded spreadsheets to meet regulatory compliance. | Maintain original file formats while enforcing consistent encryption strength across mixed Excel and ODS files.
+// AI Prompts: Generate C# code that iterates through a SharePoint document library, loads each workbook with Aspose.Cells, sets a common password, and saves it preserving the original format. | Show an Aspose.Cells for .NET example that encrypts a collection of Excel and ODS files using StrongCryptographicProvider with 128‑bit encryption and includes detailed error handling. | Explain how to extend the batch encryption script to skip already encrypted workbooks and write a processing log to a CSV file.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
 
 namespace SharePointWorkbookEncryption
 {
-    // A C# console utility that scans a folder mapped to a SharePoint document library, loads each .xlsx file with Aspose.Cells, assigns a common password via Workbook.Settings.Password, and overwrites the file. Includes progress messages and robust error handling for large‑scale encryption.
+    // C# utility that scans a SharePoint (or local) document library, loads each workbook (xls, xlsx, xlsm, xlsb, ods) via Aspose.Cells, applies a single strong password, and saves the file back in its original format. Includes recursive folder search and robust error handling.
     class Program
     {
-        static void Main(string[] args)
-        {
-            // Folder containing the workbooks to encrypt
-            string folderPath = @"C:\Workbooks";               // change to your folder
-            // Central password to apply to all workbooks
-            string centralPassword = "YourCentralPassword";
+        // Centralized password for all workbooks
+        private const string WorkbookPassword = "CentralPassword123";
 
+        // Local folder that simulates the SharePoint library (replace with actual path)
+        private const string LocalFolderPath = @"C:\Temp\Workbooks";
+
+        static void Main()
+        {
             try
             {
-                if (!Directory.Exists(folderPath))
+                // Verify the folder exists
+                if (!Directory.Exists(LocalFolderPath))
                 {
-                    Console.WriteLine($"Folder not found: {folderPath}");
+                    Console.WriteLine($"Folder not found: {LocalFolderPath}");
                     return;
                 }
 
-                // Get all Excel files in the folder (including subfolders if needed)
-                string[] files = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.AllDirectories);
+                // Get all workbook files in the folder and subfolders
+                IEnumerable<string> files = Directory.EnumerateFiles(
+                    LocalFolderPath,
+                    "*.*",
+                    SearchOption.AllDirectories)
+                    .Where(f => new[] { ".xls", ".xlsx", ".xlsm", ".xlsb", ".ods" }
+                    .Contains(Path.GetExtension(f).ToLowerInvariant()));
 
                 foreach (string filePath in files)
                 {
                     try
                     {
+                        Console.WriteLine($"Encrypting workbook: {Path.GetFileName(filePath)}");
+
+                        // Ensure the file exists before loading
                         if (!File.Exists(filePath))
                         {
                             Console.WriteLine($"File not found, skipping: {filePath}");
                             continue;
                         }
 
-                        // Load workbook from file
-                        Workbook workbook = new Workbook(filePath);
+                        // Load the workbook (no password needed for loading unencrypted files)
+                        using (FileStream inputStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                        {
+                            Workbook workbook = new Workbook(inputStream);
 
-                        // Apply password protection (encryption)
-                        workbook.Settings.Password = centralPassword;
+                            // Set the encryption password
+                            workbook.Settings.Password = WorkbookPassword;
 
-                        // Overwrite the original file with the encrypted version
-                        workbook.Save(filePath, SaveFormat.Xlsx);
+                            // Optional: define encryption strength (ignored for modern formats but kept for completeness)
+                            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
 
-                        Console.WriteLine($"Encrypted: {filePath}");
+                            // Determine original format based on extension
+                            string extension = Path.GetExtension(filePath).ToLowerInvariant();
+                            SaveFormat format = GetSaveFormat(extension);
+
+                            // Save the encrypted workbook back to the same file
+                            using (FileStream outputStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                            {
+                                workbook.Save(outputStream, format);
+                            }
+
+                            workbook.Dispose();
+                        }
                     }
-                    catch (Exception exFile)
+                    catch (Exception ex)
                     {
-                        Console.WriteLine($"Error processing file '{filePath}': {exFile.Message}");
+                        Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
                     }
                 }
 
-                Console.WriteLine("Encryption of all workbooks completed.");
+                Console.WriteLine("Encryption process completed.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Unexpected error: {ex.Message}");
             }
+        }
+
+        // Helper to map file extension to Aspose.Cells SaveFormat
+        private static SaveFormat GetSaveFormat(string extension)
+        {
+            return extension switch
+            {
+                ".xls" => SaveFormat.Excel97To2003,
+                ".xlsx" => SaveFormat.Xlsx,
+                ".xlsm" => SaveFormat.Xlsm,
+                ".xlsb" => SaveFormat.Xlsb,
+                ".ods" => SaveFormat.Ods,
+                _ => SaveFormat.Xlsx,
+            };
         }
     }
 }

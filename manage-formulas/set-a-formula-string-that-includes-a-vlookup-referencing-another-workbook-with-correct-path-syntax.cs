@@ -1,111 +1,94 @@
-// Title: Create an External VLOOKUP Formula with Correct Workbook Path in Aspose.Cells for .NET
-// Description: Demonstrates how to generate an external workbook, build a VLOOKUP formula that references it using the proper "[FileName]Sheet!Range" syntax, set the main workbook's AbsolutePath, link the external source via CalculationOptions.LinkedDataSources, and evaluate the result with Aspose.Cells for C#.
-// Keywords: Aspose.Cells | C# VLOOKUP external workbook | Excel external reference formula | AbsolutePath Aspose.Cells | LinkedDataSources calculation | .NET Excel lookup | external file path syntax
-// Common Searches: Aspose.Cells VLOOKUP external file reference | How to set AbsolutePath for linked workbooks in C# | Calculate formulas with external data sources using Aspose.Cells | Excel VLOOKUP formula syntax for another workbook | C# example of external workbook lookup
-// Developer Intent: Build and evaluate a VLOOKUP formula that pulls data from a separate Excel file using Aspose.Cells.
-// Use Cases: Generate a main workbook that retrieves values from a lookup table stored in a different Excel file. | Ensure external references resolve correctly after saving both workbooks. | Reuse a single external workbook as a linked data source for multiple formulas.
-// AI Prompts: Write C# code with Aspose.Cells to create a VLOOKUP formula that references an external workbook in the same folder, using the correct path syntax. | Explain how to configure AbsolutePath and CalculationOptions.LinkedDataSources so external VLOOKUP formulas are calculated automatically. | Provide a step‑by‑step tutorial for building an external lookup workbook, populating data, and linking it with a VLOOKUP formula in another workbook.
+// Title: Aspose.Cells C# – Set VLOOKUP Formula with Full Path to an External Workbook
+// Description: Demonstrates how to create a secondary workbook, fill a lookup table, save it, and then assign a VLOOKUP formula in a primary workbook that references the external file using the required "'[full_path\File.xlsx]Sheet'!Range" syntax. The example also shows configuring CalculationOptions.LinkedDataSources so the formula is evaluated correctly.
+// Keywords: Aspose.Cells external VLOOKUP | C# VLOOKUP across workbooks | full file path formula Aspose | LinkedDataSources calculation | reference another workbook in formula | Aspose.Cells formula property | temporary file path Excel lookup
+// Common Searches: Aspose.Cells VLOOKUP external workbook path | C# set formula with full file path in Aspose.Cells | How to calculate VLOOKUP that points to another file | LinkedDataSources example Aspose.Cells | Excel VLOOKUP formula syntax for external file in .NET
+// Developer Intent: Create and evaluate a VLOOKUP formula that pulls data from a separate workbook by specifying its absolute path.
+// Use Cases: Generate a lookup workbook, populate key‑value pairs, and save it for reuse. | Insert a VLOOKUP formula in a cell of a main workbook that references the saved file using "'[path]Sheet'!Range" syntax. | Enable cross‑workbook calculation by adding the external workbook to CalculationOptions.LinkedDataSources.
+// AI Prompts: Write C# code with Aspose.Cells that builds a VLOOKUP formula referencing an external workbook using a dynamic full file path and returns the calculated value. | Explain the role of CalculationOptions.LinkedDataSources when evaluating formulas that depend on another workbook in Aspose.Cells. | Provide a step‑by‑step tutorial for saving an external workbook, constructing the correct VLOOKUP string with path syntax, and executing the calculation in the main workbook.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsVlookupExternal
+namespace AsposeCellsVlookupExternalDemo
 {
-    // Demonstrates how to generate an external workbook, build a VLOOKUP formula that references it using the proper "[FileName]Sheet!Range" syntax, set the main workbook's AbsolutePath, link the external source via CalculationOptions.LinkedDataSources, and evaluate the result with Aspose.Cells for C#.
+    // Demonstrates how to create a secondary workbook, fill a lookup table, save it, and then assign a VLOOKUP formula in a primary workbook that references the external file using the required "'[full_path\File.xlsx]Sheet'!Range" syntax. The example also shows configuring CalculationOptions.LinkedDataSources so the formula is evaluated correctly.
     class Program
     {
         static void Main()
         {
             try
             {
-                // -------------------------------------------------------------
-                // 1. Prepare the external workbook that will be referenced by VLOOKUP
-                // -------------------------------------------------------------
-                string externalFileName = "ExternalData.xlsx";
-                string externalFullPath = Path.GetFullPath(externalFileName);
+                // -----------------------------------------------------------------
+                // 1. Create an external workbook that will be referenced by VLOOKUP
+                // -----------------------------------------------------------------
+                string externalPath = Path.Combine(Path.GetTempPath(), "ExternalData.xlsx");
 
-                // Ensure the directory exists (handle possible null from GetDirectoryName)
-                string externalDir = Path.GetDirectoryName(externalFullPath);
-                if (string.IsNullOrEmpty(externalDir))
-                {
-                    externalDir = Directory.GetCurrentDirectory();
-                }
+                // Ensure the directory exists
+                string externalDir = Path.GetDirectoryName(externalPath);
                 if (!Directory.Exists(externalDir))
                 {
                     Directory.CreateDirectory(externalDir);
                 }
 
-                // Create a simple workbook with a table in Sheet1 (A1:B10)
                 Workbook externalWb = new Workbook();
                 Worksheet extSheet = externalWb.Worksheets[0];
-                extSheet.Name = "Sheet1";
+                extSheet.Name = "Data";
 
-                // Populate lookup table: column A = keys, column B = values
-                for (int i = 0; i < 10; i++)
-                {
-                    extSheet.Cells[i, 0].PutValue($"Key{i + 1}");
-                    extSheet.Cells[i, 1].PutValue(i * 10); // some numeric value
-                }
+                // Populate a simple lookup table: Column A = keys, Column B = values
+                extSheet.Cells["A1"].PutValue("Key");
+                extSheet.Cells["B1"].PutValue("Value");
+                extSheet.Cells["A2"].PutValue("Apple");
+                extSheet.Cells["B2"].PutValue(10);
+                extSheet.Cells["A3"].PutValue("Banana");
+                extSheet.Cells["B3"].PutValue(20);
+                extSheet.Cells["A4"].PutValue("Cherry");
+                extSheet.Cells["B4"].PutValue(30);
 
-                // Save the external workbook to disk
-                externalWb.Save(externalFullPath);
+                // Save the external workbook so it has a physical file path
+                externalWb.Save(externalPath, SaveFormat.Xlsx);
 
-                // -------------------------------------------------------------
-                // 2. Create the main workbook where the VLOOKUP formula will reside
-                // -------------------------------------------------------------
+                // ---------------------------------------------------------------
+                // 2. Create the main workbook that will contain the VLOOKUP formula
+                // ---------------------------------------------------------------
                 Workbook mainWb = new Workbook();
                 Worksheet mainSheet = mainWb.Worksheets[0];
                 mainSheet.Name = "Main";
 
-                // Put a lookup key in A1 that exists in the external table
-                mainSheet.Cells["A1"].PutValue("Key5");
+                // The lookup value we want to search for
+                mainSheet.Cells["A2"].PutValue("Banana");
 
-                // -------------------------------------------------------------
-                // 3. Set the AbsolutePath of the main workbook so that relative links work
-                // -------------------------------------------------------------
-                // AbsolutePath is used only for external links; set it to the folder of the external file
-                mainWb.AbsolutePath = externalDir;
+                // Build the VLOOKUP formula referencing the external workbook.
+                // Syntax: =VLOOKUP(A2, '[full_path\ExternalData.xlsx]Data'!$A$2:$B$4, 2, FALSE)
+                string vlookupFormula = $"=VLOOKUP(A2, '[{externalPath}]Data'!$A$2:$B$4, 2, FALSE)";
 
-                // -------------------------------------------------------------
-                // 4. Build the VLOOKUP formula string that references the external workbook
-                // -------------------------------------------------------------
-                // Syntax: =[ExternalFile.xlsx]SheetName!Range
-                string externalFileOnly = Path.GetFileName(externalFullPath); // e.g., ExternalData.xlsx
-                string vlookupFormula = $"=VLOOKUP(A1,'[{externalFileOnly}]Sheet1'!$A$1:$B$10,2,FALSE)";
+                // Set the formula (use the Formula property; Aspose.Cells will calculate it later)
+                mainSheet.Cells["B2"].Formula = vlookupFormula;
 
-                // -------------------------------------------------------------
-                // 5. Assign the formula to a cell (C1)
-                // -------------------------------------------------------------
-                // Use the Formula property (compatible with all Aspose.Cells versions)
-                mainSheet.Cells["C1"].Formula = vlookupFormula;
-
-                // -------------------------------------------------------------
-                // 6. Calculate the formula, providing the external workbook as a linked data source
-                // -------------------------------------------------------------
+                // ---------------------------------------------------------------
+                // 3. Prepare calculation options so the external workbook can be used
+                // ---------------------------------------------------------------
                 CalculationOptions calcOptions = new CalculationOptions
                 {
+                    // Provide the external workbook as a linked data source.
                     LinkedDataSources = new Workbook[] { externalWb }
                 };
+
+                // Calculate the formula in the main workbook.
                 mainWb.CalculateFormula(calcOptions);
 
-                // -------------------------------------------------------------
-                // 7. Output the result and save the main workbook
-                // -------------------------------------------------------------
-                Console.WriteLine($"VLOOKUP result in C1: {mainSheet.Cells["C1"].Value}");
+                // ---------------------------------------------------------------
+                // 4. Output the result to console and save the main workbook
+                // ---------------------------------------------------------------
+                Console.WriteLine("VLOOKUP result (should be 20): " + mainSheet.Cells["B2"].Value);
 
-                string outputPath = Path.GetFullPath("MainWithVlookup.xlsx");
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-                mainWb.Save(outputPath);
-                Console.WriteLine($"Main workbook saved to: {outputPath}");
+                string mainPath = Path.Combine(Path.GetTempPath(), "MainWithVlookup.xlsx");
+                mainWb.Save(mainPath, SaveFormat.Xlsx);
+                Console.WriteLine("Main workbook saved to: " + mainPath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }

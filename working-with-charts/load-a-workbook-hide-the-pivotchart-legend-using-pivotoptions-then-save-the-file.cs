@@ -1,46 +1,82 @@
-// Title: Hide PivotChart Legend and Drop Zones in an Existing Workbook with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, locates PivotCharts on the first worksheet, disables their drop‑zone controls via PivotOptions.DropZonesVisible = false, hides the chart legend with ShowLegend = false, and saves the updated file.
-// Keywords: Aspose.Cells | C# | PivotChart | hide legend | drop zones | PivotOptions | DropZonesVisible | chart.ShowLegend | Excel chart formatting | programmatic Excel manipulation
-// Common Searches: Aspose.Cells hide pivot chart legend C# | remove pivot chart drop zones .NET | set DropZonesVisible false Aspose | chart.ShowLegend false Aspose.Cells example | programmatically hide legend in PivotChart
-// Developer Intent: Programmatically suppress the legend and pivot UI (drop zones) of PivotCharts in an existing Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Prepare a clean report workbook where PivotChart legends are removed for a professional look. | Create dashboards that prevent end‑users from altering pivot controls while keeping the visual layout tidy. | Export PivotCharts to PDF or images without legend clutter by disabling both the legend and drop zones.
-// AI Prompts: Generate C# code with Aspose.Cells that hides the legend of a PivotChart and disables its drop zones in an existing workbook. | Show how to iterate through all charts in a worksheet and apply PivotOptions.DropZonesVisible = false only to charts linked to a PivotTable. | Explain how to verify that the legend and pivot UI elements are hidden after saving the workbook with Aspose.Cells.
+// Title: Hide PivotChart Legend and Drop Zones with PivotOptions in Aspose.Cells for .NET (C#)
+// Description: Loads a workbook, finds the first PivotChart, disables its legend (ShowLegend = false) and removes pivot drop zones (PivotOptions.DropZonesVisible = false), then saves the updated file.
+// Keywords: Aspose.Cells C# hide PivotChart legend | PivotOptions DropZonesVisible false | remove pivot controls Aspose.Cells | chart formatting Aspose.Cells .NET | save workbook after chart changes
+// Common Searches: how to hide legend of a PivotChart using Aspose.Cells | disable pivot drop zones on Excel chart C# | remove pivot controls from chart programmatically Aspose.Cells | save modified workbook after chart settings change
+// Developer Intent: Programmatically hide a PivotChart legend and its pivot controls, then save the workbook.
+// Use Cases: Produce clean reports by removing unnecessary legends from PivotCharts. | Lock chart interactivity by hiding pivot drop zones before distribution. | Batch‑process workbooks to enforce a consistent chart appearance across multiple files.
+// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells, hides legends and drop zones for every PivotChart, and saves the result. | Explain how PivotOptions.DropZonesVisible affects user interaction with a PivotChart in Aspose.Cells. | Create a loop that iterates through all worksheets and charts, applying legend and drop‑zone hiding to each PivotChart.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Pivot;
 
-// Loads an Excel workbook, locates PivotCharts on the first worksheet, disables their drop‑zone controls via PivotOptions.DropZonesVisible = false, hides the chart legend with ShowLegend = false, and saves the updated file.
-class HidePivotChartLegend
+// Loads a workbook, finds the first PivotChart, disables its legend (ShowLegend = false) and removes pivot drop zones (PivotOptions.DropZonesVisible = false), then saves the updated file.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "Input.xlsx";
+        const string outputPath = "Output.xlsx";
 
-        // Access the first worksheet (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Iterate through charts to find a PivotChart
-        foreach (Chart chart in worksheet.Charts)
+        try
         {
-            // Ensure the chart is linked to a PivotTable (PivotSource is not empty)
-            if (!string.IsNullOrEmpty(chart.PivotSource))
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Access the PivotOptions of the chart
-                PivotOptions pivotOptions = chart.PivotOptions;
-
-                // Hide pivot controls (including legend-like elements) on the chart
-                // Setting DropZonesVisible to false removes the pivot UI elements.
-                pivotOptions.DropZonesVisible = false;
-
-                // If you also want to hide the standard legend, you can set ShowLegend to false
-                // (not part of PivotOptions, but commonly used for charts)
-                chart.ShowLegend = false;
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-        }
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Find the first chart that is linked to a PivotTable (PivotChart)
+            Chart pivotChart = null;
+            foreach (Chart ch in sheet.Charts)
+            {
+                if (!string.IsNullOrEmpty(ch.PivotSource))
+                {
+                    pivotChart = ch;
+                    break;
+                }
+            }
+
+            if (pivotChart != null)
+            {
+                // Hide the chart legend
+                pivotChart.ShowLegend = false;
+
+                // Hide all pivot controls on the chart
+                PivotOptions pivotOptions = pivotChart.PivotOptions;
+                if (pivotOptions != null)
+                {
+                    pivotOptions.DropZonesVisible = false;
+                }
+            }
+            else
+            {
+                Console.WriteLine("No PivotChart found in the first worksheet.");
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

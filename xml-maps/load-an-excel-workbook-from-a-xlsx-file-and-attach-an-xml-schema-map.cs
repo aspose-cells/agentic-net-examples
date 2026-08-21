@@ -1,37 +1,36 @@
-// Title: C# – Load an .xlsx Workbook and Attach an XML Schema (XSD) Map with Aspose.Cells
-// Description: Demonstrates how to open an existing .xlsx file using Aspose.Cells for .NET, add an XML schema (XSD) as an XmlMap via Worksheets.XmlMaps.Add, optionally assign a friendly name, and save the workbook with the map embedded. Includes tips for retrieving the map index and handling missing schema files.
-// Keywords: Aspose.Cells C# load workbook | add XML map Aspose.Cells | attach XSD schema to Excel | Worksheets.XmlMaps.Add | set XmlMap name | save workbook with XmlMap | .NET Excel XML mapping | C# XML schema map example
-// Common Searches: add xml map to existing excel file aspose.cells | c# load xlsx and attach xsd schema | aspnet aspose cells xml map tutorial | how to embed xml schema in excel using c# | aspose.cells Worksheets.XmlMaps example
-// Developer Intent: Open a .xlsx file, add an XSD as an XmlMap, optionally rename it, and save the updated workbook.
-// Use Cases: Create a template workbook pre‑linked to an XSD for automated XML import/export. | Distribute a spreadsheet with a named XmlMap so downstream users can map XML data without manual setup. | Integrate Excel‑XML round‑trip in a data‑exchange pipeline by embedding the schema directly in the workbook.
-// AI Prompts: Write C# code that opens an .xlsx workbook, adds an XSD file as an XmlMap, sets a custom map name, and saves the file using Aspose.Cells. | Explain how to retrieve the index of a newly added XmlMap and handle missing or invalid XSD files in Aspose.Cells. | Provide a guide to export workbook data back to XML using the attached XmlMap with Aspose.Cells for .NET.
+// Title: Attach an XML Schema Map to an Excel Workbook with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to load an existing .xlsx file into an Aspose.Cells Workbook, add an XSD schema as an XML map via the Worksheets.XmlMaps collection, optionally assign a friendly name, and save the workbook with the map attached.
+// Keywords: Aspose.Cells | XML map | XSD schema | C# | .NET | load Excel workbook | add XML map | Worksheets.XmlMaps | save workbook with schema | Excel XML integration
+// Common Searches: Aspose.Cells add XML map to workbook C# | how to attach XSD to Excel using Aspose.Cells | load .xlsx and add schema map .NET | C# code for XML schema map in Excel | Aspose.Cells Worksheets.XmlMaps example
+// Developer Intent: Add an XML schema map to an existing Excel workbook and persist the change.
+// Use Cases: Prepare a template workbook for XML data exchange by embedding an XSD map. | Give an XML map a readable name for later import/export operations. | Distribute a workbook that already contains the required XML structure for downstream processing.
+// AI Prompts: Show how to add multiple XML schema maps to a single workbook with Aspose.Cells. | Provide C# code that imports XML data into a workbook using a previously attached XML map. | Explain how to retrieve the index or name of an XML map after it has been added.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to open an existing .xlsx file using Aspose.Cells for .NET, add an XML schema (XSD) as an XmlMap via Worksheets.XmlMaps.Add, optionally assign a friendly name, and save the workbook with the map embedded. Includes tips for retrieving the map index and handling missing schema files.
-class Program
+namespace AsposeCellsXmlMapDemo
 {
-    static void Main()
+    // Demonstrates how to load an existing .xlsx file into an Aspose.Cells Workbook, add an XSD schema as an XML map via the Worksheets.XmlMaps collection, optionally assign a friendly name, and save the workbook with the map attached.
+    class Program
     {
-        // Path to the existing Excel workbook (.xlsx)
-        string excelFilePath = "input.xlsx";
+        static void Main()
+        {
+            // Load an existing Excel workbook from a .xlsx file
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Load the workbook using the constructor that accepts a file path
-        Workbook workbook = new Workbook(excelFilePath);
+            // Add an XML schema map to the workbook
+            // The schema file path can be a local file or a URL
+            int mapIndex = workbook.Worksheets.XmlMaps.Add("schema.xsd");
 
-        // Path to the XML schema (XSD) that defines the XML map
-        string xmlSchemaPath = "schema.xsd";
+            // Optionally set a friendly name for the map
+            XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
+            xmlMap.Name = "MySchemaMap";
 
-        // Add the XML schema as a map to the workbook
-        // The Add method returns the index of the newly added XmlMap
-        int mapIndex = workbook.Worksheets.XmlMaps.Add(xmlSchemaPath);
+            // Save the workbook with the attached XML map
+            workbook.Save("output.xlsx");
 
-        // Retrieve the XmlMap object (optional, e.g., to set a friendly name)
-        XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-        xmlMap.Name = "MyXmlMap";
-
-        // Save the workbook with the attached XML map
-        workbook.Save("output_with_xmlmap.xlsx");
+            Console.WriteLine("Workbook loaded and XML schema map attached successfully.");
+        }
     }
 }

@@ -1,94 +1,94 @@
-// Title: Audit Aspose.Cells HTML Export – Log Source Workbook, TableCssId, and Destination Path (C#)
-// Description: Demonstrates how to add an audit trail to Aspose.Cells HTML conversions. A static logger writes a UTC timestamp, the source workbook location (or a placeholder for a new workbook), the HtmlSaveOptions.TableCssId value, and the full destination file path to a text file before the workbook is saved as HTML.
-// Keywords: Aspose.Cells | HTML export audit | log TableCssId | export destination path | C# workbook logging | .NET Excel to HTML | audit trail Excel conversion
-// Common Searches: how to log Aspose.Cells HTML export in C# | track source workbook and TableCssId when saving to HTML | audit Excel to HTML conversion Aspose.Cells | record export details for Aspose.Cells HTML save | Aspose.Cells export logging example
-// Developer Intent: Implement a simple audit mechanism that records the source workbook, the TableCssId used, and the target HTML file path for every Aspose.Cells HTML export.
-// Use Cases: Maintain compliance logs for financial reports exported from Excel to HTML. | Analyze styling consistency by tracking TableCssId values across multiple exports. | Monitor per‑user conversion activity in a multi‑tenant SaaS platform for troubleshooting and reporting.
-// AI Prompts: Create C# code that extends ExportAuditLogger to capture export duration and success status for each Aspose.Cells HTML save. | Replace the text‑file logger with Serilog while preserving source workbook, TableCssId, and destination path information. | Write a unit test that verifies ExportAuditLogger writes the correct entry for both newly created and existing workbook exports.
+// Title: C# – Log Excel‑to‑HTML Export with TableCssId and Destination Path using Aspose.Cells
+// Description: Shows how to audit each HTML export performed with Aspose.Cells for .NET. The ExportLogger loads a workbook, configures HtmlSaveOptions with a custom TableCssId and an IExportObjectListener, saves to HTML, and writes the source file name, output path, TableCssId, and details of every exported object (type and index) to the console or any logging sink.
+// Keywords: Aspose.Cells | C# HTML export | ExportObjectListener | TableCssId | Excel to HTML audit | export logging .NET | track exported images | Aspose.Cells HtmlSaveOptions | audit conversion | log workbook export
+// Common Searches: Aspose.Cells log HTML export C# | how to use ExportObjectListener with HtmlSaveOptions | record TableCssId during Excel to HTML conversion | audit Excel to HTML conversion Aspose.Cells | log each exported image shape Aspose.Cells | save workbook as HTML with custom table id | track export operations Aspose.Cells .NET
+// Developer Intent: I need to record details of every Excel‑to‑HTML conversion, including source file, TableCssId, output path, and each exported object.
+// Use Cases: Compliance reporting for batch Excel‑to‑HTML conversions | Debugging missing images or charts after HTML export | Integrating export logs into a monitoring dashboard | Storing export metadata in a database for later analysis | Generating CSV audit trails for regulatory purposes
+// AI Prompts: Write code to persist ExportLogger entries to a CSV file with timestamps and operation IDs. | Create a unit test that asserts CustomExportObjectListener logs the correct object type and sequential index. | Show how to modify ExportLogger to write logs to an Azure Table storage. | Provide a PowerShell script that parses the console output and inserts records into a SQL Server table. | Generate a sample GitHub Actions workflow that runs the export logger on multiple workbooks and uploads the log as an artifact.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExportAudit
+// Logs export operations and handles object export events
+// Shows how to audit each HTML export performed with Aspose.Cells for .NET. The ExportLogger loads a workbook, configures HtmlSaveOptions with a custom TableCssId and an IExportObjectListener, saves to HTML, and writes the source file name, output path, TableCssId, and details of every exported object (type and index) to the console or any logging sink.
+class ExportLogger
 {
-    // Simple logger that writes audit information to a text file.
-    // Demonstrates how to add an audit trail to Aspose.Cells HTML conversions. A static logger writes a UTC timestamp, the source workbook location (or a placeholder for a new workbook), the HtmlSaveOptions.TableCssId value, and the full destination file path to a text file before the workbook is saved as HTML.
-    public static class ExportAuditLogger
-    {
-        private static readonly string LogFilePath = "ExportAuditLog.txt";
+    private readonly string _sourcePath;
+    private readonly string _destPath;
+    private readonly string _tableCssId;
 
-        public static void Log(string sourceWorkbook, string tableCssId, string destinationPath)
-        {
-            string logEntry = $"Timestamp: {DateTime.UtcNow:u} | Source: {sourceWorkbook} | TableCssId: {tableCssId} | Destination: {destinationPath}";
-            File.AppendAllLines(LogFilePath, new[] { logEntry });
-        }
+    public ExportLogger(string sourcePath, string destPath, string tableCssId)
+    {
+        _sourcePath = sourcePath;
+        _destPath = destPath;
+        _tableCssId = tableCssId;
     }
 
-    public class WorkbookExporter
+    public void ExportToHtml()
     {
-        // Exports a workbook to HTML while logging the operation details.
-        // sourcePath   : Path to the source Excel file (can be null for a newly created workbook).
-        // destPath     : Path where the HTML file will be saved.
-        // tableCssId   : Value to assign to HtmlSaveOptions.TableCssId.
-        public static void ExportToHtml(string sourcePath, string destPath, string tableCssId)
+        // Load the source workbook
+        Workbook workbook = new Workbook(_sourcePath);
+
+        // Configure HTML save options
+        HtmlSaveOptions saveOptions = new HtmlSaveOptions
         {
-            Workbook workbook;
+            TableCssId = _tableCssId,
+            ExportObjectListener = new CustomExportObjectListener(_sourcePath, _tableCssId)
+        };
 
-            // Load or create the workbook.
-            if (!string.IsNullOrEmpty(sourcePath) && File.Exists(sourcePath))
-            {
-                // Load existing workbook.
-                workbook = new Workbook(sourcePath);
-            }
-            else
-            {
-                // Create a new workbook with sample data.
-                workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Name");
-                sheet.Cells["B1"].PutValue("Age");
-                sheet.Cells["A2"].PutValue("Alice");
-                sheet.Cells["B2"].PutValue(30);
-                sheet.Cells["A3"].PutValue("Bob");
-                sheet.Cells["B3"].PutValue(25);
-            }
+        // Save the workbook as HTML
+        workbook.Save(_destPath, saveOptions);
 
-            // Configure HTML save options.
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
-            {
-                TableCssId = tableCssId,
-                ExportWorksheetCSSSeparately = false // default, kept for clarity
-            };
-
-            // Log the export operation before saving.
-            string sourceInfo = string.IsNullOrEmpty(sourcePath) ? "NewlyCreatedWorkbook" : Path.GetFullPath(sourcePath);
-            ExportAuditLogger.Log(sourceInfo, tableCssId, Path.GetFullPath(destPath));
-
-            // Perform the export.
-            workbook.Save(destPath, saveOptions);
-        }
+        // Log the overall export operation
+        LogExport();
     }
 
-    class Program
+    private void LogExport()
     {
-        static void Main()
-        {
-            // Example 1: Export a newly created workbook.
-            WorkbookExporter.ExportToHtml(
-                sourcePath: null,
-                destPath: "NewWorkbookExport.html",
-                tableCssId: "myTableStyle");
+        Console.WriteLine($"[Export] Workbook: '{Path.GetFileName(_sourcePath)}' => '{_destPath}'");
+        Console.WriteLine($"[Export] TableCssId used: '{_tableCssId}'");
+        // Extend this method to write to a file, database, etc., if needed
+    }
+}
 
-            // Example 2: Export an existing workbook.
-            string existingExcel = "SampleData.xlsx"; // Ensure this file exists in the execution folder.
-            WorkbookExporter.ExportToHtml(
-                sourcePath: existingExcel,
-                destPath: "ExistingWorkbookExport.html",
-                tableCssId: "existingTable");
+// Implements IExportObjectListener to log each exported object (e.g., images, shapes)
+class CustomExportObjectListener : IExportObjectListener
+{
+    private readonly string _sourcePath;
+    private readonly string _tableCssId;
+    private int _objectIndex = 0;
 
-            Console.WriteLine("Export operations completed. Audit log written to ExportAuditLog.txt");
-        }
+    public CustomExportObjectListener(string sourcePath, string tableCssId)
+    {
+        _sourcePath = sourcePath;
+        _tableCssId = tableCssId;
+    }
+
+    public object ExportObject(ExportObjectEvent e)
+    {
+        _objectIndex++;
+        object source = e?.GetSource();
+        string typeName = source?.GetType().Name ?? "null";
+
+        Console.WriteLine($"[ExportObject] #{_objectIndex}: Type={typeName}, Workbook='{Path.GetFileName(_sourcePath)}', TableCssId='{_tableCssId}'");
+
+        // Return null to let Aspose.Cells perform the default export handling
+        return null;
+    }
+}
+
+// Demonstrates usage
+class Program
+{
+    static void Main()
+    {
+        string sourceFile = "input.xlsx";          // Path to the source workbook
+        string destinationFile = "output.html";    // Desired HTML output path
+        string tableCssId = "myTableCss";          // Custom TableCssId for the HTML table
+
+        ExportLogger exporter = new ExportLogger(sourceFile, destinationFile, tableCssId);
+        exporter.ExportToHtml();
     }
 }

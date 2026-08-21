@@ -1,87 +1,85 @@
-// Title: Parallel Worksheet‑to‑PNG Conversion with Aspose.Cells and TPL (C#)
-// Description: Loads an Excel workbook, creates an output folder, and uses the Task Parallel Library to render each worksheet to PNG files concurrently. Each task configures ImageOrPrintOptions (PNG, OnePagePerSheet), employs SheetRender to export every page, disposes resources, and finally waits for all tasks before optionally saving the original workbook.
-// Keywords: Aspose.Cells parallel rendering | C# Excel to PNG multi‑threaded | Task Parallel Library image export | SheetRender concurrent conversion | OnePagePerSheet PNG | multi‑core Excel image generation | .NET workbook to PNG | high‑performance Excel preview
-// Common Searches: how to convert multiple Excel sheets to PNG in parallel C# | Aspose.Cells TPL example for sheet rendering | parallel image export from workbook using Aspose.Cells | improve Excel to PNG conversion speed .NET | concurrent SheetRender usage Aspose
-// Developer Intent: Export every worksheet of an Excel file to separate PNG images simultaneously, leveraging all available CPU cores for faster throughput.
-// Use Cases: Generate preview images for each sheet of large workbooks in a web service without blocking the request thread. | Batch‑process thousands of spreadsheets in a document‑management pipeline, creating per‑sheet thumbnails in minutes. | Run a background job on Azure VMs or on‑prem servers that reduces total conversion time by using all logical processors.
-// AI Prompts: Rewrite the sample to limit parallelism to the machine's logical processor count using ParallelOptions. | Add robust error handling: capture exceptions inside each task, log them, and report a summary after Task.WaitAll. | Show a version that uses Parallel.ForEach instead of manually building a List<Task> for worksheet rendering.
+// Title: C# Parallel Worksheet‑to‑PNG Export with Aspose.Cells and TPL
+// Description: This example demonstrates how to load an Excel workbook with Aspose.Cells, then use the Task Parallel Library (Parallel.ForEach) to render each worksheet and its pages to PNG files concurrently. It creates a safe file name, ensures the output directory exists, and includes per‑sheet error handling for reliable multi‑core processing.
+// Keywords: Aspose.Cells | C# | Parallel.ForEach | Task Parallel Library | worksheet to PNG | Excel image export | SheetRender | multi‑core conversion | batch Excel to PNG | GitHub example
+// Common Searches: export Excel worksheets to PNG in parallel C# | Aspose.Cells batch image conversion using TPL | how to render multiple Excel sheets as PNG concurrently | C# code for parallel worksheet image generation | safe file naming for Excel sheet PNG output
+// Developer Intent: Generate PNG images for all worksheets of a workbook simultaneously to reduce conversion time on multi‑core machines.
+// Use Cases: Create preview thumbnails for each sheet of large reports on a web server. | Automate bulk export of Excel dashboards to PNG for CI/CD pipelines. | Produce page‑by‑page PNG assets for e‑learning material from multi‑sheet workbooks.
+// AI Prompts: Write C# code that uses Aspose.Cells to export every worksheet of an Excel file to separate PNG files with Parallel.ForEach. | Explain how to sanitize worksheet names for file system paths when saving PNG images with Aspose.Cells. | Suggest robust error‑handling patterns for parallel rendering of Excel sheets to PNG using the Task Parallel Library.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsParallelRender
+// This example demonstrates how to load an Excel workbook with Aspose.Cells, then use the Task Parallel Library (Parallel.ForEach) to render each worksheet and its pages to PNG files concurrently. It creates a safe file name, ensures the output directory exists, and includes per‑sheet error handling for reliable multi‑core processing.
+public static class WorksheetToPngParallelizer
 {
-    // Loads an Excel workbook, creates an output folder, and uses the Task Parallel Library to render each worksheet to PNG files concurrently. Each task configures ImageOrPrintOptions (PNG, OnePagePerSheet), employs SheetRender to export every page, disposes resources, and finally waits for all tasks before optionally saving the original workbook.
-    class Program
+    // Converts each worksheet (and each of its pages) of an Excel file to PNG images in parallel.
+    public static void ConvertWorksheetsToPng(string excelFilePath, string outputDirectory)
     {
-        static void Main()
+        // Verify the source file exists to avoid FileNotFoundException.
+        if (!File.Exists(excelFilePath))
         {
-            // Input Excel file
-            string inputFile = "input.xlsx";
-
-            // Output directory for PNG images
-            string outputDir = "output_png";
-            Directory.CreateDirectory(outputDir);
-
-            // Load the workbook (create/load rule)
-            Workbook workbook = new Workbook(inputFile);
-
-            // Prepare a list to hold rendering tasks
-            List<Task> renderTasks = new List<Task>();
-
-            // Iterate over each worksheet in the workbook
-            for (int sheetIdx = 0; sheetIdx < workbook.Worksheets.Count; sheetIdx++)
-            {
-                // Capture the current index for the task closure
-                int currentSheetIdx = sheetIdx;
-
-                // Create a task that renders the current worksheet
-                Task task = Task.Run(() =>
-                {
-                    // Access the worksheet
-                    Worksheet sheet = workbook.Worksheets[currentSheetIdx];
-
-                    // Configure image rendering options (PNG, one page per sheet)
-                    ImageOrPrintOptions options = new ImageOrPrintOptions
-                    {
-                        ImageType = ImageType.Png,
-                        OnePagePerSheet = true
-                    };
-
-                    // Initialize SheetRender (constructor rule)
-                    SheetRender sheetRender = new SheetRender(sheet, options);
-
-                    // Render each page of the worksheet to a separate PNG file
-                    for (int pageIdx = 0; pageIdx < sheetRender.PageCount; pageIdx++)
-                    {
-                        string fileName = Path.Combine(
-                            outputDir,
-                            $"Sheet{currentSheetIdx}_Page{pageIdx}.png");
-
-                        // Render page to file (ToImage overload rule)
-                        sheetRender.ToImage(pageIdx, fileName);
-                    }
-
-                    // Release resources used by SheetRender
-                    sheetRender.Dispose();
-                });
-
-                renderTasks.Add(task);
-            }
-
-            // Wait for all rendering tasks to complete
-            Task.WaitAll(renderTasks.ToArray());
-
-            // Optionally, save the original workbook for reference (save rule)
-            string savedWorkbookPath = Path.Combine(outputDir, "original_workbook.xlsx");
-            workbook.Save(savedWorkbookPath);
-
-            Console.WriteLine("All worksheets have been rendered to PNG files.");
+            Console.Error.WriteLine($"Error: The file \"{excelFilePath}\" does not exist.");
+            return;
         }
+
+        // Ensure the output directory exists.
+        Directory.CreateDirectory(outputDirectory);
+
+        try
+        {
+            // Load the workbook from the specified file.
+            using (Workbook workbook = new Workbook(excelFilePath))
+            {
+                // Parallelize over the collection of worksheets.
+                Parallel.ForEach(workbook.Worksheets, worksheet =>
+                {
+                    try
+                    {
+                        // Configure image rendering options: PNG format (default), one page per sheet.
+                        ImageOrPrintOptions options = new ImageOrPrintOptions
+                        {
+                            // The default image format is PNG; explicit setting omitted to avoid API mismatch.
+                            OnePagePerSheet = true
+                        };
+
+                        // Create a SheetRender for the current worksheet.
+                        SheetRender sheetRender = new SheetRender(worksheet, options);
+
+                        // Render each page of the worksheet to a separate PNG file.
+                        for (int pageIndex = 0; pageIndex < sheetRender.PageCount; pageIndex++)
+                        {
+                            // Build a safe file name using the worksheet name and page index.
+                            string safeSheetName = string.Concat(worksheet.Name.Split(Path.GetInvalidFileNameChars()));
+                            string outputPath = Path.Combine(outputDirectory, $"{safeSheetName}_page{pageIndex}.png");
+
+                            // Save the rendered page to the PNG file.
+                            sheetRender.ToImage(pageIndex, outputPath);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Error.WriteLine($"Failed to render worksheet \"{worksheet.Name}\": {ex.Message}");
+                    }
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Failed to process workbook \"{excelFilePath}\": {ex.Message}");
+        }
+    }
+
+    // Example entry point.
+    public static void Main()
+    {
+        string sourceExcel = "input.xlsx";               // Path to the source Excel file.
+        string pngOutputFolder = "RenderedPages";        // Folder where PNG files will be saved.
+
+        ConvertWorksheetsToPng(sourceExcel, pngOutputFolder);
+
+        Console.WriteLine("All worksheets have been rendered to PNG images (if no errors were reported).");
     }
 }

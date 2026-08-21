@@ -1,47 +1,60 @@
-// Title: Set an array formula to sum matching rows across worksheets with Aspose.Cells for .NET
-// Description: Creates a workbook, adds Sheet1, Sheet2 and Result sheets, fills A1:A5 on the first two sheets, defines the array formula "=Sheet1!A1:A5+Sheet2!A1:A5", applies it to Result!A1 using SetArrayFormula(5,1), forces calculation, and saves the workbook.
-// Keywords: Aspose.Cells | SetArrayFormula | array formula | cross‑sheet sum | .NET | Excel automation | calculate formulas | workbook save
-// Common Searches: Aspose.Cells SetArrayFormula across multiple sheets | how to add ranges from different worksheets using Aspose.Cells | calculate array formulas after setting them in .NET | sum corresponding rows from two sheets with Aspose.Cells
-// Developer Intent: Create a rectangular array formula that adds each row from two source worksheets and writes the summed values to a third worksheet.
-// Use Cases: Combine monthly sales numbers from regional sheets into a consolidated summary with a single formula. | Produce a unified financial total by adding matching rows from separate department worksheets. | Generate a dynamic report that aggregates sensor readings stored on multiple sheets without writing individual cell formulas.
-// AI Prompts: Show how to use SetArrayFormula to multiply corresponding ranges from three worksheets in Aspose.Cells for .NET. | Provide code that reads the results of an array formula after calling CalculateFormula with Aspose.Cells. | Explain how to adjust SetArrayFormula for a multi‑column range that adds rows from several sheets.
+// Title: Set a 3‑D array formula to sum matching cells across worksheets with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook with three sheets, populates Sheet1 and Sheet2 with sample numbers, and uses SetArrayFormula to place a 5 × 3 array formula "=SUM(Sheet1:Sheet2!A1)" on Sheet3. The formula automatically spills over the target range, CalculateFormula materializes the results, and the workbook is saved as an XLSX file.
+// Keywords: Aspose.Cells | C# | .NET | SetArrayFormula | 3‑D reference | array formula across sheets | SUM across worksheets | CalculateFormula | save workbook | Excel automation
+// Common Searches: Aspose.Cells set array formula across multiple sheets | C# 3‑D SUM formula with Aspose.Cells | How to apply SetArrayFormula to a rectangular range in Aspose.Cells | Spill array formula over a range using Aspose.Cells .NET | Calculate formulas after setting array formula Aspose.Cells
+// Developer Intent: Apply a rectangular 3‑D array formula that sums corresponding cells from Sheet1 and Sheet2 into Sheet3 using Aspose.Cells for .NET.
+// Use Cases: Consolidate daily sales figures stored on separate worksheets into a single summary sheet with one array formula. | Combine budget numbers from two department sheets into a merged report without writing individual cell formulas. | Create a rolling financial statement that adds values from multiple period sheets using a single 3‑D array formula.
+// AI Prompts: Show how to extend the array formula to include a third worksheet in the 3‑D SUM reference. | Explain how to read values from the spilled range after workbook.CalculateFormula() is called. | Generate code that determines the array size dynamically based on the source sheets' row and column counts.
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, adds Sheet1, Sheet2 and Result sheets, fills A1:A5 on the first two sheets, defines the array formula "=Sheet1!A1:A5+Sheet2!A1:A5", applies it to Result!A1 using SetArrayFormula(5,1), forces calculation, and saves the workbook.
-class Program
+namespace AsposeCellsArrayFormulaDemo
 {
-    static void Main()
+    // Creates a workbook with three sheets, populates Sheet1 and Sheet2 with sample numbers, and uses SetArrayFormula to place a 5 × 3 array formula "=SUM(Sheet1:Sheet2!A1)" on Sheet3. The formula automatically spills over the target range, CalculateFormula materializes the results, and the workbook is saved as an XLSX file.
+    class Program
     {
-        // Create a new workbook (lifecycle: create)
-        Workbook workbook = new Workbook();
-
-        // Rename the default sheet and add two more sheets
-        Worksheet sheet1 = workbook.Worksheets[0];
-        sheet1.Name = "Sheet1";
-        Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-        Worksheet resultSheet = workbook.Worksheets.Add("Result");
-
-        // Populate sample data in Sheet1 (1,2,3,4,5) and Sheet2 (10,20,30,40,50)
-        for (int i = 0; i < 5; i++)
+        static void Main()
         {
-            sheet1.Cells[i, 0].PutValue(i + 1);          // A1:A5 in Sheet1
-            sheet2.Cells[i, 0].PutValue((i + 1) * 10);   // A1:A5 in Sheet2
+            // Create a new workbook with three worksheets
+            Workbook workbook = new Workbook();
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "Sheet1";
+            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+            Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
+
+            // Populate sample data in Sheet1 (A1:C5)
+            for (int row = 0; row < 5; row++)
+            {
+                for (int col = 0; col < 3; col++)
+                {
+                    sheet1.Cells[row, col].PutValue((row + 1) * 10 + col); // e.g., 11,12,13,...
+                }
+            }
+
+            // Populate sample data in Sheet2 (A1:C5)
+            for (int row = 0; row < 5; row++)
+            {
+                for (int col = 0; col < 3; col++)
+                {
+                    sheet2.Cells[row, col].PutValue((row + 1) * 100 + col); // e.g., 101,102,103,...
+                }
+            }
+
+            // Set an array formula in Sheet3 that sums the corresponding cells across Sheet1 and Sheet2
+            // The 3‑D reference SUM(Sheet1:Sheet2!A1) will adjust for each cell in the spilled range
+            Cell targetCell = sheet3.Cells["A1"];
+            targetCell.SetArrayFormula("=SUM(Sheet1:Sheet2!A1)", 5, 3);
+
+            // Calculate all formulas so that the array results are materialized
+            workbook.CalculateFormula();
+
+            // Optional: display a few results to verify
+            Console.WriteLine("Sheet3!A1 = " + sheet3.Cells["A1"].Value); // should be Sheet1!A1 + Sheet2!A1
+            Console.WriteLine("Sheet3!C5 = " + sheet3.Cells["C5"].Value); // should be Sheet1!C5 + Sheet2!C5
+
+            // Save the workbook
+            workbook.Save("ArrayFormulaDemo.xlsx");
         }
-
-        // Define an array formula that sums corresponding rows from Sheet1 and Sheet2
-        // The formula will spill into 5 rows and 1 column on the Result sheet
-        string arrayFormula = "=Sheet1!A1:A5+Sheet2!A1:A5";
-
-        // Apply the array formula starting at Result!A1
-        // Parameters: (formula, number of rows to populate, number of columns to populate)
-        resultSheet.Cells["A1"].SetArrayFormula(arrayFormula, 5, 1);
-
-        // Calculate all formulas so the array results are materialized
-        workbook.CalculateFormula();
-
-        // Save the workbook (lifecycle: save)
-        workbook.Save("ArrayFormulaSumAcrossSheets.xlsx");
     }
 }

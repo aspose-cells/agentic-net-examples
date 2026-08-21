@@ -1,27 +1,27 @@
-// Title: Aspose.Cells C# – Custom Calculation Engine that Treats Empty Cells as Zero in SUM
-// Description: This example shows how to subclass Aspose.Cells.AbstractCalculationEngine to intercept the SUM function, treat null or blank cells as 0, and return the correct total. All other functions are delegated to the default engine via the Skip flag. The custom engine is assigned to CalculationOptions.CustomEngine and used with Workbook.CalculateFormula to evaluate formulas that contain empty cells.
-// Keywords: Aspose.Cells | C# | custom calculation engine | AbstractCalculationEngine | CalculationOptions.CustomEngine | treat empty cells as zero | SUM function override | blank cell handling | Excel formula customization | Aspose.Cells API
-// Common Searches: Aspose.Cells treat blank cells as zero | custom calculation engine Aspose.Cells C# | override SUM function Aspose.Cells | CalculationOptions CustomEngine example | ignore empty cells in Aspose.Cells formulas | Aspose.Cells custom engine for SUM | C# Aspose.Cells custom formula behavior
-// Developer Intent: Create a custom calculation engine that evaluates SUM formulas by counting empty cells as zero while leaving other functions unchanged.
-// Use Cases: Generate financial reports where missing entries should be counted as zero. | Build dashboards that sum data ranges containing blanks without extra preprocessing. | Run server‑side .NET services that calculate workbooks with custom zero‑handling logic. | Apply the engine to legacy spreadsheets that use empty cells for optional values.
-// AI Prompts: Provide C# code for an AbstractCalculationEngine subclass that treats null cell values as 0 in the SUM function and integrates it with CalculationOptions.CustomEngine. | Explain how to extend the custom engine to also handle the AVERAGE function while treating empty cells as zero. | Give troubleshooting steps when the Skip property is not accessible in a custom Aspose.Cells calculation engine.
+// Title: Aspose.Cells C# Custom Calculation Engine – Treat Blank Cells as Zero in Formulas
+// Description: Shows how to build a custom Aspose.Cells calculation engine that treats empty or blank cells as 0 when evaluating arithmetic expressions and the SUM function, and how to apply it via CalculationOptions.CustomEngine.
+// Keywords: Aspose.Cells custom engine | treat blank cells as zero | C# calculation engine Aspose | override SUM function | CalculationOptions CustomEngine | handle empty cells in formulas | .NET spreadsheet calculation | Aspose.Cells AbstractCalculationEngine
+// Common Searches: Aspose.Cells treat empty cells as zero | custom calculation engine C# Aspose.Cells | override SUM function Aspose.Cells | CalculationOptions.CustomEngine example | blank cell handling in Aspose.Cells formulas
+// Developer Intent: Create a custom calculation engine that substitutes null or empty cell values with zero during formula evaluation.
+// Use Cases: Accurately sum ranges that contain optional or missing data without manual cleanup. | Generate financial or statistical reports where blank entries must be counted as zero. | Run bulk spreadsheet calculations in .NET while preventing conversion errors from empty cells.
+// AI Prompts: Write a C# class extending AbstractCalculationEngine that treats empty cells as zero for all arithmetic functions, not just SUM. | Show how to configure CalculationOptions to use a custom engine and calculate every formula in an Aspose.Cells workbook. | Explain how to extend the TreatEmptyAsZeroEngine to also handle the AVERAGE function by ignoring blanks or treating them as zero.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsCustomCalcOption
 {
     // Custom calculation engine that treats empty cells as zero for the SUM function.
-    // This example shows how to subclass Aspose.Cells.AbstractCalculationEngine to intercept the SUM function, treat null or blank cells as 0, and return the correct total. All other functions are delegated to the default engine via the Skip flag. The custom engine is assigned to CalculationOptions.CustomEngine and used with Workbook.CalculateFormula to evaluate formulas that contain empty cells.
-    public class EmptyAsZeroEngine : AbstractCalculationEngine
+    // It also processes built‑in functions so that the engine is invoked for SUM.
+    // Shows how to build a custom Aspose.Cells calculation engine that treats empty or blank cells as 0 when evaluating arithmetic expressions and the SUM function, and how to apply it via CalculationOptions.CustomEngine.
+    public class TreatEmptyAsZeroEngine : AbstractCalculationEngine
     {
-        // Enable processing of built‑in functions so we can intercept them.
+        // Enable processing of built‑in functions.
         public override bool ProcessBuiltInFunctions => true;
 
         public override void Calculate(CalculationData data)
         {
-            // Intercept only the SUM function; other functions should use the default engine.
+            // Only customize the SUM function; other functions fall back to default behavior.
             if (data.FunctionName.Equals("SUM", StringComparison.OrdinalIgnoreCase))
             {
                 double sum = 0.0;
@@ -40,74 +40,80 @@ namespace AsposeCellsCustomCalcOption
                             for (int c = area.StartColumn; c <= area.EndColumn; c++)
                             {
                                 object cellValue = area.GetValue(r, c);
-                                // Treat null (empty cell) as zero.
-                                sum += cellValue == null ? 0.0 : Convert.ToDouble(cellValue);
+                                // Treat null or empty as zero.
+                                sum += ConvertToDoubleOrZero(cellValue);
                             }
                         }
                     }
                     else
                     {
                         // Single scalar parameter.
-                        sum += param == null ? 0.0 : Convert.ToDouble(param);
+                        sum += ConvertToDoubleOrZero(param);
                     }
                 }
 
-                // Return the calculated sum.
+                // Set the calculated result for the SUM function.
                 data.CalculatedValue = sum;
-                return;
             }
+            // For any other function we do nothing – the default engine will handle it.
+        }
 
-            // For any other function, instruct the default engine to handle it.
-            // The 'Skip' property may not be available in all versions, so set it via reflection.
-            var skipProp = data.GetType().GetProperty("Skip");
-            if (skipProp != null && skipProp.CanWrite)
+        // Helper: converts a value to double; null or empty becomes 0.
+        private static double ConvertToDoubleOrZero(object value)
+        {
+            if (value == null) return 0.0;
+            if (value is string s && string.IsNullOrWhiteSpace(s)) return 0.0;
+            try
             {
-                skipProp.SetValue(data, true);
+                return Convert.ToDouble(value);
+            }
+            catch
+            {
+                // If conversion fails, treat as zero.
+                return 0.0;
             }
         }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            try
+            // ---------- Create a new workbook ----------
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+
+            // Populate data: A1 = 10, A2 = empty, A3 = 5
+            ws.Cells["A1"].PutValue(10);
+            // A2 left empty intentionally
+            ws.Cells["A3"].PutValue(5);
+
+            // Formula that adds the three cells. Empty cell should be treated as zero.
+            ws.Cells["B1"].Formula = "=A1+A2+A3";
+
+            // Also demonstrate SUM over a range that includes an empty cell.
+            ws.Cells["B2"].Formula = "=SUM(A1:A3)";
+
+            // ---------- Set up custom calculation options ----------
+            CalculationOptions opts = new CalculationOptions
             {
-                // Create a new workbook and get the first worksheet.
-                Workbook wb = new Workbook();
-                Worksheet ws = wb.Worksheets[0];
+                // Attach the custom engine.
+                CustomEngine = new TreatEmptyAsZeroEngine(),
+                // Ensure recursive calculation (default true) and ignore errors.
+                Recursive = true,
+                IgnoreError = true
+            };
 
-                // Populate sample data.
-                ws.Cells["A1"].PutValue(10);   // Non‑empty cell.
-                ws.Cells["B1"].PutValue(null); // Explicitly empty cell (treated as blank).
+            // ---------- Perform calculation ----------
+            // Calculate all formulas in the workbook using the custom options.
+            wb.CalculateFormula(opts);
 
-                // Formula that sums A1 and B1. B1 is empty.
-                ws.Cells["C1"].Formula = "=SUM(A1:B1)";
+            // ---------- Output results ----------
+            Console.WriteLine("Result of A1+A2+A3 (B1): " + ws.Cells["B1"].Value); // Expected 15
+            Console.WriteLine("Result of SUM(A1:A3) (B2): " + ws.Cells["B2"].Value); // Expected 15
 
-                // Set up calculation options with the custom engine.
-                CalculationOptions opts = new CalculationOptions
-                {
-                    CustomEngine = new EmptyAsZeroEngine(),
-                    // Ensure errors are ignored so the demo runs smoothly.
-                    IgnoreError = true,
-                    Recursive = true
-                };
-
-                // Calculate all formulas using the custom options.
-                wb.CalculateFormula(opts);
-
-                // Output the result. Expected: 10 (since empty B1 is treated as 0).
-                Console.WriteLine("Result of SUM(A1:B1) with empty cells as zero: " + ws.Cells["C1"].Value);
-
-                // Save the workbook (optional, demonstrates lifecycle compliance).
-                string outputPath = "CustomCalcOptionDemo.xlsx";
-                wb.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // ---------- Save the workbook (optional) ----------
+            wb.Save("CustomCalcOptionDemo.xlsx");
         }
     }
 }

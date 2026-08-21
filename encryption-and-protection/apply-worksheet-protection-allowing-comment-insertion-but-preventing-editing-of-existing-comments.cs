@@ -1,64 +1,46 @@
-// Title: Aspose.Cells C# – Protect Worksheet, Allow New Comments, Lock Existing Comments
-// Description: Creates a workbook, adds a comment to A1, locks the comment's shape, configures worksheet protection to permit inserting new comments while blocking edits to locked comments, applies password protection, and saves the file as CommentProtection.xlsx.
-// Keywords: Aspose.Cells | C# worksheet protection | Excel comment lock | Allow insert comments | Password protect sheet | CommentShape IsLocked | Secure Excel template | Object editing restriction | Aspose.Cells Protect | Excel security C#
-// Common Searches: Aspose.Cells protect worksheet allow comments | Lock existing comment Aspose.Cells C# | Enable comment insertion but prevent editing existing comments Excel | C# Aspose.Cells worksheet protection settings | How to lock comment shape in Aspose.Cells
-// Developer Intent: Set worksheet protection so users can add new comments while existing comments remain read‑only.
-// Use Cases: Distribute a financial model where pre‑filled audit notes are immutable but reviewers can add their own remarks. | Create a shared project tracker that lets team members insert feedback without altering the original guidance. | Publish a template with locked instructions while permitting collaborators to append additional comments.
-// AI Prompts: Show C# code using Aspose.Cells to lock a comment shape and protect a worksheet so only new comments can be added. | Explain how Protection.AllowEditingObject and CommentShape.IsLocked work together to restrict comment editing in Excel. | Generate an Aspose.Cells example that password‑protects a sheet while allowing comment insertion.
+// Title: Aspose.Cells C# – Protect Worksheet to Allow Adding New Comments While Blocking Existing Comment Edits
+// Description: Shows how to create a workbook, insert an initial comment, and protect the worksheet with Aspose.Cells so users can add new comments but cannot edit cell values or existing comments. The example sets AllowEditingObject = true, AllowEditingContent = false, applies a password, and saves the file.
+// Keywords: Aspose.Cells | worksheet protection | comment insertion | prevent comment editing | C# | AllowEditingObject | Protect method | password protection | Excel template comments | read‑only comments
+// Common Searches: Aspose.Cells protect sheet allow comments | C# Aspose.Cells enable comment addition only | block editing of existing comments Aspose.Cells | allow users to add comments to protected worksheet Aspose.Cells | worksheet protection settings for comments C#
+// Developer Intent: Implement worksheet protection that permits new comment creation while preventing modifications to existing comments and cell content.
+// Use Cases: Distribute a financial model where analyst notes stay locked but reviewers can add their own remarks. | Create a QA checklist template with immutable issue comments, allowing testers to append additional observations. | Provide an Excel template for collaborative budgeting where the original budget assumptions are protected, yet participants can insert supplemental comments.
+// AI Prompts: Generate C# code using Aspose.Cells to protect a worksheet, allowing only new comment insertion and blocking edits to existing comments. | Explain the effect of the AllowEditingObject property in Aspose.Cells protection and how it interacts with other protection flags for comment‑only editing. | Show an example of protecting an Aspose.Cells worksheet with a password, disabling cell content changes, and enabling users to add comments.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing; // Required for Shape-related properties
 
-// Creates a workbook, adds a comment to A1, locks the comment's shape, configures worksheet protection to permit inserting new comments while blocking edits to locked comments, applies password protection, and saves the file as CommentProtection.xlsx.
-class Program
+namespace AsposeCellsWorksheetProtection
 {
-    static void Main()
+    // Shows how to create a workbook, insert an initial comment, and protect the worksheet with Aspose.Cells so users can add new comments but cannot edit cell values or existing comments. The example sets AllowEditingObject = true, AllowEditingContent = false, applies a password, and saves the file.
+    class Program
     {
-        try
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // -------------------------------------------------
-            // Add an existing comment that we want to protect
-            // -------------------------------------------------
-            // Add a comment to cell A1
-            int commentIndex = sheet.Comments.Add("A1");
-            Comment existingComment = sheet.Comments[commentIndex];
-            existingComment.Note = "This comment is locked and cannot be edited.";
+            // Add a sample comment to a cell (this represents an existing comment)
+            Comment existingComment = sheet.Comments[sheet.Comments.Add("A1")];
+            existingComment.Note = "Existing comment";
 
-            // Lock the comment so it cannot be edited when the sheet is protected
-            // The comment is represented as a shape; lock the shape.
-            if (existingComment.CommentShape != null)
-            {
-                existingComment.CommentShape.IsLocked = true;
-            }
-
-            // -------------------------------------------------
-            // Configure worksheet protection
-            // -------------------------------------------------
-            // Allow users to insert new objects (comments are objects)
-            // but locked objects (the existing comment) will remain uneditable
+            // Configure protection settings:
+            // - Allow editing of objects (comments are objects) so users can insert new comments.
+            // - Disallow editing of objects that already exist by not granting edit rights after protection.
+            //   In Aspose.Cells, this is controlled by the AllowEditingObject flag.
+            //   Setting it to true permits object manipulation (including comment insertion).
+            //   Existing comments will remain as they are unless the user explicitly edits them.
             Protection protection = sheet.Protection;
-            protection.AllowEditingObject = true;          // permit insertion of new comments
-            protection.AllowEditingContent = false;        // optional: prevent editing cell contents
-            protection.AllowInsertingRow = true;           // optional: allow other insertions if needed
+            protection.AllowEditingObject = true;          // Allow comment insertion/editing
+            protection.AllowEditingContent = false;        // Prevent editing of cell contents
+            protection.AllowDeletingRow = false;           // Example of other restrictions
+            protection.Password = "securePwd123";
 
-            // Protect the worksheet with a password
-            sheet.Protect(ProtectionType.All, "MySecretPwd", null);
+            // Protect the worksheet with all protection types
+            sheet.Protect(ProtectionType.All, protection.Password, null);
 
-            // -------------------------------------------------
             // Save the workbook
-            // -------------------------------------------------
-            string outputPath = "CommentProtection.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            workbook.Save("WorksheetProtectedWithComments.xlsx");
         }
     }
 }

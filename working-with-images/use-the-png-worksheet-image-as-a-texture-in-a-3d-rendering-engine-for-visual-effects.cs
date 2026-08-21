@@ -1,54 +1,84 @@
+// Title: Export an Excel worksheet to PNG bytes with Aspose.Cells (C#) for 3D engine textures
+// Description: This example creates a workbook, fills it with data, configures ImageOrPrintOptions for PNG output, renders the first sheet to a MemoryStream, and returns the PNG as a byte array. The image can be saved locally or streamed directly to graphics APIs such as Unity, Unreal, or OpenGL.
+// Keywords: Aspose.Cells PNG export | C# worksheet to image | in‑memory PNG bytes | Excel texture for 3D engine | SheetRender to PNG | convert spreadsheet to texture | Unity texture2d from Excel | OpenGL texture from PNG
+// Common Searches: Aspose.Cells render worksheet to PNG bytes C# | Get Excel sheet image without saving file | Use Excel PNG as texture in Unity | Convert spreadsheet to OpenGL texture | C# export Excel as in‑memory PNG
+// Developer Intent: Produce a PNG representation of an Excel worksheet in memory so it can be consumed directly by a 3D rendering pipeline.
+// Use Cases: Generate a sales‑report texture for a Unity game by feeding the PNG byte array into Texture2D.LoadImage. | Stream the PNG to a remote service that supplies textures for web‑based 3D visualizations. | Save the image locally for QA before integrating it into an Unreal Engine material.
+// AI Prompts: Write C# code that converts the pngBytes array from Aspose.Cells into a Unity Texture2D. | Show how to upload the in‑memory PNG to an OpenGL texture using OpenTK in C#. | Create a method that renders multiple worksheets to separate PNG byte arrays for batch texture generation.
+
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-class Program
+namespace WorksheetTextureDemo
 {
-    static void Main()
+    // This example creates a workbook, fills it with data, configures ImageOrPrintOptions for PNG output, renders the first sheet to a MemoryStream, and returns the PNG as a byte array. The image can be saved locally or streamed directly to graphics APIs such as Unity, Unreal, or OpenGL.
+    class Program
     {
-        // 1. Create a new workbook and add some sample data.
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["A1"].PutValue("Product");
-        worksheet.Cells["B1"].PutValue("Quantity");
-        worksheet.Cells["A2"].PutValue("Apples");
-        worksheet.Cells["B2"].PutValue(150);
-        worksheet.Cells["A3"].PutValue("Oranges");
-        worksheet.Cells["B3"].PutValue(200);
-
-        // 2. Render the worksheet to a PNG image in memory using SheetRender.
-        ImageOrPrintOptions renderOptions = new ImageOrPrintOptions();
-        renderOptions.ImageType = ImageType.Png;               // PNG output
-        SheetRender sheetRender = new SheetRender(worksheet, renderOptions);
-
-        byte[] worksheetPng;
-        using (MemoryStream pngStream = new MemoryStream())
+        static void Main()
         {
-            // Render first page (index 0) to the stream – follows the provided rule.
-            sheetRender.ToImage(0, pngStream);
-            worksheetPng = pngStream.ToArray();                // Capture image bytes
+            try
+            {
+                // ------------------------------------------------------------
+                // 1. Create a workbook and fill it with sample data
+                // ------------------------------------------------------------
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Product");
+                sheet.Cells["B1"].PutValue("Sales");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["B2"].PutValue(1200);
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["B3"].PutValue(850);
+                sheet.Cells["A4"].PutValue("C");
+                sheet.Cells["B4"].PutValue(430);
+
+                // ------------------------------------------------------------
+                // 2. Render the worksheet to a PNG image in memory
+                // ------------------------------------------------------------
+                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                {
+                    ImageType = Aspose.Cells.Drawing.ImageType.Png,
+                    OnePagePerSheet = true
+                };
+
+                // Use the SheetRender constructor (lifecycle rule)
+                SheetRender renderer = new SheetRender(sheet, imgOptions);
+
+                byte[] pngBytes;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    // Render first page (index 0) to the stream (lifecycle rule)
+                    renderer.ToImage(0, ms);
+                    pngBytes = ms.ToArray(); // Capture the PNG data
+                }
+
+                Console.WriteLine($"Worksheet rendered to PNG ({pngBytes.Length} bytes).");
+
+                // ------------------------------------------------------------
+                // 3. (Optional) Save the PNG to disk
+                // ------------------------------------------------------------
+                try
+                {
+                    string outputPath = "worksheet.png";
+                    File.WriteAllBytes(outputPath, pngBytes);
+                    Console.WriteLine($"Saved PNG to {Path.GetFullPath(outputPath)}");
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"Failed to save PNG file: {ex.Message}");
+                }
+
+                // ------------------------------------------------------------
+                // 4. (Optional) Further processing of the PNG bytes can be done here
+                // ------------------------------------------------------------
+                // For example, uploading to a graphics library or converting to another format.
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-
-        // 3. Add a shape that will use the rendered worksheet image as a texture.
-        //    The shape is a rectangle positioned at row 5, column 2.
-        Shape texturedShape = worksheet.Shapes.AddRectangle(5, 2, 5, 2, 250, 150);
-        texturedShape.Fill.FillType = FillType.Texture;        // Enable texture fill
-
-        // 4. Configure the texture fill with the image data from step 2.
-        TextureFill textureFill = texturedShape.Fill.TextureFill;
-        textureFill.ImageData = worksheetPng;                  // Set the PNG as texture
-        textureFill.IsTiling = true;                          // Tile the texture
-        textureFill.Scale = 0.9;                               // Slightly shrink the texture
-
-        // 5. Apply 3‑D formatting to enhance visual effects.
-        texturedShape.ThreeDFormat.Material = PresetMaterialType.Metal; // Metallic look
-        texturedShape.ThreeDFormat.ExtrusionHeight = 20;                // Give depth
-        texturedShape.ThreeDFormat.RotationX = 25;                     // Tilt X
-        texturedShape.ThreeDFormat.RotationY = 15;                     // Tilt Y
-
-        // 6. Save the workbook with the textured 3‑D shape.
-        workbook.Save("WorkbookWith3DTextureShape.xlsx");
     }
 }

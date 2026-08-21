@@ -1,61 +1,60 @@
+// Title: Remove hidden external link from an Excel workbook using Aspose.Cells for .NET
+// Description: Load a workbook, scan the Worksheets.ExternalLinks collection for links with IsVisible = false, delete the hidden link, verify that no invisible links remain, and save the updated file.
+// Keywords: Aspose.Cells remove hidden external link | delete invisible external link .NET | ExternalLinkCollection IsVisible | C# Aspose.Cells external links | verify external link removal
+// Common Searches: how to delete hidden external links with Aspose.Cells | remove invisible external link from Excel using C# | check for hidden external links after removal Aspose | Aspose.Cells external link visibility
+// Developer Intent: Programmatically locate and delete a non‑visible external link in a workbook and confirm its successful removal.
+// Use Cases: Sanitize workbooks before distribution to eliminate hidden data connections. | Strip confidential external sources that were concealed in shared spreadsheets. | Ensure compliance by confirming only visible external links exist after processing.
+// AI Prompts: Write C# code with Aspose.Cells that removes all ExternalLink objects where IsVisible is false and returns a boolean indicating remaining hidden links. | Create a method that logs the name and index of each hidden external link before deletion using Aspose.Cells for .NET. | Explain step‑by‑step how to verify that no hidden external links are left in a workbook after removal.
+
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExternalLinkRemoval
+// Load a workbook, scan the Worksheets.ExternalLinks collection for links with IsVisible = false, delete the hidden link, verify that no invisible links remain, and save the updated file.
+class RemoveHiddenExternalLink
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook containing external links
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the external links collection
+        ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
+
+        // Locate the index of the hidden external link (IsVisible == false)
+        int hiddenLinkIndex = -1;
+        for (int i = 0; i < externalLinks.Count; i++)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add some external links to the workbook
-            // These links are for demonstration; in a real scenario the workbook would already contain them
-            ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
-            externalLinks.Add("C:\\Data\\Link1.xlsx", new string[] { "Sheet1!A1" });
-            externalLinks.Add("C:\\Data\\Link2.xlsx", new string[] { "Sheet1!B1" });
-            externalLinks.Add("C:\\Data\\Link3.xlsx", new string[] { "Sheet1!C1" });
-
-            Console.WriteLine("Initial external links count: " + externalLinks.Count);
-
-            // Identify hidden external links (IsVisible == false) and remove them
-            // Since IsVisible is read‑only, we simply demonstrate removal of any link that meets the condition
-            for (int i = externalLinks.Count - 1; i >= 0; i--)
+            if (!externalLinks[i].IsVisible)
             {
-                ExternalLink link = externalLinks[i];
-                if (!link.IsVisible) // hidden link condition
-                {
-                    externalLinks.RemoveAt(i);
-                    Console.WriteLine($"Removed hidden external link at index {i}: {link.DataSource}");
-                }
+                hiddenLinkIndex = i;
+                break;
             }
-
-            // If there were no hidden links, remove the first link for demonstration purposes
-            if (externalLinks.Count > 0 && externalLinks[0].IsVisible)
-            {
-                Console.WriteLine("No hidden links found; removing the first external link for demo.");
-                externalLinks.RemoveAt(0);
-            }
-
-            // Verify that the external link has been removed
-            Console.WriteLine("External links count after removal: " + externalLinks.Count);
-            bool anyHidden = false;
-            foreach (ExternalLink link in externalLinks)
-            {
-                if (!link.IsVisible)
-                {
-                    anyHidden = true;
-                    break;
-                }
-            }
-            Console.WriteLine("Any hidden external links remaining? " + anyHidden);
-
-            // Save the workbook (optional)
-            workbook.Save("ExternalLinkRemovalDemo.xlsx");
         }
+
+        // Remove the hidden external link if it exists
+        if (hiddenLinkIndex >= 0)
+        {
+            externalLinks.RemoveAt(hiddenLinkIndex);
+            Console.WriteLine("Hidden external link removed.");
+        }
+        else
+        {
+            Console.WriteLine("No hidden external link found.");
+        }
+
+        // Verify that no hidden external links remain
+        bool hiddenLinkStillExists = false;
+        for (int i = 0; i < externalLinks.Count; i++)
+        {
+            if (!externalLinks[i].IsVisible)
+            {
+                hiddenLinkStillExists = true;
+                break;
+            }
+        }
+        Console.WriteLine("Verification - hidden link present after removal: " + hiddenLinkStillExists);
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,31 +1,62 @@
-// Title: C# – Export Excel to CSV with Evaluated Formulas Using Aspose.Cells
-// Description: Loads an .xlsx workbook, forces a full formula calculation, strips all formulas leaving only their computed values, and saves the first worksheet as a value‑only CSV file.
-// Keywords: Aspose.Cells | C# | .NET | Excel to CSV | evaluate formulas | remove formulas | static CSV export | Workbook.CalculateFormula | Cells.RemoveFormulas | SaveFormat.Csv
-// Common Searches: Aspose.Cells export Excel to CSV with formula results | C# remove formulas before saving as CSV | calculate all formulas then convert workbook to CSV | static CSV export from Excel using Aspose.Cells | how to strip formulas in Aspose.Cells
-// Developer Intent: Create a CSV file from an Excel workbook where every formula is pre‑calculated and replaced by its value.
-// Use Cases: Generate a plain‑text report from a calculation‑intensive spreadsheet for downstream analytics. | Convert user‑filled Excel templates to value‑only CSV files for systems that reject formulas. | Automate data extraction from Excel to CSV for integration with legacy import pipelines.
-// AI Prompts: Write C# code with Aspose.Cells that loads an .xlsx, evaluates all formulas, removes them, and saves the result as a CSV. | Explain the effect of Cells.RemoveFormulas on the CSV output produced by Aspose.Cells. | Provide a solution to export each worksheet of a workbook to separate CSV files after evaluating all formulas.
+// Title: C# – Export Excel to CSV with Formulas Evaluated Using Aspose.Cells
+// Description: Load an .xlsx file with Aspose.Cells, calculate all formulas, replace each formula with its result via RemoveFormulas, and save the workbook as a static CSV file.
+// Keywords: Aspose.Cells CSV export | C# Excel to CSV conversion | evaluate formulas Aspose.Cells | RemoveFormulas method | static CSV export | Workbook.Save CSV | calculate all formulas .NET
+// Common Searches: export Excel to CSV with evaluated formulas Aspose.Cells | remove formulas before saving CSV C# | calculate workbook formulas Aspose.Cells then export | static CSV from Excel using Aspose.Cells .NET
+// Developer Intent: Generate a CSV file from an Excel workbook where every formula is replaced by its calculated value.
+// Use Cases: Create a data‑only CSV report from a workbook that contains complex calculations. | Automate batch conversion of multiple .xlsx files to CSV for downstream systems that require static values. | Prepare CSV files for import into databases or analytics tools without carrying over Excel formulas.
+// AI Prompts: Write C# code with Aspose.Cells to open an .xlsx, evaluate all formulas, replace them with values, and save as CSV. | Explain the effect of Worksheet.Cells.RemoveFormulas on the CSV output produced by Aspose.Cells. | Provide performance tips for converting large workbooks to CSV while ensuring formulas are fully calculated.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an .xlsx workbook, forces a full formula calculation, strips all formulas leaving only their computed values, and saves the first worksheet as a value‑only CSV file.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Load an .xlsx file with Aspose.Cells, calculate all formulas, replace each formula with its result via RemoveFormulas, and save the workbook as a static CSV file.
+    public class WorkbookToCsvExport
     {
-        // Load the source workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        public static void Main(string[] args)
+        {
+            Run();
+        }
 
-        // Calculate all formulas so that their results are up‑to‑date
-        workbook.CalculateFormula();
+        public static void Run()
+        {
+            // Path to the source Excel file
+            string sourcePath = "input.xlsx";
 
-        // Replace formulas with their evaluated values for static export
-        workbook.Worksheets[0].Cells.RemoveFormulas();
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Error: The file \"{sourcePath}\" was not found.");
+                return;
+            }
 
-        // Save the workbook as CSV (values only, no formulas)
-        workbook.Save("output.csv", SaveFormat.Csv);
+            try
+            {
+                // Load the workbook from the file
+                Workbook workbook = new Workbook(sourcePath);
 
-        Console.WriteLine("Workbook has been exported to CSV with formulas evaluated.");
+                // Calculate all formulas in the workbook so that their results are up‑to‑date
+                workbook.CalculateFormula();
+
+                // Replace formulas with their calculated values for each worksheet
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // RemoveFormulas replaces each formula with its evaluated result
+                    sheet.Cells.RemoveFormulas();
+                }
+
+                // Save the workbook as CSV (static data export, no formulas)
+                workbook.Save("output.csv", SaveFormat.Csv);
+
+                Console.WriteLine("Workbook has been exported to CSV with formulas evaluated.");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

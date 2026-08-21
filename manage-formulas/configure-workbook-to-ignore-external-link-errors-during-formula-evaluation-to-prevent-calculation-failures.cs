@@ -1,47 +1,50 @@
-// Title: Ignore Missing External Links During Formula Calculation with Aspose.Cells for .NET
-// Description: Shows how to enable CalculationOptions.IgnoreError in Aspose.Cells so formulas that reference external workbooks are evaluated without triggering link‑related exceptions, then saves the result.
-// Keywords: Aspose.Cells ignore external links | CalculationOptions IgnoreError .NET | skip missing external references Excel | Aspose.Cells calculate formula without external workbook | C# Aspose.Cells external link error handling
-// Common Searches: Aspose.Cells ignore external link errors | CalculationOptions.IgnoreError example C# | prevent formula failure due to missing external workbook Aspose.Cells | how to calculate formulas with broken external links in .NET
-// Developer Intent: Suppress errors caused by absent external references while calculating formulas in an Aspose.Cells workbook.
-// Use Cases: Run batch calculations on templates that contain placeholder external links. | Generate reports from workbooks where external sources are unavailable or intentionally omitted. | Process large collections of files with broken links without interrupting the calculation workflow.
-// AI Prompts: Provide a C# snippet that sets CalculationOptions.IgnoreError to true, calculates all formulas, and saves the workbook. | Explain the impact of enabling IgnoreError on external link handling versus other calculation errors in Aspose.Cells. | Show how to catch and log only non‑ignored calculation errors while skipping missing external link exceptions.
+// Title: Aspose.Cells for .NET – Suppress External Link Errors When Calculating Formulas
+// Description: Demonstrates how to configure a Workbook to ignore missing external‑link errors by setting CalculationOptions.IgnoreError to true, applying the option to workbook.CalculateFormula, and saving the result. Includes correct external reference syntax and error‑free execution.
+// Keywords: Aspose.Cells ignore external link errors | CalculationOptions IgnoreError .NET | suppress formula errors Aspose.Cells | missing external workbook reference | disable external link errors Excel | Aspose.Cells calculate formula without links
+// Common Searches: Aspose.Cells ignore external link errors | CalculationOptions.IgnoreError example C# | prevent formula failure missing external workbook Aspose.Cells | how to suppress external reference errors in Excel using Aspose.Cells | calculate formulas without external links Aspose.Cells .NET
+// Developer Intent: Avoid calculation exceptions caused by broken or unavailable external workbook references.
+// Use Cases: Generate reports that contain external formulas when the source files are not deployed. | Process user‑uploaded Excel templates with broken links on a server without raising errors. | Run batch calculations on workbooks in a cloud service where external links cannot be resolved.
+// AI Prompts: Show code that sets CalculationOptions.IgnoreError and logs cells that had errors suppressed. | Explain how to combine IgnoreError with Recursive and EnableIterativeCalculation options in Aspose.Cells. | Provide a step‑by‑step guide to disable external link updating while still allowing normal formula evaluation.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Shows how to enable CalculationOptions.IgnoreError in Aspose.Cells so formulas that reference external workbooks are evaluated without triggering link‑related exceptions, then saves the result.
+// Demonstrates how to configure a Workbook to ignore missing external‑link errors by setting CalculationOptions.IgnoreError to true, applying the option to workbook.CalculateFormula, and saving the result. Includes correct external reference syntax and error‑free execution.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (or load an existing one)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Add a formula that references an external workbook
+            // Add a formula that references an external workbook (which may be missing)
             Worksheet sheet = workbook.Worksheets[0];
-            // Correct external reference syntax: ='[ExternalSource.xlsx]Sheet1'!A1
-            sheet.Cells["A1"].Formula = "='[ExternalSource.xlsx]Sheet1'!A1";
+            // Correct external reference syntax: ='[FileName]SheetName'!CellReference
+            sheet.Cells["A1"].Formula = "='[NonExistingFile.xlsx]Sheet1'!$A$1";
 
-            // Configure calculation options to ignore errors (including missing external links)
+            // Set calculation options to ignore errors (including external link errors)
             CalculationOptions calcOptions = new CalculationOptions
             {
-                IgnoreError = true
+                IgnoreError = true // suppress errors during formula evaluation
             };
 
-            // Perform formula calculation with the configured options
+            // Calculate all formulas using the configured options
             workbook.CalculateFormula(calcOptions);
 
-            // Save the workbook after calculation
-            string outputPath = "Output_IgnoringExternalLinkErrors.xlsx";
+            // Display the result of the cell after calculation
+            Console.WriteLine("A1 value after calculation: " + sheet.Cells["A1"].StringValue);
+
+            // Save the workbook (optional)
+            string outputPath = "IgnoreExternalLinkErrors.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

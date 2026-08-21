@@ -1,44 +1,38 @@
-// Title: C# – Update a Cell Formula and Recalculate Workbook with Aspose.Cells
-// Description: Loads an Excel file, changes the formula in cell A1 from =B1 to =C1, recalculates all formulas, prints the new value, and saves the workbook as a new file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# formula update | modify Excel formula programmatically | recalculate workbook Aspose | save workbook after formula change | .NET Excel automation | cell reference replacement
-// Common Searches: Aspose.Cells change cell formula C# | recalculate formulas after editing Aspose.Cells | how to update Excel formula programmatically .NET | save workbook after formula modification Aspose | verify formula result Aspose.Cells
-// Developer Intent: Replace the formula in a specific cell, trigger a full workbook calculation, and persist the updated file.
-// Use Cases: Adjust formulas automatically when columns are inserted or removed. | Batch‑replace outdated cell references before generating financial reports. | Validate that a formula edit produces the expected result prior to distribution. | Create dynamic templates where formulas are re‑pointed based on user input.
-// AI Prompts: Write C# code using Aspose.Cells to change the formula in cell B2 from "=D5" to "=E5", recalculate only dependent cells, and display the new value. | Explain how to iterate through a worksheet and update multiple formulas to new cell references while ensuring the entire workbook is recalculated with Aspose.Cells for .NET. | Generate a script that loads an Excel workbook, replaces all occurrences of "=SUM(A1:A10)" with "=SUM(B1:B10)", runs CalculateFormula, and saves the result.
+// Title: C# – Load Excel workbook, modify a cell formula reference, recalculate with Aspose.Cells
+// Description: Demonstrates how to open an existing .xlsx file using Aspose.Cells for .NET, change the formula in cell A1 from referencing B1 to C1, trigger a full workbook recalculation, output the updated value, and save the result as a new file.
+// Keywords: Aspose.Cells C# | modify Excel formula programmatically | recalculate workbook Aspose.Cells | change cell reference in formula | load and save Excel file .NET | Workbook.CalculateFormula example
+// Common Searches: change formula cell reference Aspose.Cells C# | recalculate Excel workbook after formula edit | update Excel formula programmatically .NET | Aspose.Cells example modify cell formula | how to recalculate formulas with Aspose.Cells
+// Developer Intent: Load an existing workbook, replace a formula’s cell reference, recalculate all formulas, and verify the new value programmatically.
+// Use Cases: Automate updates to financial models when column positions shift. | Batch‑process reports to correct formula references after data restructuring. | Validate that formula changes produce expected results before publishing workbooks.
+// AI Prompts: Write C# code with Aspose.Cells that changes the formula in B2 from "=D2*2" to "=E2*2", recalculates the workbook, and prints the new value. | Show how to iterate over a dictionary of old‑to‑new cell references, update each formula accordingly, and save the workbook. | Explain how to capture, log, and handle exceptions for the value returned after calling Workbook.CalculateFormula.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaUpdateDemo
+// Demonstrates how to open an existing .xlsx file using Aspose.Cells for .NET, change the formula in cell A1 from referencing B1 to C1, trigger a full workbook recalculation, output the updated value, and save the result as a new file.
+class Program
 {
-    // Loads an Excel file, changes the formula in cell A1 from =B1 to =C1, recalculates all formulas, prints the new value, and saves the workbook as a new file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+        // Load an existing workbook from disk
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+        // Get the first worksheet and its cells collection
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-            // Assume cell A1 contains a formula that originally references B1, e.g., "=B1"
-            // Modify the formula to reference C1 instead
-            Cell targetCell = cells["A1"];
-            // Option 1: directly set the formula string
-            targetCell.Formula = "=C1";
-            // Option 2: use SetFormula (both achieve the same result)
-            // targetCell.SetFormula("=C1", null);
+        // Assume cell A1 originally contains a formula that references B1.
+        // Change the formula so it now references C1 instead.
+        Cell cell = cells["A1"];
+        cell.Formula = "=C1+10";
 
-            // Recalculate all formulas in the workbook
-            workbook.CalculateFormula();
+        // Recalculate all formulas in the workbook
+        workbook.CalculateFormula();
 
-            // Verify the updated value of A1 after recalculation
-            Console.WriteLine("Updated value in A1: " + targetCell.Value);
+        // Output the updated value of the modified cell to verify the change
+        Console.WriteLine("Updated value in A1: " + cell.Value);
 
-            // Save the modified workbook
-            workbook.Save("output.xlsx");
-        }
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

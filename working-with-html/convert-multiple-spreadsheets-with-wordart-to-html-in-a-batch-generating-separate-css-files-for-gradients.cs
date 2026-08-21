@@ -1,85 +1,90 @@
-// Title: Batch Convert Excel Files with WordArt to HTML (Separate CSS for Gradients) – C# Aspose.Cells
-// Description: A C# console utility that scans a folder for .xlsx, .xlsm and .xls workbooks, loads each with Aspose.Cells, and saves them as HTML pages. The HtmlSaveOptions are set to export each worksheet’s CSS to its own file and enable CSS custom properties, so gradient styles from WordArt are stored in separate CSS files alongside the HTML output.
-// Keywords: Aspose.Cells batch conversion | Excel to HTML C# | WordArt HTML export | ExportWorksheetCSSSeparately | EnableCssCustomProperties | gradient CSS Excel | HTML5 save options | automated Excel reporting | C# file system processing
-// Common Searches: convert multiple Excel files with WordArt to HTML using Aspose.Cells | Aspose.Cells HtmlSaveOptions separate CSS files for gradients | C# batch Excel to HTML conversion script | export WordArt styles to CSS when saving Excel as HTML | how to generate CSS folders for each worksheet in Aspose.Cells
-// Developer Intent: Automatically transform every Excel workbook in a directory—including those containing WordArt—into individual HTML pages with dedicated CSS files for gradient definitions.
-// Use Cases: Mass‑publish Excel‑based dashboards to a web portal while preserving WordArt styling. | Integrate into a nightly build pipeline that converts financial reports to HTML for client‑side viewing. | Create a lightweight HTML archive of legacy spreadsheets, keeping gradient CSS separate for easier maintenance. | Skip non‑Excel files and log any load or save errors for later review.
-// AI Prompts: Generate C# code that uses Aspose.Cells to batch convert Excel workbooks with WordArt to HTML, exporting each worksheet’s CSS to a separate file and enabling CSS custom properties for gradients. | Explain the impact of ExportWorksheetCSSSeparately and EnableCssCustomProperties on the HTML and CSS output when converting Excel to HTML with Aspose.Cells. | Provide a troubleshooting checklist for common failures (missing files, unsupported WordArt features, permission issues) during batch Excel‑to‑HTML conversion.
+// Title: Batch convert Excel files with WordArt to HTML5 using Aspose.Cells – separate CSS per worksheet
+// Description: C# utility that scans a folder for .xlsx workbooks, loads each with Aspose.Cells, and saves them as HTML5 pages. The HtmlSaveOptions are set to export each worksheet’s CSS to its own file (preserving gradient styles), write WordArt and other images as external files, and omit unused styles for a lightweight output.
+// Keywords: Aspose.Cells batch HTML export | C# Excel to HTML5 conversion | WordArt to HTML Aspose | ExportWorksheetCSSSeparately example | separate CSS per worksheet | external image export Aspose.Cells | ExcludeUnusedStyles usage | convert multiple Excel files | .NET Excel HTML conversion | gradient styles CSS Excel
+// Common Searches: batch convert Excel to HTML with Aspose.Cells | export WordArt as external image C# | Aspose.Cells ExportWorksheetCSSSeparately tutorial | save Excel worksheets to separate CSS files | HTML5 output from multiple .xlsx files | Aspose.Cells exclude unused styles example | C# script to convert folder of Excel files to HTML
+// Developer Intent: Automatically transform every Excel workbook in a directory into an HTML5 file, generating one CSS file per worksheet and saving WordArt and other graphics as separate image files.
+// Use Cases: Publish a collection of Excel dashboards on a website while keeping each sheet’s gradient styling isolated in its own CSS file. | Schedule nightly batch exports of reporting workbooks to HTML for fast, cache‑friendly web delivery. | Create static documentation from Excel templates where WordArt must remain as high‑quality images rather than Base64 strings.
+// AI Prompts: Generate C# code that uses Aspose.Cells to batch convert all .xlsx files in a directory to HTML5, exporting WordArt as external images and creating a distinct CSS file for each worksheet. | Explain how HtmlSaveOptions properties ExportWorksheetCSSSeparately, ExportImagesAsBase64, and ExcludeUnusedStyles affect the HTML output of workbooks containing WordArt. | Provide a step‑by‑step guide for configuring Aspose.Cells to produce separate CSS files for gradients when converting multiple Excel files to HTML.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace BatchConversion
+// C# utility that scans a folder for .xlsx workbooks, loads each with Aspose.Cells, and saves them as HTML5 pages. The HtmlSaveOptions are set to export each worksheet’s CSS to its own file (preserving gradient styles), write WordArt and other images as external files, and omit unused styles for a lightweight output.
+class BatchWordArtToHtml
 {
-    // A C# console utility that scans a folder for .xlsx, .xlsm and .xls workbooks, loads each with Aspose.Cells, and saves them as HTML pages. The HtmlSaveOptions are set to export each worksheet’s CSS to its own file and enable CSS custom properties, so gradient styles from WordArt are stored in separate CSS files alongside the HTML output.
-    class BatchWordArtToHtml
+    static void Main()
     {
-        static void Main()
+        // Folder containing source Excel files with WordArt
+        string sourceFolder = @"C:\InputExcels";
+
+        // Folder where HTML output and separate CSS files will be saved
+        string outputFolder = @"C:\OutputHtml";
+
+        try
         {
-            // Folder containing the source Excel files
-            string inputFolder = @"C:\InputExcels";
-
-            // Folder where HTML files and their CSS folders will be saved
-            string outputFolder = @"C:\OutputHtml";
-
-            // Verify input folder exists
-            if (!Directory.Exists(inputFolder))
+            // Ensure the source folder exists; if not, inform the user and exit
+            if (!Directory.Exists(sourceFolder))
             {
-                Console.WriteLine($"Input folder not found: {inputFolder}");
+                Console.WriteLine($"Source folder not found: {sourceFolder}");
                 return;
             }
 
-            // Ensure the output directory exists
+            // Ensure the output folder exists
             Directory.CreateDirectory(outputFolder);
 
-            // Retrieve all Excel files (xlsx, xlsm, xls) from the input folder
-            string[] excelFiles = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
-            foreach (string sourcePath in excelFiles)
+            // Process each Excel file in the source folder
+            foreach (string excelPath in Directory.GetFiles(sourceFolder, "*.xlsx"))
             {
-                string ext = Path.GetExtension(sourcePath).ToLowerInvariant();
-                if (ext != ".xlsx" && ext != ".xlsm" && ext != ".xls")
-                    continue; // Skip non‑Excel files
-
                 // Verify the file still exists before loading
-                if (!File.Exists(sourcePath))
+                if (!File.Exists(excelPath))
                 {
-                    Console.WriteLine($"File not found (skipped): {sourcePath}");
+                    Console.WriteLine($"File not found (skipped): {excelPath}");
                     continue;
                 }
 
                 try
                 {
                     // Load the workbook
-                    Workbook workbook = new Workbook(sourcePath);
-
-                    // Configure HTML save options
-                    HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                    using (Workbook workbook = new Workbook(excelPath))
                     {
-                        // Export each worksheet's CSS to a separate file (gradients are stored in CSS)
-                        ExportWorksheetCSSSeparately = true,
+                        // Configure HTML save options
+                        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                        {
+                            // Export each worksheet's CSS to a separate file (gradients will be in these CSS files)
+                            ExportWorksheetCSSSeparately = true,
 
-                        // Enable CSS custom properties to reuse gradient definitions efficiently
-                        EnableCssCustomProperties = true,
+                            // Export images (including WordArt) as separate files instead of Base64 strings
+                            ExportImagesAsBase64 = false,
 
-                        // Use HTML5 for modern markup (optional)
-                        HtmlVersion = HtmlVersion.Html5
-                    };
+                            // Use HTML5 for better standards compliance
+                            HtmlVersion = HtmlVersion.Html5,
 
-                    // Determine the output HTML file path
-                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
-                    string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+                            // Optional: keep unused styles excluded to reduce size
+                            ExcludeUnusedStyles = true
+                        };
 
-                    // Save the workbook as HTML; Aspose creates a companion folder for CSS and images
-                    workbook.Save(htmlPath, htmlOptions);
+                        // Determine output HTML file name (same as source file name with .html extension)
+                        string htmlFileName = Path.GetFileNameWithoutExtension(excelPath) + ".html";
+                        string htmlPath = Path.Combine(outputFolder, htmlFileName);
+
+                        // Save the workbook as HTML using the configured options
+                        workbook.Save(htmlPath, htmlOptions);
+
+                        Console.WriteLine($"Converted '{excelPath}' to HTML at '{htmlPath}'.");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing file '{sourcePath}': {ex.Message}");
+                    Console.WriteLine($"Error processing file '{excelPath}': {ex.Message}");
                 }
             }
 
-            Console.WriteLine("Batch conversion of spreadsheets with WordArt to HTML completed.");
+            Console.WriteLine("Batch conversion completed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

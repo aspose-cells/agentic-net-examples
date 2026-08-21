@@ -1,39 +1,35 @@
-// Title: Aspose.Cells for .NET – Place a custom footer at (0,0) on every PDF page (C#)
-// Description: Create a workbook, add optional data, set the left‑section footer text, set FooterMargin to 0, and save as PDF so the footer appears at the bottom‑left corner (coordinate 0,0) on each page.
-// Keywords: Aspose.Cells | C# | PDF footer | footer margin zero | custom footer text | set footer position | page setup footer | Aspose.Cells PDF export | footer coordinates | Aspose.Cells example
-// Common Searches: Aspose.Cells set footer at bottom of PDF | C# footer margin zero Aspose.Cells PDF | place custom footer (0,0) in generated PDF using Aspose.Cells
-// Developer Intent: Add a left‑section footer with custom text and position it at the page origin (0,0) for every page of a PDF generated from a workbook.
-// Use Cases: Add a legal disclaimer that must sit flush with the bottom edge of each PDF page. | Create invoices where terms and conditions appear as a footer anchored to the page margin. | Generate multi‑page reports that require a consistent footer aligned to the bottom‑left corner.
-// AI Prompts: Show C# code using Aspose.Cells to set a custom footer at coordinate (0,0) for all PDF pages. | How do I configure FooterMargin = 0 and add left‑section text to position a footer at the bottom edge of a PDF with Aspose.Cells? | Provide an Aspose.Cells example that places a custom footer at the page origin when saving a workbook as PDF.
+// Title: Aspose.Cells .NET: Place a Custom Footer at (0,0) on Every PDF Page
+// Description: Shows how to set the footer margin to zero inches, add custom footer text, and export a workbook to PDF so the footer is anchored at the page origin (0,0) on each page.
+// Keywords: Aspose.Cells PDF footer | footer margin zero inches | custom footer position | C# Aspose.Cells example | set footer coordinates | page origin footer | .NET workbook to PDF
+// Common Searches: Aspose.Cells set footer margin to zero | place footer at (0,0) in PDF using C# | add custom footer to every PDF page Aspose.Cells | how to position footer at bottom left in Aspose.Cells PDF | Aspose.Cells PDF footer placement tutorial
+// Developer Intent: Add a custom footer that starts at coordinate (0,0) on each page of a PDF generated from an Aspose.Cells workbook.
+// Use Cases: Insert a legal disclaimer that must begin at the very edge of every PDF page. | Generate invoices where terms and conditions appear flush with the page origin. | Create multi‑page reports that require a precisely positioned footer for branding consistency.
+// AI Prompts: Provide C# code to set the footer margin to zero inches and add custom text using Aspose.Cells for .NET. | Explain how to anchor a footer at (0,0) on each PDF page and save the workbook as PDF. | Show how to switch the footer section (left, center, right) while keeping it positioned at the page origin.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFooterExample
+// Shows how to set the footer margin to zero inches, add custom footer text, and export a workbook to PDF so the footer is anchored at the page origin (0,0) on each page.
+class Program
 {
-    // Create a workbook, add optional data, set the left‑section footer text, set FooterMargin to 0, and save as PDF so the footer appears at the bottom‑left corner (coordinate 0,0) on each page.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Add some sample content (optional)
+        worksheet.Cells["A1"].PutValue("Sample content for PDF");
 
-            // Add some sample data (optional, just to have content)
-            worksheet.Cells["A1"].PutValue("Sample content for PDF conversion.");
+        // Position the footer at the very bottom-left corner of the page
+        // Set the footer margin to zero inches so the footer starts at coordinate (0,0)
+        worksheet.PageSetup.FooterMarginInch = 0;
 
-            // Configure the footer:
-            // Set the left section (index 0) to the desired custom text.
-            // Setting FooterMargin to 0 positions the footer at the very bottom edge.
-            // This effectively places the text at coordinate (0,0) relative to the page margin.
-            worksheet.PageSetup.SetFooter(0, "Custom Footer Text");
-            worksheet.PageSetup.FooterMargin = 0; // centimeters from bottom edge
+        // Set the custom footer text in the center section (section index 1)
+        // You can change the section index to 0 (left) or 2 (right) as needed
+        worksheet.PageSetup.SetFooter(1, "Custom Footer Text");
 
-            // Save the workbook as PDF
-            workbook.Save("CustomFooter.pdf", SaveFormat.Pdf);
-        }
+        // Save the workbook as PDF; the footer will appear on every page at (0,0)
+        workbook.Save("CustomFooter.pdf", SaveFormat.Pdf);
     }
 }

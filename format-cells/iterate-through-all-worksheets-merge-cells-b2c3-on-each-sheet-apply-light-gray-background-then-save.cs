@@ -1,42 +1,46 @@
 // Title: C# – Merge B2:C3 on Every Worksheet and Apply Light Gray Fill with Aspose.Cells
-// Description: Creates a workbook, adds an extra sheet, iterates through all worksheets, merges the range B2:C3, applies a solid light‑gray background, and saves the result as MergedCellsLightGray.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | merge cells | B2:C3 | background color | light gray fill | iterate worksheets | style merged range | Excel automation | format cells
-// Common Searches: Aspose.Cells merge cells on all sheets | C# set background color for merged range | how to style merged cells Aspose.Cells | loop through worksheets and format cells .NET | merge B2:C3 and fill gray Aspose.Cells
-// Developer Intent: Merge B2:C3 on each worksheet, color it light gray, and save the workbook.
-// Use Cases: Create a consistent header block across multiple sheets. | Highlight a summary area on every worksheet with a shaded merged cell. | Prepare a template where the title region (B2:C3) is uniformly styled.
-// AI Prompts: Write C# code with Aspose.Cells that merges B2:C3 on every worksheet and sets a light gray background. | Show how to loop through all worksheets in a workbook and apply a solid gray style to a merged range. | Explain best practices for reusing a Style object when formatting merged cells across multiple sheets in Aspose.Cells.
+// Description: Creates a workbook, adds optional sheets, defines a solid light‑gray style, iterates through all worksheets to merge the range B2:C3, applies the style to the merged area, and saves the file as MergedSheets.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells merge cells C# | apply background color merged range | style merged cells Aspose.Cells | iterate worksheets format cells | save workbook Aspose.Cells
+// Common Searches: merge same cell range on all worksheets Aspose.Cells | set light gray fill for merged cells C# | loop through worksheets and format merged range | Aspose.Cells example merge B2:C3 and style | save styled workbook with Aspose.Cells .NET
+// Developer Intent: Merge cells B2:C3 on each worksheet, apply a light gray fill, and save the workbook.
+// Use Cases: Create a uniform header spanning B2:C3 on every sheet with a gray background. | Standardize a title block across multiple worksheets in a financial report. | Prepare a template where a merged cell is consistently styled for corporate branding.
+// AI Prompts: Write C# code using Aspose.Cells to merge B2:C3 on all worksheets and set a light gray background. | Show how to reuse a Style object for merged cells across multiple sheets in Aspose.Cells .NET. | Explain step‑by‑step how to iterate worksheets, merge a range, apply a solid fill, and save the workbook.
 
-using Aspose.Cells;
+using System;
 using System.Drawing;
+using Aspose.Cells;
 
-// Creates a workbook, adds an extra sheet, iterates through all worksheets, merges the range B2:C3, applies a solid light‑gray background, and saves the result as MergedCellsLightGray.xlsx using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsMergeExample
 {
-    static void Main()
+    // Creates a workbook, adds optional sheets, defines a solid light‑gray style, iterates through all worksheets to merge the range B2:C3, applies the style to the merged area, and saves the file as MergedSheets.xlsx using Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook (contains one default worksheet)
-        Workbook workbook = new Workbook();
-
-        // Add an extra worksheet so we have more than one sheet to process
-        workbook.Worksheets.Add();
-
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            // Merge cells B2:C3.
-            // B2 is row 1, column 1 (zero‑based). The range spans 2 rows and 2 columns.
-            sheet.Cells.Merge(1, 1, 2, 2);
+            // Create a new workbook (contains at least one worksheet)
+            Workbook workbook = new Workbook();
 
-            // Prepare a style with a light gray background
-            Style style = sheet.Cells[1, 1].GetStyle();
-            style.ForegroundColor = Color.LightGray;
-            style.Pattern = BackgroundType.Solid;
+            // Add a few extra worksheets for demonstration (optional)
+            workbook.Worksheets.Add();
+            workbook.Worksheets.Add();
 
-            // Apply the style to the merged cell (top‑left cell of the merged area)
-            sheet.Cells[1, 1].SetStyle(style);
+            // Define the style with a light gray background
+            Style grayStyle = workbook.CreateStyle();
+            grayStyle.Pattern = BackgroundType.Solid;
+            grayStyle.ForegroundColor = Color.LightGray;
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Merge cells B2:C3 (zero‑based indices: row 1, column 1, 2 rows, 2 columns)
+                sheet.Cells.Merge(1, 1, 2, 2);
+
+                // Apply the gray background style to the merged cell (top‑left cell of the range)
+                sheet.Cells[1, 1].SetStyle(grayStyle);
+            }
+
+            // Save the workbook to a file
+            workbook.Save("MergedSheets.xlsx", SaveFormat.Xlsx);
         }
-
-        // Save the workbook to a file
-        workbook.Save("MergedCellsLightGray.xlsx");
     }
 }

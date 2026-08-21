@@ -1,45 +1,43 @@
-// Title: Merge Cells F4:G5, Apply a Formula, and Export to CSV using Aspose.Cells for .NET
-// Description: Load an Excel workbook, merge the range F4:G5 on the first worksheet, put a value, set a formula that references the merged cell, recalculate all formulas, and save the result as a CSV file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells merge cells | Aspose.Cells CSV export | Aspose.Cells formula reference | C# merge cells | C# export to CSV | Aspose.Cells calculate formulas | Aspose.Cells .NET | Excel to CSV conversion | merged cell reference | worksheet.Save CSV
-// Common Searches: Aspose.Cells merge range F4:G5 C# | How to reference a merged cell in a formula with Aspose.Cells | Export Excel worksheet with merged cells to CSV using Aspose.Cells | Recalculate formulas after merging cells Aspose.Cells .NET | Save workbook as CSV after applying formulas Aspose.Cells
-// Developer Intent: Merge a specific cell range, use it in a formula, recalculate, and generate a CSV file.
-// Use Cases: Create a CSV report where a calculated value depends on a merged header cell. | Automate data preparation by merging cells, applying business logic, and exporting the result for downstream processing. | Convert an Excel template that contains merged cells and formulas into a flat CSV format for import into other systems.
-// AI Prompts: Generate C# code with Aspose.Cells that merges cells F4:G5, inserts a value, adds a formula referencing the merged cell, recalculates, and saves the worksheet as CSV. | Explain how Aspose.Cells handles formula evaluation for merged cells when exporting to CSV format. | Provide troubleshooting steps if the calculated result of a formula referencing a merged cell does not appear in the exported CSV.
+// Title: C# Aspose.Cells: Merge F4:G5, set a formula, calculate, and export to CSV
+// Description: Load an XLSX workbook with Aspose.Cells for .NET, merge the range F4:G5, assign a value to the merged cell, create a formula in H4 that references it, evaluate all formulas, and save the worksheet as a CSV file.
+// Keywords: Aspose.Cells merge cells C# | export CSV Aspose.Cells .NET | formula referencing merged cell | calculate formulas Aspose | Workbook.Save CSV example | C# spreadsheet manipulation
+// Common Searches: Aspose.Cells merge range and export CSV | C# set formula after merging cells Aspose | how to calculate formulas before CSV save Aspose.Cells | merge cells F4:G5 Aspose.Cells .NET
+// Developer Intent: Merge a specific cell block, apply a dependent formula, compute its result, and generate a CSV output using Aspose.Cells in C#.
+// Use Cases: Prepare a CSV report where header cells are merged for visual clarity before export. | Create a calculated column that depends on a merged cell value for downstream data processing. | Automate spreadsheet-to-CSV conversion with pre‑evaluated formulas for analytics pipelines.
+// AI Prompts: Write C# code with Aspose.Cells to merge cells F4:G5, add a formula that uses the merged cell, evaluate it, and save the sheet as CSV. | Explain the steps to calculate formulas after merging cells in Aspose.Cells and ensure the results appear in the exported CSV file. | Provide a concise tutorial for merging a range, inserting a formula, running calculations, and exporting to CSV using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-// Load an Excel workbook, merge the range F4:G5 on the first worksheet, put a value, set a formula that references the merged cell, recalculate all formulas, and save the result as a CSV file with Aspose.Cells for .NET.
-class Program
+// Load an XLSX workbook with Aspose.Cells for .NET, merge the range F4:G5, assign a value to the merged cell, create a formula in H4 that references it, evaluate all formulas, and save the worksheet as a CSV file.
+class MergeAndExportCsv
 {
     static void Main()
     {
-        // Path to the source workbook (modify as needed)
-        string inputFile = "input.xlsx";
-
-        // Load the workbook
-        Workbook workbook = new Workbook(inputFile);
+        // Load an existing workbook (replace with your actual file path)
+        string inputPath = "input.xlsx";
+        Workbook workbook = new Workbook(inputPath);
 
         // Access the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-        // Merge cells F4:G5.
-        // F4 -> row 3, column 5 (zero‑based)
-        // The range spans 2 rows and 2 columns.
-        worksheet.Cells.Merge(3, 5, 2, 2);
+        // Merge cells F4:G5 (zero‑based indices: row 3, column 5, 2 rows, 2 columns)
+        cells.Merge(3, 5, 2, 2);
 
-        // Optional: put a sample value into the merged cell.
-        worksheet.Cells["F4"].PutValue(10);
+        // Put a sample value into the merged cell for the formula to use
+        cells["F4"].PutValue(10);
 
-        // Insert a formula that references the merged cell.
-        // Example: place the formula in H6 (row 5, column 7).
-        worksheet.Cells["H6"].Formula = "=F4*2";
+        // Insert a formula in H4 that references the merged cell (F4)
+        cells["H4"].Formula = "=F4*2";
 
-        // Recalculate formulas so the result is stored.
+        // Calculate formulas so the result is stored
         workbook.CalculateFormula();
 
-        // Export the worksheet to CSV.
-        string outputFile = "output.csv";
-        workbook.Save(outputFile, SaveFormat.Csv);
+        // Export the worksheet to CSV
+        string outputPath = "output.csv";
+        workbook.Save(outputPath, SaveFormat.Csv);
+
+        Console.WriteLine("Merge completed, formula set, and CSV exported successfully.");
     }
 }

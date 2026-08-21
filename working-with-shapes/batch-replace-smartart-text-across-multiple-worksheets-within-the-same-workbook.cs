@@ -1,58 +1,89 @@
-// Title: C# – Batch replace SmartArt text across all worksheets using Aspose.Cells
-// Description: Loads an Excel file, walks through every worksheet and shape, extracts SmartArt via GetResultOfSmartArt, swaps a target placeholder with new text in each inner shape, and saves the workbook with OoxmlSaveOptions.UpdateSmartArt to apply the changes.
-// Keywords: Aspose.Cells SmartArt text replace | C# batch update SmartArt | GetResultOfSmartArt | UpdateSmartArt flag | iterate worksheets Aspose.Cells | GroupShape inner text | Excel SmartArt automation | Aspose.Cells .NET example
-// Common Searches: replace text in all SmartArt shapes Aspose.Cells C# | how to update SmartArt across multiple sheets | Aspose.Cells batch modify SmartArt diagram | save workbook with updated SmartArt
-// Developer Intent: Automatically substitute a specific placeholder string with new content in every SmartArt diagram present in all worksheets of an Excel workbook.
-// Use Cases: Refresh company branding in SmartArt diagrams of a multi‑sheet financial report. | Swap placeholder labels in training templates that rely on SmartArt flowcharts. | Update product names in regional sales decks that contain SmartArt visuals.
-// AI Prompts: Write C# code that finds and replaces a given phrase in all SmartArt objects of an Excel workbook using Aspose.Cells. | Explain the purpose of OoxmlSaveOptions.UpdateSmartArt and show how to enable it when saving a workbook. | Describe step‑by‑step how GetResultOfSmartArt converts a SmartArt shape to a GroupShape for text manipulation.
+// Title: C# – Batch Replace Placeholder Text in SmartArt Across All Worksheets with Aspose.Cells
+// Description: Loads an Excel workbook, iterates every worksheet, finds SmartArt shapes, accesses their grouped shapes via GetResultOfSmartArt, replaces a specified placeholder (e.g., &=$CompanyName) with a new value, and saves the file using OoxmlSaveOptions.UpdateSmartArt to refresh cached graphics.
+// Keywords: Aspose.Cells | C# SmartArt text replace | batch SmartArt update | replace placeholder in Excel SmartArt | GetResultOfSmartArt | GroupShape | UpdateSmartArt | multiple worksheets | Excel automation | Aspose.Cells .NET
+// Common Searches: Aspose.Cells replace text in SmartArt | C# batch replace placeholder in Excel SmartArt | How to update SmartArt text in all sheets using Aspose.Cells | Replace &=$CompanyName in SmartArt with Aspose.Cells .NET | Iterate SmartArt shapes across workbook Aspose.Cells | Refresh SmartArt after text change Aspose.Cells | SmartArt text replacement example C#
+// Developer Intent: Replace a placeholder string in every SmartArt shape throughout a workbook.
+// Use Cases: Insert company name into SmartArt diagrams of a financial report template. | Localize SmartArt captions for multilingual Excel dashboards. | Apply brand‑wide text changes after a corporate rebrand. | Automate dynamic data insertion into SmartArt for monthly reporting. | Generate customized SmartArt for client‑specific presentations.
+// AI Prompts: Write C# code using Aspose.Cells to search all worksheets for SmartArt shapes and replace a given token with a new value, ensuring UpdateSmartArt is enabled. | Explain the role of GetResultOfSmartArt and GroupShape when modifying SmartArt text in Aspose.Cells. | Create a robust batch routine that logs each replacement, handles missing placeholders, and catches exceptions during SmartArt processing. | Provide a PowerShell script that calls the compiled C# program to process multiple Excel files in a folder. | Suggest unit tests for verifying SmartArt text replacement logic with Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSmartArtBatchReplace
+namespace SmartArtBatchReplace
 {
-    // Loads an Excel file, walks through every worksheet and shape, extracts SmartArt via GetResultOfSmartArt, swaps a target placeholder with new text in each inner shape, and saves the workbook with OoxmlSaveOptions.UpdateSmartArt to apply the changes.
+    // Loads an Excel workbook, iterates every worksheet, finds SmartArt shapes, accesses their grouped shapes via GetResultOfSmartArt, replaces a specified placeholder (e.g., &=$CompanyName) with a new value, and saves the file using OoxmlSaveOptions.UpdateSmartArt to refresh cached graphics.
     class Program
     {
         static void Main()
         {
-            // Load the workbook that contains SmartArt objects
-            Workbook workbook = new Workbook("InputWorkbook.xlsx");
+            const string templatePath = "TemplateWithSmartArt.xlsx";
+            const string resultPath = "ResultWithSmartArtReplaced.xlsx";
 
-            // Text to find and its replacement
-            string oldText = "Placeholder";
-            string newText = "Replaced Text";
+            try
+            {
+                // Verify that the template file exists before loading
+                if (!File.Exists(templatePath))
+                {
+                    Console.WriteLine($"Template file not found: {templatePath}");
+                    return;
+                }
 
-            // Iterate through all worksheets in the workbook
+                // Load the workbook that contains SmartArt objects
+                Workbook workbook = new Workbook(templatePath);
+
+                // Define the placeholder text to search for and its replacement
+                string placeholder = "&=$CompanyName";   // example placeholder used in SmartArt
+                string newValue = "Contoso Ltd.";
+
+                // Perform batch replacement on SmartArt shapes across all worksheets
+                ReplaceSmartArtText(workbook, placeholder, newValue);
+
+                // Save the workbook with SmartArt update enabled
+                OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
+                {
+                    UpdateSmartArt = true   // ensure cached SmartArt shapes are refreshed
+                };
+                workbook.Save(resultPath, saveOptions);
+
+                Console.WriteLine($"SmartArt text replacement completed. Result saved to: {resultPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        /// <param name="workbook">The workbook to process.</param>
+        /// <param name="placeholder">The text to find inside SmartArt.</param>
+        /// <param name="newValue">The text to replace the placeholder with.</param>
+        static void ReplaceSmartArtText(Workbook workbook, string placeholder, string newValue)
+        {
+            // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through all shapes on the worksheet
+                // Iterate through each shape on the worksheet
                 foreach (Shape shape in sheet.Shapes)
                 {
                     // Process only SmartArt shapes
                     if (shape.IsSmartArt)
                     {
-                        // Convert the SmartArt to its grouped shape representation
+                        // Get the grouped shape representation of the SmartArt
                         GroupShape smartArtGroup = shape.GetResultOfSmartArt();
 
-                        // Iterate through each individual shape that makes up the SmartArt
+                        // Iterate through all grouped shapes that make up the SmartArt
                         foreach (Shape innerShape in smartArtGroup.GetGroupedShapes())
                         {
-                            // Replace the text inside the shape if it contains the old text
-                            if (!string.IsNullOrEmpty(innerShape.Text) && innerShape.Text.Contains(oldText))
+                            // If the shape contains text and matches the placeholder, replace it
+                            if (!string.IsNullOrEmpty(innerShape.Text) && innerShape.Text.Contains(placeholder))
                             {
-                                innerShape.Text = innerShape.Text.Replace(oldText, newText);
+                                innerShape.Text = innerShape.Text.Replace(placeholder, newValue);
                             }
                         }
                     }
                 }
             }
-
-            // Save the workbook with SmartArt update enabled
-            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
-            saveOptions.UpdateSmartArt = true; // Apply the text changes to SmartArt
-            workbook.Save("OutputWorkbook.xlsx", saveOptions);
         }
     }
 }

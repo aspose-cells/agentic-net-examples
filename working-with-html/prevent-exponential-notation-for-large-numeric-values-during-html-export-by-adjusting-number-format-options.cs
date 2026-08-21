@@ -1,34 +1,39 @@
-// Title: Export Large Numbers to HTML Without Scientific Notation Using Aspose.Cells for .NET
-// Description: Demonstrates how to insert a very large numeric value into a workbook, set the SignificantDigitsType to G17, and save the sheet as HTML so the number appears in plain decimal format instead of scientific notation.
-// Keywords: Aspose.Cells | C# | HTML export | large numbers | prevent scientific notation | SignificantDigitsType | G17 format | Excel to HTML | full‑precision display | US developers | European .NET community
-// Common Searches: Aspose.Cells export large number to HTML without exponential notation | C# prevent scientific notation in HTML output using Aspose.Cells | Set SignificantDigitsType G17 for HTML export in Aspose.Cells | How to keep big integers readable in HTML saved from Excel | Aspose.Cells number format options for web reports
-// Developer Intent: The developer needs to generate an HTML file from a workbook while ensuring that very large numeric values are rendered as full decimal strings rather than scientific (exponential) notation.
-// Use Cases: Financial dashboards where account numbers exceed 15 digits and must stay legible in a web view. | Web‑based invoices that contain product or serial codes larger than typical integer limits. | Scientific data portals that publish high‑precision identifiers without converting them to exponential form.
-// AI Prompts: Write C# code with Aspose.Cells that saves a worksheet to HTML, displaying a 20‑digit number in plain decimal using SignificantDigitsType.G17. | Explain the impact of SignificantDigitsType on number formatting in Aspose.Cells and recommend the best setting for HTML exports of large values. | Show how to programmatically verify that the generated HTML contains the exact numeric string and not scientific notation.
+// Title: Avoid Scientific Notation for Large Numbers When Exporting to HTML Using Aspose.Cells (.NET)
+// Description: C# sample that inserts a 20‑digit value, switches the workbook to 15‑digit SignificantDigitsType, applies a custom "0" number format, and saves to HTML with HtmlSaveOptions so the output shows the full integer instead of exponential form.
+// Keywords: Aspose.Cells HTML export | C# large integer display | prevent exponential notation | SignificantDigitsType Digits15 | custom number format 0 | no scientific notation | Aspose.Cells .NET | HtmlSaveOptions | worksheet to HTML | large numeric values
+// Common Searches: how to stop scientific notation in Aspose.Cells HTML output | Aspose.Cells export large numbers as plain text | set custom number format for HTML save in C# | SignificantDigitsType Digits15 usage example | prevent exponential format when converting workbook to HTML
+// Developer Intent: The developer wants an HTML representation of a spreadsheet where very large numeric cells are rendered as full numbers, not in scientific notation.
+// Use Cases: Publishing financial reports with 15‑digit account numbers that must appear unchanged in a web page. | Generating HTML invoices where product or SKU codes are long integers and should not be abbreviated. | Creating web‑ready dashboards that list identifiers or timestamps without exponent formatting.
+// AI Prompts: Write C# code with Aspose.Cells that exports a worksheet to HTML while guaranteeing all numeric cells stay in plain integer format. | Explain the interaction between SignificantDigitsType and custom number formats during HTML conversion in Aspose.Cells. | Show how to apply a style to an entire column to keep large numbers from being displayed in scientific notation when saved as HTML.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to insert a very large numeric value into a workbook, set the SignificantDigitsType to G17, and save the sheet as HTML so the number appears in plain decimal format instead of scientific notation.
+// C# sample that inserts a 20‑digit value, switches the workbook to 15‑digit SignificantDigitsType, applies a custom "0" number format, and saves to HTML with HtmlSaveOptions so the output shows the full integer instead of exponential form.
 class PreventExponentialHtmlExport
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle: create)
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Insert a large numeric value that would normally appear in exponential notation
+        // Insert a large numeric value that would normally be rendered in exponential notation
         sheet.Cells["A1"].PutValue(12345678901234567890.0);
 
-        // Adjust number format handling: use G17 format to avoid exponential notation
-        // This sets the global significant digits type for the workbook
-        workbook.Settings.SignificantDigitsType = SignificantDigitsType.G17;
+        // Set the global significant digits type to 15‑digit format to avoid scientific notation
+        workbook.Settings.SignificantDigitsType = SignificantDigitsType.Digits15;
 
-        // Prepare HTML save options (no special options needed beyond defaults)
+        // Apply a custom number format to the cell to force plain numeric display
+        Style style = workbook.CreateStyle();
+        style.Custom = "0";               // No decimal places, no exponent
+        sheet.Cells["A1"].SetStyle(style);
+
+        // Configure HTML save options (optional tweaks can be added here)
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.ExportFormula = false; // Export calculated values instead of formulas
 
-        // Save the workbook as HTML (lifecycle: save)
-        workbook.Save("LargeNumber.html", htmlOptions);
+        // Save the workbook as an HTML file with the specified options
+        workbook.Save("output.html", htmlOptions);
     }
 }

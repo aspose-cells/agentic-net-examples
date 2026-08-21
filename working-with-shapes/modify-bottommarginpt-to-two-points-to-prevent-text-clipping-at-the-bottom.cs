@@ -1,18 +1,18 @@
-// Title: Aspose.Cells .NET: Set Shape Text BottomMarginPt to 2 pts to Prevent Clipping
-// Description: Demonstrates how to create a workbook, add a rectangle shape, assign text, and configure the shape's TextBody.TextAlignment.BottomMarginPt property to 2 points so the text is fully visible and not cut off at the bottom. The workbook is saved as ShapeWithBottomMargin.xlsx.
-// Keywords: Aspose.Cells shape bottom margin | BottomMarginPt .NET | shape text clipping Aspose | adjust shape text margin C# | Aspose.Cells rectangle shape | prevent bottom text cut off
-// Common Searches: how to set bottom margin of shape text in Aspose.Cells | BottomMarginPt property example C# | prevent text clipping in Aspose.Cells shapes | increase bottom margin of shape text Aspose
-// Developer Intent: Apply a 2‑point bottom margin to a shape's text to avoid clipping.
-// Use Cases: Add labeled shapes to a report and ensure the text does not get truncated at the bottom. | Generate dynamic worksheets where each shape’s BottomMarginPt is standardized for consistent rendering. | Create a template that automatically adjusts shape text margins after inserting variable‑length content.
-// AI Prompts: Write C# code using Aspose.Cells to add a rectangle shape and set its TextBody.TextAlignment.BottomMarginPt to 2 points. | Explain the effect of BottomMarginPt on text layout inside shapes and how to use it to stop bottom clipping. | Provide a C# loop that iterates through all shapes on a worksheet and sets each shape's BottomMarginPt to 2 points.
+// Title: Set shape text bottom margin to 2 pt in Aspose.Cells for .NET
+// Description: Creates a workbook, adds a rectangle shape, assigns text, sets the TextBody.TextAlignment.BottomMarginPt to 2 points, and saves the file, ensuring the text is not clipped at the bottom.
+// Keywords: Aspose.Cells shape bottom margin | BottomMarginPt .NET | prevent text clipping Excel shape | adjust shape text margin | C# Aspose.Cells example
+// Common Searches: Aspose.Cells set bottom margin for shape text | shape text clipping fix Aspose.Cells | BottomMarginPt property usage | increase bottom margin of Excel shape programmatically | C# example for shape text margins in Aspose.Cells
+// Developer Intent: Apply a 2‑point bottom margin to a shape’s text so the content remains fully visible and is not cut off.
+// Use Cases: Designing report templates where shapes contain captions that must stay within the shape boundaries. | Automating bulk updates of existing worksheets to standardize text margins across all shapes. | Generating dashboards with multiple annotated shapes that require consistent visual spacing.
+// AI Prompts: Generate C# code that sets BottomMarginPt of a shape’s TextBody to a specified value using Aspose.Cells. | Explain the effect of BottomMarginPt on text rendering inside Excel shapes and how to choose an appropriate margin. | Provide a C# loop that iterates through all shapes in a worksheet and sets each shape’s bottom text margin to 2 points.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// Demonstrates how to create a workbook, add a rectangle shape, assign text, and configure the shape's TextBody.TextAlignment.BottomMarginPt property to 2 points so the text is fully visible and not cut off at the bottom. The workbook is saved as ShapeWithBottomMargin.xlsx.
-class Program
+// Creates a workbook, adds a rectangle shape, assigns text, sets the TextBody.TextAlignment.BottomMarginPt to 2 points, and saves the file, ensuring the text is not clipped at the bottom.
+class SetBottomMarginPt
 {
     static void Main()
     {
@@ -21,14 +21,14 @@ class Program
         Worksheet worksheet = workbook.Worksheets[0];
 
         // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, top, left, height, width
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 100, 200, 0);
+        // Parameters: upper left row, upper left column, top offset, left offset, height, width
+        Shape shape = worksheet.Shapes.AddRectangle(1, 1, 0, 0, 100, 200);
         shape.Text = "Sample text with increased bottom margin";
 
         // Set the bottom margin of the shape's text to 2 points
         shape.TextBody.TextAlignment.BottomMarginPt = 2.0;
 
-        // Save the workbook to a file
+        // Save the workbook
         workbook.Save("ShapeWithBottomMargin.xlsx");
     }
 }

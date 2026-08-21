@@ -1,20 +1,20 @@
-// Title: C# – Apply Aspose.Cells AutoFilter to show only rows where Status = "Completed"
-// Description: Creates a workbook, populates it with task data, sets an AutoFilter on range A1:D5, filters the Status column (index 2) for the value "Completed", refreshes the view to hide non‑matching rows, optionally checks hidden rows, and saves the file as FilteredByStatusCompleted.xlsx.
-// Keywords: Aspose.Cells C# | AutoFilter Excel .NET | filter rows by column value | hide rows programmatically | Excel status completed filter | worksheet filtering Aspose.Cells | C# Excel automation | filter Excel sheet by criteria | Aspose.Cells hide non‑matching rows | apply AutoFilter with Aspose
-// Common Searches: Aspose.Cells filter rows where Status = Completed | C# hide rows that do not meet AutoFilter criteria | How to use AutoFilter in Aspose.Cells .NET | Programmatically show only completed tasks in Excel using Aspose | Apply Excel AutoFilter with Aspose.Cells C# example
-// Developer Intent: Apply an AutoFilter so that only rows with Status equal to "Completed" stay visible, while all other rows are hidden.
-// Use Cases: Generate a task report that includes only completed items. | Create a clean dashboard view by automatically hiding pending or in‑progress rows. | Export a filtered list of completed entries for downstream processing or analytics.
-// AI Prompts: Show how to add a second filter condition (e.g., Status = "Completed" OR Owner = "Alice"). | Provide code to clear the AutoFilter and reveal all rows again. | Explain how to retrieve the row indices that remain visible after filtering.
+// Title: C# Aspose.Cells: AutoFilter to Show Only Rows with Status = 'Completed' and Hide the Rest
+// Description: Creates a workbook, adds ID, Status, and Value columns, sets an AutoFilter on range A1:C5, filters the Status column for the value "Completed", refreshes the view to hide non‑matching rows, prints hidden‑row flags for verification, and saves the result as FilteredStatusCompleted.xlsx.
+// Keywords: Aspose.Cells C# filter rows by column value | AutoFilter hide non‑matching rows Aspose.Cells | filter Excel rows status Completed .NET | programmatic Excel row hiding Aspose.Cells | C# Excel AutoFilter example
+// Common Searches: Aspose.Cells filter rows where Status = Completed | C# hide rows that do not meet AutoFilter criteria | How to apply AutoFilter to a specific column in Aspose.Cells | Show only completed items in Excel using Aspose.Cells C# | Retrieve hidden rows after applying AutoFilter Aspose.Cells
+// Developer Intent: Apply an AutoFilter that displays only rows whose Status column equals "Completed" and automatically hides every other row in a worksheet.
+// Use Cases: Generate a report that lists only completed tasks before exporting to Excel. | Automate data validation by confirming which rows are hidden after a status filter. | Create a clean view for end‑users that excludes pending or in‑progress items.
+// AI Prompts: Show how to extend the filter to include multiple statuses such as "Completed" and "InProgress" with Aspose.Cells. | Provide code to clear the AutoFilter and reveal all rows in the worksheet. | Explain how to obtain a collection of hidden row indices after applying an AutoFilter in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, populates it with task data, sets an AutoFilter on range A1:D5, filters the Status column (index 2) for the value "Completed", refreshes the view to hide non‑matching rows, optionally checks hidden rows, and saves the file as FilteredByStatusCompleted.xlsx.
+    // Creates a workbook, adds ID, Status, and Value columns, sets an AutoFilter on range A1:C5, filters the Status column for the value "Completed", refreshes the view to hide non‑matching rows, prints hidden‑row flags for verification, and saves the result as FilteredStatusCompleted.xlsx.
     public class FilterStatusCompletedDemo
     {
-        // Entry point required for console application
+        // Entry point for the console application
         public static void Main(string[] args)
         {
             try
@@ -23,7 +23,7 @@ namespace AsposeCellsExamples
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 
@@ -32,56 +32,46 @@ namespace AsposeCellsExamples
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate sample data
-            // Header row
-            cells["A1"].PutValue("ID");
-            cells["B1"].PutValue("Task");
-            cells["C1"].PutValue("Status");   // Status column (index 2)
-            cells["D1"].PutValue("Owner");
+            // Populate sample data with a "Status" column (column B)
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Status");
+            sheet.Cells["C1"].PutValue("Value");
 
-            // Data rows
-            cells["A2"].PutValue(1);
-            cells["B2"].PutValue("Design");
-            cells["C2"].PutValue("Completed");
-            cells["D2"].PutValue("Alice");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Completed");
+            sheet.Cells["C2"].PutValue(100);
 
-            cells["A3"].PutValue(2);
-            cells["B3"].PutValue("Development");
-            cells["C3"].PutValue("In Progress");
-            cells["D3"].PutValue("Bob");
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Pending");
+            sheet.Cells["C3"].PutValue(200);
 
-            cells["A4"].PutValue(3);
-            cells["B4"].PutValue("Testing");
-            cells["C4"].PutValue("Completed");
-            cells["D4"].PutValue("Charlie");
+            sheet.Cells["A4"].PutValue(3);
+            sheet.Cells["B4"].PutValue("Completed");
+            sheet.Cells["C4"].PutValue(150);
 
-            cells["A5"].PutValue(4);
-            cells["B5"].PutValue("Deployment");
-            cells["C5"].PutValue("Pending");
-            cells["D5"].PutValue("Diana");
+            sheet.Cells["A5"].PutValue(4);
+            sheet.Cells["B5"].PutValue("InProgress");
+            sheet.Cells["C5"].PutValue(120);
 
-            // Apply AutoFilter to the range that includes the header and all data rows
-            sheet.AutoFilter.Range = "A1:D5";
+            // Define the autofilter range (including header row)
+            sheet.AutoFilter.Range = "A1:C5";
 
-            // Filter the Status column (field index 2) for the value "Completed"
-            sheet.AutoFilter.Filter(2, "Completed");
+            // Apply filter on the "Status" column (field index 1) for the value "Completed"
+            sheet.AutoFilter.Filter(1, "Completed");
 
-            // Refresh the filter to hide rows that do not meet the criteria
+            // Refresh the filter to hide rows that do not match the criteria
             sheet.AutoFilter.Refresh();
 
-            // Verify which rows are hidden (optional)
+            // Output hidden row information for verification
             for (int row = 1; row <= sheet.Cells.MaxDataRow; row++)
             {
-                bool hidden = sheet.Cells.IsRowHidden(row);
-                Console.WriteLine($"Row {row + 1} hidden: {hidden}");
+                bool isHidden = sheet.Cells.IsRowHidden(row);
+                Console.WriteLine($"Row {row + 1} hidden: {isHidden}");
             }
 
-            // Save the workbook
-            string outputPath = "FilteredByStatusCompleted.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Save the filtered workbook
+            workbook.Save("FilteredStatusCompleted.xlsx", SaveFormat.Xlsx);
         }
     }
 }

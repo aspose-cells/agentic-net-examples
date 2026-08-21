@@ -1,21 +1,21 @@
-// Title: C# – Export Excel numbers as plain text in HTML with Aspose.Cells HtmlSaveOptions
-// Description: Shows how to stop scientific notation when converting an Excel workbook to HTML using Aspose.Cells for .NET. The sample applies a simple numeric format and enables HtmlSaveOptions.ExportNumericDataAsString (or the equivalent setting) so every numeric cell is written as plain text in the HTML output.
-// Keywords: Aspose.Cells | HtmlSaveOptions | ExportNumericDataAsString | plain numeric export | avoid scientific notation | C# | .NET | Excel to HTML | custom number format | HTML export of numbers | financial report HTML | engineering data HTML
-// Common Searches: Aspose.Cells export numbers as text HTML | prevent scientific notation in HTML export Aspose | HtmlSaveOptions ExportNumericDataAsString .NET | C# save Excel to HTML without scientific notation | how to force plain numbers in Aspose.Cells HTML output
-// Developer Intent: Save an Excel workbook to HTML so that all numeric cells appear as plain text rather than scientific notation.
-// Use Cases: Financial statements published on the web where large currency values must stay readable. | Engineering spreadsheets that require exact decimal representation in HTML tables. | Web dashboards that display identifier codes or measurements without exponential formatting. | Static HTML reports generated from Excel data for compliance documentation.
-// AI Prompts: Provide C# code that sets HtmlSaveOptions.ExportNumericDataAsString = true to export numbers as plain text with Aspose.Cells. | Explain how a custom number format and HtmlSaveOptions work together to eliminate scientific notation in HTML output. | List the NuGet packages and steps needed to convert an Excel workbook to HTML with all numeric cells rendered as plain strings.
+// Title: Aspose.Cells HtmlSaveOptions: Export Numeric Cells as Plain Text (No Scientific Notation) in C#/.NET
+// Description: This C# example shows how to stop scientific notation when converting an Excel workbook to HTML with Aspose.Cells. It creates a workbook, adds a large integer and a tiny decimal, applies a simple number style (Number = 0) to the cells, sets HtmlSaveOptions to export the displayed values and ignore column width, and saves the output so the numbers are rendered as ordinary text.
+// Keywords: Aspose.Cells | HtmlSaveOptions | C# | .NET | export numeric cells to HTML | disable scientific notation | plain number format | displayed values only | ignore column width | Excel to HTML conversion | cell style Number property
+// Common Searches: Aspose.Cells prevent scientific notation in HTML | HtmlSaveOptions export displayed values C# | format cells as plain numbers before HTML export | C# Aspose.Cells export numbers without exponent | show full numeric value in HTML using Aspose.Cells
+// Developer Intent: Create HTML output where numeric cells are rendered as ordinary text instead of scientific notation.
+// Use Cases: Web dashboards that need exact numeric representation without exponents | Financial statements or invoices displayed in browsers with human‑readable numbers | Regulatory data exports where scientific notation is prohibited | Embedding Excel data in web pages while preserving original formatting | Automated HTML reporting pipelines that require clear numeric values
+// AI Prompts: Provide C# code using Aspose.Cells to export a workbook to HTML with numbers shown as ordinary text, not scientific notation. | Show how to apply a non‑exponential number style to a range and configure HtmlSaveOptions to export displayed values only. | Explain which HtmlSaveOptions properties keep column width ignored and preserve cell formatting during Excel‑to‑HTML conversion.
 
 using System;
-using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExample
+namespace AsposeCellsHtmlExport
 {
-    // Shows how to stop scientific notation when converting an Excel workbook to HTML using Aspose.Cells for .NET. The sample applies a simple numeric format and enables HtmlSaveOptions.ExportNumericDataAsString (or the equivalent setting) so every numeric cell is written as plain text in the HTML output.
+    // This C# example shows how to stop scientific notation when converting an Excel workbook to HTML with Aspose.Cells. It creates a workbook, adds a large integer and a tiny decimal, applies a simple number style (Number = 0) to the cells, sets HtmlSaveOptions to export the displayed values and ignore column width, and saves the output so the numbers are rendered as ordinary text.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
@@ -23,32 +23,33 @@ namespace AsposeCellsExample
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate cells with numeric values that could be shown in scientific notation
-                sheet.Cells["A1"].PutValue(1234567890);
-                sheet.Cells["A2"].PutValue(0.0000001234);
+                // Populate cells with numeric values that would normally appear in scientific notation
+                sheet.Cells["A1"].PutValue(123456789);      // Large integer
+                sheet.Cells["A2"].PutValue(0.00000123);    // Small decimal
 
-                // Apply a style that forces plain numeric display (no scientific notation)
+                // Apply a plain number format to the cells to force non‑scientific display
                 Style plainStyle = workbook.CreateStyle();
-                plainStyle.Custom = "0"; // integer format; adjust as needed
-                sheet.Cells["A1"].SetStyle(plainStyle);
-                sheet.Cells["A2"].SetStyle(plainStyle);
+                plainStyle.Number = 0; // Integer format without exponent
 
-                // Configure HTML save options to export all cell data
+                // Apply the style to the range A1:A2
+                AsposeRange range = sheet.Cells.CreateRange("A1:A2");
+                range.ApplyStyle(plainStyle, new StyleFlag { All = true });
+
+                // Configure HtmlSaveOptions
                 HtmlSaveOptions htmlOptions = new HtmlSaveOptions
                 {
-                    ExportDataOptions = HtmlExportDataOptions.All
+                    // Export displayed values (not raw values)
+                    ExportDataOptions = HtmlExportDataOptions.All,
+                    // Ignore column width so the full formatted text is shown
+                    FormatDataIgnoreColumnWidth = true
                 };
 
-                // Define output file path
-                string outputPath = "PlainNumericExport.html";
-
-                // Save the workbook as HTML
-                workbook.Save(outputPath, htmlOptions);
-                Console.WriteLine($"Workbook successfully saved to '{Path.GetFullPath(outputPath)}'.");
+                // Save the workbook as HTML using the configured options
+                workbook.Save("NumericPlainText.html", htmlOptions);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

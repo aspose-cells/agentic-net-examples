@@ -1,52 +1,47 @@
-// Title: Aspose.Cells for .NET – Create a Camera Shape for a Range and Save as PNG
-// Description: This C# example shows how to add a camera shape that captures a specific cell range (A1:B2), convert the camera picture to a PNG image, write the image to disk, and save the workbook with the camera shape using Aspose.Cells.
-// Keywords: Aspose.Cells | C# | .NET | camera shape | Worksheet.Pictures.Camera | export range as image | save PNG from workbook | convert range to picture
-// Common Searches: Aspose.Cells camera shape C# example | How to capture a cell range as an image with Aspose.Cells | Save camera picture to PNG using Aspose.Cells | Export worksheet range to image .NET | Create picture from range Aspose.Cells
-// Developer Intent: Generate a camera picture for a defined cell range and export it as an image file.
-// Use Cases: Snapshot a table section for inclusion in reports or presentations. | Create thumbnail previews of worksheet areas for dashboards. | Export selected data as PNG for embedding in emails or external documents.
-// AI Prompts: Show C# code to create a camera shape for range C3:D10 and export it as a JPEG with Aspose.Cells. | Provide a snippet that adds a border to a camera picture before saving it as an image. | Explain how to reposition and resize a camera shape after it is created using Aspose.Cells.
+// Title: Aspose.Cells for .NET – Add a Camera Shape to Capture a Range and Export as PNG
+// Description: Shows how to create a workbook, populate cells, insert a camera shape that captures a specific range (e.g., A1:B2), position the picture, convert the shape to a PNG image using a MemoryStream, write the image to disk, and save the workbook.
+// Keywords: Aspose.Cells | C# camera shape | Excel range to image | Picture.Camera method | Export PNG | ToImage | .NET workbook | MemoryStream image | Excel snapshot | Aspose.Cells .NET
+// Common Searches: Aspose.Cells add camera shape C# | Export Excel range as PNG Aspose.Cells | Capture worksheet range as picture .NET | Picture.Camera example Aspose | Convert camera shape to image Aspose.Cells
+// Developer Intent: Insert a camera shape that captures a defined cell range and generate an image file from that shape.
+// Use Cases: Create a visual snapshot of a report section for embedding in PDFs or presentations. | Generate thumbnail images of data tables for web dashboards or portals. | Automate the export of selected Excel ranges as PNG files for email or API delivery.
+// AI Prompts: Provide C# code to add a camera shape for range C3:D10 and export it as a JPEG using Aspose.Cells. | Show how to place a camera picture at row 10, column 5 and programmatically set its width and height. | Explain how to obtain the picture index after adding a camera shape and handle potential exceptions.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsCameraDemo
+// Shows how to create a workbook, populate cells, insert a camera shape that captures a specific range (e.g., A1:B2), position the picture, convert the shape to a PNG image using a MemoryStream, write the image to disk, and save the workbook.
+class CameraShapeDemo
 {
-    // This C# example shows how to add a camera shape that captures a specific cell range (A1:B2), convert the camera picture to a PNG image, write the image to disk, and save the workbook with the camera shape using Aspose.Cells.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate some sample data in the range to be photographed
+        worksheet.Cells["A1"].Value = "Header1";
+        worksheet.Cells["B1"].Value = "Header2";
+        worksheet.Cells["A2"].Value = 123;
+        worksheet.Cells["B2"].Value = 456;
+
+        // Add a camera picture that captures the range A1:B2.
+        // The picture will be placed with its top‑left corner at row 5, column 1.
+        PictureCollection pictures = worksheet.Pictures;
+        int pictureIndex = pictures.Camera(5, 1, "A1:B2");
+
+        // Retrieve the created picture
+        Picture cameraPicture = pictures[pictureIndex];
+
+        // Export the camera picture to an image file (PNG)
+        using (MemoryStream imageStream = new MemoryStream())
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate some sample data that will be captured by the camera
-            worksheet.Cells["A1"].Value = "Header 1";
-            worksheet.Cells["B1"].Value = "Header 2";
-            worksheet.Cells["A2"].Value = "Row 1 Col 1";
-            worksheet.Cells["B2"].Value = "Row 1 Col 2";
-
-            // Obtain the Pictures collection from the worksheet
-            PictureCollection pictures = worksheet.Pictures;
-
-            // Create a camera picture that captures the range A1:B2.
-            // Parameters: top‑left row index, top‑left column index, source range.
-            int pictureIndex = pictures.Camera(5, 1, "A1:B2");
-
-            // Retrieve the created picture object
-            Picture cameraPicture = pictures[pictureIndex];
-
-            // Convert the camera picture to an image and save it to a file
-            using (MemoryStream imageStream = new MemoryStream())
-            {
-                cameraPicture.ToImage(imageStream, ImageType.Png);
-                File.WriteAllBytes("CameraCapture.png", imageStream.ToArray());
-            }
-
-            // Save the workbook containing the camera picture
-            workbook.Save("CameraDemo.xlsx");
+            cameraPicture.ToImage(imageStream, ImageType.Png);
+            File.WriteAllBytes("CameraPicture.png", imageStream.ToArray());
         }
+
+        // Save the workbook containing the camera shape
+        workbook.Save("CameraDemo.xlsx");
     }
 }

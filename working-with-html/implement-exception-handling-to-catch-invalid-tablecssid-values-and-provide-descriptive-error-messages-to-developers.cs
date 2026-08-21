@@ -1,88 +1,77 @@
-// Title: C# – Validate HtmlSaveOptions.TableCssId and Handle Exceptions in Aspose.Cells
-// Description: Demonstrates how to verify a user‑provided TableCssId with a regular expression, throw a descriptive ArgumentException for invalid values, and wrap the HTML export of a workbook in try/catch blocks. The example shows workbook creation, CSS‑id validation, assignment to HtmlSaveOptions, and graceful error reporting for Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | HtmlSaveOptions | TableCssId validation | C# regex CSS identifier | ArgumentException handling | HTML export workbook | custom table CSS id | .NET | exception handling Aspose.Cells | validate CSS id Aspose
-// Common Searches: how to validate TableCssId Aspose.Cells | TableCssId regex pattern C# | exception thrown for invalid TableCssId | catch ArgumentException when saving HTML with Aspose.Cells | custom CSS id for HTML export Aspose.Cells
-// Developer Intent: Ensure the TableCssId meets CSS naming rules, throw a clear error if it does not, and prevent runtime failures during HTML conversion.
-// Use Cases: Validate user input before assigning it to HtmlSaveOptions.TableCssId to avoid export errors. | Log or display a precise validation message when the CSS identifier is malformed. | Wrap workbook‑to‑HTML conversion in robust try/catch logic to handle both validation failures and unexpected runtime issues.
-// AI Prompts: Write a C# method that checks HtmlSaveOptions.TableCssId against CSS naming rules and raises a detailed ArgumentException. | Show how to modify the try‑catch block to write TableCssId validation errors to a log file instead of the console. | Create unit tests for ValidateTableCssId covering valid IDs, empty strings, whitespace, and illegal characters.
+// Title: C# – Validate HtmlSaveOptions.TableCssId with Exception Handling in Aspose.Cells
+// Description: Demonstrates how to verify a custom TableCssId before assigning it to HtmlSaveOptions, catch ArgumentException for invalid identifiers, and handle unexpected errors while exporting a workbook to HTML using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells HtmlSaveOptions TableCssId | C# TableCssId validation | exception handling Aspose.Cells | ArgumentException HtmlSaveOptions | custom CSS ID export
+// Common Searches: validate TableCssId Aspose.Cells C# | HtmlSaveOptions TableCssId exception example | how to catch invalid TableCssId in Aspose.Cells | C# Aspose.Cells HTML export CSS id validation
+// Developer Intent: Ensure only valid TableCssId values are set on HtmlSaveOptions and provide clear error messages when validation fails.
+// Use Cases: Prevent runtime failures when exporting large reports to HTML. | Log precise validation errors in CI/CD pipelines. | Enforce corporate naming conventions for CSS IDs during automated workbook conversion.
+// AI Prompts: Generate a ValidateTableCssId method that permits only alphanumeric characters, hyphens, and underscores. | Create a custom TableCssIdValidationException and replace ArgumentException in the sample. | Write NUnit tests covering null, empty, whitespace, and illegal characters for ValidateTableCssId.
 
 using System;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to verify a user‑provided TableCssId with a regular expression, throw a descriptive ArgumentException for invalid values, and wrap the HTML export of a workbook in try/catch blocks. The example shows workbook creation, CSS‑id validation, assignment to HtmlSaveOptions, and graceful error reporting for Aspose.Cells for .NET.
+    // Demonstrates how to verify a custom TableCssId before assigning it to HtmlSaveOptions, catch ArgumentException for invalid identifiers, and handle unexpected errors while exporting a workbook to HTML using Aspose.Cells for .NET.
     public class HtmlSaveOptionsTableCssIdValidationDemo
     {
-        // Validates that the TableCssId follows a simple CSS identifier pattern.
-        private static void ValidateTableCssId(string cssId)
+        // Entry point for the application
+        public static void Main(string[] args)
         {
-            // CSS identifiers must start with a letter and can contain letters, digits, hyphens, and underscores.
-            if (string.IsNullOrWhiteSpace(cssId))
-                throw new ArgumentException("TableCssId cannot be null, empty, or whitespace.");
-
-            // Simple regex for validation.
-            if (!Regex.IsMatch(cssId, @"^[a-zA-Z][\w-]*$"))
-                throw new ArgumentException($"TableCssId \"{cssId}\" is invalid. It must start with a letter and contain only letters, digits, hyphens, or underscores.");
+            Run();
         }
 
         public static void Run()
         {
             try
             {
-                // Create a sample workbook with test data.
+                // Create a new workbook and add some sample data
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
-
                 worksheet.Cells["A1"].PutValue("Name");
                 worksheet.Cells["B1"].PutValue("Age");
                 worksheet.Cells["A2"].PutValue("John");
                 worksheet.Cells["B2"].PutValue(30);
-                worksheet.Cells["A3"].PutValue("Alice");
-                worksheet.Cells["B3"].PutValue(25);
 
-                // Configure HTML save options.
+                // Prepare HTML save options
                 HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-                // Example of a valid TableCssId.
-                string userProvidedCssId = "custom-table-style";
+                // Desired TableCssId value
+                string desiredTableCssId = "custom-table-style";
 
-                // Validate before assigning.
-                ValidateTableCssId(userProvidedCssId);
-                saveOptions.TableCssId = userProvidedCssId;
+                // Validate the TableCssId before assigning it
+                ValidateTableCssId(desiredTableCssId);
 
-                // Save the workbook with the specified HTML options.
+                // Assign the validated value
+                saveOptions.TableCssId = desiredTableCssId;
+
+                // Save the workbook using the configured options
                 workbook.Save("output.html", saveOptions);
 
-                Console.WriteLine($"HTML file saved successfully with TableCssId: \"{saveOptions.TableCssId}\"");
+                Console.WriteLine($"Workbook saved successfully with TableCssId: '{saveOptions.TableCssId}'.");
             }
             catch (ArgumentException ex)
             {
-                // Provide a clear, descriptive error message for developers.
+                // Handle validation errors for TableCssId
                 Console.Error.WriteLine($"TableCssId validation error: {ex.Message}");
             }
             catch (Exception ex)
             {
-                // Catch any other unexpected exceptions.
-                Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
+                // Handle any other unexpected errors
+                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
-    }
 
-    // Entry point for the application.
-    public class Program
-    {
-        public static void Main(string[] args)
+        // Simple validation logic for TableCssId
+        private static void ValidateTableCssId(string id)
         {
-            try
-            {
-                HtmlSaveOptionsTableCssIdValidationDemo.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Fatal error: {ex.Message}");
-            }
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentException("TableCssId cannot be null, empty, or consist only of whitespace.");
+
+            // Disallow whitespace characters within the identifier
+            if (id.IndexOfAny(new char[] { ' ', '\t', '\r', '\n' }) >= 0)
+                throw new ArgumentException("TableCssId must not contain whitespace characters.");
+
+            // Additional custom validation rules can be added here if needed
         }
     }
 }

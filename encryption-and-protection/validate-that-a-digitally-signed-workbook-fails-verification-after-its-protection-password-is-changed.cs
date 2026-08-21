@@ -1,59 +1,55 @@
-// Title: Validate that changing a workbook’s protection password invalidates its digital signature with Aspose.Cells for .NET
-// Description: This C# example loads a digitally signed Excel workbook, confirms the signature is present and valid, applies a new protection password via Workbook.Protect, saves the file, reloads it, and shows that while IsDigitallySigned stays true, each DigitalSignature.IsValid becomes false, indicating the signature was broken by the password change.
-// Keywords: Aspose.Cells | C# digital signature verification | Excel workbook protection password | DigitalSignature.IsValid false | tampered signed workbook | Workbook.Protect | digital signature invalidation | Aspose.Cells .NET | Excel file tampering detection | region:US | region:EU
-// Common Searches: Aspose.Cells verify digital signature after changing protection password | C# check if Excel signature is broken by Workbook.Protect | DigitalSignature.IsValid false after workbook tampering | How to detect altered signed Excel file using Aspose.Cells | Validate Excel digital signature integrity in .NET
-// Developer Intent: Ensure that modifying the protection password of a signed workbook renders its digital signature invalid.
-// Use Cases: Audit signed Excel files for unauthorized protection changes | Automated pipeline to flag tampered workbooks by checking DigitalSignature.IsValid | Unit testing of signature integrity before and after workbook protection updates | Compliance reporting for documents whose signatures become invalid after password modification
-// AI Prompts: Generate C# code using Aspose.Cells that loads a signed workbook, changes its protection password, saves it, and verifies DigitalSignature.IsValid is false. | Explain why Workbook.Protect breaks an existing digital signature in an Excel file when using Aspose.Cells. | Create a NUnit test that asserts DigitalSignature.IsValid is true for the original file and false after applying a new password. | Provide a step‑by‑step guide to detect tampered signed workbooks in a .NET application with Aspose.Cells.
+// Title: C# Example: Verify Digital Signature Becomes Invalid After Changing Workbook Protection Password with Aspose.Cells for .NET
+// Description: Loads a digitally signed Excel workbook, confirms the signatures, protects the file with an initial password, changes the password, saves, and reloads to show that the workbook still reports being signed but each DigitalSignature.IsValid is false. Demonstrates how password changes break existing signatures using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | .NET | digital signature | IsValid | GetDigitalSignature | workbook protection | password change | signature invalidation | Excel XLSX | protect workbook | unprotect workbook | sample code | GitHub example | Aspose.Cells for .NET
+// Common Searches: Aspose.Cells verify signature after password change | C# check Excel digital signature validity after protecting workbook | digital signature becomes invalid when workbook password is changed | Aspose.Cells .NET example for protecting and unprotecting signed workbook | how to detect broken digital signatures in Excel with Aspose.Cells
+// Developer Intent: Confirm that altering the workbook protection password invalidates existing digital signatures while the workbook still reports being signed.
+// Use Cases: Automated compliance scan that flags Excel files whose signatures are broken after a password update. | Unit test that asserts IsDigitallySigned remains true but DigitalSignature.IsValid returns false after re‑protecting a workbook. | Integration scenario where a system re‑encrypts signed workbooks with a new password and needs to detect signature loss.
+// AI Prompts: Generate C# code using Aspose.Cells to load a signed Excel file, change its protection password, save it, and verify that all DigitalSignature.IsValid values are false. | Explain why changing the workbook protection password invalidates existing digital signatures in an Aspose.Cells workbook. | Create an MSTest unit test that ensures IsDigitallySigned stays true while each DigitalSignature.IsValid becomes false after re‑protecting the workbook with a new password.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.DigitalSignatures;
 
-namespace AsposeCellsDigitalSignatureVerification
+// Loads a digitally signed Excel workbook, confirms the signatures, protects the file with an initial password, changes the password, saves, and reloads to show that the workbook still reports being signed but each DigitalSignature.IsValid is false. Demonstrates how password changes break existing signatures using Aspose.Cells for .NET.
+class ValidateSignatureAfterProtectionChange
 {
-    // This C# example loads a digitally signed Excel workbook, confirms the signature is present and valid, applies a new protection password via Workbook.Protect, saves the file, reloads it, and shows that while IsDigitallySigned stays true, each DigitalSignature.IsValid becomes false, indicating the signature was broken by the password change.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load a workbook that has already been digitally signed
+        Workbook signedWorkbook = new Workbook("SignedWorkbook.xlsx");
+
+        // Verify that the workbook contains a digital signature
+        Console.WriteLine("Workbook is digitally signed (initial): " + signedWorkbook.IsDigitallySigned);
+
+        // Retrieve the digital signatures and display their validity before any changes
+        DigitalSignatureCollection originalSignatures = signedWorkbook.GetDigitalSignature();
+        foreach (DigitalSignature sig in originalSignatures)
         {
-            // Path to the original digitally signed workbook
-            string signedPath = "SignedWorkbook.xlsx";
+            Console.WriteLine("Signature valid before protection change: " + sig.IsValid);
+        }
 
-            // Load the signed workbook (create/load rule)
-            Workbook signedWorkbook = new Workbook(signedPath);
+        // Apply workbook protection with an initial password
+        signedWorkbook.Protect(ProtectionType.All, "oldPassword");
 
-            // Verify that the workbook reports being digitally signed
-            bool isSigned = signedWorkbook.IsDigitallySigned;
-            Console.WriteLine("Original workbook is digitally signed: " + isSigned);
+        // Change the protection password: unprotect with the old password and protect again with a new one
+        signedWorkbook.Unprotect("oldPassword");
+        signedWorkbook.Protect(ProtectionType.All, "newPassword");
 
-            // Retrieve the digital signatures and check their validity
-            DigitalSignatureCollection originalSignatures = signedWorkbook.GetDigitalSignature();
-            foreach (DigitalSignature sig in originalSignatures)
-            {
-                Console.WriteLine("Original signature IsValid: " + sig.IsValid);
-            }
+        // Save the workbook after the protection password has been changed
+        string modifiedPath = "ModifiedWorkbook.xlsx";
+        signedWorkbook.Save(modifiedPath, SaveFormat.Xlsx);
 
-            // Change the workbook protection password (this modifies the file and should break the signature)
-            signedWorkbook.Protect(ProtectionType.All, "NewPassword123");
+        // Load the modified workbook to verify the effect on the digital signature
+        Workbook modifiedWorkbook = new Workbook(modifiedPath);
 
-            // Save the modified workbook (save rule)
-            string tamperedPath = "TamperedWorkbook.xlsx";
-            signedWorkbook.Save(tamperedPath);
+        // The workbook still reports that it is digitally signed (signature exists)
+        Console.WriteLine("Workbook is digitally signed (after change): " + modifiedWorkbook.IsDigitallySigned);
 
-            // Load the tampered workbook
-            Workbook tamperedWorkbook = new Workbook(tamperedPath);
-
-            // The workbook still reports being digitally signed, but the signature should now be invalid
-            bool isStillSigned = tamperedWorkbook.IsDigitallySigned;
-            Console.WriteLine("Tampered workbook reports digitally signed: " + isStillSigned);
-
-            // Retrieve signatures from the tampered workbook and verify validity
-            DigitalSignatureCollection tamperedSignatures = tamperedWorkbook.GetDigitalSignature();
-            foreach (DigitalSignature sig in tamperedSignatures)
-            {
-                Console.WriteLine("Tampered signature IsValid (should be false): " + sig.IsValid);
-            }
+        // Retrieve the signatures again and check their validity; they should now be invalid
+        DigitalSignatureCollection modifiedSignatures = modifiedWorkbook.GetDigitalSignature();
+        foreach (DigitalSignature sig in modifiedSignatures)
+        {
+            Console.WriteLine("Signature valid after protection change: " + sig.IsValid);
         }
     }
 }

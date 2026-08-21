@@ -1,72 +1,62 @@
-// Title: Render WordArt Gradient in HTML Export with Custom CSS – Aspose.Cells for .NET
-// Description: Creates a workbook, adds a WordArt shape with a two‑color horizontal gradient, assigns a custom name that becomes the HTML element ID, and uses HtmlSaveOptions to embed CSS that replaces the generated image with a CSS linear‑gradient. The result is a single‑file HTML page with precise gradient control.
-// Keywords: Aspose.Cells | .NET | WordArt | gradient fill | HTML export | custom CSS | HtmlSaveOptions | shape ID | linear-gradient | single file HTML
-// Common Searches: Aspose.Cells export WordArt gradient to HTML | apply custom CSS to WordArt shape in HTML output | replace WordArt image with CSS gradient using Aspose.Cells | set HTML element ID for a shape in Aspose.Cells | render WordArt gradient fill in single‑file HTML
-// Developer Intent: Export a workbook that contains a WordArt shape with a gradient fill to HTML and control the visual appearance through a custom CSS selector.
-// Use Cases: Generate WordArt with a two‑color horizontal gradient and export it as HTML while preserving the gradient via CSS. | Target the exported shape by its HTML ID to apply a linear‑gradient background that matches the original fill. | Modify gradient colors or direction in the workbook and have the changes automatically reflected in the HTML through embedded CSS. | Produce a single‑file HTML document that combines the workbook data and custom styling for easy deployment.
-// AI Prompts: Write C# code that adds a WordArt shape with a custom gradient, assigns a name, and saves the workbook as a single‑file HTML with a CSS rule that replaces the shape image with a linear‑gradient using Aspose.Cells. | Explain how to configure HtmlSaveOptions to embed custom CSS for a specific shape ID so the gradient appears correctly in the exported HTML. | Show how to change the gradient colors or direction of a WordArt shape and ensure the HTML export reflects those changes via CSS.
+// Title: Export WordArt with Gradient Fill to HTML and Control It via Custom CSS – Aspose.Cells C#
+// Description: Demonstrates how to add a WordArt shape, apply a two‑color gradient, assign an ID, and export the workbook to HTML using HtmlSaveOptions.CssStyles to inject a CSS rule that renders the shape with a linear‑gradient background.
+// Keywords: Aspose.Cells | C# WordArt gradient | HTML export CSS | HtmlSaveOptions.CssStyles | custom CSS for WordArt | linear gradient background | preserve shape styling in HTML | .NET spreadsheet export
+// Common Searches: Aspose.Cells export WordArt gradient to HTML | how to apply custom CSS to WordArt in Aspose.Cells | preserve WordArt fill when saving as HTML | override WordArt image with CSS gradient | HtmlSaveOptions CssStyles example C#
+// Developer Intent: Generate HTML from a workbook while keeping a WordArt shape’s gradient appearance under full CSS control.
+// Use Cases: Create a WordArt shape, set a horizontal two‑color gradient, give it a unique ID, and export to HTML with a CSS rule that applies a matching linear‑gradient background. | Modify gradient colors or direction directly in the injected CSS without altering the shape’s internal fill settings. | Assign different CSS classes to multiple WordArt objects in the same sheet to produce varied gradient effects in the resulting HTML page.
+// AI Prompts: Write C# code using Aspose.Cells to add a WordArt shape with a vertical two‑color gradient, assign a unique name, and export the workbook to HTML with a CssStyles rule that applies a matching linear‑gradient background. | Explain how HtmlSaveOptions.CssStyles can replace the rendered WordArt image with a CSS gradient, including examples of changing direction, colors, and opacity. | Provide a step‑by‑step guide for exporting several WordArt shapes, each with its own CSS gradient class, using Aspose.Cells for .NET.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing.Texts;
 
-// Creates a workbook, adds a WordArt shape with a two‑color horizontal gradient, assigns a custom name that becomes the HTML element ID, and uses HtmlSaveOptions to embed CSS that replaces the generated image with a CSS linear‑gradient. The result is a single‑file HTML page with precise gradient control.
+// Demonstrates how to add a WordArt shape, apply a two‑color gradient, assign an ID, and export the workbook to HTML using HtmlSaveOptions.CssStyles to inject a CSS rule that renders the shape with a linear‑gradient background.
 class WordArtGradientHtmlExport
 {
     static void Main()
     {
-        try
-        {
-            // 1. Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // 2. Add a WordArt shape with a preset gradient style (WordArtStyle7)
-            //    Parameters: style, text, topRow, top, leftColumn, left, height, width
-            Shape wordArt = sheet.Shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle7,   // Gradient Fill - Blue, Accent 1, Reflection
-                "Gradient WordArt",                 // Text displayed in the WordArt
-                2, 0,                               // Upper‑left cell (row 2, column 0)
-                0, 0,                               // Pixel offsets within the cell
-                100, 400);                          // Height and width in pixels
+        // Add a WordArt shape with a preset gradient style (WordArtStyle7)
+        // Parameters: style, text, topRow, top, leftColumn, left, height, width
+        Shape wordArt = worksheet.Shapes.AddWordArt(
+            PresetWordArtStyle.WordArtStyle7,
+            "Gradient WordArt",
+            2,          // topRow
+            0,          // top (pixels)
+            2,          // leftColumn
+            0,          // left (pixels)
+            100,        // height (pixels)
+            400);       // width (pixels)
 
-            // 3. Set a custom name; this becomes the HTML element id when exported
-            wordArt.Name = "gradientWordArt";
+        // Assign a name to the shape so we can reference it in CSS
+        wordArt.Name = "gradientWordArt";
 
-            // 4. Replace the preset fill with a two‑color linear gradient
-            wordArt.Fill.FillType = FillType.Gradient;
-            GradientFill gradFill = wordArt.Fill.GradientFill;
-            gradFill.SetTwoColorGradient(
-                Color.FromArgb(0, 112, 192),   // First color (blue)
-                Color.FromArgb(255, 255, 255), // Second color (white)
-                GradientStyleType.Horizontal,  // Horizontal gradient
-                1);                            // Variant 1
+        // Optionally fine‑tune the gradient fill (two‑color horizontal gradient)
+        wordArt.Fill.FillType = FillType.Gradient;
+        GradientFill gradientFill = wordArt.Fill.GradientFill;
+        gradientFill.SetTwoColorGradient(
+            Color.Blue,               // first color
+            Color.LightBlue,          // second color
+            GradientStyleType.Horizontal,
+            1);                       // variant
 
-            // 5. Prepare HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                // Export shapes as images (default). The gradient will be rendered into the image.
-                CssStyles = @"
-                    /* Custom CSS for the WordArt shape */
-                    #gradientWordArt {
-                        /* Example: replace the image background with a CSS gradient */
-                        background: linear-gradient(to right, #0070C0, #FFFFFF);
-                        /* Ensure the element displays as a block with the same size as the shape */
-                        display: inline-block;
-                        width: 400px;
-                        height: 100px;
-                    }",
-                // Keep the generated HTML in a single file for simplicity.
-                SaveAsSingleFile = true
-            };
-
-            // 6. Save the workbook as HTML using the configured options
-            workbook.Save("WordArtGradient.html", htmlOptions);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
-        }
+        // Prepare HTML save options and inject a custom CSS class that
+        // overrides the background of the exported shape using a CSS gradient.
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        // The shape is rendered as an <img> element with the assigned name as its id.
+        // The CSS below applies a linear gradient background to that element.
+        htmlOptions.CssStyles = @"
+#gradientWordArt {
+    background: linear-gradient(to right, #0000FF, #ADD8E6) !important;
+    /* Ensure the gradient covers the whole element */
+    background-size: 100% 100% !important;
+}";
+        // Export the workbook to HTML with the custom CSS applied
+        workbook.Save("WordArtGradient.html", htmlOptions);
     }
 }

@@ -1,10 +1,10 @@
-// Title: Copy an Excel range to a new workbook and set the Author property with Aspose.Cells for .NET
-// Description: Load a source workbook, copy a defined cell range (e.g., A1:B5) into a fresh workbook, save it, then use WorkbookMetadata to assign the built‑in Author property before the final save. Demonstrates range copying and document metadata handling in C#.
-// Keywords: Aspose.Cells copy range | C# copy Excel cells | Aspose.Cells WorkbookMetadata | set Author property Excel | document properties Aspose.Cells | copy range to new workbook .NET | Excel metadata update
-// Common Searches: Aspose.Cells copy range to another workbook C# | How to set Author metadata in an Excel file using Aspose.Cells | Copy cells between Excel files and update document properties | WorkbookMetadata example for setting built‑in properties | Save Excel file after copying range with Aspose
-// Developer Intent: Copy a specific cell range into a newly created workbook and assign an Author value in the workbook’s built‑in document properties.
-// Use Cases: Create a report workbook by extracting a data block from a template and embedding the author’s name for audit purposes. | Automate generation of personalized workbooks where each file contains copied content and the creator’s identifier stored in metadata. | Migrate selected data from legacy spreadsheets to clean files while ensuring compliance by programmatically setting document properties.
-// AI Prompts: Generate C# code with Aspose.Cells that copies a named range from a source workbook to a destination workbook and sets multiple built‑in properties (Author, Title, Subject) before saving. | Explain how WorkbookMetadata works in Aspose.Cells for updating document properties after a workbook has been saved. | Write a reusable method that takes source path, range address, destination path, and author name, then copies the range and updates the Author property in the new file.
+// Title: Copy a Range to a New Workbook and Set the Author Property with Aspose.Cells for .NET
+// Description: Loads Source.xlsx, copies the A1:C5 range into a fresh workbook, saves it as Destination.xlsx, then updates the built‑in Author document property using Aspose.Cells metadata APIs. Demonstrates range transfer and metadata manipulation in C#.
+// Keywords: Aspose.Cells copy range | C# copy cells between workbooks | Aspose.Cells set author property | Excel document metadata .NET | Workbook built‑in properties | range transfer Aspose.Cells | Aspose.Cells MetadataOptions | programmatic Excel author tag
+// Common Searches: how to copy a range from one Excel file to another using Aspose.Cells | set author property in Excel workbook with Aspose.Cells .NET | Aspose.Cells copy cells and edit document properties | update Excel metadata without reopening the workbook | C# Aspose.Cells copy range and set built‑in properties
+// Developer Intent: Transfer a specific cell block to a new workbook and assign an Author value via document metadata.
+// Use Cases: Create a report workbook by extracting a data block from a template and embedding the report author’s name for compliance. | Automate generation of a summary file that contains selected cells from a source sheet while programmatically adding creator information. | Migrate a defined range to a separate file and set built‑in properties such as Author to track ownership and version history.
+// AI Prompts: Generate C# code with Aspose.Cells that copies range A1:C5 from Source.xlsx to Destination.xlsx and sets the Author property to a given name. | Show how to copy a dynamic range between two workbooks and then update multiple built‑in document properties (Author, Title, Subject) using Aspose.Cells metadata. | Explain a method to copy a range and modify Excel metadata without reopening the source workbook in Aspose.Cells for .NET.
 
 using System;
 using System.IO;
@@ -12,52 +12,59 @@ using Aspose.Cells;
 using Aspose.Cells.Metadata;
 using AsposeRange = Aspose.Cells.Range;
 
-// Load a source workbook, copy a defined cell range (e.g., A1:B5) into a fresh workbook, save it, then use WorkbookMetadata to assign the built‑in Author property before the final save. Demonstrates range copying and document metadata handling in C#.
-class CopyRangeAndSetAuthor
+// Loads Source.xlsx, copies the A1:C5 range into a fresh workbook, saves it as Destination.xlsx, then updates the built‑in Author document property using Aspose.Cells metadata APIs. Demonstrates range transfer and metadata manipulation in C#.
+class Program
 {
     static void Main()
     {
+        // Paths for source and destination workbooks
+        string sourcePath = "Source.xlsx";
+        string destPath = "Destination.xlsx";
+
         try
         {
-            string sourcePath = "source.xlsx";
+            // Ensure source file exists; if not, create a simple workbook
             if (!File.Exists(sourcePath))
             {
-                Console.WriteLine($"Source file '{sourcePath}' not found.");
-                return;
+                var tempWb = new Workbook();
+                var tempSheet = tempWb.Worksheets[0];
+                tempSheet.Cells["A1"].PutValue("Sample");
+                tempWb.Save(sourcePath);
             }
 
             // Load the source workbook
             Workbook sourceWorkbook = new Workbook(sourcePath);
 
-            // Define the source range to copy (e.g., A1:B5)
-            AsposeRange sourceRange = sourceWorkbook.Worksheets[0].Cells.CreateRange("A1:B5");
+            // Define the source range to copy (e.g., A1:C5)
+            AsposeRange sourceRange = sourceWorkbook.Worksheets[0].Cells.CreateRange("A1:C5");
 
             // Create a new (empty) destination workbook
-            Workbook destWorkbook = new Workbook();
+            Workbook destinationWorkbook = new Workbook();
 
-            // Define the destination range with the same size
-            AsposeRange destRange = destWorkbook.Worksheets[0].Cells.CreateRange("A1:B5");
+            // Get the first worksheet of the destination workbook
+            Worksheet destSheet = destinationWorkbook.Worksheets[0];
+
+            // Create a destination range of the same size starting at A1
+            AsposeRange destRange = destSheet.Cells.CreateRange("A1:C5");
 
             // Copy the source range into the destination range
             sourceRange.Copy(destRange);
 
-            // Save the destination workbook (initial save before metadata update)
-            string destPath = "dest.xlsx";
-            destWorkbook.Save(destPath);
+            // Save the destination workbook
+            destinationWorkbook.Save(destPath);
 
+            // ---- Set the author property using document metadata ----
             // Create metadata options for document properties
-            MetadataOptions metaOptions = new MetadataOptions(MetadataType.DocumentProperties);
+            MetadataOptions options = new MetadataOptions(MetadataType.DocumentProperties);
 
-            // Load the metadata for the saved workbook
-            WorkbookMetadata metadata = new WorkbookMetadata(destPath, metaOptions);
+            // Load metadata for the saved workbook
+            WorkbookMetadata metadata = new WorkbookMetadata(destPath, options);
 
             // Set the built‑in Author property
             metadata.BuiltInDocumentProperties.Author = "John Doe";
 
-            // Save the metadata back to the workbook file
+            // Save the updated metadata back to the file
             metadata.Save(destPath);
-
-            Console.WriteLine("Range copied and author metadata set successfully.");
         }
         catch (Exception ex)
         {

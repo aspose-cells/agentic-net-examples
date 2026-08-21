@@ -1,44 +1,45 @@
-// Title: Convert Excel to PDF while Preserving Page Breaks with Aspose.Cells for .NET
-// Description: Load an Excel workbook, optionally insert a manual break, read automatic printing breaks, and export to PDF using PdfSaveOptions (OnePagePerSheet = false, AllColumnsInOnePagePerSheet = false) so the PDF matches the worksheet pagination.
-// Keywords: Aspose.Cells | C# PDF conversion | Excel page breaks | preserve pagination | PdfSaveOptions | GetPrintingPageBreaks | manual page break | automatic page break | .NET Excel to PDF | keep column layout
-// Common Searches: Aspose.Cells keep Excel page breaks in PDF | C# export Excel to PDF with original pagination | add page break before row 20 Aspose.Cells | GetPrintingPageBreaks example .NET | PdfSaveOptions pagination settings
-// Developer Intent: Export an Excel file to PDF without altering the sheet's existing page‑break layout.
-// Use Cases: Insert a custom page break at a specific row to start a new PDF page. | Log automatic printing page‑break ranges for troubleshooting before conversion. | Generate PDFs that retain column breaks and sheet pagination defined in the source workbook.
-// AI Prompts: Write C# code using Aspose.Cells to convert an .xlsx file to PDF while keeping both manual and automatic page breaks. | Show how to add a page break after row 30 and export the workbook to PDF with OnePagePerSheet disabled. | Explain the role of GetPrintingPageBreaks and PdfSaveOptions in preserving Excel pagination during PDF export.
+// Title: C# – Convert Excel to PDF with Preserved Horizontal & Vertical Page Breaks using Aspose.Cells
+// Description: Shows how to add custom horizontal and vertical page breaks in an Aspose.Cells workbook and export the worksheet to PDF while retaining the original pagination. The example uses PdfSaveOptions with default settings that keep the page‑break layout intact.
+// Keywords: Aspose.Cells | C# | PDF conversion | Excel page breaks | horizontal page break | vertical page break | PdfSaveOptions | preserve pagination | worksheet to PDF | Aspose.Cells .NET
+// Common Searches: Aspose.Cells keep page breaks when saving to PDF | C# export Excel to PDF with custom page breaks | preserve Excel pagination in PDF using Aspose | PdfSaveOptions page break settings | convert worksheet to PDF with row and column breaks
+// Developer Intent: Export an Excel worksheet to PDF while maintaining any manually defined horizontal and vertical page breaks.
+// Use Cases: Generate multi‑page PDF reports that follow the same section breaks as the source spreadsheet. | Create printable PDFs that match the layout of a workbook containing both row and column page breaks. | Automate batch conversion of Excel sheets to PDFs, ensuring the output pagination mirrors the original Excel design.
+// AI Prompts: Write C# code with Aspose.Cells to add horizontal and vertical page breaks and save the worksheet as a PDF that preserves pagination. | Explain which PdfSaveOptions properties affect page‑break retention when converting Excel to PDF in Aspose.Cells for .NET. | Show how to retrieve automatic page‑break areas from a worksheet, compare them with custom breaks, and then export to PDF.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Load an Excel workbook, optionally insert a manual break, read automatic printing breaks, and export to PDF using PdfSaveOptions (OnePagePerSheet = false, AllColumnsInOnePagePerSheet = false) so the PDF matches the worksheet pagination.
+// Shows how to add custom horizontal and vertical page breaks in an Aspose.Cells workbook and export the worksheet to PDF while retaining the original pagination. The example uses PdfSaveOptions with default settings that keep the page‑break layout intact.
 class Program
 {
     static void Main()
     {
-        // Load the source Excel workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Ensure that any existing page breaks are retained.
-        // (Optional) Add a manual page break to demonstrate usage.
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Populate the worksheet with sample data (100 rows)
+        for (int i = 0; i < 100; i++)
         {
-            // Add a horizontal page break after row 20 (cell A21 is the first cell of the next page)
-            sheet.AddPageBreaks("A21");
+            worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
         }
 
-        // Retrieve automatic page breaks (for diagnostic purposes)
+        // Add horizontal page breaks at rows 20 and 50 (zero‑based indices)
+        worksheet.HorizontalPageBreaks.Add(19); // after row 20
+        worksheet.HorizontalPageBreaks.Add(49); // after row 50
+
+        // Add a vertical page break after column 5 (zero‑based index)
+        worksheet.VerticalPageBreaks.Add(5);
+
+        // Retrieve automatic page break areas (optional verification)
         ImageOrPrintOptions printOptions = new ImageOrPrintOptions();
-        foreach (Worksheet sheet in workbook.Worksheets)
-        {
-            CellArea[] pageBreakAreas = sheet.GetPrintingPageBreaks(printOptions);
-            Console.WriteLine($"Worksheet \"{sheet.Name}\" has {pageBreakAreas.Length} automatic page break areas.");
-        }
+        CellArea[] automaticBreaks = worksheet.GetPrintingPageBreaks(printOptions);
+        Console.WriteLine($"Automatic page break areas detected: {automaticBreaks.Length}");
 
-        // Save the workbook to PDF while preserving the original pagination.
+        // Save the workbook to PDF while preserving the defined page breaks
         PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.OnePagePerSheet = false;               // Do NOT force all content onto a single page.
-        pdfOptions.AllColumnsInOnePagePerSheet = false;   // Keep column pagination as defined in the sheet.
-
-        workbook.Save("output.pdf", pdfOptions);
+        // Default settings keep pagination; no need to set OnePagePerSheet or AllColumnsInOnePagePerSheet
+        workbook.Save("OutputWithPageBreaks.pdf", pdfOptions);
     }
 }

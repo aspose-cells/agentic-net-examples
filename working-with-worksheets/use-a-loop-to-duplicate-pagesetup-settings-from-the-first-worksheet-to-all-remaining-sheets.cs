@@ -1,45 +1,47 @@
 // Title: Copy PageSetup Settings from the First Worksheet to All Sheets with Aspose.Cells for .NET
-// Description: This example creates a workbook with three worksheets, configures page‑setup properties (A3 paper, landscape orientation, fit‑to‑width, print title rows/columns) on the first sheet, then loops through the remaining sheets and copies those settings using PageSetup.Copy before saving the file.
-// Keywords: Aspose.Cells page setup copy C# | duplicate worksheet print settings .NET | PageSetup.Copy example | apply same page layout to multiple sheets | loop copy page setup Aspose.Cells
-// Common Searches: copy page setup from one worksheet to others Aspose.Cells | Aspose.Cells loop duplicate print settings | C# copy worksheet page layout | apply same paper size to all sheets programmatically
-// Developer Intent: Replicate the page‑setup configuration of the first worksheet across every other worksheet in the workbook.
-// Use Cases: Set A3 landscape and print titles on a template sheet, then propagate the layout to all report sheets for consistent printing. | Generate a multi‑sheet workbook where each sheet must share identical fit‑to‑page and orientation settings before exporting to PDF. | Automate uniform page‑setup across worksheets when producing batch reports that require the same print format.
-// AI Prompts: Write C# code using Aspose.Cells that copies the page‑setup settings from the first worksheet to all other worksheets in a loop. | Explain which page‑setup properties are transferred by PageSetup.Copy when default CopyOptions are used. | Show an example that copies page‑setup settings to every sheet and then changes the orientation of a specific sheet afterwards.
+// Description: Demonstrates how to configure PageSetup on the first worksheet (paper size, orientation, fit‑to‑page, print titles) and then use a C# loop with PageSetup.Copy and CopyOptions to apply the same settings to every other worksheet in the workbook before saving.
+// Keywords: Aspose.Cells PageSetup copy C# | duplicate worksheet print settings .NET | loop copy page setup Aspose | PageSetup.Copy example | Aspose.Cells printing layout automation
+// Common Searches: Aspose.Cells copy page setup to other sheets | C# loop to duplicate worksheet print settings | How to apply same PageSetup to all worksheets in Aspose.Cells | PageSetup.Copy with CopyOptions in .NET
+// Developer Intent: Apply the PageSetup configuration of the first worksheet to every remaining worksheet in a workbook programmatically.
+// Use Cases: Standardize printing layout (paper size, orientation, fit‑to‑page, titles) across all sheets in multi‑sheet reports. | Automatically propagate page‑setup settings when new worksheets are added at runtime. | Maintain consistent print behavior without manually configuring each worksheet.
+// AI Prompts: Generate C# code using Aspose.Cells that copies the first worksheet's PageSetup to all existing and future worksheets. | Show how to use PageSetup.Copy with custom CopyOptions to duplicate only selected properties such as print titles. | Explain how to modify the loop to exclude hidden worksheets while copying PageSetup settings.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsPageSetupCopyDemo
 {
-    // This example creates a workbook with three worksheets, configures page‑setup properties (A3 paper, landscape orientation, fit‑to‑width, print title rows/columns) on the first sheet, then loops through the remaining sheets and copies those settings using PageSetup.Copy before saving the file.
+    // Demonstrates how to configure PageSetup on the first worksheet (paper size, orientation, fit‑to‑page, print titles) and then use a C# loop with PageSetup.Copy and CopyOptions to apply the same settings to every other worksheet in the workbook before saving.
     class Program
     {
         static void Main(string[] args)
         {
-            // Create a new workbook with three worksheets
+            // Create a new workbook with default worksheets
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet and configure its page setup
+            Worksheet firstSheet = workbook.Worksheets[0];
+            PageSetup firstPageSetup = firstSheet.PageSetup;
+            firstPageSetup.PaperSize = PaperSizeType.PaperA4;
+            firstPageSetup.Orientation = PageOrientationType.Landscape;
+            firstPageSetup.FitToPagesWide = 1;
+            firstPageSetup.FitToPagesTall = 0; // Let height adjust automatically
+            firstPageSetup.PrintTitleRows = "$1:$1";
+            firstPageSetup.PrintTitleColumns = "$A:$A";
+
+            // Ensure there are additional worksheets to demonstrate copying
+            // (Add two more sheets for the example)
             workbook.Worksheets.Add("Sheet2");
             workbook.Worksheets.Add("Sheet3");
 
-            // Configure page‑setup settings on the first worksheet
-            Worksheet firstSheet = workbook.Worksheets[0];
-            PageSetup firstSetup = firstSheet.PageSetup;
-            firstSetup.PaperSize = PaperSizeType.PaperA3;
-            firstSetup.Orientation = PageOrientationType.Landscape;
-            firstSetup.FitToPagesWide = 1;
-            firstSetup.FitToPagesTall = 0;
-            firstSetup.PrintTitleRows = "$1:$1";
-            firstSetup.PrintTitleColumns = "$A:$A";
-
-            // Loop through all remaining worksheets and copy the page‑setup settings
+            // Loop through all worksheets except the first one
             for (int i = 1; i < workbook.Worksheets.Count; i++)
             {
-                Worksheet targetSheet = workbook.Worksheets[i];
-                // Use PageSetup.Copy to duplicate settings from the first sheet
-                targetSheet.PageSetup.Copy(firstSetup, new CopyOptions());
+                // Copy the page‑setup settings from the first worksheet to the current worksheet
+                workbook.Worksheets[i].PageSetup.Copy(firstPageSetup, new CopyOptions());
             }
 
-            // Save the workbook to a file
+            // Save the workbook to verify the result
             workbook.Save("PageSetupCopied.xlsx");
         }
     }

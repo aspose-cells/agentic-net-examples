@@ -1,62 +1,58 @@
-// Title: Set and Remove Write‑Protection Password on an Excel Workbook with Aspose.Cells (.NET)
-// Description: Demonstrates how to apply a write‑protection password to a new Workbook, save it, reload the file, validate the password with ValidatePassword, clear the password to remove protection, and save the unprotected workbook using Aspose.Cells for C#.
-// Keywords: Aspose.Cells write protection | Excel write protection password C# | remove write protection Aspose.Cells | ValidatePassword Aspose.Cells | unprotect Excel file programmatically | Aspose.Cells workbook security | C# Excel password protection
-// Common Searches: how to add write protection password to Excel using Aspose.Cells | remove write protection from Aspose.Cells workbook | Aspose.Cells validate write protection password before unprotecting | C# code to clear write protection in Excel with Aspose.Cells | Aspose.Cells set and clear workbook write protection
-// Developer Intent: Apply a password‑protected write lock to an Excel workbook and later remove it programmatically with the same password.
-// Use Cases: Create a template that is locked for editing, distribute it, then unlock it in an automated process to populate data. | Secure a generated report before sending it to a client and later remove protection for further revisions. | Ensure only authorized code can modify a workbook by validating the password before clearing write protection.
-// AI Prompts: Show C# code that sets a write‑protection password on an Aspose.Cells Workbook and verifies the protection before saving. | Provide an example of loading a write‑protected Excel file with Aspose.Cells, validating the password, removing the protection, and saving the unprotected file. | Explain how to handle an incorrect password when attempting to remove write protection using Aspose.Cells in C#.
+// Title: C# – Apply and Remove Write‑Protection with Password in Excel using Aspose.Cells
+// Description: Demonstrates how to set a write‑protection password on a workbook, optionally protect its structure, verify the protection state, and then programmatically unprotect and clear the password with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells write protection | Excel password protection C# | remove workbook protection Aspose.Cells | protect workbook structure .NET | clear write‑protection password | Aspose.Cells unprotect example
+// Common Searches: Aspose.Cells set write protection password | C# remove Excel workbook protection with password | how to unprotect workbook structure using Aspose.Cells | clear write‑protection password Aspose.Cells .NET | verify workbook is write protected Aspose.Cells
+// Developer Intent: Set a password to write‑protect an Excel workbook and later remove that protection programmatically using the same password.
+// Use Cases: Distribute a read‑only template that can be unlocked for authorized updates. | Automate removal of protection in a CI/CD pipeline before further data processing. | Create a secure report for external users, then strip protection for archival.
+// AI Prompts: Generate C# code with Aspose.Cells to apply write protection, check IsWriteProtected, and then unprotect using the same password. | Show how to protect workbook structure and later call Unprotect with a password in Aspose.Cells for .NET. | Provide a robust example that catches exceptions when an incorrect password is used to clear write protection.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsWriteProtectionDemo
 {
-    // Demonstrates how to apply a write‑protection password to a new Workbook, save it, reload the file, validate the password with ValidatePassword, clear the password to remove protection, and save the unprotected workbook using Aspose.Cells for C#.
+    // Demonstrates how to set a write‑protection password on a workbook, optionally protect its structure, verify the protection state, and then programmatically unprotect and clear the password with Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            // -------------------- Create and apply write protection --------------------
-            // Create a new workbook
+            // ---------- Create a new workbook ----------
             Workbook workbook = new Workbook();
 
-            // Set write protection password
-            string writePassword = "owner";
-            workbook.Settings.WriteProtection.Password = writePassword;
+            // Add some sample data
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Write protection demo");
 
-            // Verify that the workbook is write protected
-            Console.WriteLine("Is write protected (before save): " + workbook.Settings.WriteProtection.IsWriteProtected);
+            // ---------- Apply write protection ----------
+            // Set the password that restricts modification of the file
+            workbook.Settings.WriteProtection.Password = "owner";
 
-            // Save the write‑protected workbook
-            string protectedPath = "WriteProtected.xlsx";
+            // Additionally protect the workbook structure (optional, shows unprotect usage)
+            workbook.Protect(ProtectionType.All, "owner");
+
+            // Save the protected workbook
+            string protectedPath = "WriteProtectedWorkbook.xlsx";
             workbook.Save(protectedPath);
-            Console.WriteLine("Workbook saved with write protection: " + protectedPath);
+            Console.WriteLine($"Workbook saved with write protection: {protectedPath}");
 
-            // -------------------- Load and remove write protection --------------------
-            // Load the previously saved workbook (no load password required for write protection)
+            // ---------- Load the protected workbook ----------
             Workbook loadedWorkbook = new Workbook(protectedPath);
 
-            // Validate the password before attempting to remove protection
-            bool isValid = loadedWorkbook.Settings.WriteProtection.ValidatePassword(writePassword);
-            Console.WriteLine("Password validation result: " + isValid);
+            // Verify that the workbook is write‑protected
+            Console.WriteLine("Is write protected? " + loadedWorkbook.Settings.WriteProtection.IsWriteProtected);
+            Console.WriteLine("Is structure protected with password? " + loadedWorkbook.IsWorkbookProtectedWithPassword);
 
-            if (isValid)
-            {
-                // Remove write protection by clearing the password
-                loadedWorkbook.Settings.WriteProtection.Password = null;
+            // ---------- Remove protection using the same password ----------
+            // Unprotect the workbook structure
+            loadedWorkbook.Unprotect("owner");
 
-                // Verify that protection has been removed
-                Console.WriteLine("Is write protected (after removal): " + loadedWorkbook.Settings.WriteProtection.IsWriteProtected);
+            // Clear the write‑protection password
+            loadedWorkbook.Settings.WriteProtection.Password = null;
 
-                // Save the unprotected workbook
-                string unprotectedPath = "WriteUnprotected.xlsx";
-                loadedWorkbook.Save(unprotectedPath);
-                Console.WriteLine("Workbook saved after removing write protection: " + unprotectedPath);
-            }
-            else
-            {
-                Console.WriteLine("Incorrect password. Write protection not removed.");
-            }
+            // Save the unprotected workbook
+            string unprotectedPath = "UnprotectedWorkbook.xlsx";
+            loadedWorkbook.Save(unprotectedPath);
+            Console.WriteLine($"Workbook saved after removing protection: {unprotectedPath}");
         }
     }
 }

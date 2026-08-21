@@ -1,71 +1,52 @@
-// Title: C# – Merge Cells with Aspose.Cells while Preserving Original Formatting
-// Description: Demonstrates how to merge a range (A1:B2) in an Aspose.Cells workbook without altering existing cell styles. The example captures the style of the upper‑left cell, merges the range using Cells.Merge, optionally reapplies the captured style with SetStyle(explicitFlag:true), and saves the file as MergedPreserveStyle.xlsx.
-// Keywords: Aspose.Cells merge cells preserve style | C# Aspose.Cells keep formatting after merge | Cells.Merge retain original style | SetStyle explicit flag Aspose.Cells | .NET workbook merge without losing formatting
-// Common Searches: merge cells in Aspose.Cells without changing formatting | preserve cell style after merging range Aspose.Cells .NET | how to keep bold header style when merging cells Aspose | Aspose.Cells SetStyle after Cells.Merge | C# merge A1:B2 keep original formatting
-// Developer Intent: Merge a cell range in an Aspose.Cells workbook while ensuring that all pre‑existing formatting (fonts, colors, patterns) remains unchanged.
-// Use Cases: Combine header and sub‑header cells into a single merged cell without losing bold or italic styling. | Consolidate a data block (A1:B2) while preserving font size, color, and background patterns. | Capture a cell’s style before a merge operation and reapply it to guarantee no visual changes.
-// AI Prompts: Write C# code using Aspose.Cells to merge a specified range and automatically retain all cell styles. | Show how to capture a cell’s style, perform Cells.Merge, and then reapply the style with SetStyle(explicitFlag:true) to avoid formatting loss. | Explain the interaction between Aspose.Cells’ Merge method and cell styles, and how the explicit flag in SetStyle preserves formatting.
+// Title: Preserve Cell Formatting While Merging Ranges – Aspose.Cells C# Example
+// Description: Shows how to keep the original style of the top‑left cell when merging a range (e.g., A1:B2) with Aspose.Cells for .NET. The sample captures the cell’s Style object, merges the cells, and reapplies the saved style so font, color, and background remain unchanged.
+// Keywords: Aspose.Cells merge cells C# preserve style | keep formatting after merge Aspose.Cells | Aspose.Cells style retention | C# workbook merge preserve formatting | Aspose.Cells cell style object | merge range without losing formatting
+// Common Searches: Aspose.Cells keep formatting after merge | C# merge cells preserve style Aspose | how to retain cell style when merging with Aspose.Cells | reapply style after merging cells .NET | preserve formatting of merged cells Aspose
+// Developer Intent: Maintain the visual appearance of cells when combining them into a merged range.
+// Use Cases: Create report headers that span multiple columns without losing bold text or background color. | Combine title and subtitle rows while preserving distinct font styles. | Generate printable spreadsheets where merged cells must match predefined branding.
+// AI Prompts: Generate C# code that merges A1:B2 with Aspose.Cells and automatically retains the original style of A1. | Explain the steps to capture a cell’s Style, merge a range, and reapply the style using Aspose.Cells for .NET. | Provide a concise Aspose.Cells example that merges cells without altering font, color, or pattern.
 
-using System;
+using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsMergePreserveStyle
+// Shows how to keep the original style of the top‑left cell when merging a range (e.g., A1:B2) with Aspose.Cells for .NET. The sample captures the cell’s Style object, merges the cells, and reapplies the saved style so font, color, and background remain unchanged.
+class PreserveFormattingMerge
 {
-    // Demonstrates how to merge a range (A1:B2) in an Aspose.Cells workbook without altering existing cell styles. The example captures the style of the upper‑left cell, merges the range using Cells.Merge, optionally reapplies the captured style with SetStyle(explicitFlag:true), and saves the file as MergedPreserveStyle.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook();                     // create
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-            // ---------- Populate cells with values and distinct styles ----------
-            // Cell A1
-            cells["A1"].PutValue("Header");
-            Style styleA1 = workbook.CreateStyle();
-            styleA1.Font.IsBold = true;
-            styleA1.Font.Color = System.Drawing.Color.White;
-            styleA1.ForegroundColor = System.Drawing.Color.DarkBlue;
-            styleA1.Pattern = BackgroundType.Solid;
-            cells["A1"].SetStyle(styleA1);
+        // Populate cells with values and distinct styles
+        cells["A1"].PutValue("Header");
+        Style styleA1 = workbook.CreateStyle();
+        styleA1.Font.IsBold = true;
+        styleA1.Font.Color = Color.Blue;
+        styleA1.ForegroundColor = Color.LightGray;
+        styleA1.Pattern = BackgroundType.Solid;
+        cells["A1"].SetStyle(styleA1);
 
-            // Cell B1
-            cells["B1"].PutValue("SubHeader");
-            Style styleB1 = workbook.CreateStyle();
-            styleB1.Font.IsItalic = true;
-            styleB1.ForegroundColor = System.Drawing.Color.LightGray;
-            styleB1.Pattern = BackgroundType.Solid;
-            cells["B1"].SetStyle(styleB1);
+        cells["B1"].PutValue("SubHeader");
+        Style styleB1 = workbook.CreateStyle();
+        styleB1.Font.IsItalic = true;
+        styleB1.Font.Color = Color.Green;
+        cells["B1"].SetStyle(styleB1);
 
-            // Cell A2 (will be part of the merged area)
-            cells["A2"].PutValue("Data");
-            Style styleA2 = workbook.CreateStyle();
-            styleA2.Font.Size = 12;
-            styleA2.Font.Color = System.Drawing.Color.Black;
-            cells["A2"].SetStyle(styleA2);
+        cells["A2"].PutValue("Data1");
+        cells["B2"].PutValue("Data2");
 
-            // ---------- Preserve original style before merging ----------
-            // Capture the style of the upper‑left cell (A1) – this style will be
-            // automatically retained after the merge because the Merge operation
-            // does not modify cell styles.
-            Style originalStyle = cells["A1"].GetStyle();
+        // Preserve the style of the top‑left cell before merging
+        Style preservedStyle = cells["A1"].GetStyle();
 
-            // ---------- Merge the range A1:B2 ----------
-            // Using Cells.Merge (firstRow, firstColumn, totalRows, totalColumns)
-            // This combines the four cells into a single merged cell.
-            cells.Merge(0, 0, 2, 2);                               // merge
+        // Merge the range A1:B2 (rows 0‑1, columns 0‑1)
+        cells.Merge(0, 0, 2, 2);
 
-            // ---------- Re‑apply the captured style explicitly (optional) ----------
-            // If you want to guarantee that no style changes occurred, re‑apply
-            // the original style with explicitFlag = true. This overwrites only
-            // the properties that were explicitly set in the style, leaving all
-            // other formatting untouched.
-            cells["A1"].SetStyle(originalStyle, true);            // setstyle
+        // Reapply the preserved style to the merged cell (still addressed as A1)
+        cells["A1"].SetStyle(preservedStyle);
 
-            // ---------- Save the workbook ----------
-            workbook.Save("MergedPreserveStyle.xlsx");             // save
-        }
+        // Save the workbook
+        workbook.Save("PreserveFormattingMerge.xlsx");
     }
 }

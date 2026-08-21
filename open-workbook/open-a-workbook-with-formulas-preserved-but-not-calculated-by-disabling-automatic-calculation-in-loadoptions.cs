@@ -1,27 +1,27 @@
-// Title: Load an Excel workbook without evaluating formulas using Aspose.Cells LoadOptions (.NET)
-// Description: Demonstrates how to create a LoadOptions object with ParsingFormulaOnOpen set to false, open a workbook so formulas stay as raw strings, read a cell's formula and its unevaluated value, optionally trigger calculation later, and save the file while preserving the original formulas.
-// Keywords: Aspose.Cells LoadOptions | disable formula calculation | ParsingFormulaOnOpen false | open workbook without evaluating formulas | read raw formula string | C# Excel loading | preserve formulas Aspose | manual formula calculation
-// Common Searches: Aspose.Cells load workbook without calculating formulas | How to keep formulas unchanged when opening Excel with Aspose | Read formula text only in C# Aspose.Cells | Disable automatic formula evaluation Aspose.Cells | Load Excel file as raw formulas .NET
-// Developer Intent: Open an Excel file, keep formulas intact, and prevent automatic calculation.
-// Use Cases: Extract the formula text from cells without triggering any computation. | Defer formula evaluation until a specific point in the workflow. | Modify and save a workbook while guaranteeing that original formulas remain unchanged.
-// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, disables formula parsing on open, reads the formula from cell B2, and saves the file without altering any formulas. | Show how to load a workbook with ParsingFormulaOnOpen set to false, then later calculate all formulas programmatically using Aspose.Cells. | Provide an example that prints both the raw formula string and the default (unevaluated) cell value after loading a workbook with formulas disabled.
+// Title: Load an Excel workbook without evaluating formulas using Aspose.Cells LoadOptions (C#)
+// Description: Demonstrates how to create a LoadOptions object, set ParsingFormulaOnOpen to false, and open a workbook so that formulas are loaded as raw text and are not calculated automatically. The example shows reading a formula, checking the uncomputed value, and optionally triggering manual calculation later.
+// Keywords: Aspose.Cells LoadOptions | disable formula calculation | ParsingFormulaOnOpen false | open workbook without evaluating formulas | preserve formulas as text C# | manual formula calculation Aspose.Cells
+// Common Searches: How to open Excel with formulas unchanged Aspose.Cells | Disable automatic formula evaluation on load .NET | Load workbook as raw formulas Aspose.Cells C# | Prevent formula calculation when opening workbook | Aspose.Cells load options for formula preservation
+// Developer Intent: Open an Excel file while keeping all formulas intact and avoiding any automatic calculation.
+// Use Cases: Inspect or edit formula strings without triggering calculations. | Export a workbook to another format while preserving original formulas. | Improve performance when loading large, formula‑heavy workbooks and calculate only needed cells later.
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, keeps formulas uncalculated, then calculates a specific range on demand. | Show how to iterate through all cells after loading with ParsingFormulaOnOpen false and retrieve each cell's raw formula. | Provide an example that saves the workbook after calling CalculateFormula, ensuring the original formulas remain unchanged.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsLoadFormulaDemo
+namespace AsposeCellsFormulaLoadExample
 {
-    // Demonstrates how to create a LoadOptions object with ParsingFormulaOnOpen set to false, open a workbook so formulas stay as raw strings, read a cell's formula and its unevaluated value, optionally trigger calculation later, and save the file while preserving the original formulas.
+    // Demonstrates how to create a LoadOptions object, set ParsingFormulaOnOpen to false, and open a workbook so that formulas are loaded as raw text and are not calculated automatically. The example shows reading a formula, checking the uncomputed value, and optionally triggering manual calculation later.
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the Excel file to be loaded
+            // Path to the Excel file that contains formulas
             string inputFile = "input.xlsx";
 
             // Create LoadOptions and disable formula parsing on open
             LoadOptions loadOptions = new LoadOptions();
-            loadOptions.ParsingFormulaOnOpen = false; // Formulas will be loaded as raw strings, not calculated
+            loadOptions.ParsingFormulaOnOpen = false; // formulas will be loaded as raw strings, not calculated
 
             // Load the workbook with the specified options
             Workbook workbook = new Workbook(inputFile, loadOptions);
@@ -29,16 +29,18 @@ namespace AsposeCellsLoadFormulaDemo
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Example: read a cell that contains a formula
-            Cell cell = sheet.Cells["A1"];
-            Console.WriteLine("Cell A1 Formula: " + cell.Formula);
-            Console.WriteLine("Cell A1 Value (should be default, not calculated): " + (cell.Value ?? "null"));
+            // Example cell that contains a formula (adjust address as needed)
+            Cell formulaCell = sheet.Cells["A1"];
+
+            // Display the formula text and the current value (should be default/uncomputed)
+            Console.WriteLine("Cell A1 Formula: " + formulaCell.Formula);
+            Console.WriteLine("Cell A1 Value (before calculation): " + (formulaCell.Value ?? "null"));
 
             // If you later need to calculate formulas manually, call:
             // workbook.CalculateFormula();
 
-            // Optionally save the workbook (formulas remain unchanged)
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Keep the workbook unchanged and optionally save it
+            // workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
     }
 }

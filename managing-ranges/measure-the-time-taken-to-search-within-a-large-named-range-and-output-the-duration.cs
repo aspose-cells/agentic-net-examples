@@ -1,18 +1,16 @@
-// Title: Benchmark Find Performance in a Large Named Range with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, fills a 10,000‑row × 10‑column area, defines it as a named range, configures FindOptions to limit the search, uses Stopwatch to time cells.Find for a value near the end, prints elapsed milliseconds and the cell address, then saves the file.
-// Keywords: Aspose.Cells | C# | .NET | Find performance | named range search | benchmark cell lookup | Stopwatch timing | FindOptions | CellArea | large worksheet | search duration | performance measurement
-// Common Searches: Aspose.Cells measure Find execution time | How to time a Find operation in a named range using C# | Benchmark cell search performance Aspose.Cells .NET | Search duration for large worksheet Aspose.Cells | FindOptions SetRange performance test
-// Developer Intent: Determine how long a Find call takes when it is restricted to a large named range in an Aspose.Cells workbook.
-// Use Cases: Profile and optimize search speed for massive data grids. | Validate that a specific value exists within a defined range while capturing latency. | Compare the runtime of full‑sheet searches versus named‑range‑limited searches. | Log search metrics for performance monitoring in data‑processing pipelines. | Create unit tests that assert acceptable lookup times for critical worksheets.
-// AI Prompts: Generate C# code that times a cells.Find call inside a named range using Aspose.Cells and outputs the elapsed milliseconds. | Show how to modify the example to write the search duration and result to a log file instead of the console. | Provide a version that repeats the Find operation for multiple values and aggregates average search time. | Explain how to integrate this benchmark into an automated performance test suite for Aspose.Cells. | Suggest ways to visualize the timing results using a chart library after the search completes.
+// Title: Benchmark Find operation in a large named range with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, fills a 10,000‑row × 10‑column area, defines a named range over that block, configures FindOptions with a matching CellArea, searches for the value in the last cell, and uses Stopwatch to report the elapsed milliseconds. The workbook can then be saved.
+// Keywords: Aspose.Cells | C# | .NET | FindOptions | named range | performance benchmark | search time | cell lookup | large worksheet | stopwatch timing | Excel processing speed
+// Common Searches: measure find performance Aspose.Cells C# | time search in named range Aspose.Cells | benchmark cell lookup .NET | how long does Find take in large Excel sheet | Aspose.Cells search duration example
+// Developer Intent: Determine the execution time of a Find call when it is limited to a large named range.
+// Use Cases: Compare different FindOptions settings to identify the fastest configuration for massive worksheets. | Validate that a critical value can be located within acceptable latency in reporting pipelines. | Log search duration as a health metric to detect performance regressions in automated Excel workflows.
+// AI Prompts: Generate C# code that uses Aspose.Cells FindOptions with SetRange to search a named range and measures the elapsed time. | Suggest optimizations for speeding up Find operations on large ranges in Aspose.Cells, such as changing search order or using alternative APIs. | Create a loop that repeats the timed search multiple times and returns average, min, and max durations for reliable benchmarking.
 
 using System;
 using System.Diagnostics;
-using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Creates a workbook, fills a 10,000‑row × 10‑column area, defines it as a named range, configures FindOptions to limit the search, uses Stopwatch to time cells.Find for a value near the end, prints elapsed milliseconds and the cell address, then saves the file.
+// Creates a workbook, fills a 10,000‑row × 10‑column area, defines a named range over that block, configures FindOptions with a matching CellArea, searches for the value in the last cell, and uses Stopwatch to report the elapsed milliseconds. The workbook can then be saved.
 class Program
 {
     static void Main()
@@ -26,52 +24,43 @@ class Program
 
             // Populate a large range (e.g., 10,000 rows × 10 columns)
             int totalRows = 10000;
-            int totalColumns = 10;
-            for (int row = 0; row < totalRows; row++)
+            int totalCols = 10;
+            for (int i = 0; i < totalRows; i++)
             {
-                for (int col = 0; col < totalColumns; col++)
+                for (int j = 0; j < totalCols; j++)
                 {
-                    cells[row, col].PutValue(row * totalColumns + col);
+                    cells[i, j].PutValue($"R{i}C{j}");
                 }
             }
 
             // Create a named range that covers the populated area
-            AsposeRange largeRange = cells.CreateRange(0, 0, totalRows, totalColumns);
-            largeRange.Name = "LargeRange";
+            Aspose.Cells.Range range = cells.CreateRange(0, 0, totalRows, totalCols);
+            range.Name = "LargeRange";
 
             // Configure FindOptions to limit the search to the named range
             FindOptions findOptions = new FindOptions();
             CellArea searchArea = new CellArea
             {
-                StartRow = largeRange.FirstRow,
-                StartColumn = largeRange.FirstColumn,
-                EndRow = largeRange.FirstRow + largeRange.RowCount - 1,
-                EndColumn = largeRange.FirstColumn + largeRange.ColumnCount - 1
+                StartRow = range.FirstRow,
+                StartColumn = range.FirstColumn,
+                EndRow = range.FirstRow + range.RowCount - 1,
+                EndColumn = range.FirstColumn + range.ColumnCount - 1
             };
             findOptions.SetRange(searchArea);
-            findOptions.LookInType = LookInType.Values;
-            findOptions.LookAtType = LookAtType.EntireContent;
 
-            // Measure the time taken to find a value near the end of the range
+            // Value to search for (placed at the very end to force full scan)
+            string targetValue = $"R{totalRows - 1}C{totalCols - 1}";
+
+            // Measure the time taken to perform the search
             Stopwatch stopwatch = Stopwatch.StartNew();
-            Cell foundCell = cells.Find(totalRows * totalColumns - 1, null, findOptions);
+            Cell foundCell = cells.Find(targetValue, null, findOptions);
             stopwatch.Stop();
 
-            // Output the duration and result
-            Console.WriteLine($"Search duration: {stopwatch.ElapsedMilliseconds} ms");
-            if (foundCell != null)
-            {
-                Console.WriteLine($"Value found at cell: {foundCell.Name}");
-            }
-            else
-            {
-                Console.WriteLine("Value not found.");
-            }
+            Console.WriteLine($"Search completed in {stopwatch.ElapsedMilliseconds} ms.");
+            Console.WriteLine(foundCell != null ? $"Found at {foundCell.Name}" : "Value not found");
 
-            // Save the workbook (optional, demonstrates the save rule)
-            string outputPath = "LargeRangeSearch.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+            // Save the workbook (optional)
+            workbook.Save("SearchTiming.xlsx");
         }
         catch (Exception ex)
         {

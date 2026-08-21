@@ -1,51 +1,50 @@
-// Title: Set a Print Area in Aspose.Cells .NET (C#) and Export Only Selected Cells to PDF
-// Description: C# example that creates a workbook, fills cells A1:B4, defines the print area as $A$1:$B$3, optionally fits the area to one page, and saves the file as PDF so that only the specified range appears in the output.
-// Keywords: Aspose.Cells | C# | PrintArea | PDF export | named range | PageSetup.PrintArea | FitToPagesWide | FitToPagesTall | GitHub example | Excel to PDF
-// Common Searches: Aspose.Cells set print area before PDF conversion | limit PDF output to specific cells C# | PageSetup.PrintArea Aspose.Cells example | export selected range to PDF Aspose.Cells .NET | fit print area to one PDF page C#
-// Developer Intent: Define a worksheet print area so that only the chosen cells are included when the workbook is saved as a PDF.
-// Use Cases: Create a compact PDF containing only a header and a few data rows. | Generate PDFs where the printable region is controlled programmatically without opening Excel. | Produce one‑page reports by fitting a custom print area to a single PDF page.
-// AI Prompts: Show C# code that assigns a named range as the print area in Aspose.Cells before saving to PDF. | How can I use PageSetup.FitToPagesWide and FitToPagesTall to fit a print area onto one PDF page in Aspose.Cells? | Explain how to verify that the defined print area is applied during PDF conversion with Aspose.Cells.
+// Title: Set Print Area and Export Selected Cells to PDF with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to define a worksheet's print area (or named range) using PageSetup.PrintArea, configure PdfSaveOptions, and save the workbook so that only the specified cells appear in the generated PDF.
+// Keywords: Aspose.Cells print area | C# export PDF selected range | PageSetup.PrintArea | PdfSaveOptions | limit PDF output cells | named range PDF conversion | Aspose.Cells .NET PDF | worksheet print area PDF | Aspose.Cells PDF save options | export specific cells to PDF
+// Common Searches: Aspose.Cells set print area before PDF export | C# export only part of worksheet to PDF | How to use PageSetup.PrintArea with Aspose.Cells | PdfSaveOptions respect print area Aspose.Cells | Export named range to PDF using Aspose.Cells .NET
+// Developer Intent: The developer needs to restrict the PDF output to a defined print area or named range so that only those cells are included when the workbook is saved as a PDF.
+// Use Cases: Create a concise PDF report that includes only the header and the first few data rows. | Generate an invoice PDF that contains just the billing details while omitting auxiliary worksheets. | Produce a PDF snapshot of a chart’s data range by limiting the export to the chart’s source cells. | Share a printable summary of a large spreadsheet by exporting only a specific section.
+// AI Prompts: Show C# code that sets a named range as the print area and saves the workbook to PDF with Aspose.Cells. | Explain how PdfSaveOptions can be configured to ensure the defined print area is honored during PDF conversion. | Provide a step‑by‑step guide to verify that the resulting PDF contains only the cells specified in the print area. | Suggest ways to programmatically create and apply a named range as the print area before exporting to PDF.
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-namespace AsposeCellsPrintAreaPdfDemo
+namespace AsposeCellsPrintAreaToPdf
 {
-    // C# example that creates a workbook, fills cells A1:B4, defines the print area as $A$1:$B$3, optionally fits the area to one page, and saves the file as PDF so that only the specified range appears in the output.
+    // Demonstrates how to define a worksheet's print area (or named range) using PageSetup.PrintArea, configure PdfSaveOptions, and save the workbook so that only the specified cells appear in the generated PDF.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-
-                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate some sample data
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Price");
-                sheet.Cells["A2"].PutValue("Laptop");
-                sheet.Cells["B2"].PutValue(1200);
-                sheet.Cells["A3"].PutValue("Phone");
-                sheet.Cells["B3"].PutValue(800);
-                sheet.Cells["A4"].PutValue("Tablet");
-                sheet.Cells["B4"].PutValue(500);
+                // Populate sample data
+                sheet.Cells["A1"].PutValue("Name");
+                sheet.Cells["B1"].PutValue("Score");
+                sheet.Cells["A2"].PutValue("Alice");
+                sheet.Cells["B2"].PutValue(85);
+                sheet.Cells["A3"].PutValue("Bob");
+                sheet.Cells["B3"].PutValue(92);
+                sheet.Cells["A4"].PutValue("Charlie");
+                sheet.Cells["B4"].PutValue(78);
 
-                // Define the print area directly (covers A1:B3)
-                sheet.PageSetup.PrintArea = "$A$1:$B$3";
+                // Define the print area directly (A1:B3)
+                sheet.PageSetup.PrintArea = "A1:B3";
 
-                // Optional: adjust page setup to fit the print area on a single page
-                sheet.PageSetup.FitToPagesWide = 1;
-                sheet.PageSetup.FitToPagesTall = 1;
+                // Configure PDF save options (optional)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    // Ensure the print area is respected
+                    PrintingPageType = PrintingPageType.Default
+                };
 
-                // Save the workbook as PDF. The defined print area limits the PDF content.
-                string outputPath = "PrintAreaLimited.pdf";
-                workbook.Save(outputPath, SaveFormat.Pdf);
-
-                Console.WriteLine($"PDF generated with print area limited to the range A1:B3: {outputPath}");
+                // Save the workbook as PDF; only the defined print area will appear in the file
+                workbook.Save("ExportedArea.pdf", pdfOptions);
             }
             catch (Exception ex)
             {

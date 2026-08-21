@@ -1,59 +1,47 @@
-// Title: Change Font of All RichTextPortion Objects in a Cell using Aspose.Cells for .NET (C#)
-// Description: This example shows how to retrieve the RichText collection of a worksheet cell, loop through each RichTextPortion, set a new Font.Name, and save the workbook. It includes directory creation, exception handling, and demonstrates the complete workflow with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | RichTextPortion | font name | iterate cell portions | Excel rich text formatting | modify cell font | Aspose.Cells example | Excel automation
-// Common Searches: Aspose.Cells change font of RichTextPortion | iterate RichTextPortion objects C# | set font name for each portion in Excel cell | Aspose.Cells rich text formatting tutorial | C# code to modify cell rich text font
-// Developer Intent: Update the Font.Name of every RichTextPortion inside a specific cell.
-// Use Cases: Apply different fonts to individual words within a cell for custom styling. | Standardize font across all rich‑text portions after programmatic content edits. | Bulk‑update rich‑text formatting in generated Excel reports before distribution.
-// AI Prompts: Generate C# code that retrieves the RichText collection of cell A1, iterates each RichTextPortion, and sets Font.Name to "Calibri" using Aspose.Cells. | Show how to change the font size of RichTextPortion objects based on their text length in a worksheet cell. | Provide an example that checks for null RichTextPortion entries before applying font changes in Aspose.Cells for .NET.
+// Title: Iterate RichTextPortion objects to change font name in an Excel cell with Aspose.Cells for .NET (C#)
+// Description: This example creates a workbook, adds rich‑text content to cell A1, loops through every RichTextPortion in the cell, sets each portion's Font.Name (e.g., to "Arial"), and saves the file as RichTextPortionFontName.xlsx. It demonstrates how to modify mixed‑format text programmatically using Aspose.Cells for C#.
+// Keywords: Aspose.Cells RichTextPortion font | C# change cell portion font | iterate RichTextPortion Aspose.Cells | Excel cell mixed formatting .NET | set font name for each text portion | Aspose.Cells example GitHub
+// Common Searches: how to change font of each RichTextPortion in Aspose.Cells C# | Aspose.Cells iterate cell text portions | set font name for mixed‑format cell Aspose.Cells | C# Aspose.Cells change font of part of a cell | example code RichTextPortion font change
+// Developer Intent: Programmatically update the Font.Name of every RichTextPortion inside a worksheet cell.
+// Use Cases: Apply corporate font to specific words within a cell while preserving other formatting. | Generate reports where headings and values share a cell but require distinct fonts. | Automate styling of user‑entered text that may contain multiple font styles.
+// AI Prompts: Write C# code that creates a cell with three RichTextPortion objects ("Hello", " ", "World") and changes each portion's Font.Name to "Calibri" using Aspose.Cells. | Explain how to retrieve the RichText collection from a cell and loop through its portions to set different fonts for each. | Provide a GitHub‑ready snippet that iterates RichTextPortion objects and saves the workbook to a specified folder.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRichTextPortionDemo
+// This example creates a workbook, adds rich‑text content to cell A1, loops through every RichTextPortion in the cell, sets each portion's Font.Name (e.g., to "Arial"), and saves the file as RichTextPortionFontName.xlsx. It demonstrates how to modify mixed‑format text programmatically using Aspose.Cells for C#.
+class Program
 {
-    // This example shows how to retrieve the RichText collection of a worksheet cell, loop through each RichTextPortion, set a new Font.Name, and save the workbook. It includes directory creation, exception handling, and demonstrates the complete workflow with Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Set text in cell A1
+            Cell cell = worksheet.Cells["A1"];
+            cell.PutValue("Hello World!");
+
+            // Change the font of the whole text in the cell
+            string text = cell.StringValue;
+            if (!string.IsNullOrEmpty(text))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Set a string value in cell A1 (rich text can be applied to string cells)
-                Cell cell = worksheet.Cells["A1"];
-                cell.PutValue("Hello World! This is a test.");
-
-                // Apply a font change to the whole text using the cell's style
-                string text = cell.StringValue;
-                if (!string.IsNullOrEmpty(text))
-                {
-                    Style style = cell.GetStyle();
-                    style.Font.Name = "Arial";
-                    cell.SetStyle(style);
-                }
-
-                // Define output path and ensure the directory exists
-                string outputPath = "RichTextPortionModified.xlsx";
-                string fullPath = Path.GetFullPath(outputPath);
-                string outputDir = Path.GetDirectoryName(fullPath);
-
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // Apply font name to the entire cell using its style
+                Style style = cell.GetStyle();
+                style.Font.Name = "Arial";
+                cell.SetStyle(style);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the workbook
+            string outputPath = "RichTextPortionFontName.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

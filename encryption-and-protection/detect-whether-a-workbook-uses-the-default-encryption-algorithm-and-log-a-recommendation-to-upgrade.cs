@@ -1,41 +1,42 @@
-// Title: Detect Default Encryption in an Excel Workbook and Suggest AES Upgrade with Aspose.Cells for .NET
-// Description: This C# example loads an .xlsx file using Aspose.Cells, checks the Workbook.Settings.IsDefaultEncrypted flag to see if the file is protected with the library's built‑in encryption, outputs a console notice, and advises switching to a stronger algorithm (such as AES) via SetEncryptionOptions before disposing the workbook.
-// Keywords: Aspose.Cells default encryption | Workbook.Settings.IsDefaultEncrypted | Excel encryption strength .NET | upgrade to AES Aspose.Cells | check workbook protection | SetEncryptionOptions example | C# Excel security | detect weak encryption Excel
-// Common Searches: Aspose.Cells how to know if workbook uses default encryption | C# check Excel file encryption level with Aspose | recommend stronger encryption for Excel using Aspose.Cells | property to detect built‑in encryption in Aspose.Cells | sample code to log encryption recommendation
-// Developer Intent: Determine whether an Excel file is secured with the built‑in algorithm and provide guidance to apply a stronger cipher.
-// Use Cases: Security audit of incoming spreadsheets in a regulated environment | Automated compliance logging for files that use weak encryption | Pre‑processing step in a data‑ingestion pipeline that re‑encrypts with AES‑256 | Batch utility to scan and flag workbooks before archival
-// AI Prompts: Write C# code that reads an Excel workbook with Aspose.Cells, detects default encryption, and re‑encrypts it using AES‑256 via SetEncryptionOptions. | Explain how to integrate a built‑in encryption check into an existing Aspose.Cells file‑import workflow and log a compliance warning. | Create a script that iterates over a directory of .xlsx files, reports those using the library's default cipher, and upgrades them to AES‑256.
+// Title: Detect Aspose.Cells default workbook encryption and recommend stronger protection (C#)
+// Description: Loads an Excel file with Aspose.Cells, inspects the Workbook.Settings.IsDefaultEncrypted flag, writes a console message about the encryption status, and advises using SetEncryptionOptions for a more robust algorithm before disposing the workbook.
+// Keywords: Aspose.Cells default encryption detection | Workbook.IsDefaultEncrypted C# | upgrade Excel encryption Aspose | SetEncryptionOptions example | Excel file security compliance .NET
+// Common Searches: How to know if an Excel workbook uses Aspose.Cells default encryption | C# code to verify encryption strength of a workbook with Aspose.Cells | Suggest stronger encryption for encrypted Excel files in .NET | Detect default encryption algorithm in Excel using Aspose.Cells
+// Developer Intent: Identify whether a loaded workbook is protected with the library’s built‑in encryption and output guidance to apply a more secure algorithm.
+// Use Cases: Audit incoming Excel documents for compliance by flagging those that rely on the built‑in encryption. | Run a scheduled scan of a file repository, log any workbooks using the default scheme, and generate a security report. | Embed the check in an upload service to warn users and prompt them to re‑encrypt with a stronger algorithm.
+// AI Prompts: Generate C# code that re‑encrypts a workbook with AES‑256 using Aspose.Cells SetEncryptionOptions after detecting IsDefaultEncrypted. | Show how to configure Aspose.Cells to save a workbook with a custom password and a high‑strength encryption method. | Explain exception handling for loading an Excel file encrypted with the default algorithm in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace WorkbookEncryptionCheck
+namespace AsposeCellsEncryptionCheck
 {
-    // This C# example loads an .xlsx file using Aspose.Cells, checks the Workbook.Settings.IsDefaultEncrypted flag to see if the file is protected with the library's built‑in encryption, outputs a console notice, and advises switching to a stronger algorithm (such as AES) via SetEncryptionOptions before disposing the workbook.
+    // Loads an Excel file with Aspose.Cells, inspects the Workbook.Settings.IsDefaultEncrypted flag, writes a console message about the encryption status, and advises using SetEncryptionOptions for a more robust algorithm before disposing the workbook.
     class Program
     {
         static void Main(string[] args)
         {
             // Path to the workbook to be inspected
-            string filePath = "sample.xlsx";
+            string workbookPath = "input.xlsx";
 
-            // Load the workbook (no password needed for unencrypted files)
-            Workbook workbook = new Workbook(filePath);
+            // Load the workbook (create LoadOptions if needed)
+            Workbook workbook = new Workbook(workbookPath);
 
-            // Check if the workbook is encrypted with the default algorithm
+            // Check if the workbook is encrypted with the default encryption algorithm
             bool isDefaultEncrypted = workbook.Settings.IsDefaultEncrypted;
 
+            // Log the result and recommendation
             if (isDefaultEncrypted)
             {
                 Console.WriteLine("The workbook uses the default encryption algorithm.");
-                Console.WriteLine("Recommendation: Upgrade to a stronger encryption algorithm (e.g., AES) using SetEncryptionOptions.");
+                Console.WriteLine("Recommendation: Upgrade to a stronger encryption algorithm using SetEncryptionOptions.");
             }
             else
             {
                 Console.WriteLine("The workbook does not use the default encryption algorithm.");
             }
 
-            // Optional: Dispose the workbook to release resources
+            // Optional: Dispose the workbook if no further processing is required
             workbook.Dispose();
         }
     }

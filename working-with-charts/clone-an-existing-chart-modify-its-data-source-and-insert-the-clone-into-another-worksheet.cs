@@ -1,80 +1,77 @@
-// Title: Clone a chart, reassign its data range, and insert it on a different worksheet using Aspose.Cells for .NET (C#)
-// Description: A C# walkthrough that creates a workbook, populates source data, builds a column chart, copies the chart to another sheet, points the copy to a new data block, and saves the file. The sample highlights chart duplication, series rebinding, and cross‑worksheet placement with Aspose.Cells.
-// Keywords: Aspose.Cells chart clone C# | duplicate chart Aspose.Cells | change chart data source .NET | copy chart to another worksheet | Aspose.Cells series range update | C# Excel chart example | Aspose.Cells chart manipulation
-// Common Searches: how to copy a chart to a different sheet with Aspose.Cells | Aspose.Cells C# change chart data range after cloning | duplicate Excel chart programmatically using Aspose | rebind chart series to new cells in Aspose.Cells | clone and move chart between worksheets in .NET
-// Developer Intent: The developer needs to replicate an existing chart, bind it to a new data set, and place the replica on another worksheet.
-// Use Cases: Create a template chart once and reuse it across multiple department sheets with their own data. | Generate comparative dashboards by cloning a baseline chart and linking each copy to forecast versus actual values. | Automate report generation where each region gets a personalized chart derived from a master design.
-// AI Prompts: Show C# code that clones an Aspose.Cells chart and updates its series to a different cell range. | Explain how to preserve chart formatting while changing the data source after copying the chart to another worksheet. | Provide a script to duplicate several charts and assign each a unique data range on separate sheets using Aspose.Cells.
+// Title: Clone a Chart, Change Its Data Source, and Insert into Another Worksheet – Aspose.Cells for .NET (C#)
+// Description: This Aspose.Cells for .NET example shows how to create a workbook, add a source worksheet with a column chart, then clone that chart on a different worksheet, assign a new series range, and save the file as an Excel workbook. The code demonstrates chart type copying, size preservation, and data source modification using the Aspose.Cells API.
+// Keywords: Aspose.Cells chart clone C# | copy chart to another worksheet .NET | modify chart series range Aspose.Cells | Excel chart duplication Aspose.Cells | C# Aspose.Cells chart example | chart template reuse Aspose.Cells | GitHub Aspose.Cells chart sample | Aspose.Cells API chart operations
+// Common Searches: how to duplicate a chart in Aspose.Cells for .NET | clone Excel chart and change data source using C# | Aspose.Cells copy chart to different worksheet | change series range after chart copy Aspose.Cells | Aspose.Cells chart cloning example GitHub
+// Developer Intent: The developer needs to replicate an existing chart, point it to a new data range, and place the replicated chart on a separate worksheet using Aspose.Cells for .NET.
+// Use Cases: Create a standard chart layout once and reuse it across multiple sheets with sheet‑specific data. | Generate comparative dashboards by cloning a base chart for each department or time period. | Automate monthly reporting where each month’s sheet receives a cloned chart linked to that month’s values.
+// AI Prompts: Write C# code with Aspose.Cells that clones a chart from one worksheet, updates the series to a different column, and adds the clone to another worksheet. | Explain how to keep chart formatting, titles, and axis settings intact when copying a chart with Aspose.Cells. | Provide a loop example that clones a template chart for several worksheets, assigning each clone a unique data range.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsChartCloneDemo
 {
-    // A C# walkthrough that creates a workbook, populates source data, builds a column chart, copies the chart to another sheet, points the copy to a new data block, and saves the file. The sample highlights chart duplication, series rebinding, and cross‑worksheet placement with Aspose.Cells.
+    // This Aspose.Cells for .NET example shows how to create a workbook, add a source worksheet with a column chart, then clone that chart on a different worksheet, assign a new series range, and save the file as an Excel workbook. The code demonstrates chart type copying, size preservation, and data source modification using the Aspose.Cells API.
     class Program
     {
         static void Main()
         {
             try
             {
-                // -------------------------------------------------
-                // 1. Create a workbook and add a source worksheet
-                // -------------------------------------------------
+                // Create a new workbook
                 Workbook workbook = new Workbook();
-                Worksheet sourceSheet = workbook.Worksheets[0];
-                sourceSheet.Name = "Source";
 
-                // Populate sample data for the source chart
-                sourceSheet.Cells["A1"].PutValue("Category");
-                sourceSheet.Cells["B1"].PutValue("Value");
-                sourceSheet.Cells["A2"].PutValue("A");
-                sourceSheet.Cells["B2"].PutValue(10);
-                sourceSheet.Cells["A3"].PutValue("B");
-                sourceSheet.Cells["B3"].PutValue(20);
-                sourceSheet.Cells["A4"].PutValue("C");
-                sourceSheet.Cells["B4"].PutValue(30);
+                // ---------- Source worksheet with original chart ----------
+                Worksheet srcSheet = workbook.Worksheets[0];
+                srcSheet.Name = "Source";
 
-                // Add a chart to the source worksheet
-                int srcChartIdx = sourceSheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart srcChart = sourceSheet.Charts[srcChartIdx];
-                srcChart.NSeries.Add("B2:B4", true);
-                srcChart.NSeries.CategoryData = "A2:A4";
+                // Populate sample data for the chart
+                srcSheet.Cells["A1"].PutValue("Category");
+                srcSheet.Cells["B1"].PutValue("Value");
+                srcSheet.Cells["A2"].PutValue("A");
+                srcSheet.Cells["A3"].PutValue("B");
+                srcSheet.Cells["A4"].PutValue("C");
+                srcSheet.Cells["A5"].PutValue("D");
+                srcSheet.Cells["B2"].PutValue(10);
+                srcSheet.Cells["B3"].PutValue(20);
+                srcSheet.Cells["B4"].PutValue(30);
+                srcSheet.Cells["B5"].PutValue(40);
 
-                // -------------------------------------------------
-                // 2. Add a destination worksheet where the clone will be placed
-                // -------------------------------------------------
+                // Add a chart to the source sheet
+                int srcChartIdx = srcSheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                Chart srcChart = srcSheet.Charts[srcChartIdx];
+                srcChart.NSeries.Add("B2:B5", true); // Add series values
+                srcChart.Title.Text = "Original Chart";
+
+                // ---------- Destination worksheet ----------
                 Worksheet destSheet = workbook.Worksheets.Add("Destination");
 
-                // -------------------------------------------------
-                // 3. Clone the chart: create a new chart with the same type
-                // -------------------------------------------------
+                // Populate data that will be used for the cloned chart (different source)
+                destSheet.Cells["A1"].PutValue("Category");
+                destSheet.Cells["C1"].PutValue("NewValue");
+                destSheet.Cells["A2"].PutValue("A");
+                destSheet.Cells["A3"].PutValue("B");
+                destSheet.Cells["A4"].PutValue("C");
+                destSheet.Cells["A5"].PutValue("D");
+                destSheet.Cells["C2"].PutValue(15);
+                destSheet.Cells["C3"].PutValue(25);
+                destSheet.Cells["C4"].PutValue(35);
+                destSheet.Cells["C5"].PutValue(45);
+
+                // Clone the chart: create a new chart with the same type and size
                 int clonedChartIdx = destSheet.Charts.Add(srcChart.Type, 5, 0, 15, 5);
                 Chart clonedChart = destSheet.Charts[clonedChartIdx];
 
-                // -------------------------------------------------
-                // 4. Modify the data source of the cloned chart
-                //    (for demonstration, use a different range on the destination sheet)
-                // -------------------------------------------------
-                // Populate new data on the destination sheet
-                destSheet.Cells["C1"].PutValue("Category");
-                destSheet.Cells["D1"].PutValue("Value");
-                destSheet.Cells["C2"].PutValue("X");
-                destSheet.Cells["D2"].PutValue(40);
-                destSheet.Cells["C3"].PutValue("Y");
-                destSheet.Cells["D3"].PutValue(50);
-                destSheet.Cells["C4"].PutValue("Z");
-                destSheet.Cells["D4"].PutValue(60);
+                // Add a series to the cloned chart using the new data range
+                clonedChart.NSeries.Add("C2:C5", true); // Add series values
+                clonedChart.Title.Text = "Cloned Chart with Modified Data Source";
 
-                // Set the new data range for the cloned chart
-                clonedChart.NSeries.Add("D2:D4", true);
-                clonedChart.NSeries.CategoryData = "C2:C4";
-
-                // -------------------------------------------------
-                // 5. Save the workbook
-                // -------------------------------------------------
-                workbook.Save("ChartCloneResult.xlsx");
+                // Save the workbook (ensure the directory exists)
+                string outputPath = "ChartCloneDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {

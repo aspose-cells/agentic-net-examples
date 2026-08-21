@@ -1,41 +1,58 @@
-// Title: C# – Read the subtitle of the first chart in an ODS workbook with Aspose.Cells
-// Description: Loads an ODS workbook, accesses the first worksheet, verifies chart presence, retrieves the first chart, reads its SubTitle.Text property, and prints the subtitle to the console. Demonstrates ODS‑specific chart subtitle support in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | ODS | chart subtitle | read chart subtitle | SubTitle.Text | load ODS workbook | Aspose.Cells .NET | chart metadata extraction | extract chart subtitle
-// Common Searches: Aspose.Cells get chart subtitle C# | read ODS chart subtitle .NET | how to retrieve chart subtitle from ODS file using Aspose | C# code to read chart subtitle in ODS workbook | Aspose.Cells chart subtitle property example
-// Developer Intent: Obtain the subtitle text of the first chart in an ODS file using Aspose.Cells for .NET.
-// Use Cases: Display the chart subtitle in a custom UI after loading an ODS report. | Validate that the chart subtitle follows naming conventions before publishing the workbook. | Log each chart's subtitle for audit or debugging purposes.
-// AI Prompts: Write C# code that loads an ODS workbook and returns the subtitle of every chart, handling missing or empty subtitles. | Generate an example that updates a chart's subtitle in an ODS file and saves the changes with Aspose.Cells. | Explain how Aspose.Cells exposes the SubTitle.Text property for ODS charts and why this property is not available for other spreadsheet formats.
+// Title: Retrieve the subtitle of the first chart in an ODS workbook using Aspose.Cells for .NET (C#)
+// Description: A concise C# example that checks for an ODS file, loads it with Aspose.Cells, accesses the first worksheet, verifies chart presence, reads the SubTitle property of the first chart (with null safety), and writes the subtitle text to the console.
+// Keywords: Aspose.Cells | ODS workbook | chart subtitle | C# | .NET | read chart SubTitle | load ODS file | first chart access | worksheet charts
+// Common Searches: Aspose.Cells read chart subtitle ODS C# | how to get chart subtitle from ODS using .NET | C# example load ODS workbook and retrieve first chart subtitle | Aspose.Cells SubTitle property ODS format
+// Developer Intent: Extract the subtitle text of the first chart in an ODS file.
+// Use Cases: Validate chart subtitles against corporate naming standards before publishing the workbook. | Display chart subtitles in a custom reporting dashboard after loading an ODS file. | Log all chart subtitles from an ODS workbook for compliance auditing.
+// AI Prompts: Generate C# code with Aspose.Cells that iterates through every chart in an ODS workbook and prints each chart's title and subtitle, handling missing subtitles gracefully. | Provide a robust example that loads an ODS file, checks for chart existence, and returns the subtitle of a chart at a given index, including error handling for missing files and empty chart collections.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads an ODS workbook, accesses the first worksheet, verifies chart presence, retrieves the first chart, reads its SubTitle.Text property, and prints the subtitle to the console. Demonstrates ODS‑specific chart subtitle support in Aspose.Cells for .NET.
+// A concise C# example that checks for an ODS file, loads it with Aspose.Cells, accesses the first worksheet, verifies chart presence, reads the SubTitle property of the first chart (with null safety), and writes the subtitle text to the console.
 class Program
 {
     static void Main()
     {
-        // Load the ODS workbook from file
-        Workbook workbook = new Workbook("input.ods");
+        const string inputPath = "input.ods";
 
-        // Get the first worksheet (index 0)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Check that the worksheet contains at least one chart
-        if (worksheet.Charts.Count > 0)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Retrieve the first chart in the collection
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the ODS workbook from file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (index 0)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts were found in the first worksheet.");
+                return;
+            }
+
+            // Retrieve the first chart in the worksheet's chart collection
             Chart chart = worksheet.Charts[0];
 
-            // Read the subtitle text (available only for ODS files)
-            string subtitleText = chart.SubTitle.Text;
+            // Read the subtitle text of the chart (ODS format supports SubTitle)
+            string subtitleText = chart.SubTitle?.Text ?? string.Empty;
 
             // Output the subtitle text
-            Console.WriteLine("Chart subtitle: " + subtitleText);
+            Console.WriteLine("Chart Subtitle: " + subtitleText);
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("No charts found in the workbook.");
+            // Catch any unexpected errors during processing
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,79 +1,60 @@
-// Title: Report Excel formulas with external links and their file paths – Aspose.Cells C#
-// Description: Loads an Excel workbook, iterates every worksheet and used cell, identifies formulas that reference external workbooks, gathers each linked file path via GetPrecedents or the workbook's ExternalLinks collection, and prints a concise report. Shows how to use Aspose.Cells for .NET to audit cross‑file references.
-// Keywords: Aspose.Cells external link detection | C# list Excel formula references | GetPrecedents external workbook | Excel cross‑file audit | report external file paths
-// Common Searches: Aspose.Cells find formulas that reference other workbooks | C# extract external workbook paths from Excel formulas | list cells with external links using Aspose.Cells | generate external link report .NET
-// Developer Intent: Create a concise report of all formulas that reference external workbooks and show each target file path.
-// Use Cases: Audit workbook dependencies before distribution | Document data sources for compliance or migration | Identify broken or outdated external references
-// AI Prompts: Generate a method that returns a dictionary mapping cell addresses to arrays of linked file paths using Aspose.Cells. | Adapt the sample to export the external‑link report to CSV or JSON. | Add error handling to skip cells without precedents and log missing external‑link collections.
+// Title: Report Excel formulas with external links and their file paths using Aspose.Cells for .NET
+// Description: Loads an Excel workbook, scans all worksheets and cells, identifies formulas that contain external workbook references, extracts the precedents, and prints the worksheet name, cell address, and linked file path to the console.
+// Keywords: Aspose.Cells external link detection | C# list Excel formulas referencing other workbooks | retrieve external file paths from formulas .NET | audit workbook for cross‑workbook references | enumerate formula precedents with external links | detect external references in Excel using Aspose | report external link cells Aspose.Cells
+// Common Searches: How to find formulas that link to other workbooks with Aspose.Cells | C# code to list external file names used in Excel formulas | Aspose.Cells get precedents of a formula that are external links | Extract external workbook references from an Excel file .NET | Report cells containing external links in a spreadsheet
+// Developer Intent: Identify every formula that references an external workbook and output its sheet, cell address, and the target file path.
+// Use Cases: Perform a compliance audit of a workbook’s external data dependencies. | Generate documentation of cross‑workbook links for release management. | Create a validation tool that flags cells with external references for security review.
+// AI Prompts: Write C# code with Aspose.Cells that exports all external‑link formulas to a CSV file. | Show how to modify the loop to also capture the exact range address of each external reference. | Provide a method that returns a collection of objects containing worksheet name, cell address, external file name, and referenced range.
 
 using System;
-using System.Collections.Generic;
 using Aspose.Cells;
 
-// Loads an Excel workbook, iterates every worksheet and used cell, identifies formulas that reference external workbooks, gathers each linked file path via GetPrecedents or the workbook's ExternalLinks collection, and prints a concise report. Shows how to use Aspose.Cells for .NET to audit cross‑file references.
-class ExternalLinkReport
+namespace AsposeCellsExternalLinkReport
 {
-    static void Main()
+    // Loads an Excel workbook, scans all worksheets and cells, identifies formulas that contain external workbook references, extracts the precedents, and prints the worksheet name, cell address, and linked file path to the console.
+    class Program
     {
-        // Load the workbook (replace with actual file path)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-
-        // List to hold report entries
-        List<string> reportLines = new List<string>();
-
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            Cells cells = sheet.Cells;
+            // Path to the workbook that needs to be analyzed.
+            // Replace with the actual file path as required.
+            string workbookPath = "input.xlsx";
 
-            // Iterate through all used cells in the worksheet
-            foreach (Cell cell in cells)
+            // Load the workbook.
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Iterate through each worksheet in the workbook.
+            foreach (Worksheet worksheet in workbook.Worksheets)
             {
-                // Check if the cell is a formula that contains an external link
-                if (cell.ContainsExternalLink)
-                {
-                    // Collect external file names referenced by this formula
-                    HashSet<string> externalFiles = new HashSet<string>();
+                Cells cells = worksheet.Cells;
 
-                    // Get all precedents (references) of the formula
-                    ReferredAreaCollection precedents = cell.GetPrecedents();
-                    if (precedents != null)
+                // Iterate through all cells that contain formulas.
+                foreach (Cell cell in cells)
+                {
+                    // Check if the cell is a formula and contains an external link.
+                    if (cell.IsFormula && cell.ContainsExternalLink)
                     {
-                        foreach (ReferredArea area in precedents)
+                        // Get all references (precedents) used in the formula.
+                        ReferredAreaCollection precedents = cell.GetPrecedents();
+
+                        // Some formulas may not return precedents (null), guard against it.
+                        if (precedents != null)
                         {
-                            if (area.IsExternalLink)
+                            foreach (ReferredArea area in precedents)
                             {
-                                externalFiles.Add(area.ExternalFileName);
+                                // Identify external links among the precedents.
+                                if (area.IsExternalLink)
+                                {
+                                    // Output the worksheet name, cell address, and external file path.
+                                    Console.WriteLine($"Worksheet: {worksheet.Name}, Cell: {cell.Name}, External File: {area.ExternalFileName}");
+                                }
                             }
                         }
                     }
-
-                    // If no external files were found via precedents, fall back to the workbook's external links collection
-                    if (externalFiles.Count == 0 && workbook.Worksheets.ExternalLinks.Count > 0)
-                    {
-                        foreach (ExternalLink link in workbook.Worksheets.ExternalLinks)
-                        {
-                            externalFiles.Add(link.DataSource);
-                        }
-                    }
-
-                    // Build the report line
-                    string files = string.Join(", ", externalFiles);
-                    string line = $"{sheet.Name}!{cell.Name}: {cell.Formula} -> {files}";
-                    reportLines.Add(line);
                 }
             }
-        }
 
-        // Output the report
-        Console.WriteLine("Formulas containing external links:");
-        foreach (string line in reportLines)
-        {
-            Console.WriteLine(line);
+            // Optionally, keep the workbook unchanged; no save operation is required for reporting.
         }
-
-        // Save the workbook (no modifications made, just demonstrating the save rule)
-        workbook.Save("output.xlsx");
     }
 }

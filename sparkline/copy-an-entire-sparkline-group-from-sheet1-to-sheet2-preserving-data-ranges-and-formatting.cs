@@ -1,92 +1,86 @@
+// Title: Copy Sparkline Group Between Worksheets in C# with Aspose.Cells – Preserve Data Range & Formatting
+// Description: Demonstrates how to duplicate a line sparkline group from Sheet1 to Sheet2 using Aspose.Cells for .NET. The example creates a workbook, adds a sparkline group, customizes high‑point/low‑point colors and line weight, extracts the original data range and cell location, then recreates an identical group on another sheet while copying all visual settings.
+// Keywords: Aspose.Cells sparkline copy C# | duplicate sparkline group .NET | preserve sparkline formatting | sparkline data range transfer | clone SparklineGroup Aspose | C# workbook sparkline example
+// Common Searches: copy sparkline group Aspose.Cells C# | how to duplicate sparkline worksheet .NET | preserve sparkline style when moving sheets | Aspose.Cells copy sparkline data range | clone sparkline group programmatically
+// Developer Intent: Programmatically copy an entire sparkline group from one worksheet to another while retaining its source data range and all formatting attributes.
+// Use Cases: Create a master template with predefined sparkline visuals and replicate it across multiple report sheets. | Build dashboards where the same sparkline chart appears on each tab with identical styling. | Automate worksheet cloning in large workbooks without losing sparkline appearance.
+// AI Prompts: Generate C# code that copies a SparklineGroup from Sheet1 to Sheet2 using Aspose.Cells, including high‑point, low‑point, colors, and line weight. | Explain how to retrieve a sparkline's DataRange and location, then apply them to a new SparklineGroup on a different worksheet. | Show a concise method to clone an Aspose.Cells SparklineGroup without manually setting each property.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
-class CopySparklineGroupExample
+namespace SparklineGroupCopyDemo
 {
-    static void Main()
+    // Demonstrates how to duplicate a line sparkline group from Sheet1 to Sheet2 using Aspose.Cells for .NET. The example creates a workbook, adds a sparkline group, customizes high‑point/low‑point colors and line weight, extracts the original data range and cell location, then recreates an identical group on another sheet while copying all visual settings.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // -------------------------------------------------
-        // Prepare Sheet1 with sample data and a sparkline group
-        // -------------------------------------------------
-        Worksheet sheet1 = workbook.Worksheets[0];
-        sheet1.Name = "Sheet1";
-
-        // Fill some sample data (A1:D1)
-        sheet1.Cells["A1"].PutValue(5);
-        sheet1.Cells["B1"].PutValue(2);
-        sheet1.Cells["C1"].PutValue(1);
-        sheet1.Cells["D1"].PutValue(3);
-
-        // Define where the sparkline will be placed (E1)
-        CellArea location = CellArea.CreateCellArea("E1", "E1");
-
-        // Add a sparkline group to Sheet1
-        int originalGroupIndex = sheet1.SparklineGroups.Add(
-            SparklineType.Line,          // type
-            "A1:D1",                     // data range
-            false,                       // isVertical
-            location);                   // location range
-
-        SparklineGroup originalGroup = sheet1.SparklineGroups[originalGroupIndex];
-
-        // (Optional) Add an extra sparkline to demonstrate multiple sparklines in a group
-        // Here we add the same data range to another cell (F1)
-        originalGroup.Sparklines.Add("A1:D1", 0, 5); // row 0, column 5 => F1
-
-        // Customize some formatting on the original group
-        originalGroup.ShowHighPoint = true;
-        originalGroup.ShowLowPoint = true;
-        originalGroup.HighPointColor.Color = Color.Green;
-        originalGroup.LowPointColor.Color = Color.Red;
-        originalGroup.SeriesColor.Color = Color.Blue;
-        originalGroup.LineWeight = 1.0;
-
-        // -------------------------------------------------
-        // Create Sheet2 where the sparkline group will be copied
-        // -------------------------------------------------
-        Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-
-        // Copy the same data to Sheet2 (so the sparkline references are valid)
-        sheet2.Cells["A1"].PutValue(5);
-        sheet2.Cells["B1"].PutValue(2);
-        sheet2.Cells["C1"].PutValue(1);
-        sheet2.Cells["D1"].PutValue(3);
-
-        // -------------------------------------------------
-        // Replicate the sparkline group on Sheet2
-        // -------------------------------------------------
-        // Add a new group with the same type, data range, orientation and location range
-        int copiedGroupIndex = sheet2.SparklineGroups.Add(
-            originalGroup.Type,          // same sparkline type
-            "A1:D1",                     // same data range
-            false,                       // same orientation (assumed false)
-            location);                   // same location range (E1 on Sheet2)
-
-        SparklineGroup copiedGroup = sheet2.SparklineGroups[copiedGroupIndex];
-
-        // Copy each sparkline from the original group to the new group
-        foreach (Sparkline sp in originalGroup.Sparklines)
+        static void Main()
         {
-            // Add sparkline with identical data range and cell location
-            copiedGroup.Sparklines.Add(sp.DataRange, sp.Row, sp.Column);
+            // Create a new workbook and obtain the first worksheet (Sheet1)
+            Workbook workbook = new Workbook();
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "Sheet1";
+
+            // Populate sample data in Sheet1
+            sheet1.Cells["A1"].PutValue(5);
+            sheet1.Cells["B1"].PutValue(2);
+            sheet1.Cells["C1"].PutValue(1);
+            sheet1.Cells["D1"].PutValue(3);
+
+            // Define the location where the sparkline will be placed (cell E1)
+            CellArea location = new CellArea
+            {
+                StartRow = 0,
+                EndRow = 0,
+                StartColumn = 4,
+                EndColumn = 4
+            };
+
+            // Add a sparkline group to Sheet1 (Line type)
+            int groupIndex = sheet1.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, location);
+            SparklineGroup sourceGroup = sheet1.SparklineGroups[groupIndex];
+
+            // Customize some formatting of the source sparkline group
+            sourceGroup.ShowHighPoint = true;
+            sourceGroup.ShowLowPoint = true;
+            sourceGroup.HighPointColor.Color = System.Drawing.Color.Green;
+            sourceGroup.LowPointColor.Color = System.Drawing.Color.Red;
+            sourceGroup.LineWeight = 1.0;
+
+            // Add a second worksheet (Sheet2) where the sparkline group will be copied
+            Worksheet sheet2 = workbook.Worksheets[workbook.Worksheets.Add()];
+            sheet2.Name = "Sheet2";
+
+            // Assume the source group contains at least one sparkline.
+            // Retrieve the first sparkline to obtain its data range and location.
+            Sparkline firstSparkline = sourceGroup.Sparklines[0];
+            string dataRange = firstSparkline.DataRange;               // e.g., "Sheet1!A1:D1"
+            int row = firstSparkline.Row;                             // row index of the sparkline cell
+            int column = firstSparkline.Column;                       // column index of the sparkline cell
+
+            // Build a CellArea for the destination location using the same row/column.
+            CellArea destLocation = new CellArea
+            {
+                StartRow = row,
+                EndRow = row,
+                StartColumn = column,
+                EndColumn = column
+            };
+
+            // Add a new sparkline group to Sheet2 with the same parameters.
+            int destGroupIndex = sheet2.SparklineGroups.Add(SparklineType.Line, dataRange, false, destLocation);
+            SparklineGroup destGroup = sheet2.SparklineGroups[destGroupIndex];
+
+            // Copy formatting properties from the source group to the destination group.
+            destGroup.ShowHighPoint = sourceGroup.ShowHighPoint;
+            destGroup.ShowLowPoint = sourceGroup.ShowLowPoint;
+            destGroup.HighPointColor.Color = sourceGroup.HighPointColor.Color;
+            destGroup.LowPointColor.Color = sourceGroup.LowPointColor.Color;
+            destGroup.LineWeight = sourceGroup.LineWeight;
+
+            // Save the workbook with both sheets containing identical sparkline groups.
+            workbook.Save("SparklineGroupCopyResult.xlsx");
         }
-
-        // Copy formatting properties
-        copiedGroup.ShowHighPoint = originalGroup.ShowHighPoint;
-        copiedGroup.ShowLowPoint = originalGroup.ShowLowPoint;
-        copiedGroup.HighPointColor.Color = originalGroup.HighPointColor.Color;
-        copiedGroup.LowPointColor.Color = originalGroup.LowPointColor.Color;
-        copiedGroup.SeriesColor.Color = originalGroup.SeriesColor.Color;
-        copiedGroup.LineWeight = originalGroup.LineWeight;
-
-        // -------------------------------------------------
-        // Save the workbook
-        // -------------------------------------------------
-        workbook.Save("SparklineGroupCopyDemo.xlsx");
     }
 }

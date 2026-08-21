@@ -1,84 +1,90 @@
-// Title: C# – Update PivotTable Data Source to a Union Range Across Worksheets and Refresh with Aspose.Cells
-// Description: Loads an Excel workbook, locates the first PivotTable, changes its source to a union of ranges (e.g., Sheet1!A1:C10 and Sheet2!A1:C10) using PivotTable.ChangeDataSource, then calls RefreshData and CalculateData to apply the new data before saving the file.
-// Keywords: Aspose.Cells | C# PivotTable union range | ChangeDataSource method | RefreshData | CalculateData | multiple worksheet source | Excel automation .NET | update PivotTable source | GitHub code example | sample code
-// Common Searches: Aspose.Cells set union data source for PivotTable | Refresh PivotTable after changing source in C# | Add another worksheet range to existing PivotTable | ChangeDataSource with multiple ranges example | PivotTable data source union Aspose.Cells
-// Developer Intent: Programmatically replace a PivotTable's single‑range source with a union of ranges on different worksheets and refresh the table so the new data is reflected in the report.
-// Use Cases: Automated financial reporting that expands a PivotTable to include data from a newly added worksheet. | Dynamic dashboards where the data range grows across multiple sheets and the PivotTable must stay up‑to‑date. | Batch processing of Excel files that need their PivotTables re‑sourced and recalculated without manual intervention.
-// AI Prompts: Generate C# code using Aspose.Cells to change a PivotTable's data source to a union of two worksheet ranges and refresh it. | Explain how PivotTable.ChangeDataSource accepts an array of range strings for union sources in Aspose.Cells. | Create robust error handling for missing input files and absent PivotTables when updating a PivotTable's source.
+// Title: Update PivotTable Union Data Source and Refresh It with Aspose.Cells for .NET (C#)
+// Description: Loads an existing workbook, replaces the first PivotTable's source with a union range that spans Sheet1 and Sheet2, refreshes and recalculates the table, then saves the result to a new file.
+// Keywords: Aspose.Cells PivotTable union range | change pivot data source C# | refresh pivot table Aspose.Cells | calculate pivot data .NET | multiple worksheet pivot source
+// Common Searches: Aspose.Cells add second worksheet to pivot source | C# refresh PivotTable after changing data source | how to use union range for PivotTable in Aspose.Cells | update and recalculate PivotTable programmatically
+// Developer Intent: Programmatically extend a PivotTable's source to include another worksheet and trigger a refresh so the new data is reflected.
+// Use Cases: Merge sales figures from two sheets into a single PivotTable without manual re‑configuration. | Automate PivotTable updates in a reporting pipeline after new worksheet data is added. | Ensure calculations are current after modifying the PivotTable's underlying data range.
+// AI Prompts: Write C# code using Aspose.Cells to change a PivotTable's data source to a union of Sheet1!A1:C10 and Sheet3!A1:C10, then refresh it. | Explain the steps required to refresh and recalculate a PivotTable after calling PivotTable.ChangeDataSource in Aspose.Cells. | Suggest robust error‑handling patterns when the additional worksheet referenced in a union range does not exist.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Loads an Excel workbook, locates the first PivotTable, changes its source to a union of ranges (e.g., Sheet1!A1:C10 and Sheet2!A1:C10) using PivotTable.ChangeDataSource, then calls RefreshData and CalculateData to apply the new data before saving the file.
-class UpdatePivotUnionRange
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads an existing workbook, replaces the first PivotTable's source with a union range that spans Sheet1 and Sheet2, refreshes and recalculates the table, then saves the result to a new file.
+    public class UpdateUnionRangeAndRefreshPivot
     {
-        try
+        // Entry point for the application
+        public static void Main()
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify input file exists
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
             }
 
-            // Load the workbook
+            // Load the existing workbook that contains the pivot table
             Workbook workbook = new Workbook(inputPath);
 
-            // Locate the first worksheet that contains a PivotTable
-            Worksheet pivotSheet = null;
-            PivotTable pivotTable = null;
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Assume the pivot table is on the first worksheet
+            Worksheet pivotWorksheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one pivot table
+            if (pivotWorksheet.PivotTables.Count == 0)
             {
-                if (ws.PivotTables.Count > 0)
-                {
-                    pivotSheet = ws;
-                    pivotTable = ws.PivotTables[0];
-                    break;
-                }
+                throw new InvalidOperationException("No pivot tables found on the first worksheet.");
             }
 
-            if (pivotTable == null)
-            {
-                Console.WriteLine("No PivotTable found in the workbook.");
-                return;
-            }
+            PivotTable pivotTable = pivotWorksheet.PivotTables[0];
 
-            // Define the new union data source ranges
+            // Define the new union data source that includes an additional worksheet (e.g., "Sheet2")
+            // The format is "SheetName!Range"
             string[] newDataSource = new string[]
             {
-                "Sheet1!A1:C10",
-                "Sheet2!A1:C10"
+                "Sheet1!A1:C10",   // Existing range
+                "Sheet2!A1:C10"    // Additional range to be included
             };
 
-            // Change the PivotTable's data source to the union of the ranges
-            // Aspose.Cells expects an array of range strings for union sources
+            // Change the pivot table's data source to the new union range
             pivotTable.ChangeDataSource(newDataSource);
 
-            // Refresh the PivotTable to reflect the new data source
-            pivotTable.RefreshData();      // Gather data from the new source
-            pivotTable.CalculateData();    // Recalculate the layout
+            // Refresh the pivot table data (the method is not obsolete in current API)
+            pivotTable.RefreshData();
 
-            // Ensure output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Recalculate the pivot table after data refresh
+            pivotTable.CalculateData();
+
+            // Optionally, refresh all pivot tables in the worksheet
+            // pivotWorksheet.RefreshPivotTables();
+
+            // Save the modified workbook
+            try
             {
-                Directory.CreateDirectory(outputDir);
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            // Save the updated workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                throw;
+            }
         }
     }
 }

@@ -1,65 +1,52 @@
+// Title: Auto‑Expand an Aspose.Cells ListObject When Adding New Rows – C# Example
+// Description: Demonstrates how to create a worksheet table (ListObject) covering A1:B5, append rows below it, and programmatically enlarge the table range with ListObject.Resize so the table automatically includes the new data before saving the workbook.
+// Keywords: Aspose.Cells auto expand table | ListObject Resize C# | expand Aspose.Cells table range | add rows to Aspose.Cells ListObject | dynamic table size .NET | C# Aspose.Cells table resizing
+// Common Searches: Aspose.Cells auto expand table after adding rows | ListObject.Resize example C# | how to grow a table range in Aspose.Cells | extend Aspose.Cells ListObject programmatically | auto‑expand table Aspose.Cells .NET
+// Developer Intent: Programmatically extend a ListObject’s range to include rows added beneath the original table.
+// Use Cases: Generate a report where data rows are appended at runtime and the table must grow to keep formulas and formatting applied. | Create a dynamic worksheet that feeds charts or pivots, requiring the table boundaries to reflect newly inserted rows. | Automate data import processes that add batches of rows and need the table range updated before further processing.
+// AI Prompts: Write C# code using Aspose.Cells to create a ListObject and automatically expand it after inserting additional rows. | Show how to calculate the new end row index and call ListObject.Resize to update the table range. | Explain how to achieve auto‑expand behavior for an Aspose.Cells table without manual resizing each time.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsTableAutoExpandDemo
+// Demonstrates how to create a worksheet table (ListObject) covering A1:B5, append rows below it, and programmatically enlarge the table range with ListObject.Resize so the table automatically includes the new data before saving the workbook.
+class AutoExpandTableDemo
 {
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Populate initial data for the table (A1:B5)
+        cells["A1"].PutValue("ID");
+        cells["B1"].PutValue("Name");
+        for (int i = 2; i <= 5; i++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Populate initial data for the table (including header row)
-            cells["A1"].PutValue("ID");
-            cells["B1"].PutValue("Name");
-            for (int i = 2; i <= 5; i++) // rows 2‑5 contain data
-            {
-                cells[$"A{i}"].PutValue(i - 1);
-                cells[$"B{i}"].PutValue($"Item {i - 1}");
-            }
-
-            // Add a ListObject (table) covering the initial range A1:B5 (header + 4 data rows)
-            int tableIndex = worksheet.ListObjects.Add(0, 0, 4, 1, true);
-            ListObject table = worksheet.ListObjects[tableIndex];
-            table.DisplayName = "SampleTable";
-
-            // -----------------------------------------------------------------
-            // Simulate adding new data rows below the current table range.
-            // The table will not automatically grow, so we must resize it.
-            // -----------------------------------------------------------------
-            int newRowsCount = 3; // number of rows we want to add
-            int startInsertRow = table.EndRow + 1; // first row after the current table
-
-            // Insert blank rows to make space for new data
-            cells.InsertRows(startInsertRow, newRowsCount);
-
-            // Fill the newly inserted rows with data
-            for (int i = 0; i < newRowsCount; i++)
-            {
-                int rowIdx = startInsertRow + i;
-                cells[rowIdx, 0].PutValue(table.EndRow - 3 + i + 1); // simple incremental ID
-                cells[rowIdx, 1].PutValue($"NewItem {i + 1}");
-            }
-
-            // After inserting rows, resize the table to include the new data range.
-            // Resize parameters: startRow, startColumn, endRow, endColumn, hasHeaders
-            table.Resize(
-                table.StartRow,               // keep original start row
-                table.StartColumn,            // keep original start column
-                table.EndRow + newRowsCount, // new end row after added rows
-                table.EndColumn,              // keep original end column
-                true);                       // table still has a header row
-
-            // Optional: Auto‑fit rows and columns for better appearance
-            worksheet.AutoFitRows();
-            worksheet.AutoFitColumns();
-
-            // Save the workbook
-            workbook.Save("TableAutoExpandDemo.xlsx");
+            cells[$"A{i}"].PutValue(i - 1);
+            cells[$"B{i}"].PutValue("Item " + (i - 1));
         }
+
+        // Add a ListObject (table) covering the range A1:B5
+        int tableIndex = worksheet.ListObjects.Add(0, 0, 4, 1, true);
+        ListObject table = worksheet.ListObjects[tableIndex];
+        table.DisplayName = "MyTable";
+
+        // Add new rows below the existing table (A6:B8)
+        for (int i = 6; i <= 8; i++)
+        {
+            cells[$"A{i}"].PutValue(i - 1);
+            cells[$"B{i}"].PutValue("NewItem " + (i - 1));
+        }
+
+        // Expand the table to include the newly added rows
+        // EndRow is zero‑based, so row 8 corresponds to index 7
+        int newEndRow = 7;
+        table.Resize(table.StartRow, table.StartColumn, newEndRow, table.EndColumn, true);
+
+        // Save the workbook
+        workbook.Save("AutoExpandTable.xlsx");
     }
 }

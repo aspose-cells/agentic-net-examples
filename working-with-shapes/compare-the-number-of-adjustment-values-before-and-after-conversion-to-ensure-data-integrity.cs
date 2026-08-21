@@ -1,73 +1,78 @@
-// Title: Check Shape Adjustment Count Before and After ConvertStringToNumericValue in Aspose.Cells (C#)
-// Description: Demonstrates how to record Geometry.ShapeAdjustValues.Count of a Chevron auto‑shape, run sheet.Cells.ConvertStringToNumericValue on a worksheet, and compare the counts to verify that shape adjustment data remains unchanged.
-// Keywords: Aspose.Cells | C# | .NET | Shape adjustment values | Geometry.ShapeAdjustValues | ConvertStringToNumericValue | auto shape | Chevron shape | data integrity | worksheet conversion
-// Common Searches: Aspose.Cells compare shape adjustment count after converting strings to numbers | C# verify Geometry.ShapeAdjustValues unchanged after ConvertStringToNumericValue | how to ensure auto shape adjustments are preserved in Aspose.Cells | check shape adjustment values count before and after cell conversion | Aspose.Cells data integrity for shape geometry
-// Developer Intent: Confirm that converting string cells to numeric values does not modify the number of adjustment values of an auto shape.
-// Use Cases: Validate that bulk conversion of worksheet strings to numbers does not affect auto‑shape geometry. | Log a warning when the adjustment values count changes after conversion, indicating a potential integrity issue. | Integrate a safeguard in automated report generation to abort processing if shape adjustments are altered.
-// AI Prompts: Write C# code using Aspose.Cells that captures Geometry.ShapeAdjustValues.Count before and after sheet.Cells.ConvertStringToNumericValue and throws an exception if the counts differ. | Show how to log the adjustment values count and handle mismatches when converting worksheet strings to numeric values with Aspose.Cells. | Explain why ConvertStringToNumericValue might impact shape geometry and recommend best practices to protect adjustment values in Aspose.Cells.
+// Title: Verify ShapeAdjustValues Count Before and After Workbook Save/Load with Aspose.Cells for .NET
+// Description: Creates a workbook, adds a Chevron auto shape, records the number of ShapeAdjustValues, optionally changes a value, saves the file, reloads it, and compares the counts to ensure shape geometry integrity.
+// Keywords: Aspose.Cells ShapeAdjustValues | auto shape adjustment count | C# workbook save reload verification | shape geometry persistence | data integrity Aspose.Cells
+// Common Searches: Aspose.Cells check shape adjustment values after save | compare ShapeAdjustValues count before and after reload C# | verify auto shape geometry persistence in Excel | shape adjust values lost after conversion Aspose.Cells | how to test shape data integrity with Aspose.Cells
+// Developer Intent: Confirm that the count of ShapeAdjustValues remains unchanged after a workbook is saved and reloaded.
+// Use Cases: Automated regression test for shape geometry retention in generated Excel files. | Detecting loss of custom auto‑shape parameters during format conversion (e.g., XLSX → PDF). | Ensuring shape data consistency in document‑generation pipelines that involve multiple save/load cycles.
+// AI Prompts: Write C# code that asserts ShapeAdjustValues.Count is identical before saving and after loading a workbook with Aspose.Cells. | Provide a method to log differences in ShapeAdjustValues when a workbook is reloaded. | Explain how to modify a shape's adjustment values and verify they stay unchanged after converting the workbook to another format.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to record Geometry.ShapeAdjustValues.Count of a Chevron auto‑shape, run sheet.Cells.ConvertStringToNumericValue on a worksheet, and compare the counts to verify that shape adjustment data remains unchanged.
+    // Creates a workbook, adds a Chevron auto shape, records the number of ShapeAdjustValues, optionally changes a value, saves the file, reloads it, and compares the counts to ensure shape geometry integrity.
     class CompareShapeAdjustValues
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Add an auto shape (Chevron) which contains adjustment values
-                Shape shape = sheet.Shapes.AddAutoShape(AutoShapeType.Chevron, 10, 10, 0, 0, 200, 100);
-                Geometry geometry = shape.Geometry;
-
-                // Count adjustment values before any conversion
-                int countBefore = geometry.ShapeAdjustValues.Count;
-                Console.WriteLine("Adjustment values count before conversion: " + countBefore);
-
-                // Populate cells with string data that can be converted to numeric values
-                sheet.Cells["A1"].PutValue("123");
-                sheet.Cells["A2"].PutValue("45.6");
-                sheet.Cells["A3"].PutValue("NotANumber");
-
-                // Convert all convertible string data in the worksheet to numeric values
-                sheet.Cells.ConvertStringToNumericValue();
-
-                // Count adjustment values after conversion
-                int countAfter = geometry.ShapeAdjustValues.Count;
-                Console.WriteLine("Adjustment values count after conversion: " + countAfter);
-
-                // Compare the counts to ensure data integrity
-                if (countBefore == countAfter)
-                {
-                    Console.WriteLine("Adjustment values count unchanged. Data integrity maintained.");
-                }
-                else
-                {
-                    Console.WriteLine("Adjustment values count changed! Potential data integrity issue.");
-                }
-
-                // Save the workbook (optional)
-                workbook.Save("CompareShapeAdjustValues.xlsx");
+                Run();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-    }
 
-    class Program
-    {
-        static void Main(string[] args)
+        public static void Run()
         {
-            CompareShapeAdjustValues.Run();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add an auto shape (Chevron) to the worksheet
+            Shape shape = worksheet.Shapes.AddAutoShape(AutoShapeType.Chevron, 10, 10, 0, 0, 200, 100);
+            Geometry geometry = shape.Geometry;
+
+            // Record the number of adjustment values before any conversion
+            int initialAdjustCount = geometry.ShapeAdjustValues.Count;
+
+            // Optionally modify the first adjust value if any exist
+            if (initialAdjustCount > 0)
+            {
+                geometry.ShapeAdjustValues[0].Value = 0.3;
+            }
+
+            // Save the workbook (lifecycle step)
+            string filePath = "AdjustValuesBeforeAfter.xlsx";
+            workbook.Save(filePath);
+
+            // Ensure the file exists before loading
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("Saved file not found.");
+                return;
+            }
+
+            // Load the workbook again to simulate a conversion/reload scenario
+            Workbook loadedWorkbook = new Workbook(filePath);
+            Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
+            Shape loadedShape = loadedWorksheet.Shapes[0];
+            Geometry loadedGeometry = loadedShape.Geometry;
+
+            // Record the number of adjustment values after reload
+            int afterAdjustCount = loadedGeometry.ShapeAdjustValues.Count;
+
+            // Compare the counts and output the result
+            Console.WriteLine($"Initial adjustment values count: {initialAdjustCount}");
+            Console.WriteLine($"After reload adjustment values count: {afterAdjustCount}");
+            Console.WriteLine(initialAdjustCount == afterAdjustCount
+                ? "Adjustment values count unchanged – data integrity preserved."
+                : "Adjustment values count changed – data integrity issue.");
         }
     }
 }

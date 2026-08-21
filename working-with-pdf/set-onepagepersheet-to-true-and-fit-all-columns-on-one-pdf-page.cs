@@ -1,42 +1,40 @@
+// Title: Export a Wide Worksheet to a Single PDF Page with All Columns Using Aspose.Cells for .NET (C#)
+// Description: This C# example creates a workbook, adds many columns, sets the worksheet page setup to fit the width to one page (FitToPagesWide = 1, FitToPagesTall = 0), enables PdfSaveOptions.OnePagePerSheet and AllColumnsInOnePagePerSheet, and saves the file as a PDF where each sheet appears on a single page containing all columns.
+// Keywords: Aspose.Cells | C# | .NET | PdfSaveOptions | OnePagePerSheet | AllColumnsInOnePagePerSheet | FitToPagesWide | fit columns to one PDF page | export worksheet to PDF | single page PDF | wide worksheet PDF | page setup
+// Common Searches: Aspose.Cells set OnePagePerSheet true | fit all columns on one PDF page Aspose.Cells | PdfSaveOptions AllColumnsInOnePagePerSheet example | C# export Excel to single-page PDF | force worksheet columns onto one PDF page | Aspose.Cells PDF page setup width
+// Developer Intent: Generate a PDF where each worksheet is rendered on a single page and all columns are compressed to fit the page width.
+// Use Cases: Printing wide reports without horizontal scrolling | Creating compact PDFs for catalogs or dashboards | Archiving spreadsheets so each sheet occupies one page | Producing invoices or purchase orders with many line‑item columns | Distributing spreadsheet data to stakeholders with limited screen space
+// AI Prompts: Show C# code that uses Aspose.Cells to export a worksheet to a one‑page‑per‑sheet PDF with all columns forced onto the page. | Write an example that sets worksheet.PageSetup.FitToPagesWide = 1, FitToPagesTall = 0 and enables PdfSaveOptions.OnePagePerSheet and AllColumnsInOnePagePerSheet. | Explain how to combine page‑setup settings and PdfSaveOptions to produce a single‑page PDF for a wide worksheet in Aspose.Cells.
+
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering; // for ImageOrPrintOptions if needed
 
-// Author: Aspose.Cells .NET example – set OnePagePerSheet and fit all columns on one PDF page
+// This C# example creates a workbook, adds many columns, sets the worksheet page setup to fit the width to one page (FitToPagesWide = 1, FitToPagesTall = 0), enables PdfSaveOptions.OnePagePerSheet and AllColumnsInOnePagePerSheet, and saves the file as a PDF where each sheet appears on a single page containing all columns.
 class Program
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate the sheet with sample data that spans many columns
-        for (int col = 0; col < 30; col++)
+        // Populate the sheet with sample data (optional, demonstrates many columns)
+        for (int col = 0; col < 50; col++)
         {
-            sheet.Cells[0, col].PutValue($"Header {col + 1}");
-            for (int row = 1; row <= 20; row++)
-            {
-                sheet.Cells[row, col].PutValue($"R{row}C{col + 1}");
-            }
+            worksheet.Cells[0, col].PutValue("Column " + (col + 1));
+            worksheet.Cells[1, col].PutValue("Sample data " + (col + 1));
         }
 
-        // Configure page setup to fit all columns on a single page (rows may span multiple pages)
-        PageSetup pageSetup = sheet.PageSetup;
-        pageSetup.FitToPagesTall = 0;   // 0 = unlimited rows, forces all columns onto one page width
-        pageSetup.FitToPagesWide = 1;   // optional: ensure only one page width is used
+        // Configure page setup to fit all columns on one page (height adjusts automatically)
+        worksheet.PageSetup.FitToPagesWide = 1;   // one page wide
+        worksheet.PageSetup.FitToPagesTall = 0;   // unlimited height
 
-        // Create PDF save options and enable OnePagePerSheet
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            OnePagePerSheet = true,
-            // AllColumnsInOnePagePerSheet also achieves the same effect; included for completeness
-            AllColumnsInOnePagePerSheet = true
-        };
+        // Create PDF save options and enable the required properties
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        pdfOptions.OnePagePerSheet = true;                // all content on one page per sheet
+        pdfOptions.AllColumnsInOnePagePerSheet = true;    // force all columns onto that page
 
-        // Save the workbook as PDF with the configured options
-        workbook.Save("Output.pdf", pdfOptions);
-
-        Console.WriteLine("PDF generated with OnePagePerSheet = true and all columns on one page.");
+        // Save the workbook as PDF using the configured options
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

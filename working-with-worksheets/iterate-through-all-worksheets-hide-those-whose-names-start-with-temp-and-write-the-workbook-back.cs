@@ -1,35 +1,39 @@
-// Title: Hide worksheets prefixed with "Temp" using Aspose.Cells for .NET
-// Description: Loads an Excel file with Aspose.Cells, iterates all worksheets, hides those whose names start with "Temp" (case‑insensitive) by setting IsVisible = false, and saves the modified workbook.
-// Keywords: Aspose.Cells hide worksheet | C# hide Temp sheets | iterate worksheets Aspose.Cells | set worksheet visibility | save workbook Aspose.Cells | case insensitive sheet name
-// Common Searches: Aspose.Cells hide worksheet by name | C# hide all sheets starting with Temp | How to set worksheet visibility in Aspose.Cells | Save workbook after hiding sheets Aspose.Cells | Iterate through worksheets Aspose.Cells .NET
-// Developer Intent: Hide every worksheet whose name begins with "Temp" and write the updated workbook to disk.
-// Use Cases: Remove temporary analysis sheets before sharing a report. | Conceal intermediate calculation tabs in a financial model. | Prepare a clean template by hiding helper sheets that start with "Temp".
-// AI Prompts: Generate C# code that uses Aspose.Cells to hide all worksheets whose names start with "Temp" and saves the workbook. | Show a LINQ‑based approach to filter and hide worksheets with a specific prefix in Aspose.Cells. | Explain how to unhide worksheets that were hidden by setting IsVisible = false in Aspose.Cells.
+// Title: Hide worksheets starting with “Temp” in a .NET workbook using Aspose.Cells and save it
+// Description: Loads an existing workbook, loops through all worksheets, hides any sheet whose name begins with "Temp" (case‑insensitive) by setting IsVisible to false, and saves the updated file.
+// Keywords: Aspose.Cells hide worksheet | C# hide worksheet by name | iterate worksheets Aspose.Cells | worksheet visibility Aspose.Cells | case‑insensitive worksheet name | save workbook Aspose.Cells | temporary sheets Excel | Aspose.Cells .NET
+// Common Searches: Aspose.Cells hide worksheet that starts with Temp | C# hide Excel sheets by prefix using Aspose.Cells | How to set worksheet IsVisible false Aspose.Cells | Save workbook after hiding sheets Aspose.Cells | Iterate all worksheets Aspose.Cells C#
+// Developer Intent: Programmatically hide every worksheet whose name begins with “Temp” and persist the changes to a new Excel file.
+// Use Cases: Remove internal calculation tabs before sharing a report with clients. | Automatically conceal temporary analysis sheets generated during batch processing. | Prepare a clean workbook for distribution while keeping helper sheets hidden. | Reduce visual clutter in exported Excel files by hiding auxiliary worksheets.
+// AI Prompts: Write C# code that uses Aspose.Cells to hide all worksheets whose names start with "Temp" and then saves the workbook. | Explain how to perform a case‑insensitive name check when hiding sheets with Aspose.Cells. | Show how to unhide worksheets that were hidden because their names start with "Temp" using Aspose.Cells. | Generate a script that processes multiple Excel files, hides temporary sheets in each, and saves the results.
 
 using System;
 using Aspose.Cells;
 
-// Loads an Excel file with Aspose.Cells, iterates all worksheets, hides those whose names start with "Temp" (case‑insensitive) by setting IsVisible = false, and saves the modified workbook.
-class HideTempSheets
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Loads an existing workbook, loops through all worksheets, hides any sheet whose name begins with "Temp" (case‑insensitive) by setting IsVisible to false, and saves the updated file.
+    class HideTempSheets
     {
-        // Load an existing workbook (create/load step)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through all worksheets
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
+        static void Main()
         {
-            Worksheet sheet = workbook.Worksheets[i];
+            // Load an existing workbook (create rule)
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Hide worksheets whose names start with "Temp"
-            if (sheet.Name.StartsWith("Temp", StringComparison.OrdinalIgnoreCase))
+            // Iterate through all worksheets
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
-                sheet.IsVisible = false; // hide the sheet
-            }
-        }
+                Worksheet sheet = workbook.Worksheets[i];
 
-        // Save the modified workbook (save step)
-        workbook.Save("output.xlsx");
+                // Hide the worksheet if its name starts with "Temp"
+                if (sheet.Name.StartsWith("Temp", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Set visibility to false (hide)
+                    sheet.IsVisible = false;
+                }
+            }
+
+            // Save the modified workbook (save rule)
+            workbook.Save("output.xlsx");
+        }
     }
 }

@@ -1,87 +1,101 @@
-// Title: Aspose.Cells .NET: Create Named Ranges and Apply SUMIFS for Monthly Sales Aggregation
-// Description: This example builds a new workbook, populates columns A (Date) and B (Sales) with sample data, defines the named ranges SalesDates and SalesValues, inserts a SUMIFS formula in cell D1 to total January 2023 sales, evaluates the formula, prints the result, and saves the file as MonthlySalesAggregation.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | named range | SUMIFS | monthly sales aggregation | dynamic reporting | Excel formula calculation | workbook automation | sales data analysis
-// Common Searches: Aspose.Cells define named ranges C# | SUMIFS formula with Aspose.Cells .NET | how to total sales by month using Aspose.Cells | C# example for dynamic sales report in Excel | calculate monthly totals with named ranges in Aspose.Cells
-// Developer Intent: Create named ranges for date and sales columns and compute a month‑specific total using a SUMIFS formula in Aspose.Cells.
-// Use Cases: Generate a January sales total by applying SUMIFS to the SalesValues range filtered by the SalesDates range. | Reuse the same named ranges to calculate totals for any month by adjusting the date criteria in the formula. | Automate the creation of a ready‑to‑share sales workbook that updates automatically when source data changes.
-// AI Prompts: Write C# code with Aspose.Cells that defines named ranges for columns A and B and adds a SUMIFS formula to sum sales for March 2023. | Show how to modify the SUMIFS formula so the start and end dates are read from cells instead of being hard‑coded. | Explain how to loop through a list of months and write each month’s total to consecutive cells using the defined named ranges.
+// Title: Aspose.Cells for .NET: Create a SUMIFS Named Range to Aggregate Monthly Sales (C#)
+// Description: This C# example shows how to build a workbook with date, month, year, and sales columns, define column‑based named ranges (SalesData, MonthData, YearData), and create a fourth named range (MonthlySales) that uses the SUMIFS function to total sales for a month and year specified in cells F2 and G2. The result is displayed in I1, formulas are calculated, and the file is saved.
+// Keywords: Aspose.Cells | C# | SUMIFS | named range | monthly sales aggregation | dynamic reporting | Excel formula automation | Aspose.Cells .NET example | GitHub sample | workbook calculation
+// Common Searches: Aspose.Cells SUMIFS named range C# | how to aggregate monthly sales with Aspose.Cells | dynamic report using named ranges in .NET | C# create named range for SUMIFS | Aspose.Cells example for monthly totals
+// Developer Intent: Define column‑level named ranges and a SUMIFS named range to compute month‑year sales totals that update automatically when criteria cells change.
+// Use Cases: Show a running total for a selected month and year that refreshes when the user edits cells F2 or G2. | Reference the MonthlySales named range on other worksheets to build consolidated dashboards without duplicating the SUMIFS formula. | Retrieve the underlying SalesData range via GetRange for further processing or export.
+// AI Prompts: Generate C# code using Aspose.Cells that creates named ranges for sales, month, and year columns and adds a SUMIFS named range to total sales based on month and year criteria cells. | Demonstrate how to calculate the SUMIFS named range, display the result in a cell, and save the workbook with Aspose.Cells for .NET. | Explain how changing the month or year values in the criteria cells updates the aggregated sales value automatically.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // This example builds a new workbook, populates columns A (Date) and B (Sales) with sample data, defines the named ranges SalesDates and SalesValues, inserts a SUMIFS formula in cell D1 to total January 2023 sales, evaluates the formula, prints the result, and saves the file as MonthlySalesAggregation.xlsx.
-    public class MonthlySalesAggregation
-    {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // ------------------------------------------------------------
-                // Populate sample sales data
-                // Column A: Date (yyyy-MM-dd)
-                // Column B: Sales amount
-                // ------------------------------------------------------------
-                cells["A1"].PutValue("Date");
-                cells["B1"].PutValue("Sales");
-
-                // Sample data for two months
-                DateTime startDate = new DateTime(2023, 1, 1);
-                Random rnd = new Random();
-                for (int i = 0; i < 60; i++) // 60 days of data
-                {
-                    cells[i + 1, 0].PutValue(startDate.AddDays(i));          // Date in column A
-                    cells[i + 1, 1].PutValue(rnd.Next(100, 1000));          // Random sales in column B
-                }
-
-                // ------------------------------------------------------------
-                // Create named ranges for the data columns
-                // "SalesDates" -> Sheet1!$A$2:$A$61
-                // "SalesValues" -> Sheet1!$B$2:$B$61
-                // ------------------------------------------------------------
-                int datesNameIndex = sheet.Workbook.Worksheets.Names.Add("SalesDates");
-                sheet.Workbook.Worksheets.Names[datesNameIndex].RefersTo = $"={sheet.Name}!$A$2:$A$61";
-
-                int valuesNameIndex = sheet.Workbook.Worksheets.Names.Add("SalesValues");
-                sheet.Workbook.Worksheets.Names[valuesNameIndex].RefersTo = $"={sheet.Name}!$B$2:$B$61";
-
-                // ------------------------------------------------------------
-                // Insert a formula that aggregates sales for January 2023 using SUMIFS
-                // ------------------------------------------------------------
-                // Cell D1 will hold the result
-                cells["D1"].Formula = "=SUMIFS(SalesValues, SalesDates, \">=DATE(2023,1,1)\", SalesDates, \"<=DATE(2023,1,31)\")";
-
-                // Calculate all formulas in the workbook
-                workbook.CalculateFormula();
-
-                // Output the aggregated result to the console
-                Console.WriteLine("Total sales for January 2023: " + cells["D1"].Value);
-
-                // ------------------------------------------------------------
-                // Save the workbook
-                // ------------------------------------------------------------
-                workbook.Save("MonthlySalesAggregation.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
-    }
-
-    public class Program
+    // This C# example shows how to build a workbook with date, month, year, and sales columns, define column‑based named ranges (SalesData, MonthData, YearData), and create a fourth named range (MonthlySales) that uses the SUMIFS function to total sales for a month and year specified in cells F2 and G2. The result is displayed in I1, formulas are calculated, and the file is saved.
+    public class NamedRangeSumIfsDemo
     {
         public static void Main(string[] args)
         {
-            MonthlySalesAggregation.Run();
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate header row
+            sheet.Cells["A1"].PutValue("Date");
+            sheet.Cells["B1"].PutValue("Month");
+            sheet.Cells["C1"].PutValue("Year");
+            sheet.Cells["D1"].PutValue("Sales");
+
+            // Sample data
+            string[] dates = { "2023-01-05", "2023-01-12", "2023-01-20", "2023-02-03", "2023-02-15", "2023-02-28" };
+            string[] months = { "Jan", "Jan", "Jan", "Feb", "Feb", "Feb" };
+            int[] years = { 2023, 2023, 2023, 2023, 2023, 2023 };
+            double[] sales = { 1500, 2300, 1800, 2100, 1900, 2500 };
+
+            // Fill worksheet with sample rows
+            for (int i = 0; i < dates.Length; i++)
+            {
+                int row = i + 1; // Row index (0‑based). Row 1 is the second row in the sheet.
+                sheet.Cells[row, 0].PutValue(DateTime.Parse(dates[i])); // Date
+                sheet.Cells[row, 1].PutValue(months[i]);               // Month
+                sheet.Cells[row, 2].PutValue(years[i]);                // Year
+                sheet.Cells[row, 3].PutValue(sales[i]);                // Sales
+            }
+
+            int lastDataRow = dates.Length; // Number of data rows
+
+            // Create named ranges for each column
+            int idxSales = sheet.Workbook.Worksheets.Names.Add("SalesData");
+            sheet.Workbook.Worksheets.Names[idxSales].RefersTo = $"={sheet.Name}!$D$2:$D${lastDataRow + 1}";
+
+            int idxMonth = sheet.Workbook.Worksheets.Names.Add("MonthData");
+            sheet.Workbook.Worksheets.Names[idxMonth].RefersTo = $"={sheet.Name}!$B$2:$B${lastDataRow + 1}";
+
+            int idxYear = sheet.Workbook.Worksheets.Names.Add("YearData");
+            sheet.Workbook.Worksheets.Names[idxYear].RefersTo = $"={sheet.Name}!$C$2:$C${lastDataRow + 1}";
+
+            // Cells that hold the criteria for month and year
+            sheet.Cells["F1"].PutValue("Month");
+            sheet.Cells["F2"].PutValue("Jan");   // Change to get different month totals
+            sheet.Cells["G1"].PutValue("Year");
+            sheet.Cells["G2"].PutValue(2023);    // Change to get different year totals
+
+            // Create a named range that aggregates sales using SUMIFS
+            int idxAgg = sheet.Workbook.Worksheets.Names.Add("MonthlySales");
+            // Formula: =SUMIFS(SalesData, MonthData, F2, YearData, G2)
+            sheet.Workbook.Worksheets.Names[idxAgg].RefersTo = "=SUMIFS(SalesData, MonthData, F2, YearData, G2)";
+
+            // Use the named range in a cell to display the result
+            sheet.Cells["I1"].Formula = "=MonthlySales";
+
+            // Calculate all formulas
+            workbook.CalculateFormula();
+
+            // Demonstrate GetRange on the SalesData named range
+            Name salesName = sheet.Workbook.Worksheets.Names["SalesData"];
+            Aspose.Cells.Range salesRange = salesName.GetRange();
+            Console.WriteLine($"SalesData refers to range: {salesRange.RefersTo}");
+
+            // Output the aggregated result
+            Console.WriteLine($"Aggregated sales for month '{sheet.Cells["F2"].StringValue}' and year {sheet.Cells["G2"].IntValue}: {sheet.Cells["I1"].Value}");
+
+            // Save the workbook
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "NamedRangeSumIfsDemo.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
     }
 }

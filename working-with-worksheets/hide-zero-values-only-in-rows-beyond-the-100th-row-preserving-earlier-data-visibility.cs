@@ -1,17 +1,17 @@
-// Title: C# – Hide Zero Values in Rows > 100 Using Aspose.Cells
-// Description: Creates a workbook, populates 120 rows, defines a custom number format "0;-0;;@" that suppresses zero display, and applies this style only to numeric zeros in rows after the 100th row, then saves the file as XLSX.
-// Keywords: Aspose.Cells C# hide zeros | custom number format zero suppression | apply style after row 100 | Excel zero display control | C# workbook formatting Aspose
-// Common Searches: Aspose.Cells hide zero values after row 100 | C# custom number format to hide zeros in Excel | apply style to specific rows Aspose.Cells | suppress zero display in large worksheets C# | conditional formatting zeros beyond row 100 Aspose
-// Developer Intent: Apply a style that hides numeric zeros only in rows beyond the 100th row while keeping earlier rows unchanged.
-// Use Cases: Financial statements where summary rows show zeros but detailed rows should appear blank. | Large data exports where trailing rows contain many zero values that clutter the view. | Templates that automatically conceal zeros in the lower section of a sheet for cleaner presentation.
-// AI Prompts: Generate Aspose.Cells C# code to hide zero values in rows greater than a given index using a custom number format. | Show how to use conditional formatting in Aspose.Cells to suppress zeros after row 100. | Explain how to adapt the style‑application loop for multiple worksheets and a configurable start row.
+// Title: C# AspNet Aspose.Cells Example: Hide Zero Values Only After Row 100
+// Description: Shows how to programmatically suppress numeric zeros in rows 101 and beyond with Aspose.Cells for .NET. The sample creates a workbook, populates rows 1‑150, applies the custom format "0;-0;;@" to each zero cell after the 100th row, and saves the result as an XLSX file.
+// Keywords: Aspose.Cells | C# | .NET | hide zero values | custom number format | zero suppression | Excel row 101 | conditional formatting Aspose | programmatic Excel styling | GitHub Aspose.Cells example | worksheet style zero display | large worksheet performance
+// Common Searches: Aspose.Cells hide zeros after row 100 C# | custom number format to hide zero values in Excel using .NET | programmatically hide zero cells beyond a specific row Aspose | C# example for conditional zero display in large worksheets | Aspose.Cells hide zeros in rows 101+
+// Developer Intent: Apply a style that hides numeric zero cells only in rows beyond the 100th row while leaving earlier zeros visible.
+// Use Cases: Financial statements where summary rows (first 100) must show zeros but detailed rows should appear cleaner. | Exporting massive datasets and removing trailing zero clutter after a defined row threshold. | Creating region‑specific worksheets that keep global DisplayZeros enabled but suppress zeros in a designated range.
+// AI Prompts: Generate C# code with Aspose.Cells that hides zero values only from row 101 onward using a custom number format. | Explain how to iterate from the 101st row to the last data row and apply a style that suppresses zeros without affecting earlier rows. | Show how to modify the custom format string to hide zeros while preserving positive and negative numbers in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
 namespace HideZeroValuesBeyondRow100
 {
-    // Creates a workbook, populates 120 rows, defines a custom number format "0;-0;;@" that suppresses zero display, and applies this style only to numeric zeros in rows after the 100th row, then saves the file as XLSX.
+    // Shows how to programmatically suppress numeric zeros in rows 101 and beyond with Aspose.Cells for .NET. The sample creates a workbook, populates rows 1‑150, applies the custom format "0;-0;;@" to each zero cell after the 100th row, and saves the result as an XLSX file.
     class Program
     {
         static void Main()
@@ -21,50 +21,50 @@ namespace HideZeroValuesBeyondRow100
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // ------------------------------------------------------------
-            // Sample data creation (optional, for demonstration purposes)
-            // ------------------------------------------------------------
-            // Fill first 120 rows with some numeric values, including zeros
-            for (int row = 0; row < 120; row++)
+            // Populate sample data for demonstration (rows 1 to 150, columns A to C)
+            for (int row = 0; row < 150; row++)
             {
-                for (int col = 0; col < 5; col++)
+                for (int col = 0; col < 3; col++)
                 {
-                    // Insert zero in every third column for rows beyond 100
-                    double value = (row >= 100 && col == 2) ? 0 : row + col + 1;
-                    cells[row, col].PutValue(value);
+                    // Insert zero values at every 5th row for testing
+                    if ((row + 1) % 5 == 0)
+                        cells[row, col].PutValue(0);
+                    else
+                        cells[row, col].PutValue(row + col + 1);
                 }
             }
 
-            // ------------------------------------------------------------
-            // Create a style that hides zero values using a custom format
-            // Format sections: positive;negative;zero;text
-            // The third section is left empty to hide zeros
-            // ------------------------------------------------------------
-            Style hideZeroStyle = workbook.CreateStyle();
-            hideZeroStyle.Custom = "0;-0;;@";
+            // Ensure zeros are displayed globally (default behavior)
+            sheet.DisplayZeros = true;
 
-            // ------------------------------------------------------------
-            // Apply the style only to zero-valued cells in rows > 100
-            // ------------------------------------------------------------
-            int startRow = 100; // zero‑based index (row 101 in Excel)
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
+            // Define the starting row index (zero‑based) for rows beyond the 100th row
+            int startRowIndex = 100; // corresponds to Excel row 101
 
-            for (int r = startRow; r <= maxRow; r++)
+            // Determine the last row that contains data
+            int lastDataRow = cells.MaxDataRow;
+
+            // Loop through rows beyond the 100th row
+            for (int i = startRowIndex; i <= lastDataRow; i++)
             {
-                for (int c = 0; c <= maxCol; c++)
+                // Loop through all columns that contain data in the current row
+                int lastDataColumn = cells.MaxDataColumn;
+                for (int j = 0; j <= lastDataColumn; j++)
                 {
-                    Cell cell = cells[r, c];
-                    // Check if the cell contains a numeric zero
+                    Cell cell = cells[i, j];
+
+                    // Check if the cell holds a numeric zero
                     if (cell.Type == CellValueType.IsNumeric && cell.DoubleValue == 0)
                     {
+                        // Apply a custom number format that hides zero values
+                        Style hideZeroStyle = workbook.CreateStyle();
+                        hideZeroStyle.Custom = "0;-0;;@"; // third section (zero) is empty
                         cell.SetStyle(hideZeroStyle);
                     }
                 }
             }
 
-            // Save the workbook
-            workbook.Save("HideZeroValuesBeyondRow100.xlsx", SaveFormat.Xlsx);
+            // Save the workbook to a file
+            workbook.Save("HideZerosBeyondRow100.xlsx", SaveFormat.Xlsx);
         }
     }
 }

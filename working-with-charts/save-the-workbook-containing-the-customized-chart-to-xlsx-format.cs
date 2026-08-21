@@ -1,43 +1,59 @@
 // Title: Save a Workbook with a Customized Column Chart to XLSX using Aspose.Cells for .NET
-// Description: Creates a new workbook, inserts sample data, adds a column chart, and saves the entire workbook—including the chart—to an XLSX file with Aspose.Cells in C#.
-// Keywords: Aspose.Cells | C# chart export | save workbook as XLSX | column chart Aspose.Cells | export chart to Excel | SaveFormat.Xlsx | programmatic Excel chart creation
-// Common Searches: Aspose.Cells save chart to xlsx | C# export column chart to Excel with Aspose | How to save workbook containing chart using Aspose.Cells | Save Aspose.Cells workbook as XLSX file | Create and save chart in Excel via Aspose.Cells .NET
-// Developer Intent: Export the workbook that contains a customized column chart to an XLSX file.
-// Use Cases: Generate a sales report with a column chart and deliver it as an Excel file. | Automate a financial dashboard where charts are added programmatically and saved for downstream analysis. | Produce template workbooks with predefined charts, populate them with data, and output each instance as a separate XLSX document.
-// AI Prompts: Write C# code that adds a line chart, sets a title, and saves the workbook to XLSX using Aspose.Cells. | Explain how to modify axis labels and legend properties of a chart before saving the workbook with Aspose.Cells. | Show an example of saving multiple worksheets, each containing a different chart type, into a single XLSX file using Aspose.Cells.
+// Description: Demonstrates how to create a workbook, populate quarterly sales data, add a column chart, customize its title and legend, and save the file as an XLSX document with Aspose.Cells for C#.
+// Keywords: Aspose.Cells save XLSX | C# column chart Aspose.Cells | customize chart title legend Aspose.Cells | export chart to Excel .NET | Aspose.Cells workbook with chart
+// Common Searches: Aspose.Cells save workbook with chart to XLSX | C# create column chart and export to Excel | how to set chart title and legend in Aspose.Cells | save Aspose.Cells workbook as .xlsx file | programmatically add and save chart using Aspose.Cells
+// Developer Intent: Save a workbook that contains a customized column chart as an XLSX file.
+// Use Cases: Generate a quarterly sales report with a column chart and distribute it as an Excel file. | Automate the creation of performance charts in a scheduled .NET job and persist them for later editing. | Build a template workbook, inject a chart programmatically, and save it for downstream users.
+// AI Prompts: Write C# code with Aspose.Cells to add a line chart, format axes, and save the workbook as XLSX. | Show how to export a workbook containing multiple charts into separate XLSX files using Aspose.Cells. | Explain the steps to change chart title font size and legend position before saving the workbook with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a new workbook, inserts sample data, adds a column chart, and saves the entire workbook—including the chart—to an XLSX file with Aspose.Cells in C#.
-class Program
+namespace AsposeCellsChartSaveDemo
 {
-    static void Main()
+    // Demonstrates how to create a workbook, populate quarterly sales data, add a column chart, customize its title and legend, and save the file as an XLSX document with Aspose.Cells for C#.
+    public class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        public static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Get the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["A3"].PutValue("Banana");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(30);
-        worksheet.Cells["B3"].PutValue(45);
+            // Populate sample data for the chart
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("Q1");
+            worksheet.Cells["A3"].PutValue("Q2");
+            worksheet.Cells["A4"].PutValue("Q3");
+            worksheet.Cells["A5"].PutValue("Q4");
 
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
+            worksheet.Cells["B1"].PutValue("Sales");
+            worksheet.Cells["B2"].PutValue(120);
+            worksheet.Cells["B3"].PutValue(150);
+            worksheet.Cells["B4"].PutValue(180);
+            worksheet.Cells["B5"].PutValue(200);
 
-        // Set the data range for the chart
-        chart.NSeries.Add("B2:B3", true);          // Values
-        chart.NSeries.CategoryData = "A2:A3";      // Categories
+            // Add a column chart to the worksheet
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 7, 0, 20, 10);
+            Chart chart = worksheet.Charts[chartIndex];
 
-        // Save the workbook (including the customized chart) to XLSX format
-        workbook.Save("CustomizedChart.xlsx", SaveFormat.Xlsx);
+            // Set the data source for the chart
+            chart.NSeries.Add("B2:B5", true);               // Values
+            chart.NSeries.CategoryData = "A2:A5";           // Categories
+
+            // Customize the chart (example: set title and legend position)
+            chart.Title.Text = "Quarterly Sales";
+            chart.Title.Font.Size = 14;
+            chart.Legend.Position = LegendPositionType.Bottom;
+
+            // Save the workbook with the customized chart to XLSX format
+            workbook.Save("CustomizedChart.xlsx", SaveFormat.Xlsx);
+
+            // Optional: inform the user
+            Console.WriteLine("Workbook with customized chart saved as CustomizedChart.xlsx");
+        }
     }
 }

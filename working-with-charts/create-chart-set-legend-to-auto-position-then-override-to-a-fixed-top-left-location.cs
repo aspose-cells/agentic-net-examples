@@ -1,16 +1,17 @@
-// Title: Aspose.Cells C# – Create a Column Chart, Set Legend to Auto, Then Move It to a Fixed Top‑Left Position
-// Description: This example shows how to build a workbook, add sample data, insert a column chart, apply automatic legend placement with SetPositionAuto(), switch the legend to NotDocked, and assign XPixel/YPixel values (50, 20) to position the legend precisely at the top‑left of the chart before saving the file.
-// Keywords: Aspose.Cells chart legend positioning | SetPositionAuto Aspose.Cells | Legend NotDocked C# | Aspose.Cells XPixel YPixel | column chart legend placement | Aspose.Cells C# example | custom chart legend coordinates
-// Common Searches: Aspose.Cells set legend auto then custom position | C# move chart legend to specific X Y coordinates Aspose.Cells | How to use Legend.Position NotDocked in Aspose.Cells | Aspose.Cells chart legend pixel placement | auto legend positioning Aspose.Cells chart
-// Developer Intent: Create a chart, let the legend auto‑place, then override it with exact pixel coordinates.
-// Use Cases: Standardize report layouts by fixing legend locations across multiple worksheets. | Align chart legends with corporate branding guidelines that require precise placement. | Generate templates where the legend must appear at a consistent spot regardless of data size.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a line chart, calls SetPositionAuto() on the legend, then repositions it to (100, 30) pixels from the chart's top‑left corner. | Explain why setting Legend.Position = LegendPositionType.NotDocked is required for manual XPixel/YPixel adjustments in Aspose.Cells.
+// Title: Aspose.Cells for .NET – Create a Column Chart and Position the Legend at a Fixed Top‑Left Location
+// Description: C# example that builds a workbook, adds sample data, inserts a column chart, sets the legend to automatic placement, then switches to NotDocked and uses XRatioToChart/YRatioToChart (with width and height ratios) to lock the legend at the chart’s top‑left corner before saving.
+// Keywords: Aspose.Cells | C# chart legend | NotDocked legend | XRatioToChart | YRatioToChart | legend size ratios | automatic legend positioning | column chart .NET | Aspose.Cells example
+// Common Searches: Aspose.Cells set legend position C# | How to move chart legend to top left in Aspose.Cells | NotDocked legend XRatioToChart Aspose.Cells | Override automatic legend placement Aspose.Cells .NET | Set legend width and height ratios Aspose.Cells
+// Developer Intent: Create a column chart and programmatically place its legend at a specific top‑left coordinate after applying automatic positioning.
+// Use Cases: Standardize legend placement in sales dashboards for consistent visual layout. | Generate printable reports where the legend must stay outside the data area. | Automate workbook creation with precise legend sizing for multi‑sheet analytics.
+// AI Prompts: Show C# code to set a chart legend to NotDocked and define XRatioToChart/YRatioToChart in Aspose.Cells. | Provide an Aspose.Cells example that first uses automatic legend positioning then moves the legend to a custom top‑left spot with width and height ratios. | Explain the difference between automatic legend docking and NotDocked with ratio properties in Aspose.Cells for .NET.
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// This example shows how to build a workbook, add sample data, insert a column chart, apply automatic legend placement with SetPositionAuto(), switch the legend to NotDocked, and assign XPixel/YPixel values (50, 20) to position the legend precisely at the top‑left of the chart before saving the file.
-class Program
+// C# example that builds a workbook, adds sample data, inserts a column chart, sets the legend to automatic placement, then switches to NotDocked and uses XRatioToChart/YRatioToChart (with width and height ratios) to lock the legend at the chart’s top‑left corner before saving.
+class ChartLegendPositionDemo
 {
     static void Main()
     {
@@ -31,22 +32,31 @@ class Program
         // Add a column chart to the worksheet
         int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
         Chart chart = sheet.Charts[chartIndex];
+
+        // Set the data range for the chart
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Access the chart legend
+        // Access the legend of the chart
         Legend legend = chart.Legend;
 
         // 1. Set legend to automatic positioning
         legend.SetPositionAuto();
 
         // 2. Override to a fixed top‑left location
-        //    Use NotDocked so manual X/Y coordinates are respected
+        //    Use NotDocked so that X/Y coordinates are respected
         legend.Position = LegendPositionType.NotDocked;
-        legend.XPixel = 50;   // X coordinate in pixels from the left edge of the chart area
-        legend.YPixel = 20;   // Y coordinate in pixels from the top edge of the chart area
 
-        // Save the workbook with the configured chart
-        workbook.Save("ChartLegendAutoThenFixed.xlsx");
+        // Position the legend at the top‑left corner of the chart area
+        // X/Y ratios are fractions of the chart area (0.0 = left/top, 1.0 = right/bottom)
+        legend.XRatioToChart = 0.0;   // left edge
+        legend.YRatioToChart = 0.0;   // top edge
+
+        // Optionally set size of the legend (20% width, 20% height of chart area)
+        legend.WidthRatioToChart = 0.2;
+        legend.HeightRatioToChart = 0.2;
+
+        // Save the workbook
+        workbook.Save("ChartLegendPositionDemo.xlsx");
     }
 }

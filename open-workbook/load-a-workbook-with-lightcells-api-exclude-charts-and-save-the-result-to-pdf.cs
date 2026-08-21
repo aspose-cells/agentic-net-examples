@@ -1,43 +1,71 @@
-// Title: Load an Excel workbook with LightCells, remove all charts, and export to PDF using Aspose.Cells for .NET
-// Description: Demonstrates how to open an .xlsx file with Aspose.Cells LoadOptions (compatible with LightCells), clear every chart from each worksheet, and save the modified workbook as a PDF document in C#.
-// Keywords: Aspose.Cells LightCells | C# load Excel workbook | remove charts Excel | export Excel to PDF | chart‑free PDF conversion | Aspose.Cells LoadOptions | clear worksheet charts | PDF generation without charts
-// Common Searches: Aspose.Cells LightCells load workbook and save as PDF | C# remove all charts from Excel before PDF export | How to exclude charts when converting Excel to PDF with Aspose.Cells | Clear worksheet charts using Aspose.Cells .NET | LightCells API PDF conversion without charts
-// Developer Intent: Open an Excel file with LightCells, delete every chart object, and generate a PDF version of the workbook.
-// Use Cases: Produce clean PDF reports from Excel templates that contain charts you don't want to display. | Batch‑convert multiple workbooks to PDF while stripping charts to reduce file size and speed up rendering. | Create PDF invoices or statements from Excel sheets where embedded charts should be omitted for a professional layout.
-// AI Prompts: Write C# code that uses Aspose.Cells LoadOptions for LightCells to open an .xlsx file, clear all charts from each worksheet, and save the workbook as a PDF. | Show how to configure LightCells in Aspose.Cells and exclude charts during Excel‑to‑PDF conversion in .NET.
+// Title: Load Workbook with LightCells API, Strip Charts, and Export to PDF – Aspose.Cells for .NET
+// Description: Demonstrates how to open an XLSX file using Aspose.Cells LightCells (MemoryPreference), clear every worksheet's chart collection, and save the result as a PDF with default PdfSaveOptions. Includes file‑existence check and exception handling for robust server‑side processing.
+// Keywords: Aspose.Cells LightCells load workbook | exclude charts Excel to PDF | MemoryPreference PDF conversion .NET | remove worksheet charts Aspose | light memory mode Excel PDF export
+// Common Searches: load xlsx with LightCells and omit charts | Aspose.Cells .NET export workbook to PDF without charts | how to clear charts before PDF conversion using Aspose | LightCells MemoryPreference reduce memory when converting to PDF
+// Developer Intent: Open an Excel file with LightCells, delete all chart objects, and generate a PDF.
+// Use Cases: Create lightweight PDFs of large financial spreadsheets where visual charts are unnecessary. | Automate batch processing of user‑uploaded workbooks on a cloud server, stripping charts to meet compliance or size constraints. | Produce printable reports that contain only tabular data, improving rendering speed and reducing PDF file size.
+// AI Prompts: Generate C# code that uses Aspose.Cells LightCells (MemoryPreference) to load an XLSX file, remove every chart from each worksheet, and save the workbook as a PDF. | Show an example of configuring LoadOptions for LightCells, clearing the Charts collection, and handling missing files or runtime errors during PDF export. | Explain best practices for converting large Excel files to PDF with Aspose.Cells while excluding charts to minimize memory usage.
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Saving;
 
-namespace AsposeCellsLightCellsPdfExample
+namespace AsposeCellsLightCellsExample
 {
-    // Demonstrates how to open an .xlsx file with Aspose.Cells LoadOptions (compatible with LightCells), clear every chart from each worksheet, and save the modified workbook as a PDF document in C#.
-    class Program
+    // Demonstrates how to open an XLSX file using Aspose.Cells LightCells (MemoryPreference), clear every worksheet's chart collection, and save the result as a PDF with default PdfSaveOptions. Includes file‑existence check and exception handling for robust server‑side processing.
+    public class ExcludeChartsAndSavePdf
     {
-        static void Main()
+        public static void Run()
         {
             // Path to the source Excel file
             string sourcePath = "input.xlsx";
 
-            // Initialize LoadOptions (can be customized for LightCells if needed)
-            LoadOptions loadOptions = new LoadOptions();
+            // Path for the resulting PDF file
+            string pdfPath = "output.pdf";
 
-            // Load the workbook using the constructor that accepts a file path and LoadOptions
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-            // Remove all charts from each worksheet to exclude them from the PDF output
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the source file exists
+            if (!File.Exists(sourcePath))
             {
-                // Clear the chart collection of the current worksheet
-                sheet.Charts.Clear();
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
             }
 
-            // Save the modified workbook as PDF using the provided Save method overload
-            string pdfPath = "output.pdf";
-            workbook.Save(pdfPath, SaveFormat.Pdf);
+            try
+            {
+                // Configure LoadOptions to use LightCells memory mode
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                {
+                    MemorySetting = MemorySetting.MemoryPreference
+                };
 
-            Console.WriteLine($"Workbook loaded, charts excluded, and saved to PDF at: {pdfPath}");
+                // Load the workbook with the specified options
+                Workbook workbook = new Workbook(sourcePath, loadOptions);
+
+                // Optional: remove charts if they were loaded (safety net)
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    sheet.Charts.Clear();
+                }
+
+                // Create PDF save options (default configuration)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                // Save the workbook to PDF; charts are omitted
+                workbook.Save(pdfPath, pdfOptions);
+
+                Console.WriteLine($"Workbook loaded without charts and saved to PDF at: {pdfPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            Run();
         }
     }
 }

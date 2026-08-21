@@ -1,78 +1,97 @@
 // Title: Export Formula Precedents and Dependent Counts to CSV with Aspose.Cells for .NET
-// Description: C# sample that loads an Excel workbook, activates the calculation chain, recalculates all formulas, then iterates over each formula cell on the first worksheet. For every formula it extracts referenced ranges via GetPrecedentsInCalculation, counts recursive dependents with GetDependentsInCalculation(true), and writes a CSV line containing the cell address, a semicolon‑separated list of precedents, and the dependent count.
-// Keywords: Aspose.Cells CSV export | formula precedents .NET | dependent count Aspose.Cells | Excel audit C# | calculation chain Aspose | formula dependency report | extract formula references | Aspose.Cells GetPrecedentsInCalculation | Aspose.Cells GetDependentsInCalculation | spreadsheet analysis C#
-// Common Searches: Aspose.Cells export formula audit to CSV | C# list formula precedents and dependents | how to get dependent count for Excel formulas using Aspose | generate formula dependency report with Aspose.Cells | CSV of formula cells and their references .NET
-// Developer Intent: Create a CSV file that enumerates every formula cell, its referenced ranges, and the number of cells that depend on it.
-// Use Cases: Perform a spreadsheet audit to pinpoint high‑impact formulas before migration. | Produce a compliance report that records each formula, its source cells, and downstream usage. | Identify orphaned formulas by flagging entries with a dependent count of zero.
-// AI Prompts: Write C# code using Aspose.Cells to generate a CSV with each formula cell, its precedents, and dependent count. | Extend the sample to also include the total number of precedents per formula in the CSV output. | Explain the behavior of GetPrecedentsInCalculation and GetDependentsInCalculation, including handling of cross‑sheet references.
+// Description: Loads an Excel workbook, enables the calculation chain, recalculates all formulas, and iterates every worksheet to locate formula cells. For each formula cell it extracts precedent ranges via GetPrecedentsInCalculation, counts precedents and dependents (using GetDependentsInCalculation), and writes a CSV line with the cell address, semicolon‑separated precedent list, precedent count, and dependent count. The CSV is saved as FormulaAudit.csv and the workbook can be saved after audit.
+// Keywords: Aspose.Cells formula audit | export formula precedents CSV C# | GetPrecedentsInCalculation example | GetDependentsInCalculation usage | Excel dependency report .NET | calculate formula chain Aspose | C# extract cell dependencies | spreadsheet audit CSV
+// Common Searches: Aspose.Cells export formula precedents to CSV | C# list formula cells with dependents | How to get precedent ranges in Aspose.Cells | Generate Excel dependency report using .NET | Get dependent count for formula cells Aspose
+// Developer Intent: Produce a CSV report that enumerates every formula cell, its referenced precedent ranges, and the counts of both precedents and dependents.
+// Use Cases: Validate and document complex calculation flows before refactoring large workbooks. | Create compliance‑ready documentation of formula relationships for financial or regulatory audits. | Identify high‑impact cells or orphan formulas by analyzing precedent and dependent counts.
+// AI Prompts: Write C# code with Aspose.Cells that outputs a CSV of all formula cells, their precedent areas, and dependent counts. | Extend the sample to include the worksheet name in each CSV row beside the cell address. | Add error handling for missing input files and log formula cells that have no precedents or dependents.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-// C# sample that loads an Excel workbook, activates the calculation chain, recalculates all formulas, then iterates over each formula cell on the first worksheet. For every formula it extracts referenced ranges via GetPrecedentsInCalculation, counts recursive dependents with GetDependentsInCalculation(true), and writes a CSV line containing the cell address, a semicolon‑separated list of precedents, and the dependent count.
-class FormulaAuditCsv
+namespace FormulaAudit
 {
-    static void Main()
+    // Loads an Excel workbook, enables the calculation chain, recalculates all formulas, and iterates every worksheet to locate formula cells. For each formula cell it extracts precedent ranges via GetPrecedentsInCalculation, counts precedents and dependents (using GetDependentsInCalculation), and writes a CSV line with the cell address, semicolon‑separated precedent list, precedent count, and dependent count. The CSV is saved as FormulaAudit.csv and the workbook can be saved after audit.
+    class Program
     {
-        // Load an existing workbook (replace with your file path)
-        var workbook = new Workbook("input.xlsx");
-
-        // Enable calculation chain and calculate all formulas
-        workbook.Settings.FormulaSettings.EnableCalculationChain = true;
-        workbook.CalculateFormula();
-
-        // Prepare CSV output
-        using (var writer = new StreamWriter("FormulaAudit.csv"))
+        static void Main()
         {
-            writer.WriteLine("Cell,Precedents,DependentCount");
+            // Load an existing workbook (replace with actual path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Process the first worksheet (adjust if needed)
-            var worksheet = workbook.Worksheets[0];
-            var cells = worksheet.Cells;
+            // Enable calculation chain and calculate all formulas
+            workbook.Settings.FormulaSettings.EnableCalculationChain = true;
+            workbook.CalculateFormula();
 
-            // Iterate through all used cells
-            foreach (Cell cell in cells)
+            // Prepare CSV content
+            StringBuilder csvBuilder = new StringBuilder();
+            csvBuilder.AppendLine("Cell,Precedents,PrecedentCount,DependentCount");
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                if (!cell.IsFormula) continue; // Skip non‑formula cells
+                Cells cells = sheet.Cells;
 
-                // Gather precedents (cells referenced by this formula)
-                var precedentsList = new System.Collections.Generic.List<string>();
-                IEnumerator precEnum = cell.GetPrecedentsInCalculation();
-                if (precEnum != null)
+                // Determine the used range
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
+
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    while (precEnum.MoveNext())
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        if (precEnum.Current is ReferredArea area)
+                        Cell cell = cells[row, col];
+
+                        // Process only formula cells
+                        if (cell != null && cell.IsFormula)
                         {
-                            // Convert the referred area to a readable string (e.g., A1 or A1:B3)
-                            string sheetName = string.IsNullOrEmpty(area.SheetName) ? worksheet.Name : area.SheetName;
-                            string start = CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
-                            string end = area.IsArea ? $":{CellsHelper.CellIndexToName(area.EndRow, area.EndColumn)}" : "";
-                            precedentsList.Add($"{sheetName}!{start}{end}");
+                            // ----- Precedents -----
+                            List<string> precedentNames = new List<string>();
+                            IEnumerator preEnum = cell.GetPrecedentsInCalculation();
+                            if (preEnum != null)
+                            {
+                                while (preEnum.MoveNext())
+                                {
+                                    if (preEnum.Current is ReferredArea area)
+                                    {
+                                        // Use the area’s string representation (e.g., Sheet1!A1:B2)
+                                        precedentNames.Add(area.ToString());
+                                    }
+                                }
+                            }
+                            int precedentCount = precedentNames.Count;
+
+                            // ----- Dependents -----
+                            int dependentCount = 0;
+                            IEnumerator depEnum = cell.GetDependentsInCalculation(true);
+                            if (depEnum != null)
+                            {
+                                while (depEnum.MoveNext())
+                                {
+                                    if (depEnum.Current is Cell)
+                                    {
+                                        dependentCount++;
+                                    }
+                                }
+                            }
+
+                            // Build CSV line
+                            string precedentsCsv = string.Join(";", precedentNames);
+                            csvBuilder.AppendLine($"{cell.Name},\"{precedentsCsv}\",{precedentCount},{dependentCount}");
                         }
                     }
                 }
-
-                // Count dependents whose calculated result depends on this cell (recursive)
-                int dependentCount = 0;
-                IEnumerator depEnum = cell.GetDependentsInCalculation(true);
-                if (depEnum != null)
-                {
-                    while (depEnum.MoveNext())
-                    {
-                        if (depEnum.Current is Cell) dependentCount++;
-                    }
-                }
-
-                // Write CSV line
-                string precedents = string.Join(";", precedentsList);
-                writer.WriteLine($"{cell.Name},\"{precedents}\",{dependentCount}");
             }
-        }
 
-        // Optionally save the workbook (unchanged) if needed
-        // workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Write CSV to file
+            File.WriteAllText("FormulaAudit.csv", csvBuilder.ToString());
+
+            // Optionally save the workbook (preserve any changes)
+            workbook.Save("input_audited.xlsx");
+        }
     }
 }

@@ -1,72 +1,102 @@
-// Title: Detect Out‑of‑Range Formula References in Excel with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds data, inserts valid and invalid formulas, calculates the sheet, obtains the used range via MaxDataRow/MaxDataColumn, scans all formula cells with GetPrecedents, and reports any reference that lies outside the defined data area.
-// Keywords: Aspose.Cells | .NET | C# | detect out of range formulas | GetPrecedents | used range | MaxDataRow | MaxDataColumn | Excel data validation | formula reference audit
-// Common Searches: Aspose.Cells find formulas outside used range | C# detect invalid cell references in Excel | GetPrecedents out of range check Aspose.Cells | How to validate formula references with Aspose.Cells .NET | Identify #REF! errors programmatically
-// Developer Intent: Locate and list formula cells that reference rows or columns beyond the worksheet’s current used range.
-// Use Cases: Validate workbook integrity by flagging formulas that point to empty or non‑existent cells. | Generate an audit report of out‑of‑range references before publishing or sharing the file. | Automate cleanup workflows that correct or remove formulas exceeding defined data boundaries.
-// AI Prompts: Write a C# method using Aspose.Cells that returns all cells whose formulas reference rows or columns beyond MaxDataRow or MaxDataColumn. | Provide code to replace out‑of‑range references in formulas with #REF! using Aspose.Cells. | Explain how GetPrecedents and ReferredArea can be used to separate external links from internal out‑of‑range references.
+// Title: Find Excel formulas that reference cells outside the used range using Aspose.Cells for .NET
+// Description: Loads an Excel workbook, determines each worksheet's used range with MaxDataRow/MaxDataColumn, scans all formula cells, examines their precedent areas via GetPrecedents, and flags any reference that lies beyond the used rows or columns (including whole‑row, whole‑column, single‑cell, and range references). The program outputs the offending cell addresses and formulas and can save the workbook.
+// Keywords: Aspose.Cells | .NET | detect out of range formula references | Excel formula validation | used range detection | MaxDataRow | MaxDataColumn | GetPrecedents | precedent area analysis | invalid cell reference | data quality audit | automated Excel checks
+// Common Searches: Aspose.Cells find formulas referencing cells outside used range | detect out‑of‑range precedent areas in Excel with .NET | list formula cells that point to non‑existent rows or columns | validate Excel formulas using Aspose.Cells GetPrecedents | how to flag formulas that reference empty rows in Aspose.Cells
+// Developer Intent: Identify and list all formula cells that reference rows or columns beyond the worksheet's used range.
+// Use Cases: Generate a quality‑control report of potentially erroneous formulas before workbook distribution. | Automate data‑integrity checks in ETL pipelines by flagging formulas that point to empty rows or columns. | Integrate out‑of‑range formula detection into CI/CD builds to prevent publishing faulty spreadsheets.
+// AI Prompts: Create a method that returns a collection of Cell objects whose formulas reference rows or columns beyond MaxDataRow/MaxDataColumn. | Enhance the sample to apply a red background style to each offending cell after detection. | Write a unit test suite that verifies out‑of‑range detection for single‑cell, whole‑row, and whole‑column references.
 
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-// Creates a workbook, adds data, inserts valid and invalid formulas, calculates the sheet, obtains the used range via MaxDataRow/MaxDataColumn, scans all formula cells with GetPrecedents, and reports any reference that lies outside the defined data area.
-class DetectOutOfRangeFormulas
+namespace AsposeCellsFormulaReferenceCheck
 {
-    static void Main()
+    // Loads an Excel workbook, determines each worksheet's used range with MaxDataRow/MaxDataColumn, scans all formula cells, examines their precedent areas via GetPrecedents, and flags any reference that lies beyond the used rows or columns (including whole‑row, whole‑column, single‑cell, and range references). The program outputs the offending cell addresses and formulas and can save the workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate some data within a normal used range (A1:B2)
-        cells["A1"].PutValue(10);
-        cells["A2"].PutValue(20);
-        cells["B1"].PutValue(30);
-        cells["B2"].PutValue(40);
-
-        // Valid formula that stays inside the used range
-        cells["C1"].Formula = "=SUM(A1:B2)";
-
-        // Invalid formula that references cells outside the used range
-        cells["D1"].Formula = "=E5+F6";
-
-        // Optional: calculate formulas so that dependent values are up‑to‑date
-        workbook.CalculateFormula();
-
-        // Determine the current used range of the worksheet
-        int maxDataRow = cells.MaxDataRow;       // zero‑based index of the last row with data
-        int maxDataColumn = cells.MaxDataColumn; // zero‑based index of the last column with data
-
-        // Scan all cells that contain formulas
-        foreach (Cell cell in cells)
+        static void Main()
         {
-            if (string.IsNullOrEmpty(cell.Formula))
-                continue; // Skip non‑formula cells
+            // Load the workbook (replace with actual file path)
+            Workbook workbook = new Workbook("InputWorkbook.xlsx");
 
-            // Get all precedent areas referenced by the formula
-            ReferredAreaCollection precedents = cell.GetPrecedents();
-            if (precedents == null)
-                continue; // No precedents (should not happen for a formula)
+            // List to hold cells with out‑of‑range references
+            List<Cell> cellsWithInvalidRefs = new List<Cell>();
 
-            foreach (ReferredArea area in precedents)
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Ignore external links; we only care about internal references
-                if (area.IsExternalLink)
-                    continue;
+                Cells cells = sheet.Cells;
 
-                // Determine if any part of the referenced area lies outside the used range
-                bool outOfRow = area.StartRow > maxDataRow || area.EndRow > maxDataRow;
-                bool outOfColumn = area.StartColumn > maxDataColumn || area.EndColumn > maxDataColumn;
+                // Determine the used range of the worksheet
+                int maxRow = cells.MaxDataRow;      // zero‑based index of last used row
+                int maxCol = cells.MaxDataColumn;   // zero‑based index of last used column
 
-                if (outOfRow || outOfColumn)
+                // Iterate over all cells that contain formulas
+                foreach (Cell cell in cells)
                 {
-                    Console.WriteLine($"Formula in cell {cell.Name} references out‑of‑range area: {area}");
+                    if (cell.IsFormula)
+                    {
+                        // Get all precedent areas referenced by the formula
+                        ReferredAreaCollection precedents = cell.GetPrecedents();
+                        if (precedents == null) continue;
+
+                        foreach (ReferredArea area in precedents)
+                        {
+                            // Skip external links – they are not part of the current worksheet's used range
+                            if (area.IsExternalLink) continue;
+
+                            // Check if the referenced area lies outside the used range
+                            bool outOfRange = false;
+
+                            // Single cell reference
+                            if (!area.IsArea)
+                            {
+                                if (area.StartRow > maxRow || area.StartColumn > maxCol)
+                                    outOfRange = true;
+                            }
+                            else // Range reference
+                            {
+                                // Entire column reference
+                                if (area.IsEntireColumn)
+                                {
+                                    if (area.StartColumn > maxCol)
+                                        outOfRange = true;
+                                }
+                                // Entire row reference
+                                else if (area.IsEntireRow)
+                                {
+                                    if (area.StartRow > maxRow)
+                                        outOfRange = true;
+                                }
+                                else
+                                {
+                                    // Normal range
+                                    if (area.EndRow > maxRow || area.EndColumn > maxCol)
+                                        outOfRange = true;
+                                }
+                            }
+
+                            if (outOfRange)
+                            {
+                                cellsWithInvalidRefs.Add(cell);
+                                // No need to check other areas for this cell
+                                break;
+                            }
+                        }
+                    }
                 }
             }
-        }
 
-        // Save the workbook (optional, demonstrates lifecycle usage)
-        workbook.Save("DetectedOutOfRangeFormulas.xlsx");
+            // Output results
+            Console.WriteLine("Cells with formulas referencing outside the used range:");
+            foreach (Cell c in cellsWithInvalidRefs)
+            {
+                Console.WriteLine($"{c.Name} (Sheet: {c.Worksheet.Name}) -> Formula: {c.Formula}");
+            }
+
+            // Optionally, save the workbook (if any modifications were made)
+            workbook.Save("OutputWorkbook.xlsx");
+        }
     }
 }

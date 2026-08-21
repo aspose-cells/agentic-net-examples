@@ -1,60 +1,81 @@
-// Title: Aspose.Cells for .NET – Unhide a Worksheet, Move It to the First Tab, and Save the Workbook (C#)
-// Description: C# example that loads an existing XLSX file with Aspose.Cells, makes a hidden worksheet visible, moves it to the first tab (index 0), and saves the updated workbook to a new file.
-// Keywords: Aspose.Cells unhide worksheet C# | move worksheet to first tab Aspose.Cells | set worksheet visibility Aspose.Cells .NET | save workbook after reordering sheets | C# Aspose.Cells worksheet order | Aspose.Cells hidden sheet handling
-// Common Searches: how to unhide a specific worksheet using Aspose.Cells for .NET | C# move hidden sheet to first tab Aspose.Cells | Aspose.Cells change worksheet visibility and reorder tabs | unhide and reposition worksheet Aspose.Cells example
-// Developer Intent: Make a hidden worksheet visible, place it as the first tab in the workbook, and persist the changes to a new file using Aspose.Cells for .NET.
-// Use Cases: Expose a confidential sheet before publishing the workbook to end users. | Ensure a summary or cover sheet appears as the first tab in generated reports. | Automate workbook cleanup by unhiding hidden tabs and positioning them at the beginning prior to distribution.
-// AI Prompts: Generate C# code with Aspose.Cells to unhide a worksheet named "Report" and move it to the second tab position. | Show robust error‑handling for loading a workbook, verifying a worksheet exists, changing its visibility, reordering tabs, and saving the file with Aspose.Cells.
+// Title: Unhide and Reorder a Worksheet with Aspose.Cells for .NET (C#)
+// Description: Loads an existing XLSX file, verifies its presence, makes a specified hidden worksheet visible, moves it to a given zero‑based tab index, and saves the modified workbook to a new file using Aspose.Cells.
+// Keywords: Aspose.Cells | C# | unhide worksheet | move worksheet tab | reorder Excel sheets | set worksheet visibility | Workbook.Save | Excel automation | programmatic sheet order | hidden sheet handling
+// Common Searches: Aspose.Cells unhide hidden sheet C# | change worksheet tab order with Aspose.Cells | move sheet after making it visible Aspose.Cells .NET | how to make a hidden worksheet visible programmatically | reorder Excel worksheets using Aspose.Cells
+// Developer Intent: Make a hidden worksheet visible, change its position in the tab order, and persist the changes.
+// Use Cases: Expose a confidential sheet before distributing a report. | Adjust the sequence of generated sheets to match business requirements. | Correct tab ordering after dynamically adding or removing worksheets. | Safely handle missing input files or absent target worksheets with clear logging. | Validate the target index against the workbook's sheet count to prevent runtime errors.
+// AI Prompts: Write C# code using Aspose.Cells that checks for an existing workbook, unhides a sheet named "Report", moves it to the first tab, and saves the file as "updated.xlsx". | Provide a robust Aspose.Cells example that validates the input path, makes a hidden worksheet visible, repositions it to a specified index, and handles invalid index or missing sheet scenarios. | Create a reusable method in C# that accepts a file path, sheet name, and target index, then uses Aspose.Cells to set the sheet's visibility, reorder it, and return the path of the saved workbook.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace MyApp
+namespace AsposeCellsExamples
 {
-    // C# example that loads an existing XLSX file with Aspose.Cells, makes a hidden worksheet visible, moves it to the first tab (index 0), and saves the updated workbook to a new file.
-    class Program
+    // Loads an existing XLSX file, verifies its presence, makes a specified hidden worksheet visible, moves it to a given zero‑based tab index, and saves the modified workbook to a new file using Aspose.Cells.
+    public class UnhideAndReorderWorksheet
     {
-        static void Main()
+        public static void Main(string[] args)
         {
             try
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
-                string hiddenSheetName = "HiddenSheet";
-
-                // Ensure the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Retrieve the worksheet by name
-                Worksheet sheet = workbook.Worksheets[hiddenSheetName];
-                if (sheet == null)
-                {
-                    Console.WriteLine($"Worksheet '{hiddenSheetName}' not found.");
-                    return;
-                }
-
-                // Unhide the worksheet
-                sheet.IsVisible = true;
-
-                // Move the worksheet to the first tab position
-                sheet.MoveTo(0);
-
-                // Save the updated workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Run();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             }
+        }
+
+        public static void Run()
+        {
+            // Path to the existing workbook
+            string inputPath = "input.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Name of the worksheet to unhide
+            string sheetNameToUnhide = "HiddenSheet";
+
+            // Desired new position (0‑based index) in the tab order
+            int newTabIndex = 1;
+
+            // Find the worksheet by name
+            Worksheet sheet = workbook.Worksheets[sheetNameToUnhide];
+
+            if (sheet != null)
+            {
+                // Unhide the worksheet
+                sheet.IsVisible = true; // or: sheet.SetVisible(true, true);
+
+                // Move the worksheet to the desired tab position if the index is valid
+                if (newTabIndex >= 0 && newTabIndex < workbook.Worksheets.Count)
+                {
+                    sheet.MoveTo(newTabIndex);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid tab index specified.");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Worksheet \"{sheetNameToUnhide}\" not found.");
+            }
+
+            // Save the updated workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine("Workbook saved with the worksheet unhidden and reordered.");
         }
     }
 }

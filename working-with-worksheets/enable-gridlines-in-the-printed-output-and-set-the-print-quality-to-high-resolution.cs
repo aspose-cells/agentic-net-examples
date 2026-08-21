@@ -1,49 +1,58 @@
-// Title: C# – Enable Print Gridlines & High‑Resolution (300 DPI) Printing with Aspose.Cells .NET
-// Description: Demonstrates how to turn on PrintGridlines and set PrintQuality to 300 DPI via the Worksheet.PageSetup object, add optional content, and save the workbook as GridlinesHighQuality.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# | .NET Excel printing | PrintGridlines | PrintQuality 300 DPI | high resolution Excel print | Worksheet PageSetup | gridlines in printed Excel | Excel to PDF high DPI | Aspose.Cells print settings | C# Excel export
-// Common Searches: Aspose.Cells enable printed gridlines C# | set 300 DPI print quality Aspose.Cells .NET | how to configure page setup print settings Aspose.Cells | C# code for high‑resolution Excel printing with Aspose.Cells | print gridlines Excel workbook using Aspose.Cells
-// Developer Intent: Turn on gridlines for printed output and configure the worksheet to print at high DPI resolution.
-// Use Cases: Produce audit reports where visible gridlines aid data verification. | Create marketing PDFs from Excel sheets that require crisp, high‑resolution graphics. | Prepare spreadsheets for professional printing, ensuring both gridlines and DPI meet publishing standards.
-// AI Prompts: Generate C# code that toggles PrintGridlines and sets PrintQuality to 600 DPI with Aspose.Cells. | Write a method to adjust PrintQuality based on a user‑selected quality level (e.g., 150, 300, 600 DPI). | Explain the impact of PrintQuality on file size and visual clarity when exporting to PDF using Aspose.Cells.
+// Title: C# – Enable Print Gridlines and High‑Resolution Print Quality with Aspose.Cells
+// Description: Demonstrates how to create a workbook, turn on PageSetup.PrintGridlines, set PageSetup.PrintQuality to 300 DPI (or higher), add sample data, and save the file. Ideal for generating printable Excel reports with clear cell borders and crisp output worldwide.
+// Keywords: Aspose.Cells C# print gridlines | Aspose.Cells set print quality | high DPI Excel printing Aspose | PageSetup.PrintGridlines example | PageSetup.PrintQuality C#
+// Common Searches: print gridlines Aspose.Cells .NET | set DPI for Excel worksheet Aspose | Aspose.Cells PageSetup PrintQuality sample | enable printed gridlines C# Aspose | high resolution Excel print Aspose.Cells
+// Developer Intent: Turn on gridlines for printed worksheets and configure a high‑resolution (DPI) print setting using Aspose.Cells for .NET.
+// Use Cases: Create printable reports that retain cell borders by enabling PrintGridlines. | Produce sharp PDFs or hard‑copy sheets by setting PrintQuality to 300 DPI or more before export. | Prepare workbooks with consistent print settings for batch processing or automated distribution.
+// AI Prompts: Generate C# code with Aspose.Cells that enables printed gridlines and sets PrintQuality to 600 DPI for all worksheets in a workbook. | Show how to apply PageSetup.PrintGridlines and PageSetup.PrintQuality to multiple sheets and then export to PDF. | Explain the impact of different PrintQuality values on PDF file size and visual fidelity when using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to turn on PrintGridlines and set PrintQuality to 300 DPI via the Worksheet.PageSetup object, add optional content, and save the workbook as GridlinesHighQuality.xlsx using Aspose.Cells for .NET.
-public class EnableGridlinesAndPrintQuality
+namespace AsposeCellsExamples
 {
-    public static void Main(string[] args)
+    // Demonstrates how to create a workbook, turn on PageSetup.PrintGridlines, set PageSetup.PrintQuality to 300 DPI (or higher), add sample data, and save the file. Ideal for generating printable Excel reports with clear cell borders and crisp output worldwide.
+    public class PrintSettingsDemo
     {
-        try
+        public static void Run()
         {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Enable gridlines in the printed output
+                worksheet.PageSetup.PrintGridlines = true;
+
+                // Set a high print quality (e.g., 300 DPI)
+                worksheet.PageSetup.PrintQuality = 300;
+
+                // Optionally add some data to visualize the gridlines
+                worksheet.Cells["A1"].PutValue("Gridlines enabled");
+                worksheet.Cells["B2"].PutValue(123);
+                worksheet.Cells["C3"].PutValue(DateTime.Now);
+
+                // Save the workbook
+                string outputPath = "PrintSettingsDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 
-    public static void Run()
+    // Entry point for the application
+    public class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Enable gridlines in the printed output
-        worksheet.PageSetup.PrintGridlines = true;
-
-        // Set a high print quality (e.g., 300 DPI)
-        worksheet.PageSetup.PrintQuality = 300;
-
-        // (Optional) Add sample data to visualize the gridlines
-        worksheet.Cells["A1"].PutValue("Gridlines and high‑quality print demo");
-
-        // Save the workbook
-        string outputPath = "GridlinesHighQuality.xlsx";
-        workbook.Save(outputPath);
-        Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        public static void Main(string[] args)
+        {
+            PrintSettingsDemo.Run();
+        }
     }
 }

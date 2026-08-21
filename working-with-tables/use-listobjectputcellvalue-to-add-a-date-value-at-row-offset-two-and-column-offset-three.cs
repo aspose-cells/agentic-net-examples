@@ -1,69 +1,64 @@
-// Title: Aspose.Cells C# – Insert a DateTime into a ListObject cell with PutCellValue (row offset 2, column offset 3)
-// Description: This example creates a new workbook, defines a ListObject (table) over A1:D3, and uses ListObject.PutCellValue to place a DateTime value at the specified row and column offsets. It then applies a built‑in date style to the entire Date column and saves the file as an XLSX workbook.
-// Keywords: Aspose.Cells ListObject PutCellValue date | C# insert DateTime into table cell | Aspose.Cells format date column | ListObject table cell value example | Aspose.Cells .NET date formatting | Excel table row offset column offset | Aspose.Cells GitHub sample
-// Common Searches: How to add a DateTime to a ListObject cell in C# | Aspose.Cells PutCellValue row offset column offset | Formatting date columns after inserting values with Aspose.Cells | C# Aspose.Cells example for inserting dates into tables | GitHub Aspose.Cells ListObject PutCellValue sample
-// Developer Intent: Add a DateTime to a specific cell of a ListObject table and format the column as a date.
-// Use Cases: Populate transaction dates in dynamically generated sales reports. | Add audit timestamps to rows of a log file exported to Excel. | Update project milestone dates in a schedule table before distribution.
-// AI Prompts: Write C# code that uses Aspose.Cells ListObject.PutCellValue to insert a DateTime at row offset 2, column offset 3 and then apply a date style to the column. | Explain how to format a ListObject column as a date after inserting values with PutCellValue in Aspose.Cells for .NET. | Provide a step‑by‑step guide to create a table, insert a date value, style the column, and save the workbook using Aspose.Cells.
+// Title: Insert a DateTime into a ListObject cell using PutCellValue (row offset 2, column offset 3) – C# Aspose.Cells
+// Description: Creates a workbook, defines a table (A1:D2), and uses ListObject.PutCellValue with zero‑based offsets to place the date 2023‑12‑31 in the fourth column of the third data row. A built‑in date style (format 14) is applied to the entire column before saving the file as ListObjectDateDemo.xlsx.
+// Keywords: Aspose.Cells ListObject PutCellValue | C# insert date into table cell | Aspose.Cells row offset column offset | date formatting Aspose.Cells | Aspose.Cells table example | PutCellValue DateTime | Aspose.Cells C# tutorial
+// Common Searches: Aspose.Cells ListObject PutCellValue date example | How to add a DateTime to a table cell with offsets in C# | Apply date format to a column after using PutCellValue | Zero‑based row and column offsets in Aspose.Cells ListObject | C# Aspose.Cells add date to third data row
+// Developer Intent: Add a DateTime value to a specific data cell of a ListObject table using row and column offsets and format the column as a date.
+// Use Cases: Generating reports that require a timestamp in a specific table column. | Populating a date column in dynamically created worksheets while preserving consistent formatting. | Extending an existing table with date values programmatically for data analysis or export.
+// AI Prompts: Provide C# code that creates a workbook, adds a ListObject, and uses PutCellValue to set a DateTime at row offset 2, column offset 3, then formats the column as a date with Aspose.Cells. | Show an Aspose.Cells example that inserts a date into a table cell using zero‑based offsets and applies a built‑in date style to the whole column. | Explain the behavior of ListObject.PutCellValue with row/column offsets and how to apply date formatting to the affected column in C#.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsExamples
+// Creates a workbook, defines a table (A1:D2), and uses ListObject.PutCellValue with zero‑based offsets to place the date 2023‑12‑31 in the fourth column of the third data row. A built‑in date style (format 14) is applied to the entire column before saving the file as ListObjectDateDemo.xlsx.
+class Program
 {
-    // This example creates a new workbook, defines a ListObject (table) over A1:D3, and uses ListObject.PutCellValue to place a DateTime value at the specified row and column offsets. It then applies a built‑in date style to the entire Date column and saves the file as an XLSX workbook.
-    public class ListObjectPutCellValueDateDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate header row
-            worksheet.Cells["A1"].PutValue("ID");
-            worksheet.Cells["B1"].PutValue("Name");
-            worksheet.Cells["C1"].PutValue("Amount");
-            worksheet.Cells["D1"].PutValue("Date"); // Date column
+            // Populate sample data with headers (A1:D2)
+            sheet.Cells["A1"].PutValue("Col1");
+            sheet.Cells["B1"].PutValue("Col2");
+            sheet.Cells["C1"].PutValue("Col3");
+            sheet.Cells["D1"].PutValue("Col4");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue(2);
+            sheet.Cells["C2"].PutValue(3);
+            sheet.Cells["D2"].PutValue(4);
 
-            // Populate data rows
-            worksheet.Cells["A2"].PutValue(1);
-            worksheet.Cells["B2"].PutValue("Alice");
-            worksheet.Cells["C2"].PutValue(100);
+            // Add a ListObject (table) that includes the range A1:D2 and has headers
+            int tableIndex = sheet.ListObjects.Add(0, 0, 1, 3, true);
+            ListObject table = sheet.ListObjects[tableIndex];
 
-            worksheet.Cells["A3"].PutValue(2);
-            worksheet.Cells["B3"].PutValue("Bob");
-            worksheet.Cells["C3"].PutValue(200);
+            // Define the date value to insert
+            DateTime dateToInsert = new DateTime(2023, 12, 31);
 
-            // Create a ListObject (table) covering A1:D3 with headers
-            int listObjectIndex = worksheet.ListObjects.Add(0, 0, 2, 3, true);
-            ListObject listObject = worksheet.ListObjects[listObjectIndex];
+            // Put the date value at row offset 2 (third data row) and column offset 3 (fourth column)
+            // Row offset and column offset are zero‑based within the table (excluding the header row)
+            table.PutCellValue(2, 3, dateToInsert);
 
-            // Insert a date value into the second data row (row offset 1) and fourth column (offset 3)
-            DateTime dateToInsert = new DateTime(2023, 5, 15);
-            listObject.PutCellValue(1, 3, dateToInsert);
-
-            // Format the Date column to display as a date
+            // Optional: format the fourth column as a date for proper display
             Style dateStyle = workbook.CreateStyle();
-            dateStyle.Number = 14; // Built‑in date format (mm-dd-yy)
-            // Apply style to the entire Date column within the table
-            listObject.ListColumns[3].Range.SetStyle(dateStyle);
+            dateStyle.Number = 14; // Built‑in date format
+
+            // Apply the style to each cell in the fourth data column
+            int dataRows = table.DataRange.RowCount;
+            for (int r = 0; r < dataRows; r++)
+            {
+                table.DataRange[r, 3].SetStyle(dateStyle);
+            }
 
             // Save the workbook
-            workbook.Save("ListObjectPutCellValueDateDemo.xlsx", SaveFormat.Xlsx);
+            workbook.Save("ListObjectDateDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

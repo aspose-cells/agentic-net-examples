@@ -1,84 +1,69 @@
+// Title: Set Print Area to Slicer Bounds and Export Slicer as PNG with Aspose.Cells for .NET
+// Description: This C# example loads a workbook, reads the first slicer's shape coordinates, sets the worksheet's print area to those cells, and uses ImageOrPrintOptions (OnlyArea=true) to render the slicer to a PNG file via SheetRender.
+// Keywords: Aspose.Cells | C# | slicer | print area | render slicer image | ImageOrPrintOptions | OnlyArea | SheetRender | export slicer PNG | Excel slicer bounds
+// Common Searches: Aspose.Cells set print area to slicer | export slicer as PNG C# | render slicer only area Aspose.Cells | get slicer shape coordinates .NET | save slicer image from Excel
+// Developer Intent: Set the worksheet's print area to match a slicer's dimensions and generate an image of that slicer.
+// Use Cases: Create thumbnail images of slicers for dashboard reports | Automate snapshot generation of slicers for documentation | Provide slicer visuals on web portals or mobile apps | Batch export multiple slicers for reporting pipelines
+// AI Prompts: How can I export the slicer as a JPEG instead of PNG using Aspose.Cells? | Show code to render the slicer to a MemoryStream for an ASP.NET Core API response. | Provide a loop that processes all slicers in a worksheet and saves each as a separate image file. | Explain how to adjust DPI or image dimensions when rendering slicer images.
+
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Slicers;
-using Aspose.Cells.Drawing;   // For Shape class
+using Aspose.Cells.Drawing;
 
-class SlicerToImageDemo
+// This C# example loads a workbook, reads the first slicer's shape coordinates, sets the worksheet's print area to those cells, and uses ImageOrPrintOptions (OnlyArea=true) to render the slicer to a PNG file via SheetRender.
+class RenderSlicerExample
 {
     static void Main()
     {
-        try
+        // Load an existing workbook that contains a slicer
+        // (Replace the path with your actual file)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet (adjust index if needed)
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Ensure the worksheet has at least one slicer
+        if (sheet.Slicers.Count == 0)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for a pivot table
-            sheet.Cells["A1"].Value = "Fruit";
-            sheet.Cells["B1"].Value = "Year";
-            sheet.Cells["C1"].Value = "Amount";
-
-            string[] fruits = { "Apple", "Banana", "Apple", "Banana", "Apple", "Banana" };
-            int[] years = { 2020, 2020, 2021, 2021, 2022, 2022 };
-            int[] amounts = { 50, 70, 60, 80, 55, 75 };
-
-            for (int i = 0; i < fruits.Length; i++)
-            {
-                sheet.Cells[i + 1, 0].Value = fruits[i];
-                sheet.Cells[i + 1, 1].Value = years[i];
-                sheet.Cells[i + 1, 2].Value = amounts[i];
-            }
-
-            // Add a pivot table based on the data
-            int pivotIdx = sheet.PivotTables.Add("A1:C7", "E3", "FruitPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
-            pivot.AddFieldToArea(PivotFieldType.Column, "Year");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
-            pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // Add a slicer linked to the pivot table
-            int slicerIdx = sheet.Slicers.Add(pivot, "Fruit", "F12");
-            Slicer slicer = sheet.Slicers[slicerIdx];
-            slicer.StyleType = SlicerStyleType.SlicerStyleLight1;
-
-            // Obtain the slicer's shape to determine its bounds
-            Shape slicerShape = slicer.Shape;
-            int startRow = slicerShape.UpperLeftRow;
-            int startCol = slicerShape.UpperLeftColumn;
-            int endRow = slicerShape.LowerRightRow;
-            int endCol = slicerShape.LowerRightColumn;
-
-            // Convert the bounds to an address string (e.g., "F12:G15")
-            string startCell = CellsHelper.CellIndexToName(startRow, startCol);
-            string endCell = CellsHelper.CellIndexToName(endRow, endCol);
-            string slicerRange = $"{startCell}:{endCell}";
-
-            // Set the worksheet's print area to the slicer bounds
-            sheet.PageSetup.PrintArea = slicerRange;
-
-            // Configure image rendering options to output only the defined area
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-            {
-                ImageType = ImageType.Png,
-                OnlyArea = true // Render only the print area
-            };
-
-            // Render the worksheet (which now has the slicer as its print area) to an image file
-            SheetRender renderer = new SheetRender(sheet, imgOptions);
-            renderer.ToImage(0, "SlicerImage.png");
-
-            // Optional: Save the workbook for verification
-            workbook.Save("SlicerDemo.xlsx");
+            Console.WriteLine("No slicer found in the worksheet.");
+            return;
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+
+        // Get the first slicer
+        Slicer slicer = sheet.Slicers[0];
+
+        // Obtain the underlying shape to read its bounds
+        SlicerShape shape = slicer.Shape;
+
+        // Upper‑left cell of the slicer
+        int startRow = shape.UpperLeftRow;
+        int startCol = shape.UpperLeftColumn;
+
+        // Lower‑right cell of the slicer
+        int endRow = shape.LowerRightRow;
+        int endCol = shape.LowerRightColumn;
+
+        // Convert cell indexes to A1 style names
+        string startCell = CellsHelper.CellIndexToName(startRow, startCol);
+        string endCell   = CellsHelper.CellIndexToName(endRow, endCol);
+
+        // Set the worksheet print area to exactly the slicer bounds
+        sheet.PageSetup.PrintArea = $"{startCell}:{endCell}";
+
+        // Configure image rendering options
+        ImageOrPrintOptions options = new ImageOrPrintOptions();
+        options.ImageType = ImageType.Png;   // Output format
+        options.OnlyArea = true;            // Render only the defined print area
+
+        // Create a SheetRender for the worksheet with the above options
+        SheetRender render = new SheetRender(sheet, options);
+
+        // Render the first (and only) page to an image file
+        string outputPath = "slicer.png";
+        render.ToImage(0, outputPath);
+
+        Console.WriteLine($"Slicer rendered to image: {outputPath}");
     }
 }

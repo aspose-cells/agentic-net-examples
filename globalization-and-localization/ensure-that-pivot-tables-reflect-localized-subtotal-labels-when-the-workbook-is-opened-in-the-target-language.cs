@@ -1,96 +1,64 @@
+// Title: Aspose.Cells .NET – Localize Pivot Table Subtotal Captions
+// Description: Demonstrates how to use SettablePivotGlobalizationSettings in Aspose.Cells for .NET to replace default pivot table subtotal texts (Sum, Count, Average, Max, Min) with custom strings for any target language, refresh the pivot, and save the workbook.
+// Keywords: Aspose.Cells | pivot table localization | custom subtotal captions | SettablePivotGlobalizationSettings | C# Excel i18n | globalization settings | Excel multi‑language reports | .NET Excel export | internationalization pivot table | localized Excel subtotals
+// Common Searches: change pivot subtotal text Aspose.Cells | localize Excel pivot table labels .NET | SettablePivotGlobalizationSettings example | customize sum count average captions in Excel | Aspose.Cells pivot table language support
+// Developer Intent: Show pivot tables with subtotal labels translated to the workbook’s target language.
+// Use Cases: Create Excel dashboards for global audiences where subtotal rows appear in the local language. | Prepare a reusable workbook template that automatically applies region‑specific subtotal terminology. | Meet compliance or branding guidelines by displaying translated sum, count, and average labels in exported reports.
+// AI Prompts: Generate C# code that sets French subtitles for pivot table subtotals using Aspose.Cells. | Explain how to read existing subtotal captions from a pivot table and replace them at runtime. | Provide a step‑by‑step guide to apply different localization settings for multiple languages in one workbook.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Settings;
 
 namespace AsposeCellsPivotLocalizationDemo
 {
+    // Demonstrates how to use SettablePivotGlobalizationSettings in Aspose.Cells for .NET to replace default pivot table subtotal texts (Sum, Count, Average, Max, Min) with custom strings for any target language, refresh the pivot, and save the workbook.
     class Program
     {
         static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet dataSheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet dataSheet = workbook.Worksheets[0];
 
-                // Populate sample data for the pivot table
-                dataSheet.Cells["A1"].PutValue("Category");
-                dataSheet.Cells["B1"].PutValue("SubCategory");
-                dataSheet.Cells["C1"].PutValue("Amount");
+            // Populate sample data for the pivot table
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Value");
+            dataSheet.Cells["A2"].PutValue("A");
+            dataSheet.Cells["B2"].PutValue(10);
+            dataSheet.Cells["A3"].PutValue("A");
+            dataSheet.Cells["B3"].PutValue(20);
+            dataSheet.Cells["A4"].PutValue("B");
+            dataSheet.Cells["B4"].PutValue(30);
+            dataSheet.Cells["A5"].PutValue("B");
+            dataSheet.Cells["B5"].PutValue(40);
 
-                dataSheet.Cells["A2"].PutValue("Food");
-                dataSheet.Cells["B2"].PutValue("Fruit");
-                dataSheet.Cells["C2"].PutValue(120);
+            // Add a pivot table based on the data range
+            int pivotIndex = dataSheet.PivotTables.Add("A1:B5", "D1", "PivotTable1");
+            PivotTable pivotTable = dataSheet.PivotTables[pivotIndex];
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
 
-                dataSheet.Cells["A3"].PutValue("Food");
-                dataSheet.Cells["B3"].PutValue("Vegetable");
-                dataSheet.Cells["C3"].PutValue(80);
+            // Create a SettablePivotGlobalizationSettings instance to customize subtotal texts
+            SettablePivotGlobalizationSettings localizationSettings = new SettablePivotGlobalizationSettings();
 
-                dataSheet.Cells["A4"].PutValue("Beverage");
-                dataSheet.Cells["B4"].PutValue("Tea");
-                dataSheet.Cells["C4"].PutValue(50);
+            // Set custom localized texts for various subtotal types
+            localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Sum, "Σ Total");          // Sum
+            localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Count, "Count Total");   // Count
+            localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Average, "Avg Total");   // Average
+            localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Max, "Maximum Total");   // Max
+            localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Min, "Minimum Total");   // Min
 
-                dataSheet.Cells["A5"].PutValue("Beverage");
-                dataSheet.Cells["B5"].PutValue("Coffee");
-                dataSheet.Cells["C5"].PutValue(70);
+            // Assign the customized settings to the workbook's globalization settings
+            workbook.Settings.GlobalizationSettings.PivotSettings = localizationSettings;
 
-                // Add a new worksheet for the pivot table
-                Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+            // Refresh and calculate the pivot table so that the new labels take effect
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
 
-                // Create the pivot table based on the data range
-                int pivotIndex = pivotSheet.PivotTables.Add("A1:C5", "A1", "SalesPivot");
-                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-                // Configure the pivot fields
-                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);      // Category as row
-                pivotTable.AddFieldToArea(PivotFieldType.Column, 1);   // SubCategory as column
-                pivotTable.AddFieldToArea(PivotFieldType.Data, 2);     // Amount as data
-
-                // Create a SettablePivotGlobalizationSettings instance to customize subtotal labels
-                SettablePivotGlobalizationSettings localizationSettings = new SettablePivotGlobalizationSettings();
-
-                // Set custom texts for various subtotal types (example: localized to French)
-                localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Sum, "Somme");
-                localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Count, "Nombre");
-                localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Average, "Moyenne");
-                localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Max, "Maximum");
-                localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Min, "Minimum");
-                localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Product, "Produit");
-                // The following subtotal types are not available in the current Aspose.Cells version, so they are omitted:
-                // StdDev, StdDevP, VarP
-
-                // Set custom text for variance (available)
-                localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Var, "Variance");
-
-                // Ensure GlobalizationSettings object exists
-                if (workbook.Settings.GlobalizationSettings == null)
-                    workbook.Settings.GlobalizationSettings = new GlobalizationSettings();
-
-                // Assign the custom globalization settings to the workbook
-                workbook.Settings.GlobalizationSettings.PivotSettings = localizationSettings;
-
-                // Refresh and calculate the pivot table so that the new labels take effect
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Prepare output file path
-                string outputPath = "LocalizedPivotSubtotals.xlsx";
-
-                // Delete existing file to avoid conflicts
-                if (File.Exists(outputPath))
-                    File.Delete(outputPath);
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("LocalizedPivotSubtotals.xlsx");
         }
     }
 }

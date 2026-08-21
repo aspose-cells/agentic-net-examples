@@ -1,75 +1,60 @@
-// Title: Copy a Cell Range to a New Workbook and Save as XLSX with Aspose.Cells for .NET (C#)
-// Description: C# example that loads or creates a source.xlsx file, defines the range A1:C5, creates an empty destination workbook, copies the range preserving values and formatting, and saves the result as copied_range.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells copy range C# | copy Excel cells to new workbook | Aspose.Cells create range programmatically | save copied range as XLSX | C# Aspose.Cells example | Excel range duplication .NET
-// Common Searches: how to copy a range of cells to a new Excel file using Aspose.Cells | Aspose.Cells C# copy A1:C5 to another workbook | create new workbook from selected cells Aspose.Cells | copy Excel range preserving formatting Aspose.Cells .NET | Aspose.Cells copy range and save as xlsx
-// Developer Intent: Duplicate a specific cell block from an existing workbook into a fresh workbook and write the result to an XLSX file using Aspose.Cells for .NET.
-// Use Cases: Extract a report section from a template and distribute it as an independent file. | Generate a lightweight workbook containing only the data needed for downstream processing. | Create a copy of chart source data for sharing without exposing the full original workbook.
-// AI Prompts: Write C# code with Aspose.Cells that copies a runtime‑determined range from one workbook to a new workbook and saves it as XLSX. | Explain how to copy a range while keeping cell formatting, formulas, and comments using Aspose.Cells for .NET. | Show error handling for a missing source file and how to create a placeholder workbook before copying the range.
+// Title: Copy a cell range to a new workbook and save as XLSX with Aspose.Cells for .NET
+// Description: Loads source.xlsx, extracts the A1:C3 range from the first worksheet, copies it into a fresh workbook, and saves the result as copied_range.xlsx in XLSX format using Aspose.Cells for C#.
+// Keywords: Aspose.Cells copy range .NET | C# copy Excel cells to new workbook | Aspose.Cells create workbook from range | save copied range as XLSX | Excel range copy Aspose.Cells
+// Common Searches: Aspose.Cells copy range to new workbook C# | How to copy cells A1:C3 to another Excel file using Aspose | C# Aspose.Cells save selected range as separate XLSX | Copy Excel range between workbooks with Aspose.Cells | Create new Excel file from a range using Aspose.Cells .NET
+// Developer Intent: Extract a defined cell range from an existing Excel file, place it into a new workbook, and write the new file in XLSX format.
+// Use Cases: Distribute a specific report section without exposing the full master workbook. | Generate a lightweight template that contains only the data needed for downstream processing. | Create a shareable snapshot of a data block while preserving the original workbook unchanged.
+// AI Prompts: Write C# code with Aspose.Cells that copies a runtime‑determined range from a source workbook to a new workbook and saves it as XLSX. | Explain how to copy multiple non‑contiguous ranges into separate worksheets of a new workbook while keeping formatting using Aspose.Cells. | Show how to preserve formulas, styles, and merged cells when copying a range to a new workbook with Aspose.Cells for .NET.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// C# example that loads or creates a source.xlsx file, defines the range A1:C5, creates an empty destination workbook, copies the range preserving values and formatting, and saves the result as copied_range.xlsx using Aspose.Cells for .NET.
-class Program
+// Loads source.xlsx, extracts the A1:C3 range from the first worksheet, copies it into a fresh workbook, and saves the result as copied_range.xlsx in XLSX format using Aspose.Cells for C#.
+class CopyRangeToNewWorkbook
 {
     static void Main()
     {
         try
         {
-            // Path to the source workbook
-            string sourcePath = "source.xlsx";
+            const string sourcePath = "source.xlsx";
+            const string destPath = "copied_range.xlsx";
 
-            // Ensure the source file exists; create a simple workbook if it does not
+            // Verify source file exists to avoid FileNotFoundException
             if (!File.Exists(sourcePath))
             {
-                var tempWb = new Workbook();
-                var tempSheet = tempWb.Worksheets[0];
-                var tempCells = tempSheet.Cells;
-                // Fill A1:C5 with sample data
-                for (int row = 0; row < 5; row++)
-                {
-                    for (int col = 0; col < 3; col++)
-                    {
-                        tempCells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                    }
-                }
-                tempWb.Save(sourcePath);
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
             }
 
-            // Load the source workbook
+            // Load the source workbook from a file
             Workbook sourceWorkbook = new Workbook(sourcePath);
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-            Cells sourceCells = sourceSheet.Cells;
 
-            // Define the source range (A1:C5)
-            AsposeRange sourceRange = sourceCells.CreateRange("A1:C5");
+            // Access the first worksheet in the source workbook
+            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+
+            // Define the range to be copied (e.g., cells A1:C3)
+            Aspose.Cells.Range sourceRange = sourceSheet.Cells.CreateRange("A1:C3");
 
             // Create a new (empty) destination workbook
             Workbook destinationWorkbook = new Workbook();
-            Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
-            Cells destinationCells = destinationSheet.Cells;
 
-            // Create a destination range with the same size as the source range, starting at A1
-            AsposeRange destinationRange = destinationCells.CreateRange(
-                0,                     // first row (0‑based)
-                0,                     // first column (0‑based)
-                sourceRange.RowCount, // number of rows
-                sourceRange.ColumnCount // number of columns
-            );
+            // Access the first worksheet in the destination workbook
+            Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
+
+            // Define a destination range with the same dimensions starting at A1
+            Aspose.Cells.Range destinationRange = destinationSheet.Cells.CreateRange("A1:C3");
 
             // Copy the source range into the destination range
-            sourceRange.Copy(destinationRange);
+            destinationRange.Copy(sourceRange);
 
-            // Save the destination workbook
-            string destPath = "copied_range.xlsx";
-            destinationWorkbook.Save(destPath);
-            Console.WriteLine($"Range copied successfully to '{destPath}'.");
+            // Save the destination workbook as an XLSX file
+            destinationWorkbook.Save(destPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Range copied successfully to {destPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

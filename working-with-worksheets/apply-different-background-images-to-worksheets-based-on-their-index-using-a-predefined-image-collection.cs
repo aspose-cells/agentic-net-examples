@@ -1,73 +1,73 @@
-// Title: Set Different Background Images per Worksheet by Index with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds extra sheets, loads a predefined list of image files into byte arrays, and assigns each worksheet a background image selected by its zero‑based index using modulo arithmetic. Missing images are ignored, and the workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells | C# worksheet background image | set worksheet background Aspose.Cells | multiple worksheet backgrounds | background image modulo index | load image byte array Aspose.Cells | sheet‑specific background | .NET Excel background image
-// Common Searches: Aspose.Cells set worksheet background image C# | different background per sheet Aspose.Cells | apply background images using sheet index | load image as byte array for worksheet background | background image modulo worksheet count
-// Developer Intent: Assign a unique background image to each worksheet based on its position in the workbook, using a predefined image collection and modulo logic.
-// Use Cases: Generate a multi‑sheet report where each sheet shows a themed background that matches its content. | Create a presentation workbook with alternating background images to visually separate sections. | Apply corporate branding images to specific sheets by mapping sheet indexes to a set of prepared graphics.
-// AI Prompts: Show how to skip worksheets when the corresponding image file is missing instead of using null placeholders. | Provide code that reads all background images from a folder and applies them sequentially to worksheets, handling absent files gracefully. | Explain how to use Worksheet.BackgroundImage with a Stream rather than a byte array in Aspose.Cells.
+// Title: Set Different Background Images for Worksheets by Index with Aspose.Cells (C#)
+// Description: Demonstrates how to assign a distinct background image to each worksheet in an Aspose.Cells workbook by cycling through a predefined image collection using the sheet's index (modulo operation) and saving the result as an XLSX file.
+// Keywords: Aspose.Cells background image | C# worksheet background | set worksheet image by index | rotate worksheet backgrounds | cycle images Aspose.Cells | .NET Excel background | Excel workbook image array | sample code Aspose.Cells
+// Common Searches: Aspose.Cells set different background for each sheet | C# assign worksheet background image using index | rotate Excel sheet backgrounds with Aspose.Cells | how to apply multiple background images in a workbook .NET | sample code for worksheet background image Aspose
+// Developer Intent: The developer needs to apply a unique background image to every worksheet, selecting the image from a predefined list based on the worksheet’s zero‑based index.
+// Use Cases: Create a multi‑section report where each sheet has its own themed background. | Generate a presentation workbook with rotating images to keep visual interest. | Apply corporate branding by mapping specific sheets to brand‑specific graphics.
+// AI Prompts: Write C# code using Aspose.Cells that loads an array of image files and sets each worksheet's BackgroundImage based on its index, with error handling for missing files. | Provide a reusable method that accepts a Workbook and a string[] of image paths, assigns backgrounds cyclically, and logs any unavailable images. | Explain performance best practices for loading and applying background images to many worksheets in Aspose.Cells.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, adds extra sheets, loads a predefined list of image files into byte arrays, and assigns each worksheet a background image selected by its zero‑based index using modulo arithmetic. Missing images are ignored, and the workbook is saved as an XLSX file.
-class ApplyBackgroundImages
+namespace AsposeCellsBackgroundDemo
 {
-    static void Main()
+    // Demonstrates how to assign a distinct background image to each worksheet in an Aspose.Cells workbook by cycling through a predefined image collection using the sheet's index (modulo operation) and saving the result as an XLSX file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook (lifecycle create)
-            Workbook workbook = new Workbook();
-
-            // Add extra worksheets to demonstrate multiple backgrounds
-            workbook.Worksheets.Add("Sheet2");
-            workbook.Worksheets.Add("Sheet3");
-
-            // Predefined collection of image file paths (ensure these files exist on disk)
-            string[] imagePaths = new string[]
+            try
             {
-                "bg1.jpg",
-                "bg2.jpg",
-                "bg3.jpg"
-            };
+                // Predefined collection of background image file paths.
+                // Ensure these files exist in the execution directory or provide full paths.
+                string[] backgroundImages = new string[]
+                {
+                    "Images/bg1.jpg",
+                    "Images/bg2.jpg",
+                    "Images/bg3.jpg"
+                };
 
-            // Load each existing image file into a byte array (required for Worksheet.BackgroundImage)
-            List<byte[]> images = new List<byte[]>();
-            foreach (string path in imagePaths)
-            {
-                if (File.Exists(path))
+                // Create a new workbook.
+                Workbook workbook = new Workbook();
+
+                // Add worksheets.
+                workbook.Worksheets[0].Name = "FirstSheet";
+                workbook.Worksheets.Add("SecondSheet");
+                workbook.Worksheets.Add("ThirdSheet");
+                workbook.Worksheets.Add("FourthSheet");
+
+                // Assign a background image to each worksheet.
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    images.Add(File.ReadAllBytes(path));
+                    int index = sheet.Index;
+
+                    // Cycle through the image collection.
+                    string imagePath = backgroundImages[index % backgroundImages.Length];
+
+                    // Verify that the image file exists before reading.
+                    if (File.Exists(imagePath))
+                    {
+                        byte[] imageData = File.ReadAllBytes(imagePath);
+                        sheet.BackgroundImage = imageData;
+                    }
+                    else
+                    {
+                        // If the image is missing, skip setting the background for this sheet.
+                        Console.WriteLine($"Warning: Background image not found: {imagePath}");
+                    }
                 }
-                else
-                {
-                    // If the image file is missing, add a null placeholder to keep indexing consistent
-                    images.Add(null);
-                }
+
+                // Save the workbook.
+                string outputPath = "WorkbookWithBackgrounds.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
-
-            // Iterate through all worksheets and assign a background image based on its index
-            foreach (Worksheet sheet in workbook.Worksheets)
+            catch (Exception ex)
             {
-                int sheetIndex = sheet.Index; // Get the worksheet's index
-                // Select an image from the collection; wrap around if there are more sheets than images
-                byte[] selectedImage = images[sheetIndex % images.Count];
-
-                // Set the background image only if a valid image was loaded
-                if (selectedImage != null && selectedImage.Length > 0)
-                {
-                    sheet.BackgroundImage = selectedImage;
-                }
+                // Log any unexpected errors.
+                Console.WriteLine($"Error: {ex.Message}");
             }
-
-            // Save the workbook (lifecycle save)
-            workbook.Save("WorkbookWithBackgrounds.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

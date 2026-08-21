@@ -1,27 +1,27 @@
-// Title: Reorder worksheets: Move a sheet to the first tab and set it active with Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add multiple sheets, relocate a chosen worksheet (e.g., Sheet3) to index 0, activate it, and save the result using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | MoveTo method | worksheet reorder | first tab | set active sheet | Excel automation | workbook manipulation | reorder worksheets programmatically
-// Common Searches: Aspose.Cells move worksheet to first position C# | How to set active sheet after reordering Aspose.Cells | MoveTo index 0 example Aspose.Cells | Reorder Excel tabs with Aspose.Cells .NET | Change worksheet tab order programmatically
-// Developer Intent: Programmatically move a specific worksheet to the first position in a workbook and make it the active sheet before saving.
-// Use Cases: Place a dashboard or summary sheet at the front of an automatically generated report. | Prioritize a newly created analysis worksheet in a batch‑processing workflow. | Ensure the default view opens on a designated sheet after dynamic tab reordering.
-// AI Prompts: Write C# code using Aspose.Cells to move a worksheet named "Report" to the first tab and set it as the active sheet before saving. | Explain the behavior of the Worksheet.MoveTo method when given index values, including error handling for out‑of‑range indices. | Provide a complete example that clears default sheets, adds several worksheets, reorders them, activates a specific sheet, and saves the workbook as XLSX.
+// Title: Move a worksheet to the first tab and set it active with Aspose.Cells for .NET
+// Description: Creates a workbook, adds several sheets, moves a chosen worksheet (e.g., Sheet3) to index 0, marks it as the active and selected sheet, and saves the workbook.
+// Keywords: Aspose.Cells | move worksheet | first tab | set active sheet | reorder worksheets | .NET | C# | Workbook.MoveTo | ActiveSheetIndex | worksheet index 0
+// Common Searches: Aspose.Cells move worksheet to first tab | set active sheet after moving worksheet Aspose.Cells | reorder worksheets programmatically .NET | how to make a sheet the first tab in Aspose.Cells | select worksheet on workbook open Aspose.Cells
+// Developer Intent: Reorder the worksheets so a specific sheet becomes the first tab and is active when the workbook is opened.
+// Use Cases: Place a dashboard sheet at the beginning of a generated report for immediate visibility. | Ensure a summary sheet opens as the active tab after programmatic sheet reordering. | Create a template where the most important worksheet is always positioned at index 0 and pre‑selected.
+// AI Prompts: Generate C# code using Aspose.Cells to move a worksheet named "Report" to the first position and make it the active sheet. | Explain how to reorder multiple worksheets in an Aspose.Cells workbook while keeping the first sheet selected on open. | Provide error‑handling examples for moving a worksheet to index 0 when the target sheet might be missing.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsWorksheetReorder
+namespace WorksheetRelocationDemo
 {
-    // Shows how to create a workbook, add multiple sheets, relocate a chosen worksheet (e.g., Sheet3) to index 0, activate it, and save the result using Aspose.Cells for .NET.
+    // Creates a workbook, adds several sheets, moves a chosen worksheet (e.g., Sheet3) to index 0, marks it as the active and selected sheet, and saves the workbook.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
-                // Create a new workbook (lifecycle: create)
+                // Create a new workbook (contains a default sheet)
                 Workbook workbook = new Workbook();
 
-                // Remove the default worksheet to avoid duplicate names
+                // Remove the default sheet to avoid duplicate name errors
                 workbook.Worksheets.Clear();
 
                 // Add sample worksheets with unique names
@@ -29,18 +29,18 @@ namespace AsposeCellsWorksheetReorder
                 workbook.Worksheets.Add("Sheet2");
                 workbook.Worksheets.Add("Sheet3");
 
-                // Retrieve the worksheet you want to move (e.g., "Sheet3")
+                // Get the worksheet to be moved (e.g., "Sheet3")
                 Worksheet sheetToMove = workbook.Worksheets["Sheet3"];
 
-                // Relocate the worksheet to the first position (index 0)
-                // This makes it the leftmost tab when the workbook is opened
+                // Move the worksheet to the first position (index 0)
                 sheetToMove.MoveTo(0);
 
-                // Optionally set it as the active sheet so it is displayed first
+                // Make the moved sheet the active and selected sheet
                 workbook.Worksheets.ActiveSheetIndex = sheetToMove.Index;
+                sheetToMove.IsSelected = true;
 
-                // Save the workbook (lifecycle: save)
-                workbook.Save("ReorderedWorkbook.xlsx", SaveFormat.Xlsx);
+                // Save the workbook
+                workbook.Save("RelocatedWorkbook.xlsx");
             }
             catch (Exception ex)
             {

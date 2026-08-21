@@ -1,15 +1,15 @@
-// Title: Hide a Worksheet with VisibilityType.VeryHidden while Keeping VBA Access in Aspose.Cells for .NET (C#)
-// Description: Shows how to create a macro‑enabled .xlsm workbook, add a sheet, set its VisibilityType to VeryHidden so it is invisible in the Excel UI yet reachable by VBA macros, and save the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | VeryHidden | hide worksheet | macro enabled workbook | XLSM | VBA access | VisibilityType | Excel security | programmatic sheet hiding
-// Common Searches: Aspose.Cells hide worksheet VeryHidden C# | Create macro enabled Excel file with hidden sheet using Aspose.Cells | VeryHidden sheet accessible by VBA Aspose.Cells | Set VisibilityType.VeryHidden in .NET | Hide Excel sheet from UI but use in macro Aspose
-// Developer Intent: Programmatically hide a worksheet from the Excel interface while still allowing VBA macros to read or modify its data.
-// Use Cases: Store confidential configuration values that macros can retrieve at runtime. | Hide lookup tables or intermediate results used by VBA functions. | Protect proprietary formulas by placing them on a VeryHidden sheet accessible only through code.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a worksheet, sets VisibilityType.VeryHidden, enables macros, and saves the workbook as an .xlsm file. | Provide a VBA macro example that reads cell A1 from a VeryHidden worksheet created by Aspose.Cells. | Explain how to programmatically unhide a VeryHidden sheet via VBA after the workbook is opened.
+// Title: Hide a Worksheet (VeryHidden) in an XLSM file with Aspose.Cells for .NET
+// Description: Demonstrates how to create a macro‑enabled workbook, add a sheet, set its VisibilityType to VeryHidden so it stays invisible in Excel, and save the file as XLSM for later VBA access using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells hide worksheet | VeryHidden sheet .NET | macro enabled workbook XLSX | save as XLSM Aspose | Excel VBA hidden sheet | worksheet VisibilityType | C# Aspose.Cells example | global developers | US .NET developers | EU Excel automation
+// Common Searches: Aspose.Cells set worksheet VeryHidden | Create XLSM with hidden sheet using C# | How to keep a sheet invisible but accessible to VBA | Hide Excel sheet programmatically Aspose | VeryHidden worksheet example .NET
+// Developer Intent: Make a worksheet invisible in the Excel UI while still allowing VBA macros to read or unhide it.
+// Use Cases: Store configuration or lookup tables that macros read at runtime. | Protect proprietary formulas by placing them on a VeryHidden sheet. | Distribute template workbooks where end users cannot see internal calculation sheets.
+// AI Prompts: Generate VBA code to unhide a VeryHidden worksheet created with Aspose.Cells. | Show C# to add multiple VeryHidden sheets and apply password protection in an XLSM workbook. | Explain how to toggle a worksheet between VeryHidden and Visible using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to create a macro‑enabled .xlsm workbook, add a sheet, set its VisibilityType to VeryHidden so it is invisible in the Excel UI yet reachable by VBA macros, and save the file using Aspose.Cells for .NET.
+// Demonstrates how to create a macro‑enabled workbook, add a sheet, set its VisibilityType to VeryHidden so it stays invisible in Excel, and save the file as XLSM for later VBA access using Aspose.Cells for .NET.
 class HideWorksheetDemo
 {
     static void Main()
@@ -19,25 +19,22 @@ class HideWorksheetDemo
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Add a new worksheet that will be hidden
-            Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenData");
+            // Add a new worksheet that we want to hide
+            Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
 
-            // Optional: put some data in the hidden sheet
-            hiddenSheet.Cells["A1"].PutValue("Secret Value");
-
-            // Hide the worksheet using VeryHidden so it cannot be shown via the UI,
-            // but it remains accessible to VBA macros
+            // Set the worksheet to VeryHidden.
+            // This makes the sheet invisible in the Excel UI,
+            // but it can still be accessed and made visible by VBA macros.
             hiddenSheet.VisibilityType = VisibilityType.VeryHidden;
 
-            // Enable macros in the workbook (required for macro-enabled files)
-            workbook.Settings.EnableMacros = true;
-
-            // Save the workbook as a macro‑enabled file
-            workbook.Save("HiddenSheetDemo.xlsm", SaveFormat.Xlsm);
+            // Save the workbook as a macro‑enabled file (XLSM) so that VBA macros can be added later if needed.
+            string outputPath = "HiddenSheetDemo.xlsm";
+            workbook.Save(outputPath, SaveFormat.Xlsm);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

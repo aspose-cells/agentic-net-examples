@@ -1,71 +1,78 @@
-// Title: Copy rows with cell comments using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to copy a block of rows from a source worksheet to a destination worksheet while preserving cell comments. The example creates a source workbook, adds data and comments to A1 and A3, uses Cells.CopyRows to transfer the rows, ShapeCollection.CopyCommentsInRange to move the comments, verifies the comments in the target sheet, and saves both workbooks.
-// Keywords: Aspose.Cells copy rows | cell comments transfer .NET | ShapeCollection.CopyCommentsInRange | C# copy worksheet rows with comments | preserve comments when copying rows | Aspose.Cells example C# | verify copied comments
-// Common Searches: how to copy rows and keep comments Aspose.Cells | copy cell comments between worksheets C# | Aspose.Cells transfer rows with annotations | verify comments after copying rows .NET | copy rows with comments Aspose.Cells example
-// Developer Intent: Move selected rows from one worksheet to another and retain any associated cell comments.
-// Use Cases: Clone a template section with its notes into a report sheet. | Aggregate commented rows from multiple source files into a summary workbook. | Migrate data blocks with annotations during a workbook conversion project.
-// AI Prompts: Generate C# code that copies a range of rows and all related comments from one worksheet to another using Aspose.Cells, then confirms the comments were transferred. | Explain why ShapeCollection.CopyCommentsInRange must be called after Cells.CopyRows when copying rows that contain comments. | Provide a strategy for copying multi‑column rows with comments, handling possible comment offset adjustments.
+// Title: Transfer rows with cell comments between worksheets using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to copy a block of rows from a source worksheet to a destination worksheet, preserving values, formatting, and cell comments. The example uses Workbook, Cells.CopyRows, and Shapes.CopyCommentsInRange, then verifies the transferred comments and saves the result as an Excel file.
+// Keywords: Aspose.Cells | CopyRows | CopyCommentsInRange | C# | .NET | transfer rows | cell comments | worksheet copy | Excel automation
+// Common Searches: Aspose.Cells copy rows with comments C# | how to copy rows and comments between worksheets .NET | CopyRows preserve cell comments Aspose | transfer Excel rows programmatically with comments | copy range of rows and comments using Aspose.Cells
+// Developer Intent: Copy selected rows and their associated comments from one worksheet to another while keeping formatting intact.
+// Use Cases: Migrate annotated data from a template sheet to a report sheet in a new workbook. | Create a historical snapshot by duplicating rows with comments for version control. | Build a consolidated summary by pulling rows with notes from multiple source sheets.
+// AI Prompts: Generate C# code that copies rows 2‑6 from Sheet1 to row 15 in Sheet2 and also copies all comments in that range using Aspose.Cells. | Show how to verify that comments were transferred correctly after using Cells.CopyRows and Shapes.CopyCommentsInRange. | Explain best practices for handling comment objects when moving rows across workbooks with Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to copy a block of rows from a source worksheet to a destination worksheet while preserving cell comments. The example creates a source workbook, adds data and comments to A1 and A3, uses Cells.CopyRows to transfer the rows, ShapeCollection.CopyCommentsInRange to move the comments, verifies the comments in the target sheet, and saves both workbooks.
-class TransferRowsWithComments
+namespace TransferRowsWithComments
 {
-    static void Main()
+    // Demonstrates how to copy a block of rows from a source worksheet to a destination worksheet, preserving values, formatting, and cell comments. The example uses Workbook, Cells.CopyRows, and Shapes.CopyCommentsInRange, then verifies the transferred comments and saves the result as an Excel file.
+    class Program
     {
-        // ---------- Create source workbook and add data/comments ----------
-        Workbook srcWb = new Workbook();
-        Worksheet srcWs = srcWb.Worksheets[0];
-        srcWs.Name = "Source";
-
-        // Add sample data in rows 0‑2 (A1‑A3)
-        srcWs.Cells["A1"].PutValue("Row1");
-        srcWs.Cells["A2"].PutValue("Row2");
-        srcWs.Cells["A3"].PutValue("Row3");
-
-        // Add comments to A1 and A3
-        int idx1 = srcWs.Comments.Add("A1");
-        srcWs.Comments[idx1].Note = "Comment on Row1";
-
-        int idx3 = srcWs.Comments.Add("A3");
-        srcWs.Comments[idx3].Note = "Comment on Row3";
-
-        // ---------- Create destination workbook ----------
-        Workbook destWb = new Workbook();
-        Worksheet destWs = destWb.Worksheets[0];
-        destWs.Name = "Destination";
-
-        // ---------- Define source range that contains the rows to copy ----------
-        CellArea srcArea = new CellArea
+        static void Main()
         {
-            StartRow = 0,
-            StartColumn = 0,
-            EndRow = 2,
-            EndColumn = 0   // only column A is needed for this example
-        };
+            // ---------- Create source workbook and add data with comments ----------
+            Workbook srcWorkbook = new Workbook();
+            Worksheet srcSheet = srcWorkbook.Worksheets[0];
 
-        // ---------- Copy rows data from source to destination ----------
-        // CopyRows(sourceCells, sourceRowIndex, destinationRowIndex, rowNumber)
-        destWs.Cells.CopyRows(srcWs.Cells, srcArea.StartRow, 0,
-            srcArea.EndRow - srcArea.StartRow + 1);
+            // Populate three rows with sample data
+            srcSheet.Cells["A1"].PutValue("Row1-Data");
+            srcSheet.Cells["B1"].PutValue(10);
+            srcSheet.Cells["A2"].PutValue("Row2-Data");
+            srcSheet.Cells["B2"].PutValue(20);
+            srcSheet.Cells["A3"].PutValue("Row3-Data");
+            srcSheet.Cells["B3"].PutValue(30);
 
-        // ---------- Copy comments from source range to destination ----------
-        // ShapeCollection.CopyCommentsInRange(shapes, ca, destRow, destColumn)
-        srcWs.Shapes.CopyCommentsInRange(srcWs.Shapes, srcArea, 0, 0);
+            // Add comments to each row (A1, A2, A3)
+            int c1 = srcSheet.Comments.Add("A1");
+            srcSheet.Comments[c1].Note = "Comment for A1";
 
-        // ---------- Verify that comments were copied ----------
-        Comment destCommentA1 = destWs.Comments["A1"];
-        Comment destCommentA3 = destWs.Comments["A3"];
+            int c2 = srcSheet.Comments.Add("A2");
+            srcSheet.Comments[c2].Note = "Comment for A2";
 
-        Console.WriteLine("Destination A1 comment: " +
-            (destCommentA1 != null ? destCommentA1.Note : "None"));
-        Console.WriteLine("Destination A3 comment: " +
-            (destCommentA3 != null ? destCommentA3.Note : "None"));
+            int c3 = srcSheet.Comments.Add("A3");
+            srcSheet.Comments[c3].Note = "Comment for A3";
 
-        // ---------- Save workbooks ----------
-        srcWb.Save("Source.xlsx");
-        destWb.Save("Destination.xlsx");
+            // ---------- Define source range that contains the rows to copy ----------
+            CellArea srcArea = new CellArea
+            {
+                StartRow = 0,      // Row 0 (A1)
+                StartColumn = 0,   // Column 0 (A)
+                EndRow = 2,        // Row 2 (A3)
+                EndColumn = 1      // Column 1 (B)
+            };
+
+            // ---------- Create destination workbook ----------
+            Workbook destWorkbook = new Workbook();
+            Worksheet destSheet = destWorkbook.Worksheets[0];
+
+            // ---------- Copy rows (data and formats) ----------
+            // Copy rows 0‑2 from source to destination starting at row 5 (index 5)
+            int destStartRow = 5;
+            int rowsToCopy = srcArea.EndRow - srcArea.StartRow + 1;
+            destSheet.Cells.CopyRows(srcSheet.Cells, srcArea.StartRow, destStartRow, rowsToCopy);
+
+            // ---------- Copy comments within the same range ----------
+            // Destination column start is same as source (0)
+            destSheet.Shapes.CopyCommentsInRange(srcSheet.Shapes, srcArea, destStartRow, srcArea.StartColumn);
+
+            // ---------- Verify that comments were copied ----------
+            Console.WriteLine("Comments in destination worksheet:");
+            foreach (Comment comment in destSheet.Comments)
+            {
+                // The comment's Row and Column indicate its position
+                string cellName = CellsHelper.CellIndexToName(comment.Row, comment.Column);
+                Console.WriteLine($"{cellName}: {comment.Note}");
+            }
+
+            // ---------- Save the destination workbook ----------
+            destWorkbook.Save("DestinationWithComments.xlsx");
+        }
     }
 }

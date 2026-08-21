@@ -1,37 +1,46 @@
-// Title: Apply Justify Alignment and Text Wrapping to a Cell with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to set a cell's horizontal alignment to Justify, enable text wrapping, auto‑fit the row height, and save the workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells justify alignment C# | Aspose.Cells text wrap | horizontal alignment justify Aspose.Cells | cell style wrap text .NET | auto fit row Aspose.Cells | C# Aspose.Cells formatting
-// Common Searches: Aspose.Cells set cell justification C# | how to wrap text in a cell using Aspose.Cells .NET | justify alignment with text wrap Aspose.Cells example | C# code for justified and wrapped cell in Aspose.Cells
-// Developer Intent: The developer needs to format a specific cell so its content is justified and automatically wrapped, with the row height adjusted to display all lines.
-// Use Cases: Creating a report where paragraph text must be justified and wrapped inside a single cell. | Designing an invoice template that aligns product descriptions with justified text and wraps long strings. | Generating a data export where cells contain multi‑line notes that require both justification and automatic row height adjustment.
-// AI Prompts: Show C# code to apply justify alignment and enable text wrapping for a range of cells in Aspose.Cells. | Explain how to set justify alignment and wrap text for merged cells using Aspose.Cells for .NET. | Provide a snippet that adjusts row height after enabling text wrap and justify alignment with Aspose.Cells.
+// Title: Set Cell Horizontal Alignment to Justify and Enable Text Wrapping with Aspose.Cells for .NET (C#)
+// Description: C# example that creates a workbook, writes a long string to cell A1, changes the cell style to horizontal alignment = Justify, turns on text wrapping, auto‑fits the row height, and saves the file as JustifyAndWrapDemo.xlsx using Aspose.Cells.
+// Keywords: Aspose.Cells justify alignment | wrap text Aspose.Cells .NET | horizontal alignment Justify C# | auto fit row Aspose.Cells | cell style Aspose.Cells example | C# spreadsheet text wrapping
+// Common Searches: Aspose.Cells set justify alignment and wrap text | C# how to enable text wrap in a cell with Aspose.Cells | auto fit row after wrapping text Aspose.Cells .NET | apply justify horizontal alignment to a cell using Aspose.Cells
+// Developer Intent: Apply Justify horizontal alignment and turn on text wrapping for a specific cell in a .NET workbook.
+// Use Cases: Formatting long description fields in reports so the text is justified and wrapped within each cell. | Creating invoices where address or notes cells need justified alignment and automatic row height adjustment. | Designing spreadsheet templates with header cells that stay readable on narrow columns by justifying and wrapping text.
+// AI Prompts: Generate C# code that sets a cell's horizontal alignment to Justify, enables text wrapping, and auto‑fits the row using Aspose.Cells. | Provide a reusable method that accepts a worksheet, cell address, and string, then applies justify alignment, wraps the text, and auto‑fits the row height. | Explain how to apply justify alignment and text wrapping to an entire range of cells in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to set a cell's horizontal alignment to Justify, enable text wrapping, auto‑fit the row height, and save the workbook using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // C# example that creates a workbook, writes a long string to cell A1, changes the cell style to horizontal alignment = Justify, turns on text wrapping, auto‑fits the row height, and saves the file as JustifyAndWrapDemo.xlsx using Aspose.Cells.
+    class SetJustifyAndWrapDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Access cell A1 and put a long text value
-        Cell cell = worksheet.Cells["A1"];
-        cell.PutValue("This is a long text that should be justified and wrapped within the cell.");
+            // Access a specific cell and put some long text
+            Cell cell = worksheet.Cells["A1"];
+            cell.PutValue("This is a long text that should be justified and wrapped within the cell to demonstrate the alignment and wrapping features.");
 
-        // Retrieve the cell's style, set justification and enable text wrapping
-        Style style = cell.GetStyle();
-        style.HorizontalAlignment = TextAlignmentType.Justify; // justify alignment
-        style.IsTextWrapped = true;                             // enable wrapping
-        cell.SetStyle(style);                                   // apply the style to the cell
+            // Retrieve the cell's style
+            Style style = cell.GetStyle();
 
-        // Adjust row height so the wrapped text is visible
-        worksheet.AutoFitRow(0);
+            // Set horizontal alignment to Justify
+            style.HorizontalAlignment = TextAlignmentType.Justify;
 
-        // Save the workbook
-        workbook.Save("JustifyWrap.xlsx");
+            // Enable text wrapping
+            style.IsTextWrapped = true;
+
+            // Apply the modified style back to the cell
+            cell.SetStyle(style);
+
+            // Optionally autofit the row height to show wrapped text
+            worksheet.AutoFitRow(0);
+
+            // Save the workbook to a file
+            workbook.Save("JustifyAndWrapDemo.xlsx");
+        }
     }
 }

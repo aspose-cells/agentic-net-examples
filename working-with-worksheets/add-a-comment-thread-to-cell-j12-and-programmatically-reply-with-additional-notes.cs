@@ -1,17 +1,17 @@
-// Title: Add Threaded Comment to Cell J12 and Reply Programmatically with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a new workbook, define two threaded‑comment authors, insert an initial comment in cell J12, retrieve the comment thread, append a reply from a second author, and save the file as ThreadedComment_J12.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells threaded comment C# | add comment to cell J12 | reply to threaded comment .NET | ThreadedCommentAuthors Aspose | save workbook with comments | programmatic comment thread | Excel collaboration Aspose
-// Common Searches: how to add a threaded comment to a specific cell using Aspose.Cells C# | Aspose.Cells reply to threaded comment programmatically | define multiple authors for threaded comments in Aspose.Cells | retrieve and reply to comments in Excel cell J12 with Aspose | C# example for threaded comments in Aspose.Cells
-// Developer Intent: Create a threaded comment on cell J12, then add a reply from another author, all via Aspose.Cells for .NET.
-// Use Cases: Capture review notes by inserting an initial comment from Alice in cell J12. | Document discussion by adding Bob’s reply to the same comment thread. | Share the workbook with a complete comment conversation for collaborative editing.
-// AI Prompts: Generate C# code that adds a threaded comment to cell J12 with author Alice and then adds a reply from author Bob using Aspose.Cells. | Explain how to retrieve the ThreadedCommentCollection for a cell and append a reply in Aspose.Cells for .NET. | Show how to create multiple threaded comment authors and assign them to comments in an Aspose.Cells workbook.
+// Title: Add a threaded comment to cell J12, reply programmatically, and save the workbook with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a new workbook, define two ThreadedCommentAuthor objects, insert an initial threaded comment into cell J12, retrieve the comment thread, add a reply from a second author, and save the file as ThreadedComment_J12.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells threaded comment C# | add reply to threaded comment Aspose.Cells | ThreadedCommentAuthor example | comment thread cell J12 Aspose.Cells | save workbook with comments Aspose.Cells | .NET Excel comment API | Aspose.Cells tutorial
+// Common Searches: how to add a threaded comment to a specific cell with Aspose.Cells .NET | reply to an existing threaded comment in Aspose.Cells C# | set up multiple authors for Excel comments using Aspose.Cells | Aspose.Cells example for comment threads | save Excel file with threaded comments Aspose.Cells
+// Developer Intent: Create a threaded comment on cell J12, add a reply from another author, and persist the workbook.
+// Use Cases: Initialize multiple ThreadedCommentAuthor objects and assign them to comment threads. | Insert a root threaded comment into a designated cell (e.g., J12) via the worksheet Comments API. | Retrieve the ThreadedCommentCollection for a cell and append additional replies before saving. | Generate Excel reports that include collaborative comment threads.
+// AI Prompts: Write C# code to add three replies to an existing threaded comment in Aspose.Cells, each using a different author and custom formatting. | Show how to iterate over all threaded comments in a worksheet and output the comment text, author name, and timestamp. | Provide an example that deletes a specific reply from a threaded comment thread using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsThreadedCommentDemo
 {
-    // Demonstrates how to create a new workbook, define two threaded‑comment authors, insert an initial comment in cell J12, retrieve the comment thread, append a reply from a second author, and save the file as ThreadedComment_J12.xlsx using Aspose.Cells for .NET.
+    // Demonstrates how to create a new workbook, define two ThreadedCommentAuthor objects, insert an initial threaded comment into cell J12, retrieve the comment thread, add a reply from a second author, and save the file as ThreadedComment_J12.xlsx using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
@@ -20,26 +20,40 @@ namespace AsposeCellsThreadedCommentDemo
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Access the comments collection of the worksheet
-            CommentCollection comments = worksheet.Comments;
+            // -----------------------------------------------------------------
+            // 1. Create authors for the threaded comments
+            // -----------------------------------------------------------------
+            // Author for the initial comment
+            int authorIndex1 = worksheet.Workbook.Worksheets.ThreadedCommentAuthors.Add(
+                "Alice",               // Name
+                "alice@example.com",   // UserId
+                "PROVIDER_1");         // ProviderId
+            ThreadedCommentAuthor author1 = worksheet.Workbook.Worksheets.ThreadedCommentAuthors[authorIndex1];
 
-            // Add authors for the threaded comments
-            int author1Index = workbook.Worksheets.ThreadedCommentAuthors.Add("Alice", "alice@example.com", "PROVIDER_1");
-            ThreadedCommentAuthor author1 = workbook.Worksheets.ThreadedCommentAuthors[author1Index];
+            // Author for the reply comment
+            int authorIndex2 = worksheet.Workbook.Worksheets.ThreadedCommentAuthors.Add(
+                "Bob",
+                "bob@example.com",
+                "PROVIDER_2");
+            ThreadedCommentAuthor author2 = worksheet.Workbook.Worksheets.ThreadedCommentAuthors[authorIndex2];
 
-            int author2Index = workbook.Worksheets.ThreadedCommentAuthors.Add("Bob", "bob@example.com", "PROVIDER_2");
-            ThreadedCommentAuthor author2 = workbook.Worksheets.ThreadedCommentAuthors[author2Index];
+            // -----------------------------------------------------------------
+            // 2. Add a threaded comment to cell J12
+            // -----------------------------------------------------------------
+            // This adds the first thread (the root comment) to the specified cell.
+            worksheet.Comments.AddThreadedComment("J12", "Initial threaded comment on J12.", author1);
 
-            // Add a threaded comment to cell J12 (row 11, column 9 – zero‑based indexing)
-            comments.AddThreadedComment(11, 9, "Initial comment on J12.", author1);
+            // -----------------------------------------------------------------
+            // 3. Retrieve the threaded comment collection for J12 and add a reply
+            // -----------------------------------------------------------------
+            ThreadedCommentCollection threadedComments = worksheet.Comments.GetThreadedComments("J12");
 
-            // Retrieve the threaded comment collection for J12
-            ThreadedCommentCollection threadedComments = comments.GetThreadedComments(11, 9);
+            // Add a reply to the existing thread
+            threadedComments.Add("This is a reply to the initial comment.", author2);
 
-            // Add a reply (additional note) to the same threaded comment thread
-            threadedComments.Add("This is a reply from Bob.", author2);
-
-            // Save the workbook
+            // -----------------------------------------------------------------
+            // 4. Save the workbook
+            // -----------------------------------------------------------------
             workbook.Save("ThreadedComment_J12.xlsx");
         }
     }

@@ -1,65 +1,88 @@
-// Title: Set Picture Placement to MoveAndSize and Verify Automatic Resizing with Linked Cell in Aspose.Cells for .NET
-// Description: Shows how to insert an image into a worksheet, apply PlacementType.MoveAndSize, change the column width and row height of the linked cell, and programmatically confirm that the picture scales accordingly using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# picture placement | PlacementType.MoveAndSize | image resize with cell | Excel picture scaling | Aspose.Cells .NET example | cell linked picture | dynamic image sizing | Excel automation C#
-// Common Searches: Aspose.Cells move and size picture C# | Set picture placement to MoveAndSize in .NET | Resize cell and picture automatically Aspose.Cells | Link picture size to cell dimensions Excel C# | Verify picture dimensions after cell resize Aspose
-// Developer Intent: Configure a picture to move and resize with its underlying cell and validate the size adjustment through code.
-// Use Cases: Insert a logo in a header cell that automatically adapts when the row height changes. | Create reports where product images expand or shrink with column width adjustments. | Build Excel templates with embedded graphics that stay proportionate after end‑user edits.
-// AI Prompts: Generate C# code that adds a picture to a worksheet, sets PlacementType.MoveAndSize, resizes the target cell, and prints the picture's width and height before and after the change. | Explain how PlacementType.MoveAndSize differs from Move and FreeFloating in Aspose.Cells. | Provide troubleshooting steps when a picture does not resize after changing the linked cell dimensions.
+// Title: Aspose.Cells C# – Link Picture to a Cell, Set MoveAndSize Placement, Verify Resizing
+// Description: Shows how to insert an image into a worksheet, bind it to cell B3, set Placement = MoveAndSize, resize row 3 and column B, and confirm that the picture automatically scales. Includes a fallback to an in‑memory PNG when the file is missing and saves the workbook as PictureMoveAndSize.xlsx.
+// Keywords: Aspose.Cells picture linked cell | PlacementType.MoveAndSize | C# add image from file | C# add image from MemoryStream | image resize with cell Aspose.Cells | verify picture dimensions after cell resize | Aspose.Cells workbook save | row height column width affect picture | Aspose.Cells .NET image handling
+// Common Searches: Aspose.Cells picture move and size with cell | link image to cell B3 Aspose.Cells | change row height column width affect picture size | add picture from MemoryStream Aspose.Cells C# | test picture resizing after cell resize Aspose.Cells
+// Developer Intent: Insert an image, bind it to a specific cell, make it move and scale with that cell, and programmatically verify that adjusting the cell’s row height or column width updates the image size.
+// Use Cases: Place a company logo in a header row that expands when the row height is increased. | Add placeholder graphics to a template where users can adjust column widths without breaking layout. | Generate data‑driven reports where pictures are attached to data cells and must follow cell size changes for consistent formatting.
+// AI Prompts: Write C# code using Aspose.Cells to insert a picture from a file, link it to cell C5, set Placement = MoveAndSize, then change the row height and column width and output the new picture dimensions. | Show how to add a picture from a MemoryStream in Aspose.Cells, associate it with a cell, and confirm that the picture resizes when the cell’s dimensions are modified. | Explain the effect of PlacementType.MoveAndSize on picture behavior in Aspose.Cells and provide a sample test that validates automatic scaling after cell resizing.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsPicturePlacementDemo
+// Shows how to insert an image into a worksheet, bind it to cell B3, set Placement = MoveAndSize, resize row 3 and column B, and confirm that the picture automatically scales. Includes a fallback to an in‑memory PNG when the file is missing and saves the workbook as PictureMoveAndSize.xlsx.
+class Program
 {
-    // Shows how to insert an image into a worksheet, apply PlacementType.MoveAndSize, change the column width and row height of the linked cell, and programmatically confirm that the picture scales accordingly using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Path to the image file
+            string imagePath = "sample.jpg";
+
+            int pictureIndex;
+
+            // Add a picture to the worksheet.
+            // If the file does not exist, use a minimal in‑memory PNG image.
+            if (File.Exists(imagePath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Path to the picture file
-                string picturePath = "example.jpg";
-
-                // Verify that the picture file exists before adding it
-                if (!File.Exists(picturePath))
+                pictureIndex = worksheet.Pictures.Add(2, 2, imagePath);
+            }
+            else
+            {
+                // 1x1 pixel transparent PNG
+                byte[] placeholderPng = new byte[]
                 {
-                    Console.WriteLine($"Error: The picture file \"{picturePath}\" was not found.");
-                    return;
+                    137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,
+                    0,0,0,1,0,0,0,1,8,6,0,0,0,31,21,196,
+                    137,0,0,0,12,73,68,65,84,8,153,99,0,1,0,0,
+                    5,0,1,13,10,2,0,0,0,0,73,69,78,68,174,66,
+                    96,130
+                };
+
+                using (MemoryStream ms = new MemoryStream(placeholderPng))
+                {
+                    pictureIndex = worksheet.Pictures.Add(2, 2, ms);
                 }
-
-                // Add a picture to cell B2 (row index 1, column index 1)
-                int pictureIndex = worksheet.Pictures.Add(1, 1, picturePath);
-                Picture picture = worksheet.Pictures[pictureIndex];
-
-                // Configure the picture to move and size with the cells beneath it
-                picture.Placement = PlacementType.MoveAndSize;
-
-                // Output original picture dimensions
-                Console.WriteLine($"Original picture size: Width={picture.Width} px, Height={picture.Height} px");
-
-                // Resize the linked cell (B2) by changing its column width and row height
-                worksheet.Cells.SetColumnWidth(1, 30); // Column B width = 30 characters
-                worksheet.Cells.SetRowHeight(1, 40);   // Row 2 height = 40 points
-
-                // After resizing, the picture should have adjusted its size automatically
-                Console.WriteLine($"After cell resize picture size: Width={picture.Width} px, Height={picture.Height} px");
-
-                // Save the workbook to verify the result visually if needed
-                string outputPath = "PictureMoveAndSizeWithCell.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
+
+            Picture picture = worksheet.Pictures[pictureIndex];
+
+            // Link the picture to cell B3 and set placement to move and size with the cell
+            picture.LinkedCell = "B3";
+            picture.Placement = PlacementType.MoveAndSize;
+
+            // Capture the initial size of the picture
+            double initialHeight = picture.Height;
+            double initialWidth = picture.Width;
+
+            // Resize the linked cell (row 3 and column B)
+            worksheet.Cells.SetRowHeight(2, 50);      // Row index 2 corresponds to row 3
+            worksheet.Cells.SetColumnWidth(1, 30);   // Column index 1 corresponds to column B
+
+            // After resizing the cell, capture the new size of the picture
+            double newHeight = picture.Height;
+            double newWidth = picture.Width;
+
+            // Output size information
+            Console.WriteLine($"Initial size - Height: {initialHeight}, Width: {initialWidth}");
+            Console.WriteLine($"After cell resize - Height: {newHeight}, Width: {newWidth}");
+
+            // Save the workbook
+            workbook.Save("PictureMoveAndSize.xlsx", SaveFormat.Xlsx);
+        }
+        catch (CellsException ex)
+        {
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

@@ -1,14 +1,23 @@
+// Title: Remove a Pivot Table by Index with Worksheet.PivotTables.RemoveAt (Aspose.Cells for .NET C#)
+// Description: This C# example shows how to create a workbook, add three pivot tables, delete the second pivot table using Worksheet.PivotTables.RemoveAt(1), verify the remaining count, and save the file as PivotTableRemoved.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | Worksheet.PivotTables.RemoveAt | delete pivot table | remove pivot table by index | pivot table API | Aspose.Cells pivot table | remove specific pivot table | Aspose.Cells example
+// Common Searches: Aspose.Cells remove pivot table by index | Worksheet.PivotTables.RemoveAt C# example | delete specific pivot table Aspose.Cells .NET | how to remove second pivot table Aspose.Cells | remove pivot table programmatically Aspose.Cells
+// Developer Intent: Delete a pivot table from a worksheet using its zero‑based index.
+// Use Cases: Eliminate unwanted pivot tables generated during dynamic reporting | Reduce workbook size by removing temporary pivot tables before export | Replace an outdated pivot table by deleting it at a known position and inserting a new one | Clean up pivot tables in automated spreadsheet processing pipelines
+// AI Prompts: Show code to check the pivot table count before and after calling RemoveAt. | Provide a loop that removes all pivot tables from a worksheet. | Explain how to locate a pivot table's index by name and delete it with RemoveAt. | Demonstrate error handling when the specified index is out of range. | Give an example of removing pivot tables from multiple worksheets in a workbook.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotDeleteExample
+namespace AsposeCellsPivotDeleteDemo
 {
+    // This C# example shows how to create a workbook, add three pivot tables, delete the second pivot table using Worksheet.PivotTables.RemoveAt(1), verify the remaining count, and save the file as PivotTableRemoved.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -30,7 +39,7 @@ namespace AsposeCellsPivotDeleteExample
             // Remove the pivot table at zero‑based index 1 (the second pivot table)
             sheet.PivotTables.RemoveAt(1);
 
-            // Optional: display remaining count to verify removal
+            // Optional: verify the remaining count
             Console.WriteLine("Remaining Pivot Tables Count: " + sheet.PivotTables.Count);
 
             // Save the workbook

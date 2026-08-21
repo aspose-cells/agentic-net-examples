@@ -1,80 +1,72 @@
-// Title: Aspose.Cells C# – Replace Theme Colors with Concrete RGB Values in an Excel Workbook
-// Description: Loads an Excel file, disables theme usage, iterates through each worksheet and populated cell, substitutes ThemeColor references on font, foreground, and background with the actual RGB color obtained via Workbook.GetThemeColor, clears the ThemeColor fields, reapplies the style, and saves the workbook as a new file.
-// Keywords: Aspose.Cells | C# | Excel theme colors | GetThemeColor | convert theme to RGB | explicit cell colors | disable theme usage | workbook styling | theme color replacement
-// Common Searches: Aspose.Cells convert theme color to RGB | C# replace Excel theme colors with actual colors | remove ThemeColor from cell style Aspose | how to get real color from theme in Aspose.Cells | save workbook without theme references
-// Developer Intent: Transform all themed font, foreground, and background colors in an Excel workbook into fixed RGB values using Aspose.Cells for .NET and persist the changes.
-// Use Cases: Preserve visual consistency when the file is opened on machines with different Office themes | Prepare workbooks for older Excel formats that do not support theme colors | Guarantee accurate color rendering in PDF or image exports | Enable downstream systems that cannot interpret theme‑based styling
-// AI Prompts: Write a C# method that scans every cell in an Aspose.Cells workbook, replaces any ThemeColor with the corresponding RGB from Workbook.GetThemeColor, and clears the ThemeColor property. | Describe how to keep all other style attributes intact while converting theme colors to explicit colors in Aspose.Cells. | Provide code that safely handles empty worksheets and null cell styles during the theme‑color conversion process.
+// Title: Aspose.Cells .NET – Replace Excel Theme Colors with Direct RGB Values (C#)
+// Description: A C# sample that loads an Excel workbook with Aspose.Cells, disables theme reliance, iterates every worksheet and cell, resolves each Font, Foreground, and Background ThemeColor to its actual RGB using Workbook.GetThemeColor, assigns the concrete Color, clears the ThemeColor reference, and writes the file so all colors are stored explicitly.
+// Keywords: Aspose.Cells | C# | Excel theme color conversion | GetThemeColor | explicit RGB colors | remove ThemeColor reference | cell style manipulation | disable Excel theme | Workbook.GetThemeColor example | color conversion .NET
+// Common Searches: Aspose.Cells convert theme colors to RGB C# | How to replace Excel theme colors with actual colors using Aspose.Cells | GetThemeColor usage example Aspose.Cells | Remove ThemeColor from workbook Aspose.Cells | Save Excel file with explicit colors Aspose
+// Developer Intent: Swap every ThemeColor in a workbook’s cell styles for its exact RGB value and persist the changes.
+// Use Cases: Ensure consistent appearance when the file is opened on machines lacking the original theme. | Prepare spreadsheets for PDF or image export where theme information is ignored. | Clean legacy workbooks before archiving to guarantee color fidelity across Excel versions.
+// AI Prompts: Generate C# code with Aspose.Cells that iterates all cells and replaces Font, Foreground, and Background ThemeColor properties with the RGB colors returned by Workbook.GetThemeColor. | Explain the steps to disable theme usage in an Aspose.Cells workbook and convert all themed styles to explicit colors, noting any performance tips. | Provide a concise tutorial for clearing ThemeColor references in Aspose.Cells and saving the workbook with only concrete Color values.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// Loads an Excel file, disables theme usage, iterates through each worksheet and populated cell, substitutes ThemeColor references on font, foreground, and background with the actual RGB color obtained via Workbook.GetThemeColor, clears the ThemeColor fields, reapplies the style, and saves the workbook as a new file.
-class ConvertThemedColors
+// A C# sample that loads an Excel workbook with Aspose.Cells, disables theme reliance, iterates every worksheet and cell, resolves each Font, Foreground, and Background ThemeColor to its actual RGB using Workbook.GetThemeColor, assigns the concrete Color, clears the ThemeColor reference, and writes the file so all colors are stored explicitly.
+class ConvertThemedCellsToExplicitColors
 {
     static void Main()
     {
-        // Load the workbook from a file
+        // Load the workbook from a file (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Iterate through each worksheet in the workbook
+        // Iterate through all worksheets
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            Cells cells = sheet.Cells;
-
-            // Determine the used range; if the sheet is empty, skip it
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-            if (maxRow < 0 || maxCol < 0) continue;
-
-            // Loop through all cells that contain data or formatting
-            for (int row = 0; row <= maxRow; row++)
+            // Iterate through all cells in the worksheet
+            foreach (Cell cell in sheet.Cells)
             {
-                for (int col = 0; col <= maxCol; col++)
+                // Get the current style of the cell
+                Style style = cell.GetStyle();
+                bool styleChanged = false;
+
+                // Convert themed font color to explicit color
+                if (style.Font.ThemeColor != null)
                 {
-                    Cell cell = cells[row, col];
-                    if (cell == null) continue;
+                    // Resolve the actual theme color
+                    Color explicitFontColor = workbook.GetThemeColor(style.Font.ThemeColor.ColorType);
+                    // Apply explicit color
+                    style.Font.Color = explicitFontColor;
+                    // Remove theme reference
+                    style.Font.ThemeColor = null;
+                    styleChanged = true;
+                }
 
-                    // Get the current style of the cell
-                    Style style = cell.GetStyle();
+                // Convert themed foreground (fill) color to explicit color
+                if (style.ForegroundThemeColor != null)
+                {
+                    Color explicitFgColor = workbook.GetThemeColor(style.ForegroundThemeColor.ColorType);
+                    style.ForegroundColor = explicitFgColor;
+                    style.ForegroundThemeColor = null;
+                    styleChanged = true;
+                }
 
-                    // ----- Convert Font Theme Color to explicit color -----
-                    ThemeColor fontTheme = style.Font.ThemeColor;
-                    if (fontTheme != null && fontTheme.ColorType != ThemeColorType.StyleColor)
-                    {
-                        // Retrieve the actual theme color from the workbook
-                        Color actualColor = workbook.GetThemeColor(fontTheme.ColorType);
-                        // Apply the color directly and clear the theme reference
-                        style.Font.Color = actualColor;
-                        style.Font.ThemeColor = null;
-                    }
+                // Convert themed background color to explicit color
+                if (style.BackgroundThemeColor != null)
+                {
+                    Color explicitBgColor = workbook.GetThemeColor(style.BackgroundThemeColor.ColorType);
+                    style.BackgroundColor = explicitBgColor;
+                    style.BackgroundThemeColor = null;
+                    styleChanged = true;
+                }
 
-                    // ----- Convert Foreground Theme Color to explicit color -----
-                    ThemeColor fgTheme = style.ForegroundThemeColor;
-                    if (fgTheme != null && fgTheme.ColorType != ThemeColorType.StyleColor)
-                    {
-                        Color actualColor = workbook.GetThemeColor(fgTheme.ColorType);
-                        style.ForegroundColor = actualColor;
-                        style.ForegroundThemeColor = null;
-                    }
-
-                    // ----- Convert Background Theme Color to explicit color -----
-                    ThemeColor bgTheme = style.BackgroundThemeColor;
-                    if (bgTheme != null && bgTheme.ColorType != ThemeColorType.StyleColor)
-                    {
-                        Color actualColor = workbook.GetThemeColor(bgTheme.ColorType);
-                        style.BackgroundColor = actualColor;
-                        style.BackgroundThemeColor = null;
-                    }
-
-                    // Apply the modified style back to the cell
+                // Apply the modified style back to the cell if any changes were made
+                if (styleChanged)
+                {
                     cell.SetStyle(style);
                 }
             }
         }
 
-        // Save the modified workbook to a new file
+        // Save the modified workbook (replace with your desired output path)
         workbook.Save("output.xlsx");
     }
 }

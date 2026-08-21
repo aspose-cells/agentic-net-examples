@@ -1,66 +1,60 @@
-// Title: Aspose.Cells for .NET: Create a Horizontally Expanding Named Range with INDEX‑COUNTA (C#)
-// Description: This C# example demonstrates how to define a named range that automatically expands across a row as new columns are inserted. It uses the formula =Sheet1!$A$1:INDEX(Sheet1!$1:$1, COUNTA(Sheet1!$1:$1)) to cover all non‑empty cells in the first row, inserts a column, adds data, recalculates formulas, and retrieves the updated range address, showcasing a fully dynamic named range in Aspose.Cells.
-// Keywords: Aspose.Cells | C# dynamic named range | horizontal expanding named range | INDEX function | COUNTA function | InsertColumn | Workbook.CalculateFormula | named range address | Excel dynamic range | Aspose.Cells example | GitHub Aspose.Cells | Excel chart data source
-// Common Searches: Aspose.Cells create dynamic named range C# | expand named range when inserting columns Aspose.Cells | INDEX COUNTA named range Aspose.Cells .NET | update named range after InsertColumn Aspose.Cells | retrieve named range address after recalculation Aspose.Cells | C# Aspose.Cells example dynamic range GitHub
-// Developer Intent: Define a named range that automatically grows to include any new columns added to the right of the worksheet.
-// Use Cases: Maintain a header range for monthly data that expands as new month columns are added. | Provide a chart data source that updates automatically when additional columns are inserted. | Apply conditional formatting or data validation to a range that adjusts without manual range edits.
-// AI Prompts: Generate C# code using Aspose.Cells that creates a named range expanding horizontally based on non‑empty cells in the first row. | Show how to recalculate formulas and obtain the updated address of a dynamic named range after inserting a column. | Explain why the INDEX‑COUNTA formula enables a horizontally dynamic named range in Aspose.Cells.
+// Title: C# Aspose.Cells – Create a Horizontally Expanding Dynamic Named Range
+// Description: Demonstrates how to define a named range that automatically grows to the right using an INDEX‑COUNTA formula. The example populates A1:C1, adds D1, recalculates formulas, and saves the workbook with the updated range.
+// Keywords: Aspose.Cells dynamic named range | C# horizontal expanding range | INDEX COUNTA formula Excel | auto‑grow named range Aspose | .NET Excel named range programmatically | dynamic range chart source
+// Common Searches: Aspose.Cells create dynamic named range horizontally | C# expand named range when new columns added | INDEX COUNTA named range example Aspose | auto updating named range Excel .NET | how to make a named range grow with columns
+// Developer Intent: Define a named range that automatically includes any new columns added to the right of the original range.
+// Use Cases: Keep monthly header cells in a single range so SUM or AVERAGE formulas always cover new months. | Link a chart’s data series to a range that expands as additional period columns are inserted. | Persist a self‑adjusting range in a workbook for downstream reporting or automation scripts.
+// AI Prompts: Generate C# code that shifts the dynamic range start from A1 to B1 while retaining horizontal expansion. | Show how to build a vertical dynamic named range that expands downward using Aspose.Cells, including the required formula. | Explain the role of workbook.CalculateFormula() in updating dynamic named ranges and when it can be omitted.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsDynamicNamedRangeDemo
+// Demonstrates how to define a named range that automatically grows to the right using an INDEX‑COUNTA formula. The example populates A1:C1, adds D1, recalculates formulas, and saves the workbook with the updated range.
+class Program
 {
-    // This C# example demonstrates how to define a named range that automatically expands across a row as new columns are inserted. It uses the formula =Sheet1!$A$1:INDEX(Sheet1!$1:$1, COUNTA(Sheet1!$1:$1)) to cover all non‑empty cells in the first row, inserts a column, adds data, recalculates formulas, and retrieves the updated range address, showcasing a fully dynamic named range in Aspose.Cells.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-                // Populate initial data in row 1 (A1:C1)
-                cells["A1"].PutValue("Jan");
-                cells["B1"].PutValue("Feb");
-                cells["C1"].PutValue("Mar");
+            // Populate initial data in the first row (A1, B1, C1)
+            cells["A1"].PutValue("Jan");
+            cells["B1"].PutValue("Feb");
+            cells["C1"].PutValue("Mar");
 
-                // Create a named range that expands horizontally based on the number of non‑empty cells in row 1
-                // Formula: =Sheet1!$A$1:INDEX(Sheet1!$1:$1, COUNTA(Sheet1!$1:$1))
-                int nameIndex = workbook.Worksheets.Names.Add("MyRange");
-                Name myRangeName = workbook.Worksheets.Names[nameIndex];
-                myRangeName.RefersTo = "=Sheet1!$A$1:INDEX(Sheet1!$1:$1, COUNTA(Sheet1!$1:$1))";
+            // Create a dynamic named range that expands horizontally.
+            // The formula uses INDEX together with COUNTA to always point to the last non‑empty cell in row 1.
+            // Example: =Sheet1!$A$1:INDEX(Sheet1!$1:$1, COUNTA(Sheet1!$1:$1))
+            int nameIndex = workbook.Worksheets.Names.Add("MyRange");
+            Name myRange = workbook.Worksheets.Names[nameIndex];
+            myRange.RefersTo = "=Sheet1!$A$1:INDEX(Sheet1!$1:$1, COUNTA(Sheet1!$1:$1))";
 
-                // Retrieve and display the initial range address
-                Aspose.Cells.Range initialRange = myRangeName.GetRange();
-                Console.WriteLine("Initial named range address: " + initialRange.Address);
+            // Retrieve the range and display its address before adding a new column
+            Aspose.Cells.Range rangeBefore = myRange.GetRange();
+            Console.WriteLine("Range before adding column: " + rangeBefore.Address); // Expected: A1:C1
 
-                // Insert a new column after column C (which is index 2)
-                // This shifts existing columns to the right, making room for a new column D
-                cells.InsertColumn(3, true); // Insert at column index 3 (D)
+            // Add a new column (D) with data; this should extend the named range automatically
+            cells["D1"].PutValue("Apr");
 
-                // Add data to the newly inserted column D (which is now column index 3)
-                cells["D1"].PutValue("Apr");
+            // Recalculate formulas so that the dynamic named range updates
+            workbook.CalculateFormula();
 
-                // Recalculate formulas so that the named range reflects the new column count
-                workbook.CalculateFormula();
+            // Retrieve the range again and display its new address
+            Aspose.Cells.Range rangeAfter = myRange.GetRange();
+            Console.WriteLine("Range after adding column: " + rangeAfter.Address); // Expected: A1:D1
 
-                // Retrieve and display the updated range address
-                Aspose.Cells.Range updatedRange = myRangeName.GetRange();
-                Console.WriteLine("Updated named range address after inserting column: " + updatedRange.Address);
-
-                // Save the workbook (optional, just to complete the lifecycle)
-                string outputPath = "DynamicNamedRangeDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Save the workbook (the named range is persisted)
+            string outputPath = "DynamicHorizontalNamedRange.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

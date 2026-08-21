@@ -1,91 +1,63 @@
-// Title: C# – Convert Excel Workbook to CSV with Formulas Preserved as Text using Aspose.Cells
-// Description: Load an Excel workbook with Aspose.Cells, replace every formula cell with its literal formula string via PutValue, and save the workbook as a CSV file. The resulting CSV keeps formulas intact as text, ideal for audits, data migration, or downstream processing.
-// Keywords: Aspose.Cells | C# | Excel to CSV conversion | preserve formulas as text | formula string export | SaveFormat.Csv | Workbook.Save CSV | .NET Excel automation | cell.IsFormula | PutValue | data migration | financial model audit | global
-// Common Searches: Aspose.Cells export Excel to CSV with formulas as text | C# convert workbook to CSV keeping formula strings | how to save Excel formulas in CSV using Aspose.Cells | replace formula cells with formula text before CSV export | batch convert multiple worksheets to CSV preserving formulas
-// Developer Intent: Generate a CSV file from an Excel workbook where each formula cell is written as its original formula text rather than the evaluated value.
-// Use Cases: Auditing financial spreadsheets by exporting formulas to a readable CSV format. | Migrating Excel data to a plain‑text system while retaining the original calculation logic. | Feeding CSV files to downstream applications that require the formula syntax for re‑creation of the workbook.
-// AI Prompts: Create C# code that loads an Excel file with Aspose.Cells, converts all formula cells to their formula strings, and saves the result as CSV. | Show how to modify the conversion to target only selected worksheets or a specific cell range while preserving formulas as text. | Explain which SaveOptions to set for CSV export (encoding, delimiter) when exporting formulas using Aspose.Cells.
+// Title: Export Excel to CSV with Formulas as Text Using Aspose.Cells for .NET
+// Description: Loads an .xlsx workbook, substitutes each formula cell with its formula string, and saves the workbook as a CSV file so that formulas are retained as plain text instead of evaluated results.
+// Keywords: Aspose.Cells CSV export | preserve formulas as text | C# Excel to CSV conversion | formula to string Aspose | save workbook as CSV .NET | extract Excel formulas | convert workbook to CSV | export formulas to CSV
+// Common Searches: Aspose.Cells export CSV keep formulas | C# convert Excel to CSV with formulas as text | how to save Excel formulas as text in CSV using Aspose | replace formula with its string before CSV export Aspose.Cells | extract formula strings from Excel with Aspose.Cells
+// Developer Intent: Create a CSV file from an Excel workbook where every formula cell is written as its literal formula text.
+// Use Cases: Audit or analyze spreadsheet logic by extracting raw formula strings into a CSV file. | Produce CSV reports that display the original calculation expressions for reviewers. | Feed formula text to downstream systems that parse or transform Excel formulas from CSV input.
+// AI Prompts: Generate C# code with Aspose.Cells that converts an .xlsx file to .csv and writes each formula cell as its formula string. | Explain how to replace formula values with their textual representation before saving a workbook as CSV using Aspose.Cells for .NET. | Provide a step‑by‑step example that loads a workbook, iterates cells, substitutes formulas with their text, and exports the result to CSV.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace WorkbookToCsvWithFormulasAsText
 {
-    // Load an Excel workbook with Aspose.Cells, replace every formula cell with its literal formula string via PutValue, and save the workbook as a CSV file. The resulting CSV keeps formulas intact as text, ideal for audits, data migration, or downstream processing.
-    public class WorkbookToCsvWithFormulas
+    // Loads an .xlsx workbook, substitutes each formula cell with its formula string, and saves the workbook as a CSV file so that formulas are retained as plain text instead of evaluated results.
+    class Program
     {
-        /// <param name="sourcePath">Path to the source Excel file.</param>
-        /// <param name="csvPath">Path where the resulting CSV file will be saved.</param>
-        public static void Convert(string sourcePath, string csvPath)
+        static void Main()
         {
-            try
+            // Path to the source Excel workbook
+            string sourcePath = "input.xlsx";
+
+            // Path where the CSV output will be saved
+            string csvPath = "output.csv";
+
+            // Load the workbook from the source file
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Load the workbook from the specified file (lifecycle: load)
-                Workbook workbook = new Workbook(sourcePath);
+                Cells cells = sheet.Cells;
 
-                // Iterate through each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Determine the used range of the worksheet
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
+
+                // Loop through all cells in the used range
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    // Get the maximum used row and column indices
-                    int maxRow = sheet.Cells.MaxDataRow;
-                    int maxCol = sheet.Cells.MaxDataColumn;
-
-                    // Loop over all used cells
-                    for (int row = 0; row <= maxRow; row++)
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        for (int col = 0; col <= maxCol; col++)
-                        {
-                            var cell = sheet.Cells[row, col];
+                        Cell cell = cells[row, col];
 
-                            // If the cell contains a formula, replace it with the formula text
-                            if (cell.IsFormula)
-                            {
-                                // Preserve the formula as a string value
-                                string formulaText = cell.Formula;
-                                cell.PutValue(formulaText);
-                            }
+                        // If the cell contains a formula, replace it with the formula text
+                        if (cell.IsFormula)
+                        {
+                            // Put the formula string as a plain text value
+                            cell.PutValue(cell.Formula);
                         }
                     }
                 }
-
-                // Save the modified workbook as CSV (lifecycle: save)
-                workbook.Save(csvPath, SaveFormat.Csv);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during conversion: {ex.Message}");
-                throw;
-            }
-        }
-
-        // Example usage
-        public static void Run(string sourceFile, string outputCsv)
-        {
-            if (!File.Exists(sourceFile))
-            {
-                Console.WriteLine($"Source file not found: {sourceFile}");
-                return;
             }
 
-            Convert(sourceFile, outputCsv);
-            Console.WriteLine($"Workbook converted to CSV with formulas preserved at: {outputCsv}");
-        }
+            // Save the modified workbook as CSV; formulas are now stored as text strings
+            workbook.Save(csvPath, SaveFormat.Csv);
 
-        // Entry point
-        public static void Main(string[] args)
-        {
-            try
-            {
-                string sourceFile = args.Length > 0 ? args[0] : "input.xlsx";
-                string outputCsv = args.Length > 1 ? args[1] : "output.csv";
+            // Optional: clean up
+            workbook.Dispose();
 
-                Run(sourceFile, outputCsv);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            Console.WriteLine($"Workbook converted to CSV with formulas preserved as text at: {csvPath}");
         }
     }
 }

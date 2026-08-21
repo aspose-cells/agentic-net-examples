@@ -1,43 +1,60 @@
+// Title: Convert string numbers and dates to native types in Aspose.Cells for .NET (C#)
+// Description: This example shows how to populate cells with numeric, date and non‑numeric strings, invoke Cells.ConvertStringToNumericValue to transform convertible strings into their CLR types, and verify the results. It also demonstrates loading CSV data from a memory stream with TxtLoadOptions (ConvertNumericData and ConvertDateTimeData enabled) so that numeric and date strings are automatically converted, then saves both workbooks.
+// Keywords: Aspose.Cells ConvertStringToNumericValue | C# string to numeric conversion | Aspose.Cells CSV load options | ConvertDateTimeData Aspose.Cells | numeric string to double Aspose.Cells | date string to DateTime Aspose.Cells
+// Common Searches: Aspose.Cells convert string to numeric value | How to auto‑convert dates when loading CSV in Aspose.Cells | C# Cells.ConvertStringToNumericValue example | TxtLoadOptions ConvertNumericData true | ConvertDateTimeData option Aspose.Cells
+// Developer Intent: Transform textual representations of numbers and dates into native numeric and DateTime objects while populating a workbook or importing CSV data with Aspose.Cells for .NET.
+// Use Cases: Insert numeric and date strings into cells, call Cells.ConvertStringToNumericValue, and read the CLR type of each cell. | Import a CSV stream using TxtLoadOptions with ConvertNumericData and ConvertDateTimeData set to true, so values are stored as double and DateTime automatically. | Validate conversion by checking cell.Value.GetType(), then save the workbook for further processing.
+// AI Prompts: Show C# code that uses Cells.ConvertStringToNumericValue to change string numbers and dates into native types in an Aspose.Cells workbook. | Demonstrate loading a CSV file with Aspose.Cells TxtLoadOptions so numeric and date strings are automatically converted. | Write a script that logs the CLR type of each cell after conversion and saves the workbook as an Excel file.
+
 using System;
+using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsNumberConversionDemo
+// This example shows how to populate cells with numeric, date and non‑numeric strings, invoke Cells.ConvertStringToNumericValue to transform convertible strings into their CLR types, and verify the results. It also demonstrates loading CSV data from a memory stream with TxtLoadOptions (ConvertNumericData and ConvertDateTimeData enabled) so that numeric and date strings are automatically converted, then saves both workbooks.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // ---------- Create a new workbook ----------
+        Workbook wb = new Workbook();                     // create rule
+        Cells cells = wb.Worksheets[0].Cells;
+
+        // ---------- Populate cells with textual representations ----------
+        cells["A1"].PutValue("123.45");                  // numeric string
+        cells["B1"].PutValue("2021-06-20");              // date string
+        cells["C1"].PutValue("NotANumber");              // non‑numeric string
+
+        // ---------- Convert convertible strings to native types ----------
+        cells.ConvertStringToNumericValue();              // rule: Cells.ConvertStringToNumericValue
+
+        // ---------- Display the converted values and their CLR types ----------
+        Console.WriteLine($"A1: {cells["A1"].Value} (type {cells["A1"].Value.GetType()})");
+        Console.WriteLine($"B1: {cells["B1"].Value} (type {cells["B1"].Value.GetType()})");
+        Console.WriteLine($"C1: {cells["C1"].Value} (type {cells["C1"].Value.GetType()})");
+
+        // ---------- Load CSV data with automatic conversion ----------
+        string csvData = "ID,Amount,Date\n1,99.99,2023-01-15\n2,abc,2023-02-20";
+        using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(csvData)))
         {
-            // Create a new workbook (lifecycle create rule)
-            Workbook workbook = new Workbook();
+            TxtLoadOptions txtOptions = new TxtLoadOptions(LoadFormat.Csv)
+            {
+                ConvertNumericData = true,               // convert numeric strings
+                ConvertDateTimeData = true               // convert date strings
+            };
 
-            // Get the first worksheet's cells collection
-            Cells cells = workbook.Worksheets[0].Cells;
+            Workbook csvWb = new Workbook(ms, txtOptions); // load rule
+            Worksheet ws = csvWb.Worksheets[0];
 
-            // Populate cells with textual representations of numbers.
-            // The second parameter 'true' enables conversion to the appropriate data type.
-            cells["A1"].PutValue("123.45", true);          // Converted to double
-            cells["A2"].PutValue("678", true);            // Converted to int (stored as double internally)
-            cells["A3"].PutValue("2023-07-08", true);     // Converted to DateTime
-            cells["A4"].PutValue("NotANumber", true);     // Remains as string because conversion fails
+            // Show conversion results for CSV cells
+            Console.WriteLine($"CSV B2 (Amount) type: {ws.Cells["B2"].Value.GetType()}, value: {ws.Cells["B2"].Value}");
+            Console.WriteLine($"CSV C2 (Date) type: {ws.Cells["C2"].Value.GetType()}, value: {ws.Cells["C2"].Value}");
 
-            // Additionally, put some values without conversion flag to demonstrate later conversion.
-            cells["B1"].PutValue("987.65");               // Stored as string initially
-            cells["B2"].PutValue("2021/12/31");           // Stored as string initially
-
-            // Convert any remaining string values that can be interpreted as numeric or date.
-            // This uses the Cells.ConvertStringToNumericValue method.
-            cells.ConvertStringToNumericValue();
-
-            // Display the resulting types and values in the console.
-            Console.WriteLine($"A1: {cells["A1"].Value} (Type: {cells["A1"].Type})");
-            Console.WriteLine($"A2: {cells["A2"].Value} (Type: {cells["A2"].Type})");
-            Console.WriteLine($"A3: {cells["A3"].Value} (Type: {cells["A3"].Type})");
-            Console.WriteLine($"A4: {cells["A4"].Value} (Type: {cells["A4"].Type})");
-            Console.WriteLine($"B1: {cells["B1"].Value} (Type: {cells["B1"].Type})");
-            Console.WriteLine($"B2: {cells["B2"].Value} (Type: {cells["B2"].Type})");
-
-            // Save the workbook to an Excel file (lifecycle save rule)
-            workbook.Save("NumberConversionResult.xlsx");
+            // Save the CSV‑derived workbook
+            csvWb.Save("CsvConverted.xlsx");               // save rule
         }
+
+        // ---------- Save the original workbook ----------
+        wb.Save("StringConverted.xlsx");                  // save rule
     }
 }

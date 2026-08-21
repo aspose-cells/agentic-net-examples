@@ -1,41 +1,42 @@
-// Title: List All Worksheets, Log Existing Calculation Mode, and Set Workbook to Manual with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, reads the current CalcModeType, writes the mode for each worksheet to the console, switches the calculation mode to Manual, and saves the modified file.
-// Keywords: Aspose.Cells | C# | CalcModeType | manual calculation mode | enumerate worksheets | log calculation mode | workbook formula settings | performance optimization | Excel automation | save workbook
-// Common Searches: Aspose.Cells set calculation mode to manual | how to get current calculation mode in Aspose.Cells | list all worksheets and their formula settings Aspose.Cells | log workbook calculation mode before changing it | C# change Excel calculation mode with Aspose.Cells
-// Developer Intent: Read the workbook's current calculation mode, output it for each worksheet, change the mode to Manual, and persist the change.
-// Use Cases: Create a diagnostic log of the original calculation mode before disabling automatic recalculation for large data imports. | Improve batch‑processing speed by recording the existing mode, switching to Manual, and later restoring the original setting. | Audit multiple workbooks to ensure they all use Manual calculation during server‑side processing.
-// AI Prompts: Generate C# code using Aspose.Cells that iterates through every worksheet, prints the workbook's current CalcModeType, sets the calculation mode to Manual, and saves the file. | Explain how to capture the original CalcModeType, apply Manual calculation for intensive updates, and revert to the saved mode after processing with Aspose.Cells.
+// Title: Aspose.Cells .NET – List All Worksheets, Log Their Current Calculation Mode, and Switch to Manual
+// Description: Loads an Excel workbook, iterates through every worksheet, records the workbook's existing FormulaSettings.CalculationMode for each sheet, prints the information to the console, changes the mode to Manual, and saves the file.
+// Keywords: Aspose.Cells calculation mode manual | log previous calculation mode C# | enumerate worksheets Aspose.Cells | FormulaSettings.CalculationMode | Aspose.Cells performance optimization | .NET Excel workbook settings
+// Common Searches: how to set calculation mode to manual with Aspose.Cells | retrieve and log current calculation mode for each sheet | Aspose.Cells enumerate all worksheets example | C# change Excel formula calculation mode using Aspose | log workbook settings before modifying Aspose.Cells
+// Developer Intent: Capture the existing calculation mode for each worksheet, output it for auditing, then enforce Manual calculation across the entire workbook.
+// Use Cases: Speed up bulk data imports by disabling automatic recalculation while preserving the original setting for later restoration. | Create a reproducible audit trail of formula calculation settings before running batch transformations. | Standardize workbook behavior in automated reporting pipelines by forcing Manual mode after documenting the prior configuration.
+// AI Prompts: Generate C# code that loops through all worksheets in an Aspose.Cells workbook, prints each sheet's current CalculationMode, and sets the workbook to Manual calculation. | Provide an Aspose.Cells .NET example that logs the previous FormulaSettings.CalculationMode for every worksheet before switching to manual mode and saving the file. | Write a C# utility using Aspose.Cells that records each worksheet's calculation mode, changes the mode to Manual, and outputs the original values to the console.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsUtility
 {
-    // Loads an Excel workbook, reads the current CalcModeType, writes the mode for each worksheet to the console, switches the calculation mode to Manual, and saves the modified file.
+    // Loads an Excel workbook, iterates through every worksheet, records the workbook's existing FormulaSettings.CalculationMode for each sheet, prints the information to the console, changes the mode to Manual, and saves the file.
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the source workbook (replace with actual file path)
+            // Input and output file paths (adjust as needed)
             string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Load the workbook
+            // Load the workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve the current calculation mode (applies to the whole workbook)
-            CalcModeType previousMode = workbook.Settings.FormulaSettings.CalculationMode;
-
-            // Enumerate all worksheets and log the previous calculation mode for each
+            // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Console.WriteLine($"Worksheet \"{sheet.Name}\": previous calculation mode = {previousMode}");
+                // Retrieve the current calculation mode before changing it
+                CalcModeType previousMode = workbook.Settings.FormulaSettings.CalculationMode;
+
+                // Log the worksheet name and its previous calculation mode
+                Console.WriteLine($"Worksheet '{sheet.Name}': previous calculation mode = {previousMode}");
+
+                // Set the calculation mode to Manual
+                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
             }
 
-            // Set the calculation mode to Manual for the workbook
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-
-            // Save the modified workbook (replace with desired output path)
-            string outputPath = "output.xlsx";
+            // Save the modified workbook to the output file
             workbook.Save(outputPath);
         }
     }

@@ -1,10 +1,10 @@
-// Title: Add Column, Pie, and Line Charts to a Single Worksheet with Aspose.Cells for .NET (C#)
-// Description: This example creates a new workbook, populates three distinct data ranges (A1:B5, C1:D5, E1:F5), and inserts a column chart, a pie chart, and a line chart on the same sheet. Each chart is linked to its own range, positioned at different cell locations, and the workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells multiple charts C# | add column chart Aspose.Cells | pie chart Aspose.Cells .NET | line chart worksheet Aspose | chart positioning Aspose.Cells | set chart data range programmatically | C# Excel chart automation | Aspose.Cells chart examples
-// Common Searches: how to add several chart types to one worksheet using Aspose.Cells | Aspose.Cells C# create column, pie and line charts | set chart data range and location with Aspose.Cells | multiple charts on a single Excel sheet Aspose | Aspose.Cells add chart programmatically
-// Developer Intent: Insert three different chart types on one worksheet, each bound to its own data range and placed at a specific location.
-// Use Cases: Build a sales dashboard that shows category totals (column), product mix (pie), and monthly trends (line) in a single Excel file. | Generate automated reports where pre‑configured visualizations are ready for dynamic data insertion. | Create a template workbook with embedded charts that can be reused across multiple projects.
-// AI Prompts: Show how to customize the titles, legends, and axis labels for each chart in the sample. | Provide code to export the three charts as separate PNG images while keeping them in the workbook. | Explain how to bind the charts to named ranges so they update automatically when data changes.
+// Title: Add Multiple Different Charts to a Single Worksheet with Aspose.Cells for .NET (C#)
+// Description: This C# example demonstrates how to create a new workbook, populate three separate data tables, and insert a column chart, a pie chart, and a line‑with‑data‑markers chart on the same worksheet. Each chart is assigned its own data range via SetChartDataRange, positioned in distinct cell blocks, given a title, and the workbook is saved as an XLSX file.
+// Keywords: Aspose.Cells multiple charts | C# add column chart | Aspose.Cells pie chart example | line chart with data markers Aspose | SetChartDataRange .NET | position charts worksheet Aspose.Cells | save workbook with charts | Aspose.Cells chart types
+// Common Searches: how to add several chart types to one sheet using Aspose.Cells | Aspose.Cells set separate data ranges for multiple charts | position multiple charts on the same worksheet .NET | create column, pie, and line charts with Aspose.Cells | Aspose.Cells C# example multiple charts
+// Developer Intent: Insert several charts of different types into a single worksheet, each with its own data source and layout, using Aspose.Cells for .NET.
+// Use Cases: Generate a sales dashboard workbook that shows product categories (column), market share (pie), and monthly trends (line) side‑by‑side. | Automate financial reporting where each key metric is visualized with a distinct chart placed in a predefined cell range. | Create an Excel export for a BI tool that includes multiple visualizations without manual user interaction.
+// AI Prompts: Write C# code with Aspose.Cells to add a bar, doughnut, and scatter chart to the same worksheet, each using a unique data range and positioned in separate cell blocks. | Show how to update the data source of an existing chart in an Aspose.Cells workbook without recreating the chart. | Provide a step‑by‑step guide to programmatically resize and style multiple charts on one sheet using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsMultipleChartsDemo
 {
-    // This example creates a new workbook, populates three distinct data ranges (A1:B5, C1:D5, E1:F5), and inserts a column chart, a pie chart, and a line chart on the same sheet. Each chart is linked to its own range, positioned at different cell locations, and the workbook is saved as an XLSX file.
+    // This C# example demonstrates how to create a new workbook, populate three separate data tables, and insert a column chart, a pie chart, and a line‑with‑data‑markers chart on the same worksheet. Each chart is assigned its own data range via SetChartDataRange, positioned in distinct cell blocks, given a title, and the workbook is saved as an XLSX file.
     public class Program
     {
         public static void Main()
@@ -23,75 +23,65 @@ namespace AsposeCellsMultipleChartsDemo
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // -----------------------------
-            // Populate data for three charts
-            // -----------------------------
-
-            // Data for Chart 1 (Column Chart) - Range A1:B5
+            // -------------------------------------------------
+            // Prepare data for the first chart (Column Chart)
+            // -------------------------------------------------
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["B1"].PutValue("Value");
-            for (int i = 2; i <= 5; i++)
-            {
-                sheet.Cells[$"A{i}"].PutValue($"Cat{i - 1}");
-                sheet.Cells[$"B{i}"].PutValue(i * 10); // 20,30,40,50
-            }
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["A5"].PutValue("D");
+            sheet.Cells["B5"].PutValue(40);
 
-            // Data for Chart 2 (Pie Chart) - Range C1:D5
-            sheet.Cells["C1"].PutValue("Item");
-            sheet.Cells["D1"].PutValue("Amount");
-            for (int i = 2; i <= 5; i++)
-            {
-                sheet.Cells[$"C{i}"].PutValue($"Item{i - 1}");
-                sheet.Cells[$"D{i}"].PutValue(i * 15); // 30,45,60,75
-            }
+            // Add the first chart (Column) and position it on the sheet
+            int colChartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 5);
+            Chart colChart = sheet.Charts[colChartIndex];
+            // Set the data range for the column chart (vertical series)
+            colChart.SetChartDataRange("A1:B5", true);
+            colChart.Title.Text = "Column Chart Example";
 
-            // Data for Chart 3 (Line Chart) - Range E1:F5
-            sheet.Cells["E1"].PutValue("Month");
-            sheet.Cells["F1"].PutValue("Sales");
-            for (int i = 2; i <= 5; i++)
-            {
-                sheet.Cells[$"E{i}"].PutValue($"M{i - 1}");
-                sheet.Cells[$"F{i}"].PutValue(i * 20); // 40,60,80,100
-            }
+            // -------------------------------------------------
+            // Prepare data for the second chart (Pie Chart)
+            // -------------------------------------------------
+            sheet.Cells["D1"].PutValue("Item");
+            sheet.Cells["E1"].PutValue("Amount");
+            sheet.Cells["D2"].PutValue("X");
+            sheet.Cells["E2"].PutValue(25);
+            sheet.Cells["D3"].PutValue("Y");
+            sheet.Cells["E3"].PutValue(35);
+            sheet.Cells["D4"].PutValue("Z");
+            sheet.Cells["E4"].PutValue(40);
 
-            // ---------------------------------
-            // Add Chart 1: Column Chart (A1:B5)
-            // ---------------------------------
-            int chartIndex1 = sheet.Charts.Add(
-                ChartType.Column,          // Chart type
-                "A1:B5",                  // Data range
-                true,                     // Plot by column (vertical)
-                7, 0,                     // Top row, Left column (position on sheet)
-                20, 5);                   // Bottom row, Right column (size)
+            // Add the second chart (Pie) and position it on the sheet
+            int pieChartIndex = sheet.Charts.Add(ChartType.Pie, 6, 7, 20, 12);
+            Chart pieChart = sheet.Charts[pieChartIndex];
+            // Set the data range for the pie chart (vertical series)
+            pieChart.SetChartDataRange("D1:E4", true);
+            pieChart.Title.Text = "Pie Chart Example";
 
-            Chart chart1 = sheet.Charts[chartIndex1];
-            chart1.Title.Text = "Column Chart Example";
+            // -------------------------------------------------
+            // Prepare data for the third chart (Line with Data Markers)
+            // -------------------------------------------------
+            sheet.Cells["G1"].PutValue("Month");
+            sheet.Cells["H1"].PutValue("Sales");
+            sheet.Cells["G2"].PutValue("Jan");
+            sheet.Cells["H2"].PutValue(150);
+            sheet.Cells["G3"].PutValue("Feb");
+            sheet.Cells["H3"].PutValue(200);
+            sheet.Cells["G4"].PutValue("Mar");
+            sheet.Cells["H4"].PutValue(180);
+            sheet.Cells["G5"].PutValue("Apr");
+            sheet.Cells["H5"].PutValue(220);
 
-            // ---------------------------------
-            // Add Chart 2: Pie Chart (C1:D5)
-            // ---------------------------------
-            int chartIndex2 = sheet.Charts.Add(
-                ChartType.Pie,
-                "C1:D5",
-                true,
-                7, 7,
-                20, 12);
-
-            Chart chart2 = sheet.Charts[chartIndex2];
-            chart2.Title.Text = "Pie Chart Example";
-
-            // ---------------------------------
-            // Add Chart 3: Line Chart (E1:F5)
-            // ---------------------------------
-            int chartIndex3 = sheet.Charts.Add(
-                ChartType.Line,
-                "E1:F5",
-                true,
-                22, 0,
-                35, 5);
-
-            Chart chart3 = sheet.Charts[chartIndex3];
-            chart3.Title.Text = "Line Chart Example";
+            // Add the third chart (Line with Data Markers) and position it on the sheet
+            int lineChartIndex = sheet.Charts.Add(ChartType.LineWithDataMarkers, 22, 0, 36, 5);
+            Chart lineChart = sheet.Charts[lineChartIndex];
+            lineChart.SetChartDataRange("G1:H5", true);
+            lineChart.Title.Text = "Line Chart Example";
 
             // Save the workbook to a file
             workbook.Save("MultipleChartsDemo.xlsx", SaveFormat.Xlsx);

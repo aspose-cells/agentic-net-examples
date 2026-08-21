@@ -1,17 +1,17 @@
-// Title: Aspose.Cells for .NET – Link a Rectangle Shape to cell H5 and enable Move‑And‑Size
-// Description: C# example that creates a workbook, adds a rectangle shape, links it to cell H5, sets its placement to MoveAndSize so the shape automatically resizes with the cell, and saves the file as ShapeLinkedToH5.xlsx.
-// Keywords: Aspose.Cells C# shape linked cell | MoveAndSize placement Aspose.Cells | rectangle shape cell H5 | shape follow cell resizing .NET | Aspose.Cells shape placement
-// Common Searches: Aspose.Cells link shape to a specific cell | How to make a shape resize with a cell in Aspose.Cells | C# set shape placement MoveAndSize Aspose | Rectangle shape follow cell H5 Aspose.Cells example
-// Developer Intent: Attach a rectangle shape to cell H5 and have it automatically move and resize when the cell dimensions change.
-// Use Cases: Dynamic dashboards where highlight boxes stay aligned with key data cells. | Automated report templates that preserve shape positions after column or row adjustments. | Interactive spreadsheets with comment or annotation shapes that remain bound to their target cells.
-// AI Prompts: Generate C# code that links a shape to cell B2 and applies MoveAndSize placement using Aspose.Cells. | Explain the effect of PlacementType.MoveAndSize on shape behavior during row or column resizing. | Show how to update the LinkedCell property of an existing Aspose.Cells shape to a new address.
+// Title: Aspose.Cells for .NET – Link a Shape to Cell H5 and Enable Move‑and‑Size with Cells
+// Description: Shows how to insert a rectangle shape, bind it to cell H5 via the LinkedCell property, set its Placement to MoveAndSize so it follows cell resizing, and save the workbook.
+// Keywords: Aspose.Cells | .NET | shape LinkedCell | PlacementType.MoveAndSize | move and size with cells | rectangle shape Excel | cell H5 binding | programmatic shape placement | Excel shape resizing
+// Common Searches: Aspose.Cells link shape to cell | Set shape placement MoveAndSize in C# | Bind a shape to a specific cell using Aspose.Cells | Move and resize shape with cell Aspose.Cells .NET | C# example for shape LinkedCell property
+// Developer Intent: Bind a worksheet shape to cell H5 and have it move and resize together with that cell.
+// Use Cases: Create a dynamic dashboard where icons stay aligned with key metrics as rows/columns are adjusted. | Generate reports with status symbols attached to cells that automatically adapt to layout changes. | Design templates with placeholder shapes tied to fixed cells, preserving design integrity during user edits.
+// AI Prompts: Write C# code with Aspose.Cells that adds a rectangle, links it to H5, and sets Placement to MoveAndSize. | Explain how to modify an existing shape’s LinkedCell and Placement at runtime in an Aspose.Cells workbook. | Show how to read a shape’s LinkedCell value and programmatically adjust its size based on cell dimensions.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// C# example that creates a workbook, adds a rectangle shape, links it to cell H5, sets its placement to MoveAndSize so the shape automatically resizes with the cell, and saves the file as ShapeLinkedToH5.xlsx.
-class Program
+// Shows how to insert a rectangle shape, bind it to cell H5 via the LinkedCell property, set its Placement to MoveAndSize so it follows cell resizing, and save the workbook.
+class ShapeCellLinkExample
 {
     static void Main()
     {
@@ -22,13 +22,13 @@ class Program
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Add a rectangle shape to the worksheet.
-            // Parameters: upper left row, upper left column, row offset, column offset, height, width
-            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 50, 100);
+            // Parameters: upper left row, upper left column, row offset, column offset, width, height
+            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 50);
 
             // Link the shape to cell H5 so it follows that cell
             shape.LinkedCell = "H5";
 
-            // Enable move‑and‑size with cells (the shape will resize when the cell changes size)
+            // Enable "Move and size with cells" behavior
             shape.Placement = PlacementType.MoveAndSize;
 
             // Save the workbook

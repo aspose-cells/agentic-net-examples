@@ -1,10 +1,10 @@
-// Title: Batch Export Workbook Charts with Chinese Localization via Aspose.Cells for .NET
-// Description: Loads an Excel workbook, configures Chinese chart globalization (titles, series, legend, axis units), applies the settings to the entire workbook, iterates every worksheet to export each chart as a uniquely‑named PNG image, and optionally saves the localized workbook.
-// Keywords: Aspose.Cells | .NET | C# | chart export | PNG image | Chinese localization | chart globalization settings | batch chart processing | Excel chart image | SetChartTitleName | DisplayUnitType
-// Common Searches: Aspose.Cells export all charts to PNG | How to apply Chinese labels to Excel charts with Aspose.Cells | Batch process charts in a workbook using .NET | Set Chinese axis unit names in Aspose.Cells charts | Localize Excel chart titles to 中文 with Aspose.Cells
-// Developer Intent: Apply Chinese chart globalization to every chart in a workbook and generate PNG images for each chart.
-// Use Cases: Create a set of Chinese‑language chart images for a reporting dashboard. | Produce PNG assets of all workbook charts for a presentation that requires localized labels. | Save a workbook with Chinese chart captions while also providing image copies for downstream systems.
-// AI Prompts: Show how to export the charts as JPEG with a custom quality level. | Add a semi‑transparent watermark to each exported chart image using Aspose.Cells. | Log the total number of charts processed after applying the Chinese globalization settings.
+// Title: Batch apply Chinese chart globalization and export all workbook charts as PNG using Aspose.Cells for .NET
+// Description: Loads an Excel workbook, creates Chinese chart globalization settings via SettableChartGlobalizationSettings, assigns them to the workbook, recalculates each chart, and exports every chart from all worksheets to uniquely named PNG files; optionally saves the workbook with the localized settings.
+// Keywords: Aspose.Cells | .NET | chart globalization | Chinese localization | batch chart export | export chart to PNG | SettableChartGlobalizationSettings | Excel chart image | globalization settings | chart to image API
+// Common Searches: Aspose.Cells Chinese chart globalization | export all charts to PNG Aspose.Cells | batch export Excel charts .NET | set chart titles in Chinese Aspose.Cells | globalize chart labels for Chinese workbook | save Excel charts as images with Aspose.Cells
+// Developer Intent: Apply Chinese globalization to every chart in a workbook and generate PNG images for each chart.
+// Use Cases: Produce localized chart images for a Chinese-language reporting portal by batch exporting charts after applying Chinese labels. | Create PNG assets of all workbook charts for documentation while preserving Chinese terminology in titles and axes. | Save a copy of the workbook with Chinese chart labels and also generate separate chart images for use in mobile or web applications.
+// AI Prompts: Show how to change the export format from PNG to JPEG while keeping the localization settings. | Explain how to assign different globalization settings per worksheet or per chart type. | Provide robust error handling for missing output directories, unsupported chart types, and permission issues during batch export.
 
 using System;
 using System.IO;
@@ -12,59 +12,61 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsChartLocalization
+// Loads an Excel workbook, creates Chinese chart globalization settings via SettableChartGlobalizationSettings, assigns them to the workbook, recalculates each chart, and exports every chart from all worksheets to uniquely named PNG files; optionally saves the workbook with the localized settings.
+class BatchChartLocalizationAndExport
 {
-    // Loads an Excel workbook, configures Chinese chart globalization (titles, series, legend, axis units), applies the settings to the entire workbook, iterates every worksheet to export each chart as a uniquely‑named PNG image, and optionally saves the localized workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Input workbook path
+        string workbookPath = "input.xlsx";
+
+        // Output folder for chart images
+        string outputFolder = "ChartImages";
+        Directory.CreateDirectory(outputFolder);
+
+        // Load the workbook
+        Workbook workbook = new Workbook(workbookPath);
+
+        // Create customizable Chinese globalization settings
+        var chineseSettings = new SettableChartGlobalizationSettings();
+        chineseSettings.SetChartTitleName("图表标题");
+        chineseSettings.SetSeriesName("系列");
+        chineseSettings.SetLegendIncreaseName("增加");
+        chineseSettings.SetLegendDecreaseName("减少");
+        chineseSettings.SetOtherName("其他");
+        chineseSettings.SetAxisTitleName("轴标题");
+        chineseSettings.SetAxisUnitName(DisplayUnitType.Hundreds, "百");
+        chineseSettings.SetAxisUnitName(DisplayUnitType.Thousands, "千");
+        chineseSettings.SetAxisUnitName(DisplayUnitType.TenThousands, "万");
+
+        // Apply the globalization settings to the workbook
+        workbook.Settings.GlobalizationSettings = new GlobalizationSettings
         {
-            // Input workbook path
-            string inputPath = "input.xlsx";
+            ChartSettings = chineseSettings
+        };
 
-            // Output folder for chart images
-            string outputDir = "ChartImages";
-            Directory.CreateDirectory(outputDir);
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Create customizable Chinese globalization settings
-            SettableChartGlobalizationSettings chineseSettings = new SettableChartGlobalizationSettings();
-            chineseSettings.SetChartTitleName("图表标题");
-            chineseSettings.SetSeriesName("系列");
-            chineseSettings.SetLegendIncreaseName("增加");
-            chineseSettings.SetLegendDecreaseName("减少");
-            chineseSettings.SetOtherName("其他");
-            chineseSettings.SetAxisUnitName(DisplayUnitType.Hundreds, "百");
-            chineseSettings.SetAxisUnitName(DisplayUnitType.Thousands, "千");
-            chineseSettings.SetAxisUnitName(DisplayUnitType.TenThousands, "万");
-
-            // Apply the settings to the workbook's globalization settings
-            workbook.Settings.GlobalizationSettings = new GlobalizationSettings
+        // Iterate through all worksheets and their charts
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            for (int i = 0; i < sheet.Charts.Count; i++)
             {
-                ChartSettings = chineseSettings
-            };
+                Chart chart = sheet.Charts[i];
 
-            // Iterate through all worksheets and their charts
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                int chartIdx = 0;
-                foreach (Chart chart in sheet.Charts)
-                {
-                    // Build a unique file name for each chart image
-                    string imageFile = Path.Combine(outputDir,
-                        $"Sheet{sheet.Index}_Chart{chartIdx}.png");
+                // Ensure chart layout is up‑to‑date
+                chart.Calculate();
 
-                    // Export chart to PNG image
-                    chart.ToImage(imageFile, ImageType.Png);
+                // Build a unique file name for each chart image
+                string imageFile = Path.Combine(
+                    outputFolder,
+                    $"{sheet.Name}_Chart{i + 1}.png");
 
-                    chartIdx++;
-                }
+                // Export chart as PNG image
+                chart.ToImage(imageFile, ImageType.Png);
+                Console.WriteLine($"Exported chart to: {imageFile}");
             }
-
-            // Optionally save the workbook with applied settings
-            workbook.Save("LocalizedWorkbook.xlsx");
         }
+
+        // Optionally save the workbook with applied settings
+        workbook.Save("output_with_chinese_localization.xlsx");
     }
 }

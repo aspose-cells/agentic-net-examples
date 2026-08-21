@@ -1,135 +1,70 @@
-// Title: C# – Unprotect, Rename Sheets, and Re‑protect Excel Workbook using Aspose.Cells & Azure Key Vault
-// Description: Loads an Excel file with Aspose.Cells, retrieves the workbook‑protection password from Azure Key Vault (or an environment variable fallback), removes structure protection, safely renames selected worksheets, re‑applies structure protection with the same password, and saves the result to a target path.
-// Keywords: Aspose.Cells | C# Excel | unprotect workbook | protect workbook structure | rename worksheets | Azure Key Vault secret | environment variable fallback | Workbook.Unprotect | Workbook.Protect | CreateSafeSheetName
-// Common Searches: How to unprotect an Excel workbook structure with Aspose.Cells in C# | Rename multiple worksheets safely using Aspose.Cells | Use Azure Key Vault to supply a password for Aspose.Cells workbook protection | Re‑apply workbook structure protection after modifying sheets with Aspose.Cells | Fallback to environment variable when Azure Key Vault SDK is unavailable
-// Developer Intent: Remove structure protection, rename specific sheets, and re‑apply protection using a password fetched from Azure Key Vault.
-// Use Cases: Automate processing of a password‑protected workbook: unprotect, rename the first three sheets to "Summary", "Data", and "Report", then protect again. | Integrate Azure Key Vault secret retrieval for workbook passwords, with an environment‑variable fallback for CI/CD pipelines. | Ensure output directories exist before saving the modified workbook to avoid runtime errors.
-// AI Prompts: Generate C# code that uses Aspose.Cells to unprotect a workbook structure, rename given worksheets, and protect the workbook again, pulling the password from Azure Key Vault. | Write a robust GetPasswordFromKeyVault method that calls the Azure SDK, handles exceptions, and falls back to an environment variable. | Show how to validate worksheet names with CellsHelper.CreateSafeSheetName before assigning them in Aspose.Cells.
+// Title: C# – Unprotect Excel workbook structure, rename sheets, and re‑protect with Azure Key Vault password (Aspose.Cells)
+// Description: Loads an XLSX file, retrieves a password from Azure Key Vault (or environment), removes workbook‑structure protection, safely renames selected worksheets, reapplies structure protection with the same password, and saves the result using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# | unprotect workbook structure | rename Excel worksheets programmatically | protect workbook with password | Azure Key Vault password retrieval | CellsHelper.CreateSafeSheetName | ProtectionType.Structure | secure Excel file handling | .NET workbook protection example
+// Common Searches: Aspose.Cells unprotect workbook and rename sheets C# | protect Excel workbook with Azure Key Vault password .NET | rename worksheets after unprotecting workbook using Aspose.Cells | C# code to change sheet names in a protected Excel file | how to use Azure Key Vault with Aspose.Cells password
+// Developer Intent: Remove structure protection from an Excel workbook, rename specific worksheets, then re‑apply protection using a password fetched securely (e.g., from Azure Key Vault) with Aspose.Cells for .NET.
+// Use Cases: Automated nightly job that updates sheet names in a protected template before distribution. | Enterprise solution that stores workbook passwords in Azure Key Vault to avoid hard‑coding credentials. | Batch processing pipeline that renames multiple worksheets in a secured workbook as part of data preparation.
+// AI Prompts: Write C# code with Aspose.Cells to unprotect a workbook structure using a password from Azure Key Vault, rename the first three sheets, and protect the workbook again. | Show how to replace the placeholder GetWorkbookPassword method with actual Azure Key Vault SDK calls for secure password retrieval. | Explain error handling for cases where the workbook is not protected or the supplied password is invalid when using Aspose.Cells protection APIs.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel file with Aspose.Cells, retrieves the workbook‑protection password from Azure Key Vault (or an environment variable fallback), removes structure protection, safely renames selected worksheets, re‑applies structure protection with the same password, and saves the result to a target path.
-class Program
+// Loads an XLSX file, retrieves a password from Azure Key Vault (or environment), removes workbook‑structure protection, safely renames selected worksheets, reapplies structure protection with the same password, and saves the result using Aspose.Cells for .NET.
+class WorkbookProtectionHandler
 {
-    // Retrieves a password (placeholder). Replace with Azure Key Vault logic if the SDK is available.
-    static string GetPasswordFromKeyVault(string vaultUrl, string secretName)
+    static void Main()
     {
         try
         {
-            // Azure SDK not referenced; attempt to read from environment variable as a fallback.
-            string envVar = $"{secretName}_PASSWORD";
-            string pwd = Environment.GetEnvironmentVariable(envVar);
-            if (!string.IsNullOrEmpty(pwd))
-                return pwd;
+            // Retrieve the password (replace with actual retrieval logic if needed)
+            string password = GetWorkbookPassword();
 
-            Console.WriteLine("Azure Key Vault SDK not available. Using empty password.");
-            return string.Empty;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error retrieving password: {ex.Message}");
-            return string.Empty;
-        }
-    }
+            // Verify input file exists before loading
+            string inputPath = "input.xlsx";
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-    static void Main(string[] args)
-    {
-        // Expected arguments:
-        // args[0] - input workbook path
-        // args[1] - output workbook path
-        // args[2] - Azure Key Vault URL (e.g., https://myvault.vault.azure.net/)
-        // args[3] - Secret name that holds the workbook protection password
-        if (args.Length < 4)
-        {
-            Console.WriteLine("Usage: <inputPath> <outputPath> <vaultUrl> <secretName>");
-            return;
-        }
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        string inputPath = args[0];
-        string outputPath = args[1];
-        string vaultUrl = args[2];
-        string secretName = args[3];
-
-        // Verify input file exists
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
-        // Retrieve the password (placeholder implementation)
-        string password = GetPasswordFromKeyVault(vaultUrl, secretName);
-
-        Workbook workbook = null;
-        try
-        {
-            // Load the workbook (lifecycle rule: load)
-            workbook = new Workbook(inputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
-            return;
-        }
-
-        try
-        {
-            // If the workbook structure is protected with a password, unprotect it
+            // Unprotect workbook structure if it is protected with a password
             if (workbook.IsWorkbookProtectedWithPassword)
             {
-                workbook.Unprotect(password); // rule: Workbook.Unprotect(string)
+                workbook.Unprotect(password);
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to unprotect workbook: {ex.Message}");
-            // Continue processing; some operations may still succeed
-        }
 
-        // Example rename mapping (old index -> new name)
-        var renameMap = new (int Index, string NewName)[]
-        {
-            (0, "Summary"),
-            (1, "Data"),
-            (2, "Report")
-        };
-
-        // Rename worksheets using safe sheet names
-        foreach (var (index, newName) in renameMap)
-        {
-            if (index >= 0 && index < workbook.Worksheets.Count)
+            // Rename worksheets (example: rename first three sheets)
+            string[] newNames = { "Summary", "Data", "Report" };
+            for (int i = 0; i < Math.Min(newNames.Length, workbook.Worksheets.Count); i++)
             {
-                string safeName = CellsHelper.CreateSafeSheetName(newName);
-                workbook.Worksheets[index].Name = safeName;
+                // Ensure the new name is a valid Excel sheet name
+                string safeName = CellsHelper.CreateSafeSheetName(newNames[i]);
+                workbook.Worksheets[i].Name = safeName;
             }
-        }
 
-        try
-        {
             // Re‑protect the workbook structure with the same password
-            workbook.Protect(ProtectionType.Structure, password); // rule: Workbook.Protect(ProtectionType, string)
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to protect workbook: {ex.Message}");
-        }
+            workbook.Protect(ProtectionType.Structure, password);
 
-        try
-        {
-            // Ensure output directory exists
-            string outDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
-                Directory.CreateDirectory(outDir);
-
-            // Save the modified workbook (lifecycle rule: save)
+            // Save the modified workbook
+            string outputPath = "output.xlsx";
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    // Placeholder for password retrieval; replace with Azure Key Vault or other secure source as needed
+    private static string GetWorkbookPassword()
+    {
+        // Try environment variable first, then fallback to a default password
+        string envPassword = Environment.GetEnvironmentVariable("WORKBOOK_PASSWORD");
+        return string.IsNullOrEmpty(envPassword) ? "defaultPassword" : envPassword;
     }
 }

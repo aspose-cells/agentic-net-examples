@@ -1,39 +1,38 @@
-// Title: C# – Load HTML into Aspose.Cells Workbook and Save with a Custom TableCssId
-// Description: Shows how to import an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions, assign a custom TableCssId via HtmlSaveOptions, and export the workbook back to HTML so the generated <table> element carries the specified CSS identifier.
-// Keywords: Aspose.Cells | C# | HtmlLoadOptions | HtmlSaveOptions | TableCssId | custom table id | export workbook to HTML | load HTML into workbook | change HTML table CSS identifier | .NET Excel to HTML | HTML to Excel conversion
-// Common Searches: Aspose.Cells set TableCssId when saving HTML | load HTML file into Workbook C# | change table id in exported HTML Aspose.Cells | HtmlSaveOptions TableCssId example | customize HTML table CSS id Aspose.Cells
-// Developer Intent: Load an HTML file into a workbook and re‑export it as HTML with a user‑defined TableCssId.
-// Use Cases: Align the generated HTML table ID with existing site‑wide CSS rules after converting legacy HTML reports to Excel workbooks. | Prevent ID collisions when exporting multiple worksheets to HTML by assigning unique TableCssId values to each export. | Automate the transformation of web templates into Excel files and back to HTML while preserving project‑specific CSS selectors.
-// AI Prompts: Provide a C# example that loads an HTML file into an Aspose.Cells Workbook, sets TableCssId to 'custom-table', and saves the workbook as HTML. | Explain how HtmlLoadOptions and HtmlSaveOptions work together to change the table CSS identifier during HTML export in Aspose.Cells. | Generate robust C# code that loads an HTML workbook, applies a custom TableCssId, handles possible exceptions, and writes the output HTML file.
+// Title: Load HTML into Aspose.Cells Workbook and Export with a Custom TableCssId (C#)
+// Description: Demonstrates how to import an HTML file into an Aspose.Cells Workbook using default HtmlLoadOptions, assign a custom TableCssId via HtmlSaveOptions, and save the workbook back to HTML so that table elements carry the specified CSS identifier.
+// Keywords: Aspose.Cells | C# | HTML to Workbook conversion | HtmlLoadOptions | HtmlSaveOptions | TableCssId | custom table CSS id | export HTML with Aspose.Cells | load HTML file into workbook
+// Common Searches: Aspose.Cells set TableCssId when saving HTML | load HTML file into Aspose.Cells workbook C# | change table CSS identifier in exported HTML Aspose.Cells | HtmlSaveOptions custom TableCssId example | convert HTML to workbook and back with Aspose.Cells
+// Developer Intent: Load an existing HTML document into an Aspose.Cells Workbook, apply a custom TableCssId, and re‑export the workbook to HTML.
+// Use Cases: Standardize table CSS identifiers across generated HTML reports for consistent site styling. | Batch‑process multiple HTML templates, assigning the same TableCssId to each output file. | Override the default table class when exporting a workbook to match a corporate stylesheet.
+// AI Prompts: Generate a C# example that loads an HTML file into an Aspose.Cells Workbook, sets TableCssId to "my-table", and saves it as HTML. | Explain the interaction between HtmlLoadOptions and HtmlSaveOptions in Aspose.Cells, focusing on how TableCssId influences the exported HTML. | Suggest additional HtmlSaveOptions (e.g., ExportImagesAsBase64, ExportActiveWorksheetOnly) that can be combined with a custom TableCssId for HTML export.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlTableCssIdDemo
+// Demonstrates how to import an HTML file into an Aspose.Cells Workbook using default HtmlLoadOptions, assign a custom TableCssId via HtmlSaveOptions, and save the workbook back to HTML so that table elements carry the specified CSS identifier.
+class HtmlTableCssIdExample
 {
-    // Shows how to import an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions, assign a custom TableCssId via HtmlSaveOptions, and export the workbook back to HTML so the generated <table> element carries the specified CSS identifier.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the source HTML file
-            string inputHtmlPath = "input.html";
+        // Path to the source HTML file
+        string inputHtmlPath = "input.html";
 
-            // Load the HTML file into a Workbook using HtmlLoadOptions
-            HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-            Workbook workbook = new Workbook(inputHtmlPath, loadOptions);
+        // Path for the resulting HTML file
+        string outputHtmlPath = "output.html";
 
-            // Configure HTML save options with a new TableCssId
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
-            saveOptions.TableCssId = "custom-table"; // New prefix for table CSS identifiers
+        // Load the HTML file into a workbook.
+        // HtmlLoadOptions can be customized if needed; here we use the defaults.
+        HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+        Workbook workbook = new Workbook(inputHtmlPath, loadOptions);
 
-            // Path for the exported HTML file
-            string outputHtmlPath = "output.html";
+        // Configure HTML save options with a custom TableCssId.
+        // This prefix will be added to the CSS classes of table elements in the output HTML.
+        HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
+        saveOptions.TableCssId = "custom-table-style";
 
-            // Save the workbook back to HTML using the configured options
-            workbook.Save(outputHtmlPath, saveOptions);
+        // Save the workbook back to HTML using the specified options.
+        workbook.Save(outputHtmlPath, saveOptions);
 
-            Console.WriteLine($"HTML file saved to '{outputHtmlPath}' with TableCssId = '{saveOptions.TableCssId}'.");
-        }
+        Console.WriteLine($"HTML file saved to '{outputHtmlPath}' with TableCssId = '{saveOptions.TableCssId}'.");
     }
 }

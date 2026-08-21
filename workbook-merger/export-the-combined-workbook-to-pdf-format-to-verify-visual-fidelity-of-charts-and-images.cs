@@ -1,58 +1,77 @@
-// Title: Export a merged workbook with charts and images to PDF using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook containing a column chart, optionally add a picture in a second workbook, merge the two files, configure PdfSaveOptions (ExportDocumentStructure, CalculateFormula), and save the combined workbook as a PDF for visual‑fidelity verification.
-// Keywords: Aspose.Cells PDF export | C# merge workbooks | export chart to PDF | Aspose.Cells PdfSaveOptions | combined workbook PDF | ExportDocumentStructure | .NET Excel to PDF | chart image preservation
-// Common Searches: Aspose.Cells combine workbooks and save as PDF C# | export Excel chart to PDF with Aspose.Cells | PdfSaveOptions ExportDocumentStructure example | merge two Excel files and generate PDF using Aspose | preserve images when converting Excel to PDF .NET
-// Developer Intent: Merge multiple Excel workbooks and generate a single PDF that retains charts, images, and calculated formulas.
-// Use Cases: Create a PDF report from several Excel sources where charts and pictures must appear exactly as in the original files. | Automate regression testing by exporting merged workbooks to PDF and comparing the output with baseline documents. | Generate printable documentation that combines data, visualizations, and embedded graphics from separate spreadsheets.
-// AI Prompts: Write C# code that merges three Excel workbooks, each containing different chart types, and exports the result to a PDF with document structure and formula calculation enabled. | Show how to use Aspose.Cells PdfSaveOptions to keep images positioned correctly when converting a merged workbook to PDF. | Explain a method for programmatically validating the visual fidelity of charts in the exported PDF by comparing rendered pages to reference images.
+// Title: Export Merged Excel Workbooks with Charts and Shapes to PDF using Aspose.Cells for .NET (C#)
+// Description: Creates a workbook with a column chart and another with a rectangle shape, merges the second into the first via Workbook.Combine, ensures the output folder exists, and saves the combined file as a PDF to confirm that charts and drawing objects retain their layout.
+// Keywords: Aspose.Cells | C# | Workbook.Combine | export to PDF | Excel chart PDF | shape PDF rendering | merge Excel files | .NET PDF conversion | visual fidelity PDF | combined workbook PDF
+// Common Searches: Aspose.Cells merge workbooks and export to PDF | C# export Excel chart and shape to PDF | How to combine two Excel files and save as PDF using Aspose | Save workbook with drawings as PDF .NET | Verify chart rendering in PDF with Aspose.Cells
+// Developer Intent: Combine several Excel workbooks and generate a single PDF that preserves charts and drawing objects.
+// Use Cases: Produce a consolidated PDF report that includes charts from one source workbook and graphic placeholders from another. | Automate creation of printable portfolios by merging data sheets with visual elements before PDF conversion. | Run quality‑assurance checks on merged workbooks by exporting them to PDF and reviewing layout consistency.
+// AI Prompts: Generate C# code that merges three workbooks, each containing a different chart type, and exports the result to PDF while keeping all formatting. | Show how to add robust error handling for missing data or invalid chart ranges when saving a combined workbook to PDF with Aspose.Cells. | Explain how to configure PdfSaveOptions to improve image and shape quality after merging workbooks in Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook containing a column chart, optionally add a picture in a second workbook, merge the two files, configure PdfSaveOptions (ExportDocumentStructure, CalculateFormula), and save the combined workbook as a PDF for visual‑fidelity verification.
+// Creates a workbook with a column chart and another with a rectangle shape, merges the second into the first via Workbook.Combine, ensures the output folder exists, and saves the combined file as a PDF to confirm that charts and drawing objects retain their layout.
 class ExportCombinedWorkbookToPdf
 {
     static void Main()
     {
-        // ---------- Create first workbook and add a chart ----------
-        Workbook wb1 = new Workbook();                                   // create workbook
-        Worksheet ws1 = wb1.Worksheets[0];
-        ws1.Name = "DataSheet";
+        try
+        {
+            // ---------- Create first workbook with a sample chart ----------
+            Workbook wb1 = new Workbook(); // create workbook
+            Worksheet ws1 = wb1.Worksheets[0];
+            ws1.Name = "Data1";
 
-        // Populate sample data
-        ws1.Cells["A1"].PutValue("Category");
-        ws1.Cells["A2"].PutValue("Fruits");
-        ws1.Cells["A3"].PutValue("Vegetables");
-        ws1.Cells["B1"].PutValue("Value");
-        ws1.Cells["B2"].PutValue(50);
-        ws1.Cells["B3"].PutValue(30);
+            // Populate data for the chart
+            ws1.Cells["A1"].PutValue("Category");
+            ws1.Cells["A2"].PutValue("Apple");
+            ws1.Cells["A3"].PutValue("Banana");
+            ws1.Cells["B1"].PutValue("Value");
+            ws1.Cells["B2"].PutValue(30);
+            ws1.Cells["B3"].PutValue(45);
 
-        // Add a column chart linked to the data
-        int chartIdx = ws1.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = ws1.Charts[chartIdx];
-        chart.NSeries.Add("B2:B3", true);               // values
-        chart.NSeries.CategoryData = "A2:A3";           // categories
-        chart.Title.Text = "Sample Chart";
+            // Add a column chart and bind it to the data range
+            int chartIdx1 = ws1.Charts.Add(ChartType.Column, 5, 0, 15, 10);
+            Chart chart1 = ws1.Charts[chartIdx1];
+            chart1.NSeries.Add("B2:B3", true);
+            chart1.NSeries.CategoryData = "A2:A3";
+            chart1.Title.Text = "Fruit Chart";
 
-        // ---------- Create second workbook (could contain images, shapes, etc.) ----------
-        Workbook wb2 = new Workbook();                                   // create second workbook
-        Worksheet ws2 = wb2.Worksheets[0];
-        ws2.Name = "ImageSheet";
+            // ---------- Create second workbook with a sample shape (as image placeholder) ----------
+            Workbook wb2 = new Workbook(); // create second workbook
+            Worksheet ws2 = wb2.Worksheets[0];
+            ws2.Name = "Data2";
 
-        // Example: insert a picture (requires an existing image file)
-        // ws2.Pictures.Add(1, 1, "sample_image.png"); // Uncomment and provide a valid path if needed
+            ws2.Cells["A1"].PutValue("Sample Text");
 
-        // ---------- Combine the two workbooks ----------
-        wb1.Combine(wb2);                                                // combine second into first
+            // Add a rectangle shape to act as an image placeholder
+            // Parameters: type, upperLeftRow, upperLeftColumn, top, left, height, width
+            Shape shape = ws2.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 0, 5, 0, 200, 100);
+            shape.Placement = PlacementType.FreeFloating;
+            shape.Text = "Image Placeholder";
 
-        // ---------- Configure PDF save options ----------
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.ExportDocumentStructure = true;   // retain document structure for verification
-        pdfOptions.CalculateFormula = true;         // ensure any formulas are evaluated
+            // ---------- Combine the two workbooks ----------
+            wb1.Combine(wb2); // combine wb2 into wb1
 
-        // ---------- Save the combined workbook as PDF ----------
-        wb1.Save("CombinedWorkbook.pdf", pdfOptions); // save using the Save(string, SaveOptions) rule
+            // ---------- Export the combined workbook to PDF ----------
+            string outputPath = "CombinedWorkbook.pdf";
+
+            // Ensure the directory exists (in case a relative path is used)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            wb1.Save(outputPath, SaveFormat.Pdf);
+
+            Console.WriteLine("Combined workbook exported to PDF successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

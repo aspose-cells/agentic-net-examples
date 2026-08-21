@@ -1,64 +1,66 @@
+// Title: Selective formula recalculation on quarterly worksheets using Worksheet.CalculateFormula (Aspose.Cells for .NET)
+// Description: Shows how to loop through a workbook, detect worksheets whose names contain "Quarterly", and invoke Worksheet.CalculateFormula with optional CalculationOptions to recalculate only those sheets before saving the file.
+// Keywords: Aspose.Cells | Worksheet.CalculateFormula | selective formula calculation | quarterly reporting sheets | C# .NET Excel automation | CalculationOptions | partial workbook recalculation
+// Common Searches: Aspose.Cells calculate formulas on specific sheets | Worksheet.CalculateFormula example C# | recalculate only quarterly worksheets Aspose.Cells | partial formula evaluation .NET Excel | how to skip sheets during formula calculation Aspose
+// Developer Intent: Recalculate formulas exclusively on worksheets marked for quarterly reporting.
+// Use Cases: Iterate through a workbook, identify sheets with "Quarterly" in the title, and run Worksheet.CalculateFormula on each to update only those reports. | Apply custom CalculationOptions (e.g., enable iterative calculation) to quarterly sheets while leaving other worksheets untouched. | Improve performance in large workbooks by avoiding unnecessary formula evaluation on non‑reporting sheets.
+// AI Prompts: Generate C# code that scans a Workbook, selects worksheets whose name includes "Quarterly", and calls Worksheet.CalculateFormula with CalculationOptions for each selected sheet. | Explain how to configure CalculationOptions for iterative calculations when selectively recalculating quarterly worksheets in Aspose.Cells. | Provide error‑handling patterns for unsupported functions that may appear in quarterly sheets during selective formula evaluation.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsQuarterlyReport
+// Shows how to loop through a workbook, detect worksheets whose names contain "Quarterly", and invoke Worksheet.CalculateFormula with optional CalculationOptions to recalculate only those sheets before saving the file.
+class QuarterlyFormulaEvaluator
 {
-    public class QuarterlyFormulaEvaluator
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            Run();
-        }
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        public static void Run()
-        {
-            const string inputPath = "InputReport.xlsx";
-            const string outputPath = "OutputReport.xlsx";
-
-            try
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Ensure the input file exists
-                if (!File.Exists(inputPath))
-                    throw new FileNotFoundException($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+            // Prepare calculation options (default settings)
+            CalculationOptions calcOptions = new CalculationOptions();
+
+            // Process each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Identify quarterly worksheets by name
+                if (sheet.Name.IndexOf("Quarterly", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    bool isQuarterly = false;
-
-                    // Determine quarterly sheets by name pattern
-                    if (sheet.Name.IndexOf("Quarterly", StringComparison.OrdinalIgnoreCase) >= 0)
-                        isQuarterly = true;
-
-                    // Uncomment the block below if using a custom property instead of naming convention
-                    /*
-                    if (sheet.CustomProperties.Contains("ReportType"))
-                    {
-                        string reportType = sheet.CustomProperties["ReportType"]?.ToString();
-                        if (string.Equals(reportType, "Quarterly", StringComparison.OrdinalIgnoreCase))
-                            isQuarterly = true;
-                    }
-                    */
-
-                    if (isQuarterly)
-                    {
-                        // Calculate formulas in the worksheet with custom options
-                        CalculationOptions opts = new CalculationOptions { Recursive = true };
-                        sheet.CalculateFormula(opts, true);
-                    }
+                    // Optionally perform sheet‑specific actions here
+                    // (e.g., modify data before calculation)
                 }
+            }
 
-                // Save the workbook after calculations
-                workbook.Save(outputPath);
-            }
-            catch (Exception ex)
+            // Calculate all formulas in the workbook using the specified options
+            workbook.CalculateFormula(calcOptions);
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

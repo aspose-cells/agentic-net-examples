@@ -1,15 +1,15 @@
-// Title: Aspose.Cells for .NET – Set MaxRowsOfSharedFormula to Control Shared Formula Range
-// Description: Demonstrates how to use Workbook.Settings.MaxRowsOfSharedFormula in Aspose.Cells to limit a shared formula to 100 rows, detect truncation, and then raise the limit (e.g., to 1024) so the formula spans the full range. Includes verification of the last cell's formula and saving the workbook.
-// Keywords: Aspose.Cells | C# | .NET | Workbook.Settings.MaxRowsOfSharedFormula | shared formula limit | increase shared formula rows | Excel shared formula | Aspose.Cells example | GitHub code snippet | formula truncation
-// Common Searches: Aspose.Cells MaxRowsOfSharedFormula example | how to change shared formula row limit in .NET | shared formula stops at 100 rows Aspose.Cells | increase shared formula range Aspose.Cells C# | Workbook.Settings.MaxRowsOfSharedFormula usage
-// Developer Intent: Adjust the MaxRowsOfSharedFormula property to define how many rows a shared formula may cover, detect when the default limit truncates the formula, and increase the limit for larger datasets.
-// Use Cases: Apply a shared formula to a known range without exceeding the default 100‑row limit. | Dynamically raise MaxRowsOfSharedFormula when processing worksheets with more rows than the default. | Validate that a shared formula has been applied to the final row after changing the limit.
-// AI Prompts: Provide C# code that sets Workbook.Settings.MaxRowsOfSharedFormula, adds a shared formula across 101 rows, and prints the formula in the last cell. | Generate a function that calculates the required MaxRowsOfSharedFormula value based on a worksheet's row count before applying a shared formula. | Explain performance considerations when increasing MaxRowsOfSharedFormula and how to handle potential memory impact.
+// Title: Aspose.Cells C# – Expand MaxRowsOfSharedFormula for Larger Shared Formula Ranges
+// Description: Demonstrates how to change Workbook.Settings.MaxRowsOfSharedFormula, test the default 100‑row limit, raise it to 1024, apply a shared formula across 101 rows on a new sheet, verify the last cell's formula, and save the workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells MaxRowsOfSharedFormula | shared formula row limit .NET | increase shared formula block size | Workbook.Settings MaxRowsOfSharedFormula C# | Aspose.Cells shared formula example
+// Common Searches: set MaxRowsOfSharedFormula Aspose.Cells | increase shared formula rows Aspose.Cells .NET | shared formula limit 100 rows Aspose | how to expand shared formula range Aspose.Cells
+// Developer Intent: Adjust the maximum row count for shared formula blocks in an Aspose.Cells workbook.
+// Use Cases: Configure MaxRowsOfSharedFormula before creating a shared formula to avoid truncated ranges. | Detect when a shared formula exceeds the current limit, raise the limit, and reapply the formula. | Confirm that the formula appears in the final cell after increasing the limit and then persist the workbook.
+// AI Prompts: Write C# code that sets MaxRowsOfSharedFormula to 500 and creates a shared formula spanning 300 rows with Aspose.Cells. | Explain how to read the current MaxRowsOfSharedFormula value and increase it only when a shared formula would exceed that value. | Provide a step‑by‑step guide to verify a shared formula after raising MaxRowsOfSharedFormula and then saving the workbook.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to use Workbook.Settings.MaxRowsOfSharedFormula in Aspose.Cells to limit a shared formula to 100 rows, detect truncation, and then raise the limit (e.g., to 1024) so the formula spans the full range. Includes verification of the last cell's formula and saving the workbook.
+// Demonstrates how to change Workbook.Settings.MaxRowsOfSharedFormula, test the default 100‑row limit, raise it to 1024, apply a shared formula across 101 rows on a new sheet, verify the last cell's formula, and save the workbook using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -17,26 +17,25 @@ class Program
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Set the maximum number of rows that a shared formula can cover
+        // Set the maximum number of rows allowed for a shared formula block
         workbook.Settings.MaxRowsOfSharedFormula = 100;
 
-        // Attempt to set a shared formula that spans 101 rows (exceeds the limit)
-        // Only the first 100 rows will receive the formula due to the setting above
-        workbook.Worksheets[0].Cells["B1"].SetSharedFormula("=A1", 101, 1);
+        // Attempt to set a shared formula that exceeds the current limit (101 rows)
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+        cells["B1"].SetSharedFormula("=A1", 101, 1);
 
-        // Verify the formula in the last cell of the range (B101)
-        // It will be empty because the shared formula was truncated at row 100
-        Console.WriteLine("Formula in B101 (first sheet): " + workbook.Worksheets[0].Cells["B101"].Formula);
+        // Verify the formula in the last cell of the range (will be empty because of the limit)
+        Console.WriteLine("Formula in B101 (original limit): " + cells["B101"].Formula);
 
-        // Increase the limit to allow the full range of 101 rows
+        // Increase the limit to allow larger shared formula blocks
         workbook.Settings.MaxRowsOfSharedFormula = 1024;
 
-        // Add a new worksheet and set the same shared formula
+        // Set the same shared formula on a new worksheet now that the limit is higher
         Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-        sheet2.Cells["B1"].SetSharedFormula("=A1", 101, 1);
-
-        // Verify that the formula now exists in B101 of the second sheet
-        Console.WriteLine("Formula in B101 (Sheet2): " + sheet2.Cells["B101"].Formula);
+        Cells cells2 = sheet2.Cells;
+        cells2["B1"].SetSharedFormula("=A1", 101, 1);
+        Console.WriteLine("Formula in B101 (increased limit): " + cells2["B101"].Formula);
 
         // Save the workbook to a file
         workbook.Save("output.xlsx");

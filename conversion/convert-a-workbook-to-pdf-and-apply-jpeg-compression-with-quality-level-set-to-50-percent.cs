@@ -1,42 +1,35 @@
-// Title: C# – Convert Excel Workbook to PDF with 50% JPEG Compression using Aspose.Cells
-// Description: Shows how to create or load an Excel workbook, configure PdfSaveOptions to resample images at 96 dpi with JPEG quality set to 50 percent, and save the result as output_quality_50.pdf via Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | PdfSaveOptions | SetImageResample | JPEG compression | image quality 50 | Excel to PDF .NET | C# PDF conversion | reduce PDF size | resample images | Aspose.Cells example
-// Common Searches: Aspose.Cells set JPEG quality when saving PDF | C# PdfSaveOptions image resample example | How to reduce PDF size from Excel using Aspose.Cells | Convert Excel to PDF with image compression .NET | Set image DPI and quality in Aspose.Cells PDF export
-// Developer Intent: Export an Excel workbook to PDF while applying JPEG compression at a 50 % quality level.
-// Use Cases: Generating lightweight PDF reports from Excel data for email distribution | Providing downloadable PDFs from web applications with controlled image size | Batch converting multiple spreadsheets to PDFs with consistent compression settings | Archiving Excel files as PDFs with reduced storage footprint
-// AI Prompts: Provide C# code that loads an existing .xlsx file and saves it as a PDF using Aspose.Cells with JPEG quality set to 50 % and 96 dpi. | Explain the effect of PdfSaveOptions.SetImageResample on image resolution and compression in PDF output. | Show how to adjust both DPI and quality parameters for image resampling in Aspose.Cells PDF export. | Give a step‑by‑step guide to batch process a folder of Excel files into compressed PDFs using Aspose.Cells.
+// Title: Convert Aspose.Cells Workbook to PDF with 50% JPEG Compression (C#)
+// Description: Creates a workbook, adds sample data, configures PdfSaveOptions to resample images at 96 dpi with JPEG quality set to 50 percent, and saves the result as a PDF file.
+// Keywords: Aspose.Cells | PdfSaveOptions | JPEG compression | image resample | 50% quality | C# | .NET | Excel to PDF | reduce PDF size | SetImageResample
+// Common Searches: Aspose.Cells set JPEG quality when saving PDF | PdfSaveOptions image resample C# example | Convert Excel workbook to PDF with compressed images | How to lower PDF file size using Aspose.Cells | C# Aspose.Cells export to PDF with low image quality
+// Developer Intent: Generate a PDF from an Excel workbook while compressing all embedded images to JPEG at a 50 percent quality level.
+// Use Cases: Produce lightweight PDF reports from Excel data for faster web delivery. | Batch‑convert multiple workbooks to PDFs with a consistent image compression setting to meet storage limits. | Create PDFs for mobile apps where bandwidth is limited, ensuring images are down‑sampled and compressed.
+// AI Prompts: Show how to change the JPEG quality to 75 % and the DPI to 150 using PdfSaveOptions in Aspose.Cells. | Write a reusable C# method that accepts input workbook and output PDF paths and applies 50 % JPEG compression. | Explain the impact of SetImageResample on image scaling, resolution, and file size in the generated PDF.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering; // Required for PdfSaveOptions
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfConversion
+// Creates a workbook, adds sample data, configures PdfSaveOptions to resample images at 96 dpi with JPEG quality set to 50 percent, and saves the result as a PDF file.
+class Program
 {
-    // Shows how to create or load an Excel workbook, configure PdfSaveOptions to resample images at 96 dpi with JPEG quality set to 50 percent, and save the result as output_quality_50.pdf via Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and add some sample data
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sample Text");
+        sheet.Cells["B2"].PutValue(123.45);
+        sheet.Cells["C3"].PutValue(DateTime.Now);
 
-            // Populate the worksheet with sample data
-            sheet.Cells["A1"].PutValue("Sample Text");
-            sheet.Cells["B2"].PutValue(123.45);
-            sheet.Cells["C3"].PutValue(DateTime.Now);
+        // Configure PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Create PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        // Set desired PPI (e.g., 96) and JPEG quality to 50%
+        // This will convert all images in the PDF to JPEG with 50% quality
+        pdfOptions.SetImageResample(96, 50);
 
-            // Set JPEG quality to 50% (and a reasonable PPI, e.g., 96)
-            // This will resample images to JPEG with the specified quality.
-            pdfOptions.SetImageResample(96, 50);
-
-            // Save the workbook as a PDF using the configured options
-            workbook.Save("output_quality_50.pdf", pdfOptions);
-
-            Console.WriteLine("Workbook successfully saved as PDF with JPEG quality set to 50%.");
-        }
+        // Save the workbook as a PDF using the configured options
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

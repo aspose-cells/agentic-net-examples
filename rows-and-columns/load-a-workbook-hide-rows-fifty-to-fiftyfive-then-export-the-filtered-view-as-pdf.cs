@@ -1,34 +1,36 @@
-// Title: Hide rows 50‑55 and export visible data to PDF with Aspose.Cells for .NET
-// Description: Loads an existing workbook, hides rows 50 through 55 on the first worksheet using Cells.HideRows, and saves the file as a PDF. The PdfSaveOptions automatically omit hidden rows, producing a document that contains only the visible content.
-// Keywords: Aspose.Cells hide rows C# | Excel to PDF Aspose.Cells | PdfSaveOptions hidden rows | C# hide rows before PDF export | Aspose.Cells row visibility
-// Common Searches: Aspose.Cells hide rows 50 to 55 C# | Export only visible rows to PDF using Aspose.Cells | C# hide Excel rows then save as PDF | PdfSaveOptions exclude hidden rows Aspose | How to programmatically hide rows in Aspose.Cells
-// Developer Intent: Programmatically hide rows 50‑55 in a worksheet and generate a PDF that includes only the rows that remain visible.
-// Use Cases: Create a printable report that excludes confidential rows by hiding them before PDF conversion. | Produce a clean PDF version of a sheet after collapsing rows used for intermediate calculations. | Deliver a dashboard PDF where specific rows (e.g., 50‑55) contain data that should not be shown to end users.
-// AI Prompts: Generate C# code with Aspose.Cells that hides rows 50‑55 and saves the worksheet as a PDF, ensuring hidden rows are not rendered. | Show how to use PdfSaveOptions in Aspose.Cells to export only visible rows after calling Cells.HideRows. | Explain the behavior of hidden rows during PDF export in Aspose.Cells and how to control it with save options.
+// Title: Hide rows 50‑55 and export visible data to PDF with Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook, hides rows 50‑55 in the first worksheet using Cells.HideRows, and saves the result as a PDF with PdfSaveOptions so the hidden rows are omitted from the output.
+// Keywords: Aspose.Cells | C# | hide rows | Excel to PDF | Rows 50-55 | PdfSaveOptions | worksheet hide rows | export PDF | .NET
+// Common Searches: Aspose.Cells hide rows 50 to 55 C# | Export Excel to PDF without hidden rows Aspose.Cells | C# hide specific rows before PDF conversion | How to hide rows in Aspose.Cells and save as PDF | PdfSaveOptions hide rows Aspose.Cells
+// Developer Intent: Programmatically hide rows 50‑55 in a worksheet and generate a PDF that excludes those rows.
+// Use Cases: Create printable PDF reports that omit confidential or intermediate rows by hiding them first. | Produce clean financial statements where summary rows are hidden to focus on detailed line items. | Automate batch processing of multiple workbooks, hiding unwanted rows and exporting each to PDF.
+// AI Prompts: Generate C# code using Aspose.Cells to hide rows 50‑55 in the first worksheet and export the workbook to PDF. | Explain how Aspose.Cells handles hidden rows during PDF conversion and which save options can modify this behavior. | Add robust error handling for missing input files, invalid row indices, and permission issues when hiding rows and saving to PDF with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Loads an existing workbook, hides rows 50 through 55 on the first worksheet using Cells.HideRows, and saves the file as a PDF. The PdfSaveOptions automatically omit hidden rows, producing a document that contains only the visible content.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Loads an Excel workbook, hides rows 50‑55 in the first worksheet using Cells.HideRows, and saves the result as a PDF with PdfSaveOptions so the hidden rows are omitted from the output.
+    class HideRowsAndExportPdf
     {
-        // Load the existing workbook from file
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main()
+        {
+            // Load an existing workbook from file
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet (you can change the index as needed)
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet (index 0)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Hide rows 50 to 55 (Excel rows are 1‑based, Cells API is 0‑based)
-        // Start index = 49 (row 50), total rows to hide = 6 (rows 50‑55)
-        worksheet.Cells.HideRows(49, 6);
+            // Hide rows 50 to 55 (zero‑based index: start at 49, hide 6 rows)
+            worksheet.Cells.HideRows(49, 6);
 
-        // Prepare PDF save options (default behavior skips hidden rows)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Prepare PDF save options (default options are sufficient for visible rows)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Save the workbook as PDF; only visible rows will appear in the output
-        workbook.Save("output.pdf", pdfOptions);
+            // Save the workbook as PDF; hidden rows will not appear in the output
+            workbook.Save("output.pdf", pdfOptions);
+        }
     }
 }

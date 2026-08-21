@@ -1,47 +1,32 @@
-// Title: C# – Access a Worksheet by Zero‑Based Index with Aspose.Cells for .NET
-// Description: This example shows how to create a new Workbook, retrieve the first Worksheet using its zero‑based index (0), write a text value to cell A1, and save the file. It demonstrates the simplest way to access and manipulate a worksheet by index using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | access worksheet by index | zero based index | retrieve worksheet | set cell value | save workbook | worksheet collection | Aspose.Cells example
-// Common Searches: Aspose.Cells get worksheet by index C# | How to access first worksheet in Aspose.Cells | Write to a cell after retrieving worksheet by index | Save workbook after modifying worksheet Aspose.Cells | C# Aspose.Cells example for worksheet collection
-// Developer Intent: Retrieve a worksheet from a workbook by its zero‑based index and modify a cell.
-// Use Cases: Create a new workbook and write a greeting to the default sheet (index 0). | Iterate through all worksheets by index to apply uniform formatting or data entry. | Open an existing workbook, select a specific sheet by index, populate data, and export the result.
-// AI Prompts: Generate C# code that accesses the third worksheet (index 2) in an Aspose.Cells workbook, sets cell B2 to a numeric value, and saves the file. | Provide an Aspose.Cells example that loops over every worksheet by index, writes the sheet name into cell A1 of each sheet, and saves the workbook. | Show how to safely retrieve a worksheet by index with try‑catch handling for out‑of‑range indexes in Aspose.Cells for .NET.
+// Title: Aspose.Cells C# – Access Worksheet by Zero‑Based Index and Assign to Variable
+// Description: Demonstrates how to create a Workbook, retrieve the first Worksheet using the zero‑based index (workbook.Worksheets[0]), assign it to a Worksheet variable, write a value to cell A1, and save the file as WorksheetByIndex.xlsx.
+// Keywords: Aspose.Cells worksheet index | C# get worksheet by index | Aspose.Cells Worksheets[0] | assign worksheet variable | write cell A1 Aspose.Cells | .NET Aspose.Cells example
+// Common Searches: Aspose.Cells get first worksheet | How to access worksheet by index C# | Aspose.Cells Worksheets collection example | Assign worksheet to variable Aspose.Cells | Write value to cell after retrieving worksheet
+// Developer Intent: Retrieve a worksheet from a workbook using its zero‑based index and store it in a variable for further manipulation.
+// Use Cases: Read data from a specific sheet after selecting it by index. | Update cell values, formulas, or formatting on a sheet obtained via index. | Iterate through all worksheets by index to apply consistent styles or headers. | Export or copy a particular worksheet identified by its position in the workbook.
+// AI Prompts: Generate C# code that opens an existing workbook and accesses the second worksheet by index using Aspose.Cells. | Show how to loop through every worksheet in a workbook by index and set a header row in each sheet with Aspose.Cells. | Provide an example that copies data from a worksheet accessed by index to another worksheet within the same workbook using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace WorksheetAccessExample
 {
-    // This example shows how to create a new Workbook, retrieve the first Worksheet using its zero‑based index (0), write a text value to cell A1, and save the file. It demonstrates the simplest way to access and manipulate a worksheet by index using Aspose.Cells for .NET.
-    public class AccessWorksheetByIndex
+    // Demonstrates how to create a Workbook, retrieve the first Worksheet using the zero‑based index (workbook.Worksheets[0]), assign it to a Worksheet variable, write a value to cell A1, and save the file as WorksheetByIndex.xlsx.
+    class Program
     {
-        // Entry point for the console application
-        public static void Main(string[] args)
+        static void Main()
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook (empty workbook with a default worksheet)
+            // Create a new workbook (default contains one worksheet)
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet using its zero‑based index (0)
-            Worksheet firstWorksheet = workbook.Worksheets[0];
+            // Access the first worksheet by its zero‑based index and assign it to a variable
+            Worksheet firstSheet = workbook.Worksheets[0];
 
-            // Set a value in cell A1 to demonstrate access
-            firstWorksheet.Cells["A1"].PutValue("Hello from the first worksheet!");
+            // Demonstrate that the worksheet is accessible (write a value to cell A1)
+            firstSheet.Cells["A1"].PutValue("Accessed by index");
 
             // Save the workbook to verify the changes
-            string outputPath = "AccessWorksheetByIndex.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            workbook.Save("WorksheetByIndex.xlsx");
         }
     }
 }

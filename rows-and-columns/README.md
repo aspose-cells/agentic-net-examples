@@ -4,7 +4,7 @@ description: C# examples for inserting and deleting rows and columns, hiding, sh
 product: Aspose.Cells for .NET
 category: rows-and-columns
 language: C#
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-14
 ---
 
 # Manage Excel Rows and Columns in C# with Aspose.Cells for .NET

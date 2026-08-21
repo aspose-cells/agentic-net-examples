@@ -1,63 +1,35 @@
-// Title: Unprotect a worksheet in an XLSX file with Aspose.Cells for .NET
-// Description: Loads a protected XLSX workbook, removes the worksheet password using Worksheet.Unprotect, verifies the IsProtected flag, and saves an unprotected copy.
-// Keywords: Aspose.Cells | C# worksheet unprotect | Worksheet.Unprotect | remove Excel sheet password | check IsProtected | save unprotected workbook
-// Common Searches: Aspose.Cells unprotect worksheet C# | How to remove password from Excel sheet using Aspose.Cells | Worksheet.Unprotect example .NET | Check if worksheet is protected Aspose.Cells | Save workbook after unprotecting sheet C#
-// Developer Intent: Remove password protection from a specific worksheet in an existing XLSX workbook using Aspose.Cells for .NET.
-// Use Cases: Load a workbook, call Worksheet.Unprotect with the known password, and save the file so the sheet can be edited. | Validate that the sheet is no longer protected by reading the IsProtected property before performing data extraction or modification. | Automate batch processing of multiple workbooks, unprotecting designated sheets and generating unprotected versions for downstream analytics.
-// AI Prompts: Generate C# code that uses Aspose.Cells to unprotect the second worksheet of a workbook given a password and saves the result to a new file. | Create error‑handling logic for worksheet unprotection when the password may be incorrect, including verification of the IsProtected flag after the call. | Write a reusable method that accepts a file path and password, unprotects all worksheets in the workbook, and returns the names of sheets that were successfully unprotected.
+// Title: How to Unprotect a Password‑Protected Worksheet in an XLSX File Using Aspose.Cells for .NET
+// Description: Load a protected XLSX workbook with Aspose.Cells, call Worksheet.Unprotect with the correct password, confirm the sheet is no longer locked via the IsProtected flag, and save the workbook as an unprotected file.
+// Keywords: Aspose.Cells unprotect worksheet C# | remove Excel sheet password .NET | Worksheet.Unprotect method | Excel protection removal programmatically | C# unprotect Excel worksheet | IsProtected property Aspose.Cells | save unprotected workbook Aspose | decrypt Excel sheet using Aspose.Cells
+// Common Searches: Aspose.Cells unprotect worksheet example | C# remove password from Excel sheet | Worksheet.Unprotect usage in .NET | check if Excel sheet is protected after Unprotect | save Excel file after removing sheet protection
+// Developer Intent: The developer needs to programmatically remove password protection from a specific worksheet in an XLSX workbook using Aspose.Cells for .NET.
+// Use Cases: A one‑off utility that opens a workbook, unprotects the first sheet with a known password, and writes the result to a new file. | A reusable method that accepts a file path, worksheet index or name, and password, then returns success status after unprotecting the sheet. | Batch processing of multiple workbooks where each worksheet is unlocked with its respective password before further data extraction.
+// AI Prompts: Generate C# code that loads an XLSX file with Aspose.Cells, unprotects a given worksheet using a supplied password, verifies the protection state, and saves the unprotected workbook. | Create a .NET function that takes a Workbook object, worksheet name, and password, calls Worksheet.Unprotect, and returns the updated IsProtected value. | Show error‑handling patterns for catching an incorrect password exception when using Worksheet.Unprotect in Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Load a protected XLSX workbook with Aspose.Cells, call Worksheet.Unprotect with the correct password, confirm the sheet is no longer locked via the IsProtected flag, and save the workbook as an unprotected file.
+class UnprotectWorksheetDemo
 {
-    // Loads a protected XLSX workbook, removes the worksheet password using Worksheet.Unprotect, verifies the IsProtected flag, and saves an unprotected copy.
-    public class UnprotectWorksheetDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            string inputPath = "ProtectedWorksheet.xlsx";
-            string outputPath = "UnprotectedWorksheet.xlsx";
+        // Load the workbook that contains a protected worksheet
+        string inputFile = "protected.xlsx";
+        Workbook workbook = new Workbook(inputFile);
 
-            try
-            {
-                // Ensure the input file exists before loading
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+        // Get the first worksheet (index 0)
+        Worksheet worksheet = workbook.Worksheets[0];
 
-                // Load the workbook (worksheet is protected, not the file)
-                Workbook workbook = new Workbook(inputPath);
+        // Supply the correct password to unprotect the worksheet
+        string password = "myPassword";
+        worksheet.Unprotect(password);
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Verify that the worksheet is now unprotected
+        Console.WriteLine("Worksheet is protected: " + worksheet.IsProtected);
 
-                // Unprotect the worksheet using the known password
-                worksheet.Unprotect("myWorksheetPassword");
-
-                // Verify that the worksheet is no longer protected
-                Console.WriteLine("Worksheet IsProtected: " + worksheet.IsProtected);
-
-                // Save the workbook with the worksheet now unprotected
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
-    }
-
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            UnprotectWorksheetDemo.Run();
-        }
+        // Save the workbook with the worksheet now unprotected
+        string outputFile = "unprotected.xlsx";
+        workbook.Save(outputFile);
     }
 }

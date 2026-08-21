@@ -1,64 +1,87 @@
-// Title: C# – Get Absolute Pixel Positions and Sizes of All Shapes in an Aspose.Cells Worksheet
-// Description: Loads a workbook, iterates the worksheet’s ShapeCollection, and prints each shape’s name, type, X/Y pixel coordinates and width/height. The example also demonstrates creating a workbook, adding rectangle, oval and line shapes, saving it, and then analyzing the saved file to retrieve shape positions.
-// Keywords: Aspose.Cells shape position C# | Aspose.Cells get shape coordinates | Aspose.Cells shape size properties | enumerate worksheet shapes Aspose.Cells | absolute pixel location of shapes Aspose.Cells | .NET Aspose.Cells shape collection | retrieve shape X Y width height Aspose.Cells
-// Common Searches: How to read shape X and Y coordinates in Aspose.Cells for .NET | Aspose.Cells C# list all shapes on a worksheet | Get shape width and height using Aspose.Cells | Display shape name, type and position with Aspose.Cells | Aspose.Cells absolute position of shapes in pixels
-// Developer Intent: Obtain and display the absolute X/Y pixel coordinates and dimensions of every shape on a worksheet.
-// Use Cases: Verify that chart and image placements match design specifications before publishing reports. | Export shape layout data to CSV or JSON for external diagram analysis. | Filter shapes by type (e.g., rectangles) and process only their coordinates in a custom workflow.
-// AI Prompts: Generate a method that returns a list of objects containing shape name, type, X, Y, width, and height using Aspose.Cells. | Create a utility that writes each shape’s absolute position and size to a CSV file instead of the console. | Adapt the sample to skip non‑rectangle shapes and output only rectangle coordinates.
+// Title: C# – Get absolute pixel positions and dimensions of all worksheet shapes with Aspose.Cells
+// Description: Loads an Excel workbook, accesses the first worksheet, iterates its ShapeCollection, and prints each shape’s name, type, X/Y pixel offsets, width and height. Includes file‑existence verification and robust exception handling.
+// Keywords: Aspose.Cells shape coordinates | C# get shape position Excel | retrieve shape dimensions Aspose.Cells | list worksheet shapes .NET | shape X Y pixels Aspose.Cells | Excel shape analysis C#
+// Common Searches: Aspose.Cells how to read shape X and Y coordinates | C# list all shapes in Excel worksheet | Get shape width and height using Aspose.Cells | Retrieve shape positions in pixels from Excel file | Aspose.Cells shape collection example
+// Developer Intent: Extract and display the absolute pixel location and size of every shape on a worksheet.
+// Use Cases: Create a layout audit report of all shapes for UI design validation. | Programmatically align, reposition, or resize shapes based on their current coordinates. | Export shape position and size data to CSV or JSON for automated testing of Excel templates.
+// AI Prompts: Write a method that returns a collection of objects containing shape name, type, X, Y, width, and height using Aspose.Cells for .NET. | Extend the sample to also capture each shape's Z‑order and the address of its top‑left anchor cell. | Create a function that shifts every shape by a specified X/Y offset while preserving its original size.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads a workbook, iterates the worksheet’s ShapeCollection, and prints each shape’s name, type, X/Y pixel coordinates and width/height. The example also demonstrates creating a workbook, adding rectangle, oval and line shapes, saving it, and then analyzing the saved file to retrieve shape positions.
-class ShapePositionAnalyzer
+namespace AsposeCellsShapeAnalysis
 {
-    // Loads a workbook and prints absolute positions of all shapes on the first worksheet
-    public static void Analyze(string workbookPath)
+    // Loads an Excel workbook, accesses the first worksheet, iterates its ShapeCollection, and prints each shape’s name, type, X/Y pixel offsets, width and height. Includes file‑existence verification and robust exception handling.
+    public class ShapePositionRetriever
     {
-        // Load the workbook (load rule)
-        Workbook workbook = new Workbook(workbookPath);
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        ShapeCollection shapes = worksheet.Shapes;
-
-        Console.WriteLine($"Total shapes: {shapes.Count}");
-        for (int i = 0; i < shapes.Count; i++)
+        /// <param name="filePath">Path to the Excel file to be analyzed.</param>
+        public static void RetrieveAndDisplayShapePositions(string filePath)
         {
-            Shape shape = shapes[i];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"Error: File not found -> {filePath}");
+                return;
+            }
 
-            // Absolute position in pixels (X, Y) and size (Width, Height)
-            int x = shape.X;
-            int y = shape.Y;
-            int width = shape.Width;
-            int height = shape.Height;
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(filePath);
 
-            Console.WriteLine($"Shape {i}: Name=\"{shape.Name}\", Type={shape.Type}");
-            Console.WriteLine($"  Position: X={x} px, Y={y} px");
-            Console.WriteLine($"  Size: Width={width} px, Height={height} px");
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Get the collection of shapes on the worksheet
+                ShapeCollection shapes = sheet.Shapes;
+
+                // Iterate through each shape and output its absolute position and size
+                for (int i = 0; i < shapes.Count; i++)
+                {
+                    Shape shape = shapes[i];
+
+                    // Absolute position in pixels from the worksheet's top‑left corner
+                    int x = shape.X;      // Horizontal offset
+                    int y = shape.Y;      // Vertical offset
+
+                    // Size in pixels
+                    int width = shape.Width;
+                    int height = shape.Height;
+
+                    // Output details
+                    Console.WriteLine($"Shape {i + 1}:");
+                    Console.WriteLine($"  Name   : {shape.Name}");
+                    Console.WriteLine($"  Type   : {shape.Type}");
+                    Console.WriteLine($"  X      : {x} px");
+                    Console.WriteLine($"  Y      : {y} px");
+                    Console.WriteLine($"  Width  : {width} px");
+                    Console.WriteLine($"  Height : {height} px");
+                    Console.WriteLine();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors during processing
+                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
+            }
         }
-    }
 
-    // Demonstrates creating a workbook with shapes, saving it, and then analyzing positions
-    public static void Main()
-    {
-        // Create a new workbook and add some shapes (create rule)
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Example usage
+        public static void Main()
+        {
+            // Path to the workbook containing shapes
+            string inputFile = "ShapesDemo.xlsx";
 
-        // Add a rectangle
-        worksheet.Shapes.AddRectangle(2, 0, 2, 0, 100, 150);
-        // Add an oval
-        worksheet.Shapes.AddOval(5, 0, 5, 0, 80, 120);
-        // Add a line
-        worksheet.Shapes.AddLine(8, 0, 8, 0, 200, 0);
-
-        string filePath = "ShapesDemo.xlsx";
-
-        // Save the workbook (save rule)
-        workbook.Save(filePath);
-
-        // Analyze and display shape positions
-        Analyze(filePath);
+            try
+            {
+                RetrieveAndDisplayShapePositions(inputFile);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,65 +1,80 @@
-// Title: Add a Line Chart with Linked Data Labels to Every Worksheet using Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds sample data to each sheet, inserts a LineWithDataMarkers chart, assigns series values and categories, links the chart's data‑label text to a separate label column, syncs number formatting, and saves the file as BatchLineCharts.xlsx.
-// Keywords: Aspose.Cells line chart C# | batch chart creation Aspose.Cells | linked data labels Aspose.Cells | multiple worksheets chart .NET | ChartType.LineWithDataMarkers | NSeries data source | DataLabels.LinkedSource | programmatic Excel chart | dynamic chart labels
-// Common Searches: how to add a line chart to each sheet with Aspose.Cells | link chart data labels to cells in C# Aspose.Cells | batch generate charts across worksheets .NET | sync number format for chart data labels Aspose.Cells | Aspose.Cells example for LineWithDataMarkers
-// Developer Intent: Programmatically insert a line chart on every worksheet and bind its data‑label text to corresponding cells so the labels update automatically with source data.
-// Use Cases: Create regional sales‑trend line charts in a multi‑sheet workbook, linking each point’s label to a description column that changes with the data. | Automate a monthly performance report where each sheet receives a line chart whose labels are tied to comment cells, ensuring real‑time updates when values are edited. | Build a template workbook that pre‑populates line charts with linked labels, allowing end users to add rows and have both the chart and its labels expand without additional coding.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a bar chart to every worksheet and links its data labels to a separate text column. | Show how to change the chart type to Area and customize the data‑label font, color, and background using Aspose.Cells. | Explain how to adjust the linked source range for data labels after inserting new rows into the worksheet.
+// Title: Add a Line Chart to Every Worksheet and Link Data Labels to Cells – Aspose.Cells for .NET
+// Description: C# example that creates a workbook, fills each sheet with Category, Value, and Label columns, then adds a line chart to every worksheet. The chart’s series uses the Value column, the Category axis uses the Category column, and data labels are linked to the Label column so they update automatically. The workbook is saved as an XLSX file.
+// Keywords: Aspose.Cells line chart each worksheet | C# link chart data labels to cells | batch create charts Aspose.Cells | ShowCellRange LinkedSource Aspose.Cells | populate worksheets sample data Aspose.Cells | Aspose.Cells ChartType.Line example | dynamic chart labels Excel API
+// Common Searches: how to add a line chart to all sheets with Aspose.Cells | link chart data labels to a cell range in .NET | batch chart creation Aspose.Cells C# | set linked source for chart data labels Aspose.Cells | Aspose.Cells add line chart programmatically
+// Developer Intent: Generate a line chart on each worksheet and bind its data‑label values to the corresponding cells.
+// Use Cases: Automated sales dashboards where each month’s sheet shows a line chart with labels sourced from a description column. | Multi‑sheet financial reports that need identical line charts with dynamic labels that reflect cell edits. | Product performance workbooks where every sheet displays a line chart and the labels are driven by a separate label column for easy updates.
+// AI Prompts: Write C# code using Aspose.Cells to add a bar chart to every worksheet and link its data labels to column D. | Show how to change the LinkedSource range of chart data labels after modifying the label column in an existing workbook. | Explain the purpose of ShowCellRange and LinkedSource properties when configuring chart series in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data to each sheet, inserts a LineWithDataMarkers chart, assigns series values and categories, links the chart's data‑label text to a separate label column, syncs number formatting, and saves the file as BatchLineCharts.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // C# example that creates a workbook, fills each sheet with Category, Value, and Label columns, then adds a line chart to every worksheet. The chart’s series uses the Value column, the Category axis uses the Category column, and data labels are linked to the Label column so they update automatically. The workbook is saved as an XLSX file.
+    class Program
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
-
-        // Ensure there are multiple worksheets for the batch operation
-        // Add a second worksheet for demonstration
-        workbook.Worksheets.Add();
-
-        // Iterate through each worksheet and add a line chart with linked data labels
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            // ----- Sample data setup (Category, Value, Label) -----
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["C1"].PutValue("Label");
-
-            for (int i = 1; i <= 5; i++)
+            try
             {
-                sheet.Cells[$"A{i + 1}"].PutValue($"Item {i}");
-                sheet.Cells[$"B{i + 1}"].PutValue(i * 10);
-                sheet.Cells[$"C{i + 1}"].PutValue($"Lbl {i}");
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Populate each worksheet with sample data
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Header
+                    sheet.Cells["A1"].PutValue("Category");
+                    sheet.Cells["B1"].PutValue("Value");
+                    sheet.Cells["C1"].PutValue("Label");
+
+                    // Sample rows
+                    for (int i = 2; i <= 6; i++)
+                    {
+                        sheet.Cells[$"A{i}"].PutValue($"Item {i - 1}");
+                        sheet.Cells[$"B{i}"].PutValue(i * 10);
+                        sheet.Cells[$"C{i}"].PutValue($"Lbl {i - 1}");
+                    }
+                }
+
+                // Add a line chart to each worksheet and link data labels
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    int lastRow = sheet.Cells.MaxDataRow; // zero‑based index
+                    if (lastRow < 1) continue; // no data to chart
+
+                    // Add a line chart
+                    int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+                    Chart chart = sheet.Charts[chartIndex];
+
+                    // Build Excel‑style ranges
+                    string sheetName = sheet.Name;
+                    string valueRange = $"='{sheetName}'!$B$2:$B${lastRow + 1}";
+                    string categoryRange = $"='{sheetName}'!$A$2:$A${lastRow + 1}";
+                    string labelRange = $"='{sheetName}'!$C$2:$C${lastRow + 1}";
+
+                    // Add series and set category data
+                    chart.NSeries.Add(valueRange, true);
+                    chart.NSeries.CategoryData = categoryRange;
+
+                    // Configure data labels to show linked cell values
+                    Series series = chart.NSeries[0];
+                    series.DataLabels.ShowValue = true;
+                    series.DataLabels.ShowCellRange = true;
+                    series.DataLabels.LinkedSource = labelRange;
+                }
+
+                // Save the workbook
+                string outputPath = "BatchLineCharts.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // ----- Add a line chart to the current worksheet -----
-            // Parameters: ChartType, topRow, leftColumn, bottomRow, rightColumn
-            int chartIndex = sheet.Charts.Add(ChartType.LineWithDataMarkers, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Build range strings that include the worksheet name
-            string sheetName = sheet.Name;
-            string valuesRange   = $"='{sheetName}'!$B$2:$B$6";
-            string categoryRange = $"='{sheetName}'!$A$2:$A$6";
-            string labelRange    = $"='{sheetName}'!$C$2:$C$6";
-
-            // Set the data source for the chart
-            chart.NSeries.Add(valuesRange, true);          // Y‑values
-            chart.NSeries.CategoryData = categoryRange;    // X‑axis categories
-
-            // ----- Configure data labels to link to cells -----
-            Series series = chart.NSeries[0];
-            series.DataLabels.ShowValue = true;            // Show the value
-            series.DataLabels.LinkedSource = labelRange;   // Link label text to cells
-            series.DataLabels.NumberFormatLinked = true;   // Keep number format in sync
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-
-        // Save the workbook with all charts added
-        workbook.Save("BatchLineCharts.xlsx", SaveFormat.Xlsx);
     }
 }

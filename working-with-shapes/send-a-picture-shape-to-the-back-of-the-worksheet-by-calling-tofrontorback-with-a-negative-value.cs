@@ -1,54 +1,54 @@
-// Title: Move a picture shape to the back of an Excel worksheet using Aspose.Cells for .NET
-// Description: Demonstrates how to add a PNG image to cell B2, send it behind all other worksheet objects with the ToFrontOrBack(-1) method, and save the workbook as PictureBackDemo.xlsx.
-// Keywords: Aspose.Cells picture back | ToFrontOrBack negative | C# picture z‑order | Excel shape send to back | .NET insert image worksheet
-// Common Searches: Aspose.Cells send picture to back C# | ToFrontOrBack(-1) example | move Excel shape behind cells using Aspose | place image behind other objects Aspose.Cells
-// Developer Intent: Place an inserted picture behind every other object on the worksheet by adjusting its z‑order.
-// Use Cases: Create a watermark that stays under cell data | Add a background illustration without covering labels | Arrange overlapping images where some need to be hidden behind others
-// AI Prompts: Show C# code that inserts a PNG into a worksheet and moves it to the back with Aspose.Cells. | Explain the effect of positive and negative values in the ToFrontOrBack method. | Provide a step‑by‑step guide to change the z‑order of a picture shape in Aspose.Cells for .NET.
+// Title: Move a Picture Shape to the Back of a Worksheet with ToFrontOrBack(-1) in Aspose.Cells for .NET (C#)
+// Description: Shows how to create a workbook, add a PNG picture to cell B3, send the picture behind every other object using Picture.ToFrontOrBack(-1), and save the result as an XLSX file.
+// Keywords: Aspose.Cells | C# picture layering | ToFrontOrBack | send picture to back | z-order Excel | worksheet shape ordering | Aspose.Cells picture example | move shape behind cells | Aspose.Cells .NET API
+// Common Searches: Aspose.Cells ToFrontOrBack example | C# send picture to back in Excel | how to change picture z-order with Aspose.Cells | move shape behind other objects Aspose.Cells | picture layering Aspose.Cells .NET
+// Developer Intent: Insert a picture and place it behind all other worksheet elements.
+// Use Cases: Add a faint company logo as a background while keeping data cells fully visible. | Create a report with a decorative image that should not obscure charts or tables. | Layer multiple images in a generated spreadsheet and control their stacking order programmatically.
+// AI Prompts: Write C# code that adds a PNG picture to a worksheet and moves it to the back using Aspose.Cells ToFrontOrBack(-1). | Explain the effect of positive and negative arguments in the Picture.ToFrontOrBack method for shape ordering. | Provide a robust C# example that checks for a missing image file before inserting it and sending it to the back with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a PNG image to cell B2, send it behind all other worksheet objects with the ToFrontOrBack(-1) method, and save the workbook as PictureBackDemo.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Shows how to create a workbook, add a PNG picture to cell B3, send the picture behind every other object using Picture.ToFrontOrBack(-1), and save the result as an XLSX file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Path of the image to insert.
-            string imagePath = "sample.png";
-
-            // Create a simple placeholder PNG if the file does not exist.
-            if (!File.Exists(imagePath))
+            try
             {
-                // 1x1 pixel transparent PNG.
-                const string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/5+hHgAFgwJ/lZL9WQAAAABJRU5ErkJggg==";
-                byte[] pngBytes = Convert.FromBase64String(base64Png);
-                File.WriteAllBytes(imagePath, pngBytes);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Path to the image file
+                string imagePath = "example.png";
+
+                // Add picture only if the file exists
+                if (File.Exists(imagePath))
+                {
+                    int pictureIndex = worksheet.Pictures.Add(2, 2, imagePath);
+                    Picture picture = worksheet.Pictures[pictureIndex];
+
+                    // Send the picture to the back of the z-order
+                    picture.ToFrontOrBack(-1);
+                }
+                else
+                {
+                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
+                }
+
+                // Save the workbook to a file
+                workbook.Save("PictureSentToBack.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
             }
-
-            // Create a new workbook and get the first worksheet.
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add the picture to the worksheet at cell B2 (row 1, column 1).
-            int pictureIndex = worksheet.Pictures.Add(1, 1, imagePath);
-            Picture picture = worksheet.Pictures[pictureIndex];
-
-            // Send the picture to the back of the z-order.
-            picture.ToFrontOrBack(-1);
-
-            // Save the workbook.
-            string outputPath = "PictureBackDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

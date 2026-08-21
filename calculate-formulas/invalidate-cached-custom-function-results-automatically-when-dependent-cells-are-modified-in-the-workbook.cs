@@ -1,18 +1,19 @@
 // Title: Invalidate Cached Results of a Custom Volatile Function in Aspose.Cells for .NET
-// Description: Demonstrates how to force recalculation of a user‑defined function by overriding AbstractCalculationEngine.ForceRecalculate, enabling the calculation chain, and using CalculationOptions so that cached results are cleared whenever dependent cells are edited.
-// Keywords: Aspose.Cells custom function | cache invalidation | volatile user defined function | ForceRecalculate | AbstractCalculationEngine | EnableCalculationChain | CalculateFormula | C# Excel API | Aspose.Cells .NET example | Excel custom formula engine
-// Common Searches: Aspose.Cells invalidate custom function cache | force recalculate user defined function Aspose.Cells | make custom formula volatile in Aspose.Cells .NET | enable calculation chain for dependent cells Aspose.Cells | how to refresh cached results of a custom Excel function
-// Developer Intent: Automatically clear the cached value of a custom function whenever any of its input cells are modified.
-// Use Cases: Mark a specific user‑defined function as volatile so it updates on each dependent cell change. | Track cell dependencies with EnableCalculationChain and recalculate formulas via CalculationOptions. | Log each invocation of the custom function to verify that the cache is being invalidated after edits.
-// AI Prompts: Create a C# AbstractCalculationEngine that forces recalculation of a named custom function whenever its arguments change in Aspose.Cells. | Show how to enable the calculation chain and use CalculationOptions to automatically invalidate cached results of a volatile user‑defined function. | Provide sample code that counts calls to a custom function and demonstrates cache clearing after updating a referenced cell.
+// Description: Demonstrates how to force recalculation of a custom volatile function in Aspose.Cells by enabling the calculation chain, implementing a custom calculation engine with ForceRecalculate, detecting dependent cells, and re‑calculating the workbook after input changes. The example shows cache invalidation, call‑counter verification, and saving the updated file.
+// Keywords: Aspose.Cells custom function cache invalidation | volatile custom function Aspose.Cells | ForceRecalculate Aspose.Cells | EnableCalculationChain Aspose.Cells | GetDependentsInCalculation C# | Aspose.Cells custom calculation engine | C# Excel custom function recalc | Aspose.Cells workbook.CalculateFormula
+// Common Searches: how to invalidate custom function cache Aspose.Cells | force recalculate custom function in .NET Excel library | enable calculation chain to track dependencies Aspose.Cells | retrieve dependent cells after change Aspose.Cells | volatile custom function example Aspose.Cells C#
+// Developer Intent: Make a custom Excel function recompute automatically whenever any of its referenced cells are edited, ensuring the cached result is cleared.
+// Use Cases: Create a volatile custom function that adds a call counter to prove re‑execution after dependent cells change. | Enable the calculation chain and use GetDependentsInCalculation to list cells that depend on a modified input. | Recalculate the workbook with a custom engine, verify updated results, and save the workbook.
+// AI Prompts: Show C# code for a custom calculation engine that forces recalculation of a specific function in Aspose.Cells. | Explain how to enable the calculation chain and retrieve dependent cells for a given cell using Aspose.Cells. | Provide a step‑by‑step example that demonstrates cache invalidation for a volatile custom function when an input cell value is modified.
 
 using System;
+using System.Collections;
 using Aspose.Cells;
 
 namespace CustomFunctionCacheInvalidationDemo
 {
     // Custom calculation engine that forces recalculation of the custom function
-    // Demonstrates how to force recalculation of a user‑defined function by overriding AbstractCalculationEngine.ForceRecalculate, enabling the calculation chain, and using CalculationOptions so that cached results are cleared whenever dependent cells are edited.
+    // Demonstrates how to force recalculation of a custom volatile function in Aspose.Cells by enabling the calculation chain, implementing a custom calculation engine with ForceRecalculate, detecting dependent cells, and re‑calculating the workbook after input changes. The example shows cache invalidation, call‑counter verification, and saving the updated file.
     public class MyCustomEngine : AbstractCalculationEngine
     {
         // Force recalculation for the custom function "MYVOLATILEFUNC"
@@ -21,21 +22,33 @@ namespace CustomFunctionCacheInvalidationDemo
             return string.Equals(functionName, "MYVOLATILEFUNC", StringComparison.OrdinalIgnoreCase);
         }
 
-        // Simple implementation: return the value of the first parameter plus a counter
+        // Simple implementation: sum of all parameters plus a running counter
         private int _callCount = 0;
         public override void Calculate(CalculationData data)
         {
             if (string.Equals(data.FunctionName, "MYVOLATILEFUNC", StringComparison.OrdinalIgnoreCase))
             {
-                // Increment call counter to show that the function is re‑executed
-                _callCount++;
-
-                // Get the first parameter value (expected to be a numeric cell value)
-                object param = data.GetParamValue(0);
-                double input = Convert.ToDouble(param);
-
-                // Example calculation: input value multiplied by call count
-                data.CalculatedValue = input * _callCount;
+                double sum = 0;
+                for (int i = 0; i < data.ParamCount; i++)
+                {
+                    object param = data.GetParamValue(i);
+                    // Parameters may be simple values or ReferredArea objects
+                    if (param is double d)
+                    {
+                        sum += d;
+                    }
+                    else if (param is int iVal)
+                    {
+                        sum += iVal;
+                    }
+                    else if (param is ReferredArea area)
+                    {
+                        // Take the first cell of the area for simplicity
+                        sum += Convert.ToDouble(area.GetValue(0, 0));
+                    }
+                }
+                _callCount++; // increase call counter to prove re‑execution
+                data.CalculatedValue = sum + _callCount;
             }
         }
     }
@@ -44,45 +57,61 @@ namespace CustomFunctionCacheInvalidationDemo
     {
         static void Main()
         {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Enable calculation chain so dependent cells are tracked
-            workbook.Settings.FormulaSettings.EnableCalculationChain = true;
-
-            // Place an initial value in A1 (the dependent cell)
-            cells["A1"].PutValue(5);
-
-            // Set a formula that uses the custom volatile function
-            cells["B1"].Formula = "=MYVOLATILEFUNC(A1)";
-
-            // Prepare calculation options with the custom engine
-            CalculationOptions calcOptions = new CalculationOptions
+            try
             {
-                CustomEngine = new MyCustomEngine()
-            };
+                // ---------- Create ----------
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-            // First calculation – should invoke the custom function once
-            workbook.CalculateFormula(calcOptions);
-            Console.WriteLine($"After first calc, B1 = {cells["B1"].Value} (expected 5)");
+                // Enable calculation chain so that dependent cells can be discovered
+                workbook.Settings.FormulaSettings.EnableCalculationChain = true;
 
-            // Modify the dependent cell A1
-            cells["A1"].PutValue(10);
+                // Input cells that the custom function will depend on
+                cells["A1"].PutValue(10);
+                cells["A2"].PutValue(20);
 
-            // Re‑calculate – because ForceRecalculate returns true,
-            // the cached result for MYVOLATILEFUNC is invalidated automatically
-            workbook.CalculateFormula(calcOptions);
-            Console.WriteLine($"After modifying A1, B1 = {cells["B1"].Value} (expected 20)");
+                // Cell B1 uses the custom volatile function
+                cells["B1"].Formula = "=MYVOLATILEFUNC(A1, A2)";
 
-            // Change A1 again to demonstrate further invalidation
-            cells["A1"].PutValue(2);
-            workbook.CalculateFormula(calcOptions);
-            Console.WriteLine($"After second modification, B1 = {cells["B1"].Value} (expected 6)");
+                // ---------- Set up custom engine ----------
+                MyCustomEngine customEngine = new MyCustomEngine();
+                CalculationOptions calcOptions = new CalculationOptions
+                {
+                    CustomEngine = customEngine
+                };
 
-            // ---------- Save the workbook ----------
-            workbook.Save("CustomFunctionCacheInvalidationDemo.xlsx");
+                // ---------- First calculation ----------
+                workbook.CalculateFormula(calcOptions);
+                Console.WriteLine($"Initial B1 value: {cells["B1"].Value}");
+
+                // ---------- Modify a dependent cell ----------
+                cells["A1"].PutValue(30); // change A1, which B1 depends on
+
+                // Optionally, retrieve dependents of A1 (demonstrates dependency chain)
+                IEnumerator dependents = cells.GetDependentsInCalculation(0, 0, true);
+                Console.WriteLine("Cells dependent on A1 after change:");
+                while (dependents.MoveNext())
+                {
+                    if (dependents.Current is Cell depCell)
+                    {
+                        Console.WriteLine($"- {depCell.Name}");
+                    }
+                }
+
+                // ---------- Re‑calculate ----------
+                workbook.CalculateFormula(calcOptions);
+                Console.WriteLine($"After A1 change, B1 value: {cells["B1"].Value}");
+
+                // ---------- Save ----------
+                string outputPath = "CustomFunctionCacheInvalidationDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

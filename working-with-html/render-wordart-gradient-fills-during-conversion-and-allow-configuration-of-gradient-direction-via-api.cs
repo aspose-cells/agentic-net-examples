@@ -1,70 +1,73 @@
-// Title: Aspose.Cells for .NET – Render WordArt with Gradient Fill and Configurable Direction
-// Description: Shows how to add a WordArt shape to an Excel workbook, apply a two‑color gradient fill, set its orientation with GradientDirectionType, and save the file (including HTML export) while preserving the gradient appearance.
-// Keywords: Aspose.Cells WordArt gradient | C# gradient fill WordArt | GradientDirectionType Aspose.Cells | set gradient orientation Excel | preserve WordArt in HTML export | linear gradient fill Aspose.Cells | WordArt API .NET | Excel gradient fill example
-// Common Searches: Aspose.Cells set WordArt gradient direction C# | WordArt gradient fill not showing in HTML conversion | GradientFill.SetGradient example Aspose.Cells | How to apply two‑color gradient to WordArt using Aspose.Cells | Configure gradient orientation for WordArt shape
-// Developer Intent: Create a WordArt shape with a gradient fill and programmatically define its direction using the Aspose.Cells .NET API.
-// Use Cases: Generate Excel dashboards with stylized WordArt headings that use a custom gradient direction. | Export spreadsheets to HTML while keeping WordArt gradient colors and orientation intact. | Build automated reporting tools where the gradient direction reflects data flow or user preferences.
-// AI Prompts: Write C# code with Aspose.Cells to add a WordArt shape that uses a three‑color radial gradient and lets the caller choose the gradient direction. | Explain the impact of each parameter in GradientFill.SetGradient on a WordArt shape's appearance. | Provide a complete example that converts the workbook to HTML and ensures the WordArt gradient is rendered correctly.
+// Title: Render WordArt with Two‑Color Gradient and Adjustable Direction using Aspose.Cells for .NET
+// Description: Shows how to create an Excel workbook, add a WordArt shape, apply a two‑color gradient fill, set the gradient direction via the GradientDirectionType enum, and save the file with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | WordArt gradient | GradientDirectionType | C# Excel API | two color gradient fill | configure gradient direction | Excel shape styling | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells set WordArt gradient direction | C# add WordArt with gradient fill | how to change gradient direction of WordArt using Aspose | GradientFill example Aspose.Cells | create WordArt shape programmatically Aspose.Cells
+// Developer Intent: Create an Excel file that contains a WordArt shape with a two‑color gradient whose direction can be defined programmatically.
+// Use Cases: Design branded report headers with a consistent gradient orientation. | Generate automated dashboards where gradient direction indicates data flow. | Produce marketing templates that require stylized WordArt headings. | Batch‑process existing workbooks to update WordArt gradient styles across sheets.
+// AI Prompts: Generate C# code using Aspose.Cells to add a WordArt shape with a three‑color gradient and a custom linear angle. | Show how to open an existing workbook, locate a WordArt shape by name, and modify its GradientFill colors and direction. | Explain the mapping between GradientDirectionType enum values and the visual gradient directions in Excel. | Provide a step‑by‑step guide to apply a linear gradient fill to multiple WordArt shapes across worksheets.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsWordArtGradientDemo
+// Shows how to create an Excel workbook, add a WordArt shape, apply a two‑color gradient fill, set the gradient direction via the GradientDirectionType enum, and save the file with Aspose.Cells for .NET.
+public class WordArtGradientRenderer
 {
-    // Shows how to add a WordArt shape to an Excel workbook, apply a two‑color gradient fill, set its orientation with GradientDirectionType, and save the file (including HTML export) while preserving the gradient appearance.
-    public class WordArtGradientGenerator
+    // Creates a workbook with a WordArt shape that uses a two‑color gradient.
+    // The gradient direction is supplied via the 'direction' parameter.
+    public static void CreateWordArtWithGradient(string filePath, GradientDirectionType direction)
     {
-        /// <param name="direction">The gradient direction to apply (e.g., FromUpperLeftCorner, FromCenter, etc.).</param>
-        public static void CreateWordArtWithGradient(GradientDirectionType direction)
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Add a WordArt shape; use a preset style that already has a gradient base
+        Shape wordArt = sheet.Shapes.AddWordArt(
+            PresetWordArtStyle.WordArtStyle6, // Gradient Fill - Gray
+            "Gradient WordArt",
+            5,   // upperLeftRow
+            0,   // top
+            5,   // upperLeftColumn
+            0,   // left
+            200, // height
+            100  // width
+        );
 
-            // Add a WordArt shape.
-            // Using WordArtStyle6 (Gradient Fill - Gray) as a base; we will customize the fill later.
-            Shape wordArt = worksheet.Shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle6,   // base preset style
-                "Gradient WordArt",                 // text
-                5, 0,                               // upper left row, top offset
-                5, 0,                               // upper left column, left offset
-                200, 400);                          // height, width
+        // Set the fill type to Gradient so we can access GradientFill
+        wordArt.Fill.FillType = FillType.Gradient;
 
-            // Ensure the shape's fill type is set to Gradient so we can access GradientFill.
-            wordArt.Fill.FillType = FillType.Gradient;
+        // Obtain the GradientFill object
+        GradientFill gradientFill = wordArt.Fill.GradientFill;
 
-            // Obtain the GradientFill object from the shape.
-            GradientFill gradientFill = wordArt.Fill.GradientFill;
+        // Define the two colors for the gradient (light gray to dark gray)
+        gradientFill.SetTwoColorGradient(
+            Color.LightGray,
+            Color.DarkGray,
+            GradientStyleType.Horizontal,
+            1 // variant
+        );
 
-            // Apply a two‑color gradient (light gray to dark gray) using the FillFormat method.
-            // This sets the colors and the basic gradient style.
-            wordArt.Fill.SetTwoColorGradient(
-                Color.LightGray,                    // first gradient color
-                Color.DarkGray,                     // second gradient color
-                GradientStyleType.Horizontal,       // gradient style
-                1);                                 // variant (1‑4)
+        // Apply the gradient direction supplied by the caller.
+        // Angle is set to 0 because direction is handled by GradientDirectionType.
+        gradientFill.SetGradient(GradientFillType.Linear, 0.0, direction);
 
-            // Configure the gradient direction and type.
-            // Using Linear fill type; angle is set to 0 because direction will define the orientation.
-            gradientFill.SetGradient(
-                GradientFillType.Linear,            // linear gradient
-                0.0,                                // angle (ignored for non‑linear types)
-                direction);                         // direction supplied by the caller
+        // Save the workbook to the specified path
+        workbook.Save(filePath);
+    }
+}
 
-            // Save the workbook to demonstrate the result.
-            workbook.Save("WordArtGradientDemo.xlsx");
-        }
+class Program
+{
+    static void Main()
+    {
+        // Example: render WordArt with a gradient flowing from the upper left corner
+        GradientDirectionType direction = GradientDirectionType.FromUpperLeftCorner;
 
-        // Example usage
-        public static void Main()
-        {
-            // Create a WordArt with gradient flowing from the upper left corner to the lower right.
-            CreateWordArtWithGradient(GradientDirectionType.FromUpperLeftCorner);
-        }
+        // Output file path
+        string outputPath = "WordArtGradient.xlsx";
+
+        // Create the WordArt with the chosen gradient direction
+        WordArtGradientRenderer.CreateWordArtWithGradient(outputPath, direction);
     }
 }

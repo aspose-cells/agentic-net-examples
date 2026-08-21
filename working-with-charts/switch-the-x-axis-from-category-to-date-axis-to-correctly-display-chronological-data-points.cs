@@ -1,77 +1,55 @@
-// Title: Switch Chart X‑Axis to a Date (Time) Axis with Aspose.Cells for .NET (C#)
-// Description: The sample creates a new workbook, writes DateTime values to column A and numbers to column B, adds a line chart, links the series and category ranges, then converts the X‑axis from a categorical axis to a time‑scale axis by setting CategoryAxis.CategoryType to CategoryType.TimeScale. It also demonstrates configuring BaseUnitScale, MajorUnitScale, MinorUnitScale for month and day tick intervals before saving the file as ChartWithDateAxis.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | chart X axis date | time scale axis | CategoryType.TimeScale | line chart | date axis scaling | BaseUnitScale | MajorUnitScale | MinorUnitScale | Excel chart automation
-// Common Searches: Aspose.Cells change X axis to date axis C# | time scale axis example Aspose.Cells .NET | set BaseUnitScale and MajorUnitScale for chart axis Aspose.Cells | convert categorical axis to time axis Aspose.Cells chart | date axis tick interval Aspose.Cells line chart
-// Developer Intent: Convert a chart's X‑axis from categorical to date (time) scale.
-// Use Cases: Plot monthly sales data where the X‑axis shows actual month dates. | Create a financial trend report with daily dates on the X‑axis and weekly minor ticks. | Generate a project timeline spreadsheet that accurately reflects irregular time intervals using a time‑scale axis.
-// AI Prompts: Write C# code using Aspose.Cells to add a line chart and switch its X‑axis to a time‑scale axis with monthly major ticks. | Explain how to set BaseUnitScale, MajorUnitScale, and MinorUnitScale for a date axis in Aspose.Cells charts. | Provide step‑by‑step instructions to change a chart's category axis to a date axis and customize tick intervals in Aspose.Cells for .NET.
+// Title: Aspose.Cells C# – Switch Chart X‑Axis to Date (Time‑Scale) Axis
+// Description: This C# example shows how to create a workbook with date values, add a line chart, and convert the X‑axis from a categorical axis to a time‑scale (date) axis using Aspose.Cells. It also demonstrates configuring base, major and minor units (months and days) before saving the file as an Excel workbook.
+// Keywords: Aspose.Cells chart date axis C# | switch X axis to time scale Aspose.Cells | C# line chart date axis example | CategoryAxis CategoryType TimeScale | .NET chart axis time unit configuration | Aspose.Cells set base unit months | Aspose.Cells major minor tick settings | Excel date axis Aspose.Cells | GitHub Aspose.Cells chart sample | US developers Aspose.Cells chart tutorial
+// Common Searches: How to change a chart X axis to a date axis in Aspose.Cells C# | Aspose.Cells time‑scale axis configuration .NET | Set major and minor units on a date axis using Aspose.Cells | C# example for date‑scaled line chart with Aspose.Cells | Aspose.Cells chart axis base unit months
+// Developer Intent: Convert a chart’s X‑axis to a date (time‑scale) axis and adjust its time‑unit settings in Aspose.Cells for .NET.
+// Use Cases: Monthly sales trend line chart with chronological dates on the X‑axis. | Financial performance report where the axis shows month‑level major ticks and weekly minor ticks. | Automated generation of Excel workbooks that require accurate timeline visualization for project milestones.
+// AI Prompts: Generate C# code that changes a chart’s category axis to a time‑scale axis and sets major ticks every month using Aspose.Cells. | Explain how to configure base, major, and minor unit scales for a date axis in an Aspose.Cells line chart. | Provide a step‑by‑step guide to add multiple series to a date‑axis chart and format the axis labels for month and day display.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// This C# example shows how to create a workbook with date values, add a line chart, and convert the X‑axis from a categorical axis to a time‑scale (date) axis using Aspose.Cells. It also demonstrates configuring base, major and minor units (months and days) before saving the file as an Excel workbook.
+class SwitchXAxisToDateAxis
 {
-    // The sample creates a new workbook, writes DateTime values to column A and numbers to column B, adds a line chart, links the series and category ranges, then converts the X‑axis from a categorical axis to a time‑scale axis by setting CategoryAxis.CategoryType to CategoryType.TimeScale. It also demonstrates configuring BaseUnitScale, MajorUnitScale, MinorUnitScale for month and day tick intervals before saving the file as ChartWithDateAxis.xlsx.
-    public class SwitchXAxisToDateAxis
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data: dates in column A, values in column B
-                sheet.Cells["A1"].PutValue("Date");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue(new DateTime(2024, 1, 1));
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["A3"].PutValue(new DateTime(2024, 2, 1));
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["A4"].PutValue(new DateTime(2024, 3, 1));
-                sheet.Cells["B4"].PutValue(30);
-                sheet.Cells["A5"].PutValue(new DateTime(2024, 4, 1));
-                sheet.Cells["B5"].PutValue(25);
+        // Populate worksheet with date (X) and numeric (Y) data
+        sheet.Cells["A1"].PutValue("Date");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["A2"].PutValue(new DateTime(2024, 1, 1));
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["A3"].PutValue(new DateTime(2024, 2, 1));
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["A4"].PutValue(new DateTime(2024, 3, 1));
+        sheet.Cells["B4"].PutValue(30);
+        sheet.Cells["A5"].PutValue(new DateTime(2024, 4, 1));
+        sheet.Cells["B5"].PutValue(40);
 
-                // Add a line chart to the worksheet
-                int chartIndex = sheet.Charts.Add(ChartType.Line, 6, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIndex];
+        // Add a line chart to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 25, 10);
+        Chart chart = sheet.Charts[chartIndex];
 
-                // Set the data range for the series (values) and the category (dates)
-                chart.NSeries.Add("B2:B5", true);
-                chart.NSeries.CategoryData = "A2:A5";
+        // Set the data range for the series and the category (X) axis
+        chart.NSeries.Add("B2:B5", true);
+        chart.NSeries.CategoryData = "A2:A5";
 
-                // Switch the X axis from a categorical axis to a date (time) axis
-                chart.CategoryAxis.CategoryType = CategoryType.TimeScale;
+        // Switch the X axis from a categorical axis to a date (time) axis
+        chart.CategoryAxis.CategoryType = CategoryType.TimeScale;
 
-                // Optional: define the base unit and major/minor units for better scaling
-                chart.CategoryAxis.BaseUnitScale = TimeUnit.Months;   // Base unit (months)
-                chart.CategoryAxis.MajorUnitScale = TimeUnit.Months; // Major tick every month
-                chart.CategoryAxis.MajorUnit = 1;
-                chart.CategoryAxis.MinorUnitScale = TimeUnit.Days;   // Minor tick every day
-                chart.CategoryAxis.MinorUnit = 7;
+        // Optional: configure the time scale units for better display
+        chart.CategoryAxis.BaseUnitScale = TimeUnit.Months;   // Base unit for the axis
+        chart.CategoryAxis.MajorUnitScale = TimeUnit.Months; // Major tick every month
+        chart.CategoryAxis.MajorUnit = 1;
+        chart.CategoryAxis.MinorUnitScale = TimeUnit.Days;   // Minor tick every week
+        chart.CategoryAxis.MinorUnit = 7;
 
-                // Save the workbook with the configured chart
-                string outputPath = "ChartWithDateAxis.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SwitchXAxisToDateAxis.Run();
-        }
+        // Save the workbook with the configured chart
+        workbook.Save("ChartWithDateAxis.xlsx");
     }
 }

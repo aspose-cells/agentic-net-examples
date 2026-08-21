@@ -1,70 +1,72 @@
-// Title: C# – Verify Named Range References Remain Correct After German Localization in Aspose.Cells
-// Description: Creates a workbook, populates cells A1‑A3, sets the workbook region to Germany, adds a named range "MyRange", retrieves its reference in both English and German using GetRefersTo, resolves the range with GetRange to confirm it points to A1:A3, and saves the file. Demonstrates how to validate formula localization for named ranges in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | .NET | named range | localization | German | GetRefersTo | GetRange | formula translation | CountryCode.Germany | region setting
-// Common Searches: Aspose.Cells get German formula reference | named range localization German Aspose.Cells | verify named range after setting workbook region | C# Aspose.Cells GetRefersTo localized format | handle formula translation in Aspose.Cells
-// Developer Intent: Confirm that a named range’s formula address stays accurate when the workbook is localized to German.
-// Use Cases: Compare the English and German RefersTo strings of a named range to detect translation issues. | Assert that Name.GetRange resolves to the expected cells (A1:A3) after changing workbook.Settings.Region. | Save a localized workbook and verify that the named range persists with correct references. | Integrate automated checks for formula localization in multi‑language deployment pipelines.
-// AI Prompts: Generate C# unit tests that compare the standard and German RefersTo values of a named range in Aspose.Cells. | Show code to programmatically validate that a named range resolves to A1:A3 after setting workbook.Settings.Region to CountryCode.Germany. | Explain best practices for managing formula localization of named ranges when exporting workbooks to different language regions using Aspose.Cells.
+// Title: Validate Named Range References After German Localization in Aspose.Cells for .NET
+// Description: Shows how to set the workbook region to Germany, map the SUM function to the German name SUMME, create a named range, retrieve its localized RefersTo string, apply a FormulaLocal using SUMME, calculate the result, and confirm the named range still points to the original cells before saving.
+// Keywords: Aspose.Cells | German localization | named range | RefersTo | FormulaLocal | SUMME | .NET | globalization settings | SettableGlobalizationSettings | region Germany
+// Common Searches: Aspose.Cells German locale named range | keep named range address after localization | FormulaLocal SUMME example C# | GetRefersTo localized string Aspose.Cells | set workbook region Germany Aspose.Cells
+// Developer Intent: Verify that a named range continues to reference the correct cells when the workbook is localized to German and when using a localized formula.
+// Use Cases: Call GetRefersTo(false, true) on a Name object to ensure the A1 address remains unchanged under German settings. | Assign a FormulaLocal string using the German function name SUMME that references the named range and validate that the calculated value equals the sum of the range. | Retrieve the Range via Name.GetRange(), inspect its RefersTo property and the first cell value to confirm globalization did not alter the range. | Save the workbook and open it in Excel to see the German function name displayed while the range stays intact.
+// AI Prompts: Generate C# code that creates a named range, applies German localization with SettableGlobalizationSettings, and checks that the RefersTo address stays the same. | Explain step‑by‑step how FormulaLocal works with localized function names and named ranges in Aspose.Cells for .NET. | Provide a unit‑test example that asserts the RefersTo string of a named range is unchanged after setting workbook.Settings.Region to Germany.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace NamedRangeLocalizationVerification
+namespace NamedRangeLocalizationDemo
 {
-    // Creates a workbook, populates cells A1‑A3, sets the workbook region to Germany, adds a named range "MyRange", retrieves its reference in both English and German using GetRefersTo, resolves the range with GetRange to confirm it points to A1:A3, and saves the file. Demonstrates how to validate formula localization for named ranges in Aspose.Cells for .NET.
-    public class Program
+    // Shows how to set the workbook region to Germany, map the SUM function to the German name SUMME, create a named range, retrieve its localized RefersTo string, apply a FormulaLocal using SUMME, calculate the result, and confirm the named range still points to the original cells before saving.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
-                // Create a new workbook and access the first worksheet
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
                 sheet.Name = "Sheet1";
 
-                // Populate some data that the named range will refer to
+                // Set the workbook region to Germany to enable German localization
+                workbook.Settings.Region = CountryCode.Germany;
+
+                // Create custom globalization settings and map the standard SUM function to German "SUMME"
+                SettableGlobalizationSettings gSettings = new SettableGlobalizationSettings();
+                gSettings.SetLocalFunctionName("SUM", "SUMME", true);
+                workbook.Settings.GlobalizationSettings = gSettings;
+
+                // Populate some data that will be used by the named range
                 sheet.Cells["A1"].PutValue(10);
                 sheet.Cells["A2"].PutValue(20);
                 sheet.Cells["A3"].PutValue(30);
 
-                // Set the workbook region to German to enable German localization
-                workbook.Settings.Region = CountryCode.Germany;
-
-                // Create a named range that refers to A1:A3 on Sheet1
-                // In Aspose.Cells, named ranges are managed via the NameCollection of the workbook's worksheets
+                // Add a named range that refers to the three cells above (standard A1 notation)
                 int nameIndex = workbook.Worksheets.Names.Add("MyRange");
-                Name namedRange = workbook.Worksheets.Names[nameIndex];
-                namedRange.RefersTo = "=Sheet1!$A$1:$A$3";
+                Name myRange = workbook.Worksheets.Names[nameIndex];
+                myRange.RefersTo = "=Sheet1!$A$1:$A$3";
 
-                // Retrieve the reference in standard (English) format
-                string refersToStandard = namedRange.GetRefersTo(false, false);
-                // Retrieve the reference in localized (German) format
-                string refersToLocal = namedRange.GetRefersTo(false, true);
+                // Retrieve the RefersTo string in localized (German) format
+                // isR1C1 = false (A1 notation), isLocal = true (apply locale)
+                string localizedRefersTo = myRange.GetRefersTo(false, true);
+                Console.WriteLine("Localized RefersTo: " + localizedRefersTo);
+                // Expected output: "=Sheet1!$A$1:$A$3" (same address, but locale flag is honored)
 
-                Console.WriteLine("Reference in standard format: " + refersToStandard);
-                Console.WriteLine("Reference in German localized format: " + refersToLocal);
+                // Use the localized function name in a formula that references the named range
+                Cell formulaCell = sheet.Cells["B1"];
+                formulaCell.FormulaLocal = "=SUMME(MyRange)";
 
-                // Verify that the range resolved from the name points to the expected cells
-                Aspose.Cells.Range range = namedRange.GetRange();
-                Console.WriteLine("Resolved range address: " + range.RefersTo);
-                Console.WriteLine("Values in the resolved range:");
-                for (int r = range.FirstRow; r <= range.FirstRow + range.RowCount - 1; r++)
-                {
-                    Console.WriteLine($"Cell A{r + 1}: {sheet.Cells[r, 0].Value}");
-                }
+                // Calculate the workbook to evaluate the formula
+                workbook.CalculateFormula();
 
-                // Save the workbook (optional, just to complete lifecycle)
-                string outputPath = "NamedRangeLocalizationVerification.xlsx";
-                // Ensure the directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+                // Display the result of the localized formula
+                Console.WriteLine("Result of localized formula (SUMME(MyRange)): " + formulaCell.Value);
+
+                // Verify that the named range still points to the correct range after localization
+                Aspose.Cells.Range range = myRange.GetRange();
+                Console.WriteLine($"Named range address after localization: {range.RefersTo}");
+                Console.WriteLine($"First cell value in range: {range[0, 0].Value}");
+
+                // Save the workbook
+                string outputPath = "NamedRangeLocalizationDemo.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {

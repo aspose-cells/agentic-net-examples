@@ -1,42 +1,49 @@
-// Title: Link a label shape to a date cell with a custom format using Aspose.Cells for .NET
-// Description: Creates a workbook, writes the current date to A1, applies the custom pattern "dd-mmm-yyyy", adds a label shape, links the shape to the formatted cell via SetLinkedCell (A1 style, locale‑aware), and saves the file as LinkedShapeDate.xlsx.
-// Keywords: Aspose.Cells | C# | SetLinkedCell | label shape | custom date format | Excel shape binding | locale aware linking | dynamic date display
-// Common Searches: Aspose.Cells link shape to cell C# | SetLinkedCell custom date format | label shape display cell value Aspose | bind Excel shape to date cell .NET | locale aware SetLinkedCell example
-// Developer Intent: Bind a label shape to a cell that holds a date and show the date using a user‑defined format.
-// Use Cases: Generate reports where a shape always shows the current date in a specific pattern. | Create invoices with a linked shape that displays the due date and updates automatically. | Design dashboards where shapes reflect cell values formatted as custom dates.
-// AI Prompts: Write C# code with Aspose.Cells to link a label shape to a date cell and apply a custom date format. | Explain the SetLinkedCell parameters for reference style and locale when linking a shape to a formatted date. | Show how to ensure a linked shape refreshes when the underlying date cell changes.
+// Title: Aspose.Cells for .NET: Link a label shape to a TODAY() cell and apply a custom date format
+// Description: Demonstrates how to create a workbook, insert a TODAY() formula in cell B2, format the cell with the pattern dd‑mmm‑yyyy, add a label shape, bind the shape to the formatted cell using SetLinkedCell, and save the result as LinkedShapeDate.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | label shape | linked cell | SetLinkedCell | TODAY formula | custom date format | Excel shape binding | date pattern dd-mmm-yyyy | Excel automation
+// Common Searches: link shape to cell Aspose.Cells C# | apply custom date format to cell Aspose.Cells | SetLinkedCell example .NET | add label shape with date formula Aspose.Cells | bind Excel shape to TODAY() cell using Aspose
+// Developer Intent: Create a worksheet where a label shape displays the current date by linking it to a cell that contains a TODAY() formula and uses a custom date format.
+// Use Cases: Dynamic report headers that automatically show the current date. | Dashboard templates where shapes reflect formatted date values. | Invoice or receipt templates with a linked date shape that updates on each open.
+// AI Prompts: Generate C# code that links a label shape to a cell with a TODAY() formula and formats the cell as dd‑mmm‑yyyy using Aspose.Cells. | Explain how SetLinkedCell works for binding shapes to cells in Aspose.Cells for .NET. | Show an example of adding a label shape, applying a custom date format, and linking it to a date cell in an Excel workbook.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, writes the current date to A1, applies the custom pattern "dd-mmm-yyyy", adds a label shape, links the shape to the formatted cell via SetLinkedCell (A1 style, locale‑aware), and saves the file as LinkedShapeDate.xlsx.
+// Demonstrates how to create a workbook, insert a TODAY() formula in cell B2, format the cell with the pattern dd‑mmm‑yyyy, add a label shape, bind the shape to the formatted cell using SetLinkedCell, and save the result as LinkedShapeDate.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Put a date value into cell A1
-        Cell dateCell = sheet.Cells["A1"];
-        dateCell.PutValue(DateTime.Now);
+            // Place a date formula in cell B2
+            worksheet.Cells["B2"].Formula = "=TODAY()";
 
-        // Apply a custom date format (e.g., "dd-mmm-yyyy") to the cell
-        Style dateStyle = workbook.CreateStyle();
-        dateStyle.Custom = "dd-mmm-yyyy";
-        dateCell.SetStyle(dateStyle);
+            // Apply a custom date format to the cell (e.g., 25-Dec-2023)
+            Style dateStyle = workbook.CreateStyle();
+            dateStyle.Custom = "dd-mmm-yyyy";
+            worksheet.Cells["B2"].SetStyle(dateStyle);
 
-        // Add a label shape that will display the linked cell value
-        // Parameters: upper left row, upper left column, top offset, left offset, width, height (in pixels)
-        Label label = sheet.Shapes.AddLabel(2, 2, 5, 5, 150, 30);
+            // Add a label shape to the worksheet
+            // Parameters: upper left row, upper left column, lower right row, lower right column, height, width
+            // Height and width are in points; adjust as needed.
+            Label label = worksheet.Shapes.AddLabel(4, 1, 6, 3, 30, 100);
 
-        // Link the shape to the cell containing the date
-        // formula: "$A$1", isR1C1 = false (A1 style), isLocal = true (locale‑aware)
-        label.SetLinkedCell("$A$1", false, true);
+            // Link the label shape to the cell containing the date formula
+            // Formula is in A1‑style, not R1C1, and uses the local language settings
+            label.SetLinkedCell("$B$2", false, true);
 
-        // Save the workbook
-        workbook.Save("LinkedShapeDate.xlsx");
+            // Save the workbook
+            workbook.Save("LinkedShapeDate.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

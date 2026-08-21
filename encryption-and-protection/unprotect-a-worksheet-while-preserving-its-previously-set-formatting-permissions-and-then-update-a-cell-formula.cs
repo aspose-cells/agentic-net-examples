@@ -1,68 +1,59 @@
-// Title: C# – Unprotect Aspose.Cells Worksheet, Keep Formatting Permissions, and Update a Cell Formula
-// Description: Demonstrates how to read a worksheet's AllowFormattingCell/Column/Row flags, temporarily unprotect the sheet with a password, modify a formula, recalculate, and save the workbook while restoring the original formatting permissions.
-// Keywords: Aspose.Cells unprotect worksheet C# | preserve formatting permissions Aspose.Cells | update cell formula after unprotect | worksheet protection AllowFormattingCell | C# Excel protection Aspose.Cells
-// Common Searches: how to keep AllowFormattingCell when unprotecting an Aspose.Cells sheet | C# unprotect worksheet without losing formatting rights | change formula in protected Excel sheet using Aspose.Cells | restore worksheet protection options after editing a formula | Aspose.Cells protect and unprotect worksheet example
-// Developer Intent: Temporarily remove worksheet protection, retain the original formatting allowances, modify a cell's formula, recalculate, and save the file.
-// Use Cases: Automated report pipelines that need to adjust formulas in protected sheets while preserving user formatting capabilities. | Batch processing of workbooks where formulas are refreshed without permanently disabling sheet protection. | Enterprise applications that allow end‑users to format cells but restrict structural changes, requiring occasional programmatic formula updates.
-// AI Prompts: Write C# code with Aspose.Cells to read formatting permission flags, unprotect a worksheet, set a new formula in B2, recalculate, and reapply the same permissions. | Explain the relationship between Aspose.Cells Protection object properties (AllowFormattingCell, AllowFormattingColumn, AllowFormattingRow) and the Unprotect method. | Provide a step‑by‑step tutorial for protecting a worksheet with specific formatting rights, safely unprotecting it to edit a formula, and restoring the original protection settings.
+// Title: Unprotect a worksheet, retain formatting rights, and update a cell formula with Aspose.Cells (C#)
+// Description: Demonstrates how to read a protected worksheet, capture the AllowFormattingCell flag, unprotect it, modify the formula in a specific cell, restore the original formatting permission, recalculate formulas, and save the workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells unprotect worksheet C# | preserve AllowFormattingCell permission | update cell formula Aspose.Cells | re‑protect worksheet with password | .NET spreadsheet protection | calculate formulas Aspose.Cells
+// Common Searches: how to unprotect an Aspose.Cells worksheet without losing formatting rights | change a formula in a protected Excel file using Aspose.Cells C# | restore worksheet protection settings after editing formulas | Aspose.Cells keep AllowFormattingCell flag when updating cells
+// Developer Intent: Remove protection, keep formatting permission, modify a formula, and re‑apply protection.
+// Use Cases: Adjust calculations in a locked financial model while preserving user formatting access. | Batch‑process template workbooks that are password‑protected, updating formulas without resetting permissions. | Refresh report formulas in a secured workbook after data import, then re‑secure the sheet.
+// AI Prompts: Generate C# code that unprotects an Aspose.Cells worksheet, saves the AllowFormattingCell setting, updates a given cell formula, and protects the sheet again with the same password. | Explain how to retrieve and restore worksheet protection options such as AllowFormattingCell when editing formulas with Aspose.Cells. | Create a reusable method that accepts a file path, password, cell address, and new formula, then performs unprotect‑update‑protect while preserving all original protection flags.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsWorksheetUnprotectAndFormula
+// Demonstrates how to read a protected worksheet, capture the AllowFormattingCell flag, unprotect it, modify the formula in a specific cell, restore the original formatting permission, recalculate formulas, and save the workbook using Aspose.Cells for .NET.
+class UnprotectAndUpdateFormula
 {
-    // Demonstrates how to read a worksheet's AllowFormattingCell/Column/Row flags, temporarily unprotect the sheet with a password, modify a formula, recalculate, and save the workbook while restoring the original formatting permissions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // ----- Set up initial protection with formatting permissions -----
-                // Allow formatting of cells while the sheet is protected
-                sheet.Protection.AllowFormattingCell = true;
-                sheet.Protection.AllowFormattingColumn = true;
-                sheet.Protection.AllowFormattingRow = true;
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue(5);
+            sheet.Cells["A2"].PutValue(10);
 
-                // Protect the worksheet with a password
-                string password = "SecretPwd";
-                sheet.Protect(ProtectionType.All, password, null);
+            // Set an initial formula in B1
+            sheet.Cells["B1"].Formula = "=SUM(A1:A2)";
 
-                // ----- Preserve formatting permissions before unprotecting -----
-                bool allowFmtCell = sheet.Protection.AllowFormattingCell;
-                bool allowFmtColumn = sheet.Protection.AllowFormattingColumn;
-                bool allowFmtRow = sheet.Protection.AllowFormattingRow;
+            // Protect the worksheet with a password and allow cell formatting
+            string password = "pwd123";
+            sheet.Protect(ProtectionType.All, password, null);
+            sheet.Protection.AllowFormattingCell = true; // preserve formatting permission
 
-                // ----- Unprotect the worksheet -----
-                sheet.Unprotect(password);
+            // Preserve formatting permission before unprotecting
+            bool allowFormattingCell = sheet.Protection.AllowFormattingCell;
 
-                // Restore formatting permissions after unprotecting
-                sheet.Protection.AllowFormattingCell = allowFmtCell;
-                sheet.Protection.AllowFormattingColumn = allowFmtColumn;
-                sheet.Protection.AllowFormattingRow = allowFmtRow;
+            // Unprotect the worksheet using the password
+            sheet.Unprotect(password);
 
-                // ----- Update a cell formula -----
-                // Example: set formula in cell B2 to sum of A1:A5
-                Cell targetCell = sheet.Cells["B2"];
-                // Use the Formula property to assign the formula string
-                targetCell.Formula = "=SUM(A1:A5)";
+            // Update the formula in B1
+            sheet.Cells["B1"].Formula = "=A1*2";
 
-                // Optionally calculate formulas so the result is stored
-                workbook.CalculateFormula();
+            // Re‑protect the worksheet, restoring the formatting permission
+            sheet.Protect(ProtectionType.All, password, null);
+            sheet.Protection.AllowFormattingCell = allowFormattingCell;
 
-                // ----- Save the workbook -----
-                string outputPath = "UnprotectedAndFormulaUpdated.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Calculate formulas so the workbook stores the result values
+            workbook.CalculateFormula();
+
+            // Save the modified workbook
+            workbook.Save("UnprotectedUpdated.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,95 +1,97 @@
-// Title: Add SMIL Stroke‑Dashoffset Animation to Aspose.Cells‑Generated Worksheet SVG (C#)
-// Description: Creates a workbook, renders the first worksheet to SVG with Aspose.Cells, loads the SVG, injects an <animate> element into every <path> to animate the stroke‑dashoffset over 5 seconds (repeat indefinitely), saves the animated file, and removes the temporary SVG.
-// Keywords: Aspose.Cells SVG animation | C# SMIL animate path | stroke-dashoffset SVG | SheetRender to SVG | modify Aspose.Cells SVG | dynamic Excel chart SVG | .NET SVG manipulation | inject <animate> into SVG
-// Common Searches: how to add SMIL animation to SVG exported by Aspose.Cells | C# code to animate path elements in worksheet SVG | inject <animate> tag into Aspose.Cells generated SVG | animated Excel chart SVG using Aspose.Cells | Aspose.Cells render worksheet as animated SVG
-// Developer Intent: Insert SMIL <animate> elements into each <path> of an SVG produced by Aspose.Cells to create continuous stroke‑dashoffset animation.
-// Use Cases: Display a live‑drawing sales chart on a web dashboard. | Generate SVG reports where trend lines are highlighted with moving dashes. | Create presentation‑ready Excel‑to‑SVG conversions that include built‑in animations.
-// AI Prompts: Generate C# code that loads an Aspose.Cells SVG file and adds an <animate> element to all <path> nodes to animate stroke-dashoffset for 5 seconds with infinite repeat. | Explain the process of rendering a worksheet to SVG with Aspose.Cells, then enhancing the SVG with SMIL animation while preserving viewport settings. | Provide step‑by‑step instructions to create a temporary SVG from a workbook, inject SMIL <animate> tags, save the animated SVG, and clean up temporary files.
+// Title: Animate Exported Worksheet SVG with SMIL Stroke‑Dashoffset Using Aspose.Cells for .NET
+// Description: C# example that creates a workbook, draws a freeform triangle, exports the first worksheet to SVG with Aspose.Cells, loads the SVG via XmlDocument, ensures each <path> has stroke/fill attributes, injects an SMIL <animate> element to animate stroke-dashoffset over 5 seconds (repeat indefinitely), and saves the animated SVG file.
+// Keywords: Aspose.Cells SVG animation | SMIL animate C# | stroke-dashoffset Aspose.Cells | export Excel to animated SVG .NET | modify SVG path elements C# | freeform shape SVG Aspose | dynamic SVG from Excel | XmlDocument SVG manipulation | web‑ready animated SVG | C# .NET Excel to SVG
+// Common Searches: how to add SMIL animation to SVG exported by Aspose.Cells | C# animate worksheet SVG paths | Aspose.Cells export Excel to animated SVG | add <animate> element to SVG paths with C# | stroke-dashoffset animation for Excel shapes
+// Developer Intent: Inject SMIL <animate> elements into SVG paths produced by Aspose.Cells export.
+// Use Cases: Create animated diagrams from Excel data for web pages or presentations. | Enhance chart or shape exports with stroke‑dashoffset effects without manual SVG editing. | Automate post‑processing of worksheet SVGs to add dynamic visual cues in dashboards.
+// AI Prompts: Generate C# code that uses Aspose.Cells to export a worksheet to SVG and adds an SMIL <animate> element to each <path> for stroke‑dashoffset animation. | Show how to ensure every exported SVG path has stroke and fill attributes before inserting SMIL animation using XmlDocument. | Explain the SvgImageOptions settings (CssPrefix, FitToViewPort) needed for creating an animated SVG from a workbook.
 
 using System;
 using System.IO;
 using System.Xml;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
 namespace AsposeCellsSvgAnimation
 {
-    // Creates a workbook, renders the first worksheet to SVG with Aspose.Cells, loads the SVG, injects an <animate> element into every <path> to animate the stroke‑dashoffset over 5 seconds (repeat indefinitely), saves the animated file, and removes the temporary SVG.
+    // C# example that creates a workbook, draws a freeform triangle, exports the first worksheet to SVG with Aspose.Cells, loads the SVG via XmlDocument, ensures each <path> has stroke/fill attributes, injects an SMIL <animate> element to animate stroke-dashoffset over 5 seconds (repeat indefinitely), and saves the animated SVG file.
     class Program
     {
         static void Main()
         {
-            try
+            // 1. Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            ShapeCollection shapes = worksheet.Shapes;
+
+            // 2. Define a simple freeform shape (a triangle) using ShapePath
+            ShapePath trianglePath = new ShapePath();
+            trianglePath.MoveTo(50, 10);          // top vertex
+            trianglePath.LineTo(90, 90);          // bottom right
+            trianglePath.LineTo(10, 90);          // bottom left
+            trianglePath.Close();                 // close the triangle
+
+            // 3. Add the freeform shape to the worksheet
+            // Parameters: topRow, top, leftColumn, left, height, width, paths[]
+            shapes.AddFreeform(5, 0, 5, 0, 200, 200, new ShapePath[] { trianglePath });
+
+            // 4. Export the worksheet to SVG using SheetRender and SvgImageOptions
+            SvgImageOptions svgOptions = new SvgImageOptions
             {
-                // 1. Create a new workbook and populate sample data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Month");
-                sheet.Cells["B1"].PutValue("Sales");
-                sheet.Cells["A2"].PutValue("Jan");
-                sheet.Cells["A3"].PutValue("Feb");
-                sheet.Cells["A4"].PutValue("Mar");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["B3"].PutValue(210);
-                sheet.Cells["B4"].PutValue(150);
+                ImageType = ImageType.Svg,
+                FitToViewPort = true,
+                CssPrefix = "anim-"
+            };
+            SheetRender renderer = new SheetRender(worksheet, svgOptions);
+            string svgPath = "worksheet.svg";
+            renderer.ToImage(0, svgPath);
 
-                // 2. Render the worksheet to an intermediate SVG file
-                SvgImageOptions svgOptions = new SvgImageOptions
+            // 5. Load the generated SVG file for manipulation
+            XmlDocument svgDoc = new XmlDocument();
+            svgDoc.Load(svgPath);
+
+            // 6. Register the SVG namespace for proper node selection
+            XmlNamespaceManager nsMgr = new XmlNamespaceManager(svgDoc.NameTable);
+            nsMgr.AddNamespace("svg", "http://www.w3.org/2000/svg");
+
+            // 7. Find all <path> elements and add SMIL animation to each
+            XmlNodeList pathNodes = svgDoc.SelectNodes("//svg:path", nsMgr);
+            foreach (XmlElement pathElem in pathNodes)
+            {
+                // Ensure the path has a stroke so the animation is visible
+                if (string.IsNullOrEmpty(pathElem.GetAttribute("stroke")))
                 {
-                    // SVG output is implicit; set viewport fitting
-                    FitToViewPort = true
-                };
-
-                string tempSvgPath = "worksheet_temp.svg";
-
-                // Render the first worksheet page to a temporary SVG file
-                SheetRender renderer = new SheetRender(sheet, svgOptions);
-                renderer.ToImage(0, tempSvgPath);
-
-                // 3. Load the generated SVG for manipulation
-                if (!File.Exists(tempSvgPath))
-                    throw new FileNotFoundException("Temporary SVG file was not created.", tempSvgPath);
-
-                XmlDocument svgDoc = new XmlDocument();
-                svgDoc.Load(tempSvgPath);
-
-                // Define SVG namespace for node selection
-                XmlNamespaceManager nsMgr = new XmlNamespaceManager(svgDoc.NameTable);
-                nsMgr.AddNamespace("svg", "http://www.w3.org/2000/svg");
-
-                // 4. Inject SMIL <animate> elements into each <path>
-                XmlNodeList pathNodes = svgDoc.SelectNodes("//svg:path", nsMgr);
-                if (pathNodes != null)
+                    pathElem.SetAttribute("stroke", "black");
+                }
+                if (string.IsNullOrEmpty(pathElem.GetAttribute("fill")))
                 {
-                    foreach (XmlNode pathNode in pathNodes)
-                    {
-                        XmlElement animateElem = svgDoc.CreateElement("animate", "http://www.w3.org/2000/svg");
-                        animateElem.SetAttribute("attributeName", "stroke-dashoffset");
-                        animateElem.SetAttribute("from", "0");
-                        animateElem.SetAttribute("to", "100");
-                        animateElem.SetAttribute("dur", "5s");
-                        animateElem.SetAttribute("repeatCount", "indefinite");
-                        pathNode.AppendChild(animateElem);
-                    }
+                    pathElem.SetAttribute("fill", "none");
                 }
 
-                // 5. Save the modified SVG with animation
-                string animatedSvgPath = "worksheet_animated.svg";
-                using (FileStream fs = new FileStream(animatedSvgPath, FileMode.Create, FileAccess.Write))
-                {
-                    svgDoc.Save(fs);
-                }
+                // Create an <animate> element that animates stroke-dashoffset
+                XmlElement animateElem = svgDoc.CreateElement("animate", "http://www.w3.org/2000/svg");
+                animateElem.SetAttribute("attributeName", "stroke-dashoffset");
+                animateElem.SetAttribute("from", "100");
+                animateElem.SetAttribute("to", "0");
+                animateElem.SetAttribute("dur", "5s");
+                animateElem.SetAttribute("repeatCount", "indefinite");
 
-                // Clean up temporary file
-                if (File.Exists(tempSvgPath))
-                    File.Delete(tempSvgPath);
-
-                Console.WriteLine($"Animated SVG saved to: {Path.GetFullPath(animatedSvgPath)}");
+                // Append the animation to the path element
+                pathElem.AppendChild(animateElem);
             }
-            catch (Exception ex)
+
+            // 8. Save the modified SVG back to disk
+            string animatedSvgPath = "worksheet_animated.svg";
+            using (FileStream fs = new FileStream(animatedSvgPath, FileMode.Create, FileAccess.Write))
             {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+                svgDoc.Save(fs);
             }
+
+            // 9. Optionally, save the workbook (demonstrating the lifecycle rule)
+            workbook.Save("AnimatedWorkbook.xlsx");
+
+            Console.WriteLine("SVG animation added successfully.");
         }
     }
 }

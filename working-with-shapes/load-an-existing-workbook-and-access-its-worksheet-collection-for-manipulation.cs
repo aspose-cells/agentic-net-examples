@@ -1,66 +1,71 @@
-// Title: Load an Excel workbook, access its worksheets, edit a cell, and save using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to open an existing .xlsx file with Aspose.Cells' Workbook constructor, retrieve the WorksheetCollection, write a string to cell A1 of the first sheet, handle missing files and runtime errors, and save the modified workbook to a new location on Windows platforms.
-// Keywords: Aspose.Cells load workbook C# | access worksheet collection Aspose.Cells | write to cell A1 Aspose.Cells | save modified Excel file .NET | Workbook constructor Aspose.Cells | error handling Aspose.Cells C# | Windows Excel automation Aspose
-// Common Searches: how to open an existing Excel file with Aspose.Cells C# | Aspose.Cells example to modify cell A1 after loading workbook | save a changed workbook to a different path using Aspose.Cells | C# code for loading workbook and accessing worksheets Aspose
-// Developer Intent: Open a workbook, retrieve its worksheets, change a cell value, and write the updated file back to disk.
-// Use Cases: Populate a title cell in a template workbook before generating a report. | Apply a common header across all sheets after loading a multi‑sheet workbook. | Read data from the first worksheet, update specific cells, and export the result to a new file.
-// AI Prompts: Create C# code that uses Aspose.Cells to open an existing .xlsx file, write "Hello from Aspose.Cells" to cell A1 of the first worksheet, and save the workbook to a new file with comprehensive error handling. | Provide a robust Aspose.Cells for .NET example that loads a workbook, accesses the WorksheetCollection, updates a cell, and gracefully handles FileNotFoundException and other runtime exceptions.
+// Title: Load a workbook, list its worksheets, edit a cell, and save with Aspose.Cells for .NET
+// Description: C# example that checks for an input.xlsx file, creates a placeholder workbook if missing, loads the file using Aspose.Cells, iterates the WorksheetCollection to print each sheet name, updates cell A1 on the first sheet, and saves the result as output.xlsx.
+// Keywords: Aspose.Cells load workbook C# | Aspose.Cells enumerate worksheets | Aspose.Cells modify cell value | Aspose.Cells save workbook .NET | C# Excel placeholder file | WorksheetCollection Aspose.Cells | Aspose.Cells example load and edit
+// Common Searches: how to load an existing Excel file with Aspose.Cells C# | list all worksheet names using Aspose.Cells .NET | update a cell after loading a workbook in Aspose.Cells | create placeholder Excel file when input is missing C# | save modified workbook with Aspose.Cells
+// Developer Intent: Load an existing Excel workbook, enumerate its worksheets, change a cell value, and write the changes to a new file.
+// Use Cases: Generate a dummy workbook automatically when the expected source file is absent, ensuring downstream processes do not fail. | Log or validate worksheet names by iterating the WorksheetCollection after loading a workbook. | Programmatically set or overwrite data in a specific cell (e.g., A1) of the first worksheet and persist the modification.
+// AI Prompts: Write C# code that uses Aspose.Cells to open an Excel file, creates a placeholder workbook if the file does not exist, and prints each worksheet name. | Provide a snippet that changes the value of cell A1 in the first worksheet of a loaded workbook and saves the result to a different file using Aspose.Cells for .NET. | Explain how to handle missing input files gracefully when working with Aspose.Cells in a C# console application.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsLoadAndManipulate
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to open an existing .xlsx file with Aspose.Cells' Workbook constructor, retrieve the WorksheetCollection, write a string to cell A1 of the first sheet, handle missing files and runtime errors, and save the modified workbook to a new location on Windows platforms.
-    public class LoadAndAccessWorksheets
+    // C# example that checks for an input.xlsx file, creates a placeholder workbook if missing, loads the file using Aspose.Cells, iterates the WorksheetCollection to print each sheet name, updates cell A1 on the first sheet, and saves the result as output.xlsx.
+    public class LoadWorkbookAndAccessWorksheets
     {
         public static void Run()
         {
-            // Path to the folder containing the Excel file.
-            string dataDir = @"C:\Data\"; // Adjust this path as needed.
-
-            // Build full file paths.
-            string inputPath = Path.Combine(dataDir, "input.xlsx");
-            string outputPath = Path.Combine(dataDir, "output.xlsx");
-
-            // Verify that the input file exists to avoid FileNotFoundException.
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+            // Path to the existing Excel file
+            string dataDir = "YourDocumentDirectory/";
+            string inputFile = Path.Combine(dataDir, "input.xlsx");
 
             try
             {
-                // Load an existing workbook from file using the Workbook(string) constructor.
-                Workbook workbook = new Workbook(inputPath);
+                // Ensure the input file exists; create a placeholder if missing
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    Workbook placeholder = new Workbook();
+                    placeholder.Save(inputFile);
+                    Console.WriteLine($"Created placeholder workbook at {inputFile}");
+                }
 
-                // Access the worksheet collection.
+                // Load the workbook from the file
+                Workbook workbook = new Workbook(inputFile);
+
+                // Access the worksheet collection
                 WorksheetCollection worksheets = workbook.Worksheets;
 
-                // Example manipulation: get the first worksheet and write a value to cell A1.
-                Worksheet firstSheet = worksheets[0];
-                firstSheet.Cells["A1"].PutValue("Hello from Aspose.Cells");
+                // Iterate through worksheets and display their names
+                foreach (Worksheet sheet in worksheets)
+                {
+                    Console.WriteLine("Worksheet: " + sheet.Name);
+                }
 
-                // Save the modified workbook to a new file.
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+                // Manipulate the first worksheet: set a value in cell A1
+                Worksheet firstSheet = worksheets[0];
+                firstSheet.Cells["A1"].PutValue("Loaded and Modified");
+
+                // Save the modified workbook
+                string outputFile = Path.Combine(dataDir, "output.xlsx");
+                workbook.Save(outputFile);
+                Console.WriteLine("Workbook saved to " + outputFile);
             }
             catch (Exception ex)
             {
-                // Handle any runtime exceptions.
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("Error: " + ex.Message);
             }
         }
     }
 
-    // Entry point for the application.
+    // Application entry point
     public class Program
     {
         public static void Main(string[] args)
         {
-            LoadAndAccessWorksheets.Run();
+            LoadWorkbookAndAccessWorksheets.Run();
         }
     }
 }

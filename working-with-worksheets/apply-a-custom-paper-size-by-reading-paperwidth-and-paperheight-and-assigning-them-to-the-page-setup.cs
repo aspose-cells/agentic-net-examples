@@ -1,37 +1,36 @@
-// Title: Set a Custom Paper Size in Aspose.Cells (.NET) Using Width and Height
-// Description: Shows how to create a workbook, access its first worksheet, and assign a custom paper size by providing width and height (in inches) via PageSetup.CustomPaperSize, then save the Excel file.
-// Keywords: Aspose.Cells | custom paper size | PageSetup.CustomPaperSize | .NET | C# | worksheet page setup | set paper dimensions | Excel printing | non‑standard paper size
-// Common Searches: Aspose.Cells set custom paper size .NET | PageSetup.CustomPaperSize example C# | how to define worksheet page dimensions in Aspose.Cells | print Excel on custom sized paper using Aspose.Cells | custom paper size for Excel workbook Aspose
-// Developer Intent: Define a worksheet’s page size with exact width and height values instead of using predefined paper sizes.
-// Use Cases: Print receipts or labels that require non‑standard dimensions by configuring the worksheet before export. | Generate reports for specialized printers that demand a specific page size, ensuring accurate layout on the target media. | Create marketing flyers or custom‑shaped documents where the Excel sheet must match unique dimensions for perfect printing.
-// AI Prompts: Provide a C# snippet that sets a custom paper size in Aspose.Cells using variables for width and height. | Explain how to read paper width and height from a JSON config file and apply them with PageSetup.CustomPaperSize in Aspose.Cells. | Show how to export a workbook with a custom paper size to PDF while preserving the exact dimensions.
+// Title: Set a Custom Paper Size from Cell Values with Aspose.Cells for .NET (C#)
+// Description: C# code that reads width and height values stored in worksheet cells, applies them as a custom paper size via Aspose.Cells PageSetup, and saves the workbook.
+// Keywords: Aspose.Cells | C# | CustomPaperSize | PageSetup | custom paper size | read cell values | Excel printing | worksheet page setup | custom page dimensions | Aspose.Cells .NET
+// Common Searches: Aspose.Cells set custom paper size from cells | C# Aspose.Cells custom page dimensions example | How to use CustomPaperSize method in Aspose.Cells | Read width and height from Excel and apply page setup | Aspose.Cells PageSetup custom size tutorial
+// Developer Intent: Apply a worksheet's PageSetup to a custom size using width and height values read from cells.
+// Use Cases: Allow users to specify desired page dimensions directly in an Excel template, then generate a printable file with those exact measurements. | Automate batch conversion of workbooks where each file contains its own custom paper size defined in specific cells. | Create dynamic reports that adapt their print layout based on dimensions entered by the end‑user before export.
+// AI Prompts: Generate C# code that reads paper width from cell B1 and height from B2, then sets a custom page size with Aspose.Cells. | Explain the units required by the CustomPaperSize method in Aspose.Cells and how they relate to Excel's measurement system. | Provide a robust example that validates width and height values before calling CustomPaperSize to avoid runtime errors.
 
 using System;
 using Aspose.Cells;
 
-namespace CustomPaperSizeDemo
+// C# code that reads width and height values stored in worksheet cells, applies them as a custom paper size via Aspose.Cells PageSetup, and saves the workbook.
+class CustomPaperSizeDemo
 {
-    // Shows how to create a workbook, access its first worksheet, and assign a custom paper size by providing width and height (in inches) via PageSetup.CustomPaperSize, then save the Excel file.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Example: store custom dimensions (in inches) in cells A1 (width) and A2 (height)
+        sheet.Cells["A1"].PutValue(5.0);   // width
+        sheet.Cells["A2"].PutValue(7.0);   // height
 
-            // Example: read custom dimensions (in inches)
-            double customWidth = 2.5;   // width in inches
-            double customHeight = 3.5;  // height in inches
+        // Read the custom dimensions from the worksheet
+        double width = sheet.Cells["A1"].DoubleValue;
+        double height = sheet.Cells["A2"].DoubleValue;
 
-            // Set the worksheet to use a custom paper size
-            sheet.PageSetup.PaperSize = PaperSizeType.Custom;
-            sheet.PageSetup.CustomPaperSize(customWidth, customHeight);
+        // Apply custom paper size to the worksheet's page setup
+        sheet.PageSetup.PaperSize = PaperSizeType.Custom;
+        sheet.PageSetup.CustomPaperSize(width, height);
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("CustomPaperSizeOutput.xlsx");
-        }
+        // Save the workbook with the custom page setup applied
+        workbook.Save("CustomPaperSizeResult.xlsx");
     }
 }

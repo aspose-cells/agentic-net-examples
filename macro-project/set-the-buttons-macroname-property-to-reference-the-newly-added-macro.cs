@@ -1,46 +1,69 @@
-// Title: C# – Assign a VBA macro to a Forms button using Aspose.Cells
-// Description: Demonstrates how to create a macro‑enabled workbook, add a VBA module with a simple Sub, insert a Forms button, set its MacroName property to the new macro, and save the file as .xlsm with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# macro button | set button MacroName Aspose.Cells | add VBA module programmatically | Forms button VBA macro .NET | macro‑enabled workbook Aspose | Excel automation C# Aspose.Cells | link VBA macro to shape | C# Excel button click macro
-// Common Searches: How to bind a VBA macro to a Forms button with Aspose.Cells C# | Set MacroName property of a button in a macro‑enabled workbook | Add VBA module and assign its Sub to a shape using Aspose.Cells | Create .xlsm file with button that runs a macro in C# | Aspose.Cells example linking button to macro
-// Developer Intent: The developer needs to programmatically connect a newly created VBA Sub to a Forms button so that clicking the button runs the macro in a macro‑enabled Excel file.
-// Use Cases: Generate interactive Excel templates where users trigger custom VBA actions via on‑sheet buttons. | Automate report generators that include a “Refresh” button linked to a macro for data processing. | Build Excel‑based UI components (e.g., dashboards) that launch predefined VBA routines when clicked.
-// AI Prompts: Write C# code with Aspose.Cells that adds a Forms button and assigns an existing VBA macro to its MacroName property. | Explain how to reference a macro located in a different VBA module when setting the MacroName of a button. | Provide steps to test that the button correctly executes the macro after saving the workbook as .xlsm.
+// Title: Assign a VBA macro to a Forms button in an Excel workbook using Aspose.Cells C#
+// Description: Demonstrates how to create a macro‑enabled .xlsm workbook with Aspose.Cells, add a VBA module containing a Sub, insert a Forms button, set the button's MacroName property to the new macro, and save the file.
+// Keywords: Aspose.Cells C# macro button | set button MacroName Aspose.Cells | add VBA module Aspose.Cells | macro‑enabled workbook .xlsm | Forms button VBA Aspose.Cells | C# Excel automation Aspose | link VBA macro to button
+// Common Searches: How to link a VBA macro to a Forms button with Aspose.Cells .NET | Set MacroName property for a button in an .xlsm file using C# | Create macro‑enabled workbook and assign macro to button Aspose.Cells | Aspose.Cells example for adding VBA module and button
+// Developer Intent: Connect a newly created VBA macro to a Forms button so that clicking the button runs the macro in the saved workbook.
+// Use Cases: Generate an Excel template that includes a button to display a message box via VBA. | Automate the creation of multiple buttons, each bound to a distinct macro, for complex worksheets. | Provide end‑users with a clickable control that triggers custom VBA logic without manual macro insertion.
+// AI Prompts: Write C# code with Aspose.Cells that adds a VBA module, defines a Sub, and assigns it to a Forms button's MacroName property. | Explain the steps to enable macros, add a button, link it to a macro, and save the workbook as .xlsm using Aspose.Cells. | Troubleshoot why a button's MacroName does not execute the macro after the workbook is opened.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Vba;
 
-// Demonstrates how to create a macro‑enabled workbook, add a VBA module with a simple Sub, insert a Forms button, set its MacroName property to the new macro, and save the file as .xlsm with Aspose.Cells for .NET.
-class SetButtonMacroDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to create a macro‑enabled .xlsm workbook with Aspose.Cells, add a VBA module containing a Sub, insert a Forms button, set the button's MacroName property to the new macro, and save the file.
+    public class SetButtonMacroDemo
     {
-        // Create a new workbook and enable macros
-        Workbook workbook = new Workbook();
-        workbook.Settings.EnableMacros = true;
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+                // Enable macros in the workbook
+                workbook.Settings.EnableMacros = true;
 
-        // Add a VBA module to the workbook and insert a simple macro
-        int moduleIndex = workbook.VbaProject.Modules.Add(sheet);
-        VbaModule vbaModule = workbook.VbaProject.Modules[moduleIndex];
-        vbaModule.Name = "Module1";
-        vbaModule.Codes = 
-            "Sub MyButtonMacro()\n" +
-            "    MsgBox \"Button clicked!\"\n" +
-            "End Sub";
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a Forms button to the worksheet
-        // Parameters: topRow, top (pixel offset), leftColumn, left (pixel offset), height, width
-        Button button = sheet.Shapes.AddButton(1, 0, 1, 0, 30, 100);
-        button.Text = "Run Macro";
+                // Add a VBA module to the workbook and insert a macro
+                int moduleIndex = workbook.VbaProject.Modules.Add(sheet);
+                VbaModule vbaModule = workbook.VbaProject.Modules[moduleIndex];
+                vbaModule.Name = "Module1";
+                vbaModule.Codes =
+                    "Sub MyMacro()\r\n" +
+                    "    MsgBox \"Hello from macro\"\r\n" +
+                    "End Sub";
 
-        // Set the button's MacroName property to reference the newly added macro
-        button.MacroName = "MyButtonMacro";
+                // Add a Forms button to the worksheet
+                // Parameters: topRow, top (pixel offset), leftColumn, left (pixel offset), height (pixel), width (pixel)
+                Button button = sheet.Shapes.AddButton(1, 0, 1, 0, 30, 100);
+                button.Text = "Run Macro";
 
-        // Save the workbook as a macro‑enabled file
-        workbook.Save("ButtonWithMacro.xlsm");
+                // Associate the button with the newly added macro
+                button.MacroName = "MyMacro";
+
+                // Save the workbook as a macro‑enabled file
+                string outputPath = "ButtonWithMacro.xlsm";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            SetButtonMacroDemo.Run();
+        }
     }
 }

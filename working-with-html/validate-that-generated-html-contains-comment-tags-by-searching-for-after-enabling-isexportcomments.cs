@@ -1,10 +1,10 @@
-// Title: Aspose.Cells C# – Validate HTML Export Includes <!-- Comment Tags (IsExportComments=True)
-// Description: This C# example creates a workbook, adds a comment to cell A1, saves it as HTML with HtmlSaveOptions.IsExportComments enabled, reads the generated file, and confirms the presence of the HTML comment delimiter <!--. It shows how to programmatically verify comment export in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | HTML export comments | IsExportComments | HtmlSaveOptions | validate HTML comment tags | export cell comments to HTML | Aspose.Cells .NET example | HTML comment delimiter | automated test Aspose.Cells
-// Common Searches: Aspose.Cells export comments to HTML | IsExportComments true example | C# check for <!-- in exported HTML | validate Aspose.Cells HTML output | how to include cell comments in HTML with Aspose.Cells
-// Developer Intent: Confirm that enabling IsExportComments in HtmlSaveOptions causes Aspose.Cells to embed cell comments as HTML <!-- comment tags> in the saved file.
-// Use Cases: Generate documentation‑ready HTML reports that retain Excel cell comments. | Create automated regression tests that ensure comment export works after library updates. | Batch‑process multiple workbooks to HTML while verifying each output contains comment markers. | Integrate comment‑preserving HTML export into a web service that serves Excel data as web‑friendly pages.
-// AI Prompts: Write a C# function that accepts an Excel file path, saves it as HTML with comments exported, and returns true if the output contains the <!-- marker. | Provide a unit test using NUnit that loads a workbook, exports to HTML with IsExportComments=true, and asserts the presence of comment tags. | Generate a PowerShell script that leverages Aspose.Cells .NET to convert Excel files to HTML with comments and logs validation results. | Explain how to configure HtmlSaveOptions to include cell comments and how to programmatically verify the export in a CI pipeline.
+// Title: Validate HTML Comment Tags Exported with AspNet Aspose.Cells (IsExportComments)
+// Description: C# example that creates a workbook, adds a comment to cell A1, enables HtmlSaveOptions.IsExportComments, saves to HTML, reads the file and checks for the "<!--" marker to confirm that comments are exported.
+// Keywords: Aspose.Cells HTML export comments | IsExportComments C# | verify HTML comment tag | Aspose.Cells save as HTML | C# workbook comment validation
+// Common Searches: Aspose.Cells export comments to HTML | check for <!-- in saved HTML Aspose | C# verify HTML comment tags after export | IsExportComments not working | Aspose.Cells HTMLSaveOptions comment validation
+// Developer Intent: Confirm that enabling IsExportComments in HtmlSaveOptions causes the generated HTML file to contain HTML comment delimiters (<!--).
+// Use Cases: Automated test to ensure comment export works in HTML output. | Debugging missing comments after saving a workbook as HTML. | Integrating comment verification into a CI pipeline for Aspose.Cells projects.
+// AI Prompts: Generate C# code that saves an Aspose.Cells workbook to HTML with comments and asserts the presence of "<!--" in the output. | Write a unit test using NUnit that validates HtmlSaveOptions.IsExportComments produces HTML comment tags. | Explain step‑by‑step how to read a saved HTML file and search for comment markers when exporting comments with Aspose.Cells.
 
 using System;
 using System.IO;
@@ -12,7 +12,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsCommentExportValidation
 {
-    // This C# example creates a workbook, adds a comment to cell A1, saves it as HTML with HtmlSaveOptions.IsExportComments enabled, reads the generated file, and confirms the presence of the HTML comment delimiter <!--. It shows how to programmatically verify comment export in Aspose.Cells for .NET.
+    // C# example that creates a workbook, adds a comment to cell A1, enables HtmlSaveOptions.IsExportComments, saves to HTML, reads the file and checks for the "<!--" marker to confirm that comments are exported.
     class Program
     {
         static void Main()
@@ -29,23 +29,20 @@ namespace AsposeCellsCommentExportValidation
             // Configure HTML save options to export comments
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
-                IsExportComments = true // Enable comment export
+                IsExportComments = true   // Enable comment export
             };
 
-            // Define output HTML file path
+            // Save the workbook as HTML
             string htmlPath = "output_with_comments.html";
-
-            // Save the workbook as HTML with the specified options
             workbook.Save(htmlPath, htmlOptions);
 
-            // Read the generated HTML content
+            // Read the generated HTML file
             string htmlContent = File.ReadAllText(htmlPath);
 
             // Validate that the HTML contains comment tags (<!--)
             bool containsCommentTag = htmlContent.Contains("<!--");
 
-            // Output validation result
-            Console.WriteLine($"HTML contains comment tags: {containsCommentTag}");
+            Console.WriteLine($"HTML contains comment tag: {containsCommentTag}");
         }
     }
 }

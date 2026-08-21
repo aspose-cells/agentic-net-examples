@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells PDF Export Agent
 category: working-with-pdf
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Convert Excel workbooks and selected worksheets to PDF in C#
 primary_apis: [Workbook.Save, SaveFormat.Pdf, PdfSaveOptions, Worksheet.PageSetup]
 search_intents: [Excel to PDF C#, convert XLSX to PDF without Excel, PDF/A from Excel, selected sheets to PDF]
@@ -104,3 +104,4 @@ Use `SaveFormat.Pdf` for default conversion and `PdfSaveOptions` for selection, 
 ## Definition of done
 
 The example compiles, runs, uses verified PDF options, produces a nonempty PDF, validates its stated layout or option, reports warnings, and introduces no unrelated PDF dependency.
+

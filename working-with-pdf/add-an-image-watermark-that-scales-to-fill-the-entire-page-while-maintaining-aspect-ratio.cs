@@ -1,66 +1,60 @@
-// Title: Add Full‑Page Image Watermark to PDF with Aspise.Cells (C#)
-// Description: Creates a workbook, loads a PNG, configures a RenderingWatermark with 100% ScaleToPagePercent, centered alignment, background placement, 30% opacity, and saves the workbook as a PDF where the image fills the page while preserving its aspect ratio.
-// Keywords: Aspose.Cells PDF watermark | C# image watermark full page | RenderingWatermark ScaleToPagePercent | Aspose.Cells background image PDF | Excel to PDF watermark Aspose
-// Common Searches: Aspose.Cells add image watermark to PDF | scale watermark to fill PDF page .NET | center background watermark Aspose.Cells | set watermark opacity in PDF using Aspose.Cells | full‑page image watermark Excel to PDF
-// Developer Intent: Apply an image watermark that covers the entire PDF page, maintains the original aspect ratio, and appears behind the worksheet content.
-// Use Cases: Brand every exported PDF report with a semi‑transparent company logo that spans the whole page. | Create printable forms or letterheads where a background image automatically scales to the page size. | Generate invoices or statements with a centered watermark that does not interfere with data readability.
-// AI Prompts: Show how to rotate the RenderingWatermark 45° while keeping it scaled to the page. | Provide C# code that adds a text watermark in addition to the image watermark using PdfSaveOptions. | Explain how to compute the exact ScaleToPagePercent value for a custom image size and a specific PDF page dimension.
+// Title: Add a Full‑Page Image Watermark to a PDF with Aspose.Cells (C#)
+// Description: Demonstrates how to create a Workbook, load an image, configure a RenderingWatermark to fill the page while preserving aspect ratio, set center alignment, background placement, and 30 % opacity, then save the workbook as a PDF with the image covering the entire page.
+// Keywords: Aspose.Cells PDF watermark C# | full page image watermark .NET | RenderingWatermark ScaleToPagePercent | PdfSaveOptions watermark Aspose | centered background watermark C# | maintain aspect ratio watermark PDF | Aspose.Cells image watermark example
+// Common Searches: Aspose.Cells add image watermark to PDF | C# full‑page PDF watermark with Aspose | scale watermark to page Aspose.Cells | centered background image in PDF using Aspose.Cells | set opacity for PDF watermark .NET
+// Developer Intent: Generate a PDF from a workbook that includes a centered, semi‑transparent image covering the whole page.
+// Use Cases: Embedding a corporate logo as a full‑page background on exported reports. | Creating confidential PDFs with a stamped image that fills each page. | Producing marketing brochures where a background image automatically spans the page during conversion.
+// AI Prompts: Show how to replace the PNG with a JPEG while keeping the full‑page watermark effect. | Provide code to apply different watermarks with distinct opacities to individual PDF pages. | Explain how to compute ScaleToPagePercent dynamically based on the source image size and page dimensions.
 
 using System;
 using System.IO;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWatermarkDemo
+// Demonstrates how to create a Workbook, load an image, configure a RenderingWatermark to fill the page while preserving aspect ratio, set center alignment, background placement, and 30 % opacity, then save the workbook as a PDF with the image covering the entire page.
+class ImageWatermarkExample
 {
-    // Creates a workbook, loads a PNG, configures a RenderingWatermark with 100% ScaleToPagePercent, centered alignment, background placement, 30% opacity, and saves the workbook as a PDF where the image fills the page while preserving its aspect ratio.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Add some sample data to demonstrate the watermark effect
+        workbook.Worksheets[0].Cells["A1"].PutValue("Sample content with full‑page image watermark");
+
+        // Load the image that will be used as the watermark
+        string imagePath = "watermark.png";
+        if (!File.Exists(imagePath))
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample worksheet with image watermark");
-
-            // Load the watermark image into a byte array
-            string imagePath = "watermark.png";
-            if (!File.Exists(imagePath))
-            {
-                Console.WriteLine($"Image file not found: {imagePath}");
-                return;
-            }
-            byte[] imageData = File.ReadAllBytes(imagePath);
-
-            // Create an image‑based RenderingWatermark
-            RenderingWatermark watermark = new RenderingWatermark(imageData)
-            {
-                // Scale to fill the entire page (maintains aspect ratio)
-                ScaleToPagePercent = 100,
-
-                // Center the watermark on the page
-                HAlignment = TextAlignmentType.Center,
-                VAlignment = TextAlignmentType.Center,
-
-                // Place the watermark behind the page content
-                IsBackground = true,
-
-                // Optional: set opacity and rotation
-                Opacity = 0.3f,
-                Rotation = 0f
-            };
-
-            // Configure PDF save options with the watermark
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                Watermark = watermark
-            };
-
-            // Save the workbook as a PDF with the image watermark
-            workbook.Save("WatermarkedOutput.pdf", pdfOptions);
-
-            Console.WriteLine("PDF saved with image watermark.");
+            Console.WriteLine($"Image file not found: {imagePath}");
+            return;
         }
+        byte[] imageData = File.ReadAllBytes(imagePath);
+
+        // Create an image‑based RenderingWatermark
+        RenderingWatermark watermark = new RenderingWatermark(imageData)
+        {
+            // Scale the watermark to fill the entire page (maintains aspect ratio)
+            ScaleToPagePercent = 100,
+
+            // Center the watermark horizontally and vertically
+            HAlignment = TextAlignmentType.Center,
+            VAlignment = TextAlignmentType.Center,
+
+            // Place the watermark behind the page contents
+            IsBackground = true,
+
+            // Optional: make the watermark semi‑transparent
+            Opacity = 0.3f
+        };
+
+        // Configure PDF save options to use the watermark
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            Watermark = watermark
+        };
+
+        // Save the workbook as a PDF with the full‑page image watermark
+        workbook.Save("WatermarkedFullPage.pdf", pdfOptions);
     }
 }

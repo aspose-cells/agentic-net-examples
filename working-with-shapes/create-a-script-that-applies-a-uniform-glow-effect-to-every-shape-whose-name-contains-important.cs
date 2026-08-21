@@ -1,57 +1,82 @@
-// Title: Apply a Uniform Orange Glow to All Shapes Named ‘Important’ in an Excel Workbook (Aspose.Cells for .NET)
-// Description: Loads a workbook, defines a 12‑point orange glow with 40% transparency, iterates every worksheet and shape, and applies the glow to each shape whose Name contains "Important". The modified workbook is then saved.
-// Keywords: Aspose.Cells | C# shape glow | Excel shape formatting | GlowEffect | filter shapes by name | apply orange glow | uniform glow settings | Aspose.Cells .NET
-// Common Searches: Aspose.Cells add glow to Excel shape C# | How to set shape GlowEffect in a workbook using Aspose.Cells | Filter shapes by name and apply formatting Aspose.Cells | Apply orange glow to specific shapes in Excel with .NET | Change shape glow size and transparency Aspose.Cells
-// Developer Intent: Add the same orange glow effect to every shape whose name includes the word "Important" in an Excel file using Aspose.Cells for .NET.
-// Use Cases: Highlight critical callouts in financial reports by giving all "Important" shapes a bright orange halo. | Create a consistent visual cue across dashboard worksheets for items marked as important. | Standardize template styling by automatically applying a predefined glow to every shape named "Important".
-// AI Prompts: Generate C# code with Aspose.Cells to apply a red glow of size 10 and 30% transparency to shapes whose name contains "Alert". | Refactor the glow‑application script into a reusable method that accepts size, color, transparency, and name filter parameters. | Explain how to read, modify, and clear the GlowEffect of a shape in Aspose.Cells for .NET.
+// Title: Apply Uniform Orange Glow to Shapes Named "Important" Using Aspose.Cells C#
+// Description: C# script that loads an Excel workbook (or creates one), scans every worksheet, and adds a 12‑point, 40% transparent orange glow to each shape whose Name contains the word "Important". The modified file is saved as Output_With_Glow.xlsx.
+// Keywords: Aspose.Cells C# glow effect | Excel shape glow Aspose | filter shapes by name Aspose.Cells | apply orange glow to shapes | shape formatting Excel .NET | uniform glow effect workbook
+// Common Searches: how to add glow to specific shapes in Excel using Aspose.Cells | C# apply orange glow to shapes containing 'Important' | iterate worksheet shapes and set glow properties Aspose.Cells | Aspose.Cells set shape glow color and transparency
+// Developer Intent: Programmatically add the same orange glow to every shape whose Name includes "Important" in an Excel workbook.
+// Use Cases: Highlight critical diagram elements in financial reports. | Emphasize warning icons on dashboard worksheets. | Standardize visual cues across multiple sheets by auto‑applying a glow to important shapes.
+// AI Prompts: Generate C# code with Aspose.Cells to apply a red 10‑point glow to shapes whose name contains "Alert". | Rewrite the glow‑application loop using LINQ to filter shapes by a keyword. | Explain how to set glow color and transparency dynamically based on each shape's type.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System.Drawing;
 
-namespace ApplyGlowToImportantShapes
+namespace AsposeCellsExamples
 {
-    // Loads a workbook, defines a 12‑point orange glow with 40% transparency, iterates every worksheet and shape, and applies the glow to each shape whose Name contains "Important". The modified workbook is then saved.
-    class Program
+    // C# script that loads an Excel workbook (or creates one), scans every worksheet, and adds a 12‑point, 40% transparent orange glow to each shape whose Name contains the word "Important". The modified file is saved as Output_With_Glow.xlsx.
+    public class ApplyUniformGlowToImportantShapes
     {
-        static void Main()
+        public static void Run()
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Define uniform glow settings
-            double glowSize = 12;               // radius in points
-            double glowTransparency = 0.4;      // 40% transparent
-            Color glowColor = Color.Orange;     // desired glow color
-
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                // Iterate through all shapes in the worksheet
-                foreach (Shape shape in sheet.Shapes)
+                Workbook workbook;
+                string inputPath = "input.xlsx";
+
+                // Load existing workbook if it exists; otherwise create a new workbook
+                if (File.Exists(inputPath))
                 {
-                    // Check if the shape's name contains the keyword "Important"
-                    if (!string.IsNullOrEmpty(shape.Name) && shape.Name.Contains("Important"))
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    workbook = new Workbook();
+                }
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    ShapeCollection shapes = sheet.Shapes;
+
+                    // Process each shape
+                    for (int i = 0; i < shapes.Count; i++)
                     {
-                        // Access the GlowEffect object of the shape
-                        GlowEffect glow = shape.Glow;
+                        Shape shape = shapes[i];
 
-                        // Apply uniform glow properties
-                        glow.Size = glowSize;
-                        glow.Transparency = glowTransparency;
+                        // Apply glow to shapes whose name contains "Important"
+                        if (!string.IsNullOrEmpty(shape.Name) && shape.Name.Contains("Important"))
+                        {
+                            GlowEffect glow = shape.Glow;
+                            glow.Size = 12;               // radius in points
+                            glow.Transparency = 0.4;      // 40% transparent
 
-                        // Create a CellsColor for the glow and assign the desired color
-                        CellsColor cellsColor = workbook.CreateCellsColor();
-                        cellsColor.Color = glowColor;
-                        glow.Color = cellsColor;
+                            // Set a uniform orange glow color
+                            CellsColor glowColor = workbook.CreateCellsColor();
+                            glowColor.Color = Color.Orange;
+                            glow.Color = glowColor;
+                        }
                     }
                 }
-            }
 
-            // Save the modified workbook
-            workbook.Save("output.xlsx");
+                // Save the workbook with applied effects
+                string outputPath = "Output_With_Glow.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    // Application entry point
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ApplyUniformGlowToImportantShapes.Run();
         }
     }
 }

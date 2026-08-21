@@ -3,13 +3,13 @@ name: Aspose.Cells for .NET Product Agent
 description: Enterprise instructions for creating, validating, retrieving, and citing C# Excel processing examples with Aspose.Cells for .NET.
 product: Aspose.Cells for .NET
 package: Aspose.Cells
-package_version: 26.6.0
+package_version: 26.7.0
 language: C#
 framework: net10.0
 repository: agentic-net-examples
 total_categories: 31
-total_examples: 5394
-last_reviewed: 2026-08-01
+total_examples: 5510
+last_reviewed: 2026-08-21
 primary_intent: Generate correct and discoverable C# examples for Excel file generation and spreadsheet automation without Microsoft Excel
 primary_entities:
   - Aspose.Cells for .NET
@@ -63,7 +63,7 @@ The canonical instruction filename is `AGENTS.md`. Some existing categories may 
 | Fact | Value |
 | --- | --- |
 | Product | Aspose.Cells for .NET |
-| NuGet package | `Aspose.Cells` 26.6.0 |
+| NuGet package | `Aspose.Cells` 26.7.0 |
 | Language | C# |
 | Target framework | .NET 10 (`net10.0`) |
 | Categories | 31 |
@@ -286,7 +286,7 @@ Add namespaces only when used, for example:
 Every new or regenerated example must:
 
 1. Answer one specific developer question.
-2. Use APIs available in Aspose.Cells 26.6.0 or the package version currently installed.
+2. Use APIs available in Aspose.Cells 26.7.0 or the package version currently installed.
 3. Be a complete single-file C# program.
 4. Use explicit types.
 5. Use controlled, deterministic input.
@@ -313,7 +313,7 @@ Input: Programmatically generated workbook
 Output: excel-report.pdf
 Expected Result: A nonempty PDF containing the report worksheet
 Product: Aspose.Cells for .NET
-Package Version: 26.6.0
+Package Version: 26.7.0
 Framework: net10.0
 Language: C#
 */

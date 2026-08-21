@@ -1,42 +1,44 @@
-// Title: Copy a shape, rename it, and offset 10 points in Aspose.Cells for .NET
-// Description: Demonstrates how to add a rectangle shape to a worksheet, duplicate it with ShapeCollection.AddCopy, assign a new name, and shift the copy 10 pixels to the right before saving the workbook as an XLSX file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells copy shape | ShapeCollection.AddCopy | rename copied shape | offset shape position | C# Aspose.Cells shape example | .NET spreadsheet shape duplication | move shape 10 points | Aspose.Cells tutorial
-// Common Searches: Aspose.Cells duplicate shape C# | How to rename a copied shape in Aspose.Cells | Shift copied shape horizontally Aspose.Cells | AddCopy method parameters example | Copy and move shape Aspose.Cells .NET
-// Developer Intent: Create a duplicate of an existing worksheet shape, give the copy a distinct name, and move it 10 pixels to the right.
-// Use Cases: Generate a series of offset shapes for a flow‑chart template. | Place a duplicated logo beside the original in a financial report. | Programmatically copy a chart placeholder, rename it, and align it with adjacent cells.
-// AI Prompts: Show C# code that copies a shape in Aspose.Cells, renames the copy, and offsets it by 10 points horizontally. | Provide an Aspose.Cells .NET example using ShapeCollection.AddCopy to duplicate any shape and adjust its left position.
+// Title: Duplicate, Rename, and Offset a Shape by 10 Points Using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to add a rectangle shape to a worksheet, clone it with AddCopy, assign a new name, and shift the copy 10 points to the right by adjusting its X coordinate, then save the workbook.
+// Keywords: Aspose.Cells shape duplication | C# AddCopy shape | rename copied shape Aspose.Cells | offset shape X coordinate | move shape 10 points | Aspose.Cells .NET example | Excel shape programming | shape positioning pixels points
+// Common Searches: Aspose.Cells copy shape and rename C# | How to move a duplicated shape right in Aspose.Cells | AddCopy shape offset X property example | C# duplicate Excel shape with Aspose.Cells | Shift shape position by points Aspose.Cells
+// Developer Intent: The developer needs to clone an existing worksheet shape, give the clone a distinct name, and reposition it 10 points horizontally.
+// Use Cases: Create a series of flow‑chart boxes where each copy is nudged right for visual sequencing. | Duplicate a company logo and place the copy beside the original for side‑by‑side branding. | Generate repeated form fields (e.g., checkboxes) with a consistent horizontal offset.
+// AI Prompts: Provide C# code that uses Aspose.Cells to copy a shape, rename the copy, and shift it 10 points to the right. | Show an Aspose.Cells .NET example of AddCopy followed by X‑coordinate adjustment for precise placement. | Explain how to convert points to pixels when moving shapes in Aspose.Cells and ensure accurate alignment.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeCopyExample
+// Demonstrates how to add a rectangle shape to a worksheet, clone it with AddCopy, assign a new name, and shift the copy 10 points to the right by adjusting its X coordinate, then save the workbook.
+class DuplicateShapeExample
 {
-    // Demonstrates how to add a rectangle shape to a worksheet, duplicate it with ShapeCollection.AddCopy, assign a new name, and shift the copy 10 pixels to the right before saving the workbook as an XLSX file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Get the shapes collection of the worksheet
-            ShapeCollection shapes = worksheet.Shapes;
+        // Get the shapes collection of the worksheet
+        ShapeCollection shapes = worksheet.Shapes;
 
-            // Add an original rectangle shape
-            // Parameters: upper left row, upper left column, top offset (pixels), left offset (pixels), width, height
-            Shape originalShape = shapes.AddRectangle(2, 0, 2, 0, 130, 130);
-            originalShape.Name = "OriginalShape";
+        // Add an original rectangle shape
+        // Parameters: upper left row, upper left column, top offset, left offset, width, height
+        Shape original = shapes.AddRectangle(2, 0, 2, 0, 130, 130);
 
-            // Duplicate the original shape and offset it 10 points (pixels) to the right
-            // Use the same row/column as the source shape, keep the same top offset,
-            // increase the left offset by 10 pixels.
-            Shape copiedShape = shapes.AddCopy(originalShape, 2, 2, 0, 10);
-            copiedShape.Name = "CopiedShape";
+        // Duplicate the original shape.
+        // AddCopy copies the shape to the same cell location (row 2, column 0) with no pixel offset.
+        Shape copy = shapes.AddCopy(original, 2, 0, 2, 0);
 
-            // Save the workbook to a file
-            workbook.Save("ShapeCopyOffsetDemo.xlsx");
-        }
+        // Rename the copied shape
+        copy.Name = "RectangleCopy";
+
+        // Offset the copied shape 10 points to the right.
+        // The X property represents horizontal offset in pixels.
+        // Assuming 1 point ≈ 1 pixel for simplicity; adjust as needed for precise conversion.
+        copy.X = original.X + 10;
+
+        // Save the workbook
+        workbook.Save("DuplicateShape.xlsx");
     }
 }

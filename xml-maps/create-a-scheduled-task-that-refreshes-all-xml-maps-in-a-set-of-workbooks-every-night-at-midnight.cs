@@ -1,158 +1,67 @@
+// Title: Nightly C# scheduler to refresh XML maps in Excel workbooks using Aspose.Cells
+// Description: A C# console app that builds a list of workbook paths, calculates the interval to the next midnight, and uses System.Threading.Timer to invoke a RefreshAllXmlMaps method every 24 hours. The method loads each workbook with Aspose.Cells, calls Worksheets.RefreshAll() to update all XML maps, saves the file, and writes success or error messages to the console.
+// Keywords: Aspose.Cells C# XML map refresh | daily Excel workbook refresh | System.Threading.Timer schedule | midnight task Aspose | automate XML map update | refresh all worksheets | batch Excel processing | Windows service Excel refresh
+// Common Searches: C# schedule task to refresh XML maps in Excel | Aspose.Cells refresh all worksheets nightly | How to automate XML map refresh at midnight | Batch refresh XML maps with Aspose.Cells | Create Windows service for daily Excel refresh
+// Developer Intent: Create an automated nightly routine that loads each listed workbook, refreshes its XML maps, saves the changes, and logs the outcome.
+// Use Cases: Keep financial reporting workbooks up‑to‑date each night before morning analysis. | Update XML maps in a batch of client spreadsheets after a nightly data import. | Run a background service that guarantees all stored Excel templates have current XML map connections before user access.
+// AI Prompts: Generate C# code that uses Aspose.Cells and System.Threading.Timer to run a midnight job that refreshes XML maps in a list of workbook files and logs results. | Show how to handle exceptions per workbook while refreshing XML maps and saving with Aspose.Cells in a scheduled task. | Explain how to convert the console timer into a Windows Service or Azure Function so the nightly XML map refresh persists after application restart.
+
 using System;
-using System.IO;
-using System.Timers;
+using System.Collections.Generic;
+using System.Threading;
 using Aspose.Cells;
 
-namespace XmlMapRefreshScheduler
+// A C# console app that builds a list of workbook paths, calculates the interval to the next midnight, and uses System.Threading.Timer to invoke a RefreshAllXmlMaps method every 24 hours. The method loads each workbook with Aspose.Cells, calls Worksheets.RefreshAll() to update all XML maps, saves the file, and writes success or error messages to the console.
+class Program
 {
-    class Program
+    // List of workbook file paths to be refreshed
+    static readonly List<string> workbookPaths = new List<string>
     {
-        // Folder containing the workbooks to refresh
-        private static readonly string WorkbooksFolder = @"C:\Workbooks";
+        @"C:\Workbooks\Book1.xlsx",
+        @"C:\Workbooks\Book2.xlsx"
+        // add more paths as needed
+    };
 
-        // Folder containing the XML source files for the maps
-        private static readonly string XmlDataFolder = @"C:\XmlData";
+    static void Main()
+    {
+        // Calculate the interval until the next midnight
+        DateTime now = DateTime.Now;
+        DateTime nextMidnight = now.Date.AddDays(1);
+        TimeSpan timeToMidnight = nextMidnight - now;
 
-        // Timer that triggers the refresh operation (System.Timers.Timer)
-        private static System.Timers.Timer _refreshTimer;
+        // Set up a timer that triggers at midnight and then every 24 hours
+        Timer timer = new Timer(
+            callback: state => RefreshAllXmlMaps(),
+            state: null,
+            dueTime: timeToMidnight,
+            period: TimeSpan.FromDays(1));
 
-        static void Main()
+        // Keep the application running
+        Console.WriteLine("XML map refresh scheduler started. Press Enter to exit.");
+        Console.ReadLine();
+    }
+
+    // Refreshes XML maps in all specified workbooks
+    static void RefreshAllXmlMaps()
+    {
+        foreach (string path in workbookPaths)
         {
             try
             {
-                // Verify that the required folders exist
-                if (!Directory.Exists(WorkbooksFolder))
-                {
-                    Console.WriteLine($"Workbooks folder not found: {WorkbooksFolder}");
-                    return;
-                }
+                // Load the workbook (uses the load rule)
+                Workbook wb = new Workbook(path);
 
-                if (!Directory.Exists(XmlDataFolder))
-                {
-                    Console.WriteLine($"XML data folder not found: {XmlDataFolder}");
-                    return;
-                }
+                // Refresh all connections/pivot tables (covers XML map refresh)
+                wb.Worksheets.RefreshAll();
 
-                // Calculate the interval until the next midnight
-                DateTime now = DateTime.Now;
-                DateTime nextMidnight = now.Date.AddDays(1);
-                double initialDelay = (nextMidnight - now).TotalMilliseconds;
+                // Save the workbook back to the same file (uses the save rule)
+                wb.Save(path);
 
-                // Set up the recurring 24‑hour timer (first trigger handled separately)
-                _refreshTimer = new System.Timers.Timer
-                {
-                    AutoReset = true,
-                    Interval = TimeSpan.FromDays(1).TotalMilliseconds,
-                    Enabled = false
-                };
-                _refreshTimer.Elapsed += OnRefreshTimerElapsed;
-
-                // One‑shot timer to start the first refresh at midnight
-                var startTimer = new System.Timers.Timer(initialDelay) { AutoReset = false };
-                startTimer.Elapsed += (s, e) =>
-                {
-                    _refreshTimer.Start();          // start the 24‑hour recurring timer
-                    RefreshAllWorkbooks();          // run the first refresh at midnight
-                    startTimer.Dispose();
-                };
-                startTimer.Start();
-
-                // Keep the application running
-                Console.WriteLine("XML map refresh scheduler started. Press Enter to exit.");
-                Console.ReadLine();
-
-                // Clean up timers on exit
-                _refreshTimer?.Stop();
-                _refreshTimer?.Dispose();
-                startTimer?.Dispose();
+                Console.WriteLine($"Successfully refreshed XML maps in '{path}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error in Main: {ex.Message}");
-            }
-        }
-
-        // Event handler that runs each night at midnight
-        private static void OnRefreshTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            RefreshAllWorkbooks();
-        }
-
-        // Refreshes all XML maps in every workbook found in WorkbooksFolder
-        private static void RefreshAllWorkbooks()
-        {
-            try
-            {
-                // Get all Excel files in the target folder
-                string[] workbookFiles = Directory.GetFiles(WorkbooksFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
-
-                foreach (string workbookPath in workbookFiles)
-                {
-                    if (!File.Exists(workbookPath))
-                    {
-                        Console.WriteLine($"Workbook not found: {workbookPath}");
-                        continue;
-                    }
-
-                    Workbook workbook = null;
-                    try
-                    {
-                        // Load the workbook
-                        workbook = new Workbook(workbookPath);
-                    }
-                    catch (Exception loadEx)
-                    {
-                        Console.WriteLine($"Failed to load workbook '{Path.GetFileName(workbookPath)}': {loadEx.Message}");
-                        continue;
-                    }
-
-                    // Iterate through each XML map in the workbook
-                    XmlMapCollection xmlMaps = workbook.Worksheets.XmlMaps;
-                    for (int i = 0; i < xmlMaps.Count; i++)
-                    {
-                        XmlMap map = xmlMaps[i];
-
-                        // Assume the XML source file name matches the map name with .xml extension
-                        string xmlFileName = map.Name + ".xml";
-                        string xmlFullPath = Path.Combine(XmlDataFolder, xmlFileName);
-
-                        if (File.Exists(xmlFullPath))
-                        {
-                            try
-                            {
-                                // Import the XML data into the first worksheet starting at cell A1 (row 0, column 0)
-                                workbook.ImportXml(xmlFullPath, workbook.Worksheets[0].Name, 0, 0);
-                            }
-                            catch (Exception importEx)
-                            {
-                                Console.WriteLine($"Error importing XML for map '{map.Name}' in workbook '{Path.GetFileName(workbookPath)}': {importEx.Message}");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"XML source file not found for map '{map.Name}' in workbook '{Path.GetFileName(workbookPath)}'.");
-                        }
-                    }
-
-                    try
-                    {
-                        // Save the workbook (overwrite the original file)
-                        workbook.Save(workbookPath);
-                        Console.WriteLine($"Refreshed XML maps in workbook: {Path.GetFileName(workbookPath)}");
-                    }
-                    catch (Exception saveEx)
-                    {
-                        Console.WriteLine($"Failed to save workbook '{Path.GetFileName(workbookPath)}': {saveEx.Message}");
-                    }
-                    finally
-                    {
-                        workbook?.Dispose();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during XML map refresh: {ex.Message}");
+                Console.WriteLine($"Error processing '{path}': {ex.Message}");
             }
         }
     }

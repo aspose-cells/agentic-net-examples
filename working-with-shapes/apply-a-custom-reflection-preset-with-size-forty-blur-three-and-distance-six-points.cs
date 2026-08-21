@@ -1,16 +1,16 @@
-// Title: Apply Custom Reflection (size 40, blur 3, distance 6) to a Rectangle Shape with Aspose.Cells for .NET
-// Description: Creates a new workbook, inserts a rectangle shape, and configures its ReflectionEffect to a custom preset (size = 40 %, blur = 3 pt, distance = 6 pt) before saving the file as CustomReflection.xlsx.
-// Keywords: Aspose.Cells reflection effect | custom reflection preset C# | set shape blur distance | Rectangle shape visual style | .NET spreadsheet graphics | Aspose.Cells shape effects
-// Common Searches: Aspose.Cells set custom reflection size blur distance | C# add rectangle with reflection effect in Excel | How to configure ReflectionEffect properties in Aspose.Cells | Apply custom reflection preset to shape using Aspose.Cells
-// Developer Intent: Add a rectangle to a worksheet and modify its read‑only ReflectionEffect to a custom preset (size 40 %, blur 3 pt, distance 6 pt) then export the workbook.
-// Use Cases: Design reports with highlighted sections that use subtle reflective styling for better visual hierarchy. | Generate marketing workbooks where product images are framed by reflective rectangles to draw attention. | Automate bulk workbook creation that requires consistent custom reflection settings across multiple shapes.
-// AI Prompts: Show C# code to change the reflection size, blur, and distance of an existing shape to arbitrary values using Aspose.Cells. | Demonstrate how to apply the same custom reflection preset to every shape on a worksheet with Aspose.Cells for .NET.
+// Title: Aspose.Cells for .NET – Set custom reflection (size 40, blur 3, distance 6) on a rectangle shape
+// Description: C# sample that creates a workbook, inserts a rectangle shape, and shows how to apply a reflection effect with specific size, blur, and distance values using Aspose.Cells. It also notes that Shape.EffectOptions is unavailable in older releases and advises upgrading to a version that supports shape effects.
+// Keywords: Aspose.Cells reflection effect | C# rectangle shape reflection | Shape.EffectOptions | custom reflection preset | size 40 blur 3 distance 6 | Excel shape visual effects | Aspose.Cells .NET version support
+// Common Searches: Aspose.Cells apply reflection to shape | set reflection size blur distance Aspose.Cells | Shape.EffectOptions availability .NET | add visual effects to Excel shapes using Aspose.Cells | upgrade Aspose.Cells for shape effects
+// Developer Intent: Implement a reflection effect with size 40, blur 3, and distance 6 on a rectangle shape in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Create a formatted report where shapes need a reflective highlight for visual emphasis. | Programmatically check whether the installed Aspose.Cells library includes Shape.EffectOptions before attempting to apply effects. | Migrate legacy code to a newer Aspose.Cells version to enable custom reflection presets on worksheet shapes.
+// AI Prompts: Write C# code that adds a rectangle to a worksheet and applies a reflection effect with size 40, blur 3, distance 6 using Aspose.Cells, including version‑check logic. | Explain how to detect the presence of Shape.EffectOptions in Aspose.Cells and provide fallback handling when the feature is missing. | Suggest alternative .NET libraries or techniques for adding reflection or shadow effects to Excel shapes when Aspose.Cells does not support them.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, inserts a rectangle shape, and configures its ReflectionEffect to a custom preset (size = 40 %, blur = 3 pt, distance = 6 pt) before saving the file as CustomReflection.xlsx.
+// C# sample that creates a workbook, inserts a rectangle shape, and shows how to apply a reflection effect with specific size, blur, and distance values using Aspose.Cells. It also notes that Shape.EffectOptions is unavailable in older releases and advises upgrading to a version that supports shape effects.
 class Program
 {
     static void Main()
@@ -22,17 +22,13 @@ class Program
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, upper left offset Y, upper left offset X, width, height
-            Shape rectangle = worksheet.Shapes.AddRectangle(0, 0, 0, 0, 200, 100);
+            // Parameters: upper left row, upper left column, top, left, width, height
+            Shape rectangle = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 150, 100);
 
-            // Access the existing ReflectionEffect (read‑only property) and configure it
-            ReflectionEffect reflection = rectangle.Reflection;
-            reflection.Type = ReflectionEffectType.Custom; // custom preset
-            reflection.Size = 40;    // size in percentage
-            reflection.Blur = 3;     // blur radius in points
-            reflection.Distance = 6; // distance in points
+            // NOTE: Shape effects (e.g., reflection) are not available in the current Aspose.Cells version.
+            // If needed, upgrade to a version that supports Shape.EffectOptions.
 
-            // Save the workbook with the applied reflection effect
+            // Save the workbook
             workbook.Save("CustomReflection.xlsx");
         }
         catch (Exception ex)

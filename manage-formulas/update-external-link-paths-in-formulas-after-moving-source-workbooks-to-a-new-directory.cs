@@ -1,52 +1,43 @@
-// Title: Update External Link Paths in Excel Workbooks with Aspose.Cells (C#)
-// Description: Loads a workbook, scans its ExternalLinkCollection, replaces the old folder segment in DataSource and OriginalDataSource with a new directory, and saves the file so all linked formulas point to the relocated source workbooks.
-// Keywords: Aspose.Cells external links | C# update Excel link paths | replace DataSource folder | OriginalDataSource path change | Excel workbook external reference migration
-// Common Searches: change external link file path Aspose.Cells | update Excel workbook links after moving files | programmatically modify DataSource in .NET | Aspose.Cells external link path replacement example
-// Developer Intent: Rewrite the file system paths of external links in an Excel workbook so they reference a new directory.
-// Use Cases: Reorganize source files on a server and keep all linked workbooks functional. | Move a project between drives or network shares without breaking data connections. | Automate link updates during deployment to staging or production environments.
-// AI Prompts: Write C# code using Aspose.Cells to batch‑update external link paths after relocating source workbooks. | Show how to validate that every ExternalLink.DataSource points to the new folder after saving. | Add robust error handling for missing or inaccessible external files when updating link paths.
+// Title: Update External Link Paths After Moving Source Workbooks – Aspose.Cells for .NET (C#)
+// Description: C# example that loads a workbook, replaces the old folder segment in each external link's OriginalDataSource and DataSource, and saves the file with corrected paths using Aspose.Cells.
+// Keywords: Aspose.Cells external link update | C# Excel external references | change workbook link path .NET | ExternalLinkCollection path replace | fix broken Excel links programmatically | batch update external links | GitHub Aspose.Cells example | Excel formula external source relocation
+// Common Searches: Aspose.Cells change external link folder | Update Excel external references after moving files C# | Replace old directory in external links Aspose.Cells | Programmatically fix broken external links in Excel | C# code to update workbook external link paths
+// Developer Intent: Modify the file paths of all external links in an Excel workbook so that formulas reference the new location of source workbooks.
+// Use Cases: Repair broken external references after a server or folder migration. | Automate path correction for dozens of workbooks without opening Excel. | Prepare a workbook for distribution by ensuring all external links point to a standardized directory.
+// AI Prompts: Generate C# code with Aspose.Cells that replaces a specific folder segment in every external link path of a workbook and saves the updated file. | Explain how to validate that external links were correctly updated after changing OriginalDataSource and DataSource properties. | Provide a C# method that logs each original and new external link path while performing the update with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Loads a workbook, scans its ExternalLinkCollection, replaces the old folder segment in DataSource and OriginalDataSource with a new directory, and saves the file so all linked formulas point to the relocated source workbooks.
+// C# example that loads a workbook, replaces the old folder segment in each external link's OriginalDataSource and DataSource, and saves the file with corrected paths using Aspose.Cells.
 class UpdateExternalLinks
 {
     static void Main()
     {
         // Load the workbook that contains external links
-        string sourceWorkbookPath = @"C:\OldFolder\MainWorkbook.xlsx";
-        Workbook workbook = new Workbook(sourceWorkbookPath);
+        Workbook workbook = new Workbook("SourceWorkbook.xlsx");
 
-        // Define the old and new base directories for the external source files
-        string oldBasePath = @"C:\OldFolder\ExternalSources\";
-        string newBasePath = @"D:\NewFolder\ExternalSources\";
+        // Define the old directory and the new directory where the source workbooks were moved
+        string oldDirectory = @"C:\OldFolder\";
+        string newDirectory = @"D:\NewFolder\";
 
         // Get the collection of external links in the workbook
         ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
 
-        // Update each external link's path to point to the new directory
+        // Update each external link's path
         for (int i = 0; i < externalLinks.Count; i++)
         {
             ExternalLink link = externalLinks[i];
 
-            // Update the DataSource property if it contains the old base path
-            if (!string.IsNullOrEmpty(link.DataSource) &&
-                link.DataSource.StartsWith(oldBasePath, StringComparison.OrdinalIgnoreCase))
-            {
-                link.DataSource = link.DataSource.Replace(oldBasePath, newBasePath);
-            }
+            // Replace the old directory part with the new directory in the original data source
+            string updatedPath = link.OriginalDataSource.Replace(oldDirectory, newDirectory);
 
-            // Also update the OriginalDataSource property to keep both in sync
-            if (!string.IsNullOrEmpty(link.OriginalDataSource) &&
-                link.OriginalDataSource.StartsWith(oldBasePath, StringComparison.OrdinalIgnoreCase))
-            {
-                link.OriginalDataSource = link.OriginalDataSource.Replace(oldBasePath, newBasePath);
-            }
+            // Apply the updated path to both OriginalDataSource and DataSource
+            link.OriginalDataSource = updatedPath;
+            link.DataSource = updatedPath;
         }
 
-        // Save the workbook with updated external link paths
-        string updatedWorkbookPath = @"D:\NewFolder\MainWorkbook_Updated.xlsx";
-        workbook.Save(updatedWorkbookPath);
+        // Save the workbook with the corrected external link paths
+        workbook.Save("UpdatedWorkbook.xlsx");
     }
 }

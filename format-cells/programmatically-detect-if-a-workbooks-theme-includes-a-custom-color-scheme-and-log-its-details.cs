@@ -1,64 +1,45 @@
-// Title: Detect custom Excel theme and list its colors with Aspose.Cells for .NET
-// Description: Shows how to read a workbook's Theme property, determine if it differs from the default "Office" theme, and enumerate all ThemeColorType values (except StyleColor) to log their ARGB components. Includes optional code to apply a custom theme and save the file.
-// Keywords: Aspose.Cells custom theme detection | Excel theme colors .NET | GetThemeColor C# | ThemeColorType enumeration | Workbook.Theme property | log Excel theme colors
-// Common Searches: how to check if an Excel file uses a custom theme with Aspose.Cells | retrieve theme colors from a workbook using C# | Aspose.Cells detect non‑Office theme | list ARGB values of Excel theme colors | C# code to read Excel theme scheme
-// Developer Intent: Identify whether a workbook uses a non‑default theme and output each theme color's ARGB values.
-// Use Cases: Verify that generated reports follow corporate branding by confirming the applied theme. | Audit a collection of spreadsheets for unauthorized custom themes. | Debug visual inconsistencies by logging exact theme color values.
-// AI Prompts: Generate C# code with Aspose.Cells that checks if Workbook.Theme is not "Office" and prints all ThemeColorType colors with ARGB values. | Create a method that receives a Workbook and returns a dictionary of ThemeColorType to Color, excluding StyleColor, and a flag indicating a custom theme. | Provide an example that loads an existing .xlsx, detects a custom theme, and writes a text log of each theme color.
+// Title: Detect Custom Excel Theme and List Its Colors with Aspose.Cells for .NET
+// Description: Load an Excel workbook, verify if its theme is not the default "Office" theme, and when a custom theme is present enumerate the 12 ThemeColorType slots via GetThemeColor, outputting each color's ARGB components. Includes optional workbook save.
+// Keywords: Aspose.Cells | custom theme detection | enumerate theme colors | GetThemeColor | Excel workbook theme | C# | .NET | ThemeColorType | ARGB values
+// Common Searches: Aspose.Cells check if workbook uses custom theme | list all theme colors from Excel file C# | retrieve ARGB values of Excel theme colors | detect non‑default theme in .NET Excel workbook | how to get theme color palette with Aspose.Cells
+// Developer Intent: Identify whether a workbook uses a non‑default theme and extract the full set of theme colors.
+// Use Cases: Validate corporate branding by confirming the workbook’s theme matches a predefined palette. | Create a design audit report that lists every theme color and its ARGB values for migration or compliance. | Drive conditional‑formatting logic that adapts based on the detected custom theme colors.
+// AI Prompts: Generate a C# method that returns a Dictionary<ThemeColorType, Color> for any workbook, handling both default and custom themes. | Write a reusable Aspose.Cells utility class that detects a custom theme and logs each theme color with ARGB values, including file‑not‑found handling. | Provide sample code to compare extracted custom theme colors against a corporate color standard and flag any mismatches.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// Shows how to read a workbook's Theme property, determine if it differs from the default "Office" theme, and enumerate all ThemeColorType values (except StyleColor) to log their ARGB components. Includes optional code to apply a custom theme and save the file.
+// Load an Excel workbook, verify if its theme is not the default "Office" theme, and when a custom theme is present enumerate the 12 ThemeColorType slots via GetThemeColor, outputting each color's ARGB components. Includes optional workbook save.
 class DetectCustomTheme
 {
     static void Main()
     {
-        // Create a new workbook (you could also load an existing file)
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace the path with your file)
+        Workbook workbook = new Workbook("input.xlsx"); // load rule
 
-        // ------------------------------------------------------------
-        // OPTIONAL: Apply a custom theme to demonstrate detection.
-        // In real scenarios you would load a workbook that may already
-        // contain a custom theme.
-        // ------------------------------------------------------------
-        Color[] customColors = new Color[12];
-        customColors[0] = Color.Red;          // Background1
-        customColors[1] = Color.Green;        // Text1
-        customColors[2] = Color.Blue;         // Background2
-        customColors[3] = Color.Yellow;       // Text2
-        // Remaining accent and hyperlink colors – using a neutral gray
-        for (int i = 4; i < 12; i++)
-        {
-            customColors[i] = Color.FromArgb(255, 128, 128, 128);
-        }
-        workbook.CustomTheme("MyCustomTheme", customColors);
-
-        // ------------------------------------------------------------
-        // Detect whether the workbook uses a custom theme.
-        // The default theme name in Excel is typically "Office".
-        // If the name differs, we treat it as a custom theme.
-        // ------------------------------------------------------------
+        // Retrieve the theme name
         string themeName = workbook.Theme;
-        bool isCustomTheme = !string.Equals(themeName, "Office", StringComparison.OrdinalIgnoreCase);
-
         Console.WriteLine($"Theme name: {themeName}");
-        Console.WriteLine($"Is custom theme: {isCustomTheme}");
 
-        // ------------------------------------------------------------
-        // Log details of all theme colors.
-        // ThemeColorType.StyleColor is internal and can be skipped.
-        // ------------------------------------------------------------
-        foreach (ThemeColorType type in Enum.GetValues(typeof(ThemeColorType)))
+        // Determine if the theme is custom.
+        // The default theme name is usually "Office". Any other name indicates a custom theme.
+        bool isCustom = !string.Equals(themeName, "Office", StringComparison.OrdinalIgnoreCase);
+        Console.WriteLine($"Is custom theme: {isCustom}");
+
+        // If a custom theme is present, enumerate its 12 theme colors.
+        if (isCustom)
         {
-            if (type == ThemeColorType.StyleColor) continue;
-
-            Color color = workbook.GetThemeColor(type);
-            Console.WriteLine($"{type}: A={color.A}, R={color.R}, G={color.G}, B={color.B}");
+            // ThemeColorType enum values 0‑11 correspond to the 12 theme slots.
+            for (int i = 0; i <= 11; i++)
+            {
+                ThemeColorType type = (ThemeColorType)i;
+                Color color = workbook.GetThemeColor(type);
+                Console.WriteLine($"{type}: A={color.A}, R={color.R}, G={color.G}, B={color.B}");
+            }
         }
 
-        // Save the workbook (optional, demonstrates persistence of the theme)
-        workbook.Save("DetectCustomTheme.xlsx");
+        // Save the workbook (optional, demonstrates the save rule)
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,40 +1,63 @@
-// Title: Restore Default Pivot Table Ribbon and Enable Wizard/Field List with Aspose.Cells for .NET (C#)
-// Description: Loads an existing workbook, clears any custom RibbonXml, disables the HidePivotFieldList flag, iterates through all worksheets to set EnableWizard and EnableFieldList on each PivotTable, and saves the file so the standard Excel pivot UI appears when opened.
-// Keywords: Aspose.Cells C# | pivot table ribbon reset | EnableWizard Aspose.Cells | EnableFieldList Aspose.Cells | RibbonXml clear | HidePivotFieldList false | restore Excel UI programmatically | pivot wizard activation | default pivot ribbon
-// Common Searches: how to show pivot table ribbon after loading workbook Aspose.Cells | enable pivot wizard and field list with C# Aspose.Cells | reset RibbonXml in Excel file using Aspose.Cells | programmatically display pivot field list in .NET | Aspose.Cells restore default pivot UI
-// Developer Intent: Programmatically re‑enable the Excel pivot‑table ribbon, wizard, and field list for all pivot tables in a workbook using Aspose.Cells for .NET.
-// Use Cases: A workbook imported from another source hides the pivot ribbon; the code restores the default UI for end users. | Multiple worksheets contain pivot tables that need the wizard and field list enabled without manual editing. | Automated report generation pipelines require the pivot UI to be visible when the file is opened in Excel.
-// AI Prompts: Generate C# code with Aspose.Cells that clears RibbonXml and makes the pivot field list visible for every pivot table. | Create a reusable method that accepts a file path, enables the pivot wizard and field list, and saves the workbook. | Show an example that processes a workbook containing several sheets and pivot tables, restoring the default pivot ribbon UI programmatically.
+// Title: Enable PivotTable Ribbon, Wizard, and Field List programmatically with Aspose.Cells for .NET (C#)
+// Description: Loads an existing XLSX workbook, removes any custom Ribbon XML to restore Excel's default ribbon, makes the PivotFieldList pane visible, and iterates through all worksheets to set each PivotTable's EnableWizard and EnableFieldList properties to true before saving the file.
+// Keywords: Aspose.Cells enable pivot ribbon | restore default Excel ribbon Aspose | show pivot field list C# | pivot table wizard enable Aspose.Cells | clear RibbonXml Aspose | pivot table UI programmatically | Aspose.Cells C# pivot settings
+// Common Searches: how to reset ribbon UI for pivot tables using Aspose.Cells | enable pivot table wizard and field list in all sheets Aspose.Cells .NET | remove custom RibbonXml and show pivot field list Aspose.Cells | programmatically show pivot field list in Excel workbook C# | restore default ribbon after loading workbook Aspose
+// Developer Intent: Reset any custom ribbon configuration and activate the PivotTable wizard and field‑list UI for every pivot table in a loaded workbook.
+// Use Cases: A reporting tool loads a workbook saved with a custom ribbon, clears RibbonXml, and returns the standard Excel ribbon for end users. | Generating dynamic dashboards where all pivot tables must expose the wizard and field‑list dialogs without manual user interaction. | Automating the preparation of shared workbooks so recipients can immediately access PivotTable UI features.
+// AI Prompts: Write C# code using Aspose.Cells to clear custom RibbonXml, enable the PivotTable wizard and field list for all pivot tables, and save the workbook. | Show an example that loads an .xlsx file, makes the PivotFieldList pane visible, restores the default ribbon UI, and saves the result. | Explain how to iterate over worksheets and pivot tables to set EnableWizard and EnableFieldList properties with Aspose.Cells for .NET.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Loads an existing workbook, clears any custom RibbonXml, disables the HidePivotFieldList flag, iterates through all worksheets to set EnableWizard and EnableFieldList on each PivotTable, and saves the file so the standard Excel pivot UI appears when opened.
-class EnablePivotRibbonDemo
+namespace AsposeCellsPivotRibbonDemo
 {
-    static void Main()
+    // Loads an existing XLSX workbook, removes any custom Ribbon XML to restore Excel's default ribbon, makes the PivotFieldList pane visible, and iterates through all worksheets to set each PivotTable's EnableWizard and EnableFieldList properties to true before saving the file.
+    public class Program
     {
-        // Load the workbook that contains pivot tables
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Clear any custom Ribbon XML to restore the default Ribbon UI
-        workbook.RibbonXml = null; // or string.Empty
-
-        // Ensure the PivotTable field list is not hidden by workbook settings
-        workbook.Settings.HidePivotFieldList = false;
-
-        // Enable wizard and field list for each pivot table in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        public static void Main()
         {
-            foreach (PivotTable pivot in sheet.PivotTables)
+            const string inputPath = "InputWithPivot.xlsx";
+            const string outputPath = "OutputWithDefaultRibbon.xlsx";
+
+            try
             {
-                pivot.EnableWizard = true;
-                pivot.EnableFieldList = true;
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                    return;
+                }
+
+                // Load the workbook that contains pivot tables
+                Workbook workbook = new Workbook(inputPath);
+
+                // Restore the default Ribbon UI by clearing any custom Ribbon XML
+                workbook.RibbonXml = null;
+
+                // Ensure the pivot field list UI is visible
+                workbook.Settings.HidePivotFieldList = false;
+
+                // Enable UI features for each pivot table in every worksheet
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    foreach (PivotTable pt in sheet.PivotTables)
+                    {
+                        pt.EnableWizard = true;
+                        pt.EnableFieldList = true;
+                    }
+                }
+
+                // Save the modified workbook (default format is XLSX)
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        // Save the workbook with the restored UI elements
-        workbook.Save("output.xlsx");
     }
 }

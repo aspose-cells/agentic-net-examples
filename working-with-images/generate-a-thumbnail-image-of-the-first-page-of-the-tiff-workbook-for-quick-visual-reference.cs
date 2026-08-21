@@ -1,52 +1,38 @@
+// Title: Generate a PNG thumbnail of the first worksheet page with Aspose.Cells for .NET (C#)
+// Description: This C# example loads an Excel workbook, configures ImageOrPrintOptions for a 96 dpi PNG, creates a WorkbookRender instance, and saves the first sheet (page index 0) as a compact thumbnail for quick visual reference.
+// Keywords: Aspose.Cells | C# thumbnail generation | WorkbookRender | Excel to PNG | low DPI image | first worksheet preview | image rendering API | Aspose.Cells .NET | Excel preview thumbnail | render workbook page
+// Common Searches: Aspose.Cells create thumbnail of first Excel sheet | C# render worksheet to PNG using Aspose.Cells | How to generate low‑resolution preview of an Excel workbook | WorkbookRender ToImage example C# | Create file‑browser icons from Excel files
+// Developer Intent: Produce a small PNG preview of the workbook’s first page using Aspose.Cells.
+// Use Cases: Show document previews in a web portal or intranet | Display icons for Excel files in a desktop file manager | Include page snapshots in automated test logs | Speed up content indexing by storing lightweight images
+// AI Prompts: Modify the code to create thumbnails for every worksheet in the workbook. | Change the output format to JPEG and adjust the resolution dynamically. | Add robust error handling for missing files, unsupported formats, and permission issues.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsThumbnailDemo
+// This C# example loads an Excel workbook, configures ImageOrPrintOptions for a 96 dpi PNG, creates a WorkbookRender instance, and saves the first sheet (page index 0) as a compact thumbnail for quick visual reference.
+class ThumbnailGenerator
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the source workbook (can be an existing Excel file)
-            string sourceWorkbookPath = "source.xlsx";
+        // Load the source workbook (replace with your actual file path)
+        string workbookPath = "input.xlsx";
+        Workbook workbook = new Workbook(workbookPath);
 
-            // Path where the thumbnail image will be saved
-            string thumbnailPath = "thumbnail_page0.png";
+        // Configure rendering options for a small thumbnail image
+        ImageOrPrintOptions options = new ImageOrPrintOptions();
+        options.ImageType = ImageType.Png;               // Output format
+        options.HorizontalResolution = 96;               // Lower DPI for thumbnail
+        options.VerticalResolution = 96;
 
-            // Load the workbook from file
-            Workbook workbook = new Workbook(sourceWorkbookPath);
+        // Create a renderer for the workbook
+        WorkbookRender renderer = new WorkbookRender(workbook, options);
 
-            // Configure rendering options for a small thumbnail
-            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
-            {
-                // Render as PNG (supports transparency and small file size)
-                ImageType = ImageType.Png,
+        // Render the first page (index 0) to a thumbnail file
+        string thumbnailPath = "thumbnail_page0.png";
+        renderer.ToImage(0, thumbnailPath);               // Uses WorkbookRender.ToImage(int, string)
 
-                // Render only one page per sheet to simplify thumbnail generation
-                OnePagePerSheet = true,
-
-                // Reduce resolution for a thumbnail (e.g., 96 DPI)
-                HorizontalResolution = 96,
-                VerticalResolution = 96,
-
-                // Optional: set page index to start from the first page (default is 0)
-                PageIndex = 0
-            };
-
-            // Create a WorkbookRender instance (required after any page setup changes)
-            WorkbookRender renderer = new WorkbookRender(workbook, renderOptions);
-
-            // Render the first page (page index 0) to an image file
-            // This uses the rule: WorkbookRender.ToImage(int, string)
-            renderer.ToImage(0, thumbnailPath);
-
-            // Clean up resources
-            renderer.Dispose();
-
-            Console.WriteLine($"Thumbnail of the first page saved to: {thumbnailPath}");
-        }
+        Console.WriteLine($"Thumbnail of first page saved to: {thumbnailPath}");
     }
 }

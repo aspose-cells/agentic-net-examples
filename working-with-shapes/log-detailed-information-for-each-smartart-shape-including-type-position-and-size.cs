@@ -1,10 +1,10 @@
-// Title: C# – Log SmartArt Shape Type, Position and Size in an Excel Workbook with Aspose.Cells
-// Description: Sample code that opens an Excel file, iterates through all worksheets, identifies SmartArt shapes, and writes each shape’s name, .NET type, left/top coordinates and width/height (pixels) to the console. Shows how to use Aspose.Cells ShapeCollection and SmartArtShape classes.
-// Keywords: Aspose.Cells SmartArt | C# SmartArt shape properties | retrieve SmartArt position | SmartArt size pixels | log SmartArt type | Excel shape collection .NET | iterate worksheet shapes | Aspose.Cells get SmartArt dimensions | SmartArt shape logging C# | Excel automation Aspose.Cells
-// Common Searches: How to list SmartArt shapes in an Excel file using Aspose.Cells C# | Get SmartArt coordinates and size with Aspose.Cells .NET | Retrieve SmartArt type and name from worksheets in C# | Log SmartArt shape details while iterating worksheet shapes | Aspose.Cells example for SmartArt position and dimensions
-// Developer Intent: Extract and log the name, .NET type, left/top position and width/height of every SmartArt shape in an Excel workbook.
-// Use Cases: Audit SmartArt objects to ensure correct layout before publishing a workbook. | Create a CSV report of SmartArt locations and dimensions for automated slide conversion. | Validate SmartArt size and placement against corporate design guidelines during batch processing. | Debug layout issues by printing shape metrics during development.
-// AI Prompts: Generate C# code that exports SmartArt shape details (name, type, position, size) to a CSV file using Aspose.Cells. | Show how to filter SmartArt shapes by a specific layout type (e.g., Process) while iterating worksheets. | Explain how to change the position or size of a SmartArt shape after logging its current values with Aspose.Cells.
+// Title: Aspose.Cells .NET: Log SmartArt Shape Type, Position, Size, Visibility and Z‑Order in Excel
+// Description: C# sample that opens an Excel workbook, scans every worksheet, detects SmartArt shapes, and writes each shape's name, .NET type, left/top coordinates, width/height (pixels), hidden flag and Z‑order to the console.
+// Keywords: Aspose.Cells SmartArt shape enumeration | C# get SmartArt coordinates | log SmartArt dimensions Aspose | retrieve SmartArt visibility .NET | Excel SmartArt Z‑order Aspose.Cells | Aspose.Cells shape properties | SmartArt shape diagnostics C#
+// Common Searches: how to list SmartArt shapes in an Excel file using Aspose.Cells | Aspose.Cells get SmartArt position and size | enumerate SmartArt objects in .NET workbook | retrieve SmartArt Z‑order with Aspose.Cells | log hidden status of SmartArt shapes in C#
+// Developer Intent: Extract and output the name, type, coordinates, dimensions, hidden state and Z‑order of every SmartArt shape contained in an Excel workbook.
+// Use Cases: Create a layout audit report to verify SmartArt placement before publishing a spreadsheet. | Automate quality checks that flag SmartArt objects outside expected size or position ranges. | Debug visual stacking issues by reviewing each shape's Z‑order and visibility flag.
+// AI Prompts: Generate C# code that writes the logged SmartArt details to a CSV file using Aspose.Cells. | Show how to offset each SmartArt shape by a given X/Y value after logging its original coordinates. | Explain how to filter SmartArt shapes by specific diagram types (e.g., Process, Cycle) with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
@@ -12,39 +12,47 @@ using Aspose.Cells.Drawing;
 
 namespace SmartArtInfoLogger
 {
-    // Sample code that opens an Excel file, iterates through all worksheets, identifies SmartArt shapes, and writes each shape’s name, .NET type, left/top coordinates and width/height (pixels) to the console. Shows how to use Aspose.Cells ShapeCollection and SmartArtShape classes.
+    // C# sample that opens an Excel workbook, scans every worksheet, detects SmartArt shapes, and writes each shape's name, .NET type, left/top coordinates, width/height (pixels), hidden flag and Z‑order to the console.
     class Program
     {
         static void Main(string[] args)
         {
-            // Load an existing workbook (replace with actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Load an existing workbook (replace with your actual file path)
+            string inputPath = "input.xlsx";
+            Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Iterate through each worksheet
+            foreach (Worksheet worksheet in workbook.Worksheets)
             {
-                // Get the collection of shapes on the current worksheet
-                ShapeCollection shapes = sheet.Shapes;
-
-                // Loop through each shape
-                foreach (Shape shape in shapes)
+                // Iterate through all shapes in the worksheet
+                foreach (Shape shape in worksheet.Shapes)
                 {
                     // Check if the shape is a SmartArt shape
-                    if (shape.IsSmartArt && shape is SmartArtShape smartArt)
+                    if (shape.IsSmartArt && shape is SmartArtShape smartArtShape)
                     {
-                        // Log detailed information
-                        Console.WriteLine("Worksheet: {0}", sheet.Name);
-                        Console.WriteLine("SmartArt Name: {0}", smartArt.Name);
-                        Console.WriteLine("Type: {0}", smartArt.GetType().Name);
-                        Console.WriteLine("Position - Left: {0} px, Top: {1} px", smartArt.Left, smartArt.Top);
-                        Console.WriteLine("Size - Width: {0} px, Height: {1} px", smartArt.Width, smartArt.Height);
-                        Console.WriteLine(new string('-', 40));
+                        // Log basic identification
+                        Console.WriteLine("=== SmartArt Shape Detected ===");
+                        Console.WriteLine($"Name          : {shape.Name}");
+                        Console.WriteLine($"Shape Type    : {smartArtShape.GetType().Name}");
+
+                        // Log position (in pixels)
+                        Console.WriteLine($"Left (X)      : {shape.Left}");
+                        Console.WriteLine($"Top (Y)       : {shape.Top}");
+
+                        // Log size (in pixels)
+                        Console.WriteLine($"Width         : {shape.Width}");
+                        Console.WriteLine($"Height        : {shape.Height}");
+
+                        // Additional optional details
+                        Console.WriteLine($"IsHidden      : {shape.IsHidden}");
+                        Console.WriteLine($"Z-Order       : {shape.ZOrderPosition}");
+                        Console.WriteLine();
                     }
                 }
             }
 
             // Optionally save the workbook if any modifications were made
-            workbook.Save("output.xlsx");
+            // workbook.Save("output.xlsx");
         }
     }
 }

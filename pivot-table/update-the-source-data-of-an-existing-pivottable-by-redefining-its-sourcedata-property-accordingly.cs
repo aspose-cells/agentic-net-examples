@@ -1,73 +1,62 @@
-// Title: Update PivotTable Source Range with Aspose.Cells for .NET (C#)
-// Description: Loads an existing Excel workbook, accesses the first worksheet and its first PivotTable, redefines the PivotTable's source range using the ChangeDataSource method, refreshes and recalculates the pivot data, and saves the modified file. Demonstrates how to programmatically change a PivotTable's data source in C# with Aspose.Cells.
-// Keywords: Aspose.Cells | C# | .NET | PivotTable | ChangeDataSource | RefreshData | CalculateData | update pivot source | modify pivot data range | Excel automation | programmatic pivot table
-// Common Searches: Aspose.Cells change pivot table source range C# | How to update PivotTable data source with Aspose.Cells | RefreshData after changing pivot source Aspose.Cells | C# code to modify PivotTable source in Excel | Aspose.Cells ChangeDataSource example
-// Developer Intent: Programmatically redefine the source data of an existing PivotTable and refresh its calculations using Aspose.Cells for .NET.
-// Use Cases: Switch a PivotTable to a new data block after adding or removing columns. | Point multiple PivotTables to a consolidated data range without recreating them. | Adapt a PivotTable when the underlying dataset expands or contracts dynamically.
-// AI Prompts: Generate C# code that updates a PivotTable to use a named range as its source with Aspose.Cells. | Show how to change the source data for all PivotTables in a workbook and refresh them using Aspose.Cells for .NET. | Explain how to keep PivotTable formatting intact while changing its data source programmatically.
+// Title: C# – Update PivotTable Source Range Using Aspose.Cells ChangeDataSource
+// Description: Demonstrates how to modify the source data of an existing PivotTable in a .NET workbook. The example creates initial data (A1:B4), builds a PivotTable, adds a new data block (C1:D4), calls PivotTable.ChangeDataSource with the new range and worksheet name, then refreshes and recalculates the pivot before saving the file as UpdatedPivotSource.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | PivotTable | ChangeDataSource | update pivot source range | refresh pivot data | calculate pivot | programmatic pivot table | Excel automation | Aspose.Cells example | GitHub sample | code snippet
+// Common Searches: Aspose.Cells change pivot table source range C# | How to use PivotTable.ChangeDataSource in .NET | Refresh PivotTable after source update Aspose.Cells | Update existing PivotTable data range programmatically | Aspose.Cells PivotTable example GitHub
+// Developer Intent: Replace the data range of an existing PivotTable with a new worksheet range and refresh the pivot to reflect the updated data.
+// Use Cases: Switch a PivotTable from its original range (A1:B4) to a new range (C1:D4) without recreating the pivot. | Programmatically adjust a PivotTable after inserting or modifying worksheet data. | Automate Excel reports where the source dataset changes dynamically and the pivot must stay in sync.
+// AI Prompts: Show me C# code to change a PivotTable's source range with Aspose.Cells and refresh it. | Provide an Aspose.Cells example that updates a PivotTable to use a different worksheet range and saves the workbook. | Explain step‑by‑step how to modify the SourceData of an existing PivotTable in .NET and ensure the pivot reflects the new data.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Loads an existing Excel workbook, accesses the first worksheet and its first PivotTable, redefines the PivotTable's source range using the ChangeDataSource method, refreshes and recalculates the pivot data, and saves the modified file. Demonstrates how to programmatically change a PivotTable's data source in C# with Aspose.Cells.
-class UpdatePivotSource
+// Demonstrates how to modify the source data of an existing PivotTable in a .NET workbook. The example creates initial data (A1:B4), builds a PivotTable, adds a new data block (C1:D4), calls PivotTable.ChangeDataSource with the new range and worksheet name, then refreshes and recalculates the pivot before saving the file as UpdatedPivotSource.xlsx.
+class UpdatePivotSourceDemo
 {
     static void Main()
     {
-        try
-        {
-            const string inputPath = "Input.xlsx";
-            const string outputPath = "Output.xlsx";
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Verify input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
-            }
+        // ---------- Original data (A1:B4) ----------
+        sheet.Cells["A1"].PutValue("Product");
+        sheet.Cells["B1"].PutValue("Sales");
+        sheet.Cells["A2"].PutValue("Apple");
+        sheet.Cells["B2"].PutValue(1000);
+        sheet.Cells["A3"].PutValue("Banana");
+        sheet.Cells["B3"].PutValue(2000);
+        sheet.Cells["A4"].PutValue("Orange");
+        sheet.Cells["B4"].PutValue(3000);
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+        // Create a pivot table based on the original data range
+        int pivotIndex = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
+        PivotTable pivot = sheet.PivotTables[pivotIndex];
+        pivot.AddFieldToArea(PivotFieldType.Row, "Product");
+        pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+        pivot.RefreshData();
+        pivot.CalculateData();
 
-            // Ensure there is at least one worksheet
-            if (workbook.Worksheets.Count == 0)
-            {
-                Console.WriteLine("The workbook does not contain any worksheets.");
-                return;
-            }
+        // ---------- New data (C1:D4) ----------
+        sheet.Cells["C1"].PutValue("Product");
+        sheet.Cells["D1"].PutValue("Sales");
+        sheet.Cells["C2"].PutValue("Grape");
+        sheet.Cells["D2"].PutValue(4000);
+        sheet.Cells["C3"].PutValue("Mango");
+        sheet.Cells["D3"].PutValue(5000);
+        sheet.Cells["C4"].PutValue("Peach");
+        sheet.Cells["D4"].PutValue(6000);
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Change the pivot table's data source to the new range
+        // The source array contains the range address and the worksheet name
+        string[] newSource = new string[] { "C1:D4", sheet.Name };
+        pivot.ChangeDataSource(newSource);
 
-            // Ensure the worksheet contains at least one pivot table
-            if (worksheet.PivotTables.Count == 0)
-            {
-                Console.WriteLine("No pivot tables found in the first worksheet.");
-                return;
-            }
+        // Refresh and recalculate the pivot table to reflect the new source
+        pivot.RefreshData();
+        pivot.CalculateData();
 
-            // Retrieve the first pivot table
-            PivotTable pivotTable = worksheet.PivotTables[0];
-
-            // Define the new data source range (e.g., C1:D10 on the same sheet)
-            string newDataSource = $"{worksheet.Name}!C1:D10";
-
-            // Change the pivot table's data source (expects a string array)
-            pivotTable.ChangeDataSource(new string[] { newDataSource });
-
-            // Refresh and recalculate the pivot table
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook with the updated pivot table
+        workbook.Save("UpdatedPivotSource.xlsx");
     }
 }

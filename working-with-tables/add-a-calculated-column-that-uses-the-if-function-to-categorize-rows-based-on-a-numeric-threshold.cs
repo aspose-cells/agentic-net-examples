@@ -1,72 +1,55 @@
-// Title: Add a Calculated Column with IF Formula in Aspose.Cells for C# (.NET)
-// Description: Creates a new workbook, populates columns A and B with sample items and numbers, defines a numeric threshold, inserts an =IF formula into column C to tag each row as “High” or “Low”, evaluates all formulas, and saves the file as WorkbookWithCalculatedColumn.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | IF formula | calculated column | Excel automation | threshold classification | programmatic formula | evaluate formulas | save workbook | Excel data categorization
-// Common Searches: Aspose.Cells add calculated column with IF | C# set IF formula in Excel using Aspose.Cells | programmatically categorize rows by threshold in .xlsx | how to evaluate formulas after adding them in Aspose.Cells | save workbook after inserting calculated column Aspose.Cells
-// Developer Intent: Programmatically create an Excel worksheet, add an IF‑based calculated column that classifies numeric values against a threshold, recalculate the sheet, and write the result to a file.
-// Use Cases: Automatic scoring of KPI values as “High” or “Low” in a generated report. | Data‑validation sheet that flags entries exceeding a business limit without manual edits. | Export of processed analytics where each record includes a pre‑computed category for downstream tools.
-// AI Prompts: Generate C# code using Aspose.Cells that adds a calculated column with an IF formula comparing each row's value to a given threshold and saves the workbook. | Show how to loop through rows in Aspose.Cells, assign an =IF formula to a cell, recalculate all formulas, and export the result as an .xlsx file. | Explain how to define a numeric threshold variable, build the IF formula with string interpolation, and apply it to multiple rows in Aspose.Cells.
+// Title: C# – Add a calculated column with IF formula to classify rows by threshold using Aspose.Cells
+// Description: Creates a new workbook, writes numeric values to column A, defines a threshold, inserts an IF formula in column B that returns “High” when the value exceeds the threshold and “Low” otherwise, calculates all formulas, and saves the file as CalculatedColumn.xlsx.
+// Keywords: Aspose.Cells | C# | calculated column | IF formula | threshold classification | programmatic Excel | formula calculation | Excel automation | data categorization
+// Common Searches: Aspose.Cells add IF formula column | C# set Excel formula programmatically | categorize rows by value Aspose.Cells | recalculate formulas after inserting Aspose.Cells | create calculated column .NET Excel library
+// Developer Intent: Generate a worksheet, populate numeric data, and programmatically add a calculated column that labels each row as High or Low based on a defined numeric threshold.
+// Use Cases: Automatically flag values that exceed a limit for quick review in generated reports. | Provide a derived classification column for downstream conditional formatting or pivot tables. | Export raw data with an added category column without manual Excel editing.
+// AI Prompts: Write C# code with Aspose.Cells to add a calculated column that marks values above 75 as "Pass" and others as "Fail". | Show how to use a lookup table to apply a different threshold per row in an Aspose.Cells workbook. | Explain how to force a full recalculation of all formulas after updating cell values in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsCalculatedColumnDemo
 {
-    // Creates a new workbook, populates columns A and B with sample items and numbers, defines a numeric threshold, inserts an =IF formula into column C to tag each row as “High” or “Low”, evaluates all formulas, and saves the file as WorkbookWithCalculatedColumn.xlsx.
-    public class AddCalculatedColumnWithIfDemo
+    // Creates a new workbook, writes numeric values to column A, defines a threshold, inserts an IF formula in column B that returns “High” when the value exceeds the threshold and “Low” otherwise, calculates all formulas, and saves the file as CalculatedColumn.xlsx.
+    public class Program
     {
-        public static void Run()
+        public static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Add headers for the data and the calculated column
+            cells["A1"].PutValue("Value");      // Original numeric data
+            cells["B1"].PutValue("Category");   // Calculated column header
+
+            // Populate sample numeric data in column A (rows 2 to 6)
+            double[] sampleValues = { 30, 55, 20, 80, 45 };
+            for (int i = 0; i < sampleValues.Length; i++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Sample data: Column A = Item, Column B = Value
-                cells["A1"].PutValue("Item");
-                cells["B1"].PutValue("Value");
-                cells["A2"].PutValue("Item1");
-                cells["B2"].PutValue(80);
-                cells["A3"].PutValue("Item2");
-                cells["B3"].PutValue(120);
-                cells["A4"].PutValue("Item3");
-                cells["B4"].PutValue(95);
-                cells["A5"].PutValue("Item4");
-                cells["B5"].PutValue(150);
-
-                // Header for the calculated column
-                cells["C1"].PutValue("Category");
-
-                // Define the threshold
-                double threshold = 100;
-
-                // Add IF formula to each data row to categorize based on the threshold
-                for (int row = 2; row <= 5; row++)
-                {
-                    // Formula: =IF(B[row] > threshold, "High", "Low")
-                    string formula = $"=IF(B{row}>{threshold},\"High\",\"Low\")";
-                    cells[$"C{row}"].Formula = formula;
-                }
-
-                // Calculate all formulas so that the result values are stored
-                workbook.CalculateFormula();
-
-                // Save the workbook
-                string outputPath = "WorkbookWithCalculatedColumn.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                // Row index is i + 2 because Excel rows are 1‑based and we start after the header
+                cells[i + 1, 0].PutValue(sampleValues[i]); // Column A (index 0)
             }
-            catch (Exception ex)
+
+            // Define the numeric threshold for categorization
+            double threshold = 50;
+
+            // Add the IF formula to the first cell of the calculated column (B2)
+            // The formula will be copied to the rest of the rows programmatically
+            for (int row = 1; row <= sampleValues.Length; row++)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Build the formula string for the current row, e.g. =IF(A2>50,"High","Low")
+                string formula = $"=IF(A{row + 1}>{threshold},\"High\",\"Low\")";
+                cells[row, 1].Formula = formula; // Column B (index 1)
             }
-        }
 
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
+            // Optionally calculate all formulas so that the workbook stores the results
+            workbook.CalculateFormula();
+
+            // Save the workbook to a file
+            workbook.Save("CalculatedColumn.xlsx");
         }
     }
 }

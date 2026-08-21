@@ -1,17 +1,17 @@
-// Title: Set a Uniform Adjustment Guide Value for All Shapes in Aspose.Cells (C#)
-// Description: Creates a workbook, adds several auto‑shapes, then loops through every shape on the first worksheet. For each shape it accesses the ShapeGuideCollection via `shape.Geometry.ShapeAdjustValues`, assigns the same adjustment value (0.4) to all existing guides, and inserts a default guide named "adj" when a shape has none. The workbook is saved with the updated geometry.
-// Keywords: Aspose.Cells shape adjustment | ShapeGuideCollection C# | batch update shape guides | uniform shape geometry Aspose | add default adjustment guide
-// Common Searches: Aspose.Cells set same adjustment value for all shapes | loop through shapes and modify geometry guides C# | add missing adjustment guide to Aspose.Cells shape | how to standardize shape proportions in Aspose.Cells | C# example ShapeGuideCollection
-// Developer Intent: Apply one adjustment value to every shape’s guides in a worksheet, adding a guide when none exist.
-// Use Cases: Ensure all callout arrows have identical proportion across a financial report. | Give custom geometry shapes a consistent default guide before exporting to PDF. | Prepare a template workbook where shape sizes must stay uniform after bulk edits.
-// AI Prompts: Write C# code that iterates over all shapes in an Aspose.Cells worksheet and sets each shape's adjustment guides to a specified uniform value, creating a default guide if the shape lacks any. | Explain the purpose of ShapeGuideCollection in Aspose.Cells and show how to read, modify, or add adjustment values for shapes inside a loop.
+// Title: C# – Set Uniform Shape Adjustment Guides for All Shapes Using Aspose.Cells
+// Description: This example creates a workbook, adds several auto‑shapes, then iterates through every shape on the first worksheet. It accesses each shape’s Geometry.ShapeAdjustValues collection and assigns the same adjustment value (e.g., 0.3) to all existing guides, adding a default “adj” guide when a shape has none, before saving the file.
+// Keywords: Aspose.Cells | C# | shape adjustment guide | uniform guide value | ShapeGuideCollection | modify shape geometry | Excel shape automation | loop through worksheet shapes
+// Common Searches: Aspose.Cells set same adjustment guide for all shapes | C# loop worksheet shapes adjust geometry | add default shape guide Aspose.Cells | uniform shape adjustments Excel C# | change shape geometry programmatically Aspose.Cells
+// Developer Intent: Apply a single adjustment value to every shape’s guides in a worksheet, creating a default guide when none exist.
+// Use Cases: Standardize the look of callout or arrow shapes across a workbook. | Ensure custom geometry shapes have a baseline adjustment for consistent rendering. | Prepare Excel reports with uniform visual styling before distribution. | Automate bulk shape formatting in server‑side Excel generation.
+// AI Prompts: Write C# code with Aspose.Cells that iterates over all worksheet shapes and sets each ShapeGuideCollection value to 0.3, adding an "adj" guide if the collection is empty. | Show how to retrieve and modify shape adjustment guides in Aspose.Cells, handling shapes without existing guides. | Explain the steps to apply a uniform adjustment value to every shape in an Excel file using Aspose.Cells and save the result.
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System;
 
-// Creates a workbook, adds several auto‑shapes, then loops through every shape on the first worksheet. For each shape it accesses the ShapeGuideCollection via `shape.Geometry.ShapeAdjustValues`, assigns the same adjustment value (0.4) to all existing guides, and inserts a default guide named "adj" when a shape has none. The workbook is saved with the updated geometry.
-class Program
+// This example creates a workbook, adds several auto‑shapes, then iterates through every shape on the first worksheet. It accesses each shape’s Geometry.ShapeAdjustValues collection and assigns the same adjustment value (e.g., 0.3) to all existing guides, adding a default “adj” guide when a shape has none, before saving the file.
+class ApplyUniformAdjustments
 {
     static void Main()
     {
@@ -19,38 +19,37 @@ class Program
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add several shapes that support adjustment guides
+        // Add sample shapes that support adjustment guides
         worksheet.Shapes.AddAutoShape(AutoShapeType.RightArrowCallout, 2, 0, 2, 0, 200, 150);
-        worksheet.Shapes.AddAutoShape(AutoShapeType.Chevron, 5, 0, 5, 0, 150, 80);
-        worksheet.Shapes.AddAutoShape(AutoShapeType.NotPrimitive, 8, 0, 8, 0, 120, 120); // custom geometry shape
+        worksheet.Shapes.AddAutoShape(AutoShapeType.Chevron, 5, 0, 5, 0, 200, 100);
+        worksheet.Shapes.AddAutoShape(AutoShapeType.NotPrimitive, 8, 0, 8, 0, 200, 200); // custom geometry
 
-        // Desired uniform adjustment value for all shapes
-        double uniformValue = 0.4;
+        // Desired uniform adjustment value
+        double uniformValue = 0.3;
 
-        // Iterate through each shape in the worksheet
+        // Loop through all shapes in the worksheet
         for (int i = 0; i < worksheet.Shapes.Count; i++)
         {
             Shape shape = worksheet.Shapes[i];
-
-            // Get the collection of adjustment guides for the current shape
-            ShapeGuideCollection guides = shape.Geometry.ShapeAdjustValues;
+            Geometry geometry = shape.Geometry;
+            ShapeGuideCollection guides = geometry.ShapeAdjustValues;
 
             if (guides.Count > 0)
             {
-                // If the shape already has guides, set each one to the uniform value
-                for (int g = 0; g < guides.Count; g++)
+                // Set each existing guide to the uniform value
+                for (int j = 0; j < guides.Count; j++)
                 {
-                    guides[g].Value = uniformValue;
+                    guides[j].Value = uniformValue;
                 }
             }
             else
             {
-                // If no guides exist, add a default guide named "adj" with the uniform value
+                // If no guides exist, add a default guide named "adj"
                 guides.Add("adj", uniformValue);
             }
         }
 
-        // Save the workbook with the modified shapes
+        // Save the workbook with the updated shapes
         workbook.Save("UniformShapeAdjustments.xlsx");
     }
 }

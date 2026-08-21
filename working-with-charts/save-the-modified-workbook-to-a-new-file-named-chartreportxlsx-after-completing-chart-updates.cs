@@ -1,26 +1,24 @@
-// Title: Create and Save an Excel Workbook with a Column Chart (ChartReport.xlsx) using Aspose.Cells for .NET (C#)
-// Description: A C# sample that builds a new workbook, fills cells A1:B4 with category and value data, inserts a column chart, assigns a title, and writes the file as ChartReport.xlsx via Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | .NET | C# | column chart | Excel chart example | save workbook | ChartReport.xlsx | create Excel file | chart title | NSeries | ChartType.Column
-// Common Searches: Aspose.Cells add column chart C# | save workbook with specific filename Aspose.Cells | C# example create Excel chart and export | set chart title Aspose.Cells | generate chart report using Aspose.Cells
-// Developer Intent: Produce an Excel file that contains a column chart and persist it as ChartReport.xlsx.
-// Use Cases: Automate a sales summary that visualizes product categories with a column chart for email distribution. | Create a monthly KPI dashboard where data is populated programmatically, a chart is added, and the workbook is saved for executive review. | Export query results from a database to Excel and include a column chart for quick visual analysis.
-// AI Prompts: Provide C# code that adds a line chart to the same workbook and saves it as LineReport.xlsx using Aspose.Cells. | Explain how to modify the column chart style, move the legend, and enable data labels in the given example. | Show how to load an existing template workbook, replace its data range, refresh the chart, and save the updated file.
+// Title: Create a Column Chart, Change Its Title, and Save as ChartReport.xlsx Using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to generate a new workbook with sample data, add a column chart, modify the chart title, and export the workbook to a new XLSX file named ChartReport.xlsx using Aspose.Cells in C#.
+// Keywords: Aspose.Cells C# chart example | add column chart Aspose.Cells | update chart title programmatically | save workbook as XLSX Aspose.Cells | export chart report .NET | Aspose.Cells chart manipulation | C# Excel chart automation
+// Common Searches: how to add a column chart with Aspose.Cells .NET | change chart title using Aspose.Cells C# | save Excel file with chart Aspose.Cells | Aspose.Cells example ChartReport.xlsx | C# code to create and export chart in Excel
+// Developer Intent: Generate an Excel file, insert a column chart, customize its title, and write the result to ChartReport.xlsx.
+// Use Cases: Automated sales dashboards that embed a column chart and are delivered as a ready‑to‑share XLSX file. | Monthly performance reports where the chart title reflects the reporting period before the workbook is archived. | Utility tools that let users rename chart titles on the fly and export the updated workbook for downstream processing.
+// AI Prompts: Write C# code with Aspose.Cells to add a line chart from range D2:D15, set axis labels, and save as LineReport.xlsx. | Show how to programmatically adjust legend position, axis titles, and data labels for a chart, then save the workbook using Aspose.Cells. | Explain how to export a chart as a PNG image while also saving the containing workbook with Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace ChartReportGenerator
+namespace AsposeCellsChartReport
 {
-    // A C# sample that builds a new workbook, fills cells A1:B4 with category and value data, inserts a column chart, assigns a title, and writes the file as ChartReport.xlsx via Aspose.Cells for .NET.
+    // Demonstrates how to generate a new workbook with sample data, add a column chart, modify the chart title, and export the workbook to a new XLSX file named ChartReport.xlsx using Aspose.Cells in C#.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (or load an existing one)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
@@ -33,16 +31,16 @@ namespace ChartReportGenerator
             worksheet.Cells["B3"].PutValue(20);
             worksheet.Cells["B4"].PutValue(30);
 
-            // Add a column chart
+            // Add a column chart to the worksheet
             int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
             Chart chart = worksheet.Charts[chartIndex];
 
-            // Set the data range for the chart
+            // Set the data source for the chart
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Perform any additional chart updates here (e.g., title, style)
-            chart.Title.Text = "Sample Column Chart";
+            // Example chart update: change the title
+            chart.Title.Text = "Updated Chart Title";
 
             // Save the modified workbook to a new file named ChartReport.xlsx
             workbook.Save("ChartReport.xlsx", SaveFormat.Xlsx);

@@ -1,101 +1,74 @@
-// Title: Update a PivotTable calculated field with a discount rate using Aspose.Cells for .NET (C#)
-// Description: C# example that loads an Excel workbook, finds the first PivotTable, retrieves an existing calculated field (e.g., TotalSales), creates a new formula that multiplies the original expression by a discount rate stored in cell D1, adds the new calculated field (TotalSalesWithDiscount), refreshes and recalculates the PivotTable, and saves the updated file.
-// Keywords: Aspose.Cells | C# | PivotTable | calculated field | discount rate | update formula | add calculated field | RefreshData | CalculateData | Excel automation | Excel pivot table programming
-// Common Searches: how to modify a calculated field formula in Aspose.Cells PivotTable | add discount rate to existing calculated field using Aspose.Cells .NET | create new calculated field based on another field in Aspose.Cells | refresh pivot table after adding calculated field Aspose.Cells | Aspose.Cells C# update pivot table formula with cell reference
-// Developer Intent: Add a new calculated field that applies a discount rate to an existing PivotTable calculation without altering the original field.
-// Use Cases: Generate a "TotalSalesWithDiscount" metric that applies the discount stored in D1 while preserving the original TotalSales field. | Introduce a dynamic discount factor for sales reporting that can be changed by editing a single worksheet cell. | Upgrade legacy reports by adding discounted sales calculations without breaking existing PivotTable layouts.
-// AI Prompts: Write C# code with Aspose.Cells to update a PivotTable calculated field by incorporating a discount rate cell reference. | Explain step‑by‑step how to add a new calculated field, refresh the PivotTable, and save the workbook using Aspose.Cells. | Suggest best‑practice error handling for locating pivot tables and calculated fields before modifying formulas in Aspose.Cells.
+// Title: C# – Update a Pivot Table Calculated Field with a Discount‑Rate Cell Using Aspose.Cells
+// Description: Loads an existing workbook, finds the first pivot table, writes a discount rate to cell D1, rebuilds the calculated field "DiscountedSales" with a formula that references $D$1, refreshes and recalculates the pivot, then saves the result as output.xlsx.
+// Keywords: Aspose.Cells | C# | pivot table | calculated field | update formula | discount rate cell | dynamic discount | RefreshData | CalculateData | Excel automation | replace calculated field
+// Common Searches: how to change formula of an existing calculated field in Aspose.Cells pivot table | add discount rate cell to calculated field Aspose.Cells C# | replace calculated field without recreating pivot table Aspose.Cells | refresh pivot table after updating calculated field Aspose.Cells | dynamic discount calculation in Excel pivot using Aspose.Cells
+// Developer Intent: Modify the formula of an existing calculated field in a pivot table so that it uses a discount rate stored in a worksheet cell, then refresh the pivot to apply the change.
+// Use Cases: Turn a hard‑coded discount into a user‑editable rate by referencing a worksheet cell. | Update a pivot table’s calculated field without rebuilding the entire pivot. | Ensure the pivot reflects the new formula by calling RefreshData and CalculateData. | Validate the presence of the calculated field before overwriting it to avoid duplicates.
+// AI Prompts: Write C# code with Aspose.Cells that updates the calculated field "DiscountedSales" in a pivot table to use cell D1 as the discount rate. | Show how to check for an existing calculated field in a pivot table and replace its formula with a new one that references a worksheet cell. | Explain the steps to refresh and recalculate a pivot table after changing a calculated field formula in Aspose.Cells for .NET.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// Loads an existing workbook, finds the first pivot table, writes a discount rate to cell D1, rebuilds the calculated field "DiscountedSales" with a formula that references $D$1, refreshes and recalculates the pivot, then saves the result as output.xlsx.
+class UpdateCalculatedField
 {
-    // C# example that loads an Excel workbook, finds the first PivotTable, retrieves an existing calculated field (e.g., TotalSales), creates a new formula that multiplies the original expression by a discount rate stored in cell D1, adds the new calculated field (TotalSalesWithDiscount), refreshes and recalculates the PivotTable, and saves the updated file.
-    public class UpdateCalculatedFieldFormula
+    static void Main()
     {
-        public static void Run()
+        // Load the existing workbook that contains the pivot table
+        Workbook workbook = new Workbook("input.xlsx");
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Ensure the worksheet has at least one pivot table
+        if (worksheet.PivotTables.Count == 0)
         {
-            try
+            Console.WriteLine("No pivot tables found.");
+            return;
+        }
+
+        // Get the first pivot table (adjust index if needed)
+        PivotTable pivotTable = worksheet.PivotTables[0];
+
+        // Name of the calculated field that we want to update
+        string calculatedFieldName = "DiscountedSales";
+
+        // Locate the existing calculated field (optional, just for verification)
+        PivotField existingField = null;
+        foreach (PivotField field in pivotTable.DataFields)
+        {
+            if (field.Name.Equals(calculatedFieldName, StringComparison.OrdinalIgnoreCase) && field.IsCalculatedField)
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
-
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Ensure a pivot table exists
-                if (sheet.PivotTables.Count == 0)
-                {
-                    Console.WriteLine("No pivot tables found in the worksheet.");
-                    return;
-                }
-
-                // Assume the first pivot table is the target
-                PivotTable pivotTable = sheet.PivotTables[0];
-
-                string existingFieldName = "TotalSales";
-
-                // Locate the existing calculated field in DataFields
-                PivotField existingField = null;
-                foreach (PivotField pf in pivotTable.DataFields)
-                {
-                    if (pf.Name == existingFieldName)
-                    {
-                        existingField = pf;
-                        break;
-                    }
-                }
-
-                if (existingField == null)
-                {
-                    Console.WriteLine($"Calculated field '{existingFieldName}' not found.");
-                    return;
-                }
-
-                // Get current formula (e.g., "=Price*Quantity")
-                string oldFormula = existingField.GetFormula();
-
-                // Reference cell that holds the discount rate
-                string discountRateReference = "D1";
-
-                // Build new formula incorporating the discount rate
-                string newFormula = $"=({oldFormula.TrimStart('=')})*{discountRateReference}";
-
-                // Add a new calculated field with the updated formula
-                string newFieldName = "TotalSalesWithDiscount";
-                pivotTable.AddCalculatedField(newFieldName, newFormula, true);
-
-                // Refresh and calculate the pivot table
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
+                existingField = field;
+                break;
             }
         }
 
-        // Entry point for the application
-        public static void Main(string[] args)
+        // If the field exists, we can retrieve its current formula (for logging)
+        if (existingField != null)
         {
-            Run();
+            Console.WriteLine($"Current formula for '{calculatedFieldName}': {existingField.GetFormula()}");
         }
+
+        // Define a cell that holds the discount rate parameter (e.g., 10% discount)
+        // This cell can be edited by the user without changing the code.
+        worksheet.Cells["D1"].PutValue(0.10); // 10% discount
+
+        // Build the new formula that incorporates the discount rate.
+        // Assuming the original data field is named "Sales".
+        string newFormula = $"=Sales*(1-$D$1)";
+
+        // Add the calculated field again with the same name.
+        // Aspose.Cells will replace the existing calculated field with the new definition.
+        // The third argument 'true' drags the field to the data area immediately.
+        pivotTable.AddCalculatedField(calculatedFieldName, newFormula, true);
+
+        // Refresh and recalculate the pivot table to apply the new formula.
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
+
+        // Save the updated workbook.
+        workbook.Save("output.xlsx");
+
+        Console.WriteLine($"Calculated field '{calculatedFieldName}' updated with new formula: {newFormula}");
     }
 }

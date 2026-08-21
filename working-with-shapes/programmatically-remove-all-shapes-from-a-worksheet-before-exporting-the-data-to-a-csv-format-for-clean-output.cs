@@ -1,40 +1,63 @@
-// Title: Remove all shapes from worksheets and export to CSV with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, iterates through each worksheet, calls RemoveAllDrawingObjects to delete every shape, chart, picture, and other drawing objects, then saves the cleaned workbook as a CSV file using TxtSaveOptions. Finally disposes the workbook to free resources.
-// Keywords: Aspose.Cells RemoveAllDrawingObjects | delete shapes C# | export Excel to CSV Aspose | clean CSV from Excel | remove charts before CSV export | Aspose.Cells drawing objects removal | C# Aspose.Cells CSV conversion
-// Common Searches: Aspose.Cells remove all shapes from workbook | How to export Excel to CSV without images using Aspose | C# delete charts before saving as CSV | Remove drawing objects Aspose.Cells .NET | Clean Excel data for CSV conversion
-// Developer Intent: Strip every drawing object from each worksheet and then save the workbook as a CSV file.
-// Use Cases: Generate pure data CSV reports for systems that cannot handle embedded images or charts. | Batch‑convert multiple Excel files to CSV while guaranteeing only cell values are retained. | Prepare data extracts for migration or analytics pipelines where drawing objects cause parsing errors.
-// AI Prompts: Show how to remove only specific shape types (e.g., pictures) before exporting to CSV with Aspose.Cells. | Add robust error handling for missing or corrupt input files when cleaning drawings and saving as CSV. | Create a reusable C# method that takes a workbook path and outputs a CSV file with all drawing objects removed.
+// Title: Remove All Shapes from an Excel Workbook and Export to CSV with Aspose.Cells for .NET
+// Description: Loads a workbook, removes every drawing object (pictures, charts, text boxes) from each worksheet using `RemoveAllDrawingObjects`, then saves the first worksheet as a CSV file. Includes file‑existence validation and exception handling for reliable batch processing.
+// Keywords: Aspose.Cells remove shapes | delete drawing objects .NET | export worksheet to CSV | clean CSV output Aspose.Cells | RemoveAllDrawingObjects example
+// Common Searches: how to delete all shapes in Excel with Aspose.Cells | Aspose.Cells .NET remove drawing objects before CSV export | export first sheet to CSV after stripping images | batch convert Excel to CSV without charts
+// Developer Intent: Strip every shape from all worksheets and save the first sheet as a CSV file.
+// Use Cases: Prepare data extracts from templates that contain placeholder images before importing into a database. | Batch‑convert legacy Excel reports to CSV while eliminating embedded graphics to reduce file size. | Generate clean CSV files for downstream analytics when source workbooks include charts or logos.
+// AI Prompts: Create a C# method using Aspose.Cells that removes all drawing objects from each worksheet and saves a chosen sheet as CSV. | Provide a .NET code snippet that checks the input path, calls RemoveAllDrawingObjects, handles errors, and exports the first worksheet to CSV. | Write code that returns the total number of shapes removed before exporting the workbook to CSV with Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeRemoval
+namespace AsposeCellsExamples
 {
-    // Loads an Excel workbook, iterates through each worksheet, calls RemoveAllDrawingObjects to delete every shape, chart, picture, and other drawing objects, then saves the cleaned workbook as a CSV file using TxtSaveOptions. Finally disposes the workbook to free resources.
-    class Program
+    // Loads a workbook, removes every drawing object (pictures, charts, text boxes) from each worksheet using `RemoveAllDrawingObjects`, then saves the first worksheet as a CSV file. Includes file‑existence validation and exception handling for reliable batch processing.
+    public class RemoveShapesAndExportCsv
     {
-        static void Main()
+        public static void Run(string inputPath, string outputCsvPath)
         {
-            // Load an existing workbook (replace with your source file)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            // Iterate through all worksheets and remove every drawing object (shapes, charts, pictures, etc.)
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Remove all drawing objects from each worksheet
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Removes all drawing objects in the current worksheet
                 sheet.RemoveAllDrawingObjects();
             }
 
-            // Prepare CSV (TXT) save options – default separator is comma
-            TxtSaveOptions csvOptions = new TxtSaveOptions();
+            // Save the first worksheet as CSV
+            workbook.Save(outputCsvPath, SaveFormat.Csv);
+        }
+    }
 
-            // Export the cleaned workbook to CSV format
-            workbook.Save("output.csv", csvOptions);
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            try
+            {
+                // Expect two arguments: input file path and output CSV path
+                if (args.Length < 2)
+                {
+                    Console.WriteLine("Usage: RemoveShapesAndExportCsv <input.xlsx> <output.csv>");
+                    return;
+                }
 
-            // Release resources
-            workbook.Dispose();
+                string inputPath = args[0];
+                string outputCsvPath = args[1];
+
+                RemoveShapesAndExportCsv.Run(inputPath, outputCsvPath);
+                Console.WriteLine($"CSV file successfully saved to: {outputCsvPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,92 +1,78 @@
-// Title: Merge Excel workbooks & consolidate named ranges with conflict resolution – Aspose.Cells for .NET (C#)
-// Description: Loads a set of Excel files, uses the first as the target workbook, and iteratively combines the rest with Workbook.Combine. For each source workbook the code copies its named ranges, detects name collisions and appends a unique suffix, then removes any duplicate definitions before saving the merged file.
-// Keywords: Aspose.Cells | C# Excel merge | Workbook.Combine | named ranges | conflict resolution | duplicate name removal | Excel consolidation | merge worksheets | Aspose.Cells API | Save as Xlsx
-// Common Searches: Aspose.Cells merge workbooks C# | Combine Excel files and keep named ranges unique | Rename duplicate named ranges when merging workbooks | How to remove duplicate named range definitions Aspose.Cells | C# code to consolidate multiple Excel workbooks
-// Developer Intent: Create a single workbook that contains all sheets, data, styles, and uniquely merged named ranges from several source files.
-// Use Cases: Monthly financial reports from different departments combined into a master workbook with distinct named ranges. | Data‑analysis pipeline that aggregates separate model files while preserving each range's reference. | Distribution package that bundles regional spreadsheets into one file, automatically renaming overlapping names.
-// AI Prompts: Generate C# code using Aspose.Cells to merge several workbooks and automatically rename colliding named ranges. | Show how to use Workbook.Combine together with Names.RemoveDuplicateNames to produce a clean merged Excel file. | Explain the algorithm for suffix‑based conflict resolution of named ranges during workbook consolidation.
+// Title: C# – Merge Multiple Excel Workbooks and Consolidate Named Ranges with Automatic Conflict Resolution using Aspose.Cells
+// Description: Loads a primary workbook, iterates through additional .xlsx files, copies each named range, detects case‑insensitive name collisions, appends a numeric suffix to create unique names, removes any duplicate entries, and saves the combined workbook.
+// Keywords: Aspose.Cells | C# merge workbooks | named range conflict resolution | automatic rename named ranges | remove duplicate names | Excel workbook consolidation | Aspose.Cells .NET example | GitHub Aspose.Cells code
+// Common Searches: Aspose.Cells merge workbooks C# | combine named ranges from multiple Excel files | resolve duplicate named ranges Aspose.Cells | C# code to rename conflicting named ranges | remove duplicate named ranges after merging Excel workbooks
+// Developer Intent: Programmatically combine several Excel files into a single workbook while preserving all named ranges and ensuring each name is unique.
+// Use Cases: Aggregate departmental financial models into a master workbook without name collisions. | Build a reporting package that pulls data from multiple source workbooks and automatically handles duplicate named range identifiers. | Create a distribution workbook that merges template files and their named ranges, guaranteeing unique names for downstream processing.
+// AI Prompts: Generate C# code using Aspose.Cells that merges named ranges from a list of workbooks and automatically renames duplicates with a numeric suffix. | Explain the purpose and optimal placement of the Names.RemoveDuplicateNames method in an Aspose.Cells merge workflow. | Provide a step‑by‑step tutorial to load three Excel workbooks, combine their named ranges, resolve naming conflicts, and save the result as a new file with Aspose.Cells for .NET.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsMergeNamedRanges
+namespace MergeNamedRangesDemo
 {
-    // Loads a set of Excel files, uses the first as the target workbook, and iteratively combines the rest with Workbook.Combine. For each source workbook the code copies its named ranges, detects name collisions and appends a unique suffix, then removes any duplicate definitions before saving the merged file.
+    // Loads a primary workbook, iterates through additional .xlsx files, copies each named range, detects case‑insensitive name collisions, appends a numeric suffix to create unique names, removes any duplicate entries, and saves the combined workbook.
     class Program
     {
         static void Main()
         {
             // Paths of workbooks to be merged
-            string[] files = new string[]
+            string[] workbookFiles = new string[]
             {
                 "Workbook1.xlsx",
                 "Workbook2.xlsx",
                 "Workbook3.xlsx"
             };
 
-            // Load the first workbook – it will become the target workbook
-            Workbook target = new Workbook(files[0]);
+            // Load the first workbook as the target workbook
+            Workbook targetWorkbook = new Workbook(workbookFiles[0]);
+
+            // Keep a set of existing named range texts for quick conflict detection
+            HashSet<string> existingNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (Name n in targetWorkbook.Worksheets.Names)
+            {
+                existingNames.Add(n.Text);
+            }
 
             // Process remaining workbooks
-            for (int i = 1; i < files.Length; i++)
+            for (int i = 1; i < workbookFiles.Length; i++)
             {
                 // Load source workbook
-                Workbook source = new Workbook(files[i]);
+                Workbook sourceWorkbook = new Workbook(workbookFiles[i]);
 
-                // Combine worksheets, data, styles, etc.
-                target.Combine(source);
-
-                // Merge named ranges from source into target
-                MergeNamedRanges(target, source, i);
-            }
-
-            // Remove any duplicate name definitions that might have been created
-            target.Worksheets.Names.RemoveDuplicateNames();
-
-            // Save the merged workbook
-            string outputPath = "MergedResult.xlsx";
-            target.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Merged workbook saved to '{outputPath}'.");
-        }
-
-        /// <param name="target">The workbook that will receive the named ranges.</param>
-        /// <param name="source">The workbook providing named ranges.</param>
-        /// <param name="sourceIndex">Zero‑based index of the source workbook (used for generating unique names).</param>
-        private static void MergeNamedRanges(Workbook target, Workbook source, int sourceIndex)
-        {
-            // Build a quick lookup of existing names in the target workbook
-            HashSet<string> existingNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (Name tn in target.Worksheets.Names)
-            {
-                existingNames.Add(tn.Text);
-            }
-
-            // Iterate through each named range in the source workbook
-            foreach (Name srcName in source.Worksheets.Names)
-            {
-                string newName = srcName.Text;
-
-                // Resolve conflict by appending a suffix until the name becomes unique
-                if (existingNames.Contains(newName))
+                // Iterate through each named range in the source workbook
+                foreach (Name srcName in sourceWorkbook.Worksheets.Names)
                 {
+                    string srcText = srcName.Text; // The name identifier
+                    string srcRefersTo = srcName.RefersTo; // The range reference (e.g., "=Sheet1!$A$1:$B$2")
+
+                    // Resolve naming conflict by generating a unique name if needed
+                    string finalName = srcText;
                     int suffix = 1;
-                    string baseName = newName;
-                    do
+                    while (existingNames.Contains(finalName))
                     {
-                        newName = $"{baseName}_From{sourceIndex}_{suffix}";
+                        finalName = $"{srcText}_{suffix}";
                         suffix++;
-                    } while (existingNames.Contains(newName));
+                    }
+
+                    // Add the (possibly renamed) named range to the target workbook
+                    int idx = targetWorkbook.Worksheets.Names.Add(finalName);
+                    Name newName = targetWorkbook.Worksheets.Names[idx];
+                    newName.RefersTo = srcRefersTo;
+
+                    // Record the new name to prevent future conflicts
+                    existingNames.Add(finalName);
                 }
 
-                // Add the (possibly renamed) name to the target workbook
-                int idx = target.Worksheets.Names.Add(newName);
-                Name addedName = target.Worksheets.Names[idx];
-                addedName.RefersTo = srcName.RefersTo; // copy the reference (e.g., =Sheet1!$A$1:$B$2)
-
-                // Keep the lookup up‑to‑date
-                existingNames.Add(newName);
+                // Optional: clean any accidental duplicates (safety net)
+                targetWorkbook.Worksheets.Names.RemoveDuplicateNames();
             }
+
+            // Save the merged workbook
+            string outputPath = "MergedWorkbook_WithNamedRanges.xlsx";
+            targetWorkbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Merged workbook saved to '{outputPath}'.");
         }
     }
 }

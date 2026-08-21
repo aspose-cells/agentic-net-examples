@@ -1,70 +1,90 @@
-// Title: Batch Convert Excel (.xlsx) Files to HTML with Gridlines using Aspose.Cells for .NET
-// Description: A C# console utility that scans a folder for .xlsx workbooks, creates an output directory, and converts each file to HTML with visible gridlines by configuring HtmlSaveOptions.ExportGridLines and invoking ConversionUtility. Includes basic error handling and logging.
-// Keywords: Aspose.Cells | C# batch Excel to HTML | ExportGridLines | HtmlSaveOptions | ConversionUtility | .NET Excel conversion | HTML preview of Excel | bulk Excel to HTML | gridlines in HTML | Aspose.Cells example
-// Common Searches: Aspose.Cells batch convert Excel to HTML | C# export Excel gridlines to HTML | Convert all .xlsx files in folder to HTML Aspose | HtmlSaveOptions ExportGridLines example | How to use ConversionUtility for Excel to HTML | Bulk Excel to HTML conversion .NET
-// Developer Intent: Automatically transform every .xlsx workbook in a specified directory into an HTML file that displays the original spreadsheet’s gridlines.
-// Use Cases: Generate web‑ready previews of a library of Excel reports while preserving cell borders. | Automate nightly publishing of financial worksheets to an intranet by converting them to HTML with gridlines. | Create a batch processing job that converts newly uploaded Excel files to browser‑friendly HTML for quick viewing.
-// AI Prompts: Write C# code that iterates through a folder of .xlsx files and converts each to HTML with ExportGridLines enabled using Aspose.Cells. | Show how to modify the batch conversion program to export only the active worksheet instead of the whole workbook. | Suggest robust error‑handling patterns for bulk Excel‑to‑HTML conversion with Aspose.Cells in a .NET console app.
+// Title: Batch Convert Excel Files to HTML with Gridlines Using Aspose.Cells (.NET)
+// Description: Scans a folder, loads each .xls, .xlsx, .xlsb, .xlsm, or .csv workbook with the appropriate LoadFormat, and uses Aspose.Cells ConversionUtility together with HtmlSaveOptions (ExportGridLines = true) to generate an HTML file for every workbook in a target directory, while handling missing files and conversion errors.
+// Keywords: Aspose.Cells | C# | .NET | batch Excel to HTML conversion | ExportGridLines | HtmlSaveOptions | ConversionUtility | load format | XLSX to HTML | CSV to HTML | automated spreadsheet export | web preview of Excel
+// Common Searches: Aspose.Cells batch convert Excel to HTML with gridlines | C# convert folder of .xlsx files to HTML preserving cell borders | How to export Excel files as HTML using ExportGridLines | Convert multiple CSV and XLSX files to HTML with Aspose.Cells | Sample code for Aspose.Cells HTMLSaveOptions ExportGridLines
+// Developer Intent: Automatically transform every supported Excel workbook in a directory into an HTML page that shows the original gridlines.
+// Use Cases: Create web‑ready HTML reports from a collection of financial spreadsheets while keeping cell borders visible. | Provide instant HTML previews of uploaded Excel or CSV files in a web portal without requiring Office installations. | Schedule nightly jobs that archive a folder of workbooks as static HTML pages for documentation or compliance purposes.
+// AI Prompts: Show how to add a custom CSS file to HtmlSaveOptions while keeping ExportGridLines enabled. | Modify the batch conversion to skip hidden worksheets during HTML export. | Replace console logging with CSV logging of conversion results using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-// A C# console utility that scans a folder for .xlsx workbooks, creates an output directory, and converts each file to HTML with visible gridlines by configuring HtmlSaveOptions.ExportGridLines and invoking ConversionUtility. Includes basic error handling and logging.
+// Scans a folder, loads each .xls, .xlsx, .xlsb, .xlsm, or .csv workbook with the appropriate LoadFormat, and uses Aspose.Cells ConversionUtility together with HtmlSaveOptions (ExportGridLines = true) to generate an HTML file for every workbook in a target directory, while handling missing files and conversion errors.
 class BatchExcelToHtml
 {
     static void Main()
     {
         // Folder containing source Excel files
-        string inputFolder = @"InputExcels";
+        string inputFolder = "InputExcels";
+
         // Folder where HTML files will be saved
-        string outputFolder = @"OutputHtml";
+        string outputFolder = "OutputHtml";
 
         // Ensure the output directory exists
         Directory.CreateDirectory(outputFolder);
 
-        // Verify that the input folder exists
+        // Verify the input folder exists
         if (!Directory.Exists(inputFolder))
         {
-            Console.WriteLine($"Input folder '{inputFolder}' does not exist. No files to process.");
+            Console.WriteLine($"Input folder '{inputFolder}' does not exist.");
             return;
         }
 
-        try
-        {
-            // Process each .xlsx file in the input folder
-            foreach (string sourcePath in Directory.GetFiles(inputFolder, "*.xlsx"))
-            {
-                // Build the destination HTML file path
-                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
-                string destPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+        // Get all files in the input folder
+        string[] files = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
 
-                // Load options for the source Excel file (optional, can be default)
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+        foreach (string sourcePath in files)
+        {
+            // Skip if the file does not exist (safety check)
+            if (!File.Exists(sourcePath))
+                continue;
+
+            string ext = Path.GetExtension(sourcePath).ToLowerInvariant();
+
+            // Process only supported Excel formats
+            if (ext == ".xls" || ext == ".xlsx" || ext == ".xlsb" || ext == ".xlsm" || ext == ".csv")
+            {
+                // Determine the appropriate load format
+                LoadFormat loadFormat = GetLoadFormat(ext);
+                LoadOptions loadOptions = new LoadOptions(loadFormat);
 
                 // Configure HTML save options with gridlines enabled
                 HtmlSaveOptions saveOptions = new HtmlSaveOptions
                 {
-                    ExportGridLines = true // Show spreadsheet gridlines in HTML
-                    // ExportActiveWorksheetOnly = true // Uncomment to export only the active sheet
+                    ExportGridLines = true
                 };
+
+                // Destination HTML file path
+                string destPath = Path.Combine(outputFolder,
+                    Path.GetFileNameWithoutExtension(sourcePath) + ".html");
 
                 try
                 {
-                    // Perform the conversion using the provided utility method
+                    // Perform the conversion using Aspose.Cells ConversionUtility
                     ConversionUtility.Convert(sourcePath, loadOptions, destPath, saveOptions);
                     Console.WriteLine($"Converted '{sourcePath}' to '{destPath}' with gridlines.");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error converting '{sourcePath}': {ex.Message}");
+                    Console.WriteLine($"Failed to convert '{sourcePath}': {ex.Message}");
                 }
             }
         }
-        catch (Exception ex)
+    }
+
+    // Maps file extensions to Aspose.Cells LoadFormat values
+    static LoadFormat GetLoadFormat(string extension)
+    {
+        switch (extension)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            case ".xls":  return LoadFormat.Excel97To2003;
+            case ".xlsx": // .xlsm files are also loaded as Xlsx format
+            case ".xlsm": return LoadFormat.Xlsx;
+            case ".xlsb": return LoadFormat.Xlsb;
+            case ".csv":  return LoadFormat.Csv;
+            default:      return LoadFormat.Auto;
         }
     }
 }

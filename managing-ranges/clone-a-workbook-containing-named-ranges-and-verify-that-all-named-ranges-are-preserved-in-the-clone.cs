@@ -1,86 +1,86 @@
-// Title: Clone a Workbook with Named Ranges Using Aspose.Cells for .NET and Verify Preservation
-// Description: Demonstrates how to create a source workbook with multiple named ranges, clone it with CopyOptions.CopyNames enabled, iterate through the original names to confirm each exists in the clone with the same RefersTo reference, report mismatches, and optionally save the cloned file.
-// Keywords: Aspose.Cells clone workbook C# | CopyOptions CopyNames true | preserve named ranges Aspose.Cells | verify named range after workbook copy | duplicate workbook with named ranges .NET | Aspose.Cells named range verification
-// Common Searches: How to copy a workbook with named ranges using Aspose.Cells for .NET | Aspose.Cells preserve named ranges when cloning a workbook | CopyOptions.CopyNames example C# | Check named range references after workbook duplication Aspose.Cells | Validate named ranges in cloned Excel file using Aspose.Cells
-// Developer Intent: Clone an existing workbook while automatically copying all defined named ranges and programmatically confirm that each range in the clone matches the original.
-// Use Cases: Generate personalized reports from a master template without losing named range definitions. | Automate creation of multiple workbooks for batch processing while keeping data‑extraction formulas intact. | Run integration tests that duplicate a workbook and verify that named ranges remain consistent between source and clone.
-// AI Prompts: Write C# code with Aspose.Cells that clones a workbook, copies all named ranges, and logs any missing or mismatched ranges. | Show an example using CopyOptions.CopyNames = true to duplicate a workbook and then compare each Name.RefersTo between source and clone. | Create a unit test in C# that asserts the cloned workbook contains the same named ranges as the original workbook using Aspose.Cells.
+// Title: Clone an Aspose.Cells workbook and retain all named ranges in C#
+// Description: Demonstrates how to create a source workbook, add named ranges via Worksheets.Names and Range.Name, clone the workbook with CopyOptions.CopyNames enabled, verify that each name and its RefersTo reference are preserved, and save both workbooks.
+// Keywords: Aspose.Cells clone workbook C# | preserve named ranges Aspose.Cells | CopyOptions CopyNames true | verify workbook copy named ranges | Aspose.Cells range name duplication check
+// Common Searches: clone Aspose.Cells workbook with named ranges | copy workbook keeping range names .NET | how to verify named ranges after workbook copy | Aspose.Cells CopyOptions CopyNames example | C# preserve named ranges when duplicating Excel file
+// Developer Intent: The developer needs to duplicate an Excel workbook while ensuring that every defined name (named range) is copied exactly and can be programmatically validated.
+// Use Cases: Generate user‑specific reports from a template that contains named ranges without breaking formulas. | Automate testing of workbook cloning logic by confirming that all Name objects survive the copy operation. | Create backup copies of workbooks where named ranges must remain intact for downstream processing.
+// AI Prompts: Provide C# code that clones an Aspose.Cells workbook with CopyOptions.CopyNames set to true and checks that all named ranges match the source. | Explain step‑by‑step how to compare the Names collections of two workbooks to confirm identical RefersTo references. | Describe how named ranges created via Worksheets.Names differ from those set with Range.Name when using Workbook.Copy.
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsCloneNamedRanges
 {
-    // Demonstrates how to create a source workbook with multiple named ranges, clone it with CopyOptions.CopyNames enabled, iterate through the original names to confirm each exists in the clone with the same RefersTo reference, report mismatches, and optionally save the cloned file.
-    public class CloneWorkbookWithNamedRangesDemo
+    // Demonstrates how to create a source workbook, add named ranges via Worksheets.Names and Range.Name, clone the workbook with CopyOptions.CopyNames enabled, verify that each name and its RefersTo reference are preserved, and save both workbooks.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // ---------- Create source workbook and define named ranges ----------
+                // ---------- Create source workbook and add named ranges ----------
                 Workbook sourceWorkbook = new Workbook();
+                Worksheet sheet = sourceWorkbook.Worksheets[0];
+                sheet.Name = "Data";
 
-                // First worksheet with a named range
-                Worksheet sheet1 = sourceWorkbook.Worksheets[0];
-                sheet1.Name = "Sheet1";
-                sheet1.Cells["A1"].PutValue("First Value");
-                int nameIndex1 = sourceWorkbook.Worksheets.Names.Add("FirstRange");
-                sourceWorkbook.Worksheets.Names[nameIndex1].RefersTo = "=Sheet1!$A$1";
+                // Populate some cells
+                sheet.Cells["A1"].PutValue("Header1");
+                sheet.Cells["B1"].PutValue("Header2");
+                sheet.Cells["A2"].PutValue(10);
+                sheet.Cells["B2"].PutValue(20);
+                sheet.Cells["A3"].PutValue(30);
+                sheet.Cells["B3"].PutValue(40);
 
-                // Second worksheet with another named range
-                Worksheet sheet2 = sourceWorkbook.Worksheets.Add("Data");
-                sheet2.Cells["C3"].PutValue("Second Value");
-                int nameIndex2 = sourceWorkbook.Worksheets.Names.Add("SecondRange");
-                sourceWorkbook.Worksheets.Names[nameIndex2].RefersTo = "=Data!$C$3";
+                // Create named range using the Names collection
+                int idx1 = sourceWorkbook.Worksheets.Names.Add("Numbers");
+                sourceWorkbook.Worksheets.Names[idx1].RefersTo = "=Data!$A$2:$A$3";
 
-                // ---------- Clone the workbook while preserving named ranges ----------
+                // Create another named range using the Range.Name property
+                AsposeRange rng = sheet.Cells.CreateRange("B2:B3");
+                rng.Name = "Values";
+
+                // ---------- Clone the workbook preserving named ranges ----------
                 Workbook clonedWorkbook = new Workbook();
-                CopyOptions copyOptions = new CopyOptions
-                {
-                    CopyNames = true // Ensure named ranges are copied
-                };
-                clonedWorkbook.Copy(sourceWorkbook, copyOptions);
+                CopyOptions options = new CopyOptions { CopyNames = true };
+                clonedWorkbook.Copy(sourceWorkbook, options);
 
                 // ---------- Verify that all named ranges are present in the clone ----------
-                bool allNamesPreserved = true;
-                foreach (Name sourceName in sourceWorkbook.Worksheets.Names)
+                Console.WriteLine("Verification of named ranges in the cloned workbook:");
+                foreach (Name srcName in sourceWorkbook.Worksheets.Names)
                 {
-                    // Retrieve the corresponding name in the cloned workbook by its text
-                    Name clonedName = clonedWorkbook.Worksheets.Names[sourceName.Text];
+                    // Retrieve the same name from the cloned workbook
+                    Name destName = clonedWorkbook.Worksheets.Names[srcName.Text];
 
-                    // Check existence and reference equality
-                    if (clonedName == null || clonedName.RefersTo != sourceName.RefersTo)
+                    if (destName != null && destName.RefersTo == srcName.RefersTo)
                     {
-                        allNamesPreserved = false;
-                        Console.WriteLine($"Missing or mismatched named range: {sourceName.Text}");
+                        Console.WriteLine($"- Name '{srcName.Text}' copied successfully. RefersTo: {destName.RefersTo}");
                     }
                     else
                     {
-                        Console.WriteLine($"Named range '{sourceName.Text}' copied successfully: {clonedName.RefersTo}");
+                        Console.WriteLine($"- Name '{srcName.Text}' was NOT copied correctly.");
                     }
                 }
 
-                Console.WriteLine(allNamesPreserved
-                    ? "All named ranges were preserved in the cloned workbook."
-                    : "Some named ranges were not preserved.");
+                // Optional: Save both workbooks to verify manually
+                string sourcePath = "SourceWorkbook.xlsx";
+                string clonedPath = "ClonedWorkbook.xlsx";
 
-                // ---------- Optional: Save the cloned workbook for manual inspection ----------
-                clonedWorkbook.Save("ClonedWorkbook.xlsx", SaveFormat.Xlsx);
+                // Ensure we can write to the directory
+                string directory = Path.GetDirectoryName(Path.GetFullPath(sourcePath));
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                sourceWorkbook.Save(sourcePath, SaveFormat.Xlsx);
+                clonedWorkbook.Save(clonedPath, SaveFormat.Xlsx);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CloneWorkbookWithNamedRangesDemo.Run();
         }
     }
 }

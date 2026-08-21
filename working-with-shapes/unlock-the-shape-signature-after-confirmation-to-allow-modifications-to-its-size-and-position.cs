@@ -1,49 +1,81 @@
-// Title: Unlock a protected Signature shape in Aspose.Cells (C#) to enable moving and resizing after confirmation
-// Description: Demonstrates how to create a workbook, add a rectangle shape named "Signature", protect the worksheet, and then, when a confirmation flag is true, unlock the shape by clearing its IsLocked flag and the Move/Resize lock properties before saving the file.
-// Keywords: Aspose.Cells | C# | unlock shape | shape lock | move resize | worksheet protection | Shape.IsLocked | SetLockedProperty | Signature shape | Excel protected sheet
-// Common Searches: how to unlock a shape in a protected worksheet using Aspose.Cells | Aspose.Cells enable moving and resizing of a locked shape | C# unlock rectangle shape after worksheet protection | Aspose.Cells Shape.IsLocked false example | unlock signature shape in Excel with Aspose.Cells
-// Developer Intent: Programmatically remove lock restrictions from a specific shape in a protected worksheet so it can be repositioned or resized after user approval.
-// Use Cases: Allow a digital signature rectangle to be repositioned by the end‑user while the rest of the sheet stays protected. | Enable dynamic layout adjustments for a locked chart or image without unlocking the entire worksheet. | Keep a particular shape editable for form filling while maintaining overall sheet security.
-// AI Prompts: Show C# code to unlock a shape's move and resize locks in Aspose.Cells after worksheet protection. | Provide an example that prompts the user and, upon confirmation, sets Shape.IsLocked and ShapeLockType to allow editing. | Explain how to protect an Excel sheet with Aspose.Cells but keep a specific shape editable.
+// Title: Unlock a Signature Shape in Excel with Aspose.Cells for .NET – Enable Move & Resize
+// Description: Loads an Excel workbook, finds the shape named "Signature" on the first worksheet, asks the user for confirmation, clears the shape's lock and its move/resize restrictions, optionally re‑protects the sheet, and saves the file as an unlocked version.
+// Keywords: Aspose.Cells unlock shape | Excel signature shape move | resize locked shape .NET | shape IsLocked false | ShapeLockType Move Resize | unlock shape after confirmation | protected worksheet shape edit
+// Common Searches: how to unlock a signature shape in Excel using Aspose.Cells | enable moving and resizing of a locked shape in .NET | Aspose.Cells unlock shape while worksheet is protected | C# code to change shape lock properties in Excel | unlock Excel shape after user prompt
+// Developer Intent: Remove the lock on the "Signature" shape so it can be moved or resized after user approval.
+// Use Cases: Prompt users before unlocking a signature shape on a protected sheet. | Programmatically adjust the size or position of a locked signature without removing protection. | Batch‑unlock multiple named shapes to apply layout changes in an automated workflow.
+// AI Prompts: Generate C# code with Aspose.Cells that locates a shape called "Signature", asks for user confirmation, and unlocks its move and resize properties. | Show how to unlock a shape, keep the worksheet protected, and save the workbook using Aspose.Cells for .NET. | Create a reusable method that takes a workbook path and shape name, unlocks the shape for editing, and returns the updated workbook.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSignatureUnlockDemo
+namespace AsposeCellsSignatureUnlock
 {
-    // Demonstrates how to create a workbook, add a rectangle shape named "Signature", protect the worksheet, and then, when a confirmation flag is true, unlock the shape by clearing its IsLocked flag and the Move/Resize lock properties before saving the file.
+    // Loads an Excel workbook, finds the shape named "Signature" on the first worksheet, asks the user for confirmation, clears the shape's lock and its move/resize restrictions, optionally re‑protects the sheet, and saves the file as an unlocked version.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add a sample shape that will act as the "Signature"
-            // Parameters: upper left row, upper left column, top, left, height, width
-            Shape signatureShape = worksheet.Shapes.AddRectangle(2, 2, 50, 50, 150, 50);
-            signatureShape.Name = "Signature";
-
-            // Protect the worksheet so that locked objects cannot be moved/resized
-            worksheet.Protect(ProtectionType.All);
-
-            // Confirm unlocking (in real scenario this could be a user prompt)
-            bool userConfirmed = true; // placeholder for confirmation logic
-
-            if (userConfirmed)
+            try
             {
-                // Unlock the shape itself
-                signatureShape.IsLocked = false;
+                const string inputPath = "SignedDocument.xlsx";
+                const string outputPath = "SignedDocument_Unlocked.xlsx";
 
-                // Additionally ensure that move and resize actions are not locked
-                signatureShape.SetLockedProperty(ShapeLockType.Move, false);
-                signatureShape.SetLockedProperty(ShapeLockType.Resize, false);
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file '{inputPath}' not found. Please place the workbook in the application directory.");
+                    return;
+                }
+
+                // Load the workbook that contains the signature shape
+                Workbook workbook = new Workbook(inputPath);
+                Worksheet worksheet = workbook.Worksheets[0]; // assume the shape is on the first sheet
+
+                // Locate the shape named "Signature"
+                Shape signatureShape = null;
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    if (shape.Name.Equals("Signature", StringComparison.OrdinalIgnoreCase))
+                    {
+                        signatureShape = shape;
+                        break;
+                    }
+                }
+
+                if (signatureShape == null)
+                {
+                    Console.WriteLine("Signature shape not found.");
+                    return;
+                }
+
+                // Ask user for confirmation before unlocking
+                Console.Write("Do you want to unlock the signature shape for editing? (y/n): ");
+                string answer = Console.ReadLine();
+                if (!answer.Equals("y", StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine("Operation cancelled by user.");
+                    return;
+                }
+
+                // Unlock the shape so it can be moved and resized even when the worksheet is protected
+                signatureShape.IsLocked = false; // general lock
+                signatureShape.SetLockedProperty(ShapeLockType.Move, false);   // allow moving
+                signatureShape.SetLockedProperty(ShapeLockType.Resize, false); // allow resizing
+
+                // Optionally, protect the worksheet again while keeping the shape unlocked
+                // worksheet.Protect(ProtectionType.All);
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Signature shape unlocked and workbook saved as '{outputPath}'.");
             }
-
-            // Save the workbook (lifecycle: save)
-            workbook.Save("SignatureUnlocked.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

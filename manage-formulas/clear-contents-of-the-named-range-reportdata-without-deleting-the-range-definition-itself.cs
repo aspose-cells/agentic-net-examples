@@ -1,65 +1,49 @@
-// Title: C# – Clear the contents of the named range "ReportData" while keeping its definition (Aspose.Cells for .NET)
-// Description: Demonstrates how to create or load a workbook, define a named range called ReportData, obtain its Aspose.Range object, call ClearContents() to erase all cell values without removing the name, and save the file.
-// Keywords: Aspose.Cells C# clear named range | ClearContents Aspose.Range | preserve named range definition | remove values from named range .NET | Aspose.Cells example GitHub | C# workbook named range manipulation | Aspose.Cells clear cells without deleting name
-// Common Searches: Aspose.Cells clear values of a named range | How to keep a named range after clearing its cells in .NET | ClearContents vs Clear in Aspose.Range | C# code to empty a named range but retain the name | Aspose.Cells example for clearing ReportData range
-// Developer Intent: Erase all data inside the named range "ReportData" while leaving the range name and its reference unchanged.
-// Use Cases: Refresh a report template by wiping old results before writing new data. | Reset input sections of a workbook without breaking formulas that rely on the named range. | Prepare a workbook for reuse in batch processing by clearing calculation outputs while preserving named range links.
-// AI Prompts: Show C# code that clears the contents of a named range in Aspose.Cells without deleting the name. | Explain when to use ClearContents versus Clear on an Aspose.Range object. | Give an example of repopulating a named range after calling ClearContents in Aspose.Cells.
+// Title: Aspose.Cells for .NET – Clear the contents of the "ReportData" named range while keeping its definition
+// Description: Loads an Excel workbook, locates the named range "ReportData", uses the Range.ClearContents() method to erase only cell values, and saves the file. The named range itself remains intact, and the code safely handles a missing range.
+// Keywords: Aspose.Cells clear named range | C# clear range contents | preserve named range definition | Excel named range Aspose.Cells | ClearContents method .NET
+// Common Searches: Aspose.Cells how to clear values of a named range | C# remove data from ReportData range without deleting name | Clear cells in a specific named range using Aspose.Cells | Keep named range after clearing its contents in .NET
+// Developer Intent: Remove all cell values from the "ReportData" named range without deleting the range itself.
+// Use Cases: Reset a reporting section before inserting fresh data. | Empty a template area while preserving formulas that reference the named range. | Prepare a workbook for user input by clearing previous entries but keeping the range for later reuse.
+// AI Prompts: Write C# code with Aspose.Cells that clears only the contents of a named range called "ReportData" and saves the workbook. | Show how to retrieve a named range, call ClearContents, and retain the range definition using Aspose.Cells for .NET. | Explain error handling when the named range "ReportData" does not exist while attempting to clear its contents with Aspose.Cells.
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// Alias to avoid conflict with System.Range
-using AsposeRange = Aspose.Cells.Range;
-
-// Demonstrates how to create or load a workbook, define a named range called ReportData, obtain its Aspose.Range object, call ClearContents() to erase all cell values without removing the name, and save the file.
-class Program
+// Loads an Excel workbook, locates the named range "ReportData", uses the Range.ClearContents() method to erase only cell values, and saves the file. The named range itself remains intact, and the code safely handles a missing range.
+class ClearNamedRange
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (replace with Workbook wb = new Workbook("input.xlsx"); to load an existing file)
-            Workbook wb = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet ws = wb.Worksheets[0];
-
-            // Populate some data in the area that will be named "ReportData"
-            ws.Cells["A1"].PutValue("Sample 1");
-            ws.Cells["B2"].PutValue(42);
-
-            // Retrieve the named range "ReportData" if it exists; otherwise create it
-            Name reportName = wb.Worksheets.Names["ReportData"];
-            if (reportName == null)
+            // Ensure the input file exists; create a placeholder workbook if missing
+            if (!File.Exists(inputPath))
             {
-                // Add returns the index of the newly created name
-                int nameIndex = wb.Worksheets.Names.Add("ReportData");
-                reportName = wb.Worksheets.Names[nameIndex];
+                var placeholder = new Workbook();
+                placeholder.Worksheets[0].Name = "Sheet1";
+                placeholder.Save(inputPath);
             }
 
-            // Set the reference of the named range to the desired area
-            reportName.RefersTo = ws.Name + "!$A$1:$B$2";
+            // Load the workbook that contains the named range
+            Workbook workbook = new Workbook(inputPath);
 
-            // Get the Range object associated with the named range
-            AsposeRange reportRange = reportName.GetRange();
-
-            // Clear only the contents of the range, preserving the range definition
-            reportRange.ClearContents();
-
-            // Save the workbook (replace with desired path)
-            string outputPath = "ClearedReportData.xlsx";
-
-            // Ensure the directory exists before saving
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Retrieve the named range "ReportData"
+            Name namedRange = workbook.Worksheets.Names["ReportData"];
+            if (namedRange != null)
             {
-                Directory.CreateDirectory(outputDir);
+                // Obtain the Range object linked to the name
+                Aspose.Cells.Range range = namedRange.GetRange();
+
+                // Clear only the cell contents; the range definition remains intact
+                range.ClearContents();
             }
 
-            wb.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Save the modified workbook
+            workbook.Save(outputPath);
         }
         catch (Exception ex)
         {

@@ -1,10 +1,10 @@
-// Title: C# – Safe Retrieval of PivotTable Cell by Display Name with Exception Handling in Aspose.Cells
-// Description: Shows how to build a workbook, add a pivot table, and fetch cells via PivotTable.GetCellByDisplayName. Includes try‑catch handling for a missing display name, null checks, error logging, and workbook saving to prevent crashes.
-// Keywords: Aspose.Cells | C# | PivotTable | GetCellByDisplayName | exception handling | invalid display name | null check | pivot cell retrieval | error logging | Excel automation
-// Common Searches: Aspose.Cells GetCellByDisplayName try catch | handle missing pivot field in Aspose.Cells | C# retrieve pivot table cell by display name safely | Aspose.Cells exception when display name not found | prevent crash GetCellByDisplayName Aspose
-// Developer Intent: Add robust error handling around PivotTable.GetCellByDisplayName so the program continues running when the specified display name is absent.
-// Use Cases: Validate user‑provided pivot field names before accessing data. | Log detailed errors for unsupported display names in reporting pipelines. | Supply fallback values when a required pivot field is missing. | Keep batch Excel processing jobs stable despite configuration issues. | Debug pivot table setups during development without terminating the app.
-// AI Prompts: Generate C# code that wraps PivotTable.GetCellByDisplayName in a helper method with try‑catch and returns null on failure. | Explain step‑by‑step how to add exception handling for GetCellByDisplayName in Aspose.Cells. | Create a logging utility for Aspose.Cells pivot table errors when a display name does not exist. | Write a unit test that verifies GetCellByDisplayName throws an exception for an invalid field and is caught properly.
+// Title: C# Aspose.Cells PivotTable GetCellByDisplayName with Exception Handling for Missing Fields
+// Description: Demonstrates how to safely retrieve a pivot table cell by its display name using Aspose.Cells. The example creates a workbook, builds a pivot table, fetches a cell for a valid field, and gracefully handles a non‑existent display name with try‑catch blocks and null checks, ensuring the application continues and the file is saved.
+// Keywords: Aspose.Cells PivotTable GetCellByDisplayName | C# exception handling Aspose.Cells | handle missing pivot field | prevent crash GetCellByDisplayName | pivot table cell retrieval safe | Aspose.Cells try catch example
+// Common Searches: Aspose.Cells GetCellByDisplayName exception | C# pivot table retrieve cell by display name safely | how to catch error when display name not found Aspose.Cells | prevent crash when GetCellByDisplayName fails
+// Developer Intent: Add robust error handling around PivotTable.GetCellByDisplayName so that missing or incorrect display names do not terminate the program.
+// Use Cases: Fetch the address of a valid data field cell in a pivot table. | Attempt to access a cell with an invalid display name and log a friendly message instead of crashing. | Continue processing and save the workbook even when one or more display names are incorrect.
+// AI Prompts: Generate C# code that creates a pivot table with Aspose.Cells and retrieves cells by display name using try‑catch to handle missing fields. | Write a helper method that wraps PivotTable.GetCellByDisplayName, returns null on failure, and logs the exception message. | Show how to loop through a list of display names, call GetCellByDisplayName for each, and handle exceptions individually without stopping the loop.
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to build a workbook, add a pivot table, and fetch cells via PivotTable.GetCellByDisplayName. Includes try‑catch handling for a missing display name, null checks, error logging, and workbook saving to prevent crashes.
+    // Demonstrates how to safely retrieve a pivot table cell by its display name using Aspose.Cells. The example creates a workbook, builds a pivot table, fetches a cell for a valid field, and gracefully handles a non‑existent display name with try‑catch blocks and null checks, ensuring the application continues and the file is saved.
     public class PivotTableGetCellByDisplayNameWithExceptionHandling
     {
         public static void Run()
@@ -31,66 +31,61 @@ namespace AsposeCellsExamples
                 cells["B2"].Value = 120;
                 cells["A3"].Value = "Travel";
                 cells["B3"].Value = 80;
-                cells["A4"].Value = "Food";
-                cells["B4"].Value = 150;
-                cells["A5"].Value = "Travel";
-                cells["B5"].Value = 200;
+                cells["A4"].Value = "Supplies";
+                cells["B4"].Value = 45;
 
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
+                // Add a pivot table based on the sample data
+                int pivotIndex = sheet.PivotTables.Add("A1:B4", "D3", "SamplePivot");
                 PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-                // Configure the pivot table: add row field and data field
+                // Configure the pivot table (row field and data field)
                 pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
                 pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-                // Refresh and calculate the pivot table so that display names are generated
-                pivotTable.RefreshData();
+                // Refresh data and calculate the pivot table
+                pivotTable.RefreshData();      // Correct API to refresh the cache
                 pivotTable.CalculateData();
 
-                // Retrieve a valid display name (for demonstration)
-                string validDisplayName = pivotTable.DataFields[0].DisplayName;
-                Console.WriteLine($"Valid display name: {validDisplayName}");
+                // Retrieve an existing display name (for demonstration)
+                string existingDisplayName = pivotTable.DataFields[0].DisplayName;
 
-                // Attempt to retrieve a cell using a non‑existent display name
-                string invalidDisplayName = "NonExistentField";
-                Cell cell = null;
+                // Attempt to get a cell by a valid display name
+                try
+                {
+                    Cell validCell = pivotTable.GetCellByDisplayName(existingDisplayName);
+                    Console.WriteLine($"Valid cell retrieved: {validCell?.Name ?? "null"}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error retrieving valid cell: {ex.Message}");
+                }
+
+                // Attempt to get a cell by a non‑existent display name
+                string nonExistentDisplayName = "NonExistentField";
 
                 try
                 {
-                    // This call will throw if the display name does not exist
-                    cell = pivotTable.GetCellByDisplayName(invalidDisplayName);
-                    // If no exception, still check for null (method may return null in some versions)
-                    if (cell == null)
+                    // This call may throw an exception if the display name does not exist
+                    Cell invalidCell = pivotTable.GetCellByDisplayName(nonExistentDisplayName);
+                    // If no exception is thrown, still check for null
+                    if (invalidCell == null)
                     {
-                        Console.WriteLine($"Display name '{invalidDisplayName}' returned null.");
+                        Console.WriteLine($"Display name \"{nonExistentDisplayName}\" does not correspond to any cell (null returned).");
                     }
                     else
                     {
-                        Console.WriteLine($"Cell found: {cell.Name} with value '{cell.Value}'.");
+                        Console.WriteLine($"Unexpected cell retrieved: {invalidCell.Name}");
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Handle the error gracefully without crashing the application
-                    Console.WriteLine($"Error retrieving cell for display name '{invalidDisplayName}': {ex.Message}");
+                    // Handle the exception gracefully to prevent the application from crashing
+                    Console.WriteLine($"Handled exception for display name \"{nonExistentDisplayName}\": {ex.Message}");
                 }
 
-                // Demonstrate successful retrieval using the valid display name
-                try
-                {
-                    Cell validCell = pivotTable.GetCellByDisplayName(validDisplayName);
-                    Console.WriteLine($"Valid cell: {validCell.Name}, Value: {validCell.Value}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Unexpected error with valid display name: {ex.Message}");
-                }
-
-                // Save the workbook (output file name can be adjusted as needed)
-                string outputPath = "PivotTable_GetCellByDisplayName_WithExceptionHandling.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                // Save the workbook (output file)
+                workbook.Save("PivotTable_GetCellByDisplayName_WithExceptionHandling.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)
             {
@@ -98,7 +93,7 @@ namespace AsposeCellsExamples
             }
         }
 
-        // Entry point for the application
+        // Entry point required for compilation
         public static void Main(string[] args)
         {
             Run();

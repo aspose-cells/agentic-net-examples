@@ -1,82 +1,81 @@
-// Title: Create a Pivot Table and Freeze Row Labels (first column) with Aspose.Cells for .NET (C#)
-// Description: Shows how to generate a workbook, populate a data sheet, add a pivot table, place Category and Item in the row area, Amount in the data area, switch to tabular layout, refresh and calculate the pivot, then freeze the first column (row labels) on the pivot worksheet, and finally save the file as an .xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | pivot table | freeze panes | freeze row labels | first column freeze | tabular form pivot | programmatic Excel | Excel automation | add pivot table Aspose
-// Common Searches: Aspose.Cells freeze first column in pivot table | C# create pivot table and lock row labels | How to freeze row labels of a pivot sheet using Aspose.Cells | Programmatically add pivot table and freeze panes .NET | Aspose.Cells tabular layout pivot example
-// Developer Intent: Generate a pivot table from a data range and keep the row‑label column fixed while scrolling, using Aspose.Cells for .NET.
-// Use Cases: Build a sales‑by‑category report where the Category column stays visible during horizontal scrolling. | Create a dynamic inventory dashboard with row headers locked for easier navigation. | Produce a printable Excel workbook that shows a tabular‑layout pivot table with the first column frozen for consistent reference.
-// AI Prompts: Write C# code with Aspose.Cells to create a pivot table from a range and freeze the first column on the pivot sheet. | Show how to set a pivot table to tabular form, refresh its data, and apply FreezePanes to keep row labels visible. | Explain the steps to add row and data fields to a pivot table and lock the row‑label column using Aspose.Cells for .NET.
+// Title: Create a Pivot Table and Freeze Row‑Label Column with Aspose.Cells for .NET (C#)
+// Description: This example builds a new workbook, adds a data sheet with sample sales records, creates a pivot table on that range, assigns Category and Product as row fields and Sales as a data field, refreshes and calculates the pivot, then freezes the column that holds the row labels so it stays visible while scrolling, and finally saves the file as an XLSX document.
+// Keywords: Aspose.Cells pivot table C# | freeze row labels Aspose.Cells | FreezePanes pivot table .NET | Excel pivot freeze column example | Aspose.Cells create and freeze pivot | C# Aspose.Cells pivot freeze panes
+// Common Searches: how to freeze row‑label column in a pivot table using Aspose.Cells | Aspose.Cells C# example for pivot table with frozen panes | freeze panes for pivot tables in .NET | Aspose.Cells create pivot and lock row labels | C# code to add pivot table and apply FreezePanes
+// Developer Intent: Generate an Excel workbook that contains a pivot table whose row‑label column remains fixed during horizontal scrolling.
+// Use Cases: Produce a sales summary where categories and products are row labels that stay in view while users explore large data sets. | Build an interactive dashboard that adds a pivot table to a separate worksheet and locks the label column for better navigation. | Export analytical results to Excel with a pivot table that keeps its row identifiers visible as the data area scrolls.
+// AI Prompts: Write C# code with Aspose.Cells to create a pivot table from a data range and freeze the column that contains the row labels. | Show an Aspose.Cells example that adds a pivot table, sets row and data fields, refreshes the cache, and applies FreezePanes to keep row labels visible. | Explain how to calculate the correct column index for freezing the row‑label column in a pivot table created with Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Shows how to generate a workbook, populate a data sheet, add a pivot table, place Category and Item in the row area, Amount in the data area, switch to tabular layout, refresh and calculate the pivot, then freeze the first column (row labels) on the pivot worksheet, and finally save the file as an .xlsx using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsPivotFreezeDemo
 {
-    static void Main()
+    // This example builds a new workbook, adds a data sheet with sample sales records, creates a pivot table on that range, assigns Category and Product as row fields and Sales as a data field, refreshes and calculates the pivot, then freezes the column that holds the row labels so it stays visible while scrolling, and finally saves the file as an XLSX document.
+    public class Program
     {
-        try
+        public static void Main()
         {
-            // Create a new workbook and get the default worksheet for source data
-            Workbook workbook = new Workbook();
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Populate sample data for the pivot table
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Item");
-            dataSheet.Cells["C1"].PutValue("Amount");
+                // ---------- Create data worksheet ----------
+                Worksheet dataSheet = workbook.Worksheets[0];
+                dataSheet.Name = "Data";
 
-            dataSheet.Cells["A2"].PutValue("Fruit");
-            dataSheet.Cells["B2"].PutValue("Apple");
-            dataSheet.Cells["C2"].PutValue(120);
+                // Populate sample data for the pivot table
+                dataSheet.Cells["A1"].PutValue("Category");
+                dataSheet.Cells["B1"].PutValue("Product");
+                dataSheet.Cells["C1"].PutValue("Sales");
 
-            dataSheet.Cells["A3"].PutValue("Fruit");
-            dataSheet.Cells["B3"].PutValue("Banana");
-            dataSheet.Cells["C3"].PutValue(80);
+                dataSheet.Cells["A2"].PutValue("Electronics");
+                dataSheet.Cells["B2"].PutValue("Laptop");
+                dataSheet.Cells["C2"].PutValue(1200);
 
-            dataSheet.Cells["A4"].PutValue("Vegetable");
-            dataSheet.Cells["B4"].PutValue("Carrot");
-            dataSheet.Cells["C4"].PutValue(60);
+                dataSheet.Cells["A3"].PutValue("Electronics");
+                dataSheet.Cells["B3"].PutValue("Phone");
+                dataSheet.Cells["C3"].PutValue(800);
 
-            dataSheet.Cells["A5"].PutValue("Vegetable");
-            dataSheet.Cells["B5"].PutValue("Broccoli");
-            dataSheet.Cells["C5"].PutValue(90);
+                dataSheet.Cells["A4"].PutValue("Furniture");
+                dataSheet.Cells["B4"].PutValue("Chair");
+                dataSheet.Cells["C4"].PutValue(150);
 
-            // Add a new worksheet that will contain the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+                dataSheet.Cells["A5"].PutValue("Furniture");
+                dataSheet.Cells["B5"].PutValue("Table");
+                dataSheet.Cells["C5"].PutValue(300);
 
-            // Add a pivot table: source range, destination cell, and name
-            int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:C5", "A3", "PivotTable1");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+                // ---------- Create pivot table worksheet ----------
+                Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
 
-            // Configure the pivot table fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Item");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+                // Add a pivot table; source range is the whole data area, destination cell is A1 in the pivot sheet
+                int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:C5", "A1", "SalesPivot");
+                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-            // Layout the pivot table in tabular form
-            pivotTable.ShowInTabularForm();
+                // Configure the pivot table fields
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Refresh and calculate the pivot data
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
+                // Refresh the pivot cache and calculate the data
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
 
-            // Freeze the first column (column A) while keeping all rows scrollable
-            // Parameters: row, column, totalRows, totalColumns
-            pivotSheet.FreezePanes(0, 1, 0, 1);
+                // ---------- Freeze the row‑label column ----------
+                // Freeze the column that contains row labels.
+                int freezeColumn = pivotTable.RowRange.StartColumn + 1; // column index after frozen area
+                // FreezePanes(row, column, totalRows, totalColumns)
+                pivotSheet.FreezePanes(0, freezeColumn, 0, 0);
 
-            // Define output file path
-            string outputPath = "PivotTableWithFrozenRowLabels.xlsx";
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the workbook
+                workbook.Save("PivotTableWithFrozenRowLabels.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

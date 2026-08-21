@@ -1,75 +1,106 @@
+// Title: Aspose.Cells C# – Enumerate Worksheet Columns and Get Maximum Numeric Value per Column
+// Description: This example creates a workbook, fills three columns with numbers, obtains a non‑generic Columns enumerator, walks each column, scans rows up to the last data row, detects numeric cells, records the highest value per column in a dictionary, prints the column name with its max, and saves the file.
+// Keywords: Aspose.Cells column enumerator | C# iterate columns Excel | maximum numeric value per column | Columns.GetEnumerator Aspose | CellsHelper.ColumnIndexToName | Excel column max value .NET | Aspose.Cells data analysis example | non‑generic enumerator C#
+// Common Searches: How to enumerate columns with Aspose.Cells in C# | Get max numeric cell value for each Excel column using Aspose.Cells | Aspose.Cells C# column-wise maximum calculation | Iterate worksheet columns and find highest value Aspose.Cells
+// Developer Intent: Retrieve the highest numeric cell value for every column in a worksheet using Aspose.Cells.
+// Use Cases: Generate a summary table that lists the peak value of each column for financial reporting. | Validate data ranges by ensuring column maxima stay within acceptable thresholds. | Extract column‑wise maxima to feed a chart or dashboard that highlights extreme measurements.
+// AI Prompts: Write C# code with Aspose.Cells that enumerates all columns and returns a Dictionary<int, double> of column indexes and their maximum numeric values. | Provide a LINQ‑based solution to compute the maximum numeric value per column in an Aspose.Cells worksheet. | Explain how to safely handle columns that contain no numeric cells when calculating column maxima with Aspose.Cells.
+
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsColumnMaxValueDemo
 {
-    static void Main()
+    // This example creates a workbook, fills three columns with numbers, obtains a non‑generic Columns enumerator, walks each column, scans rows up to the last data row, detects numeric cells, records the highest value per column in a dictionary, prints the column name with its max, and saves the file.
+    class Program
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();               // create
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // ------------------------------------------------------------
-        // Sample data – this section can be removed when using a real file
-        // ------------------------------------------------------------
-        cells["A1"].PutValue(10);
-        cells["A2"].PutValue(20);
-        cells["A3"].PutValue("Text");
-        cells["B1"].PutValue(5);
-        cells["B2"].PutValue(15);
-        cells["C1"].PutValue(100);
-        cells["C2"].PutValue(-50);
-        cells["C3"].PutValue(30);
-        // ------------------------------------------------------------
-
-        // Dictionary to store the maximum numeric value per column (key = column index)
-        Dictionary<int, double> maxValuesPerColumn = new Dictionary<int, double>();
-
-        // Iterate through each column using the Columns enumerator
-        foreach (Column column in worksheet.Cells.Columns)
+        static void Main()
         {
-            int colIndex = column.Index; // Column index (0‑based)
-
-            // Find the last used cell in this column
-            Cell lastCell = worksheet.Cells.EndCellInColumn(colIndex);
-            int lastRow = lastCell.Row;
-
-            double columnMax = double.MinValue;
-            bool hasNumeric = false;
-
-            // Scan all rows up to the last used row in this column
-            for (int row = 0; row <= lastRow; row++)
+            try
             {
-                Cell cell = worksheet.Cells[row, colIndex];
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
 
-                // Check if the cell contains a numeric value
-                if (cell.Value != null && cell.Type == CellValueType.IsNumeric)
+                // Populate sample numeric data across several columns
+                cells["A1"].PutValue(10);
+                cells["A2"].PutValue(25);
+                cells["A3"].PutValue(5);
+
+                cells["B1"].PutValue(7);
+                cells["B2"].PutValue(14);
+                cells["B3"].PutValue(21);
+
+                cells["C1"].PutValue(30);
+                cells["C2"].PutValue(12);
+                cells["C3"].PutValue(18);
+
+                // Dictionary to hold the maximum numeric value per column (key = column index)
+                Dictionary<int, double> maxValuesPerColumn = new Dictionary<int, double>();
+
+                // Iterate each column using the non‑generic enumerator
+                IEnumerator columnEnumerator = cells.Columns.GetEnumerator();
+                while (columnEnumerator.MoveNext())
                 {
-                    double val = Convert.ToDouble(cell.Value);
-                    if (!hasNumeric || val > columnMax)
+                    // Current column object
+                    Column column = (Column)columnEnumerator.Current;
+
+                    // Determine the column index (zero‑based)
+                    int colIndex = cells.Columns.IndexOf(column);
+                    if (colIndex < 0) continue; // safety check
+
+                    double maxInColumn = double.MinValue;
+                    bool hasNumeric = false;
+
+                    // Determine the last row that may contain data to limit the loop
+                    int lastRow = cells.MaxDataRow;
+                    if (lastRow < 0) lastRow = 0; // no data case
+
+                    // Iterate through each row in the current column
+                    for (int row = 0; row <= lastRow; row++)
                     {
-                        columnMax = val;
-                        hasNumeric = true;
+                        Cell cell = cells[row, colIndex];
+                        if (cell != null && cell.Value != null && cell.Type == CellValueType.IsNumeric)
+                        {
+                            double val = cell.DoubleValue;
+                            if (!hasNumeric || val > maxInColumn)
+                            {
+                                maxInColumn = val;
+                                hasNumeric = true;
+                            }
+                        }
+                    }
+
+                    // Record the maximum value if any numeric cell was found
+                    if (hasNumeric)
+                    {
+                        maxValuesPerColumn[colIndex] = maxInColumn;
                     }
                 }
-            }
 
-            // Record the maximum if at least one numeric cell was found
-            if (hasNumeric)
+                // Output the results
+                Console.WriteLine("Maximum numeric value per column:");
+                foreach (var kvp in maxValuesPerColumn)
+                {
+                    // Convert column index to Excel column name for readability
+                    string columnName = CellsHelper.ColumnIndexToName(kvp.Key);
+                    Console.WriteLine($"{columnName}: {kvp.Value}");
+                }
+
+                // Save the workbook (optional, demonstrates lifecycle usage)
+                string outputPath = "ColumnMaxValuesDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
             {
-                maxValuesPerColumn[colIndex] = columnMax;
+                // Log any unexpected errors
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-
-        // Output the results
-        foreach (var kvp in maxValuesPerColumn)
-        {
-            Console.WriteLine($"Column {kvp.Key} – Max Numeric Value: {kvp.Value}");
-        }
-
-        // Save the workbook (optional, demonstrates the required save rule)
-        workbook.Save("ColumnsMaxValues.xlsx");           // save
     }
 }

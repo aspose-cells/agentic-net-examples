@@ -1,38 +1,39 @@
-// Title: Aspose.Cells for .NET – Set WordArt Fill Transparency to 30% in C#
-// Description: This C# snippet creates a new workbook, inserts a WordArt object, sets its Fill.Transparency property to 0.3 (30 % opacity) for a subtle background effect, and saves the file as WordArtTransparency.xlsx.
-// Keywords: Aspose.Cells C# WordArt fill opacity | Excel shape transparency .NET | adjust shape fill transparency Aspose.Cells | WordArt background effect example | C# Excel shape transparency tutorial
-// Common Searches: C# Aspose.Cells how to change WordArt opacity | set fill transparency for a shape in Excel using .NET | adjust WordArt transparency programmatically Aspose.Cells | create faint WordArt watermark with 30% opacity in C#
-// Developer Intent: I need to make a WordArt object semi‑transparent (30 %) so it can serve as a subtle background in an Excel worksheet.
-// Use Cases: Add a low‑opacity WordArt watermark to generated financial reports. | Use semi‑transparent WordArt as a decorative header in Excel templates. | Provide faint visual cues on a sheet without covering data values.
-// AI Prompts: Show me how to modify the WordArt fill transparency to 50% after the workbook is saved. | Provide code to read the current transparency of a WordArt shape and adjust it based on a condition. | Explain how to apply a gradient fill with varying opacity to a WordArt object using Aspose.Cells.
+// Title: Apply 30% Fill Transparency to a WordArt Shape in Excel using Aspose.Cells for .NET
+// Description: Shows how to create a workbook, add a WordArt shape with a preset style, set its Fill.Transparency to 0.3 (30 % opacity), and save the result as WordArtTransparency.xlsx with Aspose.Cells for C#.
+// Keywords: Aspose.Cells | C# | .NET | Excel WordArt | shape transparency | fill opacity | Fill.Transparency | preset WordArt style | programmatic Excel graphics | Aspose.Cells shape example
+// Common Searches: how to set WordArt transparency in Aspose.Cells | Aspose.Cells C# WordArt fill opacity 30 percent | Excel WordArt shape transparency code sample | set Fill.Transparency for WordArt using Aspose.Cells .NET | make WordArt semi‑transparent in an Excel workbook
+// Developer Intent: Programmatically set a WordArt shape's fill transparency to 30 % in an Excel worksheet.
+// Use Cases: Add a light watermark behind data by using a semi‑transparent WordArt title. | Create a decorative header where the WordArt blends with cell colors without hiding content. | Generate template files that include faint WordArt branding for consistent report styling.
+// AI Prompts: Provide C# code to change a WordArt shape's Fill.Transparency to 0.5 with Aspose.Cells. | How can I modify the transparency of an existing WordArt object in a loaded workbook? | Explain the steps to retrieve a shape from the Shapes collection and adjust its fill opacity.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This C# snippet creates a new workbook, inserts a WordArt object, sets its Fill.Transparency property to 0.3 (30 % opacity) for a subtle background effect, and saves the file as WordArtTransparency.xlsx.
-class AdjustWordArtTransparency
+// Shows how to create a workbook, add a WordArt shape with a preset style, set its Fill.Transparency to 0.3 (30 % opacity), and save the result as WordArtTransparency.xlsx with Aspose.Cells for C#.
+class WordArtTransparencyDemo
 {
     static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
+
+        // Access the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a WordArt shape to the worksheet
-        // Parameters: style, text, topRow, top (pixels), leftColumn, left (pixels), height (pixels), width (pixels)
-        Shape wordArt = worksheet.Shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle1,
-            "Background Text",
-            2,    // top row index
-            10,   // top offset in pixels
-            2,    // left column index
-            10,   // left offset in pixels
-            100,  // height in pixels
-            400   // width in pixels
-        );
+        // Get the shape collection of the worksheet
+        ShapeCollection shapes = worksheet.Shapes;
 
-        // Set the fill transparency of the WordArt to 30% (0.3)
+        // Add a WordArt shape with a preset style
+        // Parameters: style, text, topRow, top, leftColumn, left, height, width
+        Shape wordArt = shapes.AddWordArt(
+            PresetWordArtStyle.WordArtStyle1,   // preset style
+            "Subtle Background",                // text
+            2, 0,                               // top row and vertical offset (pixels)
+            2, 0,                               // left column and horizontal offset (pixels)
+            200, 400);                          // height and width (pixels)
+
+        // Set the fill transparency to 30% (0.3)
         wordArt.Fill.Transparency = 0.3;
 
         // Save the workbook

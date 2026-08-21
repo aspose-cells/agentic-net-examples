@@ -1,85 +1,68 @@
-// Title: Apply a Web‑Downloaded Image as a Tiled Texture Fill to a Shape in Aspose.Cells (C#)
-// Description: Creates a workbook, adds a rectangle shape, downloads an image (with local fallback), sets the shape's FillType to Texture, enables tiling, scales the texture to 50 % and saves the file.
-// Keywords: Aspose.Cells texture fill | C# shape fill from URL | download image for Excel shape | Aspose.Cells FillType.Texture | image fallback Aspose.Cells | tiled texture Excel shape | scale texture fill C#
-// Common Searches: Aspose.Cells set shape texture from web image | C# download image and use as shape fill in Excel | texture fill with tiling and scaling Aspose.Cells | fallback to local image when remote texture fails | apply byte array as texture fill Aspose.Cells
-// Developer Intent: Load an image from a remote URL (or a local file if the download fails) and use it as a tiled, scaled texture fill for a specific shape in an Excel workbook generated with Aspose.Cells.
-// Use Cases: Generate branded reports where a logo fetched from a web service fills a shape as a repeated pattern. | Create diagrammatic worksheets that apply externally hosted pattern images to shapes, automatically adjusting tile size. | Build templates that guarantee a texture fill by falling back to a bundled image when the online source is unavailable.
-// AI Prompts: Write C# code that downloads an image from a URL, falls back to a local file, and applies it as a tiled, scaled texture fill to a rectangle shape using Aspose.Cells. | Show how to configure the TextureFill properties (IsTiling, Scale) for a shape after assigning image data from a byte array in Aspose.Cells. | Provide an example that applies different texture fills to multiple shapes, each using images from distinct URLs with error handling.
+// Title: Apply a Web Image as Texture Fill to a Shape in Aspose.Cells for .NET
+// Description: Demonstrates how to download an image from a URL with HttpClient, assign it to a shape's TextureFill, enable tiling, adjust scaling, and save the workbook as an Excel file using Aspose.Cells.
+// Keywords: Aspose.Cells texture fill | shape fill image .NET | download image for Excel shape | texture tiling Aspose.Cells | TextureFill.Scale property | C# Aspose.Cells shape example
+// Common Searches: Aspose.Cells use online image as shape texture | C# set rectangle fill to downloaded picture in Excel | how to enable tiling for shape texture in Aspose.Cells | apply web image to shape fill Aspose.Cells .NET | scale texture fill for Excel shape programmatically
+// Developer Intent: Load an image from a web address and apply it as a texture fill to a specific worksheet shape.
+// Use Cases: Create a rectangle and fill it with a JPEG retrieved from a public URL. | Repeat the texture across the shape by turning on tiling. | Resize the image inside the shape using the Scale property (e.g., 0.5 for 50%). | Provide fallback logic when the image download fails.
+// AI Prompts: Generate C# code that downloads an image from a URL and sets it as a TextureFill for a shape in Aspose.Cells, with tiling enabled. | Show how to adjust TextureFill.Scale to 0.75 and handle HttpRequestException in Aspose.Cells. | Create a reusable method that takes an image URL and a Shape object, applies the image as a texture fill, and returns the updated Workbook.
 
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a rectangle shape, downloads an image (with local fallback), sets the shape's FillType to Texture, enables tiling, scales the texture to 50 % and saves the file.
+// Demonstrates how to download an image from a URL with HttpClient, assign it to a shape's TextureFill, enable tiling, adjust scaling, and save the workbook as an Excel file using Aspose.Cells.
 class Program
 {
-    static async Task Main(string[] args)
+    static async Task Main()
     {
-        // URL of the image to be used as texture
-        const string imageUrl = "https://example.com/texture.png";
-
-        byte[] imageData = null;
-
-        // Attempt to download the image; fallback to a local file if download fails
         try
         {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add a rectangle shape that will receive the texture fill
+            // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
+            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 200, 100);
+
+            // Set the fill type of the shape to Texture
+            shape.Fill.FillType = FillType.Texture;
+
+            // Obtain the TextureFill object to assign image data
+            TextureFill textureFill = shape.Fill.TextureFill;
+
+            // URL of the image to be used as texture (valid image URL)
+            string imageUrl = "https://www.gstatic.com/webp/gallery/1.jpg";
+
+            // Download the image bytes
             using (HttpClient client = new HttpClient())
-            {
-                imageData = await client.GetByteArrayAsync(imageUrl);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to download image from '{imageUrl}'. Reason: {ex.Message}");
-            const string localFallback = "defaultTexture.png";
-            if (File.Exists(localFallback))
             {
                 try
                 {
-                    imageData = File.ReadAllBytes(localFallback);
-                    Console.WriteLine($"Loaded fallback texture from '{localFallback}'.");
+                    byte[] imageBytes = await client.GetByteArrayAsync(imageUrl);
+                    // Assign the downloaded image data to the texture fill
+                    textureFill.ImageData = imageBytes;
                 }
-                catch (Exception fileEx)
+                catch (HttpRequestException ex)
                 {
-                    Console.WriteLine($"Failed to read fallback texture. Reason: {fileEx.Message}");
+                    Console.WriteLine($"Failed to download image: {ex.Message}");
+                    // Optionally, load a local fallback image if needed
                 }
             }
-        }
 
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Optionally enable tiling or adjust scaling
+            textureFill.IsTiling = true;
+            textureFill.Scale = 0.5; // 50% scale
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, top, left, height, width
-        Shape rectangle = worksheet.Shapes.AddRectangle(2, 2, 5, 5, 150, 200);
-
-        // Apply texture fill only if image data is available
-        if (imageData != null && imageData.Length > 0)
-        {
-            rectangle.Fill.FillType = FillType.Texture;
-            rectangle.Fill.TextureFill.ImageData = imageData;
-            rectangle.Fill.TextureFill.IsTiling = true;
-            rectangle.Fill.TextureFill.Scale = 0.5; // Scale the texture to 50%
-        }
-        else
-        {
-            Console.WriteLine("No texture applied to the shape because image data is unavailable.");
-        }
-
-        // Save the workbook to a file
-        try
-        {
-            const string outputPath = "ShapeWithTexture.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Save the workbook to a file
+            workbook.Save("ShapeWithTexture.xlsx");
+            Console.WriteLine("Workbook saved successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to save workbook. Reason: {ex.Message}");
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

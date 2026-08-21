@@ -1,47 +1,57 @@
-// Title: Export Excel to PDF with Cell Comments as Footnotes using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add cell comments, configure PrintCommentsType.PrintSheetEnd to render those comments as footnotes, optionally set a page footer, and save the worksheet as a PDF with PdfSaveOptions.
-// Keywords: Aspose.Cells PDF export comments footnotes | C# PrintCommentsType.PrintSheetEnd | Excel comments to PDF footnotes | Aspose.Cells PdfSaveOptions example | Add page footer Aspose.Cells
-// Common Searches: Aspose.Cells export comments as footnotes PDF | C# print Excel comments at end of sheet | How to show cell comments in PDF using Aspose.Cells | Add footnotes from Excel comments in PDF | Set page footer when converting Excel to PDF Aspose
-// Developer Intent: Export an Excel worksheet to PDF where each cell comment appears as a footnote on the generated PDF pages.
-// Use Cases: Product catalog with explanatory notes displayed as footnotes in the PDF brochure. | Compliance report where regulatory remarks stored as comments become footnotes after conversion. | Invoice PDF that includes terms and conditions as footnotes derived from cell comments.
-// AI Prompts: Show how to place each comment on the same PDF page as its referenced cell instead of at the sheet end. | Provide code to customize the font, size, and color of comment footnotes when saving to PDF. | Explain how to extract comment text and insert it into a custom PDF footer using Aspose.Pdf after export.
+// Title: C# – Export Excel Cell Comments as PDF Footnotes with Aspose.Cells
+// Description: Shows how to build a workbook, add cell comments, set PrintCommentsType to PrintSheetEnd, add a right‑aligned page‑number footer, enable document‑structure export, and save the sheet as a PDF where each comment appears as a footnote on the corresponding page.
+// Keywords: Aspose.Cells C# PDF export | Excel comments footnotes PDF | PrintCommentsType PrintSheetEnd | PdfSaveOptions ExportDocumentStructure | add footer page number Aspose.Cells | convert Excel to PDF with comments | Aspose.Cells comment footnote example | C# workbook to PDF with footnotes
+// Common Searches: Aspose.Cells export comments as footnotes | C# print Excel comments at end of sheet PDF | how to add page numbers when saving Excel to PDF with Aspose | enable document structure in PDF using Aspose.Cells | convert Excel to PDF with comment footnotes C#
+// Developer Intent: Create a PDF from an Excel workbook where each cell comment is rendered as a footnote on the same page, optionally with a page‑number footer.
+// Use Cases: Product catalog where item notes appear as footnotes in the PDF | Regulatory compliance report with explanatory comments displayed as footnotes | Financial statements that need cell annotations and page numbers in the exported PDF | Academic worksheets where teacher comments are shown as footnotes | Invoices that include comment‑based terms and conditions as footnotes
+// AI Prompts: Generate C# code using Aspose.Cells to convert an Excel sheet to PDF with cell comments shown as footnotes and a page‑number footer. | Show how to set PrintCommentsType to PrintSheetEnd and enable ExportDocumentStructure in PdfSaveOptions. | Provide an example that adds multiple comments, configures footnote printing, and saves the workbook as a PDF using Aspose.Cells for .NET. | Explain how to include Excel comments as end‑of‑sheet footnotes when exporting to PDF with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Demonstrates how to create a workbook, add cell comments, configure PrintCommentsType.PrintSheetEnd to render those comments as footnotes, optionally set a page footer, and save the worksheet as a PDF with PdfSaveOptions.
-class Program
+namespace AsposeCellsCommentFootnotesPdf
 {
-    static void Main()
+    // Shows how to build a workbook, add cell comments, set PrintCommentsType to PrintSheetEnd, add a right‑aligned page‑number footer, enable document‑structure export, and save the sheet as a PDF where each comment appears as a footnote on the corresponding page.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate some sample data
-        sheet.Cells["A1"].PutValue("Product");
-        sheet.Cells["B1"].PutValue("Price");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["B2"].PutValue(1.20);
-        sheet.Cells["A3"].PutValue("Banana");
-        sheet.Cells["B3"].PutValue(0.80);
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Price");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(1.20);
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue(0.80);
 
-        // Add comments that will be used as footnotes
-        int commentIndex = sheet.Comments.Add("A2");
-        sheet.Comments[commentIndex].Note = "Fresh apples sourced locally.";
-        commentIndex = sheet.Comments.Add("A3");
-        sheet.Comments[commentIndex].Note = "Ripe bananas imported from Ecuador.";
+            // Add comments to cells that will appear as footnotes
+            int commentIdx = sheet.Comments.Add("A2");
+            Comment comment = sheet.Comments[commentIdx];
+            comment.Note = "Fresh apples from the orchard.";
 
-        // Configure the worksheet to print comments at the end of the sheet
-        // This places the comments after the data, effectively acting as footnotes
-        sheet.PageSetup.PrintComments = PrintCommentsType.PrintSheetEnd;
+            commentIdx = sheet.Comments.Add("A3");
+            comment = sheet.Comments[commentIdx];
+            comment.Note = "Ripe bananas imported from Ecuador.";
 
-        // Optional: add a page footer showing page numbers
-        sheet.PageSetup.SetFooter(2, "&P of &N");
+            // Configure the worksheet to print comments at the end of the sheet
+            sheet.PageSetup.PrintComments = PrintCommentsType.PrintSheetEnd;
 
-        // Save the workbook as PDF using default PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        workbook.Save("CommentsFootnotes.pdf", pdfOptions);
+            // Optional: add a footer with page number for reference
+            sheet.PageSetup.SetFooter(2, "&P of &N"); // Right section
+
+            // Set PDF save options (e.g., export document structure)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                ExportDocumentStructure = true
+            };
+
+            // Save the workbook as PDF; comments will appear as footnotes
+            workbook.Save("CommentsFootnotes.pdf", pdfOptions);
+        }
     }
 }

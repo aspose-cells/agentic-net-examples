@@ -1,50 +1,69 @@
-// Title: C# Aspose.Cells CSV Export: Trim or Preserve Leading Blank Rows/Columns
-// Description: This example creates a workbook, writes data starting at cell C3 (leaving empty rows and columns at the top‑left), and saves two CSV files. One file keeps the blanks (TrimLeadingBlankRowAndColumn = false) and the other removes them (TrimLeadingBlankRowAndColumn = true) using TxtSaveOptions.
-// Keywords: Aspose.Cells CSV export | TrimLeadingBlankRowAndColumn | remove leading blanks Aspose.Cells | preserve whitespace CSV | TxtSaveOptions C#
-// Common Searches: Aspose.Cells how to trim leading blank rows when saving to CSV | C# export Excel to CSV without empty rows | TxtSaveOptions TrimLeadingBlankRowAndColumn example | remove empty columns Aspose.Cells CSV | preserve whitespace in CSV export Aspose.Cells
-// Developer Intent: Demonstrate controlling whitespace trimming during CSV export with Aspose.Cells.
-// Use Cases: Generate a CSV that mirrors the original worksheet layout, including leading empty rows/columns, for legacy systems that rely on fixed positions. | Create a compact CSV by stripping unnecessary leading blanks to lower file size and speed up downstream processing. | Produce side‑by‑side CSV files (trimmed vs. untrimmed) to evaluate the effect of whitespace on data‑parsing scripts.
-// AI Prompts: Write C# code with Aspose.Cells to export a worksheet to CSV while keeping all leading empty rows and columns. | Extend the sample to also trim trailing blank rows and columns during CSV export. | Explain the impact of the TrimLeadingBlankRowAndColumn property on the output of TxtSaveOptions.
+// Title: C# – Control Whitespace When Exporting to CSV with Aspose.Cells TxtSaveOptions
+// Description: Creates a workbook, places data at C3, and saves it twice as CSV—once preserving leading empty rows/columns and once removing them—by toggling TxtSaveOptions.TrimLeadingBlankRowAndColumn. The example lets you compare the two outputs to see the whitespace‑cleanup effect.
+// Keywords: Aspose.Cells | C# | TxtSaveOptions | TrimLeadingBlankRowAndColumn | CSV export | whitespace cleanup | preserve leading blanks | remove empty rows | Excel to CSV | Aspose.Cells example
+// Common Searches: How to keep empty rows when saving CSV with Aspose.Cells | Aspose.Cells TxtSaveOptions TrimLeadingBlankRowAndColumn false example | Export Excel to CSV without trimming blanks C# | Difference between TrimLeadingBlankRowAndColumn true and false | Aspose.Cells whitespace removal CSV | C# code to compare CSV outputs with and without leading blanks
+// Developer Intent: Show how to enable or disable whitespace trimming during CSV export by setting the TrimLeadingBlankRowAndColumn property of TxtSaveOptions.
+// Use Cases: Generate CSV reports that retain the original worksheet layout for tools that rely on fixed row/column positions. | Produce compact CSV files for data‑import pipelines that require dense, blank‑free content. | Validate the impact of whitespace trimming by comparing two CSV files created with opposite TrimLeadingBlankRowAndColumn settings.
+// AI Prompts: Write C# code using Aspose.Cells to export a workbook to CSV while preserving leading blank rows and columns. | Explain how TxtSaveOptions.TrimLeadingBlankRowAndColumn influences CSV output and how to switch it on or off. | Provide step‑by‑step instructions to compare CSV files generated with and without whitespace trimming.
 
 using System;
 using Aspose.Cells;
 
-// This example creates a workbook, writes data starting at cell C3 (leaving empty rows and columns at the top‑left), and saves two CSV files. One file keeps the blanks (TrimLeadingBlankRowAndColumn = false) and the other removes them (TrimLeadingBlankRowAndColumn = true) using TxtSaveOptions.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Creates a workbook, places data at C3, and saves it twice as CSV—once preserving leading empty rows/columns and once removing them—by toggling TxtSaveOptions.TrimLeadingBlankRowAndColumn. The example lets you compare the two outputs to see the whitespace‑cleanup effect.
+    public class WhitespaceCleanupDemo
     {
-        try
+        public static void Run()
         {
-            WhitespaceCleanupDemo.Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Add data starting from cell C3 (leaving leading blank rows and columns)
+                sheet.Cells["C3"].PutValue("Data1");
+                sheet.Cells["D4"].PutValue("Data2");
+                sheet.Cells["E5"].PutValue("Data3");
+
+                // Export without trimming leading blanks (default is true, set to false explicitly)
+                TxtSaveOptions optionsNoTrim = new TxtSaveOptions
+                {
+                    TrimLeadingBlankRowAndColumn = false // keep leading blanks
+                };
+                workbook.Save("output_without_trim.csv", optionsNoTrim);
+
+                // Export with trimming leading blanks (default behavior)
+                TxtSaveOptions optionsTrim = new TxtSaveOptions
+                {
+                    TrimLeadingBlankRowAndColumn = true // remove leading blanks
+                };
+                workbook.Save("output_with_trim.csv", optionsTrim);
+
+                Console.WriteLine("Export completed. Compare 'output_without_trim.csv' and 'output_with_trim.csv' to see whitespace cleanup.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during processing: {ex.Message}");
+            }
         }
     }
-}
 
-class WhitespaceCleanupDemo
-{
-    public static void Run()
+    public class Program
     {
-        // Initialize a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate cells starting from C3, leaving leading blank rows and columns
-        worksheet.Cells["C3"].PutValue("Data1");
-        worksheet.Cells["D4"].PutValue("Data2");
-        worksheet.Cells["E5"].PutValue("Data3");
-
-        // Export without trimming leading blank rows/columns
-        TxtSaveOptions saveOptions = new TxtSaveOptions();
-        saveOptions.TrimLeadingBlankRowAndColumn = false; // keep blanks
-        workbook.Save("output_with_blanks.csv", saveOptions);
-
-        // Export with trimming leading blank rows/columns
-        saveOptions.TrimLeadingBlankRowAndColumn = true; // remove blanks
-        workbook.Save("output_trimmed.csv", saveOptions);
+        public static void Main(string[] args)
+        {
+            try
+            {
+                WhitespaceCleanupDemo.Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
+            }
+        }
     }
 }

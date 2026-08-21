@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Pivot Table Agent
 category: pivot-table
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Create, configure, refresh, calculate, filter, group, and format Excel PivotTables in C#
 primary_apis: [PivotTable, PivotTableCollection, PivotField, PivotItem, PivotFieldType]
 search_intents: [create PivotTable in C#, refresh Excel PivotTable, add PivotTable fields, group PivotTable data]
@@ -322,3 +322,4 @@ Interpret one developer intent
 ## Definition of done
 
 A `pivot-table` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
+

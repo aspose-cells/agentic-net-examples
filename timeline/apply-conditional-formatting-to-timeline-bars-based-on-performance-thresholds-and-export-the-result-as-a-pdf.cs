@@ -1,96 +1,98 @@
-// Title: Aspose.Cells C# – Apply Conditional Formatting to Timeline Bars and Export as PDF
-// Description: This C# sample creates a workbook, fills it with date and performance data, builds a pivot table, attaches a timeline slicer to the Date field, applies three value‑based color rules to the Performance column, and saves the entire sheet—including the timeline and colored cells—as a PDF using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# conditional formatting | timeline slicer PDF export | pivot table timeline Aspose | performance thresholds coloring | export to PDF Aspose.Cells | C# workbook PDF generation | Aspose.Cells timeline example | conditional formatting rules Aspose
-// Common Searches: How to add a timeline slicer to a pivot table with Aspose.Cells .NET | Conditional formatting based on value ranges in Aspose.Cells C# | Export worksheet containing a timeline to PDF using Aspose.Cells | C# code for coloring performance cells and creating PDF report | Aspose.Cells example for KPI dashboard with timeline
-// Developer Intent: Generate a PDF report that combines a pivot‑table timeline with value‑driven cell colors.
-// Use Cases: Monthly KPI dashboard where users filter dates via a timeline and instantly see performance bands highlighted, then share as a printable PDF. | Automated sales performance summary that colors revenue cells, includes an interactive timeline, and outputs a PDF for email distribution. | Executive briefing requiring a timeline slicer for date selection and color‑coded metrics, saved as a PDF for archiving.
-// AI Prompts: Modify the example to use custom threshold values and alternative colors for the conditional formatting. | Add data labels to the timeline bars while keeping the existing PDF export functionality. | Show how to programmatically resize and reposition the timeline shape based on worksheet dimensions. | Explain how to export only the timeline view as a separate PDF page. | Provide guidance on converting the generated PDF to an image while preserving conditional formatting.
+// Title: Conditional Formatting on Aspose.Cells Timeline Bars with Performance Thresholds and PDF Export (C#)
+// Description: Demonstrates how to create a workbook with date‑performance data, build a pivot table, attach a timeline, apply three value‑based conditional formatting rules (green > 80, yellow > 50, red ≤ 50) to the performance column, and save the result as a PDF using Aspose.Cells for .NET. Ideal for global reporting scenarios.
+// Keywords: Aspose.Cells | C# | timeline | conditional formatting | pivot table | PDF export | performance thresholds | color coding | Aspose.Cells for .NET | timeline bars
+// Common Searches: Aspose.Cells timeline conditional formatting C# | Export timeline to PDF with Aspose.Cells | Apply color rules to cells based on value Aspose.Cells | Create pivot table and timeline programmatically | How to color timeline bars by performance in .NET
+// Developer Intent: Generate a workbook, link a timeline to a pivot table, color‑code performance values, and output the formatted timeline as a PDF.
+// Use Cases: Project status reports that highlight low, medium, and high performance periods. | Automated monthly dashboards with colored timeline bars for quick visual analysis. | PDF‑based performance summaries for stakeholders that require clear visual cues.
+// AI Prompts: Write C# code with Aspose.Cells to add a timeline to a pivot table, apply three conditional formatting rules (green > 80, yellow > 50, red ≤ 50) on column B, and export the workbook as a PDF. | Show how to set background colors for cells B2:B6 based on numeric thresholds using Aspose.Cells conditional formatting. | Explain how to modify the timeline caption and style after applying conditional formatting in Aspose.Cells.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using Aspose.Cells.Timelines;
 
-// This C# sample creates a workbook, fills it with date and performance data, builds a pivot table, attaches a timeline slicer to the Date field, applies three value‑based color rules to the Performance column, and saves the entire sheet—including the timeline and colored cells—as a PDF using Aspose.Cells for .NET.
-class TimelineConditionalFormattingToPdf
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to create a workbook with date‑performance data, build a pivot table, attach a timeline, apply three value‑based conditional formatting rules (green > 80, yellow > 50, red ≤ 50) to the performance column, and save the result as a PDF using Aspose.Cells for .NET. Ideal for global reporting scenarios.
+    class TimelineConditionalFormattingPdf
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample data: Date column (A) and Performance column (B)
-            cells["A1"].PutValue("Date");
-            cells["B1"].PutValue("Performance");
-
-            // Sample dates and performance values
-            DateTime startDate = new DateTime(2023, 1, 1);
-            for (int i = 0; i < 12; i++)
+            try
             {
-                cells[i + 1, 0].PutValue(startDate.AddMonths(i));
-                // Random performance between 30 and 100
-                int perf = new Random(i).Next(30, 101);
-                cells[i + 1, 1].PutValue(perf);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Populate sample data: Date and Performance columns
+                cells["A1"].PutValue("Date");
+                cells["B1"].PutValue("Performance");
+
+                // Add several rows of data
+                cells["A2"].PutValue(new DateTime(2023, 1, 1));
+                cells["B2"].PutValue(45);   // Low performance
+                cells["A3"].PutValue(new DateTime(2023, 2, 1));
+                cells["B3"].PutValue(65);   // Medium performance
+                cells["A4"].PutValue(new DateTime(2023, 3, 1));
+                cells["B4"].PutValue(85);   // High performance
+                cells["A5"].PutValue(new DateTime(2023, 4, 1));
+                cells["B5"].PutValue(55);   // Medium performance
+                cells["A6"].PutValue(new DateTime(2023, 5, 1));
+                cells["B6"].PutValue(30);   // Low performance
+
+                // Create a pivot table that will serve as the data source for the timeline
+                int pivotIdx = sheet.PivotTables.Add("A1:B6", "D1", "PerformancePivot");
+                PivotTable pivot = sheet.PivotTables[pivotIdx];
+                pivot.AddFieldToArea(PivotFieldType.Row, "Date");
+                pivot.AddFieldToArea(PivotFieldType.Data, "Performance");
+                pivot.RefreshData();
+                pivot.CalculateData();
+
+                // Add a timeline linked to the pivot table (based on the Date field)
+                TimelineCollection timelines = sheet.Timelines;
+                int timelineIdx = timelines.Add(pivot, "F1", "Date");
+                Timeline timeline = timelines[timelineIdx];
+                timeline.Caption = "Performance Timeline";
+
+                // Apply conditional formatting to the Performance column based on thresholds
+                int cfIdx = sheet.ConditionalFormattings.Add();
+                FormatConditionCollection fcs = sheet.ConditionalFormattings[cfIdx];
+
+                // Define the range to which the formatting will be applied (B2:B6)
+                CellArea area = new CellArea
+                {
+                    StartRow = 1,
+                    EndRow = 5,
+                    StartColumn = 1,
+                    EndColumn = 1
+                };
+                fcs.AddArea(area);
+
+                // High performance (> 80) – green background
+                int highIdx = fcs.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "80", null);
+                FormatCondition highCond = fcs[highIdx];
+                highCond.Style.BackgroundColor = Color.LightGreen;
+
+                // Medium performance (> 50) – yellow background
+                int mediumIdx = fcs.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50", null);
+                FormatCondition mediumCond = fcs[mediumIdx];
+                mediumCond.Style.BackgroundColor = Color.LightYellow;
+
+                // Low performance (<= 50) – red background
+                // Use LessThan with a threshold of 51 to emulate <= 50
+                int lowIdx = fcs.AddCondition(FormatConditionType.CellValue, OperatorType.LessThan, "51", null);
+                FormatCondition lowCond = fcs[lowIdx];
+                lowCond.Style.BackgroundColor = Color.LightCoral;
+
+                // Save the workbook as a PDF file
+                workbook.Save("TimelineConditionalFormatting.pdf", SaveFormat.Pdf);
             }
-
-            // Create a pivot table that uses the data range as its source
-            string sourceRange = "A1:B13";
-            string destCell = "D1";
-            int pivotIdx = sheet.PivotTables.Add(sourceRange, destCell, "PerfPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-            // Add Date to Row area and Performance to Data area
-            pivot.AddFieldToArea(PivotFieldType.Row, "Date");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Performance");
-            pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // Add a Timeline linked to the pivot table on the Date field
-            // Place the Timeline starting at row 15, column 0 (cell A15)
-            int timelineIdx = sheet.Timelines.Add(pivot, 14, 0, "Date");
-            // Optional: adjust size of the timeline shape
-            sheet.Timelines[timelineIdx].Shape.Width = 500;
-            sheet.Timelines[timelineIdx].Shape.Height = 80;
-
-            // Apply conditional formatting to the Performance column (B2:B13)
-            int cfIdx = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIdx];
-
-            // Define the area to which the formatting will be applied
-            CellArea perfArea = new CellArea
+            catch (Exception ex)
             {
-                StartRow = 1,   // B2
-                EndRow = 12,    // B13
-                StartColumn = 1,
-                EndColumn = 1
-            };
-            fcc.AddArea(perfArea);
-
-            // Condition 1: Performance > 80 -> Green background
-            int condIdx = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "80", string.Empty);
-            FormatCondition cond = fcc[condIdx];
-            cond.Style.BackgroundColor = Color.LightGreen;
-
-            // Condition 2: 50 <= Performance <= 80 -> Yellow background
-            condIdx = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.Between, "50", "80");
-            cond = fcc[condIdx];
-            cond.Style.BackgroundColor = Color.LightYellow;
-
-            // Condition 3: Performance < 50 -> Red background
-            condIdx = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.LessThan, "50", string.Empty);
-            cond = fcc[condIdx];
-            cond.Style.BackgroundColor = Color.LightCoral;
-
-            // Save the workbook as PDF (the timeline and conditional formatting will be rendered)
-            workbook.Save("TimelineWithConditionalFormatting.pdf", SaveFormat.Pdf);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

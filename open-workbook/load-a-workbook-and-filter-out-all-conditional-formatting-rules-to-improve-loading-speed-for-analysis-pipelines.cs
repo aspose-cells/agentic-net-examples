@@ -1,39 +1,32 @@
-// Title: Load an Excel workbook without conditional formatting using Aspose.Cells for .NET
-// Description: Demonstrates how to create a LoadFilter that excludes conditional formatting, assign it to LoadOptions, and open an XLSX file with Aspose.Cells. The resulting workbook loads faster and can be saved or processed without any conditional‑formatting rules.
-// Keywords: Aspose.Cells LoadFilter | exclude conditional formatting | Excel loading performance .NET | LoadOptions conditional formatting | speed up workbook load
-// Common Searches: Aspose.Cells skip conditional formatting when opening a file | how to improve Excel load speed with LoadFilter | disable conditional formatting on workbook load .NET | load large Excel workbook faster Aspose.Cells
-// Developer Intent: Open an Excel file while omitting all conditional‑formatting rules to reduce load time and memory usage.
-// Use Cases: Process massive analytics workbooks where visual styles are irrelevant, saving CPU and RAM. | Create lightweight copies of spreadsheets for downstream services that only need raw data. | Batch‑convert or export Excel files in a pipeline that must run quickly without rendering formatting.
-// AI Prompts: Write C# code that loads an XLSX file with Aspose.Cells, disables conditional formatting, and saves the result. | Explain how to combine multiple LoadDataFilterOptions (e.g., charts, hyperlinks, conditional formatting) for selective loading. | Show a method to verify that no ConditionalFormattings exist after loading a workbook with a custom LoadFilter.
+// Title: C# – Load an Excel Workbook Excluding Conditional Formatting with Aspose.Cells
+// Description: Shows how to configure Aspose.Cells LoadFilter and LoadOptions to open an .xlsx file while skipping all conditional‑formatting rules, cutting memory consumption and load time. After loading, the workbook can be processed or saved.
+// Keywords: Aspose.Cells | C# | .NET | LoadFilter | LoadOptions | ConditionalFormatting | LoadDataFilterOptions | excel load performance | skip conditional formatting | large workbook processing | data pipeline
+// Common Searches: Aspose.Cells load workbook without conditional formatting | C# skip conditional formatting when opening Excel file | How to improve Excel load speed with Aspose.Cells | LoadFilter example for conditional formatting | Reduce memory usage when loading large Excel files .NET
+// Developer Intent: The developer wants to open an Excel workbook quickly by omitting conditional‑formatting data to improve performance in analysis pipelines.
+// Use Cases: Processing massive spreadsheets where visual styles are irrelevant | Running automated data extraction or transformation jobs with minimal overhead | Generating raw data reports from many workbooks in a CI/CD pipeline | Performing statistical analysis on Excel files without the cost of rendering formatting
+// AI Prompts: Provide a C# example that loads an Excel file with Aspose.Cells while excluding conditional formatting. | Explain how LoadDataFilterOptions.All & ~LoadDataFilterOptions.ConditionalFormatting works in Aspose.Cells. | Show how to configure LoadOptions to improve workbook load speed for large files. | Give a step‑by‑step guide to skip conditional formatting when opening a workbook and then save it.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a LoadFilter that excludes conditional formatting, assign it to LoadOptions, and open an XLSX file with Aspose.Cells. The resulting workbook loads faster and can be saved or processed without any conditional‑formatting rules.
+// Shows how to configure Aspose.Cells LoadFilter and LoadOptions to open an .xlsx file while skipping all conditional‑formatting rules, cutting memory consumption and load time. After loading, the workbook can be processed or saved.
 class Program
 {
     static void Main()
     {
-        // Define filter options: load everything except conditional formatting
-        LoadDataFilterOptions filterOptions = LoadDataFilterOptions.All & ~LoadDataFilterOptions.ConditionalFormatting;
+        // Create a LoadFilter that loads everything except conditional formatting
+        LoadFilter filter = new LoadFilter();
+        // Exclude the ConditionalFormatting flag from the default "All" options
+        filter.LoadDataFilterOptions = LoadDataFilterOptions.All & ~LoadDataFilterOptions.ConditionalFormatting;
 
-        // Create a LoadFilter with the specified options
-        LoadFilter loadFilter = new LoadFilter(filterOptions);
-
-        // Set up LoadOptions and assign the custom filter
+        // Set the filter in LoadOptions
         LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LoadFilter = loadFilter;
+        loadOptions.LoadFilter = filter;
 
         // Load the workbook using the configured LoadOptions
         Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
-        // (Optional) Verify that conditional formatting has been omitted
-        // foreach (Worksheet sheet in workbook.Worksheets)
-        // {
-        //     Console.WriteLine($"Sheet '{sheet.Name}' conditional formatting count: {sheet.ConditionalFormattings.Count}");
-        // }
-
-        // Save the workbook after loading (if further processing or saving is required)
+        // (Optional) Save the workbook after loading
         workbook.Save("output.xlsx");
     }
 }

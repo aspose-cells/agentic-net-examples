@@ -1,55 +1,57 @@
-// Title: Refresh Data Connections & Freeze Header Row in Every Worksheet – Aspose.Cells C# Example
-// Description: This C# sample loads a workbook, updates all linked data sources, pivot tables and charts using Workbook.RefreshAll, then locks the first row of each sheet with FreezePanes, and saves the result. Includes file‑existence verification and exception handling.
-// Keywords: Aspose.Cells | Workbook.RefreshAll | Refresh data connections | FreezePanes | C# .NET | freeze header row | update pivot tables | refresh charts | automate Excel processing | Excel workbook manipulation
-// Common Searches: Aspose.Cells refresh all connections C# | C# freeze first row each worksheet Aspose.Cells | Workbook.RefreshAll usage example | How to apply FreezePanes to all sheets in Aspose.Cells | Update external data and lock headers with Aspose.Cells
-// Developer Intent: Update every external data link, pivot table and chart, then keep the top row visible across all worksheets.
-// Use Cases: Nightly data pull for sales dashboards where refreshed figures must stay aligned with frozen column titles. | Regulatory financial statements that require up‑to‑date data while preserving header visibility for auditors in the US and EU. | Large inventory reports distributed to remote teams, ensuring headers stay in view after automatic data refresh. | Generating printable PDFs where refreshed content and frozen rows guarantee consistent page layout.
-// AI Prompts: Write a C# program using Aspose.Cells that refreshes all data connections, then freezes the first two rows of each worksheet. | Provide a robust Aspose.Cells snippet that calls Workbook.RefreshAll, applies FreezePanes with custom row/column offsets, and logs any refresh errors. | Explain the interaction between Workbook.RefreshAll and external data sources, and how FreezePanes can be combined to improve user experience in Excel viewers.
+// Title: Refresh All Data Connections and Freeze Header Row Using Aspose.Cells for .NET (C#)
+// Description: C# example that loads an Excel workbook with Aspose.Cells, updates every data connection (pivot tables, charts, external queries) via Workbook.RefreshAll, freezes the first row of the first worksheet using Worksheet.FreezePanes, and saves the refreshed file.
+// Keywords: Aspose.Cells | Workbook.RefreshAll | Worksheet.FreezePanes | C# Excel automation | .NET Excel API | refresh data connections | freeze header row | pivot table refresh | external data source update | Excel view stability
+// Common Searches: Aspose.Cells refresh all connections then freeze top row | C# Workbook.RefreshAll example | How to freeze header row after RefreshAll in Aspose.Cells | Freeze panes after updating data sources with Aspose.Cells | Refresh external links and lock first row in Excel using .NET
+// Developer Intent: Refresh every data connection in a workbook and then lock the top row for stable viewing.
+// Use Cases: Generate a final report where all linked data sources are up‑to‑date before distribution. | Keep column headers visible while users scroll through refreshed pivot tables or charts. | Automate Excel file preparation for dashboards that require both data refresh and consistent layout.
+// AI Prompts: Create C# code with Aspose.Cells that calls RefreshAll and then freezes the first two rows of the first worksheet. | Explain the four‑parameter overload of Worksheet.FreezePanes and its best practice after a data refresh. | Show how to handle missing input files gracefully when refreshing connections and freezing panes with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+namespace AsposeCellsExamples
 {
-    // This C# sample loads a workbook, updates all linked data sources, pivot tables and charts using Workbook.RefreshAll, then locks the first row of each sheet with FreezePanes, and saves the result. Includes file‑existence verification and exception handling.
-    class Program
+    // C# example that loads an Excel workbook with Aspose.Cells, updates every data connection (pivot tables, charts, external queries) via Workbook.RefreshAll, freezes the first row of the first worksheet using Worksheet.FreezePanes, and saves the refreshed file.
+    public class RefreshAndFreezeDemo
     {
-        static void Main(string[] args)
+        public static void Main()
         {
-            const string inputFile = "InputWorkbook.xlsx";
-            const string outputFile = "OutputWorkbook.xlsx";
+            Run();
+        }
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
-            {
-                Console.WriteLine($"Input file not found: {inputFile}");
-                return;
-            }
-
+        public static void Run()
+        {
             try
             {
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputFile);
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-                // Refresh all pivot tables, charts, and data connections (use Workbook.RefreshAll)
-                workbook.RefreshAll();
-
-                // Freeze the first row in each worksheet to keep headers visible
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    // Freeze first row (row index 1 is the first scrollable row, freeze 1 row, no columns)
-                    sheet.FreezePanes(1, 0, 1, 0);
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
 
-                // Save the updated workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook successfully saved to: {outputFile}");
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Refresh all data connections (pivot tables, charts, etc.)
+                workbook.RefreshAll();
+
+                // Freeze the top row in the first worksheet
+                Worksheet firstSheet = workbook.Worksheets[0];
+                // Freeze rows above row 1 (i.e., the first row). Use the 4‑parameter overload.
+                firstSheet.FreezePanes(1, 0, 0, 0);
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                // Handle any runtime errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

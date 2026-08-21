@@ -1,36 +1,63 @@
-// Title: C# – Set Worksheet Zoom (150%) and Freeze Top 4 Rows with Aspose.Cells
-// Description: Creates a new workbook, sets the first worksheet to Normal view, applies a 150 % zoom, freezes the first four rows while leaving columns unfrozen, and saves the file as CustomViewFreezeRows.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | set worksheet zoom | freeze rows | FreezePanes | worksheet view type | NormalView | custom zoom level | Excel automation .NET | freeze top rows
-// Common Searches: Aspose.Cells set zoom level C# | Freeze first rows Aspose.Cells .NET | How to freeze rows without columns in Aspose.Cells | Custom worksheet view example Aspose.Cells | Set NormalView and zoom in Aspose.Cells
-// Developer Intent: Create a workbook, apply a 150 % zoom, and lock the first four rows on the first worksheet.
-// Use Cases: Display header rows constantly while users scroll through large data sets, improving readability with a larger zoom. | Prepare a reporting template that opens at a predefined zoom for consistent screen layout across devices. | Build an Excel‑based data‑entry form where the top rows stay fixed, ensuring users always see key fields.
-// AI Prompts: Show C# code to set a 200 % zoom and freeze the top three rows using Aspose.Cells. | Give an Aspose.Cells example that applies NormalView, sets a custom zoom, and freezes both rows and columns simultaneously. | Explain the FreezePanes parameters for freezing only rows in Aspose.Cells for .NET.
+// Title: Set custom zoom (150%) and freeze the top three rows in Aspose.Cells for .NET
+// Description: Creates a new Workbook, adds sample data, switches the worksheet to Normal view with a 150% zoom level, freezes the first three rows while keeping all columns scrollable using FreezePanes, and saves the file as an XLSX document.
+// Keywords: Aspose.Cells | .NET | C# | set worksheet zoom | custom view | Normal view | freeze rows | FreezePanes | Excel zoom percentage | worksheet view type | freeze top rows | Aspose.Cells example
+// Common Searches: Aspose.Cells set custom zoom level | How to freeze top rows in Aspose.Cells .NET | FreezePanes method parameters Aspose.Cells | Set Normal view and 150% zoom with Aspose.Cells | C# example for freezing rows and setting zoom in Excel workbook
+// Developer Intent: Create a workbook, apply a 150% zoom in Normal view, and freeze the first three rows.
+// Use Cases: Generate reports where header rows stay visible while users zoom into data. | Provide spreadsheet templates that open with a predefined zoom level and frozen header rows. | Design dashboards that keep context rows fixed during horizontal scrolling.
+// AI Prompts: Show how to set a 150% zoom and freeze the top three rows in Aspose.Cells for .NET with error handling. | Give an example that applies Normal view, 150% zoom, freezes the first three rows, and saves the workbook to a memory stream. | Explain the FreezePanes parameters and demonstrate freezing both rows and columns in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Creates a new workbook, sets the first worksheet to Normal view, applies a 150 % zoom, freezes the first four rows while leaving columns unfrozen, and saves the file as CustomViewFreezeRows.xlsx using Aspose.Cells for .NET.
-class SetCustomViewAndFreezeRows
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Creates a new Workbook, adds sample data, switches the worksheet to Normal view with a 150% zoom level, freezes the first three rows while keeping all columns scrollable using FreezePanes, and saves the file as an XLSX document.
+    public class CustomViewAndFreezeDemo
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set the view type (optional, default is NormalView)
-        sheet.ViewType = ViewType.NormalView;
+                // Populate some sample data (optional, just to have visible content)
+                for (int i = 0; i < 20; i++)
+                {
+                    worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
+                    worksheet.Cells[i, 1].PutValue(i * 10);
+                }
 
-        // Set a custom zoom level (e.g., 150%)
-        sheet.Zoom = 150;
+                // Set the view type to Normal (default) and apply a custom zoom level (e.g., 150%)
+                worksheet.ViewType = ViewType.NormalView;
+                worksheet.Zoom = 150; // Zoom is a percentage between 10 and 400
 
-        // Freeze the first 4 rows (row index 4) while keeping columns unfrozen
-        // Parameters: row index, column index, number of frozen rows, number of frozen columns
-        sheet.FreezePanes(4, 0, 4, 0);
+                // Freeze the top 3 rows while keeping all columns scrollable
+                // Parameters: row index, column index, frozen rows, frozen columns
+                // Here we freeze rows at index 3 (fourth row) with 3 frozen rows and 0 frozen columns
+                worksheet.FreezePanes(3, 0, 3, 0);
 
-        // Save the workbook to a file
-        workbook.Save("CustomViewFreezeRows.xlsx");
+                // Save the workbook to a file
+                string outputPath = "CustomViewAndFreezeDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CustomViewAndFreezeDemo.Run();
+        }
     }
 }

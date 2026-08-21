@@ -1,47 +1,54 @@
-// Title: Extract worksheet TabId from an .xlsx with Aspose.Cells using low‑memory loading (C#)
-// Description: Demonstrates how to open an .xlsx file as a read‑only stream, apply LoadOptions.MemorySetting.MemoryPreference for lightweight loading, create a Workbook, iterate through its worksheets, and print each sheet’s Name, Index and internal TabId—without materializing the full workbook in memory.
-// Keywords: Aspose.Cells TabId extraction | read worksheet TabId without full load | MemoryPreference LoadOptions | lightweight Excel metadata C# | OpenXML worksheet identifier
-// Common Searches: Aspose.Cells get TabId of worksheets without loading workbook | C# read only TabId from large .xlsx | Memory efficient worksheet metadata extraction Aspose | LightCells mode TabId example | How to retrieve internal sheet IDs with Aspose.Cells
-// Developer Intent: Obtain the internal TabId of every worksheet in an .xlsx file while keeping memory consumption minimal.
-// Use Cases: Create a quick audit of sheet identifiers for version‑control or change‑tracking. | Detect sheet reordering across large workbooks by comparing TabId values. | Generate a lightweight summary of worksheet IDs for reporting on massive spreadsheets.
-// AI Prompts: Write C# code that uses Aspose.Cells to read only the TabId values of worksheets from a large .xlsx file, avoiding full workbook loading. | Explain the effect of LoadOptions.MemorySetting.MemoryPreference on workbook loading and how to access the Worksheet.TabId property. | Suggest an alternative approach to retrieve worksheet TabId information from an OpenXML package without instantiating a full Workbook object.
+// Title: C# – Extract worksheet TabId from an XLSX using Aspose.Cells with low‑memory loading
+// Description: Demonstrates how to open an XLSX file with LoadOptions.MemorySetting = MemoryPreference, keep only the workbook structure in memory, iterate through each Worksheet, read its TabId property, and output the sheet name, index and TabId. No cell data is materialized and the workbook is not saved.
+// Keywords: Aspose.Cells TabId extraction | C# low memory Excel loading | LoadOptions.MemoryPreference | read worksheet metadata OpenXML | XLSX TabId without full workbook | Aspose.Cells memory efficient | Excel worksheet identifier C# | US developers Aspose.Cells
+// Common Searches: Aspose.Cells get worksheet TabId without loading whole file | C# low memory read Excel sheet identifiers | How to retrieve TabId from large XLSX using Aspose | MemoryPreference load Excel metadata only | Extract worksheet IDs from OpenXML with Aspose.Cells
+// Developer Intent: Obtain the TabId of every worksheet in an XLSX file while avoiding full workbook materialization.
+// Use Cases: Validate sheet identifiers in massive workbooks for version control. | Build a name‑to‑TabId map for synchronization with external systems. | Perform quick metadata scans of large Excel files on memory‑constrained servers.
+// AI Prompts: Generate C# code that lists each worksheet’s TabId from a large XLSX using Aspose.Cells with MemoryPreference. | Explain the impact of LoadOptions.MemorySetting.MemoryPreference on workbook loading and how to access TabId. | Adapt the sample to export worksheet names and TabIds to a CSV file.
 
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Metadata;
 
-namespace AsposeCellsTabIdDemo
+namespace AsposeCellsTabIdExtractor
 {
-    // Demonstrates how to open an .xlsx file as a read‑only stream, apply LoadOptions.MemorySetting.MemoryPreference for lightweight loading, create a Workbook, iterate through its worksheets, and print each sheet’s Name, Index and internal TabId—without materializing the full workbook in memory.
+    // Demonstrates how to open an XLSX file with LoadOptions.MemorySetting = MemoryPreference, keep only the workbook structure in memory, iterate through each Worksheet, read its TabId property, and output the sheet name, index and TabId. No cell data is materialized and the workbook is not saved.
     class Program
     {
         static void Main()
         {
-            // Path to the Excel file (OpenXml package, e.g., .xlsx)
+            // Path to the Excel file (OpenXml package)
             string filePath = "sample.xlsx";
 
-            // Open the file as a read‑only stream to avoid loading the whole file into memory
-            using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            // ------------------------------------------------------------
+            // Load the workbook with minimal memory usage.
+            // ------------------------------------------------------------
+            // LoadOptions with MemoryPreference tells Aspose.Cells to avoid loading
+            // the entire workbook into memory. This is suitable for extracting
+            // lightweight metadata such as the worksheet TabId.
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                // Configure LoadOptions to use memory‑efficient loading (LightCells style)
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    // Prefer memory usage over performance; this keeps most data on disk
-                    MemorySetting = MemorySetting.MemoryPreference
-                };
+                // Prefer memory-efficient loading; the workbook structure is still
+                // available, but cell data is not fully materialized.
+                MemorySetting = MemorySetting.MemoryPreference
+            };
 
-                // Load the workbook using the stream and the lightweight LoadOptions
-                Workbook workbook = new Workbook(stream, loadOptions);
+            // Create the workbook instance using the constructor that accepts a file path and LoadOptions.
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-                // Iterate through all worksheets and output their internal TabId values
-                for (int i = 0; i < workbook.Worksheets.Count; i++)
-                {
-                    Worksheet sheet = workbook.Worksheets[i];
-                    Console.WriteLine($"Worksheet \"{sheet.Name}\" (Index {i}) has TabId: {sheet.TabId}");
-                }
-
-                // No need to save; we only extracted metadata
+            // ------------------------------------------------------------
+            // Iterate through worksheets and read the TabId property.
+            // ------------------------------------------------------------
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            {
+                Worksheet sheet = workbook.Worksheets[i];
+                int tabId = sheet.TabId; // Internal identifier for the sheet
+                Console.WriteLine($"Worksheet \"{sheet.Name}\" (Index {i}) has TabId: {tabId}");
             }
+
+            // ------------------------------------------------------------
+            // No need to save the workbook because we only read metadata.
+            // ------------------------------------------------------------
         }
     }
 }

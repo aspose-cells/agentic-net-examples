@@ -1,72 +1,42 @@
-// Title: Aspose.Cells for .NET: Format a Cell as Full Month Name and Day Using the 1904 Date System
-// Description: Demonstrates how to enable the 1904 date system in an Aspose.Cells workbook, convert a .NET DateTime to the correct Excel serial value, and apply the custom number format "mmmm d" so the cell shows the full month name and day (e.g., "July 15"). The workbook is saved as FullMonthNameDay_1904.xlsx.
-// Keywords: Aspose.Cells C# | custom date format mmmm d | 1904 date system | Excel serial number conversion | full month name day format | legacy Mac Excel compatibility | date formatting .NET | CellsHelper GetDoubleFromDateTime | Excel workbook formatting | Aspose.Cells examples
-// Common Searches: Aspose.Cells 1904 date system example | C# format Excel cell month name day | how to use custom date format mmmm d in Aspose.Cells | convert .NET DateTime to Excel serial number 1904 | display full month name in Excel using Aspose.Cells
-// Developer Intent: Create an Excel file that uses the 1904 date system and displays dates as "MonthName Day" via a custom format.
-// Use Cases: Generating reports for older Mac Excel files that require the 1904 date system. | Converting .NET DateTime values to Excel serial numbers while preserving legacy date calculations. | Applying a consistent "MonthName Day" display across multiple worksheets in automated spreadsheet generation.
-// AI Prompts: Show me C# code to enable the 1904 date system in Aspose.Cells and format a cell with "mmmm d". | Explain how to convert a .NET DateTime to an Excel serial number for the 1904 date system using Aspose.Cells. | Provide a complete Aspose.Cells example that saves a workbook with a cell displaying "July 15" in the 1904 date system.
+// Title: Apply a "Month Day" custom format with the 1904 date system using Aspose.Cells for .NET
+// Description: Creates a new Workbook, switches to the 1904 date system, converts a .NET DateTime to the Excel serial value, writes it to cell A1, applies the custom number format "mmmm d" to display the full month name and day, and saves the file as DateFormat1904.xlsx.
+// Keywords: Aspose.Cells | C# | 1904 date system | custom date format | full month name | Excel serial number | CellsHelper.GetDoubleFromDateTime | Excel Mac compatibility | number format mmmm d | date formatting in Aspose.Cells
+// Common Searches: Aspose.Cells 1904 date system example | C# format cell as month name and day in Excel | Convert DateTime to Excel serial number 1904 Aspose | Apply custom number format mmmm d with Aspose.Cells | Enable 1904 date system in Aspose.Cells .NET
+// Developer Intent: Generate an Excel workbook that uses the 1904 date system and displays dates as full month name plus day.
+// Use Cases: Producing historical reports that require the 1904 date system (e.g., Mac‑compatible files). | Exporting data where a readable "July 15" style date is needed without losing serial precision. | Building templates that combine custom date formatting with correct serial values for legacy Excel versions.
+// AI Prompts: Show C# code to enable the 1904 date system in Aspose.Cells and format a cell with "mmmm d". | How do I convert a .NET DateTime to an Excel serial number for the 1904 system using Aspose.Cells? | Explain the steps to apply a custom date format that displays the full month name and day in an Aspose.Cells workbook.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Creates a new Workbook, switches to the 1904 date system, converts a .NET DateTime to the Excel serial value, writes it to cell A1, applies the custom number format "mmmm d" to display the full month name and day, and saves the file as DateFormat1904.xlsx.
+class Program
 {
-    // Demonstrates how to enable the 1904 date system in an Aspose.Cells workbook, convert a .NET DateTime to the correct Excel serial value, and apply the custom number format "mmmm d" so the cell shows the full month name and day (e.g., "July 15"). The workbook is saved as FullMonthNameDay_1904.xlsx.
-    public class FullMonthNameDayDateFormatDemo
+    static void Main()
     {
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook
+        Workbook wb = new Workbook();
 
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook wb = new Workbook();
+        // Enable the 1904 date system
+        wb.Settings.Date1904 = true;
 
-            // Enable the 1904 date system
-            wb.Settings.Date1904 = true;
+        // Access the first worksheet and a target cell
+        Worksheet sheet = wb.Worksheets[0];
+        Cell cell = sheet.Cells["A1"];
 
-            // Get the first worksheet and a target cell
-            Worksheet sheet = wb.Worksheets[0];
-            Cell cell = sheet.Cells["A1"];
+        // Define the date to display (e.g., July 15, 2023)
+        DateTime date = new DateTime(2023, 7, 15);
 
-            // Define a DateTime value (July 15, 2023)
-            DateTime dateValue = new DateTime(2023, 7, 15);
+        // Convert the DateTime to Excel's serial number using the 1904 system
+        double serial = CellsHelper.GetDoubleFromDateTime(date, true);
+        cell.PutValue(serial);
 
-            // Convert the DateTime to Excel serial number using the 1904 system
-            double excelSerial = CellsHelper.GetDoubleFromDateTime(dateValue, wb.Settings.Date1904);
+        // Apply a custom format that shows the full month name and day
+        Style style = cell.GetStyle();
+        style.Custom = "mmmm d";
+        cell.SetStyle(style);
 
-            // Put the serial value into the cell
-            cell.PutValue(excelSerial);
-
-            // Apply a custom number format that shows full month name and day (e.g., "July 15")
-            Style style = cell.GetStyle();
-            style.Custom = "mmmm d";
-            cell.SetStyle(style);
-
-            // Determine output file path
-            string outputFile = "FullMonthNameDay_1904.xlsx";
-
-            // Ensure the directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook
-            wb.Save(outputFile);
-        }
+        // Save the workbook
+        wb.Save("DateFormat1904.xlsx");
     }
 }

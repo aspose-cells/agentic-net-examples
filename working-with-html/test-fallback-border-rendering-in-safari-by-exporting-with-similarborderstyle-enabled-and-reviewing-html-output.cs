@@ -1,67 +1,70 @@
-// Title: Test Safari Border Fallback with Aspose.Cells HTML Export (ExportSimilarBorderStyle) – C# Example
-// Description: Creates a workbook, applies thin, double and medium dash‑dot borders to cells, enables HtmlSaveOptions.ExportSimilarBorderStyle, saves as HTML, and shows how Safari substitutes unsupported border styles with similar ones.
-// Keywords: Aspose.Cells | C# HTML export | ExportSimilarBorderStyle | Safari border fallback | CellBorderType | HtmlSaveOptions | .NET cross‑browser rendering | Excel to HTML conversion | border style mapping | HTML report generation
-// Common Searches: Aspose.Cells ExportSimilarBorderStyle Safari example | how to test border rendering in Safari with Aspose.Cells | unsupported Excel border types in Safari HTML output | C# code to export Excel to HTML with fallback borders | Aspose.Cells HTML export border compatibility
-// Developer Intent: Export an Excel workbook to HTML with ExportSimilarBorderStyle enabled to verify how Safari renders borders that are not natively supported.
-// Use Cases: Produce HTML reports that retain visual border consistency across Chrome, Firefox, and Safari. | Automate visual regression tests for border appearance in Safari versus other browsers. | Generate printable invoices or dashboards where double or dash‑dot borders are automatically replaced with Safari‑friendly styles.
-// AI Prompts: Guide me through opening SafariBorderFallback.html in Safari and describing the rendered borders for each cell. | Show how to modify the sample to log cells whose border style was altered by ExportSimilarBorderStyle. | Explain the CSS mapping Aspose.Cells uses for unsupported CellBorderType values when ExportSimilarBorderStyle is true.
+// Title: Export Excel with Double Borders to HTML Using ExportSimilarBorderStyle – Safari Fallback Test (C#)
+// Description: C# example that creates a workbook, applies a blue double border to cells A1:D4, enables the HtmlSaveOptions ExportSimilarBorderStyle flag, and saves the file as SafariBorderFallback.html to verify how Safari handles unsupported double‑border styles.
+// Keywords: Aspose.Cells | ExportSimilarBorderStyle | HTML export | double border | Safari fallback | cell border rendering | C# Aspose.Cells example | HtmlSaveOptions | cross‑browser border compatibility | Aspose.Cells Safari test
+// Common Searches: Aspose.Cells ExportSimilarBorderStyle Safari | how to test double border rendering in Safari | HTML export with similar border style option | C# export Excel to HTML with border fallback | Aspose.Cells border compatibility across browsers
+// Developer Intent: Generate an HTML file from a workbook that contains double borders while enabling ExportSimilarBorderStyle to observe the fallback rendering behavior in Safari.
+// Use Cases: Validate visual consistency of double borders in browsers that lack native support, such as Safari. | Create HTML reports that gracefully degrade unsupported border styles using the similar‑border fallback. | Automate regression tests for cell border rendering after library upgrades or configuration changes.
+// AI Prompts: Write C# code that parses the saved HTML and confirms whether double borders were replaced with a supported style for Safari. | Explain the internal algorithm Aspose.Cells uses to map unsupported border styles to similar ones during HTML export. | Recommend additional HtmlSaveOptions settings that improve cross‑browser cell border rendering and overall HTML quality.
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsSafariBorderFallbackDemo
+namespace AsposeCellsSafariBorderTest
 {
-    // Creates a workbook, applies thin, double and medium dash‑dot borders to cells, enables HtmlSaveOptions.ExportSimilarBorderStyle, saves as HTML, and shows how Safari substitutes unsupported border styles with similar ones.
+    // C# example that creates a workbook, applies a blue double border to cells A1:D4, enables the HtmlSaveOptions ExportSimilarBorderStyle flag, and saves the file as SafariBorderFallback.html to verify how Safari handles unsupported double‑border styles.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Helper method to create a style with a specific border type
-            Style CreateBorderStyle(CellBorderType borderType, Color color)
+            try
             {
-                Style style = workbook.CreateStyle();
-                // Apply the same border style to all four sides
-                style.Borders[BorderType.TopBorder].LineStyle = borderType;
-                style.Borders[BorderType.BottomBorder].LineStyle = borderType;
-                style.Borders[BorderType.LeftBorder].LineStyle = borderType;
-                style.Borders[BorderType.RightBorder].LineStyle = borderType;
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-                style.Borders[BorderType.TopBorder].Color = color;
-                style.Borders[BorderType.BottomBorder].Color = color;
-                style.Borders[BorderType.LeftBorder].Color = color;
-                style.Borders[BorderType.RightBorder].Color = color;
+                // Prepare a style with a double border (may not be supported by all browsers)
+                Style doubleBorderStyle = workbook.CreateStyle();
+                doubleBorderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Double;
+                doubleBorderStyle.Borders[BorderType.TopBorder].Color = Color.Blue;
+                doubleBorderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Double;
+                doubleBorderStyle.Borders[BorderType.BottomBorder].Color = Color.Blue;
+                doubleBorderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Double;
+                doubleBorderStyle.Borders[BorderType.LeftBorder].Color = Color.Blue;
+                doubleBorderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Double;
+                doubleBorderStyle.Borders[BorderType.RightBorder].Color = Color.Blue;
 
-                return style;
+                // Apply the style to a range of cells
+                AsposeRange range = sheet.Cells.CreateRange("A1:D4");
+                // Put the same value into all cells of the range
+                range.PutValue("Double Border", false, false);
+                range.ApplyStyle(doubleBorderStyle, new StyleFlag { Borders = true });
+
+                // Create HTML save options and enable ExportSimilarBorderStyle
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+                {
+                    ExportSimilarBorderStyle = true // Fallback to similar border style for unsupported browsers
+                };
+
+                // Define output path and ensure its directory exists
+                string outputPath = "SafariBorderFallback.html";
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as HTML
+                workbook.Save(outputPath, htmlOptions);
+
+                Console.WriteLine($"HTML file saved to {outputPath} with ExportSimilarBorderStyle enabled.");
             }
-
-            // Cell A1 – supported thin border (baseline)
-            sheet.Cells["A1"].PutValue("Thin Border");
-            sheet.Cells["A1"].SetStyle(CreateBorderStyle(CellBorderType.Thin, Color.Black));
-
-            // Cell B1 – double border (not supported by some browsers like Safari)
-            sheet.Cells["B1"].PutValue("Double Border");
-            sheet.Cells["B1"].SetStyle(CreateBorderStyle(CellBorderType.Double, Color.Blue));
-
-            // Cell C1 – medium dash dot border (also potentially unsupported)
-            sheet.Cells["C1"].PutValue("MediumDashDot Border");
-            sheet.Cells["C1"].SetStyle(CreateBorderStyle(CellBorderType.MediumDashDot, Color.Green));
-
-            // Configure HTML save options with ExportSimilarBorderStyle enabled
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            catch (Exception ex)
             {
-                ExportSimilarBorderStyle = true // Fallback to a similar style when original is unsupported
-            };
-
-            // Save the workbook as HTML
-            string outputPath = "SafariBorderFallback.html";
-            workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"HTML file saved to '{outputPath}'. Open it in Safari to verify fallback border rendering.");
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

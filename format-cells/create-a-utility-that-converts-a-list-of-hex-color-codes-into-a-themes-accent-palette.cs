@@ -1,57 +1,73 @@
-// Title: C# – Convert Hex Color Array to Excel Accent Theme with Aspose.Cells
-// Description: A C# utility that builds a new Workbook, parses up to six hex color strings into the Accent1‑Accent6 slots of a 12‑color Excel theme, fills remaining slots with neutral defaults, applies the palette via workbook.CustomTheme, and saves the file as XLSX.
-// Keywords: Aspose.Cells | C# custom Excel theme | hex color palette | Accent1 Accent6 | CustomTheme method | programmatic Excel styling | theme colors from hex | Excel workbook generation | brand colors in Excel | Aspose.Cells API
-// Common Searches: How to create a custom Excel theme from hex colors using Aspose.Cells C# | Convert hex color codes to Excel accent palette programmatically | Aspose.Cells CustomTheme example C# | Set Excel theme colors from an array of hex strings | Apply brand color palette to Excel workbook with Aspose.Cells
-// Developer Intent: Generate an Excel workbook that uses a custom theme whose Accent1‑Accent6 colors are defined by a supplied list of hex codes.
-// Use Cases: Brand‑consistent reports: turn corporate hex palette into a reusable Excel theme for automated dashboards. | Template generation: create spreadsheet templates with predefined accent colors driven by user‑provided hex values. | Marketing analytics: standardize hyperlink colors while customizing accent shades for visual data stories.
-// AI Prompts: Write a C# method that accepts up to six hex color strings, builds the 12‑element Color array required by Aspose.Cells, applies it as a custom theme, and saves the workbook. | Explain the mapping of each index in the Color[] passed to workbook.CustomTheme to the corresponding theme slots in an Excel file. | Add robust validation for hex strings and error handling to the theme‑creation utility using Aspose.Cells.
+// Title: C# utility to set Excel theme accent palette from hex colors using Aspose.Cells
+// Description: A reusable C# method that builds a 12‑color Excel theme array, preserves default background, text and hyperlink colors, converts up to six hex strings ("#RRGGBB" or "RRGGBB") to System.Drawing.Color, assigns them to Accent1‑Accent6, applies the custom theme with Workbook.CustomTheme, and saves the workbook as XLSX.
+// Keywords: Aspose.Cells | C# | .NET | Excel custom theme | accent palette | hex color to Excel theme | ColorTranslator | Workbook.CustomTheme | programmatic Excel styling | brand colors in Excel | theme colors API
+// Common Searches: Aspose.Cells set custom accent colors C# | convert hex codes to Excel theme palette .NET | apply brand color palette to Excel workbook using Aspose | how to change Accent1‑Accent6 programmatically in Excel | C# example for custom Excel theme with Aspose.Cells
+// Developer Intent: Create or modify an Excel workbook so that its Accent1‑Accent6 colors come from a supplied list of hex codes.
+// Use Cases: Generate corporate‑branded reports by mapping a company’s hex palette to Excel theme accents. | Provide a UI where users pick colors, then output a themed spreadsheet that reflects those selections. | Automate production of department‑specific templates, each with a distinct accent color set.
+// AI Prompts: Write a C# function that receives a List<string> of hex colors and applies them to Accent1‑Accent6 in a custom Excel theme with Aspose.Cells. | Explain how to safely parse hex strings to System.Drawing.Color and fallback to default theme colors when parsing fails. | Show how to reuse the custom theme utility to create multiple workbooks with different theme names and output file paths.
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace ThemeUtility
+namespace ThemeUtilityDemo
 {
-    // A C# utility that builds a new Workbook, parses up to six hex color strings into the Accent1‑Accent6 slots of a 12‑color Excel theme, fills remaining slots with neutral defaults, applies the palette via workbook.CustomTheme, and saves the file as XLSX.
-    public static class ThemeConverter
+    // A reusable C# method that builds a 12‑color Excel theme array, preserves default background, text and hyperlink colors, converts up to six hex strings ("#RRGGBB" or "RRGGBB") to System.Drawing.Color, assigns them to Accent1‑Accent6, applies the custom theme with Workbook.CustomTheme, and saves the workbook as XLSX.
+    public static class ThemeUtility
     {
-        /// <param name="hexColors">Array of hex strings (e.g., "#FF5733"). Only the first six are used for Accent1‑Accent6.</param>
-        /// <param name="themeName">Name of the custom theme to create.</param>
+        /// <param name="hexColors">Hex strings (e.g., "#FF1122" or "FF1122") for Accent1‑Accent6. Up to 6 colors are used.</param>
+        /// <param name="themeName">Name of the custom theme.</param>
         /// <param name="outputPath">File path where the workbook will be saved.</param>
-        public static void ConvertHexToAccentTheme(string[] hexColors, string themeName, string outputPath)
+        public static void ApplyAccentPalette(List<string> hexColors, string themeName, string outputPath)
         {
             // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
 
-            // Prepare a 12‑element array for the theme colors.
-            // Indices 0‑3 and 10‑11 are non‑accent slots; we fill them with neutral colors.
+            // Prepare the 12 theme colors array.
+            // Index mapping (see Workbook.CustomTheme documentation):
+            // 0‑3 : Background1, Text1, Background2, Text2 (use existing theme defaults)
+            // 4‑9 : Accent1‑Accent6 (filled from hexColors)
+            // 10‑11 : Hyperlink, FollowedHyperlink (use existing theme defaults)
             Color[] themeColors = new Color[12];
-            themeColors[0] = Color.White;   // Background1
-            themeColors[1] = Color.Black;   // Text1
-            themeColors[2] = Color.White;   // Background2
-            themeColors[3] = Color.Black;   // Text2
 
-            // Fill Accent1‑Accent6 (indices 4‑9) with the supplied hex colors.
-            int accentCount = Math.Min(6, hexColors.Length);
-            for (int i = 0; i < accentCount; i++)
+            // Fill the first four entries with the current theme's defaults.
+            themeColors[0] = workbook.GetThemeColor(ThemeColorType.Background1);
+            themeColors[1] = workbook.GetThemeColor(ThemeColorType.Text1);
+            themeColors[2] = workbook.GetThemeColor(ThemeColorType.Background2);
+            themeColors[3] = workbook.GetThemeColor(ThemeColorType.Text2);
+
+            // Populate Accent1‑Accent6 from the supplied hex list.
+            // If fewer than 6 colors are supplied, remaining accents keep the default.
+            for (int i = 0; i < 6; i++)
             {
-                // Parse hex string to System.Drawing.Color.
-                // ColorTranslator handles strings with or without leading '#'.
-                Color parsed = ColorTranslator.FromHtml(hexColors[i]);
-                themeColors[4 + i] = parsed;
+                int themeIndex = 4 + i; // Accent1 starts at index 4
+                if (i < hexColors.Count)
+                {
+                    // Convert hex string to System.Drawing.Color.
+                    // ColorTranslator handles both "#RRGGBB" and "RRGGBB".
+                    try
+                    {
+                        themeColors[themeIndex] = ColorTranslator.FromHtml(hexColors[i]);
+                    }
+                    catch
+                    {
+                        // If conversion fails, fall back to the existing theme color.
+                        themeColors[themeIndex] = workbook.GetThemeColor((ThemeColorType)themeIndex);
+                    }
+                }
+                else
+                {
+                    // Use existing theme accent if no custom value is provided.
+                    themeColors[themeIndex] = workbook.GetThemeColor((ThemeColorType)themeIndex);
+                }
             }
 
-            // If fewer than six colors were supplied, fill remaining accents with a default gray.
-            for (int i = accentCount; i < 6; i++)
-            {
-                themeColors[4 + i] = Color.Gray;
-            }
+            // Fill Hyperlink and FollowedHyperlink with current theme defaults.
+            themeColors[10] = workbook.GetThemeColor(ThemeColorType.Hyperlink);
+            themeColors[11] = workbook.GetThemeColor(ThemeColorType.FollowedHyperlink);
 
-            // Hyperlink and FollowedHyperlink slots (indices 10‑11) get default colors.
-            themeColors[10] = Color.Blue;          // Hyperlink
-            themeColors[11] = Color.Purple;        // Followed Hyperlink
-
-            // Apply the custom theme (rule: CustomTheme)
+            // Apply the custom theme (lifecycle rule: modify)
             workbook.CustomTheme(themeName, themeColors);
 
             // Save the workbook (lifecycle rule: save)
@@ -64,23 +80,18 @@ namespace ThemeUtility
     {
         static void Main()
         {
-            string[] hexPalette = new string[]
+            List<string> hexPalette = new List<string>
             {
-                "#FF5733", // Accent1
-                "#33FF57", // Accent2
-                "#3357FF", // Accent3
-                "#FF33A1", // Accent4
-                "#A133FF", // Accent5
-                "#33FFF5"  // Accent6
+                "#4F81BD", // Accent1
+                "#C0504D", // Accent2
+                "#9BBB59", // Accent3
+                "#8064A2", // Accent4
+                "#4BACC6", // Accent5
+                "#F79646"  // Accent6
             };
 
-            ThemeConverter.ConvertHexToAccentTheme(
-                hexPalette,
-                "MyHexTheme",
-                "HexThemeWorkbook.xlsx"
-            );
-
-            Console.WriteLine("Custom theme created and workbook saved.");
+            ThemeUtility.ApplyAccentPalette(hexPalette, "MyCustomTheme", "CustomThemeDemo.xlsx");
+            Console.WriteLine("Custom theme applied and workbook saved.");
         }
     }
 }

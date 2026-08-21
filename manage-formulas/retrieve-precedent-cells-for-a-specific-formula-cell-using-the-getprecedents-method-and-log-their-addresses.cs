@@ -1,80 +1,69 @@
-// Title: Aspose.Cells C# GetPrecedents – List and Log Formula Cell Dependencies (including external links)
-// Description: Creates a workbook, assigns a formula to A1 that references internal cells, a range, and an external workbook, then uses GetPrecedents to retrieve a ReferredAreaCollection. Each precedent is formatted with optional external file name, sheet name, and start/end addresses, printed to the console, and the workbook is saved.
-// Keywords: Aspose.Cells | GetPrecedents | C# | .NET | formula precedents | cell dependency | external workbook reference | ReferredAreaCollection | cell address extraction | Excel formula audit
-// Common Searches: Aspose.Cells GetPrecedents C# example | how to list precedent cells of a formula using Aspose.Cells | retrieve external links from Excel formula with Aspose.Cells | C# code to get cell dependencies in Aspose.Cells | enumerate formula precedents in .NET
-// Developer Intent: Extract every cell or range that a formula depends on and output their full addresses.
-// Use Cases: Audit a worksheet by enumerating all cells and ranges referenced by a specific formula, including links to other workbooks. | Generate a dependency report that shows which sheets and external files are used by a formula for impact analysis. | Validate complex formulas programmatically by confirming that all referenced cells and ranges are correct.
-// AI Prompts: Write C# code with Aspose.Cells that calls GetPrecedents on a formula cell, formats each precedent with sheet name and external file name when present, and prints the addresses. | Show how to handle both single‑cell and range precedents returned by GetPrecedents, including external workbook references, in a .NET example. | Provide a snippet that extracts precedent information, logs it to the console, and then saves the workbook, indicating the output file path.
+// Title: Get Precedent Cell Addresses for a Formula with Aspose.Cells (C#)
+// Description: Creates a workbook, sets a formula in A1 that references internal cells, a range, and an external workbook, then uses the GetPrecedents method to enumerate each ReferredArea, builds a full address (including external file name, sheet name, and range limits), writes the addresses to the console, and saves the file.
+// Keywords: Aspose.Cells | GetPrecedents | C# | .NET | precedent cells | formula dependencies | external link reference | ReferredArea | cell address range | enumerate precedents
+// Common Searches: Aspose.Cells GetPrecedents C# example | how to list precedent cells of a formula in .NET | retrieve external references from a formula using Aspose.Cells | enumerate precedent ranges in Excel with Aspose.Cells | C# code to get dependent cells of a formula
+// Developer Intent: Obtain every cell or range that a formula depends on, format each reference with sheet and external file information, and output the list programmatically.
+// Use Cases: Audit formula dependencies before restructuring a workbook to avoid breaking calculations. | Generate a dependency report that lists all internal and external cells influencing a key metric. | Validate external workbook links for data‑integrity checks in automated spreadsheet processing.
+// AI Prompts: Write C# code using Aspose.Cells to retrieve all precedent cells for a given formula and print each address with sheet and external file names. | Create a helper method that converts ReferredArea objects from GetPrecedents into readable strings handling single cells, ranges, and external links. | Explain how to iterate over the ReferredAreaCollection returned by GetPrecedents and export the addresses to a CSV file.
 
 using System;
 using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPrecedentsDemo
 {
-    // Creates a workbook, assigns a formula to A1 that references internal cells, a range, and an external workbook, then uses GetPrecedents to retrieve a ReferredAreaCollection. Each precedent is formatted with optional external file name, sheet name, and start/end addresses, printed to the console, and the workbook is saved.
-    public class GetPrecedentsDemo
+    // Creates a workbook, sets a formula in A1 that references internal cells, a range, and an external workbook, then uses the GetPrecedents method to enumerate each ReferredArea, builds a full address (including external file name, sheet name, and range limits), writes the addresses to the console, and saves the file.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet's cells collection
+            Workbook workbook = new Workbook();
+            Cells cells = workbook.Worksheets[0].Cells;
+
+            // Define a formula that references several cells, a range, and an external link
+            cells["A1"].Formula = "=B1+SUM(B2:B5)+[Book1.xls]Sheet1!C3";
+
+            // Retrieve all precedent references of the formula cell A1
+            ReferredAreaCollection precedents = cells["A1"].GetPrecedents();
+
+            // If there are precedents, iterate and log their addresses
+            if (precedents != null && precedents.Count > 0)
             {
-                // Create a new workbook and get the first worksheet's cells
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Define a formula that references several cells/ranges, including an external link
-                cells["A1"].Formula = "=B1+SUM(C1:D2)+[External.xlsx]Sheet1!E5";
-
-                // Retrieve all precedent references for the formula cell
-                ReferredAreaCollection precedents = cells["A1"].GetPrecedents();
-
-                if (precedents != null)
+                Console.WriteLine("Precedent references for cell A1:");
+                foreach (ReferredArea area in precedents)
                 {
-                    foreach (ReferredArea area in precedents)
+                    StringBuilder sb = new StringBuilder();
+
+                    // Include external file name if the reference is an external link
+                    if (area.IsExternalLink)
                     {
-                        StringBuilder sb = new StringBuilder();
-
-                        // Include external file name if the reference is external
-                        if (area.IsExternalLink)
-                        {
-                            sb.Append('[').Append(area.ExternalFileName).Append(']');
-                        }
-
-                        // Append sheet name and start cell address
-                        sb.Append(area.SheetName).Append('!');
-                        sb.Append(CellsHelper.CellIndexToName(area.StartRow, area.StartColumn));
-
-                        // If the reference is a range, append the end cell address
-                        if (area.IsArea)
-                        {
-                            sb.Append(':').Append(CellsHelper.CellIndexToName(area.EndRow, area.EndColumn));
-                        }
-
-                        // Log the full address of the precedent
-                        Console.WriteLine(sb.ToString());
+                        sb.Append($"[{area.ExternalFileName}]");
                     }
+
+                    // Append sheet name
+                    sb.Append($"{area.SheetName}!");
+
+                    // Append start cell address
+                    sb.Append(CellsHelper.CellIndexToName(area.StartRow, area.StartColumn));
+
+                    // If the reference is an area (range), append the end cell address
+                    if (area.IsArea)
+                    {
+                        sb.Append($":{CellsHelper.CellIndexToName(area.EndRow, area.EndColumn)}");
+                    }
+
+                    // Output the constructed address
+                    Console.WriteLine(sb.ToString());
                 }
-
-                // Save the workbook (optional, demonstrates lifecycle usage)
-                string outputPath = "GetPrecedentsDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("No precedents found for cell A1.");
             }
-        }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            GetPrecedentsDemo.Run();
+            // Optionally save the workbook (demonstrates lifecycle rule usage)
+            workbook.Save("PrecedentsDemo.xlsx");
         }
     }
 }

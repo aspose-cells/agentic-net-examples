@@ -1,33 +1,32 @@
-// Title: Convert Excel to HTML with Gridlines using Aspose.Cells for .NET (C#)
-// Description: Shows how to enable worksheet gridlines, configure HtmlSaveOptions.ExportGridLines, and save a workbook as an HTML file with the library's default settings in C#.
-// Keywords: Aspose.Cells | C# | Excel to HTML conversion | Export gridlines | HtmlSaveOptions | default HTML options | worksheet gridlines | save workbook as HTML
-// Common Searches: Aspose.Cells export gridlines to HTML C# | How to save Excel as HTML with gridlines using .NET | HtmlSaveOptions ExportGridLines example | Convert workbook to HTML default settings Aspose | C# code to keep Excel gridlines in HTML output
-// Developer Intent: Generate an HTML representation of an Excel workbook while preserving the visible gridlines, using Aspose.Cells for .NET with minimal configuration.
-// Use Cases: Display spreadsheet data on a web page with the same layout as Excel, including gridlines for readability. | Create static HTML reports that can be emailed or archived without losing the grid structure. | Batch‑process multiple workbooks into HTML files for documentation portals while keeping a consistent appearance.
-// AI Prompts: Modify the example to export gridlines for only selected worksheets. | Save the HTML output to a MemoryStream instead of a file while retaining gridlines. | Add custom CSS to the generated HTML to change fonts and colors while using HtmlSaveOptions.
+// Title: Convert Excel to HTML with Gridlines Using Aspose.Cells for .NET (C#)
+// Description: Loads an .xlsx workbook, applies default HtmlSaveOptions, turns on ExportGridLines, and saves the file as HTML so the worksheet gridlines appear in the output.
+// Keywords: Aspose.Cells | C# | .NET | Excel to HTML | HtmlSaveOptions | ExportGridLines | gridlines | Workbook.Save | HTML export | convert xlsx to html
+// Common Searches: Aspose.Cells export Excel to HTML with gridlines | C# convert xlsx to html preserving gridlines | HtmlSaveOptions ExportGridLines example | How to save Excel as HTML using Aspose.Cells .NET | default HTML export options Aspose.Cells
+// Developer Intent: Generate an HTML representation of an Excel workbook that retains the original gridlines.
+// Use Cases: Display spreadsheet data on a web portal while keeping the familiar grid layout. | Provide a lightweight HTML download for users who do not have Excel installed. | Integrate Excel‑to‑HTML conversion into a .NET reporting service that requires visible cell borders.
+// AI Prompts: Write C# code with Aspose.Cells to convert an .xlsx file to HTML and enable gridlines using default options. | Explain the effect of HtmlSaveOptions.ExportGridLines on the produced HTML and how to combine it with other export settings. | Show how to export each worksheet of a workbook to separate HTML files while preserving gridlines.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to enable worksheet gridlines, configure HtmlSaveOptions.ExportGridLines, and save a workbook as an HTML file with the library's default settings in C#.
-class Program
+namespace AsposeCellsHtmlExport
 {
-    static void Main()
+    // Loads an .xlsx workbook, applies default HtmlSaveOptions, turns on ExportGridLines, and saves the file as HTML so the worksheet gridlines appear in the output.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Make gridlines visible in the worksheet
-        worksheet.IsGridlinesVisible = true;
-
-        // Create HTML save options and enable gridline export
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+        static void Main()
         {
-            ExportGridLines = worksheet.IsGridlinesVisible
-        };
+            // Load an existing Excel workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Save the workbook as HTML with the specified options
-        workbook.Save("output.html", htmlOptions);
+            // Create HTML save options with default settings
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+
+            // Enable exporting of gridlines
+            htmlOptions.ExportGridLines = true;
+
+            // Save the workbook as an HTML file using the specified options
+            workbook.Save("output.html", htmlOptions);
+        }
     }
 }

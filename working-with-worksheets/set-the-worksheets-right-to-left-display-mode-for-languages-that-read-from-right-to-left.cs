@@ -1,10 +1,10 @@
-// Title: Set Worksheet Right‑to‑Left Display Mode with Aspose.Cells for .NET
-// Description: Demonstrates how to enable right‑to‑left (RTL) orientation for an Excel worksheet using Aspose.Cells for .NET by setting the DisplayRightToLeft property, saving the workbook, reloading it, and confirming the setting.
-// Keywords: Aspose.Cells | .NET | C# | DisplayRightToLeft | right to left | RTL mode | worksheet orientation | Excel RTL | Arabic Excel | Hebrew Excel | save workbook | load workbook | verify RTL flag
-// Common Searches: Aspose.Cells set worksheet RTL | Enable right‑to‑left display in Excel using C# | DisplayRightToLeft property example | How to save Excel file with RTL layout in .NET | Check RTL setting after workbook reload
-// Developer Intent: Enable RTL layout for a worksheet and ensure the setting persists after saving.
-// Use Cases: Create Excel reports for Arabic or Hebrew audiences where the sheet must read from right to left. | Generate templates with RTL orientation before populating data programmatically. | Validate that the RTL flag remains intact when the file is opened in other spreadsheet applications.
-// AI Prompts: Show code to set DisplayRightToLeft for all worksheets in a workbook using Aspose.Cells. | Provide a C# example that toggles RTL mode based on the system culture (e.g., ar‑SA, he‑IL). | Explain how to read the DisplayRightToLeft flag from an existing Excel file with Aspose.Cells.
+// Title: Set Worksheet Right‑to‑Left Display Mode with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to enable the right‑to‑left (RTL) view for an Excel worksheet using Aspose.Cells for .NET. The example creates a workbook, sets the Worksheet.DisplayRightToLeft property, saves the file, reloads it, and confirms the setting—ideal for Arabic, Hebrew, or other RTL language users.
+// Keywords: Aspose.Cells C# | Worksheet DisplayRightToLeft | right to left Excel .NET | RTL worksheet Aspose | Arabic Excel display mode | Hebrew Excel layout | set RTL mode programmatically | Excel right‑to‑left orientation
+// Common Searches: Aspose.Cells enable right to left view C# | DisplayRightToLeft property example | How to set RTL mode for Excel sheet using Aspose | C# code for Arabic Excel layout with Aspose.Cells | Toggle worksheet right‑to‑left in .NET
+// Developer Intent: Programmatically switch a worksheet’s layout to right‑to‑left so that content aligns correctly for RTL languages such as Arabic or Hebrew.
+// Use Cases: Create a new workbook and activate RTL display for the first sheet before distributing to Middle‑East users. | Open an existing Excel file, set DisplayRightToLeft on a specific worksheet, and verify the setting after saving. | Apply RTL mode to every worksheet in a workbook to prepare a multilingual report for Arabic and Hebrew audiences.
+// AI Prompts: Write C# code that sets Worksheet.DisplayRightToLeft = true for a given sheet in an Aspose.Cells workbook. | Provide a loop that iterates through all worksheets in a workbook and enables right‑to‑left display, then saves the file. | Explain how to confirm that the RTL setting persists after reloading the workbook with Aspose.Cells.
 
 using System;
 using System.IO;
@@ -12,8 +12,8 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to enable right‑to‑left (RTL) orientation for an Excel worksheet using Aspose.Cells for .NET by setting the DisplayRightToLeft property, saving the workbook, reloading it, and confirming the setting.
-    public class SetWorksheetRightToLeftDemo
+    // Demonstrates how to enable the right‑to‑left (RTL) view for an Excel worksheet using Aspose.Cells for .NET. The example creates a workbook, sets the Worksheet.DisplayRightToLeft property, saves the file, reloads it, and confirms the setting—ideal for Arabic, Hebrew, or other RTL language users.
+    public class WorksheetDisplayRightToLeftDemo
     {
         public static void Run()
         {
@@ -25,40 +25,37 @@ namespace AsposeCellsExamples
                 // Access the first worksheet
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Enable right‑to‑left display mode for the worksheet
+                // Enable right-to-left display mode for the worksheet
                 worksheet.DisplayRightToLeft = true;
 
-                // Save the workbook to a file
+                // Save the workbook
                 string filePath = "RightToLeftDemo.xlsx";
                 workbook.Save(filePath);
 
-                // Verify the file exists before loading
-                if (!File.Exists(filePath))
+                // Verify the setting by loading the saved workbook
+                if (File.Exists(filePath))
                 {
-                    Console.WriteLine($"File not found: {filePath}");
-                    return;
+                    Workbook loadedWorkbook = new Workbook(filePath);
+                    Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
+                    Console.WriteLine("DisplayRightToLeft: " + loadedWorksheet.DisplayRightToLeft);
                 }
-
-                // Reload the workbook to confirm the setting
-                Workbook loadedWorkbook = new Workbook(filePath);
-                Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
-
-                // Output the current DisplayRightToLeft value
-                Console.WriteLine("DisplayRightToLeft: " + loadedWorksheet.DisplayRightToLeft);
+                else
+                {
+                    Console.WriteLine($"Error: File '{filePath}' was not found after saving.");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }
 
-    // Application entry point
     public class Program
     {
         public static void Main(string[] args)
         {
-            SetWorksheetRightToLeftDemo.Run();
+            WorksheetDisplayRightToLeftDemo.Run();
         }
     }
 }

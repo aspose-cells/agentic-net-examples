@@ -1,53 +1,51 @@
-// Title: Set Author & Title Properties and Freeze Top Row in Excel with Aspose.Cells for .NET
-// Description: Creates a new workbook, assigns built‑in Author and Title metadata, freezes the first worksheet row using FreezePanes, ensures the output folder exists, and saves the file as UpdatedWorkbook.xlsx using C#.
-// Keywords: Aspose.Cells C# set document properties | freeze first row Excel | Workbook BuiltInDocumentProperties | FreezePanes example | save workbook to folder
-// Common Searches: how to add author and title to Excel file with Aspose.Cells | freeze header row Aspose.Cells .NET | Aspose.Cells FreezePanes syntax for rows only | save workbook after updating properties C#
-// Developer Intent: Add author and title metadata to a workbook and keep the header row fixed while scrolling.
-// Use Cases: Generate audit‑ready reports with author and title information embedded. | Produce large data sheets where the column headings remain visible during navigation. | Automate Excel file creation that includes metadata and a frozen top row before distribution.
-// AI Prompts: Show how to set both built‑in and custom document properties in Aspose.Cells before saving. | Give an example of freezing multiple rows and columns together with FreezePanes in C#. | Explain how to programmatically confirm that the Author property was written correctly to the .xlsx file.
+// Title: Aspose.Cells for .NET – Set Author & Title Metadata and Freeze the Top Row
+// Description: Demonstrates how to assign the built‑in Author and Title properties of a new Workbook, apply FreezePanes to keep the first row static, and save the file as UpdatedWorkbook.xlsx using C#.
+// Keywords: Aspose.Cells C# | set workbook author | set workbook title | freeze top row | FreezePanes example | document properties .NET | Excel metadata Aspose
+// Common Searches: Aspose.Cells set author property C# | How to freeze the first row in Aspose.Cells | Update Excel metadata with Aspose.Cells .NET | FreezePanes usage Aspose.Cells example | Add title to workbook using Aspose.Cells
+// Developer Intent: Add author and title metadata to an Excel workbook and lock the header row in place before saving.
+// Use Cases: Create a branded report that includes author and title information while keeping column headings visible. | Build a data‑entry template where the top row stays fixed for easier navigation. | Export a spreadsheet with embedded metadata for compliance or auditing purposes.
+// AI Prompts: Show C# code that sets Author, Title, and Subject properties and freezes the first two rows with Aspose.Cells. | Explain the parameters of Worksheet.FreezePanes and how to keep header rows static in an Excel file. | Provide an Aspose.Cells example that updates multiple built‑in properties and applies FreezePanes to a specific worksheet.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Properties;
 
-// Creates a new workbook, assigns built‑in Author and Title metadata, freezes the first worksheet row using FreezePanes, ensures the output folder exists, and saves the file as UpdatedWorkbook.xlsx using C#.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to assign the built‑in Author and Title properties of a new Workbook, apply FreezePanes to keep the first row static, and save the file as UpdatedWorkbook.xlsx using C#.
+    public class UpdatePropertiesAndFreezeRow
     {
-        try
+        public static void Main()
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Update built‑in document properties
-            workbook.BuiltInDocumentProperties["Author"].Value = "John Doe";
-            workbook.BuiltInDocumentProperties["Title"].Value = "Sample Workbook";
+            // Set built‑in document properties
+            DocumentProperty authorProp = workbook.BuiltInDocumentProperties["Author"];
+            authorProp.Value = "John Smith";
 
-            // Freeze the first row (row index 0 is the header row, so freeze 1 row)
+            DocumentProperty titleProp = workbook.BuiltInDocumentProperties["Title"];
+            titleProp.Value = "Sample Workbook";
+
+            // Freeze the first row of the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            // FreezePanes(row, column, totalRows, totalColumns)
-            // Freeze rows above row 1 (i.e., first row) and no columns
+            // FreezePanes(row, column, totalRows, totalColumns) – freeze 1 row, 0 columns
             sheet.FreezePanes(1, 0, 1, 0);
 
-            // Define output file path
-            string outputPath = "UpdatedWorkbook.xlsx";
-
-            // Ensure the directory exists
-            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            // Save the workbook to disk
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Save the workbook
+            workbook.Save("UpdatedWorkbook.xlsx");
         }
     }
 }

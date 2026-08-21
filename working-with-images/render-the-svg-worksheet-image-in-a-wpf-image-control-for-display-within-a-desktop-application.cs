@@ -1,66 +1,56 @@
-// Title: Render an Aspose.Cells worksheet to SVG and display it in a WPF Image control
-// Description: Shows how to build a Workbook, export the first worksheet as an SVG file with Aspose.Cells SheetRender, and load the SVG into a WPF Image control for a desktop preview.
-// Keywords: Aspose.Cells | SVG rendering | SheetRender | WPF Image control | C# | .NET | FitToViewPort | Excel to SVG | temporary SVG file | desktop preview
-// Common Searches: Aspose.Cells export worksheet to SVG C# | Load SVG into WPF Image control | SheetRender SVG example | Display Excel sheet as SVG in WPF | C# render Excel as SVG for desktop app
-// Developer Intent: Generate an SVG representation of an Excel worksheet and bind it to a WPF Image control for on‑screen display.
-// Use Cases: Quick visual preview of spreadsheet data in a Windows desktop application without opening Excel. | Create a lightweight, scalable image of a sheet for reporting dashboards built with WPF. | Render multiple worksheets to SVG on the fly and swap the Image.Source at runtime based on user selection. | Handle rendering failures by checking the SVG file existence and falling back to a placeholder image.
-// AI Prompts: Write C# code that loads the SVG file produced by SheetRender into a WPF Image control using SvgImageSource or a compatible library. | Show XAML and view‑model binding to display a temporary SVG path returned by RenderWorksheetToSvg() in a WPF Image control. | Provide error‑handling logic for missing or corrupted SVG files when updating the Image.Source in a WPF application.
+// Title: Render an Aspose.Cells worksheet to SVG and show it as PNG in a WPF Image control (C#)
+// Description: The example builds a Workbook, fills cells with sample data, saves the first worksheet as an SVG file (SaveFormat.Svg) and renders the same sheet to a PNG image using SheetRender. The PNG can then be loaded into a WPF Image control for runtime display in a desktop application.
+// Keywords: Aspose.Cells | C# | WPF Image control | SVG export | PNG rendering | SheetRender | SaveFormat.Svg | ImageOrPrintOptions | Excel to image | desktop UI
+// Common Searches: Aspose.Cells export worksheet to SVG C# | How to render Excel sheet as PNG for WPF | Display Aspose.Cells PNG in WPF Image element | Save Excel worksheet as SVG and PNG using Aspose.Cells | C# code to load PNG into WPF Image control
+// Developer Intent: Generate vector SVG and raster PNG versions of a worksheet and use the PNG for visual presentation in a WPF desktop UI.
+// Use Cases: Create a high‑quality SVG for printing or web publishing. | Produce a PNG snapshot that can be bound to a WPF Image control. | Integrate Excel sheet visuals into a .NET desktop application without requiring Excel installation.
+// AI Prompts: Write C# code that loads the generated worksheet.png into a WPF Image control and binds it in XAML. | Show how to increase PNG resolution with ImageOrPrintOptions when rendering an Aspose.Cells worksheet. | Provide a method to convert the SVG output to an ImageSource for direct display in WPF without saving to disk.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeSvgDemo
+// The example builds a Workbook, fills cells with sample data, saves the first worksheet as an SVG file (SaveFormat.Svg) and renders the same sheet to a PNG image using SheetRender. The PNG can then be loaded into a WPF Image control for runtime display in a desktop application.
+public class Program
 {
-    // Shows how to build a Workbook, export the first worksheet as an SVG file with Aspose.Cells SheetRender, and load the SVG into a WPF Image control for a desktop preview.
-    class Program
+    public static void Main()
     {
-        [STAThread]
-        static void Main()
+        try
         {
-            try
-            {
-                string svgPath = RenderWorksheetToSvg();
-                Console.WriteLine($"SVG file generated at: {svgPath}");
-                // Optionally open the SVG with the default viewer:
-                // System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(svgPath) { UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
+            // -------------------------------------------------
+            // 1. Create a sample workbook and populate data
+            // -------------------------------------------------
+            Workbook workbook = new Workbook();                     // create workbook
+            Worksheet sheet = workbook.Worksheets[0];               // get first worksheet
+            sheet.Cells["A1"].Value = "Product";
+            sheet.Cells["B1"].Value = "Sales";
+            sheet.Cells["A2"].Value = "Apple";
+            sheet.Cells["B2"].Value = 120;
+            sheet.Cells["A3"].Value = "Orange";
+            sheet.Cells["B3"].Value = 150;
+
+            // -------------------------------------------------
+            // 2. Render the worksheet to an SVG file
+            // -------------------------------------------------
+            string svgPath = "worksheet.svg";
+            // Use SaveOptions for SVG since ImageOrPrintOptions may not expose ImageFormat in some versions
+            workbook.Save(svgPath, SaveFormat.Svg);
+            Console.WriteLine($"SVG saved to: {Path.GetFullPath(svgPath)}");
+
+            // -------------------------------------------------
+            // 3. Render the same worksheet to PNG (for display)
+            // -------------------------------------------------
+            string pngPath = "worksheet.png";
+            ImageOrPrintOptions pngOptions = new ImageOrPrintOptions(); // default format is PNG
+            SheetRender pngRender = new SheetRender(sheet, pngOptions);
+            pngRender.ToImage(0, pngPath); // save PNG to file
+            Console.WriteLine($"PNG saved to: {Path.GetFullPath(pngPath)}");
         }
-
-        private static string RenderWorksheetToSvg()
+        catch (Exception ex)
         {
-            // 1. Create a workbook and populate it with sample data
-            var workbook = new Workbook();
-            var sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["A3"].PutValue("Orange");
-            sheet.Cells["B3"].PutValue(85);
-
-            // 2. Configure SVG rendering options
-            var svgOptions = new SvgImageOptions
-            {
-                ImageType = Aspose.Cells.Drawing.ImageType.Svg,
-                FitToViewPort = true
-            };
-
-            // 3. Render the worksheet to a temporary SVG file
-            var renderer = new SheetRender(sheet, svgOptions);
-            string tempSvgPath = Path.Combine(Path.GetTempPath(), $"worksheet_{Guid.NewGuid()}.svg");
-            renderer.ToImage(0, tempSvgPath);
-
-            // 4. Verify the file was created
-            if (!File.Exists(tempSvgPath))
-                throw new FileNotFoundException("SVG file was not generated.", tempSvgPath);
-
-            return tempSvgPath;
+            // Runtime safety: log any unexpected errors
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,51 +1,42 @@
-// Title: C# – Set Worksheet Zoom to 110 % and Export PDF with Embedded Fonts using Aspose.Cells
-// Description: Creates a workbook, applies a 110 % percent‑scale zoom via PageSetup.Zoom and IsPercentScale, configures PdfSaveOptions to embed standard Windows TrueType fonts with Identity encoding and a default Arial font, then saves the sheet as a PDF.
-// Keywords: Aspose.Cells | C# | .NET | worksheet zoom | 110% zoom | PageSetup.Zoom | IsPercentScale | PDF export | embed fonts | PdfSaveOptions | EmbedStandardWindowsFonts | Identity encoding | default font | cross‑platform PDF
-// Common Searches: Aspose.Cells set worksheet zoom before PDF export | How to embed TrueType fonts in PDF using Aspose.Cells .NET | 110 percent zoom PDF Aspose.Cells example | PageSetup.IsPercentScale effect on PDF scaling | C# code to save workbook as PDF with embedded fonts
-// Developer Intent: Apply a 110 % zoom to a worksheet and generate a PDF that includes embedded fonts.
-// Use Cases: Produce printable PDFs where the content is enlarged for readability while guaranteeing font fidelity on any device. | Create standardized reports that require percent‑based scaling and must retain exact typography across platforms. | Export multilingual worksheets to PDF with full Unicode support and embedded Windows fonts to prevent missing glyphs.
-// AI Prompts: Show C# code that sets PageSetup.Zoom to 110% and saves the workbook as a PDF with embedded fonts using Aspose.Cells. | Explain how to configure PdfSaveOptions for font embedding and Identity encoding in Aspose.Cells .NET. | What does PageSetup.IsPercentScale do when exporting a worksheet to PDF with Aspose.Cells?
+// Title: Set Worksheet Zoom to 110% and Export PDF with Embedded Fonts using Aspose.Cells for .NET
+// Description: Creates a workbook, applies a 110% view zoom to the first worksheet, configures PdfSaveOptions to embed standard Windows TrueType fonts, and saves the result as a PDF file.
+// Keywords: Aspose.Cells worksheet zoom | 110% zoom Aspose.Cells | PDF font embedding Aspose.Cells | PdfSaveOptions embed fonts | C# export worksheet to PDF | Aspose.Cells view settings | embed Windows fonts PDF
+// Common Searches: how to set worksheet zoom in Aspose.Cells .NET | embed fonts when saving PDF with Aspose.Cells | Aspose.Cells PdfSaveOptions example | export Excel to PDF with embedded fonts C# | increase worksheet view zoom Aspose.Cells
+// Developer Intent: Apply a 110% view zoom to a worksheet and generate a PDF that includes embedded TrueType fonts.
+// Use Cases: Produce PDFs that match the on‑screen layout for precise visual reporting. | Ensure PDF documents render correctly on machines lacking the original fonts. | Create printable reports where standard Windows fonts are guaranteed to appear.
+// AI Prompts: Show code to set any custom zoom level (e.g., 150%) on a worksheet and embed all used fonts when exporting to PDF with Aspose.Cells for .NET. | Provide a method to verify that fonts are embedded in the generated PDF and handle embedding errors gracefully. | Explain how to embed non‑standard custom fonts in a PDF using Aspose.Cells, including required license settings and font folder configuration.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsZoomPdfDemo
+// Creates a workbook, applies a 110% view zoom to the first worksheet, configures PdfSaveOptions to embed standard Windows TrueType fonts, and saves the result as a PDF file.
+class Program
 {
-    // Creates a workbook, applies a 110 % percent‑scale zoom via PageSetup.Zoom and IsPercentScale, configures PdfSaveOptions to embed standard Windows TrueType fonts with Identity encoding and a default Arial font, then saves the sheet as a PDF.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add some sample data (optional, just to have content in PDF)
-            worksheet.Cells["A1"].PutValue("Sample Data");
-            worksheet.Cells["A2"].PutValue("Zoom set to 110% and fonts embedded in PDF.");
+            // Apply 110% zoom to the worksheet (view zoom)
+            worksheet.Zoom = 110; // Valid range is 10 to 400
 
-            // Set the zoom level to 110%
-            // Use PageSetup.Zoom for printing/scaling purposes
-            worksheet.PageSetup.Zoom = 110;
-            // Ensure the scaling mode is percent based
-            worksheet.PageSetup.IsPercentScale = true;
-
-            // Configure PDF save options to embed fonts
+            // Configure PDF save options to embed fonts in the output PDF
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Embed standard Windows TrueType fonts (required for embedding)
-                EmbedStandardWindowsFonts = true,
-                // Use identity encoding for full Unicode support
-                FontEncoding = PdfFontEncoding.Identity,
-                // Optionally set a default font in case some cells lack explicit font
-                DefaultFont = "Arial"
+                // Embed standard Windows TrueType fonts (required for font embedding)
+                EmbedStandardWindowsFonts = true
+                // FontEncoding property omitted because PdfFontEncoding is not available in this version
             };
 
-            // Save the workbook as PDF with the specified options
-            workbook.Save("ZoomedWithEmbeddedFonts.pdf", pdfOptions);
+            // Save the workbook as a PDF file with the specified options
+            workbook.Save("Worksheet_Zoom_110.pdf", pdfOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

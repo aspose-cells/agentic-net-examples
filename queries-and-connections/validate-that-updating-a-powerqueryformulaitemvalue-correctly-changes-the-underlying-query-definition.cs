@@ -1,97 +1,97 @@
-// Title: C# Example: Update and Verify PowerQueryFormulaItem.Value with Aspose.Cells for .NET
-// Description: Demonstrates how to load an Excel workbook, access its DataMashup part, modify the Value of the first PowerQueryFormulaItem (e.g., change a file‑path), save the workbook, reload it, and confirm that the change persists. This validates that PowerQueryFormulaItem updates are correctly written to the file using Aspose.Cells.
-// Keywords: Aspose.Cells | PowerQueryFormulaItem | Power Query update .NET | C# Excel DataMashup | modify Power Query formula value | persist Power Query changes | validate PowerQueryFormulaItem | Excel workbook automation | Aspose.Cells example
-// Common Searches: how to change PowerQueryFormulaItem value with Aspose.Cells | verify Power Query formula updates are saved in Excel C# | Aspose.Cells modify PowerQueryFormulaItem and reload workbook | C# code to edit Power Query source definition using Aspose | Aspose.Cells DataMashup PowerQueryFormulas example
-// Developer Intent: Edit a PowerQueryFormulaItem.Value in an Excel file and ensure the modification is saved and retrievable.
-// Use Cases: Replace environment‑specific file paths in Power Query source definitions before distributing workbooks. | Automate regression tests that edit Power Query formulas and verify persistence after a save/load cycle. | Batch‑process multiple workbooks to adjust PowerQueryFormulaItems for different deployment configurations.
-// AI Prompts: Generate C# code that iterates through all PowerQueryFormulaItems in a workbook and replaces a given substring in each Value using Aspose.Cells. | Provide a step‑by‑step guide to modify a PowerQueryFormulaItem.Value, save the workbook, reload it, and assert the new value matches the expected result. | Explain how to handle missing DataMashup parts or empty PowerQueryFormulas collections when updating Power Query formulas with Aspose.Cells.
+// Title: Validate PowerQueryFormulaItem.Value Update Reflects in FormulaDefinition – Aspose.Cells .NET Example
+// Description: Loads a workbook, accesses its PowerQueryFormulaCollection, modifies a PowerQueryFormulaItem.Value (e.g., swaps a drive letter), checks that the new value is present in the parent PowerQueryFormula.FormulaDefinition, and saves the workbook. Demonstrates how to confirm that item changes propagate to the query definition.
+// Keywords: Aspose.Cells | PowerQueryFormulaItem | Value update | FormulaDefinition | .NET | C# | query table manipulation | workbook modification | validation | replace file path
+// Common Searches: How to update PowerQueryFormulaItem.Value with Aspose.Cells | Does changing PowerQueryFormulaItem affect FormulaDefinition | Validate Power Query formula after editing items | Save workbook after Power Query changes in C# | Aspose.Cells Power Query item value replacement
+// Developer Intent: Verify that setting PowerQueryFormulaItem.Value automatically updates the associated PowerQueryFormula.FormulaDefinition.
+// Use Cases: Replace a hard‑coded file path in a Power Query parameter and confirm the new path appears in the formula definition before exporting. | Iterate over all PowerQueryFormulaItem objects to apply a common substring change (e.g., drive letter) and ensure each FormulaDefinition reflects the modification. | Automate a pre‑publish validation step that checks modified PowerQueryFormulaItem values are correctly embedded in their FormulaDefinition strings.
+// AI Prompts: Write C# code that loops through every PowerQueryFormulaItem in a workbook, replaces a specified substring in each Value, and asserts that each FormulaDefinition contains the updated value. | Create a method that accepts a workbook path, a target string, and a replacement string, updates matching PowerQueryFormulaItem values, validates the changes in FormulaDefinition, and saves the workbook. | Explain how to log original and modified PowerQueryFormulaItem values and handle scenarios where the FormulaDefinition does not reflect the update.
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.QueryTables;
 
-// Demonstrates how to load an Excel workbook, access its DataMashup part, modify the Value of the first PowerQueryFormulaItem (e.g., change a file‑path), save the workbook, reload it, and confirm that the change persists. This validates that PowerQueryFormulaItem updates are correctly written to the file using Aspose.Cells.
-class ValidatePowerQueryFormulaItemUpdate
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads a workbook, accesses its PowerQueryFormulaCollection, modifies a PowerQueryFormulaItem.Value (e.g., swaps a drive letter), checks that the new value is present in the parent PowerQueryFormula.FormulaDefinition, and saves the workbook. Demonstrates how to confirm that item changes propagate to the query definition.
+    public class PowerQueryFormulaItemUpdateValidation
     {
-        try
+        public static void Run()
         {
-            // Input workbook containing Power Query formulas
-            string inputPath = "PowerQuerySource.xlsx";
-
-            // Ensure the input file exists before loading
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
-                return;
+                const string sourcePath = "source.xlsx";
+                const string outputPath = "modified_source.xlsx";
+
+                // Verify source file exists to avoid FileNotFoundException
+                if (!File.Exists(sourcePath))
+                {
+                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    return;
+                }
+
+                // Load the workbook containing Power Query formulas
+                Workbook workbook = new Workbook(sourcePath);
+
+                // Access Power Query formulas collection
+                PowerQueryFormulaCollection formulas = workbook.DataMashup.PowerQueryFormulas;
+
+                if (formulas.Count == 0)
+                {
+                    Console.WriteLine("No Power Query formulas found in the workbook.");
+                    return;
+                }
+
+                // Use the first formula for demonstration
+                PowerQueryFormula formula = formulas[0];
+
+                // Access items of the selected formula
+                PowerQueryFormulaItemCollection items = formula.PowerQueryFormulaItems;
+
+                if (items.Count == 0)
+                {
+                    Console.WriteLine("The selected Power Query formula contains no items.");
+                    return;
+                }
+
+                // Choose the first item (could be selected by name if needed)
+                PowerQueryFormulaItem item = items[0];
+
+                // Store original value for comparison
+                string originalValue = item.Value;
+                Console.WriteLine($"Original Item Value: {originalValue}");
+
+                // Modify the item's value (example: replace drive letter)
+                string modifiedValue = originalValue.Replace(@"C:\", @"D:\");
+                item.Value = modifiedValue;
+                Console.WriteLine($"Modified Item Value: {item.Value}");
+
+                // Verify that the change is reflected in the formula definition
+                string updatedDefinition = formula.FormulaDefinition;
+                Console.WriteLine($"Updated Formula Definition: {updatedDefinition}");
+
+                bool isChangeReflected = updatedDefinition.Contains(modifiedValue);
+                Console.WriteLine(isChangeReflected
+                    ? "The change in PowerQueryFormulaItem.Value is reflected in the formula definition."
+                    : "The change was NOT reflected in the formula definition.");
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved as: {outputPath}");
             }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access DataMashup part via dynamic to avoid compile‑time dependency on Aspose.Cells.DataMashup assembly
-            dynamic dataMashup = workbook.DataMashup;
-            if (dataMashup == null)
+            catch (Exception ex)
             {
-                Console.WriteLine("The workbook does not contain a DataMashup part.");
-                return;
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Verify that at least one Power Query formula exists
-            var powerQueryFormulas = dataMashup.PowerQueryFormulas;
-            if (powerQueryFormulas == null || powerQueryFormulas.Count == 0)
-            {
-                Console.WriteLine("No Power Query formulas found in the workbook.");
-                return;
-            }
-
-            // Access the first Power Query formula
-            dynamic formula = powerQueryFormulas[0];
-
-            // Verify that the formula has at least one item
-            var items = formula.PowerQueryFormulaItems;
-            if (items == null || items.Count == 0)
-            {
-                Console.WriteLine("The selected Power Query formula contains no items.");
-                return;
-            }
-
-            // Retrieve the first item
-            dynamic item = items[0];
-            Console.WriteLine($"Original Item Name : {item.Name}");
-            Console.WriteLine($"Original Item Value: {item.Value}");
-
-            // Modify the item's Value (example: replace drive letter C:\ with D:\)
-            string modifiedValue = ((string)item.Value).Replace(@"C:\", @"D:\");
-            item.Value = modifiedValue;
-            Console.WriteLine($"Modified Item Value: {item.Value}");
-
-            // Save the workbook with the updated value
-            string outputPath = "PowerQueryModified.xlsx";
-            workbook.Save(outputPath);
-
-            // Reload the saved workbook to verify that the change persisted
-            Workbook reloadedWorkbook = new Workbook(outputPath);
-            dynamic reloadedDataMashup = reloadedWorkbook.DataMashup;
-            if (reloadedDataMashup == null)
-            {
-                Console.WriteLine("Reloaded workbook does not contain a DataMashup part.");
-                return;
-            }
-
-            dynamic reloadedFormula = reloadedDataMashup.PowerQueryFormulas[0];
-            dynamic reloadedItem = reloadedFormula.PowerQueryFormulaItems[0];
-            Console.WriteLine($"Reloaded Item Value: {reloadedItem.Value}");
-
-            // Validate that the reloaded value matches the modified value
-            bool validationPassed = reloadedItem.Value == modifiedValue;
-            Console.WriteLine($"Validation result: {(validationPassed ? "Success" : "Failure")}");
         }
-        catch (Exception ex)
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            PowerQueryFormulaItemUpdateValidation.Run();
         }
     }
 }

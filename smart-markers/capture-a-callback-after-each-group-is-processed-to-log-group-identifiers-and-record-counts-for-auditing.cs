@@ -1,103 +1,79 @@
+// Title: Log row group IDs and record counts with a callback after grouping rows – Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, fill it with sample data, define row ranges, group each range using Cells.GroupRows, and invoke a custom LogGroupInfo callback that calculates and logs the start index, end index, and record count for every processed group before saving the file.
+// Keywords: Aspose.Cells group rows callback | C# log grouped rows | record count after grouping rows .NET | worksheet row grouping audit | Cells.GroupRows example | Aspose.Cells logging callback | row grouping diagnostics C#
+// Common Searches: Aspose.Cells callback after grouping rows | how to log row groups in Aspose.Cells | record count for each grouped row range .NET | audit grouped rows Aspose.Cells C# | custom logging for Cells.GroupRows
+// Developer Intent: Capture and log the start/end indices and size of each row group immediately after it is created.
+// Use Cases: Maintain an audit trail of grouped sections in financial or reporting spreadsheets. | Validate grouping logic in large data‑processing pipelines by outputting group identifiers and counts. | Debug complex worksheets by printing row‑group details to the console or a log file.
+// AI Prompts: Generate a C# method that groups rows with Aspose.Cells and calls a user‑defined callback receiving start and end row indices. | Show how to modify the LogGroupInfo callback to write group information to a text file instead of the console. | Create code that captures grouping events for both rows and columns in Aspose.Cells and logs their ranges and record counts.
+
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
 namespace AsposeCellsGroupCallbackDemo
 {
+    // Demonstrates how to create a workbook, fill it with sample data, define row ranges, group each range using Cells.GroupRows, and invoke a custom LogGroupInfo callback that calculates and logs the start index, end index, and record count for every processed group before saving the file.
     class Program
     {
-        static void Main()
+        // Simple callback method that logs group information.
+        static void LogGroupInfo(int startIndex, int endIndex)
         {
-            // -------------------- Create workbook and sample data --------------------
-            Workbook workbook = new Workbook();                     // create a new workbook
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data (numeric values to be grouped)
-            sheet.Cells["A1"].Value = "Category";
-            sheet.Cells["B1"].Value = "Amount";
-
-            sheet.Cells["A2"].Value = "A";
-            sheet.Cells["B2"].Value = 5;
-            sheet.Cells["A3"].Value = "A";
-            sheet.Cells["B3"].Value = 12;
-            sheet.Cells["A4"].Value = "A";
-            sheet.Cells["B4"].Value = 19;
-            sheet.Cells["A5"].Value = "B";
-            sheet.Cells["B5"].Value = 7;
-            sheet.Cells["A6"].Value = "B";
-            sheet.Cells["B6"].Value = 14;
-            sheet.Cells["A7"].Value = "B";
-            sheet.Cells["B7"].Value = 21;
-
-            // -------------------- Create PivotTable --------------------
-            int pivotIdx = sheet.PivotTables.Add("A1:B7", "D3", "DemoPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-
-            // Add fields: Category as row, Amount as data
-            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-            // -------------------- Group the numeric data field --------------------
-            // The data field is automatically added to the data area; we need its base field index
-            // to group the underlying numeric field (Amount). BaseFields[1] corresponds to "Amount".
-            PivotField amountField = pivot.BaseFields[1];
-            // Group by interval of 10 (0‑9, 10‑19, 20‑29) and create a new field for the groups
-            amountField.GroupBy(10.0, true);
-
-            // Refresh and calculate to apply grouping
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // -------------------- Callback simulation: log each group after grouping --------------------
-            LogGroupInfo(pivot, amountField);
-
-            // -------------------- Save the workbook --------------------
-            workbook.Save("GroupedPivotWithAudit.xlsx");
+            int recordCount = endIndex - startIndex + 1;
+            Console.WriteLine($"Group processed: Rows {startIndex} to {endIndex} (Count = {recordCount})");
         }
 
-        // Simulates a callback by iterating over the generated groups and logging details.
-        static void LogGroupInfo(PivotTable pivot, PivotField groupedField)
+        // Groups rows and invokes the callback after each grouping operation.
+        static void GroupRowsWithCallback(Worksheet worksheet, int[][] groups, bool hideGroupedRows)
         {
-            // After grouping, a new field is added to the pivot table (the grouped field).
-            // Its index is the last field in the pivot's RowFields collection.
-            // We locate it by matching the field name that contains the grouping interval.
-            PivotField newGroupField = null;
-            foreach (PivotField rf in pivot.RowFields)
+            Cells cells = worksheet.Cells;
+
+            foreach (int[] range in groups)
             {
-                if (rf.Name.Contains(groupedField.Name) && rf.GroupSettings != null)
+                int start = range[0];
+                int end = range[1];
+
+                // Perform the actual grouping.
+                cells.GroupRows(start, end, hideGroupedRows);
+
+                // Callback logging.
+                LogGroupInfo(start, end);
+            }
+        }
+
+        static void Main()
+        {
+            try
+            {
+                // Create a new workbook.
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Populate sample data (10 rows, 2 columns).
+                for (int row = 0; row < 10; row++)
                 {
-                    newGroupField = rf;
-                    break;
+                    cells[row, 0].PutValue($"Item {row + 1}");
+                    cells[row, 1].PutValue(row * 10);
                 }
+
+                // Define row groups: {0-2}, {3-5}, {6-9}
+                int[][] rowGroups = new int[][]
+                {
+                    new int[] { 0, 2 },
+                    new int[] { 3, 5 },
+                    new int[] { 6, 9 }
+                };
+
+                // Group rows and log after each group.
+                GroupRowsWithCallback(sheet, rowGroups, hideGroupedRows: false);
+
+                // Save the workbook.
+                string outputPath = "GroupedWorkbook.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            if (newGroupField == null)
+            catch (Exception ex)
             {
-                Console.WriteLine("No grouped field found.");
-                return;
-            }
-
-            Console.WriteLine($"--- Audit Log for Grouped Field: {newGroupField.Name} ---");
-            Console.WriteLine($"Group Type: {newGroupField.GroupSettings.Type}");
-            Console.WriteLine($"Total Groups (Pivot Items): {newGroupField.PivotItems.Count}");
-
-            // Iterate through each pivot item (each group) and log its identifier and record count.
-            foreach (PivotItem item in newGroupField.PivotItems)
-            {
-                // The item.Value holds the group label (e.g., "0-9", "10-19").
-                string groupLabel = item.Value?.ToString() ?? "Undefined";
-
-                // Record count can be obtained from the corresponding data field's summary.
-                // Here we fetch the subtotal for the group from the data field.
-                // Since we have only one data field, its index is 0 in DataFields.
-                int dataFieldIdx = 0;
-                double subtotal = 0;
-                // The Subtotal for a specific group is stored in the PivotItem's Subtotal property.
-                // However, Aspose.Cells does not expose a direct count; we approximate by summing.
-                // For demonstration, we retrieve the displayed value from the pivot table cell.
-                // This requires locating the cell that contains the subtotal for the group.
-                // Simplify: output the group label only.
-                Console.WriteLine($"Group: {groupLabel}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

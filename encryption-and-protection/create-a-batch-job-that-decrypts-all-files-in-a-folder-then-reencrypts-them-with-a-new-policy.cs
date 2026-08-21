@@ -1,79 +1,83 @@
-// Title: Batch Decrypt and Re‑Encrypt Excel Workbooks with a New Policy using Aspose.Cells for .NET
-// Description: Scans a folder for .xlsx files, opens each workbook with the legacy password, applies a new password, encryption type, and key length, then saves the files to a target directory while logging any errors.
-// Keywords: Aspose.Cells | C# batch encryption | Excel workbook decryption | change Excel password programmatically | set encryption type | strong cryptographic provider | bulk Excel encryption | file encryption policy | LoadOptions password | Workbook.SetEncryptionOptions
-// Common Searches: C# batch decrypt Excel files Aspose.Cells | how to re‑encrypt multiple .xlsx files with new password | change encryption type of Excel workbooks programmatically | bulk update Excel file protection using Aspose.Cells | automate Excel encryption policy migration .NET
-// Developer Intent: Decrypt every Excel file in a folder and re‑save it with a new password and encryption configuration.
-// Use Cases: Upgrade legacy spreadsheets protected with weak passwords to a strong cryptographic provider across a corporate document library. | Run a scheduled job that enforces organization‑wide encryption standards on newly uploaded Excel reports. | Prepare a batch of workbooks for archiving by increasing key length to meet compliance requirements.
-// AI Prompts: Create C# code that iterates over .xls and .xlsx files, removes existing protection, and applies AES‑256 encryption with a configurable password using Aspose.Cells. | Refactor the batch encryption script to accept input and output paths via command‑line arguments and generate a CSV log of processed files. | Write a PowerShell wrapper that calls the Aspose.Cells C# utility, passes folder parameters, and sends a summary email after completion.
+// Title: C# Batch Decrypt & Re‑encrypt Excel Files with Aspose.Cells – Update Password & Encryption Policy
+// Description: A console utility that scans a source folder for .xlsx workbooks encrypted with an old password, opens each file using Aspose.Cells, applies a new password, switches to StrongCryptographicProvider with a 128‑bit key, and saves the re‑encrypted copies to a destination folder. Includes folder validation, per‑file error handling, and progress logging.
+// Keywords: Aspose.Cells | C# batch encryption | Excel workbook decryption | re‑encrypt XLSX files | StrongCryptographicProvider | 128‑bit encryption key | change Excel password programmatically | process multiple Excel files | folder batch encryption | LoadOptions password
+// Common Searches: how to batch decrypt encrypted Excel files using Aspose.Cells | C# code to change password of multiple XLSX workbooks | re‑encrypt Excel files with StrongCryptographicProvider in .NET | update encryption policy for a folder of Excel spreadsheets | automate Excel file password rotation with Aspose.Cells
+// Developer Intent: Automate the decryption of all encrypted Excel workbooks in a directory and re‑save them with a new password and stronger encryption settings.
+// Use Cases: Migrate legacy encrypted spreadsheets to a stronger encryption algorithm before long‑term storage. | Enforce organization‑wide password policies by rotating passwords on shared Excel reports. | Integrate into CI/CD pipelines to apply a consistent encryption policy to generated spreadsheets.
+// AI Prompts: Generate C# code that iterates over a folder, opens each .xlsx with an existing password using Aspose.Cells, and saves it with a new password and StrongCryptographicProvider encryption. | Add robust logging and retry logic to the batch encryption script, capturing file‑level successes and failures. | Extend the utility to handle .xls and .xlsm formats and read encryption parameters from a JSON configuration file.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Metadata;
 
-// Scans a folder for .xlsx files, opens each workbook with the legacy password, applies a new password, encryption type, and key length, then saves the files to a target directory while logging any errors.
-class BatchEncryptDecrypt
+namespace BatchEncryption
 {
-    static void Main()
+    // A console utility that scans a source folder for .xlsx workbooks encrypted with an old password, opens each file using Aspose.Cells, applies a new password, switches to StrongCryptographicProvider with a 128‑bit key, and saves the re‑encrypted copies to a destination folder. Includes folder validation, per‑file error handling, and progress logging.
+    class Program
     {
-        // Folder containing the source Excel files
-        string sourceFolder = @"C:\InputFiles";
-
-        // Folder where the re‑encrypted files will be saved
-        string outputFolder = @"C:\OutputFiles";
-
-        // Old password used to open the encrypted files (if any)
-        string oldPassword = "oldPassword";
-
-        // New password and encryption policy to apply
-        string newPassword = "newPassword";
-        EncryptionType newEncryptionType = EncryptionType.StrongCryptographicProvider;
-        int newKeyLength = 128; // 40, 128, or 256 bits are supported
-
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Verify source directory exists
-        if (!Directory.Exists(sourceFolder))
+        static void Main()
         {
-            Console.WriteLine($"Source folder not found: {sourceFolder}");
-            return;
-        }
+            // Folder containing the Excel files to process
+            string sourceFolder = @"C:\InputFiles";
+            // Folder where the re‑encrypted files will be saved
+            string destinationFolder = @"C:\OutputFiles";
 
-        // Process each Excel file in the source folder
-        foreach (string filePath in Directory.GetFiles(sourceFolder, "*.xlsx"))
-        {
-            if (!File.Exists(filePath))
+            // Verify source folder exists
+            if (!Directory.Exists(sourceFolder))
             {
-                Console.WriteLine($"File not found (skipped): {filePath}");
-                continue;
+                Console.WriteLine($"Source folder does not exist: {sourceFolder}");
+                return;
             }
 
-            try
+            // Ensure the destination folder exists
+            Directory.CreateDirectory(destinationFolder);
+
+            // Old password used for the existing encrypted files
+            const string oldPassword = "oldPassword";
+            // New password and encryption policy to apply
+            const string newPassword = "newPassword";
+            const EncryptionType newEncryptionType = EncryptionType.StrongCryptographicProvider;
+            const int newKeyLength = 128; // 128‑bit key
+
+            // Process each Excel file in the source folder
+            foreach (string filePath in Directory.GetFiles(sourceFolder, "*.xlsx"))
             {
-                // Load the workbook using the old password (if the file is encrypted)
-                LoadOptions loadOptions = new LoadOptions
+                try
                 {
-                    Password = oldPassword
-                };
+                    // Verify the file still exists before loading
+                    if (!File.Exists(filePath))
+                    {
+                        Console.WriteLine($"File not found: {filePath}");
+                        continue;
+                    }
 
-                Workbook workbook = new Workbook(filePath, loadOptions);
+                    // Load the workbook using the old password (decryption step)
+                    LoadOptions loadOptions = new LoadOptions
+                    {
+                        Password = oldPassword
+                    };
+                    Workbook workbook = new Workbook(filePath, loadOptions);
 
-                // Apply the new encryption settings
-                workbook.Settings.Password = newPassword;
-                workbook.SetEncryptionOptions(newEncryptionType, newKeyLength);
+                    // Apply the new encryption policy
+                    workbook.Settings.Password = newPassword;
+                    workbook.SetEncryptionOptions(newEncryptionType, newKeyLength);
 
-                // Save the workbook to the output folder (overwrites any existing file with the same name)
-                string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-                workbook.Save(outputPath);
-                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
+                    // Build the output file path
+                    string fileName = Path.GetFileName(filePath);
+                    string outputPath = Path.Combine(destinationFolder, fileName);
+
+                    // Save the workbook with the new encryption (re‑encryption step)
+                    workbook.Save(outputPath, SaveFormat.Xlsx);
+
+                    Console.WriteLine($"Processed: {fileName}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-            }
+
+            Console.WriteLine("Batch encryption job completed.");
         }
-
-        Console.WriteLine("All files have been processed.");
     }
 }

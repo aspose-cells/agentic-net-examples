@@ -1,130 +1,81 @@
-// Title: Add Subtotals with Localized Labels to All Worksheets using Aspose.Cells C#
-// Description: Creates a workbook with three sheets, fills each with sample data, sets a custom global label for the Sum subtotal via SettableGlobalizationSettings, then iterates all worksheets and applies the Subtotal method (group by first column, page breaks, summary below) and saves the file.
-// Keywords: Aspose.Cells | C# | add subtotals | localized subtotal label | SettableGlobalizationSettings | globalization settings | Subtotal method | multiple worksheets | group by column | page breaks | Excel macro replacement | financial report automation
-// Common Searches: Aspose.Cells set custom subtotal label .NET | How to add subtotals to every sheet in Aspose.Cells | Globalize subtotal function in C# workbook | Iterate worksheets and apply Subtotal in Aspose.Cells | Replace Excel subtotal macro with C# code
-// Developer Intent: Generate a C# routine that applies subtotal rows with a custom localized label to each worksheet in an Aspose.Cells workbook.
-// Use Cases: Create multi‑sheet financial statements where each sheet shows grouped totals with a language‑specific “Sum” label. | Consolidate regional sales data across worksheets, automatically inserting subtotals and page breaks for printed reports. | Migrate Excel VBA subtotal macros to a .NET solution that respects user‑locale settings.
-// AI Prompts: Write a C# method that receives a label string and uses SettableGlobalizationSettings to rename the Sum total before calling Worksheet.Cells.Subtotal on all sheets. | Extend the subtotal routine to handle multiple subtotal columns and different functions (Average, Count) while keeping the localized total name. | Add detailed logging to the worksheet loop that records sheet names, success status, and any exceptions for troubleshooting.
+// Title: C# – Add Subtotal Rows with Localized Labels to All Worksheets using Aspose.Cells
+// Description: Demonstrates how to create or load a workbook, set a custom total name with SettableGlobalizationSettings, loop through every worksheet, define the data range, and call Cells.Subtotal to insert grouped summary rows that display the localized label, then save the file.
+// Keywords: Aspose.Cells subtotal C# | localized subtotal label | SettableGlobalizationSettings | custom total name Excel | globalization settings Aspose.Cells | add subtotals to all worksheets | macro‑like subtotal routine | ConsolidationFunction.Sum custom label | Excel automation C# | internationalized subtotal rows
+// Common Searches: Aspose.Cells change subtotal label | C# add subtotals to every sheet | SettableGlobalizationSettings example | custom total name for sum function Aspose.Cells | globalize Excel subtotal text C# | macro to add localized subtotals Aspose
+// Developer Intent: Create a macro‑style routine that inserts subtotal rows with a custom, localized label into each worksheet of an Aspose.Cells workbook.
+// Use Cases: Produce multilingual financial statements where the subtotal caption appears in the target language on every sheet. | Automate consolidation of sales data across dozens of worksheets while enforcing a consistent localized total label. | Prepare a master workbook for international distribution, ensuring all subtotal rows use the same translated wording.
+// AI Prompts: Generate C# code that uses Aspose.Cells to set a custom total name for the Sum function and adds subtotal rows to all worksheets. | Explain the role of SettableGlobalizationSettings in overriding subtotal labels and show how to customize other consolidation functions. | Provide a step‑by‑step tutorial for loading an existing workbook, applying a localized subtotal label, adding grouped totals, and saving the result.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Settings;
 
-namespace SubtotalMacroDemo
+namespace SubtotalWithLocalizedLabels
 {
-    // Creates a workbook with three sheets, fills each with sample data, sets a custom global label for the Sum subtotal via SettableGlobalizationSettings, then iterates all worksheets and applies the Subtotal method (group by first column, page breaks, summary below) and saves the file.
+    // Demonstrates how to create or load a workbook, set a custom total name with SettableGlobalizationSettings, loop through every worksheet, define the data range, and call Cells.Subtotal to insert grouped summary rows that display the localized label, then save the file.
     class Program
     {
         static void Main()
         {
-            try
-            {
-                // Create a new workbook (contains one default worksheet)
-                Workbook workbook = new Workbook();
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // replace with new Workbook("input.xlsx") if needed
 
-                // Rename the default worksheet and populate it with sample data
-                Worksheet firstSheet = workbook.Worksheets[0];
-                firstSheet.Name = "Sheet1";
-                PopulateSampleData(firstSheet);
+            // ------------------------------------------------------------
+            // 1. Define custom globalization settings to change the total label
+            // ------------------------------------------------------------
+            // SettableGlobalizationSettings allows us to override the default text
+            // that appears for subtotal rows (e.g., "Sum").
+            SettableGlobalizationSettings globalization = new SettableGlobalizationSettings();
 
-                // Add two more worksheets and fill them with the same sample data
-                for (int i = 1; i < 3; i++)
-                {
-                    // Worksheets.Add() returns the index of the newly added sheet
-                    int newIndex = workbook.Worksheets.Add();
-                    Worksheet ws = workbook.Worksheets[newIndex];
-                    ws.Name = $"Sheet{i + 1}";
-                    PopulateSampleData(ws);
-                }
+            // Example: change the label for the Sum function to a localized version
+            globalization.SetTotalName(ConsolidationFunction.Sum, "Σ Total");   // you can use any language string here
+            // You can also customize other functions if required:
+            // globalization.SetTotalName(ConsolidationFunction.Average, "Avg Total");
 
-                // Apply custom localization for subtotal labels
-                SettableGlobalizationSettings globalization = new SettableGlobalizationSettings();
-                globalization.SetTotalName(ConsolidationFunction.Sum, "Localized Sum");
-                workbook.Settings.GlobalizationSettings = globalization;
+            // Apply the custom settings to the workbook
+            workbook.Settings.GlobalizationSettings = globalization;
 
-                // Add subtotals to every worksheet in the workbook
-                AddSubtotalsToAllWorksheets(workbook);
-
-                // Save the workbook
-                workbook.Save("SubtotalsWithLocalizedLabels.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        // Adds subtotals to each worksheet in the provided workbook
-        private static void AddSubtotalsToAllWorksheets(Workbook workbook)
-        {
+            // ------------------------------------------------------------
+            // 2. Add subtotals to every worksheet in the workbook
+            // ------------------------------------------------------------
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                try
-                {
-                    // Determine the used range of the worksheet
-                    int maxRow = sheet.Cells.MaxDataRow;
-                    int maxCol = sheet.Cells.MaxDataColumn;
+                // Determine the used range of the worksheet
+                int maxRow = sheet.Cells.MaxDataRow;      // zero‑based index of the last row with data
+                int maxCol = sheet.Cells.MaxDataColumn;   // zero‑based index of the last column with data
 
-                    // Skip empty sheets
-                    if (maxRow < 0 || maxCol < 0)
-                        continue;
+                // If the sheet is empty, skip it
+                if (maxRow < 0 || maxCol < 0)
+                    continue;
 
-                    // Define the cell area covering the data (including header row)
-                    CellArea area = new CellArea
-                    {
-                        StartRow = 0,
-                        StartColumn = 0,
-                        EndRow = maxRow,
-                        EndColumn = maxCol
-                    };
+                // Define the cell area that contains the data (including header row)
+                CellArea area = CellArea.CreateCellArea(0, 0, maxRow, maxCol);
 
-                    // Subtotal the second column (index 1) if it exists; otherwise the first column
-                    int[] totalList = maxCol >= 1 ? new int[] { 1 } : new int[] { 0 };
+                // Choose the column to group by (typically the first column, index 0)
+                int groupByColumn = 0;
 
-                    // Apply subtotal:
-                    // - Group by the first column (index 0)
-                    // - Use Sum function
-                    // - Replace existing subtotals, add page breaks, place summary below data
-                    sheet.Cells.Subtotal(
-                        area,
-                        0,                                 // groupBy column index
-                        ConsolidationFunction.Sum,         // subtotal function
-                        totalList,                         // columns to subtotal
-                        true,                              // replace existing subtotals
-                        true,                              // add page breaks between groups
-                        true                               // place summary below data
-                    );
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to add subtotals on sheet '{sheet.Name}': {ex.Message}");
-                }
+                // Choose which columns should receive the subtotal calculation.
+                // Here we subtotal the second column (index 1). Adjust as needed.
+                int[] totalColumns = new int[] { 1 };
+
+                // Add subtotals:
+                //   replace: true  – replace any existing subtotals
+                //   pageBreaks: false – do not insert page breaks between groups
+                //   summaryBelowData: true – place the subtotal row below each group
+                sheet.Cells.Subtotal(
+                    area,
+                    groupByColumn,
+                    ConsolidationFunction.Sum,
+                    totalColumns,
+                    true,   // replace existing subtotals
+                    false,  // no page breaks
+                    true    // summary below data
+                );
             }
-        }
 
-        // Helper method to fill a worksheet with simple sample data
-        private static void PopulateSampleData(Worksheet sheet)
-        {
-            // Header
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Amount");
-
-            // Sample rows
-            object[,] data = new object[,]
-            {
-                { "North", 1200 },
-                { "North", 800 },
-                { "South", 1500 },
-                { "South", 700 },
-                { "East",  1100 },
-                { "West",  900 }
-            };
-
-            for (int r = 0; r < data.GetLength(0); r++)
-            {
-                sheet.Cells[r + 1, 0].PutValue(data[r, 0]); // Category
-                sheet.Cells[r + 1, 1].PutValue(data[r, 1]); // Amount
-            }
+            // ------------------------------------------------------------
+            // 3. Save the workbook
+            // ------------------------------------------------------------
+            workbook.Save("WorkbookWithLocalizedSubtotals.xlsx");
         }
     }
 }

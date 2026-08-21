@@ -1,79 +1,73 @@
-// Title: Prevent saving an Aspose.Cells workbook when worksheets have duplicate TabId values (C#)
-// Description: Demonstrates how to detect duplicate TabId values across worksheets in an Aspose.Cells Workbook using a HashSet, and abort the Save operation if any conflict is found. The example creates three sheets, intentionally repeats a TabId, validates uniqueness with a HasDuplicateTabIds method, and shows how to handle the error before calling workbook.Save.
-// Keywords: Aspose.Cells | C# | duplicate TabId | worksheet TabId validation | prevent workbook save | TabId conflict detection | HashSet duplicate check | Excel sheet identifier uniqueness
-// Common Searches: Aspose.Cells prevent save on duplicate TabId | C# check for duplicate worksheet TabId | validate unique TabId before workbook.Save | detect repeated TabId in Aspose.Cells workbook | how to stop saving Excel file with duplicate sheet IDs
-// Developer Intent: Ensure that a workbook is not saved when any worksheet contains a non‑unique TabId, protecting the file from identifier conflicts.
-// Use Cases: Integrate HasDuplicateTabIds into a data‑import pipeline that creates worksheets dynamically, aborting the export if TabId collisions occur. | Replace the console warning with an exception to enforce TabId uniqueness in enterprise‑level document generation services. | Run the duplicate‑TabId check after renaming or reordering sheets in an automated report generator to guarantee compliance with downstream processing requirements.
-// AI Prompts: Generate a LINQ‑based version of HasDuplicateTabIds that returns the list of duplicate TabId values and their worksheet names. | Write NUnit tests for the duplicate TabId detection logic covering both unique and colliding scenarios. | Create a reusable Aspose.Cells extension method that validates TabId uniqueness and throws a custom DuplicateTabIdException.
+// Title: Prevent Saving an Aspose.Cells Workbook When Worksheets Have Duplicate TabId Values (C#)
+// Description: Demonstrates how to scan all worksheets in an Aspose.Cells workbook for duplicate TabId values using a HashSet, abort the save operation if a conflict is found, and optionally correct the IDs before calling Workbook.Save. The example creates three sheets, deliberately duplicates a TabId, and shows the validation logic.
+// Keywords: Aspose.Cells duplicate TabId | C# worksheet TabId uniqueness | prevent workbook save Aspose.Cells | TabId validation .NET | Aspose.Cells Workbook.Save check | detect duplicate worksheet IDs | HashSet duplicate detection C#
+// Common Searches: Aspose.Cells check for duplicate TabId before saving | C# prevent workbook save if TabId conflict | validate worksheet TabId uniqueness Aspose.Cells | how to detect duplicate TabId in Aspose.Cells workbook | Aspose.Cells TabId duplicate handling
+// Developer Intent: Ensure a workbook is not saved when any worksheet contains a non‑unique TabId.
+// Use Cases: Validate TabId uniqueness after adding, removing, or renaming sheets in a batch generation process. | Automatically assign new unique TabIds to colliding worksheets before invoking Workbook.Save. | Integrate duplicate TabId detection into CI pipelines that produce Excel files with Aspose.Cells.
+// AI Prompts: Generate a method that returns all duplicate TabId values in an Aspose.Cells workbook. | Show code to reassign unique TabIds to worksheets that share the same TabId before saving. | Create a custom DuplicateTabIdException and demonstrate throwing it when duplicate TabIds are detected during save.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace PreventDuplicateTabIdSave
+// Demonstrates how to scan all worksheets in an Aspose.Cells workbook for duplicate TabId values using a HashSet, abort the save operation if a conflict is found, and optionally correct the IDs before calling Workbook.Save. The example creates three sheets, deliberately duplicates a TabId, and shows the validation logic.
+class PreventDuplicateTabIdSave
 {
-    // Demonstrates how to detect duplicate TabId values across worksheets in an Aspose.Cells Workbook using a HashSet, and abort the Save operation if any conflict is found. The example creates three sheets, intentionally repeats a TabId, validates uniqueness with a HasDuplicateTabIds method, and shows how to handle the error before calling workbook.Save.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Access the default worksheet and set a TabId
+        Worksheet ws1 = workbook.Worksheets[0];
+        ws1.Name = "Sheet1";
+        ws1.TabId = 101;
+
+        // Add a second worksheet with a different TabId
+        int idx2 = workbook.Worksheets.Add();
+        Worksheet ws2 = workbook.Worksheets[idx2];
+        ws2.Name = "Sheet2";
+        ws2.TabId = 102;
+
+        // Add a third worksheet that intentionally duplicates a TabId
+        int idx3 = workbook.Worksheets.Add();
+        Worksheet ws3 = workbook.Worksheets[idx3];
+        ws3.Name = "Sheet3";
+        ws3.TabId = 101; // Duplicate of ws1
+
+        // Validate TabId uniqueness before attempting to save
+        if (HasDuplicateTabIds(workbook))
         {
-            // Create a new workbook (lifecycle rule: use constructor)
-            Workbook workbook = new Workbook();
-
-            // Add a few worksheets and intentionally set duplicate TabId values
-            int sheet1Idx = workbook.Worksheets.Add();
-            Worksheet sheet1 = workbook.Worksheets[sheet1Idx];
-            sheet1.Name = "SheetA";
-            sheet1.TabId = 101; // first unique TabId
-
-            int sheet2Idx = workbook.Worksheets.Add();
-            Worksheet sheet2 = workbook.Worksheets[sheet2Idx];
-            sheet2.Name = "SheetB";
-            sheet2.TabId = 102; // second unique TabId
-
-            int sheet3Idx = workbook.Worksheets.Add();
-            Worksheet sheet3 = workbook.Worksheets[sheet3Idx];
-            sheet3.Name = "SheetC";
-            sheet3.TabId = 101; // duplicate TabId (same as SheetA)
-
-            // Perform any other modifications here...
-            // ...
-
-            // Validate that no duplicate TabId exists before saving
-            if (HasDuplicateTabIds(workbook))
-            {
-                Console.WriteLine("Error: Duplicate TabId detected. Workbook will not be saved.");
-                // Optionally, you could throw an exception or handle the situation as needed
-                // throw new InvalidOperationException("Duplicate TabId values found.");
-            }
-            else
-            {
-                // Save the workbook (lifecycle rule: use Save method)
-                string outputPath = "ValidatedWorkbook.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-
-            // Clean up
-            workbook.Dispose();
+            Console.WriteLine("Cannot save workbook: duplicate TabId detected.");
+            // Handle the situation as needed (e.g., assign new TabIds, abort, etc.)
+        }
+        else
+        {
+            // No duplicates – safe to save
+            workbook.Save("ValidWorkbook.xlsx", SaveFormat.Xlsx);
+            Console.WriteLine("Workbook saved successfully.");
         }
 
-        static bool HasDuplicateTabIds(Workbook workbook)
+        // Release resources
+        workbook.Dispose();
+    }
+
+    // Checks the workbook for duplicate TabId values.
+    // Returns true if any duplicate is found.
+    static bool HasDuplicateTabIds(Workbook wb)
+    {
+        HashSet<int> seenIds = new HashSet<int>();
+        foreach (Worksheet ws in wb.Worksheets)
         {
-            HashSet<int> seenTabIds = new HashSet<int>();
-            foreach (Worksheet ws in workbook.Worksheets)
+            int currentId = ws.TabId;
+            if (seenIds.Contains(currentId))
             {
-                int tabId = ws.TabId;
-                // If the TabId has already been encountered, we have a duplicate
-                if (!seenTabIds.Add(tabId))
-                {
-                    // Duplicate found
-                    Console.WriteLine($"Duplicate TabId {tabId} found in worksheet '{ws.Name}'.");
-                    return true;
-                }
+                // Duplicate found
+                return true;
             }
-            // No duplicates
-            return false;
+            seenIds.Add(currentId);
         }
+        // All TabIds are unique
+        return false;
     }
 }

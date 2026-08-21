@@ -1,39 +1,65 @@
-// Title: Read ODS Page Background Color with Aspose.Cells for .NET
-// Description: Shows how to load an ODS workbook, access a worksheet's OdsPageBackground via PageSetup, determine if the background is a solid color, and output the Color value or its type.
-// Keywords: Aspose.Cells | ODS | page background | background color | C# | .NET | OdsPageBackground | retrieve | extract | audit
-// Common Searches: Aspose.Cells read ODS page background color | C# get ODS page background type | How to check ODS page background in .NET | Retrieve ODS page background using Aspose.Cells | Extract solid color from ODS page background
-// Developer Intent: Obtain the solid‑color page background defined in an ODS workbook.
-// Use Cases: Validate that ODS documents use the corporate brand color for page backgrounds. | Create an inventory of background colors across a batch of ODS files for compliance reporting. | Log the background color before converting ODS to PDF to ensure visual fidelity.
-// AI Prompts: Provide C# code that reads the ODS page background color with Aspose.Cells and gracefully handles image or pattern backgrounds. | Explain how to loop through all worksheets in a workbook and list each sheet's ODS page background color. | Show how to set a new solid‑color background for an ODS page and save the changes using Aspose.Cells.
+// Title: Extract ODS Page Background Color Using Aspose.Cells for .NET
+// Description: Loads an ODS workbook, accesses the first worksheet's PageSetup, reads the OdsPageBackground object, determines if it is a solid color, outputs the color value for audit, and saves the file unchanged.
+// Keywords: Aspose.Cells OdsPageBackground | ODS page background color .NET | read ODS page setup background | C# ODS background audit | Aspose.Cells OdsPageBackgroundType
+// Common Searches: how to get ODS page background color with Aspose.Cells | Aspose.Cells retrieve ODS background type C# | audit ODS workbook page background color | C# read ODS page setup background
+// Developer Intent: Obtain and log the solid‑color background of an ODS worksheet for compliance or reporting.
+// Use Cases: Verify that an ODS sheet uses a specific solid color before publishing. | Detect whether the page background is a graphic, color, or none for conditional processing. | Perform a non‑destructive audit of ODS files by reading and recording background settings.
+// AI Prompts: Generate C# code with Aspose.Cells that returns the OdsPageBackgroundType and, if it is Color, the hex value of the background. | Create a function that logs the ODS page background color or indicates if a graphic is used. | Write a unit test that confirms the background color extraction works for an ODS file containing a solid color.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Ods;
 
-// Shows how to load an ODS workbook, access a worksheet's OdsPageBackground via PageSetup, determine if the background is a solid color, and output the Color value or its type.
-class Program
+namespace OdsPageBackgroundAudit
 {
-    static void Main()
+    // Loads an ODS workbook, accesses the first worksheet's PageSetup, reads the OdsPageBackground object, determines if it is a solid color, outputs the color value for audit, and saves the file unchanged.
+    class Program
     {
-        // Load the ODS workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.ods");
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Retrieve the ODS page background object
-        OdsPageBackground background = worksheet.PageSetup.ODSPageBackground;
-
-        // Determine if the background is set to a color and output it
-        if (background.Type == OdsPageBackgroundType.Color)
+        static void Main(string[] args)
         {
-            Color bgColor = background.Color;
-            Console.WriteLine($"ODS page background color: {bgColor}");
-        }
-        else
-        {
-            Console.WriteLine($"ODS page background type is not a color. Current type: {background.Type}");
+            // Path to the ODS file to audit
+            string inputPath = "input.ods";
+
+            // Load the workbook (lifecycle rule: load)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Get the PageSetup object
+            PageSetup pageSetup = sheet.PageSetup;
+
+            // Retrieve the ODS page background object
+            OdsPageBackground background = pageSetup.ODSPageBackground;
+
+            // Check if the background type is set to Color
+            if (background.Type == OdsPageBackgroundType.Color)
+            {
+                // Get the background color
+                Color bgColor = background.Color;
+
+                // Output the color information for auditing
+                Console.WriteLine($"ODS Page Background Type: Color");
+                Console.WriteLine($"Background Color: {bgColor}");
+            }
+            else
+            {
+                // If not a color background, indicate the current type
+                Console.WriteLine($"ODS Page Background Type: {background.Type}");
+                if (background.Type == OdsPageBackgroundType.Graphic)
+                {
+                    Console.WriteLine("Background is set to a graphic. Color information is not applicable.");
+                }
+                else
+                {
+                    Console.WriteLine("No background is set.");
+                }
+            }
+
+            // Optionally save the workbook unchanged (lifecycle rule: save)
+            // This demonstrates adherence to the save rule without altering the file.
+            workbook.Save("output_audit.ods");
         }
     }
 }

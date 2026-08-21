@@ -1,41 +1,44 @@
-// Title: C# – Merge Z4:AA4 and Apply 45° Text Rotation with Aspose.Cells, Save as XLSX
-// Description: Load an existing workbook, merge the range Z4:AA4 on the first worksheet, set a 45‑degree text rotation via a style and StyleFlag, and save the result as an XLSX file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells merge cells | C# rotate text | 45 degree text rotation | Excel style flag | save workbook as xlsx | merged cell formatting | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells merge Z4 AA4 C# | rotate text 45 degrees merged cell Aspose | C# set cell rotation Aspose.Cells | how to merge cells and apply style Aspose | save modified workbook as xlsx Aspose.Cells
-// Developer Intent: Merge cells Z4:AA4, rotate the text 45°, and export the workbook to XLSX with Aspose.Cells in C#.
-// Use Cases: Create a diagonal header spanning two columns for financial dashboards. | Design printable forms where narrow columns need angled labels. | Build a template with merged title cells that stand out visually.
-// AI Prompts: Write C# code using Aspose.Cells to merge Z4:AA4, set a 45° rotation, and save as output.xlsx. | Explain why a StyleFlag is required when applying rotation to a merged cell in Aspose.Cells. | Provide a step‑by‑step tutorial for modifying an existing XLSX file to merge cells and rotate text with Aspose.Cells for .NET.
+// Title: Merge Z4:AA4 and apply 45° text rotation with Aspose.Cells for .NET (C#)
+// Description: Load an existing XLSX workbook, merge the range Z4:AA4 on the first worksheet, create a style with a 45‑degree rotation, apply it to the merged cell, and save the result as a new XLSX file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells merge cells | Aspose.Cells text rotation | C# rotate text in Excel | Aspose.Cells style flag rotation | save workbook as xlsx Aspose
+// Common Searches: Aspose.Cells merge Z4 AA4 C# | rotate text 45 degrees merged cells Aspose | how to apply style to merged cells Aspose.Cells | save modified Excel as XLSX using Aspose.Cells
+// Developer Intent: Merge a specific cell range, rotate its text 45°, and save the workbook as XLSX with Aspose.Cells in C#.
+// Use Cases: Create a diagonal header spanning two columns for a financial summary. | Design a dashboard title row with angled text for visual emphasis. | Prepare printable reports where merged cells need slanted labels for space efficiency.
+// AI Prompts: Show C# code to merge Z4:AA4, set a 45° rotation, and save as XLSX with Aspose.Cells. | Explain how to use StyleFlag to enable text rotation on a merged cell in Aspose.Cells. | Provide a step‑by‑step example of applying a rotation style to merged cells and exporting the workbook.
 
 using System;
 using Aspose.Cells;
 
-// Load an existing workbook, merge the range Z4:AA4 on the first worksheet, set a 45‑degree text rotation via a style and StyleFlag, and save the result as an XLSX file using Aspose.Cells for .NET.
+// Load an existing XLSX workbook, merge the range Z4:AA4 on the first worksheet, create a style with a 45‑degree rotation, apply it to the merged cell, and save the result as a new XLSX file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Path to the existing spreadsheet
-        string inputPath = "input.xlsx";
-
-        // Load the workbook
+        // Load the existing spreadsheet
+        string inputPath = "input.xlsx";               // replace with your source file
         Workbook workbook = new Workbook(inputPath);
-        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Merge cells Z4:AA4 (row index 3, column index 25, 1 row, 2 columns)
-        worksheet.Cells.Merge(3, 25, 1, 2);
+        // Work with the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Merge cells Z4:AA4
+        // Row index is zero‑based (4th row -> 3), column Z is 25, AA is 26
+        // Merge 1 row and 2 columns starting at (3,25)
+        sheet.Cells.Merge(3, 25, 1, 2);
 
         // Create a style with a 45‑degree text rotation
-        Style style = workbook.CreateStyle();
-        style.RotationAngle = 45;
+        Style rotStyle = workbook.CreateStyle();
+        rotStyle.RotationAngle = 45;
 
         // Enable the rotation flag so the style is applied
         StyleFlag flag = new StyleFlag();
         flag.Rotation = true;
 
         // Apply the style to the merged cell (upper‑left cell Z4)
-        worksheet.Cells[3, 25].SetStyle(style, flag);
+        sheet.Cells["Z4"].SetStyle(rotStyle, flag);
 
         // Save the modified workbook as XLSX
-        workbook.Save("output.xlsx");
+        string outputPath = "output.xlsx";             // desired output file
+        workbook.Save(outputPath);
     }
 }

@@ -1,46 +1,61 @@
+// Title: Render an Excel Workbook to TIFF in a MemoryStream with Aspose.Cells (C#)
+// Description: This example creates a Workbook, sets TIFF options (LZW compression, one page per sheet), and uses WorkbookRender.ToImage(Stream) to write the image directly to a MemoryStream. The stream can then be reset, saved, sent over a network, or stored without creating a temporary file.
+// Keywords: Aspose.Cells TIFF rendering | C# MemoryStream image export | WorkbookRender ToImage stream | LZW compression TIFF | Excel to TIFF in memory | export Excel as image C# | Aspose.Cells image options
+// Common Searches: Aspose.Cells render workbook to TIFF memory stream C# | How to export Excel as TIFF without a file using Aspose.Cells | C# convert worksheet to TIFF image stream | Aspose.Cells LZW compression TIFF example | Create multi‑page TIFF from Excel in memory
+// Developer Intent: The developer needs to convert an Excel workbook to a TIFF image and keep the result in a MemoryStream for further processing such as sending over a web API, storing in a database, or attaching to an email.
+// Use Cases: Generate a TIFF preview of a report and embed it in an email attachment without writing to disk. | Send the TIFF byte stream to a third‑party printing service that accepts image streams. | Store the TIFF bytes in a database column for archival of generated Excel reports.
+// AI Prompts: Show how to render each worksheet as a separate page in a multi‑page TIFF stored in a MemoryStream. | Provide code for reading the TIFF bytes from the MemoryStream and returning them from an ASP.NET Core controller action. | Explain how to switch the compression to CCITT Group 4 and retrieve the resulting byte array.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing; // for ImageType enum
+using Aspose.Cells.Drawing;
 
-class RenderWorkbookToTiffStream
+namespace AsposeCellsTiffMemoryStreamDemo
 {
-    public static void Main()
+    // This example creates a Workbook, sets TIFF options (LZW compression, one page per sheet), and uses WorkbookRender.ToImage(Stream) to write the image directly to a MemoryStream. The stream can then be reset, saved, sent over a network, or stored without creating a temporary file.
+    public class Program
     {
-        // Create a new workbook and add some sample data
-        Workbook workbook = new Workbook();
-        Worksheet ws = workbook.Worksheets[0];
-        ws.Cells["A1"].PutValue("Aspose.Cells TIFF Rendering Demo");
-        ws.Cells["A2"].PutValue(DateTime.Now);
-
-        // Configure image rendering options for TIFF output
-        ImageOrPrintOptions options = new ImageOrPrintOptions();
-        options.ImageType = ImageType.Tiff;                     // Specify TIFF format
-        options.TiffCompression = TiffCompression.CompressionLZW; // Optional compression
-        options.OnePagePerSheet = true;                         // Render each sheet as a single page
-
-        // Create a renderer for the whole workbook
-        WorkbookRender renderer = new WorkbookRender(workbook, options);
-
-        // Render the workbook to a memory stream
-        using (MemoryStream tiffStream = new MemoryStream())
+        public static void Main()
         {
-            renderer.ToImage(tiffStream); // Render entire workbook as TIFF into the stream
+            // Create a new workbook and add some sample data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Aspose.Cells TIFF rendering to MemoryStream");
+            sheet.Cells["A2"].PutValue(DateTime.Now);
 
-            // Reset stream position if further processing is needed
-            tiffStream.Position = 0;
-
-            // Example: save the stream to a file (optional, for verification)
-            using (FileStream file = new FileStream("output.tiff", FileMode.Create, FileAccess.Write))
+            // Configure rendering options for TIFF output
+            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
             {
-                tiffStream.CopyTo(file);
+                ImageType = ImageType.Tiff,                 // Specify TIFF format
+                TiffCompression = TiffCompression.CompressionLZW, // Optional: set compression
+                OnePagePerSheet = true                      // Render each sheet as a single page
+            };
+
+            // Create a renderer for the whole workbook
+            WorkbookRender renderer = new WorkbookRender(workbook, renderOptions);
+
+            // Render the workbook to a memory stream
+            using (MemoryStream tiffStream = new MemoryStream())
+            {
+                renderer.ToImage(tiffStream); // Uses WorkbookRender.ToImage(Stream)
+
+                // The stream now contains the TIFF image data.
+                // Reset position if the stream will be read later.
+                tiffStream.Position = 0;
+
+                // Example: write the stream to a file (optional, for verification)
+                using (FileStream file = new FileStream("output.tiff", FileMode.Create, FileAccess.Write))
+                {
+                    tiffStream.CopyTo(file);
+                }
+
+                Console.WriteLine($"TIFF image rendered to memory stream. Length = {tiffStream.Length} bytes.");
             }
 
-            Console.WriteLine($"TIFF image rendered to stream. Stream length: {tiffStream.Length} bytes");
+            // Clean up
+            renderer.Dispose();
         }
-
-        // Release resources used by the renderer
-        renderer.Dispose();
     }
 }

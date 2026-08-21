@@ -1,48 +1,49 @@
-// Title: AutoFitRows after inserting rows with Aspose.Cells for .NET (C#)
-// Description: This example shows how to create a workbook, insert new rows, fill them with data, and call worksheet.AutoFitRows() to automatically adjust every row's height so the sheet keeps a consistent appearance before saving.
-// Keywords: Aspose.Cells AutoFitRows | C# AutoFitRows after insert | worksheet.AutoFitRows usage | adjust Excel row height programmatically | insert rows Aspose.Cells | auto fit rows .NET | Excel row height automation
-// Common Searches: Aspose.Cells AutoFitRows after inserting rows | C# auto fit rows in Excel workbook | how to adjust row height after adding rows Aspose.Cells | worksheet.AutoFitRows example C# | auto‑fit all rows after bulk insert Aspose.Cells
-// Developer Intent: Resize all rows automatically after new rows are added to maintain uniform height.
-// Use Cases: Add a variable number of data rows to a template and auto‑fit them before exporting. | Generate dynamic reports where row count changes at runtime and consistent layout is required. | Replace placeholder rows in an existing sheet with actual content and keep row heights consistent.
-// AI Prompts: Generate C# code that inserts rows at a given index and then calls worksheet.AutoFitRows() using Aspose.Cells. | Explain the performance impact of calling AutoFitRows after bulk row insertion in a large workbook. | Show how to combine InsertRows and AutoFitRows to maintain a tidy Excel sheet in Aspose.Cells for .NET.
+// Title: AutoFitRows after InsertRows in Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, insert new rows, populate them, and then call sheet.AutoFitRows() (optionally sheet.AutoFitColumns()) to automatically adjust row heights so the added content aligns with existing rows before saving the file.
+// Keywords: Aspose.Cells AutoFitRows C# | InsertRows Aspose.Cells .NET | adjust row height programmatically | auto‑fit rows after inserting rows | uniform row height Aspose.Cells
+// Common Searches: Aspose.Cells AutoFitRows after InsertRows | C# auto fit rows after adding rows | how to resize rows to content in Aspose.Cells | auto‑fit worksheet rows .NET
+// Developer Intent: Resize all worksheet rows to fit their content after new rows have been inserted.
+// Use Cases: Generate a dynamic report, insert placeholder rows, fill them, and auto‑fit rows to keep the layout tidy. | Add monthly summary rows to an existing template and ensure proper row height before exporting to XLSX. | Programmatically build a spreadsheet, insert data rows on the fly, and apply AutoFitRows/AutoFitColumns for optimal display.
+// AI Prompts: Provide C# code that inserts rows with Aspose.Cells, fills the cells, and then calls AutoFitRows to adjust heights. | Show an example of using sheet.AutoFitRows() after cells.InsertRows() and saving the workbook as XLSX. | Explain when and why to invoke AutoFitRows in Aspose.Cells after modifying worksheet data.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsAutoFitRowsDemo
+// Demonstrates how to create a workbook, insert new rows, populate them, and then call sheet.AutoFitRows() (optionally sheet.AutoFitColumns()) to automatically adjust row heights so the added content aligns with existing rows before saving the file.
+class AutoFitRowsAfterInsertDemo
 {
-    // This example shows how to create a workbook, insert new rows, fill them with data, and call worksheet.AutoFitRows() to automatically adjust every row's height so the sheet keeps a consistent appearance before saving.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+        // Add some initial data
+        cells["A1"].PutValue("Header");
+        cells["A2"].PutValue("Original Row 1");
+        cells["A3"].PutValue("Original Row 2");
 
-            // Populate some initial data
-            cells["A1"].PutValue("Header");
-            cells["A2"].PutValue("Row 1 data");
-            cells["A3"].PutValue("Row 2 data");
-            cells["A4"].PutValue("Row 3 data");
+        // Insert two new rows at index 2 (zero‑based). Existing rows shift down.
+        cells.InsertRows(2, 2);
 
-            // Insert two new rows after the header (at index 1)
-            // This pushes existing rows down and creates empty rows ready for new data
-            cells.InsertRows(1, 2);
+        // Populate the newly inserted rows
+        cells["A3"].PutValue("Inserted Row 1");
+        cells["A4"].PutValue("Inserted Row 2");
 
-            // Add data to the newly inserted rows
-            cells["A2"].PutValue("Inserted Row 1");
-            cells["A3"].PutValue("Inserted Row 2");
+        // Auto‑fit all rows to adjust their heights based on the new content
+        sheet.AutoFitRows();
 
-            // Apply AutoFitRows to adjust the height of all rows based on their content
-            // This ensures uniform row height throughout the sheet
-            worksheet.AutoFitRows();
+        // (Optional) Auto‑fit columns for better visibility
+        sheet.AutoFitColumns();
 
-            // Save the workbook to a file
-            workbook.Save("AutoFitRowsAfterInsert.xlsx");
-        }
+        // Save the workbook
+        string outputPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+            "AutoFitRowsAfterInsert.xlsx");
+        workbook.Save(outputPath, SaveFormat.Xlsx);
+
+        Console.WriteLine("Workbook saved to: " + outputPath);
     }
 }

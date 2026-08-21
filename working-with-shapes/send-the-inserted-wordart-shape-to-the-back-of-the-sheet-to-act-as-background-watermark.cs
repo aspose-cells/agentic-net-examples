@@ -1,17 +1,16 @@
-// Title: Add WordArt as a Background Watermark in Excel using Aspose.Cells for .NET
-// Description: C# example that creates a workbook, inserts a WordArt shape with custom text, sets its ZOrderPosition to 0 so it sits behind all other objects, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells WordArt watermark | C# Excel background shape | ZOrderPosition Aspose.Cells | send shape to back Excel | add WordArt to worksheet | Excel watermark programmatically | Aspose.Cells shape ordering
-// Common Searches: how to place WordArt behind cells in Aspose.Cells | set shape Z-order in Excel using C# | create background watermark with WordArt in .NET | Aspose.Cells send shape to back | programmatic Excel watermark Aspose
-// Developer Intent: Place a WordArt shape behind all worksheet content so it functions as a background watermark.
-// Use Cases: Generate confidential reports with a semi‑transparent "CONFIDENTIAL" watermark that does not obscure data. | Add a company logo WordArt as a persistent background element across multiple worksheets. | Automate the insertion of rotated WordArt watermarks into template workbooks while preserving chart and table visibility.
-// AI Prompts: Write C# code with Aspose.Cells to add a WordArt shape, set its ZOrderPosition to 0, and save the workbook. | Show how to apply a semi‑transparent WordArt watermark to every sheet in an existing Excel file using Aspose.Cells for .NET. | Explain the ZOrderPosition property in Aspose.Cells and how to use it to send a shape to the back of a worksheet.
+// Title: Add a WordArt background watermark in Excel with Aspose.Cells for .NET – send shape to back
+// Description: C# example that creates a workbook, inserts a WordArt shape containing "CONFIDENTIAL", moves the shape behind all cells with ToFrontOrBack(1), applies 80% transparency, and saves the file as WordArtBackground.xlsx.
+// Keywords: Aspose.Cells | C# WordArt watermark | send shape to back | ToFrontOrBack method | Excel background watermark .NET | Aspose.Cells shape ordering | WordArt transparency Aspose | add WordArt Aspose.Cells | programmatic Excel watermark | Aspose.Cells API
+// Common Searches: How to place WordArt behind cells using Aspose.Cells | Aspose.Cells C# send shape to back | Create semi‑transparent Excel watermark with WordArt in .NET | Aspose.Cells ToFrontOrBack example | Programmatic Excel watermark Aspose.Cells
+// Developer Intent: Insert a WordArt shape and position it behind worksheet content to serve as a background watermark.
+// Use Cases: Generate confidential reports where a faint "CONFIDENTIAL" watermark appears behind all data. | Design branded templates by sending a logo WordArt shape to the back, providing a subtle background on each sheet. | Automate watermarking across multiple worksheets by adding WordArt, sending it to the back, and adjusting transparency.
+// AI Prompts: Write C# code with Aspose.Cells that adds a WordArt shape, sends it to the back of the sheet, and sets 70% transparency for a watermark. | Explain the ToFrontOrBack method in Aspose.Cells and show how to use it to position shapes behind cells. | Provide a sample that applies a WordArt background watermark to every worksheet in a workbook using Aspose.Cells for .NET.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// C# example that creates a workbook, inserts a WordArt shape with custom text, sets its ZOrderPosition to 0 so it sits behind all other objects, and saves the file as an Excel workbook.
+// C# example that creates a workbook, inserts a WordArt shape containing "CONFIDENTIAL", moves the shape behind all cells with ToFrontOrBack(1), applies 80% transparency, and saves the file as WordArtBackground.xlsx.
 class Program
 {
     static void Main()
@@ -20,41 +19,35 @@ class Program
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Insert a WordArt shape (preset style, text, position and size)
-            Shape wordArt = worksheet.Shapes.AddWordArt(
+            // Add sample data to demonstrate the watermark effect
+            sheet.Cells["A1"].PutValue("Sample content behind watermark.");
+
+            // Insert a WordArt shape that will serve as the watermark
+            Shape wordArt = sheet.Shapes.AddWordArt(
                 PresetWordArtStyle.WordArtStyle1, // preset style
-                "CONFIDENTIAL",                  // text
+                "CONFIDENTIAL",                  // watermark text
                 0,   // top row index
-                0,   // vertical offset (pixels)
                 0,   // left column index
+                0,   // vertical offset (pixels)
                 0,   // horizontal offset (pixels)
                 200, // height (pixels)
                 600  // width (pixels)
             );
 
-            // Send the WordArt to the back so it acts as a background watermark
-            // In Aspose.Cells, set ZOrderPosition to a low value to place it behind other shapes
-            wordArt.ZOrderPosition = 0;
+            // Send the WordArt shape to the back so it appears behind other content
+            wordArt.ToFrontOrBack(1); // 1 = send to back
 
-            // Define output file path
-            string outputPath = "WordArtBackground.xlsx";
-
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Make the watermark semi‑transparent (optional)
+            wordArt.FillFormat.Transparency = 0.8; // 80% transparent
 
             // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            workbook.Save("WordArtBackground.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

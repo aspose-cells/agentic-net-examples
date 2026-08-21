@@ -1,48 +1,40 @@
-// Title: Set a worksheet's print area using a named range with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add sample data, define a named range (MyPrintArea) covering A1:B3, assign that name to PageSetup.PrintArea, and save the file, enabling flexible print‑area configuration.
-// Keywords: Aspose.Cells | C# | print area | named range | PageSetup.PrintArea | worksheet printing | dynamic print range | .NET Excel library
-// Common Searches: Aspose.Cells set print area named range C# | how to use named range for print area in Aspose.Cells | PageSetup.PrintArea from workbook name Aspose.Cells | C# Aspose.Cells flexible print area example
-// Developer Intent: Set the worksheet's print area by referencing a named range instead of a hard‑coded cell address.
-// Use Cases: Update the printable region by changing the named range without touching code. | Apply a consistent print layout across multiple sheets by reusing the same named range. | Adjust the print area dynamically based on data volume before exporting or printing.
-// AI Prompts: Write C# code with Aspose.Cells that creates a named range and uses it as the worksheet's print area. | Show how to modify an existing named range and refresh the PrintArea property in an Aspose.Cells workbook. | Provide a script that sets the same named‑range print area for every worksheet in a workbook using Aspose.Cells for .NET.
+// Title: Set Print Area Using a Named Range in Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds sample data, defines a named range (MyPrintArea) covering A1:B3, assigns it to Worksheet.PageSetup.PrintArea, and saves as PrintAreaNamedRange.xlsx.
+// Keywords: Aspose.Cells print area named range | C# set print area Aspose.Cells | Aspose.Cells PageSetup PrintArea | dynamic print region .NET | named range printing Aspose
+// Common Searches: Aspose.Cells assign named range to print area C# | how to use named range for print area in .NET | set worksheet print area with name Aspose.Cells | dynamic print area example Aspose.Cells C#
+// Developer Intent: Reference a named range instead of fixed cell addresses when defining a worksheet's print area.
+// Use Cases: Allow users to modify the printable region by updating a named range without code changes. | Standardize print layouts across multiple sheets by applying the same named range. | Create templates where the print area adapts to varying data sizes.
+// AI Prompts: Show how to change the cells covered by MyPrintArea after the workbook is created and refresh the print area. | Provide code to assign different named ranges as print areas for several worksheets in one workbook. | Explain how to read the current PrintArea value, verify it references a valid named range, and handle errors.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsPrintAreaWithNamedRange
+// Creates a workbook, adds sample data, defines a named range (MyPrintArea) covering A1:B3, assigns it to Worksheet.PageSetup.PrintArea, and saves as PrintAreaNamedRange.xlsx.
+class SetPrintAreaUsingNamedRange
 {
-    // Demonstrates how to create a workbook, add sample data, define a named range (MyPrintArea) covering A1:B3, assign that name to PageSetup.PrintArea, and save the file, enabling flexible print‑area configuration.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Populate some sample data
+        worksheet.Cells["A1"].PutValue("Header1");
+        worksheet.Cells["B1"].PutValue("Header2");
+        worksheet.Cells["A2"].PutValue(10);
+        worksheet.Cells["B2"].PutValue(20);
+        worksheet.Cells["A3"].PutValue(30);
+        worksheet.Cells["B3"].PutValue(40);
 
-            // Populate some sample data
-            sheet.Cells["A1"].PutValue("Name");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("Item1");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("Item2");
-            sheet.Cells["B3"].PutValue(20);
+        // Define a named range that covers the area to be printed (A1:B3)
+        int nameIndex = workbook.Worksheets.Names.Add("MyPrintArea");
+        // The RefersTo string must start with '=' and include the sheet name
+        workbook.Worksheets.Names[nameIndex].RefersTo = $"={worksheet.Name}!$A$1:$B$3";
 
-            // Define a named range that covers A1:B3
-            // Add a new name to the workbook's name collection
-            int nameIndex = workbook.Worksheets.Names.Add("MyPrintArea");
-            // The RefersTo formula must start with '=' and include the sheet name
-            workbook.Worksheets.Names[nameIndex].RefersTo = $"={sheet.Name}!$A$1:$B$3";
+        // Assign the named range to the worksheet's print area
+        worksheet.PageSetup.PrintArea = "MyPrintArea";
 
-            // Set the print area to the named range (instead of a literal address)
-            sheet.PageSetup.PrintArea = "MyPrintArea";
-
-            // Save the workbook (lifecycle: save)
-            workbook.Save("PrintAreaWithNamedRange.xlsx");
-
-            Console.WriteLine("Workbook saved with print area set to named range 'MyPrintArea'.");
-        }
+        // Save the workbook
+        workbook.Save("PrintAreaNamedRange.xlsx");
     }
 }

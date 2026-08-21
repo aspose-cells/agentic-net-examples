@@ -1,111 +1,121 @@
-// Title: Aspose.Cells .NET Benchmark: Direct Cell Formula Evaluation vs Calculation Chain
-// Description: Creates a 2,000‑row workbook, fills column A with numbers, adds dependent formulas in column B, and measures execution time for three scenarios: (1) per‑cell CalculateFormula, (2) workbook.CalculateFormula with the calculation chain disabled, and (3) workbook.CalculateFormula with the chain enabled. Results are printed and the workbooks are saved for further analysis.
-// Keywords: Aspose.Cells benchmark | formula calculation performance | direct cell evaluation .NET | EnableCalculationChain | disable calculation chain | CalculateFormula timing | large spreadsheet performance | C# Aspose.Cells example
-// Common Searches: Aspose.Cells benchmark direct formula evaluation | how to disable calculation chain in Aspose.Cells | measure formula calculation speed Aspose.Cells .NET | compare workbook.CalculateFormula with and without chain | performance testing Aspose.Cells formulas
-// Developer Intent: Compare the runtime of individual cell formula evaluation against workbook‑level calculation with the calculation chain turned on or off.
-// Use Cases: Identify the fastest calculation mode for spreadsheets containing thousands of inter‑dependent formulas. | Quantify the performance impact of the EnableCalculationChain setting in real‑world workloads. | Generate reproducible timing reports for optimization or capacity‑planning purposes.
-// AI Prompts: Generate a C# script that runs the benchmark 10 times, records each duration, and outputs average times for direct evaluation, no‑chain, and with‑chain calculations. | Show how to parallelize the per‑cell formula evaluation using Task Parallel Library and compare the results with the single‑threaded approach. | Explain how to interpret the benchmark output to decide when disabling the calculation chain yields the best performance.
+// Title: Aspose.Cells .NET Benchmark: Direct Formula Evaluation vs Calculation Chain
+// Description: Creates a 2,000‑row workbook where column A holds numbers and column B contains formulas that reference the previous B cell and the current A cell. The template is cloned twice: one clone evaluates each formula individually with Worksheet.CalculateFormula(string) while measuring elapsed time, and the other enables Settings.FormulaSettings.EnableCalculationChain and runs Workbook.CalculateFormula() to benchmark the full‑sheet calculation, the first run, and an incremental run after modifying A1. Both workbooks are saved for result comparison.
+// Keywords: Aspose.Cells | .NET | C# | formula calculation benchmark | direct evaluation performance | calculation chain | incremental recalculation | workbook speed testing | spreadsheet processing performance | large workbook formulas
+// Common Searches: Aspose.Cells benchmark formula calculation speed | direct Worksheet.CalculateFormula vs calculation chain | measure incremental recalculation time Aspose.Cells | performance test for large Excel workbooks .NET | how to enable calculation chain Aspose.Cells
+// Developer Intent: Compare execution time of per‑cell formula evaluation against the calculation‑chain engine for identical formula sets.
+// Use Cases: Identify the most efficient calculation method for workbooks with thousands of inter‑dependent formulas. | Evaluate the overhead of incremental updates when the calculation chain is active. | Gather performance data to guide architecture decisions for spreadsheet‑heavy services.
+// AI Prompts: Rewrite the benchmark to log both elapsed milliseconds and CPU usage for each calculation method. | Interpret typical benchmark results and recommend thresholds for choosing direct evaluation versus the calculation chain in Aspose.Cells. | Extend the sample to run multiple workbook sizes and export timing results to a CSV file.
 
 using System;
 using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a 2,000‑row workbook, fills column A with numbers, adds dependent formulas in column B, and measures execution time for three scenarios: (1) per‑cell CalculateFormula, (2) workbook.CalculateFormula with the calculation chain disabled, and (3) workbook.CalculateFormula with the chain enabled. Results are printed and the workbooks are saved for further analysis.
+// Creates a 2,000‑row workbook where column A holds numbers and column B contains formulas that reference the previous B cell and the current A cell. The template is cloned twice: one clone evaluates each formula individually with Worksheet.CalculateFormula(string) while measuring elapsed time, and the other enables Settings.FormulaSettings.EnableCalculationChain and runs Workbook.CalculateFormula() to benchmark the full‑sheet calculation, the first run, and an incremental run after modifying A1. Both workbooks are saved for result comparison.
 class FormulaCalculationBenchmark
 {
     static void Main()
     {
         try
         {
-            // Create a workbook and populate it with a large set of formulas
-            Workbook sourceWb = new Workbook();
-            Worksheet sheet = sourceWb.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Number of rows with formulas to generate
+            const int rowCount = 2000;
 
-            int rowCount = 2000; // adjust for desired size
+            // -----------------------------------------------------------------
+            // Prepare a workbook with a large set of formulas (same for both tests)
+            // -----------------------------------------------------------------
+            Workbook wbTemplate = new Workbook();
+            Worksheet wsTemplate = wbTemplate.Worksheets[0];
+            Cells cells = wsTemplate.Cells;
 
-            // Initialize first column with values
+            // Fill column A with base values
             for (int i = 0; i < rowCount; i++)
             {
-                cells[i, 0].PutValue(i + 1); // A column
+                cells[i, 0].PutValue(i + 1); // A1, A2, ...
             }
 
-            // Add formulas that depend on the previous row (simple chain)
+            // Add formulas in column B that depend on the previous row in column B
+            // B1 = A1 * 2
+            // B2 = B1 + A2
+            // B3 = B2 + A3 ... etc.
+            cells[0, 1].Formula = "=A1*2";
             for (int i = 1; i < rowCount; i++)
             {
-                // B column: =A{i}+B{i-1}
-                string formula = $"=A{i + 1}+B{i}";
+                // Example: B{i+1} = B{i} + A{i+1}
+                string formula = $"=B{i}+A{i + 1}";
                 cells[i, 1].Formula = formula;
             }
 
-            // Ensure the first formula cell has a base value
-            cells[0, 1].Formula = "=A1*2";
+            // -----------------------------------------------------------------
+            // Benchmark: Direct evaluation (evaluate each formula individually)
+            // -----------------------------------------------------------------
+            // Clone the template workbook to avoid side‑effects
+            Workbook wbDirect = new Workbook();
+            wbDirect.Copy(wbTemplate);
+            Worksheet wsDirect = wbDirect.Worksheets[0];
 
-            // -----------------------------------------------------------------
-            // Benchmark: Direct evaluation (cell‑by‑cell)
-            // -----------------------------------------------------------------
-            Worksheet directSheet = sourceWb.Worksheets[0]; // use same sheet
             Stopwatch swDirect = Stopwatch.StartNew();
 
+            // Iterate through all formula cells and evaluate them using Worksheet.CalculateFormula(string)
+            // This does not rely on the calculation chain.
             for (int i = 0; i < rowCount; i++)
             {
-                // Calculate each formula individually if the cell has a formula
-                if (directSheet.Cells[i, 1].IsFormula)
-                {
-                    // CalculateFormula returns the result; we assign it back to the cell
-                    object result = directSheet.CalculateFormula(directSheet.Cells[i, 1].Formula);
-                    directSheet.Cells[i, 1].PutValue(result);
-                }
+                string formula = wsDirect.Cells[i, 1].Formula;
+                // Calculate the formula; result is returned but we don't need to store it
+                wsDirect.CalculateFormula(formula);
             }
 
             swDirect.Stop();
             Console.WriteLine($"Direct evaluation time: {swDirect.ElapsedMilliseconds} ms");
 
             // -----------------------------------------------------------------
-            // Helper to clone a workbook via memory stream (avoids missing Copy overload)
+            // Benchmark: Calculation chain (enable chain and calculate whole workbook)
             // -----------------------------------------------------------------
-            Workbook CloneWorkbook(Workbook original)
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    original.Save(ms, SaveFormat.Xlsx);
-                    ms.Position = 0;
-                    return new Workbook(ms);
-                }
-            }
+            // Clone the template workbook again
+            Workbook wbChain = new Workbook();
+            wbChain.Copy(wbTemplate);
+            // Enable calculation chain
+            wbChain.Settings.FormulaSettings.EnableCalculationChain = true;
 
-            // -----------------------------------------------------------------
-            // Benchmark: Workbook calculation with calculation chain disabled
-            // -----------------------------------------------------------------
-            Workbook wbNoChain = CloneWorkbook(sourceWb);
-            wbNoChain.Settings.FormulaSettings.EnableCalculationChain = false;
+            Stopwatch swChain = Stopwatch.StartNew();
 
-            Stopwatch swNoChain = Stopwatch.StartNew();
-            wbNoChain.CalculateFormula();
-            swNoChain.Stop();
+            // First calculation builds the chain and evaluates all formulas
+            wbChain.CalculateFormula();
 
-            Console.WriteLine($"Workbook calculation without chain: {swNoChain.ElapsedMilliseconds} ms");
+            swChain.Stop();
+            Console.WriteLine($"Calculation chain time (first run, chain built): {swChain.ElapsedMilliseconds} ms");
 
             // -----------------------------------------------------------------
-            // Benchmark: Workbook calculation with calculation chain enabled
+            // Optional: Measure subsequent calculation after a small change
             // -----------------------------------------------------------------
-            Workbook wbWithChain = CloneWorkbook(sourceWb);
-            wbWithChain.Settings.FormulaSettings.EnableCalculationChain = true;
+            // Change a single cell value to trigger incremental calculation
+            wbChain.Worksheets[0].Cells[0, 0].PutValue(999); // modify A1
 
-            // First calculation will build the chain; measure the total time
-            Stopwatch swWithChain = Stopwatch.StartNew();
-            wbWithChain.CalculateFormula();
-            swWithChain.Stop();
+            Stopwatch swChainIncremental = Stopwatch.StartNew();
 
-            Console.WriteLine($"Workbook calculation with chain: {swWithChain.ElapsedMilliseconds} ms");
+            // Re‑calculate; with the chain enabled only affected cells should be recomputed
+            wbChain.CalculateFormula();
 
-            // Optional: Save the workbooks (ensure the directory exists)
-            string noChainPath = "Benchmark_NoChain.xlsx";
-            string withChainPath = "Benchmark_WithChain.xlsx";
+            swChainIncremental.Stop();
+            Console.WriteLine($"Calculation chain incremental update time: {swChainIncremental.ElapsedMilliseconds} ms");
 
-            wbNoChain.Save(noChainPath, SaveFormat.Xlsx);
-            wbWithChain.Save(withChainPath, SaveFormat.Xlsx);
+            // -----------------------------------------------------------------
+            // Save workbooks (demonstrates lifecycle usage)
+            // -----------------------------------------------------------------
+            string directPath = "DirectEvaluationResult.xlsx";
+            string chainPath = "ChainCalculationResult.xlsx";
+
+            // Ensure the directories exist (guard for custom paths)
+            string directDir = Path.GetDirectoryName(directPath);
+            if (!string.IsNullOrEmpty(directDir) && !Directory.Exists(directDir))
+                Directory.CreateDirectory(directDir);
+
+            string chainDir = Path.GetDirectoryName(chainPath);
+            if (!string.IsNullOrEmpty(chainDir) && !Directory.Exists(chainDir))
+                Directory.CreateDirectory(chainDir);
+
+            wbDirect.Save(directPath, SaveFormat.Xlsx);
+            wbChain.Save(chainPath, SaveFormat.Xlsx);
         }
         catch (Exception ex)
         {

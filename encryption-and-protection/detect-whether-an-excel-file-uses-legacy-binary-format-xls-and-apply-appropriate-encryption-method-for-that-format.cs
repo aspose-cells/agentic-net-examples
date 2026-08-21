@@ -1,104 +1,98 @@
-// Title: Detect legacy XLS format and encrypt with StrongCryptographicProvider using Aspose.Cells for .NET
-// Description: This example checks if a file is an Excel 97‑2003 binary (XLS), loads it (optionally with an existing password), assigns a new password, applies StrongCryptographicProvider 128‑bit encryption, encrypts document properties, and saves the protected workbook as an XLS file.
-// Keywords: Aspose.Cells encrypt XLS | detect Excel 97-2003 format C# | StrongCryptographicProvider encryption | XLS password protection .NET | XlsSaveOptions encrypt properties
-// Common Searches: how to encrypt an XLS file with Aspose.Cells | detect legacy Excel format before applying protection | set password for Excel 97-2003 workbook using Aspose | encrypt document properties when saving XLS | C# Aspose.Cells encryption for legacy Excel files
-// Developer Intent: Identify a legacy XLS file and apply password‑based StrongCryptographicProvider encryption with Aspose.Cells.
-// Use Cases: Secure confidential XLS reports before distribution. | Upgrade existing XLS password protection to a stronger algorithm. | Automate batch processing that validates format and encrypts only legacy workbooks.
-// AI Prompts: Write C# code that uses Aspose.Cells to detect an Excel file's format and encrypt it with StrongCryptographicProvider when it is an XLS. | Refactor the LegacyXlsEncryptionDemo to handle both XLS and XLSX, selecting the appropriate encryption method for each. | Explain how to change the encryption key size or provider for legacy XLS files in Aspose.Cells.
+// Title: Detect legacy .xls format and apply encryption with Aspose.Cells for .NET
+// Description: C# sample that uses Aspose.Cells to identify an Excel 97‑2003 (.xls) workbook, set a password, configure EncryptionType and key length, and save with XlsSaveOptions that encrypt document properties. For .xlsx/.xlsm files it applies standard password protection only.
+// Keywords: Aspose.Cells detect xls format | legacy .xls encryption .NET | EncryptionType Aspose.Cells | XlsSaveOptions encrypt properties | Workbook password protection C# | FileFormatUtil DetectFileFormat | Excel 97-2003 encryption | Aspose.Cells encryption example
+// Common Searches: how to check if an Excel file is .xls using Aspose.Cells | apply strong encryption to legacy Excel workbook Aspose.Cells | set encryption type and key length for .xls files | encrypt document properties when saving .xls with Aspose.Cells | C# detect Excel format and protect workbook
+// Developer Intent: Identify whether a workbook is in the old .xls format and apply the correct encryption settings before saving.
+// Use Cases: Secure a batch of legacy .xls files by assigning a password and specifying a 128‑bit StrongCryptographicProvider encryption. | Automatically protect mixed Excel collections: full encryption for .xls, simple password protection for .xlsx/.xlsm. | Log the detected format and encryption outcome for compliance auditing.
+// AI Prompts: Generate C# code that detects .xls files with Aspose.Cells, applies EncryptionType.StrongCryptographicProvider and a 256‑bit key, and saves with encrypted document properties. | Write a script that scans a directory, encrypts each .xls file using a user‑supplied password and key length, and only password‑protects non‑xls files.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsEncryptionDemo
 {
-    // This example checks if a file is an Excel 97‑2003 binary (XLS), loads it (optionally with an existing password), assigns a new password, applies StrongCryptographicProvider 128‑bit encryption, encrypts document properties, and saves the protected workbook as an XLS file.
-    public class LegacyXlsEncryptionDemo
+    // C# sample that uses Aspose.Cells to identify an Excel 97‑2003 (.xls) workbook, set a password, configure EncryptionType and key length, and save with XlsSaveOptions that encrypt document properties. For .xlsx/.xlsm files it applies standard password protection only.
+    public class LegacyXlsEncryption
     {
-        // Detects if the file is a legacy XLS and applies encryption appropriate for that format.
-        public static void Run(string inputFilePath, string outputFilePath, string password)
+        /// <param name="sourcePath">Path to the source Excel file.</param>
+        /// <param name="destPath">Path where the encrypted file will be saved.</param>
+        /// <param name="password">Password to protect the workbook.</param>
+        /// <param name="encryptionType">Encryption algorithm to use (only relevant for .xls).</param>
+        /// <param name="keyLength">Key length for the encryption algorithm (e.g., 128).</param>
+        public static void ApplyEncryption(string sourcePath, string destPath, string password,
+                                           EncryptionType encryptionType, int keyLength)
+        {
+            // Verify source file exists to avoid FileNotFoundException.
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"Source file not found: {sourcePath}");
+
+            // Detect the file format of the source workbook.
+            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(sourcePath);
+            bool isLegacyXls = formatInfo.FileFormatType == FileFormatType.Excel97To2003;
+
+            // Load the workbook (no password needed for loading because we are encrypting a fresh copy).
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Set the workbook password (required for both .xls and .xlsx).
+            workbook.Settings.Password = password;
+
+            if (isLegacyXls)
+            {
+                // For legacy .xls files, specify encryption options.
+                workbook.SetEncryptionOptions(encryptionType, keyLength);
+
+                // Create XlsSaveOptions to control .xls specific saving behavior.
+                XlsSaveOptions saveOptions = new XlsSaveOptions
+                {
+                    // Ensure document properties are also encrypted (default is true).
+                    EncryptDocumentProperties = true
+                };
+
+                // Save the workbook as .xls with the specified options.
+                workbook.Save(destPath, saveOptions);
+            }
+            else
+            {
+                // For modern formats (.xlsx, .xlsm, etc.), simple password protection is sufficient.
+                // Save using the default format inferred from the destination file extension.
+                workbook.Save(destPath);
+            }
+
+            // Output detection result.
+            Console.WriteLine($"Source file format: {formatInfo.FileFormatType}");
+            Console.WriteLine($"Is legacy .xls: {isLegacyXls}");
+            Console.WriteLine($"Encrypted file saved to: {destPath}");
+        }
+
+        // Example usage
+        public static void Run()
         {
             try
             {
-                // Verify input file exists.
-                if (!File.Exists(inputFilePath))
-                {
-                    Console.WriteLine($"Input file not found: {inputFilePath}");
-                    return;
-                }
+                string sourceFile = "input.xls";          // Replace with your source file path
+                string encryptedFile = "output_encrypted.xls";
+                string password = "MySecretPwd";
 
-                // Detect the file format.
-                FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(inputFilePath);
-                Console.WriteLine($"Detected format: {fileInfo.FileFormatType}");
-                Console.WriteLine($"Is encrypted already: {fileInfo.IsEncrypted}");
+                // Choose an encryption type supported for Excel 97-2003 files.
+                EncryptionType encType = EncryptionType.StrongCryptographicProvider;
+                int keyLen = 128; // Valid values: 40, 128, 256
 
-                // Proceed only if the file is a legacy Excel 97-2003 binary file (XLS).
-                if (fileInfo.FileFormatType == FileFormatType.Excel97To2003)
-                {
-                    // Load the workbook (use LoadOptions with password if it is already encrypted).
-                    LoadOptions loadOptions = new LoadOptions();
-                    if (fileInfo.IsEncrypted)
-                    {
-                        loadOptions.Password = password;
-                    }
-
-                    Workbook workbook = new Workbook(inputFilePath, loadOptions);
-
-                    // Set the password that will protect the workbook.
-                    workbook.Settings.Password = password;
-
-                    // Apply encryption options suitable for XLS files.
-                    // Using StrongCryptographicProvider with a 128‑bit key as an example.
-                    workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
-
-                    // Create save options for XLS format.
-                    XlsSaveOptions saveOptions = new XlsSaveOptions
-                    {
-                        // Ensure document properties are also encrypted (default is true).
-                        EncryptDocumentProperties = true
-                    };
-
-                    // Ensure output directory exists.
-                    string outputDir = Path.GetDirectoryName(outputFilePath);
-                    if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                    {
-                        Directory.CreateDirectory(outputDir);
-                    }
-
-                    // Save the encrypted workbook as an XLS file.
-                    workbook.Save(outputFilePath, saveOptions);
-
-                    Console.WriteLine($"Encrypted XLS file saved to: {outputFilePath}");
-                }
-                else
-                {
-                    Console.WriteLine("The provided file is not a legacy XLS format. No encryption applied.");
-                }
+                ApplyEncryption(sourceFile, encryptedFile, password, encType, keyLen);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred during encryption: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }
 
-    // Entry point for the console application.
+    // Entry point for the application.
     public class Program
     {
-        // Usage: LegacyXlsEncryptionDemo <inputFilePath> <outputFilePath> <password>
         public static void Main(string[] args)
         {
-            if (args.Length < 3)
-            {
-                Console.WriteLine("Usage: LegacyXlsEncryptionDemo <inputFilePath> <outputFilePath> <password>");
-                return;
-            }
-
-            string inputFilePath = args[0];
-            string outputFilePath = args[1];
-            string password = args[2];
-
-            LegacyXlsEncryptionDemo.Run(inputFilePath, outputFilePath, password);
+            LegacyXlsEncryption.Run();
         }
     }
 }

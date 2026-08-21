@@ -1,70 +1,55 @@
-// Title: Flag Formatting‑Only Worksheets in Aspose.Cells for .NET (C#) Using MaxDataRow & Row.IsBlank
-// Description: C# sample that creates or loads a workbook, iterates through each worksheet, uses Cells.MaxDataRow and Row.IsBlank to detect sheets that contain only formatting (no cell values), renames them with a "FLAGGED_" prefix, and saves the result.
-// Keywords: Aspose.Cells C# flag formatting only worksheet | MaxDataRow blank rows detection | Row.IsBlank Aspose.Cells | rename worksheet without data | detect empty data sheets .NET | formatting‑only sheet detection | Aspose.Cells worksheet validation | C# workbook cleanup
-// Common Searches: Aspose.Cells detect formatting only sheet | C# check if worksheet has only formatting | MaxDataRow returns rows with formatting only | rename empty worksheets Aspose.Cells | how to flag blank rows in Aspose.Cells
-// Developer Intent: Identify worksheets whose MaxDataRow is greater than zero yet contain no actual cell values, and rename them to indicate they are formatting‑only.
-// Use Cases: Automatically mark layout‑only sheets before distributing a workbook to end users. | Skip processing of worksheets that appear to have data rows but are actually empty, improving batch report generation. | Maintain a clean workbook by flagging sheets created solely for visual design. | Generate audit logs of formatting‑only worksheets for compliance reporting.
-// AI Prompts: Generate C# code with Aspose.Cells that flags worksheets where MaxDataRow > 0 but every row is blank, adding a "FLAGGED_" prefix to the sheet name. | Suggest a performance‑optimized method to detect formatting‑only worksheets without iterating every row in Aspose.Cells for .NET. | Create a reusable Aspose.Cells utility method that returns a list of worksheet names containing only formatting based on MaxDataRow and Row.IsBlank.
+// Title: Flag formatting‑only worksheets (MaxDataRow > 0, no values) using Aspose.Cells for .NET
+// Description: Loads an Excel workbook, iterates through each worksheet, and when MaxDataRow is greater than zero while every row is blank, writes a note to cell A1 and saves the file. Shows how to detect sheets that contain only styles without data in C# with Aspose.Cells.
+// Keywords: Aspose.Cells | .NET | C# | detect formatting only worksheet | MaxDataRow | empty data rows | flag sheet | Excel automation | worksheet validation | style‑only sheet
+// Common Searches: Aspose.Cells detect sheet with only formatting | C# check if Excel worksheet has data | MaxDataRow no values Aspose | flag empty Excel sheets using Aspose | write note to A1 when sheet has no data
+// Developer Intent: Identify worksheets that have rows but no cell values and mark them, indicating they consist solely of formatting.
+// Use Cases: Automated quality‑check of incoming Excel files to flag sheets that contain only styles. | Pre‑processing step that labels formatting‑only worksheets before downstream data extraction. | Generating a report of sheets lacking data to alert users or trigger cleanup actions.
+// AI Prompts: Generate C# code with Aspose.Cells that scans a workbook and adds a comment to cell A1 of any worksheet that has rows but no data values. | Suggest an alternative method using MaxDataRow or other properties to detect formatting‑only worksheets and flag them. | Explain how to modify the sample to log the names of formatting‑only sheets instead of writing to cell A1.
 
 using System;
 using Aspose.Cells;
 
-namespace WorksheetFlaggingDemo
+// Loads an Excel workbook, iterates through each worksheet, and when MaxDataRow is greater than zero while every row is blank, writes a note to cell A1 and saves the file. Shows how to detect sheets that contain only styles without data in C# with Aspose.Cells.
+class Program
 {
-    // C# sample that creates or loads a workbook, iterates through each worksheet, uses Cells.MaxDataRow and Row.IsBlank to detect sheets that contain only formatting (no cell values), renames them with a "FLAGGED_" prefix, and saves the result.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet worksheet in workbook.Worksheets)
         {
-            // Create a new workbook or load an existing one
-            // Replace the path with your actual file if loading
-            Workbook workbook = new Workbook(); // new workbook for demonstration
+            Cells cells = worksheet.Cells;
 
-            // Example: add a worksheet with formatting only (no data)
-            Worksheet fmtOnlySheet = workbook.Worksheets[0];
-            fmtOnlySheet.Name = "FormattingOnlySheet";
-            // Apply some formatting without putting any values
-            Style style = workbook.CreateStyle();
-            style.Font.IsBold = true;
-            fmtOnlySheet.Cells.CreateRange("A1:C5").ApplyStyle(style, new StyleFlag { FontBold = true });
-
-            // Example: add a worksheet with actual data
-            Worksheet dataSheet = workbook.Worksheets.Add("DataSheet");
-            dataSheet.Cells["A1"].PutValue("Header");
-            dataSheet.Cells["A2"].PutValue("Value");
-
-            // Iterate through all worksheets to flag those that have MaxDataRow > 0
-            // but contain no actual data (all rows are blank, i.e., formatting‑only)
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Check if there are any cells that contain data or style
+            if (cells.MaxRow > 0)
             {
-                int maxDataRow = sheet.Cells.MaxDataRow;
+                bool allRowsBlank = true;
 
-                // MaxDataRow > 0 indicates there is at least one row index considered
-                if (maxDataRow > 0)
+                // Examine each row up to the maximum row index
+                for (int rowIndex = 0; rowIndex <= cells.MaxRow; rowIndex++)
                 {
-                    bool allRowsBlank = true;
+                    Row row = cells.Rows[rowIndex];
 
-                    // Check each row up to MaxDataRow using Row.IsBlank
-                    for (int rowIndex = 0; rowIndex <= maxDataRow; rowIndex++)
+                    // Row.IsBlank is true when the row has no data (values)
+                    if (!row.IsBlank)
                     {
-                        Row row = sheet.Cells.Rows[rowIndex];
-                        if (!row.IsBlank)
-                        {
-                            allRowsBlank = false;
-                            break;
-                        }
-                    }
-
-                    // If all rows are blank, rename the worksheet to flag it
-                    if (allRowsBlank)
-                    {
-                        sheet.Name = "FLAGGED_" + sheet.Name;
+                        allRowsBlank = false;
+                        break;
                     }
                 }
-            }
 
-            // Save the workbook
-            workbook.Save("FlaggedWorksheets.xlsx", SaveFormat.Xlsx);
+                // If MaxRow > 0 but every row is blank, the sheet has only formatting
+                if (allRowsBlank)
+                {
+                    // Flag the worksheet by writing a note in cell A1
+                    cells["A1"].PutValue("Formatting‑only sheet (no data)");
+                }
+            }
         }
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

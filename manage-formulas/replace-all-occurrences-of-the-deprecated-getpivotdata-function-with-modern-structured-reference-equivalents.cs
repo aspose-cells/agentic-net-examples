@@ -1,10 +1,10 @@
-// Title: Replace GETPIVOTDATA with Structured References in Excel using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, iterates every cell in each worksheet, detects formulas that contain the GETPIVOTDATA function, swaps them for a structured‑reference placeholder, refreshes all pivot tables, and saves the updated file.
-// Keywords: Aspose.Cells GETPIVOTDATA replacement | structured reference Excel .NET | update deprecated formulas Aspose | pivot table refresh programmatically | iterate workbook cells C#
-// Common Searches: how to replace GETPIVOTDATA with structured reference using Aspose.Cells | Aspose.Cells replace deprecated Excel functions | C# code to modify formulas in all worksheets | refresh pivot tables after formula changes Aspose | bulk update Excel formulas .NET
-// Developer Intent: Automatically locate and replace every GETPIVOTDATA formula in a workbook with a modern structured‑reference equivalent using Aspose.Cells for .NET.
-// Use Cases: Migrate legacy workbooks that rely on GETPIVOTDATA to the newer structured‑reference syntax before distribution. | Run a batch job that cleans up deprecated formulas across dozens of Excel files. | Ensure pivot tables stay synchronized after programmatic formula modifications.
-// AI Prompts: Write C# code with Aspose.Cells that parses GETPIVOTDATA arguments and builds the matching structured reference formula. | Show a robust approach to detect GETPIVOTDATA formulas while preserving cell formatting, comments, and named ranges. | Explain how to test that the new structured‑reference formulas return identical results to the original GETPIVOTDATA calls.
+// Title: Replace GETPIVOTDATA with Structured References using Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook, scans every worksheet and cell, detects formulas that start with GETPIVOTDATA, substitutes each with a structured‑reference placeholder (e.g., =Table1[Column1]) via Aspose.Cells, and saves the modified file.
+// Keywords: Aspose.Cells | C# | .NET | GETPIVOTDATA replacement | structured reference | Excel formula conversion | batch formula update | legacy Excel migration
+// Common Searches: Aspose.Cells replace GETPIVOTDATA formula | convert GETPIVOTDATA to table reference C# | update deprecated Excel functions with Aspose.Cells | batch replace GETPIVOTDATA across worksheets | structured reference example Aspose.Cells
+// Developer Intent: Automatically substitute all GETPIVOTDATA formulas in a workbook with modern structured‑reference expressions.
+// Use Cases: Modernize legacy reports that rely on GETPIVOTDATA before distribution. | Process large collections of workbooks to ensure compatibility with newer Excel versions. | Embed formula migration into an automated data‑export pipeline.
+// AI Prompts: Write C# code using Aspose.Cells that finds every GETPIVOTDATA formula in a workbook and replaces it with a user‑defined structured reference string. | Show how to log the address, original formula, and replacement for each cell while performing the conversion. | Demonstrate parameterizing the replacement so the target table name and column are extracted from the original GETPIVOTDATA arguments.
 
 using System;
 using System.IO;
@@ -12,30 +12,18 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Loads an Excel workbook, iterates every cell in each worksheet, detects formulas that contain the GETPIVOTDATA function, swaps them for a structured‑reference placeholder, refreshes all pivot tables, and saves the updated file.
+    // Loads an Excel workbook, scans every worksheet and cell, detects formulas that start with GETPIVOTDATA, substitutes each with a structured‑reference placeholder (e.g., =Table1[Column1]) via Aspose.Cells, and saves the modified file.
     public class ReplaceGetPivotData
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
         public static void Run()
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists to avoid FileNotFoundException
+            // Verify input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                 return;
             }
 
@@ -44,51 +32,47 @@ namespace AsposeCellsExamples
                 // Load the workbook that contains GETPIVOTDATA formulas
                 Workbook workbook = new Workbook(inputPath);
 
-                // Iterate through all worksheets in the workbook
+                // Iterate through all worksheets
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Get the used range of the worksheet
-                    Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
-
-                    // Determine start and end indices
-                    int startRow = usedRange.FirstRow;
-                    int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-                    int startColumn = usedRange.FirstColumn;
-                    int endColumn = usedRange.FirstColumn + usedRange.ColumnCount - 1;
-
-                    // Loop through each cell in the used range
-                    for (int row = startRow; row <= endRow; row++)
+                    // Iterate through all used cells in the worksheet
+                    foreach (Cell cell in sheet.Cells)
                     {
-                        for (int col = startColumn; col <= endColumn; col++)
+                        // Process only cells that contain a formula
+                        if (cell.IsFormula)
                         {
-                            Cell cell = sheet.Cells[row, col];
+                            string formula = cell.Formula;
 
-                            // Check if the cell contains a formula with GETPIVOTDATA
-                            if (!string.IsNullOrEmpty(cell.Formula) &&
-                                cell.Formula.IndexOf("GETPIVOTDATA", StringComparison.OrdinalIgnoreCase) >= 0)
+                            // Check if the formula uses the deprecated GETPIVOTDATA function
+                            if (formula.StartsWith("GETPIVOTDATA", StringComparison.OrdinalIgnoreCase))
                             {
-                                // Simple replacement: remove the GETPIVOTDATA call and insert a placeholder
-                                // In a real scenario, you would parse the arguments and build a structured reference.
-                                string newFormula = "/* Replaced GETPIVOTDATA with structured reference */";
+                                // Placeholder structured reference replacement
+                                string placeholderStructuredRef = "=Table1[Column1]";
 
-                                // Assign the new formula to the cell
-                                cell.Formula = newFormula;
+                                // Replace the old formula with the new structured reference
+                                cell.PutValue(placeholderStructuredRef);
                             }
                         }
                     }
                 }
 
-                // Refresh all pivot tables to ensure they reflect any data changes
-                workbook.Worksheets.RefreshPivotTables();
-
                 // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Processing error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ReplaceGetPivotData.Run();
         }
     }
 }

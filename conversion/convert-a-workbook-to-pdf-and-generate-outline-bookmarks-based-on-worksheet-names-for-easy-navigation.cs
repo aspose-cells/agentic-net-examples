@@ -1,66 +1,65 @@
-// Title: Create PDF from Excel with Worksheet Bookmarks using Aspose.Cells for .NET
-// Description: This example shows how to load or create an Excel workbook, add worksheets if needed, write a value to cell A1 of each sheet, build a root PdfBookmarkEntry and sub‑bookmarks named after each worksheet, enable ExportDocumentStructure in PdfSaveOptions, and save the workbook as a PDF that contains a navigable outline reflecting the sheet names.
-// Keywords: Aspose.Cells | C# | .NET | Excel to PDF | PDF bookmarks | PdfBookmarkEntry | ExportDocumentStructure | worksheet outline | PDF navigation | document structure
-// Common Searches: Aspose.Cells add PDF bookmarks from Excel sheets | C# save workbook as PDF with outline | Export Excel workbook to PDF with navigation bookmarks | PdfSaveOptions ExportDocumentStructure example | Create PDF bookmark hierarchy using Aspose.Cells
-// Developer Intent: Generate a PDF from an Excel workbook and embed outline bookmarks for each worksheet to enable quick navigation.
-// Use Cases: Produce a multi‑section PDF report where each Excel sheet appears as a clickable bookmark. | Automate the creation of user manuals that preserve the workbook’s tab structure in PDF form. | Provide end‑users with a searchable PDF that mirrors the original Excel file’s organization.
-// AI Prompts: How can I set custom colors or styles for PdfBookmarkEntry bookmarks in Aspose.Cells? | Show me how to create nested PDF bookmarks for grouped worksheets using Aspose.Cells. | Provide code to save the PDF to a MemoryStream while keeping the bookmark hierarchy intact.
+// Title: Export Excel Workbook to PDF with Worksheet Bookmarks using Aspose.Cells for .NET (C#)
+// Description: Loads an .xlsx file, builds a root PDF bookmark, adds a child bookmark for every worksheet (using the sheet name and cell A1 as the destination), enables document structure via PdfSaveOptions, and saves the workbook as a PDF that contains a clickable outline.
+// Keywords: Aspose.Cells PDF bookmarks | C# export Excel to PDF | PdfBookmarkEntry | ExportDocumentStructure | worksheet bookmarks PDF | Aspose.Cells PDF outline | convert workbook to PDF | Aspose.Cells .NET
+// Common Searches: Aspose.Cells add PDF bookmarks from Excel sheets | C# create PDF outline when saving workbook | Export Excel to PDF with bookmarks Aspose | PdfSaveOptions ExportDocumentStructure example | How to generate PDF bookmarks for each worksheet using Aspose.Cells
+// Developer Intent: Create a PDF from an Excel workbook that includes a hierarchical bookmark for each worksheet.
+// Use Cases: Generate a single PDF report where each worksheet appears as a clickable bookmark for fast navigation. | Automate production of PDF documentation that mirrors a multi‑sheet workbook, preserving the sheet hierarchy as a bookmark tree. | Export financial models or dashboards to PDF while keeping sheet names as navigable sections for end users.
+// AI Prompts: Write C# code with Aspose.Cells to export an Excel file to PDF and add a bookmark for each worksheet, ensuring the PDF includes document structure. | Explain how ExportDocumentStructure and PdfBookmarkEntry work together in Aspose.Cells to create PDF outline bookmarks. | Modify the sample to set custom page numbers as bookmark destinations instead of using cell A1.
 
 using System;
 using System.Collections;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// This example shows how to load or create an Excel workbook, add worksheets if needed, write a value to cell A1 of each sheet, build a root PdfBookmarkEntry and sub‑bookmarks named after each worksheet, enable ExportDocumentStructure in PdfSaveOptions, and save the workbook as a PDF that contains a navigable outline reflecting the sheet names.
+// Loads an .xlsx file, builds a root PDF bookmark, adds a child bookmark for every worksheet (using the sheet name and cell A1 as the destination), enables document structure via PdfSaveOptions, and saves the workbook as a PDF that contains a clickable outline.
 class WorkbookToPdfWithBookmarks
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook(); // new Workbook("input.xlsx");
-
-        // Ensure there are worksheets to work with
-        if (workbook.Worksheets.Count == 0)
-        {
-            workbook.Worksheets.Add("Sheet1");
-            workbook.Worksheets.Add("Sheet2");
-            workbook.Worksheets.Add("Sheet3");
-        }
-
-        // Populate each worksheet with a value at A1 (bookmark destination)
-        foreach (Worksheet ws in workbook.Worksheets)
-        {
-            ws.Cells["A1"].PutValue($"{ws.Name} Content");
-        }
+        // Load the source workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
         // Create the root bookmark entry
         PdfBookmarkEntry rootBookmark = new PdfBookmarkEntry
         {
             Text = "Workbook",
-            Destination = workbook.Worksheets[0].Cells["A1"],
-            IsOpen = true,
-            SubEntry = new ArrayList()
+            IsOpen = true
         };
 
-        // Add a sub‑bookmark for each worksheet using its name and A1 cell as destination
-        foreach (Worksheet ws in workbook.Worksheets)
+        // Collection for child bookmarks (one per worksheet)
+        ArrayList subEntries = new ArrayList();
+
+        // Generate a bookmark for each worksheet using its name as the title
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            PdfBookmarkEntry sheetBookmark = new PdfBookmarkEntry
+            // Destination cell for the bookmark (A1 of each sheet)
+            Cell destCell = sheet.Cells["A1"];
+
+            // Ensure the destination cell contains something (optional)
+            if (destCell.Value == null)
+                destCell.PutValue(sheet.Name);
+
+            // Create a bookmark entry for the current sheet
+            PdfBookmarkEntry entry = new PdfBookmarkEntry
             {
-                Text = ws.Name,
-                Destination = ws.Cells["A1"]
+                Text = sheet.Name,
+                Destination = destCell
             };
-            rootBookmark.SubEntry.Add(sheetBookmark);
+
+            subEntries.Add(entry);
         }
 
-        // Configure PDF save options to include the bookmark structure
+        // Attach the child entries to the root bookmark
+        rootBookmark.SubEntry = subEntries;
+
+        // Configure PDF save options to include document structure and the bookmarks
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
             ExportDocumentStructure = true,
             Bookmark = rootBookmark
         };
 
-        // Save the workbook as PDF with the generated outline bookmarks
-        workbook.Save("WorkbookWithBookmarks.pdf", pdfOptions);
+        // Save the workbook as PDF with the defined options
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

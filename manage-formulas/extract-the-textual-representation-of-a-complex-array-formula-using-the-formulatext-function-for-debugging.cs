@@ -1,64 +1,46 @@
-// Title: Extract Array Formula Text with FORMULATEXT in Aspose.Cells for .NET
-// Description: This C# example creates a workbook, fills A1:B3 with numbers, applies the array formula `SUM(A1:A3*B1:B3)` to C1 using SetArrayFormula, then uses CalculateFormula("=FORMULATEXT(C1)") to obtain the exact formula string for debugging, prints it, and saves the workbook.
-// Keywords: Aspose.Cells | C# | .NET | array formula | FORMULATEXT | SetArrayFormula | CalculateFormula | extract formula text | Excel formula debugging | retrieve formula string
-// Common Searches: Aspose.Cells get formula text C# | How to use FORMULATEXT with Aspose.Cells | Extract array formula as string in .NET | Debug Aspose.Cells array formulas | Retrieve Excel formula programmatically
-// Developer Intent: Obtain the literal text of an array formula applied to a cell to verify or debug its implementation.
-// Use Cases: Log the exact formula of a cell to confirm that SetArrayFormula was applied correctly. | Compare the extracted formula against an expected pattern in automated tests. | Generate documentation that includes the original Excel formulas without opening the file.
-// AI Prompts: Show C# code that extracts the FORMULATEXT of a cell containing an array formula using Aspose.Cells. | Provide a .NET example for retrieving and printing the text of a complex array formula in an Excel workbook. | Explain how to debug Aspose.Cells array formulas by obtaining their textual representation.
+// Title: Extract array formula text with FORMULATEXT in Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, fills two ranges, sets a 3‑row array formula "=A1:A3*B1:B3" in C1:C3, uses the Excel FORMULATEXT function in D1 to retrieve the exact formula string, calculates, prints the result, and saves the file.
+// Keywords: Aspose.Cells | C# | .NET | array formula | FORMULATEXT | formula text extraction | debug Excel formulas | SetArrayFormula | FormulaText function
+// Common Searches: Aspose.Cells get formula text of array formula | C# FORMULATEXT example with Aspose.Cells | retrieve array formula string in .NET | debug complex array formulas Aspose.Cells | how to use SetArrayFormula and FORMULATEXT
+// Developer Intent: Obtain the exact textual representation of a multi‑cell array formula for debugging or documentation using Aspose.Cells.
+// Use Cases: Log the precise formula applied to an array range to verify implementation. | Compare retrieved formula text with expected patterns during automated tests. | Generate audit reports that list all array formulas present in a workbook.
+// AI Prompts: Show C# code that extracts the text of a multi‑cell array formula using Aspose.Cells and FORMULATEXT. | Explain how to debug complex array formulas in Aspose.Cells by retrieving their string representation. | Provide an example of handling cases where FORMULATEXT returns an empty string for a non‑array cell.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Creates a workbook, fills two ranges, sets a 3‑row array formula "=A1:A3*B1:B3" in C1:C3, uses the Excel FORMULATEXT function in D1 to retrieve the exact formula string, calculates, prints the result, and saves the file.
+class Program
 {
-    // This C# example creates a workbook, fills A1:B3 with numbers, applies the array formula `SUM(A1:A3*B1:B3)` to C1 using SetArrayFormula, then uses CalculateFormula("=FORMULATEXT(C1)") to obtain the exact formula string for debugging, prints it, and saves the workbook.
-    public class ExtractArrayFormulaTextDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate data that the array formula will use
-                sheet.Cells["A1"].PutValue(1);
-                sheet.Cells["A2"].PutValue(2);
-                sheet.Cells["A3"].PutValue(3);
-                sheet.Cells["B1"].PutValue(4);
-                sheet.Cells["B2"].PutValue(5);
-                sheet.Cells["B3"].PutValue(6);
+        // Populate some sample data that will be used by the array formula
+        worksheet.Cells["A1"].PutValue(1);
+        worksheet.Cells["A2"].PutValue(2);
+        worksheet.Cells["A3"].PutValue(3);
+        worksheet.Cells["B1"].PutValue(4);
+        worksheet.Cells["B2"].PutValue(5);
+        worksheet.Cells["B3"].PutValue(6);
 
-                // Define a complex array formula
-                string arrayFormula = "SUM(A1:A3*B1:B3)";
+        // Set a complex array formula (e.g., element‑wise multiplication of two ranges)
+        // The formula will occupy a 3‑row by 1‑column range starting at C1
+        worksheet.Cells["C1"].SetArrayFormula("=A1:A3*B1:B3", 3, 1);
 
-                // Apply the array formula to cell C1
-                sheet.Cells["C1"].SetArrayFormula(arrayFormula, 0, 0);
+        // Use the Excel FORMULATEXT function to retrieve the textual representation
+        // of the array formula from the first cell of the array (C1)
+        worksheet.Cells["D1"].Formula = "=FORMULATEXT(C1)";
 
-                // Retrieve the textual representation of the array formula
-                object formulaText = sheet.CalculateFormula("=FORMULATEXT(C1)");
+        // Calculate all formulas so that FORMULATEXT returns the actual text
+        workbook.CalculateFormula();
 
-                Console.WriteLine("Extracted array formula text: " + (formulaText?.ToString() ?? "null"));
+        // Output the extracted formula text for debugging purposes
+        Console.WriteLine("Extracted array formula: " + worksheet.Cells["D1"].StringValue);
 
-                // Save the workbook
-                string outputPath = "ExtractArrayFormulaTextDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Program entry point
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ExtractArrayFormulaTextDemo.Run();
-        }
+        // Save the workbook (optional, demonstrates lifecycle compliance)
+        workbook.Save("ArrayFormulaDebug.xlsx");
     }
 }

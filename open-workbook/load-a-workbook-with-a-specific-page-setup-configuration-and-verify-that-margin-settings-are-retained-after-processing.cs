@@ -1,71 +1,63 @@
-// Title: C# Example: Set and Verify Worksheet Page Margins with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, assign left, right, top, and bottom margins in centimeters via the PageSetup object, save the file, reload it, and programmatically confirm that the margin values are retained.
-// Keywords: Aspose.Cells | C# page margins | Excel margin persistence | Worksheet PageSetup margins | load workbook verify margins | Aspose.Cells .NET margin example | set margins centimeters | Excel print margins C#
-// Common Searches: Aspose.Cells set worksheet margins C# | How to keep Excel page margins after saving with Aspose.Cells | Verify Excel margins programmatically .NET | C# code to compare original and loaded page margins | Aspose.Cells margin retention test
-// Developer Intent: Confirm that page margin settings applied to a worksheet stay unchanged after the workbook is saved and reloaded using Aspose.Cells for .NET.
-// Use Cases: Generate a report template with precise print margins, save it, and later validate margins before distribution. | Automate quality checks across a batch of generated Excel files to ensure consistent layout settings. | Add margin verification to a CI/CD pipeline to catch unintended changes in page setup during development.
-// AI Prompts: Write C# code with Aspose.Cells that sets left, right, top, and bottom margins in centimeters and verifies they are unchanged after reloading the workbook. | Provide a reusable method that compares expected margin values with those read from a loaded worksheet and returns a boolean result. | Explain how Aspose.Cells stores page margin values, the default unit, and how to convert between centimeters and points.
+// Title: Verify Excel PageSetup Margins After Load/Save with Aspose.Cells for .NET
+// Description: Demonstrates how to create an Excel workbook, set left, right, top, and bottom margins in centimeters, save it, reload it with Aspose.Cells, read the PageSetup margin values, confirm they match the expected measurements, add a confirmation cell, and save a processed copy while preserving the original margin configuration.
+// Keywords: Aspose.Cells margin verification | C# Excel PageSetup margins | load workbook Aspose.Cells .NET | preserve Excel margins after save | PageSetup LeftMargin RightMargin TopMargin BottomMargin | Excel margin unit centimeters | Aspose.Cells margin unit conversion
+// Common Searches: how to read page margins from Excel using Aspose.Cells | verify Excel margin values after saving with Aspose.Cells | Aspose.Cells get left and right margin in cm | C# check Excel PageSetup margins after load | preserve page setup settings Aspose.Cells .NET
+// Developer Intent: Ensure that margin settings defined in an Excel workbook remain unchanged after loading, processing, and re‑saving with Aspose.Cells.
+// Use Cases: Set custom page margins for a workbook before distribution and confirm they are retained. | Load an existing Excel file, read its PageSetup margins, and validate them against design specifications. | Perform additional worksheet operations after margin verification while keeping the original margin configuration intact.
+// AI Prompts: Generate C# code using Aspose.Cells to set page margins in centimeters, save the workbook, reload it, and assert that LeftMargin, RightMargin, TopMargin, and BottomMargin are unchanged. | Write a .NET unit test that opens an Excel file with Aspose.Cells and verifies that all PageSetup margin values match expected numbers. | Explain how Aspose.Cells stores PageSetup margin values, the default units, and how unit conversion works when reading or writing margins.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsMarginVerification
+namespace PageSetupMarginVerification
 {
-    // Demonstrates how to create a workbook, assign left, right, top, and bottom margins in centimeters via the PageSetup object, save the file, reload it, and programmatically confirm that the margin values are retained.
+    // Demonstrates how to create an Excel workbook, set left, right, top, and bottom margins in centimeters, save it, reload it with Aspose.Cells, read the PageSetup margin values, confirm they match the expected measurements, add a confirmation cell, and save a processed copy while preserving the original margin configuration.
     class Program
     {
         static void Main()
         {
-            // Define the path for the temporary workbook
-            string filePath = "MarginTest.xlsx";
+            // Define file paths
+            string originalPath = "OriginalMargins.xlsx";
+            string processedPath = "ProcessedMargins.xlsx";
 
-            // -------------------- Create and configure workbook --------------------
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
+            // ---------- Create a new workbook and set margin values ----------
+            Workbook workbook = new Workbook(); // create
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Set page margin values (centimeters)
-            double leftMargin = 1.0;
-            double rightMargin = 1.5;
-            double topMargin = 2.0;
-            double bottomMargin = 0.5;
+            // Set specific margin values (centimeters)
+            sheet.PageSetup.LeftMargin = 1.0;    // 1 cm
+            sheet.PageSetup.RightMargin = 1.5;   // 1.5 cm
+            sheet.PageSetup.TopMargin = 2.0;     // 2 cm
+            sheet.PageSetup.BottomMargin = 2.5;  // 2.5 cm
 
-            sheet.PageSetup.LeftMargin = leftMargin;
-            sheet.PageSetup.RightMargin = rightMargin;
-            sheet.PageSetup.TopMargin = topMargin;
-            sheet.PageSetup.BottomMargin = bottomMargin;
+            // Save the workbook with the configured margins
+            workbook.Save(originalPath, SaveFormat.Xlsx); // save
 
-            // Save the workbook to disk
-            workbook.Save(filePath, SaveFormat.Xlsx);
-
-            // -------------------- Load workbook and verify margins --------------------
-            // Load the workbook from the saved file
-            Workbook loadedWorkbook = new Workbook(filePath);
-
-            // Access the first worksheet of the loaded workbook
+            // ---------- Load the workbook and verify margin settings ----------
+            Workbook loadedWorkbook = new Workbook(originalPath); // load
             Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-            PageSetup loadedSetup = loadedSheet.PageSetup;
+            PageSetup ps = loadedSheet.PageSetup;
 
-            // Retrieve margin values from the loaded workbook
-            double loadedLeft = loadedSetup.LeftMargin;
-            double loadedRight = loadedSetup.RightMargin;
-            double loadedTop = loadedSetup.TopMargin;
-            double loadedBottom = loadedSetup.BottomMargin;
+            // Retrieve margin values
+            double left = ps.LeftMargin;
+            double right = ps.RightMargin;
+            double top = ps.TopMargin;
+            double bottom = ps.BottomMargin;
 
-            // Verify that the margins match the original values
-            bool marginsMatch = Math.Abs(loadedLeft - leftMargin) < 0.0001 &&
-                                Math.Abs(loadedRight - rightMargin) < 0.0001 &&
-                                Math.Abs(loadedTop - topMargin) < 0.0001 &&
-                                Math.Abs(loadedBottom - bottomMargin) < 0.0001;
+            // Output the retrieved margin values
+            Console.WriteLine($"Loaded Margins (cm): Left={left}, Right={right}, Top={top}, Bottom={bottom}");
 
-            // Output verification result
-            Console.WriteLine("Margin verification result: " + (marginsMatch ? "Success" : "Failure"));
-            Console.WriteLine($"LeftMargin: Expected={leftMargin}, Loaded={loadedLeft}");
-            Console.WriteLine($"RightMargin: Expected={rightMargin}, Loaded={loadedRight}");
-            Console.WriteLine($"TopMargin: Expected={topMargin}, Loaded={loadedTop}");
-            Console.WriteLine($"BottomMargin: Expected={bottomMargin}, Loaded={loadedBottom}");
+            // Simple verification: compare with expected values
+            bool marginsMatch = Math.Abs(left - 1.0) < 0.0001 &&
+                                Math.Abs(right - 1.5) < 0.0001 &&
+                                Math.Abs(top - 2.0) < 0.0001 &&
+                                Math.Abs(bottom - 2.5) < 0.0001;
+
+            Console.WriteLine("Margin verification " + (marginsMatch ? "succeeded." : "failed."));
+
+            // Optionally, perform additional processing (e.g., add data) and save again
+            loadedSheet.Cells["A1"].PutValue("Margin verification completed.");
+            loadedWorkbook.Save(processedPath, SaveFormat.Xlsx); // save processed workbook
         }
     }
 }

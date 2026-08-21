@@ -1,79 +1,95 @@
-// Title: Embed a PDF as an attachment during Excel‑to‑PDF conversion with Aspose.Cells for .NET (C#)
-// Description: Creates a temporary PDF, inserts an OLE object with a custom icon, embeds the PDF data, enables EmbedAttachments in PdfSaveOptions, and saves the workbook as a PDF that carries the PDF as an attachment.
-// Keywords: Aspose.Cells | C# | Excel to PDF | embed PDF attachment | OLE object | PdfSaveOptions | EmbedAttachments | PDF attachment in Excel | Aspose.Cells PDF conversion
-// Common Searches: Aspose.Cells embed PDF attachment C# | Add OLE object PDF when saving Excel as PDF | PdfSaveOptions EmbedAttachments example | C# embed PDF in generated PDF using Aspose.Cells | Excel workbook to PDF with attached PDF
-// Developer Intent: Add a PDF file as an embedded attachment to the PDF produced from an Excel workbook.
-// Use Cases: Attach a technical specification PDF to a financial report generated from Excel. | Bundle terms‑and‑conditions PDF with an invoice PDF created from a spreadsheet. | Provide supporting documentation (PDF) alongside a data export for regulatory compliance.
-// AI Prompts: Show how to embed multiple PDFs as OLE attachments when converting an Excel workbook to PDF with Aspose.Cells. | Explain how to replace the default icon for an embedded PDF OLE object in the output PDF. | Give best‑practice error handling for missing source PDFs during OleObject.SetEmbeddedObject and PdfSaveOptions usage.
+// Title: Embed a PDF as an OLE attachment while converting Excel to PDF with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, add a PDF‑based OLE object displayed as an icon, enable the EmbedAttachments flag in PdfSaveOptions, and save the sheet as a PDF that carries the original PDF as an attachment.
+// Keywords: Aspose.Cells embed PDF | C# Excel to PDF OLE attachment | PdfSaveOptions EmbedAttachments | Aspose.Cells OLE object PDF | Excel workbook PDF attachment | .NET Aspose.Cells PDF embed | C# add PDF as OLE icon
+// Common Searches: Aspose.Cells add PDF OLE object C# | embed PDF attachment when saving Excel as PDF | PdfSaveOptions EmbedAttachments example | C# Excel to PDF with embedded file using Aspose | how to attach a PDF to generated PDF in Aspose.Cells
+// Developer Intent: Add a PDF file as an embedded OLE object in an Excel workbook and have it appear as an attachment in the PDF produced by Aspose.Cells.
+// Use Cases: Include a product‑specification PDF inside a sales‑report PDF generated from Excel. | Attach a signed contract PDF to a financial‑statement PDF so both travel together. | Showcase embedding any binary file as an OLE icon and delivering it as an attachment in the final PDF.
+// AI Prompts: Write C# code that inserts a PDF as an OLE object in an Excel worksheet and saves the workbook to PDF with the PDF attached using Aspose.Cells. | Explain how to configure PdfSaveOptions to embed OLE objects as attachments in the output PDF for Aspose.Cells .NET. | Generate a sample that embeds multiple PDFs with custom icons in a workbook and exports a single PDF containing all attachments.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a temporary PDF, inserts an OLE object with a custom icon, embeds the PDF data, enables EmbedAttachments in PdfSaveOptions, and saves the workbook as a PDF that carries the PDF as an attachment.
-class EmbedPdfInExcelToPdf
+// Demonstrates how to create a workbook, add a PDF‑based OLE object displayed as an icon, enable the EmbedAttachments flag in PdfSaveOptions, and save the sheet as a PDF that carries the original PDF as an attachment.
+class EmbedPdfAttachmentDemo
 {
     static void Main()
     {
         try
         {
-            // Ensure a sample PDF exists for embedding
-            string pdfPath = "sample.pdf";
-            if (!File.Exists(pdfPath))
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            worksheet.Cells["A1"].PutValue("Excel to PDF with embedded PDF attachment");
+
+            // Path to the PDF file that will be embedded
+            string pdfFilePath = "sample.pdf";
+
+            // Create a minimal PDF file if it does not exist (for demonstration purposes)
+            if (!File.Exists(pdfFilePath))
             {
-                // Minimal PDF content (sufficient for demonstration)
-                File.WriteAllText(pdfPath, "%PDF-1.4\n%âãÏÓ\n1 0 obj\n<<>>\nendobj\ntrailer\n<<>>\n%%EOF");
+                // Simple PDF header bytes; a real PDF should be used in production
+                File.WriteAllBytes(pdfFilePath, new byte[] { 0x25, 0x50, 0x44, 0x46, 0x2D });
             }
 
-            // Create a new workbook and add a title
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Excel to PDF with Embedded PDF Attachment");
+            // Generate a placeholder icon (PNG) for the OLE object
+            byte[] iconBytes = GeneratePlaceholderIcon();
 
-            // Use a minimal 1x1 PNG icon (transparent) for the OLE object
-            byte[] iconData = Convert.FromBase64String(
-                "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=");
+            // Add an OLE object placeholder to the worksheet using the generated icon
+            int oleIndex = worksheet.OleObjects.Add(5, 0, 200, 200, iconBytes);
+            OleObject oleObject = worksheet.OleObjects[oleIndex];
 
-            // Add the OLE object referencing the PDF file
-            int oleIndex = sheet.OleObjects.Add(5, 0, 200, 200, iconData);
-            OleObject ole = sheet.OleObjects[oleIndex];
+            // Read the PDF file bytes
+            byte[] pdfData = File.ReadAllBytes(pdfFilePath);
 
-            // Embed the PDF data into the OLE object
-            byte[] pdfData = File.ReadAllBytes(pdfPath);
-            ole.SetEmbeddedObject(false, pdfData, pdfPath, true, "Sample PDF");
-            ole.FileFormatType = FileFormatType.Pdf; // Ensure correct format
+            // Embed the PDF file into the OLE object (not linked, displayed as an icon)
+            oleObject.SetEmbeddedObject(
+                linkToFile: false,          // Do not link, embed the data
+                objectData: pdfData,        // PDF file bytes
+                sourceFileName: Path.GetFileName(pdfFilePath),
+                displayAsIcon: true,        // Show as an icon in Excel
+                label: "Embedded PDF");     // Icon label
 
-            // Configure PDF save options to embed OLE attachments
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Specify that the embedded object is a PDF
+            oleObject.FileFormatType = FileFormatType.Pdf;
+
+            // Configure PDF save options to embed attachments
+            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions
             {
-                EmbedAttachments = true
+                EmbedAttachments = true // Enable embedding of OLE attachments
             };
 
-            // Save the workbook as PDF with the embedded attachment
-            string outputPath = "ExcelWithEmbeddedPdf.pdf";
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Save the workbook as PDF; the embedded PDF will be attached to the output PDF
+            workbook.Save("OutputWithEmbeddedPdf.pdf", pdfSaveOptions);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("Error: " + ex.Message);
         }
         finally
         {
-            // Clean up temporary PDF file if it exists
-            string tempPdf = "sample.pdf";
-            if (File.Exists(tempPdf))
+            // Clean up the temporary PDF file used for embedding
+            string pdfFilePath = "sample.pdf";
+            if (File.Exists(pdfFilePath))
             {
                 try
                 {
-                    File.Delete(tempPdf);
+                    File.Delete(pdfFilePath);
                 }
                 catch
                 {
-                    // Ignored – cleanup failure should not crash the program
+                    // ignore cleanup errors
                 }
             }
         }
+    }
+
+    // Returns a simple 1x1 PNG icon as a byte array
+    private static byte[] GeneratePlaceholderIcon()
+    {
+        // Base64-encoded 1x1 transparent PNG
+        const string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=";
+        return Convert.FromBase64String(base64Png);
     }
 }

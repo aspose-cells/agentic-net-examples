@@ -1,27 +1,40 @@
-// Title: Convert XLSX to lightweight HTML with Aspose.Cells for .NET (ExcludeUnusedStyles)
-// Description: Loads an XLSX workbook, enables HtmlSaveOptions.ExcludeUnusedStyles to omit unused CSS, and saves the file as a compact HTML document, reducing output size.
-// Keywords: Aspose.Cells | C# | .NET | HTML export | ExcludeUnusedStyles | optimize HTML size | Excel to HTML conversion | reduce HTML payload | Aspose.Cells HtmlSaveOptions | lightweight HTML report
-// Common Searches: Aspose.Cells exclude unused styles HTML example | How to shrink HTML output when converting Excel with Aspose | C# convert XLSX to HTML without extra CSS | HtmlSaveOptions ExcludeUnusedStyles usage | Optimize Excel to HTML conversion Aspose.Cells
-// Developer Intent: Export an Excel workbook to HTML while automatically removing any style definitions that are not used, to produce a smaller, faster‑loading file.
-// Use Cases: Create fast‑loading web reports from Excel data. | Batch‑process workbooks for email‑friendly HTML attachments. | Serve Excel‑derived content over low‑bandwidth connections. | Archive spreadsheets as minimal‑size HTML snapshots.
-// AI Prompts: Generate C# code that loads an XLSX file with Aspose.Cells and saves it as HTML using ExcludeUnusedStyles, and explain the size benefit. | Describe how HtmlSaveOptions.ExcludeUnusedStyles affects the CSS generated for a workbook containing many custom styles. | Show a combined Aspose.Cells HTML export configuration that uses ExcludeUnusedStyles together with ExportImagesAsBase64 for the smallest possible HTML output.
+// Title: C# – Convert XLSX to HTML with Aspose.Cells while Excluding Unused Styles
+// Description: Load an XLSX workbook using Aspose.Cells for .NET, enable HtmlSaveOptions.ExcludeUnusedStyles, and save it as HTML to generate a smaller file that contains only the CSS needed for the rendered sheet.
+// Keywords: Aspose.Cells | C# | HtmlSaveOptions | ExcludeUnusedStyles | XLSX to HTML | reduce HTML size | minimal CSS export | Excel to HTML conversion | optimize HTML output | Aspose.Cells .NET
+// Common Searches: Aspose.Cells exclude unused styles | HtmlSaveOptions ExcludeUnusedStyles C# example | convert Excel workbook to HTML small file | remove unused CSS when exporting XLSX | Aspose.Cells HTML export size reduction | C# export XLSX as HTML minimal CSS
+// Developer Intent: Generate an HTML representation of an Excel workbook that omits any CSS rules not applied to the sheet, thereby shrinking the output file.
+// Use Cases: Publish lightweight Excel‑derived reports on web pages without excess CSS. | Attach compact HTML previews of large spreadsheets in email communications. | Render workbook snapshots in a web application where bandwidth is limited. | Create archival HTML copies of workbooks while keeping file size minimal.
+// AI Prompts: Show how to set HtmlSaveOptions.ExcludeUnusedStyles to true in a C# Aspose.Cells example. | Provide a step‑by‑step C# code snippet that loads an .xlsx file, configures HtmlSaveOptions to drop unused styles, and saves the result as .html. | Explain the impact of ExcludeUnusedStyles on the generated HTML and when it is advisable to use this option. | Give a comparison of HTML file size with and without ExcludeUnusedStyles enabled in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Loads an XLSX workbook, enables HtmlSaveOptions.ExcludeUnusedStyles to omit unused CSS, and saves the file as a compact HTML document, reducing output size.
-class Program
+namespace AsposeCellsHtmlExport
 {
-    static void Main()
+    // Load an XLSX workbook using Aspose.Cells for .NET, enable HtmlSaveOptions.ExcludeUnusedStyles, and save it as HTML to generate a smaller file that contains only the CSS needed for the rendered sheet.
+    class Program
     {
-        // Load the existing XLSX workbook from disk
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main()
+        {
+            // Path to the source XLSX workbook
+            string inputPath = "input.xlsx";
 
-        // Create HTML save options and enable exclusion of unused styles
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-        saveOptions.ExcludeUnusedStyles = true; // Reduces HTML file size
+            // Path where the HTML file will be saved
+            string outputPath = "output.html";
 
-        // Save the workbook as an HTML file using the specified options
-        workbook.Save("output.html", saveOptions);
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Create HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+
+            // Enable exclusion of unused styles to reduce the HTML file size
+            htmlOptions.ExcludeUnusedStyles = true;
+
+            // Save the workbook as HTML using the configured options
+            workbook.Save(outputPath, htmlOptions);
+
+            Console.WriteLine("Workbook has been saved as HTML with unused styles excluded.");
+        }
     }
 }

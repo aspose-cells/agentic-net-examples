@@ -1,67 +1,48 @@
-// Title: C# Aspose.Cells: Set Precision As Displayed to Round Formula Results
-// Description: Shows how to enable the PrecisionAsDisplayed option in a .NET workbook, apply a number format, insert a high‑precision value, reference it with a formula, recalculate, and save so that both cells display the rounded value.
-// Keywords: Aspose.Cells PrecisionAsDisplayed | C# Excel rounding formulas | displayed precision setting | formula calculation rounding | Aspose.Cells workbook settings | Excel number format rounding | C# .NET Aspose.Cells example | GitHub Aspose.Cells PrecisionAsDisplayed
-// Common Searches: Aspose.Cells PrecisionAsDisplayed C# | round Excel formulas with Aspose.Cells | set displayed precision in .NET workbook | enable formula rounding in Aspose.Cells | Aspose.Cells calculate with displayed precision
-// Developer Intent: Activate the workbook’s displayed‑precision mode so that all formula evaluations honor the cell’s visible number format.
-// Use Cases: Prepare financial statements where every calculated cell must match the two‑decimal display required by auditors. | Export data to downstream systems that only accept rounded values, ensuring consistency by turning on PrecisionAsDisplayed before saving. | Apply custom number formats across a worksheet and enforce uniform rounding for all dependent formulas.
-// AI Prompts: Demonstrate toggling PrecisionAsDisplayed on an existing Aspose.Cells workbook and re‑calculating the formulas. | Provide a C# snippet that sets a custom number format, enables displayed precision, and verifies that the formula result respects the rounding. | Explain how PrecisionAsDisplayed affects iterative calculations and how to disable it after processing.
+// Title: Aspose.Cells for .NET – Enable PrecisionAsDisplayed to round formulas to cell display format (C#)
+// Description: This C# example creates a workbook, activates the PrecisionAsDisplayed setting, formats cell A1 to two decimal places, assigns a formula in B1 that references A1, recalculates the workbook, and demonstrates that both the displayed value of A1 and the calculated result in B1 are rounded to the displayed precision before saving the file.
+// Keywords: Aspose.Cells | PrecisionAsDisplayed | C# | .NET | formula rounding | displayed precision | cell formatting rounding | workbook.Settings.FormulaSettings | financial spreadsheet rounding
+// Common Searches: Aspose.Cells PrecisionAsDisplayed C# | How to round formula results to displayed decimals in Aspose.Cells | Enable displayed precision in .NET Excel library | C# calculate workbook with displayed precision | Aspose.Cells rounding based on cell format
+// Developer Intent: Activate workbook.Settings.FormulaSettings.PrecisionAsDisplayed so that all formula calculations use the displayed cell precision, ensuring results are rounded according to the cell's number format.
+// Use Cases: Financial reports that require values limited to two decimal places | Generating Excel invoices where dependent cells must share the same rounding | Preparing data for downstream systems that accept only rounded numbers | Creating spreadsheet templates where visual precision must match stored values
+// AI Prompts: Show C# code using Aspose.Cells to set PrecisionAsDisplayed true, format a cell to two decimals, add a formula referencing that cell, and display the rounded result. | Provide an Aspose.Cells .NET example that enables displayed precision, applies number formatting, and verifies formula rounding in the generated workbook. | Explain the impact of PrecisionAsDisplayed on formula calculation and how to test it with a simple C# workbook.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// This C# example creates a workbook, activates the PrecisionAsDisplayed setting, formats cell A1 to two decimal places, assigns a formula in B1 that references A1, recalculates the workbook, and demonstrates that both the displayed value of A1 and the calculated result in B1 are rounded to the displayed precision before saving the file.
+class Program
 {
-    // Shows how to enable the PrecisionAsDisplayed option in a .NET workbook, apply a number format, insert a high‑precision value, reference it with a formula, recalculate, and save so that both cells display the rounded value.
-    public class SetPrecisionAsDisplayedDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Enable PrecisionAsDisplayed so calculations use the displayed precision
-            workbook.Settings.FormulaSettings.PrecisionAsDisplayed = true;
+        // Enable PrecisionAsDisplayed so calculations use the displayed precision
+        workbook.Settings.FormulaSettings.PrecisionAsDisplayed = true;
 
-            // Access the first worksheet and its cells
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Access the first worksheet and its cells
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-            // Put a value with many decimal places into A1
-            cells["A1"].PutValue(1.23456);
+        // Put a value with many decimal places into A1
+        cells["A1"].PutValue(1.23456);
 
-            // Set the number format of A1 to show 2 decimal places (0.00)
-            Style style = cells["A1"].GetStyle();
-            style.Number = 2;
-            cells["A1"].SetStyle(style);
+        // Set the display format of A1 to show 2 decimal places (0.00)
+        Style style = cells["A1"].GetStyle();
+        style.Number = 2;
+        cells["A1"].SetStyle(style);
 
-            // Set a formula in B1 that references A1
-            cells["B1"].Formula = "=A1";
+        // Set a formula in B1 that references A1
+        cells["B1"].Formula = "=A1";
 
-            // Calculate formulas; with PrecisionAsDisplayed enabled, B1 will use the rounded value
-            workbook.CalculateFormula();
+        // Calculate formulas; the result will respect the displayed precision
+        workbook.CalculateFormula();
 
-            // Display results
-            Console.WriteLine("A1 displayed value: " + cells["A1"].StringValue); // Expected: 1.23
-            Console.WriteLine("B1 calculated value: " + cells["B1"].Value);      // Expected: 1.23
+        // Output the displayed value of A1 and the calculated value of B1
+        Console.WriteLine("A1 displayed value: " + cells["A1"].StringValue); // Expected: 1.23
+        Console.WriteLine("B1 calculated value: " + cells["B1"].Value);      // Expected: 1.23
 
-            // Save the workbook
-            workbook.Save("PrecisionAsDisplayedDemo.xlsx");
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                SetPrecisionAsDisplayedDemo.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+        // Save the workbook (optional)
+        workbook.Save("PrecisionAsDisplayedDemo.xlsx");
     }
 }

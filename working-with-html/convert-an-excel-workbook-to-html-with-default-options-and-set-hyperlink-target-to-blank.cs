@@ -1,28 +1,27 @@
 // Title: Convert Excel to HTML with _blank hyperlinks using Aspose.Cells for .NET (C#)
-// Description: Shows how to create or load a Workbook, add a hyperlink, configure HtmlSaveOptions with default settings, set LinkTargetType to Blank so links open in a new tab, and save the workbook as an HTML file.
-// Keywords: Aspose.Cells | C# | Excel to HTML | HtmlSaveOptions | LinkTargetType | hyperlink target blank | export workbook to HTML | convert Excel to HTML .NET | Aspose.Cells HTML export | open links in new tab
-// Common Searches: Aspose.Cells export Excel to HTML C# | HtmlSaveOptions LinkTargetType Blank example | how to make hyperlinks open in new tab when saving Excel as HTML | C# convert workbook to HTML with Aspose.Cells | set hyperlink target _blank Aspose.Cells HTML output
-// Developer Intent: Generate an HTML file from an Excel workbook where all hyperlinks open in a new browser tab.
-// Use Cases: Create web‑ready reports from Excel data that keep users on the host page. | Automate conversion of dynamically generated spreadsheets for embedding in portals or intranets. | Produce static documentation with external links that open in separate tabs to avoid navigation loss.
-// AI Prompts: Provide a C# snippet that converts an Aspose.Cells Workbook to HTML and forces hyperlinks to open in a new tab. | How do I set HtmlSaveOptions.LinkTargetType to Blank for all links during Excel‑to‑HTML conversion with Aspose.Cells? | Explain the steps to export an Excel file to HTML using Aspose.Cells while ensuring hyperlinks use the _blank target.
+// Description: Loads an .xlsx file, adds a sample hyperlink, configures HtmlSaveOptions to set LinkTargetType = Blank, and saves the workbook as an HTML page where all links open in a new browser tab.
+// Keywords: Aspose.Cells | C# Excel to HTML | HtmlSaveOptions | LinkTargetType Blank | hyperlink target _blank | convert .xlsx to .html | export workbook as HTML | Aspose.Cells hyperlink | HTML export options | new tab links
+// Common Searches: Aspose.Cells export Excel to HTML _blank | How to set hyperlink target when saving Excel as HTML in C# | HtmlSaveOptions LinkTargetType example | Convert .xlsx to HTML with Aspose.Cells .NET | C# code to open Excel hyperlinks in new tab after HTML conversion
+// Developer Intent: Generate an HTML version of an Excel workbook where every hyperlink uses the _blank target so it opens in a new browser tab.
+// Use Cases: Web dashboards that embed spreadsheet data with external links opening in separate tabs. | Email or intranet reports that need an HTML preview of Excel files with safe link behavior. | Automated batch conversion of multiple .xlsx files to .html while enforcing a uniform _blank link target. | Documentation generation from Excel spreadsheets with consistent hyperlink handling.
+// AI Prompts: Write C# code using Aspose.Cells to convert an Excel workbook to HTML and set all hyperlink targets to _blank. | Explain the purpose of HtmlSaveOptions.LinkTargetType and how it affects hyperlink rendering in the generated HTML. | Create a script that processes every .xlsx file in a folder, converting each to HTML with Aspose.Cells and applying the _blank link target. | Show how to customize the output folder and CSS while preserving _blank hyperlinks during Excel‑to‑HTML conversion.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlExport
 {
-    // Shows how to create or load a Workbook, add a hyperlink, configure HtmlSaveOptions with default settings, set LinkTargetType to Blank so links open in a new tab, and save the workbook as an HTML file.
+    // Loads an .xlsx file, adds a sample hyperlink, configures HtmlSaveOptions to set LinkTargetType = Blank, and saves the workbook as an HTML page where all links open in a new browser tab.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            // Load an existing Excel workbook (replace with your actual file path)
+            string excelPath = "input.xlsx";
+            Workbook workbook = new Workbook(excelPath);
 
-            // Access the first worksheet
+            // Example: add a hyperlink to demonstrate the target attribute
             Worksheet sheet = workbook.Worksheets[0];
-
-            // Add sample data and a hyperlink
             sheet.Cells["A1"].PutValue("Visit Aspose");
             sheet.Hyperlinks.Add("A1", 1, 1, "https://www.aspose.com");
 
@@ -32,8 +31,11 @@ namespace AsposeCellsHtmlExport
             // Set hyperlink target to open in a new window/tab (_blank)
             saveOptions.LinkTargetType = HtmlLinkTargetType.Blank;
 
-            // Save the workbook as HTML
-            workbook.Save("output.html", saveOptions);
+            // Save the workbook as HTML using the configured options
+            string htmlPath = "output.html";
+            workbook.Save(htmlPath, saveOptions);
+
+            Console.WriteLine($"Workbook successfully converted to HTML: {htmlPath}");
         }
     }
 }

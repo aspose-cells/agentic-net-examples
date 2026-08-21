@@ -1,38 +1,55 @@
-// Title: Aspose.Cells C# – Relocate a TextBox by Setting UpperLeftRow & UpperLeftColumn
-// Description: Shows how to create a workbook, add a TextBox at cell B3 (row 2, column 2), move it to cell C6 (row 5, column 3) by updating the UpperLeftRow and UpperLeftColumn properties, optionally resize it, and save the result as MovedTextBox.xlsx.
-// Keywords: Aspose.Cells move textbox C# | Aspose.Cells TextBox anchor | UpperLeftRow UpperLeftColumn | change shape position Aspose.Cells | C# reposition TextBox | Aspose.Cells worksheet shapes | adjust TextBox size Aspose.Cells
-// Common Searches: Aspose.Cells move textbox to another cell | How to change TextBox anchor row and column in Aspose.Cells .NET | C# set UpperLeftRow UpperLeftColumn for shape | Resize TextBox after moving Aspose.Cells | Move multiple TextBoxes programmatically Aspose.Cells
-// Developer Intent: Reposition an existing TextBox to a different cell by modifying its UpperLeftRow and UpperLeftColumn anchor values.
-// Use Cases: Keep a label TextBox aligned with a data column after rows are inserted or deleted. | Place a TextBox next to a dynamically generated table header by anchoring it to the header cell. | Customize a worksheet template by moving several TextBoxes to user‑specified cells during report generation.
-// AI Prompts: Generate C# code with Aspose.Cells that moves a TextBox from row 2, column 2 to row 10, column 5 while preserving its original height and width. | Explain how UpperLeftRow and UpperLeftColumn define a TextBox's anchor point and how to calculate them for merged cells in Aspose.Cells. | Provide a C# loop that iterates over a dictionary of cell coordinates and repositions each TextBox in a worksheet accordingly.
+// Title: Move a TextBox to a New Cell in Aspose.Cells (C#)
+// Description: Creates a workbook, adds a TextBox at row 2 col 1, sets its text, then repositions it to row 5 col 3 by updating UpperLeftRow and UpperLeftColumn before saving the file.
+// Keywords: Aspose.Cells | C# | move textbox | textbox position | UpperLeftRow | UpperLeftColumn | shape anchor | Excel worksheet
+// Common Searches: Aspose.Cells change textbox location C# | How to set UpperLeftRow UpperLeftColumn for a textbox | Relocate textbox to another cell in Aspose.Cells | Update textbox anchor coordinates in .NET | Move shape to different row and column Aspose.Cells
+// Developer Intent: Reposition an existing TextBox by modifying its UpperLeftRow and UpperLeftColumn properties.
+// Use Cases: Place a label next to a dynamically generated table in a report. | Adjust textbox placement after inserting rows or columns. | Standardize textbox alignment across multiple dashboard sheets.
+// AI Prompts: Generate C# code that moves a textbox to row 10, column 2 and resizes it using Aspose.Cells. | Show how to shift all textboxes down by two rows in a worksheet with Aspose.Cells. | Explain the role of UpperLeftRow and UpperLeftColumn in determining textbox placement in an Excel file created with Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to create a workbook, add a TextBox at cell B3 (row 2, column 2), move it to cell C6 (row 5, column 3) by updating the UpperLeftRow and UpperLeftColumn properties, optionally resize it, and save the result as MovedTextBox.xlsx.
-class MoveTextBoxDemo
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Creates a workbook, adds a TextBox at row 2 col 1, sets its text, then repositions it to row 5 col 3 by updating UpperLeftRow and UpperLeftColumn before saving the file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Add a textbox at an initial location (row 2, column 2)
-        int textboxIndex = worksheet.TextBoxes.Add(2, 2, 100, 200);
-        TextBox textbox = worksheet.TextBoxes[textboxIndex];
-        textbox.Text = "Original Position";
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Move the textbox to a new location (row 5, column 3) by updating its anchor coordinates
-        textbox.UpperLeftRow = 5;
-        textbox.UpperLeftColumn = 3;
+                // Add a textbox at initial position (row 2, column 1) with height 100px and width 200px
+                int textboxIndex = worksheet.TextBoxes.Add(2, 1, 100, 200);
 
-        // Optionally adjust size after moving
-        textbox.Height = 120;
-        textbox.Width = 250;
+                // Retrieve the added textbox
+                TextBox textbox = worksheet.TextBoxes[textboxIndex];
 
-        // Save the workbook
-        workbook.Save("MovedTextBox.xlsx");
+                // Set sample text
+                textbox.Text = "Sample TextBox";
+
+                // Move the textbox to a new location (upper‑left corner at row 5, column 3)
+                textbox.UpperLeftRow = 5;
+                textbox.UpperLeftColumn = 3;
+
+                // Define output file path
+                string outputPath = "MovedTextbox.xlsx";
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

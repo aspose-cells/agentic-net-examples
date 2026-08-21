@@ -1,52 +1,57 @@
-// Title: C# – Convert Aspose.Cells Workbook to PDF and Understand Viewer Toolbar Limitations
-// Description: Shows how to create or load an Aspose.Cells Workbook, add data, configure PdfSaveOptions, ensure the target folder exists, and save the workbook as a PDF. The sample also clarifies that the current Aspose.Cells API does not expose ViewerPreferences such as HideToolbar, and points to possible work‑arounds.
-// Keywords: Aspose.Cells PDF conversion C# | Workbook to PDF Aspose.Cells | PdfSaveOptions C# | hide toolbar PDF Aspose | viewer preferences PDF Aspose.Cells | export Excel to PDF .NET | Aspose.Cells API limitation viewer preferences | C# create output directory | Aspose.Cells save PDF | PDF viewer UI control
-// Common Searches: Aspose.Cells hide toolbar when exporting to PDF | PDF viewer preferences not supported in Aspose.Cells | C# convert Excel workbook to PDF with Aspose.Cells | How to set PdfSaveOptions in Aspose.Cells | Create output folder before saving PDF Aspose.Cells
-// Developer Intent: Export an Excel workbook to PDF using Aspose.Cells for .NET and learn why the viewer toolbar cannot be hidden directly through the API.
-// Use Cases: Generate a PDF report from a dynamically built workbook while managing file‑system paths. | Batch‑process multiple workbooks into PDFs, automatically creating missing output directories. | Understand API constraints around PDF viewer UI settings and plan post‑processing if toolbar hiding is required.
-// AI Prompts: Write C# code with Aspose.Cells that converts a workbook to PDF and explains the lack of HideToolbar support. | Suggest a post‑processing approach (e.g., using iTextSharp or PdfSharp) to hide the toolbar in PDFs created by Aspose.Cells. | Provide a concise example that creates a workbook, adds data, ensures the output directory exists, and saves it as PDF with available PdfSaveOptions.
+// Title: Convert Aspose.Cells Workbook to PDF with C# – Toolbar Hiding Not Supported
+// Description: C# example that creates an Aspose.Cells workbook, adds sample data, configures PdfSaveOptions, ensures the output folder exists, and saves the workbook as a PDF. The code notes that current Aspose.Cells versions do not expose viewer‑preference settings such as hiding the PDF toolbar.
+// Keywords: Aspose.Cells PDF conversion C# | save workbook as PDF | PdfSaveOptions viewer preferences | hide PDF toolbar Aspose.Cells | .NET Excel to PDF | Aspose.Cells export PDF
+// Common Searches: Aspose.Cells hide toolbar when saving PDF | PdfSaveOptions hide PDF viewer toolbar C# | export Excel to PDF with custom viewer settings Aspose | C# convert workbook to PDF Aspose.Cells | viewer preferences not supported Aspose.Cells PDF
+// Developer Intent: Generate a PDF from an Excel workbook using Aspose.Cells for .NET and understand that toolbar visibility cannot be set through PdfSaveOptions.
+// Use Cases: Create a workbook programmatically, populate cells, and export it to PDF. | Automatically create the destination directory before writing the PDF file. | Identify the limitation that Aspose.Cells does not currently allow PDF viewer preferences such as toolbar visibility.
+// AI Prompts: Write C# code with Aspose.Cells to convert a workbook to PDF and explain why toolbar hiding cannot be configured via PdfSaveOptions. | Suggest a post‑processing method or third‑party library to modify the generated PDF so the toolbar is hidden on open. | Describe how to monitor Aspose.Cells release notes for future support of PDF viewer preferences.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Shows how to create or load an Aspose.Cells Workbook, add data, configure PdfSaveOptions, ensure the target folder exists, and save the workbook as a PDF. The sample also clarifies that the current Aspose.Cells API does not expose ViewerPreferences such as HideToolbar, and points to possible work‑arounds.
-class ConvertWorkbookToPdf
+// C# example that creates an Aspose.Cells workbook, adds sample data, configures PdfSaveOptions, ensures the output folder exists, and saves the workbook as a PDF. The code notes that current Aspose.Cells versions do not expose viewer‑preference settings such as hiding the PDF toolbar.
+class WorkbookToPdfWithHiddenToolbar
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (or load an existing one)
+            // -----------------------------------------------------------------
+            // 1. Create a new Excel workbook and add sample data
+            // -----------------------------------------------------------------
             Workbook workbook = new Workbook();
-
-            // Add some sample data to the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             sheet.Cells["A1"].PutValue("Sample data for PDF conversion");
 
-            // Create PDF save options
+            // -----------------------------------------------------------------
+            // 2. Configure PDF save options
+            // -----------------------------------------------------------------
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // NOTE: ViewerPreferences (e.g., HideToolbar) are not available in the current Aspose.Cells API.
-            // If needed, configure other PDF options here.
+            // NOTE: In the current Aspose.Cells version, viewer preferences such as
+            // hiding the toolbar are not exposed via PdfSaveOptions. The PDF will be
+            // generated with default viewer settings.
 
-            // Define output file path
-            string outputPath = "Converted.pdf";
+            // -----------------------------------------------------------------
+            // 3. Save the workbook as PDF
+            // -----------------------------------------------------------------
+            string pdfPath = "output.pdf";
 
             // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(pdfPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook as a PDF file using the configured options
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"Workbook successfully saved to {outputPath}");
+            workbook.Save(pdfPath, pdfOptions);
+
+            Console.WriteLine("Workbook has been saved to PDF.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

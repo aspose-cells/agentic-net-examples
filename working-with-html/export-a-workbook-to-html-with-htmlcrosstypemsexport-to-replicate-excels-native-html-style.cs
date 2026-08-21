@@ -1,26 +1,28 @@
-// Title: Export Excel to HTML with Aspose.Cells using HtmlCrossType.MSExport (C#)
-// Description: Shows how to build a workbook, populate cells, configure HtmlSaveOptions.HtmlCrossStringType to HtmlCrossType.MSExport, and save the file as HTML that mirrors Excel's built‑in HTML export.
-// Keywords: Aspose.Cells | HtmlCrossType | MSExport | C# | HTML export | Excel to HTML | cross‑cell rendering | HtmlSaveOptions | .NET | workbook to HTML
-// Common Searches: Aspose.Cells HtmlCrossType.MSExport example | C# export Excel workbook to HTML with Excel style | HtmlSaveOptions cross‑cell string rendering | How to keep merged cells when converting Excel to HTML | Generate Excel‑like HTML using Aspose.Cells
-// Developer Intent: Convert an Excel workbook to HTML while preserving Excel’s native formatting (merged cells, cross‑cell strings) by setting HtmlCrossType.MSExport in Aspose.Cells for a C# project.
-// Use Cases: Create web‑ready reports that look identical to Excel’s native HTML output. | Automate conversion of spreadsheets with merged cells for email previews or documentation. | Build a portal that displays uploaded Excel files as faithful HTML pages without losing layout.
-// AI Prompts: Generate C# code that loads an existing .xlsx file and saves it as HTML using HtmlCrossType.MSExport with Aspose.Cells. | Explain how to configure HtmlSaveOptions to embed CSS, images, and enable MSExport cross‑cell rendering for accurate Excel‑style HTML. | Compare HtmlCrossType.MSExport with HtmlCrossType.Default and suggest when each should be used.
+// Title: C# – Export Workbook to HTML with Aspose.Cells using HtmlCrossType.MSExport (Excel‑style HTML)
+// Description: Demonstrates how to create a workbook, add data, set HtmlSaveOptions.HtmlCrossStringType to HtmlCrossType.MSExport, and save the file as HTML so the output matches Excel's native HTML formatting.
+// Keywords: Aspose.Cells | C# | HTML export | HtmlCrossType.MSExport | Excel style HTML | HtmlSaveOptions | Workbook to HTML | sample code | .NET
+// Common Searches: Aspose.Cells export workbook to HTML MSExport C# | HtmlCrossStringType MSExport example | How to mimic Excel HTML output with Aspose.Cells | C# save Excel as HTML with original formatting
+// Developer Intent: Generate HTML that replicates Excel’s native formatting by exporting a workbook with HtmlCrossType.MSExport.
+// Use Cases: Create web‑ready reports that retain Excel cell styles. | Provide spreadsheet previews in web applications without requiring Office. | Automate batch conversion of Excel files to HTML for email or documentation while preserving the original look.
+// AI Prompts: Show how to set HtmlCrossStringType to MSExport in Aspose.Cells and save a workbook as HTML using C#. | Give a C# snippet that exports a workbook to HTML with custom CSS while using HtmlCrossType.MSExport. | Explain the differences between HtmlCrossType.MSExport and the default HTML export option in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlExport
 {
-    // Shows how to build a workbook, populate cells, configure HtmlSaveOptions.HtmlCrossStringType to HtmlCrossType.MSExport, and save the file as HTML that mirrors Excel's built‑in HTML export.
+    // Demonstrates how to create a workbook, add data, set HtmlSaveOptions.HtmlCrossStringType to HtmlCrossType.MSExport, and save the file as HTML so the output matches Excel's native HTML formatting.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Create a new workbook (empty Excel file)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet to add some sample data
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
+
+            // Add some sample data
             sheet.Cells["A1"].PutValue("First");
             sheet.Cells["B1"].PutValue("Second");
             sheet.Cells["A2"].PutValue(123);
@@ -28,14 +30,13 @@ namespace AsposeCellsHtmlExport
 
             // Configure HTML save options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-            // Set the cross-cell string rendering to mimic Excel's native HTML export
+            // Use MSExport cross string type to mimic Excel's native HTML style
             htmlOptions.HtmlCrossStringType = HtmlCrossType.MSExport;
 
-            // Save the workbook as an HTML file using the configured options
-            workbook.Save("output.html", htmlOptions);
+            // Save the workbook as HTML with the specified options
+            workbook.Save("ExportedWithMSExport.html", htmlOptions);
 
-            Console.WriteLine("Workbook exported to HTML with HtmlCrossType.MSExport.");
+            Console.WriteLine("Workbook exported to HTML using HtmlCrossType.MSExport.");
         }
     }
 }

@@ -1,72 +1,43 @@
-// Title: Get an Excel Table's DisplayName with Cell.GetTable in Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, selects a cell inside a table, uses Cell.GetTable to obtain the ListObject, reads its DisplayName property, handles a possible null result, prints the name, and saves the file unchanged.
-// Keywords: Aspose.Cells | Cell.GetTable | ListObject DisplayName | C# Excel table name | retrieve table display name | read Excel table name .NET | Aspose.Cells example C# | Excel table metadata | Aspose.Cells GetTable demo
-// Common Searches: Aspose.Cells get table display name C# | Cell.GetTable return ListObject name | how to read Excel table name with Aspose.Cells | retrieve ListObject DisplayName from a cell | C# example for getting Excel table name
-// Developer Intent: Extract the display name of the table that contains a specific cell in an Excel workbook.
-// Use Cases: Log table names before processing rows for auditing. | Validate that a cell belongs to the expected table by comparing its DisplayName. | Generate documentation that lists all table names in a workbook.
-// AI Prompts: Show how to safely check for a null ListObject when using Cell.GetTable in Aspose.Cells. | Provide C# code to iterate over all tables in a worksheet and output each DisplayName. | Explain how to rename a table's DisplayName after retrieving it with Cell.GetTable.
+// Title: Get Excel Table Display Name with Aspose.Cells for .NET (Cell.GetTable)
+// Description: Loads a workbook, selects a cell inside a table, calls Cell.GetTable() to obtain the ListObject, and reads its DisplayName property, handling the case where the cell is not part of any table.
+// Keywords: Aspose.Cells | C# | Cell.GetTable | ListObject | DisplayName | Excel table name | retrieve table name | read table properties | Aspose.Cells .NET example | Excel table metadata
+// Common Searches: Aspose.Cells get table name C# | Cell.GetTable display name example | How to read Excel table display name using Aspose | Check if a cell belongs to a table Aspose.Cells | Retrieve ListObject DisplayName Aspose.Cells
+// Developer Intent: Identify the display name of the Excel table that contains a specified cell.
+// Use Cases: Log the table name for a cell during data‑validation workflows. | Confirm that a target cell resides in the expected table before extracting rows. | Generate a quick inventory of tables in a worksheet by probing representative cells and outputting each DisplayName.
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, picks a cell, uses GetTable to fetch its ListObject, and prints the table's DisplayName. | Provide an Aspose.Cells .NET snippet that checks whether a given cell is inside a table and returns the table's display name or a not‑found message.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsExamples
+// Loads a workbook, selects a cell inside a table, calls Cell.GetTable() to obtain the ListObject, and reads its DisplayName property, handling the case where the cell is not part of any table.
+class GetTableDisplayName
 {
-    // Loads a workbook, selects a cell inside a table, uses Cell.GetTable to obtain the ListObject, reads its DisplayName property, handles a possible null result, prints the name, and saves the file unchanged.
-    public class GetTableDisplayNameDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet (or any specific worksheet)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Choose a cell that is inside a table; for example, cell A2
+        Cell cell = worksheet.Cells["A2"];
+
+        // Retrieve the table (ListObject) that the cell belongs to
+        ListObject table = cell.GetTable();
+
+        if (table != null)
         {
-            Run();
+            // Read and display the table's display name
+            Console.WriteLine("Table Display Name: " + table.DisplayName);
+        }
+        else
+        {
+            Console.WriteLine("The specified cell does not belong to any table.");
         }
 
-        public static void Run()
-        {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            try
-            {
-                // Ensure the input file exists before loading
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                    return;
-                }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Choose a cell that belongs to a table (e.g., A2)
-                Cell cellInTable = worksheet.Cells["A2"];
-
-                // Retrieve the table (ListObject) that the cell belongs to
-                ListObject table = cellInTable.GetTable();
-
-                if (table != null)
-                {
-                    // Read and display the table's display name
-                    string displayName = table.DisplayName;
-                    Console.WriteLine("Table Display Name: " + displayName);
-                }
-                else
-                {
-                    Console.WriteLine("The specified cell is not part of any table.");
-                }
-
-                // Save the workbook (unchanged) to a new file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+        // Save the workbook if any changes were made (optional)
+        workbook.Save("output.xlsx");
     }
 }

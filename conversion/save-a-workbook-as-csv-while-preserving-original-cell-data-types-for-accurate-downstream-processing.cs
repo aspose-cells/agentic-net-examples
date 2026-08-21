@@ -1,44 +1,62 @@
-// Title: Save Workbook as CSV with Native Data Types using Aspose.Cells for .NET
-// Description: Demonstrates how to export an Aspose.Cells workbook to a CSV file while keeping each cell's original data type. The example creates a mixed‑type sheet, configures TxtSaveOptions (comma separator, minimal quoting, no quote prefix), and saves the result as output.csv.
-// Keywords: Aspose.Cells CSV export | preserve cell data types | TxtSaveOptions C# | SaveFormat.Csv | Excel to CSV .NET | numeric values CSV Aspose | custom CSV delimiter | minimal quoting CSV
-// Common Searches: Aspose.Cells export to CSV preserving data types | C# save Excel as CSV without converting numbers to text | TxtSaveOptions separator and quoting options | How to keep numeric cells numeric in CSV using Aspose.Cells | CSV export settings Aspose.Cells .NET
-// Developer Intent: Export a workbook to CSV while retaining the original data types of all cells.
-// Use Cases: Generate CSV reports for analytics pipelines that require numeric columns to remain numeric. | Create data exchange files for database imports where type fidelity is critical. | Produce lightweight CSV snapshots of mixed‑type worksheets with custom delimiters and only necessary quoting.
-// AI Prompts: Write C# code with Aspose.Cells to save a workbook as TSV while preserving native cell types. | Show how to force all fields to be quoted in a CSV export using TxtSaveOptions. | Explain the role of the PreserveString property when exporting CSV files with Aspose.Cells.
+// Title: Save Aspose.Cells Workbook to CSV with DisplayStyle to Preserve Cell Formats
+// Description: Shows how to export a worksheet to CSV using Aspose.Cells TxtSaveOptions with the DisplayStyle format strategy, keeping strings, numbers, dates, and booleans in their original displayed form.
+// Keywords: Aspose.Cells CSV export | TxtSaveOptions | DisplayStyle format strategy | preserve cell formatting | C# Aspose.Cells example | save workbook as CSV | data type preservation | comma delimiter CSV | export single worksheet
+// Common Searches: Aspose.Cells export to CSV preserving formats | DisplayStyle option for CSV in Aspose.Cells | keep date and number formatting when saving CSV with Aspose.Cells | C# save Excel as CSV without losing cell types | how to use TxtSaveOptions for CSV in Aspose.Cells
+// Developer Intent: Export a worksheet to CSV while retaining the original display format of each cell.
+// Use Cases: Create CSV reports from Excel files that contain mixed data types, ensuring downstream systems read the same textual values shown in Excel. | Migrate data from a spreadsheet to a CSV‑based analytics pipeline without losing numeric or date formatting. | Generate single‑sheet CSV files for integration with legacy applications that require exact string representations of dates, numbers, and booleans.
+// AI Prompts: Write C# code that loads an existing Excel workbook and saves a selected worksheet to CSV using TxtSaveOptions with DisplayStyle to keep original formats. | Show how to change the CSV delimiter to a semicolon in TxtSaveOptions while still preserving cell display values. | Explain how to loop through all worksheets in a workbook and export each one to a separate CSV file, maintaining the displayed formatting for every sheet.
 
 using System;
 using Aspose.Cells;
-using System.Text;
+using Aspose.Cells.Saving;
 
-// Demonstrates how to export an Aspose.Cells workbook to a CSV file while keeping each cell's original data type. The example creates a mixed‑type sheet, configures TxtSaveOptions (comma separator, minimal quoting, no quote prefix), and saves the result as output.csv.
-class SaveWorkbookAsCsv
+namespace AsposeCellsCsvExport
 {
-    static void Main()
+    // Shows how to export a worksheet to CSV using Aspose.Cells TxtSaveOptions with the DisplayStyle format strategy, keeping strings, numbers, dates, and booleans in their original displayed form.
+    public class PreserveDataTypesCsv
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate the worksheet with mixed data types
-        worksheet.Cells["A1"].PutValue("Name");   // string header
-        worksheet.Cells["B1"].PutValue("Age");    // string header
-        worksheet.Cells["A2"].PutValue("John");   // string value
-        worksheet.Cells["B2"].PutValue(30);       // numeric value
-        worksheet.Cells["A3"].PutValue("Jane");   // string value
-        worksheet.Cells["B3"].PutValue(25);       // numeric value
-
-        // The Cells collection preserves native data types by default.
-        // No need to change PreserveString (default is false).
-
-        // Configure CSV save options
-        TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+        public static void Run()
         {
-            Separator = ',',          // Use comma as delimiter
-            AlwaysQuoted = false,     // Quote only when necessary
-            ExportQuotePrefix = false // Do not export leading quote characters
-        };
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-        // Save the workbook as CSV while keeping original data types
-        workbook.Save("output.csv", csvOptions);
+                // Populate cells with different data types
+                cells["A1"].PutValue("Text");                     // string
+                cells["B1"].PutValue(12345);                      // integer
+                cells["C1"].PutValue(123.456);                    // double
+                cells["D1"].PutValue(DateTime.Now);               // DateTime
+                cells["E1"].PutValue(true);                       // boolean
+
+                // Configure CSV save options
+                TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+                {
+                    Separator = ',',                                 // Use comma as delimiter
+                    FormatStrategy = CellValueFormatStrategy.DisplayStyle, // Preserve displayed format
+                    ExportAllSheets = false,                         // Export only the active sheet
+                    ClearData = false                                // Keep workbook data after saving
+                };
+
+                // Save the workbook as CSV while preserving original data representations
+                workbook.Save("PreservedDataTypes.csv", csvOptions);
+                Console.WriteLine("CSV file saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            PreserveDataTypesCsv.Run();
+        }
     }
 }

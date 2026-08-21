@@ -1,65 +1,63 @@
-// Title: Backup an Excel worksheet by enumerating cells with Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, adds a "BackupCopy" sheet, determines the used range of the first worksheet, iterates through each populated cell, copies values or formulas to the new sheet, and saves the file. Empty cells are skipped and formulas are retained.
-// Keywords: Aspose.Cells backup worksheet C# | enumerate cells Aspose.Cells | copy Excel sheet programmatically | preserve formulas Aspose.Cells | iterate used range .NET
-// Common Searches: How to copy a worksheet to a new sheet with Aspose.Cells C# | Backup Excel data using Aspose.Cells .NET | Copy cells with formulas to another sheet Aspose.Cells | Programmatic Excel worksheet snapshot C#
-// Developer Intent: Create a duplicate of a worksheet’s populated cells in a new sheet while keeping formulas intact.
-// Use Cases: Generate versioned backups before applying bulk data transformations. | Create read‑only snapshots for audit trails or reporting. | Clone a sheet for temporary calculations without modifying the original.
-// AI Prompts: Write C# code using Aspose.Cells that adds a backup worksheet, loops through the used range of the first sheet, copies each non‑empty cell’s value or formula to the backup sheet, and saves the workbook. | Provide an Aspose.Cells example that uses MaxDataRow and MaxDataColumn, skips empty cells, and preserves formulas when duplicating worksheet data.
+// Title: Backup a worksheet by enumerating cells and copying values with Aspose.Cells for .NET
+// Description: Demonstrates how to create a backup sheet in the same workbook by determining the used range of the source worksheet, iterating through each cell, copying non‑null values, and saving the file using Aspose.Cells for C#.
+// Keywords: Aspose.Cells | C# | .NET | copy worksheet data | backup Excel sheet | enumerate cells | used range | cell iteration | programmatic Excel backup | Excel data duplication
+// Common Searches: Aspose.Cells copy worksheet to new sheet | How to backup Excel data with Aspose.Cells .NET | Iterate over used range Aspose.Cells C# | Copy cell values between worksheets Aspose.Cells | Create backup sheet in same workbook Aspose.Cells
+// Developer Intent: Create a backup copy of a worksheet’s data by looping through each cell and writing the values to a newly added sheet.
+// Use Cases: Preserve original data before applying transformations or calculations. | Generate an internal version‑controlled snapshot for audit trails. | Provide a quick undo mechanism by keeping a duplicate of the source sheet within the same workbook.
+// AI Prompts: Write C# code using Aspose.Cells that copies all non‑null cell values from a source worksheet to a newly added backup worksheet. | Show an Aspose.Cells .NET example that iterates over the used range of a sheet and duplicates the data into another sheet while preserving cell formatting. | Create a reusable method that accepts a Workbook and a source sheet name, adds a backup sheet, and copies the data cell‑by‑cell with Aspose.Cells.
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsBackupExample
+// Demonstrates how to create a backup sheet in the same workbook by determining the used range of the source worksheet, iterating through each cell, copying non‑null values, and saving the file using Aspose.Cells for C#.
+class BackupWorksheet
 {
-    // Loads a workbook, adds a "BackupCopy" sheet, determines the used range of the first worksheet, iterates through each populated cell, copies values or formulas to the new sheet, and saves the file. Empty cells are skipped and formulas are retained.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load the source workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Create a source workbook and add some sample data
+            Workbook sourceWorkbook = new Workbook();
+            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+            sourceSheet.Name = "Original";
 
-            // Get the first worksheet (or any worksheet you want to back up)
-            Worksheet sourceSheet = workbook.Worksheets[0];
+            sourceSheet.Cells["A1"].PutValue("Name");
+            sourceSheet.Cells["B1"].PutValue("Score");
+            sourceSheet.Cells["A2"].PutValue("Alice");
+            sourceSheet.Cells["B2"].PutValue(85);
+            sourceSheet.Cells["A3"].PutValue("Bob");
+            sourceSheet.Cells["B3"].PutValue(92);
 
             // Add a new worksheet that will hold the backup copy
-            Worksheet backupSheet = workbook.Worksheets.Add("BackupCopy");
+            Worksheet backupSheet = sourceWorkbook.Worksheets.Add("Backup");
 
             // Get the Cells collections for source and backup sheets
-            Cells sourceCells = sourceSheet.Cells;
+            Cells srcCells = sourceSheet.Cells;
             Cells backupCells = backupSheet.Cells;
 
-            // Determine the used range limits
-            int maxRow = sourceCells.MaxDataRow;      // zero‑based index of the last row with data
-            int maxCol = sourceCells.MaxDataColumn;   // zero‑based index of the last column with data
+            // Determine the used range in the source sheet
+            int maxRow = srcCells.MaxDataRow;      // zero‑based index of the last row with data
+            int maxCol = srcCells.MaxDataColumn;   // zero‑based index of the last column with data
 
-            // Enumerate each cell in the used range and copy its content
+            // Copy each cell value from source to backup
             for (int row = 0; row <= maxRow; row++)
             {
                 for (int col = 0; col <= maxCol; col++)
                 {
-                    Cell srcCell = sourceCells[row, col];
-
-                    // Skip empty cells
-                    if (srcCell == null || srcCell.Type == CellValueType.IsNull)
-                        continue;
-
-                    Cell destCell = backupCells[row, col];
-
-                    // Preserve formulas if present; otherwise copy the evaluated value
-                    if (!string.IsNullOrEmpty(srcCell.Formula))
+                    var srcCell = srcCells[row, col];
+                    if (srcCell != null && srcCell.Type != CellValueType.IsNull)
                     {
-                        destCell.Formula = srcCell.Formula;
-                    }
-                    else
-                    {
-                        destCell.PutValue(srcCell.Value);
+                        backupCells[row, col].PutValue(srcCell.Value);
                     }
                 }
             }
 
-            // Save the workbook with the backup sheet
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Save the workbook containing both the original and the backup sheet
+            sourceWorkbook.Save("BackupDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

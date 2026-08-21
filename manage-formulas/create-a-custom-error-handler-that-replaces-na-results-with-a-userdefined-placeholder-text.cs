@@ -1,10 +1,10 @@
-// Title: C# – Aspose.Cells custom GlobalizationSettings to replace #N/A with a user‑defined placeholder
-// Description: Demonstrates how to subclass Aspose.Cells.GlobalizationSettings, override GetErrorValueString to return a developer‑specified string for the "#N/A" error, apply the settings to a workbook, insert an NA() formula, calculate it, and save the file with the custom placeholder displayed.
-// Keywords: Aspose.Cells | C# | .NET | custom error handling | #N/A placeholder | GlobalizationSettings | GetErrorValueString | override error display | Excel error customization | NA() function
-// Common Searches: Aspose.Cells replace #N/A error | custom GlobalizationSettings Aspose.Cells .NET | override GetErrorValueString example | display custom text for NA() error | Aspose.Cells error placeholder C# | hide #N/A in generated Excel workbook
-// Developer Intent: Show a custom message instead of the default #N/A error when cells are displayed.
-// Use Cases: Present user‑friendly messages such as "Data Not Available" in reports. | Localize error messages by supplying language‑specific placeholders per workbook. | Suppress calculation errors in exported Excel files while keeping the original formulas intact.
-// AI Prompts: Write a C# class that inherits from Aspose.Cells.GlobalizationSettings to replace #N/A errors with a custom string and show how to use it. | Generate sample code that applies a custom GlobalizationSettings to a workbook, adds an NA() formula, calculates it, and saves the file with the placeholder text. | Explain how to extend the custom error handler to also replace other errors like #DIV/0! or #VALUE! in Aspose.Cells.
+// Title: C# Aspose.Cells: Custom error handler to replace #N/A with a user‑defined placeholder
+// Description: Shows how to create a subclass of GlobalizationSettings in Aspose.Cells for .NET, override GetErrorValueString, and apply the custom settings to a workbook so that any #N/A error (for example from a VLOOKUP miss) is shown as a developer‑specified text such as "Data Not Available". The sample calculates formulas, reads the display string, and saves the workbook.
+// Keywords: Aspose.Cells | C# | .NET | CustomErrorGlobalizationSettings | GlobalizationSettings | GetErrorValueString | #N/A replacement | custom placeholder | error handling | VLOOKUP error | Workbook.Settings.GlobalizationSettings | display string | Excel export
+// Common Searches: Aspose.Cells replace #N/A with custom text | override GetErrorValueString Aspose.Cells | custom globalization settings error value | C# Aspose.Cells custom error handler example | how to change #N/A display in Aspose.Cells
+// Developer Intent: Replace #N/A error values with a custom placeholder when displaying cell contents.
+// Use Cases: Show a friendly message like "Data Not Available" for missing lookup results. | Provide localized error messages across an entire workbook by defining language‑specific placeholders. | Ensure consistent placeholder text for all #N/A errors before exporting the workbook to Excel.
+// AI Prompts: Write a GlobalizationSettings subclass that substitutes "#N/A" with "Not Found" and apply it to an Aspose.Cells workbook. | Explain step‑by‑step how to assign a custom error handler to Workbook.Settings.GlobalizationSettings and retrieve the display string of a cell containing an error. | Generate sample C# code that uses a custom placeholder for #N/A errors in a workbook with multiple formulas and saves the result.
 
 using System;
 using Aspose.Cells;
@@ -12,9 +12,10 @@ using Aspose.Cells;
 namespace AsposeCellsCustomErrorHandler
 {
     // Custom globalization settings to replace #N/A with a user‑defined placeholder
-    // Demonstrates how to subclass Aspose.Cells.GlobalizationSettings, override GetErrorValueString to return a developer‑specified string for the "#N/A" error, apply the settings to a workbook, insert an NA() formula, calculate it, and save the file with the custom placeholder displayed.
+    // Shows how to create a subclass of GlobalizationSettings in Aspose.Cells for .NET, override GetErrorValueString, and apply the custom settings to a workbook so that any #N/A error (for example from a VLOOKUP miss) is shown as a developer‑specified text such as "Data Not Available". The sample calculates formulas, reads the display string, and saves the workbook.
     public class CustomErrorGlobalizationSettings : GlobalizationSettings
     {
+        // Placeholder text to display instead of #N/A
         private readonly string _naPlaceholder;
 
         public CustomErrorGlobalizationSettings(string naPlaceholder)
@@ -22,9 +23,10 @@ namespace AsposeCellsCustomErrorHandler
             _naPlaceholder = naPlaceholder;
         }
 
+        // Override the method that returns the display string for an error value
         public override string GetErrorValueString(string err)
         {
-            // Replace only the #N/A error; other errors fall back to default handling
+            // If the error is #N/A, return the custom placeholder; otherwise use default behavior
             return err switch
             {
                 "#N/A" => _naPlaceholder,
@@ -37,29 +39,27 @@ namespace AsposeCellsCustomErrorHandler
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Define the placeholder text for #N/A errors
-            string placeholder = "Data Not Available";
+            // Apply the custom globalization settings (replace #N/A with "Data Not Available")
+            workbook.Settings.GlobalizationSettings = new CustomErrorGlobalizationSettings("Data Not Available");
 
-            // Apply the custom globalization settings to the workbook
-            workbook.Settings.GlobalizationSettings = new CustomErrorGlobalizationSettings(placeholder);
+            // Example that generates #N/A: VLOOKUP with a missing key
+            cells["A1"].PutValue("Key");
+            cells["A2"].PutValue("Value1");
+            cells["B1"].Formula = "=VLOOKUP(\"MissingKey\",A1:A2,1,FALSE)";
 
-            // Create a cell that will contain the #N/A error using the NA() function
-            Cell errorCell = sheet.Cells["A1"];
-            errorCell.Formula = "=NA()";
-
-            // Calculate formulas so the error is generated
+            // Calculate formulas so that the error is produced
             workbook.CalculateFormula();
 
             // Retrieve the display string; it will use the custom placeholder
-            string displayedValue = errorCell.DisplayStringValue;
+            string result = cells["B1"].DisplayStringValue;
+            Console.WriteLine($"Cell B1 display value: {result}");
 
-            Console.WriteLine($"Cell A1 displayed value: {displayedValue}");
-
-            // Save the workbook (lifecycle save)
+            // Save the workbook
             workbook.Save("CustomErrorHandlerDemo.xlsx");
         }
     }

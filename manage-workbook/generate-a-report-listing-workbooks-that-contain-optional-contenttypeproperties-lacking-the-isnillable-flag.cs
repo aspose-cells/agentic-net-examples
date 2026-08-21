@@ -1,99 +1,80 @@
+// Title: C# – Generate CSV Report of Excel Workbooks with Non‑Nillable ContentTypeProperties using Aspose.Cells
+// Description: A console app that scans a folder for .xls, .xlsx, .xlsm and .xlsb files, loads each workbook with Aspose.Cells, examines its ContentTypePropertyCollection, and records every property where the IsNillable flag is false or undefined. Results are saved to a CSV file with workbook name, property name and IsNillable value, and loading errors are logged.
+// Keywords: Aspose.Cells ContentTypeProperty IsNillable | C# generate CSV report Excel workbooks | list non‑nillable content type properties | Aspose.Cells iterate ContentTypeProperties | detect optional ContentTypeProperty flag | Excel template compliance check | Aspose.Cells .NET CSV export
+// Common Searches: Aspose.Cells code to list ContentTypeProperties without IsNillable | C# generate CSV of Excel files missing nillable flag | how to audit workbooks for non‑nillable content type properties | scan folder for Excel files and report IsNillable false | Aspose.Cells ContentTypePropertyCollection example
+// Developer Intent: Create a CSV file that lists every workbook containing ContentTypeProperties where IsNillable is false or not set, including error handling for unreadable files.
+// Use Cases: Validate that Excel templates mark optional content type properties as nillable before publishing. | Audit a repository of workbooks to prevent data loss during XML serialization. | Provide administrators with a quick‑look report to update non‑nillable properties.
+// AI Prompts: Write C# code with Aspose.Cells to scan a directory of Excel files and output a CSV of ContentTypeProperties where IsNillable is false. | Improve the program to log errors to a separate file and enable recursive folder search. | Extend the report to include each property's DataType, default value, and whether it is required.
+
 using System;
 using System.IO;
-using System.Text;
+using System.Collections.Generic;
 using Aspose.Cells;
+using Aspose.Cells.Properties;
 
-class ContentTypePropertiesReport
+namespace ContentTypePropertyReport
 {
-    static void Main(string[] args)
+    // A console app that scans a folder for .xls, .xlsx, .xlsm and .xlsb files, loads each workbook with Aspose.Cells, examines its ContentTypePropertyCollection, and records every property where the IsNillable flag is false or undefined. Results are saved to a CSV file with workbook name, property name and IsNillable value, and loading errors are logged.
+    class Program
     {
-        // Folder containing the workbooks to scan.
-        string folderPath = @"C:\Workbooks";
-
-        // Ensure the folder exists.
-        if (!Directory.Exists(folderPath))
+        // Entry point
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Folder not found: {folderPath}");
-            return;
-        }
+            // Folder containing the workbooks to analyze
+            string folderPath = @"C:\Workbooks";
 
-        // Output CSV file.
-        string reportPath = Path.Combine(folderPath, "ContentTypePropertiesReport.csv");
+            // Output report file (CSV format)
+            string reportPath = Path.Combine(folderPath, "ContentTypePropertiesReport.csv");
 
-        // Prepare CSV header.
-        var sb = new StringBuilder();
-        sb.AppendLine("Workbook,PropertyName,IsNillable");
+            // Prepare a list to hold report lines
+            List<string> reportLines = new List<string>();
+            // Header line
+            reportLines.Add("WorkbookFile,PropertyName,IsNillable");
 
-        // Enumerate all Excel files in the folder (including subfolders).
-        foreach (string file in Directory.GetFiles(folderPath, "*.xlsx", SearchOption.AllDirectories))
-        {
-            // Ensure the file actually exists.
-            if (!File.Exists(file))
-                continue;
-
-            try
+            // Get all Excel files in the folder (including subfolders if needed)
+            string[] workbookFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
+            foreach (string file in workbookFiles)
             {
-                // Load the workbook. If the file is password‑protected,
-                // Aspose.Cells throws a CellsException.
-                var loadOptions = new LoadOptions();
-                using (Workbook wb = new Workbook(file, loadOptions))
+                // Filter supported Excel extensions
+                string ext = Path.GetExtension(file).ToLowerInvariant();
+                if (ext != ".xls" && ext != ".xlsx" && ext != ".xlsm" && ext != ".xlsb")
+                    continue;
+
+                try
                 {
-                    bool hasMissingFlag = false;
+                    // Load the workbook
+                    Workbook workbook = new Workbook(file);
 
-                    // Iterate through all content type properties.
-                    for (int i = 0; i < wb.ContentTypeProperties.Count; i++)
+                    // Iterate through all ContentTypeProperties
+                    ContentTypePropertyCollection props = workbook.ContentTypeProperties;
+                    for (int i = 0; i < props.Count; i++)
                     {
-                        var prop = wb.ContentTypeProperties[i]; // Use var to avoid explicit type issues.
-
-                        // Record properties where IsNillable is false.
+                        ContentTypeProperty prop = props[i];
+                        // If IsNillable is false (or not set), record it
                         if (!prop.IsNillable)
                         {
-                            hasMissingFlag = true;
-                            sb.AppendLine($"{Path.GetFileName(file)},{prop.Name},{prop.IsNillable}");
+                            string line = $"{Path.GetFileName(file)},{prop.Name},{prop.IsNillable}";
+                            reportLines.Add(line);
                         }
                     }
 
-                    // Handle workbooks with no ContentTypeProperties.
-                    if (wb.ContentTypeProperties.Count == 0)
-                    {
-                        sb.AppendLine($"{Path.GetFileName(file)},<No ContentTypeProperties>,");
-                    }
-                    else if (!hasMissingFlag)
-                    {
-                        // All properties are nillable.
-                        sb.AppendLine($"{Path.GetFileName(file)},<All IsNillable>,True");
-                    }
+                    // Dispose workbook (optional, as it implements IDisposable)
+                    workbook.Dispose();
                 }
-            }
-            catch (CellsException ex)
-            {
-                // Password‑protected files throw a CellsException whose message contains
-                // the word "Password". Treat them as such.
-                if (ex.Message != null && ex.Message.IndexOf("Password", StringComparison.OrdinalIgnoreCase) >= 0)
+                catch (Exception ex)
                 {
-                    sb.AppendLine($"{Path.GetFileName(file)},<Password Protected>,");
-                }
-                else
-                {
-                    sb.AppendLine($"{Path.GetFileName(file)},<CellsException: {ex.Message}>,");
+                    // In case a file cannot be processed, write an error line
+                    string errorLine = $"{Path.GetFileName(file)},Error loading workbook,{ex.Message}";
+                    reportLines.Add(errorLine);
                 }
             }
-            catch (Exception ex)
-            {
-                // Log any other unexpected errors and continue processing.
-                sb.AppendLine($"{Path.GetFileName(file)},<Error: {ex.Message}>,");
-            }
-        }
 
-        // Write the CSV report to disk.
-        try
-        {
-            File.WriteAllText(reportPath, sb.ToString());
+            // Write the report to the CSV file
+            File.WriteAllLines(reportPath, reportLines);
+
+            // Also output a summary to the console
             Console.WriteLine($"Report generated: {reportPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to write report: {ex.Message}");
+            Console.WriteLine($"Total entries: {reportLines.Count - 1}");
         }
     }
 }

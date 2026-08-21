@@ -1,17 +1,17 @@
-// Title: C# – Retrieve the formula of cell E3 on the second worksheet with Aspose.Cells
-// Description: Loads an existing Excel file, accesses the worksheet at index 1 (the second sheet), reads the Formula property of cell E3, outputs the formula, optionally clears the cell, and saves the workbook. Demonstrates how to capture a formula before any deletion occurs.
-// Keywords: Aspose.Cells C# | read cell formula | Excel formula retrieval | second worksheet | cell E3 formula | Aspose.Cells get formula | C# Excel automation | clear cell value Aspose
-// Common Searches: Aspose.Cells get formula of a cell in .NET | C# read formula from second sheet Excel | retrieve Excel cell formula before clearing | how to obtain cell E3 formula using Aspose.Cells | read and delete cell formula Aspose.Cells C#
-// Developer Intent: Extract the formula string from cell E3 on the second worksheet before removing its contents.
-// Use Cases: Audit or log formulas prior to bulk data cleanup | Backup formulas to a separate repository before transformation | Validate expected calculations exist before applying worksheet updates | Generate documentation of dynamic formulas in multi‑sheet workbooks
-// AI Prompts: Generate C# code that returns the formula of cell E3 on the second worksheet using Aspose.Cells without modifying the file. | Create a reusable method accepting a file path, sheet index, and cell address, which returns the cell's formula while preserving the original workbook. | Write a script that prints the formula of a specified cell, clears its value and formula, and then saves the workbook with Aspose.Cells.
+// Title: Aspose.Cells C# – Retrieve formula of E3 in second worksheet before clearing
+// Description: Loads an existing workbook, accesses worksheet index 1, reads the formula from cell E3, prints it, empties the cell, and saves the workbook. Includes file‑existence verification and robust exception handling.
+// Keywords: Aspose.Cells | C# | read cell formula | E3 formula | second worksheet | clear cell value | Excel formula extraction | Workbook.Save | exception handling
+// Common Searches: Aspose.Cells get formula from cell E3 | C# read Excel formula before deleting cell | How to retrieve and clear cell content with Aspose.Cells | Get formula of a cell in specific worksheet Aspose | Aspose.Cells example read formula then clear
+// Developer Intent: Extract the formula stored in cell E3 of the second worksheet before removing its content.
+// Use Cases: Log original formulas before performing bulk data cleanup. | Validate and audit formulas in a particular sheet prior to exporting a sanitized workbook. | Capture cell formulas for compliance reporting before programmatically clearing cells.
+// AI Prompts: Show C# code using Aspose.Cells to read the formula of cell E3 on the second worksheet and then clear the cell while preserving the workbook. | Explain how to safely retrieve a cell's formula before modifying its contents with Aspose.Cells for .NET. | Provide guidance for handling cases where the target cell does not contain a formula when using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an existing Excel file, accesses the worksheet at index 1 (the second sheet), reads the Formula property of cell E3, outputs the formula, optionally clears the cell, and saves the workbook. Demonstrates how to capture a formula before any deletion occurs.
-class RetrieveFormulaDemo
+// Loads an existing workbook, accesses worksheet index 1, reads the formula from cell E3, prints it, empties the cell, and saves the workbook. Includes file‑existence verification and robust exception handling.
+class Program
 {
     static void Main()
     {
@@ -20,10 +20,10 @@ class RetrieveFormulaDemo
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
@@ -33,23 +33,24 @@ class RetrieveFormulaDemo
             // Access the second worksheet (index 1)
             Worksheet secondSheet = workbook.Worksheets[1];
 
-            // Get the cell E3 from the second worksheet
+            // Get the cell at E3
             Cell targetCell = secondSheet.Cells["E3"];
 
-            // Retrieve the formula before any deletion occurs
+            // Retrieve the formula before any deletion
             string formula = targetCell.Formula;
-            Console.WriteLine($"Formula in worksheet '{secondSheet.Name}' cell E3: {formula}");
+            Console.WriteLine("Formula in E3 before deletion: " + formula);
 
-            // Example deletion: clear the cell's contents (removes the formula)
-            targetCell.PutValue(string.Empty); // removes value and formula
+            // Clear the cell's contents (using PutValue with an empty string)
+            targetCell.PutValue(string.Empty);
 
-            // Save the workbook after the operation
+            // Save the workbook after processing
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

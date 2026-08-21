@@ -1,15 +1,15 @@
-// Title: Ignore empty‑cell reference errors in Aspose.Cells formula calculation (C#)
-// Description: Demonstrates how to suppress errors caused by formulas that reference empty cells in Aspose.Cells for .NET. The example creates a workbook, sets an empty value in A1, adds a formula in B1, configures CalculationOptions.IgnoreError, disables the EmptyCellRef check via ErrorCheckOptionCollection for a specific range, runs workbook.CalculateFormula, and saves the result.
-// Keywords: Aspose.Cells | C# | CalculationOptions.IgnoreError | ErrorCheckOptionCollection | EmptyCellRef | ignore empty cell reference | suppress formula errors | formula calculation options | disable error check Aspose.Cells | Excel automation .NET
-// Common Searches: Aspose.Cells ignore empty cell reference errors | How to disable EmptyCellRef error check in Aspose.Cells | CalculationOptions.IgnoreError example C# | Suppress formula errors in Aspose.Cells workbook | Apply error‑check options to a range Aspose.Cells
-// Developer Intent: Prevent formula evaluation from throwing errors when referenced cells are blank.
-// Use Cases: Run financial or statistical models where missing inputs should not halt calculation. | Generate Excel templates that tolerate empty cells without displaying error warnings. | Automate report creation that skips empty‑cell reference errors for defined sheet areas.
-// AI Prompts: Show C# code to configure Aspose.Cells CalculationOptions to ignore all formula errors and turn off EmptyCellRef checks for a specific range. | Explain how CalculationOptions.IgnoreError and ErrorCheckOption.SetErrorCheck affect formula evaluation in Aspose.Cells. | Provide a step‑by‑step guide to suppress empty‑cell reference errors when calculating formulas with Aspose.Cells for .NET.
+// Title: Ignore Empty‑Cell Errors in Aspose.Cells Formula Calculation (C#)
+// Description: Demonstrates how to use Aspose.Cells' CalculationOptions.IgnoreError flag to treat references to blank cells as zero, prevent formula errors, and calculate the workbook programmatically in C#.
+// Keywords: Aspose.Cells | C# | CalculationOptions | IgnoreError | empty cell reference | formula error handling | treat blank cells as zero | workbook.CalculateFormula | .NET spreadsheet library | global developers
+// Common Searches: Aspose.Cells ignore empty cell errors | CalculationOptions.IgnoreError C# example | prevent #REF! for blank cells Aspose.Cells | calculate formulas without errors Aspose.Cells .NET | treat blank cells as zero Aspose.Cells
+// Developer Intent: Configure Aspose.Cells to evaluate formulas without raising errors when they reference empty cells, treating those cells as zero.
+// Use Cases: Financial models where optional input cells may be left blank. | Automated report generation that includes formulas referencing potentially empty data fields. | Bulk processing of workbooks where missing values should not interrupt calculations.
+// AI Prompts: Generate C# code that calculates an Aspose.Cells workbook while ignoring errors from empty‑cell references. | Show how to set CalculationOptions.IgnoreError to treat blank cells as zero and then save the workbook. | Explain when and why to use CalculationOptions.IgnoreError in Aspose.Cells formula evaluation.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to suppress errors caused by formulas that reference empty cells in Aspose.Cells for .NET. The example creates a workbook, sets an empty value in A1, adds a formula in B1, configures CalculationOptions.IgnoreError, disables the EmptyCellRef check via ErrorCheckOptionCollection for a specific range, runs workbook.CalculateFormula, and saves the result.
+// Demonstrates how to use Aspose.Cells' CalculationOptions.IgnoreError flag to treat references to blank cells as zero, prevent formula errors, and calculate the workbook programmatically in C#.
 class Program
 {
     static void Main()
@@ -17,32 +17,23 @@ class Program
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
 
-        // Set up a scenario where a formula references an empty cell
-        cells["A1"].PutValue("");               // Empty cell
-        cells["B1"].Formula = "=A1*2";           // Formula that references the empty cell
+        // Set a formula that references an empty cell (B1 is empty)
+        worksheet.Cells["A1"].Formula = "=B1+10";
 
-        // Configure calculation options to ignore all errors during formula evaluation
+        // Configure calculation options to ignore errors (including empty‑cell reference errors)
         CalculationOptions calcOptions = new CalculationOptions
         {
-            IgnoreError = true // Suppress errors such as those from empty‑cell references
+            IgnoreError = true
         };
 
-        // Additionally, disable the specific error check for empty‑cell references
-        ErrorCheckOptionCollection errorCheckOptions = worksheet.ErrorCheckOptions;
-        int optionIndex = errorCheckOptions.Add();               // Add a new error‑check option
-        ErrorCheckOption errorCheckOption = errorCheckOptions[optionIndex];
-        errorCheckOption.SetErrorCheck(ErrorCheckType.EmptyCellRef, false); // Do not flag empty‑cell reference errors
-        errorCheckOption.AddRange(CellArea.CreateCellArea("A1", "Z100"));   // Apply to the desired range
-
-        // Perform calculation with the configured options
+        // Perform calculation with the specified options
         workbook.CalculateFormula(calcOptions);
 
-        // Display the result of the formula that referenced the empty cell
-        Console.WriteLine("Result in B1: " + cells["B1"].StringValue);
+        // Display the calculated result (should be 10 because B1 is treated as 0)
+        Console.WriteLine("A1 result: " + worksheet.Cells["A1"].StringValue);
 
-        // Save the workbook
-        workbook.Save("IgnoreEmptyCellReference.xlsx");
+        // Save the workbook (optional)
+        workbook.Save("IgnoreEmptyCellError.xlsx");
     }
 }

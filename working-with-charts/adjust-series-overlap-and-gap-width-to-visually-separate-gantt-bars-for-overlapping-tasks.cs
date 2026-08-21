@@ -1,66 +1,80 @@
-// Title: Set Series Overlap & Gap Width to Separate Overlapping Gantt Bars – Aspose.Cells C# Example
-// Description: This C# sample creates an Excel workbook, populates it with task, start, and duration data, adds a stacked bar chart for a Gantt view, hides the start series, and configures the Duration series with a negative Overlap and a custom GapWidth to clearly separate overlapping bars before saving the file.
-// Keywords: Aspose.Cells | C# | Gantt chart | stacked bar chart | series overlap | negative overlap | gap width | chart spacing | transparent series | Excel chart formatting | overlapping tasks visualization
-// Common Searches: Aspose.Cells set negative series overlap | change gap width stacked bar chart Aspose.Cells | separate overlapping Gantt bars C# | hide start series in Aspose.Cells chart | adjust bar spacing in Excel using Aspose.Cells
-// Developer Intent: Apply the Overlap and GapWidth properties of a chart series to visually separate bars that would otherwise overlap in a Gantt chart.
-// Use Cases: Display tasks with overlapping time periods as distinct bars in a Gantt chart. | Hide positioning data (Start) while keeping it for bar alignment by making the series transparent. | Fine‑tune vertical spacing between task rows to improve readability of stacked bar charts.
-// AI Prompts: Write C# code using Aspose.Cells that creates a Gantt chart and sets series Overlap to -40 and GapWidth to 150. | Explain how Overlap and GapWidth affect stacked bar charts in Aspose.Cells, with recommended value ranges. | Provide a step‑by‑step guide to make a chart series invisible but still used for positioning in Aspose.Cells.
+// Title: Aspose.Cells .NET – Adjust Series Overlap & Gap Width to Separate Gantt Bars
+// Description: C# example that builds a horizontal stacked‑bar Gantt chart, hides the start‑date series, and applies Overlap = -40 and GapWidth = 150 to both series (and the chart) so overlapping tasks are visually separated. The workbook is saved as an Excel file.
+// Keywords: Aspose.Cells series overlap | gap width stacked bar chart | Gantt chart spacing .NET | horizontal stacked bar Aspose | Excel chart formatting C# | visual separation Gantt bars | Aspose.Cells chart properties
+// Common Searches: set series overlap Aspose.Cells | gap width for stacked bar chart .NET | separate overlapping Gantt tasks Excel | Aspose.Cells horizontal Gantt example | adjust chart spacing Aspose.Cells C#
+// Developer Intent: Modify a stacked‑bar Gantt chart in Aspose.Cells so that overlapping task bars are spaced apart by configuring the Overlap and GapWidth properties of the series and chart.
+// Use Cases: Create a horizontal stacked‑bar Gantt chart where the start‑date series is invisible and the duration series forms the visible bars. | Apply the same Overlap (-40) and GapWidth (150) settings to multiple series to ensure consistent spacing across all tasks. | Generate an Excel workbook with clearly spaced Gantt bars for project‑timeline reporting.
+// AI Prompts: Write C# code using Aspose.Cells to build a Gantt chart and set series Overlap and GapWidth for visual separation. | Explain the impact of Overlap and GapWidth on stacked‑bar charts in Aspose.Cells with code snippets. | Provide debugging steps when Gantt bars still overlap after setting Overlap and GapWidth in Aspose.Cells.
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System.Drawing;
 
-// This C# sample creates an Excel workbook, populates it with task, start, and duration data, adds a stacked bar chart for a Gantt view, hides the start series, and configures the Duration series with a negative Overlap and a custom GapWidth to clearly separate overlapping bars before saving the file.
-class GanttChartOverlapDemo
+namespace GanttChartExample
 {
-    static void Main()
+    // C# example that builds a horizontal stacked‑bar Gantt chart, hides the start‑date series, and applies Overlap = -40 and GapWidth = 150 to both series (and the chart) so overlapping tasks are visually separated. The workbook is saved as an Excel file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Prepare sample data for a Gantt chart (Task, Start, Duration)
-        sheet.Cells["A1"].PutValue("Task");
-        sheet.Cells["B1"].PutValue("Start");
-        sheet.Cells["C1"].PutValue("Duration");
-
-        string[] tasks = { "Task A", "Task B", "Task C" };
-        int[] starts = { 1, 2, 3 };
-        int[] durations = { 5, 4, 6 };
-
-        for (int i = 0; i < tasks.Length; i++)
+        static void Main()
         {
-            sheet.Cells[i + 2, 0].PutValue(tasks[i]);   // Column A
-            sheet.Cells[i + 2, 1].PutValue(starts[i]); // Column B
-            sheet.Cells[i + 2, 2].PutValue(durations[i]); // Column C
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Header row
+                sheet.Cells["A1"].PutValue("Task");
+                sheet.Cells["B1"].PutValue("Start");
+                sheet.Cells["C1"].PutValue("Duration");
+
+                // Sample data – store start dates as Excel serial numbers (OADate)
+                sheet.Cells["A2"].PutValue("Task 1");
+                sheet.Cells["B2"].PutValue(DateTime.Today.ToOADate());
+                sheet.Cells["C2"].PutValue(5);
+
+                sheet.Cells["A3"].PutValue("Task 2");
+                sheet.Cells["B3"].PutValue(DateTime.Today.AddDays(3).ToOADate());
+                sheet.Cells["C3"].PutValue(7);
+
+                sheet.Cells["A4"].PutValue("Task 3");
+                sheet.Cells["B4"].PutValue(DateTime.Today.AddDays(6).ToOADate());
+                sheet.Cells["C4"].PutValue(4);
+
+                // Add a stacked bar chart (horizontal) to represent the Gantt bars
+                int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 6, 0, 20, 12);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // First series: Start dates (invisible, used for positioning)
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries[0].Values = "=B2:B4";
+                chart.NSeries[0].Name = "Start";
+                chart.NSeries[0].Border.IsVisible = false;
+                chart.NSeries[0].Area.ForegroundColor = Color.Transparent;
+
+                // Second series: Duration (visible Gantt bars)
+                chart.NSeries.Add("C2:C4", true);
+                chart.NSeries[1].Values = "=C2:C4";
+                chart.NSeries[1].Name = "Duration";
+
+                // Set category (task) labels
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Adjust overlap and gap width for better visual separation
+                chart.NSeries[0].Overlap = -40;
+                chart.NSeries[1].Overlap = -40;
+                chart.NSeries[0].GapWidth = 150;
+                chart.NSeries[1].GapWidth = 150;
+                chart.GapWidth = 150;
+
+                // Save the workbook
+                workbook.Save("GanttChartWithOverlapAndGapWidth.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-
-        // Add a stacked bar chart (commonly used for Gantt charts)
-        int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 5, 0, 20, 12);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // First series: Start (invisible, used only for positioning)
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries[0].Values = "=B2:B4";
-        chart.NSeries[0].Name = "Start";
-        // Make the start series transparent so it doesn't appear in the legend or chart
-        chart.NSeries[0].Area.ForegroundColor = Color.Transparent;
-        chart.NSeries[0].IsFiltered = true; // hide from legend
-
-        // Second series: Duration (visible bars)
-        chart.NSeries.Add("C2:C4", false);
-        chart.NSeries[1].Values = "=C2:C4";
-        chart.NSeries[1].Name = "Duration";
-
-        // Set category (Y‑axis) labels to the task names
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Adjust series overlap and gap width to separate overlapping bars
-        chart.NSeries[1].Overlap = -30;   // Negative value separates bars (-100 to 100)
-        chart.NSeries[1].GapWidth = 100; // Reduces space between clusters (0 to 500)
-
-        // Save the workbook with the chart
-        workbook.Save("GanttOverlapDemo.xlsx");
     }
 }

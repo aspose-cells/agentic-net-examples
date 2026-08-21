@@ -1,17 +1,17 @@
-// Title: C# Aspose.Cells – Export to HTML with HtmlCrossType.FitToCell to confine cell text
-// Description: Create a workbook, insert a long string, set a narrow column width, and save as HTML using HtmlSaveOptions.HtmlCrossStringType = FitToCell so the text stays within the cell boundaries.
-// Keywords: Aspose.Cells HtmlCrossType FitToCell | C# export Excel to HTML | prevent text overflow HTML | HtmlSaveOptions FitToCell example | Aspose.Cells HTML rendering | cell width HTML export
-// Common Searches: Aspose.Cells FitToCell HTML export C# | how to stop text overflow when saving Excel as HTML | HtmlCrossStringType FitToCell usage | set column width and fit text in HTML output Aspose | C# Aspose.Cells HTML export options
-// Developer Intent: Generate an HTML file from an Aspose.Cells workbook where each cell’s content is limited to the cell’s width by using HtmlCrossType.FitToCell.
-// Use Cases: Web‑based reports with narrow columns that must keep long descriptions inside their cells. | Online spreadsheet viewers that require a clean layout without text spilling into adjacent cells. | HTML invoices or catalogs where product details need to stay within predefined column boundaries.
-// AI Prompts: Provide a C# snippet that saves an Aspose.Cells workbook to HTML with text confined to each cell using HtmlCrossType.FitToCell. | Explain the effect of HtmlCrossStringType on HTML rendering and how it interacts with column width settings. | Show how to combine column width adjustments and HtmlSaveOptions to prevent overflow in the generated HTML file.
+// Title: C# Export Excel to HTML with Aspose.Cells – HtmlCrossType.FitToCell to Prevent Text Overflow
+// Description: Demonstrates how to create a workbook, insert a long string into a cell, set a narrow column width, and save the file as HTML using Aspose.Cells HtmlSaveOptions with HtmlCrossType.FitToCell so the text is truncated to the cell's width instead of spilling over.
+// Keywords: Aspose.Cells HtmlCrossType FitToCell | C# HTML export Excel | prevent text overflow Aspose.Cells | set column width Excel C# | HtmlSaveOptions FitToCell example
+// Common Searches: Aspose.Cells fit text to cell when exporting HTML | HtmlCrossType.FitToCell C# sample | how to stop cell overflow in HTML output Aspose | export Excel to HTML with controlled column width
+// Developer Intent: Generate an HTML file from an Excel workbook where cell content is confined to the cell width using HtmlCrossType.FitToCell.
+// Use Cases: Web dashboards that require fixed‑width columns to keep layout tidy. | Email‑ready HTML tables where long descriptions must not break the design. | Printable HTML snapshots of spreadsheets that preserve column boundaries.
+// AI Prompts: Show how to apply HtmlCrossType.FitToCell to every worksheet in a workbook when saving to HTML with Aspose.Cells. | Compare HtmlCrossType.FitToCell with other HtmlCrossStringType options and suggest ideal scenarios for each. | Provide code that adjusts row height after using FitToCell to avoid clipped text in the generated HTML.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlCrossFitToCellDemo
 {
-    // Create a workbook, insert a long string, set a narrow column width, and save as HTML using HtmlSaveOptions.HtmlCrossStringType = FitToCell so the text stays within the cell boundaries.
+    // Demonstrates how to create a workbook, insert a long string into a cell, set a narrow column width, and save the file as HTML using Aspose.Cells HtmlSaveOptions with HtmlCrossType.FitToCell so the text is truncated to the cell's width instead of spilling over.
     class Program
     {
         static void Main()
@@ -23,18 +23,16 @@ namespace AsposeCellsHtmlCrossFitToCellDemo
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Put a long text into a cell that would normally overflow
-            worksheet.Cells["A1"].PutValue("This is a very long text that should be confined within the cell width when exported to HTML.");
+            worksheet.Cells["A1"].PutValue("This is a very long text that should be truncated to fit within the cell width.");
 
-            // Optionally set a narrow column width to demonstrate the effect
+            // Set a narrow column width to force overflow
             worksheet.Cells.SetColumnWidth(0, 10); // Column A width
 
-            // Create HTML save options
+            // Configure HTML save options to use FitToCell cross type
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-            // Set the cross string type to FitToCell to restrict overflow
             htmlOptions.HtmlCrossStringType = HtmlCrossType.FitToCell;
 
-            // Save the workbook as HTML using the specified options
+            // Save the workbook as HTML with the specified options
             workbook.Save("FitToCellOutput.html", htmlOptions);
 
             Console.WriteLine("HTML file saved with HtmlCrossType.FitToCell.");

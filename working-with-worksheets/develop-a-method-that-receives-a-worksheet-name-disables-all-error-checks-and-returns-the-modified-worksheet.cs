@@ -1,71 +1,83 @@
-// Title: C# – Disable All Error Checks on a Named Worksheet with Aspose.Cells
-// Description: A concise example that creates a new Workbook, renames its first worksheet, disables every ErrorCheckType using an ErrorCheckOption, applies the setting to the full used range, and returns the modified Worksheet for further processing or saving.
-// Keywords: Aspose.Cells C# | disable worksheet error checks | ErrorCheckOptionCollection | ErrorCheckType false | set worksheet name Aspose.Cells | .NET Excel library example | apply error check to used range | GitHub Aspose.Cells sample | Excel error indicators off | programmatic worksheet configuration
-// Common Searches: how to turn off all error checking in Aspose.Cells | Aspose.Cells disable error checks for entire sheet | C# set worksheet name and suppress error warnings | apply ErrorCheckOption to whole worksheet Aspose.Cells | sample code to disable Excel error indicators with Aspose
-// Developer Intent: Create a method that accepts a worksheet name, disables every error‑check type on that sheet, and returns the configured Worksheet.
-// Use Cases: Export data without Excel error triangles cluttering the view. | Provide a clean template for end‑users where validation warnings are unnecessary. | Generate multiple named sheets with uniform error‑check settings before populating data.
-// AI Prompts: Write a C# function using Aspose.Cells that takes a worksheet name, disables all error checks for the entire used range, and returns the Worksheet object. | Show how to add an ErrorCheckOption to a worksheet, set each ErrorCheckType to false, and apply it to the full used area in Aspose.Cells for .NET. | Explain how to retrieve the parent Workbook from a returned Worksheet and save the file after disabling error checks.
+// Title: C# – Disable All Error Checks for a Worksheet Using Aspose.Cells
+// Description: A C# helper method that receives a Workbook and a worksheet name, retrieves the matching Worksheet, creates an ErrorCheckOption, disables every ErrorCheckType, applies the option to the entire used range, and returns the updated Worksheet. Useful for removing Excel error indicators before saving or distributing a file.
+// Keywords: Aspose.Cells | C# | .NET | disable worksheet error checks | ErrorCheckOption | ErrorCheckType | Excel error indicators | programmatic Excel formatting | workbook manipulation | remove validation warnings
+// Common Searches: Aspose.Cells disable all error checks on a sheet | C# turn off Excel error triangles with Aspose.Cells | how to hide error indicators in a worksheet using Aspose.Cells | programmatically disable error checking for a specific worksheet .NET | remove validation warnings from Excel file using Aspose.Cells
+// Developer Intent: Create a function that disables every error‑check type on a named worksheet and returns the modified Worksheet.
+// Use Cases: Prepare a report workbook for distribution without Excel error triangles. | Generate clean data‑export sheets programmatically, eliminating validation warnings. | Apply consistent error‑check settings across all worksheets in a large workbook.
+// AI Prompts: Write a C# method with Aspose.Cells that disables all error checks for a given worksheet name and applies the setting to the whole used range. | Show how to loop through all worksheets in a Workbook and call DisableAllErrorChecks for each sheet. | Explain how to verify that error checks have been disabled after invoking the method in Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// A concise example that creates a new Workbook, renames its first worksheet, disables every ErrorCheckType using an ErrorCheckOption, applies the setting to the full used range, and returns the modified Worksheet for further processing or saving.
-public static class WorksheetHelper
+namespace AsposeCellsUtilities
 {
-    /// <param name="sheetName">The name of the worksheet to create or rename.</param>
-    /// <returns>The worksheet with all error checks disabled.</returns>
-    public static Worksheet GetWorksheetWithAllErrorChecksDisabled(string sheetName)
+    // A C# helper method that receives a Workbook and a worksheet name, retrieves the matching Worksheet, creates an ErrorCheckOption, disables every ErrorCheckType, applies the option to the entire used range, and returns the updated Worksheet. Useful for removing Excel error indicators before saving or distributing a file.
+    public static class WorksheetHelper
     {
-        // Create a new workbook (lifecycle rule)
-        Workbook workbook = new Workbook();
-
-        // Use the first worksheet and set its name
-        Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Name = sheetName;
-
-        // Access the collection of error‑check options for the worksheet
-        ErrorCheckOptionCollection options = worksheet.ErrorCheckOptions;
-
-        // Add a new ErrorCheckOption that will hold our settings
-        int optionIndex = options.Add();
-        ErrorCheckOption option = options[optionIndex];
-
-        // Disable every possible error‑check type
-        foreach (ErrorCheckType type in Enum.GetValues(typeof(ErrorCheckType)))
+        /// <param name="workbook">The workbook containing the worksheet.</param>
+        /// <param name="worksheetName">The name of the worksheet to modify.</param>
+        /// <returns>The worksheet with all error checks disabled.</returns>
+        public static Worksheet DisableAllErrorChecks(Workbook workbook, string worksheetName)
         {
-            option.SetErrorCheck(type, false);
+            // Get the worksheet by name; throws if not found.
+            Worksheet sheet = workbook.Worksheets[worksheetName];
+
+            // Access the collection of error‑check options for this sheet.
+            ErrorCheckOptionCollection options = sheet.ErrorCheckOptions;
+
+            // Add a new ErrorCheckOption to the collection.
+            int optionIndex = options.Add();
+            ErrorCheckOption option = options[optionIndex];
+
+            // Disable every possible error check type.
+            foreach (ErrorCheckType checkType in Enum.GetValues(typeof(ErrorCheckType)))
+            {
+                option.SetErrorCheck(checkType, false);
+            }
+
+            // Apply the option to the whole used range of the worksheet.
+            int maxRow = sheet.Cells.MaxRow;
+            int maxCol = sheet.Cells.MaxDataColumn; // last column with data
+            option.AddRange(CellArea.CreateCellArea(0, 0, maxRow, maxCol));
+
+            return sheet;
         }
-
-        // Apply the option to the whole used range of the worksheet
-        int maxRow = worksheet.Cells.MaxRow;
-        int maxCol = worksheet.Cells.MaxColumn;
-        option.AddRange(CellArea.CreateCellArea(0, 0, maxRow, maxCol));
-
-        // Return the modified worksheet
-        return worksheet;
     }
-}
 
-public class Program
-{
-    public static void Main()
+    public static class Program
     {
-        try
+        public static void Main(string[] args)
         {
-            string sheetName = "MySheet";
-            Worksheet ws = WorksheetHelper.GetWorksheetWithAllErrorChecksDisabled(sheetName);
+            try
+            {
+                string inputPath = "input.xlsx";
+                Workbook workbook;
 
-            // Retrieve the workbook that owns the worksheet
-            Workbook wb = ws.Workbook;
+                // Load existing workbook if it exists; otherwise create a new one.
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    workbook = new Workbook();
+                    workbook.Worksheets[0].Name = "Sheet1";
+                }
 
-            // Save the workbook to verify the result
-            string outputPath = "Output.xlsx";
-            wb.Save(outputPath);
-            Console.WriteLine($"Worksheet '{ws.Name}' created and saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Disable all error checks on the first worksheet.
+                string sheetName = workbook.Worksheets[0].Name;
+                WorksheetHelper.DisableAllErrorChecks(workbook, sheetName);
+
+                // Save the modified workbook.
+                string outputPath = "output.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

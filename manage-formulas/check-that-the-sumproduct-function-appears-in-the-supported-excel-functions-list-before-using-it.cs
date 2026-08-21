@@ -1,51 +1,56 @@
-// Title: Check SUMPRODUCT support in Aspose.Cells for .NET before applying the formula
-// Description: Creates a workbook, adds sample data, and uses a temporary cell to evaluate the SUMPRODUCT formula. By inspecting the HasCustomFunction flag, the code determines whether SUMPRODUCT is available, applies it to the target cell only when supported, calculates the result, and saves the file.
-// Keywords: Aspose.Cells SUMPRODUCT support | HasCustomFunction detection | conditional formula .NET | verify Excel function availability | runtime safe formula insertion
-// Common Searches: Aspose.Cells how to test if SUMPRODUCT is supported | HasCustomFunction property example | prevent unsupported formula errors Aspose.Cells | check Excel function availability before use
-// Developer Intent: Detect whether the SUMPRODUCT function exists in the current Aspose.Cells version and set the formula only if it is supported.
-// Use Cases: Programmatically confirm support for a specific Excel function before writing it to a worksheet. | Avoid runtime exceptions caused by unsupported functions in older Aspose.Cells releases. | Implement fallback logic that switches to an alternative calculation when a function is missing.
-// AI Prompts: Write C# code that checks for XLOOKUP support with Aspose.Cells and falls back to VLOOKUP if unavailable. | Create a utility that iterates over a list of formulas, uses HasCustomFunction to filter out unsupported ones, and applies the rest. | Generate a method that logs all custom or unsupported functions detected in a workbook using Aspose.Cells.
+// Title: C# Aspose.Cells – Verify SUMPRODUCT support before using the formula
+// Description: Creates a workbook, fills A1:A3 and B1:B3, assigns =SUMPRODUCT(A1:A3,B1:B3) to C1, uses the HasCustomFunction property to detect if SUMPRODUCT is supported, calculates the result when possible, and saves the file.
+// Keywords: Aspose.Cells SUMPRODUCT support | HasCustomFunction C# | detect unsupported Excel functions .NET | validate Excel function compatibility | Aspose.Cells formula checking | C# Excel function detection | Aspose.Cells example GitHub | Excel SUMPRODUCT Aspose.Cells
+// Common Searches: how to check if SUMPRODUCT is supported in Aspose.Cells | Aspose.Cells HasCustomFunction usage | detect custom functions in Aspose.Cells C# | verify Excel function compatibility with Aspose.Cells | C# example for unsupported Excel functions
+// Developer Intent: Identify whether the SUMPRODUCT function is available in the current Aspose.Cells version before performing calculations.
+// Use Cases: Prevent runtime errors by confirming SUMPRODUCT support prior to large‑scale data processing. | Implement a fallback algorithm when SUMPRODUCT is reported as unsupported. | Log or report any custom (unsupported) functions encountered while importing workbooks.
+// AI Prompts: Write C# code that checks any Excel formula for unsupported functions using HasCustomFunction and provides an alternative calculation. | Generate a method that scans all worksheets in a workbook and returns formulas containing custom functions. | Create an Aspose.Cells example that replaces unsupported SUMPRODUCT formulas with equivalent supported expressions.
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, adds sample data, and uses a temporary cell to evaluate the SUMPRODUCT formula. By inspecting the HasCustomFunction flag, the code determines whether SUMPRODUCT is available, applies it to the target cell only when supported, calculates the result, and saves the file.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Creates a workbook, fills A1:A3 and B1:B3, assigns =SUMPRODUCT(A1:A3,B1:B3) to C1, uses the HasCustomFunction property to detect if SUMPRODUCT is supported, calculates the result when possible, and saves the file.
+    class CheckSumProductSupport
     {
-        // Create a new workbook (lifecycle rule)
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate sample data for the SUMPRODUCT calculation
-        cells["A1"].PutValue(1);
-        cells["A2"].PutValue(2);
-        cells["B1"].PutValue(3);
-        cells["B2"].PutValue(4);
-
-        // Use a temporary cell to test whether SUMPRODUCT is supported
-        Cell testCell = cells["C1"];
-        testCell.Formula = "=SUMPRODUCT(A1:A2,B1:B2)";
-
-        // If the formula contains an unsupported (custom) function, HasCustomFunction will be true
-        bool sumProductSupported = !testCell.HasCustomFunction;
-
-        if (sumProductSupported)
+        static void Main()
         {
-            // SUMPRODUCT is supported – apply it to the actual target cell
-            cells["D1"].Formula = "=SUMPRODUCT(A1:A2,B1:B2)";
-            workbook.CalculateFormula(); // evaluate formulas
-            Console.WriteLine("SUMPRODUCT result: " + cells["D1"].Value);
-        }
-        else
-        {
-            // Inform the user that the function is not available
-            Console.WriteLine("SUMPRODUCT function is not supported in this Aspose.Cells version.");
-        }
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Save the workbook (lifecycle rule)
-        workbook.Save("SumProductCheck.xlsx");
+            // Populate sample data for the SUMPRODUCT calculation
+            cells["A1"].PutValue(1);
+            cells["A2"].PutValue(2);
+            cells["A3"].PutValue(3);
+            cells["B1"].PutValue(4);
+            cells["B2"].PutValue(5);
+            cells["B3"].PutValue(6);
+
+            // Set a formula that uses SUMPRODUCT
+            Cell formulaCell = cells["C1"];
+            formulaCell.Formula = "=SUMPRODUCT(A1:A3,B1:B3)";
+
+            // Check whether the function is recognized as a custom (unsupported) function
+            if (formulaCell.HasCustomFunction)
+            {
+                Console.WriteLine("SUMPRODUCT is NOT supported by the current Aspose.Cells version.");
+            }
+            else
+            {
+                Console.WriteLine("SUMPRODUCT is supported. Calculating...");
+
+                // Calculate the workbook formulas
+                workbook.CalculateFormula();
+
+                // Output the result
+                Console.WriteLine("Result of SUMPRODUCT(A1:A3,B1:B3): " + formulaCell.Value);
+            }
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("CheckSumProductSupport.xlsx");
+        }
     }
 }

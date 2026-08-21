@@ -1,11 +1,11 @@
----
+﻿---
 name: Aspose.Cells Cell Data Agent
 category: cells-data
 product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Read, write, import, validate, search, sort, and enumerate Excel cell data in C#
 primary_apis: [Cell, Cells, Cell.PutValue, Cell.Value, Cells.ImportArray, Cells.ImportCustomObjects, Cells.Find]
 related_categories: [../managing-ranges/, ../rows-and-columns/, ../format-cells/, ../manage-formulas/]
@@ -126,3 +126,4 @@ Review checklist: correct zero-based indexes; typed values preserved; iteration 
 ## Definition of done
 
 The example is complete when its API is version-verified, data types and bounds are correct, its result is deterministic and checked, and both humans and AI systems can identify the solved cell-data problem immediately.
+

@@ -1,78 +1,75 @@
-// Title: Validate VBA Modules for Sub Main Before Saving an Xlsm Workbook with Aspose.Cells for .NET
-// Description: Shows how to create a macro‑enabled workbook, add procedural and class VBA modules, and programmatically confirm that each module contains a Sub Main routine (case‑insensitive). The file is saved only when all modules pass the check; otherwise, missing entry points are reported.
-// Keywords: Aspose.Cells | VBA module validation | Sub Main check | macro enabled workbook | C# Aspose.Cells VBA | VbaProject.Modules | Xlsm save validation | Excel automation | code entry point | Aspose.Cells .NET
-// Common Searches: Aspose.Cells check Sub Main in VBA modules | C# validate VBA modules before saving workbook | ensure every VBA module has an entry point using Aspose.Cells | save macro enabled workbook after VBA validation | detect missing Sub Main in Excel VBA with Aspose.Cells
-// Developer Intent: The developer wants to guarantee that every VBA module in a generated macro‑enabled workbook includes a Sub Main routine before committing the file.
-// Use Cases: Automated pipelines that generate Excel files and must enforce a runnable Sub Main in each module. | Quality‑gate for Excel add‑ins requiring a standard entry routine across all VBA modules. | Diagnostic tool that lists modules lacking Sub Main to aid debugging and code review. | Corporate policy enforcement ensuring consistent entry points in VBA macros.
-// AI Prompts: Write C# code using Aspose.Cells that scans VbaProject.Modules and returns the names of modules without a Sub Main declaration. | Create an example that throws a custom ValidationException instead of writing to the console when a module is missing the entry point. | Show how to extend the validation to accept alternative entry names such as "Sub Start" while keeping the search case‑insensitive. | Generate a PowerShell script that calls the compiled .NET example and logs validation results to a JSON file.
+// Title: C# – Validate VBA Modules for a Sub Main Entry Point Before Saving an Aspose.Cells .xlsm Workbook
+// Description: Creates a macro‑enabled workbook, adds a procedural VBA module with a Sub Main routine and a class module without one, then scans every VbaProject module for a case‑insensitive "Sub Main" definition. If any module is missing the entry point, an InvalidOperationException is thrown; otherwise the workbook is saved as a .xlsm file.
+// Keywords: Aspose.Cells VBA validation | C# Sub Main detection | macro‑enabled workbook save | VbaProject module check | .xlsm validation C# | Aspose.Cells .NET example | global C# developers
+// Common Searches: how to verify Sub Main in all VBA modules using Aspose.Cells C# | validate VBA modules before saving .xlsm with Aspose.Cells | throw error when VBA class module lacks Sub Main C# | Aspose.Cells check for entry point in VBA project | C# code to ensure every VBA module has Sub Main
+// Developer Intent: Confirm that each VBA module in a workbook contains a Sub Main routine before the file is saved.
+// Use Cases: Prevent committing a macro‑enabled workbook that lacks a consistent entry point. | Automate VBA module validation in CI/CD pipelines to fail builds with missing Sub Main. | Provide precise error messages identifying modules without the required entry point.
+// AI Prompts: Generate C# code with Aspose.Cells that logs names of VBA modules missing Sub Main instead of throwing an exception. | Modify the validation loop to also check for a Sub Init routine and return a list of modules missing either entry point. | Create an NUnit test that verifies InvalidOperationException is raised when a class module without Sub Main is added.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsVbaValidation
 {
-    // Shows how to create a macro‑enabled workbook, add procedural and class VBA modules, and programmatically confirm that each module contains a Sub Main routine (case‑insensitive). The file is saved only when all modules pass the check; otherwise, missing entry points are reported.
-    public class ValidateVbaModules
+    // Creates a macro‑enabled workbook, adds a procedural VBA module with a Sub Main routine and a class module without one, then scans every VbaProject module for a case‑insensitive "Sub Main" definition. If any module is missing the entry point, an InvalidOperationException is thrown; otherwise the workbook is saved as a .xlsm file.
+    public class WorkbookWithVbaValidation
     {
         public static void Run()
         {
             try
             {
-                // Create a new macro-enabled workbook
+                // Create a new workbook (macro-enabled format will be used on save)
                 Workbook workbook = new Workbook();
 
                 // Access the VBA project
                 VbaProject vbaProject = workbook.VbaProject;
 
-                // Add a procedural module with Sub Main
-                int index1 = vbaProject.Modules.Add(VbaModuleType.Procedural, "ModuleWithMain");
-                VbaModule module1 = vbaProject.Modules[index1];
-                module1.Codes = "Sub Main()\n    MsgBox \"Hello from Main\"\nEnd Sub";
+                // Add a procedural module and set its code
+                int procIndex = vbaProject.Modules.Add(VbaModuleType.Procedural, "ProceduralModule");
+                VbaModule procModule = vbaProject.Modules[procIndex];
+                procModule.Codes = "Sub Main()\n    MsgBox \"Procedural Main\"\nEnd Sub";
 
-                // Add a class module without Sub Main (for validation demonstration)
-                int index2 = vbaProject.Modules.Add(VbaModuleType.Class, "ModuleWithoutMain");
-                VbaModule module2 = vbaProject.Modules[index2];
-                module2.Codes = "Public Sub Test()\n    MsgBox \"No Main here\"\nEnd Sub";
+                // Add a class module without Sub Main (to demonstrate validation failure)
+                int classIndex = vbaProject.Modules.Add(VbaModuleType.Class, "ClassModule");
+                VbaModule classModule = vbaProject.Modules[classIndex];
+                classModule.Codes = "Public Sub Test()\n    MsgBox \"No Main here\"\nEnd Sub";
 
-                // Validate that each module contains a Sub Main entry point
-                bool allModulesValid = true;
-                foreach (VbaModule mod in vbaProject.Modules)
+                // Validate that every module contains a Sub Main entry point
+                foreach (VbaModule module in vbaProject.Modules)
                 {
-                    // Check for the presence of "Sub Main" (case‑insensitive)
-                    if (string.IsNullOrEmpty(mod.Codes) ||
-                        mod.Codes.IndexOf("Sub Main", StringComparison.OrdinalIgnoreCase) == -1)
+                    // Check for presence of "Sub Main" (case‑insensitive)
+                    bool hasSubMain = !string.IsNullOrEmpty(module.Codes) &&
+                                      module.Codes.IndexOf("Sub Main", StringComparison.OrdinalIgnoreCase) != -1;
+
+                    if (hasSubMain)
                     {
-                        allModulesValid = false;
-                        Console.WriteLine($"Module \"{mod.Name}\" does not contain a Sub Main entry point.");
+                        // Sub Main found – continue checking other modules
+                        continue;
                     }
+
+                    // If we reach here, the current module lacks Sub Main
+                    throw new InvalidOperationException(
+                        $"VBA module \"{module.Name}\" does not contain a Sub Main entry point.");
                 }
 
-                // Save only if validation passed
-                if (allModulesValid)
-                {
-                    string outPath = "ValidatedWorkbook.xlsm";
-                    workbook.Save(outPath, SaveFormat.Xlsm);
-                    Console.WriteLine($"Workbook saved successfully to \"{outPath}\". All modules contain Sub Main.");
-                }
-                else
-                {
-                    Console.WriteLine("Workbook not saved because one or more modules lack a Sub Main entry point.");
-                }
+                // All modules passed validation; save the workbook as a macro‑enabled file
+                workbook.Save("ValidatedWorkbook.xlsm", SaveFormat.Xlsm);
+                Console.WriteLine("Workbook saved successfully as ValidatedWorkbook.xlsm");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
     }
 
-    // Entry point required by the .NET runtime
+    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)
         {
-            ValidateVbaModules.Run();
+            WorkbookWithVbaValidation.Run();
         }
     }
 }

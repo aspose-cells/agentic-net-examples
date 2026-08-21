@@ -1,78 +1,92 @@
-// Title: C# – Convert Worksheet Background Image Stream to Base64 String
-// Description: A reusable C# helper that validates a non‑null image Stream, rewinds it if possible, reads all bytes via a MemoryStream, and returns the Base64 representation. Includes a demo that loads a JPEG file, encodes it, and prints the result—ideal for embedding background pictures in Excel files with Aspose.Cells.
-// Keywords: C# base64 image stream | worksheet background image | Aspose.Cells background picture | convert stream to base64 | image to base64 C# | Excel background image encoding | file stream to base64
-// Common Searches: convert image stream to base64 c# | aspocells background image base64 | c# read file stream and get base64 | embed base64 background image in Excel using Aspose.Cells | c# encode worksheet background picture
-// Developer Intent: Generate a Base64‑encoded string from a worksheet background image stream for use with Aspose.Cells.
-// Use Cases: Encode a background picture to Base64 before assigning it to a worksheet via Aspose.Cells. | Transmit the Base64 string of a worksheet background image through a REST API for client‑side rendering. | Persist the Base64 representation of a worksheet background image in a database for later reuse.
-// AI Prompts: Write a C# method that accepts any image Stream and returns its Base64 string, including null checks and stream positioning. | Show how to read a JPEG file, convert it to Base64 with the helper, and set it as a worksheet background using Aspose.Cells. | Refactor ConvertBackgroundImageStreamToBase64 into an async method using async/await.
+// Title: C# Aspose.Cells – Convert Worksheet Background Image to a Base64 String
+// Description: Sample C# code that loads an Excel workbook with Aspose.Cells, extracts the background picture of a specified worksheet, and returns it as a Base64‑encoded string. Includes a reusable helper for converting any image stream to Base64 and robust checks for file existence and missing images.
+// Keywords: Aspose.Cells background image | C# convert image to Base64 | Excel worksheet picture extraction | Base64 string from Excel image | .NET Excel image stream | retrieve worksheet background bytes | data URI Excel background | Aspose.Cells API example
+// Common Searches: Aspose.Cells get worksheet background image as Base64 | C# extract Excel sheet background picture | convert Excel background to Base64 string | how to read worksheet background image with Aspose.Cells | Base64 encoding of Excel worksheet image
+// Developer Intent: Obtain the background picture of an Excel worksheet and deliver it as a Base64‑encoded string for embedding or transmission.
+// Use Cases: Embed the worksheet background directly in HTML or email using a data‑URI. | Store the Base64 image in a database for audit trails or later rendering. | Transmit the image via a REST API to a web client without saving a physical file.
+// AI Prompts: Generate a method that opens an Excel file with Aspose.Cells, reads the background image of a given worksheet, and returns a Base64 string, handling missing files and empty backgrounds. | Extend the ConvertStreamToBase64 utility to accept non‑seekable streams and optionally prepend the appropriate MIME type for data‑URI usage. | Show how to take the Base64 string from GetWorksheetBackgroundImageBase64 and create an <img> tag with a data URI in an ASP.NET MVC view.
 
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// A reusable C# helper that validates a non‑null image Stream, rewinds it if possible, reads all bytes via a MemoryStream, and returns the Base64 representation. Includes a demo that loads a JPEG file, encodes it, and prints the result—ideal for embedding background pictures in Excel files with Aspose.Cells.
-public static class ImageHelper
+// Sample C# code that loads an Excel workbook with Aspose.Cells, extracts the background picture of a specified worksheet, and returns it as a Base64‑encoded string. Includes a reusable helper for converting any image stream to Base64 and robust checks for file existence and missing images.
+public static class BackgroundImageHelper
 {
-    /// <param name="imageStream">The input stream containing the image data.</param>
-    /// <returns>Base64 encoded string of the image.</returns>
-    public static string ConvertBackgroundImageStreamToBase64(Stream imageStream)
+    // Converts any image stream (e.g., a worksheet background image stream) to a Base64 string.
+    public static string ConvertStreamToBase64(Stream imageStream)
     {
         if (imageStream == null)
             throw new ArgumentNullException(nameof(imageStream));
 
-        // Ensure the stream is positioned at the beginning
+        // Reset position if the stream supports seeking.
         if (imageStream.CanSeek)
-            imageStream.Seek(0, SeekOrigin.Begin);
+            imageStream.Position = 0;
 
-        // Read all bytes from the stream
+        // Read the entire stream into a byte array.
         using (MemoryStream ms = new MemoryStream())
         {
             imageStream.CopyTo(ms);
             byte[] imageBytes = ms.ToArray();
 
-            // Convert the byte array to a Base64 string
+            // Return the Base64 representation.
             return Convert.ToBase64String(imageBytes);
         }
     }
 
-    // Example usage
-    public static void Demo()
+    // Loads a workbook, retrieves the background image of a worksheet,
+    // and returns it as a Base64 string.
+    public static string GetWorksheetBackgroundImageBase64(string workbookPath, int worksheetIndex = 0)
     {
-        // Assume we have an image file that will be used as a worksheet background
-        string imagePath = "background.jpg";
+        // Ensure the workbook file exists to avoid FileNotFoundException.
+        if (!File.Exists(workbookPath))
+            throw new FileNotFoundException($"Workbook file not found: {workbookPath}");
 
-        if (!File.Exists(imagePath))
-        {
-            Console.Error.WriteLine($"File not found: {imagePath}");
-            return;
-        }
+        // Load the workbook.
+        Workbook workbook = new Workbook(workbookPath);
+        Worksheet worksheet = workbook.Worksheets[worksheetIndex];
 
-        try
-        {
-            using (FileStream fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
-            {
-                string base64 = ConvertBackgroundImageStreamToBase64(fs);
-                Console.WriteLine("Base64 string:");
-                Console.WriteLine(base64);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error processing image: {ex.Message}");
-        }
+        // Retrieve the background image bytes.
+        byte[] backgroundBytes = worksheet.BackgroundImage;
+
+        // If no background image is set, return an empty string.
+        if (backgroundBytes == null || backgroundBytes.Length == 0)
+            return string.Empty;
+
+        // Convert the byte array to Base64.
+        return Convert.ToBase64String(backgroundBytes);
     }
 }
 
 public class Program
 {
+    // Entry point for the console application.
     public static void Main(string[] args)
     {
+        // Example workbook path; adjust as needed.
+        string workbookPath = "sample.xlsx";
+
+        // Verify the file exists before proceeding.
+        if (!File.Exists(workbookPath))
+        {
+            Console.WriteLine($"File not found: {workbookPath}");
+            return;
+        }
+
         try
         {
-            ImageHelper.Demo();
+            // Retrieve the background image as a Base64 string.
+            string base64Image = BackgroundImageHelper.GetWorksheetBackgroundImageBase64(workbookPath);
+
+            if (string.IsNullOrEmpty(base64Image))
+                Console.WriteLine("No background image found in the worksheet.");
+            else
+                Console.WriteLine($"Background Image Base64: {base64Image}");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+            // Handle any unexpected errors gracefully.
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

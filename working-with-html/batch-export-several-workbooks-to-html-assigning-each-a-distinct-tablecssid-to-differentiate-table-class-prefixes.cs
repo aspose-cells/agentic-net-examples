@@ -1,10 +1,10 @@
-// Title: Batch Convert Multiple Excel Workbooks to HTML with Unique TableCssId using Aspose.Cells for .NET
-// Description: C# program that scans a directory for .xlsx files, loads each workbook with Aspose.Cells, and saves it as an HTML file. A distinct TableCssId is assigned per workbook via HtmlSaveOptions, preventing CSS conflicts when the pages are displayed together.
-// Keywords: Aspose.Cells | C# | batch export to HTML | HtmlSaveOptions | TableCssId | convert Excel to HTML | multiple workbooks | unique CSS identifier | folder processing | automated Excel conversion
-// Common Searches: Aspose.Cells export multiple Excel files to HTML | C# set TableCssId for each workbook | batch convert .xlsx to .html with unique CSS ids | HtmlSaveOptions TableCssId loop example | how to avoid CSS collisions when exporting Excel to HTML
-// Developer Intent: Automatically generate separate HTML files from a collection of Excel workbooks, giving each table its own CSS identifier.
-// Use Cases: Publish a series of financial reports on a web portal where each report needs an isolated table style. | Provide users with web‑ready previews of uploaded spreadsheets, ensuring style rules do not interfere across files. | Schedule nightly conversion of dashboard workbooks to HTML for intranet distribution, with independent CSS selectors for custom theming.
-// AI Prompts: Generate C# code that reads all .xlsx files in a folder and saves each as HTML using Aspose.Cells, assigning a unique TableCssId based on the file name. | Explain the effect of the TableCssId property in HtmlSaveOptions on the resulting HTML markup and how to target it with external CSS. | Extend the sample to add a <link> tag for a custom stylesheet in every exported HTML file while preserving distinct TableCssId values.
+// Title: Batch Convert Excel Workbooks to HTML with Unique TableCssId using Aspose.Cells for .NET
+// Description: A C# console app that scans a folder for .xls/.xlsx files, loads each workbook with Aspose.Cells, assigns a distinct TableCssId (e.g., table1, table2) via HtmlSaveOptions, and saves the result as HTML in a separate output directory, preventing CSS class collisions across files.
+// Keywords: Aspose.Cells HTML export | C# batch Excel to HTML | TableCssId | unique table CSS id | convert multiple workbooks | .NET Excel to HTML | avoid CSS conflicts Aspose
+// Common Searches: Aspose.Cells set different TableCssId for each HTML export | batch convert Excel files to HTML C# Aspose | unique table CSS identifier when exporting workbooks | export multiple Excel workbooks to HTML without style overlap | C# code to assign sequential TableCssId in Aspose.Cells
+// Developer Intent: Automatically convert every Excel workbook in a directory to an HTML file, giving each output a unique TableCssId to keep table styles isolated.
+// Use Cases: Generate independent HTML reports for a collection of spreadsheets, each with its own CSS namespace. | Prepare HTML versions of financial models for web portals where table styles must not interfere with one another. | Automate bulk conversion of Excel dashboards to email‑ready HTML pages with distinct table identifiers.
+// AI Prompts: Write C# code that uses Aspose.Cells to batch export all Excel files in a folder to HTML, assigning a sequential TableCssId to each file. | Show how to modify the sample to export each worksheet's CSS to separate files and customize the CSS filenames. | Suggest a method to log each conversion (source path, output HTML, TableCssId) to a CSV while preserving the unique identifiers.
 
 using System;
 using System.IO;
@@ -12,73 +12,49 @@ using Aspose.Cells;
 
 namespace BatchHtmlExport
 {
-    // C# program that scans a directory for .xlsx files, loads each workbook with Aspose.Cells, and saves it as an HTML file. A distinct TableCssId is assigned per workbook via HtmlSaveOptions, preventing CSS conflicts when the pages are displayed together.
+    // A C# console app that scans a folder for .xls/.xlsx files, loads each workbook with Aspose.Cells, assigns a distinct TableCssId (e.g., table1, table2) via HtmlSaveOptions, and saves the result as HTML in a separate output directory, preventing CSS class collisions across files.
     class Program
     {
         static void Main()
         {
-            // Define the folder containing the source Excel files
-            string sourceFolder = @"C:\ExcelFiles";
+            // Directory containing source Excel workbooks
+            string sourceDir = @"C:\InputWorkbooks";
 
-            // Define the folder where the HTML files will be saved
-            string outputFolder = @"C:\HtmlExports";
+            // Directory where HTML files will be saved
+            string outputDir = @"C:\HtmlOutputs";
 
             // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
+            Directory.CreateDirectory(outputDir);
 
-            // Verify source directory exists
-            if (!Directory.Exists(sourceFolder))
+            // Get all Excel files in the source directory (supports .xls and .xlsx)
+            string[] excelFiles = Directory.GetFiles(sourceDir, "*.*", SearchOption.TopDirectoryOnly);
+            
+            int index = 1; // Counter to generate distinct TableCssId values
+
+            foreach (string excelPath in excelFiles)
             {
-                Console.WriteLine($"Source folder not found: {sourceFolder}");
-                return;
-            }
+                // Load the workbook
+                Workbook workbook = new Workbook(excelPath);
 
-            // Get all Excel files in the source folder (you can adjust the search pattern as needed)
-            string[] excelFiles = Directory.GetFiles(sourceFolder, "*.xlsx");
+                // Configure HTML save options
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+                
+                // Assign a unique TableCssId for each workbook (e.g., "table1", "table2", ...)
+                saveOptions.TableCssId = $"table{index}";
 
-            if (excelFiles.Length == 0)
-            {
-                Console.WriteLine($"No Excel files found in: {sourceFolder}");
-                return;
-            }
+                // Optional: export each worksheet's CSS separately to avoid style conflicts
+                // saveOptions.ExportWorksheetCSSSeparately = true;
 
-            // Loop through each workbook and export it to HTML with a unique TableCssId
-            for (int i = 0; i < excelFiles.Length; i++)
-            {
-                string excelPath = excelFiles[i];
+                // Determine output HTML file name (same as workbook name with .html extension)
+                string htmlFileName = Path.GetFileNameWithoutExtension(excelPath) + ".html";
+                string htmlPath = Path.Combine(outputDir, htmlFileName);
 
-                // Ensure the file exists before attempting to load
-                if (!File.Exists(excelPath))
-                {
-                    Console.WriteLine($"File not found: {excelPath}");
-                    continue;
-                }
+                // Save the workbook as HTML using the configured options
+                workbook.Save(htmlPath, saveOptions);
 
-                try
-                {
-                    // Load the workbook from the file
-                    Workbook workbook = new Workbook(excelPath);
+                Console.WriteLine($"Saved '{excelPath}' as HTML with TableCssId='{saveOptions.TableCssId}' to '{htmlPath}'");
 
-                    // Create HTML save options
-                    HtmlSaveOptions saveOptions = new HtmlSaveOptions
-                    {
-                        // Assign a distinct TableCssId for this workbook (e.g., "tableStyle0", "tableStyle1", ...)
-                        TableCssId = $"tableStyle{i}"
-                    };
-
-                    // Build the output HTML file path (same name as the Excel file but with .html extension)
-                    string htmlFileName = Path.GetFileNameWithoutExtension(excelPath) + ".html";
-                    string htmlPath = Path.Combine(outputFolder, htmlFileName);
-
-                    // Save the workbook as HTML using the configured options
-                    workbook.Save(htmlPath, saveOptions);
-
-                    Console.WriteLine($"Exported '{excelPath}' to '{htmlPath}' with TableCssId = '{saveOptions.TableCssId}'.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing '{excelPath}': {ex.Message}");
-                }
+                index++;
             }
 
             Console.WriteLine("Batch export completed.");

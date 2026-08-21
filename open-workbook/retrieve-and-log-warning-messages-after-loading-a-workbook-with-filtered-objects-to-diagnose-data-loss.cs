@@ -1,10 +1,10 @@
-// Title: Capture Aspose.Cells Load Warnings with IWarningCallback and Structure‑Only LoadFilter (C#)
-// Description: Demonstrates how to implement a custom IWarningCallback that records every WarningInfo emitted during workbook loading. The sample configures LoadOptions with a WarningCallback and a LoadFilter that loads only the workbook structure, causing data‑loss warnings. After the Workbook is created, all collected warnings are enumerated and displayed, with an optional save of the partially loaded file.
-// Keywords: Aspose.Cells | C# | IWarningCallback | LoadOptions | LoadFilter | Structure filter | warning collection | data loss warning | Excel workbook loading | log warnings
-// Common Searches: Aspose.Cells capture load warnings C# | How to use IWarningCallback with LoadFilter | Retrieve warning messages after loading workbook Aspose.Cells | Log data loss warnings Aspose.Cells .NET | Structure load filter warnings Aspose.Cells
-// Developer Intent: Collect and log every warning produced when a workbook is loaded with a Structure‑only filter to identify omitted cells, charts, and other elements.
-// Use Cases: Audit which workbook components were skipped because of the Structure filter and store the details in a log file. | Display warning summaries in a UI to inform users about potential data loss before saving the workbook. | Programmatically evaluate warnings and decide whether to reload the file with full data based on the presence of DataLoss warnings.
-// AI Prompts: Generate a C# snippet that uses Aspose.Cells IWarningCallback to collect load warnings and writes them to a text log. | Show how to filter out WarningType.DataLoss while still capturing other warning types in the WarningCollector. | Provide code that throws an exception if any DataLoss warning is detected after loading a workbook with a Structure filter.
+// Title: Log Workbook Load Warnings with a Custom IWarningCallback and LoadFilter in Aspose.Cells for .NET
+// Description: Demonstrates how to attach a custom IWarningCallback to LoadOptions and use a LoadFilter to capture and log warning messages generated while loading an Excel workbook. The collected warnings help developers detect unsupported features or data loss caused by filtered loading.
+// Keywords: Aspose.Cells | C# | LoadOptions warning callback | IWarningCallback example | Custom LoadFilter | Excel workbook load warnings | diagnose data loss Aspose.Cells | log warning messages .NET | filtered workbook loading
+// Common Searches: Aspose.Cells capture load warnings C# | how to use IWarningCallback with LoadOptions | log warnings when loading Excel with Aspose.Cells | detect data loss using LoadFilter Aspose.Cells | retrieve warning messages after workbook load
+// Developer Intent: Capture and log all warning messages produced during a filtered workbook load to identify potential data loss or unsupported features.
+// Use Cases: Implement a custom IWarningCallback to collect warnings and write them to a file or monitoring system. | Apply a LoadFilter that loads only specific parts of a workbook (e.g., cell data) while using the warning callback to spot omitted content. | Analyze collected warnings after loading to decide whether to continue processing, alert the user, or retry with different load options.
+// AI Prompts: Generate C# code that uses Aspose.Cells LoadOptions with a custom IWarningCallback to log warnings while loading a workbook with a specific LoadFilter. | Show how to filter warning types such as UnsupportedFeature from the callback output and store them in a structured JSON log. | Provide a strategy for handling load warnings: when to abort, when to retry with alternative options, and how to notify end‑users.
 
 using System;
 using System.Collections.Generic;
@@ -12,21 +12,32 @@ using Aspose.Cells;
 
 namespace AsposeCellsWarningDemo
 {
-    // Custom warning callback that stores all warnings for later inspection
-    // Demonstrates how to implement a custom IWarningCallback that records every WarningInfo emitted during workbook loading. The sample configures LoadOptions with a WarningCallback and a LoadFilter that loads only the workbook structure, causing data‑loss warnings. After the Workbook is created, all collected warnings are enumerated and displayed, with an optional save of the partially loaded file.
-    public class WarningCollector : IWarningCallback
+    // Custom warning callback that collects warning messages
+    // Demonstrates how to attach a custom IWarningCallback to LoadOptions and use a LoadFilter to capture and log warning messages generated while loading an Excel workbook. The collected warnings help developers detect unsupported features or data loss caused by filtered loading.
+    public class CustomWarningCallback : IWarningCallback
     {
-        // List to keep received warnings
-        public List<WarningInfo> CollectedWarnings { get; } = new List<WarningInfo>();
+        // Store warnings for later inspection
+        public List<string> Messages { get; } = new List<string>();
 
-        // This method is called by Aspose.Cells whenever a warning occurs
+        // This method is invoked by Aspose.Cells when a warning occurs
         public void Warning(WarningInfo warningInfo)
         {
-            // Store the warning
-            CollectedWarnings.Add(warningInfo);
+            // Build a readable message
+            string msg = $"Warning Type: {warningInfo.Type}, Description: {warningInfo.Description}";
+            // Add to collection
+            Messages.Add(msg);
+            // Also output to console immediately
+            Console.WriteLine(msg);
+        }
+    }
 
-            // Immediate console output (optional)
-            Console.WriteLine($"[During Load] Warning: {warningInfo.Type} - {warningInfo.Description}");
+    // Custom load filter to demonstrate filtered loading (e.g., load only cell values and formulas)
+    public class CustomLoadFilter : LoadFilter
+    {
+        public override void StartSheet(Worksheet sheet)
+        {
+            // Load only cell data (values, formulas, formatting) for each sheet
+            LoadDataFilterOptions = LoadDataFilterOptions.CellData;
         }
     }
 
@@ -34,38 +45,40 @@ namespace AsposeCellsWarningDemo
     {
         static void Main()
         {
-            // Path to the source workbook (replace with actual file)
+            // Path to the source workbook (replace with actual file path)
             string sourceFile = "input.xlsx";
 
-            // Create a warning collector instance
-            var warningCollector = new WarningCollector();
+            // Create the custom warning callback instance
+            var warningCallback = new CustomWarningCallback();
 
             // Configure load options
             LoadOptions loadOptions = new LoadOptions
             {
-                // Attach the warning callback
-                WarningCallback = warningCollector,
-
-                // Apply a filter that loads only the workbook structure.
-                // This will cause data loss for cells, charts, etc., generating warnings.
-                LoadFilter = new LoadFilter(LoadDataFilterOptions.Structure)
+                // Assign the warning callback to capture warnings during loading
+                WarningCallback = warningCallback,
+                // Apply a custom load filter to limit loaded data
+                LoadFilter = new CustomLoadFilter()
             };
 
             // Load the workbook with the specified options
             Workbook workbook = new Workbook(sourceFile, loadOptions);
 
-            // After loading, output all collected warnings
-            Console.WriteLine("\n=== Collected Warnings After Loading ===");
-            foreach (var warning in warningCollector.CollectedWarnings)
+            // At this point, any warnings generated during loading have been collected
+            Console.WriteLine("\n--- Collected Warning Messages ---");
+            if (warningCallback.Messages.Count == 0)
             {
-                Console.WriteLine($"Warning Type: {warning.Type}");
-                Console.WriteLine($"Description : {warning.Description}");
-                Console.WriteLine($"Corrected   : {warning.CorrectedObject ?? "null"}");
-                Console.WriteLine(new string('-', 40));
+                Console.WriteLine("No warnings were generated during loading.");
+            }
+            else
+            {
+                foreach (var msg in warningCallback.Messages)
+                {
+                    Console.WriteLine(msg);
+                }
             }
 
-            // (Optional) Save the workbook to verify it is still usable
-            workbook.Save("output.xlsx");
+            // Optional: demonstrate that the workbook is usable after loading
+            Console.WriteLine($"\nWorkbook loaded with {workbook.Worksheets.Count} worksheet(s).");
         }
     }
 }

@@ -1,56 +1,123 @@
-// Title: Convert WordArt with Gradient Fill to PDF using Aspose.Cells for .NET
-// Description: Creates an Excel workbook, inserts a WordArt shape with a custom two‑color diagonal gradient, forces the fill type to Gradient, saves the file, and converts it to PDF while preserving the gradient appearance.
-// Keywords: Aspose.Cells | WordArt gradient | Excel to PDF conversion | preserve gradient fill | C# Aspose.Cells example | ConversionUtility PDF | gradient WordArt export
-// Common Searches: Aspose.Cells export WordArt gradient to PDF | C# preserve WordArt fill when converting Excel to PDF | how to add gradient WordArt in Aspose.Cells | convert Excel workbook with WordArt to PDF | gradient fill not showing in PDF Aspose.Cells
-// Developer Intent: Generate a PDF from an Excel file that contains a WordArt object with a custom gradient, ensuring the gradient renders correctly in the output.
-// Use Cases: Design marketing flyers in Excel with gradient WordArt titles and deliver them as PDF brochures. | Automate financial reports where section headers use gradient WordArt that must remain unchanged after PDF export. | Batch‑process archived Excel documents that include WordArt, converting each to PDF while keeping visual fidelity.
-// AI Prompts: Show how to apply a three‑color gradient to WordArt before PDF conversion. | Provide code to convert the workbook to PDF directly without creating a temporary XLSX file. | Explain how to modify the gradient angle or style for WordArt shapes during export.
+// Title: C# – Convert Excel WordArt with Gradient Fill to PDF using Aspose.Cells
+// Description: Loads an Excel workbook, finds WordArt shapes, changes their fill to a two‑color gradient, saves a temporary XLSX, and converts it to PDF with Aspose.Cells while cleaning up the temporary file.
+// Keywords: Aspose.Cells WordArt gradient | C# convert Excel to PDF | WordArt gradient fill Aspose | Excel shape fill type gradient | ConversionUtility PDF export | .NET Excel to PDF gradient
+// Common Searches: how to keep WordArt gradient when converting Excel to PDF with Aspose.Cells | set gradient fill for WordArt shapes before PDF export C# | Aspose.Cells convert Excel WordArt to PDF with accurate colors | apply two‑color diagonal gradient to WordArt in .NET
+// Developer Intent: Apply a gradient fill to WordArt objects in an Excel file and export the workbook to PDF while preserving the gradient appearance.
+// Use Cases: Batch‑process Excel templates that contain WordArt, applying a brand‑specific gradient before generating PDF reports. | Dynamically adjust WordArt gradient colors based on runtime data (e.g., status indicators) and create a PDF snapshot for distribution. | Produce a PDF catalog from an Excel design where WordArt titles must use a diagonal red‑to‑blue gradient for consistent branding.
+// AI Prompts: Show how to use a three‑color gradient on WordArt shapes before PDF conversion with Aspose.Cells. | Provide an example that converts an Excel file with WordArt to PDF without creating a temporary XLSX file. | Explain how to retain WordArt outline, shadow, and other formatting when exporting to PDF using Aspose.Cells.
 
+using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Utility;
 
-// Creates an Excel workbook, inserts a WordArt shape with a custom two‑color diagonal gradient, forces the fill type to Gradient, saves the file, and converts it to PDF while preserving the gradient appearance.
-class WordArtToPdf
+// Loads an Excel workbook, finds WordArt shapes, changes their fill to a two‑color gradient, saves a temporary XLSX, and converts it to PDF with Aspose.Cells while cleaning up the temporary file.
+public class WordArtPdfConverter
 {
-    static void Main()
+    /// <param name="inputExcelPath">Full path to the source Excel file.</param>
+    /// <param name="outputPdfPath">Full path where the resulting PDF will be saved.</param>
+    public static void Convert(string inputExcelPath, string outputPdfPath)
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Verify that the source Excel file exists.
+        if (!File.Exists(inputExcelPath))
+        {
+            Console.WriteLine($"Error: Input file not found – {inputExcelPath}");
+            return;
+        }
 
-        // Add a WordArt shape with a preset style that includes a gradient fill
-        // Parameters: style, text, topRow, top (pixels), leftColumn, left (pixels), height (pixels), width (pixels)
-        Shape wordArt = worksheet.Shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle6, // Gradient Fill - Gray (preset)
-            "Gradient WordArt",
-            2,   // topRow
-            0,   // top offset in pixels
-            2,   // leftColumn
-            0,   // left offset in pixels
-            100, // height in pixels
-            400  // width in pixels
-        );
+        Workbook workbook;
+        try
+        {
+            // Load the workbook from the specified Excel file.
+            workbook = new Workbook(inputExcelPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
 
-        // Ensure the fill type is set to Gradient
-        wordArt.Fill.FillType = FillType.Gradient;
+        // Iterate through all worksheets in the workbook.
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Iterate through all shapes on the worksheet.
+            foreach (Shape shape in sheet.Shapes)
+            {
+                // Process only WordArt shapes using the IsWordArt property.
+                if (shape.IsWordArt)
+                {
+                    // Set the fill type to Gradient to enable gradient operations.
+                    shape.Fill.FillType = FillType.Gradient;
 
-        // Apply a custom two‑color gradient to the WordArt for accurate rendering
-        // Gradient from Red to Blue, diagonal down style, variant 1
-        wordArt.Fill.SetTwoColorGradient(
-            Color.Red,
-            Color.Blue,
-            GradientStyleType.DiagonalDown,
-            1
-        );
+                    // Obtain the GradientFill object; it may be null if the fill type is not gradient.
+                    GradientFill gradientFill = shape.Fill.GradientFill;
+                    if (gradientFill != null)
+                    {
+                        // Apply a two‑color gradient (example: Red → Blue, diagonal down, variant 1).
+                        gradientFill.SetTwoColorGradient(
+                            Color.Red,               // First gradient color
+                            Color.Blue,              // Second gradient color
+                            GradientStyleType.DiagonalDown,
+                            1);                      // Variant (1‑4)
+                    }
+                }
+            }
+        }
 
-        // Save the workbook to a temporary Excel file (required for the conversion utility)
-        string tempExcelPath = "temp_wordart.xlsx";
-        workbook.Save(tempExcelPath);
+        // Save the modified workbook to a temporary XLSX file.
+        string tempXlsxPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xlsx");
+        try
+        {
+            workbook.Save(tempXlsxPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save temporary workbook: {ex.Message}");
+            return;
+        }
 
-        // Convert the Excel file to PDF, preserving the gradient fill in the WordArt
-        string pdfOutputPath = "WordArtWithGradient.pdf";
-        ConversionUtility.Convert(tempExcelPath, pdfOutputPath);
+        try
+        {
+            // Convert the temporary XLSX file to PDF using the ConversionUtility rule.
+            ConversionUtility.Convert(tempXlsxPath, outputPdfPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Conversion failed: {ex.Message}");
+        }
+        finally
+        {
+            // Clean up the temporary file.
+            if (File.Exists(tempXlsxPath))
+            {
+                try
+                {
+                    File.Delete(tempXlsxPath);
+                }
+                catch
+                {
+                    // Ignored – best‑effort cleanup.
+                }
+            }
+        }
+    }
+
+    // Example usage
+    public static void Main()
+    {
+        string sourceExcel = "WordArtSample.xlsx";   // Replace with your source file path
+        string targetPdf   = "WordArtOutput.pdf";    // Desired PDF output path
+
+        try
+        {
+            Convert(sourceExcel, targetPdf);
+            Console.WriteLine("Conversion completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
     }
 }

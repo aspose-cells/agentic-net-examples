@@ -1,17 +1,17 @@
-// Title: C# – Apply Accent2 Theme Color Conditional Formatting with Aspose.Cells for Values Over a Threshold
-// Description: This example shows how to create a workbook with Aspose.Cells for .NET, fill column A with numbers, define a threshold (e.g., 50), and add a conditional‑formatting rule for A1:A10 that highlights cells whose values exceed the threshold using the workbook’s Accent2 theme color. The workbook is then saved as an .xlsx file.
-// Keywords: Aspose.Cells C# conditional formatting | Accent2 theme color Excel | highlight cells above threshold | FormatConditionType.CellValue example | OperatorType.GreaterThan Aspose | solid fill style Excel theme | C# Excel automation Aspose.Cells | apply theme colors programmatically | Excel conditional formatting .NET
-// Common Searches: how to use Accent2 theme color in Aspose.Cells conditional formatting | C# code to highlight values greater than 50 in Excel with Aspose | apply solid fill style using workbook theme colors Aspose.Cells | add CellValue condition to a range in Aspose.Cells .NET | retrieve Accent2 color from Excel theme with Aspose
-// Developer Intent: Add a conditional‑formatting rule that uses the workbook’s Accent2 theme color to highlight cells whose numeric values are greater than a specified threshold.
-// Use Cases: Flag sales figures that surpass a target in a financial dashboard. | Mark temperature readings that exceed safety limits in an engineering log. | Highlight student scores above a passing grade in an academic report.
-// AI Prompts: Generate C# Aspose.Cells code that applies conditional formatting with the workbook’s Accent2 theme color to cells where the value is greater than a given threshold. | Show how to create a FormatCondition of type CellValue with OperatorType.GreaterThan and set its style to the actual Accent2 color from the workbook theme. | Explain how to replace a hard‑coded LightBlue color with the real Accent2 color retrieved from the workbook’s theme in Aspose.Cells.
+// Title: Aspose.Cells .NET – Conditional Formatting with Accent2 Theme Color for Values Over a Threshold
+// Description: Shows how to create a workbook, populate column A with sample numbers, add a conditional formatting rule for A1:A10 that highlights cells greater than 50 using the Accent2 theme color (RGB 0,176,240) and bold text, and save the result as an .xlsx file.
+// Keywords: Aspose.Cells | .NET | C# | conditional formatting | Accent2 theme color | highlight cells above threshold | Excel solid fill | cell style formatting | threshold based coloring
+// Common Searches: Aspose.Cells conditional formatting Accent2 C# | how to highlight cells greater than a value using Aspose.Cells | apply theme accent color to conditional format .NET | set solid background for conditional rule in Aspose.Cells | C# example conditional formatting threshold Excel
+// Developer Intent: Create a conditional formatting rule that colors cells with values exceeding a given threshold using the workbook’s Accent2 theme color.
+// Use Cases: Flag sales figures that surpass a target amount in a financial dashboard. | Mark temperature readings above safety limits in an engineering log. | Highlight overdue task counts that exceed a defined threshold in a project tracker.
+// AI Prompts: Write C# code with Aspose.Cells to apply Accent2 theme color conditional formatting for cells greater than a specified number. | Modify the example to use a different theme accent (e.g., Accent3) and a custom threshold value. | Extend the solution to apply the same Accent2 conditional formatting to multiple columns or a whole table.
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing; // For BackgroundType enum
+using Aspose.Cells.Drawing; // Retained for potential future use
 
-// This example shows how to create a workbook with Aspose.Cells for .NET, fill column A with numbers, define a threshold (e.g., 50), and add a conditional‑formatting rule for A1:A10 that highlights cells whose values exceed the threshold using the workbook’s Accent2 theme color. The workbook is then saved as an .xlsx file.
+// Shows how to create a workbook, populate column A with sample numbers, add a conditional formatting rule for A1:A10 that highlights cells greater than 50 using the Accent2 theme color (RGB 0,176,240) and bold text, and save the result as an .xlsx file.
 class ConditionalFormattingAccent2
 {
     static void Main()
@@ -22,20 +22,17 @@ class ConditionalFormattingAccent2
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample numeric data in column A (rows 1-10)
+            // Populate sample data in column A (rows 1-10)
             for (int i = 0; i < 10; i++)
             {
                 sheet.Cells[i, 0].PutValue(i * 10); // Values: 0,10,20,...,90
             }
 
-            // Define the threshold value to compare against
-            double threshold = 50; // Highlight values greater than 50
-
-            // Add a new conditional formatting collection to the worksheet
+            // Add a conditional formatting collection to the worksheet
             int cfIndex = sheet.ConditionalFormattings.Add();
             FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
 
-            // Set the range to which the conditional formatting will be applied (A1:A10)
+            // Define the range to which the formatting will be applied (A1:A10)
             CellArea area = new CellArea
             {
                 StartRow = 0,
@@ -45,24 +42,29 @@ class ConditionalFormattingAccent2
             };
             fcc.AddArea(area);
 
-            // Add a CellValue condition: values greater than the threshold
+            // Add a CellValue condition: highlight cells greater than the threshold (e.g., 50)
             int conditionIndex = fcc.AddCondition(
                 FormatConditionType.CellValue,
                 OperatorType.GreaterThan,
-                threshold.ToString(),
-                null);
+                "50",   // Formula1 – the threshold value
+                null); // Formula2 – not used for GreaterThan
 
             // Retrieve the created condition
-            FormatCondition fc = fcc[conditionIndex];
+            FormatCondition condition = fcc[conditionIndex];
 
-            // Configure the style: solid fill with a light blue color (approximation of Accent2)
-            fc.Style.Pattern = BackgroundType.Solid;               // Solid fill
-            fc.Style.ForegroundColor = Color.LightBlue;           // Approximate Accent2 color
+            // Apply a solid fill using a color that matches the typical Accent2 theme color
+            condition.Style.BackgroundColor = System.Drawing.Color.FromArgb(0, 176, 240);
+            condition.Style.Pattern = BackgroundType.Solid;
+
+            // Optionally, make the text bold for better visibility
+            condition.Style.Font.IsBold = true;
+
+            // Define output file name
+            string outputPath = "ConditionalFormatting_Accent2.xlsx";
 
             // Save the workbook
-            string outputPath = "ConditionalFormatting_Accent2.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

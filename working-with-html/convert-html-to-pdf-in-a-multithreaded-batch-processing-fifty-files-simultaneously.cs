@@ -1,92 +1,79 @@
-// Title: Convert HTML to PDF in Parallel (up to 50 files) with Aspose.Cells C#
-// Description: A C# example that scans a directory for *.html files, loads each into an Aspose.Cells Workbook (LoadFormat.Html) and saves it as PDF (SaveFormat.Pdf). The conversion runs inside Parallel.ForEach with MaxDegreeOfParallelism set to 50, providing fast batch processing and per‑file error logging.
-// Keywords: Aspose.Cells | HTML to PDF | C# parallel conversion | batch processing | Parallel.ForEach | max degree of parallelism 50 | multi‑threaded conversion | Workbook LoadFormat.Html | SaveFormat.Pdf | folder batch conversion
-// Common Searches: Aspose.Cells convert multiple HTML files to PDF C# | parallel HTML to PDF conversion with Aspose.Cells | batch convert HTML folder to PDF using Parallel.ForEach | limit Aspose.Cells conversion to 50 concurrent tasks | error handling in multi‑threaded HTML to PDF conversion
-// Developer Intent: The developer needs to transform every HTML file in a given folder into a PDF document using Aspose.Cells, while processing up to 50 files simultaneously to maximize throughput.
-// Use Cases: Nightly job that archives web‑generated reports by converting a large HTML dump to PDF. | Web service that receives bulk HTML spreadsheets and returns PDFs without blocking other requests. | Command‑line tool for finance teams to batch‑convert thousands of HTML invoices to PDF in minutes.
-// AI Prompts: Add CancellationToken support to the batch processor so the conversion can be stopped gracefully. | Replace console output with structured logging (e.g., Serilog) while keeping the parallel workflow intact. | Create a unit‑test suite that mocks file I/O, verifies that each HTML file produces a PDF, and checks error handling.
+// Title: Batch convert 50 HTML files to PDF in parallel with Aspose.Cells (C#)
+// Description: Shows how to load 50 HTML documents into Aspose.Cells workbooks and export each to PDF simultaneously using Parallel.ForEach, with automatic output folder creation, per‑file error handling, and optional MaxDegreeOfParallelism tuning.
+// Keywords: Aspose.Cells | HTML to PDF | C# parallel conversion | batch PDF generation | Parallel.ForEach | LoadFormat.Html | PdfSaveOptions | .NET | multi‑threaded conversion | GitHub Aspose.Cells example
+// Common Searches: convert multiple html files to pdf c# aspose.cells | parallel html to pdf conversion .net | maxdegreeofparallelism aspose.cells pdf export | batch html to pdf aspose example github | error handling parallel file conversion aspose.cells
+// Developer Intent: Generate PDF files from a large set of HTML documents concurrently using Aspose.Cells in a C# application.
+// Use Cases: Produce PDF reports from HTML templates for dozens of clients in a single run to cut processing time. | Automate conversion of uploaded HTML invoices to PDF in a web service with multi‑threaded throughput. | Archive a directory of marketing HTML assets as PDFs while logging any conversion failures.
+// AI Prompts: Add cancellation token support to the parallel HTML‑to‑PDF conversion code using Aspose.Cells. | Show how to set MaxDegreeOfParallelism based on the machine’s CPU core count for optimal performance. | Modify the example to write conversion results and errors to a CSV log file instead of the console.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlToPdfBatch
+namespace HtmlToPdfBatch
 {
-    // This class performs multi‑threaded conversion of HTML files to PDF.
-    // It processes up to 50 files in parallel using Parallel.ForEach.
-    // A C# example that scans a directory for *.html files, loads each into an Aspose.Cells Workbook (LoadFormat.Html) and saves it as PDF (SaveFormat.Pdf). The conversion runs inside Parallel.ForEach with MaxDegreeOfParallelism set to 50, providing fast batch processing and per‑file error logging.
-    public static class HtmlToPdfBatchProcessor
-    {
-        // Converts all *.html files found in inputFolder to PDF files in outputFolder.
-        public static void Process(string inputFolder, string outputFolder)
-        {
-            // Verify that the source directory exists.
-            if (!Directory.Exists(inputFolder))
-            {
-                Console.WriteLine($"[Error] Input folder does not exist: {inputFolder}");
-                return;
-            }
-
-            // Get all HTML files from the source directory.
-            string[] htmlFiles = Directory.GetFiles(inputFolder, "*.html", SearchOption.TopDirectoryOnly);
-            if (htmlFiles.Length == 0)
-            {
-                Console.WriteLine($"[Info] No HTML files found in: {inputFolder}");
-                return;
-            }
-
-            // Ensure the destination directory exists.
-            Directory.CreateDirectory(outputFolder);
-
-            // Limit the degree of parallelism to 50 simultaneous tasks.
-            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 50 };
-
-            // Process each file concurrently.
-            Parallel.ForEach(htmlFiles, parallelOptions, htmlPath =>
-            {
-                try
-                {
-                    // Load the HTML file into a Workbook. LoadOptions specifies the source format.
-                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
-                    Workbook workbook = new Workbook(htmlPath, loadOptions);
-
-                    // Build the output PDF file name.
-                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(htmlPath);
-                    string pdfPath = Path.Combine(outputFolder, fileNameWithoutExt + ".pdf");
-
-                    // Save the workbook as PDF.
-                    workbook.Save(pdfPath, SaveFormat.Pdf);
-
-                    Console.WriteLine($"[Success] {Path.GetFileName(htmlPath)} -> {Path.GetFileName(pdfPath)}");
-                }
-                catch (Exception ex)
-                {
-                    // Log any conversion errors without stopping other tasks.
-                    Console.WriteLine($"[Error] Converting '{htmlPath}' failed: {ex.Message}");
-                }
-            });
-        }
-    }
-
-    // Example entry point.
+    // Shows how to load 50 HTML documents into Aspose.Cells workbooks and export each to PDF simultaneously using Parallel.ForEach, with automatic output folder creation, per‑file error handling, and optional MaxDegreeOfParallelism tuning.
     class Program
     {
         static void Main(string[] args)
         {
-            try
+            // Prepare a list of HTML files to be converted.
+            // In a real scenario these could be read from a directory or a database.
+            List<string> htmlFiles = new List<string>();
+            for (int i = 1; i <= 50; i++)
             {
-                // Define source and destination folders (adjust as needed).
-                string sourceFolder = @"C:\InputHtml";
-                string destinationFolder = @"C:\OutputPdf";
+                string fileName = $"input_{i}.html";
+                htmlFiles.Add(fileName);
+            }
 
-                // Run the batch conversion.
-                HtmlToPdfBatchProcessor.Process(sourceFolder, destinationFolder);
-            }
-            catch (Exception ex)
+            // Ensure that the output directory exists.
+            string outputDir = "PdfOutput";
+            Directory.CreateDirectory(outputDir);
+
+            // Convert each HTML file to PDF in parallel.
+            // ParallelOptions can limit the degree of parallelism if needed.
+            ParallelOptions options = new ParallelOptions
             {
-                Console.WriteLine($"[Fatal] Unexpected error: {ex.Message}");
-            }
+                // MaxDegreeOfParallelism = 50; // optional, default is the number of processors
+            };
+
+            Parallel.ForEach(htmlFiles, options, htmlPath =>
+            {
+                try
+                {
+                    // Verify source file exists.
+                    if (!File.Exists(htmlPath))
+                    {
+                        Console.WriteLine($"Source file not found: {htmlPath}");
+                        return;
+                    }
+
+                    // Load the HTML file into a workbook.
+                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+                    Workbook workbook = new Workbook(htmlPath, loadOptions);
+
+                    // Prepare PDF save options (default options are sufficient for most cases).
+                    PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                    // Determine the output PDF file name.
+                    string pdfFileName = Path.GetFileNameWithoutExtension(htmlPath) + ".pdf";
+                    string pdfPath = Path.Combine(outputDir, pdfFileName);
+
+                    // Save the workbook as PDF.
+                    workbook.Save(pdfPath, pdfOptions);
+
+                    Console.WriteLine($"Converted '{htmlPath}' to '{pdfPath}'.");
+                }
+                catch (Exception ex)
+                {
+                    // Log any errors that occur during conversion of an individual file.
+                    Console.WriteLine($"Error converting '{htmlPath}': {ex.Message}");
+                }
+            });
+
+            Console.WriteLine("Batch conversion completed.");
         }
     }
 }

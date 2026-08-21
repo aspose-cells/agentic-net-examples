@@ -1,41 +1,29 @@
-// Title: C# – Apply Password Protection to a Shared Workbook with Aspose.Cells
-// Description: Load an existing Excel file, enable shared mode, set a password using ProtectSharedWorkbook, save the workbook, and confirm the protection status with Settings.IsProtected—all with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# shared workbook protection | ProtectSharedWorkbook | password protected Excel | shared workbook encryption .NET | Workbook.Settings.IsProtected | Aspose.Cells example | Excel password protection C# | save protected workbook | Aspose.Cells API
-// Common Searches: Aspose.Cells protect shared workbook C# | How to set password for shared Excel file using Aspose.Cells | ProtectSharedWorkbook method example | Verify shared workbook protection Aspose.Cells | C# code to encrypt shared workbook
-// Developer Intent: Load a shared Excel workbook, apply a password to its shared mode, and save the protected file.
-// Use Cases: Secure a collaborative workbook before distribution to prevent unauthorized edits. | Enforce read‑only access for team members by password‑protecting the shared mode. | Programmatically verify that a saved workbook remains protected after deployment.
-// AI Prompts: Generate C# code that loads a workbook, enables shared mode, applies a password with ProtectSharedWorkbook, and saves it. | Show how to handle exceptions when protecting a shared workbook with a password using Aspose.Cells. | Explain how to change or remove the password of an already protected shared workbook in Aspose.Cells.
+// Title: C# – Add Password Protection to a Shared Excel Workbook with Aspose.Cells
+// Description: Demonstrates how to load an existing Excel file, enable shared mode, secure the shared workbook with a password using the ProtectSharedWorkbook method, and write the protected version to a new file.
+// Keywords: Aspose.Cells C# protect shared workbook | password protect shared Excel file | ProtectSharedWorkbook method | shared mode encryption Aspose | save protected workbook .NET
+// Common Searches: how to password‑lock a shared workbook using Aspose.Cells | Aspose.Cells C# protect shared mode programmatically | set shared workbook password in .NET | save Excel file with shared protection Aspose
+// Developer Intent: The developer needs to open a pre‑existing workbook, ensure it is in shared mode, apply a password to that shared state, and persist the secured file.
+// Use Cases: Allow multiple users to edit a workbook while requiring a password to modify the shared settings. | Distribute a collaborative Excel file internally but block unauthorized changes to the shared configuration. | Automate creation of shared workbooks that must be unlocked with a secret before users can join the editing session.
+// AI Prompts: Write C# code with Aspose.Cells that opens a workbook, activates shared mode, applies a password via ProtectSharedWorkbook, and saves the result. | Explain the parameters and behavior of ProtectSharedWorkbook, including how it differs from regular workbook protection. | Provide robust error handling for loading a file, checking shared status, applying password protection, and saving the protected workbook.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsSharedWorkbookProtection
+// Demonstrates how to load an existing Excel file, enable shared mode, secure the shared workbook with a password using the ProtectSharedWorkbook method, and write the protected version to a new file.
+class Program
 {
-    // Load an existing Excel file, enable shared mode, set a password using ProtectSharedWorkbook, save the workbook, and confirm the protection status with Settings.IsProtected—all with Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the existing shared workbook
-            string inputPath = "SharedWorkbook.xlsx";
+        // Load the existing shared workbook
+        Workbook workbook = new Workbook("SharedWorkbook.xlsx");
 
-            // Load the shared workbook
-            Workbook workbook = new Workbook(inputPath);
+        // Ensure the workbook is marked as shared (optional if already shared)
+        workbook.Settings.Shared = true;
 
-            // Ensure the workbook is marked as shared (optional if already shared)
-            workbook.Settings.Shared = true;
+        // Apply password protection to the shared mode
+        workbook.ProtectSharedWorkbook("MySecretPassword");
 
-            // Apply password protection to the shared mode
-            string password = "MySecretPassword";
-            workbook.ProtectSharedWorkbook(password);
-
-            // Save the protected workbook
-            string outputPath = "ProtectedSharedWorkbook.xlsx";
-            workbook.Save(outputPath);
-
-            // Optional: verify protection status
-            Workbook loaded = new Workbook(outputPath);
-            Console.WriteLine("Workbook is protected: " + loaded.Settings.IsProtected);
-        }
+        // Save the protected workbook
+        workbook.Save("ProtectedSharedWorkbook.xlsx");
     }
 }

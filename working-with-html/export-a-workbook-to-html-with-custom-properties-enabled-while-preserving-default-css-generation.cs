@@ -1,18 +1,18 @@
-// Title: Export Workbook to HTML with Document & Workbook Properties Using Aspose.Cells (C#)
-// Description: Shows how to create a workbook, set built‑in document properties (Author, Title), enable ExportWorkbookProperties and ExportDocumentProperties in HtmlSaveOptions, and save the file as HTML while preserving Aspose.Cells' default CSS styling.
-// Keywords: Aspose.Cells | C# HTML export | ExportWorkbookProperties | ExportDocumentProperties | HtmlSaveOptions | default CSS | Excel to HTML | custom document properties | workbook metadata | Aspose.Cells .NET
-// Common Searches: Aspose.Cells export HTML with document properties C# | How to keep default CSS when saving Excel as HTML Aspose | Enable ExportWorkbookProperties in HtmlSaveOptions | Save Excel workbook to HTML with author and title metadata | Aspose.Cells HtmlSaveOptions default style preservation
-// Developer Intent: Generate an HTML file from a workbook that includes author/title metadata and retains the library’s standard CSS.
-// Use Cases: Publish Excel data on a website with SEO‑friendly metadata. | Archive spreadsheets as HTML while preserving styling and property information. | Feed HTML reports into a content management system that reads embedded workbook properties. | Automate batch conversion of Excel templates to HTML with consistent look and metadata.
-// AI Prompts: Write C# code using Aspose.Cells to export a workbook to HTML with ExportWorkbookProperties and ExportDocumentProperties turned on, without disabling the default CSS. | Explain which HtmlSaveOptions flags control property export and CSS generation, and show how to verify the properties appear in the resulting HTML. | Provide guidance on customizing the output path, file name, and embedding additional custom document properties while keeping default styling.
+// Title: Export Aspose.Cells Workbook to HTML with Document Properties and Default CSS (C#)
+// Description: Shows how to create a workbook, set built‑in properties (Author, Title), enable ExportWorkbookProperties in HtmlSaveOptions, and save the file as HTML while keeping Aspose.Cells' default CSS styling.
+// Keywords: Aspose.Cells | C# HTML export | ExportWorkbookProperties | document properties | default CSS | HtmlSaveOptions | Workbook to HTML | Excel metadata in HTML | web publishing spreadsheet | Aspose.Cells tutorial
+// Common Searches: Aspose.Cells export workbook to HTML with properties | C# HtmlSaveOptions ExportWorkbookProperties true | keep default CSS when saving Excel as HTML Aspose | include author and title in HTML output Aspose.Cells | how to export Excel metadata to HTML using Aspose
+// Developer Intent: Generate an HTML file from a workbook that contains built‑in document metadata and uses the library’s standard CSS generation.
+// Use Cases: Web‑based reports that need author and title information displayed in the HTML view. | Emailing spreadsheet snapshots without applying custom styles. | Automated batch conversion pipelines that preserve default styling and embedded metadata. | Embedding Excel metadata in web pages for compliance or audit trails.
+// AI Prompts: Write C# code with Aspose.Cells to export a workbook to HTML, enable ExportWorkbookProperties, and retain the default CSS. | Demonstrate adding custom document properties and including them in the HTML output using Aspose.Cells. | Explain the difference between default CSS generation and inline styling when exporting to HTML with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExportHtml
+namespace AspiseCellsExamples
 {
-    // Shows how to create a workbook, set built‑in document properties (Author, Title), enable ExportWorkbookProperties and ExportDocumentProperties in HtmlSaveOptions, and save the file as HTML while preserving Aspose.Cells' default CSS styling.
-    public class ExportWithCustomProperties
+    // Shows how to create a workbook, set built‑in properties (Author, Title), enable ExportWorkbookProperties in HtmlSaveOptions, and save the file as HTML while keeping Aspose.Cells' default CSS styling.
+    public class ExportWorkbookToHtmlWithProperties
     {
         public static void Run()
         {
@@ -21,26 +21,24 @@ namespace AsposeCellsExportHtml
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Get the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Add sample data to the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Hello World!");
 
-                // Add some sample data
-                worksheet.Cells["A1"].PutValue("Hello World!");
-
-                // Set custom document properties (author and title)
+                // Set built‑in document properties (author and title)
                 workbook.BuiltInDocumentProperties.Author = "John Doe";
                 workbook.BuiltInDocumentProperties.Title = "Sample Workbook";
 
                 // Create HTML save options
                 HtmlSaveOptions options = new HtmlSaveOptions
                 {
-                    // Enable exporting of workbook and document properties (default is true)
-                    ExportWorkbookProperties = true,
-                    ExportDocumentProperties = true
+                    // Ensure workbook properties are exported (default is true)
+                    ExportWorkbookProperties = true
                 };
 
-                // Save the workbook as HTML with the specified options
-                workbook.Save("SampleOutput.html", options);
+                // Save the workbook as HTML, keeping default CSS generation
+                workbook.Save("ExportedWorkbook.html", options);
+                Console.WriteLine("Workbook exported successfully to ExportedWorkbook.html");
             }
             catch (Exception ex)
             {
@@ -54,7 +52,7 @@ namespace AsposeCellsExportHtml
     {
         public static void Main(string[] args)
         {
-            ExportWithCustomProperties.Run();
+            ExportWorkbookToHtmlWithProperties.Run();
         }
     }
 }

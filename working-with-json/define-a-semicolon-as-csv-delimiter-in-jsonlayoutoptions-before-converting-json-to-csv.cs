@@ -1,63 +1,69 @@
+// Title: C# – Convert JSON to Semicolon‑Delimited CSV with Aspose.Cells
+// Description: Demonstrates how to import JSON into a worksheet using JsonLayoutOptions (ArrayAsTable, ConvertNumericOrDate) and export it as a CSV file with a semicolon separator via TxtSaveOptions. Includes directory creation and basic error handling.
+// Keywords: Aspose.Cells JSON to CSV | C# semicolon CSV delimiter | JsonLayoutOptions ArrayAsTable | TxtSaveOptions custom separator | .NET export JSON as CSV | European locale CSV format
+// Common Searches: Aspose.Cells set CSV delimiter to semicolon | C# convert JSON array to CSV with custom separator | JsonUtility import JSON and save as CSV Aspose | How to use TxtSaveOptions Separator property | Semicolon‑delimited CSV export .NET
+// Developer Intent: Export JSON data to a CSV file using a semicolon as the field separator with Aspose.Cells.
+// Use Cases: Create CSV reports for European systems that require ';' as the delimiter. | Transform JSON APIs into semicolon‑delimited files for legacy import pipelines. | Automate data exchange where numeric strings must be converted to numbers before CSV export.
+// AI Prompts: Generate C# code that reads JSON, loads it into an Aspose.Cells workbook, and saves it as a semicolon‑delimited CSV. | Explain the impact of JsonLayoutOptions.ArrayAsTable and ConvertNumericOrDate on the worksheet before CSV conversion. | Provide step‑by‑step instructions to configure TxtSaveOptions for a custom CSV separator in Aspose.Cells.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-namespace AsposeCellsCsvDelimiterDemo
+// Demonstrates how to import JSON into a worksheet using JsonLayoutOptions (ArrayAsTable, ConvertNumericOrDate) and export it as a CSV file with a semicolon separator via TxtSaveOptions. Includes directory creation and basic error handling.
+class JsonToCsvWithSemicolon
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // ---------- Step 1: Import JSON data using JsonLayoutOptions ----------
-            // Configure JSON layout options as needed (example settings)
-            JsonLayoutOptions jsonOptions = new JsonLayoutOptions
-            {
-                ArrayAsTable = true,
-                ConvertNumericOrDate = true,
-                DateFormat = "yyyy-MM-dd",
-                NumberFormat = "0.00"
-            };
-
-            // Sample JSON string
-            string jsonData = @"{
-                ""Employees"": [
-                    { ""ID"": 1, ""Name"": ""John"", ""Salary"": 50000, ""HireDate"": ""2022-01-15"" },
-                    { ""ID"": 2, ""Name"": ""Alice"", ""Salary"": 62000, ""HireDate"": ""2021-07-30"" }
+            // Sample JSON data
+            string json = @"{
+                ""People"": [
+                    { ""Name"": ""John"", ""Age"": 30 },
+                    { ""Name"": ""Alice"", ""Age"": 25 }
                 ]
             }";
 
-            // Import the JSON data into the worksheet starting at cell A1 (row 0, column 0)
-            JsonUtility.ImportData(jsonData, cells, 0, 0, jsonOptions);
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // ---------- Step 2: Export the worksheet data to CSV with semicolon delimiter ----------
-            // Aspose.Cells does not provide a direct CSV export option with custom delimiter,
-            // so we will use the ImportCSV method as an example of setting the delimiter.
-            // First, save the current worksheet to a temporary CSV file using the default comma delimiter.
-            string tempCsvPath = Path.GetTempFileName();
-            workbook.Save(tempCsvPath, SaveFormat.Csv);
+            // Configure JSON layout options (optional settings)
+            JsonLayoutOptions jsonOptions = new JsonLayoutOptions
+            {
+                ArrayAsTable = true,          // Treat arrays as tables
+                ConvertNumericOrDate = true   // Convert numeric/date strings
+            };
 
-            // Now, create a new workbook to import the CSV using a semicolon as the splitter.
-            Workbook csvWorkbook = new Workbook();
-            Worksheet csvWorksheet = csvWorkbook.Worksheets[0];
-            Cells csvCells = csvWorksheet.Cells;
+            // Import JSON data into the worksheet starting at cell A1 (row 0, column 0)
+            JsonUtility.ImportData(json, worksheet.Cells, 0, 0, jsonOptions);
 
-            // Import the CSV file with semicolon as the delimiter and convert numeric data.
-            csvCells.ImportCSV(tempCsvPath, ";", true, 0, 0);
+            // Set CSV save options with semicolon as the delimiter
+            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+            {
+                Separator = ';'               // Use semicolon as CSV delimiter
+                // ConvertNumericData property is not available; numeric conversion is handled during import
+            };
 
-            // Save the final CSV file with semicolon delimiter.
-            string finalCsvPath = "OutputWithSemicolonDelimiter.csv";
-            csvWorkbook.Save(finalCsvPath, SaveFormat.Csv);
+            // Define output file path
+            string outputPath = "output.csv";
 
-            // Clean up temporary file
-            File.Delete(tempCsvPath);
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            Console.WriteLine("CSV file saved with semicolon delimiter at: " + Path.GetFullPath(finalCsvPath));
+            // Save the worksheet as a CSV file using the defined options
+            workbook.Save(outputPath, csvOptions);
+            Console.WriteLine($"CSV file saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

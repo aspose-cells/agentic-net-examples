@@ -1,70 +1,47 @@
-// Title: Aspose.Cells .NET: Apply a Preset Shadow and Custom Spacing to Shape Text
-// Description: A C# helper that retrieves a FontSetting for a specified character range in a Shape, assigns a PresetShadowType, sets character spacing, and returns the configured object for further font styling before saving the workbook.
-// Keywords: Aspose.Cells FontSetting shadow | preset shadow type C# | character spacing shape text | Aspose.Cells shape text formatting | C# Aspose.Cells FontSetting example | apply text shadow Aspose.Cells | shape text character range | Aspose.Cells .NET tutorial
-// Common Searches: how to set a preset shadow on shape text using Aspose.Cells | change character spacing for shape text in C# Aspose.Cells | Aspose.Cells FontSetting shadow and spacing example | apply text effects to a shape in Aspose.Cells .NET | C# code to format shape text with shadow and spacing
-// Developer Intent: Create a FontSetting that applies a chosen preset shadow and a specific character spacing to a defined range of characters inside a Shape.
-// Use Cases: Add an offset‑bottom shadow and increase spacing for the entire text of a rectangle shape. | Apply a tight spacing and a perspective shadow only to the first five characters of a shape’s label. | Retrieve the FontSetting, then modify font weight, color, or underline before exporting the workbook.
-// AI Prompts: Generate a C# method that accepts a Shape, start index, length, PresetShadowType, and spacing, and returns a configured FontSetting using Aspose.Cells. | Show how to chain additional font properties (size, italic, underline) after obtaining the FontSetting. | Write validation logic that throws ArgumentOutOfRangeException when the character range exceeds the shape's text length.
+// Title: C# helper to create Aspose.Cells FontSetting with preset shadow and character spacing
+// Description: A concise C# method that builds a FontSetting for a specific character range, applies a chosen PresetShadowType, sets custom character spacing, and returns the configured object for further styling in Aspose.Cells workbooks.
+// Keywords: Aspose.Cells | FontSetting | preset shadow | character spacing | C# | Aspose.Cells TextOptions | Shadow.PresetType | worksheet text formatting | Aspose.Cells example | GitHub | dotnet
+// Common Searches: Aspose.Cells set preset shadow on FontSetting | C# change character spacing in Excel cell using Aspose | How to use FontSetting TextOptions in Aspose.Cells | Apply shadow effect to part of cell text Aspose.Cells | Sample code FontSetting shadow and spacing
+// Developer Intent: Generate a FontSetting that applies a selected shadow preset and custom spacing to a defined text range in an Aspose.Cells worksheet.
+// Use Cases: Highlight the first few characters of a header with a bottom‑offset shadow and wider spacing for visual emphasis. | Create a reusable helper that formats column titles across multiple sheets, each with distinct shadow presets and tighter spacing. | Produce a styled report where section titles receive a soft shadow and expanded spacing while body text remains default.
+// AI Prompts: Write a C# method that returns a FontSetting with a given PresetShadowType and spacing for a specified character range in Aspose.Cells. | Show how to call FontSettingHelper.GetFontSettingWithShadowAndSpacing to style text in a workbook and then save the file. | Explain how to extend the helper to also set underline style and font color while preserving shadow and spacing settings.
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// A C# helper that retrieves a FontSetting for a specified character range in a Shape, assigns a PresetShadowType, sets character spacing, and returns the configured object for further font styling before saving the workbook.
+// A concise C# method that builds a FontSetting for a specific character range, applies a chosen PresetShadowType, sets custom character spacing, and returns the configured object for further styling in Aspose.Cells workbooks.
 public static class FontSettingHelper
 {
-    /// <param name="shape">The shape containing the text.</param>
-    /// <param name="startIndex">Zero‑based start index of the characters.</param>
-    /// <param name="length">Number of characters to include.</param>
+    /// <param name="sheets">The collection of worksheets the FontSetting belongs to.</param>
+    /// <param name="startIndex">Zero‑based start index of the character range.</param>
+    /// <param name="length">Number of characters in the range.</param>
     /// <param name="preset">The preset shadow type to apply.</param>
     /// <param name="spacing">The spacing value to set (positive = wider, negative = tighter).</param>
     /// <returns>A configured FontSetting instance.</returns>
-    public static FontSetting CreateFontSettingWithShadowAndSpacing(
-        Shape shape,
+    public static FontSetting GetFontSettingWithShadowAndSpacing(
+        WorksheetCollection sheets,
         int startIndex,
         int length,
         PresetShadowType preset,
         double spacing)
     {
-        // Obtain the FontSetting for the requested character range.
-        FontSetting fontSetting = shape.Characters(startIndex, length);
+        // Create the FontSetting for the specified character range.
+        FontSetting fontSetting = new FontSetting(startIndex, length, sheets);
 
-        // Configure the shadow effect using the specified preset.
-        fontSetting.TextOptions.Shadow.PresetType = preset;
+        // Access the TextOptions associated with this FontSetting.
+        TextOptions textOptions = fontSetting.TextOptions;
+
+        // Configure the shadow effect using the provided preset.
+        textOptions.Shadow.PresetType = preset;
 
         // Set the character spacing.
-        fontSetting.TextOptions.Spacing = spacing;
+        textOptions.Spacing = spacing;
 
+        // Return the fully configured FontSetting.
         return fontSetting;
-    }
-}
-
-public class Example
-{
-    public static void Run()
-    {
-        // Create a workbook and add a shape.
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Shape shape = sheet.Shapes.AddAutoShape(AutoShapeType.Rectangle, 4, 4, 4, 4, 200, 100);
-        shape.Text = "Aspose Cells Demo";
-
-        // Apply shadow preset and spacing to the whole text.
-        FontSetting fs = FontSettingHelper.CreateFontSettingWithShadowAndSpacing(
-            shape,
-            0,
-            shape.Text.Length,
-            PresetShadowType.OffsetBottom,
-            2.0);
-
-        // Additional font customizations can be done via fs.Font if needed.
-        fs.Font.IsBold = true;
-        fs.Font.Color = Color.DarkBlue;
-
-        // Save the workbook.
-        workbook.Save("DemoWithShadowAndSpacing.xlsx");
     }
 }
 
@@ -74,8 +51,33 @@ public class Program
     {
         try
         {
-            Example.Run();
-            Console.WriteLine("Workbook created successfully.");
+            // Create a new workbook and get the first worksheet.
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+
+            // Set a sample value in cell A1.
+            ws.Cells["A1"].PutValue("Hello World");
+
+            // Apply font settings to the first 5 characters of the cell.
+            FontSetting fs = FontSettingHelper.GetFontSettingWithShadowAndSpacing(
+                wb.Worksheets, 0, 5, PresetShadowType.OffsetBottom, 2.0);
+
+            // Additional font styling.
+            fs.Font.IsBold = true;
+
+            // Define output file path.
+            string outputPath = "output.xlsx";
+
+            // Ensure the output directory exists.
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook.
+            wb.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

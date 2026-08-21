@@ -1,25 +1,25 @@
-// Title: C# – Delete rows with null or DBNull in a required column using Aspose.Cells (reverse loop)
-// Description: This Aspose.Cells example creates a workbook, adds sample data, then iterates from the last data row to the first (skipping the header) to detect null or DBNull values in a required column. Matching rows are removed with Cells.DeleteRow and the workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells C# delete rows | remove null rows Aspose.Cells | DBNull row deletion .NET | reverse loop delete Excel rows | Cells.DeleteRow example | Excel data cleansing C# | Aspose.Cells GitHub sample | worksheet row removal null column | C# Excel automation Aspose
-// Common Searches: Aspose.Cells delete rows where column is null | C# remove rows with DBNull in Excel worksheet | How to loop backwards to delete rows in Aspose.Cells | Aspose.Cells example for cleaning data rows | Delete empty ID rows using Aspose.Cells .NET
-// Developer Intent: Remove every worksheet row whose required column contains null or DBNull values.
-// Use Cases: Clean imported datasets by discarding incomplete records before analysis. | Prepare Excel reports that require all rows to have a valid identifier. | Automate data validation in batch processing pipelines using Aspose.Cells.
-// AI Prompts: Generate C# code with Aspose.Cells that deletes rows where column A is null or DBNull, using a bottom‑up loop. | Explain how Cells.DeleteRow works when shifting rows after removal in Aspose.Cells. | Show how to adapt the loop to preserve cell formatting and formulas while deleting rows.
+// Title: Aspose.Cells for .NET (C#) – Remove rows where a required column is null or blank
+// Description: The example builds a workbook, fills column A with sample entries, iterates from the last row upward, evaluates each cell in the mandatory column for null, DBNull or an empty string, deletes rows that meet the condition using Cells.DeleteRow, and writes the result to RowsDeleted.xlsx.
+// Keywords: Aspose.Cells | .NET | C# | DeleteRow | null values | empty cells | required column | reverse loop | Excel worksheet | MaxDataRow | data cleanup
+// Common Searches: Aspose.Cells delete rows with null values C# | remove blank rows from Excel worksheet using .NET | loop delete rows where column is empty Aspose.Cells | C# Aspose.Cells delete rows based on required column | how to purge rows with missing data in Excel via Aspose
+// Developer Intent: Programmatically eliminate rows that lack a mandatory value in a specific column.
+// Use Cases: Sanitize imported CSV/Excel data by discarding records missing a key field before further processing. | Generate clean reports where rows without an identifier must be omitted. | Automate validation of Excel sheets in ETL pipelines by removing incomplete rows on the fly.
+// AI Prompts: Generate C# code with Aspose.Cells that deletes rows where column B contains null, DBNull, or an empty string, iterating from the bottom to keep indexes stable. | Show an Aspose.Cells .NET snippet that removes rows with missing mandatory values and saves the workbook as an XLSX file. | Create a reusable method that accepts a Worksheet and a column index, then deletes all rows with null or blank cells in that column using Aspose.Cells.
 
 using System;
-using System.Data;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // This Aspose.Cells example creates a workbook, adds sample data, then iterates from the last data row to the first (skipping the header) to detect null or DBNull values in a required column. Matching rows are removed with Cells.DeleteRow and the workbook is saved as an XLSX file.
-    public class DeleteRowsWithNullInColumn
+    // The example builds a workbook, fills column A with sample entries, iterates from the last row upward, evaluates each cell in the mandatory column for null, DBNull or an empty string, deletes rows that meet the condition using Cells.DeleteRow, and writes the result to RowsDeleted.xlsx.
+    public class DeleteRowsWithNullInRequiredColumn
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
             try
             {
                 Run();
+                Console.WriteLine("Workbook created and rows with null/empty values deleted successfully.");
             }
             catch (Exception ex)
             {
@@ -31,49 +31,42 @@ namespace AsposeCellsExamples
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Sample data: column A (index 0) is the required column
-            // Header row
-            cells["A1"].PutValue("ID");
-            cells["B1"].PutValue("Name");
+            // Populate sample data (column A is the required column)
+            // Row 0 – Header
+            cells["A1"].PutValue("Name");
+            // Rows with data; some rows have null/empty values in the required column
+            cells["A2"].PutValue("Alice");   // valid
+            cells["A3"].PutValue("");        // null/empty – should be deleted
+            cells["A4"].PutValue("Bob");     // valid
+            cells["A5"].PutValue(null);      // null – should be deleted
+            cells["A6"].PutValue("Charlie"); // valid
 
-            // Data rows
-            cells["A2"].PutValue(1);
-            cells["B2"].PutValue("Alice");
-
-            cells["A3"].PutValue(null);               // Null value in required column
-            cells["B3"].PutValue("Bob");
-
-            cells["A4"].PutValue(3);
-            cells["B4"].PutValue("Charlie");
-
-            cells["A5"].PutValue(DBNull.Value);       // DBNull also considered null
-            cells["B5"].PutValue("David");
-
-            // Index of the required column (0‑based)
+            // Determine the index of the required column (0‑based, column A)
             int requiredColumnIndex = 0;
 
-            // Loop from the last data row up to the first data row (skip header)
-            for (int row = cells.MaxDataRow; row >= 1; row--)
+            // Loop from the last data row upwards to avoid index shifting after deletions
+            for (int row = cells.MaxDataRow; row >= 0; row--)
             {
-                Cell cell = cells[row, requiredColumnIndex];
+                // Retrieve the cell value; it can be null, DBNull, or an empty string
+                object cellValue = cells[row, requiredColumnIndex].Value;
 
-                // Determine if the cell is null or DBNull
-                bool isNull = cell.Value == null || cell.Value == DBNull.Value;
+                // Check for null or empty string (treated as null for this scenario)
+                bool isNullOrEmpty = cellValue == null ||
+                                     (cellValue is string s && string.IsNullOrEmpty(s)) ||
+                                     (cellValue is DBNull);
 
-                if (isNull)
+                if (isNullOrEmpty)
                 {
-                    // Delete the entire row and shift subsequent rows up
-                    cells.DeleteRow(row, true);
+                    // Delete the entire row
+                    cells.DeleteRow(row);
                 }
             }
 
-            // Save the workbook
-            string outputPath = "DeletedRows.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Save the workbook to a file
+            workbook.Save("RowsDeleted.xlsx", SaveFormat.Xlsx);
         }
     }
 }

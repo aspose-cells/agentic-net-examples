@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Tables Agent
 category: working-with-tables
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Create and manage structured Excel tables in C#
 primary_apis: [Worksheet.ListObjects, ListObjectCollection.Add, ListObject, ListColumn, TableStyleType, TableToRangeOptions]
 search_intents: [create Excel table C#, style ListObject, filter Excel table, add totals row, convert table to range]
@@ -96,3 +96,4 @@ Use `ListObjects.Add` to create a table, `TableStyleType` for a built-in style, 
 ## Definition of done
 
 The example compiles, runs, creates or changes a real `ListObject`, verifies semantic table state and persisted output, and contains no unrelated query or UI dependency.
+

@@ -1,35 +1,44 @@
-// Title: List password‑protected worksheets in an Excel workbook using Aspose.Cells for .NET
-// Description: Load an Excel file with Aspose.Cells, iterate through its worksheets, detect those secured with a password via the Protection.IsProtectedWithPassword property, and output each sheet's name and index to the console without modifying the file.
-// Keywords: Aspose.Cells password protected sheets | C# detect worksheet protection | list protected worksheets .NET | Excel sheet security check | enumerate protected worksheets
-// Common Searches: how to find password protected worksheets with Aspose.Cells | C# list protected sheets in Excel file | detect worksheet password using Aspose.Cells for .NET | report protected worksheets without saving | enumerate Excel sheets that require a password
-// Developer Intent: Retrieve and display the names and indexes of all worksheets that have password protection in a given workbook.
-// Use Cases: Audit workbook security before distribution | Create a compliance log of protected sheets | Skip password‑protected tabs during data extraction
-// AI Prompts: Generate C# code with Aspose.Cells that writes the list of password‑protected worksheets to a text file. | Show how to log protected worksheet names using a logging framework instead of Console.WriteLine. | Extend the example to also report the specific protection options (e.g., objects, scenarios) enabled on each sheet.
+// Title: List password‑protected worksheets in an Excel file using Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook with Aspose.Cells, scans each worksheet, checks the Worksheet.Protection.IsProtectedWithPassword flag, gathers the names of sheets secured with a password, and prints the list to the console.
+// Keywords: Aspose.Cells list protected worksheets | C# detect worksheet password protection | enumerate password‑protected sheets Aspose | Excel workbook protection status .NET | retrieve protected sheet names Aspose.Cells | global Excel security audit | Aspose.Cells .NET worldwide
+// Common Searches: how to list password protected worksheets using Aspose.Cells | C# code to check Excel sheet protection Aspose | get names of protected worksheets in a workbook .NET | identify password‑protected sheets with Aspose.Cells
+// Developer Intent: Identify and output all worksheets in a workbook that are secured with a password.
+// Use Cases: Generate a quick report of protected sheets before sharing the workbook. | Validate that only intended worksheets are password‑protected for compliance. | Log protected worksheet names for security audits or change‑management processes.
+// AI Prompts: Provide C# code that writes the list of password‑protected worksheets to a CSV file using Aspose.Cells. | Show how to programmatically remove password protection from the identified worksheets. | Explain how to check both worksheet and workbook protection status in a single Aspose.Cells routine.
 
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-// Load an Excel file with Aspose.Cells, iterate through its worksheets, detect those secured with a password via the Protection.IsProtectedWithPassword property, and output each sheet's name and index to the console without modifying the file.
-class ListPasswordProtectedWorksheets
+// Loads an Excel workbook with Aspose.Cells, scans each worksheet, checks the Worksheet.Protection.IsProtectedWithPassword flag, gathers the names of sheets secured with a password, and prints the list to the console.
+class ListProtectedWorksheets
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        string workbookPath = "input.xlsx";
-        Workbook workbook = new Workbook(workbookPath);
+        // Path to the workbook to be examined
+        string filePath = "input.xlsx";
 
-        // Iterate through all worksheets and list those protected with a password
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
+        // Load the workbook (uses Aspose.Cells default load options)
+        Workbook workbook = new Workbook(filePath);
+
+        // Collect names of worksheets that are password protected
+        List<string> protectedSheets = new List<string>();
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            Worksheet sheet = workbook.Worksheets[i];
-
-            // Check if the worksheet's protection has a password
+            // Worksheet.Protection.IsProtectedWithPassword indicates password protection
             if (sheet.Protection.IsProtectedWithPassword)
             {
-                Console.WriteLine($"Worksheet '{sheet.Name}' (index {i}) is password protected.");
+                protectedSheets.Add(sheet.Name);
             }
         }
 
-        // No need to save the workbook for this reporting task
+        // Display the result
+        Console.WriteLine("Password protected worksheets:");
+        foreach (string name in protectedSheets)
+        {
+            Console.WriteLine("- " + name);
+        }
     }
 }

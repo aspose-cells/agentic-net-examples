@@ -1,93 +1,80 @@
-// Title: C# – Generate a Named‑Range and Formula Report with Aspose.Cells
-// Description: A console program that loads an Excel workbook using Aspose.Cells for .NET, enumerates all defined names, extracts each name’s RefersTo formula, resolves the actual cell address when possible, and prints the results. The workbook can be saved after inspection.
-// Keywords: Aspose.Cells | C# named ranges | list defined names | Excel named range report | GetRange Aspose.Cells | RefersTo formula | .NET Excel automation | named range documentation | workbook NameCollection
-// Common Searches: list all named ranges with Aspose.Cells C# | how to get RefersTo formula of a defined name in .NET | retrieve range address from a named range using Aspose.Cells | C# code to export named range definitions from Excel | Aspose.Cells example for named‑range documentation
-// Developer Intent: Build a .NET console app that reads an Excel file and outputs every named range together with its formula and resolved address.
-// Use Cases: Create documentation of all named ranges for audit or compliance. | Validate that each defined name points to a valid cell range before distribution. | Export named‑range metadata to CSV/JSON for integration with reporting tools.
-// AI Prompts: Write C# code with Aspose.Cells that reads a workbook and writes a CSV containing Name, RefersTo formula, and resolved address for each defined name. | Provide a method returning Dictionary<string, string> where the key is the named range and the value is its address, handling GetRange exceptions gracefully. | Generate a PowerShell script that calls a compiled .NET assembly to produce a named‑range report for a given Excel file.
+// Title: C# – Export All Named Ranges and Their RefersTo Formulas to a Text Report with Aspose.Cells for .NET
+// Description: This example creates a workbook, defines named ranges, then iterates the NameCollection to write each range's name, RefersTo formula, and concrete cell addresses into a plain‑text report. The workbook is also saved for reference.
+// Keywords: Aspose.Cells .NET named ranges | C# export named ranges to text | list RefersTo formulas Aspose.Cells | retrieve range addresses from Name.GetRanges | generate named range documentation
+// Common Searches: list all named ranges with formulas using Aspose.Cells C# | how to export named range addresses to a txt file | Aspose.Cells get RefersTo property of named ranges | iterate NameCollection Aspose.Cells example | C# code to document workbook named ranges
+// Developer Intent: Produce a text file that enumerates every named range in a workbook together with its RefersTo expression and the actual cell addresses.
+// Use Cases: Create audit documentation that shows how cells are grouped by named ranges. | Generate user‑facing reference material for complex spreadsheets. | Validate named‑range definitions during automated testing of spreadsheet logic.
+// AI Prompts: Write C# code with Aspose.Cells that reads an existing workbook and outputs all named ranges and their RefersTo strings to a CSV file. | Show how to extract each address returned by Name.GetRanges() and include it in a formatted report. | Explain how to handle named ranges that reference external sheets or formulas when building a documentation report with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace NamedRangesReport
+// This example creates a workbook, defines named ranges, then iterates the NameCollection to write each range's name, RefersTo formula, and concrete cell addresses into a plain‑text report. The workbook is also saved for reference.
+class NamedRangesReport
 {
-    // A console program that loads an Excel workbook using Aspose.Cells for .NET, enumerates all defined names, extracts each name’s RefersTo formula, resolves the actual cell address when possible, and prints the results. The workbook can be saved after inspection.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Path to the workbook that contains the named ranges.
-            string inputPath = "input.xlsx";
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
 
-            // Verify that the input file exists to avoid FileNotFoundException.
-            if (!File.Exists(inputPath))
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].PutValue(30);
+            sheet.Cells["B1"].PutValue(5);
+            sheet.Cells["B2"].PutValue(15);
+            sheet.Cells["B3"].PutValue(25);
+
+            // Define named ranges
+            int idxNumbers = workbook.Worksheets.Names.Add("Numbers");
+            workbook.Worksheets.Names[idxNumbers].RefersTo = "=Sheet1!$A$1:$A$3";
+
+            int idxValues = workbook.Worksheets.Names.Add("Values");
+            workbook.Worksheets.Names[idxValues].RefersTo = "=Sheet1!$B$1:$B$3";
+
+            // Generate a textual report of all named ranges and their formulas
+            using (StreamWriter writer = new StreamWriter("NamedRangesReport.txt"))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
+                writer.WriteLine("Named Ranges Report");
+                writer.WriteLine("====================");
+                writer.WriteLine();
 
-            Workbook workbook;
-            try
-            {
-                // Load the workbook.
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
-                return;
-            }
-
-            // Access the collection of all defined names in the workbook.
-            NameCollection names = workbook.Worksheets.Names;
-
-            Console.WriteLine("Named Ranges Report");
-            Console.WriteLine("====================");
-            Console.WriteLine();
-
-            // Iterate through each Name object.
-            foreach (Name name in names)
-            {
-                // Name text (e.g., "MyRange")
-                string nameText = name.Text;
-
-                // The formula that the name refers to (starts with '=').
-                string refersToFormula = name.RefersTo;
-
-                // Try to obtain the actual Range object if the name refers to a range.
-                // GetRange may return null for external references or non‑range definitions.
-                string rangeAddress = "N/A";
-                try
+                // Iterate through the NameCollection
+                foreach (Name name in workbook.Worksheets.Names)
                 {
-                    Aspose.Cells.Range range = name.GetRange();
-                    if (range != null)
+                    writer.WriteLine($"Name       : {name.Text}");
+                    writer.WriteLine($"RefersTo   : {name.RefersTo}");
+
+                    // Retrieve the actual Range objects referenced by the name
+                    Aspose.Cells.Range[] ranges = name.GetRanges();
+
+                    if (ranges != null && ranges.Length > 0)
                     {
-                        rangeAddress = range.Address;
+                        foreach (Aspose.Cells.Range range in ranges)
+                        {
+                            writer.WriteLine($"  Range Address : {range.Address}");
+                        }
                     }
-                }
-                catch
-                {
-                    // Ignored – GetRange can throw if the reference is not a simple range.
-                }
+                    else
+                    {
+                        writer.WriteLine("  No concrete range returned.");
+                    }
 
-                // Output the information.
-                Console.WriteLine($"Name          : {nameText}");
-                Console.WriteLine($"Refers To     : {refersToFormula}");
-                Console.WriteLine($"Range Address : {rangeAddress}");
-                Console.WriteLine(new string('-', 40));
+                    writer.WriteLine();
+                }
             }
 
-            // Optionally save the workbook if any changes were made.
-            try
-            {
-                workbook.Save("output.xlsx");
-                Console.WriteLine("Workbook saved as \"output.xlsx\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
-            }
+            // Save the workbook (optional, demonstrates lifecycle usage)
+            workbook.Save("SampleWorkbook.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

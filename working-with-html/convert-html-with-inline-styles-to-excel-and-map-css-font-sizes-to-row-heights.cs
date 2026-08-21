@@ -1,83 +1,70 @@
-// Title: C# – Convert HTML with Inline CSS to Excel and Auto‑Adjust Row Height by Font Size using Aspose.Cells
-// Description: Loads an HTML file while preserving inline styles, creates an Aspose.Cells workbook, scans each used row to find the largest font size, applies a 1.2 conversion factor to set the row height, and saves the result as an XLSX document.
-// Keywords: Aspose.Cells HTML to Excel conversion | C# inline CSS to Excel | map CSS font-size to Excel row height | auto adjust row height Aspose.Cells | .NET export HTML table to XLSX | font size based row height scaling
-// Common Searches: how to keep inline CSS when converting HTML to Excel with Aspose.Cells | set Excel row height from maximum font size in a row C# | convert HTML file to .xlsx and auto‑scale row heights | Aspose.Cells example mapping font-size to row height
-// Developer Intent: Transform an HTML document with inline CSS into an Excel workbook and automatically set each row’s height according to the biggest font size in that row.
-// Use Cases: Create printable Excel reports from styled HTML invoices where row dimensions match the text size. | Export web‑based tables to Excel while preserving visual layout by scaling rows to the largest font in each line. | Automate conversion of HTML email templates to Excel, keeping inline formatting and ensuring readable row spacing.
-// AI Prompts: Generate a C# Aspose.Cells snippet that loads an HTML file with inline styles and sets row heights based on the maximum font size per row using a 1.2 conversion factor. | Explain how to modify the font‑size‑to‑row‑height factor for different display requirements when converting HTML to Excel with Aspose.Cells. | Provide best‑practice error‑handling patterns for adjusting row heights during HTML‑to‑Excel conversion in C#.
+// Title: C# – Convert HTML with Inline CSS to Excel and Auto‑Adjust Row Height by Font Size (Aspose.Cells)
+// Description: The sample reads an HTML document with embedded style attributes, builds a Workbook via HtmlLoadOptions, examines every row to locate the largest font size, multiplies the point size by 1.2 to derive a row height, applies it, and writes an XLSX file. This keeps the original web layout intact in Excel.
+// Keywords: Aspose.Cells HTML to Excel | C# inline CSS conversion | map CSS font size to Excel row height | auto row height Aspose.Cells | HtmlLoadOptions example | global developers
+// Common Searches: aspocells convert html with inline styles to xlsx | set excel row height based on font size after html import | c# example adjusting row height from css font size | how to preserve html layout in excel using Aspose
+// Developer Intent: Transform an HTML document that uses inline CSS into an Excel workbook and automatically set each row’s height to accommodate the biggest font size in that row.
+// Use Cases: Create printable Excel reports that retain the visual appearance of web‑based tables. | Migrate email templates or web dashboards with inline styling into spreadsheets without text clipping. | Generate data exports for international teams where row height must reflect varying font sizes.
+// AI Prompts: Generate C# code with Aspose.Cells to load an HTML file, compute the maximum font size per row, and set row height proportionally. | Explain the reasoning behind the 1.2 conversion factor from points to row height and propose a more precise formula. | Suggest how to handle merged cells and multi‑line text when calculating row height after importing HTML.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Loads an HTML file while preserving inline styles, creates an Aspose.Cells workbook, scans each used row to find the largest font size, applies a 1.2 conversion factor to set the row height, and saves the result as an XLSX document.
-class HtmlToExcelConverter
+namespace HtmlToExcelConversion
 {
-    static void Main()
+    // The sample reads an HTML document with embedded style attributes, builds a Workbook via HtmlLoadOptions, examines every row to locate the largest font size, multiplies the point size by 1.2 to derive a row height, applies it, and writes an XLSX file. This keeps the original web layout intact in Excel.
+    class Program
     {
-        const string inputPath = "input.html";
-        const string outputPath = "output.xlsx";
-
-        try
+        static void Main(string[] args)
         {
-            // Verify that the input HTML file exists
-            if (!File.Exists(inputPath))
+            // Path to the source HTML file that contains inline CSS styles
+            string htmlPath = "input.html";
+
+            // Load the HTML file into a workbook.
+            // HtmlLoadOptions parses the HTML and creates corresponding cells, styles, etc.
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+            Workbook workbook = new Workbook(htmlPath, loadOptions);
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
+                Cells cells = sheet.Cells;
 
-            // Load the HTML file (inline styles are preserved)
-            var loadOptions = new HtmlLoadOptions();
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+                // Determine the used range to limit the iteration
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
 
-            // Work with the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Determine the used range
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            // Adjust each row height based on the largest font size in that row
-            for (int row = 0; row <= maxRow; row++)
-            {
-                double maxFontSize = 0.0;
-
-                // Scan all columns in the current row
-                for (int col = 0; col <= maxCol; col++)
+                // Process each row
+                for (int rowIndex = 0; rowIndex <= maxRow; rowIndex++)
                 {
-                    Cell cell = cells[row, col];
-                    if (cell != null && cell.Value != null)
-                    {
-                        double fontSize = cell.GetStyle().Font.Size;
-                        if (fontSize > maxFontSize)
-                            maxFontSize = fontSize;
-                    }
-                }
+                    double maxFontSizeInRow = 0;
 
-                // If any font size was found, set the row height proportionally
-                if (maxFontSize > 0)
-                {
-                    try
+                    // Scan all cells in the current row to find the largest font size
+                    for (int colIndex = 0; colIndex <= maxCol; colIndex++)
                     {
-                        // Simple conversion: height = font size * 1.2 (points to pixels approximation)
-                        sheet.Cells.Rows[row].Height = maxFontSize * 1.2;
+                        Cell cell = cells[rowIndex, colIndex];
+                        if (cell != null && cell.Value != null)
+                        {
+                            double fontSize = cell.GetStyle().Font.Size;
+                            if (fontSize > maxFontSizeInRow)
+                                maxFontSizeInRow = fontSize;
+                        }
                     }
-                    catch (Exception ex)
+
+                    // If any font size was found, adjust the row height accordingly.
+                    // The factor 1.2 approximates the conversion from point size to row height.
+                    if (maxFontSizeInRow > 0)
                     {
-                        Console.WriteLine($"Warning: Unable to set height for row {row}. {ex.Message}");
+                        Row row = cells.Rows[rowIndex];
+                        row.Height = maxFontSizeInRow * 1.2;
                     }
                 }
             }
 
-            // Save the workbook as an Excel file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Conversion completed. Output saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Save the workbook as an Excel file.
+            string excelPath = "output.xlsx";
+            workbook.Save(excelPath, SaveFormat.Xlsx);
+
+            Console.WriteLine("HTML has been converted to Excel and row heights adjusted.");
         }
     }
 }

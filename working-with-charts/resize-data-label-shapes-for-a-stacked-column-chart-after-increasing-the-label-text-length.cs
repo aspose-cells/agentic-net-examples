@@ -1,19 +1,18 @@
-// Title: Resize Data Label Shapes for a Stacked Column Chart in C# using Aspose.Cells
-// Description: Shows how to create a workbook, add a stacked column chart, prepend custom text to each data label, enable automatic shape resizing with IsResizeShapeToFitText, recalculate the chart, and save the file so the labels expand to fit the longer content.
-// Keywords: Aspose.Cells | C# | .NET | stacked column chart | data labels | IsResizeShapeToFitText | auto resize label shape | chart label length | Excel chart programming | Aspose.Cells chart API
-// Common Searches: Aspose.Cells resize data label shape C# | auto fit chart data labels after changing text | IsResizeShapeToFitText example Aspose.Cells | increase data label length stacked column chart .NET | recalculate chart after modifying data labels Aspose
-// Developer Intent: Automatically adjust the size of data label shapes so they accommodate longer custom text in a stacked column chart.
-// Use Cases: Add a prefix (e.g., "Sales:") to each label and let the shape grow to avoid truncation. | Generate Excel reports where label content varies in length and must remain fully visible. | Create dynamic charts that display units or descriptions without manual resizing of label boxes.
-// AI Prompts: Provide C# code that sets IsResizeShapeToFitText for each ChartPoint in a stacked column chart using Aspose.Cells. | How can I prepend custom text to data labels and make the label shapes auto‑expand in an Aspose.Cells chart? | Explain the steps to recalculate an Aspose.Cells chart after updating data label text so the resized shapes are applied.
+// Title: Resize data label shapes in a stacked column chart using Aspose.Cells for .NET
+// Description: Demonstrates how to create a stacked column chart, extend each data label's text, turn off automatic resizing, and assign a fixed width (120 px) and height (30 px) to every label before recalculating and saving the workbook.
+// Keywords: Aspose.Cells | C# chart data labels | stacked column chart | custom label size | disable auto resize | IsResizeShapeToFitText | .NET Excel chart | ChartPoint label text | LabelPositionType.Center | set label width height
+// Common Searches: Aspose.Cells set fixed size for chart data labels | how to prevent data label auto‑resize in .NET | increase data label text and adjust shape Aspose.Cells | customize stacked column chart labels C# | resize data label shape for each point Aspose.Cells
+// Developer Intent: Apply a consistent, manually defined size to data labels after lengthening their text in a stacked column chart.
+// Use Cases: Ensuring readability when data labels contain additional descriptive text. | Maintaining uniform label dimensions across all points in a series. | Creating printable Excel reports where label size must not change automatically.
+// AI Prompts: Write C# code with Aspose.Cells that disables automatic label resizing and sets a fixed width and height for each data label in a stacked column chart. | Show how to append extra information to chart point labels and then resize the label shape to fit the new text. | Provide an example of customizing data label position and size for a specific series in an Aspose.Cells-generated Excel chart.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsResizeDataLabelShapes
+namespace AsposeCellsResizeDataLabelDemo
 {
-    // Shows how to create a workbook, add a stacked column chart, prepend custom text to each data label, enable automatic shape resizing with IsResizeShapeToFitText, recalculate the chart, and save the file so the labels expand to fit the longer content.
+    // Demonstrates how to create a stacked column chart, extend each data label's text, turn off automatic resizing, and assign a fixed width (120 px) and height (30 px) to every label before recalculating and saving the workbook.
     class Program
     {
         static void Main()
@@ -30,36 +29,43 @@ namespace AsposeCellsResizeDataLabelShapes
                 sheet.Cells["A3"].PutValue("Q2");
                 sheet.Cells["A4"].PutValue("Q3");
 
-                // Series 1
+                // First series (Product A)
                 sheet.Cells["B1"].PutValue("Product A");
                 sheet.Cells["B2"].PutValue(10);
                 sheet.Cells["B3"].PutValue(20);
                 sheet.Cells["B4"].PutValue(30);
 
-                // Series 2
+                // Second series (Product B)
                 sheet.Cells["C1"].PutValue("Product B");
                 sheet.Cells["C2"].PutValue(15);
                 sheet.Cells["C3"].PutValue(25);
                 sheet.Cells["C4"].PutValue(35);
 
-                // Add a stacked column chart (use ColumnStacked which is supported)
-                int chartIndex = sheet.Charts.Add(ChartType.ColumnStacked, 5, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIndex];
+                // Add a stacked column chart (ColumnStacked is the correct enum value)
+                int chartIdx = sheet.Charts.Add(ChartType.ColumnStacked, 5, 0, 20, 10);
+                Chart chart = sheet.Charts[chartIdx];
 
                 // Set data range for both series
-                chart.NSeries.Add("B2:C4", true);               // Values
-                chart.NSeries.CategoryData = "A2:A4";           // Categories
+                chart.NSeries.Add("B2:C4", true);
+                chart.NSeries.CategoryData = "A2:A4";
 
                 // Enable data labels for the first series
                 Series series = chart.NSeries[0];
-                series.DataLabels.ShowValue = true;             // Show the numeric value
+                series.DataLabels.ShowValue = true;
                 series.DataLabels.Position = LabelPositionType.Center;
 
-                // Increase the label text length by prefixing a custom string
+                // Increase label text length for each point and resize the label shape
                 foreach (ChartPoint point in series.Points)
                 {
-                    point.DataLabels.Text = $"Sales: {point.YValue} units";
-                    point.DataLabels.IsResizeShapeToFitText = true;
+                    // Append extra text to make the label longer
+                    point.DataLabels.Text = $"Value: {point.YValue} (extended info)";
+
+                    // Disable automatic resizing so we can set custom dimensions
+                    point.DataLabels.IsResizeShapeToFitText = false;
+
+                    // Set custom size (in pixels) sufficient for the longer text
+                    point.DataLabels.Width = 120;
+                    point.DataLabels.Height = 30;
                 }
 
                 // Recalculate the chart to apply changes
@@ -68,11 +74,11 @@ namespace AsposeCellsResizeDataLabelShapes
                 // Save the workbook
                 string outputPath = "StackedColumn_ResizedDataLabels.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

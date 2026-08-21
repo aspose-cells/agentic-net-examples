@@ -1,92 +1,66 @@
-// Title: Clone an OLE object to a different worksheet using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add an OLE object with a preview image and embedded Excel data, then duplicate that OLE object on another sheet while preserving its image, embedded file, and key properties, and finally save the result.
-// Keywords: Aspose.Cells | C# | .NET | clone OLE object | copy OLE object worksheet | OleObjects.Add | ObjectData | FileFormatType | DisplayAsIcon | ProgID | Excel OLE embedding | sample code | GitHub example
-// Common Searches: Aspose.Cells clone OLE object C# | copy OLE object to another sheet .NET | duplicate embedded Excel OLE in workbook | how to transfer OLE object properties with Aspose.Cells | sample code for cloning OLE objects in C#
-// Developer Intent: Programmatically duplicate an existing OLE object and place the copy on a different worksheet while retaining its visual preview and embedded data.
-// Use Cases: Create a master template with a reusable OLE chart and replicate it across multiple report sheets. | Embed a supplemental Excel file as an OLE object in a dashboard workbook and copy it to each department tab. | Maintain the snapshot image of an OLE object when reorganizing worksheets for printing or page‑break adjustments.
-// AI Prompts: Generate C# code with Aspose.Cells that clones an OLE object from one worksheet to another, preserving image preview and embedded file. | Explain which OLE object properties must be copied (FileFormatType, DisplayAsIcon, ProgID) to achieve an exact duplicate in Aspose.Cells. | Provide error‑handling patterns for missing preview image or embedded file when cloning OLE objects with Aspose.Cells.
+// Title: Clone an OLE Object to a Different Worksheet with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to duplicate an existing OLE object in a workbook by reading its binary data, creating a new worksheet, and adding a cloned OleObject with identical position, size, and visual settings using Aspose.Cells for .NET. The workbook is saved as ClonedOleObject.xlsx.
+// Keywords: Aspose.Cells | C# | OLE object clone | copy OLE object worksheet | OleObjects.Add | Aspose.Cells.Drawing | embedded Excel file | CloneOleObjectDemo | Excel automation | save workbook Xlsx
+// Common Searches: clone OLE object Aspose.Cells C# | copy embedded Excel file to another sheet .NET | duplicate OleObject across worksheets | Aspose.Cells how to copy OLE object | C# code to clone OLE object in Excel
+// Developer Intent: Create an identical copy of a source OleObject and insert it into a new worksheet within the same workbook.
+// Use Cases: Insert the same embedded document on multiple report sections without re‑embedding the file. | Provide language‑specific sheets that share a common OLE chart or spreadsheet. | Maintain consistent icon display and label when reusing OLE objects across worksheets.
+// AI Prompts: Write C# code that clones an OleObject from one worksheet to another using Aspose.Cells, preserving size and display properties. | Explain step‑by‑step how to copy an OLE object's binary data and visual attributes to a new sheet with Aspose.Cells for .NET. | Suggest robust error handling for missing source file or invalid OLE data when cloning objects in Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, add an OLE object with a preview image and embedded Excel data, then duplicate that OLE object on another sheet while preserving its image, embedded file, and key properties, and finally save the result.
+// Demonstrates how to duplicate an existing OLE object in a workbook by reading its binary data, creating a new worksheet, and adding a cloned OleObject with identical position, size, and visual settings using Aspose.Cells for .NET. The workbook is saved as ClonedOleObject.xlsx.
 class CloneOleObjectDemo
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Source worksheet where the original OLE object resides
-            Worksheet sourceSheet = workbook.Worksheets[0];
-            sourceSheet.Name = "Source";
+        // -----------------------------------------------------------------
+        // Source worksheet: add an OLE object that we will clone later
+        // -----------------------------------------------------------------
+        Worksheet sourceSheet = workbook.Worksheets[0];
+        sourceSheet.Name = "Source";
 
-            // Prepare image data for the OLE object's preview (snapshot)
-            byte[] snapshotImage;
-            const string snapshotPath = "snapshot.png";
-            if (File.Exists(snapshotPath))
-            {
-                snapshotImage = File.ReadAllBytes(snapshotPath);
-            }
-            else
-            {
-                // Fallback to an empty image if the file is missing
-                snapshotImage = new byte[0];
-                Console.WriteLine($"Warning: '{snapshotPath}' not found. Using empty image data.");
-            }
+        // Load binary data for the OLE object (e.g., an existing Excel file)
+        // Adjust the path to a valid file on your system
+        byte[] oleData = File.ReadAllBytes("sample.xlsx");
 
-            // Prepare embedded OLE data (e.g., an Excel file to embed)
-            byte[] embeddedData;
-            const string embeddedPath = "embedded.xlsx";
-            if (File.Exists(embeddedPath))
-            {
-                embeddedData = File.ReadAllBytes(embeddedPath);
-            }
-            else
-            {
-                // Fallback to an empty byte array if the file is missing
-                embeddedData = new byte[0];
-                Console.WriteLine($"Warning: '{embeddedPath}' not found. Using empty embedded data.");
-            }
+        // Add the OLE object to the source sheet
+        // Parameters: topRow, leftColumn, height (px), width (px), object data
+        int oleIndex = sourceSheet.OleObjects.Add(5, 2, 200, 300, oleData);
+        OleObject sourceOle = sourceSheet.OleObjects[oleIndex];
 
-            // Add the original OLE object to the source worksheet
-            int originalIndex = sourceSheet.OleObjects.Add(2, 2, 200, 200, snapshotImage);
-            OleObject originalOle = sourceSheet.OleObjects[originalIndex];
+        // Set some optional properties on the source OLE object
+        sourceOle.DisplayAsIcon = true;
+        sourceOle.Label = "Sample OLE";
 
-            // Set the embedded object data and its format
-            originalOle.ObjectData = embeddedData;
-            originalOle.FileFormatType = FileFormatType.Xlsx;
+        // -----------------------------------------------------------------
+        // Target worksheet: clone the OLE object here
+        // -----------------------------------------------------------------
+        Worksheet targetSheet = workbook.Worksheets.Add("Clone");
 
-            // Add a new worksheet that will receive the cloned OLE object
-            Worksheet targetSheet = workbook.Worksheets.Add("Clone");
+        // Clone the OLE object by adding a new one with the same binary data
+        // and copying position/size from the source object
+        int clonedIndex = targetSheet.OleObjects.Add(
+            sourceOle.UpperLeftRow,          // same top row
+            sourceOle.UpperLeftColumn,       // same left column
+            sourceOle.Height,                // same height
+            sourceOle.Width,                 // same width
+            sourceOle.ObjectData);           // same embedded data
 
-            // Clone the OLE object by adding a new one with the same visual data
-            int cloneIndex = targetSheet.OleObjects.Add(
-                originalOle.UpperLeftRow,
-                originalOle.UpperLeftColumn,
-                originalOle.Height,
-                originalOle.Width,
-                originalOle.ImageData);
+        OleObject clonedOle = targetSheet.OleObjects[clonedIndex];
 
-            OleObject clonedOle = targetSheet.OleObjects[cloneIndex];
+        // Copy additional visual properties to keep the clone identical
+        clonedOle.DisplayAsIcon = sourceOle.DisplayAsIcon;
+        clonedOle.Label = sourceOle.Label;
 
-            // Copy the embedded data and relevant properties from the original
-            clonedOle.ObjectData = originalOle.ObjectData;
-            clonedOle.FileFormatType = originalOle.FileFormatType;
-            clonedOle.DisplayAsIcon = originalOle.DisplayAsIcon;
-            clonedOle.ProgID = originalOle.ProgID;
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("ClonedOleObject.xlsx", SaveFormat.Xlsx);
-            Console.WriteLine("Workbook saved as 'ClonedOleObject.xlsx'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // -----------------------------------------------------------------
+        // Save the workbook with the cloned OLE object
+        // -----------------------------------------------------------------
+        workbook.Save("ClonedOleObject.xlsx", SaveFormat.Xlsx);
     }
 }

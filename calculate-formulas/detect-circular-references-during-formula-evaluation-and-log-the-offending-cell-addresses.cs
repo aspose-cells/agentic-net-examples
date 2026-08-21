@@ -1,10 +1,10 @@
-// Title: Detect Circular References in Aspose.Cells with a Custom Calculation Monitor (C#)
-// Description: Creates a workbook with a circular reference (A1 ↔ B1), attaches a custom CircularReferenceMonitor derived from AbstractCalculationMonitor, and logs each offending cell address during workbook.CalculateFormula. The monitor returns true to let the engine continue processing.
-// Keywords: Aspose.Cells circular reference | C# calculation monitor | AbstractCalculationMonitor example | log circular cells Aspose | CalculateFormula options | detect circular formulas .NET | Excel circular dependency detection
-// Common Searches: Aspose.Cells detect circular reference | custom calculation monitor C# | log cell addresses of circular formulas | how to use AbstractCalculationMonitor | Aspose.Cells circular reference example
-// Developer Intent: Implement a custom calculation monitor that captures and logs the addresses of cells involved in circular references during formula evaluation.
-// Use Cases: Validate newly generated workbooks for circular dependencies before saving. | Debug complex financial models by listing cells that cause circular calculations. | Integrate circular reference detection into an automated spreadsheet quality‑check pipeline.
-// AI Prompts: Show how to modify CircularReferenceMonitor to store circular cell addresses in a List<string> instead of printing them. | Provide code for handling circular references that span multiple worksheets and logging each sheet name with the cell address. | Explain how to suppress circular reference exceptions while still capturing the offending cells using CalculationOptions.
+// Title: C# Custom CalculationMonitor to Detect and Log Circular References in Aspose.Cells
+// Description: Shows how to subclass AbstractCalculationMonitor, override OnCircular to enumerate offending cells, build their addresses, and log them while using CalculationOptions with workbook.CalculateFormula. Includes optional workbook save.
+// Keywords: Aspose.Cells | C# | .NET | circular reference detection | AbstractCalculationMonitor | OnCircular | formula calculation | cell address logging | CalculationOptions | Excel automation
+// Common Searches: Aspose.Cells detect circular reference C# | Custom CalculationMonitor example | Log circular reference cells Aspose.Cells | How to use AbstractCalculationMonitor .NET | Workbook.CalculateFormula circular reference
+// Developer Intent: Create a custom CalculationMonitor that captures and logs cells involved in circular references during formula evaluation.
+// Use Cases: Debug spreadsheets with inter‑dependent formulas by listing offending cells. | Prevent calculation errors before saving a workbook. | Integrate circular‑reference logging into automated Excel processing pipelines. | Collect circular cell addresses for reporting or corrective scripts.
+// AI Prompts: Generate a C# class extending AbstractCalculationMonitor that records circular reference cell addresses to a file. | Demonstrate configuring CalculationOptions with a custom monitor and invoking workbook.CalculateFormula to detect circular references. | Explain how to modify OnCircular to return a list of cell addresses instead of printing them.
 
 using System;
 using System.Collections;
@@ -13,8 +13,8 @@ using Aspose.Cells;
 namespace CircularReferenceDemo
 {
     // Custom monitor to detect and log circular references during calculation
-    // Creates a workbook with a circular reference (A1 ↔ B1), attaches a custom CircularReferenceMonitor derived from AbstractCalculationMonitor, and logs each offending cell address during workbook.CalculateFormula. The monitor returns true to let the engine continue processing.
-    class CircularReferenceMonitor : AbstractCalculationMonitor
+    // Shows how to subclass AbstractCalculationMonitor, override OnCircular to enumerate offending cells, build their addresses, and log them while using CalculationOptions with workbook.CalculateFormula. Includes optional workbook save.
+    public class CircularReferenceMonitor : AbstractCalculationMonitor
     {
         private readonly Workbook _workbook;
 
@@ -26,25 +26,24 @@ namespace CircularReferenceDemo
         // Called when the calculation engine finds a circular reference
         public override bool OnCircular(IEnumerator circularCellsData)
         {
-            Console.WriteLine("Circular reference detected:");
+            Console.WriteLine("Circular reference detected. Offending cells:");
+
             while (circularCellsData.MoveNext())
             {
-                // Each item is a CellArea containing location info
-                if (circularCellsData.Current is CellArea area)
-                {
-                    string address = CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
-                    // Assuming the circular reference is on the first worksheet
-                    string sheetName = _workbook.Worksheets[0].Name;
-                    Console.WriteLine($"{sheetName}!{address}");
-                }
-                else
-                {
-                    // Fallback: just output the object
-                    Console.WriteLine(circularCellsData.Current);
-                }
+                // The items are CalculationCell objects; use reflection to obtain their properties
+                object calcCell = circularCellsData.Current;
+                var type = calcCell.GetType();
+
+                int row = (int)type.GetProperty("Row").GetValue(calcCell);
+                int column = (int)type.GetProperty("Column").GetValue(calcCell);
+                int sheetIndex = (int)type.GetProperty("SheetIndex").GetValue(calcCell);
+
+                // Build the cell address (e.g., Sheet1!A1)
+                string address = $"{_workbook.Worksheets[sheetIndex].Name}!{CellsHelper.CellIndexToName(row, column)}";
+                Console.WriteLine(address);
             }
 
-            // Return true to let the engine continue processing other cells
+            // Return true to let the engine continue calculation for these cells
             return true;
         }
     }
@@ -53,33 +52,24 @@ namespace CircularReferenceDemo
     {
         static void Main()
         {
-            try
+            // Create a new workbook and set up a circular reference scenario
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            sheet.Cells["A1"].Formula = "=B1";
+            sheet.Cells["B1"].Formula = "=A1";
+
+            // Configure calculation options with the custom monitor
+            CalculationOptions options = new CalculationOptions
             {
-                // Create a new workbook and set up a circular reference scenario
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                CalculationMonitor = new CircularReferenceMonitor(workbook)
+            };
 
-                sheet.Cells["A1"].Formula = "=B1";
-                sheet.Cells["B1"].Formula = "=A1";
+            // Perform formula calculation; the monitor will log any circular references
+            workbook.CalculateFormula(options);
 
-                // Configure calculation options with the custom monitor
-                CalculationOptions options = new CalculationOptions
-                {
-                    CalculationMonitor = new CircularReferenceMonitor(workbook),
-                    Recursive = true
-                };
-
-                // Perform formula calculation; circular references will be logged
-                workbook.CalculateFormula(options);
-
-                // Save the workbook (optional, just to complete the lifecycle)
-                workbook.Save("CircularReferenceDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook (optional, just to demonstrate lifecycle usage)
+            workbook.Save("CircularReferenceDemo.xlsx");
         }
     }
 }

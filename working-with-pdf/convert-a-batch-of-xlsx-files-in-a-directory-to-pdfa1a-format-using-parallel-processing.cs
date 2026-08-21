@@ -1,10 +1,10 @@
-// Title: Batch Convert XLSX to PDF/A‑1a in Parallel with Aspose.Cells for .NET (C#)
-// Description: A C# console app that scans a folder for .xlsx files, creates an output directory, and uses Parallel.ForEach with Aspose.Cells' ConversionUtility, LoadOptions and PdfSaveOptions to generate PDF/A‑1a compliant PDFs. Includes per‑file error handling and progress logging.
-// Keywords: Aspose.Cells | C# | .NET | XLSX to PDF/A-1a conversion | parallel batch conversion | ConversionUtility | PdfSaveOptions | PDF/A-1a compliance | Excel archival | GitHub example | open source code
-// Common Searches: convert folder of xlsx to pdf/a-1a c# | aspose.cells parallel batch conversion example | c# code to generate PDF/A-1a from Excel | batch convert excel to pdf/a using asp.net | github aspose.cells pdfa1a sample
-// Developer Intent: Convert every XLSX file in a directory to a PDF/A‑1a document using concurrent processing.
-// Use Cases: Automate archival of daily financial workbooks by converting each spreadsheet to PDF/A‑1a in a background service. | Accelerate migration of a large Excel repository to PDF/A‑1a by processing files concurrently with Aspose.Cells. | Integrate the batch converter into CI/CD pipelines to validate PDF/A compliance of generated reports before release.
-// AI Prompts: Show how to preserve original file timestamps after conversion. | Add timing metrics to log conversion duration per file and total elapsed time. | Modify the code to traverse subfolders recursively while keeping parallel execution.
+// Title: Parallel Batch Convert XLSX to PDF/A‑1a with Aspose.Cells for .NET (C#)
+// Description: Scans a folder for .xlsx files and uses Aspose.Cells with Parallel.ForEach to convert each workbook to PDF/A‑1a on all CPU cores, reporting success or errors in the console.
+// Keywords: Aspose.Cells C# | XLSX to PDF/A-1a conversion | parallel Excel PDF conversion | batch PDF/A-1a generation | PdfSaveOptions Compliance PdfA1a | LoadOptions Xlsx | ConversionUtility Aspose | .NET multi‑core processing | archive‑ready PDF | Windows console Excel conversion
+// Common Searches: convert folder of xlsx files to pdf/a-1a c# | asp.net parallel excel to pdf/a batch conversion | aspocells batch pdf/a-1a example | c# multi‑threaded xlsx to pdf/a conversion | how to use ConversionUtility for pdf/a compliance
+// Developer Intent: Convert every XLSX file in a directory to PDF/A‑1a using multi‑core parallelism.
+// Use Cases: Automated archival of financial spreadsheets on a server farm. | Real‑time compliance processing of incoming Excel reports in a shared drop folder. | Integration into CI/CD pipelines to verify PDF/A‑1a output of generated workbooks.
+// AI Prompts: Write C# code that adds a CancellationToken to the Parallel.ForEach loop for graceful shutdown. | Show how to log conversion progress and errors to a rotating file while preserving parallel execution. | Extend the program to recursively process sub‑folders and preserve the original directory structure in the output.
 
 using System;
 using System.IO;
@@ -13,76 +13,66 @@ using Aspose.Cells;
 using Aspose.Cells.Utility;
 using Aspose.Cells.Rendering;
 
-namespace BatchXlsxToPdfA1a
+namespace BatchXlsxToPdfA
 {
-    // A C# console app that scans a folder for .xlsx files, creates an output directory, and uses Parallel.ForEach with Aspose.Cells' ConversionUtility, LoadOptions and PdfSaveOptions to generate PDF/A‑1a compliant PDFs. Includes per‑file error handling and progress logging.
+    // Scans a folder for .xlsx files and uses Aspose.Cells with Parallel.ForEach to convert each workbook to PDF/A‑1a on all CPU cores, reporting success or errors in the console.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            try
-            {
-                // Directory containing the source XLSX files
-                string sourceDirectory = @"C:\InputXlsx";
+            // Directory containing the XLSX files. Change as needed.
+            string sourceDirectory = @"C:\InputXlsx";
 
-                // Verify source directory exists
-                if (!Directory.Exists(sourceDirectory))
+            // Verify the directory exists.
+            if (!Directory.Exists(sourceDirectory))
+            {
+                Console.WriteLine($"Source directory does not exist: {sourceDirectory}");
+                return;
+            }
+
+            // Get all .xlsx files in the directory (non‑recursive).
+            string[] xlsxFiles = Directory.GetFiles(sourceDirectory, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+            if (xlsxFiles.Length == 0)
+            {
+                Console.WriteLine("No XLSX files found to convert.");
+                return;
+            }
+
+            // Process files in parallel, using the number of logical processors.
+            ParallelOptions parallelOptions = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = Environment.ProcessorCount
+            };
+
+            Parallel.ForEach(xlsxFiles, parallelOptions, xlsxPath =>
+            {
+                try
                 {
-                    Console.WriteLine($"Source directory not found: {sourceDirectory}");
-                    return;
+                    // Destination PDF file path (same name, .pdf extension).
+                    string pdfPath = Path.ChangeExtension(xlsxPath, ".pdf");
+
+                    // Load options for XLSX format.
+                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+
+                    // Save options for PDF/A‑1a compliance.
+                    PdfSaveOptions saveOptions = new PdfSaveOptions
+                    {
+                        Compliance = PdfCompliance.PdfA1a
+                    };
+
+                    // Perform the conversion using the provided ConversionUtility method.
+                    ConversionUtility.Convert(xlsxPath, loadOptions, pdfPath, saveOptions);
+
+                    Console.WriteLine($"Converted: {Path.GetFileName(xlsxPath)} → {Path.GetFileName(pdfPath)}");
                 }
-
-                // Directory where the converted PDF/A‑1a files will be saved
-                string outputDirectory = @"C:\OutputPdfA1a";
-
-                // Ensure the output directory exists
-                Directory.CreateDirectory(outputDirectory);
-
-                // Get all .xlsx files in the source directory (non‑recursive)
-                string[] xlsxFiles = Directory.GetFiles(sourceDirectory, "*.xlsx", SearchOption.TopDirectoryOnly);
-
-                // Process each file in parallel
-                Parallel.ForEach(xlsxFiles, sourcePath =>
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        // Verify the source file still exists
-                        if (!File.Exists(sourcePath))
-                        {
-                            Console.WriteLine($"Source file not found: {sourcePath}");
-                            return;
-                        }
+                    Console.WriteLine($"Error converting '{Path.GetFileName(xlsxPath)}': {ex.Message}");
+                }
+            });
 
-                        // Build the destination PDF file path (same file name, .pdf extension)
-                        string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
-                        string destPath = Path.Combine(outputDirectory, fileNameWithoutExt + ".pdf");
-
-                        // Load options – explicitly specify the source format (XLSX)
-                        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-
-                        // Save options – set PDF compliance to PDF/A‑1a
-                        PdfSaveOptions saveOptions = new PdfSaveOptions
-                        {
-                            Compliance = PdfCompliance.PdfA1a
-                        };
-
-                        // Perform the conversion using the utility method that accepts options
-                        ConversionUtility.Convert(sourcePath, loadOptions, destPath, saveOptions);
-
-                        Console.WriteLine($"Converted: {sourcePath} -> {destPath}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error converting '{sourcePath}': {ex.Message}");
-                    }
-                });
-
-                Console.WriteLine("Batch conversion completed.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            Console.WriteLine("Batch conversion completed.");
         }
     }
 }

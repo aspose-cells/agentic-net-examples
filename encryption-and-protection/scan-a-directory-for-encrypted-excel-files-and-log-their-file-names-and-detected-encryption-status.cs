@@ -1,10 +1,10 @@
-// Title: C# – Scan a directory for encrypted Excel files using Aspose.Cells FileFormatUtil
-// Description: A console utility that enumerates *.xls, *.xlsx, *.xlsm and *.xlsb files in a given folder, uses Aspose.Cells FileFormatUtil.DetectFileFormat to determine whether each workbook is password‑protected, and writes the file name with a true/false encryption flag to the console while handling I/O and format errors.
-// Keywords: Aspose.Cells encryption detection C# | FileFormatUtil DetectFileFormat encrypted workbook | scan folder for password‑protected Excel files | list encrypted .xlsx files .NET | check Excel file protection programmatically
-// Common Searches: how to detect encrypted Excel files with Aspose.Cells | C# code to list password‑protected workbooks in a folder | using FileFormatUtil to identify protected spreadsheets | batch scan for encrypted .xls/.xlsx files | Aspose.Cells example for encryption status
-// Developer Intent: Find all Excel workbooks in a specified directory and report which ones are encrypted.
-// Use Cases: Generate a compliance inventory of password‑protected spreadsheets before migration. | Skip encrypted files automatically during a bulk data‑import operation. | Audit a shared drive to quantify protected Excel files for security reporting.
-// AI Prompts: Create a C# script that scans subfolders recursively, detects encrypted Excel files with Aspose.Cells, and exports the results to a CSV file. | Show how to catch specific exceptions from FileFormatUtil.DetectFileFormat when a file is corrupted or uses an unsupported format. | Refactor the sample to use parallel processing for faster scanning of large directories and summarize the total count of encrypted versus unencrypted files.
+// Title: C# – Scan a directory for encrypted Excel files using Aspose.Cells
+// Description: A console utility that recursively scans a folder, filters Excel workbooks, uses Aspose.Cells.FileFormatUtil to detect password protection, and logs each file name with its encryption status or any error encountered.
+// Keywords: Aspose.Cells | C# | encrypted Excel files | password protected workbook | FileFormatUtil | detect Excel encryption | scan folder for Excel | batch Excel security check | Excel file protection .NET | GitHub example
+// Common Searches: Aspose.Cells detect encrypted workbook C# | C# code to list password protected Excel files | How to check if an Excel file is encrypted using Aspose | Scan folder for protected Excel files .NET | Batch encryption detection Aspose.Cells
+// Developer Intent: Determine which Excel files in a given directory are password‑protected and output their names with a true/false encryption flag.
+// Use Cases: Generate an inventory of encrypted workbooks before a migration or backup. | Exclude password‑protected files from bulk conversion, data extraction, or analytics pipelines. | Alert administrators to unexpected encryption or corrupted files during nightly scans. | Perform compliance audits of confidential spreadsheets across shared drives.
+// AI Prompts: Create a method that accepts a folder path and returns a list of (file name, isEncrypted) tuples using Aspose.Cells. | Rewrite the program to write the results to a CSV file with columns: FileName, Encrypted, ErrorMessage. | Add timestamped file logging and preserve console output for each detection attempt. | Implement parallel processing to speed up scanning of large file collections. | Extend the example to output results as JSON for consumption by a REST API.
 
 using System;
 using System.IO;
@@ -12,50 +12,44 @@ using Aspose.Cells;
 
 namespace AsposeCellsEncryptionScanner
 {
-    // A console utility that enumerates *.xls, *.xlsx, *.xlsm and *.xlsb files in a given folder, uses Aspose.Cells FileFormatUtil.DetectFileFormat to determine whether each workbook is password‑protected, and writes the file name with a true/false encryption flag to the console while handling I/O and format errors.
+    // A console utility that recursively scans a folder, filters Excel workbooks, uses Aspose.Cells.FileFormatUtil to detect password protection, and logs each file name with its encryption status or any error encountered.
     class Program
     {
         static void Main(string[] args)
         {
-            // Directory to scan – can be overridden by a command‑line argument
-            string folderPath = args.Length > 0 ? args[0] : @"C:\Path\To\Excel\Files";
+            // Directory to scan – change as needed or pass as an argument
+            string folderPath = args.Length > 0 ? args[0] : @"C:\ExcelFiles";
 
             if (!Directory.Exists(folderPath))
             {
-                Console.WriteLine($"Folder not found: {folderPath}");
+                Console.WriteLine($"Folder does not exist: {folderPath}");
                 return;
             }
 
-            // Supported Excel extensions
-            string[] extensions = new[] { "*.xls", "*.xlsx", "*.xlsm", "*.xlsb" };
+            // Define Excel file extensions to consider
+            string[] excelExtensions = new[] { ".xls", ".xlsx", ".xlsm", ".xlsb", ".xls", ".xlt", ".xltx", ".xltm" };
 
-            try
+            // Enumerate files recursively
+            foreach (string filePath in Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories))
             {
-                // Iterate through each extension and process matching files
-                foreach (string ext in extensions)
+                // Skip non‑Excel files
+                if (Array.IndexOf(excelExtensions, Path.GetExtension(filePath).ToLowerInvariant()) < 0)
+                    continue;
+
+                try
                 {
-                    foreach (string filePath in Directory.GetFiles(folderPath, ext, SearchOption.TopDirectoryOnly))
-                    {
-                        try
-                        {
-                            // Detect file format and encryption status
-                            FileFormatInfo info = FileFormatUtil.DetectFileFormat(filePath);
+                    // Detect file format and encryption status
+                    FileFormatInfo info = FileFormatUtil.DetectFileFormat(filePath);
+                    bool isEncrypted = info.IsEncrypted;
 
-                            // Log file name and encryption status
-                            Console.WriteLine($"File: {Path.GetFileName(filePath)} | Encrypted: {info.IsEncrypted}");
-                        }
-                        catch (Exception ex)
-                        {
-                            // Log any errors encountered while processing the file
-                            Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
-                        }
-                    }
+                    // Log result
+                    Console.WriteLine($"{Path.GetFileName(filePath)}\tEncrypted: {isEncrypted}");
                 }
-            }
-            catch (Exception ex)
-            {
-                // Log unexpected errors during directory enumeration
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                catch (Exception ex)
+                {
+                    // Log any errors (e.g., corrupted file)
+                    Console.WriteLine($"{Path.GetFileName(filePath)}\tError: {ex.Message}");
+                }
             }
         }
     }

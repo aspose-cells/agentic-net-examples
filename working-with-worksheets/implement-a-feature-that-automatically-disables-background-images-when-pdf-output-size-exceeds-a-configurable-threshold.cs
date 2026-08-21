@@ -1,97 +1,90 @@
-// Title: Auto‑remove worksheet background images when PDF exceeds size limit (Aspose.Cells C#)
-// Description: Demonstrates a C# routine that saves a Workbook to PDF, checks the generated file size against a configurable byte threshold, and automatically clears all worksheet BackgroundImage properties before re‑saving if the size is too large. The approach keeps PDFs within attachment or bandwidth limits without manual intervention.
-// Keywords: Aspose.Cells PDF size limit | C# remove worksheet background image | conditional PDF export Aspose.Cells | auto background removal PDF | Excel to PDF size check | Aspose.Cells memory stream | threshold based PDF generation
-// Common Searches: Aspose.Cells disable background images for large PDF | C# export Excel to PDF only if under 5 MB | how to trim PDF size by removing worksheet backgrounds | auto remove sheet background when PDF too big Aspose | conditional PDF generation based on file size C#
-// Developer Intent: Create a PDF from a workbook and automatically strip worksheet background images when the output exceeds a predefined size.
-// Use Cases: Sending Excel‑derived reports via email where attachment size must stay below a limit. | Providing on‑demand PDFs in web apps that need to respect bandwidth caps. | Running batch conversions that adapt to storage quotas by removing heavy background graphics only when necessary.
-// AI Prompts: Generate a C# method using Aspose.Cells that checks PDF size and removes all worksheet background images if it exceeds a configurable threshold. | Show how to read the size threshold from appsettings.json and apply it in the auto‑background‑removal workflow. | Explain logging of original and reduced PDF sizes and handling cases where no background images exist.
+// Title: Aspose.Cells for .NET – Auto‑disable worksheet background images when PDF exceeds size limit
+// Description: Demonstrates how to export a workbook to PDF, measure the generated file size, and automatically remove all worksheet background images if the size surpasses a configurable threshold (e.g., 5 MB). The example uses PdfSaveOptions with MinimumSize optimization, a temporary MemoryStream for size checking, and re‑saves the PDF after background removal.
+// Keywords: Aspose.Cells PDF size limit | disable worksheet background image | conditional PDF export | C# Aspose.Cells PDF optimization | check PDF file size before save | remove background images Aspose.Cells | auto background removal PDF | minimum size PDF Aspose
+// Common Searches: Aspose.Cells remove background image if PDF too large | C# export workbook to PDF with size threshold | how to limit PDF file size in Aspose.Cells | conditional background image removal during PDF export | auto disable worksheet background for large PDFs
+// Developer Intent: Automatically drop worksheet background images when the exported PDF exceeds a predefined size limit.
+// Use Cases: Generate compact PDF reports for email attachments by stripping backgrounds only when necessary. | Enforce file‑size policies in automated batch conversions of Excel workbooks to PDF. | Provide a fallback PDF version without backgrounds for low‑bandwidth environments.
+// AI Prompts: Create a reusable C# method that takes a Workbook and a size limit, saves the PDF with backgrounds if under the limit, otherwise clears all BackgroundImage properties and re‑saves. | Show how to externalize the size threshold to appsettings.json and integrate the conditional background removal into an existing Aspose.Cells PDF export pipeline. | Write a GitHub‑style README snippet explaining the memory‑stream size check and background‑image removal logic for Aspose.Cells PDF generation.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Demonstrates a C# routine that saves a Workbook to PDF, checks the generated file size against a configurable byte threshold, and automatically clears all worksheet BackgroundImage properties before re‑saving if the size is too large. The approach keeps PDFs within attachment or bandwidth limits without manual intervention.
-public class PdfExporter
+// Demonstrates how to export a workbook to PDF, measure the generated file size, and automatically remove all worksheet background images if the size surpasses a configurable threshold (e.g., 5 MB). The example uses PdfSaveOptions with MinimumSize optimization, a temporary MemoryStream for size checking, and re‑saves the PDF after background removal.
+class PdfExportWithBackgroundControl
 {
-    // Configurable size threshold in bytes (e.g., 5 MB)
-    private const long SizeThresholdBytes = 5 * 1024 * 1024;
-
-    /// <param name="workbook">The workbook to export.</param>
-    /// <param name="outputPath">Full path of the resulting PDF file.</param>
-    public static void SavePdfWithAutoBackgroundRemoval(Workbook workbook, string outputPath)
+    static void Main()
     {
         try
         {
-            // Render PDF with default options into a memory stream
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Configurable size threshold (e.g., 5 MB)
+            const long sizeThresholdBytes = 5 * 1024 * 1024;
 
+            // ---------- Create or load workbook ----------
+            Workbook workbook = new Workbook(); // create a new workbook
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample data for PDF export.");
+
+            // Add a background image for demonstration (optional)
+            // Note: System.Drawing may not be available on all platforms, so this step is skipped.
+            // If needed, ensure System.Drawing.Common is referenced and uncomment the code below.
+            /*
+            string backgroundImagePath = "background.jpg";
+            if (File.Exists(backgroundImagePath))
+            {
+                sheet.BackgroundImage = System.Drawing.Image.FromFile(backgroundImagePath);
+            }
+            */
+
+            // ---------- Prepare PDF save options ----------
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Use minimum size optimization as a first step
+                OptimizationType = PdfOptimizationType.MinimumSize
+            };
+
+            // ---------- First save to memory to check size ----------
             using (MemoryStream tempStream = new MemoryStream())
             {
                 workbook.Save(tempStream, pdfOptions);
+                long generatedSize = tempStream.Length;
 
-                // If size is within the acceptable range, write the stream to the final file
-                if (tempStream.Length <= SizeThresholdBytes)
-                {
-                    File.WriteAllBytes(outputPath, tempStream.ToArray());
-                    Console.WriteLine($"PDF saved successfully (size {tempStream.Length} bytes).");
-                    return;
-                }
+                // Determine output file path
+                string outputPath = "output.pdf";
 
-                // Size exceeds threshold – remove background images from all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // If size exceeds the threshold, remove background images and re‑save
+                if (generatedSize > sizeThresholdBytes)
                 {
-                    if (sheet.BackgroundImage != null && sheet.BackgroundImage.Length > 0)
+                    // Disable background images on all worksheets
+                    foreach (Worksheet ws in workbook.Worksheets)
                     {
-                        sheet.BackgroundImage = null;
+                        ws.BackgroundImage = null;
                     }
-                }
 
-                // Regenerate PDF after background removal
-                using (MemoryStream finalStream = new MemoryStream())
+                    // Re‑save the workbook after background removal
+                    using (FileStream finalFile = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                    {
+                        workbook.Save(finalFile, pdfOptions);
+                    }
+
+                    Console.WriteLine($"PDF size ({generatedSize} bytes) exceeded threshold. Background images removed and PDF saved.");
+                }
+                else
                 {
-                    workbook.Save(finalStream, pdfOptions);
-                    File.WriteAllBytes(outputPath, finalStream.ToArray());
-                    Console.WriteLine($"PDF size exceeded threshold. Background images removed. New size {finalStream.Length} bytes.");
+                    // Size is acceptable; save the original PDF
+                    using (FileStream finalFile = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                    {
+                        workbook.Save(finalFile, pdfOptions);
+                    }
+
+                    Console.WriteLine($"PDF size ({generatedSize} bytes) within threshold. PDF saved with background images.");
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during PDF export: {ex.Message}");
-        }
-    }
-
-    // Example usage
-    public static void Main()
-    {
-        const string inputPath = "InputWithBackground.xlsx";
-        const string outputPath = "Result.pdf";
-
-        try
-        {
-            Workbook wb;
-
-            if (File.Exists(inputPath))
-            {
-                // Load existing workbook
-                wb = new Workbook(inputPath);
-            }
-            else
-            {
-                // Create a sample workbook if the input file is missing
-                Console.WriteLine($"Input file '{inputPath}' not found. Creating a sample workbook.");
-                wb = new Workbook();
-                Worksheet ws = wb.Worksheets[0];
-                ws.Name = "SampleSheet";
-                ws.Cells["A1"].PutValue("Sample Data");
-            }
-
-            SavePdfWithAutoBackgroundRemoval(wb, outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,34 +1,34 @@
-// Title: Aspose.Cells for .NET – C# Example to Color Cells Red When Value Exceeds 500
-// Description: Creates a workbook, populates column A with values 0‑900, defines the range A1:A10, adds a FormatCondition that triggers on values greater than 500, sets the background to red, and saves the file as an .xlsx document.
-// Keywords: Aspose.Cells C# conditional formatting | highlight cells > 500 | red fill Aspose.Cells | FormatConditionType.CellValue | OperatorType.GreaterThan | Excel automation .NET | cell background color programmatically | Aspose.Cells workbook example
-// Common Searches: Aspose.Cells how to highlight cells above a threshold | C# set red fill for values greater than 500 in Excel | conditional formatting rule using Aspose.Cells .NET | change cell background based on numeric value Aspose | apply FormatCondition to a range with Aspose.Cells
-// Developer Intent: Create a conditional formatting rule that paints cells red when their numeric value is greater than 500.
-// Use Cases: Flag sales numbers that surpass a target in a financial dashboard. | Visually identify sensor readings outside safe limits. | Mark budget items that exceed allocated amounts for quick review.
-// AI Prompts: Write C# code with Aspose.Cells that applies a red background to any cell in column B whose value is over 500. | Show how to change the operator to "less than" and use a custom blue color instead of red. | Provide a tutorial for adding multiple conditional formatting rules to the same range, such as green for values < 200 and yellow for values between 200‑500.
+// Title: Aspose.Cells for .NET – Conditional Formatting to Highlight Cells > 500 with Red Fill
+// Description: Creates a workbook, optionally fills column A with sample numbers, defines a conditional‑formatting range (A1:A10), adds a rule that selects cells whose value exceeds 500, and applies a red background style before saving the file.
+// Keywords: Aspose.Cells | .NET | C# conditional formatting | highlight cells greater than 500 | red fill color | Excel automation | FormatCondition | CellArea range | background color rule
+// Common Searches: Aspose.Cells highlight cells >500 red | C# conditional formatting Excel Aspose | set cell background based on value Aspose.Cells | apply red fill to values over 500 using .NET | how to add conditional formatting with Aspose.Cells
+// Developer Intent: Add a conditional‑formatting rule that colors any cell with a numeric value above 500 red.
+// Use Cases: Flag sales numbers that exceed a target in a financial dashboard. | Mark temperature readings above safety limits in an engineering log. | Identify budget items that surpass allocated amounts in a planning sheet.
+// AI Prompts: Write C# code using Aspose.Cells to apply a red fill to cells greater than 500 in a specified range. | Show how to combine multiple conditional‑formatting rules (e.g., >500 red, <200 green) on the same worksheet with Aspose.Cells. | Explain how to change the fill color of an existing conditional‑formatting rule programmatically in Aspose.Cells for .NET.
 
 using Aspose.Cells;
 using System.Drawing;
 
-// Creates a workbook, populates column A with values 0‑900, defines the range A1:A10, adds a FormatCondition that triggers on values greater than 500, sets the background to red, and saves the file as an .xlsx document.
+// Creates a workbook, optionally fills column A with sample numbers, defines a conditional‑formatting range (A1:A10), adds a rule that selects cells whose value exceeds 500, and applies a red background style before saving the file.
 class Program
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // (Optional) Populate sample data in column A
+        // Populate sample series data in column A (optional)
         for (int i = 0; i < 10; i++)
         {
-            sheet.Cells[i, 0].PutValue(i * 100); // 0,100,...,900
+            worksheet.Cells[i, 0].PutValue(i * 150); // 0, 150, 300, ... 1350
         }
 
         // Add a conditional formatting collection to the worksheet
-        int cfIndex = sheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcs = sheet.ConditionalFormattings[cfIndex];
+        int cfIndex = worksheet.ConditionalFormattings.Add();
+        FormatConditionCollection fcc = worksheet.ConditionalFormattings[cfIndex];
 
-        // Define the range to which the rule applies (A1:A10)
+        // Define the range to which the conditional formatting will be applied (A1:A10)
         CellArea area = new CellArea
         {
             StartRow = 0,
@@ -36,14 +36,14 @@ class Program
             StartColumn = 0,
             EndColumn = 0
         };
-        fcs.AddArea(area);
+        fcc.AddArea(area);
 
-        // Add a condition: cell value greater than 500
-        int conditionIdx = fcs.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "500", null);
-        FormatCondition fc = fcs[conditionIdx];
+        // Add a condition: cells with values greater than 500
+        int conditionIndex = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "500", null);
+        FormatCondition condition = fcc[conditionIndex];
 
-        // Set the fill (background) color to red for cells meeting the condition
-        fc.Style.BackgroundColor = Color.Red;
+        // Set the fill color to red for cells that meet the condition
+        condition.Style.BackgroundColor = Color.Red;
 
         // Save the workbook
         workbook.Save("ConditionalFormattingGreaterThan500.xlsx");

@@ -1,60 +1,110 @@
-// Title: Batch delete the "Temp" VBA module from Excel workbooks with Aspose.Cells for .NET
-// Description: Iterates through all Excel files in a folder, loads each workbook with Aspose.Cells, checks for VBA macros, removes the module named Temp via VbaProject.Modules.Remove, and saves the workbook in its original format to an output directory.
-// Keywords: Aspose.Cells C# remove VBA module | VbaProject Modules.Remove example | batch delete Temp macro | process macro-enabled workbooks .NET | save workbook after VBA removal | Excel macro cleanup Aspose | C# delete VBA module programmatically
-// Common Searches: How to remove a specific VBA module from multiple Excel files using Aspose.Cells | C# code to batch delete the Temp module in macro-enabled workbooks | Aspose.Cells example for VbaProject module removal | Save Excel files after stripping VBA code with Aspose | Remove VBA modules programmatically in .NET
-// Developer Intent: The developer wants to delete the VBA module named "Temp" from each workbook in a folder and save the cleaned files.
-// Use Cases: Cleaning temporary macro modules before distributing workbooks to end users. | Automating compliance by stripping unwanted VBA code from a batch of financial reports. | Preparing workbooks for macro‑restricted environments by removing all "Temp" modules.
-// AI Prompts: Generate C# code using Aspose.Cells to remove a VBA module named "Temp" from all Excel files in a directory and save them to another folder. | Provide best‑practice error handling for VbaModuleCollection.Remove when processing multiple workbooks with Aspose.Cells. | Explain how to preserve the original file format while saving workbooks after modifying their VBA projects with Aspose.Cells.
+// Title: C# – Remove ‘Temp’ VBA Module from All Excel Workbooks in a Folder with Aspose.Cells
+// Description: A C# console utility that scans a directory for Excel files (xls, xlsx, xlsm, xlsb), detects VBA projects, deletes any module named "Temp", and overwrites the original workbooks using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells VBA module removal | C# delete Temp macro | batch Excel VBA cleanup | overwrite Excel workbook after VBA edit | macro‑enabled workbook processing
+// Common Searches: how to delete a specific VBA module from multiple Excel files using Aspose.Cells | batch remove Temp macro from .xlsm files c# | overwrite original Excel files after removing VBA modules .NET | check for macros before editing workbook with Aspose.Cells | remove unwanted VBA code from a folder of workbooks
+// Developer Intent: Delete every VBA module named "Temp" from each workbook in a given folder and save the modified files in place.
+// Use Cases: Clean temporary or debug macros before publishing workbooks to end users. | Automate compliance by stripping prohibited VBA code from archived spreadsheets. | Prepare a batch of macro‑enabled files for migration to a macro‑free environment.
+// AI Prompts: Write C# code with Aspose.Cells that removes a list of VBA modules (e.g., Temp, Debug) from all Excel files in a directory and logs each change. | Enhance the RemoveTempVbaModules example with detailed error handling for read‑only files, permission issues, and corrupted workbooks. | Create a PowerShell wrapper that calls the C# utility to process folders supplied via command‑line arguments.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// Iterates through all Excel files in a folder, loads each workbook with Aspose.Cells, checks for VBA macros, removes the module named Temp via VbaProject.Modules.Remove, and saves the workbook in its original format to an output directory.
-class RemoveTempModules
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // A C# console utility that scans a directory for Excel files (xls, xlsx, xlsm, xlsb), detects VBA projects, deletes any module named "Temp", and overwrites the original workbooks using Aspose.Cells for .NET.
+    public class RemoveTempVbaModules
     {
-        // Input folder containing the workbooks
-        string inputFolder = @"C:\InputWorkbooks";
-        // Output folder for the modified workbooks
-        string outputFolder = @"C:\OutputWorkbooks";
-
-        // Ensure the output folder exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Get all Excel files (including macro‑enabled formats) from the input folder
-        string[] workbookFiles = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
-
-        foreach (string filePath in workbookFiles)
+        // Removes VBA modules named "Temp" from each workbook in the specified folder
+        // and saves the modified workbooks, overwriting the original files.
+        public static void Run(string folderPath)
         {
-            // Load the workbook (uses the Workbook(string) constructor)
-            Workbook workbook = new Workbook(filePath);
-
-            // If the workbook contains VBA macros, try to remove the module named "Temp"
-            if (workbook.HasMacro)
+            if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
             {
+                Console.WriteLine("Invalid or non‑existent folder path.");
+                return;
+            }
+
+            // Get all Excel files in the folder (including macro‑enabled formats)
+            string[] workbookFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
+            foreach (string filePath in workbookFiles)
+            {
+                // Process only known Excel extensions
+                string ext = Path.GetExtension(filePath).ToLowerInvariant();
+                if (ext != ".xls" && ext != ".xlsx" && ext != ".xlsm" && ext != ".xlsb")
+                {
+                    continue;
+                }
+
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found: {Path.GetFileName(filePath)}");
+                    continue;
+                }
+
                 try
                 {
-                    // Remove the module by name (uses VbaModuleCollection.Remove(string))
-                    workbook.VbaProject.Modules.Remove("Temp");
+                    // Load the workbook
+                    using (Workbook workbook = new Workbook(filePath))
+                    {
+                        // Proceed only if the workbook contains macros/VBA project
+                        if (workbook.HasMacro)
+                        {
+                            VbaModuleCollection modules = workbook.VbaProject.Modules;
+
+                            // Check if a module named "Temp" exists
+                            bool tempExists = false;
+                            foreach (VbaModule module in modules)
+                            {
+                                if (module.Name.Equals("Temp", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    tempExists = true;
+                                    break;
+                                }
+                            }
+
+                            if (tempExists)
+                            {
+                                modules.Remove("Temp");
+                                // Save the workbook, overwriting the original file
+                                workbook.Save(filePath);
+                                Console.WriteLine($"Removed 'Temp' module and saved: {Path.GetFileName(filePath)}");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"No 'Temp' module found in: {Path.GetFileName(filePath)}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Workbook does not contain macros: {Path.GetFileName(filePath)}");
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
-                    // Log any errors but continue processing other workbooks
-                    Console.WriteLine($"Error removing 'Temp' module from '{Path.GetFileName(filePath)}': {ex.Message}");
+                    Console.WriteLine($"Error processing file '{Path.GetFileName(filePath)}': {ex.Message}");
                 }
             }
-
-            // Save the modified workbook to the output folder (preserves original format)
-            string destPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-            workbook.Save(destPath);
-
-            // Release resources
-            workbook.Dispose();
         }
+    }
 
-        Console.WriteLine("All workbooks processed.");
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            try
+            {
+                string folderPath = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
+                Console.WriteLine($"Processing folder: {folderPath}");
+                RemoveTempVbaModules.Run(folderPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
+            }
+        }
     }
 }

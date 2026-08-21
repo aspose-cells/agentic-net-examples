@@ -1,10 +1,10 @@
-// Title: Import JSON Shape Configurations and Recreate Excel Shapes with Aspose.Cells for .NET (C#)
-// Description: A C# example that reads a JSON file of shape definitions (type, name, row/column position, offsets, size, optional text), deserializes them into ShapeConfig objects, creates matching rectangle, line or oval shapes on the first worksheet using Aspose.Cells drawing APIs, applies custom properties, handles missing or empty files gracefully, and saves the result as an Excel workbook.
-// Keywords: Aspose.Cells | C# | .NET | JSON | shape import | Excel shapes | rectangle | line | oval | drawing API | workbook save | shape configuration | deserialize JSON | add shape programmatically
-// Common Searches: Aspose.Cells read shape settings from JSON | Create Excel shapes from external config C# | Deserialize shape list and add to worksheet Aspose.Cells | Import rectangle line oval shapes via JSON | How to generate shapes in Excel using Aspose.Cells and JSON
-// Developer Intent: Load shape parameters from a JSON file and generate the same shapes on an Excel worksheet with Aspose.Cells.
-// Use Cases: Generate a workbook that reproduces rectangles, lines, and ovals defined in a JSON configuration. | Produce an empty workbook when the JSON file is missing or contains no shapes, avoiding runtime errors. | Assign custom names and text to each shape for later identification, editing, or automation.
-// AI Prompts: Write C# code that reads a JSON array of shape configurations and adds the corresponding shapes to an Aspose.Cells worksheet, including error handling for unsupported types. | Provide a JSON schema that matches the ShapeConfig class used for importing shapes into Aspose.Cells. | Explain how to extend the sample to support additional shape types such as Triangle or Picture with Aspose.Cells.
+// Title: C# – Import Shape Settings from JSON and Recreate Shapes in an Aspose.Cells Worksheet
+// Description: Loads a JSON file that defines shape type, position, size, name, linked cell and input range, deserializes it into ShapeConfig objects, and uses Aspose.Cells to add rectangles, lines, ovals or generic shapes to the first worksheet of a new workbook. Missing dimensions are estimated from cell spans, optional properties are applied, and the workbook is saved as an XLSX file.
+// Keywords: Aspose.Cells JSON shape import | C# add shapes from configuration | Aspose.Cells create rectangle line oval | linked cell shape Aspose.Cells | shape input range Aspose.Cells | deserialize shape settings C# | dynamic shape generation Aspose.Cells
+// Common Searches: How to import shape definitions from JSON into Aspose.Cells | C# add rectangle, line, oval to worksheet using Aspose.Cells | Set linked cell for a shape with Aspose.Cells API | Calculate shape size from cell range in Aspose.Cells | Fallback shape type handling Aspose.Cells
+// Developer Intent: Read a JSON file containing shape parameters and programmatically add matching shapes to an Aspose.Cells worksheet.
+// Use Cases: Load shape definitions from a JSON file and place rectangles, lines, or ovals on the first worksheet with correct row/column anchors. | Provide explicit Width and Height in the JSON to override automatic size estimation. | Gracefully handle unknown shape types by defaulting to a generic rectangle shape.
+// AI Prompts: Generate C# code that reads a JSON array of shape configurations and uses Aspose.Cells to add each shape to a worksheet, estimating missing dimensions from cell spans. | Create a JSON schema for the ShapeConfig class compatible with the provided Aspose.Cells shape‑creation logic. | Show how to extend the switch expression to support additional shape types such as "Triangle" using Aspose.Cells MsoDrawingType.
 
 using System;
 using System.Collections.Generic;
@@ -15,19 +15,20 @@ using Aspose.Cells.Drawing;
 
 namespace ShapeImportExample
 {
-    // Represents a shape configuration read from JSON.
-    // A C# example that reads a JSON file of shape definitions (type, name, row/column position, offsets, size, optional text), deserializes them into ShapeConfig objects, creates matching rectangle, line or oval shapes on the first worksheet using Aspose.Cells drawing APIs, applies custom properties, handles missing or empty files gracefully, and saves the result as an Excel workbook.
+    // Represents the configuration for a shape read from JSON
+    // Loads a JSON file that defines shape type, position, size, name, linked cell and input range, deserializes it into ShapeConfig objects, and uses Aspose.Cells to add rectangles, lines, ovals or generic shapes to the first worksheet of a new workbook. Missing dimensions are estimated from cell spans, optional properties are applied, and the workbook is saved as an XLSX file.
     public class ShapeConfig
     {
-        public string Type { get; set; }               // e.g., "Rectangle", "Line", "Oval"
-        public string Name { get; set; }               // Shape name
-        public int UpperLeftRow { get; set; }          // Starting row (0‑based)
-        public int UpperLeftColumn { get; set; }       // Starting column (0‑based)
-        public int UpperLeftRowOffset { get; set; }    // Pixel offset from the upper‑left row
-        public int UpperLeftColumnOffset { get; set; } // Pixel offset from the upper‑left column
-        public int Height { get; set; }                // Height in pixels
-        public int Width { get; set; }                 // Width in pixels
-        public string Text { get; set; }               // Optional text for the shape
+        public string? Type { get; set; }               // e.g., "Rectangle", "Line", "Oval"
+        public string? Name { get; set; }               // Shape name
+        public int UpperLeftRow { get; set; }           // Starting row (0‑based)
+        public int UpperLeftColumn { get; set; }        // Starting column (0‑based)
+        public int LowerRightRow { get; set; }          // Ending row (0‑based)
+        public int LowerRightColumn { get; set; }       // Ending column (0‑based)
+        public int Width { get; set; }                  // Width in pixels (optional)
+        public int Height { get; set; }                 // Height in pixels (optional)
+        public string? LinkedCell { get; set; }         // e.g., "A1"
+        public string? InputRange { get; set; }         // e.g., "B2:C3"
     }
 
     class Program
@@ -36,92 +37,122 @@ namespace ShapeImportExample
         {
             try
             {
-                // Path to the JSON file that contains an array of shape configurations.
-                const string jsonPath = "shapesConfig.json";
+                // Path to the JSON file that contains shape configurations
+                string jsonPath = "shapesConfig.json";
 
-                // Verify that the JSON file exists before attempting to read it.
+                // Ensure the JSON file exists
                 if (!File.Exists(jsonPath))
                 {
-                    Console.WriteLine($"Configuration file '{jsonPath}' not found. No shapes will be created.");
-                    // Proceed with an empty list so the workbook is still generated.
-                    ProcessShapes(new List<ShapeConfig>());
+                    Console.WriteLine($"Configuration file not found: {jsonPath}");
                     return;
                 }
 
-                // Read and deserialize the JSON content.
+                // Read the entire JSON content
                 string jsonContent = File.ReadAllText(jsonPath);
-                List<ShapeConfig> shapeConfigs = JsonSerializer.Deserialize<List<ShapeConfig>>(jsonContent) 
-                                                ?? new List<ShapeConfig>();
 
-                ProcessShapes(shapeConfigs);
+                // Deserialize JSON into a list of ShapeConfig objects
+                List<ShapeConfig>? shapeConfigs = JsonSerializer.Deserialize<List<ShapeConfig>>(jsonContent);
+                if (shapeConfigs == null)
+                {
+                    Console.WriteLine("Failed to deserialize shape configurations.");
+                    return;
+                }
+
+                // -------------------------------------------------
+                // Create a new workbook (creation rule)
+                // -------------------------------------------------
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet where shapes will be recreated
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // -------------------------------------------------
+                // Recreate each shape based on its configuration
+                // -------------------------------------------------
+                foreach (var cfg in shapeConfigs)
+                {
+                    try
+                    {
+                        // Compute size and offsets. If Width/Height are not provided,
+                        // approximate using cell dimensions (rough estimates).
+                        int width = cfg.Width > 0
+                            ? cfg.Width
+                            : (cfg.LowerRightColumn - cfg.UpperLeftColumn + 1) * 64;   // approx 64 px per column
+                        int height = cfg.Height > 0
+                            ? cfg.Height
+                            : (cfg.LowerRightRow - cfg.UpperLeftRow + 1) * 15;        // approx 15 px per row
+
+                        int upperLeftRowOffset = 0;
+                        int upperLeftColumnOffset = 0;
+
+                        Shape shape = cfg.Type?.ToLower() switch
+                        {
+                            "rectangle" => sheet.Shapes.AddRectangle(
+                                cfg.UpperLeftRow,
+                                cfg.UpperLeftColumn,
+                                upperLeftRowOffset,
+                                upperLeftColumnOffset,
+                                height,
+                                width),
+
+                            "line" => sheet.Shapes.AddLine(
+                                cfg.UpperLeftRow,
+                                cfg.UpperLeftColumn,
+                                upperLeftRowOffset,
+                                upperLeftColumnOffset,
+                                height,
+                                width),
+
+                            "oval" => sheet.Shapes.AddOval(
+                                cfg.UpperLeftRow,
+                                cfg.UpperLeftColumn,
+                                upperLeftRowOffset,
+                                upperLeftColumnOffset,
+                                height,
+                                width),
+
+                            // Fallback to a generic rectangle shape
+                            _ => sheet.Shapes.AddShape(
+                                MsoDrawingType.Rectangle,
+                                cfg.UpperLeftRow,
+                                cfg.UpperLeftColumn,
+                                upperLeftRowOffset,
+                                upperLeftColumnOffset,
+                                height,
+                                width)
+                        };
+
+                        // Apply optional size overrides if they were explicitly set
+                        if (cfg.Width > 0) shape.Width = cfg.Width;
+                        if (cfg.Height > 0) shape.Height = cfg.Height;
+
+                        // Apply common properties
+                        if (!string.IsNullOrEmpty(cfg.Name))
+                            shape.Name = cfg.Name;
+
+                        if (!string.IsNullOrEmpty(cfg.LinkedCell))
+                            shape.SetLinkedCell(cfg.LinkedCell, false, false);
+
+                        if (!string.IsNullOrEmpty(cfg.InputRange))
+                            shape.SetInputRange(cfg.InputRange, false, false);
+                    }
+                    catch (Exception exShape)
+                    {
+                        Console.WriteLine($"Failed to create shape '{cfg.Name ?? cfg.Type}': {exShape.Message}");
+                    }
+                }
+
+                // -------------------------------------------------
+                // Save the workbook (save rule)
+                // -------------------------------------------------
+                string outputPath = "ShapesFromJson.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        // Creates shapes based on the provided configurations and saves the workbook.
-        private static void ProcessShapes(List<ShapeConfig> shapeConfigs)
-        {
-            // Create a new workbook.
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet where shapes will be recreated.
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Iterate over each shape configuration and create the corresponding shape.
-            foreach (var cfg in shapeConfigs)
-            {
-                if (cfg == null) continue;
-
-                Shape shape = null;
-                switch (cfg.Type?.Trim().ToLower())
-                {
-                    case "rectangle":
-                        shape = sheet.Shapes.AddRectangle(
-                            cfg.UpperLeftRow,
-                            cfg.UpperLeftColumn,
-                            cfg.UpperLeftRowOffset,
-                            cfg.UpperLeftColumnOffset,
-                            cfg.Height,
-                            cfg.Width);
-                        break;
-                    case "line":
-                        shape = sheet.Shapes.AddLine(
-                            cfg.UpperLeftRow,
-                            cfg.UpperLeftColumn,
-                            cfg.UpperLeftRowOffset,
-                            cfg.UpperLeftColumnOffset,
-                            cfg.Height,
-                            cfg.Width);
-                        break;
-                    case "oval":
-                        shape = sheet.Shapes.AddOval(
-                            cfg.UpperLeftRow,
-                            cfg.UpperLeftColumn,
-                            cfg.UpperLeftRowOffset,
-                            cfg.UpperLeftColumnOffset,
-                            cfg.Height,
-                            cfg.Width);
-                        break;
-                    default:
-                        Console.WriteLine($"Unsupported shape type: {cfg.Type}");
-                        continue;
-                }
-
-                // Apply optional properties.
-                if (!string.IsNullOrEmpty(cfg.Name))
-                    shape.Name = cfg.Name;
-
-                if (!string.IsNullOrEmpty(cfg.Text))
-                    shape.Text = cfg.Text;
-            }
-
-            // Save the workbook to an Excel file.
-            const string outputPath = "RecreatedShapes.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
     }
 }

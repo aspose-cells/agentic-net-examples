@@ -1,60 +1,81 @@
+// Title: Add a Column with a Named‑Range Formula to an Aspose.Cells Table and Auto‑Propagate on New Rows (C#)
+// Description: Demonstrates how to create a workbook, define a named range, build a ListObject, insert a new column, resize the table, assign a =SUM(MyRange) formula to the column, add a row, recalculate formulas, and output the calculated values to confirm automatic propagation.
+// Keywords: Aspose.Cells | C# | ListObject | add column to table | named range formula | formula propagation | resize table | calculate formulas | Excel automation | dynamic column
+// Common Searches: Aspose.Cells add column to ListObject with formula | set named range formula in Aspose.Cells table column | auto‑propagate table formulas after inserting rows Aspose.Cells | resize Aspose.Cells table after inserting a column | C# example named range formula in Excel table
+// Developer Intent: Add a new column to an existing Aspose.Cells table, apply a formula that references a named range, and ensure the formula automatically fills cells of rows added later.
+// Use Cases: Create a calculated column that always sums a predefined range, regardless of data growth. | Add a dynamic summary column that updates instantly when new records are appended. | Centralize range references with named ranges for easier maintenance across multiple table columns.
+// AI Prompts: Generate C# code using Aspose.Cells to insert a column into a ListObject, set its formula to =SUM(MyRange), and recalculate the workbook. | Explain how to resize an Aspose.Cells table after inserting a column and ensure the new column’s formula propagates to newly added rows. | Provide troubleshooting steps when a named‑range formula does not auto‑fill after adding rows to an Aspose.Cells table.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsTableNamedRangeDemo
+// Demonstrates how to create a workbook, define a named range, build a ListObject, insert a new column, resize the table, assign a =SUM(MyRange) formula to the column, add a row, recalculate formulas, and output the calculated values to confirm automatic propagation.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
 
-            // Populate sample data for the table (ID, Value, Result)
-            cells["A1"].PutValue("ID");
-            cells["B1"].PutValue("Value");
-            cells["C1"].PutValue("Result");
+            // Populate sample data for the initial table (two columns: ID and Value)
+            ws.Cells["A1"].PutValue("ID");
+            ws.Cells["B1"].PutValue("Value");
+            ws.Cells["A2"].PutValue(1);
+            ws.Cells["B2"].PutValue(10);
+            ws.Cells["A3"].PutValue(2);
+            ws.Cells["B3"].PutValue(20);
+            ws.Cells["A4"].PutValue(3);
+            ws.Cells["B4"].PutValue(30);
 
-            // Add some rows
-            cells["A2"].PutValue(1);
-            cells["B2"].PutValue(10);
-            cells["A3"].PutValue(2);
-            cells["B3"].PutValue(20);
-            cells["A4"].PutValue(3);
-            cells["B4"].PutValue(30);
+            // Create a named range "MyRange" that refers to the Value column (B2:B4)
+            int nameIdx = wb.Worksheets.Names.Add("MyRange");
+            Name myRange = wb.Worksheets.Names[nameIdx];
+            myRange.RefersTo = "=Sheet1!$B$2:$B$4";
 
-            // Create a ListObject (table) that includes the three columns
-            int tableIndex = sheet.ListObjects.Add("A1", "C4", true);
-            ListObject table = sheet.ListObjects[tableIndex];
+            // Add a ListObject (table) covering the existing data range A1:B4
+            int tblIdx = ws.ListObjects.Add("A1", "B4", true);
+            ListObject table = ws.ListObjects[tblIdx];
+            // ShowHeaders is true by default; no explicit property needed
 
-            // Define a named range that refers to the "Value" column (B2:B4)
-            int nameIndex = workbook.Worksheets.Names.Add("MyValues");
-            Name namedRange = workbook.Worksheets.Names[nameIndex];
-            // Set the reference using A1 notation; false,false indicate A1 format and global scope
-            namedRange.SetRefersTo("=Sheet1!$B$2:$B$4", false, false);
+            // Insert a new column after the existing ones (column index 2 corresponds to column C)
+            ws.Cells.InsertColumn(2, true);
 
-            // Set the formula for the third column ("Result") to reference the named range.
-            // Using SUM to produce a scalar value per row; the formula will be applied to each cell in the column.
-            ListColumn resultColumn = table.ListColumns[2]; // zero‑based index, third column
-            resultColumn.Formula = "=SUM(MyValues)";
+            // Expand the table to include the newly inserted column (range A1:C4)
+            // Resize(startRow, startColumn, totalRows, totalColumns, expandRows)
+            table.Resize(0, 0, 4, 3, true);
 
-            // Calculate formulas so that values are populated
-            workbook.CalculateFormula();
+            // Set header for the new column
+            ws.Cells["C1"].PutValue("Calc");
 
-            // Verify propagation: output the formula and calculated value for each data row in the "Result" column
-            Console.WriteLine("Result column after setting formula referencing named range:");
-            for (int row = 1; row <= table.DataRange.RowCount; row++) // data rows start after header
+            // Set the formula for the new column to reference the named range.
+            // This formula will be applied to every cell in the column.
+            ListColumn calcColumn = table.ListColumns[2]; // zero‑based index
+            calcColumn.Formula = "=SUM(MyRange)";
+
+            // Add a new row to the table; the formula should automatically propagate to the new cell.
+            table.PutCellValue(4, 0, 4);   // ID for the new row
+            table.PutCellValue(4, 1, 40);  // Value for the new row
+
+            // Recalculate all formulas in the workbook
+            wb.CalculateFormula();
+
+            // Output the values of the Calc column to verify propagation
+            Console.WriteLine("Calc column values after adding a row:");
+            for (int row = 1; row <= 5; row++) // rows 1..5 (including header row)
             {
-                // Cell address for the current row in the Result column
-                Cell resultCell = table.DataRange[row - 1, 2]; // column index 2 within the table's data range
-                Console.WriteLine($"{resultCell.Name} -> Formula: {resultCell.Formula}, Value: {resultCell.Value}");
+                Console.WriteLine($"Row {row}: {ws.Cells[row, 2].Value}");
             }
 
             // Save the workbook
-            workbook.Save("TableWithNamedRangeFormula.xlsx");
+            wb.Save("TableWithNamedRangeFormula.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

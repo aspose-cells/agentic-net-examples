@@ -1,18 +1,19 @@
-// Title: Send a shape to the back with a negative Z‑order in Aspose.Cells for .NET
-// Description: Shows how to add a rectangle to a worksheet, move it to the back using Shape.ToFrontOrBack(-1), read its ZOrderPosition to verify the placement, and save the workbook.
-// Keywords: Aspose.Cells | .NET | shape Z-order | ToFrontOrBack | send shape to back | ZOrderPosition | C# Excel shape ordering | negative Z order | move shape behind | Aspose.Cells shape layering
-// Common Searches: Aspose.Cells move shape behind other objects | C# set shape ZOrderPosition negative | How to send shape to back in Excel using Aspose.Cells | Retrieve shape ZOrderPosition Aspose.Cells | Can ToFrontOrBack accept negative values
-// Developer Intent: Programmatically place a shape behind all other worksheet objects by applying a negative Z‑order and confirm its position.
-// Use Cases: Create a watermark that stays behind cell data. | Add background graphics without covering charts. | Ensure decorative shapes are hidden behind tables. | Prepare layered reports where annotations appear on top of base graphics.
-// AI Prompts: Generate code to move all shapes in a worksheet to the back using a loop in Aspose.Cells for .NET. | Explain the range of ZOrderPosition values and how Aspose.Cells determines the backmost object. | Show how to validate that a shape is the lowest‑order object after calling ToFrontOrBack with a negative number.
+// Title: C# – Send a Shape to the Back and Verify Z‑Order with Aspose.Cells for .NET
+// Description: This example creates a workbook, adds two overlapping rectangle shapes, moves the second shape to the back using ToBack() or ToFrontOrBack(-1), prints each shape's ZOrderPosition to confirm the layering, ensures the output folder exists, and saves the file as an XLSX workbook.
+// Keywords: Aspose.Cells shape Z-order | move shape to back Aspose.Cells | ToBack method C# | ToFrontOrBack negative Aspose.Cells | verify ZOrderPosition | Excel shape layering .NET | Aspose.Cells drawing order
+// Common Searches: how to send a shape to the back in Aspose.Cells | Aspose.Cells check ZOrderPosition after reordering | C# Aspose.Cells ToFrontOrBack example | move Excel shape behind other objects using Aspose | set large negative Z-order Aspose.Cells
+// Developer Intent: Move a specific shape behind all other drawing objects in a worksheet and confirm its Z‑order value.
+// Use Cases: Place a background image behind charts and text in generated reports. | Keep a watermark shape hidden behind data cells. | Control the visual stacking of overlapping charts, pictures, or text boxes.
+// AI Prompts: Generate C# code that uses Aspose.Cells to send a shape to the back by setting a large negative Z‑order and then output its ZOrderPosition. | Show an Aspose.Cells example that adds multiple shapes, moves one to the back with ToBack() or ToFrontOrBack(-1), and saves the workbook. | Explain how Aspose.Cells calculates ZOrderPosition values after calling ToFrontOrBack with a negative index.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsZOrderDemo
 {
-    // Shows how to add a rectangle to a worksheet, move it to the back using Shape.ToFrontOrBack(-1), read its ZOrderPosition to verify the placement, and save the workbook.
+    // This example creates a workbook, adds two overlapping rectangle shapes, moves the second shape to the back using ToBack() or ToFrontOrBack(-1), prints each shape's ZOrderPosition to confirm the layering, ensures the output folder exists, and saves the file as an XLSX workbook.
     class Program
     {
         static void Main()
@@ -23,17 +24,30 @@ namespace AsposeCellsZOrderDemo
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add a rectangle shape to the worksheet
-                Shape shape = worksheet.Shapes.AddRectangle(10, 10, 100, 100, 0, 0);
+                // Add two overlapping rectangles for visual verification
+                Shape rect1 = worksheet.Shapes.AddRectangle(10, 10, 100, 100, 0, 0);
+                Shape rect2 = worksheet.Shapes.AddRectangle(30, 30, 100, 100, 0, 0);
 
-                // Send the shape to the back using a safe order value
-                shape.ToFrontOrBack(-1); // move one position backward (to the back)
+                // Send rect2 to the back using the proper API (move one position back)
+                rect2.ToFrontOrBack(-1); // or rect2.ToBack();
 
-                // Verify the shape's Z-order position (lower values are farther back)
-                Console.WriteLine("Shape ZOrderPosition after sending to back: " + shape.ZOrderPosition);
+                // Verify Z-order positions (lower value means farther back)
+                Console.WriteLine("rect1 ZOrderPosition: " + rect1.ZOrderPosition);
+                Console.WriteLine("rect2 ZOrderPosition (after ToFrontOrBack): " + rect2.ZOrderPosition);
 
-                // Save the workbook to verify the result visually if needed
-                workbook.Save("ZOrderBackDemo.xlsx");
+                // Define output file path
+                string outputPath = "ZOrderDemo.xlsx";
+
+                // Ensure the directory exists before saving
+                string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {

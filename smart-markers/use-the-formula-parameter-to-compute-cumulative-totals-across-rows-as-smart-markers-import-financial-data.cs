@@ -1,54 +1,75 @@
+// Title: C# – Compute Cumulative Totals with Smart Markers & Formula Parameter in Aspose.Cells
+// Description: Demonstrates how to import a financial DataTable into an Excel template using Aspose.Cells smart markers, apply a running‑total formula (=SUM($B$2:B2)) via the Formula parameter, let WorkbookDesigner copy the formula down automatically, evaluate the totals with CalculateFormula, and save the result as CumulativeTotals.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | Smart Markers | Formula Parameter | cumulative total | running total | WorkbookDesigner | Excel automation | financial report
+// Common Searches: Aspose.Cells smart markers cumulative total example | C# running total column using formula parameter | WorkbookDesigner copy formulas automatically | How to calculate cumulative sum in Aspose.Cells | Smart markers import DataTable Excel
+// Developer Intent: Create an Excel worksheet where each row from a DataTable is inserted via smart markers and a cumulative total column is generated automatically using a formula parameter.
+// Use Cases: Generate a financial ledger with a running total for transaction amounts. | Build a monthly sales report that shows cumulative sales alongside each sale entry. | Produce a payroll sheet that lists employee earnings and accumulates total pay per employee.
+// AI Prompts: Show how to reset the cumulative total at the start of each month using smart markers. | Provide code to handle multiple DataTables, each with its own cumulative total column, in a single workbook. | Explain how to add conditional formatting to highlight rows where the cumulative total exceeds a threshold after processing smart markers.
+
 using System;
 using System.Data;
+using System.IO;
 using Aspose.Cells;
 
+// Demonstrates how to import a financial DataTable into an Excel template using Aspose.Cells smart markers, apply a running‑total formula (=SUM($B$2:B2)) via the Formula parameter, let WorkbookDesigner copy the formula down automatically, evaluate the totals with CalculateFormula, and save the result as CumulativeTotals.xlsx.
 class CumulativeTotalsSmartMarkers
 {
     static void Main()
     {
-        // 1. Create a new workbook (lifecycle: create)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        try
+        {
+            // ---------- 1. Prepare source data (financial transactions) ----------
+            DataTable financialData = new DataTable("Financial");
+            financialData.Columns.Add("Date", typeof(DateTime));
+            financialData.Columns.Add("Amount", typeof(double));
 
-        // 2. Set up the template header
-        cells["A1"].PutValue("Date");
-        cells["B1"].PutValue("Description");
-        cells["C1"].PutValue("Amount");
-        cells["D1"].PutValue("Cumulative");
+            financialData.Rows.Add(new DateTime(2023, 1, 1), 1500.0);
+            financialData.Rows.Add(new DateTime(2023, 1, 5), 2300.0);
+            financialData.Rows.Add(new DateTime(2023, 1, 10), -500.0);
+            financialData.Rows.Add(new DateTime(2023, 1, 15), 1200.0);
+            financialData.Rows.Add(new DateTime(2023, 1, 20), 800.0);
 
-        // 3. Insert smart markers for data rows (starting at row 2)
-        //    &=$ColumnName tells Aspose.Cells to replace the cell with data from the DataTable.
-        cells["A2"].PutValue("&=$Date");
-        cells["B2"].PutValue("&=$Description");
-        cells["C2"].PutValue("&=$Amount");
+            // ---------- 2. Create a workbook and design the template ----------
+            Workbook workbook = new Workbook();                     // create workbook
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // 4. Formula to compute cumulative total across rows.
-        //    $C$2 is an absolute reference to the first amount cell.
-        //    C2 is a relative reference that expands as the formula is copied down.
-        cells["D2"].Formula = "=SUM($C$2:C2)";
+            // Header row
+            cells["A1"].PutValue("Date");
+            cells["B1"].PutValue("Amount");
+            cells["C1"].PutValue("Cumulative Total");
 
-        // 5. Prepare sample financial data in a DataTable.
-        DataTable dt = new DataTable("Financial");
-        dt.Columns.Add("Date", typeof(DateTime));
-        dt.Columns.Add("Description", typeof(string));
-        dt.Columns.Add("Amount", typeof(double));
+            // Row 2 contains smart markers that will be repeated for each DataTable row
+            //   &=$Date   -> inserts the Date value
+            //   &=$Amount -> inserts the Amount value
+            //   =SUM($B$2:B2) -> running total: sum from first amount (absolute $B$2) to current row B
+            cells["A2"].PutValue("&=$Date");
+            cells["B2"].PutValue("&=$Amount");
+            cells["C2"].PutValue("=SUM($B$2:B2)"); // formula parameter for cumulative total
 
-        dt.Rows.Add(new DateTime(2023, 1, 1), "Opening Balance", 1000.0);
-        dt.Rows.Add(new DateTime(2023, 1, 5), "Revenue", 2500.0);
-        dt.Rows.Add(new DateTime(2023, 1, 10), "Expense", -800.0);
-        dt.Rows.Add(new DateTime(2023, 1, 15), "Revenue", 1200.0);
-        dt.Rows.Add(new DateTime(2023, 1, 20), "Expense", -500.0);
+            // ---------- 3. Use WorkbookDesigner to merge data with the template ----------
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource(financialData);
+            designer.Process(); // fills rows and copies the formula down automatically
 
-        // 6. Use WorkbookDesigner to process smart markers.
-        WorkbookDesigner designer = new WorkbookDesigner(workbook);
-        designer.SetDataSource(dt);
-        designer.Process();
+            // ---------- 4. Calculate all formulas so cumulative totals are evaluated ----------
+            workbook.CalculateFormula();
 
-        // 7. Calculate all formulas so that cumulative totals are evaluated.
-        workbook.CalculateFormula();
+            // ---------- 5. Save the result ----------
+            string outputPath = "CumulativeTotals.xlsx";
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-        // 8. Save the result (lifecycle: save)
-        workbook.Save("CumulativeTotals.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

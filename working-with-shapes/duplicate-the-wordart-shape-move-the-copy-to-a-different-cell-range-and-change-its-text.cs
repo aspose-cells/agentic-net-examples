@@ -1,10 +1,10 @@
-// Title: C# – Duplicate a WordArt Shape, Relocate It to a New Cell Range, and Edit Its Text Using Aspose.Cells
-// Description: The sample creates a workbook, inserts a WordArt object, clones it, moves the copy to a different cell range with Shape.MoveToRange, updates the TextEffect content, and saves the result as WordArtDuplicate.xlsx. It illustrates the AddWordArt and MoveToRange methods of Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | WordArt | duplicate shape | move shape to cell range | Shape.MoveToRange | AddWordArt | Excel automation | change WordArt text
-// Common Searches: How to copy a WordArt object and place it in another range with Aspose.Cells | Aspose.Cells C# move WordArt to specific rows and columns | Change the caption of a duplicated WordArt shape in .NET | Shape.MoveToRange example for Excel worksheets | AddWordArt and edit TextEffect using Aspose.Cells
-// Developer Intent: Create a copy of an existing WordArt, reposition the copy in a different cell block, and assign new text to it.
-// Use Cases: Generate a decorative header for a report, duplicate it, move the copy to a summary section, and give it a distinct label. | Place a branded WordArt logo in multiple worksheet zones, each with a customized caption, by cloning and relocating the shape. | Automate section headings across several sheets by reusing a base WordArt, shifting its location, and updating the displayed text.
-// AI Prompts: Write C# code with Aspose.Cells that clones a WordArt shape, moves it to rows 10‑11 and columns 3‑4, and sets the text to "Quarterly Summary". | Explain how Shape.MoveToRange determines the position of a WordArt object within an Excel sheet when using Aspose.Cells for .NET. | Provide a step‑by‑step tutorial for copying a WordArt shape, modifying its TextEffect, and saving the workbook with Aspose.Cells.
+// Title: Aspose.Cells C# – Duplicate a WordArt shape, move it to a new cell range, and edit its text
+// Description: This example shows how to create a workbook, add a WordArt shape, clone it with the same size, reposition the copy using MoveToRange, modify its text via the TextEffect property, and save the file with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | WordArt shape | duplicate shape | move shape to range | change WordArt text | AddWordArt | Shape.MoveToRange | TextEffect | Excel automation | programmatic Excel
+// Common Searches: copy WordArt shape Aspose.Cells C# | move WordArt to specific cells programmatically | change text of WordArt using Aspose.Cells | duplicate shape and reposition in Excel worksheet | Aspose.Cells example for cloning WordArt
+// Developer Intent: Create a copy of an existing WordArt object, place it in a different cell range, and update its displayed text.
+// Use Cases: Generate section headers by duplicating a styled WordArt label across multiple worksheet areas. | Automate branding by copying a WordArt logo to several sheets and customizing the caption per sheet. | Build a template that repeats a WordArt tag for each page of a report, adjusting the text for each page.
+// AI Prompts: Write C# code that clones a WordArt shape, moves it to rows 10‑12 and columns 3‑4, and sets its text to "Quarterly Summary" using Aspose.Cells. | Explain how Shape.MoveToRange positions a WordArt shape relative to cell boundaries in Aspose.Cells and which measurement units are applied.
 
 using System;
 using Aspose.Cells;
@@ -12,62 +12,53 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsWordArtDuplicate
 {
-    // The sample creates a workbook, inserts a WordArt object, clones it, moves the copy to a different cell range with Shape.MoveToRange, updates the TextEffect content, and saves the result as WordArtDuplicate.xlsx. It illustrates the AddWordArt and MoveToRange methods of Aspose.Cells for .NET.
+    // This example shows how to create a workbook, add a WordArt shape, clone it with the same size, reposition the copy using MoveToRange, modify its text via the TextEffect property, and save the file with Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle rule)
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Get the shape collection of the worksheet
             ShapeCollection shapes = worksheet.Shapes;
 
-            // Define common parameters for the WordArt
-            PresetWordArtStyle style = PresetWordArtStyle.WordArtStyle1;
-            int topRow = 2;      // Upper left row index
-            int top = 10;        // Vertical offset in pixels
-            int leftColumn = 2;  // Upper left column index
-            int left = 10;       // Horizontal offset in pixels
-            int height = 50;     // Height in pixels
-            int width = 200;     // Width in pixels
-
-            // Add the original WordArt shape
+            // Add an original WordArt shape
+            // Parameters: style, text, topRow, top (pixel offset), leftColumn, left (pixel offset), height, width
             Shape originalWordArt = shapes.AddWordArt(
-                style,
-                "Original WordArt",
-                topRow,
-                top,
-                leftColumn,
-                left,
-                height,
-                width);
+                PresetWordArtStyle.WordArtStyle1,   // preset style
+                "Original WordArt",                 // initial text
+                2, 0,                               // top row and vertical offset
+                2, 0,                               // left column and horizontal offset
+                100,                               // height in pixels
+                300                                // width in pixels
+            );
 
-            // Add a duplicate WordArt with the same style and size
-            Shape duplicateWordArt = shapes.AddWordArt(
-                style,
-                "Placeholder", // temporary text, will be changed later
-                topRow,
-                top,
-                leftColumn,
-                left,
-                height,
-                width);
+            // Duplicate the WordArt by adding a new shape with the same dimensions
+            // Move the copy to a different cell range (e.g., rows 5-6, columns 5-6)
+            Shape copyWordArt = shapes.AddWordArt(
+                PresetWordArtStyle.WordArtStyle1,   // same preset style as original
+                "Copy WordArt",                     // new text (will be set later)
+                5, 0,                               // top row for the copy
+                5, 0,                               // left column for the copy
+                originalWordArt.Height,             // same height as original
+                originalWordArt.Width               // same width as original
+            );
 
-            // Move the duplicate to a different cell range (e.g., rows 6-7, columns 6-7)
-            // Parameters: topRow, leftColumn, bottomRow, rightColumn
-            duplicateWordArt.MoveToRange(6, 6, 7, 7);
+            // Optionally, adjust the position more precisely using MoveToRange
+            // MoveToRange(startRow, startColumn, endRow, endColumn)
+            copyWordArt.MoveToRange(5, 5, 6, 6);
 
-            // Change the text of the duplicate WordArt
-            if (duplicateWordArt.IsWordArt)
+            // Change the text of the copied WordArt using TextEffect property
+            if (copyWordArt.IsWordArt)
             {
-                TextEffectFormat textEffect = duplicateWordArt.TextEffect;
-                textEffect.Text = "Duplicate WordArt";
+                TextEffectFormat textEffect = copyWordArt.TextEffect;
+                textEffect.Text = "Duplicated WordArt";
             }
 
-            // Save the workbook
-            workbook.Save("WordArtDuplicate.xlsx");
+            // Save the workbook (lifecycle rule)
+            workbook.Save("DuplicatedWordArt.xlsx");
         }
     }
 }

@@ -1,45 +1,49 @@
-// Title: Export Excel to a Single‑File HTML with Custom CSS to Override Cell Colors using Aspose.Cells for .NET
-// Description: Shows how to load an .xlsx workbook with Aspose.Cells, set HtmlSaveOptions to produce one HTML file, embed custom CSS (via CssStyles) and optionally use CellCssPrefix, then save the workbook so the default cell background and font colors are replaced.
-// Keywords: Aspose.Cells | C# | Export Excel to HTML | HtmlSaveOptions | custom CSS | single file HTML | override cell colors | CellCssPrefix | CssStyles | embedded stylesheet
-// Common Searches: Aspose.Cells export Excel to HTML with custom stylesheet | C# save workbook as single HTML file Aspose.Cells | how to change cell background color in Aspose.Cells HTML output | HtmlSaveOptions CssStyles example | use CellCssPrefix to style cells in exported HTML
-// Developer Intent: The developer needs to convert an Excel workbook into a single HTML document and apply a custom stylesheet that changes the default cell background and text colors.
-// Use Cases: Create a web‑ready report that matches corporate branding without external CSS files. | Provide a self‑contained HTML preview of a spreadsheet for email or intranet distribution. | Generate a downloadable HTML version of a workbook with consistent styling across all cells.
-// AI Prompts: Generate C# code with Aspose.Cells that saves a workbook as one HTML file and embeds CSS to override cell background and font colors. | Explain the role of HtmlSaveOptions.CellCssPrefix and CssStyles when customizing the HTML output of Aspose.Cells. | Show how to embed a custom stylesheet directly in the exported HTML instead of linking to an external CSS file.
+// Title: Export Excel to HTML with a custom CSS stylesheet that overrides cell colors using Aspose.Cells for .NET
+// Description: Loads an Excel workbook with Aspose.Cells, configures HtmlSaveOptions to embed a custom CSS string that changes background and text colors for all <td> elements (and optional classes), ensures CSS is applied by keeping DisableCss false, and saves the workbook as an HTML file with the new styling.
+// Keywords: Aspose.Cells | C# | Excel to HTML | custom CSS stylesheet | override cell colors | HtmlSaveOptions | CssStyles property | DisableCss false | web report styling | brand colors in HTML export
+// Common Searches: Aspose.Cells export Excel as HTML with custom CSS | change cell background color in HTML output using Aspose.Cells | apply external stylesheet when saving workbook to HTML .NET | override default cell styles in Aspose.Cells HTML export | how to use HtmlSaveOptions.CssStyles in C#
+// Developer Intent: Create an HTML version of an Excel workbook and apply a custom CSS stylesheet that replaces the default cell coloring.
+// Use Cases: Publish Excel‑based dashboards on a website with a unified brand color scheme. | Generate HTML reports where all cells share a specific background and text color without altering the source workbook. | Add CSS classes to selected cells for conditional formatting that appears only in the exported HTML page.
+// AI Prompts: Show how to load a CSS file from disk and assign its contents to HtmlSaveOptions.CssStyles before exporting to HTML. | Provide C# code that adds different CSS classes to rows based on their numeric values, then saves the workbook as HTML. | Explain how to disable inline styles completely and reference an external CSS file when saving an Excel workbook to HTML with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to load an .xlsx workbook with Aspose.Cells, set HtmlSaveOptions to produce one HTML file, embed custom CSS (via CssStyles) and optionally use CellCssPrefix, then save the workbook so the default cell background and font colors are replaced.
-class ExportExcelToHtmlWithCustomCss
+// Loads an Excel workbook with Aspose.Cells, configures HtmlSaveOptions to embed a custom CSS string that changes background and text colors for all <td> elements (and optional classes), ensures CSS is applied by keeping DisableCss false, and saves the workbook as an HTML file with the new styling.
+class Program
 {
     static void Main()
     {
-        // Load the Excel workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        // Path to the source Excel file
+        string excelPath = "input.xlsx";
+
+        // Path for the generated HTML file
+        string htmlPath = "output.html";
+
+        // Load the workbook from the Excel file
+        Workbook workbook = new Workbook(excelPath);
 
         // Create HTML save options
         HtmlSaveOptions saveOptions = new HtmlSaveOptions();
 
-        // Save the HTML as a single file so that CssStyles are applied
-        saveOptions.SaveAsSingleFile = true;
-
-        // Optional: set a prefix for generated cell CSS classes
-        saveOptions.CellCssPrefix = "custom-";
-
-        // Define custom CSS that overrides default cell background and font colors
+        // Define custom CSS that overrides default cell colors
+        // This CSS will be applied to all table cells (td) and can be extended as needed
         saveOptions.CssStyles = @"
-            /* Override all table cells */
             td {
-                background-color: #e0f7fa !important; /* Light cyan background */
-                color: #006064 !important;           /* Dark cyan text */
+                background-color: #ffebcd !important;   /* Light orange background for all cells */
+                color: #2f4f4f !important;              /* Dark slate gray text color */
             }
-            /* If cell CSS classes are used, ensure they also get the style */
             .custom-cell {
-                background-color: #e0f7fa !important;
-                color: #006064 !important;
+                background-color: #add8e6 !important;   /* Light blue for cells with this class */
+                color: #000080 !important;              /* Navy text color */
             }";
 
-        // Save the workbook as HTML with the custom stylesheet
-        workbook.Save("output.html", saveOptions);
+        // Ensure that CSS styles are used (not only inline styles)
+        saveOptions.DisableCss = false;
+
+        // Save the workbook as an HTML file with the custom stylesheet
+        workbook.Save(htmlPath, saveOptions);
+
+        Console.WriteLine($"HTML file saved to: {htmlPath}");
     }
 }

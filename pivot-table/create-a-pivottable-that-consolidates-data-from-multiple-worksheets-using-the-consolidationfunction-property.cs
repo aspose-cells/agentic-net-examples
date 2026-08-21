@@ -1,10 +1,10 @@
-// Title: Create a Consolidated PivotTable from Multiple Worksheets with ConsolidationFunction – Aspose.Cells for .NET (C#)
-// Description: This C# example demonstrates how to build a PivotTable that pulls data from two worksheets, uses the multi‑range overload, assigns Category, Year, and Value fields, sets the data field's ConsolidationFunction to Sum, refreshes and calculates the pivot, and saves the workbook as ConsolidatedPivotTableDemo.xlsx.
-// Keywords: Aspose.Cells PivotTable multiple worksheets | ConsolidationFunction Sum C# | Aspose.Cells create consolidated pivot | pivot table multi‑range source Aspose.Cells | C# .NET Excel pivot example
-// Common Searches: Aspose.Cells pivot table from several sheets | set ConsolidationFunction for PivotTable in Aspose.Cells | consolidate data ranges into one pivot using Aspose.Cells | C# example of multi‑range PivotTable Aspose.Cells | how to refresh calculated pivot in Aspose.Cells
-// Developer Intent: Generate a PivotTable that aggregates data from multiple worksheets and applies a sum consolidation function using Aspose.Cells for .NET.
-// Use Cases: Combine regional sales worksheets into a single summary pivot. | Aggregate yearly financial figures from separate department sheets. | Build a dashboard that consolidates category‑year metrics across multiple data tables.
-// AI Prompts: Show C# code to create a consolidated PivotTable with the ConsolidationFunction set to Average using Aspose.Cells. | How can I change the ConsolidationFunction of an existing Aspose.Cells PivotTable at runtime? | Explain the steps to refresh and recalculate a multi‑range PivotTable after updating source data in Aspose.Cells.
+// Title: Consolidate data from multiple worksheets into a PivotTable with Aspose.Cells for .NET
+// Description: C# example that creates a workbook, fills identical tables on two sheets, applies a sum subtotal via the ConsolidationFunction property, and builds a consolidated PivotTable on a third sheet using multiple source ranges. The PivotTable shows Category as rows and Value as data, then saves the file as an Excel workbook.
+// Keywords: Aspose.Cells PivotTable multiple worksheets | ConsolidationFunction.Sum C# | consolidated pivot table Aspose.Cells | .NET Excel pivot from several sheets | add pivot table with multiple source ranges | subtotal using ConsolidationFunction
+// Common Searches: how to create a pivot table from several worksheets using Aspose.Cells | Aspose.Cells ConsolidationFunction sum subtotal example | C# combine data from multiple sheets into one pivot table | Aspose.Cells add pivot table with multiple ranges | consolidated pivot report Aspose.Cells .NET
+// Developer Intent: Generate a PivotTable that aggregates data across multiple worksheets and applies a sum subtotal using the ConsolidationFunction property in Aspose.Cells for .NET.
+// Use Cases: Summarize regional sales figures from separate worksheets into a single pivot report. | Aggregate inventory counts from multiple location sheets for a company‑wide overview. | Produce a financial consolidation where department totals are summed into one pivot table.
+// AI Prompts: Show how to add a column field (e.g., Date) to the consolidated PivotTable. | Provide code to export the consolidated PivotTable to PDF with Aspose.Cells. | Explain how to switch the ConsolidationFunction from Sum to Average for the subtotals.
 
 using System;
 using Aspose.Cells;
@@ -12,84 +12,95 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // This C# example demonstrates how to build a PivotTable that pulls data from two worksheets, uses the multi‑range overload, assigns Category, Year, and Value fields, sets the data field's ConsolidationFunction to Sum, refreshes and calculates the pivot, and saves the workbook as ConsolidatedPivotTableDemo.xlsx.
+    // C# example that creates a workbook, fills identical tables on two sheets, applies a sum subtotal via the ConsolidationFunction property, and builds a consolidated PivotTable on a third sheet using multiple source ranges. The PivotTable shows Category as rows and Value as data, then saves the file as an Excel workbook.
     public class ConsolidatedPivotTableDemo
     {
         public static void Run()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // -------------------------
-            // Prepare source worksheets
-            // -------------------------
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Sheet1";
-            FillData(sheet1, "A");
-
-            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-            FillData(sheet2, "B");
-
-            // ---------------------------------
-            // Create a worksheet for the pivot
-            // ---------------------------------
-            Worksheet pivotSheet = workbook.Worksheets.Add("PivotSheet");
-
-            // Define the consolidation ranges (source data from both sheets)
-            string[] sourceRanges = {
-                "=Sheet1!A1:C5",
-                "=Sheet2!A1:C5"
-            };
-
-            // No auto page fields – we will add them manually if needed
-            PivotPageFields pageFields = new PivotPageFields();
-
-            // Add the pivot table using the overload that accepts multiple ranges
-            int pivotIndex = pivotSheet.PivotTables.Add(
-                sourceRanges,          // multiple consolidation ranges
-                false,                 // isAutoPage
-                pageFields,            // page fields (empty in this case)
-                "A3",                  // destination cell for the pivot table
-                "ConsolidatedPivot"); // pivot table name
-
-            // Get the created pivot table
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-            // Configure the pivot fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Year");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
-
-            // Set the consolidation function for the data field (e.g., Sum)
-            if (pivotTable.DataFields.Count > 0)
+            try
             {
-                pivotTable.DataFields[0].Function = ConsolidationFunction.Sum;
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // -------------------------------------------------
+                // Prepare sample data in two worksheets (Sheet1 and Sheet2)
+                // -------------------------------------------------
+                Worksheet sheet1 = workbook.Worksheets[0];
+                sheet1.Name = "Sheet1";
+                FillSampleData(sheet1);
+
+                Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+                FillSampleData(sheet2);
+
+                // -------------------------------------------------
+                // Apply subtotal on each sheet using ConsolidationFunction.Sum
+                // -------------------------------------------------
+                // Define the data area (A1:C5) for subtotal
+                CellArea dataArea = new CellArea
+                {
+                    StartRow = 0,
+                    StartColumn = 0,
+                    EndRow = 4,
+                    EndColumn = 2
+                };
+                // Apply subtotal on the "Value" column (index 1) with Sum function
+                sheet1.Cells.Subtotal(dataArea, 0, ConsolidationFunction.Sum, new int[] { 1 });
+                sheet2.Cells.Subtotal(dataArea, 0, ConsolidationFunction.Sum, new int[] { 1 });
+
+                // -------------------------------------------------
+                // Create a new worksheet to host the consolidated PivotTable
+                // -------------------------------------------------
+                Worksheet pivotSheet = workbook.Worksheets.Add("ConsolidatedPivot");
+
+                // -------------------------------------------------
+                // Define multiple consolidation ranges (the two sheets)
+                // -------------------------------------------------
+                string[] sourceRanges = new string[]
+                {
+                    "=Sheet1!A1:C5",
+                    "=Sheet2!A1:C5"
+                };
+
+                // Create empty page fields (not using auto page)
+                PivotPageFields pageFields = new PivotPageFields();
+
+                // Add the PivotTable using the overload that accepts multiple ranges
+                PivotTableCollection pivotTables = pivotSheet.PivotTables;
+                int pivotIndex = pivotTables.Add(sourceRanges, false, pageFields, "A1", "ConsolidatedPivotTable");
+
+                // -------------------------------------------------
+                // Configure the PivotTable (Row: Category, Data: Value)
+                // -------------------------------------------------
+                PivotTable pivotTable = pivotTables[pivotIndex];
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
+
+                // -------------------------------------------------
+                // Save the workbook
+                // -------------------------------------------------
+                workbook.Save("ConsolidatedPivotTableDemo.xlsx");
             }
-
-            // Refresh and calculate the pivot table data
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("ConsolidatedPivotTableDemo.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during execution: {ex.Message}");
+            }
         }
 
         // Helper method to fill sample data into a worksheet
-        private static void FillData(Worksheet sheet, string prefix)
+        private static void FillSampleData(Worksheet sheet)
         {
             Cells cells = sheet.Cells;
-
-            // Header row
+            // Header
             cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Year");
-            cells["C1"].PutValue("Value");
+            cells["B1"].PutValue("Value");
+            cells["C1"].PutValue("Date");
 
             // Sample rows
-            for (int i = 2; i <= 5; i++)
+            for (int i = 0; i < 5; i++)
             {
-                cells[$"A{i}"].PutValue($"{prefix}Cat{i - 1}");
-                cells[$"B{i}"].PutValue(2020 + (i - 2));
-                cells[$"C{i}"].PutValue(i * 100);
+                cells[$"A{i + 2}"].PutValue($"Item{i + 1}");
+                cells[$"B{i + 2}"].PutValue((i + 1) * 100);
+                cells[$"C{i + 2}"].PutValue(DateTime.Now.AddDays(i).ToString("yyyy-MM-dd"));
             }
         }
     }
@@ -99,15 +110,7 @@ namespace AsposeCellsExamples
     {
         public static void Main(string[] args)
         {
-            try
-            {
-                ConsolidatedPivotTableDemo.Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            ConsolidatedPivotTableDemo.Run();
         }
     }
 }

@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Timelines Agent
 category: timeline
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: C# examples for creating, accessing, positioning, styling, connecting, removing, and rendering Excel PivotTable timelines based on date fields
 primary_apis: [Worksheet.Timelines, TimelineCollection.Add, Timeline, PivotTable]
 search_intents: [create Excel timeline in C#, add timeline to PivotTable, filter PivotTable by date, remove Excel timeline]
@@ -314,3 +314,4 @@ Interpret one developer intent
 ## Definition of done
 
 A `timeline` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
+

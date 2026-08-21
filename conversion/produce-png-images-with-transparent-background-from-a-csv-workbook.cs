@@ -1,63 +1,61 @@
-// Title: Convert CSV Workbook to Transparent PNG Images with Aspose.Cells for .NET (C#)
-// Description: Loads a CSV file into an Aspose.Cells Workbook, configures ImageOrPrintOptions with Transparent=true, and uses SheetRender to export each worksheet (or page) as a PNG file that has a transparent background. Ideal for web overlays, dashboard graphics, and batch image generation.
-// Keywords: Aspose.Cells | C# | .NET | CSV to PNG | transparent PNG | ImageOrPrintOptions | SheetRender | export worksheet as image | batch conversion | image rendering
-// Common Searches: Aspose.Cells transparent PNG from CSV | C# export CSV to PNG with transparency | how to render worksheet as PNG with transparent background | save Aspose.Cells workbook as PNG image transparent | batch convert CSV files to PNG using Aspose.Cells
-// Developer Intent: Generate PNG images with a transparent background from a CSV workbook using Aspose.Cells in C#.
-// Use Cases: Overlay CSV data on web pages where the page background must remain visible. | Create theme‑aware PNG assets for reporting dashboards or mobile apps. | Automate batch conversion of multiple CSV files into transparent PNG files for UI integration. | Produce image tiles without background for printable or PDF reports.
-// AI Prompts: Write C# code that reads a CSV file into an Aspose.Cells Workbook and saves each worksheet as a transparent PNG image. | Show how to set ImageOrPrintOptions.Transparent to true and render a worksheet to PNG with Aspose.Cells. | Explain how to modify the sample to add a custom background color instead of transparency. | Provide a script that processes all CSV files in a folder and outputs transparent PNGs for each workbook.
+// Title: C# – Convert CSV to Transparent PNG Images with Aspose.Cells
+// Description: Learn how to import a CSV file into an Aspose.Cells workbook, configure ImageOrPrintOptions for PNG format with a transparent background, and render each worksheet page as a separate PNG file. The example saves the images to a designated folder and optionally stores the workbook as an XLSX file.
+// Keywords: Aspose.Cells CSV to PNG | transparent PNG Aspose.Cells | C# convert CSV to image | ImageOrPrintOptions Transparent true | .NET render worksheet as PNG | SheetRender transparent background | export CSV as PNG .NET | one page per sheet Aspose | save workbook as XLSX | Aspose.Cells image rendering
+// Common Searches: Aspose.Cells render CSV as transparent PNG | C# export worksheet to PNG with transparency | How to create PNG images from CSV using Aspose.Cells | ImageOrPrintOptions transparent background example | SheetRender one page per sheet PNG
+// Developer Intent: Generate PNG files with a transparent background from a CSV‑based workbook using Aspose.Cells for .NET.
+// Use Cases: Convert CSV reports into high‑quality PNG graphics for web or UI overlays. | Produce transparent PNG assets for dashboards, presentations, or marketing material. | Automate batch rendering of multiple worksheet pages while preserving transparency. | Save the original workbook for later editing or archival after image generation.
+// AI Prompts: Write C# code that reads a CSV file, loads it into an Aspose.Cells workbook, and saves each sheet as a transparent PNG image. | Explain the steps to configure ImageOrPrintOptions for PNG output with a transparent background and one page per sheet in Aspose.Cells. | Provide a script that renders a CSV‑derived worksheet to PNG files in a specific output folder and also saves the workbook as XLSX.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-// Loads a CSV file into an Aspose.Cells Workbook, configures ImageOrPrintOptions with Transparent=true, and uses SheetRender to export each worksheet (or page) as a PNG file that has a transparent background. Ideal for web overlays, dashboard graphics, and batch image generation.
-class CsvToTransparentPng
+namespace AsposeCellsTransparentPngDemo
 {
-    static void Main()
+    // Learn how to import a CSV file into an Aspose.Cells workbook, configure ImageOrPrintOptions for PNG format with a transparent background, and render each worksheet page as a separate PNG file. The example saves the images to a designated folder and optionally stores the workbook as an XLSX file.
+    public class Program
     {
-        // Path to the source CSV file
-        string csvPath = "data.csv";
-
-        // Directory where PNG images will be saved
-        string outputDir = "output";
-        Directory.CreateDirectory(outputDir);
-
-        // Create a new workbook instance
-        Workbook workbook = new Workbook();
-
-        // Import CSV data into the first worksheet starting at cell A1
-        // Using comma as delimiter and converting numeric strings to numbers
-        workbook.Worksheets[0].Cells.ImportCSV(csvPath, ",", true, 0, 0);
-
-        // Configure image rendering options for transparent PNG output
-        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+        public static void Main()
         {
-            ImageType = ImageType.Png,   // PNG format
-            Transparent = true,          // Enable transparent background
-            OnePagePerSheet = true       // Render each sheet as a single page
-        };
+            // Path to the source CSV file
+            string csvPath = "data.csv";
 
-        // Iterate through all worksheets and render each to a PNG file
-        for (int sheetIdx = 0; sheetIdx < workbook.Worksheets.Count; sheetIdx++)
-        {
-            Worksheet sheet = workbook.Worksheets[sheetIdx];
+            // Create a new empty workbook
+            Workbook workbook = new Workbook();
 
-            // Create a SheetRender instance with the worksheet and image options
-            SheetRender renderer = new SheetRender(sheet, imgOptions);
+            // Import CSV data into the first worksheet starting at cell A1 (row 0, column 0)
+            // Using comma as delimiter and converting numeric strings to numbers
+            workbook.Worksheets[0].Cells.ImportCSV(csvPath, ",", true, 0, 0);
 
-            // Render each page of the sheet (usually one page because of OnePagePerSheet)
-            for (int page = 0; page < renderer.PageCount; page++)
+            // Configure image rendering options:
+            // - Output format: PNG
+            // - Transparent background
+            // - Render each worksheet as a single page
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                string fileName = Path.Combine(outputDir,
-                    $"Sheet{sheetIdx + 1}_Page{page + 1}.png");
+                ImageType = Aspose.Cells.Drawing.ImageType.Png,
+                Transparent = true,
+                OnePagePerSheet = true
+            };
 
-                // Save the rendered page as a PNG file with transparent background
-                renderer.ToImage(page, fileName);
+            // Create a SheetRender for the first worksheet with the above options
+            SheetRender sheetRender = new SheetRender(workbook.Worksheets[0], imgOptions);
+
+            // Ensure the output directory exists
+            string outputDir = "output_images";
+            Directory.CreateDirectory(outputDir);
+
+            // Render each page of the sheet to a separate PNG file with transparent background
+            for (int pageIndex = 0; pageIndex < sheetRender.PageCount; pageIndex++)
+            {
+                string imagePath = Path.Combine(outputDir, $"sheet_page_{pageIndex}.png");
+                sheetRender.ToImage(pageIndex, imagePath);
+                Console.WriteLine($"Rendered page {pageIndex} to {imagePath}");
             }
-        }
 
-        Console.WriteLine("Transparent PNG images have been generated successfully.");
+            // Optionally, save the workbook for reference
+            workbook.Save(Path.Combine(outputDir, "imported_workbook.xlsx"));
+        }
     }
 }

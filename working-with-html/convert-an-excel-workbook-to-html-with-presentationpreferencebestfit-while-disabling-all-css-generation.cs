@@ -1,35 +1,38 @@
-// Title: C# – Export Excel to HTML with BestFit layout and no CSS using Aspose.Cells
-// Description: Learn how to convert an Excel workbook to HTML in C# with Aspose.Cells, enabling the BestFit presentation preference for optimal layout while disabling all CSS generation so only inline styles are emitted.
-// Keywords: Aspose.Cells HTML export | C# Excel to HTML conversion | PresentationPreference BestFit | DisableCss Aspose.Cells | inline styles HTML output | .NET Excel to HTML | export Excel without external CSS
-// Common Searches: Aspose.Cells export Excel to HTML BestFit | C# disable CSS when saving workbook as HTML | How to get inline‑style HTML from Excel using Aspose | PresentationPreference option in HtmlSaveOptions | Convert Excel file to HTML without stylesheet
-// Developer Intent: Generate an HTML version of an Excel workbook in C# with a layout that mimics Excel’s appearance (BestFit) while suppressing external CSS files, relying solely on inline styling.
-// Use Cases: Embedding spreadsheet previews in email bodies where external CSS is blocked. | Creating lightweight, self‑contained HTML reports for documentation or archiving. | Building web pages that display Excel data without loading additional stylesheet resources.
-// AI Prompts: Write C# code that uses Aspose.Cells to save an Excel workbook as HTML with PresentationPreference set to BestFit and CSS generation disabled. | Explain how PresentationPreference influences the HTML layout and why disabling CSS results in only inline styles. | Provide a step‑by‑step tutorial for configuring HtmlSaveOptions to achieve a best‑fit layout with no external CSS in Aspose.Cells.
+// Title: C# – Export Excel to HTML with BestFit layout and inline styles only using Aspose.Cells
+// Description: Demonstrates loading an Excel workbook, configuring HtmlSaveOptions to enable PresentationPreference (BestFit) and disable all CSS generation, then saving the file as HTML with only inline styling.
+// Keywords: Aspose.Cells | C# HTML export | PresentationPreference BestFit | DisableCss | Excel to HTML | inline styles only | HtmlSaveOptions | .NET spreadsheet conversion
+// Common Searches: Aspose.Cells export Excel to HTML BestFit | disable CSS when saving workbook as HTML Aspose.Cells | C# convert Excel to HTML with inline styles | HtmlSaveOptions PresentationPreference true | Aspose.Cells HTML output without external CSS
+// Developer Intent: Create an HTML representation of an Excel workbook that uses the BestFit presentation mode and contains no external CSS files, only inline styling, via Aspose.Cells for .NET.
+// Use Cases: Generate web‑ready spreadsheet views that preserve column widths while keeping all styling inside the HTML markup. | Produce email‑compatible HTML reports where external CSS files are blocked. | Archive workbook snapshots for documentation or version control without managing separate style sheets.
+// AI Prompts: Show how to set HtmlSaveOptions.PresentationPreference to BestFit and disable CSS generation in Aspose.Cells C#. | Provide a complete C# example that loads an .xlsx file and saves it as HTML with only inline styles using Aspose.Cells. | Explain the effect of HtmlSaveOptions.DisableCss and PresentationPreference on the structure and size of the generated HTML.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Learn how to convert an Excel workbook to HTML in C# with Aspose.Cells, enabling the BestFit presentation preference for optimal layout while disabling all CSS generation so only inline styles are emitted.
-class Program
+namespace AsposeCellsHtmlExport
 {
-    static void Main()
+    // Demonstrates loading an Excel workbook, configuring HtmlSaveOptions to enable PresentationPreference (BestFit) and disable all CSS generation, then saving the file as HTML with only inline styling.
+    class Program
     {
-        // Load the source Excel workbook (replace with your actual file path)
-        string inputFile = "input.xlsx";
-        Workbook workbook = new Workbook(inputFile);
+        static void Main(string[] args)
+        {
+            // Load an existing workbook (replace with your actual file path)
+            // If you don't have an input file, you can create a new workbook instead.
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Create HTML save options
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // Create HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-        // Enable presentation preference for a more beautiful layout (BestFit)
-        htmlOptions.PresentationPreference = true;
+            // Enable presentation preference for a more beautiful layout (BestFit)
+            htmlOptions.PresentationPreference = true;
 
-        // Disable all CSS generation – only inline styles will be used
-        htmlOptions.DisableCss = true;
+            // Disable all CSS generation – only inline styles will be used
+            htmlOptions.DisableCss = true;
 
-        // Save the workbook as an HTML file
-        string outputFile = "output.html";
-        workbook.Save(outputFile, htmlOptions);
+            // Save the workbook as HTML
+            workbook.Save("output.html", htmlOptions);
+
+            Console.WriteLine("Workbook has been converted to HTML with PresentationPreference and CSS disabled.");
+        }
     }
 }

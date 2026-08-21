@@ -1,30 +1,25 @@
-// Title: C# – Convert HTML to PDF with Clickable Links using Aspose.Cells
-// Description: Demonstrates loading an HTML file into an Aspose.Cells Workbook and saving it as a PDF. Hyperlinks from the source HTML are automatically retained as clickable links in the generated PDF, with basic PdfSaveOptions configuration.
-// Keywords: Aspose.Cells | C# | HTML to PDF | clickable hyperlinks | PdfSaveOptions | preserve links | convert HTML workbook to PDF | Aspose.Cells .NET | HTML report to PDF
-// Common Searches: Aspose.Cells convert HTML to PDF C# | preserve hyperlinks when saving PDF Aspose.Cells | C# HTML to PDF clickable links | PdfSaveOptions preserve links | how to keep HTML links in PDF using Aspose
-// Developer Intent: Generate a PDF from an HTML document while keeping every original hyperlink active, using Aspose.Cells for .NET.
-// Use Cases: Transform web‑based reports into printable PDFs that retain functional URLs for distribution. | Automate batch conversion of multiple HTML files to PDFs with active links for archival or compliance purposes. | Create PDF versions of HTML email templates where recipients can still click embedded links.
-// AI Prompts: Provide C# code that loads an HTML file into an Aspose.Cells Workbook and saves it as a PDF with clickable hyperlinks. | Explain how to customize PdfSaveOptions (e.g., page size, image quality) while ensuring hyperlinks remain functional in the PDF output. | Show a C# script that batch processes a folder of HTML files into PDFs, preserving active links using Aspose.Cells.
+// Title: C# – Convert HTML to PDF with clickable hyperlinks using Aspose.Cells
+// Description: Load an HTML file into an Aspose.Cells Workbook and export it as a PDF. All anchor tags are retained, so the resulting PDF contains active, clickable links.
+// Keywords: Aspose.Cells HTML to PDF | C# PDF conversion | preserve hyperlinks | clickable PDF links | SaveFormat.Pdf | HTML workbook Aspose.Cells | convert HTML file to PDF C#
+// Common Searches: Aspose.Cells keep links when converting HTML to PDF | C# convert HTML file to PDF with active hyperlinks | How to export HTML as PDF with clickable links using Aspose.Cells | HTML to PDF conversion example Aspose.Cells .NET
+// Developer Intent: Generate a PDF from an HTML document while preserving functional hyperlinks, using Aspose.Cells for .NET.
+// Use Cases: Transform marketing email HTML templates into PDF brochures that retain all call‑to‑action links. | Archive web pages as PDFs for offline reading, keeping navigation links usable. | Automate report pipelines where HTML tables with URLs are rendered as PDFs with active links.
+// AI Prompts: Show a C# snippet that loads an HTML file into an Aspose.Cells Workbook and saves it as a PDF with clickable hyperlinks. | Explain how Aspose.Cells maps HTML anchor tags to PDF link annotations during export and whether any extra settings are needed. | Provide code to batch‑process a folder of HTML files, converting each to a PDF while preserving all hyperlinks.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
-// Demonstrates loading an HTML file into an Aspose.Cells Workbook and saving it as a PDF. Hyperlinks from the source HTML are automatically retained as clickable links in the generated PDF, with basic PdfSaveOptions configuration.
+// Load an HTML file into an Aspose.Cells Workbook and export it as a PDF. All anchor tags are retained, so the resulting PDF contains active, clickable links.
 class HtmlToPdfConverter
 {
     static void Main()
     {
-        // Load the HTML file into a workbook.
-        // The constructor automatically detects the format based on the file extension.
+        // Load the source HTML file into a workbook.
+        // Aspose.Cells can parse HTML and represent it as an Excel workbook.
         Workbook workbook = new Workbook("input.html");
 
-        // Create PDF save options. Hyperlinks are preserved by default,
-        // but you can customize other PDF settings here if needed.
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-        // Save the workbook as a PDF file. The resulting PDF will contain
-        // clickable hyperlinks that were present in the original HTML.
-        workbook.Save("output.pdf", pdfOptions);
+        // Save the workbook as PDF.
+        // Hyperlinks present in the HTML are retained and become clickable in the PDF.
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

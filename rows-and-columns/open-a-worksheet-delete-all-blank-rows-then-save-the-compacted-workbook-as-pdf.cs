@@ -1,47 +1,41 @@
-// Title: Aspose.Cells C# – Remove Blank Rows and Export Excel to PDF
-// Description: Load an Excel workbook with Aspose.Cells, call Worksheet.Cells.DeleteBlankRows() to purge empty rows, set PdfSaveOptions.PrintingPageType = IgnoreBlank to skip blank pages, and save the compact workbook as a PDF. Ideal for cleaning user‑generated sheets before distribution.
-// Keywords: Aspose.Cells | C# | DeleteBlankRows | remove empty rows | Excel to PDF | PdfSaveOptions | IgnoreBlank | compact PDF | batch Excel processing | export worksheet as PDF
-// Common Searches: Aspose.Cells delete blank rows C# | How to remove empty rows from Excel using Aspose.Cells | Save Excel as PDF without blank pages Aspose.Cells | C# code to compact Excel workbook before PDF export | Worksheet.Cells.DeleteBlankRows example
-// Developer Intent: Strip all completely empty rows from a worksheet and generate a PDF that contains only populated data.
-// Use Cases: Sanitize data‑entry forms before creating printable reports. | Compress large financial workbooks into lean PDFs for email distribution. | Automate nightly batch conversion of Excel logs to PDF archives without gaps. | Prepare regulatory filings where blank rows cause pagination errors.
-// AI Prompts: Write C# code that iterates through every worksheet in a workbook, deletes blank rows, and saves each sheet as an individual PDF using Aspose.Cells. | Explain the impact of PdfSaveOptions.PrintingPageType.IgnoreBlank on page count after rows are removed. | Create a PowerShell script that calls a compiled .NET assembly to process a folder of .xlsx files, removing blank rows and exporting PDFs. | Design a unit test that confirms DeleteBlankRows does not affect rows containing formulas that return empty strings.
+// Title: C# – Delete Blank Rows in an Excel Worksheet and Export to PDF with Aspose.Cells
+// Description: Load an Excel file using Aspose.Cells, remove every empty row with Cells.DeleteBlankRows, configure PdfSaveOptions to ignore blank pages, and save the cleaned workbook as a PDF.
+// Keywords: Aspose.Cells | C# delete blank rows | Excel to PDF conversion | PdfSaveOptions | IgnoreBlank pages | Remove empty rows | Cells.DeleteBlankRows | Workbook.Save PDF | Aspose.Cells API
+// Common Searches: Aspose.Cells delete blank rows C# | How to remove empty rows before PDF export Aspose | Convert Excel to PDF ignoring blank pages .NET | Cells.DeleteBlankRows example | PdfSaveOptions PrintingPageType.IgnoreBlank usage
+// Developer Intent: Clean a worksheet by deleting all empty rows and generate a compact PDF without blank pages using Aspose.Cells for .NET.
+// Use Cases: Prepare data‑driven reports by stripping out blank rows prior to PDF generation, ensuring a tidy printable document. | Archive Excel workbooks as PDFs after removing unnecessary empty rows to reduce file size and improve readability. | Create client‑facing PDFs from spreadsheets that contain sporadic gaps, preventing the appearance of blank pages in the final output.
+// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, deletes all blank rows, sets PdfSaveOptions to ignore blank pages, and saves the result as a PDF. | Show an example of using Cells.DeleteBlankRows and PdfSaveOptions.PrintingPageType = IgnoreBlank to convert an Excel worksheet to a compact PDF. | Explain how to programmatically remove empty rows from a specific worksheet before exporting to PDF with Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Load an Excel file using Aspose.Cells, remove every empty row with Cells.DeleteBlankRows, configure PdfSaveOptions to ignore blank pages, and save the cleaned workbook as a PDF.
+class DeleteBlankRowsAndSavePdf
 {
-    // Load an Excel workbook with Aspose.Cells, call Worksheet.Cells.DeleteBlankRows() to purge empty rows, set PdfSaveOptions.PrintingPageType = IgnoreBlank to skip blank pages, and save the compact workbook as a PDF. Ideal for cleaning user‑generated sheets before distribution.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Path to the source Excel file
+        string inputPath = "input.xlsx";
+
+        // Path for the resulting PDF file
+        string outputPath = "output.pdf";
+
+        // Load the workbook from the specified file
+        Workbook workbook = new Workbook(inputPath);
+
+        // Access the first worksheet (you can modify this to target a specific sheet)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Delete all blank rows in the worksheet
+        worksheet.Cells.DeleteBlankRows();
+
+        // Optional: configure PDF save options (e.g., ignore completely blank pages)
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Path to the source Excel file
-            string inputPath = "input.xlsx";
+            PrintingPageType = PrintingPageType.IgnoreBlank
+        };
 
-            // Load the workbook from the file
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (or any specific worksheet as needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Delete all blank rows in the worksheet
-            worksheet.Cells.DeleteBlankRows();
-
-            // Optional: configure PDF save options (e.g., ignore completely blank pages)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                PrintingPageType = PrintingPageType.IgnoreBlank
-            };
-
-            // Save the compacted workbook as a PDF file
-            string outputPath = "output.pdf";
-            workbook.Save(outputPath, pdfOptions);
-
-            // Clean up resources
-            workbook.Dispose();
-
-            Console.WriteLine("Workbook processed and saved as PDF successfully.");
-        }
+        // Save the compacted workbook as a PDF file
+        workbook.Save(outputPath, pdfOptions);
     }
 }

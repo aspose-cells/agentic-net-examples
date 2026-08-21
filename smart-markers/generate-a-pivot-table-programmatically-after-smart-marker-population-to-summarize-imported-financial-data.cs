@@ -1,10 +1,10 @@
-// Title: Generate a Pivot Table After Smart‑Marker Population with Aspose.Cells for .NET
-// Description: This Aspose.Cells for .NET sample builds a workbook template with smart markers for Region, Product, Month, and Revenue, populates it from a DataTable of financial records using WorkbookDesigner, then creates a separate worksheet and adds a pivot table that groups revenue by Region (rows) and Month (columns). The final Excel file demonstrates automated financial reporting in C#.
-// Keywords: Aspose.Cells | smart markers | pivot table | .NET | C# | financial data | WorkbookDesigner | DataTable | Excel automation | region revenue pivot | programmatic pivot | Excel reporting
-// Common Searches: Aspose.Cells create pivot table after smart markers | C# smart markers to pivot table example | generate financial pivot report with Aspose.Cells | populate worksheet with smart markers and add pivot | automate Excel pivot table using Aspose.Cells .NET
-// Developer Intent: Build a pivot table that summarizes data filled via smart markers.
-// Use Cases: Produce a monthly revenue summary by region and month without manual Excel work. | Design a reusable Excel template that auto‑populates sales data and creates a pivot report. | Integrate smart‑marker data import and pivot generation into an automated financial‑reporting pipeline.
-// AI Prompts: Show how to format the pivot table revenue column as currency. | Add a total row for each region in the generated pivot table. | Create a chart that visualizes the pivot data directly after the table is built. | Explain how to enable automatic refresh of the pivot when the underlying smart‑marker data changes.
+// Title: Create a Pivot Table from Smart‑Marker Populated Financial Data using Aspose.Cells for .NET (C#)
+// Description: C# example that builds a workbook, inserts a smart‑marker linked to a financial DataTable, processes it with WorkbookDesigner, then adds a pivot table on a new sheet (Region rows, Product columns, summed Amount) and saves the file.
+// Keywords: Aspose.Cells | C# | .NET | smart markers | WorkbookDesigner | pivot table | financial data | DataTable | region product amount | programmatic Excel automation
+// Common Searches: Aspose.Cells create pivot table after smart markers | C# smart marker to pivot table example | How to use WorkbookDesigner with pivot tables | Generate financial pivot report with Aspose.Cells | Programmatically add pivot table in .NET Excel
+// Developer Intent: Create a pivot table that summarizes financial data inserted via smart markers.
+// Use Cases: Automatically generate regional sales summaries after importing transaction data through smart markers. | Build a dynamic financial report that pivots revenue by product without manual Excel steps. | Integrate data import and analysis in a single Aspose.Cells workflow for quarterly dashboards.
+// AI Prompts: Show C# code to add a filter on the Region field in the generated pivot table. | Demonstrate how to format the Amount values as currency and apply a built‑in style to the pivot table. | Explain how to export the workbook containing the pivot table to PDF using Aspose.Cells. | Provide steps to refresh the pivot table after updating the underlying smart‑marker data.
 
 using System;
 using System.Data;
@@ -12,78 +12,91 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using AsposeRange = Aspose.Cells.Range;
 
-// This Aspose.Cells for .NET sample builds a workbook template with smart markers for Region, Product, Month, and Revenue, populates it from a DataTable of financial records using WorkbookDesigner, then creates a separate worksheet and adds a pivot table that groups revenue by Region (rows) and Month (columns). The final Excel file demonstrates automated financial reporting in C#.
-class Program
+namespace AsposeCellsPivotAfterSmartMarkers
 {
-    static void Main()
+    // C# example that builds a workbook, inserts a smart‑marker linked to a financial DataTable, processes it with WorkbookDesigner, then adds a pivot table on a new sheet (Region rows, Product columns, summed Amount) and saves the file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook that will act as the template containing smart markers
-            Workbook workbook = new Workbook();
-            Worksheet templateSheet = workbook.Worksheets[0];
-            templateSheet.Name = "Template";
+            try
+            {
+                // 1. Create a new workbook (lifecycle: create)
+                Workbook workbook = new Workbook();
 
-            // Define column headers
-            templateSheet.Cells["A1"].PutValue("Region");
-            templateSheet.Cells["B1"].PutValue("Product");
-            templateSheet.Cells["C1"].PutValue("Month");
-            templateSheet.Cells["D1"].PutValue("Revenue");
+                // 2. Add a worksheet that will hold the smart‑marker template
+                Worksheet templateSheet = workbook.Worksheets[0];
+                templateSheet.Name = "Template";
 
-            // Insert smart markers for line‑by‑line data population
-            templateSheet.Cells["A2"].PutValue("&=$Region");
-            templateSheet.Cells["B2"].PutValue("&=$Product");
-            templateSheet.Cells["C2"].PutValue("&=$Month");
-            templateSheet.Cells["D2"].PutValue("&=$Revenue");
+                // 3. Place a smart‑marker that will be replaced by the data source.
+                //    The marker syntax "&=$FinancialData" tells the designer to insert the data source named "FinancialData".
+                templateSheet.Cells["A1"].PutValue("&=$FinancialData");
 
-            // Mark the range that contains the smart markers
-            templateSheet.Cells.CreateRange("A2:D2").Name = "_CellsSmartMarkers";
+                // 4. Define the range that contains smart markers and give it the required name.
+                //    Aspose.Cells looks for a named range called "_CellsSmartMarkers".
+                AsposeRange smRange = templateSheet.Cells.CreateRange("A1");
+                smRange.Name = "_CellsSmartMarkers";
 
-            // Prepare the financial data source
-            DataTable financialData = new DataTable("FinancialData");
-            financialData.Columns.Add("Region", typeof(string));
-            financialData.Columns.Add("Product", typeof(string));
-            financialData.Columns.Add("Month", typeof(string));
-            financialData.Columns.Add("Revenue", typeof(double));
+                // 5. Prepare a DataTable that represents the financial data to be inserted.
+                DataTable dt = new DataTable("FinancialData");
+                dt.Columns.Add("Region", typeof(string));
+                dt.Columns.Add("Product", typeof(string));
+                dt.Columns.Add("Amount", typeof(double));
 
-            financialData.Rows.Add("North", "Widget", "Jan", 12000);
-            financialData.Rows.Add("North", "Widget", "Feb", 15000);
-            financialData.Rows.Add("South", "Gadget", "Jan", 8000);
-            financialData.Rows.Add("South", "Gadget", "Feb", 9500);
-            financialData.Rows.Add("East", "Widget", "Jan", 11000);
-            financialData.Rows.Add("East", "Gadget", "Feb", 13000);
+                // Sample rows
+                dt.Rows.Add("North America", "Laptop", 125000);
+                dt.Rows.Add("North America", "Tablet", 85000);
+                dt.Rows.Add("Europe", "Laptop", 97000);
+                dt.Rows.Add("Europe", "Smartphone", 66000);
+                dt.Rows.Add("Asia", "Tablet", 72000);
+                dt.Rows.Add("Asia", "Smartphone", 54000);
 
-            // Process the smart markers and populate the worksheet with the data
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource(financialData);
-            designer.Process();
+                // 6. Process smart markers using WorkbookDesigner.
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                designer.SetDataSource("FinancialData", dt);
+                designer.Process(); // processes all smart markers in the workbook
 
-            // Add a new worksheet that will host the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("PivotReport");
+                // 7. Use the processed "Template" sheet as the source for the pivot table.
+                Worksheet dataSheet = workbook.Worksheets["Template"];
 
-            // Build the source data reference for the pivot table (including headers)
-            AsposeRange sourceRange = templateSheet.Cells.MaxDisplayRange;
-            string sourceData = $"=Template!{sourceRange.Address}";
+                // 8. Add a new worksheet that will contain the pivot table.
+                Worksheet pivotSheet = workbook.Worksheets.Add("FinancialPivot");
 
-            // Add the pivot table using the (sourceData, destCellName, tableName) overload
-            int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A3", "FinancialPivot");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+                // 9. Determine the source data range for the pivot table.
+                //    MaxDisplayRange gives the used range of the data sheet.
+                AsposeRange maxRange = dataSheet.Cells.MaxDisplayRange;
+                int startRow = maxRange.FirstRow;
+                int startColumn = maxRange.FirstColumn;
+                int endRow = startRow + maxRange.RowCount - 1;
+                int endColumn = startColumn + maxRange.ColumnCount - 1;
 
-            // Configure the pivot fields: Region → rows, Month → columns, Revenue → data
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Region");
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Month");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Revenue");
+                string startCell = CellsHelper.CellIndexToName(startRow, startColumn);
+                string endCell = CellsHelper.CellIndexToName(endRow, endColumn);
+                string sourceData = $"=Template!{startCell}:{endCell}";
 
-            // Optional layout and calculation
-            pivotTable.ShowInTabularForm();
-            pivotTable.CalculateData();
+                // 10. Add the pivot table to the pivot sheet (lifecycle: add via PivotTableCollection.Add)
+                int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A1", "FinancialSummary");
+                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-            // Save the final workbook
-            workbook.Save("FinancialPivotReport.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // 11. Configure the pivot table fields:
+                //     - Region as Row field
+                //     - Product as Column field
+                //     - Amount as Data field (sum)
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Region");
+                pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+
+                // 12. Optional: display the pivot in tabular form and calculate the data.
+                pivotTable.ShowInTabularForm();
+                pivotTable.CalculateData();
+
+                // 13. Save the workbook (lifecycle: save)
+                workbook.Save("FinancialPivotAfterSmartMarkers.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

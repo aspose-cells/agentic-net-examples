@@ -1,72 +1,72 @@
-// Title: C# Aspose.Cells – Find and Highlight Overlapping Cells Using Range.Intersect
-// Description: Creates a workbook, defines ranges A5:B15 and B10:C20, retrieves their intersection with the Range.Intersect method, displays the intersected address, applies a light‑green fill, and saves the file as IntersectResult.xlsx.
-// Keywords: Aspose.Cells Range.Intersect C# | overlapping cells Excel | highlight intersected range | C# Excel inter‑section example | Aspose.Cells formatting intersect
-// Common Searches: Aspose.Cells intersect two ranges C# | how to get overlapping cells A5:B15 B10:C20 | highlight intersected cells Aspose.Cells | Range.Intersect null check example
-// Developer Intent: Identify the common cells of two specified ranges and apply visual formatting to them.
-// Use Cases: Apply conditional formatting to the area where two data tables overlap. | Validate user‑defined zones before merging worksheets to avoid data collisions. | Generate a visual cue for intersecting ranges in automated report generation.
-// AI Prompts: Generate C# code with Aspose.Cells that finds the intersection of A5:B15 and B10:C20 and colors the cells yellow. | Explain the behavior of Range.Intersect in Aspose.Cells and how to handle a null return safely. | Show an alternative way to style intersected cells using style inheritance instead of SetStyle.
+// Title: Aspose.Cells C# Intersect Method – Find & Highlight Overlapping Cells (A5:B15 & B10:C20)
+// Description: Creates a workbook, defines ranges A5:B15 and B10:C20, uses the Intersect method to retrieve their common cells, checks for null, applies a yellow background style to the intersected area, and saves the file as IntersectRangesDemo.xlsx.
+// Keywords: Aspose.Cells Intersect C# | overlapping ranges Excel | highlight intersected cells | range intersection Aspose | apply style to range | Excel cell range intersect example
+// Common Searches: Aspose.Cells intersect two ranges C# | How to highlight overlapping cells in Aspose.Cells | C# get common cells between A5:B15 and B10:C20 | Aspose.Cells range intersection null check | Apply background color to intersected range Aspose
+// Developer Intent: Identify the cells that are common to two defined ranges and apply a visual highlight to them.
+// Use Cases: Show the intersecting area of two data blocks by coloring the overlapping cells. | Validate range overlap before performing calculations such as summing only the shared cells. | Log or display the address of the intersected range for reporting or user feedback.
+// AI Prompts: Generate C# code with Aspose.Cells that finds the intersection of ranges A5:B15 and B10:C20, colors the intersected cells yellow, and saves the workbook. | Explain the Intersect method in Aspose.Cells, including how to handle a null result before styling the range. | Provide step‑by‑step instructions to retrieve the address of an intersected range and output it to the console.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsIntersectDemo
+namespace AsposeCellsExamples
 {
-    // Creates a workbook, defines ranges A5:B15 and B10:C20, retrieves their intersection with the Range.Intersect method, displays the intersected address, applies a light‑green fill, and saves the file as IntersectResult.xlsx.
-    class Program
+    // Creates a workbook, defines ranges A5:B15 and B10:C20, uses the Intersect method to retrieve their common cells, checks for null, applies a yellow background style to the intersected area, and saves the file as IntersectRangesDemo.xlsx.
+    public class IntersectRangesDemo
     {
-        static void Main()
+        public static void Run()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook and get the first worksheet's cells
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
                 Cells cells = worksheet.Cells;
 
-                // Populate some sample data (optional, just for visualization)
-                for (int row = 4; row <= 19; row++) // rows 5 to 20 (zero‑based index)
-                {
-                    for (int col = 0; col <= 2; col++) // columns A (0) to C (2)
-                    {
-                        cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                    }
-                }
+                // Create the first range A5:B15
+                AsposeRange range1 = cells.CreateRange("A5", "B15");
 
-                // Create the two ranges to be intersected
-                // Range A5:B15  => rows 4‑14, columns 0‑1
-                AsposeRange rangeA = cells.CreateRange("A5", "B15");
-                // Range B10:C20 => rows 9‑19, columns 1‑2
-                AsposeRange rangeB = cells.CreateRange("B10", "C20");
+                // Create the second range B10:C20
+                AsposeRange range2 = cells.CreateRange("B10", "C20");
 
-                // Use the Intersect method to get the overlapping area
-                AsposeRange intersectRange = rangeA.Intersect(rangeB);
+                // Get the rectangular intersection of the two ranges
+                AsposeRange intersectRange = range1.Intersect(range2);
 
+                // If an intersection exists, display its address and highlight it
                 if (intersectRange != null)
                 {
-                    // Output the address of the intersected range
-                    Console.WriteLine("Intersected range address: " + intersectRange.Address);
+                    Console.WriteLine("Intersected range: " + intersectRange.Address);
 
-                    // Highlight the intersected cells with a background color
+                    // Apply a yellow background to the intersected cells
                     Style highlight = workbook.CreateStyle();
-                    highlight.ForegroundColor = Color.LightGreen;
+                    highlight.ForegroundColor = Color.Yellow;
                     highlight.Pattern = BackgroundType.Solid;
                     intersectRange.SetStyle(highlight);
                 }
                 else
                 {
-                    Console.WriteLine("The ranges do not intersect.");
+                    Console.WriteLine("The specified ranges do not intersect.");
                 }
 
-                // Save the workbook to verify the result
-                workbook.Save("IntersectResult.xlsx");
-                Console.WriteLine("Workbook saved as IntersectResult.xlsx");
+                // Save the workbook with the highlighted intersection
+                workbook.Save("IntersectRangesDemo.xlsx");
+                Console.WriteLine("Workbook saved as IntersectRangesDemo.xlsx");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            IntersectRangesDemo.Run();
         }
     }
 }

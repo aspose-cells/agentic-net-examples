@@ -1,62 +1,68 @@
-// Title: Change individual chart theme colors with Workbook.SetThemeColor in Aspose.Cells for .NET
-// Description: Demonstrates how to modify the workbook's Theme.ColorScheme (Accent1, Accent2, Text1, Hyperlink, etc.) using Workbook.SetThemeColor so that a column chart automatically adopts the new colors, then saves the file as an Excel workbook.
-// Keywords: Aspose.Cells | C# | .NET | Workbook.SetThemeColor | ThemeColorType | chart theme colors | modify Excel theme programmatically | column chart color palette | brand colors in Excel | update workbook theme scheme
-// Common Searches: Aspose.Cells change chart theme colors | SetThemeColor example C# | how to update Accent1 Accent2 in Excel with Aspose | modify workbook theme color scheme programmatically | chart series inherit workbook theme Aspose.Cells
-// Developer Intent: The developer wants to programmatically adjust specific theme colors (e.g., Accent1, Accent2) so that chart series reflect a custom color palette without setting each series color individually.
-// Use Cases: Apply a corporate brand palette by redefining Accent1 and Accent2 before generating charts. | Create themed reports where chart colors, text, and hyperlinks follow a unified style defined in the workbook theme. | Generate multiple workbooks with consistent visual branding by updating the theme once rather than styling each chart element.
-// AI Prompts: Show how to change Accent3 and Accent4 theme colors for a chart using Aspose.Cells. | Provide code to reset all workbook theme colors to their default values after modification. | Explain whether existing charts need a refresh after calling Workbook.SetThemeColor and how the change propagates.
+// Title: Aspose.Cells .NET – Change Individual Chart Theme Colors with SetThemeColor
+// Description: Demonstrates how to create a workbook, add sample data, insert a column chart, and customize specific theme colors (Accent1, Accent2, Text1, Background1) using the Workbook.SetThemeColor method, which updates the chart's Theme.ColorScheme before saving the file.
+// Keywords: Aspose.Cells set theme color | modify chart theme colors .NET | Workbook.SetThemeColor example | custom Excel theme palette Aspose | change Accent1 Accent2 colors programmatically | Theme.ColorScheme Aspose.Cells | C# chart color customization | Excel theme color API
+// Common Searches: how to change chart theme colors with Aspose.Cells | Aspose.Cells SetThemeColor C# example | customize Excel theme palette programmatically | change Accent1 color in Aspose.Cells workbook | update Theme.ColorScheme for a chart
+// Developer Intent: Apply custom RGB values to individual theme colors so that a chart inherits the new palette when the workbook is generated.
+// Use Cases: Align chart colors with corporate branding by setting Accent1 and Accent2 to brand-specific shades. | Improve accessibility of generated reports by adjusting Text1 and Background1 contrast colors. | Produce localized versions of a spreadsheet with region‑specific theme palettes without manual editing.
+// AI Prompts: Show C# code that changes Accent1, Accent2, Text1, and Background1 theme colors for a chart using Aspose.Cells. | Explain how to retrieve and edit the Theme.ColorScheme of a workbook after it has been created. | Provide a step‑by‑step guide to apply custom RGB values to theme colors so existing charts update automatically.
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
+using System.Drawing;
 
-namespace AsposeCellsThemeDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to modify the workbook's Theme.ColorScheme (Accent1, Accent2, Text1, Hyperlink, etc.) using Workbook.SetThemeColor so that a column chart automatically adopts the new colors, then saves the file as an Excel workbook.
+    // Demonstrates how to create a workbook, add sample data, insert a column chart, and customize specific theme colors (Accent1, Accent2, Text1, Background1) using the Workbook.SetThemeColor method, which updates the chart's Theme.ColorScheme before saving the file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["C1"].PutValue("Series2");
-
-            for (int i = 2; i <= 6; i++)
+            try
             {
-                sheet.Cells[$"A{i}"].PutValue("Cat " + (i - 1));
-                sheet.Cells[$"B{i}"].PutValue(i * 10);
-                sheet.Cells[$"C{i}"].PutValue(i * 15);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data for the chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["A2"].PutValue("Jan");
+                sheet.Cells["A3"].PutValue("Feb");
+                sheet.Cells["A4"].PutValue("Mar");
+
+                sheet.Cells["B1"].PutValue("Series1");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["B4"].PutValue(30);
+
+                sheet.Cells["C1"].PutValue("Series2");
+                sheet.Cells["C2"].PutValue(15);
+                sheet.Cells["C3"].PutValue(25);
+                sheet.Cells["C4"].PutValue(35);
+
+                // Add a column chart
+                int chartIdx = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
+                Chart chart = sheet.Charts[chartIdx];
+
+                // Set the data range for the series
+                chart.NSeries.Add("B2:C4", true);
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Modify theme colors that affect the chart
+                workbook.SetThemeColor(ThemeColorType.Accent1, Color.FromArgb(0, 128, 128));      // teal
+                workbook.SetThemeColor(ThemeColorType.Accent2, Color.FromArgb(255, 165, 0));    // orange
+                workbook.SetThemeColor(ThemeColorType.Text1, Color.FromArgb(64, 64, 64));       // dark gray
+                workbook.SetThemeColor(ThemeColorType.Background1, Color.FromArgb(255, 255, 200)); // light yellow
+
+                // Save the workbook
+                string outputPath = "ChartWithCustomThemeColors.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Add a column chart
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 8, 0, 25, 15);
-            Chart chart = sheet.Charts[chartIdx];
-
-            // Set the data range for the chart
-            chart.NSeries.Add("B1:C6", true);
-            chart.NSeries.CategoryData = "A2:A6";
-
-            // Initially use theme colors for the series (default Accent1 and Accent2)
-            // No explicit color assignment needed; they inherit from the workbook theme.
-
-            // Modify individual theme colors that the chart will use
-            // Change Accent1 to a deep orange and Accent2 to a teal color
-            workbook.SetThemeColor(ThemeColorType.Accent1, Color.FromArgb(255, 140, 0)); // Deep orange
-            workbook.SetThemeColor(ThemeColorType.Accent2, Color.FromArgb(0, 128, 128)); // Teal
-
-            // Optionally modify other theme entries, e.g., Text1 and Hyperlink
-            workbook.SetThemeColor(ThemeColorType.Text1, Color.DarkSlateGray);
-            workbook.SetThemeColor(ThemeColorType.Hyperlink, Color.MediumPurple);
-
-            // Save the workbook to verify that the chart reflects the new theme colors
-            workbook.Save("ChartWithModifiedThemeColors.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

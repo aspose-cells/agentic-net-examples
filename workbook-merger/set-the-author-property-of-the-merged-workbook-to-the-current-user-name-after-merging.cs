@@ -1,10 +1,10 @@
-// Title: C# – Merge Excel workbooks with Aspose.Cells and set Author to current Windows user
-// Description: Shows how to load two .xlsx files, copy every worksheet from a source workbook into a target workbook, set the merged workbook's Author property to Environment.UserName, and save the result.
-// Keywords: Aspose.Cells merge workbooks C# | set workbook author programmatically | Workbook.Settings.Author | Environment.UserName Excel metadata | combine Excel files Aspose.Cells | update document properties after merge
-// Common Searches: how to set author of merged Excel file using Aspose.Cells | C# merge two workbooks and assign current user as author | Aspose.Cells copy worksheets and update metadata | set document properties after workbook merge .NET
-// Developer Intent: Assign the current Windows user name to the Author property of a workbook after merging worksheets.
-// Use Cases: Consolidate departmental reports while automatically recording the user who performed the merge for audit trails. | Run a nightly job that aggregates daily logs into a single workbook and tags the file with the service account name. | Create a reusable template that merges source workbooks and updates ownership information via the Author field.
-// AI Prompts: Generate C# code that merges two Excel workbooks with Aspose.Cells and sets Workbook.Settings.Author to Environment.UserName. | Provide an example that copies all worksheets from a source workbook to a target workbook, then updates the Author, Title, and Company properties before saving. | Explain error handling for missing source files while still ensuring the Author property is set correctly after a merge.
+// Title: Set Workbook Author to Current User After Merging Excel Files with Aspose.Cells for .NET
+// Description: This C# example demonstrates how to merge two Excel workbooks using Aspose.Cells, remove the placeholder sheet created by the default constructor, and assign the logged‑in Windows user name to both Settings.Author and BuiltInDocumentProperties.Author before saving the combined file as MergedWorkbook.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | workbook merge | set author property | Environment.UserName | built‑in document properties | remove default worksheet | Excel metadata
+// Common Searches: Aspose.Cells set author property C# | merge multiple Excel files and set author | remove default sheet after workbook merge Aspose.Cells | Environment.UserName workbook author Aspose | update built‑in document properties after merging workbooks
+// Developer Intent: Assign the current Windows user as the Author metadata of a workbook that results from merging multiple Excel files.
+// Use Cases: Record the person who performed a batch merge of Excel workbooks for audit trails. | Ensure consistent author information across Excel viewers by updating both Settings.Author and BuiltInDocumentProperties.Author. | Automatically clean up the empty worksheet added by the Workbook constructor before saving the merged file.
+// AI Prompts: Generate C# code using Aspose.Cells that merges two Excel workbooks, deletes the default empty worksheet, and sets the merged workbook's Author to Environment.UserName. | Show how to copy worksheets from source workbooks into a new workbook and then update Settings.Author and BuiltInDocumentProperties.Author. | Explain step‑by‑step how to modify built‑in document properties of an Aspose.Cells workbook after merging worksheets.
 
 using System;
 using System.IO;
@@ -12,48 +12,77 @@ using Aspose.Cells;
 
 namespace AsposeCellsMergeExample
 {
-    // Shows how to load two .xlsx files, copy every worksheet from a source workbook into a target workbook, set the merged workbook's Author property to Environment.UserName, and save the result.
+    // This C# example demonstrates how to merge two Excel workbooks using Aspose.Cells, remove the placeholder sheet created by the default constructor, and assign the logged‑in Windows user name to both Settings.Author and BuiltInDocumentProperties.Author before saving the combined file as MergedWorkbook.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Define file paths
-                string targetPath = "Source1.xlsx";
-                string sourcePath = "Source2.xlsx";
-                string outputPath = "MergedWorkbook.xlsx";
+                // Create a new workbook that will hold the merged content
+                Workbook mergedWorkbook = new Workbook();
 
-                // Verify that input files exist
-                if (!File.Exists(targetPath))
-                    throw new FileNotFoundException($"Target workbook not found: {targetPath}");
-                if (!File.Exists(sourcePath))
-                    throw new FileNotFoundException($"Source workbook not found: {sourcePath}");
-
-                // Load the target workbook
-                Workbook targetWorkbook = new Workbook(targetPath);
-
-                // Load the source workbook to be merged
-                Workbook sourceWorkbook = new Workbook(sourcePath);
-
-                // Merge worksheets from source into target
-                foreach (Worksheet sourceSheet in sourceWorkbook.Worksheets)
+                // Load the first source workbook if it exists
+                Workbook source1 = null;
+                if (File.Exists("Source1.xlsx"))
                 {
-                    // Add a copy of each source worksheet to the target workbook using the sheet name
-                    targetWorkbook.Worksheets.AddCopy(sourceSheet.Name);
+                    source1 = new Workbook("Source1.xlsx");
+                }
+                else
+                {
+                    Console.WriteLine("Source1.xlsx not found.");
                 }
 
-                // Set the author of the merged workbook
-                targetWorkbook.Settings.Author = Environment.UserName;
+                // Load the second source workbook if it exists
+                Workbook source2 = null;
+                if (File.Exists("Source2.xlsx"))
+                {
+                    source2 = new Workbook("Source2.xlsx");
+                }
+                else
+                {
+                    Console.WriteLine("Source2.xlsx not found.");
+                }
+
+                // Helper to copy worksheets from a source workbook to the merged workbook
+                void CopyWorksheets(Workbook source)
+                {
+                    if (source == null) return;
+
+                    foreach (Worksheet sheet in source.Worksheets)
+                    {
+                        // Add a new empty worksheet to the merged workbook
+                        int newIndex = mergedWorkbook.Worksheets.Add();
+                        Worksheet newSheet = mergedWorkbook.Worksheets[newIndex];
+
+                        // Copy the source sheet's content into the new sheet
+                        sheet.Copy(newSheet);
+                    }
+                }
+
+                // Copy worksheets from both source workbooks
+                CopyWorksheets(source1);
+                CopyWorksheets(source2);
+
+                // Remove the default empty worksheet that was created with the new workbook
+                if (mergedWorkbook.Worksheets.Count > 0 &&
+                    mergedWorkbook.Worksheets[0].Cells.MaxDataColumn == -1 &&
+                    mergedWorkbook.Worksheets[0].Cells.MaxDataRow == -1)
+                {
+                    mergedWorkbook.Worksheets.RemoveAt(0);
+                }
+
+                // Set the author of the merged workbook to the current user name
+                mergedWorkbook.Settings.Author = Environment.UserName;
+                mergedWorkbook.BuiltInDocumentProperties.Author = Environment.UserName;
 
                 // Save the merged workbook
-                targetWorkbook.Save(outputPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Workbooks merged successfully. Output saved to '{outputPath}'.");
+                mergedWorkbook.Save("MergedWorkbook.xlsx", SaveFormat.Xlsx);
+                Console.WriteLine("Merged workbook saved successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

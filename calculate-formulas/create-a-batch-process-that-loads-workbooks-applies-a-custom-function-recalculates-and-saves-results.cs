@@ -1,72 +1,112 @@
-// Title: Batch recalculate Excel workbooks with a custom DOUBLE(x) function using Aspose.Cells for .NET
-// Description: A C# utility that scans a source directory, loads each .xls or .xlsx file with Aspose.Cells, registers a custom calculation engine implementing DOUBLE(x) = x × 2, recalculates all formulas, and saves the updated workbooks to a target folder while preserving original file names.
-// Keywords: Aspose.Cells batch processing | C# custom calculation engine | Excel workbook recalculate | DOUBLE custom function | load and save Excel files .NET | process multiple workbooks programmatically | calculate formulas with custom engine | directory based Excel automation
-// Common Searches: Aspose.Cells custom function example C# | Batch recalculate formulas in Excel files using Aspose.Cells | How to add a DOUBLE(x) function to Aspose.Cells calculation engine | Save processed workbooks to a different folder Aspose.Cells | C# loop through Excel files and recalculate formulas
-// Developer Intent: Create a C# batch routine that loads each workbook, applies a custom DOUBLE function during formula calculation, and writes the refreshed files to an output directory.
-// Use Cases: Nightly re‑calculation of financial models where a custom scaling factor (DOUBLE) must be applied before archiving. | Automated processing of daily sales reports that contain the DOUBLE function, updating values and depositing the results in a reporting folder. | Bulk adjustment of engineering spreadsheets in a shared drive, applying a custom multiplier and saving the modified files for downstream analysis.
-// AI Prompts: Generate C# code that adds a SUMSQ(x,y) custom function to the existing DoubleFunctionEngine and updates the batch loop to use it. | Explain how Aspose.Cells invokes CustomEngine during Workbook.CalculateFormula and suggest debugging steps for parameter conversion issues. | Write NUnit tests for DoubleFunctionEngine verifying that DOUBLE returns twice the input for integers, doubles, and numeric strings.
+// Title: Batch recalculate multiple Excel workbooks with a custom MYFUNC engine using Aspose.Cells for .NET
+// Description: Iterates over a collection of Excel files, loads each workbook with Aspose.Cells, recalculates all formulas using a custom AbstractCalculationEngine that implements the MYFUNC function, and saves the updated workbooks to a separate folder while handling missing files and runtime errors.
+// Keywords: Aspose.Cells | C# batch processing | custom calculation engine | MYFUNC function | CalculateFormula | multiple workbooks | Excel automation | AbstractCalculationEngine | recalculate formulas | save processed Excel files
+// Common Searches: Aspose.Cells batch recalculate Excel files C# | custom function MYFUNC Aspose.Cells example | process multiple workbooks with custom engine .NET | how to use AbstractCalculationEngine in Aspose.Cells | save recalculated workbooks to a new folder
+// Developer Intent: Load several Excel files, recalculate all formulas with a custom MYFUNC engine, and write the results to an output directory.
+// Use Cases: Nightly batch job that updates financial models containing a proprietary MYFUNC across dozens of spreadsheets. | Automated preparation of monthly reports that rely on custom calculations before distribution to stakeholders. | Migration of a legacy spreadsheet library to a standardized format while preserving custom‑function results.
+// AI Prompts: Generate C# code that adds type‑checking and logging for unsupported parameters in MyCustomEngine.Calculate. | Show how to extend MyCustomEngine to implement a new custom function SUMIFX that accepts a range and a criterion. | Create a unit test for MyCustomEngine.Calculate that verifies MYFUNC correctly sums values from both scalar arguments and cell ranges.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace BatchCustomFunctionDemo
+// Iterates over a collection of Excel files, loads each workbook with Aspose.Cells, recalculates all formulas using a custom AbstractCalculationEngine that implements the MYFUNC function, and saves the updated workbooks to a separate folder while handling missing files and runtime errors.
+class Program
 {
-    // Custom calculation engine that implements a simple function DOUBLE(x) = x * 2
-    // A C# utility that scans a source directory, loads each .xls or .xlsx file with Aspose.Cells, registers a custom calculation engine implementing DOUBLE(x) = x × 2, recalculates all formulas, and saves the updated workbooks to a target folder while preserving original file names.
-    public class DoubleFunctionEngine : AbstractCalculationEngine
+    static void Main()
     {
-        public override void Calculate(CalculationData data)
+        // Input workbook file paths
+        var inputFiles = new List<string>
         {
-            // Check if the function being evaluated is our custom function
-            if (data.FunctionName.Equals("DOUBLE", StringComparison.OrdinalIgnoreCase))
+            "Input1.xlsx",
+            "Input2.xlsx"
+        };
+
+        // Output folder for processed workbooks
+        string outputFolder = "Processed";
+        Directory.CreateDirectory(outputFolder);
+
+        // Custom calculation engine instance
+        var customEngine = new MyCustomEngine();
+
+        // Calculation options that use the custom engine
+        var calcOptions = new CalculationOptions
+        {
+            CustomEngine = customEngine
+        };
+
+        // Process each workbook
+        foreach (var inputPath in inputFiles)
+        {
+            try
             {
-                // Get the first parameter value
-                object param = data.GetParamValue(0);
-                double value = Convert.ToDouble(param);
-                // Set the calculated result
-                data.CalculatedValue = value * 2;
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    continue;
+                }
+
+                // Load workbook
+                Workbook wb = new Workbook(inputPath);
+
+                // Recalculate all formulas using the custom engine
+                wb.CalculateFormula(calcOptions);
+
+                // Build output file name
+                string fileName = Path.GetFileNameWithoutExtension(inputPath);
+                string outputPath = Path.Combine(outputFolder, $"{fileName}_Processed.xlsx");
+
+                // Save the processed workbook
+                wb.Save(outputPath);
+                Console.WriteLine($"Processed workbook saved to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing '{inputPath}': {ex.Message}");
             }
         }
     }
 
-    class Program
+    // Custom calculation engine implementing a sample function MYFUNC
+    private class MyCustomEngine : AbstractCalculationEngine
     {
-        static void Main()
+        public override void Calculate(CalculationData data)
         {
-            // Folder containing source workbooks
-            string sourceFolder = @"C:\InputWorkbooks";
-            // Folder where processed workbooks will be saved
-            string outputFolder = @"C:\OutputWorkbooks";
-
-            // Ensure output directory exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Get all Excel files in the source folder (xlsx and xls)
-            string[] files = Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly);
-            foreach (string filePath in files)
+            // Handle custom function named MYFUNC
+            if (data.FunctionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
             {
-                // Load workbook using the string constructor (load rule)
-                Workbook workbook = new Workbook(filePath);
+                double sum = 0;
 
-                // Prepare calculation options with our custom engine
-                CalculationOptions calcOptions = new CalculationOptions
+                // Iterate through all parameters of the function
+                for (int i = 0; i < data.ParamCount; i++)
                 {
-                    CustomEngine = new DoubleFunctionEngine()
-                };
+                    object param = data.GetParamValue(i);
 
-                // Recalculate all formulas (including custom functions) in the workbook
-                workbook.CalculateFormula(calcOptions);
+                    // Direct numeric value
+                    if (param is double d)
+                    {
+                        sum += d;
+                    }
+                    // Parameter is a range (ReferredArea)
+                    else if (param is ReferredArea area)
+                    {
+                        for (int r = area.StartRow; r <= area.EndRow; r++)
+                        {
+                            for (int c = area.StartColumn; c <= area.EndColumn; c++)
+                            {
+                                object val = area.GetValue(r, c);
+                                if (val is double dv)
+                                    sum += dv;
+                            }
+                        }
+                    }
+                }
 
-                // Build output file path (preserve original name)
-                string fileName = Path.GetFileName(filePath);
-                string outputPath = Path.Combine(outputFolder, fileName);
-
-                // Save the processed workbook using the Save(string) method (save rule)
-                workbook.Save(outputPath);
+                // Set the result of the custom function
+                data.CalculatedValue = sum;
             }
-
-            Console.WriteLine("Batch processing completed.");
         }
     }
 }

@@ -1,46 +1,69 @@
-// Title: C# Aspose.Cells: Link TextBox Shape to Cell, Apply SUBSTITUTE Formula, Update Shape Text
-// Description: Demonstrates how to create a workbook, add a TextBox shape, link it to cell B2, set a SUBSTITUTE formula that changes "Hello World" to "Hello Aspose", recalculate formulas, refresh the shape’s displayed text, verify the result, and save the file as LinkedShapeSubstitute.xlsx.
-// Keywords: Aspose.Cells | C# shape linking | SetLinkedCell | UpdateSelectedValue | SUBSTITUTE function | Excel textbox shape | linked cell formula | recalculate formulas | .NET Aspose.Cells example | dynamic shape text
-// Common Searches: Aspose.Cells link textbox to cell | SetLinkedCell C# example | Update shape text after formula Aspose.Cells | SUBSTITUTE formula in linked cell | Refresh linked shape value .NET | How to bind shape to cell in Aspose.Cells
-// Developer Intent: Link a TextBox shape to a cell containing a SUBSTITUTE formula and refresh the shape’s text.
-// Use Cases: Generate dynamic labels in Excel reports by linking shapes to cells with text‑manipulating formulas. | Build dashboards where changing a formula automatically updates chart or textbox annotations. | Create localized worksheets by substituting language strings in linked shapes. | Automate report generation where shape captions reflect calculated values without manual editing.
-// AI Prompts: Write C# code using Aspose.Cells to add a TextBox shape, link it to a cell, assign a SUBSTITUTE formula, recalculate, and update the shape’s displayed text. | Explain the interaction between SetLinkedCell and UpdateSelectedValue for reflecting formula results in a shape. | Provide a verification method to confirm that a shape’s text matches the result of a SUBSTITUTE formula in the linked cell. | Show how to modify SUBSTITUTE parameters at runtime and automatically refresh linked shapes.
+// Title: Aspose.Cells .NET: Link a TextBox Shape to a Cell with SUBSTITUTE Formula and Auto‑Update Text
+// Description: Demonstrates how to add a TextBox shape, link it to a cell containing a SUBSTITUTE formula, recalculate the workbook, and verify that the shape’s displayed text updates when the source cell changes. Includes error handling and saving the workbook.
+// Keywords: Aspose.Cells | C# | .NET | SetLinkedCell | linked shape | textbox shape | SUBSTITUTE formula | dynamic shape text | workbook recalculation | cell formula evaluation | example code
+// Common Searches: Aspose.Cells link shape to cell example | C# set linked textbox to formula cell | update shape text after cell value change Aspose.Cells | SUBSTITUTE function with linked shape .NET | how to refresh linked shape in Aspose.Cells
+// Developer Intent: Show how to bind a TextBox shape to a cell that uses the SUBSTITUTE function and ensure the shape reflects formula results after any source‑cell modification.
+// Use Cases: Display transformed data (e.g., character replacement) directly on a shape for visual reports. | Create dashboards where shapes automatically show the latest formula outcomes without manual refresh. | Generate workbooks with labels or annotations that stay synchronized with underlying cell values.
+// AI Prompts: Write C# code with Aspose.Cells to link a TextBox shape to a cell that contains a SUBSTITUTE formula and verify the shape text after changing the source cell. | Explain the role of Shape.SetLinkedCell and Workbook.CalculateFormula in keeping linked shapes up‑to‑date. | Suggest best practices for error handling when linking shapes to formula cells in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, add a TextBox shape, link it to cell B2, set a SUBSTITUTE formula that changes "Hello World" to "Hello Aspose", recalculate formulas, refresh the shape’s displayed text, verify the result, and save the file as LinkedShapeSubstitute.xlsx.
-class Program
+namespace AsposeCellsLinkShapeExample
 {
-    static void Main()
+    // Demonstrates how to add a TextBox shape, link it to a cell containing a SUBSTITUTE formula, recalculate the workbook, and verify that the shape’s displayed text updates when the source cell changes. Includes error handling and saving the workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a text box shape to the worksheet
-        // Parameters: upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn, upperLeftPixel, upperLeftPixel2
-        Shape shape = sheet.Shapes.AddTextBox(1, 1, 3, 3, 150, 40);
-        shape.Text = "Initial Text";
+                // Add a text box shape to the worksheet
+                // Parameters: upper left row, upper left column, row offset, column offset, height, width
+                Shape shape = sheet.Shapes.AddTextBox(2, 2, 0, 0, 100, 200);
 
-        // Link the shape to cell B2 (row index 1, column index 1)
-        shape.SetLinkedCell("B2", true, true);
+                // Link the shape to cell B1 (the shape will display the value of B1)
+                shape.SetLinkedCell("B1", false, false);
 
-        // Set a formula in the linked cell that uses SUBSTITUTE to replace "World" with "Aspose"
-        Cell linkedCell = sheet.Cells["B2"];
-        linkedCell.Formula = "SUBSTITUTE(\"Hello World\",\"World\",\"Aspose\")";
+                // Put initial value in A1
+                sheet.Cells["A1"].PutValue("apple");
 
-        // Recalculate formulas so the linked cell gets the new value
-        workbook.CalculateFormula();
+                // Set formula in B1 that substitutes character 'a' with 'b' in A1
+                sheet.Cells["B1"].Formula = "=SUBSTITUTE(A1,\"a\",\"b\")";
 
-        // Update the shape's displayed text from the linked cell value
-        shape.UpdateSelectedValue();
+                // Recalculate the workbook so that formulas are evaluated
+                workbook.CalculateFormula();
 
-        // Verify the updated text (should be "Hello Aspose")
-        Console.WriteLine("Shape text after update: " + shape.Text);
+                // Verify that the shape text reflects the substituted value
+                Console.WriteLine("After first calculation:");
+                Console.WriteLine($"Cell A1 value: {sheet.Cells["A1"].StringValue}");
+                Console.WriteLine($"Cell B1 (formula result): {sheet.Cells["B1"].StringValue}");
+                Console.WriteLine($"Shape linked text: {shape.Text}");
 
-        // Save the workbook
-        workbook.Save("LinkedShapeSubstitute.xlsx");
+                // Change the source value in A1
+                sheet.Cells["A1"].PutValue("banana");
+
+                // Recalculate again
+                workbook.CalculateFormula();
+
+                // Verify updated text in the shape
+                Console.WriteLine("\nAfter updating A1:");
+                Console.WriteLine($"Cell A1 value: {sheet.Cells["A1"].StringValue}");
+                Console.WriteLine($"Cell B1 (formula result): {sheet.Cells["B1"].StringValue}");
+                Console.WriteLine($"Shape linked text: {shape.Text}");
+
+                // Save the workbook
+                workbook.Save("LinkedShapeWithSubstitute.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

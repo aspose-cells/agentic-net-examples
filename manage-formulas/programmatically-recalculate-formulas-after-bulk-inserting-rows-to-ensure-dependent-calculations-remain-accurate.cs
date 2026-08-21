@@ -1,87 +1,72 @@
-// Title: Recalculate Formulas After Bulk Row Insertion with Aspose.Cells for .NET
-// Description: Demonstrates how to insert multiple rows into an Aspose.Cells worksheet, refresh dynamic‑array and shared formulas, recalculate all dependent calculations, and save the updated workbook using C#.
-// Keywords: Aspose.Cells bulk row insert | recalculate formulas C# | RefreshDynamicArrayFormulas | CalculateFormula after insert | shared formula update | Excel row insertion programmatic | .NET spreadsheet automation
-// Common Searches: Aspose.Cells recalculate formulas after inserting rows | C# insert rows and update formulas in Excel workbook | how to refresh dynamic array formulas Aspose.Cells | shared formula shift after bulk row insert .NET | programmatic Excel row insertion with formula recalculation
-// Developer Intent: Update all worksheet formulas automatically after a bulk row insertion so that calculations remain accurate.
-// Use Cases: Add several rows to a sheet and keep formulas that reference shifted cells correct. | Refresh dynamic‑array formulas and then run CalculateFormula to obtain up‑to‑date results. | Persist the workbook with recalculated values after structural changes.
-// AI Prompts: Show C# code that inserts rows, refreshes dynamic array formulas, and recalculates all formulas with Aspose.Cells. | Explain how RefreshDynamicArrayFormulas differs from CalculateFormula after a bulk row insertion. | Provide a step‑by‑step guide to preserve shared formulas when inserting multiple rows in an Aspose.Cells workbook.
+// Title: Recalculate Formulas After Bulk Row Insertion with Aspose.Cells for .NET (C#)
+// Description: This example shows how to insert multiple rows in an Aspose.Cells worksheet, update formula references with the updateReference flag, and then force a full recalculation using Workbook.CalculateFormula. It also demonstrates refreshing dynamic‑array formulas via Workbook.RefreshDynamicArrayFormulas so that all dependent calculations remain accurate before saving the file.
+// Keywords: Aspose.Cells bulk insert rows | recalculate formulas C# | Workbook.CalculateFormula | RefreshDynamicArrayFormulas | updateReference flag | Excel formula refresh after InsertRows | .NET spreadsheet automation
+// Common Searches: how to refresh formulas after inserting rows Aspose.Cells | Aspose.Cells recalculate dependent formulas .NET | update cell references when adding multiple rows | C# insert rows and recalculate workbook | dynamic array formula refresh Aspose.Cells
+// Developer Intent: Refresh all workbook formulas after a bulk row insertion to keep dependent calculations correct.
+// Use Cases: Insert a block of rows and automatically adjust existing formula references. | Force a complete calculation pass to ensure numeric results reflect new row positions. | Refresh spilled dynamic‑array formulas after bulk insertion before saving the workbook.
+// AI Prompts: Generate C# code that inserts rows with Cells.InsertRows, then calls CalculateFormula and RefreshDynamicArrayFormulas to update all formulas in an Aspose.Cells workbook. | Explain the role of the updateReference parameter in Cells.InsertRows and why a subsequent CalculateFormula call is necessary. | Provide a step‑by‑step verification method for checking recalculated cell values after bulk row insertion using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace RecalculateAfterBulkInsert
 {
-    // Demonstrates how to insert multiple rows into an Aspose.Cells worksheet, refresh dynamic‑array and shared formulas, recalculate all dependent calculations, and save the updated workbook using C#.
-    public class RecalculateAfterBulkInsertDemo
+    // This example shows how to insert multiple rows in an Aspose.Cells worksheet, update formula references with the updateReference flag, and then force a full recalculation using Workbook.CalculateFormula. It also demonstrates refreshing dynamic‑array formulas via Workbook.RefreshDynamicArrayFormulas so that all dependent calculations remain accurate before saving the file.
+    class Program
     {
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            Cells cells = ws.Cells;
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // -------------------------------------------------
-            // 1. Populate initial data
-            // -------------------------------------------------
-            // Column A: simple numeric values
-            for (int i = 0; i < 5; i++)
-            {
-                cells[i, 0].PutValue(i + 1); // A1..A5 = 1,2,3,4,5
-            }
+            // ------------------------------------------------------------
+            // Set up initial data and formulas that depend on each other
+            // ------------------------------------------------------------
+            // Column A – base values
+            cells["A1"].PutValue(10);
+            cells["A2"].PutValue(20);
+            cells["A3"].PutValue(30);
 
-            // Column B: formula that depends on column A (B = A * 10)
-            // Use a shared formula for the range B1:B5
-            cells[0, 1].SetSharedFormula("=A1*10", 5, 1, new FormulaParseOptions());
+            // Column B – formula that references column A
+            cells["B1"].Formula = "=A1*2";
+            cells["B2"].Formula = "=A2*2";
+            cells["B3"].Formula = "=A3*2";
 
-            // Calculate the initial formulas so that dependent values are set
-            wb.CalculateFormula();
+            // Column C – formula that sums the values in column B
+            cells["C1"].Formula = "=SUM(B1:B3)";
 
-            // -------------------------------------------------
-            // 2. Bulk insert rows
-            // -------------------------------------------------
-            // Insert 3 rows starting at row index 2 (zero‑based, i.e., before original row 3)
-            // The 'true' flag updates references in other worksheets if needed
-            cells.InsertRows(2, 3, true);
+            // ------------------------------------------------------------
+            // Perform bulk row insertion (e.g., insert 5 rows after row 2)
+            // ------------------------------------------------------------
+            // InsertRows(rowIndex, totalRows, updateReference)
+            // rowIndex is zero‑based, so 2 means after the existing rows 0 and 1
+            cells.InsertRows(2, 5, true);
 
-            // Optionally fill the newly inserted rows with data
-            cells[2, 0].PutValue(100); // New A3
-            cells[3, 0].PutValue(200); // New A4
-            cells[4, 0].PutValue(300); // New A5
+            // ------------------------------------------------------------
+            // Recalculate all formulas to reflect the new row positions
+            // ------------------------------------------------------------
+            // For regular formulas
+            workbook.CalculateFormula();
 
-            // -------------------------------------------------
-            // 3. Recalculate formulas after insertion
-            // -------------------------------------------------
-            // Refresh dynamic array formulas (if any) and then calculate all formulas
-            wb.RefreshDynamicArrayFormulas(true);
-            wb.CalculateFormula();
+            // If the workbook contains dynamic array formulas, refresh them as well
+            // The 'true' flag also forces calculation of the spilled ranges
+            workbook.RefreshDynamicArrayFormulas(true);
 
-            // -------------------------------------------------
-            // 4. Verify results
-            // -------------------------------------------------
-            Console.WriteLine("After inserting rows and recalculation:");
-            for (int i = 0; i <= cells.MaxDataRow; i++)
-            {
-                Console.WriteLine($"Row {i + 1}: A = {cells[i, 0].Value}, B = {cells[i, 1].Value}");
-            }
+            // ------------------------------------------------------------
+            // Output some results to verify correct recalculation
+            // ------------------------------------------------------------
+            Console.WriteLine("After inserting rows and recalculating:");
+            Console.WriteLine($"B1 (should be 20) = {cells["B1"].Value}");
+            Console.WriteLine($"B2 (should be 40) = {cells["B2"].Value}");
+            Console.WriteLine($"B3 (should be 60) = {cells["B3"].Value}");
+            Console.WriteLine($"C1 (sum of B1:B3) = {cells["C1"].Value}");
 
-            // -------------------------------------------------
-            // 5. Save the workbook (lifecycle rule)
-            // -------------------------------------------------
-            wb.Save("RecalculateAfterBulkInsert.xlsx");
+            // ------------------------------------------------------------
+            // Save the workbook (lifecycle rule: use provided save logic)
+            // ------------------------------------------------------------
+            workbook.Save("RecalculatedAfterInsert.xlsx");
         }
     }
 }

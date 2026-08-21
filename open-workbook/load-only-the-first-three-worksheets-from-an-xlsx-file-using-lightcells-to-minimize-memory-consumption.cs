@@ -1,19 +1,39 @@
-// Title: Memory‑Efficiently Load the First Three Worksheets with LightCells in Aspose.Cells for .NET
-// Description: Demonstrates how to create a custom LightCellsDataHandler that processes only the first three worksheets, configure LoadOptions for LightCells mode, load a large XLSX file partially, enumerate the loaded sheets, and save the trimmed workbook.
-// Keywords: Aspose.Cells LightCells | load specific worksheets .NET | partial workbook loading | memory efficient Excel processing | C# LightCellsDataHandler | skip worksheets Aspose | large workbook performance
-// Common Searches: Aspose.Cells load first three sheets | LightCells load selected worksheets | C# memory efficient Excel loading | How to skip worksheets with LightCells | Partial workbook load Aspose.Cells
-// Developer Intent: Load only the first three worksheets of an XLSX file to minimize memory consumption.
-// Use Cases: Extract data from the initial three sheets of a massive workbook without loading the entire file. | Create a lightweight copy of a multi‑sheet workbook that contains only the first three worksheets for downstream analysis. | Generate a quick summary report by processing just the first three sheets, reducing runtime and memory overhead.
-// AI Prompts: Show how to modify the LightCellsDataHandler to load a configurable number of worksheets based on a parameter. | Provide an example of loading worksheets by name using LightCells instead of by index. | Explain how to combine LightCells with streaming to export the first three sheets to CSV files efficiently.
+// Title: C# – Load the First Three Worksheets with LightCells in Aspose.Cells
+// Description: Demonstrates how to use Aspose.Cells LightCells mode with a custom LightCellsDataHandler to load only the first three worksheets of an XLSX file, dramatically lowering memory consumption. The handler’s StartSheet method returns true for the initial three sheets and false for the rest, allowing partial workbook loading in .NET.
+// Keywords: Aspose.Cells LightCells | C# load specific worksheets | partial workbook load | memory optimization Aspose.Cells | LightCellsDataHandler example | .NET Excel streaming | skip worksheets Aspose | GitHub Aspose.Cells sample
+// Common Searches: Aspose.Cells load first three sheets | LightCells load selected worksheets .NET | How to limit workbook loading memory usage | LightCellsDataHandler skip sheets example | Partial Excel file load C# Aspose
+// Developer Intent: Load only the first three worksheets from an XLSX file using LightCells to minimize memory usage.
+// Use Cases: Create a quick summary report by reading just the first three sheets of a massive workbook. | Accelerate data migration scripts that need only the initial worksheets, avoiding unnecessary memory overhead. | Build a web API that processes large Excel uploads but extracts data from the first three sheets to stay within server limits.
+// AI Prompts: Generate a LightCellsDataHandler that loads the first N worksheets of a workbook. | Show how to modify the handler to load worksheets based on their names instead of order. | Explain how to retrieve the actual count of worksheets loaded after using LightCells mode.
 
 using System;
 using Aspose.Cells;
 
-namespace LightCellsFirstThreeSheetsDemo
+// Demonstrates how to use Aspose.Cells LightCells mode with a custom LightCellsDataHandler to load only the first three worksheets of an XLSX file, dramatically lowering memory consumption. The handler’s StartSheet method returns true for the initial three sheets and false for the rest, allowing partial workbook loading in .NET.
+class Program
 {
-    // Custom LightCellsDataHandler that processes only the first three worksheets
-    // Demonstrates how to create a custom LightCellsDataHandler that processes only the first three worksheets, configure LoadOptions for LightCells mode, load a large XLSX file partially, enumerate the loaded sheets, and save the trimmed workbook.
-    public class FirstThreeSheetsHandler : LightCellsDataHandler
+    static void Main()
+    {
+        // Path to the source XLSX file
+        string inputPath = "input.xlsx";
+
+        // Create load options and assign a LightCellsDataHandler that limits loading to the first three sheets
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.LightCellsDataHandler = new FirstThreeSheetsHandler();
+
+        // Load the workbook using the LightCells mode
+        Workbook workbook = new Workbook(inputPath, loadOptions);
+
+        // Display the number of worksheets that were actually loaded
+        Console.WriteLine("Worksheets loaded: " + workbook.Worksheets.Count);
+        for (int i = 0; i < Math.Min(3, workbook.Worksheets.Count); i++)
+        {
+            Console.WriteLine($"Sheet {i + 1}: {workbook.Worksheets[i].Name}");
+        }
+    }
+
+    // LightCellsDataHandler implementation that processes only the first three worksheets
+    private class FirstThreeSheetsHandler : LightCellsDataHandler
     {
         private int _processedSheets = 0;
 
@@ -25,49 +45,13 @@ namespace LightCellsFirstThreeSheetsDemo
                 _processedSheets++;
                 return true; // Process this sheet
             }
-            return false; // Skip this sheet
+            return false; // Skip remaining sheets
         }
 
-        // Process all rows
+        // The following methods are required by the interface but are not used for sheet filtering
         public bool StartRow(int rowIndex) => true;
-
-        // Process all rows
         public bool ProcessRow(Row row) => true;
-
-        // Process all cells
         public bool StartCell(int columnIndex) => true;
-
-        // Process all cells
         public bool ProcessCell(Cell cell) => true;
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            // Path to the source workbook
-            string sourcePath = "LargeWorkbook.xlsx";
-
-            // Configure LoadOptions to use LightCells mode with the custom handler
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.LightCellsDataHandler = new FirstThreeSheetsHandler();
-
-            // Load the workbook; only the first three worksheets will be loaded into memory
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-            // Verify the number of loaded worksheets (should be <= 3)
-            Console.WriteLine($"Worksheets loaded: {workbook.Worksheets.Count}");
-
-            // Example: iterate through the loaded sheets and print their names
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                Console.WriteLine($"Sheet: {sheet.Name}");
-            }
-
-            // Save the partially loaded workbook if needed
-            string outputPath = "FirstThreeSheetsOnly.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to: {outputPath}");
-        }
     }
 }

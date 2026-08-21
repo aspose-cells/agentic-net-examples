@@ -1,61 +1,75 @@
-// Title: Tile an Image as Texture in a Rectangle Shape with Aspect Ratio Preservation – Aspose.Cells for .NET (C#)
-// Description: Shows how to insert a rectangle shape into an Excel worksheet using Aspose.Cells for .NET, apply a PNG texture fill, enable tiling, keep the picture’s original proportions via FillPictureType.StackAndScale, and save the workbook.
-// Keywords: Aspose.Cells | C# | texture fill | image tiling | rectangle shape | FillPictureType.StackAndScale | preserve aspect ratio | Excel shape fill | Aspose.Cells example | IsTiling property
-// Common Searches: Aspose.Cells tile image as texture in shape | C# preserve aspect ratio texture fill Aspose.Cells | How to use FillPictureType.StackAndScale with Aspose.Cells | Enable IsTiling for shape fill in Aspose.Cells .NET | Add rectangle shape with texture fill using Aspose.Cells
-// Developer Intent: Apply a tiled picture texture to a rectangle shape in an Excel file while maintaining the image’s original proportions.
-// Use Cases: Create a patterned background for a chart area by tiling a PNG texture within a rectangle. | Design a report header that repeats a logo texture without distortion. | Add a tiled watermark to a printable Excel flyer that keeps its aspect ratio.
-// AI Prompts: Show how to change the tile scaling factor to 0.5 while keeping the image proportions in the provided Aspose.Cells code. | Provide a C# example that applies a tiled JPEG texture to a circular shape using Aspose.Cells for .NET. | Explain how to read the current TextureFill settings of a shape and switch the picture format type from StackAndScale to Stretch.
+// Title: Tile a picture as texture inside a rectangle shape while preserving aspect ratio with Aspose.Cells (C#)
+// Description: Demonstrates how to add a rectangle shape to a workbook, load a PNG image as a texture, enable tiling, keep the image's original aspect ratio using FillPictureType.StackAndScale, optionally scale each tile, and save the file with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells texture fill | C# shape tiling | preserve aspect ratio fill | FillPictureType.StackAndScale | TilePicOption scaling | rectangle shape texture | Aspose.Cells example | image tiling spreadsheet
+// Common Searches: Aspose.Cells tile image inside shape C# | preserve aspect ratio texture fill Aspose.Cells | how to scale tiled picture in Aspose.Cells | FillPictureType options Aspose.Cells .NET | add rectangle shape with texture fill Aspose.Cells
+// Developer Intent: Apply a tiled image texture to a rectangle shape in a spreadsheet while maintaining the image's original proportions.
+// Use Cases: Create a repeating logo background for a report header without distortion. | Design patterned cells or banners where the texture repeats uniformly. | Generate custom worksheet graphics that require scaled tiles while keeping the source image's aspect ratio.
+// AI Prompts: Modify the sample to use a 75% tile scale and turn off tiling. | Show how to stretch the texture instead of preserving aspect ratio using a different FillPictureType. | Load the texture image from a MemoryStream rather than a file path in Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to insert a rectangle shape into an Excel worksheet using Aspose.Cells for .NET, apply a PNG texture fill, enable tiling, keep the picture’s original proportions via FillPictureType.StackAndScale, and save the workbook.
-class TilePictureAsTexture
+// Demonstrates how to add a rectangle shape to a workbook, load a PNG image as a texture, enable tiling, keep the image's original aspect ratio using FillPictureType.StackAndScale, optionally scale each tile, and save the file with Aspose.Cells for .NET.
+public class TextureFillTilingDemo
 {
-    static void Main()
+    public static void Main(string[] args)
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add a rectangle shape (row, column, offsetX, offsetY, width, height)
-            Shape rectangle = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 200, 150);
-
-            // Set the fill type of the shape to texture
-            rectangle.Fill.FillType = FillType.Texture;
-
-            // Path to the texture image
-            string texturePath = "texture.png";
-
-            if (File.Exists(texturePath))
-            {
-                // Load the picture file that will be used as texture
-                byte[] imageData = File.ReadAllBytes(texturePath);
-
-                // Configure the texture fill
-                TextureFill textureFill = rectangle.Fill.TextureFill;
-                textureFill.ImageData = imageData;          // assign image bytes
-                textureFill.IsTiling = true;                // enable tiling
-                textureFill.PictureFormatType = FillPictureType.StackAndScale; // preserve aspect ratio while tiling
-                textureFill.Scale = 1.0;                    // overall scaling factor (1 = original size)
-            }
-            else
-            {
-                Console.WriteLine($"Texture file not found: {texturePath}. The rectangle will be saved without a texture.");
-            }
-
-            // Save the workbook
-            string outputPath = "RectangleWithTiledTexture.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Run();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    public static void Run()
+    {
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Add a rectangle shape where the texture will be applied
+        // Parameters: upper left row, upper left column, top, left, width, height (in points)
+        Shape rectangle = worksheet.Shapes.AddRectangle(2, 2, 2, 2, 300, 200);
+
+        // Set the fill type of the shape to texture
+        rectangle.Fill.FillType = FillType.Texture;
+
+        // Load the picture file that will be used as the texture
+        string texturePath = "texture.png";
+        if (File.Exists(texturePath))
+        {
+            byte[] imageData = File.ReadAllBytes(texturePath);
+            rectangle.Fill.TextureFill.ImageData = imageData;
+        }
+        else
+        {
+            Console.WriteLine($"Warning: Texture file '{texturePath}' not found. Skipping texture fill.");
+        }
+
+        // Enable tiling so the picture repeats to fill the shape
+        rectangle.Fill.TextureFill.IsTiling = true;
+
+        // Preserve the aspect ratio of the picture while tiling.
+        // Using FillPictureType.StackAndScale keeps the original aspect ratio.
+        rectangle.Fill.TextureFill.PictureFormatType = FillPictureType.StackAndScale;
+
+        // Optionally adjust the scale of each tile (same value for X and Y to keep aspect ratio)
+        // Here we set each tile to 50% of its original size.
+        TilePicOption tileOptions = new TilePicOption
+        {
+            ScaleX = 0.5,   // 50% horizontal scale
+            ScaleY = 0.5    // 50% vertical scale
+        };
+        rectangle.Fill.TextureFill.TilePicOption = tileOptions;
+
+        // Save the workbook with the textured rectangle
+        string outputPath = "TextureFillTilingDemo.xlsx";
+        workbook.Save(outputPath);
+        Console.WriteLine($"Workbook saved to '{outputPath}'.");
     }
 }

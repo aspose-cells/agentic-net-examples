@@ -1,54 +1,52 @@
-// Title: Change Light1 (Background1) Theme Color to a Subtle Gray while Preserving Accent Colors – Aspose.Cells for .NET
-// Description: Creates a new workbook, reads the existing theme palette, replaces the Light1 (Background1) entry with a light‑gray shade that mimics a subtle texture, re‑applies the theme unchanged for all accent colors, demonstrates the new background on cell A1, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells | C# | .NET | custom Excel theme | Background1 color | Light1 theme | preserve accent colors | subtle gray fill | programmatic workbook styling | Excel theme modification
-// Common Searches: Aspose.Cells change Light1 color C# | How to modify Background1 theme without affecting accents | Set subtle gray background in Excel workbook using Aspose | Custom theme with only background color change .NET | Preserve accent palette when updating Excel theme programmatically
-// Developer Intent: Generate a custom theme that updates only the Light1 (Background1) color to a subtle gray while leaving every accent color untouched.
-// Use Cases: Apply a neutral, low‑contrast background to reports for a printed‑friendly appearance. | Validate theme changes by styling a sample cell after the custom theme is applied. | Distribute Excel files that require a consistent, non‑distracting background across all sheets.
-// AI Prompts: Write C# code with Aspose.Cells that replaces the Light1 theme color with a light gray and keeps all other theme colors unchanged. | Show how to read the full theme palette, modify only Background1, and reapply the custom theme in a .NET workbook. | Explain how to create a cell style that uses the new Background1 color and apply it to a range of cells.
+// Title: Add Gray12 Texture to Light1 (Background1) Theme Color in Aspose.Cells C#
+// Description: Demonstrates how to retrieve the Light1 (Background1) theme color from a workbook, create a Gray12 patterned style that uses the original color as foreground with a light tint as background, apply it to a range (A1:Z100), and save the file—keeping all accent colors unchanged.
+// Keywords: Aspose.Cells | C# | theme color texture | Light1 background | Background1 pattern | Gray12 pattern | Excel style pattern | preserve accent colors | apply style to range | Excel workbook theming
+// Common Searches: How to add a Gray12 texture to Light1 theme in Aspose.Cells .NET | Replace Background1 color with pattern without changing accents | Apply textured style to a specific range using Aspose.Cells C# | Set theme background pattern in Excel via Aspose.Cells | Create Excel template with patterned Light1 background
+// Developer Intent: Apply a subtle Gray12 texture to the Light1 (Background1) theme color while leaving all other theme colors, especially accent colors, untouched.
+// Use Cases: Design a report template where the primary background has a professional Gray12 texture. | Highlight a data block (e.g., A1:Z100) with a patterned style without affecting the workbook’s color scheme. | Generate branded Excel files that require a textured Light1 background for visual consistency.
+// AI Prompts: Show C# code to apply a Gray12 texture to the Light1 (Background1) theme color in Aspose.Cells while preserving accent colors. | Explain how to retrieve a theme color, create a patterned style, and apply it to a range in an Aspose.Cells workbook. | Provide step‑by‑step instructions for adding a subtle texture to the Light1 background without altering other theme colors.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsThemeTextureDemo
 {
-    // Creates a new workbook, reads the existing theme palette, replaces the Light1 (Background1) entry with a light‑gray shade that mimics a subtle texture, re‑applies the theme unchanged for all accent colors, demonstrates the new background on cell A1, and saves the file as an XLSX document.
+    // Demonstrates how to retrieve the Light1 (Background1) theme color from a workbook, create a Gray12 patterned style that uses the original color as foreground with a light tint as background, apply it to a range (A1:Z100), and save the file—keeping all accent colors unchanged.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle rule)
-            Workbook workbook = new Workbook();
-
-            // Retrieve the current theme colors for all types except Background1
-            Color[] currentColors = new Color[12];
-            for (int i = 1; i < 12; i++)
+            try
             {
-                // ThemeColorType values map directly to the array index
-                ThemeColorType type = (ThemeColorType)i;
-                currentColors[i] = workbook.GetThemeColor(type);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Retrieve the current Background1 theme color (Light1)
+                Color originalBackground = workbook.GetThemeColor(ThemeColorType.Background1);
+
+                // Create a style that uses a subtle texture pattern (Gray12)
+                // Foreground color will be the original background color,
+                // Background color will be a slightly lighter tint to enhance the texture effect.
+                Style textureStyle = workbook.CreateStyle();
+                textureStyle.SetPatternColor(
+                    BackgroundType.Gray12,                 // Subtle texture pattern
+                    originalBackground,                    // Foreground color (original Light1)
+                    Color.FromArgb(255, 245, 245, 245));    // Very light background for contrast
+
+                // Apply the style to a defined range (A1:Z100)
+                AsposeRange range = sheet.Cells.CreateRange("A1:Z100");
+                range.ApplyStyle(textureStyle, new StyleFlag { All = true });
+
+                // Save the workbook
+                workbook.Save("ThemeWithTexture.xlsx");
             }
-
-            // Define a subtle texture-like color for Light1 (Background1)
-            // Since themes accept only solid colors, we use a light gray that mimics a subtle texture
-            Color subtleTextureColor = Color.FromArgb(240, 240, 240);
-            currentColors[0] = subtleTextureColor; // Background1 (Light1)
-
-            // Apply the custom theme while keeping all accent colors unchanged
-            workbook.CustomTheme("CustomWithSubtleTexture", currentColors);
-
-            // (Optional) Apply the new Background1 color to a sample cell to demonstrate the change
-            Worksheet sheet = workbook.Worksheets[0];
-            Cell sampleCell = sheet.Cells["A1"];
-            sampleCell.PutValue("Background1 with subtle texture color");
-
-            Style style = workbook.CreateStyle();
-            style.Pattern = BackgroundType.Solid;
-            style.BackgroundColor = subtleTextureColor; // use the same color for solid fill
-            sampleCell.SetStyle(style);
-
-            // Save the workbook (lifecycle rule)
-            workbook.Save("Workbook_With_SubtleTexture_Background1.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

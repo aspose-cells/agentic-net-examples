@@ -1,60 +1,74 @@
-// Title: Set Shape Glow Size, Tint, and Transparency by Importance Level in Aspose.Cells (C#)
-// Description: Demonstrates a reusable C# method that clamps an importance value (1‑5), computes a glow radius, applies a theme accent color with proportional tint, and adjusts transparency, then saves the workbook with the customized shape effect.
-// Keywords: Aspose.Cells shape glow | C# glow size based on importance | shape glow tint Aspose.Cells | adjust shape transparency .NET | Excel shape visual priority
-// Common Searches: how to change shape glow intensity in Aspose.Cells C# | set glow radius and color tint for Excel shapes using Aspose | apply variable glow effect to worksheet shapes based on priority | Aspose.Cells custom glow transparency example | C# code for dynamic shape glow in Excel file
-// Developer Intent: Create a shape glow effect that varies with a numeric importance level and apply it to a worksheet shape using Aspose.Cells for .NET.
-// Use Cases: Highlight critical tasks in a project timeline with larger, brighter glows. | Differentiate risk categories in a matrix by increasing glow size and lightness for higher risk items. | Build an alert dashboard where severity levels are visually encoded through glow radius, tint, and opacity.
-// AI Prompts: Generate a C# utility that maps an enum (Low, Medium, High, Critical) to glow size, tint, and transparency for any Aspose.Cells shape. | Write unit tests for the ApplyGlowBasedOnImportance method covering values below 1, above 5, and each valid level. | Show how to read an importance value from a custom document property and apply the glow method to all shapes in a worksheet.
+// Title: Set Shape Glow Intensity by Importance Level with Aspose.Cells for .NET (C#)
+// Description: C# example that clamps an importance rating (1‑5), converts it to a glow radius, chooses green for low importance and red for high importance, applies a 30% transparency, and saves the workbook. Demonstrates how to programmatically highlight worksheet shapes using Aspose.Cells.
+// Keywords: Aspose.Cells | C# | shape glow | glow intensity | importance level | glow size | glow color | worksheet shape | Excel automation | visual emphasis
+// Common Searches: Aspose.Cells set shape glow size | C# change shape glow color based on importance | how to add glow effect to Excel shape using Aspose | map importance rating to shape glow radius | apply transparency to shape glow Aspose.Cells
+// Developer Intent: Programmatically apply a glow effect to a worksheet shape where size, color, and transparency reflect a numeric importance level.
+// Use Cases: Mark critical tasks in a project plan with a large red glow. | Distinguish low‑priority items on a dashboard using a small green glow. | Standardize visual cues across multiple sheets by applying a fixed 30% glow transparency.
+// AI Prompts: Write a C# method that sets a shape's glow radius, color, and transparency in Aspose.Cells based on an importance value from 1 to 5. | Provide code to loop through all shapes in a worksheet and call SetGlowIntensity using each shape's custom importance property. | Explain how to extend SetGlowIntensity to use a gradient (green → yellow → red) instead of only green and red.
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using System.Drawing;
 
-namespace AsposeCellsGlowDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates a reusable C# method that clamps an importance value (1‑5), computes a glow radius, applies a theme accent color with proportional tint, and adjusts transparency, then saves the workbook with the customized shape effect.
-    class Program
+    // C# example that clamps an importance rating (1‑5), converts it to a glow radius, chooses green for low importance and red for high importance, applies a 30% transparency, and saves the workbook. Demonstrates how to programmatically highlight worksheet shapes using Aspose.Cells.
+    public class ShapeGlowByImportance
     {
-        // Adjusts the glow effect of a shape according to an importance level (1‑5).
-        static void ApplyGlowBasedOnImportance(Shape shape, int importanceLevel)
+        // Sets the glow effect of a shape based on an importance level (1‑5).
+        // Higher importance → larger glow radius and a more intense color.
+        public static void SetGlowIntensity(Workbook workbook, Shape shape, int importanceLevel)
         {
-            // Ensure the importance level stays within the expected range.
-            if (importanceLevel < 1) importanceLevel = 1;
-            if (importanceLevel > 5) importanceLevel = 5;
+            // Clamp the importance level to the expected range.
+            importanceLevel = Math.Max(1, Math.Min(5, importanceLevel));
 
-            // Larger importance → larger glow radius (in points).
-            double glowSize = importanceLevel * 5.0; // 5,10,15,20,25 points
+            // Map importance to glow size (points). Example: 1 → 5pt, 5 → 25pt.
+            double glowSize = importanceLevel * 5.0;
             shape.Glow.Size = glowSize;
 
-            // Use a theme accent color and brighten it with tint for higher importance.
-            CellsColor glowColor = shape.Glow.Color;
-            glowColor.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0);
-            // Tint range: -1.0 (darker) to 1.0 (lighter). Increase tint with importance.
-            double tint = 0.1 * importanceLevel; // 0.1 to 0.5
-            glowColor.SetTintOfShapeColor(tint);
+            // Choose a color: low importance = green, high importance = red.
+            Color baseColor = importanceLevel <= 2 ? Color.Green : Color.Red;
 
-            // Decrease transparency for higher importance (more opaque).
-            shape.Glow.Transparency = Math.Max(0.0, 0.5 - 0.08 * importanceLevel); // 0.42 to 0.1
+            // Assign the color using CellsColor (required by Aspose.Cells).
+            shape.Glow.Color = workbook.CreateCellsColor();
+            shape.Glow.Color.Color = baseColor;
+
+            // Optional: set a constant transparency for visual consistency.
+            shape.Glow.Transparency = 0.3; // 30% transparent
         }
 
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook and obtain the first worksheet.
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet.
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape to the worksheet.
-            Shape rect = sheet.Shapes.AddRectangle(2, 0, 2, 0, 150, 100);
+                // Add a rectangle shape to the worksheet.
+                // Parameters: upper left row, upper left column, upper left offsetX, offsetY, width, height.
+                Shape shape = worksheet.Shapes.AddRectangle(2, 1, 0, 0, 150, 100);
+                SetGlowIntensity(workbook, shape, 4); // High importance
 
-            // Example importance level (could be read from a custom property).
-            int importance = 3; // medium importance
+                // Add another shape with lower importance.
+                Shape shapeLow = worksheet.Shapes.AddRectangle(5, 1, 0, 0, 150, 100);
+                SetGlowIntensity(workbook, shapeLow, 1); // Low importance
 
-            // Apply glow effect based on the importance level.
-            ApplyGlowBasedOnImportance(rect, importance);
+                // Save the workbook.
+                workbook.Save("ShapeGlowByImportance.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-            // Save the workbook with the applied glow effect.
-            workbook.Save("ShapeGlowByImportance.xlsx");
+        // Entry point for the application.
+        public static void Main(string[] args)
+        {
+            Run();
         }
     }
 }

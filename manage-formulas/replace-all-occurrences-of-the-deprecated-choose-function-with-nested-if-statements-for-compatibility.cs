@@ -1,98 +1,86 @@
-// Title: Convert deprecated CHOOSE formulas to nested IF with Aspose.Cells for .NET (C#)
-// Description: A C# example that scans a workbook, detects every CHOOSE function, rewrites it as an equivalent nested IF expression using regular‑expression parsing, recalculates the sheet and saves the updated file—ensuring compatibility with older Excel versions.
-// Keywords: Aspose.Cells CHOOSE replacement | C# convert CHOOSE to IF | nested IF formula generation | bulk Excel formula update | legacy Excel compatibility | .NET Excel automation | Excel formula migration | Aspose.Cells API example | US developers | global spreadsheet processing
-// Common Searches: replace CHOOSE with IF Aspose.Cells C# | convert Excel CHOOSE function to nested IF programmatically | bulk formula conversion Aspose.Cells .NET | how to rewrite CHOOSE formulas in C# | Aspose.Cells example for updating formulas
-// Developer Intent: Automatically rewrite all CHOOSE formulas in a workbook to nested IF statements for broader Excel compatibility.
-// Use Cases: Modernize legacy spreadsheets that rely on the now‑deprecated CHOOSE function. | Perform bulk formula migration across multiple worksheets before distribution. | Validate conversion by recalculating the workbook and persisting the corrected version.
-// AI Prompts: Create a C# method that parses any CHOOSE function (any number of arguments) and returns a nested IF formula, correctly handling commas inside quoted strings. | Write Aspose.Cells code to iterate through every cell in a workbook, replace CHOOSE formulas using the conversion method, recalculate all formulas, and save the workbook. | Explain how to adjust the regular expression to safely split CHOOSE arguments when they contain escaped quotes or embedded commas.
+// Title: Replace deprecated CHOOSE with nested IF using Aspose.Cells for .NET (C#)
+// Description: C# sample that loads an Excel workbook with Aspose.Cells, scans every formula cell, detects the CHOOSE function, converts it to an equivalent nested IF expression via regex, updates the formula and saves the file. Ideal for bulk migration of legacy spreadsheets to Excel versions that no longer support CHOOSE.
+// Keywords: Aspose.Cells | C# | CHOOSE function | nested IF | Excel formula conversion | replace CHOOSE | deprecated Excel function | bulk formula update | regex replace | Excel compatibility
+// Common Searches: how to replace CHOOSE with IF in Excel using Aspose.Cells C# | convert CHOOSE formulas to nested IF programmatically | Aspose.Cells replace deprecated functions | C# code to change Excel formulas in bulk | regex CHOOSE to IF Aspose.Cells example
+// Developer Intent: Transform all CHOOSE formulas in a workbook into nested IF statements for compatibility.
+// Use Cases: Modernize legacy spreadsheets that rely on the CHOOSE function before distribution. | Automate large‑scale formula migration across multiple worksheets or workbooks. | Prepare Excel files for environments where CHOOSE is unsupported, such as older Office versions or third‑party parsers.
+// AI Prompts: Generate a C# method with Aspose.Cells that replaces any CHOOSE call with a nested IF, handling any number of arguments. | Enhance the ReplaceChooseWithIf function to correctly parse arguments containing commas inside nested parentheses. | Write unit tests (e.g., using NUnit) that verify CHOOSE‑to‑IF conversion for different index expressions and argument counts.
 
 using System;
-using System.Text;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
 namespace AsposeCellsChooseReplacement
 {
-    // A C# example that scans a workbook, detects every CHOOSE function, rewrites it as an equivalent nested IF expression using regular‑expression parsing, recalculates the sheet and saves the updated file—ensuring compatibility with older Excel versions.
+    // C# sample that loads an Excel workbook with Aspose.Cells, scans every formula cell, detects the CHOOSE function, converts it to an equivalent nested IF expression via regex, updates the formula and saves the file. Ideal for bulk migration of legacy spreadsheets to Excel versions that no longer support CHOOSE.
     class Program
     {
-        // Converts a CHOOSE function in a formula to nested IF statements.
-        // Example: =CHOOSE(A1,"One","Two","Three")
-        // becomes: =IF(A1=1,"One",IF(A1=2,"Two","Three"))
-        static string ConvertChooseToIf(string formula)
-        {
-            // Find the CHOOSE function (case‑insensitive)
-            var match = Regex.Match(formula, @"CHOOSE\s*\(([^)]*)\)", RegexOptions.IgnoreCase);
-            if (!match.Success) return formula; // No CHOOSE found
-
-            // Extract the inner arguments
-            string argsContent = match.Groups[1].Value;
-            // Split by commas, but keep commas inside quotes intact
-            var args = Regex.Split(argsContent, @",(?![^""]*""\s*,)").Select(s => s.Trim()).ToArray();
-
-            if (args.Length < 2) return formula; // Not enough arguments
-
-            string indexExpr = args[0]; // The index expression (could be a cell reference or number)
-            // Build nested IFs from the remaining arguments
-            StringBuilder sb = new StringBuilder();
-            sb.Append("IF(");
-            sb.Append(indexExpr);
-            sb.Append("=1,");
-            sb.Append(args[1]);
-
-            for (int i = 2; i < args.Length; i++)
-            {
-                sb.Append(",IF(");
-                sb.Append(indexExpr);
-                sb.Append("=");
-                sb.Append(i);
-                sb.Append(",");
-                sb.Append(args[i]);
-            }
-
-            // Close the opened parentheses
-            sb.Append(new string(')', args.Length - 1));
-
-            // Replace the original CHOOSE call with the generated IF chain
-            string newFormula = Regex.Replace(formula,
-                @"CHOOSE\s*\([^\)]*\)",
-                sb.ToString(),
-                RegexOptions.IgnoreCase);
-
-            return newFormula;
-        }
-
         static void Main()
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Access the first worksheet (adjust as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Sample data for the index argument
-            cells["A1"].PutValue(2); // Index = 2
-
-            // Cell with a CHOOSE formula (to be replaced)
-            cells["B1"].Formula = "=CHOOSE(A1,\"One\",\"Two\",\"Three\")";
-
-            // Iterate through all cells and replace CHOOSE with nested IF
+            // Iterate through all used cells
             foreach (Cell cell in cells)
             {
-                if (cell.IsFormula && cell.Formula.IndexOf("CHOOSE", StringComparison.OrdinalIgnoreCase) >= 0)
+                // Process only cells that contain a formula
+                if (!string.IsNullOrEmpty(cell.Formula))
                 {
-                    string original = cell.Formula;
-                    string replaced = ConvertChooseToIf(original);
-                    cell.Formula = replaced;
+                    string formula = cell.Formula;
+
+                    // Detect the deprecated CHOOSE function (case‑insensitive)
+                    if (formula.IndexOf("CHOOSE", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        // Replace CHOOSE with nested IF statements
+                        string newFormula = ReplaceChooseWithIf(formula);
+                        cell.Formula = newFormula;
+                    }
                 }
             }
 
-            // Calculate formulas to verify the replacement works (lifecycle rule: calculate)
-            workbook.CalculateFormula();
+            // Save the modified workbook
+            workbook.Save("output.xlsx");
+        }
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("ChooseReplaced.xlsx");
+        private static string ReplaceChooseWithIf(string formula)
+        {
+            // Regular expression to capture the argument list of CHOOSE
+            // It assumes that arguments themselves do not contain commas inside parentheses.
+            var choosePattern = new Regex(@"CHOOSE\s*\(([^)]*)\)", RegexOptions.IgnoreCase);
+            var match = choosePattern.Match(formula);
+            if (!match.Success)
+                return formula; // No valid CHOOSE found; return original
+
+            // Split the captured arguments by commas
+            string[] args = match.Groups[1].Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            if (args.Length < 2)
+                return formula; // Not enough arguments to transform
+
+            // Trim whitespace from each argument
+            for (int i = 0; i < args.Length; i++)
+                args[i] = args[i].Trim();
+
+            string indexExpr = args[0]; // The index expression (e.g., A1 or 2)
+
+            // Build nested IF expression
+            string nestedIf = args[args.Length - 1]; // Default value (last argument)
+            for (int i = args.Length - 2; i >= 1; i--)
+            {
+                // IF(index=position, value, previousNestedIf)
+                nestedIf = $"IF({indexExpr}={i}, {args[i]}, {nestedIf})";
+            }
+
+            // Replace the original CHOOSE call with the new IF expression
+            string newFormula = choosePattern.Replace(formula, nestedIf);
+            // Ensure the formula starts with '=' (Aspose.Cells expects it)
+            if (!newFormula.StartsWith("="))
+                newFormula = "=" + newFormula;
+
+            return newFormula;
         }
     }
 }

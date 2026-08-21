@@ -1,30 +1,59 @@
-// Title: C# – Hide Rows 20‑25 in Excel and Convert to PDF using Aspose.Cells
-// Description: This example shows how to load an Excel workbook with Aspose.Cells, hide rows 20 through 25 on the first worksheet using the zero‑based HideRows method, and save the modified file directly as a PDF.
-// Keywords: Aspose.Cells C# hide rows | HideRows method | Excel to PDF conversion | C# export workbook as PDF | row visibility Aspose.Cells | HideRows(19,6) | Aspose.Cells SaveFormat.Pdf
-// Common Searches: Aspose.Cells hide specific rows C# | Convert Excel to PDF after hiding rows | C# HideRows(19,6) example | Omit rows in PDF using Aspose.Cells | Export worksheet to PDF with hidden rows
-// Developer Intent: Hide a defined row range in an Excel file and generate a PDF output.
-// Use Cases: Prepare client‑ready PDFs that exclude a confidential row block | Create printable reports where particular rows are hidden to improve layout | Batch‑process workbooks to conceal predefined rows before converting each to PDF
-// AI Prompts: Generate C# code that uses Aspose.Cells to conceal rows 20‑25 in a worksheet and then save the workbook as a PDF. | Explain the steps to hide a row interval with the HideRows method and export the modified Excel file to PDF in .NET.
+// Title: C# – Hide Rows 20‑25 in an Excel Worksheet and Export to PDF using Aspose.Cells
+// Description: Loads an Excel file (creates a simple workbook if missing), hides rows 20‑25 on the first sheet with the zero‑based HideRows method, and saves the result directly as a PDF document via Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# hide rows | Excel to PDF conversion .NET | HideRows method example | zero based row index Aspose | export hidden rows PDF
+// Common Searches: Aspose.Cells hide specific rows before PDF export | C# hide rows 20 to 25 in Excel | Convert Excel to PDF after hiding rows | How to use HideRows with Aspose.Cells .NET
+// Developer Intent: Remove rows 20‑25 from view in an Excel file and generate a PDF version of the workbook.
+// Use Cases: Produce printable reports that omit temporary or draft rows. | Generate clean invoice PDFs where summary rows are hidden. | Automate batch processing to conceal confidential rows before archiving as PDF.
+// AI Prompts: Write C# code with Aspose.Cells to hide rows 20‑25 in the first worksheet and save as PDF. | Explain why the HideRows method uses a start index of 19 for row 20. | Add comprehensive error handling for missing input files when converting Excel to PDF after hiding rows.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// This example shows how to load an Excel workbook with Aspose.Cells, hide rows 20 through 25 on the first worksheet using the zero‑based HideRows method, and save the modified file directly as a PDF.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads an Excel file (creates a simple workbook if missing), hides rows 20‑25 on the first sheet with the zero‑based HideRows method, and saves the result directly as a PDF document via Aspose.Cells for .NET.
+    public class HideRowsAndSavePdf
     {
-        // Load the existing Excel file
-        string sourcePath = "input.xlsx";
-        Workbook workbook = new Workbook(sourcePath);
+        public static void Run()
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Get the first worksheet (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
+            try
+            {
+                // Ensure the input file exists; create a simple workbook if missing
+                if (!File.Exists(inputPath))
+                {
+                    var tempWb = new Workbook();
+                    tempWb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
+                    tempWb.Save(inputPath);
+                }
 
-        // Hide rows 20 through 25 (zero‑based start index 19, total 6 rows)
-        worksheet.Cells.HideRows(19, 6);
+                // Load the existing Excel file
+                var workbook = new Workbook(inputPath);
 
-        // Save the workbook as PDF
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+                // Access the first worksheet (you can change the index if needed)
+                var worksheet = workbook.Worksheets[0];
+
+                // Hide rows 20 to 25 (zero‑based index: start at 19, hide 6 rows)
+                worksheet.Cells.HideRows(19, 6);
+
+                // Save the modified workbook as PDF
+                workbook.Save(outputPath, SaveFormat.Pdf);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main()
+        {
+            HideRowsAndSavePdf.Run();
+        }
     }
 }

@@ -1,31 +1,32 @@
-// Title: Aspose.Cells for .NET: Conditional Formatting with Freeze Panes in C#
-// Description: C# sample that creates a workbook, populates column A with numeric data, adds a conditional‑format rule to highlight values greater than 50 in light‑green bold cells (rows 1‑5), freezes the first five rows at cell A6, and saves the result as ConditionalFormattingAndFreeze.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | conditional formatting | freeze panes | freeze rows | highlight cells | Excel automation | sample code | Workbook | Worksheet | FormatCondition | CellArea | GitHub example
-// Common Searches: Aspose.Cells conditional formatting C# example | how to freeze top rows with Aspose.Cells .NET | highlight cells greater than 50 using Aspose.Cells | freeze panes at A6 Aspose.Cells C# | apply conditional format then freeze panes Aspose
-// Developer Intent: Create an Excel workbook, apply a value‑based conditional format, and lock the header rows so they stay visible while scrolling, using Aspose.Cells for .NET.
-// Use Cases: Sales dashboards where high‑volume rows are colored and header rows remain fixed for quick comparison. | Financial statements that emphasize expenses above a threshold while keeping summary rows in view. | Exported data reports that automatically format critical values and preserve navigation context with frozen panes.
-// AI Prompts: Show how to change the conditional formatting to use a red background for values less than 20. | Provide code to freeze both rows and columns at cell C10 while retaining existing formatting rules. | Explain how to add multiple conditional formatting rules to separate ranges before applying freeze panes.
+// Title: Conditional Formatting and Freeze Panes with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, fills column A with values 0‑90, adds a conditional formatting rule that colors cells yellow when the value is ≥ 50, freezes the first ten rows and the first column, and saves the file as an XLSX document.
+// Keywords: Aspose.Cells conditional formatting C# | freeze panes Aspose.Cells .NET | highlight cells >= 50 Excel | Workbook FreezePanes method | FormatConditionCollection example | CellArea range Aspose.Cells | C# Excel automation | Aspose.Cells API tutorial
+// Common Searches: Aspose.Cells C# conditional formatting >= 50 | How to freeze top rows with Aspose.Cells | Freeze panes after applying conditional formatting in .NET | C# example for conditional formatting and FreezePanes | Aspose.Cells highlight cells and keep them visible
+// Developer Intent: Generate an XLSX file, apply a yellow background to cells with values ≥ 50, and freeze the first ten rows plus the first column so the highlighted rows stay in view.
+// Use Cases: Mark high‑value rows in a sales report while keeping them visible during scrolling. | Create a financial dashboard where rows meeting a threshold are colored and locked for quick comparison. | Build a template that automatically emphasizes key rows with conditional formatting and freeze panes for end‑users.
+// AI Prompts: Show how to change the conditional formatting to a red background for values > 80 and freeze only the top row using Aspose.Cells. | Provide a C# snippet that adds three conditional formatting rules (green < 30, yellow 30‑60, red > 60) and freezes rows and columns based on a dynamic range. | Explain how to apply conditional formatting to multiple columns and then freeze the header row and first column in Aspose.Cells.
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsConditionalFormattingAndFreeze
+// Creates a workbook, fills column A with values 0‑90, adds a conditional formatting rule that colors cells yellow when the value is ≥ 50, freezes the first ten rows and the first column, and saves the file as an XLSX document.
+class Program
 {
-    // C# sample that creates a workbook, populates column A with numeric data, adds a conditional‑format rule to highlight values greater than 50 in light‑green bold cells (rows 1‑5), freezes the first five rows at cell A6, and saves the result as ConditionalFormattingAndFreeze.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate sample data in column A (rows 0-9)
+            // Populate sample numeric data in column A (rows 0‑9)
             for (int i = 0; i < 10; i++)
             {
-                cells[i, 0].PutValue(i * 10); // Values: 0,10,20,...,90
+                cells[i, 0].PutValue(i * 10); // 0, 10, 20, ... 90
             }
 
             // ---------- Conditional Formatting ----------
@@ -33,29 +34,34 @@ namespace AsposeCellsConditionalFormattingAndFreeze
             int cfIndex = sheet.ConditionalFormattings.Add();
             FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
 
-            // Define the range to which the formatting will be applied (rows 0-4, column A)
+            // Define the range A1:A10 (rows 0‑9, column 0)
             CellArea area = new CellArea
             {
                 StartRow = 0,
-                EndRow = 4,
+                EndRow = 9,
                 StartColumn = 0,
                 EndColumn = 0
             };
             fcc.AddArea(area);
 
-            // Add a condition: highlight cells with value > 50
-            int condIndex = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50", null);
-            FormatCondition condition = fcc[condIndex];
-            condition.Style.BackgroundColor = Color.LightGreen;
-            condition.Style.Font.IsBold = true;
+            // Add a condition: cells with value >= 50 get a yellow background
+            // Use GreaterThan operator with value 49 to emulate >= 50 (compatible with older API versions)
+            int condIdx = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "49", null);
+            FormatCondition fc = fcc[condIdx];
+            fc.Style.BackgroundColor = Color.Yellow;
 
             // ---------- Freeze Panes ----------
-            // Freeze the top 5 rows so that the conditional formatting remains visible while scrolling
-            // Freeze at cell A6 (row index 5) with 5 frozen rows and 0 frozen columns
-            sheet.FreezePanes("A6", 5, 0);
+            // Freeze the first 10 rows and the first column so the formatted rows stay visible
+            sheet.FreezePanes(10, 1, 10, 1);
 
             // Save the workbook
-            workbook.Save("ConditionalFormattingAndFreeze.xlsx");
+            string outputPath = "ConditionalFormattingAndFreeze.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

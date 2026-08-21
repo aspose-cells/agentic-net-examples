@@ -1,54 +1,65 @@
-// Title: C# CLI Tool to Encrypt an Excel Workbook with Aspose.Cells and Save as _encrypted
-// Description: A console application that accepts a file path, validates the file, loads the workbook with Aspose.Cells, sets a password, applies strong 128‑bit encryption, builds an output name with an “_encrypted” suffix, and saves the protected workbook.
-// Keywords: Aspose.Cells | C# encryption | Excel password protection | CLI tool | command line | strong cryptographic provider | 128‑bit encryption | Workbook.Save | console application | file path argument
-// Common Searches: encrypt Excel file C# Aspose.Cells | command line password protection for .xlsx | C# console app encrypt workbook | Aspose.Cells set encryption options | save encrypted workbook with custom name | batch encrypt Excel files using Aspose
-// Developer Intent: Encrypt an existing Excel workbook from the command line and write the encrypted copy to a new location.
-// Use Cases: Run the utility in a batch script to protect multiple spreadsheets before archiving. | Integrate the tool into a CI/CD pipeline to secure confidential reports generated during builds. | Schedule a Windows task that automatically encrypts newly created workbooks in a shared folder.
-// AI Prompts: Create a C# console program that takes a file path, loads the workbook with Aspose.Cells, applies a password and 128‑bit strong encryption, and saves it with an "_encrypted" suffix. | Add optional command‑line arguments for custom password, encryption type, and key length to the Aspose.Cells encryption CLI tool. | Explain how to extend the program to handle .xls, .xlsx, and .csv files while preserving encryption settings.
+// Title: C# Console Tool to Encrypt an Excel Workbook with Aspose.Cells – Command‑Line Utility
+// Description: A .NET console application that accepts an Excel file path, optionally a password, loads the workbook using Aspose.Cells, applies password protection, creates an output file with an "_encrypted" suffix, saves the protected workbook, and prints the new location or any error messages. Ideal for scripting, CI/CD, or end‑user protection without opening Excel.
+// Keywords: Aspose.Cells | C# console | Excel encryption | workbook password protection | command line utility | CLI Excel encrypt | .NET encrypt workbook | batch Excel security | CI/CD Excel protection | GitHub C# Excel encrypt
+// Common Searches: encrypt Excel file using Aspose.Cells C# console app | command line tool to add password to .xlsx | save encrypted workbook with _encrypted suffix .NET | C# CLI encrypt workbook Aspose.Cells example | batch encrypt Excel files in Windows
+// Developer Intent: Protect an existing Excel workbook from the command line by applying a password and writing the encrypted file to a new location.
+// Use Cases: Automate workbook encryption in a nightly batch script for multiple reports. | Integrate the tool into a CI/CD pipeline to secure generated spreadsheets before deployment. | Provide non‑technical users a simple executable to password‑protect spreadsheets without Microsoft Excel.
+// AI Prompts: Write a PowerShell script that runs WorkbookEncryptor.exe for every .xlsx file in a given folder and logs the output paths. | Extend the program to accept an output‑directory argument while preserving the original filename and adding the _encrypted suffix. | Add a command‑line option to choose between AES‑128 and AES‑256 encryption modes supported by Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A console application that accepts a file path, validates the file, loads the workbook with Aspose.Cells, sets a password, applies strong 128‑bit encryption, builds an output name with an “_encrypted” suffix, and saves the protected workbook.
-class Program
+namespace WorkbookEncryptor
 {
-    static void Main(string[] args)
+    // A .NET console application that accepts an Excel file path, optionally a password, loads the workbook using Aspose.Cells, applies password protection, creates an output file with an "_encrypted" suffix, saves the protected workbook, and prints the new location or any error messages. Ideal for scripting, CI/CD, or end‑user protection without opening Excel.
+    class Program
     {
-        // Verify that a file path was provided
-        if (args.Length == 0)
+        static void Main(string[] args)
         {
-            Console.WriteLine("Usage: encrypt <inputFilePath>");
-            return;
+            // Verify that a file path was provided
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Usage: WorkbookEncryptor <inputFilePath> [password]");
+                return;
+            }
+
+            string inputPath = args[0];
+
+            // Optional password argument; use default if not supplied
+            string password = args.Length > 1 ? args[1] : "password123";
+
+            // Validate input file existence
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: File not found - {inputPath}");
+                return;
+            }
+
+            try
+            {
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(inputPath);
+
+                // Set the encryption password
+                workbook.Settings.Password = password;
+
+                // Build output file path (insert "_encrypted" before extension)
+                string directory = Path.GetDirectoryName(inputPath);
+                string filenameWithoutExt = Path.GetFileNameWithoutExtension(inputPath);
+                string extension = Path.GetExtension(inputPath);
+                string outputPath = Path.Combine(directory, $"{filenameWithoutExt}_encrypted{extension}");
+
+                // Save the encrypted workbook
+                workbook.Save(outputPath);
+
+                // Inform the user of the new location
+                Console.WriteLine($"Encrypted workbook saved to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing workbook: {ex.Message}");
+            }
         }
-
-        string inputPath = args[0];
-
-        // Check that the input file exists
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"File not found: {inputPath}");
-            return;
-        }
-
-        // Load the workbook from the specified file
-        Workbook workbook = new Workbook(inputPath);
-
-        // Set a password to encrypt the workbook
-        workbook.Settings.Password = "password123";
-
-        // Optionally specify encryption algorithm and key length
-        workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
-
-        // Build the output file path (original name with "_encrypted" suffix)
-        string directory = Path.GetDirectoryName(inputPath);
-        string fileNameWithoutExt = Path.GetFileNameWithoutExtension(inputPath);
-        string extension = Path.GetExtension(inputPath);
-        string outputPath = Path.Combine(directory, $"{fileNameWithoutExt}_encrypted{extension}");
-
-        // Save the encrypted workbook
-        workbook.Save(outputPath);
-
-        Console.WriteLine($"Encrypted workbook saved to: {outputPath}");
     }
 }

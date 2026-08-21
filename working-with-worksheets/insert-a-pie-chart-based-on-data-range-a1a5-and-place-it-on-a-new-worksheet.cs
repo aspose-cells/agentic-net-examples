@@ -1,17 +1,17 @@
-// Title: C# – Insert a Pie Chart from A1:A5 on a New Worksheet with Aspose.Cells
-// Description: Creates a workbook, adds a separate sheet, fills A1:A5 with categories and B1:B5 with values, inserts a pie chart linked to those ranges, sets an optional title, positions the chart, and saves the file as PieChartWorkbook.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# pie chart | add chart new worksheet .NET | set chart data range A1:A5 | pie chart category labels Aspose | C# Aspose.Cells example | programmatic chart positioning | save workbook with chart | GitHub Aspose.Cells samples | Excel pie chart automation | Aspose.Cells chart title
-// Common Searches: how to add a pie chart to a new sheet using Aspose.Cells C# | Aspose.Cells set category data for pie chart | C# code to create and position a pie chart in Excel | Aspose.Cells example for chart series and labels | generate pie chart programmatically with Aspose.Cells
-// Developer Intent: Generate a dedicated worksheet, populate category/value cells, and embed a pie chart that references those ranges.
-// Use Cases: Automated sales‑by‑region visualization on its own sheet for monthly reports. | Financial budget allocation pie chart placed in a separate worksheet for dashboard distribution. | Product‑mix distribution chart added to a workbook that will be shared with external stakeholders.
-// AI Prompts: Show how to display data labels with percentages on the Aspose.Cells pie chart. | Provide code to convert the pie chart to a 3‑D pie and adjust its dimensions. | Explain how to export only the chart worksheet as an image using Aspose.Cells.
+// Title: C# – Insert a Pie Chart from A1:A5 onto a New Worksheet using Aspose.Cells
+// Description: Demonstrates how to create a workbook, add a new worksheet, populate cells A1‑A5 with numeric data, place a Pie chart (rows 6‑20, columns 0‑8) that references the range A1:A5, set a chart title, and save the file as an Excel workbook with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | .NET | pie chart | new worksheet | chart data range A1:A5 | add chart programmatically | chart positioning | save Excel workbook | Excel automation
+// Common Searches: Aspose.Cells add pie chart C# | create chart on new worksheet Aspose.Cells | set pie chart data source A1:A5 | position chart rows columns Aspose.Cells | save workbook with chart Aspose.Cells
+// Developer Intent: Programmatically add a Pie chart based on cells A1:A5 to a freshly created worksheet and persist the workbook.
+// Use Cases: Generate a sales‑by‑product pie chart for monthly reporting. | Build a financial dashboard that visualizes expense categories as a pie chart. | Automate batch creation of Excel files that include pre‑formatted charts for data analysis.
+// AI Prompts: Show C# code to add a donut chart from range B2:B6 on an existing worksheet with Aspose.Cells. | Explain how to customize pie chart colors, legend placement, and data labels in Aspose.Cells. | Provide a method to export a pie chart created with Aspose.Cells as a PNG image.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds a separate sheet, fills A1:A5 with categories and B1:B5 with values, inserts a pie chart linked to those ranges, sets an optional title, positions the chart, and saves the file as PieChartWorkbook.xlsx using Aspose.Cells for .NET.
-class InsertPieChart
+// Demonstrates how to create a workbook, add a new worksheet, populate cells A1‑A5 with numeric data, place a Pie chart (rows 6‑20, columns 0‑8) that references the range A1:A5, set a chart title, and save the file as an Excel workbook with Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
@@ -23,30 +23,23 @@ class InsertPieChart
         Worksheet chartSheet = workbook.Worksheets[newSheetIndex];
         chartSheet.Name = "PieChartSheet";
 
-        // Populate sample categories in A1:A5
-        chartSheet.Cells["A1"].PutValue("Category1");
-        chartSheet.Cells["A2"].PutValue("Category2");
-        chartSheet.Cells["A3"].PutValue("Category3");
-        chartSheet.Cells["A4"].PutValue("Category4");
-        chartSheet.Cells["A5"].PutValue("Category5");
+        // Populate sample numeric data in the range A1:A5
+        chartSheet.Cells["A1"].PutValue(10);
+        chartSheet.Cells["A2"].PutValue(20);
+        chartSheet.Cells["A3"].PutValue(30);
+        chartSheet.Cells["A4"].PutValue(25);
+        chartSheet.Cells["A5"].PutValue(15);
 
-        // Populate corresponding values in B1:B5
-        chartSheet.Cells["B1"].PutValue(10);
-        chartSheet.Cells["B2"].PutValue(20);
-        chartSheet.Cells["B3"].PutValue(30);
-        chartSheet.Cells["B4"].PutValue(25);
-        chartSheet.Cells["B5"].PutValue(15);
+        // Add a pie chart to the worksheet
+        // Parameters: chart type, top row, left column, bottom row, right column
+        int chartIndex = chartSheet.Charts.Add(ChartType.Pie, 6, 0, 20, 8);
+        Chart pieChart = chartSheet.Charts[chartIndex];
 
-        // Add a pie chart to the worksheet (positioned from row 5, column 0 to row 20, column 8)
-        int chartIndex = chartSheet.Charts.Add(ChartType.Pie, 5, 0, 20, 8);
-        Chart chart = chartSheet.Charts[chartIndex];
+        // Set the data source for the pie chart using the specified range A1:A5
+        pieChart.NSeries.Add("A1:A5", true);
 
-        // Set the data range for the chart (values) and category labels
-        chart.NSeries.Add("B1:B5", true);
-        chart.NSeries.CategoryData = "A1:A5";
-
-        // Optional: set a title for the chart
-        chart.Title.Text = "Sample Pie Chart";
+        // Optional: give the chart a title
+        pieChart.Title.Text = "Sample Pie Chart";
 
         // Save the workbook to a file
         workbook.Save("PieChartWorkbook.xlsx");

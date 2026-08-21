@@ -1,53 +1,58 @@
+// Title: Insert a picture into an Excel worksheet and remove its background with Aspose.Cells for .NET
+// Description: Demonstrates how to add an image to a worksheet, set a transparent color to hide the white backdrop, optionally resize the picture, and save the workbook as an XLSX file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells insert image | Excel picture transparent background .NET | remove white background Aspose.Cells | picture formatting Aspose.Cells | C# Aspose.Cells image resizing | background removal Excel .NET | transparent color picture Aspose
+// Common Searches: Aspose.Cells make picture background transparent | C# insert image into Excel with transparent background | remove white background from picture in Excel using Aspose | how to set TransparentColor for a picture in Aspose.Cells | resize inserted image Aspose.Cells C#
+// Developer Intent: Add an image to a worksheet and make its background transparent programmatically.
+// Use Cases: Embedding a logo in a financial report without the surrounding white margin. | Displaying product photos in a catalog sheet that blend with cell colors. | Creating dashboards where overlay images do not obscure underlying data.
+// AI Prompts: Write C# code that inserts a PNG into an Aspose.Cells worksheet and sets TransparentColor to a specific RGB value. | Show how to batch‑process a folder of JPEGs, add each to a separate worksheet, apply white‑background removal, and adjust dimensions with Aspose.Cells. | Explain how to detect the dominant background hue of an image and automatically apply it as TransparentColor before insertion.
+
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsPictureBackgroundRemoval
+// Demonstrates how to add an image to a worksheet, set a transparent color to hide the white backdrop, optionally resize the picture, and save the workbook as an XLSX file using Aspose.Cells for .NET.
+class InsertPictureWithBackgroundRemoval
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Path to the source image
-                string imagePath = "input.jpg";
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Verify that the image file exists before adding it to the worksheet
-                if (File.Exists(imagePath))
-                {
-                    // Add the picture to the worksheet (row 5, column 2 as an example)
-                    int pictureIndex = worksheet.Pictures.Add(5, 2, imagePath);
-                    Picture picture = worksheet.Pictures[pictureIndex];
+            // Path to the picture file to be inserted
+            string picturePath = "input.jpg";
 
-                    // Make pure white (RGB 255,255,255) transparent
-                    CellsColor transparentColor = workbook.CreateCellsColor();
-                    transparentColor.Color = Color.White;
-                    picture.FormatPicture.TransparentColor = transparentColor;
+            // Ensure the picture file exists before adding
+            if (!File.Exists(picturePath))
+                throw new FileNotFoundException($"Picture file not found: {picturePath}");
 
-                    // Optionally adjust picture size
-                    picture.Width = 300;   // width in pixels
-                    picture.Height = 200;  // height in pixels
-                }
-                else
-                {
-                    Console.WriteLine($"Image file not found: {imagePath}");
-                }
+            // Add the picture to the worksheet at cell (0,0)
+            int pictureIndex = worksheet.Pictures.Add(0, 0, picturePath);
 
-                // Save the workbook with the modified picture
-                workbook.Save("OutputWithTransparentBackground.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Retrieve the Picture object
+            Picture picture = worksheet.Pictures[pictureIndex];
+
+            // Make white background transparent
+            CellsColor transparentColor = workbook.CreateCellsColor();
+            transparentColor.Color = Color.White;
+            picture.FormatPicture.TransparentColor = transparentColor;
+
+            // Adjust picture size if needed
+            picture.Width = 300;   // width in pixels
+            picture.Height = 200;  // height in pixels
+
+            // Save the workbook
+            workbook.Save("OutputWithTransparentBackground.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

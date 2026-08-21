@@ -1,44 +1,41 @@
-// Title: Add and rotate a WordArt shape diagonally in an Excel sheet using Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, inserts a WordArt shape with a preset style, sizes it to 500 × 500 px, rotates it 45°, positions it from the top‑left to the bottom‑right corner, and saves the file as WordArtDiagonal.xlsx.
-// Keywords: Aspose.Cells C# | WordArt shape | add WordArt Excel | rotate shape Aspose.Cells | diagonal placement WordArt | PresetWordArtStyle | RotationAngle property | Excel worksheet shapes | .NET Excel graphics
-// Common Searches: how to add WordArt with Aspose.Cells C# | rotate WordArt shape 45 degrees in Excel using Aspose | position WordArt diagonally across a worksheet | Aspose.Cells preset WordArt style example | C# code to create tilted WordArt in Excel
-// Developer Intent: Insert a WordArt object, tilt it 45°, and span it across the worksheet diagonal.
-// Use Cases: Create a slanted banner for report titles. | Add a watermark‑style WordArt that runs corner‑to‑corner. | Design decorative headings for presentation‑style workbooks.
-// AI Prompts: Generate C# Aspose.Cells code that adds a preset WordArt shape, sets its size, rotates it 45°, and saves the workbook. | Show how to place a WordArt object diagonally across an Excel sheet and adjust its rotation with Aspose.Cells for .NET. | Explain how to compute shape dimensions so a WordArt covers the full diagonal of any worksheet using Aspose.Cells.
+// Title: Add and rotate a WordArt shape diagonally across an Excel sheet with Aspose.Cells for .NET
+// Description: Demonstrates how to insert a WordArt shape using Aspose.Cells, set its dimensions, rotate it 45°, position it from the top‑left to the bottom‑right of a worksheet, and save the workbook as an .xlsx file.
+// Keywords: Aspose.Cells | C# | WordArt shape | shape rotation | Excel worksheet | AddWordArt | RotationAngle | diagonal placement | Aspose.Cells example
+// Common Searches: Aspose.Cells add WordArt C# | rotate WordArt 45 degrees Aspose.Cells | position WordArt diagonally Excel | set shape rotation angle Aspose.Cells | how to create diagonal header with WordArt in .NET
+// Developer Intent: Insert a WordArt object, rotate it 45°, and align it along the worksheet diagonal.
+// Use Cases: Create a decorative diagonal banner for automated reports. | Highlight a section of a spreadsheet with rotated branding text. | Generate a watermark‑style WordArt that spans the sheet’s diagonal.
+// AI Prompts: Write C# code that uses Aspose.Cells to add a WordArt shape, set its size to 800 × 200 px, rotate it 45°, and anchor it from cell A1 to the opposite corner. | Show how to change the WordArt rotation angle based on a value read from a worksheet cell. | Explain the math for calculating the width and height needed for a WordArt shape to cover the full diagonal of any worksheet.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, inserts a WordArt shape with a preset style, sizes it to 500 × 500 px, rotates it 45°, positions it from the top‑left to the bottom‑right corner, and saves the file as WordArtDiagonal.xlsx.
+// Demonstrates how to insert a WordArt shape using Aspose.Cells, set its dimensions, rotate it 45°, position it from the top‑left to the bottom‑right of a worksheet, and save the workbook as an .xlsx file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Get the shapes collection of the worksheet
-        ShapeCollection shapes = worksheet.Shapes;
-
         // Add a WordArt shape with a preset style
-        // Positioned at the top‑left corner and sized to span diagonally across the sheet
-        Shape wordArt = shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle1, // preset style
-            "Diagonal WordArt",               // text
-            0,    // topRow index
-            0,    // top offset (pixels)
-            0,    // leftColumn index
-            0,    // left offset (pixels)
-            500,  // height (pixels)
-            500   // width (pixels)
+        // Positioned at the top‑left corner (row 0, column 0) with a large width to span diagonally
+        Shape wordArt = worksheet.Shapes.AddWordArt(
+            PresetWordArtStyle.WordArtStyle1,   // preset style
+            "Diagonal WordArt",                 // text
+            0,   // top row index
+            0,   // vertical offset in pixels
+            0,   // left column index
+            0,   // horizontal offset in pixels
+            200, // height in pixels
+            800  // width in pixels
         );
 
-        // Rotate the WordArt shape by 45 degrees
+        // Rotate the WordArt 45 degrees
         wordArt.RotationAngle = 45;
 
-        // Save the workbook to a file
+        // Save the workbook
         workbook.Save("WordArtDiagonal.xlsx");
     }
 }

@@ -1,68 +1,85 @@
-// Title: C# – Set a Custom Display Label for a Linked OLE Object in Excel with Aspose.Cells
-// Description: Demonstrates how to add a linked OLE object (e.g., a Word document) to an Excel worksheet, assign a meaningful label via the OleObject.Label property, save the workbook, and verify that the label persists after reloading.
-// Keywords: Aspose.Cells C# OLE object label | set linked OLE object caption .NET | Excel OleObject.Label property | custom display name for OLE in Excel | programmatically change OLE object label
-// Common Searches: change OLE object label Aspose.Cells | set custom caption for linked OLE object C# | update display text of OLE object in generated Excel | how to modify OleObject.Label in .NET
-// Developer Intent: Assign a readable label to a linked OLE object in an Excel file.
-// Use Cases: Provide a clear, user‑friendly name for a linked Word file in an automated report. | Differentiate multiple linked OLE objects by giving each a distinct caption. | Confirm that the custom label is stored correctly after the workbook is saved and reopened.
-// AI Prompts: Show C# code that adds a linked OLE object to a worksheet and sets its Label property to a custom string using Aspose.Cells. | Generate an example that saves an Excel file with a labeled OLE object and then reads back the label to verify it. | Explain how to retrieve and update the Label of an existing OleObject in a loaded workbook with Aspose.Cells for .NET.
+// Title: C# – Update the display label of a linked OLE object in Excel using Aspose.Cells
+// Description: Demonstrates how to add a linked OLE object (e.g., a Word document) to a worksheet, assign a custom display label via the OleObject.Label property, save the workbook, reload it, and confirm that the label persists—all with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# OLE object label | set OLE object display text .NET | linked OLE object Excel Aspose | OleObject.Label property | programmatically change OLE label
+// Common Searches: how to set label for linked OLE object in Excel using Aspose.Cells | Aspose.Cells change OLE object display name C# | read OLE object label after saving workbook Aspose | C# update OleObject.Label property | add Word document OLE link with custom label Aspose.Cells
+// Developer Intent: Assign or modify the visible label of a linked OLE object in an Excel workbook through Aspose.Cells for .NET.
+// Use Cases: Insert a linked Word file into a sheet and give it a meaningful caption for end‑users. | Batch‑process existing workbooks to rename OLE object labels based on file names or business rules. | Validate that a custom label survives workbook serialization and can be read back programmatically.
+// AI Prompts: Generate C# code that sets the Label property of an OleObject after adding it with Aspose.Cells. | Show how to iterate through all OleObjects in a workbook and assign each a label derived from its source path. | Explain how to verify the label of a linked OLE object after loading a saved workbook with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a linked OLE object (e.g., a Word document) to an Excel worksheet, assign a meaningful label via the OleObject.Label property, save the workbook, and verify that the label persists after reloading.
-class UpdateOleLabel
+namespace OleObjectLabelUpdateDemo
 {
-    static void Main()
+    // Demonstrates how to add a linked OLE object (e.g., a Word document) to a worksheet, assign a custom display label via the OleObject.Label property, save the workbook, reload it, and confirm that the label persists—all with Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Path to the file that will be linked as an OLE object
-            string sourceFilePath = "sample.docx";
-
-            // Ensure the source file exists (create an empty file if necessary)
-            if (!File.Exists(sourceFilePath))
+            try
             {
-                File.WriteAllBytes(sourceFilePath, new byte[0]);
-            }
+                // Path to a source file that will be linked as an OLE object.
+                string sourceFilePath = @"C:\Temp\SampleDocument.docx";
 
-            // Add an OLE object placeholder to the worksheet.
-            // Passing null for imageData lets Aspose.Cells use the default icon.
-            int oleIndex = worksheet.OleObjects.Add(5, 5, 150, 150, null);
-            OleObject oleObject = worksheet.OleObjects[oleIndex];
+                if (!File.Exists(sourceFilePath))
+                {
+                    Console.WriteLine($"Source file not found: {sourceFilePath}");
+                    return;
+                }
 
-            // Configure the OLE object as a linked object
-            oleObject.IsLink = true; // Mark as linked
-            oleObject.ObjectSourceFullName = Path.GetFullPath(sourceFilePath); // Set source file path
-            oleObject.ProgID = "Word.Document.12"; // ProgID for a Word document
+                // -----------------------------------------------------------------
+                // Create a new workbook and add a linked OLE object with a label.
+                // -----------------------------------------------------------------
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Update the display label of the linked OLE object
-            oleObject.Label = "Project Specification";
+                // Use null for the placeholder image; Aspose.Cells will apply a default icon.
+                byte[] placeholderImage = null;
 
-            // Save the workbook
-            string outputPath = "OleLabelDemo.xlsx";
-            workbook.Save(outputPath);
+                // Add the OLE object at cell B2 (row 1, column 1) with the placeholder image.
+                int oleIndex = sheet.OleObjects.Add(1, 1, 200, 200, placeholderImage);
+                OleObject ole = sheet.OleObjects[oleIndex];
 
-            // Reload the workbook to verify that the label was saved correctly
-            if (File.Exists(outputPath))
-            {
+                // Configure the OLE object to link to the external file.
+                ole.IsLink = true;
+                ole.ObjectSourceFullName = sourceFilePath;
+                ole.ProgID = "Word.Document.12"; // ProgID for .docx
+
+                // Set the display label that will appear on the worksheet.
+                ole.Label = "Project Specification Document";
+
+                // Ensure the output directory exists.
+                string outputPath = @"C:\Temp\OleObjectLabelDemo.xlsx";
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook to disk.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {outputPath}");
+
+                // -----------------------------------------------------------------
+                // Load the saved workbook and verify the label of the OLE object.
+                // -----------------------------------------------------------------
+                if (!File.Exists(outputPath))
+                {
+                    Console.WriteLine($"Saved workbook not found: {outputPath}");
+                    return;
+                }
+
                 Workbook loadedWorkbook = new Workbook(outputPath);
                 OleObject loadedOle = loadedWorkbook.Worksheets[0].OleObjects[0];
+
                 Console.WriteLine("Loaded OLE Object Label: " + loadedOle.Label);
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Failed to save the workbook.");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

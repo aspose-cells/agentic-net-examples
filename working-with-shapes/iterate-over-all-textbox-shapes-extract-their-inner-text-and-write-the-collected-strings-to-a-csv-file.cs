@@ -1,10 +1,10 @@
-// Title: Export All TextBox Shape Text from an Excel Workbook to CSV with Aspose.Cells for .NET
-// Description: Loads an .xlsx file, iterates through every worksheet, reads the Text property of each TextBox shape via the TextBoxCollection, and writes the gathered strings to a CSV file with proper quoting while leaving the original workbook unchanged.
-// Keywords: Aspose.Cells C# extract TextBox text | Excel TextBox to CSV | read shape text Aspose.Cells | export textbox contents .NET | TextBoxCollection iteration | CSV export Aspose.Cells | C# Excel shape processing
-// Common Searches: How to read TextBox shapes from Excel using Aspose.Cells C# | Export TextBox contents to CSV with Aspose.Cells .NET | Get all TextBox text in a workbook Aspose.Cells | C# extract shape text from .xlsx file | Aspose.Cells TextBoxCollection example
-// Developer Intent: Collect the inner text of every TextBox shape in a workbook and save the results to a CSV file.
-// Use Cases: Generate a consolidated list of notes entered in TextBox shapes across multiple sheets. | Create a CSV backup of TextBox content before performing bulk workbook modifications. | Prepare TextBox data for import into a database or analytics pipeline.
-// AI Prompts: Write C# code that uses Aspose.Cells to read the Text property of each TextBox on all worksheets and export the values to a CSV file with proper escaping. | Suggest performance tips for processing large workbooks that contain thousands of TextBox shapes when exporting their text to CSV. | Show how to modify the sample to include the worksheet name and TextBox index alongside each text entry in the CSV output.
+// Title: Extract TextBox Shape Text from an Excel Workbook and Export to CSV with Aspose.Cells for .NET
+// Description: Load an Excel file, loop through every worksheet, gather the Text property of each non‑empty TextBox shape, and write the collected strings to a CSV file with proper quoting. The workbook can be saved afterward if needed.
+// Keywords: Aspose.Cells TextBox extraction | C# export TextBox to CSV | read shape text Aspose.Cells | .NET Excel TextBox to CSV | iterate worksheets Aspose.Cells | extract textbox contents | Excel shape text export | Aspose.Cells CSV output | workbook TextBox collection | Aspose.Cells shape handling
+// Common Searches: how to get text from all TextBox shapes using Aspose.Cells | export Excel TextBox contents to CSV in C# | Aspose.Cells iterate over worksheet TextBoxes | C# read TextBox shape text from workbook | save TextBox values to CSV with Aspose
+// Developer Intent: Collect every TextBox shape's inner text from a workbook and write the values to a CSV file.
+// Use Cases: Consolidate user comments stored in TextBox shapes across multiple sheets for reporting. | Migrate legacy data entered in TextBoxes to a CSV format for database import. | Create an audit log of TextBox contents before performing bulk edits on the workbook.
+// AI Prompts: Generate C# code that uses Aspose.Cells to iterate all worksheets, extract each TextBox's Text, and export the results to a CSV file with proper escaping. | Show how to filter extracted TextBox text by a keyword before writing to CSV using Aspose.Cells. | Explain performance‑friendly techniques for extracting TextBox contents from large Excel files with Aspose.Cells while keeping memory usage low.
 
 using System;
 using System.Collections.Generic;
@@ -12,34 +12,34 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an .xlsx file, iterates through every worksheet, reads the Text property of each TextBox shape via the TextBoxCollection, and writes the gathered strings to a CSV file with proper quoting while leaving the original workbook unchanged.
+// Load an Excel file, loop through every worksheet, gather the Text property of each non‑empty TextBox shape, and write the collected strings to a CSV file with proper quoting. The workbook can be saved afterward if needed.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        string inputFile = "input.xlsx";
-        Workbook workbook = new Workbook(inputFile);
+        // Load an existing workbook (replace with your actual file path)
+        string inputPath = "input.xlsx";
+        Workbook workbook = new Workbook(inputPath);
 
-        // List to hold the text from each TextBox
+        // Collect the inner text of all TextBox shapes across all worksheets
         List<string> textboxTexts = new List<string>();
 
-        // Iterate through all worksheets in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Get the collection of TextBox shapes on the current worksheet
-            TextBoxCollection textBoxCollection = sheet.TextBoxes;
-
-            // Iterate over each TextBox and collect its inner text
-            foreach (TextBox tb in textBoxCollection)
+            // The TextBoxes property gives access to the TextBox collection of the worksheet
+            foreach (TextBox tb in sheet.TextBoxes)
             {
-                textboxTexts.Add(tb.Text);
+                // Guard against null or empty text
+                if (!string.IsNullOrEmpty(tb.Text))
+                {
+                    textboxTexts.Add(tb.Text);
+                }
             }
         }
 
-        // Write the collected texts to a CSV file
-        string csvFile = "textbox_texts.csv";
-        using (StreamWriter writer = new StreamWriter(csvFile))
+        // Write the collected strings to a CSV file
+        string csvPath = "textbox_texts.csv";
+        using (StreamWriter writer = new StreamWriter(csvPath))
         {
             // Optional header row
             writer.WriteLine("TextBoxText");
@@ -52,7 +52,7 @@ class Program
             }
         }
 
-        // Save the workbook (unchanged) if you need to persist any modifications
+        // Save the workbook if any modifications were made (optional)
         workbook.Save("output.xlsx");
     }
 }

@@ -1,37 +1,25 @@
-// Title: Batch Decrypt Encrypted XLSX Files with Aspose.Cells for .NET
-// Description: A C# console utility that scans a folder for password‑protected XLSX workbooks, detects encryption, tries a predefined list of passwords, removes the protection with Aspose.Cells, saves the unencrypted copy, and logs each successful decryption.
-// Keywords: Aspose.Cells | C# | .NET | batch decrypt Excel | encrypted XLSX | password list | verify Excel password | remove workbook protection | detect encrypted file | automate Excel decryption
-// Common Searches: how to batch decrypt XLSX files using Aspose.Cells | c# program to try multiple passwords on encrypted Excel workbooks | aspnet automate removal of Excel file password | verify Excel password before loading with Aspose.Cells | bulk unlock password‑protected Excel files .NET
-// Developer Intent: Automatically unlock every encrypted XLSX file in a directory by testing a set of possible passwords and saving the decrypted versions.
-// Use Cases: Process nightly drops of password‑protected reports so downstream analytics can read them. | Migrate a legacy archive of secured Excel files to an unprotected repository for easier access. | Identify which known password opens each workbook before performing data extraction or validation.
-// AI Prompts: Generate C# code that uses Aspose.Cells to batch decrypt XLSX files with a supplied password list and produce a log of successes and failures. | Show how to extend the utility to export a CSV summary containing file name, successful password, and output path. | Suggest performance optimizations for decrypting large encrypted workbooks in bulk with Aspose.Cells.
+// Title: C# Batch Decrypt Encrypted XLSX Files with Multiple Passwords Using Aspose.Cells
+// Description: A C# console app that scans a directory (recursively), detects encrypted .xlsx workbooks, tries a predefined list of passwords, removes the password when a match is found, saves an unprotected copy with a "_decrypted" suffix, and logs success or failure for each file.
+// Keywords: Aspose.Cells batch decryption | C# decrypt encrypted Excel | verify password Aspose.Cells | remove workbook password programmatically | detect encrypted XLSX files | load encrypted workbook with password | GitHub Aspose.Cells example | bulk Excel password removal
+// Common Searches: batch decrypt encrypted Excel files C# | Aspose.Cells try multiple passwords | remove password from many XLSX files | C# script to unlock encrypted workbooks | detect and decrypt protected Excel files
+// Developer Intent: Automatically unlock every encrypted XLSX file in a folder by testing a set of possible passwords and save each workbook without protection.
+// Use Cases: Mass‑unprotect archived spreadsheets before migration to a data lake. | Process user‑submitted encrypted reports when the password list is known, producing plain‑text files for analysis. | Add a pre‑release check in CI/CD pipelines to ensure no password‑protected Excel files are shipped.
+// AI Prompts: Write C# code with Aspose.Cells that recursively scans a folder, detects encrypted .xlsx files, attempts a list of passwords, removes the password, saves a decrypted copy, and logs each outcome. | Show how to modify the batch decryption script to generate a CSV report containing file path, successful password (if any), and status. | Explain error handling for files where no password matches and how to continue processing the remaining workbooks.
 
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace BatchDecrypt
+namespace BatchDecryptXlsx
 {
-    // A C# console utility that scans a folder for password‑protected XLSX workbooks, detects encryption, tries a predefined list of passwords, removes the protection with Aspose.Cells, saves the unencrypted copy, and logs each successful decryption.
+    // A C# console app that scans a directory (recursively), detects encrypted .xlsx workbooks, tries a predefined list of passwords, removes the password when a match is found, saves an unprotected copy with a "_decrypted" suffix, and logs success or failure for each file.
     class Program
     {
         static void Main(string[] args)
         {
-            // Folder containing encrypted XLSX files
-            string inputFolder = @"EncryptedFiles";
-            // Folder where decrypted files will be saved
-            string outputFolder = @"DecryptedFiles";
-
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Verify input folder exists
-            if (!Directory.Exists(inputFolder))
-            {
-                Console.WriteLine($"Input folder '{inputFolder}' does not exist. Please create it and add encrypted files.");
-                return;
-            }
+            // Folder containing the XLSX files to process
+            string folderPath = @"C:\ExcelFiles";
 
             // List of possible passwords to try
             List<string> possiblePasswords = new List<string>
@@ -42,61 +30,53 @@ namespace BatchDecrypt
                 "test"
             };
 
-            // Process each .xlsx file in the input folder
-            foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+            // Get all .xlsx files in the folder (including subfolders)
+            string[] excelFiles = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.AllDirectories);
+
+            foreach (string filePath in excelFiles)
             {
-                try
+                // Detect if the file is encrypted
+                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
+                if (!formatInfo.IsEncrypted)
                 {
-                    // Detect file format and check if the file is encrypted
-                    FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
-                    if (!fileInfo.IsEncrypted)
-                    {
-                        Console.WriteLine($"{Path.GetFileName(filePath)} is not encrypted. Skipping.");
-                        continue;
-                    }
+                    Console.WriteLine($"File is not encrypted, skipping: {filePath}");
+                    continue;
+                }
 
-                    bool decrypted = false;
+                bool decrypted = false;
 
-                    // Try each password until one succeeds
-                    foreach (string pwd in possiblePasswords)
+                // Try each password until one succeeds
+                foreach (string pwd in possiblePasswords)
+                {
+                    // Verify password using a fresh stream each time
+                    using (FileStream stream = File.OpenRead(filePath))
                     {
-                        // Verify password without loading the whole workbook
-                        using (Stream stream = File.OpenRead(filePath))
+                        if (FileFormatUtil.VerifyPassword(stream, pwd))
                         {
-                            if (FileFormatUtil.VerifyPassword(stream, pwd))
-                            {
-                                // Load the workbook with the correct password
-                                LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto)
-                                {
-                                    Password = pwd
-                                };
-                                Workbook workbook = new Workbook(filePath, loadOptions);
+                            // Load the workbook with the correct password
+                            LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+                            loadOptions.Password = pwd;
+                            Workbook workbook = new Workbook(filePath, loadOptions);
 
-                                // Remove the password protection
-                                workbook.Settings.Password = null;
+                            // Remove the password protection
+                            workbook.Settings.Password = null;
 
-                                // Save the unprotected workbook
-                                string outputPath = Path.Combine(
-                                    outputFolder,
-                                    Path.GetFileNameWithoutExtension(filePath) + "_decrypted.xlsx");
+                            // Save the unprotected workbook (you can change the output path as needed)
+                            string outputPath = Path.Combine(
+                                Path.GetDirectoryName(filePath),
+                                Path.GetFileNameWithoutExtension(filePath) + "_decrypted.xlsx");
 
-                                workbook.Save(outputPath);
-
-                                Console.WriteLine($"Successfully decrypted '{Path.GetFileName(filePath)}' with password '{pwd}'. Saved to '{outputPath}'.");
-                                decrypted = true;
-                                break; // Exit password loop for this file
-                            }
+                            workbook.Save(outputPath);
+                            Console.WriteLine($"Successfully decrypted '{filePath}' with password '{pwd}'. Saved as '{outputPath}'.");
+                            decrypted = true;
+                            break; // Stop trying other passwords for this file
                         }
                     }
-
-                    if (!decrypted)
-                    {
-                        Console.WriteLine($"Failed to decrypt '{Path.GetFileName(filePath)}'. No matching password found.");
-                    }
                 }
-                catch (Exception ex)
+
+                if (!decrypted)
                 {
-                    Console.WriteLine($"Error processing file '{Path.GetFileName(filePath)}': {ex.Message}");
+                    Console.WriteLine($"Failed to decrypt '{filePath}'. No matching password found.");
                 }
             }
         }

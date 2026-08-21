@@ -1,42 +1,62 @@
-// Title: C# – Add a Boolean to a Specific Row in an Aspose.Cells ListObject Table with PutCellValue
-// Description: Creates a workbook, defines a ListObject over A1:B3, and uses ListObject.PutCellValue with zero‑based row and column offsets to insert a new data row and set the Boolean Flag column to true, then saves the file as an XLSX document.
-// Keywords: Aspose.Cells ListObject PutCellValue | C# add boolean to table row | Aspose.Cells table row offset | set cell value in ListObject | Aspose.Cells boolean column example
-// Common Searches: Aspose.Cells PutCellValue boolean C# | how to add a new row to ListObject and set flag | zero based row offset ListObject PutCellValue | C# Aspose.Cells set true/false in table column | insert boolean value into Aspose.Cells table
-// Developer Intent: Insert a Boolean value into a designated row and column of a ListObject table using PutCellValue.
-// Use Cases: Automatically assign a true/false status flag when appending new records to a spreadsheet table. | Update a Boolean field in an existing table row based on calculation results or user input. | Generate dynamic reports where each row includes a Boolean indicator for filtering or conditional formatting.
-// AI Prompts: Write C# code that adds a new row to an Aspose.Cells ListObject and sets a Boolean value in the second column using PutCellValue. | Explain the concept of zero‑based row and column offsets in ListObject.PutCellValue with a code example. | Show how to modify an existing Boolean cell in a ListObject without adding a new row, using Aspose.Cells.
+// Title: Set a Boolean in an Aspose.Cells ListObject Table with ListObject.PutCellValue (C#)
+// Description: Demonstrates how to create a workbook, define a table with headers, add sample rows, and use ListObject.PutCellValue(rowOffset, columnOffset, true) to write a boolean value into a specific cell of the table before saving the file.
+// Keywords: Aspose.Cells ListObject PutCellValue | C# boolean table cell | Aspose.Cells update cell by offset | Set true false in Aspose table | Aspose.Cells .NET ListObject example
+// Common Searches: Aspose.Cells PutCellValue boolean example | How to write true/false to a ListObject cell in C# | Update specific table cell using rowOffset columnOffset Aspose | Set boolean value in Aspose.Cells table programmatically
+// Developer Intent: Insert a boolean value into a designated row and column of an Aspose.Cells ListObject using the PutCellValue method.
+// Use Cases: Mark records as active/inactive in a generated report. | Apply business‑logic flags to rows after data import. | Initialize a status column when building worksheets dynamically.
+// AI Prompts: Show how to use ListObject.PutCellValue to write a DateTime value at a given offset. | Provide a loop that updates multiple boolean cells in a ListObject with PutCellValue. | Explain how to convert a ListObject row/column offset to an A1 cell address before calling PutCellValue.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Creates a workbook, defines a ListObject over A1:B3, and uses ListObject.PutCellValue with zero‑based row and column offsets to insert a new data row and set the Boolean Flag column to true, then saves the file as an XLSX document.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to create a workbook, define a table with headers, add sample rows, and use ListObject.PutCellValue(rowOffset, columnOffset, true) to write a boolean value into a specific cell of the table before saving the file.
+    public class ListObjectPutBooleanDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add header row and some initial data to form a table
-        sheet.Cells["A1"].PutValue("ID");
-        sheet.Cells["B1"].PutValue("Flag");
-        sheet.Cells["A2"].PutValue(1);
-        sheet.Cells["B2"].PutValue(false);
-        sheet.Cells["A3"].PutValue(2);
-        sheet.Cells["B3"].PutValue(false);
+                // Add header row for the table
+                worksheet.Cells["A1"].PutValue("ID");
+                worksheet.Cells["B1"].PutValue("IsActive");
 
-        // Create a ListObject (table) that includes the range A1:B3, with a header row
-        int tableIndex = sheet.ListObjects.Add(0, 0, 2, 1, true);
-        ListObject table = sheet.ListObjects[tableIndex];
+                // Add some initial data rows
+                worksheet.Cells["A2"].PutValue(1);
+                worksheet.Cells["B2"].PutValue(false);
+                worksheet.Cells["A3"].PutValue(2);
+                worksheet.Cells["B3"].PutValue(true);
 
-        // Add a new row to the table (row offset 2) and set a boolean value in column 1
-        // Row offsets are zero‑based relative to the first data row (excluding the header)
-        table.PutCellValue(2, 0, 3);      // Set ID = 3 in the new row
-        table.PutCellValue(2, 1, true);  // Set boolean Flag = true in the new row
+                // Create a ListObject (table) that covers the data range A1:B3
+                // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
+                int tableIndex = worksheet.ListObjects.Add(0, 0, 2, 1, true);
+                ListObject table = worksheet.ListObjects[tableIndex];
 
-        // Save the workbook to a file
-        workbook.Save("ListObjectBooleanDemo.xlsx", SaveFormat.Xlsx);
+                // Update the cell at row offset 1 (second data row) and column offset 1 (second column)
+                // Set the boolean value to true using PutCellValue
+                table.PutCellValue(rowOffset: 1, columnOffset: 1, value: true);
+
+                // Save the workbook to a file
+                string outputPath = "ListObjectPutCellValueBooleanDemo.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            Run();
+        }
     }
 }

@@ -1,47 +1,63 @@
-// Title: Add or update a chart label with today’s date using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, insert a column chart, add a label shape inside the chart area, set its text to the current date (yyyy‑MM‑dd) via C# and Aspose.Cells, and save the file as an Excel workbook.
-// Keywords: Aspose.Cells | .NET | C# | chart label | AddLabelInChart | current date | Excel chart annotation | update chart label | Aspose.Cells chart shape | DateTime.Now
-// Common Searches: Aspose.Cells add label to chart C# | Set chart label text to today’s date Aspose.Cells | Update existing chart label Aspose.Cells .NET | Change chart annotation dynamically C# | How to use AddLabelInChart with Aspose.Cells
-// Developer Intent: Insert or modify a chart label to show the current date programmatically.
-// Use Cases: Stamp daily reports with a date label on sales charts | Automate dashboard Excel exports with a dynamic date annotation | Replace static chart titles with a runtime date for scheduled generation
-// AI Prompts: Write C# code using Aspose.Cells to add a label inside a chart and set its text to DateTime.Now formatted as yyyy-MM-dd. | Show how to find an existing label shape in a chart and update its text to the current date in Aspose.Cells for .NET. | Provide a sample that adds multiple chart labels each with different date formats using Aspose.Cells C#.
+// Title: Set chart data labels to today's date with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds a column chart, populates sample data, enables data labels, disables auto‑generated text for each point, assigns the current date (yyyy‑MM‑dd) to the label, and saves the file.
+// Keywords: Aspose.Cells chart data label | C# set chart label text | current date label Aspose.Cells | custom chart point labels .NET | DataLabels.Text Aspose.Cells | disable auto text chart label | update chart labels programmatically
+// Common Searches: Aspose.Cells set custom text for chart data labels | C# change chart point label to today’s date | How to disable auto text on Aspose.Cells chart labels | Update column chart labels with dynamic date Aspose.Cells | Aspose.Cells DataLabels.Text example
+// Developer Intent: Programmatically replace each chart point’s data label with the current date.
+// Use Cases: Add a generation timestamp to every column in a sales chart for audit trails. | Display the report date on KPI chart labels so viewers know data freshness. | Insert a daily update date into financial chart labels to indicate when values were captured.
+// AI Prompts: Generate C# code using Aspose.Cells that disables auto text for chart points and sets DataLabels.Text to DateTime.Now formatted as yyyy‑MM‑dd. | Show how to update only the first series of a line chart with today’s date as the label text in Aspose.Cells. | Explain how to change the DataLabels.Text property for each ChartPoint while keeping ShowValue enabled.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, insert a column chart, add a label shape inside the chart area, set its text to the current date (yyyy‑MM‑dd) via C# and Aspose.Cells, and save the file as an Excel workbook.
-class UpdateChartLabel
+namespace AsposeCellsLabelUpdateDemo
 {
-    static void Main()
+    // Creates a workbook, adds a column chart, populates sample data, enables data labels, disables auto‑generated text for each point, assigns the current date (yyyy‑MM‑dd) to the label, and saves the file.
+    public class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate some sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["B1"].PutValue(10);
-        worksheet.Cells["B2"].PutValue(20);
-        worksheet.Cells["B3"].PutValue(30);
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
 
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.NSeries.Add("B1:B3", true);          // Set Y values
-        chart.NSeries.CategoryData = "A1:A3";      // Set X categories
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-        // Add a label shape inside the chart area
-        // Parameters are top, left, height, width (in 1/4000 of chart area)
-        Label chartLabel = chart.Shapes.AddLabelInChart(100, 100, 200, 200);
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Update the label text to display the current date
-        chartLabel.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            // Set the data range for the chart
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-        // Save the workbook with the updated chart label
-        workbook.Save("ChartWithCurrentDateLabel.xlsx");
+            // Enable data labels for the series
+            foreach (Series series in chart.NSeries)
+            {
+                series.DataLabels.ShowValue = true;
+
+                // Update each data label to display the current date
+                foreach (ChartPoint point in series.Points)
+                {
+                    // Disable auto-generated text so we can set custom text
+                    point.DataLabels.IsAutoText = false;
+
+                    // Set the label text to today's date (e.g., "2026-08-10")
+                    point.DataLabels.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                }
+            }
+
+            // Save the workbook with the updated chart labels
+            workbook.Save("ChartWithDateLabels.xlsx");
+        }
     }
 }

@@ -1,45 +1,67 @@
-// Title: Toggle a Shape’s Glow Effect in Aspose.Cells for .NET (C#) Without Changing Other Formatting
-// Description: Shows how to add a rectangle shape to an Excel worksheet with Aspose.Cells, then programmatically enable or hide its glow by adjusting Glow.Size, Glow.Color and Glow.Transparency while leaving all other shape properties untouched, and finally save the workbook.
-// Keywords: Aspose.Cells C# shape glow | Excel shape glow toggle | Aspose.Cells Glow.Transparency | hide glow Aspose.Cells | enable glow Aspose.Cells | shape formatting .NET | Aspose.Cells drawing API | toggle glow visibility | Excel shape effects | programmatic glow control
-// Common Searches: how to hide glow effect on a shape using Aspose.Cells | enable glow on an Excel shape without altering other properties | C# toggle shape glow visibility Aspose.Cells | set shape glow transparency to 100% in .NET | Aspose.Cells change glow size and color programmatically
-// Developer Intent: Programmatically turn a shape’s glow on or off while preserving its existing size, color, and other formatting.
-// Use Cases: Allow end‑users to switch a highlight glow on a diagram element in a generated report. | Apply conditional glow to emphasize key shapes only when certain data criteria are met. | Create reusable Excel templates where the glow can be activated or deactivated via code without resetting the shape’s design.
-// AI Prompts: Write C# code with Aspose.Cells that toggles a shape’s glow effect without modifying its size or color. | Show how to hide a shape’s glow by setting Transparency to 100% and later re‑enable it with a specific radius and color. | Explain how to detect whether a shape’s glow is currently hidden and then make it visible using the Aspose.Cells API.
+// Title: Toggle Shape Glow Visibility with Aspose.Cells for .NET (C#)
+// Description: This example creates a new Workbook, adds a rectangle shape, applies an orange glow, and then toggles the glow on or off by checking the Glow.Size property. The code changes only the glow visibility, leaving all other shape attributes untouched, and saves the workbook as an .xlsx file.
+// Keywords: Aspose.Cells | C# | shape glow | toggle glow | hide glow | show glow | Glow.Size | Aspose.Cells.Drawing | Excel shape effects | programmatic shape formatting | GitHub example | Aspose.Cells API
+// Common Searches: how to hide glow effect on a shape using Aspose.Cells | toggle shape glow programmatically C# | Aspose.Cells change glow visibility without affecting other properties | C# example for turning off shape glow in Excel | Aspose.Cells shape glow toggle code
+// Developer Intent: Enable or disable the glow effect of a specific Shape object while preserving its color, transparency, and other formatting.
+// Use Cases: Conditionally remove the glow from a chart legend shape before exporting the workbook. | Add a UI toggle that switches the glow on a button‑shaped annotation without altering its size or fill. | Batch‑process a worksheet to hide glows on all shapes to meet corporate branding guidelines.
+// AI Prompts: Generate C# code that uses Aspose.Cells to turn off the glow of a Shape object while keeping its other properties unchanged. | Write a method AcceptShape(Shape shape, bool enableGlow) that toggles the glow effect and returns the updated workbook. | Provide a step‑by‑step explanation of how to check shape.Glow.Size and hide or restore the glow in Aspose.Cells.
 
-using System.Drawing;
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System.Drawing;
 
-// Shows how to add a rectangle shape to an Excel worksheet with Aspose.Cells, then programmatically enable or hide its glow by adjusting Glow.Size, Glow.Color and Glow.Transparency while leaving all other shape properties untouched, and finally save the workbook.
-class ToggleGlowVisibility
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // This example creates a new Workbook, adds a rectangle shape, applies an orange glow, and then toggles the glow on or off by checking the Glow.Size property. The code changes only the glow visibility, leaving all other shape attributes untouched, and saves the workbook as an .xlsx file.
+    public class ToggleGlowEffectDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add a rectangle shape to the worksheet
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 150);
-
-        // Toggle the glow effect visibility
-        // If the glow size is zero, the glow is considered hidden – enable it.
-        // Otherwise, make the glow fully transparent to hide it without changing other properties.
-        if (shape.Glow.Size == 0)
+        public static void Main()
         {
-            // Enable glow: set size, color and make it fully opaque
-            shape.Glow.Size = 8;                         // radius in points
-            shape.Glow.Transparency = 0.0;               // fully opaque
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a rectangle shape to the worksheet
+            Shape shape = sheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 150);
+
+            // Initialize glow effect (visible state)
+            shape.Glow.Size = 12;                     // radius in points
+            shape.Glow.Transparency = 0.0;            // fully opaque
             shape.Glow.Color = workbook.CreateCellsColor();
-            shape.Glow.Color.Color = Color.Yellow;      // any desired color
-        }
-        else
-        {
-            // Hide glow by setting transparency to 100%
-            shape.Glow.Transparency = 1.0;
-        }
+            shape.Glow.Color.Color = Color.Orange;   // set glow color
 
-        // Save the workbook
-        workbook.Save("ToggleGlowVisibility.xlsx");
+            // ---------- Toggle logic ----------
+            // If the shape currently has a glow effect (size > 0), hide it by setting size to 0.
+            // Otherwise, restore a default glow effect.
+            if (shape.Glow.Size > 0)
+            {
+                // Hide glow
+                shape.Glow.Size = 0;
+            }
+            else
+            {
+                // Show glow: re‑apply a default glow effect
+                shape.Glow.Size = 12;
+                shape.Glow.Transparency = 0.0;
+                shape.Glow.Color = workbook.CreateCellsColor();
+                shape.Glow.Color.Color = Color.Orange;
+            }
+
+            // Save the workbook
+            workbook.Save("ToggleGlowEffectDemo.xlsx");
+        }
     }
 }

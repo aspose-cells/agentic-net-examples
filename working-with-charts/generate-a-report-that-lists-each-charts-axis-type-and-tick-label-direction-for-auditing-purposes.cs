@@ -1,108 +1,93 @@
-// Title: C# console report of chart axis types and tick‑label directions with Aspose.Cells
-// Description: Loads an Excel workbook, iterates every worksheet and chart, calculates each chart layout, and prints to the console the axis scope (primary/secondary), axis type (Category, Value, Series) and tick‑label text direction. Ideal for .NET developers needing a quick audit of chart axis settings.
-// Keywords: Aspose.Cells chart axis direction | C# list chart axes tick label | retrieve axis type Aspose.Cells | audit Excel chart axes .NET | chart axis tick label direction C# | Aspose.Cells console report | Excel chart axis enumeration
-// Common Searches: how to get tick label direction of chart axes using Aspose.Cells C# | list primary and secondary axes for all charts in a workbook | Aspose.Cells enumerate chart axes properties | C# code to output chart axis type and label direction | Aspose.Cells chart axis audit example
-// Developer Intent: Generate a detailed console report that shows each chart’s axis type and its tick‑label direction across all worksheets in an Excel file.
-// Use Cases: Create an audit log of chart axis settings before publishing a workbook to guarantee visual consistency. | Validate that tick‑label directions follow corporate style guidelines in financial or marketing reports. | Troubleshoot unexpected axis formatting in automated chart generation pipelines.
-// AI Prompts: Write a method that returns a List<ChartAxisInfo> with worksheet name, chart name, axis scope, axis type, and tick‑label direction. | Modify the sample to export the axis report to CSV or JSON instead of writing to the console. | Add error handling for missing secondary axes and produce a summary of primary vs. secondary axes found.
+// Title: Aspose.Cells for .NET – Generate a Chart Axis Audit Report (Axis Type & Tick‑Label Direction)
+// Description: This C# example creates a workbook, adds sample data, inserts a column chart and a line chart, assigns different ChartTextDirectionType values to the Category and Value axes, forces chart calculation, and then iterates through every chart in the worksheet. For each chart it prints the axis type (Category, Value, and optional Series) together with the TickLabels.DirectionType, and finally saves the workbook. Ideal for developers who need to verify or document axis label orientation across multiple charts.
+// Keywords: Aspose.Cells chart axis audit | C# chart tick label direction | ChartTextDirectionType .NET | list chart axis types Aspose | retrieve chart axis properties | Aspose.Cells console report | Excel chart axis enumeration | Aspose.Cells GitHub example | US developers Aspose.Cells | UK Aspose.Cells chart API
+// Common Searches: How to list axis type and tick label direction for each chart using Aspose.Cells | Aspose.Cells C# generate chart axis audit report | Retrieve category and value axis label orientation in a workbook | Check for series axis in Aspose.Cells charts | Aspose.Cells chart axis properties example GitHub
+// Developer Intent: Produce a console‑based audit that enumerates every chart’s axis type and its tick‑label direction.
+// Use Cases: Document the label orientation of multiple charts before publishing an Excel report. | Validate that chart axes conform to corporate style guidelines (e.g., vertical category labels). | Detect and log the presence of a Series axis in charts that support it. | Automate quality checks for generated workbooks in CI pipelines.
+// AI Prompts: Write C# code with Aspose.Cells that iterates through all charts in a worksheet and prints each axis’s type and TickLabels.DirectionType. | Create a method that returns a dictionary mapping chart names to a list of their axis types and corresponding tick‑label directions. | Show how to change the tick label direction for every value axis in a workbook and then generate an audit report.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads an Excel workbook, iterates every worksheet and chart, calculates each chart layout, and prints to the console the axis scope (primary/secondary), axis type (Category, Value, Series) and tick‑label text direction. Ideal for .NET developers needing a quick audit of chart axis settings.
+// This C# example creates a workbook, adds sample data, inserts a column chart and a line chart, assigns different ChartTextDirectionType values to the Category and Value axes, forces chart calculation, and then iterates through every chart in the worksheet. For each chart it prints the axis type (Category, Value, and optional Series) together with the TickLabels.DirectionType, and finally saves the workbook. Ideal for developers who need to verify or document axis label orientation across multiple charts.
 class ChartAxisAudit
 {
     static void Main()
     {
-        try
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate sample data for charts
+        worksheet.Cells["A1"].PutValue("Category");
+        worksheet.Cells["A2"].PutValue("A");
+        worksheet.Cells["A3"].PutValue("B");
+        worksheet.Cells["A4"].PutValue("C");
+
+        worksheet.Cells["B1"].PutValue("Value1");
+        worksheet.Cells["B2"].PutValue(10);
+        worksheet.Cells["B3"].PutValue(20);
+        worksheet.Cells["B4"].PutValue(30);
+
+        worksheet.Cells["C1"].PutValue("Value2");
+        worksheet.Cells["C2"].PutValue(15);
+        worksheet.Cells["C3"].PutValue(25);
+        worksheet.Cells["C4"].PutValue(35);
+
+        // Add first chart (Column)
+        int chartIndex1 = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 10);
+        Chart chart1 = worksheet.Charts[chartIndex1];
+        chart1.NSeries.Add("B2:B4", true);
+        chart1.NSeries.CategoryData = "A2:A4";
+        chart1.Title.Text = "Column Chart";
+        // Set tick label directions for this chart
+        chart1.CategoryAxis.TickLabels.DirectionType = ChartTextDirectionType.Vertical;
+        chart1.ValueAxis.TickLabels.DirectionType = ChartTextDirectionType.Horizontal;
+
+        // Add second chart (Line)
+        int chartIndex2 = worksheet.Charts.Add(ChartType.Line, 20, 0, 30, 10);
+        Chart chart2 = worksheet.Charts[chartIndex2];
+        chart2.NSeries.Add("C2:C4", true);
+        chart2.NSeries.CategoryData = "A2:A4";
+        chart2.Title.Text = "Line Chart";
+        // Set tick label directions for this chart
+        chart2.CategoryAxis.TickLabels.DirectionType = ChartTextDirectionType.Rotate90;
+        chart2.ValueAxis.TickLabels.DirectionType = ChartTextDirectionType.Rotate270;
+
+        // Ensure axes are calculated before reading properties
+        foreach (Chart ch in worksheet.Charts)
         {
-            const string inputPath = "input.xlsx";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException.
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
-
-            // Load the workbook that contains charts.
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through all worksheets.
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Iterate through all charts on the worksheet.
-                foreach (Chart chart in sheet.Charts)
-                {
-                    // Ensure the chart layout is calculated before accessing axis properties.
-                    chart.Calculate();
-
-                    // Local helper to output information for a given axis.
-                    void ReportAxis(Axis axis, AxisType type, bool isPrimary)
-                    {
-                        if (axis == null) return; // Safety check.
-
-                        // Get the text direction of the tick labels.
-                        ChartTextDirectionType direction = axis.TickLabels.DirectionType;
-
-                        // Build a readable description.
-                        string axisScope = isPrimary ? "Primary" : "Secondary";
-                        Console.WriteLine($"Worksheet: {sheet.Name}");
-                        Console.WriteLine($"Chart: {(!string.IsNullOrEmpty(chart.Name) ? chart.Name : "Unnamed Chart")}");
-                        Console.WriteLine($"  {axisScope} {type} Axis:");
-                        Console.WriteLine($"    TickLabel Direction: {direction}");
-                    }
-
-                    // Primary Category Axis
-                    if (chart.HasAxis(AxisType.Category, true))
-                    {
-                        ReportAxis(chart.CategoryAxis, AxisType.Category, true);
-                    }
-
-                    // Secondary Category Axis
-                    if (chart.HasAxis(AxisType.Category, false))
-                    {
-                        ReportAxis(chart.SecondCategoryAxis, AxisType.Category, false);
-                    }
-
-                    // Primary Value Axis
-                    if (chart.HasAxis(AxisType.Value, true))
-                    {
-                        ReportAxis(chart.ValueAxis, AxisType.Value, true);
-                    }
-
-                    // Secondary Value Axis
-                    if (chart.HasAxis(AxisType.Value, false))
-                    {
-                        ReportAxis(chart.SecondValueAxis, AxisType.Value, false);
-                    }
-
-                    // Primary Series Axis (if applicable)
-                    if (chart.HasAxis(AxisType.Series, true))
-                    {
-                        ReportAxis(chart.SeriesAxis, AxisType.Series, true);
-                    }
-
-                    // Secondary Series Axis (if applicable)
-                    if (chart.HasAxis(AxisType.Series, false) && chart.SeriesAxis != null)
-                    {
-                        // Aspose.Cells does not have a distinct property for secondary series axis,
-                        // so we reuse the same SeriesAxis reference when HasAxis returns true for false.
-                        ReportAxis(chart.SeriesAxis, AxisType.Series, false);
-                    }
-
-                    Console.WriteLine(); // Blank line between charts
-                }
-            }
-
-            // Optionally, save the workbook after any modifications.
-            // workbook.Save("output.xlsx");
+            ch.Calculate();
         }
-        catch (Exception ex)
+
+        // Generate audit report to console
+        Console.WriteLine("Chart Axis Audit Report");
+        Console.WriteLine("-----------------------");
+        foreach (Chart ch in worksheet.Charts)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.WriteLine($"Chart Name: {ch.Name}");
+
+            // Category axis
+            Axis categoryAxis = ch.CategoryAxis;
+            Console.WriteLine($"  Axis Type: Category");
+            Console.WriteLine($"  Tick Label Direction: {categoryAxis.TickLabels.DirectionType}");
+
+            // Value axis
+            Axis valueAxis = ch.ValueAxis;
+            Console.WriteLine($"  Axis Type: Value");
+            Console.WriteLine($"  Tick Label Direction: {valueAxis.TickLabels.DirectionType}");
+
+            // Series axis (if present)
+            if (ch.HasAxis(AxisType.Series, true))
+            {
+                Axis seriesAxis = ch.SeriesAxis;
+                Console.WriteLine($"  Axis Type: Series");
+                Console.WriteLine($"  Tick Label Direction: {seriesAxis.TickLabels.DirectionType}");
+            }
         }
+
+        // Save the workbook containing the charts
+        workbook.Save("ChartAxisAuditReport.xlsx");
     }
 }

@@ -1,51 +1,81 @@
-// Title: Right‑align specific characters in an Excel textbox with Aspose.Cells for .NET (C#)
-// Description: A C# snippet that creates a workbook, adds a textbox shape, finds a target substring, applies bold red styling via Font and StyleFlag, sets the paragraph alignment to right, and writes the result to an .xlsx file.
-// Keywords: Aspose.Cells C# textbox alignment | format characters in shape Aspose.Cells | right align substring Excel textbox | StyleFlag text formatting .NET | TextParagraph alignment Aspose.Cells | Excel shape text styling C# | Aspose.Cells example workbook textbox
-// Common Searches: How to align part of the text in an Aspose.Cells textbox | Apply bold red style to a substring in an Excel shape using C# | Set paragraph alignment for a textbox shape with Aspose.Cells | Use StyleFlag to format characters inside a textbox in .NET
-// Developer Intent: Apply bold red styling to a selected range of characters inside a textbox and make the entire paragraph right‑justified using Aspose.Cells.
-// Use Cases: Generating a financial report where the word “Total” inside a textbox is highlighted in red bold and the whole note is right‑aligned for emphasis. | Creating an invoice template that emphasizes the amount field within a textbox while keeping the surrounding text left‑aligned. | Designing a dashboard sheet where status messages are partially highlighted and the message block is aligned to the right edge of the sheet.
-// AI Prompts: Write C# code with Aspose.Cells that formats a specific substring in a textbox (bold, red) and then sets the textbox paragraph to right alignment. | Show how to use StyleFlag and TextParagraph objects to style and right‑justify selected characters inside an Excel shape using Aspose.Cells for .NET. | Explain the steps to locate a word in a textbox, apply custom font properties, and adjust paragraph alignment for that range with Aspose.Cells.
+// Title: Right‑Align TextBox Paragraph and Highlight Specific Characters with Aspose.Cells for .NET (C#)
+// Description: This example creates a workbook, inserts a textbox shape, sets the paragraph alignment to right, and uses the FormatCharacters method with a StyleFlag to apply bold, italic and red color to a selected substring inside the textbox before saving the file.
+// Keywords: Aspose.Cells right align textbox | FormatCharacters C# | StyleFlag text formatting | highlight substring in shape | textbox paragraph alignment .NET | apply bold italic color Aspose.Cells
+// Common Searches: Aspose.Cells set textbox paragraph alignment to right | How to format part of text in a textbox shape using C# | Apply bold italic red style to specific characters Aspose.Cells | FormatCharacters method example for shapes | Right‑align text inside a shape with Aspose.Cells
+// Developer Intent: Align a textbox paragraph to the right and style a chosen character range with bold, italic and color.
+// Use Cases: Right‑aligned report footer where the word "Confidential" is emphasized in red, bold and italic. | Form label that aligns the instruction text to the right while highlighting the action word "Submit". | Dashboard widget with right‑aligned guidance and a highlighted alert term using custom font attributes.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a textbox, aligns its paragraph to the right, and formats the word "Important" in bold, italic, and blue. | Show how to format multiple non‑contiguous character ranges in a textbox shape with different styles using Aspose.Cells for .NET. | Demonstrate using StyleFlag and FormatCharacters to underline and color the substring "Review" green inside a right‑aligned textbox.
 
+using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// A C# snippet that creates a workbook, adds a textbox shape, finds a target substring, applies bold red styling via Font and StyleFlag, sets the paragraph alignment to right, and writes the result to an .xlsx file.
-class RightAlignSpecificChars
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // This example creates a workbook, inserts a textbox shape, sets the paragraph alignment to right, and uses the FormatCharacters method with a StyleFlag to apply bold, italic and red color to a selected substring inside the textbox before saving the file.
+    public class RightAlignSpecificCharactersDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a text box shape to the worksheet
-        Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 100, 100, 300, 100);
-        textBox.Text = "Important: Align this part right";
+                // Add a text box shape to the worksheet
+                // Parameters: upper left row, upper left column, lower right row, lower right column, width, height
+                Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 100, 100, 300, 100);
+                textBox.Text = "Important: Align this part to the right";
 
-        // Determine the start index and length of the characters to emphasize
-        int startIndex = textBox.Text.IndexOf("Align");
-        int length = "Align this part".Length;
+                // Set the paragraph alignment of the first paragraph to Right
+                TextParagraph paragraph = textBox.TextBody.TextParagraphs[0];
+                paragraph.AlignmentType = TextAlignmentType.Right;
 
-        // Prepare a font with the desired emphasis (bold and red)
-        Aspose.Cells.Font emphasisFont = textBox.Font;
-        emphasisFont.IsBold = true;
-        emphasisFont.Color = Color.Red;
+                // Create a font for the characters we want to emphasize
+                Aspose.Cells.Font emphasisFont = textBox.Font;
+                emphasisFont.IsBold = true;          // make it bold
+                emphasisFont.IsItalic = true;        // make it italic
+                emphasisFont.Color = Color.Red;      // change color for visibility
 
-        // Specify which font properties should be applied
-        StyleFlag flag = new StyleFlag();
-        flag.FontBold = true;
-        flag.FontColor = true;
+                // Create a StyleFlag indicating which font properties to apply
+                StyleFlag flag = new StyleFlag
+                {
+                    FontBold = true,
+                    FontItalic = true,
+                    FontColor = true
+                };
 
-        // Apply the formatting to the selected characters
-        textBox.FormatCharacters(startIndex, length, emphasisFont, flag);
+                // Define the range of characters to emphasize (e.g., "Align this part")
+                string text = textBox.Text;
+                int startIndex = text.IndexOf("Align", StringComparison.Ordinal);
+                if (startIndex >= 0)
+                {
+                    int length = "Align this part".Length;
+                    // Apply formatting to the specific characters
+                    textBox.FormatCharacters(startIndex, length, emphasisFont, flag);
+                }
 
-        // Set the paragraph alignment of the whole text box to right
-        TextParagraph paragraph = textBox.TextBody.TextParagraphs[0];
-        paragraph.AlignmentType = TextAlignmentType.Right;
+                // Save the workbook
+                string outputPath = "RightAlignSpecificCharactersDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
 
-        // Save the workbook
-        workbook.Save("RightAlignSpecificChars.xlsx");
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            RightAlignSpecificCharactersDemo.Run();
+        }
     }
 }

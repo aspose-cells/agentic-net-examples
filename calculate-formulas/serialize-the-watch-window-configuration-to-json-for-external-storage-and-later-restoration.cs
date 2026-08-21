@@ -1,82 +1,84 @@
+// Title: C# – Serialize and Restore Aspose.Cells Watch Window to JSON
+// Description: Demonstrates how to capture the CellWatch items of a worksheet, serialize them to an indented JSON file with System.Text.Json, and later deserialize the file to re‑add the watches to a new workbook. Includes saving and loading the configuration and optional workbook export.
+// Keywords: Aspose.Cells | CellWatch | watch window | JSON serialization | C# example | System.Text.Json | export watch configuration | import watch configuration | persist watch items | restore watch window
+// Common Searches: Aspose.Cells serialize watch window to JSON | how to save CellWatch list as JSON in C# | restore Aspose.Cells watch items from file | export and import watch window configuration | C# example for persisting CellWatch objects
+// Developer Intent: Export the worksheet's watch window to a JSON file and reload it later into another workbook.
+// Use Cases: Preserve user‑defined watch items between application sessions. | Share a predefined watch configuration with teammates. | Create a backup of watch settings before running bulk calculations.
+// AI Prompts: Write C# code that reads a JSON file of CellWatch objects and adds them to a worksheet using Aspose.Cells. | Show how to customize JsonSerializerOptions for Aspose.Cells CellWatch serialization. | Explain a method to clear existing watches in a worksheet before re‑importing them from JSON.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
 
-namespace AsposeCellsWatchWindowJsonDemo
+namespace AsposeCellsWatchWindowJson
 {
-    // Simple DTO representing a watch item for JSON serialization
-    public class WatchItem
+    // Demonstrates how to capture the CellWatch items of a worksheet, serialize them to an indented JSON file with System.Text.Json, and later deserialize the file to re‑add the watches to a new workbook. Includes saving and loading the configuration and optional workbook export.
+    class Program
     {
-        public string CellName { get; set; }
-        public int Row { get; set; }
-        public int Column { get; set; }
-    }
-
-    public class Program
-    {
-        public static void Main()
+        static void Main()
         {
-            // -----------------------------------------------------------------
-            // 1. Create a workbook and add some cell watches to the first sheet
-            // -----------------------------------------------------------------
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add watches for cells B2 and C3
-            sheet.CellWatches.Add("B2");
-            sheet.CellWatches.Add("C3");
+            // Add a couple of cell watch items to the watch window
+            int watchIndex1 = sheet.CellWatches.Add("B2");
+            CellWatch watch1 = sheet.CellWatches[watchIndex1];
+            watch1.Row = 1;          // zero‑based row index
+            watch1.Column = 1;       // zero‑based column index
+            watch1.CellName = "B2";
 
-            // -----------------------------------------------------------------
-            // 2. Extract the watch configuration into a serializable list
-            // -----------------------------------------------------------------
-            List<WatchItem> watchItems = new List<WatchItem>();
+            int watchIndex2 = sheet.CellWatches.Add("D5");
+            CellWatch watch2 = sheet.CellWatches[watchIndex2];
+            watch2.Row = 4;
+            watch2.Column = 3;
+            watch2.CellName = "D5";
+
+            // ------------------------------------------------------------
+            // Serialize the current watch window configuration to JSON
+            // ------------------------------------------------------------
+            var watchList = new List<CellWatch>();
             for (int i = 0; i < sheet.CellWatches.Count; i++)
             {
-                CellWatch cw = sheet.CellWatches[i];
-                watchItems.Add(new WatchItem
-                {
-                    CellName = cw.CellName,
-                    Row = cw.Row,
-                    Column = cw.Column
-                });
+                watchList.Add(sheet.CellWatches[i]);
             }
 
-            // -----------------------------------------------------------------
-            // 3. Serialize the watch list to JSON and save it to a file
-            // -----------------------------------------------------------------
-            JsonSerializerOptions jsonOptions = new JsonSerializerOptions
-            {
-                WriteIndented = true
-            };
-            string json = JsonSerializer.Serialize(watchItems, jsonOptions);
+            string json = JsonSerializer.Serialize(
+                watchList,
+                new JsonSerializerOptions { WriteIndented = true });
+
+            // Save the JSON to an external file
             string jsonPath = "WatchWindowConfig.json";
             File.WriteAllText(jsonPath, json);
-            Console.WriteLine($"Watch window configuration saved to '{jsonPath}':");
+            Console.WriteLine($"Watch window configuration saved to: {jsonPath}");
             Console.WriteLine(json);
 
-            // -----------------------------------------------------------------
-            // 4. Demonstrate restoration: create a new workbook and load watches
-            // -----------------------------------------------------------------
-            Workbook restoredWorkbook = new Workbook();
-            Worksheet restoredSheet = restoredWorkbook.Worksheets[0];
+            // ------------------------------------------------------------
+            // Demonstrate restoration of the watch window from the saved JSON
+            // ------------------------------------------------------------
+            // (In a real scenario you might load a different workbook)
+            // Clear existing watches for demonstration purposes
+            // Note: Aspose.Cells does not provide a direct Clear method,
+            // so we recreate the worksheet to start fresh.
+            workbook = new Workbook();               // new workbook
+            sheet = workbook.Worksheets[0];          // first worksheet
 
-            // Load JSON from file
+            // Load the JSON file
             string loadedJson = File.ReadAllText(jsonPath);
-            List<WatchItem> loadedWatches = JsonSerializer.Deserialize<List<WatchItem>>(loadedJson);
+            List<CellWatch> loadedWatches = JsonSerializer.Deserialize<List<CellWatch>>(loadedJson);
 
-            // Re‑add each watch to the worksheet
-            foreach (WatchItem item in loadedWatches)
+            // Re‑add each watch item to the worksheet's watch window
+            foreach (CellWatch cw in loadedWatches)
             {
-                // The Add method accepts a cell name; we can use the stored CellName
-                restoredSheet.CellWatches.Add(item.CellName);
+                // Adding by cell name automatically sets row/column internally
+                sheet.CellWatches.Add(cw.CellName);
             }
 
-            // Save the restored workbook to verify that watches are present
-            string restoredPath = "RestoredWorkbook.xlsx";
-            restoredWorkbook.Save(restoredPath);
-            Console.WriteLine($"Restored workbook saved to '{restoredPath}'.");
+            // Save the workbook to verify that watches are restored (optional)
+            workbook.Save("RestoredWorkbook.xlsx");
+            Console.WriteLine("Workbook saved with restored watch window.");
         }
     }
 }

@@ -1,47 +1,52 @@
 // Title: Preserve DIV Layout When Loading and Saving HTML with Aspose.Cells (C#)
-// Description: Demonstrates how to load an HTML file with DIV‑based layout into an Aspose.Cells Workbook using HtmlLoadOptions.SupportDivTag, export it back to HTML with HtmlSaveOptions.ParseHtmlTagInCell disabled, and verify that the DIV structure remains unchanged by comparing tag counts.
-// Keywords: Aspose.Cells HTML DIV preservation | HtmlLoadOptions.SupportDivTag C# | HtmlSaveOptions.ParseHtmlTagInCell | load HTML to workbook Aspose | save workbook to HTML without parsing tags | compare DIV count Aspose.Cells | C# round‑trip HTML Excel conversion
-// Common Searches: how to keep div tags when converting HTML to Excel with Aspose.Cells | Aspose.Cells preserve div layout example .NET | verify HTML div structure after saving workbook | HtmlLoadOptions SupportDivTag usage | HtmlSaveOptions ParseHtmlTagInCell effect
-// Developer Intent: Load an HTML file that uses DIVs, save it back to HTML without altering those DIV elements, and programmatically confirm the layout is unchanged.
-// Use Cases: Import a web page that relies on DIV layout into Excel for data processing while retaining its visual structure. | Perform a round‑trip conversion (HTML → Excel → HTML) and ensure the DIV hierarchy is preserved for downstream web rendering. | Create an automated test that validates Aspose.Cells does not modify the number or placement of DIV tags during conversion.
-// AI Prompts: Write C# code that loads an HTML file with Aspose.Cells using HtmlLoadOptions.SupportDivTag, saves it preserving DIV tags, and checks the DIV count before and after conversion. | Explain how HtmlSaveOptions.ParseHtmlTagInCell influences DIV preservation when exporting a workbook to HTML. | Generate an MSTest unit test that asserts the original and saved HTML files contain the same number of <div> elements after conversion with Aspose.Cells.
+// Description: Demonstrates how to enable HtmlLoadOptions.SupportDivTag, load an HTML file into a Workbook, re‑export it to HTML, and verify that the original DIV structure remains unchanged by comparing tag counts.
+// Keywords: Aspose.Cells HTML div preservation | HtmlLoadOptions SupportDivTag C# | load HTML with DIV layout Aspose.Cells | save workbook to HTML without losing DIVs | verify DIV count after export | Aspose.Cells HTML to Excel conversion | C# Aspose.Cells HTML example
+// Common Searches: keep div elements when converting HTML with Aspose.Cells | Aspose.Cells preserve div layout on save | how to enable SupportDivTag in HtmlLoadOptions | compare div tags before and after Aspose.Cells export | C# load HTML preserving div tags Aspose
+// Developer Intent: Ensure that the DIV‑based layout of an HTML document is retained after loading it into a Workbook and saving it back with Aspose.Cells.
+// Use Cases: Import a web‑based report that uses DIVs, modify data programmatically, and export it without breaking the original layout. | Validate that a spreadsheet template delivered as HTML keeps its DIV structure after processing. | Automate a workflow that reads HTML invoices, updates cells, and writes the file back while preserving the original markup.
+// AI Prompts: Write C# code that loads an HTML file with Aspose.Cells, enables SupportDivTag, updates a cell value, and saves the workbook while keeping the original DIV markup. | Create a C# unit test that asserts the number of <div> tags is identical before and after saving a workbook using HtmlLoadOptions.SupportDivTag. | Explain the effect of HtmlLoadOptions.SupportDivTag on HTML‑to‑Excel conversion and list any known limitations.
 
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsDivPreserveDemo
+// Demonstrates how to enable HtmlLoadOptions.SupportDivTag, load an HTML file into a Workbook, re‑export it to HTML, and verify that the original DIV structure remains unchanged by comparing tag counts.
+class PreserveDivLayoutExample
 {
-    // Demonstrates how to load an HTML file with DIV‑based layout into an Aspose.Cells Workbook using HtmlLoadOptions.SupportDivTag, export it back to HTML with HtmlSaveOptions.ParseHtmlTagInCell disabled, and verify that the DIV structure remains unchanged by comparing tag counts.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Paths for the input and output HTML files
-            string inputHtmlPath = "input.html";
-            string outputHtmlPath = "output.html";
+        // Paths to the input and output HTML files
+        string inputHtmlPath = "input.html";
+        string outputHtmlPath = "output.html";
 
-            // Load the HTML file with DIV layout support enabled
-            HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-            loadOptions.SupportDivTag = true;
-            Workbook workbook = new Workbook(inputHtmlPath, loadOptions);
+        // ---------- Load HTML with DIV layout support ----------
+        // Create HtmlLoadOptions and enable SupportDivTag
+        HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+        loadOptions.SupportDivTag = true;
 
-            // Save the workbook back to HTML while preserving HTML tags in cells
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            saveOptions.ParseHtmlTagInCell = false; // keep <div> tags as they are
-            workbook.Save(outputHtmlPath, saveOptions);
+        // Load the HTML file into a Workbook using the load options
+        Workbook workbook = new Workbook(inputHtmlPath, loadOptions);
 
-            // Verify that the DIV structure remains unchanged
-            string originalHtml = File.ReadAllText(inputHtmlPath);
-            string savedHtml = File.ReadAllText(outputHtmlPath);
+        // ---------- Save the workbook back to HTML ----------
+        // Create HtmlSaveOptions (default constructor is sufficient)
+        HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-            int originalDivCount = Regex.Matches(originalHtml, "<div\\b", RegexOptions.IgnoreCase).Count;
-            int savedDivCount = Regex.Matches(savedHtml, "<div\\b", RegexOptions.IgnoreCase).Count;
+        // Save the workbook as HTML
+        workbook.Save(outputHtmlPath, saveOptions);
 
-            Console.WriteLine($"Original DIV count: {originalDivCount}");
-            Console.WriteLine($"Saved DIV count: {savedDivCount}");
-            Console.WriteLine("DIV structure preserved: " + (originalDivCount == savedDivCount));
-        }
+        // ---------- Verify that DIV structure is unchanged ----------
+        // Read both original and saved HTML content
+        string originalHtml = File.ReadAllText(inputHtmlPath);
+        string savedHtml = File.ReadAllText(outputHtmlPath);
+
+        // Count the number of <div> tags in each file (case‑insensitive)
+        int originalDivCount = Regex.Matches(originalHtml, "<div\\b", RegexOptions.IgnoreCase).Count;
+        int savedDivCount = Regex.Matches(savedHtml, "<div\\b", RegexOptions.IgnoreCase).Count;
+
+        // Output verification result
+        Console.WriteLine($"Original <div> count: {originalDivCount}");
+        Console.WriteLine($"Saved <div> count: {savedDivCount}");
+        Console.WriteLine("DIV structure preserved: " + (originalDivCount == savedDivCount));
     }
 }

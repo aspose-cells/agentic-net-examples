@@ -1,51 +1,68 @@
-// Title: Read and Preserve TextParagraph SpaceBefore (Points) in a TextBox Shape – Aspose.Cells for .NET
-// Description: Demonstrates how to read the current SpaceBefore value of a TextParagraph in a TextBox shape, modify it using LineSpaceSizeType.Points, and then restore the original setting before saving the workbook with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# | TextParagraph SpaceBefore | read paragraph spacing Aspose.Cells | preserve paragraph spacing | LineSpaceSizeType.Points | shape text box spacing | modify SpaceBefore Aspose.Cells | restore original formatting | Aspose.Cells API example | paragraph formatting .NET
-// Common Searches: Aspose.Cells get SpaceBefore of TextBox paragraph | change paragraph spacing in Aspose.Cells shape | restore original SpaceBefore after edit Aspose.Cells | C# read and set SpaceBefore points Aspose.Cells | Aspose.Cells TextParagraph spacing example
-// Developer Intent: Read a paragraph's SpaceBefore value, apply a temporary change, and then revert to the saved value using Aspose.Cells for .NET.
-// Use Cases: Temporarily adjust paragraph spacing for visual emphasis and then revert to the original layout. | Store spacing settings before batch updating multiple shapes to ensure consistent formatting. | Clone a shape, modify its paragraph spacing for a preview, and restore the source shape's spacing afterward.
-// AI Prompts: Generate C# code with Aspose.Cells that reads the SpaceBefore of the second paragraph in a TextBox, adds a user‑specified number of points, and then resets it to the original value. | Explain how LineSpaceSizeType.Points and SpaceBeforeSizeType work together to control paragraph spacing in Aspose.Cells. | Provide a script that iterates through all TextParagraphs in a shape, saves each SpaceBefore value, applies a uniform increase, and finally restores the original values.
+// Title: Read and Preserve the Original SpaceBefore (Points) of a Shape Paragraph – Aspose.Cells for .NET (C#)
+// Description: This example creates a workbook, inserts a text box shape, accesses the second TextParagraph, forces spacing units to points, reads the current SpaceBefore value, stores it, changes the spacing to 12 pt, and saves the file. It shows how to capture and retain the original paragraph spacing before applying custom formatting in Aspose.Cells for .NET.
+// Keywords: Aspose.Cells read SpaceBefore | preserve paragraph spacing | Shape TextParagraph points | C# Aspose.Cells spacing | modify SpaceBefore property
+// Common Searches: how to get SpaceBefore value from a shape paragraph in Aspose.Cells | preserve original paragraph spacing before changing it C# | read SpaceBefore points from a text box in Aspose.Cells .NET
+// Developer Intent: Retrieve a shape paragraph's SpaceBefore (points), keep the original value, then adjust the spacing.
+// Use Cases: Log the existing paragraph spacing before applying new formatting for audit trails. | Temporarily modify spacing for a specific report layout while being able to revert to the original settings. | Conditionally adjust paragraph spacing based on the retrieved original SpaceBefore value.
+// AI Prompts: Provide C# code that reads the SpaceBefore property of a TextParagraph in Aspose.Cells and saves it before modification. | Show an example that keeps the original paragraph spacing when updating SpaceBefore in a shape's text box using Aspose.Cells for .NET. | Explain how to set spacing units to points before accessing SpaceBefore in Aspose.Cells C#.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsExample
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to read the current SpaceBefore value of a TextParagraph in a TextBox shape, modify it using LineSpaceSizeType.Points, and then restore the original setting before saving the workbook with Aspose.Cells for .NET.
-    class ReadAndPreserveSpaceBefore
+    // This example creates a workbook, inserts a text box shape, accesses the second TextParagraph, forces spacing units to points, reads the current SpaceBefore value, stores it, changes the spacing to 12 pt, and saves the file. It shows how to capture and retain the original paragraph spacing before applying custom formatting in Aspose.Cells for .NET.
+    public class PreserveSpaceBeforeDemo
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a text box shape to the worksheet
-            Shape shape = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 400, 200);
-            shape.Text = "First paragraph\nSecond paragraph";
+                // Add a text box shape to the worksheet
+                // Parameters: upper left row, upper left column, top offset, left offset, width, height (in pixels)
+                Shape shape = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 400, 200);
+                shape.Text = "First paragraph\nSecond paragraph";
 
-            // Access the second paragraph (index 1)
-            TextParagraph paragraph = shape.TextBody.TextParagraphs[1];
+                // Access the second paragraph (index 1)
+                TextParagraph paragraph = shape.TextBody.TextParagraphs[1];
 
-            // Ensure the paragraph uses point units for spacing
-            paragraph.LineSpaceSizeType = LineSpaceSizeType.Points;
-            paragraph.SpaceBeforeSizeType = LineSpaceSizeType.Points;
+                // Ensure the paragraph uses point units for spacing
+                paragraph.SpaceBeforeSizeType = LineSpaceSizeType.Points;
+                paragraph.LineSpaceSizeType = LineSpaceSizeType.Points;
 
-            // Read and store the original SpaceBefore value
-            double originalSpaceBefore = paragraph.SpaceBefore; // value in points
+                // Preserve original SpaceBefore value
+                double originalSpaceBefore = paragraph.SpaceBefore; // value in points
+                Console.WriteLine("Original SpaceBefore (points): " + originalSpaceBefore);
 
-            // Modify the SpaceBefore value (example: increase by 5 points)
-            paragraph.SpaceBefore = originalSpaceBefore + 5;
+                // Modify the SpaceBefore value
+                paragraph.SpaceBefore = 12.0; // set new spacing before the paragraph (12 points)
 
-            // ... perform other operations as needed ...
+                // Verify the modification
+                Console.WriteLine("Modified SpaceBefore (points): " + paragraph.SpaceBefore);
 
-            // Restore the original SpaceBefore value to preserve settings
-            paragraph.SpaceBefore = originalSpaceBefore;
+                // Save the workbook to demonstrate persistence
+                string outputPath = "PreserveSpaceBeforeDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine("Workbook saved to: " + outputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
+    }
 
-            // Save the workbook
-            workbook.Save("ReadAndPreserveSpaceBefore.xlsx");
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            PreserveSpaceBeforeDemo.Run();
         }
     }
 }

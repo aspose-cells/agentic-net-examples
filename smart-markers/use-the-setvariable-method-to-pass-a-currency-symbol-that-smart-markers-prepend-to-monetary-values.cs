@@ -1,66 +1,60 @@
+// Title: C# SetVariable to Prepend a Currency Symbol in Aspose.Cells Smart Markers
+// Description: Demonstrates how to store a currency symbol in a worksheet variable and reference it with smart markers (e.g., "&=Variables!B1&Price") using WorkbookDesigner.SetVariable, then generate a formatted Excel file with prices prefixed by the symbol.
+// Keywords: Aspose.Cells | SetVariable | C# | smart markers | currency symbol | price formatting | WorkbookDesigner | Excel template | dynamic currency | financial report | multi‑currency invoice
+// Common Searches: Aspose.Cells SetVariable example C# | prepend currency symbol smart markers Aspose | how to use variables with smart markers in .NET | dynamic currency formatting Aspose.Cells | C# Excel template currency symbol SetVariable
+// Developer Intent: Insert a configurable currency symbol before price values in smart‑marker‑driven Excel reports.
+// Use Cases: Create a single‑source currency variable for all price columns in a quarterly financial statement. | Switch between $, €, £, or ¥ at runtime to generate locale‑specific invoices without changing the template. | Build reusable Excel templates where monetary fields automatically display the correct symbol for multi‑currency dashboards.
+// AI Prompts: Generate C# code that uses WorkbookDesigner.SetVariable to set a currency symbol and applies it in smart markers for price columns. | Explain step‑by‑step how to change the currency symbol at runtime before calling Designer.Process() in Aspose.Cells. | Show an example of combining SetVariable with smart markers to produce an invoice workbook that supports multiple currencies.
+
 using System;
-using System.Data;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerCurrency
+// Demonstrates how to store a currency symbol in a worksheet variable and reference it with smart markers (e.g., "&=Variables!B1&Price") using WorkbookDesigner.SetVariable, then generate a formatted Excel file with prices prefixed by the symbol.
+class SetVariableCurrencyDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Add a worksheet that will contain the smart marker template
-                Worksheet templateSheet = workbook.Worksheets[0];
-                templateSheet.Name = "Template";
+            // (Optional) Add a worksheet that holds variable values
+            Worksheet variablesSheet = workbook.Worksheets.Add("Variables");
+            variablesSheet.Cells["A1"].PutValue("CurrencySymbol");
+            variablesSheet.Cells["B1"].PutValue("$");
 
-                // Place a smart marker that concatenates a literal currency symbol with the numeric field "Amount"
-                // Using "$" directly instead of a variable to avoid missing SetVariableValue API
-                templateSheet.Cells["A1"].PutValue("$&Amount");
+            // Create a WorkbookDesigner for smart marker processing
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
 
-                // Prepare data source: a DataTable with a monetary column
-                DataTable dt = new DataTable("Data");
-                dt.Columns.Add("Amount", typeof(double));
-                dt.Rows.Add(1234.56); // sample monetary value
+            // Add a template worksheet with smart markers
+            Worksheet template = workbook.Worksheets.Add("Template");
 
-                // Create a WorkbookDesigner to work with smart markers
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            // Header row
+            template.Cells["A1"].PutValue("Item");
+            template.Cells["B1"].PutValue("Price");
 
-                // Assign the data source to the designer
-                designer.SetDataSource(dt);
+            // Sample data rows (the data source for the smart marker)
+            template.Cells["A2"].PutValue("Apple");
+            template.Cells["B2"].PutValue(1.25);
+            template.Cells["A3"].PutValue("Banana");
+            template.Cells["B3"].PutValue(0.75);
 
-                // Process the smart markers (they will be replaced with actual values)
-                designer.Process();
+            // Smart marker that prepends the currency symbol to the monetary value.
+            // Use the variable stored in the Variables sheet (cell B1).
+            template.Cells["C1"].PutValue("Formatted Price");
+            template.Cells["C2"].PutValue("&=Variables!B1&Price");
+            template.Cells["C3"].PutValue("&=Variables!B1&Price");
 
-                // Apply a custom number format to the result cell to keep numeric formatting
-                Style style = workbook.CreateStyle();
-                style.Custom = "#,##0.00"; // standard monetary format without symbol
-                StyleFlag flag = new StyleFlag { NumberFormat = true };
+            // Process the smart markers
+            designer.Process();
 
-                // Create a range covering cell A1 (row 0, column 0)
-                Aspose.Cells.Range resultRange = templateSheet.Cells.CreateRange(0, 0, 1, 1);
-                resultRange.ApplyStyle(style, flag);
-
-                // Ensure the output directory exists
-                string outputPath = "SmartMarkerCurrencyDemo.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook (lifecycle rule: save)
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("SetVariableCurrencyDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

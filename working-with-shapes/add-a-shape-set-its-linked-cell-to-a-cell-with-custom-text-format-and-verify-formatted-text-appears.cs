@@ -1,17 +1,16 @@
-// Title: Link a Rectangle Shape to a Formatted Cell and Verify Text with Aspose.Cells for .NET
-// Description: Creates a workbook, writes "Custom Formatted Text" to cell A1, applies a red bold 14‑pt style, adds a rectangle shape, sets its LinkedCell to A1, updates the shape value, prints shape.Text to confirm the formatted content, and saves the file as ShapeLinkedCellDemo.xlsx.
-// Keywords: Aspose.Cells | C# | shape linked cell | rectangle shape | custom cell style | LinkedCell property | UpdateSelectedValue | verify shape text | Excel automation | styled cell value in shape
-// Common Searches: Aspose.Cells link shape to cell with formatting | How to set LinkedCell for a rectangle in .NET | Retrieve shape.Text after linking to a styled cell | Update shape value after changing cell style Aspose.Cells | C# example linking shape to formatted Excel cell
-// Developer Intent: Connect a shape to a styled cell and confirm the shape displays the same formatted text.
-// Use Cases: Dynamic dashboards where shapes reflect styled cell values for visual emphasis. | Automated report templates that use linked shapes to show updated cell content. | Excel‑based UI components that sync shape captions with formatted data cells.
-// AI Prompts: Generate C# code that links a rectangle shape to a formatted cell and verifies the displayed text using Aspose.Cells. | Show how to refresh a shape after changing the font color, weight, or size of its linked cell in Aspose.Cells for .NET. | Explain the steps to use LinkedCell and UpdateSelectedValue to keep shape text in sync with a styled Excel cell.
+// Title: Aspose.Cells for .NET – Link a Rectangle Shape to a Custom‑Formatted Cell and Display the Formatted Value
+// Description: Demonstrates how to create a workbook, apply a custom currency number format to cell B2, add a rectangle shape, set its LinkedCell to B2, invoke UpdateSelectedValue so the shape shows the formatted text, and save the result as ShapeLinkedCellFormatted.xlsx.
+// Keywords: Aspose.Cells | C# | shape linked cell | custom number format | UpdateSelectedValue | rectangle shape | Excel automation | formatted value in shape | .NET example
+// Common Searches: Aspose.Cells link shape to cell with custom format | C# rectangle shape shows formatted cell value | How to use UpdateSelectedValue in Aspose.Cells | Display currency format in linked shape Aspose | Aspose.Cells shape LinkedCell example
+// Developer Intent: Show how to bind a shape to a cell that uses a custom number format and make the shape render the formatted text automatically.
+// Use Cases: Financial dashboards where shapes reflect live currency values from the worksheet. | Printable reports that use shapes as dynamic placeholders for formatted dates or amounts. | Interactive spreadsheets where shape captions update instantly to match custom‑styled cell data.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a rectangle shape linked to a cell formatted as currency and verifies the shape displays the formatted amount. | Provide an example linking multiple shapes to cells with different custom formats (date, percentage, currency) and ensure each shape shows the correct formatted value. | Explain the role of UpdateSelectedValue when a shape is linked to a styled cell in Aspose.Cells, including when the cell format changes.
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, writes "Custom Formatted Text" to cell A1, applies a red bold 14‑pt style, adds a rectangle shape, sets its LinkedCell to A1, updates the shape value, prints shape.Text to confirm the formatted content, and saves the file as ShapeLinkedCellDemo.xlsx.
+// Demonstrates how to create a workbook, apply a custom currency number format to cell B2, add a rectangle shape, set its LinkedCell to B2, invoke UpdateSelectedValue so the shape shows the formatted text, and save the result as ShapeLinkedCellFormatted.xlsx.
 class ShapeLinkedCellDemo
 {
     static void Main()
@@ -20,31 +19,32 @@ class ShapeLinkedCellDemo
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set a custom formatted text in cell A1
-        Cell cell = worksheet.Cells["A1"];
-        cell.PutValue("Custom Formatted Text");
+        // -------------------------------------------------
+        // 1. Set up a cell with a custom number format
+        // -------------------------------------------------
+        // Target cell B2
+        Cell targetCell = worksheet.Cells["B2"];
+        // Put a numeric value
+        targetCell.PutValue(1234.56);
+        // Create a style with a custom format (e.g., currency)
+        Style customStyle = workbook.CreateStyle();
+        customStyle.Custom = "$#,##0.00";
+        // Apply the style to the cell
+        targetCell.SetStyle(customStyle);
 
-        // Apply a custom style (e.g., red font, bold, 14pt)
-        Style style = cell.GetStyle();
-        style.Font.Color = Color.Red;
-        style.Font.IsBold = true;
-        style.Font.Size = 14;
-        cell.SetStyle(style);
+        // -------------------------------------------------
+        // 2. Add a rectangle shape and link it to the cell
+        // -------------------------------------------------
+        // Parameters: upperLeftRow, upperLeftColumn, upperLeftPixel, upperLeftPixel, width, height
+        Shape rectangle = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 150, 50);
+        // Link the shape to cell B2
+        rectangle.LinkedCell = "B2";
+        // Ensure the shape reflects the linked cell's current value/format
+        rectangle.UpdateSelectedValue();
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, row offset, column offset, width, height
-        Shape shape = worksheet.Shapes.AddRectangle(2, 1, 0, 0, 150, 50);
-
-        // Link the shape to the formatted cell (A1)
-        shape.LinkedCell = "A1";
-
-        // Update the shape's displayed value based on the linked cell
-        shape.UpdateSelectedValue();
-
-        // Verify that the shape's text reflects the cell's value
-        Console.WriteLine("Shape Text: " + shape.Text);
-
-        // Save the workbook to a file
-        workbook.Save("ShapeLinkedCellDemo.xlsx");
+        // -------------------------------------------------
+        // 3. Save the workbook
+        // -------------------------------------------------
+        workbook.Save("ShapeLinkedCellFormatted.xlsx");
     }
 }

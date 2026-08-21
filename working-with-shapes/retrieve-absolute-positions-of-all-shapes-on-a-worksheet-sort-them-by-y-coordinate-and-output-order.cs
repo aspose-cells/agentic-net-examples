@@ -1,10 +1,10 @@
-// Title: C# – Get absolute positions of all worksheet shapes and sort by Y coordinate with Aspose.Cells
-// Description: Shows how to enumerate every shape on an Aspose.Cells worksheet, read each shape's absolute X and Y coordinates, sort the collection from top‑to‑bottom, output the sorted order, and save the workbook.
-// Keywords: Aspose.Cells shape Y coordinate | C# sort worksheet shapes | retrieve shape positions Aspose | Excel shape absolute location .NET | shape collection ordering | Aspose.Cells GetTopLeftRow
-// Common Searches: Aspose.Cells get shape Y position | How to sort Excel shapes by vertical position in C# | List all shapes on a worksheet using Aspose.Cells | Retrieve shape coordinates without Excel Interop | C# order shapes top to bottom Aspose.Cells
-// Developer Intent: Obtain the absolute X/Y positions of every shape on a worksheet, sort the shapes by their Y coordinate, and display the sorted order.
-// Use Cases: Create a layout index that lists diagram elements from top to bottom for visual analysis. | Programmatically re‑position shapes after sorting to achieve vertical alignment. | Export the sorted shape list (name and coordinates) to another system for further processing.
-// AI Prompts: Write C# code using Aspose.Cells that returns a List<string> of shape names ordered from top to bottom. | Show how to access Shape.X and Shape.Y properties and sort the collection without using LINQ. | Generate a method that moves each shape to a new row after sorting them by Y coordinate.
+// Title: Aspose.Cells .NET – Retrieve and Sort Worksheet Shapes by Absolute Y Position
+// Description: Demonstrates how to enumerate all shapes on an Aspose.Cells worksheet, read each shape's absolute Y coordinate (pixel offset from the top), sort the shapes from top to bottom, display their names and Y values, and optionally save the workbook.
+// Keywords: Aspose.Cells | C# | shape Y coordinate | absolute shape position | sort worksheet shapes | Excel shape ordering | retrieve shape locations | Aspose.Cells Drawing | Excel automation
+// Common Searches: Aspose.Cells get shape Y coordinate .NET | sort Excel shapes by vertical position using Aspose | list all shapes with absolute positions in a workbook | C# retrieve shape locations Aspose.Cells | order shapes top to bottom Aspose.Cells
+// Developer Intent: Extract the absolute Y positions of every shape on a worksheet, arrange them in ascending Y order, and output the sorted sequence.
+// Use Cases: Create a top‑to‑bottom inventory of chart, image, and drawing objects for reporting or auditing. | Adjust drawing order before exporting to PDF or image to ensure correct visual layering. | Programmatically align or reposition shapes based on their vertical layout within a sheet.
+// AI Prompts: Generate C# code with Aspose.Cells that collects each shape's absolute Y coordinate, sorts the shapes from top to bottom, and prints their names and Y values. | Show how to output the sorted shape list and then save the workbook as an Excel file using Aspose.Cells. | Explain how to extend the example to also sort shapes by X coordinate after the Y‑coordinate sort.
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to enumerate every shape on an Aspose.Cells worksheet, read each shape's absolute X and Y coordinates, sort the collection from top‑to‑bottom, output the sorted order, and save the workbook.
+// Demonstrates how to enumerate all shapes on an Aspose.Cells worksheet, read each shape's absolute Y coordinate (pixel offset from the top), sort the shapes from top to bottom, display their names and Y values, and optionally save the workbook.
 class Program
 {
     static void Main()
@@ -21,32 +21,46 @@ class Program
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add sample shapes to the worksheet
-        // Parameters: upperLeftRow, top, upperLeftColumn, left, height, width
-        worksheet.Shapes.AddRectangle(2, 10, 2, 20, 100, 100); // Shape 0
-        worksheet.Shapes.AddOval(5, 50, 5, 30, 80, 80);       // Shape 1
-        worksheet.Shapes.AddLine(8, 30, 8, 40, 200, 5);       // Shape 2
+        // -------------------------------------------------
+        // Add sample shapes (for demonstration purposes)
+        // -------------------------------------------------
+        // Rectangle shape
+        worksheet.Shapes.AddRectangle(2, 10, 2, 10, 50, 100);
+        // Oval shape
+        worksheet.Shapes.AddOval(5, 30, 5, 30, 60, 80);
+        // Line shape
+        worksheet.Shapes.AddLine(8, 20, 8, 20, 100, 5);
 
-        // Retrieve all shapes from the worksheet
-        ShapeCollection shapeCollection = worksheet.Shapes;
-        List<Shape> shapes = new List<Shape>();
-        for (int i = 0; i < shapeCollection.Count; i++)
+        // -------------------------------------------------
+        // Retrieve all shapes with their absolute Y positions
+        // -------------------------------------------------
+        var shapeInfos = new List<(Shape shape, int y)>();
+        for (int i = 0; i < worksheet.Shapes.Count; i++)
         {
-            shapes.Add(shapeCollection[i]);
+            Shape shape = worksheet.Shapes[i];
+            // Y property gives the vertical offset from the worksheet top border (pixels)
+            shapeInfos.Add((shape, shape.Y));
         }
 
-        // Sort shapes by their Y coordinate (top to bottom)
-        List<Shape> sortedShapes = shapes.OrderBy(s => s.Y).ToList();
+        // -------------------------------------------------
+        // Sort shapes by Y coordinate (top to bottom)
+        // -------------------------------------------------
+        var sortedShapes = shapeInfos.OrderBy(info => info.y).ToList();
 
+        // -------------------------------------------------
         // Output the sorted order
+        // -------------------------------------------------
         Console.WriteLine("Shapes sorted by Y coordinate (top to bottom):");
         for (int i = 0; i < sortedShapes.Count; i++)
         {
-            Shape s = sortedShapes[i];
-            Console.WriteLine($"Sorted Index: {i}, Name: {s.Name}, Y: {s.Y}, X: {s.X}");
+            Shape shape = sortedShapes[i].shape;
+            int yPos = sortedShapes[i].y;
+            Console.WriteLine($"Order {i + 1}: Name = \"{shape.Name}\", Y = {yPos}");
         }
 
-        // Save the workbook
-        workbook.Save("SortedShapesDemo.xlsx");
+        // -------------------------------------------------
+        // Save the workbook (optional)
+        // -------------------------------------------------
+        workbook.Save("ShapesSortedByY.xlsx");
     }
 }

@@ -1,57 +1,49 @@
-// Title: Style Header Row and Freeze It with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, writes header cells, defines a bold white font on a dark‑blue solid background, applies the style to the first row via ApplyRowStyle with a StyleFlag, freezes the top row at A2, and saves the file as HeaderStyledAndFrozen.xlsx.
-// Keywords: Aspose.Cells C# ApplyRowStyle | Aspose.Cells FreezePanes | header row styling Aspose.Cells | freeze first row Excel C# | StyleFlag Aspose.Cells | Excel header formatting .NET
-// Common Searches: Aspose.Cells style header row C# | How to freeze first row in Excel using Aspose.Cells | ApplyRowStyle example C# Aspose.Cells | FreezePanes at A2 Aspose.Cells .NET | Excel header formatting with Aspose.Cells
-// Developer Intent: Apply custom formatting to the worksheet’s header row and keep it visible by freezing the pane.
-// Use Cases: Generating reports where column titles need bold white text on a dark‑blue background that stays fixed while scrolling. | Exporting large data sets to Excel with a styled, frozen header to improve readability. | Automating workbook creation where multiple sheets require consistent header styling and frozen panes.
-// AI Prompts: Write C# code using Aspose.Cells to apply a bold white font on a dark‑blue background to the first row and freeze that row at A2. | Show how to add borders and center alignment to the styled header while preserving the freeze pane in Aspose.Cells. | Provide an example that applies the same styled and frozen header to all worksheets in a workbook using Aspose.Cells for .NET.
+// Title: Style the Header Row and Freeze the Top Row with Aspose.Cells for .NET (C#)
+// Description: Creates a new workbook, writes column headings to the first row, defines a bold white font on a dark‑blue solid background, applies the style to the entire first row using a StyleFlag, freezes the pane at cell A2 so the header stays visible while scrolling, and saves the file as HeaderStyleAndFreeze.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | Excel header style | ApplyRowStyle | StyleFlag | FreezePanes | freeze top row | worksheet formatting | Excel export template | bold header font | dark blue background
+// Common Searches: Aspose.Cells style first row as header | How to freeze top row in Aspose.Cells C# | Apply custom style to header row Aspose.Cells | Freeze panes while preserving formatting Aspose.Cells | C# code to bold header and freeze pane in Excel
+// Developer Intent: Apply a custom visual style to the first worksheet row and keep that row fixed during scrolling.
+// Use Cases: Generating Excel reports with branded column headings that remain visible. | Creating reusable templates where the header row is automatically styled and frozen. | Exporting data grids to Excel with a clear, colored header for easier navigation.
+// AI Prompts: Show C# code to style a header row with a dark background and freeze the top row using Aspose.Cells. | How can I apply different styles to multiple header rows and freeze them in Aspose.Cells for .NET? | Explain the interaction between StyleFlag and FreezePanes when preserving header formatting while scrolling.
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
+using System.Drawing;
 
-// Creates a workbook, writes header cells, defines a bold white font on a dark‑blue solid background, applies the style to the first row via ApplyRowStyle with a StyleFlag, freezes the top row at A2, and saves the file as HeaderStyledAndFrozen.xlsx.
-class Program
+// Creates a new workbook, writes column headings to the first row, defines a bold white font on a dark‑blue solid background, applies the style to the entire first row using a StyleFlag, freezes the pane at cell A2 so the header stays visible while scrolling, and saves the file as HeaderStyleAndFreeze.xlsx.
+class HeaderStyleAndFreezeDemo
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-            // Sample header values
-            cells[0, 0].PutValue("ID");
-            cells[0, 1].PutValue("Name");
-            cells[0, 2].PutValue("Score");
+        // Sample header data
+        cells["A1"].PutValue("Name");
+        cells["B1"].PutValue("Age");
+        cells["C1"].PutValue("Country");
 
-            // Create a style for the header row
-            Style headerStyle = workbook.CreateStyle();
-            headerStyle.Font.IsBold = true;                     // Bold font
-            headerStyle.Font.Color = Color.White;               // White font color
-            headerStyle.ForegroundColor = Color.DarkBlue;       // Background color
-            headerStyle.Pattern = BackgroundType.Solid;         // Solid fill
+        // Define a style for the header row
+        Style headerStyle = workbook.CreateStyle();
+        headerStyle.Font.IsBold = true;
+        headerStyle.Font.Color = Color.White;
+        headerStyle.ForegroundColor = Color.DarkBlue;
+        headerStyle.Pattern = BackgroundType.Solid;
 
-            // Define which style attributes to apply
-            StyleFlag flag = new StyleFlag();
-            flag.Font = true;          // Apply font settings
-            flag.CellShading = true;   // Apply fill (background) settings
+        // Apply all style attributes
+        StyleFlag flag = new StyleFlag();
+        flag.All = true;
 
-            // Apply the style to the first row (row index 0)
-            cells.ApplyRowStyle(0, headerStyle, flag);
+        // Apply the style to the first row (index 0)
+        cells.ApplyRowStyle(0, headerStyle, flag);
 
-            // Freeze the first row so it stays visible while scrolling
-            // Freeze at cell A2 with 1 frozen row and 0 frozen columns
-            sheet.FreezePanes("A2", 1, 0);
+        // Freeze the header row (first row) so it remains visible while scrolling
+        // Freeze at cell A2 with 1 frozen row and 0 frozen columns
+        worksheet.FreezePanes("A2", 1, 0);
 
-            // Save the workbook
-            workbook.Save("HeaderStyledAndFrozen.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook
+        workbook.Save("HeaderStyleAndFreeze.xlsx");
     }
 }

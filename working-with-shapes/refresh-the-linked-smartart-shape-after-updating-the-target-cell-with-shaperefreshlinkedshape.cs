@@ -1,32 +1,70 @@
 // Title: Refresh a linked SmartArt shape after changing its source cell with Aspose.Cells for .NET
-// Description: Shows how to open an Excel workbook, update a cell that drives a SmartArt diagram, call Worksheet.Shapes.UpdateSelectedValue (or Shape.RefreshLinkedShape) to refresh the linked SmartArt, enable automatic diagram updates via OoxmlSaveOptions.UpdateSmartArt, and save the file so the visual reflects the new data.
-// Keywords: Aspose.Cells | .NET | SmartArt refresh | linked SmartArt | UpdateSmartArt | Worksheet.Shapes.UpdateSelectedValue | Shape.RefreshLinkedShape | Excel automation | programmatic SmartArt update | OoxmlSaveOptions
-// Common Searches: Aspose.Cells refresh linked SmartArt | Update SmartArt after cell change C# | Shape.RefreshLinkedShape example | Enable SmartArt update when saving workbook | How to programmatically refresh SmartArt in Excel
-// Developer Intent: Refresh a SmartArt diagram that is linked to a worksheet cell after the cell value is modified in code.
-// Use Cases: Automated KPI dashboards where SmartArt graphics must reflect the latest cell values before distribution. | Scheduled report generation that modifies data cells and needs the associated SmartArt to update automatically. | Processing Excel templates with linked SmartArt, altering source cells via code, and delivering a final file with synchronized diagrams.
-// AI Prompts: Provide a C# example that changes a cell value, refreshes the linked SmartArt, and saves the workbook with UpdateSmartArt enabled. | Explain when to use Worksheet.Shapes.UpdateSelectedValue versus Shape.RefreshLinkedShape in Aspose.Cells. | How can I ensure SmartArt diagrams update automatically when I modify their source cells using Aspose.Cells for .NET?
+// Description: Loads or creates a workbook, updates cell B2, calls worksheet.Shapes.UpdateSelectedValue, and saves the file using OoxmlSaveOptions.UpdateSmartArt so the SmartArt diagram reflects the new value.
+// Keywords: Aspose.Cells | C# | SmartArt refresh | UpdateSelectedValue | UpdateSmartArt | linked shape refresh | Shape.RefreshLinkedShape | worksheet.Shapes | Excel automation | programmatic SmartArt update
+// Common Searches: how to refresh SmartArt after cell change Aspose.Cells | Aspose.Cells .NET update linked SmartArt diagram | worksheet.Shapes.UpdateSelectedValue example | Enable UpdateSmartArt when saving workbook | refresh linked shape programmatically Excel C#
+// Developer Intent: Refresh a SmartArt graphic that is linked to worksheet cells after the cell values have been modified.
+// Use Cases: Keep KPI dashboards up‑to‑date by refreshing SmartArt diagrams after data imports. | Automate monthly reports that modify worksheet values and need refreshed SmartArt before distribution. | Batch‑process workbooks to recalculate all linked SmartArt graphics after a data migration.
+// AI Prompts: Show me C# code that uses Shape.RefreshLinkedShape or worksheet.Shapes.UpdateSelectedValue to refresh a SmartArt shape after updating its source cell with Aspose.Cells. | Provide an example that updates multiple linked SmartArt shapes and saves the workbook with UpdateSmartArt enabled. | Explain the difference between Shape.RefreshLinkedShape and worksheet.Shapes.UpdateSelectedValue in Aspose.Cells.
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to open an Excel workbook, update a cell that drives a SmartArt diagram, call Worksheet.Shapes.UpdateSelectedValue (or Shape.RefreshLinkedShape) to refresh the linked SmartArt, enable automatic diagram updates via OoxmlSaveOptions.UpdateSmartArt, and save the file so the visual reflects the new data.
-class RefreshSmartArtDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads or creates a workbook, updates cell B2, calls worksheet.Shapes.UpdateSelectedValue, and saves the file using OoxmlSaveOptions.UpdateSmartArt so the SmartArt diagram reflects the new value.
+    class RefreshSmartArtExample
     {
-        // Load the workbook that contains the linked SmartArt shape
-        Workbook workbook = new Workbook("template.xlsx");
+        static void Main()
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-        // Update the cell that is linked to the SmartArt shape
-        Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["B2"].PutValue("New Value");
+        public static void Run()
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Refresh the selected values of all shapes (including linked SmartArt)
-        worksheet.Shapes.UpdateSelectedValue();
+            // Ensure the input workbook exists; create a minimal workbook if it does not.
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                // Add a default worksheet and a placeholder SmartArt shape if needed.
+                Worksheet ws = workbook.Worksheets[0];
+                ws.Name = "Sheet1";
+                ws.Cells["B2"].PutValue("Initial Value");
+                // Note: Adding actual SmartArt programmatically is beyond this example.
+                workbook.Save(inputPath);
+                Console.WriteLine($"Created placeholder workbook at '{inputPath}'.");
+            }
 
-        // Save the workbook with SmartArt update enabled
-        OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
-        saveOptions.UpdateSmartArt = true;
-        workbook.Save("output.xlsx", saveOptions);
+            // Update the target cell that the SmartArt is linked to
+            Worksheet worksheet = workbook.Worksheets[0];
+            worksheet.Cells["B2"].PutValue("New Value");
+
+            // Refresh the linked shape values (including SmartArt) after the cell change
+            worksheet.Shapes.UpdateSelectedValue();
+
+            // Save the workbook with SmartArt update enabled
+            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
+            {
+                UpdateSmartArt = true
+            };
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook saved with updated SmartArt to '{outputPath}'.");
+        }
     }
 }

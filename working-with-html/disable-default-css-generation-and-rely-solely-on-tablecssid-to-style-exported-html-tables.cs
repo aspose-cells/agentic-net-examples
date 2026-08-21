@@ -1,22 +1,22 @@
-// Title: C# – Export Excel to HTML with Aspose.Cells, Disable Default CSS and Use Custom TableCssId
-// Description: Demonstrates how to save an Aspose.Cells workbook as HTML without the library‑generated CSS. By setting HtmlSaveOptions.DisableCss = true and assigning a custom HtmlSaveOptions.TableCssId, the <table> tag receives a unique ID that can be styled with your own external stylesheet.
-// Keywords: Aspose.Cells | HtmlSaveOptions.DisableCss | TableCssId | C# HTML export | Excel to HTML without CSS | .NET Aspose.Cells example | custom table styling
-// Common Searches: Aspose.Cells disable default CSS when exporting to HTML | How to set TableCssId for HTML tables in Aspose.Cells C# | Export Excel workbook to HTML without generated CSS | Aspose.Cells HTML export custom table ID | C# Aspose.Cells HTMLSaveOptions example
-// Developer Intent: Turn off Aspose.Cells’ built‑in CSS output and rely on a custom TableCssId to apply external styling to the exported HTML table.
-// Use Cases: Create lightweight HTML reports that inherit site‑wide CSS frameworks via a unique table ID. | Generate HTML snippets for web applications that manage all styling through their own stylesheet, avoiding Aspose.Cells‑generated styles. | Produce HTML email content where only minimal external CSS is allowed, using TableCssId to target the table.
-// AI Prompts: Show C# code that exports an Aspose.Cells workbook to HTML with DisableCss=true and a custom TableCssId, then link an external CSS file for styling. | Provide CSS rules that target the TableCssId set in HtmlSaveOptions to style borders, fonts, and colors of the exported table. | Explain the interaction between DisableCss and TableCssId in Aspose.Cells and how they enable HTML that depends solely on external CSS.
+// Title: Aspose.Cells .NET: Export Workbook to HTML with Inline Styles and Custom TableCssId
+// Description: Creates an in‑memory workbook, fills sample data, and saves it as HTML using HtmlSaveOptions with DisableCss = true and TableCssId = "custom-table", so styling is inline and the table can be targeted by a custom ID.
+// Keywords: Aspose.Cells | HtmlSaveOptions | DisableCss | TableCssId | export Excel to HTML | inline styles | .NET | C# | HTML table styling | custom CSS id
+// Common Searches: disable default CSS Aspose.Cells HTML export | set TableCssId in Aspose.Cells | export Excel as HTML with only inline styles | Aspose.Cells HtmlSaveOptions example C# | custom table identifier HTML output Aspose
+// Developer Intent: Turn off automatic CSS generation and use TableCssId to apply external styles to the exported HTML table.
+// Use Cases: Generate lightweight HTML reports where a site‑wide stylesheet targets the table via a known ID. | Create email‑friendly HTML that cannot reference external CSS files, relying on inline styles and a predictable table ID. | Embed the exported table into an existing web page and apply custom CSS rules using the specified TableCssId.
+// AI Prompts: Write C# code that exports an Aspose.Cells workbook to HTML with DisableCss enabled and a custom TableCssId. | Show how to craft CSS that selects the TableCssId set by Aspose.Cells during HTML export. | Demonstrate changing the TableCssId value in the example and verifying the generated HTML contains the new identifier.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlExport
 {
-    // Demonstrates how to save an Aspose.Cells workbook as HTML without the library‑generated CSS. By setting HtmlSaveOptions.DisableCss = true and assigning a custom HtmlSaveOptions.TableCssId, the <table> tag receives a unique ID that can be styled with your own external stylesheet.
+    // Creates an in‑memory workbook, fills sample data, and saves it as HTML using HtmlSaveOptions with DisableCss = true and TableCssId = "custom-table", so styling is inline and the table can be targeted by a custom ID.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (in-memory)
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -28,18 +28,17 @@ namespace AsposeCellsHtmlExport
             sheet.Cells["A3"].PutValue("Alice");
             sheet.Cells["B3"].PutValue(25);
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-            // Disable generation of external CSS files; use only inline styles
-            htmlOptions.DisableCss = true;
-
-            // Assign a custom TableCssId prefix; this will be added to the <table> element
-            // and can be used in external CSS to style the table without relying on default CSS.
-            htmlOptions.TableCssId = "custom-table";
+            // Configure HTML save options:
+            // - DisableCss = true forces all styling to be inline (no external CSS files)
+            // - TableCssId provides a custom identifier that can be used in CSS selectors
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            htmlOptions.DisableCss = true;          // Use only inline styles
+            htmlOptions.TableCssId = "custom-table"; // Prefix for CSS classes/ids in the generated table
 
             // Save the workbook as HTML using the configured options
             workbook.Save("ExportedTable.html", htmlOptions);
+
+            Console.WriteLine("HTML export completed with inline styles and TableCssId set.");
         }
     }
 }

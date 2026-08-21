@@ -1,68 +1,54 @@
-// Title: Keep Header Row Static Using NoAdd in Aspose.Cells Smart Markers – C# Example
-// Description: Shows how to use the `noadd` directive (via ImportTableOptions.ShiftFirstRowDown) on the first template row so the header remains unchanged when importing a DataTable and merging cells with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | noadd | smart markers | C# | ImportTableOptions | ShiftFirstRowDown | static header | merge cells | DataTable import | Excel report template
-// Common Searches: Aspose.Cells noadd header row | C# keep header static smart markers | ImportTableOptions ShiftFirstRowDown example | merge rows without moving header Aspose.Cells | smart marker noadd parameter usage
-// Developer Intent: Apply the `noadd` attribute to the first template row so the header is not duplicated or shifted during data import and subsequent merge operations.
-// Use Cases: Import a DataTable that already contains column titles and add data rows without altering the header. | Generate Excel reports where column headings stay fixed while data rows are dynamically added and merged. | Create templates that merge cells in data rows but keep the first row untouched by using the noadd setting.
-// AI Prompts: Provide C# code that uses Aspose.Cells smart markers with a noadd directive on the first template row to keep the header static during a merge. | Explain the difference between the noadd attribute and ShiftFirstRowDown when importing a DataTable with a header in Aspose.Cells for .NET. | Show how to merge cells below a static header after importing data with the noadd parameter in Aspose.Cells.
+// Title: Aspose.Cells .NET – Keep Header Row Static While Merging Data Rows (ShiftFirstRowDown)
+// Description: Demonstrates how to import a DataTable into an Excel workbook with column names as a header, set ImportTableOptions.ShiftFirstRowDown = false (the noadd parameter) to keep the header row fixed, merge the data rows, optionally repeat the header on printed pages with PrintTitleRows, and save the file as XLSX.
+// Keywords: Aspose.Cells | ImportTableOptions | ShiftFirstRowDown | static header | merge rows | noadd parameter | PrintTitleRows | C# Excel export | .NET Excel merging
+// Common Searches: Aspose.Cells keep header row static when merging | ImportTableOptions ShiftFirstRowDown example C# | prevent header shift during Excel merge Aspose | set PrintTitleRows Aspose.Cells .NET | noadd parameter Aspose.Cells
+// Developer Intent: The developer needs to preserve the first (header) row in place while merging subsequent data rows in an Excel sheet generated with Aspose.Cells for .NET.
+// Use Cases: Create reports where the header row remains unchanged after merging data rows. | Generate printable worksheets with a repeating header using PrintTitleRows. | Programmatically import tabular data and apply custom merging without disturbing column titles.
+// AI Prompts: Explain how ImportTableOptions.ShiftFirstRowDown = false keeps the header static during cell merging in Aspose.Cells for .NET. | Provide a C# example that imports a DataTable, merges data rows, and sets PrintTitleRows to repeat the header. | Describe the impact of the noadd parameter on header positioning when using Aspose.Cells ImportTableOptions.
 
 using System;
 using System.Data;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsHeaderStaticDemo
 {
-    // Shows how to use the `noadd` directive (via ImportTableOptions.ShiftFirstRowDown) on the first template row so the header remains unchanged when importing a DataTable and merging cells with Aspose.Cells for .NET.
-    public class NoAddHeaderDuringMergeDemo
+    // Demonstrates how to import a DataTable into an Excel workbook with column names as a header, set ImportTableOptions.ShiftFirstRowDown = false (the noadd parameter) to keep the header row fixed, merge the data rows, optionally repeat the header on printed pages with PrintTitleRows, and save the file as XLSX.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Prepare a DataTable with a header row and some data rows
+            DataTable table = new DataTable();
+            table.Columns.Add("Product");
+            table.Columns.Add("Quantity");
+            table.Rows.Add("Apple", 10);
+            table.Rows.Add("Banana", 20);
+            table.Rows.Add("Cherry", 30);
+
+            // Import the DataTable starting at cell A1.
+            // ShiftFirstRowDown = false ensures the first row (header) stays at its original position.
+            ImportTableOptions importOptions = new ImportTableOptions
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                IsFieldNameShown = true,   // import the column names as header
+                ShiftFirstRowDown = false  // noadd parameter: keep header static during merging
+            };
+            cells.ImportData(table, 0, 0, importOptions);
 
-                // Prepare a DataTable where the first row is the header
-                DataTable table = new DataTable();
-                table.Columns.Add("Header1");
-                table.Columns.Add("Header2");
-                table.Rows.Add("Header1", "Header2"); // header row (template row)
-                table.Rows.Add("Data1", "Data2");
-                table.Rows.Add("Data3", "Data4");
+            // Merge the data rows (rows 2-4) into a single cell to demonstrate merging.
+            // The header row (row 1) remains unchanged because of the above option.
+            cells.Merge(1, 0, 3, 1); // merges cells A2:B4
 
-                // Configure ImportTableOptions:
-                // ShiftFirstRowDown = true ensures the first template row (header) stays static
-                // and new rows are inserted below it during the import/merge operation.
-                ImportTableOptions importOptions = new ImportTableOptions
-                {
-                    ShiftFirstRowDown = true,
-                    IsFieldNameShown = false // we already have the header in the DataTable
-                };
+            // Optionally, set PrintTitleRows so the header repeats on each printed page
+            sheet.PageSetup.PrintTitleRows = "$1:$1";
 
-                // Import the DataTable starting at cell A1
-                cells.ImportData(table, 0, 0, importOptions);
-
-                // Example of merging cells below the header to demonstrate that the header remains unchanged
-                // Merge cells B2:C2 (second data row) – the header in row 1 stays intact.
-                cells.Merge(1, 1, 1, 2);
-                cells[1, 1].PutValue("Merged Data");
-
-                // Save the workbook
-                workbook.Save("NoAddHeaderDuringMergeDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
+            // Save the workbook
+            workbook.Save("HeaderStaticDuringMerging.xlsx", SaveFormat.Xlsx);
         }
     }
 }

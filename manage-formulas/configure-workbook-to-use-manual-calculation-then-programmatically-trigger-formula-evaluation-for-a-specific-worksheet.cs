@@ -1,55 +1,47 @@
-// Title: Aspose.Cells C# – Set Workbook to Manual Calculation Mode and Run Formula Evaluation
-// Description: Shows how to create a workbook, add numeric data, assign a SUM formula, switch the calculation mode to Manual, recalculate formulas programmatically with CalculateFormula, and save the workbook.
-// Keywords: Aspose.Cells | C# | .NET | Manual calculation mode | CalcModeType.Manual | CalculateFormula | programmatic formula evaluation | worksheet recalculation | Excel automation | performance optimization
-// Common Searches: Aspose.Cells set manual calculation mode C# | how to recalculate formulas programmatically Aspose.Cells | CalculateFormula for a single worksheet Aspose.Cells .NET | manual vs automatic calculation Aspose.Cells example | trigger formula evaluation after data update Aspose.Cells
-// Developer Intent: Configure a workbook for manual calculation and invoke formula evaluation on demand.
-// Use Cases: Populate large workbooks, keep calculation disabled, then compute formulas once after all data is entered to improve speed. | Recalculate formulas only on a specific sheet after modifying its cells, leaving other sheets untouched. | Generate a final report where formulas are evaluated just before saving to guarantee consistent results.
-// AI Prompts: Write C# code using Aspose.Cells to set the workbook's calculation mode to Manual and then calculate formulas for a chosen worksheet on demand. | Provide an example that updates cell values, keeps the workbook in Manual mode, calls CalculateFormula only when needed, and saves the file.
+// Title: Aspose.Cells C# – Set Manual Calculation Mode and Recalculate a Single Worksheet
+// Description: Shows how to switch a workbook to manual calculation, configure optional CalculationOptions, and call worksheet.CalculateFormula to evaluate formulas only on the chosen sheet before saving the file.
+// Keywords: Aspose.Cells | C# | .NET | manual calculation mode | CalcModeType.Manual | CalculateFormula | recalculate single worksheet | disable recursive calculation | formula evaluation | Aspose.Cells example | GitHub Aspose.Cells manual calc
+// Common Searches: Aspose.Cells set manual calculation mode C# | CalculateFormula for one worksheet only | disable recursive formula calculation Aspose.Cells | trigger formula evaluation after cell update Aspose.Cells .NET | manual calc mode example Aspose.Cells GitHub
+// Developer Intent: The developer needs to change the workbook’s calculation setting to manual and programmatically recalculate formulas on a specific worksheet without affecting other sheets.
+// Use Cases: Recompute formulas on a large sheet after bulk data changes while keeping other sheets untouched. | Generate on‑demand reports where formula evaluation is deferred for performance reasons. | Perform iterative or conditional calculations on a single worksheet without triggering full‑workbook recalculation.
+// AI Prompts: Provide C# code that sets CalcModeType.Manual, updates cells, and calls worksheet.CalculateFormula with CalculationOptions to recalculate only that sheet. | Explain how to disable recursive calculation when using Aspose.Cells to evaluate formulas on a specific worksheet. | Show an example of triggering manual formula evaluation for a worksheet, retrieving the result, and saving the workbook.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsManualCalcDemo
+// Shows how to switch a workbook to manual calculation, configure optional CalculationOptions, and call worksheet.CalculateFormula to evaluate formulas only on the chosen sheet before saving the file.
+class ManualCalculationDemo
 {
-    // Shows how to create a workbook, add numeric data, assign a SUM formula, switch the calculation mode to Manual, recalculate formulas programmatically with CalculateFormula, and save the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate some sample data
+        worksheet.Cells["A1"].PutValue(10);
+        worksheet.Cells["A2"].PutValue(20);
+        // Add a formula that depends on the above cells
+        worksheet.Cells["B1"].Formula = "=A1+A2";
+
+        // Set the workbook's calculation mode to Manual
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+
+        // Prepare calculation options (optional settings)
+        CalculationOptions calcOptions = new CalculationOptions
         {
-            try
-            {
-                // Create a new workbook (lifecycle create rule)
-                Workbook workbook = new Workbook();
+            // Enable recursive calculation only if you want dependent worksheets to be processed
+            Recursive = false
+        };
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+        // Trigger calculation for the specific worksheet
+        // The second parameter (recursive) is set to false to limit calculation to this worksheet only
+        worksheet.CalculateFormula(calcOptions, false);
 
-                // Populate some sample data
-                sheet.Cells["A1"].PutValue(10);
-                sheet.Cells["A2"].PutValue(20);
-                sheet.Cells["A3"].PutValue(30);
+        // Output the calculated result to verify
+        Console.WriteLine("B1 value after manual calculation: " + worksheet.Cells["B1"].Value);
 
-                // Add a formula that sums the three values
-                sheet.Cells["B1"].Formula = "=SUM(A1:A3)";
-
-                // Set calculation mode to Manual
-                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-
-                // Trigger calculation for the entire workbook (manual mode)
-                workbook.CalculateFormula();
-
-                // Display the calculated result
-                Console.WriteLine("Result of B1 after manual calculation: " + sheet.Cells["B1"].Value);
-
-                // Save the workbook (lifecycle save rule)
-                string outputPath = "ManualCalculationDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+        // Save the workbook
+        workbook.Save("ManualCalculationResult.xlsx");
     }
 }

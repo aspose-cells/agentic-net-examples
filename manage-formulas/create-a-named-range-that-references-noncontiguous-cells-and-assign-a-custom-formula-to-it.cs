@@ -1,67 +1,69 @@
-// Title: C# – Create a non‑contiguous named range and apply a SUM formula with Aspose.Cells
-// Description: This example shows how to build a new workbook, fill cells A1, C1 and E1, define a named range that spans these non‑adjacent cells, assign a SUM formula that references the range, calculate the result, and save the file as NamedRangeNonContiguous.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# named range | non‑contiguous named range .NET | Excel named range multiple areas | SUM formula Aspose.Cells | Workbook.CalculateFormula | GetRanges Aspose.Cells | create named range programmatically | Aspose.Cells Excel automation
-// Common Searches: how to create a named range with separate cells using Aspose.Cells | Aspose.Cells C# sum formula referencing non‑adjacent cells | retrieve areas of a multi‑area named range in Aspose.Cells | set formula for a cell that uses a non‑contiguous named range | save workbook after calculating formulas with Aspose.Cells
-// Developer Intent: Define a named range that includes non‑adjacent cells and use it in a custom formula.
-// Use Cases: Summarize scattered data points by grouping them into a single named range and applying SUM, AVERAGE, or MAX. | Provide a reusable data source for charts or pivot tables that require values from non‑contiguous cells. | Simplify complex formulas by referencing a multi‑area named range instead of listing each cell individually.
-// AI Prompts: Write C# code with Aspose.Cells that creates a named range for cells A1, C1, and E1 and sets a SUM formula in B1. | Show how to enumerate all areas of a non‑contiguous named range using Aspose.Cells. | Demonstrate using the same named range in an AVERAGE formula with Aspose.Cells.
+// Title: Create a non‑contiguous named range and apply a SUM formula with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to build a new workbook, fill cells A1, B3 and D5, define a named range that spans these non‑adjacent cells using the RefersTo property, assign a SUM formula that references the range, calculate the result, and save the file as NonContiguousNamedRange.xlsx.
+// Keywords: Aspose.Cells C# | .NET Excel automation | named range non‑contiguous | RefersTo multiple areas | custom formula Aspose.Cells | SUM named range | create named range programmatically | Excel workbook Aspose | non adjacent cells formula
+// Common Searches: Aspose.Cells create named range with separate cells | How to use RefersTo for non‑contiguous ranges in C# | Apply SUM to a multi‑area named range using Aspose.Cells | Define named range that includes A1, B3, D5 in .NET | Calculate formulas after adding a named range in Aspose.Cells
+// Developer Intent: Define a named range that points to non‑adjacent cells and use it in a custom formula.
+// Use Cases: Aggregate scattered data points with a single SUM expression. | Provide a reusable range for charts or pivot tables that pull values from non‑contiguous cells. | Simplify complex worksheets by grouping unrelated cells under one name for formula reuse.
+// AI Prompts: Generate C# code with Aspose.Cells that creates a named range covering cells A1, C2, and E3 and sets an AVERAGE formula using that range. | Show how to extend an existing named range's RefersTo property to include an additional non‑contiguous cell and refresh dependent formulas. | Write a script that creates multiple non‑contiguous named ranges and applies different custom formulas (SUM, MAX, MIN) to each.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsNamedRangeDemo
+namespace AsposeCellsExamples
 {
-    // This example shows how to build a new workbook, fill cells A1, C1 and E1, define a named range that spans these non‑adjacent cells, assign a SUM formula that references the range, calculate the result, and save the file as NamedRangeNonContiguous.xlsx using Aspose.Cells for .NET.
-    class Program
+    // Demonstrates how to build a new workbook, fill cells A1, B3 and D5, define a named range that spans these non‑adjacent cells using the RefersTo property, assign a SUM formula that references the range, calculate the result, and save the file as NonContiguousNamedRange.xlsx.
+    public class NonContiguousNamedRangeDemo
     {
-        static void Main()
+        public static void Run()
         {
             try
             {
-                // Create a new workbook (lifecycle create)
+                // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Access the first worksheet
+                // Access the first worksheet and give it a name
                 Worksheet sheet = workbook.Worksheets[0];
                 sheet.Name = "Sheet1";
 
                 // Populate some sample data in non‑contiguous cells
                 sheet.Cells["A1"].PutValue(10);
-                sheet.Cells["C1"].PutValue(20);
-                sheet.Cells["E1"].PutValue(30);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["D5"].PutValue(30);
 
                 // Add a named range that refers to the non‑contiguous cells
-                // The RefersTo string uses commas to separate the areas
-                int nameIndex = sheet.Workbook.Worksheets.Names.Add("MyNonContig");
-                Name myName = sheet.Workbook.Worksheets.Names[nameIndex];
-                myName.RefersTo = "=Sheet1!$A$1,$C$1,$E$1";
+                int nameIndex = workbook.Worksheets.Names.Add("MyNonContig");
+                Name namedRange = workbook.Worksheets.Names[nameIndex];
+                // RefersTo can contain multiple areas separated by commas
+                namedRange.RefersTo = "=Sheet1!$A$1,$B$3,$D$5";
 
-                // Verify the named range by retrieving all its areas
-                // Use fully qualified Aspose.Cells.Range to avoid conflict with System.Range
-                Aspose.Cells.Range[] areas = myName.GetRanges();
-                Console.WriteLine("Named range consists of the following areas:");
-                foreach (Aspose.Cells.Range area in areas)
-                {
-                    Console.WriteLine($" - {area.RefersTo}");
-                }
+                // Assign a custom formula that uses the named range (e.g., sum of the cells)
+                sheet.Cells["F1"].Formula = "=SUM(MyNonContig)";
 
-                // Assign a custom formula that uses the named range (sum of the three cells)
-                sheet.Cells["B1"].Formula = "=SUM(MyNonContig)";
-
-                // Calculate formulas so that B1 gets the result
+                // Calculate formulas so that the result appears in F1
                 workbook.CalculateFormula();
 
-                // Output the result of the custom formula
-                Console.WriteLine($"Result of SUM(MyNonContig) in B1: {sheet.Cells["B1"].Value}");
-
-                // Save the workbook (lifecycle save)
-                string outputPath = "NamedRangeNonContiguous.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                // Save the workbook
+                workbook.Save("NonContiguousNamedRange.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Runtime error: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            try
+            {
+                NonContiguousNamedRangeDemo.Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
             }
         }
     }

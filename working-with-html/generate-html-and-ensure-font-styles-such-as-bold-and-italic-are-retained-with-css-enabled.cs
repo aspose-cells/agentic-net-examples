@@ -1,43 +1,46 @@
-// Title: Export Excel to HTML with CSS while preserving <b> and <i> formatting using Aspose.Cells for .NET
-// Description: This example creates a workbook, inserts HTML‑styled text (<b>Bold</b> and <i>Italic</i>) into cell A1, configures HtmlSaveOptions (ParseHtmlTagInCell, DisableCss = false, AddGenericFont = true) and saves the file as StyledOutput.html. The resulting HTML uses CSS to render bold and italic text exactly as defined in the cell.
-// Keywords: Aspose.Cells HTML export .NET | ParseHtmlTagInCell | CSS styling Excel to HTML | preserve bold italic Aspose | HtmlSaveOptions example | C# Excel to HTML conversion | generic font fallback CSS
-// Common Searches: Aspose.Cells keep <b> tags when saving as HTML | How to enable CSS for Excel to HTML export .NET | Parse HTML tags inside Excel cells with Aspose | Export workbook to HTML with bold and italic styling | C# Aspose.Cells HtmlSaveOptions settings
-// Developer Intent: Generate an HTML file from an Excel workbook that retains bold and italic styling defined by HTML tags inside cell values, using CSS via Aspose.Cells for .NET.
-// Use Cases: Publishing web‑ready reports where cell content includes HTML markup and the exported page must display bold/italic text correctly. | Automating conversion of Excel templates with embedded HTML formatting into browser‑compatible HTML with fallback fonts. | Building a .NET service that returns styled HTML snippets for email or web templates while preserving inline HTML tag formatting.
-// AI Prompts: Show how to modify HtmlSaveOptions to embed all CSS inline while still parsing HTML tags in cells. | Give an example of adding custom CSS classes to the generated HTML for bold and italic text using Aspose.Cells. | Explain how to export each worksheet to a separate HTML file with the same CSS and tag‑parsing configuration.
+// Title: Export Excel to HTML with Bold & Italic Styling Using Aspose.Cells (C#)
+// Description: This C# example creates a workbook, applies bold formatting to A1, italic to B1, and embeds HTML tags for combined bold‑italic text in C1. HtmlSaveOptions are configured to generate CSS classes (DisableCss = false) and to parse HTML tags inside cells, then the workbook is saved as StyledOutput.html with CSS‑based styling preserved.
+// Keywords: Aspose.Cells HTML export C# | Excel to HTML with CSS | preserve bold formatting Aspose | preserve italic formatting Aspose | HtmlSaveOptions ParseHtmlTagInCell | generate CSS classes Aspose.Cells | styled HTML from workbook
+// Common Searches: Aspose.Cells export Excel to HTML with CSS | keep bold and italic when saving Excel as HTML | parse HTML tags inside Excel cells Aspose | disable inline styles Aspose.Cells HTML output | C# example for HTML export with styling
+// Developer Intent: Export an Excel workbook to HTML while retaining bold and italic formatting through generated CSS rather than inline styles.
+// Use Cases: Publish a spreadsheet‑based report on a website with clean CSS styling. | Create email‑ready HTML from Excel that respects text emphasis without inline formatting. | Generate documentation pages from a workbook where headings are bold and notes are italic, using reusable CSS classes.
+// AI Prompts: Show how to add underline formatting to a cell and have it appear in the exported HTML with CSS classes. | Provide code to reference an external CSS file instead of the automatically generated stylesheet when saving HTML with Aspose.Cells. | Explain how to customize the names of generated CSS classes for bold and italic styles via HtmlSaveOptions.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+// This C# example creates a workbook, applies bold formatting to A1, italic to B1, and embeds HTML tags for combined bold‑italic text in C1. HtmlSaveOptions are configured to generate CSS classes (DisableCss = false) and to parse HTML tags inside cells, then the workbook is saved as StyledOutput.html with CSS‑based styling preserved.
+class Program
 {
-    // This example creates a workbook, inserts HTML‑styled text (<b>Bold</b> and <i>Italic</i>) into cell A1, configures HtmlSaveOptions (ParseHtmlTagInCell, DisableCss = false, AddGenericFont = true) and saves the file as StyledOutput.html. The resulting HTML uses CSS to render bold and italic text exactly as defined in the cell.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Put HTML formatted text into a cell.
-            // The HTML tags <b> and <i> will be parsed and rendered as bold and italic.
-            Cell cell = worksheet.Cells["A1"];
-            cell.PutValue("<b>Bold Text</b> and <i>Italic Text</i>");
+        // Cell A1: apply bold style
+        Cell cellA1 = worksheet.Cells["A1"];
+        cellA1.PutValue("Bold Text");
+        Style styleA1 = cellA1.GetStyle();
+        styleA1.Font.IsBold = true;
+        cellA1.SetStyle(styleA1);
 
-            // Configure HTML save options.
-            // DisableCss = false ensures that CSS styles are used (default behavior).
-            // ParseHtmlTagInCell = true makes the HTML tags inside the cell value be interpreted.
-            // AddGenericFont = true (default) adds a generic font fallback in the CSS.
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
-            {
-                DisableCss = false,
-                ParseHtmlTagInCell = true,
-                AddGenericFont = true
-            };
+        // Cell B1: apply italic style
+        Cell cellB1 = worksheet.Cells["B1"];
+        cellB1.PutValue("Italic Text");
+        Style styleB1 = cellB1.GetStyle();
+        styleB1.Font.IsItalic = true;
+        cellB1.SetStyle(styleB1);
 
-            // Save the workbook as an HTML file with the specified options.
-            workbook.Save("StyledOutput.html", htmlOptions);
-        }
+        // Cell C1: use HTML tags to combine bold and italic
+        worksheet.Cells["C1"].HtmlString = "<b>Bold</b> and <i>Italic</i>";
+
+        // Configure HTML save options to use CSS (inline styles disabled)
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+        htmlOptions.DisableCss = false;               // ensure CSS classes are generated
+        htmlOptions.ParseHtmlTagInCell = true;         // parse HTML tags inside cells
+
+        // Save the workbook as HTML with the specified options
+        workbook.Save("StyledOutput.html", htmlOptions);
     }
 }

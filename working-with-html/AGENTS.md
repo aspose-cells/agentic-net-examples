@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells HTML Agent
 category: working-with-html
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Export Excel to HTML and import HTML into Excel in C#
 primary_apis: [Workbook.Save, HtmlSaveOptions, HtmlLoadOptions, IStreamProvider, StreamProviderOptions]
 search_intents: [Excel to HTML C#, convert HTML to Excel, single file Excel HTML, embed Excel images as base64]
@@ -100,3 +100,4 @@ Use `HtmlSaveOptions` for Excel-to-HTML and `HtmlLoadOptions` for HTML-to-Excel.
 ## Definition of done
 
 The example compiles, runs, creates or imports the intended HTML structure, validates text/resources or imported cells, and does not claim browser-perfect round-trip fidelity.
+

@@ -1,16 +1,15 @@
-// Title: C# Aspose.Cells Example: Apply Built‑In Currency Format to Range R2:R20
-// Description: Shows how to create a Style with the built‑in currency number format (Number = 5), define the R2:R20 range, apply the style via SetStyle, add sample values, and save the workbook as CurrencyStyleRange.xlsx.
-// Keywords: Aspose.Cells C# | currency number format | Style SetStyle | CreateStyle | CreateRange R2:R20 | Excel currency formatting | built‑in format 5 | financial cells styling | range styling Aspose.Cells | C# Excel automation
-// Common Searches: Aspose.Cells set currency format for R2 to R20 C# | apply style to specific column range Aspose.Cells | C# example of currency style on Excel range | how to use built‑in number format 5 with Aspose.Cells | format financial column as currency using Aspose.Cells
-// Developer Intent: Create a currency style and apply it to cells R2‑R20 in an Excel workbook.
-// Use Cases: Display monetary values in a single column with consistent USD formatting. | Prepare financial reports where a predefined currency style is reused across multiple sheets. | Generate test workbooks that showcase currency formatting for validation pipelines.
-// AI Prompts: Generate C# code with Aspose.Cells that applies a built‑in currency format to the range A1:A15 and saves the file. | Explain how to create a reusable currency style and assign it to several non‑contiguous ranges in an Aspose.Cells workbook.
+// Title: Set Currency Number Format for Range R2:R20 with Aspose.Cells for .NET
+// Description: Demonstrates how to create a style with the built‑in currency number format (Number = 5) in Aspose.Cells, apply it to the range R2:R20 on the first worksheet, and save the workbook as CurrencyRange.xlsx.
+// Keywords: Aspose.Cells | C# | currency number format | Excel style | range R2:R20 | SetStyle | CreateStyle | built‑in format 5 | format cells as currency | Aspose.Cells tutorial
+// Common Searches: Aspose.Cells set currency format C# | How to apply a number format to a range in Aspose.Cells | Apply built‑in currency style to cells R2 to R20 | C# Aspose.Cells format cells as currency | Create reusable style for multiple ranges Aspose.Cells
+// Developer Intent: Apply a currency number format style to the cells R2‑R20.
+// Use Cases: Format a column of monetary values (R2‑R20) as currency before exporting the workbook. | Maintain consistent financial formatting across several worksheets by reusing the same currency style. | Combine the currency style with additional formatting (fonts, borders, alignment) for polished financial reports.
+// AI Prompts: Generate C# code that uses a custom currency format string instead of the built‑in Number = 5 in Aspose.Cells. | Show how to create a reusable currency style and apply it to multiple non‑contiguous ranges in a workbook using Aspose.Cells for .NET. | Explain how to merge a currency style with other style attributes such as font color, alignment, and borders in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Shows how to create a Style with the built‑in currency number format (Number = 5), define the R2:R20 range, apply the style via SetStyle, add sample values, and save the workbook as CurrencyStyleRange.xlsx.
+// Demonstrates how to create a style with the built‑in currency number format (Number = 5) in Aspose.Cells, apply it to the range R2:R20 on the first worksheet, and save the workbook as CurrencyRange.xlsx.
 class Program
 {
     static void Main()
@@ -25,24 +24,16 @@ class Program
             Style currencyStyle = workbook.CreateStyle();
             currencyStyle.Number = 5; // "$#,##0_);($#,##0)" – currency format
 
-            // Define the range R2:R20 using the Aspose.Cells.Range alias to avoid conflict with System.Range
-            AsposeRange range = worksheet.Cells.CreateRange("R2", "R20");
-
-            // Apply the currency style to the entire range
+            // Define the range R2:R20 and apply the style
+            Aspose.Cells.Range range = worksheet.Cells.CreateRange("R2", "R20");
             range.SetStyle(currencyStyle);
 
-            // Fill the range with sample numeric values to see the formatting
-            for (int row = 1; row <= 19; row++) // rows are zero‑based; row 1 = R2, row 19 = R20
-            {
-                worksheet.Cells[row, 17].PutValue(1234.56 + row); // column 17 = column R
-            }
-
             // Save the workbook
-            workbook.Save("CurrencyStyleRange.xlsx");
+            workbook.Save("CurrencyRange.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

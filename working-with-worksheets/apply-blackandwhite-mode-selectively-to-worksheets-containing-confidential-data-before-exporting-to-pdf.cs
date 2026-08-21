@@ -1,49 +1,86 @@
-// Title: Apply Black‑and‑White Printing to Confidential Worksheets and Export to PDF with Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, detects worksheets whose names contain "Confidential", sets their PageSetup.BlackAndWhite flag, and saves the file as a PDF using PdfSaveOptions (visible sheets only). Confidential sheets are rendered in grayscale while other sheets keep their original colors.
-// Keywords: Aspose.Cells black and white PDF | PageSetup.BlackAndWhite C# | selective grayscale Aspose.Cells | export confidential worksheets to PDF | PdfSaveOptions SheetSet Visible | C# Aspose.Cells PDF export
-// Common Searches: Aspose.Cells set black and white for specific sheets | C# export only visible worksheets to PDF | how to grayscale confidential worksheets in Aspose.Cells | apply PageSetup.BlackAndWhite before PDF conversion | selective grayscale export Aspose.Cells .NET
-// Developer Intent: Mark worksheets that contain confidential data as black‑and‑white and generate a PDF that includes only visible sheets.
-// Use Cases: Create compliance‑ready PDFs where sensitive worksheets are shown in grayscale while the rest remain in color. | Automate batch processing of workbooks to enforce a naming‑based grayscale rule before distribution. | Generate reports that hide hidden sheets and protect confidential content by rendering it in black‑and‑white.
-// AI Prompts: Write C# code with Aspose.Cells to enable PageSetup.BlackAndWhite for worksheets whose name includes "Confidential" and save the workbook as a PDF containing only visible sheets. | Explain the effect of the PageSetup.BlackAndWhite property on PDF rendering in Aspose.Cells and any scenarios where it does not apply. | Suggest an alternative method to apply grayscale to selected worksheets without altering the color settings of other sheets during PDF export.
+// Title: Apply Black‑and‑White Printing to Confidential Worksheets and Export to PDF with Aspose.Cells for .NET
+// Description: Demonstrates how to flag worksheets whose names contain "Confidential" with PageSetup.BlackAndWhite, keep other sheets in color, configure PdfSaveOptions (e.g., ignore blank pages), and save the workbook as a single PDF where confidential data appears in grayscale.
+// Keywords: Aspose.Cells black and white worksheet | conditional PDF export .NET | PageSetup.BlackAndWhite property | export confidential sheets to PDF | ignore blank pages Aspose.Cells | grayscale PDF Aspose.Cells | C# workbook PDF conversion | selective worksheet formatting
+// Common Searches: how to set black and white mode for specific sheets in Aspose.Cells | export confidential worksheets as grayscale PDF using C# | Aspose.Cells conditional PageSetup settings before PDF save | ignore empty pages when saving workbook to PDF Aspose.Cells
+// Developer Intent: Set a grayscale printing mode only on confidential worksheets and generate a PDF that mixes black‑and‑white and color pages.
+// Use Cases: Mark worksheets with "Confidential" in the title as black‑and‑white while leaving public sheets in color, then create a combined PDF. | Load an existing workbook, apply PageSetup.BlackAndWhite based on a custom list of confidential sheet names, and export with PdfSaveOptions.PrintingPageType = IgnoreBlank. | Generate reports where sensitive data is visually de‑emphasized (grayscale) without affecting the visual style of non‑confidential sections.
+// AI Prompts: Write C# code using Aspose.Cells to set PageSetup.BlackAndWhite = true for worksheets whose name contains a confidentiality keyword and save the workbook as a PDF. | Show how to configure PdfSaveOptions to ignore blank pages while exporting a workbook that contains both color and grayscale worksheets. | Explain how to read a list of confidential worksheet names from an external source, apply the black‑and‑white setting, and export the result to PDF with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsBlackAndWhiteDemo
+namespace AsposeCellsExamples
 {
-    // Loads a workbook, detects worksheets whose names contain "Confidential", sets their PageSetup.BlackAndWhite flag, and saves the file as a PDF using PdfSaveOptions (visible sheets only). Confidential sheets are rendered in grayscale while other sheets keep their original colors.
-    class Program
+    // Demonstrates how to flag worksheets whose names contain "Confidential" with PageSetup.BlackAndWhite, keep other sheets in color, configure PdfSaveOptions (e.g., ignore blank pages), and save the workbook as a single PDF where confidential data appears in grayscale.
+    public class ConfidentialBlackAndWhitePdfExport
     {
-        static void Main(string[] args)
+        public static void Run()
         {
-            // Load an existing workbook (replace with your file path)
-            string inputPath = "input.xlsx";
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                // Identify confidential sheets (e.g., name contains "Confidential")
-                if (sheet.Name.IndexOf("Confidential", StringComparison.OrdinalIgnoreCase) >= 0)
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
+
+                // -------------------------------------------------
+                // Sample data: add three worksheets, two of them are confidential
+                // -------------------------------------------------
+                Worksheet ws1 = workbook.Worksheets[0];
+                ws1.Name = "Summary";
+                ws1.Cells["A1"].PutValue("Public Data");
+
+                Worksheet wsConf1 = workbook.Worksheets.Add("Confidential_Q1");
+                wsConf1.Cells["A1"].PutValue("Secret Data Q1");
+
+                Worksheet wsConf2 = workbook.Worksheets.Add("Confidential_Q2");
+                wsConf2.Cells["A1"].PutValue("Secret Data Q2");
+
+                // -------------------------------------------------
+                // Apply black‑and‑white printing mode only to confidential sheets
+                // -------------------------------------------------
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Enable black‑and‑white printing for this sheet
-                    sheet.PageSetup.BlackAndWhite = true;
+                    // Define your own criteria for confidentiality.
+                    // Here we treat any sheet whose name contains "Confidential" as confidential.
+                    if (sheet.Name.IndexOf("Confidential", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        // Set the BlackAndWhite property to true for printing.
+                        sheet.PageSetup.BlackAndWhite = true;
+                    }
+                    else
+                    {
+                        // Ensure non‑confidential sheets retain their original color mode.
+                        sheet.PageSetup.BlackAndWhite = false;
+                    }
                 }
+
+                // -------------------------------------------------
+                // Prepare PDF save options (you can customize further if needed)
+                // -------------------------------------------------
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    // Example: ignore blank pages to keep the PDF tidy
+                    PrintingPageType = PrintingPageType.IgnoreBlank
+                };
+
+                // -------------------------------------------------
+                // Export the workbook to PDF. Only the confidential sheets will be rendered in black‑and‑white.
+                // -------------------------------------------------
+                string outputPath = "ConfidentialReport.pdf";
+                workbook.Save(outputPath, pdfOptions);
+
+                Console.WriteLine($"Workbook exported to PDF at: {outputPath}");
             }
-
-            // Configure PDF save options (you can adjust other options as needed)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            catch (Exception ex)
             {
-                // Example: export only visible sheets (optional)
-                SheetSet = SheetSet.Visible
-            };
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
 
-            // Save the workbook to PDF
-            string outputPath = "output.pdf";
-            workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"Workbook saved to PDF with black‑and‑white applied to confidential sheets: {outputPath}");
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            Run();
         }
     }
 }

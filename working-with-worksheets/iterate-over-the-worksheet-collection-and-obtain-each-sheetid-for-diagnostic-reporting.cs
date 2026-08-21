@@ -1,41 +1,54 @@
-// Title: Get each worksheet’s internal SheetId (TabId) with Aspose.Cells for .NET
-// Description: Creates a workbook, adds sample worksheets, then loops through Workbook.Worksheets, reads each sheet’s TabId, name, and index, writes the data to the console, and saves the workbook as WorksheetIdsReport.xlsx.
-// Keywords: Aspose.Cells | .NET | C# | Worksheet TabId | SheetId | iterate worksheets | Workbook.Worksheets loop | diagnostic sheet identifier | debug workbook structure | internal sheet ID
-// Common Searches: Aspose.Cells get worksheet TabId .NET | How to read internal SheetId of worksheets in Aspose.Cells | Iterate over worksheets and print TabId using C# | Diagnostic worksheet IDs Aspose.Cells | Retrieve worksheet index and TabId for debugging
-// Developer Intent: The developer needs to enumerate all worksheets in a workbook and obtain each worksheet’s internal SheetId (TabId) for diagnostic or logging purposes.
-// Use Cases: Log worksheet identifiers to confirm correct ordering after programmatic changes. | Create a diagnostic report of worksheet names, indexes, and TabId values for workbook integrity checks. | Validate that newly added sheets receive expected TabId values during workbook generation.
-// AI Prompts: Generate C# code that iterates through an Aspose.Cells workbook and stores each worksheet’s TabId, name, and index in a dictionary. | Show how to export worksheet names, indexes, and TabId values to a CSV file using Aspose.Cells. | Explain how to compare saved TabId values with current worksheet TabId to detect modifications after editing a workbook.
+// Title: Retrieve Worksheet TabId (SheetId) for Every Sheet in an Aspose.Cells .NET Workbook
+// Description: Creates an in‑memory workbook, adds several worksheets, then loops through the Worksheets collection to read each sheet's internal TabId and name, outputs the values to the console, and saves the file.
+// Keywords: Aspose.Cells TabId | worksheet SheetId .NET | iterate worksheets Aspose | get internal worksheet identifier | Aspose.Cells diagnostic IDs
+// Common Searches: Aspose.Cells get worksheet TabId C# | how to read SheetId of each worksheet | list all worksheet IDs Aspose.Cells | C# iterate worksheets and show TabId
+// Developer Intent: Extract the internal TabId of every worksheet in a workbook for logging or validation.
+// Use Cases: Log TabIds after adding or removing sheets to confirm unique identifiers. | Build a name‑to‑ID map for custom metadata or external references. | Detect changes in worksheet ordering by comparing TabIds before and after modifications.
+// AI Prompts: Generate a C# function that returns a Dictionary<string, int> mapping worksheet names to their TabIds using Aspose.Cells. | Write code that iterates all worksheets in a workbook and writes each Name and TabId to a CSV file. | Explain the difference between a worksheet's TabId and its index in Aspose.Cells and when each should be used.
 
 using System;
 using Aspose.Cells;
 
 namespace WorksheetIdDiagnostic
 {
-    // Creates a workbook, adds sample worksheets, then loops through Workbook.Worksheets, reads each sheet’s TabId, name, and index, writes the data to the console, and saves the workbook as WorksheetIdsReport.xlsx.
-    class Program
+    // Creates an in‑memory workbook, adds several worksheets, then loops through the Worksheets collection to read each sheet's internal TabId and name, outputs the values to the console, and saves the file.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
-
-            // Add sample worksheets for demonstration
-            workbook.Worksheets.Add("Sales");
-            workbook.Worksheets.Add("Inventory");
-            workbook.Worksheets.Add("Summary");
-
-            // Iterate over the worksheet collection
-            WorksheetCollection sheets = workbook.Worksheets;
-            for (int i = 0; i < sheets.Count; i++)
+            try
             {
-                Worksheet sheet = sheets[i];
-                // Obtain the internal SheetId (TabId) for diagnostic reporting
-                int sheetId = sheet.TabId;
-                Console.WriteLine($"Worksheet Name: {sheet.Name}, Index: {sheet.Index}, SheetId (TabId): {sheetId}");
-            }
+                // Create a new workbook (in-memory)
+                Workbook workbook = new Workbook();
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("WorksheetIdsReport.xlsx");
+                // Rename the default first worksheet
+                workbook.Worksheets[0].Name = "FirstSheet";
+
+                // Add additional worksheets and keep references
+                Worksheet secondSheet = workbook.Worksheets.Add("SecondSheet");
+                Worksheet thirdSheet = workbook.Worksheets.Add("ThirdSheet");
+
+                // Optionally put some data (not required for ID retrieval)
+                secondSheet.Cells["A1"].PutValue("Data in second sheet");
+                thirdSheet.Cells["A1"].PutValue("Data in third sheet");
+
+                // Iterate over the worksheet collection and obtain each TabId (internal sheet identifier)
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    int sheetId = sheet.TabId;               // Internal identifier for the sheet
+                    string sheetName = sheet.Name;           // Friendly name of the sheet
+                    Console.WriteLine($"Worksheet \"{sheetName}\" has TabId: {sheetId}");
+                }
+
+                // Save the workbook to verify that everything works (optional)
+                string outputPath = "WorksheetIdDiagnostic.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

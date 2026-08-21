@@ -1,70 +1,55 @@
-// Title: Aspose.Cells C# – Convert ListObject to Range while keeping header and first row styles (TableToRangeOptions.LastRow)
-// Description: Demonstrates how to create a workbook, style the header and the first data row, add a ListObject, and convert the table to a range using TableToRangeOptions with LastRow = 1 so that only those two rows retain their formatting.
-// Keywords: Aspose.Cells TableToRangeOptions | C# convert ListObject to range | preserve header formatting Aspose | retain first data row style | .NET Excel table to range | LastRow option example
-// Common Searches: Aspose.Cells keep header style when converting table to range | TableToRangeOptions LastRow C# example | convert Excel ListObject to range preserving first rows | Aspose.Cells table conversion options
-// Developer Intent: Keep the header and first data row formatting while flattening a table into a range.
-// Use Cases: Generate a report where only the top rows of a table need to stay visually styled after conversion. | Export a subset of a table for downstream processing while preserving its header and first row appearance. | Create a styled worksheet, apply a table, then flatten it without losing the initial row styles.
-// AI Prompts: Show C# code using Aspose.Cells to convert a ListObject to a range and retain header and first row formatting with TableToRangeOptions.LastRow. | Explain how TableToRangeOptions.LastRow works in Aspose.Cells and give a practical example. | Provide a step‑by‑step guide to style the header and first data row of an Excel table and then flatten the table while keeping those styles.
+// Title: Convert Aspose.Cells Table to a Range while preserving header and first data row (TableToRangeOptions.LastRow)
+// Description: Creates a workbook, adds a table, sets TableToRangeOptions.LastRow to 1 (zero‑based) so only the header row and the first data row keep their formatting, converts the table to a normal range, and saves the file.
+// Keywords: Aspose.Cells | TableToRangeOptions | LastRow | C# | .NET | convert table to range | preserve header formatting | first data row | ListObject | Excel table conversion
+// Common Searches: Aspose.Cells TableToRangeOptions LastRow example | keep header and first row when converting table to range | convert ListObject to range without losing formatting | C# Aspose.Cells table to range conversion
+// Developer Intent: Convert an Aspose.Cells ListObject to a regular range while retaining formatting only for the header row and the first data row.
+// Use Cases: Flatten a styled table for printing, keeping only the header and a sample row visible. | Export a subset of a table for custom calculations, discarding extra rows but preserving top‑two‑row styling. | Create a template that converts tables to ranges yet leaves the header and first row editable with original styles.
+// AI Prompts: Show how to use TableToRangeOptions.LastRow to keep the header and first data row when converting a table to a range in Aspose.Cells for .NET. | Provide a C# code snippet that converts a ListObject to a range and retains formatting only for rows 0 and 1. | Explain the difference between setting TableToRangeOptions.LastRow to 0 versus 1 during table‑to‑range conversion.
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsTableToRangeDemo
+// Creates a workbook, adds a table, sets TableToRangeOptions.LastRow to 1 (zero‑based) so only the header row and the first data row keep their formatting, converts the table to a normal range, and saves the file.
+class Program
 {
-    // Demonstrates how to create a workbook, style the header and the first data row, add a ListObject, and convert the table to a range using TableToRangeOptions with LastRow = 1 so that only those two rows retain their formatting.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Populate header row (row 0)
+        cells[0, 0].PutValue("Header1");
+        cells[0, 1].PutValue("Header2");
+
+        // Populate first data row (row 1)
+        cells[1, 0].PutValue("Data1");
+        cells[1, 1].PutValue(100);
+
+        // Populate additional data rows (rows 2‑4)
+        for (int r = 2; r < 5; r++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate header row (row 0)
-            cells[0, 0].PutValue("ID");
-            cells[0, 1].PutValue("Name");
-            cells[0, 2].PutValue("Score");
-
-            // Populate data rows (rows 1 to 5)
-            for (int row = 1; row <= 5; row++)
-            {
-                cells[row, 0].PutValue(row);                     // ID
-                cells[row, 1].PutValue($"User{row}");            // Name
-                cells[row, 2].PutValue(50 + row * 5);            // Score
-            }
-
-            // Apply formatting to header row
-            Style headerStyle = workbook.CreateStyle();
-            headerStyle.Font.IsBold = true;
-            headerStyle.ForegroundColor = System.Drawing.Color.LightGray;
-            headerStyle.Pattern = BackgroundType.Solid;
-            StyleFlag headerFlag = new StyleFlag { FontBold = true, CellShading = true };
-            cells.CreateRange(0, 0, 1, 3).ApplyStyle(headerStyle, headerFlag);
-
-            // Apply formatting to the first data row (row 1)
-            Style firstDataStyle = workbook.CreateStyle();
-            firstDataStyle.ForegroundColor = System.Drawing.Color.LightYellow;
-            firstDataStyle.Pattern = BackgroundType.Solid;
-            StyleFlag firstDataFlag = new StyleFlag { CellShading = true };
-            cells.CreateRange(1, 0, 1, 3).ApplyStyle(firstDataStyle, firstDataFlag);
-
-            // Add a ListObject (table) that covers all rows (0‑5) and columns (0‑2)
-            int tableIndex = sheet.ListObjects.Add(0, 0, 5, 2, true);
-            ListObject table = sheet.ListObjects[tableIndex];
-            table.TableStyleType = TableStyleType.TableStyleMedium2;
-
-            // Convert the table to a range, retaining only header and first data row
-            TableToRangeOptions options = new TableToRangeOptions
-            {
-                // LastRow is zero‑based; setting it to 1 keeps rows 0 and 1.
-                LastRow = 1
-            };
-            table.ConvertToRange(options);
-
-            // Save the workbook
-            workbook.Save("TableToRange_WithHeaderAndFirstRow.xlsx");
+            cells[r, 0].PutValue($"Data{r}");
+            cells[r, 1].PutValue(r * 10);
         }
+
+        // Add a table that spans rows 0‑4 and columns 0‑1
+        int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
+        ListObject table = sheet.ListObjects[tableIndex];
+        table.TableStyleType = TableStyleType.TableStyleMedium2;
+
+        // Configure conversion options to keep only the header row and the first data row
+        TableToRangeOptions options = new TableToRangeOptions
+        {
+            // LastRow is zero‑based; setting it to 1 retains rows 0 and 1
+            LastRow = 1
+        };
+
+        // Convert the table to a normal range using the specified options
+        table.ConvertToRange(options);
+
+        // Save the workbook
+        workbook.Save("TableToRangeHeaderAndFirstRow.xlsx");
     }
 }

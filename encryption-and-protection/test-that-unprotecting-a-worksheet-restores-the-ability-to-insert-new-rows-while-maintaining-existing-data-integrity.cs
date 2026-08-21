@@ -1,88 +1,57 @@
-// Title: C# – Unprotect an Aspose.Cells worksheet to insert rows while preserving data integrity
-// Description: Demonstrates protecting a worksheet with row insertion disabled, catching the expected failure, unprotecting with a password, inserting a new row, verifying that original cells shift correctly, and saving the workbook.
-// Keywords: Aspose.Cells protect worksheet C# | unprotect worksheet Aspose.Cells | insert row after unprotect | row insertion disabled protection | verify data integrity Aspose.Cells | C# Excel protection example | Aspose.Cells InsertRow exception
-// Common Searches: how to unprotect an Aspose.Cells worksheet in C# | Aspose.Cells insert row after sheet protection | C# protect sheet without allowing row insertion | Aspose.Cells verify cell values after unprotect | example of worksheet protection and unprotect in Aspose.Cells
-// Developer Intent: Remove protection from a worksheet so that a new row can be added without altering existing cell values.
-// Use Cases: Lock a template sheet to prevent manual row additions, then programmatically unprotect it to insert summary rows before export. | Create a report with a fixed layout, temporarily unprotect the sheet to add calculated rows, and re‑apply protection if needed. | Automated test that confirms InsertRow throws an exception on a protected sheet and succeeds after calling Unprotect with the correct password.
-// AI Prompts: Generate C# code using Aspose.Cells that protects a worksheet, blocks row insertion, catches the failure, then unprotects with a password and inserts a new row while keeping existing data intact. | Explain how to handle the exception thrown by InsertRow on a protected sheet and how to validate that original rows shift correctly after unprotecting. | Write a unit test in C# that asserts InsertRow fails on a protected worksheet and passes after calling Unprotect with the correct password.
+// Title: Aspose.Cells for .NET – Unprotect a Worksheet and Insert a Row Without Losing Data
+// Description: C# example that creates a workbook, protects the first worksheet, demonstrates that row insertion fails while protected, then unprotects with the correct password, inserts a new row, shifts existing values, and saves the file. Shows how to verify data integrity after unprotecting.
+// Keywords: Aspose.Cells unprotect worksheet C# | insert row after unprotect Aspose.Cells | worksheet protection row insertion | data integrity after row insert | C# Aspose.Cells protect sheet example | Unprotect InsertRow Aspose.Cells
+// Common Searches: how to insert a row in a protected worksheet using Aspose.Cells | Aspose.Cells C# unprotect sheet then add row | verify data shift after inserting row in Aspose.Cells | Aspose.Cells protect sheet prevent row insertion | C# test worksheet unprotect restores insert row
+// Developer Intent: Confirm that calling Unprotect on a protected worksheet re‑enables row insertion and that existing cell values remain correctly positioned after the new row is added.
+// Use Cases: Automated test to ensure protection blocks row insertion and unprotect restores it without corrupting data. | Workflow that temporarily locks a sheet during calculations, then unlocks it to allow users to add rows before final save. | Validation that a workbook saved after unprotecting can be edited by end users while preserving original content.
+// AI Prompts: Write a C# unit test with Aspose.Cells that asserts row insertion throws an exception on a protected sheet and succeeds after Unprotect with the correct password. | Provide C# code that protects a worksheet, attempts to insert a row, catches the failure, then unprotects, inserts a row, and checks that previous cell values have shifted as expected. | Explain how Aspose.Cells ProtectionType controls allowed actions and how to temporarily lift row‑insertion restrictions using Unprotect.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsProtectionTest
+// C# example that creates a workbook, protects the first worksheet, demonstrates that row insertion fails while protected, then unprotects with the correct password, inserts a new row, shifts existing values, and saves the file. Shows how to verify data integrity after unprotecting.
+class TestWorksheetUnprotectInsertRow
 {
-    // Demonstrates protecting a worksheet with row insertion disabled, catching the expected failure, unprotecting with a password, inserting a new row, verifying that original cells shift correctly, and saving the workbook.
-    public class UnprotectInsertRowDemo
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Populate initial data in rows 0, 1 and 2
+        cells[0, 0].PutValue("Row0");
+        cells[1, 0].PutValue("Row1");
+        cells[2, 0].PutValue("Row2");
+
+        // Protect the worksheet with a password (insertion of rows is not allowed by default)
+        sheet.Protect(ProtectionType.All, "pwd123", null);
+
+        // Attempt to insert a row while the sheet is protected – this should fail
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Populate initial data in rows 0 to 2
-                cells[0, 0].PutValue("Row0");
-                cells[0, 1].PutValue(10);
-                cells[1, 0].PutValue("Row1");
-                cells[1, 1].PutValue(20);
-                cells[2, 0].PutValue("Row2");
-                cells[2, 1].PutValue(30);
-
-                // Configure protection: disallow inserting rows
-                Protection protection = worksheet.Protection;
-                protection.AllowInsertingRow = false;
-                protection.Password = "pwd123";
-                worksheet.Protect(ProtectionType.All, "pwd123", null);
-
-                Console.WriteLine($"Worksheet protected: {worksheet.IsProtected}");
-
-                // Attempt to insert a row while protected (should fail)
-                try
-                {
-                    cells.InsertRow(1);
-                    Console.WriteLine("Unexpected: Row inserted while protection disallows it.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Expected failure when inserting row on protected sheet: {ex.Message}");
-                }
-
-                // Unprotect the worksheet with the correct password
-                worksheet.Unprotect("pwd123");
-                Console.WriteLine($"Worksheet protected after unprotect: {worksheet.IsProtected}");
-
-                // Insert a new row at index 1 (between original Row0 and Row1)
-                cells.InsertRow(1);
-                // Add data to the newly inserted row
-                cells[1, 0].PutValue("InsertedRow");
-                cells[1, 1].PutValue(99);
-
-                // Verify data integrity after insertion
-                Console.WriteLine($"Cell A0: {cells[0, 0].StringValue} (expected 'Row0')");
-                Console.WriteLine($"Cell A1: {cells[1, 0].StringValue} (expected 'InsertedRow')");
-                Console.WriteLine($"Cell A2: {cells[2, 0].StringValue} (expected 'Row1')");
-                Console.WriteLine($"Cell A3: {cells[3, 0].StringValue} (expected 'Row2')");
-
-                // Save the workbook to verify the result
-                workbook.Save("UnprotectInsertRowDemo.xlsx");
-                Console.WriteLine("Workbook saved as 'UnprotectInsertRowDemo.xlsx'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
+            cells.InsertRow(1);
+            Console.WriteLine("Unexpected: Row inserted while worksheet is protected.");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            UnprotectInsertRowDemo.Run();
+            Console.WriteLine("Expected failure inserting row while protected: " + ex.Message);
         }
+
+        // Unprotect the worksheet using the correct password
+        sheet.Unprotect("pwd123");
+
+        // Insert a new row at index 1 (original rows shift down)
+        cells.InsertRow(1);
+        cells[1, 0].PutValue("InsertedRow");
+
+        // Verify that existing data remains intact and has shifted correctly
+        Console.WriteLine("Cell A0 (should be Row0): " + cells[0, 0].StringValue);
+        Console.WriteLine("Cell A1 (should be InsertedRow): " + cells[1, 0].StringValue);
+        Console.WriteLine("Cell A2 (should be Row1): " + cells[2, 0].StringValue);
+        Console.WriteLine("Cell A3 (should be Row2): " + cells[3, 0].StringValue);
+
+        // Save the workbook to verify the result
+        workbook.Save("UnprotectInsertRowDemo.xlsx");
     }
 }

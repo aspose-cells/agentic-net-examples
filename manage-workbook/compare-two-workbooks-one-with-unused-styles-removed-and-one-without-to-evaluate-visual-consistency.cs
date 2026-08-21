@@ -1,110 +1,80 @@
+// Title: Validate visual consistency after removing unused styles with AspNet Aspose.Cells (C#)
+// Description: C# sample that loads an original workbook, clones it, records the style pool size, calls RemoveUnusedStyles on the clone, then iterates every worksheet, row and column to compare each cell's display style using Style.Equals. It reports mismatches and confirms that formatting remains identical, finally saving the cleaned file for manual review.
+// Keywords: Aspose.Cells RemoveUnusedStyles | C# compare workbook styles | Excel style pool size | GetDisplayStyle | Style.Equals | visual consistency check | Excel file size optimization | cell formatting verification
+// Common Searches: how to ensure removing unused styles does not change Excel appearance Aspose.Cells | C# compare two Excel workbooks cell style equality | verify visual consistency after RemoveUnusedStyles | Aspose.Cells count of styles before after cleanup | detect formatting differences in cloned workbook
+// Developer Intent: Confirm that calling RemoveUnusedStyles on a workbook does not alter any cell's visual formatting.
+// Use Cases: Automated regression test to catch unintended style changes after workbook optimization. | Generate a size‑reduced Excel file for distribution while guaranteeing identical look and feel. | Audit large workbooks to ensure style cleanup does not affect end‑user presentation.
+// AI Prompts: Write C# code that loads an Excel file, creates a copy, removes unused styles with Aspose.Cells, and lists cells where the display style differs. | Explain the effect of RemoveUnusedStyles on the style pool and how to use GetDisplayStyle and Style.Equals for visual verification. | Provide a step‑by‑step tutorial for comparing cell formatting between two workbooks after style cleanup using Aspose.Cells for .NET.
+
 using System;
-using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsStyleComparison
 {
+    // C# sample that loads an original workbook, clones it, records the style pool size, calls RemoveUnusedStyles on the clone, then iterates every worksheet, row and column to compare each cell's display style using Style.Equals. It reports mismatches and confirms that formatting remains identical, finally saving the cleaned file for manual review.
     class Program
     {
         static void Main()
         {
-            try
+            // Path to the original workbook (with all styles)
+            string originalPath = "original.xlsx";
+
+            // Load the original workbook
+            Workbook originalWb = new Workbook(originalPath);
+
+            // Create a copy of the original workbook to work on removing unused styles
+            Workbook cleanedWb = new Workbook();
+            cleanedWb.Copy(originalWb); // use the provided Copy method
+
+            // Record style count before removal
+            int styleCountBefore = originalWb.CountOfStylesInPool;
+            Console.WriteLine($"Style count before removal: {styleCountBefore}");
+
+            // Remove unused styles from the copy
+            cleanedWb.RemoveUnusedStyles();
+
+            // Record style count after removal
+            int styleCountAfter = cleanedWb.CountOfStylesInPool;
+            Console.WriteLine($"Style count after removal: {styleCountAfter}");
+
+            // Compare visual consistency cell by cell
+            bool allMatch = true;
+            int sheetCount = originalWb.Worksheets.Count;
+
+            for (int s = 0; s < sheetCount; s++)
             {
-                // Path to the source workbook (contains all styles)
-                string sourcePath = "SourceWorkbook.xlsx";
+                Worksheet sheetOriginal = originalWb.Worksheets[s];
+                Worksheet sheetCleaned = cleanedWb.Worksheets[s];
 
-                // Verify that the source file exists
-                if (!File.Exists(sourcePath))
+                // Determine the used range (max row/column) for iteration
+                int maxRow = Math.Max(sheetOriginal.Cells.MaxDataRow, sheetCleaned.Cells.MaxDataRow);
+                int maxCol = Math.Max(sheetOriginal.Cells.MaxDataColumn, sheetCleaned.Cells.MaxDataColumn);
+
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
-
-                // Load the original workbook (contains all styles)
-                Workbook wbOriginal = new Workbook(sourcePath);
-
-                // Load a second instance of the same workbook that we will clean up
-                Workbook wbCleaned = new Workbook(sourcePath);
-
-                // Remove all unused styles from the second workbook
-                wbCleaned.RemoveUnusedStyles();
-
-                // Display style pool counts for both workbooks
-                Console.WriteLine($"Original workbook style pool count: {wbOriginal.CountOfStylesInPool}");
-                Console.WriteLine($"Cleaned workbook style pool count:   {wbCleaned.CountOfStylesInPool}");
-
-                // Compare visual consistency cell by cell
-                bool allCellsMatch = true;
-
-                // Ensure both workbooks have the same number of worksheets
-                if (wbOriginal.Worksheets.Count != wbCleaned.Worksheets.Count)
-                {
-                    Console.WriteLine("Worksheet count mismatch between the two workbooks.");
-                    allCellsMatch = false;
-                }
-                else
-                {
-                    for (int sheetIndex = 0; sheetIndex < wbOriginal.Worksheets.Count; sheetIndex++)
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        Worksheet sheetOriginal = wbOriginal.Worksheets[sheetIndex];
-                        Worksheet sheetCleaned = wbCleaned.Worksheets[sheetIndex];
+                        // Get display styles for the current cell in both workbooks
+                        Style styleOriginal = sheetOriginal.Cells[row, col].GetDisplayStyle();
+                        Style styleCleaned = sheetCleaned.Cells[row, col].GetDisplayStyle();
 
-                        // Determine the used ranges for both sheets
-                        AsposeRange originalRange = sheetOriginal.Cells.MaxDisplayRange;
-                        AsposeRange cleanedRange = sheetCleaned.Cells.MaxDisplayRange;
-
-                        // If a sheet is empty, skip it
-                        if (originalRange == null && cleanedRange == null)
-                            continue;
-
-                        // Use empty range defaults when one side is null
-                        if (originalRange == null) originalRange = cleanedRange;
-                        if (cleanedRange == null) cleanedRange = originalRange;
-
-                        // Compute the union of the two ranges
-                        int startRow = Math.Min(originalRange.FirstRow, cleanedRange.FirstRow);
-                        int startCol = Math.Min(originalRange.FirstColumn, cleanedRange.FirstColumn);
-                        int endRow = Math.Max(originalRange.FirstRow + originalRange.RowCount - 1,
-                                             cleanedRange.FirstRow + cleanedRange.RowCount - 1);
-                        int endCol = Math.Max(originalRange.FirstColumn + originalRange.ColumnCount - 1,
-                                             cleanedRange.FirstColumn + cleanedRange.ColumnCount - 1);
-
-                        // Iterate through the union area
-                        for (int row = startRow; row <= endRow; row++)
+                        // Use Style.Equals to compare the two styles
+                        if (!styleOriginal.Equals(styleCleaned))
                         {
-                            for (int col = startCol; col <= endCol; col++)
-                            {
-                                // Get display styles (styles after considering conditional formatting, merged cells, etc.)
-                                Style styleOriginal = sheetOriginal.Cells[row, col].GetDisplayStyle();
-                                Style styleCleaned = sheetCleaned.Cells[row, col].GetDisplayStyle();
-
-                                // Compare the two styles
-                                if (!styleOriginal.Equals(styleCleaned))
-                                {
-                                    Console.WriteLine($"Style mismatch at Sheet[{sheetIndex}] Cell[{row},{col}]");
-                                    allCellsMatch = false;
-                                }
-                            }
+                            allMatch = false;
+                            Console.WriteLine($"Mismatch found at Sheet[{s}] Cell[{row},{col}]");
                         }
                     }
                 }
-
-                // Report the final result
-                if (allCellsMatch)
-                    Console.WriteLine("Visual consistency verified: all cell styles match after removing unused styles.");
-                else
-                    Console.WriteLine("Visual inconsistency detected: some cell styles differ after removing unused styles.");
-
-                // Optionally, save the cleaned workbook for manual inspection
-                string cleanedPath = "CleanedWorkbook.xlsx";
-                wbCleaned.Save(cleanedPath);
-                Console.WriteLine($"Cleaned workbook saved to: {cleanedPath}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            if (allMatch)
+                Console.WriteLine("Visual consistency verified: all cell styles match after removing unused styles.");
+            else
+                Console.WriteLine("Visual inconsistency detected: some cell styles differ after removing unused styles.");
+
+            // Optionally, save the cleaned workbook for manual inspection
+            cleanedWb.Save("cleaned_without_unused_styles.xlsx");
         }
     }
 }

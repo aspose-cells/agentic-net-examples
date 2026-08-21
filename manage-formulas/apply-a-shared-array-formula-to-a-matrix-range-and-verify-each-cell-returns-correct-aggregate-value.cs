@@ -1,53 +1,67 @@
-// Title: C# – Apply a Shared Formula to Sum Rows in a Matrix with Aspose.Cells
-// Description: Creates a workbook, fills a 3×2 matrix in A1:B3, assigns a shared formula in D1 that adds the two cells of each row, propagates it to D2‑D3 via SetSharedFormula, calculates the sheet, and programmatically checks that every D‑column value equals the expected row total.
-// Keywords: Aspose.Cells | C# | SetSharedFormula | shared formula | row sum | matrix range | calculate formulas | verify results | Excel automation | workbook calculation
-// Common Searches: Aspose.Cells SetSharedFormula example | how to sum rows with shared formula in .NET | C# verify Excel formula results programmatically | shared array formula Aspose.Cells | calculate workbook after setting formula
-// Developer Intent: Show how to assign a shared formula that computes each row’s total and validate the computed values against expected sums.
-// Use Cases: Generate row totals for a data table without writing separate formulas for each cell. | Minimize spreadsheet size by reusing a single formula across many rows. | Automate unit tests that confirm formula accuracy after workbook.CalculateFormula().
-// AI Prompts: Write C# code that uses Aspose.Cells SetSharedFormula to sum each row of a given matrix range. | Explain how to validate that every cell containing a shared formula returns the correct sum after workbook.CalculateFormula(). | Provide troubleshooting steps when a shared formula in Aspose.Cells does not produce expected results.
+// Title: Shared Array Formula (SetArrayFormula) – Sum Matrix Verification in Aspose.Cells for .NET
+// Description: Creates a 3×3 numeric matrix (A1:C3), defines =SUM($A$1:$C$3) as a shared array, applies it to B2:D4 with SetArrayFormula, calculates all formulas, retrieves the expected total via a regular SUM, and confirms each spilled cell matches the aggregate before saving the workbook.
+// Keywords: Aspose.Cells | C# | SetArrayFormula | shared array formula | matrix sum | verify array result | calculate formulas | Excel automation .NET | spilled array range | Workbook.Save
+// Common Searches: Aspose.Cells SetArrayFormula example C# | how to apply shared array formula to a range | verify spilled array values in Aspose.Cells | calculate sum of matrix with Aspose.Cells | C# code for shared array formula verification
+// Developer Intent: Apply a shared array formula to a matrix range and ensure every cell returns the correct aggregate sum.
+// Use Cases: Display the total of a data block in every cell of a target area using a single shared formula. | Programmatically validate that a spilled array produces identical results across all cells. | Generate an Excel file where the summed value is visible in a multi‑cell block for reporting or further processing.
+// AI Prompts: Modify the example to use AVERAGE instead of SUM while keeping the verification steps. | Show how to apply a shared array formula to a non‑contiguous range with Aspose.Cells for .NET. | Explain error handling when the source matrix contains text or empty cells during SetArrayFormula execution.
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, fills a 3×2 matrix in A1:B3, assigns a shared formula in D1 that adds the two cells of each row, propagates it to D2‑D3 via SetSharedFormula, calculates the sheet, and programmatically checks that every D‑column value equals the expected row total.
-class SharedArrayFormulaDemo
+namespace AsposeCellsSharedArrayFormulaDemo
 {
-    static void Main()
+    // Creates a 3×3 numeric matrix (A1:C3), defines =SUM($A$1:$C$3) as a shared array, applies it to B2:D4 with SetArrayFormula, calculates all formulas, retrieves the expected total via a regular SUM, and confirms each spilled cell matches the aggregate before saving the workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate a 3x2 matrix (A1:B3) with sample numeric data
-        int[,] matrix = { { 1, 2 }, { 3, 4 }, { 5, 6 } };
-        for (int row = 0; row < 3; row++)
+        static void Main()
         {
-            for (int col = 0; col < 2; col++)
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate a 3x3 matrix in A1:C3
+            int[,] data = {
+                { 1, 2, 3 },
+                { 4, 5, 6 },
+                { 7, 8, 9 }
+            };
+
+            for (int r = 0; r < 3; r++)
+                for (int c = 0; c < 3; c++)
+                    cells[r, c].PutValue(data[r, c]);
+
+            // Define the array formula that calculates the total sum of the matrix
+            string arrayFormula = "=SUM($A$1:$C$3)";
+
+            // Apply the array formula as a shared array to a 3x3 range starting at B2 (cells B2:D4)
+            // This will cause the same aggregate value to appear in every cell of the range
+            Cell startCell = cells["B2"];
+            startCell.SetArrayFormula(arrayFormula, 3, 3, new FormulaParseOptions());
+
+            // Calculate all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Get the expected aggregate value using a normal formula calculation
+            object expectedObj = sheet.CalculateFormula("=SUM(A1:C3)");
+            double expected = Convert.ToDouble(expectedObj);
+
+            // Verify each cell in the spilled range contains the expected aggregate value
+            Console.WriteLine("Verifying shared array formula results (B2:D4):");
+            for (int r = 0; r < 3; r++)
             {
-                cells[row, col].PutValue(matrix[row, col]); // A1:B3
+                for (int c = 0; c < 3; c++)
+                {
+                    Cell cur = cells[1 + r, 1 + c]; // B2 is (1,1)
+                    double actual = Convert.ToDouble(cur.Value);
+                    bool match = Math.Abs(actual - expected) < 1e-9;
+                    Console.WriteLine($"{cur.Name}: {actual} {(match ? "OK" : "FAIL")}");
+                }
             }
+
+            // Save the workbook (optional, just to visualize the result if needed)
+            workbook.Save("SharedArrayFormulaDemo.xlsx");
         }
-
-        // Apply a shared formula that sums each row's A and B values.
-        // The formula is entered in D1 and will be propagated to D2 and D3.
-        // Parameters: (formula, rowNumber, columnNumber)
-        cells["D1"].SetSharedFormula("=SUM(A1:B1)", 3, 1);
-
-        // Calculate all formulas in the workbook
-        workbook.CalculateFormula();
-
-        // Verify that each cell in D1:D3 contains the correct row sum
-        bool allCorrect = true;
-        for (int row = 0; row < 3; row++)
-        {
-            double expected = matrix[row, 0] + matrix[row, 1];
-            double actual = cells[row, 3].DoubleValue; // Column D has index 3
-            Console.WriteLine($"Row {row + 1}: Expected = {expected}, Actual = {actual}");
-            if (Math.Abs(expected - actual) > 1e-9)
-                allCorrect = false;
-        }
-
-        Console.WriteLine("All values correct: " + allCorrect);
     }
 }

@@ -1,48 +1,66 @@
-// Title: List VBA Module Names in an .xlsm Workbook Using Aspose.Cells for .NET (C#)
-// Description: Loads a macro‑enabled workbook, enables macro processing, checks for VBA presence, accesses the VbaProject, iterates the VbaModuleCollection, and prints each module's Name – effectively enumerating all macro containers in the file.
-// Keywords: Aspose.Cells | C# | .xlsm | VBA modules | VbaProject | enumerate macros | list macro names | enable macros Aspose | Workbook.HasMacro
-// Common Searches: list VBA modules Aspose.Cells C# | enumerate macro names in .xlsm file | how to get VbaModule names with Aspose | check workbook contains macros Aspose.Cells | access VBA project from .xlsm using .NET
-// Developer Intent: Retrieve the names of all VBA modules (macros) contained in a macro‑enabled workbook.
-// Use Cases: Verify required macros exist before processing the workbook. | Create an inventory of macro names for documentation or compliance audits. | Select specific modules for dynamic execution or code‑generation tasks.
-// AI Prompts: Generate C# code with Aspose.Cells that extracts the full source code of each VBA module in an .xlsm file. | Show how to filter VBA modules by a naming pattern and list only the matching macro names. | Provide an example that disables macro processing after enumerating modules to reduce memory usage.
+// Title: Enumerate VBA macro (Sub/Function) names in an .xlsm file with Aspose.Cells for .NET
+// Description: Loads an .xlsm workbook, enables macro processing, verifies the presence of a VBA project, walks through each VbaModule, parses the source code and prints every Sub and Function identifier found.
+// Keywords: Aspose.Cells VBA enumeration | list macros .xlsm C# | extract Sub Function names Aspose | read VBA project modules .NET | macro enabled workbook analysis
+// Common Searches: how to list all macros in an xlsm using Aspose.Cells | C# code to get VBA module names and procedures | retrieve VBA macro names from a workbook with Aspose | enumerate Sub and Function declarations in macro‑enabled Excel file
+// Developer Intent: Obtain a complete list of VBA macro identifiers (Sub and Function) defined in the VBA project of a loaded workbook.
+// Use Cases: Create an inventory of macros for documentation or compliance audits. | Validate required macros exist before running automated Excel workflows. | Populate a UI component (e.g., dropdown) with available macro names for user selection.
+// AI Prompts: Generate a C# method that returns a Dictionary<string, List<string>> where each key is a VBA module name and each value is the list of macro names in that module using Aspose.Cells. | Provide code that extracts all macro names from an .xlsm file and writes them to a CSV file with Aspose.Cells for .NET. | Write a reusable function that checks a workbook for VBA macros and returns a flat List<string> of all Sub and Function names.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// Loads a macro‑enabled workbook, enables macro processing, checks for VBA presence, accesses the VbaProject, iterates the VbaModuleCollection, and prints each module's Name – effectively enumerating all macro containers in the file.
+// Loads an .xlsm workbook, enables macro processing, verifies the presence of a VBA project, walks through each VbaModule, parses the source code and prints every Sub and Function identifier found.
 class Program
 {
     static void Main()
     {
-        // Load the macro-enabled workbook (replace with your file path)
+        // Load the macro-enabled workbook
         Workbook workbook = new Workbook("input.xlsm");
 
         // Enable macros for the loaded workbook (required for VBA access)
         workbook.Settings.EnableMacros = true;
 
-        // Check if the workbook actually contains VBA macros
-        if (!workbook.HasMacro)
+        // Verify that the workbook contains VBA project
+        if (workbook.HasMacro && workbook.VbaProject != null)
         {
-            Console.WriteLine("The workbook does not contain any macros.");
-            return;
+            VbaProject vbaProject = workbook.VbaProject;
+
+            Console.WriteLine($"Total VBA modules: {vbaProject.Modules.Count}");
+
+            // Enumerate each VBA module
+            foreach (VbaModule module in vbaProject.Modules)
+            {
+                // Module name (if available)
+                Console.WriteLine($"Module: {module.Name}");
+
+                // Parse the module code to list macro (Sub/Function) names
+                if (!string.IsNullOrEmpty(module.Codes))
+                {
+                    string[] lines = module.Codes.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string line in lines)
+                    {
+                        string trimmed = line.Trim();
+
+                        // Look for Sub or Function declarations
+                        if (trimmed.StartsWith("Sub ", StringComparison.OrdinalIgnoreCase) ||
+                            trimmed.StartsWith("Function ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            int nameStart = trimmed.IndexOf(' ') + 1;
+                            int nameEnd = trimmed.IndexOf('(');
+                            if (nameEnd > nameStart)
+                            {
+                                string macroName = trimmed.Substring(nameStart, nameEnd - nameStart);
+                                Console.WriteLine($"  Macro: {macroName}");
+                            }
+                        }
+                    }
+                }
+            }
         }
-
-        // Get the VBA project from the workbook
-        VbaProject vbaProject = workbook.VbaProject;
-
-        // Get the collection of VBA modules (each module can contain one or more macros)
-        VbaModuleCollection modules = vbaProject.Modules;
-
-        Console.WriteLine($"Total VBA modules: {modules.Count}");
-
-        // Enumerate each module and output its name (module name is typically the macro container)
-        for (int i = 0; i < modules.Count; i++)
+        else
         {
-            VbaModule module = modules[i];
-
-            // The VbaModule class exposes a Name property that holds the module's identifier
-            Console.WriteLine($"Module {i + 1}: {module.Name}");
+            Console.WriteLine("The workbook does not contain any VBA macros.");
         }
     }
 }

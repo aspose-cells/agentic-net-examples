@@ -1,18 +1,18 @@
-// Title: Auto‑fit TextBox shape in Aspose.Cells for .NET – resize automatically to content
-// Description: Shows how to create a workbook, add a TextBox shape, set its text, enable auto‑fit with TextBoxOptions.ResizeToFitText, optionally invoke FitToTextSize for immediate sizing, and save the Excel file.
-// Keywords: Aspose.Cells | .NET | C# | TextBox auto fit | ResizeToFitText | FitToTextSize | auto resize shape | Excel textbox size | Aspose.Cells example
-// Common Searches: Aspose.Cells auto fit textbox | Resize textbox to fit text in .NET | TextBoxOptions ResizeToFitText usage | FitToTextSize method Aspose.Cells | How to make Excel textbox auto‑size with Aspose
-// Developer Intent: Enable a TextBox shape to automatically adjust its width and height to the length of its text in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Generate comment boxes that expand to show full remarks without clipping. | Create dynamic labels that adapt their dimensions to varying data lengths. | Design templates where notes are inserted as auto‑sizing textboxes, preserving layout consistency.
-// AI Prompts: Write C# code with Aspose.Cells to add a textbox that auto‑fits its content and apply a custom font and background color. | Show how to iterate over a list of strings and place an auto‑fit textbox for each item on successive rows. | Explain the difference between manually calculating textbox dimensions and using ResizeToFitText with FitToTextSize.
+// Title: Auto‑fit a TextBox shape to its content using Aspose.Cells for .NET (C#)
+// Description: A C# example that creates an Excel workbook with Aspose.Cells, inserts a TextBox shape, assigns a long string, activates the TextBoxOptions.ResizeToFitText flag, calls FitToTextSize to recalculate dimensions, and saves the file. The shape expands automatically so the full text is visible.
+// Keywords: Aspose.Cells | .NET | C# | TextBox auto size | ResizeToFitText | FitToTextSize | Excel textbox resize | shape sizing | Aspose.Cells TextBoxOptions | GitHub Aspose.Cells example
+// Common Searches: Aspose.Cells auto size textbox | ResizeToFitText property C# example | FitToTextSize method usage | Make Excel textbox resize automatically with Aspose.Cells | Aspose.Cells shape size based on text
+// Developer Intent: Adjust a TextBox shape so its dimensions automatically follow the length of its text.
+// Use Cases: Generate comment boxes in reports that grow with variable‑length notes. | Create dynamic labels on dashboards that expand to fit data‑driven strings. | Design printable spreadsheets where annotations never truncate.
+// AI Prompts: Show how to enable automatic resizing for a TextBox in Aspose.Cells and apply the change before saving the workbook. | Provide a C# loop that processes every TextBox on a worksheet, sets ResizeToFitText, and calls FitToTextSize. | Explain the role of TextBoxOptions.ResizeToFitText versus invoking FitToTextSize in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// Shows how to create a workbook, add a TextBox shape, set its text, enable auto‑fit with TextBoxOptions.ResizeToFitText, optionally invoke FitToTextSize for immediate sizing, and save the Excel file.
-class Program
+// A C# example that creates an Excel workbook with Aspose.Cells, inserts a TextBox shape, assigns a long string, activates the TextBoxOptions.ResizeToFitText flag, calls FitToTextSize to recalculate dimensions, and saves the file. The shape expands automatically so the full text is visible.
+class TextBoxAutoFitDemo
 {
     static void Main()
     {
@@ -22,16 +22,18 @@ class Program
 
         // Add a text box shape to the worksheet
         // Parameters: upper left row, upper left column, top offset, left offset, width, height
-        TextBox textBox = worksheet.Shapes.AddTextBox(1, 1, 0, 0, 200, 50);
-        textBox.Text = "This is a sample text that will cause the textbox to automatically resize based on its content length.";
+        TextBox textBox = worksheet.Shapes.AddTextBox(1, 1, 100, 100, 200, 50);
+
+        // Set the text that will determine the required size
+        textBox.Text = "This is a sample text that will cause the textbox to resize automatically based on its content length.";
 
         // Enable auto‑fit so the shape resizes to fit the text
         textBox.TextBoxOptions.ResizeToFitText = true;
 
-        // Recalculate the size immediately (optional, ensures the shape reflects the new setting)
+        // Apply the size adjustment immediately (optional, ensures dimensions are updated before saving)
         textBox.FitToTextSize();
 
         // Save the workbook
-        workbook.Save("AutoFitTextBoxDemo.xlsx");
+        workbook.Save("TextBoxAutoFitDemo.xlsx");
     }
 }

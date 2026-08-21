@@ -1,65 +1,61 @@
-// Title: Unlock a Locked WordArt Watermark in Excel with Aspose.Cells (C#)
-// Description: Load an Excel file, unprotect the worksheet if needed, iterate through all shapes, set Shape.IsLocked and TextBody.IsLockedText to false, and save the workbook so the WordArt watermark can be edited even when the sheet remains protected.
-// Keywords: Aspose.Cells unlock WordArt | Excel shape IsLocked false | remove watermark protection C# | modify locked WordArt Aspose | unprotect worksheet Aspose.Cells | shape.TextBody.IsLockedText | C# Excel watermark editing
-// Common Searches: how to unlock WordArt watermark in Excel using Aspose.Cells | set shape.IsLocked = false with Aspose.Cells C# | unlock text inside WordArt shape Aspose.Cells | unprotect worksheet and edit watermark programmatically | Aspose.Cells example for unlocking shapes
-// Developer Intent: Programmatically remove lock restrictions from a WordArt watermark so it can be edited while the worksheet stays protected.
-// Use Cases: Enable end‑users to change the text or position of a WordArt watermark in a protected template. | Batch‑process multiple workbooks to unlock watermarks before applying automated content updates. | Prepare reusable Excel templates where the watermark remains editable by downstream automation.
-// AI Prompts: Write C# code with Aspose.Cells that unlocks all shapes and their text in a protected worksheet, then re‑applies protection with a password. | Show how to detect only WordArt shapes in a worksheet and unlock those while leaving other shapes unchanged. | Provide error‑handling for missing files, absent shapes, or incorrect worksheet passwords when unlocking a WordArt watermark.
+// Title: Unlock WordArt Watermark Shapes in Excel with Aspose.Cells (.NET)
+// Description: Loads a password‑protected workbook, removes workbook and worksheet protection, iterates all shapes, clears the IsLocked flag and the IsLockedText property for WordArt, then saves the unlocked file.
+// Keywords: Aspose.Cells unlock WordArt | Excel shape unlock .NET | remove locked watermark Aspose | unprotect worksheet shapes C# | edit WordArt text programmatically | IsLockedText false Aspose.Cells | batch unlock Excel watermarks
+// Common Searches: how to unlock WordArt watermark in Excel using Aspose.Cells | C# code to make locked shapes editable after workbook protection | remove shape lock from protected worksheet Aspose.Cells | unlock text editing for WordArt in a protected Excel file | Aspose.Cells unlock watermark without losing other protections
+// Developer Intent: Programmatically remove the lock on WordArt watermark shapes so they can be edited after the workbook and worksheet are unprotected.
+// Use Cases: Enable end‑users to modify the text of a pre‑locked WordArt watermark in a template. | Automate unlocking of shape objects across many workbooks before applying bulk updates. | Prepare a protected Excel template, then programmatically unlock only the watermark while keeping other protections intact. | Integrate into a CI pipeline to ensure watermarks are editable before publishing reports.
+// AI Prompts: Write a C# method using Aspose.Cells that accepts a file path and password, unlocks all shapes, and clears IsLockedText for WordArt. | Explain the steps to safely unprotect a workbook and worksheet, then iterate shapes to change lock properties. | Provide error‑handling code for missing files or incorrect passwords when unlocking WordArt watermarks. | Show how to detect non‑WordArt shapes and skip them while unlocking only WordArt objects.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsUnlockWordArtWatermark
+namespace UnlockWordArtWatermarkApp
 {
-    // Load an Excel file, unprotect the worksheet if needed, iterate through all shapes, set Shape.IsLocked and TextBody.IsLockedText to false, and save the workbook so the WordArt watermark can be edited even when the sheet remains protected.
-    class Program
+    // Loads a password‑protected workbook, removes workbook and worksheet protection, iterates all shapes, clears the IsLocked flag and the IsLockedText property for WordArt, then saves the unlocked file.
+    class UnlockWordArtWatermark
     {
         static void Main()
         {
-            const string inputPath = "LockedWatermark.xlsx";
-            const string outputPath = "UnlockedWatermark.xlsx";
+            const string inputPath = "Watermarked.xlsx";
+            const string outputPath = "Watermarked_Unlocked.xlsx";
+            const string password = "password";
 
             try
             {
-                // Ensure the input file exists before attempting to load it
+                // Verify that the input file exists
                 if (!File.Exists(inputPath))
                 {
                     Console.WriteLine($"Input file '{inputPath}' not found.");
                     return;
                 }
 
-                // Load the workbook that contains the locked WordArt watermark
+                // Load the workbook containing the locked WordArt watermark
                 Workbook workbook = new Workbook(inputPath);
+
+                // Unprotect the workbook if it is password‑protected
+                workbook.Unprotect(password);
 
                 // Access the first worksheet (adjust index if needed)
                 Worksheet worksheet = workbook.Worksheets[0];
+                worksheet.Unprotect(password);
 
-                // Unprotect the worksheet if it is protected
-                if (worksheet.IsProtected)
-                {
-                    // Replace with actual password if required; empty string for none
-                    worksheet.Unprotect("yourPassword");
-                }
-
-                // Iterate through all shapes on the worksheet
+                // Unlock all shapes on the worksheet
                 foreach (Shape shape in worksheet.Shapes)
                 {
-                    // Unlock the shape so it can be modified when the sheet is protected
                     shape.IsLocked = false;
 
-                    // Unlock the text within the shape if it exists
+                    // Unlock text editing for WordArt shapes
                     if (shape.TextBody != null && shape.TextBody.TextAlignment != null)
                     {
                         shape.TextBody.TextAlignment.IsLockedText = false;
                     }
                 }
 
-                // Save the workbook with the unlocked watermark
+                // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved as '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {

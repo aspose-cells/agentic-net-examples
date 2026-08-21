@@ -1,55 +1,54 @@
-// Title: Hide Chart Legend in Aspose.Cells for .NET and Verify No Legend Rendering
-// Description: C# example that creates a workbook, adds sample data, inserts a column chart, disables the legend with ShowLegend = false, calculates the chart, prints the ShowLegend flag and the LegendEntries count (which remains >0 but is not rendered), and saves the result as ChartWithoutLegend.xlsx.
-// Keywords: Aspose.Cells hide chart legend | ShowLegend false C# | Aspose.Cells legend visibility | verify legend entries Aspose.Cells | remove Excel chart legend programmatically | Aspose.Cells chart formatting | C# Excel chart example
-// Common Searches: how to hide chart legend using Aspose.Cells .NET | Aspose.Cells ShowLegend property example | check legend entries after hiding legend Aspose.Cells | C# hide Excel chart legend programmatically | Aspose.Cells verify legend not rendered
+// Title: Hide Chart Legend in Aspose.Cells for .NET (C#) and Verify Entries
+// Description: Creates a workbook, adds a column chart with sample data, disables the legend using chart.ShowLegend = false, outputs the ShowLegend flag and the count of LegendEntries (which remain in the collection), and saves the result as ChartWithoutLegend.xlsx.
+// Keywords: Aspose.Cells hide legend | chart.ShowLegend false | C# Aspose.Cells chart legend | verify legend entries Aspose.Cells | remove chart legend .NET
+// Common Searches: Aspose.Cells hide chart legend C# | chart.ShowLegend property example | check legend entries after hiding legend Aspose.Cells | remove legend from Excel chart using Aspose.Cells | how to make chart legend invisible Aspose.Cells
 // Developer Intent: Make the chart legend invisible and confirm that no legend entries are rendered in the output file.
-// Use Cases: Generate clean reports where the legend must be hidden but still validate its data programmatically. | Automate Excel dashboards that follow branding rules requiring no visible legends, while logging legend entry counts for debugging. | Create Excel files for downstream processing where legends are unnecessary, ensuring they do not affect layout or rendering.
-// AI Prompts: Write C# code with Aspose.Cells that hides a chart legend using ShowLegend = false and confirms that LegendEntries are not displayed after chart.Calculate(). | Explain how the ShowLegend property influences chart rendering in Aspose.Cells and how to programmatically verify that the legend is not rendered. | Suggest alternative methods in Aspose.Cells to suppress a chart legend, such as clearing LegendEntries or setting legend formatting to transparent, and compare them with using ShowLegend.
+// Use Cases: Produce a clean column chart for dashboards where a legend is unnecessary. | Create printable Excel charts without overlapping legend text. | Hide legends before exporting workbooks to PDF to reduce visual clutter.
+// AI Prompts: Generate C# code with Aspose.Cells that hides a chart legend and logs the number of legend entries after disabling it. | Explain the effect of setting chart.ShowLegend = false on the Legend.LegendEntries collection and how to confirm the legend is not displayed in the saved workbook. | Suggest alternative methods to remove legend entries from an Aspose.Cells chart without using the ShowLegend property.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// C# example that creates a workbook, adds sample data, inserts a column chart, disables the legend with ShowLegend = false, calculates the chart, prints the ShowLegend flag and the LegendEntries count (which remains >0 but is not rendered), and saves the result as ChartWithoutLegend.xlsx.
-class Program
+namespace AsposeCellsLegendVisibility
 {
-    static void Main()
+    // Creates a workbook, adds a column chart with sample data, disables the legend using chart.ShowLegend = false, outputs the ShowLegend flag and the count of LegendEntries (which remain in the collection), and saves the result as ChartWithoutLegend.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-        // Add a column chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Set the data range for the chart
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Set the data range for the chart
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-        // Hide the legend using the ShowLegend property
-        chart.ShowLegend = false;
+            // Hide the legend
+            chart.ShowLegend = false;
 
-        // Verify that the legend is hidden
-        Console.WriteLine("Chart.ShowLegend after setting to false: " + chart.ShowLegend);
+            // Verify that the legend is hidden and that no legend entries will be rendered
+            // (The entries collection still exists, but they will not be displayed because ShowLegend is false)
+            Console.WriteLine("Chart.ShowLegend = " + chart.ShowLegend);
+            Console.WriteLine("Number of legend entries (still present in collection): " + chart.Legend.LegendEntries.Count);
 
-        // Calculate the chart to ensure internal structures are built
-        chart.Calculate();
-
-        // Check the number of legend entries (they exist but are not rendered because the legend is hidden)
-        Console.WriteLine("Legend entries count (should be >0 but not displayed): " + chart.Legend.LegendEntries.Count);
-
-        // Save the workbook
-        workbook.Save("ChartWithoutLegend.xlsx");
+            // Save the workbook
+            workbook.Save("ChartWithoutLegend.xlsx");
+        }
     }
 }

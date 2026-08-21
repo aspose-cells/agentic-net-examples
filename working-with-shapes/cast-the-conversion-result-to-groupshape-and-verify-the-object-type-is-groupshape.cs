@@ -1,10 +1,10 @@
-// Title: Cast SmartArt conversion result to GroupShape and verify its type – Aspose.Cells for .NET (C#)
-// Description: This example shows how to create a workbook, add a rectangle placeholder, convert it with GetResultOfSmartArt, cast the returned object to GroupShape, confirm the cast succeeded, optionally adjust the group's position, and save the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells GetResultOfSmartArt | GroupShape cast C# | SmartArt to GroupShape conversion | verify shape type Aspose.Cells | Aspose.Cells shape manipulation | C# Aspose.Cells GroupShape example | SmartArt conversion validation
-// Common Searches: cast GetResultOfSmartArt to GroupShape Aspose.Cells | check if SmartArt conversion returns GroupShape C# | how to verify GroupShape after SmartArt conversion | Aspose.Cells modify GroupShape position | GetResultOfSmartArt returns null handling
-// Developer Intent: The developer needs to cast the result of GetResultOfSmartArt to a GroupShape object and ensure the cast is valid before manipulating the shape.
-// Use Cases: Validate that a SmartArt placeholder was successfully converted to a GroupShape before applying layout changes. | Adjust the Left and Top properties of the GroupShape after conversion. | Conditionally save the workbook only when the GroupShape conversion is non‑null and correctly typed.
-// AI Prompts: Generate C# code that casts shape.GetResultOfSmartArt() to GroupShape and logs whether the cast succeeded. | Provide an example that iterates through all child shapes inside the GroupShape returned by GetResultOfSmartArt. | Show how to handle a null result from GetResultOfSmartArt when the source shape is not SmartArt.
+// Title: Convert SmartArt to GroupShape and Verify Type with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds a placeholder shape, uses GetResultOfSmartArt to turn the SmartArt into a GroupShape, casts the result, checks for null and correct type, and saves the file.
+// Keywords: Aspose.Cells | C# | .NET | GetResultOfSmartArt | GroupShape | SmartArt conversion | shape casting | verify shape type | spreadsheet example | Aspose.Cells tutorial
+// Common Searches: Aspose.Cells GetResultOfSmartArt GroupShape C# | cast SmartArt result to GroupShape .NET | check SmartArt conversion type Aspose.Cells | validate GroupShape after SmartArt conversion | C# example converting SmartArt to grouped shapes
+// Developer Intent: Demonstrate casting the output of GetResultOfSmartArt to GroupShape and confirming the object's type before further manipulation.
+// Use Cases: Confirm successful SmartArt‑to‑GroupShape conversion before editing sub‑shapes. | Avoid InvalidCastException by verifying the returned object is a GroupShape. | Apply conditional logic based on shape type when processing imported SmartArt diagrams. | Automate workbook generation that includes SmartArt groups with type safety.
+// AI Prompts: Write C# code using Aspose.Cells to convert a SmartArt shape to a GroupShape and assert its type. | Generate a robust example that casts GetResultOfSmartArt output, handles null, and logs verification. | Explain best practices for safely working with a GroupShape returned from SmartArt conversion in Aspose.Cells. | Provide a step‑by‑step guide to validate SmartArt conversion results in a .NET spreadsheet application.
 
 using System;
 using Aspose.Cells;
@@ -12,50 +12,47 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExamples
 {
-    // This example shows how to create a workbook, add a rectangle placeholder, convert it with GetResultOfSmartArt, cast the returned object to GroupShape, confirm the cast succeeded, optionally adjust the group's position, and save the file using Aspose.Cells for .NET.
+    // Creates a workbook, adds a placeholder shape, uses GetResultOfSmartArt to turn the SmartArt into a GroupShape, casts the result, checks for null and correct type, and saves the file.
     public class CastSmartArtResultDemo
     {
-        public static void Run()
+        public static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Add a rectangle shape (placeholder for SmartArt)
-                Shape shape = sheet.Shapes.AddRectangle(0, 0, 0, 0, 200, 200);
-
-                // Convert SmartArt to grouped shapes (returns GroupShape if shape is SmartArt)
-                GroupShape result = shape.GetResultOfSmartArt();
-
-                // Verify that the conversion result is a GroupShape
-                if (result != null && result is GroupShape)
-                {
-                    Console.WriteLine("Conversion succeeded: result is a GroupShape.");
-                    // Example: modify the group shape
-                    result.Left = 100;
-                    result.Top = 50;
-                }
-                else
-                {
-                    Console.WriteLine("Conversion did not produce a GroupShape (result is null or not a GroupShape).");
-                }
-
-                // Save the workbook
-                workbook.Save("CastSmartArtResultDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+                Run();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 
-        // Entry point for the application
-        public static void Main(string[] args)
+        public static void Run()
         {
-            Run();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add a rectangle shape (placeholder for SmartArt)
+            Shape shape = worksheet.Shapes.AddRectangle(0, 0, 200, 200, 0, 0);
+
+            // Convert SmartArt to grouped shapes (returns GroupShape)
+            GroupShape conversionResult = shape.GetResultOfSmartArt();
+
+            // Verify that the conversion result is a GroupShape
+            if (conversionResult != null && conversionResult is GroupShape)
+            {
+                Console.WriteLine("Conversion returned a GroupShape.");
+            }
+            else
+            {
+                Console.WriteLine("Conversion did not return a GroupShape.");
+            }
+
+            // Save the workbook
+            string outputPath = "CastSmartArtResultDemo.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
     }
 }

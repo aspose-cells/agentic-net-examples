@@ -1,33 +1,31 @@
-// Title: Add a Signature Line to the Last Worksheet in an Aspose.Cells Workbook (C#)
-// Description: Creates or loads a workbook, determines the final sheet using Worksheets.Count, and inserts a configurable SignatureLine at a specific cell before saving the file.
-// Keywords: Aspose.Cells C# signature line | add signature line Excel | last worksheet index | worksheet count Aspose.Cells | digital signature Excel programmatically | SignatureLine object | Aspose.Cells GitHub example
-// Common Searches: Aspose.Cells add signature line to last sheet | C# get index of final worksheet Aspose.Cells | Insert digital signature line in Excel using Aspose | How to place a signature line on a specific cell with Aspose.Cells
-// Developer Intent: Programmatically place a SignatureLine on the workbook's final worksheet by calculating its index with Worksheets.Count.
-// Use Cases: Automatically append an approval signature to the last page of a multi‑sheet financial report. | Embed a manager’s signature line in the final sheet of a generated contract for compliance. | Add a custom signer block to the concluding worksheet of an invoice workbook.
-// AI Prompts: Generate C# code that uses Aspose.Cells to add a SignatureLine to the last worksheet of an existing workbook. | Show how to set signer name, title, and email for a SignatureLine and position it at row 10, column 4 on the final sheet. | Explain how to retrieve the last worksheet index without adding extra sheets and then insert a signature line.
+// Title: Add a Signature Line to the Last Worksheet in Aspose.Cells (C#)
+// Description: Creates a workbook, adds worksheets, determines the final sheet using Worksheets.Count, builds a SignatureLine object, places it at a specific cell with Shapes.AddSignatureLine, and saves the file as WorkbookWithSignatureLine.xlsx.
+// Keywords: Aspose.Cells signature line C# | add signature to Excel sheet | last worksheet index Aspose.Cells | Shapes.AddSignatureLine example | programmatic Excel digital signature | C# Excel workbook protection
+// Common Searches: Aspose.Cells add signature line to last sheet C# | How to get last worksheet index in Aspose.Cells | Insert signature placeholder in Excel using Aspose.Cells | C# code for signature line in Excel workbook | Aspose.Cells shape collection add signature line
+// Developer Intent: Place a digital signature placeholder on the final worksheet of a workbook by calculating its index with Worksheets.Count and using Shapes.AddSignatureLine.
+// Use Cases: Automatically append a manager's signature line to the closing sheet of a generated financial report. | Add a signature placeholder to the final contract worksheet before sending for approval. | Programmatically embed a signature line at a predefined cell in the last sheet of an Excel-based workflow.
+// AI Prompts: Write C# code that uses Aspose.Cells to add a customizable SignatureLine to the last worksheet of an existing workbook, handling single‑sheet workbooks gracefully. | Show how to create a SignatureLine with signer details, insert it at row 5 column 2 of the final sheet, and then export the workbook to PDF. | Explain the steps to retrieve the index of the last worksheet using Worksheets.Count and add a signature line with custom properties using Shapes.AddSignatureLine.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates or loads a workbook, determines the final sheet using Worksheets.Count, and inserts a configurable SignatureLine at a specific cell before saving the file.
+// Creates a workbook, adds worksheets, determines the final sheet using Worksheets.Count, builds a SignatureLine object, places it at a specific cell with Shapes.AddSignatureLine, and saves the file as WorkbookWithSignatureLine.xlsx.
 class AddSignatureToLastWorksheet
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
+        // Create a new workbook (lifecycle rule: create)
         Workbook workbook = new Workbook();
 
-        // Add a few worksheets for demonstration
+        // Add a few worksheets to demonstrate locating the last one
         workbook.Worksheets.Add("FirstSheet");
         workbook.Worksheets.Add("SecondSheet");
         workbook.Worksheets.Add("ThirdSheet"); // This will be the last worksheet
 
-        // Determine the index of the last worksheet using the worksheet count
-        int lastSheetIndex = workbook.Worksheets.Count - 1;
-
-        // Access the last worksheet
-        Worksheet lastWorksheet = workbook.Worksheets[lastSheetIndex];
+        // Get the index of the last worksheet using the worksheet count
+        int lastIndex = workbook.Worksheets.Count - 1;
+        Worksheet lastWorksheet = workbook.Worksheets[lastIndex];
 
         // Create a SignatureLine object and set its properties
         SignatureLine signatureLine = new SignatureLine
@@ -36,16 +34,16 @@ class AddSignatureToLastWorksheet
             Title = "Manager",
             Email = "john.doe@example.com",
             AllowComments = true,
-            IsLine = true,
             ShowSignedDate = true,
+            IsLine = true,
             Instructions = "Please sign to approve."
         };
 
-        // Add the signature line to the worksheet at a specific cell position (row 5, column 2)
-        // Row and column indices are zero‑based, so row 5 = sixth row, column 2 = third column
+        // Add the signature line to the last worksheet at row 5, column 2 (zero‑based indices)
+        // ShapeCollection.AddSignatureLine(topRow, leftColumn, signatureLine)
         lastWorksheet.Shapes.AddSignatureLine(5, 2, signatureLine);
 
-        // Save the workbook to a file
+        // Save the workbook (lifecycle rule: save)
         workbook.Save("WorkbookWithSignatureLine.xlsx");
     }
 }

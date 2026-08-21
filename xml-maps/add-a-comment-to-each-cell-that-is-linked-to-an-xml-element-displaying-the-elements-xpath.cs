@@ -1,10 +1,10 @@
-// Title: Add XPath Comments to Cells Linked via XML Map with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, import an XML map, link specific cells to XML elements using XPath, and insert a visible comment that displays each element's XPath before saving the file.
-// Keywords: Aspose.Cells XML map comment | C# add comment with XPath | link Excel cell to XML element | visible comment Aspose.Cells | XPath annotation Excel .NET
-// Common Searches: Aspose.Cells add comment showing XPath | C# link cell to XML map and display path | how to annotate XML‑mapped cells in Excel | visible XPath comment Aspose.Cells .NET | add XML map comments programmatically
-// Developer Intent: Insert a visible comment into each cell linked to an XML element that shows the element's XPath.
-// Use Cases: Provide auditors with a clear trace of each cell's source XML path. | Help end‑users understand the underlying XML schema while editing linked data. | Create documentation sheets that pair data values with their corresponding XPath for validation purposes.
-// AI Prompts: Write C# code using Aspose.Cells that scans a workbook for all XML‑mapped cells and adds a comment containing each cell's full XPath. | Create a method that accepts a Workbook object and adds visible XPath comments to every linked cell without overwriting existing comments. | Explain how to modify the sample so comments are hidden by default and appear only on hover in Excel.
+// Title: Add XPath Comments to XML‑Mapped Cells with Aspose.Cells for .NET (C# Example)
+// Description: This C# sample creates a workbook, writes a temporary XML file, adds it as an XML map, links selected cells to XML element paths, inserts a comment in each linked cell that shows the XPath, and saves the result as an XLSX file.
+// Keywords: Aspose.Cells | C# XML map | add comment to cell | XPath comment | link cell to XML element | Excel workbook | temporary XML file | Aspose.Cells for .NET example | GitHub code snippet | XML mapping documentation
+// Common Searches: How to add an XPath comment to a cell linked with an XML map using Aspose.Cells | C# Aspose.Cells example for linking cells to XML and showing path in comments | Add comments to XML‑mapped cells in .NET | Aspose.Cells XML map tutorial with comments | Insert cell comments with XML element paths in Excel via Aspose
+// Developer Intent: Insert a comment into each cell that is linked to an XML element, displaying the element’s XPath.
+// Use Cases: Document XML‑to‑Excel mappings by annotating each linked cell with its XPath for easier maintenance | Create an audit‑ready spreadsheet that records source XML paths alongside data values | Build a template that visualizes XML structure directly in Excel through cell comments
+// AI Prompts: Generate C# code that uses Aspose.Cells to add an XML map, link specific cells, and insert comments containing each cell’s XPath. | Explain step‑by‑step how to create a temporary XML file, add it as an XML map, link cells, and add XPath comments in Aspose.Cells for .NET. | Show how to read, update, or delete the comment text of a cell that is linked to an XML element using Aspose.Cells API.
 
 using System;
 using System.IO;
@@ -12,40 +12,41 @@ using Aspose.Cells;
 
 namespace AsposeCellsXmlCommentDemo
 {
-    // Demonstrates how to create a workbook, import an XML map, link specific cells to XML elements using XPath, and insert a visible comment that displays each element's XPath before saving the file.
-    public class Program
+    // This C# sample creates a workbook, writes a temporary XML file, adds it as an XML map, links selected cells to XML element paths, inserts a comment in each linked cell that shows the XPath, and saves the result as an XLSX file.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                // Sample XML content
+                string xmlContent = @"<Root><Item>Value</Item></Root>";
 
-                // Sample XML to create an XML map
-                string xmlContent = @"<Transmittals><Issued_Document>Test</Issued_Document></Transmittals>";
+                // Write XML to a temporary file to be used for the XML map
+                string tempXmlPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xml");
+                File.WriteAllText(tempXmlPath, xmlContent);
 
-                // Write XML to a temporary file if it does not already exist
-                string xmlFilePath = "Transmittals.xml";
-                if (!File.Exists(xmlFilePath))
-                {
-                    File.WriteAllText(xmlFilePath, xmlContent);
-                }
+                // Ensure the temporary XML file exists before adding the map
+                if (!File.Exists(tempXmlPath))
+                    throw new FileNotFoundException("Temporary XML file was not created.", tempXmlPath);
 
-                // Add the XML map to the workbook using the file path
-                int mapIndex = workbook.Worksheets.XmlMaps.Add(xmlFilePath);
+                // Add the XML map using the temporary file path
+                int mapIndex = workbook.Worksheets.XmlMaps.Add(tempXmlPath);
                 XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-                xmlMap.Name = "Transmittals_Map";
+                xmlMap.Name = "RootMap";
 
-                // Define the cells to link and their corresponding XPath
+                // Get the first worksheet and its cells collection
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Define cells to link with their corresponding XML element paths
                 var links = new (int Row, int Column, string Path)[]
                 {
-                    (0, 0, "/Transmittals/Issued_Document"),
-                    (1, 1, "/Transmittals/Issued_Document") // example of another linked cell
+                    (0, 0, "/Root/Item"), // A1
+                    (1, 1, "/Root/Item")  // B2
                 };
 
                 // Link each cell to the XML map and add a comment showing the XPath
@@ -55,15 +56,15 @@ namespace AsposeCellsXmlCommentDemo
                     cells.LinkToXmlMap(xmlMap.Name, link.Row, link.Column, link.Path);
 
                     // Add a comment to the same cell
-                    int commentIdx = worksheet.Comments.Add(link.Row, link.Column);
-                    Comment comment = worksheet.Comments[commentIdx];
-                    comment.Note = $"Linked to XML element: {link.Path}";
-                    comment.Author = "XmlLinker";
-                    comment.IsVisible = true;
+                    int commentIndex = sheet.Comments.Add(link.Row, link.Column);
+                    Comment comment = sheet.Comments[commentIndex];
+                    comment.Note = $"Linked to XML path: {link.Path}";
                 }
 
                 // Save the workbook
-                workbook.Save("XmlLinkedComments.xlsx");
+                string outputPath = "XmlLinkedComments.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {

@@ -1,65 +1,54 @@
-// Title: Copy a Single Row with Formulas, Comments, and Formatting Using Aspose.Cells for .NET
-// Description: Demonstrates how to duplicate a row in the same worksheet with Aspose.Cells for .NET while retaining cell values, formulas, styles, and comments, then saves the workbook as an XLSX file.
-// Keywords: Aspose.Cells CopyRow | copy Excel row C# | preserve formulas Aspose.Cells | copy row with comments | duplicate worksheet row .NET | Excel row copy formatting | Aspose.Cells row copy example
-// Common Searches: Aspose.Cells copy row preserving formulas | C# copy Excel row with comments | How to duplicate a worksheet row using Aspose.Cells | CopyRow method example Aspose.Cells .NET | Copy row with formatting Aspose.Cells
-// Developer Intent: Duplicate a row within the same worksheet while keeping all cell content, formulas, styles, and comments unchanged.
-// Use Cases: Create a reusable header row for data entry templates. | Apply the same calculation logic to additional rows without rewriting formulas. | Clone a documented row with notes for training or audit trails.
-// AI Prompts: Write C# code with Aspose.Cells to copy row 3 to row 12, preserving formulas, comments, and cell styles. | Explain the parameters of Cells.CopyRow and how it handles merged cells and comments in Aspose.Cells for .NET. | Suggest robust error‑handling patterns when copying rows that contain formulas and comments using Aspose.Cells.
+// Title: Copy a Worksheet Row with Formulas, Comments, and Formatting – Aspose.Cells C# Example
+// Description: Shows how to duplicate a single row in the same worksheet using Aspose.Cells for .NET while keeping cell values, formulas, styles, and attached comments. The example calls Cells.CopyRow for data and formatting, then copies comments manually to the destination row before saving the workbook.
+// Keywords: Aspose.Cells copy row C# | duplicate worksheet row .NET | preserve formulas Aspose.Cells | copy cell comments Aspose.Cells | row formatting copy Aspose.Cells | Cells.CopyRow example | C# Excel row cloning
+// Common Searches: Aspose.Cells copy row preserving formulas | How to copy a row with comments in Aspose.Cells C# | Copy row formatting Aspose.Cells .NET | Duplicate Excel row using Aspose.Cells | CopyRow method example Aspose.Cells
+// Developer Intent: Duplicate a row in the same sheet without losing formulas, styles, or comments.
+// Use Cases: Replicate a header row that contains calculations and explanatory notes for a new report section. | Generate multiple data‑entry rows from a template row that includes validation, formulas, and comments. | Move a calculation row to another part of the worksheet while preserving its appearance and attached remarks.
+// AI Prompts: Write C# code that copies a row with Aspose.Cells and automatically transfers all comments to the new row. | Explain why Cells.CopyRow does not copy comments and propose a utility method to clone them efficiently. | Provide a robust copy‑row routine that handles missing comment authors and preserves merged cells and data validation.
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsExamples
+// Shows how to duplicate a single row in the same worksheet using Aspose.Cells for .NET while keeping cell values, formulas, styles, and attached comments. The example calls Cells.CopyRow for data and formatting, then copies comments manually to the destination row before saving the workbook.
+class CopyRowExample
 {
-    // Demonstrates how to duplicate a row in the same worksheet with Aspose.Cells for .NET while retaining cell values, formulas, styles, and comments, then saves the workbook as an XLSX file.
-    public class CopySingleRowDemo
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Populate source row (row index 0) with values, a formula, and a comment
+        cells["A1"].PutValue(10);
+        cells["B1"].PutValue(20);
+        cells["C1"].Formula = "=A1+B1";
+
+        // Add a comment to cell A1
+        int commentIdx = worksheet.Comments.Add(0, 0); // row 0, column 0
+        Comment srcComment = worksheet.Comments[commentIdx];
+        srcComment.Note = "Sample comment on source row";
+
+        // Copy the entire row 0 to row 2 (preserves data, formulas, and formatting)
+        cells.CopyRow(cells, 0, 2);
+
+        // Manually copy comments from the source row to the destination row
+        foreach (Comment comment in worksheet.Comments)
         {
-            try
+            if (comment.Row == 0) // source row
             {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook(); // Use new Workbook("input.xlsx") to load an existing file
+                int destRow = 2; // destination row index
+                int col = comment.Column;
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate the source row (row 0) with data, a formula, and a comment
-                cells["A1"].PutValue("Sample Text");
-                cells["B1"].PutValue(10);
-                cells["C1"].Formula = "=B1*2";
-
-                // Add a comment to cell A1
-                int commentIdx = sheet.Comments.Add("A1");
-                Comment comment = sheet.Comments[commentIdx];
-                comment.Note = "This is a comment on the source row";
-
-                // Define source and destination row indices (zero‑based)
-                int sourceRowIndex = 0;      // Row 1 in Excel
-                int destinationRowIndex = 4; // Row 5 in Excel
-
-                // Copy the entire row preserving values, formulas, formatting, and comments
-                cells.CopyRow(cells, sourceRowIndex, destinationRowIndex);
-
-                // Save the workbook with the copied row
-                string outputPath = "CopyRowResult.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Add a new comment at the same column in the destination row
+                int newCommentIdx = worksheet.Comments.Add(destRow, col);
+                Comment destComment = worksheet.Comments[newCommentIdx];
+                destComment.Note = comment.Note;
+                destComment.Author = comment.Author;
             }
         }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CopySingleRowDemo.Run();
-        }
+        // Save the workbook
+        workbook.Save("CopyRowResult.xlsx");
     }
 }

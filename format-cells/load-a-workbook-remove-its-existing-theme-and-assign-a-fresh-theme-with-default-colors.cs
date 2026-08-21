@@ -1,39 +1,29 @@
+// Title: C# – Reset an Excel workbook’s theme to the default using Aspose.Cells
+// Description: Loads an existing .xlsx file, creates a fresh workbook that contains Aspose.Cells’ built‑in default theme, copies that theme onto the loaded workbook with CopyTheme, and saves the result. The process removes any custom theme and restores the standard default colors.
+// Keywords: Aspose.Cells | C# | .NET | reset Excel theme | default theme | CopyTheme | remove custom theme | workbook theme manipulation | Excel theme example | GitHub sample
+// Common Searches: how to reset Excel theme with Aspose.Cells C# | copy default theme to existing workbook Aspose.Cells | remove custom theme from .xlsx programmatically | Aspose.Cells example for theme replacement | C# code to apply default Excel theme
+// Developer Intent: Replace a workbook’s current theme with Aspose.Cells’ default theme.
+// Use Cases: Standardize the look of many workbooks before publishing by applying the default theme. | Strip corporate branding from a template so end users receive a neutral workbook. | Prepare a file for external distribution to avoid theme‑related licensing issues.
+// AI Prompts: Show C# code that loads an Excel file, resets its theme to the default using Aspose.Cells, and saves the output. | Create a reusable method that takes input and output paths, resets the workbook theme to Aspose.Cells’ default, and returns success status. | Explain how the CopyTheme method works in Aspose.Cells and demonstrate its use for removing custom themes.
+
 using System;
-using System.Drawing;
 using Aspose.Cells;
 
+// Loads an existing .xlsx file, creates a fresh workbook that contains Aspose.Cells’ built‑in default theme, copies that theme onto the loaded workbook with CopyTheme, and saves the result. The process removes any custom theme and restores the standard default colors.
 class ThemeResetExample
 {
     static void Main()
     {
-        // Load an existing workbook from file
-        Workbook workbook = new Workbook("input.xlsx");
+        // Load the existing workbook from file
+        Workbook workbook = new Workbook("InputWorkbook.xlsx");
 
-        // Define a fresh set of 12 default theme colors
-        // Index mapping:
-        // 0-Background1, 1-Text1, 2-Background2, 3-Text2,
-        // 4-Accent1, 5-Accent2, 6-Accent3, 7-Accent4,
-        // 8-Accent5, 9-Accent6, 10-Hyperlink, 11-Followed Hyperlink
-        Color[] defaultColors = new Color[]
-        {
-            Color.White,          // Background1
-            Color.Black,          // Text1
-            Color.FromArgb(242, 242, 242), // Background2 (light gray)
-            Color.FromArgb(31, 31, 31),    // Text2 (dark gray)
-            Color.FromArgb(0, 112, 192),   // Accent1 (blue)
-            Color.FromArgb(255, 192, 0),   // Accent2 (orange)
-            Color.FromArgb(112, 173, 71),  // Accent3 (green)
-            Color.FromArgb(255, 0, 0),     // Accent4 (red)
-            Color.FromArgb(255, 0, 255),   // Accent5 (magenta)
-            Color.FromArgb(0, 176, 80),    // Accent6 (teal)
-            Color.FromArgb(0, 0, 255),     // Hyperlink (blue)
-            Color.FromArgb(128, 0, 128)    // Followed Hyperlink (purple)
-        };
+        // Create a new workbook which contains the default theme
+        Workbook defaultThemeWorkbook = new Workbook();
 
-        // Apply the fresh theme, effectively removing the previous one
-        workbook.CustomTheme("DefaultTheme", defaultColors);
+        // Replace the theme of the loaded workbook with the default theme
+        workbook.CopyTheme(defaultThemeWorkbook);
 
-        // Save the workbook with the new theme applied
-        workbook.Save("output.xlsx");
+        // Save the workbook with the refreshed theme
+        workbook.Save("OutputWorkbook.xlsx");
     }
 }

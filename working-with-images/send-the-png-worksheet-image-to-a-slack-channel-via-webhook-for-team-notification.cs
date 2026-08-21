@@ -1,67 +1,68 @@
+// Title: Post a Worksheet PNG to Slack via Incoming Webhook using Aspose.Cells (C#)
+// Description: Render the first page of an Aspose.Cells workbook to a PNG image in memory, encode it as a Base64 data URI, build a Slack webhook payload with the image attachment, and send it to a Slack channel using HttpClient. Ideal for .NET developers who need automated spreadsheet snapshots in Slack.
+// Keywords: Aspose.Cells | C# | Slack incoming webhook | PNG image | SheetRender | Base64 data URI | HttpClient | automated reporting | .NET webhook payload | Excel snapshot to Slack
+// Common Searches: C# send Aspose.Cells PNG to Slack | How to post worksheet image to Slack webhook | Aspose.Cells render sheet as PNG and upload to Slack | Slack incoming webhook image attachment C# | Send Excel snapshot to Slack using .NET
+// Developer Intent: Render a worksheet to PNG and deliver the image to a Slack channel through an incoming webhook from C# code.
+// Use Cases: Automated reporting: push a visual snapshot of a generated report to Slack for quick team review. | CI/CD pipelines: post a preview of a spreadsheet after a successful build. | Alerting: notify stakeholders with a worksheet image when a data threshold is breached. | Daily dashboard: share the latest Excel dashboard image in a Slack channel each morning. | Collaborative review: allow non‑technical team members to see spreadsheet changes without opening the file.
+// AI Prompts: Create a reusable C# method that accepts a Workbook and a Slack webhook URL and posts the first worksheet as a PNG image. | Show how to modify the Slack payload to include a title, fallback text, and additional fields in the attachment. | Explain error‑handling and retry logic for Slack webhook responses in .NET. | Demonstrate sending the PNG as a file upload using Slack's files.upload API instead of a data URI. | Provide a PowerShell script that performs the same Aspose.Cells PNG rendering and Slack notification.
+
 using System;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
+// Render the first page of an Aspose.Cells workbook to a PNG image in memory, encode it as a Base64 data URI, build a Slack webhook payload with the image attachment, and send it to a Slack channel using HttpClient. Ideal for .NET developers who need automated spreadsheet snapshots in Slack.
 class Program
 {
-    static async Task Main()
+    // Replace with your actual Slack Incoming Webhook URL
+    private const string SlackWebhookUrl = "https://hooks.slack.com/services/XXXXX/XXXXX/XXXXX";
+
+    static async Task Main(string[] args)
     {
-        // Slack incoming webhook URL (replace with your actual webhook)
-        string webhookUrl = "https://hooks.slack.com/services/XXXXX/XXXXX/XXXXX";
-
-        // -------------------------------------------------
-        // Create a workbook and add some sample data
-        // -------------------------------------------------
-        Workbook workbook = new Workbook();
+        // 1. Create a workbook and add sample data
+        Workbook workbook = new Workbook();                         // create workbook
         Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["A1"].PutValue("Hello Slack!");
-        worksheet.Cells["A2"].PutValue(DateTime.Now);
+        worksheet.Cells["A1"].PutValue("Aspose.Cells worksheet rendered as PNG");
 
-        // -------------------------------------------------
-        // Render the first page of the worksheet to a PNG image in memory
-        // -------------------------------------------------
+        // 2. Render the first page of the worksheet to a PNG image in memory
         ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
         {
-            ImageType = Aspose.Cells.Drawing.ImageType.Png,
-            OnePagePerSheet = true
+            ImageType = ImageType.Png
         };
-        SheetRender sheetRender = new SheetRender(worksheet, renderOptions);
+        SheetRender sheetRender = new SheetRender(worksheet, renderOptions); // SheetRender constructor
+        using MemoryStream imageStream = new MemoryStream();
+        sheetRender.ToImage(0, imageStream);                        // ToImage(pageIndex, Stream)
+        byte[] pngBytes = imageStream.ToArray();
 
-        using (MemoryStream imageStream = new MemoryStream())
+        // 3. Encode the PNG image as a Base64 data URI (Slack can display data URIs in attachments)
+        string base64Image = Convert.ToBase64String(pngBytes);
+        string dataUri = $"data:image/png;base64,{base64Image}";
+
+        // 4. Build the JSON payload for the Slack webhook
+        var payload = new
         {
-            sheetRender.ToImage(0, imageStream);   // Use provided SheetRender.ToImage overload
-            imageStream.Position = 0;               // Reset stream position for reading
-
-            // -------------------------------------------------
-            // Prepare multipart/form-data payload for Slack webhook
-            // -------------------------------------------------
-            using (HttpClient httpClient = new HttpClient())
-            using (MultipartFormDataContent multipart = new MultipartFormDataContent())
+            text = "Worksheet image generated by Aspose.Cells",
+            attachments = new[]
             {
-                // Image part
-                StreamContent imageContent = new StreamContent(imageStream);
-                imageContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/png");
-                multipart.Add(imageContent, "file", "worksheet.png");
-
-                // JSON payload part (required by Slack for incoming webhooks)
-                StringContent jsonPayload = new StringContent("{\"text\":\"Worksheet image attached\"}");
-                jsonPayload.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                new
                 {
-                    Name = "payload_json"
-                };
-                multipart.Add(jsonPayload);
-
-                // -------------------------------------------------
-                // Send POST request to Slack webhook
-                // -------------------------------------------------
-                HttpResponseMessage response = await httpClient.PostAsync(webhookUrl, multipart);
-                string responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Slack response: {responseBody}");
+                    fallback = "Worksheet image",
+                    image_url = dataUri
+                }
             }
-        }
+        };
+        string jsonPayload = JsonSerializer.Serialize(payload);
+
+        // 5. Post the payload to Slack
+        using HttpClient httpClient = new HttpClient();
+        using StringContent httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+        HttpResponseMessage response = await httpClient.PostAsync(SlackWebhookUrl, httpContent);
+
+        Console.WriteLine($"Slack webhook response: {(int)response.StatusCode} {response.ReasonPhrase}");
     }
 }

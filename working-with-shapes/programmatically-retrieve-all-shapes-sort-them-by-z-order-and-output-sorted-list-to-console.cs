@@ -1,54 +1,41 @@
-// Title: Aspose.Cells C# – Retrieve and Sort Worksheet Shapes by Z‑Order
-// Description: Demonstrates how to create a workbook, add shapes, obtain the ShapeCollection, sort the shapes by their ZOrderPosition property, and print each shape's name, type, and Z‑order index to the console before saving the file.
-// Keywords: Aspose.Cells | C# | shape ZOrderPosition | sort worksheet shapes | ShapeCollection | Excel shape ordering | Aspose.Cells example
-// Common Searches: Aspose.Cells sort shapes by Z-order | C# get shape ZOrderPosition | list Excel shapes with Aspose.Cells | retrieve shape collection .NET | order shapes in worksheet Aspose
-// Developer Intent: Get every shape from a worksheet, order them by Z‑order, and display the sorted information.
-// Use Cases: Create a console report of shape layering to troubleshoot overlapping objects. | Reorder shapes programmatically before exporting or printing the workbook. | Export shape metadata (name, type, Z‑order) for documentation or integration with other systems.
-// AI Prompts: Generate C# code using Aspose.Cells that lists all worksheet shapes sorted by ZOrderPosition. | Show how to log each shape's name, type, and Z‑order after sorting with Aspose.Cells. | Explain how to modify a shape's Z‑order after retrieving and sorting it in C#.
+// Title: C# – Retrieve All Worksheet Shapes and Sort by Z‑Order with Aspose.Cells
+// Description: Loads an Excel workbook, accesses the first worksheet, extracts its ShapeCollection, orders the shapes by the ZOrderPosition property, and prints each shape’s name, type, and Z‑order value to the console.
+// Keywords: Aspose.Cells shape collection | C# get worksheet shapes | sort shapes by ZOrderPosition | list Excel shapes .NET | shape Z‑order Aspose | enumerate worksheet shapes | Aspose.Cells ordering shapes | C# console output shapes
+// Common Searches: Aspose.Cells sort shapes by Z‑order C# | list all shapes in Excel worksheet using Aspose.Cells | retrieve shape collection and ZOrderPosition Aspose | C# code to order Excel shapes by Z‑order | how to get shape Z‑order position with Aspose.Cells
+// Developer Intent: Obtain every shape on a worksheet, arrange them by their Z‑order, and display the ordered list.
+// Use Cases: Ensure correct visual layering when exporting a sheet to PDF or image formats. | Programmatically adjust shape order before batch formatting or alignment operations. | Validate that important annotations or graphics appear on top in generated reports.
+// AI Prompts: Create C# code that moves a selected shape to the front of the Z‑order after retrieving the sorted collection with Aspose.Cells. | Show how to export the sorted shape list (name, type, ZOrderPosition) to a CSV file instead of the console. | Demonstrate grouping shapes by Z‑order ranges and applying distinct formatting to each group using Aspose.Cells.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeZOrderDemo
+// Loads an Excel workbook, accesses the first worksheet, extracts its ShapeCollection, orders the shapes by the ZOrderPosition property, and prints each shape’s name, type, and Z‑order value to the console.
+class Program
 {
-    // Demonstrates how to create a workbook, add shapes, obtain the ShapeCollection, sort the shapes by their ZOrderPosition property, and print each shape's name, type, and Z‑order index to the console before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load an existing workbook (replace the path with your file)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Get all shapes in the worksheet
+        ShapeCollection shapes = worksheet.Shapes;
+
+        // Sort shapes by their Z-order position (ascending)
+        var sortedShapes = shapes
+            .Cast<Shape>()
+            .OrderBy(s => s.ZOrderPosition)
+            .ToList();
+
+        // Output the sorted list to the console
+        Console.WriteLine("Shapes sorted by Z-order:");
+        foreach (var shape in sortedShapes)
         {
-            // Create a new workbook (using the standard creation rule)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add sample shapes (for demonstration purposes)
-            sheet.Shapes.AddRectangle(2, 0, 2, 0, 100, 100);
-            sheet.Shapes.AddOval(5, 0, 5, 0, 100, 100);
-            sheet.Shapes.AddLine(8, 0, 8, 0, 100, 100);
-
-            // Retrieve the shape collection
-            ShapeCollection shapes = sheet.Shapes;
-
-            // Build a list of shapes and sort them by ZOrderPosition
-            List<Shape> sortedShapes = shapes.Cast<Shape>()
-                                             .OrderBy(s => s.ZOrderPosition)
-                                             .ToList();
-
-            // Output the sorted shapes to the console
-            Console.WriteLine("Shapes sorted by Z-order position:");
-            foreach (Shape shape in sortedShapes)
-            {
-                // Display shape name (if set) and its Z-order index
-                string name = string.IsNullOrEmpty(shape.Name) ? "(no name)" : shape.Name;
-                Console.WriteLine($"Name: {name}, Type: {shape.Type}, ZOrderPosition: {shape.ZOrderPosition}");
-            }
-
-            // Save the workbook (using the standard save rule)
-            workbook.Save("SortedShapesDemo.xlsx");
+            Console.WriteLine($"Name: {shape.Name}, Type: {shape.Type}, ZOrderPosition: {shape.ZOrderPosition}");
         }
     }
 }

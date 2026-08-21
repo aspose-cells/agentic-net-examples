@@ -1,10 +1,10 @@
-// Title: C# – Sign an Excel VBA project in a .xlsm workbook with a PFX certificate using Aspose.Cells
-// Description: Shows how to load a macro‑enabled workbook, retrieve its VbaProject, import an X509Certificate2 from a .pfx file (with password), create a DigitalSignature, sign the VBA project, and save the signed .xlsm file. Includes simple verification of the signature status.
-// Keywords: Aspose.Cells | C# VBA signing | sign .xlsm | PFX certificate | X509Certificate2 | DigitalSignature | VbaProject.Sign | macro workbook signing | code signing Excel macros | digital signature Excel
-// Common Searches: sign VBA project Aspose.Cells C# | apply PFX certificate to Excel macro workbook | C# code to digitally sign .xlsm file | Aspose.Cells sign macro-enabled workbook | verify VBA project signature programmatically | load .pfx certificate in .NET for Excel signing
-// Developer Intent: The developer wants to digitally sign the VBA project of a macro‑enabled workbook using a PFX certificate.
-// Use Cases: Apply a corporate code‑signing certificate to protect macros before distributing the workbook. | Automate signing of generated reports that contain embedded macros as part of a CI/CD pipeline. | Ensure end‑users see a trusted signature when opening macro‑enabled workbooks. | Maintain compliance by embedding a digital signature in Excel files that contain VBA code.
-// AI Prompts: Generate C# code that loads a .pfx certificate with a password and signs a workbook's VBA project using Aspose.Cells. | Explain how to verify the digital signature of a VBA project after signing it with Aspose.Cells. | Provide error‑handling recommendations for missing VBA project or invalid certificate when signing with Aspose.Cells.
+// Title: C# – Sign an Excel VBA Project with a PFX Certificate using Aspose.Cells
+// Description: Demonstrates how to load a macro‑enabled .xlsm workbook, retrieve its VbaProject, import an X509Certificate2 from a PFX file with a password, create a DigitalSignature, sign the VBA project, save the signed workbook, and optionally verify the signature status with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | VBA project signing | PFX certificate | DigitalSignature | VbaProject.Sign | macro-enabled workbook | Excel .xlsm | certificate password | code example
+// Common Searches: sign VBA project Aspose.Cells C# | load PFX certificate and sign Excel macro | verify signed VBA project .xlsm | Aspose.Cells VbaProject.Sign sample | C# digital signature for Excel VBA
+// Developer Intent: Apply a PFX‑based digital signature to the VBA project of a macro‑enabled Excel file.
+// Use Cases: Secure a macro‑enabled workbook before distribution by signing its VBA code. | Automate compliance checks that require VBA projects to be digitally signed. | Integrate VBA signing into a CI/CD pipeline to enforce code‑signing policies.
+// AI Prompts: Generate C# code that signs an Excel VBA project with a PFX certificate using Aspose.Cells and includes error handling. | Explain how to confirm that a VBA project is signed and the signature is valid after saving the workbook. | Show how to add VBA project signing to a build script or GitHub Actions workflow with Aspose.Cells for .NET.
 
 using System;
 using System.IO;
@@ -15,64 +15,94 @@ using Aspose.Cells.DigitalSignatures;
 
 namespace AsposeCellsVbaSigningDemo
 {
-    // Shows how to load a macro‑enabled workbook, retrieve its VbaProject, import an X509Certificate2 from a .pfx file (with password), create a DigitalSignature, sign the VBA project, and save the signed .xlsm file. Includes simple verification of the signature status.
+    // Demonstrates how to load a macro‑enabled .xlsm workbook, retrieve its VbaProject, import an X509Certificate2 from a PFX file with a password, create a DigitalSignature, sign the VBA project, save the signed workbook, and optionally verify the signature status with Aspose.Cells for .NET.
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            try
+            {
+                VbaProjectSigner.Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+        }
+    }
+
     public class VbaProjectSigner
     {
-        /// <param name="inputPath">Path to the source .xlsm workbook.</param>
-        /// <param name="outputPath">Path where the signed workbook will be saved.</param>
-        /// <param name="pfxPath">Path to the PFX certificate file.</param>
-        /// <param name="pfxPassword">Password for the PFX certificate.</param>
-        public static void SignVbaProject(string inputPath, string outputPath, string pfxPath, string pfxPassword)
+        public static void Run()
         {
-            // Load the workbook that contains a VBA project
+            // Path to the macro-enabled workbook that contains a VBA project
+            string inputPath = "InputWorkbook.xlsm";
+
+            // Verify input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input workbook not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook (lifecycle: load)
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the VBA project; it may be null if the workbook has no macros
+            // Access the VBA project
             VbaProject vbaProject = workbook.VbaProject;
-            if (vbaProject == null)
+
+            // Ensure the workbook actually contains a VBA project
+            if (vbaProject != null)
+            {
+                // Load the signing certificate from a PFX file
+                string certPath = "MyCertificate.pfx";
+                string certPassword = "certPassword";
+
+                // Verify certificate file exists
+                if (!File.Exists(certPath))
+                {
+                    Console.WriteLine($"Certificate file not found: {certPath}");
+                    return;
+                }
+
+                X509Certificate2 certificate;
+                try
+                {
+                    certificate = new X509Certificate2(certPath, certPassword);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to load certificate: {ex.Message}");
+                    return;
+                }
+
+                // Create a DigitalSignature instance using the certificate
+                DigitalSignature digitalSignature = new DigitalSignature(
+                    certificate,                     // certificate with private key
+                    "Signed by Aspose.Cells demo",   // comments / purpose
+                    DateTime.Now);                   // signing time
+
+                // Sign the VBA project (feature: VbaProject.Sign)
+                vbaProject.Sign(digitalSignature);
+
+                // Save the signed workbook (lifecycle: save)
+                string outputPath = "SignedWorkbook.xlsm";
+                workbook.Save(outputPath, SaveFormat.Xlsm);
+                Console.WriteLine($"Workbook signed and saved to: {outputPath}");
+
+                // Optional: Verify the signature after saving
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    workbook.Save(ms, SaveFormat.Xlsm);
+                    Workbook verifyWb = new Workbook(ms);
+                    Console.WriteLine("VBA Project Signed: " + verifyWb.VbaProject.IsSigned);
+                    Console.WriteLine("Signature Valid: " + verifyWb.VbaProject.IsValidSigned);
+                }
+            }
+            else
             {
                 Console.WriteLine("The workbook does not contain a VBA project.");
-                return;
             }
-
-            // Load the certificate (must contain a private key) from the PFX file
-            X509Certificate2 certificate = new X509Certificate2(pfxPath, pfxPassword);
-
-            // Create a DigitalSignature instance with the certificate, a comment, and the current time
-            DigitalSignature digitalSignature = new DigitalSignature(certificate, "Signed by Aspose.Cells", DateTime.Now);
-
-            // Sign the VBA project
-            vbaProject.Sign(digitalSignature);
-
-            // Save the signed workbook in macro-enabled format
-            workbook.Save(outputPath, SaveFormat.Xlsm);
-
-            // Optional verification output
-            Console.WriteLine($"VBA project signed: {vbaProject.IsSigned}");
-            Console.WriteLine($"Signature valid: {vbaProject.IsValidSigned}");
-        }
-
-        // Example usage
-        public static void Main()
-        {
-            string inputFile = "SampleWithVba.xlsm";      // source workbook
-            string outputFile = "SignedSample.xlsm";      // signed workbook
-            string certificateFile = "MyCert.pfx";        // PFX certificate
-            string certificatePassword = "certPassword"; // certificate password
-
-            // Ensure the input files exist before attempting to sign
-            if (!File.Exists(inputFile))
-            {
-                Console.WriteLine($"Input workbook not found: {inputFile}");
-                return;
-            }
-            if (!File.Exists(certificateFile))
-            {
-                Console.WriteLine($"Certificate file not found: {certificateFile}");
-                return;
-            }
-
-            SignVbaProject(inputFile, outputFile, certificateFile, certificatePassword);
         }
     }
 }

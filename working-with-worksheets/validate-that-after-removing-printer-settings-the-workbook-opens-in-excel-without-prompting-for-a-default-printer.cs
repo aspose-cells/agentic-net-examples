@@ -1,40 +1,40 @@
-// Title: Remove printer settings with Aspose.Cells (C#) to stop Excel's default printer dialog
-// Description: Demonstrates how to assign a dummy printer settings byte array to a worksheet, clear it by setting PageSetup.PrinterSettings to null, save the workbook, reload it, and verify that the printer settings are absent, ensuring the file opens in Excel without prompting for a default printer.
-// Keywords: Aspose.Cells | C# | PrinterSettings | PageSetup | clear printer settings | Excel default printer prompt | remove printer settings | Workbook.Save | reload workbook | null printer settings
-// Common Searches: Aspose.Cells remove printer settings C# | How to stop Excel printer dialog with Aspose.Cells | PageSetup.PrinterSettings null example | Validate workbook opens without printer prompt | Clear printer settings before saving Excel file
-// Developer Intent: Ensure a generated workbook contains no printer configuration so that Excel opens it without showing a default‑printer selection dialog.
-// Use Cases: Generate a report, apply temporary printer settings for layout testing, then clear them before distribution. | Automate creation of Excel files that must run on client machines without a configured printer by setting PageSetup.PrinterSettings to null for each worksheet. | Write a unit test that sets dummy printer settings, clears them, saves the workbook, reloads it, and asserts that PrinterSettings is null.
-// AI Prompts: Create an xUnit test that verifies PageSetup.PrinterSettings is null after saving and reloading an Aspose.Cells workbook. | Show code to iterate over all worksheets in a workbook and set PageSetup.PrinterSettings to null before exporting to Excel. | Explain why Excel displays a default printer dialog when printer settings exist and how assigning null to PrinterSettings prevents this behavior.
+// Title: Clear printer settings in Aspose.Cells (C#) to stop Excel default printer dialog
+// Description: Demonstrates how to remove PageSetup.PrinterSettings from a workbook, save it, reload it, and verify that Excel opens the file without prompting for a default printer.
+// Keywords: Aspose.Cells clear printer settings | C# remove PageSetup printer configuration | Excel workbook no printer prompt | PageSetup.PrinterSettings null | Aspose.Cells .NET printer dialog
+// Common Searches: how to clear printer settings in Aspose.Cells | prevent Excel printer dialog when opening generated file | Aspose.Cells remove PageSetup printer settings before save | C# verify workbook has no printer settings after saving
+// Developer Intent: Ensure the generated workbook contains no printer configuration so Excel opens it without asking for a default printer.
+// Use Cases: Server‑side report generation on headless machines where no printer is installed. | Distributing template files that must be printer‑agnostic. | Automated quality checks that confirm workbooks are free of printer metadata before publishing.
+// AI Prompts: Show C# code to clear printer settings in an Aspose.Cells workbook and confirm they are removed after saving. | Write a unit test that loads a saved workbook and asserts PageSetup.PrinterSettings is null or empty. | Explain the difference between a null and an empty byte array for PageSetup.PrinterSettings after clearing.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to assign a dummy printer settings byte array to a worksheet, clear it by setting PageSetup.PrinterSettings to null, save the workbook, reload it, and verify that the printer settings are absent, ensuring the file opens in Excel without prompting for a default printer.
-class ValidatePrinterSettings
+// Demonstrates how to remove PageSetup.PrinterSettings from a workbook, save it, reload it, and verify that Excel opens the file without prompting for a default printer.
+class RemovePrinterSettingsDemo
 {
     static void Main()
     {
-        // Create a new workbook and add some data
+        // Create a new workbook and add some sample data
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["A1"].PutValue("Printer Settings Test");
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sample data for printer settings test");
 
-        // Assign dummy printer settings (byte array) to simulate existing settings
-        worksheet.PageSetup.PrinterSettings = new byte[] { 0x01, 0x02, 0x03 };
-        Console.WriteLine("PrinterSettings initially set: " + (worksheet.PageSetup.PrinterSettings != null));
+        // Optionally set dummy printer settings (byte array) to simulate existing settings
+        sheet.PageSetup.PrinterSettings = new byte[] { 0x01, 0x02, 0x03 };
 
-        // Remove the printer settings by setting the property to null
-        worksheet.PageSetup.PrinterSettings = null;
-        Console.WriteLine("PrinterSettings after removal: " + (worksheet.PageSetup.PrinterSettings == null));
+        // Remove printer settings by assigning null (or an empty byte array)
+        sheet.PageSetup.PrinterSettings = null; // Clears the stored printer configuration
 
         // Save the workbook to a file
-        string filePath = "WorkbookWithoutPrinterSettings.xlsx";
+        string filePath = "Workbook_NoPrinterPrompt.xlsx";
         workbook.Save(filePath);
 
-        // Load the saved workbook to verify that printer settings are indeed absent
+        // Reload the workbook to verify that printer settings are indeed cleared
         Workbook loadedWorkbook = new Workbook(filePath);
-        Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
-        bool printerSettingsExist = loadedWorksheet.PageSetup.PrinterSettings != null;
-        Console.WriteLine("After reload, PrinterSettings present? " + printerSettingsExist);
+        byte[] loadedPrinterSettings = loadedWorkbook.Worksheets[0].PageSetup.PrinterSettings;
+
+        // Output verification result
+        bool isCleared = loadedPrinterSettings == null || loadedPrinterSettings.Length == 0;
+        Console.WriteLine($"Printer settings cleared: {isCleared}");
     }
 }

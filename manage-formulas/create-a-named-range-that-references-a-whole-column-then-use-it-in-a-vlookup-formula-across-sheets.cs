@@ -1,88 +1,52 @@
-// Title: C# Aspose.Cells: Create a Whole‑Column Named Range and Apply VLOOKUP Across Worksheets
-// Description: Demonstrates how to build a new workbook, define a named range that spans entire columns (Data!$B:$C), retrieve its address, add a second sheet, insert VLOOKUP formulas that reference the named range, calculate all formulas, display results, and save the file as an .xlsx document using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells named range whole column | C# VLOOKUP named range | cross‑sheet formula Aspose.Cells | Aspose.Cells calculate formulas | define column range .NET workbook | Aspose.Cells example VLOOKUP | named range address Aspose.Cells
-// Common Searches: how to create a whole column named range in Aspose.Cells C# | use named range with VLOOKUP across sheets Aspose.Cells | Aspose.Cells calculate VLOOKUP after setting named range | retrieve address of a named range Aspose.Cells | Aspose.Cells example for column‑wide named range
-// Developer Intent: Define a column‑wide named range and reference it in VLOOKUP formulas on another worksheet.
-// Use Cases: Create a named range "LookupTable" that points to Data!$B:$C for dynamic lookups. | Insert VLOOKUP formulas on a separate sheet that pull values from the named range. | Programmatically evaluate all formulas and persist the results by saving the workbook.
-// AI Prompts: Show me C# code that creates a whole‑column named range in Aspose.Cells and uses it in a VLOOKUP on a different sheet. | Provide an Aspose.Cells example that calculates VLOOKUP formulas referencing a column‑wide named range and saves the workbook. | Explain how to get and display the address of a named range defined as an entire column using Aspose.Cells for .NET.
+// Title: C# – Define a Whole‑Column Named Range and Use It in a Cross‑Sheet VLOOKUP with Aspose.Cells
+// Description: Creates a workbook, fills columns B and C on Sheet1, defines a named range that covers the entire B:C columns, adds Sheet2, inserts a VLOOKUP formula that references the named range, calculates formulas, outputs the result, and saves the file.
+// Keywords: Aspose.Cells | C# | named range whole column | VLOOKUP | cross‑sheet lookup | Excel formula calculation | reference entire column | Workbook API
+// Common Searches: Aspose.Cells define named range for whole column | C# VLOOKUP using named range across worksheets | How to reference entire column in Aspose.Cells formula | Calculate VLOOKUP after setting named range in Aspose.Cells
+// Developer Intent: Create a column‑wide named range and reference it in a VLOOKUP formula on a different worksheet.
+// Use Cases: Expose a B:C lookup table on Sheet1 as a named range and retrieve values from Sheet2. | Perform cross‑sheet data lookup without hard‑coding cell addresses. | Programmatically calculate formulas, read the VLOOKUP result, and save the workbook.
+// AI Prompts: Show C# code that defines a whole‑column named range and uses it in a VLOOKUP on another sheet with Aspose.Cells. | Generate an Aspose.Cells example that populates sample data, creates a column‑wide named range, applies VLOOKUP across worksheets, calculates formulas, and saves the file. | Explain how to reference an entire column via a named range in Aspose.Cells and use it in a cross‑sheet VLOOKUP.
 
 using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsNamedRangeVLookup
+// Creates a workbook, fills columns B and C on Sheet1, defines a named range that covers the entire B:C columns, adds Sheet2, inserts a VLOOKUP formula that references the named range, calculates formulas, outputs the result, and saves the file.
+class NamedRangeVlookupDemo
 {
-    // Demonstrates how to build a new workbook, define a named range that spans entire columns (Data!$B:$C), retrieve its address, add a second sheet, insert VLOOKUP formulas that reference the named range, calculate all formulas, display results, and save the file as an .xlsx document using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook wb = new Workbook();
 
-                // -------------------------------------------------
-                // Sheet1 – source data for VLOOKUP
-                // -------------------------------------------------
-                Worksheet sheet1 = workbook.Worksheets[0];
-                sheet1.Name = "Data";
+        // Access the first worksheet and name it "Sheet1"
+        Worksheet sheet1 = wb.Worksheets[0];
+        sheet1.Name = "Sheet1";
 
-                // Populate column B with lookup keys and column C with corresponding values
-                sheet1.Cells["B1"].PutValue("Apple");
-                sheet1.Cells["C1"].PutValue(100);
-                sheet1.Cells["B2"].PutValue("Banana");
-                sheet1.Cells["C2"].PutValue(200);
-                sheet1.Cells["B3"].PutValue("Cherry");
-                sheet1.Cells["C3"].PutValue(300);
-                sheet1.Cells["B4"].PutValue("Date");
-                sheet1.Cells["C4"].PutValue(400);
-                sheet1.Cells["B5"].PutValue("Elderberry");
-                sheet1.Cells["C5"].PutValue(500);
+        // Populate sample data: column B contains keys, column C contains values
+        sheet1.Cells["B1"].PutValue("Apple");
+        sheet1.Cells["C1"].PutValue(100);
+        sheet1.Cells["B2"].PutValue("Banana");
+        sheet1.Cells["C2"].PutValue(200);
+        sheet1.Cells["B3"].PutValue("Cherry");
+        sheet1.Cells["C3"].PutValue(300);
 
-                // -------------------------------------------------
-                // Create a named range that refers to the whole columns B:C
-                // -------------------------------------------------
-                int nameIndex = workbook.Worksheets.Names.Add("LookupTable");
-                workbook.Worksheets.Names[nameIndex].RefersTo = "=Data!$B:$C";
+        // Create a named range that refers to the whole columns B:C on Sheet1
+        int nameIdx = wb.Worksheets.Names.Add("LookupTable");
+        wb.Worksheets.Names[nameIdx].RefersTo = "=Sheet1!$B:$C";
 
-                // Retrieve the Range object via GetRange()
-                Name lookupName = workbook.Worksheets.Names[nameIndex];
-                AsposeRange lookupRange = lookupName.GetRange(); // whole columns B:C
-                Console.WriteLine($"Named range address: {lookupRange.Address}");
+        // Add a second worksheet named "Sheet2"
+        Worksheet sheet2 = wb.Worksheets.Add("Sheet2");
 
-                // -------------------------------------------------
-                // Sheet2 – where VLOOKUP will be used
-                // -------------------------------------------------
-                Worksheet sheet2 = workbook.Worksheets.Add("Lookup");
-                sheet2.Cells["A1"].PutValue("Cherry");
-                sheet2.Cells["A2"].PutValue("Apple");
-                sheet2.Cells["A3"].PutValue("Elderberry");
+        // Use VLOOKUP on Sheet2 referencing the named range.
+        // Lookup "Banana" and return the value from the second column of the table array.
+        sheet2.Cells["A1"].Formula = "=VLOOKUP(\"Banana\", LookupTable, 2, FALSE)";
 
-                // Apply VLOOKUP formula using the named range.
-                sheet2.Cells["B1"].Formula = "=VLOOKUP(A1,LookupTable,2,FALSE)";
-                sheet2.Cells["B2"].Formula = "=VLOOKUP(A2,LookupTable,2,FALSE)";
-                sheet2.Cells["B3"].Formula = "=VLOOKUP(A3,LookupTable,2,FALSE)";
+        // Calculate all formulas in the workbook
+        wb.CalculateFormula();
 
-                // Calculate all formulas so that the results are stored in the cells
-                workbook.CalculateFormula();
+        // Display the VLOOKUP result
+        Console.WriteLine("VLOOKUP result: " + sheet2.Cells["A1"].Value);
 
-                // Display the results in the console (optional verification)
-                Console.WriteLine($"Result for {sheet2.Cells["A1"].StringValue}: {sheet2.Cells["B1"].Value}");
-                Console.WriteLine($"Result for {sheet2.Cells["A2"].StringValue}: {sheet2.Cells["B2"].Value}");
-                Console.WriteLine($"Result for {sheet2.Cells["A3"].StringValue}: {sheet2.Cells["B3"].Value}");
-
-                // -------------------------------------------------
-                // Save the workbook
-                // -------------------------------------------------
-                string outputPath = "NamedRangeVLookupDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Save the workbook to a file
+        wb.Save("NamedRangeVlookupDemo.xlsx");
     }
 }

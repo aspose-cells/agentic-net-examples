@@ -1,42 +1,42 @@
-// Title: C# – Dynamically Set Progress Bar Chart Title in Aspose.Cells Based on Project Phase
-// Description: Creates a workbook, adds task data, inserts a column chart as a progress bar, and sets the chart title at runtime using the current project phase. The example also shows how to format the title’s font size and boldness before saving the file.
-// Keywords: Aspose.Cells | C# | dynamic chart title | progress bar chart | column chart | Excel chart title runtime | project phase | chart title formatting | GitHub example | Aspose.Cells API
-// Common Searches: Aspose.Cells set chart title programmatically C# | dynamic Excel chart title based on variable | change column chart title at runtime Aspose.Cells | format chart title font Aspose.Cells C# | update progress bar chart title with project phase
-// Developer Intent: The developer needs to assign a chart title that reflects the current project phase when generating a progress‑bar chart with Aspose.Cells in C#.
-// Use Cases: Automated project status reports where each chart title displays the active phase (Design, Implementation, Testing, etc.). | Weekly dashboard workbooks that programmatically update chart titles for multiple projects. | Reusable Excel templates that adjust chart titles based on data pulled from a database or API.
-// AI Prompts: Generate C# code using Aspose.Cells to read a project phase from a database and update an existing chart title accordingly. | Show how to apply font size, bold, and color styling to a chart title that is set dynamically in Aspose.Cells. | Provide a loop that iterates through all charts in a workbook and prefixes each title with its corresponding project phase.
+// Title: Set a Dynamic Title for a Progress Bar Chart in Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, fills task and completion data, adds a column chart styled as a progress bar, and assigns a title that incorporates a runtime variable (currentPhase). The title is shown, bolded, and sized to 14 pt before the file is saved.
+// Keywords: Aspose.Cells | .NET | C# | dynamic chart title | progress bar chart | update Excel chart title at runtime | chart title formatting | column chart Aspose.Cells | project phase label | Excel automation
+// Common Searches: Aspose.Cells change chart title dynamically C# | set Excel chart title from variable .NET | progress bar chart title based on project phase | format chart title bold 14 point Aspose.Cells | runtime update of Excel chart title using C#
+// Developer Intent: Add a runtime‑driven title to a progress bar chart in an Excel workbook using Aspose.Cells.
+// Use Cases: Generate weekly status reports where the chart title reflects the current phase (Design, Development, Testing, etc.). | Build a template that reads the phase name from a database or worksheet cell and automatically refreshes the chart title when data changes. | Create presentation‑ready workbooks with a bold, larger‑font title that highlights the active project phase.
+// AI Prompts: Write C# code with Aspose.Cells that sets a chart title from a string variable and formats it as bold 14‑point text. | Show how to bind a chart title to a worksheet cell so the title updates automatically when the cell value changes. | Provide an example that iterates over multiple charts in a workbook and assigns each a title from an array of project phase names.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsDynamicChartTitle
+namespace ProgressBarChartDemo
 {
-    // Creates a workbook, adds task data, inserts a column chart as a progress bar, and sets the chart title at runtime using the current project phase. The example also shows how to format the title’s font size and boldness before saving the file.
+    // Creates a workbook, fills task and completion data, adds a column chart styled as a progress bar, and assigns a title that incorporates a runtime variable (currentPhase). The title is shown, bolded, and sized to 14 pt before the file is saved.
     class Program
     {
         static void Main()
         {
             // Define the current project phase (could be retrieved from elsewhere)
-            string currentPhase = "Implementation";
+            string currentPhase = "Design";
 
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the progress bar chart
             sheet.Cells["A1"].PutValue("Task");
-            sheet.Cells["A2"].PutValue("Design");
+            sheet.Cells["A2"].PutValue("Planning");
             sheet.Cells["A3"].PutValue("Development");
             sheet.Cells["A4"].PutValue("Testing");
 
             sheet.Cells["B1"].PutValue("Completion");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["B3"].PutValue(60);
-            sheet.Cells["B4"].PutValue(20);
+            sheet.Cells["B2"].PutValue(20);
+            sheet.Cells["B3"].PutValue(50);
+            sheet.Cells["B4"].PutValue(80);
 
-            // Add a column chart (used here as a simple progress representation)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
+            // Add a column chart (can be styled as a progress bar)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
 
             // Set the data range for the chart
@@ -47,12 +47,12 @@ namespace AsposeCellsDynamicChartTitle
             chart.Title.IsVisible = true;
             chart.Title.Text = $"Project Progress - {currentPhase} Phase";
 
-            // Optionally adjust title appearance
+            // Optional: adjust title appearance
             chart.Title.Font.Size = 14;
             chart.Title.Font.IsBold = true;
 
             // Save the workbook
-            workbook.Save("DynamicChartTitle.xlsx");
+            workbook.Save("ProgressBarChart.xlsx");
         }
     }
 }

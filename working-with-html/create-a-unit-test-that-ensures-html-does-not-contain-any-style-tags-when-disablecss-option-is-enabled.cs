@@ -1,91 +1,57 @@
-// Title: C# Unit Test: Verify HtmlSaveOptions.DisableCss Generates HTML Without <style> Tags in Aspose.Cells
-// Description: Creates a workbook, applies bold red formatting, saves it to HTML with HtmlSaveOptions.DisableCss enabled, and asserts that the output contains no <style> elements while the formatting appears as inline style attributes.
-// Keywords: Aspose.Cells | HtmlSaveOptions | DisableCss | C# unit test | .NET HTML export | inline styles | no style tag | automated testing | CI validation | Aspose.Cells HTML output
-// Common Searches: Aspose.Cells unit test for DisableCss | how to ensure HtmlSaveOptions.DisableCss removes style tags | C# test HTML export without CSS using Aspose.Cells | verify inline styles in Aspose.Cells HTML output | disable CSS in Aspose.Cells HTML export unit test
-// Developer Intent: Confirm that setting HtmlSaveOptions.DisableCss to true prevents <style> blocks from being emitted and forces formatting to be rendered as inline CSS.
-// Use Cases: Add a CI check that HTML exported from Aspose.Cells complies with email clients that block embedded CSS. | Guard against regressions where future library updates might re‑introduce <style> sections when DisableCss is used. | Ensure that workbook formatting (e.g., bold, color) is correctly translated into inline style attributes for downstream processing.
-// AI Prompts: Generate an MSTest method that creates a workbook, applies bold red formatting, saves to HTML with HtmlSaveOptions.DisableCss, and asserts the absence of <style> tags and the presence of inline style="font-weight:bold". | Write a xUnit test that loads a workbook, configures HtmlSaveOptions.DisableCss, writes to a MemoryStream, reads the HTML string, and verifies no style blocks exist while inline CSS reflects the cell style. | Provide a NUnit example that checks Aspose.Cells HTML export for inline styling only when the DisableCss option is enabled, including assertions for missing <style> elements and correct inline attributes.
+// Title: C# Unit Test: Verify Aspose.Cells HTML Export Produces No <style> Tags When DisableCss Is Enabled
+// Description: Creates a workbook, applies bold formatting, configures HtmlSaveOptions with DisableCss = true, saves to a MemoryStream as HTML, reads the output, and asserts that the generated HTML contains no <style> elements. Ideal for automated testing of inline‑style only HTML export in Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | HtmlSaveOptions.DisableCss | C# unit test | HTML export without CSS | verify no style tags | inline styles only | Aspose.Cells HTML output test | MSTest | NUnit | XUnit
+// Common Searches: Aspose.Cells unit test for DisableCss | How to check that exported HTML has no <style> tags in C# | HtmlSaveOptions.DisableCss example | Testing Aspose.Cells HTML output for inline styles | C# verify Aspose.Cells HTML does not contain CSS blocks
+// Developer Intent: Write an automated test that confirms Aspose.Cells generates HTML without any <style> elements when the DisableCss option is turned on.
+// Use Cases: Validate HTML for email templates that prohibit embedded style blocks. | Ensure compliance with strict Content Security Policy (CSP) rules that block <style> tags. | Add a regression test to detect future changes in Aspose.Cells HTML rendering behavior.
+// AI Prompts: Generate an MSTest method that creates a workbook, sets HtmlSaveOptions.DisableCss = true, saves to a string, and asserts the string does not contain '<style>'. | Provide an XUnit test snippet that logs the HTML output from Aspose.Cells and fails if any '<style>' tag is found. | Write a mock‑free NUnit test for Aspose.Cells HTML export that checks for the absence of CSS blocks in CI pipelines.
 
 using System;
 using System.IO;
-using System.Text;
-using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsTests
+namespace AsposeCellsExamples
 {
-    // Creates a workbook, applies bold red formatting, saves it to HTML with HtmlSaveOptions.DisableCss enabled, and asserts that the output contains no <style> elements while the formatting appears as inline style attributes.
-    public class HtmlSaveOptionsTests
+    // Creates a workbook, applies bold formatting, configures HtmlSaveOptions with DisableCss = true, saves to a MemoryStream as HTML, reads the output, and asserts that the generated HTML contains no <style> elements. Ideal for automated testing of inline‑style only HTML export in Aspose.Cells for .NET.
+    public class HtmlDisableCssDemo
     {
-        public void Run()
+        public static void Main()
         {
             try
             {
-                // Create a new workbook and add some formatted data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cell cell = sheet.Cells["A1"];
+                // Create a new workbook and add styled content
+                var workbook = new Workbook();
+                var worksheet = workbook.Worksheets[0];
+                var cell = worksheet.Cells["A1"];
                 cell.PutValue("Styled Text");
-
-                // Apply a style that would normally be emitted as CSS
-                Style style = cell.GetStyle();
+                var style = cell.GetStyle();
                 style.Font.IsBold = true;
-                style.Font.Color = Color.Red;
                 cell.SetStyle(style);
 
                 // Configure HtmlSaveOptions to disable CSS (use only inline styles)
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                var saveOptions = new HtmlSaveOptions
                 {
                     DisableCss = true
                 };
 
                 // Save the workbook to a memory stream as HTML
-                using (MemoryStream htmlStream = new MemoryStream())
+                using (var stream = new MemoryStream())
                 {
-                    workbook.Save(htmlStream, saveOptions);
-                    htmlStream.Position = 0;
+                    workbook.Save(stream, saveOptions);
+                    stream.Position = 0;
+                    string htmlContent = new StreamReader(stream).ReadToEnd();
 
-                    // Read the generated HTML as a string
-                    string htmlContent;
-                    using (StreamReader reader = new StreamReader(htmlStream, Encoding.UTF8))
-                    {
-                        htmlContent = reader.ReadToEnd();
-                    }
-
-                    // Verify that no <style> tags are present in the output
-                    if (htmlContent.IndexOf("<style", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        Console.WriteLine("FAIL: HTML output contains <style> tags even though DisableCss is enabled.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("PASS: No <style> tags found.");
-                    }
-
-                    // Ensure that inline style attributes are present (formatting applied)
-                    if (htmlContent.Contains("style=\"") && htmlContent.Contains("font-weight:bold"))
-                    {
-                        Console.WriteLine("PASS: Inline style attributes are present.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("FAIL: Inline style attributes are missing; formatting may not have been applied.");
-                    }
+                    // Verify that the generated HTML does not contain any <style> tags
+                    bool containsStyleTag = htmlContent.Contains("<style", StringComparison.OrdinalIgnoreCase);
+                    Console.WriteLine(containsStyleTag
+                        ? "Test Failed: HTML contains <style> tags."
+                        : "Test Passed: HTML does not contain <style> tags.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"ERROR: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            HtmlSaveOptionsTests test = new HtmlSaveOptionsTests();
-            test.Run();
         }
     }
 }

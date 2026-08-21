@@ -1,37 +1,33 @@
+// Title: Case‑insensitive find and replace of "Revenue Total" in an Excel workbook using Aspose.Cells for .NET
+// Description: The sample loads an Excel workbook with Aspose.Cells, configures ReplaceOptions to ignore case and allow partial matches, substitutes every occurrence of revenue‑related text (e.g., "total revenue", "Total Revenue") with the standardized phrase "Revenue Total", and saves the updated file.
+// Keywords: Aspose.Cells case insensitive replace | C# Excel find and replace | Workbook.Replace options | standardize revenue terminology | Excel text normalization .NET | replace string in .xlsx | financial spreadsheet automation
+// Common Searches: Aspose.Cells replace text ignoring case | C# replace partial cell content in Excel | How to standardize revenue labels in Excel using Aspose | Case‑insensitive string replace in .NET Excel library | Update legacy financial spreadsheets programmatically
+// Developer Intent: Replace all variations of revenue‑related wording with the consistent label "Revenue Total" in an Excel file using Aspose.Cells for .NET.
+// Use Cases: Ensure uniform financial terminology across quarterly reports before distribution. | Modernize legacy workbooks where revenue headings appear in mixed capitalizations. | Automate post‑processing of generated Excel files to enforce a single revenue label.
+// AI Prompts: Generate C# code that replaces multiple revenue‑related phrases with "Revenue Total" across all worksheets using Aspose.Cells. | Explain how ReplaceOptions properties affect case‑insensitive matching in Workbook.Replace. | Show how to log each replacement made when normalizing text in an Excel workbook with Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsReplaceExample
+// The sample loads an Excel workbook with Aspose.Cells, configures ReplaceOptions to ignore case and allow partial matches, substitutes every occurrence of revenue‑related text (e.g., "total revenue", "Total Revenue") with the standardized phrase "Revenue Total", and saves the updated file.
+class ReplaceTotalRevenue
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook (replace "input.xlsx" with your source file)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Configure replace options for case‑insensitive search
+        ReplaceOptions options = new ReplaceOptions
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            CaseSensitive = false,          // ignore case
+            MatchEntireCellContents = false // allow partial matches within a cell
+        };
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Replace all occurrences of "total revenue" with "Revenue Total"
+        workbook.Replace("total revenue", "Revenue Total", options);
 
-            // Sample data containing different case variations of the target phrase
-            sheet.Cells["A1"].PutValue("Total Revenue");
-            sheet.Cells["A2"].PutValue("total revenue");
-            sheet.Cells["A3"].PutValue("TOTAL REVENUE");
-            sheet.Cells["A4"].PutValue("Net Total Revenue");
-
-            // Configure replace options for case‑insensitive search
-            ReplaceOptions options = new ReplaceOptions
-            {
-                CaseSensitive = false,          // ignore case
-                MatchEntireCellContents = false // allow partial matches within a cell
-            };
-
-            // Perform the replacement
-            int replacedCount = workbook.Replace("total revenue", "Revenue Total", options);
-            Console.WriteLine($"Replacements made: {replacedCount}");
-
-            // Save the workbook
-            workbook.Save("ReplacedOutput.xlsx");
-        }
+        // Save the modified workbook (replace "output.xlsx" with your desired path)
+        workbook.Save("output.xlsx");
     }
 }

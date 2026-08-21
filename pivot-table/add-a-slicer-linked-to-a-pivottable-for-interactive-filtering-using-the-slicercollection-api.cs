@@ -1,10 +1,19 @@
+// Title: C# – Add a Slicer to a PivotTable using Aspose.Cells SlicerCollection API
+// Description: Learn how to create a workbook, build a PivotTable, and attach a slicer that filters the "Fruit" field. The example shows positioning the slicer at cell E2, customizing its caption, style, column count, and size, then saving the file as PivotTableWithSlicer.xlsx.
+// Keywords: Aspose.Cells slicer example | C# add slicer to pivot table | Aspose.Cells SlicerCollection API | PivotTable slicer C# | customize slicer appearance Aspose | save workbook with slicer | .NET Excel slicer tutorial
+// Common Searches: how to add a slicer to a pivot table with Aspose.Cells | Aspose.Cells C# slicer linked to pivot table | set slicer position and style Aspose.Cells | Aspose.Cells example for slicer collection | C# code to create pivot table and slicer
+// Developer Intent: Generate a slicer linked to a PivotTable for interactive Excel filtering via Aspose.Cells in C#.
+// Use Cases: Enable end‑users to filter a PivotTable by fruit type with a clickable slicer. | Match corporate report design by customizing slicer caption, style, column layout, and pixel dimensions. | Automate workbook generation that includes pre‑configured slicers for downstream analysis.
+// AI Prompts: Show how to add multiple slicers for different PivotTable fields using Aspose.Cells in C#. | Provide code to programmatically select or deselect slicer items at runtime with Aspose.Cells. | Explain how to apply custom styles and arrange slicers on a worksheet using the SlicerCollection API.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace SlicerWithPivotExample
+namespace AsposeCellsSlicerDemo
 {
+    // Learn how to create a workbook, build a PivotTable, and attach a slicer that filters the "Fruit" field. The example shows positioning the slicer at cell E2, customizing its caption, style, column count, and size, then saving the file as PivotTableWithSlicer.xlsx.
     class Program
     {
         static void Main()
@@ -24,22 +33,23 @@ namespace SlicerWithPivotExample
             cells["A4"].Value = "Banana";
             cells["B4"].Value = 8;
 
-            // Add a pivot table based on the data range A1:B4, place it at C3
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "C3", "FruitPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "FruitPivot");
+            PivotTable pivot = sheet.PivotTables[pivotIndex];
 
-            // Configure the pivot: Fruit as row field, Quantity as data field
+            // Add the "Fruit" field to the row area and "Quantity" to the data area
             pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
             pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
-            pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
+
+            // Refresh and calculate the pivot table to ensure it has data
             pivot.RefreshData();
             pivot.CalculateData();
 
             // Add a slicer linked to the pivot table.
             // The slicer will be placed with its upper‑left corner at cell E2
-            // and will filter by the "Fruit" field.
-            int slicerIdx = sheet.Slicers.Add(pivot, "E2", "Fruit");
-            Slicer slicer = sheet.Slicers[slicerIdx];
+            // and will filter based on the "Fruit" field.
+            int slicerIndex = sheet.Slicers.Add(pivot, "E2", "Fruit");
+            Slicer slicer = sheet.Slicers[slicerIndex];
 
             // Optional: customize slicer appearance
             slicer.Caption = "Fruit Filter";
@@ -48,11 +58,8 @@ namespace SlicerWithPivotExample
             slicer.WidthPixel = 150;
             slicer.HeightPixel = 120;
 
-            // Refresh the slicer to ensure it reflects the current pivot data
-            slicer.Refresh();
-
-            // Save the workbook
-            workbook.Save("SlicerLinkedToPivot.xlsx");
+            // Save the workbook to a file
+            workbook.Save("PivotTableWithSlicer.xlsx");
         }
     }
 }

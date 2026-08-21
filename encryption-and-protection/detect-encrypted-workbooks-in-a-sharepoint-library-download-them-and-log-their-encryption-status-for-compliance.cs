@@ -1,78 +1,84 @@
-// Title: C# Sample: Detect and Log Encrypted Excel Workbooks Using Aspose.Cells (Local Folder – Ready for SharePoint)
-// Description: A console app that scans a specified directory, filters Excel files, and uses Aspose.Cells FileFormatUtil to identify encrypted workbooks. It prints each file name with its encryption flag and includes robust error handling. The code can be extended to download files from a SharePoint library before checking compliance.
-// Keywords: Aspose.Cells encryption detection C# | FileFormatUtil IsEncrypted example | check Excel password protection .NET | scan folder for protected Excel files | audit encrypted workbooks | SharePoint Excel encryption check | US compliance Excel security | EU GDPR Excel encryption
-// Common Searches: how to detect password‑protected Excel files with Aspose.Cells | C# code to list encrypted .xlsx files in a directory | Aspose.Cells FileFormatUtil IsEncrypted usage | log encryption status of multiple Excel workbooks | download and verify encrypted Excel files from SharePoint
-// Developer Intent: Find out which Excel workbooks are encrypted and output their status for compliance reporting.
-// Use Cases: Run a compliance scan on a repository of Excel files before publishing. | Generate an audit report showing encrypted vs. unencrypted workbooks. | Integrate encryption detection into an automated pipeline that moves protected files to a secure location.
-// AI Prompts: Write a C# method that returns true if a given Excel file is encrypted using Aspose.Cells. | Show how to modify the sample to export the file name and encryption flag to a CSV file. | Explain how to catch Aspose.Cells specific exceptions during encryption detection and log detailed error information.
+// Title: Detect Encrypted Excel Workbooks in a SharePoint Library Using Aspose.Cells (C#)
+// Description: A C# console app that iterates over SharePoint Excel file URLs, downloads each workbook with HttpClient, uses Aspose.Cells FileFormatUtil to identify the file format and encryption status, logs the results for compliance, and optionally saves encrypted files locally for further analysis.
+// Keywords: Aspose.Cells | C# | SharePoint | Excel encryption detection | FileFormatUtil | IsEncrypted | Office 365 compliance | download Excel from SharePoint | batch workbook audit | encrypted workbook logging
+// Common Searches: how to check if SharePoint Excel files are password protected using Aspose.Cells | C# code to detect encrypted workbooks in a SharePoint library | Aspose.Cells detect encrypted Excel file | automate Excel encryption audit in SharePoint | download and scan Excel files for encryption with .NET
+// Developer Intent: Programmatically identify which Excel workbooks stored in a SharePoint document library are encrypted and record their status to satisfy security and compliance requirements.
+// Use Cases: Run a scheduled compliance scan that flags encrypted Excel files across a SharePoint site and generates a summary report. | Batch download all encrypted workbooks for secure archiving, decryption, or further forensic analysis. | Integrate the detection logic into a larger governance workflow that logs format and encryption details for each file.
+// AI Prompts: Generate a C# method that accepts a collection of SharePoint file URLs, downloads each workbook, and returns a dictionary of URL → IsEncrypted using Aspose.Cells. | Enhance the sample to capture the workbook's password hint (if available) and include it in the compliance log. | Create a PowerShell script that runs the compiled .NET executable, parses its console output, and writes the encryption results to a CSV file for reporting.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using Aspose.Cells; // Requires Aspose.Cells for .NET
+using System.Net.Http;
+using System.Threading.Tasks;
+using Aspose.Cells;
 
 namespace SharePointWorkbookEncryptionCheck
 {
-    // A console app that scans a specified directory, filters Excel files, and uses Aspose.Cells FileFormatUtil to identify encrypted workbooks. It prints each file name with its encryption flag and includes robust error handling. The code can be extended to download files from a SharePoint library before checking compliance.
+    // A C# console app that iterates over SharePoint Excel file URLs, downloads each workbook with HttpClient, uses Aspose.Cells FileFormatUtil to identify the file format and encryption status, logs the results for compliance, and optionally saves encrypted files locally for further analysis.
     class Program
     {
-        // Adjust this path to point to a folder that contains Excel files to be checked
-        private const string LocalFolderPath = @"C:\Temp\ExcelFiles";
-
-        static void Main()
+        // Entry point
+        static async Task Main(string[] args)
         {
-            try
+            // List of SharePoint file URLs to inspect.
+            // Replace these with actual URLs from your SharePoint library.
+            List<string> workbookUrls = new List<string>
             {
-                // Verify that the folder exists
-                if (!Directory.Exists(LocalFolderPath))
+                "https://sharepoint.example.com/sites/Docs/Workbook1.xlsx",
+                "https://sharepoint.example.com/sites/Docs/Workbook2.xls",
+                // Add more URLs as needed
+            };
+
+            // HttpClient instance for downloading files.
+            using (HttpClient httpClient = new HttpClient())
+            {
+                foreach (string fileUrl in workbookUrls)
                 {
-                    Console.WriteLine($"Folder not found: {LocalFolderPath}");
-                    return;
-                }
-
-                // Get all Excel files in the folder (including subfolders if needed)
-                string[] excelFiles = Directory.GetFiles(LocalFolderPath, "*.*", SearchOption.TopDirectoryOnly);
-                if (excelFiles.Length == 0)
-                {
-                    Console.WriteLine("No files found in the specified folder.");
-                    return;
-                }
-
-                foreach (string filePath in excelFiles)
-                {
-                    // Filter only supported Excel extensions
-                    string extension = Path.GetExtension(filePath).ToLowerInvariant();
-                    if (extension != ".xls" && extension != ".xlsx" && extension != ".xlsm" && extension != ".xlsb")
-                    {
-                        continue;
-                    }
-
-                    // Ensure the file actually exists before processing
-                    if (!File.Exists(filePath))
-                    {
-                        Console.WriteLine($"File not found: {filePath}");
-                        continue;
-                    }
-
-                    bool isEncrypted = false;
                     try
                     {
-                        // Detect file format and encryption status using Aspose.Cells
-                        FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-                        isEncrypted = formatInfo.IsEncrypted;
+                        // Download the workbook into a memory stream.
+                        using (Stream fileStream = await httpClient.GetStreamAsync(fileUrl))
+                        using (MemoryStream memoryStream = new MemoryStream())
+                        {
+                            await fileStream.CopyToAsync(memoryStream);
+                            memoryStream.Position = 0; // Reset stream position for detection.
+
+                            // Detect file format and encryption status using Aspose.Cells.
+                            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(memoryStream);
+                            bool isEncrypted = formatInfo.IsEncrypted;
+
+                            // Log the result.
+                            Console.WriteLine($"File: {fileUrl}");
+                            Console.WriteLine($"  Encrypted: {isEncrypted}");
+                            Console.WriteLine($"  Format: {formatInfo.FileFormatType}");
+                            Console.WriteLine();
+
+                            // Optional: Save the file locally for further analysis.
+                            if (isEncrypted)
+                            {
+                                // Example: Save encrypted file to a local folder.
+                                string localFileName = Path.GetFileName(new Uri(fileUrl).LocalPath);
+                                string localPath = Path.Combine("DownloadedWorkbooks", localFileName);
+                                Directory.CreateDirectory(Path.GetDirectoryName(localPath));
+
+                                // Rewind the stream before saving.
+                                memoryStream.Position = 0;
+                                using (FileStream localFile = new FileStream(localPath, FileMode.Create, FileAccess.Write))
+                                {
+                                    await memoryStream.CopyToAsync(localFile);
+                                }
+
+                                Console.WriteLine($"  Encrypted workbook saved to: {localPath}");
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error detecting format for '{Path.GetFileName(filePath)}': {ex.Message}");
+                        // Log any errors encountered while processing the file.
+                        Console.WriteLine($"Error processing file '{fileUrl}': {ex.Message}");
                     }
-
-                    // Log the result
-                    Console.WriteLine($"File: {Path.GetFileName(filePath)} | Encrypted: {isEncrypted}");
                 }
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors to prevent the application from crashing
-                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }

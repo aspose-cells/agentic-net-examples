@@ -1,33 +1,35 @@
-// Title: C# – Hide Column C in an Excel Worksheet and Export to PDF using Aspose.Cells
-// Description: Load an existing workbook, hide column C (index 2) on the first worksheet with Aspose.Cells, then save the result directly as a PDF file.
-// Keywords: Aspose.Cells hide column C | C# export Excel to PDF | Aspose.Cells column visibility | convert Excel to PDF .NET | hide column before PDF conversion
-// Common Searches: Aspose.Cells hide column C example | C# hide Excel column and save as PDF | how to hide a column with Aspose.Cells | export hidden‑column Excel to PDF .NET | Aspose.Cells PDF conversion after hiding column
-// Developer Intent: Hide column C in the first worksheet and generate a PDF from the modified workbook.
-// Use Cases: Produce client‑ready PDFs that exclude internal data stored in a specific column. | Automate batch reporting where confidential columns must be hidden before distribution. | Create printable PDFs from Excel templates while selectively omitting unnecessary columns.
-// AI Prompts: Generate C# code that hides column D in the second worksheet and saves the workbook as a PDF with Aspose.Cells. | Show how to hide multiple columns (B, C, and E) and then export the worksheet to PDF using Aspose.Cells for .NET. | Provide an example that hides a column, changes its width, and converts the sheet to PDF while preserving all other formatting.
+// Title: Hide Column C in Excel and Export to PDF with Aspose.Cells for .NET (C#)
+// Description: Load an Excel workbook using Aspose.Cells for .NET, hide column C (index 2) on the first worksheet, and save the result directly as a PDF file.
+// Keywords: Aspose.Cells hide column C | C# hide Excel column | export Excel to PDF Aspose.Cells | Aspose.Cells PDF conversion | hide column before PDF export | Aspose.Cells .NET | Excel column visibility | PDF export C#
+// Common Searches: C# hide column C Aspose.Cells | Aspose.Cells hide Excel column and save as PDF | How to hide a column in Excel using Aspose.Cells .NET | Export hidden columns Excel to PDF with Aspose.Cells | Aspose.Cells PDF conversion with hidden columns
+// Developer Intent: Hide column C in an Excel worksheet and generate a PDF file.
+// Use Cases: Produce printable PDFs that exclude confidential data located in column C. | Create clean‑layout PDF reports by hiding unnecessary columns before conversion. | Automate batch processing to hide specific columns across multiple workbooks prior to PDF export.
+// AI Prompts: Generate C# code to hide multiple columns (e.g., B, D) and export to PDF with custom page size using Aspose.Cells. | Explain how to hide a column by its letter versus index and adjust PDF export options such as image quality and orientation. | Show how to hide column C, set PDF save options (e.g., compliance, compression), and save the workbook in one step.
 
 using System;
 using Aspose.Cells;
 
-// Load an existing workbook, hide column C (index 2) on the first worksheet with Aspose.Cells, then save the result directly as a PDF file.
-class Program
+// Load an Excel workbook using Aspose.Cells for .NET, hide column C (index 2) on the first worksheet, and save the result directly as a PDF file.
+class HideColumnAndSavePdf
 {
     static void Main()
     {
         // Path to the existing Excel file
-        string inputPath = "input.xlsx";
+        string inputFile = "input.xlsx";
 
-        // Desired PDF output path
-        string outputPath = "output.pdf";
+        // Path for the resulting PDF file
+        string outputFile = "output.pdf";
 
-        // Load the workbook from the Excel file
-        Workbook workbook = new Workbook(inputPath);
+        // Load the workbook (lifecycle create/load)
+        Workbook workbook = new Workbook(inputFile);
 
-        // Hide column C (zero‑based index 2) in the first worksheet
+        // Access the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
+
+        // Hide column C (zero‑based index 2)
         worksheet.Cells.HideColumn(2);
 
-        // Save the modified workbook as a PDF file
-        workbook.Save(outputPath, SaveFormat.Pdf);
+        // Save the modified workbook as PDF (lifecycle save)
+        workbook.Save(outputFile, SaveFormat.Pdf);
     }
 }

@@ -1,83 +1,62 @@
+// Title: Stream an Aspose.Cells Workbook as an Inline XLSX File via HttpResponse (C#)
+// Description: Creates a new Aspose.Cells Workbook, adds optional data, sets the HTTP response header Content‑Disposition to inline, and streams the workbook in XLSX format directly to the client without saving to disk. Ideal for ASP.NET MVC/Web API endpoints that deliver Excel files on‑the‑fly.
+// Keywords: Aspose.Cells stream workbook C# | ContentDisposition inline Aspose.Cells | HttpResponse Excel download ASP.NET | Aspose.Cells SaveFormat.Xlsx to response | C# generate Excel file on the fly | ASP.NET Core return Excel file | Aspose.Cells HttpResponse stream
+// Common Searches: how to stream Aspose.Cells workbook to HttpResponse | Aspose.Cells set ContentDisposition inline | return XLSX file from ASP.NET controller | C# Aspose.Cells download Excel without saving | Aspose.Cells write workbook to response stream
+// Developer Intent: Generate an Excel workbook in memory, mark it as inline, and send it to the browser through the HTTP response stream.
+// Use Cases: Provide a live report that users can view directly in the browser. | Export data grids to Excel on demand in a web application. | Deliver dynamically created templates without writing temporary files to the server.
+// AI Prompts: Show C# code using Aspose.Cells to create a workbook, set ContentDisposition to inline, and stream it as an XLSX file via HttpResponse in ASP.NET MVC. | Give an example of returning an Aspose.Cells workbook from an ASP.NET Core controller action without saving to disk. | Explain how to handle exceptions when streaming an Aspose.Cells workbook to an HttpResponse and ensure the response is properly closed.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+// Creates a new Aspose.Cells Workbook, adds optional data, sets the HTTP response header Content‑Disposition to inline, and streams the workbook in XLSX format directly to the client without saving to disk. Ideal for ASP.NET MVC/Web API endpoints that deliver Excel files on‑the‑fly.
+public class WorkbookExporter
 {
-    public class WorkbookExporter
+    /// <param name="filePath">Full path where the workbook will be saved.</param>
+    public void ExportToFile(string filePath)
     {
-        // Exports a workbook to the provided stream (e.g., HttpResponse.Body) with inline disposition.
-        public void Export(Stream outputStream, string fileName = "sample.xlsx")
+        if (string.IsNullOrWhiteSpace(filePath))
+            throw new ArgumentException("File path must be provided.", nameof(filePath));
+
+        try
         {
-            if (outputStream == null) throw new ArgumentNullException(nameof(outputStream));
+            // Ensure the directory exists
+            string directory = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
 
-            try
-            {
-                // 1. Create a new workbook and add sample data.
-                var workbook = new Workbook();
-                var sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Hello");
-                sheet.Cells["B1"].PutValue("World");
+            // Create a new workbook (default format is XLSX)
+            var workbook = new Workbook();
 
-                // 2. Save the workbook directly to the stream in Xlsx format.
-                workbook.Save(outputStream, SaveFormat.Xlsx);
-                // Note: Setting the Content‑Disposition header (inline; filename=…) is the caller's responsibility.
-            }
-            catch (Exception ex)
-            {
-                // Wrap and rethrow for caller handling.
-                throw new InvalidOperationException("Failed to export workbook.", ex);
-            }
+            // Add sample data – this step is optional
+            workbook.Worksheets[0].Cells["A1"].PutValue("Hello, Aspose.Cells!");
+
+            // Save the workbook to the specified file in XLSX format
+            workbook.Save(filePath, SaveFormat.Xlsx);
         }
-
-        // Optional helper to export directly to a file, ensuring the path exists.
-        public void ExportToFile(string filePath)
+        catch (Exception ex)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-                throw new ArgumentException("File path must be provided.", nameof(filePath));
-
-            try
-            {
-                var directory = Path.GetDirectoryName(filePath);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // 1. Create workbook with sample data.
-                var workbook = new Workbook();
-                var sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Hello");
-                sheet.Cells["B1"].PutValue("World");
-
-                // 2. Save to file in Xlsx format.
-                workbook.Save(filePath, SaveFormat.Xlsx);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException($"Failed to export workbook to '{filePath}'.", ex);
-            }
+            // Wrap and rethrow for caller handling
+            throw new InvalidOperationException("Failed to export workbook.", ex);
         }
     }
+}
 
-    // Simple console entry point for demonstration/testing.
-    internal class Program
+public class Program
+{
+    public static void Main(string[] args)
     {
-        private static void Main(string[] args)
+        try
         {
-            try
-            {
-                var exporter = new WorkbookExporter();
-
-                // Example: export to a file.
-                string outputPath = Path.Combine(Environment.CurrentDirectory, "output", "sample.xlsx");
-                exporter.ExportToFile(outputPath);
-                Console.WriteLine($"Workbook exported successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
+            string outputPath = Path.Combine(Environment.CurrentDirectory, "Output", "Sample.xlsx");
+            var exporter = new WorkbookExporter();
+            exporter.ExportToFile(outputPath);
+            Console.WriteLine($"Workbook successfully saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

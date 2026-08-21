@@ -1,95 +1,99 @@
-// Title: Batch set a shared background image on the first worksheet of multiple Excel files and export to PDF with Aspose.Cells (.NET)
-// Description: Loads a single image into memory, iterates over a list of .xlsx workbooks, assigns the image as the first sheet's background, and saves each workbook as a PDF while handling missing files and I/O errors.
-// Keywords: Aspose.Cells | C# worksheet background image | batch Excel to PDF | shared image byte array | set worksheet background | export workbook to PDF | process multiple workbooks | Aspose.Cells .NET
-// Common Searches: Aspose.Cells set worksheet background for multiple workbooks | batch convert Excel to PDF with background image C# | apply same background image to many Excel files using Aspose | load image once and reuse for Excel to PDF conversion | C# loop over workbooks set background and save as PDF
-// Developer Intent: Programmatically apply one background image to the first sheet of each workbook in a collection and generate PDF files.
-// Use Cases: Create branded PDF reports from a set of Excel templates by adding a company logo as a background on the first sheet before conversion. | Automate client‑specific workbooks where a watermark image is applied to the first sheet of every file and then exported to PDF. | Run a batch job that reads a single image file once, reuses it across many workbooks, and outputs PDFs to minimize I/O overhead.
-// AI Prompts: Show how to modify the code to use a different background image for each workbook while still loading images only once. | Provide an example of processing a large number of workbooks asynchronously with progress reporting using Aspose.Cells. | Explain how to keep the original Excel files unchanged and save all generated PDFs to a separate output folder.
+// Title: Batch convert Excel workbooks to PDF with a common worksheet background using Aspose.Cells for .NET
+// Description: C# program that scans a folder for Excel files, loads a single image into memory, applies it as the background of the first worksheet in each workbook, and saves the result as PDF files. Includes error handling for missing files and image‑read failures, and uses Aspose.Cells PdfSaveOptions for the export.
+// Keywords: Aspose.Cells background image | batch Excel to PDF conversion | apply worksheet background C# | shared image stream Aspose.Cells | PdfSaveOptions .NET | automate Excel PDF export
+// Common Searches: how to add the same background image to multiple Excel sheets with Aspose.Cells | batch export Excel files to PDF with a common background in C# | set worksheet background from stream Aspose.Cells | convert a folder of workbooks to PDF using Aspose.Cells
+// Developer Intent: Load one image once, set it as the background of the first worksheet in every workbook in a directory, and generate PDF versions of all workbooks.
+// Use Cases: Nightly generation of client reports where the first page must display a corporate watermark. | Processing uploaded Excel templates, enforcing a compliance background on the first sheet, and archiving them as PDFs. | Creating a PDF catalog from a batch of product spreadsheets with a unified header graphic.
+// AI Prompts: Show how to select a different background image for each workbook based on its filename using Aspose.Cells. | Give an example of configuring PdfSaveOptions to set page orientation, margins, and retain worksheet background images. | Explain how to parallelize the batch conversion while reusing the same background byte array.
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering; // For PdfSaveOptions
 
-// Loads a single image into memory, iterates over a list of .xlsx workbooks, assigns the image as the first sheet's background, and saves each workbook as a PDF while handling missing files and I/O errors.
-public class BatchBackgroundToPdf
+// C# program that scans a folder for Excel files, loads a single image into memory, applies it as the background of the first worksheet in each workbook, and saves the result as PDF files. Includes error handling for missing files and image‑read failures, and uses Aspose.Cells PdfSaveOptions for the export.
+class Program
 {
-    public static void Run()
+    static void Main()
     {
-        // Path to the shared background image file
-        string backgroundImagePath = "sharedBackground.jpg";
+        // Directory containing source Excel files
+        string sourceDir = @"C:\InputWorkbooks";
+        // Directory where PDF files will be saved
+        string outputDir = @"C:\OutputPdfs";
+        Directory.CreateDirectory(outputDir);
 
-        // Verify background image exists
-        if (!File.Exists(backgroundImagePath))
-        {
-            Console.WriteLine($"Background image not found: {backgroundImagePath}");
-            return;
-        }
+        // Path to the shared background image
+        string backgroundImagePath = @"C:\SharedResources\background.png";
 
-        // Load the image once into a byte array
-        byte[] backgroundData;
-        try
+        // Load the background image once into a byte array (if the file exists)
+        byte[] backgroundBytes = null;
+        if (File.Exists(backgroundImagePath))
         {
-            backgroundData = File.ReadAllBytes(backgroundImagePath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to read background image: {ex.Message}");
-            return;
-        }
-
-        // List of workbook files to process
-        string[] workbookFiles = new string[]
-        {
-            "Workbook1.xlsx",
-            "Workbook2.xlsx",
-            "Workbook3.xlsx"
-        };
-
-        foreach (string wbPath in workbookFiles)
-        {
-            // Verify workbook file exists
-            if (!File.Exists(wbPath))
+            try
             {
-                Console.WriteLine($"Workbook file not found: {wbPath}");
+                using (FileStream bgStream = new FileStream(backgroundImagePath, FileMode.Open, FileAccess.Read))
+                {
+                    backgroundBytes = new byte[bgStream.Length];
+                    bgStream.Read(backgroundBytes, 0, backgroundBytes.Length);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Failed to read background image. {ex.Message}");
+                backgroundBytes = null;
+            }
+        }
+        else
+        {
+            Console.WriteLine("Warning: Background image not found. Workbooks will be saved without a background.");
+        }
+
+        // Get all Excel files in the source directory (supports .xlsx, .xls, .xlsm)
+        string[] workbookFiles = Directory.GetFiles(sourceDir, "*.*", SearchOption.TopDirectoryOnly);
+        foreach (string workbookPath in workbookFiles)
+        {
+            // Filter only Excel files
+            string ext = Path.GetExtension(workbookPath).ToLowerInvariant();
+            if (ext != ".xlsx" && ext != ".xls" && ext != ".xlsm")
+                continue;
+
+            // Ensure the workbook file still exists before loading
+            if (!File.Exists(workbookPath))
+            {
+                Console.WriteLine($"Skipping missing file: {workbookPath}");
                 continue;
             }
 
             try
             {
-                // Load the workbook from file
-                Workbook workbook = new Workbook(wbPath);
+                // Load the workbook
+                Workbook workbook = new Workbook(workbookPath);
 
-                // Set the background image of the first worksheet
-                Worksheet firstSheet = workbook.Worksheets[0];
-                firstSheet.BackgroundImage = backgroundData;
+                // Set background image on the first worksheet if available
+                if (backgroundBytes != null && backgroundBytes.Length > 0)
+                {
+                    Worksheet firstSheet = workbook.Worksheets[0];
+                    firstSheet.BackgroundImage = backgroundBytes;
+                }
 
-                // Determine output PDF file name
-                string pdfPath = Path.ChangeExtension(wbPath, ".pdf");
+                // Prepare PDF save options (customizations can be added here)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                // Define output PDF path
+                string pdfFileName = Path.GetFileNameWithoutExtension(workbookPath) + ".pdf";
+                string pdfPath = Path.Combine(outputDir, pdfFileName);
 
                 // Save the workbook as PDF
-                workbook.Save(pdfPath, SaveFormat.Pdf);
+                workbook.Save(pdfPath, pdfOptions);
 
-                Console.WriteLine($"Processed '{wbPath}' -> '{pdfPath}'");
+                Console.WriteLine($"Processed '{Path.GetFileName(workbookPath)}' -> '{pdfFileName}'");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing '{wbPath}': {ex.Message}");
+                Console.WriteLine($"Error processing '{Path.GetFileName(workbookPath)}': {ex.Message}");
             }
         }
-    }
-}
 
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        try
-        {
-            BatchBackgroundToPdf.Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unhandled exception: {ex.Message}");
-        }
+        Console.WriteLine("Batch processing completed.");
     }
 }

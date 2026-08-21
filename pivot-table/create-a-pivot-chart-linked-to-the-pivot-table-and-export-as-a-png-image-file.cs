@@ -1,81 +1,67 @@
-// Title: Export a Pivot‑Chart Linked to a Pivot Table as PNG with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add sample sales data, build a pivot table, place a column chart linked to that pivot, refresh the chart data, and save the chart as a PNG image while also saving the workbook as an XLSX file using Aspose.Cells for C#.
-// Keywords: Aspose.Cells pivot chart | export chart to PNG | pivot table chart C# | Aspose.Cells .NET image export | programmatic chart generation | pivot chart automation | C# Excel chart export
-// Common Searches: Aspose.Cells export pivot chart as PNG | Create pivot chart from pivot table C# | Save Excel chart image with Aspose.Cells | Link chart to pivot table programmatically | Generate PNG chart from workbook using Aspose
-// Developer Intent: Create a pivot chart bound to a pivot table and output it as a PNG file.
-// Use Cases: Add a sales‑summary chart image to automated PDF reports. | Produce thumbnail charts for a web dashboard that updates from Excel data. | Attach chart images to email alerts without opening Excel.
-// AI Prompts: Write C# code with Aspose.Cells that builds a pivot table, adds a column chart linked to it, and saves the chart as a PNG file. | Explain the role of Chart.PivotSource and Chart.RefreshPivotData when connecting a chart to a pivot table in Aspose.Cells. | Show how to set custom width, height, and DPI for a PNG export of a pivot chart using Aspose.Cells.
+// Title: Export a Pivot Chart Linked to a Pivot Table as PNG with Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, add sample data, build a pivot table, insert a column chart linked to that pivot table, refresh the chart data, and export the chart directly to a PNG file using Aspose.Cells for C#.
+// Keywords: Aspose.Cells pivot chart PNG | C# export pivot chart image | link chart to pivot table Aspose | Aspose.Cells chart refresh | pivot chart to image .NET | Aspose.Cells example PNG export
+// Common Searches: Aspose.Cells export pivot chart as PNG C# | how to link chart to pivot table Aspose.Cells | C# create pivot table and chart then save as image | Aspose.Cells generate PNG from pivot chart | export Excel pivot chart to PNG programmatically
+// Developer Intent: Create a pivot chart bound to a pivot table and save the chart as a PNG image file using Aspose.Cells for .NET.
+// Use Cases: Automate generation of sales‑summary charts and embed PNGs in PowerPoint decks. | Produce daily dashboard snapshots as PNG images for email or web reporting. | Create printable chart graphics from server‑side Excel data without installing Excel.
+// AI Prompts: Write C# code with Aspose.Cells that builds a pivot table, adds a column chart linked to it, refreshes the data, and exports the chart as a PNG file. | Explain step‑by‑step how to attach a pie chart to an existing pivot table in Aspose.Cells and save the result as a high‑resolution PNG. | Show how to iterate over all pivot tables in a workbook, generate corresponding charts, and batch export each chart to separate PNG files using Aspose.Cells.
 
 using System;
+using System.Drawing.Imaging;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPivotChartExport
+// Demonstrates how to create a workbook, add sample data, build a pivot table, insert a column chart linked to that pivot table, refresh the chart data, and export the chart directly to a PNG file using Aspose.Cells for C#.
+class PivotChartToPng
 {
-    // Demonstrates how to create a workbook, add sample sales data, build a pivot table, place a column chart linked to that pivot, refresh the chart data, and save the chart as a PNG image while also saving the workbook as an XLSX file using Aspose.Cells for C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet dataSheet = workbook.Worksheets[0];
 
-                // Get the first worksheet (will hold the source data)
-                Worksheet dataSheet = workbook.Worksheets[0];
-                dataSheet.Name = "Data";
+            // Populate sample data for the pivot table
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Value");
+            dataSheet.Cells["A2"].PutValue("A");
+            dataSheet.Cells["B2"].PutValue(10);
+            dataSheet.Cells["A3"].PutValue("B");
+            dataSheet.Cells["B3"].PutValue(20);
+            dataSheet.Cells["A4"].PutValue("A");
+            dataSheet.Cells["B4"].PutValue(30);
+            dataSheet.Cells["A5"].PutValue("B");
+            dataSheet.Cells["B5"].PutValue(40);
 
-                // Populate sample data for the pivot table
-                dataSheet.Cells["A1"].PutValue("Category");
-                dataSheet.Cells["B1"].PutValue("Sales");
-                dataSheet.Cells["A2"].PutValue("Fruit");
-                dataSheet.Cells["B2"].PutValue(1200);
-                dataSheet.Cells["A3"].PutValue("Vegetable");
-                dataSheet.Cells["B3"].PutValue(800);
-                dataSheet.Cells["A4"].PutValue("Fruit");
-                dataSheet.Cells["B4"].PutValue(1500);
-                dataSheet.Cells["A5"].PutValue("Vegetable");
-                dataSheet.Cells["B5"].PutValue(600);
+            // Add a pivot table based on the data range
+            int pivotIndex = dataSheet.PivotTables.Add("A1:B5", "D1", "PivotTable1");
+            PivotTable pivotTable = dataSheet.PivotTables[pivotIndex];
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
 
-                // Add a new worksheet that will contain the pivot table and the chart
-                Worksheet pivotSheet = workbook.Worksheets.Add("PivotAndChart");
+            // Add a chart that will be linked to the pivot table
+            int chartIndex = dataSheet.Charts.Add(ChartType.Column, 7, 0, 20, 10);
+            Chart chart = dataSheet.Charts[chartIndex];
 
-                // Create a pivot table based on the data range A1:B5
-                // The pivot table will be placed starting at cell D1 in the pivot sheet
-                int pivotIndex = pivotSheet.PivotTables.Add("Data!A1:B5", "D1", "PivotTable1");
-                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+            // Link the chart to the pivot table
+            chart.PivotSource = "PivotTable1";
 
-                // Configure the pivot table: Category on rows, Sales on data
-                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Column 0 -> Category
-                pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Column 1 -> Sales
+            // Refresh the chart so it pulls data from the pivot table
+            chart.RefreshPivotData();
 
-                // Refresh and calculate the pivot table data
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
+            // Export the pivot chart to a PNG image file (default format is PNG)
+            chart.ToImage("PivotChart.png");
 
-                // Add a chart to the same worksheet (positioned below the pivot table)
-                int chartIndex = pivotSheet.Charts.Add(ChartType.Column, 10, 0, 25, 15);
-                Chart chart = pivotSheet.Charts[chartIndex];
+            // Optionally save the workbook (not required for the image export)
+            workbook.Save("PivotChartDemo.xlsx", SaveFormat.Xlsx);
 
-                // Link the chart to the pivot table
-                chart.PivotSource = "PivotTable1";
-
-                // Ensure the chart picks up the latest pivot data
-                chart.RefreshPivotData();
-
-                // Export the chart as a PNG image file (default format is PNG)
-                chart.ToImage("PivotChart.png");
-
-                // Optionally, save the workbook to verify the result
-                workbook.Save("PivotChartDemo.xlsx", SaveFormat.Xlsx);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine("Pivot chart exported to PivotChart.png successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

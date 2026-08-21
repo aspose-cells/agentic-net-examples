@@ -1,48 +1,48 @@
-// Title: Load an XLSM workbook and access its VBA project with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to verify a macro‑enabled Excel file exists, load it using Aspose.Cells, obtain the Workbook.VbaProject object, and display the project name, signing status, protection flag, and module count, with handling for workbooks that lack a VBA project.
-// Keywords: Aspose.Cells | C# .NET | XLSM | VbaProject | macro-enabled workbook | read VBA project | VBA module count | signed macros | protected VBA | extract VBA code | Excel automation
-// Common Searches: Aspose.Cells C# load XLSM workbook | Get VBA project information from macro-enabled Excel using Aspose.Cells | How to read VBA modules count with Aspose.Cells .NET | Check if VBA project is signed in an XLSM file with Aspose.Cells | Determine if VBA project is protected in Excel workbook C#
-// Developer Intent: The developer wants to load a macro‑enabled Excel file and inspect its VBA project metadata.
-// Use Cases: Validate that uploaded XLSM files contain signed macros before processing. | Enumerate VBA modules to extract or document macro code. | Detect protected VBA projects to decide whether to modify or remove macros. | Log VBA project metadata for compliance auditing. | Generate a summary of macro usage across a batch of workbooks.
-// AI Prompts: Write C# code using Aspose.Cells to load an XLSM file and list all VBA module names. | Create a method that returns true if the VBA project in a loaded workbook is signed, otherwise false. | Provide an example that extracts the source code from each VBA module and saves each as a .bas file. | Generate a script that checks whether a VBA project is password‑protected and reports the result. | Show how to copy VBA modules from one workbook to another using Aspose.Cells.
+// Title: C# – Load an XLSM workbook and access its VbaProject with Aspose.Cells for .NET
+// Description: Demonstrates how to open a macro‑enabled Excel file (XLSM) from disk using Aspose.Cells, verify the file's existence, retrieve the workbook's VbaProject, and display key VBA metadata such as project name, signing status, protection flag, and module count. Includes graceful handling for missing files or workbooks without VBA projects.
+// Keywords: Aspose.Cells C# | load XLSM workbook | VbaProject extraction | macro‑enabled Excel | VBA project properties | Aspose.Cells VBA analysis | .NET Excel macro example | read VBA modules
+// Common Searches: Aspose.Cells get VbaProject from XLSM C# | How to read VBA project details with Aspose.Cells | C# sample to list VBA modules in a macro‑enabled workbook | Check if Excel file contains signed VBA macros using Aspose.Cells | Retrieve VBA project name and module count with Aspose.Cells
+// Developer Intent: Open a macro‑enabled Excel file and obtain its VbaProject to inspect VBA metadata.
+// Use Cases: Display VBA project name, signing status, protection flag, and module count for an XLSM workbook. | Validate the presence of a VBA project before performing macro analysis or transformation. | Provide clear error messages when the target file is missing or lacks a VBA project.
+// AI Prompts: Generate C# code with Aspose.Cells that lists all VBA module names in an XLSM file. | Create a method to extract and save the source code of each VBA module from a loaded workbook. | Suggest robust error‑handling patterns for accessing VbaProject when the file may be absent or contain no macros.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsVbaDemo
 {
-    // Demonstrates how to verify a macro‑enabled Excel file exists, load it using Aspose.Cells, obtain the Workbook.VbaProject object, and display the project name, signing status, protection flag, and module count, with handling for workbooks that lack a VBA project.
-    public class LoadVbaProjectDemo
+    // Demonstrates how to open a macro‑enabled Excel file (XLSM) from disk using Aspose.Cells, verify the file's existence, retrieve the workbook's VbaProject, and display key VBA metadata such as project name, signing status, protection flag, and module count. Includes graceful handling for missing files or workbooks without VBA projects.
+    public class LoadVbaProject
     {
         public static void Run()
         {
-            // Path to the macro-enabled workbook
-            string filePath = "sample.xlsm";
+            // Path to the macro-enabled workbook (XLSM) on disk
+            string workbookPath = "sample_with_macro.xlsm";
 
-            // Ensure the file exists before attempting to load
-            if (!File.Exists(filePath))
+            // Verify that the file exists to avoid FileNotFoundException
+            if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"File not found: {filePath}");
+                Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
                 return;
             }
 
             try
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
+                // Load the workbook using the string constructor (provided rule)
+                Workbook workbook = new Workbook(workbookPath);
 
-                // Obtain the VBA project
+                // Obtain the VbaProject object from the loaded workbook
                 VbaProject vbaProject = workbook.VbaProject;
 
-                // Display VBA project information if present
+                // Simple analysis: display some basic VBA project information
                 if (vbaProject != null)
                 {
-                    Console.WriteLine($"VBA Project Name: {vbaProject.Name}");
-                    Console.WriteLine($"Is Signed: {vbaProject.IsSigned}");
-                    Console.WriteLine($"Is Protected: {vbaProject.IsProtected}");
-                    Console.WriteLine($"Modules Count: {vbaProject.Modules.Count}");
+                    Console.WriteLine("VBA Project Name: " + vbaProject.Name);
+                    Console.WriteLine("Is Signed: " + vbaProject.IsSigned);
+                    Console.WriteLine("Is Protected: " + vbaProject.IsProtected);
+                    Console.WriteLine("Modules Count: " + vbaProject.Modules.Count);
                 }
                 else
                 {
@@ -51,16 +51,16 @@ namespace AsposeCellsExamples
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                // Catch any unexpected errors during processing
+                Console.WriteLine("An error occurred while processing the workbook:");
+                Console.WriteLine(ex.Message);
             }
         }
-    }
 
-    public class Program
-    {
+        // Entry point required for the application
         public static void Main(string[] args)
         {
-            LoadVbaProjectDemo.Run();
+            Run();
         }
     }
 }

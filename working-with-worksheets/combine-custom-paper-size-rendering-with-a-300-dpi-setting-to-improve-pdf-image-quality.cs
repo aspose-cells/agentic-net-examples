@@ -1,57 +1,54 @@
-// Title: Aspose.Cells .NET – Create PDF with Custom 4×6‑inch Paper Size and 300 DPI Image Quality
-// Description: Demonstrates how to set a 4 × 6 in custom paper size, configure worksheet PrintQuality to 300 DPI, and use PdfSaveOptions.SetImageResample(300, 90) for high‑resolution JPEG output, then save the workbook as a PDF with crisp graphics.
-// Keywords: Aspose.Cells | .NET | C# | PDF export | custom paper size | 4x6 inches | 300 DPI | PrintQuality | PdfSaveOptions | SetImageResample | high resolution | JPEG quality | worksheet page setup
-// Common Searches: Aspose.Cells set custom paper size PDF | How to export PDF at 300 DPI using Aspose.Cells | PdfSaveOptions image resample example C# | Increase PDF image quality Aspose.Cells .NET | PrintQuality DPI worksheet Aspose.Cells
-// Developer Intent: Export a worksheet to a PDF with exact 4 × 6 in dimensions and 300 DPI image resolution.
-// Use Cases: Generate small‑format flyers (4×6 in) with sharp images for marketing materials. | Create high‑resolution invoices or receipts where barcodes and logos must be clear. | Produce mobile‑friendly sales reports that retain image fidelity on handheld printers.
-// AI Prompts: Show how to change the custom paper size to 5×7 in while keeping 300 DPI image quality in Aspose.Cells. | Explain the impact of JPEG quality values in SetImageResample on file size and visual fidelity. | Provide code to apply different DPI settings to multiple worksheets and save each as a separate PDF.
+// Title: Generate a 4×6 in PDF with custom paper size and 300 DPI using Aspose.Cells (.NET)
+// Description: C# code that creates a workbook, sets a 4 in × 6 in page via PageSetup.CustomPaperSize, applies PrintQuality = 300 DPI, uses PdfSaveOptions.SetImageResample(300, 90) for high‑resolution images, and saves the worksheet as a PDF.
+// Keywords: Aspose.Cells PDF export | custom paper size | 300 DPI | PdfSaveOptions SetImageResample | .NET | C# workbook to PDF | high resolution PDF | PrintQuality | PageSetup.CustomPaperSize
+// Common Searches: Aspose.Cells set custom paper size PDF | 300 DPI PDF export Aspose.Cells C# | PdfSaveOptions image resample example | how to increase PDF image quality Aspose.Cells | create 4x6 inch PDF with Aspose.Cells
+// Developer Intent: Export a worksheet to a PDF with a defined page size and 300 DPI image quality.
+// Use Cases: Print‑ready flyers that require exact dimensions and crisp graphics. | Professional invoices or reports where high‑resolution images are mandatory. | Marketing brochures or product sheets that need a specific size and DPI for offset printing.
+// AI Prompts: Show how to change the custom paper size to 8.5×11 in while keeping 300 DPI in the Aspose.Cells PDF export. | Explain the effect of PdfSaveOptions.SetImageResample on embedded images and how to modify the JPEG quality parameter. | Provide code to apply different DPI settings for multiple worksheets in the same workbook when saving to PDF.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfDpiDemo
+// C# code that creates a workbook, sets a 4 in × 6 in page via PageSetup.CustomPaperSize, applies PrintQuality = 300 DPI, uses PdfSaveOptions.SetImageResample(300, 90) for high‑resolution images, and saves the worksheet as a PDF.
+public class CustomPaperSizePdfDemo
 {
-    // Demonstrates how to set a 4 × 6 in custom paper size, configure worksheet PrintQuality to 300 DPI, and use PdfSaveOptions.SetImageResample(300, 90) for high‑resolution JPEG output, then save the workbook as a PDF with crisp graphics.
-    class Program
+    public static void Main(string[] args)
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate some sample data
-            sheet.Cells["A1"].PutValue("Item");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["A2"].PutValue("Apples");
-            sheet.Cells["B2"].PutValue(150);
-            sheet.Cells["A3"].PutValue("Bananas");
-            sheet.Cells["B3"].PutValue(200);
-
-            // ------------------------------------------------------------
-            // 1. Set a custom paper size (width: 4 inches, height: 6 inches)
-            // ------------------------------------------------------------
-            sheet.PageSetup.CustomPaperSize(4.0, 6.0);
-
-            // ------------------------------------------------------------
-            // 2. Increase the print quality (DPI) for the worksheet
-            // ------------------------------------------------------------
-            sheet.PageSetup.PrintQuality = 300; // 300 DPI
-
-            // ------------------------------------------------------------
-            // 3. Configure PDF save options to resample images at 300 DPI
-            //    and use a high JPEG quality (e.g., 90%)
-            // ------------------------------------------------------------
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-            pdfOptions.SetImageResample(300, 90); // desiredPPI = 300, jpegQuality = 90
-
-            // ------------------------------------------------------------
-            // 4. Save the workbook as PDF with the above settings
-            // ------------------------------------------------------------
-            workbook.Save("CustomPaper_300DPI.pdf", pdfOptions);
-
-            Console.WriteLine("PDF generated with custom paper size and 300 DPI image quality.");
+            Run();
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    public static void Run()
+    {
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Add sample data to demonstrate the rendering
+        sheet.Cells["A1"].PutValue("Custom Paper Size with 300 DPI PDF");
+        sheet.Cells["A2"].PutValue("Sample data for high‑quality PDF output");
+
+        // Set a custom paper size (width: 4 inches, height: 6 inches)
+        sheet.PageSetup.CustomPaperSize(4.0, 6.0);
+
+        // Set the print quality to 300 DPI
+        sheet.PageSetup.PrintQuality = 300;
+
+        // Configure PDF save options
+        PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
+        // Resample images to 300 PPI with high JPEG quality (90%)
+        pdfSaveOptions.SetImageResample(300, 90);
+
+        // Save the workbook as a PDF
+        string outputPath = "CustomPaperSize_300DPI.pdf";
+        workbook.Save(outputPath, pdfSaveOptions);
+        Console.WriteLine($"PDF saved to: {outputPath}");
     }
 }

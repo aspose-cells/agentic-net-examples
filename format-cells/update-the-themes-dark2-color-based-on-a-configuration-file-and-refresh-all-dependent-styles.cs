@@ -1,129 +1,55 @@
-// Title: C# – Update Excel Dark2 Theme Color from JSON and Refresh Dependent Styles with Aspose.Cells
-// Description: Read a hex value from a JSON file, set the workbook's Dark2 theme color (fallback to Accent1 if missing), reapply all styles that reference the theme, and save the updated Excel file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells set theme color C# | update Dark2 theme Excel | refresh theme dependent styles | load theme color from JSON | fallback to Accent1 theme | Excel theme customization .NET | C# Excel theming example | Aspose.Cells workbook styling
-// Common Searches: change Dark2 theme color Aspose.Cells C# | apply JSON color to Excel theme using Aspose | refresh cell styles after theme update Aspose.Cells | fallback to Accent1 when Dark2 not present | C# example for updating Excel theme colors
-// Developer Intent: Modify a workbook’s Dark2 theme color based on a JSON configuration and ensure every style that uses that theme color is refreshed.
-// Use Cases: Apply a corporate brand color to the Dark2 theme across an existing report workbook. | Allow end‑users to define theme colors in a config file without manually editing each cell style. | Maintain visual consistency by falling back to Accent1 when a workbook lacks a Dark2 theme.
-// AI Prompts: Generate C# code that reads a hex color from a JSON file, sets the Dark2 theme in an Aspose.Cells workbook, and refreshes all dependent styles. | Show how to update multiple theme colors from a JSON configuration using the Workbook.ThemeColors collection. | Explain how to detect the absence of the Dark2 theme and programmatically fallback to Accent1 when applying a new theme color with Aspose.Cells.
+// Title: C# Example: Update Excel Dark2 (Background2) Theme Color from a Config File using Aspose.Cells
+// Description: Loads an existing workbook, reads a hex color from a text configuration file, converts it to a System.Drawing.Color, applies the value to the Dark2 (Background2) theme via Workbook.SetThemeColor, and saves the updated file. Includes basic error handling for missing files and invalid color strings.
+// Keywords: Aspose.Cells C# | SetThemeColor | ThemeColorType.Background2 | Dark2 theme color | Excel theme update | hex color from config | read color file C# | Workbook.SetThemeColor example | .NET Excel styling | GitHub Aspose.Cells sample
+// Common Searches: how to change Dark2 theme color in Excel with Aspose.Cells .NET | C# read hex color from file and set Excel theme | Aspose.Cells SetThemeColor Background2 example | update Excel theme colors from configuration file | apply corporate brand color to Excel workbook using Aspose
+// Developer Intent: Programmatically set the Dark2 (Background2) theme color of an Excel workbook based on a hex value stored in an external configuration file.
+// Use Cases: Enforce corporate branding by loading a brand color from a central config and applying it to all generated reports. | Allow end‑users to customize report appearance by selecting a color saved in a simple text file. | Batch‑process multiple workbooks, updating their theme colors from individual config files to maintain visual consistency.
+// AI Prompts: Generate C# code that reads a hex color from a JSON configuration file and updates the Dark2 (Background2) theme color in an Aspose.Cells workbook. | Show how to add comprehensive validation for hex strings and file existence when using Workbook.SetThemeColor for Background2. | Explain how to refresh or reapply cell styles after changing the Dark2 theme color with Aspose.Cells.
 
 using System;
 using System.Drawing;
 using System.IO;
-using System.Text.Json;
 using Aspose.Cells;
 
-// Read a hex value from a JSON file, set the workbook's Dark2 theme color (fallback to Accent1 if missing), reapply all styles that reference the theme, and save the updated Excel file using Aspose.Cells for .NET.
+// Loads an existing workbook, reads a hex color from a text configuration file, converts it to a System.Drawing.Color, applies the value to the Dark2 (Background2) theme via Workbook.SetThemeColor, and saves the updated file. Includes basic error handling for missing files and invalid color strings.
 class UpdateDark2Theme
 {
     static void Main()
     {
         try
         {
-            // Load configuration file that contains the new Dark2 color in hex format.
-            const string configPath = "themeConfig.json";
+            // Paths for the workbook and configuration file
+            string workbookPath = "input.xlsx";
+            string configPath = "themeconfig.txt";   // Expected format: #RRGGBB or RRGGBB
+
+            // Verify that the required files exist
+            if (!File.Exists(workbookPath))
+                throw new FileNotFoundException($"Workbook file not found: {workbookPath}");
             if (!File.Exists(configPath))
-            {
-                Console.WriteLine($"Configuration file not found: {configPath}");
-                return;
-            }
+                throw new FileNotFoundException($"Configuration file not found: {configPath}");
 
-            string json = File.ReadAllText(configPath);
-            ThemeConfig? config = JsonSerializer.Deserialize<ThemeConfig>(json);
-            if (config == null || string.IsNullOrWhiteSpace(config.Dark2Hex))
-            {
-                Console.WriteLine("Invalid configuration. Ensure Dark2Hex is present.");
-                return;
-            }
+            // Load the existing workbook
+            Workbook workbook = new Workbook(workbookPath);
 
-            // Convert the hex string to a System.Drawing.Color.
-            Color dark2Color = ColorTranslator.FromHtml(config.Dark2Hex);
+            // Read the color value from the configuration file
+            string colorString = File.ReadAllText(configPath).Trim();
 
-            // Verify the input workbook exists before loading.
-            const string inputPath = "input.xlsx";
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input workbook not found: {inputPath}");
-                return;
-            }
+            // Ensure the color string starts with '#'
+            if (!colorString.StartsWith("#"))
+                colorString = "#" + colorString;
 
-            // Load the existing workbook (lifecycle rule: load).
-            Workbook workbook = new Workbook(inputPath);
+            // Convert the string to a System.Drawing.Color
+            Color dark2Color = ColorTranslator.FromHtml(colorString);
 
-            // Determine which theme color to update.
-            // Prefer Dark2; if not available, fall back to Accent1.
-            ThemeColorType targetTheme = Enum.TryParse<ThemeColorType>("Dark2", out var parsedDark2)
-                ? parsedDark2
-                : ThemeColorType.Accent1;
+            // Update the Dark2 (Background2) theme color
+            workbook.SetThemeColor(ThemeColorType.Background2, dark2Color);
 
-            // Update the selected theme color.
-            workbook.SetThemeColor(targetTheme, dark2Color);
-
-            // Refresh all styles that depend on the target theme color.
-            RefreshThemeDependentStyles(workbook, targetTheme);
-
-            // Save the modified workbook (lifecycle rule: save).
-            const string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved with updated {targetTheme} theme color to '{outputPath}'.");
+            // Save the modified workbook
+            workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
-    }
-
-    // Reapplies styles that reference the specified theme color to ensure they reflect the change.
-    private static void RefreshThemeDependentStyles(Workbook workbook, ThemeColorType targetType)
-    {
-        try
-        {
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                Cells cells = sheet.Cells;
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-
-                for (int r = 0; r <= maxRow; r++)
-                {
-                    for (int c = 0; c <= maxCol; c++)
-                    {
-                        Cell cell = cells[r, c];
-                        if (cell == null) continue;
-
-                        Style style = cell.GetStyle();
-                        bool needsRefresh = false;
-
-                        // Font theme color
-                        ThemeColor? fontTheme = style.Font.ThemeColor;
-                        if (fontTheme != null && fontTheme.ColorType == targetType)
-                            needsRefresh = true;
-
-                        // Background theme color
-                        ThemeColor? bgTheme = style.BackgroundThemeColor;
-                        if (bgTheme != null && bgTheme.ColorType == targetType)
-                            needsRefresh = true;
-
-                        // Foreground theme color
-                        ThemeColor? fgTheme = style.ForegroundThemeColor;
-                        if (fgTheme != null && fgTheme.ColorType == targetType)
-                            needsRefresh = true;
-
-                        // Reapply the style if it uses the target theme color.
-                        if (needsRefresh)
-                            cell.SetStyle(style);
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error while refreshing styles: {ex.Message}");
-        }
-    }
-
-    // Simple POCO to map the JSON configuration.
-    private class ThemeConfig
-    {
-        public string? Dark2Hex { get; set; }
     }
 }

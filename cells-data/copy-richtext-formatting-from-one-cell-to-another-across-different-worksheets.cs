@@ -1,42 +1,33 @@
-// Title: Copy Rich‑Text Formatted Cell Between Worksheets with Aspose.Cells for .NET
-// Description: Demonstrates how to load a source workbook, locate a rich‑text cell (e.g., A1), and use the Aspose.Cells `Copy` method to transfer its value, formula, and all formatting—including rich‑text segments—to a target cell (e.g., B2) on another worksheet or workbook, then save the result.
-// Keywords: Aspose.Cells copy rich text cell | copy cell formatting between worksheets .NET | preserve rich text Aspose.Cells | transfer formatted cell to new workbook | Aspose.Cells C# copy cell with rich text
-// Common Searches: copy rich text cell Aspose.Cells C# | how to preserve cell formatting between worksheets | Aspose.Cells copy cell with rich text to another workbook | transfer formatted Excel cell using Aspose.Cells | copy cell value formula and formatting Aspose
-// Developer Intent: Copy a cell that contains rich‑text formatting from one worksheet or workbook to another while keeping its value, formula, and styles intact.
-// Use Cases: Reuse a styled header from a template workbook across multiple generated reports. | Duplicate a formatted note cell on several sheets of a new workbook without losing color or font variations. | Build a branding workbook by moving rich‑text logo cells from an existing file into a fresh document.
-// AI Prompts: Generate C# code using Aspose.Cells that copies a cell with rich‑text formatting from one worksheet to another, preserving formulas and styles. | Show how to copy multiple rich‑text cells from a source sheet to a destination sheet in a different workbook with Aspose.Cells. | Explain how to copy only the rich‑text portion of a cell while leaving other formatting unchanged using Aspose.Cells for .NET.
+// Title: Copy Rich‑Text Formatting Between Cells Across Worksheets with Aspose.Cells for .NET
+// Description: Shows how to load a source workbook, copy a cell that contains rich‑text (bold, italic, color, etc.) to another worksheet or workbook using the Cell.Copy method, and save the updated file while preserving all formatting.
+// Keywords: Aspose.Cells | C# | Cell.Copy | rich text formatting | preserve cell formatting | copy cell between workbooks | Excel automation .NET | transfer rich‑text | worksheet to worksheet copy | copy formatted cell
+// Common Searches: Aspose.Cells copy cell with rich text | preserve rich‑text when copying Excel cells C# | copy formatted cell to another worksheet Aspose | transfer rich‑text formatting between workbooks .NET | Cell.Copy rich text example
+// Developer Intent: Copy a cell’s value and its rich‑text formatting from a source worksheet to a target cell in a different worksheet or workbook using Aspose.Cells for .NET.
+// Use Cases: Clone styled header rows from a template workbook into generated reports without losing bold or colored segments. | Replicate title cells with mixed formatting across multiple sheets when building multi‑page invoices. | Move user‑entered rich‑text comments from a data sheet to a summary sheet while keeping all visual cues.
+// AI Prompts: Provide C# code that copies a cell with rich‑text formatting from one workbook to another using Aspose.Cells. | Show how to copy only the rich‑text formatting (not the cell value) between worksheets with Aspose.Cells for .NET. | Explain how Cell.Copy preserves rich‑text and what additional steps are needed for merged cells or conditional formatting.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsRichTextCopyDemo
+// Shows how to load a source workbook, copy a cell that contains rich‑text (bold, italic, color, etc.) to another worksheet or workbook using the Cell.Copy method, and save the updated file while preserving all formatting.
+class CopyRichTextFormatting
 {
-    // Demonstrates how to load a source workbook, locate a rich‑text cell (e.g., A1), and use the Aspose.Cells `Copy` method to transfer its value, formula, and all formatting—including rich‑text segments—to a target cell (e.g., B2) on another worksheet or workbook, then save the result.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Load the source workbook that contains the rich‑text formatted cell
-            Workbook sourceWorkbook = new Workbook("source.xlsx");
+        // Load the source workbook that contains the rich‑text formatted cell.
+        Workbook sourceWorkbook = new Workbook("Source.xlsx");
+        Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+        Cell sourceCell = sourceSheet.Cells["A1"]; // cell with rich‑text
 
-            // Access the source worksheet and the cell with rich‑text formatting (e.g., A1)
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-            Cell sourceCell = sourceSheet.Cells["A1"];
+        // Create (or load) the destination workbook.
+        Workbook destinationWorkbook = new Workbook();
+        Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
+        Cell destinationCell = destinationSheet.Cells["B2"]; // target cell
 
-            // Create a new destination workbook (or load an existing one)
-            Workbook destinationWorkbook = new Workbook();
+        // Copy the cell value together with all formatting, including rich‑text.
+        destinationCell.Copy(sourceCell);
 
-            // Access the destination worksheet (first sheet by default) and the target cell (e.g., B2)
-            Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
-            destinationSheet.Name = "Destination";
-            Cell destinationCell = destinationSheet.Cells["B2"];
-
-            // Copy the source cell to the destination cell.
-            // This copies the value, formula, and all formatting including rich‑text formatting.
-            destinationCell.Copy(sourceCell);
-
-            // Save the destination workbook with the copied rich‑text formatting
-            destinationWorkbook.Save("dest.xlsx");
-        }
+        // Save the workbook with the copied formatting.
+        destinationWorkbook.Save("Result.xlsx");
     }
 }

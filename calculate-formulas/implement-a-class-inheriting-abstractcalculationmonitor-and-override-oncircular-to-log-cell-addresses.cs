@@ -1,101 +1,94 @@
-// Title: C# Custom AbstractCalculationMonitor for Logging Circular Reference Cells in Aspose.Cells
-// Description: Demonstrates how to inherit from AbstractCalculationMonitor, override the OnCircular method, and output the A1 addresses of cells that form a circular reference during workbook.CalculateFormula. The sample uses reflection to read row, column, and sheet index from the enumerated cell data, prints each address, and returns true to let the engine continue processing.
-// Keywords: Aspose.Cells | AbstractCalculationMonitor | OnCircular override | circular reference logging | C# formula calculation monitor | cell address extraction | reflection in Aspose.Cells | custom calculation monitor example
-// Common Searches: how to detect circular references with Aspose.Cells | override OnCircular to log cells in Aspose.Cells .NET | custom calculation monitor for formula evaluation | Aspose.Cells example for circular reference handling | C# log cell addresses when circular reference occurs
-// Developer Intent: Create a custom calculation monitor that captures and logs the addresses of cells involved in a circular reference during formula evaluation.
-// Use Cases: Debug complex spreadsheets by listing every cell that participates in a circular reference. | Integrate the monitor into an automated testing suite to verify that no unintended circular formulas exist. | Redirect the logged information to a file, database, or monitoring service for audit trails. | Control calculation flow by returning false from OnCircular to abort processing when a circular reference is found.
-// AI Prompts: Write a C# AbstractCalculationMonitor that writes circular reference cell addresses to a log file instead of the console. | Show how to attach a custom CircularReferenceMonitor to CalculationOptions and trigger workbook.CalculateFormula to capture circular references. | Explain how modifying OnCircular to return false stops formula calculation after detecting a circular reference.
+// Title: C# Custom AbstractCalculationMonitor to Log Circular Reference Cells in Aspose.Cells
+// Description: Shows how to inherit Aspose.Cells.AbstractCalculationMonitor, override the OnCircular method, and write the sheet index and A1‑style address of each circular reference while calculating formulas. The monitor returns true so the engine continues processing.
+// Keywords: Aspose.Cells | AbstractCalculationMonitor | OnCircular | circular reference detection | C# .NET | formula calculation | CalculationOptions | log cell addresses | debug Excel formulas | Excel circular reference
+// Common Searches: Aspose.Cells custom calculation monitor example | how to capture circular references with AbstractCalculationMonitor | C# log circular reference cells during workbook calculation | override OnCircular in Aspose.Cells | Aspose.Cells CalculationOptions circular reference monitor
+// Developer Intent: Create a custom calculation monitor that records the locations of cells involved in circular references when a workbook is evaluated.
+// Use Cases: Identify and document circular references in large Excel workbooks without aborting the calculation. | Integrate detailed circular‑reference logging into automated report‑generation pipelines. | Provide developers with sheet, row, and column data to build diagnostic tools for formula errors.
+// AI Prompts: Write a C# AbstractCalculationMonitor that writes circular reference details to a text file instead of the console. | Modify the CircularReferenceMonitor to collect cell addresses in a List<string> and return it after workbook.CalculateFormula. | Explain the purpose of the boolean return value from OnCircular and how it affects Aspose.Cells calculation flow.
 
-using Aspose.Cells;
 using System;
 using System.Collections;
-using System.IO;
-using System.Reflection;
+using Aspose.Cells;
 
 namespace AsposeCellsCircularDemo
 {
-    // Demonstrates how to inherit from AbstractCalculationMonitor, override the OnCircular method, and output the A1 addresses of cells that form a circular reference during workbook.CalculateFormula. The sample uses reflection to read row, column, and sheet index from the enumerated cell data, prints each address, and returns true to let the engine continue processing.
-    class Program
+    // Custom monitor that logs circular reference cell addresses
+    // Shows how to inherit Aspose.Cells.AbstractCalculationMonitor, override the OnCircular method, and write the sheet index and A1‑style address of each circular reference while calculating formulas. The monitor returns true so the engine continues processing.
+    public class CircularReferenceMonitor : AbstractCalculationMonitor
     {
-        static void Main()
+        public override bool OnCircular(IEnumerator circularCellsData)
+        {
+            Console.WriteLine("Circular reference detected:");
+            while (circularCellsData.MoveNext())
+            {
+                object current = circularCellsData.Current;
+                if (current != null)
+                {
+                    var type = current.GetType();
+                    var rowProp = type.GetProperty("Row");
+                    var colProp = type.GetProperty("Column");
+                    var sheetProp = type.GetProperty("SheetIndex");
+
+                    if (rowProp != null && colProp != null && sheetProp != null)
+                    {
+                        int row = (int)rowProp.GetValue(current);
+                        int col = (int)colProp.GetValue(current);
+                        int sheetIdx = (int)sheetProp.GetValue(current);
+                        string cellName = CellsHelper.CellIndexToName(row, col);
+                        Console.WriteLine($"Sheet {sheetIdx}: {cellName}");
+                    }
+                    else
+                    {
+                        // Fallback output if expected properties are missing
+                        Console.WriteLine(current);
+                    }
+                }
+            }
+            // Return true to let the engine continue calculation for these cells
+            return true;
+        }
+    }
+
+    public class Program
+    {
+        public static void Main()
         {
             try
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Set up a circular reference: A1 -> B1, B1 -> A1
-                worksheet.Cells["A1"].Formula = "=B1";
-                worksheet.Cells["B1"].Formula = "=A1";
+                // Create a simple circular reference: A1 -> B1, B1 -> A1
+                sheet.Cells["A1"].Formula = "=B1";
+                sheet.Cells["B1"].Formula = "=A1";
 
-                // Create calculation options and attach the custom monitor
+                // Set calculation options with the custom monitor
                 CalculationOptions options = new CalculationOptions
                 {
                     CalculationMonitor = new CircularReferenceMonitor()
                 };
 
-                // Perform formula calculation; the monitor will be invoked for circular refs
+                // Perform calculation; the monitor will log circular cells
                 workbook.CalculateFormula(options);
-
-                // Save the workbook
-                string outputPath = "CircularReferenceDemo.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Calculation error: {ex.Message}");
             }
-        }
-    }
 
-    // Custom monitor that logs the addresses of cells involved in a circular reference
-    class CircularReferenceMonitor : AbstractCalculationMonitor
-    {
-        public override bool OnCircular(IEnumerator circularCellsData)
-        {
-            Console.WriteLine("Circular reference detected. Cells involved:");
-
-            while (circularCellsData.MoveNext())
+            try
             {
-                object cellObj = circularCellsData.Current;
-                if (cellObj != null)
-                {
-                    // Try to extract Row, Column, and SheetIndex via reflection
-                    Type type = cellObj.GetType();
-                    PropertyInfo rowProp = type.GetProperty("Row");
-                    PropertyInfo colProp = type.GetProperty("Column");
-                    PropertyInfo sheetProp = type.GetProperty("SheetIndex");
-
-                    if (rowProp != null && colProp != null && sheetProp != null)
-                    {
-                        int row = (int)rowProp.GetValue(cellObj);
-                        int col = (int)colProp.GetValue(cellObj);
-                        int sheetIdx = (int)sheetProp.GetValue(cellObj);
-                        string address = CellsHelper.CellIndexToName(row, col);
-                        Console.WriteLine($"Sheet {sheetIdx}: {address}");
-                    }
-                    else
-                    {
-                        // Fallback: output the raw object if expected properties are missing
-                        Console.WriteLine(cellObj.ToString());
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("null");
-                }
+                // Save the workbook (optional)
+                string outputPath = "CircularReferenceDemo.xlsx";
+                Workbook workbook = new Workbook(); // Recreate to include any changes if needed
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Return true to allow the engine to continue processing the circular cells
-            return true;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Save error: {ex.Message}");
+            }
         }
     }
 }

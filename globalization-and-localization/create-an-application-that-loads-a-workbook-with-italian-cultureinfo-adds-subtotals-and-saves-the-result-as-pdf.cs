@@ -1,47 +1,78 @@
+// Title: C# – Load Excel with Italian CultureInfo, add subtotals, export to PDF using Aspose.Cells
+// Description: A concise Aspose.Cells for .NET demo that loads an XLSX file with Italian (it‑IT) CultureInfo, inserts a subtotal grouping sales by category, and saves the result as a PDF document.
+// Keywords: Aspose.Cells C# | .NET Excel to PDF | Italian CultureInfo it-IT | LoadOptions CultureInfo | Cells.Subtotal method | Excel subtotal example | localized Excel report | PDF export Aspose.Cells | group by category Excel | sum function Excel C#
+// Common Searches: Aspose.Cells load workbook with Italian locale | C# add subtotal to Excel sheet using Aspose.Cells | Export Excel with subtotals to PDF .NET | How to set CultureInfo it-IT in Aspose.Cells LoadOptions | Subtotal function example Aspose.Cells C#
+// Developer Intent: Load an existing XLSX file using Italian locale settings, apply a subtotal that sums sales per category, and generate a PDF version of the workbook.
+// Use Cases: Create printable Italian sales reports that automatically calculate category totals. | Automate generation of inventory sheets for the Italian market with summed quantities before PDF distribution. | Produce localized financial summaries in PDF format by applying subtotals to raw Excel data.
+// AI Prompts: Provide C# code that loads an XLSX with LoadOptions.CultureInfo set to "it-IT", adds a subtotal on the sales column grouped by category, and saves the workbook as a PDF using Aspose.Cells. | Show an Aspose.Cells example for applying Italian CultureInfo, using Cells.Subtotal to summarize data, and exporting the result to PDF. | Explain how to configure LoadOptions for Italian locale and use the Subtotal method to generate a PDF report in .NET.
+
 using System;
 using System.Globalization;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-class SubtotalItalianPdf
+namespace SubtotalItalianPdfDemo
 {
-    static void Main()
+    // A concise Aspose.Cells for .NET demo that loads an XLSX file with Italian (it‑IT) CultureInfo, inserts a subtotal grouping sales by category, and saves the result as a PDF document.
+    class Program
     {
-        // Path to the source Excel file
-        string inputPath = "input.xlsx";
+        static void Main()
+        {
+            // -----------------------------------------------------------------
+            // 1. Create a sample workbook with data and save it as an XLSX file.
+            // -----------------------------------------------------------------
+            Workbook tempWorkbook = new Workbook();                         // create workbook
+            Worksheet sheet = tempWorkbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Path for the resulting PDF file
-        string outputPath = "output.pdf";
+            // Header row
+            cells["A1"].PutValue("Categoria");   // Category (Italian)
+            cells["B1"].PutValue("Prodotto");   // Product
+            cells["C1"].PutValue("Vendite");    // Sales
 
-        // Load the workbook with Italian culture settings
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-        loadOptions.CultureInfo = new CultureInfo("it-IT"); // Italian CultureInfo
-        Workbook workbook = new Workbook(inputPath, loadOptions);
+            // Sample data rows
+            object[,] data = new object[,]
+            {
+                { "Nord", "Widget", 5000 },
+                { "Nord", "Gadget", 3000 },
+                { "Sud",  "Widget", 6000 },
+                { "Sud",  "Gadget", 4000 },
+                { "Ovest","Widget", 4500 }
+            };
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+            for (int r = 0; r < data.GetLength(0); r++)
+                for (int c = 0; c < data.GetLength(1); c++)
+                    cells[r + 1, c].PutValue(data[r, c]);
 
-        // Define the range that contains the data (e.g., A1:C6)
-        // Adjust the range as needed for your actual data
-        CellArea dataArea = CellArea.CreateCellArea(0, 0, 5, 2); // rows 0-5, columns 0-2
+            // Save the temporary Excel file (will be loaded later with Italian culture)
+            string tempFilePath = "sample.xlsx";
+            tempWorkbook.Save(tempFilePath, SaveFormat.Xlsx);
 
-        // Add subtotals:
-        // - Group by the first column (index 0)
-        // - Use SUM function
-        // - Apply subtotal to the third column (index 2)
-        // - Replace existing subtotals, add page breaks, place summary below data
-        cells.Subtotal(
-            dataArea,
-            0,
-            ConsolidationFunction.Sum,
-            new int[] { 2 },
-            replace: true,
-            pageBreaks: true,
-            summaryBelowData: true);
+            // ---------------------------------------------------------------
+            // 2. Load the workbook using Italian CultureInfo (it-IT)
+            // ---------------------------------------------------------------
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            loadOptions.CultureInfo = new CultureInfo("it-IT");   // set Italian culture for loading
+            Workbook workbook = new Workbook(tempFilePath, loadOptions); // load with options
 
-        // Save the workbook as PDF
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        workbook.Save(outputPath, pdfOptions);
+            // ---------------------------------------------------------------
+            // 3. Add subtotals to the loaded workbook
+            // ---------------------------------------------------------------
+            Worksheet ws = workbook.Worksheets[0];
+            Cells wsCells = ws.Cells;
+
+            // Define the range that contains the data (A1:C6)
+            CellArea area = CellArea.CreateCellArea(0, 0, 5, 2); // rows 0-5, columns 0-2
+
+            // Group by the first column (Categoria), sum the sales column (index 2)
+            wsCells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 2 });
+
+            // ---------------------------------------------------------------
+            // 4. Save the result as PDF
+            // ---------------------------------------------------------------
+            string pdfPath = "output.pdf";
+            workbook.Save(pdfPath, SaveFormat.Pdf);
+
+            Console.WriteLine("Workbook loaded with Italian culture, subtotal added, and saved as PDF.");
+        }
     }
 }

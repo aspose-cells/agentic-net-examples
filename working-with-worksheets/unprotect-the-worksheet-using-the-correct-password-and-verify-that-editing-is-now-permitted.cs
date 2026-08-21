@@ -1,20 +1,20 @@
-// Title: Unprotect an Aspose.Cells Worksheet with Password and Verify Editing (C#)
-// Description: Demonstrates how to protect a worksheet, remove the protection using the correct password, confirm the IsProtected flag is false, edit a cell, and save the workbook with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells unprotect worksheet C# | worksheet password removal .NET | verify editing after unprotect Aspose | protect and unprotect Excel sheet programmatically | Aspose.Cells workbook save example
-// Common Searches: Aspose.Cells how to unprotect a sheet with password | C# check if worksheet is protected after unprotect | write to cell after removing worksheet protection Aspose | remove Excel sheet protection using Aspose.Cells | sample code unprotect worksheet Aspose.Cells C#
-// Developer Intent: Remove password protection from a worksheet and ensure the sheet can be edited programmatically.
-// Use Cases: Automated report generation that requires temporary unprotection before bulk data updates. | Data migration scripts that need to edit protected sheets safely. | Pre‑processing Excel files to strip protection, modify content, and re‑save for downstream systems.
-// AI Prompts: Generate C# code with Aspose.Cells to unprotect a worksheet using a supplied password and handle wrong‑password errors. | Show how to read the IsProtected property before and after unprotecting, then write a value to cell A1. | Create a reusable method that takes a file path and password, unprotects the first worksheet, updates a cell, and saves the workbook.
+// Title: Unprotect a Worksheet with Password and Verify Editing in Aspose.Cells for C#
+// Description: Creates a workbook, protects the first worksheet with a password, removes the protection using the same password, confirms the sheet is no longer protected, writes a value to cell A1, and saves the file as UnprotectedWorksheet.xlsx.
+// Keywords: Aspose.Cells C# unprotect worksheet | worksheet password protection removal | remove worksheet protection programmatically | check IsProtected after Unprotect | write to cell after unprotect Aspose.Cells | Protect method example Aspose.Cells | Unprotect method usage C# | Excel automation password toggle
+// Common Searches: Aspose.Cells unprotect worksheet C# | How to remove password protection from a worksheet using Aspose.Cells | Check if worksheet is still protected after Unprotect call | Write to a cell after unprotecting a sheet in Aspose.Cells | C# code sample for toggling worksheet protection with Aspose
+// Developer Intent: Programmatically lift password protection from a worksheet and ensure the sheet can be edited.
+// Use Cases: Automated data import that requires temporary removal of sheet protection before bulk updates. | Generating dynamic reports where protection is applied after data is written, then verified before final save. | Implementing role‑based access where the application unprotects a sheet for authorized users, modifies cells, and re‑applies protection.
+// AI Prompts: Generate C# code using Aspose.Cells to unprotect a worksheet with a given password, write "Edit allowed" to cell A1, and handle an incorrect password scenario. | Create a reusable method that checks a worksheet's IsProtected flag, unprotects it with a password, updates specified cells, and saves the workbook. | Explain how to verify that a worksheet is no longer protected after calling Unprotect in Aspose.Cells for .NET, including sample console output.
 
 using Aspose.Cells;
 using System;
 
-// Demonstrates how to protect a worksheet, remove the protection using the correct password, confirm the IsProtected flag is false, edit a cell, and save the workbook with Aspose.Cells for .NET.
+// Creates a workbook, protects the first worksheet with a password, removes the protection using the same password, confirms the sheet is no longer protected, writes a value to cell A1, and saves the file as UnprotectedWorksheet.xlsx.
 class UnprotectWorksheetDemo
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook (lifecycle create)
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
@@ -27,10 +27,10 @@ class UnprotectWorksheetDemo
         Console.WriteLine("Worksheet protected after unprotect: " + sheet.IsProtected);
 
         // Verify that editing is now permitted by writing to a cell
-        sheet.Cells["A1"].PutValue("Edited after unprotect");
+        sheet.Cells["A1"].PutValue("Edit allowed");
         Console.WriteLine("Cell A1 value: " + sheet.Cells["A1"].StringValue);
 
-        // Save the workbook
+        // Save the workbook (lifecycle save)
         workbook.Save("UnprotectedWorksheet.xlsx");
     }
 }

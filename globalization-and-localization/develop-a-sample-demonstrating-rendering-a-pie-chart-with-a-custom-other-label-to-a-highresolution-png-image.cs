@@ -1,84 +1,103 @@
-// Title: C# – Render a High‑Resolution PNG Pie Chart with a Custom “Other” Label Using Aspose.Cells
-// Description: This example creates a workbook, fills it with category/value data, adds a pie chart, applies a custom name to the automatically generated “Other” slice via SettableChartGlobalizationSettings, sets ImageOrPrintOptions to 300 DPI, and exports the chart as a high‑resolution PNG. The workbook can also be saved for later editing.
-// Keywords: Aspose.Cells | C# | .NET | pie chart | high resolution PNG | 300 DPI | custom Other label | SettableChartGlobalizationSettings | chart globalization | export chart image | localization
-// Common Searches: Aspose.Cells custom Other label pie chart | export pie chart as high DPI PNG C# | SettableChartGlobalizationSettings example | render Aspose.Cells chart to high resolution image | globalize chart labels Aspose.Cells
-// Developer Intent: Generate a pie chart, assign a localized "Other" slice name, and export the chart as a 300 DPI PNG image with Aspose.Cells for .NET.
-// Use Cases: Create printable reports that require a crisp PNG pie chart with minor categories grouped under a translated "Other" label. | Supply high‑resolution chart images for dashboards, presentations, or documentation while preserving the original workbook. | Automate multilingual chart generation where the "Other" slice text must be customized per locale.
-// AI Prompts: Show how to set the DPI for a chart image exported with Aspose.Cells in C#. | Provide code to change the "Other" slice label of a pie chart using SettableChartGlobalizationSettings. | Explain how to batch‑export multiple charts from a workbook to high‑resolution PNG files with Aspose.Cells.
+// Title: Aspose.Cells for .NET: Create a Pie Chart with a Custom “Other” Slice and Export as 300 DPI PNG
+// Description: This .NET example shows how to build a workbook, add category and value data, generate a pie chart, group slices below a configurable percentage into an automatically created “Other” slice, rename that slice with SettableChartGlobalizationSettings, and render the chart to a high‑resolution 300 DPI PNG file. The workbook can also be saved for reference.
+// Keywords: Aspose.Cells | C# pie chart | custom other slice | ChartSplitType.PercentValue | high resolution PNG | 300 DPI export | SettableChartGlobalizationSettings | chart rendering Aspose.Cells | export chart image .NET | globalization settings chart
+// Common Searches: Aspose.Cells set custom label for Other slice | pie chart split by percent value Aspose | export Aspose.Cells chart to high DPI PNG | change Other slice name in Aspose.Cells | C# render chart as 300 DPI image | globalization settings for charts Aspose.Cells
+// Developer Intent: Generate a pie chart that consolidates small categories into a labeled “Other” slice and save the visual as a 300 DPI PNG image.
+// Use Cases: Print‑ready sales distribution graphics for marketing brochures. | Automated dashboard thumbnails for web portals. | Localized financial reports where the “Other” label must be translated. | Batch processing of Excel files to create high‑resolution chart images for PDF generation.
+// AI Prompts: Modify the sample to use a 10 % split threshold and rename the automatic slice to "Other Categories". | Provide code that exports the same pie chart as a 600 DPI JPEG while preserving the custom "Other" label. | Show how to apply a distinct fill color to the automatically generated "Other" slice after setting its custom name.
 
 using System;
-using System.Drawing.Imaging;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
-using System.IO;
 
-namespace AsposeCellsPieChartHighRes
+namespace AsposeCellsExamples
 {
-    // This example creates a workbook, fills it with category/value data, adds a pie chart, applies a custom name to the automatically generated “Other” slice via SettableChartGlobalizationSettings, sets ImageOrPrintOptions to 300 DPI, and exports the chart as a high‑resolution PNG. The workbook can also be saved for later editing.
-    class Program
+    // This .NET example shows how to build a workbook, add category and value data, generate a pie chart, group slices below a configurable percentage into an automatically created “Other” slice, rename that slice with SettableChartGlobalizationSettings, and render the chart to a high‑resolution 300 DPI PNG file. The workbook can also be saved for reference.
+    public class PieChartCustomOtherLabel
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pie chart
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["A3"].PutValue("Orange");
-                sheet.Cells["A4"].PutValue("Banana");
-                sheet.Cells["A5"].PutValue("Grape");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["B3"].PutValue(80);
-                sheet.Cells["B4"].PutValue(30);
-                sheet.Cells["B5"].PutValue(70);
-
-                // Add a pie chart to the worksheet
-                int chartIndex = sheet.Charts.Add(ChartType.Pie, 7, 0, 25, 12);
-                Chart pieChart = sheet.Charts[chartIndex];
-
-                // Set the data range for the chart
-                pieChart.NSeries.Add("B2:B5", true);
-                pieChart.NSeries.CategoryData = "A2:A5";
-
-                // Set a custom name for the "Other" label using globalization settings
-                SettableChartGlobalizationSettings globalizationSettings = new SettableChartGlobalizationSettings();
-                globalizationSettings.SetOtherName("Miscellaneous Items");
-                Console.WriteLine("Custom Other label: " + globalizationSettings.GetOtherName());
-
-                // Configure high‑resolution image options (e.g., 300 DPI)
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-                {
-                    HorizontalResolution = 300,
-                    VerticalResolution = 300
-                    // ImageFormat defaults to PNG when the file extension is .png
-                };
-
-                // Ensure the output directory exists
-                string outputImagePath = "HighResPieChart.png";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputImagePath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Render the chart to a high‑resolution PNG file
-                pieChart.ToImage(outputImagePath, imgOptions);
-                Console.WriteLine($"Pie chart rendered to high‑resolution PNG: {outputImagePath}");
-
-                // Save the workbook (optional, to keep the chart in the file)
-                string workbookPath = "PieChartWorkbook.xlsx";
-                workbook.Save(workbookPath);
-                Console.WriteLine($"Workbook saved: {workbookPath}");
+                Run();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the pie chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["A3"].PutValue("Orange");
+            sheet.Cells["A4"].PutValue("Banana");
+            sheet.Cells["A5"].PutValue("Grape");
+
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(40);
+            sheet.Cells["B3"].PutValue(30);
+            sheet.Cells["B4"].PutValue(15);
+            sheet.Cells["B5"].PutValue(15);
+
+            // Add a pie chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 12);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Bind the data range to the chart
+            chart.NSeries.Add("B2:B5", true);
+            chart.NSeries.CategoryData = "A2:A5";
+
+            // Use PercentValue split so that small slices are grouped into an "Other" slice
+            chart.NSeries[0].SplitType = ChartSplitType.PercentValue;
+            chart.NSeries[0].SplitValue = 20; // values < 20% will be placed in the "Other" slice
+
+            // Set a custom name for the automatically generated "Other" label
+            SettableChartGlobalizationSettings globalization = new SettableChartGlobalizationSettings();
+            globalization.SetOtherName("Miscellaneous Items");
+
+            // (Optional) Verify the custom name
+            string otherName = globalization.GetOtherName();
+            Console.WriteLine("Custom 'Other' label set to: " + otherName);
+
+            // Prepare high‑resolution image options (300 DPI PNG)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                HorizontalResolution = 300,
+                VerticalResolution = 300
+                // ImageFormat defaults to PNG, so no explicit setting required
+            };
+
+            // Render the chart to a high‑resolution PNG file
+            string pngPath = "PieChart_HighRes.png";
+            try
+            {
+                chart.ToImage(pngPath, imgOptions);
+                Console.WriteLine($"Chart image saved to: {Path.GetFullPath(pngPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save chart image: {ex.Message}");
+            }
+
+            // Save the workbook (optional, just to keep the file complete)
+            string workbookPath = "PieChartWorkbook.xlsx";
+            try
+            {
+                workbook.Save(workbookPath);
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(workbookPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
             }
         }
     }

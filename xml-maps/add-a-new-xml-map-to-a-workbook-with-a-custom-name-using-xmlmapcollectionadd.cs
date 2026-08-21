@@ -1,59 +1,63 @@
-// Title: Add a Named XML Map to a Workbook with Aspose.Cells (C#) using XmlMapCollection.Add
-// Description: Demonstrates how to create a new Workbook, write an XSD schema to a temporary file, add the schema as an XML map with XmlMaps.Add, assign a custom Name to the XmlMap, and save the workbook containing the named map.
-// Keywords: Aspose.Cells C# XML map | XmlMapCollection.Add | custom XmlMap name | add XSD schema to workbook | temporary XSD file Aspose.Cells | save workbook with XML map | .NET Excel XML mapping
-// Common Searches: Aspose.Cells add XML map with custom name C# | XmlMapCollection.Add example .NET | set XmlMap.Name after adding to workbook | how to use temporary XSD file with Aspose.Cells | save Excel file with XML map Aspose
-// Developer Intent: Create an XML map in a workbook and give it a custom identifier.
-// Use Cases: Import XML data by first adding its XSD as a named map, then referencing the map for data import. | Build a reusable Excel template that includes a predefined, meaningfully‑named XML map for downstream XML export. | Generate workbooks with multiple distinct XML maps, each labeled with a unique name for easy programmatic access.
-// AI Prompts: Write C# code that adds several XML maps from different XSD files to a workbook, assigning each a unique custom name using Aspose.Cells. | Explain how to replace the XSD schema of an existing XmlMap while keeping its custom Name property intact. | Provide a step‑by‑step guide to validate an XML file against a previously added XmlMap before importing its data into a worksheet.
+// Title: Add a Custom‑Named XML Map to a Workbook with Aspose.Cells (C#)
+// Description: Demonstrates how to create a new Workbook, define an inline XML schema, add it to the Worksheets.XmlMaps collection using XmlMapCollection.Add, assign a custom name to the resulting XmlMap, and save the file as WorkbookWithXmlMap.xlsx.
+// Keywords: Aspose.Cells XML map | XmlMapCollection Add | custom XmlMap name | C# Aspose.Cells example | add XML schema to workbook | set XmlMap.Name | export workbook with XML map | Aspose.Cells .NET tutorial
+// Common Searches: Aspose.Cells add XML map C# | how to set custom name for XmlMap | XmlMapCollection Add method usage | save workbook after adding XML map | C# example for XML schema mapping in Aspose.Cells
+// Developer Intent: Create an XML map in a workbook and give it a user‑defined name using Aspose.Cells for .NET.
+// Use Cases: Map XML data to worksheet cells with a recognizable map identifier. | Reuse a named XML map across multiple workbooks for consistent data import/export. | Prepare a workbook for automated XML export where the map name conveys the data structure.
+// AI Prompts: Generate C# code that loads an XML schema from a file, adds it to a workbook with XmlMapCollection.Add, and sets a custom map name. | Show how to retrieve an existing XmlMap by name and modify its properties in Aspose.Cells. | Provide robust error handling for invalid XML schemas when adding an XmlMap in a .NET application.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a new Workbook, write an XSD schema to a temporary file, add the schema as an XML map with XmlMaps.Add, assign a custom Name to the XmlMap, and save the workbook containing the named map.
-class AddXmlMapDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to create a new Workbook, define an inline XML schema, add it to the Worksheets.XmlMaps collection using XmlMapCollection.Add, assign a custom name to the resulting XmlMap, and save the file as WorkbookWithXmlMap.xlsx.
+    public class AddXmlMapWithCustomName
     {
-        try
+        public static void Run()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Define an XML schema as a string
-            string xmlSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-                                    <xs:element name='Root'>
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name='Item' type='xs:string'/>
-                                            </xs:sequence>
-                                        </xs:complexType>
-                                    </xs:element>
-                                 </xs:schema>";
+                // Get the XmlMapCollection from the workbook
+                XmlMapCollection xmlMaps = workbook.Worksheets.XmlMaps;
 
-            // Write the schema to a temporary file (Aspose.Cells expects a file path)
-            string tempSchemaPath = Path.Combine(Path.GetTempPath(), "tempSchema.xsd");
-            File.WriteAllText(tempSchemaPath, xmlSchema);
+                // Define an XML schema (inline string)
+                string xmlSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+                                        <xs:element name='Root'>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name='Item' type='xs:string'/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                     </xs:schema>";
 
-            // Ensure the temporary schema file exists before adding
-            if (!File.Exists(tempSchemaPath))
-                throw new FileNotFoundException("Temporary XML schema file was not created.", tempSchemaPath);
+                // Add the XML map to the collection
+                int mapIndex = xmlMaps.Add(xmlSchema);
 
-            // Add the XML map to the workbook; Add returns the map index
-            int mapIndex = workbook.Worksheets.XmlMaps.Add(tempSchemaPath);
+                // Retrieve the added XmlMap and assign a custom name
+                XmlMap xmlMap = xmlMaps[mapIndex];
+                xmlMap.Name = "MyCustomMap";
 
-            // Retrieve the newly added XmlMap and set a custom name
-            XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-            xmlMap.Name = "MyCustomMap";
-
-            // Save the workbook with the XML map attached
-            string outputPath = "WorkbookWithXmlMap.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // Save the workbook
+                workbook.Save("WorkbookWithXmlMap.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            AddXmlMapWithCustomName.Run();
         }
     }
 }

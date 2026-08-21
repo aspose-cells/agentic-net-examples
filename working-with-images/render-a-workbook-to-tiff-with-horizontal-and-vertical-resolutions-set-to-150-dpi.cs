@@ -1,49 +1,39 @@
-// Title: Export an Aspose.Cells Workbook to a Multi‑Page TIFF at 150 DPI (C#)
-// Description: Demonstrates how to create or load a workbook, set ImageOrPrintOptions to TIFF format, configure HorizontalResolution and VerticalResolution to 150 DPI, and use WorkbookRender to generate a multi‑page TIFF file in C#.
-// Keywords: Aspose.Cells | C# | .NET | TIFF export | 150 DPI | ImageOrPrintOptions | WorkbookRender | multi‑page TIFF | Excel to TIFF | set DPI Aspose.Cells
-// Common Searches: Aspose.Cells export workbook to TIFF C# | set horizontal and vertical DPI for TIFF in Aspose.Cells | render Excel as multi‑page TIFF with 150 DPI | ImageOrPrintOptions DPI settings Aspose.Cells | C# create high‑resolution TIFF from spreadsheet
-// Developer Intent: Generate a TIFF image of the entire workbook with both horizontal and vertical resolution fixed at 150 DPI.
-// Use Cases: Archiving spreadsheets as high‑resolution printable TIFFs for compliance records. | Embedding multi‑page TIFFs in reports or document management systems that require a specific DPI. | Converting Excel data to a format compatible with legacy imaging workflows that accept only TIFF files.
-// AI Prompts: Modify the sample to accept a DPI value from the user and apply it to both resolutions. | Show how to render a single worksheet to a 150 DPI TIFF instead of the whole workbook. | Add TIFF compression options while preserving the 150 DPI setting.
+// Title: Export an Aspose.Cells Workbook to a 150 DPI TIFF image (C#)
+// Description: Demonstrates how to create a workbook, set ImageOrPrintOptions to TIFF format with 150 DPI horizontal and vertical resolution, and render the entire workbook to a TIFF file using WorkbookRender in Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | TIFF export | 150 DPI | ImageOrPrintOptions | WorkbookRender | Excel to image | set resolution
+// Common Searches: Aspose.Cells render workbook to TIFF with 150 DPI | C# set horizontal and vertical DPI when exporting Excel to TIFF | How to export Excel as high‑resolution TIFF using Aspose.Cells | ImageOrPrintOptions DPI settings Aspose.Cells .NET
+// Developer Intent: Generate a TIFF file from a workbook where both horizontal and vertical resolutions are fixed at 150 DPI.
+// Use Cases: Produce print‑ready TIFF files from Excel data for marketing materials. | Create high‑resolution images for archival of financial reports. | Export worksheets to TIFF for inclusion in PDF portfolios while maintaining exact DPI.
+// AI Prompts: Write C# code with Aspose.Cells to export a workbook to a multi‑page TIFF at 300 DPI. | Explain how to adjust compression type and image quality when saving a TIFF with Aspose.Cells. | Show how to render selected worksheets to separate TIFF files with custom DPI settings.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsTiffDemo
+// Demonstrates how to create a workbook, set ImageOrPrintOptions to TIFF format with 150 DPI horizontal and vertical resolution, and render the entire workbook to a TIFF file using WorkbookRender in Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates how to create or load a workbook, set ImageOrPrintOptions to TIFF format, configure HorizontalResolution and VerticalResolution to 150 DPI, and use WorkbookRender to generate a multi‑page TIFF file in C#.
-    public class RenderWorkbookToTiff
+    static void Main()
     {
-        public static void Main()
-        {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and add some sample data
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("TIFF rendering at 150 DPI");
 
-            // Add some sample data to demonstrate the rendering
-            sheet.Cells["A1"].PutValue("Aspose.Cells TIFF Rendering Demo");
-            sheet.Cells["B2"].PutValue(DateTime.Now);
+        // Configure image options for TIFF output with 150 DPI resolution
+        ImageOrPrintOptions options = new ImageOrPrintOptions();
+        options.ImageType = ImageType.Tiff;          // Set output format to TIFF
+        options.HorizontalResolution = 150;          // Horizontal DPI
+        options.VerticalResolution = 150;            // Vertical DPI
 
-            // Configure image rendering options
-            ImageOrPrintOptions options = new ImageOrPrintOptions
-            {
-                // Specify that the output format is TIFF
-                ImageType = ImageType.Tiff,
-                // Set the desired DPI for both horizontal and vertical dimensions
-                HorizontalResolution = 150,
-                VerticalResolution = 150
-            };
+        // Initialize the workbook renderer with the workbook and options
+        WorkbookRender renderer = new WorkbookRender(workbook, options);
 
-            // Create a workbook renderer with the configured options
-            WorkbookRender renderer = new WorkbookRender(workbook, options);
+        // Render the entire workbook to a TIFF file
+        string outputPath = "output_150dpi.tiff";
+        renderer.ToImage(outputPath);
 
-            // Render the entire workbook to a multi‑page TIFF file
-            string outputPath = "WorkbookOutput_150dpi.tiff";
-            renderer.ToImage(outputPath);
-
-            Console.WriteLine($"Workbook successfully rendered to TIFF at {outputPath} with 150 DPI resolution.");
-        }
+        Console.WriteLine($"Workbook successfully rendered to TIFF at 150 DPI: {outputPath}");
     }
 }

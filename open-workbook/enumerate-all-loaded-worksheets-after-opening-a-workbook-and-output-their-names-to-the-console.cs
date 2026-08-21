@@ -1,33 +1,29 @@
-// Title: Enumerate all worksheet names in an Excel file using Aspose.Cells for .NET (C#)
-// Description: This C# example shows how to open an existing .xlsx workbook with Aspose.Cells, access the Workbook.Worksheets collection, iterate through each Worksheet object, and output its Name property to the console.
-// Keywords: Aspose.Cells list worksheets | C# read Excel sheet names | Aspose.Cells get worksheet collection | print worksheet names .NET | enumerate Excel sheets C#
-// Common Searches: aspocells get worksheet names c# | how to list all sheets in an Excel workbook using Aspose.Cells | C# loop through worksheets Aspose.Cells example | retrieve sheet names from .xlsx with Aspose.Cells | display Excel worksheet names console Aspose
-// Developer Intent: Show every sheet title contained in a loaded workbook.
-// Use Cases: Confirm required tabs exist before extracting data | Log workbook structure for debugging or audit trails | Select a sheet dynamically based on its retrieved name | Generate documentation of a workbook’s layout
-// AI Prompts: Write a C# function that returns a List<string> of worksheet names from a given Excel file using Aspose.Cells. | Adapt the example to write sheet names to a text file instead of the console. | Provide code that filters worksheet names starting with a specific prefix (e.g., "Report_") using Aspose.Cells. | Explain how to include hidden worksheets when enumerating sheet names.
+// Title: Enumerate all worksheet names in an Excel workbook using Aspose.Cells for .NET (C#)
+// Description: This example shows how to open an existing Excel file with Aspose.Cells, loop through the Workbook.Worksheets collection, and print each Worksheet.Name to the console. No changes are saved, making it ideal for read‑only scenarios.
+// Keywords: Aspose.Cells list worksheets | C# read Excel sheet names | enumerate workbook worksheets .NET | display worksheet names console | Aspose.Cells get sheet titles
+// Common Searches: how to get all sheet names from an Excel file using Aspose.Cells | C# loop through worksheets in a workbook | Aspose.Cells print worksheet names | read Excel worksheet titles without saving
+// Developer Intent: Obtain and show the names of every worksheet contained in a loaded workbook.
+// Use Cases: Verify required worksheets are present before data processing | Create an audit log of all sheet names in a workbook | Dynamically select a worksheet by name after listing available sheets
+// AI Prompts: Generate C# code with Aspose.Cells that lists all worksheet names and includes try‑catch handling for missing or corrupted files. | Provide an example that filters worksheets whose names begin with a given prefix while enumerating the workbook. | Show how to write the list of worksheet names to a text file instead of the console using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// This C# example shows how to open an existing .xlsx workbook with Aspose.Cells, access the Workbook.Worksheets collection, iterate through each Worksheet object, and output its Name property to the console.
+// This example shows how to open an existing Excel file with Aspose.Cells, loop through the Workbook.Worksheets collection, and print each Worksheet.Name to the console. No changes are saved, making it ideal for read‑only scenarios.
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Path to the existing workbook file
-        string workbookPath = "input.xlsx";
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Load the workbook from the specified file
-        Workbook workbook = new Workbook(workbookPath);
-
-        // Get the collection of worksheets
-        WorksheetCollection worksheets = workbook.Worksheets;
-
-        // Enumerate each worksheet and output its name
-        for (int i = 0; i < worksheets.Count; i++)
+        // Enumerate all worksheets and output their names
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            Worksheet sheet = worksheets[i];
             Console.WriteLine(sheet.Name);
         }
+
+        // No need to save if only reading; uncomment if you modify and want to save
+        // workbook.Save("output.xlsx");
     }
 }

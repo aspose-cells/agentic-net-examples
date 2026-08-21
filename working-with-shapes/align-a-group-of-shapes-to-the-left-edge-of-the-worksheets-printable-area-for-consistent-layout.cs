@@ -1,63 +1,64 @@
+// Title: Align worksheet shapes to the printable area's left margin with Aspose.Cells for .NET
+// Description: C# example that creates a workbook, adds several shapes, reads the worksheet's left margin (cm), converts it to points, and sets each shape's LeftToCorner so all shapes line up with the printable area's left edge before saving.
+// Keywords: Aspose.Cells shape alignment | C# left margin printable area | LeftToCorner property | convert cm to points Aspose.Cells | position Excel shapes programmatically | page setup margins Aspose.Cells
+// Common Searches: how to align all shapes to left printable area Aspose.Cells | set shape left position based on page margin .NET | convert worksheet margin centimeters to points for shape placement | Aspose.Cells align multiple shapes left edge | C# code to position Excel shapes using printable area
+// Developer Intent: Position every shape on a worksheet so its left edge matches the left margin of the printable area.
+// Use Cases: Design a report template where logos and graphics start at the printable area's left edge for consistent printing. | Standardize watermarks or header images across many sheets after adjusting page margins. | Automate bulk updates of shape positions when the left margin changes, eliminating manual repositioning.
+// AI Prompts: Generate C# code using Aspose.Cells to align all shapes to the right margin of the printable area. | Show how to read and modify the top margin to vertically align shapes in an Excel worksheet with Aspose.Cells. | Provide an example that aligns shapes to the printable area while preserving their original size and aspect ratio.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AlignShapesToPrintableArea
 {
-    class Program
+    // C# example that creates a workbook, adds several shapes, reads the worksheet's left margin (cm), converts it to points, and sets each shape's LeftToCorner so all shapes line up with the printable area's left edge before saving.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Sample data to make the sheet printable
-            sheet.Cells["A1"].PutValue("Header");
-            sheet.Cells["A2"].PutValue("Data 1");
-            sheet.Cells["A3"].PutValue("Data 2");
-
-            // Set a left margin (in centimeters) for the printable area
-            // This margin defines where the printable area starts on the sheet
-            sheet.PageSetup.LeftMargin = 2.0; // 2 cm left margin
-
-            // Add a few shapes that we want to align to the printable area
-            Shape shape1 = sheet.Shapes.AddRectangle(2, 2, 100, 50, 0, 0);
-            shape1.Name = "Rect1";
-            shape1.Text = "First";
-
-            Shape shape2 = sheet.Shapes.AddOval(4, 4, 120, 60, 0, 0);
-            shape2.Name = "Oval1";
-            shape2.Text = "Second";
-
-            Shape shape3 = sheet.Shapes.AddTextBox(6, 6, 150, 70, 0, 0);
-            shape3.Name = "TextBox1";
-            shape3.Text = "Third";
-
-            // ------------------------------------------------------------
-            // Align all shapes to the left edge of the printable area.
-            // The printable area's left edge is defined by the left margin.
-            // LeftToCorner property sets the horizontal offset of a shape
-            // from the worksheet's left border (in pixels).
-            // ------------------------------------------------------------
-
-            // Convert left margin (cm) to pixels.
-            // 1 cm = 28.3465 points, 1 point = 1/72 inch, 1 inch = 96 pixels.
-            double cmToPixels = 28.3465 * 96.0 / 72.0; // ≈ 37.7953
-            int leftMarginPixels = (int)Math.Round(sheet.PageSetup.LeftMargin * cmToPixels);
-
-            // Apply the calculated offset to each shape.
-            foreach (Shape shp in sheet.Shapes)
+            try
             {
-                // Only adjust regular shapes (skip group shapes if any)
-                if (!shp.IsGroup)
-                {
-                    shp.LeftToCorner = leftMarginPixels;
-                }
-            }
+                // Create a new workbook (lifecycle: create)
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Save the workbook (lifecycle: save)
-            workbook.Save("AlignedShapes.xlsx");
+                // Add a few sample shapes to demonstrate the alignment
+                // Parameters: upper left row, upper left column, top, left, width, height
+                Shape shape1 = sheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 50);
+                Shape shape2 = sheet.Shapes.AddOval(5, 3, 0, 0, 120, 60);
+                Shape shape3 = sheet.Shapes.AddTextBox(8, 1, 0, 0, 150, 70);
+
+                // Optional: give shapes some visual distinction (commented out due to API differences)
+                // shape1.Fill.ForeColor = System.Drawing.Color.LightBlue;
+                // shape2.Fill.ForeColor = System.Drawing.Color.LightGreen;
+                // shape3.Fill.ForeColor = System.Drawing.Color.LightCoral;
+
+                // Align all shapes to the left edge of the printable area.
+                // The printable area starts after the left margin defined in PageSetup.
+                // Convert the left margin (centimeters) to points (1 cm = 28.3464567 points)
+                // Shape.LeftToCorner expects an integer offset (in points).
+                double leftMarginCm = sheet.PageSetup.LeftMargin; // default is 2.54 cm (1 inch)
+                int leftMarginPoints = (int)Math.Round(leftMarginCm * 28.3464567);
+
+                // Iterate through all shapes on the worksheet and set their LeftToCorner
+                foreach (Shape shp in sheet.Shapes)
+                {
+                    shp.LeftToCorner = leftMarginPoints;
+                }
+
+                // Define output file path
+                string outputPath = "AlignedShapes.xlsx";
+
+                // Save the workbook (lifecycle: save)
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

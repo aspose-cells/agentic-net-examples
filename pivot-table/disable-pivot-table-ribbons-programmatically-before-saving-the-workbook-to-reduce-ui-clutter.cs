@@ -1,10 +1,10 @@
-// Title: Hide PivotTable UI (field list ribbon, wizard) in Aspose.Cells for .NET
-// Description: Demonstrates how to programmatically suppress the PivotTable field‑list ribbon, wizard, and field list in a workbook created with Aspose.Cells for .NET before saving it as an Excel file.
-// Keywords: Aspose.Cells hide pivot field list | disable pivot ribbon .NET | turn off pivot wizard Aspose.Cells | remove pivot UI Excel | HidePivotFieldList | PivotTable.EnableWizard | PivotTable.EnableFieldList | C# Aspose.Cells pivot table
-// Common Searches: how to hide pivot field list ribbon using Aspose.Cells C# | disable pivot table wizard in generated Excel with Aspose.Cells | remove pivot UI elements before saving workbook | Aspose.Cells hide pivot UI Excel output | C# programmatically turn off pivot table ribbons
-// Developer Intent: Programmatically hide the PivotTable field‑list ribbon, wizard, and field list in an Aspose.Cells workbook to deliver a clean Excel UI.
-// Use Cases: Create a reporting workbook where the PivotTable opens without the field‑list ribbon, preventing accidental layout changes. | Distribute Excel templates that show data only, with the PivotTable wizard and field list disabled for end users. | Automate Excel exports containing PivotTables while ensuring a minimal UI for non‑technical recipients.
-// AI Prompts: Show C# code that disables the PivotTable field‑list ribbon, wizard, and field list using Aspose.Cells before saving the workbook. | Provide an Aspose.Cells example to turn off PivotTable UI elements for a specific pivot table in .NET. | Explain how to suppress all PivotTable UI components in an Aspose.Cells workbook to reduce clutter.
+// Title: Disable Pivot Table Ribbons in Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds a simple pivot table, and programmatically hides the PivotTable wizard, field‑list pane, and ribbon field‑list button using EnableWizard, EnableFieldList, and HidePivotFieldList before saving the file.
+// Keywords: Aspose.Cells hide pivot ribbon | disable pivot wizard C# | remove pivot field list programmatically | Aspose.Cells pivot UI off | C# hide Excel ribbon elements | Aspose.Cells pivot table settings | Excel UI cleanup Aspose
+// Common Searches: how to hide pivot table wizard in Aspose.Cells .NET | disable pivot field list ribbon button C# | programmatically turn off pivot UI Aspose.Cells | Aspose.Cells hide pivot ribbons before saving workbook | C# Aspose.Cells remove pivot table UI elements
+// Developer Intent: Hide all pivot‑table related ribbon UI elements before saving the workbook.
+// Use Cases: Generate a clean report for end users where pivot editing tools are unnecessary. | Create a template that prevents users from altering the pivot layout via the ribbon. | Distribute an Excel file with a locked pivot UI to avoid accidental changes.
+// AI Prompts: Show C# code to hide the PivotTable wizard and field list in Aspose.Cells. | How can I disable the pivot field‑list button on the Excel ribbon using Aspose.Cells? | Provide an example that turns off all pivot UI elements before saving a workbook with Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
@@ -12,43 +12,38 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotRibbonDisable
 {
-    // Demonstrates how to programmatically suppress the PivotTable field‑list ribbon, wizard, and field list in a workbook created with Aspose.Cells for .NET before saving it as an Excel file.
-    public class Program
+    // Creates a workbook, adds a simple pivot table, and programmatically hides the PivotTable wizard, field‑list pane, and ribbon field‑list button using EnableWizard, EnableFieldList, and HidePivotFieldList before saving the file.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Amount");
-            sheet.Cells["A2"].PutValue("Food");
-            sheet.Cells["B2"].PutValue(1200);
-            sheet.Cells["A3"].PutValue("Drink");
-            sheet.Cells["B3"].PutValue(800);
-            sheet.Cells["A4"].PutValue("Food");
-            sheet.Cells["B4"].PutValue(1500);
-            sheet.Cells["A5"].PutValue("Drink");
-            sheet.Cells["B5"].PutValue(900);
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(1000);
+            sheet.Cells["A3"].PutValue("Orange");
+            sheet.Cells["B3"].PutValue(1500);
+            sheet.Cells["A4"].PutValue("Banana");
+            sheet.Cells["B4"].PutValue(2000);
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
+            // Add a pivot table based on the sample data
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "SalesPivot");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Amount as data field
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product column
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales column
 
-            // Disable pivot table UI ribbons/field list to reduce UI clutter
-            // This hides the PivotTable field list ribbon when the workbook is opened in Excel
-            workbook.Settings.HidePivotFieldList = true;
-
-            // Optionally also disable the PivotTable wizard and field list for the specific pivot table
-            pivotTable.EnableWizard = false;
-            pivotTable.EnableFieldList = false;
+            // Disable UI elements (ribbons) related to the pivot table
+            pivotTable.EnableWizard = false;        // Hide the PivotTable Wizard
+            pivotTable.EnableFieldList = false;     // Hide the field list pane
+            workbook.Settings.HidePivotFieldList = true; // Hide the field list button on the ribbon
 
             // Save the workbook
-            workbook.Save("PivotTable_RibbonDisabled.xlsx");
+            workbook.Save("PivotTable_Ribbons_Disabled.xlsx");
         }
     }
 }

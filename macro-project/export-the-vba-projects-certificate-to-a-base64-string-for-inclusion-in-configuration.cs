@@ -1,94 +1,83 @@
-// Title: Export a Signed VBA Project Certificate to Base64 Using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, accesses its VBA project, checks the IsSigned flag, extracts the raw certificate bytes (CertRawData), converts them to a Base64 string, prints the result, and writes it to a UTF‑8 text file for configuration or audit purposes.
-// Keywords: Aspose.Cells VBA certificate export | C# extract VBA project certificate | Convert VBA certificate to Base64 | CertRawData Aspose.Cells | Save VBA certificate to config file | Signed macro certificate extraction | Excel VBA project signing
-// Common Searches: how to get VBA project certificate with Aspose.Cells | export signed VBA macro certificate as Base64 C# | Aspose.Cells check if VBA project is signed | retrieve CertRawData from Excel workbook | save VBA certificate to text file .NET
-// Developer Intent: Extract the certificate from a signed VBA project and encode it as a Base64 string for storage or further processing.
-// Use Cases: Persist the Base64 certificate in application settings to verify macro signatures at runtime. | Include the certificate string in deployment scripts that re‑sign workbooks on different machines. | Log the exported certificate for compliance and audit trails before distributing the workbook.
-// AI Prompts: Generate a C# method that loads an .xlsm file with Aspose.Cells, verifies the VBA project is signed, and returns the certificate as a Base64 string. | Create error‑handling code for exporting a VBA project's certificate to a text file, covering missing workbook, unsigned project, and empty certificate scenarios. | Write a snippet that saves the Base64‑encoded VBA certificate into an appsettings.json entry using Aspose.Cells.
+// Title: Export VBA Project Certificate to Base64 with Aspose.Cells for .NET (C#)
+// Description: Loads a workbook that contains a signed VBA project, extracts the certificate's raw bytes via Aspose.Cells VbaProject.CertRawData, converts them to a Base64 string, outputs the result, and saves the workbook unchanged.
+// Keywords: Aspose.Cells VBA certificate export | C# convert VBA cert to Base64 | retrieve CertRawData Aspose.Cells | signed VBA project certificate .NET | export VBA project certificate
+// Common Searches: how to get VBA project certificate with Aspose.Cells | convert VBA certificate to Base64 in C# | Aspose.Cells read signed VBA project certificate | export VBA cert raw data .NET | Base64 string from VBA project certificate
+// Developer Intent: Extract the signed VBA project's certificate from a workbook and represent it as a Base64 string.
+// Use Cases: Store the Base64 certificate in configuration files for macro integrity checks. | Log the certificate value for compliance auditing of signed workbooks. | Pass the certificate to deployment scripts that need to re‑sign macros on other machines.
+// AI Prompts: Generate C# code using Aspose.Cells that reads a signed VBA project's CertRawData, converts it to Base64, and handles missing or unsigned projects gracefully. | Create a reusable method that returns the Base64 representation of a workbook's VBA certificate and logs appropriate messages for error conditions. | Write error‑handling logic for exporting a VBA certificate to Base64 while ensuring the workbook is saved without modifications.
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsVbaCertificateExport
+// Loads a workbook that contains a signed VBA project, extracts the certificate's raw bytes via Aspose.Cells VbaProject.CertRawData, converts them to a Base64 string, outputs the result, and saves the workbook unchanged.
+public class ExportVbaCertificate
 {
-    // Loads an Excel workbook, accesses its VBA project, checks the IsSigned flag, extracts the raw certificate bytes (CertRawData), converts them to a Base64 string, prints the result, and writes it to a UTF‑8 text file for configuration or audit purposes.
-    public class CertificateExporter
+    public static void Main()
     {
-        // Entry point for the application.
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+
+    public static void Run()
+    {
+        // Path to the workbook that contains a signed VBA project
+        string inputPath = "SignedWorkbook.xlsm";
+
+        // Verify the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        // Exports the VBA project's certificate (if signed) to a Base64 string.
-        public static void Run()
+        try
         {
-            // Path to the workbook that contains a signed VBA project.
-            string workbookPath = "SignedWorkbook.xlsm";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Verify that the workbook file exists to avoid FileNotFoundException.
-            if (!File.Exists(workbookPath))
+            // Access the VBA project
+            VbaProject vbaProject = workbook.VbaProject;
+
+            // Verify that the VBA project is signed and certificate data exists
+            if (vbaProject != null && vbaProject.IsSigned)
             {
-                Console.WriteLine($"Workbook file not found: {workbookPath}");
-                return;
-            }
+                byte[] certData = vbaProject.CertRawData;
 
-            try
-            {
-                // Load the workbook.
-                Workbook workbook = new Workbook(workbookPath);
-
-                // Access the VBA project.
-                VbaProject vbaProject = workbook.VbaProject;
-
-                // Check if the VBA project is signed.
-                if (vbaProject.IsSigned)
+                if (certData != null && certData.Length > 0)
                 {
-                    // Retrieve the raw certificate data.
-                    byte[] certData = vbaProject.CertRawData;
+                    // Convert the raw certificate bytes to a Base64 string
+                    string base64Cert = Convert.ToBase64String(certData);
 
-                    // Ensure certificate data exists.
-                    if (certData != null && certData.Length > 0)
-                    {
-                        // Convert the raw bytes to a Base64 string.
-                        string base64Cert = Convert.ToBase64String(certData);
-
-                        // Output the Base64 string.
-                        Console.WriteLine("VBA Project Certificate (Base64):");
-                        Console.WriteLine(base64Cert);
-
-                        // Save the Base64 string to a configuration file.
-                        string configPath = "VbaCertificateConfig.txt";
-                        File.WriteAllText(configPath, base64Cert, Encoding.UTF8);
-                        Console.WriteLine($"Base64 certificate saved to: {configPath}");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Certificate raw data is empty.");
-                    }
+                    // Output the Base64 string (can be stored in configuration)
+                    Console.WriteLine("VBA Project Certificate (Base64):");
+                    Console.WriteLine(base64Cert);
                 }
                 else
                 {
-                    Console.WriteLine("The VBA project is not signed; no certificate to export.");
+                    Console.WriteLine("Certificate raw data is empty.");
                 }
-
-                // Optionally, save the workbook if any modifications were made.
-                // workbook.Save("ModifiedWorkbook.xlsm", SaveFormat.Xlsm);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
+                Console.WriteLine("VBA project is not signed or not present.");
             }
+
+            // Save the workbook (no modifications made, just demonstrating save lifecycle)
+            string outputPath = "ExportVbaCertificate_Output.xlsm";
+            workbook.Save(outputPath, SaveFormat.Xlsm);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing workbook: {ex.Message}");
         }
     }
 }

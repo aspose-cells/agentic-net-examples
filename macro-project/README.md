@@ -4,7 +4,7 @@ description: C# examples for reading, creating, modifying, copying, protecting, 
 product: Aspose.Cells for .NET
 category: macro-project
 language: C#
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-14
 ---
 
 # Manage Excel VBA Macros in C# with Aspose.Cells for .NET

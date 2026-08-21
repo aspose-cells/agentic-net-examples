@@ -1,96 +1,106 @@
-// Title: Aspose.Cells C# Example: VLOOKUP‑Driven Column Chart for Quarterly Targets
-// Description: Demonstrates how to build a product lookup table, apply VLOOKUP formulas to fetch quarterly target values, create a column chart that reads those formula results, recalculate all formulas, and save the workbook as VLookupChartDemo.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells VLOOKUP chart | C# Excel column chart from formula | dynamic chart data Aspose.Cells | calculate formulas Aspose.Cells | Excel VLOOKUP example C# | populate chart with lookup values
-// Common Searches: how to use VLOOKUP with Aspose.Cells chart | C# create column chart from formula results | Aspose.Cells example VLOOKUP for chart data | generate Excel chart using lookup table in C# | Aspose.Cells calculate formulas before saving
-// Developer Intent: Create an Excel workbook where a column chart displays quarterly targets retrieved through VLOOKUP formulas.
-// Use Cases: Build a product‑wise quarterly target table and pull Q1 values into a chart via VLOOKUP. | Generate a chart that automatically updates when the source lookup table changes. | Ensure the chart shows numeric values by recalculating all formulas before saving.
-// AI Prompts: Show how to modify the VLOOKUP formula to return Q2 or Q3 targets. | Add multiple series to the chart for Q1‑Q4 using VLOOKUP in Aspose.Cells. | Explain how to set chart title, axis labels, and legend programmatically after formula calculation.
+// Title: Aspose.Cells .NET Example: Build a VLOOKUP‑Driven Column Chart
+// Description: Demonstrates how to create a workbook, set up a Quarter‑Target lookup table, apply VLOOKUP formulas, force calculation, and generate a column chart that visualizes the retrieved values using Aspose.Cells for C#.
+// Keywords: Aspose.Cells | C# VLOOKUP | Excel VLOOKUP chart | Aspose.Cells column chart | formula calculation Aspose.Cells | dynamic chart data | Excel automation .NET | chart series from formulas | VLOOKUP example | Aspose.Cells workbook
+// Common Searches: VLOOKUP formula in Aspose.Cells .NET | Create column chart from formula results Aspose.Cells | Calculate formulas before adding chart Aspose.Cells | Bind chart series to VLOOKUP cells Aspose.Cells | Aspose.Cells example for dynamic chart data
+// Developer Intent: Generate an Excel file where a column chart shows quarterly targets fetched with VLOOKUP formulas via Aspose.Cells for .NET.
+// Use Cases: Produce a quarterly target report that updates automatically when the lookup table changes. | Create a reusable Excel template that calculates values with VLOOKUP and visualizes them in a chart for financial presentations. | Automate batch generation of workbooks with different lookup ranges while ensuring formulas are evaluated before chart rendering.
+// AI Prompts: Write C# code using Aspose.Cells to add a VLOOKUP formula range and bind the results to a column chart, then save the workbook. | Explain how to force formula calculation in Aspose.Cells before creating a chart so VLOOKUP results appear in the series. | Provide step‑by‑step instructions to set chart series and category data from cells containing VLOOKUP formulas in Aspose.Cells for .NET.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates how to build a product lookup table, apply VLOOKUP formulas to fetch quarterly target values, create a column chart that reads those formula results, recalculate all formulas, and save the workbook as VLookupChartDemo.xlsx using Aspose.Cells for .NET.
-class VLookupChartDemo
+namespace VLookupChartDemo
 {
-    static void Main()
+    // Demonstrates how to create a workbook, set up a Quarter‑Target lookup table, apply VLOOKUP formulas, force calculation, and generate a column chart that visualizes the retrieved values using Aspose.Cells for C#.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // ------------------------------------------------------------
-            // 1. Build a lookup table with quarterly targets
-            // ------------------------------------------------------------
-            // Header row
-            cells["A1"].PutValue("Product");
-            cells["B1"].PutValue("Q1");
-            cells["C1"].PutValue("Q2");
-            cells["D1"].PutValue("Q3");
-            cells["E1"].PutValue("Q4");
-
-            // Sample data
-            string[] products = { "ProdA", "ProdB", "ProdC" };
-            int[,] targets = {
-                { 100, 120, 130, 140 },
-                { 200, 210, 220, 230 },
-                { 300, 310, 320, 330 }
-            };
-
-            // Populate the lookup table (A2:E4)
-            for (int i = 0; i < products.Length; i++)
+            try
             {
-                cells[i + 1, 0].PutValue(products[i]);               // Column A: Product name
-                for (int q = 0; q < 4; q++)
-                    cells[i + 1, q + 1].PutValue(targets[i, q]);    // Columns B‑E: Quarterly targets
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // ------------------------------------------------------------
+                // 1. Prepare the lookup table (Quarter -> Target)
+                // ------------------------------------------------------------
+                // Header
+                cells["A1"].PutValue("Quarter");
+                cells["B1"].PutValue("Target");
+
+                // Data rows
+                cells["A2"].PutValue("Q1");
+                cells["B2"].PutValue(120000);
+                cells["A3"].PutValue("Q2");
+                cells["B3"].PutValue(150000);
+                cells["A4"].PutValue("Q3");
+                cells["B4"].PutValue(130000);
+                cells["A5"].PutValue("Q4");
+                cells["B5"].PutValue(170000);
+
+                // ------------------------------------------------------------
+                // 2. List of quarters for the chart (could be same as lookup keys)
+                // ------------------------------------------------------------
+                cells["D1"].PutValue("Quarter");
+                cells["E1"].PutValue("Target (VLOOKUP)");
+
+                cells["D2"].PutValue("Q1");
+                cells["D3"].PutValue("Q2");
+                cells["D4"].PutValue("Q3");
+                cells["D5"].PutValue("Q4");
+
+                // ------------------------------------------------------------
+                // 3. Apply VLOOKUP formula to retrieve targets dynamically
+                // ------------------------------------------------------------
+                // Formula: =VLOOKUP(D2,$A$2:$B$5,2,FALSE)
+                for (int row = 2; row <= 5; row++)
+                {
+                    string formula = $"=VLOOKUP(D{row},$A$2:$B$5,2,FALSE)";
+                    cells[$"E{row}"].Formula = formula;
+                }
+
+                // ------------------------------------------------------------
+                // 4. Calculate all formulas so that the VLOOKUP results are materialized
+                // ------------------------------------------------------------
+                workbook.CalculateFormula();
+
+                // ------------------------------------------------------------
+                // 5. Create a column chart that uses the quarters as categories
+                //    and the VLOOKUP results as values
+                // ------------------------------------------------------------
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 20, 10);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Set the data source for the series: values (E2:E5) and categories (D2:D5)
+                chart.NSeries.Add("E2:E5", true);
+                chart.NSeries.CategoryData = "D2:D5";
+
+                // Optional: give the chart a title
+                chart.Title.Text = "Quarterly Targets (VLOOKUP)";
+
+                // ------------------------------------------------------------
+                // 6. Save the workbook
+                // ------------------------------------------------------------
+                string outputPath = "VLookupChart.xlsx";
+
+                // Ensure the directory exists (in case a path is provided)
+                string directory = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                workbook.Save(outputPath);
+                Console.WriteLine("Workbook with VLOOKUP-driven chart created successfully.");
             }
-
-            // ------------------------------------------------------------
-            // 2. List of products to be displayed in the chart
-            // ------------------------------------------------------------
-            cells["G1"].PutValue("SelectedProduct");
-            cells["G2"].PutValue("ProdA");
-            cells["G3"].PutValue("ProdB");
-            cells["G4"].PutValue("ProdC");
-
-            // ------------------------------------------------------------
-            // 3. Apply VLOOKUP formulas to fetch Q1 targets for each selected product
-            //    Formula: =VLOOKUP(Gx,$A$2:$E$4,2,FALSE)
-            // ------------------------------------------------------------
-            for (int row = 2; row <= 4; row++)
+            catch (Exception ex)
             {
-                string formula = $"=VLOOKUP(G{row},$A$2:$E$4,2,FALSE)";
-                cells[$"H{row}"].SetFormula(formula, new FormulaParseOptions());
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // ------------------------------------------------------------
-            // 4. Create a column chart that uses the VLOOKUP results
-            // ------------------------------------------------------------
-            // Add a column chart positioned at rows 6‑20 and columns 0‑10
-            int chartIdx = worksheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
-            Chart chart = worksheet.Charts[chartIdx];
-
-            // Series values come from H2:H4 (the VLOOKUP results)
-            chart.NSeries.Add("H2:H4", true);
-            // Category (X‑axis) labels come from G2:G4 (selected product names)
-            chart.NSeries.CategoryData = "G2:G4";
-
-            // ------------------------------------------------------------
-            // 5. Calculate all formulas so that the chart reflects actual values
-            // ------------------------------------------------------------
-            workbook.CalculateFormula();
-
-            // ------------------------------------------------------------
-            // 6. Save the workbook
-            // ------------------------------------------------------------
-            workbook.Save("VLookupChartDemo.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,86 +1,103 @@
-// Title: Create a macro‑free Excel report of cells using the Hyperlink theme color with Aspose.Cells for .NET (C#)
-// Description: C# example that builds a new workbook, applies the Hyperlink theme color to sample cells, scans the used range, detects Font.ThemeColor = Hyperlink, and writes each cell's address and value to a separate report sheet. The workbook is saved macro‑free with auto‑fitted columns.
-// Keywords: Aspose.Cells | C# | .NET | Hyperlink theme color | list cells by theme color | macro‑free Excel report | Font.ThemeColor filter | Excel cell audit | theme color detection | Aspose.Cells example
-// Common Searches: Aspose.Cells list cells with Hyperlink theme color | C# generate report of hyperlink‑styled cells | How to find cells using Font.ThemeColor in Aspose.Cells | Macro‑free Excel file that lists theme colored cells | Aspose.Cells iterate cells and check ThemeColor
-// Developer Intent: Generate a macro‑free Excel workbook that enumerates every cell whose font uses the Hyperlink theme color and records its address and value on a summary worksheet.
-// Use Cases: Audit a worksheet to locate all hyperlink‑styled cells for compliance checks. | Create a concise summary sheet for reviewers who need to see only hyperlink‑colored data. | Export a clean, macro‑free Excel file for downstream processing or sharing. | Validate that theme‑based formatting has been applied consistently across a workbook. | Document cell addresses and contents for reporting or documentation purposes.
-// AI Prompts: Write C# code using Aspose.Cells to scan a worksheet and list cells where Font.ThemeColor equals Hyperlink, outputting address and value to a new sheet. | Show how to modify the example to include separate columns for row index and column letter instead of the full cell address. | Explain how to generalize the solution to filter cells by any ThemeColorType (e.g., Accent1, Accent2) with a single parameter. | Provide steps to convert the macro‑free report into a CSV file using Aspose.Cells. | Describe how to add conditional formatting to the report sheet that highlights cells with empty values.
+// Title: Aspose.Cells C# – Macro‑Free Report of Cells Using the Hyperlink Theme Color
+// Description: Creates a workbook, applies the Hyperlink theme color to selected cells, scans the used range, records each cell address and its hyperlink URL (if any) on a separate report sheet, auto‑fits columns, and saves a macro‑free XLSX file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | Excel | hyperlink theme color | list themed cells | macro‑free report | detect hyperlink style | theme color detection | Excel automation | cell style scanning
+// Common Searches: list cells with hyperlink theme color Aspose.Cells .NET | generate Excel report of themed hyperlink cells without macros | find cells styled with Hyperlink theme color using C# | Aspose.Cells detect font ThemeColor Hyperlink | create summary of hyperlink‑styled cells in Excel
+// Developer Intent: Produce a macro‑free Excel file that enumerates every cell whose font uses the Hyperlink theme color and includes any associated hyperlink address.
+// Use Cases: Audit spreadsheets to verify that only intended cells use the Hyperlink theme color. | Export a concise index of themed hyperlink cells for documentation or UI generation. | Validate workbook styling before publishing to ensure compliance with branding guidelines.
+// AI Prompts: Write C# code with Aspose.Cells that scans a worksheet and outputs a report of cells using the Hyperlink theme color together with their hyperlink URLs. | Provide a method that returns a DataTable of cell addresses and hyperlink addresses where the font ThemeColor equals Hyperlink. | Explain how to extend the example to also capture cells colored with a custom RGB value that matches the default hyperlink color.
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using System.Drawing;
 
 namespace HyperlinkThemeColorReport
 {
-    // C# example that builds a new workbook, applies the Hyperlink theme color to sample cells, scans the used range, detects Font.ThemeColor = Hyperlink, and writes each cell's address and value to a separate report sheet. The workbook is saved macro‑free with auto‑fitted columns.
+    // Creates a workbook, applies the Hyperlink theme color to selected cells, scans the used range, records each cell address and its hyperlink URL (if any) on a separate report sheet, auto‑fits columns, and saves a macro‑free XLSX file using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-            // Get the first worksheet (source data)
-            Worksheet sourceSheet = workbook.Worksheets[0];
-            sourceSheet.Name = "Data";
-
-            // Add sample data and apply the Hyperlink theme color to some cells
-            // Cell A1 - Hyperlink theme color
-            Cell cellA1 = sourceSheet.Cells["A1"];
-            cellA1.PutValue("Link 1");
-            Style styleA1 = cellA1.GetStyle();
+            // Add sample cells with hyperlinks and apply the Hyperlink theme color to the font
+            // Cell A1 - hyperlink with Hyperlink theme color
+            sheet.Hyperlinks.Add("A1", 1, 1, "https://www.example.com");
+            Cell a1 = sheet.Cells["A1"];
+            a1.PutValue("Example Link");
+            Style styleA1 = a1.GetStyle();
+            // Set font to use the Hyperlink theme color
             styleA1.Font.ThemeColor = new ThemeColor(ThemeColorType.Hyperlink, 0.0);
-            cellA1.SetStyle(styleA1);
+            a1.SetStyle(styleA1);
 
-            // Cell B2 - Normal color
-            Cell cellB2 = sourceSheet.Cells["B2"];
-            cellB2.PutValue("Normal");
+            // Cell B2 - regular text (no theme color)
+            Cell b2 = sheet.Cells["B2"];
+            b2.PutValue("Regular Text");
             // No special theme color applied
 
-            // Cell C3 - Hyperlink theme color
-            Cell cellC3 = sourceSheet.Cells["C3"];
-            cellC3.PutValue("Link 2");
-            Style styleC3 = cellC3.GetStyle();
-            styleC3.Font.ThemeColor = new ThemeColor(ThemeColorType.Hyperlink, 0.0);
-            cellC3.SetStyle(styleC3);
+            // Cell C3 - hyperlink but default style (not theme color)
+            sheet.Hyperlinks.Add("C3", 1, 1, "https://www.aspose.com");
+            Cell c3 = sheet.Cells["C3"];
+            c3.PutValue("Aspose Link");
+            // Keep default style
 
-            // Create a new worksheet for the report
-            Worksheet reportSheet = workbook.Worksheets.Add("HyperlinkThemeReport");
+            // Cell D4 - apply Hyperlink theme color without a hyperlink
+            Cell d4 = sheet.Cells["D4"];
+            d4.PutValue("Styled Text");
+            Style styleD4 = d4.GetStyle();
+            styleD4.Font.ThemeColor = new ThemeColor(ThemeColorType.Hyperlink, 0.0);
+            d4.SetStyle(styleD4);
+
+            // Create a report worksheet
+            Worksheet report = workbook.Worksheets.Add("Report");
             // Header
-            reportSheet.Cells["A1"].PutValue("Cell Address");
-            reportSheet.Cells["B1"].PutValue("Cell Value");
+            report.Cells[0, 0].PutValue("Cell Address");
+            report.Cells[0, 1].PutValue("Hyperlink Address (if any)");
 
-            int reportRow = 1; // zero‑based index; start after header
+            int reportRow = 1;
 
-            // Iterate through all used cells in the source sheet
-            int maxRow = sourceSheet.Cells.MaxDataRow;
-            int maxCol = sourceSheet.Cells.MaxDataColumn;
+            // Iterate through all used cells in the data worksheet
+            int maxRow = sheet.Cells.MaxDisplayRange.RowCount;
+            int maxCol = sheet.Cells.MaxDisplayRange.ColumnCount;
 
-            for (int row = 0; row <= maxRow; row++)
+            for (int row = 0; row < maxRow; row++)
             {
-                for (int col = 0; col <= maxCol; col++)
+                for (int col = 0; col < maxCol; col++)
                 {
-                    Cell curCell = sourceSheet.Cells[row, col];
+                    Cell cell = sheet.Cells[row, col];
                     // Skip empty cells
-                    if (curCell.Type == CellValueType.IsNull) continue;
+                    if (cell.Type == CellValueType.IsNull) continue;
 
-                    Style curStyle = curCell.GetStyle();
-
+                    Style cellStyle = cell.GetStyle();
                     // Check if the font uses the Hyperlink theme color
-                    if (curStyle.Font.ThemeColor != null &&
-                        curStyle.Font.ThemeColor.ColorType == ThemeColorType.Hyperlink)
+                    if (cellStyle.Font.ThemeColor != null &&
+                        cellStyle.Font.ThemeColor.ColorType == ThemeColorType.Hyperlink)
                     {
-                        // Write the address and value to the report sheet
-                        reportSheet.Cells[reportRow, 0].PutValue(curCell.Name);
-                        reportSheet.Cells[reportRow, 1].PutValue(curCell.StringValue);
+                        // Record the cell address
+                        string address = cell.Name; // e.g., "A1"
+                        report.Cells[reportRow, 0].PutValue(address);
+
+                        // If the cell also contains a hyperlink, retrieve its address
+                        string hyperlinkAddress = string.Empty;
+                        foreach (Hyperlink link in sheet.Hyperlinks)
+                        {
+                            if (link.Area.StartRow == row && link.Area.StartColumn == col)
+                            {
+                                hyperlinkAddress = link.Address;
+                                break;
+                            }
+                        }
+                        report.Cells[reportRow, 1].PutValue(hyperlinkAddress);
                         reportRow++;
                     }
                 }
             }
 
-            // Auto‑fit columns for better readability
-            reportSheet.AutoFitColumns();
+            // Auto-fit columns for better readability
+            report.AutoFitColumns();
 
             // Save the workbook (macro‑free)
             workbook.Save("HyperlinkThemeColorReport.xlsx");

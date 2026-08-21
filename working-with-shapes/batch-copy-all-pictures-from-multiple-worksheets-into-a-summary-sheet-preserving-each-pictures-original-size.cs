@@ -1,10 +1,10 @@
-// Title: Copy All Pictures from Multiple Worksheets to a Summary Sheet (Preserve Size) – Aspose.Cells for .NET
-// Description: This Aspose.Cells for .NET example creates a workbook, adds images to several worksheets, then generates a "Summary" sheet. It iterates through every worksheet, extracts each picture's raw data via a memory stream, and inserts the image onto the summary sheet while keeping the original height, width, border color, border weight, and placement. Pictures are spaced by a configurable row offset before the workbook is saved.
-// Keywords: Aspose.Cells copy pictures | C# copy Excel images | preserve picture dimensions | batch copy images Excel | summary worksheet pictures | .NET Excel shape handling | Aspose.Cells picture properties | Excel image aggregation
-// Common Searches: how to copy all images from Excel worksheets using Aspose.Cells | preserve picture size when moving pictures between sheets .NET | batch transfer pictures to a summary sheet Aspose.Cells | C# example copy Excel pictures to another worksheet | Aspose.Cells copy picture properties
-// Developer Intent: Transfer every picture from each worksheet into a single summary sheet while retaining the original size and formatting.
-// Use Cases: Create a catalog sheet that aggregates product photos from department worksheets. | Build a visual dashboard that gathers thumbnails from multiple project sheets for quick review. | Migrate embedded graphics from legacy worksheets into a centralized summary page in a reporting workbook.
-// AI Prompts: Generate C# code with Aspose.Cells that copies all pictures from every worksheet to a new summary sheet, preserving dimensions and borders. | Show how to iterate through worksheets, extract picture data, and add each image to a summary sheet with adjustable row spacing using Aspose.Cells. | Explain safe handling of pictures that may have missing or empty image data when copying between worksheets in Aspose.Cells.
+// Title: Copy All Pictures from Multiple Worksheets to a Summary Sheet (Preserve Size) – Aspose.Cells for .NET C# Example
+// Description: Demonstrates how to create a workbook, add images to several worksheets, iterate through each sheet (excluding the summary), retrieve every picture with GetAllPictures, copy the image data to a new summary sheet using the original anchor coordinates, and preserve the original dimensions and formatting with Picture.Copy and CopyOptions before saving the file.
+// Keywords: Aspose.Cells copy pictures C# | preserve image size Excel | batch copy images Aspose.Cells | GetAllPictures example | summary worksheet picture aggregation | Excel image duplication .NET | copy shapes between sheets
+// Common Searches: copy all images from worksheets to one sheet Aspose.Cells | preserve picture dimensions when moving Excel images | Aspose.Cells C# example to aggregate pictures | how to duplicate pictures across worksheets in .NET | batch copy pictures in Excel using Aspose
+// Developer Intent: Transfer every picture from each worksheet into a single summary sheet while keeping its original size and formatting.
+// Use Cases: Create a catalog sheet that gathers product photos from multiple category tabs. | Compile design mockups from several project worksheets into one overview page. | Migrate embedded images from legacy Excel files into a new template that displays all images together.
+// AI Prompts: Generate C# code with Aspose.Cells that loops through all worksheets, copies each picture to a summary sheet, and retains original size and formatting. | Show how to extract Picture.Data, add the image to another worksheet using the same anchor coordinates, and use CopyOptions to preserve properties. | Explain why Picture.Copy with default CopyOptions is needed to keep image dimensions when duplicating pictures across sheets.
 
 using System;
 using System.IO;
@@ -13,89 +13,97 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExamples
 {
-    // This Aspose.Cells for .NET example creates a workbook, adds images to several worksheets, then generates a "Summary" sheet. It iterates through every worksheet, extracts each picture's raw data via a memory stream, and inserts the image onto the summary sheet while keeping the original height, width, border color, border weight, and placement. Pictures are spaced by a configurable row offset before the workbook is saved.
+    // Demonstrates how to create a workbook, add images to several worksheets, iterate through each sheet (excluding the summary), retrieve every picture with GetAllPictures, copy the image data to a new summary sheet using the original anchor coordinates, and preserve the original dimensions and formatting with Picture.Copy and CopyOptions before saving the file.
     public class BatchCopyPicturesToSummary
     {
-        public static void Main()
+        public static void Run()
         {
             try
             {
-                Run();
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // -------------------------------------------------
+                // Sample data: add two worksheets with pictures
+                // -------------------------------------------------
+                Worksheet sheet1 = workbook.Worksheets[0];
+                sheet1.Name = "Sheet1";
+
+                // Add a picture to Sheet1 if the file exists
+                string imgPath1 = "image1.jpg";
+                if (File.Exists(imgPath1))
+                {
+                    sheet1.Pictures.Add(2, 2, imgPath1);
+                }
+
+                Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+                // Add a picture to Sheet2 if the file exists
+                string imgPath2 = "image2.png";
+                if (File.Exists(imgPath2))
+                {
+                    sheet2.Pictures.Add(5, 3, imgPath2);
+                }
+
+                // -------------------------------------------------
+                // Create (or get) the summary worksheet where all pictures will be copied
+                // -------------------------------------------------
+                Worksheet summarySheet = workbook.Worksheets.Add("Summary");
+
+                // -------------------------------------------------
+                // Iterate through all worksheets except the summary sheet
+                // -------------------------------------------------
+                for (int wsIndex = 0; wsIndex < workbook.Worksheets.Count; wsIndex++)
+                {
+                    Worksheet ws = workbook.Worksheets[wsIndex];
+                    if (ws.Name == summarySheet.Name) continue; // skip summary sheet
+
+                    // Get all pictures from the current worksheet
+                    Picture[] pictures = ws.GetAllPictures(); // includes embedded and floating pictures
+
+                    foreach (Picture srcPic in pictures)
+                    {
+                        // Retrieve picture binary data
+                        byte[] imgData = srcPic.Data;
+                        if (imgData == null || imgData.Length == 0) continue; // safety check
+
+                        // Preserve original position and size using the picture's anchor coordinates
+                        int topRow = srcPic.UpperLeftRow;
+                        int leftColumn = srcPic.UpperLeftColumn;
+                        int bottomRow = srcPic.LowerRightRow;
+                        int rightColumn = srcPic.LowerRightColumn;
+
+                        // Add a placeholder picture to the summary sheet using the same image data
+                        using (MemoryStream ms = new MemoryStream(imgData))
+                        {
+                            int newPicIdx = summarySheet.Pictures.Add(topRow, leftColumn, bottomRow, rightColumn, ms);
+                            Picture destPic = summarySheet.Pictures[newPicIdx];
+
+                            // Copy all properties from source picture to destination picture
+                            CopyOptions copyOptions = new CopyOptions(); // default options
+                            destPic.Copy(srcPic, copyOptions); // preserves original size and formatting
+                        }
+                    }
+                }
+
+                // -------------------------------------------------
+                // Save the workbook (lifecycle: save)
+                // -------------------------------------------------
+                string outPath = "BatchCopyPicturesSummary.xlsx";
+                workbook.Save(outPath);
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outPath)}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
+    }
 
-        public static void Run()
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Add first worksheet and a picture (ensure the image file exists)
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Sheet1";
-            string imgPath1 = "image1.jpg";
-            if (File.Exists(imgPath1))
-                sheet1.Pictures.Add(2, 2, imgPath1);
-            else
-                Console.WriteLine($"Warning: '{imgPath1}' not found. Skipping picture addition.");
-
-            // Add second worksheet and a picture
-            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-            string imgPath2 = "image2.png";
-            if (File.Exists(imgPath2))
-                sheet2.Pictures.Add(4, 4, imgPath2);
-            else
-                Console.WriteLine($"Warning: '{imgPath2}' not found. Skipping picture addition.");
-
-            // Add a summary worksheet where all pictures will be copied
-            Worksheet summarySheet = workbook.Worksheets.Add("Summary");
-
-            // Positioning variables for copied pictures
-            int currentRow = 0;
-            const int rowSpacing = 20; // rows to skip between pictures
-
-            // Iterate through all worksheets except the summary sheet
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                if (ws.Name == summarySheet.Name)
-                    continue;
-
-                // Iterate through each picture in the current worksheet
-                foreach (Picture srcPic in ws.Pictures)
-                {
-                    // Retrieve raw image data
-                    byte[] imgData = srcPic.Data;
-                    if (imgData == null || imgData.Length == 0)
-                        continue; // safety check
-
-                    // Add picture to the summary sheet using a memory stream
-                    using (MemoryStream ms = new MemoryStream(imgData))
-                    {
-                        int picIndex = summarySheet.Pictures.Add(currentRow, 0, ms);
-                        Picture destPic = summarySheet.Pictures[picIndex];
-
-                        // Preserve original size
-                        destPic.Height = srcPic.Height;
-                        destPic.Width = srcPic.Width;
-
-                        // Preserve visual properties
-                        destPic.BorderLineColor = srcPic.BorderLineColor;
-                        destPic.BorderWeight = srcPic.BorderWeight;
-                        destPic.Placement = srcPic.Placement;
-
-                        // Move to next row position for the following picture
-                        currentRow += rowSpacing;
-                    }
-                }
-            }
-
-            // Save the workbook
-            string outputPath = "BatchCopyPicturesSummary.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            BatchCopyPicturesToSummary.Run();
         }
     }
 }

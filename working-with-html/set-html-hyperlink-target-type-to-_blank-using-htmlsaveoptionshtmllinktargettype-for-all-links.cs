@@ -1,35 +1,29 @@
-// Title: Aspose.Cells C# – Set all HTML hyperlink targets to "_blank" using HtmlSaveOptions.LinkTargetType
-// Description: Demonstrates how to create a workbook, add a hyperlink, configure HtmlSaveOptions.LinkTargetType to HtmlLinkTargetType.Blank, and save the file as HTML so every link opens in a new browser tab.
-// Keywords: Aspose.Cells HtmlSaveOptions | HtmlLinkTargetType.Blank | C# export Excel to HTML | hyperlink target _blank | Aspose.Cells hyperlink settings
-// Common Searches: Aspose.Cells set hyperlink target blank | HtmlSaveOptions LinkTargetType example C# | export Excel to HTML with _blank links | make all links open in new tab Aspose.Cells
-// Developer Intent: Configure Aspose.Cells HTML export so that all hyperlinks are rendered with target="_blank".
-// Use Cases: Publish a spreadsheet on a website where external links must not navigate away from the page. | Generate an HTML report for internal users, ensuring links open in separate tabs. | Create an HTML email attachment from a workbook with links that open in new windows.
-// AI Prompts: Show how to set HtmlSaveOptions.LinkTargetType to HtmlLinkTargetType.Blank for every hyperlink when saving a workbook to HTML with Aspose.Cells (C#). | Provide a complete C# sample that adds multiple hyperlinks to a workbook and exports it to HTML with target='_blank' on all links. | Explain the differences between HtmlLinkTargetType.Blank, Self, and Parent in Aspose.Cells and recommend scenarios for each.
+// Title: Set All Hyperlink Targets to _blank in Aspose.Cells HTML Export (C#)
+// Description: Demonstrates how to configure HtmlSaveOptions.LinkTargetType to HtmlLinkTargetType.Blank so that every hyperlink in the generated HTML file opens in a new browser tab.
+// Keywords: Aspose.Cells | HtmlSaveOptions | LinkTargetType | HtmlLinkTargetType.Blank | .NET | C# | export Excel to HTML | hyperlink target blank | open links in new tab
+// Common Searches: Aspose.Cells set hyperlink target blank | HtmlSaveOptions LinkTargetType example | export Excel as HTML with _blank links | C# Aspose.Cells open links in new tab | how to make HTML links open in new window using Aspose
+// Developer Intent: Configure Aspose.Cells to generate HTML where all hyperlinks use target="_blank".
+// Use Cases: Publish a financial dashboard online while keeping external references from navigating away. | Create web‑ready documentation from an Excel template with links that open in separate tabs. | Build an interactive spreadsheet portal where users can follow links without losing the main page.
+// AI Prompts: Show C# code that sets HtmlSaveOptions.LinkTargetType to HtmlLinkTargetType.Blank for an Aspose.Cells workbook. | How can I export an Excel file to HTML with all hyperlinks opening in a new tab using Aspose.Cells? | Explain the effect of HtmlLinkTargetType on generated HTML and how to change it to _blank.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, add a hyperlink, configure HtmlSaveOptions.LinkTargetType to HtmlLinkTargetType.Blank, and save the file as HTML so every link opens in a new browser tab.
-class Program
+// Demonstrates how to configure HtmlSaveOptions.LinkTargetType to HtmlLinkTargetType.Blank so that every hyperlink in the generated HTML file opens in a new browser tab.
+class SetHtmlLinkTargetBlank
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        // Put display text into a cell and add a hyperlink to it
+        worksheet.Cells["A1"].PutValue("Visit Aspose");
+        worksheet.Hyperlinks.Add("A1", 1, 1, "https://www.aspose.com");
 
-        // Put display text into cell A1
-        sheet.Cells["A1"].PutValue("Visit Google");
-
-        // Add a hyperlink to cell A1 (display text -> URL)
-        sheet.Hyperlinks.Add("A1", 1, 1, "https://www.google.com");
-
-        // Create HTML save options
+        // Create HTML save options and set the link target type to "_blank"
         HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-
-        // Set the target type so that all links are rendered with target="_blank"
         saveOptions.LinkTargetType = HtmlLinkTargetType.Blank;
 
         // Save the workbook as an HTML file using the configured options

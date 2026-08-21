@@ -1,20 +1,19 @@
-// Title: Export a Chart to PDF with Transparent Background using Aspose.Cells for .NET (C#)
-// Description: C# example that creates a workbook, adds sample data, builds a column chart, sets the chart area to fully transparent, and exports the chart directly to a PDF file. Ideal for overlaying the chart on other documents or graphics.
-// Keywords: Aspose.Cells | C# | .NET | chart export PDF | transparent chart background | chart area transparency | column chart PDF | Aspose.Cells example | GitHub Aspose.Cells chart | PDF overlay chart
-// Common Searches: How to export an Excel chart as a PDF with a transparent background using Aspose.Cells | Aspose.Cells .NET make chart background transparent before PDF export | Export chart to PDF with full transparency Aspose.Cells C# | Aspose.Cells transparent chart PDF example GitHub | C# code to set chart area transparency in Aspose.Cells
-// Developer Intent: Create a PDF of a chart that has no background color so it can be layered over other images or PDFs.
-// Use Cases: Overlay a chart on a custom slide background for presentations. | Insert a transparent chart into pre‑designed PDF report templates. | Combine charts with web graphics where the chart must blend seamlessly. | Generate reusable chart assets for branding‑consistent marketing materials.
-// AI Prompts: Show C# code to set a chart's background to transparent and export it to PDF with Aspose.Cells. | Provide an Aspose.Cells example that exports multiple charts with different transparency levels to separate PDF files. | Explain how to verify that the exported PDF has a fully transparent background using Aspose.Cells.
+// Title: C# – Export Aspose.Cells Chart to PDF with Transparent Background
+// Description: Demonstrates how to create a workbook, add a column chart, set the chart area to transparent, and save only the chart as a PDF using Aspose.Cells' Chart.ToPdf method. Ideal for generating overlay‑ready graphics.
+// Keywords: Aspose.Cells C# chart PDF export | transparent chart background | Chart.ToPdf transparent | export chart as PDF Aspose | C# Aspose.Cells transparent PDF | overlay chart PDF
+// Common Searches: Aspose.Cells export chart to PDF transparent | C# make chart background transparent Aspose | Chart.ToPdf transparent background example | save Aspose.Cells chart as PDF without background | how to overlay Aspose chart on other PDFs
+// Developer Intent: Generate a PDF file that contains only a chart from an Aspose.Cells workbook, preserving a fully transparent background for compositing.
+// Use Cases: Create overlayable charts for financial reports or dashboards. | Insert clean, background‑free graphics into presentations or PDFs. | Produce watermark‑free visual elements for branding or marketing materials.
+// AI Prompts: Show C# code to export an Aspose.Cells chart to PNG with a transparent background. | Explain how to set a chart's background to transparent and customize the PDF page size in Aspose.Cells. | Guide me on merging multiple transparent‑background chart PDFs into one document using Aspose.Pdf.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
-using System.Drawing;
 
 namespace AsposeCellsChartTransparentPdf
 {
-    // C# example that creates a workbook, adds sample data, builds a column chart, sets the chart area to fully transparent, and exports the chart directly to a PDF file. Ideal for overlaying the chart on other documents or graphics.
+    // Demonstrates how to create a workbook, add a column chart, set the chart area to transparent, and save only the chart as a PDF using Aspose.Cells' Chart.ToPdf method. Ideal for generating overlay‑ready graphics.
     class Program
     {
         static void Main()
@@ -22,7 +21,7 @@ namespace AsposeCellsChartTransparentPdf
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
@@ -46,8 +45,6 @@ namespace AsposeCellsChartTransparentPdf
 
             // Make the chart background transparent
             chart.ChartArea.BackgroundMode = BackgroundMode.Transparent;
-            // Optional: set full transparency (0.0 = opaque, 1.0 = fully transparent)
-            chart.ChartArea.Area.Transparency = 1.0;
 
             // Export the chart to a PDF file with transparent background
             chart.ToPdf("TransparentChart.pdf");

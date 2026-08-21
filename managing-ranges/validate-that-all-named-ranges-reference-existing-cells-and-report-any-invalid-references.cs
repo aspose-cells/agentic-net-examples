@@ -1,134 +1,109 @@
-// Title: C# – Validate and Report Invalid Named Ranges with Aspose.Cells
-// Description: Loads an Excel file, scans every defined name, uses Name.GetRanges(true) to retrieve its cells, checks that each range and its first cell exist, gathers names with broken references, creates a worksheet called InvalidNamesReport listing them, and saves the updated workbook.
-// Keywords: Aspose.Cells named range validation | C# detect broken named ranges | Excel GetRanges invalid reference | .NET named range integrity check | report invalid named ranges Aspose | Excel workbook diagnostics C# | Aspose.Cells GetRanges exception handling
-// Common Searches: how to find invalid named ranges using Aspose.Cells | C# code to list broken named ranges in Excel | Aspose.Cells GetRanges returns empty for missing cells | generate report of undefined named ranges .NET | validate named ranges before saving workbook
-// Developer Intent: Identify every defined name that points to a non‑existent cell or worksheet and produce a clear list for correction.
-// Use Cases: Pre‑publish validation to prevent runtime errors caused by deleted rows or columns. | Automatic creation of a diagnostic sheet that end users can edit to fix broken names. | Integration into CI pipelines that verify Excel data models for reference integrity.
-// AI Prompts: Write a C# function with Aspose.Cells that returns a collection of defined names whose referenced ranges are out of bounds. | Generate code that adds a worksheet named "InvalidNamesReport" and populates it with all invalid named range identifiers. | Create a console application that validates named ranges and logs the results to both the console and a new report sheet.
+// Title: Validate Excel Named Ranges and Detect Invalid References with Aspose.Cells for .NET
+// Description: Loads an Excel file, enumerates all defined names, uses Name.GetRanges(true) to resolve each reference, and verifies that the start/end rows and columns fall within the worksheet's populated area (MaxDataRow/MaxDataColumn). Invalid or out‑of‑bounds ranges are logged, and the workbook is saved unchanged.
+// Keywords: Aspose.Cells named range validation | C# check Excel named ranges | detect broken named ranges | invalid named range detection | Excel range bounds verification | Aspose.Cells GetRanges example | .NET Excel workbook validation
+// Common Searches: how to validate named ranges in Excel using Aspose.Cells | C# code to find invalid named range references | Aspose.Cells check if named range points to existing cells | detect out of bounds named ranges .NET | verify Excel named ranges programmatically
+// Developer Intent: Ensure every named range in a workbook references cells that actually exist and report any that are missing or out of bounds.
+// Use Cases: Audit workbooks before distribution to prevent formula errors caused by broken named ranges. | Automate cleanup of corrupted named ranges during batch processing of multiple Excel files. | Validate named ranges after programmatic modifications such as row/column deletions or sheet restructuring.
+// AI Prompts: Write C# code with Aspose.Cells that iterates all defined names and flags those whose GetRanges returns null or an empty collection. | Create a method that checks each range's FirstRow, FirstColumn, RowCount, and ColumnCount against the worksheet's MaxDataRow and MaxDataColumn, returning a list of invalid named ranges. | Suggest enhancements to automatically remove or correct invalid named ranges after they are detected.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Loads an Excel file, scans every defined name, uses Name.GetRanges(true) to retrieve its cells, checks that each range and its first cell exist, gathers names with broken references, creates a worksheet called InvalidNamesReport listing them, and saves the updated workbook.
-class ValidateNamedRanges
+namespace NamedRangeValidator
 {
-    static void Main(string[] args)
+    // Loads an Excel file, enumerates all defined names, uses Name.GetRanges(true) to resolve each reference, and verifies that the start/end rows and columns fall within the worksheet's populated area (MaxDataRow/MaxDataColumn). Invalid or out‑of‑bounds ranges are logged, and the workbook is saved unchanged.
+    class Program
     {
-        // Determine input and output paths
-        string inputPath = args.Length > 0 ? args[0] : "input.xlsx";
-        string outputPath = args.Length > 1 ? args[1] : "output.xlsx";
-
-        // Verify that the input workbook exists
-        if (!File.Exists(inputPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
+            // Paths for input and output workbooks
+            string inputPath = "input.xlsx";
+            string outputPath = "validated.xlsx";
 
-        Workbook workbook;
-        try
-        {
-            // Load the workbook (lifecycle rule: load)
-            workbook = new Workbook(inputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
-            return;
-        }
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                return;
+            }
 
-        // List to hold names that reference non‑existent cells
-        List<string> invalidNames = new List<string>();
-
-        // Iterate through every defined name in the workbook
-        foreach (Name name in workbook.Worksheets.Names)
-        {
+            Workbook workbook = null;
             try
             {
-                // Retrieve all ranges the name refers to, forcing recalculation
-                AsposeRange[] ranges = name.GetRanges(true);
+                // Load the workbook from the specified file (constructor loads the file)
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
 
-                // If no ranges are returned, the reference is invalid
+            // Collection of all defined names (named ranges) in the workbook
+            NameCollection names = workbook.Worksheets.Names;
+
+            bool anyInvalid = false;
+
+            // Iterate through each defined name
+            foreach (Name name in names)
+            {
+                // Obtain the ranges the name refers to (recalculate to get latest info)
+                Aspose.Cells.Range[] ranges = name.GetRanges(true);
+
+                // If GetRanges returns null or an empty array, the reference is likely invalid
                 if (ranges == null || ranges.Length == 0)
                 {
-                    invalidNames.Add(name.Text);
+                    Console.WriteLine($"Invalid reference detected: Name '{name.Text}' has no resolvable ranges. RefersTo = {name.RefersTo}");
+                    anyInvalid = true;
                     continue;
                 }
 
-                // Validate each returned range
-                foreach (AsposeRange rng in ranges)
+                // Validate each range returned
+                foreach (Aspose.Cells.Range range in ranges)
                 {
-                    // If the range or its worksheet is null, mark as invalid
-                    if (rng == null || rng.Worksheet == null)
-                    {
-                        invalidNames.Add(name.Text);
-                        break;
-                    }
+                    Worksheet ws = range.Worksheet;
 
-                    // Attempt to access the first cell; an exception means the address is out of bounds
-                    try
+                    // Determine the maximum occupied row/column in the worksheet
+                    int maxRow = ws.Cells.MaxDataRow;      // -1 if worksheet is empty
+                    int maxCol = ws.Cells.MaxDataColumn;   // -1 if worksheet is empty
+
+                    // Validate start and end indices against worksheet limits
+                    bool startRowValid = range.FirstRow >= 0 && (maxRow == -1 || range.FirstRow <= maxRow);
+                    bool endRowValid   = range.RowCount > 0 && (maxRow == -1 || (range.FirstRow + range.RowCount - 1) <= maxRow);
+                    bool startColValid = range.FirstColumn >= 0 && (maxCol == -1 || range.FirstColumn <= maxCol);
+                    bool endColValid   = range.ColumnCount > 0 && (maxCol == -1 || (range.FirstColumn + range.ColumnCount - 1) <= maxCol);
+
+                    if (!startRowValid || !endRowValid || !startColValid || !endColValid)
                     {
-                        Cell firstCell = rng[0, 0];
-                    }
-                    catch
-                    {
-                        invalidNames.Add(name.Text);
-                        break;
+                        Console.WriteLine($"Invalid reference detected: Name '{name.Text}' refers to range '{range.RefersTo}' which is out of bounds in worksheet '{ws.Name}'.");
+                        anyInvalid = true;
                     }
                 }
             }
-            catch
+
+            if (!anyInvalid)
             {
-                // Any exception while obtaining ranges indicates a bad reference
-                invalidNames.Add(name.Text);
+                Console.WriteLine("All named ranges reference valid cells.");
             }
-        }
 
-        // Output validation results to the console
-        if (invalidNames.Count == 0)
-        {
-            Console.WriteLine("All named ranges are valid.");
-        }
-        else
-        {
-            Console.WriteLine("Invalid named ranges found:");
-            foreach (string n in invalidNames)
-            {
-                Console.WriteLine("- " + n);
-            }
-        }
-
-        // Optional: create a worksheet that lists the invalid names
-        Worksheet reportSheet = workbook.Worksheets[workbook.Worksheets.Add()];
-        reportSheet.Name = "InvalidNamesReport";
-        int row = 0;
-        reportSheet.Cells[row, 0].PutValue("Invalid Named Ranges");
-        row++;
-        foreach (string n in invalidNames)
-        {
-            reportSheet.Cells[row, 0].PutValue(n);
-            row++;
-        }
-
-        // Save the workbook (lifecycle rule: save)
-        try
-        {
             // Ensure the output directory exists
-            string outDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
+            try
             {
-                Directory.CreateDirectory(outDir);
-            }
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                // Save the (unchanged) workbook to the output path
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
         }
     }
 }

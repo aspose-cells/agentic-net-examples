@@ -1,19 +1,19 @@
-// Title: Aspose.Cells for .NET: Create a PivotChart from a PivotTable to Visualize Sales Data (C#)
-// Description: This example creates a workbook, adds sample sales rows, builds a PivotTable with Region rows, Product columns and summed Sales, then generates a column PivotChart linked to the table, configures drop‑zone options, refreshes the data, and saves the file as PivotChartExample.xlsx.
-// Keywords: Aspose.Cells C# pivot chart | Aspose.Cells pivot table example | create pivot chart .NET | visualize sales data Aspose | programmatic Excel chart | pivot chart drop zones | refresh pivot data | column chart from pivot table | Excel automation C# | Aspose.Cells tutorial
-// Common Searches: Aspose.Cells create pivot chart from pivot table C# | How to link a PivotChart to a PivotTable using Aspose.Cells | Set drop zones on a PivotChart with Aspose.Cells | Refresh PivotChart data programmatically Aspose.Cells | Example of sales dashboard with PivotTable and PivotChart in .NET
-// Developer Intent: Generate a PivotChart that is bound to a PivotTable for displaying aggregated sales figures.
-// Use Cases: Automate a sales dashboard workbook that updates charts when source data changes. | Export a refreshed PivotChart as an image for inclusion in reports or presentations. | Provide end‑users with interactive drop‑zone controls to reshape the chart directly in Excel.
-// AI Prompts: Show how to change the PivotChart type to a line chart and set custom series colors in Aspose.Cells for .NET. | Provide code to save the refreshed PivotChart as a PNG file after calling RefreshPivotData. | Explain how to configure the workbook so the PivotChart automatically refreshes on file open.
+// Title: Create a PivotChart from a PivotTable with Aspose.Cells for .NET (C#)
+// Description: C# code that builds a workbook, inserts sample sales rows, creates a PivotTable (Region rows, Product columns, Sum of Sales), adds a linked column PivotChart, enables interactive drop‑zone controls, refreshes the chart data, and saves the file as PivotChartDemo.xlsx using Aspose.Cells.
+// Keywords: Aspose.Cells pivot chart C# | create pivot chart Aspose.Cells | link pivot chart to pivot table .NET | pivot chart drop zones | refresh pivot chart Aspose | C# Excel pivot table example | sales data pivot chart | Aspose.Cells chart types | Excel automation Aspose.Cells
+// Common Searches: Aspose.Cells how to add a PivotChart to a workbook | C# create PivotTable and PivotChart with Aspose.Cells | Enable drop zone controls on PivotChart Aspose | Refresh PivotChart after changing PivotTable data Aspose.Cells | Example of sales data pivot chart using Aspose.Cells .NET
+// Developer Intent: Generate a column PivotChart that automatically reflects the aggregated sales values defined in a PivotTable.
+// Use Cases: Produce an executive‑ready column chart showing regional product sales derived from a PivotTable. | Create an interactive Excel file where users can modify categories, series, and filters directly on the chart via drop‑zone controls. | Export a single workbook containing both a PivotTable and its linked chart for distribution to stakeholders.
+// AI Prompts: Write C# code with Aspose.Cells to add a PivotChart linked to an existing PivotTable and enable all drop‑zone options. | Show how to refresh a PivotChart after updating the underlying PivotTable data using Aspose.Cells for .NET. | Explain how to change the chart type and customize PivotOptions for a PivotChart created from sales data.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
 
-namespace PivotChartExample
+namespace PivotChartDemo
 {
-    // This example creates a workbook, adds sample sales rows, builds a PivotTable with Region rows, Product columns and summed Sales, then generates a column PivotChart linked to the table, configures drop‑zone options, refreshes the data, and saves the file as PivotChartExample.xlsx.
+    // C# code that builds a workbook, inserts sample sales rows, creates a PivotTable (Region rows, Product columns, Sum of Sales), adds a linked column PivotChart, enables interactive drop‑zone controls, refreshes the chart data, and saves the file as PivotChartDemo.xlsx using Aspose.Cells.
     class Program
     {
         static void Main()
@@ -32,31 +32,33 @@ namespace PivotChartExample
             dataSheet.Cells["B1"].PutValue("Product");
             dataSheet.Cells["C1"].PutValue("Sales");
 
-            // Sample data
+            // Sample rows
             dataSheet.Cells["A2"].PutValue("North");
-            dataSheet.Cells["B2"].PutValue("Apple");
+            dataSheet.Cells["B2"].PutValue("Laptop");
             dataSheet.Cells["C2"].PutValue(1200);
 
             dataSheet.Cells["A3"].PutValue("North");
-            dataSheet.Cells["B3"].PutValue("Banana");
+            dataSheet.Cells["B3"].PutValue("Phone");
             dataSheet.Cells["C3"].PutValue(800);
 
             dataSheet.Cells["A4"].PutValue("South");
-            dataSheet.Cells["B4"].PutValue("Apple");
+            dataSheet.Cells["B4"].PutValue("Laptop");
             dataSheet.Cells["C4"].PutValue(1500);
 
             dataSheet.Cells["A5"].PutValue("South");
-            dataSheet.Cells["B5"].PutValue("Banana");
-            dataSheet.Cells["C5"].PutValue(700);
+            dataSheet.Cells["B5"].PutValue("Phone");
+            dataSheet.Cells["C5"].PutValue(900);
 
             // -------------------------------------------------
             // 2. Create a PivotTable on a new worksheet
             // -------------------------------------------------
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+
             // Define the source data range (including headers)
             string sourceData = "=SalesData!A1:C5";
-            // Add the pivot table; top‑left cell of the report will be A1
-            int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A1", "SalesPivot");
+
+            // Add the pivot table; top‑left corner at cell A3
+            int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A3", "SalesPivot");
             PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
             // Configure the pivot fields:
@@ -67,34 +69,34 @@ namespace PivotChartExample
             pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Optional: set the layout to compact form
-            pivotTable.ShowInCompactForm();
+            // Optional: calculate the pivot data now
+            pivotTable.CalculateData();
 
             // -------------------------------------------------
-            // 3. Add a PivotChart that uses the created PivotTable
+            // 3. Add a PivotChart linked to the PivotTable
             // -------------------------------------------------
-            // Add a column chart positioned on the same worksheet
-            int chartIndex = pivotSheet.Charts.Add(ChartType.Column, 10, 0, 25, 15);
+            // Add a column chart positioned on the same pivot sheet
+            int chartIndex = pivotSheet.Charts.Add(ChartType.Column, 15, 0, 30, 15);
             Chart chart = pivotSheet.Charts[chartIndex];
 
             // Link the chart to the pivot table
-            chart.PivotSource = "Pivot!SalesPivot";
+            chart.PivotSource = "PivotTable!SalesPivot";
 
             // Refresh the chart so it pulls data from the pivot table
             chart.RefreshPivotData();
 
-            // (Optional) Enable pivot controls on the chart
-            PivotOptions options = chart.PivotOptions;
-            options.DropZonesVisible = true;
-            options.DropZoneCategories = true;
-            options.DropZoneSeries = true;
-            options.DropZoneData = true;
-            options.DropZoneFilter = true;
+            // Optional: enable pivot controls on the chart
+            PivotOptions pivotOptions = chart.PivotOptions;
+            pivotOptions.DropZonesVisible = true;
+            pivotOptions.DropZoneFilter = true;
+            pivotOptions.DropZoneCategories = true;
+            pivotOptions.DropZoneSeries = true;
+            pivotOptions.DropZoneData = true;
 
             // -------------------------------------------------
             // 4. Save the workbook
             // -------------------------------------------------
-            workbook.Save("PivotChartExample.xlsx");
+            workbook.Save("PivotChartDemo.xlsx");
         }
     }
 }

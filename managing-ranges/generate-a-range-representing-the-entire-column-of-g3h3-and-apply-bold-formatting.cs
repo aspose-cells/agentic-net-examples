@@ -1,63 +1,51 @@
-// Title: C# – Apply Bold Formatting to Entire Columns G and H with Aspose.Cells
-// Description: Creates a new workbook, defines a range for G3:H3, retrieves the EntireColumn property to get columns G and H, builds a bold‑only style using StyleFlag, applies the style to the whole columns, and saves the file as BoldEntireColumns.xlsx.
-// Keywords: Aspose.Cells C# | apply bold to column | EntireColumn property | range G3:H3 | StyleFlag font bold | format entire column Aspose.Cells | C# Excel formatting example | Aspose.Cells bold columns
-// Common Searches: Aspose.Cells apply bold to whole column | C# format entire column G and H | How to use EntireColumn in Aspose.Cells | Bold specific columns in Excel with Aspose.Cells .NET | Create range and apply style flag Aspose.Cells
-// Developer Intent: Apply a bold font style to every cell in the columns that intersect a given range.
-// Use Cases: Highlight header columns in generated reports. | Enforce consistent bold styling for data columns based on a sample range. | Programmatically format selected columns without altering other cell attributes.
-// AI Prompts: Show me C# code to bold entire columns G and H using Aspose.Cells. | How do I retrieve the EntireColumn of a range and apply only a bold font style? | Explain using StyleFlag to change just the font weight in Aspose.Cells for .NET.
+// Title: Bold Entire Columns G and H Using a G3:H3 Range in Aspose.Cells for .NET
+// Description: Demonstrates how to create a range for cells G3:H3, retrieve its EntireColumn range, and apply a bold font style with a StyleFlag, then save the workbook as BoldEntireColumns.xlsx.
+// Keywords: Aspose.Cells | C# | EntireColumn | StyleFlag | bold font | range G3:H3 | column formatting | Excel automation | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells apply bold to entire column | How to use EntireColumn property in C# | Create range G3:H3 Aspose.Cells | StyleFlag bold font Aspose.Cells .NET | Bold columns G and H programmatically
+// Developer Intent: Apply a bold font style to the full columns that contain the G3:H3 range.
+// Use Cases: Emphasize header columns G and H in a generated report. | Highlight specific data sections by bolding entire columns. | Create a template where selected columns are automatically styled for readability.
+// AI Prompts: Show C# code that creates a G3:H3 range, gets its EntireColumn, and applies a bold style using Aspose.Cells. | Explain how to use StyleFlag to change only the font bold attribute for columns G and H. | Provide an example of adding background color together with bold font to the same columns in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// Demonstrates how to create a range for cells G3:H3, retrieve its EntireColumn range, and apply a bold font style with a StyleFlag, then save the workbook as BoldEntireColumns.xlsx.
+class Program
 {
-    // Creates a new workbook, defines a range for G3:H3, retrieves the EntireColumn property to get columns G and H, builds a bold‑only style using StyleFlag, applies the style to the whole columns, and saves the file as BoldEntireColumns.xlsx.
-    public class ApplyBoldToEntireColumns
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+            // Create a range that covers cells G3:H3 (row index 2, column indexes 6 and 7)
+            // Parameters: firstRow, firstColumn, totalRows, totalColumns
+            AsposeRange range = cells.CreateRange(2, 6, 1, 2);
 
-                // Create a range covering G3:H3 (row index 2, column index 6)
-                Aspose.Cells.Range rangeG3H3 = cells.CreateRange(2, 6, 1, 2);
+            // Get the entire columns that contain the range (columns G and H)
+            AsposeRange entireColumns = range.EntireColumn;
 
-                // Get the entire columns that contain the range (columns G and H)
-                Aspose.Cells.Range entireColumns = rangeG3H3.EntireColumn;
+            // Define a style with bold font
+            Style boldStyle = workbook.CreateStyle();
+            boldStyle.Font.IsBold = true;
 
-                // Create a style with bold font
-                Style boldStyle = workbook.CreateStyle();
-                boldStyle.Font.IsBold = true;
+            // Specify that only the bold attribute should be applied
+            StyleFlag flag = new StyleFlag();
+            flag.FontBold = true;
 
-                // Apply only the bold attribute
-                StyleFlag flag = new StyleFlag { FontBold = true };
+            // Apply the bold style to the entire columns
+            entireColumns.ApplyStyle(boldStyle, flag);
 
-                // Apply the bold style to the entire columns
-                entireColumns.ApplyStyle(boldStyle, flag);
-
-                // Save the workbook
-                workbook.Save("BoldEntireColumns.xlsx");
-                Console.WriteLine("Workbook saved as BoldEntireColumns.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("BoldEntireColumns.xlsx");
         }
-    }
-
-    // Entry point for the example
-    public class Program
-    {
-        public static void Main()
+        catch (Exception ex)
         {
-            ApplyBoldToEntireColumns.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

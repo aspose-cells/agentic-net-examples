@@ -1,10 +1,10 @@
-// Title: Aspose.Cells C# – Verify Default English Labels with ChartGlobalizationSettings
-// Description: Creates a workbook with a column chart, uses ChartGlobalizationSettings without custom values, and prints the built‑in English strings for series name, chart title, legend actions, axis title, other label, and axis unit (thousands). The sample checks that every string is non‑empty and saves the file, demonstrating the fallback localization behavior.
-// Keywords: Aspose.Cells | ChartGlobalizationSettings | default chart localization | English fallback labels | C# chart series name | GetChartTitleName | GetLegendIncreaseName | GetAxisUnitName | display unit thousands | chart globalization .NET
-// Common Searches: Aspose.Cells default chart labels C# | How to get built‑in English text for chart elements in Aspose.Cells | ChartGlobalizationSettings default strings example | Verify chart localization when no globalization is set | Aspose.Cells fallback language for charts
-// Developer Intent: Ensure that Aspose.Cells returns the built‑in English strings for all chart UI elements when no custom globalization configuration is applied.
-// Use Cases: Display the default English series, title, legend, and axis labels for a newly generated chart. | Run a quick sanity check that all fallback localization strings are populated before exporting a workbook. | Create automated tests that confirm the presence of default chart texts in environments without localization settings.
-// AI Prompts: Generate C# code that lists every default chart label provided by ChartGlobalizationSettings and asserts they are not null or empty. | Write a unit test for Aspose.Cells that creates a column chart, accesses ChartGlobalizationSettings, and verifies the English fallback strings. | Explain how ChartGlobalizationSettings supplies fallback English text for chart elements when no custom globalization is configured.
+// Title: C# – Verify Default English Chart Localization with Aspose.Cells ChartGlobalizationSettings
+// Description: Creates a workbook, adds a column chart, and uses a fresh ChartGlobalizationSettings instance (no custom culture) to fetch the built‑in English labels such as Series, Chart Title, Increase, Decrease, Total, Axis Title, Other and the "Thousands" axis unit. The values are printed to the console and optionally applied to the chart before saving the file.
+// Keywords: Aspose.Cells | ChartGlobalizationSettings | default chart localization | C# chart example | Aspose.Cells .NET | English chart labels | chart title default text | axis unit name thousands | no custom culture | Aspose.Cells demo
+// Common Searches: Aspose.Cells get default chart text C# | ChartGlobalizationSettings default English strings | how to retrieve chart labels without localization in Aspose.Cells | default series name Aspose.Cells chart | axis unit name thousands Aspose.Cells
+// Developer Intent: Confirm that Aspose.Cells returns the built‑in English strings for chart elements when no globalization settings are supplied.
+// Use Cases: Display the default English series name, chart title, and legend entries in a console log for verification. | Assign the retrieved default labels to a chart's title and axis titles before exporting the workbook. | Implement an automated test that asserts each default label matches the expected English value (e.g., "Series", "Chart Title").
+// AI Prompts: Write C# code that creates a column chart with Aspose.Cells and prints the default localization strings using ChartGlobalizationSettings. | Explain how ChartGlobalizationSettings determines the fallback English text when no culture is set in Aspose.Cells. | Generate a C# unit test that verifies ChartGlobalizationSettings.GetChartTitleName() returns "Chart Title".
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsChartLocalizationDemo
 {
-    // Creates a workbook with a column chart, uses ChartGlobalizationSettings without custom values, and prints the built‑in English strings for series name, chart title, legend actions, axis title, other label, and axis unit (thousands). The sample checks that every string is non‑empty and saves the file, demonstrating the fallback localization behavior.
+    // Creates a workbook, adds a column chart, and uses a fresh ChartGlobalizationSettings instance (no custom culture) to fetch the built‑in English labels such as Series, Chart Title, Increase, Decrease, Total, Axis Title, Other and the "Thousands" axis unit. The values are printed to the console and optionally applied to the chart before saving the file.
     class Program
     {
         static void Main()
@@ -41,39 +41,32 @@ namespace AsposeCellsChartLocalizationDemo
             // Use the default ChartGlobalizationSettings to retrieve default English texts.
             ChartGlobalizationSettings defaultSettings = new ChartGlobalizationSettings();
 
-            // Retrieve default texts
-            string seriesName = defaultSettings.GetSeriesName();
-            string chartTitleName = defaultSettings.GetChartTitleName();
-            string legendIncreaseName = defaultSettings.GetLegendIncreaseName();
-            string legendDecreaseName = defaultSettings.GetLegendDecreaseName();
-            string legendTotalName = defaultSettings.GetLegendTotalName();
-            string axisTitleName = defaultSettings.GetAxisTitleName();
-            string otherName = defaultSettings.GetOtherName();
-            string axisUnitName = defaultSettings.GetAxisUnitName(DisplayUnitType.Thousands);
+            // Retrieve default English strings
+            string seriesName = defaultSettings.GetSeriesName();               // Expected: "Series"
+            string chartTitleName = defaultSettings.GetChartTitleName();       // Expected: "Chart Title"
+            string legendIncrease = defaultSettings.GetLegendIncreaseName();   // Expected: "Increase"
+            string legendDecrease = defaultSettings.GetLegendDecreaseName();   // Expected: "Decrease"
+            string legendTotal = defaultSettings.GetLegendTotalName();         // Expected: "Total"
+            string axisTitle = defaultSettings.GetAxisTitleName();             // Expected: "Axis Title"
+            string otherName = defaultSettings.GetOtherName();                 // Expected: "Other"
+            string axisUnit = defaultSettings.GetAxisUnitName(DisplayUnitType.Thousands); // Expected: "Thousands"
 
-            // Output the retrieved default English texts to the console
+            // Output the retrieved default texts to the console
             Console.WriteLine("Default Series Name: " + seriesName);
             Console.WriteLine("Default Chart Title Name: " + chartTitleName);
-            Console.WriteLine("Default Legend Increase Name: " + legendIncreaseName);
-            Console.WriteLine("Default Legend Decrease Name: " + legendDecreaseName);
-            Console.WriteLine("Default Legend Total Name: " + legendTotalName);
-            Console.WriteLine("Default Axis Title Name: " + axisTitleName);
+            Console.WriteLine("Default Legend Increase Name: " + legendIncrease);
+            Console.WriteLine("Default Legend Decrease Name: " + legendDecrease);
+            Console.WriteLine("Default Legend Total Name: " + legendTotal);
+            Console.WriteLine("Default Axis Title Name: " + axisTitle);
             Console.WriteLine("Default Other Name: " + otherName);
-            Console.WriteLine("Default Axis Unit Name (Thousands): " + axisUnitName);
+            Console.WriteLine("Default Axis Unit Name (Thousands): " + axisUnit);
 
-            // Simple verification: ensure none of the retrieved strings are null or empty
-            bool allTextsPresent = !string.IsNullOrEmpty(seriesName) &&
-                                   !string.IsNullOrEmpty(chartTitleName) &&
-                                   !string.IsNullOrEmpty(legendIncreaseName) &&
-                                   !string.IsNullOrEmpty(legendDecreaseName) &&
-                                   !string.IsNullOrEmpty(legendTotalName) &&
-                                   !string.IsNullOrEmpty(axisTitleName) &&
-                                   !string.IsNullOrEmpty(otherName) &&
-                                   !string.IsNullOrEmpty(axisUnitName);
+            // Optionally assign these defaults to the chart to demonstrate they appear as expected
+            chart.Title.Text = chartTitleName;
+            chart.ValueAxis.Title.Text = axisTitle;
+            chart.CategoryAxis.Title.Text = axisTitle;
 
-            Console.WriteLine("All default English texts present: " + allTextsPresent);
-
-            // Save the workbook (optional, just to complete lifecycle)
+            // Save the workbook (using the standard save method)
             workbook.Save("DefaultChartLocalizationDemo.xlsx");
         }
     }

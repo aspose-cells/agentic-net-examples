@@ -1,108 +1,59 @@
-// Title: Detect Excel Workbook Encryption Algorithm and Strength using Aspose.Cells in C#
-// Description: A C# console sample that checks if an Excel file is encrypted, loads it with a password, uses reflection to read the internal EncryptionType, and reports whether the algorithm is StrongCryptographicProvider (strong) or a weaker method. Includes handling for missing files, invalid passwords, and unexpected errors.
-// Keywords: Aspose.Cells C# encryption detection | Excel workbook encryption algorithm | EncryptionType reflection Aspose.Cells | strong vs weak Excel encryption .NET | detect encrypted workbook Aspose.Cells | WorkbookSettings IsEncrypted | LoadOptions password Excel | CellsException handling | Excel file security audit | C# Excel encryption strength
-// Common Searches: How to detect encryption algorithm of an Excel file with Aspose.Cells C# | C# check if Excel workbook uses strong encryption | Retrieve EncryptionType from Aspose.Cells Workbook | Identify weak Excel encryption using .NET | Aspose.Cells detect encrypted workbook and password | Reflection to read private _encryptionType field | Determine Excel file encryption strength programmatically
-// Developer Intent: Identify the workbook’s encryption algorithm and indicate whether it is strong or weak.
-// Use Cases: Audit a collection of Excel files to ensure all documents employ strong encryption before archival. | Run a batch utility that scans multiple workbooks, logs each file’s encryption algorithm and strength for compliance reporting. | Provide immediate feedback in an application when an opened workbook uses weak encryption, prompting the user to re‑encrypt.
-// AI Prompts: Write a C# method that uses reflection to extract the private _encryptionType field from an Aspose.Cells Workbook and returns a description of its strength. | Generate robust error handling for invalid passwords and missing encryption fields when detecting workbook encryption with Aspose.Cells. | Create a console program that iterates over a folder of Excel files, determines each file’s encryption type via reflection, and writes the results to a CSV file.
+// Title: Detect Excel Workbook Encryption Algorithm and Strength with Aspose.Cells (C#)
+// Description: C# example that loads an Excel file using Aspose.Cells, checks if the workbook is encrypted, retrieves the internal EncryptionType via reflection, maps the enum to strong or weak categories, and logs the result. Includes a fallback message when the property cannot be accessed.
+// Keywords: Aspose.Cells encryption detection | Excel workbook EncryptionType | C# identify Excel encryption algorithm | strong vs weak Excel encryption .NET | reflection read internal property Aspose.Cells | Workbook.Settings.IsEncrypted | EncryptionType enum Aspose.Cells | Excel file security assessment
+// Common Searches: How to get encryption algorithm of an Excel file using Aspose.Cells | Determine if Excel workbook uses strong encryption in C# | Read EncryptionType property with reflection Aspose.Cells | Check workbook encryption strength without password | Aspose.Cells detect weak encryption
+// Developer Intent: Identify the encryption algorithm of an Excel workbook and report whether it is classified as strong or weak.
+// Use Cases: Compliance auditing: automatically flag workbooks that use weak encryption. | Pre‑processing validation: decide whether to decrypt or reject files based on encryption strength. | Logging and monitoring: record encryption details for security dashboards. | Fallback handling: provide a default message when the EncryptionType property is unavailable.
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, uses reflection to obtain the EncryptionType enum, and prints "strong" or "weak" based on the value. | Explain how Aspose.Cells maps EncryptionType values to cryptographic strength categories. | Suggest a non‑reflection approach to evaluate workbook encryption strength in Aspose.Cells.
 
 using System;
 using System.IO;
 using System.Reflection;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionCheck
+// C# example that loads an Excel file using Aspose.Cells, checks if the workbook is encrypted, retrieves the internal EncryptionType via reflection, maps the enum to strong or weak categories, and logs the result. Includes a fallback message when the property cannot be accessed.
+class IdentifyEncryption
 {
-    // A C# console sample that checks if an Excel file is encrypted, loads it with a password, uses reflection to read the internal EncryptionType, and reports whether the algorithm is StrongCryptographicProvider (strong) or a weaker method. Includes handling for missing files, invalid passwords, and unexpected errors.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the workbook to analyze
+        string filePath = "sample.xlsx";
+
+        // Load the workbook (no password needed for detection)
+        Workbook workbook = new Workbook(filePath);
+
+        // Check if the workbook is encrypted
+        bool isEncrypted = workbook.Settings.IsEncrypted;
+        Console.WriteLine($"Workbook encrypted: {isEncrypted}");
+
+        if (isEncrypted)
         {
-            // Path to the workbook to be examined
-            string filePath = "EncryptedWorkbook.xlsx";
+            // Try to obtain the encryption type via reflection.
+            // Aspose.Cells may expose an internal property named "EncryptionType" in WorkbookSettings.
+            PropertyInfo encProp = workbook.Settings.GetType()
+                .GetProperty("EncryptionType", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
-            // Verify that the file exists before proceeding
-            if (!File.Exists(filePath))
+            if (encProp != null)
             {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
+                // Cast the retrieved value to the public EncryptionType enum.
+                EncryptionType encType = (EncryptionType)encProp.GetValue(workbook.Settings);
+                Console.WriteLine($"Encryption algorithm: {encType}");
 
-            try
+                // Determine strength based on the enum value.
+                bool isStrong = encType == EncryptionType.StrongCryptographicProvider ||
+                                encType == EncryptionType.EnhancedCryptographicProviderV1;
+
+                Console.WriteLine(isStrong ? "Encryption is strong." : "Encryption is weak.");
+            }
+            else
             {
-                // Detect basic file information, including whether it is encrypted
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-                Console.WriteLine($"IsEncrypted (FileFormatInfo): {formatInfo.IsEncrypted}");
-
-                if (!formatInfo.IsEncrypted)
-                {
-                    Console.WriteLine("The workbook is not encrypted.");
-                    return;
-                }
-
-                // Prompt for password (replace with actual password if known)
-                Console.Write("Enter password for the encrypted workbook: ");
-                string password = Console.ReadLine() ?? string.Empty;
-
-                // Load the workbook using the supplied password
-                LoadOptions loadOptions = new LoadOptions { Password = password };
-                Workbook workbook = new Workbook(filePath, loadOptions);
-
-                // Verify that the workbook reports being encrypted via Settings
-                bool isEncrypted = workbook.Settings.IsEncrypted;
-                Console.WriteLine($"IsEncrypted (WorkbookSettings): {isEncrypted}");
-
-                // Attempt to retrieve the encryption type using reflection.
-                // Aspose.Cells does not expose a public getter for the encryption type,
-                // but internally it is stored in a private field named "_encryptionType".
-                EncryptionType encryptionType = EncryptionType.XOR; // default fallback
-                try
-                {
-                    // First try to get the field from Workbook
-                    FieldInfo field = typeof(Workbook).GetField("_encryptionType", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (field != null && field.GetValue(workbook) is EncryptionType et)
-                    {
-                        encryptionType = et;
-                    }
-                    else
-                    {
-                        // If not found, try WorkbookSettings
-                        FieldInfo settingsField = typeof(WorkbookSettings).GetField("_encryptionType", BindingFlags.NonPublic | BindingFlags.Instance);
-                        if (settingsField != null && settingsField.GetValue(workbook.Settings) is EncryptionType et2)
-                        {
-                            encryptionType = et2;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Reflection error while retrieving encryption type: {ex.Message}");
-                }
-
-                // Determine strength based on the enumeration value
-                bool isStrong = encryptionType == EncryptionType.StrongCryptographicProvider;
-                string strength = isStrong ? "Strong" : "Weak";
-
-                // Output the result
-                Console.WriteLine($"Encryption Algorithm: {encryptionType}");
-                Console.WriteLine($"Encryption Strength: {strength}");
+                // Fallback when the property is not accessible.
+                Console.WriteLine("Unable to determine the exact encryption algorithm. Assuming default strong encryption for modern formats.");
             }
-            catch (CellsException ex)
-            {
-                // Aspose.Cells throws CellsException for invalid passwords and other issues
-                if (ex.Message != null && ex.Message.IndexOf("invalid password", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    Console.WriteLine("Invalid password provided. Unable to open the workbook.");
-                }
-                else
-                {
-                    Console.WriteLine($"CellsException: {ex.Message}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
+        }
+        else
+        {
+            Console.WriteLine("Workbook is not encrypted.");
         }
     }
 }

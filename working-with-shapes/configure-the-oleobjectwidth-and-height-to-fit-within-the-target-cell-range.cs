@@ -1,18 +1,17 @@
-// Title: Fit an OleObject to a Cell Range with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to add an OleObject to a workbook and anchor it to a specific cell block (e.g., B2:D5) by setting UpperLeftRow/Column and LowerRightRow/Column, ensuring the object's width and height match the target range.
-// Keywords: Aspose.Cells OleObject resize | C# fit OleObject to cells | anchor OleObject cell range | set OleObject dimensions Aspose | OleObject UpperLeftRow LowerRightRow
-// Common Searches: Aspose.Cells resize OleObject to cell range | C# set OleObject width height Aspose | fit embedded OLE object to B2:D5 | how to anchor OleObject to specific cells in .NET | adjust OleObject dimensions programmatically
-// Developer Intent: Resize an OleObject so it exactly covers a defined cell range.
-// Use Cases: Generate reports where a placeholder image automatically fills a table area. | Align an embedded chart with a data block so it scales with surrounding cells. | Embed a Word document that matches the size of a designated cell region in a spreadsheet.
-// AI Prompts: Write C# code that calculates OleObject.Width and Height from column widths and row heights to fit a given range in Aspose.Cells. | Show how to modify an existing OleObject after loading a workbook so it aligns with cells C3:E6. | Explain how to retrieve column width and row height values in Aspose.Cells to set an OleObject's size accurately.
+// Title: Fit OleObject to a Cell Range – Set Width & Height with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to calculate the combined pixel width of a column range and the pixel height of a row range, add an OLE object at the range's top‑left cell, and set OleObject.Width, OleObject.Height, and Placement so the object exactly fills the selected cells. The workbook is then saved as OleObjectFitRange.xlsx.
+// Keywords: Aspose.Cells C# OleObject size | fit OLE object to cell range | set OleObject Width Height Aspose | GetColumnWidthPixel Aspose.Cells | GetRowHeightPixel Aspose.Cells | OleObject Placement MoveAndSize | calculate pixel dimensions Aspose | Aspose.Cells add OLE object | C# spreadsheet OLE embedding
+// Common Searches: Aspose.Cells set OleObject width and height | C# calculate total column width in pixels Aspose | fit OLE object across multiple cells Aspose.Cells | OleObject placement MoveAndSize example | how to make OLE object resize with cells Aspose
+// Developer Intent: Resize an OLE object so it precisely covers a specified block of rows and columns by applying the summed pixel dimensions of those cells.
+// Use Cases: Embed a chart that spans rows 2‑5 and columns B‑D and moves with the sheet. | Insert a PDF as an OLE object occupying a defined cell block for reporting templates. | Programmatically adjust OLE object dimensions after column width or row height changes.
+// AI Prompts: Generate C# code using Aspose.Cells that adds an OLE object sized to a given start/end row and column range and updates its Width/Height when the worksheet layout changes. | Explain how to retrieve column widths and row heights in pixels with Aspose.Cells and apply them to OleObject dimensions. | Create a reusable method that accepts startRow, endRow, startColumn, endColumn and returns the pixel width and height needed for an OleObject.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add an OleObject to a workbook and anchor it to a specific cell block (e.g., B2:D5) by setting UpperLeftRow/Column and LowerRightRow/Column, ensuring the object's width and height match the target range.
-class OleObjectFitToCellRange
+// Demonstrates how to calculate the combined pixel width of a column range and the pixel height of a row range, add an OLE object at the range's top‑left cell, and set OleObject.Width, OleObject.Height, and Placement so the object exactly fills the selected cells. The workbook is then saved as OleObjectFitRange.xlsx.
+class Program
 {
     static void Main()
     {
@@ -20,51 +19,54 @@ class OleObjectFitToCellRange
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Define the target cell range (B2:D5)
-            int startRow = 1;      // B2 -> row index 1 (zero‑based)
-            int endRow = 4;        // D5 -> row index 4
-            int startColumn = 1;   // Column B -> index 1
-            int endColumn = 3;     // Column D -> index 3
+            // Define the target cell range where the OLE object should fit
+            // Example: rows 2 to 5 (zero‑based) and columns 1 to 3
+            int startRow = 2;
+            int endRow = 5;
+            int startColumn = 1;
+            int endColumn = 3;
 
-            // Add a placeholder OleObject (size will be adjusted later)
-            // Use a dummy 1x1 pixel transparent PNG to satisfy the API
-            byte[] dummyImage = new byte[]
+            // Calculate total width in pixels by summing column widths in the range
+            int totalWidthPixels = 0;
+            for (int col = startColumn; col <= endColumn; col++)
             {
-                137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,
-                0,0,0,1,0,0,0,1,8,6,0,0,0,31,21,196,
-                137,0,0,0,12,73,68,65,84,8,153,99,0,1,0,0,
-                5,0,1,0,0,0,0,73,69,78,68,174,66,96,130
-            };
-            int oleIndex = sheet.OleObjects.Add(startRow, startColumn, 0, 0, dummyImage);
-            OleObject ole = sheet.OleObjects[oleIndex];
-
-            // Anchor the OleObject to the exact cell range
-            ole.UpperLeftRow = startRow;
-            ole.UpperLeftColumn = startColumn;
-            ole.LowerRightRow = endRow;
-            ole.LowerRightColumn = endColumn;
-
-            // Determine output path and ensure its directory exists
-            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "OleObjectFitToRange.xlsx");
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (string.IsNullOrEmpty(outputDir))
-            {
-                outputDir = Directory.GetCurrentDirectory();
+                // Get column width in pixels directly
+                double colWidthPixels = worksheet.Cells.GetColumnWidthPixel(col);
+                totalWidthPixels += (int)Math.Ceiling(colWidthPixels);
             }
-            if (!Directory.Exists(outputDir))
+
+            // Calculate total height in pixels by summing row heights in the range
+            int totalHeightPixels = 0;
+            for (int row = startRow; row <= endRow; row++)
             {
-                Directory.CreateDirectory(outputDir);
+                // Get row height in pixels directly
+                double rowHeightPixels = worksheet.Cells.GetRowHeightPixel(row);
+                totalHeightPixels += (int)Math.Ceiling(rowHeightPixels);
             }
+
+            // Prepare image data for the OLE object (using an empty byte array for demo purposes)
+            byte[] imageData = new byte[0];
+
+            // Add the OLE object at the upper‑left cell of the range with the calculated size
+            // Parameters: topRow, leftColumn, height (pixels), width (pixels), imageData
+            int oleIndex = worksheet.OleObjects.Add(startRow, startColumn, totalHeightPixels, totalWidthPixels, imageData);
+            OleObject oleObject = worksheet.OleObjects[oleIndex];
+
+            // Ensure the OLE object's Width and Height exactly match the target cell range
+            oleObject.Width = totalWidthPixels;
+            oleObject.Height = totalHeightPixels;
+
+            // Optional: set placement so the object moves and resizes with cells
+            oleObject.Placement = PlacementType.MoveAndSize;
 
             // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            workbook.Save("OleObjectFitRange.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

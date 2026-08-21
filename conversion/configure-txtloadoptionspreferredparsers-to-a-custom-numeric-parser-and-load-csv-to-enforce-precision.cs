@@ -1,50 +1,45 @@
-// Title: C# – Load CSV with Aspose.Cells and a user‑defined decimal parser to retain exact precision
-// Description: Demonstrates implementing ICustomParser that returns System.Decimal, assigning it via TxtLoadOptions.PreferredParsers for a target CSV column, enabling KeepPrecision and ConvertNumericData, loading the stream into a Workbook, confirming the numeric type, and saving the result as an XLSX file.
-// Keywords: Aspose.Cells | TxtLoadOptions | PreferredParsers | custom numeric parser | decimal precision | CSV import .NET | KeepPrecision | ConvertNumericData | C# example | financial data import
-// Common Searches: Aspose.Cells custom parser CSV | How to preserve decimal places when loading CSV with Aspose.Cells | Set PreferredParsers for specific columns in C# | Enable KeepPrecision for large numbers Aspose.Cells | Load high‑precision numbers into Excel using Aspose.Cells .NET
-// Developer Intent: Configure TxtLoadOptions so that a selected CSV column is parsed with a user‑defined decimal parser, guaranteeing high‑precision values are stored as Decimal in the workbook.
-// Use Cases: Import financial statements where amounts exceed 15 decimal places. | Read scientific measurement data that requires exact numeric values. | Apply distinct parsers per column while retaining default handling for the rest. | Generate Excel reports from CSV without losing numeric accuracy.
-// AI Prompts: Generate C# code that uses ICustomParser to parse dates in a CSV with Aspose.Cells. | Show how to assign separate parsers for three columns using TxtLoadOptions.PreferredParsers. | Explain the interaction between KeepPrecision and ConvertNumericData for large numeric strings.
+// Title: C# – Load CSV with Aspose.Cells using a custom Decimal parser (TxtLoadOptions.PreferredParsers)
+// Description: Demonstrates how to implement an ICustomParser that converts strings to Decimal, assign it to TxtLoadOptions.PreferredParsers for a specific CSV column, enable KeepPrecision and numeric conversion, load the CSV from a memory stream into a Workbook, verify the cell type, and save the result as an XLSX file.
+// Keywords: Aspose.Cells custom parser | TxtLoadOptions PreferredParsers | CSV to Excel high precision | Decimal precision C# | KeepPrecision Aspose.Cells | ConvertNumericData CSV | ICustomParser example | load CSV Aspose.Cells .NET | financial data import Aspose
+// Common Searches: Aspose.Cells custom numeric parser for CSV | How to preserve decimal precision when loading CSV | TxtLoadOptions PreferredParsers column specific | C# load CSV with high‑precision numbers Aspose | KeepPrecision option Aspose.Cells CSV import
+// Developer Intent: Set TxtLoadOptions.PreferredParsers to a Decimal‑based ICustomParser so that selected CSV columns are imported as exact Decimal values without losing precision.
+// Use Cases: Import financial CSV files where amounts have many decimal places and must remain exact in the workbook. | Load mixed‑type CSV data (text in column A, high‑precision numbers in column B) by assigning null to the first parser and a Decimal parser to the second. | Prevent truncation or rounding of large numeric strings during CSV‑to‑Excel conversion by enabling KeepPrecision and disabling date conversion.
+// AI Prompts: Generate C# code that creates a TxtLoadOptions object for CSV, assigns a custom ICustomParser that parses values to Decimal for column 2, loads the data into a Workbook, and saves it as XLSX while preserving precision. | Explain the role of TxtLoadOptions.PreferredParsers in Aspose.Cells and how it interacts with KeepPrecision, ConvertNumericData, and ConvertDateTimeData settings. | Show how to validate that a cell imported with a custom Decimal parser is of type Numeric and retrieve its Decimal value in C#.
 
 using System;
 using System.IO;
-using System.Text;
+using System.Globalization;
 using Aspose.Cells;
 
 namespace AsposeCellsCustomParserDemo
 {
-    // Custom numeric parser that preserves full decimal precision
-    // Demonstrates implementing ICustomParser that returns System.Decimal, assigning it via TxtLoadOptions.PreferredParsers for a target CSV column, enabling KeepPrecision and ConvertNumericData, loading the stream into a Workbook, confirming the numeric type, and saving the result as an XLSX file.
-    public class DecimalParser : ICustomParser
+    // Custom numeric parser that parses values as Decimal to preserve precision
+    // Demonstrates how to implement an ICustomParser that converts strings to Decimal, assign it to TxtLoadOptions.PreferredParsers for a specific CSV column, enable KeepPrecision and numeric conversion, load the CSV from a memory stream into a Workbook, verify the cell type, and save the result as an XLSX file.
+    class DecimalParser : ICustomParser
     {
-        // Try to parse the string as a decimal. Return true if successful.
+        // Attempts to parse the string; returns true if successful
         public bool Parse(string value, out object result)
         {
-            // Trim whitespace and try to parse using invariant culture
-            if (decimal.TryParse(value.Trim(), System.Globalization.NumberStyles.Any,
-                                 System.Globalization.CultureInfo.InvariantCulture, out decimal dec))
+            // Use invariant culture to avoid locale‑dependent decimal separators
+            if (decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal dec))
             {
-                result = dec; // Return the decimal value
+                result = dec;
                 return true;
             }
-
-            // Fallback to default parsing (treat as string)
-            result = value;
+            result = null;
             return false;
         }
 
-        // Direct parsing without the out parameter (used internally by Aspose.Cells)
+        // Direct parsing without the out parameter
         public object ParseObject(string value)
         {
-            if (decimal.TryParse(value.Trim(), System.Globalization.NumberStyles.Any,
-                                 System.Globalization.CultureInfo.InvariantCulture, out decimal dec))
-            {
+            if (decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal dec))
                 return dec;
-            }
+            // Fallback to original string if parsing fails
             return value;
         }
 
-        // Description of the format this parser handles
+        // Description of the parser format
         public string GetFormat()
         {
             return "Decimal";
@@ -55,39 +50,37 @@ namespace AsposeCellsCustomParserDemo
     {
         static void Main()
         {
-            // Sample CSV data containing high‑precision numbers
-            string csvData = "ID,Amount,Description\n" +
-                             "1,12345.67890123456789,First item\n" +
-                             "2,98765.43210987654321,Second item";
+            // Sample CSV containing high‑precision numeric values
+            string csvData = "ID,Value\n1,1234567890.123456789\n2,9876543210.987654321";
 
-            // Create TxtLoadOptions for CSV and assign the custom decimal parser
+            // Create TxtLoadOptions for CSV and assign the custom parser
             TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv)
             {
-                // Use the custom parser for the second column (index 1)
+                // PreferredParsers[0] = null (default parser for first column)
+                // PreferredParsers[1] = DecimalParser for the second column (Value)
                 PreferredParsers = new ICustomParser[] { null, new DecimalParser() },
 
-                // Keep precision for long numeric strings
+                // KeepPrecision ensures long string values are not truncated
                 KeepPrecision = true,
 
-                // Ensure numeric conversion is enabled
+                // Enable numeric conversion (default true) and disable date conversion for clarity
                 ConvertNumericData = true,
-
-                // Optional: keep date conversion disabled for this example
                 ConvertDateTimeData = false
             };
 
-            // Load the CSV data into a workbook using the configured options
-            using (MemoryStream csvStream = new MemoryStream(Encoding.UTF8.GetBytes(csvData)))
+            // Load the CSV data from a memory stream using the configured options
+            using (MemoryStream stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(csvData)))
             {
-                Workbook workbook = new Workbook(csvStream, loadOptions);
-                Cells cells = workbook.Worksheets[0].Cells;
+                Workbook workbook = new Workbook(stream, loadOptions);
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // Demonstrate that the high‑precision numbers are stored as Decimal
-                Console.WriteLine("Cell B2 Type: " + cells[1, 1].Type); // Should be Numeric
-                Console.WriteLine("Cell B2 Value: " + cells[1, 1].Value); // Full precision
+                // Verify that the high‑precision number is stored as a numeric type
+                Console.WriteLine("Cell B2 Type: " + cells[1, 1].Type); // Expected: Numeric
+                Console.WriteLine("Cell B2 Value (Decimal): " + cells[1, 1].Value);
 
                 // Save the workbook to an Excel file
-                workbook.Save("PreciseNumbers.xlsx", SaveFormat.Xlsx);
+                workbook.Save("CustomParserOutput.xlsx", SaveFormat.Xlsx);
             }
         }
     }

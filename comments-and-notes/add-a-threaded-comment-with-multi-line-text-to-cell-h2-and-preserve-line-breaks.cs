@@ -1,37 +1,40 @@
-// Title: Add a Multi‑Line Threaded Comment to Cell H2 with Line Breaks using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, define a threaded‑comment author, build a comment string that contains "\n" line breaks, attach the comment to cell H2, and save the file as ThreadedCommentMultiLine.xlsx.
-// Keywords: Aspose.Cells C# | threaded comment Excel | multi line comment | preserve newline in comment | add comment to cell H2 | Excel API author comment | save workbook Aspose
-// Common Searches: Aspose.Cells add threaded comment with line breaks | C# code to insert multi‑line comment in Excel | how to set author for Excel threaded comment using Aspose | preserve newline characters in Excel comment .NET | threaded comment example for cell H2
-// Developer Intent: Insert a threaded comment that spans several lines into cell H2 while keeping the line breaks intact.
-// Use Cases: Embed detailed review notes directly in generated reports. | Provide step‑by‑step instructions for a specific cell in a collaborative spreadsheet. | Mark cells with author‑attributed annotations that require formatted, multi‑line text.
-// AI Prompts: Generate C# code with Aspose.Cells to add a threaded comment containing newline characters to cell H2 and assign a custom author. | Show how to create multiple threaded comments with different authors, each preserving its own line breaks. | Explain how to read, modify, or delete an existing multi‑line threaded comment in an Aspose.Cells workbook.
+// Title: Add a Multi‑Line Threaded Comment to Cell H2 with Aspose.Cells for .NET
+// Description: Shows how to create a Workbook, add a threaded comment author, define a string with \r\n line breaks, place a multi‑line threaded comment into cell H2 (row 2, column 8), and save the file as ThreadedComment_H2.xlsx using Aspose.Cells in C#.
+// Keywords: Aspose.Cells | C# threaded comment | Excel multi‑line comment | preserve line breaks | cell H2 | add comment author | Aspose.Cells .NET example | threaded comment API | Excel automation | programmatic Excel comments
+// Common Searches: Aspose.Cells add threaded comment C# | multi line comment Excel .NET | preserve newline in Aspose.Cells comment | threaded comment author Aspose.Cells | how to comment cell H2 programmatically | Excel comment line break Aspose | C# example threaded comment
+// Developer Intent: Insert a threaded comment containing several lines into cell H2, keep the line breaks, and assign a custom author.
+// Use Cases: Add detailed review notes to a specific cell for collaborative report editing. | Programmatically annotate generated data with multi‑line explanations for auditors. | Highlight data anomalies with author‑attributed threaded comments in financial models.
+// AI Prompts: Write C# code using Aspose.Cells to add a threaded comment with newline characters to cell H2 and set a custom author. | Explain how Aspose.Cells preserves line breaks in threaded comments and show alternative formatting options for multi‑line text. | Provide a step‑by‑step guide to create, edit, and delete threaded comments that contain multi‑line content in an Excel workbook with Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, define a threaded‑comment author, build a comment string that contains "\n" line breaks, attach the comment to cell H2, and save the file as ThreadedCommentMultiLine.xlsx.
-class Program
+namespace AsposeCellsThreadedCommentExample
 {
-    static void Main()
+    // Shows how to create a Workbook, add a threaded comment author, define a string with \r\n line breaks, place a multi‑line threaded comment into cell H2 (row 2, column 8), and save the file as ThreadedComment_H2.xlsx using Aspose.Cells in C#.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a threaded comment author
-        int authorIndex = workbook.Worksheets.ThreadedCommentAuthors.Add(
-            "Demo Author",          // author name
-            "demo@example.com",     // user id (email)
-            "DemoProvider");        // provider id
-        ThreadedCommentAuthor author = workbook.Worksheets.ThreadedCommentAuthors[authorIndex];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Define multi‑line comment text; "\n" preserves line breaks in Excel comments
-        string multiLineText = "First line of comment.\nSecond line of comment.\nThird line.";
+            // Add a threaded comment author
+            // Parameters: Name, UserId, ProviderId
+            int authorIndex = workbook.Worksheets.ThreadedCommentAuthors.Add("Demo Author", "demo_user", "demo_provider");
+            ThreadedCommentAuthor author = workbook.Worksheets.ThreadedCommentAuthors[authorIndex];
 
-        // Add the threaded comment to cell H2 (row 1, column 7) using the cell name
-        worksheet.Comments.AddThreadedComment("H2", multiLineText, author);
+            // Define multi-line comment text (preserve line breaks)
+            string multiLineText = "First line of comment.\r\nSecond line of comment.\r\nThird line of comment.";
 
-        // Save the workbook
-        workbook.Save("ThreadedCommentMultiLine.xlsx");
+            // Add a threaded comment to cell H2 (row index 1, column index 7)
+            worksheet.Comments.AddThreadedComment(1, 7, multiLineText, author);
+
+            // Save the workbook
+            workbook.Save("ThreadedComment_H2.xlsx");
+        }
     }
 }

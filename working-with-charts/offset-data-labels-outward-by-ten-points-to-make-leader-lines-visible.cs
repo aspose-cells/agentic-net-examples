@@ -1,10 +1,10 @@
-// Title: Offset Chart Data Labels and Add Leader Lines with Aspose.Cells for .NET (C#)
-// Description: Creates an Excel workbook, adds a column chart, moves data labels 10 points outward (OutsideEnd), enables leader lines, and customizes their style, weight, and color using Aspose.Cells for .NET before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | offset data labels | chart leader lines | column chart labeling | OutsideEnd label position | custom leader line style | Excel chart example | GitHub Aspose.Cells demo
-// Common Searches: Aspose.Cells move data labels outward | C# chart leader lines Aspose.Cells | set label position OutsideEnd Excel chart .NET | customize leader line color and weight Aspose.Cells | offset data labels by points in Excel using C#
-// Developer Intent: Show how to place data labels outside a column chart and style leader lines with Aspose.Cells for .NET.
-// Use Cases: Generate Excel reports where each column value is displayed outside the bar with a clear leader line for readability. | Create presentation‑ready charts that avoid label overlap by offsetting labels and using colored leader lines. | Automate workbook generation in .NET applications where precise label positioning and line styling are required.
-// AI Prompts: Write C# code with Aspose.Cells to offset column chart data labels by 10 points and apply a blue solid leader line. | Show how to set data label position to OutsideEnd and customize leader line style, weight, and color in an Aspose.Cells chart. | Provide a complete Aspose.Cells example that creates a column chart, enables data labels, offsets them outward, and configures leader lines.
+// Title: Offset Pie Chart Data Labels and Add Leader Lines with Aspose.Cells for .NET (C#)
+// Description: Creates an Excel workbook, inserts sample data, adds a pie chart, moves the data labels outward by ten points to make leader lines visible, enables and styles those leader lines, then saves the file. Demonstrates label positioning, offsetting, and leader‑line customization using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# chart example | pie chart data labels outside | offset data labels | leader lines | LabelPositionType.OutsideEnd | ChartType.Pie | Aspose.Cells for .NET | Excel chart styling | chart label offset points
+// Common Searches: Aspose.Cells offset data labels outside pie chart | C# add leader lines to Aspose.Cells chart | how to position chart data labels outside in .NET | customize leader line style Aspose.Cells | set label offset points Aspose.Cells
+// Developer Intent: Show pie‑chart values with labels placed outside the slices, offset by a specific number of points so leader lines are visible, and apply custom styling to those leader lines.
+// Use Cases: Generate a sales‑distribution pie chart where each slice label is positioned outside and linked with a 1 pt black solid leader line for clear presentation. | Create an Excel report for project budgeting that highlights category totals using offset outside labels and styled leader lines to improve readability.
+// AI Prompts: Provide C# code to offset pie chart data labels by ten points and enable leader lines using Aspose.Cells. | Show how to customize leader line thickness, color, and dash style for a chart series in Aspose.Cells for .NET. | Explain how to position data labels outside a pie chart and adjust their offset programmatically with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
@@ -14,18 +14,18 @@ using System.Drawing;
 
 namespace AsposeCellsExamples
 {
-    // Creates an Excel workbook, adds a column chart, moves data labels 10 points outward (OutsideEnd), enables leader lines, and customizes their style, weight, and color using Aspose.Cells for .NET before saving the file.
+    // Creates an Excel workbook, inserts sample data, adds a pie chart, moves the data labels outward by ten points to make leader lines visible, enables and styles those leader lines, then saves the file. Demonstrates label positioning, offsetting, and leader‑line customization using Aspose.Cells for .NET.
     public class OffsetDataLabelsDemo
     {
         public static void Run()
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data
+                // Populate sample data for a pie chart
                 sheet.Cells["A1"].PutValue("Category");
                 sheet.Cells["A2"].PutValue("A");
                 sheet.Cells["A3"].PutValue("B");
@@ -35,31 +35,30 @@ namespace AsposeCellsExamples
                 sheet.Cells["B3"].PutValue(20);
                 sheet.Cells["B4"].PutValue(30);
 
-                // Add a column chart
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                // Add a pie chart
+                int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 8);
                 Chart chart = sheet.Charts[chartIndex];
 
-                // Set data source for the chart
+                // Set the data range for the chart
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // Enable data labels for the first series
+                // Enable data labels and position them outside the slices
                 Series series = chart.NSeries[0];
                 series.DataLabels.ShowValue = true;
+                series.DataLabels.Position = LabelPositionType.OutsideEnd; // place labels outside
 
-                // Position data labels outside the columns (outward)
-                series.DataLabels.Position = LabelPositionType.OutsideEnd;
-
-                // Enable leader lines so they become visible
+                // Enable leader lines so the labels are connected to the slices
                 series.HasLeaderLines = true;
-                series.LeaderLines.IsAuto = false;               // Disable automatic style
-                series.LeaderLines.Style = LineType.Solid;       // Solid line
-                series.LeaderLines.WeightPt = 1;                 // Thin line
-                series.LeaderLines.Color = Color.Blue;           // Color of the leader line
+
+                // Configure leader lines
+                series.LeaderLines.IsAuto = false;
+                series.LeaderLines.WeightPt = 1.0;               // line thickness
+                series.LeaderLines.Style = LineType.Solid;       // solid line
+                series.LeaderLines.Color = Color.Black;
 
                 // Save the workbook
                 workbook.Save("OffsetDataLabelsDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)
             {

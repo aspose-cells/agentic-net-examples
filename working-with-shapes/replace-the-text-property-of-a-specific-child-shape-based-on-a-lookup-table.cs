@@ -1,61 +1,60 @@
-// Title: Replace Shape Text Using a Lookup Dictionary in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to load or create a workbook, iterate over all worksheet shapes, and substitute each shape's Text property with a new value from a Dictionary<string,string> before saving the file.
-// Keywords: Aspose.Cells shape text replacement | C# replace worksheet shape caption | lookup dictionary Aspose.Cells | update Excel shape text .NET | iterate worksheet shapes Aspose
-// Common Searches: How to change text of a shape in Aspose.Cells C# | Replace Excel shape captions using a dictionary | Iterate over worksheet shapes and modify Text property | Aspose.Cells update shape text based on lookup table
-// Developer Intent: Swap the Text value of specific worksheet shapes according to entries in a lookup table.
-// Use Cases: Refresh placeholder labels in a template workbook before distribution. | Localize shape captions by mapping original text to translated strings. | Synchronize shape text with external data sources during automated report generation.
-// AI Prompts: Write C# code that loops through all shapes in an Aspose.Cells worksheet and replaces their Text using a Dictionary<string,string> lookup. | Show how to filter shapes that contain text and update only those whose text matches keys in a lookup table with Aspose.Cells for .NET. | Provide an example that saves the workbook after applying a lookup‑based text replacement to shape captions.
+// Title: C# – Replace Text in a Specific Excel Shape Using a Lookup Dictionary with Aspose.Cells
+// Description: Loads an Excel workbook, finds a shape named "MyTextBox" on the first worksheet, and replaces its TextBody content using key‑value pairs from a Dictionary before saving the file.
+// Keywords: Aspose.Cells replace shape text | C# Excel shape text replacement | Aspose.Cells TextBody Replace | lookup dictionary Excel textbox | update Excel shape content .NET | Aspose.Cells shape manipulation
+// Common Searches: replace text in a specific shape Aspose.Cells C# | use dictionary to update Excel textbox with Aspose | Aspose.Cells change placeholder text in shape | iterate worksheet shapes and modify TextBody | C# replace shape text based on lookup table
+// Developer Intent: Replace the Text property of a targeted child shape using a lookup dictionary.
+// Use Cases: Swap placeholder strings in template workbooks with real data before distribution. | Apply language translation dictionaries to shape labels for localization. | Insert calculated values such as totals or dates into specific shape text boxes.
+// AI Prompts: Generate C# code that iterates through worksheet shapes and replaces text using a Dictionary<string,string> with Aspose.Cells. | Show how to perform case‑insensitive replacements in a shape's TextBody using Aspose.Cells for .NET. | Provide an example that logs each text replacement applied to a shape's TextBody during processing.
 
-using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing.Texts;
 
-// Demonstrates how to load or create a workbook, iterate over all worksheet shapes, and substitute each shape's Text property with a new value from a Dictionary<string,string> before saving the file.
+// Loads an Excel workbook, finds a shape named "MyTextBox" on the first worksheet, and replaces its TextBody content using key‑value pairs from a Dictionary before saving the file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the worksheet that contains the shape
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // -------------------------------------------------
-        // Sample shapes – in real scenario shapes already exist
-        // -------------------------------------------------
-        // Add a text box shape
-        Shape textBox = worksheet.Shapes.AddTextBox(1, 0, 0, 100, 30, 200);
-        textBox.Text = "Hello";
-
-        // Add a rectangle shape
-        Shape rectangle = worksheet.Shapes.AddRectangle(1, 0, 1, 150, 30, 200);
-        rectangle.Text = "World";
-
-        // -------------------------------------------------
-        // Lookup table: old text -> new text
-        // -------------------------------------------------
+        // Lookup table: key = text to find, value = text to replace with
         var lookup = new Dictionary<string, string>
         {
-            { "Hello", "Hi" },
-            { "World", "Earth" }
+            { "OldValue1", "NewValue1" },
+            { "Placeholder", "ActualData" },
+            { "ABC", "XYZ" }
         };
 
-        // -------------------------------------------------
-        // Replace the Text property of each shape based on the lookup
-        // -------------------------------------------------
+        // Locate the specific child shape (by name, index, or any other criteria)
+        Shape targetShape = null;
         foreach (Shape shape in worksheet.Shapes)
         {
-            // Ensure the shape actually contains text
-            if (!string.IsNullOrEmpty(shape.Text) && lookup.ContainsKey(shape.Text))
+            // Example: identify shape by its Name property
+            if (shape.Name == "MyTextBox")
             {
-                // Replace with the corresponding value from the lookup table
-                shape.Text = lookup[shape.Text];
+                targetShape = shape;
+                break;
             }
         }
 
-        // -------------------------------------------------
-        // Save the workbook
-        // -------------------------------------------------
-        workbook.Save("ModifiedShapes.xlsx");
+        if (targetShape != null)
+        {
+            // Use the shape's TextBody (FontSettingCollection) to perform replacements
+            FontSettingCollection textBody = targetShape.TextBody;
+
+            foreach (var pair in lookup)
+            {
+                // Replace all occurrences of the old text with the new text
+                textBody.Replace(pair.Key, pair.Value);
+            }
+        }
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,75 +1,37 @@
-// Title: Aspose.Cells for .NET – Delete all worksheet‑scoped (or all) named ranges from an Excel workbook
-// Description: Loads a workbook, extracts every defined name from the Worksheets.Names collection, removes them with NameCollection.Remove, and saves the cleaned file. Includes optional filtering for worksheet‑scoped names only.
-// Keywords: Aspose.Cells delete named ranges | remove worksheet scoped names .NET | clear defined names C# | Workbook.Worksheets.Names.Remove | Aspose.Cells clean workbook | C# Excel named range removal
-// Common Searches: how to delete worksheet scoped named ranges using Aspose.Cells | remove all defined names from an Excel file C# | Aspose.Cells clear named ranges before saving | C# code to purge named ranges in a workbook | Aspose.Cells delete names collection
-// Developer Intent: Eliminate every defined name—optionally only worksheet‑scoped—from a workbook and write the result to a new file.
-// Use Cases: Strip legacy named ranges from a template before distribution. | Prevent reference errors after data migration by clearing obsolete names. | Prepare an Excel file for systems that do not support named ranges.
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, removes only worksheet‑scoped named ranges, and saves the file. | Show how to use NameCollection.Remove(string[]) to delete all defined names in a workbook. | Explain how to check the IsWorksheetScoped property before removing a name.
+// Title: Remove all worksheet‑scoped named ranges from an Excel file using Aspose.Cells for .NET
+// Description: Loads an existing workbook, extracts every worksheet‑level name from the Worksheets.Names collection, deletes them in a single operation, and saves the cleaned file. Ideal for preparing Excel files for distribution or further processing.
+// Keywords: Aspose.Cells delete worksheet names | remove worksheet scoped named ranges .NET | clear Excel named ranges programmatically | Workbook.Worksheets.Names.Remove | clean Excel workbook Aspose.Cells | C# delete Excel named ranges
+// Common Searches: how to delete all worksheet scoped names with Aspose.Cells | Aspose.Cells remove named ranges from workbook C# | clear worksheet level names in Excel using .NET | bulk delete Excel named ranges Aspose.Cells
+// Developer Intent: Programmatically purge every worksheet‑level named range from a loaded workbook and write the sanitized version to disk.
+// Use Cases: Strip internal names before sharing a template with external users. | Eliminate temporary ranges generated during data‑analysis pipelines. | Prepare a workbook for import into systems that do not support custom names.
+// AI Prompts: Generate a C# method that accepts an input path, removes all worksheet‑scoped named ranges with Aspose.Cells, and returns the path of the cleaned file. | Show error‑handling best practices when deleting named ranges from a large Excel workbook using Aspose.Cells. | Explain how to verify that no worksheet‑level names remain after calling Worksheets.Names.Remove.
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads an existing workbook, extracts every worksheet‑level name from the Worksheets.Names collection, deletes them in a single operation, and saves the cleaned file. Ideal for preparing Excel files for distribution or further processing.
+class Program
 {
-    // Loads a workbook, extracts every defined name from the Worksheets.Names collection, removes them with NameCollection.Remove, and saves the cleaned file. Includes optional filtering for worksheet‑scoped names only.
-    public class DeleteWorksheetScopedNames
+    static void Main()
     {
-        public static void Run()
+        // Load the existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Get the collection of worksheet‑scoped named ranges
+        NameCollection worksheetNames = workbook.Worksheets.Names;
+
+        // Collect the texts of all defined names
+        List<string> namesToDelete = new List<string>();
+        foreach (Name name in worksheetNames)
         {
-            const string inputFile = "input.xlsx";
-            const string outputFile = "output.xlsx";
-
-            // Verify input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
-            {
-                Console.WriteLine($"Input file \"{inputFile}\" not found.");
-                return;
-            }
-
-            try
-            {
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputFile);
-
-                // Get the collection of defined names (includes worksheet‑scoped names)
-                NameCollection names = workbook.Worksheets.Names;
-
-                // Collect the texts of all names to be removed
-                List<string> namesToRemove = new List<string>();
-                foreach (Name name in names)
-                {
-                    // If you need to filter only worksheet‑scoped names, uncomment the next line
-                    // if (name.IsWorksheetScoped) namesToRemove.Add(name.Text);
-                    
-                    // For removing all defined names, add every name
-                    namesToRemove.Add(name.Text);
-                }
-
-                // Remove the collected names using the Remove(string[]) method
-                if (namesToRemove.Count > 0)
-                {
-                    names.Remove(namesToRemove.ToArray());
-                }
-
-                // Save the cleaned workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            namesToDelete.Add(name.Text);
         }
-    }
 
-    // Entry point for the application
-    public static class Program
-    {
-        public static void Main(string[] args)
-        {
-            DeleteWorksheetScopedNames.Run();
-        }
+        // Remove all collected names in one call
+        worksheetNames.Remove(namesToDelete.ToArray());
+
+        // Save the cleaned workbook
+        workbook.Save("cleaned.xlsx");
     }
 }

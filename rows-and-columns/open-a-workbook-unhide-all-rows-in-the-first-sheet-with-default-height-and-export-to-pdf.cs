@@ -1,38 +1,37 @@
-// Title: C# – Unhide All Rows in First Worksheet (Default Height) and Export to PDF with Aspose.Cells
-// Description: Load an Excel file, unhide every row in the first sheet while preserving the default row height, and convert the workbook to a PDF using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# unhide rows | export worksheet to PDF | default row height Aspose.Cells | convert Excel to PDF .NET | unhide hidden rows programmatically
-// Common Searches: Aspose.Cells how to unhide all rows before PDF conversion | C# code to show hidden rows and save Excel as PDF | unhide rows default height Aspose.Cells example | convert hidden‑row Excel file to PDF with Aspose
-// Developer Intent: Reveal every row in the first worksheet using the original height and generate a PDF from the workbook.
-// Use Cases: Produce printable PDFs from templates where hidden rows must appear. | Batch‑process Excel reports, ensuring no data is omitted due to hidden rows. | Create compliance‑ready PDFs that display all rows regardless of prior visibility settings.
-// AI Prompts: Generate C# code that opens an Excel workbook, unhides all rows in the first sheet with default height, and saves it as a PDF using Aspose.Cells. | Show how to calculate the last data row, unhide rows from index 0 to that row, and export the workbook to PDF with Aspose.Cells in .NET.
+// Title: Aspose.Cells .NET: Unhide All Rows in the First Worksheet (Default Height) and Export to PDF
+// Description: Loads an Excel workbook, accesses the first worksheet, determines the allocated row count, unhides every row while preserving the default (auto‑fit) height, and saves the workbook as a PDF file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells unhide rows .NET | export Excel to PDF C# | default row height Aspose | unhide hidden rows PDF conversion | Aspose.Cells workbook to PDF
+// Common Searches: how to unhide rows with Aspose.Cells before PDF export | Aspose.Cells C# unhide all rows default height | convert Excel to PDF after showing hidden rows | C# code to unhide rows and save as PDF using Aspose
+// Developer Intent: Reveal every row in the first worksheet using the default height and generate a PDF version of the workbook.
+// Use Cases: Prepare a printable PDF from an Excel template that contains hidden rows. | Automate batch processing of workbooks to ensure all data is visible in the resulting PDFs. | Create a utility that receives an .xlsx path, unhides rows in the first sheet, and outputs a distribution‑ready PDF.
+// AI Prompts: Generate a C# method that takes an input .xlsx file and an output PDF path, unhides all rows in the first worksheet with default height using Aspose.Cells, and saves the PDF. | Show sample Aspose.Cells code to unhide rows from row 0 to the last allocated row (height -1) and then export the workbook to PDF.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Load an Excel file, unhide every row in the first sheet while preserving the default row height, and convert the workbook to a PDF using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsUnhideRowsAndExportPdf
 {
-    static void Main()
+    // Loads an Excel workbook, accesses the first worksheet, determines the allocated row count, unhides every row while preserving the default (auto‑fit) height, and saves the workbook as a PDF file using Aspose.Cells for .NET.
+    class Program
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main()
+        {
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Determine the number of rows to unhide.
-        // MaxDataRow returns the last row index that contains data.
-        // Adding 1 gives the total count of rows that may be hidden.
-        int totalRows = cells.MaxDataRow + 1;
+            // Determine the total number of rows in the sheet
+            // Rows.Count returns the number of rows currently allocated in the sheet
+            int totalRows = sheet.Cells.Rows.Count;
 
-        // Unhide all rows starting from row 0.
-        // Height = -1 keeps the original (default) row height.
-        cells.UnhideRows(0, totalRows, -1);
+            // Unhide all rows in the first sheet.
+            // The height parameter is set to -1 to keep the default (auto‑fit) height.
+            sheet.Cells.UnhideRows(0, totalRows, -1);
 
-        // Save the workbook as PDF.
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        workbook.Save("output.pdf", pdfOptions);
+            // Export the workbook to PDF (replace with your desired output path)
+            workbook.Save("output.pdf", SaveFormat.Pdf);
+        }
     }
 }

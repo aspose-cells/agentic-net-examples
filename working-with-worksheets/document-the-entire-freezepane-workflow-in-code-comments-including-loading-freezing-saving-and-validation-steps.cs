@@ -1,37 +1,32 @@
-// Title: Aspose.Cells .NET Freeze Panes Example – Load, Freeze, Validate, Save as XLSB
-// Description: C# sample that creates or loads a workbook, freezes the first three rows and columns at cell C3, reads back the freeze parameters with GetFreezedPanes, checks PaneState, and saves the file as XLSB using XlsbSaveOptions with merged‑area validation.
-// Keywords: Aspose.Cells | C# | .NET | freeze panes | Worksheet.FreezePanes | GetFreezedPanes | PaneState | XlsbSaveOptions | ValidateMergedAreas | XLSB | Excel automation
-// Common Searches: Aspose.Cells freeze first rows columns C# | GetFreezedPanes example Aspose.Cells | save XLSB with merged area validation Aspose.Cells | PaneState enumeration Aspose.Cells | C# code to freeze panes in Excel | Aspose.Cells freeze pane workflow
-// Developer Intent: Demonstrate how to programmatically freeze rows/columns, verify the settings, and persist the workbook with validation using Aspose.Cells for .NET.
-// Use Cases: Generate reports where header rows and columns stay visible while scrolling. | Automate Excel creation on a server that requires frozen panes for better navigation. | Validate merged cells before saving to XLSB to avoid file corruption. | Integrate freeze‑pane logic into a document‑processing pipeline that outputs XLSB files.
-// AI Prompts: Write C# code with Aspose.Cells to freeze the first three rows and columns at cell C3 and print the freeze details using GetFreezedPanes. | Show how to save a workbook as .xlsb with ValidateMergedAreas enabled and explain why this setting matters. | Explain the possible values of PaneState after applying FreezePanes and how to interpret each state. | Create a script that loads an existing workbook, applies freeze panes, checks GetFreezedPanes output, and logs the results.
+// Title: Aspose.Cells .NET – Complete Freeze‑Pane Workflow: Load, Freeze, Save, Validate, Unfreeze
+// Description: A C# sample that demonstrates the full freeze‑pane lifecycle with Aspose.Cells: create or load a workbook, populate sample data, freeze rows and columns at cell C3, persist the file, reload it to confirm the settings via GetFreezedPanes, and optionally remove the freeze before saving a second file.
+// Keywords: Aspose.Cells freeze panes C# | GetFreezedPanes method | Aspose.Cells unfreeze panes | save workbook Aspose.Cells .NET | worksheet freeze validation | C# Excel freeze pane example | Aspose.Cells API freeze pane
+// Common Searches: how to freeze panes at a specific cell using Aspose.Cells for .NET | verify frozen pane settings after saving an Excel file with Aspose.Cells | unfreeze panes programmatically and resave workbook in C# | retrieve number of frozen rows and columns Aspose.Cells | Aspose.Cells example for freeze‑pane round‑trip validation
+// Developer Intent: Show step‑by‑step code for creating, freezing, persisting, checking, and optionally unfreezing panes in an Excel workbook with Aspose.Cells for .NET.
+// Use Cases: Generate reports where header rows and columns stay visible while scrolling large data tables. | Automated quality‑check to ensure freeze‑pane settings survive a save/load cycle before distribution. | Provide users with both frozen and unfrozen versions of a workbook based on preference.
+// AI Prompts: Write C# code that loads an existing workbook, freezes panes at D5, saves it, and then reads back the frozen rows and columns using Aspose.Cells. | Explain how GetFreezedPanes works in Aspose.Cells and how to handle cases where no panes are frozen. | Create a step‑by‑step guide to unfreeze panes, save the workbook, and confirm that the freeze settings have been cleared.
 
 using System;
 using Aspose.Cells;
 
 namespace FreezePaneWorkflowDemo
 {
-    // C# sample that creates or loads a workbook, freezes the first three rows and columns at cell C3, reads back the freeze parameters with GetFreezedPanes, checks PaneState, and saves the file as XLSB using XlsbSaveOptions with merged‑area validation.
+    // A C# sample that demonstrates the full freeze‑pane lifecycle with Aspose.Cells: create or load a workbook, populate sample data, freeze rows and columns at cell C3, persist the file, reload it to confirm the settings via GetFreezedPanes, and optionally remove the freeze before saving a second file.
     class Program
     {
         static void Main()
         {
             // ------------------------------------------------------------
-            // 1. Load or create a workbook
+            // 1. Create a new workbook (or load an existing one)
             // ------------------------------------------------------------
-            // Here we create a new workbook. In a real scenario you could
-            // load an existing file using: new Workbook("input.xlsx");
+            // Here we create a fresh workbook. In a real scenario you could
+            // also load a workbook from disk using: Workbook workbook = new Workbook("input.xlsx");
             Workbook workbook = new Workbook();
 
-            // ------------------------------------------------------------
-            // 2. Access the target worksheet
-            // ------------------------------------------------------------
+            // Access the first worksheet in the workbook
             Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Name = "DataSheet";
 
-            // ------------------------------------------------------------
-            // 3. Populate some sample data (optional, just for illustration)
-            // ------------------------------------------------------------
+            // Populate some sample data so that the freeze pane effect is visible
             for (int row = 0; row < 20; row++)
             {
                 for (int col = 0; col < 5; col++)
@@ -41,52 +36,51 @@ namespace FreezePaneWorkflowDemo
             }
 
             // ------------------------------------------------------------
-            // 4. Freeze panes
+            // 2. Freeze panes
             // ------------------------------------------------------------
-            // Freeze the first three rows and first three columns.
-            // The freeze position is cell "C3" (row index 2, column index 2).
-            // The last two parameters specify how many rows/columns are frozen.
+            // Freeze panes at cell "C3" (which is row index 2, column index 2)
+            // The parameters 3 and 3 indicate that the top 3 rows and left 3 columns
+            // will remain visible while scrolling.
             worksheet.FreezePanes("C3", 3, 3);
 
             // ------------------------------------------------------------
-            // 5. Validate that the panes are frozen
+            // 3. Save the workbook to disk
             // ------------------------------------------------------------
-            // GetFreezedPanes returns a boolean indicating whether the
-            // worksheet has frozen panes and outputs the freeze details.
-            int freezeRow, freezeColumn, frozenRows, frozenColumns;
-            bool hasFreeze = worksheet.GetFreezedPanes(out freezeRow, out freezeColumn, out frozenRows, out frozenColumns);
+            // The workbook is saved in XLSX format. You can change the format by
+            // providing a different SaveFormat enum value.
+            string outputPath = "FreezePaneDemo.xlsx";
+            workbook.Save(outputPath);
 
-            Console.WriteLine($"Has frozen panes: {hasFreeze}");
+            // ------------------------------------------------------------
+            // 4. Validation – verify that the panes are indeed frozen
+            // ------------------------------------------------------------
+            // Load the saved workbook to ensure that the freeze settings persisted.
+            Workbook loadedWorkbook = new Workbook(outputPath);
+            Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
+
+            // Retrieve freeze pane information using GetFreezedPanes.
+            // The method returns true if the worksheet has frozen panes.
+            bool hasFreeze = loadedWorksheet.GetFreezedPanes(
+                out int freezeRow,
+                out int freezeColumn,
+                out int frozenRows,
+                out int frozenColumns);
+
+            // Output the validation results.
+            Console.WriteLine($"Freeze panes present: {hasFreeze}");
             if (hasFreeze)
             {
-                Console.WriteLine($"Freeze position - Row: {freezeRow}, Column: {freezeColumn}");
-                Console.WriteLine($"Frozen rows: {frozenRows}, Frozen columns: {frozenColumns}");
+                Console.WriteLine($"Freeze position - Row index: {freezeRow}, Column index: {freezeColumn}");
+                Console.WriteLine($"Number of frozen rows: {frozenRows}, Number of frozen columns: {frozenColumns}");
             }
 
             // ------------------------------------------------------------
-            // 6. Check the overall pane state (optional)
+            // 5. Optional: Unfreeze panes and re‑save (demonstrates full workflow)
             // ------------------------------------------------------------
-            // PaneState provides a higher‑level enumeration of the pane status.
-            PaneStateType paneState = worksheet.PaneState;
-            Console.WriteLine($"Pane state: {paneState}");
-
-            // ------------------------------------------------------------
-            // 7. Save the workbook with validation of merged areas
-            // ------------------------------------------------------------
-            // Although this example does not merge cells, setting
-            // ValidateMergedAreas demonstrates how to enable validation
-            // during the save operation.
-            XlsbSaveOptions saveOptions = new XlsbSaveOptions
-            {
-                ValidateMergedAreas = true,
-                // Preserve merged areas (default is true, set explicitly for clarity)
-                MergeAreas = true
-            };
-
-            // Save the workbook to a file.
-            workbook.Save("FreezePaneWorkflowDemo.xlsb", saveOptions);
-
-            Console.WriteLine("Workbook saved successfully.");
+            loadedWorksheet.UnFreezePanes();
+            string unfreezePath = "UnfreezePaneDemo.xlsx";
+            loadedWorkbook.Save(unfreezePath);
+            Console.WriteLine($"Workbook saved after unfreezing panes to '{unfreezePath}'.");
         }
     }
 }

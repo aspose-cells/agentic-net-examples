@@ -1,92 +1,67 @@
-// Title: Export IconSet Conditional Formatting to HTML with <img> Tags using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, apply a TrafficLights31 IconSet to cells A1:A5, configure HtmlSaveOptions to write icons as external image files, save the workbook as HTML, and verify the generated <img> tags with a regular expression.
-// Keywords: Aspose.Cells | C# | IconSet export | HTML save options | conditional formatting icons | TrafficLights31 | ExportImagesAsBase64 false | attached files directory | image verification regex | web report icons
-// Common Searches: Aspose.Cells export IconSet to HTML | HTML export conditional formatting icons Aspose | save Excel icons as separate image files .NET | verify <img> tags in exported HTML Aspose.Cells | configure HtmlSaveOptions for external images
-// Developer Intent: Generate an HTML file from a workbook that contains an IconSet conditional format and ensure the icons are saved as external image files referenced by <img> tags.
-// Use Cases: Render traffic‑light icons in a web‑based dashboard without base64 encoding. | Automate validation of exported HTML to confirm the correct number of icon images. | Integrate Excel‑derived reports into a CMS that requires images served from a specific URL path.
-// AI Prompts: Write C# code with Aspose.Cells that adds a TrafficLights31 IconSet to a range and exports the workbook to HTML, saving icons as separate PNG files in a custom folder. | Provide a method that parses the saved HTML file and returns all <img> src attributes that correspond to conditional‑formatting icons. | Explain how to set HtmlSaveOptions so icons are not embedded as base64 but written to an attached files directory with a URL prefix.
+// Title: Export IconSet Conditional Formatting to HTML with <img> Icons using Aspose.Cells C#
+// Description: Creates a workbook, fills column A with numbers, applies a TrafficLights31 IconSet to A1:A10, and saves the file as HTML with HtmlSaveOptions.ExportImagesAsBase64 set to false so each icon is written as an external image referenced by an <img> tag. The sample then reads the HTML to confirm the presence of the <img> elements.
+// Keywords: Aspose.Cells | C# | HTML export | IconSet conditional formatting | TrafficLights31 | ExportImagesAsBase64 false | img tag verification | conditional formatting icons HTML | Aspose.Cells HtmlSaveOptions
+// Common Searches: Aspose.Cells export IconSet to HTML | How to save conditional formatting icons as images in HTML | C# Aspose.Cells HtmlSaveOptions ExportImagesAsBase64 | Verify <img> tags in Aspose.Cells HTML output | IconSet HTML export example
+// Developer Intent: Generate HTML from a workbook that includes IconSet conditional formatting and ensure the icons appear as separate image files referenced by <img> tags.
+// Use Cases: Build a web dashboard where traffic‑light icons from an IconSet visually represent KPI values. | Automate a regression test that exports a spreadsheet to HTML and checks that each IconSet cell contains an <img> element pointing to the correct icon file. | Create email‑ready HTML reports with conditional‑formatting icons saved as external images for consistent rendering across mail clients.
+// AI Prompts: Write C# code with Aspose.Cells to add a TrafficLights31 IconSet to a range and export the workbook to HTML using external image files for the icons. | Provide a method that parses the generated HTML and asserts that every cell containing the IconSet includes an <img> tag referencing the correct icon file. | Explain the impact of setting HtmlSaveOptions.ExportImagesAsBase64 to false on the rendering of conditional‑formatting icons in exported HTML.
 
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsIconSetHtmlExport
+// Creates a workbook, fills column A with numbers, applies a TrafficLights31 IconSet to A1:A10, and saves the file as HTML with HtmlSaveOptions.ExportImagesAsBase64 set to false so each icon is written as an external image referenced by an <img> tag. The sample then reads the HTML to confirm the presence of the <img> elements.
+class IconSetHtmlExportDemo
 {
-    // Demonstrates how to create a workbook, apply a TrafficLights31 IconSet to cells A1:A5, configure HtmlSaveOptions to write icons as external image files, save the workbook as HTML, and verify the generated <img> tags with a regular expression.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate column A with sample numeric values
+        for (int i = 0; i < 10; i++)
         {
-            // 1. Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // 2. Populate sample data in column A (A1:A5)
-            for (int i = 0; i < 5; i++)
-            {
-                sheet.Cells[i, 0].PutValue((i + 1) * 10); // 10, 20, 30, 40, 50
-            }
-
-            // 3. Add an IconSet conditional formatting to the range A1:A5
-            int cfIndex = sheet.ConditionalFormattings.Add();                     // add a new conditional formatting collection
-            FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex]; // get the collection
-
-            // Define the cell area for the conditional formatting
-            CellArea area = new CellArea
-            {
-                StartRow = 0,
-                EndRow = 4,
-                StartColumn = 0,
-                EndColumn = 0
-            };
-            fcc.AddArea(area);
-
-            // Add an IconSet condition
-            int conditionIndex = fcc.AddCondition(FormatConditionType.IconSet);
-            FormatCondition condition = fcc[conditionIndex];
-
-            // Configure the IconSet (use TrafficLights31 as an example)
-            condition.IconSet.Type = IconSetType.TrafficLights31;
-            condition.IconSet.ShowValue = true; // display the cell value alongside the icon
-
-            // 4. Prepare HTML save options to ensure icons are exported as separate image files
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            htmlOptions.ExportImagesAsBase64 = false; // export images as files, not base64 strings
-            string attachedDir = "IconImages";
-            Directory.CreateDirectory(attachedDir);
-            htmlOptions.AttachedFilesDirectory = attachedDir; // folder where images will be saved
-            htmlOptions.AttachedFilesUrlPrefix = attachedDir + "/"; // URL prefix used in the HTML <img> tags
-
-            // 5. Save the workbook as HTML
-            string htmlPath = "IconSetExport.html";
-            workbook.Save(htmlPath, htmlOptions);
-
-            // 6. Verify that the generated HTML contains <img> tags for the icons
-            string htmlContent = File.ReadAllText(htmlPath);
-            MatchCollection imgMatches = Regex.Matches(htmlContent, @"<img\s+[^>]*src\s*=\s*[""'][^""']+[""'][^>]*>", RegexOptions.IgnoreCase);
-
-            Console.WriteLine($"HTML file saved to: {Path.GetFullPath(htmlPath)}");
-            Console.WriteLine($"Number of <img> tags found: {imgMatches.Count}");
-
-            // List the src attributes of the found <img> tags (first few if many)
-            int displayCount = Math.Min(5, imgMatches.Count);
-            for (int i = 0; i < displayCount; i++)
-            {
-                string imgTag = imgMatches[i].Value;
-                Console.WriteLine($"Img tag {i + 1}: {imgTag}");
-            }
-
-            // 7. Optionally, list the exported image files to confirm they exist
-            if (Directory.Exists(attachedDir))
-            {
-                string[] imageFiles = Directory.GetFiles(attachedDir);
-                Console.WriteLine($"Exported image files in '{attachedDir}':");
-                foreach (string file in imageFiles)
-                {
-                    Console.WriteLine($" - {Path.GetFileName(file)} ({new FileInfo(file).Length} bytes)");
-                }
-            }
+            worksheet.Cells[i, 0].PutValue(i * 10);
         }
+
+        // Add an IconSet conditional formatting to the range A1:A10
+        int cfIndex = worksheet.ConditionalFormattings.Add();
+        FormatConditionCollection fcc = worksheet.ConditionalFormattings[cfIndex];
+
+        // Define the cell area for the conditional formatting
+        CellArea area = new CellArea
+        {
+            StartRow = 0,
+            EndRow = 9,
+            StartColumn = 0,
+            EndColumn = 0
+        };
+        fcc.AddArea(area);
+
+        // Add the IconSet condition and configure its type
+        int conditionIndex = fcc.AddCondition(FormatConditionType.IconSet);
+        FormatCondition condition = fcc[conditionIndex];
+        condition.IconSet.Type = IconSetType.TrafficLights31;
+        condition.IconSet.ShowValue = true; // optional: display the cell value alongside the icon
+
+        // Prepare HTML save options to export images as separate files (so <img> tags are used)
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+        {
+            ExportImagesAsBase64 = false // ensures icons are saved as image files referenced by <img>
+        };
+
+        // Define output paths
+        string outputDir = Path.Combine(Environment.CurrentDirectory, "output");
+        Directory.CreateDirectory(outputDir);
+        string htmlPath = Path.Combine(outputDir, "IconSet.html");
+
+        // Save the workbook as HTML
+        workbook.Save(htmlPath, htmlOptions);
+
+        // Verify that the generated HTML contains <img> tags for the icons
+        string htmlContent = File.ReadAllText(htmlPath);
+        bool containsImgTag = htmlContent.Contains("<img");
+        Console.WriteLine("HTML contains <img> tags for icons: " + containsImgTag);
     }
 }

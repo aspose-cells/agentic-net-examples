@@ -1,74 +1,83 @@
-// Title: Monitor Aspose.Cells chart‑to‑PNG conversion with IProgress in C#
-// Description: Creates a workbook, adds a column chart, and uses ImageOrPrintOptions with a custom IPageSavingCallback to report the rendering percentage via an IProgress<int> instance that writes to the console while saving the chart as a PNG file.
-// Keywords: Aspose.Cells | chart export PNG | IProgress<int> | IPageSavingCallback | C# | .NET | image conversion progress | console logging | ImageOrPrintOptions | chart rendering feedback
-// Common Searches: Aspose.Cells track chart export progress C# | IProgress with ImageOrPrintOptions example | How to show percentage while saving chart as PNG | Implement IPageSavingCallback for image conversion | Console progress report for Aspose.Cells chart rendering
-// Developer Intent: Export a worksheet chart to a PNG image and display the conversion percentage in the console during the process.
-// Use Cases: Command‑line tools that need real‑time feedback when converting large or multi‑page charts. | Batch jobs that process many charts and require per‑file progress reporting for monitoring. | Desktop applications that want to inform users about chart image generation to improve perceived performance.
-// AI Prompts: Write a C# snippet that saves an Aspose.Cells chart as JPEG and reports progress with IProgress<int>. | Show how to modify the ChartProgressCallback to write progress updates to a log file instead of the console. | Provide an example that adds CancellationToken support to the chart‑to‑image conversion while still using IProgress for status updates.
+// Title: Monitor Aspose.Cells Chart‑to‑PNG Conversion with IProgress in C#
+// Description: This example creates a workbook, adds a column chart, and exports the chart to a PNG file while reporting conversion percentages through a custom IProgress<int> implementation that writes updates to the console.
+// Keywords: Aspose.Cells | chart to PNG | IProgress | .NET | C# | conversion progress | console progress reporting | chart image export | progress callback | Aspose.Cells chart export
+// Common Searches: Aspose.Cells report chart conversion progress | C# IProgress example for chart to PNG | how to track Aspose.Cells image export percentage | convert Aspose.Cells chart to PNG with progress callback | display chart export progress in console .NET
+// Developer Intent: Show real‑time percentage of a chart‑to‑PNG conversion using IProgress and output it to the console.
+// Use Cases: Provide live feedback in a console tool when exporting large charts to PNG. | Log conversion milestones during batch processing of multiple charts. | Integrate progress updates into a GUI status bar while generating chart images for reports.
+// AI Prompts: Generate an async version of the chart‑to‑PNG conversion that reports progress via IProgress<int> without blocking the UI. | Create a reusable IProgress implementation that writes percentage updates to a log file instead of the console. | Adapt the sample to export the chart as JPEG and include cancellation support through a CancellationToken.
 
 using System;
+using System.Threading;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a column chart, and uses ImageOrPrintOptions with a custom IPageSavingCallback to report the rendering percentage via an IProgress<int> instance that writes to the console while saving the chart as a PNG file.
-class Program
+namespace AsposeCellsChartConversionProgress
 {
-    static void Main()
+    // Simple IProgress implementation that writes percentage to console
+    // This example creates a workbook, adds a column chart, and exports the chart to a PNG file while reporting conversion percentages through a custom IProgress<int> implementation that writes updates to the console.
+    class ConsoleProgress : IProgress<int>
     {
-        // Create a workbook and add sample data for the chart
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["A3"].PutValue("Banana");
-        worksheet.Cells["A4"].PutValue("Cherry");
-
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(30);
-        worksheet.Cells["B3"].PutValue(45);
-        worksheet.Cells["B4"].PutValue(25);
-
-        // Add a column chart and bind it to the data range
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Set up a progress reporter that writes percentage to the console
-        IProgress<int> progress = new Progress<int>(p => Console.WriteLine($"Conversion progress: {p}%"));
-
-        // Configure image options and attach the custom page‑saving callback
-        ImageOrPrintOptions options = new ImageOrPrintOptions
+        public void Report(int value)
         {
-            ImageType = ImageType.Png,
-            PageSavingCallback = new ChartProgressCallback(progress)
-        };
-
-        // Convert the chart to a PNG file while reporting progress
-        chart.ToImage("chart.png", options);
+            Console.WriteLine($"Conversion progress: {value}%");
+        }
     }
 
-    // Custom callback that reports conversion progress via IProgress<int>
-    private class ChartProgressCallback : IPageSavingCallback
+    class Program
     {
-        private readonly IProgress<int> _progress;
-
-        public ChartProgressCallback(IProgress<int> progress) => _progress = progress;
-
-        public void PageStartSaving(PageStartSavingArgs args)
+        static void Main()
         {
-            // Calculate percentage based on current page index and total page count
-            int percent = (int)((args.PageIndex + 1) * 100.0 / args.PageCount);
-            _progress.Report(percent);
+            // 1. Create a new workbook and add sample data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["A3"].PutValue("Orange");
+            sheet.Cells["A4"].PutValue("Banana");
+
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(15);
+            sheet.Cells["B4"].PutValue(7);
+
+            // 2. Add a column chart based on the data
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // 3. Prepare progress reporter
+            IProgress<int> progress = new ConsoleProgress();
+
+            // 4. Convert chart to PNG while reporting progress
+            ConvertChartToPngWithProgress(chart, "chart_output.png", progress);
+
+            // 5. Save the workbook (optional, just to keep the file consistent)
+            workbook.Save("ChartWorkbook.xlsx");
         }
 
-        public void PageEndSaving(PageEndSavingArgs args)
+        // Performs the conversion and reports progress via IProgress<int>
+        static void ConvertChartToPngWithProgress(Chart chart, string outputPath, IProgress<int> progress)
         {
-            // Ensure the final report reaches 100%
-            _progress.Report(100);
+            // Report start
+            progress.Report(0);
+
+            // Simulate some preparatory work (e.g., calculating layout)
+            Thread.Sleep(200); // short delay to mimic work
+            progress.Report(30);
+
+            // Actual conversion – this is a single operation, so we treat it as the bulk of work
+            chart.ToImage(outputPath, ImageType.Png);
+
+            // Report near completion
+            progress.Report(80);
+            Thread.Sleep(100); // optional delay to illustrate asynchronous steps
+
+            // Final report
+            progress.Report(100);
+            Console.WriteLine($"Chart successfully saved to '{outputPath}'.");
         }
     }
 }

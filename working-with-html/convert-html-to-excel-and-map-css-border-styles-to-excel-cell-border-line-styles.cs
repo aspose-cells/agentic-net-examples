@@ -1,103 +1,84 @@
-// Title: HTML to Excel in C# with CSS border mapping – Aspose.Cells
-// Description: Loads an HTML file into an Aspose.Cells Workbook, optionally translates CSS border names to CellBorderType values via a dictionary, applies the mapped line styles to every used cell, and saves the result as an XLSX workbook.
-// Keywords: Aspose.Cells | HTML to Excel conversion | C# | .NET | CSS border mapping | CellBorderType | Excel cell borders | LoadOptions Html | Workbook.Save Xlsx
-// Common Searches: convert html file to xlsx using Aspose.Cells | map css border styles to Excel borders C# | Aspose.Cells custom border mapping example | load html workbook and preserve borders | apply CellBorderType from css in Aspose.Cells
-// Developer Intent: Load an HTML document, replace CSS border definitions with matching Excel border styles, and generate a styled XLSX file.
-// Use Cases: Transform HTML reports into Excel workbooks while keeping original border thicknesses. | Process HTML tables that store border style names in comments and reflect them in Excel cells. | Create a reusable utility that reads CSS border values, maps them to Aspose.Cells enums, and applies consistent styling across worksheets.
-// AI Prompts: Write C# code that parses CSS border attributes from HTML and maps them to Aspose.Cells CellBorderType enums for all cells. | Show how to extend the CSS‑to‑CellBorder dictionary with custom names and apply different line styles to individual cell sides. | Explain a fallback strategy when a CSS border style is missing from the mapping dictionary during HTML‑to‑Excel conversion.
+// Title: C# – Convert HTML to Excel and Translate CSS Border Styles to Excel Cell Borders with Aspose.Cells
+// Description: Loads an HTML file into an Aspose.Cells Workbook, walks every populated cell, converts CSS‑derived thin and medium borders to medium and thick Excel line styles, and saves the result as an XLSX workbook.
+// Keywords: Aspose.Cells HTML to Excel | C# CSS border mapping | Excel cell border style conversion | Load HTML workbook .NET | Save workbook as XLSX | CellBorderType Thin to Medium | CellBorderType Medium to Thick | HTML table to spreadsheet
+// Common Searches: how to convert html to excel with aspose.cells c# | map css border thickness to excel cell borders | change cell border line style after loading html | asp.net convert html tables to xlsx preserving borders | c# iterate cells to adjust border style aspose
+// Developer Intent: Load an HTML document into a Workbook, adjust each cell’s border line type to reflect the original CSS thickness, and export the modified workbook as an XLSX file.
+// Use Cases: Transform web‑generated tables into Excel while upgrading thin CSS borders for clearer presentation. | Standardize border thickness across imported HTML reports to maintain consistent spreadsheet formatting. | Automate batch conversion of multiple HTML files, applying custom CSS‑to‑Excel border mappings before saving.
+// AI Prompts: Write C# code that loads an HTML file with Aspose.Cells, iterates all cells, replaces CellBorderType.Thin with Medium and Medium with Thick, then saves as .xlsx. | Show how to extend the border‑mapping logic to support solid, dashed, and double CSS borders when converting HTML to Excel using Aspose.Cells. | Explain how to access the original CSS border properties of an HTML cell via LoadOptions in Aspose.Cells.
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// Alias to avoid ambiguity with System.Range
-using AsposeRange = Aspose.Cells.Range;
-
-// Loads an HTML file into an Aspose.Cells Workbook, optionally translates CSS border names to CellBorderType values via a dictionary, applies the mapped line styles to every used cell, and saves the result as an XLSX workbook.
+// Loads an HTML file into an Aspose.Cells Workbook, walks every populated cell, converts CSS‑derived thin and medium borders to medium and thick Excel line styles, and saves the result as an XLSX workbook.
 class HtmlToExcelConverter
 {
     static void Main()
     {
-        // Paths for source HTML and destination Excel files
-        string htmlFile = "sample.html";
-        string excelFile = "converted.xlsx";
+        // Input HTML file path (must exist)
+        string htmlPath = "sample.html";
 
-        try
+        // Output Excel file path
+        string excelPath = "converted.xlsx";
+
+        // -------------------------------------------------
+        // Load the HTML file into a Workbook (load lifecycle)
+        // -------------------------------------------------
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+        Workbook workbook = new Workbook(htmlPath, loadOptions);
+
+        // -------------------------------------------------
+        // Map CSS border styles to Excel cell border line styles
+        // (simple example mapping based on existing line style)
+        // -------------------------------------------------
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Ensure the HTML source file exists
-            if (!File.Exists(htmlFile))
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
+
+            for (int row = 0; row <= maxRow; row++)
             {
-                Console.WriteLine($"Error: HTML file '{htmlFile}' not found.");
-                return;
-            }
-
-            // Load the HTML file into a workbook using LoadOptions (HTML format)
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
-            Workbook workbook = new Workbook(htmlFile, loadOptions);
-
-            // ------------------------------------------------------------
-            // OPTIONAL: Custom mapping of CSS border styles to Excel borders
-            // ------------------------------------------------------------
-            var cssToCellBorder = new Dictionary<string, CellBorderType>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "thin", CellBorderType.Thin },
-                { "medium", CellBorderType.Medium },
-                { "dashed", CellBorderType.Dashed },
-                { "dotted", CellBorderType.Dotted },
-                { "double", CellBorderType.Double },
-                { "hair", CellBorderType.Hair },
-                { "mediumDashed", CellBorderType.MediumDashed },
-                { "mediumDashDot", CellBorderType.MediumDashDot },
-                { "mediumDashDotDot", CellBorderType.MediumDashDotDot },
-                { "slantedDashDot", CellBorderType.SlantedDashDot } // corrected enum name
-            };
-
-            // Iterate over all used cells and adjust border line styles if needed
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Get the range that actually contains data
-                AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
-
-                int startRow = usedRange.FirstRow;
-                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-                int startColumn = usedRange.FirstColumn;
-                int endColumn = usedRange.FirstColumn + usedRange.ColumnCount - 1;
-
-                for (int row = startRow; row <= endRow; row++)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    for (int col = startColumn; col <= endColumn; col++)
+                    Cell cell = sheet.Cells[row, col];
+                    Style style = cell.GetStyle();
+                    bool styleChanged = false;
+
+                    // Iterate over all four border sides
+                    foreach (BorderType borderSide in new[] {
+                        BorderType.LeftBorder,
+                        BorderType.RightBorder,
+                        BorderType.TopBorder,
+                        BorderType.BottomBorder })
                     {
-                        Cell cell = sheet.Cells[row, col];
-                        Style style = cell.GetStyle();
+                        CellBorderType currentLine = style.Borders[borderSide].LineStyle;
 
-                        // Placeholder: suppose we stored the original CSS border style name
-                        // in the cell's comment. In real scenarios you would extract the CSS
-                        // value from the HTML parser.
-                        string? cssBorder = cell.Comment?.Note;
-
-                        if (!string.IsNullOrEmpty(cssBorder) && cssToCellBorder.TryGetValue(cssBorder, out CellBorderType borderType))
+                        // Example mapping:
+                        // - Thin  -> Medium (assume original CSS was "solid")
+                        // - Medium -> Thick  (assume original CSS was "double")
+                        // Adjust as needed for your specific CSS-to-Excel mapping.
+                        if (currentLine == CellBorderType.Thin)
                         {
-                            // Apply the mapped border type to all four sides
-                            style.Borders[BorderType.LeftBorder].LineStyle = borderType;
-                            style.Borders[BorderType.RightBorder].LineStyle = borderType;
-                            style.Borders[BorderType.TopBorder].LineStyle = borderType;
-                            style.Borders[BorderType.BottomBorder].LineStyle = borderType;
-                            cell.SetStyle(style);
+                            style.Borders[borderSide].LineStyle = CellBorderType.Medium;
+                            styleChanged = true;
                         }
+                        else if (currentLine == CellBorderType.Medium)
+                        {
+                            style.Borders[borderSide].LineStyle = CellBorderType.Thick;
+                            styleChanged = true;
+                        }
+                    }
+
+                    if (styleChanged)
+                    {
+                        cell.SetStyle(style);
                     }
                 }
             }
-
-            // Save the workbook as an Excel file (XLSX)
-            workbook.Save(excelFile, SaveFormat.Xlsx);
-
-            Console.WriteLine($"HTML file '{htmlFile}' has been converted to Excel file '{excelFile}'.");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+
+        // -------------------------------------------------
+        // Save the workbook as an Excel file (save lifecycle)
+        // -------------------------------------------------
+        workbook.Save(excelPath, SaveFormat.Xlsx);
     }
 }

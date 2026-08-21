@@ -1,57 +1,54 @@
-// Title: Check if an Excel workbook needs an open or modify password with Aspose.Cells for .NET
-// Description: Loads an Excel file using Aspose.Cells, determines whether the workbook is encrypted (open password) via Workbook.Settings.IsEncrypted and whether it is write‑protected (modify password) via Workbook.Settings.WriteProtection.IsWriteProtected, then prints both boolean results.
-// Keywords: Aspose.Cells | C# password protection | Workbook.IsEncrypted | WriteProtection.IsWriteProtected | detect Excel encryption .NET | open password check | modify password check | Excel file security | Aspose.Cells encryption detection
-// Common Searches: Aspose.Cells how to know if Excel file has an open password | C# check write protection on workbook with Aspose.Cells | determine if Excel workbook is encrypted using Aspose | get password status of Excel file Aspose.Cells | read workbook protection flags .NET
-// Developer Intent: Find out whether a loaded workbook requires a password to open or to modify.
-// Use Cases: Audit spreadsheets for protection before processing them. | Prompt users for a password only when the file is encrypted or write‑protected. | Exclude write‑protected workbooks from batch write operations. | Generate a security‑status report for a collection of Excel files.
-// AI Prompts: Write C# code that uses Aspose.Cells to report open‑password and modify‑password requirements for a given Excel file, handling missing files and exceptions. | Explain the difference between Workbook.Settings.IsEncrypted and Workbook.Settings.WriteProtection.IsWriteProtected, and show typical usage scenarios in a .NET application.
+// Title: Check if an Excel workbook requires a password to open or to edit using Aspose.Cells for .NET
+// Description: C# example that uses Aspose.Cells to detect whether an Excel file is encrypted (password needed to open) via FileFormatUtil.DetectFileFormat, then, if not encrypted, loads the workbook to read WriteProtection.IsWriteProtected and IsWorkbookProtectedWithPassword. The three protection states are written to the console.
+// Keywords: Aspose.Cells detect encrypted workbook | Excel file password open .NET | check write protection Aspose.Cells | workbook structure protection C# | FileFormatUtil DetectFileFormat | Workbook.Settings.WriteProtection | IsWorkbookProtectedWithPassword | Excel security audit Aspose
+// Common Searches: how to know if an Excel file is password protected for opening using Aspose.Cells | Aspose.Cells .NET check if workbook is write‑protected | detect workbook encryption and write protection with Aspose.Cells | C# get Excel file protection status Aspose | Aspose.Cells determine if workbook structure is password protected
+// Developer Intent: Identify whether an Excel workbook is encrypted (requires a password to open) and whether it is write‑protected or structure‑protected, then output those flags.
+// Use Cases: Validate protection level before extracting or modifying data. | Log encryption and write‑protection status for compliance audits. | Conditionally load a workbook with a known password only when it is encrypted.
+// AI Prompts: Generate C# code that opens an encrypted Excel file with a supplied password using Aspose.Cells, then reports write protection and structure protection. | Provide error‑handling patterns for cases where the workbook is encrypted but the opening password is missing, while still returning the encryption flag. | Show how to embed the protection‑status checks into a processing pipeline that skips write‑protected workbooks.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPasswordCheck
 {
-    // Loads an Excel file using Aspose.Cells, determines whether the workbook is encrypted (open password) via Workbook.Settings.IsEncrypted and whether it is write‑protected (modify password) via Workbook.Settings.WriteProtection.IsWriteProtected, then prints both boolean results.
-    public class WorkbookPasswordStatusDemo
+    // C# example that uses Aspose.Cells to detect whether an Excel file is encrypted (password needed to open) via FileFormatUtil.DetectFileFormat, then, if not encrypted, loads the workbook to read WriteProtection.IsWriteProtected and IsWorkbookProtectedWithPassword. The three protection states are written to the console.
+    class Program
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        static void Main(string[] args)
         {
             // Path to the workbook to be examined
-            string filePath = "sample.xlsx";
+            string workbookPath = "sample.xlsx";
 
-            // Verify that the file exists before attempting to load it
-            if (!File.Exists(filePath))
+            // Detect if the file is encrypted (requires a password to open)
+            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(workbookPath);
+            bool isEncrypted = formatInfo.IsEncrypted;
+
+            // Variables to hold modification protection status
+            bool isWriteProtected = false;
+            bool isWorkbookProtectedWithPassword = false;
+
+            // If the workbook is not encrypted, we can load it to inspect further protection settings
+            if (!isEncrypted)
             {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
+                // Load the workbook (no password needed)
+                Workbook workbook = new Workbook(workbookPath);
+
+                // Check if the workbook is write‑protected (requires a password to modify)
+                isWriteProtected = workbook.Settings.WriteProtection.IsWriteProtected;
+
+                // Check if the workbook structure or window is protected with a password
+                isWorkbookProtectedWithPassword = workbook.IsWorkbookProtectedWithPassword;
+            }
+            else
+            {
+                // When encrypted, additional protection details cannot be read without the opening password.
+                // Optionally, load with a known password here to inspect further, if available.
             }
 
-            // Load the workbook within a using block to ensure proper disposal
-            using (Workbook workbook = new Workbook(filePath))
-            {
-                // Check if a password is required to open the workbook
-                bool requiresOpenPassword = workbook.Settings.IsEncrypted;
-
-                // Check if a password is required to modify (write-protect) the workbook
-                bool requiresModifyPassword = workbook.Settings.WriteProtection.IsWriteProtected;
-
-                // Log the statuses
-                Console.WriteLine($"Requires password to open: {requiresOpenPassword}");
-                Console.WriteLine($"Requires password to modify: {requiresModifyPassword}");
-            }
+            // Log the results
+            Console.WriteLine($"Requires password to open (IsEncrypted): {isEncrypted}");
+            Console.WriteLine($"Requires password to modify (WriteProtection.IsWriteProtected): {isWriteProtected}");
+            Console.WriteLine($"Workbook structure/window protected with password (IsWorkbookProtectedWithPassword): {isWorkbookProtectedWithPassword}");
         }
     }
 }

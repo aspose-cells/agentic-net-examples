@@ -1,62 +1,57 @@
-// Title: C# – Apply a Custom Two‑Color Gradient to WordArt Using Worksheet Cell Colors (Aspose.Cells)
-// Description: This example creates a workbook, reads start and end color values from cells A1 and A2, converts them to System.Drawing.Color, adds a WordArt shape, sets its fill to a two‑color gradient, customizes the direction (45° diagonal) and saves the file as WordArtCustomGradient.xlsx.
-// Keywords: Aspose.Cells WordArt gradient | custom gradient from Excel cells | C# WordArt two‑color gradient | set gradient angle Aspose.Cells | read color names Excel C# | WordArt fill type Gradient | Aspose.Cells shape styling
-// Common Searches: how to set a custom gradient on WordArt with Aspose.Cells | read color values from Excel cells for WordArt fill | C# Aspose.Cells two‑color gradient WordArt example | change WordArt gradient angle programmatically | apply brand colors to WordArt using worksheet data
-// Developer Intent: Create a WordArt shape and apply a two‑color gradient whose start and end colors are taken from worksheet cells.
-// Use Cases: Brand‑consistent reports where heading WordArt colors are driven by cells, allowing non‑developers to update colors. | User‑customizable documents where end‑users enter their preferred colors in the spreadsheet and the WordArt updates automatically. | Automated flyer generation that reads marketing color codes from a sheet and applies a diagonal gradient to promotional WordArt.
-// AI Prompts: Generate C# code with Aspose.Cells that reads hex color strings from cells and applies a radial gradient to a WordArt shape. | Show how to validate worksheet color names before converting them to System.Drawing.Color for a WordArt fill. | Explain how to switch the gradient style (horizontal, vertical, diagonal) after setting a two‑color gradient on WordArt using Aspose.Cells.
+// Title: Apply Custom Gradient Fill to WordArt Using Cell‑Defined Hex Colors – Aspose.Cells for .NET
+// Description: Creates a workbook, stores start and end hex color strings in cells A1 and B1, adds a WordArt shape, sets its fill type to Gradient, converts the hex values to System.Drawing.Color, applies a two‑color horizontal gradient with a 45° linear direction, and saves the file as an .xlsx document.
+// Keywords: Aspose.Cells | WordArt gradient fill | custom hex colors | C# | .NET | Excel gradient | two‑color gradient | linear gradient angle | FillType.Gradient | SetTwoColorGradient | GradientFillType.Linear
+// Common Searches: Aspose.Cells WordArt custom gradient from Excel cells | C# set start and end colors for WordArt gradient | read hex color value from worksheet and apply to shape | change WordArt gradient direction programmatically | apply two‑color gradient to WordArt using Aspose.Cells
+// Developer Intent: Read hex color codes from worksheet cells and use them to define a custom two‑color gradient for a WordArt shape in an Excel file.
+// Use Cases: Brand‑consistent reports where WordArt headings use company colors stored in the workbook. | User‑driven styling: end‑users enter palette values in cells and the generated Excel reflects those colors in WordArt. | Dynamic visual emphasis by adjusting gradient direction or angle based on data context.
+// AI Prompts: Show how to extend the example to a three‑color gradient using cells C1, D1, and E1. | Generate code that reads RGB triples from a range and applies a radial gradient to a WordArt shape. | Explain how to toggle between linear and path gradient types for WordArt with Aspose.Cells.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// This example creates a workbook, reads start and end color values from cells A1 and A2, converts them to System.Drawing.Color, adds a WordArt shape, sets its fill to a two‑color gradient, customizes the direction (45° diagonal) and saves the file as WordArtCustomGradient.xlsx.
+// Creates a workbook, stores start and end hex color strings in cells A1 and B1, adds a WordArt shape, sets its fill type to Gradient, converts the hex values to System.Drawing.Color, applies a two‑color horizontal gradient with a 45° linear direction, and saves the file as an .xlsx document.
 class WordArtGradientExample
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Define custom start and end colors in the worksheet (e.g., cells A1 and A2)
-        // These could be any color names or hex strings; here we use known color names.
-        sheet.Cells["A1"].PutValue("DarkOrange"); // start color name
-        sheet.Cells["A2"].PutValue("MediumSeaGreen"); // end color name
+        // Define custom start and end colors in cells (as HTML hex strings)
+        sheet.Cells["A1"].PutValue("#FF5733"); // start color
+        sheet.Cells["B1"].PutValue("#33C1FF"); // end color
 
-        // Retrieve the color names from the cells
-        string startColorName = sheet.Cells["A1"].StringValue;
-        string endColorName = sheet.Cells["A2"].StringValue;
-
-        // Convert the names to System.Drawing.Color objects
-        Color startColor = Color.FromName(startColorName);
-        Color endColor = Color.FromName(endColorName);
-
-        // Add a WordArt shape to the worksheet
-        // Use any preset style; we will override the fill with our custom gradient.
+        // Add a WordArt shape (initially with any preset style)
         Shape wordArt = sheet.Shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle1, // initial preset (will be changed)
-            "Aspose.Cells Gradient WordArt",
-            2, 0, // upper left row, top offset
-            2, 0, // upper left column, left offset
-            300, // height
-            600  // width
-        );
+            PresetWordArtStyle.WordArtStyle1, // preset (will be overridden by custom gradient)
+            "Custom Gradient WordArt",
+            2, 0,   // upper left row, top
+            2, 0,   // upper left column, left
+            300, 100); // height, width
 
-        // Set the fill type of the WordArt to Gradient
+        // Set the fill type to Gradient to enable gradient operations
         wordArt.Fill.FillType = FillType.Gradient;
 
-        // Apply a two‑color gradient using the custom colors from the workbook
-        // GradientStyleType.Horizontal creates a left‑to‑right gradient; variant 1 is the default.
+        // Retrieve the custom colors from the worksheet
+        string startHex = sheet.Cells["A1"].StringValue;
+        string endHex = sheet.Cells["B1"].StringValue;
+
+        // Convert HTML hex strings to System.Drawing.Color
+        Color startColor = ColorTranslator.FromHtml(startHex);
+        Color endColor = ColorTranslator.FromHtml(endHex);
+
+        // Apply a two‑color gradient to the WordArt shape
+        // Using Horizontal style and variant 1 (default)
         wordArt.Fill.SetTwoColorGradient(startColor, endColor, GradientStyleType.Horizontal, 1);
 
-        // Optionally, adjust the gradient direction or angle via the GradientFill object
-        // Here we set a 45‑degree angle for a diagonal effect.
-        wordArt.Fill.GradientFill.Angle = 45.0f;
+        // Optionally, adjust the gradient direction or angle via GradientFill
+        // Here we set a linear gradient at 45 degrees
+        wordArt.Fill.GradientFill.SetGradient(GradientFillType.Linear, 45, GradientDirectionType.FromUpperLeftCorner);
 
-        // Save the workbook with the customized WordArt
+        // Save the workbook to demonstrate the result
         workbook.Save("WordArtCustomGradient.xlsx");
     }
 }

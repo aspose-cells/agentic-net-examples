@@ -1,50 +1,57 @@
-// Title: Aspose.Cells C# – Set Worksheet VeryHidden, Freeze Panes, Then Unhide
-// Description: Creates a workbook, adds a temporary visible sheet, marks the first worksheet as VeryHidden, applies FreezePanes at C3 (2 rows × 2 columns), restores the worksheet to Visible, optionally removes the temporary sheet, and saves the file.
-// Keywords: Aspose.Cells VeryHidden worksheet | Aspose.Cells FreezePanes C# | unhide VeryHidden sheet Aspose.Cells | temporary worksheet Aspose.Cells | save workbook Aspose.Cells C#
-// Common Searches: Aspose.Cells set worksheet VeryHidden then visible | freeze panes on hidden sheet Aspose.Cells | how to keep one sheet visible while hiding others Aspose.Cells | C# Aspose.Cells remove temporary sheet after hiding
-// Developer Intent: Hide a worksheet as VeryHidden, freeze panes, and make it visible again while satisfying Aspose.Cells' requirement for at least one visible sheet.
-// Use Cases: Protect layout by hiding a sheet VeryHidden, freezing headers, then revealing it for end‑users. | Generate templates where internal sheets stay hidden during creation and are shown before distribution. | Work around Aspose.Cells' visibility rule by using a temporary sheet while manipulating other sheets.
-// AI Prompts: Write C# code using Aspose.Cells that sets a worksheet to VeryHidden, freezes panes at a given cell, then restores visibility, ensuring a temporary visible sheet exists. | Provide an Aspose.Cells example that removes the temporary worksheet after the hidden sheet is made visible again.
+// Title: Aspose.Cells .NET: Set Worksheet VeryHidden, Freeze Panes, Then Make Visible
+// Description: Demonstrates how to hide a worksheet as VeryHidden, apply FreezePanes at cell C3 while hidden, restore visibility, and optionally remove a temporary sheet, using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells VeryHidden worksheet | freeze panes hidden sheet Aspose.Cells | make worksheet visible Aspose.Cells | temporary worksheet Aspose.Cells | C# Aspose.Cells hide sheet | Aspose.Cells workbook save
+// Common Searches: Aspose.Cells set worksheet VeryHidden and freeze panes | freeze panes on a hidden worksheet using Aspose.Cells | unhide VeryHidden sheet after applying FreezePanes Aspose.Cells | remove temporary sheet after changing visibility Aspose.Cells | C# Aspose.Cells hide sheet then show
+// Developer Intent: Hide a worksheet as VeryHidden, freeze panes while hidden, then reveal the sheet.
+// Use Cases: Secure a sheet by hiding it during layout configuration such as freeze panes. | Satisfy Aspose.Cells requirement for at least one visible sheet before applying VeryHidden. | Programmatically clean up a temporary worksheet after visibility and freeze settings are applied.
+// AI Prompts: Write C# code with Aspose.Cells to set a worksheet to VeryHidden, freeze panes at D4, then make it visible and delete a temporary sheet. | Explain why Aspose.Cells needs a visible worksheet before another can be set to VeryHidden and show the proper workaround. | Provide robust error handling for freezing panes on a hidden worksheet using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, adds a temporary visible sheet, marks the first worksheet as VeryHidden, applies FreezePanes at C3 (2 rows × 2 columns), restores the worksheet to Visible, optionally removes the temporary sheet, and saves the file.
-class Program
+namespace AsposeCellsVisibilityAndFreezeDemo
 {
-    static void Main()
+    // Demonstrates how to hide a worksheet as VeryHidden, apply FreezePanes at cell C3 while hidden, restore visibility, and optionally remove a temporary sheet, using Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook (contains one default worksheet)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook with a default worksheet
+                Workbook workbook = new Workbook();
 
-            // Add a temporary worksheet so the workbook always has at least one visible sheet
-            Worksheet tempSheet = workbook.Worksheets.Add("Temp");
+                // Reference the first (target) worksheet
+                Worksheet targetSheet = workbook.Worksheets[0];
 
-            // Access the first worksheet (the one we will manipulate)
-            Worksheet sheet = workbook.Worksheets[0];
+                // Add a temporary visible worksheet so the workbook always has at least one visible sheet
+                Worksheet tempSheet = workbook.Worksheets.Add("Temp");
 
-            // Hide the worksheet as VeryHidden (allowed because Temp sheet is visible)
-            sheet.VisibilityType = VisibilityType.VeryHidden;
+                // Hide the target worksheet as VeryHidden (requires another visible sheet)
+                targetSheet.VisibilityType = VisibilityType.VeryHidden;
 
-            // Freeze panes at cell C3 with 2 frozen rows and 2 frozen columns
-            sheet.FreezePanes("C3", 2, 2);
+                // Freeze panes while the sheet is hidden (freeze at cell C3, 3 rows and 3 columns)
+                targetSheet.FreezePanes("C3", 3, 3);
 
-            // Make the worksheet visible again
-            sheet.VisibilityType = VisibilityType.Visible;
+                // Make the target worksheet visible again
+                targetSheet.VisibilityType = VisibilityType.Visible;
 
-            // Optional: remove the temporary worksheet
-            int tempIndex = workbook.Worksheets.IndexOf(tempSheet);
-            if (tempIndex >= 0)
-                workbook.Worksheets.RemoveAt(tempIndex);
+                // Remove the temporary worksheet (optional)
+                int tempIndex = workbook.Worksheets.IndexOf(tempSheet);
+                if (tempIndex >= 0)
+                {
+                    workbook.Worksheets.RemoveAt(tempIndex);
+                }
 
-            // Save the workbook
-            workbook.Save("VeryHiddenFreezeDemo.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook
+                string outputPath = "VisibilityAndFreezeDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

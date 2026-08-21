@@ -1,17 +1,18 @@
-// Title: Set Excel Print Area from MaxDisplayRange using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, populate data (including merged cells), retrieve the worksheet's MaxDisplayRange, convert its boundaries to A1 notation, assign the range to PageSetup.PrintArea, and save the file while safely handling a null range.
-// Keywords: Aspose.Cells | C# | MaxDisplayRange | PrintArea | PageSetup | merged cells | Excel printing | dynamic print area | worksheet display range
-// Common Searches: Aspose.Cells set print area from MaxDisplayRange C# | how to use MaxDisplayRange for printing in Aspose.Cells | define Excel print area programmatically .NET | include merged cells in Aspose.Cells print area | retrieve worksheet display range for print setup
-// Developer Intent: Determine the worksheet’s maximum display range and apply it as the print area in an Aspose.Cells workbook.
-// Use Cases: Automatically size the print area for reports that generate data at runtime. | Create a reusable helper that sets PageSetup.PrintArea to the content region of each worksheet. | Prevent blank pages by printing only the area that contains data, merged cells, or shapes.
-// AI Prompts: Generate a C# method that takes a Worksheet, gets its MaxDisplayRange, and sets PageSetup.PrintArea, handling null ranges. | Write code to loop through all worksheets in a Workbook and assign each one a print area based on its MaxDisplayRange using Aspose.Cells. | Explain the differences between MaxDisplayRange and UsedRange in Aspose.Cells and advise when to use each for defining print areas.
+// Title: C# Example: Set Worksheet Print Area from MaxDisplayRange with Aspose.Cells
+// Description: Demonstrates how to create a workbook, add data, merged cells and a shape, retrieve the worksheet's MaxDisplayRange, convert its bounds to A1 notation, assign the range to PageSetup.PrintArea, and save the file. The sample shows a reliable way to define a print area that automatically covers all visible content.
+// Keywords: Aspose.Cells C# MaxDisplayRange | set print area programmatically | PageSetup.PrintArea Aspose | worksheet MaxDisplayRange example | include merged cells and shapes in print range | Aspose.Cells .NET tutorial | dynamic print area calculation | CellsHelper.CellIndexToName usage | GitHub Aspose.Cells demo | coding‑agent snippet
+// Common Searches: Aspose.Cells set print area from MaxDisplayRange C# | how to include shapes in print range Aspose.Cells | retrieve maximum display range worksheet Aspose | C# code to define PageSetup.PrintArea automatically | MaxDisplayRange vs UsedRange Aspose.Cells
+// Developer Intent: Obtain the worksheet’s maximum display range and apply it as the print area in a .NET workbook.
+// Use Cases: Automatically configure the print area for reports that contain data, merged regions, and graphics. | Create a reusable helper method that sets PageSetup.PrintArea based on MaxDisplayRange for any worksheet. | Generate print‑ready Excel files where the printable region adapts to content changes without manual adjustments.
+// AI Prompts: Write a C# method that takes a Worksheet object, gets its MaxDisplayRange, builds an A1‑style address, and sets PageSetup.PrintArea, handling null ranges. | Show how to use CellsHelper.CellIndexToName with MaxDisplayRange properties to construct the print area string. | Explain why MaxDisplayRange is preferred over UsedRange when the sheet contains shapes or merged cells.
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Drawing; // For Shape-related classes
 
-namespace AsposeCellsPrintAreaDemo
+namespace MaxDisplayRangePrintAreaDemo
 {
-    // Demonstrates how to create a workbook, populate data (including merged cells), retrieve the worksheet's MaxDisplayRange, convert its boundaries to A1 notation, assign the range to PageSetup.PrintArea, and save the file while safely handling a null range.
+    // Demonstrates how to create a workbook, add data, merged cells and a shape, retrieve the worksheet's MaxDisplayRange, convert its bounds to A1 notation, assign the range to PageSetup.PrintArea, and save the file. The sample shows a reliable way to define a print area that automatically covers all visible content.
     class Program
     {
         static void Main()
@@ -22,7 +23,7 @@ namespace AsposeCellsPrintAreaDemo
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate some data to generate a display range
+                // Populate the worksheet with sample data
                 worksheet.Cells["A1"].PutValue("Header1");
                 worksheet.Cells["B1"].PutValue("Header2");
                 worksheet.Cells["A2"].PutValue(100);
@@ -30,17 +31,27 @@ namespace AsposeCellsPrintAreaDemo
                 worksheet.Cells["A3"].PutValue(300);
                 worksheet.Cells["B3"].PutValue(400);
 
-                // Add a merged cell to ensure it is included in MaxDisplayRange
-                worksheet.Cells.Merge(4, 0, 1, 2); // Merge cells A5:C5
-                worksheet.Cells["A5"].PutValue("Merged Cell");
+                // Add a merged cell to demonstrate MaxDisplayRange includes it
+                worksheet.Cells.Merge(4, 0, 2, 2); // Merge cells A5:C6
+
+                // Add a text effect shape (required parameters include height and width)
+                worksheet.Shapes.AddTextEffect(
+                    MsoPresetTextEffect.TextEffect1, // preset effect
+                    "Merged Area",                  // text
+                    "Arial",                        // font name
+                    12,                             // font size
+                    false,                          // bold
+                    false,                          // italic
+                    4, 0,                           // upper‑left row & column
+                    0, 0,                           // top & left offsets
+                    0, 0);                          // height & width (auto‑size)
 
                 // Retrieve the maximum display range (includes data, merged cells, shapes)
-                Aspose.Cells.Range maxDisplayRange = worksheet.Cells.MaxDisplayRange;
+                var maxDisplayRange = worksheet.Cells.MaxDisplayRange;
 
-                // Guard against empty worksheet (MaxDisplayRange can be null)
                 if (maxDisplayRange != null)
                 {
-                    // Convert the range boundaries to cell names (e.g., "A1")
+                    // Calculate the start and end cell addresses of the range
                     string startCell = CellsHelper.CellIndexToName(maxDisplayRange.FirstRow, maxDisplayRange.FirstColumn);
                     string endCell = CellsHelper.CellIndexToName(
                         maxDisplayRange.FirstRow + maxDisplayRange.RowCount - 1,
@@ -48,10 +59,18 @@ namespace AsposeCellsPrintAreaDemo
 
                     // Define the print area using the calculated range
                     worksheet.PageSetup.PrintArea = $"{startCell}:{endCell}";
+
+                    Console.WriteLine($"Print area set to: {worksheet.PageSetup.PrintArea}");
+                }
+                else
+                {
+                    Console.WriteLine("Worksheet is empty; no print area defined.");
                 }
 
-                // Save the workbook with the defined print area
-                workbook.Save("PrintAreaFromMaxDisplayRange.xlsx");
+                // Save the workbook
+                string outputPath = "MaxDisplayRangePrintAreaDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {

@@ -1,10 +1,10 @@
-// Title: Ungroup an IconSet (GroupShape) and Edit Individual Shapes with Aspose.Cells for .NET (C#)
-// Description: This C# example demonstrates how to create a workbook, group rectangle shapes to mimic an IconSet, call GroupShape.Ungroup() to release the icons, modify properties of each shape (e.g., line weight, fill color), and save the result. It shows the exact API calls needed for shape manipulation in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells ungroup GroupShape | IconSet shape editing .NET | C# Aspose.Cells GroupShape.Ungroup | modify individual Excel shapes | Aspose.Cells shape line weight | access shapes after grouping | Aspose.Cells workbook shape example | C# Excel icon set ungroup
-// Common Searches: Aspose.Cells how to ungroup shapes in C# | Ungroup IconSet using Aspose.Cells for .NET | Edit individual icons after grouping Aspose.Cells | C# code to modify shape line weight in Excel workbook | Retrieve shapes from a GroupShape Aspose.Cells
-// Developer Intent: The developer needs to break a grouped IconSet into its component shapes so each can be formatted or updated independently.
-// Use Cases: Separate a grouped IconSet to change the fill color of a specific icon. | Adjust line weight, style, or color of individual shapes after ungrouping. | Iterate through ungrouped shapes to apply custom formatting before saving the workbook.
-// AI Prompts: Generate C# code that uses Aspose.Cells to ungroup a GroupShape and set the fill color of the first icon to LightBlue. | Show how to loop through all shapes returned by GroupShape.Ungroup() and assign different line styles to each. | Explain fallback handling for older Aspose.Cells versions where Shape.Fill.ForeColor is unavailable.
+// Title: Ungroup a GroupShape and edit individual icons using Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, add rectangle shapes, group them, ungroup the GroupShape, modify each shape's fill color, and save the file with Aspose.Cells C# API.
+// Keywords: Aspose.Cells | .NET | C# | GroupShape | Ungroup | shape editing | icon set | fill color | Excel workbook | worksheet shapes
+// Common Searches: Aspose.Cells ungroup GroupShape C# | how to edit individual icons after grouping in Aspose.Cells | change shape fill color after Ungroup Aspose.Cells | C# code to ungroup shapes in Excel using Aspose.Cells
+// Developer Intent: Separate a grouped shape to access and modify each component shape.
+// Use Cases: Ungroup a grouped icon set to recolor each icon individually. | Retrieve and reposition shapes after ungrouping for custom layout. | Apply distinct formatting (fill, border, text) to shapes once they are ungrouped.
+// AI Prompts: Write C# code with Aspose.Cells that ungroups a GroupShape and sets a unique border style for each shape. | Show how to loop through the shapes returned by Ungroup() and add a text label to any text box within the group.
 
 using System;
 using System.Drawing;
@@ -13,55 +13,45 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExamples
 {
-    // This C# example demonstrates how to create a workbook, group rectangle shapes to mimic an IconSet, call GroupShape.Ungroup() to release the icons, modify properties of each shape (e.g., line weight, fill color), and save the result. It shows the exact API calls needed for shape manipulation in Aspose.Cells for .NET.
+    // Demonstrates how to create a workbook, add rectangle shapes, group them, ungroup the GroupShape, modify each shape's fill color, and save the file with Aspose.Cells C# API.
     public class UngroupIconSetDemo
     {
-        public static void Run()
+        public static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add two rectangle shapes that will represent icons (for demonstration)
-                Shape shape1 = worksheet.Shapes.AddRectangle(0, 0, 0, 0, 100, 50);
-                Shape shape2 = worksheet.Shapes.AddRectangle(0, 0, 3, 0, 100, 50);
-
-                // Group the two shapes – this simulates a grouped IconSet
-                GroupShape groupShape = worksheet.Shapes.Group(new Shape[] { shape1, shape2 });
-
-                // Ungroup the previously created group to access individual shapes (icons)
-                groupShape.Ungroup();
-
-                // After ungrouping, the shapes are available individually in the collection
-                // Example: modify the first shape's fill color (if supported)
-                // Note: Fill.ForeColor may not be available in some versions; this line is optional.
-                // shape1.Fill.ForeColor = Color.LightBlue;
-
-                // Example: modify the second shape's line style
-                shape2.Line.Weight = 2.0f;
-                // Note: Line.Color may not be available in some versions; this line is optional.
-                // shape2.Line.Color = Color.DarkBlue;
-
-                // Save the workbook
-                string outputPath = "UngroupedIconSetDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Run();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("Error: " + ex.Message);
             }
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        public static void Run()
         {
-            UngroupIconSetDemo.Run();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add two rectangle shapes (simulating icons)
+            Shape shape1 = worksheet.Shapes.AddRectangle(0, 0, 0, 0, 100, 50);
+            Shape shape2 = worksheet.Shapes.AddRectangle(0, 0, 3, 0, 100, 50);
+
+            // Group the two shapes into a GroupShape
+            GroupShape groupShape = worksheet.Shapes.Group(new Shape[] { shape1, shape2 });
+
+            // Ungroup the previously created group to access individual shapes
+            groupShape.Ungroup();
+
+            // After ungrouping, edit the individual shapes (e.g., change fill colors)
+            shape1.FillFormat.ForeColor = Color.Yellow;
+            shape2.FillFormat.ForeColor = Color.LightBlue;
+
+            // Save the workbook
+            string outputPath = "UngroupedIconSetDemo.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
     }
 }

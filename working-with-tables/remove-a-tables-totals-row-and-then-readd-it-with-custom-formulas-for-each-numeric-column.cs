@@ -1,15 +1,16 @@
-// Title: Aspose.Cells for .NET: Remove and Re‑Add a Table Totals Row with Custom Formulas (C#)
-// Description: This example demonstrates how to create a workbook, add a ListObject covering A1:D5, hide the existing totals row, show it again, and assign custom formulas to the Qty, Price, and Discount columns using TotalsCalculation.Custom and SetCustomTotalsRowFormula. The workbook is then saved with the customized totals row.
-// Keywords: Aspose.Cells | C# | .NET | ListObject | Excel table | Remove totals row | Add totals row | Custom totals formulas | SetCustomTotalsRowFormula | ShowTotals property | TotalsCalculation.Custom | GitHub sample | code example
-// Common Searches: how to delete totals row in Aspose.Cells | Aspose.Cells custom totals row formula C# | remove and re‑add table totals row ListObject | set custom totals for numeric columns Aspose.Cells | Aspose.Cells table totals row example
-// Developer Intent: Delete an existing totals row of a ListObject and recreate it with custom formulas for each numeric column using Aspose.Cells for .NET.
-// Use Cases: Sales reports that need a double‑sum for quantity, average price, and maximum discount. | Financial worksheets where standard totals must be replaced with bespoke calculations. | Automated Excel exports that refresh custom aggregate values after data updates. | Data‑entry templates that enforce specific aggregate logic in the totals row.
-// AI Prompts: Generate C# code with Aspose.Cells to remove a table's totals row, enable it again, and set custom formulas for Qty, Price, and Discount columns. | Explain how ShowTotals, TotalsCalculation, and SetCustomTotalsRowFormula work together in an Aspose.Cells ListObject. | Provide a step‑by‑step guide for adding a ListObject, toggling the totals row, and applying custom aggregate formulas in a .NET workbook.
+// Title: Aspose.Cells for .NET – Remove and Re‑add Table Totals Row with Custom SUM & AVERAGE Formulas (C#)
+// Description: C# sample that creates a workbook, adds a ListObject (Excel table), hides its default totals row, then shows the row again and sets custom formulas – SUM for the Quantity column and AVERAGE for the Price column – before saving the file.
+// Keywords: Aspose.Cells | C# | .NET | ListObject | Excel table totals row | remove totals row | custom totals formula | SUM formula Aspose.Cells | AVERAGE formula Aspose.Cells | sample code | GitHub example
+// Common Searches: Aspose.Cells hide table totals row C# | set custom totals formula ListObject Aspose.Cells | remove and add totals row Aspose.Cells .NET | custom SUM and AVERAGE in Excel table using Aspose.Cells | C# example for ListObject custom aggregates
+// Developer Intent: Hide an existing ListObject totals row, then display it again with user‑defined formulas for numeric columns.
+// Use Cases: Generate a sales workbook where the totals row must be rebuilt with specific aggregates after data changes. | Create an Excel export that shows a custom SUM for quantity and an AVERAGE for price in the table footer. | Implement dynamic reporting where the totals row is toggled and customized programmatically.
+// AI Prompts: Write C# code with Aspose.Cells to hide a table totals row and then add a custom SUM formula to the Quantity column. | Show how to apply different custom formulas (SUM, AVERAGE, COUNT) to multiple columns of an Aspose.Cells ListObject. | Explain the steps to toggle ShowTotals and set custom totals row formulas without altering other table settings.
 
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
 
-// This example demonstrates how to create a workbook, add a ListObject covering A1:D5, hide the existing totals row, show it again, and assign custom formulas to the Qty, Price, and Discount columns using TotalsCalculation.Custom and SetCustomTotalsRowFormula. The workbook is then saved with the customized totals row.
+// C# sample that creates a workbook, adds a ListObject (Excel table), hides its default totals row, then shows the row again and sets custom formulas – SUM for the Quantity column and AVERAGE for the Price column – before saving the file.
 class Program
 {
     static void Main()
@@ -19,53 +20,51 @@ class Program
         Worksheet worksheet = workbook.Worksheets[0];
         Cells cells = worksheet.Cells;
 
-        // Populate header row
+        // Populate sample data (header + 3 rows)
         cells["A1"].PutValue("Item");
-        cells["B1"].PutValue("Qty");
+        cells["B1"].PutValue("Quantity");
         cells["C1"].PutValue("Price");
-        cells["D1"].PutValue("Discount");
+        cells["D1"].PutValue("Notes");
 
-        // Populate sample numeric data
-        string[] items = { "Apple", "Banana", "Cherry", "Date" };
+        string[] items = { "Apple", "Banana", "Orange" };
+        int[] quantities = { 10, 20, 15 };
+        double[] prices = { 0.5, 0.3, 0.6 };
+        string[] notes = { "Fresh", "Ripe", "Citrus" };
+
         for (int i = 0; i < items.Length; i++)
         {
-            int row = i + 1; // zero‑based index for data rows
-            cells[row, 0].PutValue(items[i]);                 // Item name (text)
-            cells[row, 1].PutValue((i + 1) * 10);             // Qty (numeric)
-            cells[row, 2].PutValue((i + 1) * 2.5);            // Price (numeric)
-            cells[row, 3].PutValue(0.05 * (i + 1));           // Discount (numeric)
+            int row = i + 1; // data starts at row 2 (zero‑based index)
+            cells[row, 0].PutValue(items[i]);
+            cells[row, 1].PutValue(quantities[i]);
+            cells[row, 2].PutValue(prices[i]);
+            cells[row, 3].PutValue(notes[i]);
         }
 
-        // Add a table that covers the data range (A1:D5)
-        int tableIndex = worksheet.ListObjects.Add(0, 0, items.Length, 3, true);
-        ListObject table = worksheet.ListObjects[tableIndex];
+        // Add a table that covers the data range (A1:D4)
+        int tableIdx = worksheet.ListObjects.Add(0, 0, items.Length, 3, true);
+        ListObject table = worksheet.ListObjects[tableIdx];
         table.DisplayName = "SalesTable";
 
-        // Show the totals row, then remove it
-        table.ShowTotals = true;
-        table.ShowTotals = false;   // Removal of the totals row
-
-        // Re‑add the totals row
+        // Show the totals row initially
         table.ShowTotals = true;
 
-        // ----- Set custom formulas for each numeric column -----
+        // ---- Remove the totals row ----
+        table.ShowTotals = false;
 
-        // Column 1 (Qty) – custom total: double the sum of Qty
+        // ---- Re‑add the totals row with custom formulas ----
+        table.ShowTotals = true;
+
+        // Column "Quantity" (numeric) – custom SUM formula
         ListColumn qtyColumn = table.ListColumns[1];
         qtyColumn.TotalsCalculation = TotalsCalculation.Custom;
-        qtyColumn.SetCustomTotalsRowFormula("=SUM([Qty])*2", false, false);
+        qtyColumn.SetCustomTotalsRowFormula("=SUM([Quantity])", false, false);
 
-        // Column 2 (Price) – custom total: average of Price
+        // Column "Price" (numeric) – custom AVERAGE formula
         ListColumn priceColumn = table.ListColumns[2];
         priceColumn.TotalsCalculation = TotalsCalculation.Custom;
         priceColumn.SetCustomTotalsRowFormula("=AVERAGE([Price])", false, false);
 
-        // Column 3 (Discount) – custom total: maximum Discount
-        ListColumn discountColumn = table.ListColumns[3];
-        discountColumn.TotalsCalculation = TotalsCalculation.Custom;
-        discountColumn.SetCustomTotalsRowFormula("=MAX([Discount])", false, false);
-
-        // Save the workbook with the custom totals row
+        // Save the workbook
         workbook.Save("TableWithCustomTotals.xlsx");
     }
 }

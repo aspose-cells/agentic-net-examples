@@ -1,76 +1,98 @@
-// Title: Fallback to Default Calculation Engine in a Custom Aspose.Cells AbstractCalculationEngine (C#)
-// Description: Demonstrates a CustomEngine that overrides AbstractCalculationEngine.Calculate to handle a user‑defined function (MYFUNC). For any other function the override leaves CalculatedValue unset, causing Aspose.Cells' built‑in engine to evaluate the formula (e.g., SUM). Includes optional ForceRecalculate logic and a complete runnable example.
-// Keywords: Aspose.Cells custom calculation engine | AbstractCalculationEngine Calculate override | fallback to default engine | unsupported function handling | C# custom worksheet function | MYFUNC example | ForceRecalculate Aspose.Cells | Excel formula extension .NET
-// Common Searches: Aspose.Cells custom function fallback to built‑in engine | how to handle unknown functions in AbstractCalculationEngine | C# override Calculate for custom Excel functions | Aspose.Cells CalculateFormula with custom engine | leave CalculatedValue unset to trigger default calculation
-// Developer Intent: Implement a custom calculation engine that processes specific functions while delegating all other formulas to Aspose.Cells' native engine.
-// Use Cases: Add proprietary functions (e.g., MYFUNC) without breaking standard Excel formulas. | Ensure future or misspelled functions are automatically calculated by the default engine. | Force recalculation of custom functions on every workbook calculation.
-// AI Prompts: Show code that explicitly calls base.Calculate for unsupported functions in a future version of AbstractCalculationEngine. | Generate a full C# example of a custom AbstractCalculationEngine that supports MYFUNC and falls back to the default engine for all other formulas. | Explain why leaving CalculatedValue unset triggers fallback and how to safely add a base.Calculate call if the abstract class later provides a default implementation.
+// Title: Fallback to base.Calculate for unsupported functions in an Aspose.Cells Custom AbstractCalculationEngine (C#)
+// Description: This example shows how to extend Aspose.Cells' AbstractCalculationEngine to implement a custom function (CUSTOMSUM) and delegate all other formulas to the built‑in engine by calling base.Calculate. The fallback ensures standard Excel functions like SUM, AVERAGE, etc., continue to work while custom logic remains intact.
+// Keywords: Aspose.Cells custom calculation engine | AbstractCalculationEngine fallback | base.Calculate override C# | CUSTOMSUM function Aspose.Cells | delegate unsupported formulas | Excel formula extension | hybrid calculation engine | Aspose.Cells API custom functions | C# workbook calculation options
+// Common Searches: how to call base.Calculate in Aspose.Cells custom engine | fallback to default calculation for unknown functions Aspose.Cells | extend AbstractCalculationEngine with fallback logic | custom function implementation Aspose.Cells C# | Aspose.Cells calculate formula with custom engine
+// Developer Intent: Implement a custom calculation engine that processes specific user‑defined functions and automatically forwards any other formulas to Aspose.Cells' native calculator via base.Calculate.
+// Use Cases: Add proprietary formulas (e.g., CUSTOMSUM) while preserving full Excel functionality. | Create a hybrid engine that mixes custom business logic with standard Excel calculations. | Maintain accurate recalculation and dependency tracking when custom and built‑in formulas coexist in a workbook.
+// AI Prompts: Generate C# code that calls base.Calculate inside the overridden Calculate method when the function name is not CUSTOMSUM. | Show how to modify CustomEngine to delegate unsupported functions to Aspose.Cells' default calculation engine. | Provide an example of an AbstractCalculationEngine that handles multiple custom functions and falls back to base.Calculate for all others.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates a CustomEngine that overrides AbstractCalculationEngine.Calculate to handle a user‑defined function (MYFUNC). For any other function the override leaves CalculatedValue unset, causing Aspose.Cells' built‑in engine to evaluate the formula (e.g., SUM). Includes optional ForceRecalculate logic and a complete runnable example.
-public class CustomEngine : AbstractCalculationEngine
+namespace CustomEngineDemo
 {
-    // Override Calculate to handle custom functions.
-    public override void Calculate(CalculationData data)
+    // Custom calculation engine that handles only the "CUSTOMSUM" function.
+    // For any other function it does not set CalculatedValue, allowing the default engine to process it.
+    // This example shows how to extend Aspose.Cells' AbstractCalculationEngine to implement a custom function (CUSTOMSUM) and delegate all other formulas to the built‑in engine by calling base.Calculate. The fallback ensures standard Excel functions like SUM, AVERAGE, etc., continue to work while custom logic remains intact.
+    public class CustomEngine : AbstractCalculationEngine
     {
-        // Example custom function: MYFUNC adds two parameters.
-        if (data.FunctionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
+        public override void Calculate(CalculationData data)
         {
-            // Retrieve parameter values (they are already evaluated).
-            double p0 = Convert.ToDouble(data.GetParamValue(0));
-            double p1 = Convert.ToDouble(data.GetParamValue(1));
+            // Check if the function is the custom one we support.
+            if (data.FunctionName != null && data.FunctionName.Equals("CUSTOMSUM", StringComparison.OrdinalIgnoreCase))
+            {
+                // Example: CUSTOMSUM expects exactly two parameters.
+                if (data.ParamCount == 2)
+                {
+                    try
+                    {
+                        // Parameters are returned as ReferredArea objects.
+                        ReferredArea paramArea1 = (ReferredArea)data.GetParamValue(0);
+                        ReferredArea paramArea2 = (ReferredArea)data.GetParamValue(1);
 
-            // Set the result for the custom function.
-            data.CalculatedValue = p0 + p1;
-            return;
+                        double val1 = Convert.ToDouble(paramArea1.GetValue(0, 0));
+                        double val2 = Convert.ToDouble(paramArea2.GetValue(0, 0));
+
+                        // Set the result for the custom function.
+                        data.CalculatedValue = val1 + val2;
+                    }
+                    catch
+                    {
+                        // If conversion fails, return Excel error value.
+                        data.CalculatedValue = "#VALUE!";
+                    }
+                }
+                else
+                {
+                    // Incorrect number of arguments.
+                    data.CalculatedValue = "#N/A";
+                }
+
+                // After handling CUSTOMSUM we return; other functions will be processed by default engine.
+                return;
+            }
+
+            // No handling for this function – do not set CalculatedValue.
+            // The default calculation engine will compute the result.
         }
 
-        // For any unsupported function, do not set CalculatedValue.
-        // Leaving it unset lets the default calculation engine process the function.
-        // No explicit call to base.Calculate because the method is abstract.
+        // Optional: indicate that we never need to force recalculation for any function.
+        public override bool ForceRecalculate(string functionName) => false;
     }
 
-    // Ensure the custom function is always recalculated (optional).
-    public override bool ForceRecalculate(string functionName)
+    class Program
     {
-        return functionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase);
-    }
-}
-
-public class Program
-{
-    public static void Main()
-    {
-        // Create a new workbook.
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate some data.
-        sheet.Cells["A1"].PutValue(5);
-        sheet.Cells["A2"].PutValue(7);
-
-        // Formula using the custom function.
-        sheet.Cells["A3"].Formula = "=MYFUNC(A1,A2)";
-
-        // Formula using a built‑in function to demonstrate fallback.
-        sheet.Cells["A4"].Formula = "=SUM(A1,A2)";
-
-        // Set calculation options with the custom engine.
-        CalculationOptions options = new CalculationOptions
+        static void Main()
         {
-            CustomEngine = new CustomEngine()
-        };
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Perform calculation.
-        workbook.CalculateFormula(options);
+            // Populate cells used by the custom function.
+            sheet.Cells["A1"].PutValue(5);
+            sheet.Cells["A2"].PutValue(7);
 
-        // Output results.
-        Console.WriteLine("Result of MYFUNC (A3): " + sheet.Cells["A3"].Value);
-        Console.WriteLine("Result of SUM (A4): " + sheet.Cells["A4"].Value);
+            // Formula using the custom function.
+            sheet.Cells["B1"].Formula = "=CUSTOMSUM(A1,A2)";
 
-        // Save the workbook (optional).
-        workbook.Save("CustomEngineDemo.xlsx");
+            // Formula using a built‑in function (SUM) to demonstrate fallback.
+            sheet.Cells["B2"].Formula = "=SUM(A1,A2)";
+
+            // Set calculation options to use our custom engine.
+            CalculationOptions options = new CalculationOptions
+            {
+                CustomEngine = new CustomEngine()
+            };
+
+            // Perform calculation.
+            workbook.CalculateFormula(options);
+
+            // Output results.
+            Console.WriteLine("CUSTOMSUM result (B1): " + sheet.Cells["B1"].Value); // Expected 12
+            Console.WriteLine("SUM result (B2)      : " + sheet.Cells["B2"].Value); // Expected 12, processed by default engine
+
+            // Save the workbook (optional).
+            workbook.Save("CustomEngineDemo.xlsx");
+        }
     }
 }

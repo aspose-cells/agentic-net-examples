@@ -1,56 +1,65 @@
-// Title: Insert Image via Smart Marker Using a Byte[] Data Source – Aspose.Cells C# Example
-// Description: Demonstrates how to place an image in an Excel worksheet by adding a smart marker "&Image:ImageData" to a cell, supplying a DataTable with a byte[] column, and processing the marker with WorkbookDesigner. The example loads a PNG file into a byte array, binds it as the data source, and saves the result as SmartMarkerImageOutput.xlsx.
-// Keywords: Aspose.Cells | C# smart marker image | byte array image Excel | WorkbookDesigner | Insert image smart marker | Excel image from database | Aspose.Cells example | GitHub Aspose.Cells image smart marker
-// Common Searches: Aspose.Cells insert image from byte array C# | smart marker &Image usage example | WorkbookDesigner image data source tutorial | C# code to embed PNG in Excel with Aspose.Cells | GitHub repository Aspose.Cells smart marker image
-// Developer Intent: Add an image to an Excel file by using a smart marker that references a byte[] field.
-// Use Cases: Generate product catalogs where each item’s photo is stored as a BLOB and inserted via smart markers. | Create employee directories that display profile pictures retrieved from a database. | Automate reports that embed chart screenshots saved as byte arrays into the final workbook.
-// AI Prompts: Write a C# program that reads all PNG files from a folder, fills a DataTable with byte[] values, and uses Aspose.Cells smart markers to insert each image into separate rows of an Excel sheet. | Explain how to control image size, scaling, and alignment when using the &Image smart marker in Aspose.Cells. | Provide error‑handling code for missing or corrupted image files while processing smart markers with WorkbookDesigner.
+// Title: Insert Images into Excel with Aspose.Cells Smart Markers Using a byte[] Source (C#)
+// Description: C# sample that demonstrates how to embed a PNG image into an Excel workbook via Aspose.Cells Smart Markers. A smart‑marker "&=Image:Photo" is placed in cell A1, a DataTable with a byte[] column supplies the image bytes, WorkbookDesigner processes the marker, and the file is saved as an XLSX workbook.
+// Keywords: Aspose.Cells | Smart Markers | C# image insertion | byte[] image Excel | WorkbookDesigner | Excel picture from database | populate Excel with pictures | Aspose.Cells &=Image tag | Excel automation C# | smart marker image example
+// Common Searches: Aspose.Cells insert image from byte array | C# smart marker image tag example | how to use &=Image smart marker in Aspose.Cells | load PNG into byte[] and add to Excel with Aspose | Aspose.Cells WorkbookDesigner image column
+// Developer Intent: Add an image to a worksheet by linking a byte[] data column to a smart‑marker image tag.
+// Use Cases: Generate a product catalog where each product row displays a photo stored as a BLOB. | Create an employee directory workbook that embeds staff portraits from a byte[] field. | Automate a sales report that inserts chart screenshots saved as byte arrays into specific cells.
+// AI Prompts: Show how to modify the code to insert multiple images from a DataTable with several rows. | Explain how to set the width and height of images inserted via the &=Image smart marker. | Provide an example that reads an image into a MemoryStream before assigning it to the byte[] column.
 
 using System;
 using System.Data;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to place an image in an Excel worksheet by adding a smart marker "&Image:ImageData" to a cell, supplying a DataTable with a byte[] column, and processing the marker with WorkbookDesigner. The example loads a PNG file into a byte array, binds it as the data source, and saves the result as SmartMarkerImageOutput.xlsx.
-class InsertImageSmartMarker
+namespace AsposeCellsSmartMarkerImageDemo
 {
-    static void Main()
+    // C# sample that demonstrates how to embed a PNG image into an Excel workbook via Aspose.Cells Smart Markers. A smart‑marker "&=Image:Photo" is placed in cell A1, a DataTable with a byte[] column supplies the image bytes, WorkbookDesigner processes the marker, and the file is saved as an XLSX workbook.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet.
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Verify that the image file exists to avoid FileNotFoundException
+                const string imagePath = "sample.png";
+                if (!File.Exists(imagePath))
+                {
+                    Console.WriteLine($"Image file \"{imagePath}\" not found.");
+                    return;
+                }
 
-            // Add a smart marker that will be replaced by an image.
-            // The marker expects a byte[] field named ImageData.
-            sheet.Cells["A1"].PutValue("&Image:ImageData");
+                // Create a new workbook (lifecycle: create)
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Prepare a data source containing the image bytes.
-            DataTable dt = new DataTable("Images");
-            dt.Columns.Add("ImageData", typeof(byte[]));
+                // Insert a smart marker that expects an image.
+                // The syntax "&=Image:Photo" tells the processor to replace this cell with an image
+                // taken from the "Photo" column of the data source.
+                sheet.Cells["A1"].PutValue("&=Image:Photo");
 
-            // Load an image file into a byte array.
-            string imagePath = "example.png";
-            if (!File.Exists(imagePath))
-                throw new FileNotFoundException($"Image file not found: {imagePath}");
+                // Prepare a DataTable as the data source.
+                // The "Photo" column must be of type byte[] and contain the image data.
+                DataTable dt = new DataTable("Products");
+                dt.Columns.Add("Photo", typeof(byte[]));
 
-            byte[] imageBytes = File.ReadAllBytes(imagePath);
-            dt.Rows.Add(imageBytes);
+                // Load the image file into a byte array.
+                byte[] imageBytes = File.ReadAllBytes(imagePath);
+                dt.Rows.Add(imageBytes);
 
-            // Process the smart markers using WorkbookDesigner.
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource(dt);
-            designer.Process();
+                // Process the workbook with the data source using WorkbookDesigner (Smart Marker processor)
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                designer.SetDataSource(dt);
+                designer.Process();
 
-            // Save the workbook with the inserted image.
-            string outputPath = "SmartMarkerImageOutput.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook (lifecycle: save)
+                const string outputPath = "SmartMarkerImageOutput.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

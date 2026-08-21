@@ -1,70 +1,70 @@
+// Title: Aspose.Cells for .NET – Set Dark1 Theme Fill on Pivot Table Row Headers (C#)
+// Description: Shows how to create a workbook, add sample data, build a pivot table, enable row‑header styling, apply the PivotTableStyleDark1 (which uses the workbook’s Dark1 theme color for fills), and save the file as an .xlsx document.
+// Keywords: Aspose.Cells | C# pivot table | PivotTableStyleDark1 | Dark1 theme color | row header fill | Excel theme color | Aspose.Cells pivot styling | set pivot table row header color | Excel theme fill | Aspose.Cells .NET
+// Common Searches: Aspose.Cells set Dark1 theme for pivot table row headers | C# apply PivotTableStyleDark1 to row headers | change pivot table row header fill color using Aspose.Cells | how to use workbook theme colors in Aspose.Cells pivot tables | apply theme color to pivot table headers .NET
+// Developer Intent: Apply the workbook’s Dark1 theme color to the fill of pivot table row headers.
+// Use Cases: Generate a formatted report where pivot table row headers match the workbook theme. | Standardize visual style of Excel dashboards created programmatically. | Ensure consistent theme‑aware coloring across multiple pivot tables in automated reporting. | Create pivot tables with theme‑based styling for corporate branding.
+// AI Prompts: Write C# code with Aspose.Cells that creates a pivot table and sets the row header fill to the Dark1 theme color. | Explain the effect of PivotTableStyleDark1 on row header colors in an Aspose.Cells pivot table. | Show how to modify an existing Aspose.Cells pivot table to use the Dark1 theme for row header fills. | Provide step‑by‑step instructions to enable ShowPivotStyleRowHeader and apply PivotTableStyleDark1 in .NET.
+
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotThemeDemo
+namespace AsposeCellsExamples
 {
-    class Program
+    // Shows how to create a workbook, add sample data, build a pivot table, enable row‑header styling, apply the PivotTableStyleDark1 (which uses the workbook’s Dark1 theme color for fills), and save the file as an .xlsx document.
+    public class PivotTableRowHeaderDark1Theme
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // ---------- Sample data for the pivot table ----------
-            // Header row
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-
-            // Data rows
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("A");
-            sheet.Cells["B4"].PutValue(30);
-            sheet.Cells["A5"].PutValue("B");
-            sheet.Cells["B5"].PutValue(40);
-
-            // ---------- Create the pivot table ----------
-            int pivotIdx = sheet.PivotTables.Add("A1:B5", "E3", "PivotTable1");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-
-            // Add fields: Category as row field, Value as data field
-            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
-
-            // Ensure the style is applied to row headers
-            pivot.ShowPivotStyleRowHeader = true;
-
-            // ---------- Create a style that uses the theme's Dark1 color ----------
-            // In the theme, Dark1 corresponds to the Background1 color.
-            Style headerStyle = workbook.CreateStyle();
-            headerStyle.Pattern = BackgroundType.Solid;
-            headerStyle.BackgroundThemeColor = new ThemeColor(ThemeColorType.Background1, 0); // Dark1 (Background1) with no tint
-            headerStyle.Font.Color = Color.White; // Optional: make the font readable
-
-            // ---------- Apply the style to each row header cell ----------
-            // Row header cells contain the distinct category values ("A", "B", etc.).
-            // We'll locate them using Find and then format the entire row of the pivot table that holds the header.
-            Cell found = sheet.Cells.Find("A", null);
-            if (found != null)
+            try
             {
-                // The row index returned is the worksheet row where the header appears in the pivot table.
-                // Format that row (column 0 corresponds to the row header area in the pivot table).
-                pivot.Format(found.Row, 0, headerStyle);
-            }
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            found = sheet.Cells.Find("B", null);
-            if (found != null)
+                // Populate sample data for the pivot table
+                sheet.Cells["A1"].Value = "Category";
+                sheet.Cells["B1"].Value = "Amount";
+                sheet.Cells["A2"].Value = "A";
+                sheet.Cells["B2"].Value = 100;
+                sheet.Cells["A3"].Value = "B";
+                sheet.Cells["B3"].Value = 200;
+                sheet.Cells["A4"].Value = "A";
+                sheet.Cells["B4"].Value = 150;
+                sheet.Cells["A5"].Value = "B";
+                sheet.Cells["B5"].Value = 250;
+
+                // Add a pivot table based on the data range
+                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
+                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+
+                // Configure the pivot table: add a row field and a data field
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+
+                // Ensure the row header style is applied
+                pivotTable.ShowPivotStyleRowHeader = true;
+
+                // Apply the Dark1 pivot table style – this uses the theme's Dark1 color for fills
+                pivotTable.PivotTableStyleType = PivotTableStyleType.PivotTableStyleDark1;
+
+                // Save the workbook
+                workbook.Save("PivotTableRowHeaderDark1.xlsx");
+            }
+            catch (Exception ex)
             {
-                pivot.Format(found.Row, 0, headerStyle);
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+    }
 
-            // ---------- Save the workbook ----------
-            workbook.Save("PivotTableRowHeaderDark1Theme.xlsx");
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            PivotTableRowHeaderDark1Theme.Run();
         }
     }
 }

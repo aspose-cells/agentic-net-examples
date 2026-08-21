@@ -1,18 +1,18 @@
-// Title: Aspose.Cells C# – Create a column‑line combo chart and export to macro‑enabled XLSM
-// Description: A C# sample that builds a workbook, fills cells A1:C4 with data, adds a column‑line combo chart, sets series names and category axis, then saves the file as a macro‑enabled XLSM using Aspose.Cells.
-// Keywords: Aspose.Cells | C# combo chart | macro enabled XLSM | SaveFormat.Xlsm | Excel chart automation | column line combo | Aspose.Cells chart example | export chart to XLSM | create workbook with chart | Aspose.Cells SaveFormat
-// Common Searches: Aspose.Cells create combo chart C# | save workbook as XLSM Aspose.Cells | C# export chart to macro enabled file | add line series to column chart Aspose.Cells | Aspose.Cells SaveFormat.Xlsm example
-// Developer Intent: Generate a workbook containing a column‑line combo chart and write it to a macro‑enabled XLSM file.
-// Use Cases: Automate monthly sales reports that include a combo chart and need to be distributed as macro‑enabled files for further user interaction. | Create Excel templates with pre‑defined charts and VBA macros, populate them programmatically, and save in XLSM format. | Build interactive dashboards that combine visual charts with macro functionality, exporting the result as a macro‑enabled workbook.
-// AI Prompts: Show how to add a chart title and axis labels to the combo chart before saving the workbook as XLSM. | Provide code to embed a simple VBA macro into the workbook after creating the combo chart and then save it as a macro‑enabled file.
+// Title: Save a Combo Column‑Line Chart as a Macro‑Enabled XLSM Workbook using Aspose.Cells for .NET (C#)
+// Description: Shows how to create a Workbook, fill it with sample data, add a column‑line combo chart, enable macros, and save the result as an XLSM macro‑enabled file with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | macro enabled workbook | XLSM | combo chart | column chart | line chart | save as XLSM | enable macros | Excel VBA preservation
+// Common Searches: Aspose.Cells save workbook as XLSM | Create combo chart with Aspose.Cells C# | Enable macros in Aspose.Cells workbook | Export chart to macro‑enabled Excel file | C# Aspose.Cells macro enabled file
+// Developer Intent: Export a workbook that contains a combo chart to a macro‑enabled XLSM file.
+// Use Cases: Generate a sales dashboard with a column‑line chart and deliver it as an XLSM file for downstream VBA processing. | Automate report creation where charts must coexist with embedded macros that need to remain functional after saving. | Copy worksheets that include macros and ensure the macros are preserved when the workbook is saved as XLSM.
+// AI Prompts: Write C# code using Aspose.Cells to add a column‑line combo chart and save the workbook as a macro‑enabled XLSM file. | Explain why enabling macros in Aspose.Cells workbook settings is required before saving as XLSM. | Show how to convert a macro‑enabled XLSM workbook to a regular XLSX file while keeping the chart but removing all macros.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsComboChartMacro
+namespace AsposeCellsComboChartMacroSave
 {
-    // A C# sample that builds a workbook, fills cells A1:C4 with data, adds a column‑line combo chart, sets series names and category axis, then saves the file as a macro‑enabled XLSM using Aspose.Cells.
+    // Shows how to create a Workbook, fill it with sample data, add a column‑line combo chart, enable macros, and save the result as an XLSM macro‑enabled file with Aspose.Cells for .NET.
     class Program
     {
         static void Main()
@@ -25,39 +25,42 @@ namespace AsposeCellsComboChartMacro
 
             // Populate sample data for the combo chart
             sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Series 1");
-            sheet.Cells["C1"].PutValue("Series 2");
+            sheet.Cells["B1"].PutValue("Column Series");
+            sheet.Cells["C1"].PutValue("Line Series");
 
             sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["C2"].PutValue(20);
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["C2"].PutValue(30);
 
             sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["B3"].PutValue(30);
-            sheet.Cells["C3"].PutValue(25);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["C3"].PutValue(45);
 
             sheet.Cells["A4"].PutValue("Mar");
-            sheet.Cells["B4"].PutValue(20);
-            sheet.Cells["C4"].PutValue(30);
+            sheet.Cells["B4"].PutValue(180);
+            sheet.Cells["C4"].PutValue(60);
 
             // Add a combo chart (Column + Line)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 25, 10);
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
 
             // First series as Column
             chart.NSeries.Add("B2:B4", true);
-            chart.NSeries[0].Name = "Series 1";
+            chart.NSeries[0].Name = "Column Series";
 
             // Second series as Line
             chart.NSeries.Add("C2:C4", true);
-            chart.NSeries[1].Name = "Series 2";
+            chart.NSeries[1].Name = "Line Series";
             chart.NSeries[1].Type = ChartType.Line;
 
             // Set category (X) axis data
             chart.NSeries.CategoryData = "A2:A4";
 
+            // Enable macros in workbook settings (optional, required when copying worksheets with macros)
+            workbook.Settings.EnableMacros = true;
+
             // Save the workbook as a macro‑enabled XLSM file
-            workbook.Save("ComboChart.xlsm", SaveFormat.Xlsm);
+            workbook.Save("ComboChartMacroEnabled.xlsm", SaveFormat.Xlsm);
         }
     }
 }

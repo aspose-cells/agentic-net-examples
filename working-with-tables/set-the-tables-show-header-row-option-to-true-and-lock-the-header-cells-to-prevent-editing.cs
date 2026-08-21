@@ -1,10 +1,10 @@
-// Title: Show Table Header Row and Lock Header Cells with Aspose.Cells for .NET
-// Description: Demonstrates how to add a ListObject to a worksheet, enable its header row, lock the header cells, protect the sheet, and save the workbook as an Excel file using Aspose.Cells in C#.
-// Keywords: Aspose.Cells C# | ListObject ShowHeaderRow | lock table header cells | worksheet protection Aspose.Cells | read‑only Excel header | .NET Excel table header | protect header row programmatically
-// Common Searches: Aspose.Cells lock table header row | C# show header row ListObject | protect worksheet header cells Aspose | make Excel table header read‑only with Aspose.Cells | how to lock header cells in Aspose.Cells .NET
-// Developer Intent: Enable the table header row and make its cells read‑only.
-// Use Cases: Create a product catalog where column titles cannot be altered by end users. | Generate compliance‑driven reports that require a fixed header while allowing data entry. | Export data to Excel from an application and ensure the table headings remain unchanged.
-// AI Prompts: Provide C# code using Aspose.Cells to add a ListObject, display its header row, lock the header cells, and protect the worksheet. | Show an example that locks only the header row of an Excel table while keeping data rows editable with Aspose.Cells for .NET. | Explain the steps to configure cell style locking and worksheet protection to make a table header read‑only in Aspose.Cells.
+// Title: Lock Table Header Row and Show Headers with Aspose.Cells in C#
+// Description: Demonstrates how to add a ListObject table to a new workbook, enable the header row, lock each header cell, protect the worksheet, and save the file as TableHeaderLocked.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# | ListObject header lock | ShowHeaderRow | protect worksheet | lock table header cells | Excel table read‑only header | Aspose.Cells example | C# Excel automation | GitHub Aspose.Cells sample | Aspose.Cells table protection
+// Common Searches: Aspose.Cells lock table header C# | ShowHeaderRow true Aspose.Cells | protect worksheet after locking cells Aspose.Cells | read‑only header row Aspose.Cells ListObject | C# code to lock Excel table header with Aspose | Aspose.Cells example for header row protection
+// Developer Intent: Display the table header row and make the header cells read‑only by locking them and protecting the worksheet.
+// Use Cases: Create a template where column titles stay immutable while users fill data rows. | Distribute a report that guarantees consistent header formatting across all recipients. | Build a data‑entry workbook that prevents accidental changes to header labels.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a ListObject, sets ShowHeaderRow to true, locks the header cells, and protects the worksheet. | Show an Aspose.Cells example that makes only the table header row read‑only while allowing edits in the data rows. | Explain step‑by‑step how to lock a table's header row and protect the sheet using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Tables;
 
 namespace AsposeCellsTableHeaderLockDemo
 {
-    // Demonstrates how to add a ListObject to a worksheet, enable its header row, lock the header cells, protect the sheet, and save the workbook as an Excel file using Aspose.Cells in C#.
+    // Demonstrates how to add a ListObject table to a new workbook, enable the header row, lock each header cell, protect the worksheet, and save the file as TableHeaderLocked.xlsx using Aspose.Cells for .NET.
     public class Program
     {
         public static void Main()
@@ -23,13 +23,13 @@ namespace AsposeCellsTableHeaderLockDemo
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate sample data with a header row
+                // Populate sample data (including header row)
                 worksheet.Cells["A1"].PutValue("Product");
                 worksheet.Cells["B1"].PutValue("Price");
                 worksheet.Cells["A2"].PutValue("Apple");
-                worksheet.Cells["B2"].PutValue(2.5);
-                worksheet.Cells["A3"].PutValue("Orange");
-                worksheet.Cells["B3"].PutValue(1.8);
+                worksheet.Cells["B2"].PutValue(1.20);
+                worksheet.Cells["A3"].PutValue("Banana");
+                worksheet.Cells["B3"].PutValue(0.80);
 
                 // Add a table (ListObject) that includes the header row
                 // Parameters: first row, first column, last row, last column, hasHeaders
@@ -39,13 +39,17 @@ namespace AsposeCellsTableHeaderLockDemo
                 // Ensure the header row is visible
                 table.ShowHeaderRow = true;
 
-                // Lock the header cells to prevent editing
+                // Determine the range of header cells
                 int headerRow = table.StartRow;
-                for (int col = table.StartColumn; col <= table.EndColumn; col++)
+                int firstCol = table.StartColumn;
+                int lastCol = firstCol + table.ListColumns.Count - 1; // use ListColumns.Count
+
+                // Lock each header cell
+                for (int col = firstCol; col <= lastCol; col++)
                 {
                     Cell headerCell = worksheet.Cells[headerRow, col];
                     Style style = headerCell.GetStyle();
-                    style.IsLocked = true;
+                    style.IsLocked = true; // Mark cell as locked
                     headerCell.SetStyle(style);
                 }
 

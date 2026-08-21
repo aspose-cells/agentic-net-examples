@@ -1,47 +1,50 @@
-// Title: Set Convergence Threshold (MaxChange) for Iterative Calculations in Aspose.Cells .NET
-// Description: C# example that enables iterative calculation in Aspose.Cells, defines a circular reference, and sets Workbook.Settings.FormulaSettings.MaxChange to 0.001 to control precision and stop the loop when changes fall below the threshold.
-// Keywords: Aspose.Cells iterative calculation | MaxChange convergence threshold | FormulaSettings EnableIterativeCalculation | circular reference precision .NET | Aspose.Cells calculation settings | set MaxChange 0.001
-// Common Searches: Aspose.Cells set MaxChange | how to define convergence threshold in Aspose.Cells | iterative calculation example C# Aspose.Cells | circular reference handling Aspose.Cells | control precision of iterative formulas Aspose.Cells
-// Developer Intent: Configure the convergence threshold to 0.001 so iterative formula evaluation stops when changes are smaller than this value.
-// Use Cases: Terminate iterative calculations for financial models once the result stabilizes within 0.001, avoiding endless loops. | Improve performance of large spreadsheets by limiting iterations based on a defined precision level. | Ensure reproducible results in engineering simulations that rely on circular references and require specific accuracy.
-// AI Prompts: Generate a C# snippet that sets EnableIterativeCalculation, MaxIteration, and MaxChange to 0.001 in Aspose.Cells and explains each setting. | Explain how FormulaSettings.MaxChange influences the stopping condition of iterative calculations in Aspose.Cells. | Create documentation that describes best practices for using convergence thresholds with circular references in Aspose.Cells.
+// Title: Set ConvergenceThreshold (MaxChange) = 0.001 for Iterative Calculations in Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to enable iterative calculation in Aspose.Cells, set the convergence threshold (MaxChange) to 0.001, optionally limit iterations, create a circular reference, calculate formulas, output results, and save the workbook.
+// Keywords: Aspose.Cells iterative calculation | ConvergenceThreshold Aspose.Cells | MaxChange C# | Aspose.Cells circular reference | FormulaSettings precision | Aspose.Cells .NET example | Set MaxIteration Aspose.Cells | Iterative formula evaluation
+// Common Searches: Aspose.Cells set convergence threshold | How to configure MaxChange in Aspose.Cells | Enable iterative calculation Aspose.Cells C# | Circular reference handling Aspose.Cells | Iterative formula settings Aspose.Cells .NET
+// Developer Intent: Configure Aspose.Cells to use a 0.001 convergence threshold for iterative formula evaluation.
+// Use Cases: Resolve circular references by enabling iterative calculation with a precise convergence threshold. | Balance performance and accuracy by adjusting MaxIteration and MaxChange values. | Validate iterative results by calculating formulas and saving the workbook.
+// AI Prompts: Show C# code to set ConvergenceThreshold (MaxChange) to 0.001 in Aspose.Cells. | Provide an Aspose.Cells example that enables iterative calculation and defines MaxIteration and MaxChange. | Explain how MaxChange influences the resolution of circular references in Aspose.Cells.
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// C# example that enables iterative calculation in Aspose.Cells, defines a circular reference, and sets Workbook.Settings.FormulaSettings.MaxChange to 0.001 to control precision and stop the loop when changes fall below the threshold.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to enable iterative calculation in Aspose.Cells, set the convergence threshold (MaxChange) to 0.001, optionally limit iterations, create a circular reference, calculate formulas, output results, and save the workbook.
+    class SetConvergenceThresholdDemo
     {
-        try
+        static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+                // Enable iterative calculation and set related options
+                workbook.Settings.FormulaSettings.EnableIterativeCalculation = true;
+                workbook.Settings.FormulaSettings.MaxIteration = 100;          // optional: maximum iterations
+                workbook.Settings.FormulaSettings.MaxChange = 0.001;          // precision for iterative calculations
 
-            // Set up a circular reference for demonstration
-            sheet.Cells["A1"].Formula = "=B1+1";
-            sheet.Cells["B1"].Formula = "=A1+1";
+                // Example circular reference to demonstrate iterative calculation
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].Formula = "=B1+1";
+                sheet.Cells["B1"].Formula = "=A1+1";
 
-            // Enable iterative calculation and configure its parameters
-            workbook.Settings.FormulaSettings.EnableIterativeCalculation = true;
-            workbook.Settings.FormulaSettings.MaxIteration = 100;      // maximum number of iterations
-            workbook.Settings.FormulaSettings.MaxChange = 0.001;      // convergence threshold (precision)
+                // Calculate all formulas
+                workbook.CalculateFormula();
 
-            // Perform calculation
-            workbook.CalculateFormula();
+                // Output the results
+                Console.WriteLine("A1 value: " + sheet.Cells["A1"].Value);
+                Console.WriteLine("B1 value: " + sheet.Cells["B1"].Value);
 
-            // Save the workbook
-            string outputPath = "IterativeCalculationResult.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook
+                workbook.Save("ConvergenceThresholdDemo.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

@@ -1,41 +1,41 @@
-// Title: Set Right-to-Left Text Direction for an Excel Comment Shape with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add an Arabic comment to cell A1, retrieve the associated CommentShape, set its TextDirection to RightToLeft, and save the file. This enables proper rendering of RTL languages such as Arabic or Hebrew in Excel comments.
-// Keywords: Aspose.Cells | CommentShape | TextDirection | RightToLeft | RTL comment | Arabic Excel comment | Hebrew Excel comment | C# | .NET | bidirectional language support | Excel comment formatting
-// Common Searches: Aspose.Cells set comment direction RTL | C# change Excel comment text direction | RightToLeft comment shape Aspose.Cells | How to display Arabic comment in Excel using Aspose | Set TextDirectionType for comment in .NET
-// Developer Intent: Apply RightToLeft text direction to a comment's shape so RTL languages display correctly in Excel.
-// Use Cases: Generate a report with Arabic or Hebrew comments that require RTL layout. | Batch‑process an existing workbook to convert all comment shapes to RightToLeft. | Create multilingual Excel templates where specific comments need bidirectional rendering.
-// AI Prompts: Show C# code that sets CommentShape.TextDirection to RightToLeft with Aspose.Cells. | Provide a loop that updates TextDirection for every comment in a workbook to RightToLeft. | Explain the TextDirectionType options available for CommentShape in Aspose.Cells.
+// Title: C# – Set Comment Shape Text Direction to RightToLeft with Aspose.Cells
+// Description: Shows how to create a workbook, add a comment, access its CommentShape, set the TextDirection property to RightToLeft for bidirectional language rendering, and save the Excel file.
+// Keywords: Aspose.Cells | C# | CommentShape | TextDirection | RightToLeft | bidirectional language | Excel comment | Arabic | Hebrew
+// Common Searches: Aspose.Cells set comment shape RightToLeft | C# change comment text direction in Excel | RightToLeft comment rendering Aspose.Cells | How to enable Arabic comments in Excel with Aspose.Cells | Set TextDirection of CommentShape using Aspose.Cells .NET
+// Developer Intent: Apply RightToLeft text direction to a comment's shape to support Arabic, Hebrew, or other bidirectional scripts.
+// Use Cases: Generate reports where comment boxes must display Arabic or Hebrew text correctly. | Update existing workbooks to convert comment orientation to RightToLeft before distribution. | Create multilingual Excel templates with comments that automatically adapt to right‑to‑left languages.
+// AI Prompts: Provide C# code that sets a comment's shape TextDirection to RightToLeft using Aspose.Cells. | How can I enable right‑to‑left text in Excel comment shapes for Arabic content with Aspose.Cells? | Explain the effect of TextDirectionType.RightToLeft on comment rendering in an Aspose.Cells workbook.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsCommentTextDirection
+namespace AsposeCellsCommentShapeDirection
 {
-    // Demonstrates how to create a workbook, add an Arabic comment to cell A1, retrieve the associated CommentShape, set its TextDirection to RightToLeft, and save the file. This enables proper rendering of RTL languages such as Arabic or Hebrew in Excel comments.
+    // Shows how to create a workbook, add a comment, access its CommentShape, set the TextDirection property to RightToLeft for bidirectional language rendering, and save the Excel file.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle: create)
+            // Create a new workbook (lifecycle create rule)
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Add a comment to cell A1
             int commentIndex = worksheet.Comments.Add("A1");
             Comment comment = worksheet.Comments[commentIndex];
-            comment.Note = "مثال على النص من اليمين إلى اليسار"; // Sample Arabic text
+            comment.Note = "This comment's shape will have RightToLeft text direction.";
 
-            // Access the shape associated with the comment
+            // Obtain the shape associated with the comment
             CommentShape commentShape = comment.CommentShape;
 
             // Set the text direction of the comment's shape to RightToLeft
             commentShape.TextDirection = TextDirectionType.RightToLeft;
 
-            // Save the workbook (lifecycle: save)
-            workbook.Save("CommentRightToLeft.xlsx");
+            // Save the workbook (lifecycle save rule)
+            workbook.Save("CommentShapeTextDirection.xlsx");
         }
     }
 }

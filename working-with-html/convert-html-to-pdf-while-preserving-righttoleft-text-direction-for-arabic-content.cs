@@ -1,78 +1,70 @@
-// Title: Convert Arabic HTML to PDF with RTL Layout Using Aspose.Cells for .NET
-// Description: Loads an Arabic HTML file into an Aspose.Cells workbook, activates right‑to‑left display, applies a TextDirection style to the used range, sets an Arabic‑compatible default font, and saves the result as a PDF that retains the RTL layout.
-// Keywords: Aspose.Cells | HTML to PDF conversion | RTL layout | Arabic PDF | C# | DisplayRightToLeft | TextDirection | PdfSaveOptions | default font Arabic | spreadsheet to PDF
-// Common Searches: Aspose.Cells convert Arabic HTML to PDF | C# preserve right‑to‑left text when exporting PDF | set default Arabic font in Aspose.Cells PDF output | apply RTL style to worksheet before PDF save | troubleshoot missing Arabic characters in PDF
-// Developer Intent: Generate a PDF from an Arabic HTML source while keeping the right‑to‑left text direction intact.
-// Use Cases: Produce printable PDFs of Arabic web reports with correct RTL alignment. | Create multilingual invoices where Arabic sections require RTL rendering before PDF export. | Automate batch conversion of Arabic HTML templates to PDFs that preserve layout and font rendering.
-// AI Prompts: Write C# code that loads an Arabic HTML file into an Aspose.Cells workbook, applies a right‑to‑left text direction style to all cells, and saves it as a PDF with an Arabic‑compatible default font. | Explain how DisplayRightToLeft and TextDirection properties influence PDF rendering in Aspose.Cells and how to resolve missing Arabic glyphs. | Provide a step‑by‑step guide to batch‑process multiple HTML files into PDFs that retain RTL formatting using Aspose.Cells.
+// Title: C# – Convert Arabic HTML to PDF with RTL layout using Aspose.Cells
+// Description: Loads an HTML file containing Arabic text into an Aspose.Cells workbook, enables right‑to‑left display, applies a RTL text direction style to the used range, sets an Arabic‑compatible font (e.g., Arial) via PdfSaveOptions, and saves the result as a PDF while preserving the correct RTL layout.
+// Keywords: Aspose.Cells HTML to PDF | C# RTL conversion | Arabic PDF export | right to left layout Aspose.Cells | .NET convert HTML to PDF | DisplayRightToLeft property | TextDirection RightToLeft | PdfSaveOptions DefaultFont | Arabic font support
+// Common Searches: Aspose.Cells convert Arabic HTML to PDF | C# export HTML with RTL to PDF using Aspose | How to keep right‑to‑left formatting in PDF with Aspose.Cells | Set default Arabic font for PDF export Aspose.Cells | Enable DisplayRightToLeft before saving PDF
+// Developer Intent: Create a PDF from an Arabic HTML source while preserving right‑to‑left text direction and proper character rendering.
+// Use Cases: Automated pipeline that converts web‑generated Arabic reports (HTML) to PDF for archiving. | Generating printable invoices or certificates in Arabic where layout must remain RTL. | Building a multilingual document conversion service that supports Arabic without manual post‑processing.
+// AI Prompts: Generate C# code with Aspose.Cells to convert an Arabic HTML file to PDF, preserving RTL layout and using Arial as the default font. | Explain the impact of DisplayRightToLeft and TextDirection properties on RTL rendering when exporting to PDF with Aspose.Cells. | Provide a step‑by‑step troubleshooting guide for garbled Arabic characters after HTML‑to‑PDF conversion using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using CellsRange = Aspose.Cells.Range;
+using Aspose.Cells.Rendering;
 
-namespace HtmlToPdfRtlExample
+namespace AsposeCellsHtmlToPdfRtl
 {
-    // Loads an Arabic HTML file into an Aspose.Cells workbook, activates right‑to‑left display, applies a TextDirection style to the used range, sets an Arabic‑compatible default font, and saves the result as a PDF that retains the RTL layout.
+    // Loads an HTML file containing Arabic text into an Aspose.Cells workbook, enables right‑to‑left display, applies a RTL text direction style to the used range, sets an Arabic‑compatible font (e.g., Arial) via PdfSaveOptions, and saves the result as a PDF while preserving the correct RTL layout.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Path to the source HTML file containing Arabic text
-            string htmlPath = "input.html";
-
-            // Verify that the input HTML file exists
-            if (!File.Exists(htmlPath))
-            {
-                Console.WriteLine($"Error: The file \"{htmlPath}\" was not found.");
-                return;
-            }
-
             try
             {
-                // Load the HTML file into a workbook.
-                // Aspose.Cells can interpret HTML as a spreadsheet.
-                Workbook workbook = new Workbook(htmlPath);
+                // Path to the source HTML file containing Arabic text
+                string htmlPath = "input.html";
 
-                // Iterate through all worksheets and enable right‑to‑left display.
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(htmlPath))
                 {
-                    // Makes the whole sheet render from right to left.
-                    sheet.DisplayRightToLeft = true;
-
-                    // Create a style that forces right‑to‑left text direction.
-                    Style rtlStyle = workbook.CreateStyle();
-                    rtlStyle.TextDirection = TextDirectionType.RightToLeft;
-
-                    // Apply the style to the used range of the worksheet.
-                    // StyleFlag specifies which style attributes to apply.
-                    StyleFlag flag = new StyleFlag
-                    {
-                        TextDirection = true
-                    };
-
-                    // MaxDisplayRange returns the area that actually contains data.
-                    CellsRange usedRange = sheet.Cells.MaxDisplayRange;
-                    usedRange.ApplyStyle(rtlStyle, flag);
+                    Console.WriteLine($"Input file not found: {htmlPath}");
+                    return;
                 }
 
-                // Configure PDF save options.
-                // Set a default font that supports Arabic characters (e.g., Arial or Times New Roman).
+                // Load the HTML file into a new workbook instance
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+                Workbook workbook = new Workbook(htmlPath, loadOptions);
+
+                // Access the first worksheet (or any specific worksheet)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Enable right‑to‑left display for the worksheet
+                worksheet.DisplayRightToLeft = true;
+
+                // Ensure that individual cells also have RTL direction
+                Style rtlStyle = workbook.CreateStyle();
+                rtlStyle.TextDirection = TextDirectionType.RightToLeft;
+
+                // Apply the style to the used range
+                Aspose.Cells.Range usedRange = worksheet.Cells.MaxDisplayRange;
+                usedRange.ApplyStyle(rtlStyle, new StyleFlag { TextDirection = true });
+
+                // Configure PDF save options
                 PdfSaveOptions pdfOptions = new PdfSaveOptions
                 {
+                    // Use a font that supports Arabic characters
                     DefaultFont = "Arial",
+                    // Try to use the workbook's default font first
                     CheckWorkbookDefaultFont = true
                 };
 
-                // Save the workbook as a PDF file while preserving RTL layout.
-                string pdfPath = "output.pdf";
-                workbook.Save(pdfPath, pdfOptions);
-
-                Console.WriteLine($"HTML has been converted to PDF with RTL support: {pdfPath}");
+                // Save the workbook as PDF while preserving RTL layout
+                string outputPath = "output.pdf";
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"PDF saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

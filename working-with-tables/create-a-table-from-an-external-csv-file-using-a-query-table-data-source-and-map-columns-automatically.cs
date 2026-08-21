@@ -1,20 +1,19 @@
-// Title: Create an Excel Table from a CSV File with Automatic Column Mapping using Aspose.Cells (C#)
-// Description: Demonstrates how to verify a CSV file, import its data into a new workbook, generate a ListObject (Excel table) with headers, auto‑fit the columns, and save the result as an XLSX file using Aspose.Cells in C#.
-// Keywords: Aspose.Cells CSV import | C# ImportCSV to ListObject | Excel table from CSV | automatic column mapping Aspose.Cells | auto fit columns C# | save workbook as XLSX | query table Aspose.Cells | ListObject example C# | Aspose.Cells data import | CSV to Excel table conversion
-// Common Searches: Aspose.Cells import CSV and create table C# | How to add ListObject from CSV using Aspose.Cells | C# auto‑fit columns after CSV import Aspose | Create Excel table from external CSV file Aspose.Cells | Check CSV file existence before importing Aspose
-// Developer Intent: Read a CSV file, convert it into an Excel table with mapped columns, and export the workbook as XLSX.
-// Use Cases: Generate a formatted report by turning raw CSV data into an Excel table with headers. | Encapsulate CSV‑to‑table conversion in a reusable C# method for batch processing. | Prepare data for downstream analysis by importing CSV, creating a ListObject, and applying auto‑fit.
-// AI Prompts: Write a C# function that takes a CSV path, imports the data with Aspose.Cells, creates a ListObject with headers, auto‑fits columns, and returns the Workbook. | Provide error‑handling code for missing CSV files and invalid delimiters when building a query table with Aspose.Cells. | Show how to add a query table to an existing worksheet that references an external CSV and automatically maps its columns using Aspose.Cells.
+// Title: C# – Import CSV and Create an Excel ListObject (Query Table) with Automatic Column Mapping using Aspose.Cells
+// Description: Shows how to read an external CSV file with Aspose.Cells for .NET, automatically convert data types, determine the used range, add a ListObject that uses the first row as headers, give the table a display name, and save the workbook as an XLSX file.
+// Keywords: Aspose.Cells | C# | ImportCSV | ListObject | Query Table | CSV to Excel | automatic column mapping | Excel table creation | XLSX export | Workbook automation
+// Common Searches: Aspose.Cells import CSV to ListObject C# | Create Excel table from CSV using Aspose.Cells | C# code for CSV to Excel query table | Automatic column mapping Aspose.Cells .NET | How to add a ListObject from CSV with Aspose
+// Developer Intent: Programmatically generate an Excel table from a CSV file with headers and mapped columns.
+// Use Cases: Transform daily sales CSV exports into structured Excel tables for pivot‑table reporting. | Convert configuration or lookup CSV files into filterable query tables within automated reports. | Batch‑process log CSVs, creating a ListObject for each to enable Excel‑based validation, charting, and analysis.
+// AI Prompts: Write C# code that reads a CSV file, imports it with ImportCSV, creates a ListObject over the exact used range, sets the first row as headers, assigns a custom display name, and saves the workbook as XLSX. | Provide a reusable method `Workbook CreateWorkbookFromCsv(string csvPath, string tableName)` that returns a workbook containing a query table with automatic column mapping. | Explain how to detect the populated range after ImportCSV, add a ListObject that spans that range, and handle missing output directories gracefully.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsQueryTableFromCsv
 {
-    // Demonstrates how to verify a CSV file, import its data into a new workbook, generate a ListObject (Excel table) with headers, auto‑fit the columns, and save the result as an XLSX file using Aspose.Cells in C#.
+    // Shows how to read an external CSV file with Aspose.Cells for .NET, automatically convert data types, determine the used range, add a ListObject that uses the first row as headers, give the table a display name, and save the workbook as an XLSX file.
     class Program
     {
         static void Main()
@@ -31,37 +30,50 @@ namespace AsposeCellsQueryTableFromCsv
                     return;
                 }
 
-                // 1. Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // 2. Import the CSV data into the worksheet starting at cell A1 (row 0, column 0)
-                //    Use comma as the delimiter and enable numeric conversion.
+                // Import the CSV data starting at cell A1 (row 0, column 0)
+                // Using comma as delimiter and converting numeric data automatically
                 cells.ImportCSV(csvPath, ",", true, 0, 0);
 
-                // 3. Determine the range that now contains data
-                //    MaxDisplayRange gives the smallest rectangle that encloses all non‑empty cells.
-                AsposeRange dataRange = cells.MaxDisplayRange;
+                // Determine the range that now contains the imported data
+                Aspose.Cells.Range usedRange = cells.MaxDisplayRange;
 
-                // 4. Add a ListObject (Excel table) over the imported data.
-                //    The parameters are: first row, first column, total rows, total columns, hasHeaders.
+                // Calculate start and end positions for the ListObject
+                int startRow = usedRange.FirstRow;
+                int startColumn = usedRange.FirstColumn;
+                int endRow = startRow + usedRange.RowCount - 1;
+                int endColumn = startColumn + usedRange.ColumnCount - 1;
+
+                // Add a ListObject (Excel table) over the imported range
+                // The last parameter 'true' indicates that the first row contains column headers
                 int listObjectIndex = sheet.ListObjects.Add(
-                    dataRange.FirstRow,          // first row
-                    dataRange.FirstColumn,       // first column
-                    dataRange.RowCount,          // total rows
-                    dataRange.ColumnCount,       // total columns
-                    true);                       // show header
+                    startRow, startColumn,
+                    endRow, endColumn,
+                    true);
 
                 ListObject table = sheet.ListObjects[listObjectIndex];
 
-                // 5. (Optional) Adjust column widths automatically based on the imported data.
-                //    AutoFitColumns works on the worksheet; specify the column range of the table.
-                sheet.AutoFitColumns(dataRange.FirstColumn, dataRange.ColumnCount);
+                // Optionally give the table a display name
+                table.DisplayName = "CsvDataTable";
 
-                // 6. Save the workbook to an XLSX file.
-                workbook.Save("ResultFromCsv.xlsx", SaveFormat.Xlsx);
-                Console.WriteLine("Workbook saved as ResultFromCsv.xlsx");
+                // Save the workbook to an XLSX file
+                string outputPath = "CsvDataAsQueryTable.xlsx";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {

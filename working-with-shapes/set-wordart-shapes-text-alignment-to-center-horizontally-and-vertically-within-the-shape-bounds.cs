@@ -1,10 +1,10 @@
-// Title: Center WordArt Text Horizontally and Vertically with Aspose.Cells for .NET (C#)
-// Description: This example creates a new workbook, inserts a WordArt shape using a preset style, and centers the text inside the shape by setting the TextHorizontalAlignment and TextVerticalAlignment properties to Center. The workbook is then saved as an Excel file.
-// Keywords: Aspose.Cells WordArt alignment | C# center WordArt text | TextHorizontalAlignment Aspose.Cells | TextVerticalAlignment Aspose.Cells | AddWordArt C# | Excel WordArt center text | Aspose.Cells shape formatting
-// Common Searches: Aspose.Cells center WordArt text horizontally | how to vertically align WordArt text in .NET | C# set WordArt text alignment Aspose.Cells | center text inside WordArt shape Excel | Aspose.Cells WordArt alignment example
-// Developer Intent: Align WordArt text to the middle of the shape both horizontally and vertically using Aspose.Cells for .NET.
-// Use Cases: Generate a report title with WordArt that remains centered regardless of shape resizing. | Design a dashboard label where the WordArt caption must stay perfectly centered within its bounds.
-// AI Prompts: Write C# code to align WordArt text to the left and top using Aspose.Cells. | Show how to retrieve the current TextHorizontalAlignment and TextVerticalAlignment values from a WordArt shape. | Create an example that applies different preset WordArt styles while keeping the text centered.
+// Title: Center WordArt Text Horizontally & Vertically in Excel using Aspose.Cells for .NET (C#)
+// Description: Shows how to insert a WordArt shape into an Excel workbook with Aspose.Cells for .NET and set its TextHorizontalAlignment and TextVerticalAlignment properties to Center before saving the file.
+// Keywords: Aspose.Cells | C# | WordArt | text alignment | horizontal center | vertical center | Excel shape | PresetWordArtStyle | TextHorizontalAlignment | TextVerticalAlignment
+// Common Searches: Aspose.Cells center WordArt text | C# set WordArt horizontal alignment in Excel | how to vertically align WordArt with Aspose.Cells | center text inside WordArt shape .NET | Aspose.Cells WordArt alignment example
+// Developer Intent: Center the text of a WordArt shape both horizontally and vertically.
+// Use Cases: Create a title banner where the WordArt label stays perfectly centered regardless of column width. | Generate dashboard cards with WordArt captions that remain aligned in the middle of each shape. | Build a reusable Excel template where WordArt captions automatically stay centered after shape resizing.
+// AI Prompts: Provide C# code to align WordArt text to the left and top using Aspose.Cells. | Show how to resize a WordArt shape while preserving its centered text alignment. | Explain how to apply different PresetWordArtStyle values without affecting text centering.
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsWordArtAlignment
 {
-    // This example creates a new workbook, inserts a WordArt shape using a preset style, and centers the text inside the shape by setting the TextHorizontalAlignment and TextVerticalAlignment properties to Center. The workbook is then saved as an Excel file.
+    // Shows how to insert a WordArt shape into an Excel workbook with Aspose.Cells for .NET and set its TextHorizontalAlignment and TextVerticalAlignment properties to Center before saving the file.
     class Program
     {
         static void Main()
@@ -33,12 +33,14 @@ namespace AsposeCellsWordArtAlignment
                 100,    // height (pixels)
                 300);   // width (pixels)
 
-            // Set horizontal and vertical text alignment to Center
+            // Set horizontal text alignment to Center
             wordArt.TextHorizontalAlignment = TextAlignmentType.Center;
+
+            // Set vertical text alignment to Center
             wordArt.TextVerticalAlignment = TextAlignmentType.Center;
 
             // Save the workbook
-            workbook.Save("WordArtCenteredAlignment.xlsx");
+            workbook.Save("WordArtCentered.xlsx");
         }
     }
 }

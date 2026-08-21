@@ -1,28 +1,28 @@
-// Title: Localize Aspose.Cells Chart Labels to Chinese with a ChartGlobalizationSettings Subclass (C#)
-// Description: This example shows how to create a ChartChineseSettings class that inherits from ChartGlobalizationSettings and overrides methods to supply Chinese strings for axis titles, display units, chart title, legend entries, "Other" and series names. The custom settings are applied to a workbook via GlobalizationSettings.ChartSettings, a column chart is generated, and the file is saved as an Excel workbook.
-// Keywords: Aspose.Cells | C# | .NET | ChartGlobalizationSettings | Chinese localization | Excel chart labels | chart axis Chinese | legend translation | globalization settings | multilingual Excel | custom chart settings
-// Common Searches: Aspose.Cells chart Chinese localization example | how to set Chinese axis titles in Aspose.Cells | custom ChartGlobalizationSettings for Chinese labels | apply Chinese legend text to Aspose.Cells charts | C# chart globalization settings Aspose.Cells
-// Developer Intent: Implement a subclass of ChartGlobalizationSettings that returns Chinese text for all chart UI elements and apply it to a workbook to produce fully localized charts.
-// Use Cases: Produce Excel reports for Chinese audiences with automatically translated chart titles, axes, and legends. | Standardize Chinese chart terminology across multiple workbooks in a multilingual .NET application. | Create reusable localization components for Aspose.Cells charts without manually editing each label.
-// AI Prompts: Generate a ChartGlobalizationSettings subclass that provides Japanese translations for chart elements in Aspose.Cells. | Explain how to switch between English and Chinese ChartGlobalizationSettings at runtime in a C# workbook. | Show code to localize data label text for French using a custom Aspose.Cells globalization class.
+// Title: C# – Custom ChartChineseSettings subclass for Chinese localization of Aspose.Cells charts
+// Description: Demonstrates how to create a ChartChineseSettings class that inherits from ChartGlobalizationSettings, overrides methods to supply Chinese strings for axis titles, display units, chart title, legend items, "Other" category and series name, and applies the settings to a workbook containing a column chart.
+// Keywords: Aspose.Cells | ChartGlobalizationSettings | Chinese localization | .NET | C# chart example | custom chart globalization | axis title translation | display unit Chinese | chart legend Chinese | globalization settings demo | GitHub Aspose.Cells example
+// Common Searches: Aspose.Cells chart Chinese labels | How to localize chart axis titles in Chinese using Aspose.Cells | Custom ChartGlobalizationSettings C# example | Set Chinese display unit names in Aspose.Cells chart | ChartChineseSettings tutorial
+// Developer Intent: Create a subclass of ChartGlobalizationSettings that returns Chinese text for all chart UI elements and apply it to a workbook.
+// Use Cases: Generate Excel reports with fully Chinese chart captions for Chinese‑speaking audiences. | Show custom unit symbols such as “千” for thousands on chart axes. | Provide Chinese legends, titles, and "Other" category labels in pie or column charts.
+// AI Prompts: Write a ChartGlobalizationSettings subclass that returns Japanese translations for chart elements. | Show how to toggle between English and Chinese chart globalization settings at runtime in Aspose.Cells. | Explain how to customize chart legend text using a custom globalization class in Aspose.Cells .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsDemo
+namespace AsposeCellsExamples
 {
-    // Custom Chinese globalization settings for charts
-    // This example shows how to create a ChartChineseSettings class that inherits from ChartGlobalizationSettings and overrides methods to supply Chinese strings for axis titles, display units, chart title, legend entries, "Other" and series names. The custom settings are applied to a workbook via GlobalizationSettings.ChartSettings, a column chart is generated, and the file is saved as an Excel workbook.
+    // Custom globalization settings for charts providing Chinese translations
+    // Demonstrates how to create a ChartChineseSettings class that inherits from ChartGlobalizationSettings, overrides methods to supply Chinese strings for axis titles, display units, chart title, legend items, "Other" category and series name, and applies the settings to a workbook containing a column chart.
     public class ChartChineseSettings : ChartGlobalizationSettings
     {
-        // Axis title name in Chinese
+        // Axis title (e.g., X Axis, Y Axis)
         public override string GetAxisTitleName()
         {
-            return "坐标轴标题";
+            return "轴标题";
         }
 
-        // Axis unit names for different display unit types
+        // Unit names for display units
         public override string GetAxisUnitName(DisplayUnitType type)
         {
             switch (type)
@@ -42,92 +42,92 @@ namespace AsposeCellsDemo
             }
         }
 
-        // Chart title name in Chinese
+        // Chart title
         public override string GetChartTitleName()
         {
             return "图表标题";
         }
 
-        // Legend decrease label in Chinese
+        // Legend labels
         public override string GetLegendDecreaseName()
         {
             return "递减";
         }
 
-        // Legend increase label in Chinese
         public override string GetLegendIncreaseName()
         {
             return "递增";
         }
 
-        // Legend total label in Chinese
         public override string GetLegendTotalName()
         {
-            return "合计";
+            return "总计";
         }
 
-        // "Other" label in Chinese
+        // Name for "Other" category in pie charts etc.
         public override string GetOtherName()
         {
             return "其他";
         }
 
-        // Series name in Chinese
+        // Series name
         public override string GetSeriesName()
         {
             return "系列";
         }
     }
 
-    // Demonstration of applying the custom Chinese settings to a workbook
-    public static class Demo
+    public class GlobalizationSettingsDemo
     {
         public static void Run()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            Worksheet sheet = wb.Worksheets[0];
 
             // Populate sample data
-            ws.Cells["A1"].PutValue("类别");
-            ws.Cells["A2"].PutValue("第一类");
-            ws.Cells["A3"].PutValue("第二类");
-            ws.Cells["B1"].PutValue("数值");
-            ws.Cells["B2"].PutValue(120);
-            ws.Cells["B3"].PutValue(340);
+            sheet.Cells["A1"].PutValue("类别");
+            sheet.Cells["A2"].PutValue("第一季度");
+            sheet.Cells["A3"].PutValue("第二季度");
+            sheet.Cells["A4"].PutValue("第三季度");
+            sheet.Cells["B1"].PutValue("数值");
+            sheet.Cells["B2"].PutValue(1200);
+            sheet.Cells["B3"].PutValue(2500);
+            sheet.Cells["B4"].PutValue(1800);
 
             // Add a column chart
-            int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = ws.Charts[chartIdx];
-            chart.NSeries.Add("B2:B3", true);
-            chart.NSeries.CategoryData = "A2:A3";
-            chart.Title.Text = "示例图表";
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 15);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+            chart.Title.Text = "销售额";
 
-            // Apply the custom Chinese globalization settings
+            // Set display unit to thousands to see custom unit name
+            chart.ValueAxis.DisplayUnit = DisplayUnitType.Thousands;
+            chart.ValueAxis.IsDisplayUnitLabelShown = true;
+
+            // Apply the custom Chinese chart globalization settings
             wb.Settings.GlobalizationSettings = new GlobalizationSettings
             {
                 ChartSettings = new ChartChineseSettings()
             };
 
-            // Save the workbook
-            wb.Save("ChartChineseDemo.xlsx");
+            // Output some localized strings to console for verification
+            Console.WriteLine("Chart Title Name: " + ((ChartGlobalizationSettings)wb.Settings.GlobalizationSettings.ChartSettings).GetChartTitleName());
+            Console.WriteLine("Axis Unit Name (Thousands): " + ((ChartGlobalizationSettings)wb.Settings.GlobalizationSettings.ChartSettings).GetAxisUnitName(DisplayUnitType.Thousands));
+            Console.WriteLine("Legend Total Name: " + ((ChartGlobalizationSettings)wb.Settings.GlobalizationSettings.ChartSettings).GetLegendTotalName());
+
+            // Save the workbook (the chart will reflect Chinese labels where applicable)
+            wb.Save("ChartChineseSettingsDemo.xlsx");
         }
     }
 
-    // Program entry point
-    public class Program
+    // Entry point
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            try
-            {
-                Demo.Run();
-                Console.WriteLine("Workbook created successfully: ChartChineseDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            GlobalizationSettingsDemo.Run();
         }
     }
 }

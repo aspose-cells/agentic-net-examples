@@ -1,58 +1,66 @@
-// Title: C# – Refresh an Aspose.Cells Camera Shape to Show Updated Range Data
-// Description: Demonstrates how to add a camera picture to a worksheet, modify the source cells, and programmatically refresh the camera shape using the Aspose.Cells Camera API so the latest values are displayed. The example saves the workbook before and after the refresh.
-// Keywords: Aspose.Cells | C# | .NET | camera picture | refresh camera shape | range snapshot | PictureCollection.Camera | update cell values | dynamic workbook | API example
-// Common Searches: Aspose.Cells refresh camera picture after data change | C# create and update camera shape in Excel | How to programmatically refresh a camera shape in Aspose.Cells | Aspose.Cells .NET camera method example | Refresh snapshot of a range using Aspose.Cells
-// Developer Intent: Update an existing camera shape so it reflects the current content of its source range without recreating the workbook.
-// Use Cases: Generate a sales report, capture a table with a camera shape, change quantities, and refresh the image to show new totals. | Create a dashboard where a pivot table snapshot must stay in sync after data recalculation. | Automate workbook generation that imports data, then refreshes multiple camera pictures to keep all visual snapshots current.
-// AI Prompts: Write C# code that refreshes an Aspose.Cells camera picture after modifying cell values without adding a duplicate image. | Explain how to locate an existing camera picture in a worksheet and update its image to reflect changed data. | Show how to replace an old camera picture with a refreshed version while preserving its original position and size.
+// Title: Refresh a Camera Shape in Aspose.Cells for .NET – Re‑create Picture to Display Updated Range
+// Description: Demonstrates how to programmatically refresh a camera shape by deleting the existing picture from a worksheet's PictureCollection and inserting a new camera picture for the same range, ensuring the latest cell values are shown before saving the workbook.
+// Keywords: Aspose.Cells .NET camera shape refresh | update camera picture programmatically | PictureCollection.Camera API | refresh Excel camera image | C# Aspose.Cells example
+// Common Searches: how to refresh a camera shape in Aspose.Cells | Aspose.Cells update camera picture after cell change | C# remove and recreate camera picture Excel | Aspose.Cells refresh range image without reopening workbook
+// Developer Intent: Update a camera shape so it reflects the current data in its source range.
+// Use Cases: After modifying worksheet data, regenerate the camera picture to keep dashboards accurate. | Automate report generation where embedded camera images must show the latest calculations. | Refresh multiple camera shapes in a sheet after a batch data import.
+// AI Prompts: Generate C# code using Aspose.Cells to refresh a camera shape after changing its source cells. | Show how to delete an existing camera picture and add a new one for the same range in Aspose.Cells for .NET. | Explain a method to programmatically update several camera shapes in a worksheet with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsCameraRefreshDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to add a camera picture to a worksheet, modify the source cells, and programmatically refresh the camera shape using the Aspose.Cells Camera API so the latest values are displayed. The example saves the workbook before and after the refresh.
-    class Program
+    // Demonstrates how to programmatically refresh a camera shape by deleting the existing picture from a worksheet's PictureCollection and inserting a new camera picture for the same range, ensuring the latest cell values are shown before saving the workbook.
+    public class RefreshCameraShapeDemo
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate initial data in the range that will be photographed
-            sheet.Cells["A1"].PutValue("Item");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(20);
+                // Populate a range with initial data
+                sheet.Cells["A1"].PutValue("Item");
+                sheet.Cells["B1"].PutValue("Quantity");
+                sheet.Cells["A2"].PutValue("Apple");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["A3"].PutValue("Banana");
+                sheet.Cells["B3"].PutValue(20);
 
-            // Get the Pictures collection from the worksheet
-            PictureCollection pictures = sheet.Pictures;
+                // Add a camera picture that captures the range A1:B3
+                PictureCollection pictures = sheet.Pictures;
+                int pictureIndex = pictures.Camera(5, 1, "A1:B3"); // row=5, column=1 (zero‑based)
 
-            // Create a camera picture that captures the range A1:B3.
-            // The picture will be placed with its top‑left corner at row 5, column 1.
-            int pictureIndex = pictures.Camera(5, 1, "A1:B3");
-            Console.WriteLine($"Initial camera picture added at index {pictureIndex}.");
+                // Modify the source range data after the picture has been created
+                sheet.Cells["B2"].PutValue(15); // change quantity for Apple
+                sheet.Cells["B3"].PutValue(25); // change quantity for Banana
 
-            // Save the workbook showing the initial camera picture
-            workbook.Save("CameraInitial.xlsx");
+                // Refresh the camera picture:
+                // 1. Remove the old picture.
+                pictures.RemoveAt(pictureIndex);
+                // 2. Re‑add the camera picture for the same range.
+                pictureIndex = pictures.Camera(5, 1, "A1:B3");
 
-            // -----------------------------------------------------------------
-            // Update the source range data – the camera picture should reflect this.
-            // -----------------------------------------------------------------
-            sheet.Cells["B2"].PutValue(15); // Change quantity for Apple
-            sheet.Cells["B3"].PutValue(25); // Change quantity for Banana
+                // Save the workbook to verify that the picture reflects the updated data
+                workbook.Save("RefreshCameraShapeDemo.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
 
-            // Refresh the camera picture by creating a new one for the same range.
-            // This demonstrates the API method to capture the current content.
-            int refreshedPictureIndex = pictures.Camera(5, 1, "A1:B3");
-            Console.WriteLine($"Refreshed camera picture added at index {refreshedPictureIndex}.");
-
-            // Save the workbook after refreshing the camera picture
-            workbook.Save("CameraRefreshed.xlsx");
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            RefreshCameraShapeDemo.Run();
         }
     }
 }

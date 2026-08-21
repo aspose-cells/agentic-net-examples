@@ -1,51 +1,41 @@
-// Title: Set Workbook CalculationMode to Automatic for all worksheets after data import – Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to import data into each worksheet of a new Workbook, then enforce the workbook‑level FormulaSettings.CalculationMode = Automatic by iterating over the sheets, optionally recalculate formulas, and save the file as Output.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# | CalculationMode Automatic | FormulaSettings | iterate worksheets | recalculate formulas | data import workbook | set automatic calculation | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells set calculation mode automatic | C# loop through worksheets set formula settings | Enable automatic formula recalculation after data import Aspose.Cells | How to force workbook calculation mode in Aspose.Cells .NET | Calculate formulas programmatically Aspose.Cells
-// Developer Intent: Apply the Automatic calculation mode to the workbook after populating data in every worksheet.
-// Use Cases: Populate sales data across multiple sheets and ensure all dependent formulas refresh automatically before exporting. | Create a multi‑sheet financial model where each sheet contains formulas that must recalculate after batch data entry. | Automate report generation pipelines that require the workbook to be in Automatic mode to guarantee up‑to‑date calculations.
-// AI Prompts: Generate C# code with Aspose.Cells that sets Workbook.Settings.FormulaSettings.CalculationMode to Automatic after filling cells in each worksheet. | Explain why CalculationMode is a workbook‑level property and how iterating over worksheets still achieves the desired effect. | Show how to invoke workbook.CalculateFormula() after changing the calculation mode in an Aspose.Cells .NET application.
+// Title: Aspose.Cells .NET – Set Workbook Calculation Mode to Automatic After Data Import
+// Description: C# example that creates a workbook, simulates data import into each worksheet, then sets the workbook's FormulaSettings.CalculationMode to Automatic (the setting applies globally) and saves the file.
+// Keywords: Aspose.Cells calculation mode automatic | C# set workbook formula calculation | Aspose.Cells iterate worksheets | FormulaSettings.CalculationMode .NET | automatic formula recalculation after import
+// Common Searches: how to enable automatic calculation in Aspose.Cells .NET | set calculation mode to automatic for all worksheets Aspose.Cells | Aspose.Cells change formula settings after data load | C# Aspose.Cells automatic recalculation example
+// Developer Intent: Enable automatic formula recalculation for a workbook after programmatically importing data into its worksheets.
+// Use Cases: Import large data sets into multiple sheets and ensure formulas update instantly. | Prepare a workbook for end‑user editing by turning on automatic calculation after bulk data population. | Reset calculation mode to Automatic in batch‑processed workbooks before distribution.
+// AI Prompts: Write C# code using Aspose.Cells that imports data into every worksheet and then sets the workbook's calculation mode to Automatic. | Show how to configure FormulaSettings.CalculationMode to Automatic after filling cells in a multi‑sheet workbook. | Explain the difference between Manual and Automatic calculation modes in Aspose.Cells and how to switch them after data manipulation.
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// C# example that creates a workbook, simulates data import into each worksheet, then sets the workbook's FormulaSettings.CalculationMode to Automatic (the setting applies globally) and saves the file.
+class Program
 {
-    // Demonstrates how to import data into each worksheet of a new Workbook, then enforce the workbook‑level FormulaSettings.CalculationMode = Automatic by iterating over the sheets, optionally recalculate formulas, and save the file as Output.xlsx using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Create a new workbook (empty with one default worksheet)
+        Workbook workbook = new Workbook();
+
+        // -------------------- Data import simulation --------------------
+        // Here you would import your data into each worksheet.
+        // For demonstration, we fill each worksheet with simple values.
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            // Create a new workbook (default contains one worksheet)
-            Workbook workbook = new Workbook();
-
-            // ----- Data import simulation -----
-            // For demonstration, add sample data to each worksheet.
-            // In real scenarios, replace this block with actual data import logic.
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Add some values to the first worksheet
-                sheet.Cells["A1"].PutValue("Item");
-                sheet.Cells["B1"].PutValue("Quantity");
-                sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["A3"].PutValue("Orange");
-                sheet.Cells["B3"].PutValue(15);
-            }
-
-            // ----- Set calculation mode to Automatic for all worksheets -----
-            // Although CalculationMode is a workbook‑level setting, we iterate over worksheets
-            // as requested and set the mode repeatedly (the final value will be Automatic).
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
-            }
-
-            // Optionally, calculate formulas now if needed
-            workbook.CalculateFormula();
-
-            // Save the workbook to a file
-            workbook.Save("Output.xlsx", SaveFormat.Xlsx);
+            ws.Cells["A1"].PutValue("Imported");
+            ws.Cells["B1"].PutValue(100);
         }
+        // ----------------------------------------------------------------
+
+        // After completing data imports, set the calculation mode to Automatic.
+        // The CalculationMode property is defined at the workbook level,
+        // but we iterate over worksheets as requested.
+        foreach (Worksheet ws in workbook.Worksheets)
+        {
+            // Setting the mode (the same setting applies to the whole workbook)
+            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+        }
+
+        // Save the workbook to a file.
+        workbook.Save("Result.xlsx", SaveFormat.Xlsx);
     }
 }

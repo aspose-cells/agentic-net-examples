@@ -1,16 +1,17 @@
-// Title: Clone a TextBox, Change Its Text, and Insert into a New Row with Aspose.Cells for .NET
-// Description: C# example that creates a workbook, adds a formatted template TextBox, inserts a new worksheet row, clones the TextBox into that row, updates the cloned placeholder text, and saves the file as an XLSX document using Aspose.Cells.
-// Keywords: Aspose.Cells clone textbox C# | Aspose.Cells copy shape | Aspose.Cells insert row with shape | Aspose.Cells update textbox text | Aspose.Cells .NET TextBox example | Aspose.Cells shape formatting | Aspose.Cells worksheet shapes
-// Common Searches: how to duplicate a TextBox in Aspose.Cells | clone textbox and change text Aspose.Cells .NET | insert a shape into a new row using Aspose.Cells | copy textbox formatting Aspose.Cells C# | Aspose.Cells add TextBox to worksheet programmatically
-// Developer Intent: The developer needs to programmatically copy an existing TextBox, modify its placeholder text, and place the copy in a newly inserted row of an Excel worksheet using Aspose.Cells for .NET.
-// Use Cases: Generate a report where each data row includes a styled comment box derived from a template. | Automate invoice creation with identical label TextBoxes across rows, updating only the displayed text per line item. | Build a dynamic form where a template TextBox is cloned for every newly added record while preserving font and fill settings.
-// AI Prompts: Show me C# code to clone a TextBox shape, preserve its formatting, insert a new row, and set new placeholder text with Aspose.Cells. | Provide a reusable method that takes a source TextBox and a target row index, inserts the row, clones the TextBox into that row, and updates its content. | Explain how to copy font, color, and size properties of a TextBox when moving it to another location in an Aspose.Cells worksheet.
+// Title: Clone a TextBox Template, Update Placeholder, and Insert into a New Row with Aspose.Cells for .NET
+// Description: Demonstrates how to add a template TextBox to a worksheet, clone it to a newly inserted row, copy its visual properties, replace the placeholder text, and save the workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# | clone TextBox Aspose.Cells | copy TextBox formatting | insert row Excel Aspose | placeholder text TextBox | shape duplication Aspose.Cells | Excel workbook TextBox styling | Aspose.Cells Drawing API | programmatic TextBox creation | Excel shape copy C#
+// Common Searches: how to duplicate a TextBox in Aspose.Cells | copy TextBox style to another row .NET | replace placeholder text in Aspose.Cells TextBox | insert a new row and add a shape with Aspose.Cells | clone shape properties Aspose.Cells C# | Aspose.Cells TextBox example
+// Developer Intent: Create a reusable TextBox template, clone it to a new worksheet row, preserve its formatting, and set custom text.
+// Use Cases: Generate a series of employee name labels, each in its own styled TextBox on separate rows. | Build a fillable form where a placeholder TextBox is programmatically replaced with actual data for each record. | Maintain consistent layout in reports by duplicating a formatted TextBox across multiple rows.
+// AI Prompts: Show C# code that clones a TextBox shape, copies all font, fill, and line settings, and places it in a newly inserted row using Aspose.Cells. | Provide an example that iterates over a data table and creates a cloned TextBox for each row, updating the placeholder with the row's value. | Explain how to copy visual properties from one Aspose.Cells TextBox to another, including background color and border style.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System.Drawing;
 
-// C# example that creates a workbook, adds a formatted template TextBox, inserts a new worksheet row, clones the TextBox into that row, updates the cloned placeholder text, and saves the file as an XLSX document using Aspose.Cells.
+// Demonstrates how to add a template TextBox to a worksheet, clone it to a newly inserted row, copy its visual properties, replace the placeholder text, and save the workbook using Aspose.Cells for .NET.
 class CloneTextBoxExample
 {
     static void Main()
@@ -20,47 +21,51 @@ class CloneTextBoxExample
         Worksheet worksheet = workbook.Worksheets[0];
 
         // -------------------------------------------------
-        // 1. Create a template TextBox (this would normally
-        //    already exist in the sheet; we create it here
-        //    for demonstration purposes)
+        // 1. Add a template TextBox (acts as the source)
         // -------------------------------------------------
         // Parameters: topRow, leftColumn, height (pixels), width (pixels)
-        int templateIndex = worksheet.TextBoxes.Add(2, 2, 50, 150);
+        int templateTopRow = 2;      // row index where template starts
+        int templateLeftColumn = 1; // column index where template starts
+        int templateHeight = 60;    // height in pixels
+        int templateWidth = 200;    // width in pixels
+
+        int templateIndex = worksheet.TextBoxes.Add(templateTopRow, templateLeftColumn, templateHeight, templateWidth);
         TextBox templateBox = worksheet.TextBoxes[templateIndex];
-        templateBox.Text = "Template Placeholder";
-        // Example of setting additional formatting (optional)
-        templateBox.Font.Name = "Arial";
+
+        // Set placeholder text in the template
+        templateBox.Text = "{{Placeholder}}";
+        templateBox.Font.Name = "Calibri";
         templateBox.Font.Size = 12;
         templateBox.Font.IsBold = true;
+        templateBox.Font.Color = Color.DarkBlue;
 
         // -------------------------------------------------
-        // 2. Insert a new row where the cloned TextBox will be placed
+        // 2. Clone the template TextBox to a new row
         // -------------------------------------------------
-        // Insert one row after row index 5 (zero‑based, so row 6 in Excel)
-        int targetRow = 6;
-        worksheet.Cells.InsertRows(targetRow, 1);
+        // Determine the row where the new TextBox will be placed
+        // Insert a new row below the template row to keep layout tidy
+        int newRowIndex = templateTopRow + 5; // arbitrary offset for demonstration
+        worksheet.Cells.InsertRow(newRowIndex);
 
-        // -------------------------------------------------
-        // 3. Clone the template TextBox
-        // -------------------------------------------------
-        // Add a new TextBox at the same column as the template,
-        // using the same size as the template.
-        int clonedIndex = worksheet.TextBoxes.Add(targetRow, 2, templateBox.Height, templateBox.Width);
-        TextBox clonedBox = worksheet.TextBoxes[clonedIndex];
+        // Add a new TextBox using the same size and column as the template
+        int newIndex = worksheet.TextBoxes.Add(newRowIndex, templateLeftColumn, templateHeight, templateWidth);
+        TextBox clonedBox = worksheet.TextBoxes[newIndex];
 
-        // Copy desired properties from the template.
-        // Here we copy the font settings and fill color as an example.
+        // Copy visual properties from the template (optional, can be extended)
         clonedBox.Font.Name = templateBox.Font.Name;
         clonedBox.Font.Size = templateBox.Font.Size;
         clonedBox.Font.IsBold = templateBox.Font.IsBold;
         clonedBox.Font.Color = templateBox.Font.Color;
+        clonedBox.Fill.SolidFill.Color = templateBox.Fill.SolidFill.Color;
+        clonedBox.Line.Weight = templateBox.Line.Weight;
+        clonedBox.Line.DashStyle = templateBox.Line.DashStyle;
 
-        // Update the placeholder text in the cloned TextBox
-        clonedBox.Text = "Cloned TextBox Content";
+        // Update the placeholder text with actual content
+        clonedBox.Text = "John Doe";
 
         // -------------------------------------------------
-        // 4. Save the workbook
+        // 3. Save the workbook
         // -------------------------------------------------
-        workbook.Save("ClonedTextBox.xlsx");
+        workbook.Save("ClonedTextBoxDemo.xlsx");
     }
 }

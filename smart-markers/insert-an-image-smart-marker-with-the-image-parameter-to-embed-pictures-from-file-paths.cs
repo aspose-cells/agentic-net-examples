@@ -1,76 +1,78 @@
-// Title: Insert an Image from a File Path Using Aspose.Cells Smart Markers (C#)
-// Description: Demonstrates how to embed a picture in an Excel workbook by placing the smart‑marker "&=Image" in a cell, supplying a DataTable with an "Image" column that holds the full file path, processing the marker with WorkbookDesigner, optionally setting the picture to be placed inside the cell, and saving the result as an XLSX file.
-// Keywords: Aspose.Cells smart marker image | C# embed picture from file path | WorkbookDesigner insert image | place picture inside cell Aspose.Cells | image smart marker syntax | Aspose.Cells .NET image insertion | Excel smart marker picture
-// Common Searches: Aspose.Cells insert image using smart marker C# | How to embed picture from file path with Aspose.Cells | Smart marker syntax for images Aspose.Cells | Place picture inside a cell using WorkbookDesigner | C# Aspose.Cells image smart marker example
-// Developer Intent: Embed an image into an Excel worksheet by using a smart marker that reads the image file path from a data source.
-// Use Cases: Generate product catalogs where each product row automatically displays its photo from a stored image file. | Create employee directories that pull profile pictures from disk into the spreadsheet. | Automate report generation that inserts dynamically selected chart images stored on the server.
-// AI Prompts: Show how to modify the code to handle multiple image paths and insert them into consecutive rows. | Provide an example that uses relative image paths and automatically resizes pictures to fit cell dimensions. | Explain how to replace the DataTable with a List<T> as the data source for image smart markers.
+// Title: Insert an Image Smart Marker from a File Path using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to place an image smart marker ("&=\"Image\"") in a worksheet, read a JPEG file into a byte array, bind it via a DataSet, process with WorkbookDesigner, and save the result as an Excel file.
+// Keywords: Aspose.Cells | C# | image smart marker | embed picture Excel | WorkbookDesigner | byte[] image | file path image | Excel automation | smart markers tutorial | .NET Excel library
+// Common Searches: Aspose.Cells insert image from file path | C# smart marker image example | WorkbookDesigner embed picture Excel | how to use image smart markers Aspose | load JPEG into Excel using Aspose.Cells
+// Developer Intent: Replace a smart marker with a picture loaded from a local file and generate the final workbook programmatically.
+// Use Cases: Create a product catalog where each item’s photo is inserted automatically via a smart marker. | Generate an employee directory that places staff headshots into the spreadsheet without manual editing. | Add a company logo to report headers by processing a single image smart marker during workbook creation.
+// AI Prompts: Show how to modify the sample to insert multiple images from a DataTable with several rows of byte[] values. | Provide code that logs missing image files but continues processing other smart markers. | Explain how to control the inserted image’s dimensions or scaling when using an image smart marker.
 
 using System;
-using System.Data;
 using System.IO;
+using System.Data;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSmartMarkerImageDemo
+// Demonstrates how to place an image smart marker ("&=\"Image\"") in a worksheet, read a JPEG file into a byte array, bind it via a DataSet, process with WorkbookDesigner, and save the result as an Excel file.
+public class ImageData
 {
-    // Demonstrates how to embed a picture in an Excel workbook by placing the smart‑marker "&=Image" in a cell, supplying a DataTable with an "Image" column that holds the full file path, processing the marker with WorkbookDesigner, optionally setting the picture to be placed inside the cell, and saving the result as an XLSX file.
-    class Program
+    // Property name matches the smart marker name; using byte[] avoids System.Drawing dependency
+    public byte[] Image { get; set; } = Array.Empty<byte>();
+}
+
+public class Program
+{
+    public static void Main()
     {
-        static void Main()
+        try
         {
+            // Create a new workbook (template)
+            var workbook = new Workbook();
+            var worksheet = workbook.Worksheets[0];
+
+            // Insert an image smart marker in cell A1
+            // The marker syntax &="Image" tells Aspose.Cells to replace it with the Image property value
+            worksheet.Cells["A1"].PutValue("&=\"Image\"");
+
+            // Prepare the data source containing the image to embed
+            string imagePath = "sample.jpg"; // path to the image file
+            var data = new ImageData();
+
             try
             {
-                // Create a new workbook.
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Insert a smart marker that expects an image path.
-                // The marker syntax "&=Image" tells Aspose.Cells to treat the value as an image.
-                sheet.Cells["A1"].PutValue("&=Image");
-
-                // Prepare data source: a DataTable with a column named "Image"
-                // containing the full file path of the picture to embed.
-                DataTable dt = new DataTable("Images");
-                dt.Columns.Add("Image", typeof(string));
-
-                // Define the image file path (adjust to an existing image on your machine).
-                string imagePath = @"C:\Images\sample_picture.jpg";
-
-                // Ensure the image file exists before adding it to the data source.
                 if (File.Exists(imagePath))
                 {
-                    dt.Rows.Add(imagePath);
+                    data.Image = File.ReadAllBytes(imagePath);
                 }
                 else
                 {
-                    Console.WriteLine($"Image file not found: {imagePath}");
-                    // Add an empty string to keep the row count consistent.
-                    dt.Rows.Add(string.Empty);
+                    Console.WriteLine($"Warning: Image file '{imagePath}' not found. An empty image will be used.");
                 }
-
-                // Process the smart markers using WorkbookDesigner.
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
-                designer.SetDataSource(dt);
-                designer.Process();
-
-                // Optionally, adjust the picture placement to fit inside the cell.
-                // Retrieve the inserted picture (it will be the last picture added).
-                if (sheet.Pictures.Count > 0)
-                {
-                    Picture pic = sheet.Pictures[sheet.Pictures.Count - 1];
-                    pic.IsPlacedInCell = true; // place picture inside the cell
-                }
-
-                // Save the workbook.
-                string outputPath = "SmartMarkerImageOutput.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error reading image file: {ex.Message}");
+                data.Image = Array.Empty<byte>();
             }
+
+            // Build a DataSet with a DataTable that matches the smart marker name
+            var dataTable = new DataTable("ImageData");
+            dataTable.Columns.Add("Image", typeof(byte[]));
+            dataTable.Rows.Add(data.Image);
+            var dataSet = new DataSet();
+            dataSet.Tables.Add(dataTable);
+
+            // Process the smart marker and embed the image using WorkbookDesigner
+            var designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource(dataSet);
+            designer.Process();
+
+            // Save the resulting workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

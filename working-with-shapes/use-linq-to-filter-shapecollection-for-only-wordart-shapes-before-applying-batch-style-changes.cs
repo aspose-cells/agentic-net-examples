@@ -1,70 +1,47 @@
-// Title: Use LINQ to Filter WordArt Shapes and Apply Batch TextEffect Styling in Aspose.Cells (.NET)
-// Description: Creates an Excel workbook, adds WordArt and regular shapes, then uses a LINQ query on the ShapeCollection to select only shapes where IsWordArt is true. For each WordArt shape the TextEffect format is updated (bold, italic, size, font, rotation, preset shape) and the workbook is saved.
-// Keywords: Aspose.Cells | C# | LINQ | WordArt | ShapeCollection | IsWordArt | TextEffectFormat | batch styling | preset shape | Excel automation
-// Common Searches: LINQ filter WordArt shapes Aspose.Cells | apply batch TextEffect formatting to WordArt in C# | select only WordArt from ShapeCollection | change preset shape of WordArt programmatically | update font properties for multiple WordArt objects
-// Developer Intent: Select WordArt shapes from a worksheet and apply uniform TextEffect formatting in one pass.
-// Use Cases: Standardize font style (bold, size, family) for all WordArt in a financial dashboard workbook. | Convert every WordArt to a specific preset shape (e.g., ArchUpCurve) for a marketing presentation. | Disable character rotation while applying consistent styling to WordArt in a template file.
-// AI Prompts: Generate C# code that uses Aspose.Cells to retrieve only WordArt shapes with LINQ and set their font to Arial 18 bold. | Provide a LINQ query to filter ShapeCollection for WordArt and then apply a batch TextEffect change that sets FontItalic to false and PresetShape to StraightLine. | Write a method that iterates over all WordArt shapes in a workbook, disables RotatedChars, applies a preset shape, and saves the updated file.
+// Title: LINQ Filter WordArt Shapes and Apply Batch Text Effects with Aspose.Cells (.NET)
+// Description: Creates a workbook, adds WordArt and regular shapes, uses LINQ to select only WordArt objects from the worksheet's ShapeCollection, updates their TextEffectFormat (bold, italic, 24 pt Arial), and saves the result as an Excel file.
+// Keywords: Aspose.Cells | C# | .NET | LINQ ShapeCollection | WordArt filter | batch text effect | IsWordArt | TextEffectFormat | Excel shape styling
+// Common Searches: filter WordArt shapes Aspose.Cells C# | apply batch formatting to WordArt with LINQ | select only WordArt objects in worksheet | change font of all WordArt shapes programmatically | Aspose.Cells ShapeCollection LINQ example
+// Developer Intent: Select only WordArt shapes in a worksheet and modify their text‑effect properties in one pass.
+// Use Cases: Standardize WordArt typography across a corporate template. | Increase readability by enlarging and bolding all WordArt before PDF export. | Apply brand‑consistent font styling to WordArt while preserving other drawings.
+// AI Prompts: Generate C# code that uses Aspose.Cells to filter WordArt shapes with LINQ and set their TextEffectFormat to bold, italic, 24 pt Arial. | Show an example of enumerating only WordArt objects in a worksheet and updating their font properties in bulk. | Demonstrate how to cast ShapeCollection to Shape, use IsWordArt, and apply batch style changes to WordArt in Aspose.Cells for .NET.
 
 using System;
 using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsWordArtBatchStyle
+// Creates a workbook, adds WordArt and regular shapes, uses LINQ to select only WordArt objects from the worksheet's ShapeCollection, updates their TextEffectFormat (bold, italic, 24 pt Arial), and saves the result as an Excel file.
+class Program
 {
-    // Creates an Excel workbook, adds WordArt and regular shapes, then uses a LINQ query on the ShapeCollection to select only shapes where IsWordArt is true. For each WordArt shape the TextEffect format is updated (bold, italic, size, font, rotation, preset shape) and the workbook is saved.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Access the shape collection of the worksheet
+        ShapeCollection shapes = worksheet.Shapes;
+
+        // Add sample shapes: two WordArt shapes and one regular rectangle
+        shapes.AddWordArt(PresetWordArtStyle.WordArtStyle1, "Hello", 0, 0, 0, 0, 100, 200);
+        shapes.AddRectangle(2, 0, 2, 0, 100, 100);
+        shapes.AddWordArt(PresetWordArtStyle.WordArtStyle5, "World", 5, 0, 5, 0, 100, 200);
+
+        // Use LINQ to filter only the WordArt shapes
+        var wordArtShapes = shapes.Cast<Shape>().Where(s => s.IsWordArt);
+
+        // Apply batch style changes to each WordArt shape
+        foreach (var shape in wordArtShapes)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add a few shapes: two WordArt and one regular rectangle
-            Shape wordArt1 = worksheet.Shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle1,
-                "Hello World",
-                2, 10,   // topRow, top
-                2, 10,   // leftColumn, left
-                100, 300 // height, width
-            );
-
-            Shape wordArt2 = worksheet.Shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle5,
-                "Aspose.Cells",
-                5, 20,
-                5, 20,
-                120, 350
-            );
-
-            // Regular rectangle (not WordArt)
-            worksheet.Shapes.AddRectangle(8, 30, 8, 30, 150, 200);
-
-            // Use LINQ to filter only WordArt shapes
-            var wordArtShapes = worksheet.Shapes
-                                        .Where(shape => shape.IsWordArt)
-                                        .ToList();
-
-            // Apply batch style changes to each WordArt shape
-            foreach (Shape shape in wordArtShapes)
-            {
-                // Access the TextEffect format of the WordArt shape
-                TextEffectFormat textEffect = shape.TextEffect;
-
-                // Example style changes
-                textEffect.FontBold = true;          // Make text bold
-                textEffect.FontItalic = true;        // Make text italic
-                textEffect.FontSize = 24;            // Increase font size
-                textEffect.FontName = "Calibri";     // Change font family
-                textEffect.RotatedChars = false;    // Ensure characters are not rotated
-                // Optionally change the preset shape type
-                textEffect.PresetShape = MsoPresetTextEffectShape.ArchUpCurve;
-            }
-
-            // Save the workbook with the updated WordArt styles
-            workbook.Save("WordArtBatchStyled.xlsx");
+            TextEffectFormat textEffect = shape.TextEffect;
+            textEffect.FontBold = true;
+            textEffect.FontItalic = true;
+            textEffect.FontSize = 24;
+            textEffect.FontName = "Arial";
         }
+
+        // Save the workbook with the updated shapes
+        workbook.Save("WordArtBatchStyle.xlsx");
     }
 }

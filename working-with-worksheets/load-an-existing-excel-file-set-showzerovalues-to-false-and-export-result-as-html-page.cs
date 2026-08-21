@@ -1,20 +1,20 @@
-// Title: Hide Zero Values in Excel and Export to HTML with Aspose.Cells for .NET
-// Description: Loads an existing workbook, turns off zero‑value display on every worksheet, and saves the result as an HTML file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | DisplayZeros | suppress zeroes | Excel to HTML conversion | HtmlSaveOptions | Workbook.Save | export workbook as HTML | Excel reporting | web‑ready spreadsheet
-// Common Searches: Aspose.Cells hide zero values when converting to HTML | C# set DisplayZeros false for all worksheets | Export Excel workbook to HTML without zeroes Aspose | Disable zero display in Aspose.Cells HTML export | Convert .xlsx to .html using Aspose.Cells and omit zeros
-// Developer Intent: Load an Excel file, disable zero‑value rendering for each sheet, and generate an HTML version of the workbook.
-// Use Cases: Produce web‑friendly financial reports that exclude zero balances. | Create clean HTML snapshots of dashboards without placeholder zeros. | Automate batch conversion of multiple spreadsheets to HTML while suppressing empty cells.
-// AI Prompts: Generate C# code that opens a workbook, sets Worksheet.DisplayZeros = false for every sheet, and saves it as HTML with optional CSS embedding using Aspose.Cells. | Explain how HtmlSaveOptions can be configured to control image handling, CSS inclusion, and other settings when exporting Excel to HTML with Aspose.Cells. | Write a script that processes a folder of .xlsx files, hides zero values, and outputs corresponding .html files using Aspose.Cells for .NET.
+// Title: Export Excel to HTML without Zero Values using Aspose.Cells for .NET (C#)
+// Description: Loads an existing workbook, disables zero‑value display on every worksheet (DisplayZeros = false), and saves the file as an HTML page with default HtmlSaveOptions. The resulting HTML omits cells that contain zero.
+// Keywords: Aspose.Cells C# | .NET Excel to HTML | Hide zero values Aspose | DisplayZeros false | ShowZeroValues property | Workbook.Save HTML | HtmlSaveOptions Aspose | Excel web export | Suppress zero cells | Convert XLSX to HTML
+// Common Searches: Aspose.Cells hide zero values when exporting to HTML | C# export Excel workbook to HTML without zeros | DisplayZeros property Aspose.Cells example | Convert XLSX to HTML using Aspose.Cells .NET | How to suppress zero cells in HTML output from Excel
+// Developer Intent: Load an existing Excel file, turn off zero‑value display for all worksheets, and generate an HTML version of the workbook.
+// Use Cases: Create web‑ready financial reports that exclude zero entries. | Produce clean printable HTML snapshots of spreadsheets for dashboards. | Automate batch conversion of multiple workbooks to HTML while removing zero clutter.
+// AI Prompts: Generate C# code with Aspose.Cells that loads a workbook, sets DisplayZeros = false for each worksheet, and saves it as HTML. | Write a reusable method that accepts input and output paths and converts an Excel file to HTML with zero values hidden using Aspose.Cells. | Explain how to customize HtmlSaveOptions (e.g., embed CSS, inline images) when exporting Excel to HTML while suppressing zero cells.
 
 using System;
 using Aspose.Cells;
 
-// Loads an existing workbook, turns off zero‑value display on every worksheet, and saves the result as an HTML file using Aspose.Cells for .NET.
-class Program
+// Loads an existing workbook, disables zero‑value display on every worksheet (DisplayZeros = false), and saves the file as an HTML page with default HtmlSaveOptions. The resulting HTML omits cells that contain zero.
+class ExportExcelToHtml
 {
     static void Main()
     {
-        // Load the existing Excel workbook
+        // Load the existing Excel workbook from file
         Workbook workbook = new Workbook("input.xlsx");
 
         // Disable displaying zero values for all worksheets
@@ -26,7 +26,7 @@ class Program
         // Create HTML save options (default settings)
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-        // Export the workbook to an HTML page
+        // Export the entire workbook to an HTML file
         workbook.Save("output.html", htmlOptions);
     }
 }

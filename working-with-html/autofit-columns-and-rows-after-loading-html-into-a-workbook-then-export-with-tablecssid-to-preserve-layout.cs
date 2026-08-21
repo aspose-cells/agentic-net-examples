@@ -1,31 +1,32 @@
-// Title: Auto‑Fit Columns & Rows When Importing HTML and Preserve Layout with TableCssId – Aspose.Cells for .NET
-// Description: Shows how to load an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions.AutoFitColsAndRows, then export it back to HTML with HtmlSaveOptions.TableCssId so the original table styling is kept via CSS.
-// Keywords: Aspose.Cells | C# | .NET | HtmlLoadOptions AutoFitColsAndRows | HtmlSaveOptions TableCssId | HTML to Excel conversion | Excel to HTML export | preserve table layout | auto‑fit columns rows | custom CSS id for HTML table
-// Common Searches: Aspose.Cells auto fit columns rows when loading HTML | How to use TableCssId in HtmlSaveOptions | Preserve HTML table styling after Excel conversion | Load HTML into workbook and export with custom CSS selector | C# Aspose.Cells import HTML auto‑fit
-// Developer Intent: Import an HTML document, automatically adjust its column widths and row heights, and save it as HTML with a designated CSS id to retain the original layout.
-// Use Cases: Convert web‑based HTML reports to Excel, auto‑fit the cells, and generate HTML output that matches the site’s CSS framework. | Process user‑submitted HTML spreadsheets, ensure proper sizing, and re‑export with a custom TableCssId for seamless integration into existing web pages. | Migrate legacy HTML tables to Excel for data manipulation, then publish them back to HTML while preserving the original visual styling.
-// AI Prompts: Provide C# code that loads an HTML file into an Aspose.Cells Workbook with AutoFitColsAndRows enabled and saves it as HTML using a custom TableCssId. | Explain how HtmlSaveOptions.TableCssId influences the generated HTML and how it works together with AutoFitColsAndRows to keep the table layout intact. | Show a step‑by‑step example of converting HTML to Excel, auto‑fitting rows and columns, then exporting back to HTML with a specific CSS selector for the table.
+// Title: C# – Auto‑fit columns and rows when loading HTML with Aspose.Cells and save using a custom TableCssId
+// Description: Loads an HTML file into an Aspose.Cells Workbook with AutoFitColsAndRows enabled, then exports the workbook back to HTML while assigning a TableCssId for targeted CSS styling. The approach keeps the original table layout and simplifies post‑processing in web applications.
+// Keywords: Aspose.Cells HtmlLoadOptions AutoFitColsAndRows | Aspose.Cells HtmlSaveOptions TableCssId | C# auto fit columns rows HTML | preserve HTML table layout Aspose | .NET export workbook to HTML custom CSS id
+// Common Searches: Aspose.Cells auto fit columns rows when loading HTML | Set TableCssId in Aspose.Cells HTML export | Preserve HTML table layout after conversion with Aspose.Cells | C# load HTML workbook auto‑fit and save with custom CSS id
+// Developer Intent: Load an HTML document into a workbook, automatically adjust column widths and row heights, and save the workbook as HTML with a user‑defined TableCssId for precise CSS targeting.
+// Use Cases: Render uploaded HTML reports in a web portal, auto‑fit the grid, and apply a consistent stylesheet via a custom TableCssId. | Convert HTML tables to Excel, retain the original layout through auto‑fit, then re‑export to HTML for further web‑based manipulation. | Batch‑process a collection of HTML files, applying auto‑fit on load and assigning unique TableCssIds to each output for uniform styling across all pages.
+// AI Prompts: Write C# code that uses Aspose.Cells to load an HTML file, enable AutoFitColsAndRows, and save it as HTML with a specified TableCssId. | Explain the interaction between HtmlLoadOptions.AutoFitColsAndRows and HtmlSaveOptions.TableCssId in preserving table layout. | Provide a step‑by‑step guide for batch converting a folder of HTML files to HTML with auto‑fit and custom TableCssId using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to load an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions.AutoFitColsAndRows, then export it back to HTML with HtmlSaveOptions.TableCssId so the original table styling is kept via CSS.
+// Loads an HTML file into an Aspose.Cells Workbook with AutoFitColsAndRows enabled, then exports the workbook back to HTML while assigning a TableCssId for targeted CSS styling. The approach keeps the original table layout and simplifies post‑processing in web applications.
 class Program
 {
     static void Main()
     {
-        // Load HTML with auto‑fit enabled for both columns and rows
+        // Load HTML file with auto‑fit enabled for columns and rows
         HtmlLoadOptions loadOptions = new HtmlLoadOptions(LoadFormat.Html);
-        loadOptions.AutoFitColsAndRows = true;               // Auto‑fit during import
+        loadOptions.AutoFitColsAndRows = true;               // Auto‑fit during load
 
-        // Load the HTML file into a workbook using the specified options
+        // Replace "input.html" with the path to your source HTML file
         Workbook workbook = new Workbook("input.html", loadOptions);
 
-        // Prepare HTML save options and set a TableCssId to keep layout styling
+        // Configure HTML save options to use a custom TableCssId
         HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
-        saveOptions.TableCssId = "custom-table-style";       // Prefix for CSS selectors in the generated table
+        saveOptions.TableCssId = "custom-table-style";       // Prefix for CSS selectors inside the table
 
-        // Save the workbook as HTML with the configured options
+        // Save the workbook as HTML preserving the layout
+        // Replace "output.html" with the desired output path
         workbook.Save("output.html", saveOptions);
     }
 }

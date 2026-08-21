@@ -1,159 +1,106 @@
-// Title: Concurrent Excel template processing with Aspose.Cells WorkbookDesigner (C#)
-// Description: Loads multiple Excel templates, enables MultiThreadReading, creates a separate WorkbookDesigner for each, binds a list of Person objects as the "Data" source, processes smart markers in parallel tasks, and merges the successful workbooks into a single file (MergedResult.xlsx).
-// Keywords: Aspose.Cells multithreaded processing | WorkbookDesigner parallel execution | smart markers C# | merge multiple workbooks Aspose | MultiThreadReading cells | concurrent Excel template generation | Aspose.Cells combine workbooks
-// Common Searches: process Excel templates concurrently with Aspose.Cells | parallel smart marker processing C# | merge workbooks after parallel execution Aspose | enable MultiThreadReading for WorkbookDesigner | combine multiple WorkbookDesigner results
-// Developer Intent: Run each Excel template on its own thread using WorkbookDesigner, then combine the processed workbooks into one file.
-// Use Cases: Generate department‑level reports simultaneously and produce a master workbook. | Create a batch of invoices from different templates in parallel, then archive them together. | Aggregate regional sales data from several smart‑marker templates concurrently for executive review.
-// AI Prompts: Write C# code that uses Aspose.Cells to process a collection of Excel templates with smart markers on separate threads and merges the outputs into a single workbook. | Explain the performance impact of MultiThreadReading when using WorkbookDesigner and list thread‑safety best practices. | Show how to log errors for individual template tasks while still consolidating successfully processed workbooks.
+// Title: Parallel processing of multiple Excel templates with smart markers using Aspose.Cells for .NET
+// Description: Loads several Excel templates that contain smart markers, creates a separate WorkbookDesigner for each, binds individual DataTables, enables MultiThreadReading, processes the templates concurrently with Parallel.For, and merges the resulting workbooks into a single file (MergedResult.xlsx).
+// Keywords: Aspose.Cells parallel processing | WorkbookDesigner multi‑thread | smart markers concurrent C# | combine multiple workbooks Aspose | MultiThreadReading cells | Parallel.For Excel generation
+// Common Searches: Aspose.Cells process smart markers in parallel | C# merge workbooks after parallel processing | Enable MultiThreadReading for WorkbookDesigner | Parallel.For Aspose.Cells example | Combine multiple template workbooks .NET
+// Developer Intent: Run separate WorkbookDesigner instances on different templates simultaneously and consolidate the outputs into one workbook.
+// Use Cases: Generate a master report by populating several smart‑marker templates with distinct data sets in parallel, then merging them. | Speed up bulk mail‑merge style Excel creation by assigning each template to its own thread and combining the results. | Aggregate departmental spreadsheets processed concurrently into a single master workbook to reduce overall runtime.
+// AI Prompts: Provide C# code that creates a WorkbookDesigner for each Excel template, processes them inside Parallel.For, and merges the workbooks with Aspose.Cells. | Explain how to safely enable MultiThreadReading on worksheets when using Parallel.For with smart markers. | Suggest best practices for error handling and logging in a parallel Aspose.Cells workbook processing scenario.
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// Loads multiple Excel templates, enables MultiThreadReading, creates a separate WorkbookDesigner for each, binds a list of Person objects as the "Data" source, processes smart markers in parallel tasks, and merges the successful workbooks into a single file (MergedResult.xlsx).
+// Loads several Excel templates that contain smart markers, creates a separate WorkbookDesigner for each, binds individual DataTables, enables MultiThreadReading, processes the templates concurrently with Parallel.For, and merges the resulting workbooks into a single file (MergedResult.xlsx).
 class MultiThreadWorkbookDesignerDemo
 {
     static void Main()
     {
-        // Define template files and their corresponding data sources.
-        var templates = new List<(string templatePath, object dataSource)>
+        // Paths to template workbooks (each contains smart markers)
+        string[] templates = { "Template1.xlsx", "Template2.xlsx", "Template3.xlsx" };
+
+        // Prepare a simple data source for each template (DataTable used as example)
+        List<DataTable> dataSources = new List<DataTable>();
+        for (int i = 0; i < templates.Length; i++)
         {
-            ("Template1.xlsx", GetSampleData1()),
-            ("Template2.xlsx", GetSampleData2()),
-            ("Template3.xlsx", GetSampleData3())
-        };
-
-        var processingTasks = new List<Task<Workbook>>();
-
-        // Process each template in its own task.
-        foreach (var item in templates)
-        {
-            processingTasks.Add(Task.Run(() =>
-            {
-                try
-                {
-                    // Verify that the template file exists.
-                    if (!File.Exists(item.templatePath))
-                        throw new FileNotFoundException($"Template file not found: {item.templatePath}");
-
-                    // Load the template workbook.
-                    Workbook wb = new Workbook(item.templatePath);
-
-                    // Enable multi‑thread reading for the worksheet's cells.
-                    wb.Worksheets[0].Cells.MultiThreadReading = true;
-
-                    // Create a WorkbookDesigner for this workbook.
-                    WorkbookDesigner designer = new WorkbookDesigner(wb);
-
-                    // Bind the data source (the name "Data" matches the smart markers in the template).
-                    designer.SetDataSource("Data", item.dataSource);
-
-                    // Process smart markers.
-                    designer.Process();
-
-                    // Return the processed workbook.
-                    return designer.Workbook;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing '{item.templatePath}': {ex.Message}");
-                    return null;
-                }
-            }));
+            DataTable dt = new DataTable("Table" + i);
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Value", typeof(int));
+            dt.Rows.Add("ItemA", i * 10);
+            dt.Rows.Add("ItemB", i * 20);
+            dataSources.Add(dt);
         }
 
-        try
-        {
-            // Wait for all parallel tasks to complete.
-            Task.WaitAll(processingTasks.ToArray());
-        }
-        catch (AggregateException aggEx)
-        {
-            foreach (var ex in aggEx.InnerExceptions)
-                Console.WriteLine($"Task error: {ex.Message}");
-        }
+        // Array to hold the processed workbooks from each thread
+        Workbook[] processedWorkbooks = new Workbook[templates.Length];
 
-        // Merge all successfully processed workbooks into a single workbook.
-        Workbook finalWorkbook = null;
-        foreach (var task in processingTasks)
-        {
-            Workbook processed = task.Result;
-            if (processed == null)
-                continue; // Skip failed tasks.
-
-            if (finalWorkbook == null)
-            {
-                // Use the first processed workbook as the base.
-                finalWorkbook = processed;
-            }
-            else
-            {
-                // Combine subsequent workbooks into the base workbook.
-                finalWorkbook.Combine(processed);
-            }
-        }
-
-        // Save the merged result if at least one workbook was processed.
-        if (finalWorkbook != null)
+        // Process each template concurrently
+        Parallel.For(0, templates.Length, index =>
         {
             try
             {
-                finalWorkbook.Save("MergedResult.xlsx");
-                Console.WriteLine("Merged workbook saved as 'MergedResult.xlsx'.");
+                string templatePath = templates[index];
+
+                // Verify that the template file exists before loading
+                if (!File.Exists(templatePath))
+                {
+                    Console.WriteLine($"Template file not found: {templatePath}. Skipping this entry.");
+                    return;
+                }
+
+                // Load the template workbook
+                Workbook wb = new Workbook(templatePath);
+
+                // Enable multi‑thread reading for the cells collection (required for safe concurrent reads)
+                wb.Worksheets[0].Cells.MultiThreadReading = true;
+
+                // Create a WorkbookDesigner bound to this workbook
+                WorkbookDesigner designer = new WorkbookDesigner(wb);
+
+                // Bind the data source to the smart marker name "Data"
+                designer.SetDataSource("Data", dataSources[index]);
+
+                // Process the smart markers and populate the workbook
+                designer.Process();
+
+                // Store the processed workbook for later merging
+                processedWorkbooks[index] = designer.Workbook;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving merged workbook: {ex.Message}");
+                Console.WriteLine($"Error processing template '{templates[index]}': {ex.Message}");
+            }
+        });
+
+        // Create an empty workbook that will hold the merged result
+        Workbook finalWorkbook = new Workbook();
+
+        // Remove the default empty sheet created by the constructor, if present
+        if (finalWorkbook.Worksheets.Count > 0)
+        {
+            finalWorkbook.Worksheets.RemoveAt(0);
+        }
+
+        // Merge each processed workbook into the final workbook
+        foreach (Workbook wb in processedWorkbooks)
+        {
+            if (wb != null)
+            {
+                finalWorkbook.Combine(wb);
             }
         }
-        else
+
+        // Save the merged workbook to disk
+        try
         {
-            Console.WriteLine("No workbooks were processed; merged file not created.");
+            finalWorkbook.Save("MergedResult.xlsx");
+            Console.WriteLine("Merged workbook saved as 'MergedResult.xlsx'.");
         }
-    }
-
-    // Sample data for the first template.
-    static List<Person> GetSampleData1()
-    {
-        return new List<Person>
+        catch (Exception ex)
         {
-            new Person("Alice", 28),
-            new Person("Bob", 35)
-        };
-    }
-
-    // Sample data for the second template.
-    static List<Person> GetSampleData2()
-    {
-        return new List<Person>
-        {
-            new Person("Charlie", 22),
-            new Person("Diana", 31)
-        };
-    }
-
-    // Sample data for the third template.
-    static List<Person> GetSampleData3()
-    {
-        return new List<Person>
-        {
-            new Person("Eve", 27),
-            new Person("Frank", 40)
-        };
-    }
-
-    // Simple POCO class used as a data source for smart markers.
-    public class Person
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
-
-        public Person(string name, int age)
-        {
-            Name = name;
-            Age = age;
+            Console.WriteLine($"Failed to save merged workbook: {ex.Message}");
         }
     }
 }

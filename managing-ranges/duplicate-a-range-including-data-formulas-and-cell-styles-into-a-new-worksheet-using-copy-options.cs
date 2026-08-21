@@ -1,73 +1,78 @@
+// Title: Copy a Range with Data, Formulas & Styles to Another Worksheet using PasteOptions – Aspose.Cells for .NET (C#)
+// Description: C# example that creates a workbook, fills a source sheet with headers, values, formulas and a bold gray style, then uses Aspose.Cells PasteOptions (PasteType.All) to duplicate the A1:D3 range—including values, formulas, and formatting—into a new worksheet and saves the file.
+// Keywords: Aspose.Cells copy range C# | PasteOptions duplicate range | preserve formulas Aspose.Cells | copy cell styles .NET | Excel range copy example | Aspose.Cells tutorial | GitHub Aspose.Cells sample | C# Excel automation
+// Common Searches: Aspose.Cells copy range with formulas C# | How to duplicate a range with formatting using PasteOptions | Copy Excel cells to another sheet preserving styles Aspose.Cells | C# PasteOptions PasteType.All example | Aspose.Cells range copy to new worksheet
+// Developer Intent: Duplicate a source range—including values, formulas, and formatting—to a destination range on a new worksheet using PasteOptions.
+// Use Cases: Generate multiple report tabs by cloning a styled, calculated table from a template sheet. | Create a summary sheet that reuses a formatted data block while keeping all underlying formulas intact. | Export a fully formatted and calculated table to a separate workbook for distribution without altering the original.
+// AI Prompts: Provide C# code that copies a range with formulas and cell styles to another worksheet using Aspose.Cells PasteOptions. | Show how to use PasteOptions to copy a range while skipping blank cells but retaining formatting in Aspose.Cells for .NET. | Explain how to transpose a range during copy while preserving formulas and styles with Aspose.Cells PasteOptions. | Give a step‑by‑step guide to duplicate a range to a new worksheet and save the workbook using Aspose.Cells.
+
 using System;
-using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;   // Alias to avoid conflict with System.Range
+using Aspose.Cells.Drawing;
+using System.Drawing;
 
 namespace AsposeCellsRangeDuplicate
 {
+    // C# example that creates a workbook, fills a source sheet with headers, values, formulas and a bold gray style, then uses Aspose.Cells PasteOptions (PasteType.All) to duplicate the A1:D3 range—including values, formulas, and formatting—into a new worksheet and saves the file.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook (no template file needed)
+                // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Get the first worksheet (source) and name it
-                Worksheet sourceSheet = workbook.Worksheets[0];
-                sourceSheet.Name = "Source";
+                // -------------------- Source Worksheet --------------------
+                Worksheet srcSheet = workbook.Worksheets[0];
+                srcSheet.Name = "Source";
 
-                // Populate source range with values, a formula in the last column and a simple style
-                Cells srcCells = sourceSheet.Cells;
-                for (int row = 0; row < 5; row++)
-                {
-                    for (int col = 0; col < 5; col++)
-                    {
-                        // Put a numeric value
-                        srcCells[row, col].PutValue(row * 10 + col);
+                // Populate source range with data, formulas and style
+                srcSheet.Cells["A1"].PutValue("Item");
+                srcSheet.Cells["B1"].PutValue("Quantity");
+                srcSheet.Cells["C1"].PutValue("Price");
+                srcSheet.Cells["A2"].PutValue("Apple");
+                srcSheet.Cells["B2"].PutValue(10);
+                srcSheet.Cells["C2"].PutValue(0.5);
+                srcSheet.Cells["A3"].PutValue("Banana");
+                srcSheet.Cells["B3"].PutValue(5);
+                srcSheet.Cells["C3"].PutValue(0.3);
 
-                        // Add a SUM formula in column E (index 4) of each row
-                        if (col == 4)
-                        {
-                            srcCells[row, col].Formula = $"=SUM(A{row + 1}:D{row + 1})";
-                        }
+                // Formula (Total = Quantity * Price)
+                srcSheet.Cells["D2"].Formula = "B2*C2";
+                srcSheet.Cells["D3"].Formula = "B3*C3";
 
-                        // Apply a basic style
-                        Style style = workbook.CreateStyle();
-                        style.Font.Name = "Arial";
-                        style.Font.Size = 12;
-                        style.Font.IsBold = (col % 2 == 0);
-                        srcCells[row, col].SetStyle(style);
-                    }
-                }
+                // Apply a simple style to the header row
+                Style headerStyle = workbook.CreateStyle();
+                headerStyle.Font.IsBold = true;
+                headerStyle.ForegroundColor = Color.LightGray;
+                headerStyle.Pattern = BackgroundType.Solid;
+                srcSheet.Cells.CreateRange("A1:D1").SetStyle(headerStyle);
 
-                // Add a new worksheet that will receive the duplicated range
-                Worksheet destSheet = workbook.Worksheets[workbook.Worksheets.Add()];
-                destSheet.Name = "Destination";
+                // -------------------- Destination Worksheet --------------------
+                Worksheet destSheet = workbook.Worksheets.Add("Destination");
 
-                // Define source and destination ranges (both 5x5)
-                AsposeRange sourceRange = srcCells.CreateRange(0, 0, 5, 5);
-                AsposeRange destRange = destSheet.Cells.CreateRange(0, 0, 5, 5);
+                // Define source and destination ranges (same size)
+                Aspose.Cells.Range sourceRange = srcSheet.Cells.CreateRange("A1:D3");
+                Aspose.Cells.Range destRange = destSheet.Cells.CreateRange("A1:D3");
 
-                // Set paste options to copy everything (data, formulas, formats, etc.)
+                // Configure paste options to copy everything (data, formulas, formats, etc.)
                 PasteOptions pasteOptions = new PasteOptions
                 {
-                    PasteType = PasteType.All
+                    PasteType = PasteType.All,   // copy all aspects
+                    SkipBlanks = false,         // do not skip blanks
+                    Transpose = false           // keep original orientation
                 };
 
-                // Perform the copy with the specified options
+                // Perform the copy using the range copy method with paste options
                 destRange.Copy(sourceRange, pasteOptions);
 
                 // Save the workbook
-                string outputPath = "RangeDuplicateDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                workbook.Save("RangeDuplicateWithCopyOptions.xlsx");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

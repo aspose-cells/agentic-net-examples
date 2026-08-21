@@ -1,42 +1,38 @@
-// Title: C# – Create a Workbook, Merge A1:D1 as a Centered Title, and Save with Aspose.Cells
-// Description: Demonstrates how to instantiate a new Workbook, merge the range A1:D1 on the first worksheet, insert a title, apply horizontal and vertical center alignment, and save the file as an Excel workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# merge cells | center align merged cell Aspose | create workbook with title row | Excel merge A1:D1 Aspose.Cells | set TextAlignmentType Center | save workbook Aspose.Cells .NET | style merged cell Aspose | C# Excel automation Aspose.Cells
-// Common Searches: how to merge cells A1 to D1 using Aspose.Cells C# | center text in merged cells Aspose.Cells .NET | save Excel file after merging cells with Aspose | apply vertical and horizontal alignment to merged cell C# | Aspose.Cells example for title row merge
-// Developer Intent: Generate a new Excel workbook, merge the first row for a title, center the title text, and write the file to disk.
-// Use Cases: Create a report header where the title spans columns A‑D and is centrally aligned before adding data. | Design an invoice template with a merged, centered heading across the top of the sheet. | Build a dashboard worksheet that requires a bold, centered title row prior to inserting charts and tables.
-// AI Prompts: Write C# code with Aspose.Cells to merge cells A1:D1, set a custom title, apply both horizontal and vertical center alignment, and save as 'Report.xlsx'. | Explain how to modify the style of a merged cell in Aspose.Cells for .NET to include font size, bold formatting, and centered alignment. | Provide an example that adds a merged title row to an existing workbook while preserving the original formatting of other cells.
+// Title: C# – Create Workbook, Merge A1:D1, Center Bold Title, Save with Aspose.Cells
+// Description: Shows how to create a new workbook, merge cells A1:D1, insert a title, apply centered bold formatting, and save the file as MergedTitle.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | merge cells A1:D1 | center text | bold title | Excel workbook | save xlsx | cell alignment
+// Common Searches: Aspose.Cells merge cells and center text C# | How to set a bold title across columns A to D with Aspose.Cells | Create merged title row in Excel using Aspose.Cells .NET | Set horizontal and vertical alignment for merged cells Aspose
+// Developer Intent: Generate an Excel file with a merged title row that spans columns A‑D, centered and bold, then save the workbook.
+// Use Cases: Standard report header with a spanning title | Invoice or receipt template that needs a prominent top title | Dashboard sheet where the main heading covers multiple columns | Automated data export that adds a formatted heading to each workbook
+// AI Prompts: Generate C# Aspose.Cells code to merge A1:D1, set "Report Title" centered and bold, and save as MergedTitle.xlsx. | Explain step‑by‑step how to apply horizontal and vertical alignment to a merged cell in Aspose.Cells. | Show how to create a reusable style for merged title rows and apply it across multiple worksheets in C#.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsMergeTitleExample
+// Shows how to create a new workbook, merge cells A1:D1, insert a title, apply centered bold formatting, and save the file as MergedTitle.xlsx using Aspose.Cells for .NET.
+class MergeTitleExample
 {
-    // Demonstrates how to instantiate a new Workbook, merge the range A1:D1 on the first worksheet, insert a title, apply horizontal and vertical center alignment, and save the file as an Excel workbook using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-            // Merge cells A1:D1 (row 0, column 0, 1 row, 4 columns)
-            cells.Merge(0, 0, 1, 4);
+        // Merge cells A1:D1 (row 0, column 0, 1 row, 4 columns)
+        cells.Merge(0, 0, 1, 4);
 
-            // Set the title text in the merged cell
-            cells[0, 0].PutValue("Report Title");
+        // Set the title text in the merged cell (upper‑left cell of the range)
+        cells[0, 0].PutValue("Report Title");
 
-            // Retrieve the style of the merged cell and set horizontal alignment to center
-            Style style = cells[0, 0].GetStyle();
-            style.HorizontalAlignment = TextAlignmentType.Center;
-            // Optionally, set vertical alignment to center as well
-            style.VerticalAlignment = TextAlignmentType.Center;
-            // Apply the updated style back to the cell
-            cells[0, 0].SetStyle(style);
+        // Retrieve the style of the merged cell and set horizontal alignment to Center
+        Style style = cells[0, 0].GetStyle();
+        style.HorizontalAlignment = TextAlignmentType.Center;
+        style.VerticalAlignment = TextAlignmentType.Center;
+        style.Font.IsBold = true; // optional: make the title bold
+        cells[0, 0].SetStyle(style);
 
-            // Save the workbook to a file
-            workbook.Save("MergedTitle.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("MergedTitle.xlsx");
     }
 }

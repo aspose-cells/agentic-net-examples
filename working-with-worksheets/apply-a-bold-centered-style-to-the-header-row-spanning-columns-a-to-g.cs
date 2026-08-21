@@ -1,16 +1,17 @@
-// Title: Bold & Center Header Row (A‑G) with Aspose.Cells for .NET
-// Description: Creates a new Workbook, defines a style with bold font and centered alignment, applies it to the range A1:G1 using a StyleFlag, inserts sample header text, and saves the file as HeaderStyleDemo.xlsx.
-// Keywords: Aspose.Cells header style C# | bold centered header Aspose.Cells | apply style to range A1:G1 | StyleFlag formatting .NET | Excel header formatting Aspose | C# Aspose.Cells example
-// Common Searches: Aspose.Cells make header row bold and centered | C# apply style to cells A1 to G1 Aspose | StyleFlag usage Aspose.Cells .NET | format Excel header row programmatically | Aspose.Cells header row styling example
-// Developer Intent: Format the first worksheet row (A1:G1) as a bold, horizontally and vertically centered header.
-// Use Cases: Generate reports with a visually distinct title row. | Standardize header appearance across multiple exported Excel sheets. | Create reusable header styles for automated data population.
-// AI Prompts: Write C# code using Aspose.Cells to apply a bold, centered style to the header row spanning columns A to G and add sample headings. | Show how to use StyleFlag in Aspose.Cells to apply only font boldness and alignment to a specific range. | Explain how to define a reusable header style and apply it to several worksheets in a workbook with Aspose.Cells for .NET.
+// Title: Create a Bold, Center‑Aligned Header Across A‑G Using Aspose.Cells (C#)
+// Description: Shows how to build a new Workbook, set up a Style with bold font and center alignment via StyleFlag, apply it to the first row covering columns A‑G, auto‑fit the row height, and save the file as HeaderStyle.xlsx with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# style range | bold header Aspose.Cells | center‑aligned header row | StyleFlag font bold | HorizontalAlignment Center | AutoFitRow Excel | Excel header formatting .NET | global spreadsheet styling | US developers Aspose.Cells | India .NET Excel library
+// Common Searches: Aspose.Cells how to make header row bold and centered | C# apply style to A-G range Aspose.Cells | Set horizontal alignment center with StyleFlag Aspose.Cells | AutoFitRow after styling header Aspose.Cells | Create bold centered title row in Excel using Aspose.Cells .NET | Aspose.Cells tutorial for header formatting
+// Developer Intent: Apply bold font and center alignment to the first worksheet row spanning columns A‑G.
+// Use Cases: Generate a report template with a prominent title row. | Prepare export files where the header spans multiple columns for better readability. | Automate financial dashboards that require a consistent header style. | Build multi‑regional spreadsheets (US, EU, APAC) with a unified header format.
+// AI Prompts: Write C# code using Aspose.Cells to apply a bold, centered style to cells A1:G1 and auto‑fit the row. | Explain the steps to create a Style, configure a StyleFlag, and apply it to a range in Aspose.Cells for .NET. | Show how to encapsulate header styling into a reusable method that accepts any worksheet and column range. | Provide a GitHub‑ready snippet that formats a header row across A‑G with bold font and center alignment using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing; // for alignment enums if needed
+using Aspose.Cells.Drawing; // for TextAlignmentType
+using AsposeRange = Aspose.Cells.Range; // Resolve ambiguity with System.Range
 
-// Creates a new Workbook, defines a style with bold font and centered alignment, applies it to the range A1:G1 using a StyleFlag, inserts sample header text, and saves the file as HeaderStyleDemo.xlsx.
+// Shows how to build a new Workbook, set up a Style with bold font and center alignment via StyleFlag, apply it to the first row covering columns A‑G, auto‑fit the row height, and save the file as HeaderStyle.xlsx with Aspose.Cells for .NET.
 class ApplyHeaderStyle
 {
     static void Main()
@@ -22,34 +23,29 @@ class ApplyHeaderStyle
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Create a style for the header: bold font and centered alignment
+            // Create a style: bold font and centered horizontally
             Style headerStyle = workbook.CreateStyle();
-            headerStyle.Font.IsBold = true;                         // make text bold
-            headerStyle.HorizontalAlignment = TextAlignmentType.Center; // center horizontally
-            headerStyle.VerticalAlignment = TextAlignmentType.Center;   // optional: center vertically
+            headerStyle.Font.IsBold = true;
+            headerStyle.HorizontalAlignment = TextAlignmentType.Center;
 
-            // Define which style properties should be applied
-            StyleFlag flag = new StyleFlag();
-            flag.FontBold = true;               // apply bold setting
-            flag.HorizontalAlignment = true;   // apply horizontal alignment
-            flag.VerticalAlignment = true;      // apply vertical alignment (optional)
+            // Define which style properties to apply
+            StyleFlag flag = new StyleFlag
+            {
+                FontBold = true,
+                HorizontalAlignment = true
+            };
 
-            // Create a range that covers columns A to G in the first row (row index 0)
-            // Parameters: startRow, startColumn, totalRows, totalColumns
-            Aspose.Cells.Range headerRange = cells.CreateRange(0, 0, 1, 7); // A1:G1
+            // Create a range that covers columns A (0) to G (6) in the first row (row index 0)
+            AsposeRange headerRange = cells.CreateRange(0, 0, 1, 7); // startRow, startColumn, totalRows, totalColumns
 
             // Apply the style to the defined range
             headerRange.ApplyStyle(headerStyle, flag);
 
-            // Optionally, put some sample header text
-            string[] headers = { "Header1", "Header2", "Header3", "Header4", "Header5", "Header6", "Header7" };
-            for (int i = 0; i < headers.Length; i++)
-            {
-                cells[0, i].PutValue(headers[i]);
-            }
+            // Optionally autofit the row height to display the centered text nicely
+            worksheet.AutoFitRow(0);
 
             // Save the workbook
-            workbook.Save("HeaderStyleDemo.xlsx");
+            workbook.Save("HeaderStyle.xlsx");
         }
         catch (Exception ex)
         {

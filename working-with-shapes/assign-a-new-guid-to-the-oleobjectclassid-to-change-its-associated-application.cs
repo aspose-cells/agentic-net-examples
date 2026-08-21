@@ -1,10 +1,10 @@
-// Title: Assign a New GUID to an OleObject’s ClassIdentifier Using Aspose.Cells for .NET (C#)
-// Description: C# sample that creates an Excel workbook with Aspose.Cells, inserts an OLE object, generates a fresh GUID, assigns it to OleObject.ClassIdentifier, optionally sets the ProgID (e.g., Word.Document.12), saves the file, reloads it, and verifies that the GUID and ProgID persist.
-// Keywords: Aspose.Cells | C# | OleObject | ClassIdentifier | GUID | ProgID | Excel OLE object | set OLE GUID | change OLE application | generate GUID for OLE | persist OLE object
-// Common Searches: Aspose.Cells assign GUID to OleObject | C# change OleObject ClassIdentifier | set ProgID for Excel OLE object with Aspose.Cells | verify OLE GUID after saving workbook | generate and persist custom GUID for OLE in Excel | how to update OleObject application association
-// Developer Intent: Update an OleObject’s ClassIdentifier with a new GUID (and optional ProgID) to alter its linked application via Aspose.Cells.
-// Use Cases: Create a workbook, add an OLE placeholder, generate a GUID, assign it to ClassIdentifier, set a ProgID, and save the file. | Reload the saved workbook to read back the OleObject, convert the stored ClassIdentifier bytes to a Guid, and confirm it matches the original. | Replace the default OLE application by assigning a custom GUID and updating the ProgID to point to a different program.
-// AI Prompts: Write C# code using Aspose.Cells that adds an OLE object, generates a new GUID, assigns it to ClassIdentifier, sets ProgID to "Word.Document.12", saves the workbook, and validates the GUID after loading. | Explain the steps to persist a custom GUID for an OleObject in an Excel file with Aspose.Cells and retrieve it later in C#. | Provide a step‑by‑step tutorial for changing the associated application of an OLE object by updating its ClassIdentifier and ProgID using Aspose.Cells for .NET.
+// Title: Assign a New GUID to OleObject.ClassIdentifier with Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, add an OLE object, generate a fresh GUID, assign its byte array to OleObject.ClassIdentifier, optionally set a ProgID (e.g., "Excel.Sheet.12"), save the file, reload it, and verify that the GUID is persisted.
+// Keywords: Aspose.Cells | C# | OleObject | ClassIdentifier | GUID | ProgID | Excel OLE object | generate GUID | embed OLE | change OLE application | persist OLE object
+// Common Searches: Aspose.Cells assign new GUID to OleObject | set OleObject ClassIdentifier C# | change OLE object ProgID with Aspose.Cells | verify GUID of embedded OLE object after save | how to generate and apply GUID to Excel OLE object
+// Developer Intent: Programmatically replace the default ClassIdentifier of an OleObject with a newly generated GUID to associate it with a different application.
+// Use Cases: Embed an OLE object in an Excel workbook and bind it to a custom application via a unique GUID. | Update the ProgID of an existing OLE object after assigning a new ClassIdentifier. | Save and reload a workbook to confirm that the custom GUID is correctly stored in the file.
+// AI Prompts: Write C# code using Aspose.Cells to add an OLE object, assign a newly created GUID to its ClassIdentifier, set a custom ProgID, and validate the GUID after saving the workbook. | Explain the relationship between the ClassIdentifier byte array and a GUID, and how Aspose.Cells encodes this information in an Excel file. | Suggest robust error‑handling patterns for GUID assignment to OleObject.ClassIdentifier in Aspose.Cells.
 
 using System;
 using System.IO;
@@ -13,7 +13,7 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExamples
 {
-    // C# sample that creates an Excel workbook with Aspose.Cells, inserts an OLE object, generates a fresh GUID, assigns it to OleObject.ClassIdentifier, optionally sets the ProgID (e.g., Word.Document.12), saves the file, reloads it, and verifies that the GUID and ProgID persist.
+    // Demonstrates how to create a workbook, add an OLE object, generate a fresh GUID, assign its byte array to OleObject.ClassIdentifier, optionally set a ProgID (e.g., "Excel.Sheet.12"), save the file, reload it, and verify that the GUID is persisted.
     public class OleObjectAssignNewGuidDemo
     {
         public static void Run()
@@ -24,43 +24,44 @@ namespace AsposeCellsExamples
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Add an OLE object with placeholder data
-                int oleIndex = sheet.OleObjects.Add(10, 10, 200, 100, new byte[0]);
+                // Add an OLE object (empty data for demonstration)
+                int oleIndex = sheet.OleObjects.Add(5, 5, 150, 100, new byte[0]);
                 OleObject oleObject = sheet.OleObjects[oleIndex];
 
-                // Generate a new GUID and assign it to the ClassIdentifier
+                // Generate a new GUID and assign its byte representation to ClassIdentifier
                 Guid newGuid = Guid.NewGuid();
                 oleObject.ClassIdentifier = newGuid.ToByteArray();
 
-                // Optionally set ProgID
-                oleObject.ProgID = "Word.Document.12";
+                // Optionally set ProgID to reflect the target application (e.g., Excel)
+                oleObject.ProgID = "Excel.Sheet.12";
 
                 // Save the workbook
-                string filePath = "OleObjectWithNewGuid.xlsx";
-                workbook.Save(filePath);
+                string outputPath = "OleObjectWithNewGuid.xlsx";
+                workbook.Save(outputPath);
 
-                // Verify the GUID was persisted
-                if (File.Exists(filePath))
+                // Verify the file exists before loading
+                if (!File.Exists(outputPath))
                 {
-                    Workbook loadedWorkbook = new Workbook(filePath);
-                    OleObject loadedOle = loadedWorkbook.Worksheets[0].OleObjects[0];
-                    Guid loadedGuid = new Guid(loadedOle.ClassIdentifier);
-                    Console.WriteLine("Original GUID: " + newGuid);
-                    Console.WriteLine("Loaded GUID  : " + loadedGuid);
-                    Console.WriteLine("ProgID       : " + loadedOle.ProgID);
+                    Console.WriteLine($"Error: The file '{outputPath}' was not found after saving.");
+                    return;
                 }
-                else
-                {
-                    Console.WriteLine("File not found: " + filePath);
-                }
+
+                // Load the workbook to verify the GUID was persisted
+                Workbook loadedWorkbook = new Workbook(outputPath);
+                OleObject loadedOle = loadedWorkbook.Worksheets[0].OleObjects[0];
+                Guid loadedGuid = new Guid(loadedOle.ClassIdentifier);
+
+                Console.WriteLine("Original GUID : " + newGuid);
+                Console.WriteLine("Loaded GUID   : " + loadedGuid);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }
 
+    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)

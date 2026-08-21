@@ -1,102 +1,101 @@
-// Title: C# – Extract Cells from a Defined Print Area Using Aspose.Cells LightCells
-// Description: This example shows how to load an Excel workbook in LightCells mode with a custom LightCellsDataHandler that reads the worksheet's print area (or the full used range when no print area exists) and captures only the cells inside that region. The handler stores each cell's address and value, enabling memory‑efficient processing of large sheets.
-// Keywords: Aspose.Cells LightCells C# | print area extraction | custom LightCellsDataHandler | load workbook partial range | Excel print area API | memory efficient Excel processing | CellArea CreateCellArea | Aspose.Cells GitHub example | filter cells by print area | C# Excel cell extraction
-// Common Searches: Aspose.Cells load only print area | C# LightCells handler for print area | extract cells from defined print range Aspose | how to use CellArea with LightCells | partial workbook loading Aspose.Cells | sample code LightCellsDataHandler print area
-// Developer Intent: Load a workbook and retrieve only the cells that belong to the worksheet's defined print area using LightCells.
-// Use Cases: Process massive spreadsheets while limiting memory consumption by loading just the printable region. | Create a printable report that includes only the cells marked for printing, ignoring hidden or auxiliary data. | Validate or audit values within the print area before sending the file to a printer or export routine.
-// AI Prompts: Generate a LightCellsDataHandler that records cell formulas as well as values for the defined print area. | Explain how to modify the handler to fall back to a named range when a print area is not set. | Provide a step‑by‑step guide to integrate this LightCells approach into an ASP.NET Core web API.
+// Title: Aspose.Cells .NET – Extract Cells from a Defined Print Area Using LightCells
+// Description: Loads an Excel workbook in LightCells mode with a custom LightCellsDataHandler that reads each worksheet's PageSetup.PrintArea, converts it to a CellArea, and streams only the cells inside that range. Extracted cell addresses and values are stored in a dictionary for fast, memory‑efficient processing.
+// Keywords: Aspose.Cells LightCells | print area extraction .NET | LoadOptions LightCellsDataHandler | CellArea filter rows columns | stream Excel cells efficiently | custom LightCells handler example | Aspose.Cells C# print area
+// Common Searches: How to read only the print area with Aspose.Cells LightCells | Extract cell values from a specific print range in .NET | LightCellsDataHandler example for print area filtering | Load workbook efficiently and limit to printable region | Aspose.Cells C# extract cells by PageSetup.PrintArea
+// Developer Intent: Load a workbook in LightCells mode and retrieve only the cells that belong to the worksheet's defined print area.
+// Use Cases: Generate a report that includes just the printable section of a template workbook. | Copy or export data from the print area to another file or database without loading the full sheet. | Validate content inside the print area during automated QA tests.
+// AI Prompts: Create a LightCellsDataHandler that returns a list of cell addresses and their values for the defined print area. | Extend the PrintAreaHandler to also capture cell formulas and formatting information. | Show how to process multiple worksheets, each with its own print area, using LightCells in Aspose.Cells.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsLightCellsPrintAreaDemo
+// Loads an Excel workbook in LightCells mode with a custom LightCellsDataHandler that reads each worksheet's PageSetup.PrintArea, converts it to a CellArea, and streams only the cells inside that range. Extracted cell addresses and values are stored in a dictionary for fast, memory‑efficient processing.
+class PrintAreaExtractor
 {
-    // Custom LightCellsDataHandler that extracts only cells inside the worksheet's print area
-    // This example shows how to load an Excel workbook in LightCells mode with a custom LightCellsDataHandler that reads the worksheet's print area (or the full used range when no print area exists) and captures only the cells inside that region. The handler stores each cell's address and value, enabling memory‑efficient processing of large sheets.
-    public class PrintAreaLightCellsHandler : LightCellsDataHandler
+    static void Main()
     {
-        private CellArea _printArea;
-        private readonly List<string> _extractedValues = new List<string>();
+        // Path to the workbook that has a print area defined
+        string filePath = "input.xlsx";
 
-        // Expose extracted values after loading
-        public IReadOnlyList<string> Values => _extractedValues.AsReadOnly();
+        // Create a custom LightCellsDataHandler that extracts cells inside the print area
+        var handler = new PrintAreaHandler();
 
-        // Called when a worksheet starts processing
-        public bool StartSheet(Worksheet sheet)
+        // Configure load options to use the handler
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.LightCellsDataHandler = handler;
+
+        // Load the workbook in LightCells mode
+        Workbook workbook = new Workbook(filePath, loadOptions);
+
+        // After loading, the handler contains the extracted cells
+        Console.WriteLine("Cells extracted from the defined print area:");
+        foreach (var kvp in handler.ExtractedData)
         {
-            // Retrieve the print area defined in the worksheet (e.g., "A1:B3")
-            string area = sheet.PageSetup.PrintArea;
-
-            if (string.IsNullOrEmpty(area))
-            {
-                // If no print area is defined, consider the whole used range
-                int maxRow = sheet.Cells.MaxDataRow;
-                int maxCol = sheet.Cells.MaxDataColumn;
-                _printArea = CellArea.CreateCellArea(0, 0, maxRow, maxCol);
-            }
-            else
-            {
-                // Convert the address string to a CellArea
-                string[] parts = area.Split(':');
-                _printArea = CellArea.CreateCellArea(parts[0], parts[1]);
-            }
-
-            // Continue processing this sheet
-            return true;
-        }
-
-        // Called for each row; return true only if the row is inside the print area
-        public bool StartRow(int rowIndex)
-        {
-            return rowIndex >= _printArea.StartRow && rowIndex <= _printArea.EndRow;
-        }
-
-        // Called for each cell; return true only if the column is inside the print area
-        public bool StartCell(int columnIndex)
-        {
-            return columnIndex >= _printArea.StartColumn && columnIndex <= _printArea.EndColumn;
-        }
-
-        // Process the cell data (store its address and value)
-        public bool ProcessCell(Cell cell)
-        {
-            _extractedValues.Add($"{cell.Name}: {cell.Value}");
-            return true; // Continue processing
-        }
-
-        // Row processing is not needed for this demo, but must be implemented
-        public bool ProcessRow(Row row)
-        {
-            return true;
+            Console.WriteLine($"{kvp.Key}: {kvp.Value}");
         }
     }
+}
 
-    class Program
+// Custom handler implementing LightCellsDataHandler
+public class PrintAreaHandler : LightCellsDataHandler
+{
+    // Current worksheet print area
+    private CellArea _printArea;
+
+    // Collected cell address/value pairs
+    public Dictionary<string, object> ExtractedData { get; } = new Dictionary<string, object>();
+
+    // Called when a new worksheet is encountered
+    public bool StartSheet(Worksheet sheet)
     {
-        static void Main()
+        // Retrieve the print area string (e.g., "A1:B3")
+        string areaStr = sheet.PageSetup.PrintArea;
+
+        if (!string.IsNullOrEmpty(areaStr))
         {
-            // Path to the source workbook (must contain a defined print area)
-            string inputPath = "input.xlsx";
-
-            // Set up LoadOptions with the custom LightCellsDataHandler
-            LoadOptions loadOptions = new LoadOptions();
-            PrintAreaLightCellsHandler handler = new PrintAreaLightCellsHandler();
-            loadOptions.LightCellsDataHandler = handler;
-
-            // Load the workbook using LightCells mode
-            Workbook workbook = new Workbook(inputPath, loadOptions);
-
-            // After loading, the handler contains only the cells that belong to the print area
-            Console.WriteLine("Cells extracted from the defined print area:");
-            foreach (string entry in handler.Values)
-            {
-                Console.WriteLine(entry);
-            }
-
-            // (Optional) Save the workbook if further processing is required
-            // workbook.Save("output.xlsx");
+            // Convert the string to a CellArea object
+            var parts = areaStr.Split(':');
+            if (parts.Length == 2)
+                _printArea = CellArea.CreateCellArea(parts[0], parts[1]);
+            else
+                _printArea = new CellArea(); // fallback to empty area
         }
+        else
+        {
+            // No print area defined – set an impossible range so nothing is processed
+            _printArea = new CellArea { StartRow = -1 };
+        }
+
+        // Continue processing rows in this sheet
+        return true;
+    }
+
+    // Called before processing each row
+    public bool StartRow(int rowIndex)
+    {
+        // Process the row only if its index lies within the print area rows
+        return rowIndex >= _printArea.StartRow && rowIndex <= _printArea.EndRow;
+    }
+
+    // Called after a row is started; return true to continue to its cells
+    public bool ProcessRow(Row row)
+    {
+        return true;
+    }
+
+    // Called before processing each cell in the current row
+    public bool StartCell(int columnIndex)
+    {
+        // Process the cell only if its column lies within the print area columns
+        return columnIndex >= _printArea.StartColumn && columnIndex <= _printArea.EndColumn;
+    }
+
+    // Called for each cell that passed the StartCell check
+    public bool ProcessCell(Cell cell)
+    {
+        // Store the cell's address (e.g., "B2") and its value
+        ExtractedData[cell.Name] = cell.Value;
+        return true;
     }
 }

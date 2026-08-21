@@ -1,42 +1,46 @@
-// Title: Read a shape's shadow color and log its RGB values using Aspose.Cells for .NET
-// Description: Shows how to access a worksheet shape's ShadowEffect.Color, convert it to System.Drawing.Color, and write the red, green, and blue components to the console (with optional workbook save).
-// Keywords: Aspose.Cells shadow color | shape shadow RGB | read shape shadow Aspose | Excel shape formatting .NET | retrieve shadow effect color | Aspose.Cells shape styling
-// Common Searches: Aspose.Cells get shape shadow color | How to obtain RGB of shape shadow in C# | Read shadow effect color of Excel shape | Aspose.Cells shape formatting shadow example
-// Developer Intent: Extract the current shadow color of a worksheet shape and output its RGB components.
-// Use Cases: Verify that programmatically created shapes use the intended shadow hue during automated report generation. | Debug visual inconsistencies in Excel files by logging shadow color values for each shape. | Generate an audit trail of shape formatting settings, including shadow color, for compliance documentation.
-// AI Prompts: Write C# code with Aspose.Cells that reads a shape's shadow color and logs the RGB values to a file. | Provide a loop that iterates over all shapes in a worksheet and prints each shape's shadow color components. | Explain how to change a shape's shadow color based on its existing RGB values using Aspose.Cells for .NET.
+// Title: Read a shape's shadow color and log RGB values with Aspose.Cells for .NET (C#)
+// Description: This example creates a workbook, adds a rectangle shape, assigns a shadow color, reads the ShadowEffect.Color, extracts the System.Drawing.Color, and writes the R, G, B components to the console. It then saves the file, reloads it, and confirms that the shadow color persists.
+// Keywords: Aspose.Cells | C# | shape shadow color | ShadowEffect | RGB values | read shadow color | retrieve shape styling | Excel shape formatting | Aspose.Cells API | worksheet shape
+// Common Searches: Aspose.Cells get shape shadow color C# | How to read RGB of a shape's shadow in Aspose.Cells | ShadowEffect.Color example Aspose.Cells | Verify shape shadow after saving workbook Aspose.Cells | C# read shape formatting Aspose.Cells
+// Developer Intent: Retrieve the current shadow color of a worksheet shape and output its RGB components.
+// Use Cases: Debug visual formatting by logging shadow colors of generated shapes. | Validate that custom shadow styling survives workbook save and reload operations. | Create a style audit report that records RGB values of shape shadows across multiple sheets.
+// AI Prompts: Generate C# code that reads a shape's ShadowEffect.Color and prints its RGB values using Aspose.Cells. | Show how to confirm that a shape's shadow color remains unchanged after saving and reopening an Excel file with Aspose.Cells. | Explain the steps to set, retrieve, and log the RGB components of a shape's shadow in Aspose.Cells for .NET.
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using System.Drawing;
 
-// Shows how to access a worksheet shape's ShadowEffect.Color, convert it to System.Drawing.Color, and write the red, green, and blue components to the console (with optional workbook save).
+// This example creates a workbook, adds a rectangle shape, assigns a shadow color, reads the ShadowEffect.Color, extracts the System.Drawing.Color, and writes the R, G, B components to the console. It then saves the file, reloads it, and confirms that the shadow color persists.
 class ReadShadowColorDemo
 {
-    public static void Main()
+    static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a rectangle shape to the worksheet
-        Shape shape = sheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 100);
+        // Add a rectangle shape
+        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 100);
 
-        // Set a shadow color for the shape (for demonstration purposes)
+        // Configure shadow color (for demonstration)
         ShadowEffect shadowEffect = shape.ShadowEffect;
         CellsColor shadowColor = workbook.CreateCellsColor();
-        shadowColor.Color = Color.Green; // Example shadow color
-        shadowEffect.Color = shadowColor;
+        shadowColor.Color = Color.Blue;               // Set desired shadow color
+        shadowEffect.Color = shadowColor;              // Apply to the shape's shadow
 
-        // Retrieve the current shadow color of the shape
-        CellsColor currentShadowColor = shape.ShadowEffect.Color;
-        Color sysColor = currentShadowColor.Color;
+        // Read the current shadow color and output its RGB components
+        Color currentColor = shape.ShadowEffect.Color.Color;
+        Console.WriteLine($"Shadow Color RGB: {currentColor.R}, {currentColor.G}, {currentColor.B}");
 
-        // Log the RGB components of the shadow color
-        Console.WriteLine($"Shadow Color - R: {sysColor.R}, G: {sysColor.G}, B: {sysColor.B}");
+        // Save the workbook
+        string filePath = "ReadShadowColorDemo.xlsx";
+        workbook.Save(filePath);
 
-        // Save the workbook (optional)
-        workbook.Save("ReadShadowColorDemo.xlsx");
+        // Load the workbook back to verify the saved shadow color
+        Workbook loadedWorkbook = new Workbook(filePath);
+        Shape loadedShape = loadedWorkbook.Worksheets[0].Shapes[0];
+        Color loadedColor = loadedShape.ShadowEffect.Color.Color;
+        Console.WriteLine($"Loaded Shadow Color RGB: {loadedColor.R}, {loadedColor.G}, {loadedColor.B}");
     }
 }

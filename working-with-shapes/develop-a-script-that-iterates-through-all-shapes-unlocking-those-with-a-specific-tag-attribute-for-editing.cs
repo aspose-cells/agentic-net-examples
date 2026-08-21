@@ -1,55 +1,46 @@
-// Title: C# – Unlock Shapes by Tag in an Excel Workbook with Aspose.Cells
-// Description: Load a workbook, enable object editing on protected sheets, iterate through all shapes, identify those whose Name (or AlternativeText) contains a given tag, set IsLocked = false, and save the updated file.
-// Keywords: Aspose.Cells C# unlock shape | shape tag Aspose.Cells | iterate shapes workbook | IsLocked false Aspose.Cells | worksheet protection edit objects | Excel shape unlocking C# | tag‑based shape selection | Aspose.Cells shape collection | batch unlock Excel shapes | C# Excel automation Aspose
-// Common Searches: how to unlock shapes with a specific tag using Aspose.Cells C# | iterate all shapes in an Excel workbook and set IsLocked false | enable editing of objects on a protected worksheet Aspose.Cells | unlock Excel shapes by name keyword in .NET | Aspose.Cells example for unlocking selected shapes
-// Developer Intent: Programmatically remove the lock from shapes that match a predefined tag so they remain editable even when the worksheet is protected.
-// Use Cases: Prepare a template where only diagram elements marked "UnlockMe" can be edited by end users. | Automate bulk processing of multiple worksheets to expose specific shapes while keeping the rest locked. | Create a reporting workbook that protects the sheet but allows users to modify only tagged comment boxes or icons.
-// AI Prompts: Write C# code with Aspose.Cells that unlocks all shapes whose Name contains "UnlockMe" and then re‑protects each worksheet. | Show how to store a custom identifier in a shape's AlternativeText property and unlock shapes based on that identifier using Aspose.Cells. | Explain handling of shape unlocking when the workbook contains shared formulas and several protected sheets.
+// Title: C# – Unlock Shapes by Name Tag in a Protected Worksheet with Aspose.Cells for .NET
+// Description: Loads a workbook, protects the first worksheet while permitting drawing‑object edits, iterates all shapes, unlocks those whose Name matches a given tag, and saves the updated file.
+// Keywords: Aspose.Cells | C# | .NET | unlock shape | shape tag | protected worksheet | worksheet.Shapes | IsLocked | drawing objects | Excel automation | code example | GitHub
+// Common Searches: Aspose.Cells unlock shape by name | unlock shapes in protected Excel sheet C# | iterate worksheet shapes Aspose.Cells | shape.IsLocked false example | allow editing drawing objects Aspose.Cells | C# code unlock shapes with tag
+// Developer Intent: Unlock only the shapes whose Name matches a specified tag so they remain editable on a protected sheet.
+// Use Cases: Create a protected template where only callout shapes named "UnlockMe" stay editable for end users. | Automate a reporting workflow that unlocks placeholder shapes before inserting dynamic content. | Distribute a workbook that locks all drawing objects except those tagged for later modification.
+// AI Prompts: Generate C# code using Aspose.Cells to unlock all shapes with a specific Name tag in a protected worksheet and save the workbook. | Show how to protect a worksheet, allow editing of drawing objects, then unlock selected shapes based on a custom tag. | Explain step‑by‑step how to loop through worksheet.Shapes, compare each shape's Name to a target tag, and set IsLocked = false.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeUnlocker
+// Loads a workbook, protects the first worksheet while permitting drawing‑object edits, iterates all shapes, unlocks those whose Name matches a given tag, and saves the updated file.
+class UnlockShapesByTag
 {
-    // Load a workbook, enable object editing on protected sheets, iterate through all shapes, identify those whose Name (or AlternativeText) contains a given tag, set IsLocked = false, and save the updated file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet (adjust index if needed)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Allow editing of drawing objects even when the sheet is protected
+        worksheet.Protection.AllowEditingObject = true;
+        worksheet.Protect(ProtectionType.All);
+
+        // Define the tag (here we use the shape's Name property as the tag)
+        const string targetTag = "UnlockMe";
+
+        // Iterate through all shapes in the worksheet
+        foreach (Shape shape in worksheet.Shapes)
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Define the tag that identifies shapes to be unlocked
-            const string targetTag = "UnlockMe";
-
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Check if the shape's Name matches the target tag
+            if (!string.IsNullOrEmpty(shape.Name) &&
+                shape.Name.Equals(targetTag, StringComparison.OrdinalIgnoreCase))
             {
-                // Ensure that drawing objects can be edited when the sheet is protected
-                sheet.Protection.AllowEditingObject = true;
-
-                // Iterate through each shape in the current worksheet
-                ShapeCollection shapes = sheet.Shapes;
-                for (int i = 0; i < shapes.Count; i++)
-                {
-                    Shape shape = shapes[i];
-
-                    // Check if the shape's Name (used here as a tag) matches the target tag
-                    // Adjust this condition if you store the tag in a different property
-                    if (shape.Name != null && shape.Name.Contains(targetTag, StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Unlock the shape so it can be edited even when the sheet is protected
-                        shape.IsLocked = false;
-                    }
-                }
-
-                // (Optional) Protect the worksheet after unlocking the desired shapes
-                // sheet.Protect(ProtectionType.All);
+                // Unlock the shape for editing
+                shape.IsLocked = false;
             }
-
-            // Save the modified workbook
-            workbook.Save("output.xlsx");
         }
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

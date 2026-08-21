@@ -1,25 +1,22 @@
-// Title: C# – Change Chart Theme to MonochromaticPalette6 in an XLS File Using Aspose.Cells
-// Description: Load an XLS workbook with Aspose.Cells, locate the first chart, set its series palette to ChartColorPaletteType.MonochromaticPalette6, and save the updated file.
-// Keywords: Aspose.Cells | C# chart color palette | MonochromaticPalette6 | ChartColorPaletteType | modify XLS chart colors | ChangeColors method | programmatic chart styling
-// Common Searches: Aspose.Cells set chart palette C# | apply MonochromaticPalette6 to XLS chart | change chart colors without Excel | C# change series colors in existing workbook | Aspose.Cells chart theme example
-// Developer Intent: Programmatically apply the MonochromaticPalette6 palette to a chart’s series in an existing XLS workbook and persist the changes.
-// Use Cases: Enforce a uniform monochrome look across all charts in quarterly reports before distribution. | Implement corporate branding by automatically assigning a predefined palette to charts generated from data exports. | Replace default Excel colors with a high‑contrast scheme to improve readability for printed or screen‑shared workbooks.
-// AI Prompts: Generate C# code that opens an XLS file with Aspose.Cells, selects a specific chart, applies ChartColorPaletteType.MonochromaticPalette6 to its series, and saves the workbook. | Show an example that iterates through every chart in a workbook and sets each series collection to MonochromaticPalette6 using the ChangeColors method. | Write a reusable function that receives a workbook path and a chart index, changes the chart’s color palette to MonochromaticPalette6, and returns the path of the saved file.
+// Title: Apply MonochromaticPalette6 to a chart in an existing XLS workbook with Aspose.Cells for .NET
+// Description: Loads an XLS file, accesses the first worksheet, selects the first chart, changes its series colors to the MonochromaticPalette6 palette using Chart.NSeries.ChangeColors, and saves the workbook as a new file.
+// Keywords: Aspose.Cells chart color palette | MonochromaticPalette6 C# | change chart colors XLS | Chart.NSeries.ChangeColors | Aspose.Cells .NET example
+// Common Searches: how to set chart palette Aspose.Cells | apply monochrome colors to XLS chart | Aspose.Cells change chart theme colors | C# update chart colors in existing workbook
+// Developer Intent: Modify the color scheme of a specific chart in an existing XLS workbook to use the MonochromaticPalette6 palette and persist the changes.
+// Use Cases: Enforce a corporate monochrome style on legacy Excel reports before distribution. | Automate visual consistency for financial dashboards generated from older XLS files. | Integrate chart re‑theming into a migration pipeline that upgrades XLS workbooks to newer Office formats.
+// AI Prompts: Generate C# code that opens an XLS file, finds a chart by its index, and applies ChartColorPaletteType.MonochromaticPalette6 to its series using Aspose.Cells. | Explain the effect of Chart.NSeries.ChangeColors in Aspose.Cells and how to verify the palette after saving the workbook. | Refactor the sample to accept a chart index and a palette enum as parameters, enabling dynamic color updates.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Load an XLS workbook with Aspose.Cells, locate the first chart, set its series palette to ChartColorPaletteType.MonochromaticPalette6, and save the updated file.
+// Loads an XLS file, accesses the first worksheet, selects the first chart, changes its series colors to the MonochromaticPalette6 palette using Chart.NSeries.ChangeColors, and saves the workbook as a new file.
 class ChangeChartThemeColors
 {
     static void Main()
     {
-        // Path to the existing XLS file
-        string inputPath = "input.xls";
-
-        // Load the workbook
-        Workbook workbook = new Workbook(inputPath);
+        // Load the existing XLS workbook
+        Workbook workbook = new Workbook("input.xls");
 
         // Access the first worksheet (adjust index if needed)
         Worksheet worksheet = workbook.Worksheets[0];
@@ -31,17 +28,14 @@ class ChangeChartThemeColors
             return;
         }
 
-        // Get the first chart (replace index if a specific chart is required)
+        // Get the specific chart (e.g., the first chart)
         Chart chart = worksheet.Charts[0];
 
-        // Change the color palette of all series in the chart to MonochromaticPalette6
-        SeriesCollection seriesColl = chart.NSeries;
-        seriesColl.ChangeColors(ChartColorPaletteType.MonochromaticPalette6);
+        // Change the color palette of the chart's series to MonochromaticPalette6
+        chart.NSeries.ChangeColors(ChartColorPaletteType.MonochromaticPalette6);
 
         // Save the modified workbook
-        string outputPath = "output.xls";
-        workbook.Save(outputPath);
-
-        Console.WriteLine($"Chart theme colors updated and saved to '{outputPath}'.");
+        workbook.Save("output.xls");
+        Console.WriteLine("Chart theme colors updated and workbook saved as output.xls.");
     }
 }

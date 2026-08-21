@@ -1,19 +1,18 @@
-// Title: Aspose.Cells .NET – Verify HTML tooltip appears only for truncated cells
-// Description: C# example that creates a workbook, sets a narrow column width to force truncation, enables AddTooltipText in HtmlSaveOptions, saves to HTML, reads the output, counts title attributes and confirms that a tooltip is generated solely for the cell whose text is cut off.
-// Keywords: Aspose.Cells HTML tooltip | AddTooltipText option | truncated cell detection | HTML export column width | title attribute verification | C# Aspose.Cells example
-// Common Searches: Aspose.Cells add tooltip only for overflow text | HTML export tooltip for truncated cells Aspose | how to count title attributes in Aspose.Cells HTML output | verify tooltip generation with HtmlSaveOptions | C# test for truncated cell tooltips
-// Developer Intent: Confirm that tooltips are added exclusively to cells whose displayed text is truncated after HTML export.
-// Use Cases: Generate HTML reports where long cell values show full content on hover while short values remain tooltip‑free. | Automate regression tests that validate tooltip count matches the number of overflow cells in CI pipelines. | Improve user experience in web‑based spreadsheets by conditionally adding hover text based on column width.
-// AI Prompts: Create C# code using Aspose.Cells to export a workbook to HTML with AddTooltipText enabled and verify that only truncated cells contain a title attribute. | Write an NUnit test that parses the generated HTML and asserts the number of title attributes equals the number of cells with overflow text. | Explain how SaveFormat.Html and HtmlSaveOptions properties (AddTooltipText, FormatDataIgnoreColumnWidth) affect tooltip generation for truncated cells.
+// Title: Aspose.Cells for .NET – Verify HTML tooltips only for truncated cell text
+// Description: This C# example creates a workbook with two cells, narrows the first column to force overflow, enables AddTooltipText in HtmlSaveOptions, saves to HTML, and programmatically checks that a <title> attribute is generated for the overflowed cell (A1) while the fitting cell (B1) remains tooltip‑free.
+// Keywords: Aspose.Cells HTML tooltip | AddTooltipText .NET | truncated cell text tooltip | verify title attribute Aspose | column width overflow Aspose.Cells | C# Aspose.Cells HTML export | unit test tooltip generation | Excel to HTML tooltip overflow
+// Common Searches: Aspose.Cells add tooltip for overflow cells | HTML export tooltip only when text is cut off | C# check title attribute in Aspose.Cells HTML output | verify tooltip generation based on column width Aspose | how to test Aspose.Cells HTML tooltip behavior
+// Developer Intent: Confirm that the generated HTML contains a title attribute exclusively for cells whose displayed content is clipped by column width.
+// Use Cases: Create interactive HTML reports where long values reveal full text on hover while short values stay clean. | Automated regression test to ensure AddTooltipText respects column overflow rules. | Build printable web tables that show tooltips only for truncated entries, improving user experience.
+// AI Prompts: Generate a C# unit test that parses the saved HTML and asserts that only overflowed cells have a title attribute. | Extend the sample to detect truncated cells before saving and assign custom tooltip text for each overflowed cell. | Provide a step‑by‑step guide to validate tooltip behavior across multiple rows and columns with varying widths using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsTooltipVerification
+namespace TooltipVerificationDemo
 {
-    // C# example that creates a workbook, sets a narrow column width to force truncation, enables AddTooltipText in HtmlSaveOptions, saves to HTML, reads the output, counts title attributes and confirms that a tooltip is generated solely for the cell whose text is cut off.
+    // This C# example creates a workbook with two cells, narrows the first column to force overflow, enables AddTooltipText in HtmlSaveOptions, saves to HTML, and programmatically checks that a <title> attribute is generated for the overflowed cell (A1) while the fitting cell (B1) remains tooltip‑free.
     class Program
     {
         static void Main()
@@ -23,49 +22,36 @@ namespace AsposeCellsTooltipVerification
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Cell A1: short text (will fit)
-            cells["A1"].PutValue("Short");
+            // Cell A1: long text that will be truncated
+            cells["A1"].PutValue("This is a very long text that will exceed the column width and should show a tooltip.");
+            // Cell B1: short text that fits the column
+            cells["B1"].PutValue("Short");
 
-            // Cell A2: long text (will be truncated)
-            cells["A2"].PutValue("This is a very long text that will not fit into the column width and should be truncated");
-
-            // Set a narrow column width so that A2 gets truncated
-            cells.SetColumnWidth(0, 10); // Column A width
+            // Set column widths: narrow for A (causing truncation), wide for B (no truncation)
+            cells.SetColumnWidth(0, 10); // Column A
+            cells.SetColumnWidth(1, 30); // Column B
 
             // Configure HTML save options to add tooltip text when data is truncated
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
-            saveOptions.AddTooltipText = true;               // Enable tooltip generation
-            saveOptions.FormatDataIgnoreColumnWidth = false; // Ensure truncation occurs (default)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            htmlOptions.AddTooltipText = true;
 
-            // Define output HTML file path
-            string htmlPath = "TooltipVerification.html";
+            // Save the workbook to HTML
+            string htmlPath = "TooltipDemo.html";
+            workbook.Save(htmlPath, htmlOptions);
 
-            // Save the workbook as HTML
-            workbook.Save(htmlPath, saveOptions);
-
-            // Read the generated HTML content
+            // Load the generated HTML as plain text
             string htmlContent = File.ReadAllText(htmlPath);
 
             // Simple verification:
-            // Count occurrences of the title attribute (tooltip) in the HTML.
-            // Expect exactly one tooltip for the truncated cell (A2) and none for the short cell (A1).
-            int tooltipCount = 0;
-            int index = 0;
-            while ((index = htmlContent.IndexOf("title=", index, StringComparison.OrdinalIgnoreCase)) != -1)
-            {
-                tooltipCount++;
-                index += 6; // Move past "title="
-            }
+            // Look for a tooltip (title attribute) in the cell representing A1
+            bool a1HasTooltip = htmlContent.Contains("<td") && htmlContent.Contains("title=\"This is a very long text");
+            // Look for a tooltip in the cell representing B1 (should not exist)
+            bool b1HasTooltip = htmlContent.Contains("<td") && htmlContent.Contains(">Short</td") && htmlContent.Contains("title=\"Short\"");
 
-            // Output verification result
-            if (tooltipCount == 1)
-            {
-                Console.WriteLine("Verification passed: Tooltip appears only for the truncated cell.");
-            }
-            else
-            {
-                Console.WriteLine($"Verification failed: Expected 1 tooltip, found {tooltipCount}.");
-            }
+            // Output verification results
+            Console.WriteLine("Verification Results:");
+            Console.WriteLine($"A1 tooltip present (expected true): {a1HasTooltip}");
+            Console.WriteLine($"B1 tooltip present (expected false): {b1HasTooltip}");
         }
     }
 }

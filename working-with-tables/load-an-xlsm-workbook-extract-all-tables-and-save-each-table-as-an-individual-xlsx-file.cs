@@ -1,93 +1,106 @@
-// Title: Extract ListObject tables from an XLSM workbook to separate XLSX files using Aspose.Cells for .NET
-// Description: Loads a macro‑enabled XLSM workbook, iterates through every worksheet, extracts each ListObject (Excel table) and writes its cell values into a new workbook, saving each table as an individual XLSX file (Table_0.xlsx, Table_1.xlsx, …).
-// Keywords: Aspose.Cells | C# | XLSM | XLSX | ListObject | extract tables | export Excel tables | macro enabled workbook | save each table | Excel table extraction
-// Common Searches: how to export each table from an XLSM file using Aspose.Cells | C# extract ListObject tables to separate workbooks | Aspose.Cells copy table range to new XLSX file | extract tables from macro enabled workbook Aspose.Cells | save Excel tables as individual files C#
-// Developer Intent: Extract every table in a macro‑enabled workbook and save each one as its own XLSX file.
-// Use Cases: Create standalone reports for each data table inside a shared XLSM workbook. | Feed individual tables into downstream pipelines that only accept plain XLSX files. | Distribute per‑table files to different teams while preserving the original macro workbook.
-// AI Prompts: Generate C# code with Aspose.Cells that extracts all ListObjects from an XLSM file and saves each as a separate XLSX workbook, preserving only cell values. | Suggest code changes to copy table formatting, column widths, and styles when extracting tables with Aspose.Cells. | Provide performance‑tuning tips for extracting a large number of tables from a big XLSM workbook using Aspose.Cells.
+// Title: Extract ListObject Tables from an XLSM Workbook to Separate XLSX Files with Aspose.Cells (C#)
+// Description: C# sample that loads a macro‑enabled XLSM workbook, walks through every worksheet, extracts each ListObject (Excel table) into a DataTable, creates a new workbook, writes the headers and rows, and saves the result as an individual XLSX file. Includes file‑existence validation and robust error handling.
+// Keywords: Aspose.Cells extract tables | C# ListObject to XLSX | split XLSM into multiple workbooks | export Excel table programmatically | iterate worksheets Aspose.Cells | save each table as separate file | macro enabled workbook processing | Aspose.Cells table extraction example
+// Common Searches: how to extract tables from an XLSM using Aspose.Cells C# | save each ListObject as a separate XLSX file | split macro workbook into individual Excel files | Aspose.Cells export ListObject to new workbook | C# code to iterate worksheets and tables in Excel
+// Developer Intent: Programmatically separate every table in a macro‑enabled workbook into its own XLSX file.
+// Use Cases: Create standalone reports for each data table stored in a shared macro workbook. | Prepare per‑table files for downstream analytics pipelines that require single‑table inputs. | Automate archiving of consolidated workbooks by splitting them into individual, version‑controlled files.
+// AI Prompts: Generate C# code that uses Aspose.Cells to extract all ListObjects from an XLSM and save each as a separate XLSX, with file‑existence checks. | Show how to preserve original table styles, column widths, and formatting when exporting tables to new workbooks. | Suggest a naming convention for the output files that includes the source worksheet name and the ListObject name instead of a numeric counter.
 
 using System;
+using System.Data;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
-using AsposeRange = Aspose.Cells.Range;
+using Aspose.Cells.Tables; // Required for ListObject
 
 namespace AsposeCellsTableExtractor
 {
-    // Loads a macro‑enabled XLSM workbook, iterates through every worksheet, extracts each ListObject (Excel table) and writes its cell values into a new workbook, saving each table as an individual XLSX file (Table_0.xlsx, Table_1.xlsx, …).
+    // C# sample that loads a macro‑enabled XLSM workbook, walks through every worksheet, extracts each ListObject (Excel table) into a DataTable, creates a new workbook, writes the headers and rows, and saves the result as an individual XLSX file. Includes file‑existence validation and robust error handling.
     class Program
     {
         static void Main()
         {
-            // Path to the source XLSM workbook
-            string sourcePath = "input.xlsm";
-
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
-
             try
             {
-                // Load the workbook (lifecycle: load)
+                // Path to the source XLSM workbook
+                string sourcePath = "source.xlsm";
+
+                // Verify that the source file exists to avoid FileNotFoundException
+                if (!File.Exists(sourcePath))
+                {
+                    Console.WriteLine($"Error: The file '{sourcePath}' was not found.");
+                    return;
+                }
+
+                // Load the macro‑enabled workbook
                 Workbook sourceWorkbook = new Workbook(sourcePath);
+
                 int tableCounter = 0;
 
-                // Iterate through each worksheet in the source workbook
-                foreach (Worksheet sourceSheet in sourceWorkbook.Worksheets)
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in sourceWorkbook.Worksheets)
                 {
-                    // Iterate through each table (ListObject) in the worksheet
-                    foreach (ListObject table in sourceSheet.ListObjects)
+                    // Iterate through all tables (ListObjects) in the worksheet
+                    foreach (ListObject table in sheet.ListObjects)
                     {
                         try
                         {
-                            // Create a new workbook for the individual table (lifecycle: create)
+                            // Create a new empty workbook for the current table
                             Workbook tableWorkbook = new Workbook();
 
-                            // Get the first (and only) worksheet in the new workbook
-                            Worksheet destSheet = tableWorkbook.Worksheets[0];
+                            // Get the first (default) worksheet of the new workbook
+                            Worksheet tableSheet = tableWorkbook.Worksheets[0];
 
-                            // Determine the range of the table
-                            AsposeRange range = table.DataRange;
-                            int startRow = range.FirstRow;
-                            int endRow = startRow + range.RowCount - 1;
-                            int startCol = range.FirstColumn;
-                            int endCol = startCol + range.ColumnCount - 1;
+                            // Calculate the size of the table
+                            int rowCount = table.EndRow - table.StartRow + 1;
+                            int columnCount = table.EndColumn - table.StartColumn + 1;
 
-                            // Copy the table data cell by cell
-                            for (int row = startRow; row <= endRow; row++)
+                            // Export the table data to a DataTable
+                            DataTable dt = sheet.Cells.ExportDataTable(
+                                table.StartRow,          // start row of the table
+                                table.StartColumn,       // start column of the table
+                                rowCount,                // number of rows in the table
+                                columnCount,             // number of columns in the table
+                                true);                   // include column names as headers
+
+                            // Manually import the DataTable into the new worksheet
+                            // Write column headers
+                            for (int col = 0; col < dt.Columns.Count; col++)
                             {
-                                for (int col = startCol; col <= endCol; col++)
-                                {
-                                    // Retrieve the value from the source cell
-                                    object value = sourceSheet.Cells[row, col].Value;
+                                tableSheet.Cells[0, col].PutValue(dt.Columns[col].ColumnName);
+                            }
 
-                                    // Place the value into the destination workbook, preserving relative positions
-                                    destSheet.Cells[row - startRow, col - startCol].PutValue(value);
+                            // Write data rows
+                            for (int row = 0; row < dt.Rows.Count; row++)
+                            {
+                                for (int col = 0; col < dt.Columns.Count; col++)
+                                {
+                                    tableSheet.Cells[row + 1, col].PutValue(dt.Rows[row][col]);
                                 }
                             }
 
-                            // Save the individual table as an XLSX file (lifecycle: save)
+                            // Build a file name for the extracted table
                             string outputPath = $"Table_{tableCounter}.xlsx";
+
+                            // Save the new workbook as an XLSX file
                             tableWorkbook.Save(outputPath, SaveFormat.Xlsx);
-                            Console.WriteLine($"Saved table {tableCounter} to {outputPath}");
+
+                            Console.WriteLine($"Saved table {tableCounter} to '{outputPath}'.");
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Error processing table {tableCounter}: {ex.Message}");
+                            Console.WriteLine($"Failed to extract table {tableCounter}: {ex.Message}");
                         }
 
                         tableCounter++;
                     }
                 }
 
-                Console.WriteLine("All tables have been extracted and saved.");
+                Console.WriteLine("All tables have been processed.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                // Catch any unexpected exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

@@ -1,10 +1,10 @@
-// Title: Center a Chart Legend in Aspose.Cells for .NET without Overlap
-// Description: Demonstrates how to create a column chart in a new workbook, disable legend overlay, set the legend to NotDocked, define its width and height as ratios of the chart, calculate X/Y ratios to place the legend at the plot‑area center, verify the settings with chart.Calculate(), and save the result as ChartWithCenteredLegend.xlsx.
-// Keywords: Aspose.Cells legend center | C# chart legend position | Aspose.Cells NotDocked legend | prevent legend overlap Aspose.Cells | XRatioToChart YRatioToChart | column chart legend placement .NET | Aspose.Cells chart layout
-// Common Searches: Aspose.Cells center legend in chart | how to prevent legend overlap in Aspose.Cells | set manual legend coordinates Aspose.Cells C# | legend.Position NotDocked Aspose.Cells example | center legend using XRatioToChart YRatioToChart
-// Developer Intent: Place a chart legend at the exact center of the plot area while ensuring it does not cover any data series.
-// Use Cases: Design sales dashboards where a balanced, centered legend improves readability. | Generate automated Excel reports with multiple charts that require consistent, non‑overlapping legend placement. | Programmatically validate visual layout of exported charts in data‑analysis pipelines.
-// AI Prompts: Write C# code with Aspose.Cells to add a line chart and center its legend using NotDocked and ratio properties, ensuring no overlap. | Explain the effect of XRatioToChart and YRatioToChart on legend positioning in Aspose.Cells and show sample calculations. | Provide a step‑by‑step guide to verify legend placement after calling chart.Calculate() in Aspose.Cells.
+// Title: Center Chart Legend Inside Plot Area with Aspose.Cells for .NET
+// Description: Creates a workbook, adds a column chart, sets the legend to NotDocked with overlay, defines a fixed size, computes the plot‑area ratios, positions the legend at the plot‑area centre, recalculates the layout, checks that the legend stays fully inside the plot bounds, and saves the file.
+// Keywords: Aspose.Cells | C# chart legend | center legend | plot area | NotDocked legend | legend overlay | chart layout | prevent legend overlap | Aspose.Cells example
+// Common Searches: Aspose.Cells center legend plot area | C# position chart legend inside plot area | how to prevent legend overlap in Aspose.Cells chart | set legend NotDocked and overlay Aspose.Cells | validate legend bounds Aspose.Cells
+// Developer Intent: Programmatically place a chart legend at the exact centre of the plot area and confirm it does not exceed the plot boundaries.
+// Use Cases: Generate a column chart and manually centre a fixed‑size legend for a tidy visual layout. | Automatically verify legend coordinates before saving to avoid clipping or overlap. | Adapt legend size and position dynamically based on plot‑area dimensions for responsive chart designs.
+// AI Prompts: Write C# code using Aspose.Cells that adds a chart, sets the legend to NotDocked with overlay, defines width/height ratios, and centers it inside the plot area. | Create a method that returns true if an Aspose.Cells chart legend is completely contained within the plot area. | Show an example that moves the legend to the centre of the plot area for any chart type and logs whether the placement is inside the bounds.
 
 using System;
 using Aspose.Cells;
@@ -12,12 +12,12 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsLegendCenterDemo
 {
-    // Demonstrates how to create a column chart in a new workbook, disable legend overlay, set the legend to NotDocked, define its width and height as ratios of the chart, calculate X/Y ratios to place the legend at the plot‑area center, verify the settings with chart.Calculate(), and save the result as ChartWithCenteredLegend.xlsx.
+    // Creates a workbook, adds a column chart, sets the legend to NotDocked with overlay, defines a fixed size, computes the plot‑area ratios, positions the legend at the plot‑area centre, recalculates the layout, checks that the legend stays fully inside the plot bounds, and saves the file.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -34,35 +34,48 @@ namespace AsposeCellsLegendCenterDemo
             // Add a column chart
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
             Chart chart = sheet.Charts[chartIndex];
-            chart.SetChartDataRange("A1:B4", true);
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
             // Access the legend
             Legend legend = chart.Legend;
 
-            // Ensure the legend does not overlap the chart area
-            legend.IsOverLay = false; // Show legend without overlapping the chart
-
-            // Position the legend in the center of the plot area
-            // Use NotDocked so we can set manual coordinates
+            // Place legend inside the plot area (not docked) and allow overlay
             legend.Position = LegendPositionType.NotDocked;
+            legend.IsOverLay = true; // Enable overlay so we can position it manually
 
-            // Define legend size as a fraction of the chart area
+            // Retrieve plot area dimensions (ratios to chart)
+            PlotArea plotArea = chart.PlotArea;
+            double plotX = plotArea.XRatioToChart;
+            double plotY = plotArea.YRatioToChart;
+            double plotWidth = plotArea.WidthRatioToChart;
+            double plotHeight = plotArea.HeightRatioToChart;
+
+            // Ensure legend has a defined size (optional, otherwise automatic)
+            legend.IsAutomaticSize = false;
             legend.WidthRatioToChart = 0.2;   // 20% of chart width
             legend.HeightRatioToChart = 0.1;  // 10% of chart height
 
-            // Center the legend
-            legend.XRatioToChart = 0.5 - legend.WidthRatioToChart / 2;
-            legend.YRatioToChart = 0.5 - legend.HeightRatioToChart / 2;
+            // Center the legend within the plot area
+            legend.XRatioToChart = plotX + (plotWidth - legend.WidthRatioToChart) / 2;
+            legend.YRatioToChart = plotY + (plotHeight - legend.HeightRatioToChart) / 2;
 
-            // Recalculate chart layout after manual positioning
+            // Recalculate chart layout to apply changes
             chart.Calculate();
 
-            // Verify that the legend is set not to overlap
-            Console.WriteLine("Legend IsOverLay (should be false): " + legend.IsOverLay);
-            Console.WriteLine($"Legend Center Position - XRatio: {legend.XRatioToChart}, YRatio: {legend.YRatioToChart}");
+            // Verify that legend lies completely inside the plot area (no overlap outside)
+            bool isInsidePlotArea =
+                legend.XRatioToChart >= plotX &&
+                legend.YRatioToChart >= plotY &&
+                (legend.XRatioToChart + legend.WidthRatioToChart) <= (plotX + plotWidth) &&
+                (legend.YRatioToChart + legend.HeightRatioToChart) <= (plotY + plotHeight);
+
+            Console.WriteLine(isInsidePlotArea
+                ? "Legend is centered within the plot area with no external overlap."
+                : "Legend placement exceeds plot area bounds.");
 
             // Save the workbook
-            workbook.Save("ChartWithCenteredLegend.xlsx");
+            workbook.Save("LegendCentered.xlsx");
         }
     }
 }

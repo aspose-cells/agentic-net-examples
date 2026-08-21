@@ -1,110 +1,101 @@
-// Title: Extract and Rename Embedded OLE Objects from Excel Worksheets with Aspose.Cells (C#)
-// Description: Load an Excel workbook, iterate through each worksheet, extract the binary data of every embedded OLE object, infer its file extension, create a filename that combines the worksheet name and object index, and write the file to a designated output folder. The workbook can be saved afterwards if needed.
-// Keywords: Aspose.Cells OLE extraction | C# extract embedded OLE | rename OLE files by sheet name | determine OLE file extension | save OLE objects to folder | Excel embedded objects extraction | Aspose.Cells example C#
-// Common Searches: how to extract OLE objects from Excel using Aspose.Cells | C# save embedded OLE files with worksheet name | Aspose.Cells get file extension of OleObject | extract and rename OLE objects in .NET | Aspose.Cells extract embedded PDFs from workbook
-// Developer Intent: Programmatically pull each OLE object from an Excel file, name the extracted file with its worksheet identifier, and store it in a chosen directory.
-// Use Cases: Archive all embedded documents from a multi‑sheet financial model, using sheet names for quick reference. | Migrate legacy reports by pulling PDFs, Word files, and images out of Excel before converting the workbook to a new format. | Create a backup of every OLE object in a template workbook prior to automated processing, ensuring original files remain untouched.
-// AI Prompts: Write C# code that uses Aspose.Cells to loop through worksheets, extract each OleObject's data, infer its extension, and save the file with a name that includes the sheet name and object index. | Generate a helper method that maps OleObject.FileFormatType values to common file extensions, with a default .bin fallback. | Provide error‑handling snippets for missing input files, empty OLE data, and unsupported formats when extracting OLE objects from an Excel workbook.
+// Title: C# – Extract and Save Embedded OLE Objects from Excel Worksheets with Aspose.Cells
+// Description: Load an Excel workbook, loop through each worksheet, retrieve every embedded OLE object, infer the proper file extension from its FileFormatType, generate a filesystem‑safe name that includes the worksheet title and object index, and write the binary data to a designated output folder.
+// Keywords: Aspose.Cells extract OLE | C# OLE object extraction | save embedded Excel objects | worksheet name file naming | FileFormatType to extension mapping | create output directory C# | batch export OLE from Excel | Aspose.Cells OLEObjectCollection
+// Common Searches: how to extract OLE objects from Excel using Aspose.Cells C# | save embedded Word/PDF from Excel workbook | rename extracted OLE files with worksheet name | map Aspose.Cells FileFormatType to file extension | C# create safe file names from Excel sheet names
+// Developer Intent: Programmatically pull every embedded OLE object from all worksheets, name each file with the sheet title and a sequential index, and store them in a chosen folder.
+// Use Cases: Archive all embedded documents (Word, PowerPoint, PDF) from a multi‑sheet workbook for compliance audits. | Migrate legacy Excel files by separating embedded assets into individual files before conversion. | Automate content extraction for downstream processing, such as indexing extracted files in a search engine.
+// AI Prompts: Generate C# code that uses Aspose.Cells to extract OLE objects, determine the correct extension from FileFormatType, and save each file with a name containing the worksheet title and object number. | Explain how to sanitize worksheet names for use in Windows file paths when exporting embedded OLE data with Aspose.Cells. | Extend the GetExtensionFromFormat method to include image (png, jpg) and audio (mp3, wav) formats embedded as OLE objects.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace OleObjectExtractionDemo
+// Load an Excel workbook, loop through each worksheet, retrieve every embedded OLE object, infer the proper file extension from its FileFormatType, generate a filesystem‑safe name that includes the worksheet title and object index, and write the binary data to a designated output folder.
+class ExtractOleObjects
 {
-    // Load an Excel workbook, iterate through each worksheet, extract the binary data of every embedded OLE object, infer its file extension, create a filename that combines the worksheet name and object index, and write the file to a designated output folder. The workbook can be saved afterwards if needed.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the source Excel file
+        string inputFile = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputFile))
         {
-            // Input Excel file containing OLE objects
-            string inputFile = "input.xlsx";
+            Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
+            return;
+        }
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
+        // Directory where extracted OLE files will be saved
+        string outputDir = "ExtractedOleObjects";
+
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputDir);
+
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputFile);
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Console.WriteLine($"Error: Input file '{inputFile}' was not found.");
-                return;
-            }
+                // Get the collection of OLE objects on the current worksheet
+                OleObjectCollection oleObjects = sheet.OleObjects;
 
-            // Directory where extracted OLE files will be saved
-            string outputDirectory = "ExtractedOleObjects";
-
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputDirectory);
-
-            try
-            {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputFile);
-
-                // Iterate through each worksheet
-                foreach (Worksheet worksheet in workbook.Worksheets)
+                // Process each OLE object
+                for (int i = 0; i < oleObjects.Count; i++)
                 {
-                    // Process each OLE object in the current worksheet
-                    for (int i = 0; i < worksheet.OleObjects.Count; i++)
-                    {
-                        OleObject ole = worksheet.OleObjects[i];
-                        byte[] oleData = ole.ObjectData;
+                    OleObject ole = oleObjects[i];
 
-                        // Skip if there is no embedded data
-                        if (oleData == null || oleData.Length == 0)
-                            continue;
+                    // Retrieve the embedded OLE data as a byte array
+                    byte[] data = ole.ObjectData;
 
-                        // Determine file extension
-                        string extension = GetExtensionFromOle(ole);
+                    // Determine a suitable file extension based on the object's format
+                    string extension = GetExtensionFromFormat(ole.FileFormatType);
 
-                        // Build a unique file name using worksheet name and object index
-                        string fileName = $"{worksheet.Name}_OleObject_{i}{extension}";
-                        string outputPath = Path.Combine(outputDirectory, fileName);
+                    // Build a safe file name using the worksheet name and OLE index
+                    string safeSheetName = MakeFileSystemSafe(sheet.Name);
+                    string fileName = $"{safeSheetName}_Ole{i + 1}{extension}";
+                    string outputPath = Path.Combine(outputDir, fileName);
 
-                        // Write the OLE data to the file system
-                        File.WriteAllBytes(outputPath, oleData);
-                    }
+                    // Write the OLE data to the file system
+                    File.WriteAllBytes(outputPath, data);
                 }
+            }
 
-                // Save the workbook (optional – can be omitted if not needed)
-                workbook.Save("output.xlsx", SaveFormat.Xlsx);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine("OLE objects extraction completed successfully.");
         }
-
-        // Helper method to infer file extension for an OLE object
-        private static string GetExtensionFromOle(OleObject ole)
+        catch (Exception ex)
         {
-            // Try to use the original source file name if available
-            string sourceFullName = ole.ObjectSourceFullName;
-            if (!string.IsNullOrEmpty(sourceFullName))
-            {
-                string ext = Path.GetExtension(sourceFullName);
-                if (!string.IsNullOrEmpty(ext))
-                    return ext;
-            }
-
-            // Fallback: derive extension from the FileFormatType enum name
-            string formatName = ole.FileFormatType.ToString().ToLowerInvariant();
-
-            if (formatName.Contains("docx"))
-                return ".docx";
-            if (formatName.Contains("doc"))
-                return ".doc";
-            if (formatName.Contains("xlsx"))
-                return ".xlsx";
-            if (formatName.Contains("xls"))
-                return ".xls";
-            if (formatName.Contains("pptx"))
-                return ".pptx";
-            if (formatName.Contains("ppt"))
-                return ".ppt";
-            if (formatName.Contains("pdf"))
-                return ".pdf";
-
-            // Default binary extension
-            return ".bin";
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    // Maps Aspose.Cells.FileFormatType to common file extensions
+    static string GetExtensionFromFormat(FileFormatType format)
+    {
+        switch (format)
+        {
+            case FileFormatType.Xlsx: return ".xlsx";
+            case FileFormatType.Xlsb: return ".xlsb";
+            case FileFormatType.Docx: return ".docx";
+            case FileFormatType.Doc: return ".doc";
+            case FileFormatType.Pptx: return ".pptx";
+            case FileFormatType.Ppt: return ".ppt";
+            case FileFormatType.Pdf: return ".pdf";
+            // Add more mappings as needed for supported formats
+            default: return ".bin";
+        }
+    }
+
+    // Replaces characters that are invalid in file names with an underscore
+    static string MakeFileSystemSafe(string name)
+    {
+        foreach (char c in Path.GetInvalidFileNameChars())
+        {
+            name = name.Replace(c, '_');
+        }
+        return name;
     }
 }

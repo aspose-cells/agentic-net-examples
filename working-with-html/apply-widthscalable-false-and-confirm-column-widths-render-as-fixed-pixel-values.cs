@@ -1,41 +1,69 @@
-// Title: Aspose.Cells for .NET – Export Excel to HTML with Fixed Pixel Column Widths (WidthScalable = false)
-// Description: This example creates a workbook, assigns column A (150 px) and column B (80 px) using SetColumnWidthPixel, disables automatic scaling via HtmlSaveOptions.WidthScalable = false, and saves the sheet as FixedWidthOutput.html where column sizes are rendered as exact pixel values.
-// Keywords: Aspose.Cells HTML export | SetColumnWidthPixel | WidthScalable false | fixed column width HTML | C# Aspose.Cells example | pixel column width
-// Common Searches: Aspose.Cells export HTML fixed column width | HtmlSaveOptions WidthScalable property C# | Set column width in pixels before HTML save | Disable column width scaling Aspose.Cells
-// Developer Intent: Produce an HTML representation of an Excel worksheet where each column retains a predefined pixel width.
-// Use Cases: Web dashboards that require a stable column layout across browsers. | Email templates with HTML tables that must keep exact column dimensions. | Printable HTML reports where column spacing cannot be altered by viewport size.
-// AI Prompts: How do I set column widths in pixels and turn off width scaling when saving a workbook to HTML with Aspose.Cells for .NET? | Give me a C# code sample that verifies the generated HTML contains the expected pixel values after using WidthScalable = false. | Explain the effect of HtmlSaveOptions.WidthScalable on column rendering and how to enforce fixed pixel widths.
+// Title: Aspose.Cells for .NET – Fixed Pixel Column Widths with WidthScalable = false in HTML export
+// Description: Demonstrates how to set column widths in exact pixels using SetColumnWidthPixel, verify them with GetColumnWidthPixel, and generate HTML where the columns keep those fixed sizes by setting HtmlSaveOptions.WidthScalable to false. The workbook is also saved as XLSX to show that the pixel‑based widths persist in the native format.
+// Keywords: Aspose.Cells column width pixel | HtmlSaveOptions WidthScalable false | C# export Excel to HTML fixed width | SetColumnWidthPixel example | disable column scaling Aspose.Cells
+// Common Searches: Aspose.Cells set column width in pixels | How to disable WidthScalable in HTML export | Export Excel to HTML with fixed column sizes .NET | GetColumnWidthPixel Aspose.Cells C# | Fixed pixel column width HTML Aspose
+// Developer Intent: Create HTML output where column widths are locked to specific pixel values by turning off WidthScalable.
+// Use Cases: Define precise pixel widths for columns A and B, then export the sheet to HTML with non‑scalable columns. | Read back the pixel dimensions after setting them to confirm the values before saving. | Save the same workbook as XLSX to ensure the pixel‑based column settings are retained in the original file.
+// AI Prompts: Generate C# code that sets column widths in pixels with Aspose.Cells and saves the workbook to HTML with WidthScalable disabled. | Explain the effect of HtmlSaveOptions.WidthScalable = false on the generated HTML and how to validate column widths. | Provide a step‑by‑step tutorial for verifying pixel column widths before and after exporting to HTML and XLSX.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsWidthScalableDemo
+namespace AsposeCellsExamples
 {
-    // This example creates a workbook, assigns column A (150 px) and column B (80 px) using SetColumnWidthPixel, disables automatic scaling via HtmlSaveOptions.WidthScalable = false, and saves the sheet as FixedWidthOutput.html where column sizes are rendered as exact pixel values.
-    class Program
+    // Demonstrates how to set column widths in exact pixels using SetColumnWidthPixel, verify them with GetColumnWidthPixel, and generate HTML where the columns keep those fixed sizes by setting HtmlSaveOptions.WidthScalable to false. The workbook is also saved as XLSX to show that the pixel‑based widths persist in the native format.
+    public class WidthScalableFixedDemo
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-            // Set some sample data
-            cells["A1"].PutValue("Fixed Width Column");
-            cells["B1"].PutValue("Another Column");
+                // Set column widths in pixels (fixed values)
+                cells.SetColumnWidthPixel(0, 150); // Column A = 150 pixels
+                cells.SetColumnWidthPixel(1, 200); // Column B = 200 pixels
 
-            // Set column widths in pixels (fixed values)
-            // Column A (index 0) to 150 pixels, Column B (index 1) to 80 pixels
-            cells.SetColumnWidthPixel(0, 150);
-            cells.SetColumnWidthPixel(1, 80);
+                // Verify the pixel widths
+                int col0Width = cells.GetColumnWidthPixel(0);
+                int col1Width = cells.GetColumnWidthPixel(1);
+                Console.WriteLine($"Column A width (pixels): {col0Width}");
+                Console.WriteLine($"Column B width (pixels): {col1Width}");
 
-            // Configure HTML save options to disable width scaling
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            htmlOptions.WidthScalable = false; // Ensure column widths are exported as fixed pixel values
+                // Populate some data to visualize the widths in HTML
+                sheet.Cells["A1"].PutValue("Short");
+                sheet.Cells["B1"].PutValue("This is a longer text to show column width effect");
 
-            // Save the workbook as HTML with the specified options
-            workbook.Save("FixedWidthOutput.html", htmlOptions);
+                // Configure HTML save options with WidthScalable set to false (fixed pixel widths)
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    WidthScalable = false
+                };
+
+                // Save the workbook as HTML with fixed column widths
+                workbook.Save("output_fixed.html", htmlOptions);
+
+                // Also save as XLSX to confirm the widths are retained in the native format
+                workbook.Save("output_fixed.xlsx");
+
+                Console.WriteLine("Files saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            WidthScalableFixedDemo.Run();
         }
     }
 }

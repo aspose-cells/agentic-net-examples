@@ -1,45 +1,52 @@
-// Title: Clamp Worksheet TabId to 1‑65535 with Aspose.Cells for .NET
-// Description: Shows how to validate a worksheet's TabId, enforce the 1‑65535 range required for Excel 97‑2003 compatibility, assign the corrected value, save the workbook, and confirm the setting using Aspose.Cells in C#.
-// Keywords: Aspose.Cells TabId | worksheet TabId range | Excel 97-2003 compatibility | C# clamp TabId | validate TabId Aspose | legacy Excel TabId limit
-// Common Searches: Aspose.Cells set TabId range | How to limit worksheet TabId to 65535 | TabId out of range error Aspose | Validate TabId before saving Excel file | C# example for TabId validation
-// Developer Intent: Guarantee that a worksheet's TabId remains within the 1‑65535 limits so the workbook is compatible with older Excel versions.
-// Use Cases: Check user‑supplied TabId values before assigning them to avoid save‑time exceptions in legacy Excel formats. | Automatically adjust out‑of‑range TabId numbers to the nearest valid boundary when generating automated reports. | Reload a saved workbook to verify that the corrected TabId persisted correctly.
-// AI Prompts: Write C# code with Aspose.Cells that verifies a TabId, clamps it to 1‑65535, applies it to a worksheet, and saves the file. | Explain Aspose.Cells' behavior when a TabId exceeds the Excel 97‑2003 limit and outline a best‑practice correction pattern. | Provide a script to batch‑process multiple worksheets, ensuring each TabId is validated and corrected before export.
+// Title: Validate Worksheet TabId (1‑65535) with Aspose.Cells for .NET
+// Description: Shows how to create a workbook, deliberately set an out‑of‑range TabId, loop through all worksheets, ensure each TabId is between 1 and 65,535, reset invalid entries, log the actions, and save the file.
+// Keywords: Aspose.Cells TabId validation | worksheet TabId range .NET | Excel TabId limit 65535 | reset invalid TabId Aspose | TabId compatibility older Excel | C# Aspose.Cells workbook TabId
+// Common Searches: Aspose.Cells check worksheet TabId range | how to fix TabId greater than 65535 in Excel using C# | validate TabId before saving workbook Aspose | set valid TabId for worksheets Aspose.Cells | Excel TabId out of range error solution
+// Developer Intent: Ensure every worksheet's TabId stays within the 1‑65535 range and automatically correct any values that fall outside this limit.
+// Use Cases: Automatically adjust TabId values that exceed Excel's maximum when generating reports programmatically. | Log worksheets with invalid TabId for compliance auditing before distribution. | Maintain compatibility with legacy Excel versions by enforcing valid TabId identifiers.
+// AI Prompts: Create a C# method using Aspose.Cells that clamps each worksheet TabId to the 1‑65535 range and returns the names of sheets that were modified. | Generate code that validates TabId values, writes a correction log, and saves the workbook with a user‑specified filename. | Write a unit test in C# that verifies TabId handling for values below 1, within range, and above 65,535.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to validate a worksheet's TabId, enforce the 1‑65535 range required for Excel 97‑2003 compatibility, assign the corrected value, save the workbook, and confirm the setting using Aspose.Cells in C#.
-class TabIdValidator
+namespace AsposeCellsTabIdValidation
 {
-    static void Main()
+    // Shows how to create a workbook, deliberately set an out‑of‑range TabId, loop through all worksheets, ensure each TabId is between 1 and 65,535, reset invalid entries, log the actions, and save the file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Desired TabId value (example). Replace with your actual value.
-        int desiredTabId = 70000;
-
-        // Validate that TabId is within the range 1 to 65535 (Excel 97-2003 compatibility)
-        if (desiredTabId < 1 || desiredTabId > 65535)
+        static void Main(string[] args)
         {
-            Console.WriteLine($"TabId {desiredTabId} is out of the valid range (1‑65535). Adjusting to the nearest valid value.");
-            // Clamp the value to the allowed range
-            desiredTabId = Math.Max(1, Math.Min(65535, desiredTabId));
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Example: set an invalid TabId (greater than 65535)
+            sheet.TabId = 70000;
+
+            // Validate TabId values for all worksheets
+            foreach (Worksheet ws in workbook.Worksheets)
+            {
+                int tabId = ws.TabId;
+
+                // TabId must be between 1 and 65535 inclusive
+                if (tabId < 1 || tabId > 65535)
+                {
+                    // Adjust to a valid value (e.g., set to 1) and optionally log
+                    Console.WriteLine($"Worksheet \"{ws.Name}\" has invalid TabId {tabId}. Resetting to 1.");
+                    ws.TabId = 1;
+                }
+                else
+                {
+                    Console.WriteLine($"Worksheet \"{ws.Name}\" TabId {tabId} is valid.");
+                }
+            }
+
+            // Save the workbook (lifecycle rule: save)
+            string outputPath = "ValidatedTabIdWorkbook.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        // Assign the validated TabId to the worksheet
-        worksheet.TabId = desiredTabId;
-        Console.WriteLine($"Worksheet TabId set to {worksheet.TabId}");
-
-        // Save the workbook
-        string outputPath = "TabIdValidated.xlsx";
-        workbook.Save(outputPath);
-
-        // Load the saved workbook to verify the TabId
-        Workbook loadedWorkbook = new Workbook(outputPath);
-        Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
-        Console.WriteLine($"Loaded Worksheet TabId: {loadedWorksheet.TabId}");
     }
 }

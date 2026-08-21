@@ -1,67 +1,40 @@
-// Title: Read IsAutomaticPaperSize for All Worksheets into a C# Dictionary with Aspose.Cells
-// Description: Shows how to create or load a Workbook, loop through every Worksheet, read the PageSetup.IsAutomaticPaperSize flag, store each result in a Dictionary<string,bool> keyed by worksheet name, display the values, and optionally save the workbook as XLSX using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | IsAutomaticPaperSize | C# | .NET | worksheet page setup | read property | dictionary | iterate worksheets | print values | save workbook
-// Common Searches: Aspose.Cells read IsAutomaticPaperSize property | C# get automatic paper size for each worksheet | store worksheet page setup flags in dictionary | iterate worksheets Aspose.Cells .NET | how to check IsAutomaticPaperSize in Aspose.Cells
-// Developer Intent: Extract the IsAutomaticPaperSize flag from every worksheet and map it to the worksheet name.
-// Use Cases: Create a summary report of which sheets use automatic paper sizing before printing. | Apply conditional page‑setup changes based on each sheet’s automatic paper size setting. | Log or export paper‑size configurations for compliance or documentation purposes.
-// AI Prompts: Generate C# code using Aspose.Cells that iterates through all worksheets, reads PageSetup.IsAutomaticPaperSize, and returns a Dictionary<string,bool>. | Provide an example that captures IsAutomaticPaperSize for each sheet, prints the results, and saves the workbook. | Explain how to toggle the IsAutomaticPaperSize property for selected worksheets based on a custom condition.
+// Title: Aspose.Cells .NET – Read IsAutomaticPaperSize for All Worksheets into a Dictionary
+// Description: Load a workbook, loop through every worksheet, retrieve the PageSetup.IsAutomaticPaperSize flag, store each boolean in a Dictionary keyed by sheet name, and optionally save the file.
+// Keywords: Aspose.Cells | C# | .NET | IsAutomaticPaperSize | PageSetup | worksheet iteration | dictionary storage | workbook printing settings | Excel automation
+// Common Searches: Aspose.Cells get IsAutomaticPaperSize for each sheet | C# read worksheet page setup flag | store worksheet properties in a dictionary Aspose | iterate worksheets and access PageSetup in .NET | how to check automatic paper size in Excel using Aspose
+// Developer Intent: Extract the IsAutomaticPaperSize flag from every worksheet and keep the results in a name‑based dictionary.
+// Use Cases: Audit a workbook to ensure all sheets are set to automatic paper size before batch printing. | Create a configuration report that lists page‑setup flags for documentation or compliance. | Programmatically adjust page settings only on sheets where automatic sizing is disabled.
+// AI Prompts: Generate C# code with Aspose.Cells that returns a Dictionary<string, bool> containing each worksheet’s IsAutomaticPaperSize value. | Show how to log the IsAutomaticPaperSize flag for all sheets and save the workbook only when at least one sheet has the flag set to false. | Explain how to toggle IsAutomaticPaperSize for selected worksheets while preserving other PageSetup properties.
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Load a workbook, loop through every worksheet, retrieve the PageSetup.IsAutomaticPaperSize flag, store each boolean in a Dictionary keyed by sheet name, and optionally save the file.
+class Program
 {
-    // Shows how to create or load a Workbook, loop through every Worksheet, read the PageSetup.IsAutomaticPaperSize flag, store each result in a Dictionary<string,bool> keyed by worksheet name, display the values, and optionally save the workbook as XLSX using Aspose.Cells for .NET.
-    public class ReadIsAutomaticPaperSizeDemo
+    static void Main()
     {
-        public static void Run()
+        // Load an existing workbook (provide the correct file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Dictionary to store the IsAutomaticPaperSize value for each worksheet
+        Dictionary<string, bool> automaticPaperSizeBySheet = new Dictionary<string, bool>();
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
-            {
-                // Create a new workbook (or load an existing file if needed)
-                Workbook workbook = new Workbook();
+            // Read the IsAutomaticPaperSize property from the worksheet's PageSetup
+            bool isAutomatic = sheet.PageSetup.IsAutomaticPaperSize;
 
-                // Add a second worksheet for demonstration
-                workbook.Worksheets.Add();
+            // Store the result using the worksheet name as the key
+            automaticPaperSizeBySheet[sheet.Name] = isAutomatic;
 
-                // Dictionary to hold worksheet name and its IsAutomaticPaperSize value
-                Dictionary<string, bool> automaticPaperSizeMap = new Dictionary<string, bool>();
-
-                // Iterate through all worksheets in the workbook
-                for (int i = 0; i < workbook.Worksheets.Count; i++)
-                {
-                    Worksheet sheet = workbook.Worksheets[i];
-                    // Read the IsAutomaticPaperSize property from the worksheet's PageSetup
-                    bool isAutomatic = sheet.PageSetup.IsAutomaticPaperSize;
-                    automaticPaperSizeMap[sheet.Name] = isAutomatic;
-                }
-
-                // Output the collected values
-                foreach (var kvp in automaticPaperSizeMap)
-                {
-                    Console.WriteLine($"Worksheet \"{kvp.Key}\" - Automatic Paper Size: {kvp.Value}");
-                }
-
-                // Save the workbook (optional, demonstrates lifecycle usage)
-                string outputPath = "ReadIsAutomaticPaperSizeDemo.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to \"{Path.GetFullPath(outputPath)}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Output the value for verification
+            Console.WriteLine($"Worksheet '{sheet.Name}': IsAutomaticPaperSize = {isAutomatic}");
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ReadIsAutomaticPaperSizeDemo.Run();
-        }
+        // Save the workbook if any changes were made (optional)
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

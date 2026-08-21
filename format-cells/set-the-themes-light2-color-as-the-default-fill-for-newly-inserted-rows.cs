@@ -1,10 +1,10 @@
-// Title: Aspose.Cells for .NET – Apply Light2 Theme Color as Default Fill for Inserted Rows
-// Description: Demonstrates how to create a style that uses the workbook's Light2 (Background2) theme color, insert rows at a specific index, and assign the style to each new Row so that any later cells inherit a solid Light2 background. The workbook is then saved as an .xlsx file.
-// Keywords: Aspose.Cells | C# | .NET | theme color | Light2 | Background2 | row style | insert rows | default fill | solid background | Style.SetStyle | Row.SetStyle
-// Common Searches: set theme Light2 fill for new rows Aspose.Cells | default row background using workbook theme .NET | apply theme color to inserted rows C# | how to use Background2 theme color in Aspose.Cells | row style inheritance after InsertRows
-// Developer Intent: Apply the workbook's Light2 theme color as the default background for rows that are programmatically inserted.
-// Use Cases: Create a template where any added rows automatically match the secondary theme color, ensuring visual consistency. | Generate dynamic reports that insert data rows while preserving the workbook’s theme‑based styling without setting each cell individually. | Build financial models where new rows inherit the Background2 fill, simplifying maintenance of a uniform look across changing data sections.
-// AI Prompts: Show how to switch the style to use the Dark1 theme color for newly inserted rows. | Provide code to apply the same Light2 theme style to an entire column after rows are added. | Explain how to keep the row style when copying rows to another worksheet with Aspose.Cells.
+// Title: Set Light2 Theme Color as Default Row Fill When Inserting Rows – Aspose.Cells for .NET (C#)
+// Description: Shows how to create a style that uses the workbook's Light2 (Background2) theme color with a solid fill, insert rows, and assign that style as the default row format so each newly added row automatically displays the Light2 background. The workbook is saved as RowsWithLight2ThemeFill.xlsx.
+// Keywords: Aspose.Cells | C# | Light2 theme color | row default style | insert rows | theme background fill | Workbook theme | solid fill | Background2 | Style.SetStyle
+// Common Searches: Aspose.Cells set row background to Light2 | C# apply workbook theme color to inserted rows | default row style Aspose.Cells | how to use theme colors in Aspose.Cells | insert rows with theme fill .NET
+// Developer Intent: Apply the Light2 theme color as the default fill for rows inserted programmatically.
+// Use Cases: Generate a report where every new data row automatically inherits the Light2 background for consistent visual styling. | Create a spreadsheet template that adds rows with a predefined theme‑based fill, eliminating manual formatting. | Build financial statements that dynamically insert rows while preserving the workbook’s Light2 theme color. | Design dashboards where inserted rows match the overall theme without extra code.
+// AI Prompts: Modify the example to use a different theme color (e.g., Dark1) as the default fill for inserted rows. | Provide a version that applies the Light2 fill to a range of rows using a single style assignment instead of a loop. | Explain how to set the Light2 fill as the default style for all future rows added to the worksheet, including rows added after the initial insertion.
 
 using System;
 using System.Drawing;
@@ -12,7 +12,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsThemeRowDemo
 {
-    // Demonstrates how to create a style that uses the workbook's Light2 (Background2) theme color, insert rows at a specific index, and assign the style to each new Row so that any later cells inherit a solid Light2 background. The workbook is then saved as an .xlsx file.
+    // Shows how to create a style that uses the workbook's Light2 (Background2) theme color with a solid fill, insert rows, and assign that style as the default row format so each newly added row automatically displays the Light2 background. The workbook is saved as RowsWithLight2ThemeFill.xlsx.
     class Program
     {
         static void Main()
@@ -22,43 +22,47 @@ namespace AsposeCellsThemeRowDemo
             Worksheet worksheet = workbook.Worksheets[0];
 
             // ------------------------------------------------------------
-            // Define a style that uses the theme's Light2 color (Background2)
+            // Prepare a style that uses the theme's Light2 (Background2) color
+            // as the default fill for a row.
             // ------------------------------------------------------------
-            Style themeStyle = workbook.CreateStyle();
-            // Use the theme color Background2 (Light2) with no tint
-            themeStyle.BackgroundThemeColor = new ThemeColor(ThemeColorType.Background2, 0);
-            // Set a solid fill pattern so the background color is applied
-            themeStyle.Pattern = BackgroundType.Solid;
+            Style light2Style = workbook.CreateStyle();
+
+            // Use a solid fill pattern
+            light2Style.Pattern = BackgroundType.Solid;
+
+            // Set the background theme color to Light2 (Background2) with no tint
+            // ThemeColorType.Background2 corresponds to the Light2 theme color.
+            light2Style.BackgroundThemeColor = new ThemeColor(ThemeColorType.Background2, 0.0);
 
             // ------------------------------------------------------------
-            // Insert new rows (for example, insert 3 rows at index 2)
+            // Insert a few rows and apply the prepared style as the default style
+            // for each newly inserted row.
             // ------------------------------------------------------------
-            int insertIndex = 2;   // zero‑based row index where rows will be inserted
-            int rowCount = 3;      // number of rows to insert
-            worksheet.Cells.InsertRows(insertIndex, rowCount);
+            // Insert three rows starting at row index 2 (third row, zero‑based)
+            int insertIndex = 2;
+            int rowsToInsert = 3;
+            worksheet.Cells.InsertRows(insertIndex, rowsToInsert);
 
-            // ------------------------------------------------------------
-            // Apply the theme style as the default style for each newly inserted row
-            // ------------------------------------------------------------
-            for (int i = insertIndex; i < insertIndex + rowCount; i++)
+            // Apply the style to each inserted row
+            for (int i = insertIndex; i < insertIndex + rowsToInsert; i++)
             {
                 // Get the Row object
                 Row row = worksheet.Cells.Rows[i];
-                // Set the style; this becomes the default style for cells added later in this row
-                row.SetStyle(themeStyle);
+
+                // Set the prepared style as the default style for this row
+                row.SetStyle(light2Style);
             }
 
             // ------------------------------------------------------------
-            // (Optional) Add some data to the new rows to demonstrate the style
+            // Optional: add some data to visualize the styled rows
             // ------------------------------------------------------------
-            for (int i = insertIndex; i < insertIndex + rowCount; i++)
-            {
-                worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
-                worksheet.Cells[i, 1].PutValue(i * 10);
-            }
+            worksheet.Cells["A1"].PutValue("Header");
+            worksheet.Cells["A3"].PutValue("Row with Light2 fill");
+            worksheet.Cells["A4"].PutValue("Another Light2 row");
+            worksheet.Cells["A5"].PutValue("Yet another Light2 row");
 
             // Save the workbook
-            workbook.Save("ThemeLight2RowStyle.xlsx");
+            workbook.Save("RowsWithLight2ThemeFill.xlsx");
         }
     }
 }

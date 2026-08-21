@@ -1,38 +1,71 @@
-// Title: Check if an Excel file is password‑protected with Aspose.Cells for .NET (C#)
-// Description: A C# helper method uses Aspose.Cells' FileFormatUtil.DetectFileFormat to obtain a FileFormatInfo object and returns its IsEncrypted flag, indicating whether the specified Excel workbook requires a password to open.
-// Keywords: Aspose.Cells | C# | .NET | Excel password protection | encrypted workbook detection | FileFormatUtil | IsEncrypted property | detect Excel encryption | Excel file security
-// Common Searches: Aspose.Cells detect encrypted Excel file C# | How to know if .xlsx is password protected using Aspose | C# check Excel workbook encryption Aspose.Cells | IsExcelFilePasswordProtected example | FileFormatUtil IsEncrypted usage
-// Developer Intent: Determine programmatically whether an Excel workbook requires a password before it can be opened.
-// Use Cases: Validate uploaded spreadsheets and reject those that are password‑protected. | Skip encrypted files during batch import or conversion pipelines. | Show a warning message to users when they try to open a protected workbook. | Log encrypted files for compliance or audit reporting. | Prompt for a password only after confirming that the file is encrypted.
-// AI Prompts: Generate a robust C# method with Aspose.Cells that returns true if an Excel file is encrypted, including exception handling for missing or inaccessible files. | Create unit tests for IsExcelFilePasswordProtected covering encrypted, unencrypted, and non‑existent file scenarios. | Explain how FileFormatUtil.DetectFileFormat and FileFormatInfo.IsEncrypted work together to detect password protection across .xls, .xlsx, and .xlsb formats. | Show how to integrate the password‑check into an ASP.NET file‑upload workflow that blocks encrypted workbooks.
+// Title: C# – Detect Password‑Protected Excel Workbook Using Aspose.Cells
+// Description: Learn how to use Aspose.Cells for .NET to check if an Excel file (.xls, .xlsx, .xlsb, etc.) is encrypted. The sample code validates the file path, calls FileFormatUtil.DetectFileFormat, and reads FileFormatInfo.IsEncrypted, with robust error handling.
+// Keywords: Aspose.Cells C# detect encrypted Excel | check Excel password protection .NET | FileFormatUtil IsEncrypted | Excel file encryption detection | C# verify workbook password | Aspose.Cells file format detection | Excel security audit C# | detect protected .xlsx programmatically
+// Common Searches: how to know if an Excel file is password protected in C# | Aspose.Cells detect encrypted workbook | C# check if .xlsx requires a password | FileFormatUtil DetectFileFormat password | Aspose.Cells IsEncrypted example
+// Developer Intent: Identify whether a specified Excel workbook is encrypted and requires a password before opening or processing it.
+// Use Cases: Validate user‑uploaded spreadsheets to reject or prompt for passwords before import. | Run a security scan over a repository of workbooks and generate a report of encrypted files. | Skip password‑protected files in bulk conversion or data‑extraction pipelines.
+// AI Prompts: Generate a C# method that returns true if an Excel file is password protected using Aspose.Cells, including file‑existence checks and exception handling. | Show sample code that iterates through a folder of Excel files and logs each file’s encryption status with Aspose.Cells. | Explain the behavior of FileFormatInfo.IsEncrypted and which Excel formats (xls, xlsx, xlsb, csv, etc.) it can evaluate.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPasswordCheck
+namespace AsposeCellsExamples
 {
-    // A C# helper method uses Aspose.Cells' FileFormatUtil.DetectFileFormat to obtain a FileFormatInfo object and returns its IsEncrypted flag, indicating whether the specified Excel workbook requires a password to open.
+    // Learn how to use Aspose.Cells for .NET to check if an Excel file (.xls, .xlsx, .xlsb, etc.) is encrypted. The sample code validates the file path, calls FileFormatUtil.DetectFileFormat, and reads FileFormatInfo.IsEncrypted, with robust error handling.
     public static class ExcelProtectionHelper
     {
         /// <param name="filePath">Full path to the Excel file.</param>
-        /// <returns>True if the file requires a password to open; otherwise, false.</returns>
+        /// <returns>True if the file is encrypted and requires a password to open; otherwise, false.</returns>
         public static bool IsExcelFilePasswordProtected(string filePath)
         {
-            // Detect the file format and obtain information about the file.
-            FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
+            // Verify that the file exists to avoid FileNotFoundException.
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return false;
+            }
 
-            // The IsEncrypted property indicates whether the document is encrypted
-            // and therefore requires a password to open.
-            return fileInfo.IsEncrypted;
+            try
+            {
+                // Detect the file format and retrieve its metadata.
+                FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
+
+                // The IsEncrypted property indicates whether the document is encrypted
+                // and therefore requires a password to open.
+                return fileInfo.IsEncrypted;
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors gracefully.
+                Console.WriteLine($"Error while checking protection: {ex.Message}");
+                return false;
+            }
         }
 
         // Example usage
-        public static void Main()
+        public static void Run()
         {
             string path = "sample.xlsx";
 
-            bool protectedFlag = IsExcelFilePasswordProtected(path);
-            Console.WriteLine($"Is '{path}' password protected? {protectedFlag}");
+            bool protectedStatus = IsExcelFilePasswordProtected(path);
+            Console.WriteLine($"Is '{path}' password protected? {protectedStatus}");
+        }
+    }
+
+    // Entry point required for console application.
+    public static class Program
+    {
+        public static void Main()
+        {
+            try
+            {
+                ExcelProtectionHelper.Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
+            }
         }
     }
 }

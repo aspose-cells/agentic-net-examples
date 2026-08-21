@@ -1,82 +1,65 @@
-// Title: C# – Convert CSV to Excel and Add an Interactive Timeline with Aspose.Cells
-// Description: A complete C# example that checks for a CSV file of events, creates a sample if missing, converts the CSV to XLSX using Aspose.Cells ConversionUtility, builds a pivot table on the Event and Date columns, inserts a linked timeline, and saves the workbook with the timeline for easy date navigation.
-// Keywords: Aspose.Cells CSV to XLSX | C# timeline worksheet | Aspose.Cells pivot table | add timeline to Excel | ConversionUtility example | .NET Excel automation | interactive timeline Aspose | event timeline Excel | CSV import Aspose.Cells
-// Common Searches: how to convert csv to excel with Aspose.Cells C# | add a timeline to a worksheet using Aspose.Cells | create pivot table and timeline from CSV in .NET | Aspose.Cells example for event timeline | C# code to generate Excel timeline from CSV
-// Developer Intent: Import event dates from a CSV file, transform them into an Excel workbook, and visualize the dates with an interactive timeline linked to a pivot table.
-// Use Cases: Generate a project‑milestone workbook from a CSV source with a clickable timeline for quick date filtering. | Produce a sales‑events report that converts raw CSV data to Excel, creates a pivot table, and adds a timeline for chronological analysis. | Automate an event‑log workbook that includes a pivot table and an interactive timeline to visualize and explore chronological data.
-// AI Prompts: Provide a C# snippet that reads a CSV, converts it to XLSX with Aspose.Cells ConversionUtility, creates a pivot table, and adds a timeline linked to the Date field. | Explain how to customize the timeline’s style, size, and position after inserting it into a worksheet using Aspose.Cells. | Suggest best practices for handling large CSV files when building a pivot table and timeline with Aspose.Cells, including memory‑management tips.
+// Title: C# – Build an Excel Timeline from CSV Event Dates with Aspose.Cells
+// Description: The sample checks for an events CSV, creates a workbook, imports the data, generates a PivotTable using the Date column as the row field and Event as the data field, adds a linked Timeline control, sets a caption, and saves the file as an interactive Excel timeline.
+// Keywords: Aspose.Cells | C# CSV import | Excel timeline control | PivotTable Aspose.Cells | event timeline Excel | Aspose.Cells Timeline API | ImportCSV Aspose.Cells | AddTimeline Aspose.Cells | generate timeline from CSV
+// Common Searches: Aspose.Cells import CSV and create timeline | Add timeline control to PivotTable using C# | Generate Excel timeline from event dates | Aspose.Cells timeline example .NET | How to link a timeline to a pivot table in Aspose.Cells
+// Developer Intent: Create an Excel workbook that visualizes event dates with an interactive Timeline control sourced from a CSV file.
+// Use Cases: Import a CSV containing Event and Date columns into a worksheet. | Build a PivotTable from the imported range, placing Date in the row area and Event in the data area. | Attach a Timeline control to the PivotTable, position it on the sheet, and customize its caption. | Save the workbook as an .xlsx file that end‑users can filter via the timeline.
+// AI Prompts: Show C# code to customize the Timeline control's date range, style, and slicer layout with Aspose.Cells. | Explain how to add multiple Timeline controls for different date fields in the same workbook using Aspose.Cells for .NET. | Provide a step‑by‑step guide to export the generated timeline workbook to PDF while preserving the interactive elements.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Timelines;
-using Aspose.Cells.Utility;
 
-// A complete C# example that checks for a CSV file of events, creates a sample if missing, converts the CSV to XLSX using Aspose.Cells ConversionUtility, builds a pivot table on the Event and Date columns, inserts a linked timeline, and saves the workbook with the timeline for easy date navigation.
-class TimelineFromCsv
+// The sample checks for an events CSV, creates a workbook, imports the data, generates a PivotTable using the Date column as the row field and Event as the data field, adds a linked Timeline control, sets a caption, and saves the file as an interactive Excel timeline.
+class EventTimelineGenerator
 {
     static void Main()
     {
-        // Paths for source CSV and intermediate/final Excel files
-        string csvPath = "events.csv";
-        string intermediateXlsx = "events.xlsx";
-        string finalXlsx = "events_with_timeline.xlsx";
-
         try
         {
-            // Ensure the CSV file exists; create a simple sample if it does not.
+            // Ensure the CSV file exists; create a simple sample if missing
+            string csvPath = "events.csv";
             if (!File.Exists(csvPath))
             {
-                // Sample data: Event,Date
-                string[] sampleLines =
-                {
-                    "Event,Date",
-                    "Launch,2023-01-15",
-                    "Update,2023-02-10",
-                    "Release,2023-03-05"
-                };
-                File.WriteAllLines(csvPath, sampleLines);
-                Console.WriteLine($"Sample CSV created at '{Path.GetFullPath(csvPath)}'.");
+                var sample = "Event,Date\r\nLaunch,2023-01-15\r\nUpdate,2023-03-10\r\nRelease,2023-06-05\r\n";
+                File.WriteAllText(csvPath, sample);
             }
 
-            // 1. Convert CSV to XLSX using Aspose.Cells ConversionUtility
-            ConversionUtility.Convert(csvPath, intermediateXlsx);
-
-            // Verify the intermediate file was created
-            if (!File.Exists(intermediateXlsx))
-                throw new FileNotFoundException($"Failed to create intermediate file '{intermediateXlsx}'.");
-
-            // 2. Load the newly created workbook
-            Workbook workbook = new Workbook(intermediateXlsx);
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // 3. Create a PivotTable that uses the imported data.
-            //    Assuming the CSV has columns "Event" (A) and "Date" (B).
-            //    Determine the used range to set an accurate data area.
-            int lastRow = sheet.Cells.MaxDataRow + 1; // +1 because rows are zero‑based
-            string dataRange = $"A1:B{lastRow}";
-            int pivotIndex = sheet.PivotTables.Add(dataRange, "D1", "PivotTable1");
-            PivotTable pivot = sheet.PivotTables[pivotIndex];
+            // Import the CSV file (headers "Event,Date")
+            cells.ImportCSV(csvPath, ",", true, 0, 0);
 
-            // Add the Date field as a row (timeline base) and Event as data (count)
+            // Determine the used range for the pivot source
+            int lastRow = cells.MaxDataRow + 1; // +1 because range is inclusive
+            string sourceRange = $"A1:B{lastRow}";
+
+            // Create a PivotTable that will serve as the data source for the Timeline
+            PivotTableCollection pivots = sheet.PivotTables;
+            int pivotIndex = pivots.Add(sourceRange, "D1", "EventPivot");
+            PivotTable pivot = pivots[pivotIndex];
+
+            // Use the "Date" column as the row field (time axis)
             pivot.AddFieldToArea(PivotFieldType.Row, "Date");
+            // Use the "Event" column as the data field (count of events)
             pivot.AddFieldToArea(PivotFieldType.Data, "Event");
-            pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
 
-            // Refresh and calculate the pivot data
+            // Refresh and calculate the PivotTable data
             pivot.RefreshData();
             pivot.CalculateData();
 
-            // 4. Add a Timeline linked to the PivotTable, using the "Date" field.
-            //    The timeline will be placed starting at cell A20 (row 19, column 0).
+            // Add a Timeline linked to the PivotTable, positioned at cell A20 (row 19, column 0)
             int timelineIndex = sheet.Timelines.Add(pivot, 19, 0, "Date");
             Timeline timeline = sheet.Timelines[timelineIndex];
             timeline.Caption = "Event Timeline";
 
-            // 5. Save the final workbook with the timeline
-            workbook.Save(finalXlsx, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully as '{finalXlsx}'.");
+            // Save the workbook with the Timeline control
+            workbook.Save("EventTimeline.xlsx");
         }
         catch (Exception ex)
         {

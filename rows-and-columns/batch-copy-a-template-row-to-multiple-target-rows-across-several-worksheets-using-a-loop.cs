@@ -1,56 +1,46 @@
-// Title: Batch copy a template row to multiple rows across worksheets with Aspose.Cells for .NET (C#)
-// Description: This C# example creates a workbook, adds sample headers to the first row, generates additional worksheets, and uses a nested loop with Cells.CopyRow to duplicate the template row into several specified rows on every sheet, then saves the file as BatchCopyRowsOutput.xlsx.
-// Keywords: Aspose.Cells | C# | CopyRow | batch copy rows | multiple worksheets | template row | Excel automation | Aspose.Cells API | copy row across sheets | GitHub example
-// Common Searches: Aspose.Cells copy row to multiple sheets C# | How to duplicate a header row on every worksheet using Aspose.Cells | Batch copy rows across worksheets in .NET | Copy template row to specific rows with Aspose.Cells | Loop to copy rows in Excel using Aspose.Cells
-// Developer Intent: Duplicate a single source row into several target rows on each worksheet of a workbook.
-// Use Cases: Add identical header rows to all sheets in a financial report | Populate repeated product‑info rows in each section of multi‑sheet templates | Prepare a data‑entry template where the same row appears at multiple positions across worksheets
-// AI Prompts: Show C# code that copies row 1 to rows 3, 6, and 9 on every worksheet using Aspose.Cells CopyRow. | Give an example that preserves cell styles, formats, and merged cells while batch copying a template row across multiple sheets. | Explain how to limit the copy operation to worksheets whose names begin with 'Data' using Aspose.Cells for .NET.
+// Title: Batch copy a template row to multiple rows across worksheets with Aspose.Cells for .NET
+// Description: Loads a workbook, treats row 2 of the first worksheet as a template, and loops through the remaining sheets to copy that row to specified rows (e.g., 5, 10, 15) using Cells.CopyRow, preserving data and formatting, then saves the updated file.
+// Keywords: Aspose.Cells | CopyRow | C# | .NET | batch copy rows | template row | copy row across worksheets | Excel automation | loop copy rows | preserve formatting
+// Common Searches: How to copy a row to several rows in other worksheets using Aspose.Cells C# | Batch copy a template row across multiple sheets in .NET | Copy row with formatting to multiple destinations in Excel with Aspose.Cells | Loop through worksheets and duplicate a specific row in C# | Aspose.Cells copy row to many rows example
+// Developer Intent: Copy a single template row from the first worksheet to a set of target rows in every other worksheet of the workbook.
+// Use Cases: Apply a styled header row to all sheets in a report workbook. | Duplicate a pre‑formatted data‑entry row across several sections of each worksheet. | Insert a summary row template into every sheet for consistent layout.
+// AI Prompts: Generate C# code that uses Aspose.Cells to copy row 2 from the first worksheet to rows 3, 7 and 12 in all other worksheets, keeping formatting intact. | Explain how to modify the loop to skip worksheets whose names contain the word "Archive" while copying the template row. | Show how to copy a row and then auto‑fit column widths in each target worksheet after the copy operation.
 
 using System;
 using Aspose.Cells;
 
-namespace BatchCopyRowsExample
+// Loads a workbook, treats row 2 of the first worksheet as a template, and loops through the remaining sheets to copy that row to specified rows (e.g., 5, 10, 15) using Cells.CopyRow, preserving data and formatting, then saves the updated file.
+class Program
 {
-    // This C# example creates a workbook, adds sample headers to the first row, generates additional worksheets, and uses a nested loop with Cells.CopyRow to duplicate the template row into several specified rows on every sheet, then saves the file as BatchCopyRowsOutput.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook that contains the template row.
+        // The template row is assumed to be in the first worksheet (index 0) at row index 1 (second row).
+        Workbook workbook = new Workbook("Template.xlsx");
+
+        // Source worksheet and its cells.
+        Worksheet sourceSheet = workbook.Worksheets[0];
+        Cells sourceCells = sourceSheet.Cells;
+        int templateRowIndex = 1; // zero‑based index of the template row.
+
+        // Define the destination row indices where the template row will be copied.
+        int[] destinationRows = new int[] { 5, 10, 15 }; // example target rows.
+
+        // Iterate over all worksheets except the source (template) sheet.
+        for (int wsIndex = 1; wsIndex < workbook.Worksheets.Count; wsIndex++)
         {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook();
+            Worksheet targetSheet = workbook.Worksheets[wsIndex];
+            Cells targetCells = targetSheet.Cells;
 
-            // ---------- Prepare the template row ----------
-            // Use the first worksheet as the source of the template row (row index 0)
-            Worksheet templateSheet = workbook.Worksheets[0];
-            // Fill some sample data in the template row
-            templateSheet.Cells["A1"].PutValue("Product");
-            templateSheet.Cells["B1"].PutValue("Quantity");
-            templateSheet.Cells["C1"].PutValue("Price");
-
-            // ---------- Add additional worksheets ----------
-            // For demonstration, create a total of 3 worksheets (including the first one)
-            for (int i = 1; i < 3; i++)
+            // Copy the template row to each specified destination row in the current worksheet.
+            foreach (int destRowIndex in destinationRows)
             {
-                workbook.Worksheets.Add($"Sheet{i + 1}");
+                // CopyRow copies data and formats of the whole row from sourceCells to targetCells.
+                targetCells.CopyRow(sourceCells, templateRowIndex, destRowIndex);
             }
-
-            // ---------- Define target rows where the template row will be copied ----------
-            // These rows will receive a copy of the template row in each worksheet
-            int[] targetRows = new int[] { 2, 5, 8 }; // zero‑based indices (row 3, 6, 9 in Excel)
-
-            // ---------- Loop through each worksheet and copy the template row ----------
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                foreach (int targetRow in targetRows)
-                {
-                    // Copy the template row (row 0) from the template sheet to the target row
-                    // in the current worksheet.
-                    ws.Cells.CopyRow(templateSheet.Cells, 0, targetRow);
-                }
-            }
-
-            // ---------- Save the result ----------
-            workbook.Save("BatchCopyRowsOutput.xlsx");
         }
+
+        // Save the workbook with the copied rows.
+        workbook.Save("Result.xlsx");
     }
 }

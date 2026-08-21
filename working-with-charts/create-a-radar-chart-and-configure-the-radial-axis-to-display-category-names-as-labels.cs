@@ -1,9 +1,18 @@
+// Title: Aspose.Cells for .NET: Create a Radar Chart with Category Labels on the Radial Axis (C#)
+// Description: This C# example shows how to build a new workbook, populate categories and values, add a Radar chart, bind the series and category ranges, enable radial axis labels via the HasRadarAxisLabels property, and save the file as an Excel workbook.
+// Keywords: Aspose.Cells | C# radar chart | radial axis labels | category labels | Excel chart example | HasRadarAxisLabels | Aspose.Cells for .NET | RadarChart API | chart customization | source code
+// Common Searches: Aspose.Cells radar chart with category labels | C# enable radial axis labels Aspose.Cells | How to add category names to radar chart axis .NET | Aspose.Cells example radar chart radial axis | Create spider chart with Aspose.Cells C#
+// Developer Intent: Create a radar chart and display category names as labels on its radial axis using Aspose.Cells for .NET.
+// Use Cases: Visualize product feature comparisons where each axis is a labeled category. | Present survey results with clear category labels on a spider chart for stakeholder reports. | Generate Excel workbooks that include radar charts with axis labels for automated data dashboards.
+// AI Prompts: Write C# code with Aspose.Cells that builds a radar chart and turns on radial axis category labels. | Explain the steps to bind category data and enable HasRadarAxisLabels for a radar chart in Aspose.Cells. | Show how to customize a radar chart's appearance and save it as an Excel file using Aspose.Cells for .NET.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsRadarChartDemo
+namespace RadarChartExample
 {
+    // This C# example shows how to build a new workbook, populate categories and values, add a Radar chart, bind the series and category ranges, enable radial axis labels via the HasRadarAxisLabels property, and save the file as an Excel workbook.
     class Program
     {
         static void Main()
@@ -28,14 +37,14 @@ namespace AsposeCellsRadarChartDemo
             Chart radarChart = sheet.Charts[chartIndex];
 
             // Add the series data (values) and set the category (radial) data
-            int seriesIdx = radarChart.NSeries.Add("B2:B4", true);
+            int seriesIndex = radarChart.NSeries.Add("B2:B4", true);
             radarChart.NSeries.CategoryData = "A2:A4";
 
             // Enable category (radial) axis labels for the radar chart
-            Series series = radarChart.NSeries[seriesIdx];
+            Series series = radarChart.NSeries[seriesIndex];
             series.HasRadarAxisLabels = true;
 
-            // Save the workbook to a file
+            // Save the workbook with the radar chart
             workbook.Save("RadarChartWithRadialLabels.xlsx");
         }
     }

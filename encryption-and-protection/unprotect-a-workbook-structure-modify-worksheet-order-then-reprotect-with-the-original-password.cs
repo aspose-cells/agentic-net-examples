@@ -1,72 +1,87 @@
 // Title: C# – Unprotect Excel workbook structure, reorder sheets, and re‑protect with Aspose.Cells
-// Description: Loads a password‑protected workbook, removes structure protection, moves a worksheet (e.g., the third sheet) to a new position, reapplies the same protection, and saves the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells unprotect workbook | C# reorder Excel sheets | protect workbook structure password | Worksheet.MoveTo example | modify sheet order in protected Excel
-// Common Searches: how to unprotect and reorder sheets in a protected Excel file using Aspose.Cells | C# move worksheet after unprotecting workbook structure | re‑protect workbook structure after changing sheet order Aspose.Cells
-// Developer Intent: Remove structure protection from a workbook, change the order of its worksheets, then restore the original protection with the same password.
-// Use Cases: Insert a summary tab at the front of a locked financial report before distribution. | Re‑order generated template sheets after unlocking a workbook for automated processing. | Batch‑process protected workbooks to adjust sheet sequence while preserving existing passwords.
-// AI Prompts: Write C# code that uses Aspose.Cells to unprotect a workbook's structure, move the third worksheet to the first position, and re‑protect it with the original password. | Provide a robust example that checks for at least three worksheets, handles missing file errors, logs each step, and saves the reordered workbook.
+// Description: Loads a password‑protected Excel file, removes structure protection, moves the first worksheet to the last position, reapplies the same password protection, and saves the result. Includes handling for missing or incorrect passwords.
+// Keywords: Aspose.Cells C# unprotect workbook | Excel workbook structure protection | move worksheet programmatically | Workbook.Unprotect password | Workbook.Protect structure | reorder sheets Aspose.Cells | handle invalid password Aspose.Cells | C# Excel sheet ordering example
+// Common Searches: how to unprotect workbook structure with Aspose.Cells C# | move first worksheet to last using Aspose.Cells | re‑protect Excel workbook after changing sheet order | Aspose.Cells catch invalid password exception | C# example for workbook.Unprotect and Protect
+// Developer Intent: Remove structure protection, change worksheet order, then restore protection with the original password in a .NET application.
+// Use Cases: Standardize sheet sequence in protected reports while keeping the original password. | Batch‑process protected workbooks to enforce a specific tab order without exposing passwords. | Gracefully continue processing when a workbook is unprotected or the password is wrong, ensuring the file is still saved.
+// AI Prompts: Generate C# code that catches a CellsException for an invalid password when calling Workbook.Unprotect in Aspose.Cells. | Show how to move a worksheet to a new index and then protect the workbook structure with a password using Aspose.Cells. | Explain how to check if a workbook is structure‑protected before attempting to unprotect it with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace WorkbookStructureReorder
 {
-    // Loads a password‑protected workbook, removes structure protection, moves a worksheet (e.g., the third sheet) to a new position, reapplies the same protection, and saves the file using Aspose.Cells for .NET.
-    public class WorkbookStructureReorderDemo
+    // Loads a password‑protected Excel file, removes structure protection, moves the first worksheet to the last position, reapplies the same password protection, and saves the result. Includes handling for missing or incorrect passwords.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             // Path to the protected workbook
-            string inputPath = "ProtectedWorkbook.xlsx";
+            string inputPath = "protected_workbook.xlsx";
+
+            // Path where the modified workbook will be saved
+            string outputPath = "reordered_workbook.xlsx";
+
             // Password used to protect the workbook structure
-            string password = "myPassword";
+            string password = "mySecretPassword";
 
             // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             try
             {
-                // Load the workbook (lifecycle rule: load)
-                using (Workbook workbook = new Workbook(inputPath))
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Attempt to unprotect the workbook structure; ignore if password is invalid or not protected
+                try
                 {
-                    // Unprotect the workbook structure using the original password
                     workbook.Unprotect(password);
-
-                    // Example reordering: move the third worksheet (index 2) to the first position (index 0)
-                    // Ensure the workbook has at least three sheets
-                    if (workbook.Worksheets.Count > 2)
-                    {
-                        Worksheet sheetToMove = workbook.Worksheets[2];
-                        sheetToMove.MoveTo(0); // MoveTo method repositions the sheet
-                    }
-
-                    // Re‑protect the workbook structure with the same password
-                    workbook.Protect(ProtectionType.Structure, password);
-
-                    // Save the modified workbook (lifecycle rule: save)
-                    string outputPath = "ReorderedWorkbook.xlsx";
-                    workbook.Save(outputPath);
-
-                    Console.WriteLine($"Workbook structure unprotected, reordered, and re‑protected. Saved as '{outputPath}'.");
                 }
+                catch (CellsException ex)
+                {
+                    // Aspose.Cells throws CellsException with a message indicating an invalid password
+                    if (ex.Message != null && ex.Message.IndexOf("Invalid password", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        Console.WriteLine("Warning: Invalid password or workbook is not protected. Continuing without unprotecting.");
+                    }
+                    else
+                    {
+                        // Re‑throw unexpected exceptions
+                        throw;
+                    }
+                }
+
+                // Example: move the first worksheet to the last position
+                if (workbook.Worksheets.Count > 1)
+                {
+                    Worksheet firstSheet = workbook.Worksheets[0];
+                    firstSheet.MoveTo(workbook.Worksheets.Count - 1);
+                }
+
+                // Re‑protect the workbook structure with the same password
+                workbook.Protect(ProtectionType.Structure, password);
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            WorkbookStructureReorderDemo.Run();
         }
     }
 }

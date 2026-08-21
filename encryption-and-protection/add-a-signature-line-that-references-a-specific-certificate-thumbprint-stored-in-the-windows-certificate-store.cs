@@ -1,82 +1,103 @@
-// Title: Add a Signature Line and Digital Signature to Excel using a Thumbprint‑Loaded Certificate (Aspose.Cells C#)
-// Description: This C# example shows how to retrieve an X509Certificate2 from the current user's Personal store by thumbprint, create a workbook with Aspose.Cells, insert a visible signature line, generate a matching DigitalSignature, attach it to the workbook, and save the signed XLSX file.
-// Keywords: Aspose.Cells signature line | C# digital signature Excel | load certificate by thumbprint | Windows certificate store Aspose | Excel workbook signing .NET | X509Certificate2 thumbprint | AddSignatureLineWithThumbprint
-// Common Searches: Aspose.Cells add signature line C# | sign Excel file with certificate thumbprint | load X509Certificate2 from Windows store in .NET | digital signature for Excel workbook Aspose | visible signature line and digital signature together
-// Developer Intent: Create an Excel file, place a visible signature line, and apply a digital signature using a certificate identified by its thumbprint.
-// Use Cases: Automated contract approval where the visible signature line and the underlying digital signature use a corporate certificate stored in Windows. | Generating audited financial reports that require both a signature line for reviewers and a cryptographic signature for compliance. | Batch‑signing exported spreadsheets in a Windows environment using a specific user or service certificate.
-// AI Prompts: Extend the sample to enumerate all certificates in the store and let the user pick one based on thumbprint or subject name. | Add comprehensive error handling for missing, expired, or non‑exportable certificates when signing an Excel workbook with Aspose.Cells. | Show how to verify the digital signature after saving the workbook using Aspose.Cells APIs.
+// Title: Add a Signature Line and Digitally Sign an Excel Workbook Using a Certificate Thumbprint (Aspose.Cells for .NET)
+// Description: Loads an X509Certificate2 from the CurrentUser\My store by thumbprint, creates a SignatureLine with signer details, links it to a DigitalSignature, adds the signature to the workbook’s DigitalSignatureCollection, and saves the signed Excel file.
+// Keywords: Aspose.Cells signature line | digital signature certificate thumbprint | C# Excel signing | X509Store Aspose.Cells | add signature line .NET | certificate thumbprint Excel | Windows certificate store signing
+// Common Searches: Aspose.Cells add signature line and sign workbook | C# load certificate by thumbprint for Excel digital signature | How to use X509Store with Aspose.Cells | Link SignatureLine to DigitalSignature in Aspose.Cells | Apply digital signature to Excel file using Windows certificate
+// Developer Intent: Create a pre‑filled signature line in an Excel workbook and apply a digital signature using a certificate identified by its thumbprint from the Windows certificate store.
+// Use Cases: Automated approval sheets where the signature line is pre‑populated and the file is signed with a corporate certificate retrieved by thumbprint. | Compliance reporting that programmatically adds a signature line to each generated report and signs it without user interaction. | Graceful handling of missing or invalid thumbprints by skipping the digital signature while still producing a usable workbook.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a SignatureLine to a worksheet and signs the workbook using a certificate loaded from the Windows certificate store by thumbprint. | Explain how to detect and handle a missing certificate thumbprint when applying a digital signature with Aspose.Cells. | Show how to associate a DigitalSignature Id with an existing SignatureLine to ensure the signature matches the correct line in Aspose.Cells.
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.DigitalSignatures;
 
-// This C# example shows how to retrieve an X509Certificate2 from the current user's Personal store by thumbprint, create a workbook with Aspose.Cells, insert a visible signature line, generate a matching DigitalSignature, attach it to the workbook, and save the signed XLSX file.
-class AddSignatureLineWithThumbprint
+namespace AsposeCellsSignatureDemo
 {
-    static void Main()
+    // Loads an X509Certificate2 from the CurrentUser\My store by thumbprint, creates a SignatureLine with signer details, links it to a DigitalSignature, adds the signature to the workbook’s DigitalSignatureCollection, and saves the signed Excel file.
+    class Program
     {
-        // ----- 1. Load the certificate from Windows certificate store by thumbprint -----
-        string thumbprint = "YOUR_CERTIFICATE_THUMBPRINT"; // replace with actual thumbprint (no spaces)
-        X509Certificate2 certificate = null;
-
-        X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
-        store.Open(OpenFlags.ReadOnly);
-        var certs = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, false);
-        if (certs.Count > 0)
+        static void Main()
         {
-            certificate = certs[0];
+            try
+            {
+                // Thumbprint of the certificate stored in the Windows certificate store
+                const string certificateThumbprint = "YOUR_CERTIFICATE_THUMBPRINT_HERE";
+
+                X509Certificate2 certificate = null;
+                if (!string.IsNullOrWhiteSpace(certificateThumbprint) &&
+                    !certificateThumbprint.Equals("YOUR_CERTIFICATE_THUMBPRINT_HERE", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Load the certificate from CurrentUser\My store
+                    using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+                    {
+                        store.Open(OpenFlags.ReadOnly);
+                        X509Certificate2Collection found = store.Certificates.Find(
+                            X509FindType.FindByThumbprint,
+                            certificateThumbprint,
+                            validOnly: false);
+
+                        if (found.Count > 0)
+                        {
+                            certificate = found[0];
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Certificate with thumbprint {certificateThumbprint} not found. Continuing without digital signature.");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No valid certificate thumbprint provided. Skipping digital signature.");
+                }
+
+                // Create a new workbook
+                Workbook wb = new Workbook();
+                Worksheet ws = wb.Worksheets[0];
+
+                // Create a signature line and assign an identifier
+                SignatureLine sigLine = new SignatureLine
+                {
+                    Signer = "John Doe",
+                    Title = "Approver",
+                    Email = "john.doe@example.com",
+                    IsLine = true,
+                    AllowComments = true,
+                    ShowSignedDate = true,
+                    Instructions = "Please sign to approve.",
+                    Id = Guid.NewGuid()
+                };
+
+                // Add the signature line to the worksheet (row 5, column 2 as an example)
+                ws.Shapes.AddSignatureLine(5, 2, sigLine);
+
+                // If a certificate was loaded, create and attach a digital signature
+                if (certificate != null)
+                {
+                    DigitalSignature digitalSignature = new DigitalSignature(
+                        certificate,
+                        "Approved by John Doe",
+                        DateTime.Now)
+                    {
+                        Id = sigLine.Id // Link to the signature line
+                    };
+
+                    DigitalSignatureCollection dsCollection = new DigitalSignatureCollection();
+                    dsCollection.Add(digitalSignature);
+                    wb.SetDigitalSignature(dsCollection);
+                }
+
+                // Save the signed workbook
+                const string outputPath = "SignedWorkbook_WithSignatureLine.xlsx";
+                wb.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-        store.Close();
-
-        if (certificate == null)
-        {
-            Console.WriteLine("Certificate with the specified thumbprint was not found.");
-            return;
-        }
-
-        // ----- 2. Create a new workbook and add a signature line -----
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-
-        // Configure the signature line
-        SignatureLine signatureLine = new SignatureLine
-        {
-            Signer = "John Doe",
-            Title = "Approver",
-            Email = "john.doe@example.com",
-            Id = Guid.NewGuid(),               // unique identifier for the line
-            ProviderId = Guid.Empty,           // default provider
-            SignatureLineType = SignatureType.Default,
-            AllowComments = true,
-            ShowSignedDate = true,
-            Instructions = "Please sign here."
-        };
-
-        // Add the signature line to the worksheet (row 5, column 2 as an example)
-        Picture pic = ws.Shapes.AddSignatureLine(5, 2, signatureLine);
-
-        // ----- 3. Create a digital signature that references the same certificate -----
-        DigitalSignature digitalSignature = new DigitalSignature(
-            certificate,
-            "Signed using certificate from thumbprint",
-            DateTime.Now);
-
-        // Associate the digital signature with the signature line via the Id
-        digitalSignature.Id = signatureLine.Id;
-        digitalSignature.ProviderId = signatureLine.ProviderId;
-
-        // ----- 4. Add the digital signature to the workbook -----
-        DigitalSignatureCollection dsCollection = new DigitalSignatureCollection();
-        dsCollection.Add(digitalSignature);
-        wb.SetDigitalSignature(dsCollection);
-
-        // ----- 5. Save the signed workbook -----
-        string outputPath = "SignedWorkbook.xlsx";
-        wb.Save(outputPath, SaveFormat.Xlsx);
-        Console.WriteLine($"Workbook saved and signed at: {outputPath}");
     }
 }

@@ -1,66 +1,52 @@
-// Title: Aspose.Cells for .NET – Verify formulas auto‑update after changing a named‑range address
-// Description: This C# example creates a workbook, defines a named range "MyRange" (A1:A3), uses it in a SUM formula, expands the range to A1:A4, recalculates the workbook, and confirms that the formula result and the range address are refreshed automatically without editing the formula.
-// Keywords: Aspose.Cells .NET named range | C# RefersTo property | dynamic named range formula | automatic formula recalculation | Name.GetRange example | update named range address | SUM(MyRange) Aspose.Cells | Workbook.CalculateFormula | Excel named range API | Aspose.Cells GitHub sample
-// Common Searches: how to update a named range in Aspose.Cells | C# change named range address and recalculate formulas | Aspose.Cells automatic formula refresh after RefersTo change | verify SUM(MyRange) updates in .NET | Name.GetRange returns new address Aspose.Cells
-// Developer Intent: Confirm that modifying a Name.RefersTo value instantly propagates to all dependent formulas.
-// Use Cases: Create a named range, reference it in a formula, then extend the range and observe the updated result. | Retrieve the modified range with Name.GetRange() to validate the new address. | Save the workbook after the dynamic range change for downstream processing.
-// AI Prompts: Generate C# code with Aspose.Cells that defines a named range, uses it in a formula, changes the range address, and automatically recalculates the workbook. | Explain why calling Workbook.CalculateFormula() after updating Name.RefersTo updates all formulas that reference the named range. | Provide a step‑by‑step verification that Name.GetRange() reflects the new address after modifying RefersTo.
+// Title: Aspose.Cells .NET: Verify formulas auto‑update when a named range address changes
+// Description: This C# example creates a workbook, defines a named range "MyRange" for A1:A3, uses it in a SUM formula, extends the data to A4, updates the range to A1:A4, recalculates the workbook, and demonstrates that the formula result changes from 60 to 100 without editing the formula.
+// Keywords: Aspose.Cells named range update | C# RefersTo property | automatic formula recalculation | SUM(MyRange) after range change | programmatic named range extension
+// Common Searches: Aspose.Cells update named range formula automatically | C# change Name.RefersTo and recalc formulas | how to extend a named range in Aspose.Cells .NET | formula refresh after named range modification Aspose | Aspose.Cells dependent formula update
+// Developer Intent: Confirm that changing a named range's RefersTo address triggers automatic updates of all formulas that reference the range.
+// Use Cases: Define a named range for a data block, use it in calculations, then expand the range and rely on Aspose.Cells to adjust results. | Programmatically adjust a range after inserting new rows and let the library recalculate dependent formulas. | Save the workbook after modifying the range to ensure the updated formula values persist.
+// AI Prompts: Show how to change a named range address in Aspose.Cells for .NET and have formulas recalculate automatically. | Provide a C# snippet that validates formulas referencing a named range reflect the updated range without manual edits. | Explain Aspose.Cells' handling of dependent formula updates when Name.RefersTo is modified.
 
 using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsNamedRangeUpdateDemo
+// This C# example creates a workbook, defines a named range "MyRange" for A1:A3, uses it in a SUM formula, extends the data to A4, updates the range to A1:A4, recalculates the workbook, and demonstrates that the formula result changes from 60 to 100 without editing the formula.
+class NamedRangeUpdateDemo
 {
-    // This C# example creates a workbook, defines a named range "MyRange" (A1:A3), uses it in a SUM formula, expands the range to A1:A4, recalculates the workbook, and confirms that the formula result and the range address are refreshed automatically without editing the formula.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Sheet1";
 
-                // Populate initial data in cells A1:A3
-                sheet.Cells["A1"].PutValue(10);
-                sheet.Cells["A2"].PutValue(20);
-                sheet.Cells["A3"].PutValue(30);
+        // Populate initial data in cells A1:A3
+        sheet.Cells["A1"].PutValue(10);
+        sheet.Cells["A2"].PutValue(20);
+        sheet.Cells["A3"].PutValue(30);
 
-                // Add a named range "MyRange" that refers to A1:A3
-                int nameIndex = sheet.Workbook.Worksheets.Names.Add("MyRange");
-                Name myRange = sheet.Workbook.Worksheets.Names[nameIndex];
-                myRange.RefersTo = "=Sheet1!$A$1:$A$3";
+        // Create a named range "MyRange" that refers to A1:A3
+        int nameIndex = workbook.Worksheets.Names.Add("MyRange");
+        Name myRange = workbook.Worksheets.Names[nameIndex];
+        myRange.RefersTo = "=Sheet1!$A$1:$A$3";
 
-                // Use the named range in a formula (SUM) placed in B1
-                sheet.Cells["B1"].Formula = "=SUM(MyRange)";
+        // Use the named range in a formula: B1 = SUM(MyRange)
+        sheet.Cells["B1"].Formula = "=SUM(MyRange)";
+        workbook.CalculateFormula();
 
-                // Calculate formulas and display the result
-                workbook.CalculateFormula();
-                Console.WriteLine($"Initial SUM(MyRange) = {sheet.Cells["B1"].Value}"); // Expected 60
+        Console.WriteLine("Initial SUM(MyRange) = " + sheet.Cells["B1"].Value); // Expected: 60
 
-                // Extend the named range to include A4 and add a value to A4
-                sheet.Cells["A4"].PutValue(40);
-                myRange.RefersTo = "=Sheet1!$A$1:$A$4";
+        // Extend the data range by adding a value to A4
+        sheet.Cells["A4"].PutValue(40);
 
-                // Recalculate formulas after the named range change
-                workbook.CalculateFormula();
+        // Update the named range to include the new cell (A1:A4)
+        myRange.RefersTo = "=Sheet1!$A$1:$A$4";
 
-                // Display the updated result; it should now include the value from A4
-                Console.WriteLine($"Updated SUM(MyRange) = {sheet.Cells["B1"].Value}"); // Expected 100
+        // Recalculate formulas; the change propagates automatically
+        workbook.CalculateFormula();
 
-                // Verify that GetRange reflects the new address
-                AsposeRange updatedRange = myRange.GetRange();
-                Console.WriteLine($"Named range now refers to: {updatedRange.Address}"); // Expected A1:A4
+        Console.WriteLine("After extending range, SUM(MyRange) = " + sheet.Cells["B1"].Value); // Expected: 100
 
-                // Save the workbook (optional)
-                workbook.Save("NamedRangeUpdateDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Save the workbook (optional verification)
+        workbook.Save("NamedRangeUpdateDemo.xlsx");
     }
 }

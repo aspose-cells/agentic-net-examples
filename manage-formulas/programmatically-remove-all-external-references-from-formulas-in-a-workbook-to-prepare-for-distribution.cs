@@ -1,38 +1,38 @@
-// Title: Remove External Links from Excel Formulas Using Aspose.Cells (.NET)
-// Description: C# code that loads an .xlsx workbook with Aspose.Cells, clears all external workbook references via ExternalLinkCollection, rewrites formulas to local cells, and saves a distribution‑ready file.
-// Keywords: Aspose.Cells external link removal | C# clear Excel external references | ExternalLinkCollection Clear updateReferencesAsLocal | convert external formulas to local | Excel workbook distribution without links | .NET Excel API remove external links | strip external data sources from workbook | Aspose.Cells formula cleanup
-// Common Searches: how to delete external workbook links with Aspose.Cells | C# example for removing Excel external references | Aspose.Cells clear external links before sharing file | update formulas to internal references .NET | batch process Excel files to eliminate external links
-// Developer Intent: Eliminate every external workbook reference and adjust formulas to point to the current file.
-// Use Cases: Prepare a financial model for client delivery by stripping hidden data connections. | Publish a template that must not contain links to other spreadsheets. | Run an automated job that sanitizes a folder of Excel files for compliance.
-// AI Prompts: Generate C# code that removes all external links from an Excel workbook with Aspose.Cells and updates formulas to local references. | Explain the effect of ExternalLinkCollection.Clear(updateReferencesAsLocal:true) on formulas that originally pointed to other workbooks. | Provide a step‑by‑step tutorial for loading a workbook, clearing external references, and saving the cleaned version using Aspose.Cells for .NET.
+// Title: Remove External Links from Excel Formulas with Aspose.Cells for .NET (C#)
+// Description: Load an Excel workbook, clear its ExternalLinkCollection, optionally update formulas to reference the current file, and save the sanitized workbook—ideal for preparing files for distribution.
+// Keywords: Aspose.Cells external links | clear external references | remove workbook links C# | update formulas after link removal | Aspose.Cells ExternalLinkCollection | Excel sanitization .NET | remove #REF! external references | C# Excel automation | prepare workbook for distribution
+// Common Searches: Aspose.Cells remove external links C# | clear external references in Excel with .NET | how to delete external links using Aspose.Cells | update formulas after removing external links | programmatically strip external references from workbook
+// Developer Intent: Eliminate all external references in workbook formulas to create a clean file ready for sharing or publishing.
+// Use Cases: Sanitize client‑facing workbooks by stripping links to source data while keeping internal calculations intact. | Automate batch processing of multiple Excel files to ensure no external references remain before archiving. | Prepare reusable templates that must not contain links to external files or sheets.
+// AI Prompts: Write C# code using Aspose.Cells that loads an Excel file, clears all external links with formula updates, and saves the result. | Show how to iterate over a directory of .xlsx files, remove external references from each workbook using Aspose.Cells, and log any formulas that become #REF!. | Explain the effect of ExternalLinkCollection.Clear(true) on formulas that reference missing worksheets.
 
 using System;
 using Aspose.Cells;
 
 namespace RemoveExternalLinksDemo
 {
-    // C# code that loads an .xlsx workbook with Aspose.Cells, clears all external workbook references via ExternalLinkCollection, rewrites formulas to local cells, and saves a distribution‑ready file.
+    // Load an Excel workbook, clear its ExternalLinkCollection, optionally update formulas to reference the current file, and save the sanitized workbook—ideal for preparing files for distribution.
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the source workbook that may contain external links
-            string inputPath = "input.xlsx";
+            // Load the workbook that may contain external links
+            // Replace "input.xlsx" with the path to your source file
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the collection of external links in the workbook
+            // Get the collection of external links in the workbook
             ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
 
-            // Remove all external links and update formulas to refer to the current workbook where possible
-            externalLinks.Clear(updateReferencesAsLocal: true);
+            // Remove all external links.
+            // Pass true to update references in formulas to refer to the current workbook where possible.
+            // If a referenced sheet does not exist locally, the formula will become #REF!.
+            externalLinks.Clear(true);
 
-            // Save the cleaned workbook ready for distribution
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
+            // Save the cleaned workbook.
+            // Replace "output.xlsx" with the desired output path.
+            workbook.Save("output.xlsx");
 
-            Console.WriteLine($"External links removed and workbook saved to '{outputPath}'.");
+            Console.WriteLine("External links removed and workbook saved successfully.");
         }
     }
 }

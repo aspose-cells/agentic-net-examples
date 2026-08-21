@@ -1,70 +1,98 @@
-// Title: Save a Gantt‑Chart Workbook as a New XLSX File to a Specified Folder with Aspose.Cells for .NET (C#)
-// Description: C# example that checks the source path, creates the target directory if needed, loads the workbook containing a Gantt chart with Aspose.Cells, and saves it as "GanttChart_Output.xlsx" in the chosen folder while handling errors gracefully.
-// Keywords: Aspose.Cells | C# | save workbook | Gantt chart | output folder | CreateDirectory | SaveFormat.Xlsx | Excel export automation | .NET Excel library
-// Common Searches: Aspose.Cells save workbook to custom folder C# | How to export a Gantt chart Excel file using Aspose.Cells | C# create directory then save Excel workbook | Save existing Excel file as new XLSX with Aspose.Cells .NET
-// Developer Intent: Export an existing workbook that contains a Gantt chart to a new XLSX file in a user‑defined directory.
-// Use Cases: Provide project stakeholders with a separate Gantt‑chart file stored in a shared reports folder. | Automate nightly archiving of the latest Gantt schedule for version control and backup. | Integrate the method into a CI/CD pipeline to generate a Gantt‑chart artifact after each build.
-// AI Prompts: Generate a C# function that loads an Excel workbook with a Gantt chart using Aspose.Cells and saves it as a new XLSX file in a specified output directory, ensuring the folder exists and handling missing source files. | Modify the SaveGanttChart example to return the full path of the saved file and log detailed error information instead of only writing to the console. | Write unit tests for SaveGanttChart that verify folder creation, successful save, and proper handling of a non‑existent source workbook.
+// Title: Save a Gantt‑Chart Workbook as XLSX to a Specified Folder with Aspose.Cells for .NET (C#)
+// Description: Creates a new Workbook, adds task rows, computes duration with formulas, builds a stacked‑bar Gantt chart, hides the start series, sets a title, and writes the file to a user‑defined output directory as GanttChart.xlsx.
+// Keywords: Aspose.Cells C# | save workbook to folder | export Gantt chart XLSX | stacked bar chart Excel | C# generate Excel file | custom output directory .NET | project schedule Excel export | Aspose.Cells save example
+// Common Searches: how to save an Aspose.Cells workbook to a custom folder | C# generate Gantt chart Excel file with Aspose.Cells | Aspose.Cells export stacked bar chart as XLSX | save Excel file to user‑specified directory .NET | create and store Gantt chart workbook programmatically
+// Developer Intent: Generate a Gantt‑chart workbook and persist it as an XLSX file in a folder supplied at runtime.
+// Use Cases: Automated nightly reporting that writes a project‑schedule Excel file to a shared network drive. | Web API endpoint that creates a Gantt chart on‑the‑fly, saves it to a temporary folder, and returns the file path for download. | Desktop utility that lets end‑users choose a destination folder for the exported Gantt‑chart workbook.
+// AI Prompts: Modify the example so the start series is completely transparent instead of only hiding its border. | Add data labels to the duration series before saving the workbook. | Allow the caller to specify both the output folder and a custom file name while preserving the save logic.
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsGanttSaveDemo
+// Creates a new Workbook, adds task rows, computes duration with formulas, builds a stacked‑bar Gantt chart, hides the start series, sets a title, and writes the file to a user‑defined output directory as GanttChart.xlsx.
+public class GanttChartSaver
 {
-    // C# example that checks the source path, creates the target directory if needed, loads the workbook containing a Gantt chart with Aspose.Cells, and saves it as "GanttChart_Output.xlsx" in the chosen folder while handling errors gracefully.
-    public class GanttChartSaver
+    public static void Run(string outputFolder)
     {
-        /// <param name="sourceFilePath">Full path to the source workbook that contains the Gantt chart.</param>
-        /// <param name="outputFolder">Folder where the new XLSX file will be created.</param>
-        public static void SaveGanttChart(string sourceFilePath, string outputFolder)
+        try
         {
-            try
+            // Ensure the output directory exists.
+            Directory.CreateDirectory(outputFolder);
+
+            // Create a new workbook and get the first worksheet.
+            using (Workbook workbook = new Workbook())
             {
-                // Verify that the source workbook exists.
-                if (!File.Exists(sourceFilePath))
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Header row.
+                sheet.Cells["A1"].PutValue("Task");
+                sheet.Cells["B1"].PutValue("Start");
+                sheet.Cells["C1"].PutValue("Finish");
+                sheet.Cells["D1"].PutValue("Duration");
+
+                // Sample data.
+                sheet.Cells["A2"].PutValue("Planning");
+                sheet.Cells["B2"].PutValue(new DateTime(2023, 1, 1));
+                sheet.Cells["C2"].PutValue(new DateTime(2023, 1, 5));
+
+                sheet.Cells["A3"].PutValue("Design");
+                sheet.Cells["B3"].PutValue(new DateTime(2023, 1, 6));
+                sheet.Cells["C3"].PutValue(new DateTime(2023, 1, 12));
+
+                sheet.Cells["A4"].PutValue("Implementation");
+                sheet.Cells["B4"].PutValue(new DateTime(2023, 1, 13));
+                sheet.Cells["C4"].PutValue(new DateTime(2023, 1, 25));
+
+                // Calculate duration (Finish - Start) in days.
+                sheet.Cells["D2"].Formula = "C2-B2";
+                sheet.Cells["D3"].Formula = "C3-B3";
+                sheet.Cells["D4"].Formula = "C4-B4";
+
+                // Add a stacked bar chart to simulate a Gantt chart.
+                int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 5, 0, 20, 8);
+                Chart ganttChart = sheet.Charts[chartIndex];
+
+                // Series: Start (invisible) and Duration (visible).
+                ganttChart.NSeries.Add("B2:B4", true); // Start dates
+                ganttChart.NSeries.Add("D2:D4", true); // Duration
+                ganttChart.NSeries.CategoryData = "A2:A4";
+
+                // Hide the start series by making its border invisible.
+                if (ganttChart.NSeries.Count > 0)
                 {
-                    Console.WriteLine($"Source file not found: {sourceFilePath}");
-                    return;
+                    Series startSeries = ganttChart.NSeries[0];
+                    startSeries.Border.IsVisible = false; // Hide border if any
                 }
 
-                // Ensure the output directory exists.
-                Directory.CreateDirectory(outputFolder);
+                // Optional: set chart title.
+                ganttChart.Title.Text = "Project Schedule";
 
-                // Load the existing workbook.
-                Workbook workbook = new Workbook(sourceFilePath);
+                // Build the full file path.
+                string filePath = Path.Combine(outputFolder, "GanttChart.xlsx");
 
-                // Construct the full path for the new file.
-                string outputFilePath = Path.Combine(outputFolder, "GanttChart_Output.xlsx");
+                // Save the workbook.
+                workbook.Save(filePath, SaveFormat.Xlsx);
 
-                // Save the workbook as XLSX.
-                workbook.Save(outputFilePath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Gantt chart workbook saved successfully to: {outputFilePath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while saving the Gantt chart: {ex.Message}");
+                Console.WriteLine($"Workbook with Gantt chart saved to: {filePath}");
             }
         }
-
-        // Example usage
-        public static void Main()
+        catch (Exception ex)
         {
-            try
-            {
-                // Path to the workbook that already contains the Gantt chart.
-                string sourcePath = @"C:\Input\ProjectPlanWithGantt.xlsx";
-
-                // Desired output folder.
-                string outputDir = @"C:\Output\GanttExports";
-
-                SaveGanttChart(sourcePath, outputDir);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            Console.WriteLine($"Error creating Gantt chart workbook: {ex.Message}");
         }
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        // Determine output folder (use current directory if not provided).
+        string outputFolder = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
+
+        GanttChartSaver.Run(outputFolder);
     }
 }

@@ -1,64 +1,91 @@
-// Title: Synchronize Excel worksheets by copying changed cells with Aspose.Cells for .NET (C#)
-// Description: C# code that loads a source and a target workbook, determines the combined data range, iterates every cell, writes the source value to the target when the values differ or the target is empty, clears the target cell when the source is blank, and saves the updated workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | Excel worksheet synchronization | copy changed cells | compare workbooks | update Excel file | clear empty cells | iterate cells | Excel automation
-// Common Searches: Aspose.Cells copy only modified cells between workbooks C# | How to sync two Excel sheets with Aspose.Cells .NET | Clear target cell when source cell is empty Aspose.Cells | Compare and update Excel worksheets using C# Aspose
-// Developer Intent: Transfer only new or altered values from a source sheet to a target sheet and remove data in the target where the source is empty.
-// Use Cases: Refresh a master report with daily edits from a temporary worksheet while keeping unchanged rows intact. | Apply user‑made changes from a draft workbook to the production version without overwriting unchanged cells. | Create an incremental backup by writing only the cells that have changed since the last backup.
-// AI Prompts: Generate a C# Aspose.Cells snippet that synchronizes two worksheets, copying only differing values and clearing cells that are empty in the source. | Suggest performance improvements for the cell‑by‑cell synchronization loop, including handling of merged cells and formula preservation. | Explain how to extend the example to process all worksheets in a workbook and retain original formatting and data validation rules.
+// Title: Sync Excel worksheets by copying only changed cells with Aspose.Cells for .NET (C#)
+// Description: Loads a source and a target workbook, determines the combined used range, iterates each cell, compares values (including null handling), copies differing values while preserving data types, and saves the updated workbook. Ideal for incremental Excel updates using Aspose.Cells in C#.
+// Keywords: Aspose.Cells | C# | .NET | worksheet synchronization | copy changed cells | compare Excel cells | incremental workbook update | Excel cell iteration | preserve data types | Excel merge C#
+// Common Searches: Aspose.Cells sync two worksheets C# | Copy only modified cells between Excel files using Aspose | How to compare and update Excel cells with Aspose.Cells | Incremental Excel workbook merge .NET | Iterate over cells and copy differences Aspose.Cells
+// Developer Intent: Update a target worksheet by copying only those cells whose values differ from a source worksheet, then save the result.
+// Use Cases: Refresh a master report with daily changes from a temporary workbook. | Merge template edits into an existing data file without overwriting unchanged cells. | Create a version‑controlled copy of a workbook after applying selective updates. | Synchronize regional Excel sheets into a central repository while preserving original data.
+// AI Prompts: Write C# code using Aspose.Cells that copies only changed cell values from one worksheet to another. | Explain best practices for handling null cells and preserving data types during Excel synchronization with Aspose.Cells. | Optimize the cell‑iteration loop to skip empty rows and reduce memory consumption in a worksheet sync routine.
 
 using System;
 using Aspose.Cells;
 
-// C# code that loads a source and a target workbook, determines the combined data range, iterates every cell, writes the source value to the target when the values differ or the target is empty, clears the target cell when the source is blank, and saves the updated workbook using Aspose.Cells for .NET.
-class WorksheetSynchronizer
+namespace AsposeCellsSyncDemo
 {
-    static void Main()
+    // Loads a source and a target workbook, determines the combined used range, iterates each cell, compares values (including null handling), copies differing values while preserving data types, and saves the updated workbook. Ideal for incremental Excel updates using Aspose.Cells in C#.
+    public class WorksheetSynchronizer
     {
-        // Load the source workbook (contains the latest changes)
-        Workbook sourceWorkbook = new Workbook("source.xlsx");
-
-        // Load the target workbook (the one to be updated)
-        Workbook targetWorkbook = new Workbook("target.xlsx");
-
-        // Get the worksheets to synchronize (here we use the first sheet of each workbook)
-        Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-        Worksheet targetSheet = targetWorkbook.Worksheets[0];
-
-        // Determine the range that needs to be checked.
-        // Use the maximum of the data rows/columns from both sheets.
-        int maxRow = Math.Max(sourceSheet.Cells.MaxDataRow, targetSheet.Cells.MaxDataRow);
-        int maxCol = Math.Max(sourceSheet.Cells.MaxDataColumn, targetSheet.Cells.MaxDataColumn);
-
-        // Iterate through each cell in the determined range.
-        for (int row = 0; row <= maxRow; row++)
+        /// <param name="sourceFile">Path to the source workbook.</param>
+        /// <param name="targetFile">Path to the target workbook (will be updated).</param>
+        /// <param name="outputFile">Path where the synchronized workbook will be saved.</param>
+        public static void SyncWorksheets(string sourceFile, string targetFile, string outputFile)
         {
-            for (int col = 0; col <= maxCol; col++)
-            {
-                // Access cells by indexer.
-                var srcCell = sourceSheet.Cells[row, col];
-                var tgtCell = targetSheet.Cells[row, col];
+            // Load the source and target workbooks (creation and loading are done via Aspose.Cells APIs)
+            Workbook sourceWorkbook = new Workbook(sourceFile);
+            Workbook targetWorkbook = new Workbook(targetFile);
 
-                // If the source cell has a value, compare it with the target cell.
-                if (srcCell != null && srcCell.Value != null)
+            // Assume we are working with the first worksheet of each workbook.
+            // Adjust the index or name as needed.
+            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+            Worksheet targetSheet = targetWorkbook.Worksheets[0];
+
+            // Get the Cells collections for easier access.
+            Cells sourceCells = sourceSheet.Cells;
+            Cells targetCells = targetSheet.Cells;
+
+            // Determine the range to iterate: the maximum of source and target used rows/columns.
+            int maxRow = Math.Max(sourceCells.MaxDataRow, targetCells.MaxDataRow);
+            int maxColumn = Math.Max(sourceCells.MaxDataColumn, targetCells.MaxDataColumn);
+
+            // Iterate through each cell within the determined range.
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxColumn; col++)
                 {
-                    // Copy the value when the target cell is empty or the values differ.
-                    if (tgtCell == null || !object.Equals(srcCell.Value, tgtCell.Value))
+                    // Retrieve the source and target cells (may be null if the cell does not exist).
+                    Cell sourceCell = sourceCells[row, col];
+                    Cell targetCell = targetCells[row, col];
+
+                    // If the source cell is null, there is nothing to copy.
+                    if (sourceCell == null)
+                        continue;
+
+                    // Compare the values. Use the .Value property which returns the underlying object.
+                    // Null handling is required because targetCell may be null.
+                    object sourceValue = sourceCell.Value;
+                    object targetValue = targetCell?.Value;
+
+                    // If values are different (including one being null), copy the source value to target.
+                    bool valuesDiffer = (sourceValue == null && targetValue != null) ||
+                                        (sourceValue != null && !sourceValue.Equals(targetValue));
+
+                    if (valuesDiffer)
                     {
-                        tgtCell.PutValue(srcCell.Value);
-                    }
-                }
-                else
-                {
-                    // Source cell is empty – clear the corresponding target cell if it has data.
-                    if (tgtCell != null && tgtCell.Value != null)
-                    {
-                        tgtCell.PutValue(null);
+                        // Ensure the target cell exists before putting a value.
+                        if (targetCell == null)
+                        {
+                            targetCell = targetCells[row, col];
+                        }
+
+                        // Copy the value (preserves data type).
+                        targetCell.PutValue(sourceValue);
                     }
                 }
             }
+
+            // Save the updated target workbook to the specified output file.
+            targetWorkbook.Save(outputFile);
         }
 
-        // Save the updated target workbook.
-        targetWorkbook.Save("target_synced.xlsx");
+        // Example usage
+        public static void Main()
+        {
+            string sourcePath = "SourceWorkbook.xlsx";
+            string targetPath = "TargetWorkbook.xlsx";
+            string outputPath = "SynchronizedWorkbook.xlsx";
+
+            SyncWorksheets(sourcePath, targetPath, outputPath);
+
+            Console.WriteLine("Synchronization complete. Output saved to: " + outputPath);
+        }
     }
 }

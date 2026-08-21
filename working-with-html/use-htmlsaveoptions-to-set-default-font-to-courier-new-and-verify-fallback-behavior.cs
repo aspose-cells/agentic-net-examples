@@ -1,43 +1,48 @@
-// Title: Aspose.Cells .NET: Set HtmlSaveOptions.DefaultFontName to "Courier New" for HTML export and verify fallback
-// Description: Demonstrates how to configure HtmlSaveOptions.DefaultFontName to "Courier New" so that Aspose.Cells substitutes a missing font with a reliable fallback when saving a workbook as HTML. The example creates a workbook, applies a non‑existent font to a cell, saves to HTML, and checks the generated markup for the fallback font name.
-// Keywords: Aspose.Cells HtmlSaveOptions | DefaultFontName | Courier New fallback | HTML export missing font | C# Aspose.Cells example | verify fallback font | .NET spreadsheet to HTML | font substitution Aspose
-// Common Searches: Aspose.Cells set default font for HTML export | HtmlSaveOptions.DefaultFontName usage | fallback font when saving workbook to HTML | how to handle missing fonts in Aspose.Cells HTML output | verify default font in generated HTML Aspose
-// Developer Intent: Set a guaranteed fallback font for HTML conversion and confirm that Aspose.Cells applies it when the original cell font is unavailable.
-// Use Cases: Ensure consistent HTML rendering across browsers by defining a fallback font. | Replace unsupported or missing fonts in a spreadsheet with a known web‑safe font during export. | Programmatically validate that the fallback font appears in the saved HTML markup.
-// AI Prompts: Show C# code that sets HtmlSaveOptions.DefaultFontName to "Courier New" and checks the output HTML for the fallback font. | Generate a unit test in .NET that asserts the saved HTML contains "Courier New" when a cell uses a non‑existent font. | Explain how Aspose.Cells selects a fallback font during HTML conversion and how to customize it with HtmlSaveOptions.
+// Title: Set a Default Fallback Font with Aspose.Cells HtmlSaveOptions (C#) and Verify HTML Output
+// Description: Demonstrates how to assign "Courier New" as the DefaultFontName in HtmlSaveOptions, export a workbook containing a missing font to HTML, and programmatically confirm that the fallback font appears in the generated markup.
+// Keywords: Aspose.Cells HtmlSaveOptions | DefaultFontName | fallback font HTML export | C# .NET | Courier New | missing font handling | font substitution Aspose.Cells | verify HTML output | unit test HTML conversion | Aspose.Cells HTML conversion
+// Common Searches: Aspose.Cells set default font for HTML export | HtmlSaveOptions DefaultFontName example C# | how to use fallback font with Aspose.Cells HTML | verify font substitution in Aspose.Cells HTML output | C# code to check default font in saved HTML
+// Developer Intent: Define a fallback font for HTML conversion and confirm its presence in the saved file.
+// Use Cases: Ensure consistent typography in HTML reports when source workbooks reference unavailable fonts. | Create automated tests that validate font fallback behavior after HTML export. | Generate web‑ready spreadsheets on servers lacking the original fonts.
+// AI Prompts: Write C# code that sets HtmlSaveOptions.DefaultFontName to "Courier New" and checks the resulting HTML for that font name. | Explain Aspose.Cells font resolution during HTML export and how DefaultFontName influences fallback selection. | Provide a C# unit‑test that saves a workbook with a non‑existent font to HTML and asserts the fallback font is used.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to configure HtmlSaveOptions.DefaultFontName to "Courier New" so that Aspose.Cells substitutes a missing font with a reliable fallback when saving a workbook as HTML. The example creates a workbook, applies a non‑existent font to a cell, saves to HTML, and checks the generated markup for the fallback font name.
-class HtmlDefaultFontDemo
+namespace AsposeCellsHtmlDefaultFontDemo
 {
-    static void Main()
+    // Demonstrates how to assign "Courier New" as the DefaultFontName in HtmlSaveOptions, export a workbook containing a missing font to HTML, and programmatically confirm that the fallback font appears in the generated markup.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add sample text to a cell
-        worksheet.Cells["A1"].PutValue("Text with a missing font");
+            // Put sample text into a cell
+            worksheet.Cells["A1"].PutValue("Text with missing font");
 
-        // Apply a style that uses a font that does not exist on the system
-        Style missingFontStyle = workbook.CreateStyle();
-        missingFontStyle.Font.Name = "NonExistentFont";
-        worksheet.Cells["A1"].SetStyle(missingFontStyle);
+            // Apply a style that uses a font which does not exist on the system
+            Style missingFontStyle = workbook.CreateStyle();
+            missingFontStyle.Font.Name = "NonExistentFont";
+            worksheet.Cells["A1"].SetStyle(missingFontStyle);
 
-        // Configure HTML save options to use "Courier New" as the default fallback font
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-        saveOptions.DefaultFontName = "Courier New";
+            // Configure HTML save options with a default fallback font
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            htmlOptions.DefaultFontName = "Courier New";
 
-        // Save the workbook to HTML
-        string htmlFile = "output.html";
-        workbook.Save(htmlFile, saveOptions);
+            // Save the workbook to HTML using the configured options
+            string htmlPath = "output.html";
+            workbook.Save(htmlPath, htmlOptions);
 
-        // Verify that the fallback font appears in the generated HTML
-        string htmlContent = File.ReadAllText(htmlFile);
-        bool fallbackUsed = htmlContent.Contains("Courier New");
-        Console.WriteLine("Fallback to default font used: " + fallbackUsed);
+            // Verify that the fallback font appears in the generated HTML
+            string htmlContent = File.ReadAllText(htmlPath);
+            bool fallbackUsed = htmlContent.Contains("Courier New", StringComparison.OrdinalIgnoreCase);
+
+            Console.WriteLine($"HTML saved to: {htmlPath}");
+            Console.WriteLine($"Fallback font \"Courier New\" applied: {fallbackUsed}");
+        }
     }
 }

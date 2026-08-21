@@ -1,74 +1,57 @@
-// Title: Copy Rows with Hyperlinks and Preserve Targets Using Aspose.Cells for .NET
-// Description: Demonstrates how to copy a worksheet row that contains a hyperlink with Aspose.Cells. The example shows the default copy behavior that creates a new hyperlink entry, then uses CopyOptions.ExtendToAdjacentRange to extend the original hyperlink range instead of duplicating it. It prints the hyperlink count, address, and start/end rows, and saves the workbook for verification.
-// Keywords: Aspose.Cells copy rows | hyperlink copy options | ExtendToAdjacentRange | C# Aspose.Cells example | preserve hyperlink after row copy | worksheet hyperlink range | CopyRows method | .NET spreadsheet library
-// Common Searches: Aspose.Cells copy row with hyperlink | ExtendToAdjacentRange hyperlink behavior | how to keep hyperlink target when copying rows | hyperlink count after copying rows Aspose.Cells | C# copy rows without duplicating hyperlinks
-// Developer Intent: Copy rows that contain hyperlinks and ensure the hyperlinks continue to point to the original target after the copy operation.
-// Use Cases: Duplicate a data row with its hyperlink, creating a separate hyperlink entry (default copy). | Copy a row while extending the existing hyperlink range so the original hyperlink covers both rows. | Programmatically verify hyperlink address and range after copying rows to confirm correct behavior.
-// AI Prompts: Write C# code using Aspose.Cells that copies a row with a hyperlink and uses CopyOptions.ExtendToAdjacentRange to extend the hyperlink range instead of creating a new entry. | Create a method that copies rows, returns the hyperlink count before and after the copy, and checks that the hyperlink address remains unchanged. | Explain the effect of the ExtendToAdjacentRange property on hyperlink handling during row copy operations in Aspose.Cells, and show sample console output of hyperlink area properties.
+// Title: Copy a Row with Hyperlink and Preserve Its Range Using Aspose.Cells for .NET
+// Description: Demonstrates how to add a hyperlink to a cell, copy the entire row with Cells.CopyRows, enable ExtendToAdjacentRange, and confirm that the hyperlink area expands to include the new row before saving the workbook.
+// Keywords: Aspose.Cells copy rows | hyperlink preservation .NET | ExtendToAdjacentRange | Cells.CopyRows C# | Excel hyperlink area | verify hyperlink after copy | Aspose.Cells API | C# Excel automation
+// Common Searches: Aspose.Cells copy row with hyperlink | ExtendToAdjacentRange effect on hyperlinks | C# verify hyperlink range after row copy | How to keep hyperlinks when copying rows in Aspose.Cells | CopyRows preserve hyperlink area
+// Developer Intent: Copy a row that contains a hyperlink and ensure the hyperlink automatically extends to the newly copied row.
+// Use Cases: Duplicate a data row that includes an external link while keeping the link target unchanged. | Programmatically copy multiple rows with embedded hyperlinks and validate that the hyperlink count remains constant. | Generate a report where linked rows are moved to a different section and the hyperlink range must cover the new rows.
+// AI Prompts: Provide C# code that copies rows containing hyperlinks with Aspose.Cells and keeps the link addresses intact. | Explain how CopyOptions.ExtendToAdjacentRange updates Hyperlink.Area when rows are duplicated. | Show a method to check that Hyperlink.Area.StartRow and EndRow reflect the added rows after using Cells.CopyRows.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to copy a worksheet row that contains a hyperlink with Aspose.Cells. The example shows the default copy behavior that creates a new hyperlink entry, then uses CopyOptions.ExtendToAdjacentRange to extend the original hyperlink range instead of duplicating it. It prints the hyperlink count, address, and start/end rows, and saves the workbook for verification.
-class CopyRowsWithHyperlinksDemo
+namespace AsposeCellsHyperlinkCopyDemo
 {
-    static void Main()
+    // Demonstrates how to add a hyperlink to a cell, copy the entire row with Cells.CopyRows, enable ExtendToAdjacentRange, and confirm that the hyperlink area expands to include the new row before saving the workbook.
+    public class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
+        public static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // ------------------------------------------------------------
-        // 1. Add a hyperlink in row 1 (zero‑based index) – cell A2
-        // ------------------------------------------------------------
-        ws.Cells["A2"].PutValue("Row with hyperlink");
-        ws.Hyperlinks.Add("A2", 1, 1, "https://www.example.com");
+            // Add sample data in row 2 (index 1) and a hyperlink in cell A2
+            sheet.Cells["A2"].PutValue("Original Row");
+            // Hyperlink points to an external website
+            sheet.Hyperlinks.Add("A2", 1, 1, "https://www.example.com");
 
-        // ------------------------------------------------------------
-        // 2. Copy the row without any CopyOptions (default behavior)
-        //    This creates a new hyperlink for the copied row.
-        // ------------------------------------------------------------
-        ws.Cells.CopyRows(ws.Cells, 1, 2, 1);
-        Console.WriteLine("Hyperlink count after default copy: " + ws.Hyperlinks.Count);
-        // Expected: 2 (original + copied)
+            // Display original hyperlink information
+            Console.WriteLine("Before copy:");
+            foreach (Hyperlink link in sheet.Hyperlinks)
+            {
+                Console.WriteLine($"Address: {link.Address}");
+                Console.WriteLine($"Area: Row {link.Area.StartRow} - {link.Area.EndRow}, Column {link.Area.StartColumn} - {link.Area.EndColumn}");
+            }
 
-        // ------------------------------------------------------------
-        // 3. Reset worksheet to test ExtendToAdjacentRange option
-        // ------------------------------------------------------------
-        ws.Cells.ClearContents(0, 0, ws.Cells.MaxRow + 1, ws.Cells.MaxColumn + 1);
-        ws.Hyperlinks.Clear();
+            // Prepare copy options to extend hyperlink range when copying to adjacent rows
+            CopyOptions copyOptions = new CopyOptions();
+            copyOptions.ExtendToAdjacentRange = true;
 
-        ws.Cells["A2"].PutValue("Row with hyperlink");
-        ws.Hyperlinks.Add("A2", 1, 1, "https://www.example.com");
+            // Copy row 2 (index 1) to row 3 (index 2)
+            // Parameters: sourceCells, sourceRowIndex, destinationRowIndex, rowNumber, copyOptions
+            sheet.Cells.CopyRows(sheet.Cells, 1, 2, 1, copyOptions);
 
-        // ------------------------------------------------------------
-        // 4. Copy the row using CopyOptions.ExtendToAdjacentRange = true
-        //    The hyperlink range is extended; no new hyperlink is added.
-        // ------------------------------------------------------------
-        CopyOptions options = new CopyOptions();
-        options.ExtendToAdjacentRange = true;
+            // Verify hyperlink count (should remain the same) and that the hyperlink area now includes the new row
+            Console.WriteLine("\nAfter copy:");
+            Console.WriteLine($"Hyperlink count: {sheet.Hyperlinks.Count}");
+            foreach (Hyperlink link in sheet.Hyperlinks)
+            {
+                Console.WriteLine($"Address: {link.Address}");
+                Console.WriteLine($"Area: Row {link.Area.StartRow} - {link.Area.EndRow}, Column {link.Area.StartColumn} - {link.Area.EndColumn}");
+            }
 
-        ws.Cells.CopyRows(ws.Cells, 1, 2, 1, options);
-
-        // ------------------------------------------------------------
-        // 5. Verify results
-        // ------------------------------------------------------------
-        Console.WriteLine("Hyperlink count after copy with ExtendToAdjacentRange: " + ws.Hyperlinks.Count);
-        // Expected: 1 (range extended, not duplicated)
-
-        Hyperlink link = ws.Hyperlinks[0];
-
-        // Address should remain unchanged
-        Console.WriteLine("Hyperlink address: " + link.Address);
-
-        // The area should now span rows 1 and 2 (zero‑based indices)
-        Console.WriteLine("Hyperlink start row (zero‑based): " + link.Area.StartRow);
-        Console.WriteLine("Hyperlink end row (zero‑based): " + link.Area.EndRow);
-        // Expected EndRow = 2
-
-        // ------------------------------------------------------------
-        // 6. Save the workbook for visual inspection if needed
-        // ------------------------------------------------------------
-        wb.Save("CopyRowsHyperlinkDemo.xlsx");
+            // Save the workbook to verify manually if needed
+            workbook.Save("HyperlinkCopyResult.xlsx");
+        }
     }
 }

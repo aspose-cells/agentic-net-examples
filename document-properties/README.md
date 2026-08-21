@@ -4,7 +4,7 @@ description: C# examples for built-in and custom Excel workbook properties, type
 product: Aspose.Cells for .NET
 category: document-properties
 language: C#
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-14
 ---
 
 # Read and Set Excel Document Properties in C# with Aspose.Cells

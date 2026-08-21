@@ -1,109 +1,85 @@
-// Title: Aspose.Cells for .NET – Freeze Top Row, Set Print Title, Verify on Printed Pages
-// Description: C# sample that creates a workbook, adds a header row, freezes the first row, assigns the same row as a repeat print title, checks frozen‑pane parameters, validates the PrintTitleRows setting with GetPrintingPageBreaks (ImageOrPrintOptions), and saves the file. Shows how to keep a header visible while scrolling and on every printed page.
-// Keywords: Aspose.Cells C# freeze panes | Aspose.Cells print title rows | repeat header on each printed page | GetPrintingPageBreaks example | PageSetup PrintTitleRows Aspose.Cells | C# Excel freeze top row | verify print titles Aspose.Cells | Aspose.Cells .NET tutorial | Excel header repeat on print | Aspose.Cells pagination validation
-// Common Searches: how to freeze the first row in Aspose.Cells C# | set repeat header row for printing with Aspose.Cells | verify print title rows using GetPrintingPageBreaks | Aspose.Cells example: freeze pane and print title | C# code to repeat header on every printed page in Excel
-// Developer Intent: Freeze the worksheet's top row, mark it as a print title, and programmatically confirm it appears on each printed page.
-// Use Cases: Generate Excel reports where the header stays fixed while scrolling and repeats on every printed page. | Programmatically read back frozen‑pane settings and PrintTitleRows before distributing the workbook. | Validate pagination with GetPrintingPageBreaks to ensure the title row is included on the first page.
-// AI Prompts: Write C# code using Aspose.Cells to freeze the first row, set it as a print title, and confirm the configuration with GetPrintingPageBreaks. | Explain how to programmatically verify that a frozen header row repeats on each printed page in an Aspose.Cells workbook. | Provide step‑by‑step instructions for creating an Excel file with a frozen header that also acts as a repeat print title, including validation and saving.
+// Title: Aspose.Cells .NET – Freeze Top Row, Set Print Title Row, Render Pages for Verification
+// Description: Creates a workbook with 100 rows, freezes the first row, assigns it as the repeatable print title, defines a print area, saves the file, checks freeze‑pane settings, and renders each printed page to PNG images to confirm the title row appears on every page.
+// Keywords: Aspose.Cells freeze panes | print title rows Aspose.Cells | repeat header on printed pages .NET | render worksheet pages to images | verify print titles programmatically | Aspose.Cells PageSetup PrintArea | C# Aspose.Cells example
+// Common Searches: how to freeze first row and repeat as print title in Aspose.Cells | render printed Excel pages to PNG with Aspose.Cells .NET | check frozen panes and print titles via code | set print title rows and print area together Aspose.Cells | verify print header repeats on each page
+// Developer Intent: Freeze the top row, designate it as the print title that repeats on every printed page, and programmatically confirm the configuration by rendering the pages.
+// Use Cases: Generate a spreadsheet, freeze the header row, and set it as a repeating print title. | Define a specific print area and save the workbook for distribution. | Retrieve and display freeze‑pane parameters and the PrintTitleRows setting for validation. | Render each printed page to an image file to visually verify that the title row repeats across pages.
+// AI Prompts: Write C# code using Aspose.Cells to freeze the first row, set it as the print title row, define a print area, and render each printed page to PNG for verification. | Explain how to programmatically validate frozen panes and print title rows in an Aspose.Cells workbook and output the results to the console. | Provide tips for configuring ImageOrPrintOptions so that the header row appears on every rendered page when using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPrintTitleWithFreezeDemo
 {
-    // C# sample that creates a workbook, adds a header row, freezes the first row, assigns the same row as a repeat print title, checks frozen‑pane parameters, validates the PrintTitleRows setting with GetPrintingPageBreaks (ImageOrPrintOptions), and saves the file. Shows how to keep a header visible while scrolling and on every printed page.
-    public class PrintTitleWithFrozenRowsDemo
+    // Creates a workbook with 100 rows, freezes the first row, assigns it as the repeatable print title, defines a print area, saves the file, checks freeze‑pane settings, and renders each printed page to PNG images to confirm the title row appears on every page.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Populate the worksheet with sample data (100 rows, 5 columns)
+            for (int row = 0; row < 100; row++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // -------------------------------------------------
-                // Populate sample data (header + many rows)
-                // -------------------------------------------------
-                worksheet.Cells["A1"].PutValue("Header");
-                for (int i = 2; i <= 100; i++)
+                for (int col = 0; col < 5; col++)
                 {
-                    worksheet.Cells[$"A{i}"].PutValue($"Data {i - 1}");
+                    worksheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
                 }
-
-                // -------------------------------------------------
-                // Freeze the first row (so it stays visible while scrolling)
-                // FreezePanes(rowIndex, columnIndex, freezedRows, freezedColumns)
-                // Row index and column index are zero‑based. To freeze the top row,
-                // set rowIndex = 1 (second row) and freezedRows = 1.
-                // -------------------------------------------------
-                worksheet.FreezePanes(1, 0, 1, 0);
-
-                // -------------------------------------------------
-                // Set the print title rows to repeat the first row on each printed page
-                // The range must be in absolute A1 style.
-                // -------------------------------------------------
-                worksheet.PageSetup.PrintTitleRows = "$1:$1";
-
-                // Optional: also repeat the first column on each page
-                // worksheet.PageSetup.PrintTitleColumns = "$A:$A";
-
-                // -------------------------------------------------
-                // Verify that the freeze panes are set correctly
-                // -------------------------------------------------
-                bool hasFreeze = worksheet.GetFreezedPanes(out int row, out int column, out int freezedRows, out int freezedColumns);
-                Console.WriteLine($"Freeze panes set: {hasFreeze}");
-                if (hasFreeze)
-                {
-                    Console.WriteLine($"Freeze position - Row: {row}, Column: {column}");
-                    Console.WriteLine($"Frozen rows: {freezedRows}, Frozen columns: {freezedColumns}");
-                }
-
-                // -------------------------------------------------
-                // Verify that the print title rows are configured
-                // -------------------------------------------------
-                Console.WriteLine($"PrintTitleRows = {worksheet.PageSetup.PrintTitleRows}");
-
-                // -------------------------------------------------
-                // Use GetPrintingPageBreaks to ensure that the first page
-                // includes the title row (row 1). The first CellArea returned
-                // should have EndRow >= 0 (the title row is always on page 0).
-                // -------------------------------------------------
-                ImageOrPrintOptions printOptions = new ImageOrPrintOptions
-                {
-                    // Fit all rows on one page to force pagination for demonstration
-                    OnePagePerSheet = false
-                };
-                CellArea[] pageBreaks = worksheet.GetPrintingPageBreaks(printOptions);
-                if (pageBreaks != null && pageBreaks.Length > 0)
-                {
-                    Console.WriteLine($"First page ends at row: {pageBreaks[0].EndRow + 1}");
-                    // The title row (row 1) should be within this range
-                    bool titleInFirstPage = pageBreaks[0].EndRow >= 0;
-                    Console.WriteLine($"Title row present on first printed page: {titleInFirstPage}");
-                }
-
-                // -------------------------------------------------
-                // Save the workbook (the print titles will repeat when the file
-                // is printed from Excel or via Aspose.Cells rendering)
-                // -------------------------------------------------
-                string outputPath = "PrintTitleWithFrozenRowsDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-            catch (Exception ex)
+
+            // Freeze the first row so it stays visible while scrolling
+            // FreezePanes(row, column, freezedRows, freezedColumns)
+            // Freeze at cell A2 (row index 1) with 1 frozen row and 0 frozen columns
+            worksheet.FreezePanes(2, 1, 1, 0);
+
+            // Set the first row as the print title row (will repeat on each printed page)
+            worksheet.PageSetup.PrintTitleRows = "$1:$1";
+
+            // Define the print area to include all data
+            worksheet.PageSetup.PrintArea = "A1:E100";
+
+            // Save the workbook (lifecycle rule)
+            workbook.Save("PrintTitleRowsWithFreeze.xlsx");
+
+            // Verify that the freeze panes are set correctly
+            bool hasFreeze = worksheet.GetFreezedPanes(out int freezeRow, out int freezeColumn,
+                                                       out int frozenRows, out int frozenColumns);
+            Console.WriteLine($"Freeze panes set: {hasFreeze}");
+            if (hasFreeze)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Freeze position - Row: {freezeRow}, Column: {freezeColumn}");
+                Console.WriteLine($"Frozen rows: {frozenRows}, Frozen columns: {frozenColumns}");
             }
-        }
 
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
+            // Verify that the print title rows property is set
+            Console.WriteLine($"PrintTitleRows = {worksheet.PageSetup.PrintTitleRows}");
+
+            // Render each printed page to an image to visually confirm that the title row appears on every page
+            ImageOrPrintOptions printOptions = new ImageOrPrintOptions
+            {
+                OnePagePerSheet = false, // allow multiple pages
+                HorizontalResolution = 96,
+                VerticalResolution = 96
+            };
+
+            SheetRender sheetRender = new SheetRender(worksheet, printOptions);
+            int pageCount = sheetRender.PageCount;
+            Console.WriteLine($"Total pages to be printed: {pageCount}");
+
+            for (int i = 0; i < pageCount; i++)
+            {
+                string imagePath = $"PrintedPage_{i + 1}.png";
+                sheetRender.ToImage(i, imagePath);
+                Console.WriteLine($"Rendered page {i + 1} to {imagePath}");
+            }
+
+            // Clean up resources
+            sheetRender.Dispose();
+
+            Console.WriteLine("Demo completed. Verify the generated images to ensure the title row repeats on each page.");
         }
     }
 }

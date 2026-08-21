@@ -1,72 +1,51 @@
-// Title: Enable AutoFilter arrows on a worksheet header using Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, adds header and sample rows, sets the AutoFilter range to display filter arrows on the header, and saves the file as WorksheetWithFilterArrows.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | AutoFilter | filter arrows | Excel sorting | worksheet header | programmatic filter | Excel automation
-// Common Searches: Aspose.Cells show filter arrows in Excel | C# enable AutoFilter for a range | add sorting dropdowns to Excel header with Aspose | programmatically apply AutoFilter in .NET | display Excel filter arrows using Aspose.Cells
-// Developer Intent: Show filter arrows on the header row so end users can sort and filter data directly in Excel.
-// Use Cases: Generate a sales report where users can filter by category or price. | Export database query results to an interactive Excel file with built‑in filtering. | Create a reusable template that automatically applies AutoFilter to dynamic data ranges.
-// AI Prompts: Write C# code with Aspose.Cells to apply an AutoFilter to range A1:D20 and display filter arrows on the header. | Show how to set the AutoFilter.Range property in Aspose.Cells and save the workbook with visible filter arrows. | Provide an example of adding a custom AutoFilter criteria (e.g., values > 100) after enabling filter arrows using Aspose.Cells.
+// Title: Show Filter Arrows & Enable Sorting on a Protected Worksheet with Aspose.Cells (C#)
+// Description: Creates a workbook, adds a header row with sample data, applies an AutoFilter range so filter arrows appear, protects the sheet, and grants users permission to sort and filter while the worksheet remains locked.
+// Keywords: Aspose.Cells C# filter arrows | AutoFilter range Aspose.Cells | protect worksheet allow sorting | Excel filter dropdown protected sheet | Aspose.Cells enable sorting on protected sheet
+// Common Searches: Aspose.Cells show filter arrows on header | C# enable sorting on protected worksheet | AutoFilter with protection Aspose.Cells | how to keep filter arrows after protecting sheet | Aspose.Cells allow filtering on locked sheet
+// Developer Intent: Display AutoFilter dropdown arrows on the header row and let end‑users sort or filter data even when the worksheet is protected.
+// Use Cases: Distribute a sales report where the layout is locked but users can filter by product category. | Provide a template for price analysis that prevents editing but permits column sorting via filter arrows. | Create an inventory workbook that is read‑only for most cells yet still supports dynamic filtering for downstream users.
+// AI Prompts: Generate C# code that adds filter arrows to a header row and protects the sheet while allowing sorting and filtering with Aspose.Cells. | Explain how to set an AutoFilter range and configure AllowSorting and AllowFiltering on a protected worksheet in Aspose.Cells for .NET. | Show step‑by‑step instructions to enable filter dropdowns on a protected Excel sheet using Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Creates a workbook, adds a header row with sample data, applies an AutoFilter range so filter arrows appear, protects the sheet, and grants users permission to sort and filter while the worksheet remains locked.
+class EnableFilterArrows
 {
-    // Creates a new workbook, adds header and sample rows, sets the AutoFilter range to display filter arrows on the header, and saves the file as WorksheetWithFilterArrows.xlsx.
-    public class EnableFilterArrowsDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate header row
-                worksheet.Cells["A1"].PutValue("Product");
-                worksheet.Cells["B1"].PutValue("Category");
-                worksheet.Cells["C1"].PutValue("Price");
+        // Add header row
+        sheet.Cells["A1"].PutValue("Product");
+        sheet.Cells["B1"].PutValue("Category");
+        sheet.Cells["C1"].PutValue("Price");
 
-                // Populate some sample data
-                worksheet.Cells["A2"].PutValue("Laptop");
-                worksheet.Cells["B2"].PutValue("Electronics");
-                worksheet.Cells["C2"].PutValue(1200);
+        // Add some sample data
+        sheet.Cells["A2"].PutValue("Laptop");
+        sheet.Cells["B2"].PutValue("Electronics");
+        sheet.Cells["C2"].PutValue(1200);
 
-                worksheet.Cells["A3"].PutValue("Shirt");
-                worksheet.Cells["B3"].PutValue("Clothing");
-                worksheet.Cells["C3"].PutValue(45);
+        sheet.Cells["A3"].PutValue("Shirt");
+        sheet.Cells["B3"].PutValue("Clothing");
+        sheet.Cells["C3"].PutValue(45);
 
-                worksheet.Cells["A4"].PutValue("Phone");
-                worksheet.Cells["B4"].PutValue("Electronics");
-                worksheet.Cells["C4"].PutValue(800);
+        sheet.Cells["A4"].PutValue("Phone");
+        sheet.Cells["B4"].PutValue("Electronics");
+        sheet.Cells["C4"].PutValue(800);
 
-                worksheet.Cells["A5"].PutValue("Book");
-                worksheet.Cells["B5"].PutValue("Stationery");
-                worksheet.Cells["C5"].PutValue(20);
+        // Apply AutoFilter to the range that includes the header row.
+        // This makes the filter arrows appear on the header cells.
+        sheet.AutoFilter.Range = "A1:C4";
 
-                // Apply an AutoFilter to the range that includes the header row.
-                // This will display filter arrows on the header cells, allowing users to sort/filter.
-                worksheet.AutoFilter.Range = "A1:C5";
+        // Protect the worksheet but allow the user to sort and filter.
+        sheet.Protect(ProtectionType.All);
+        sheet.Protection.AllowSorting = true;
+        sheet.Protection.AllowFiltering = true;
 
-                // Save the workbook to verify the filter arrows appear.
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "WorksheetWithFilterArrows.xlsx");
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            EnableFilterArrowsDemo.Run();
-        }
+        // Save the workbook.
+        workbook.Save("WorksheetWithFilterArrows.xlsx");
     }
 }

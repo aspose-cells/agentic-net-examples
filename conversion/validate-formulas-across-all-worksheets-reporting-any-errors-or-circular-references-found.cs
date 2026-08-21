@@ -1,82 +1,92 @@
-// Title: Validate Excel Formulas and Detect Circular References with Aspose.Cells for .NET (C#)
-// Description: Load an Excel workbook, enable the calculation chain, and configure CalculationOptions to surface errors. The sample runs workbook.CalculateFormula with a custom CircularReferenceMonitor, catches exceptions, scans every used cell across all worksheets for CellValueType.IsError, and prints each error address and message. Finally, the workbook can be saved after corrections.
-// Keywords: Aspose.Cells formula validation | C# Excel circular reference detection | Aspose.Cells CalculateFormula error handling | scan workbook for formula errors .NET | AbstractCalculationMonitor example | Excel error values C# | calculation chain Aspose.Cells | US developers Aspose.Cells | UK .NET Excel automation | India C# spreadsheet processing
-// Common Searches: How to find circular references in Excel using Aspose.Cells C# | List cells with formula errors after calculation Aspose.Cells | Enable calculation chain and capture errors Aspose.Cells .NET | Iterate worksheets to detect #REF! or #DIV/0! in C# | Aspose.Cells example for formula validation and error reporting
-// Developer Intent: Run a comprehensive formula audit on an Excel file and output any error cells or circular‑reference chains before saving.
-// Use Cases: Execute workbook.CalculateFormula with a CircularReferenceMonitor to expose circular dependencies. | After calculation, loop through each worksheet’s used range and log cells where Cell.Type equals CellValueType.IsError. | Generate a report of error locations for QA or automated correction workflows. | Save the corrected workbook to a new file after fixing reported issues.
-// AI Prompts: Write C# code using Aspose.Cells that validates all formulas in a workbook and returns a list of cells containing errors. | Create a custom AbstractCalculationMonitor that logs each step of a circular reference chain and allows the engine to continue processing. | Show how to set CalculationOptions so that errors are not ignored and circular references are captured during formula calculation.
+// Title: Validate Formulas & Detect Circular References in All Worksheets with Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook, disables iterative calculation, enables the calculation chain, and runs workbook.CalculateFormula with a custom AbstractCalculationMonitor to capture circular reference cells and report formula errors. Optionally saves the validated file.
+// Keywords: Aspose.Cells | C# | .NET | Excel formula validation | circular reference detection | calculate formulas | AbstractCalculationMonitor | disable iterative calculation | enable calculation chain | workbook.CalculateFormula
+// Common Searches: Aspose.Cells find circular references C# | Validate all formulas in an Excel workbook using Aspose.Cells | How to use AbstractCalculationMonitor to log circular references | Disable iterative calculation when checking formulas with Aspose.Cells | Enable calculation chain for formula dependency tracking Aspose.Cells
+// Developer Intent: Detect formula errors and any circular references across every sheet of an Excel workbook.
+// Use Cases: Run a full workbook formula audit before publishing or processing data. | Identify and list cells that participate in circular references for correction. | Ensure accurate dependency tracking by enabling the calculation chain during validation. | Prevent silent failures by disabling iterative calculation and capturing runtime errors. | Save a clean copy of the workbook after validation for downstream workflows.
+// AI Prompts: Generate C# code using Aspose.Cells that validates all formulas in a workbook and returns a collection of cells involved in circular references. | Show how to extend AbstractCalculationMonitor to record detailed circular reference paths and integrate it with CalculationOptions. | Explain the configuration of CalculationOptions to throw exceptions on unsupported functions while still capturing circular reference information.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-// Load an Excel workbook, enable the calculation chain, and configure CalculationOptions to surface errors. The sample runs workbook.CalculateFormula with a custom CircularReferenceMonitor, catches exceptions, scans every used cell across all worksheets for CellValueType.IsError, and prints each error address and message. Finally, the workbook can be saved after corrections.
-class Program
+namespace FormulaValidationDemo
 {
-    static void Main()
+    // Custom monitor to capture circular reference information
+    // Loads an Excel workbook, disables iterative calculation, enables the calculation chain, and runs workbook.CalculateFormula with a custom AbstractCalculationMonitor to capture circular reference cells and report formula errors. Optionally saves the validated file.
+    class CircularReferenceMonitor : AbstractCalculationMonitor
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        public List<string> CircularCells { get; } = new List<string>();
 
-        // Enable calculation chain to allow dependent analysis
-        workbook.Settings.FormulaSettings.EnableCalculationChain = true;
-
-        // Configure calculation options
-        CalculationOptions options = new CalculationOptions
-        {
-            // Do not ignore errors so they will be reported
-            IgnoreError = false,
-            // Attach a monitor to capture circular references
-            CalculationMonitor = new CircularReferenceMonitor()
-        };
-
-        // Perform formula calculation and capture any errors
-        try
-        {
-            workbook.CalculateFormula(options);
-            Console.WriteLine("All formulas calculated successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error during formula calculation: " + ex.Message);
-        }
-
-        // After calculation, scan all cells for error values
-        foreach (Worksheet sheet in workbook.Worksheets)
-        {
-            Cells cells = sheet.Cells;
-            // Iterate only over the used range to improve performance
-            for (int row = 0; row <= cells.MaxDataRow; row++)
-            {
-                for (int col = 0; col <= cells.MaxDataColumn; col++)
-                {
-                    Cell cell = cells[row, col];
-                    // Cells that resulted in an error have the IsError type
-                    if (cell.Type == CellValueType.IsError)
-                    {
-                        Console.WriteLine($"Error in {sheet.Name}!{cell.Name}: {cell.StringValue}");
-                    }
-                }
-            }
-        }
-
-        // Save the workbook (optional, e.g., after fixing issues)
-        workbook.Save("output.xlsx");
-    }
-
-    // Custom monitor to detect circular references during calculation
-    private class CircularReferenceMonitor : AbstractCalculationMonitor
-    {
+        // Called when a circular reference is detected during calculation
         public override bool OnCircular(IEnumerator circularCellsData)
         {
-            Console.WriteLine("Circular reference detected:");
             while (circularCellsData.MoveNext())
             {
-                // Each item is a CalculationCell representing a cell involved in the circular reference
-                Console.WriteLine(circularCellsData.Current);
+                // Store a textual representation of each cell involved in the circular reference
+                CircularCells.Add(circularCellsData.Current?.ToString() ?? "UnknownCell");
             }
-            // Return true to let the engine continue processing other cells
+            // Continue calculation after reporting
             return true;
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            // Path to the workbook to be validated
+            string inputPath = "input.xlsx";
+            // Path where the workbook will be saved after validation (optional)
+            string outputPath = "output.xlsx";
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Ensure iterative calculation is disabled so circular references are reported
+            workbook.Settings.FormulaSettings.EnableIterativeCalculation = false;
+            // Enable calculation chain for better dependency tracking (optional but helpful)
+            workbook.Settings.FormulaSettings.EnableCalculationChain = true;
+
+            // Prepare a custom monitor to capture circular references
+            var circularMonitor = new CircularReferenceMonitor();
+
+            // Set calculation options: do not ignore errors and attach the monitor
+            var calcOptions = new CalculationOptions
+            {
+                IgnoreError = false,
+                CalculationMonitor = circularMonitor
+            };
+
+            // Perform formula calculation across all worksheets
+            try
+            {
+                workbook.CalculateFormula(calcOptions);
+                Console.WriteLine("Formula calculation completed without runtime errors.");
+            }
+            catch (Exception ex)
+            {
+                // Report any errors encountered during calculation (e.g., unsupported functions)
+                Console.WriteLine("Error during formula calculation: " + ex.Message);
+            }
+
+            // Report circular references if any were detected
+            if (circularMonitor.CircularCells.Count > 0)
+            {
+                Console.WriteLine("Circular references detected in the following cells:");
+                foreach (string cellInfo in circularMonitor.CircularCells)
+                {
+                    Console.WriteLine(cellInfo);
+                }
+            }
+            else
+            {
+                Console.WriteLine("No circular references detected.");
+            }
+
+            // Save the workbook (optional, demonstrates lifecycle compliance)
+            workbook.Save(outputPath);
         }
     }
 }

@@ -1,19 +1,18 @@
-// Title: Convert HTML with CSS Gradient Backgrounds to PDF using Aspose.Cells for .NET
-// Description: A concise C# example that loads an HTML file containing CSS gradient backgrounds into an Aspose.Cells Workbook (LoadFormat.Html) and saves it as a PDF (SaveFormat.Pdf) while preserving the gradient fills and overall visual styling.
-// Keywords: Aspose.Cells | HTML to PDF conversion | CSS gradient background | preserve gradient fills | C# | LoadOptions | LoadFormat.Html | SaveFormat.Pdf | Workbook conversion | .NET PDF rendering | gradient fill preservation
-// Common Searches: Aspose.Cells convert HTML with gradients to PDF | C# preserve CSS gradient when exporting HTML to PDF | Load HTML workbook Aspose.Cells gradient background | HTML to PDF with gradient fills .NET | Aspose.Cells SaveFormat.Pdf gradient support
-// Developer Intent: Generate a PDF from an HTML document that uses CSS gradient backgrounds, ensuring the gradients appear unchanged in the output, by using Aspose.Cells for .NET.
-// Use Cases: Create printable PDFs from marketing web pages that rely on gradient styling without losing design fidelity. | Automate archival of email or landing‑page HTML templates as PDFs while keeping background effects intact. | Batch‑process a collection of HTML reports with gradient backgrounds into high‑quality PDFs for documentation.
-// AI Prompts: Write C# code that loads an HTML file with CSS gradients into an Aspose.Cells Workbook and saves it as a PDF preserving the gradients. | Explain how LoadOptions with LoadFormat.Html affects rendering of CSS gradient backgrounds in Aspose.Cells PDF output. | Suggest best‑practice error handling and logging for converting multiple HTML files to PDF with Aspose.Cells, ensuring gradient fills remain intact.
+// Title: C# – Convert HTML with CSS Gradient Backgrounds to PDF using AspNet Aspose.Cells
+// Description: Load an HTML file that contains CSS gradient backgrounds into an Aspose.Cells Workbook, automatically translate the gradients into shape fills, and save the workbook as a PDF while preserving the visual gradient effects.
+// Keywords: Aspose.Cells HTML to PDF | C# convert HTML gradient to PDF | preserve CSS gradients Aspose | SaveFormat.Pdf gradient support | Aspose.Cells workbook HTML import
+// Common Searches: Aspose.Cells keep CSS gradients when exporting HTML to PDF | C# convert HTML with gradient background to PDF | HTML to PDF conversion preserving gradient fills Aspose | How to render CSS gradients in PDF using Aspose.Cells
+// Developer Intent: Convert an HTML document that uses CSS gradient backgrounds into a PDF while retaining the gradient appearance, using Aspose.Cells for .NET.
+// Use Cases: Generate PDF reports from web‑styled HTML templates that rely on gradient backgrounds. | Batch‑process multiple HTML files with gradient styling into archival PDFs. | Expose a REST endpoint that receives HTML content, renders it with Aspose.Cells, and returns a gradient‑preserving PDF.
+// AI Prompts: Write C# code to loop through a folder of *.html files and convert each to a PDF with gradient fills using Aspose.Cells. | Explain how to detect unsupported CSS gradients in Aspose.Cells and replace them with solid colors before PDF export. | Show how to modify the gradient fill parameters of shapes after loading HTML but before saving the workbook as PDF.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
 namespace AsposeCellsHtmlToPdf
 {
-    // A concise C# example that loads an HTML file containing CSS gradient backgrounds into an Aspose.Cells Workbook (LoadFormat.Html) and saves it as a PDF (SaveFormat.Pdf) while preserving the gradient fills and overall visual styling.
+    // Load an HTML file that contains CSS gradient backgrounds into an Aspose.Cells Workbook, automatically translate the gradients into shape fills, and save the workbook as a PDF while preserving the visual gradient effects.
     class Program
     {
         static void Main()
@@ -24,27 +23,29 @@ namespace AsposeCellsHtmlToPdf
             // Path for the resulting PDF file
             string pdfPath = "output.pdf";
 
+            // Verify that the input HTML file exists
+            if (!File.Exists(htmlPath))
+            {
+                Console.WriteLine($"Error: Input file not found at '{htmlPath}'.");
+                return;
+            }
+
             try
             {
-                // Verify that the HTML file exists to avoid FileNotFoundException
-                if (!File.Exists(htmlPath))
-                {
-                    Console.WriteLine($"Error: HTML file '{htmlPath}' not found.");
-                    return;
-                }
+                // Load the HTML file into a new workbook instance.
+                // The constructor automatically parses the HTML and converts CSS background images (including gradients)
+                // into corresponding shapes with gradient fills inside the workbook.
+                Workbook workbook = new Workbook(htmlPath);
 
-                // Load the HTML file into the workbook using LoadOptions with Html format
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
-                Workbook workbook = new Workbook(htmlPath, loadOptions);
-
-                // Save the workbook as PDF, preserving visual elements such as gradient fills
+                // Save the workbook as PDF.
+                // The PDF renderer preserves the gradient fills that were created from the CSS backgrounds.
                 workbook.Save(pdfPath, SaveFormat.Pdf);
 
-                Console.WriteLine($"HTML file '{htmlPath}' has been converted to PDF '{pdfPath}' with gradient fills preserved.");
+                Console.WriteLine($"HTML file '{htmlPath}' has been successfully converted to PDF with gradients preserved at '{pdfPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
             }
         }
     }

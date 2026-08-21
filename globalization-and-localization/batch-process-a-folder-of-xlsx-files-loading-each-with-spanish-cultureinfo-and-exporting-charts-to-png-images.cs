@@ -1,10 +1,10 @@
-// Title: Batch export Excel charts to PNG with Aspose.Cells for .NET
-// Description: A C# console utility that scans a folder for *.xlsx files, loads each workbook with the Spanish (es‑ES) CultureInfo via LoadOptions, iterates through all worksheets and charts, and writes every chart as a uniquely named PNG file to a target directory. Includes folder creation, missing‑file checks, and basic error handling.
-// Keywords: Aspose.Cells | C# chart export | Excel to PNG batch | Spanish locale es-ES | LoadOptions CultureInfo | multiple workbook processing | chart image extraction | GitHub Aspose.Cells example | .NET Excel automation
-// Common Searches: export all charts from multiple Excel files to PNG Aspose.Cells | load workbook with Spanish culture es-ES Aspose.Cells .NET | batch chart image conversion C# Aspose | how to save Excel charts as PNG programmatically | Aspose.Cells example for chart export in a folder
-// Developer Intent: Export every chart from each XLSX file in a folder to PNG while applying the es‑ES culture settings.
-// Use Cases: Produce localized chart graphics for Spanish‑language dashboards or reports. | Create web‑ready PNG assets from Excel workbooks in bulk for multilingual sites. | Run regression tests to verify chart rendering under the es‑ES culture before release.
-// AI Prompts: Write C# code that reads all .xlsx files in a directory, loads them with a specific CultureInfo, and saves each chart as a PNG with a unique filename using Aspose.Cells. | Explain the effect of setting CultureInfo to es‑ES on chart data formatting when exporting with Aspose.Cells.
+// Title: C# – Batch export Excel charts to PNG with Spanish (es‑ES) locale using Aspose.Cells
+// Description: A console utility that scans a folder for *.xlsx files, loads each workbook with a Spanish (es‑ES) CultureInfo via LoadOptions, iterates every worksheet and chart, and saves each chart as an individual PNG file in a target directory. Includes robust folder validation and per‑chart error handling.
+// Keywords: Aspose.Cells | C# | export chart to PNG | batch process Excel files | Spanish locale | es-ES CultureInfo | LoadOptions | chart extraction | Excel automation | globalization | localization | folder scanning | chart image generation | Aspose.Cells for .NET
+// Common Searches: Aspose.Cells batch export charts to PNG | load Excel workbook with Spanish culture C# | export all charts from multiple XLSX files | C# code to convert Excel charts to images | Aspose.Cells chart image generation with locale
+// Developer Intent: Automatically generate PNG images for every chart in each XLSX workbook within a directory, applying the Spanish (es‑ES) culture during load.
+// Use Cases: Create locale‑specific chart graphics for a Spanish‑language reporting portal. | Produce a library of PNG assets for marketing collateral from a collection of Excel workbooks. | Validate that chart rendering respects Spanish number formats and date conventions before publishing.
+// AI Prompts: Write C# code that uses Aspose.Cells to batch export charts from XLSX files with a specified CultureInfo and custom file naming. | Explain best practices for handling exceptions when exporting charts to PNG inside a loop with Aspose.Cells. | Show how to adapt the sample to output SVG files while keeping the Spanish locale settings.
 
 using System;
 using System.Globalization;
@@ -12,87 +12,85 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// A C# console utility that scans a folder for *.xlsx files, loads each workbook with the Spanish (es‑ES) CultureInfo via LoadOptions, iterates through all worksheets and charts, and writes every chart as a uniquely named PNG file to a target directory. Includes folder creation, missing‑file checks, and basic error handling.
-class BatchChartExport
+// A console utility that scans a folder for *.xlsx files, loads each workbook with a Spanish (es‑ES) CultureInfo via LoadOptions, iterates every worksheet and chart, and saves each chart as an individual PNG file in a target directory. Includes robust folder validation and per‑chart error handling.
+class ExportChartsBatch
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Folder containing the source XLSX files
-        string sourceFolder = @"C:\InputExcelFiles";
-
-        // Folder where the PNG images will be saved
+        // Input folder containing XLSX files
+        string inputFolder = @"C:\InputExcelFiles";
+        // Output folder for PNG images
         string outputFolder = @"C:\ExportedCharts";
 
         try
         {
-            // Ensure the output directory exists
+            // Ensure output directory exists
             Directory.CreateDirectory(outputFolder);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to create output folder: {ex.Message}");
+            Console.WriteLine($"Failed to create output directory: {ex.Message}");
             return;
         }
 
-        // Verify source folder exists
-        if (!Directory.Exists(sourceFolder))
+        // Verify input folder exists
+        if (!Directory.Exists(inputFolder))
         {
-            Console.WriteLine($"Source folder does not exist: {sourceFolder}");
+            Console.WriteLine($"Input folder does not exist: {inputFolder}");
             return;
         }
 
-        // Get all XLSX files in the source folder
-        string[] excelFiles = Directory.GetFiles(sourceFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
-
-        if (excelFiles.Length == 0)
+        // Process each XLSX file in the folder
+        foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
         {
-            Console.WriteLine("No Excel files found in the source folder.");
-            return;
-        }
-
-        foreach (string excelPath in excelFiles)
-        {
-            // Verify the file still exists before loading
-            if (!File.Exists(excelPath))
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine($"File not found, skipping: {excelPath}");
+                Console.WriteLine($"File not found, skipping: {filePath}");
                 continue;
             }
 
             try
             {
-                // Load options with Spanish culture (es-ES)
+                // LoadOptions with Spanish culture (es-ES)
                 LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
                 {
                     CultureInfo = new CultureInfo("es-ES")
                 };
 
                 // Load the workbook
-                using (Workbook workbook = new Workbook(excelPath, loadOptions))
+                using (Workbook workbook = new Workbook(filePath, loadOptions))
                 {
-                    int chartCounter = 0;
-
-                    // Iterate through each worksheet
+                    // Iterate through all worksheets
                     foreach (Worksheet sheet in workbook.Worksheets)
                     {
-                        // Iterate through each chart in the worksheet
+                        // Iterate through all charts in the worksheet
                         foreach (Chart chart in sheet.Charts)
                         {
-                            // Build a unique file name for the chart image
-                            string chartFileName = $"{Path.GetFileNameWithoutExtension(excelPath)}_Sheet{sheet.Index}_Chart{chartCounter}.png";
-                            string chartFilePath = Path.Combine(outputFolder, chartFileName);
+                            // Determine chart index within the worksheet
+                            int chartIdx = sheet.Charts.IndexOf(chart);
 
-                            // Export the chart to a PNG image file
-                            chart.ToImage(chartFilePath);
+                            // Build a unique file name for each chart
+                            string chartName = string.IsNullOrEmpty(chart.Name) ? $"Chart_{chartIdx}" : chart.Name;
+                            string baseFileName = Path.GetFileNameWithoutExtension(filePath);
+                            string imageFileName = $"{baseFileName}_{chartName}.png";
+                            string imagePath = Path.Combine(outputFolder, imageFileName);
 
-                            chartCounter++;
+                            try
+                            {
+                                // Export the chart to PNG
+                                chart.ToImage(imagePath);
+                            }
+                            catch (Exception imgEx)
+                            {
+                                Console.WriteLine($"Failed to export chart '{chartName}' from '{filePath}': {imgEx.Message}");
+                            }
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing file '{excelPath}': {ex.Message}");
+                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
         }
 

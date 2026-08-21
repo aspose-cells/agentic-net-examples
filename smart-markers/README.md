@@ -4,7 +4,7 @@ description: C# examples for template-driven Excel reports, Smart Marker syntax,
 product: Aspose.Cells for .NET
 category: smart-markers
 language: C#
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-14
 ---
 
 # Generate Excel Reports with Smart Markers in C# and Aspose.Cells

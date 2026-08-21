@@ -1,52 +1,37 @@
-// Title: Print cell comments in place with Aspose.Cells for .NET (PrintComments = PrintInPlace)
-// Description: Shows how to add comments to cells, configure Worksheet.PageSetup.PrintComments to PrintCommentsType.PrintInPlace, and save the workbook so comments retain their on‑sheet positions when printed or exported.
-// Keywords: Aspose.Cells | PrintComments | PrintInPlace | C# cell comments | worksheet page setup | export comments | .NET spreadsheet printing | cell notes printing
-// Common Searches: Aspose.Cells print comments in place C# | How to keep cell comments when printing with Aspose.Cells | Set PrintComments property Aspose.Cells | Print cell notes exactly as shown Aspose.Cells | PageSetup.PrintComments example .NET
-// Developer Intent: Configure the worksheet so that all cell comments are printed at their original locations on the sheet.
-// Use Cases: Create printable reports where reviewer notes stay anchored to their cells. | Generate audit worksheets that must display comments on hard‑copy output. | Export a workbook to PDF while preserving the visual layout of cell comments.
-// AI Prompts: Provide C# code that adds comments to multiple cells, sets PrintComments to PrintInPlace for every worksheet, and saves the workbook as PDF. | Explain the difference between PrintInPlace and PrintNoComments in Aspose.Cells and recommend scenarios for each. | Show how to apply PageSetup.PrintComments = PrintInPlace to all worksheets in an existing workbook using Aspose.Cells for .NET.
+// Title: Print Cell Comments In‑Place with Aspose.Cells for .NET (C#)
+// Description: Shows how to add comments to cells, set Worksheet.PageSetup.PrintComments to PrintCommentsType.PrintInPlace, and save the workbook so the comments are printed directly on the sheet.
+// Keywords: Aspose.Cells | PrintComments | PrintInPlace | C# | .NET | worksheet comments | print comments in place | Excel export | PageSetup | SaveFormat.Xlsx
+// Common Searches: Aspose.Cells print comments in place C# | Set PrintComments property Aspose.Cells .NET | How to print cell comments on worksheet using Aspose.Cells | PrintCommentsType.PrintInPlace example | Export Excel with visible comments Aspose.Cells
+// Developer Intent: Configure a worksheet to print its cell comments directly on the printed page by using the PrintComments property.
+// Use Cases: Create printable Excel reports where reviewer notes stay attached to their cells. | Distribute workbooks that retain visible comments on paper copies. | Automate generation of documentation sheets with in‑place comments for quality checks.
+// AI Prompts: Provide C# code to set PrintComments = PrintInPlace for all worksheets in a workbook using Aspose.Cells. | Show how to export a workbook with in‑place comments to PDF with Aspose.Cells. | Explain the differences between PrintInPlace, PrintNoComments, and PrintAllComments options in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPrintCommentsDemo
 {
-    // Shows how to add comments to cells, configure Worksheet.PageSetup.PrintComments to PrintCommentsType.PrintInPlace, and save the workbook so comments retain their on‑sheet positions when printed or exported.
-    public class PrintAllCommentsInPlaceDemo
+    // Shows how to add comments to cells, set Worksheet.PageSetup.PrintComments to PrintCommentsType.PrintInPlace, and save the workbook so the comments are printed directly on the sheet.
+    class Program
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add sample comments to demonstrate the setting
+            // Add sample comments to demonstrate the print setting
             int idx1 = sheet.Comments.Add("A1");
             sheet.Comments[idx1].Note = "Comment for A1";
 
             int idx2 = sheet.Comments.Add("B2");
             sheet.Comments[idx2].Note = "Comment for B2";
 
-            // Set the page setup to print comments exactly as they appear on the sheet
+            // Set the PrintComments property to print comments in place
             sheet.PageSetup.PrintComments = PrintCommentsType.PrintInPlace;
 
-            // Save the workbook (the comments will be printed in place when the sheet is printed)
-            string outputPath = "PrintCommentsInPlace.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Workbook saved to '{outputPath}' with PrintComments set to PrintInPlace.");
+            // Save the workbook (the comments will be printed in place when printed)
+            workbook.Save("PrintCommentsInPlace.xlsx", SaveFormat.Xlsx);
         }
     }
 }

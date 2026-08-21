@@ -1,69 +1,80 @@
-// Title: Copy a Named Range Between Workbooks with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to copy a defined named range (including its data, formatting, and formula reference) from a source worksheet to a destination worksheet in a different workbook, while preserving the original name and updating the RefersTo address.
-// Keywords: Aspose.Cells copy named range | C# copy range between workbooks | preserve named range RefersTo | duplicate named range Aspose.Cells | copy range formatting .NET
-// Common Searches: copy named range Aspose.Cells C# | preserve RefersTo when moving range to another workbook | duplicate named range across workbooks .NET | Aspose.Cells copy range with formatting | how to replicate a named range in a new workbook
-// Developer Intent: Transfer a named range from one workbook to another, recreate the same name in the target workbook, and adjust the RefersTo formula to point to the new location.
-// Use Cases: Migrate a template range with formulas from a master file to client‑specific files while keeping the range identifier. | Propagate data‑validation or calculation ranges across multiple reports generated programmatically. | Synchronize named range definitions when consolidating data from several source workbooks.
-// AI Prompts: Generate C# code using Aspose.Cells to copy a named range from one workbook to another and update its RefersTo reference. | Explain step‑by‑step how to duplicate a named range, including data, formatting, and name, between worksheets in .NET. | Provide robust error‑handling patterns for copying named ranges across workbooks with Aspose.Cells.
+// Title: Copy a Named Range Between Worksheets and Preserve Its Name with Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, define a named range on a source sheet, copy the range (including values, formulas, and formatting) to another worksheet, recreate the same named range on the destination sheet, and save the file using Aspose.Cells for C#.
+// Keywords: Aspose.Cells copy named range | C# named range duplicate worksheet | preserve named range reference | copy range with formatting Aspose | programmatic named range Aspose.Cells
+// Common Searches: copy named range to another sheet Aspose.Cells | preserve named range name when duplicating data | how to copy range with formulas and formatting in .NET | Aspose.Cells create named range programmatically | duplicate table with named range for reporting
+// Developer Intent: Duplicate an existing named range on a different worksheet while keeping the original name and updating its reference to the new location.
+// Use Cases: Clone a template table to a new sheet while retaining the named range for downstream calculations. | Move a data block to a summary worksheet and keep the named range for dynamic chart sources. | Create a backup of chart source data on another sheet without breaking formulas that rely on the named range.
+// AI Prompts: Generate C# code with Aspose.Cells that copies a named range from Sheet1 to Sheet2 and retains the original name. | Show how to copy a named range, including formulas and formatting, and update the RefersTo property for the new sheet using Aspose.Cells. | Explain strategies for handling name conflicts when copying a named range to another worksheet in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates how to copy a defined named range (including its data, formatting, and formula reference) from a source worksheet to a destination worksheet in a different workbook, while preserving the original name and updating the RefersTo address.
-class CopyNamedRangeDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to create a workbook, define a named range on a source sheet, copy the range (including values, formulas, and formatting) to another worksheet, recreate the same named range on the destination sheet, and save the file using Aspose.Cells for C#.
+    public class CopyNamedRangeDemo
     {
-        try
+        public static void Run()
         {
-            // ---------- Create source workbook ----------
-            Workbook srcWb = new Workbook();                     // create source workbook
-            Worksheet srcWs = srcWb.Worksheets[0];
-            srcWs.Name = "Source";
+            try
+            {
+                // Create a workbook and a source worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sourceSheet = workbook.Worksheets[0];
+                sourceSheet.Name = "Source";
 
-            // Fill some data in the source range
-            srcWs.Cells["A1"].PutValue("Item");
-            srcWs.Cells["B1"].PutValue(10);
-            srcWs.Cells["A2"].PutValue("Qty");
-            srcWs.Cells["B2"].PutValue(20);
+                // Populate the source range with sample data
+                sourceSheet.Cells["A1"].PutValue("Item");
+                sourceSheet.Cells["B1"].PutValue("Quantity");
+                sourceSheet.Cells["A2"].PutValue("Apple");
+                sourceSheet.Cells["B2"].PutValue(10);
+                sourceSheet.Cells["A3"].PutValue("Orange");
+                sourceSheet.Cells["B3"].PutValue(20);
 
-            // Define a named range "MyRange" that refers to A1:B2 on the source sheet
-            int srcNameIdx = srcWb.Worksheets.Names.Add("MyRange");
-            srcWb.Worksheets.Names[srcNameIdx].RefersTo = $"={srcWs.Name}!$A$1:$B$2";
+                // Define a named range "MyRange" that refers to A1:B3 on the source sheet
+                int nameIdx = workbook.Worksheets.Names.Add("MyRange");
+                Name sourceName = workbook.Worksheets.Names[nameIdx];
+                sourceName.RefersTo = $"={sourceSheet.Name}!$A$1:$B$3";
 
-            // ---------- Create destination workbook ----------
-            Workbook destWb = new Workbook();                    // create destination workbook
-            Worksheet destWs = destWb.Worksheets[0];
-            destWs.Name = "Destination";
+                // Add a destination worksheet
+                Worksheet destSheet = workbook.Worksheets.Add("Destination");
 
-            // ---------- Copy the cells of the named range ----------
-            // Retrieve the source range via the Name object
-            Name srcName = srcWb.Worksheets.Names["MyRange"];
-            AsposeRange srcRange = srcName.GetRange();
+                // Retrieve the Range object represented by the named range
+                AsposeRange srcRange = sourceName.GetRange();
 
-            // Create an equally sized range on the destination sheet at the same address
-            AsposeRange destRange = destWs.Cells.CreateRange(
-                srcRange.FirstRow,
-                srcRange.FirstColumn,
-                srcRange.RowCount,
-                srcRange.ColumnCount);
+                // Create a destination range on the destination sheet with the same dimensions
+                AsposeRange destRange = destSheet.Cells.CreateRange(
+                    srcRange.FirstRow,
+                    srcRange.FirstColumn,
+                    srcRange.RowCount,
+                    srcRange.ColumnCount);
 
-            // Copy data, formatting, etc. from source range to destination range
-            destRange.Copy(srcRange);
+                // Copy data, formulas, formatting, etc., from source range to destination range
+                srcRange.Copy(destRange);
 
-            // ---------- Replicate the named range in the destination workbook ----------
-            int destNameIdx = destWb.Worksheets.Names.Add("MyRange");
-            // Adjust the RefersTo formula to point to the destination sheet
-            destWb.Worksheets.Names[destNameIdx].RefersTo = $"={destWs.Name}!$A$1:$B$2";
+                // Create a new named range on the destination sheet that points to the copied range
+                int destNameIdx = workbook.Worksheets.Names.Add("MyRange");
+                Name destName = workbook.Worksheets.Names[destNameIdx];
+                destName.RefersTo = $"={destSheet.Name}!$A$1:$B$3";
 
-            // ---------- Save workbooks ----------
-            srcWb.Save("Source.xlsx");
-            destWb.Save("Destination.xlsx");
+                // Save the workbook
+                workbook.Save("CopyNamedRangeResult.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            CopyNamedRangeDemo.Run();
         }
     }
 }

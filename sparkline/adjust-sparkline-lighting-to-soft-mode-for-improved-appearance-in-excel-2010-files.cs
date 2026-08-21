@@ -1,14 +1,21 @@
+// Title: Aspose.Cells .NET – Add a Line Sparkline (Excel 2010) and Note Soft‑Lighting Limitation
+// Description: C# example that creates a workbook, inserts a line‑type sparkline for range A1:D1, places it in cell E1, and saves as an Excel 2010 .xlsx file. The API does not expose a property for soft lighting or 3‑D effects, so visual tweaks must rely on available sparkline styling options.
+// Keywords: Aspose.Cells | C# sparkline example | Excel 2010 sparkline | soft lighting not supported | sparkline styling | SparklineGroup | line sparkline | visual appearance | Aspose.Cells API limitation
+// Common Searches: Aspose.Cells sparkline soft lighting | how to change sparkline lighting in .NET | sparkline visual style Aspose.Cells | apply 3D effects to sparklines with Aspose | sparkline appearance options Excel 2010
+// Developer Intent: Add a line sparkline to an Excel 2010 file and understand that soft lighting cannot be set via Aspose.Cells.
+// Use Cases: Generate a workbook and insert a line sparkline for a data range. | Attempt to modify sparkline lighting (discover API limitation). | Apply alternative styling such as color, weight, or markers to achieve a softer look. | Save the result as an .xlsx file compatible with Excel 2010.
+// AI Prompts: Provide C# code using Aspose.Cells to create a line sparkline and describe how to mimic soft lighting with existing properties. | Suggest a workaround for achieving a softer visual effect on sparklines when the API lacks a lighting setting. | Explain why Aspose.Cells does not support sparkline lighting adjustments and list alternative customization options.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsDemo
+namespace SparklineLightingDemo
 {
+    // C# example that creates a workbook, inserts a line‑type sparkline for range A1:D1, places it in cell E1, and saves as an Excel 2010 .xlsx file. The API does not expose a property for soft lighting or 3‑D effects, so visual tweaks must rely on available sparkline styling options.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
@@ -23,56 +30,27 @@ namespace AsposeCellsDemo
                 sheet.Cells["D1"].PutValue(3);
 
                 // Define the location where the sparkline will be placed (cell E1)
-                CellArea sparklineArea = new CellArea
+                CellArea location = new CellArea
                 {
                     StartRow = 0,
                     EndRow = 0,
-                    StartColumn = 4, // Column E (0‑based index)
+                    StartColumn = 4,
                     EndColumn = 4
                 };
 
-                // Add a line sparkline group and create the sparkline
-                int sparklineGroupIdx = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, sparklineArea);
-                SparklineGroup sparklineGroup = sheet.SparklineGroups[sparklineGroupIdx];
-                sparklineGroup.Sparklines.Add($"{sheet.Name}!A1:D1", 0, 4);
+                // Add a sparkline group (Line type) with the data range A1:D1
+                int groupIdx = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, location);
+                SparklineGroup group = sheet.SparklineGroups[groupIdx];
 
-                // ---------------------------------------------------------------------------
-                // Adjust lighting for the sparkline appearance.
-                // Sparklines themselves do not expose a direct lighting property, but they are
-                // rendered as shapes. By adding a dummy chart and setting its 3D lighting to
-                // Soft, we can demonstrate the use of LightRigType.Soft in the same workbook.
-                // ---------------------------------------------------------------------------
+                // Add a sparkline to the group (the same range, placed at row 0, column 4)
+                group.Sparklines.Add(sheet.Name + "!A1:D1", 0, 4);
 
-                // Add a simple column chart (it will not interfere with the sparkline)
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = sheet.Charts[chartIdx];
-                chart.SetChartDataRange("A1:D1", true);
+                // Note: Aspose.Cells does not expose direct lighting or 3‑D format
+                // properties for sparklines. Any visual styling must be done through
+                // the SparklineGroup or Sparkline properties that are available.
 
-                // Access the first series of the chart
-                Series series = chart.NSeries[0];
-
-                // Ensure the series has 3D format data
-                ShapePropertyCollection shapeProps = series.ShapeProperties;
-                if (shapeProps.HasFormat3D())
-                {
-                    // Set the surface lighting type to Soft
-                    Format3D format3D = shapeProps.Format3D;
-                    format3D.SurfaceLightingType = LightRigType.Soft;
-                    // Optional: adjust lighting angle for better effect
-                    format3D.LightingAngle = 45.0;
-                }
-
-                // Prepare output path
-                string outputPath = "SparklineWithSoftLighting.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook (Excel 2010 format)
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // Save the workbook as an Excel 2010 file (xlsx)
+                workbook.Save("SparklineWithSoftLighting.xlsx", SaveFormat.Xlsx);
             }
             catch (Exception ex)
             {

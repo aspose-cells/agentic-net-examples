@@ -1,21 +1,21 @@
-// Title: Aspose.Cells for .NET – Disable Text Wrap on All Chart Data Labels Across Worksheets
-// Description: Loads a workbook, iterates through every worksheet and chart, and sets both series‑level and point‑level DataLabels.IsTextWrapped to false, then saves the file. Ideal for batch‑updating chart label formatting in Excel with Aspose.Cells.
-// Keywords: Aspose.Cells disable chart label wrap | C# chart data label no wrap | batch update chart labels Aspose | iterate worksheets charts Aspose.Cells | DataLabels.IsTextWrapped false
-// Common Searches: how to turn off text wrap for chart data labels in Aspose.Cells | disable data label wrapping for all charts in a workbook .NET | loop through worksheets and charts to change label properties Aspose | remove text wrapping from Excel chart labels programmatically
-// Developer Intent: Turn off text wrapping for every chart data label in all worksheets of an Excel workbook.
-// Use Cases: Prepare printable reports where chart labels must stay on a single line. | Standardize chart appearance across multiple sheets before PDF conversion. | Clean up legacy workbooks that have wrapped labels causing layout problems.
-// AI Prompts: Write C# code using Aspose.Cells to disable text wrap on chart data labels in every worksheet and save the workbook. | Show how to also change the font size and color of data labels after disabling wrap for each series and point. | Explain how to limit the operation to only ColumnClustered charts while leaving other chart types unchanged.
+// Title: C# – Disable Text Wrapping for All Chart Data Labels in Every Worksheet with Aspose.Cells
+// Description: Loads a workbook, iterates through each worksheet, chart, and series, sets DataLabels.IsTextWrapped to false, and saves the file, removing line‑breaks from every chart label in the workbook.
+// Keywords: Aspose.Cells C# chart data label wrap | disable text wrap chart labels Aspose | batch update chart labels .NET | iterate worksheets charts Aspose.Cells | DataLabels.IsTextWrapped false
+// Common Searches: how to turn off text wrap for chart labels in all worksheets asp.net | batch disable data label wrapping Aspose.Cells | C# loop through charts and series to change label properties | remove chart label wrapping from entire workbook
+// Developer Intent: Turn off text wrapping for every chart data label across all worksheets in an Excel file using Aspose.Cells for .NET.
+// Use Cases: Standardize label appearance in multi‑sheet financial reports. | Prevent layout shifts in automated dashboards where wrapped labels break design. | Prepare workbooks for distribution with consistent single‑line chart labels.
+// AI Prompts: Generate C# code that disables text wrapping for chart data labels in all worksheets using Aspose.Cells. | Show how to change additional label properties (font size, color) while iterating through charts with Aspose.Cells. | Provide a snippet that applies IsTextWrapped = false only to column and bar charts across a workbook.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads a workbook, iterates through every worksheet and chart, and sets both series‑level and point‑level DataLabels.IsTextWrapped to false, then saves the file. Ideal for batch‑updating chart label formatting in Excel with Aspose.Cells.
+// Loads a workbook, iterates through each worksheet, chart, and series, sets DataLabels.IsTextWrapped to false, and saves the file, removing line‑breaks from every chart label in the workbook.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
+        // Load an existing workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
         // Loop through all worksheets in the workbook
@@ -27,19 +27,16 @@ class Program
                 // Loop through each series in the chart
                 foreach (Series series in chart.NSeries)
                 {
-                    // Disable text wrapping for the series data labels
-                    series.DataLabels.IsTextWrapped = false;
+                    // Access the data labels of the series
+                    DataLabels dataLabels = series.DataLabels;
 
-                    // Also disable text wrapping for each individual point's data label
-                    foreach (ChartPoint point in series.Points)
-                    {
-                        point.DataLabels.IsTextWrapped = false;
-                    }
+                    // Disable text wrapping for the data labels
+                    dataLabels.IsTextWrapped = false;
                 }
             }
         }
 
-        // Save the modified workbook
+        // Save the modified workbook (replace with your desired output path)
         workbook.Save("output.xlsx");
     }
 }

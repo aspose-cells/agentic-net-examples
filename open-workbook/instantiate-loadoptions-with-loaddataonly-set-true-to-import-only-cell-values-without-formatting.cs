@@ -1,29 +1,28 @@
-// Title: C# – Load an Excel workbook with Aspose.Cells using LoadOptions (LoadDataOnly = true) to read only cell values
-// Description: Demonstrates how to create a LoadOptions object, enable LoadDataOnly (or use LoadFilter CellValue) so that Aspose.Cells reads only raw cell values from an .xlsx file, skipping formatting, formulas, and styles. The example prints the value of cell A1 after the lightweight load.
-// Keywords: Aspose.Cells LoadOptions LoadDataOnly | C# read Excel values only | LoadFilter CellValue example | import workbook without formatting | fast Excel data extraction C# | skip styles Aspose.Cells
-// Common Searches: Aspose.Cells load only cell values C# | LoadOptions LoadDataOnly true example | How to ignore formatting when opening Excel with Aspose.Cells | C# read Excel data without formulas Aspose | Fast load of large Excel file using Aspose.Cells
-// Developer Intent: Open an Excel file with Aspose.Cells while importing just the raw cell contents, omitting all formatting, formulas, and style information.
-// Use Cases: Rapid data extraction from massive spreadsheets where visual styles are irrelevant. | Feeding plain values into analytics or ETL pipelines without the overhead of style processing. | Generating lightweight reports or CSV exports that require only the underlying text and numbers.
-// AI Prompts: Provide a C# snippet that uses Aspose.Cells LoadOptions with LoadDataOnly = true to read only cell values from an .xlsx file. | Explain the difference between LoadOptions.LoadDataOnly and LoadOptions.LoadFilter when loading Excel workbooks in Aspose.Cells. | Show how to iterate over a range of cells after loading a workbook with LoadFilter set to CellValue.
+// Title: C# – Load an Excel workbook with Aspose.Cells using LoadOptions to read only cell values (no formatting)
+// Description: Demonstrates how to create a LoadOptions object, set its LoadFilter to LoadDataFilterOptions.CellValue, and open an Excel file so that only raw cell values are loaded while all formatting, styles, and graphics are ignored. The example prints the value of cell A1 from the first worksheet, showing a lightweight way to read data.
+// Keywords: Aspose.Cells LoadOptions C# | LoadDataOnly true Aspose.Cells | LoadFilter CellValue example | read Excel values only | skip formatting Aspose.Cells | memory‑efficient Excel import C# | load workbook without styles
+// Common Searches: Aspose.Cells load workbook without formatting C# | LoadOptions LoadDataOnly true example | How to read only cell values with Aspose.Cells | C# load Excel file ignoring styles | LoadFilter CellValue usage Aspose.Cells
+// Developer Intent: Open an Excel file with Aspose.Cells while retrieving only the raw cell values and omitting all formatting, styles, and graphics.
+// Use Cases: Fast extraction of data from large spreadsheets for analytics or ETL pipelines. | Migrating cell contents to a database without importing visual formatting. | Running batch validation or calculations on cell values with minimal memory overhead.
+// AI Prompts: Show how to modify the code to also load formulas while still skipping formatting. | Provide a version that reads only cell values from a CSV file using Aspose.Cells LoadOptions. | Explain how to combine LoadOptions with LoadFilter to exclude comments and hyperlinks.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a LoadOptions object, enable LoadDataOnly (or use LoadFilter CellValue) so that Aspose.Cells reads only raw cell values from an .xlsx file, skipping formatting, formulas, and styles. The example prints the value of cell A1 after the lightweight load.
-class Program
+// Demonstrates how to create a LoadOptions object, set its LoadFilter to LoadDataFilterOptions.CellValue, and open an Excel file so that only raw cell values are loaded while all formatting, styles, and graphics are ignored. The example prints the value of cell A1 from the first worksheet, showing a lightweight way to read data.
+class LoadDataOnlyDemo
 {
     static void Main()
     {
-        // Create LoadOptions instance
+        // Create LoadOptions and configure it to load only cell values (no formatting)
         LoadOptions loadOptions = new LoadOptions();
-
-        // Configure the LoadFilter to load only cell values (no formatting, formulas, etc.)
         loadOptions.LoadFilter = new LoadFilter(LoadDataFilterOptions.CellValue);
 
         // Load the workbook using the configured options
         Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
-        // Example usage: output the value of cell A1 from the first worksheet
-        Console.WriteLine(workbook.Worksheets[0].Cells["A1"].StringValue);
+        // Access the first worksheet and display a cell value to verify loading
+        Worksheet sheet = workbook.Worksheets[0];
+        Console.WriteLine("A1 value: " + sheet.Cells["A1"].StringValue);
     }
 }

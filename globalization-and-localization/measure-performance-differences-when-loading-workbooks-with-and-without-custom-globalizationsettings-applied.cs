@@ -1,107 +1,73 @@
+// Title: Benchmark Aspose.Cells Workbook Load Time With vs Without Custom GlobalizationSettings (C#)
+// Description: Creates a sample workbook, saves it, then loads the file twice while measuring elapsed time: once with the default globalization settings and once after assigning a custom GlobalizationSettings that overrides boolean string values. The program prints both load times and shows the effect on cell string representations.
+// Keywords: Aspose.Cells | .NET | C# | Workbook load performance | GlobalizationSettings | custom localization | benchmark | measure load time | boolean string override | performance testing
+// Common Searches: Aspose.Cells load time benchmark C# | Does GlobalizationSettings affect workbook loading speed | Measure performance difference default vs custom GlobalizationSettings | How to time Aspose.Cells workbook load in .NET | Custom GlobalizationSettings impact on Aspose.Cells performance
+// Developer Intent: Compare the loading speed of an Excel workbook using Aspose.Cells with the default globalization settings versus after applying a custom GlobalizationSettings object.
+// Use Cases: Profile load latency for large Excel files when custom localization is required. | Validate that overriding boolean strings does not introduce noticeable overhead. | Integrate load‑time measurements into automated regression tests for Aspose.Cells deployments.
+// AI Prompts: Generate a C# program that loads the same Excel file multiple times, records the elapsed milliseconds for default and custom GlobalizationSettings, and calculates average times. | Show how to extend GlobalizationSettings to customize date and number formats, then benchmark any impact on workbook load performance. | Provide a PowerShell script that runs the compiled C# benchmark executable on a set of sample workbooks and aggregates the results.
+
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using Aspose.Cells;
 
 namespace AsposeCellsPerformanceDemo
 {
-    // Custom globalization settings – overrides a few methods for demonstration.
+    // Custom globalization settings overriding boolean display strings
+    // Creates a sample workbook, saves it, then loads the file twice while measuring elapsed time: once with the default globalization settings and once after assigning a custom GlobalizationSettings that overrides boolean string values. The program prints both load times and shows the effect on cell string representations.
     public class CustomGlobalizationSettings : GlobalizationSettings
     {
-        public override string GetBooleanValueString(bool bv)
+        public override string GetBooleanValueString(bool value)
         {
-            return bv ? "TRUE_CUSTOM" : "FALSE_CUSTOM";
-        }
-
-        public override string GetErrorValueString(string err)
-        {
-            // Simple mapping for demonstration.
-            return err.Replace("#", "#CUST_");
+            return value ? "TRUE_CUSTOM" : "FALSE_CUSTOM";
         }
     }
 
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Path to the sample workbook.
-            const string filePath = "sample.xlsx";
+            // Path for the sample workbook
+            string sampleFile = "SampleWorkbook.xlsx";
 
-            // -----------------------------------------------------------------
-            // 1. Create a sample workbook (if it does not already exist) and save it.
-            // -----------------------------------------------------------------
-            if (!System.IO.File.Exists(filePath))
-            {
-                // Create a new workbook – using the provided constructor rule.
-                Workbook wbCreate = new Workbook();
+            // -------------------------------------------------
+            // Create a sample workbook and save it (using provided APIs)
+            // -------------------------------------------------
+            Workbook createWb = new Workbook();                     // Workbook()
+            Worksheet sheet = createWb.Worksheets[0];              // Access first worksheet
+            Cells cells = sheet.Cells;
+            cells["A1"].PutValue(true);                            // Boolean value
+            cells["A2"].PutValue(false);
+            cells["B1"].PutValue(12345.67);                        // Numeric value
+            cells["B2"].PutValue("Sample text");                   // Text value
+            createWb.Save(sampleFile);                             // Save(string)
 
-                // Populate some data.
-                Worksheet ws = wbCreate.Worksheets[0];
-                Cells cells = ws.Cells;
-                for (int row = 0; row < 1000; row++)
-                {
-                    cells[row, 0].PutValue($"Item {row}");
-                    cells[row, 1].PutValue(row * 1.1);
-                }
-
-                // Save the workbook – using the provided Save method.
-                wbCreate.Save(filePath);
-                Console.WriteLine($"Sample workbook created at '{filePath}'.");
-            }
-
-            // -----------------------------------------------------------------
-            // 2. Load without custom GlobalizationSettings and measure time.
-            // -----------------------------------------------------------------
+            // -------------------------------------------------
+            // Measure load time without custom globalization settings
+            // -------------------------------------------------
             Stopwatch sw = new Stopwatch();
             sw.Start();
-
-            // Load workbook using the constructor that accepts a file path.
-            Workbook wbDefault = new Workbook(filePath);
-
+            Workbook wbDefault = new Workbook(sampleFile);          // Workbook(string)
             sw.Stop();
-            long loadTimeDefaultMs = sw.ElapsedMilliseconds;
-            Console.WriteLine($"Load time without custom globalization: {loadTimeDefaultMs} ms");
+            long elapsedDefault = sw.ElapsedMilliseconds;
 
-            // -----------------------------------------------------------------
-            // 3. Load and then apply custom GlobalizationSettings; measure both phases.
-            // -----------------------------------------------------------------
-            // Measure load time (same as above, but separate stopwatch for clarity).
+            // -------------------------------------------------
+            // Measure load time with custom globalization settings applied after load
+            // -------------------------------------------------
             sw.Restart();
-            Workbook wbWithCustom = new Workbook(filePath);
+            Workbook wbCustom = new Workbook(sampleFile);           // Workbook(string)
+            wbCustom.Settings.GlobalizationSettings = new CustomGlobalizationSettings(); // Apply custom settings
             sw.Stop();
-            long loadTimeWithCustomMs = sw.ElapsedMilliseconds;
-            Console.WriteLine($"Load time before applying custom globalization: {loadTimeWithCustomMs} ms");
+            long elapsedCustom = sw.ElapsedMilliseconds;
 
-            // Measure the time required to assign the custom settings.
-            sw.Restart();
-            wbWithCustom.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
-            sw.Stop();
-            long applySettingsTimeMs = sw.ElapsedMilliseconds;
-            Console.WriteLine($"Time to apply custom globalization settings: {applySettingsTimeMs} ms");
+            // -------------------------------------------------
+            // Output the performance results
+            // -------------------------------------------------
+            Console.WriteLine($"Load time without custom globalization: {elapsedDefault} ms");
+            Console.WriteLine($"Load time with custom globalization (applied after load): {elapsedCustom} ms");
 
-            // -----------------------------------------------------------------
-            // 4. Optional: demonstrate that the custom settings affect cell display.
-            // -----------------------------------------------------------------
-            // Put a boolean value and an error value to see custom strings.
-            Cells demoCells = wbWithCustom.Worksheets[0].Cells;
-            demoCells[0, 2].PutValue(true);
-            demoCells[1, 2].PutValue("#DIV/0!");
-
-            // Access the string representations (they will use the custom settings).
-            string boolStr = demoCells[0, 2].StringValue; // Expected "TRUE_CUSTOM"
-            string errStr = demoCells[1, 2].StringValue; // Expected "#CUST_DIV/0!"
-
-            Console.WriteLine($"Custom boolean string: {boolStr}");
-            Console.WriteLine($"Custom error string: {errStr}");
-
-            // -----------------------------------------------------------------
-            // 5. Summary output.
-            // -----------------------------------------------------------------
-            Console.WriteLine();
-            Console.WriteLine("Performance Summary:");
-            Console.WriteLine($"- Default load time          : {loadTimeDefaultMs} ms");
-            Console.WriteLine($"- Load time (custom later)   : {loadTimeWithCustomMs} ms");
-            Console.WriteLine($"- Apply custom settings time : {applySettingsTimeMs} ms");
+            // Demonstrate that the custom settings affect cell string values
+            Console.WriteLine($"Default workbook cell A1 string: {wbDefault.Worksheets[0].Cells["A1"].StringValue}");
+            Console.WriteLine($"Custom workbook cell A1 string: {wbCustom.Worksheets[0].Cells["A1"].StringValue}");
         }
     }
 }

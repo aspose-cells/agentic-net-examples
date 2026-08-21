@@ -1,57 +1,63 @@
-// Title: Aspose.Cells .NET – Compare HTML file size with WidthScalable true vs false
-// Description: Creates a workbook, fills it with sample data, saves it to HTML twice (WidthScalable = true and WidthScalable = false), measures each file’s byte size, and reports which setting generates a larger HTML output.
-// Keywords: Aspose.Cells | HtmlSaveOptions | WidthScalable | HTML export size | C# .NET | file size comparison | Excel to HTML | workbook rendering
-// Common Searches: WidthScalable impact on HTML size Aspose.Cells | Aspose.Cells HTML file size true vs false | measure HTML output size C# Aspose | compare WidthScalable settings Aspose.Cells | optimize HTML export size Aspose.Cells
-// Developer Intent: Find out whether enabling or disabling HtmlSaveOptions.WidthScalable produces a larger HTML file for the same workbook.
-// Use Cases: Assess the bandwidth cost of scalable HTML layouts before publishing Excel data on a website. | Select the most size‑efficient WidthScalable setting for automated report generation pipelines. | Benchmark HTML export options across multiple workbooks to define a default export configuration.
-// AI Prompts: Write C# code that saves a workbook to HTML with WidthScalable true and false, then prints the byte sizes and indicates which is larger. | Explain why the WidthScalable option can increase HTML file size and suggest techniques to keep the output compact while preserving scalability. | Create a PowerShell script that processes a folder of .xlsx files, exports each to HTML with both WidthScalable values, and logs the size differences to a CSV file.
+// Title: Aspose.Cells C# – Compare HTML Output Size with WidthScalable True vs False
+// Description: Creates a workbook with 100 rows × 10 columns, saves two HTML files—one using HtmlSaveOptions.WidthScalable = true (scalable units) and another with WidthScalable = false (pixel units)—then reads the file sizes and reports which setting yields the smaller HTML file.
+// Keywords: Aspose.Cells | C# HTML export | HtmlSaveOptions WidthScalable | scalable vs fixed column width | HTML file size comparison | Aspose.Cells performance | Excel to HTML conversion
+// Common Searches: Aspose.Cells WidthScalable effect on HTML size | compare scalable and fixed column width in Aspose.Cells | HTML export file size Aspose.Cells C# | which WidthScalable setting creates smaller HTML | measure HTML output size Aspose.Cells
+// Developer Intent: Find out whether setting HtmlSaveOptions.WidthScalable to true or false produces a smaller HTML file for the same workbook.
+// Use Cases: Select the optimal WidthScalable value to minimize HTML payload for web‑based spreadsheet viewers. | Automate batch conversion of Excel workbooks to HTML and enforce a file‑size limit. | Generate lightweight HTML reports by testing scalable versus fixed column‑width modes.
+// AI Prompts: Generate C# code that logs the exact byte difference between the scalable and fixed HTML files produced by Aspose.Cells. | Explain how WidthScalable changes the generated CSS/HTML markup and why it can reduce file size. | Provide a strategy to programmatically choose WidthScalable = true or false based on a maximum allowed HTML size.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, fills it with sample data, saves it to HTML twice (WidthScalable = true and WidthScalable = false), measures each file’s byte size, and reports which setting generates a larger HTML output.
-class CompareWidthScalable
+namespace AsposeCellsWidthScalableComparison
 {
-    static void Main()
+    // Creates a workbook with 100 rows × 10 columns, saves two HTML files—one using HtmlSaveOptions.WidthScalable = true (scalable units) and another with WidthScalable = false (pixel units)—then reads the file sizes and reports which setting yields the smaller HTML file.
+    class Program
     {
-        // Create a workbook and populate it with sample data
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add enough data to make the HTML size noticeable
-        for (int row = 0; row < 200; row++)
+        static void Main()
         {
-            for (int col = 0; col < 20; col++)
+            // Create a new workbook and add sample data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate the worksheet with enough data to make column widths noticeable
+            for (int row = 0; row < 100; row++)
             {
-                sheet.Cells[row, col].PutValue($"R{row}C{col}");
+                for (int col = 0; col < 10; col++)
+                {
+                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1} - Some long text to test width");
+                }
             }
+
+            // Define file names for the two HTML outputs
+            string scalablePath = "output_scalable.html";
+            string fixedPath = "output_fixed.html";
+
+            // Save with WidthScalable = true
+            HtmlSaveOptions scalableOptions = new HtmlSaveOptions();
+            scalableOptions.WidthScalable = true; // Export column width using scalable units
+            workbook.Save(scalablePath, scalableOptions);
+
+            // Save with WidthScalable = false
+            HtmlSaveOptions fixedOptions = new HtmlSaveOptions();
+            fixedOptions.WidthScalable = false; // Export column width using fixed pixel units
+            workbook.Save(fixedPath, fixedOptions);
+
+            // Get file sizes
+            long scalableSize = new FileInfo(scalablePath).Length;
+            long fixedSize = new FileInfo(fixedPath).Length;
+
+            // Output the comparison
+            Console.WriteLine($"HTML size with WidthScalable = true : {scalableSize} bytes");
+            Console.WriteLine($"HTML size with WidthScalable = false: {fixedSize} bytes");
+
+            if (scalableSize < fixedSize)
+                Console.WriteLine("Scalable width produces a smaller HTML file.");
+            else if (scalableSize > fixedSize)
+                Console.WriteLine("Fixed width produces a smaller HTML file.");
+            else
+                Console.WriteLine("Both files have the same size.");
         }
-
-        // Initialize HTML save options (common for both saves)
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-        // Save with WidthScalable = true
-        htmlOptions.WidthScalable = true;
-        string truePath = "output_widthscalable_true.html";
-        workbook.Save(truePath, htmlOptions);
-        long trueSize = new FileInfo(truePath).Length;
-
-        // Save with WidthScalable = false
-        htmlOptions.WidthScalable = false;
-        string falsePath = "output_widthscalable_false.html";
-        workbook.Save(falsePath, htmlOptions);
-        long falseSize = new FileInfo(falsePath).Length;
-
-        // Output the file sizes and comparison result
-        Console.WriteLine($"WidthScalable = true  : {trueSize} bytes");
-        Console.WriteLine($"WidthScalable = false : {falseSize} bytes");
-
-        if (trueSize > falseSize)
-            Console.WriteLine("Enabling WidthScalable results in a larger HTML file.");
-        else if (trueSize < falseSize)
-            Console.WriteLine("Disabling WidthScalable results in a larger HTML file.");
-        else
-            Console.WriteLine("Both HTML files have the same size.");
     }
 }

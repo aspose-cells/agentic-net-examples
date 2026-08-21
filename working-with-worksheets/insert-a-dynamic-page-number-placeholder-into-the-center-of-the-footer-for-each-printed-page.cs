@@ -1,17 +1,17 @@
-// Title: Add Centered "Page X of Y" Footer in Excel using Aspose.Cells for C#
-// Description: Demonstrates how to set the center section of an Excel worksheet footer to show the current page number and total pages ("Page &P of &N") with Aspose.Cells, then save the workbook.
-// Keywords: Aspose.Cells C# footer page number | Excel center footer page count | SetFooter Aspose.Cells example | dynamic page number placeholder &P &N | C# add page numbers to printed Excel
-// Common Searches: Aspose.Cells set center footer page number | C# add "Page X of Y" to Excel footer | How to use SetFooter for page numbering in Aspose.Cells | Print Excel with page numbers using Aspose.Cells
-// Developer Intent: Insert a placeholder that automatically displays the current page and total page count in the center footer of every printed worksheet.
-// Use Cases: Printing multi‑page reports that need a consistent "Page X of Y" label. | Generating invoices or statements where each sheet shows its position in the document. | Automating documentation exports that require centered page numbering for compliance.
-// AI Prompts: Show C# code to set left, center, and right footer sections with different Aspose.Cells placeholders. | Explain how to change the font style and size of footer text in Aspose.Cells. | Provide a method to hide the footer on the first printed page while keeping page numbers on subsequent pages.
+// Title: Add "Page X of Y" to the center footer of an Excel sheet with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, optionally adds sample data, and uses Worksheet.PageSetup.SetFooter to insert the "Page &P of &N" placeholder in the center section of the printed footer, then saves the file as FooterWithPageNumber.xlsx.
+// Keywords: Aspose.Cells C# set footer | Excel page number placeholder | center footer page count | Worksheet PageSetup SetFooter | dynamic page numbering Aspose | print footer Aspose.Cells
+// Common Searches: Aspose.Cells set center footer page number | C# add page X of Y to Excel footer | How to use &P &N in Aspose.Cells footer | Print Excel with page numbers using Aspose.Cells .NET | Set footer for all worksheets Aspose.Cells
+// Developer Intent: Place a dynamic "Page X of Y" placeholder in the center of the worksheet footer.
+// Use Cases: Generate multi‑page printable reports where each page shows "Page X of Y" in the footer. | Create invoices or statements that automatically include page numbering for proper pagination. | Produce catalogs, manuals, or documentation exported from Excel with consistent footer pagination. | Automate batch export of workbooks to PDF/print with uniform page numbering across sheets.
+// AI Prompts: Generate C# code to set left and right footer text while keeping the center page number placeholder using Aspose.Cells. | Show how to apply the same footer settings to every worksheet in a workbook with Aspose.Cells. | Explain how to format the page number placeholder in the footer (e.g., bold, font size) using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsFooterExample
 {
-    // Demonstrates how to set the center section of an Excel worksheet footer to show the current page number and total pages ("Page &P of &N") with Aspose.Cells, then save the workbook.
+    // Creates a workbook, optionally adds sample data, and uses Worksheet.PageSetup.SetFooter to insert the "Page &P of &N" placeholder in the center section of the printed footer, then saves the file as FooterWithPageNumber.xlsx.
     class Program
     {
         static void Main()

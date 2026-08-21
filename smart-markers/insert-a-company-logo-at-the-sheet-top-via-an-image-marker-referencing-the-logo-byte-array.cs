@@ -1,46 +1,55 @@
-// Title: C# – Insert Company Logo into Excel Header with Aspose.Cells SetHeaderPicture
-// Description: Demonstrates how to load a PNG logo into a byte array and embed it in the center section of an Excel worksheet header using Aspose.Cells. The example sets the header script, adjusts the header margin for proper fit, includes robust file‑existence checking, and saves the workbook as an XLSX file.
-// Keywords: Aspose.Cells C# header image | SetHeaderPicture byte array | add logo to Excel header .NET | Excel header picture Aspose | C# workbook header logo example | Aspose.Cells SetHeader usage | Excel branding with header logo | smart markers header image
-// Common Searches: Aspose.Cells insert logo into Excel header C# | SetHeaderPicture example with byte array | how to add a company logo to Excel header using Aspose | center header image Aspose.Cells .NET | adjust Excel header margin for logo Aspose
-// Developer Intent: Embed a company logo in the worksheet header by loading the image as a byte array and using SetHeaderPicture.
-// Use Cases: Generate branded reports where the logo appears on every printed page. | Automate invoice creation with a consistent header logo for corporate identity. | Produce Excel exports that include a centered header image and proper margin settings for printing.
-// AI Prompts: Write C# code with Aspose.Cells that reads a PNG logo, sets it as the center header image using SetHeaderPicture, and adjusts the header margin. | Explain the relationship between SetHeaderPicture and SetHeader for embedding images in Excel headers with Aspose.Cells. | Provide error‑handling patterns for missing logo files and ensure the workbook saves after adding a header picture.
+// Title: Add a Company Logo to an Excel Header via Byte Array with Aspose.Cells for .NET
+// Description: Creates a new workbook, loads a PNG logo into a byte array, inserts the image into the center header using Worksheet.PageSetup.SetHeaderPicture and the &G placeholder, optionally scales the picture, and saves the file.
+// Keywords: Aspose.Cells header picture | C# insert logo Excel header | byte array image Excel | SetHeaderPicture Aspose | Excel &G placeholder | scale header image Aspose.Cells
+// Common Searches: how to add logo to Excel header Aspose.Cells | set header picture from byte array C# | use &G placeholder for header image | resize header logo Aspose.Cells | insert image into Excel page header programmatically
+// Developer Intent: Place a company logo in the top header of an Excel worksheet by loading the image as a byte array.
+// Use Cases: Automated generation of branded reports with a centered logo on every printed page. | Creating invoices that embed the corporate logo in the header without manual editing. | Producing printable worksheets where the logo size adapts to page layout.
+// AI Prompts: Show how to set a header picture from a MemoryStream instead of a file using Aspose.Cells for .NET. | Generate code that calculates dynamic scaling for a header logo based on page width and height. | Explain how to assign different images to the left, center, and right header sections in Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// Demonstrates how to load a PNG logo into a byte array and embed it in the center section of an Excel worksheet header using Aspose.Cells. The example sets the header script, adjusts the header margin for proper fit, includes robust file‑existence checking, and saves the workbook as an XLSX file.
+// Creates a new workbook, loads a PNG logo into a byte array, inserts the image into the center header using Worksheet.PageSetup.SetHeaderPicture and the &G placeholder, optionally scales the picture, and saves the file.
 class InsertLogoInHeader
 {
     static void Main()
     {
         try
         {
-            // Verify that the logo file exists to avoid FileNotFoundException
-            const string logoPath = "CompanyLogo.png";
-            if (!File.Exists(logoPath))
-                throw new FileNotFoundException($"Logo file not found: {logoPath}");
-
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Load the company logo into a byte array
-            byte[] logoBytes = File.ReadAllBytes(logoPath);
+            string logoPath = "company_logo.png";
 
-            // Insert the logo into the center section of the header (section index 1)
-            sheet.PageSetup.SetHeaderPicture(1, logoBytes);
-            // Place the picture in the center of the header using the appropriate script
-            sheet.PageSetup.SetHeader(1, "&C&G");
+            if (File.Exists(logoPath))
+            {
+                // Load the company logo into a byte array
+                byte[] logoBytes = File.ReadAllBytes(logoPath);
 
-            // Optionally adjust the header margin to ensure the logo fits nicely (in inches)
-            sheet.PageSetup.HeaderMargin = 0.5;
+                // Insert the logo into the center section of the header (section index 1)
+                Picture headerPic = worksheet.PageSetup.SetHeaderPicture(1, logoBytes);
+
+                // Set the header script to display the picture placeholder (&G)
+                worksheet.PageSetup.SetHeader(1, "&G");
+
+                // Optional: adjust picture scaling
+                // headerPic.ScaleX = 0.5; // 50% width
+                // headerPic.ScaleY = 0.5; // 50% height
+            }
+            else
+            {
+                Console.WriteLine($"Logo file not found: {logoPath}. Header will be created without image.");
+                // Optionally set a text header instead
+                worksheet.PageSetup.SetHeader(1, "Company Header");
+            }
 
             // Save the workbook
-            const string outputPath = "WorkbookWithLogoHeader.xlsx";
+            string outputPath = "Workbook_With_Logo_Header.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

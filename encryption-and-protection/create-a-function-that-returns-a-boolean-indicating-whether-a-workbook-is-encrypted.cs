@@ -1,71 +1,60 @@
-// Title: Check if an Excel workbook is encrypted with Aspose.Cells for .NET (C#)
-// Description: C# helper that uses Aspose.Cells FileFormatUtil.DetectFileFormat to determine whether a workbook file is password‑protected without loading the document, with file‑existence verification and robust error handling.
-// Keywords: Aspose.Cells | C# encryption detection | Excel workbook encrypted | FileFormatUtil IsEncrypted | DetectFileFormat | password protected Excel | WorkbookEncryptionHelper | Aspose.Cells .NET | encrypted workbook check | Excel file security
-// Common Searches: Aspose.Cells how to know if Excel file is encrypted | C# detect password protected workbook without opening | FileFormatUtil IsEncrypted example | Check Excel encryption status Aspose | Determine if .xlsx is encrypted using Aspose.Cells
-// Developer Intent: Determine whether a given Excel file is encrypted.
-// Use Cases: Prompt the user for a password only when the file is encrypted | Skip encrypted workbooks during bulk import or migration | Generate a compliance report listing encryption status of spreadsheets | Validate files before applying transformations or calculations | Automate pre‑processing of spreadsheets in a CI/CD pipeline
-// AI Prompts: Generate a C# method using Aspose.Cells that returns true if a workbook is encrypted and logs errors. | Create a script that scans a directory and prints encryption status for each Excel file using the IsWorkbookEncrypted helper. | Explain how to extend IsWorkbookEncrypted to also retrieve the encryption algorithm name from FileFormatInfo. | Provide unit tests for the IsWorkbookEncrypted function covering missing file, unencrypted, and encrypted scenarios. | Show how to integrate IsWorkbookEncrypted into an ASP.NET Core file‑upload workflow.
+// Title: Check if an Excel workbook is encrypted with Aspose.Cells in C#
+// Description: C# helper method that validates a file path, uses Aspose.Cells.FileFormatUtil.DetectFileFormat to obtain a FileFormatInfo object, and returns the IsEncrypted flag as a boolean. Handles missing files and errors without loading the workbook.
+// Keywords: Aspose.Cells | C# | detect encrypted Excel file | FileFormatUtil | IsEncrypted | password protected workbook | Excel encryption status | DetectFileFormat | WorkbookEncryptionHelper | .NET Excel security
+// Common Searches: Aspose.Cells check if Excel file is encrypted | C# detect password protection on .xlsx using Aspose | How to know if an Excel workbook is encrypted without opening it | FileFormatUtil IsEncrypted example | Determine encryption status of Excel file in .NET
+// Developer Intent: Find out whether a given Excel workbook is encrypted or password‑protected using Aspose.Cells.
+// Use Cases: Skip encrypted files during bulk import to avoid load errors. | Log encryption status for audit trails in document management systems. | Display a security indicator in a UI that lists Excel documents. | Validate files before applying transformations that require an unprotected workbook.
+// AI Prompts: Generate unit tests for WorkbookEncryptionHelper.IsWorkbookEncrypted covering missing files, unencrypted workbooks, and encrypted workbooks. | Provide an alternative approach that attempts to load the workbook with LoadOptions and catches the encryption exception to infer encryption status. | Create a step‑by‑step guide showing how to integrate IsWorkbookEncrypted into a file‑processing pipeline that filters protected Excel files.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsUtilities
+namespace AsposeCellsExample
 {
-    // C# helper that uses Aspose.Cells FileFormatUtil.DetectFileFormat to determine whether a workbook file is password‑protected without loading the document, with file‑existence verification and robust error handling.
+    // C# helper method that validates a file path, uses Aspose.Cells.FileFormatUtil.DetectFileFormat to obtain a FileFormatInfo object, and returns the IsEncrypted flag as a boolean. Handles missing files and errors without loading the workbook.
     public static class WorkbookEncryptionHelper
     {
         /// <param name="filePath">Full path to the workbook file.</param>
-        /// <returns>True if the workbook is encrypted; otherwise, false.</returns>
+        /// <returns>True if encrypted; otherwise false.</returns>
         public static bool IsWorkbookEncrypted(string filePath)
         {
-            // Ensure the file exists to avoid FileNotFoundException.
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentException("File path must be provided.", nameof(filePath));
+
             if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return false;
-            }
+                throw new FileNotFoundException("Workbook file not found.", filePath);
 
             try
             {
-                // Detect the file format and retrieve encryption information without fully loading the workbook.
+                // Detect file format and encryption status without loading the workbook.
                 FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
                 return formatInfo.IsEncrypted;
             }
             catch (Exception ex)
             {
-                // Log unexpected errors and treat the workbook as not encrypted.
-                Console.WriteLine($"Error detecting encryption for '{filePath}': {ex.Message}");
+                // Log the error and return false indicating unknown encryption status.
+                Console.Error.WriteLine($"Error detecting encryption: {ex.Message}");
                 return false;
             }
         }
-
-        // Example usage
-        public static void Demo()
-        {
-            string encryptedPath = "encrypted.xlsx";
-            string normalPath = "normal.xlsx";
-
-            bool isEncrypted1 = IsWorkbookEncrypted(encryptedPath);
-            Console.WriteLine($"'{encryptedPath}' encrypted? {isEncrypted1}");
-
-            bool isEncrypted2 = IsWorkbookEncrypted(normalPath);
-            Console.WriteLine($"'{normalPath}' encrypted? {isEncrypted2}");
-        }
     }
 
-    // Entry point for the console application.
-    public static class Program
+    internal class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
+            // Example file path; adjust as needed.
+            string filePath = @"C:\Docs\sample.xlsx";
+
             try
             {
-                WorkbookEncryptionHelper.Demo();
+                bool encrypted = WorkbookEncryptionHelper.IsWorkbookEncrypted(filePath);
+                Console.WriteLine($"Workbook encrypted: {encrypted}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.Error.WriteLine($"Failed to check workbook encryption: {ex.Message}");
             }
         }
     }

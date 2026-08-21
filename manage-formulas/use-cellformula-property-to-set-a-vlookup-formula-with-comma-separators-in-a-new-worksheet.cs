@@ -1,47 +1,45 @@
-// Title: Insert a VLOOKUP formula with commas using Cell.Formula in Aspose.Cells for .NET
-// Description: Creates a workbook, builds a D‑E lookup table, sets the formula "=VLOOKUP(A2, D1:E4, 2, FALSE)" in B2 via Cell.Formula, forces calculation, and saves the file as VlookupDemo.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | Cell.Formula | VLOOKUP | comma‑separated formula | calculate formulas | save workbook | Excel automation | lookup table
-// Common Searches: Aspose.Cells set VLOOKUP formula with commas | Cell.Formula VLOOKUP example C# | how to calculate formulas after inserting VLOOKUP Aspose | save workbook after adding VLOOKUP Aspose.Cells | programmatically add lookup formula in Excel using Aspose
-// Developer Intent: Programmatically add a comma‑separated VLOOKUP expression to a cell, evaluate it, and persist the workbook.
-// Use Cases: Pre‑populate reports with VLOOKUP functions that auto‑calculate on open. | Generate data‑driven Excel files where lookup logic is embedded during creation. | Automate cross‑reference checks by inserting VLOOKUP formulas into source worksheets.
-// AI Prompts: Write C# code with Aspose.Cells that adds a VLOOKUP formula using commas to cell B2, recalculates the workbook, and saves it as an .xlsx file. | Show how to use Cell.Formula to set "=VLOOKUP(A2, D1:E4, 2, FALSE)" and then call CalculateFormula in Aspose.Cells.
+// Title: C# – Set a VLOOKUP formula with comma separators using Aspose.Cells
+// Description: Shows how to create a new workbook, build a simple lookup table, add a lookup key, assign a VLOOKUP formula with comma separators via the Cell.Formula property, calculate all formulas, read the result, and save the file as VlookupDemo.xlsx.
+// Keywords: Aspose.Cells | C# | VLOOKUP | Cell.Formula | comma separator | calculate formulas | save workbook | lookup table | Excel automation | locale formula separator
+// Common Searches: Aspose.Cells set VLOOKUP formula with commas | C# VLOOKUP using Aspose.Cells Cell.Formula | how to calculate VLOOKUP in Aspose.Cells | save workbook after adding formula Aspose.Cells | locale specific formula separators Aspose.Cells
+// Developer Intent: Insert a VLOOKUP formula that uses commas, evaluate it, and write the workbook to disk.
+// Use Cases: Generate a price‑lookup sheet where item names are matched to prices via VLOOKUP. | Automate dynamic reports that require lookup calculations across many rows. | Create Excel files with pre‑calculated lookup results for downstream data pipelines.
+// AI Prompts: Write C# code with Aspose.Cells that adds a VLOOKUP formula using comma separators, forces calculation, and saves the workbook. | Explain how to handle locale‑specific formula separators when setting formulas through Aspose.Cells. | Show how to apply the same VLOOKUP formula to a range of lookup values and retrieve each result programmatically.
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, builds a D‑E lookup table, sets the formula "=VLOOKUP(A2, D1:E4, 2, FALSE)" in B2 via Cell.Formula, forces calculation, and saves the file as VlookupDemo.xlsx.
+// Shows how to create a new workbook, build a simple lookup table, add a lookup key, assign a VLOOKUP formula with comma separators via the Cell.Formula property, calculate all formulas, read the result, and save the file as VlookupDemo.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-
-        // Add a new worksheet (the first one is already present, we can use it)
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // ----- Prepare data for VLOOKUP -----
-        // Header for lookup table
-        worksheet.Cells["D1"].PutValue("Key");
-        worksheet.Cells["E1"].PutValue("Value");
+        // Populate a simple lookup table (A1:B4)
+        worksheet.Cells["A1"].PutValue("Item");
+        worksheet.Cells["B1"].PutValue("Price");
+        worksheet.Cells["A2"].PutValue("Apple");
+        worksheet.Cells["B2"].PutValue(10);
+        worksheet.Cells["A3"].PutValue("Banana");
+        worksheet.Cells["B3"].PutValue(20);
+        worksheet.Cells["A4"].PutValue("Cherry");
+        worksheet.Cells["B4"].PutValue(30);
 
-        // Sample lookup rows
-        worksheet.Cells["D2"].PutValue("A");
-        worksheet.Cells["E2"].PutValue(100);
-        worksheet.Cells["D3"].PutValue("B");
-        worksheet.Cells["E3"].PutValue(200);
-        worksheet.Cells["D4"].PutValue("C");
-        worksheet.Cells["E4"].PutValue(300);
+        // The value we want to look up
+        worksheet.Cells["D2"].PutValue("Banana");
 
-        // Value we want to look up
-        worksheet.Cells["A2"].PutValue("B");
-
-        // ----- Set VLOOKUP formula using comma separators -----
-        // Formula: =VLOOKUP(A2, D1:E4, 2, FALSE)
-        worksheet.Cells["B2"].Formula = "=VLOOKUP(A2, D1:E4, 2, FALSE)";
+        // Set VLOOKUP formula using comma separators
+        // Syntax: =VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup])
+        worksheet.Cells["E2"].Formula = "=VLOOKUP(D2, A2:B4, 2, FALSE)";
 
         // Calculate all formulas in the workbook
         workbook.CalculateFormula();
+
+        // Output the result of the VLOOKUP
+        Console.WriteLine("VLOOKUP result: " + worksheet.Cells["E2"].Value);
 
         // Save the workbook to a file
         workbook.Save("VlookupDemo.xlsx");

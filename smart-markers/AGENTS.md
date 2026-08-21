@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Smart Markers Agent
 category: smart-markers
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: C# examples for template-driven Excel reports, Smart Marker syntax, object and DataTable binding, grouping, formulas, images, formatting, and WorkbookDesigner processing
 primary_apis: [WorkbookDesigner, WorkbookDesigner.SetDataSource, WorkbookDesigner.Process, WorkbookDesigner.Workbook, DataTable]
 search_intents: [Smart Markers Aspose.Cells C#, generate Excel report from DataTable, bind objects to Excel template, WorkbookDesigner Process]
@@ -318,3 +318,4 @@ Interpret one developer intent
 ## Definition of done
 
 A `smart-markers` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
+

@@ -1,42 +1,65 @@
-// Title: Load an XLSX workbook and get the first chart with Aspose.Cells for .NET
-// Description: Shows how to open an existing XLSX file using Aspose.Cells for .NET, access the first worksheet, verify its Charts collection, retrieve the first Chart object, and read its Name and Type properties.
-// Keywords: Aspose.Cells load workbook | Aspose.Cells chart collection | retrieve first chart C# | read chart name Aspose.Cells | Excel chart object .NET | Aspose.Cells get chart | Workbook(string) constructor | chart properties Aspose.Cells | C# Excel chart extraction | Aspose.Cells example
-// Common Searches: How to read the first chart in an Excel file using Aspose.Cells for .NET | Aspose.Cells retrieve chart object from worksheet | Get chart name and type from XLSX with Aspose.Cells | Check if a worksheet contains charts using Aspose.Cells | Aspose.Cells C# load workbook and access charts
-// Developer Intent: Obtain the first Chart object from the first worksheet of an existing XLSX workbook using Aspose.Cells for .NET.
-// Use Cases: Display the chart's name and type to confirm successful retrieval. | Validate the presence of charts before applying chart‑specific logic. | Modify chart attributes (e.g., title, style) after acquiring the Chart instance.
-// AI Prompts: Provide C# code that loads an XLSX file with Aspose.Cells and extracts the data series of the first chart on the first worksheet. | Show how to change the title of the first chart after retrieving it from a worksheet using Aspose.Cells for .NET. | Explain how to loop through all charts in a workbook and export each chart as an image with Aspose.Cells.
+// Title: C# – Load an XLSX workbook with Aspose.Cells and get the first chart from the first worksheet
+// Description: Opens an existing XLSX file, verifies the file and worksheet, checks for charts, retrieves the first Chart object, prints its Name and Type, and optionally saves the workbook. Includes error handling for missing files or absent charts.
+// Keywords: Aspose.Cells | C# chart extraction | load workbook | first chart | worksheet charts | retrieve chart object | read chart name | chart type | Aspose.Cells example | XLSX chart C#
+// Common Searches: Aspose.Cells get first chart C# | read chart name from XLSX using Aspose.Cells | C# load workbook and list charts | how to check if worksheet has charts Aspose.Cells | sample code for chart extraction Aspose.Cells .NET
+// Developer Intent: Obtain the first Chart object from the first worksheet of an XLSX workbook using Aspose.Cells in C#.
+// Use Cases: Log chart metadata for audit or reporting. | Validate that a worksheet contains at least one chart before further processing. | Extract chart information to drive dynamic report generation. | Modify properties of the first chart after loading the workbook. | Automate workbook validation in CI/CD pipelines.
+// AI Prompts: Write C# code with Aspose.Cells that opens a workbook, checks for charts, returns the first chart's Name and Type, and handles missing file or no charts. | Create a robust Aspose.Cells snippet that iterates all charts in a worksheet, prints each chart's Name and Type, and includes graceful error handling. | Show how to copy the first chart to a new worksheet after loading an XLSX file using Aspose.Cells, preserving its formatting.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Shows how to open an existing XLSX file using Aspose.Cells for .NET, access the first worksheet, verify its Charts collection, retrieve the first Chart object, and read its Name and Type properties.
+// Opens an existing XLSX file, verifies the file and worksheet, checks for charts, retrieves the first Chart object, prints its Name and Type, and optionally saves the workbook. Includes error handling for missing files or absent charts.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook that contains a chart
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath); // uses Workbook(string) constructor
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Retrieve the first chart object from the worksheet's chart collection
-        if (worksheet.Charts.Count > 0)
+        try
         {
-            Chart firstChart = worksheet.Charts[0]; // ChartCollection indexer
+            string inputFile = "input.xlsx";
 
-            // Example: display some properties of the retrieved chart
-            Console.WriteLine($"Chart Name: {firstChart.Name}");
-            Console.WriteLine($"Chart Type: {firstChart.Type}");
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Input file '{inputFile}' not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputFile);
+
+            // Ensure the workbook has at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+            {
+                Console.WriteLine("The workbook contains no worksheets.");
+                return;
+            }
+
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Check for charts in the first worksheet
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the first worksheet.");
+            }
+            else
+            {
+                // Retrieve and display details of the first chart
+                Chart firstChart = worksheet.Charts[0];
+                Console.WriteLine($"Chart Name: {firstChart.Name}");
+                Console.WriteLine($"Chart Type: {firstChart.Type}");
+            }
+
+            // Save the workbook (optional)
+            string outputFile = "output.xlsx";
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved to '{outputFile}'.");
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("No charts found in the first worksheet.");
+            Console.WriteLine($"Error: {ex.Message}");
         }
-
-        // (Optional) Save the workbook if any modifications are made
-        // workbook.Save("output.xlsx");
     }
 }

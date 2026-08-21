@@ -1,69 +1,74 @@
-// Title: Add a Footer Watermark Image to Every Worksheet with Aspose.Cells (C#)
-// Description: This example demonstrates how to load a PNG file, verify its presence, and use Aspose.Cells' `SetFooterPicture` method to embed the image as a center‑section footer on all worksheets. It also shows how to clear the footer when the image is unavailable and save the workbook.
-// Keywords: Aspose.Cells footer picture | C# footer watermark | SetFooterPicture example | apply image to worksheet footer | Aspose.Cells page setup | add logo to Excel footer
-// Common Searches: Aspose.Cells add image to footer C# | set footer picture for all sheets Aspose.Cells | C# code to insert watermark in Excel footer | Aspose.Cells page setup footer image multiple worksheets
-// Developer Intent: Insert the same picture as a footer watermark across all worksheets in a workbook.
-// Use Cases: Brand every sheet with a company logo in the footer. | Include a confidentiality watermark on printable reports. | Attach a copyright image to each worksheet before distribution.
-// AI Prompts: Show how to place the footer watermark in the left section instead of the center using Aspose.Cells. | Provide code that reads the image from a stream and applies it as a footer picture to each worksheet. | Explain how to use different footer images for odd and even pages with Aspose.Cells.
+// Title: Add a uniform footer image watermark to every worksheet using Aspose.Cells for .NET (C#)
+// Description: The sample reads a PNG file, creates or opens a Workbook, and inserts the image as a centered footer picture on each worksheet with PageSetup.SetFooterPicture and PageSetup.SetFooter("&G"). The file is saved as WorkbookWithFooterWatermark.xlsx.
+// Keywords: Aspose.Cells C# footer image | Excel footer watermark .NET | SetFooterPicture Aspose | centered footer picture | same image all worksheets | Excel workbook watermark | read PNG bytes C# | PageSetup footer picture | Aspose.Cells tutorial | Excel automation watermark
+// Common Searches: asp.net add image to Excel footer | c# Aspose.Cells set footer picture for all sheets | how to place a logo in Excel footer using Aspose | apply identical footer watermark across worksheets programmatically | set footer picture center section Aspose.Cells
+// Developer Intent: Insert the same picture as a footer watermark on every worksheet in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Generate a report workbook that automatically displays the company logo in the footer of each sheet. | Add a confidentiality‑notice image to the footer of all worksheets in a financial statement before distribution. | Create monthly sales workbooks where a branding graphic appears consistently in the footer of every page.
+// AI Prompts: Show how to move the watermark to the left or right footer section instead of the center. | Provide an example that reads the image from a MemoryStream and applies it to all worksheets. | Explain techniques for resizing or compressing a large PNG before calling SetFooterPicture to improve performance.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// This example demonstrates how to load a PNG file, verify its presence, and use Aspose.Cells' `SetFooterPicture` method to embed the image as a center‑section footer on all worksheets. It also shows how to clear the footer when the image is unavailable and save the workbook.
-class FooterWatermarkDemo
+// The sample reads a PNG file, creates or opens a Workbook, and inserts the image as a centered footer picture on each worksheet with PageSetup.SetFooterPicture and PageSetup.SetFooter("&G"). The file is saved as WorkbookWithFooterWatermark.xlsx.
+class Program
 {
     static void Main()
     {
-        try
+        // Path to the watermark image file
+        string imagePath = "watermark.png";
+
+        byte[] imageData = null;
+
+        // Verify that the image file exists before attempting to read it
+        if (File.Exists(imagePath))
         {
-            // Path to the image file that will be used as the footer watermark
-            string imagePath = "watermark.png";
-
-            // Verify that the image file exists before attempting to read it
-            if (!File.Exists(imagePath))
-            {
-                Console.WriteLine($"Image file not found: {imagePath}");
-                Console.WriteLine("The workbook will be created without a footer watermark.");
-            }
-
-            // Load the image file into a byte array (if it exists)
-            byte[] imageData = null;
-            if (File.Exists(imagePath))
+            try
             {
                 imageData = File.ReadAllBytes(imagePath);
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading image file: {ex.Message}");
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Image file not found: {imagePath}. Watermark will be skipped.");
+        }
 
-            // Create a new workbook (or load an existing one if needed)
-            Workbook workbook = new Workbook();
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
 
-            // Apply the footer picture to every worksheet in the workbook
+        // Apply the footer picture to every worksheet if image data is available
+        if (imageData != null)
+        {
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                if (imageData != null)
+                try
                 {
-                    // Insert the picture into the center section of the footer (section index 1)
-                    Picture picture = sheet.PageSetup.SetFooterPicture(1, imageData);
-                    // Set the footer script to display the picture
+                    // Set the picture in the center section of the footer (section index 1)
+                    sheet.PageSetup.SetFooterPicture(1, imageData);
+
+                    // Use the image placeholder "&G" to display the picture in the footer
                     sheet.PageSetup.SetFooter(1, "&G");
                 }
-                else
+                catch (Exception ex)
                 {
-                    // Optionally clear any existing footer content
-                    sheet.PageSetup.SetFooter(1, string.Empty);
+                    Console.WriteLine($"Error applying watermark to sheet '{sheet.Name}': {ex.Message}");
                 }
             }
+        }
 
-            // Save the workbook with the footer watermarks applied
-            string outputPath = "WorkbookWithFooterWatermark.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        // Save the modified workbook
+        try
+        {
+            workbook.Save("WorkbookWithFooterWatermark.xlsx");
+            Console.WriteLine("Workbook saved successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred:");
-            Console.WriteLine(ex.Message);
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
     }
 }

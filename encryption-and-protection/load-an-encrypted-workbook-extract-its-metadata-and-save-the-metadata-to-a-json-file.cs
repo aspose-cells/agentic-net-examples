@@ -1,10 +1,10 @@
-// Title: Extract metadata from a password‑protected Excel workbook to JSON with Aspose.Cells for .NET
-// Description: This example demonstrates how to open an encrypted .xlsx file using Aspose.Cells' MetadataOptions, read both built‑in and custom document properties via WorkbookMetadata, serialize the combined data with System.Text.Json, and write the formatted JSON to disk. Includes robust error handling for CellsException and general exceptions.
-// Keywords: Aspose.Cells encrypted workbook metadata | C# read password protected Excel properties | WorkbookMetadata document properties | export Excel metadata to JSON | .NET extract custom document properties | MetadataOptions password
-// Common Searches: load password protected Excel file Aspose.Cells C# | extract built‑in and custom properties from encrypted workbook | save Excel workbook metadata as JSON .NET | Aspose.Cells MetadataOptions example | read document properties from protected .xlsx
-// Developer Intent: Open a password‑protected Excel file, retrieve its built‑in and custom document properties, and save the information as a JSON document.
-// Use Cases: Compliance audit: pull metadata from secured workbooks without manual decryption. | Data migration: move Excel document properties into a JSON‑based configuration repository. | Reporting: generate a consolidated JSON report of properties across multiple protected files.
-// AI Prompts: Generate C# code that opens an encrypted Excel workbook with Aspose.Cells, reads all document properties, and writes them to a pretty‑printed JSON file. | Explain the role of MetadataOptions.Password when accessing protected workbook metadata in Aspose.Cells for .NET. | Suggest best‑practice error handling for extracting metadata from a password‑protected workbook using Aspose.Cells.
+// Title: Read encrypted Excel workbook metadata and export to JSON with Aspose.Cells for .NET
+// Description: C# sample that opens a password‑protected .xlsx using Aspose.Cells MetadataOptions, extracts both built‑in and custom document properties via WorkbookMetadata, and writes the collected data to a formatted JSON file.
+// Keywords: Aspose.Cells encrypted workbook | C# read password protected Excel metadata | WorkbookMetadata password option | extract document properties Aspose.Cells | save Excel metadata to JSON | MetadataOptions example .NET | Excel file encryption Aspose | built‑in and custom properties extraction | Aspose.Cells JSON serialization
+// Common Searches: How to read metadata from a password‑protected Excel file using Aspose.Cells | Aspose.Cells C# extract document properties from encrypted workbook | Export Excel workbook properties to JSON in .NET | Load encrypted workbook metadata without opening the file | Aspose.Cells MetadataOptions password example
+// Developer Intent: Open a password‑protected Excel workbook, retrieve its built‑in and custom document properties, and save the information as a JSON file.
+// Use Cases: Create compliance reports by exporting properties of protected workbooks to a central JSON store. | Maintain an audit trail of encrypted Excel files by archiving their metadata. | Migrate custom and built‑in properties from password‑locked spreadsheets to a metadata management system.
+// AI Prompts: Generate C# code that uses Aspose.Cells to open a password‑protected .xlsx and collect all document properties into dictionaries. | Show how to serialize the extracted workbook metadata to a pretty‑printed JSON file with System.Text.Json. | Explain best practices for handling FileNotFoundException, CellsException, and generic errors when loading encrypted workbooks with Aspose.Cells.
 
 using System;
 using System.Collections.Generic;
@@ -14,77 +14,84 @@ using Aspose.Cells;
 using Aspose.Cells.Metadata;
 using Aspose.Cells.Properties;
 
-namespace AsposeCellsMetadataExample
+// C# sample that opens a password‑protected .xlsx using Aspose.Cells MetadataOptions, extracts both built‑in and custom document properties via WorkbookMetadata, and writes the collected data to a formatted JSON file.
+class ExtractEncryptedWorkbookMetadata
 {
-    // This example demonstrates how to open an encrypted .xlsx file using Aspose.Cells' MetadataOptions, read both built‑in and custom document properties via WorkbookMetadata, serialize the combined data with System.Text.Json, and write the formatted JSON to disk. Includes robust error handling for CellsException and general exceptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the encrypted workbook and its password
+        string workbookPath = "encrypted_workbook.xlsx";
+        string workbookPassword = "mySecretPassword";
+
+        try
         {
-            try
+            // Ensure the workbook exists; if not, create a simple encrypted workbook for demo purposes
+            if (!File.Exists(workbookPath))
             {
-                // Path to the encrypted workbook
-                string workbookPath = "encrypted_workbook.xlsx";
+                // Create a new workbook with a single sheet and some data
+                var wb = new Workbook();
+                wb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
 
-                // Verify that the workbook file exists
-                if (!File.Exists(workbookPath))
-                {
-                    Console.WriteLine($"Error: Workbook file '{workbookPath}' not found.");
-                    return;
-                }
+                // Set workbook password for encryption
+                wb.Settings.Password = workbookPassword;
 
-                // Password used to protect the workbook
-                string password = "mySecretPassword";
-
-                // Create options to load document properties and provide the password
-                MetadataOptions options = new MetadataOptions(MetadataType.DocumentProperties)
-                {
-                    Password = password
-                };
-
-                // Load workbook metadata (WorkbookMetadata does not require explicit Load call)
-                WorkbookMetadata metadata = new WorkbookMetadata(workbookPath, options);
-
-                // Extract built‑in document properties
-                BuiltInDocumentPropertyCollection builtInProps = metadata.BuiltInDocumentProperties;
-                var builtInDict = new Dictionary<string, object>();
-                foreach (DocumentProperty prop in builtInProps)
-                {
-                    builtInDict[prop.Name] = prop.Value;
-                }
-
-                // Extract custom document properties
-                CustomDocumentPropertyCollection customProps = metadata.CustomDocumentProperties;
-                var customDict = new Dictionary<string, object>();
-                foreach (DocumentProperty prop in customProps)
-                {
-                    customDict[prop.Name] = prop.Value;
-                }
-
-                // Combine both collections into a single object for JSON serialization
-                var metadataObject = new
-                {
-                    BuiltInProperties = builtInDict,
-                    CustomProperties = customDict
-                };
-
-                // Serialize to JSON
-                string json = JsonSerializer.Serialize(metadataObject, new JsonSerializerOptions { WriteIndented = true });
-
-                // Save JSON to a file
-                string jsonPath = "workbook_metadata.json";
-                File.WriteAllText(jsonPath, json);
-
-                Console.WriteLine($"Metadata extracted and saved to '{jsonPath}'.");
+                // Save the encrypted workbook
+                wb.Save(workbookPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Created encrypted workbook at '{workbookPath}'.");
             }
-            catch (CellsException ex)
+
+            // Configure metadata options to load document properties and provide the password
+            var metadataOptions = new MetadataOptions(MetadataType.DocumentProperties)
             {
-                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
-            }
-            catch (Exception ex)
+                Password = workbookPassword
+            };
+
+            // Load the workbook metadata using the provided constructor
+            var metadata = new WorkbookMetadata(workbookPath, metadataOptions);
+
+            // Prepare containers for built‑in and custom properties
+            var builtInProps = new Dictionary<string, object>();
+            var customProps = new Dictionary<string, object>();
+
+            // Extract built‑in document properties
+            foreach (DocumentProperty prop in metadata.BuiltInDocumentProperties)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                builtInProps[prop.Name] = prop.Value ?? string.Empty;
             }
+
+            // Extract custom document properties
+            foreach (DocumentProperty prop in metadata.CustomDocumentProperties)
+            {
+                customProps[prop.Name] = prop.Value ?? string.Empty;
+            }
+
+            // Combine both sections into a single object for JSON serialization
+            var allMetadata = new
+            {
+                BuiltIn = builtInProps,
+                Custom = customProps
+            };
+
+            // Serialize to JSON (indented for readability)
+            string json = JsonSerializer.Serialize(allMetadata, new JsonSerializerOptions { WriteIndented = true });
+
+            // Save the JSON to a file
+            string jsonPath = "workbook_metadata.json";
+            File.WriteAllText(jsonPath, json);
+
+            Console.WriteLine($"Metadata extracted and saved to '{jsonPath}'.");
+        }
+        catch (FileNotFoundException fnfEx)
+        {
+            Console.WriteLine($"File not found: {fnfEx.FileName}");
+        }
+        catch (CellsException cellsEx)
+        {
+            Console.WriteLine($"Aspose.Cells error: {cellsEx.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

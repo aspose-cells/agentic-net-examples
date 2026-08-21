@@ -1,67 +1,63 @@
-// Title: C# – Extract every formula from an Excel workbook into a SheetName!Cell dictionary with Aspose.Cells
-// Description: Loads an XLSX file using Aspose.Cells, forces formula parsing, scans each worksheet’s used range, captures non‑empty Formula values, and stores them in a Dictionary where the key is "SheetName!CellAddress". The dictionary can be printed, saved, or further processed.
-// Keywords: Aspose.Cells extract formulas C# | C# get all Excel formulas dictionary | LoadOptions ParsingFormulaOnOpen | Workbook.ParseFormulas | iterate worksheets Aspose.Cells | cell.Formula property | .NET Excel audit | global developers | US .NET community | European data processing
-// Common Searches: how to list all formulas in an Excel file using Aspose.Cells C# | dictionary of sheet name and cell address for formulas .NET | parse formulas after opening workbook Aspose.Cells | retrieve cell.Formula for every cell in workbook | extract Excel formulas for audit report C#
-// Developer Intent: Gather every formula present in a loaded workbook and organize them in a key‑value map keyed by sheet name and cell address.
-// Use Cases: Create a formula audit log that shows which cells contain calculations. | Replace or update specific formulas programmatically after locating them in the dictionary. | Export the formula map to JSON, CSV, or a database for external analysis or reporting.
-// AI Prompts: Generate a reusable C# method that returns Dictionary<string,string> of all formulas from a Workbook using Aspose.Cells. | Provide C# code that extracts formulas while correctly handling merged cells, hidden rows, and protected sheets. | Show how to serialize the formula dictionary to JSON and write it to a file with System.Text.Json.
+// Title: Extract Excel formulas into a C# Dictionary with Aspose.Cells
+// Description: Loads a workbook, forces formula parsing, walks every worksheet and populated cell, checks the IsFormula flag, and stores each cell's A1 address together with its formula text in a Dictionary<string,string> that is returned to the caller.
+// Keywords: Aspose.Cells formula extraction | C# Excel formula dictionary | parse formulas after load | .NET read Excel formulas | cell address to formula mapping | global | Aspose.Cells API
+// Common Searches: Aspose.Cells get all formulas C# | dictionary of cell formulas Aspose | extract Excel formulas programmatically | iterate worksheets and collect formulas | force formula parsing Aspose.Cells
+// Developer Intent: Collect every formula in a workbook and map it to its A1 cell reference.
+// Use Cases: Generate an audit list of all formula cells for compliance reviews. | Batch‑replace or adjust formulas across multiple sheets before saving. | Export formula mappings to JSON, CSV, or a database for external analysis.
+// AI Prompts: Create a C# method that opens an Excel file with Aspose.Cells, ensures formulas are parsed, and returns a Dictionary<string,string> of cell addresses and their formulas. | Show how to traverse all worksheets and cells in Aspose.Cells, selecting only those where IsFormula is true. | Explain how to handle workbooks loaded with formula parsing disabled and still retrieve the formulas using Aspose.Cells.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-// Loads an XLSX file using Aspose.Cells, forces formula parsing, scans each worksheet’s used range, captures non‑empty Formula values, and stores them in a Dictionary where the key is "SheetName!CellAddress". The dictionary can be printed, saved, or further processed.
-class ExtractFormulas
+// Loads a workbook, forces formula parsing, walks every worksheet and populated cell, checks the IsFormula flag, and stores each cell's A1 address together with its formula text in a Dictionary<string,string> that is returned to the caller.
+class FormulaExtractor
 {
-    static void Main()
+    // Loads a workbook from the given path and extracts all formulas.
+    // Returns a dictionary where the key is the cell address (e.g., "A1")
+    // and the value is the formula string (e.g., "=SUM(B1:B5)").
+    public static Dictionary<string, string> ExtractFormulas(string filePath)
     {
-        // Load the workbook (adjust the file path as needed)
-        string inputPath = "input.xlsx";
+        // Load the workbook (uses default LoadOptions)
+        Workbook workbook = new Workbook(filePath);
 
-        // Ensure formulas are parsed when the file is opened
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.ParsingFormulaOnOpen = true;
-        Workbook workbook = new Workbook(inputPath, loadOptions);
-
-        // Parse any formulas that were not parsed during load
+        // Ensure that any formulas that were not parsed on load are parsed now.
+        // This avoids null or empty Formula values for cells that were loaded with parsing disabled.
         workbook.ParseFormulas(false);
 
-        // Dictionary to store formulas keyed by "SheetName!CellAddress"
-        Dictionary<string, string> formulaDictionary = new Dictionary<string, string>();
+        var formulas = new Dictionary<string, string>();
 
-        // Iterate through all worksheets
+        // Iterate through each worksheet in the workbook.
         foreach (Worksheet sheet in workbook.Worksheets)
         {
             Cells cells = sheet.Cells;
 
-            // Determine the used range of the worksheet
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            // Scan each cell within the used range
-            for (int row = 0; row <= maxRow; row++)
+            // Iterate through all cells that contain data in the worksheet.
+            foreach (Cell cell in cells)
             {
-                for (int col = 0; col <= maxCol; col++)
+                // Check if the cell actually contains a formula.
+                if (cell.IsFormula)
                 {
-                    Cell cell = cells[row, col];
-
-                    // If the cell contains a formula, add it to the dictionary
-                    if (!string.IsNullOrEmpty(cell.Formula))
-                    {
-                        string key = $"{sheet.Name}!{cell.Name}";
-                        formulaDictionary[key] = cell.Formula;
-                    }
+                    // cell.Name returns the address in A1 notation.
+                    formulas[cell.Name] = cell.Formula;
                 }
             }
         }
 
-        // Output the collected formulas (optional)
-        foreach (var kvp in formulaDictionary)
-        {
-            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
-        }
+        return formulas;
+    }
 
-        // Save the workbook if any changes were made (optional)
-        // workbook.Save("output.xlsx");
+    // Example entry point demonstrating usage.
+    static void Main()
+    {
+        string inputPath = "input.xlsx"; // Path to the workbook to process.
+
+        Dictionary<string, string> formulaMap = ExtractFormulas(inputPath);
+
+        // Output the extracted formulas.
+        foreach (KeyValuePair<string, string> kvp in formulaMap)
+        {
+            Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+        }
     }
 }

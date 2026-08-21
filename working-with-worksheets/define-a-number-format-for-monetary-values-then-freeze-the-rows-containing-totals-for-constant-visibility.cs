@@ -1,78 +1,83 @@
-// Title: Aspose.Cells .NET: Apply Currency Format to a Table Column and Freeze the Totals Row
-// Description: C# example that creates a workbook, builds a ListObject table with item prices, adds a totals row that sums the Price column, defines a custom currency style ($#,##0.00), applies the style only to the Price column (including the totals row), and freezes all rows through the totals row for constant visibility.
-// Keywords: Aspose.Cells | C# | .NET | currency number format | custom number format | freeze panes | freeze rows | totals row | ListObject | table column formatting | Excel monetary formatting
-// Common Searches: Aspose.Cells format column as currency C# | How to freeze rows up to totals row in Aspose.Cells | Apply custom number format to ListObject column Aspose.Cells | Add totals row and keep it visible in Excel using Aspose.Cells | C# example for currency style and freeze panes with Aspose.Cells
-// Developer Intent: Create a worksheet where the price column shows monetary values in a custom currency format and the totals row stays visible while scrolling.
-// Use Cases: Sales report with prices displayed as $1,234.56 and a frozen totals row for quick reference. | Financial statement where the sum row remains on screen while reviewing detailed line items. | Invoice workbook that formats all monetary values as currency and locks the totals row in place.
-// AI Prompts: Generate C# code using Aspose.Cells to apply a $#,##0.00 number format to a specific ListObject column and freeze rows through the totals row. | Show how to add a totals row to a table, set its calculation to Sum, format the column as currency, and keep the totals row visible with freeze panes in Aspose.Cells .NET. | Provide an Aspose.Cells example that creates a custom currency style, applies it only to the data and totals rows of a column, then freezes those rows for constant visibility.
+// Title: Format a Currency Column and Freeze the Totals Row with Aspose.Cells for .NET
+// Description: Creates a workbook, adds a ListObject table with a summed totals row, applies a custom "$#,##0.00" currency style only to the data and totals cells, freezes all rows up to the totals row, and saves the file.
+// Keywords: Aspose.Cells currency format | custom number format .NET | freeze panes Aspose.Cells | totals row formatting | ListObject monetary style | C# Excel currency formatting | freeze rows with totals
+// Common Searches: Aspose.Cells set custom monetary format for a column | How to freeze rows that include a totals row in Aspose.Cells | Apply number format only to data rows in a ListObject | Add and format a totals row in an Aspose.Cells table | C# freeze panes up to a specific row in Excel
+// Developer Intent: Generate a worksheet, format the Price column as currency, add a summed totals row, and keep those rows visible by freezing them.
+// Use Cases: Sales report where prices are shown in a specific currency format and the total stays on screen while scrolling. | Invoice template that formats all monetary values with "$#,##0.00" and pins the header and totals rows for quick reference. | Financial dashboard that uses a ListObject with a sum totals row, applies currency styling only to numeric cells, and freezes the totals row.
+// AI Prompts: Provide C# code using Aspose.Cells to apply a "$#,##0.00" format to a table column and freeze rows up to the totals row. | Show an Aspose.Cells example that creates a ListObject, adds a sum totals row, formats the numeric column as currency, and freezes the header and totals rows. | Explain how to use StyleFlag in Aspose.Cells to apply only number formatting while preserving other cell styles.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsNumberFormatAndFreeze
+namespace AsposeCellsExamples
 {
-    // C# example that creates a workbook, builds a ListObject table with item prices, adds a totals row that sums the Price column, defines a custom currency style ($#,##0.00), applies the style only to the Price column (including the totals row), and freezes all rows through the totals row for constant visibility.
-    class Program
+    // Creates a workbook, adds a ListObject table with a summed totals row, applies a custom "$#,##0.00" currency style only to the data and totals cells, freezes all rows up to the totals row, and saves the file.
+    public class MonetaryFormatAndFreezeRows
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate sample data: Item names in column A and prices in column B
-                cells["A1"].PutValue("Item");
-                cells["B1"].PutValue("Price");
-                string[] items = { "Book", "Pen", "Notebook", "Eraser" };
-                double[] prices = { 12.5, 1.2, 5.75, 0.8 };
-
-                for (int i = 0; i < items.Length; i++)
-                {
-                    cells[i + 1, 0].PutValue(items[i]);   // Column A
-                    cells[i + 1, 1].PutValue(prices[i]); // Column B
-                }
-
-                // Add a table (ListObject) that includes the data range (A1:B{items.Length + 1})
-                int lastDataRow = items.Length + 1; // includes header row
-                int tableIndex = sheet.ListObjects.Add(0, 0, lastDataRow, 1, true);
-                ListObject table = sheet.ListObjects[tableIndex];
-                table.DisplayName = "SalesTable";
-
-                // Show totals row and set the totals calculation for the Price column (index 1)
-                table.ShowTotals = true;
-                table.ListColumns[1].TotalsCalculation = TotalsCalculation.Sum;
-
-                // Define a monetary number format style (e.g., $1,234.56)
-                Style moneyStyle = workbook.CreateStyle();
-                moneyStyle.Custom = "$#,##0.00";
-
-                // Apply only the number format to the Price column (including the totals row)
-                StyleFlag flag = new StyleFlag { NumberFormat = true };
-
-                // Determine the range that covers the Price column of the table (data + totals)
-                int priceColumnIndex = 1; // column B (zero‑based)
-                int dataStartRow = 1; // first data row (zero‑based, after header)
-                int totalsRowIndex = items.Length + 1; // zero‑based index of the totals row
-                int totalRows = items.Length + 1; // data rows + totals row
-
-                // Create the range for the Price column (data rows + totals row)
-                Aspose.Cells.Range priceRange = sheet.Cells.CreateRange(dataStartRow, priceColumnIndex, totalRows, 1);
-                priceRange.ApplyStyle(moneyStyle, flag);
-
-                // Freeze the rows up to (and including) the totals row so they stay visible while scrolling
-                sheet.FreezePanes(totalsRowIndex + 1, 0, totalsRowIndex + 1, 0);
-
-                // Save the workbook
-                workbook.Save("NumberFormatAndFreeze.xlsx");
+                Run();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Populate sample data (Item and Price)
+            cells["A1"].PutValue("Item");
+            cells["B1"].PutValue("Price");
+            string[] items = { "Apple", "Banana", "Cherry", "Date", "Elderberry" };
+            double[] prices = { 1.25, 0.75, 2.50, 3.10, 4.20 };
+            for (int i = 0; i < items.Length; i++)
+            {
+                cells[i + 1, 0].PutValue(items[i]);   // Column A
+                cells[i + 1, 1].PutValue(prices[i]); // Column B
+            }
+
+            // Add a table covering the data range and enable the totals row
+            int tableIndex = worksheet.ListObjects.Add(0, 0, items.Length, 1, true);
+            ListObject table = worksheet.ListObjects[tableIndex];
+            table.ShowTotals = true;
+            // Set the totals calculation for the Price column to Sum
+            table.ListColumns[1].TotalsCalculation = TotalsCalculation.Sum;
+
+            // Define a custom number format for monetary values
+            Style moneyStyle = workbook.CreateStyle();
+            moneyStyle.Custom = "$#,##0.00";
+
+            // Apply only the number format to the data column (excluding header and totals)
+            StyleFlag flag = new StyleFlag();
+            flag.NumberFormat = true;
+
+            // Data rows are from row 2 to the row before the totals row
+            int dataStartRow = 1; // zero‑based index (row 2 in Excel)
+            int dataRowCount = items.Length; // number of data rows
+            Aspose.Cells.Range dataRange = cells.CreateRange(dataStartRow, 1, dataRowCount, 1);
+            dataRange.ApplyStyle(moneyStyle, flag);
+
+            // Calculate the index of the totals row (header + data rows)
+            int totalRow = items.Length + 1; // zero‑based index
+
+            // Apply the same number format to the totals row cell
+            cells[totalRow, 1].SetStyle(moneyStyle);
+
+            // Freeze rows up to and including the totals row so they stay visible while scrolling
+            int rowsToFreeze = totalRow + 1; // number of rows to keep frozen
+            worksheet.FreezePanes(rowsToFreeze, 0, rowsToFreeze, 0);
+
+            // Save the workbook
+            workbook.Save("MonetaryFormatAndFreezeRows.xlsx");
         }
     }
 }

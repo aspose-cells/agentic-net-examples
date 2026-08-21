@@ -1,41 +1,50 @@
-// Title: Detect Frozen Panes in a Worksheet with Aspose.Cells C# (IsFreezePanes/GetFreezedPanes)
-// Description: This C# example creates a workbook, applies FreezePanes at cell C5, then uses GetFreezedPanes (or the IsFreezePanes property) to verify whether the worksheet contains frozen panes and to retrieve the freeze position, frozen rows, and frozen columns before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | FreezePanes | GetFreezedPanes | IsFreezePanes | detect frozen panes | worksheet freeze status | retrieve frozen rows columns
-// Common Searches: Aspose.Cells check if worksheet has frozen panes C# | GetFreezedPanes example Aspose.Cells | IsFreezePanes property usage | how to read freeze pane coordinates Aspose.Cells | detect frozen rows and columns in .NET workbook
-// Developer Intent: Find out whether a worksheet currently has frozen panes and obtain the exact freeze coordinates.
-// Use Cases: Validate that a generated report keeps header rows frozen before distribution. | Conditionally apply formatting only when no panes are frozen to prevent layout issues. | Log freeze pane details for audit trails when exporting workbooks to clients.
-// AI Prompts: Generate C# code using Aspose.Cells to determine if a worksheet has frozen panes and print the freeze row and column. | Show how to call GetFreezedPanes after FreezePanes to retrieve frozen rows and columns. | Explain when to prefer IsFreezePanes versus GetFreezedPanes in Aspose.Cells.
+// Title: C# – Detect Frozen Panes in an Aspose.Cells Worksheet (IsFreezePanes & GetFreezedPanes)
+// Description: The sample creates or loads a workbook, applies FreezePanes at cell C5, then shows how to verify frozen panes using the IsFreezePanes property and the GetFreezedPanes method. It prints the freeze position, the number of frozen rows and columns, and saves the workbook.
+// Keywords: Aspose.Cells frozen panes C# | IsFreezePanes property | GetFreezedPanes method | detect freeze panes .NET | worksheet FreezePanes example | Aspose.Cells API check freeze | C# Excel freeze pane detection
+// Common Searches: Aspose.Cells check if worksheet has frozen panes | C# IsFreezePanes property usage | GetFreezedPanes returns false | How to read freeze pane coordinates Aspose.Cells | Detect frozen rows and columns in .NET Excel library
+// Developer Intent: Determine whether a worksheet contains frozen panes and obtain their row/column coordinates.
+// Use Cases: Validate a workbook before publishing to ensure no unintended frozen sections. | Adjust UI layout dynamically based on the presence and location of frozen rows or columns. | Log freeze pane settings for auditing, debugging, or migration scripts.
+// AI Prompts: Write C# code using Aspose.Cells that checks for frozen panes with IsFreezePanes and prints the freeze row, column, and counts. | Create a reusable method that returns a boolean for frozen panes and outputs the coordinates using GetFreezedPanes. | Show how to combine IsFreezePanes and GetFreezedPanes to both detect and detail frozen panes in an Aspose.Cells worksheet.
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// This C# example creates a workbook, applies FreezePanes at cell C5, then uses GetFreezedPanes (or the IsFreezePanes property) to verify whether the worksheet contains frozen panes and to retrieve the freeze position, frozen rows, and frozen columns before saving the file.
-class Program
+namespace AsposeCellsFreezePaneCheck
 {
-    static void Main()
+    // The sample creates or loads a workbook, applies FreezePanes at cell C5, then shows how to verify frozen panes using the IsFreezePanes property and the GetFreezedPanes method. It prints the freeze position, the number of frozen rows and columns, and saves the workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Freeze panes at cell C5 (row index 4, column index 2) with 2 frozen rows and 1 frozen column
-        worksheet.FreezePanes(4, 2, 2, 1);
-
-        // Variables to receive freeze pane details
-        int row, column, frozenRows, frozenColumns;
-
-        // GetFreezedPanes returns true if the worksheet has frozen panes
-        bool hasFreeze = worksheet.GetFreezedPanes(out row, out column, out frozenRows, out frozenColumns);
-
-        // Display the result
-        Console.WriteLine("Worksheet has frozen panes: " + hasFreeze);
-        if (hasFreeze)
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Freeze position - Row: {row}, Column: {column}");
-            Console.WriteLine($"Frozen rows: {frozenRows}, Frozen columns: {frozenColumns}");
-        }
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // creates an empty workbook
 
-        // Save the workbook (optional)
-        workbook.Save("FrozenPanesCheck.xlsx");
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Example: freeze panes at cell C5 (row index 4, column index 2) with 2 frozen rows and 1 frozen column
+            worksheet.FreezePanes(4, 2, 2, 1);
+
+            // Variables to receive freeze pane details
+            int freezeRow, freezeColumn, frozenRows, frozenColumns;
+
+            // GetFreezedPanes returns true if the worksheet has frozen panes
+            bool hasFrozenPanes = worksheet.GetFreezedPanes(
+                out freezeRow,
+                out freezeColumn,
+                out frozenRows,
+                out frozenColumns);
+
+            // Output the result
+            Console.WriteLine($"Worksheet has frozen panes: {hasFrozenPanes}");
+            if (hasFrozenPanes)
+            {
+                Console.WriteLine($"Freeze position - Row: {freezeRow}, Column: {freezeColumn}");
+                Console.WriteLine($"Frozen rows: {frozenRows}, Frozen columns: {frozenColumns}");
+            }
+
+            // Save the workbook (optional, just to demonstrate lifecycle usage)
+            workbook.Save("FreezePaneCheckOutput.xlsx");
+        }
     }
 }

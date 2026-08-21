@@ -1,19 +1,19 @@
-// Title: Aspose.Cells for .NET – Apply Currency Formatting to PivotTable Grand Total (C#)
-// Description: Creates a workbook, adds sample sales data, builds a PivotTable, assigns the Sales field as a data field, applies the "$#,##0.00" format to the data field (affecting all cells and the grand total row), refreshes the pivot, and saves the Excel file.
-// Keywords: Aspose.Cells | C# PivotTable number format | currency format pivot total | grand total formatting Aspose | custom number format Excel | PivotTable data field format | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells set number format for pivot table total | C# format grand total row in Excel pivot | apply currency format to pivot data field Aspose | how to format pivot table totals using Aspose.Cells | custom number format for pivot table in .NET
-// Developer Intent: Set a currency number format for the PivotTable’s grand total row.
-// Use Cases: Financial reports where totals must appear as $ values | Exporting sales analysis to Excel with consistent monetary styling | Automated dashboard generation that requires formatted grand totals | Preparing audit‑ready spreadsheets with standardized currency display
-// AI Prompts: Write C# code with Aspose.Cells that formats the grand total row of a PivotTable using a custom currency pattern. | Show how to apply a percentage number format only to the grand total row of a PivotTable in Aspose.Cells. | Explain the steps to change the number format of a PivotTable data field without affecting the underlying source data in Aspose.Cells.
+// Title: Apply a Custom Currency Number Format to PivotTable Grand Total Row with Aspose.Cells for .NET (C#)
+// Description: This C# example creates a workbook, adds sample sales data, builds a PivotTable, sets the data field to sum, applies the number format "$#,##0.00" to the data field (which also formats the row grand total), enables row grand totals, refreshes the PivotTable, and saves the file as an .xlsx.
+// Keywords: Aspose.Cells | C# | .NET | PivotTable | custom number format | grand total formatting | currency format | Excel export | data field formatting | financial reporting
+// Common Searches: Aspose.Cells format pivot table grand total | C# set number format for pivot table totals Aspose | How to apply currency format to PivotTable row totals using Aspose.Cells | Custom number format for PivotTable data field .NET | Show row grand totals with formatting Aspose.Cells
+// Developer Intent: Programmatically set a custom number format for a PivotTable data field so that both data cells and the row grand total display values in the specified format using Aspose.Cells for .NET.
+// Use Cases: Generate sales reports with USD currency totals in the grand‑total row. | Create financial statements where pivot totals use an accounting number format. | Export Excel files with consistent formatting for data cells and grand totals. | Automate dashboards that require formatted row grand totals. | Prepare pivot‑based summaries for multinational data with locale‑specific number formats.
+// AI Prompts: Write C# code using Aspose.Cells to create a PivotTable and apply a custom currency number format to its row grand total. | Show how to set a percentage number format with two decimal places for a PivotTable data field and its grand total in Aspose.Cells for .NET. | Provide an example that enables row grand totals and applies an accounting format (e.g., "_($* #,##0.00_);_($* (#,##0.00);_($* "-"??_);_(@_)" ) to a PivotTable using Aspose.Cells C#.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;   // Required for PivotTable, PivotField, PivotFieldType
+using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, adds sample sales data, builds a PivotTable, assigns the Sales field as a data field, applies the "$#,##0.00" format to the data field (affecting all cells and the grand total row), refreshes the pivot, and saves the Excel file.
+    // This C# example creates a workbook, adds sample sales data, builds a PivotTable, sets the data field to sum, applies the number format "$#,##0.00" to the data field (which also formats the row grand total), enables row grand totals, refreshes the PivotTable, and saves the file as an .xlsx.
     class Program
     {
         static void Main(string[] args)
@@ -22,64 +22,59 @@ namespace AsposeCellsExamples
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the pivot table
-                worksheet.Cells["A1"].PutValue("Product");
-                worksheet.Cells["B1"].PutValue("Region");
-                worksheet.Cells["C1"].PutValue("Sales");
+                // Populate sample data
+                sheet.Cells["A1"].PutValue("Product");
+                sheet.Cells["B1"].PutValue("Region");
+                sheet.Cells["C1"].PutValue("Sales");
 
-                worksheet.Cells["A2"].PutValue("Laptop");
-                worksheet.Cells["B2"].PutValue("North");
-                worksheet.Cells["C2"].PutValue(1200);
+                sheet.Cells["A2"].PutValue("Laptop");
+                sheet.Cells["B2"].PutValue("North");
+                sheet.Cells["C2"].PutValue(1200);
 
-                worksheet.Cells["A3"].PutValue("Laptop");
-                worksheet.Cells["B3"].PutValue("South");
-                worksheet.Cells["C3"].PutValue(1500);
+                sheet.Cells["A3"].PutValue("Laptop");
+                sheet.Cells["B3"].PutValue("South");
+                sheet.Cells["C3"].PutValue(1500);
 
-                worksheet.Cells["A4"].PutValue("Phone");
-                worksheet.Cells["B4"].PutValue("North");
-                worksheet.Cells["C4"].PutValue(800);
+                sheet.Cells["A4"].PutValue("Phone");
+                sheet.Cells["B4"].PutValue("North");
+                sheet.Cells["C4"].PutValue(800);
 
-                worksheet.Cells["A5"].PutValue("Phone");
-                worksheet.Cells["B5"].PutValue("South");
-                worksheet.Cells["C5"].PutValue(1100);
+                sheet.Cells["A5"].PutValue("Phone");
+                sheet.Cells["B5"].PutValue("South");
+                sheet.Cells["C5"].PutValue(1100);
 
                 // Add a pivot table based on the data range
-                int pivotIndex = worksheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-                PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+                int ptIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
+                PivotTable pivot = sheet.PivotTables[ptIndex];
 
-                // Add fields to the pivot table
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
-                int dataFieldPos = pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+                // Configure pivot fields
+                pivot.AddFieldToArea(PivotFieldType.Row, "Product");
+                int dataFieldIdx = pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-                // Retrieve the data field that will hold the sales values
-                PivotField dataField = pivotTable.DataFields[dataFieldPos];
-
-                // Set a custom number format – this format is applied to all data cells,
-                // including the grand total row
+                // Set custom number format for the data field (applies to data cells and grand total row)
+                PivotField dataField = pivot.DataFields[dataFieldIdx];
+                dataField.Function = ConsolidationFunction.Sum;
                 dataField.NumberFormat = "$#,##0.00";
 
-                // Refresh and calculate the pivot table to apply the format
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
+                // Ensure the grand total row is displayed
+                pivot.ShowRowGrandTotals = true;
 
-                // Ensure the output directory exists
-                string outputPath = "PivotTableGrandTotalNumberFormat.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+                // Refresh and calculate the pivot table
+                pivot.RefreshData();
+                pivot.CalculateData();
+
+                // Define output file path
+                string outputPath = "PivotTableGrandTotalCustomFormat.xlsx";
 
                 // Save the workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred while creating the pivot table:");
+                Console.WriteLine("An error occurred while creating the workbook:");
                 Console.WriteLine(ex.Message);
             }
         }

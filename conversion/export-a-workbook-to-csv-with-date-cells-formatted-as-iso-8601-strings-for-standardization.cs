@@ -1,40 +1,85 @@
-// Title: C# – Export Aspose.Cells Workbook to CSV with ISO 8601 Date Formatting
-// Description: Creates a workbook, inserts DateTime values, applies a custom "yyyy-MM-ddTHH:mm:ss" style, and saves the file as CSV so all date cells are written in ISO 8601 format.
-// Keywords: Aspose.Cells CSV export C# | ISO 8601 date format Aspose | C# custom date style CSV | Aspose.Cells export to CSV with dates | CSV date formatting Aspose.Cells | Save workbook as CSV ISO date
-// Common Searches: Aspose.Cells export CSV with ISO 8601 dates C# | How to format dates as ISO 8601 when saving CSV using Aspose.Cells | C# Aspose.Cells custom date style before CSV export | Save workbook to CSV preserving date format Aspose | ISO 8601 timestamp CSV Aspose.Cells example
-// Developer Intent: Generate a CSV file from an Aspose.Cells workbook where every date cell is rendered as an ISO 8601 timestamp.
-// Use Cases: Standardizing timestamps for data pipelines that require ISO 8601 strings. | Producing CSV reports that can be parsed reliably by external systems or APIs. | Creating audit logs in CSV with consistent, sortable date formats.
-// AI Prompts: Show C# code that applies an ISO 8601 custom date format to cells and saves the workbook as CSV using Aspose.Cells. | Give an example of exporting an Aspose.Cells workbook to CSV while ensuring all dates appear as "yyyy-MM-ddTHH:mm:ss".
+// Title: Export a Workbook to CSV with ISO‑8601 Date Formatting using Aspose.Cells for .NET (C#)
+// Description: This C# example demonstrates how to create an Aspose.Cells workbook, apply the ISO‑8601 pattern (yyyy‑MM‑ddTHH:mm:ss) to DateTime cells, ensure the target folder exists, and save the file as CSV. The resulting CSV contains standardized date strings suitable for data exchange and logging.
+// Keywords: aspose.cells | csv export | iso 8601 | c# | dotnet | custom date format | saveformat.csv | excel to csv conversion | date formatting in csv | data integration
+// Common Searches: Aspose.Cells export workbook to CSV with ISO 8601 dates | C# set custom date format before CSV save Aspose | How to format DateTime cells as yyyy-MM-ddTHH:mm:ss in CSV using Aspose.Cells | Create CSV file with standardized timestamps in .NET | Aspose.Cells CSV export timezone handling
+// Developer Intent: Generate a CSV file from a workbook where every DateTime value is written in ISO‑8601 format.
+// Use Cases: Exchange CSV data with APIs or services that require ISO‑8601 timestamps. | Produce audit‑ready reports with consistent date strings across platforms. | Load CSV into databases that expect the "yyyy-MM-ddTHH:mm:ss" pattern.
+// AI Prompts: Write C# code that uses Aspose.Cells to export a workbook to CSV with dates formatted as "yyyy-MM-ddTHH:mm:ss" and creates the output directory if missing. | Explain how to apply a custom style to an entire column of DateTime cells before saving as CSV with Aspose.Cells. | Show how to include UTC offset or 'Z' designator when exporting dates to CSV in ISO‑8601 using Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, inserts DateTime values, applies a custom "yyyy-MM-ddTHH:mm:ss" style, and saves the file as CSV so all date cells are written in ISO 8601 format.
-class ExportWorkbookToCsvWithIsoDate
+namespace AsposeCellsCsvExport
 {
-    static void Main()
+    // This C# example demonstrates how to create an Aspose.Cells workbook, apply the ISO‑8601 pattern (yyyy‑MM‑ddTHH:mm:ss) to DateTime cells, ensure the target folder exists, and save the file as CSV. The resulting CSV contains standardized date strings suitable for data exchange and logging.
+    public class ExportWorkbookToCsvWithIsoDates
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook (lifecycle rule: create)
+                Workbook workbook = new Workbook();
 
-        // Insert sample date values
-        cells["A1"].PutValue(DateTime.Now);                         // Current date & time
-        cells["A2"].PutValue(new DateTime(2023, 5, 15, 13, 45, 30)); // Fixed date & time
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-        // Define ISO 8601 format (e.g., 2023-05-15T13:45:30)
-        string iso8601Format = "yyyy-MM-ddTHH:mm:ss";
+                // Populate some sample data
+                cells["A1"].PutValue("ID");
+                cells["B1"].PutValue("Name");
+                cells["C1"].PutValue("CreatedOn");
 
-        // Create a style with the custom date format
-        Style isoStyle = workbook.CreateStyle();
-        isoStyle.Custom = iso8601Format;
+                cells["A2"].PutValue(1);
+                cells["B2"].PutValue("Alice");
+                cells["C2"].PutValue(new DateTime(2023, 5, 15, 14, 30, 0)); // sample date
 
-        // Apply the style to the cells containing dates
-        cells["A1"].SetStyle(isoStyle);
-        cells["A2"].SetStyle(isoStyle);
+                cells["A3"].PutValue(2);
+                cells["B3"].PutValue("Bob");
+                cells["C3"].PutValue(DateTime.Now); // current date‑time
 
-        // Save the workbook as CSV; the dates will be written using the ISO 8601 format
-        workbook.Save("output.csv", SaveFormat.Csv);
+                // Define ISO 8601 format for date cells
+                const string isoFormat = "yyyy-MM-ddTHH:mm:ss";
+
+                // Apply the custom format to all cells in column C that contain dates
+                for (int row = 1; row <= sheet.Cells.MaxDataRow; row++)
+                {
+                    Cell dateCell = cells[row, 2]; // column index 2 = "C"
+                    if (dateCell.Type == CellValueType.IsDateTime)
+                    {
+                        Style style = dateCell.GetStyle();
+                        style.Custom = isoFormat; // set ISO format
+                        dateCell.SetStyle(style);
+                    }
+                }
+
+                // Determine output file path
+                string outputFile = Path.Combine(Directory.GetCurrentDirectory(), "ExportedData.csv");
+
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(outputFile);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as CSV (lifecycle rule: save)
+                // The custom style ensures dates are written in ISO 8601 format.
+                workbook.Save(outputFile, SaveFormat.Csv);
+
+                Console.WriteLine($"Workbook exported to CSV with ISO 8601 date formatting: {outputFile}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during export: {ex.Message}");
+            }
+        }
+
+        // Entry point required for console application
+        public static void Main(string[] args)
+        {
+            Run();
+        }
     }
 }

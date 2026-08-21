@@ -1,38 +1,44 @@
-// Title: Hide Zero Values Across All Worksheets and Export Workbook to PDF with Aspose.Cells for .NET (C#)
-// Description: Demonstrates creating or loading an Aspose.Cells workbook, populating cells, looping through every worksheet to set DisplayZeros = false (disabling zero display), and saving the entire workbook as a PDF using PdfSaveOptions.
-// Keywords: Aspose.Cells | C# | .NET | DisplayZeros | hide zero values | PDF export | iterate worksheets | Workbook to PDF | zero suppression | ShowZeroValues false
-// Common Searches: Aspose.Cells hide zeros in all sheets | Set DisplayZeros false for every worksheet C# | Export workbook to PDF after disabling zero display | How to suppress zero values in PDF output Aspose.Cells | Iterate worksheets Aspose.Cells .NET PDF conversion
-// Developer Intent: Turn off zero‑value display for every worksheet and generate a PDF file.
-// Use Cases: Financial statements where zero amounts should be omitted before printing. | Invoice batches that must hide empty price cells in the final PDF. | Automated report pipelines that apply a global zero‑suppression rule across multiple sheets.
-// AI Prompts: Generate C# code with Aspose.Cells that loops through all worksheets, sets DisplayZeros to false, and saves the workbook as a PDF. | Show an example of disabling zero values on newly added worksheets before exporting to PDF using Aspose.Cells. | Explain the impact of the DisplayZeros property on PDF rendering and how to apply it workbook‑wide in Aspose.Cells.
+// Title: Hide Zero Values Across All Worksheets and Save as PDF Using Aspose.Cells for .NET (C#)
+// Description: A C# sample that creates or loads an Aspose.Cells workbook, iterates through each worksheet, sets the DisplayZeros property to false to suppress zero cells, and then exports the whole workbook to a PDF file with PdfSaveOptions.
+// Keywords: Aspose.Cells C# | DisplayZeros false | hide zero values | iterate worksheets | PDF export | PdfSaveOptions | Workbook.Save PDF | suppress zero cells | Aspose.Cells .NET | Excel to PDF conversion
+// Common Searches: Aspose.Cells hide zero values C# | Set DisplayZeros false for all worksheets | Export Aspose.Cells workbook to PDF | Iterate worksheets Aspose.Cells example | C# code to suppress zeros in Excel PDF | PdfSaveOptions hide zeros Aspose
+// Developer Intent: Disable zero display on every worksheet and generate a PDF from the workbook.
+// Use Cases: Financial statements where zero amounts should not appear in the printed PDF. | Invoice batches that need clean PDFs without placeholder zeros across multiple sheets. | Automated reporting pipelines that hide zero values before archiving workbooks as PDFs.
+// AI Prompts: Show a C# snippet that loops through all worksheets in an Aspose.Cells workbook, sets DisplayZeros to false, and saves the file as PDF using PdfSaveOptions. | Explain how the DisplayZeros property affects PDF rendering in Aspose.Cells and whether additional PDF options are required. | Modify the example to load an existing workbook from a given path, hide zeros on every sheet, and export it to a PDF file.
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Demonstrates creating or loading an Aspose.Cells workbook, populating cells, looping through every worksheet to set DisplayZeros = false (disabling zero display), and saving the entire workbook as a PDF using PdfSaveOptions.
-class Program
+namespace AsposeCellsShowZeroExample
 {
-    static void Main()
+    // A C# sample that creates or loads an Aspose.Cells workbook, iterates through each worksheet, sets the DisplayZeros property to false to suppress zero cells, and then exports the whole workbook to a PDF file with PdfSaveOptions.
+    class Program
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
-
-        // Sample data with zero values
-        Worksheet sheet1 = workbook.Worksheets[0];
-        sheet1.Cells["A1"].PutValue(0);
-        sheet1.Cells["A2"].PutValue(123);
-
-        Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-        sheet2.Cells["B1"].PutValue(0);
-
-        // Iterate through all worksheets and hide zero values
-        foreach (Worksheet ws in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            ws.DisplayZeros = false; // ShowZeroValues = false
-        }
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-        // Save the workbook as PDF
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        workbook.Save("output.pdf", pdfOptions);
+            // Add sample data with zero values to demonstrate the effect
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "Sheet1";
+            sheet1.Cells["A1"].PutValue(0);
+            sheet1.Cells["A2"].PutValue(123);
+
+            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+            sheet2.Cells["B1"].PutValue(0);
+            sheet2.Cells["B2"].PutValue(456);
+
+            // Iterate through all worksheets and hide zero values
+            foreach (Worksheet ws in workbook.Worksheets)
+            {
+                ws.DisplayZeros = false; // Do not display zero values
+            }
+
+            // Save the workbook as PDF
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            workbook.Save("output.pdf", pdfOptions);
+        }
     }
 }

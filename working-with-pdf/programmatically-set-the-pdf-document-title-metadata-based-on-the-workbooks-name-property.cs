@@ -1,27 +1,38 @@
-using System;
-using Aspose.Cells;
+// Title: Set PDF Title from Excel Workbook Name with Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook, extracts the file name (without extension), assigns it to the built‑in Title property, enables DisplayDocTitle in PdfSaveOptions, and saves the workbook as a PDF so viewers display the title metadata derived from the source workbook.
+// Keywords: Aspose.Cells | C# | PDF title metadata | DisplayDocTitle | BuiltInDocumentProperties.Title | Excel to PDF conversion | set PDF document title | programmatic PDF metadata | save PDF with title | Aspose.Cells PDF options
+// Common Searches: Aspose.Cells set PDF title from workbook name | C# display document title in PDF using Aspose.Cells | PdfSaveOptions DisplayDocTitle example | How to set BuiltInDocumentProperties.Title before saving PDF | Set PDF metadata programmatically Aspose.Cells
+// Developer Intent: Assign the workbook filename as the PDF document title before saving.
+// Use Cases: Generate PDFs whose title matches the source Excel filename for improved cataloging. | Batch convert a folder of .xlsx files to PDFs with automatic title metadata. | Ensure PDF viewers display a custom title by enabling DisplayDocTitle. | Integrate title setting into automated reporting pipelines.
+// AI Prompts: Generate C# code that sets author, subject, and title metadata for a PDF using Aspose.Cells. | Write a script to batch process a directory of .xlsx files, converting each to PDF and setting the PDF title to the original filename. | Explain how PdfSaveOptions.DisplayDocTitle affects PDF viewers and how to verify the title property after export.
 
-// Author: Aspose.Cells .NET example – sets PDF title from workbook name
-class Program
+using System;
+using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Rendering;
+
+// Loads an Excel workbook, extracts the file name (without extension), assigns it to the built‑in Title property, enables DisplayDocTitle in PdfSaveOptions, and saves the workbook as a PDF so viewers display the title metadata derived from the source workbook.
+class PdfTitleFromWorkbookName
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        // Path to the source Excel workbook
+        string excelPath = "input.xlsx";
 
-        // Assign a file name to the workbook (used as the title)
-        workbook.FileName = "SampleWorkbook.xlsx";
+        // Load the workbook (load rule)
+        Workbook workbook = new Workbook(excelPath);
 
-        // Set the built‑in document title to match the workbook's file name
-        workbook.BuiltInDocumentProperties.Title = workbook.FileName;
+        // Derive the workbook name from the file name (without extension)
+        string workbookName = Path.GetFileNameWithoutExtension(excelPath);
 
-        // Configure PDF save options to display the document title in the viewer's title bar
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            DisplayDocTitle = true
-        };
+        // Set the built‑in document title to the workbook name
+        workbook.BuiltInDocumentProperties.Title = workbookName;
 
-        // Save the workbook as PDF; the PDF will carry the title metadata
-        workbook.Save("SampleWorkbook.pdf", pdfOptions);
+        // Create PDF save options and enable displaying the document title
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        pdfOptions.DisplayDocTitle = true;   // ensures the PDF viewer shows the title
+
+        // Save the workbook as PDF (save rule)
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

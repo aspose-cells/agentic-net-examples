@@ -1,10 +1,10 @@
-// Title: C# CLI to batch convert chart‑free Excel workbooks to PDF with Aspose.Cells
-// Description: A console application that receives a folder path, scans for Excel files, skips any workbook containing charts, and converts the remaining files to PDF using Aspose.Cells' ConversionUtility. The PDF is saved beside the source file with the same base name.
-// Keywords: Aspose.Cells | Excel to PDF conversion | C# console app | batch Excel PDF | skip chart worksheets | folder processing | command line utility | .NET PDF generation | ConversionUtility | automated report export
-// Common Searches: C# command line batch convert Excel to PDF Aspose.Cells | how to ignore Excel files with charts when converting to PDF | convert all .xlsx files in a directory to PDF using .NET | Aspose.Cells example for folder‑level Excel PDF conversion | skip chart‑containing worksheets during PDF export
-// Developer Intent: Create a .NET console tool that iterates through a directory, filters Excel workbooks, excludes those with charts, and generates PDF files for the rest.
-// Use Cases: Nightly automation that turns chart‑free Excel templates into PDF reports for distribution. | Archival script that converts incoming data spreadsheets to PDF while leaving chart‑rich files untouched. | CI/CD step that validates Excel inputs can be rendered as PDF without chart rendering errors.
-// AI Prompts: Add structured logging and a progress bar to the Excel‑to‑PDF CLI while keeping the chart‑skip logic intact. | Write an xUnit test that verifies files containing charts are not converted to PDF by the folder processor. | Modify the utility to output a JSON summary with counts of converted, skipped, and failed files.
+// Title: C# CLI Tool to Batch Convert Chart‑Free Excel Files to PDF with Aspose.Cells
+// Description: A command‑line application that receives a folder path, scans for Excel workbooks, skips any workbook containing charts, and converts the remaining files to PDF using Aspose.Cells.Utility.ConversionUtility, saving the PDFs alongside the originals.
+// Keywords: Aspose.Cells batch conversion | C# Excel to PDF CLI | skip charts Excel conversion | ConversionUtility example | folder processing Excel files
+// Common Searches: convert all Excel files in a directory to PDF with Aspose.Cells | C# command line batch Excel to PDF conversion | skip Excel workbooks with charts when exporting to PDF | Aspose.Cells CLI tool for folder conversion | how to use ConversionUtility to save PDF from Excel
+// Developer Intent: Create a console program that converts every chart‑free Excel workbook in a given folder to a PDF file.
+// Use Cases: Automate nightly PDF report generation from a shared folder of spreadsheets that contain only data tables. | Add a pre‑deployment step in CI/CD pipelines to verify that chart‑free Excel inputs render correctly as PDFs. | Process user‑uploaded Excel files on a server, converting only those without charts while logging skipped items.
+// AI Prompts: Generate a C# method that iterates through a directory, loads each Excel file with Aspose.Cells, detects charts, and saves chart‑free workbooks as PDF using ConversionUtility. | Extend the batch converter to write detailed logs (success, skipped, errors) to a file instead of the console. | Write unit tests for the chart‑detection routine and the PDF conversion flow of the CLI utility.
 
 using System;
 using System.IO;
@@ -13,15 +13,15 @@ using Aspose.Cells.Utility;
 
 namespace ExcelToPdfConverter
 {
-    // A console application that receives a folder path, scans for Excel files, skips any workbook containing charts, and converts the remaining files to PDF using Aspose.Cells' ConversionUtility. The PDF is saved beside the source file with the same base name.
+    // A command‑line application that receives a folder path, scans for Excel workbooks, skips any workbook containing charts, and converts the remaining files to PDF using Aspose.Cells.Utility.ConversionUtility, saving the PDFs alongside the originals.
     class Program
     {
         static void Main(string[] args)
         {
-            // Validate input argument
-            if (args.Length == 0)
+            // Expect a single argument: the folder path containing Excel files
+            if (args.Length != 1)
             {
-                Console.WriteLine("Please provide the folder path as the first argument.");
+                Console.WriteLine("Usage: ExcelToPdfConverter <folderPath>");
                 return;
             }
 
@@ -29,57 +29,54 @@ namespace ExcelToPdfConverter
 
             if (!Directory.Exists(folderPath))
             {
-                Console.WriteLine($"Folder does not exist: {folderPath}");
+                Console.WriteLine($"Error: The folder \"{folderPath}\" does not exist.");
                 return;
             }
 
-            // Process each file in the folder
-            foreach (string filePath in Directory.GetFiles(folderPath))
+            // Define Excel file extensions to process
+            string[] excelExtensions = new[] { ".xls", ".xlsx", ".xlsm", ".xlsb", ".ods", ".csv", ".tsv" };
+
+            // Enumerate files with the defined extensions
+            foreach (string filePath in Directory.EnumerateFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly))
             {
+                string ext = Path.GetExtension(filePath).ToLowerInvariant();
+                if (Array.IndexOf(excelExtensions, ext) < 0)
+                    continue; // Skip non‑Excel files
+
                 try
                 {
-                    // Detect if the file is an Excel workbook based on its extension
-                    string extension = Path.GetExtension(filePath).ToLowerInvariant();
-                    // Common Excel extensions
-                    if (extension != ".xls" && extension != ".xlsx" && extension != ".xlsm" &&
-                        extension != ".xlsb" && extension != ".ods" && extension != ".csv")
-                    {
-                        continue; // Skip non‑Excel files
-                    }
-
-                    // Load the workbook
+                    // Load the workbook (creation rule)
                     Workbook workbook = new Workbook(filePath);
 
-                    // Determine whether any worksheet contains charts
-                    bool hasChart = false;
+                    // Determine if any worksheet contains charts
+                    bool hasCharts = false;
                     foreach (Worksheet sheet in workbook.Worksheets)
                     {
                         if (sheet.Charts.Count > 0)
                         {
-                            hasChart = true;
+                            hasCharts = true;
                             break;
                         }
                     }
 
-                    if (hasChart)
+                    if (hasCharts)
                     {
-                        Console.WriteLine($"Skipping file (contains charts): {Path.GetFileName(filePath)}");
+                        Console.WriteLine($"Skipping \"{Path.GetFileName(filePath)}\" because it contains charts.");
                         continue;
                     }
 
-                    // Build output PDF file path
-                    string pdfPath = Path.Combine(
-                        Path.GetDirectoryName(filePath) ?? string.Empty,
-                        Path.GetFileNameWithoutExtension(filePath) + ".pdf");
+                    // Build the output PDF file path
+                    string pdfPath = Path.Combine(Path.GetDirectoryName(filePath) ?? string.Empty,
+                                                  Path.GetFileNameWithoutExtension(filePath) + ".pdf");
 
-                    // Convert Excel to PDF using the provided utility method
+                    // Convert Excel to PDF using the provided ConversionUtility (save rule)
                     ConversionUtility.Convert(filePath, pdfPath);
 
-                    Console.WriteLine($"Converted: {Path.GetFileName(filePath)} -> {Path.GetFileName(pdfPath)}");
+                    Console.WriteLine($"Converted \"{Path.GetFileName(filePath)}\" to PDF successfully.");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing file '{Path.GetFileName(filePath)}': {ex.Message}");
+                    Console.WriteLine($"Error processing \"{Path.GetFileName(filePath)}\": {ex.Message}");
                 }
             }
         }

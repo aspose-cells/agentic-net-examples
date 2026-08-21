@@ -1,19 +1,18 @@
-// Title: Resize Chart Data Label Shapes and Preserve Hyperlinks Using Aspose.Cells for .NET
-// Description: Shows how to build an in‑memory workbook, insert a column chart, enable data labels, turn off automatic shape resizing, assign a constant width and height to each label, and save the workbook. The approach keeps label dimensions stable after adding hyperlinks that point to external resources.
-// Keywords: Aspose.Cells | .NET | C# | chart data labels | resize data label shape | fixed label size | disable auto resize | hyperlink on chart label | Excel chart customization | Aspose.Cells API
-// Common Searches: how to set a fixed size for chart data labels in Aspose.Cells | prevent data label shape from auto‑resizing in Aspose.Cells chart | add hyperlink to Excel chart data label with Aspose.Cells | Aspose.Cells resize data label after adding hyperlink | C# Aspose.Cells chart label dimensions
-// Developer Intent: Apply a uniform width and height to every chart data label shape and keep that size unchanged when hyperlinks are attached.
-// Use Cases: Generate reports where chart labels must remain visually aligned regardless of label text length. | Create dashboards that link each data label to an external web page while preserving label layout. | Automate Excel chart production for multinational teams (US, EU, APAC) with consistent label sizing.
-// AI Prompts: Write C# code that adds a hyperlink to each chart data label and then sets DataLabels.IsResizeShapeToFitText = false with a fixed Width and Height using Aspose.Cells. | Show how to iterate over ChartPoint objects in Aspose.Cells, assign a constant label size, and attach an external URL to each label. | Provide a complete Aspose.Cells example that creates a column chart, resizes data label shapes, adds hyperlinks, and verifies the label dimensions in the saved XLSX file.
+// Title: Aspose.Cells for .NET – Auto‑Resize Chart Data Label Shapes After Adding Hyperlinks
+// Description: Demonstrates how to create a workbook, insert a column chart, add a hyperlink to each data label, and enable the IsResizeShapeToFitText property so every label shape automatically expands to fit its linked text before saving the file.
+// Keywords: Aspose.Cells resize data label shape | chart data label auto resize .NET | add hyperlink to chart data label Aspose.Cells | IsResizeShapeToFitText property | column chart data labels fit text | Aspose.Cells chart hyperlink example | C# Excel chart label sizing
+// Common Searches: how to auto resize chart data labels in Aspose.Cells | add hyperlink to each data label in Aspose.Cells chart | fit data label shape to text Aspose.Cells .NET | Aspose.Cells IsResizeShapeToFitText usage | C# resize Excel chart label after adding hyperlink
+// Developer Intent: Automatically adjust each chart point’s data label shape to fit its text after attaching a hyperlink.
+// Use Cases: Generating Excel reports where data labels contain clickable URLs and must expand to avoid truncation. | Creating dynamic dashboards with column charts that automatically size labels for varying values and linked resources. | Automating workbook production for web‑based analytics, ensuring all label hyperlinks are visible and properly sized.
+// AI Prompts: Show C# code that adds a hyperlink to each chart data label before enabling auto‑resize in Aspose.Cells. | Explain how to customize font style of data labels while keeping IsResizeShapeToFitText active. | Provide error‑handling best practices for resizing data label shapes in large Aspose.Cells charts.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to build an in‑memory workbook, insert a column chart, enable data labels, turn off automatic shape resizing, assign a constant width and height to each label, and save the workbook. The approach keeps label dimensions stable after adding hyperlinks that point to external resources.
+    // Demonstrates how to create a workbook, insert a column chart, add a hyperlink to each data label, and enable the IsResizeShapeToFitText property so every label shape automatically expands to fit its linked text before saving the file.
     public class ResizeDataLabelShapesWithHyperlink
     {
         public static void Main()
@@ -30,7 +29,7 @@ namespace AsposeCellsExamples
 
         public static void Run()
         {
-            // Create a new workbook in memory
+            // Create a new workbook
             Workbook workbook = new Workbook(FileFormatType.Xlsx);
             Worksheet worksheet = workbook.Worksheets[0];
 
@@ -56,28 +55,32 @@ namespace AsposeCellsExamples
             dataLabels.Position = LabelPositionType.Center;
 
             // Iterate through each point, resize the label shape
+            int pointIdx = 0;
             foreach (ChartPoint point in chart.NSeries[0].Points)
             {
-                // Disable automatic resizing to keep custom dimensions
-                point.DataLabels.IsResizeShapeToFitText = false;
+                try
+                {
+                    // Resize the data label shape to fit its text
+                    point.DataLabels.IsResizeShapeToFitText = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Warning: Unable to resize label for point {pointIdx}. {ex.Message}");
+                }
 
-                // Set custom size (width and height in pixels)
-                point.DataLabels.Width = 80;   // Adjust as needed
-                point.DataLabels.Height = 30;  // Adjust as needed
+                pointIdx++;
             }
 
-            // Define output file path
+            // Save the workbook
             string outputPath = "ResizeDataLabelShapesWithHyperlink.xlsx";
-
             try
             {
-                // Save the workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
             }
         }
     }

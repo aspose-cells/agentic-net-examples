@@ -1,18 +1,18 @@
-// Title: C# – Insert a Picture at H12, Move to I13, and Verify Position with Aspose.Cells
-// Description: Create a new workbook, add an image to cell H12, relocate its upper‑left corner to cell I13 using Picture.Move, output the new row/column indices, and save the file.
-// Keywords: Aspose.Cells picture insertion | C# picture Move method | UpperLeftRow verification | Excel image placement programmatically | Aspose.Cells picture coordinates
-// Common Searches: add image to specific cell Aspose.Cells C# | change picture UpperLeftCell Aspose.Cells | verify picture location after move Aspose.Cells | save workbook after moving picture Aspose.Cells
-// Developer Intent: Programmatically place an image at H12, shift it to I13, and confirm the updated UpperLeftRow and UpperLeftColumn values.
-// Use Cases: Insert a company logo into a template and reposition it when the layout changes. | Automate image alignment in dynamically generated financial reports. | Validate that pictures are correctly anchored after batch processing of Excel files.
-// AI Prompts: Write C# code with Aspose.Cells to add a picture at H12, move it to I13, and print the new UpperLeftRow and UpperLeftColumn. | Explain how Picture.Move updates a picture's UpperLeftRow and UpperLeftColumn in Aspose.Cells. | Show error‑handling patterns for missing image files when inserting pictures with Aspose.Cells.
+// Title: C# – Insert a picture at cell H12, move it to I13, and verify its position using Aspose.Cells
+// Description: Demonstrates how to add a JPEG image to cell H12 in a new workbook, programmatically relocate the picture so its upper‑left corner aligns with cell I13, confirm the new UpperLeftRow and UpperLeftColumn values, and save the file as an XLSX document.
+// Keywords: Aspose.Cells picture insert C# | move picture to another cell Aspose.Cells | verify picture position Aspose.Cells | UpperLeftRow UpperLeftColumn | C# spreadsheet image placement | Aspose.Cells picture anchoring
+// Common Searches: How to anchor an image to H12 and move it to I13 with Aspose.Cells | Aspose.Cells C# change picture UpperLeftCell | Check picture coordinates after moving in Aspose.Cells | Insert and reposition picture in Excel using Aspose.Cells .NET
+// Developer Intent: Add an image to a worksheet at H12, shift it to I13 programmatically, and validate the new cell coordinates.
+// Use Cases: Place a logo in a placeholder cell and later move it to the final header location in automated reports. | Ensure dynamically added product photos line up with calculated cells in a catalog worksheet. | Validate layout adjustments after inserting images into generated spreadsheets.
+// AI Prompts: Show C# code that inserts a picture at cell H12 with Aspose.Cells, moves it to I13, and verifies UpperLeftRow and UpperLeftColumn. | Provide error handling for missing image files and confirm workbook saving after repositioning the picture.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Create a new workbook, add an image to cell H12, relocate its upper‑left corner to cell I13 using Picture.Move, output the new row/column indices, and save the file.
-class InsertAndMovePicture
+// Demonstrates how to add a JPEG image to cell H12 in a new workbook, programmatically relocate the picture so its upper‑left corner aligns with cell I13, confirm the new UpperLeftRow and UpperLeftColumn values, and save the file as an XLSX document.
+class PicturePositionDemo
 {
     static void Main()
     {
@@ -22,35 +22,42 @@ class InsertAndMovePicture
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Path to the image file
+            // Path to the image file to be inserted
             string imagePath = "sample.jpg";
 
-            if (File.Exists(imagePath))
+            // Verify that the image file exists before attempting to add it
+            if (!File.Exists(imagePath))
             {
-                // Add a picture at cell H12 (row index 11, column index 7)
-                int pictureIndex = worksheet.Pictures.Add(11, 7, imagePath);
-                Picture picture = worksheet.Pictures[pictureIndex];
+                Console.WriteLine($"Image file not found: {imagePath}");
+                return;
+            }
 
-                // Move the picture so its upper‑left corner is at cell I13 (row 12, column 8)
-                picture.Move(12, 8);
+            // Insert a picture anchored to cell H12 (row index 11, column index 7)
+            int pictureIndex = worksheet.Pictures.Add(11, 7, imagePath);
+            Picture picture = worksheet.Pictures[pictureIndex];
 
-                // Verify the new position
-                Console.WriteLine($"Picture UpperLeftRow: {picture.UpperLeftRow}");
-                Console.WriteLine($"Picture UpperLeftColumn: {picture.UpperLeftColumn}");
+            // Move the picture so its upper‑left cell becomes I13 (row index 12, column index 8)
+            picture.Move(12, 8);
+
+            // Verify the new position
+            int upperRow = picture.UpperLeftRow;       // zero‑based row index
+            int upperColumn = picture.UpperLeftColumn; // zero‑based column index
+
+            if (upperRow == 12 && upperColumn == 8)
+            {
+                Console.WriteLine("Picture successfully moved to cell I13.");
             }
             else
             {
-                Console.WriteLine($"Image file not found: {imagePath}. Skipping picture insertion.");
+                Console.WriteLine($"Picture position mismatch. Current position: Row {upperRow + 1}, Column {upperColumn + 1}");
             }
 
             // Save the workbook
-            string resultPath = "Result.xlsx";
-            workbook.Save(resultPath);
-            Console.WriteLine($"Workbook saved to {resultPath}");
+            workbook.Save("PicturePositionResult.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

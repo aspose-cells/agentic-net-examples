@@ -1,48 +1,48 @@
-// Title: Group a TextBox with other shapes and move them as a single container using Aspose.Cells for .NET
-// Description: Demonstrates how to add a TextBox, rectangle, and oval to a worksheet, combine them into a GroupShape, rename the group, and reposition the whole group by setting its Left and Top properties before saving the workbook.
-// Keywords: Aspose.Cells group shapes | C# GroupShape example | move grouped shapes .NET | add TextBox Aspose.Cells | Excel shape container
-// Common Searches: Aspose.Cells group TextBox with rectangle and oval | move grouped shapes together in Excel using C# | how to create a GroupShape in Aspose.Cells | set position of a grouped shape Aspose.Cells
-// Developer Intent: Create a GroupShape that contains a TextBox, rectangle, and oval, then shift the entire group as one object.
-// Use Cases: Bundle a label TextBox with decorative shapes to create a movable annotation on a dashboard. | Assemble a multi‑part logo from separate shapes and position it with a single coordinate change. | Align form fields composed of several shapes and adjust their layout by moving the group instead of each element.
-// AI Prompts: Generate C# code with Aspose.Cells that groups a TextBox, rectangle, and oval and sets the group's Left and Top values. | Explain how to ungroup a GroupShape in Aspose.Cells while keeping the original shape positions intact. | Show how to add a hyperlink to a GroupShape that contains multiple shapes in an Excel file using Aspose.Cells.
+// Title: Group a TextBox with Rectangle and Oval using Aspose.Cells for .NET (C#)
+// Description: C# example that creates a workbook, adds a TextBox, a rectangle, and an oval to the first worksheet, groups them into a single GroupShape named "MyGroupedShapes", and saves the file as GroupedShapes.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | GroupShape | group shapes | textbox grouping | Excel shape grouping | Aspose.Cells example | shape container
+// Common Searches: Aspose.Cells group textbox with other shapes | C# group rectangle and oval in Excel using Aspose | How to create a GroupShape in Aspose.Cells | Move multiple shapes together in an Excel workbook C# | Aspose.Cells GroupShape method usage
+// Developer Intent: Combine a TextBox, rectangle, and oval into a single GroupShape so they can be moved and formatted as one unit.
+// Use Cases: Design a diagram where annotation shapes stay aligned when repositioned. | Create a composite label for a chart that includes text and geometric shapes. | Apply uniform scaling or rotation to several related shapes with a single command.
+// AI Prompts: Show C# code to ungroup a GroupShape created with Aspose.Cells. | Provide an example of adding a caption to an existing GroupShape in Aspose.Cells for .NET. | Explain how to iterate through individual shapes inside a GroupShape using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a TextBox, rectangle, and oval to a worksheet, combine them into a GroupShape, rename the group, and reposition the whole group by setting its Left and Top properties before saving the workbook.
-class GroupTextboxDemo
+namespace AsposeCellsGroupTextboxExample
 {
-    static void Main()
+    // C# example that creates a workbook, adds a TextBox, a rectangle, and an oval to the first worksheet, groups them into a single GroupShape named "MyGroupedShapes", and saves the file as GroupedShapes.xlsx.
+    public class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        ShapeCollection shapes = sheet.Shapes;
+        public static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a TextBox shape
-        TextBox txtBox = (TextBox)shapes.AddTextBox(2, 0, 2, 0, 150, 50);
-        txtBox.Text = "Sample Text";
-        txtBox.Name = "MyTextBox";
+            // Get the shapes collection of the worksheet
+            ShapeCollection shapes = sheet.Shapes;
 
-        // Add a rectangle shape
-        Shape rect = shapes.AddRectangle(5, 0, 5, 0, 100, 80);
-        rect.Name = "MyRectangle";
+            // Add a TextBox shape
+            TextBox txtBox = shapes.AddTextBox(2, 0, 2, 0, 120, 40);
+            txtBox.Text = "Sample TextBox";
 
-        // Add an oval shape
-        Shape oval = shapes.AddOval(8, 0, 8, 0, 80, 80);
-        oval.Name = "MyOval";
+            // Add a rectangle shape
+            Shape rect = shapes.AddRectangle(5, 0, 5, 0, 100, 60);
+            rect.Text = "Rectangle";
 
-        // Group the TextBox with the rectangle and oval
-        Shape[] groupItems = new Shape[] { txtBox, rect, oval };
-        GroupShape group = shapes.Group(groupItems);
-        group.Name = "MyGroup";
+            // Add an oval shape
+            Shape oval = shapes.AddOval(9, 0, 9, 0, 80, 80);
+            oval.Text = "Oval";
 
-        // Move the grouped container as a single unit
-        group.Left = 200; // horizontal offset in pixels
-        group.Top = 100;  // vertical offset in pixels
+            // Group the TextBox with the rectangle and oval
+            Shape[] itemsToGroup = new Shape[] { txtBox, rect, oval };
+            GroupShape group = shapes.Group(itemsToGroup);
+            group.Name = "MyGroupedShapes";
 
-        // Save the workbook
-        workbook.Save("GroupedTextboxDemo.xlsx");
+            // Save the workbook
+            workbook.Save("GroupedShapes.xlsx");
+        }
     }
 }

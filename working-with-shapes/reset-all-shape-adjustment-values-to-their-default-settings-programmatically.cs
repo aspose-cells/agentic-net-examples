@@ -1,62 +1,63 @@
-// Title: Reset Shape Adjustment Values to Default with Aspose.Cells for .NET (C#)
-// Description: Shows how to programmatically set all ShapeGuide adjustment values of an auto shape (e.g., Chevron) to their default (0) using Aspose.Cells for .NET and then save the workbook.
-// Keywords: Aspose.Cells | C# | reset shape adjustment | ShapeGuide default | auto shape geometry | worksheet shapes | chevron shape | reset shape guides | Aspose.Cells example | default adjustment values
-// Common Searches: reset shapeadjustvalues aspose.cells | default shape guide values c# | clear auto shape adjustments aspose | Aspose.Cells reset shape geometry | how to set shape adjustment to zero
-// Developer Intent: Programmatically set every ShapeGuide.Value of a shape’s Geometry to its default (0) in a workbook.
-// Use Cases: Standardize auto‑shape appearance before exporting or sharing a workbook. | Remove custom geometry tweaks when reusing a template shape across multiple sheets. | Prepare shapes for visual comparison by resetting all guides to their original values.
-// AI Prompts: Write C# code that iterates through all shapes in an Aspose.Cells workbook and resets each ShapeGuide to its default value. | Create a reusable method that accepts a Shape object and sets all Geometry.ShapeAdjustValues to 0 using Aspose.Cells. | Explain how to verify that shape adjustment values have been reset after modification with Aspose.Cells.
+// Title: Reset Shape Adjustment Guides to Default Values with Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook, iterates through all worksheets and shapes, accesses each shape's Geometry, sets every ShapeGuide.Value to 0.0 (default), and saves the modified file.
+// Keywords: Aspose.Cells | C# | reset shape adjustment | shape guide default | shape geometry | Excel workbook | iterate shapes | clear shape adjustments
+// Common Searches: reset shape adjustment guides Aspose.Cells C# | clear shape geometry values in Excel using Aspose.Cells | set all shape guides to default with .NET | programmatically reset custom shape adjustments Aspose.Cells
+// Developer Intent: Programmatically set every shape's adjustment guide to its default (0.0) across all worksheets in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Normalize imported template shapes before generating automated reports. | Ensure consistent rendering when exporting workbooks to PDF or image formats. | Prepare a shared workbook for multiple users by removing custom shape tweaks.
+// AI Prompts: Write C# code with Aspose.Cells that resets all shape adjustment guides to 0.0 and saves the workbook. | Show how to log each shape's name and type before clearing its adjustment values using Aspose.Cells. | Explain how to modify the sample to apply a custom default value (e.g., 0.5) to every shape guide.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to programmatically set all ShapeGuide adjustment values of an auto shape (e.g., Chevron) to their default (0) using Aspose.Cells for .NET and then save the workbook.
-    public class ResetShapeAdjustValuesDemo
+    // Loads an Excel workbook, iterates through all worksheets and shapes, accesses each shape's Geometry, sets every ShapeGuide.Value to 0.0 (default), and saves the modified file.
+    public class ResetShapeAdjustValues
     {
         public static void Run()
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Add a sample auto shape that has adjustment values (e.g., a chevron)
-                Shape shape = worksheet.Shapes.AddAutoShape(AutoShapeType.Chevron, 5, 5, 0, 0, 200, 100);
-
-                // Access the geometry of the shape
-                Geometry geometry = shape.Geometry;
-
-                // Display initial adjustment values
-                Console.WriteLine("Initial ShapeAdjustValues:");
-                foreach (ShapeGuide guide in geometry.ShapeAdjustValues)
+                // Iterate through all worksheets
+                foreach (Worksheet worksheet in workbook.Worksheets)
                 {
-                    Console.WriteLine($"Value: {guide.Value}");
+                    // Iterate through all shapes in the worksheet
+                    foreach (Shape shape in worksheet.Shapes)
+                    {
+                        // Access the geometry of the shape
+                        Geometry geometry = shape.Geometry;
+                        if (geometry == null) continue;
+
+                        // Reset each adjustment guide to its default (assumed 0.0)
+                        foreach (ShapeGuide guide in geometry.ShapeAdjustValues)
+                        {
+                            guide.Value = 0.0;
+                        }
+                    }
                 }
 
-                // Reset each adjustment value to its default (0.0)
-                foreach (ShapeGuide guide in geometry.ShapeAdjustValues)
-                {
-                    guide.Value = 0.0;
-                }
-
-                // Verify that values have been reset
-                Console.WriteLine("\nAfter resetting to default:");
-                foreach (ShapeGuide guide in geometry.ShapeAdjustValues)
-                {
-                    Console.WriteLine($"Value: {guide.Value}");
-                }
-
-                // Save the workbook with the modified shape
-                string outputPath = "ResetShapeAdjustValuesDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"\nWorkbook saved to {outputPath}");
+                // Save the modified workbook
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }
@@ -66,7 +67,7 @@ namespace AsposeCellsExamples
     {
         public static void Main(string[] args)
         {
-            ResetShapeAdjustValuesDemo.Run();
+            ResetShapeAdjustValues.Run();
         }
     }
 }

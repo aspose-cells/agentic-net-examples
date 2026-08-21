@@ -1,92 +1,75 @@
-// Title: C# Batch Apply Spring Theme to Multiple Excel Workbooks Using Aspose.Cells
-// Description: C# console app scans a folder of .xlsx quarterly reports, creates a 12‑color spring palette, applies it via Workbook.CustomTheme, and saves themed workbooks to an output folder with error handling.
-// Keywords: Aspose.Cells | C# batch theme | custom Excel theme | seasonal color palette | Workbook.CustomTheme | spring theme Excel | bulk workbook processing | quarterly report automation | .NET Excel library | Excel theming script
-// Common Searches: apply custom theme to multiple Excel files C# | Aspose.Cells batch theme example | Workbook.CustomTheme bulk processing | C# script to add seasonal palette to workbooks | automate Excel theme for quarterly reports
-// Developer Intent: Automatically apply a spring‑style custom theme to every quarterly‑report workbook in a directory and write the themed copies to a separate folder.
-// Use Cases: Generate spring‑themed versions of all quarterly reports for marketing or internal distribution without manual editing. | Update branding across an existing library of Excel reports when corporate colors change. | Create separate seasonal workbook sets (spring, summer, fall, winter) as part of an automated publishing pipeline.
-// AI Prompts: Write C# code that uses Aspose.Cells to load each .xlsx file in a folder, apply a 12‑color spring palette as a custom theme, and save the result to an output directory. | Show how to call Workbook.CustomTheme with a named theme and a Color[] array while handling missing folders and file‑not‑found errors. | Explain best practices for batch processing Excel workbooks in .NET, including logging, exception handling, and performance tips.
+// Title: Batch Apply a Seasonal Theme to Multiple Excel Workbooks with Aspose.Cells for .NET
+// Description: A C# utility that iterates over a list of quarterly report files, creates a custom 12‑color seasonal theme (e.g., Spring), applies it with Workbook.CustomTheme, and saves each workbook with a "_Seasonal" suffix. Ideal for automating corporate branding across Q1‑Q4 reports.
+// Keywords: Aspose.Cells | C# Excel automation | custom Excel theme | batch workbook processing | seasonal color palette | Workbook.CustomTheme | quarterly report styling | Excel theming .NET | automated Excel branding | multiple file Excel theme
+// Common Searches: apply a custom theme to many Excel files using Aspose.Cells C# | batch add seasonal colors to quarterly reports | Aspose.Cells example for workbook theming | automate Excel theme application across multiple workbooks | C# code to set custom Excel theme for a folder of files
+// Developer Intent: Programmatically apply a predefined seasonal color theme to a collection of quarterly Excel workbooks and save themed copies automatically.
+// Use Cases: Produce branded Q1‑Q4 reports with a spring or winter visual style before distribution. | Integrate seasonal theming into a nightly build that updates financial dashboards. | Create a reusable command‑line tool that adds any custom theme to a batch of Excel files.
+// AI Prompts: Generate code to read theme colors from a JSON configuration file instead of hard‑coding them. | Show how to select a different seasonal palette (e.g., Winter) based on the current month. | Add robust error handling and logging for missing files, permission issues, and save failures in the batch job.
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 
 namespace SeasonalThemeBatchJob
 {
-    // C# console app scans a folder of .xlsx quarterly reports, creates a 12‑color spring palette, applies it via Workbook.CustomTheme, and saves themed workbooks to an output folder with error handling.
+    // A C# utility that iterates over a list of quarterly report files, creates a custom 12‑color seasonal theme (e.g., Spring), applies it with Workbook.CustomTheme, and saves each workbook with a "_Seasonal" suffix. Ideal for automating corporate branding across Q1‑Q4 reports.
     class Program
     {
         static void Main(string[] args)
         {
-            // Define the folder that contains the quarterly report workbooks
-            string inputFolder = @"C:\QuarterlyReports\Input";
-            // Define the folder where the themed workbooks will be saved
-            string outputFolder = @"C:\QuarterlyReports\Output";
-
-            // Verify input folder exists
-            if (!Directory.Exists(inputFolder))
+            // Define the list of quarterly report workbook file paths
+            List<string> inputFiles = new List<string>
             {
-                Console.WriteLine($"Input folder not found: {inputFolder}");
-                return;
-            }
-
-            // Ensure the output folder exists
-            if (!Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);
-
-            // Define a seasonal (e.g., Spring) theme color palette (12 colors)
-            // Index mapping: 0-Background1, 1-Text1, 2-Background2, 3-Text2,
-            // 4-Accent1, 5-Accent2, 6-Accent3, 7-Accent4, 8-Accent5, 9-Accent6,
-            // 10-Hyperlink, 11-FollowedHyperlink
-            Color[] springColors = new Color[]
-            {
-                Color.FromArgb(255, 228, 225), // Light pink background
-                Color.FromArgb(34, 139, 34),   // Forest green text
-                Color.FromArgb(255, 250, 240), // Ivory background
-                Color.FromArgb(85, 107, 47),   // Dark olive text
-                Color.FromArgb(60, 179, 113),  // Medium sea green accent
-                Color.FromArgb(255, 182, 193), // Light pink accent
-                Color.FromArgb(144, 238, 144), // Light green accent
-                Color.FromArgb(255, 215, 0),   // Gold accent
-                Color.FromArgb(173, 216, 230), // Light blue accent
-                Color.FromArgb(221, 160, 221), // Plum accent
-                Color.FromArgb(0, 0, 255),     // Blue hyperlink
-                Color.FromArgb(128, 0, 128)    // Purple followed hyperlink
+                @"C:\Reports\Q1_Report.xlsx",
+                @"C:\Reports\Q2_Report.xlsx",
+                @"C:\Reports\Q3_Report.xlsx",
+                @"C:\Reports\Q4_Report.xlsx"
             };
 
-            // Process each .xlsx file in the input folder
-            foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+            // Process each workbook and apply the seasonal theme
+            foreach (string inputPath in inputFiles)
             {
-                try
-                {
-                    // Verify the file still exists before loading
-                    if (!File.Exists(filePath))
-                    {
-                        Console.WriteLine($"File not found: {filePath}");
-                        continue;
-                    }
+                // Generate an output path (e.g., add "_Seasonal" suffix before extension)
+                string outputPath = System.IO.Path.Combine(
+                    System.IO.Path.GetDirectoryName(inputPath),
+                    System.IO.Path.GetFileNameWithoutExtension(inputPath) + "_Seasonal" + System.IO.Path.GetExtension(inputPath));
 
-                    // Load the workbook
-                    Workbook workbook = new Workbook(filePath);
-
-                    // Apply the custom seasonal theme
-                    workbook.CustomTheme("SpringTheme", springColors);
-
-                    // Determine the output file path (same name, different folder)
-                    string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-
-                    // Save the themed workbook
-                    workbook.Save(outputPath);
-
-                    Console.WriteLine($"Applied Spring theme to: {Path.GetFileName(filePath)}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{Path.GetFileName(filePath)}': {ex.Message}");
-                }
+                ApplySeasonalTheme(inputPath, outputPath);
+                Console.WriteLine($"Applied seasonal theme to: {inputPath}");
+                Console.WriteLine($"Saved themed workbook as: {outputPath}");
             }
+        }
 
-            Console.WriteLine("Batch processing completed.");
+        /// <param name="inputPath">Full path of the source workbook.</param>
+        /// <param name="outputPath">Full path where the themed workbook will be saved.</param>
+        static void ApplySeasonalTheme(string inputPath, string outputPath)
+        {
+            // Load the existing workbook (uses the Workbook(string) constructor)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Define a custom theme with 12 colors (example: Spring theme)
+            Color[] seasonalColors = new Color[12]
+            {
+                Color.FromArgb(255, 255, 228, 225), // Background1 - MistyRose
+                Color.FromArgb(255, 34, 139, 34),   // Text1 - ForestGreen
+                Color.FromArgb(255, 255, 250, 240), // Background2 - FloralWhite
+                Color.FromArgb(255, 85, 107, 47),   // Text2 - DarkOliveGreen
+                Color.FromArgb(255, 60, 179, 113),  // Accent1 - MediumSeaGreen
+                Color.FromArgb(255, 46, 139, 87),   // Accent2 - SeaGreen
+                Color.FromArgb(255, 144, 238, 144), // Accent3 - LightGreen
+                Color.FromArgb(255, 152, 251, 152), // Accent4 - PaleGreen
+                Color.FromArgb(255, 0, 128, 0),     // Accent5 - Green
+                Color.FromArgb(255, 34, 139, 34),   // Accent6 - ForestGreen (duplicate for illustration)
+                Color.FromArgb(255, 0, 0, 255),     // Hyperlink - Blue
+                Color.FromArgb(255, 255, 0, 0)      // Followed Hyperlink - Red
+            };
+
+            // Apply the custom theme (uses Workbook.CustomTheme method)
+            workbook.CustomTheme("SpringSeasonalTheme", seasonalColors);
+
+            // Save the themed workbook (uses Workbook.Save(string) method)
+            workbook.Save(outputPath);
         }
     }
 }

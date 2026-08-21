@@ -1,10 +1,10 @@
-// Title: C# – Load Mixed‑Encoding CSV (UTF‑8 & UTF‑16LE) with TxtLoadOptions.IsMultiEncoded in Aspose.Cells
-// Description: Demonstrates how to create a temporary CSV that combines UTF‑8, UTF‑8 Cyrillic, and UTF‑16LE Japanese sections, load it with Aspose.Cells using TxtLoadOptions.IsMultiEncoded, verify that Unicode characters are preserved, and optionally save the result as an XLSX workbook.
-// Keywords: Aspose.Cells | TxtLoadOptions | IsMultiEncoded | mixed encoding CSV | UTF-8 UTF-16LE | Unicode import .NET | C# CSV to Excel | multi‑encoding detection | preserve Unicode characters
-// Common Searches: Aspose.Cells read CSV with multiple encodings | IsMultiEncoded true example C# | load UTF‑16LE data inside UTF‑8 CSV Aspose.Cells | verify Unicode characters after CSV import .NET | convert mixed‑encoding CSV to XLSX
-// Developer Intent: Enable Aspose.Cells to detect and load sections of a CSV file encoded in different Unicode formats, ensuring all characters remain intact after import.
-// Use Cases: Import legacy CSV exports where each segment uses a distinct encoding and convert them to Excel for analysis. | Validate that Cyrillic and Japanese text are correctly imported from international data feeds. | Create an automated pipeline that reads mixed‑encoding CSV files and saves them as XLSX while preserving original character sets.
-// AI Prompts: Write C# code that uses Aspose.Cells TxtLoadOptions with IsMultiEncoded set to true to read a CSV containing UTF‑8 and UTF‑16LE sections and save it as an XLSX file. | Explain how Aspose.Cells determines encoding boundaries when IsMultiEncoded is enabled and which fallback encoding is applied. | Provide a step‑by‑step tutorial for generating a mixed‑encoding CSV in memory, loading it with Aspose.Cells, and checking specific cells for expected Unicode strings.
+// Title: Import a Mixed‑Encoding CSV with TxtLoadOptions.IsMultiEncoded in Aspose.Cells for .NET
+// Description: This example builds a MemoryStream that concatenates UTF‑8 and UTF‑16LE byte sequences, activates TxtLoadOptions.IsMultiEncoded, sets the comma separator, and loads the stream into a worksheet via ImportCSV. After import, the code prints cell values to confirm that Japanese characters are intact and optionally saves the workbook as an XLSX file.
+// Keywords: Aspose.Cells | TxtLoadOptions.IsMultiEncoded | ImportCSV | C# mixed encoding CSV | UTF-8 UTF-16LE | preserve Unicode | memory stream CSV | multi‑encoded CSV | Excel export
+// Common Searches: Aspose.Cells read CSV with multiple encodings | Enable IsMultiEncoded for CSV import | Load UTF‑8 and UTF‑16LE data in one CSV | Check Unicode characters after ImportCSV | C# Aspose.Cells mixed encoding example
+// Developer Intent: Load a CSV that contains sections encoded in different character sets using TxtLoadOptions.IsMultiEncoded and verify that non‑ASCII text remains unchanged.
+// Use Cases: Processing logs that mix English and localized strings | Migrating legacy CSV files with mixed encodings to XLSX | Automated validation of Unicode data during import | Reading CSV streams from APIs that may switch encodings | Generating reports from multilingual CSV sources
+// AI Prompts: Generate C# code that reads a CSV stream containing UTF‑8 and UTF‑16LE data with Aspose.Cells TxtLoadOptions.IsMultiEncoded and writes the result to an XLSX file. | Explain how TxtLoadOptions.IsMultiEncoded detects encoding changes within a single CSV stream and list any known limitations. | Create a C# unit test that asserts Japanese characters are preserved after importing a mixed‑encoding CSV using Aspose.Cells. | Suggest performance‑friendly ways to import large multi‑encoded CSV files with Aspose.Cells. | Troubleshoot why Unicode characters might appear as garbled text when IsMultiEncoded is set to false.
 
 using System;
 using System.IO;
@@ -13,64 +13,48 @@ using Aspose.Cells;
 
 namespace AsposeCellsMixedEncodingDemo
 {
-    // Demonstrates how to create a temporary CSV that combines UTF‑8, UTF‑8 Cyrillic, and UTF‑16LE Japanese sections, load it with Aspose.Cells using TxtLoadOptions.IsMultiEncoded, verify that Unicode characters are preserved, and optionally save the result as an XLSX workbook.
+    // This example builds a MemoryStream that concatenates UTF‑8 and UTF‑16LE byte sequences, activates TxtLoadOptions.IsMultiEncoded, sets the comma separator, and loads the stream into a worksheet via ImportCSV. After import, the code prints cell values to confirm that Japanese characters are intact and optionally saves the workbook as an XLSX file.
     class Program
     {
         static void Main()
         {
-            // Prepare mixed‑encoding CSV content
-            // Part 1 – UTF‑8 encoded (default)
-            string part1 = "Name,Comment\nJohn,Hello\n";
+            // ----- Prepare mixed‑encoding CSV data -----
+            // Part 1: UTF‑8 encoded (ASCII characters)
+            string partUtf8 = "Name,Comment\nJohn,Hello\n";
 
-            // Part 2 – UTF‑8 encoded Unicode (Cyrillic)
-            string part2 = "Anna,Привет\n";
+            // Part 2: UTF‑16LE encoded (Japanese characters)
+            string partUtf16 = "Anna,こんにちは\n";
 
-            // Part 3 – UTF‑16LE encoded Unicode (Japanese)
-            string part3 = "Bob,こんにちは\n";
+            // Convert each part to its respective byte representation
+            byte[] bytesUtf8 = Encoding.UTF8.GetBytes(partUtf8);
+            byte[] bytesUtf16 = Encoding.Unicode.GetBytes(partUtf16); // Unicode = UTF‑16LE
 
-            // Convert each part to bytes with the appropriate encoding
-            byte[] bytesPart1 = Encoding.UTF8.GetBytes(part1);
-            byte[] bytesPart2 = Encoding.UTF8.GetBytes(part2);
-            byte[] bytesPart3 = Encoding.Unicode.GetBytes(part3); // UTF‑16LE
+            // Combine the two byte arrays into a single stream
+            MemoryStream mixedStream = new MemoryStream();
+            mixedStream.Write(bytesUtf8, 0, bytesUtf8.Length);
+            mixedStream.Write(bytesUtf16, 0, bytesUtf16.Length);
+            mixedStream.Position = 0; // Reset for reading
 
-            // Combine the byte arrays into a single CSV file
-            string tempCsvPath = Path.GetTempFileName();
-            using (FileStream fs = new FileStream(tempCsvPath, FileMode.Create, FileAccess.Write))
-            {
-                fs.Write(bytesPart1, 0, bytesPart1.Length);
-                fs.Write(bytesPart2, 0, bytesPart2.Length);
-                fs.Write(bytesPart3, 0, bytesPart3.Length);
-            }
+            // ----- Configure TxtLoadOptions -----
+            TxtLoadOptions loadOptions = new TxtLoadOptions();
+            loadOptions.IsMultiEncoded = true;      // Enable handling of multiple encodings
+            loadOptions.Separator = ',';            // CSV separator
+            loadOptions.ConvertNumericData = false; // Keep all data as strings for this demo
 
-            // Configure TxtLoadOptions to handle multiple encodings
-            TxtLoadOptions loadOptions = new TxtLoadOptions
-            {
-                Separator = ',',          // CSV separator
-                IsMultiEncoded = true,    // Enable multi‑encoding detection
-                Encoding = Encoding.UTF8   // Default encoding for sections without BOM
-            };
+            // ----- Load CSV into a workbook using ImportCSV (stream overload) -----
+            Workbook workbook = new Workbook(); // Empty workbook
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells.ImportCSV(mixedStream, loadOptions, 0, 0);
 
-            // Load the mixed‑encoding CSV into a workbook using the options
-            Workbook workbook = new Workbook(tempCsvPath, loadOptions);
+            // ----- Verify that Unicode characters are preserved -----
+            // Row 1 (index 0) contains header, Row 2 (index 1) = John, Row 3 (index 2) = Anna
+            Console.WriteLine("A2 (Name): " + sheet.Cells["A2"].StringValue); // Expected: John
+            Console.WriteLine("B2 (Comment): " + sheet.Cells["B2"].StringValue); // Expected: Hello
+            Console.WriteLine("A3 (Name): " + sheet.Cells["A3"].StringValue); // Expected: Anna
+            Console.WriteLine("B3 (Comment): " + sheet.Cells["B3"].StringValue); // Expected: こんにちは
 
-            // Access the loaded cells to verify Unicode characters are preserved
-            Cells cells = workbook.Worksheets[0].Cells;
-
-            Console.WriteLine("A2 (John): " + cells["A2"].StringValue);          // John
-            Console.WriteLine("B2 (Hello): " + cells["B2"].StringValue);        // Hello
-
-            Console.WriteLine("A3 (Anna): " + cells["A3"].StringValue);          // Anna
-            Console.WriteLine("B3 (Cyrillic): " + cells["B3"].StringValue);     // Привет
-
-            Console.WriteLine("A4 (Bob): " + cells["A4"].StringValue);           // Bob
-            Console.WriteLine("B4 (Japanese): " + cells["B4"].StringValue);     // こんにちは
-
-            // Optional: save the workbook to verify successful load (uses default save logic)
-            string outputPath = Path.Combine(Path.GetDirectoryName(tempCsvPath), "MixedEncodingOutput.xlsx");
-            workbook.Save(outputPath);
-
-            // Clean up temporary CSV file
-            File.Delete(tempCsvPath);
+            // Optional: Save to verify visually (uses default UTF‑8 encoding)
+            workbook.Save("MixedEncodingOutput.xlsx", SaveFormat.Xlsx);
         }
     }
 }

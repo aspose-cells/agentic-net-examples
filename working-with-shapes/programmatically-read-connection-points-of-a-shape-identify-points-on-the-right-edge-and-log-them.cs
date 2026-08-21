@@ -1,65 +1,71 @@
-// Title: Aspose.Cells .NET – Retrieve shape connection points and list those on the right edge
-// Description: Creates a workbook, adds a rectangle shape, calculates its right‑edge X coordinate, reads all connection points with GetConnectionPoints, filters points that lie on the right edge using a tolerance, logs the matching points, and saves the file.
-// Keywords: Aspose.Cells shape connection points | C# GetConnectionPoints | filter right edge points | shape bounding rectangle Aspose.Cells | floating point tolerance comparison | Aspose.Cells connector alignment
-// Common Searches: Aspose.Cells get shape connection points .NET | filter shape connection points by right side | C# Aspose.Cells right edge connection points | how to read shape connectors in Aspose.Cells | Aspose.Cells shape GetConnectionPoints example
-// Developer Intent: Read all connection points of a worksheet shape and output only those that are positioned on the shape’s right edge.
-// Use Cases: Attach connectors programmatically to the right side of a shape using filtered connection points. | Validate layout consistency by ensuring custom connectors align with the shape’s right edge before saving. | Generate a coordinate report of right‑edge connection points for documentation or auditing.
-// AI Prompts: Generate C# code with Aspose.Cells that reads a shape’s connection points and returns those on the right edge within a tolerance. | Show how to compute a shape’s right‑edge X coordinate and compare it to connection point X values in Aspose.Cells .NET. | Provide an example that logs right‑edge connection points of a rectangle shape and saves the workbook using Aspose.Cells.
+// Title: C# – Retrieve shape connection points and log those on the right edge with Aspose.Cells
+// Description: Creates a workbook, adds a rectangle shape, reads its connection points via GetConnectionPoints(), calculates the shape's right‑edge X coordinate using the Width property, and writes to the console only the points that lie on that edge within a tolerance.
+// Keywords: Aspose.Cells shape connection points | GetConnectionPoints C# | filter connection points by X coordinate | right edge shape Aspose.Cells | shape width tolerance Aspose.Cells | log shape connection points .NET
+// Common Searches: Aspose.Cells get shape connection points C# | how to find right‑edge connection points in Aspose.Cells | filter shape connection points by X value Aspose.Cells | calculate shape right edge using Width property Aspose.Cells | C# example for reading shape connection points
+// Developer Intent: Read a shape's connection points and output only those positioned on the shape's right side.
+// Use Cases: Verify that connectors are attached to the right side of a diagram element before exporting. | Produce a layout report that lists all right‑edge connection points for auditing Excel drawings. | Programmatically adjust connector positions based on right‑edge connection points of shapes.
+// AI Prompts: Generate C# code that reads shape connection points with Aspose.Cells and filters those on the right edge using a tolerance. | Explain how to compute the right‑edge X coordinate of a shape and compare it to connection point coordinates in Aspose.Cells. | Show an example of logging only right‑edge connection points of a rectangle shape in a .NET console application.
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a rectangle shape, calculates its right‑edge X coordinate, reads all connection points with GetConnectionPoints, filters points that lie on the right edge using a tolerance, logs the matching points, and saves the file.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Creates a workbook, adds a rectangle shape, reads its connection points via GetConnectionPoints(), calculates the shape's right‑edge X coordinate using the Width property, and writes to the console only the points that lie on that edge within a tolerance.
+    public class ShapeConnectionPointsDemo
     {
-        try
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, top offset, left offset, height, width
-            Shape shape = worksheet.Shapes.AddRectangle(1, 0, 0, 100, 200, 0);
-
-            // Build the bounding rectangle of the shape using its position and size properties
-            RectangleF rect = new RectangleF(shape.Left, shape.Top, shape.Width, shape.Height);
-
-            // X coordinate of the right edge of the shape
-            float rightEdgeX = rect.X + rect.Width;
-
-            // Retrieve all connection points of the shape
-            float[][] connectionPoints = shape.GetConnectionPoints();
-
-            Console.WriteLine("Connection points located on the right edge of the shape:");
-            const float tolerance = 0.01f; // tolerance for floating‑point comparison
-
-            for (int i = 0; i < connectionPoints.Length; i++)
+            try
             {
-                float x = connectionPoints[i][0];
-                float y = connectionPoints[i][1];
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Identify points whose X coordinate matches the right edge (within tolerance)
-                if (Math.Abs(x - rightEdgeX) <= tolerance)
+                // Add a rectangle shape to the worksheet
+                // Parameters: upper left row, upper left column, row offset, column offset, height, width
+                Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 200);
+
+                // Retrieve the connection points of the shape
+                float[][] points = shape.GetConnectionPoints();
+
+                // Determine the right edge X coordinate of the shape
+                double rightEdgeX = shape.Width; // Width is in points
+
+                // Tolerance for floating point comparison
+                const double tolerance = 0.5;
+
+                // Log all connection points that lie on the right edge
+                Console.WriteLine("Connection points on the right edge:");
+                for (int i = 0; i < points.Length; i++)
                 {
-                    Console.WriteLine($"Point {i + 1}: X = {x}, Y = {y}");
+                    double x = points[i][0];
+                    double y = points[i][1];
+
+                    if (Math.Abs(x - rightEdgeX) <= tolerance)
+                    {
+                        Console.WriteLine($"Point {i + 1}: X={x}, Y={y}");
+                    }
                 }
+
+                // Save the workbook (optional, just to demonstrate lifecycle usage)
+                workbook.Save("ShapeConnectionPointsDemo.xlsx");
+                Console.WriteLine("Workbook saved as ShapeConnectionPointsDemo.xlsx");
             }
-
-            // Define output file path
-            string outputPath = "ConnectionPointsDemo.xlsx";
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+    }
+
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            ShapeConnectionPointsDemo.Run();
         }
     }
 }

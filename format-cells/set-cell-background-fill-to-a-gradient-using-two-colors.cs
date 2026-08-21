@@ -1,49 +1,49 @@
+// Title: C# – Apply a Two‑Color Gradient Fill to an Excel Cell with Aspose.Cells
+// Description: Creates a workbook, defines a style with a horizontal two‑color gradient (LightBlue → DarkBlue), applies it to cell A1, adjusts row height and column width, and saves the file as CellGradientDemo.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells gradient fill C# | two color cell background .NET | horizontal gradient Excel Aspose | SetTwoColorGradient example | Excel cell style gradient C# | Aspose.Cells formatting tutorial
+// Common Searches: how to set gradient background for a cell in Aspose.Cells C# | Aspose.Cells SetTwoColorGradient horizontal example | apply two‑color gradient to Excel cell using .NET | C# code for gradient fill in Aspose.Cells workbook
+// Developer Intent: Generate a cell style with a horizontal two‑color gradient and apply it to a specific worksheet cell.
+// Use Cases: Emphasize header rows in automated reports with a blue gradient. | Create visually distinct dashboard sections by applying gradient backgrounds to key cells. | Represent intensity or progress levels in status cells using gradient shading.
+// AI Prompts: Generate C# code to apply a vertical three‑color gradient to a range of cells with Aspose.Cells. | Show how to set a diagonal two‑color gradient on merged cells while keeping existing formatting intact. | Explain how to vary the gradient colors based on a cell's numeric value in Aspose.Cells for .NET.
+
 using System;
 using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;   // Required for GradientStyleType enum
+using Aspose.Cells.Drawing;   // Required for GradientStyleType
 
-namespace AsposeCellsGradientDemo
+// Creates a workbook, defines a style with a horizontal two‑color gradient (LightBlue → DarkBlue), applies it to cell A1, adjusts row height and column width, and saves the file as CellGradientDemo.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook (lifecycle create)
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Create a style object
-                Style style = workbook.CreateStyle();
+            // Create a style and set a two‑color gradient fill
+            Style style = workbook.CreateStyle();
+            // Gradient from LightBlue to DarkBlue, horizontal direction, variant 1
+            style.SetTwoColorGradient(Color.LightBlue, Color.DarkBlue, GradientStyleType.Horizontal, 1);
+            // Enable gradient rendering for the style
+            style.IsGradient = true;
 
-                // Set a two‑color gradient on the style (LightSkyBlue → DarkBlue, horizontal)
-                style.SetTwoColorGradient(
-                    Color.LightSkyBlue,          // first gradient color
-                    Color.DarkBlue,              // second gradient color
-                    GradientStyleType.Horizontal, // gradient direction
-                    1);                          // variant (1‑4)
+            // Apply the style to a cell
+            Cell cell = worksheet.Cells["A1"];
+            cell.PutValue("Gradient Cell");
+            cell.SetStyle(style);
 
-                // Apply the style to a specific cell
-                Cell cell = worksheet.Cells["A1"];
-                cell.PutValue("Gradient Cell");
-                cell.SetStyle(style);
+            // Adjust row height and column width for better visibility
+            worksheet.Cells.SetRowHeight(0, 40);
+            worksheet.Cells.SetColumnWidth(0, 25);
 
-                // Adjust row height and column width for better visibility
-                worksheet.Cells.SetRowHeight(0, 40);
-                worksheet.Cells.SetColumnWidth(0, 30);
-
-                // Save the workbook
-                string outputPath = "CellTwoColorGradient.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook (lifecycle save)
+            workbook.Save("CellGradientDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

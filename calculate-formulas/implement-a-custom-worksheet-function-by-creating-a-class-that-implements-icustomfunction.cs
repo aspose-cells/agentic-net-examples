@@ -1,112 +1,110 @@
+// Title: Implement a Custom Worksheet Function in Aspose.Cells (.NET) Using ICustomFunction and a Custom Engine
+// Description: Shows how to create an ICustomFunction implementation, register it with a CustomFunctionDefinition, build a custom calculation engine derived from AbstractCalculationEngine, apply the function in a worksheet formula, run calculation with CalculationOptions, and save the result.
+// Keywords: Aspose.Cells custom function .NET | ICustomFunction example | custom calculation engine Aspose | register user‑defined Excel function | array‑mode parameters Aspose.Cells | C# custom worksheet function
+// Common Searches: how to add a user defined function in Aspose.Cells | custom calculation engine for Aspose.Cells .NET | define array mode for custom Excel function Aspose | register ICustomFunction implementation | run custom formula with Aspose.Cells
+// Developer Intent: Create and integrate a user‑defined worksheet function into Aspose.Cells calculation workflow.
+// Use Cases: Add two cell values with a custom MYFUNC and use it in formulas. | Process whole ranges by marking parameters as array‑mode. | Replace the default engine to execute bespoke logic during workbook calculation.
+// AI Prompts: Generate C# code for an ICustomFunction that multiplies all numeric arguments and registers it as MYMULT in Aspose.Cells. | Show how to modify MyCustomFunctionDefinition to accept a variable number of arguments and enable array‑mode for the first parameter. | Provide an example that uses the custom engine to evaluate =MYFUNC(A1:A5) where the function sums the range.
+
 using System;
 using Aspose.Cells;
+using System.Collections.Generic;
 
-namespace CustomFunctionDemo
+// Interface for custom worksheet functions
+public interface ICustomFunction
 {
-    // Custom function definition – specifies which parameters should be evaluated in array mode
-    public class MyCustomFunctionDefinition : CustomFunctionDefinition
+    // Evaluates the function with the given arguments
+    object Evaluate(object[] args);
+}
+
+// Example custom function that sums all numeric arguments
+// Shows how to create an ICustomFunction implementation, register it with a CustomFunctionDefinition, build a custom calculation engine derived from AbstractCalculationEngine, apply the function in a worksheet formula, run calculation with CalculationOptions, and save the result.
+public class MyCustomFunction : ICustomFunction
+{
+    public object Evaluate(object[] args)
     {
-        // For this demo, the first parameter (index 0) will be processed in array mode
-        public override int[] GetArrayModeParameters(string functionName)
+        double sum = 0;
+        foreach (var arg in args)
         {
-            if (functionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
-            {
-                return new int[] { 0 };
-            }
-            return base.GetArrayModeParameters(functionName);
+            if (arg != null && double.TryParse(arg.ToString(), out double d))
+                sum += d;
         }
+        return sum;
+    }
+}
+
+// CustomFunctionDefinition to specify which parameters should be calculated in array mode
+public class MyCustomFunctionDefinition : CustomFunctionDefinition
+{
+    public override int[] GetArrayModeParameters(string functionName)
+    {
+        // For MYFUNC both parameters are processed in array mode
+        if (functionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
+            return new int[] { 0, 1 };
+        return base.GetArrayModeParameters(functionName);
+    }
+}
+
+// Custom calculation engine that delegates to registered ICustomFunction implementations
+public class MyEngine : AbstractCalculationEngine
+{
+    private readonly Dictionary<string, ICustomFunction> _functions =
+        new Dictionary<string, ICustomFunction>(StringComparer.OrdinalIgnoreCase);
+
+    public MyEngine()
+    {
+        // Register custom functions here
+        _functions["MYFUNC"] = new MyCustomFunction();
     }
 
-    // Custom calculation engine – performs the actual calculation of the custom function
-    public class MyCustomEngine : AbstractCalculationEngine
+    public override void Calculate(CalculationData data)
     {
-        public override void Calculate(CalculationData data)
+        if (_functions.TryGetValue(data.FunctionName, out ICustomFunction func))
         {
-            // Handle only the custom function we are interested in
-            if (data.FunctionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
+            // Gather parameter values
+            object[] args = new object[data.ParamCount];
+            for (int i = 0; i < data.ParamCount; i++)
             {
-                // Retrieve the first parameter – because we marked it as array‑mode,
-                // it may be returned as a 2‑D object array
-                object param0 = data.GetParamValue(0);
-                double sum = 0;
-
-                if (param0 is object[,] arrayValues)
-                {
-                    // Iterate through all values in the array and accumulate the sum
-                    foreach (object val in arrayValues)
-                    {
-                        if (val != null && double.TryParse(val.ToString(), out double d))
-                        {
-                            sum += d;
-                        }
-                    }
-                }
-                else
-                {
-                    // Single value case
-                    if (param0 != null && double.TryParse(param0.ToString(), out double d))
-                    {
-                        sum = d;
-                    }
-                }
-
-                // Second parameter is a normal scalar value
-                object param1 = data.GetParamValue(1);
-                if (param1 != null && double.TryParse(param1.ToString(), out double d2))
-                {
-                    sum += d2;
-                }
-
-                // Set the result – the engine must assign CalculatedValue
-                data.CalculatedValue = sum;
+                args[i] = data.GetParamValue(i);
             }
-        }
 
-        // Force recalculation for our custom function each time the workbook is calculated
-        public override bool ForceRecalculate(string functionName)
-        {
-            return functionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase);
+            // Execute custom function and set the result
+            data.CalculatedValue = func.Evaluate(args);
         }
     }
+}
 
-    class Program
+class Program
+{
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+
+        // Sample data for the custom function
+        ws.Cells["A1"].PutValue(5);
+        ws.Cells["A2"].PutValue(7);
+
+        // Update custom function definition (optional, for array‑mode handling)
+        wb.UpdateCustomFunctionDefinition(new MyCustomFunctionDefinition());
+
+        // Set a formula that uses the custom function
+        ws.Cells["B1"].Formula = "=MYFUNC(A1, A2)";
+
+        // Configure calculation options with the custom engine
+        CalculationOptions opts = new CalculationOptions
         {
-            // Create a new workbook (lifecycle rule – use provided creation method)
-            Workbook wb = new Workbook();
+            CustomEngine = new MyEngine()
+        };
 
-            // Access the first worksheet
-            Worksheet sheet = wb.Worksheets[0];
+        // Perform calculation
+        wb.CalculateFormula(opts);
 
-            // Populate sample data
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
-            sheet.Cells["A3"].PutValue(30);
-            sheet.Cells["B1"].PutValue(5); // scalar second argument
+        // Output the result
+        Console.WriteLine("Result of MYFUNC: " + ws.Cells["B1"].Value);
 
-            // Update the workbook with our custom function definition
-            wb.UpdateCustomFunctionDefinition(new MyCustomFunctionDefinition());
-
-            // Set a formula that uses the custom function.
-            // The first argument is a range (A1:A3) – it will be processed in array mode.
-            // The second argument is a single cell (B1).
-            sheet.Cells["C1"].Formula = "=MYFUNC(A1:A3, B1)";
-
-            // Prepare calculation options with our custom engine
-            CalculationOptions options = new CalculationOptions
-            {
-                CustomEngine = new MyCustomEngine()
-            };
-
-            // Calculate all formulas using the custom engine
-            wb.CalculateFormula(options);
-
-            // Output the result of the custom function
-            Console.WriteLine("Result of MYFUNC(A1:A3, B1): " + sheet.Cells["C1"].Value);
-
-            // Save the workbook (lifecycle rule – use provided save method)
-            wb.Save("CustomFunctionResult.xlsx");
-        }
+        // Save the workbook
+        wb.Save("CustomFunctionResult.xlsx");
     }
 }

@@ -1,81 +1,112 @@
+// Title: C# – Export Pivot Table to CSV with Headers Using Aspose.Cells
+// Description: Loads an Excel workbook, finds the first worksheet containing a pivot table, extracts the pivot range (including column names) into a DataTable, and writes it to a CSV file while preserving data types and correctly escaping commas and quotes.
+// Keywords: Aspose.Cells export pivot table CSV | C# export pivot table to CSV | pivot table CSV with headers | ExportDataTable Aspose.Cells | Excel pivot to CSV C# | preserve data types CSV export | Aspose.Cells example GitHub
+// Common Searches: how to export a pivot table to csv using aspose.cells | c# export excel pivot table with column headers | aspose.cells ExportDataTable pivot example | save pivot table as csv file c# | csv export preserving data types asp.net
+// Developer Intent: Generate a CSV file from the first pivot table in an Excel workbook, keeping column headers and original data types intact.
+// Use Cases: Create CSV reports from pivot summaries for downstream analytics pipelines. | Provide a data feed for BI tools that require flat‑file input. | Automate periodic email attachments containing pivot‑derived metrics.
+// AI Prompts: Write C# code with Aspose.Cells that exports a specific pivot table to CSV, ensuring headers are included and values are escaped. | Show how to modify the example to export only visible rows and use a semicolon delimiter. | Explain how to retain numeric formatting (e.g., currency, dates) when converting pivot table values to CSV with Aspose.Cells.
+
 using System;
 using System.Data;
+using System.Globalization;
 using System.IO;
-using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
+// Loads an Excel workbook, finds the first worksheet containing a pivot table, extracts the pivot range (including column names) into a DataTable, and writes it to a CSV file while preserving data types and correctly escaping commas and quotes.
 class ExportPivotToCsv
 {
     static void Main()
     {
-        // Path to the workbook that contains the pivot table
-        string workbookPath = "input.xlsx";
-
-        // Load the workbook (load rule)
-        Workbook workbook = new Workbook(workbookPath);
-
-        // Assume the first worksheet contains the pivot table
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Get the first pivot table in the worksheet
-        if (sheet.PivotTables.Count == 0)
+        try
         {
-            Console.WriteLine("No pivot tables found in the worksheet.");
-            return;
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.csv";
 
-        PivotTable pivot = sheet.PivotTables[0];
-
-        // Determine the range that covers the whole pivot table (including headers)
-        CellArea area = pivot.TableRange1; // range of the pivot table (without page fields)
-        int startRow = area.StartRow;
-        int startColumn = area.StartColumn;
-        int totalRows = area.EndRow - area.StartRow + 1;
-        int totalColumns = area.EndColumn - area.StartColumn + 1;
-
-        // Set export options: export column names (headers) and keep original data types
-        ExportTableOptions exportOptions = new ExportTableOptions
-        {
-            ExportColumnName = true,   // first row becomes column names
-            ExportAsString = false,    // keep original data types
-            CheckMixedValueType = true // handle mixed types safely
-        };
-
-        // Export the pivot table range to a DataTable (export rule)
-        DataTable dataTable = sheet.Cells.ExportDataTable(startRow, startColumn, totalRows, totalColumns, exportOptions);
-
-        // Path for the resulting CSV file
-        string csvPath = "pivot_data.csv";
-
-        // Write the DataTable to CSV while preserving column headers
-        using (StreamWriter writer = new StreamWriter(csvPath))
-        {
-            // Write header line
-            string headerLine = string.Join(",", dataTable.Columns.Cast<DataColumn>()
-                                            .Select(col => EscapeCsv(col.ColumnName)));
-            writer.WriteLine(headerLine);
-
-            // Write each data row
-            foreach (DataRow row in dataTable.Rows)
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                string line = string.Join(",", dataTable.Columns.Cast<DataColumn>()
-                                            .Select(col => EscapeCsv(row[col] == DBNull.Value ? string.Empty : row[col].ToString())));
-                writer.WriteLine(line);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
+
+            // Load workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Locate the first worksheet that contains a pivot table
+            Worksheet sheet = null;
+            PivotTable pivot = null;
+            foreach (Worksheet ws in workbook.Worksheets)
+            {
+                if (ws.PivotTables.Count > 0)
+                {
+                    sheet = ws;
+                    pivot = ws.PivotTables[0];
+                    break;
+                }
+            }
+
+            if (pivot == null || sheet == null)
+            {
+                Console.WriteLine("No pivot tables found in the workbook.");
+                return;
+            }
+
+            // Determine the range of the pivot table (excluding page fields)
+            CellArea range = pivot.TableRange1;
+            int firstRow = range.StartRow;
+            int firstColumn = range.StartColumn;
+            int totalRows = range.EndRow - range.StartRow + 1;
+            int totalColumns = range.EndColumn - range.StartColumn + 1;
+
+            // Export options: include column headers
+            ExportTableOptions exportOptions = new ExportTableOptions
+            {
+                ExportColumnName = true
+            };
+
+            // Export pivot range to a DataTable
+            DataTable dt = sheet.Cells.ExportDataTable(firstRow, firstColumn, totalRows, totalColumns, exportOptions);
+
+            // Write DataTable to CSV
+            using (StreamWriter writer = new StreamWriter(outputPath))
+            {
+                // Header row
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    writer.Write(dt.Columns[i].ColumnName);
+                    if (i < dt.Columns.Count - 1) writer.Write(",");
+                }
+                writer.WriteLine();
+
+                // Data rows
+                foreach (DataRow row in dt.Rows)
+                {
+                    for (int i = 0; i < dt.Columns.Count; i++)
+                    {
+                        object value = row[i];
+                        string text = value == null || value == DBNull.Value
+                            ? string.Empty
+                            : Convert.ToString(value, CultureInfo.InvariantCulture);
+
+                        // Escape commas and quotes
+                        if (text.Contains(",") || text.Contains("\""))
+                        {
+                            text = $"\"{text.Replace("\"", "\"\"")}\"";
+                        }
+
+                        writer.Write(text);
+                        if (i < dt.Columns.Count - 1) writer.Write(",");
+                    }
+                    writer.WriteLine();
+                }
+            }
+
+            Console.WriteLine("Pivot table exported to CSV successfully.");
         }
-
-        Console.WriteLine($"Pivot table data exported successfully to '{csvPath}'.");
-    }
-
-    // Helper method to escape CSV fields according to RFC 4180
-    private static string EscapeCsv(string field)
-    {
-        if (field.Contains(",") || field.Contains("\"") || field.Contains("\n") || field.Contains("\r"))
+        catch (Exception ex)
         {
-            string escaped = field.Replace("\"", "\"\"");
-            return $"\"{escaped}\"";
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-        return field;
     }
 }

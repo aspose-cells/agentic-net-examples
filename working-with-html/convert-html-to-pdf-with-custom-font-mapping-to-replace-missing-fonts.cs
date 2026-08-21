@@ -1,87 +1,68 @@
-// Title: C# – Convert HTML to PDF with Custom Font Mapping & Substitutes using Aspose.Cells
-// Description: Demonstrates how to register a custom font directory, define font substitutes for missing typefaces, load an HTML file into an Aspose.Cells Workbook, configure PdfSaveOptions with a fallback font and compatibility checks, and export the result as a PDF while preserving layout.
-// Keywords: Aspose.Cells | HTML to PDF conversion | custom font folder | font substitution | default font fallback | PdfSaveOptions | C# .NET | missing fonts handling | font compatibility check | PDF export
-// Common Searches: Aspose.Cells register custom font folder | HTML to PDF with font substitutes Aspose.Cells | C# set default font for PDF export Aspose.Cells | how to map missing fonts when converting HTML to PDF | PdfSaveOptions font compatibility Aspose.Cells
-// Developer Intent: Convert an HTML document to PDF while automatically replacing unavailable fonts with user‑defined alternatives.
-// Use Cases: Load a web‑page HTML file into a Workbook and generate a PDF that uses fonts from a private .ttf collection. | Define substitute fonts (e.g., replace Arial with Liberation Sans) to ensure consistent rendering on machines without the original typeface. | Enable font compatibility checks to avoid missing characters and guarantee a printable PDF output.
-// AI Prompts: Write C# code that registers a custom font directory and sets font substitutes before converting HTML to PDF with Aspose.Cells. | Explain the PdfSaveOptions properties needed for default font fallback and font‑compatibility verification. | Provide troubleshooting steps when custom fonts are not applied in the exported PDF.
+// Title: C# – Convert HTML to PDF with Custom Font Mapping & Substitution using Aspose.Cells
+// Description: Load an HTML file into an Aspose.Cells workbook, set a recursive custom TrueType font folder, define font substitutes, configure PdfSaveOptions (DefaultFont, CheckWorkbookDefaultFont, CheckFontCompatibility), and save the result as a PDF while automatically replacing missing fonts.
+// Keywords: Aspose.Cells HTML to PDF | custom font folder Aspose.Cells | font substitution .NET | PdfSaveOptions DefaultFont | CheckFontCompatibility | C# HTML to PDF conversion | font mapping Aspose.Cells | replace missing fonts PDF
+// Common Searches: Aspose.Cells map custom fonts when converting HTML to PDF | C# replace missing Arial with Liberation Sans in PDF using Aspose.Cells | set recursive font folder Aspose.Cells PDF export | enable font compatibility checking PdfSaveOptions Aspose.Cells | how to use FontConfigs.SetFontSubstitutes in C#
+// Developer Intent: Convert an HTML document to PDF while ensuring any unavailable fonts are automatically replaced using a private font directory and defined substitute fonts.
+// Use Cases: Generate branded PDF reports from HTML templates on servers that lack standard system fonts. | Create printable invoices from HTML where the default Arial font may be missing, substituting it with open‑source alternatives. | Run a batch job that processes many HTML files into PDFs, applying a shared custom font repository to maintain consistent appearance.
+// AI Prompts: Write C# code that converts HTML to PDF with Aspose.Cells, adds a recursive custom font folder, and sets font substitutes for missing families. | Explain the interaction between FontConfigs.SetFontSubstitutes and PdfSaveOptions.CheckFontCompatibility in Aspose.Cells. | Show how to log each font substitution that occurs during an HTML‑to‑PDF conversion with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsHtmlToPdf
+// Load an HTML file into an Aspose.Cells workbook, set a recursive custom TrueType font folder, define font substitutes, configure PdfSaveOptions (DefaultFont, CheckWorkbookDefaultFont, CheckFontCompatibility), and save the result as a PDF while automatically replacing missing fonts.
+class HtmlToPdfWithFontMapping
 {
-    // Demonstrates how to register a custom font directory, define font substitutes for missing typefaces, load an HTML file into an Aspose.Cells Workbook, configure PdfSaveOptions with a fallback font and compatibility checks, and export the result as a PDF while preserving layout.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Set the folder that contains custom TrueType fonts (recursive scan)
+            string customFontFolder = @"C:\CustomFonts";
+            if (Directory.Exists(customFontFolder))
             {
-                // Path to the folder that contains custom fonts (e.g., .ttf files)
-                string customFontFolder = @"C:\MyCustomFonts";
-
-                // Register the custom font folder if it exists
-                if (Directory.Exists(customFontFolder))
-                {
-                    // Register the custom font folder (recursive scan)
-                    FontConfigs.SetFontFolder(customFontFolder, true);
-                }
-                else
-                {
-                    Console.WriteLine($"Custom font folder not found: {customFontFolder}");
-                }
-
-                // Define font substitutes for a font that might be missing in the environment
-                // For example, if the HTML uses "Arial" but it's not available, substitute with "Liberation Sans"
-                FontConfigs.SetFontSubstitutes("Arial", new[] { "Liberation Sans", "Helvetica", "Verdana" });
-
-                // Load the HTML file into a Workbook
-                // Aspose.Cells can directly load HTML documents
-                string htmlPath = @"C:\Input\sample.html";
-
-                if (!File.Exists(htmlPath))
-                {
-                    Console.WriteLine($"Input HTML file not found: {htmlPath}");
-                    return;
-                }
-
-                Workbook workbook = new Workbook(htmlPath);
-
-                // Configure PDF save options with custom font handling
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    // Use a default font that is guaranteed to exist (fallback)
-                    DefaultFont = "Liberation Sans",
-                    // Try to use the workbook's default font first
-                    CheckWorkbookDefaultFont = true,
-                    // Enable font compatibility checking to substitute missing characters
-                    CheckFontCompatibility = true,
-                    // Optional: set font encoding (Identity is default)
-                    FontEncoding = PdfFontEncoding.Identity
-                };
-
-                // Ensure output directory exists
-                string outputDir = @"C:\Output";
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as PDF
-                string pdfPath = Path.Combine(outputDir, "result.pdf");
-                workbook.Save(pdfPath, pdfOptions);
-
-                Console.WriteLine("HTML has been converted to PDF with custom font mapping.");
-                Console.WriteLine($"PDF saved to: {pdfPath}");
+                FontConfigs.SetFontFolder(customFontFolder, true);
             }
-            catch (Exception ex)
+
+            // Define substitute fonts for a font that might be missing on the target system
+            // If "Arial" is not available, Aspose.Cells will try "Liberation Sans" then "DejaVu Sans"
+            FontConfigs.SetFontSubstitutes("Arial", new[] { "Liberation Sans", "DejaVu Sans" });
+
+            // Load the source HTML file into a workbook
+            string htmlFilePath = @"C:\Input\sample.html";
+            if (!File.Exists(htmlFilePath))
+                throw new FileNotFoundException("HTML input file not found.", htmlFilePath);
+
+            // Use HtmlLoadOptions to correctly interpret the HTML content
+            var htmlLoadOptions = new HtmlLoadOptions();
+            Workbook workbook = new Workbook(htmlFilePath, htmlLoadOptions);
+
+            // Configure PDF save options with custom font handling
+            var pdfOptions = new PdfSaveOptions
             {
-                Console.WriteLine("An error occurred during conversion:");
-                Console.WriteLine(ex.Message);
-            }
+                // Primary font to use; if unavailable, substitutes defined above will be applied
+                DefaultFont = "Arial",
+
+                // Try to use the workbook's default font before falling back to system fonts
+                CheckWorkbookDefaultFont = true,
+
+                // Ensure font compatibility checking so missing characters are replaced with substitutes
+                CheckFontCompatibility = true
+            };
+
+            // Ensure the output directory exists
+            string pdfOutputPath = @"C:\Output\result.pdf";
+            string outputDir = Path.GetDirectoryName(pdfOutputPath);
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the workbook as a PDF file using the configured options
+            workbook.Save(pdfOutputPath, pdfOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

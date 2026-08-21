@@ -1,10 +1,10 @@
-// Title: Add a Rectangle Shape Linked to a Cell and Capture Circular Reference Errors with a Custom Calculation Monitor (Aspose.Cells .NET)
-// Description: Demonstrates how to create a workbook, insert a rectangle shape, link it to cell A1, set formulas that create a circular reference, and use a custom class derived from AbstractCalculationMonitor to log the involved cells. The example shows configuring CalculationOptions, handling the circular‑reference event, catching calculation exceptions, and saving the file.
-// Keywords: Aspose.Cells add shape | link shape to cell | circular reference detection | custom calculation monitor | handle circular reference error | Aspose.Cells .NET example | shape linked cell formula | worksheet calculation monitor
-// Common Searches: Aspose.Cells link shape to cell and detect circular reference | How to use AbstractCalculationMonitor for circular references | Add rectangle shape with linked cell in C# Aspose.Cells | Capture circular reference events during workbook calculation | Graceful error handling for circular formulas Aspose.Cells
-// Developer Intent: Create a shape linked to a cell that participates in a circular reference and use a custom calculation monitor to detect and log the circular reference while handling any calculation errors.
-// Use Cases: Display dynamic values on a shape that updates with cell changes and monitor for circular dependencies. | Implement a custom AbstractCalculationMonitor to enumerate and log cells involved in a circular reference. | Execute workbook calculations inside a try‑catch block to prevent crashes and still generate the output file.
-// AI Prompts: Generate C# code that adds a circle shape linked to cell B2, creates a circular reference with another cell, and logs the reference using a custom calculation monitor in Aspose.Cells. | Show how to configure CalculationOptions with a custom monitor to capture circular reference events and continue processing after an exception. | Explain the parameters of SetLinkedCell for locale‑aware shape‑to‑cell linking in Aspose.Cells.
+// Title: Link a Rectangle Shape to a Cell with a Circular Reference and Handle It Using a Custom Calculation Monitor (Aspose.Cells for .NET)
+// Description: Demonstrates how to add a rectangle shape to a worksheet, link it to cell A1, create a circular reference between A1 and B1, and capture the loop with a custom class derived from AbstractCalculationMonitor. The example shows graceful error handling during workbook.CalculateFormula and saves the file after detection.
+// Keywords: Aspose.Cells shape linking | C# rectangle shape linked cell | circular reference detection | AbstractCalculationMonitor example | custom calculation monitor .NET | handle circular reference error | Aspose.Cells formula calculation | save workbook after error handling
+// Common Searches: Aspose.Cells link shape to cell | detect circular reference with Aspose.Cells | custom calculation monitor tutorial | C# shape linked cell circular reference | handle formula errors in Aspose.Cells
+// Developer Intent: Create a shape that references a cell involved in a circular formula loop and capture the event without crashing the application.
+// Use Cases: Log every cell participating in a circular reference for audit purposes. | Prevent unhandled exceptions when formulas contain loops. | Maintain shape-to-cell links while safely processing complex workbooks.
+// AI Prompts: Generate C# code that adds a rectangle shape, links it to a cell, creates a circular reference, and uses a custom AbstractCalculationMonitor to log circular cells. | Show how to catch and display calculation errors caused by circular references in Aspose.Cells for .NET.
 
 using System;
 using System.Collections;
@@ -13,20 +13,20 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsCircularReferenceDemo
 {
-    // Custom calculation monitor to handle circular reference events
-    // Demonstrates how to create a workbook, insert a rectangle shape, link it to cell A1, set formulas that create a circular reference, and use a custom class derived from AbstractCalculationMonitor to log the involved cells. The example shows configuring CalculationOptions, handling the circular‑reference event, catching calculation exceptions, and saving the file.
+    // Custom calculation monitor to handle circular references
+    // Demonstrates how to add a rectangle shape to a worksheet, link it to cell A1, create a circular reference between A1 and B1, and capture the loop with a custom class derived from AbstractCalculationMonitor. The example shows graceful error handling during workbook.CalculateFormula and saves the file after detection.
     class CircularReferenceMonitor : AbstractCalculationMonitor
     {
-        // This method is called when the engine detects circular references
+        // This method is called when a circular reference is detected during calculation
         public override bool OnCircular(IEnumerator circularCellsData)
         {
             Console.WriteLine("Circular reference detected!");
             while (circularCellsData.MoveNext())
             {
-                // Each item is a CalculationCell; display its address
-                Console.WriteLine($" - {circularCellsData.Current}");
+                // Each item is a CalculationCell; its ToString provides cell address
+                Console.WriteLine($"Circular cell: {circularCellsData.Current}");
             }
-            // Return true to let the engine continue processing (or false to stop)
+            // Return true to let the engine continue processing other cells
             return true;
         }
     }
@@ -35,40 +35,39 @@ namespace AsposeCellsCircularReferenceDemo
     {
         static void Main()
         {
-            // ---------- Create a new workbook ----------
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // ---------- Add a rectangle shape ----------
+            // Add a rectangle shape to the worksheet
             // Parameters: upper left row, upper left column, top, left, width, height
-            Shape rect = sheet.Shapes.AddRectangle(2, 2, 0, 0, 120, 30);
+            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 120, 40);
 
-            // Link the shape's value to cell A1
-            rect.SetLinkedCell("$A$1", false, true); // absolute A1 reference, locale‑aware
+            // Link the shape to cell A1 (which will be part of a circular reference)
+            // Using SetLinkedCell method (rule)
+            shape.SetLinkedCell("$A$1", false, true);
 
-            // ---------- Create a circular reference scenario ----------
-            // A1 depends on B1 and B1 depends on A1
-            sheet.Cells["A1"].Formula = "=B1";
-            sheet.Cells["B1"].Formula = "=A1";
+            // Create a circular reference: A1 = B1, B1 = A1
+            worksheet.Cells["A1"].Formula = "=B1";
+            worksheet.Cells["B1"].Formula = "=A1";
 
-            // ---------- Set up calculation options with the custom monitor ----------
-            CalculationOptions calcOptions = new CalculationOptions
-            {
-                CalculationMonitor = new CircularReferenceMonitor()
-            };
+            // Set up calculation options with the custom monitor
+            CalculationOptions options = new CalculationOptions();
+            options.CalculationMonitor = new CircularReferenceMonitor();
 
-            // ---------- Perform calculation and handle possible errors ----------
             try
             {
-                workbook.CalculateFormula(calcOptions);
-                Console.WriteLine("Calculation completed successfully.");
+                // Perform formula calculation (circular reference will trigger monitor)
+                workbook.CalculateFormula(options);
+                Console.WriteLine("Calculation completed.");
             }
             catch (Exception ex)
             {
+                // Gracefully handle any unexpected errors
                 Console.WriteLine($"Calculation error: {ex.Message}");
             }
 
-            // ---------- Save the workbook ----------
+            // Save the workbook (lifecycle rule: save)
             workbook.Save("CircularReferenceDemo.xlsx");
         }
     }

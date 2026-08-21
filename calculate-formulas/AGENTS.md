@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Formula Calculation Agent
 category: calculate-formulas
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Calculate and recalculate Excel formulas in C# without Microsoft Excel
 primary_apis:
   - Workbook.CalculateFormula
@@ -607,3 +607,4 @@ Required validation evidence:
 ## Definition of done
 
 A `calculate-formulas` example is done only when it is technically correct, version-verified, deterministic, runnable, result-checked, safe, clearly named, independently understandable, and retrievable by both developers and AI systems.
+

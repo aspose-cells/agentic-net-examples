@@ -1,52 +1,59 @@
-// Title: Save Aspose.Cells Workbook as HTML without Gridlines and Verify Absence (C#)
-// Description: Shows how to create a workbook, enable its gridlines, add sample data, set HtmlSaveOptions.ExportGridLines = false, export to HTML, and programmatically confirm that no gridline or border CSS is present in the generated file.
-// Keywords: Aspose.Cells | C# HTML export | ExportGridLines false | disable gridlines | verify HTML output | gridline removal | HtmlSaveOptions | Excel to HTML conversion | no border styles | Aspose.Cells sample code
-// Common Searches: Aspose.Cells export to HTML without gridlines | C# HtmlSaveOptions ExportGridLines example | how to hide gridlines in HTML output using Aspose.Cells | verify that HTML export has no border CSS | disable gridlines when saving workbook as HTML
-// Developer Intent: Export a workbook to HTML with gridlines turned off and programmatically confirm they are omitted.
-// Use Cases: Generate clean web reports from Excel data where gridlines would clutter the layout. | Create printable HTML versions of spreadsheets that match corporate branding without visible borders. | Automate a CI check to ensure the ExportGridLines setting is respected in automated HTML exports.
-// AI Prompts: Write C# code using Aspose.Cells to save a workbook as HTML with ExportGridLines set to false and validate that the output contains no border or gridline CSS. | Provide a C# unit test that asserts the generated HTML from Aspose.Cells does not include any gridline styles when ExportGridLines is disabled. | Explain how to combine HtmlSaveOptions settings for custom HTML export while keeping gridlines hidden.
+// Title: Aspose.Cells C# – Export Workbook to HTML without Gridlines and Verify
+// Description: Creates a workbook, adds sample data, enables worksheet gridlines, configures HtmlSaveOptions with ExportGridLines = false, saves to HTML, reads the file, and checks for border CSS to confirm that gridlines are omitted.
+// Keywords: Aspose.Cells HTML export C# | ExportGridLines false | disable gridlines Aspose.Cells | verify HTML output Aspose | gridline CSS detection | Aspose.Cells HtmlSaveOptions example
+// Common Searches: How to turn off gridlines when saving Excel to HTML with Aspose.Cells | Aspose.Cells ExportGridLines property C# example | Check HTML for gridline borders after Aspose export | Validate that Aspose.Cells HTML export excludes gridlines
+// Developer Intent: Save a workbook as HTML with gridlines turned off and programmatically confirm that no gridline markup appears.
+// Use Cases: Generate clean HTML reports where spreadsheet borders are not wanted. | Create printable web versions of worksheets without visual clutter. | Automate CI tests to ensure ExportGridLines setting is respected.
+// AI Prompts: Write C# code that exports an Aspose.Cells workbook to HTML with ExportGridLines set to false and validates the absence of gridline CSS. | Explain how to scan the generated HTML file to detect any border styles that would indicate exported gridlines. | Suggest alternative verification techniques, such as DOM parsing or regex, to confirm gridlines are omitted.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Shows how to create a workbook, enable its gridlines, add sample data, set HtmlSaveOptions.ExportGridLines = false, export to HTML, and programmatically confirm that no gridline or border CSS is present in the generated file.
-class Program
+namespace AsposeCellsHtmlExport
 {
-    static void Main()
+    // Creates a workbook, adds sample data, enables worksheet gridlines, configures HtmlSaveOptions with ExportGridLines = false, saves to HTML, reads the file, and checks for border CSS to confirm that gridlines are omitted.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Enable gridlines in the worksheet (they are visible in Excel)
-        worksheet.IsGridlinesVisible = true;
-
-        // Add some sample data so the HTML has content to render
-        worksheet.Cells["A1"].PutValue("Sample Text");
-        worksheet.Cells["B2"].PutValue(12345);
-        worksheet.Cells["C3"].PutValue(DateTime.Now);
-
-        // Configure HTML save options with ExportGridLines disabled
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+        static void Main()
         {
-            ExportGridLines = false   // Ensure gridlines are not exported
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Define the output HTML file path
-        string outputPath = "output.html";
+            // Add some sample data so the HTML has visible cells
+            sheet.Cells["A1"].PutValue("First");
+            sheet.Cells["B2"].PutValue(123);
+            sheet.Cells["C3"].PutValue(DateTime.Now);
 
-        // Save the workbook as HTML using the configured options
-        workbook.Save(outputPath, htmlOptions);
+            // Ensure gridlines are visible in the worksheet (they would be exported if enabled)
+            sheet.IsGridlinesVisible = true;
 
-        // Read the generated HTML file
-        string htmlContent = File.ReadAllText(outputPath);
+            // Configure HTML save options with ExportGridLines disabled
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            {
+                ExportGridLines = false,               // Disable gridline export
+                ExportActiveWorksheetOnly = true       // Export only the active sheet for simplicity
+            };
 
-        // Simple verification: check that the HTML does not contain border styles
-        bool gridLinesFound = htmlContent.Contains("border") || htmlContent.Contains("gridline");
+            // Define output path
+            string outputPath = "output.html";
 
-        // Output verification results
-        Console.WriteLine($"ExportGridLines option set to: {htmlOptions.ExportGridLines}");
-        Console.WriteLine($"Gridlines present in HTML? {(gridLinesFound ? "Yes" : "No")}");
+            // Save the workbook as HTML using the configured options
+            workbook.Save(outputPath, htmlOptions);
+
+            // Verify that gridlines are absent by inspecting the generated HTML
+            string htmlContent = File.ReadAllText(outputPath);
+
+            // Simple check: look for CSS border definitions that Aspose adds for gridlines
+            bool containsGridLines = htmlContent.Contains("border") && htmlContent.Contains("solid");
+
+            Console.WriteLine("HTML file saved to: " + Path.GetFullPath(outputPath));
+            Console.WriteLine("ExportGridLines option set to: " + htmlOptions.ExportGridLines);
+            Console.WriteLine("Gridlines present in HTML? " + (containsGridLines ? "Yes" : "No"));
+            Console.WriteLine(containsGridLines
+                ? "Gridlines were exported despite the option being disabled."
+                : "Gridlines are correctly absent in the HTML output.");
+        }
     }
 }

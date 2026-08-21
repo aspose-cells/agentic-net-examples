@@ -1,68 +1,67 @@
-// Title: Aspose.Cells C# – Enable ShowValuesColumn to Separate Value Fields in a PivotTable
-// Description: This example creates a workbook, adds sample sales data, builds a PivotTable on range A1:C5, assigns Category to rows, Product to columns, and Sales to data, then sets the ShowValuesColumn property so each data field appears in its own column before refreshing and saving the file.
-// Keywords: Aspose.Cells ShowValuesColumn | C# PivotTable separate value columns | Aspose.Cells enable ShowValuesColumn | PivotTable value field column per field | .NET Excel pivot table display options
-// Common Searches: how to turn on ShowValuesColumn in Aspose.Cells | Aspose.Cells C# display each data field in its own column | pivot table ShowValuesColumn property example | separate value columns in Excel pivot using Aspose | Aspose.Cells version check for ShowValuesColumn support
-// Developer Intent: Activate the ShowValuesColumn property on a PivotTable so every data field is rendered in a distinct column.
-// Use Cases: Generate a sales report where the Sales metric is shown in a separate column for each product. | Create a financial summary with multiple metrics (Revenue, Cost, Profit) each displayed in its own column by enabling ShowValuesColumn. | Build a dashboard that adds several data fields (e.g., Sales, Quantity) to a PivotTable and uses ShowValuesColumn to produce a flat table layout for downstream processing.
-// AI Prompts: Write C# code using Aspose.Cells to set pivotTable.ShowValuesColumn = true, add two data fields, refresh the data, and save the workbook. | Show an example that toggles ShowValuesColumn on a PivotTable and explains the visual change in the exported Excel file. | Provide a snippet that checks the Aspose.Cells version at runtime and conditionally applies ShowValuesColumn if the property is available.
+// Title: Aspose.Cells C# – ShowValuesColumn property for PivotTable (unsupported in current version)
+// Description: C# example that creates a workbook, fills a small sales table, adds a PivotTable and assigns row, column, and data fields. The code notes that the ShowValuesColumn property, which would place each value field in its own column, is not available in the present Aspose.Cells release. The workbook is then calculated and saved as PivotTable_ShowValuesColumn.xlsx.
+// Keywords: Aspose.Cells | ShowValuesColumn | PivotTable layout | C# | .NET | Excel pivot value columns | value field separate column | Aspose.Cells version compatibility | pivot table programming | workaround for ShowValuesColumn
+// Common Searches: Aspose.Cells ShowValuesColumn support | how to display each value field in its own column with Aspose.Cells | pivot table value column layout .NET | Aspose.Cells version that includes ShowValuesColumn | alternative to ShowValuesColumn in Aspose.Cells
+// Developer Intent: Attempt to activate the ShowValuesColumn setting so that each data field appears in a distinct column of the generated PivotTable using Aspose.Cells for .NET.
+// Use Cases: Building a sales dashboard where Sales, Quantity, and Discount are shown in separate columns for easy comparison. | Creating a financial report that lists revenue, cost, and profit as individual columns in a PivotTable. | Exporting pivot data to Excel for downstream BI tools that require one column per metric.
+// AI Prompts: Generate C# code with Aspose.Cells that checks the library version and enables ShowValuesColumn if the property exists. | Suggest a workaround to simulate ShowValuesColumn behavior when the property is missing in Aspose.Cells. | Explain how to restructure a PivotTable in Aspose.Cells to display each value field in its own column without using ShowValuesColumn.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// This example creates a workbook, adds sample sales data, builds a PivotTable on range A1:C5, assigns Category to rows, Product to columns, and Sales to data, then sets the ShowValuesColumn property so each data field appears in its own column before refreshing and saving the file.
-class Program
+namespace AsposeCellsPivotDemo
 {
-    static void Main()
+    // C# example that creates a workbook, fills a small sales table, adds a PivotTable and assigns row, column, and data fields. The code notes that the ShowValuesColumn property, which would place each value field in its own column, is not available in the present Aspose.Cells release. The workbook is then calculated and saved as PivotTable_ShowValuesColumn.xlsx.
+    class ShowValuesColumnDemo
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Product");
-            sheet.Cells["C1"].PutValue("Sales");
+                // Populate sample data for the pivot table
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Product");
+                sheet.Cells["C1"].PutValue("Sales");
 
-            sheet.Cells["A2"].PutValue("Fruit");
-            sheet.Cells["B2"].PutValue("Apple");
-            sheet.Cells["C2"].PutValue(120);
+                sheet.Cells["A2"].PutValue("Electronics");
+                sheet.Cells["B2"].PutValue("Laptop");
+                sheet.Cells["C2"].PutValue(1200);
 
-            sheet.Cells["A3"].PutValue("Fruit");
-            sheet.Cells["B3"].PutValue("Orange");
-            sheet.Cells["C3"].PutValue(80);
+                sheet.Cells["A3"].PutValue("Electronics");
+                sheet.Cells["B3"].PutValue("Phone");
+                sheet.Cells["C3"].PutValue(800);
 
-            sheet.Cells["A4"].PutValue("Vegetable");
-            sheet.Cells["B4"].PutValue("Carrot");
-            sheet.Cells["C4"].PutValue(150);
+                sheet.Cells["A4"].PutValue("Furniture");
+                sheet.Cells["B4"].PutValue("Chair");
+                sheet.Cells["C4"].PutValue(150);
 
-            sheet.Cells["A5"].PutValue("Vegetable");
-            sheet.Cells["B5"].PutValue("Potato");
-            sheet.Cells["C5"].PutValue(200);
+                // Add a pivot table based on the data range
+                int pivotIndex = sheet.PivotTables.Add("A1:C4", "E1", "PivotTable1");
+                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E1", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // Add fields to the pivot table
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+                pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Configure the pivot table fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");    // Row field
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Product"); // Column field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");     // Data field
+                // NOTE: The ShowValuesColumn property is not available in this version of Aspose.Cells.
+                // The pivot table will use the default layout for value fields.
 
-            // The ShowValuesColumn property is not available in all versions; omitted.
+                // Calculate the pivot table data
+                pivotTable.CalculateData();
 
-            // Refresh data source and calculate the pivot table
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook with the configured pivot table
-            workbook.Save("PivotTableShowValuesColumnDemo.xlsx", SaveFormat.Xlsx);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook
+                workbook.Save("PivotTable_ShowValuesColumn.xlsx", SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

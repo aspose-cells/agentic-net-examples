@@ -1,76 +1,74 @@
-// Title: C# – Batch Add a Printing‑Prevention VBA Macro to All .xlsm Files with Aspose.Cells
-// Description: A C# console app that scans a folder for macro‑enabled Excel workbooks (*.xlsm), loads each file with Aspose.Cells, creates or updates the "ThisWorkbook" VBA class, inserts a Workbook_BeforePrint routine that cancels printing and shows a message, then saves the workbook back in Xlsm format, overwriting the original file.
-// Keywords: Aspose.Cells | C# add VBA macro | batch process xlsm | prevent printing Excel | Workbook_BeforePrint | macro‑enabled workbook | VBA project manipulation | automate VBA insertion | Excel automation .NET | Windows C# Excel macro
-// Common Searches: add beforeprint macro to multiple xlsm files using C# | batch insert VBA into Excel workbooks Aspose.Cells | disable printing in Excel programmatically | C# code to update ThisWorkbook module in all workbooks | overwrite macro‑enabled workbook with new VBA code
-// Developer Intent: Insert a VBA routine that blocks printing into every macro‑enabled workbook within a specified directory, using Aspose.Cells for .NET.
-// Use Cases: Enforce a no‑print policy on confidential Excel templates before distribution. | Automatically embed a printing‑prevention macro into generated reports to protect sensitive data. | Upgrade existing macro‑enabled workbooks with a security macro without manual editing.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a Workbook_BeforePrint macro to all .xlsm files in a folder and overwrites each file. | Show how to detect whether the "ThisWorkbook" module already contains the printing‑prevention code before replacing it. | Create a version of the script that logs processed file names and any errors to a CSV file while adding the macro.
+// Title: Batch add a print‑blocking VBA macro to all .xlsm files with Aspose.Cells C#
+// Description: Iterates through every *.xlsm workbook in a specified folder, loads each file with Aspose.Cells, confirms a VBA project exists, injects a Workbook_BeforePrint routine into the ThisWorkbook class to display a warning and cancel printing, then overwrites the file in macro‑enabled format.
+// Keywords: Aspose.Cells VBA macro injection | C# batch process xlsm | prevent printing Excel macro | add ThisWorkbook module programmatically | save macro‑enabled workbook .NET | automate VBA code insertion | Excel print disable Aspose
+// Common Searches: how to add a VBA macro to multiple xlsm files using Aspose.Cells | C# code to disable printing in Excel workbooks programmatically | batch insert Workbook_BeforePrint event with Aspose.Cells | add ThisWorkbook class module to existing VBA project .NET | prevent Excel printing across a folder of macro‑enabled files
+// Developer Intent: Insert a VBA routine that blocks printing into every macro‑enabled workbook in a given directory using Aspose.Cells for .NET.
+// Use Cases: Enforce a no‑print policy on a collection of Excel templates before distribution. | Update legacy .xlsm reports with a print‑cancellation macro without opening Excel manually. | Integrate into CI/CD pipelines to guarantee all generated macro‑enabled files contain the print‑prevention code.
+// AI Prompts: Write C# code with Aspose.Cells that adds a Workbook_BeforePrint macro to all .xlsm files in a folder, handling missing VBA projects gracefully. | Show how to modify or create the ThisWorkbook class module and inject VBA code using the Aspose.Cells VbaProject API. | Provide best‑practice error handling and logging for batch processing of macro‑enabled workbooks with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// A C# console app that scans a folder for macro‑enabled Excel workbooks (*.xlsm), loads each file with Aspose.Cells, creates or updates the "ThisWorkbook" VBA class, inserts a Workbook_BeforePrint routine that cancels printing and shows a message, then saves the workbook back in Xlsm format, overwriting the original file.
-class BatchAddPrintPreventionMacro
+namespace MacroProcessing
 {
-    static void Main()
+    // Iterates through every *.xlsm workbook in a specified folder, loads each file with Aspose.Cells, confirms a VBA project exists, injects a Workbook_BeforePrint routine into the ThisWorkbook class to display a warning and cancel printing, then overwrites the file in macro‑enabled format.
+    class BatchAddPrintPreventionMacro
     {
-        // Folder containing macro‑enabled workbooks (*.xlsm)
-        string folderPath = @"C:\Path\To\MacroWorkbooks";
+        static void Main()
+        {
+            // Folder containing macro‑enabled workbooks (*.xlsm)
+            string folderPath = @"C:\Path\To\MacroWorkbooks";
 
-        // Verify that the folder exists
-        if (!Directory.Exists(folderPath))
-        {
-            Console.WriteLine($"Folder not found: {folderPath}");
-            return;
-        }
-
-        // Get all .xlsm files in the folder
-        string[] files;
-        try
-        {
-            files = Directory.GetFiles(folderPath, "*.xlsm");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error retrieving files: {ex.Message}");
-            return;
-        }
-
-        foreach (string filePath in files)
-        {
-            // Ensure the file still exists before processing
-            if (!File.Exists(filePath))
+            if (!Directory.Exists(folderPath))
             {
-                Console.WriteLine($"File not found (skipped): {filePath}");
-                continue;
+                Console.WriteLine($"Folder not found: {folderPath}");
+                return;
             }
 
-            try
+            // Iterate over each .xlsm file in the folder
+            foreach (string filePath in Directory.GetFiles(folderPath, "*.xlsm"))
             {
-                // Load the workbook (macro‑enabled)
-                Workbook workbook = new Workbook(filePath);
+                try
+                {
+                    if (!File.Exists(filePath))
+                    {
+                        Console.WriteLine($"File not found: {filePath}");
+                        continue;
+                    }
 
-                // Add or replace a VBA class module named "ThisWorkbook"
-                int moduleIndex = workbook.VbaProject.Modules.Add(VbaModuleType.Class, "ThisWorkbook");
-                VbaModule vbaModule = workbook.VbaProject.Modules[moduleIndex];
-                vbaModule.Codes =
-@"Private Sub Workbook_BeforePrint(Cancel As Boolean)
-    Cancel = True
-    MsgBox ""Printing is disabled.""
-End Sub";
+                    // Load the workbook
+                    Workbook workbook = new Workbook(filePath);
 
-                // Save the workbook back as macro‑enabled file (overwrites original)
-                workbook.Save(filePath, SaveFormat.Xlsm);
-                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
+                    // Ensure the workbook has a VBA project
+                    VbaProject vbaProject = workbook.VbaProject;
+                    if (vbaProject == null)
+                    {
+                        Console.WriteLine($"No VBA project found in: {Path.GetFileName(filePath)}. Skipping.");
+                        continue;
+                    }
+
+                    // Add or reuse the class module named "ThisWorkbook"
+                    int moduleIndex = vbaProject.Modules.Add(VbaModuleType.Class, "ThisWorkbook");
+                    VbaModule module = vbaProject.Modules[moduleIndex];
+
+                    // VBA code that cancels any print operation
+                    module.Codes =
+                        "Private Sub Workbook_BeforePrint(Cancel As Boolean)\r\n" +
+                        "    MsgBox \"Printing is disabled.\"\r\n" +
+                        "    Cancel = True\r\n" +
+                        "End Sub";
+
+                    // Overwrite the original file with the macro added
+                    workbook.Save(filePath, SaveFormat.Xlsm);
+                    Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                }
             }
         }
-
-        Console.WriteLine("Processing completed. Printing‑prevention macro added to all workbooks.");
     }
 }

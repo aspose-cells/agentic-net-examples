@@ -1,33 +1,53 @@
-// Title: Import a 1‑D string array into cell A1 with Aspose.Cells for .NET (C#)
-// Description: Creates a new Workbook, converts a string[] to object[] and uses Worksheet.Cells.ImportObjectArray to write the values horizontally starting at row 0, column 0 (cell A1), then saves the file as OneDimensionalStringArray.xlsx.
-// Keywords: Aspose.Cells C# import string array | ImportObjectArray example | load 1‑D array into Excel | horizontal array import Aspose | convert string[] to object[]
-// Common Searches: Aspose.Cells import string array C# | ImportObjectArray horizontal example | write string[] to Excel with Aspose | populate first row from array Aspose.Cells
-// Developer Intent: Insert a one‑dimensional string array into the first row and first column of an Excel worksheet using Aspose.Cells.
-// Use Cases: Create a header row from a list of column names stored in a string array. | Place a series of labels across the top of a report sheet. | Initialize a simple data table where the first row is populated from predefined strings.
-// AI Prompts: Generate C# code that uses Aspose.Cells to import a string[] into cell A1 horizontally. | Show how to import a one‑dimensional array vertically with ImportObjectArray in Aspose.Cells. | Explain how to convert any primitive array (int[], double[], etc.) to object[] for ImportObjectArray.
+// Title: C# – Load a One‑Dimensional String Array into Excel Cells with Aspose.Cells
+// Description: This example creates a new Workbook, accesses the first Worksheet, and writes a string[] horizontally across the first row starting at cell A1 using Worksheet.Cells.ImportObjectArray (isVertical = false). The workbook is then saved as OneDimensionalStringArray.xlsx.
+// Keywords: Aspose.Cells | C# | ImportObjectArray | string array to Excel | horizontal array import | load data into cells | save workbook as xlsx | Excel automation | populate first row | worksheet cells import
+// Common Searches: Aspose.Cells import string array C# | how to write a one‑dimensional array to Excel with Aspose | ImportObjectArray horizontal example | load string[] into first row Aspose.Cells | C# write array to Excel cells starting at A1
+// Developer Intent: Write a one‑dimensional string array horizontally into the first row of a worksheet starting at cell A1.
+// Use Cases: Create a header row from a list of column names. | Export a simple report line generated in memory. | Transfer data from a CSV parser directly into Excel without looping through cells.
+// AI Prompts: Generate C# code to import a one‑dimensional string array vertically into an Excel worksheet using Aspose.Cells. | Show how to import a two‑dimensional object array into a specific range with ImportObjectArray. | Explain each parameter of Worksheet.Cells.ImportObjectArray and how to handle null values in the source array.
 
 using System;
 using Aspose.Cells;
 
-// Creates a new Workbook, converts a string[] to object[] and uses Worksheet.Cells.ImportObjectArray to write the values horizontally starting at row 0, column 0 (cell A1), then saves the file as OneDimensionalStringArray.xlsx.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // This example creates a new Workbook, accesses the first Worksheet, and writes a string[] horizontally across the first row starting at cell A1 using Worksheet.Cells.ImportObjectArray (isVertical = false). The workbook is then saved as OneDimensionalStringArray.xlsx.
+    public class LoadOneDimensionalStringArray
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // One‑dimensional string array to be loaded into the sheet
-        string[] stringArray = new string[] { "Alpha", "Beta", "Gamma", "Delta" };
+                // Get the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Convert the string array to an object array because ImportObjectArray expects object[]
-        object[] objArray = Array.ConvertAll(stringArray, s => (object)s);
+                // Prepare a one‑dimensional string array
+                string[] stringArray = new string[] { "Alpha", "Beta", "Gamma", "Delta" };
 
-        // Import the array horizontally (isVertical = false) starting at the first row (0) and first column (0)
-        worksheet.Cells.ImportObjectArray(objArray, 0, 0, false);
+                // Import the array into cells starting at row 0, column 0 (A1)
+                // isVertical = false -> import horizontally across columns
+                worksheet.Cells.ImportObjectArray(stringArray, 0, 0, false);
 
-        // Save the workbook to a file
-        workbook.Save("OneDimensionalStringArray.xlsx");
+                // Save the workbook to a file
+                string outputPath = "OneDimensionalStringArray.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            LoadOneDimensionalStringArray.Run();
+        }
     }
 }

@@ -1,31 +1,34 @@
-// Title: Hide rows 10‑20, unhide rows 15‑18 (auto‑fit) and save as PDF using Aspose.Cells for .NET
-// Description: C# sample that loads an Excel workbook with Aspose.Cells, hides rows 10‑20, unhides rows 15‑18 applying automatic height, and converts the result to a PDF file.
-// Keywords: Aspose.Cells | C# hide rows | Cells.HideRows | Cells.UnhideRows | auto‑fit row height | Excel to PDF conversion | export workbook as PDF | hide row range | unhide specific rows | .NET PDF generation
-// Common Searches: Aspose.Cells hide rows 10 to 20 C# | unhide rows 15-18 auto fit height Aspose.Cells | convert Excel to PDF after hiding rows .NET | Cells.HideRows and Cells.UnhideRows example | how to hide and unhide rows in Aspose.Cells
-// Developer Intent: Programmatically hide a set of rows, reveal a subset with automatic height adjustment, and generate a PDF from the modified workbook using C#.
-// Use Cases: Create a printable report that omits confidential sections while displaying a specific range with proper spacing. | Prepare a PDF invoice where header rows are hidden during processing but later revealed for final output. | Automate document layout adjustments by toggling row visibility before exporting to PDF.
-// AI Prompts: Write C# code with Aspose.Cells to hide rows 5‑12, then unhide rows 7‑9 using a fixed height of 20 points, and export to PDF. | Show how to use Cells.HideRows and Cells.UnhideRows with the auto‑fit height parameter (-1) in a .NET example. | Generate a step‑by‑step guide for hiding a row range, unhiding a sub‑range with auto‑fit, and converting the worksheet to PDF using Aspose.Cells.
+// Title: Hide rows 10‑20, unhide rows 15‑18 with auto‑fit height, and export to PDF using Aspose.Cells for .NET (C#)
+// Description: Loads an existing workbook, hides rows 10‑20, reveals rows 15‑18 while automatically adjusting their height, and saves the result as a PDF document with Aspose.Cells for C#.
+// Keywords: Aspose.Cells hide rows C# | Aspose.Cells UnhideRows method | auto‑fit row height Aspose.Cells | export worksheet to PDF C# | row visibility manipulation Aspose.Cells | HideRows API Aspose.Cells | C# Excel to PDF conversion
+// Common Searches: Aspose.Cells hide a range of rows then unhide a subset | C# unhide rows with automatic height using Aspose.Cells | How to export a workbook to PDF after changing row visibility | Aspose.Cells HideRows and UnhideRows example | Set row height to auto when unhiding rows in Aspose.Cells
+// Developer Intent: The developer needs to conceal rows 10‑20, make rows 15‑18 visible with auto‑adjusted height, and generate a PDF from the modified worksheet.
+// Use Cases: Create a printable report that initially hides confidential sections, then reveals only the required rows with proper spacing before PDF export. | Generate invoices where summary rows are hidden during processing but line‑item rows are displayed with optimal height in the final PDF. | Prepare a client‑ready spreadsheet where business rules dictate which rows stay hidden and which are shown with auto‑fit height for clean PDF output.
+// AI Prompts: Provide C# code that hides rows 10‑20, unhides rows 15‑18 with auto‑fit height, and saves the workbook as a PDF using Aspose.Cells. | Explain the effect of passing -1 as the height parameter to the UnhideRows method in Aspose.Cells. | Show an example of converting an Excel worksheet to PDF after modifying row visibility with Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-// C# sample that loads an Excel workbook with Aspose.Cells, hides rows 10‑20, unhides rows 15‑18 applying automatic height, and converts the result to a PDF file.
-class Program
+namespace AsposeCellsRowVisibilityDemo
 {
-    static void Main()
+    // Loads an existing workbook, hides rows 10‑20, reveals rows 15‑18 while automatically adjusting their height, and saves the result as a PDF document with Aspose.Cells for C#.
+    class Program
     {
-        // Load an existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        static void Main()
+        {
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Hide rows 10 through 20 (zero‑based index 9, total 11 rows)
-        cells.HideRows(9, 11);
+            // Hide rows 10 to 20 (zero‑based index 9, total 11 rows)
+            cells.HideRows(9, 11);
 
-        // Unhide rows 15 through 18 (zero‑based index 14, total 4 rows) with auto‑fit height (-1)
-        cells.UnhideRows(14, 4, -1);
+            // Unhide rows 15 to 18 (zero‑based index 14, total 4 rows) and auto‑fit height
+            cells.UnhideRows(14, 4, -1);
 
-        // Save the workbook as PDF
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+            // Save the modified workbook as PDF
+            workbook.Save("output.pdf", SaveFormat.Pdf);
+        }
     }
 }

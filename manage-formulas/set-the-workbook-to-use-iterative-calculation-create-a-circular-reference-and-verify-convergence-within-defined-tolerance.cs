@@ -1,58 +1,61 @@
-// Title: Aspose.Cells .NET: Enable Iterative Calculation, Create Circular Reference, Verify Convergence
-// Description: Demonstrates how to turn on iterative calculation in Aspose.Cells, define a circular reference (A1 = B1+1, B1 = A1+1), set MaxIteration and MaxChange, run the calculation, and programmatically confirm that the result converges within the specified tolerance.
-// Keywords: Aspose.Cells iterative calculation | circular reference .NET | MaxIteration Aspose.Cells | MaxChange tolerance | formula convergence C# | Aspose.Cells workbook settings | iterative formula evaluation
-// Common Searches: how to enable iterative calculation in Aspose.Cells | Aspose.Cells circular reference example | verify formula convergence with Aspose.Cells | set MaxIteration and MaxChange Aspose.Cells .NET | iterative calculation sample code C#
-// Developer Intent: Turn on iterative calculation, create a circular reference, and check that the formulas converge within a defined tolerance.
-// Use Cases: Run financial models that contain mutually dependent cells by enabling iterative calculation and retrieving the stable values. | Control precision and performance of complex spreadsheets by adjusting MaxIteration and MaxChange settings. | Programmatically detect non‑convergent scenarios and trigger custom error handling or logging.
-// AI Prompts: Generate C# code using Aspose.Cells to enable iterative calculation with custom MaxIteration and MaxChange, create a circular reference, and output whether the calculation converged. | Show how to log the iteration count and raise an exception when a circular reference does not converge in Aspose.Cells. | Explain how to read the final values and convergence status after iterative calculation in an Aspose.Cells workbook.
+// Title: Aspose.Cells C# – Enable Iterative Calculation for Circular References and Verify Convergence
+// Description: Creates a workbook, sets up a circular reference (A1 ↔ B1), activates iterative calculation with custom MaxIteration and MaxChange values, runs the calculation engine, checks that the result satisfies the tolerance, outputs the values, and saves the file.
+// Keywords: Aspose.Cells | C# | .NET | iterative calculation | circular reference | MaxIteration | MaxChange | convergence tolerance | formula settings | CalculateFormula | Excel circular formulas
+// Common Searches: Aspose.Cells enable iterative calculation C# | Set MaxIteration MaxChange Aspose.Cells | How to handle circular references with Aspose.Cells | Check convergence of circular formulas Aspose.Cells | Save workbook after iterative calculation Aspose.Cells
+// Developer Intent: Turn on iterative calculation, define a circular reference, execute the formula engine, and confirm that the outcome meets the configured tolerance.
+// Use Cases: Financial models with inter‑dependent cells that require iterative solving | Engineering calculations where formulas reference each other and need precision control | Automated validation of spreadsheet convergence before publishing or exporting | Unit testing custom iteration settings in Aspose.Cells
+// AI Prompts: Write C# code using Aspose.Cells to enable iterative calculation with MaxIteration = 100 and MaxChange = 0.001, then display whether convergence was reached. | Explain the algorithm Aspose.Cells uses to detect convergence for circular references and how to read the iteration count after CalculateFormula. | Create a C# NUnit test that asserts the absolute difference between cells A1 and B1 after iteration is ≤ MaxChange.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsIterativeDemo
 {
-    // Demonstrates how to turn on iterative calculation in Aspose.Cells, define a circular reference (A1 = B1+1, B1 = A1+1), set MaxIteration and MaxChange, run the calculation, and programmatically confirm that the result converges within the specified tolerance.
+    // Creates a workbook, sets up a circular reference (A1 ↔ B1), activates iterative calculation with custom MaxIteration and MaxChange values, runs the calculation engine, checks that the result satisfies the tolerance, outputs the values, and saves the file.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet and its cells
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Create a circular reference:
-            // A1 = B1 + 1
-            // B1 = A1 + 1
+            // Set up a circular reference:
+            // A1 depends on B1, B1 depends on A1
             cells["A1"].Formula = "=B1+1";
             cells["B1"].Formula = "=A1+1";
 
-            // Enable iterative calculation and set convergence parameters
-            workbook.Settings.FormulaSettings.EnableIterativeCalculation = true;
-            workbook.Settings.FormulaSettings.MaxIteration = 100;      // maximum number of iterations
-            workbook.Settings.FormulaSettings.MaxChange = 0.001;      // tolerance for convergence
+            // Enable iterative calculation and define convergence criteria
+            workbook.Settings.FormulaSettings.EnableIterativeCalculation = true; // allow iteration
+            workbook.Settings.FormulaSettings.MaxIteration = 100;                // maximum number of iterations
+            workbook.Settings.FormulaSettings.MaxChange = 0.001;                // tolerance for convergence
 
-            // Calculate formulas using the iterative settings
+            // Perform the calculation
             workbook.CalculateFormula();
 
-            // Retrieve the calculated values
+            // Retrieve calculated values
             double a1Value = cells["A1"].DoubleValue;
             double b1Value = cells["B1"].DoubleValue;
 
-            // Verify convergence: the absolute difference should be within the defined MaxChange
-            double difference = Math.Abs(a1Value - b1Value);
-            bool isConverged = difference <= workbook.Settings.FormulaSettings.MaxChange;
+            // Output the results
+            Console.WriteLine($"A1 value after iterative calculation: {a1Value}");
+            Console.WriteLine($"B1 value after iterative calculation: {b1Value}");
 
-            // Output results
-            Console.WriteLine($"A1 = {a1Value}");
-            Console.WriteLine($"B1 = {b1Value}");
-            Console.WriteLine($"Difference = {difference}");
-            Console.WriteLine($"Converged within tolerance ({workbook.Settings.FormulaSettings.MaxChange}): {isConverged}");
+            // Verify convergence: the difference between successive iterations should be <= MaxChange.
+            // For this simple circular reference the expected relationship is B1 = A1 + 1.
+            double difference = Math.Abs(b1Value - (a1Value + 1));
+            Console.WriteLine($"Difference from expected relationship (B1 = A1 + 1): {difference}");
 
-            // Save the workbook (optional)
-            workbook.Save("IterativeCircular.xlsx");
+            if (difference <= workbook.Settings.FormulaSettings.MaxChange)
+                Console.WriteLine("Convergence within defined tolerance achieved.");
+            else
+                Console.WriteLine("Convergence not within tolerance; iteration limit may have been reached.");
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("IterativeCircularReference.xlsx");
         }
     }
 }

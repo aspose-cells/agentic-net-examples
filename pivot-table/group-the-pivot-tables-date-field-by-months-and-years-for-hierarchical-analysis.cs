@@ -1,78 +1,78 @@
+// Title: Group a Pivot Table Date Field by Month and Year using Aspose.Cells for .NET (C#)
+// Description: Creates a workbook with sample dates and values, builds a pivot table, places the Date column in rows and the Value column in data, then groups the Date field into month‑ and year‑level hierarchies via PivotField.GroupBy, refreshes the pivot, and saves the result as PivotGroupedByMonthsYears.xlsx.
+// Keywords: Aspose.Cells pivot table month grouping | C# group pivot date by year | Aspose.Cells hierarchical date grouping | PivotField.GroupBy months years .NET | Excel pivot date hierarchy Aspose | US developers Aspose.Cells pivot
+// Common Searches: Aspose.Cells group pivot date by month and year C# | How to create month‑year hierarchy in Aspose pivot table | PivotField.GroupBy example Aspose.Cells .NET | Date grouping in Aspose.Cells pivot tables
+// Developer Intent: Apply month and year grouping to a pivot table's Date field for hierarchical reporting.
+// Use Cases: Monthly and yearly sales aggregation in a financial workbook. | Generating a timeline view of transactions with month‑year drill‑down. | Building a dashboard that summarizes KPI data by month and then by year.
+// AI Prompts: Write C# code with Aspose.Cells that groups a pivot table Date field into months and years and saves the workbook. | Explain each parameter of PivotField.GroupBy when grouping dates in Aspose.Cells. | Show how to extend the grouping to include quarters or days alongside months and years in an Aspose.Cells pivot table.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-class PivotDateGroupExample
+// Creates a workbook with sample dates and values, builds a pivot table, places the Date column in rows and the Value column in data, then groups the Date field into month‑ and year‑level hierarchies via PivotField.GroupBy, refreshes the pivot, and saves the result as PivotGroupedByMonthsYears.xlsx.
+class Program
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // ----- Populate sample data -----
-        // Header row
-        sheet.Cells["A1"].PutValue("Date");
-        sheet.Cells["B1"].PutValue("Sales");
+        // -------------------------------------------------
+        // Prepare sample data: a Date column and a Value column
+        // -------------------------------------------------
+        worksheet.Cells["A1"].PutValue("Date");
+        worksheet.Cells["B1"].PutValue("Value");
 
-        // Sample dates and sales values
-        sheet.Cells["A2"].PutValue(new DateTime(2023, 1, 15));
-        sheet.Cells["B2"].PutValue(1200);
-        sheet.Cells["A3"].PutValue(new DateTime(2023, 2, 20));
-        sheet.Cells["B3"].PutValue(1500);
-        sheet.Cells["A4"].PutValue(new DateTime(2023, 3, 10));
-        sheet.Cells["B4"].PutValue(1800);
-        sheet.Cells["A5"].PutValue(new DateTime(2023, 4, 5));
-        sheet.Cells["B5"].PutValue(2100);
-        sheet.Cells["A6"].PutValue(new DateTime(2023, 5, 25));
-        sheet.Cells["B6"].PutValue(2400);
-        sheet.Cells["A7"].PutValue(new DateTime(2023, 6, 30));
-        sheet.Cells["B7"].PutValue(2700);
-        sheet.Cells["A8"].PutValue(new DateTime(2023, 7, 15));
-        sheet.Cells["B8"].PutValue(3000);
-        sheet.Cells["A9"].PutValue(new DateTime(2023, 8, 20));
-        sheet.Cells["B9"].PutValue(3300);
-        sheet.Cells["A10"].PutValue(new DateTime(2023, 9, 10));
-        sheet.Cells["B10"].PutValue(3600);
-        sheet.Cells["A11"].PutValue(new DateTime(2023, 10, 5));
-        sheet.Cells["B11"].PutValue(3900);
-        sheet.Cells["A12"].PutValue(new DateTime(2023, 11, 25));
-        sheet.Cells["B12"].PutValue(4200);
-        sheet.Cells["A13"].PutValue(new DateTime(2023, 12, 31));
-        sheet.Cells["B13"].PutValue(4500);
+        // Add several dates spanning multiple months
+        worksheet.Cells["A2"].PutValue(new DateTime(2023, 1, 5));
+        worksheet.Cells["A3"].PutValue(new DateTime(2023, 2, 12));
+        worksheet.Cells["A4"].PutValue(new DateTime(2023, 3, 20));
+        worksheet.Cells["A5"].PutValue(new DateTime(2023, 4, 8));
+        worksheet.Cells["A6"].PutValue(new DateTime(2023, 5, 15));
 
-        // ----- Create a pivot table -----
-        // Data range includes headers (A1:B13)
-        int pivotIndex = sheet.PivotTables.Add("A1:B13", "D3", "SalesPivot");
-        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+        // Corresponding numeric values
+        worksheet.Cells["B2"].PutValue(100);
+        worksheet.Cells["B3"].PutValue(150);
+        worksheet.Cells["B4"].PutValue(200);
+        worksheet.Cells["B5"].PutValue(250);
+        worksheet.Cells["B6"].PutValue(300);
 
-        // Add the Date field to the Row area
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Date");
+        // -------------------------------------------------
+        // Create a pivot table based on the data range
+        // -------------------------------------------------
+        int pivotIndex = worksheet.PivotTables.Add("A1:B6", "E3", "SalesPivot");
+        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
 
-        // Add the Sales field to the Data area
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+        // Add the Date field to the row area and the Value field to the data area
+        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // column index 0 -> Date
+        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // column index 1 -> Value
 
-        // ----- Group the Date field by Months and Years -----
-        // Retrieve the date field (first row field)
+        // -------------------------------------------------
+        // Group the Date field by Months and Years
+        // -------------------------------------------------
         PivotField dateField = pivotTable.RowFields[0];
 
         // Define the grouping range (full year) and the desired group types
         DateTime startDate = new DateTime(2023, 1, 1);
         DateTime endDate   = new DateTime(2023, 12, 31);
-        PivotGroupByType[] groups = new PivotGroupByType[]
+        PivotGroupByType[] groupTypes = new PivotGroupByType[]
         {
             PivotGroupByType.Months,
             PivotGroupByType.Years
         };
 
-        // Perform grouping; interval set to 1 (default), first group becomes a new field = false
-        dateField.GroupBy(startDate, endDate, groups, 1, false);
+        // Apply grouping; interval is ignored when specific group types are supplied
+        dateField.GroupBy(startDate, endDate, groupTypes, 1, false);
 
-        // Refresh and calculate the pivot table to apply grouping
+        // Refresh and calculate the pivot table to reflect the new grouping
         pivotTable.RefreshData();
         pivotTable.CalculateData();
 
-        // ----- Save the workbook -----
-        workbook.Save("PivotDateGroupedByMonthsAndYears.xlsx");
+        // -------------------------------------------------
+        // Save the workbook
+        // -------------------------------------------------
+        workbook.Save("PivotGroupedByMonthsYears.xlsx");
     }
 }

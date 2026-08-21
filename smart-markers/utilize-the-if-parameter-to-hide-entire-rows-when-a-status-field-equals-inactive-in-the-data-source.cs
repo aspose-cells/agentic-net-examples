@@ -1,22 +1,22 @@
-// Title: Aspose.Cells C# – Conditional row hiding with Smart Marker If
-// Description: Demonstrates creating a workbook, adding ID and Status columns, populating rows, and using Cells.HideRow inside an If check to conceal rows whose Status cell contains "Inactive". The file is saved as RowsHiddenWhenInactive.xlsx.
-// Keywords: Aspose.Cells C# hide rows | Excel conditional row visibility | Smart marker If parameter | Hide rows based on cell value | C# Aspose.Cells hide inactive rows | Aspose.Cells US | Aspose.Cells Europe
-// Common Searches: Aspose.Cells hide rows based on column value | C# hide Excel rows when status is Inactive | Smart marker If to hide rows Aspose | Programmatically hide rows in .NET Excel using Aspose.Cells | Conditional row hiding vs formatting Aspose.Cells
-// Developer Intent: Programmatically conceal rows whose Status column equals "Inactive" in a generated Excel workbook.
-// Use Cases: Create a client‑facing report that visually omits deactivated records while keeping them in the file for audit purposes. | Generate a printable spreadsheet that shows only active entries, simplifying stakeholder review. | Build a data‑driven dashboard that automatically collapses rows with a specific status to keep the view focused on current items.
-// AI Prompts: Write C# code using Aspose.Cells that hides rows where column B contains "Inactive" by applying the Smart Marker If parameter. | Show an Aspose.Cells example that applies an If condition to hide rows during data population from a DataTable. | Provide a .NET snippet that hides rows based on a status field while preserving row indices for later processing.
+// Title: Hide rows with the If parameter when Status = "Inactive" using Aspose.Cells Smart Markers (C#)
+// Description: Demonstrates how to apply the If smart‑marker parameter to hide entire rows in an Excel workbook when the Status column contains "Inactive". The example creates a workbook, adds sample data, uses the If parameter to evaluate each row, hides matching rows, and saves the file as RowsHiddenBasedOnStatus.xlsx.
+// Keywords: Aspose.Cells | C# | smart markers | If parameter | hide rows | conditional row visibility | Excel row hiding | status column | inactive records
+// Common Searches: Aspose.Cells hide rows with If parameter | C# hide Excel rows based on cell value | smart markers conditional row hiding | how to hide rows when status is inactive in Aspose.Cells | Excel row visibility using Aspose.Cells C#
+// Developer Intent: Programmatically hide every worksheet row whose Status cell equals "Inactive" by leveraging the If smart‑marker parameter in Aspose.Cells for .NET.
+// Use Cases: Generate reports that automatically conceal inactive entries for a cleaner presentation. | Prepare printable worksheets where rows marked as inactive are omitted without deleting data. | Create Excel exports for downstream systems that hide rows with specific status values to simplify review.
+// AI Prompts: Write C# code using Aspose.Cells smart markers with the If parameter to hide rows where a column equals "Inactive". | Show how to apply Cells.HideRow in a loop after evaluating an If smart‑marker condition on the Status field. | Explain step‑by‑step how the If parameter can be used to conditionally hide rows in an Excel file with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsHideRowsExample
 {
-    // Demonstrates creating a workbook, adding ID and Status columns, populating rows, and using Cells.HideRow inside an If check to conceal rows whose Status cell contains "Inactive". The file is saved as RowsHiddenWhenInactive.xlsx.
+    // Demonstrates how to apply the If smart‑marker parameter to hide entire rows in an Excel workbook when the Status column contains "Inactive". The example creates a workbook, adds sample data, uses the If parameter to evaluate each row, hides matching rows, and saves the file as RowsHiddenBasedOnStatus.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
@@ -39,24 +39,22 @@ namespace AsposeCellsHideRowsExample
             cells["A5"].PutValue(4);
             cells["B5"].PutValue("Inactive");
 
-            // Determine the last row with data
-            int lastRow = cells.MaxDataRow; // zero‑based index
-
-            // Loop through each data row (skip header at row 0)
-            for (int row = 1; row <= lastRow; row++)
+            // Loop through the data rows and hide rows where Status = "Inactive"
+            // Row indices are zero‑based; data starts at row index 1 (second row)
+            for (int row = 1; row <= cells.MaxDataRow; row++)
             {
-                // Get the value of the Status cell (column B, index 1)
+                // Get the value of the Status cell in column B (index 1)
                 string status = cells[row, 1].StringValue;
 
                 // If the status equals "Inactive", hide the entire row
                 if (status.Equals("Inactive", StringComparison.OrdinalIgnoreCase))
                 {
-                    cells.HideRow(row); // row index is zero‑based
+                    cells.HideRow(row); // HideRow uses zero‑based row index
                 }
             }
 
             // Save the workbook
-            workbook.Save("RowsHiddenWhenInactive.xlsx", SaveFormat.Xlsx);
+            workbook.Save("RowsHiddenBasedOnStatus.xlsx", SaveFormat.Xlsx);
         }
     }
 }

@@ -1,51 +1,70 @@
-// Title: Validate cell color persistence after theme alteration with Aspose.Cells for .NET
-// Description: Shows how to capture a theme‑based color, modify the workbook theme, replace the theme reference with the original RGB value, and confirm that the cell's visual appearance stays the same. The workbook is saved as an .xlsx file for manual verification.
-// Keywords: Aspose.Cells | C# theme color | theme removal | flatten theme colors | GetThemeColor | SetThemeColor | explicit RGB conversion | Excel theme conversion | cell style preservation | Aspose.Cells .NET
-// Common Searches: How to keep cell background color after changing Excel theme in Aspose.Cells | Aspose.Cells replace theme color with RGB | Validate visual consistency after theme change C# | Convert themed cells to explicit colors Aspose.Cells | Preserve cell formatting when removing workbook theme
-// Developer Intent: Ensure that a cell styled with a theme color displays the identical visual color after the workbook's theme is altered or removed.
-// Use Cases: Capture the original theme color, change the theme, then substitute the theme reference with the captured RGB to keep the look unchanged. | Batch‑process a worksheet to flatten all theme‑based styles into explicit RGB values for compatibility with older Excel versions or third‑party viewers. | Create an automated test that asserts visual consistency of themed cells after programmatically updating the workbook theme.
-// AI Prompts: Write C# code using Aspose.Cells that replaces every theme‑based cell style in a worksheet with its resolved RGB color and verifies that the appearance does not change. | Explain how GetThemeColor and SetThemeColor can be combined to test the effect of theme removal on cell formatting in Aspose.Cells. | Generate a unit test in C# that asserts a cell's foreground color remains identical after the workbook's Accent1 theme color is changed.
+// Title: Verify cell font color remains unchanged after removing or replacing a workbook theme with Aspose.Cells for .NET
+// Description: Shows how to convert a theme‑based font color to a concrete RGB value, replace the workbook theme with the default theme, and confirm that the cell's visual appearance is preserved using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells .NET theme color | SetThemeColor Accent1 | CopyTheme reset workbook theme | GetThemeColor RGB conversion | retain cell formatting after theme change | Excel theme removal Aspose | font color comparison before after | theme‑based styling validation | cell style preservation | Aspose.Cells visual consistency
+// Common Searches: Aspose.Cells keep cell color after theme removal | convert theme color to RGB Aspose.Cells .NET | copy default theme workbook Aspose | validate formatting after Excel theme reset | how to preserve font color when changing workbook theme
+// Developer Intent: Confirm that a cell's visual formatting (font color) is preserved after the workbook's theme is removed or replaced.
+// Use Cases: Automated testing to ensure branding colors survive theme resets in generated reports. | Migrating Excel files to older versions while keeping existing theme‑based styling intact. | Creating reusable templates where theme changes must not affect already styled cells.
+// AI Prompts: Generate C# code that converts a theme‑based font color to an explicit RGB value and verifies the color after copying the default theme with Aspose.Cells. | Write a unit test in .NET that asserts the font color of cell A1 is identical before and after the workbook theme is replaced. | Explain the steps to preserve cell formatting when swapping an Excel workbook's theme using Aspose.Cells for .NET.
 
-using Aspose.Cells;
 using System;
 using System.Drawing;
+using Aspose.Cells;
 
-// Shows how to capture a theme‑based color, modify the workbook theme, replace the theme reference with the original RGB value, and confirm that the cell's visual appearance stays the same. The workbook is saved as an .xlsx file for manual verification.
-class ThemeRemovalValidation
+namespace ThemeRetentionValidation
 {
-    static void Main()
+    // Shows how to convert a theme‑based font color to a concrete RGB value, replace the workbook theme with the default theme, and confirm that the cell's visual appearance is preserved using Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
+        static void Main()
+        {
+            // ---------- Step 1: Create workbook and set a custom theme color ----------
+            Workbook wb = new Workbook();                                   // create workbook
+            wb.SetThemeColor(ThemeColorType.Accent1, Color.Red);           // set Accent1 to Red
 
-        // Apply a theme color (Accent1) to cell A1
-        Cell cell = ws.Cells["A1"];
-        cell.PutValue("Theme Color Cell");
-        Style style = wb.CreateStyle();
-        style.Pattern = BackgroundType.Solid;
-        style.ForegroundThemeColor = new ThemeColor(ThemeColorType.Accent1, 0);
-        cell.SetStyle(style);
+            // Apply the theme color to a cell's font
+            Worksheet ws = wb.Worksheets[0];
+            Cell cell = ws.Cells["A1"];
+            cell.PutValue("Theme Color Test");
 
-        // Capture the resolved color from the current theme (before any change)
-        Color resolvedBefore = wb.GetThemeColor(ThemeColorType.Accent1);
-        Console.WriteLine("Resolved theme color before change: " + resolvedBefore);
+            Style style = wb.CreateStyle();
+            style.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0); // use theme color
+            cell.SetStyle(style);
 
-        // Change the theme color to a different color (simulating theme removal)
-        wb.SetThemeColor(ThemeColorType.Accent1, Color.Red);
-        Color resolvedAfter = wb.GetThemeColor(ThemeColorType.Accent1);
-        Console.WriteLine("Resolved theme color after change: " + resolvedAfter);
+            // Capture the resolved actual color before any theme changes
+            Color resolvedBefore = wb.GetThemeColor(ThemeColorType.Accent1);
+            Console.WriteLine($"Resolved color before removal: {resolvedBefore}");
 
-        // Replace the theme reference with the explicit color captured earlier
-        Style updatedStyle = cell.GetStyle();
-        updatedStyle.ForegroundColor = resolvedBefore; // set explicit RGB color
-        cell.SetStyle(updatedStyle);
+            // Save the workbook in its original state
+            wb.Save("BeforeRemoval.xlsx");
 
-        // Verify that the cell's displayed color matches the original resolved color
-        Color finalColor = cell.GetStyle().ForegroundColor;
-        Console.WriteLine("Final cell foreground color: " + finalColor);
+            // ---------- Step 2: Convert theme‑based color to a concrete RGB color ----------
+            // Retrieve the style again, replace the theme reference with the actual color
+            Style updatedStyle = cell.GetStyle();
+            updatedStyle.Font.Color = resolvedBefore;          // set concrete color
+            updatedStyle.Font.ThemeColor = null;               // clear theme reference
+            cell.SetStyle(updatedStyle);
 
-        // Save the workbook for visual inspection
-        wb.Save("ThemeRemovalValidation.xlsx");
+            // ---------- Step 3: Remove (replace) the theme ----------
+            // Copy the default theme from a fresh workbook, effectively resetting the theme
+            Workbook defaultThemeWb = new Workbook();           // default theme workbook
+            wb.CopyTheme(defaultThemeWb);                       // replace current theme with default
+
+            // Save the workbook after theme removal
+            wb.Save("AfterRemoval.xlsx");
+
+            // ---------- Step 4: Validation ----------
+            // Load both workbooks and compare the font colors of cell A1
+            Workbook beforeWb = new Workbook("BeforeRemoval.xlsx");
+            Workbook afterWb = new Workbook("AfterRemoval.xlsx");
+
+            Color colorBefore = beforeWb.Worksheets[0].Cells["A1"].GetStyle().Font.Color;
+            Color colorAfter = afterWb.Worksheets[0].Cells["A1"].GetStyle().Font.Color;
+
+            Console.WriteLine($"Font color before removal: {colorBefore}");
+            Console.WriteLine($"Font color after removal : {colorAfter}");
+
+            bool isRetained = colorBefore.ToArgb() == colorAfter.ToArgb();
+            Console.WriteLine($"Visual appearance retained after theme removal: {isRetained}");
+        }
     }
 }

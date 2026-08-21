@@ -1,79 +1,59 @@
-// Title: C# – Bind a List<Product> to WorkbookDesigner Smart Markers with Aspose.Cells
-// Description: Demonstrates how to create a workbook template, define smart markers that reference a "Products" collection, populate a List<Product> (Name, Price, Quantity), bind the list to WorkbookDesigner via SetDataSource, process the markers, and save the result as CustomObjectDataSource.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells WorkbookDesigner | C# smart markers custom collection | SetDataSource List<T> | bind custom objects to Excel template | Aspose.Cells data source example | Excel generation from object list | custom data source for smart markers | .NET Excel export
-// Common Searches: How to bind a List of custom objects to WorkbookDesigner smart markers | Aspose.Cells SetDataSource generic List example | C# smart markers with custom class as data source | WorkbookDesigner process custom collection tutorial | Aspose.Cells custom object data source for Excel
-// Developer Intent: Bind a custom List<Product> to WorkbookDesigner smart markers and generate a populated Excel file.
-// Use Cases: Create an inventory sheet where each product row is filled from a List<Product>. | Generate an invoice that lists line‑item details using a custom collection. | Export sales or stock data to Excel by mapping DTO objects to smart markers.
-// AI Prompts: Add a total row that calculates Σ(Price × Quantity) after processing the smart markers. | Show how to use a DataTable instead of List<Product> as the data source for the same markers. | Explain how to apply currency formatting to the Price column post‑processing.
+// Title: Bind a Custom List<Person> to WorkbookDesigner Smart Markers in Aspose.Cells for .NET
+// Description: Shows how to create a workbook, place smart markers (&Person.Name, &Person.Age), bind a List<Person> with WorkbookDesigner.SetDataSource, process the markers, and save the populated file as CustomCollectionOutput.xlsx.
+// Keywords: Aspose.Cells | WorkbookDesigner | C# | .NET | smart markers | custom collection | SetDataSource | List<Person> | Excel export | object‑oriented merging
+// Common Searches: Aspose.Cells bind List to smart markers | WorkbookDesigner custom object source example | C# set data source for smart markers | How to use a custom collection with WorkbookDesigner | Export List<Person> to Excel using Aspose.Cells
+// Developer Intent: Populate an Excel worksheet from a custom collection by linking it to smart markers with WorkbookDesigner.
+// Use Cases: Generate an employee roster where each row reflects a Person object. | Create a customer age report by merging a List<Person> into a template workbook. | Export in‑memory data structures to Excel without writing cell‑by‑cell code.
+// AI Prompts: Add a bold header row and apply column width auto‑fit to the smart‑marker columns in the example. | Show how to bind multiple collections (e.g., List<Person> and List<Department>) to separate smart‑marker groups within the same workbook. | Explain how to use an ObservableCollection<Person> with WorkbookDesigner so that changes in the collection can be re‑processed to update the Excel file.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomDataSource
+// Shows how to create a workbook, place smart markers (&Person.Name, &Person.Age), bind a List<Person> with WorkbookDesigner.SetDataSource, process the markers, and save the populated file as CustomCollectionOutput.xlsx.
+public class Person
 {
-    // Custom object that will be used as a data source
-    // Demonstrates how to create a workbook template, define smart markers that reference a "Products" collection, populate a List<Product> (Name, Price, Quantity), bind the list to WorkbookDesigner via SetDataSource, process the markers, and save the result as CustomObjectDataSource.xlsx using Aspose.Cells for .NET.
-    public class Product
-    {
-        public string Name { get; set; }
-        public double Price { get; set; }
-        public int Quantity { get; set; }
+    public string Name { get; set; }
+    public int Age { get; set; }
 
-        public Product(string name, double price, int quantity)
-        {
-            Name = name;
-            Price = price;
-            Quantity = quantity;
-        }
+    public Person(string name, int age)
+    {
+        Name = name;
+        Age = age;
     }
+}
 
-    public class Demo
+public class WorkbookDesignerCustomCollectionDemo
+{
+    public static void Main()
     {
-        public static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Insert smart markers that refer to the data source name "Person"
+        sheet.Cells["A1"].PutValue("&Person.Name");
+        sheet.Cells["B1"].PutValue("&Person.Age");
+
+        // Initialize WorkbookDesigner and assign the workbook
+        WorkbookDesigner designer = new WorkbookDesigner();
+        designer.Workbook = workbook;
+
+        // Prepare a custom collection of Person objects
+        List<Person> persons = new List<Person>
         {
-            // ---------- Create a new workbook (template) ----------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            new Person("John", 28),
+            new Person("Emily", 34),
+            new Person("Michael", 45)
+        };
 
-            // ---------- Define smart markers for the collection ----------
-            // Header row
-            sheet.Cells["A1"].PutValue("Product Name");
-            sheet.Cells["B1"].PutValue("Price");
-            sheet.Cells["C1"].PutValue("Quantity");
+        // Bind the collection to the smart marker name "Person"
+        designer.SetDataSource("Person", persons);
 
-            // Data rows – the markers reference the collection name "Products"
-            sheet.Cells["A2"].PutValue("&=Products.Name");
-            sheet.Cells["B2"].PutValue("&=Products.Price");
-            sheet.Cells["C2"].PutValue("&=Products.Quantity");
+        // Process the smart markers and populate the worksheet
+        designer.Process();
 
-            // ---------- Prepare a custom collection ----------
-            List<Product> products = new List<Product>
-            {
-                new Product("Apple", 1.20, 50),
-                new Product("Banana", 0.80, 100),
-                new Product("Orange", 1.00, 75)
-            };
-
-            // ---------- Initialize WorkbookDesigner and assign the workbook ----------
-            WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = workbook;
-
-            // ---------- Bind the collection to the smart marker variable ----------
-            // This uses the SetDataSource(string, object) overload.
-            designer.SetDataSource("Products", products);
-
-            // Alternative approach (commented out):
-            // Use CellsDataTableFactory to create an ICellsDataTable from the collection
-            // CellsDataTableFactory factory = workbook.CellsDataTableFactory;
-            // ICellsDataTable dataTable = factory.GetInstance(products);
-            // designer.SetDataSource("Products", dataTable);
-
-            // ---------- Process the smart markers ----------
-            designer.Process();
-
-            // ---------- Save the populated workbook ----------
-            designer.Workbook.Save("CustomObjectDataSource.xlsx");
-        }
+        // Save the populated workbook
+        workbook.Save("CustomCollectionOutput.xlsx");
     }
 }

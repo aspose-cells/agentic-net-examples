@@ -1,101 +1,42 @@
-// Title: Read OLE Object CLSID (ClassIdentifier) in Excel with Aspose.Cells for .NET
-// Description: Loads a workbook, iterates each worksheet’s OleObjects collection, extracts the ClassIdentifier byte array, converts it to a readable hex string, and prints the worksheet name, OLE index, ProgID, and CLSID. The sample also shows how to create a new workbook, add an OLE object with a custom 16‑byte CLSID, set its ProgID, and save the file for testing.
-// Keywords: Aspose.Cells OLE CLSID | ClassIdentifier property .NET | read embedded OLE object GUID | audit Excel OLE objects | convert byte[] to hex Aspose | C# OleObject ClassIdentifier | Excel security scan OLE
-// Common Searches: how to get CLSID of OLE object using Aspose.Cells | Aspose.Cells read ClassIdentifier from Excel | C# list embedded OLE objects in workbook | convert OLE ClassIdentifier to string | Aspose.Cells audit embedded OLE content
-// Developer Intent: Retrieve the ClassIdentifier (CLSID) of each embedded OLE object in an Excel workbook for auditing or compliance verification.
-// Use Cases: Generate a compliance report that lists worksheet, OLE index, ProgID, and CLSID for all embedded objects. | Detect prohibited or unknown OLE content by scanning CLSIDs across workbooks. | Create a test workbook with a known CLSID to validate that the ClassIdentifier persists after saving.
-// AI Prompts: Write C# code with Aspose.Cells to enumerate OLE objects in an Excel file and output their CLSID values. | Show how to assign a custom 16‑byte ClassIdentifier to a new OleObject and save the workbook. | Explain how to format the byte[] ClassIdentifier as a standard GUID string in C#.
+// Title: Audit CLSID (ClassIdentifier) of embedded OLE objects in Excel using Aspose.Cells for .NET
+// Description: Loads a workbook, iterates every worksheet and its OleObjects collection, extracts the 16‑byte ClassIdentifier, converts it to a GUID, and prints the sheet name, OLE index and CLSID. Ideal for compliance checks and object validation.
+// Keywords: Aspose.Cells OLE CLSID | C# read OleObject ClassIdentifier | Excel embedded OLE GUID | Aspose.Cells audit OLE objects | .NET extract OLE ClassIdentifier | GitHub Aspose.Cells OLE example | US developers Aspose.Cells | Europe .NET Excel OLE
+// Common Searches: how to get CLSID of an OLE object with Aspose.Cells | Aspose.Cells retrieve OleObject ClassIdentifier C# | convert OLE ClassIdentifier to GUID in .NET | list embedded OLE objects in Excel workbook Aspose | audit Excel OLE objects for compliance
+// Developer Intent: Obtain the CLSID of each embedded OLE object in an Excel file for verification or reporting.
+// Use Cases: Cross‑check OLE objects against an approved CLSID whitelist. | Produce a compliance report that lists worksheet names, OLE positions and their GUIDs. | Detect missing or corrupted OLE entries by flagging invalid ClassIdentifier arrays.
+// AI Prompts: Generate C# code with Aspose.Cells that enumerates all OLE objects in a workbook, extracts their CLSID GUIDs, and writes the results to a CSV file. | Create a method that receives a file path and returns a dictionary mapping worksheet names to collections of OLE CLSIDs, handling null or malformed identifiers gracefully. | Explain how to compare extracted CLSID GUIDs with a predefined whitelist and highlight any non‑compliant OLE objects.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads a workbook, iterates each worksheet’s OleObjects collection, extracts the ClassIdentifier byte array, converts it to a readable hex string, and prints the worksheet name, OLE index, ProgID, and CLSID. The sample also shows how to create a new workbook, add an OLE object with a custom 16‑byte CLSID, set its ProgID, and save the file for testing.
+// Loads a workbook, iterates every worksheet and its OleObjects collection, extracts the 16‑byte ClassIdentifier, converts it to a GUID, and prints the sheet name, OLE index and CLSID. Ideal for compliance checks and object validation.
 class OleObjectClassIdAudit
 {
     static void Main()
     {
-        // Path to the workbook that contains OLE objects to audit
-        string inputPath = "SampleWithOle.xlsx";
+        // Load an existing workbook that contains OLE objects
+        Workbook workbook = new Workbook("input.xlsx");
 
-        Workbook workbook = null;
-
-        // Load the workbook only if the file exists
-        if (File.Exists(inputPath))
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
+            // Iterate through each OLE object in the worksheet
+            for (int i = 0; i < sheet.OleObjects.Count; i++)
             {
-                workbook = new Workbook(inputPath);
+                OleObject ole = sheet.OleObjects[i];
+
+                // Retrieve the ClassIdentifier (CLSID) byte array
+                byte[] classIdBytes = ole.ClassIdentifier;
+
+                // Convert the byte array to a GUID string if it has the expected length (16 bytes)
+                string classIdGuid = (classIdBytes != null && classIdBytes.Length == 16)
+                    ? new Guid(classIdBytes).ToString()
+                    : "Invalid or missing ClassIdentifier";
+
+                // Output the auditing information
+                Console.WriteLine($"Worksheet: {sheet.Name}, OLE Index: {i}, ClassIdentifier (GUID): {classIdGuid}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
-            }
-        }
-        else
-        {
-            Console.WriteLine($"Input file '{inputPath}' not found. Skipping audit.");
-        }
-
-        // Perform audit if workbook was loaded successfully
-        if (workbook != null)
-        {
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                for (int i = 0; i < sheet.OleObjects.Count; i++)
-                {
-                    OleObject ole = sheet.OleObjects[i];
-
-                    // Retrieve the ClassIdentifier (CLSID) as a byte array
-                    byte[] clsid = ole.ClassIdentifier;
-
-                    // Convert the CLSID to a readable hex string (or indicate if none)
-                    string clsidHex = (clsid != null && clsid.Length > 0)
-                        ? BitConverter.ToString(clsid).Replace("-", "")
-                        : "None";
-
-                    // Output audit information
-                    Console.WriteLine($"Worksheet: {sheet.Name}, OLE Index: {i}");
-                    Console.WriteLine($"ProgID: {ole.ProgID}");
-                    Console.WriteLine($"ClassIdentifier (CLSID): {clsidHex}");
-                    Console.WriteLine();
-                }
-            }
-        }
-
-        // ------------------------------------------------------------
-        // Demonstration: create a new workbook and add an OLE object
-        // with a known ClassIdentifier for testing purposes (create rule)
-        // ------------------------------------------------------------
-        try
-        {
-            Workbook newWb = new Workbook();
-            Worksheet newSheet = newWb.Worksheets[0];
-
-            // Sample CLSID (16-byte array)
-            byte[] sampleClsId = new byte[]
-            {
-                0x01,0x02,0x03,0x04,
-                0x05,0x06,0x07,0x08,
-                0x09,0x0A,0x0B,0x0C,
-                0x0D,0x0E,0x0F,0x10
-            };
-
-            // Add an empty OLE object and set its properties
-            int oleIdx = newSheet.OleObjects.Add(5, 5, 100, 50, new byte[0]);
-            OleObject newOle = newSheet.OleObjects[oleIdx];
-            newOle.ClassIdentifier = sampleClsId;
-            newOle.ProgID = "Excel.Sheet.12";
-
-            // Save the new workbook (save rule)
-            string outputPath = "AuditDemo.xlsx";
-            newWb.Save(outputPath);
-            Console.WriteLine($"Demo workbook saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during demo workbook creation: {ex.Message}");
         }
     }
 }

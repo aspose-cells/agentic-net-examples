@@ -1,89 +1,39 @@
-// Title: Aspose.Cells .NET: Insert an Image into Cell C9 and Retrieve Its Absolute X/Y Coordinates
-// Description: Demonstrates how to add a PNG picture to cell C9 (row 8, column 2) using Aspose.Cells for .NET, set the picture's Placement to MoveAndSize, log its absolute X and Y pixel positions, save the workbook, reload it, and verify that the coordinates persist.
-// Keywords: Aspose.Cells add picture to cell | C# insert image Aspose.Cells | picture absolute coordinates | PlacementType.MoveAndSize example | retrieve picture X Y properties | save workbook with image | reload workbook picture position
-// Common Searches: how to insert an image into a specific cell with Aspose.Cells .NET | get pixel position of a picture after adding it to a worksheet | persist picture coordinates after saving and loading a workbook | set picture placement to move and size with cell in Aspose.Cells
-// Developer Intent: Add a PNG to cell C9, configure it to move and size with the cell, and obtain its absolute X and Y pixel coordinates before and after saving the workbook.
-// Use Cases: Log picture coordinates to validate layout alignment in automated report generation. | Calculate relative positions for additional shapes or annotations based on the image's absolute location. | Ensure consistent picture placement when a workbook is transferred between systems or edited later.
-// AI Prompts: Generate C# code that inserts a PNG into cell C9 with Aspose.Cells, sets PlacementType.MoveAndSize, and prints the picture's X and Y coordinates. | Show how to retrieve and log picture coordinates after reloading a workbook saved with Aspose.Cells. | Explain how PlacementType.MoveAndSize influences a picture's absolute coordinates in Aspose.Cells.
+// Title: C# – Insert an Image into Cell C9 and Retrieve Its Absolute X/Y Pixel Position with Aspose.Cells
+// Description: Demonstrates how to create a workbook, add a PNG picture to cell C9 (row 9, column C), set the picture to be placed inside the cell, read its absolute X and Y pixel coordinates, log the values, and save the file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# picture insertion | add image to Excel cell | cell C9 picture Aspose | absolute X coordinate Aspose.Cells | absolute Y coordinate Aspose.Cells | IsPlacedInCell property | .NET Excel image coordinates | worksheet.Pictures.Add example
+// Common Searches: how to insert an image into a specific Excel cell with Aspose.Cells | retrieve pixel position of a picture placed in a cell using C# | Aspose.Cells get picture X Y coordinates | C# Aspose.Cells picture placement inside cell | absolute coordinates of Excel shape Aspose
+// Developer Intent: Place a PNG image in cell C9 and obtain its exact pixel location for logging or further calculations.
+// Use Cases: Validate image alignment when generating automated Excel reports. | Compute offsets for overlaying additional shapes relative to the inserted picture. | Export picture coordinates to external systems for UI mapping or analytics.
+// AI Prompts: Generate C# code that adds a PNG to cell C9 with Aspose.Cells, sets IsPlacedInCell = true, and prints the picture's X and Y pixel values. | Show how to read and log the absolute X/Y coordinates of a shape after placing it inside a worksheet cell using Aspose.Cells for .NET. | Explain how to convert Aspose.Cells picture coordinates from points to pixels if needed.
 
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing; // Required for Picture class and PlacementType enum
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+// Demonstrates how to create a workbook, add a PNG picture to cell C9 (row 9, column C), set the picture to be placed inside the cell, read its absolute X and Y pixel coordinates, log the values, and save the file using Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates how to add a PNG picture to cell C9 (row 8, column 2) using Aspose.Cells for .NET, set the picture's Placement to MoveAndSize, log its absolute X and Y pixel positions, save the workbook, reload it, and verify that the coordinates persist.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-                // Path to the image file (ensure it exists)
-                string imagePath = "sample.png";
-                if (!File.Exists(imagePath))
-                {
-                    Console.WriteLine($"Image file not found: {imagePath}");
-                    return;
-                }
+        // Add a picture to the worksheet at cell C9 (row index 8, column index 2)
+        int pictureIndex = worksheet.Pictures.Add(8, 2, "sample.png");
+        Picture picture = worksheet.Pictures[pictureIndex];
 
-                // Add the picture to cell C9 (row index 8, column index 2)
-                int pictureIndex = worksheet.Pictures.Add(8, 2, imagePath);
-                Picture picture = worksheet.Pictures[pictureIndex];
+        // Place the picture inside the cell
+        picture.IsPlacedInCell = true;
 
-                // Embed the picture inside the cell (move and size with the cell)
-                picture.Placement = PlacementType.MoveAndSize;
+        // Retrieve the absolute X and Y coordinates (in pixels) of the picture
+        double absoluteX = picture.X;
+        double absoluteY = picture.Y;
 
-                // Log absolute X/Y coordinates (pixels from worksheet origin)
-                Console.WriteLine($"Picture absolute X: {picture.X} pixels");
-                Console.WriteLine($"Picture absolute Y: {picture.Y} pixels");
+        // Log the coordinates
+        Console.WriteLine($"Picture absolute position - X: {absoluteX}, Y: {absoluteY}");
 
-                // Save the workbook
-                string fileName = "output.xlsx";
-                workbook.Save(fileName);
-
-                // Verify the file was saved
-                if (!File.Exists(fileName))
-                {
-                    Console.WriteLine($"Failed to save workbook: {fileName}");
-                    return;
-                }
-
-                // Reload the workbook to demonstrate persistence
-                Workbook loadedWorkbook;
-                try
-                {
-                    loadedWorkbook = new Workbook(fileName);
-                }
-                catch (Exception loadEx)
-                {
-                    Console.WriteLine($"Error loading workbook: {loadEx.Message}");
-                    return;
-                }
-
-                Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
-
-                // Ensure a picture exists after reload
-                if (loadedWorksheet.Pictures.Count > 0)
-                {
-                    Picture loadedPicture = loadedWorksheet.Pictures[0];
-                    Console.WriteLine($"After reload - Picture absolute X: {loadedPicture.X} pixels");
-                    Console.WriteLine($"After reload - Picture absolute Y: {loadedPicture.Y} pixels");
-                }
-                else
-                {
-                    Console.WriteLine("No pictures found after reload.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception: {ex.Message}");
-            }
-        }
+        // Save the workbook
+        workbook.Save("output.xlsx");
     }
 }

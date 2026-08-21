@@ -1,69 +1,82 @@
+// Title: C# Aspose.Cells example: Generate Excel report of Japanese‑formatted dates with original Gregorian values
+// Description: A complete Aspose.Cells for .NET sample that creates a workbook, populates cells with Gregorian DateTime values, sets the workbook region to Japan, applies a custom Japanese date format (e.g., "yyyy年M月d日"), and builds a separate worksheet listing each date cell’s address, the original Gregorian value, and the Japanese‑formatted string. The result is saved as JapaneseDateReport.xlsx.
+// Keywords: Aspose.Cells | C# | Japanese date format | Excel localization | Gregorian to Japanese conversion | region Japan | custom number format | date conversion report | Excel automation | globalization | localization | Japanese era dates | workbook generation
+// Common Searches: Aspose.Cells convert dates to Japanese format | C# generate Excel report of Japanese dates | apply Japanese locale in Aspose.Cells | list original and Japanese dates in Excel using Aspose | create date conversion report with Aspose.Cells .NET
+// Developer Intent: Produce an Excel workbook that scans all DateTime cells, converts each to the Japanese calendar format, and records the cell address, original Gregorian DateTime, and formatted string on a dedicated report sheet.
+// Use Cases: Audit date‑field localization for a Japanese market release while preserving original timestamps for traceability. | Prepare financial statements that require Japanese era date formatting but must retain Gregorian dates for regulatory compliance. | Document a migration of date formats by generating a side‑by‑side report of source and localized values. | Automate generation of localized Excel reports for multinational teams needing both native and universal date representations.
+// AI Prompts: Write C# code using Aspose.Cells that iterates through a worksheet, applies the custom Japanese date format "[$-F800]yyyy年M月d日" to every DateTime cell, and logs the cell address, original Gregorian value, and formatted result on a new report sheet. | Explain how to set the workbook region to Japan in Aspose.Cells and why the custom number format "[$-F800]yyyy年M月d日" displays dates in the Japanese calendar style. | Provide a unit test for the Japanese date report that verifies the report sheet contains correct cell addresses, original DateTime objects, and properly formatted Japanese strings. | Suggest best practices for handling time‑zone differences when converting Gregorian dates to Japanese formatted dates in Aspose.Cells.
+
 using System;
-using System.Collections.Generic;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsJapaneseDateReport
 {
-    static void Main()
+    // A complete Aspose.Cells for .NET sample that creates a workbook, populates cells with Gregorian DateTime values, sets the workbook region to Japan, applies a custom Japanese date format (e.g., "yyyy年M月d日"), and builds a separate worksheet listing each date cell’s address, the original Gregorian value, and the Japanese‑formatted string. The result is saved as JapaneseDateReport.xlsx.
+    public class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet dataSheet = workbook.Worksheets[0];
-        dataSheet.Name = "Data";
-
-        // Populate sample Gregorian dates
-        dataSheet.Cells["A1"].PutValue(new DateTime(2023, 1, 15));
-        dataSheet.Cells["A2"].PutValue(new DateTime(2023, 2, 20));
-        dataSheet.Cells["B1"].PutValue(new DateTime(2023, 3, 25));
-        dataSheet.Cells["B2"].PutValue("Not a date"); // non‑date cell
-
-        // Set workbook region to Japan (Japanese locale)
-        workbook.Settings.Region = CountryCode.Japan;
-
-        // Create a style that formats dates in Japanese pattern
-        Style japaneseStyle = workbook.CreateStyle();
-        japaneseStyle.Custom = "[$-ja-JP]yyyy年m月d日";
-
-        // List to hold report entries: cell address, original Gregorian value, Japanese formatted string
-        List<(string Address, DateTime Gregorian, string Japanese)> report = new List<(string, DateTime, string)>();
-
-        // Scan used cells for DateTime values, apply Japanese style, and record information
-        int maxRow = dataSheet.Cells.MaxDataRow;
-        int maxCol = dataSheet.Cells.MaxDataColumn;
-        for (int row = 0; row <= maxRow; row++)
+        public static void Main()
         {
-            for (int col = 0; col <= maxCol; col++)
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet (source data)
+            Worksheet sourceSheet = workbook.Worksheets[0];
+
+            // Populate sample Gregorian dates in column A
+            for (int i = 0; i < 5; i++)
             {
-                Cell cell = dataSheet.Cells[row, col];
-                if (cell.Type == CellValueType.IsDateTime)
+                // PutValue automatically stores the value as a DateTime
+                sourceSheet.Cells[i, 0].PutValue(DateTime.Now.AddDays(i));
+            }
+
+            // Set the workbook's regional settings to Japan
+            workbook.Settings.Region = CountryCode.Japan;
+
+            // Add a new worksheet for the report
+            int reportIndex = workbook.Worksheets.Add();
+            Worksheet reportSheet = workbook.Worksheets[reportIndex];
+            reportSheet.Name = "JapaneseDateReport";
+
+            // Write report headers
+            reportSheet.Cells[0, 0].PutValue("Cell Address");
+            reportSheet.Cells[0, 1].PutValue("Original Gregorian Value");
+            reportSheet.Cells[0, 2].PutValue("Japanese Formatted Value");
+
+            int reportRow = 1; // start after header
+
+            // Determine the used range in the source sheet
+            int maxRow = sourceSheet.Cells.MaxDataRow;
+            int maxCol = sourceSheet.Cells.MaxDataColumn;
+
+            // Iterate through all cells in the used range
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    DateTime originalDate = cell.DateTimeValue;          // Gregorian value
-                    cell.SetStyle(japaneseStyle);                        // Apply Japanese formatting
-                    string japaneseFormatted = cell.StringValue;         // Formatted string after style
-                    report.Add((cell.Name, originalDate, japaneseFormatted));
+                    Cell cell = sourceSheet.Cells[row, col];
+
+                    // Process only cells that contain a DateTime value
+                    if (cell.Type == CellValueType.IsDateTime)
+                    {
+                        // Preserve the original Gregorian DateTime
+                        DateTime originalDate = cell.DateTimeValue;
+
+                        // Apply Japanese date format (e.g., "2023年5月15日")
+                        Style style = cell.GetStyle();
+                        style.Custom = "[$-F800]yyyy年m月d日";
+                        cell.SetStyle(style);
+
+                        // Record the conversion in the report sheet
+                        reportSheet.Cells[reportRow, 0].PutValue(cell.Name);                     // e.g., "A1"
+                        reportSheet.Cells[reportRow, 1].PutValue(originalDate);                // original Gregorian
+                        reportSheet.Cells[reportRow, 2].PutValue(cell.StringValue);           // Japanese formatted string
+                        reportRow++;
+                    }
                 }
             }
+
+            // Save the workbook with the report
+            workbook.Save("JapaneseDateReport.xlsx");
         }
-
-        // Create a new worksheet to hold the report
-        Worksheet reportSheet = workbook.Worksheets[workbook.Worksheets.Add()];
-        reportSheet.Name = "Report";
-
-        // Write header
-        reportSheet.Cells["A1"].PutValue("Cell");
-        reportSheet.Cells["B1"].PutValue("Gregorian");
-        reportSheet.Cells["C1"].PutValue("Japanese");
-
-        // Populate report rows
-        for (int i = 0; i < report.Count; i++)
-        {
-            int rowIndex = i + 1; // offset for header
-            reportSheet.Cells[rowIndex, 0].PutValue(report[i].Address);
-            reportSheet.Cells[rowIndex, 1].PutValue(report[i].Gregorian);
-            reportSheet.Cells[rowIndex, 2].PutValue(report[i].Japanese);
-        }
-
-        // Save the workbook with the converted dates and the report
-        workbook.Save("JapaneseDateReport.xlsx");
     }
 }

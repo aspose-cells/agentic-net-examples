@@ -1,16 +1,16 @@
-// Title: Copy a Table Style from One Worksheet to Another with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a source ListObject with a built‑in table style, add a destination ListObject on a different sheet, and transfer the TableStyleName, first‑column, and last‑column highlight settings programmatically before saving the workbook.
-// Keywords: Aspose.Cells copy table style C# | transfer ListObject formatting .NET | apply same Excel table style multiple sheets | Aspose.Cells TableStyleName example | C# copy table visual formatting
-// Common Searches: how to copy Aspose.Cells table style between worksheets | C# copy ListObject style to another sheet | duplicate Excel table formatting with Aspose.Cells | apply TableStyleMedium9 to multiple tables programmatically | Aspose.Cells copy table appearance code
-// Developer Intent: Replicate the visual formatting of a source table on a different worksheet using Aspose.Cells for .NET.
-// Use Cases: Generate multi‑sheet reports where every table follows the corporate table style for a consistent look. | Create a template workbook and programmatically add new tables that automatically inherit the template’s style and column highlights. | Synchronize table appearance after cloning or moving tables between worksheets in an automated data‑processing workflow.
-// AI Prompts: Show C# code that copies all table style properties, including banded rows and columns, from one Aspose.Cells ListObject to another. | Explain how to transfer a table’s style together with its conditional formatting rules between worksheets using Aspose.Cells for .NET. | Provide a reusable method that accepts a source ListObject and a destination ListObject and applies the source’s TableStyleName, first‑column, and last‑column settings.
+// Title: Copy a table style between worksheets with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a source ListObject, apply a built‑in TableStyleMedium2, then assign the same TableStyleName to a table on another sheet, ensuring identical visual formatting before saving the workbook.
+// Keywords: Aspose.Cells C# | copy Excel table style | ListObject TableStyleName | apply built‑in table style programmatically | TableStyleMedium2 Aspose | worksheet table formatting | Aspose.Cells example | Excel style cloning .NET
+// Common Searches: Aspose.Cells copy table formatting to another sheet | C# assign same TableStyleName to multiple ListObjects | how to reuse Excel table style with Aspose.Cells | programmatically set built‑in table style in .NET | duplicate table appearance across worksheets Aspose
+// Developer Intent: Reuse the visual formatting of one ListObject for another table on a different worksheet.
+// Use Cases: Standardize branding by applying a single table style to all report sheets. | Generate new worksheets dynamically while preserving a predefined table appearance. | Clone formatting when creating month‑over‑month comparison tabs without manual styling.
+// AI Prompts: Show C# code that copies a ListObject's TableStyleName to another table using Aspose.Cells. | Explain how to retrieve all built‑in table styles in Aspose.Cells and apply a chosen style to several tables. | Provide an example of cloning table formatting across multiple worksheets in a .NET workbook.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Demonstrates how to create a source ListObject with a built‑in table style, add a destination ListObject on a different sheet, and transfer the TableStyleName, first‑column, and last‑column highlight settings programmatically before saving the workbook.
+// Demonstrates how to create a source ListObject, apply a built‑in TableStyleMedium2, then assign the same TableStyleName to a table on another sheet, ensuring identical visual formatting before saving the workbook.
 class CopyTableStyleDemo
 {
     static void Main()
@@ -30,14 +30,16 @@ class CopyTableStyleDemo
         srcSheet.Cells["A3"].PutValue("Banana");
         srcSheet.Cells["B3"].PutValue(0.8);
 
-        // Add a table to the source sheet
+        // Add a table on the source sheet
         int srcTableIdx = srcSheet.ListObjects.Add(0, 0, 2, 1, true);
         ListObject srcTable = srcSheet.ListObjects[srcTableIdx];
-
-        // Apply a built‑in table style to the source table
-        srcTable.TableStyleName = "TableStyleMedium9";
         srcTable.ShowTableStyleFirstColumn = true;
         srcTable.ShowTableStyleLastColumn = true;
+
+        // Apply a built‑in table style to the source table
+        TableStyleCollection tableStyles = workbook.Worksheets.TableStyles;
+        TableStyle builtinStyle = tableStyles.GetBuiltinTableStyle(TableStyleType.TableStyleMedium2);
+        srcTable.TableStyleName = builtinStyle.Name;
 
         // ---------- Destination sheet ----------
         Worksheet destSheet = workbook.Worksheets[workbook.Worksheets.Add()];
@@ -51,14 +53,14 @@ class CopyTableStyleDemo
         destSheet.Cells["A3"].PutValue("Grape");
         destSheet.Cells["B3"].PutValue(2.0);
 
-        // Add a table to the destination sheet
+        // Add a table on the destination sheet
         int destTableIdx = destSheet.ListObjects.Add(0, 0, 2, 1, true);
         ListObject destTable = destSheet.ListObjects[destTableIdx];
+        destTable.ShowTableStyleFirstColumn = true;
+        destTable.ShowTableStyleLastColumn = true;
 
-        // Copy the style settings from the source table to the destination table
+        // Copy the style from the source table to the destination table
         destTable.TableStyleName = srcTable.TableStyleName;
-        destTable.ShowTableStyleFirstColumn = srcTable.ShowTableStyleFirstColumn;
-        destTable.ShowTableStyleLastColumn = srcTable.ShowTableStyleLastColumn;
 
         // Save the workbook
         workbook.Save("TableStyleCopied.xlsx");

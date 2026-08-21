@@ -1,60 +1,78 @@
-// Title: Create a Light‑Blue Rectangle Behind a Chart with Aspose.Cells for .NET
-// Description: Demonstrates how to add a rectangle shape inside a chart using AddShapeInChartByScale, fill it with solid LightBlue, and set its Z‑order to 0 so the shape appears behind all chart elements in a .NET workbook.
-// Keywords: Aspose.Cells add shape in chart | AddShapeInChartByScale C# | chart rectangle fill color | set shape ZOrderPosition Aspose.Cells | light blue rectangle Aspose.Cells | place shape behind chart objects
-// Common Searches: how to add a rectangle to a chart with Aspose.Cells | change Z‑order of chart shapes in Aspose.Cells .NET | fill chart shape with specific color using Aspose.Cells | Aspose.Cells AddShapeInChartByScale example | send shape to back of chart Aspose.Cells
-// Developer Intent: Insert a rectangle into a chart, apply a LightBlue solid fill, and position it behind all other chart components using Aspose.Cells for .NET.
-// Use Cases: Highlight a data region by placing a colored background rectangle behind a column chart. | Add a subtle watermark behind chart series for branding or visual consistency. | Group multiple chart elements visually by using a behind‑the‑scenes rectangle as a container.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a rectangle to a chart, fills it with LightBlue, and sends it to the back. | Show how to adjust the Z‑order of a shape inside an Aspose.Cells chart so it appears behind axes and series. | Explain the use of AddShapeInChartByScale for proportionally positioning a shape within a chart in Aspose.Cells.
+// Title: C# Example – Insert a Light‑Blue Rectangle Behind a Chart Using Aspose.Cells
+// Description: This Aspose.Cells for .NET sample creates a workbook, adds sample data and a column chart, then inserts a rectangle shape inside the chart with AddShapeInChartByScale, fills it with LightBlue, sets its ZOrderPosition to send it to the back, and saves the file as RectangleBehindChart.xlsx.
+// Keywords: Aspose.Cells | C# chart shape | AddShapeInChartByScale | rectangle behind chart | ZOrderPosition | Excel chart background | light blue fill | .NET | shape Z‑order | chart watermark | Aspose.Cells example | GitHub Aspose.Cells | Excel shape layering
+// Common Searches: Aspose.Cells add rectangle behind chart C# | How to set shape Z‑order in Aspose.Cells chart | Add background shape to Excel chart using Aspose.Cells | C# example for AddShapeInChartByScale | Place shape behind chart objects Aspose.Cells
+// Developer Intent: Add a light‑blue rectangle shape behind a chart in an Excel workbook with Aspose.Cells for .NET.
+// Use Cases: Create a colored background for a chart while keeping data series visible. | Add a subtle watermark behind chart elements for branding or copyright notices. | Design custom chart layouts by layering solid‑fill shapes beneath chart series.
+// AI Prompts: Generate C# code that inserts a rectangle shape behind a chart using Aspose.Cells and applies a LightBlue solid fill. | Show how to adjust a shape's ZOrderPosition in an Aspose.Cells chart so the shape appears behind all chart objects. | Provide an Aspose.Cells example that uses AddShapeInChartByScale to position a shape relative to chart dimensions and set its fill color.
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
-using System.Drawing;
 
-// Demonstrates how to add a rectangle shape inside a chart using AddShapeInChartByScale, fill it with solid LightBlue, and set its Z‑order to 0 so the shape appears behind all chart elements in a .NET workbook.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // This Aspose.Cells for .NET sample creates a workbook, adds sample data and a column chart, then inserts a rectangle shape inside the chart with AddShapeInChartByScale, fills it with LightBlue, sets its ZOrderPosition to send it to the back, and saves the file as RectangleBehindChart.xlsx.
+    public class RectangleBehindChartDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+                // Populate sample data for the chart
+                worksheet.Cells["A1"].PutValue("Category");
+                worksheet.Cells["A2"].PutValue("A");
+                worksheet.Cells["A3"].PutValue("B");
+                worksheet.Cells["A4"].PutValue("C");
+                worksheet.Cells["B1"].PutValue("Value");
+                worksheet.Cells["B2"].PutValue(10);
+                worksheet.Cells["B3"].PutValue(20);
+                worksheet.Cells["B4"].PutValue(30);
 
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+                // Add a column chart
+                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 1, 20, 10);
+                Chart chart = worksheet.Charts[chartIndex];
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
 
-        // Add a rectangle shape inside the chart using percentage coordinates
-        Shape rectangle = chart.Shapes.AddShapeInChartByScale(
-            MsoDrawingType.Rectangle,
-            PlacementType.Move,
-            0.2, // left 20% from chart left
-            0.2, // top 20% from chart top
-            0.4, // right 40% from chart left
-            0.4  // bottom 40% from chart top
-        );
+                // Add a rectangle shape inside the chart using percent scale coordinates
+                // left=10%, top=10%, width=80%, height=80% of the chart area
+                Shape rectangle = chart.Shapes.AddShapeInChartByScale(
+                    MsoDrawingType.Rectangle,
+                    PlacementType.Move,
+                    0.1,   // left (10%)
+                    0.1,   // top (10%)
+                    0.8,   // width (80%)
+                    0.8);  // height (80%)
 
-        // Fill the rectangle with light blue
-        rectangle.Fill.FillType = FillType.Solid;
-        rectangle.Fill.SolidFill.Color = Color.LightBlue;
+                // Fill the rectangle with light blue color
+                rectangle.Fill.SolidFill.Color = Color.LightBlue;
 
-        // Place the rectangle behind other chart objects
-        rectangle.ZOrderPosition = 0;
+                // Place the rectangle behind all chart objects
+                rectangle.ZOrderPosition = 0; // lower Z-order means back
 
-        // Save the workbook
-        workbook.Save("RectangleBehindChart.xlsx");
+                // Save the workbook
+                workbook.Save("RectangleBehindChart.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            RectangleBehindChartDemo.Run();
+        }
     }
 }

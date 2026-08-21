@@ -1,23 +1,22 @@
-// Title: Sign a VBA project in an .xlsm workbook using a Windows certificate store thumbprint – Aspose.Cells for .NET
-// Description: Loads a macro‑enabled workbook, fetches an X509Certificate2 from the Current User Personal store by thumbprint, creates a DigitalSignature, signs the workbook's VbaProject, saves the signed file, and validates the signature using Aspose.Cells APIs.
-// Keywords: Aspose.Cells VBA signing | C# certificate thumbprint | digital signature Excel macro | sign .xlsm workbook programmatically | Windows certificate store Aspose
-// Common Searches: sign VBA project Aspose.Cells C# | retrieve certificate by thumbprint .NET | add digital signature to Excel macro workbook | how to sign .xlsm file with Windows store certificate | verify signed VBA project programmatically
-// Developer Intent: Programmatically apply a digital signature to the VBA project of a macro‑enabled Excel workbook using a certificate retrieved from the Windows certificate store.
-// Use Cases: Deploy corporate‑signed macros to guarantee authenticity and prevent tampering. | Automate compliance by signing VBA projects during a build or release pipeline. | Validate that signed VBA code remains intact after distribution or storage.
-// AI Prompts: Generate C# code that signs a VBA project with a certificate fetched by thumbprint from the CurrentUser store using Aspose.Cells. | Explain how to handle missing private keys when signing a VBA project with a Windows store certificate. | Show how to programmatically verify the validity of a signed VBA project after saving the workbook.
+// Title: C# – Sign a VBA Project in an XLSM Workbook Using a Windows Certificate Store Thumbprint with Aspose.Cells
+// Description: Load a macro‑enabled workbook, fetch a personal X509Certificate2 by thumbprint from the Current User store, create an Aspose.Cells DigitalSignature, sign the VBA project, save the file, and verify the signature.
+// Keywords: Aspose.Cells | C# | VBA project signing | XLSM digital signature | Windows certificate store | thumbprint lookup | X509Certificate2 | macro‑enabled workbook | programmatic signing | digital signature verification
+// Common Searches: sign VBA project Aspose.Cells C# | retrieve certificate by thumbprint .NET | add digital signature to XLSM file | how to sign macro‑enabled workbook programmatically | verify VBA project signature after saving
+// Developer Intent: Apply a digital signature to the VBA project of a macro‑enabled workbook using a certificate stored in the Windows certificate store.
+// Use Cases: Secure distribution of macro‑enabled workbooks by signing the VBA code with a corporate certificate. | Automate signing of multiple XLSM files in a CI/CD pipeline using a single thumbprint‑identified certificate. | Validate that a signed VBA project remains intact after saving and reloading the workbook.
+// AI Prompts: Generate C# code that uses Aspose.Cells to sign the VBA project of an XLSM workbook with a certificate retrieved from the CurrentUser Personal store by thumbprint, then confirm the signature status. | Explain how to locate an X509Certificate2 in the Windows certificate store using a thumbprint and use it to create a DigitalSignature for a VBA project with Aspose.Cells. | Write a C# routine that iterates over a list of macro‑enabled workbooks, signs each VBA project with the same certificate, and logs success or failure for each file.
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 using Aspose.Cells.DigitalSignatures;
 
-namespace AsposeCellsVbaSigningDemo
+namespace AsposeCellsVbaSigning
 {
-    // Loads a macro‑enabled workbook, fetches an X509Certificate2 from the Current User Personal store by thumbprint, creates a DigitalSignature, signs the workbook's VbaProject, saves the signed file, and validates the signature using Aspose.Cells APIs.
-    public class VbaProjectSignWithStoreCertificate
+    // Load a macro‑enabled workbook, fetch a personal X509Certificate2 by thumbprint from the Current User store, create an Aspose.Cells DigitalSignature, sign the VBA project, save the file, and verify the signature.
+    public class VbaProjectSigner
     {
         public static void Run()
         {
@@ -26,7 +25,7 @@ namespace AsposeCellsVbaSigningDemo
                 // Path to the macro-enabled workbook that contains a VBA project
                 string workbookPath = "InputWorkbook.xlsm";
 
-                // Ensure the input workbook exists
+                // Verify the input workbook exists
                 if (!File.Exists(workbookPath))
                 {
                     Console.WriteLine($"Input workbook not found: {workbookPath}");
@@ -38,6 +37,7 @@ namespace AsposeCellsVbaSigningDemo
 
                 // Access the VBA project
                 VbaProject vbaProject = workbook.VbaProject;
+
                 if (vbaProject == null)
                 {
                     Console.WriteLine("The workbook does not contain a VBA project.");
@@ -45,30 +45,13 @@ namespace AsposeCellsVbaSigningDemo
                 }
 
                 // Thumbprint of the certificate stored in the Windows certificate store
-                string thumbprint = "YOUR_CERTIFICATE_THUMBPRINT".Replace(" ", string.Empty).ToUpperInvariant();
+                string certificateThumbprint = "YOUR_CERTIFICATE_THUMBPRINT";
 
                 // Retrieve the certificate from the Current User's Personal store
-                X509Certificate2 certificate = null;
-                using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
-                {
-                    store.Open(OpenFlags.ReadOnly);
-                    var certCollection = store.Certificates.Find(
-                        X509FindType.FindByThumbprint,
-                        thumbprint,
-                        validOnly: false);
-
-                    certificate = certCollection.OfType<X509Certificate2>().FirstOrDefault();
-                }
-
+                X509Certificate2 certificate = GetCertificateByThumbprint(certificateThumbprint);
                 if (certificate == null)
                 {
-                    Console.WriteLine($"Certificate with thumbprint {thumbprint} not found in the store.");
-                    return;
-                }
-
-                if (!certificate.HasPrivateKey)
-                {
-                    Console.WriteLine("The selected certificate does not contain a private key required for signing.");
+                    Console.WriteLine("Certificate with the specified thumbprint was not found.");
                     return;
                 }
 
@@ -84,9 +67,8 @@ namespace AsposeCellsVbaSigningDemo
                 // Save the signed workbook
                 string signedWorkbookPath = "SignedWorkbook.xlsm";
                 workbook.Save(signedWorkbookPath, SaveFormat.Xlsm);
-                Console.WriteLine($"Signed workbook saved to: {signedWorkbookPath}");
 
-                // Verify signing status
+                // Verify the signature
                 if (File.Exists(signedWorkbookPath))
                 {
                     Workbook verifyWorkbook = new Workbook(signedWorkbookPath);
@@ -95,23 +77,41 @@ namespace AsposeCellsVbaSigningDemo
                 }
                 else
                 {
-                    Console.WriteLine("Failed to save the signed workbook.");
+                    Console.WriteLine($"Failed to save signed workbook: {signedWorkbookPath}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred during the signing process:");
+                Console.WriteLine("An error occurred during VBA project signing:");
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static X509Certificate2 GetCertificateByThumbprint(string thumbprint)
+        {
+            // Open the personal (My) store of the current user
+            using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+            {
+                store.Open(OpenFlags.ReadOnly);
+
+                // Find certificates matching the thumbprint (case‑insensitive, ignore spaces)
+                X509Certificate2Collection found = store.Certificates.Find(
+                    X509FindType.FindByThumbprint,
+                    thumbprint.Replace(" ", string.Empty),
+                    false);
+
+                // Return the first matching certificate, or null if none found
+                return found.Count > 0 ? found[0] : null;
             }
         }
     }
 
-    // Entry point for the console application
+    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)
         {
-            VbaProjectSignWithStoreCertificate.Run();
+            VbaProjectSigner.Run();
         }
     }
 }

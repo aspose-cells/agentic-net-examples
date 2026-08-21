@@ -1,37 +1,37 @@
-// Title: Convert Excel Workbook to HTML with Aspose.Cells Default HtmlSaveOptions (C#)
-// Description: A C# console example that loads an .xlsx file into an Aspose.Cells Workbook, uses the default HtmlSaveOptions, and saves the workbook as an HTML file via Workbook.Save.
-// Keywords: Aspose.Cells | Excel to HTML conversion | C# HtmlSaveOptions | .NET Excel export | Workbook.Save HTML | default HtmlSaveOptions | Aspose.Cells example
-// Common Searches: Aspose.Cells export Excel to HTML C# | default HtmlSaveOptions example | convert .xlsx to .html using Aspose.Cells | C# save workbook as HTML | Aspose.Cells HTML conversion without custom settings
-// Developer Intent: Generate an HTML file from an Excel workbook using Aspose.Cells with the default HtmlSaveOptions.
-// Use Cases: Quickly preview an Excel report as HTML for web pages without custom styling. | Automate batch conversion of uploaded Excel files to HTML for email or documentation pipelines. | Create static HTML snapshots of workbook data in scheduled .NET jobs.
-// AI Prompts: Provide C# code that loads an Excel file and saves it as HTML using Aspose.Cells with default HtmlSaveOptions, including proper error handling. | Explain how to modify the sample to embed images and CSS directly in the generated HTML with Aspose.Cells. | Show how to iterate over all .xlsx files in a folder and convert each to HTML using Aspose.Cells.
+// Title: Convert Excel to HTML with Aspose.Cells (C#) – default HtmlSaveOptions
+// Description: Loads an Excel workbook using Aspose.Cells, applies the default HtmlSaveOptions, and saves the file as HTML. Includes a complete C# example and a console confirmation message.
+// Keywords: Aspose.Cells Excel to HTML C# | HtmlSaveOptions default | Workbook.Save HTML | export Excel as HTML | C# convert .xlsx to .html | Aspose.Cells sample code | Excel to web preview
+// Common Searches: Aspose.Cells convert xlsx to html C# | default HtmlSaveOptions example | save Excel workbook as HTML without custom settings | C# code to export Excel to HTML using Aspose | how to generate HTML preview from Excel file
+// Developer Intent: Create an HTML representation of an Excel workbook using Aspose.Cells with the out‑of‑the‑box HtmlSaveOptions.
+// Use Cases: Provide a quick web‑ready preview of Excel reports. | Automate batch conversion of multiple spreadsheets for website publishing. | Generate HTML email bodies from Excel templates without extra configuration.
+// AI Prompts: Write C# code that loads an Excel file and saves it as HTML using Aspose.Cells default HtmlSaveOptions, including error handling. | Explain how to modify HtmlSaveOptions to embed images as base64 while keeping other defaults unchanged. | Show a loop that processes a folder of Excel files, converting each to HTML with a single HtmlSaveOptions instance.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlConversion
+namespace ExcelToHtmlConversion
 {
-    // A C# console example that loads an .xlsx file into an Aspose.Cells Workbook, uses the default HtmlSaveOptions, and saves the workbook as an HTML file via Workbook.Save.
+    // Loads an Excel workbook using Aspose.Cells, applies the default HtmlSaveOptions, and saves the file as HTML. Includes a complete C# example and a console confirmation message.
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the source Excel file
-            string inputPath = "input.xlsx";
+            // Path to the source Excel file (can be .xlsx, .xls, etc.)
+            string sourcePath = "input.xlsx";
 
-            // Path where the HTML output will be saved
+            // Load the workbook from the file system
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Create HtmlSaveOptions with default settings
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+
+            // Define the output HTML file path
             string outputPath = "output.html";
 
-            // Load the Excel workbook from the file system
-            Workbook workbook = new Workbook(inputPath);
-
-            // Create default HTML save options
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-
             // Save the workbook as HTML using the default options
-            workbook.Save(outputPath, saveOptions);
+            workbook.Save(outputPath, htmlOptions);
 
-            Console.WriteLine($"Workbook has been converted to HTML and saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook successfully converted to HTML: {outputPath}");
         }
     }
 }

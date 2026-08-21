@@ -1,47 +1,45 @@
-// Title: Send a Shape Named "Background" to the Back (Lowest Z‑Order) with Aspose.Cells for .NET
-// Description: Load a workbook, locate the shape called "Background" on the first worksheet, set its ZOrderPosition to 0 (or use ToFrontOrBack(-1)) to place it behind all other objects, and save the file.
-// Keywords: Aspose.Cells shape Z-order | move shape to back Aspose.Cells | background shape lowest Z order .NET | Aspose.Cells send shape to back | C# Excel shape layering | ZOrderPosition Aspose.Cells | ToFrontOrBack Aspose.Cells | Excel shape ordering .NET | Aspose.Cells background image behind charts
-// Common Searches: Aspose.Cells send shape to back | set ZOrderPosition of a shape in C# | move background shape behind other objects Excel | how to change shape layering Aspose.Cells | C# Aspose.Cells shape Z-order example
-// Developer Intent: Place the "Background" shape at the lowest Z‑order so every other worksheet object appears above it.
-// Use Cases: Ensure a watermark or background image never obscures data tables, charts, or text boxes in generated reports. | Programmatically reorder decorative shapes in a template to maintain a clean visual hierarchy. | Adjust shape layering when adding multiple objects dynamically to keep important content on top.
-// AI Prompts: Show C# code that sends a specific shape to the back of the Z‑order using Aspose.Cells. | Provide an example of setting a shape's ZOrderPosition to the lowest level and verifying the change. | Explain alternative methods such as ToFrontOrBack for moving shapes forward or backward in Aspose.Cells.
+// Title: Aspose.Cells .NET – Send Background Shape to Back (Lowest Z‑Order)
+// Description: Demonstrates how to add two rectangles to a worksheet, then move the larger rectangle to the back using the ToFrontOrBack(-1) method so it becomes the lowest‑level shape before saving the workbook.
+// Keywords: Aspose.Cells shape Z‑order | ToFrontOrBack method | send shape to back .NET | background shape layering | shape ordering Aspose.Cells
+// Common Searches: Aspose.Cells move shape behind others | set shape lowest Z‑order .NET | background rectangle behind data Aspose.Cells | how to send shape to back in workbook
+// Developer Intent: Place a shape at the bottom of the Z‑order stack so every other worksheet object appears above it.
+// Use Cases: Create a full‑page background rectangle for a report template. | Add a watermark that must stay behind charts, tables, and images. | Layer multiple charts and graphics while keeping a background shape at the bottom.
+// AI Prompts: Show code that sends a shape to the back using Aspose.Cells for .NET. | Explain the ToFrontOrBack method and how to set a shape's Z‑order to the lowest level. | Provide an example of layering shapes with a background shape at the lowest Z‑order.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Load a workbook, locate the shape called "Background" on the first worksheet, set its ZOrderPosition to 0 (or use ToFrontOrBack(-1)) to place it behind all other objects, and save the file.
-class SetBackgroundZOrder
+// Demonstrates how to add two rectangles to a worksheet, then move the larger rectangle to the back using the ToFrontOrBack(-1) method so it becomes the lowest‑level shape before saving the workbook.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("Input.xlsx");
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Find the shape named "Background"
-        Shape backgroundShape = null;
-        foreach (Shape shape in sheet.Shapes)
+        try
         {
-            if (shape.Name == "Background")
-            {
-                backgroundShape = shape;
-                break;
-            }
-        }
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        if (backgroundShape != null)
-        {
-            // Set the shape to the lowest Z‑order position (backmost)
-            backgroundShape.ZOrderPosition = 0;
-            // Alternatively, you could use: backgroundShape.ToFrontOrBack(-1);
-        }
-        else
-        {
-            Console.WriteLine("Shape named 'Background' not found.");
-        }
+            // Add a shape that will appear in front (foreground)
+            Shape foreground = sheet.Shapes.AddRectangle(2, 2, 50, 50, 200, 150);
+            foreground.Name = "Foreground";
 
-        // Save the workbook with the updated Z‑order
-        workbook.Save("Output.xlsx");
+            // Add a shape that will serve as the background
+            // Adding it after the foreground allows us to move it behind later
+            Shape background = sheet.Shapes.AddRectangle(0, 0, 0, 0, 800, 600);
+            background.Name = "Background";
+
+            // Send the background shape to the back (lowest Z‑order)
+            // Since it is currently at index 1, moving it back by -1 places it at index 0
+            background.ToFrontOrBack(-1);
+
+            // Save the workbook
+            workbook.Save("ZOrderDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

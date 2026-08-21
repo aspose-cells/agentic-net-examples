@@ -1,10 +1,10 @@
-// Title: C# – Sign and Verify a Password‑Protected Excel Worksheet with Aspose.Cells Digital Signatures
-// Description: Shows how to protect the first worksheet of a new workbook, load an X509 .pfx certificate, create a digital signature with a comment and UTC timestamp, embed it in the workbook, save the file, then reload it to check the IsDigitallySigned flag, enumerate the signature collection, and display each signature’s comment, signing time and validation result.
-// Keywords: Aspose.Cells | C# digital signature | Excel worksheet protection | X509 certificate signing | verify workbook signature | protected sheet signing | digital signature collection | IsDigitallySigned | Aspose.Cells .NET | certificate .pfx
-// Common Searches: Aspose.Cells sign protected worksheet C# | Add digital signature to Excel file using Aspose | Verify Excel digital signature with Aspose.Cells | Load X509 certificate for Aspose.Cells signing | Check if workbook is digitally signed Aspose
-// Developer Intent: Add a digital signature to a password‑protected Excel worksheet and confirm its authenticity programmatically.
-// Use Cases: Secure distribution of confidential reports by protecting the sheet and embedding a certificate‑based signature. | Automated compliance checks that load a signed workbook, verify its integrity, and extract signature metadata. | Integrate digital signing into CI/CD pipelines to guarantee the authenticity of generated Excel deliverables.
-// AI Prompts: Generate C# code with Aspose.Cells that protects the first worksheet, signs it using a .pfx certificate, saves the file, and then verifies the signature. | Explain how to retrieve and display digital‑signature comments, signing timestamps, and validation results from a signed workbook. | Provide best‑practice error‑handling for missing certificate files, incorrect passwords, and failed signature validation when using Aspose.Cells.
+// Title: Sign and Verify a Protected Worksheet with Aspose.Cells for .NET
+// Description: Demonstrates how to protect a worksheet, attach a digital signature using an X509 PFX certificate, save the workbook, and then reload it to check IsDigitallySigned, retrieve the DigitalSignatureCollection, and read each signature’s comments, timestamp and validation status.
+// Keywords: Aspose.Cells digital signature | C# protect worksheet | Excel digital signature verification | X509Certificate2 signing | SetDigitalSignature | IsDigitallySigned | DigitalSignatureCollection | Workbook signing .NET | Excel compliance
+// Common Searches: Aspose.Cells add digital signature to protected sheet C# | Verify Excel workbook signature after protection Aspose | How to sign an Excel file with a PFX certificate using Aspose.Cells | Check digital signature validity in a .NET workbook | Protect worksheet and apply digital signature Aspose.Cells example
+// Developer Intent: Apply a digital signature to a worksheet that has been protected and programmatically confirm the signature’s authenticity.
+// Use Cases: Secure financial or legal reports by protecting the sheet and signing the workbook before distribution. | Automate compliance audits by validating that received Excel files are signed and unchanged. | Integrate digital signing into a document‑generation pipeline to guarantee integrity of protected worksheets.
+// AI Prompts: Generate C# code that protects an Aspose.Cells worksheet, signs it with a PFX certificate, and saves the workbook. | Show how to load a signed Excel file with Aspose.Cells and programmatically verify each digital signature’s comments, timestamp, and validity. | Explain how to handle signature verification failures and retrieve detailed error information using Aspose.Cells.
 
 using System;
 using System.IO;
@@ -14,89 +14,73 @@ using Aspose.Cells.DigitalSignatures;
 
 namespace AsposeCellsDigitalSignatureDemo
 {
-    // Shows how to protect the first worksheet of a new workbook, load an X509 .pfx certificate, create a digital signature with a comment and UTC timestamp, embed it in the workbook, save the file, then reload it to check the IsDigitallySigned flag, enumerate the signature collection, and display each signature’s comment, signing time and validation result.
+    // Demonstrates how to protect a worksheet, attach a digital signature using an X509 PFX certificate, save the workbook, and then reload it to check IsDigitallySigned, retrieve the DigitalSignatureCollection, and read each signature’s comments, timestamp and validation status.
     class Program
     {
         static void Main()
         {
-            try
+            // Path to the certificate file (PFX) and its password
+            string certPath = "myCertificate.pfx";
+            string certPassword = "certPassword";
+
+            // Output file for the signed workbook
+            string signedFile = "ProtectedSignedWorkbook.xlsx";
+
+            // -------------------------------------------------
+            // 1. Create a new workbook and add sample data
+            // -------------------------------------------------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "ProtectedSheet";
+            sheet.Cells["A1"].PutValue("Data to be protected and signed");
+
+            // -------------------------------------------------
+            // 2. Protect the worksheet (all protection types)
+            // -------------------------------------------------
+            sheet.Protect(ProtectionType.All);
+
+            // -------------------------------------------------
+            // 3. Load the certificate and create a digital signature
+            // -------------------------------------------------
+            X509Certificate2 certificate = new X509Certificate2(certPath, certPassword);
+            DigitalSignature signature = new DigitalSignature(certificate, "Workbook Signature", DateTime.UtcNow);
+
+            // -------------------------------------------------
+            // 4. Add the signature to a collection and set it on the workbook
+            // -------------------------------------------------
+            DigitalSignatureCollection signatures = new DigitalSignatureCollection();
+            signatures.Add(signature);
+            workbook.SetDigitalSignature(signatures);
+
+            // -------------------------------------------------
+            // 5. Save the signed workbook
+            // -------------------------------------------------
+            workbook.Save(signedFile, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved with digital signature: {signedFile}");
+
+            // -------------------------------------------------
+            // 6. Load the saved workbook and verify the signature
+            // -------------------------------------------------
+            Workbook loadedWorkbook = new Workbook(signedFile);
+
+            // Check if the workbook reports being digitally signed
+            Console.WriteLine($"Is workbook digitally signed? {loadedWorkbook.IsDigitallySigned}");
+
+            // Retrieve the digital signature collection
+            DigitalSignatureCollection loadedSignatures = loadedWorkbook.GetDigitalSignature();
+
+            if (loadedSignatures != null)
             {
-                // Path to the certificate (PFX) file and its password
-                string certPath = "myCertificate.pfx";
-                string certPassword = "certPassword";
-
-                // Verify that the certificate file exists
-                if (!File.Exists(certPath))
+                foreach (DigitalSignature ds in loadedSignatures)
                 {
-                    Console.WriteLine($"Certificate file not found: {certPath}");
-                    return;
-                }
-
-                // Output workbook path
-                string signedWorkbookPath = "ProtectedSignedWorkbook.xlsx";
-
-                // -------------------------------------------------
-                // 1. Create a new workbook and protect its first sheet
-                // -------------------------------------------------
-                Workbook workbook = new Workbook();                     // create
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Protect the worksheet with a password (all protection types)
-                // The third parameter is the old password; an empty string is acceptable for a new protection
-                sheet.Protect(ProtectionType.All, "sheetPassword", string.Empty);
-
-                // -------------------------------------------------
-                // 2. Load the certificate and create a digital signature
-                // -------------------------------------------------
-                X509Certificate2 certificate = new X509Certificate2(certPath, certPassword);
-                DigitalSignature signature = new DigitalSignature(
-                    certificate,                     // certificate containing private key
-                    "Signed protected worksheet",    // comment
-                    DateTime.UtcNow);                // sign time (UTC)
-
-                // -------------------------------------------------
-                // 3. Add the signature to a collection and apply it to the workbook
-                // -------------------------------------------------
-                DigitalSignatureCollection signatures = new DigitalSignatureCollection();
-                signatures.Add(signature);
-                workbook.SetDigitalSignature(signatures);               // set signature
-
-                // -------------------------------------------------
-                // 4. Save the signed workbook
-                // -------------------------------------------------
-                workbook.Save(signedWorkbookPath, SaveFormat.Xlsx);     // save
-                Console.WriteLine($"Workbook saved to: {signedWorkbookPath}");
-
-                // -------------------------------------------------
-                // 5. Load the saved workbook and verify the signature
-                // -------------------------------------------------
-                if (!File.Exists(signedWorkbookPath))
-                {
-                    Console.WriteLine($"Saved workbook not found: {signedWorkbookPath}");
-                    return;
-                }
-
-                Workbook loadedWorkbook = new Workbook(signedWorkbookPath); // load
-                Console.WriteLine("Workbook is digitally signed: " + loadedWorkbook.IsDigitallySigned);
-
-                DigitalSignatureCollection loadedSignatures = loadedWorkbook.GetDigitalSignature();
-                if (loadedSignatures != null)
-                {
-                    foreach (DigitalSignature ds in loadedSignatures)
-                    {
-                        Console.WriteLine("Signature comment : " + ds.Comments);
-                        Console.WriteLine("Signature time    : " + ds.SignTime);
-                        Console.WriteLine("Signature valid   : " + ds.IsValid);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No digital signatures found.");
+                    Console.WriteLine($"Signature Comments : {ds.Comments}");
+                    Console.WriteLine($"Signature Time     : {ds.SignTime}");
+                    Console.WriteLine($"Signature IsValid  : {ds.IsValid}");
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("No digital signatures found in the workbook.");
             }
         }
     }

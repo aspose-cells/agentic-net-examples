@@ -1,56 +1,39 @@
-// Title: Convert Excel to PDF without Embedding Linked Images – Aspose.Cells C#
-// Description: Loads an Excel workbook with Aspose.Cells, configures PdfSaveOptions to turn off attachment embedding and ignore blank pages, optionally handles the EnableExternalLinks setting, and saves a compact PDF that excludes external linked pictures.
-// Keywords: Aspose.Cells | C# | Excel to PDF conversion | exclude linked images | PdfSaveOptions | EmbedAttachments false | ignore blank pages | reduce PDF size | EnableExternalLinks | batch workbook conversion
-// Common Searches: Aspose.Cells convert Excel to PDF without images | How to skip external linked pictures when saving PDF with Aspose.Cells | Minimize PDF file size Aspose.Cells C# | PdfSaveOptions ignore blank pages example | Disable OLE attachments in Aspose.Cells PDF export
-// Developer Intent: Generate a PDF from an Excel file while preventing external linked images and OLE attachments from being embedded, resulting in a smaller document.
-// Use Cases: Produce archival PDFs that contain only embedded data, omitting linked pictures to keep storage low. | Create clean, size‑optimized PDF reports for email distribution or web publishing. | Run automated batch conversions of workbooks where blank pages and external media must be excluded for compliance.
-// AI Prompts: Show C# code using Aspose.Cells PdfSaveOptions to export an Excel workbook to PDF without embedding linked images and to ignore blank pages. | Explain how to detect and disable the EnableExternalLinks property in Aspose.Cells before saving a workbook as a minimal‑size PDF.
+// Title: Convert Excel to PDF without Embedding Linked Images using Aspose.Cells for .NET
+// Description: Shows how to load an Excel workbook, set PdfSaveOptions.EmbedAttachments = false, and save it as a PDF, thereby excluding external linked images and OLE objects to produce a smaller file.
+// Keywords: Aspose.Cells | C# | Excel to PDF conversion | PdfSaveOptions | EmbedAttachments false | exclude linked images | reduce PDF size | no OLE embedding | minimal PDF output | PDF conversion options
+// Common Searches: Aspose.Cells prevent image embedding in PDF | How to disable attachments when converting Excel to PDF | C# Excel to PDF minimal file size | Exclude external pictures from PDF using Aspose.Cells | PdfSaveOptions EmbedAttachments example
+// Developer Intent: Generate a PDF from an Excel workbook while omitting external linked images to keep the file size low.
+// Use Cases: Produce lightweight PDF reports that reference external charts or photos. | Batch‑process workbooks for archival without inflating PDF size with OLE objects. | Create PDF invoices that use a centrally stored logo without embedding the image.
+// AI Prompts: Provide C# code that converts an Excel file to PDF with Aspose.Cells and disables attachment embedding. | Explain the impact of PdfSaveOptions.EmbedAttachments on PDF size in Aspose.Cells conversions. | Give a step‑by‑step tutorial for excluding external linked images when saving a workbook as PDF.
 
 using System;
-using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells;                     // Core Aspose.Cells namespace
+using Aspose.Cells.Rendering;          // For PdfSaveOptions
 
-// Loads an Excel workbook with Aspose.Cells, configures PdfSaveOptions to turn off attachment embedding and ignore blank pages, optionally handles the EnableExternalLinks setting, and saves a compact PDF that excludes external linked pictures.
-class ConvertWorkbookToPdf
+// Shows how to load an Excel workbook, set PdfSaveOptions.EmbedAttachments = false, and save it as a PDF, thereby excluding external linked images and OLE objects to produce a smaller file.
+class WorkbookToPdfWithoutExternalImages
 {
     static void Main()
     {
-        try
-        {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
+        // Path to the source Excel workbook (can contain external linked images)
+        string sourceFile = "input.xlsx";
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
+        // Desired output PDF file path
+        string pdfFile = "output.pdf";
 
-            // Load the source workbook
-            Workbook workbook = new Workbook(inputPath);
+        // Create PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // NOTE: In some Aspose.Cells versions the EnableExternalLinks property is unavailable.
-            // If needed, configure related settings here using the appropriate API for your version.
+        // Ensure that external attachments (OLE objects) are NOT embedded.
+        // This helps keep the PDF size minimal when the workbook contains linked images.
+        pdfOptions.EmbedAttachments = false;
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Do not embed OLE attachments (default is false, set explicitly for clarity)
-                EmbedAttachments = false,
-                // Skip blank pages to further reduce file size
-                PrintingPageType = PrintingPageType.IgnoreBlank
-            };
+        // Load the workbook from the source file
+        Workbook workbook = new Workbook(sourceFile);
 
-            // Save the workbook as PDF using the configured options
-            workbook.Save(outputPath, pdfOptions);
+        // Save the workbook as PDF using the configured options
+        workbook.Save(pdfFile, pdfOptions);
 
-            Console.WriteLine($"Workbook successfully converted to PDF: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        Console.WriteLine($"Workbook successfully converted to PDF without embedding external images: {pdfFile}");
     }
 }

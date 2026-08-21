@@ -1,39 +1,36 @@
-// Title: Async Convert WordArt‑Rich Excel Sheets to HTML with Base64 Gradients – Aspose.Cells for .NET
-// Description: Loads an Excel workbook containing WordArt and gradient shapes, then creates a separate HTML file for each worksheet. The code uses HtmlSaveOptions to embed all shape images as Base64, leverages Range.ToHtml for rendering, and runs each sheet conversion on its own Task, awaiting all tasks before finishing.
-// Keywords: Aspose.Cells async HTML export | WordArt gradient to Base64 | parallel worksheet conversion .NET | Range.ToHtml example | C# Excel to HTML asynchronous
-// Common Searches: convert Excel with WordArt to HTML asynchronously | embed gradient shapes as Base64 when saving Excel as HTML | parallel sheet to HTML Aspose.Cells C# | async Range.ToHtml usage
-// Developer Intent: Generate per‑worksheet HTML output from a WordArt‑filled workbook without temporary image files, using asynchronous tasks.
-// Use Cases: Create fast HTML previews of every sheet in a marketing report that contains styled WordArt logos. | Expose an ASP.NET Core endpoint that receives an Excel file and returns HTML streams for each sheet, reducing latency with parallel processing. | Batch‑process a directory of Excel templates with decorative shapes, archiving them as self‑contained HTML pages.
-// AI Prompts: Rewrite the conversion logic with Parallel.ForEach and ensure the Workbook is disposed correctly. | Show how to stream the generated HTML directly from a MemoryStream in an ASP.NET Core controller. | Add Serilog logging to capture errors per worksheet, including sheet name and exception details.
+// Title: Async Conversion of WordArt‑Rich Excel Sheets to HTML with Aspose.Cells for .NET
+// Description: This C# example shows how to load an Excel workbook that contains WordArt shapes with gradient fills, set HtmlSaveOptions for HTML5 with separate CSS and base64‑encoded images, and convert each worksheet’s used range to its own HTML file on separate threads. It creates an output folder, runs a Task per sheet, writes the HTML bytes, and awaits all tasks, delivering fast, non‑blocking conversion of WordArt‑enabled spreadsheets.
+// Keywords: Aspose.Cells | C# | .NET | asynchronous HTML conversion | Excel to HTML | WordArt gradients | parallel worksheet conversion | HtmlSaveOptions | Range.ToHtml | Task.Run | Task.WhenAll | HTML5 export | base64 images
+// Common Searches: async convert Excel to HTML Aspose.Cells | export WordArt gradients to HTML .NET | parallel worksheet HTML conversion C# | how to use Range.ToHtml asynchronously | Aspose.Cells generate HTML5 with separate CSS
+// Developer Intent: The developer wants to transform every worksheet that contains WordArt with gradient fills into separate HTML files, executing the conversions concurrently to avoid blocking the application.
+// Use Cases: Generate web‑ready HTML reports from Excel workbooks that include WordArt graphics without UI delays. | Batch‑process large Excel files on a server, converting each sheet to HTML in parallel to reduce overall runtime. | Build an API endpoint that accepts an uploaded spreadsheet and returns per‑sheet HTML files, preserving gradient styling via base64 images. | Create automated documentation pipelines that convert design‑heavy Excel sheets to HTML for publishing.
+// AI Prompts: Modify the example to write conversion errors to a log file while preserving asynchronous processing. | Replace the Task.Run loop with Parallel.ForEach and explain the differences. | Show how to configure HtmlSaveOptions to output WordArt gradients as SVG instead of base64 images. | Add cancellation support using CancellationToken to stop the conversion mid‑process. | Provide code to stream the generated HTML directly to an HTTP response in an ASP.NET Core controller.
 
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Loads an Excel workbook containing WordArt and gradient shapes, then creates a separate HTML file for each worksheet. The code uses HtmlSaveOptions to embed all shape images as Base64, leverages Range.ToHtml for rendering, and runs each sheet conversion on its own Task, awaiting all tasks before finishing.
-class AsyncWordArtHtmlConversion
+// This C# example shows how to load an Excel workbook that contains WordArt shapes with gradient fills, set HtmlSaveOptions for HTML5 with separate CSS and base64‑encoded images, and convert each worksheet’s used range to its own HTML file on separate threads. It creates an output folder, runs a Task per sheet, writes the HTML bytes, and awaits all tasks, delivering fast, non‑blocking conversion of WordArt‑enabled spreadsheets.
+public class AsyncWordArtToHtmlConverter
 {
-    static async Task Main(string[] args)
+    public static async Task Main(string[] args)
     {
-        // Path to the source workbook that contains WordArt and gradient shapes
+        // Path to the source Excel file (contains WordArt with gradients)
         string sourcePath = "WordArtWorkbook.xlsx";
 
         // Verify that the source file exists to avoid FileNotFoundException
         if (!File.Exists(sourcePath))
         {
-            Console.WriteLine($"Error: The source workbook \"{sourcePath}\" was not found.");
+            Console.WriteLine($"Error: The file '{sourcePath}' was not found.");
             return;
         }
-
-        // Directory where individual HTML files will be written
-        string outputDir = "HtmlOutput";
-        Directory.CreateDirectory(outputDir);
 
         Workbook workbook;
         try
         {
-            // Load the workbook (uses Aspose.Cells load rule)
+            // Load the workbook
             workbook = new Workbook(sourcePath);
         }
         catch (Exception ex)
@@ -42,58 +39,53 @@ class AsyncWordArtHtmlConversion
             return;
         }
 
-        // Configure HTML save options – export images (including WordArt gradients) as Base64
+        // Configure HTML save options
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions
         {
-            ExportImagesAsBase64 = true,               // embed shape images directly
-            HtmlCrossStringType = HtmlCrossType.Cross, // faster cross‑string handling for large files
-            ExportWorksheetCSSSeparately = true        // optional: separate CSS per sheet
+            HtmlVersion = HtmlVersion.Html5,
+            ExportWorksheetCSSSeparately = true,
+            ExportImagesAsBase64 = true
         };
 
-        // Prepare a task for each worksheet to run conversion in parallel
+        // Prepare output folder
+        string outputFolder = "HtmlOutput";
+        Directory.CreateDirectory(outputFolder);
+
+        // Create a task for each worksheet to convert its used range to HTML
         Task[] conversionTasks = new Task[workbook.Worksheets.Count];
         for (int i = 0; i < workbook.Worksheets.Count; i++)
         {
-            int sheetIndex = i; // capture loop variable for the lambda
+            int sheetIndex = i; // capture loop variable
             conversionTasks[i] = Task.Run(() =>
             {
                 try
                 {
-                    // Get the worksheet
                     Worksheet sheet = workbook.Worksheets[sheetIndex];
 
-                    // Determine the used range of the sheet
-                    int maxRow = sheet.Cells.MaxDataRow;
-                    int maxCol = sheet.Cells.MaxDataColumn;
+                    // Determine the used range of the worksheet
+                    Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
 
-                    // Create a range that covers the entire used area
-                    Aspose.Cells.Range range = sheet.Cells.CreateRange(0, 0, maxRow + 1, maxCol + 1);
+                    // Convert the range to HTML bytes
+                    byte[] htmlBytes = usedRange.ToHtml(htmlOptions);
 
-                    // Convert the range to HTML (uses Range.ToHtml rule)
-                    byte[] htmlBytes = range.ToHtml(htmlOptions);
+                    // Build the output file name
+                    string htmlFilePath = Path.Combine(outputFolder, $"Sheet{sheetIndex + 1}.html");
 
-                    // Write the HTML bytes to a file named after the sheet
-                    string htmlPath = Path.Combine(outputDir, $"Sheet{sheetIndex + 1}.html");
-                    File.WriteAllBytes(htmlPath, htmlBytes);
+                    // Write the HTML bytes to file
+                    File.WriteAllBytes(htmlFilePath, htmlBytes);
 
-                    Console.WriteLine($"Worksheet \"{sheet.Name}\" saved to {htmlPath}");
+                    Console.WriteLine($"Worksheet '{sheet.Name}' converted to HTML: {htmlFilePath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing sheet index {sheetIndex}: {ex.Message}");
+                    Console.WriteLine($"Error processing worksheet index {sheetIndex}: {ex.Message}");
                 }
             });
         }
 
-        try
-        {
-            // Await completion of all conversion tasks
-            await Task.WhenAll(conversionTasks);
-            Console.WriteLine("All worksheets have been converted to HTML asynchronously.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred during conversion: {ex.Message}");
-        }
+        // Await all conversion tasks to complete
+        await Task.WhenAll(conversionTasks);
+
+        Console.WriteLine("All worksheets have been converted to HTML asynchronously.");
     }
 }

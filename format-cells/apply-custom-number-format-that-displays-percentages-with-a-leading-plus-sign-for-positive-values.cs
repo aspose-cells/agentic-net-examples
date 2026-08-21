@@ -1,39 +1,60 @@
-// Title: C# – Aspose.Cells: Custom Number Format to Show a Plus Sign for Positive Percentages
-// Description: Demonstrates how to create a workbook, write percentage values, and apply a custom number format (+0.00%;-0.00%;0.00%) that prefixes positive percentages with a plus sign, negatives with a minus sign, and formats zero without a sign, then saves the file.
-// Keywords: Aspose.Cells custom number format | C# percentage format plus sign | Excel positive negative zero format .NET | Aspose.Cells style custom format | display + sign for positive percentages | format cells as +0.00% -0.00% 0.00% | Aspose.Cells number format string | C# Excel formatting plus minus
-// Common Searches: Aspose.Cells add plus sign to positive percentages | C# custom number format for positive negative zero values | How to format Excel cells as +0.00% in Aspose.Cells | Aspose.Cells percentage format with sign symbols | C# Aspose.Cells custom number format examples
-// Developer Intent: Create a style with a custom number format that displays a leading '+' for positive percentages, '-' for negatives, and a neutral format for zero, then apply it to cells.
-// Use Cases: Financial reports where gains must be marked with '+' and losses with '-' for instant visual cue. | KPI dashboards that require explicit sign indicators on percentage metrics. | Audit‑ready Excel exports that enforce a standardized sign‑aware percentage format.
-// AI Prompts: Generate C# code using Aspose.Cells to format percentages with + for positives, - for negatives, and no sign for zero. | Show how to apply a custom number format to a range of cells in Aspose.Cells, handling zero values correctly. | Explain how to modify the format to show one decimal place (e.g., +0.0%;-0.0%;0.0%) while keeping the sign symbols.
+// Title: C# – Show a Plus Sign for Positive Percentages with a Custom Number Format in Aspose.Cells
+// Description: Creates a workbook, writes values to A1‑A3, defines the custom format "+0.00%;-0.00%;0.00%" to display a leading ‘+’ for positive percentages, applies the format to the range using a StyleFlag that targets only the number format, and saves the file as an XLSX document.
+// Keywords: Aspose.Cells custom format | C# percentage plus sign | Excel positive sign format | StyleFlag number format | .NET workbook formatting
+// Common Searches: Aspose.Cells display + sign for positive percentages | custom number format string positive negative zero .NET | apply number format to a range Aspose.Cells C# | how to add plus sign to percentage values in Excel with code
+// Developer Intent: Generate an Excel file where positive percentages are prefixed with ‘+’, while negative values keep ‘‑’ and zero values show no sign.
+// Use Cases: Financial statements that highlight growth with a plus sign. | KPI dashboards where increases need explicit ‘+’ markers. | Automated reporting that distinguishes positive, negative, and zero percentages clearly.
+// AI Prompts: Provide C# Aspose.Cells code that defines a custom number format "+0.00%;-0.00%;0.00%" and applies it to cells A1:A3. | Explain how to use StyleFlag to restrict formatting to the number format portion of a style in Aspose.Cells. | Show an example of saving a workbook after applying separate patterns for positive, negative, and zero percentages.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, write percentage values, and apply a custom number format (+0.00%;-0.00%;0.00%) that prefixes positive percentages with a plus sign, negatives with a minus sign, and formats zero without a sign, then saves the file.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Creates a workbook, writes values to A1‑A3, defines the custom format "+0.00%;-0.00%;0.00%" to display a leading ‘+’ for positive percentages, applies the format to the range using a StyleFlag that targets only the number format, and saves the file as an XLSX document.
+    public class PercentageWithPlusSignDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Sample values: positive, negative and zero percentages
-        worksheet.Cells["A1"].PutValue(0.25);   // 25%
-        worksheet.Cells["A2"].PutValue(-0.10); // -10%
-        worksheet.Cells["A3"].PutValue(0);     // 0%
+                // Sample values: positive, negative, zero
+                sheet.Cells["A1"].PutValue(0.25);   // 25%
+                sheet.Cells["A2"].PutValue(-0.10); // -10%
+                sheet.Cells["A3"].PutValue(0.0);   // 0%
 
-        // Create a style with a custom number format that shows a leading plus sign for positives
-        Style percentStyle = workbook.CreateStyle();
-        // Format: +0.00% for positive, -0.00% for negative, 0.00% for zero
-        percentStyle.Custom = "+0.00%;-0.00%;0.00%";
+                // Define a custom number format with plus sign for positives
+                Style style = workbook.CreateStyle();
+                style.Custom = "+0.00%;-0.00%;0.00%";
 
-        // Apply the style to the cells
-        worksheet.Cells["A1"].SetStyle(percentStyle);
-        worksheet.Cells["A2"].SetStyle(percentStyle);
-        worksheet.Cells["A3"].SetStyle(percentStyle);
+                // Apply the style to the range A1:A3
+                Aspose.Cells.Range range = sheet.Cells.CreateRange("A1:A3");
+                StyleFlag flag = new StyleFlag();
+                flag.NumberFormat = true; // Apply only the number format part
+                range.ApplyStyle(style, flag);
 
-        // Save the workbook
-        workbook.Save("PercentageWithPlusSign.xlsx");
+                // Save the workbook
+                string outputPath = "PercentageWithPlusSignDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    // Program entry point
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            PercentageWithPlusSignDemo.Run();
+        }
     }
 }

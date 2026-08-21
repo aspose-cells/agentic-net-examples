@@ -1,74 +1,80 @@
-// Title: Aspose.Cells for .NET – Hide Chart Legend When Only One Series Exists
-// Description: C# example that creates a workbook, adds a column chart, binds a single data series, checks the series count, and disables the legend to avoid redundant labels before saving the file.
-// Keywords: Aspose.Cells hide legend | chart legend conditional .NET | single series chart Aspose | ShowLegend false Aspose.Cells | C# Excel chart formatting
-// Common Searches: hide legend Aspose.Cells chart single series | Aspose.Cells conditional legend display | C# remove chart legend when only one series | Aspose.Cells ShowLegend property usage
-// Developer Intent: Automatically suppress the legend of a chart that contains exactly one data series using Aspose.Cells for .NET.
-// Use Cases: Generate a column chart from a data range and automatically hide the legend when only one series is plotted. | Process multiple charts in a workbook, applying the same rule to remove legends from single‑series charts. | Create clean reporting workbooks where single‑series charts are displayed without unnecessary legend entries.
-// AI Prompts: Write C# code with Aspose.Cells to create a line chart and hide its legend only if the chart has a single series. | Show how to iterate over all charts in a workbook and set ShowLegend = false for charts with exactly one series. | Explain the steps to check a chart's NSeries count in Aspose.Cells and control legend visibility programmatically.
+// Title: Hide Legend for Single‑Series Charts with Aspose.Cells for .NET (C#)
+// Description: This C# example demonstrates how to programmatically hide the legend of a chart that contains only one data series using Aspose.Cells. The code creates a workbook with two column charts, iterates through every worksheet and chart, sets ShowLegend to false when the series count equals one, keeps the legend visible for multi‑series charts, and saves the file as an Excel workbook.
+// Keywords: Aspose.Cells | C# chart legend | hide legend single series | ShowLegend property | conditional legend visibility | .NET Excel automation | remove redundant legend | Excel chart customization
+// Common Searches: Aspose.Cells hide chart legend single series | C# set ShowLegend false for one series chart | how to hide legend in Aspose.Cells chart | conditional legend visibility Aspose.Cells .NET | remove legend from Excel chart with one series
+// Developer Intent: Automatically suppress the legend on charts that have only one data series while preserving it on charts with multiple series.
+// Use Cases: Generating financial reports where single‑series column charts should not display a legend. | Building dashboards that contain many charts and need consistent legend handling based on series count. | Applying a workbook‑wide rule to ensure legends appear only when they add value to the visualisation.
+// AI Prompts: Provide C# code using Aspose.Cells to hide the legend of any chart that contains exactly one series. | Show an Aspose.Cells snippet that toggles ShowLegend based on the number of series for each chart in a workbook. | Explain how to iterate through all worksheets and set legend visibility only for charts with more than one series in Aspose.Cells for .NET.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// This C# example demonstrates how to programmatically hide the legend of a chart that contains only one data series using Aspose.Cells. The code creates a workbook with two column charts, iterates through every worksheet and chart, sets ShowLegend to false when the series count equals one, keeps the legend visible for multi‑series charts, and saves the file as an Excel workbook.
+class HideLegendSingleSeries
 {
-    // C# example that creates a workbook, adds a column chart, binds a single data series, checks the series count, and disables the legend to avoid redundant labels before saving the file.
-    public class HideLegendForSingleSeriesChart
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // -----------------------------
+        // Chart with a single series
+        // -----------------------------
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["A4"].PutValue("C");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["B4"].PutValue(30);
+        int chartIdx1 = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+        Chart chart1 = sheet.Charts[chartIdx1];
+        chart1.NSeries.Add("B2:B4", true);
+        chart1.NSeries.CategoryData = "A2:A4";
+
+        // -----------------------------
+        // Chart with multiple series
+        // -----------------------------
+        sheet.Cells["D1"].PutValue("Category");
+        sheet.Cells["D2"].PutValue("A");
+        sheet.Cells["D3"].PutValue("B");
+        sheet.Cells["D4"].PutValue("C");
+        sheet.Cells["E1"].PutValue("Series1");
+        sheet.Cells["E2"].PutValue(5);
+        sheet.Cells["E3"].PutValue(15);
+        sheet.Cells["E4"].PutValue(25);
+        sheet.Cells["F1"].PutValue("Series2");
+        sheet.Cells["F2"].PutValue(8);
+        sheet.Cells["F3"].PutValue(18);
+        sheet.Cells["F4"].PutValue(28);
+        int chartIdx2 = sheet.Charts.Add(ChartType.Column, 20, 0, 30, 5);
+        Chart chart2 = sheet.Charts[chartIdx2];
+        chart2.NSeries.Add("E2:E4", true);
+        chart2.NSeries.Add("F2:F4", true);
+        chart2.NSeries.CategoryData = "D2:D4";
+
+        // Iterate through all worksheets and their charts
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            try
+            foreach (Chart ch in ws.Charts)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
-
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
-
-                // Add a column chart
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Set the data range for the chart
-                chart.NSeries.Add("B2:B4", true);          // Values
-                chart.NSeries.CategoryData = "A2:A4";      // Categories
-
-                // Hide legend if only one series exists
-                if (chart.NSeries.Count == 1)
+                // Hide legend if the chart contains only one series
+                if (ch.NSeries.Count == 1)
                 {
-                    chart.ShowLegend = false;
+                    ch.ShowLegend = false;
                 }
-
-                // Determine output file path
-                string outputFile = "HideLegendSingleSeriesChart.xlsx";
-
-                // Save the workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputFile)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                else
+                {
+                    // Ensure legend is visible for charts with multiple series
+                    ch.ShowLegend = true;
+                }
             }
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            HideLegendForSingleSeriesChart.Run();
-        }
+        // Save the workbook
+        workbook.Save("HideLegendSingleSeries.xlsx");
     }
 }

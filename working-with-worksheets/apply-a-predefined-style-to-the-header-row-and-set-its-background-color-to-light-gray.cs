@@ -1,35 +1,50 @@
-// Title: C# – Apply Light Gray Background Style to Worksheet Header Row with Aspose.Cells
-// Description: Creates a new workbook, defines a solid light‑gray background style, uses a StyleFlag to apply all style attributes, styles the first row (header) of the worksheet, and saves the file as HeaderStyle.xlsx.
-// Keywords: Aspose.Cells header row style C# | set row background color Aspose.Cells | StyleFlag apply style Aspose.Cells | solid light gray background Aspose.Cells | C# Excel header formatting Aspose
-// Common Searches: Aspose.Cells set header row background color C# | How to apply a style to the first row in Aspose.Cells | C# Aspose.Cells StyleFlag example | Create gray header row in Excel with Aspose.Cells | Apply solid background to worksheet row using Aspose.Cells
-// Developer Intent: Apply a predefined style with a light gray background to the worksheet’s header row.
-// Use Cases: Standardize header appearance for automated Excel reports. | Highlight column titles to improve spreadsheet readability. | Reuse a single style across multiple worksheets in a workbook.
-// AI Prompts: Generate C# Aspose.Cells code that adds bold font, center alignment, and a light gray background to a worksheet header row. | Show how to define a reusable style and apply it to several rows and columns with StyleFlag in Aspose.Cells C#. | Explain how to modify the header style to include custom font size while keeping the solid light gray background.
+// Title: Style Header Row with Light Gray Background Using Aspose.Cells for .NET
+// Description: Creates a workbook, defines a solid LightGray style with bold centered font, applies it to the first row via ApplyRowStyle and a full StyleFlag, then saves as HeaderRowStyled.xlsx.
+// Keywords: Aspose.Cells C# header style | ApplyRowStyle | StyleFlag All | light gray header background | Excel header formatting .NET | solid fill Aspose.Cells | centered bold font | worksheet header row style
+// Common Searches: Aspose.Cells set header row background color | C# apply style to first row Excel | How to use StyleFlag with ApplyRowStyle | Create gray header row Aspose.Cells | Bold centered header in Excel using Aspose
+// Developer Intent: Apply a predefined style with a light‑gray background and bold centered text to the worksheet’s header row.
+// Use Cases: Automated report generation where column headings are highlighted for quick visual scanning. | Ensuring consistent header formatting across multiple exported spreadsheets in a data‑pipeline. | Producing printable tables with a distinct header row to improve readability.
+// AI Prompts: Generate C# code using Aspose.Cells to create a Style with solid LightGray fill, bold black 12‑pt font, centered alignment, and apply it to row 0 via ApplyRowStyle. | Show how to define a reusable Style and a StyleFlag set to All=true for formatting header rows in several worksheets. | Demonstrate applying the same header style to rows 0‑2 using a loop and ApplyRowStyle in Aspose.Cells for .NET.
 
+using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// Creates a new workbook, defines a solid light‑gray background style, uses a StyleFlag to apply all style attributes, styles the first row (header) of the worksheet, and saves the file as HeaderStyle.xlsx.
-class ApplyHeaderStyle
+namespace AsposeCellsHeaderStyleDemo
 {
-    static void Main()
+    // Creates a workbook, defines a solid LightGray style with bold centered font, applies it to the first row via ApplyRowStyle and a full StyleFlag, then saves as HeaderRowStyled.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Create a style with a solid light gray background
-        Style headerStyle = workbook.CreateStyle();
-        headerStyle.Pattern = BackgroundType.Solid;
-        headerStyle.BackgroundColor = Color.LightGray;
+            // Populate header cells (optional, just for demonstration)
+            cells[0, 0].PutValue("ID");
+            cells[0, 1].PutValue("Name");
+            cells[0, 2].PutValue("Date");
 
-        // Define a style flag to apply all style attributes
-        StyleFlag flag = new StyleFlag { All = true };
+            // Create a style for the header row
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.Pattern = BackgroundType.Solid;               // Use solid fill
+            headerStyle.ForegroundColor = Color.LightGray;            // Light gray background
+            headerStyle.Font.IsBold = true;                           // Make text bold
+            headerStyle.Font.Color = Color.Black;                     // Font color
+            headerStyle.Font.Size = 12;                               // Font size
+            headerStyle.HorizontalAlignment = TextAlignmentType.Center;
+            headerStyle.VerticalAlignment = TextAlignmentType.Center;
 
-        // Apply the style to the first row (header row)
-        worksheet.Cells.Rows[0].ApplyStyle(headerStyle, flag);
+            // Define a style flag to apply all formatting properties
+            StyleFlag flag = new StyleFlag { All = true };
 
-        // Save the workbook
-        workbook.Save("HeaderStyle.xlsx");
+            // Apply the style to the first (header) row (row index 0)
+            cells.ApplyRowStyle(0, headerStyle, flag);
+
+            // Save the workbook
+            workbook.Save("HeaderRowStyled.xlsx");
+        }
     }
 }

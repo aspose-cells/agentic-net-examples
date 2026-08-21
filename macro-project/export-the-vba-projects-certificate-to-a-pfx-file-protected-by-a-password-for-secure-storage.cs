@@ -1,10 +1,10 @@
-// Title: Export a Signed VBA Project Certificate to a Password‑Protected PFX File with Aspose.Cells for .NET (C#)
-// Description: Loads a macro‑enabled .xlsm workbook, accesses its VbaProject, verifies the project is signed, imports the embedded X509 certificate, exports it as a password‑protected PFX byte array, and writes the .pfx file to disk using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# VBA certificate export | export VBA project certificate | password protected PFX | VbaProject CertRawData | macro-enabled workbook | extract signed VBA certificate | X509Certificate2 Aspose.Cells
-// Common Searches: export VBA project certificate to pfx Aspose.Cells | C# extract signed macro workbook certificate | save VBA signing certificate as password protected PFX | Aspose.Cells retrieve VBA project CertRawData | how to backup VBA project certificate .NET
-// Developer Intent: Create a password‑protected PFX file from the signing certificate embedded in a signed VBA project.
-// Use Cases: Archive the signing certificate of a macro‑enabled workbook for compliance audits. | Migrate a VBA project's signing certificate to another system while keeping the private key encrypted. | Back up the VBA project's certificate before re‑signing or updating the macro code.
-// AI Prompts: Write C# code that loads a .xlsm file with Aspose.Cells, extracts the VBA project's certificate, and saves it as a password‑protected .pfx file. | Explain how to handle an unsigned VBA project or missing certificate data when using Aspose.Cells. | Provide a step‑by‑step guide to verify that the exported PFX contains the private key using .NET security APIs.
+// Title: Export a signed VBA project's certificate to a password‑protected PFX file using Aspose.Cells for .NET
+// Description: Loads a signed .xlsm workbook with Aspose.Cells, accesses its VbaProject, verifies the presence of a signing certificate, imports the raw certificate data into an X509Certificate2 object, and exports it as a password‑protected .pfx file saved to disk.
+// Keywords: Aspose.Cells VBA certificate export | C# export VBA project certificate | password protected PFX .NET | X509Certificate2 Import CertRawData | VbaProject IsSigned check | Excel macro signing backup
+// Common Searches: export VBA project certificate Aspose.Cells C# | save signed macro certificate as .pfx | how to protect exported certificate with password .NET | retrieve CertRawData from .xlsm workbook | backup VBA signing certificate programmatically
+// Developer Intent: Extract the signing certificate from a signed VBA project and save it as a password‑protected .pfx file for secure archival or migration.
+// Use Cases: Create a secure backup of a VBA project's signing certificate for compliance audits. | Migrate a macro's signing certificate to another server or development environment. | Automate verification that a VBA project is signed before performing certificate export.
+// AI Prompts: Write C# code that loads a signed .xlsm file with Aspose.Cells, checks VbaProject.IsSigned, and exports the certificate to a password‑protected PFX. | Explain how to use X509Certificate2.Import with VbaProject.CertRawData and then export the certificate as a PFX using a custom password. | Suggest robust error‑handling patterns for exporting a VBA project's certificate to a .pfx file in a .NET application.
 
 using System;
 using System.IO;
@@ -14,64 +14,66 @@ using Aspose.Cells.Vba;
 
 namespace AsposeCellsExamples
 {
-    // Loads a macro‑enabled .xlsm workbook, accesses its VbaProject, verifies the project is signed, imports the embedded X509 certificate, exports it as a password‑protected PFX byte array, and writes the .pfx file to disk using Aspose.Cells for .NET.
-    public class ExportVbaCertificateToPfx
+    // Loads a signed .xlsm workbook with Aspose.Cells, accesses its VbaProject, verifies the presence of a signing certificate, imports the raw certificate data into an X509Certificate2 object, and exports it as a password‑protected .pfx file saved to disk.
+    public class ExportVbaCertificate
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
-        }
-
         public static void Run()
         {
             // Path to the workbook that contains a signed VBA project
             string workbookPath = "SignedWorkbook.xlsm";
 
-            // Verify that the workbook file exists before loading
+            // Verify the workbook file exists
             if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"Workbook file not found: '{workbookPath}'.");
+                Console.WriteLine($"Workbook file '{workbookPath}' not found.");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
-
-            // Access the VBA project
-            VbaProject vbaProject = workbook.VbaProject;
-
-            // Verify that the VBA project is signed and certificate data is available
-            if (vbaProject.IsSigned && vbaProject.CertRawData != null && vbaProject.CertRawData.Length > 0)
+            try
             {
-                // Load the certificate from raw data (avoids obsolete constructor)
-                X509Certificate2 certificate = new X509Certificate2();
-                certificate.Import(vbaProject.CertRawData);
+                // Load the workbook
+                Workbook workbook = new Workbook(workbookPath);
 
-                // Define a password to protect the exported .pfx file
-                string pfxPassword = "ExportPassword123";
+                // Access the VBA project
+                VbaProject vbaProject = workbook.VbaProject;
 
-                // Export the certificate (including private key if present) to a PFX byte array
-                byte[] pfxData = certificate.Export(X509ContentType.Pfx, pfxPassword);
+                // Verify that the VBA project is signed and certificate data is available
+                if (vbaProject.IsSigned && vbaProject.CertRawData != null && vbaProject.CertRawData.Length > 0)
+                {
+                    // Load the certificate from the raw data using Import (avoids obsolete ctor)
+                    X509Certificate2 certificate = new X509Certificate2();
+                    certificate.Import(vbaProject.CertRawData);
 
-                // Write the PFX data to a file for secure storage
-                string outputPfxPath = "VbaProjectCertificate.pfx";
-                File.WriteAllBytes(outputPfxPath, pfxData);
+                    // Define a password to protect the exported .pfx file
+                    string exportPassword = "StrongPassword123";
 
-                Console.WriteLine($"Certificate exported successfully to '{outputPfxPath}'.");
+                    // Export the certificate (including private key if present) to a PFX byte array
+                    byte[] pfxData = certificate.Export(X509ContentType.Pfx, exportPassword);
+
+                    // Save the PFX data to a file
+                    string outputPath = "VbaProjectCertificate.pfx";
+                    File.WriteAllBytes(outputPath, pfxData);
+
+                    Console.WriteLine($"Certificate exported successfully to '{outputPath}'.");
+                }
+                else
+                {
+                    Console.WriteLine("The VBA project is not signed or does not contain certificate data.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("The VBA project is not signed or certificate data is unavailable.");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+    }
 
-            // No need to save the workbook for this operation; the focus is on exporting the certificate.
+    // Application entry point
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ExportVbaCertificate.Run();
         }
     }
 }

@@ -1,56 +1,48 @@
-// Title: C# – Create a case‑insensitive dictionary that maps worksheet names to SheetId (TabId) using Aspose.Cells
-// Description: This example shows how to generate a Workbook, assign custom TabId values to several worksheets, and populate a `Dictionary<string,int>` where each worksheet's name serves as the key and its SheetId (TabId) as the value. The resulting map enables O(1) retrieval of a worksheet's identifier by name, useful for fast look‑ups in large workbooks.
-// Keywords: Aspose.Cells C# worksheet TabId | dictionary worksheet name to SheetId | fast worksheet ID lookup .NET | case‑insensitive worksheet map | Aspose.Cells API SheetId retrieval
-// Common Searches: Aspose.Cells get worksheet TabId by name | C# dictionary for worksheet SheetId | lookup worksheet ID in Aspose.Cells workbook | case insensitive worksheet name to ID mapping | quick SheetId retrieval Aspose.Cells
-// Developer Intent: Create a lookup table that returns a worksheet’s SheetId (TabId) when supplied with its name.
-// Use Cases: Pass a worksheet’s SheetId to other Aspose.Cells methods that require a TabId. | Verify the existence of a worksheet before updating it, using O(1) dictionary checks. | Synchronize worksheet identifiers across multiple workbooks by storing a name‑to‑ID map.
-// AI Prompts: Write C# code that builds a case‑insensitive dictionary mapping worksheet names to their TabId in an Aspose.Cells workbook. | Demonstrate how to safely retrieve a SheetId from the dictionary and handle missing worksheet names. | Show how to serialize the name‑to‑SheetId dictionary to JSON and reload it for later fast lookups.
+// Title: C# – Build a case‑insensitive dictionary of worksheet names to SheetId (TabId) with Aspose.Cells
+// Description: This example creates a Workbook, assigns custom TabId values to three worksheets, and populates a case‑insensitive Dictionary<string,int> where each key is the worksheet name and each value is the corresponding SheetId. It demonstrates fast lookup, prints the mapping, and saves the file.
+// Keywords: Aspose.Cells | C# | .NET | Worksheet TabId | SheetId lookup | case‑insensitive dictionary | fast worksheet ID retrieval | sample code | GitHub example
+// Common Searches: Aspose.Cells map worksheet name to TabId | C# dictionary worksheet name SheetId | quick lookup worksheet ID Aspose.Cells | case insensitive worksheet ID dictionary .NET | how to get worksheet TabId without looping
+// Developer Intent: Create a dictionary that maps each worksheet’s name to its TabId (SheetId) for instant retrieval in C#.
+// Use Cases: Retrieve a worksheet’s TabId in O(1) time for conditional processing. | Synchronize workbook identifiers with external systems that reference worksheets by name. | Validate worksheet existence before applying formatting, formulas, or data updates.
+// AI Prompts: Generate C# code using Aspose.Cells that builds a case‑insensitive dictionary of worksheet names to TabId values and shows how to query it. | Show how to keep the name‑to‑TabId dictionary up‑to‑date when worksheets are added or removed at runtime in an Aspose.Cells workbook. | Provide a GitHub‑style README snippet explaining the purpose and performance benefits of the dictionary lookup.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsWorksheetIdLookup
+// This example creates a Workbook, assigns custom TabId values to three worksheets, and populates a case‑insensitive Dictionary<string,int> where each key is the worksheet name and each value is the corresponding SheetId. It demonstrates fast lookup, prints the mapping, and saves the file.
+class Program
 {
-    // This example shows how to generate a Workbook, assign custom TabId values to several worksheets, and populate a `Dictionary<string,int>` where each worksheet's name serves as the key and its SheetId (TabId) as the value. The resulting map enables O(1) retrieval of a worksheet's identifier by name, useful for fast look‑ups in large workbooks.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Add sample worksheets and assign TabId values (SheetId)
+        workbook.Worksheets[0].Name = "First";
+        workbook.Worksheets[0].TabId = 101;
+
+        Worksheet sheet2 = workbook.Worksheets.Add("Second");
+        sheet2.TabId = 202;
+
+        Worksheet sheet3 = workbook.Worksheets.Add("Third");
+        sheet3.TabId = 303;
+
+        // Build a dictionary keyed by worksheet name with TabId as the value
+        Dictionary<string, int> sheetIdLookup = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            // Create a new workbook and add a few worksheets
-            Workbook workbook = new Workbook();
-            workbook.Worksheets[0].Name = "FirstSheet";
-            workbook.Worksheets[0].TabId = 101; // example SheetId
-
-            Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
-            sheet2.TabId = 202;
-
-            Worksheet sheet3 = workbook.Worksheets.Add("ThirdSheet");
-            sheet3.TabId = 303;
-
-            // Dictionary to hold worksheet name -> SheetId (TabId) mapping
-            Dictionary<string, int> sheetIdLookup = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-
-            // Populate the dictionary
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                // ws.Name is the key, ws.TabId is the SheetId value
-                sheetIdLookup[ws.Name] = ws.TabId;
-            }
-
-            // Example usage: retrieve SheetId by worksheet name
-            string lookupName = "SecondSheet";
-            if (sheetIdLookup.TryGetValue(lookupName, out int sheetId))
-            {
-                Console.WriteLine($"Worksheet \"{lookupName}\" has SheetId (TabId): {sheetId}");
-            }
-            else
-            {
-                Console.WriteLine($"Worksheet \"{lookupName}\" not found in the lookup dictionary.");
-            }
-
-            // Save the workbook (optional)
-            workbook.Save("WorksheetIdLookupDemo.xlsx");
+            sheetIdLookup[ws.Name] = ws.TabId;
         }
+
+        // Demonstrate quick lookup
+        Console.WriteLine("Worksheet TabId lookup:");
+        foreach (var kvp in sheetIdLookup)
+        {
+            Console.WriteLine($"Name: {kvp.Key}, TabId: {kvp.Value}");
+        }
+
+        // Save the workbook (optional)
+        workbook.Save("SheetIdLookup.xlsx");
     }
 }

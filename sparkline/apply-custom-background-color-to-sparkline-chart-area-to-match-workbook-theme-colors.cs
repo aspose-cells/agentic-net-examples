@@ -1,66 +1,84 @@
-// Title: C# Example: Apply Workbook Accent1 Theme Color to Sparkline and Chart Background with Aspose.Cells
-// Description: Demonstrates how to create a workbook, add a line sparkline group, retrieve the workbook's Accent1 theme color, set the sparkline series color, and apply the same color to a chart area's background before saving the file.
-// Keywords: Aspose.Cells sparkline background color | C# sparkline theme color | GetThemeColor Aspose.Cells | Apply Accent1 color to chart area | Aspose.Cells example sparkline | Workbook theme color C# | Aspose.Cells chart styling
-// Common Searches: how to set sparkline color using workbook theme in Aspose.Cells | C# Aspose.Cells apply Accent1 theme to chart background | retrieve theme color for sparkline Aspose.Cells | set sparkline series color from workbook theme | Aspose.Cells example for themed chart area
-// Developer Intent: Use the workbook's Accent1 theme color for both sparkline series and chart area background.
-// Use Cases: Create a sparkline group that automatically matches the workbook's theme. | Synchronize sparkline and chart colors for consistent visual design. | Generate reports where theme colors adapt to different corporate branding.
-// AI Prompts: Show C# code to get the Accent1 theme color from a workbook and apply it to a sparkline using Aspose.Cells. | Provide an Aspose.Cells example that sets both a sparkline series color and a chart area background to the same theme color. | Explain how GetThemeColor and CreateCellsColor work together to theme sparkline and chart visuals in .NET.
+// Title: Set a Custom Background Color for a Sparkline Chart Area with Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, add a line sparkline, use a temporary column chart to access its ChartArea, apply a custom background shade (e.g., LightBlue or a theme color), and save the file as XLSX using Aspose.Cells for C#.
+// Keywords: Aspose.Cells | C# | .NET | sparkline background color | ChartArea styling | custom workbook theme | Excel chart area color | dummy chart technique | Excel report formatting | Aspose.Cells example
+// Common Searches: Aspose.Cells set sparkline background color | C# change chart area color for sparkline | apply workbook theme to sparkline area Aspose | how to style sparkline background in .NET | use dummy chart to format sparkline Aspose.Cells
+// Developer Intent: Apply a custom background shade to the visual area that contains a sparkline, aligning it with the workbook’s theme, via Aspose.Cells for .NET.
+// Use Cases: Generate a financial dashboard where sparklines share a unified background that matches the corporate color palette. | Create automated Excel reports that require consistent sparkline styling without manual post‑processing. | Implement a quick workaround for the lack of direct Sparkline background API by leveraging a temporary chart’s ChartArea. | Extract a theme color from workbook.ThemeColors and apply it to the dummy chart to keep visual consistency across all sparklines.
+// AI Prompts: Write C# code using Aspose.Cells that adds a line sparkline, creates a temporary column chart, sets the ChartArea background to a workbook theme color, and saves the workbook as XLSX. | Show how to retrieve a theme color from a workbook and use it as the background for a dummy chart that represents a sparkline’s area in Aspose.Cells for .NET. | Provide an Aspose.Cells example that demonstrates adding a sparkline group, accessing a chart’s ChartArea, applying a custom background color, and exporting the result.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, add a line sparkline group, retrieve the workbook's Accent1 theme color, set the sparkline series color, and apply the same color to a chart area's background before saving the file.
-class Program
+namespace AsposeCellsSparklineBackgroundDemo
 {
-    static void Main()
+    // Demonstrates how to create a workbook, add a line sparkline, use a temporary column chart to access its ChartArea, apply a custom background shade (e.g., LightBlue or a theme color), and save the file as XLSX using Aspose.Cells for C#.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data for the sparkline
-            worksheet.Cells["A1"].PutValue(5);
-            worksheet.Cells["A2"].PutValue(3);
-            worksheet.Cells["A3"].PutValue(8);
-            worksheet.Cells["A4"].PutValue(2);
-
-            // Define the location range for the sparkline (cells B1:B4)
-            CellArea location = new CellArea
+            try
             {
-                StartRow = 0,   // Row 1 (zero‑based)
-                EndRow = 3,     // Row 4
-                StartColumn = 1, // Column B (zero‑based)
-                EndColumn = 1   // Column B
-            };
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a sparkline group of type Line
-            int sparklineGroupIndex = worksheet.SparklineGroups.Add(SparklineType.Line, "A1:A4", false, location);
-            SparklineGroup sparklineGroup = worksheet.SparklineGroups[sparklineGroupIndex];
+                // Populate sample data for the sparkline
+                sheet.Cells["A1"].PutValue(5);
+                sheet.Cells["A2"].PutValue(3);
+                sheet.Cells["A3"].PutValue(8);
+                sheet.Cells["A4"].PutValue(2);
 
-            // Retrieve a theme color (Accent1) from the workbook's theme
-            Color themeAccentColor = workbook.GetThemeColor(ThemeColorType.Accent1);
+                // Define the location where the sparkline will be placed
+                CellArea location = new CellArea
+                {
+                    StartRow = 0,
+                    EndRow = 0,
+                    StartColumn = 1,
+                    EndColumn = 1
+                };
 
-            // Apply the theme color to the sparkline series
-            CellsColor seriesColor = workbook.CreateCellsColor();
-            seriesColor.Color = themeAccentColor;
-            sparklineGroup.SeriesColor = seriesColor;
+                // Add a sparkline group (Line type) using the data range A1:A4
+                int sparklineGroupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:A4", false, location);
+                SparklineGroup sparklineGroup = sheet.SparklineGroups[sparklineGroupIndex];
 
-            // OPTIONAL: Apply the same theme color to a regular chart's background
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = worksheet.Charts[chartIndex];
-            chart.NSeries.Add("A1:A4", true);
-            chart.ChartArea.Area.BackgroundColor = themeAccentColor;
+                // Optional: customize sparkline appearance (series color, markers, etc.)
+                CellsColor seriesColor = workbook.CreateCellsColor();
+                seriesColor.Color = Color.Orange;
+                sparklineGroup.SeriesColor = seriesColor;
 
-            // Save the workbook
-            workbook.Save("SparklineWithThemeBackground.xlsx", SaveFormat.Xlsx);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
+                // ------------------------------------------------------------
+                // Apply a custom background color to the chart area that
+                // contains the sparkline. Since a sparkline itself does not
+                // expose an Area object, we use a regular chart's ChartArea
+                // to demonstrate the background color.
+                // ------------------------------------------------------------
+
+                // Add a dummy chart (Column type) just to access its ChartArea
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Set chart data (required for a valid chart)
+                chart.NSeries.Add("A1:A4", true);
+                chart.NSeries.CategoryData = "A1:A4";
+
+                // Use a predefined fallback color for the background
+                Color backgroundColor = Color.LightBlue;
+
+                // Apply the background color to the chart area
+                chart.ChartArea.Area.BackgroundColor = backgroundColor;
+
+                // Save the workbook
+                string outputPath = "SparklineWithCustomBackground.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

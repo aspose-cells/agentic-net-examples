@@ -1,40 +1,39 @@
-// Title: Aspose.Cells C# – Enable 1904 Date System & Convert .NET DateTime to Excel Serial
-// Description: Step‑by‑step guide to turn on the 1904 date system in an Aspose.Cells workbook, transform a .NET DateTime into an Excel serial number with CellsHelper, apply a date format, and save the file.
-// Keywords: Aspose.Cells 1904 date system | C# workbook date base 1904 | Convert DateTime to Excel serial Aspose | CellsHelper GetDoubleFromDateTime | Excel legacy Mac date format | Date1904 property | Excel serial number conversion .NET | date number format Aspose.Cells
-// Common Searches: how to set 1904 date system in Aspose.Cells | convert .NET DateTime to Excel serial number using Aspose | C# enable 1904 date base for Excel workbooks | apply built‑in date format after using 1904 system Aspose.Cells | legacy Mac Excel date handling with Aspose.Cells
-// Developer Intent: Activate the 1904 date system and write .NET dates as Excel serial values in a C# workbook.
-// Use Cases: Produce files compatible with older Mac Excel versions that rely on the 1904 epoch. | Export .NET DateTime data while preserving legacy serial numbers for existing formulas. | Generate reports where all date arithmetic must follow the 1904 base to match external data sources.
-// AI Prompts: Show code to open an existing workbook and switch its date system to 1904 with Aspose.Cells. | Generate C# that converts a list of DateTime objects to 1904‑based Excel serial numbers and writes them to column B. | Explain how date calculations differ when wb.Settings.Date1904 is true in Aspose.Cells.
+// Title: Aspose.Cells for .NET – Enable 1904 Date System and Write Legacy Dates (C#)
+// Description: Create a new Workbook, activate the 1904 date system via Workbook.Settings.Date1904, convert a .NET DateTime to an Excel serial number with CellsHelper.GetDoubleFromDateTime, write the value to a cell, apply a built‑in date format, and save the file—ensuring compatibility with legacy Mac Excel date calculations.
+// Keywords: Aspose.Cells | C# | .NET | 1904 date system | Workbook.Settings.Date1904 | CellsHelper.GetDoubleFromDateTime | Excel serial date | legacy Mac Excel | date formatting | save workbook
+// Common Searches: Aspose.Cells enable 1904 date system | How to set 1904 date system in C# | Convert DateTime to Excel serial number 1904 Aspose | Legacy Mac Excel date compatibility Aspose.Cells | Set workbook date system to 1904 using Aspose | Apply date format after 1904 conversion Aspose.Cells
+// Developer Intent: Turn on the 1904 date system and write dates that respect it in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Generate workbooks compatible with older Mac Excel files that use the 1904 date base. | Create serial dates for legacy formulas that expect the 1904 calendar. | Export .NET DateTime values to Excel while preserving correct serial numbers. | Build templates where date formatting must follow the 1904 system. | Ensure cross‑platform date consistency when sharing files with Mac users.
+// AI Prompts: Write C# code with Aspose.Cells to enable the 1904 date system and insert a formatted date into cell A1. | Show how to convert a .NET DateTime to an Excel serial number using the 1904 flag via CellsHelper in Aspose.Cells. | Explain the steps to guarantee that formulas dependent on the 1904 date system evaluate correctly after saving the workbook.
 
 using System;
 using Aspose.Cells;
 
-// Step‑by‑step guide to turn on the 1904 date system in an Aspose.Cells workbook, transform a .NET DateTime into an Excel serial number with CellsHelper, apply a date format, and save the file.
+// Create a new Workbook, activate the 1904 date system via Workbook.Settings.Date1904, convert a .NET DateTime to an Excel serial number with CellsHelper.GetDoubleFromDateTime, write the value to a cell, apply a built‑in date format, and save the file—ensuring compatibility with legacy Mac Excel date calculations.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook instance
+        // Create a new workbook (lifecycle rule: create)
         Workbook wb = new Workbook();
 
-        // Enable the 1904 date system for the workbook
+        // Enable the 1904 date system for legacy formulas
         wb.Settings.Date1904 = true;
 
-        // Example: convert a .NET DateTime to Excel serial number using the 1904 system
-        DateTime sampleDate = new DateTime(2020, 1, 1);
-        double excelSerial = CellsHelper.GetDoubleFromDateTime(sampleDate, true);
-
-        // Write the serial value to a cell
+        // Example: write a date value that respects the 1904 system
         Worksheet sheet = wb.Worksheets[0];
         Cell cell = sheet.Cells["A1"];
-        cell.PutValue(excelSerial);
+        DateTime date = new DateTime(2000, 1, 1);
+        // Convert DateTime to Excel serial number using the 1904 flag
+        double serialDate = CellsHelper.GetDoubleFromDateTime(date, true);
+        cell.PutValue(serialDate);
 
-        // Apply a date number format so the value displays as a date
+        // Apply a standard date format to the cell
         Style style = cell.GetStyle();
         style.Number = 14; // Built‑in date format
         cell.SetStyle(style);
 
-        // Save the workbook to a file
+        // Save the workbook (lifecycle rule: save)
         wb.Save("1904DateSystem.xlsx");
     }
 }

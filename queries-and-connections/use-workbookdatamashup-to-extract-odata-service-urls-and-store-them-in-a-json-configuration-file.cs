@@ -1,103 +1,66 @@
+// Title: Extract OData URLs from Excel Power Query using Aspose.Cells Workbook.DataMashup (C#)
+// Description: Loads an Excel workbook with Aspose.Cells, reads the DataMashup to enumerate PowerQueryFormulas, applies a regex to each formula definition to capture HTTP/HTTPS OData service URLs, removes duplicates, and writes the list to a formatted JSON configuration file. The workbook can be saved afterwards if needed.
+// Keywords: Aspose.Cells | Workbook.DataMashup | C# | Power Query | OData URL extraction | Excel external connections | regex URL parsing | JSON export | DataMashup API | Excel automation
+// Common Searches: Aspose.Cells extract OData URLs from Power Query | C# read Workbook.DataMashup formulas | How to list external OData connections in an Excel file | Save extracted URLs to JSON with Aspose.Cells | Regex to find URLs in PowerQueryFormula definitions
+// Developer Intent: Retrieve all OData service endpoints referenced in an Excel workbook's Power Query formulas and store them in a JSON configuration file using Aspose.Cells.
+// Use Cases: Create an inventory of external OData sources for compliance auditing. | Generate a JSON manifest for downstream data‑integration pipelines. | Validate endpoint URLs before refreshing queries to enforce security policies.
+// AI Prompts: Write C# code that uses Aspose.Cells Workbook.DataMashup to collect unique OData URLs from Power Query formulas and output an indented JSON file. | Explain step‑by‑step how to apply a regular expression to PowerQueryFormula.FormulaDefinition to isolate HTTP/HTTPS URLs. | Suggest enhancements for handling duplicate URLs, trimming trailing characters, and logging extraction results.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
-using Aspose.Cells.ExternalConnections;
 using Aspose.Cells.QueryTables;
 
-namespace AsposeCellsODataExtractor
+namespace ODataUrlExtractor
 {
-    // Simple model to hold extracted OData URLs for JSON serialization
-    public class ODataConfig
+    // Loads an Excel workbook with Aspose.Cells, reads the DataMashup to enumerate PowerQueryFormulas, applies a regex to each formula definition to capture HTTP/HTTPS OData service URLs, removes duplicates, and writes the list to a formatted JSON configuration file. The workbook can be saved afterwards if needed.
+    class Program
     {
-        public List<string> Urls { get; set; } = new List<string>();
-    }
-
-    public class Program
-    {
-        public static void Main()
+        static void Main()
         {
-            // Path to the source workbook that may contain Power Query (OData) connections
-            string sourcePath = "source.xlsx";
+            // Path to the workbook that contains Power Query (OData) formulas
+            string sourcePath = "input.xlsx";
 
-            // Load the workbook (using the standard Aspose.Cells load rule)
+            // Load the workbook (create/load rule)
             Workbook workbook = new Workbook(sourcePath);
 
-            // Prepare a collection to hold discovered URLs
-            ODataConfig config = new ODataConfig();
-
-            // -----------------------------------------------------------------
-            // 1. Extract URLs from Power Query formulas (DataMashup.PowerQueryFormulas)
-            // -----------------------------------------------------------------
+            // Access mashup data which holds Power Query formulas
             DataMashup mashup = workbook.DataMashup;
+
+            // Collection to store discovered OData URLs
+            List<string> odataUrls = new List<string>();
+
             if (mashup != null && mashup.PowerQueryFormulas != null)
             {
+                // Iterate through each Power Query formula
                 foreach (PowerQueryFormula formula in mashup.PowerQueryFormulas)
                 {
-                    // The formula definition often contains the OData service URL.
-                    // Example: let Source = OData.Feed("https://services.odata.org/V4/Northwind/Northwind.svc/Products")
+                    // The formula definition may contain the OData service URL
                     string definition = formula.FormulaDefinition;
-                    if (!string.IsNullOrEmpty(definition))
+
+                    // Use a regular expression to extract URLs starting with http or https
+                    foreach (Match match in Regex.Matches(definition, @"https?://[^\s'\""]+"))
                     {
-                        // Simple extraction: look for text between double quotes after OData.Feed(
-                        int startIdx = definition.IndexOf("OData.Feed(", StringComparison.OrdinalIgnoreCase);
-                        if (startIdx >= 0)
+                        string url = match.Value.TrimEnd(';', ')'); // clean trailing characters
+                        if (!odataUrls.Contains(url))
                         {
-                            startIdx = definition.IndexOf('\"', startIdx);
-                            if (startIdx >= 0)
-                            {
-                                int endIdx = definition.IndexOf('\"', startIdx + 1);
-                                if (endIdx > startIdx)
-                                {
-                                    string url = definition.Substring(startIdx + 1, endIdx - startIdx - 1);
-                                    if (!config.Urls.Contains(url))
-                                    {
-                                        config.Urls.Add(url);
-                                    }
-                                }
-                            }
+                            odataUrls.Add(url);
                         }
                     }
                 }
             }
 
-            // -----------------------------------------------------------------
-            // 2. Extract URLs from external web query connections (DataConnections)
-            // -----------------------------------------------------------------
-            ExternalConnectionCollection connections = workbook.DataConnections;
-            if (connections != null)
-            {
-                foreach (ExternalConnection conn in connections)
-                {
-                    // Only WebQueryConnection objects have a Url property that can point to OData services
-                    if (conn is WebQueryConnection webConn && !string.IsNullOrEmpty(webConn.Url))
-                    {
-                        if (!config.Urls.Contains(webConn.Url))
-                        {
-                            config.Urls.Add(webConn.Url);
-                        }
-                    }
-                }
-            }
+            // Serialize the list of URLs to a JSON configuration file
+            string jsonOutput = JsonSerializer.Serialize(odataUrls, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText("odataUrls.json", jsonOutput);
 
-            // -----------------------------------------------------------------
-            // 3. Serialize the collected URLs to a JSON configuration file
-            // -----------------------------------------------------------------
-            string jsonOutputPath = "ODataConfig.json";
-            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
-            string json = JsonSerializer.Serialize(config, jsonOptions);
-            File.WriteAllText(jsonOutputPath, json);
+            // Optionally, save the workbook (save rule) if any modifications were made
+            workbook.Save("output.xlsx");
 
-            // -----------------------------------------------------------------
-            // 4. (Optional) Save the workbook if any modifications were made
-            // -----------------------------------------------------------------
-            // In this scenario we only read data, so saving is not required.
-            // However, to demonstrate the save rule, we could save a copy.
-            string destPath = "source_copy.xlsx";
-            workbook.Save(destPath);
-
-            Console.WriteLine($"Extracted {config.Urls.Count} OData URL(s) and saved to '{jsonOutputPath}'.");
+            Console.WriteLine("Extraction complete. URLs saved to odataUrls.json");
         }
     }
 }

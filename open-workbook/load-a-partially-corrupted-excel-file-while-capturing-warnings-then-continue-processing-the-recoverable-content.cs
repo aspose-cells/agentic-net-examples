@@ -1,80 +1,112 @@
-// Title: C# – Load a Partially Corrupted Excel Workbook with Warning Callback, RepairLoad & DataExtractLoad (Aspose.Cells)
-// Description: Demonstrates how to open a potentially damaged .xlsx file in .NET, capture each load warning via a custom IWarningCallback, enable RepairLoad and DataExtractLoad to recover usable data, skip unnecessary shapes, and read the first few cells from the recovered worksheet.
-// Keywords: Aspose.Cells | C# | .NET | load corrupted workbook | warning callback | RepairLoad | DataExtractLoad | IgnoreUselessShapes | CheckDataValid false | recoverable Excel data | GitHub example | openxlsx damaged file | Excel file repair
-// Common Searches: Aspose.Cells load corrupted xlsx with warnings | C# warning callback for Excel workbook load | Enable RepairLoad in Aspose.Cells | How to extract data from a damaged Excel file using Aspose | Skip shapes when opening a corrupted workbook Aspose.Cells
-// Developer Intent: Open a damaged Excel file, log all load warnings, activate repair and data‑extract modes, and continue processing the recovered content.
-// Use Cases: Log warning types and messages to diagnose file integrity issues. | Recover cell values from a partially corrupted sheet for further analysis. | Improve load performance on broken files by ignoring non‑essential shapes.
-// AI Prompts: Write C# code that opens a corrupted .xlsx with Aspose.Cells, uses a custom IWarningCallback to print warnings, enables RepairLoad and DataExtractLoad, and iterates over the first 10 rows of column B. | Explain how WarningCallback, IgnoreUselessShapes, and CheckDataValid affect the loading of a damaged workbook in Aspose.Cells. | Generate a GitHub‑style README snippet describing this example and its required NuGet packages.
+// Title: Load a Corrupted Excel Workbook in C# with Aspose.Cells – Capture Warnings and Recover Data
+// Description: This example shows how to open a partially damaged .xlsx file using Aspose.Cells LoadOptions, register a custom IWarningCallback to collect load warnings, ignore unnecessary shapes, bypass data‑validation checks, handle the FileCorrupted CellsException to obtain any recoverable Workbook, enable RepairLoad for further operations, iterate through worksheets to read available cells, and save the repaired file while listing all captured warnings.
+// Keywords: Aspose.Cells corrupted workbook | C# load damaged Excel | capture load warnings | custom IWarningCallback | ignore useless shapes | disable data validation | RepairLoad option | recover Excel data | CellsException FileCorrupted | save recovered workbook
+// Common Searches: how to open a corrupted xlsx with Aspose.Cells | Aspose.Cells load options for damaged Excel files | collect warnings while loading Excel in .NET | recover data from partially corrupted workbook Aspose | ignore shapes when loading corrupted Excel C#
+// Developer Intent: Open a partially corrupted Excel file, log all load warnings, and continue processing the recoverable content.
+// Use Cases: Log every warning generated during workbook loading for audit or debugging. | Extract a Workbook object from a FileCorrupted exception and read whatever data is still intact. | Enable RepairLoad to allow further manipulation and then save the repaired workbook to a new file.
+// AI Prompts: Generate C# code that uses Aspose.Cells LoadOptions with a custom IWarningCallback to open a corrupted .xlsx, capture warnings, and continue with the recovered Workbook. | Explain how to retrieve the Workbook from a CellsException when the file is corrupted and how to activate RepairLoad for subsequent operations. | Show the LoadOptions settings needed to ignore useless shapes and skip data‑validation checks while loading a damaged Excel workbook.
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace Example
+namespace AsposeCellsCorruptLoadDemo
 {
-    // Demonstrates how to open a potentially damaged .xlsx file in .NET, capture each load warning via a custom IWarningCallback, enable RepairLoad and DataExtractLoad to recover usable data, skip unnecessary shapes, and read the first few cells from the recovered worksheet.
+    // Custom warning callback that stores all warnings for later inspection
+    // This example shows how to open a partially damaged .xlsx file using Aspose.Cells LoadOptions, register a custom IWarningCallback to collect load warnings, ignore unnecessary shapes, bypass data‑validation checks, handle the FileCorrupted CellsException to obtain any recoverable Workbook, enable RepairLoad for further operations, iterate through worksheets to read available cells, and save the repaired file while listing all captured warnings.
     public class CustomWarningCallback : IWarningCallback
     {
-        // Called for each warning generated during load
+        public List<WarningInfo> Warnings { get; } = new List<WarningInfo>();
+
         public void Warning(WarningInfo warningInfo)
         {
-            Console.WriteLine($"Warning Type: {warningInfo.Type}, Description: {warningInfo.Description}");
+            // Store the warning
+            Warnings.Add(warningInfo);
+            // Optionally, write to console for immediate feedback
+            Console.WriteLine($"Warning: {warningInfo.Description}");
         }
     }
 
-    public class LoadCorruptedWorkbookDemo
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            string filePath = "corrupted.xlsx";
+            // Path to the partially corrupted Excel file
+            string inputPath = "corrupted.xlsx";
 
-            // Prevent FileNotFoundException
-            if (!File.Exists(filePath))
+            // Initialize the custom warning callback
+            var warningCallback = new CustomWarningCallback();
+
+            // Configure load options to capture warnings
+            LoadOptions loadOptions = new LoadOptions
             {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
+                WarningCallback = warningCallback,
+                // Ignoring useless shapes can help with corrupted files that contain junk shapes
+                IgnoreUselessShapes = true,
+                // Continue loading even if data validation errors are present
+                CheckDataValid = false
+            };
+
+            Workbook workbook = null;
 
             try
             {
-                // Set up warning callback
-                IWarningCallback warningCallback = new CustomWarningCallback();
-
-                // Configure load options
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    WarningCallback = warningCallback,
-                    IgnoreUselessShapes = true,
-                    CheckDataValid = false
-                };
-
                 // Load the workbook with the specified options
-                Workbook workbook = new Workbook(filePath, loadOptions);
-
-                // Enable repair and data‑extract modes
-                workbook.Settings.RepairLoad = true;
-                workbook.Settings.DataExtractLoad = true;
-
-                // Example processing: read first few cells from the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Console.WriteLine("First 5 cells in column A (recoverable content):");
-                for (int row = 0; row < 5; row++)
+                workbook = new Workbook(inputPath, loadOptions);
+            }
+            catch (CellsException ex) when (ex.Code == ExceptionType.FileCorrupted)
+            {
+                // The file is corrupted but Aspose.Cells may have loaded recoverable parts
+                Console.WriteLine("FileCorrupted exception caught. Attempting to continue with recovered content.");
+                // The workbook object may still be partially loaded; proceed if not null
+                if (ex.Data.Contains("Workbook") && ex.Data["Workbook"] is Workbook recoveredWorkbook)
                 {
-                    Console.WriteLine($"A{row + 1}: {sheet.Cells[row, 0].StringValue}");
+                    workbook = recoveredWorkbook;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                Console.WriteLine($"Unexpected error while loading workbook: {ex.Message}");
+                return;
             }
-        }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            LoadCorruptedWorkbookDemo.Run();
+            if (workbook == null)
+            {
+                Console.WriteLine("Workbook could not be loaded.");
+                return;
+            }
+
+            // Enable repair mode for subsequent operations
+            workbook.Settings.RepairLoad = true;
+
+            // Example processing: iterate through worksheets and print first cell values
+            Console.WriteLine("\nRecoverable content:");
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Console.WriteLine($"Worksheet: {sheet.Name}");
+                // Attempt to read the value of cell A1; if it fails, catch and continue
+                try
+                {
+                    var cellValue = sheet.Cells["A1"].Value;
+                    Console.WriteLine($"  A1 = {cellValue}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"  Unable to read A1: {ex.Message}");
+                }
+            }
+
+            // Optionally, save the recovered workbook to a new file
+            string outputPath = "recovered_output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"\nRecovered workbook saved to: {outputPath}");
+
+            // Display all captured warnings
+            Console.WriteLine("\nCaptured warnings:");
+            foreach (var warning in warningCallback.Warnings)
+            {
+                Console.WriteLine($"- Type: {warning.Type}, Description: {warning.Description}");
+            }
         }
     }
 }

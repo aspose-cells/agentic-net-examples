@@ -1,10 +1,10 @@
-// Title: Assign a Custom Calculation Monitor to Workbook.Settings.CalculationMonitor in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a class derived from AbstractCalculationMonitor, attach it to Workbook.Settings.CalculationMonitor, and run Workbook.CalculateFormula. The monitor logs cell coordinates before and after each calculation, reports original and new values, and stops processing when a circular reference is detected.
-// Keywords: Aspose.Cells | C# | .NET | custom calculation monitor | AbstractCalculationMonitor | Workbook.Settings.CalculationMonitor | formula calculation callbacks | circular reference detection | Excel automation logging | debugging formula evaluation
-// Common Searches: how to use a custom calculation monitor in Aspose.Cells C# | set Workbook.Settings.CalculationMonitor before loading workbook | log formula calculation steps with Aspose.Cells | stop calculation on circular reference Aspose.Cells | Aspose.Cells calculation monitor example
-// Developer Intent: Implement a custom monitor to receive before/after calculation events and to intercept circular references during Excel formula evaluation with Aspose.Cells.
-// Use Cases: Debug complex workbooks by tracing each cell's calculation order. | Create an audit trail that records original and newly calculated values. | Prevent infinite loops by aborting calculation when a circular reference is found.
-// AI Prompts: Show C# code that assigns MyCalculationMonitor to Workbook.Settings.CalculationMonitor before loading an Excel file with Aspose.Cells. | Explain how to log cell coordinates and value changes using AbstractCalculationMonitor in Aspose.Cells. | Compare using CalculationOptions.CalculationMonitor versus Workbook.Settings.CalculationMonitor for formula evaluation.
+// Title: Attach a Custom AbstractCalculationMonitor to an Aspose.Cells Workbook for Formula Calculation (C#)
+// Description: Demonstrates how to create a class that inherits from AbstractCalculationMonitor, assign it to Workbook.Settings.CalculationMonitor (or via CalculationOptions), run workbook.CalculateFormula, capture before/after callbacks, detect circular references, and save the updated file.
+// Keywords: Aspose.Cells | C# | AbstractCalculationMonitor | custom calculation monitor | formula calculation | circular reference detection | Workbook.CalculateFormula | calculation callbacks | Excel automation | performance logging
+// Common Searches: Aspose.Cells custom calculation monitor example | How to use AbstractCalculationMonitor in C# | Assign calculation monitor before workbook.CalculateFormula | Log cell calculation events with Aspose.Cells | Detect circular references using Aspose.Cells monitor
+// Developer Intent: Add a custom calculation monitor to a workbook and execute formula evaluation with real‑time callbacks.
+// Use Cases: Trace the start and end of each cell's calculation to diagnose performance bottlenecks. | Log original and new cell values after formula evaluation for audit trails. | Identify and handle circular references during spreadsheet processing.
+// AI Prompts: Generate C# code that sets Workbook.Settings.CalculationMonitor to a custom monitor before loading a workbook with Aspose.Cells. | Show how to redirect the monitor's console output to a file or logging framework. | Explain how to parse the IEnumerator passed to OnCircular to list the cells involved in a circular reference.
 
 using System;
 using System.Collections;
@@ -13,26 +13,26 @@ using Aspose.Cells;
 
 namespace AsposeCellsCustomMonitorDemo
 {
-    // Custom monitor implementation
-    // Demonstrates how to create a class derived from AbstractCalculationMonitor, attach it to Workbook.Settings.CalculationMonitor, and run Workbook.CalculateFormula. The monitor logs cell coordinates before and after each calculation, reports original and new values, and stops processing when a circular reference is detected.
+    // Custom monitor that inherits from AbstractCalculationMonitor
+    // Demonstrates how to create a class that inherits from AbstractCalculationMonitor, assign it to Workbook.Settings.CalculationMonitor (or via CalculationOptions), run workbook.CalculateFormula, capture before/after callbacks, detect circular references, and save the updated file.
     public class MyCalculationMonitor : AbstractCalculationMonitor
     {
         public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
         {
-            Console.WriteLine($"Before calculate - Sheet:{sheetIndex} Row:{rowIndex} Col:{columnIndex}");
+            Console.WriteLine($"Before calculating Sheet{sheetIndex}, Row{rowIndex}, Column{columnIndex}");
         }
 
         public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
         {
-            Console.WriteLine($"After calculate  - Sheet:{sheetIndex} Row:{rowIndex} Col:{columnIndex}");
-            Console.WriteLine($"  Original: {OriginalValue}, New: {CalculatedValue}, Changed: {ValueChanged}");
+            Console.WriteLine($"After calculating Sheet{sheetIndex}, Row{rowIndex}, Column{columnIndex}");
+            Console.WriteLine($"Original: {OriginalValue}, New: {CalculatedValue}, Changed: {ValueChanged}");
         }
 
         public override bool OnCircular(IEnumerator circularCellsData)
         {
             Console.WriteLine("Circular reference detected.");
-            // Return false to stop calculation when a circular reference is found
-            return false;
+            // Continue calculation despite circular reference
+            return true;
         }
     }
 
@@ -40,36 +40,43 @@ namespace AsposeCellsCustomMonitorDemo
     {
         static void Main()
         {
-            const string inputPath = "Input.xlsx";
-            const string outputPath = "Output.xlsx";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
-
             try
             {
-                // Create the custom monitor instance
+                // Create an instance of the custom calculation monitor
                 MyCalculationMonitor monitor = new MyCalculationMonitor();
 
-                // Prepare calculation options and assign the monitor
+                Workbook workbook;
+
+                // Ensure the input file exists; if not, create a simple workbook for demonstration
+                const string inputPath = "Input.xlsx";
+                if (!File.Exists(inputPath))
+                {
+                    workbook = new Workbook();
+                    Worksheet sheet = workbook.Worksheets[0];
+                    sheet.Cells["A1"].PutValue(10);
+                    sheet.Cells["A2"].PutValue(20);
+                    sheet.Cells["A3"].Formula = "=A1+A2";
+                    workbook.Save(inputPath);
+                }
+                else
+                {
+                    // Load the existing workbook
+                    workbook = new Workbook(inputPath);
+                }
+
+                // Prepare calculation options and attach the monitor
                 CalculationOptions calcOptions = new CalculationOptions
                 {
                     CalculationMonitor = monitor
                 };
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Perform formula calculation using the options that contain the monitor
+                // Perform formula calculation with the custom monitor active
                 workbook.CalculateFormula(calcOptions);
 
                 // Save the workbook after calculation
+                const string outputPath = "Output.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Calculation completed. Output saved to \"{outputPath}\".");
+                Console.WriteLine($"Calculation completed. Output saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {

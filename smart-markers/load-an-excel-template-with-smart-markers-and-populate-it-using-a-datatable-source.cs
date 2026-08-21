@@ -1,44 +1,46 @@
-// Title: C# – Populate an Excel template with smart markers from a DataTable using Aspose.Cells
-// Description: Loads a workbook that contains smart markers, creates a matching DataTable, assigns it as the data source to a WorkbookDesigner, processes the markers, and saves the filled workbook. Demonstrates end‑to‑end automation of Excel templates with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | smart markers | WorkbookDesigner | DataTable source | populate Excel template | process smart markers | Excel automation | template filling | generate report
-// Common Searches: Aspose.Cells C# load template with smart markers | How to fill smart markers from a DataTable | WorkbookDesigner SetDataSource example | Populate Excel template using Aspose.Cells | Smart markers C# sample code
-// Developer Intent: The developer needs to read an existing Excel file that contains smart markers, bind a DataTable to those markers, generate the final document, and save it programmatically.
-// Use Cases: Create employee directories by mapping DataTable rows to smart markers in a pre‑designed sheet. | Generate batch invoices where each record populates customer and order details via smart markers. | Automate HR onboarding forms by filling template placeholders with data pulled from a database.
-// AI Prompts: Show a C# snippet that reads a DataTable from SQL Server and uses WorkbookDesigner to replace smart markers in an Excel template. | Explain how to handle multiple DataTables with separate smart‑marker groups in the same workbook. | Provide code to set the output file name dynamically based on a column value from the DataTable when processing smart markers.
+// Title: Populate an Excel Template with Smart Markers from a DataTable in C# (Aspose.Cells)
+// Description: Learn how to load an Excel workbook that contains smart markers, bind a DataTable as the data source with WorkbookDesigner, process the markers, and save the populated file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | smart markers | C# | .NET | DataTable | WorkbookDesigner | Excel template | populate Excel | load workbook | process smart markers
+// Common Searches: Aspose.Cells load Excel template with smart markers C# | WorkbookDesigner set DataTable source example | populate smart markers from DataTable Aspose.Cells | C# smart markers tutorial Aspose.Cells
+// Developer Intent: Load an Excel template that contains smart markers and fill it using a DataTable as the data source.
+// Use Cases: Generate an employee directory by mapping a DataTable to smart markers in a pre‑designed workbook. | Create invoices where each row of a DataTable populates customer and item smart markers. | Produce department summary sheets by binding multiple DataTables to a single smart‑marker workbook.
+// AI Prompts: Write C# code that loads a smart‑marker Excel template, binds a DataSet with several DataTables to WorkbookDesigner, processes the markers, and saves the output file. | Explain how to bind a DataTable to Aspose.Cells WorkbookDesigner, apply custom number formats to smart markers, and skip rows when the data source is empty.
 
 using System;
 using System.Data;
 using Aspose.Cells;
 
-// Loads a workbook that contains smart markers, creates a matching DataTable, assigns it as the data source to a WorkbookDesigner, processes the markers, and saves the filled workbook. Demonstrates end‑to‑end automation of Excel templates with Aspose.Cells for .NET.
-class SmartMarkerExample
+namespace SmartMarkerExample
 {
-    static void Main()
+    // Learn how to load an Excel workbook that contains smart markers, bind a DataTable as the data source with WorkbookDesigner, process the markers, and save the populated file using Aspose.Cells for .NET.
+    class Program
     {
-        // Load the Excel template that contains smart markers (e.g., &=$Name, &=$Age, &=$Department)
-        Workbook workbook = new Workbook("TemplateWithSmartMarkers.xlsx");
+        static void Main()
+        {
+            // Load the Excel template that contains smart markers
+            Workbook workbook = new Workbook("TemplateWithSmartMarkers.xlsx");
 
-        // Create a DataTable that matches the smart marker fields
-        DataTable dt = new DataTable("Employees");
-        dt.Columns.Add("Name", typeof(string));
-        dt.Columns.Add("Age", typeof(int));
-        dt.Columns.Add("Department", typeof(string));
+            // Create and populate a DataTable that will serve as the data source
+            DataTable dataTable = new DataTable("Employees");
+            dataTable.Columns.Add("Name", typeof(string));
+            dataTable.Columns.Add("Age", typeof(int));
+            dataTable.Columns.Add("Department", typeof(string));
 
-        // Populate the DataTable with sample data
-        dt.Rows.Add("John Doe", 30, "Sales");
-        dt.Rows.Add("Jane Smith", 28, "Marketing");
-        dt.Rows.Add("Mike Johnson", 35, "Engineering");
+            dataTable.Rows.Add("John Doe", 30, "Sales");
+            dataTable.Rows.Add("Jane Smith", 28, "Marketing");
+            dataTable.Rows.Add("Mike Johnson", 35, "Engineering");
 
-        // Initialize WorkbookDesigner with the loaded workbook
-        WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            // Initialize WorkbookDesigner with the loaded workbook
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
 
-        // Set the DataTable as the data source for the smart markers
-        designer.SetDataSource(dt);
+            // Set the DataTable as the data source for smart markers
+            designer.SetDataSource(dataTable);
 
-        // Process the smart markers and fill the worksheet with data from the DataTable
-        designer.Process();
+            // Process the smart markers and populate the worksheet with data
+            designer.Process();
 
-        // Save the resulting workbook
-        workbook.Save("PopulatedOutput.xlsx");
+            // Save the populated workbook to a new file
+            workbook.Save("PopulatedOutput.xlsx");
+        }
     }
 }

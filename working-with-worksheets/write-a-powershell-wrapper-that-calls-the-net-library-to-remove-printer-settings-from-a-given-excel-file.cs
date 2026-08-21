@@ -1,10 +1,10 @@
-// Title: PowerShell Wrapper for Aspose.Cells .NET to Strip Printer Settings from Excel Workbooks
-// Description: A PowerShell‑based solution that invokes a compiled C# console app (or directly loads Aspose.Cells.dll) to load an Excel workbook, clear the PageSetup.PrinterSettings on every worksheet, and save the sanitized file. Ideal for automation, CI/CD pipelines, and secure distribution of Excel reports.
-// Keywords: Aspose.Cells PowerShell wrapper | remove printer settings Excel | clear worksheet printer configuration | Worksheet.PageSetup.PrinterSettings null | .NET Excel automation | PowerShell call .NET library | sanitize Excel files | CI/CD Excel cleanup | command‑line Excel printer removal | GitHub Aspose.Cells example
-// Common Searches: PowerShell script to remove printer settings from XLSX using Aspose.Cells | How to clear Excel printer configuration with .NET and PowerShell | Aspose.Cells example for stripping printer settings | Command line tool to sanitize Excel workbooks printer data | Load Aspose.Cells.dll in PowerShell and modify PageSetup
-// Developer Intent: Create a PowerShell utility that leverages the Aspose.Cells .NET library to delete all embedded printer settings from a specified Excel file, enabling easy command‑line or scripted execution.
-// Use Cases: Sanitize confidential Excel reports before sharing by removing printer metadata. | Integrate the wrapper into build or release pipelines to guarantee printer‑free workbooks. | Provide IT administrators a simple command‑line tool for bulk cleaning of Excel files on Windows servers.
-// AI Prompts: Generate a PowerShell script that uses Add-Type to load Aspose.Cells.dll and replicates the C# logic to set Worksheet.PageSetup.PrinterSettings to null for each sheet. | Write a PowerShell function Remove-ExcelPrinterSettings that accepts input and output paths, invokes the compiled RemovePrinterSettings.exe, and returns a success status. | Create a PowerShell one‑liner that calls the Aspose.Cells .NET API to open an XLSX file, clear printer settings on all worksheets, and save the result.
+// Title: PowerShell Wrapper for Aspose.Cells .NET to Strip Printer Settings from Excel Files
+// Description: A PowerShell‑compatible wrapper that invokes a compiled C# console app using Aspose.Cells for .NET. It loads an Excel workbook, clears the PageSetup.PrinterSettings on every worksheet, and saves the file to a new location. Includes argument validation, missing‑file checks, and automatic output‑folder creation.
+// Keywords: PowerShell wrapper | Aspose.Cells | remove printer settings | Excel workbook | PageSetup.PrinterSettings | C# console utility | automate Excel sanitization | CI/CD Excel processing | strip printer configuration | .NET Excel library
+// Common Searches: PowerShell script to clear printer settings in Excel using Aspose.Cells | How to remove stored printer configuration from .xlsx files | Aspose.Cells remove printer settings command line | Batch strip printer settings from Excel workbooks PowerShell | C# program to delete printer settings in Excel workbook
+// Developer Intent: Provide a PowerShell‑friendly way to call an Aspose.Cells .NET executable that removes all printer settings from an Excel workbook.
+// Use Cases: Sanitize confidential Excel reports before distribution by eliminating embedded printer configurations. | Integrate the wrapper into a CI/CD pipeline to ensure generated spreadsheets contain no printer metadata. | Run a scheduled PowerShell job that processes a folder of workbooks, stripping printer settings from each file.
+// AI Prompts: Create a PowerShell script that runs RemovePrinterSettings.exe with input and output paths and captures any errors. | Write a PowerShell function Remove-ExcelPrinterSettings that loads the Aspose.Cells assembly, clears PageSetup.PrinterSettings for each worksheet, and returns a success flag. | Generate PowerShell code to batch process all .xlsx files in a directory using the compiled Aspose.Cells printer‑setting remover.
 
 using System;
 using System.IO;
@@ -12,51 +12,53 @@ using Aspose.Cells;
 
 namespace RemovePrinterSettings
 {
-    // A PowerShell‑based solution that invokes a compiled C# console app (or directly loads Aspose.Cells.dll) to load an Excel workbook, clear the PageSetup.PrinterSettings on every worksheet, and save the sanitized file. Ideal for automation, CI/CD pipelines, and secure distribution of Excel reports.
+    // A PowerShell‑compatible wrapper that invokes a compiled C# console app using Aspose.Cells for .NET. It loads an Excel workbook, clears the PageSetup.PrinterSettings on every worksheet, and saves the file to a new location. Includes argument validation, missing‑file checks, and automatic output‑folder creation.
     class Program
     {
         static void Main(string[] args)
         {
-            // Expect exactly two arguments: input file and output file paths
+            // Expect exactly two arguments: input file path and output file path
             if (args.Length != 2)
             {
                 Console.WriteLine("Usage: RemovePrinterSettings <InputFile> <OutputFile>");
                 return;
             }
 
-            string inputPath = args[0];
-            string outputPath = args[1];
+            string inputFile = args[0];
+            string outputFile = args[1];
+
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Error: Input file '{inputFile}' does not exist.");
+                return;
+            }
 
             try
             {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Error: Input file not found: {inputPath}");
-                    return;
-                }
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(inputFile);
 
-                // Load the workbook from the input file
-                var workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets and clear printer settings
+                // Iterate through all worksheets and clear stored printer settings
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Setting PrinterSettings to null removes stored printer configuration
+                    // PageSetup.PrinterSettings is a byte[]; setting it to null removes the stored settings
                     sheet.PageSetup.PrinterSettings = null;
                 }
 
-                // Save the modified workbook to the output file
-                workbook.Save(outputPath);
+                // Ensure the directory for the output file exists
+                string outputDir = Path.GetDirectoryName(outputFile);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                // Release unmanaged resources
-                workbook.Dispose();
-
-                Console.WriteLine($"Printer settings removed successfully. Output saved to: {outputPath}");
+                // Save the modified workbook
+                workbook.Save(outputFile);
+                Console.WriteLine($"Printer settings have been removed and the file has been saved to '{outputFile}'.");
             }
             catch (Exception ex)
             {
-                // Catch any runtime exceptions and display a friendly message
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

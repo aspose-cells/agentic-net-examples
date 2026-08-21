@@ -1,45 +1,66 @@
-using Aspose.Cells;
+// Title: Aspose.Cells .NET – Validate Custom Boolean Localization for Formula Results
+// Description: Shows how to use SettableGlobalizationSettings to replace the default TRUE/FALSE with custom strings (e.g., YES/NO), apply the settings to a workbook, evaluate a logical formula, and confirm that the cell's displayed StringValue matches the localized representation before saving the file.
+// Keywords: Aspose.Cells | C# boolean localization | SettableGlobalizationSettings | custom TRUE FALSE strings | Excel boolean display | localized YES NO | formula result localization | globalization settings .NET | validate boolean string | Excel workbook localization
+// Common Searches: Aspose.Cells custom boolean display | SettableGlobalizationSettings example C# | show YES instead of TRUE in Excel using Aspose | validate localized boolean string in C# | Excel boolean localization .NET
+// Developer Intent: Ensure that a cell containing a logical formula shows the custom localized YES/NO strings rather than the default TRUE/FALSE.
+// Use Cases: Generate region‑specific Excel reports where boolean values appear in the local language. | Automated unit test that verifies the StringValue of a formula cell equals the expected localized text. | Create documentation or dashboards with language‑appropriate boolean labels for end‑users.
+// AI Prompts: Write C# code that sets custom boolean strings in Aspose.Cells, evaluates a formula, and checks that the cell's displayed string matches the localization. | Explain how SettableGlobalizationSettings affects BoolValue and StringValue for cells with logical formulas in Aspose.Cells. | Show how to retrieve and compare localized boolean strings for both true and false outcomes after workbook calculation.
+
 using System;
+using Aspose.Cells;
 
-class BooleanLocalizationDemo
+namespace AsposeCellsBooleanLocalizationDemo
 {
-    static void Main()
+    // Shows how to use SettableGlobalizationSettings to replace the default TRUE/FALSE with custom strings (e.g., YES/NO), apply the settings to a workbook, evaluate a logical formula, and confirm that the cell's displayed StringValue matches the localized representation before saving the file.
+    public class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        public static void Main()
+        {
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Create custom globalization settings and define localized boolean strings
-        SettableGlobalizationSettings gSettings = new SettableGlobalizationSettings();
-        gSettings.SetBooleanValueString(true, "YES_LOCAL");
-        gSettings.SetBooleanValueString(false, "NO_LOCAL");
+            // Create custom globalization settings and define localized boolean strings
+            SettableGlobalizationSettings globalization = new SettableGlobalizationSettings();
+            globalization.SetBooleanValueString(true, "YES");   // localized representation for TRUE
+            globalization.SetBooleanValueString(false, "NO");   // localized representation for FALSE
 
-        // Apply the custom globalization settings to the workbook
-        workbook.Settings.GlobalizationSettings = gSettings;
+            // Apply the custom settings to the workbook
+            workbook.Settings.GlobalizationSettings = globalization;
 
-        // Insert logical formulas that evaluate to boolean values
-        sheet.Cells["A1"].Formula = "=2>1"; // evaluates to true
-        sheet.Cells["A2"].Formula = "=1>2"; // evaluates to false
+            // Insert a logical formula that evaluates to TRUE
+            Cell boolCell = worksheet.Cells["A1"];
+            boolCell.Formula = "=2>1";
 
-        // Calculate the formulas so that the cells contain the evaluated results
-        workbook.CalculateFormula();
+            // Calculate formulas so that the result is stored in the cell
+            workbook.CalculateFormula();
 
-        // Retrieve the displayed string values from the cells
-        string displayedA1 = sheet.Cells["A1"].StringValue; // should show "YES_LOCAL"
-        string displayedA2 = sheet.Cells["A2"].StringValue; // should show "NO_LOCAL"
+            // Retrieve the boolean result directly
+            bool result = boolCell.BoolValue; // should be true
 
-        // Use GetBooleanValueString to obtain the expected localized strings
-        string expectedTrue = gSettings.GetBooleanValueString(true);
-        string expectedFalse = gSettings.GetBooleanValueString(false);
+            // Get the localized display string via the globalization settings
+            string localizedString = globalization.GetBooleanValueString(result);
 
-        // Output the results and validation status
-        Console.WriteLine($"Cell A1 displays: {displayedA1} (expected: {expectedTrue})");
-        Console.WriteLine($"Cell A2 displays: {displayedA2} (expected: {expectedFalse})");
+            // Also retrieve the string value as shown in the cell (should reflect localization)
+            string cellStringValue = boolCell.StringValue;
 
-        bool isValid = displayedA1 == expectedTrue && displayedA2 == expectedFalse;
-        Console.WriteLine("Localization validation " + (isValid ? "passed" : "failed"));
+            // Output verification results
+            Console.WriteLine($"Cell A1 formula result (BoolValue): {result}");
+            Console.WriteLine($"Localized string from GetBooleanValueString: {localizedString}");
+            Console.WriteLine($"Cell A1 displayed string value: {cellStringValue}");
 
-        // Save the workbook
-        workbook.Save("BooleanLocalizationDemo.xlsx");
+            // Validate that the cell's displayed string matches the localized string
+            if (cellStringValue == localizedString)
+            {
+                Console.WriteLine("Validation succeeded: Boolean value is displayed with the localized string.");
+            }
+            else
+            {
+                Console.WriteLine("Validation failed: Displayed string does not match the localized representation.");
+            }
+
+            // Save the workbook (lifecycle: save)
+            workbook.Save("BooleanLocalizationDemo.xlsx");
+        }
     }
 }

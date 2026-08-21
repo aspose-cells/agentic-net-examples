@@ -1,91 +1,82 @@
-// Title: Import and Apply a VBA Project Certificate to Another Workbook with Aspose.Cells (.NET)
-// Description: Load a signed workbook, extract its VBA project's CertRawData, create a DigitalSignature, and sign a different macro‑enabled workbook using Aspose.Cells for C#.
-// Keywords: Aspose.Cells VBA certificate import | C# copy VBA digital signature | sign macro-enabled workbook programmatically | VbaProject CertRawData extraction | Excel VBA digital signature .NET | import VBA certificate Aspose | automated Excel macro signing
-// Common Searches: how to copy a VBA certificate from one Excel file to another using Aspose.Cells | C# code to extract CertRawData from a signed VBA project | programmatically sign a .xlsm workbook with an existing VBA certificate | Aspose.Cells import VBA project certificate example | digital signature for Excel macro projects in .NET
-// Developer Intent: Extract a VBA project's certificate from a signed workbook and reuse it to sign another workbook's VBA project.
-// Use Cases: Standardize corporate VBA signing across multiple macro‑enabled reports. | Automate signing of generated Excel files that contain macros, preserving the original authority. | Migrate existing signed VBA projects to new workbooks without losing the digital signature.
-// AI Prompts: Write C# code that reads CertRawData from a signed VBA project with Aspose.Cells and signs another workbook's VBA project using the same certificate. | Explain how to handle password‑protected VBA certificates when importing them via Aspose.Cells, including error handling best practices. | Provide a step‑by‑step guide to verify a source VBA project is signed before extracting its certificate and applying it to a target workbook.
+// Title: Import a VBA Project Certificate and Sign Another Workbook with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to load a signed macro‑enabled workbook, extract its VBA project certificate via VbaProject.CertRawData, create an X509Certificate2 and DigitalSignature, and apply the same certificate to sign a different workbook's VBA project using Aspose.Cells.
+// Keywords: Aspose.Cells VBA certificate import | C# copy VBA digital signature | VbaProject.CertRawData | DigitalSignature Aspose.Cells | sign macro-enabled workbook programmatically | X509Certificate2 Excel VBA | batch sign Excel macros | Excel VBA project signing
+// Common Searches: how to copy a VBA project certificate between Excel files with Aspose.Cells | C# extract VBA certificate raw data from signed workbook | use Aspose.Cells to sign another workbook with an existing VBA certificate | import VBA digital signature in .NET | Aspose.Cells VbaProject.Sign example
+// Developer Intent: Retrieve a VBA project's digital certificate from a signed workbook and reuse it to sign a different workbook's VBA project programmatically.
+// Use Cases: Apply a corporate VBA signing certificate across multiple macro‑enabled workbooks without user interaction. | Automate batch signing of newly generated workbooks using a trusted certificate stored in an existing file. | Consolidate several signed workbooks into a master file while preserving the original signing authority.
+// AI Prompts: Generate C# code that extracts a VBA project's certificate from a signed workbook using Aspose.Cells and signs another workbook with it. | Explain how to handle password‑protected VBA certificates when importing them with Aspose.Cells and X509Certificate2. | Provide robust error‑handling patterns for signing a VBA project with an imported digital certificate in Aspose.Cells.
 
 using System;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 using Aspose.Cells.DigitalSignatures;
 
-namespace AsposeCellsVbaCertificateImport
+// Demonstrates how to load a signed macro‑enabled workbook, extract its VBA project certificate via VbaProject.CertRawData, create an X509Certificate2 and DigitalSignature, and apply the same certificate to sign a different workbook's VBA project using Aspose.Cells.
+class ImportVbaCertificate
 {
-    // Load a signed workbook, extract its VBA project's CertRawData, create a DigitalSignature, and sign a different macro‑enabled workbook using Aspose.Cells for C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string sourcePath = "SignedSource.xlsm";
+            const string targetPath = "Target.xlsm";
+            const string outputPath = "TargetSigned.xlsm";
+
+            // Verify source workbook exists
+            if (!File.Exists(sourcePath))
             {
-                // Path to the workbook that already contains a signed VBA project (source)
-                string sourcePath = "SourceSigned.xlsm";
-
-                // Verify source file exists
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file not found: '{sourcePath}'.");
-                    return;
-                }
-
-                // Load the source workbook
-                Workbook sourceWorkbook = new Workbook(sourcePath);
-
-                // Access its VBA project
-                VbaProject sourceVba = sourceWorkbook.VbaProject;
-
-                // Ensure the source VBA project is signed
-                if (!sourceVba.IsSigned)
-                {
-                    Console.WriteLine("Source VBA project is not signed. Exiting.");
-                    return;
-                }
-
-                // Retrieve the raw certificate data from the signed VBA project
-                byte[] certificateRawData = sourceVba.CertRawData;
-
-                // Password used to protect the original certificate (replace with actual password)
-                string certificatePassword = "your_certificate_password";
-
-                // Path to the target workbook that will receive the same signing authority
-                string targetPath = "TargetUnsigned.xlsm";
-
-                // Verify target file exists
-                if (!File.Exists(targetPath))
-                {
-                    Console.WriteLine($"Target file not found: '{targetPath}'.");
-                    return;
-                }
-
-                // Load the target workbook (it may or may not already have a VBA project)
-                Workbook targetWorkbook = new Workbook(targetPath);
-
-                // Access the VBA project of the target workbook
-                VbaProject targetVba = targetWorkbook.VbaProject;
-
-                // Create a DigitalSignature object using the raw certificate data
-                DigitalSignature importedSignature = new DigitalSignature(
-                    certificateRawData,          // certificate bytes
-                    certificatePassword,        // password for the certificate
-                    "Imported VBA Signature",   // optional comment
-                    DateTime.Now);              // signing time
-
-                // Sign the target VBA project with the imported certificate
-                targetVba.Sign(importedSignature);
-
-                // Save the signed target workbook
-                string outputPath = "TargetSigned.xlsm";
-                targetWorkbook.Save(outputPath, SaveFormat.Xlsm);
-
-                Console.WriteLine($"Target workbook signed and saved to '{outputPath}'.");
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Verify target workbook exists
+            if (!File.Exists(targetPath))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Target file not found: {targetPath}");
+                return;
             }
+
+            // Load the workbook that already has a signed VBA project (source)
+            Workbook sourceWorkbook = new Workbook(sourcePath);
+
+            // Retrieve the raw certificate data from the source VBA project
+            byte[] certificateData = sourceWorkbook.VbaProject.CertRawData;
+
+            // Ensure the source workbook is actually signed
+            if (certificateData == null || certificateData.Length == 0)
+            {
+                Console.WriteLine("Source workbook does not contain a signed VBA project.");
+                return;
+            }
+
+            // Load the certificate from the raw data.
+            // Replace "sourceCertPassword" with the actual password of the source certificate if required.
+            string sourceCertPassword = "sourceCertPassword";
+            X509Certificate2 certificate = new X509Certificate2(certificateData, sourceCertPassword);
+
+            // Create a DigitalSignature object using the imported certificate
+            DigitalSignature importedSignature = new DigitalSignature(
+                certificate,
+                "Imported VBA Signature",
+                DateTime.Now);
+
+            // Load the target workbook that will receive the imported certificate
+            Workbook targetWorkbook = new Workbook(targetPath);
+
+            // Sign the target workbook's VBA project with the imported digital signature
+            VbaProject targetVbaProject = targetWorkbook.VbaProject;
+            targetVbaProject.Sign(importedSignature);
+
+            // Save the target workbook; it will now be signed with the same certificate as the source
+            targetWorkbook.Save(outputPath, SaveFormat.Xlsm);
+
+            Console.WriteLine("Certificate imported and VBA project signed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

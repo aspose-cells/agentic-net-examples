@@ -1,10 +1,10 @@
-// Title: C# Aspose.Cells – Load Workbook from Byte Array, Edit Chart X/Y Axis Titles & Tick Marks, Return Updated Byte Array
-// Description: Shows how to read an Excel file from a byte[] via MemoryStream, locate the first worksheet’s first chart, set new titles and visibility for the category (X) and value (Y) axes, configure major/minor tick marks, enable automatic major unit scaling, and write the workbook back to a byte[] using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# chart axis modification | modify chart axis title | byte array workbook | MemoryStream Excel | category axis title | value axis title | tick mark customization | automatic major unit scaling | load workbook from stream | save workbook to stream | Excel chart customization .NET | ASP.NET Core Excel processing | Azure Functions Excel chart
-// Common Searches: Aspose.Cells change chart axis title C# | load Excel file from byte array Aspose | update chart axes in memory stream | save modified workbook to byte array Aspose.Cells | set chart tick marks programmatically .NET | automatic scaling for chart axes Aspose
-// Developer Intent: Load an Excel workbook from a byte array, modify the first chart’s X and Y axis titles and tick‑mark settings, and obtain the edited workbook as a byte array.
-// Use Cases: Generate a financial report on a web server, adjust chart axis labels before returning the file through a REST API. | Store Excel dashboards in a database, edit axis formatting on‑the‑fly for a BI portal, and stream the updated file to the client. | Accept user‑uploaded spreadsheets in an ASP.NET Core service, correct chart axis titles for compliance, and provide the corrected file for download. | Automate chart styling in Azure Functions that process Excel files uploaded to Blob storage.
-// AI Prompts: Write C# code that reads an Excel workbook from a byte[] using Aspose.Cells, changes the first chart’s category and value axis titles, sets major/minor tick marks, enables automatic major unit scaling, and returns the workbook as a byte[]. | Provide error‑handling best practices for modifying chart axes when the workbook may lack worksheets or charts, using Aspose.Cells in .NET. | Show how to verify that axis title and tick‑mark changes were applied by inspecting the chart object after saving the workbook to a MemoryStream.
+// Title: Modify Excel Chart Axes from a Byte Array with Aspose.Cells for .NET
+// Description: Loads an Excel workbook from a byte[] using a MemoryStream, accesses the first worksheet and its first chart, updates the category and value axis titles, sets major tick marks to outside, optionally defines the value axis range, then saves the workbook back to a byte[] in XLSX format.
+// Keywords: Aspose.Cells | C# | .NET | chart axis modification | load workbook from byte array | save workbook to byte array | Excel chart formatting | memory stream | set axis titles | tick mark style | axis range
+// Common Searches: Aspose.Cells change chart axis title programmatically | load Excel file from byte[] and edit chart | save modified Excel workbook to byte array C# | set chart tick marks Aspose.Cells .NET | adjust chart axis range using Aspose.Cells
+// Developer Intent: Edit the axis properties of the first chart in a workbook that is read from a byte array and return the updated workbook as a byte array.
+// Use Cases: Server‑side processing of uploaded Excel files to rename chart axes before sending the file back to the client. | Dynamic report generation where axis titles and ranges are calculated from data and the result is streamed via a web API. | Document conversion pipelines that need to modify chart formatting without writing intermediate files to disk.
+// AI Prompts: Create a C# method that receives a byte[] of an Excel file, changes the first chart's category and value axis titles, sets major tick marks to outside, defines a value axis range of 0‑100, and returns the modified workbook as a byte[]. | Add robust error handling to the chart‑axis modification routine: check for the existence of charts, log a warning if none are found, and handle unexpected exceptions gracefully. | Extend the ModifyChartAxes function to iterate through all worksheets and update every chart's axis titles and ranges based on supplied parameters.
 
 using System;
 using System.IO;
@@ -13,81 +13,81 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsExample
 {
-    // Shows how to read an Excel file from a byte[] via MemoryStream, locate the first worksheet’s first chart, set new titles and visibility for the category (X) and value (Y) axes, configure major/minor tick marks, enable automatic major unit scaling, and write the workbook back to a byte[] using Aspose.Cells for .NET.
+    // Loads an Excel workbook from a byte[] using a MemoryStream, accesses the first worksheet and its first chart, updates the category and value axis titles, sets major tick marks to outside, optionally defines the value axis range, then saves the workbook back to a byte[] in XLSX format.
     public class ChartAxisModifier
     {
-        /// <param name="excelData">Input Excel file bytes.</param>
-        /// <returns>Modified Excel file bytes.</returns>
-        public static byte[] ModifyChartAxes(byte[] excelData)
+        /// <param name="inputExcel">The input Excel file bytes.</param>
+        /// <returns>Byte array of the modified workbook.</returns>
+        public static byte[] ModifyChartAxes(byte[] inputExcel)
         {
-            try
+            // Load the workbook from the input stream
+            using (MemoryStream inputStream = new MemoryStream(inputExcel))
             {
-                using (MemoryStream inputStream = new MemoryStream(excelData))
+                Workbook workbook = new Workbook(inputStream);
+
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Ensure there is at least one chart to modify
+                if (worksheet.Charts.Count > 0)
                 {
-                    Workbook workbook = new Workbook(inputStream);
-
-                    if (workbook.Worksheets.Count == 0)
-                        throw new InvalidOperationException("The workbook contains no worksheets.");
-
-                    Worksheet worksheet = workbook.Worksheets[0];
-
-                    if (worksheet.Charts.Count == 0)
-                        throw new InvalidOperationException("No charts found in the first worksheet.");
-
+                    // Get the first chart
                     Chart chart = worksheet.Charts[0];
 
-                    // Modify Category (X) axis.
-                    chart.CategoryAxis.Title.Text = "Modified X Axis";
-                    chart.CategoryAxis.Title.IsVisible = true;
+                    // Modify axis titles
+                    chart.CategoryAxis.Title.Text = "New Category Axis";
+                    chart.ValueAxis.Title.Text = "New Value Axis";
+
+                    // Set major tick marks for both axes
                     chart.CategoryAxis.MajorTickMark = TickMarkType.Outside;
-                    chart.CategoryAxis.MinorTickMark = TickMarkType.None;
-
-                    // Modify Value (Y) axis.
-                    chart.ValueAxis.Title.Text = "Modified Y Axis";
-                    chart.ValueAxis.Title.IsVisible = true;
                     chart.ValueAxis.MajorTickMark = TickMarkType.Outside;
-                    chart.ValueAxis.MinorTickMark = TickMarkType.None;
 
-                    // Automatic scaling.
-                    chart.ValueAxis.IsAutomaticMajorUnit = true;
-                    chart.CategoryAxis.IsAutomaticMajorUnit = true;
-
-                    using (MemoryStream outputStream = workbook.SaveToStream())
-                    {
-                        return outputStream.ToArray();
-                    }
+                    // Optionally set axis range (example values)
+                    chart.ValueAxis.MinValue = 0;
+                    chart.ValueAxis.MaxValue = 100;
                 }
-            }
-            catch
-            {
-                // Propagate exception to caller.
-                throw;
+
+                // Save the modified workbook to a memory stream as XLSX
+                using (MemoryStream outputStream = new MemoryStream())
+                {
+                    workbook.Save(outputStream, SaveFormat.Xlsx);
+                    return outputStream.ToArray();
+                }
             }
         }
     }
 
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        // Entry point required for compilation
+        public static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
             try
             {
+                // Determine input and output file paths
+                string inputPath = args.Length > 0 ? args[0] : "input.xlsx";
+                string outputPath = args.Length > 1 ? args[1] : "output_modified.xlsx";
+
+                // Verify input file exists
                 if (!File.Exists(inputPath))
                 {
                     Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
+                // Read input workbook bytes
                 byte[] inputBytes = File.ReadAllBytes(inputPath);
-                byte[] modifiedBytes = ChartAxisModifier.ModifyChartAxes(inputBytes);
-                File.WriteAllBytes(outputPath, modifiedBytes);
-                Console.WriteLine($"Modified workbook saved to {outputPath}");
+
+                // Modify chart axes
+                byte[] resultBytes = ChartAxisModifier.ModifyChartAxes(inputBytes);
+
+                // Write the modified workbook to the output file
+                File.WriteAllBytes(outputPath, resultBytes);
+                Console.WriteLine($"Modified workbook saved to: {outputPath}");
             }
             catch (Exception ex)
             {
+                // Log any unexpected errors
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }

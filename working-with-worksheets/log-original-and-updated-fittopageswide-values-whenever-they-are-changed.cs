@@ -1,60 +1,47 @@
-// Title: Log FitToPagesWide Changes in Aspose.Cells for .NET
-// Description: Shows how to read, modify, and log the FitToPagesWide property of a worksheet's PageSetup with Aspose.Cells for .NET, printing values before and after each change and then saving the workbook.
-// Keywords: Aspose.Cells | FitToPagesWide | PageSetup | C# | .NET | worksheet pagination | property logging | console output | workbook save
-// Common Searches: Aspose.Cells log FitToPagesWide value | C# record page setup changes Aspose.Cells | how to output original and new FitToPagesWide | track pagination settings in Aspose.Cells workbook | save workbook after changing FitToPagesWide
-// Developer Intent: The developer wants to display the original FitToPagesWide setting and each subsequent value whenever the property is updated.
-// Use Cases: Debug page‑layout scaling by printing FitToPagesWide before and after adjustments. | Create an audit trail of pagination settings for compliance reporting. | Verify that dynamic page‑width scaling is applied correctly prior to saving the file.
-// AI Prompts: Generate a reusable C# method that logs the previous and new FitToPagesWide values whenever the property is set on a Worksheet. | Provide code to capture FitToPagesWide changes for all worksheets in a workbook and export the change log to a CSV file. | Explain how to integrate FitToPagesWide logging into a larger Aspose.Cells processing pipeline that also modifies other PageSetup options.
+// Title: C# – Log FitToPagesWide changes in Aspose.Cells worksheet PageSetup
+// Description: Demonstrates how to read the default FitToPagesWide setting of a worksheet, output the original value, modify it using the FitToPagesWide property and the SetFitToPages method, log each new value, and save the workbook as an Excel file.
+// Keywords: Aspose.Cells | C# | FitToPagesWide | PageSetup | SetFitToPages | log page scaling | worksheet print settings | track changes
+// Common Searches: Aspose.Cells log FitToPagesWide value | C# get default FitToPagesWide | change FitToPagesWide and capture previous value | SetFitToPages example Aspose.Cells | how to audit worksheet page setup in .NET
+// Developer Intent: Capture the initial FitToPagesWide setting and record each modification made to the worksheet's print scaling.
+// Use Cases: Audit printing configuration before and after scaling adjustments. | Generate a change history for dynamic report layouts that alter page width. | Validate batch updates of page setup across multiple worksheets.
+// AI Prompts: Create a C# routine that writes the original and updated FitToPagesWide values to a log file with timestamps. | Show how to wrap FitToPagesWide changes in an event handler that records every modification for a worksheet. | Explain the difference between setting FitToPagesWide directly and using SetFitToPages, including how to log both outcomes.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsFitToPagesWideLogger
 {
-    // Shows how to read, modify, and log the FitToPagesWide property of a worksheet's PageSetup with Aspose.Cells for .NET, printing values before and after each change and then saving the workbook.
-    public class FitToPagesWideLoggingDemo
+    // Demonstrates how to read the default FitToPagesWide setting of a worksheet, output the original value, modify it using the FitToPagesWide property and the SetFitToPages method, log each new value, and save the workbook as an Excel file.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook (lifecycle: create)
-                Workbook workbook = new Workbook();
+            // Create a new workbook (creation rule)
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Get the PageSetup object
-                PageSetup pageSetup = worksheet.PageSetup;
+            // Get the PageSetup object
+            PageSetup pageSetup = worksheet.PageSetup;
 
-                // Log the original FitToPagesWide value (default is 1)
-                Console.WriteLine($"Original FitToPagesWide: {pageSetup.FitToPagesWide}");
+            // Log the original FitToPagesWide value (default is 1)
+            int originalFitToPagesWide = pageSetup.FitToPagesWide;
+            Console.WriteLine($"Original FitToPagesWide: {originalFitToPagesWide}");
 
-                // Change the FitToPagesWide value
-                pageSetup.FitToPagesWide = 2;
+            // Change the FitToPagesWide value using the property
+            pageSetup.FitToPagesWide = 2;
 
-                // Log the updated value
-                Console.WriteLine($"Updated FitToPagesWide: {pageSetup.FitToPagesWide}");
+            // Log the updated FitToPagesWide value
+            int updatedFitToPagesWide = pageSetup.FitToPagesWide;
+            Console.WriteLine($"Updated FitToPagesWide (property): {updatedFitToPagesWide}");
 
-                // Change it again to demonstrate multiple logs
-                int previousValue = pageSetup.FitToPagesWide;
-                pageSetup.FitToPagesWide = 3;
-                Console.WriteLine($"FitToPagesWide changed from {previousValue} to {pageSetup.FitToPagesWide}");
+            // Alternatively, change the value using SetFitToPages method
+            pageSetup.SetFitToPages(3, pageSetup.FitToPagesTall);
+            Console.WriteLine($"Updated FitToPagesWide (SetFitToPages): {pageSetup.FitToPagesWide}");
 
-                // Save the workbook (lifecycle: save)
-                workbook.Save("FitToPagesWideLoggingDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
+            // Save the workbook (save rule)
+            workbook.Save("FitToPagesWideLogDemo.xlsx");
         }
     }
 }

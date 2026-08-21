@@ -1,40 +1,46 @@
-// Title: How to Retrieve Worksheet Shapes with Aspose.Cells for .NET (C#)
-// Description: This example shows how to load or create a workbook, access a specific worksheet, obtain its ShapeCollection via the worksheet.Shapes property, loop through each shape to read its type and name, and finally save the file. The code works with Aspose.Cells for .NET in C#.
-// Keywords: Aspose.Cells C# | worksheet shapes .NET | ShapeCollection Aspose | list Excel shapes | enumerate worksheet shapes | Aspose.Cells retrieve shapes | C# Excel shape iteration | Aspose.Cells API worksheet.Shapes | Excel shape properties C# | Aspose.Cells example
-// Common Searches: Aspose.Cells get all shapes from a worksheet | C# retrieve ShapeCollection in Excel file | How to list shapes in an Excel sheet using Aspose | Iterate over worksheet shapes Aspose.Cells .NET | Access shape type and name with Aspose.Cells
-// Developer Intent: Fetch the Shapes collection of a worksheet so it can be inspected, filtered, or modified programmatically.
-// Use Cases: Log every shape’s type and name for audit purposes. | Locate and remove unwanted pictures or charts by name. | Adjust position, size, or formatting of shapes in bulk.
-// AI Prompts: Write C# code that loads an existing workbook and deletes all picture shapes from the first worksheet using Aspose.Cells. | Provide an example that changes the fill color of every rectangle shape after retrieving the ShapeCollection. | Create a method that returns a dictionary of shape names and their corresponding types for a given worksheet.
+// Title: Aspose.Cells .NET – Retrieve Worksheet Shapes Collection and Add a Rectangle
+// Description: Demonstrates how to access the Shapes collection of a worksheet in Aspose.Cells for .NET, enumerate existing shapes, add a new rectangle shape, and save the workbook.
+// Keywords: Aspose.Cells Shapes .NET | worksheet.Shapes collection | ShapeCollection C# example | iterate worksheet shapes | add rectangle Aspose.Cells | Aspose.Cells shape manipulation | C# Aspose.Cells shape API
+// Common Searches: How to get shapes from a worksheet using Aspose.Cells .NET | Aspose.Cells enumerate shapes C# | Add rectangle shape to Excel with Aspose.Cells | Aspose.Cells ShapeCollection example | C# code to list worksheet shapes Aspose
+// Developer Intent: Access and work with the Shapes collection of a specific worksheet to read, modify, or add shapes.
+// Use Cases: List all shapes on a worksheet and read their Type and Name. | Insert a rectangle shape at a defined row/column with custom dimensions. | Update a workbook after adding or modifying shapes.
+// AI Prompts: Write C# code that obtains the ShapeCollection from a worksheet, loops through each shape, and prints its Type and Name using Aspose.Cells. | Show how to add a rectangle shape at row 2, column 2 with height 100 and width 200, then save the workbook with Aspose.Cells. | Explain how to filter shapes by Type after retrieving the ShapeCollection from a worksheet in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsShapesDemo
 {
-    // This example shows how to load or create a workbook, access a specific worksheet, obtain its ShapeCollection via the worksheet.Shapes property, loop through each shape to read its type and name, and finally save the file. The code works with Aspose.Cells for .NET in C#.
-    class RetrieveShapesDemo
+    // Demonstrates how to access the Shapes collection of a worksheet in Aspose.Cells for .NET, enumerate existing shapes, add a new rectangle shape, and save the workbook.
+    class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook(); // new workbook; replace with new Workbook("input.xlsx") to load
+            Workbook workbook = new Workbook(); // creates an empty workbook
 
-            // Access the first worksheet (or any selected worksheet)
+            // Access the first worksheet (you can select any worksheet by index or name)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Retrieve the Shapes collection from the worksheet
+            // Retrieve the ShapeCollection from the selected worksheet
             ShapeCollection shapes = worksheet.Shapes;
 
-            // Example: iterate through all shapes and output basic info
+            // Example: iterate through existing shapes (if any) for further processing
             for (int i = 0; i < shapes.Count; i++)
             {
                 Shape shape = shapes[i];
                 Console.WriteLine($"Shape {i}: Type={shape.Type}, Name={shape.Name}");
+                // Additional processing can be done here
             }
 
-            // Save the workbook if any modifications were made
-            workbook.Save("Output.xlsx");
+            // (Optional) Add a shape to demonstrate that the collection is functional
+            // shapes.AddRectangle(upperLeftRow, top, upperLeftColumn, left, height, width);
+            // Example:
+            shapes.AddRectangle(2, 0, 2, 0, 100, 200);
+
+            // Save the workbook to verify changes (if needed)
+            workbook.Save("ShapesDemo.xlsx");
         }
     }
 }

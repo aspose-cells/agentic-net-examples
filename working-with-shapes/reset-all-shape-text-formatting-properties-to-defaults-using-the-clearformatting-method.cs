@@ -1,71 +1,48 @@
-// Title: Reset Shape Text Formatting to Default with ClearFormatting in Aspose.Cells for .NET
-// Description: Learn how to revert a shape's text styling to the workbook defaults using the Shape.Font.ClearFormatting() method in Aspose.Cells for C#. The example adds a rectangle, applies custom font settings, clears them, and saves the workbook.
-// Keywords: Aspose.Cells ClearFormatting | shape text reset .NET | Aspose.Cells shape font defaults | C# Aspose.Cells shape formatting | reset shape font properties | Aspose.Cells API ClearFormatting method
-// Common Searches: Aspose.Cells clear shape font formatting | reset shape text to default in C# | how to use ClearFormatting on shape font Aspose.Cells | remove custom font from shape Aspose.Cells .NET | default font for shape text Aspose.Cells
-// Developer Intent: Revert all font attributes of a worksheet shape to the default settings using Aspose.Cells.
-// Use Cases: Undo temporary styling on a shape before applying a new theme. | Standardize multiple shapes by clearing custom font attributes in a report generator. | Validate that font resets work by logging shape.Font properties after ClearFormatting.
-// AI Prompts: Generate C# code that adds a rectangle shape, sets custom font properties, then calls shape.Font.ClearFormatting() and saves the workbook. | Explain step‑by‑step how Shape.Font.ClearFormatting() restores default font name, size, style, and color in Aspose.Cells. | Compare manual font property assignment with using ClearFormatting for resetting shape text formatting in Aspose.Cells.
+// Title: Clear Shape Text Formatting to Default with Aspise.Cells for .NET
+// Description: Shows how to add a rectangle shape, apply custom text styling (red color, 14‑pt size, bold) and then revert all text formatting to the default appearance using the ClearFormatting (or TextBody.Clear) method in Aspose.Cells for .NET.
+// Keywords: Aspose.Cells clear shape text formatting | Aspose.Cells reset shape font | ClearFormatting shape Aspose.Cells | Shape TextOptions reset .NET | Aspose.Cells TextBody.Clear | C# remove shape text style | default shape text Aspose.Cells | Aspose.Cells shape formatting API
+// Common Searches: how to clear shape text formatting Aspose.Cells C# | reset shape font to default Aspose.Cells | ClearFormatting method for shape text Aspose.Cells | remove custom text style from worksheet shape | Aspose.Cells shape TextBody.Clear example
+// Developer Intent: Reset a worksheet shape's text formatting to the default style.
+// Use Cases: Reusing a shape after custom styling by clearing previous font settings. | Ensuring consistent text appearance across multiple shapes in a generated workbook. | Applying a theme‑based default style to shape text before adding dynamic content.
+// AI Prompts: Generate C# code that adds a shape, sets custom TextOptions, then clears all formatting with ClearFormatting in Aspose.Cells. | Explain the difference between Shape.TextBody.Clear and ClearFormatting for resetting shape text styles. | Provide a step‑by‑step tutorial for reverting shape text to default formatting in Aspose.Cells for .NET.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsShapeFormattingReset
+// Shows how to add a rectangle shape, apply custom text styling (red color, 14‑pt size, bold) and then revert all text formatting to the default appearance using the ClearFormatting (or TextBody.Clear) method in Aspose.Cells for .NET.
+class ResetShapeTextFormatting
 {
-    // Learn how to revert a shape's text styling to the workbook defaults using the Shape.Font.ClearFormatting() method in Aspose.Cells for C#. The example adds a rectangle, applies custom font settings, clears them, and saves the workbook.
-    public class ResetShapeTextFormatting
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
             Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 100, 200, 0);
+            shape.Text = "Sample Text";
 
-            // Set some initial text and formatting for demonstration
-            shape.Text = "Formatted Text Example";
+            // Apply custom text formatting
+            TextOptions textOpts = shape.TextOptions;
+            textOpts.Color = Color.Red;
+            textOpts.Size = 14;
+            textOpts.IsBold = true;
 
-            // Apply custom font settings to the whole shape text
-            shape.Font.Name = "Arial";
-            shape.Font.Size = 14;
-            shape.Font.IsBold = true;
-            shape.Font.IsItalic = true;
-            shape.Font.Color = Color.Red;
+            // Reset all text formatting to defaults by clearing font settings
+            // In newer Aspose.Cells versions, TextBody itself is a FontSettingCollection
+            shape.TextBody.Clear();
 
-            // Reset all text formatting properties to their defaults
-            shape.Font.Name = "Calibri";          // default font name
-            shape.Font.Size = 11;                 // default font size
-            shape.Font.IsBold = false;
-            shape.Font.IsItalic = false;
-            shape.Font.Color = Color.Black;      // default font color
-
-            // Verify that formatting has been reset
-            Console.WriteLine($"Font Name after reset: {shape.Font.Name}");
-            Console.WriteLine($"Font Size after reset: {shape.Font.Size}");
-            Console.WriteLine($"IsBold after reset: {shape.Font.IsBold}");
-            Console.WriteLine($"IsItalic after reset: {shape.Font.IsItalic}");
-            Console.WriteLine($"Font Color after reset: {shape.Font.Color}");
-
-            // Save the workbook to a file
-            string outputPath = "ShapeTextFormattingReset.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Save the workbook
+            workbook.Save("ResetShapeTextFormatting.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

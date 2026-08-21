@@ -1,10 +1,10 @@
-// Title: C# – Replace “Draft” with “Final” in a Named Range using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, retrieves a defined named range (e.g., PublishRange), parses its RefersTo formula to identify the worksheet and address, iterates every cell in the range, swaps any occurrence of the word “Draft” with “Final”, and saves the modified file. Includes checks for missing files, undefined names, and malformed formulas.
-// Keywords: Aspose.Cells | C# replace text | named range | Excel workbook | .NET | PublishRange | bulk cell update | replace Draft with Final | cell iteration | RefersTo parsing | Excel automation
-// Common Searches: replace text in named range Aspose.Cells | C# change all Draft cells to Final in Excel | how to get RefersTo address from named range .NET | iterate over cells in a specific range using Aspose.Cells | update placeholder values in Excel with Aspose.Cells | error handling for missing named range Aspose.Cells
-// Developer Intent: Swap every occurrence of the word “Draft” for “Final” inside a specific named range before publishing the workbook.
-// Use Cases: Finalize status labels in a publishing range prior to report distribution | Automate cleanup of draft markers across a predefined area of a spreadsheet | Prepare a template workbook for external stakeholders by converting draft tags to final tags | Integrate into a CI pipeline that validates and finalizes Excel assets | Support multi‑sheet workbooks where only a named range needs text replacement
-// AI Prompts: Generate C# code with Aspose.Cells that finds a named range, parses its RefersTo property, iterates all cells, and replaces the substring 'Draft' with 'Final'. | Explain how to safely handle missing named ranges and malformed RefersTo formulas when performing bulk text replacement in Aspose.Cells. | Provide a step‑by‑step guide to bulk‑replace a word in a defined Excel range using Aspose.Cells for .NET, including error handling and performance tips.
+// Title: Replace "Draft" with "Final" in a named range using Aspose.Cells for .NET (C#)
+// Description: Loads an Excel template, locates the named range "PublishRange", parses its RefersTo address, creates a Range object, swaps every occurrence of the word "Draft" with "Final" in string cells, and saves the result as "Published.xlsx".
+// Keywords: Aspose.Cells replace text named range | C# update Excel cells Aspose | replace Draft Final Aspose.Cells | named range string replacement .NET | Excel workbook text replace Aspose
+// Common Searches: Aspose.Cells replace word in named range C# | How to change text in a specific Excel named range using .NET | C# replace Draft with Final in Excel range Aspose | Programmatically edit cells inside a named range Aspose.Cells
+// Developer Intent: Swap every "Draft" occurrence for "Final" within the cells of a defined named range and persist the changes to a new workbook.
+// Use Cases: Prepare a publish‑ready copy of a template by converting draft markers to final text in a designated range. | Automate the finalization step of a report section that is isolated by a named range before distribution. | Batch‑process status flags or version labels across a predefined area of a workbook as part of a data pipeline.
+// AI Prompts: Write C# code with Aspose.Cells that finds a named range and replaces a substring in all string cells. | Explain how to extract the worksheet name and address from a named range's RefersTo property in Aspose.Cells. | Suggest robust error‑handling patterns when modifying cell values inside a named range with Aspose.Cells.
 
 using System;
 using System.IO;
@@ -12,88 +12,75 @@ using Aspose.Cells;
 
 namespace ReplaceDraftInNamedRange
 {
-    // Loads an Excel workbook, retrieves a defined named range (e.g., PublishRange), parses its RefersTo formula to identify the worksheet and address, iterates every cell in the range, swaps any occurrence of the word “Draft” with “Final”, and saves the modified file. Includes checks for missing files, undefined names, and malformed formulas.
+    // Loads an Excel template, locates the named range "PublishRange", parses its RefersTo address, creates a Range object, swaps every occurrence of the word "Draft" with "Final" in string cells, and saves the result as "Published.xlsx".
     class Program
     {
         static void Main()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            const string templatePath = "Template.xlsx";
+            const string outputPath = "Published.xlsx";
+            const string rangeName = "PublishRange";
 
-            // Verify input file exists
-            if (!File.Exists(inputPath))
+            // Verify template file exists
+            if (!File.Exists(templatePath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Template file '{templatePath}' not found.");
                 return;
             }
 
             try
             {
-                // Load the workbook that contains the named range (e.g., "PublishRange")
-                Workbook workbook = new Workbook(inputPath);
+                // Load the workbook (lifecycle rule: load)
+                Workbook workbook = new Workbook(templatePath);
 
                 // Retrieve the named range definition
-                // Assumes the named range is already defined in the workbook
-                Name publishRangeName = workbook.Worksheets.Names["PublishRange"];
-                if (publishRangeName == null)
+                Name namedRange = workbook.Worksheets.Names[rangeName];
+                if (namedRange == null)
                 {
-                    Console.WriteLine("Named range 'PublishRange' not found.");
+                    Console.WriteLine($"Named range '{rangeName}' not found.");
                     return;
                 }
 
-                // The RefersTo property returns a formula like "=Sheet1!$A$1:$B$10"
-                string refersTo = publishRangeName.RefersTo;
-                if (refersTo.StartsWith("="))
-                    refersTo = refersTo.Substring(1); // remove leading '='
-
-                // Split sheet name and address
+                // The RefersTo string looks like "=Sheet1!$A$1:$C$10"
+                string refersTo = namedRange.RefersTo.TrimStart('=');
                 int exclPos = refersTo.IndexOf('!');
                 if (exclPos < 0)
                 {
-                    Console.WriteLine("Invalid RefersTo format for named range.");
+                    Console.WriteLine("Invalid RefersTo format.");
                     return;
                 }
 
                 string sheetName = refersTo.Substring(0, exclPos);
-                string rangeAddress = refersTo.Substring(exclPos + 1);
+                string address = refersTo.Substring(exclPos + 1);
 
                 // Get the worksheet that contains the range
                 Worksheet ws = workbook.Worksheets[sheetName];
                 if (ws == null)
                 {
-                    Console.WriteLine($"Worksheet \"{sheetName}\" not found.");
+                    Console.WriteLine($"Worksheet '{sheetName}' not found.");
                     return;
                 }
 
-                // Create a Range object for the address (use fully qualified name to avoid ambiguity)
-                Aspose.Cells.Range range = ws.Cells.CreateRange(rangeAddress);
+                // Create the Range object from the address (use fully qualified type to avoid ambiguity)
+                Aspose.Cells.Range range = ws.Cells.CreateRange(address);
 
-                // Iterate through all cells in the range and replace "Draft" with "Final"
-                int firstRow = range.FirstRow;
-                int firstColumn = range.FirstColumn;
-                int rowCount = range.RowCount;
-                int columnCount = range.ColumnCount;
-
-                for (int i = 0; i < rowCount; i++)
+                // Iterate through each cell in the range and replace "Draft" with "Final"
+                foreach (Cell cell in range)
                 {
-                    for (int j = 0; j < columnCount; j++)
+                    if (cell.Type == CellValueType.IsString)
                     {
-                        Cell cell = ws.Cells[firstRow + i, firstColumn + j];
-                        if (cell.Type == CellValueType.IsString)
+                        string text = cell.StringValue;
+                        if (text.Contains("Draft"))
                         {
-                            string text = cell.StringValue;
-                            if (text.Contains("Draft"))
-                            {
-                                // Replace the word "Draft" with "Final"
-                                cell.PutValue(text.Replace("Draft", "Final"));
-                            }
+                            string newText = text.Replace("Draft", "Final");
+                            cell.PutValue(newText);
                         }
                     }
                 }
 
-                // Save the modified workbook
+                // Save the modified workbook (lifecycle rule: save)
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved as \"{outputPath}\".");
+                Console.WriteLine($"Workbook saved as '{outputPath}'.");
             }
             catch (Exception ex)
             {

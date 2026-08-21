@@ -1,10 +1,10 @@
-// Title: Export an Excel cell formula to LaTeX and embed it in an HTML paragraph with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, writes the formula "=SUM(A1:B1)" to cell C5, adds an equation shape at the same location, copies the formula text into the shape, converts it to LaTeX using ToLaTeX(), wraps the result in a <p> tag, and saves the HTML paragraph to a file. The workbook is also saved for reference.
-// Keywords: Aspose.Cells | C# | .NET | ToLaTeX | Excel formula to LaTeX | export formula as HTML | equation shape | cell C5 | SUM formula | HTML paragraph | LaTeX conversion | Excel automation
-// Common Searches: convert Excel formula to LaTeX C# Aspose.Cells | export cell formula as HTML paragraph | ToLaTeX example for .NET | how to add equation shape in Aspose.Cells | save LaTeX output to HTML file
-// Developer Intent: Generate a LaTeX string from a worksheet formula and write it inside an HTML <p> element using Aspose.Cells for .NET.
-// Use Cases: Build web reports that display Excel calculations as rendered LaTeX equations. | Automate documentation pipelines that extract formulas from workbooks and embed them in HTML pages. | Create printable HTML content with LaTeX‑formatted equations for scientific or financial publications.
-// AI Prompts: Show how to iterate over a range of cells and write each formula as a separate LaTeX paragraph in one HTML file. | Provide code that saves the LaTeX output to a .tex file instead of embedding it in HTML. | Explain how to adjust the size and position of the equation shape before calling ToLaTeX() for optimal LaTeX rendering.
+// Title: Convert Excel Cell Formula to LaTeX and Embed in HTML with Aspose.Cells (C#)
+// Description: Shows how to read the formula in cell C5, place it in a textbox shape, obtain its EquationNode, convert the node to a LaTeX string via ToLaTeX(), wrap the string in an HTML <p> element, and save both the HTML file and the workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | ToLaTeX | Excel formula to LaTeX | EquationNode | textbox shape | HTML export | LaTeX conversion | cell C5 | programmatic Excel | document automation
+// Common Searches: Aspose.Cells convert formula to LaTeX C# | ToLaTeX example with EquationNode | Export Excel formula as LaTeX HTML | Create equation node from textbox shape Aspose.Cells | Save LaTeX string to HTML file using Aspose
+// Developer Intent: Extract the formula from cell C5, transform it into LaTeX, and embed the result in an HTML paragraph.
+// Use Cases: Generate LaTeX snippets for technical documentation directly from Excel calculations. | Produce web‑ready reports that display spreadsheet formulas as formatted equations. | Automate conversion of Excel logic into LaTeX for scientific publishing or e‑learning platforms.
+// AI Prompts: Write C# code that reads a formula from a given cell, converts it to LaTeX with Aspose.Cells, and writes the output into an HTML file. | Explain the role of EquationNode and the ToLaTeX() method when converting a textbox shape equation. | Suggest ways to obtain an EquationNode without adding a temporary textbox shape.
 
 using System;
 using System.IO;
@@ -12,40 +12,45 @@ using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Equations;
 
-// This example creates a workbook, writes the formula "=SUM(A1:B1)" to cell C5, adds an equation shape at the same location, copies the formula text into the shape, converts it to LaTeX using ToLaTeX(), wraps the result in a <p> tag, and saves the HTML paragraph to a file. The workbook is also saved for reference.
-class ExportFormulaToLaTeX
+namespace AsposeCellsFormulaToLaTeX
 {
-    static void Main()
+    // Shows how to read the formula in cell C5, place it in a textbox shape, obtain its EquationNode, convert the node to a LaTeX string via ToLaTeX(), wrap the string in an HTML <p> element, and save both the HTML file and the workbook using Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set a sample formula in cell C5
-        worksheet.Cells["C5"].Formula = "=SUM(A1:B1)";
+            // Put a sample formula into cell C5
+            worksheet.Cells["C5"].Formula = "=A1+B1";
 
-        // Add an equation shape near cell C5 (parameters: topRow, top, leftColumn, left, height, width)
-        TextBox equationShape = worksheet.Shapes.AddEquation(worksheet.Cells["C5"].Row, 0,
-                                                            worksheet.Cells["C5"].Column, 0,
-                                                            100, 300);
+            // Retrieve the formula string from cell C5
+            string excelFormula = worksheet.Cells["C5"].Formula; // e.g., "=A1+B1"
 
-        // Retrieve the equation node from the shape
-        EquationNode equationNode = equationShape.GetEquationParagraph();
+            // Add a temporary textbox shape to hold the formula as an equation
+            // Parameters: topRow, top, leftColumn, left, height, width
+            TextBox textBox = worksheet.Shapes.AddTextBox(4, 0, 4, 0, 200, 50);
 
-        // Assign the cell formula text to the equation shape (as plain text)
-        // This allows the ToLaTeX method to generate a LaTeX representation of the text.
-        equationShape.Text = worksheet.Cells["C5"].Formula;
+            // Set the textbox text to the Excel formula.
+            // Aspose will treat this as an equation paragraph.
+            textBox.Text = excelFormula;
 
-        // Convert the equation node to LaTeX
-        string latexExpression = equationNode.ToLaTeX();
+            // Get the equation paragraph (EquationNode) from the textbox
+            EquationNode equationNode = textBox.GetEquationParagraph();
 
-        // Embed the LaTeX expression in an HTML paragraph
-        string htmlParagraph = $"<p>{latexExpression}</p>";
+            // Convert the equation node to LaTeX using ToLaTeX()
+            string latexExpression = equationNode != null ? equationNode.ToLaTeX() : string.Empty;
 
-        // Write the HTML paragraph to a file
-        File.WriteAllText("FormulaLaTeX.html", htmlParagraph);
+            // Embed the LaTeX expression in an HTML paragraph
+            string htmlContent = $"<p>{latexExpression}</p>";
 
-        // Optionally, save the workbook (not required for the HTML output)
-        workbook.Save("ExportFormulaToLaTeX.xlsx");
+            // Save the HTML content to a file
+            File.WriteAllText("FormulaLaTeX.html", htmlContent);
+
+            // Optionally, save the workbook to verify the setup (lifecycle: save)
+            workbook.Save("FormulaDemo.xlsx");
+        }
     }
 }

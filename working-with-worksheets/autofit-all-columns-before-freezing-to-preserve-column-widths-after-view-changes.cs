@@ -1,40 +1,41 @@
-// Title: Auto‑Fit Columns Before Freezing Panes with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, fills cells with varied text, calls AutoFitColumns to size every column, then freezes the top two rows and left two columns at cell C3, preserving column widths, and saves the file as AutoFitAndFreeze.xlsx.
-// Keywords: Aspose.Cells AutoFitColumns C# | FreezePanes preserve column width | auto fit then freeze panes Aspose.Cells | C# spreadsheet column sizing | Aspose.Cells column width retention
-// Common Searches: auto fit columns before freeze panes Aspose.Cells | preserve column width when using FreezePanes .NET | C# Aspose.Cells AutoFitColumns example | why call AutoFitColumns before FreezePanes | freeze top rows and columns after auto fit
-// Developer Intent: Automatically size all worksheet columns based on content, then lock header rows and columns without altering the calculated widths.
-// Use Cases: Generating reports where column widths must stay consistent after freezing header rows/columns. | Exporting data to Excel templates that require optimal column sizing before applying FreezePanes. | Creating reusable spreadsheet layouts that keep column dimensions intact during user navigation.
-// AI Prompts: Write C# code using Aspose.Cells to auto‑fit every column, then freeze the first two rows and columns while keeping the column widths unchanged. | Explain the importance of calling AutoFitColumns before FreezePanes in Aspose.Cells and show a short example. | Provide step‑by‑step instructions to adjust column widths, apply FreezePanes, and save the workbook with Aspose.Cells for .NET.
+// Title: C# Example: Auto‑Fit All Columns Then Freeze Panes with Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, populate cells, call Worksheet.AutoFitColumns() to size every column to its content, and then apply Worksheet.FreezePanes() so the calculated widths stay fixed when scrolling. The file is saved as an Excel workbook.
+// Keywords: Aspose.Cells C# | AutoFitColumns | FreezePanes | preserve column width | Excel column autosize | worksheet freeze panes .NET | dynamic column width | Excel export C# | Aspose.Cells example | auto fit before freeze
+// Common Searches: auto fit columns before freeze panes Aspose.Cells | keep column widths after freezing rows C# | Aspose.Cells AutoFitColumns then FreezePanes sample | C# Excel column autosize and freeze header | how to preserve column width when freezing panes
+// Developer Intent: Adjust column widths automatically before locking rows/columns so the layout remains unchanged during scrolling.
+// Use Cases: Generating reports where column sizes adapt to data and the header row stays visible. | Building spreadsheet templates that maintain consistent column widths across devices after freezing panes. | Exporting data to Excel with dynamic column sizing and a frozen top row/first column for improved readability.
+// AI Prompts: Write C# code using Aspose.Cells to auto‑fit every column and then freeze the first row and column, ensuring widths are retained. | Explain why AutoFitColumns must be called before FreezePanes in Aspose.Cells and show a complete example. | Create a reusable method that receives a Workbook and a freeze‑pane configuration, auto‑fits all columns on each worksheet, and applies the freeze settings.
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, fills cells with varied text, calls AutoFitColumns to size every column, then freezes the top two rows and left two columns at cell C3, preserving column widths, and saves the file as AutoFitAndFreeze.xlsx.
-class AutoFitAndFreezeDemo
+// Demonstrates how to create a workbook, populate cells, call Worksheet.AutoFitColumns() to size every column to its content, and then apply Worksheet.FreezePanes() so the calculated widths stay fixed when scrolling. The file is saved as an Excel workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook (lifecycle rule: create)
         Workbook workbook = new Workbook();
 
         // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate sample data
-        sheet.Cells["A1"].PutValue("Short");
-        sheet.Cells["B1"].PutValue("This is a longer text that should cause column B to expand");
-        sheet.Cells["C1"].PutValue("Medium length");
-        sheet.Cells["A2"].PutValue("Another row with a very very long text that will affect column A width");
-        sheet.Cells["B2"].PutValue(12345);
-        sheet.Cells["C2"].PutValue(DateTime.Now);
+        // Populate some sample data to demonstrate column width changes
+        worksheet.Cells["A1"].PutValue("Short");
+        worksheet.Cells["B1"].PutValue("This is a considerably longer piece of text that should cause the column to expand");
+        worksheet.Cells["C1"].PutValue("Medium length");
+        worksheet.Cells["A2"].PutValue("Another short");
+        worksheet.Cells["B2"].PutValue("Another very long text entry that will affect column B width");
+        worksheet.Cells["C2"].PutValue("Text");
 
-        // Auto‑fit all columns before freezing panes to preserve column widths
-        sheet.AutoFitColumns();
+        // Auto‑fit all columns before freezing panes (feature rule: AutoFitColumns)
+        worksheet.AutoFitColumns();
 
-        // Freeze panes at cell C3 (row index 2, column index 2) with 2 rows and 2 columns frozen
-        sheet.FreezePanes(2, 2, 2, 2);
+        // Freeze panes at cell B2 (row index 1, column index 1) with 1 frozen row and 1 frozen column
+        // (feature rule: FreezePanes)
+        worksheet.FreezePanes(1, 1, 1, 1);
 
-        // Save the workbook
-        workbook.Save("AutoFitAndFreeze.xlsx");
+        // Save the workbook (lifecycle rule: save)
+        workbook.Save("AutoFitAndFreezeDemo.xlsx");
     }
 }

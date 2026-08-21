@@ -1,51 +1,53 @@
-// Title: Aspose.Cells for .NET – Set hh:mm:ss 24‑hour time format on a cell (C#)
-// Description: This C# example creates a workbook, writes a DateTime value (14:30:45) to cell A1, defines a style whose number format is "hh:mm:ss", applies the style, and saves the file as CustomTimeFormatDemo.xlsx using Aspose.Cells.
-// Keywords: Aspose.Cells | C# time format | hh:mm:ss Excel | custom number format .NET | format cell as time | Excel 24 hour display | Aspose.Cells example | GitHub Aspose.Cells C#
-// Common Searches: C# Aspose.Cells set cell time format | how to display hh:mm:ss in Excel with Aspose | apply custom number format to Excel cell .NET | Aspose.Cells time only formatting | save workbook with time format C#
-// Developer Intent: I need to present a DateTime value in an Excel cell using a 24‑hour clock (hh:mm:ss) while keeping the underlying value unchanged.
-// Use Cases: Generating production shift logs where each entry must show hour‑minute‑second. | Exporting telemetry timestamps for analytics dashboards that require a fixed 24‑hour display. | Creating timetable sheets for transportation schedules that need consistent time formatting across locales. | Automating report files where downstream systems parse time strings in hh:mm:ss format.
-// AI Prompts: Write C# code that formats an entire column with hh:mm:ss using Aspose.Cells and keeps the style after the workbook is opened in Excel. | Demonstrate how to combine a custom time pattern with culture‑aware date parsing in Aspose.Cells for .NET. | Show how to apply the same 24‑hour format to a named range and then protect the worksheet. | Explain how to verify that the time format persists when the file is opened on different operating systems.
+// Title: C# – Apply Custom Number Format "hh:mm:ss" (24‑hour) with Aspose.Cells
+// Description: Demonstrates how to create a workbook, insert a DateTime value, define a style with the custom number format "hh:mm:ss", apply the style to a cell, and save the file as an Excel workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells custom time format | C# 24‑hour time format | Aspose.Cells number format hh:mm:ss | .NET Excel custom format | format cells as time Aspose | Aspose.Cells US developers | Aspose.Cells Europe examples
+// Common Searches: Aspose.Cells set 24 hour time format C# | how to use custom number format hh:mm:ss in Aspose.Cells | format Excel cell as time using Aspose.Cells .NET | apply custom time style to a cell with Aspose.Cells
+// Developer Intent: The developer needs to display a DateTime value in a worksheet cell using the 24‑hour "hh:mm:ss" format.
+// Use Cases: Standardizing timestamps in exported schedules or shift rosters. | Generating logs where only the time component must be visible. | Creating dashboards that require consistent 24‑hour time representation across different locales.
+// AI Prompts: Show C# code that applies the custom number format "hh:mm:ss" to a range of cells with Aspose.Cells. | Explain how to preserve existing cell styles while adding a 24‑hour time format to selected cells. | Provide a step‑by‑step guide for using Workbook.CreateStyle().Custom to set a time format in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // This C# example creates a workbook, writes a DateTime value (14:30:45) to cell A1, defines a style whose number format is "hh:mm:ss", applies the style, and saves the file as CustomTimeFormatDemo.xlsx using Aspose.Cells.
+    // Demonstrates how to create a workbook, insert a DateTime value, define a style with the custom number format "hh:mm:ss", apply the style to a cell, and save the file as an Excel workbook using Aspose.Cells for .NET.
     public class CustomTimeFormatDemo
     {
-        // Entry point for the application
-        public static void Main(string[] args)
+        public static void Run()
         {
             try
             {
-                Run();
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Put a DateTime value that includes time (e.g., 14:30:45)
+                worksheet.Cells["A1"].PutValue(new DateTime(2023, 1, 1, 14, 30, 45));
+
+                // Create a style and set the custom number format to 24‑hour time
+                Style style = workbook.CreateStyle();
+                style.Custom = "hh:mm:ss";
+
+                // Apply the style to the cell
+                worksheet.Cells["A1"].SetStyle(style);
+
+                // Save the workbook
+                workbook.Save("CustomTimeFormat.xlsx");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
+    }
 
-        public static void Run()
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Insert a time value (14:30:45) into cell A1
-            cells["A1"].PutValue(new DateTime(2023, 1, 1, 14, 30, 45));
-
-            // Create a style and set a custom 24‑hour time format
-            Style style = workbook.CreateStyle();
-            style.Custom = "hh:mm:ss";
-
-            // Apply the style to the cell
-            cells["A1"].SetStyle(style);
-
-            // Save the workbook
-            workbook.Save("CustomTimeFormatDemo.xlsx");
+            CustomTimeFormatDemo.Run();
         }
     }
 }

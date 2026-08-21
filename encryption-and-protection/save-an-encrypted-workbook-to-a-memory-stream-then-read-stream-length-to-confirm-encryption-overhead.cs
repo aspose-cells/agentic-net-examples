@@ -1,50 +1,41 @@
-// Title: Encrypt an Aspose.Cells Workbook to a MemoryStream and Measure Size Overhead (C#)
-// Description: C# example that creates an Aspose.Cells Workbook, writes sample data, saves it to a MemoryStream, records the unencrypted length, applies a password via Workbook.Settings.Password, optionally sets strong encryption options, saves the encrypted version to another MemoryStream, and calculates the byte difference to show the encryption overhead.
-// Keywords: Aspose.Cells | C# encryption | Workbook.SaveToStream | password protected workbook | encryption overhead | memory stream size | Excel encryption .NET | measure encrypted file size | Aspose.Cells encryption options
-// Common Searches: C# save Aspose.Cells workbook to MemoryStream with password | How to get encrypted workbook size using Aspose.Cells | Aspose.Cells encryption overhead measurement | Set password for Excel file in memory using Aspose.Cells | Compare encrypted vs unencrypted workbook stream length
-// Developer Intent: Save a workbook to a MemoryStream with password protection and compare its byte size to the unencrypted version.
-// Use Cases: Compliance testing to verify expected byte increase after encryption | Generate password‑protected Excel files on the fly for web APIs | Benchmark Aspose.Cells encryption performance by measuring stream length differences | Validate file size before transmitting encrypted workbooks over a network | Implement in‑memory Excel handling without writing temporary files to disk
-// AI Prompts: Write C# code using Aspose.Cells to create a workbook, save it to a MemoryStream, apply a password, and output both unencrypted and encrypted stream lengths. | Explain how to configure strong encryption (e.g., AES‑128) for an Aspose.Cells workbook when saving to a stream. | Provide a reusable method that returns the encryption overhead in bytes for any given workbook.
+// Title: Encrypt an Aspose.Cells Workbook to a MemoryStream and Check Size (C#)
+// Description: Creates a workbook, adds sample data, applies password protection with StrongCryptographicProvider (128‑bit), saves the encrypted file to a MemoryStream, reads its Length, then saves a plain version to another stream to illustrate the encryption overhead.
+// Keywords: Aspose.Cells encrypt workbook C# | save encrypted Excel to MemoryStream | Workbook.Settings.Password | SetEncryptionOptions Aspose.Cells | measure encrypted stream size | encryption overhead Excel .NET
+// Common Searches: how to encrypt Excel with Aspose.Cells and stream it | memory stream length of encrypted workbook Aspose | compare encrypted vs plain workbook size .NET | set encryption type and key length for .xls using Aspose
+// Developer Intent: Save a password‑protected workbook to a stream and determine the byte increase caused by encryption.
+// Use Cases: Validate the byte overhead introduced by Excel encryption before transmitting files. | Generate an encrypted workbook entirely in memory for HTTP responses or API returns. | Programmatically switch between encrypted and unencrypted outputs using the same Workbook instance.
+// AI Prompts: Write C# code that encrypts an Aspose.Cells workbook with a custom password, uses StrongCryptographicProvider 256‑bit encryption, saves it to a MemoryStream, and returns the stream length. | Explain why an encrypted Excel stream is larger than an unencrypted one and how to calculate the overhead. | Show how to clear Workbook.Settings.Password after encryption and reuse the workbook to produce an unencrypted MemoryStream.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionDemo
+// Creates a workbook, adds sample data, applies password protection with StrongCryptographicProvider (128‑bit), saves the encrypted file to a MemoryStream, reads its Length, then saves a plain version to another stream to illustrate the encryption overhead.
+class Program
 {
-    // C# example that creates an Aspose.Cells Workbook, writes sample data, saves it to a MemoryStream, records the unencrypted length, applies a password via Workbook.Settings.Password, optionally sets strong encryption options, saves the encrypted version to another MemoryStream, and calculates the byte difference to show the encryption overhead.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample");
-            sheet.Cells["B1"].PutValue(123);
+        // Create a new workbook and add some data
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sample Data");
+        sheet.Cells["B1"].PutValue(42);
 
-            // Save the workbook without encryption to a memory stream
-            MemoryStream unencryptedStream = workbook.SaveToStream();
-            long unencryptedLength = unencryptedStream.Length;
-            Console.WriteLine($"Unencrypted stream length: {unencryptedLength} bytes");
+        // Apply password protection (encryption)
+        workbook.Settings.Password = "securePwd";
 
-            // Apply password protection (encryption)
-            workbook.Settings.Password = "myPassword";
-            // Optional: set encryption options for older Excel formats
-            // workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+        // Optional: specify encryption type and key length for .xls format
+        workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
 
-            // Save the encrypted workbook to another memory stream
-            MemoryStream encryptedStream = workbook.SaveToStream();
-            long encryptedLength = encryptedStream.Length;
-            Console.WriteLine($"Encrypted stream length: {encryptedLength} bytes");
+        // Save the encrypted workbook to a memory stream
+        MemoryStream encryptedStream = workbook.SaveToStream();
 
-            // Compare lengths to confirm encryption overhead
-            long overhead = encryptedLength - unencryptedLength;
-            Console.WriteLine($"Encryption overhead: {overhead} bytes");
+        // Output the length of the encrypted stream (shows encryption overhead)
+        Console.WriteLine($"Encrypted stream length: {encryptedStream.Length} bytes");
 
-            // Clean up streams
-            unencryptedStream.Dispose();
-            encryptedStream.Dispose();
-        }
+        // For comparison, save an unencrypted version to another stream
+        workbook.Settings.Password = null; // remove password
+        MemoryStream plainStream = workbook.SaveToStream();
+        Console.WriteLine($"Unencrypted stream length: {plainStream.Length} bytes");
     }
 }

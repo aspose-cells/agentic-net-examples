@@ -1,11 +1,18 @@
+// Title: C# – Compute and Collect Average Values of Sparkline Data with Aspose.Cells
+// Description: Creates a workbook, fills a 3×4 range, adds line sparklines per row, then iterates every sparkline group, extracts each sparkline's data range, calculates the numeric average of the cells, stores the results in a List<double>, prints the averages, and saves the file.
+// Keywords: Aspose.Cells | C# | sparkline average | iterate sparklines | sparkline data range | calculate sparkline statistics | Excel sparkline processing | Aspose.Cells API
+// Common Searches: Aspose.Cells calculate sparkline average C# | How to get sparkline data values with Aspose.Cells | Iterate sparkline groups .NET | Store sparkline averages in a list Aspose.Cells | Retrieve sparkline range values C#
+// Developer Intent: Extract each sparkline’s data range, compute its average, and collect the results in a list.
+// Use Cases: Build a summary sheet that lists the average value of each row’s sparkline for quick trend analysis. | Apply conditional formatting based on sparkline averages to highlight high‑ or low‑performing rows. | Export the calculated averages to another worksheet or a CSV file for downstream reporting.
+// AI Prompts: Generate a reusable method that receives a Worksheet and returns a List<double> of all sparkline averages using Aspose.Cells. | Provide error‑handling code that safely computes sparkline averages when the range contains non‑numeric or empty cells. | Show how to write each computed sparkline average back to the worksheet next to the sparkline column.
+
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using AsposeRange = Aspose.Cells.Range;
 
-class SparklineAverageExample
+// Creates a workbook, fills a 3×4 range, adds line sparklines per row, then iterates every sparkline group, extracts each sparkline's data range, calculates the numeric average of the cells, stores the results in a List<double>, prints the averages, and saves the file.
+class Program
 {
     static void Main()
     {
@@ -13,53 +20,59 @@ class SparklineAverageExample
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data (5 rows x 4 columns)
-            for (int row = 0; row < 5; row++)
+            // Populate sample data (3 rows x 4 columns)
+            for (int r = 0; r < 3; r++)
             {
-                for (int col = 0; col < 4; col++)
+                for (int c = 0; c < 4; c++)
                 {
-                    sheet.Cells[row, col].PutValue((row + 1) * (col + 1)); // simple numeric data
+                    worksheet.Cells[r, c].PutValue((r + 1) * (c + 1));
                 }
             }
 
-            // Define where the sparklines will be placed (column F)
+            // Define where the sparklines will be placed (column E)
             CellArea location = new CellArea
             {
                 StartRow = 0,
-                EndRow = 4,
-                StartColumn = 5,
-                EndColumn = 5
+                EndRow = 2,
+                StartColumn = 4,
+                EndColumn = 4
             };
 
-            // Add a sparkline group (Line type) covering the data range A1:D5
-            int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D5", false, location);
-            SparklineGroup group = sheet.SparklineGroups[groupIndex];
+            // Add a sparkline group for the data range A1:D3
+            int groupIndex = worksheet.SparklineGroups.Add(SparklineType.Line, "A1:D3", false, location);
+            SparklineGroup sparklineGroup = worksheet.SparklineGroups[groupIndex];
 
-            // Add a sparkline for each row (A1:D1, A2:D2, ..., A5:D5)
-            for (int r = 0; r < 5; r++)
+            // Add a sparkline for each row in the data range
+            for (int row = 0; row < 3; row++)
             {
-                string rowRange = $"A{r + 1}:D{r + 1}";
-                group.Sparklines.Add(rowRange, r, 5); // row index, column index (F column)
+                // Data range for the current row, e.g., "A1:D1"
+                string dataRange = $"{worksheet.Name}!A{row + 1}:D{row + 1}";
+                sparklineGroup.Sparklines.Add(dataRange, row, 4);
             }
 
-            // List to hold average values of each sparkline
+            // List to store average values of each sparkline
             List<double> sparklineAverages = new List<double>();
 
-            // Iterate through each sparkline, compute the average of its data range, and store it
-            foreach (SparklineGroup sg in sheet.SparklineGroups)
+            // Iterate through all sparkline groups and their sparklines
+            foreach (SparklineGroup group in worksheet.SparklineGroups)
             {
-                foreach (Sparkline sp in sg.Sparklines)
+                foreach (Sparkline sparkline in group.Sparklines)
                 {
-                    // Obtain the range object from the sparkline's DataRange string
-                    AsposeRange dataRange = sheet.Cells.CreateRange(sp.DataRange);
+                    // Get the data range string (may include sheet name)
+                    string range = sparkline.DataRange;
+                    // Remove sheet name if present
+                    string address = range.Contains("!") ? range.Split('!')[1] : range;
+
+                    // Retrieve the range object from the worksheet
+                    Aspose.Cells.Range cellsRange = worksheet.Cells.CreateRange(address);
 
                     double sum = 0;
                     int count = 0;
 
-                    // Accumulate numeric values in the range
-                    foreach (Cell cell in dataRange)
+                    // Calculate sum and count of numeric values in the range
+                    foreach (Cell cell in cellsRange)
                     {
                         if (cell.Value != null && double.TryParse(cell.Value.ToString(), out double val))
                         {
@@ -68,25 +81,23 @@ class SparklineAverageExample
                         }
                     }
 
+                    // Compute average (avoid division by zero)
                     double average = count > 0 ? sum / count : 0;
                     sparklineAverages.Add(average);
                 }
             }
 
-            // Output the averages to console for verification
+            // Output the averages to console
             for (int i = 0; i < sparklineAverages.Count; i++)
             {
-                Console.WriteLine($"Sparkline {i + 1} average: {sparklineAverages[i]}");
+                Console.WriteLine($"Sparkline {i} average = {sparklineAverages[i]}");
             }
 
-            // Save the workbook (ensure the directory exists)
-            string outputPath = "SparklineAverageExample.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            // Save the workbook
+            workbook.Save("SparklinesWithAverages.xlsx");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
             Console.WriteLine($"Error: {ex.Message}");
         }
     }

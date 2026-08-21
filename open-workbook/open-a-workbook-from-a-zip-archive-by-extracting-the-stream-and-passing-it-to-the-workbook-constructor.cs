@@ -1,81 +1,77 @@
-// Title: Load an Excel workbook from a ZIP archive using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to open a .xlsx file stored inside a .zip package by reading the entry as a Stream with System.IO.Compression, passing the stream to the Aspose.Cells Workbook constructor, accessing cell values, and saving the workbook. Includes checks for missing files or entries and basic error handling.
-// Keywords: Aspose.Cells | C# | .NET | ZipArchive | Workbook from stream | open Excel from zip | extract xlsx entry | read cell A1 | save workbook | error handling
-// Common Searches: Aspose.Cells load Excel from zip archive | C# open .xlsx inside .zip without extracting | Workbook constructor stream Aspose.Cells example | read cell from zipped Excel file | extract Excel entry using ZipArchive in .NET
-// Developer Intent: Read an Excel workbook directly from a ZIP file by extracting the .xlsx entry as a stream and initializing an Aspose.Cells Workbook with that stream.
-// Use Cases: Read or modify data in Excel files that are distributed as part of a zip package without creating temporary files. | Batch‑process multiple .xlsx files inside a zip archive for conversion, validation, or data extraction. | Integrate zipped Excel resources into web services or APIs where disk I/O must be minimized.
-// AI Prompts: Generate C# code to loop through all .xlsx entries in a zip archive and open each with Aspose.Cells. | Show how to open a password‑protected Excel file inside a zip using Aspose.Cells. | Provide best‑practice error handling for loading workbooks from ZipArchive streams in .NET.
+// Title: Open an Excel workbook from a ZIP archive with Aspose.Cells (C# stream example)
+// Description: Demonstrates how to verify a ZIP file, locate a .xlsx entry with System.IO.Compression.ZipArchive, extract the entry as a stream, and load it directly into an Aspose.Cells Workbook. The sample reads the first worksheet name and cell A1, then optionally saves the workbook to a new file, all without writing the original Excel file to disk.
+// Keywords: Aspose.Cells load workbook from zip stream | C# extract Excel from zip archive | Workbook constructor stream parameter | read Excel entry using ZipArchive | open workbook without extracting to disk | Aspose.Cells ZipArchive example | C# in‑memory Excel processing
+// Common Searches: How to open an Excel file inside a zip with Aspose.Cells .NET | C# load workbook from zip entry stream | Aspose.Cells read .xlsx from ZipArchive | Open Excel from zip without extracting file | Aspose.Cells example for zip archive
+// Developer Intent: Load an Excel workbook directly from a ZIP archive using a memory stream, avoiding temporary files.
+// Use Cases: Read worksheet names or cell values from Excel files packaged in a zip archive. | Process multiple .xlsx entries in a zip, modify them in memory, and save the results. | Perform calculations on a workbook extracted from a zip and export the updated file without intermediate extraction.
+// AI Prompts: Generate C# code that iterates over all .xlsx entries in a zip file and opens each with Aspose.Cells Workbook. | Provide robust error‑handling patterns for loading a workbook from a zip entry stream using Aspose.Cells. | Show how to change a cell value in the extracted workbook and save the updated file back to disk without extracting the original Excel file.
 
 using System;
 using System.IO;
 using System.IO.Compression;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsZipExample
 {
-    // Demonstrates how to open a .xlsx file stored inside a .zip package by reading the entry as a Stream with System.IO.Compression, passing the stream to the Aspose.Cells Workbook constructor, accessing cell values, and saving the workbook. Includes checks for missing files or entries and basic error handling.
-    public class OpenWorkbookFromZip
+    // Demonstrates how to verify a ZIP file, locate a .xlsx entry with System.IO.Compression.ZipArchive, extract the entry as a stream, and load it directly into an Aspose.Cells Workbook. The sample reads the first worksheet name and cell A1, then optionally saves the workbook to a new file, all without writing the original Excel file to disk.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
+            // Path to the ZIP archive that contains an Excel file
+            string zipPath = "sample.zip";
+
+            // Name of the Excel file inside the ZIP archive
+            string excelEntryName = "sample.xlsx";
+
             try
             {
-                // Path to the ZIP archive containing the Excel file
-                string zipFilePath = "sample.zip";
-
-                // Name of the Excel file entry inside the ZIP archive
-                string excelEntryName = "sample.xlsx";
-
-                // Verify that the ZIP file exists
-                if (!File.Exists(zipFilePath))
+                // Verify that the ZIP file exists before attempting to open it
+                if (!File.Exists(zipPath))
                 {
-                    Console.WriteLine($"ZIP file '{zipFilePath}' not found.");
+                    Console.WriteLine($"ZIP archive not found: '{zipPath}'.");
                     return;
                 }
 
                 // Open the ZIP archive for reading
-                using (FileStream zipStream = new FileStream(zipFilePath, FileMode.Open, FileAccess.Read))
-                using (ZipArchive archive = new ZipArchive(zipStream, ZipArchiveMode.Read))
+                using (FileStream zipFileStream = new FileStream(zipPath, FileMode.Open, FileAccess.Read))
+                using (ZipArchive zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Read))
                 {
                     // Locate the specific entry (Excel file) within the archive
-                    ZipArchiveEntry excelEntry = archive.GetEntry(excelEntryName);
+                    ZipArchiveEntry excelEntry = zipArchive.GetEntry(excelEntryName);
                     if (excelEntry == null)
                     {
                         Console.WriteLine($"Entry '{excelEntryName}' not found in the ZIP archive.");
                         return;
                     }
 
-                    // Open a stream to the Excel entry
-                    using (Stream excelStream = excelEntry.Open())
+                    // Extract the entry as a stream
+                    using (Stream entryStream = excelEntry.Open())
                     {
-                        // Create a Workbook instance from the extracted stream
-                        Workbook workbook = new Workbook(excelStream);
+                        // Ensure the stream is positioned at the beginning
+                        if (entryStream.CanSeek)
+                            entryStream.Seek(0, SeekOrigin.Begin);
 
-                        // Example operation: read the value of cell A1 from the first worksheet
+                        // Load the workbook from the extracted stream
+                        Workbook workbook = new Workbook(entryStream);
+
+                        // Access the first worksheet and read a cell value (for demonstration)
                         Worksheet sheet = workbook.Worksheets[0];
-                        Console.WriteLine($"Cell A1 value: {sheet.Cells["A1"].StringValue}");
+                        Console.WriteLine("First worksheet name: " + sheet.Name);
+                        Console.WriteLine("Cell A1 value: " + sheet.Cells["A1"].StringValue);
 
-                        // Save the workbook to a new file on disk
+                        // Optionally, save the workbook to a new file
                         string outputPath = "ExtractedWorkbook.xlsx";
-                        workbook.Save(outputPath);
+                        workbook.Save(outputPath, SaveFormat.Xlsx);
                         Console.WriteLine($"Workbook saved to '{outputPath}'.");
                     }
                 }
-
-                Console.WriteLine("Workbook extracted from ZIP and saved successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Catch any unexpected exceptions and display a friendly message
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            OpenWorkbookFromZip.Run();
         }
     }
 }

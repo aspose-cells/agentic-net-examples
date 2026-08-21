@@ -1,55 +1,42 @@
-using System;
+// Title: Aspose.Cells .NET – Add CountNums Subtotal to Column K without Outline Levels
+// Description: C# example that creates a workbook, writes a header, three numeric values and a text entry into column K, defines a CellArea for rows 0‑4, and calls Worksheet.Cells.Subtotal with ConsolidationFunction.CountNums to insert a numeric‑count subtotal in the same column. No outline hierarchy is generated and the file is saved as SubtotalCountNumsColumnK.xlsx.
+// Keywords: Aspose.Cells subtotal CountNums C# | Worksheet.Cells.Subtotal example | count numeric cells Aspose | Excel subtotal without outline | column K subtotal Aspose.Cells | C# Excel automation CountNums
+// Common Searches: Aspose.Cells CountNums subtotal column K | C# add subtotal without outline levels | How to count numeric cells with Aspose.Cells | Worksheet.Cells.Subtotal usage example | Excel subtotal CountNums C# code
+// Developer Intent: Insert a CountNums subtotal for column K while preventing the creation of outline levels.
+// Use Cases: Produce a summary row that counts only numeric entries in a data column for financial reports. | Generate Excel files where text values are ignored in subtotal calculations, simplifying downstream analysis. | Create clean worksheets with subtotal rows that do not introduce collapsible outline groups.
+// AI Prompts: Write C# code using Aspose.Cells to apply a CountNums subtotal on column K without creating outline levels. | Show how to call Worksheet.Cells.Subtotal with ConsolidationFunction.CountNums, grouping by the same column and adding the subtotal to that column. | Explain why the CountNums function ignores non‑numeric cells when generating subtotals in Aspose.Cells.
+
 using Aspose.Cells;
 
-namespace AsposeCellsSubtotalExample
+// C# example that creates a workbook, writes a header, three numeric values and a text entry into column K, defines a CellArea for rows 0‑4, and calls Worksheet.Cells.Subtotal with ConsolidationFunction.CountNums to insert a numeric‑count subtotal in the same column. No outline hierarchy is generated and the file is saved as SubtotalCountNumsColumnK.xlsx.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-            // Populate sample data in columns J (index 9) and K (index 10)
-            // Header row
-            worksheet.Cells["J1"].PutValue("Category");
-            worksheet.Cells["K1"].PutValue("Value");
+        // Populate sample data in column K (zero‑based index 10)
+        // Header
+        cells[0, 10].PutValue("Numbers");
+        // Numeric values
+        cells[1, 10].PutValue(5);
+        cells[2, 10].PutValue(10);
+        cells[3, 10].PutValue(15);
+        // Non‑numeric value (should be ignored by CountNums)
+        cells[4, 10].PutValue("Text");
 
-            // Sample data rows
-            object[,] data = new object[,]
-            {
-                { "A", 10 },
-                { "A", 20 },
-                { "B", 15 },
-                { "B", 25 },
-                { "C", 30 }
-            };
+        // Define the range that includes the header and data (A1 is row 0, column 10)
+        CellArea area = CellArea.CreateCellArea(0, 10, 4, 10);
 
-            for (int i = 0; i < data.GetLength(0); i++)
-            {
-                // Row index is i+1 because row 0 contains headers
-                worksheet.Cells[i + 1, 9].PutValue(data[i, 0]); // Column J
-                worksheet.Cells[i + 1, 10].PutValue(data[i, 1]); // Column K
-            }
+        // Apply subtotals using the CountNums function on column K.
+        // groupBy = 0 (group by the first column of the area, which is column K itself)
+        // totalList = new int[] { 0 } (add subtotal for the same column)
+        worksheet.Cells.Subtotal(area, 0, ConsolidationFunction.CountNums, new int[] { 0 });
 
-            // Define the cell area that includes the data (J1:K6)
-            // StartRow = 0, StartColumn = 9 (J), EndRow = 5, EndColumn = 10 (K)
-            CellArea area = CellArea.CreateCellArea(0, 9, 5, 10);
-
-            // Add subtotals:
-            // - Group by the first column of the area (Category, offset 0)
-            // - Use CountNums function on the second column (Value, offset 1)
-            // - No outline levels are created because we use the 4‑parameter overload
-            worksheet.Cells.Subtotal(
-                area,
-                0,                                 // groupBy: first column in the area
-                ConsolidationFunction.CountNums,   // function: CountNumbers
-                new int[] { 1 }                    // totalList: apply to second column in the area
-            );
-
-            // Save the workbook
-            workbook.Save("Subtotal_CountNums_ColumnK.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("SubtotalCountNumsColumnK.xlsx");
     }
 }

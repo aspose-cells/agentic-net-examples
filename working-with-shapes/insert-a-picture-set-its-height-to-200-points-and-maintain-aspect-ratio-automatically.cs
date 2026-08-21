@@ -1,60 +1,54 @@
-// Title: Aspose.Cells .NET – Insert a picture with 200 pt height and locked aspect ratio
-// Description: Demonstrates how to create a new Workbook, verify an image file, add the picture to cell A1, set HeightPt to 200 points, enable IsAspectRatioLocked to keep proportions, and save the result as output.xlsx using Aspose.Cells for C#.
-// Keywords: Aspose.Cells | .NET | C# | insert image Excel | picture height points | lock aspect ratio | HeightPt | IsAspectRatioLocked | Excel automation | worksheet picture | image resizing
-// Common Searches: Aspose.Cells add picture to Excel worksheet | set picture height in points Aspose.Cells | lock aspect ratio when inserting image Excel .NET | C# resize picture to fixed height without distortion | how to use HeightPt and IsAspectRatioLocked
-// Developer Intent: Add an image to a worksheet, force its height to 200 pt, and preserve the original width‑to‑height ratio.
-// Use Cases: Embedding a company logo at a uniform height across generated reports. | Building a template that accepts user photos and displays them with consistent sizing. | Batch‑processing a collection of pictures into spreadsheets while ensuring each retains its proportions.
-// AI Prompts: Generate C# code with Aspose.Cells that inserts a picture into cell B2, sets WidthPt to 150, and keeps the aspect ratio locked. | Explain the interaction between HeightPt, WidthPt, and IsAspectRatioLocked in Aspose.Cells picture objects. | Provide robust error‑handling patterns for image insertion in an Aspose.Cells console application.
+// Title: Insert a Picture into Excel with Fixed Height (200 pt) and Auto‑scaled Width using Aspose.Cells for .NET
+// Description: Demonstrates how to add an image to the first worksheet, set its height to 200 points, lock the aspect ratio so the width adjusts automatically, and save the workbook as an .xlsx file.
+// Keywords: Aspose.Cells picture insertion | C# set image height points | lock aspect ratio Excel | add image to worksheet .NET | auto‑scale picture width
+// Common Searches: Aspose.Cells add image with fixed height | how to keep picture proportions in Excel using C# | set picture height 200 points Aspose.Cells example | auto‑adjust image width after setting height Aspose.Cells
+// Developer Intent: Add an image to a worksheet, enforce a 200‑point height, and preserve its original proportions.
+// Use Cases: Standardizing logo size in automated financial reports. | Displaying product photos at a uniform height in catalog generators. | Embedding screenshots in dashboards without distortion.
+// AI Prompts: Generate C# code with Aspose.Cells that inserts a PNG at cell B2, sets height to 150 pt, and locks the aspect ratio. | Show how to insert multiple pictures, each with a specific height and locked proportions, then export the workbook. | Provide a snippet that checks for an image file before adding it as a picture with a fixed height in Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace InsertPictureExample
+// Demonstrates how to add an image to the first worksheet, set its height to 200 points, lock the aspect ratio so the width adjusts automatically, and save the workbook as an .xlsx file.
+class Program
 {
-    // Demonstrates how to create a new Workbook, verify an image file, add the picture to cell A1, set HeightPt to 200 points, enable IsAspectRatioLocked to keep proportions, and save the result as output.xlsx using Aspose.Cells for C#.
-    class InsertPictureWithAspectRatio
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            string imagePath = "image.jpg";
+
+            // Verify that the image file exists before adding it
+            if (File.Exists(imagePath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Add a picture to the worksheet (top-left corner at row 1, column 1)
+                int pictureIndex = worksheet.Pictures.Add(1, 1, imagePath);
+                Picture picture = worksheet.Pictures[pictureIndex];
 
-                string imagePath = "image.jpg";
+                // Set the picture height to 200 points
+                picture.HeightPt = 200;
 
-                // Verify that the image file exists before adding it
-                if (File.Exists(imagePath))
-                {
-                    // Add picture at top‑left cell (row 0, column 0)
-                    int pictureIndex = worksheet.Pictures.Add(0, 0, imagePath);
-                    Picture picture = worksheet.Pictures[pictureIndex];
-
-                    // Set picture height to 200 points and lock aspect ratio
-                    picture.HeightPt = 200;
-                    picture.IsAspectRatioLocked = true;
-                }
-                else
-                {
-                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
-                }
-
-                // Save the workbook
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                // Lock the aspect ratio so the width adjusts automatically
+                picture.IsAspectRatioLocked = true;
             }
-            catch (CellsException ex)
+            else
             {
-                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+                Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+
+            // Save the workbook
+            workbook.Save("output.xlsx");
+            Console.WriteLine("Workbook saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

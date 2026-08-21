@@ -1,166 +1,166 @@
-// Title: Custom ICellsDataTable for JSON Web‑Service Smart Markers in Aspose.Cells (.NET)
-// Description: Implements ICellsDataTable to parse a JSON array from a web service, expose rows and columns, and bind the source to WorkbookDesigner so smart markers like &=$WebData.Name populate an Excel workbook automatically.
-// Keywords: Aspose.Cells | ICellsDataTable | smart markers | JSON web service | C# | WorkbookDesigner | custom data source | Excel report generation | .NET
-// Common Searches: bind json response to aspose.cells smart markers | implement icellsdatatable c# | populate excel from web api using aspose.cells | aspose.cells custom datasource example | smart markers json array
-// Developer Intent: Create a reusable ICellsDataTable that converts a JSON API response into a data table for Aspose.Cells smart markers.
-// Use Cases: Generate sales or inventory reports directly from a REST endpoint without intermediate POCO models. | Create master‑detail Excel sheets by registering multiple WebServiceDataSource instances (e.g., Orders, Customers) with WorkbookDesigner. | Apply conditional formatting or grouping while iterating over the custom data source during smart‑marker processing.
-// AI Prompts: Write a C# method that calls a REST API with HttpClient, builds a WebServiceDataSource from the JSON, and processes a workbook template containing smart markers. | Explain how to extend WebServiceDataSource to handle nested JSON objects and expose them as separate smart‑marker tables. | Provide sample code that registers two custom data sources ("Orders" and "Customers") with WorkbookDesigner and uses smart markers to produce a master‑detail Excel report.
+// Title: C# Custom ICellsDataTable for Aspose.Cells Smart Markers – Load JSON Data from a Web Service
+// Description: Demonstrates a C# ICellsDataTable implementation that fetches product data via HttpClient, deserializes a JSON array, and supplies Name and Price columns to WorkbookDesigner smart markers, with fallback sample data and Excel file output.
+// Keywords: Aspose.Cells | ICellsDataTable | smart markers | C# | web service | JSON API | REST | WorkbookDesigner | custom data source | Excel export | product catalog | HttpClient
+// Common Searches: Aspose.Cells custom ICellsDataTable example | populate Excel smart markers from REST API C# | load JSON data into Aspose.Cells workbook | WorkbookDesigner set data source from web service | fallback data for Aspose.Cells smart markers
+// Developer Intent: Create a reusable ICellsDataTable that retrieves product information from a JSON web service and feeds it to smart markers in an Aspose.Cells workbook.
+// Use Cases: Generate a product catalog Excel file by pulling the latest items from a live REST endpoint. | Automate sales or inventory reports where product names and prices are inserted via smart markers. | Ensure report generation continues when the API is unavailable by providing built‑in fallback data. | Integrate Aspose.Cells into ASP.NET or console applications that need dynamic Excel output from external services.
+// AI Prompts: Write a C# class that implements ICellsDataTable, reads a JSON array from a URL, and exposes column names for smart markers. | Show how to bind the custom data source to WorkbookDesigner, place smart markers like &=$Products.Name, and generate an Excel file. | Explain error handling strategies and how to supply fallback sample data when the web service call fails.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Aspose.Cells;
-using Aspose.Cells.Tables; // ICellsDataTable
 
-// Custom data source that retrieves data from a web service (JSON response)
-// Implements ICellsDataTable to parse a JSON array from a web service, expose rows and columns, and bind the source to WorkbookDesigner so smart markers like &=$WebData.Name populate an Excel workbook automatically.
-public class WebServiceDataSource : ICellsDataTable
+namespace AsposeCellsCustomDataSourceDemo
 {
-    // Internal list of records parsed from JSON
-    private readonly List<Dictionary<string, object>> _records;
-    private int _currentRow = -1;
-
-    // Constructor accepts the JSON string (could be fetched beforehand)
-    public WebServiceDataSource(string json)
+    // Simple POCO representing a product returned by the web service
+    // Demonstrates a C# ICellsDataTable implementation that fetches product data via HttpClient, deserializes a JSON array, and supplies Name and Price columns to WorkbookDesigner smart markers, with fallback sample data and Excel file output.
+    public class Product
     {
-        // Parse JSON array of objects into a list of dictionaries
-        var temp = JsonSerializer.Deserialize<List<Dictionary<string, JsonElement>>>(json,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<Dictionary<string, JsonElement>>();
+        public string Name { get; set; }
+        public double Price { get; set; }
+    }
 
-        _records = temp.ConvertAll(dict =>
+    // Custom data source implementing ICellsDataTable.
+    // It fetches data from a web service (JSON array of Product objects) and
+    // provides the required members for smart marker processing.
+    public class WebServiceDataSource : ICellsDataTable
+    {
+        private readonly List<Product> _products;
+        private int _currentRow = -1;
+
+        // Constructor accepts the endpoint URL, performs the HTTP GET request,
+        // and deserializes the JSON response into a list of Product objects.
+        // If the request fails, fallback sample data is used.
+        public WebServiceDataSource(string requestUrl)
         {
-            var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            foreach (var kvp in dict)
+            List<Product> products = null;
+
+            try
             {
-                // Convert JsonElement to appropriate .NET type
-                object value = kvp.Value.ValueKind switch
-                {
-                    JsonValueKind.String => kvp.Value.GetString(),
-                    JsonValueKind.Number => kvp.Value.TryGetInt64(out long l) ? (object)l :
-                                            kvp.Value.TryGetDouble(out double d) ? (object)d : kvp.Value.GetDecimal(),
-                    JsonValueKind.True => true,
-                    JsonValueKind.False => false,
-                    JsonValueKind.Null => null,
-                    _ => kvp.Value.GetRawText()
-                };
-                result[kvp.Key] = value;
+                using var httpClient = new HttpClient();
+                var response = httpClient.GetAsync(requestUrl).Result;
+                response.EnsureSuccessStatusCode();
+                string json = response.Content.ReadAsStringAsync().Result;
+
+                // Expecting JSON like: [{ "Name": "Item1", "Price": 10.5 }, ...]
+                products = JsonSerializer.Deserialize<List<Product>>(json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             }
-            return result;
-        });
-    }
-
-    // Indexer by row and column (zero‑based). Column order follows the Columns array.
-    public object this[int rowIndex, int columnIndex]
-    {
-        get
-        {
-            string colName = Columns[columnIndex];
-            return _records[rowIndex][colName];
-        }
-    }
-
-    // Indexer by row only – returns the whole record as a dictionary
-    public object this[int rowIndex] => _records[rowIndex];
-
-    // Indexer by column name – works on the current row (set by Next())
-    public object this[string columnName] => _records[_currentRow][columnName];
-
-    // Total number of rows
-    public int RowCount => _records.Count;
-
-    // Total number of columns (derived from first record or empty)
-    public int ColumnCount => Columns.Length;
-
-    // Alias for RowCount (required by ICellsDataTable)
-    public int Count => RowCount;
-
-    // Column names – derived from the first record (order of appearance)
-    public string[] Columns
-    {
-        get
-        {
-            if (_records.Count == 0) return Array.Empty<string>();
-            var keys = new List<string>(_records[0].Keys);
-            return keys.ToArray();
-        }
-    }
-
-    // Reset enumeration to before the first row
-    public void BeforeFirst()
-    {
-        _currentRow = -1;
-    }
-
-    // Move to the next row; returns false when no more rows
-    public bool Next()
-    {
-        _currentRow++;
-        return _currentRow < _records.Count;
-    }
-}
-
-// Example usage demonstrating the custom data source with smart markers
-public class SmartMarkerWebServiceDemo
-{
-    public static void Run()
-    {
-        try
-        {
-            // 1. Create a new workbook (template) and place smart markers
-            Workbook workbook = new Workbook(); // create empty workbook
-            Worksheet sheet = workbook.Worksheets[0];
-            // Smart markers reference the fields returned by the web service
-            sheet.Cells["A1"].PutValue("&=$WebData.Id");
-            sheet.Cells["B1"].PutValue("&=$WebData.Name");
-            sheet.Cells["C1"].PutValue("&=$WebData.Price");
-
-            // 2. Simulate a web service call (replace with real HttpClient call if needed)
-            string jsonResponse = FetchDataFromWebService().Result; // async result for brevity
-
-            // 3. Create the custom data source using the JSON response
-            var dataSource = new WebServiceDataSource(jsonResponse);
-
-            // 4. Set up the WorkbookDesigner and bind the custom data source
-            WorkbookDesigner designer = new WorkbookDesigner
+            catch (Exception)
             {
-                Workbook = workbook // assign workbook
-            };
-            designer.SetDataSource("WebData", dataSource); // bind custom source
+                // Fallback to sample data when the web service is unavailable
+                products = new List<Product>
+                {
+                    new Product { Name = "Sample Product 1", Price = 9.99 },
+                    new Product { Name = "Sample Product 2", Price = 19.99 }
+                };
+            }
 
-            // 5. Process smart markers and generate the final workbook
-            designer.Process();
-
-            // 6. Save the result (output)
-            string outputPath = "WebServiceSmartMarkersOutput.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+            _products = products ?? new List<Product>();
         }
-        catch (Exception ex)
+
+        // Indexer for row/column access (column 0 = Name, column 1 = Price)
+        public object this[int rowIndex, int columnIndex]
         {
-            Console.Error.WriteLine($"Error during SmartMarkerWebServiceDemo: {ex.Message}");
+            get
+            {
+                var product = _products[rowIndex];
+                return columnIndex == 0 ? product.Name : (object)product.Price;
+            }
+        }
+
+        // Indexer for row access – returns the whole object for the current row.
+        public object this[int rowIndex] => _products[rowIndex];
+
+        // Indexer for column name access (used by smart markers like $Products.Name)
+        public object this[string columnName]
+        {
+            get
+            {
+                // _currentRow is set by Next()
+                var product = _products[_currentRow];
+                return columnName switch
+                {
+                    "Name" => product.Name,
+                    "Price" => product.Price,
+                    _ => null
+                };
+            }
+        }
+
+        // Total number of rows
+        public int RowCount => _products.Count;
+
+        // Number of columns (Name, Price)
+        public int ColumnCount => 2;
+
+        // Alias for RowCount
+        public int Count => _products.Count;
+
+        // Column names exposed to the designer
+        public string[] Columns => new[] { "Name", "Price" };
+
+        // Reset enumeration to before the first row
+        public void BeforeFirst()
+        {
+            _currentRow = -1;
+        }
+
+        // Move to the next row; returns false when no more rows are available
+        public bool Next()
+        {
+            _currentRow++;
+            return _currentRow < _products.Count;
         }
     }
 
-    // Mock method that pretends to call a remote API and returns JSON.
-    // Replace the implementation with a real HttpClient request as needed.
-    private static async Task<string> FetchDataFromWebService()
+    class Program
     {
-        // Example JSON array returned by the service
-        // [{"Id":1,"Name":"Product A","Price":12.5},{"Id":2,"Name":"Product B","Price":23.0}]
-        await Task.Delay(10); // simulate async latency
-        return "[{\"Id\":1,\"Name\":\"Product A\",\"Price\":12.5},{\"Id\":2,\"Name\":\"Product B\",\"Price\":23.0}]";
-    }
-}
+        static void Main()
+        {
+            try
+            {
+                // Create a new workbook (template)
+                var workbook = new Workbook();
+                var sheet = workbook.Worksheets[0];
 
-// Entry point
-class Program
-{
-    static void Main()
-    {
-        SmartMarkerWebServiceDemo.Run();
-        Console.WriteLine("Workbook generated successfully.");
+                // Place smart markers in the first two rows (header + data row)
+                sheet.Cells["A1"].PutValue("&=$Products.Name");
+                sheet.Cells["B1"].PutValue("&=$Products.Price");
+
+                // Initialize the designer with the workbook
+                var designer = new WorkbookDesigner
+                {
+                    Workbook = workbook
+                };
+
+                // Set the custom data source. Replace the URL with a real endpoint.
+                // For demonstration, you can host a simple JSON file locally.
+                string serviceUrl = "https://example.com/api/products";
+                designer.SetDataSource("Products", new WebServiceDataSource(serviceUrl));
+
+                // Process smart markers – this will populate the cells with data from the web service
+                designer.Process();
+
+                // Determine output path and ensure the directory exists
+                string outputPath = "SmartMarkerFromWebService.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the resulting workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

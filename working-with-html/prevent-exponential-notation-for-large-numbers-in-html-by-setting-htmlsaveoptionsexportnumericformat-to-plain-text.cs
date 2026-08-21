@@ -1,37 +1,39 @@
-// Title: Prevent Exponential Notation for Large Numbers in HTML with Aspose.Cells (.NET)
-// Description: Demonstrates writing a very large integer to a worksheet and exporting the workbook to HTML using HtmlSaveOptions so the value appears as plain text rather than scientific notation.
-// Keywords: Aspose.Cells | HtmlSaveOptions | ExportNumericFormat | PlainText | prevent exponential notation | large numbers HTML export | C# Aspose.Cells example | display big integers | remove scientific notation
-// Common Searches: Aspose.Cells prevent scientific notation HTML | HtmlSaveOptions ExportNumericFormat plain text C# | export large integer to HTML Aspose.Cells | remove exponential format in HTML export Aspose | display 20‑digit number in HTML using Aspose.Cells
-// Developer Intent: Export a workbook to HTML while keeping very large numeric values shown as plain text instead of scientific notation.
-// Use Cases: Generate an HTML report that contains credit‑card numbers or other identifiers without losing digits. | Create financial statements where high‑precision figures must remain in full decimal form. | Build web‑based dashboards that display large IDs or timestamps exactly as entered.
-// AI Prompts: Write C# code that sets HtmlSaveOptions.ExportNumericFormat to PlainText to stop exponential notation when exporting a workbook to HTML with Aspose.Cells. | Show an example that inserts a 20‑digit number into a cell and saves the worksheet as HTML, preserving the full digit sequence.
+// Title: Aspose.Cells for .NET – Prevent scientific notation for large numbers when exporting to HTML
+// Description: Demonstrates how to write a 20‑digit value to a cell, configure HtmlSaveOptions.ExportNumericFormat, and save the workbook as HTML so the number appears exactly as entered instead of in exponential form.
+// Keywords: Aspose.Cells | .NET | C# | HtmlSaveOptions | ExportNumericFormat | prevent scientific notation | large numbers HTML export | avoid exponential notation | exact numeric display | HTML workbook export
+// Common Searches: Aspose.Cells ExportNumericFormat C# example | save large integer to HTML without scientific notation | HtmlSaveOptions prevent exponential notation | Aspose.Cells large number display in HTML | C# export spreadsheet to HTML exact numbers
+// Developer Intent: Export a workbook to HTML while guaranteeing that large numeric values are rendered as plain text rather than scientific notation.
+// Use Cases: Web reports that must show full account or transaction IDs without rounding. | Financial dashboards where high‑precision figures need exact visual representation. | Barcode or product‑code listings exported to HTML that require the original digit sequence.
+// AI Prompts: Provide C# code using Aspose.Cells to export a workbook to HTML with ExportNumericFormat set so a 20‑digit number stays in plain text. | Show how to write a large integer as a string in a cell and configure HtmlSaveOptions to avoid scientific notation in the HTML output. | Explain the role of HtmlSaveOptions.ExportNumericFormat in controlling numeric formatting during HTML export with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates writing a very large integer to a worksheet and exporting the workbook to HTML using HtmlSaveOptions so the value appears as plain text rather than scientific notation.
-class PreventExponentialNotation
+// Demonstrates how to write a 20‑digit value to a cell, configure HtmlSaveOptions.ExportNumericFormat, and save the workbook as HTML so the number appears exactly as entered instead of in exponential form.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and access the first worksheet
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Insert a large numeric value as text to avoid exponential notation in HTML output
-            sheet.Cells["A1"].PutValue("12345678901234567890");
+            // Insert a large numeric value as a string to keep the full precision in HTML output
+            worksheet.Cells["A1"].PutValue("12345678901234567890");
 
-            // Initialize HTML save options (default options are sufficient)
+            // Set up HTML save options (default options are sufficient for this scenario)
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-            // Save the workbook as HTML using the configured options
-            workbook.Save("LargeNumberPlainText.html", htmlOptions);
+            // Save the workbook as an HTML file
+            string outputPath = "LargeNumberOutput.html";
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

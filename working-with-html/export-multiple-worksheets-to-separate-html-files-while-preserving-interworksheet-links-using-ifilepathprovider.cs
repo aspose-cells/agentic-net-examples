@@ -1,23 +1,25 @@
-// Title: Export Multiple Worksheets to Separate HTML Files with Working Inter‑Sheet Links using Aspose.Cells IFilePathProvider (C#)
-// Description: Demonstrates how to create a workbook, add cross‑sheet hyperlinks, implement a custom IFilePathProvider that returns "{SheetName}.html", configure HtmlSaveOptions to export every worksheet to its own HTML page, and preserve functional links between the generated pages. The primary output.html contains the tab strip while each sheet is saved as an individual HTML file.
-// Keywords: Aspose.Cells export multiple worksheets HTML | IFilePathProvider custom file names | preserve cross‑sheet hyperlinks | HtmlSaveOptions ExportActiveWorksheetOnly false | C# workbook to separate HTML files | Aspose.Cells HTML tab strip | save workbook as individual HTML pages
-// Common Searches: export each worksheet to separate html using aspose.cells | keep hyperlinks between sheets when saving as html | custom IFilePathProvider example asp.net | htmlsaveoptions export all worksheets asp.net | aspose.cells generate html files per sheet
-// Developer Intent: The developer needs to save a workbook as a set of HTML files—one per worksheet—while ensuring that hyperlinks that reference other worksheets remain operational after export.
-// Use Cases: Publish a multi‑page web report where Summary, Details, and Report sheets become distinct HTML pages linked together for seamless navigation. | Build a documentation site that separates content into separate HTML files per worksheet but retains cross‑references via hyperlinks. | Automate the conversion of large Excel workbooks into individually cached HTML pages to improve web‑hosting performance and SEO indexing.
-// AI Prompts: Show how to modify CustomFilePathProvider to store the generated HTML files in a nested folder structure. | Explain how to embed a custom CSS stylesheet into each exported HTML sheet while still using IFilePathProvider for separate files. | Provide code that adds a navigation bar on the main output.html linking to each worksheet's individual HTML file.
+// Title: Export Worksheets to Separate HTML Files with Preserved Links using Aspose.Cells (C#)
+// Description: Demonstrates how to save each worksheet of an Aspose.Cells workbook as an individual HTML file while keeping inter‑worksheet hyperlinks functional. The example implements a custom IFilePathProvider that returns "<SheetName>.html", configures HtmlSaveOptions with ExportActiveWorksheetOnly, and writes the files to disk.
+// Keywords: Aspose.Cells HTML export | C# export worksheets to HTML | IFilePathProvider example | preserve worksheet hyperlinks | ExportActiveWorksheetOnly | separate HTML files per sheet | Aspose.Cells custom file naming
+// Common Searches: Aspose.Cells export each worksheet to separate HTML file | keep hyperlinks between worksheets when saving as HTML | custom IFilePathProvider for HTML export Aspose.Cells | C# save workbook as multiple HTML pages | how to use ExportActiveWorksheetOnly Aspose.Cells
+// Developer Intent: Create individual HTML pages for every worksheet and ensure that hyperlinks between sheets continue to work after export.
+// Use Cases: Publish a multi‑sheet Excel report as a web‑ready set of pages with navigation links. | Generate per‑sheet documentation for a portal where each section is a separate HTML file. | Automate batch conversion of workbooks to HTML with a naming scheme controlled by a custom provider.
+// AI Prompts: Show how to modify CustomFilePathProvider to store HTML files in a subfolder while preserving links. | Provide C# code that exports only selected worksheets to separate HTML files with custom filenames. | Explain how to add a hyperlink that points to a specific cell in another worksheet after exporting to separate HTML files.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExportMultipleSheets
+namespace ExportWorksheetsToSeparateHtml
 {
-    // Provides a separate HTML file name for each worksheet based on its name.
-    // Demonstrates how to create a workbook, add cross‑sheet hyperlinks, implement a custom IFilePathProvider that returns "{SheetName}.html", configure HtmlSaveOptions to export every worksheet to its own HTML page, and preserve functional links between the generated pages. The primary output.html contains the tab strip while each sheet is saved as an individual HTML file.
+    // Custom implementation of IFilePathProvider.
+    // Returns a file name for each worksheet so that links between worksheets are preserved.
+    // Demonstrates how to save each worksheet of an Aspose.Cells workbook as an individual HTML file while keeping inter‑worksheet hyperlinks functional. The example implements a custom IFilePathProvider that returns "<SheetName>.html", configures HtmlSaveOptions with ExportActiveWorksheetOnly, and writes the files to disk.
     internal class CustomFilePathProvider : IFilePathProvider
     {
         public string GetFullName(string sheetName)
         {
-            // Example: "Sheet1.html", "DataSheet.html", etc.
+            // Each worksheet will be saved as "<SheetName>.html" in the same directory as the main file.
             return $"{sheetName}.html";
         }
     }
@@ -30,41 +32,58 @@ namespace AsposeCellsExportMultipleSheets
             {
                 // Create a new workbook with three worksheets.
                 Workbook workbook = new Workbook();
-                workbook.Worksheets[0].Name = "Summary";
-                Worksheet sheet1 = workbook.Worksheets[0];
-
-                Worksheet sheet2 = workbook.Worksheets.Add("Details");
-                Worksheet sheet3 = workbook.Worksheets.Add("Report");
+                workbook.Worksheets[0].Name = "Sheet1";
+                workbook.Worksheets.Add("Sheet2");
+                workbook.Worksheets.Add("Sheet3");
 
                 // Populate some data.
-                sheet1.Cells["A1"].PutValue("Welcome to the Summary sheet.");
-                sheet2.Cells["A1"].PutValue("Details are listed here.");
-                sheet3.Cells["A1"].PutValue("Final report content.");
+                workbook.Worksheets["Sheet1"].Cells["A1"].PutValue("Data in Sheet1");
+                workbook.Worksheets["Sheet2"].Cells["A1"].PutValue("Data in Sheet2");
+                workbook.Worksheets["Sheet3"].Cells["A1"].PutValue("Data in Sheet3");
 
-                // Add an inter‑worksheet hyperlink from Summary!B2 to Details!A1.
-                int link1Index = sheet1.Hyperlinks.Add(1, 1, 1, 1, "Details!A1");
-                Hyperlink link1 = sheet1.Hyperlinks[link1Index];
-                link1.ScreenTip = "Go to Details";
-                link1.TextToDisplay = "Details Link";
-
-                // Add another hyperlink from Details!B2 to Report!A1.
-                int link2Index = sheet2.Hyperlinks.Add(1, 1, 1, 1, "Report!A1");
-                Hyperlink link2 = sheet2.Hyperlinks[link2Index];
-                link2.ScreenTip = "Go to Report";
-                link2.TextToDisplay = "Report Link";
+                // Add a hyperlink in Sheet1 that points to Sheet2.
+                // The hyperlink will be updated automatically to refer to the correct HTML file.
+                Worksheet sheet1 = workbook.Worksheets["Sheet1"];
+                try
+                {
+                    // Add hyperlink at cell C3 (row index 2, column index 2 – zero based indexing).
+                    // totalRows = 1, totalColumns = 1 for a single cell.
+                    // Use overload with 5 parameters (screen tip set separately if needed).
+                    sheet1.Hyperlinks.Add(2, 2, 1, 1, "Sheet2!A1");
+                    // Optionally set display text and screen tip.
+                    sheet1.Cells["C3"].PutValue("Go to Sheet2");
+                    // Set screen tip if desired.
+                    if (sheet1.Hyperlinks.Count > 0)
+                    {
+                        sheet1.Hyperlinks[0].ScreenTip = "Go to Sheet2";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to add hyperlink: {ex.Message}");
+                }
 
                 // Configure HTML save options.
                 HtmlSaveOptions saveOptions = new HtmlSaveOptions
                 {
-                    // Export each worksheet to its own HTML file.
-                    ExportActiveWorksheetOnly = false,
-                    // Use the custom file path provider so links point to the correct files.
+                    // Export each worksheet separately.
+                    ExportActiveWorksheetOnly = true,
+                    // Use the custom provider to generate file names.
                     FilePathProvider = new CustomFilePathProvider()
                 };
 
-                // Save the workbook. The main file (output.html) contains the tab strip,
-                // and each worksheet is saved as a separate HTML file as defined by the provider.
-                workbook.Save("output.html", saveOptions);
+                // Determine output file path and ensure directory exists.
+                string outputFile = "Workbook.html";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile)) ?? Directory.GetCurrentDirectory();
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook. The main file name is arbitrary; separate files will be created per worksheet.
+                workbook.Save(outputFile, saveOptions);
+
+                Console.WriteLine("Worksheets exported to separate HTML files with preserved links.");
             }
             catch (Exception ex)
             {

@@ -1,34 +1,29 @@
-// Title: HTML to Excel conversion with CSS background colors – Aspose.Cells for .NET
-// Description: Shows how to load an HTML file that contains CSS styling (including cell background colors) into an Aspose.Cells Workbook using LoadOptions.LoadFormat.Html, then save it as an XLSX workbook with C#.
-// Keywords: Aspose.Cells HTML to Excel | C# preserve CSS background color | LoadFormat.Html | HTML table to XLSX | convert styled HTML to Excel | Aspose.Cells .NET | cell background color conversion | HTML to XLSX C#
-// Common Searches: Aspose.Cells keep cell colors when converting HTML to Excel | C# load HTML with CSS into workbook | HTML table to Excel preserving formatting Aspose | Export styled HTML as XLSX using Aspose.Cells | LoadOptions LoadFormat.Html background color
-// Developer Intent: Convert an HTML document into an Excel workbook while retaining the CSS‑defined cell background colors.
-// Use Cases: Create Excel reports from web‑based tables that maintain the original color scheme for corporate dashboards. | Automate batch conversion of styled HTML files to XLSX files for offline analysis without losing visual cues. | Integrate HTML‑to‑Excel export in a .NET application where the generated spreadsheets must reflect the source page’s formatting.
-// AI Prompts: Generate C# code with Aspose.Cells that loads an HTML file and saves it as XLSX, ensuring CSS background colors are applied to cells. | Explain the role of LoadOptions.LoadFormat.Html in preserving CSS formatting, especially background colors, when loading HTML into a Workbook. | Provide a method to verify and, if needed, adjust cell background colors after importing an HTML file with Aspose.Cells.
+// Title: C# – Convert HTML (including CSS background colors) to Excel with Aspose.Cells
+// Description: This .NET example demonstrates how to use Aspose.Cells' ConversionUtility.Convert method to read an HTML file that applies CSS for cell background shading and generate an XLSX workbook while keeping the original colors and formatting intact.
+// Keywords: Aspose.Cells | C# HTML to Excel conversion | retain CSS cell colors | ConversionUtility Convert | Excel formatting preservation | styled HTML to XLSX | Aspose.Cells .NET library | HTML table to Excel | US C# developers | European .NET community
+// Common Searches: Aspose.Cells keep CSS colors during HTML to Excel conversion | C# convert HTML table with background shading to XLSX | How to preserve cell formatting when converting HTML to Excel using Aspose | ConversionUtility retain styles from HTML in Excel | Convert styled HTML invoice to Excel .NET
+// Developer Intent: Convert an HTML document to an Excel workbook while retaining CSS‑based cell background colors.
+// Use Cases: Generate Excel reports from color‑coded HTML invoices without losing the branding palette. | Migrate web‑based dashboards that use visual cues into Excel spreadsheets for offline analysis. | Provide downloadable .xlsx versions of HTML email newsletters that preserve their original background colors. | Automate extraction of styled HTML tables for financial or statistical modeling in Excel.
+// AI Prompts: Show C# code using Aspose.Cells ConversionUtility to convert HTML to XLSX while preserving CSS background colors. | Explain how to configure ConversionUtility to retain cell formatting when converting HTML that references external CSS files. | Give step‑by‑step instructions for handling both inline and linked CSS during HTML‑to‑Excel conversion in .NET. | What options does Aspose.Cells provide to map CSS styles to Excel cell styles?
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
 
-// Shows how to load an HTML file that contains CSS styling (including cell background colors) into an Aspose.Cells Workbook using LoadOptions.LoadFormat.Html, then save it as an XLSX workbook with C#.
+// This .NET example demonstrates how to use Aspose.Cells' ConversionUtility.Convert method to read an HTML file that applies CSS for cell background shading and generate an XLSX workbook while keeping the original colors and formatting intact.
 class HtmlToExcelConverter
 {
     static void Main()
     {
-        // Path to the source HTML file
-        string htmlFilePath = "input.html";
+        // Path to the source HTML file (contains CSS background colors)
+        string htmlPath = "input.html";
 
-        // Path for the resulting Excel file
-        string excelFilePath = "output.xlsx";
+        // Desired path for the resulting Excel workbook
+        string excelPath = "output.xlsx";
 
-        // Load the HTML file into a Workbook.
-        // LoadOptions with LoadFormat.Html ensures the HTML is parsed correctly,
-        // including CSS styles such as cell background colors.
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
-        Workbook workbook = new Workbook(htmlFilePath, loadOptions);
+        // Convert the HTML file to Excel while preserving cell styles (including background colors)
+        ConversionUtility.Convert(htmlPath, excelPath);
 
-        // Save the workbook as an Excel file (XLSX format).
-        workbook.Save(excelFilePath, SaveFormat.Xlsx);
-
-        Console.WriteLine("Conversion completed. Excel file saved to: " + excelFilePath);
+        Console.WriteLine("HTML successfully converted to Excel. File saved at: " + excelPath);
     }
 }

@@ -1,10 +1,10 @@
-// Title: Render an Excel worksheet to LZW‑compressed TIFF and GZip it using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, apply LZW compression via ImageOrPrintOptions, export the first worksheet as a TIFF file, and then shrink the TIFF further by compressing it with GZipStream, all with proper error handling.
-// Keywords: Aspose.Cells TIFF export C# | LZW TIFF compression | GZip compress image .NET | reduce Excel export size | C# GZipStream example
-// Common Searches: export Aspose.Cells worksheet as compressed TIFF | C# GZip a TIFF generated from Excel | how to shrink TIFF file size with Aspose.Cells | LZW TIFF and GZip compression .NET
-// Developer Intent: Create a TIFF image from a workbook with LZW compression and then GZip the TIFF to minimize storage footprint.
-// Use Cases: Archive large Excel reports as compact GZip‑packed TIFF files. | Attach size‑restricted TIFF images to emails after GZip compression. | Store massive numbers of rendered worksheets in cloud buckets with minimal storage cost.
-// AI Prompts: Generate C# code that uses Aspose.Cells to render a worksheet to LZW‑compressed TIFF and then compress the file with GZip, including exception handling. | Explain how to switch ImageOrPrintOptions to other TIFF compression methods before applying GZip. | Show how to pipe the TIFF output directly into a GZipStream to avoid creating a temporary .tiff file.
+// Title: Compress a TIFF worksheet with GZip using Aspose.Cells for .NET
+// Description: Creates a Workbook, renders the first worksheet to a TIFF stream with optional LZW compression and 300 dpi resolution, then writes the stream into a GZipStream to produce a .tiff.gz file, reducing storage size.
+// Keywords: Aspose.Cells | C# | .NET | TIFF compression | GZip | LZW | ImageOrPrintOptions | SheetRender | memory stream | archive Excel as image | reduce file size
+// Common Searches: Aspose.Cells render worksheet to TIFF and gzip | C# compress TIFF with GZip | How to create .tiff.gz from Excel using Aspose | LZW TIFF compression with GZip in .NET | Save Excel sheet as compressed TIFF
+// Developer Intent: Generate a TIFF image of an Excel worksheet and shrink its footprint by applying GZip compression.
+// Use Cases: Long‑term archival of Excel reports as compact TIFF files. | Sending worksheet snapshots over low‑bandwidth networks. | Creating backup images where disk space is limited.
+// AI Prompts: Show C# code that uses Aspose.Cells to render a worksheet to a TIFF stream with LZW compression, then compress it with GZip and save as .tiff.gz. | Explain how to adjust ImageOrPrintOptions for resolution and TIFF compression before GZip compression. | Give best‑practice error handling for rendering a worksheet to TIFF and compressing it with GZip in a .NET application.
 
 using System;
 using System.IO;
@@ -12,50 +12,53 @@ using System.IO.Compression;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Demonstrates how to create a workbook, apply LZW compression via ImageOrPrintOptions, export the first worksheet as a TIFF file, and then shrink the TIFF further by compressing it with GZipStream, all with proper error handling.
-class TiffGzipCompressionDemo
+namespace AsposeCellsTiffGzipExample
 {
-    static void Main()
+    // Creates a Workbook, renders the first worksheet to a TIFF stream with optional LZW compression and 300 dpi resolution, then writes the stream into a GZipStream to produce a .tiff.gz file, reducing storage size.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Cells["A1"].PutValue("Sample data for TIFF");
-            worksheet.Cells["A2"].PutValue(DateTime.Now);
-
-            // Configure image options for TIFF rendering with LZW compression
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            try
             {
-                // Specify TIFF compression type
-                TiffCompression = TiffCompression.CompressionLZW,
-                OnePagePerSheet = true
-            };
+                // Create a new workbook and add sample data
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("TIFF GZip Compression Demo");
+                sheet.Cells["A2"].PutValue(DateTime.Now);
 
-            // Render the worksheet to a TIFF file
-            string tiffFilePath = "output.tiff";
-            SheetRender renderer = new SheetRender(worksheet, imgOptions);
-            renderer.ToTiff(tiffFilePath);
+                // Configure image options for TIFF rendering
+                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                {
+                    // Use LZW compression for the TIFF itself (optional)
+                    TiffCompression = TiffCompression.CompressionLZW,
+                    // Set a reasonable resolution
+                    HorizontalResolution = 300,
+                    VerticalResolution = 300
+                };
 
-            // Verify that the TIFF file was created before compression
-            if (!File.Exists(tiffFilePath))
-                throw new FileNotFoundException("Rendered TIFF file not found.", tiffFilePath);
+                // Render the worksheet to a memory stream as TIFF
+                using (MemoryStream tiffStream = new MemoryStream())
+                {
+                    SheetRender renderer = new SheetRender(sheet, imgOptions);
+                    renderer.ToTiff(tiffStream); // Render to TIFF stream
 
-            // Compress the generated TIFF file using GZip
-            string gzFilePath = "output.tiff.gz";
-            using (FileStream originalFile = new FileStream(tiffFilePath, FileMode.Open, FileAccess.Read))
-            using (FileStream compressedFile = new FileStream(gzFilePath, FileMode.Create, FileAccess.Write))
-            using (GZipStream gzipStream = new GZipStream(compressedFile, CompressionLevel.Optimal))
-            {
-                originalFile.CopyTo(gzipStream);
+                    // Prepare the output file for the GZip-compressed TIFF
+                    using (FileStream outputFile = new FileStream("Worksheet.tiff.gz", FileMode.Create, FileAccess.Write))
+                    using (GZipStream gzip = new GZipStream(outputFile, CompressionLevel.Optimal))
+                    {
+                        // Reset the position of the TIFF stream before copying
+                        tiffStream.Position = 0;
+                        tiffStream.CopyTo(gzip);
+                    }
+                }
+
+                Console.WriteLine("Worksheet rendered to TIFF and compressed with GZip successfully.");
             }
-
-            Console.WriteLine("TIFF file rendered and compressed to GZip successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

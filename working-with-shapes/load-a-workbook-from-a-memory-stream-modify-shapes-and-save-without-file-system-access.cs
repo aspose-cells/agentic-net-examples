@@ -1,61 +1,52 @@
+// Title: C# – Load, Edit, and Save Excel Shapes via MemoryStream with Aspose.Cells
+// Description: Demonstrates how to create an Excel workbook in memory, add a rectangle shape, reload the workbook from a MemoryStream, change the shape’s name and fill color, and save the result back to another MemoryStream—entirely without touching the file system.
+// Keywords: Aspose.Cells C# MemoryStream | edit Excel shape in memory | modify shape name Aspose.Cells | change shape fill color .NET | load workbook from stream | save workbook to stream | in‑memory Excel processing | no disk I/O Aspose.Cells | shape manipulation Aspose.Cells
+// Common Searches: Aspose.Cells edit shape without saving to disk | C# load Excel from MemoryStream and change rectangle color | save modified workbook to MemoryStream Aspose.Cells | how to rename a shape in an Excel file using Aspose.Cells | in‑memory Excel shape update C#
+// Developer Intent: Load an Excel workbook from a MemoryStream, update a shape’s name and fill color, and write the modified workbook to another MemoryStream, avoiding any file‑system operations.
+// Use Cases: Web API that receives an uploaded XLSX, updates chart or diagram shapes on the fly, and returns the altered file as a byte array. | Automated report generator that builds Excel files entirely in memory, customizes shapes, and emails the result without creating temporary files. | Batch processing of workbooks stored in a database where shape properties are refreshed using streams to eliminate disk I/O.
+// AI Prompts: Provide C# code that loads an Excel workbook from a byte array, changes the fill color of every rectangle shape to red, and returns the updated workbook as a byte array using Aspose.Cells. | Show an example that reads a workbook from a MemoryStream, prefixes "Updated_" to each shape’s name, and writes the workbook to a new MemoryStream. | Explain best practices for efficiently modifying shape properties in large numbers of in‑memory workbooks with Aspose.Cells while avoiding any file‑system access.
+
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsMemoryDemo
+// Demonstrates how to create an Excel workbook in memory, add a rectangle shape, reload the workbook from a MemoryStream, change the shape’s name and fill color, and save the result back to another MemoryStream—entirely without touching the file system.
+class ShapeMemoryDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create an initial workbook in memory and add a rectangle shape
+        using (MemoryStream sourceStream = new MemoryStream())
         {
-            // ------------------------------------------------------------
-            // 1. Create a new workbook and add a rectangle shape.
-            // ------------------------------------------------------------
-            Workbook originalWorkbook = new Workbook();                     // create workbook
-            Worksheet originalSheet = originalWorkbook.Worksheets[0];      // get first worksheet
+            Workbook wb = new Workbook();                                   // create workbook
+            Worksheet ws = wb.Worksheets[0];
+            Shape rect = ws.Shapes.AddRectangle(1, 1, 0, 0, 100, 100);      // add rectangle
+            rect.Name = "OriginalRect";
+            rect.FillFormat.ForeColor = System.Drawing.Color.Blue;          // set initial color
 
-            // Add a rectangle shape: (upper left row, column, upper left offset X, offset Y, width, height)
-            Shape rect = originalSheet.Shapes.AddRectangle(1, 1, 0, 0, 100, 50);
-            rect.Name = "OriginalRectangle";
-            rect.FillFormat.ForeColor = Color.Red;                         // initial fill color
+            // Save the workbook to the memory stream (XLSX format)
+            wb.Save(sourceStream, SaveFormat.Xlsx);
+            sourceStream.Position = 0;                                      // reset for reading
 
-            // ------------------------------------------------------------
-            // 2. Save the workbook to a memory stream (XLSX format).
-            // ------------------------------------------------------------
-            using (MemoryStream sourceStream = new MemoryStream())
+            // Load the workbook from the memory stream
+            Workbook loadedWb = new Workbook(sourceStream);
+            Worksheet loadedWs = loadedWb.Worksheets[0];
+
+            // Modify the first shape: change its name and fill color
+            if (loadedWs.Shapes.Count > 0)
             {
-                originalWorkbook.Save(sourceStream, SaveFormat.Xlsx);      // save to stream
-                sourceStream.Position = 0;                                 // reset for reading
+                Shape shape = loadedWs.Shapes[0];
+                shape.Name = "ModifiedRect";
+                shape.FillFormat.ForeColor = System.Drawing.Color.Green;
+            }
 
-                // ------------------------------------------------------------
-                // 3. Load the workbook from the memory stream.
-                // ------------------------------------------------------------
-                Workbook loadedWorkbook = new Workbook(sourceStream);       // load from stream
-                Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-
-                // ------------------------------------------------------------
-                // 4. Modify the shape: rename and change fill color.
-                // ------------------------------------------------------------
-                if (loadedSheet.Shapes.Count > 0)
-                {
-                    Shape shapeToModify = loadedSheet.Shapes[0];
-                    shapeToModify.Name = "ModifiedRectangle";
-                    shapeToModify.FillFormat.ForeColor = Color.Blue;        // change fill color
-                }
-
-                // ------------------------------------------------------------
-                // 5. Save the modified workbook to another memory stream.
-                // ------------------------------------------------------------
-                using (MemoryStream resultStream = new MemoryStream())
-                {
-                    loadedWorkbook.Save(resultStream, SaveFormat.Xlsx);   // save modified workbook
-                    resultStream.Position = 0;                            // ready for further use
-
-                    // Example usage: display the size of the resulting stream.
-                    Console.WriteLine($"Modified workbook size: {resultStream.Length} bytes");
-                }
+            // Save the modified workbook to another memory stream
+            using (MemoryStream resultStream = new MemoryStream())
+            {
+                loadedWb.Save(resultStream, SaveFormat.Xlsx);
+                // resultStream now holds the updated workbook; its length can be inspected
+                Console.WriteLine($"Modified workbook size: {resultStream.Length} bytes");
             }
         }
     }

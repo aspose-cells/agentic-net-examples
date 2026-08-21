@@ -1,77 +1,55 @@
-// Title: Add a Rotated Semi‑Transparent WordArt Watermark to Every Worksheet (Aspose.Cells C#)
-// Description: C# example that creates or loads an Aspose.Cells workbook, loops through all worksheets, inserts a WordArt shape with custom text, sets 50 % transparency, rotates it -45°, customizes the font, and saves the file. Demonstrates using the ShapeCollection, TextEffectFormat, and file‑system checks.
-// Keywords: Aspose.Cells watermark | C# WordArt shape | rotate WordArt Excel | transparent watermark Aspose.Cells | iterate worksheets add shape | Excel .NET shape collection | programmatic watermark Excel | Aspose.Cells C# example
-// Common Searches: how to add a rotated watermark to all sheets with Aspose.Cells .NET | Aspose.Cells C# set WordArt transparency | apply diagonal CONFIDENTIAL watermark to every worksheet | add WordArt shape to Excel workbook using Aspose.Cells | save workbook after inserting watermarks in C#
-// Developer Intent: Programmatically place a semi‑transparent, diagonal WordArt watermark on each worksheet of an Excel file.
-// Use Cases: Mark confidential reports with a diagonal "CONFIDENTIAL" label across all tabs. | Brand internal templates by overlaying a faint company name or logo on every sheet. | Insert a draft watermark before distributing generated workbooks to reviewers.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a semi‑transparent rotated WordArt watermark to all worksheets. | Show how to change the transparency, rotation angle, and font of a WordArt shape in an Excel workbook using Aspose.Cells. | Provide an example that creates the output folder if it does not exist before saving the watermarked workbook.
+// Title: Add a Semi‑Transparent WordArt Watermark to Every Worksheet with Aspose.Cells (C#)
+// Description: Demonstrates how to loop through all worksheets in a workbook, insert a WordArt shape with custom text, apply 50 % fill transparency, hide its outline, and save the file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# watermark | WordArt transparency Aspose | add watermark all sheets | Excel WordArt shape | iterate worksheets Aspose.Cells | semi transparent watermark C# | hide WordArt outline | Aspose.Cells shape collection
+// Common Searches: Aspose.Cells add watermark to each worksheet | C# WordArt watermark transparency Excel | How to loop through worksheets and insert WordArt with Aspose.Cells | Set WordArt fill transparency in Aspose.Cells | Hide WordArt border in Excel using Aspose
+// Developer Intent: Insert a semi‑transparent WordArt overlay on every worksheet of an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Protect confidential reports by overlaying a faint "CONFIDENTIAL" label on all sheets. | Brand internal templates with a company slogan or logo as a subtle background element. | Add a legal disclaimer or copyright notice across an entire workbook before distribution.
+// AI Prompts: Write C# code that uses Aspose.Cells to add a WordArt watermark with customizable text, size, position, and 50 % transparency to each worksheet. | Show how to adjust WordArt fill transparency and hide its outline when creating a watermark in an Excel file with Aspose.Cells. | Provide a complete example that iterates over all worksheets, inserts a semi‑transparent WordArt shape, and saves the workbook.
 
 using System;
-using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// C# example that creates or loads an Aspose.Cells workbook, loops through all worksheets, inserts a WordArt shape with custom text, sets 50 % transparency, rotates it -45°, customizes the font, and saves the file. Demonstrates using the ShapeCollection, TextEffectFormat, and file‑system checks.
+// Demonstrates how to loop through all worksheets in a workbook, insert a WordArt shape with custom text, apply 50 % fill transparency, hide its outline, and save the file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        try
+        // Create a new workbook (empty with a default worksheet)
+        Workbook workbook = new Workbook();
+
+        // Optional: add some sample data to each sheet
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
-
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Access the shape collection of the current worksheet
-                ShapeCollection shapes = sheet.Shapes;
-
-                // Add a WordArt shape that will serve as the watermark
-                // Parameters: style, text, topRow, top offset, leftColumn, left offset, height, width
-                Shape wordArt = shapes.AddWordArt(
-                    PresetWordArtStyle.WordArtStyle1,   // preset style
-                    "CONFIDENTIAL",                     // watermark text
-                    0, 0,                               // top row and vertical offset (pixels)
-                    0, 0,                               // left column and horizontal offset (pixels)
-                    500, 800);                          // height and width (pixels)
-
-                // Make the WordArt semi‑transparent
-                wordArt.Fill.Transparency = 0.5; // 50% transparency
-
-                // Rotate the WordArt to give a typical watermark appearance
-                wordArt.RotationAngle = -45; // degrees
-
-                // Optional: customize the text appearance
-                if (wordArt.IsWordArt)
-                {
-                    TextEffectFormat textEffect = wordArt.TextEffect;
-                    textEffect.FontBold = true;
-                    textEffect.FontItalic = false;
-                    textEffect.FontName = "Arial";
-                    textEffect.FontSize = 48;
-                    // FontColor property is not available in some versions; omitted for compatibility
-                }
-            }
-
-            // Define output file path
-            string outputPath = "WatermarkedWorkbook.xlsx";
-
-            // Ensure the directory exists before saving
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook with the watermarks applied
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            ws.Cells["A1"].PutValue("Sample data");
         }
-        catch (Exception ex)
+
+        // Iterate through all worksheets and add a semi‑transparent WordArt watermark
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Get the shape collection of the current worksheet
+            ShapeCollection shapes = ws.Shapes;
+
+            // Add WordArt. Parameters: style, text, topRow, top offset, leftColumn, left offset, height, width
+            Shape wordArt = shapes.AddWordArt(
+                PresetWordArtStyle.WordArtStyle1,
+                "CONFIDENTIAL",
+                0,    // topRow index
+                0,    // top offset (pixels)
+                0,    // leftColumn index
+                0,    // left offset (pixels)
+                100,  // height (pixels)
+                400   // width (pixels)
+            );
+
+            // Set semi‑transparent fill (0 = opaque, 1 = fully transparent)
+            wordArt.FillFormat.Transparency = 0.5;
+
+            // Hide the outline of the WordArt
+            wordArt.LineFormat.IsVisible = false;
         }
+
+        // Save the workbook with the watermarks applied
+        workbook.Save("WorkbookWithWatermark.xlsx");
     }
 }

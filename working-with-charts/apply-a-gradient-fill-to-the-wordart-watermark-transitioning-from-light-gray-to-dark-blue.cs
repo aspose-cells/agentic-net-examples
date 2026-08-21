@@ -1,54 +1,68 @@
-// Title: C# – Apply a Horizontal Light‑Gray to Dark‑Blue Gradient Fill on a WordArt Watermark using Aspose.Cells
-// Description: Creates a new workbook, inserts a WordArt shape with the text "CONFIDENTIAL", sets a horizontal two‑color gradient (light gray → dark blue), makes it 50 % transparent, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells | C# | WordArt watermark | gradient fill | horizontal gradient | light gray | dark blue | transparent shape | Excel workbook | PresetWordArtStyle
-// Common Searches: Aspose.Cells C# add gradient WordArt watermark | horizontal light gray to dark blue gradient in Excel shape | make WordArt watermark semi transparent with Aspose.Cells | set two‑color gradient for WordArt using .NET | programmatically create confidential watermark in Excel
-// Developer Intent: Generate a WordArt watermark and apply a horizontal light‑gray‑to‑dark‑blue gradient with 50 % transparency in an Excel file.
-// Use Cases: Mark confidential reports with a subtle color‑shift watermark. | Brand internal templates using corporate colors in a gradient watermark. | Batch‑process multiple worksheets to add consistent gradient watermarks.
-// AI Prompts: Show C# code to change the gradient direction of the WordArt watermark to vertical while keeping the same colors. | Demonstrate how to add a three‑color gradient (light gray, medium blue, dark blue) to a WordArt shape with Aspose.Cells. | Explain how to reuse a predefined gradient fill across several WordArt watermarks on different worksheets.
+// Title: Apply a Light Gray‑to‑Dark Blue Horizontal Gradient to a WordArt Watermark in Aspose.Cells (C#)
+// Description: Creates a new workbook, adds a WordArt shape with the text "CONFIDENTIAL", switches its fill to a horizontal gradient (light gray → dark blue), configures a semi‑transparent RenderingWatermark, and saves the result as a PDF. Demonstrates gradient styling of WordArt for watermarking in Aspose.Cells for .NET.
+// Keywords: Aspose.Cells gradient WordArt | C# WordArt watermark | horizontal gradient fill Aspose.Cells | two‑color gradient WordArt PDF | Aspose.Cells rendering watermark | gradient fill shape Aspose.Cells | PDF export with WordArt watermark
+// Common Searches: Aspose.Cells set gradient fill on WordArt C# | how to create gradient WordArt watermark in .NET | horizontal light gray to dark blue gradient Aspose.Cells | export workbook to PDF with WordArt watermark | change WordArt fill type to gradient Aspose.Cells
+// Developer Intent: Add a WordArt shape, apply a horizontal light‑gray‑to‑dark‑blue gradient, and generate a PDF where the shape serves as a semi‑transparent watermark.
+// Use Cases: Brand‑consistent confidential PDFs with a corporate‑color gradient watermark. | Automated report pipelines that mark drafts or final versions using gradient WordArt watermarks. | Visually distinct security labels across multiple worksheets in a spreadsheet export.
+// AI Prompts: Generate C# code to change the gradient direction to vertical and use red and orange colors for the WordArt watermark. | Provide an example that adds a different gradient WordArt watermark to each worksheet in a single workbook. | Explain how to modify the RenderingWatermark opacity while keeping the WordArt gradient unchanged.
 
-using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWordArtWatermark
+// Creates a new workbook, adds a WordArt shape with the text "CONFIDENTIAL", switches its fill to a horizontal gradient (light gray → dark blue), configures a semi‑transparent RenderingWatermark, and saves the result as a PDF. Demonstrates gradient styling of WordArt for watermarking in Aspose.Cells for .NET.
+class Program
 {
-    // Creates a new workbook, inserts a WordArt shape with the text "CONFIDENTIAL", sets a horizontal two‑color gradient (light gray → dark blue), makes it 50 % transparent, and saves the file as an XLSX document.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Add a WordArt shape that will serve as the visual watermark
+        // Parameters: preset style, text, upperLeftRow, top, upperLeftColumn, left, height, width
+        Shape wordArt = worksheet.Shapes.AddWordArt(
+            PresetWordArtStyle.WordArtStyle6, // Base style (gradient fill - gray)
+            "CONFIDENTIAL",                  // Watermark text
+            5, 0,                            // Row and top offset
+            5, 0,                            // Column and left offset
+            300, 100);                       // Height and width
+
+        // Change the fill type to gradient so we can customize it
+        wordArt.Fill.FillType = FillType.Gradient;
+
+        // Obtain the GradientFill object and set a two‑color gradient
+        // Light gray -> Dark blue, horizontal direction, first variant
+        GradientFill gradientFill = wordArt.Fill.GradientFill;
+        gradientFill.SetTwoColorGradient(
+            Color.LightGray,   // First color (light gray)
+            Color.DarkBlue,    // Second color (dark blue)
+            GradientStyleType.Horizontal,
+            1);                // Variant
+
+        // Create a RenderingFont for the text watermark (used by PDF rendering)
+        RenderingFont renderingFont = new RenderingFont("Arial", 48)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Bold = true,
+            Color = Color.Black
+        };
 
-            // Add a WordArt shape that will act as the watermark
-            // Parameters: style, text, upperLeftRow, top, upperLeftColumn, left, height, width
-            Shape wordArt = sheet.Shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle1,   // base style (can be changed later)
-                "CONFIDENTIAL",                     // watermark text
-                5, 0,                               // row and top offset
-                5, 0,                               // column and left offset
-                200, 600);                          // height and width
+        // Create the RenderingWatermark with the same text
+        RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", renderingFont)
+        {
+            Opacity = 0.3f,                     // Semi‑transparent
+            Rotation = 45,                      // Diagonal appearance
+            IsBackground = true,                // Render behind page content
+            HAlignment = TextAlignmentType.Center,
+            VAlignment = TextAlignmentType.Center
+        };
 
-            // Ensure the shape uses a gradient fill
-            wordArt.Fill.FillType = FillType.Gradient;
-
-            // Obtain the GradientFill object
-            GradientFill gradientFill = wordArt.Fill.GradientFill;
-
-            // Apply a two‑color gradient: light gray to dark blue, horizontal direction
-            gradientFill.SetTwoColorGradient(
-                Color.LightGray,    // first (light) color
-                Color.DarkBlue,     // second (dark) color
-                GradientStyleType.Horizontal, // gradient style
-                1);                 // variant (default)
-
-            // Optionally, make the WordArt semi‑transparent to resemble a watermark
-            wordArt.Fill.Transparency = 0.5; // 50% transparent
-
-            // Save the workbook
-            workbook.Save("WordArtWatermarkGradient.xlsx");
-        }
+        // Save the workbook as PDF with the watermark applied
+        PdfSaveOptions saveOptions = new PdfSaveOptions
+        {
+            Watermark = watermark
+        };
+        workbook.Save("WatermarkedGradientWordArt.pdf", saveOptions);
     }
 }

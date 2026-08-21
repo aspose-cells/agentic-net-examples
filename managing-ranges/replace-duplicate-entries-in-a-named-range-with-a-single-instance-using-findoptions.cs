@@ -1,10 +1,10 @@
-// Title: Remove duplicate entries from a named range with Aspose.Cells FindOptions (C#)
-// Description: Demonstrates how to create a workbook, define a named range, and use Aspose.Cells FindOptions to locate and clear duplicate values while preserving the first occurrence. The example works with .NET (C#) and shows how to restrict searches to a specific named range, making the data list unique.
-// Keywords: Aspose.Cells | C# | FindOptions | named range | remove duplicates | duplicate values | clear cells | Excel unique list | Aspose.Cells .NET | data cleaning
-// Common Searches: Aspose.Cells remove duplicate values from named range | FindOptions limit search to specific range C# | How to clear duplicate cells in Excel using Aspose | Keep first occurrence of a value in Aspose.Cells | C# code to deduplicate a named range in Excel
-// Developer Intent: The developer wants to keep only the first occurrence of each value inside a named range and erase all subsequent duplicates using Aspose.Cells FindOptions.
-// Use Cases: Cleaning imported lists where duplicate entries must be eliminated but the original entry retained. | Preparing a named range for data‑validation rules that require unique items. | Generating reports that need a distinct set of values extracted from a predefined range. | Automating spreadsheet cleanup in multi‑regional deployments (US, EU, APAC) using a single .NET solution.
-// AI Prompts: Show a compact Aspose.Cells .NET snippet that removes duplicate values from a named range using FindOptions. | Explain step‑by‑step how to configure FindOptions to restrict a Find operation to a specific named range and clear duplicate cells. | Suggest performance‑oriented improvements for the duplicate‑removal loop when processing large named ranges.
+// Title: Remove duplicate entries from a named range with FindOptions – Aspose.Cells for .NET (C#)
+// Description: This example creates a workbook, defines a named range (A1:A6), and uses Aspose.Cells FindOptions limited to that range to locate and clear duplicate values, preserving only the first occurrence. The cleaned workbook is saved as an XLSX file.
+// Keywords: Aspose.Cells duplicate removal | named range FindOptions C# | remove duplicate cells .NET | Aspose.Cells Find method example | clear duplicate entries Excel library
+// Common Searches: Aspose.Cells delete duplicate values in named range | FindOptions duplicate search C# | how to remove duplicate cells with Aspose.Cells | C# code to clean named range duplicates | Aspose.Cells de‑duplication example
+// Developer Intent: Programmatically eliminate repeated values inside a defined named range, keeping the first occurrence of each entry.
+// Use Cases: Sanitize a list of product codes stored in a named range before exporting. | Prepare data for validation by ensuring a named range contains unique items. | Automate cleanup of user‑entered lists (e.g., categories, tags) in Excel worksheets.
+// AI Prompts: Write C# code using Aspose.Cells to remove duplicate rows from a multi‑column named range while retaining the first row. | Show how to modify the example to ignore case‑sensitive duplicates when searching with FindOptions. | Explain how to set LookAtType.Partial in FindOptions to delete cells that partially match a given string within a named range.
 
 using System;
 using System.Collections.Generic;
@@ -12,9 +12,22 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, define a named range, and use Aspose.Cells FindOptions to locate and clear duplicate values while preserving the first occurrence. The example works with .NET (C#) and shows how to restrict searches to a specific named range, making the data list unique.
+    // This example creates a workbook, defines a named range (A1:A6), and uses Aspose.Cells FindOptions limited to that range to locate and clear duplicate values, preserving only the first occurrence. The cleaned workbook is saved as an XLSX file.
     public class RemoveDuplicateEntriesInNamedRange
     {
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
         public static void Run()
         {
             try
@@ -32,14 +45,20 @@ namespace AsposeCellsExamples
                 sheet.Cells["A6"].PutValue("Date");
 
                 // Define a named range that covers the populated cells
-                int nameIdx = workbook.Worksheets.Names.Add("MyRange");
-                workbook.Worksheets.Names[nameIdx].RefersTo = "=Sheet1!$A$1:$A$6";
+                int nameIndex = sheet.Workbook.Worksheets.Names.Add("MyRange");
+                sheet.Workbook.Worksheets.Names[nameIndex].RefersTo = $"={sheet.Name}!$A$1:$A$6";
 
                 // Retrieve the named range object
-                Name namedRange = workbook.Worksheets.Names["MyRange"];
+                Name namedRange = sheet.Workbook.Worksheets.Names["MyRange"];
                 Aspose.Cells.Range range = namedRange.GetRange();
 
-                // Build a CellArea that represents the same range – required for FindOptions
+                // Prepare FindOptions with the same search range as the named range
+                FindOptions findOptions = new FindOptions
+                {
+                    LookInType = LookInType.Values
+                    // LookAtType defaults to whole content; explicit setting removed to avoid compatibility issues
+                };
+
                 CellArea searchArea = new CellArea
                 {
                     StartRow = range.FirstRow,
@@ -47,77 +66,57 @@ namespace AsposeCellsExamples
                     EndRow = range.FirstRow + range.RowCount - 1,
                     EndColumn = range.FirstColumn + range.ColumnCount - 1
                 };
-
-                // Configure FindOptions to limit searches to the named range
-                FindOptions findOptions = new FindOptions();
                 findOptions.SetRange(searchArea);
-                findOptions.LookInType = LookInType.Values;
-                // Default LookAtType is Whole, so no explicit setting is required
 
-                // Keep track of values that have already been processed
+                // Keep track of values already processed to avoid re‑scanning them
                 HashSet<string> processedValues = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
                 // Iterate through each cell in the named range
-                for (int r = range.FirstRow; r < range.FirstRow + range.RowCount; r++)
+                for (int row = range.FirstRow; row <= range.FirstRow + range.RowCount - 1; row++)
                 {
-                    for (int c = range.FirstColumn; c < range.FirstColumn + range.ColumnCount; c++)
+                    for (int col = range.FirstColumn; col <= range.FirstColumn + range.ColumnCount - 1; col++)
                     {
-                        Cell currentCell = sheet.Cells[r, c];
+                        Cell currentCell = sheet.Cells[row, col];
                         string cellValue = currentCell.StringValue;
 
                         // Skip empty cells
                         if (string.IsNullOrEmpty(cellValue))
                             continue;
 
-                        // If this value has already been handled, it means this cell is a duplicate
+                        // If this value has already been processed, it means the first occurrence
+                        // was earlier and this cell is a duplicate; clear it.
                         if (processedValues.Contains(cellValue))
                         {
-                            // Replace duplicate entry with an empty string
                             currentCell.PutValue(string.Empty);
                             continue;
                         }
 
-                        // First occurrence – add to the processed set
+                        // First time we see this value – add to processed set
                         processedValues.Add(cellValue);
 
-                        // Use Find with the same FindOptions to locate any further duplicates
-                        Cell previousFound = null;
-                        Cell duplicate = sheet.Cells.Find(cellValue, previousFound, findOptions);
-                        bool firstMatch = true; // the first match will be the current cell itself
-
-                        while (duplicate != null)
+                        // Find subsequent duplicates within the same range
+                        Cell previousFound = currentCell;
+                        Cell duplicateCell = sheet.Cells.Find(cellValue, previousFound, findOptions);
+                        while (duplicateCell != null)
                         {
-                            if (firstMatch && duplicate.Row == r && duplicate.Column == c)
-                            {
-                                // This is the original occurrence; keep it
-                                firstMatch = false;
-                            }
-                            else
-                            {
-                                // Clear the duplicate cell
-                                duplicate.PutValue(string.Empty);
-                            }
+                            // Clear the duplicate cell
+                            duplicateCell.PutValue(string.Empty);
 
-                            // Continue searching from the last found cell
-                            previousFound = duplicate;
-                            duplicate = sheet.Cells.Find(cellValue, previousFound, findOptions);
+                            // Continue searching after the cleared cell
+                            previousFound = duplicateCell;
+                            duplicateCell = sheet.Cells.Find(cellValue, previousFound, findOptions);
                         }
                     }
                 }
 
-                // Optionally, save the workbook to verify results (file path can be adjusted)
-                // workbook.Save("Result.xlsx");
+                // Save the workbook with duplicates removed
+                workbook.Save("RemoveDuplicatesInNamedRange.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Run error: {ex.Message}");
+                throw; // Re‑throw to be caught by outer handler if needed
             }
-        }
-
-        // Entry point for the console application
-        public static void Main()
-        {
-            Run();
         }
     }
 }

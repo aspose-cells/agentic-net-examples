@@ -1,39 +1,44 @@
-// Title: Export Excel to HTML with merged cells using Aspose.Cells for .NET
-// Description: Shows how to build a workbook, merge a range, and save it as HTML with Aspose.Cells. The HtmlSaveOptions generate the correct colspan/rowspan tags so the merged layout is retained in the web page.
-// Keywords: Aspose.Cells | C# | .NET | HTML export | merged cells | colspan | rowspan | HtmlSaveOptions | MergeEmptyTdType | Excel to HTML conversion
-// Common Searches: Aspose.Cells export merged cells to HTML | HTML output with colspan from Excel using Aspose | keep merged cells when converting Excel to HTML .NET | HtmlSaveOptions MergeEmptyTdType default behavior | C# code to convert Excel with merged headers to HTML
-// Developer Intent: Convert an Excel workbook to an HTML document while preserving merged ranges through proper table attributes.
-// Use Cases: Render Excel reports with merged header rows as web‑ready HTML tables. | Automate the transformation of dashboard worksheets into static HTML pages without losing layout. | Create documentation that mirrors the original spreadsheet’s merged cell structure in a browser.
-// AI Prompts: Provide C# code that exports an Aspose.Cells workbook to HTML and keeps merged cells using colspan and rowspan. | Explain how HtmlSaveOptions.MergeEmptyTdType influences the rendering of empty merged cells in HTML. | Show how to customize the HTML output of merged cells with additional CSS styling in Aspose.Cells.
+// Title: Export Excel to HTML with merged cells (colspan/rowspan) using Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, merge a range (A2:C3), configure HtmlSaveOptions to output merged cells as proper colspan and rowspan attributes, and save the result as an HTML file while keeping the original layout intact.
+// Keywords: Aspose.Cells | C# | .NET | Excel to HTML | merged cells | colspan | rowspan | HtmlSaveOptions | MergeEmptyTdType | HtmlExportDataOptions | preserve layout | web report generation
+// Common Searches: Aspose.Cells export merged cells to HTML | HTML export colspan rowspan Aspose .NET | keep merged cells when converting Excel to HTML | HtmlSaveOptions MergeEmptyTdType example | C# convert Excel workbook to HTML with merged ranges
+// Developer Intent: Generate an HTML file from an Excel workbook that retains merged cell structures using Aspose.Cells.
+// Use Cases: Create web‑ready reports from dynamically built workbooks with merged headers. | Display existing Excel documents on a website without losing complex cell merges. | Batch‑process multiple spreadsheets into HTML for documentation while preserving layout.
+// AI Prompts: Write C# code with Aspose.Cells to export a workbook to HTML, ensuring merged cells use correct colspan and rowspan attributes. | Explain the impact of HtmlSaveOptions.MergeEmptyTdType and HtmlExportDataOptions on merged‑cell HTML output. | Show how to configure HtmlSaveOptions to preserve merged ranges when saving an Excel file as HTML in .NET.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to build a workbook, merge a range, and save it as HTML with Aspose.Cells. The HtmlSaveOptions generate the correct colspan/rowspan tags so the merged layout is retained in the web page.
-class ExportMergedCellsToHtml
+namespace AsposeCellsHtmlExport
 {
-    static void Main()
+    // Demonstrates how to create a workbook, merge a range (A2:C3), configure HtmlSaveOptions to output merged cells as proper colspan and rowspan attributes, and save the result as an HTML file while keeping the original layout intact.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate some data
-        sheet.Cells["A1"].PutValue("Header 1");
-        sheet.Cells["B1"].PutValue("Header 2");
-        sheet.Cells["A2"].PutValue("Value 1");
-        sheet.Cells["B2"].PutValue("Value 2");
-
-        // Merge cells A1:B1 to demonstrate merged cells (will be rendered with colspan)
-        sheet.Cells.Merge(0, 0, 1, 2); // Row 0, Column 0, 1 row, 2 columns
-
-        // Set HTML save options – default merging behavior retains merged cells
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+        static void Main()
         {
-            MergeEmptyTdType = MergeEmptyTdType.Default
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook as HTML; merged cells will appear with appropriate colspan/rowspan
-        workbook.Save("MergedCells.html", htmlOptions);
+            // Populate some data
+            sheet.Cells["A1"].PutValue("Header");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("Merged Cell");
+
+            // Merge a range of cells (A2:C3) – this will be represented with colspan/rowspan in HTML
+            sheet.Cells.Merge(1, 0, 2, 3); // rows 1-2, columns 0-2 (A2:C3)
+
+            // Create HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+
+            // Ensure merged cells are exported using default behavior (colspan/rowspan)
+            htmlOptions.MergeEmptyTdType = MergeEmptyTdType.Default;
+
+            // Export all data (default) – keeps merged cells intact
+            htmlOptions.ExportDataOptions = HtmlExportDataOptions.All;
+
+            // Save the workbook as HTML
+            workbook.Save("ExportedWithMergedCells.html", htmlOptions);
+        }
     }
 }

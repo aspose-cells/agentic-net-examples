@@ -1,52 +1,58 @@
-// Title: Create a drop‑down list validation for cell U2 with Aspose.Cells for .NET
-// Description: Shows how to generate a workbook, target cell U2, add a list‑type data validation with an in‑cell drop‑down, set the allowed values (OptionA, OptionB, OptionC) via Formula1, and save the file as U2Validation.xlsx using Aspose.Cells in C#.
-// Keywords: Aspose.Cells | C# data validation | list validation | drop‑down list | cell U2 | ValidationType.List | Formula1 | .NET Excel | predefined options | spreadsheet dropdown
-// Common Searches: Aspose.Cells create drop‑down list for a single cell | C# add list validation to cell U2 using Aspose.Cells | How to set ValidationType.List with Formula1 in Aspose.Cells | Excel data validation with predefined options in .NET | Aspose.Cells restrict cell input to specific values
-// Developer Intent: Add a data‑validation rule that limits cell U2 to a predefined list of values.
-// Use Cases: Force users to choose a category from a fixed list in a generated report. | Provide a status selector (e.g., OptionA‑OptionC) in a data‑entry template. | Prevent invalid entries in a form by applying a list validation to cell U2.
-// AI Prompts: Write C# code with Aspose.Cells that adds a list validation to cell U2 containing 'OptionA', 'OptionB', and 'OptionC' and saves the workbook. | Explain how to change the validation to reference a named range instead of a hard‑coded list in Aspose.Cells. | Show how to apply the same list validation to a range such as U2:U10 using Aspose.Cells.
+// Title: C# – Add List‑Based Data Validation to Cell U2 with Aspose.Cells for .NET
+// Description: Shows how to create a workbook, target cell U2, apply a List‑type validation containing predefined options, enable the in‑cell drop‑down, and save the file as U2_Validation.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# data validation | ValidationType.List | Excel drop‑down list | cell U2 | restrict cell input | predefined options | Aspose.Cells example | Excel automation | list validation
+// Common Searches: Aspose.Cells add list validation C# | how to create drop‑down in a single Excel cell using Aspose | restrict cell U2 to specific values Aspose.Cells | C# code for ValidationType.List Aspose | Excel data validation with Aspose.Cells .NET
+// Developer Intent: Apply a List validation to cell U2 so that only the specified options can be entered.
+// Use Cases: Design a data‑entry template where users select a category from a drop‑down in U2. | Generate reports that enforce status values (e.g., Approved, Pending, Rejected) via list validation in U2. | Automate workbook creation for surveys, limiting answers in U2 to predefined choices. | Create a financial model that restricts currency codes in U2 to a fixed list.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a list validation to cell U2 containing 'OptionA', 'OptionB', 'OptionC' and saves as 'U2_Validation.xlsx'. | Show how to reference a named range on another worksheet for the validation list instead of a hard‑coded string. | Explain how to customize the error alert (title, message, style) for the list validation on cell U2. | Provide a step‑by‑step guide to enable the in‑cell drop‑down and set a custom input message for cell U2 validation.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to generate a workbook, target cell U2, add a list‑type data validation with an in‑cell drop‑down, set the allowed values (OptionA, OptionB, OptionC) via Formula1, and save the file as U2Validation.xlsx using Aspose.Cells in C#.
-class Program
+namespace AsposeCellsValidationExample
 {
-    static void Main()
+    // Shows how to create a workbook, target cell U2, apply a List‑type validation containing predefined options, enable the in‑cell drop‑down, and save the file as U2_Validation.xlsx using Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Define the cell area for U2 (zero‑based indices: row 1, column 20)
-            CellArea u2Area = new CellArea
+            try
             {
-                StartRow = 1,
-                StartColumn = 20,
-                EndRow = 1,
-                EndColumn = 20
-            };
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Add a validation rule for the specified area
-            int validationIndex = worksheet.Validations.Add(u2Area);
-            Validation validation = worksheet.Validations[validationIndex];
+                // Get the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Configure the validation as a list with allowed options
-            validation.Type = ValidationType.List;
-            validation.InCellDropDown = true;
-            // Formula1 must be quoted when using a comma‑separated list
-            validation.Formula1 = "\"OptionA,OptionB,OptionC\"";
+                // Define the cell area for the validation (U2)
+                CellArea area = new CellArea
+                {
+                    StartRow = 1,      // Row index is zero‑based (U2 -> row 2)
+                    EndRow = 1,
+                    StartColumn = 20, // Column index is zero‑based (U -> 21st column)
+                    EndColumn = 20
+                };
 
-            // Save the workbook
-            string outputPath = "U2Validation.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Add a new validation rule for the specified area
+                int validationIndex = worksheet.Validations.Add(area);
+                Validation validation = worksheet.Validations[validationIndex];
+
+                // Set the validation type to a list of predefined options
+                validation.Type = ValidationType.List;
+
+                // Define the allowed values (comma‑separated) and enclose in double quotes
+                validation.Formula1 = "\"OptionA,OptionB,OptionC\"";
+
+                // Enable the in‑cell drop‑down list
+                validation.InCellDropDown = true;
+
+                // Save the workbook
+                workbook.Save("U2_Validation.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,43 +1,40 @@
-// Title: C# – Change WordArt Font Color to Dark Blue Across All Worksheets with Aspose.Cells
-// Description: Loads an Excel workbook, iterates each worksheet and its Shapes collection, identifies WordArt objects via IsWordArt, sets their Font.Color to Color.DarkBlue, and saves the updated file.
-// Keywords: Aspose.Cells | C# | WordArt | font color | dark blue | IsWordArt | iterate shapes | Excel automation | bulk style update | shape.Font.Color
-// Common Searches: Aspose.Cells change WordArt color .NET | set WordArt text color in Excel using C# | loop through shapes and modify WordArt font | bulk update WordArt font color Aspose | C# code to change WordArt to dark blue
-// Developer Intent: Apply a dark‑blue font color to every WordArt shape in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Enforce corporate branding by converting all WordArt captions to the official dark‑blue shade in multi‑sheet reports. | Prepare a template workbook where WordArt text must match a predefined color before distribution to end users. | Automate the correction of imported WordArt objects that appear in default colors, ensuring visual consistency across all worksheets.
-// AI Prompts: Generate C# code with Aspose.Cells that changes WordArt font color to a custom RGB value instead of DarkBlue. | Explain how to filter shapes by type (WordArt, picture, chart) and modify their properties using Aspose.Cells for .NET. | Provide a snippet that logs the name or index of each WordArt shape whose color was updated during processing.
+// Title: C# – Change WordArt Font Color to Dark Blue in All Worksheets Using Aspose.Cells
+// Description: Loads a workbook, iterates every worksheet and its Shapes collection, detects WordArt objects via Shape.IsWordArt, sets their Font.Color to Color.DarkBlue, and saves the updated file.
+// Keywords: Aspose.Cells C# WordArt color | Shape.IsWordArt Aspose.Cells | change WordArt font color .NET | iterate Excel shapes Aspose | bulk shape formatting Aspose.Cells | Color.DarkBlue Excel | C# Excel shape manipulation | Aspose.Cells API font color
+// Common Searches: How to set WordArt text color in Excel with Aspose.Cells C# | Iterate all shapes in a workbook and change WordArt font color | Batch update WordArt colors across multiple worksheets using Aspose.Cells | Aspose.Cells example for changing WordArt to dark blue | C# code to detect WordArt and modify its font color in Excel
+// Developer Intent: Locate every WordArt shape in an Excel workbook and apply a dark‑blue font color programmatically.
+// Use Cases: Enforce corporate dark‑blue branding on all WordArt objects before publishing a multi‑sheet report. | Standardize visual appearance of generated dashboards by converting WordArt text to a single color. | Modernize legacy spreadsheets by automatically updating WordArt font colors to match new design guidelines.
+// AI Prompts: Write C# code with Aspose.Cells that changes the font color of all WordArt shapes to a custom RGB value. | Explain how to identify WordArt shapes in a worksheet and modify their text formatting using Shape.IsWordArt. | Show a script that processes a folder of Excel files and batch‑updates WordArt text colors to dark blue with Aspose.Cells.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsWordArtColorChange
+// Loads a workbook, iterates every worksheet and its Shapes collection, detects WordArt objects via Shape.IsWordArt, sets their Font.Color to Color.DarkBlue, and saves the updated file.
+class ChangeWordArtColor
 {
-    // Loads an Excel workbook, iterates each worksheet and its Shapes collection, identifies WordArt objects via IsWordArt, sets their Font.Color to Color.DarkBlue, and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Iterate through all shapes in the worksheet
+            foreach (Shape shape in sheet.Shapes)
             {
-                // Iterate through all shapes in the worksheet
-                foreach (Shape shape in sheet.Shapes)
+                // Identify WordArt shapes
+                if (shape.IsWordArt)
                 {
-                    // Check if the shape is a WordArt object
-                    if (shape.IsWordArt)
-                    {
-                        // Change the text color to dark blue
-                        shape.Font.Color = Color.DarkBlue;
-                    }
+                    // Change the text color to dark blue
+                    shape.Font.Color = Color.DarkBlue;
                 }
             }
-
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("output.xlsx");
         }
+
+        // Save the workbook with the updated WordArt colors
+        workbook.Save("output.xlsx");
     }
 }

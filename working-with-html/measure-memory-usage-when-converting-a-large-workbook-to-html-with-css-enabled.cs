@@ -1,65 +1,76 @@
-// Title: Measure memory usage during large Excel‑to‑HTML conversion with CSS (Aspose.Cells for .NET)
-// Description: Creates a 5,000‑row × 50‑column workbook, applies MemoryPreference, records process private memory before and after saving to HTML with Css enabled (HtmlSaveOptions), and outputs the memory delta in megabytes.
-// Keywords: Aspose.Cells memory profiling | HTML conversion memory usage | .NET workbook to HTML | Css enabled HtmlSaveOptions | large Excel workbook performance | MemoryPreference Aspose.Cells | process PrivateMemorySize64 | benchmark Aspose.Cells HTML export
-// Common Searches: Aspose.Cells memory usage when saving to HTML | How to track .NET memory during Excel to HTML conversion | HtmlSaveOptions CSS impact on memory consumption | Measure peak memory for large workbook HTML export | Reduce memory footprint Aspose.Cells HTML conversion
-// Developer Intent: Quantify the memory consumed by Aspose.Cells when converting a massive workbook to HTML with CSS enabled.
-// Use Cases: Benchmark memory impact of different HtmlSaveOptions settings. | Validate that MemoryPreference lowers peak memory for huge worksheets. | Compare memory usage with CSS enabled versus disabled during HTML export.
-// AI Prompts: Generate C# code that logs GC collections, working set, and private memory before and after Aspose.Cells workbook.Save to HTML with CSS options. | Suggest additional techniques (streaming, partial saves, workbook splitting) to further reduce memory consumption for large Excel‑to‑HTML conversions. | Create a unit test that asserts the memory increase stays below a defined threshold when converting a 5,000 × 50 workbook to HTML with CSS enabled.
+// Title: C# – Measure memory usage when exporting a large workbook to HTML with CSS using Aspose.Cells
+// Description: Creates a 5,000‑row × 50‑column workbook, applies the FileCache memory setting, enables CSS in HtmlSaveOptions, records private memory before and after workbook.Save, forces garbage collection, and reports the memory delta.
+// Keywords: Aspose.Cells memory profiling | HTML export memory usage | C# Aspose.Cells large workbook | HtmlSaveOptions CSS performance | FileCache memory setting | process private memory .NET | Excel to HTML conversion benchmark
+// Common Searches: measure memory consumption Aspose.Cells HTML export | C# memory usage large workbook to HTML with CSS | Aspose.Cells memory profiling during Save | how to track memory before and after workbook.Save | impact of CSS on Aspose.Cells HTML conversion memory
+// Developer Intent: Find out how much memory Aspose.Cells consumes when converting a massive workbook to HTML with CSS enabled.
+// Use Cases: Validate that FileCache keeps the memory footprint low for huge worksheets during HTML export. | Compare memory impact of enabling vs. disabling CSS in HtmlSaveOptions for performance tuning. | Add memory checks to CI pipelines to ensure HTML conversion stays within resource limits.
+// AI Prompts: Generate C# code that logs working set, private bytes, and GC collection counts before and after saving a workbook to HTML with Aspose.Cells. | Show how to capture peak memory usage using PerformanceCounter or DiagnosticSource during HTML export with CSS enabled. | Explain best practices for configuring MemorySetting and HtmlSaveOptions to minimize memory consumption in large‑scale Excel‑to‑HTML conversions.
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a 5,000‑row × 50‑column workbook, applies MemoryPreference, records process private memory before and after saving to HTML with Css enabled (HtmlSaveOptions), and outputs the memory delta in megabytes.
-class MeasureMemoryDuringHtmlConversion
+namespace AsposeCellsMemoryMeasurement
 {
-    static void Main()
+    // Creates a 5,000‑row × 50‑column workbook, applies the FileCache memory setting, enables CSS in HtmlSaveOptions, records private memory before and after workbook.Save, forces garbage collection, and reports the memory delta.
+    class Program
     {
-        // Create a large workbook with many rows and columns
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate the worksheet with sample data (e.g., 5000 rows x 50 columns)
-        int rows = 5000;
-        int cols = 50;
-        for (int r = 0; r < rows; r++)
+        static void Main()
         {
-            for (int c = 0; c < cols; c++)
+            // Path to the generated HTML file
+            string htmlPath = Path.Combine(Path.GetTempPath(), "LargeWorkbook.html");
+
+            // Create a large workbook (e.g., 5000 rows x 50 columns)
+            Workbook workbook = new Workbook();
+            // Use a memory‑friendly setting for large data
+            workbook.Settings.MemorySetting = MemorySetting.FileCache;
+
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate the worksheet with sample data
+            for (int row = 0; row < 5000; row++)
             {
-                cells[r, c].PutValue($"R{r + 1}C{c + 1}");
+                for (int col = 0; col < 50; col++)
+                {
+                    cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                }
             }
+
+            // Configure HTML save options with CSS enabled (default behavior)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            {
+                // Ensure CSS is used (inline styles disabled)
+                DisableCss = false,
+                // Keep CSS in separate files for clarity (optional)
+                ExportWorksheetCSSSeparately = false,
+                // Enable additional CSS custom properties for better performance
+                EnableCssCustomProperties = true
+            };
+
+            // Measure memory before conversion
+            Process proc = Process.GetCurrentProcess();
+            long memoryBefore = proc.PrivateMemorySize64;
+
+            // Convert the workbook to HTML
+            workbook.Save(htmlPath, htmlOptions);
+
+            // Force garbage collection to get a more accurate post‑conversion measurement
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            // Measure memory after conversion
+            long memoryAfter = proc.PrivateMemorySize64;
+
+            // Output the results
+            Console.WriteLine($"HTML file saved to: {htmlPath}");
+            Console.WriteLine($"Memory before conversion: {memoryBefore / 1024 / 1024} MB");
+            Console.WriteLine($"Memory after conversion : {memoryAfter / 1024 / 1024} MB");
+            Console.WriteLine($"Memory increase          : {(memoryAfter - memoryBefore) / 1024 / 1024} MB");
+
+            // Clean up
+            workbook.Dispose();
         }
-
-        // Optional: set memory preference to reduce memory footprint during processing
-        workbook.Settings.MemorySetting = MemorySetting.MemoryPreference;
-
-        // Capture memory usage before conversion
-        Process proc = Process.GetCurrentProcess();
-        long memoryBefore = proc.PrivateMemorySize64;
-
-        // Configure HTML save options with CSS enabled (default behavior)
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-        {
-            // Ensure CSS is used (inline styles only when DisableCss is true)
-            DisableCss = false,
-            // Export worksheet CSS separately to keep CSS files (optional)
-            ExportWorksheetCSSSeparately = true,
-            // Enable additional CSS custom properties for better performance (optional)
-            EnableCssCustomProperties = true
-        };
-
-        // Convert the workbook to HTML
-        string htmlPath = "LargeWorkbook.html";
-        workbook.Save(htmlPath, htmlOptions);
-
-        // Capture memory usage after conversion
-        long memoryAfter = proc.PrivateMemorySize64;
-
-        // Output memory usage information
-        Console.WriteLine($"Memory before conversion: {memoryBefore / (1024 * 1024)} MB");
-        Console.WriteLine($"Memory after conversion : {memoryAfter / (1024 * 1024)} MB");
-        Console.WriteLine($"Memory increase         : {(memoryAfter - memoryBefore) / (1024 * 1024)} MB");
-        Console.WriteLine($"HTML file saved to: {htmlPath}");
     }
 }

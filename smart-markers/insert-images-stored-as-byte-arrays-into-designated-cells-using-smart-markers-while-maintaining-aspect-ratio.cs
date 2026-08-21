@@ -1,10 +1,10 @@
-// Title: Insert Images from Byte Arrays into Cells Using Smart Markers and Keep Aspect Ratio – Aspose.Cells for .NET
-// Description: Demonstrates how to read a PNG file into a byte[] array, bind it to a DataTable, place a smart marker "&=Image" in a target cell, process the marker with WorkbookDesigner, lock the picture's aspect ratio, attach the image to the cell, and save the workbook.
-// Keywords: Aspose.Cells image from byte array | smart markers insert picture .NET | lock picture aspect ratio Aspose.Cells | WorkbookDesigner image insertion | C# embed image in Excel cell | place picture in cell with smart marker
-// Common Searches: how to embed a byte[] image in Excel using Aspose.Cells smart markers | preserve aspect ratio when inserting images via Aspose.Cells | set picture to move with cell after smart marker processing | insert multiple images from DataTable using Aspose.Cells smart markers | C# Aspose.Cells image insertion example
-// Developer Intent: Embed a byte‑array image into a specific worksheet cell through a smart marker and ensure the picture retains its original proportions.
-// Use Cases: Generate product catalogs where each product row displays a photo stored as a byte[] in a database. | Create employee directories that pull profile pictures from a byte[] field and embed them in designated cells. | Add a company logo from a byte[] to an invoice header while keeping the logo's dimensions proportional.
-// AI Prompts: Show code to insert several images from a DataTable into consecutive rows using smart markers, with each picture locked to its aspect ratio. | Provide an example of using WorkbookDesigner with a List<T> where T contains a byte[] Image property for smart‑marker population. | Explain how to adjust a picture's size relative to its cell after locking the aspect ratio in Aspose.Cells.
+// Title: Insert image byte array into a worksheet cell via smart markers with aspect‑ratio lock – Aspose.Cells for .NET
+// Description: This C# sample reads a PNG file into a byte[], adds it to a DataTable, places the &IMG smart marker in cell A1, processes the marker with WorkbookDesigner, then configures the inserted picture to stay inside the cell and retain its proportions before saving the workbook.
+// Keywords: Aspose.Cells image byte array | smart marker &IMG | place picture in cell | lock aspect ratio | IsPlacedInCell property | C# Excel image insertion | WorkbookDesigner image handling
+// Common Searches: Aspose.Cells insert image from byte[] using smart marker | C# keep picture aspect ratio when adding to Excel with Aspose | How to embed PNG into a specific cell with Aspose.Cells | Set IsPlacedInCell true for smart‑marker images | Smart marker image scaling Aspose.Cells
+// Developer Intent: Add a picture stored as a byte[] to a designated Excel cell through a smart marker, ensuring the image remains within the cell boundaries and preserves its original proportions.
+// Use Cases: Load a company logo into a byte array, bind it to a DataTable, use the &IMG marker in a template cell, and lock the aspect ratio so the logo fits neatly. | Generate product catalogs where each row contains a product photo; populate a DataTable with multiple byte[] columns and apply the same smart‑marker logic to insert and size each image. | Create a reporting template that automatically places user‑uploaded photos into predefined cells, preventing distortion and keeping the images confined to their cells.
+// AI Prompts: Provide C# code that inserts multiple images from a DataTable into consecutive rows using smart markers, and sets each picture to be placed in the cell with a locked aspect ratio. | Explain how to automatically adjust row height and column width after inserting an image with IsPlacedInCell enabled in Aspose.Cells. | Show how to handle different image formats (PNG, JPEG, GIF) stored as byte arrays when using smart markers to embed them in a worksheet.
 
 using System;
 using System.Data;
@@ -14,58 +14,53 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsImageSmartMarkerDemo
 {
-    // Demonstrates how to read a PNG file into a byte[] array, bind it to a DataTable, place a smart marker "&=Image" in a target cell, process the marker with WorkbookDesigner, lock the picture's aspect ratio, attach the image to the cell, and save the workbook.
+    // This C# sample reads a PNG file into a byte[], adds it to a DataTable, places the &IMG smart marker in cell A1, processes the marker with WorkbookDesigner, then configures the inserted picture to stay inside the cell and retain its proportions before saving the workbook.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Define the target cell where the image will be placed using a smart marker
-                // The smart marker syntax "&=Image" tells Aspose.Cells to treat the cell value as an image
-                Cell markerCell = sheet.Cells["B2"];
-                markerCell.PutValue("&=Image");
-
-                // Prepare image data as a byte array (example uses a local PNG file)
-                byte[] imageBytes = null;
-                string imagePath = "sample.png";
-                if (File.Exists(imagePath))
+                // ---------- 1. Prepare image byte array ----------
+                const string imagePath = "sample.png";
+                if (!File.Exists(imagePath))
                 {
-                    imageBytes = File.ReadAllBytes(imagePath);
-                }
-                else
-                {
-                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping image insertion.");
+                    Console.WriteLine($"Image file \"{imagePath}\" not found.");
+                    return;
                 }
 
-                // Create a DataTable that will serve as the data source for the smart marker
-                DataTable dt = new DataTable();
-                dt.Columns.Add("Image", typeof(byte[]));
+                byte[] imageBytes = File.ReadAllBytes(imagePath);
+
+                // ---------- 2. Create a data source containing the image ----------
+                DataTable dt = new DataTable("Images");
+                dt.Columns.Add("ImageData", typeof(byte[]));
                 dt.Rows.Add(imageBytes);
 
-                // Process the smart markers using WorkbookDesigner (compatible with all Aspose.Cells versions)
+                // ---------- 3. Create a workbook and place a smart marker ----------
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                // Put the smart marker in cell A1.
+                sheet.Cells["A1"].PutValue("&IMG");
+
+                // ---------- 4. Process the smart marker ----------
                 WorkbookDesigner designer = new WorkbookDesigner(workbook);
                 designer.SetDataSource(dt);
                 designer.Process();
 
-                // After processing, the image is placed in the cell as an embedded picture.
-                // Retrieve the picture object that was created and lock its aspect ratio.
-                // The picture is the last one added to the worksheet's Pictures collection.
+                // ---------- 5. Adjust the inserted picture ----------
                 if (sheet.Pictures.Count > 0)
                 {
-                    Picture pic = sheet.Pictures[sheet.Pictures.Count - 1];
-                    pic.IsAspectRatioLocked = true; // Maintain original aspect ratio
-                    pic.IsPlacedInCell = true;      // Ensure the picture moves/resizes with the cell
+                    Picture pic = sheet.Pictures[0];
+                    // Place the picture inside the cell (maintains cell boundaries).
+                    pic.IsPlacedInCell = true;
+                    // Lock aspect ratio so the image scales proportionally.
+                    pic.IsAspectRatioLocked = true;
                 }
 
-                // Save the workbook
-                string outputPath = "ImageSmartMarkerOutput.xlsx";
+                // ---------- 6. Save the workbook ----------
+                const string outputPath = "ImageSmartMarkerOutput.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
             }
             catch (Exception ex)
             {

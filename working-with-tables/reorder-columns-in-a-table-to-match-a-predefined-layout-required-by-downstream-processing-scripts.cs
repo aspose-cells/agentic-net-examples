@@ -1,80 +1,86 @@
-// Title: Reorder Excel Table Columns with Aspose.Cells CopyColumns in C#
-// Description: This example creates a workbook, defines a source ListObject with columns ID, Name, Age, and Salary, and generates a new worksheet where the columns are copied in the order Name, ID, Salary, Age using the CopyColumns method. The destination table’s column headers are refreshed, formatting is preserved, and the file is saved as an Excel workbook.
-// Keywords: Aspose.Cells | C# | .NET | CopyColumns | ListObject | reorder columns | Excel table column order | move columns between worksheets | preserve formatting | data transformation | global | United States | Europe
-// Common Searches: how to change column order of a ListObject using Aspose.Cells | copy specific columns to another sheet in C# Aspose.Cells | reorder Excel table columns programmatically .NET | preserve table style when moving columns Aspose.Cells | sample code for CopyColumns Aspose.Cells C#
-// Developer Intent: The developer needs to rearrange the columns of an Excel table to a predefined sequence without altering the original sheet.
-// Use Cases: Create a downstream‑ready worksheet with a custom column layout. | Generate reports where the column sequence differs from the source data. | Prepare data files for systems that require a specific column order.
-// AI Prompts: Show how to reorder columns of an existing ListObject in place without creating a new worksheet using Aspose.Cells. | Provide a dynamic method that maps header names to indexes and reorders them with CopyColumns. | Explain how to keep cell formats, table styles, and formulas intact while reordering columns in Aspose.Cells.
+// Title: Reorder Excel worksheet columns and keep ListObject intact with Aspose.Cells for .NET (C#)
+// Description: Loads a workbook, creates a new sheet, copies columns to a custom order using Cells.CopyColumns, replicates any existing ListObject (Excel table) with updated headers, removes the original sheet, renames the reordered sheet, and saves the result.
+// Keywords: Aspose.Cells C# reorder columns | copy columns Excel Aspose.Cells | preserve ListObject after column reorder | Excel table column order Aspose | worksheet rename Aspose.Cells | copy rows and columns Aspose.Cells | custom column index array Aspose | Excel automation .NET
+// Common Searches: Aspose.Cells reorder worksheet columns C# | how to keep Excel table when reordering columns with Aspose | copy columns to new sheet Aspose.Cells .NET | rename sheet after column rearrangement Aspose | preserve ListObject after column copy Aspose.Cells
+// Developer Intent: Rearrange specific columns in a worksheet, maintain any embedded Excel table, and replace the original sheet with the reordered version.
+// Use Cases: Reorder columns C, A, D, B in a source workbook and export the reordered file. | Move an existing ListObject to a new sheet while changing column order, keeping the table name and headers correct. | Prepare data files for downstream processes that require a fixed column layout, removing the old sheet and renaming the new one.
+// AI Prompts: Write C# code with Aspose.Cells that reorders worksheet columns based on an integer array and preserves any ListObject on the sheet. | Show how to copy a table range to a new worksheet, update its column names after reordering, and delete the original worksheet using Aspose.Cells. | Explain how to handle multiple ListObjects on a sheet when reordering columns with Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsColumnReorderDemo
+namespace AsposeCellsColumnReorder
 {
-    // This example creates a workbook, defines a source ListObject with columns ID, Name, Age, and Salary, and generates a new worksheet where the columns are copied in the order Name, ID, Salary, Age using the CopyColumns method. The destination table’s column headers are refreshed, formatting is preserved, and the file is saved as an Excel workbook.
+    // Loads a workbook, creates a new sheet, copies columns to a custom order using Cells.CopyColumns, replicates any existing ListObject (Excel table) with updated headers, removes the original sheet, renames the reordered sheet, and saves the result.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet (source)
-            Workbook workbook = new Workbook();
-            Worksheet srcSheet = workbook.Worksheets[0];
-            srcSheet.Name = "Source";
+            // Load the source workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("SourceData.xlsx");
 
-            // Populate sample data with headers in columns A‑D
-            // Headers: ID, Name, Age, Salary
-            srcSheet.Cells["A1"].PutValue("ID");
-            srcSheet.Cells["B1"].PutValue("Name");
-            srcSheet.Cells["C1"].PutValue("Age");
-            srcSheet.Cells["D1"].PutValue("Salary");
+            // Assume the data to be reordered is on the first worksheet
+            Worksheet sourceSheet = workbook.Worksheets[0];
 
-            // Add some rows
-            for (int i = 2; i <= 6; i++)
-            {
-                srcSheet.Cells[i - 1, 0].PutValue(i - 1);                 // ID
-                srcSheet.Cells[i - 1, 1].PutValue($"Person {i - 1}");   // Name
-                srcSheet.Cells[i - 1, 2].PutValue(20 + i);              // Age
-                srcSheet.Cells[i - 1, 3].PutValue(3000 + i * 100);      // Salary
-            }
+            // Create a new worksheet that will hold the columns in the required order
+            Worksheet reorderedSheet = workbook.Worksheets.Add("Reordered");
 
-            // Create a table (ListObject) covering the data range (A1:D6)
-            ListObjectCollection srcTables = srcSheet.ListObjects;
-            int srcTableIndex = srcTables.Add(0, 0, 5, 3, true);
-            ListObject srcTable = srcTables[srcTableIndex];
-            srcTable.DisplayName = "EmployeeTable";
+            // Define the desired column order (0‑based indexes of the source columns)
+            // Example: new order = Column C, Column A, Column D, Column B
+            int[] desiredOrder = new int[] { 2, 0, 3, 1 };
 
-            // Desired column order: Name, ID, Salary, Age
-            // Corresponding source column indexes (0‑based): B(1), A(0), D(3), C(2)
-            int[] desiredOrder = new int[] { 1, 0, 3, 2 };
-
-            // Add a new worksheet that will hold the reordered columns
-            Worksheet destSheet = workbook.Worksheets.Add("Reordered");
-
-            // Copy columns from source to destination according to the desired order
-            // Each iteration copies one whole column (including header) to the target position
+            // Copy each column from the source sheet to the new sheet according to the desired order
             for (int destCol = 0; destCol < desiredOrder.Length; destCol++)
             {
                 int srcCol = desiredOrder[destCol];
-                // Copy the whole column (including formats) from srcSheet to destSheet
-                destSheet.Cells.CopyColumns(
-                    srcSheet.Cells,   // source cells
-                    srcCol,           // source column index
-                    destCol,          // destination column index in destSheet
-                    1);               // number of columns to copy
+                // Copy a single column (columnNumber = 1) from source to destination
+                reorderedSheet.Cells.CopyColumns(
+                    sourceSheet.Cells,   // source cells
+                    srcCol,              // source column index
+                    destCol,             // destination column index
+                    1);                  // number of columns to copy
             }
 
-            // Create a table in the destination sheet that matches the copied range
-            ListObjectCollection destTables = destSheet.ListObjects;
-            int destTableIndex = destTables.Add(0, 0, 5, desiredOrder.Length - 1, true);
-            ListObject destTable = destTables[destTableIndex];
-            destTable.DisplayName = "ReorderedEmployeeTable";
+            // If the source sheet contains a ListObject (table), copy it to the new sheet
+            // and update its column names so they match the header cells.
+            if (sourceSheet.ListObjects.Count > 0)
+            {
+                // Copy the entire table range (including headers) to the new sheet
+                ListObject sourceTable = sourceSheet.ListObjects[0];
+                int firstRow = sourceTable.StartRow;
+                int firstCol = sourceTable.StartColumn;
+                int totalRows = sourceTable.EndRow - firstRow + 1;
+                int totalCols = sourceTable.EndColumn - firstCol + 1;
 
-            // Update the table column names to reflect the header values in the new layout
-            destTable.UpdateColumnName();
+                // Copy the range that contains the table
+                reorderedSheet.Cells.CopyRows(
+                    sourceSheet.Cells,
+                    firstRow,
+                    firstRow,
+                    totalRows);
 
-            // Save the workbook (output file)
-            workbook.Save("ReorderedColumnsDemo.xlsx");
+                // Re‑create the table on the reordered sheet (same size, with headers)
+                int newTableIndex = reorderedSheet.ListObjects.Add(
+                    firstRow,
+                    0,                     // destination column is now 0 after reordering
+                    firstRow + totalRows - 1,
+                    desiredOrder.Length - 1,
+                    true);
+                ListObject newTable = reorderedSheet.ListObjects[newTableIndex];
+                newTable.DisplayName = sourceTable.DisplayName;
+
+                // Ensure column names reflect the header cells after reordering
+                newTable.UpdateColumnName();
+            }
+
+            // Remove the original sheet and rename the reordered sheet to the original name
+            int sourceIndex = sourceSheet.Index;
+            workbook.Worksheets.RemoveAt(sourceIndex);
+            reorderedSheet.Name = "Sheet1";
+
+            // Save the modified workbook (replace with your desired output path)
+            workbook.Save("ReorderedData.xlsx");
         }
     }
 }

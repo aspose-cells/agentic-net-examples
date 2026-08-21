@@ -1,34 +1,59 @@
-// Title: Rename a Named Range (ReportData → SummaryData) in Aspose.Cells for .NET and Save the Workbook
-// Description: Shows how to get a Name object, update its Text property from "ReportData" to "SummaryData", and save the workbook with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells rename named range | Name.Text property C# | modify named range Aspose.Cells | Workbook.Save after rename | C# Aspose.Cells named range management
-// Common Searches: rename named range Aspose.Cells .NET | change Name.Text Aspose.Cells | update named range and save workbook C# | Aspose.Cells how to rename a name object | C# code to modify named range in Excel file
-// Developer Intent: Change the existing named range "ReportData" to "SummaryData" and write the updated workbook to disk.
-// Use Cases: Align workbook named ranges with a standardized reporting schema before distribution. | Allow end‑users to rename ranges dynamically based on UI input during runtime. | Prepare a batch of workbooks for automated processing by enforcing a consistent naming convention.
-// AI Prompts: Write C# code using Aspose.Cells that checks if a named range exists, renames it safely, and saves the workbook, handling errors gracefully. | Create a reusable method that accepts oldName, newName, and filePath, renames the Name object, and persists the workbook. | Explain the difference between Name.Text and Name.RefersTo in Aspose.Cells, with examples of when to use each.
+// Title: C# – Rename an Excel defined name with Aspose.Cells (ReportData → SummaryData)
+// Description: Loads (or creates) an Excel workbook, retrieves the defined name "ReportData", changes its Name.Text to "SummaryData", and saves the modified file. Demonstrates safe handling when the name is missing.
+// Keywords: Aspose.Cells | C# | rename defined name | Name.Text | Excel named range | Workbook.Save | ReportData | SummaryData | Aspose.Cells for .NET | named range rename | Excel automation
+// Common Searches: Aspose.Cells rename defined name C# | Change Name.Text property Aspose.Cells | How to rename Excel named range using Aspose.Cells .NET | C# code to rename ReportData to SummaryData | Update named range programmatically Aspose.Cells
+// Developer Intent: Rename the existing defined name "ReportData" to "SummaryData" in an Excel workbook using Aspose.Cells for .NET and persist the change.
+// Use Cases: Refactor legacy named ranges after a data model change. | Enforce consistent naming across a batch of generated reports. | Replace placeholder names in a template before distribution. | Automate workbook cleanup by renaming obsolete ranges.
+// AI Prompts: Write C# code with Aspose.Cells that finds a defined name 'ReportData', changes its Text to 'SummaryData', and saves the workbook, handling the case where the name does not exist. | Show a C# Aspose.Cells snippet that creates a workbook, adds a dummy defined name, renames it to 'SummaryData', and writes the file to disk. | Provide a GitHub‑style README example for renaming an Excel named range using Aspose.Cells for .NET.
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to get a Name object, update its Text property from "ReportData" to "SummaryData", and save the workbook with Aspose.Cells for .NET.
+// Loads (or creates) an Excel workbook, retrieves the defined name "ReportData", changes its Name.Text to "SummaryData", and saves the modified file. Demonstrates safe handling when the name is missing.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        const string inputPath = "ReportDataWorkbook.xlsx";
+        const string outputPath = "ModifiedReportDataWorkbook.xlsx";
 
-        // Ensure there is a named range called "ReportData"
-        // (If it already exists, this will add another with the same name; adjust as needed)
-        int idx = workbook.Worksheets.Names.Add("ReportData");
-        Name reportName = workbook.Worksheets.Names[idx];
-        reportName.RefersTo = "=Sheet1!$A$1:$B$2";
+        try
+        {
+            Workbook workbook;
 
-        // Retrieve the Name object for "ReportData"
-        Name nameObj = workbook.Worksheets.Names["ReportData"];
+            // Load existing workbook if it exists; otherwise create a new one with a placeholder defined name.
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Name = "Sheet1";
 
-        // Change its Text property to "SummaryData"
-        nameObj.Text = "SummaryData";
+                // Add a dummy defined name "ReportData" pointing to cell A1.
+                int nameIndex = workbook.Worksheets.Names.Add("ReportData");
+                workbook.Worksheets.Names[nameIndex].RefersTo = $"{sheet.Name}!$A$1";
+            }
 
-        // Save the workbook
-        workbook.Save("ModifiedWorkbook.xlsx");
+            // Retrieve the defined name "ReportData".
+            Name reportName = workbook.Worksheets.Names["ReportData"];
+
+            // If the name exists, rename it to "SummaryData".
+            if (reportName != null)
+            {
+                reportName.Text = "SummaryData";
+            }
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

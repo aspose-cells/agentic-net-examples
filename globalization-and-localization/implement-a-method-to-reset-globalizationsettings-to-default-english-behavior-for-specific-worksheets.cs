@@ -1,56 +1,68 @@
+// Title: Reset Aspose.Cells Workbook GlobalizationSettings to Default English in C#
+// Description: A C# helper that creates a fresh GlobalizationSettings instance containing the built‑in English strings (e.g., "TRUE", "FALSE", error messages) and assigns it to Workbook.Settings.GlobalizationSettings, reverting any custom localization for the entire workbook. An optional worksheetIndices parameter is kept for API compatibility but does not affect the global reset.
+// Keywords: Aspose.Cells | C# | Reset GlobalizationSettings | default English globalization | SettableGlobalizationSettings | workbook culture reset | Excel localization | boolean strings TRUE FALSE | error message localization | worksheet globalization
+// Common Searches: how to reset Aspose.Cells globalization to English | Aspose.Cells default English settings .NET | reset workbook culture Aspose.Cells C# | remove custom localization from Aspose.Cells workbook | globalization settings revert Aspose.Cells
+// Developer Intent: Restore a workbook's globalization to the built‑in English defaults.
+// Use Cases: After applying custom SettableGlobalizationSettings for a localized workbook, call the helper to ensure English boolean and error strings before saving or exporting. | When loading workbooks from unknown locales, reset globalization to guarantee consistent English output across all sheets. | In a multi‑sheet processing pipeline, use the method (with optional worksheet indices) to keep the signature stable while globally resetting culture.
+// AI Prompts: Generate C# code that resets Aspose.Cells workbook globalization to default English without altering cell values. | Show how to validate that boolean cells display "TRUE" and "FALSE" after resetting GlobalizationSettings in Aspose.Cells. | Extend ResetGlobalizationSettings to accept a culture name and apply the corresponding built‑in globalization settings in C#.
+
 using System;
 using Aspose.Cells;
 
-public class GlobalizationResetDemo
+// A C# helper that creates a fresh GlobalizationSettings instance containing the built‑in English strings (e.g., "TRUE", "FALSE", error messages) and assigns it to Workbook.Settings.GlobalizationSettings, reverting any custom localization for the entire workbook. An optional worksheetIndices parameter is kept for API compatibility but does not affect the global reset.
+public static class GlobalizationHelper
 {
-    // Resets the workbook's globalization settings to the default English behavior.
-    // Aspose.Cells applies globalization at the workbook level, so this affects all worksheets.
-    public static void ResetGlobalizationSettings(Workbook workbook, params int[] worksheetIndices)
+    /// <param name="workbook">The workbook whose globalization settings should be reset.</param>
+    /// <param name="worksheetIndices">
+    /// Optional array of worksheet indices that the caller is interested in.
+    /// The parameter is not used internally because globalization settings are workbook‑wide,
+    /// but it allows the caller to specify which sheets triggered the reset.
+    /// </param>
+    public static void ResetGlobalizationSettings(Workbook workbook, int[] worksheetIndices = null)
     {
-        // Create a fresh instance of the default (English) globalization settings.
+        if (workbook == null)
+            throw new ArgumentNullException(nameof(workbook));
+
+        // Create a fresh GlobalizationSettings instance – this contains the default
+        // English strings (e.g., "TRUE", "FALSE", error values, etc.).
         GlobalizationSettings defaultSettings = new GlobalizationSettings();
 
-        // Apply the default settings to the workbook.
+        // Assign the default settings to the workbook.
         workbook.Settings.GlobalizationSettings = defaultSettings;
-    }
 
-    public static void Run()
-    {
-        // ---------- Create a workbook ----------
-        Workbook wb = new Workbook();               // create new workbook
-        wb.Worksheets.Add();                        // now we have two worksheets (indices 0 and 1)
-
-        // ---------- Apply custom globalization to demonstrate the change ----------
-        SettableGlobalizationSettings custom = new SettableGlobalizationSettings();
-        custom.SetBooleanValueString(true, "TRUE_CUSTOM");
-        custom.SetBooleanValueString(false, "FALSE_CUSTOM");
-        wb.Settings.GlobalizationSettings = custom; // set custom settings
-
-        // Populate some cells with boolean values.
-        wb.Worksheets[0].Cells["A1"].PutValue(true);
-        wb.Worksheets[0].Cells["A2"].PutValue(false);
-
-        Console.WriteLine("Before reset:");
-        Console.WriteLine($"Sheet0 A1: {wb.Worksheets[0].Cells["A1"].StringValue}");
-        Console.WriteLine($"Sheet0 A2: {wb.Worksheets[0].Cells["A2"].StringValue}");
-
-        // ---------- Reset globalization to default English for worksheet 0 ----------
-        // (The reset is workbook‑wide; the worksheetIndices parameter is kept for API compatibility.)
-        ResetGlobalizationSettings(wb, 0);
-
-        Console.WriteLine("After reset:");
-        Console.WriteLine($"Sheet0 A1: {wb.Worksheets[0].Cells["A1"].StringValue}");
-        Console.WriteLine($"Sheet0 A2: {wb.Worksheets[0].Cells["A2"].StringValue}");
-
-        // ---------- Save the workbook ----------
-        wb.Save("GlobalizationResetDemo.xlsx");
+        // No further per‑worksheet handling is required because the settings are
+        // applied globally. The optional worksheetIndices parameter is kept for API
+        // compatibility and future extensions.
     }
 }
 
+// Example usage
 class Program
 {
     static void Main()
     {
-        GlobalizationResetDemo.Run();
+        // Create a new workbook and add some data
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+        ws.Cells["A1"].PutValue(true);
+        ws.Cells["A2"].PutValue(false);
+        ws.Cells["A3"].PutValue("#DIV/0!");
+
+        // Suppose we previously applied custom globalization settings
+        SettableGlobalizationSettings customSettings = new SettableGlobalizationSettings();
+        customSettings.SetBooleanValueString(true, "ИСТИНА");
+        customSettings.SetBooleanValueString(false, "ЛОЖЬ");
+        wb.Settings.GlobalizationSettings = customSettings;
+
+        // Now reset to default English behavior for the first worksheet (index 0)
+        GlobalizationHelper.ResetGlobalizationSettings(wb, new int[] { 0 });
+
+        // Verify that the default English strings are used
+        Console.WriteLine($"Cell A1: {ws.Cells["A1"].StringValue}"); // Expected: TRUE
+        Console.WriteLine($"Cell A2: {ws.Cells["A2"].StringValue}"); // Expected: FALSE
+        Console.WriteLine($"Cell A3: {ws.Cells["A3"].StringValue}"); // Expected: #DIV/0!
+
+        // Save the workbook (using the standard Aspose.Cells save method)
+        wb.Save("ResetGlobalizationDemo.xlsx");
     }
 }

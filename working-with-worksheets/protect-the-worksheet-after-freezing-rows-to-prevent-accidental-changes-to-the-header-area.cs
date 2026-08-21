@@ -1,48 +1,34 @@
-// Title: Freeze Header Row and Protect Worksheet with Password using Aspose.Cells for .NET
-// Description: Demonstrates how to create a new workbook, freeze the first row as a header, apply full worksheet protection with a password, and save the file as ProtectedHeader.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells freeze row | protect worksheet password | freeze panes .NET | worksheet protection Aspose.Cells | C# Excel header freeze | Aspose.Cells example | Excel security Aspose
-// Common Searches: Aspose.Cells freeze first row and protect | how to protect worksheet after freezing panes in C# | set password on Excel sheet with Aspose.Cells | freeze header and lock cells Aspose.Cells .NET | protect Excel workbook programmatically Aspose
-// Developer Intent: Freeze the top row and secure the entire worksheet with a password.
-// Use Cases: Create a read‑only report where the header stays visible while scrolling. | Distribute a template that locks all cells after freezing the header to avoid accidental edits. | Generate an export file for external partners with the header area frozen and password‑protected.
-// AI Prompts: Provide C# code that freezes the first row and applies full worksheet protection with a password using Aspose.Cells. | Show how to freeze multiple header rows and protect only specific ranges in an Aspose.Cells workbook. | Explain how to programmatically unprotect a worksheet that was frozen and secured with a password in Aspose.Cells.
+// Title: Freeze Top Header Row and Protect Worksheet with Password using Aspose.Cells for .NET (C#)
+// Description: Creates a new workbook, freezes the first row by setting the freeze pane at A2, applies full worksheet protection with a password, and saves the file as ProtectedHeader.xlsx.
+// Keywords: Aspose.Cells freeze panes C# | Aspose.Cells protect worksheet password | freeze header row C# | worksheet protection Aspose.Cells | C# Excel freeze and lock
+// Common Searches: Aspose.Cells freeze first row and protect sheet | C# protect worksheet after freezing panes | how to lock header row in generated Excel using Aspose.Cells | freeze panes and set password protection Aspose.Cells .NET | prevent editing of frozen header in Aspose.Cells workbook
+// Developer Intent: Freeze the first row and secure the worksheet with a password to stop accidental header changes.
+// Use Cases: Generate a read‑only report where the header stays visible while scrolling and cannot be edited. | Create a data‑entry template that allows users to edit data rows but keeps the frozen header locked. | Distribute a spreadsheet to end users with a protected header after programmatically freezing panes.
+// AI Prompts: Show C# code to freeze multiple rows and protect only specific cells while leaving other cells editable with Aspose.Cells. | Explain how to unprotect a worksheet, modify the header row, and re‑apply password protection using Aspose.Cells for .NET. | Compare ProtectionType options when protecting a worksheet after freezing panes in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a new workbook, freeze the first row as a header, apply full worksheet protection with a password, and save the file as ProtectedHeader.xlsx using Aspose.Cells for .NET.
-public class ProtectHeaderDemo
+// Creates a new workbook, freezes the first row by setting the freeze pane at A2, applies full worksheet protection with a password, and saves the file as ProtectedHeader.xlsx.
+class Program
 {
-    public static void Run()
+    static void Main()
     {
-        try
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Freeze the first row (header) – freeze panes at the second row (index 1)
-            // Parameters: row index, column index, number of frozen rows, number of frozen columns
-            sheet.FreezePanes(1, 0, 1, 0);
+        // Freeze the header row (first row). Freeze starts at cell A2,
+        // with 1 frozen row and 0 frozen columns.
+        sheet.FreezePanes("A2", 1, 0);
 
-            // Protect the worksheet with all protection options and a password
-            sheet.Protect(ProtectionType.All, "HeaderPass", null);
+        // Protect the worksheet with all protection options and a password.
+        // This prevents editing of the locked header cells.
+        sheet.Protect(ProtectionType.All, "HeaderProtect123", null);
 
-            // Save the workbook
-            workbook.Save("ProtectedHeader.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        ProtectHeaderDemo.Run();
+        // Save the workbook
+        workbook.Save("ProtectedHeader.xlsx");
     }
 }

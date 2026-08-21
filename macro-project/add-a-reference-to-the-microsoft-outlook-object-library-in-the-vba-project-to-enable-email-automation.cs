@@ -1,51 +1,66 @@
+// Title: Add Outlook Object Library Reference to an Excel VBA Project with Aspose.Cells (C#)
+// Description: Demonstrates how to create a new workbook with Aspose.Cells, access its VBA project, set UTF‑8 encoding, and programmatically add a registered reference to the Microsoft Outlook 16.0 Object Library. The workbook is saved as a macro‑enabled XLSM file, ready for Outlook automation from VBA macros.
+// Keywords: Aspose.Cells VBA reference | C# add Outlook library | Excel macro‑enabled workbook | Add Outlook reference programmatically | VbaProject References AddRegisteredReference | Outlook Object Library GUID | Excel automation with Outlook | Save XLSM with Aspose.Cells
+// Common Searches: how to add outlook reference to excel vba using aspocells | c# add microsoft outlook object library to vba project | programmatically insert outlook reference in xlsm file | aspocells add registered reference outlook | create macro enabled workbook with outlook automation
+// Developer Intent: Insert the Microsoft Outlook Object Library into a workbook’s VBA project so VBA macros can control Outlook.
+// Use Cases: Generate a template workbook that can send emails via Outlook without manual reference setup. | Automate report distribution where VBA code drafts and dispatches Outlook messages. | Prepare a pre‑configured XLSM file for end‑users who need Outlook integration in Excel macros.
+// AI Prompts: Write C# code using Aspose.Cells to add the Outlook 16.0 Object Library as a registered reference in a VBA project and save the file as .xlsm. | Explain how to locate the Outlook library GUID and use VbaProject.References.AddRegisteredReference to embed it in an Excel workbook. | Show how to verify that the Outlook reference was added correctly to the generated VBA project.
+
 using System;
+using System.IO;
 using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
 namespace AsposeCellsVbaOutlookReference
 {
-    class Program
+    // Demonstrates how to create a new workbook with Aspose.Cells, access its VBA project, set UTF‑8 encoding, and programmatically add a registered reference to the Microsoft Outlook 16.0 Object Library. The workbook is saved as a macro‑enabled XLSM file, ready for Outlook automation from VBA macros.
+    public class AddOutlookReference
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook (macro-enabled will be saved later)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new empty workbook
+                Workbook workbook = new Workbook();
 
-            // Access the VBA project (automatically created for .xlsm files)
-            VbaProject vbaProject = workbook.VbaProject;
+                // Get (or lazily create) the VBA project associated with the workbook
+                VbaProject vbaProject = workbook.VbaProject;
 
-            // Set project encoding (optional, but good practice)
-            vbaProject.Encoding = Encoding.UTF8;
+                // Set the encoding for the VBA project
+                vbaProject.Encoding = Encoding.UTF8;
 
-            // Add a reference to the Microsoft Outlook Object Library.
-            // The libid string below is the typical identifier for Outlook 16.0.
-            // Adjust the path/version if a different Outlook version is targeted.
-            string outlookName = "Outlook";
-            string outlookLibId = "*\\G{00062FFF-0000-0000-C000-000000000046}#9.0#0#C:\\Program Files\\Microsoft Office\\Office16\\MSOUTL.OLB#Microsoft Outlook 16.0 Object Library";
+                // Add a reference to the Microsoft Outlook Object Library
+                string outlookLibId = "*\\G{00062FFF-0000-0000-C000-000000000046}#9.0#0#C:\\Program Files\\Microsoft Office\\Office16\\MSOUTL.OLB#Microsoft Outlook 16.0 Object Library";
+                vbaProject.References.AddRegisteredReference("Outlook", outlookLibId);
 
-            vbaProject.References.AddRegisteredReference(outlookName, outlookLibId);
+                // Define output path
+                string outputPath = "WorkbookWithOutlookReference.xlsm";
 
-            // Optionally, add a simple VBA module that uses Outlook (demonstration purpose)
-            int moduleIndex = vbaProject.Modules.Add(VbaModuleType.Class, "OutlookHelper");
-            VbaModule module = vbaProject.Modules[moduleIndex];
-            module.Codes = @"
-Public Sub SendTestMail()
-    Dim outlookApp As Object
-    Set outlookApp = CreateObject(""Outlook.Application"")
-    Dim mail As Object
-    Set mail = outlookApp.CreateItem(0) ' 0 = olMailItem
-    mail.Subject = ""Test Email""
-    mail.Body = ""This is a test email sent from VBA.""
-    mail.To = ""example@example.com""
-    mail.Send
-End Sub
-";
+                // Ensure the output directory exists (if any)
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-            // Save the workbook as a macro-enabled file
-            workbook.Save("WorkbookWithOutlookReference.xlsm", SaveFormat.Xlsm);
+                // Save the workbook as a macro‑enabled file
+                workbook.Save(outputPath, SaveFormat.Xlsm);
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
 
-            Console.WriteLine("Workbook saved with Outlook reference added.");
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            AddOutlookReference.Run();
         }
     }
 }

@@ -1,10 +1,10 @@
-// Title: Check VBA Project IsSigned After Adding a Digital Signature with Aspose.Cells for .NET (C#)
-// Description: Creates a temporary macro‑enabled workbook, loads an X509 certificate, signs the workbook's VBA project using Aspose.Cells.DigitalSignatures, prints the IsSigned and IsValidSigned flags, saves the file to a memory stream, reloads it, and confirms that the signature status persists after the round‑trip.
-// Keywords: Aspose.Cells VBA digital signature | C# check IsSigned property | verify VBA signature persistence | sign macro-enabled workbook programmatically | IsValidSigned Aspose.Cells | load X509 certificate C# | VBA project signing example | Aspose.Cells .NET digital signature
-// Common Searches: How to check if a VBA project is signed with Aspose.Cells .NET | Verify VBA digital signature after saving workbook in C# | Programmatically sign a macro‑enabled workbook and read IsSigned | Persist VBA signature when saving to a memory stream using Aspose.Cells | Aspose.Cells C# example for VBA project signing and validation
-// Developer Intent: The developer needs to sign a VBA project programmatically and ensure that the IsSigned flag remains true after the workbook is saved and reloaded.
-// Use Cases: Sign a newly created macro‑enabled workbook and validate the signature before distribution. | Load a workbook from a stream, check IsSigned and IsValidSigned to detect tampering. | Automate logging of signature validation results in a batch processing pipeline.
-// AI Prompts: Generate C# code that uses Aspose.Cells to sign a VBA project, then reload the workbook and verify IsSigned and IsValidSigned properties. | Explain how to handle missing or invalid X509 certificate files when signing a VBA project with Aspose.Cells. | Show how to remove a digital signature from a VBA project and confirm that IsSigned becomes false using Aspose.Cells for .NET.
+// Title: C# Example: Verify VBA Project IsSigned After Adding a Digital Signature with Aspose.Cells for .NET
+// Description: Creates a macro‑enabled workbook, loads a .pfx certificate, signs the workbook's VBA project using Aspose.Cells.DigitalSignatures, saves to a memory stream, reloads the file, and reads VbaProject.IsSigned and VbaProject.IsValidSigned to confirm the signature status.
+// Keywords: Aspose.Cells | C# VBA digital signature | VbaProject.IsSigned | VbaProject.IsValidSigned | macro‑enabled workbook | X509Certificate2 signing | programmatic VBA signing | .NET Excel automation | GitHub Aspose.Cells example
+// Common Searches: how to check if a VBA project is signed using Aspose.Cells .NET | Aspose.Cells sample code to sign VBA project and verify IsSigned | C# verify VBA digital signature after signing | VbaProject.IsValidSigned returns false after signing | load .pfx certificate and sign Excel macro project with Aspose
+// Developer Intent: Confirm that a VBA project has been digitally signed and that the signature is valid after programmatic signing with Aspose.Cells.
+// Use Cases: Generate a new .xlsm workbook, apply a digital signature to its VBA project, and read IsSigned to ensure the signing succeeded. | Load an existing .pfx certificate, sign the VBA project of any workbook, then check both IsSigned and IsValidSigned for validation. | Handle missing certificate or missing VBA project gracefully while still reporting the signing outcome.
+// AI Prompts: Write C# code using Aspose.Cells to sign a VBA project with a .pfx certificate and then display VbaProject.IsSigned and IsValidSigned. | Explain error handling when the certificate file is absent while attempting to sign a VBA project with Aspose.Cells. | Show a step‑by‑step example that creates a macro‑enabled workbook, signs its VBA project, saves to a stream, reloads, and verifies the signature status.
 
 using System;
 using System.IO;
@@ -13,31 +13,48 @@ using Aspose.Cells.Vba;
 using Aspose.Cells.DigitalSignatures;
 using System.Security.Cryptography.X509Certificates;
 
-// Creates a temporary macro‑enabled workbook, loads an X509 certificate, signs the workbook's VBA project using Aspose.Cells.DigitalSignatures, prints the IsSigned and IsValidSigned flags, saves the file to a memory stream, reloads it, and confirms that the signature status persists after the round‑trip.
-class CheckVbaProjectSignature
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Creates a macro‑enabled workbook, loads a .pfx certificate, signs the workbook's VBA project using Aspose.Cells.DigitalSignatures, saves to a memory stream, reloads the file, and reads VbaProject.IsSigned and VbaProject.IsValidSigned to confirm the signature status.
+    class CheckVbaSignature
     {
-        const string tempFile = "temp.xlsm";
-        const string certificatePath = "MyCertificate.pfx";
-        const string certificatePassword = "password";
-
-        try
+        static void Main()
         {
-            // Create a temporary macro‑enabled workbook
-            Workbook tempWorkbook = new Workbook();
-            tempWorkbook.Save(tempFile, SaveFormat.Xlsm);
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-            // Load the workbook (now it contains a VBA project placeholder)
-            Workbook workbook = new Workbook(tempFile);
+        public static void Run()
+        {
+            // Create a new workbook (contains a VBA project)
+            Workbook wb = new Workbook();
 
-            // Load the certificate if the file exists
-            X509Certificate2 certificate = null;
-            if (File.Exists(certificatePath))
+            // Ensure the VBA project exists by saving as macro-enabled and reloading
+            using (MemoryStream tempStream = new MemoryStream())
+            {
+                wb.Save(tempStream, SaveFormat.Xlsm);
+                tempStream.Position = 0;
+                wb = new Workbook(tempStream);
+            }
+
+            // Load the signing certificate if the file exists
+            const string certPath = "YourCertificate.pfx";
+            const string certPassword = "password";
+            X509Certificate2? certificate = null;
+
+            if (File.Exists(certPath))
             {
                 try
                 {
-                    certificate = new X509Certificate2(certificatePath, certificatePassword);
+#pragma warning disable SYSLIB0057 // Suppress obsolete warning for demo purposes
+                    certificate = new X509Certificate2(certPath, certPassword);
+#pragma warning restore SYSLIB0057
                 }
                 catch (Exception ex)
                 {
@@ -46,58 +63,38 @@ class CheckVbaProjectSignature
             }
             else
             {
-                Console.WriteLine($"Certificate file '{certificatePath}' not found. Skipping signing.");
+                Console.WriteLine($"Certificate file not found: {certPath}");
             }
 
-            // Sign the VBA project if both certificate and VBA project are available
-            VbaProject vbaProject = workbook.VbaProject;
-            if (certificate != null && vbaProject != null)
+            // Sign the VBA project if a certificate was loaded
+            VbaProject? vbaProject = wb.VbaProject;
+            if (vbaProject != null && certificate != null)
             {
-                DigitalSignature vbaSignature = new DigitalSignature(certificate, "VBA Project Signature", DateTime.Now);
+                DigitalSignature vbaSignature = new DigitalSignature(certificate, "VBA Signing", DateTime.Now);
                 vbaProject.Sign(vbaSignature);
-                Console.WriteLine("After signing - IsSigned: " + vbaProject.IsSigned);
-                Console.WriteLine("After signing - IsValidSigned: " + vbaProject.IsValidSigned);
             }
             else
             {
-                Console.WriteLine("VBA project not available or certificate not loaded. Skipping signing.");
+                Console.WriteLine("VBA project not signed (missing certificate or VBA project).");
             }
 
-            // Verify that the signature persists after saving to a stream
-            using (MemoryStream ms = new MemoryStream())
+            // Save the signed workbook to a memory stream and verify the signature
+            using (MemoryStream signedStream = new MemoryStream())
             {
-                workbook.Save(ms, SaveFormat.Xlsm);
-                ms.Position = 0; // Reset stream for reading
+                wb.Save(signedStream, SaveFormat.Xlsm);
+                signedStream.Position = 0;
 
-                Workbook reloadedWorkbook = new Workbook(ms);
-                VbaProject reloadedVba = reloadedWorkbook.VbaProject;
-                if (reloadedVba != null)
+                Workbook verifyWb = new Workbook(signedStream);
+                VbaProject? verifyVba = verifyWb.VbaProject;
+
+                if (verifyVba != null)
                 {
-                    Console.WriteLine("After reload - IsSigned: " + reloadedVba.IsSigned);
-                    Console.WriteLine("After reload - IsValidSigned: " + reloadedVba.IsValidSigned);
+                    Console.WriteLine("VBA Project IsSigned: " + verifyVba.IsSigned);
+                    Console.WriteLine("VBA Project IsValidSigned: " + verifyVba.IsValidSigned);
                 }
                 else
                 {
-                    Console.WriteLine("Reloaded workbook does not contain a VBA project.");
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-        }
-        finally
-        {
-            // Clean up the temporary file
-            if (File.Exists(tempFile))
-            {
-                try
-                {
-                    File.Delete(tempFile);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to delete temporary file: {ex.Message}");
+                    Console.WriteLine("No VBA project found in the saved workbook.");
                 }
             }
         }

@@ -1,16 +1,16 @@
-// Title: Insert a linked picture from a URL into cell R2 using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to add a web‑based image to an Excel worksheet with Aspose.Cells, place it at cell R2, set its size, and save the file as XLSX.
-// Keywords: Aspose.Cells AddLinkedPicture | C# insert image from URL | place picture in Excel cell | linked picture Aspose.Cells | cell R2 image insertion
-// Common Searches: Aspose.Cells add picture from web URL | C# insert image into specific Excel cell | How to use AddLinkedPicture in Aspose.Cells | position picture at cell R2 programmatically | link external image in Excel with Aspose
-// Developer Intent: Add a linked image hosted at a URL to cell R2 of a worksheet and save the workbook.
-// Use Cases: Create product catalogs where each item’s photo is linked from a CDN and anchored to a designated cell. | Generate marketing reports that pull the latest logo from a remote server and place it in the header row. | Automate invoice generation by embedding a supplier’s online logo into a fixed cell for consistent branding.
-// AI Prompts: Write C# code with Aspose.Cells to insert a linked picture from a given URL into cell R2, using a width of 120 px and height of 80 px. | Explain how to adjust alignment and scaling of a picture added with AddLinkedPicture in Aspose.Cells. | Provide sample error handling for unreachable or invalid image URLs when using AddLinkedPicture in a .NET application.
+// Title: Insert a linked picture from a URL into cell R2 with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, access the first worksheet, and use Shapes.AddLinkedPicture to place a web‑hosted image at cell R2 (row 2, column 18) with a custom size, then save the file as an .xlsx document.
+// Keywords: Aspose.Cells | C# | AddLinkedPicture | linked picture | insert image from URL | cell R2 | worksheet image positioning | external image linking | dynamic picture update | Excel automation
+// Common Searches: Aspose.Cells add linked picture to specific cell | C# insert image from web URL into Excel worksheet | Place picture at cell R2 using Aspose.Cells | How to use Shapes.AddLinkedPicture in .NET | Excel workbook with external image link C#
+// Developer Intent: Add a web‑based linked image to cell R2 of a worksheet and save the workbook.
+// Use Cases: Embed a company logo hosted online into generated reports without increasing file size. | Create dashboards that automatically refresh charts when the source image URL changes. | Build template‑driven spreadsheets that pull branding or product images from a CDN at predefined cell locations.
+// AI Prompts: Show C# code using Aspose.Cells to add a linked picture from a URL into cell R2 with a width and height of 100 px. | Explain the parameters of Shapes.AddLinkedPicture for positioning an external image in a worksheet. | Give an example of linking an online image so the picture updates automatically when the source file changes.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a web‑based image to an Excel worksheet with Aspose.Cells, place it at cell R2, set its size, and save the file as XLSX.
+// Demonstrates how to create a workbook, access the first worksheet, and use Shapes.AddLinkedPicture to place a web‑hosted image at cell R2 (row 2, column 18) with a custom size, then save the file as an .xlsx document.
 class InsertPictureFromUrl
 {
     static void Main()
@@ -21,19 +21,14 @@ class InsertPictureFromUrl
         // Access the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // URL of the image to be linked
+        // URL of the image to insert
         string imageUrl = "https://example.com/sample.jpg";
 
-        // Position the picture at cell R2 (zero‑based indices: row 1, column 17)
-        int topRow = 1;      // Row 2
-        int leftColumn = 17; // Column R
-        int height = 100;    // Height in pixels
-        int width = 100;     // Width in pixels
-
-        // Add a linked picture using the ShapeCollection.AddLinkedPicture method
-        worksheet.Shapes.AddLinkedPicture(topRow, leftColumn, height, width, imageUrl);
+        // Add a linked picture at cell R2 (row index 1, column index 17)
+        // Height and width are set to 100 pixels each
+        worksheet.Shapes.AddLinkedPicture(1, 17, 100, 100, imageUrl);
 
         // Save the workbook
-        workbook.Save("output_with_linked_picture.xlsx");
+        workbook.Save("WorkbookWithLinkedPicture.xlsx");
     }
 }

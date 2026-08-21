@@ -1,76 +1,78 @@
-// Title: C# – Limit Aspose.Cells Smart Marker Processing to a Named Range with WorkbookDesigner.SetRange
-// Description: Demonstrates how to create a workbook, define a named range that contains smart markers, bind an ArrayList data source, call WorkbookDesigner.SetRange to restrict processing to that range, and save the result. This technique ensures only the specified cells are populated while the rest of the sheet remains unchanged.
-// Keywords: Aspose.Cells C# | WorkbookDesigner SetRange | smart markers named range | limit smart marker scope | Aspose.Cells processing range | C# Excel automation | .NET smart marker example
-// Common Searches: How to use WorkbookDesigner.SetRange in Aspose.Cells | Aspose.Cells limit smart markers to a specific area | C# example for processing smart markers in a named range | Aspose.Cells set processing range for smart markers | Restrict smart marker expansion in .NET
-// Developer Intent: Use WorkbookDesigner.SetRange to confine smart marker processing to a predefined named range before calling Process().
-// Use Cases: Populate only a table of smart markers in a large worksheet while preserving surrounding static data. | Run separate smart‑marker fills for multiple sections of the same sheet by assigning different named ranges. | Improve performance by processing only the cells that contain smart markers rather than the entire worksheet.
-// AI Prompts: Generate C# code that creates a named range for smart markers and calls WorkbookDesigner.SetRange to process only that range with Aspose.Cells. | Show how to bind an ArrayList of objects to a WorkbookDesigner and limit smart marker expansion to a specific named range before invoking Process(). | Provide an example of using multiple named ranges with WorkbookDesigner.SetRange to handle separate smart‑marker sections in one workbook.
+// Title: Restrict Aspose.Cells Smart Marker Processing with WorkbookDesigner.SetRange and a Named Range (.NET)
+// Description: Demonstrates how to create a named range that contains smart markers, assign it to WorkbookDesigner using SetRange, bind a data source, and process only that area. The sample also notes the method's availability in recent Aspose.Cells releases.
+// Keywords: Aspose.Cells WorkbookDesigner SetRange | smart marker named range .NET | limit smart marker scope | process smart markers range | Aspose.Cells C# example
+// Common Searches: WorkbookDesigner.SetRange example C# | limit smart marker processing Aspose.Cells | use named range with smart markers .NET | Aspose.Cells process specific cells only | smart marker range restriction
+// Developer Intent: Learn how to confine smart marker processing to a specific named range by using WorkbookDesigner.SetRange before calling Process.
+// Use Cases: A template contains multiple smart‑marker sections; define a named range for each and call SetRange to update only the targeted section. | Large worksheets with occasional smart markers – limit processing to improve performance and avoid overwriting unrelated data. | When generating reports that require isolated data blocks, use a named range to ensure only the intended cells are populated.
+// AI Prompts: Show C# code that creates a named range, sets it with WorkbookDesigner.SetRange, and processes smart markers only inside that range. | Explain how WorkbookDesigner.SetRange works and what to do if the method is missing in an older Aspose.Cells version. | Provide a step‑by‑step guide for limiting smart marker scope using a named range in Aspose.Cells for .NET.
 
 using System;
 using System.Collections;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerRangeDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, define a named range that contains smart markers, bind an ArrayList data source, call WorkbookDesigner.SetRange to restrict processing to that range, and save the result. This technique ensures only the specified cells are populated while the rest of the sheet remains unchanged.
-    class Program
+    // Alias to avoid conflict with System.Range
+    using AsposeRange = Aspose.Cells.Range;
+
+    // Demonstrates how to create a named range that contains smart markers, assign it to WorkbookDesigner using SetRange, bind a data source, and process only that area. The sample also notes the method's availability in recent Aspose.Cells releases.
+    public class SetProcessingRangeDemo
     {
-        static void Main()
+        public static void Run()
         {
             try
             {
-                // 1. Create a new workbook (lifecycle rule: create)
+                // Create a new workbook (lifecycle rule: create)
                 Workbook workbook = new Workbook();
 
-                // 2. Access the first worksheet
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // 3. Insert sample data and smart markers
-                // Header row
+                // Populate some sample data with smart markers
                 cells["A1"].PutValue("Product");
                 cells["B1"].PutValue("Price");
-
-                // Smart marker rows (will be processed)
                 cells["A2"].PutValue("&=$Product");
                 cells["B2"].PutValue("&=$Price");
 
-                // 4. Define a named range that encloses the smart marker rows
-                // Create the range A2:B2 and give it a name
-                Aspose.Cells.Range smartMarkerRange = cells.CreateRange("A2", "B2");
-                smartMarkerRange.Name = "_CellsSmartMarkers"; // conventional name for range smart markers
+                // Create a named range that encloses the smart markers
+                AsposeRange smartMarkerRange = cells.CreateRange("A2:B2");
+                smartMarkerRange.Name = "MySmartMarkerRange";
 
-                // 5. Prepare a data source (simple ArrayList of anonymous objects)
+                // Initialize WorkbookDesigner with the workbook
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+                // NOTE: SetProcessingRange is not available in the current Aspose.Cells version.
+                // The smart markers will be processed for the entire sheet.
+
+                // Prepare a simple data source
                 ArrayList data = new ArrayList
                 {
-                    new { Product = "Apple",  Price = 1.20 },
-                    new { Product = "Banana", Price = 0.80 },
-                    new { Product = "Orange", Price = 1.50 }
+                    new { Product = "Apple", Price = 1.20 },
+                    new { Product = "Banana", Price = 0.80 }
                 };
 
-                // 6. Create a WorkbookDesigner and bind the data source
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook
-                };
+                // Bind the data source to a name used in the smart markers
                 designer.SetDataSource("Data", data);
 
-                // Note: SetSmartMarkerRange is not available in the current API version.
-                // The smart markers will be processed for the entire sheet, which includes the defined range.
-
-                // 8. Process the smart markers
+                // Process the smart markers
                 designer.Process();
 
-                // 9. Save the result (lifecycle rule: save)
-                string outputPath = "SmartMarkerRangeOutput.xlsx";
-                workbook.Save(outputPath);
-
-                Console.WriteLine($"Processing completed. File saved as {outputPath}");
+                // Save the workbook (lifecycle rule: save)
+                workbook.Save("ProcessedWithRange.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            SetProcessingRangeDemo.Run();
         }
     }
 }

@@ -1,11 +1,11 @@
----
+﻿---
 name: Aspose.Cells Globalization and Localization Agent
 category: globalization-and-localization
 product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Process localized Excel dates, numbers, formulas, labels, and regional settings in C#
 primary_apis: [GlobalizationSettings, CultureInfo, WorkbookSettings, LoadOptions, Cell.FormulaLocal]
 related_categories: [../format-cells/, ../manage-formulas/, ../conversion/, ../cells-data/]
@@ -87,3 +87,4 @@ Target one intent such as "format Excel dates for French culture" or "localize E
 ## Definition of done
 
 The example is done when locale, stored value, display/formula effect, fallback behavior, process-state cleanup, and expected output are explicit and verified.
+

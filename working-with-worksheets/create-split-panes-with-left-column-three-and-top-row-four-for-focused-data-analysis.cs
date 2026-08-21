@@ -1,50 +1,45 @@
-// Title: Split Worksheet into Left‑Pane (3 Columns) and Top‑Pane (4 Rows) with Aspose.Cells for .NET
-// Description: Demonstrates how to create a new workbook, optionally fill it with sample data, split the worksheet window, and configure the pane collection so the left pane shows the first three columns and the top pane shows the first four rows, then save as SplitPanesDemo.xlsx.
-// Keywords: Aspose.Cells split panes | C# freeze columns | freeze top rows Aspose.Cells | FirstVisibleColumnOfRightPane | FirstVisibleRowOfBottomPane | Excel pane configuration .NET | split worksheet window programmatically | Aspose.Cells pane collection
-// Common Searches: Aspose.Cells split pane three columns left | set first visible row of bottom pane Aspose.Cells | freeze first 3 columns and 4 rows using Aspose.Cells C# | how to split worksheet window with Aspose.Cells .NET | configure pane positions in Excel with Aspose.Cells
-// Developer Intent: The developer needs to split a worksheet so that the left pane displays three columns and the top pane displays four rows, keeping those sections static while scrolling.
-// Use Cases: Keep identifier columns visible while scrolling through large datasets. | Maintain summary rows at the top of a report for constant reference. | Create a four‑quadrant view for data analysis, with independent scrolling in each pane.
-// AI Prompts: Show C# code to freeze the first two columns and the first row using Aspose.Cells. | Provide an example that sets custom pixel‑based pane sizes after splitting a worksheet with Aspose.Cells. | Explain how to read, modify, and persist existing pane settings when loading an existing workbook.
+// Title: C# – Split worksheet into left 3 columns and top 4 rows using Aspose.Cells
+// Description: Demonstrates how to create a workbook, populate sample data, split the view, and set the first visible column of the right pane to column D and the first visible row of the bottom pane to row 5, then save as SplitPaneDemo.xlsx.
+// Keywords: Aspose.Cells split pane C# | first visible column of right pane | first visible row of bottom pane | freeze left columns Aspose.Cells | freeze top rows Aspose.Cells | Excel pane configuration .NET | split worksheet window Aspose
+// Common Searches: Aspose.Cells split pane left three columns | set first visible column of right pane example | freeze top four rows with Aspose.Cells | C# split worksheet view Aspose.Cells | how to configure split panes in Excel using .NET
+// Developer Intent: Configure a worksheet view so the left pane shows three columns and the top pane shows four rows.
+// Use Cases: Keep identifier columns and header rows visible while scrolling large tables. | Build a dashboard where the first rows and columns stay static for quick reference. | Prepare financial or inventory reports that require frozen top rows and left columns for context.
+// AI Prompts: Write C# code with Aspose.Cells that splits a worksheet so the left pane displays the first three columns and the top pane displays the first four rows, then saves the file. | Explain the zero‑based indexing of FirstVisibleColumnOfRightPane and FirstVisibleRowOfBottomPane in Aspose.Cells. | Show how to adjust split pane positions dynamically based on the size of a data range in a .NET workbook.
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsSplitPanesDemo
+// Demonstrates how to create a workbook, populate sample data, split the view, and set the first visible column of the right pane to column D and the first visible row of the bottom pane to row 5, then save as SplitPaneDemo.xlsx.
+class SplitPaneDemo
 {
-    // Demonstrates how to create a new workbook, optionally fill it with sample data, split the worksheet window, and configure the pane collection so the left pane shows the first three columns and the top pane shows the first four rows, then save as SplitPanesDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Optional: populate some data for demonstration
+        for (int i = 0; i < 20; i++)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate some sample data (optional, just for demonstration)
-            for (int i = 0; i < 20; i++)
+            for (int j = 0; j < 10; j++)
             {
-                for (int j = 0; j < 10; j++)
-                {
-                    sheet.Cells[i, j].PutValue($"R{i + 1}C{j + 1}");
-                }
+                worksheet.Cells[i, j].PutValue($"Row {i + 1}, Col {j + 1}");
             }
-
-            // Split the worksheet window
-            sheet.Split();
-
-            // Get the pane collection to configure split positions
-            PaneCollection panes = sheet.GetPanes();
-
-            // Set the first visible column of the right pane (zero‑based index)
-            // Left pane will show columns 0,1,2 (three columns)
-            panes.FirstVisibleColumnOfRightPane = 3;
-
-            // Set the first visible row of the bottom pane (zero‑based index)
-            // Top pane will show rows 0,1,2,3 (four rows)
-            panes.FirstVisibleRowOfBottomPane = 4;
-
-            // Save the workbook
-            workbook.Save("SplitPanesDemo.xlsx");
         }
+
+        // Split the worksheet window
+        worksheet.Split();
+
+        // Access the pane collection to configure split positions
+        PaneCollection panes = worksheet.GetPanes();
+
+        // Set the first visible column of the right pane (left pane will show 3 columns)
+        panes.FirstVisibleColumnOfRightPane = 3; // zero‑based index, column D becomes first visible in right pane
+
+        // Set the first visible row of the bottom pane (top pane will show 4 rows)
+        panes.FirstVisibleRowOfBottomPane = 4; // zero‑based index, row 5 becomes first visible in bottom pane
+
+        // Save the workbook
+        workbook.Save("SplitPaneDemo.xlsx");
     }
 }

@@ -1,10 +1,10 @@
-// Title: Apply a JSON‑Defined 12‑Color Palette as a Custom Workbook Theme with Aspose.Cells for .NET
-// Description: Read a JSON file containing twelve HTML hex color strings, convert them to System.Drawing.Color objects, create a new Workbook, apply the colors as a custom theme using Aspose.Cells' CustomTheme method, and save the workbook to showcase the new theme.
-// Keywords: Aspose.Cells | C# | .NET | JSON color palette | custom workbook theme | Excel theme programmatically | CustomTheme method | import theme from JSON | color scheme Excel | dynamic Excel styling
-// Common Searches: Aspose.Cells load custom theme from JSON | C# set Excel workbook theme colors programmatically | apply JSON color palette to Excel using Aspose.Cells | how to use CustomTheme with a JSON file | import 12 hex colors into Aspose.Cells workbook
-// Developer Intent: Read a JSON array of twelve hex colors and apply them as a custom theme to a new Aspose.Cells workbook.
-// Use Cases: Brand corporate reports by loading brand colors from a JSON configuration and applying them as a workbook theme. | Generate user‑specific themed spreadsheets where the color scheme is supplied in a JSON file. | Validate external theme definitions (exactly 12 colors) before applying them to ensure consistent styling across generated Excel files.
-// AI Prompts: Write C# code that reads a JSON array of 12 hex color strings, converts each to System.Drawing.Color, and uses Aspose.Cells.CustomTheme to apply them as a theme named "MyTheme". | Provide error handling for missing JSON files, incorrect array length, or invalid hex strings when creating a custom Excel theme with Aspose.Cells.
+// Title: C# – Load a JSON Color Palette and Set a Custom Workbook Theme with Aspose.Cells
+// Description: The sample reads a JSON file containing twelve hex color strings, converts each entry to a System.Drawing.Color, builds a theme via Workbook.CustomTheme, applies an accent style to a cell, and writes the result to an XLSX workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# JSON theme | CustomTheme method | Excel color palette programmatically | load hex colors from JSON | Workbook.CustomTheme example | Aspose.Cells .NET tutorial | JSON defined colors for Excel | apply theme colors in code | Excel workbook styling
+// Common Searches: how to create an Excel theme from a JSON file using Aspose.Cells | Aspose.Cells C# read hex colors array and set workbook theme | example of Workbook.CustomTheme with colors loaded from JSON | apply custom color scheme to Excel workbook programmatically | C# load JSON palette and use it in Aspose.Cells
+// Developer Intent: Read a JSON array of twelve hex values and use it to build and apply a custom theme to an Aspose.Cells workbook.
+// Use Cases: Implement brand‑consistent reports by importing a JSON‑based color palette at runtime. | Enable multi‑tenant SaaS platforms to generate workbooks with tenant‑specific themes stored in JSON files. | Allow end‑users to switch visual styles by selecting different JSON color schemes without recompiling code.
+// AI Prompts: Generate C# code that parses a JSON array of 12 hex colors and creates a custom Excel theme with Aspose.Cells. | Explain validation steps for a JSON color list before calling Workbook.CustomTheme in a .NET application. | Show how to apply an Accent1 style from a JSON‑derived theme to a specific cell using Aspose.Cells.
 
 using System;
 using System.Drawing;
@@ -14,7 +14,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsThemeFromJson
 {
-    // Read a JSON file containing twelve HTML hex color strings, convert them to System.Drawing.Color objects, create a new Workbook, apply the colors as a custom theme using Aspose.Cells' CustomTheme method, and save the workbook to showcase the new theme.
+    // The sample reads a JSON file containing twelve hex color strings, converts each entry to a System.Drawing.Color, builds a theme via Workbook.CustomTheme, applies an accent style to a cell, and writes the result to an XLSX workbook using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
@@ -22,42 +22,55 @@ namespace AsposeCellsThemeFromJson
             try
             {
                 // Path to the JSON file that defines the theme colors.
-                // The JSON should be an array of 12 color strings (e.g., "#FF0000").
+                // Expected format: an array of 12 color strings in hex notation, e.g. ["#FF0000", "#00FF00", ...]
                 string jsonPath = "themeColors.json";
 
-                // Verify that the JSON file exists before attempting to read it.
+                // Verify that the JSON file exists to avoid FileNotFoundException.
                 if (!File.Exists(jsonPath))
                 {
                     Console.WriteLine($"JSON file not found: {jsonPath}");
                     return;
                 }
 
-                // Read and parse the JSON file.
+                // Read the JSON content.
                 string jsonContent = File.ReadAllText(jsonPath);
-                string[] colorStrings = JsonSerializer.Deserialize<string[]>(jsonContent);
 
-                if (colorStrings == null || colorStrings.Length != 12)
+                // Deserialize the JSON array into a string[].
+                string[] hexColors = JsonSerializer.Deserialize<string[]>(jsonContent);
+
+                // Validate that exactly 12 colors are provided.
+                if (hexColors == null || hexColors.Length != 12)
                 {
                     Console.WriteLine("The JSON file must contain exactly 12 color definitions.");
                     return;
                 }
 
-                // Convert the string representations to System.Drawing.Color objects.
+                // Convert hex strings to System.Drawing.Color objects.
                 Color[] themeColors = new Color[12];
                 for (int i = 0; i < 12; i++)
                 {
-                    // ColorTranslator can handle HTML hex strings.
-                    themeColors[i] = ColorTranslator.FromHtml(colorStrings[i]);
+                    // ColorTranslator can parse HTML hex color strings.
+                    themeColors[i] = ColorTranslator.FromHtml(hexColors[i]);
                 }
 
-                // Create a new workbook (lifecycle rule: create).
+                // Create a new workbook.
                 Workbook workbook = new Workbook();
 
-                // Apply the custom theme using the parsed colors (lifecycle rule: modify).
+                // Apply the custom theme using the colors from JSON.
                 workbook.CustomTheme("JsonImportedTheme", themeColors);
 
-                // Save the workbook to demonstrate the applied theme (lifecycle rule: save).
-                string outputPath = "WorkbookWithJsonTheme.xlsx";
+                // Demonstrate the theme by applying an accent color to a cell.
+                Worksheet sheet = workbook.Worksheets[0];
+                Cell demoCell = sheet.Cells["A1"];
+                demoCell.PutValue("Theme Applied from JSON");
+
+                Style style = workbook.CreateStyle();
+                // Use Accent1 from the newly defined theme.
+                style.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0);
+                demoCell.SetStyle(style);
+
+                // Save the workbook with the new theme.
+                string outputPath = "CustomThemeWorkbook.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }

@@ -1,16 +1,16 @@
-// Title: C# – Convert HTML to a compressed PDF with Aspose.Cells (Flate stream compression)
-// Description: Loads an HTML file into an Aspose.Cells Workbook, applies Flate object‑stream compression and MinimumSize optimization via PdfSaveOptions, and saves the result as a reduced‑size PDF.
-// Keywords: Aspose.Cells | C# | .NET | HTML to PDF conversion | PDF compression | Flate compression | object stream compression | PdfSaveOptions | MinimumSize optimization | reduce PDF size
-// Common Searches: Aspose.Cells convert HTML to PDF C# | How to compress PDF with Flate using Aspose.Cells | PDF object stream compression Aspose .NET | Reduce PDF file size Aspose.Cells | Save HTML as PDF with MinimumSize optimization
-// Developer Intent: Load an HTML document into a Workbook and export it as a PDF that uses Flate object‑stream compression to minimize file size.
-// Use Cases: Create email‑ready PDF reports from HTML templates while keeping attachments lightweight. | Archive web pages as compact PDFs to conserve storage in document repositories. | Batch‑process multiple HTML files into size‑optimized PDFs for a document‑management workflow.
-// AI Prompts: Generate C# code using Aspose.Cells to convert an HTML file to PDF with Flate compression and MinimumSize optimization. | Explain how PdfCompressionCore.Flate and PdfOptimizationType.MinimumSize affect PDF size in Aspose.Cells. | Show best‑practice error handling when loading HTML into a Workbook and saving it as a compressed PDF.
+// Title: C# – Convert HTML to PDF with Flate object‑stream compression using Aspose.Cells
+// Description: Loads an HTML file into an Aspose.Cells Workbook, configures PdfSaveOptions for Flate compression and MinimumSize optimization, and saves a compact PDF suitable for email or archival storage.
+// Keywords: Aspose.Cells | HTML to PDF | C# | Flate compression | PdfSaveOptions | object stream compression | minimum size PDF | PDF optimization | .NET PDF compression | Aspose.Cells PDF
+// Common Searches: Aspose.Cells convert HTML to PDF C# | Flate object stream compression PDF Aspose | How to reduce PDF size with Aspose.Cells | PdfSaveOptions compression options .NET | Compress PDF generated from HTML using Aspose
+// Developer Intent: The developer wants to turn an HTML document into a PDF and apply Flate object‑stream compression to minimize the resulting file size.
+// Use Cases: Create email‑friendly PDFs from HTML templates. | Archive web pages as small PDFs for long‑term storage. | Batch‑process HTML reports into compressed PDFs for distribution.
+// AI Prompts: Generate C# code that converts an HTML file to a PDF with Flate compression using Aspose.Cells. | Explain the impact of PdfCompressionCore.Flate and PdfOptimizationType.MinimumSize on PDF size in Aspose.Cells. | Show how to enable additional PDF options (e.g., font embedding) while keeping object‑stream compression active.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Loads an HTML file into an Aspose.Cells Workbook, applies Flate object‑stream compression and MinimumSize optimization via PdfSaveOptions, and saves the result as a reduced‑size PDF.
+// Loads an HTML file into an Aspose.Cells Workbook, configures PdfSaveOptions for Flate compression and MinimumSize optimization, and saves a compact PDF suitable for email or archival storage.
 class HtmlToPdfCompressed
 {
     static void Main()

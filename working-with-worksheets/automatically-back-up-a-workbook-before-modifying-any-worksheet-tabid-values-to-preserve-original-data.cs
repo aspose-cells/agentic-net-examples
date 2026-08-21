@@ -1,56 +1,47 @@
-// Title: Backup an Excel workbook and modify worksheet TabId using Aspose.Cells for .NET
-// Description: Load a workbook, create a backup with Workbook.Copy, save it, update each worksheet's TabId, and write the modified file to a new location—all with Aspose.Cells in C#.
-// Keywords: Aspose.Cells backup workbook | C# modify worksheet TabId | Workbook.Copy example | save Excel file after changes .NET | preserve original Excel data | Aspose.Cells Worksheet.TabId | Excel versioning C#
-// Common Searches: Aspose.Cells create backup before editing workbook | How to change TabId of worksheets in C# | Copy Excel file with Aspose.Cells and keep original | C# backup Excel workbook then modify sheets | Aspose.Cells example for preserving original data
-// Developer Intent: Generate a backup of the source workbook, change each sheet's TabId, and save the altered workbook without overwriting the original.
-// Use Cases: Automated service that backs up user‑uploaded spreadsheets before applying bulk TabId updates. | Version‑controlled Excel processing pipeline where the original file must remain unchanged. | Data‑integrity safeguard for scripts that reorder or rename worksheets by adjusting TabId values.
-// AI Prompts: Write C# code with Aspose.Cells to copy a workbook to a backup file, update each worksheet's TabId, and save the result to a new file. | Show how to add error handling and logging around the backup and TabId modification steps using Aspose.Cells. | Explain how to compare the backup workbook with the source to confirm they are identical before modifying TabId values.
+// Title: Backup an Excel workbook and adjust worksheet TabId values with Aspose.Cells for .NET (C#)
+// Description: Loads an existing workbook, creates a copy as a backup file, increments the TabId of every worksheet, and saves both the backup and the modified original workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# backup workbook | Excel workbook copy | Worksheet TabId | modify TabId Aspose.Cells | preserve original Excel file | copy workbook C# | save backup Excel | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells backup workbook before editing | How to copy an Excel file with Aspose.Cells C# | Change worksheet TabId using Aspose.Cells | Save original Excel file as backup in .NET | C# example for preserving workbook data with Aspose
+// Developer Intent: Create a backup of the original Excel file, then modify each worksheet's TabId while keeping the source data unchanged.
+// Use Cases: Automated data‑migration scripts that need a safety copy before altering sheet properties. | Audit‑trail generation where a snapshot of the workbook is stored prior to batch updates. | Scheduled maintenance jobs that back up workbooks and then re‑index TabId values for integration with external systems.
+// AI Prompts: Generate C# code using Aspose.Cells to copy an existing workbook to a backup file, increase every worksheet's TabId by a specified offset, and save both files. | Provide a reusable method that accepts a workbook path and an offset, creates a backup with a timestamped suffix, updates TabId values for all worksheets, and returns the paths of the backup and updated files.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsBackupDemo
+namespace WorkbookBackupExample
 {
-    // Load a workbook, create a backup with Workbook.Copy, save it, update each worksheet's TabId, and write the modified file to a new location—all with Aspose.Cells in C#.
-    public class TabIdModifier
+    // Loads an existing workbook, creates a copy as a backup file, increments the TabId of every worksheet, and saves both the backup and the modified original workbook using Aspose.Cells for .NET.
+    class Program
     {
-        /// <param name="sourcePath">Path to the original workbook.</param>
-        /// <param name="backupPath">Path where the backup will be saved.</param>
-        /// <param name="outputPath">Path where the modified workbook will be saved.</param>
-        public static void Process(string sourcePath, string backupPath, string outputPath)
+        static void Main()
         {
-            // Load the original workbook (uses the provided Workbook(string) constructor)
-            Workbook originalWorkbook = new Workbook(sourcePath);
+            // Path to the original workbook
+            string originalPath = "OriginalWorkbook.xlsx";
 
-            // Create a backup workbook by copying the original (uses Workbook.Copy method)
+            // Load the original workbook (load rule)
+            Workbook originalWorkbook = new Workbook(originalPath);
+
+            // Create a backup workbook instance (create rule)
             Workbook backupWorkbook = new Workbook();
+
+            // Copy the original workbook into the backup workbook (copy rule)
             backupWorkbook.Copy(originalWorkbook);
 
-            // Save the backup (uses the provided Save(string) method)
+            // Save the backup workbook (save rule)
+            string backupPath = "OriginalWorkbook_Backup.xlsx";
             backupWorkbook.Save(backupPath);
 
             // Modify TabId values of each worksheet in the original workbook
             foreach (Worksheet sheet in originalWorkbook.Worksheets)
             {
-                // Example modification: set TabId to a unique value based on sheet index
-                sheet.TabId = sheet.Index + 1000;
+                // Example modification: set TabId to a new unique value
+                // Here we simply add 1000 to the existing TabId
+                sheet.TabId += 1000;
             }
 
-            // Save the modified workbook (uses the provided Save(string) method)
-            originalWorkbook.Save(outputPath);
-        }
-
-        // Example usage
-        public static void Main()
-        {
-            string sourceFile = "InputWorkbook.xlsx";
-            string backupFile = "InputWorkbook_Backup.xlsx";
-            string outputFile = "InputWorkbook_Modified.xlsx";
-
-            Process(sourceFile, backupFile, outputFile);
-
-            Console.WriteLine("Backup created at: " + backupFile);
-            Console.WriteLine("Modified workbook saved at: " + outputFile);
+            // Save the modified original workbook (save rule)
+            originalWorkbook.Save(originalPath);
         }
     }
 }

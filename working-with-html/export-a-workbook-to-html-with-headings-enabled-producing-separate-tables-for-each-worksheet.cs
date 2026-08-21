@@ -1,52 +1,56 @@
-// Title: C# Aspose.Cells: Export Workbook to HTML with Row/Column Headings and Separate Files
-// Description: Demonstrates how to use Aspose.Cells HtmlSaveOptions in C# to enable ExportRowColumnHeadings, disable SaveAsSingleFile, and generate individual HTML files for each worksheet, preserving column letters and row numbers.
-// Keywords: Aspose.Cells HTML export | C# HtmlSaveOptions | ExportRowColumnHeadings | SaveAsSingleFile false | multiple worksheets to HTML | separate HTML files per sheet | HTML column headings Aspose | Excel to HTML C# example
-// Common Searches: Aspose.Cells export workbook to HTML with headings C# | Save each worksheet as separate HTML file Aspose.Cells | HtmlSaveOptions ExportRowColumnHeadings example | How to disable SaveAsSingleFile in Aspose.Cells | C# convert Excel sheets to individual HTML tables
-// Developer Intent: Generate HTML output that includes spreadsheet row/column headings and creates one HTML file for each worksheet.
-// Use Cases: Create printable HTML reports that retain Excel column letters and row numbers. | Build web documentation where each sheet is loaded as an independent HTML table. | Serve separate HTML files per sheet for dynamic loading in single‑page applications.
-// AI Prompts: Write C# code using Aspose.Cells to export a workbook to HTML with ExportRowColumnHeadings enabled and each worksheet saved as a separate file. | Explain the impact of HtmlSaveOptions.SaveAsSingleFile = false when exporting multiple worksheets to HTML. | Show how to specify a custom output folder and naming pattern for each worksheet's HTML file with Aspose.Cells.
+// Title: Export Aspose.Cells Workbook to Separate HTML Files with Row/Column Headings (C#)
+// Description: Demonstrates how to create a workbook with multiple worksheets, enable row and column headings, and save each sheet as an individual HTML file using Aspose.Cells HtmlSaveOptions in .NET.
+// Keywords: Aspose.Cells HTML export | C# export workbook to HTML | row column headings Aspose | multiple HTML files per worksheet | HtmlSaveOptions SaveAsSingleFile false | ExportActiveWorksheetOnly false
+// Common Searches: Aspose.Cells export workbook to HTML with headings | save each worksheet as separate HTML file C# | HtmlSaveOptions ExportRowColumnHeadings example | how to disable single file output Aspose.Cells | export multiple sheets to individual HTML pages
+// Developer Intent: Generate separate HTML files for every worksheet while preserving row and column headers.
+// Use Cases: Create paginated HTML reports where each sheet appears on its own page with full headers. | Provide web‑ready data tables for a multi‑page portal, keeping column and row titles intact. | Export Excel data to HTML for documentation or email distribution, with each worksheet isolated.
+// AI Prompts: Show how to specify an output folder and custom file naming when exporting multiple worksheets to HTML with Aspose.Cells. | Add custom CSS to the generated HTML tables while retaining row and column headings. | Explain how to export only selected worksheets to separate HTML files using HtmlSaveOptions.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlExport
 {
-    // Demonstrates how to use Aspose.Cells HtmlSaveOptions in C# to enable ExportRowColumnHeadings, disable SaveAsSingleFile, and generate individual HTML files for each worksheet, preserving column letters and row numbers.
+    // Demonstrates how to create a workbook with multiple worksheets, enable row and column headings, and save each sheet as an individual HTML file using Aspose.Cells HtmlSaveOptions in .NET.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook with two worksheets
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            workbook.Worksheets[0].Name = "FirstSheet";
-            Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
 
-            // Populate first worksheet
+            // Add data to the first worksheet (default sheet)
             Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "FirstSheet";
             sheet1.Cells["A1"].PutValue("Header1");
             sheet1.Cells["B1"].PutValue("Header2");
             sheet1.Cells["A2"].PutValue("Data1");
             sheet1.Cells["B2"].PutValue("Data2");
 
-            // Populate second worksheet
-            sheet2.Cells["A1"].PutValue("Item");
-            sheet2.Cells["B1"].PutValue("Quantity");
-            sheet2.Cells["A2"].PutValue("Apple");
-            sheet2.Cells["B2"].PutValue(10);
-            sheet2.Cells["A3"].PutValue("Banana");
-            sheet2.Cells["B3"].PutValue(20);
+            // Add a second worksheet and populate it
+            Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
+            sheet2.Cells["A1"].PutValue("ColA");
+            sheet2.Cells["B1"].PutValue("ColB");
+            sheet2.Cells["A2"].PutValue("Value1");
+            sheet2.Cells["B2"].PutValue("Value2");
 
             // Configure HTML save options
             HtmlSaveOptions options = new HtmlSaveOptions
             {
-                // Export row and column headings (A, B, 1, 2, …)
+                // Enable export of row and column headings
                 ExportRowColumnHeadings = true,
-                // Ensure each worksheet is saved as a separate HTML file
-                SaveAsSingleFile = false
+
+                // Ensure each worksheet is saved as a separate HTML file (default behavior)
+                SaveAsSingleFile = false,
+
+                // Export all worksheets (not only the active one)
+                ExportActiveWorksheetOnly = false
             };
 
-            // Save the workbook to HTML. Separate files will be generated for each sheet.
-            workbook.Save("WorkbookWithHeadings.html", options);
+            // Save the workbook to HTML.
+            // When SaveAsSingleFile is false, Aspose.Cells creates separate HTML files for each sheet.
+            // The base file name is used as a prefix for each generated file.
+            workbook.Save("WorkbookOutput.html", options);
         }
     }
 }

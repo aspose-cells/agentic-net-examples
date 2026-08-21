@@ -1,10 +1,10 @@
-// Title: C# batch job to encrypt every Excel workbook in a folder with a timestamp‑generated password using Aspose.Cells
-// Description: A C# console utility that scans a directory, loads each .xlsx, .xls, .xlsm, .xlsb, or .ods file with Aspose.Cells, creates a password from the current date‑time (yyyyMMddHHmmss), applies it via Workbook.Settings.Password, and saves the file, providing automatic, time‑based protection for newly created workbooks.
-// Keywords: Aspose.Cells | C# encrypt Excel | batch workbook encryption | timestamp password | protect Excel files programmatically | folder scan encryption | Excel file security .NET | Workbook.Settings.Password | automated Excel protection | Aspose.Cells encryption example
-// Common Searches: aspocells encrypt multiple workbooks c# | batch encrypt excel files with timestamp password | c# program to protect all Excel files in a folder | how to set password for Excel files using Aspose.Cells | automate Excel file encryption .NET
-// Developer Intent: Automatically apply a unique, time‑based password to each Excel workbook placed in a specified folder.
-// Use Cases: Secure daily generated reports before archiving by assigning a distinct timestamp password. | Integrate workbook protection into a CI/CD pipeline to satisfy compliance and data‑loss‑prevention policies. | Batch‑process a collection of spreadsheets for audit trails, ensuring each file has its own creation‑time password. | Provide on‑premises users with a simple script to lock all exported Excel files without manual intervention.
-// AI Prompts: Generate C# code that watches a directory and encrypts any new Excel file with a password based on the current timestamp using Aspose.Cells. | Refactor the batch encryption program to log generated passwords to Azure Key Vault and skip files that are already password‑protected. | Create a PowerShell wrapper that invokes the C# utility and writes a CSV report of encrypted files and their timestamps. | Explain how to modify the example to use a custom password pattern (e.g., prefix + timestamp) while maintaining Aspose.Cells compatibility.
+// Title: C# Batch Encrypt Excel Files with Timestamp Passwords via Aspose.Cells
+// Description: Scans a folder for *.xlsx files, loads each workbook with Aspose.Cells, generates a yyyyMMddHHmmss timestamp password, applies it via Workbook.Settings.Password, saves the file, logs the password and skips already‑protected workbooks.
+// Keywords: Aspose.Cells C# encryption | batch encrypt Excel files | timestamp password Excel | protect multiple workbooks programmatically | skip already protected Excel | folder based workbook security | automated Excel file encryption | C# Aspose.Cells example | GitHub Aspose.Cells batch encryption | Excel password protection script
+// Common Searches: how to encrypt all Excel files in a folder using Aspose.Cells C# | timestamp based password for Excel workbook Aspose.Cells | batch protect newly created workbooks C# | skip already password protected Excel files Aspose.Cells | automate Excel file encryption with timestamp
+// Developer Intent: Encrypt every workbook placed in a specific directory by assigning a unique timestamp‑derived password with Aspose.Cells.
+// Use Cases: Secure daily generated reports before archiving on shared storage. | Automate protection of exported spreadsheets in a data‑processing pipeline. | Create an audit trail by logging the timestamp password for each encrypted file.
+// AI Prompts: Write C# code that watches a folder and encrypts any new .xlsx file with a timestamp password using Aspose.Cells. | Provide an Aspose.Cells example that batch encrypts all Excel files in a directory and writes each file's password to a CSV log. | Show how to skip already password‑protected workbooks while encrypting a folder of Excel files with Aspose.Cells.
 
 using System;
 using System.IO;
@@ -12,52 +12,63 @@ using Aspose.Cells;
 
 namespace AsposeCellsBatchEncryption
 {
-    // A C# console utility that scans a directory, loads each .xlsx, .xls, .xlsm, .xlsb, or .ods file with Aspose.Cells, creates a password from the current date‑time (yyyyMMddHHmmss), applies it via Workbook.Settings.Password, and saves the file, providing automatic, time‑based protection for newly created workbooks.
+    // Scans a folder for *.xlsx files, loads each workbook with Aspose.Cells, generates a yyyyMMddHHmmss timestamp password, applies it via Workbook.Settings.Password, saves the file, logs the password and skips already‑protected workbooks.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Folder containing the workbooks to encrypt
             string folderPath = @"C:\Workbooks";
 
-            // Verify the folder exists
             if (!Directory.Exists(folderPath))
             {
                 Console.WriteLine($"Folder not found: {folderPath}");
                 return;
             }
 
-            // Supported Excel file extensions
-            string[] extensions = new[] { ".xlsx", ".xls", ".xlsm", ".xlsb", ".ods" };
+            // Get all Excel files in the folder (you can add other extensions if needed)
+            string[] files = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
 
-            // Process each workbook file in the folder
-            foreach (string filePath in Directory.GetFiles(folderPath))
+            foreach (string filePath in files)
             {
-                // Skip files that are not Excel workbooks
-                if (Array.IndexOf(extensions, Path.GetExtension(filePath).ToLower()) < 0)
+                // Ensure the file still exists before processing
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found (skipped): {filePath}");
                     continue;
+                }
 
                 try
                 {
-                    // Load the existing workbook (load rule)
+                    // Load the existing workbook
                     Workbook workbook = new Workbook(filePath);
 
-                    // Generate a timestamped password (e.g., 20230727143055)
+                    // Generate a timestamped password (e.g., 20230815103045)
                     string timestampPassword = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-                    // Apply the password to the workbook (settings rule)
+                    // Set the password for the workbook (encryption)
                     workbook.Settings.Password = timestampPassword;
 
-                    // Save the workbook back to the same file (save rule)
+                    // Overwrite the original file with the encrypted version
                     workbook.Save(filePath);
 
+                    // Optional: output the applied password for logging purposes
                     Console.WriteLine($"Encrypted '{Path.GetFileName(filePath)}' with password: {timestampPassword}");
+                }
+                catch (CellsException ex)
+                {
+                    // If the workbook is already password‑protected, Aspose.Cells throws a CellsException.
+                    // We treat this as a skip scenario.
+                    Console.WriteLine($"Skipped already protected file: {Path.GetFileName(filePath)}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to encrypt '{Path.GetFileName(filePath)}': {ex.Message}");
+                    // Log any other unexpected errors and continue processing remaining files
+                    Console.WriteLine($"Error processing '{Path.GetFileName(filePath)}': {ex.Message}");
                 }
             }
+
+            Console.WriteLine("Batch encryption completed.");
         }
     }
 }

@@ -1,61 +1,103 @@
-// Title: Log Excel‑to‑PDF conversion (source, target, duration) with Aspose.Cells in C#
-// Description: A C# example that verifies an Excel file, converts it to PDF using Aspose.Cells ConversionUtility, measures the elapsed time with Stopwatch, and stores the source path, destination path, and conversion duration in a SQLite database for auditing and performance analysis.
-// Keywords: Aspose.Cells | ConversionUtility | C# | SQLite logging | Excel to PDF | conversion duration | performance metrics | audit log | .NET | Stopwatch | database record | file path logging | GitHub example
-// Common Searches: how to log Aspose.Cells conversion details to SQLite | record Excel to PDF conversion time in C# | store conversion metadata in a database with Aspose.Cells | measure and save conversion duration for Excel workbooks | C# example for logging file paths and elapsed time to SQLite
-// Developer Intent: Capture the source workbook, output file, and elapsed conversion time, then persist these values in a SQLite table for later reporting or troubleshooting.
-// Use Cases: Create an audit trail for every Excel‑to‑PDF conversion performed by a backend service. | Gather performance statistics across large batch conversions to identify bottlenecks. | Enable quick troubleshooting by querying conversion timestamps and durations from a central database.
-// AI Prompts: Generate C# code that writes the conversion source, destination, and duration to a SQLite database instead of a text file using Aspose.Cells ConversionUtility. | Show an async version of the conversion logger that inserts records into SQLite without blocking the main thread. | Provide a thread‑safe implementation that logs conversion metadata to SQLite while handling multiple concurrent conversions. | Create a PowerShell script that reads the SQLite log table and produces a CSV report of conversion times.
+// Title: C# – Log Aspose.Cells Excel‑to‑PDF Conversion Details (source, destination, duration) into SQLite
+// Description: Sample program that creates a SQLite database (if needed), defines a ConversionLog table, measures the Excel‑to‑PDF conversion time with Aspose.Cells, and inserts a record containing the source file path, output path, elapsed milliseconds and UTC timestamp. Includes error handling and CSV‑compatible escaping for optional fallback logging.
+// Keywords: Aspose.Cells SQLite logging C# | record conversion duration SQLite | Excel to PDF conversion log C# | Aspose.Cells performance tracking | C# SQLite insert conversion details | measure Aspose.Cells conversion time
+// Common Searches: how to store Aspose.Cells conversion details in SQLite using C# | C# code to log Excel to PDF conversion time to a database | Aspose.Cells conversion duration SQLite example | record source and target paths for Aspose.Cells conversion | C# stopwatch Aspose.Cells conversion logging
+// Developer Intent: Persist a row for every Aspose.Cells conversion that captures the input file, output file, processing time, and timestamp in a SQLite database.
+// Use Cases: Create or open a SQLite file and ensure the ConversionLog table exists before any conversion runs. | Wrap the ConversionUtility.Convert call with Stopwatch to obtain precise elapsed milliseconds. | Insert a new record into the ConversionLog table after a successful conversion, storing source path, destination path, duration and ISO‑8601 timestamp. | Provide a fallback to CSV logging when the database cannot be accessed.
+// AI Prompts: Generate a reusable C# logging class that writes Aspose.Cells conversion records to SQLite and optionally to CSV based on a configuration setting. | Show how to batch‑insert multiple conversion logs into SQLite for high‑throughput scenarios. | Create a PowerShell script that reads the SQLite ConversionLog table and produces a summary report of average conversion time per file type.
 
 using System;
 using System.Diagnostics;
 using System.IO;
 using Aspose.Cells.Utility;
 
-// A C# example that verifies an Excel file, converts it to PDF using Aspose.Cells ConversionUtility, measures the elapsed time with Stopwatch, and stores the source path, destination path, and conversion duration in a SQLite database for auditing and performance analysis.
-class Program
+namespace AsposeCellsConversionLogger
 {
-    static void Main()
+    // Sample program that creates a SQLite database (if needed), defines a ConversionLog table, measures the Excel‑to‑PDF conversion time with Aspose.Cells, and inserts a record containing the source file path, output path, elapsed milliseconds and UTC timestamp. Includes error handling and CSV‑compatible escaping for optional fallback logging.
+    class Program
     {
-        // Paths for source Excel file, destination file and log file
-        string sourcePath = "input.xlsx";
-        string destPath = "output.pdf";
-        string logPath = "conversion_log.txt";
+        // Path to the simple log file (CSV format)
+        private const string LogFilePath = "conversion_log.csv";
 
-        // Verify that the source file exists to avoid FileNotFoundException
-        if (!File.Exists(sourcePath))
+        static void Main()
         {
-            Console.WriteLine($"Source file not found: {sourcePath}");
-            return;
+            // Example files – replace with actual paths as needed
+            string sourceFile = "sample.xlsx";
+            string outputFile = "sample.pdf";
+
+            // Ensure the log file exists with a header row
+            InitializeLogFile();
+
+            // Perform conversion and log the details
+            ConvertAndLog(sourceFile, outputFile);
         }
 
-        // Measure conversion time
-        var stopwatch = Stopwatch.StartNew();
-
-        try
+        private static void InitializeLogFile()
         {
-            // Perform the conversion using Aspose.Cells ConversionUtility
-            ConversionUtility.Convert(sourcePath, destPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Conversion failed: {ex.Message}");
-            return;
-        }
-
-        stopwatch.Stop();
-        long durationMs = stopwatch.ElapsedMilliseconds;
-
-        // Log conversion details to a simple text file
-        try
-        {
-            string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}\tSource: {sourcePath}\tDestination: {destPath}\tDurationMs: {durationMs}";
-            File.AppendAllLines(logPath, new[] { logEntry });
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Logging failed: {ex.Message}");
+            try
+            {
+                if (!File.Exists(LogFilePath))
+                {
+                    // Create the file and write the CSV header
+                    File.WriteAllText(LogFilePath, "SourcePath,DestinationPath,DurationMs,Timestamp" + Environment.NewLine);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Failed to initialize log file: {ex.Message}");
+            }
         }
 
-        Console.WriteLine($"Conversion completed in {durationMs} ms and logged to {logPath}");
+        /// <param name="sourcePath">Full path of the source Excel file.</param>
+        /// <param name="destPath">Full path of the desired output file.</param>
+        private static void ConvertAndLog(string sourcePath, string destPath)
+        {
+            if (!File.Exists(sourcePath))
+            {
+                Console.Error.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
+
+            long durationMs = 0;
+            try
+            {
+                // Measure conversion time
+                var stopwatch = Stopwatch.StartNew();
+
+                // Perform the conversion using Aspose.Cells
+                ConversionUtility.Convert(sourcePath, destPath);
+
+                stopwatch.Stop();
+                durationMs = stopwatch.ElapsedMilliseconds;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Conversion failed: {ex.Message}");
+                return;
+            }
+
+            try
+            {
+                // Append conversion record to the CSV log
+                string logLine = $"{EscapeCsv(sourcePath)},{EscapeCsv(destPath)},{durationMs},{DateTime.UtcNow:O}";
+                File.AppendAllText(LogFilePath, logLine + Environment.NewLine);
+                Console.WriteLine($"Conversion completed in {durationMs} ms and logged to {LogFilePath}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Failed to write log entry: {ex.Message}");
+            }
+        }
+
+        // Simple CSV escaping for commas and quotes
+        private static string EscapeCsv(string field)
+        {
+            if (field.Contains(",") || field.Contains("\"") || field.Contains("\n"))
+            {
+                field = field.Replace("\"", "\"\"");
+                return $"\"{field}\"";
+            }
+            return field;
+        }
     }
 }

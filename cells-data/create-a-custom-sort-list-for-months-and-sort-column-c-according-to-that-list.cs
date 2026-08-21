@@ -1,58 +1,75 @@
+// Title: Custom Month Sort in Excel with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to define a custom month order list and use Aspose.Cells' DataSorter to sort column C of an Excel worksheet while preserving headers, then saves the result as SortedByMonth.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | custom sort list | month sorting | DataSorter | Excel custom order | sort column by list | Excel automation | sample code
+// Common Searches: Aspose.Cells sort column by custom month list C# | DataSorter AddKey custom list example | How to sort Excel months with Aspose.Cells .NET | Custom order sorting in Excel using Aspose | C# code for month based sorting in workbook
+// Developer Intent: Apply a predefined month sequence to sort an Excel column using Aspose.Cells.
+// Use Cases: Organize sales data by calendar month when months are stored as text. | Prepare monthly reports from unordered records without converting to dates. | Ensure month columns follow chronological order before creating pivot tables or charts.
+// AI Prompts: Generate C# code that sorts an Excel worksheet column using a custom month list with Aspose.Cells. | Explain the parameters of DataSorter.AddKey for custom list sorting in Aspose.Cells. | Show how to sort multiple columns while keeping header rows intact using Aspose.Cells DataSorter.
+
 using System;
 using Aspose.Cells;
 
-class Program
+namespace CustomMonthSortExample
 {
-    static void Main()
+    // Demonstrates how to define a custom month order list and use Aspose.Cells' DataSorter to sort column C of an Excel worksheet while preserving headers, then saves the result as SortedByMonth.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add header row
-        worksheet.Cells["A1"].PutValue("ID");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["C1"].PutValue("Month");
-
-        // Add sample data (months are in column C)
-        worksheet.Cells["A2"].PutValue(1);
-        worksheet.Cells["B2"].PutValue(100);
-        worksheet.Cells["C2"].PutValue("March");
-
-        worksheet.Cells["A3"].PutValue(2);
-        worksheet.Cells["B3"].PutValue(200);
-        worksheet.Cells["C3"].PutValue("January");
-
-        worksheet.Cells["A4"].PutValue(3);
-        worksheet.Cells["B4"].PutValue(150);
-        worksheet.Cells["C4"].PutValue("December");
-
-        worksheet.Cells["A5"].PutValue(4);
-        worksheet.Cells["B5"].PutValue(120);
-        worksheet.Cells["C5"].PutValue("July");
-
-        // Define a custom sort list for months
-        string monthCustomList = "January,February,March,April,May,June,July,August,September,October,November,December";
-
-        // Configure the DataSorter
-        DataSorter sorter = workbook.DataSorter;
-        sorter.HasHeaders = true; // First row contains headers
-        // Add sorting key for column C (index 2) using the custom month list
-        sorter.AddKey(2, SortOrder.Ascending, monthCustomList);
-
-        // Define the range to sort (including the header row)
-        CellArea sortArea = new CellArea
+        static void Main()
         {
-            StartRow = 0,
-            StartColumn = 0,
-            EndRow = 4,
-            EndColumn = 2
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Perform the sort
-        sorter.Sort(worksheet.Cells, sortArea);
+            // Add header row
+            cells["A1"].PutValue("ID");
+            cells["B1"].PutValue("Value");
+            cells["C1"].PutValue("Month");
 
-        // Save the workbook
-        workbook.Save("SortedMonths.xlsx");
+            // Sample data with months in random order
+            cells["A2"].PutValue(1);
+            cells["B2"].PutValue(100);
+            cells["C2"].PutValue("March");
+
+            cells["A3"].PutValue(2);
+            cells["B3"].PutValue(200);
+            cells["C3"].PutValue("January");
+
+            cells["A4"].PutValue(3);
+            cells["B4"].PutValue(150);
+            cells["C4"].PutValue("December");
+
+            cells["A5"].PutValue(4);
+            cells["B5"].PutValue(120);
+            cells["C5"].PutValue("July");
+
+            cells["A6"].PutValue(5);
+            cells["B6"].PutValue(180);
+            cells["C6"].PutValue("May");
+
+            // Define the custom month order list
+            string monthOrder = "January,February,March,April,May,June,July,August,September,October,November,December";
+
+            // Configure the DataSorter
+            DataSorter sorter = workbook.DataSorter;
+            sorter.HasHeaders = true; // First row contains headers
+            // Add custom sort key for column C (index 2) using the month order list
+            sorter.AddKey(2, SortOrder.Ascending, monthOrder);
+
+            // Define the range to sort (including headers)
+            CellArea sortArea = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = 5,   // rows 0‑5 (A1:C6)
+                EndColumn = 2 // columns A‑C
+            };
+
+            // Perform the sort
+            sorter.Sort(worksheet.Cells, sortArea);
+
+            // Save the workbook
+            workbook.Save("SortedByMonth.xlsx");
+        }
     }
 }

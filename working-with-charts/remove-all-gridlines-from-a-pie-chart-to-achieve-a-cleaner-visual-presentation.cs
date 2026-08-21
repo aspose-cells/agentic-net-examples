@@ -1,73 +1,64 @@
-// Title: C# – Remove Gridlines from a Pie Chart using Aspose.Cells for .NET
-// Description: Creates a workbook, adds sample data, inserts a pie chart, and disables major/minor gridlines on both axes plus the 2‑D walls/gridlines property, then saves as PieChart_NoGridlines.xlsx.
-// Keywords: Aspose.Cells pie chart gridlines | hide chart gridlines C# | disable axes gridlines Aspose.Cells | WallsAndGridlines2D false | .NET chart formatting | remove pie chart walls
-// Common Searches: Aspose.Cells hide gridlines on pie chart | remove chart walls and gridlines .NET | disable major and minor gridlines Aspose.Cells | C# pie chart without gridlines Aspose | how to turn off chart walls Aspose.Cells
-// Developer Intent: Generate a pie chart and eliminate every visual gridline and wall to produce a clean, minimalist chart.
-// Use Cases: Prepare a sales‑distribution pie chart for presentations without distracting gridlines. | Design a financial dashboard that displays multiple minimalist pie charts. | Export printable reports where pie charts must appear uncluttered.
-// AI Prompts: Write C# code that hides all gridlines for any Aspose.Cells chart, including the WallsAndGridlines2D setting. | Explain how the WallsAndGridlines2D property affects pie chart rendering in Aspose.Cells. | Suggest alternative techniques to remove visual gridlines from a pie chart using Aspose.Cells for .NET.
+// Title: Hide Gridlines on a Pie Chart with Aspose.Cells for .NET (C#)
+// Description: Shows how to build a workbook, add data, create a pie chart, and turn off both major and minor gridlines on the category and value axes using Aspose.Cells for .NET, delivering a chart with no visible gridlines.
+// Keywords: Aspose.Cells C# hide chart gridlines | pie chart gridlines Aspose.Cells | remove gridlines Aspose.Cells .NET | chart axis gridlines visibility | disable major minor gridlines | Aspose.Cells chart styling
+// Common Searches: Aspose.Cells hide pie chart gridlines C# | C# remove chart gridlines Aspose.Cells | set chart gridlines invisible Aspose.Cells | pie chart without gridlines Aspose.Cells .NET | how to turn off chart axes gridlines Aspose.Cells
+// Developer Intent: Disable all gridlines on a pie chart to achieve a cleaner visual output.
+// Use Cases: Generate a sales‑distribution pie chart for a financial report and suppress gridlines before exporting to Excel. | Automate dashboard creation where every pie chart must match corporate style guidelines that forbid axis gridlines. | Build a multi‑sheet workbook with numerous pie charts, ensuring each chart displays without gridlines for improved readability.
+// AI Prompts: Write C# code with Aspose.Cells that creates a pie chart and makes both major and minor gridlines on its axes invisible. | Explain step‑by‑step how to guarantee a pie chart in Aspose.Cells shows no gridlines, including which axis properties to modify. | Provide a method to programmatically verify that gridlines are hidden on an Aspose.Cells chart before saving the workbook.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// Shows how to build a workbook, add data, create a pie chart, and turn off both major and minor gridlines on the category and value axes using Aspose.Cells for .NET, delivering a chart with no visible gridlines.
+class RemovePieChartGridlines
 {
-    // Creates a workbook, adds sample data, inserts a pie chart, and disables major/minor gridlines on both axes plus the 2‑D walls/gridlines property, then saves as PieChart_NoGridlines.xlsx.
-    public class RemovePieChartGridlines
+    static void Main(string[] args)
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pie chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("Apple");
-                worksheet.Cells["A3"].PutValue("Orange");
-                worksheet.Cells["A4"].PutValue("Banana");
-
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(50);
-                worksheet.Cells["B3"].PutValue(30);
-                worksheet.Cells["B4"].PutValue(20);
-
-                // Add a pie chart to the worksheet
-                int chartIndex = worksheet.Charts.Add(ChartType.Pie, 5, 0, 15, 5);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Set the data range for the chart
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Hide gridlines (pie charts have no axes, but objects exist)
-                chart.ValueAxis.MajorGridLines.IsVisible = false;
-                chart.ValueAxis.MinorGridLines.IsVisible = false;
-                chart.CategoryAxis.MajorGridLines.IsVisible = false;
-                chart.CategoryAxis.MinorGridLines.IsVisible = false;
-
-                // Ensure 2‑D gridlines are disabled (safe for pie charts)
-                chart.WallsAndGridlines2D = false;
-
-                // Save the workbook
-                workbook.Save("PieChart_NoGridlines.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 
-    // Entry point for the application
-    public class Program
+    public static void Run()
     {
-        public static void Main(string[] args)
-        {
-            RemovePieChartGridlines.Run();
-        }
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Populate sample data for the pie chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("Apple");
+        sheet.Cells["A3"].PutValue("Orange");
+        sheet.Cells["A4"].PutValue("Banana");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(50);
+        sheet.Cells["B3"].PutValue(30);
+        sheet.Cells["B4"].PutValue(20);
+
+        // Add a pie chart to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 15, 5);
+        Chart chart = sheet.Charts[chartIndex];
+
+        // Set the data range for the chart
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
+
+        // Hide all gridlines (major and minor) on both axes
+        // Pie charts may not display axes, but setting visibility to false guarantees they are removed
+        chart.CategoryAxis.MajorGridLines.IsVisible = false;
+        chart.CategoryAxis.MinorGridLines.IsVisible = false;
+        chart.ValueAxis.MajorGridLines.IsVisible = false;
+        chart.ValueAxis.MinorGridLines.IsVisible = false;
+
+        // Save the workbook with the cleaned-up pie chart
+        string outputPath = "PieChart_NoGridlines.xlsx";
+        workbook.Save(outputPath);
+        Console.WriteLine($"Workbook saved to {outputPath}");
     }
 }

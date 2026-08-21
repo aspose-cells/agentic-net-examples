@@ -1,10 +1,10 @@
-// Title: Benchmark Shape.UpdateSelectedValue with 1,000 Linked ListBox Shapes in Aspose.Cells for .NET
-// Description: C# sample that creates a workbook, fills column A with sequential values, adds 1,000 ListBox shapes each linked to its row cell, then measures the time required for Shapes.UpdateSelectedValue to synchronize all linked shapes before saving the file.
-// Keywords: Aspose.Cells | .NET | C# | Shape.UpdateSelectedValue | performance benchmark | linked shapes | ListBox shape | large workbook | Excel automation | code example | GitHub sample
-// Common Searches: Aspose.Cells Shape.UpdateSelectedValue performance | benchmark linked ListBox shapes in .NET | how long does UpdateSelectedValue take with many shapes | measure shape update speed Aspose.Cells | C# example for updating linked shape values
-// Developer Intent: Evaluate the execution time of Shapes.UpdateSelectedValue when thousands of ListBox shapes are linked to worksheet cells.
-// Use Cases: Determine if shape‑linked updates meet latency requirements for real‑time dashboards. | Compare performance impact of different shape counts during workbook generation. | Identify bottlenecks before optimizing large Excel reports that use many linked controls.
-// AI Prompts: Generate a C# script that logs Shape.UpdateSelectedValue execution time for 100, 500, and 2000 linked ListBox shapes and plots the results. | Suggest optimization techniques to reduce the runtime of UpdateSelectedValue when handling thousands of linked shapes in Aspose.Cells. | Create a unit test that verifies UpdateSelectedValue completes within 150 ms for 500 linked ListBox shapes.
+// Title: Aspose.Cells for .NET – Benchmark UpdateSelectedValue with Thousands of Linked ListBox Shapes
+// Description: C# sample that creates a workbook, fills column A with values 1‑1000, adds 1,000 ListBox shapes each linked to a distinct cell in column B, and measures the execution time of sheet.Shapes.UpdateSelectedValue using Stopwatch before saving the file.
+// Keywords: Aspose.Cells | UpdateSelectedValue | performance benchmark | .NET | C# example | ListBox shape | linked cell | large workbook | shape processing speed | stopwatch timing | GitHub
+// Common Searches: Aspose.Cells UpdateSelectedValue performance test | measure time for UpdateSelectedValue with many shapes | benchmark ListBox shape linked cells .NET | how fast is Shapes.UpdateSelectedValue on large workbook | C# code to time UpdateSelectedValue for thousands of shapes
+// Developer Intent: Evaluate how quickly Shapes.UpdateSelectedValue processes a worksheet that contains a high volume of linked ListBox controls.
+// Use Cases: Confirm that bulk updating of ListBox selections meets latency requirements for reporting dashboards. | Compare runtimes before and after changing input ranges, linked cells, or disabling events. | Validate scalability of interactive Excel reports generated with Aspose.Cells in high‑volume scenarios.
+// AI Prompts: Generate C# code that adds 5,000 ListBox shapes, links each to a unique cell, and records the duration of sheet.Shapes.UpdateSelectedValue with high‑precision timing. | Suggest ways to accelerate UpdateSelectedValue for worksheets containing many linked shapes, such as turning off calculation or event handling. | Provide a snippet that logs the elapsed time of UpdateSelectedValue in seconds to a JSON file for later analysis.
 
 using System;
 using System.Diagnostics;
@@ -13,7 +13,7 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsPerformanceDemo
 {
-    // C# sample that creates a workbook, fills column A with sequential values, adds 1,000 ListBox shapes each linked to its row cell, then measures the time required for Shapes.UpdateSelectedValue to synchronize all linked shapes before saving the file.
+    // C# sample that creates a workbook, fills column A with values 1‑1000, adds 1,000 ListBox shapes each linked to a distinct cell in column B, and measures the execution time of sheet.Shapes.UpdateSelectedValue using Stopwatch before saving the file.
     class Program
     {
         static void Main()
@@ -22,46 +22,49 @@ namespace AsposeCellsPerformanceDemo
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Number of shapes to create for the performance test
-            const int shapeCount = 1000;
-
-            // Populate cells that will be linked to the shapes
-            for (int i = 0; i < shapeCount; i++)
+            // Populate a column with sample data (A1:A1000)
+            for (int i = 0; i < 1000; i++)
             {
-                // Fill column A with sequential numbers (these will be the linked values)
                 sheet.Cells[i, 0].Value = i + 1;
             }
 
-            // Add ListBox shapes and link each one to a corresponding cell in column A
+            // Add a large number of ListBox shapes, each linked to a different cell
+            int shapeCount = 1000; // adjust as needed for performance testing
             for (int i = 0; i < shapeCount; i++)
             {
-                // Position each shape in its own row to avoid overlap
+                // Position each shape in a separate row to avoid overlap
                 int row = i;
-                int col = 2; // start from column C to leave space for data
+                int col = 2; // column C
+                int upperLeftRow = row;
+                int upperLeftColumn = col;
+                int top = 5;
+                int left = 5;
+                int width = 100;
+                int height = 20;
 
-                // Add a ListBox shape (height and width are arbitrary)
-                Shape shape = sheet.Shapes.AddListBox(row, col, 0, 0, 120, 20);
-
-                // Set the input range (the list of items) – using the same range for simplicity
+                // Add ListBox shape
+                Shape shape = sheet.Shapes.AddListBox(upperLeftRow, upperLeftColumn, top, left, width, height);
+                // Set the input range (same for all shapes in this example)
                 shape.SetInputRange("$A$1:$A$10", false, false);
-
-                // Link the shape's selected value to the cell in column A of the same row
-                string linkedCellAddress = $"$A${row + 1}";
-                shape.SetLinkedCell(linkedCellAddress, false, true);
+                // Link each shape to a unique cell in column B (e.g., B1, B2, ...)
+                string linkedCell = $"$B${i + 1}";
+                shape.SetLinkedCell(linkedCell, false, true);
+                // Initialize linked cell with a value that matches one of the input items
+                sheet.Cells[i, 1].Value = (i % 10) + 1; // values 1..10
             }
 
-            // Measure the time taken to update selected values for all shapes
+            // Measure performance of updating selected values for all shapes
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            // This updates the selected value of each shape based on its linked cell
+            // Update selected values for all shapes in the worksheet
             sheet.Shapes.UpdateSelectedValue();
 
             sw.Stop();
-            Console.WriteLine($"Time taken to update {shapeCount} linked shapes: {sw.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Time taken to update selected values for {shapeCount} shapes: {sw.ElapsedMilliseconds} ms");
 
-            // Save the workbook (optional, just to verify that everything works)
-            workbook.Save("PerformanceTestResult.xlsx");
+            // Save the workbook (using the standard save method)
+            workbook.Save("PerformanceUpdateSelectedValue.xlsx");
         }
     }
 }

@@ -1,17 +1,17 @@
-// Title: C# – Apply Bold and Italic Formatting to Words in an Aspose.Cells TextBox Shape
-// Description: Creates a workbook, inserts a TextBox shape, sets its text, and uses FontSettingCollection with Style and StyleFlag to make the word “Bold” bold and the word “Italic” italic, then saves the file as BoldItalicTextBox.xlsx.
-// Keywords: Aspose.Cells C# textbox formatting | apply bold to shape text Aspose.Cells | apply italic to shape text Aspose.Cells | FontSettingCollection partial formatting | StyleFlag text styling Excel | C# Excel shape text styling | Aspose.Cells partial character formatting | Excel automation text styling
-// Common Searches: how to bold part of a textbox in Aspose.Cells C# | italic text inside a shape using Aspose.Cells | C# format specific characters in Aspose.Cells TextBox | Aspose.Cells StyleFlag example for partial text | apply mixed font styles to Excel shape text
-// Developer Intent: Apply bold and italic styles to individual words inside a TextBox shape in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Generate a sales report where key terms inside a textbox need distinct emphasis. | Create instructional worksheets that highlight action verbs with bold or italic styling programmatically. | Automate marketing templates that format product names differently within shape captions.
-// AI Prompts: Show how to underline and change the color of a specific word in an Aspose.Cells TextBox using C#. | Provide a C# snippet that applies three different font styles to non‑contiguous words in a shape's TextBody. | Explain how to retrieve a TextBox's FontSettingCollection, modify alignment, line spacing, and then apply the changes.
+// Title: Apply Bold and Italic Formatting to Text Inside a TextBox Shape with Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, insert a TextBox shape, set its text, and use the TextBody FontSettingCollection together with Style and StyleFlag objects to apply bold to the word “Bold” and italic to the word “Italic”. The workbook is then saved as an Excel file.
+// Keywords: Aspose.Cells textbox bold | Aspose.Cells italic text | C# rich text in Excel shape | FontSettingCollection format substring | mixed font styles Aspose.Cells | apply style to part of textbox | Excel shape text formatting .NET
+// Common Searches: how to make a word bold in an Aspose.Cells textbox | apply italic to part of textbox text Aspose.Cells C# | format substrings inside Excel shape using Aspose.Cells | Aspose.Cells FontSettingCollection example | C# set mixed font styles in Excel textbox
+// Developer Intent: Use Aspose.Cells for .NET to apply distinct bold and italic styles to specific words within a TextBox shape in an Excel workbook.
+// Use Cases: Emphasize key terms in a dashboard textbox. | Create a title with mixed bold/italic styling inside a shape. | Generate instructional notes where certain words need separate emphasis.
+// AI Prompts: Write C# code that adds underline and a custom font color to the word "example" inside an Aspose.Cells textbox. | Show how to replace a specific word in all textboxes of a worksheet and apply bold formatting to each occurrence using Aspose.Cells for .NET. | Provide a method to apply both bold and italic styles simultaneously to a selected character range in a textbox shape.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// Creates a workbook, inserts a TextBox shape, sets its text, and uses FontSettingCollection with Style and StyleFlag to make the word “Bold” bold and the word “Italic” italic, then saves the file as BoldItalicTextBox.xlsx.
+// Demonstrates how to create a workbook, insert a TextBox shape, set its text, and use the TextBody FontSettingCollection together with Style and StyleFlag objects to apply bold to the word “Bold” and italic to the word “Italic”. The workbook is then saved as an Excel file.
 class ApplyBoldItalicInTextBox
 {
     static void Main()
@@ -21,39 +21,44 @@ class ApplyBoldItalicInTextBox
         Worksheet worksheet = workbook.Worksheets[0];
 
         // Add a textbox shape to the worksheet
-        // Parameters: upper left row, upper left column, top, left, width, height
-        Shape textBox = worksheet.Shapes.AddTextBox(1, 1, 0, 0, 200, 50);
+        // Parameters: upper left row, upper left column, lower right row, lower right column, width, height
+        Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 300, 100);
 
-        // Set the initial text of the textbox
-        textBox.Text = "Bold and Italic text";
+        // Set the text of the textbox
+        textBox.Text = "Bold and Italic text example";
 
-        // Get the FontSettingCollection that represents the text body of the shape
+        // Get the FontSettingCollection that manages rich text inside the textbox
         FontSettingCollection textBody = textBox.TextBody;
 
-        // -------------------------------------------------
-        // Apply Bold to the word "Bold"
-        // -------------------------------------------------
-        // Create a style to hold the font settings
+        // ---------- Apply Bold to the word "Bold" ----------
+        int boldStart = 0;                     // start index of "Bold"
+        int boldLength = "Bold".Length;        // length of "Bold"
+
+        // Create a style with Bold enabled
         Style boldStyle = workbook.CreateStyle();
-        boldStyle.Font.IsBold = true;          // set bold
-        // Define which font properties should be applied
+        boldStyle.Font.IsBold = true;
+
+        // Define which font properties to apply (only Bold)
         StyleFlag boldFlag = new StyleFlag();
         boldFlag.FontBold = true;
 
-        // Apply formatting: start index 0, length 4 ("Bold")
-        textBody.Format(0, 4, boldStyle.Font, boldFlag);
+        // Apply the bold formatting to the specified range
+        textBody.Format(boldStart, boldLength, boldStyle.Font, boldFlag);
 
-        // -------------------------------------------------
-        // Apply Italic to the word "Italic"
-        // -------------------------------------------------
+        // ---------- Apply Italic to the word "Italic" ----------
+        string fullText = textBox.Text;
+        int italicStart = fullText.IndexOf("Italic");   // locate "Italic"
+        int italicLength = "Italic".Length;
+
+        // Create a style with Italic enabled
         Style italicStyle = workbook.CreateStyle();
-        italicStyle.Font.IsItalic = true;      // set italic
+        italicStyle.Font.IsItalic = true;
+
+        // Define which font properties to apply (only Italic)
         StyleFlag italicFlag = new StyleFlag();
         italicFlag.FontItalic = true;
 
-        // "Italic" starts after "Bold and " (9 characters)
-        int italicStart = "Bold and ".Length; // 9
-        int italicLength = "Italic".Length;   // 6
+        // Apply the italic formatting to the specified range
         textBody.Format(italicStart, italicLength, italicStyle.Font, italicFlag);
 
         // Save the workbook to a file

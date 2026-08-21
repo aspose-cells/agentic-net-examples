@@ -1,73 +1,66 @@
 // Title: C# – Remove Empty Rows from an Aspose.Cells Worksheet Using a Bottom‑Up Loop
-// Description: A concise example that creates a workbook, adds sample data with blank rows, then uses MaxDataRow and MaxDataColumn to scan each row from the bottom up. Rows whose cells are all of type IsNull are deleted with Cells.DeleteRow, and the cleaned workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells C# delete empty rows | remove blank rows Aspose.Cells | Aspose.Cells MaxDataRow | Aspose.Cells MaxDataColumn | Cells.DeleteRow example | C# Excel remove empty rows | Aspose.Cells worksheet cleanup | bottom up row deletion Aspose.Cells
-// Common Searches: how to delete empty rows in Aspose.Cells C# | remove blank rows from Excel using Aspose.Cells | Aspose.Cells delete rows with no data | C# loop to clean up empty rows in worksheet | Aspose.Cells bottom up row deletion to avoid index shift
-// Developer Intent: Eliminate every completely empty row from a worksheet programmatically.
-// Use Cases: Sanitize imported CSV or database data by stripping rows that contain no values before further processing. | Prepare a template workbook for end‑users by removing placeholder rows left blank during design. | Compress generated reports by deleting trailing blank rows after dynamic data insertion.
-// AI Prompts: Show how to modify the loop so rows that contain only formulas are kept while empty rows are removed. | Provide an alternative solution that uses Worksheet.Rows collection to delete empty rows in a single operation. | Explain how to preserve rows with comments or cell formatting even when their values are null.
+// Description: Demonstrates how to delete every completely blank row in an Aspose.Cells workbook. The example creates a workbook, adds sample data with intentional gaps, uses Cells.MaxDataRow and Cells.MaxDataColumn to locate the data range, iterates from the last row upward, checks each cell’s type for null, removes empty rows with Cells.DeleteRow, and saves the cleaned file as an XLSX document.
+// Keywords: Aspose.Cells delete empty rows C# | remove blank rows Aspose.Cells .NET | Cells.MaxDataRow example | bottom up row deletion Aspose | DeleteRow method C# | clean worksheet Aspose.Cells | skip null cells Aspose.Cells
+// Common Searches: how to delete empty rows in Aspose.Cells for .NET | remove blank rows from worksheet using C# Aspose.Cells | Aspose.Cells delete rows where all cells are null | iterate from bottom to top to delete rows Aspose.Cells | Aspose.Cells remove empty rows without shifting data
+// Developer Intent: Eliminate all rows that contain no data from a worksheet while preserving the order of remaining rows.
+// Use Cases: Sanitize CSV imports that contain sporadic empty lines before generating a report. | Trim placeholder rows added during dynamic data population in financial models. | Prepare a clean worksheet layout for export to Excel after programmatic row insertion.
+// AI Prompts: Write C# code with Aspose.Cells that removes empty rows based on a single key column instead of the whole row. | Show an alternative method using Aspose.Cells Range objects or LINQ to filter out blank rows. | Explain how to adapt the loop to keep rows that have formulas but no visible values.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Demonstrates how to delete every completely blank row in an Aspose.Cells workbook. The example creates a workbook, adds sample data with intentional gaps, uses Cells.MaxDataRow and Cells.MaxDataColumn to locate the data range, iterates from the last row upward, checks each cell’s type for null, removes empty rows with Cells.DeleteRow, and saves the cleaned file as an XLSX document.
+class RemoveEmptyRowsDemo
 {
-    // A concise example that creates a workbook, adds sample data with blank rows, then uses MaxDataRow and MaxDataColumn to scan each row from the bottom up. Rows whose cells are all of type IsNull are deleted with Cells.DeleteRow, and the cleaned workbook is saved as an XLSX file.
-    class RemoveEmptyRowsWithLoop
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Populate the worksheet with some data and intentional blank rows
+            cells["A1"].PutValue("Header");
+            cells["A2"].PutValue("Data1");
+            // Row 3 (index 2) is left blank
+            cells["A4"].PutValue("Data2"); // Row 4 (index 3)
+            // Row 5 (index 4) is left blank
+            cells["A6"].PutValue("Data3"); // Row 6 (index 5)
+
+            // Determine the last row that contains data (zero‑based index)
+            int lastDataRow = cells.MaxDataRow;
+
+            // Iterate from the bottom upwards so that row indices remain valid after deletions
+            for (int row = lastDataRow; row >= 0; row--)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                bool isEmpty = true;
 
-                // Sample data with some blank rows
-                cells["A1"].PutValue("Header");
-                cells["A2"].PutValue("Data1");
-                cells["A4"].PutValue("Data2"); // Row 3 is blank
-                cells["A6"].PutValue("Data3"); // Row 5 is blank
-
-                // Determine the last row that contains data
-                int lastRow = cells.MaxDataRow;
-
-                // Loop from the bottom up to avoid index shifting after deletion
-                for (int row = lastRow; row >= 0; row--)
+                // Check each column up to the last column that contains data
+                for (int col = 0; col <= cells.MaxDataColumn; col++)
                 {
-                    bool isEmpty = true;
-
-                    // Check each column up to the last column that contains data
-                    for (int col = 0; col <= cells.MaxDataColumn; col++)
+                    // If any cell in the row is not null, the row is not empty
+                    if (cells[row, col].Type != CellValueType.IsNull)
                     {
-                        // If any cell in the row is not blank, the row is not empty
-                        Cell cell = cells[row, col];
-                        if (cell.Type != CellValueType.IsNull)
-                        {
-                            isEmpty = false;
-                            break;
-                        }
-                    }
-
-                    // Delete the row if it is empty
-                    if (isEmpty)
-                    {
-                        cells.DeleteRow(row);
+                        isEmpty = false;
+                        break;
                     }
                 }
 
-                // Define output file path
-                string outputPath = "RemovedEmptyRows.xlsx";
+                // Delete the row if it is empty
+                if (isEmpty)
+                {
+                    cells.DeleteRow(row);
+                }
+            }
 
-                // Save the workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook with the empty rows removed
+            workbook.Save("RemovedEmptyRows.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

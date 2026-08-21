@@ -1,22 +1,21 @@
-// Title: Toggle ImageActiveXControl Visibility on an Aspose.Cells Chart (C#)
-// Description: Creates a workbook, adds a column chart, places an ImageActiveXControl over the chart, loads a PNG into the control, sets PictureSizeMode to Zoom, and uses the IsVisible property to show or hide the picture based on a Boolean flag before saving the file.
-// Keywords: Aspose.Cells ImageActiveXControl | C# toggle picture visibility | Excel chart ActiveX image | IsVisible property Aspose.Cells | conditional picture display Excel | Aspose.Cells chart picture control | ActiveX image control visibility | C# Aspose.Cells example
-// Common Searches: how to hide ImageActiveXControl on a chart using Aspose.Cells | C# toggle visibility of picture control in Aspose.Cells workbook | set IsVisible property for ActiveX image in Excel with Aspose.Cells | conditional display of chart logo Aspose.Cells .NET | Aspose.Cells example for showing/hiding picture on chart
-// Developer Intent: Show or hide an ImageActiveXControl placed on a chart by evaluating a Boolean flag in C# code using Aspose.Cells.
-// Use Cases: Display a company logo on a chart only when a reporting flag is enabled. | Hide a watermark image for a clean presentation view. | Toggle a dynamic picture that reflects user input before exporting the workbook.
-// AI Prompts: Write C# code with Aspose.Cells that adds an ImageActiveXControl to a chart and toggles its IsVisible property based on a Boolean variable. | Provide an Aspose.Cells example that loads a PNG into an ImageActiveXControl, sets PictureSizeMode to Zoom, and conditionally hides the control before saving the workbook. | Explain how to programmatically change the visibility of an ActiveX picture control on an Excel chart using Aspose.Cells after the workbook is generated.
+// Title: Toggle picture visibility on an Aspose.Cells chart with a Boolean flag (C#)
+// Description: Creates a new workbook, adds a column chart with sample data, and uses a Boolean variable to decide whether to insert a picture (example.png) near the chart. The picture is positioned by cell coordinates and the workbook is saved as an XLSX file.
+// Keywords: Aspose.Cells C# toggle picture | conditional image insertion Excel chart | hide/show picture Aspose.Cells | chart overlay image visibility .NET | boolean flag picture Aspose.Cells
+// Common Searches: Aspose.Cells show picture on chart conditionally | C# add picture to Excel chart only if flag is true | toggle visibility of chart image Aspose.Cells | conditional picture insertion Excel using Aspose | how to hide a picture in an Aspose.Cells chart
+// Developer Intent: Insert or omit a picture on an Excel chart at runtime based on a Boolean condition using Aspose.Cells for .NET.
+// Use Cases: Add a company logo to reports only when branding is required. | Display a warning icon on a chart when data exceeds thresholds. | Show a trend‑line graphic when a specific analysis mode is enabled.
+// AI Prompts: Write C# code that adds a picture to an Aspose.Cells chart only when a boolean variable is true. | Show how to remove or hide an existing picture from an Aspose.Cells chart when a condition changes. | Explain positioning a picture relative to a chart and controlling its visibility with Aspose.Cells APIs.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.ActiveXControls;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, adds a column chart, places an ImageActiveXControl over the chart, loads a PNG into the control, sets PictureSizeMode to Zoom, and uses the IsVisible property to show or hide the picture based on a Boolean flag before saving the file.
-    public class TogglePictureControlVisibility
+    // Creates a new workbook, adds a column chart with sample data, and uses a Boolean variable to decide whether to insert a picture (example.png) near the chart. The picture is positioned by cell coordinates and the workbook is saved as an XLSX file.
+    public class TogglePictureVisibilityInChart
     {
         public static void Main()
         {
@@ -32,73 +31,61 @@ namespace AsposeCellsExamples
 
         public static void Run()
         {
-            // Flag that determines whether the picture control should be visible
-            bool showPictureControl = true; // Change to false to hide the control
+            // Flag that determines whether the picture should be visible
+            bool showPicture = true; // set to false to hide the picture
 
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add some sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(30);
+            // Add a sample chart to the worksheet
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = worksheet.Charts[chartIndex];
 
-            // Create a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = sheet.Charts[chartIndex];
+            // Populate chart data
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["A2"].PutValue("A");
+            worksheet.Cells["B2"].PutValue(10);
+            worksheet.Cells["A3"].PutValue("B");
+            worksheet.Cells["B3"].PutValue(20);
+            worksheet.Cells["A4"].PutValue("C");
+            worksheet.Cells["B4"].PutValue(30);
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Add an Image ActiveX control (acts as a picture control) over the chart area
-            Shape pictureShape = sheet.Shapes.AddActiveXControl(
-                ControlType.Image,    // Image ActiveX control
-                6,                    // top row (inside chart area)
-                1,                    // left column
-                0,                    // top offset (pixels)
-                0,                    // left offset (pixels)
-                100,                  // width (pixels)
-                100);                 // height (pixels)
+            // Add a picture to the worksheet if required and the file exists
+            string imagePath = "example.png";
 
-            // Cast the ActiveXControl to ImageActiveXControl to access picture-specific members
-            ImageActiveXControl imageControl = (ImageActiveXControl)pictureShape.ActiveXControl;
-
-            // Load picture data if the file exists
-            string imagePath = "sample_image.png";
-            if (File.Exists(imagePath))
+            if (showPicture)
             {
-                try
+                if (File.Exists(imagePath))
                 {
-                    byte[] pictureData = File.ReadAllBytes(imagePath);
-                    imageControl.Picture = pictureData;
+                    try
+                    {
+                        int pictureIndex = worksheet.Pictures.Add(6, 1, imagePath);
+                        Picture picture = worksheet.Pictures[pictureIndex];
+
+                        // Position the picture near the chart (using fixed cells as reference)
+                        picture.UpperLeftRow = 6;      // row index (zero‑based)
+                        picture.UpperLeftColumn = 1;   // column index (zero‑based)
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to add picture: {ex.Message}");
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"Failed to load image: {ex.Message}");
+                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture addition.");
                 }
             }
-            else
-            {
-                Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture assignment.");
-            }
-
-            // Toggle visibility based on the flag
-            imageControl.IsVisible = showPictureControl;
-
-            // Optionally, set other properties (e.g., picture size mode)
-            imageControl.PictureSizeMode = ControlPictureSizeMode.Zoom;
 
             // Save the workbook
-            string outputPath = "TogglePictureControlVisibility.xlsx";
             try
             {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                workbook.Save("TogglePictureVisibilityInChart.xlsx", SaveFormat.Xlsx);
+                Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)
             {

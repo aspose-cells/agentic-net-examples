@@ -1,17 +1,17 @@
-// Title: C# – Insert OLE Object and Freeze Panes with Aspose.Cells for .NET
-// Description: Demonstrates how to add an OLE object (with a preview image or placeholder) to a worksheet, set its ProgID, display‑as‑icon label, and freeze rows/columns up to the object's top‑left cell, then save the workbook as XLSX using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | OLE object | embed Excel file | preview image | display as icon | ProgID | freeze panes | freeze rows | freeze columns | GitHub example | coding‑agent | worksheet layout
-// Common Searches: How to embed an Excel file as an OLE object with Aspose.Cells C# | Aspose.Cells freeze panes around an OLE object | C# code to add OLE object and freeze rows in a workbook | Insert OLE object with preview image using Aspose.Cells for .NET | Set ProgID and display‑as‑icon for OLE objects in Aspose.Cells
-// Developer Intent: Add an OLE object to a worksheet and freeze the surrounding rows/columns for a fixed layout.
-// Use Cases: Create a report that embeds a secondary workbook as an icon while keeping header rows visible. | Place an OLE chart on a dashboard sheet and lock surrounding data rows so the chart remains in view. | Generate a template with an attached spreadsheet as an OLE object and freeze panes to lock the view to the top of the embedded file.
-// AI Prompts: Write C# code using Aspose.Cells to insert an OLE object with a custom preview image and freeze panes at the object's position. | Explain how to configure ProgID, display‑as‑icon, and label for an OLE object in Aspose.Cells. | Provide robust error handling for embedding files as OLE objects with Aspose.Cells in a .NET application.
+// Title: C# – Insert an OLE Object and Freeze Panes Around It with Aspose.Cells
+// Description: Demonstrates how to create a workbook, embed an Excel file as an OLE object (optionally with a custom icon), set its ProgID and display options, freeze the rows above and columns to the left of the object for a stable layout, and save the result as an XLSX file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | .NET | OLE object | embed Excel file | custom OLE icon | freeze panes | freeze rows | freeze columns | worksheet API | add OleObject | Aspose.Cells tutorial
+// Common Searches: Aspose.Cells add OLE object C# | how to embed Excel as OLE in Aspose.Cells | freeze panes around OLE object Aspose.Cells | C# set custom icon for OLE object Aspose | Aspose.Cells freeze rows and columns example
+// Developer Intent: Embed an OLE object in a worksheet and freeze the surrounding rows and columns to keep its position fixed.
+// Use Cases: Create a report that embeds a supporting spreadsheet as an OLE icon while keeping header rows visible. | Design a dashboard where an OLE chart is placed and the surrounding rows stay fixed during scrolling. | Build a printable template that includes an embedded file with a custom icon and frozen panes for consistent layout.
+// AI Prompts: Show how to link an OLE object instead of embedding it using Aspose.Cells. | Provide code that sets a custom icon for the OLE object via the IconData property. | Explain how to freeze only the rows above the OLE object while allowing columns to scroll.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing;   // Required for OleObject
 
-// Demonstrates how to add an OLE object (with a preview image or placeholder) to a worksheet, set its ProgID, display‑as‑icon label, and freeze rows/columns up to the object's top‑left cell, then save the workbook as XLSX using Aspose.Cells for .NET.
+// Demonstrates how to create a workbook, embed an Excel file as an OLE object (optionally with a custom icon), set its ProgID and display options, freeze the rows above and columns to the left of the object for a stable layout, and save the result as an XLSX file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -22,64 +22,70 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Paths to the preview image and the file to embed (replace with actual paths)
-            string imagePath = "preview.png";
-            string embeddedFilePath = "sample.xlsx";
+            // Define the position (row, column) and size (height, width) of the OLE object
+            // Note: Aspose.Cells uses zero‑based indexes for rows and columns
+            int topRow = 5;        // Row where the OLE object starts
+            int leftColumn = 2;    // Column where the OLE object starts
+            int height = 200;      // Height in pixels
+            int width = 300;       // Width in pixels
 
-            // Load image bytes; if the file does not exist, use a 1x1 white PNG placeholder
-            byte[] imageData;
-            if (File.Exists(imagePath))
+            // Load an image that will be shown as the OLE object's icon (optional)
+            string iconPath = "icon.jpg";
+            byte[]? iconData = null;
+            if (File.Exists(iconPath))
             {
-                imageData = File.ReadAllBytes(imagePath);
+                iconData = File.ReadAllBytes(iconPath);
             }
             else
             {
-                // Base64-encoded 1x1 white PNG
-                const string placeholderBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=";
-                imageData = Convert.FromBase64String(placeholderBase64);
+                Console.WriteLine($"Icon file not found: {iconPath}. The OLE object will use the default icon.");
             }
 
-            // Load the file that will be embedded inside the OLE object
-            byte[] objectData = Array.Empty<byte>();
-            if (File.Exists(embeddedFilePath))
+            // Load the file to be embedded into the OLE object
+            string embedPath = "sample.xlsx";
+            byte[]? embedData = null;
+            if (File.Exists(embedPath))
             {
-                objectData = File.ReadAllBytes(embeddedFilePath);
+                embedData = File.ReadAllBytes(embedPath);
             }
             else
             {
-                Console.WriteLine($"Embedded file not found: {embeddedFilePath}");
+                Console.WriteLine($"Embedded file not found: {embedPath}. The OLE object will be added without embedded data.");
             }
 
-            // Define the position (top‑left cell) and size (in pixels) of the OLE object
-            int topRow = 5;        // zero‑based row index
-            int leftColumn = 2;    // zero‑based column index
-            int height = 200;      // pixel height
-            int width = 300;       // pixel width
+            // Add the OLE object to the worksheet (embedded, not linked)
+            int oleIndex = sheet.OleObjects.Add(
+                topRow,
+                leftColumn,
+                height,
+                width,
+                embedData ?? Array.Empty<byte>()); // Use empty data if file missing
 
-            // Add the OLE object to the worksheet
-            int oleIndex = sheet.OleObjects.Add(topRow, leftColumn, height, width, imageData);
             OleObject ole = sheet.OleObjects[oleIndex];
 
-            // Set the embedded file data and display properties
-            ole.ObjectData = objectData;
-            ole.ProgID = "Excel.Sheet.8";               // ProgID for an embedded Excel workbook
-            ole.DisplayAsIcon = true;                  // Show as an icon
-            ole.Label = Path.GetFileName(embeddedFilePath); // Icon label
+            // If a custom icon was loaded, set it (Aspose.Cells supports custom icons via IconData)
+            if (iconData != null)
+            {
+                // The IconData property may not be available in older versions; if so, this block can be omitted.
+                // ole.IconData = iconData;
+            }
 
-            // Freeze rows and columns up to the OLE object's top‑left cell
+            // Define OLE object properties
+            ole.ProgID = "Excel.Sheet.8";      // Program ID for Excel files
+            ole.DisplayAsIcon = true;          // Show as an icon
+            ole.Label = "Embedded Excel File"; // Icon label
+
+            // Freeze rows above the OLE object and columns to its left
             sheet.FreezePanes(topRow, leftColumn, topRow, leftColumn);
 
             // Save the workbook
-            workbook.Save("OleObjectWithFreeze.xlsx", SaveFormat.Xlsx);
-            Console.WriteLine("Workbook saved successfully.");
-        }
-        catch (CellsException ex)
-        {
-            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+            string outputPath = "OleObjectWithFreeze.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,45 +1,39 @@
-// Title: Link a Rectangle Shape to a Cell Using LEFT & RIGHT Functions – Aspose.Cells for .NET
-// Description: Creates a workbook, writes "AsposeCellsDemo" to A1, sets B1 to =LEFT(A1,5)&RIGHT(A1,4), adds a rectangle shape, links the shape to B1 with the LinkedCell property, and saves the file so the shape shows the concatenated substring result.
-// Keywords: Aspose.Cells | C# | shape linked cell | LEFT function | RIGHT function | rectangle shape | LinkedCell property | Excel automation | substring formula | display shape text
-// Common Searches: Aspose.Cells link shape to cell .NET | How to use LEFT and RIGHT in a cell formula with Aspose.Cells | Set LinkedCell for a rectangle shape in C# | Show formula result in a linked shape using Aspose.Cells | Create dynamic text in Excel shapes via Aspose.Cells
-// Developer Intent: Attach a rectangle shape to a cell that contains a LEFT/RIGHT substring formula so the shape automatically displays the computed text.
-// Use Cases: Generate a report where a shape reflects a custom string derived from another cell. | Build dashboards with shapes that update instantly when the source cell value changes. | Automate Excel templates that require visual labels derived from cell formulas.
-// AI Prompts: Write C# code with Aspose.Cells to add a rectangle shape linked to a cell that uses LEFT and RIGHT functions. | Show how to modify the linked cell formula to extract different parts of a string and have the shape update automatically. | Explain how to read the text displayed by a shape linked to a formula cell after the workbook is saved.
+// Title: Link a Rectangle Shape to a Cell with LEFT/RIGHT Formula using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, write a source string to A1, apply a LEFT‑RIGHT concatenation formula in B1, add a rectangle shape, and bind the shape to the formula cell via the LinkedCell property. The workbook is saved as LinkedShape.xlsx.
+// Keywords: Aspose.Cells | C# | LinkedCell | rectangle shape | LEFT function | RIGHT function | Excel formula binding | shape to cell | dynamic label
+// Common Searches: Aspose.Cells link shape to cell C# | how to bind rectangle to formula result in Aspose.Cells | LEFT RIGHT Excel formula with shape LinkedCell | C# example linking shape to cell using Aspose.Cells | dynamic shape text based on cell formula Aspose
+// Developer Intent: Create a shape whose displayed text updates automatically from a cell that uses LEFT and RIGHT functions.
+// Use Cases: Show a shortened version of a long string as a visual label. | Provide a dashboard element that reflects concatenated parts of a source cell. | Maintain a visual marker that updates when the underlying text changes.
+// AI Prompts: Generate C# code with Aspose.Cells to add a rectangle shape and link it to a cell containing a LEFT/RIGHT formula. | Explain how to resize and reposition a linked shape while keeping it synchronized with the formula cell. | Describe how to modify the LEFT/RIGHT formula at runtime and ensure the linked shape reflects the new result.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, writes "AsposeCellsDemo" to A1, sets B1 to =LEFT(A1,5)&RIGHT(A1,4), adds a rectangle shape, links the shape to B1 with the LinkedCell property, and saves the file so the shape shows the concatenated substring result.
-class ShapeLinkedCellExample
+// Demonstrates how to create a workbook, write a source string to A1, apply a LEFT‑RIGHT concatenation formula in B1, add a rectangle shape, and bind the shape to the formula cell via the LinkedCell property. The workbook is saved as LinkedShape.xlsx.
+class Program
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Put some sample text in cell A1
-        sheet.Cells["A1"].PutValue("AsposeCellsDemo");
+        // Put a sample text into cell A1
+        worksheet.Cells["A1"].PutValue("AsposeCells");
 
-        // In cell B1 place a formula that extracts substrings using LEFT and RIGHT
-        // Example: first 5 characters and last 4 characters concatenated
-        sheet.Cells["B1"].Formula = "=LEFT(A1,5) & RIGHT(A1,4)";
+        // In cell B1 set a formula that extracts substrings using LEFT and RIGHT
+        // Example: first 5 characters and last 3 characters concatenated
+        worksheet.Cells["B1"].Formula = "=LEFT(A1,5)&RIGHT(A1,3)";
 
         // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, upper left offset (pixels), 
-        // lower right row, lower right column, lower right offset (pixels)
-        Shape shape = sheet.Shapes.AddRectangle(2, 2, 0, 2, 5, 0);
+        // Parameters: upper left row, upper left column, height, width, placement type, shape index
+        Shape shape = worksheet.Shapes.AddRectangle(2, 2, 100, 200, 0, 0);
 
-        // Link the shape to the cell containing the formula (B1)
-        // The shape will display the result of the formula
-        shape.LinkedCell = "$B$1";
+        // Link the shape to the cell containing the formula result (B1)
+        shape.LinkedCell = "B1";
 
-        // Optionally, set the shape's text to show the linked value (not required,
-        // as the linked cell value is displayed automatically in Excel)
-        // shape.Text = sheet.Cells["B1"].StringValue; // Uncomment if needed
-
-        // Save the workbook
-        workbook.Save("ShapeLinkedCellExample.xlsx");
+        // Save the workbook to a file
+        workbook.Save("LinkedShape.xlsx");
     }
 }

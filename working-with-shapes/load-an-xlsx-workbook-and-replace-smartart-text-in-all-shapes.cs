@@ -1,50 +1,50 @@
-// Title: Replace SmartArt Text in All Shapes of an XLSX Workbook with Aspose.Cells for .NET
-// Description: This C# example loads an XLSX file using Aspose.Cells, scans every worksheet for SmartArt shapes, converts each SmartArt to a GroupShape, overwrites the text of every grouped element with a new value, and saves the workbook with UpdateSmartArt enabled so the changes are persisted.
-// Keywords: Aspose.Cells SmartArt text replacement | C# update Excel SmartArt | Iterate workbook shapes Aspose | OoxmlSaveOptions UpdateSmartArt | Bulk edit SmartArt captions | .NET Excel shape manipulation
-// Common Searches: how to change SmartArt text in Excel using Aspose.Cells | Aspose.Cells replace all SmartArt labels C# | programmatically edit SmartArt shapes in .xlsx | save Excel file after modifying SmartArt Aspose | bulk update SmartArt captions across worksheets
-// Developer Intent: Programmatically replace the text of every SmartArt shape in an Excel workbook and write the changes back to the file.
-// Use Cases: Localize SmartArt labels in a template before distribution. | Populate SmartArt descriptions with dynamic report data. | Enforce brand‑consistent wording across multiple worksheets.
-// AI Prompts: Generate C# code that iterates through a workbook, finds SmartArt shapes, and sets their text from a dictionary using Aspose.Cells. | Explain what happens if OoxmlSaveOptions.UpdateSmartArt is set to false when saving after SmartArt modifications. | Show how to log original SmartArt text before replacement while processing with Aspose.Cells.
+// Title: C# – Replace SmartArt and Alternative Text in All Shapes of an XLSX Workbook with Aspose.Cells
+// Description: Loads an XLSX file, iterates every worksheet and each shape, sets a new AlternativeText for all shapes, detects SmartArt objects, converts them to GroupShape, replaces the text of every grouped shape originating from SmartArt, and saves the workbook with the UpdateSmartArt option enabled.
+// Keywords: Aspose.Cells C# | SmartArt text replacement | Excel shape alternative text | Iterate worksheet shapes | UpdateSmartArt option | GroupShape Aspose | Bulk shape text update | C# Excel automation
+// Common Searches: Aspose.Cells replace SmartArt text C# | How to change alternative text for all shapes in Excel using Aspose | Save workbook with UpdateSmartArt flag | Convert SmartArt to GroupShape Aspose.Cells | Iterate shapes on each worksheet C#
+// Developer Intent: Update every shape’s alternative text and replace all SmartArt node text in an XLSX file, then save with SmartArt refreshed.
+// Use Cases: Refresh SmartArt labels in a reporting template before distribution. | Add descriptive alternative text to all diagram elements for accessibility compliance. | Automate bulk editing of shape captions after data‑driven calculations. | Create a localized version of a workbook by swapping SmartArt text in one step.
+// AI Prompts: Generate code that reads a CSV mapping and replaces SmartArt node text accordingly. | Show how to log shape name, type, and original text before modification. | Explain error‑handling for worksheets without shapes or SmartArt. | Provide a version that processes only selected worksheets based on their name.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This C# example loads an XLSX file using Aspose.Cells, scans every worksheet for SmartArt shapes, converts each SmartArt to a GroupShape, overwrites the text of every grouped element with a new value, and saves the workbook with UpdateSmartArt enabled so the changes are persisted.
-class ReplaceSmartArtText
+// Loads an XLSX file, iterates every worksheet and each shape, sets a new AlternativeText for all shapes, detects SmartArt objects, converts them to GroupShape, replaces the text of every grouped shape originating from SmartArt, and saves the workbook with the UpdateSmartArt option enabled.
+class Program
 {
     static void Main()
     {
-        // Paths to the source and destination files
-        string inputFile = "input.xlsx";
-        string outputFile = "output.xlsx";
+        // Load the source workbook (lifecycle rule: load)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Load the workbook (lifecycle: load)
-        Workbook workbook = new Workbook(inputFile);
-
-        // Iterate through all worksheets and their shapes
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Iterate through all worksheets
+        foreach (Worksheet worksheet in workbook.Worksheets)
         {
-            foreach (Shape shape in sheet.Shapes)
+            // Iterate through all shapes in the worksheet
+            foreach (Shape shape in worksheet.Shapes)
             {
-                // Process only SmartArt shapes
+                // Example: replace alternative text of every shape
+                shape.AlternativeText = "ReplacedAlternativeText";
+
+                // Check if the shape is a SmartArt object
                 if (shape.IsSmartArt)
                 {
-                    // Convert SmartArt to a grouped shape collection
-                    GroupShape group = shape.GetResultOfSmartArt();
+                    // Convert SmartArt to a grouped shape (cached result)
+                    GroupShape groupShape = shape.GetResultOfSmartArt();
 
-                    // Replace the text of each grouped shape
-                    foreach (Shape smartShape in group.GetGroupedShapes())
+                    // Replace text in each grouped shape that originated from SmartArt
+                    foreach (Shape smartArtShape in groupShape.GetGroupedShapes())
                     {
-                        smartShape.Text = "ReplacedText";
+                        smartArtShape.Text = "ReplacedSmartArtText";
                     }
                 }
             }
         }
 
-        // Save the workbook with SmartArt updating enabled (lifecycle: save)
+        // Save the workbook with SmartArt update enabled (lifecycle rule: save)
         OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
         saveOptions.UpdateSmartArt = true;
-        workbook.Save(outputFile, saveOptions);
+        workbook.Save("output.xlsx", saveOptions);
     }
 }

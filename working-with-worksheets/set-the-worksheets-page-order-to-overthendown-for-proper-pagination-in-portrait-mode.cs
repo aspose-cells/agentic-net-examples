@@ -1,50 +1,52 @@
-// Title: Set worksheet print order to OverThenDown (portrait) using Aspose.Cells for .NET
-// Description: Creates a new Workbook, sets the first worksheet to portrait orientation, changes the print order to OverThenDown via PageSetup.Order, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells | C# | SetPageOrder | PrintOrderType | OverThenDown | portrait orientation | page setup | Excel pagination | Workbook.Save | XLSX export | worksheet printing
-// Common Searches: Aspose.Cells set print order OverThenDown | C# page setup portrait orientation Aspose.Cells | how to change worksheet pagination order in .NET | save workbook after modifying page order Aspose | print order OverThenDown example C#
-// Developer Intent: Configure a worksheet to print pages over‑then‑down in portrait mode and persist the changes to an Excel file.
-// Use Cases: Generating multi‑page reports where each row of pages is filled horizontally before moving to the next row. | Creating printable invoices or forms that require booklet‑style pagination. | Preparing portrait‑oriented worksheets for accurate physical page sequencing during batch printing.
-// AI Prompts: Write C# code with Aspose.Cells that sets a worksheet to portrait orientation and OverThenDown print order, then saves it as XLSX. | Explain the effect of PrintOrderType.OverThenDown on Excel pagination when using Aspose.Cells. | Provide step‑by‑step instructions to configure page setup for portrait mode and over‑then‑down print order in Aspose.Cells for .NET.
+// Title: C# – Set worksheet page order to OverThenDown (portrait) with Aspose.Cells
+// Description: Shows how to create a workbook, switch the sheet to portrait mode, assign PrintOrderType.OverThenDown to PageSetup.Order, and save the result as an XLSX file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# page order | PrintOrderType OverThenDown | worksheet pagination portrait | PageSetup.Order | Excel print order .NET | Aspose.Cells tutorial | set page order C#
+// Common Searches: Aspose.Cells set page order OverThenDown | C# print order portrait Excel | How to change worksheet pagination order in Aspose.Cells | PrintOrderType OverThenDown example | Configure page setup orientation and order Aspose.Cells
+// Developer Intent: Configure a worksheet's print order to OverThenDown while keeping the sheet in portrait mode in an Aspose.Cells workbook.
+// Use Cases: Printing multi‑column reports where pages fill horizontally before moving down the sheet. | Generating invoices that require horizontal page sequencing in a vertical layout. | Preparing Excel sheets for booklet or brochure printing with OverThenDown pagination. | Automating batch export of reports where a consistent page order is mandatory.
+// AI Prompts: Generate C# code with Aspose.Cells that sets PageSetup.Orientation to portrait, assigns PageSetup.Order = PrintOrderType.OverThenDown, and saves the workbook as XLSX. | Explain the difference between OverThenDown and DownThenOver print orders in Aspose.Cells and recommend scenarios for each. | Provide a step‑by‑step tutorial for configuring page setup (orientation, margins, scaling, order) in an Aspose.Cells workbook using .NET.
 
-using Aspose.Cells;
 using System;
-using System.IO;
+using Aspose.Cells;
 
-// Creates a new Workbook, sets the first worksheet to portrait orientation, changes the print order to OverThenDown via PageSetup.Order, and saves the file as an XLSX document.
-public class SetPageOrderDemo
+namespace AsposeCellsExamples
 {
-    public static void Run()
+    // Shows how to create a workbook, switch the sheet to portrait mode, assign PrintOrderType.OverThenDown to PageSetup.Order, and save the result as an XLSX file using Aspose.Cells for .NET.
+    public class SetPageOrderDemo
     {
-        try
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Ensure the sheet is in portrait orientation (optional but typical for pagination)
-            sheet.PageSetup.Orientation = PageOrientationType.Portrait;
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Set the print order to OverThenDown for proper pagination
-            sheet.PageSetup.Order = PrintOrderType.OverThenDown;
+                // Ensure the sheet is in portrait orientation
+                sheet.PageSetup.Orientation = PageOrientationType.Portrait;
 
-            // Define output file path
-            string outputPath = "PageOrder_OverThenDown.xlsx";
+                // Set the page order to OverThenDown for proper pagination
+                sheet.PageSetup.Order = PrintOrderType.OverThenDown;
 
-            // Save the workbook to an XLSX file
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                // Define output file name
+                string outputPath = "PageOrder_OverThenDown.xlsx";
+
+                // Save the workbook to a file
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        // Entry point for the application
+        public static void Main(string[] args)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Run();
         }
-    }
-}
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        SetPageOrderDemo.Run();
     }
 }

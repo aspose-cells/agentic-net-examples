@@ -1,59 +1,58 @@
-// Title: C# – Convert a semicolon‑delimited CSV to XLSX using Aspose.Cells TxtLoadOptions
-// Description: Demonstrates how to configure TxtLoadOptions.Separator to ';', load a CSV file with a custom delimiter into an Aspose.Cells Workbook, and save the result as an XLSX workbook. Includes file‑existence checking and basic exception handling for robust .NET applications.
-// Keywords: Aspose.Cells | C# CSV to XLSX | semicolon delimiter | TxtLoadOptions Separator | .NET Excel export | custom CSV delimiter | load CSV Aspose | Excel conversion C# | batch CSV to XLSX
-// Common Searches: Aspose.Cells set TxtLoadOptions separator to semicolon | C# convert CSV with ; delimiter to Excel | load CSV with custom delimiter using Aspose.Cells | save loaded CSV workbook as XLSX in .NET | how to handle missing CSV file Aspose.Cells
-// Developer Intent: Load a CSV that uses ';' as the field separator and export it to an XLSX file with Aspose.Cells.
-// Use Cases: Transform European‑style CSV reports (semicolon separated) into Excel for business analysis. | Automate nightly batch conversion of multiple semicolon‑delimited CSV files to XLSX in a Windows service. | Integrate custom‑delimited CSV ingestion into a data‑processing pipeline that outputs Excel workbooks.
-// AI Prompts: Generate C# code that reads a pipe‑delimited CSV with Aspose.Cells TxtLoadOptions and saves it as XLSX. | Explain how to specify character encoding when loading a CSV with a custom separator in Aspose.Cells. | Provide a pattern for logging and retry logic during bulk CSV‑to‑XLSX conversion in a console app.
+// Title: C# – Convert Semicolon‑Delimited CSV to XLSX with Aspose.Cells TxtLoadOptions
+// Description: Demonstrates how to set TxtLoadOptions.Separator to ';', load a CSV file using Aspose.Cells, and save the workbook as an XLSX document in a single step.
+// Keywords: Aspose.Cells TxtLoadOptions separator | semicolon CSV to XLSX C# | custom delimiter CSV Aspose | load CSV with TxtLoadOptions | save workbook as XLSX | European CSV conversion | Aspose.Cells CSV import example
+// Common Searches: Aspose.Cells set CSV delimiter to semicolon | C# convert CSV with custom separator to Excel | TxtLoadOptions separator usage | How to load semicolon‑separated CSV in .NET | Batch convert CSV files to XLSX with Aspose
+// Developer Intent: Configure a custom CSV delimiter, import the file, and export it as an XLSX workbook.
+// Use Cases: Transform European‑style CSV reports (semicolon‑separated) into Excel for analysis. | Automate nightly conversion of multiple semicolon‑delimited CSV files to XLSX in a CI pipeline. | Read CSV data with a non‑standard delimiter, apply Aspose.Cells formatting, and generate a shareable Excel file.
+// AI Prompts: Generate C# code that uses Aspose.Cells TxtLoadOptions to load a CSV file with a semicolon delimiter and save it as XLSX. | Create a script that scans a directory for *.csv files, converts each using TxtLoadOptions.Separator = ';', and logs conversion results. | Explain how TxtLoadOptions can be configured for different delimiters and how to preserve data types when converting CSV to XLSX with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace CsvToXlsx
 {
-    // Demonstrates how to configure TxtLoadOptions.Separator to ';', load a CSV file with a custom delimiter into an Aspose.Cells Workbook, and save the result as an XLSX workbook. Includes file‑existence checking and basic exception handling for robust .NET applications.
+    // Demonstrates how to set TxtLoadOptions.Separator to ';', load a CSV file using Aspose.Cells, and save the workbook as an XLSX document in a single step.
     public class CsvToXlsxConverter
     {
-        // Entry point for the application
         public static void Main(string[] args)
         {
-            Run();
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
 
         public static void Run()
         {
-            // Path to the source CSV file (replace with your actual file path)
+            // Path to the source CSV file
             string csvPath = "input.csv";
 
-            // Verify that the CSV file exists to avoid FileNotFoundException
+            // Verify input file exists
             if (!File.Exists(csvPath))
             {
-                Console.WriteLine($"Error: The file '{csvPath}' was not found.");
+                Console.WriteLine($"Input file not found: {csvPath}");
                 return;
             }
 
-            try
+            // Create load options and set the separator to semicolon
+            TxtLoadOptions loadOptions = new TxtLoadOptions
             {
-                // Create load options and set the separator to a semicolon
-                TxtLoadOptions loadOptions = new TxtLoadOptions
-                {
-                    Separator = ';'
-                };
+                Separator = ';'
+            };
 
-                // Load the CSV file into a workbook using the configured options
-                Workbook workbook = new Workbook(csvPath, loadOptions);
+            // Load the CSV file using the configured options
+            Workbook workbook = new Workbook(csvPath, loadOptions);
 
-                // Save the workbook as an XLSX file
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Conversion successful. XLSX saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Handle any runtime exceptions gracefully
-                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
-            }
+            // Export the loaded workbook to XLSX format
+            string xlsxPath = "output.xlsx";
+            workbook.Save(xlsxPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Conversion completed. Output saved to {xlsxPath}");
         }
     }
 }

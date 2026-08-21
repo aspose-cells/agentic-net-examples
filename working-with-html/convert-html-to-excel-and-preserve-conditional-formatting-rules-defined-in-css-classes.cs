@@ -1,40 +1,39 @@
-// Title: C# – Convert HTML to Excel while retaining CSS conditional formatting with Aspose.Cells
-// Description: Learn how to load an HTML file using Aspose.Cells LoadOptions (Html) and convert it to an XLSX workbook via ConversionUtility. The process automatically maps CSS class styles, including conditional‑formatting rules, so the resulting spreadsheet mirrors the original HTML appearance.
-// Keywords: Aspose.Cells HTML to Excel conversion | C# preserve CSS conditional formatting | ConversionUtility Excel export | LoadOptions Html Aspose | map CSS classes to Excel styles
-// Common Searches: Aspose.Cells keep CSS formatting when converting HTML to XLSX | C# convert HTML file to Excel preserving conditional rules | How to map HTML CSS classes to Excel styles with Aspose | HTML to Excel conversion with conditional formatting in .NET
-// Developer Intent: Transform an HTML document into an Excel workbook without losing any CSS‑driven conditional formatting.
-// Use Cases: Export web‑based financial dashboards that use CSS highlights into Excel for offline analysis. | Migrate HTML email reports containing data‑driven color rules to spreadsheet format. | Automate generation of Excel templates from HTML marketing assets while preserving visual cues.
-// AI Prompts: Show how to customize OoxmlSaveOptions (e.g., set compression level) while still keeping CSS conditional formatting. | Provide code that reads the HTML from a MemoryStream instead of a file and retains formatting during conversion. | Explain how to programmatically inspect the workbook to confirm that conditional‑formatting rules were transferred.
+// Title: C# – Convert HTML with CSS Conditional Formatting to Excel using Aspose.Cells
+// Description: A .NET example that loads an HTML file containing CSS‑based conditional formatting via LoadOptions (Html) and converts it to an XLSX workbook with ConversionUtility, automatically preserving the formatting rules.
+// Keywords: Aspose.Cells | C# | HTML to Excel conversion | CSS conditional formatting | LoadOptions Html | ConversionUtility | preserve styles | Excel export .NET | GitHub example | Aspose.Cells API
+// Common Searches: Aspose.Cells preserve CSS conditional formatting when converting HTML to Excel | C# convert HTML table with conditional formatting to XLSX | Load HTML with CSS styles into workbook Aspose.Cells | ConversionUtility HTML to Excel example | How to keep conditional formatting from HTML in Excel using Aspose
+// Developer Intent: Transform an HTML document that uses CSS conditional formatting into an Excel workbook while retaining the original formatting rules.
+// Use Cases: Export web‑based financial dashboards that rely on CSS conditional formatting into Excel for further analysis. | Migrate styled HTML reports or email templates into Excel without losing visual cues such as color‑coded thresholds. | Automate bulk conversion of HTML tables with conditional styling into XLSX files for downstream data processing.
+// AI Prompts: Show how to map specific CSS classes to Excel conditional formatting after using ConversionUtility. | Provide code to validate that conditional formatting from the source HTML was retained in the generated workbook. | Explain how to customize LoadOptions to handle external CSS files during HTML‑to‑Excel conversion.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-// Learn how to load an HTML file using Aspose.Cells LoadOptions (Html) and convert it to an XLSX workbook via ConversionUtility. The process automatically maps CSS class styles, including conditional‑formatting rules, so the resulting spreadsheet mirrors the original HTML appearance.
+// A .NET example that loads an HTML file containing CSS‑based conditional formatting via LoadOptions (Html) and converts it to an XLSX workbook with ConversionUtility, automatically preserving the formatting rules.
 class HtmlToExcelConverter
 {
     static void Main()
     {
-        // Path to the source HTML file that contains CSS classes for conditional formatting
-        string sourceHtml = "input.html";
+        // Path to the source HTML file that contains CSS‑based conditional formatting
+        string htmlFile = "input.html";
 
-        // Path where the resulting Excel file will be saved
-        string destinationXlsx = "output.xlsx";
+        // Desired path for the resulting Excel workbook
+        string excelFile = "output.xlsx";
 
-        // LoadOptions tells Aspose.Cells to interpret the source file as HTML
+        // LoadOptions specify that the source file is HTML.
+        // This enables Aspose.Cells to parse the HTML and its CSS styles.
         LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
 
-        // When loading HTML, Aspose.Cells automatically maps CSS class based styles
-        // (including conditional formatting) to the corresponding Excel style objects.
-        // No additional flags are required; just ensure that the HTML is well‑formed.
+        // OoxmlSaveOptions are used for saving the workbook in XLSX format.
+        // No special settings are required for preserving conditional formatting,
+        // as the parsing of CSS classes is handled during the load phase.
+        OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
 
-        // Convert the HTML file to an Excel workbook using the ConversionUtility.
-        // OoxmlSaveOptions can be used to control Excel saving, but default options are sufficient.
-        SaveOptions saveOptions = new OoxmlSaveOptions();
+        // Perform the conversion from HTML to Excel.
+        // The ConversionUtility respects the provided load and save options.
+        ConversionUtility.Convert(htmlFile, loadOptions, excelFile, saveOptions);
 
-        // Perform the conversion
-        ConversionUtility.Convert(sourceHtml, loadOptions, destinationXlsx, saveOptions);
-
-        Console.WriteLine("HTML has been successfully converted to Excel with CSS‑based conditional formatting preserved.");
+        Console.WriteLine("Conversion completed. Excel file saved to: " + excelFile);
     }
 }

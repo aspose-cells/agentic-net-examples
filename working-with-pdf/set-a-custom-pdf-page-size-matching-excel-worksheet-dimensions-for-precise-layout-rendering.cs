@@ -1,44 +1,74 @@
+// Title: Create a PDF whose page size matches an Excel worksheet using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to export a workbook to PDF with physical dimensions that exactly equal the rendered size of the sheet. The example clears margins, forces a single‑page layout, retrieves width and height via SheetRender.GetPageSizeInch, applies CustomPaperSize, and saves the PDF.
+// Keywords: Aspose.Cells | C# | custom paper size | SheetRender GetPageSizeInch | fit worksheet to one page | remove margins PDF export | Excel to PDF exact dimensions | Aspose.Cells PDF export | paper size custom | PDF page size from worksheet
+// Common Searches: Aspose.Cells set custom PDF page size | How to match PDF page size to Excel sheet in .NET | Get worksheet rendered size in inches Aspose.Cells | Export Excel to PDF without scaling Aspose | C# Aspose.Cells custom paper size PDF
+// Developer Intent: Export an Excel worksheet to PDF with a page size that mirrors the worksheet’s rendered dimensions.
+// Use Cases: Printing reports that must retain the exact layout of the original sheet | Generating dashboards where each grid fits a single PDF page of a specific size | Creating printable forms that require no extra margins or scaling | Automating batch conversion of worksheets to size‑specific PDFs
+// AI Prompts: Provide C# code using Aspose.Cells to calculate a worksheet’s rendered width and height and set those values as a custom PDF paper size. | Explain step‑by‑step how to clear margins, fit a sheet to one page, retrieve page dimensions with SheetRender, and export to PDF. | Show how to combine SheetRender.GetPageSizeInch with PageSetup.CustomPaperSize to produce a PDF that exactly matches the worksheet size.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-class Program
+namespace AsposeCellsCustomPdfSize
 {
-    static void Main()
+    // Demonstrates how to export a workbook to PDF with physical dimensions that exactly equal the rendered size of the sheet. The example clears margins, forces a single‑page layout, retrieves width and height via SheetRender.GetPageSizeInch, applies CustomPaperSize, and saves the PDF.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Sample data (optional, just to have content)
-        sheet.Cells["A1"].PutValue("Header");
-        sheet.Cells["A2"].PutValue("Data");
-
-        // Define the print area that covers the used range
-        sheet.PageSetup.PrintArea = "A1:B2";
-
-        // Remove all margins so the page size matches the content exactly
-        sheet.PageSetup.LeftMargin = 0;
-        sheet.PageSetup.RightMargin = 0;
-        sheet.PageSetup.TopMargin = 0;
-        sheet.PageSetup.BottomMargin = 0;
-
-        // Render the sheet to obtain the page size in inches
-        ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+        static void Main()
         {
-            OnePagePerSheet = true,
-            ImageType = ImageType.Png // required by constructor, not used for PDF
-        };
-        SheetRender sheetRender = new SheetRender(sheet, renderOptions);
-        float[] pageSizeInInches = sheetRender.GetPageSizeInch(0); // [0]=width, [1]=height
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Set a custom paper size that matches the calculated dimensions
-        sheet.PageSetup.CustomPaperSize(pageSizeInInches[0], pageSizeInInches[1]);
+                // Populate sample data (adjust as needed)
+                for (int row = 0; row < 20; row++)
+                {
+                    for (int col = 0; col < 5; col++)
+                    {
+                        sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                    }
+                }
 
-        // Save the workbook as PDF; the custom page size will be applied
-        workbook.Save("CustomSizeWorksheet.pdf", SaveFormat.Pdf);
+                // Define the print area and remove margins for exact sizing
+                sheet.PageSetup.PrintArea = "A1:E20";
+                sheet.PageSetup.LeftMargin = 0;
+                sheet.PageSetup.RightMargin = 0;
+                sheet.PageSetup.TopMargin = 0;
+                sheet.PageSetup.BottomMargin = 0;
+
+                // Fit the whole area onto a single page (helps SheetRender calculate size)
+                sheet.PageSetup.FitToPagesWide = 1;
+                sheet.PageSetup.FitToPagesTall = 1;
+
+                // Temporarily set paper size to Custom so that later we can assign exact dimensions
+                sheet.PageSetup.PaperSize = PaperSizeType.Custom;
+
+                // Use SheetRender to obtain the size (in inches) of the rendered page
+                ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+                {
+                    OnePagePerSheet = true
+                    // ImageFormat is not required for size calculation
+                };
+
+                SheetRender sheetRender = new SheetRender(sheet, renderOptions);
+                // Get width and height of the first (and only) page
+                float[] pageSizeInInches = sheetRender.GetPageSizeInch(0);
+                double pageWidth = pageSizeInInches[0];
+                double pageHeight = pageSizeInInches[1];
+
+                // Apply the exact dimensions as a custom paper size
+                sheet.PageSetup.CustomPaperSize(pageWidth, pageHeight);
+
+                // Save the workbook as PDF; the custom paper size will be used
+                workbook.Save("CustomSizeOutput.pdf", SaveFormat.Pdf);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }
-
-// Author: Example demonstrating how to set a custom PDF page size that matches the worksheet dimensions.

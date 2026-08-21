@@ -1,10 +1,10 @@
-// Title: C# – Export Excel Chart as PNG and Centered PDF Page with Localized “Other” Label using Aspose.Cells
-// Description: Creates a workbook with a pie chart, sets the chart title to a localized "Other" label, exports the chart to a PNG image, and saves it as an 8.5×11 in PDF page centered on the page. Includes sample code for looping through multiple charts.
-// Keywords: Aspose.Cells chart export | C# export chart to PDF | localize chart title Aspose.Cells | chart to PNG Aspose.Cells | center chart on PDF page | globalization Excel chart | Aspose.Cells PDF page layout
-// Common Searches: How to export an Excel chart as a centered PDF page with Aspose.Cells C# | Apply a localized label to a chart title before exporting with Aspose.Cells | Extract chart image to PNG and convert to PDF using Aspose.Cells .NET | Loop through all charts in a workbook and export each to PDF Aspose.Cells
-// Developer Intent: Export a chart image, apply a language‑specific label, and generate a centered PDF page for each chart using Aspose.Cells for .NET.
-// Use Cases: Produce multilingual PDF reports where each chart occupies its own centered page. | Create PNG assets for web dashboards while also providing print‑ready PDF versions. | Automate batch processing of workbooks: translate chart titles and export each chart to separate PDF pages.
-// AI Prompts: Generate C# code that iterates through all charts in a workbook, reads a translated title from a resource file, sets the title, and exports each chart to a centered PDF page of custom size using Aspose.Cells. | Show how to replace a chart's title with a localized string and then save the chart as both PNG and PDF with Aspose.Cells in .NET. | Explain how to control image quality and DPI when converting a chart to PNG before embedding it in a PDF with Aspose.Cells.
+// Title: C# – Export Excel charts as PNG and centered 8.5×11 in PDF with localized “Other” label using Aspose.Cells
+// Description: Loads an Excel workbook, replaces every cell containing the exact text "Other" with a supplied localized string (e.g., Chinese "其他"), then iterates through all worksheets and charts, exporting each chart to a PNG file and to a PDF page sized 8.5 × 11 inches with horizontal and vertical centering. The workbook is saved with the updated labels.
+// Keywords: Aspose.Cells chart export PDF | C# export chart PNG | localize chart label Other | center chart on PDF page | batch chart extraction Aspose | Excel globalization Aspose.Cells | chart to image Aspose.Cells | replace cell value C#
+// Common Searches: Aspose.Cells replace "Other" with localized text | export each Excel chart to separate PDF page C# | save chart as PNG and PDF with Aspose.Cells | center chart on 8.5x11 PDF using Aspose | globalize Excel chart labels programmatically
+// Developer Intent: The developer needs to translate the "Other" category in an Excel workbook, then generate both PNG thumbnails and centered PDF pages for every chart, while preserving the localized workbook.
+// Use Cases: Produce multilingual PDF reports where chart categories must be translated before distribution. | Create a printable catalog of all workbook charts with uniform 8.5 × 11 in pages centered for a professional look. | Generate PNG previews for web galleries while keeping the source workbook updated with localized labels.
+// AI Prompts: Write a C# routine that scans a workbook, replaces cells equal to "Other" with a given localized string, and exports each chart to PNG and a centered 8.5×11 in PDF using Aspose.Cells. | Provide code to batch export all charts in an Excel file to both PNG and PDF formats, applying horizontal and vertical centering on the PDF pages. | Explain how to handle localization of chart category labels in Excel before exporting charts with Aspose.Cells.
 
 using System;
 using System.IO;
@@ -12,64 +12,61 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace ChartExportExample
+namespace AsposeCellsChartExport
 {
-    // Creates a workbook with a pie chart, sets the chart title to a localized "Other" label, exports the chart to a PNG image, and saves it as an 8.5×11 in PDF page centered on the page. Includes sample code for looping through multiple charts.
+    // Loads an Excel workbook, replaces every cell containing the exact text "Other" with a supplied localized string (e.g., Chinese "其他"), then iterates through all worksheets and charts, exporting each chart to a PNG file and to a PDF page sized 8.5 × 11 inches with horizontal and vertical centering. The workbook is saved with the updated labels.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Path to the source Excel file
+            string sourceFile = "input.xlsx";
 
-            // Populate sample data for a pie chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["A4"].PutValue("Other"); // Category that will be localized
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(40);
-            sheet.Cells["B3"].PutValue(35);
-            sheet.Cells["B4"].PutValue(25);
+            // Load the workbook
+            Workbook workbook = new Workbook(sourceFile);
 
-            // Add a pie chart
-            int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 15);
-            Chart chart = sheet.Charts[chartIndex];
+            // Localized label for "Other"
+            string localizedOther = "其他";
 
-            // Set data source for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Apply a localized label "Other" to the chart title (or you could set a data label)
-            chart.Title.Text = "Other";
-
-            // Export the chart as an image (optional, demonstrates image extraction)
-            string imagePath = "ChartImage.png";
-            chart.ToImage(imagePath, ImageType.Png);
-            Console.WriteLine($"Chart image saved to {imagePath}");
-
-            // Export the chart to a PDF page with specific page size and centered alignment
-            string pdfPath = "ChartPage.pdf";
-            chart.ToPdf(pdfPath, 8.5f, 11f, PageLayoutAlignmentType.Center, PageLayoutAlignmentType.Center);
-            Console.WriteLine($"Chart PDF page saved to {pdfPath}");
-
-            // If you have multiple charts, you can loop through them and export each one
-            // Example loop (uncomment if needed):
-            /*
-            for (int i = 0; i < sheet.Charts.Count; i++)
+            // Iterate through all worksheets
+            for (int wsIndex = 0; wsIndex < workbook.Worksheets.Count; wsIndex++)
             {
-                Chart c = sheet.Charts[i];
-                c.Title.Text = "Other";
-                string imgFile = $"ChartImage_{i}.png";
-                c.ToImage(imgFile, ImageType.Png);
-                string pdfFile = $"ChartPage_{i}.pdf";
-                c.ToPdf(pdfFile, 8.5f, 11f, PageLayoutAlignmentType.Center, PageLayoutAlignmentType.Center);
-            }
-            */
+                Worksheet sheet = workbook.Worksheets[wsIndex];
 
-            // Save the workbook (optional, to keep the source Excel file)
-            workbook.Save("SourceWorkbook.xlsx");
+                // Replace any cell value equal to "Other" with the localized string
+                // This ensures chart categories that use the cell value are updated
+                foreach (Cell cell in sheet.Cells)
+                {
+                    if (cell.Type == CellValueType.IsString && cell.StringValue == "Other")
+                    {
+                        cell.PutValue(localizedOther);
+                    }
+                }
+
+                // Process each chart in the worksheet
+                for (int chartIndex = 0; chartIndex < sheet.Charts.Count; chartIndex++)
+                {
+                    Chart chart = sheet.Charts[chartIndex];
+
+                    // Export chart image (PNG) – useful for further processing or verification
+                    string imagePath = $"Chart_{wsIndex}_{chartIndex}.png";
+                    chart.ToImage(imagePath, ImageType.Png);
+
+                    // Export chart to a PDF page
+                    // Desired page size: 8.5 x 11 inches, centered horizontally and vertically
+                    string pdfPath = $"Chart_{wsIndex}_{chartIndex}.pdf";
+                    chart.ToPdf(pdfPath, 8.5f, 11f,
+                        PageLayoutAlignmentType.Center,
+                        PageLayoutAlignmentType.Center);
+
+                    Console.WriteLine($"Chart {chartIndex} on worksheet {wsIndex} exported to image and PDF.");
+                }
+            }
+
+            // Optionally save the modified workbook (with localized labels)
+            string modifiedWorkbookPath = "input_localized.xlsx";
+            workbook.Save(modifiedWorkbookPath);
+            Console.WriteLine($"Workbook saved with localized labels to '{modifiedWorkbookPath}'.");
         }
     }
 }

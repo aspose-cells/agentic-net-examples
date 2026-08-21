@@ -1,93 +1,122 @@
-// Title: Show PivotChart Values as Percent of Total in XLS with Aspose.Cells (C#)
-// Description: Loads an existing XLS workbook, finds the first chart linked to a pivot table, changes the first data field to display values as a percentage of the total, refreshes the pivot table and chart, and saves the result as a new file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# pivot chart percentage | PivotTable ShowValuesSetting PercentageOfTotal | Refresh pivot chart after data field change | Load and modify XLS workbook Aspose.Cells | C# Aspose.Cells PivotChart example
-// Common Searches: Aspose.Cells set pivot chart to percent of total | C# change pivot table data field to percentage | Refresh pivot chart after updating calculation type Aspose | Find pivot chart source table in XLS using Aspose.Cells | Convert pivot chart values to percentages programmatically
-// Developer Intent: Convert the data series of a PivotChart to show percentages of the total and save the updated XLS file.
-// Use Cases: Create executive dashboards where sales figures are shown as share of total. | Automate updates to legacy XLS reports without rebuilding the workbook. | Generate periodic reports that require pivot chart percentages to reflect the latest data.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a pivot table’s first data field to PercentageOfTotal and updates the linked pivot chart. | Explain how to locate a pivot chart’s source pivot table in an XLS workbook using Aspose.Cells. | Provide error‑handling patterns for missing pivot charts or malformed PivotSource strings when converting chart data to percentages.
+// Title: Aspose.Cells .NET – Show PivotChart Values as Percentage of Total in XLS
+// Description: Load an existing XLS workbook, locate the first chart linked to a PivotTable, change the first data field to display percentages of the total, refresh the PivotTable and chart, and save the updated file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells PivotChart percentage | C# set pivot chart to percent of total | refresh pivot chart after data change | PivotField ShowValuesSetting PercentageOfTotal | convert pivot chart values to percent | Aspose.Cells XLS pivot table manipulation
+// Common Searches: Aspose.Cells change pivot chart to percentage | C# code to set pivot chart values as percent of total | refresh pivot chart after modifying pivot table in .NET | show pivot table data as percentage using Aspose.Cells | how to display pivot chart percentages in XLS with C#
+// Developer Intent: Modify a PivotChart so its data series are shown as percentages of the total and save the workbook.
+// Use Cases: Create management reports where sales figures are displayed as a share of total revenue. | Update an existing KPI dashboard to automatically show ratio‑based metrics without rebuilding charts. | Batch‑process multiple Excel files to enforce consistent percentage formatting on all pivot charts.
+// AI Prompts: Write C# code with Aspose.Cells that converts the first data field of a PivotChart to PercentageOfTotal and refreshes the chart. | Explain how to locate a PivotChart’s source PivotTable, set ShowValuesSetting.CalculationType, and save the workbook. | Provide error‑handling patterns for missing PivotChart or PivotTable when converting values to percentages in Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsPivotChartPercentage
 {
-    // Loads an existing XLS workbook, finds the first chart linked to a pivot table, changes the first data field to display values as a percentage of the total, refreshes the pivot table and chart, and saves the result as a new file using Aspose.Cells for .NET.
+    // Load an existing XLS workbook, locate the first chart linked to a PivotTable, change the first data field to display percentages of the total, refresh the PivotTable and chart, and save the updated file using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            // Load the existing XLS workbook
-            Workbook workbook = new Workbook("input.xls");
-
-            // Assume the first worksheet contains the pivot chart
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Find the first chart that is linked to a pivot table
-            Chart pivotChart = null;
-            foreach (Chart ch in sheet.Charts)
+            try
             {
-                if (!string.IsNullOrEmpty(ch.PivotSource))
+                // Input workbook path
+                string inputPath = "InputWorkbook.xls";
+
+                // Verify the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    pivotChart = ch;
-                    break;
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
-            }
 
-            if (pivotChart == null)
-            {
-                Console.WriteLine("No pivot chart found in the worksheet.");
-                return;
-            }
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Parse the PivotSource string (format: SheetName!PivotTableName)
-            string[] parts = pivotChart.PivotSource.Split('!');
-            if (parts.Length != 2)
-            {
-                Console.WriteLine("Invalid PivotSource format.");
-                return;
-            }
+                // Assume the first worksheet contains the pivot chart
+                Worksheet sheet = workbook.Worksheets[0];
 
-            string pivotSheetName = parts[0];
-            string pivotTableName = parts[1];
-
-            // Get the worksheet that holds the pivot table
-            Worksheet pivotSheet = workbook.Worksheets[pivotSheetName];
-
-            // Locate the pivot table by name
-            PivotTable pivotTable = null;
-            foreach (PivotTable pt in pivotSheet.PivotTables)
-            {
-                if (pt.Name == pivotTableName)
+                // Find the first chart that is linked to a pivot table
+                Chart pivotChart = null;
+                foreach (Chart ch in sheet.Charts)
                 {
-                    pivotTable = pt;
-                    break;
+                    if (!string.IsNullOrEmpty(ch.PivotSource))
+                    {
+                        pivotChart = ch;
+                        break;
+                    }
                 }
-            }
 
-            if (pivotTable == null)
+                if (pivotChart == null)
+                {
+                    Console.WriteLine("No pivot chart found in the worksheet.");
+                    return;
+                }
+
+                // Parse the PivotSource string: format "SheetName!PivotTableName"
+                string[] parts = pivotChart.PivotSource.Split('!');
+                if (parts.Length != 2)
+                {
+                    Console.WriteLine("Invalid PivotSource format.");
+                    return;
+                }
+
+                string pivotSheetName = parts[0];
+                string pivotTableName = parts[1];
+
+                // Get the worksheet that holds the pivot table
+                Worksheet pivotSheet = workbook.Worksheets[pivotSheetName];
+
+                // Locate the pivot table by name
+                PivotTable pivotTable = null;
+                foreach (PivotTable pt in pivotSheet.PivotTables)
+                {
+                    if (pt.Name.Equals(pivotTableName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        pivotTable = pt;
+                        break;
+                    }
+                }
+
+                if (pivotTable == null)
+                {
+                    Console.WriteLine($"PivotTable '{pivotTableName}' not found.");
+                    return;
+                }
+
+                // Set the data field to display values as percentage of total
+                if (pivotTable.DataFields.Count > 0)
+                {
+                    PivotField dataField = pivotTable.DataFields[0];
+                    dataField.ShowValuesSetting.CalculationType = PivotFieldDataDisplayFormat.PercentageOfTotal;
+                }
+
+                // Refresh pivot table data and recalculate
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
+
+                // Refresh the chart so it reflects the updated pivot data
+                pivotChart.RefreshPivotData();
+
+                // Output workbook path
+                string outputPath = "OutputWorkbook.xls";
+
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook with the updated chart
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine("Pivot table not found.");
-                return;
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Set the data field to display values as percentage of total
-            if (pivotTable.DataFields.Count > 0)
-            {
-                PivotField dataField = pivotTable.DataFields[0];
-                dataField.ShowValuesSetting.CalculationType = PivotFieldDataDisplayFormat.PercentageOfTotal;
-            }
-
-            // Refresh and recalculate the pivot table
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Refresh the chart so it reflects the updated pivot data
-            pivotChart.RefreshPivotData();
-
-            // Save the modified workbook
-            workbook.Save("output.xls");
         }
     }
 }

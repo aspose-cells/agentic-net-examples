@@ -1,37 +1,40 @@
-// Title: Aspose.Cells .NET: Export Worksheet‑Specific CSS Files When Saving to HTML
-// Description: Demonstrates how to set HtmlSaveOptions.ExportWorksheetCSSSeparately to true so that each worksheet in a workbook is saved with its own CSS stylesheet file alongside the generated HTML.
-// Keywords: Aspose.Cells ExportWorksheetCSSSeparately | HTML save options .NET | per‑sheet CSS Aspose | generate separate CSS files | Workbook to HTML Aspose.Cells
-// Common Searches: Aspose.Cells ExportWorksheetCSSSeparately example C# | save workbook as HTML with individual CSS files | how to create separate stylesheet per worksheet Aspose | HtmlSaveOptions per‑sheet CSS .NET
-// Developer Intent: Save a workbook as HTML while producing an independent CSS file for each worksheet.
-// Use Cases: Web reports that need isolated styling for each sheet to prevent CSS conflicts. | Performance‑optimized portals that cache per‑sheet styles separately. | Documentation generators that export multi‑sheet workbooks with distinct style sheets.
-// AI Prompts: Generate code to customize the filenames of the CSS files created when ExportWorksheetCSSSeparately is enabled. | Show how to programmatically insert <link> tags for the separate CSS files into a custom HTML template after saving. | Explain the interaction between ExportWorksheetCSSSeparately and other HtmlSaveOptions such as ExportImagesAsBase64 and PreserveOriginalColumnWidth.
+// Title: Export Worksheet‑Specific CSS Files When Saving Excel to HTML with Aspose.Cells for .NET
+// Description: Demonstrates how to set HtmlSaveOptions.ExportWorksheetCSSSeparately to true so each worksheet in a workbook is saved with its own CSS file, producing separate stylesheet files alongside the HTML output.
+// Keywords: Aspose.Cells ExportWorksheetCSSSeparately | HTML save options per worksheet CSS | C# Aspose.Cells separate CSS files | Excel to HTML with individual stylesheets | .NET generate per‑sheet CSS
+// Common Searches: Aspose.Cells ExportWorksheetCSSSeparately example C# | save Excel workbook as HTML with separate CSS per sheet | how to generate individual CSS files for each worksheet using Aspose.Cells | HTML export options for multi‑sheet workbook Aspose.Cells
+// Developer Intent: Create distinct CSS files for each worksheet when converting an Excel workbook to HTML.
+// Use Cases: Publish multi‑sheet Excel reports on the web where each sheet needs its own styling. | Maintain separate branding or themes for individual worksheets in HTML output. | Automate generation of HTML dashboards from Excel with per‑sheet CSS for easier updates.
+// AI Prompts: Show C# code that saves an Excel workbook to HTML with ExportWorksheetCSSSeparately enabled using Aspose.Cells. | Explain the folder structure created when ExportWorksheetCSSSeparately is true and how to reference the generated CSS files. | Provide guidance on customizing the names of the CSS files produced by ExportWorksheetCSSSeparately in Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExportWorksheetCssSeparatelyDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to set HtmlSaveOptions.ExportWorksheetCSSSeparately to true so that each worksheet in a workbook is saved with its own CSS stylesheet file alongside the generated HTML.
-    class Program
+    // Demonstrates how to set HtmlSaveOptions.ExportWorksheetCSSSeparately to true so each worksheet in a workbook is saved with its own CSS file, producing separate stylesheet files alongside the HTML output.
+    public class ExportWorksheetCssSeparatelyDemo
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook and add sample data to two worksheets
+            // Create a new workbook and add some sample data
             Workbook workbook = new Workbook();
             Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "FirstSheet";
-            sheet1.Cells["A1"].PutValue("Data in first sheet");
+            sheet1.Name = "Sheet1";
+            sheet1.Cells["A1"].PutValue("Data in Sheet 1");
 
-            Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
-            sheet2.Cells["A1"].PutValue("Data in second sheet");
+            // Add a second worksheet with its own data
+            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+            sheet2.Cells["A1"].PutValue("Data in Sheet 2");
 
             // Configure HTML save options to export CSS for each worksheet separately
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            saveOptions.ExportWorksheetCSSSeparately = true; // Generates distinct CSS files per worksheet
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            {
+                ExportWorksheetCSSSeparately = true // Enable separate CSS files per worksheet
+            };
 
-            // Define the output directory and file name
-            string outputDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "AsposeHtmlExport");
+            // Define output directory and file name
+            string outputDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "HtmlExport");
             Directory.CreateDirectory(outputDir);
             string outputPath = Path.Combine(outputDir, "Workbook.html");
 
@@ -39,7 +42,20 @@ namespace AsposeCellsExportWorksheetCssSeparatelyDemo
             workbook.Save(outputPath, saveOptions);
 
             Console.WriteLine($"HTML file saved to: {outputPath}");
-            Console.WriteLine("Separate CSS files for each worksheet have been generated in the same directory.");
+            Console.WriteLine("Separate CSS files for each worksheet are generated in the same directory.");
+        }
+
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

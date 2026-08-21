@@ -1,71 +1,79 @@
-// Title: Aspose.Cells for .NET – Create a Chart on a Hidden Worksheet, Apply Cell‑Based Data Labels, and Unhide the Sheet
-// Description: Demonstrates how to add a column chart to a hidden worksheet, link its data labels to a cell range (column C) with custom font color, then change the worksheet visibility to visible and save the workbook as an XLSX file using Aspose.Cells in C#.
-// Keywords: Aspose.Cells hidden worksheet chart | C# cell based data labels Aspose.Cells | Aspose.Cells set worksheet visibility | link chart data labels to cell range | Aspose.Cells chart label font color | create column chart Aspose.Cells .NET | unhide sheet after adding chart Aspose.Cells
-// Common Searches: add chart to hidden sheet Aspose.Cells C# | enable cell based data labels Aspose.Cells | unhide worksheet after chart creation Aspose.Cells | set data label source range Aspose.Cells | customize chart label font color Aspose.Cells
-// Developer Intent: Add a chart to a hidden worksheet, use cell values for the chart's data labels, customize label appearance, then make the worksheet visible before saving.
-// Use Cases: Generate intermediate charts on hidden sheets during automated report building, then expose only the final sheets to users. | Create dashboards where each data point’s label is sourced from a separate column for richer descriptions. | Programmatically hide worksheets to keep workbook size low, add charts with cell‑linked labels, and reveal only the necessary sheets in the final output.
-// AI Prompts: Show C# code that creates a pie chart on a hidden worksheet, links its data labels to a cell range, and then unhides the sheet using Aspose.Cells. | Provide an Aspose.Cells example that hides a sheet, adds a line chart with cell‑based labels, changes label font color, and saves the workbook as XLSX. | Explain how to set the visibility of a worksheet after adding a chart and how to link data labels to cells in Aspose.Cells for .NET.
+// Title: C# – Add a Column Chart with Cell‑Based Labels on a Hidden Worksheet using Aspose.Cells
+// Description: Demonstrates how to create a workbook, populate a hidden sheet with category, value and label data, insert a column chart on that sheet, link the chart’s data labels to a cell range, format the labels, hide the source worksheet, and save the file as XLSX.
+// Keywords: Aspose.Cells hidden worksheet chart | C# column chart cell based labels | link data labels to cells Aspose | hide sheet after chart creation | Aspose.Cells PlotVisibleCellsOnly false
+// Common Searches: Aspose.Cells create chart on hidden sheet C# | cell based data labels hidden worksheet Aspose | hide worksheet after adding chart .NET | link chart labels to cell range Aspose.Cells | plot data from hidden sheet Aspose
+// Developer Intent: Generate a column chart on a hidden sheet, attach labels from a cell range, hide the data sheet, and export the workbook.
+// Use Cases: Present confidential data through a chart while keeping the source sheet invisible. | Build a dashboard where only the chart is shown, with labels derived from hidden cells. | Automate report generation that requires cell‑based labels without exposing raw data.
+// AI Prompts: Provide C# code that creates a line chart on a hidden worksheet, uses cells for data labels, and saves the workbook with the sheet hidden. | Show an example of a pie chart on a hidden sheet, enables cell‑based labels, customizes the label font, and hides the data worksheet before saving.
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
-// Demonstrates how to add a column chart to a hidden worksheet, link its data labels to a cell range (column C) with custom font color, then change the worksheet visibility to visible and save the workbook as an XLSX file using Aspose.Cells in C#.
-class ChartOnHiddenSheetDemo
+namespace AsposeCellsChartOnHiddenSheet
 {
-    static void Main()
+    // Demonstrates how to create a workbook, populate a hidden sheet with category, value and label data, insert a column chart on that sheet, link the chart’s data labels to a cell range, format the labels, hide the source worksheet, and save the file as XLSX.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook with a default worksheet.
+                Workbook workbook = new Workbook();
 
-            // Add a new worksheet that will hold the chart
-            int sheetIndex = workbook.Worksheets.Add();
-            Worksheet ws = workbook.Worksheets[sheetIndex];
-            ws.Name = "HiddenChartSheet";
+                // The first worksheet will hold the hidden data.
+                Worksheet hiddenSheet = workbook.Worksheets[0];
+                hiddenSheet.Name = "HiddenData";
 
-            // Hide the worksheet
-            ws.VisibilityType = VisibilityType.Hidden;
+                // Add a second (dummy) worksheet to ensure the workbook always has at least one visible sheet.
+                Worksheet dummySheet = workbook.Worksheets.Add("Dummy");
 
-            // Populate sample data
-            ws.Cells["A1"].PutValue("Category");
-            ws.Cells["B1"].PutValue("Value");
-            ws.Cells["C1"].PutValue("Label");
-            ws.Cells["A2"].PutValue("A");
-            ws.Cells["B2"].PutValue(10);
-            ws.Cells["C2"].PutValue("Ten");
-            ws.Cells["A3"].PutValue("B");
-            ws.Cells["B3"].PutValue(20);
-            ws.Cells["C3"].PutValue("Twenty");
-            ws.Cells["A4"].PutValue("C");
-            ws.Cells["B4"].PutValue(30);
-            ws.Cells["C4"].PutValue("Thirty");
+                // Populate sample data for the chart on the hidden sheet.
+                hiddenSheet.Cells["A1"].PutValue("Category");
+                hiddenSheet.Cells["B1"].PutValue("Value");
+                hiddenSheet.Cells["C1"].PutValue("Label"); // Cell‑based labels
 
-            // Add a column chart to the hidden worksheet
-            int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = ws.Charts[chartIdx];
+                hiddenSheet.Cells["A2"].PutValue("A");
+                hiddenSheet.Cells["B2"].PutValue(10);
+                hiddenSheet.Cells["C2"].PutValue("Ten");
 
-            // Define the data series and category axis
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+                hiddenSheet.Cells["A3"].PutValue("B");
+                hiddenSheet.Cells["B3"].PutValue(20);
+                hiddenSheet.Cells["C3"].PutValue("Twenty");
 
-            // Enable cell‑based data labels (use values from column C)
-            var series = chart.NSeries[0];
-            series.DataLabels.ShowCellRange = true;
-            series.DataLabels.LinkedSource = "C2:C4";
-            series.DataLabels.Font.Color = Color.Blue;
+                hiddenSheet.Cells["A4"].PutValue("C");
+                hiddenSheet.Cells["B4"].PutValue(30);
+                hiddenSheet.Cells["C4"].PutValue("Thirty");
 
-            // Make the worksheet visible again
-            ws.VisibilityType = VisibilityType.Visible;
+                // Add a column chart to the hidden worksheet (the sheet can be visible while creating the chart).
+                int chartIndex = hiddenSheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                Chart chart = hiddenSheet.Charts[chartIndex];
 
-            // Save the workbook
-            workbook.Save("ChartOnHiddenSheet.xlsx", SaveFormat.Xlsx);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+                // Set the data range for the chart (values) and categories (X‑axis).
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Enable cell‑based data labels using the linked source cells.
+                chart.NSeries[0].DataLabels.ShowCellRange = true;
+                chart.NSeries[0].DataLabels.LinkedSource = "C2:C4";
+                chart.NSeries[0].DataLabels.Font.Color = Color.Blue;
+                chart.NSeries[0].DataLabels.Font.Size = 10;
+
+                // Ensure hidden cells are plotted if needed.
+                chart.PlotVisibleCellsOnly = false;
+
+                // Hide the data worksheet now that the chart is created.
+                hiddenSheet.VisibilityType = VisibilityType.Hidden;
+
+                // Save the workbook.
+                workbook.Save("ChartOnHiddenSheet.xlsx", SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
         }
     }
 }

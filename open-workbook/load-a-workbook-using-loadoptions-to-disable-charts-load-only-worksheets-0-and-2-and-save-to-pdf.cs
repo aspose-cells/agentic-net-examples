@@ -1,54 +1,44 @@
-// Title: Load selected worksheets (0 & 2) without charts using Aspose.Cells LoadOptions and export to PDF (C#)
-// Description: Demonstrates how to create a custom LoadFilter that disables chart loading and limits the workbook to sheet indexes 0 and 2. The filter is applied through LoadOptions when constructing a Workbook, and the resulting workbook is saved as a PDF, yielding a lightweight document that contains only the chosen sheets and no chart objects.
-// Keywords: Aspose.Cells | LoadOptions | LoadFilter | C# | disable charts | select worksheets | sheet indexes | export to PDF | Excel to PDF | filter workbook
-// Common Searches: Aspose.Cells load only specific sheets | How to exclude charts when loading an Excel file with Aspose | C# load workbook with LoadOptions and save as PDF | LoadFilter example for sheet selection in Aspose.Cells | Export selected worksheets to PDF using Aspose.Cells
-// Developer Intent: Load an Excel file while skipping all charts and loading only sheets 0 and 2, then convert the filtered workbook to PDF.
-// Use Cases: Create a compact PDF report that includes only summary and data sheets, omitting large chart objects. | Reduce processing time and memory usage by loading just the required worksheets from a massive workbook. | Provide users with a PDF preview of selected Excel tabs without rendering embedded charts.
-// AI Prompts: Generate C# code that uses a custom LoadFilter in Aspose.Cells to load only sheet indexes 0 and 2 and exclude charts, then save the workbook as PDF. | Explain how LoadOptions and LoadFilter work together to filter worksheets and chart objects in Aspose.Cells. | Show step‑by‑step instructions for loading an Excel file with selected sheets and no charts, and exporting it to PDF using Aspose.Cells for .NET.
+// Title: Load selected worksheets without charts using Aspose.Cells LoadOptions and export to PDF (C#)
+// Description: Demonstrates how to create a LoadOptions object with a custom LoadFilter that disables chart loading and loads only worksheet indexes 0 and 2, then opens an Excel file and saves the resulting workbook as a PDF using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | LoadOptions | CustomLoadFilter | disable chart loading | load specific worksheets | C# PDF export | Aspose.Cells .NET | select sheets by index | Excel to PDF without charts
+// Common Searches: How can I load only certain sheets with Aspose.Cells and skip charts? | Aspose.Cells C# load worksheets 0 and 2 only | Export selected Excel sheets to PDF using LoadOptions | Disable chart loading in Aspose.Cells to improve performance | Custom LoadFilter example for Aspose.Cells .NET
+// Developer Intent: Load an Excel workbook while excluding chart objects and loading only the first and third worksheets, then convert the workbook to PDF.
+// Use Cases: Generate a lightweight PDF report that contains only data tables, omitting chart graphics to reduce file size. | Speed up processing of large workbooks by loading only the required sheets and ignoring unnecessary chart data. | Archive specific worksheets of an Excel file as PDF while discarding visual chart elements.
+// AI Prompts: Show how to modify the CustomLoadFilter to also exclude images while loading selected worksheets. | Provide code that loads worksheets 1 and 3 and saves each to separate PDF files using Aspose.Cells. | Explain how to configure LoadDataFilterOptions to load formulas but skip charts for particular sheets.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsLoadFilterExample
+// Demonstrates how to create a LoadOptions object with a custom LoadFilter that disables chart loading and loads only worksheet indexes 0 and 2, then opens an Excel file and saves the resulting workbook as a PDF using Aspose.Cells for .NET.
+class Program
 {
-    // Custom LoadFilter to control which data is loaded and which sheets are loaded
-    // Demonstrates how to create a custom LoadFilter that disables chart loading and limits the workbook to sheet indexes 0 and 2. The filter is applied through LoadOptions when constructing a Workbook, and the resulting workbook is saved as a PDF, yielding a lightweight document that contains only the chosen sheets and no chart objects.
-    public class CustomLoadFilter : LoadFilter
+    static void Main()
     {
-        // Load all data except charts
-        private const LoadDataFilterOptions LoadOptionsWithoutCharts =
-            LoadDataFilterOptions.All & ~LoadDataFilterOptions.Chart;
+        // Create LoadOptions and assign a custom LoadFilter
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.LoadFilter = new CustomLoadFilter();
 
-        // Specify the sheet indexes to load (0‑based)
-        private static readonly int[] SheetsToLoad = new int[] { 0, 2 };
+        // Load the workbook with the specified options
+        Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
-        public CustomLoadFilter() : base(LoadOptionsWithoutCharts)
-        {
-        }
-
-        // Override to provide the custom sheet loading order
-        public override int[] SheetsInLoadingOrder => SheetsToLoad;
+        // Save the loaded workbook to PDF
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 
-    class Program
+    // Custom LoadFilter to exclude charts and load only sheets 0 and 2
+    class CustomLoadFilter : LoadFilter
     {
-        static void Main()
+        // Initialize with all data options; we'll adjust per sheet
+        public CustomLoadFilter() : base(LoadDataFilterOptions.All) { }
+
+        // Called for each sheet being loaded
+        public override void StartSheet(Worksheet sheet)
         {
-            // Path to the source Excel file
-            string inputPath = "input.xlsx";
-
-            // Configure LoadOptions with the custom filter
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.LoadFilter = new CustomLoadFilter();
-
-            // Load the workbook using the constructor that accepts a file name and LoadOptions
-            Workbook workbook = new Workbook(inputPath, loadOptions);
-
-            // Save the loaded workbook as PDF (charts are omitted, only sheets 0 and 2 are present)
-            string outputPath = "output.pdf";
-            workbook.Save(outputPath, SaveFormat.Pdf);
-
-            Console.WriteLine($"Workbook loaded with sheets 0 and 2 (charts excluded) and saved to PDF at '{outputPath}'.");
+            // Load everything except charts
+            LoadDataFilterOptions = LoadDataFilterOptions.All & ~LoadDataFilterOptions.Chart;
         }
+
+        // Specify the exact sheet indexes to load (0‑based)
+        public override int[] SheetsInLoadingOrder => new int[] { 0, 2 };
     }
 }

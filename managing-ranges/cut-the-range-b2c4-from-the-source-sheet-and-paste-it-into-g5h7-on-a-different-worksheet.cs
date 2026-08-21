@@ -1,56 +1,51 @@
-// Title: Cut range B2:C4 from a source worksheet and insert it into G5:H7 on another sheet using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, populate cells B2:C4 on a source sheet, define the range, add a destination sheet, and use Aspose.Cells' InsertCutCells with ShiftType.Down to cut the range and paste it starting at G5 (covering G5:H7) on the destination sheet. The workbook is then saved to a file.
-// Keywords: Aspose.Cells cut range C# | InsertCutCells .NET | move cells between worksheets Aspose | cut and paste B2:C4 to G5 | ShiftType.Down Aspose.Cells | C# Excel range manipulation | Aspose.Cells example cut paste
-// Common Searches: how to cut and paste a range between worksheets using Aspose.Cells | Aspose.Cells InsertCutCells example G5 | cut range B2:C4 and paste to G5:H7 Aspose | ShiftType options for InsertCutCells Aspose.Cells | C# code to move cells from one sheet to another Aspose
-// Developer Intent: Cut the B2:C4 range from the source worksheet and insert it into cells G5:H7 on a different worksheet.
-// Use Cases: Reorganize a data block by moving it from a raw data sheet to a formatted report sheet. | Automate the transfer of calculated results from a processing sheet to a summary sheet at a fixed position.
-// AI Prompts: Write C# code with Aspose.Cells that cuts the range B2:C4 from one worksheet and inserts it into G5:H7 on another worksheet, including proper error handling. | Explain the impact of each ShiftType (Down, Right, Up, Left) when using InsertCutCells to cut and paste ranges in Aspose.Cells.
+// Title: C# Aspose.Cells: Cut range B2:C4 and paste to G5:H7 on another worksheet
+// Description: Demonstrates how to create a workbook, fill cells B2:C4 on a source sheet, add a destination sheet, and use InsertCutCells with ShiftType.Down to cut the range and paste it starting at cell G5 (G5:H7) on the destination sheet, then save the file.
+// Keywords: Aspose.Cells | C# | .NET | cut range | paste range | InsertCutCells | ShiftType.Down | move cells between worksheets | cut and paste cells | range B2:C4 | cell G5
+// Common Searches: Aspose.Cells cut range and paste to another sheet | InsertCutCells C# example | How to move cells B2:C4 to G5:H7 with Aspose.Cells | Cut and paste cells across worksheets .NET | ShiftType.Down effect in Aspose.Cells
+// Developer Intent: Cut the range B2:C4 from a source worksheet and paste it into G5:H7 on a different worksheet using Aspose.Cells for .NET.
+// Use Cases: Transfer a data block from a raw data sheet to a formatted report sheet without losing layout. | Reposition a calculated table onto a summary sheet while automatically shifting existing cells down. | Programmatically reorganize workbook content by cutting and pasting ranges across multiple worksheets.
+// AI Prompts: Generate C# code that uses Aspose.Cells to cut the range B2:C4 from one worksheet and paste it into G5:H7 on another worksheet. | Explain the InsertCutCells method parameters, including row/column indexes and the impact of different ShiftType values. | Show how to handle errors when cutting and pasting ranges with Aspose.Cells in a .NET application.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsCutPasteDemo
 {
-    // Demonstrates how to create a workbook, populate cells B2:C4 on a source sheet, define the range, add a destination sheet, and use Aspose.Cells' InsertCutCells with ShiftType.Down to cut the range and paste it starting at G5 (covering G5:H7) on the destination sheet. The workbook is then saved to a file.
+    // Demonstrates how to create a workbook, fill cells B2:C4 on a source sheet, add a destination sheet, and use InsertCutCells with ShiftType.Down to cut the range and paste it starting at cell G5 (G5:H7) on the destination sheet, then save the file.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook (lifecycle create)
                 Workbook workbook = new Workbook();
 
-                // Source worksheet (first sheet)
+                // Access the first worksheet as the source sheet
                 Worksheet sourceSheet = workbook.Worksheets[0];
                 sourceSheet.Name = "Source";
 
-                // Destination worksheet (add a new sheet)
+                // Populate the source range B2:C4 with sample data
+                sourceSheet.Cells["B2"].PutValue("B2");
+                sourceSheet.Cells["C2"].PutValue("C2");
+                sourceSheet.Cells["B3"].PutValue("B3");
+                sourceSheet.Cells["C3"].PutValue("C3");
+                sourceSheet.Cells["B4"].PutValue("B4");
+                sourceSheet.Cells["C4"].PutValue("C4");
+
+                // Create a second worksheet as the destination sheet
                 Worksheet destSheet = workbook.Worksheets.Add("Destination");
 
-                // Populate the source range B2:C4 with sample data
-                sourceSheet.Cells["B2"].PutValue("Item1");
-                sourceSheet.Cells["B3"].PutValue("Item2");
-                sourceSheet.Cells["B4"].PutValue("Item3");
-                sourceSheet.Cells["C2"].PutValue(10);
-                sourceSheet.Cells["C3"].PutValue(20);
-                sourceSheet.Cells["C4"].PutValue(30);
-
-                // Create the range to cut (B2:C4) on the source sheet
+                // Define the range to cut from the source sheet (B2:C4)
                 AsposeRange cutRange = sourceSheet.Cells.CreateRange("B2:C4");
 
                 // Insert the cut range into the destination sheet at G5 (row index 4, column index 6)
-                // ShiftType.Down is used; adjust if a different shift behavior is required.
+                // ShiftType.Down is used to shift existing cells down if needed
                 destSheet.Cells.InsertCutCells(cutRange, 4, 6, ShiftType.Down);
 
-                // Define output file name
-                string outputFile = "CutPasteDemo.xlsx";
-
-                // Save the workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputFile)}'.");
+                // Save the workbook (lifecycle save)
+                workbook.Save("CutPasteResult.xlsx");
             }
             catch (Exception ex)
             {

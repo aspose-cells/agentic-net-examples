@@ -1,118 +1,105 @@
-// Title: Custom lookup across all worksheets with Aspose.Cells for .NET (C#) – find and highlight matching cells
-// Description: Demonstrates a reusable FindAcrossWorksheets method that scans every worksheet in an Aspose.Cells Workbook, uses FindOptions (LookInType.Values, LookAtType.Contains) to locate cells containing a specified string, creates a 1 × 1 Range for each hit, returns a List<Range>, and shows how to apply a yellow style, output the addresses, and save the result.
-// Keywords: Aspose.Cells find across worksheets | C# custom lookup function | highlight matching cells Aspose.Cells | FindOptions LookInType.Values | search multiple sheets .NET | create range from found cell | Excel data extraction C# | Aspose.Cells Find method example
-// Common Searches: Aspose.Cells search all worksheets for a value | C# highlight cells that match a keyword in Excel | How to return cell ranges from Find in Aspose.Cells | Custom lookup function for multiple sheets Aspose.Cells | Find and style matching cells across worksheets .NET
-// Developer Intent: Create a reusable C# function that searches every worksheet in a workbook for a given text, returns the matching cell ranges, and enables further actions such as styling or reporting.
-// Use Cases: Locate and highlight every occurrence of a product name across product and sales sheets. | Generate a list of cell addresses that contain a specific keyword for audit or reporting. | Apply a uniform formatting (e.g., yellow background) to all cells matching a lookup term before exporting the workbook.
-// AI Prompts: Write a C# method using Aspose.Cells that searches for a string in all worksheets and returns a List<Range> of the matches. | Show how to apply a yellow background style to each range returned by a custom lookup function in Aspose.Cells. | Explain how to modify the FindAcrossWorksheets function to perform case‑insensitive searches and restrict results to a particular column.
+// Title: C# custom Aspose.Cells function to find a value across all worksheets and return its Range
+// Description: Demonstrates how to create a static FindFirstMatchRange method that iterates through every worksheet in an Aspose.Cells Workbook, uses FindOptions (LookInType.Values, LookAtType.Contains) to locate the first cell containing a specified text, returns a one‑cell Range, highlights the cell, and saves the workbook. Includes sample data on two sheets (Products and Sales).
+// Keywords: Aspose.Cells | C# | .NET | custom lookup function | search across worksheets | FindOptions | Range object | highlight cell | Excel automation | Workbook | find cell value
+// Common Searches: Aspose.Cells find value in any worksheet | C# return Range for first matching cell across sheets | custom function to search all sheets Aspose.Cells | highlight found cell Aspose.Cells C# | search multiple worksheets and get cell range
+// Developer Intent: Locate the first occurrence of a given text in any worksheet of a workbook and obtain it as an Aspose.Cells Range for further processing.
+// Use Cases: Identify and highlight a product name that may appear on several sheets before generating a report. | Validate data consistency by detecting duplicate entries across multiple worksheets. | Extract the cell range of a matching value to feed into formulas, conditional formatting, or chart data sources.
+// AI Prompts: Write a C# method using Aspose.Cells that searches for a string in every worksheet and returns the first matching cell as a one‑cell Range. | Show how to call the custom lookup method, apply a yellow background style to the returned range, and save the workbook to a given file path. | Explain how to adapt FindFirstMatchRange for exact matches, case‑insensitive searches, or whole‑sheet scans.
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsCustomLookup
 {
-    // Demonstrates a reusable FindAcrossWorksheets method that scans every worksheet in an Aspose.Cells Workbook, uses FindOptions (LookInType.Values, LookAtType.Contains) to locate cells containing a specified string, creates a 1 × 1 Range for each hit, returns a List<Range>, and shows how to apply a yellow style, output the addresses, and save the result.
+    // Demonstrates how to create a static FindFirstMatchRange method that iterates through every worksheet in an Aspose.Cells Workbook, uses FindOptions (LookInType.Values, LookAtType.Contains) to locate the first cell containing a specified text, returns a one‑cell Range, highlights the cell, and saves the workbook. Includes sample data on two sheets (Products and Sales).
     class Program
     {
-        // Searches for a value across all worksheets and returns a list of ranges
-        // that represent the matching cells.
-        static List<Aspose.Cells.Range> FindAcrossWorksheets(Workbook workbook, string searchValue)
+        // Custom function that searches for a value across all worksheets
+        // and returns the first matching cell as an AsposeRange object.
+        static AsposeRange? FindFirstMatchRange(Workbook workbook, string searchValue)
         {
-            var options = new FindOptions
-            {
-                LookInType = LookInType.Values,
-                LookAtType = LookAtType.Contains
-            };
-
-            var result = new List<Aspose.Cells.Range>();
-
+            // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Cell previous = null;
-                Cell found = sheet.Cells.Find(searchValue, previous, options);
-
-                while (found != null)
+                // Configure find options: search in cell values and allow partial matches
+                FindOptions options = new FindOptions
                 {
-                    // Create a 1x1 range for the found cell.
-                    var cellRange = sheet.Cells.CreateRange(found.Row, found.Column, 1, 1);
-                    result.Add(cellRange);
+                    LookInType = LookInType.Values,
+                    LookAtType = LookAtType.Contains
+                };
 
-                    // Continue searching from the current cell.
-                    previous = found;
-                    found = sheet.Cells.Find(searchValue, previous, options);
+                // Perform the search starting from the beginning (previousCell = null)
+                Cell foundCell = sheet.Cells.Find(searchValue, null, options);
+
+                // If a matching cell is found, create and return a one‑cell range
+                if (foundCell != null)
+                {
+                    return sheet.Cells.CreateRange(foundCell.Row, foundCell.Column, 1, 1);
                 }
             }
 
-            return result; // Empty list if no matches were found.
+            // No match found in any worksheet
+            return null;
         }
 
         static void Main()
         {
             try
             {
-                // Create a new workbook and populate data.
-                var wb = new Workbook();
+                // Create a new workbook and add sample data on two worksheets
+                Workbook wb = new Workbook();
 
-                var ws1 = wb.Worksheets[0];
+                // Worksheet 1
+                Worksheet ws1 = wb.Worksheets[0];
                 ws1.Name = "Products";
                 ws1.Cells["A1"].PutValue("Item");
                 ws1.Cells["A2"].PutValue("Apple");
                 ws1.Cells["A3"].PutValue("Banana");
-                ws1.Cells["A4"].PutValue("Cherry");
 
-                int sheetIndex = wb.Worksheets.Add();
-                var ws2 = wb.Worksheets[sheetIndex];
-                ws2.Name = "Sales";
+                // Worksheet 2 (Add returns a Worksheet when a name is supplied)
+                Worksheet ws2 = wb.Worksheets.Add("Sales");
                 ws2.Cells["B1"].PutValue("Product");
-                ws2.Cells["B2"].PutValue("Apple");
-                ws2.Cells["B3"].PutValue("Durian");
-                ws2.Cells["B4"].PutValue("Banana");
+                ws2.Cells["B2"].PutValue("Orange");
+                ws2.Cells["B3"].PutValue("Apple"); // Duplicate value to test cross‑sheet search
 
-                // Perform the custom lookup for the term "Apple".
-                var matches = FindAcrossWorksheets(wb, "Apple");
+                // Use the custom lookup function to find "Apple"
+                string lookupValue = "Apple";
+                AsposeRange? resultRange = FindFirstMatchRange(wb, lookupValue);
 
-                if (matches.Count > 0)
+                if (resultRange != null)
                 {
-                    // Highlight all matching cells.
-                    var highlight = wb.CreateStyle();
+                    // Highlight the found range for visual confirmation
+                    Style highlight = wb.CreateStyle();
                     highlight.ForegroundColor = Color.Yellow;
                     highlight.Pattern = BackgroundType.Solid;
+                    resultRange.SetStyle(highlight);
 
-                    foreach (var range in matches)
-                    {
-                        range.SetStyle(highlight);
-                    }
-
-                    Console.WriteLine("Matches found at:");
-                    foreach (var range in matches)
-                    {
-                        Console.WriteLine($"{range.Worksheet.Name}!{range.RefersTo}");
-                    }
+                    Console.WriteLine($"Found '{lookupValue}' in worksheet '{resultRange.Worksheet.Name}' at {resultRange.FirstRow},{resultRange.FirstColumn}");
                 }
                 else
                 {
-                    Console.WriteLine("No matches found.");
+                    Console.WriteLine($"Value '{lookupValue}' not found in any worksheet.");
                 }
 
-                // Save the workbook.
-                string outputPath = "LookupResult.xlsx";
+                // Save the workbook
+                string outputPath = "CustomLookupResult.xlsx";
 
-                // Ensure the directory exists before saving.
-                string directory = Path.GetDirectoryName(outputPath);
+                // Ensure the directory exists before saving
+                string? directory = Path.GetDirectoryName(outputPath);
                 if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
                 wb.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

@@ -1,63 +1,45 @@
-// Title: C# – Create an Excel Table from a Cell Range and Assign a Custom Name with Aspose.Cells
-// Description: Learn how to use Aspose.Cells for .NET to convert a range (A1:B3) into a ListObject table, set its DisplayName (e.g., "EmployeeTable"), apply a built‑in style, and save the workbook as an .xlsx file.
-// Keywords: Aspose.Cells create table from range | C# ListObject custom name | Aspose.Cells set table DisplayName | apply table style Aspose.Cells | save workbook as xlsx .NET | convert cell range to Excel table | Aspose.Cells TableStyleMedium9
-// Common Searches: convert cell range to table Aspose.Cells .NET | set custom table name in Aspose.Cells | apply built‑in table style with Aspose.Cells | add ListObject with headers using Aspose.Cells | save Aspose.Cells workbook as xlsx
-// Developer Intent: Create a ListObject table from a specified range, give it a custom name, optionally style it, and export the workbook.
-// Use Cases: Generate a named employee list table for reporting. | Programmatically build styled tables from dynamic data ranges. | Automate Excel workbook creation with named tables to simplify downstream analysis.
-// AI Prompts: Write C# code with Aspose.Cells that creates a table from range A1:C10, names it "SalesData", applies TableStyleMedium9, and saves as an .xlsx file. | Show how to add a ListObject, set its DisplayName, apply a built‑in style, and persist the workbook using Aspose.Cells for .NET. | Explain how to retrieve the index of a newly added ListObject, rename the table, and confirm the applied style.
+// Title: Create a Table from a Cell Range and Set a Custom Name with Aspose.Cells for .NET
+// Description: Demonstrates how to generate a new workbook, populate cells A1:C4, convert the range into a ListObject table, assign a custom DisplayName (e.g., EmployeeTable), apply a table style, and save the file as an XLSX document using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells create table from range | Aspose.Cells ListObject DisplayName | custom table name Aspose.Cells | apply table style Aspose.Cells | save workbook with table Aspose | C# Aspose.Cells table example
+// Common Searches: how to add a table from a range in Aspose.Cells | set custom display name for ListObject Aspose.Cells .NET | Aspose.Cells table style options | save workbook with named table Aspose.Cells | C# create table and assign name using Aspose.Cells
+// Developer Intent: Create a worksheet table from a defined range and give it a custom display name.
+// Use Cases: Generate a named table for employee data to enable easy reference in formulas and filters. | Apply a predefined table style for consistent visual formatting before exporting reports. | Create multiple named tables on a single sheet to separate distinct datasets such as sales, inventory, and contacts.
+// AI Prompts: Write C# code with Aspose.Cells that creates a table from range B2:E10, includes headers, and sets its DisplayName to 'SalesData'. | Show how to change the TableStyleName of an existing ListObject and save the workbook as 'Report.xlsx' using Aspose.Cells. | Provide an example that adds several tables with custom DisplayName values to one worksheet and then retrieves a table by its name.
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using AsposeRange = Aspose.Cells.Range;
 
-// Learn how to use Aspose.Cells for .NET to convert a range (A1:B3) into a ListObject table, set its DisplayName (e.g., "EmployeeTable"), apply a built‑in style, and save the workbook as an .xlsx file.
+// Demonstrates how to generate a new workbook, populate cells A1:C4, convert the range into a ListObject table, assign a custom DisplayName (e.g., EmployeeTable), apply a table style, and save the file as an XLSX document using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        try
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Fill sample data in the range A1:C4 (including headers)
+        cells["A1"].PutValue("ID");
+        cells["B1"].PutValue("Name");
+        cells["C1"].PutValue("Score");
+
+        int id = 1;
+        for (int row = 2; row <= 4; row++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample data (including header row)
-            cells["A1"].PutValue("ID");
-            cells["B1"].PutValue("Name");
-            cells["A2"].PutValue(1);
-            cells["B2"].PutValue("John");
-            cells["A3"].PutValue(2);
-            cells["B3"].PutValue("Mary");
-
-            // Define the range that will be converted to a table
-            AsposeRange sourceRange = cells.CreateRange("A1", "B3");
-
-            // Add a ListObject (table) using the range coordinates
-            int tableIndex = sheet.ListObjects.Add(
-                sourceRange.FirstRow,
-                sourceRange.FirstColumn,
-                sourceRange.FirstRow + sourceRange.RowCount - 1,
-                sourceRange.FirstColumn + sourceRange.ColumnCount - 1,
-                true); // true indicates the range has headers
-
-            ListObject table = sheet.ListObjects[tableIndex];
-
-            // Assign a custom name to the table
-            table.DisplayName = "EmployeeTable";
-
-            // Optional: apply a built‑in table style
-            table.TableStyleName = "TableStyleMedium9";
-
-            // Save the workbook
-            string outputPath = "CreatedTable.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            cells[row - 1, 0].PutValue(id++);                 // ID column
+            cells[row - 1, 1].PutValue("Person" + row);       // Name column
+            cells[row - 1, 2].PutValue(50 + row * 5);         // Score column
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+
+        // Create a table (ListObject) from the range A1:C4 and assign a custom name
+        ListObjectCollection tables = sheet.ListObjects;
+        int tableIndex = tables.Add("A1", "C4", true); // hasHeaders = true
+        ListObject table = tables[tableIndex];
+        table.DisplayName = "EmployeeTable";          // custom table name
+        table.TableStyleName = "TableStyleMedium9";   // optional styling
+
+        // Save the workbook
+        workbook.Save("TableWithCustomName.xlsx");
     }
 }

@@ -1,66 +1,75 @@
-// Title: Aspose.Cells for .NET – Verify PDF with AllColumnsInOnePagePerSheet renders one page per worksheet
-// Description: Creates a workbook with two sheets, each filled with 200 columns, saves it to PDF using PdfSaveOptions (AllColumnsInOnePagePerSheet = true, OnePagePerSheet = true), renders the same workbook with ImageOrPrintOptions, retrieves the page count via WorkbookRender, and checks that the count matches the number of worksheets, confirming a single‑page‑per‑sheet PDF.
-// Keywords: Aspose.Cells | AllColumnsInOnePagePerSheet | OnePagePerSheet | PDF pagination | C# | WorkbookRender page count | verify single page per sheet | Aspose.Cells PDF options | render workbook to PDF | page count validation
-// Common Searches: Aspose.Cells PDF one page per worksheet | AllColumnsInOnePagePerSheet example C# | how to get PDF page count with Aspose.Cells | verify PDF pagination Aspose.Cells | C# render workbook to single page PDF
-// Developer Intent: Ensure that setting AllColumnsInOnePagePerSheet (and OnePagePerSheet) produces exactly one PDF page for each worksheet, regardless of column width.
-// Use Cases: Automated testing of PDF layout for reports with many columns | Generating printable PDFs where each sheet must occupy a single page | Validating pagination settings before deploying document generation pipelines
-// AI Prompts: Generate a C# unit test that asserts WorkbookRender.PageCount equals Workbook.Worksheets.Count when AllColumnsInOnePagePerSheet is enabled. | Explain how PdfSaveOptions and ImageOrPrintOptions work together to force a single PDF page per worksheet in Aspose.Cells. | Provide code to log a pass/fail message after comparing rendered page count with worksheet count for multi‑sheet workbooks.
+// Title: Validate single‑page PDF per worksheet using AllColumnsInOnePagePerSheet in Aspose.Cells for .NET
+// Description: Creates a workbook with two sheets, each filled with 200 columns, saves it as PDF with PdfSaveOptions.AllColumnsInOnePagePerSheet = true and OnePagePerSheet = true, then uses WorkbookRender and SheetRender to confirm that every sheet renders exactly one page.
+// Keywords: Aspose.Cells | AllColumnsInOnePagePerSheet | OnePagePerSheet | PDF pagination | WorkbookRender | SheetRender | C# example | page count verification | single page per sheet | Aspose.Cells PDF
+// Common Searches: Aspose.Cells single page per worksheet PDF | AllColumnsInOnePagePerSheet option usage | How to check PDF page count with Aspose.Cells | C# verify PDF pagination Aspose.Cells | OnePagePerSheet PDF Aspose.Cells example
+// Developer Intent: Ensure that a PDF generated from a workbook using AllColumnsInOnePagePerSheet and OnePagePerSheet settings contains exactly one page for each worksheet.
+// Use Cases: Produce compact PDF reports where each sheet must fit on one page | Automated testing of PDF pagination settings in CI/CD pipelines | Validate workbook layout before distribution to clients | Create printable PDFs from wide tables without manual scaling | Integrate pagination verification into document generation services
+// AI Prompts: Generate C# code that asserts each worksheet renders one PDF page when AllColumnsInOnePagePerSheet is enabled. | Describe how WorkbookRender calculates page counts with AllColumnsInOnePagePerSheet and OnePagePerSheet. | Provide alternative methods to verify PDF pagination without rendering each sheet. | Explain performance considerations when using SheetRender for page count verification. | Show how to log page count results for multiple worksheets in Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Creates a workbook with two sheets, each filled with 200 columns, saves it to PDF using PdfSaveOptions (AllColumnsInOnePagePerSheet = true, OnePagePerSheet = true), renders the same workbook with ImageOrPrintOptions, retrieves the page count via WorkbookRender, and checks that the count matches the number of worksheets, confirming a single‑page‑per‑sheet PDF.
+// Creates a workbook with two sheets, each filled with 200 columns, saves it as PDF with PdfSaveOptions.AllColumnsInOnePagePerSheet = true and OnePagePerSheet = true, then uses WorkbookRender and SheetRender to confirm that every sheet renders exactly one page.
 class VerifyAllColumnsOnePagePerSheet
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and add a second worksheet
+            // Create a new workbook and add two worksheets
             Workbook workbook = new Workbook();
-            workbook.Worksheets.Add("Sheet2");
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "Sheet1";
+            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
 
-            // Populate each worksheet with a large number of columns
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Populate each sheet with a large number of columns to force pagination
+            for (int col = 0; col < 200; col++)
             {
-                for (int col = 0; col < 200; col++)
-                {
-                    sheet.Cells[0, col].PutValue($"Column {col + 1}");
-                    sheet.Cells[1, col].PutValue($"Sample data {col + 1}");
-                }
+                sheet1.Cells[0, col].PutValue($"Column {col + 1}");
+                sheet2.Cells[0, col].PutValue($"Column {col + 1}");
             }
 
-            // Configure PDF save options to force all columns onto a single page per sheet
+            // PDF save options to fit all columns on a single page per sheet
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
                 AllColumnsInOnePagePerSheet = true,
                 OnePagePerSheet = true
             };
 
-            // Save the workbook as PDF
-            string pdfPath = "output.pdf";
-            workbook.Save(pdfPath, pdfOptions);
+            // Save the workbook as PDF (demonstrates actual file creation)
+            workbook.Save("AllColumnsOnePagePerSheet.pdf", pdfOptions);
 
-            // Use ImageOrPrintOptions for rendering to obtain page counts
+            // Rendering options (used for page count calculation)
             ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
             {
                 AllColumnsInOnePagePerSheet = true,
                 OnePagePerSheet = true
+                // ImageFormat is not required for page count calculation
             };
 
-            // Render the workbook and get the total page count
-            WorkbookRender renderer = new WorkbookRender(workbook, renderOptions);
-            int totalPages = renderer.PageCount;
-            int expectedPages = workbook.Worksheets.Count;
+            // Use WorkbookRender to obtain the total page count of the rendered PDF
+            WorkbookRender workbookRender = new WorkbookRender(workbook, renderOptions);
+            int totalPageCount = workbookRender.PageCount;
+            Console.WriteLine($"Total pages in PDF (rendered): {totalPageCount}");
 
-            // Output verification result
-            Console.WriteLine($"Total pages rendered: {totalPages}");
-            Console.WriteLine($"Expected pages (one per worksheet): {expectedPages}");
-            Console.WriteLine(totalPages == expectedPages
-                ? "Verification passed: each worksheet is rendered on exactly one page."
-                : "Verification failed: page count does not match the number of worksheets.");
+            // Verify that each worksheet renders exactly one page
+            bool verificationPassed = true;
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            {
+                SheetRender sheetRender = new SheetRender(workbook.Worksheets[i], renderOptions);
+                int sheetPageCount = sheetRender.PageCount;
+                Console.WriteLine($"Worksheet '{workbook.Worksheets[i].Name}' page count: {sheetPageCount}");
+
+                if (sheetPageCount != 1)
+                {
+                    verificationPassed = false;
+                }
+            }
+
+            Console.WriteLine(verificationPassed
+                ? "Verification succeeded: each worksheet has exactly one page."
+                : "Verification failed: one or more worksheets have more than one page.");
         }
         catch (Exception ex)
         {

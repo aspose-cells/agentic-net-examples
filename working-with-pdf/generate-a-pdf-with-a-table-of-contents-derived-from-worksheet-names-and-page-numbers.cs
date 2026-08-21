@@ -1,78 +1,91 @@
-// Title: Generate a PDF with a clickable Table of Contents from Excel sheets using Aspose.Cells for .NET
-// Description: C# sample that builds a workbook, adds three worksheets filled with data, creates a PdfBookmarkEntry hierarchy (root "Table of Contents" with entries pointing to each sheet's A1 cell), enables ExportDocumentStructure, and saves the workbook as a PDF containing a clickable TOC for easy navigation.
-// Keywords: Aspose.Cells PDF bookmarks | C# PDF table of contents | ExportDocumentStructure | PdfBookmarkEntry | Aspose.Cells save as PDF | Excel to PDF with TOC | Aspose.Cells .NET | PDF navigation bookmarks | generate PDF from workbook | Aspose.Cells PDFSaveOptions
-// Common Searches: Aspose.Cells add PDF bookmarks | Create PDF table of contents from Excel using C# | How to export Excel workbook to PDF with TOC Aspose | PdfSaveOptions ExportDocumentStructure example | C# generate PDF with clickable TOC Aspose.Cells
-// Developer Intent: Create a PDF from an Excel workbook that includes a clickable table of contents linking to the start of each worksheet.
-// Use Cases: Automated multi‑sheet financial reports with a TOC for quick navigation | Exporting training manuals where each chapter is a worksheet and the PDF needs a navigation pane | Building accessible PDFs (PDF/UA) with document structure from Excel data | Generating product catalogs where each category is a sheet and the PDF includes a TOC
-// AI Prompts: Show how to add page numbers to each entry in the PDF table of contents using Aspose.Cells. | Provide code to create nested bookmarks when worksheet names follow a hierarchical pattern. | Explain how to customize bookmark icons and colors in the generated PDF. | Give an example that places the table of contents on a separate first page with page numbers. | Convert this C# example to Aspose.Cells for Java while preserving the TOC functionality.
+// Title: Generate PDF with Worksheet‑Based Table of Contents using Aspose.Cells for .NET (C#)
+// Description: C# example that creates a workbook, renders each worksheet to a single PDF page, builds a root PdfBookmarkEntry containing sheet names and start pages, and saves the file with ExportDocumentStructure so the bookmarks serve as a clickable table of contents.
+// Keywords: Aspose.Cells | C# | PDF bookmarks | table of contents | OnePagePerSheet | PdfSaveOptions | Excel to PDF | document structure | Aspose.Cells for .NET | PDF generation
+// Common Searches: Aspose.Cells add PDF bookmarks from Excel sheets | C# create PDF table of contents from workbook | Export Excel worksheets to PDF with page numbers Aspose | How to generate clickable TOC in PDF using Aspose.Cells | One page per sheet PDF Aspose.Cells .NET
+// Developer Intent: Create a PDF where each Excel worksheet is rendered on its own page and a clickable TOC lists the sheet names with corresponding page numbers.
+// Use Cases: Produce a multi‑sheet PDF report with a navigable TOC for quick access to sections such as Summary, Details, and Statistics. | Generate printable documentation where each Excel sheet becomes a separate PDF page and the TOC reflects exact page numbers for reference. | Automate PDF creation with worksheet‑based bookmarks for integration into document management systems that require searchable PDF structure.
+// AI Prompts: Show how to add hierarchical sub‑bookmarks for sections within each worksheet while keeping the main TOC intact. | Provide code to stream the PDF to an ASP.NET response, preserving the generated table of contents. | Explain how to customize the root bookmark title and set individual entries to be collapsed or expanded by default.
 
 using System;
 using System.Collections;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// C# sample that builds a workbook, adds three worksheets filled with data, creates a PdfBookmarkEntry hierarchy (root "Table of Contents" with entries pointing to each sheet's A1 cell), enables ExportDocumentStructure, and saves the workbook as a PDF containing a clickable TOC for easy navigation.
-class GeneratePdfWithToc
+namespace AsposeCellsPdfTocDemo
 {
-    static void Main()
+    // C# example that creates a workbook, renders each worksheet to a single PDF page, builds a root PdfBookmarkEntry containing sheet names and start pages, and saves the file with ExportDocumentStructure so the bookmarks serve as a clickable table of contents.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook (contains one default worksheet)
+            // Create a new workbook and add sample worksheets
             Workbook workbook = new Workbook();
 
-            // Ensure we have three worksheets
-            for (int i = 1; i < 3; i++)
+            // Worksheet 1
+            Worksheet ws1 = workbook.Worksheets[0];
+            ws1.Name = "Summary";
+            ws1.Cells["A1"].PutValue("Summary Data");
+            for (int i = 2; i <= 30; i++)
+                ws1.Cells[$"A{i}"].PutValue($"Item {i - 1}");
+
+            // Worksheet 2
+            Worksheet ws2 = workbook.Worksheets.Add("Details");
+            ws2.Cells["A1"].PutValue("Details Header");
+            for (int i = 2; i <= 50; i++)
+                ws2.Cells[$"A{i}"].PutValue($"Detail {i - 1}");
+
+            // Worksheet 3
+            Worksheet ws3 = workbook.Worksheets.Add("Statistics");
+            ws3.Cells["A1"].PutValue("Statistics Header");
+            for (int i = 2; i <= 40; i++)
+                ws3.Cells[$"A{i}"].PutValue($"Stat {i - 1}");
+
+            // Options for rendering – each sheet will be rendered on a single page
+            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
             {
-                workbook.Worksheets.Add();
-            }
+                OnePagePerSheet = true
+            };
 
-            // Populate each worksheet with sample data
-            for (int i = 0; i < 3; i++)
-            {
-                Worksheet sheet = workbook.Worksheets[i];
-                sheet.Name = $"Sheet{i + 1}";
-                sheet.Cells["A1"].PutValue($"Start of {sheet.Name}");
-
-                // Fill rows to potentially span multiple PDF pages
-                for (int row = 0; row < 100; row++)
-                {
-                    sheet.Cells[row, 0].PutValue($"Row {row + 1} in {sheet.Name}");
-                }
-            }
-
-            // Create the root PDF bookmark (acts as the Table of Contents)
-            PdfBookmarkEntry tocRoot = new PdfBookmarkEntry
+            // Calculate the starting page number for each worksheet
+            int currentPage = 1;
+            PdfBookmarkEntry rootBookmark = new PdfBookmarkEntry
             {
                 Text = "Table of Contents",
                 IsOpen = true,
                 SubEntry = new ArrayList()
             };
 
-            // Add a bookmark entry for each worksheet; destination is cell A1
             foreach (Worksheet sheet in workbook.Worksheets)
             {
+                // Render the sheet to obtain its page count
+                SheetRender sheetRender = new SheetRender(sheet, renderOptions);
+                int sheetPages = sheetRender.PageCount; // With OnePagePerSheet this will be 1
+
+                // Create a bookmark entry for the sheet
                 PdfBookmarkEntry entry = new PdfBookmarkEntry
                 {
-                    Text = sheet.Name,
+                    Text = $"{sheet.Name} - Page {currentPage}",
                     Destination = sheet.Cells["A1"]
                 };
-                tocRoot.SubEntry.Add(entry);
+
+                // Add the entry to the root bookmark
+                rootBookmark.SubEntry.Add(entry);
+
+                // Update the running page number
+                currentPage += sheetPages;
+
+                sheetRender.Dispose();
             }
 
-            // Configure PDF save options to include document structure and bookmarks
+            // Configure PDF save options
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                ExportDocumentStructure = true,
-                Bookmark = tocRoot
+                ExportDocumentStructure = true, // Retain document structure for bookmarks
+                Bookmark = rootBookmark
             };
 
-            // Save the workbook as a PDF with the generated Table of Contents
+            // Save the workbook as PDF with the generated table of contents
             workbook.Save("WorkbookWithTOC.pdf", pdfOptions);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

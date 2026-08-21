@@ -1,59 +1,85 @@
-// Title: Copy a Range to a New Workbook and Convert Formulas to Static Values with Aspose.Cells for .NET
-// Description: Creates a source workbook, adds numeric data and a SUM formula, defines the source range A1:A3, creates a destination workbook, copies the range with CopyData, removes all formulas using Worksheet.Cells.RemoveFormulas, and saves the result as a static‑value workbook (CopiedValues.xlsx).
-// Keywords: Aspose.Cells | CopyData | RemoveFormulas | C# copy range | static values | export workbook | formula to value | range copy .NET | Excel snapshot | no formulas
-// Common Searches: Aspose.Cells copy range to another workbook | remove formulas after copying range Aspose | convert Excel formulas to values C# | how to export static values with Aspose.Cells | CopyData vs PasteValues Aspose
-// Developer Intent: Copy a selected cell range from a source workbook into a new workbook and replace every formula with its evaluated value so the destination contains only static data.
-// Use Cases: Generate a read‑only report by copying calculated cells and stripping formulas before distribution. | Archive financial models as immutable snapshots to prevent accidental recalculation. | Create a lightweight data export for downstream systems that cannot process Excel formulas.
-// AI Prompts: Write C# code using Aspose.Cells to copy a specific range from one workbook to another and replace all formulas with their calculated values. | Show how to copy multiple ranges, preserve cell formatting, and then remove formulas in the destination worksheet. | Explain the impact of Worksheet.Cells.RemoveFormulas after using Range.CopyData in Aspose.Cells, including performance considerations.
+// Title: Copy a range to a new workbook and strip formulas with Aspose.Cells for .NET
+// Description: Load a source workbook, copy a defined range (e.g., A1:D10) to a fresh workbook using PasteOptions.Values, then call RemoveFormulas to keep only static values before saving.
+// Keywords: Aspose.Cells | C# | copy range values only | remove formulas | PasteOptions.Values | Excel static values | read‑only report workbook | archive snapshot Excel
+// Common Searches: Aspose.Cells copy range without formulas | C# copy cells as values to new workbook | remove all formulas after copying Excel file Aspose | PasteOptions.Values example Aspose.Cells | how to export static values from Excel using Aspose
+// Developer Intent: Transfer a specific cell block from one workbook to another while ensuring the destination contains only literal values, no formulas.
+// Use Cases: Generate a read‑only report by copying calculated results as plain numbers. | Create an archival snapshot of a worksheet that hides underlying formulas. | Distribute a pre‑filled template to external partners without exposing calculation logic.
+// AI Prompts: Show C# code that copies a range from one workbook to another with Aspose.Cells and retains only the values. | Demonstrate how to purge any remaining formulas after copying cells using Aspose.Cells. | Explain the effect of PasteOptions.Values when copying ranges between Excel workbooks in Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// Creates a source workbook, adds numeric data and a SUM formula, defines the source range A1:A3, creates a destination workbook, copies the range with CopyData, removes all formulas using Worksheet.Cells.RemoveFormulas, and saves the result as a static‑value workbook (CopiedValues.xlsx).
-class Program
+namespace AsposeCellsCopyRangeAndRemoveFormulas
 {
-    static void Main()
+    // Load a source workbook, copy a defined range (e.g., A1:D10) to a fresh workbook using PasteOptions.Values, then call RemoveFormulas to keep only static values before saving.
+    class Program
     {
-        try
+        static void Main()
         {
-            // ---------- Create source workbook and add data with a formula ----------
-            Workbook srcWorkbook = new Workbook();
-            Worksheet srcSheet = srcWorkbook.Worksheets[0];
-            srcSheet.Name = "Source";
+            // Paths for source and destination workbooks
+            string sourcePath = "source.xlsx";
+            string destinationPath = "destination.xlsx";
 
-            // Populate some cells
-            srcSheet.Cells["A1"].PutValue(10);
-            srcSheet.Cells["A2"].PutValue(20);
-            // Cell with a formula that sums A1 and A2
-            srcSheet.Cells["A3"].Formula = "=SUM(A1:A2)";
+            try
+            {
+                // Ensure source workbook exists; create a simple one if missing
+                if (!File.Exists(sourcePath))
+                {
+                    var tempWb = new Workbook();
+                    var tempWs = tempWb.Worksheets[0];
+                    // Populate some sample data
+                    tempWs.Cells["A1"].PutValue("Item");
+                    tempWs.Cells["B1"].PutValue(123);
+                    // Set a formula in C1
+                    tempWs.Cells["C1"].Formula = "=B1*2";
+                    tempWb.Save(sourcePath);
+                }
 
-            // Define the source range to be copied
-            AsposeRange srcRange = srcSheet.Cells.CreateRange("A1:A3");
+                // Load the source workbook
+                Workbook sourceWorkbook = new Workbook(sourcePath);
 
-            // ---------- Create destination workbook ----------
-            Workbook destWorkbook = new Workbook();
-            Worksheet destSheet = destWorkbook.Worksheets[0];
-            destSheet.Name = "Copy";
+                // Create a new (empty) workbook for the destination
+                Workbook destinationWorkbook = new Workbook();
 
-            // Define a destination range of the same size
-            AsposeRange destRange = destSheet.Cells.CreateRange("B1:B3");
+                // Get the first worksheet from each workbook
+                Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+                Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
 
-            // ---------- Copy the range (including formulas) ----------
-            destRange.CopyData(srcRange);
+                // Define the range to copy (adjust the address as needed)
+                AsposeRange sourceRange = sourceSheet.Cells.CreateRange("A1:D10");
 
-            // ---------- Remove all formulas, leaving only static values ----------
-            destSheet.Cells.RemoveFormulas();
+                // Create a matching range in the destination worksheet
+                AsposeRange destinationRange = destinationSheet.Cells.CreateRange("A1:D10");
 
-            // ---------- Save the resulting workbook ----------
-            string outputPath = "CopiedValues.xlsx";
-            destWorkbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Set paste options to copy only the values (no formulas)
+                PasteOptions pasteOptions = new PasteOptions
+                {
+                    PasteType = PasteType.Values
+                };
+
+                // Copy the source range to the destination range using the paste options
+                destinationRange.Copy(sourceRange, pasteOptions);
+
+                // As an extra safeguard, remove any formulas that might still exist
+                destinationSheet.Cells.RemoveFormulas();
+
+                // Ensure the destination directory exists
+                string destDir = Path.GetDirectoryName(destinationPath);
+                if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
+                {
+                    Directory.CreateDirectory(destDir);
+                }
+
+                // Save the new workbook
+                destinationWorkbook.Save(destinationPath);
+                Console.WriteLine($"Workbook copied successfully to '{destinationPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,39 +1,34 @@
-// Title: Aspose.Cells C# – Fit a worksheet to a single printed page (FitToPagesWide=1, FitToPagesTall=1)
-// Description: Creates an in‑memory workbook, adds sample data, configures the worksheet's PageSetup so the entire sheet scales to one page, and saves the file. Demonstrates how to use FitToPagesWide and FitToPagesTall for single‑page printing in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# page setup | FitToPagesWide | FitToPagesTall | single page print Aspose.Cells | .NET Excel scaling | print worksheet on one page | Aspose.Cells example PDF export
-// Common Searches: Aspose.Cells set worksheet to one page C# | FitToPagesWide=1 FitToPagesTall=1 example | how to print Excel sheet on a single page using Aspose.Cells | C# page setup fit to one page Aspose.Cells | scale worksheet to one page .NET
-// Developer Intent: Configure a worksheet so that all rows and columns are printed on a single page by setting FitToPagesWide and FitToPagesTall to 1.
-// Use Cases: Generate a compact PDF report where the whole sheet must appear on one page. | Create printable invoices that automatically fit on a single sheet of paper. | Produce a summary dashboard that prints without pagination for easy distribution.
-// AI Prompts: Show C# code that sets FitToPagesWide and FitToPagesTall to 1 and exports the workbook to PDF with Aspose.Cells. | Give an example that combines page orientation, margins, and FitToPages settings to achieve one‑page output. | Explain how to programmatically confirm that the configured page setup will result in a single printed page.
+// Title: C# Aspose.Cells – Fit Worksheet to One Printed Page (FitToPagesWide = 1, FitToPagesTall = 1)
+// Description: This C# example creates a workbook, optionally adds data, and sets Worksheet.PageSetup.FitToPagesWide and FitToPagesTall to 1 so the entire sheet prints on a single page, then saves the file as SinglePagePrint.xlsx.
+// Keywords: Aspose.Cells C# FitToPagesWide | FitToPagesTall .NET | single page print Excel | worksheet page scaling | print entire sheet on one page | Aspose.Cells page setup | C# Excel export single page
+// Common Searches: Aspose.Cells set FitToPagesWide 1 | Fit worksheet to one page C# | Aspose.Cells single page printing example | How to fit Excel sheet to one page using Aspose.Cells | C# page setup FitToPagesTall
+// Developer Intent: Apply FitToPagesWide = 1 and FitToPagesTall = 1 to a worksheet so it prints on a single page.
+// Use Cases: Generate printable reports that must fit on one page. | Create invoices or receipts without page breaks. | Export dashboards to Excel with a single‑page layout for easy distribution.
+// AI Prompts: Show me how to set FitToPagesWide and FitToPagesTall for all worksheets in a workbook using Aspose.Cells. | Provide code that adjusts page margins, orientation, and scaling together with FitToPagesWide = 1 for single‑page printing. | Explain how to programmatically verify that the page setup will result in a single printed page in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFitToSinglePage
+// This C# example creates a workbook, optionally adds data, and sets Worksheet.PageSetup.FitToPagesWide and FitToPagesTall to 1 so the entire sheet prints on a single page, then saves the file as SinglePagePrint.xlsx.
+class Program
 {
-    // Creates an in‑memory workbook, adds sample data, configures the worksheet's PageSetup so the entire sheet scales to one page, and saves the file. Demonstrates how to use FitToPagesWide and FitToPagesTall for single‑page printing in Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (in‑memory)
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // (Optional) Add some data so the page has content
-            worksheet.Cells["A1"].PutValue("Sample Data 1");
-            worksheet.Cells["B2"].PutValue("Sample Data 2");
+        // (Optional) Add some sample data
+        worksheet.Cells["A1"].PutValue("Sample Data 1");
+        worksheet.Cells["B1"].PutValue("Sample Data 2");
 
-            // Configure page setup to fit the entire sheet on one page
-            worksheet.PageSetup.FitToPagesWide = 1; // one page wide
-            worksheet.PageSetup.FitToPagesTall = 1; // one page tall
+        // Configure page setup to fit the entire sheet on a single page
+        worksheet.PageSetup.FitToPagesWide = 1; // Fit to 1 page wide
+        worksheet.PageSetup.FitToPagesTall = 1; // Fit to 1 page tall
 
-            // Save the workbook to a file
-            workbook.Save("FitToSinglePage.xlsx");
-
-            Console.WriteLine("Workbook saved with FitToPagesWide=1 and FitToPagesTall=1.");
-        }
+        // Save the workbook
+        workbook.Save("SinglePagePrint.xlsx");
     }
 }

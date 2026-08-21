@@ -1,45 +1,50 @@
-// Title: Aspose.Cells for .NET – Preserve cross‑worksheet formulas when deleting a column
-// Description: This C# example creates a workbook with two sheets, writes a value to Sheet1!A1, adds a formula in Sheet2!B1 that points to Sheet1!A1, deletes the first column of Sheet1 using DeleteColumn(0) (default false), and shows that the formula in Sheet2 remains "=Sheet1!A1". The workbook is then saved.
-// Keywords: Aspose.Cells DeleteColumn | C# keep formula after column removal | cross sheet reference unchanged | default false DeleteColumn behavior | Aspose.Cells .NET example | preserve external formula references | column deletion without updating formulas
-// Common Searches: Aspose.Cells delete column without changing formulas | Does DeleteColumn affect formulas in other worksheets | C# keep Sheet2 formula after removing column in Sheet1 | How to prevent formula updates when deleting a column in Aspose.Cells | Aspose.Cells default DeleteColumn behavior
-// Developer Intent: Confirm that a formula on a different worksheet is not altered when the referenced column is removed from the source sheet.
-// Use Cases: Validate data‑migration scripts that modify sheet structure but must retain original references. | Run automated checks before publishing a workbook to ensure reporting formulas stay intact. | Demonstrate how to delete columns while preserving formula integrity for financial models.
-// AI Prompts: Write C# code with Aspose.Cells that deletes column A in Sheet1 but leaves formulas in other sheets unchanged. | Create a unit test in C# asserting that Sheet2!B1 still equals "=Sheet1!A1" after calling DeleteColumn on Sheet1. | Explain the impact of the DeleteColumn overload with the boolean flag on formula updates in Aspose.Cells.
+// Title: Aspose.Cells .NET – Verify formulas stay unchanged after default column deletion
+// Description: Demonstrates how a SUM formula on a Summary sheet that references Data!A1:A3 remains identical after deleting column A from the Data sheet with the default DeleteColumn method, confirming that cross‑sheet references are not auto‑updated.
+// Keywords: Aspose.Cells verify formula after column delete | default DeleteColumn behavior .NET | cross sheet formula unchanged | preserve formulas Aspose.Cells | column deletion without reference update
+// Common Searches: Aspose.Cells keep formula after deleting column | Does DeleteColumn update references in other worksheets | Check formula integrity after column removal Aspose.Cells | Aspose.Cells default DeleteColumn does not adjust formulas
+// Developer Intent: Confirm that a formula in another worksheet is not modified when a column is removed using the default DeleteColumn method.
+// Use Cases: Automated validation that summary calculations remain accurate after source columns are programmatically removed. | Logging formula values before and after column deletion to detect unintended changes. | Ensuring data‑cleanup scripts do not break cross‑sheet references in financial models.
+// AI Prompts: Write C# code with Aspose.Cells that deletes a column but leaves formulas in other sheets unchanged and logs the before/after formulas. | Show how to compare a cell's formula before and after calling DeleteColumn and output a boolean indicating if it changed. | Explain how to enable reference updating in Aspose.Cells when deleting columns, instead of preserving the original formulas.
 
 using System;
 using Aspose.Cells;
 
-namespace VerifyFormulaAfterColumnDeletion
+// Demonstrates how a SUM formula on a Summary sheet that references Data!A1:A3 remains identical after deleting column A from the Data sheet with the default DeleteColumn method, confirming that cross‑sheet references are not auto‑updated.
+class Program
 {
-    // This C# example creates a workbook with two sheets, writes a value to Sheet1!A1, adds a formula in Sheet2!B1 that points to Sheet1!A1, deletes the first column of Sheet1 using DeleteColumn(0) (default false), and shows that the formula in Sheet2 remains "=Sheet1!A1". The workbook is then saved.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook with two worksheets
-            Workbook workbook = new Workbook();
-            Worksheet sheet1 = workbook.Worksheets[0];               // First sheet
-            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");    // Second sheet
+        // Create a new workbook with two worksheets
+        Workbook workbook = new Workbook();
+        Worksheet dataSheet = workbook.Worksheets[0];
+        dataSheet.Name = "Data";
+        Worksheet summarySheet = workbook.Worksheets.Add("Summary");
 
-            // Populate Sheet1 with a value in cell A1
-            sheet1.Cells["A1"].PutValue(100);
+        // Populate column A in the Data sheet
+        dataSheet.Cells["A1"].PutValue(10);
+        dataSheet.Cells["A2"].PutValue(20);
+        dataSheet.Cells["A3"].PutValue(30);
 
-            // In Sheet2, set a formula that references Sheet1!A1
-            // This formula should remain unchanged after deleting a column in Sheet1
-            sheet2.Cells["B1"].Formula = "=Sheet1!A1";
+        // Set a formula in the Summary sheet that references the Data sheet
+        summarySheet.Cells["B1"].Formula = "=SUM(Data!A1:A3)";
 
-            // Display the original formula in Sheet2
-            Console.WriteLine("Original formula in Sheet2!B1: " + sheet2.Cells["B1"].Formula);
+        // Store the formula before column deletion
+        string formulaBefore = summarySheet.Cells["B1"].Formula;
+        Console.WriteLine("Formula before deletion: " + formulaBefore);
 
-            // Delete the first column (A) in Sheet1 without updating references
-            // Using the overload without the bool parameter (default is false)
-            sheet1.Cells.DeleteColumn(0);
+        // Delete column A (index 0) from the Data sheet using the default DeleteColumn method
+        // This method does NOT update references in other worksheets
+        dataSheet.Cells.DeleteColumn(0);
 
-            // After deletion, the formula in Sheet2 should still be "=Sheet1!A1"
-            Console.WriteLine("Formula in Sheet2!B1 after deleting column in Sheet1: " + sheet2.Cells["B1"].Formula);
+        // Retrieve the formula after deletion
+        string formulaAfter = summarySheet.Cells["B1"].Formula;
+        Console.WriteLine("Formula after deletion: " + formulaAfter);
 
-            // Save the workbook (optional, just to demonstrate lifecycle usage)
-            workbook.Save("VerifyFormulaAfterColumnDeletion.xlsx");
-        }
+        // Verify that the formula remained unchanged
+        bool unchanged = formulaBefore == formulaAfter;
+        Console.WriteLine("Formula unchanged: " + unchanged);
+
+        // Save the workbook
+        workbook.Save("FormulaCheck.xlsx");
     }
 }

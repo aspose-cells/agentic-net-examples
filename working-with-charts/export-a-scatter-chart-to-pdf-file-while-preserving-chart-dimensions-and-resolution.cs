@@ -1,35 +1,22 @@
-// Title: Export Scatter Chart to PDF with Exact Size and Resolution using Aspose.Cells for .NET
-// Description: Creates a workbook, fills X‑Y data, builds a scatter chart, reads its pixel size, converts to inches via system DPI, and uses Chart.ToPdf to generate a PDF that matches the chart’s original dimensions and centers it on the page.
-// Keywords: Aspose.Cells scatter chart PDF export | C# chart to PDF preserving size | convert chart pixels to inches Aspose | Chart.ToPdf exact dimensions | PDF DPI handling Aspose.Cells | .NET export Excel chart as PDF | center chart on PDF page
-// Common Searches: How to export a scatter chart to PDF with original size in C# | Aspose.Cells preserve chart resolution when saving to PDF | Convert Excel scatter chart to PDF maintaining dimensions | Chart.ToPdf page size based on pixel dimensions | Center Excel chart on PDF page using Aspose.Cells
-// Developer Intent: Generate a PDF file from a scatter chart in an Excel workbook while keeping the chart’s exact pixel dimensions, resolution, and alignment.
-// Use Cases: Produce printable reports where the scatter chart must retain its on‑screen size. | Automate batch conversion of multiple Excel scatter charts to PDFs with consistent layout. | Create PDFs for dashboards that require precise chart placement and DPI fidelity.
-// AI Prompts: Write C# code with Aspose.Cells to export a scatter chart to PDF, preserving its pixel dimensions and DPI. | Explain how to calculate PDF page width and height from a chart’s pixel size using the system DPI in Aspose.Cells. | Show how to center a chart on a PDF page when exporting with Chart.ToPdf in .NET.
+// Title: Export Scatter Chart to PDF with Original Size using Aspose.Cells for .NET
+// Description: Creates a workbook, adds X/Y data, builds a scatter chart, reads its pixel dimensions, converts them to inches based on system DPI, and saves the chart to a PDF while preserving width, height, and centering on the page.
+// Keywords: Aspose.Cells export scatter chart PDF | scatter chart to PDF .NET | preserve chart dimensions Aspose | chart GetActualSize pixels | convert pixels to inches DPI | Chart.ToPdf method | C# Aspose.Cells PDF export | center chart on PDF page
+// Common Searches: export scatter chart to PDF Aspose.Cells | how to keep original chart size when saving as PDF | Aspose.Cells GetActualSize example | convert chart size from pixels to inches | center chart on PDF using Aspose.Cells
+// Developer Intent: Generate a PDF file that contains a scatter chart rendered at the same size and resolution as it appears in Excel.
+// Use Cases: Produce scientific reports where chart dimensions must match the on‑screen layout. | Create printable PDFs that replicate the exact worksheet design for regulatory submissions. | Automate batch conversion of multiple Excel scatter charts to PDFs while maintaining DPI consistency.
+// AI Prompts: Write C# code with Aspose.Cells to export a scatter chart to PDF, preserving its original pixel dimensions and centering it. | Show how to retrieve a chart's actual size in pixels and convert the values to inches using the system DPI for PDF export. | Explain how to adjust DPI or scaling factors when exporting charts to PDF with Aspose.Cells.
 
 using System;
-using System.IO;
+using System.Drawing;                     // For Size
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsScatterChartPdfExport
+// Creates a workbook, adds X/Y data, builds a scatter chart, reads its pixel dimensions, converts them to inches based on system DPI, and saves the chart to a PDF while preserving width, height, and centering on the page.
+class ExportScatterChartToPdf
 {
-    // Creates a workbook, fills X‑Y data, builds a scatter chart, reads its pixel size, converts to inches via system DPI, and uses Chart.ToPdf to generate a PDF that matches the chart’s original dimensions and centers it on the page.
-    public class ExportScatterChart
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -44,62 +31,41 @@ namespace AsposeCellsScatterChartPdfExport
             sheet.Cells["B3"].PutValue(4);
             sheet.Cells["A4"].PutValue(3);
             sheet.Cells["B4"].PutValue(6);
-            sheet.Cells["A5"].PutValue(4);
-            sheet.Cells["B5"].PutValue(8);
-            sheet.Cells["A6"].PutValue(5);
-            sheet.Cells["B6"].PutValue(10);
 
-            // Add a scatter chart (X values are categories, Y values are values)
-            int chartIndex = sheet.Charts.Add(ChartType.Scatter, 5, 0, 20, 12);
-            Chart chart = sheet.Charts[chartIndex];
+            // Add a scatter chart to the worksheet.
+            // Parameters: chart type, upper‑left row, upper‑left column, lower‑right row, lower‑right column
+            int chartIdx = sheet.Charts.Add(ChartType.Scatter, 5, 0, 20, 8);
+            Chart chart = sheet.Charts[chartIdx];
 
-            // Set the data range for the series (Y values) and the X values (category data)
-            chart.NSeries.Add("B2:B6", true);
-            chart.NSeries[0].XValues = "A2:A6";
+            // Set the data source for the chart.
+            // Y values (values) are taken from column B, X values (categories) from column A.
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-            // Optional: set chart title
-            chart.Title.Text = "Sample Scatter Chart";
+            // Retrieve the actual size of the chart in pixels (returns int[2] => width, height).
+            int[] actualSizeArray = chart.GetActualSize();
+            Size actualSize = new Size(actualSizeArray[0], actualSizeArray[1]);
 
-            // Ensure the chart uses full page size when exported
-            chart.PrintSize = PrintSizeType.Full;
+            // Convert pixel dimensions to inches using the current DPI setting.
+            double dpi = CellsHelper.DPI; // DPI of the machine (default 96)
+            float widthInches = (float)(actualSize.Width / dpi);
+            float heightInches = (float)(actualSize.Height / dpi);
 
-            // Get the actual size of the chart in pixels (returns int[] {width, height})
-            int[] actualSize = chart.GetActualSize();
-            int widthPixels = actualSize[0];
-            int heightPixels = actualSize[1];
+            // Export the chart to PDF, preserving its dimensions.
+            // The chart will be centered on the page.
+            chart.ToPdf(
+                "ScatterChart.pdf",
+                widthInches,
+                heightInches,
+                PageLayoutAlignmentType.Center,
+                PageLayoutAlignmentType.Center
+            );
 
-            // Get the system DPI (dots per inch)
-            double dpi = CellsHelper.DPI; // default is 96
-
-            // Convert pixel dimensions to inches for PDF page size
-            float pageWidthInches = (float)(widthPixels / dpi);
-            float pageHeightInches = (float)(heightPixels / dpi);
-
-            // Define output file path
-            string outputPath = "ScatterChart.pdf";
-
-            // Ensure the directory for the output file exists (handle null when only file name is provided)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            try
-            {
-                // Export the chart to a PDF file, preserving its dimensions and centering it on the page
-                chart.ToPdf(outputPath,
-                            pageWidthInches,
-                            pageHeightInches,
-                            PageLayoutAlignmentType.Center,
-                            PageLayoutAlignmentType.Center);
-
-                Console.WriteLine("Scatter chart exported to PDF with preserved dimensions.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to export chart to PDF: {ex.Message}");
-            }
+            Console.WriteLine("Scatter chart exported to ScatterChart.pdf with original dimensions.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

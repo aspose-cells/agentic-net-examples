@@ -1,77 +1,115 @@
-// Title: Find the worksheet with a Progress Bar chart and verify required columns using Aspose.Cells for .NET
-// Description: Loads an XLSX file with Aspose.Cells, scans all worksheets to locate the first Bar chart (used as a Progress Bar), identifies the hosting worksheet, checks that specified columns (e.g., A and B) contain at least one non‑empty cell within the used range, reports the results, and optionally saves the workbook.
-// Keywords: Aspose.Cells C# chart detection | locate worksheet with chart Aspose | progress bar chart validation .NET | verify Excel column data presence | check chart source columns Aspose.Cells | load workbook with data validation | iterate worksheets and charts C# | Excel bar chart automation | batch workbook validation Aspose | chart data integrity check
-// Common Searches: Aspose.Cells find worksheet that contains a specific chart | C# code to locate a progress bar chart in Excel | validate that columns A and B have data in the chart sheet using Aspose | how to detect bar chart type with Aspose.Cells .NET | check for empty source columns before saving workbook Aspose
-// Developer Intent: Identify the worksheet that hosts a progress‑bar (Bar) chart and confirm that its required data columns are populated.
-// Use Cases: Automatically locate the sheet that contains a progress bar chart to apply further formatting or calculations. | Ensure source data columns are not empty before generating reports that embed the chart. | Integrate chart‑data validation into batch processing pipelines for multiple Excel workbooks.
-// AI Prompts: Write C# code with Aspose.Cells that finds a bar chart named 'Progress' and verifies that columns A‑C contain numeric values. | Provide an Aspose.Cells snippet that logs missing data in chart source columns and throws an exception if any required column is empty. | Show how to iterate all worksheets and charts to collect locations of progress bar charts and validate their data ranges in a .NET application.
+// Title: C# – Find the Progress Bar chart worksheet and verify required columns using Aspose.Cells
+// Description: Load an XLSX workbook with Aspose.Cells, search each sheet for a Bar or Column chart whose title contains “Progress Bar”, retrieve the chart's parent worksheet, and confirm that the first row includes the mandatory “Task” and “Progress” headers. Missing headers are logged and the workbook is saved.
+// Keywords: Aspose.Cells C# chart search | find chart by title Aspose | retrieve worksheet from chart Aspose.Cells | validate Excel headers C# | progress bar chart validation | Excel column header check | LoadOptions Aspose.Cells | C# Excel automation | Aspose.Cells example GitHub | code snippet Aspose.Cells
+// Common Searches: Aspose.Cells locate chart by title C# | How to get worksheet of a specific chart in Excel using Aspose.Cells | Check for required column headers in Excel with Aspose.Cells | Validate progress bar chart data before saving with Aspose.Cells | C# code to find Progress Bar chart and verify Task and Progress columns
+// Developer Intent: Identify the worksheet that contains a Progress Bar chart and ensure it has the required Task and Progress columns.
+// Use Cases: Automated quality‑check of reporting templates that must include a progress bar visual and specific data columns. | Pre‑publish validation of Excel workbooks to guarantee chart data integrity and header presence. | Batch processing of multiple files to confirm required columns before downstream analytics.
+// AI Prompts: Generate C# code with Aspose.Cells that finds a chart whose title contains 'Progress Bar' and returns the worksheet name. | Write a method that scans the first row of a worksheet for 'Task' and 'Progress' headers and logs any missing columns. | Explain how LoadOptions.CheckDataValid influences workbook loading in Aspose.Cells. | Adapt the example to work with .xls files and a Pie chart type.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads an XLSX file with Aspose.Cells, scans all worksheets to locate the first Bar chart (used as a Progress Bar), identifies the hosting worksheet, checks that specified columns (e.g., A and B) contain at least one non‑empty cell within the used range, reports the results, and optionally saves the workbook.
-class ProgressBarChartValidator
+namespace ProgressBarChartValidation
 {
-    static void Main()
+    // Load an XLSX workbook with Aspose.Cells, search each sheet for a Bar or Column chart whose title contains “Progress Bar”, retrieve the chart's parent worksheet, and confirm that the first row includes the mandatory “Task” and “Progress” headers. Missing headers are logged and the workbook is saved.
+    public class Program
     {
-        // Load the workbook (replace "input.xlsx" with your file path)
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-        loadOptions.CheckDataValid = true; // optional validation while loading
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
-
-        // Locate the Progress Bar chart and its containing worksheet
-        Chart progressChart = null;
-        Worksheet chartWorksheet = null;
-
-        foreach (Worksheet ws in workbook.Worksheets)
+        public static void Main(string[] args)
         {
-            foreach (Chart ch in ws.Charts)
+            try
             {
-                // Assuming a Progress Bar chart is a Bar chart; adjust the condition as needed
-                if (ch.Type == ChartType.Bar)
-                {
-                    progressChart = ch;
-                    chartWorksheet = ws;
-                    break;
-                }
+                Validator.Run();
             }
-            if (progressChart != null) break;
-        }
-
-        if (progressChart == null)
-        {
-            Console.WriteLine("Progress Bar chart not found in the workbook.");
-            return;
-        }
-
-        Console.WriteLine($"Progress Bar chart found in worksheet: {chartWorksheet.Name}");
-
-        // Validate that required data columns exist (e.g., columns A and B must contain data)
-        int[] requiredColumns = { 0, 1 }; // 0 = A, 1 = B
-
-        // Determine the used row range of the worksheet
-        int startRow = chartWorksheet.Cells.MinDataRow;
-        int endRow   = chartWorksheet.Cells.MaxDataRow;
-
-        foreach (int colIndex in requiredColumns)
-        {
-            bool hasData = false;
-
-            for (int row = startRow; row <= endRow; row++)
+            catch (Exception ex)
             {
-                Cell cell = chartWorksheet.Cells[row, colIndex];
-                if (cell != null && cell.Type != CellValueType.IsNull && !string.IsNullOrEmpty(cell.StringValue))
-                {
-                    hasData = true;
-                    break;
-                }
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
+            }
+        }
+    }
+
+    public class Validator
+    {
+        public static void Run()
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            Console.WriteLine($"Column {(char)('A' + colIndex)} contains data: {hasData}");
-        }
+            // Load the workbook with data validation checking enabled
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                CheckDataValid = true
+            };
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-        // Save the workbook after validation (optional)
-        workbook.Save("output.xlsx");
+            Chart progressBarChart = null;
+            Worksheet chartWorksheet = null;
+
+            // Locate the progress bar chart
+            foreach (Worksheet ws in workbook.Worksheets)
+            {
+                foreach (Chart chart in ws.Charts)
+                {
+                    if (chart.Type == ChartType.Bar || chart.Type == ChartType.Column)
+                    {
+                        if (chart.Title != null && !string.IsNullOrEmpty(chart.Title.Text) &&
+                            chart.Title.Text.Contains("Progress Bar", StringComparison.OrdinalIgnoreCase))
+                        {
+                            progressBarChart = chart;
+                            chartWorksheet = chart.Worksheet;
+                            break;
+                        }
+                    }
+                }
+                if (progressBarChart != null) break;
+            }
+
+            if (progressBarChart == null)
+            {
+                Console.WriteLine("Progress Bar chart not found in the workbook.");
+                return;
+            }
+
+            Console.WriteLine($"Progress Bar chart is located in worksheet: {chartWorksheet.Name}");
+
+            // Verify required column headers
+            string[] requiredHeaders = { "Task", "Progress" };
+            Cells cells = chartWorksheet.Cells;
+            int lastColumn = cells.MaxColumn;
+
+            foreach (string header in requiredHeaders)
+            {
+                bool found = false;
+                for (int col = 0; col <= lastColumn; col++)
+                {
+                    if (string.Equals(cells[0, col].StringValue, header, StringComparison.OrdinalIgnoreCase))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    Console.WriteLine($"Required column \"{header}\" is missing in worksheet \"{chartWorksheet.Name}\".");
+                }
+                else
+                {
+                    Console.WriteLine($"Column \"{header}\" exists.");
+                }
+            }
+
+            // Save the workbook (if any modifications were made)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
     }
 }

@@ -1,36 +1,48 @@
-// Title: C# – Move a Worksheet to the First Tab and Freeze Column A with Aspose.Cells
-// Description: Shows how to reorder worksheets by moving a sheet to index 0 and then lock the first column (column A) using FreezePanes in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells move worksheet C# | freeze column A Aspose.Cells | reorder worksheets .NET | FreezePanes C# example | move sheet to first position Aspose | lock first column Excel .NET | Aspose.Cells worksheet ordering | freeze panes only column Aspose
-// Common Searches: move worksheet to first tab Aspose.Cells C# | freeze first column in a specific sheet Aspose.Cells | Aspose.Cells reorder sheets and freeze panes | how to use FreezePanes for column A in C# | Aspose.Cells move sheet to index 0
-// Developer Intent: Reorder a worksheet to the leftmost tab and keep column A fixed while scrolling.
-// Use Cases: Place a summary or index sheet at the beginning of a workbook and keep identifiers visible during horizontal scrolling. | Create a dashboard where the primary data sheet is moved to the front and the key ID column stays locked. | Organize multi‑sheet reports by moving the most important sheet to the first position and freezing its first column for quick reference.
-// AI Prompts: Generate C# code that moves a worksheet to index 0 and freezes column A using Aspose.Cells. | Explain the parameters of FreezePanes when only the first column should be locked after moving a sheet. | Show an Aspose.Cells example that reorders worksheets and applies FreezePanes to column A in the moved sheet.
+// Title: Reorder a Worksheet and Freeze Column A using Aspose.Cells for .NET (C#)
+// Description: Create a workbook, add three sheets, move "Sheet3" to the second position with MoveTo, freeze column A on that sheet via FreezePanes, and save the file as MovedAndFrozen.xlsx.
+// Keywords: Aspose.Cells | C# | MoveTo | FreezePanes | reorder worksheet | freeze first column | Excel automation | worksheet order | freeze column A
+// Common Searches: Aspose.Cells move worksheet to specific index C# | Freeze column A after moving sheet Aspose.Cells | How to reorder worksheets and apply freeze panes in .NET | C# example MoveTo and FreezePanes Aspose.Cells | Change sheet order and lock first column Aspose.Cells
+// Developer Intent: Reorder a worksheet within a workbook and apply a freeze pane so column A remains visible while scrolling.
+// Use Cases: Place a summary sheet at the start of a report, then keep identifier column fixed on the data sheet for quick navigation. | Generate a financial workbook where the detailed data sheet is positioned deliberately and account IDs in column A stay static. | Programmatically build an Excel file that requires a specific sheet sequence and a frozen first column before distribution.
+// AI Prompts: Show a C# snippet that moves a worksheet to index 1 and freezes column A using Aspose.Cells. | Provide an Aspose.Cells example that reorders sheets and applies FreezePanes to the first column. | Explain the FreezePanes parameters needed to lock only column A after moving a sheet in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to reorder worksheets by moving a sheet to index 0 and then lock the first column (column A) using FreezePanes in Aspose.Cells for .NET.
+// Create a workbook, add three sheets, move "Sheet3" to the second position with MoveTo, freeze column A on that sheet via FreezePanes, and save the file as MovedAndFrozen.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook (contains a default sheet named "Sheet1")
+            Workbook workbook = new Workbook();
 
-        // Add sample worksheets
-        workbook.Worksheets.Add("First");
-        workbook.Worksheets.Add("Second");
-        workbook.Worksheets.Add("Third");
+            // Remove the default sheet to avoid duplicate name errors
+            if (workbook.Worksheets.Count > 0)
+                workbook.Worksheets.RemoveAt(0);
 
-        // Move the worksheet named "Third" to the first position (index 0)
-        Worksheet sheetToMove = workbook.Worksheets["Third"];
-        sheetToMove.MoveTo(0);
+            // Add sample worksheets with unique names
+            workbook.Worksheets.Add("Sheet1");
+            workbook.Worksheets.Add("Sheet2");
+            workbook.Worksheets.Add("Sheet3");
 
-        // Freeze the first column (column A) in the moved worksheet
-        // Freeze at cell B1 with 0 frozen rows and 1 frozen column
-        sheetToMove.FreezePanes("B1", 0, 1);
+            // Move "Sheet3" to the second position (index 1)
+            Worksheet sheetToMove = workbook.Worksheets["Sheet3"];
+            sheetToMove.MoveTo(1);
 
-        // Save the workbook
-        workbook.Save("MovedAndFrozen.xlsx");
+            // Freeze the first column (A) on the moved sheet
+            // FreezePanes(rowIndex, columnIndex, freezedRows, freezedColumns)
+            // Setting columnIndex to 1 (B) freezes column A; no rows are frozen.
+            sheetToMove.FreezePanes(0, 1, 0, 1);
+
+            // Save the workbook
+            workbook.Save("MovedAndFrozen.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

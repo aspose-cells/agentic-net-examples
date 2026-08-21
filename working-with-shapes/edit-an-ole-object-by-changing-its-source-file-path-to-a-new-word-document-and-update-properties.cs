@@ -1,10 +1,10 @@
-// Title: Update an OLE object in Excel to link a new Word file and modify its properties – Aspose.Cells C# example
-// Description: Loads an Excel workbook, retrieves the first OLE object, changes its linked source to a new Word document with SetNativeSourceFullName and ObjectSourceFullName, then configures AutoUpdate, DisplayAsIcon, ProgID, Label, and IsLink before saving the workbook.
-// Keywords: Aspose.Cells | C# | OLE object | SetNativeSourceFullName | ObjectSourceFullName | link Word document | Excel OLE edit | display as icon | ProgID | AutoUpdate | IsLink
-// Common Searches: how to change OLE object source file in Excel using Aspose.Cells | Aspose.Cells C# set OLE object to display as icon | update linked Word document path for OLE object Aspose.Cells | disable auto‑update for OLE objects in Excel with Aspose | set ProgID for OLE object to Word.Document.12 Aspose.Cells
-// Developer Intent: Replace the source file of an existing OLE object with a new Word document and adjust its linking and display settings using Aspose.Cells for .NET.
-// Use Cases: Relink an OLE object after moving the original Word file to a different folder. | Show a linked Word document as an icon with a custom label inside an Excel sheet. | Prevent automatic refresh of a linked OLE object to keep the workbook stable.
-// AI Prompts: Generate C# code that iterates over all OLE objects in a worksheet and updates each linked Word document path using Aspose.Cells. | Explain how to set ProgID, enable DisplayAsIcon, and assign a custom label for an OLE object with Aspose.Cells for .NET.
+// Title: Replace linked OLE Word source and set display properties with Aspose.Cells C#
+// Description: Loads an Excel workbook, scans every worksheet for linked OLE objects, changes each object's source file to a new Word document, disables auto‑update, assigns the Word ProgID, shows the object as an icon, adds a custom label, and saves the updated file.
+// Keywords: Aspose.Cells OLE edit | C# change OLE source path | linked OLE Word document | set OLE ProgID | display OLE as icon | update OLE properties | Excel OLE automation
+// Common Searches: how to change OLE source file in Excel using Aspose.Cells | Aspose.Cells set ProgID for Word OLE object C# | display OLE object as icon with custom label Aspose | disable auto update for linked OLE objects Aspose.Cells
+// Developer Intent: Update the file path of linked OLE objects that embed Word documents and modify their visual and update settings in an Excel workbook.
+// Use Cases: Re‑link all embedded Word files in a template before sending to clients. | Prevent OLE objects from refreshing automatically when the workbook opens. | Present embedded documents as icons with meaningful labels for cleaner reports.
+// AI Prompts: Write C# code with Aspose.Cells that iterates through every worksheet, finds linked OLE objects, sets ObjectSourceFullName to a given Word file, disables AutoUpdate, sets ProgID to "Word.Document.12", enables DisplayAsIcon, and assigns a custom label. | Show an example that batch‑updates OLE objects in an Excel file to point to a new document path and changes their display properties using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
@@ -12,47 +12,40 @@ using Aspose.Cells.Drawing;
 
 namespace OleObjectEditDemo
 {
-    // Loads an Excel workbook, retrieves the first OLE object, changes its linked source to a new Word document with SetNativeSourceFullName and ObjectSourceFullName, then configures AutoUpdate, DisplayAsIcon, ProgID, Label, and IsLink before saving the workbook.
+    // Loads an Excel workbook, scans every worksheet for linked OLE objects, changes each object's source file to a new Word document, disables auto‑update, assigns the Word ProgID, shows the object as an icon, adds a custom label, and saves the updated file.
     class Program
     {
         static void Main()
         {
-            // Load an existing workbook that contains an OLE object
-            Workbook workbook = new Workbook("input.xlsx");
+            // Load an existing workbook that contains OLE objects
+            Workbook workbook = new Workbook("InputWorkbook.xlsx");
 
-            // Access the first worksheet (adjust if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Define the new Word document path that will replace the current OLE source
+            string newWordPath = @"C:\Documents\NewDocument.docx";
 
-            // Ensure there is at least one OLE object in the worksheet
-            if (worksheet.OleObjects.Count == 0)
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Console.WriteLine("No OLE objects found in the worksheet.");
-                return;
+                // Iterate through all OLE objects in the current worksheet
+                foreach (OleObject ole in sheet.OleObjects)
+                {
+                    // Update only if the OLE object is linked to a file
+                    if (ole.IsLink)
+                    {
+                        // Change the source file path to the new Word document
+                        ole.ObjectSourceFullName = newWordPath;
+
+                        // Update additional properties as required
+                        ole.AutoUpdate = false;                     // Disable automatic updates
+                        ole.ProgID = "Word.Document.12";            // Set ProgID for Word documents
+                        ole.DisplayAsIcon = true;                   // Show as an icon
+                        ole.Label = "New Word Document";            // Icon label
+                    }
+                }
             }
 
-            // Get the first OLE object
-            OleObject oleObject = worksheet.OleObjects[0];
-
-            // New Word document path to link the OLE object to
-            string newWordPath = @"C:\Docs\NewDocument.docx";
-
-            // Update the native source full name (works for linked objects)
-            oleObject.SetNativeSourceFullName(newWordPath);
-
-            // Also set the ObjectSourceFullName property for completeness
-            oleObject.ObjectSourceFullName = newWordPath;
-
-            // Update additional properties as required
-            oleObject.AutoUpdate = false;                 // Do not auto‑update when source changes
-            oleObject.DisplayAsIcon = true;               // Show the object as an icon
-            oleObject.ProgID = "Word.Document.12";        // ProgID for Word documents
-            oleObject.Label = "New Word Document";        // Icon label
-            oleObject.IsLink = true;                      // Ensure the object remains linked to the file
-
             // Save the modified workbook
-            workbook.Save("output.xlsx");
-
-            Console.WriteLine("OLE object updated and workbook saved successfully.");
+            workbook.Save("OutputWorkbook.xlsx");
         }
     }
 }

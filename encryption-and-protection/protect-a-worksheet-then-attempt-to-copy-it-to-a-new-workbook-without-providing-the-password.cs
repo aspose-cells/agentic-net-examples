@@ -1,72 +1,49 @@
-// Title: Aspose.Cells for .NET – Attempt to Copy a Password‑Protected Worksheet Without Supplying the Password (C#)
-// Description: This C# example creates a workbook, protects its first worksheet with a password using Worksheet.Protect, then tries to copy that sheet to a new workbook with Worksheets.AddCopy while omitting the password. The code catches the resulting exception, logs the error, and saves both workbooks for inspection.
-// Keywords: Aspose.Cells | C# | worksheet protection | Protect method | AddCopy | copy protected sheet | password‑protected worksheet | exception handling | copy without password | .NET example
-// Common Searches: Aspose.Cells copy protected worksheet without password | Worksheets.AddCopy exception when sheet is protected | How to copy a password‑protected sheet using Aspose.Cells .NET | Why does AddCopy fail on a protected worksheet | C# Aspose.Cells worksheet protection copy error
-// Developer Intent: Show that copying a password‑protected worksheet without providing the password triggers an exception, demonstrating the need to supply the password or remove protection first.
-// Use Cases: Verify that Worksheets.AddCopy throws an error when the source sheet is protected and no password is given. | Implement robust error handling and logging for failed copy operations on protected worksheets. | Save the source and destination workbooks to examine protection status after an attempted copy.
-// AI Prompts: Generate C# code with Aspose.Cells that copies a protected worksheet to another workbook by providing the required password. | Explain why Worksheets.AddCopy cannot duplicate a password‑protected sheet without the password and outline the correct steps to achieve the copy. | Create a C# unit test that asserts an exception is thrown when AddCopy is called on a protected worksheet without supplying a password.
+// Title: Aspose.Cells .NET – Copy a password‑protected worksheet without supplying the password
+// Description: Demonstrates creating a workbook, protecting its first worksheet with a password, and then trying to copy that sheet to a new workbook without the password. The example catches the exception thrown by Aspose.Cells when protection blocks the copy operation.
+// Keywords: Aspose.Cells copy protected worksheet | worksheet protection exception .NET | Copy without password Aspose.Cells | Worksheet.IsProtected check | Aspose.Cells ProtectionType.All
+// Common Searches: copy password protected worksheet Aspose.Cells .NET | exception when copying protected sheet without password | how to detect protected worksheet before copy | Aspose.Cells copy fails due to protection | bypass worksheet protection during copy Aspose.Cells
+// Developer Intent: Show that copying a password‑protected worksheet without the correct password triggers an exception in Aspose.Cells.
+// Use Cases: Validate Worksheet.IsProtected before invoking Copy to avoid runtime errors. | Log the specific exception message when a protected sheet cannot be copied. | Unprotect the worksheet with the correct password or supply the password to enable a successful copy.
+// AI Prompts: Provide Aspose.Cells .NET code that copies a protected worksheet after supplying the password. | Explain how to programmatically check Worksheet.IsProtected and conditionally copy or log a warning. | What exception type does Aspose.Cells throw when Copy is called on a password‑protected worksheet without a password?
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsWorksheetProtectionDemo
+namespace AsposeCellsWorksheetCopyDemo
 {
-    // This C# example creates a workbook, protects its first worksheet with a password using Worksheet.Protect, then tries to copy that sheet to a new workbook with Worksheets.AddCopy while omitting the password. The code catches the resulting exception, logs the error, and saves both workbooks for inspection.
+    // Demonstrates creating a workbook, protecting its first worksheet with a password, and then trying to copy that sheet to a new workbook without the password. The example catches the exception thrown by Aspose.Cells when protection blocks the copy operation.
     class Program
     {
         static void Main()
         {
+            // Create the source workbook and protect its first worksheet with a password
+            Workbook sourceWorkbook = new Workbook();
+            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+            sourceSheet.Cells["A1"].PutValue("Sensitive Data");
+            sourceSheet.Protect(ProtectionType.All, "SecretPwd", null);
+            Console.WriteLine("Source worksheet protected: " + sourceSheet.IsProtected);
+
+            // Save the source workbook (optional, just for inspection)
+            sourceWorkbook.Save("SourceProtected.xlsx");
+
+            // Create a new destination workbook
+            Workbook destinationWorkbook = new Workbook();
+            Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
+
             try
             {
-                // Create source workbook and protect its first worksheet with a password
-                Workbook sourceWorkbook = new Workbook();
-                Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-                sourceSheet.Protect(ProtectionType.All, "SecretPwd", null);
-                Console.WriteLine($"Source worksheet protected: {sourceSheet.IsProtected}");
-
-                // Attempt to copy the protected worksheet to a new workbook without providing the password
-                Workbook destWorkbook = new Workbook();
-                try
-                {
-                    // AddCopy expects the worksheet name, not the Worksheet object
-                    destWorkbook.Worksheets.AddCopy(sourceSheet.Name);
-                    Console.WriteLine("Worksheet copied successfully (unexpected).");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to copy protected worksheet without password: {ex.Message}");
-                }
-
-                // Save the workbooks for inspection (optional)
-                SaveWorkbook(sourceWorkbook, "ProtectedSource.xlsx");
-                SaveWorkbook(destWorkbook, "Destination.xlsx");
+                // Attempt to copy the protected worksheet without providing the password.
+                // This will throw an exception because the source worksheet is password‑protected.
+                sourceSheet.Copy(destinationSheet);
+                Console.WriteLine("Copy succeeded unexpectedly.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine("Copy failed as expected: " + ex.Message);
             }
-        }
 
-        // Helper method to save a workbook safely
-        private static void SaveWorkbook(Workbook workbook, string filePath)
-        {
-            try
-            {
-                // Ensure the directory exists
-                string directory = Path.GetDirectoryName(filePath);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                workbook.Save(filePath);
-                Console.WriteLine($"Workbook saved: {filePath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving workbook '{filePath}': {ex.Message}");
-            }
+            // Save the destination workbook (will contain an empty sheet if copy failed)
+            destinationWorkbook.Save("Destination.xlsx");
         }
     }
 }

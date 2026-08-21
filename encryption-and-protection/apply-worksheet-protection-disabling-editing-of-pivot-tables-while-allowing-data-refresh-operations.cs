@@ -1,66 +1,50 @@
-// Title: C# – Protect an Excel worksheet, disable pivot table editing while allowing refresh with Aspose.Cells
-// Description: Demonstrates how to create a workbook, add a pivot table, set worksheet protection to block pivot table modifications (AllowUsingPivotTable = false), keep refresh operations enabled, and save the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells worksheet protection C# | disable pivot table editing Aspose | allow pivot refresh protected sheet | ProtectionType.All Aspose.Cells | C# Excel pivot table protection example
-// Common Searches: Aspose.Cells protect sheet but allow pivot refresh | C# disable pivot table editing on protected worksheet | How to set AllowUsingPivotTable false in Aspose.Cells | Refresh pivot tables after worksheet protection Aspose | Excel worksheet protection with pivot tables C#
-// Developer Intent: Protect a worksheet, prevent users from altering pivot tables, yet still permit pivot table refresh operations.
-// Use Cases: Distribute a reporting template where users can update data via refresh but cannot change the pivot layout. | Secure shared workbooks in a corporate environment while keeping automated data refresh functional. | Create dashboards that lock pivot configurations but allow real‑time data updates.
-// AI Prompts: Show C# code to protect an Excel sheet with Aspose.Cells, disable pivot table editing, and still allow pivot refresh. | Explain the impact of setting AllowUsingPivotTable = false together with ProtectionType.All in Aspose.Cells. | Generate a step‑by‑step guide for protecting a worksheet while keeping pivot table refresh enabled using Aspose.Cells for .NET.
+// Title: C# – Protect Worksheet to Block Pivot Table Editing While Allowing Refresh with Aspose.Cells
+// Description: Shows how to build a workbook, insert a pivot table, and apply worksheet protection that disables pivot table editing (AllowUsingPivotTable = false) yet still permits RefreshPivotTables. The sheet is secured with ProtectionType.All (no password) and saved as an Excel file.
+// Keywords: Aspose.Cells worksheet protection C# | disable pivot table editing | AllowUsingPivotTable false | refresh pivot on protected sheet | Aspose.Cells .NET example | Excel pivot lock without password | global Excel security | US developers Aspose.Cells
+// Common Searches: Aspose.Cells protect worksheet but keep pivot refreshable | C# disable pivot table editing Aspose.Cells | AllowUsingPivotTable property example | RefreshPivotTables on protected sheet | How to lock pivot layout in Excel using Aspose.Cells
+// Developer Intent: Secure a worksheet so users cannot modify pivot tables, yet they can still refresh the pivot data programmatically.
+// Use Cases: Distribute a financial report where the pivot layout is locked but data can be refreshed by end‑users. | Create a dashboard template that prevents accidental pivot changes while allowing automated nightly refreshes. | Provide external partners with a protected Excel file that only permits pivot refresh, not structural edits.
+// AI Prompts: Generate C# code using Aspose.Cells that protects a worksheet, disables pivot table editing, and still allows RefreshPivotTables. | Explain the effect of setting Protection.AllowUsingPivotTable = false together with ProtectionType.All in Aspose.Cells. | Show how to protect an Excel sheet without a password while keeping pivot tables refreshable in Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// Shows how to build a workbook, insert a pivot table, and apply worksheet protection that disables pivot table editing (AllowUsingPivotTable = false) yet still permits RefreshPivotTables. The sheet is secured with ProtectionType.All (no password) and saved as an Excel file.
+class Program
 {
-    // Demonstrates how to create a workbook, add a pivot table, set worksheet protection to block pivot table modifications (AllowUsingPivotTable = false), keep refresh operations enabled, and save the file using Aspose.Cells for .NET.
-    public class ProtectWorksheetDisablePivotEditingDemo
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Populate sample data for the pivot table
+        worksheet.Cells["A1"].PutValue("Category");
+        worksheet.Cells["A2"].PutValue("Fruit");
+        worksheet.Cells["A3"].PutValue("Vegetable");
+        worksheet.Cells["B1"].PutValue("Sales");
+        worksheet.Cells["B2"].PutValue(1200);
+        worksheet.Cells["B3"].PutValue(800);
 
-            // Populate sample data for the pivot table
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Fruit");
-            worksheet.Cells["A3"].PutValue("Vegetable");
-            worksheet.Cells["B1"].PutValue("Quantity");
-            worksheet.Cells["B2"].PutValue(120);
-            worksheet.Cells["B3"].PutValue(80);
+        // Add a pivot table based on the sample data
+        int pivotIndex = worksheet.PivotTables.Add("A1:B3", "D5", "SalesPivot");
+        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
+        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales as data field
 
-            // Add a pivot table based on the sample data
-            int pivotIndex = worksheet.PivotTables.Add("A1:B3", "D5", "SamplePivot");
-            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Quantity as data field
+        // Configure worksheet protection:
+        // - Disallow manipulation of pivot tables (editing, moving, etc.)
+        // - Allow all other operations, including data refresh
+        Protection protection = worksheet.Protection;
+        protection.AllowUsingPivotTable = false; // Disable editing of pivot tables
+        // Protect the worksheet (no password required for this example)
+        worksheet.Protect(ProtectionType.All);
 
-            // Access the worksheet protection settings
-            Protection protection = worksheet.Protection;
+        // Refresh pivot tables – this operation is still permitted despite the protection setting
+        worksheet.RefreshPivotTables();
 
-            // Disable manipulation of pivot tables while the sheet is protected
-            protection.AllowUsingPivotTable = false;
-
-            // Protect the worksheet (all protection types, no password)
-            worksheet.Protect(ProtectionType.All);
-
-            // Refresh pivot tables – this operation is still allowed despite the protection setting
-            worksheet.RefreshPivotTables();
-
-            // Save the workbook
-            workbook.Save("ProtectWorksheetDisablePivotEditingDemo.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("ProtectedWorksheetWithPivotRefresh.xlsx");
     }
 }

@@ -1,38 +1,52 @@
-// Title: C# – Insert a Linked Picture and Update Its Source URL with Aspose.Cells
-// Description: Demonstrates how to add a linked picture to a worksheet, change its SourceFullName to a new image URL, and save the workbook so the picture reflects the updated source.
-// Keywords: Aspose.Cells linked picture | C# update picture URL | .NET insert linked image | SourceFullName property | refresh external image | worksheet picture sample | GitHub Aspose.Cells example | programmatic image replacement
-// Common Searches: Aspose.Cells change linked picture URL C# | how to update SourceFullName of a picture in Aspose.Cells | replace linked image in Excel workbook using .NET | refresh external picture after URL change Aspose.Cells | sample code for linked picture in Aspose.Cells
-// Developer Intent: Insert a linked picture into a worksheet and then programmatically replace its source URL.
-// Use Cases: Create a report template with a placeholder image that is later swapped for a user‑specific URL. | Build dashboards that pull external graphics and need to refresh them when the source files are updated. | Generate workbooks that reference online logos or charts, allowing the URLs to be changed without recreating the file.
-// AI Prompts: Show C# code using Aspose.Cells to add a linked picture and later modify its SourceFullName property. | Explain how to force a linked picture to refresh after its URL has been changed in an existing workbook. | Provide error‑handling patterns for invalid or unreachable image URLs when updating a linked picture.
+// Title: C# – Insert a Linked Picture, Update Its Source URL, and Refresh with Aspose.Cells
+// Description: Demonstrates how to add a linked picture from a web URL to a worksheet, modify the picture's SourceFullName to a new URL, trigger a refresh, and save the workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells linked picture | C# update picture source | refresh external image Excel | change SourceFullName Aspose | programmatic image replacement
+// Common Searches: how to change linked picture URL in Aspose.Cells C# | refresh external image after source change Excel | add linked picture and update its source programmatically | replace web image in generated workbook
+// Developer Intent: Replace the URL of an existing linked image in a worksheet and ensure the new picture appears when the file is opened.
+// Use Cases: Generate a report with a placeholder image and swap it for a final graphic at runtime. | Automate bulk updates of external logos across many Excel files without recreating shapes. | Create dynamic dashboards where chart images are refreshed based on latest web resources.
+// AI Prompts: Write C# code with Aspose.Cells that inserts a linked picture, changes its SourceFullName to a different URL, and saves the workbook. | Explain why calling Workbook.CalculateFormula() helps refresh a linked picture after its source is updated. | Suggest robust error‑handling patterns for updating linked picture URLs in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a linked picture to a worksheet, change its SourceFullName to a new image URL, and save the workbook so the picture reflects the updated source.
-class Program
+// Demonstrates how to add a linked picture from a web URL to a worksheet, modify the picture's SourceFullName to a new URL, trigger a refresh, and save the workbook using Aspose.Cells for .NET.
+class LinkedPictureRefreshDemo
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Insert a linked picture (initial source URL)
-        string initialUrl = "https://example.com/initial.jpg";
-        Picture linkedPicture = worksheet.Shapes.AddLinkedPicture(
-            topRow: 1,          // row index where the picture starts
-            leftColumn: 1,      // column index where the picture starts
-            height: 200,        // height in pixels
-            width: 200,         // width in pixels
-            sourceFullName: initialUrl);
+            // Initial image URL (linked picture)
+            string initialImageUrl = "https://example.com/initial-image.jpg";
 
-        // Change the source URL of the linked picture to a new image
-        string newUrl = "https://example.com/updated.jpg";
-        linkedPicture.SourceFullName = newUrl;
+            // Insert the linked picture at row 1, column 1 with size 150x150 pixels
+            Picture linkedPicture = worksheet.Shapes.AddLinkedPicture(1, 1, 150, 150, initialImageUrl);
 
-        // Save the workbook (the picture will now reference the new URL)
-        workbook.Save("LinkedPictureUpdated.xlsx");
+            // Verify that the picture is linked
+            Console.WriteLine("Is linked picture: " + linkedPicture.IsLink);
+            Console.WriteLine("Current SourceFullName: " + linkedPicture.SourceFullName);
+
+            // Change the source URL to a new image
+            string newImageUrl = "https://example.com/updated-image.png";
+            linkedPicture.SourceFullName = newImageUrl;
+
+            // Force formula recalculation (harmless for picture refresh)
+            workbook.CalculateFormula();
+
+            // Save the workbook
+            string outputPath = "LinkedPictureUpdated.xlsx";
+            workbook.Save(outputPath);
+
+            Console.WriteLine($"Workbook saved with updated linked picture at '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

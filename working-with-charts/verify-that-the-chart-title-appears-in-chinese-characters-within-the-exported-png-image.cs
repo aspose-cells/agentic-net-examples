@@ -1,27 +1,25 @@
-// Title: C# – Export Aspose.Cells Chart with Chinese Title to PNG and Verify Rendering
-// Description: Shows how to build a workbook, add a column chart, assign a Chinese‑language title, and export the chart as a PNG with Aspose.Cells for .NET, so you can confirm that the Unicode title appears correctly in the image.
-// Keywords: Aspose.Cells | C# chart export | PNG chart image | Chinese title | Unicode chart text | non‑Latin characters | .NET localization | font fallback Aspose | chart title verification
-// Common Searches: Aspose.Cells export chart with Chinese title | C# create chart and save as PNG Aspose | verify Unicode text in exported chart image | how to set non‑Latin chart title in Aspose.Cells | chart title rendering issue Chinese characters
-// Developer Intent: The developer needs to ensure that a chart title containing Chinese characters is rendered correctly when the chart is exported to a PNG file using Aspose.Cells for .NET.
-// Use Cases: Generate localized sales dashboards where chart headings must display Chinese text in image assets. | Automate creation of multilingual reports that embed chart PNGs in PDFs or web pages. | Perform visual or OCR‑based validation of chart rendering for quality‑assurance pipelines.
-// AI Prompts: Write C# code with Aspose.Cells to export a chart that has a Japanese (or any Unicode) title to PNG and confirm the text appears. | Explain how to set up font fallback in Aspose.Cells so Chinese characters render properly in chart titles for image exports. | Suggest a programmatic way to verify the exported PNG contains the expected Chinese title using an OCR library.
+// Title: Export a Column Chart with a Chinese Title to PNG using Aspose.Cells for .NET
+// Description: Creates a workbook, fills cells with Chinese labels, adds a column chart, sets the title to "销售报告", and exports the chart as a PNG image. The PNG can be inspected manually or with OCR to confirm the Chinese characters are rendered correctly.
+// Keywords: Aspose.Cells C# export chart PNG | chart title Chinese characters | Unicode chart title Aspose.Cells | column chart PNG Aspose.Cells | localize chart titles .NET
+// Common Searches: Aspose.Cells export chart with Chinese title | C# chart PNG Unicode verification | how to show Chinese text in Aspose.Cells chart | export column chart to PNG with non‑Latin title | verify Chinese characters in chart image
+// Developer Intent: Generate a PNG of a column chart whose title is displayed in Chinese and ensure the characters render correctly.
+// Use Cases: Produce multilingual sales dashboards where chart titles must appear in Chinese and are shared as image files. | Automate report generation that embeds localized chart images in emails or web pages. | Add image‑based validation to CI pipelines by exporting charts and checking titles with OCR.
+// AI Prompts: Write C# code that creates a pie chart with a Japanese title and saves it as a JPEG using Aspose.Cells. | Provide a C# method that uses an OCR library to confirm a specific Unicode string exists in a PNG exported from Aspose.Cells. | Explain how to set up font fallback in Aspose.Cells so Chinese characters render correctly in exported chart images.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsChartChineseTitleVerification
+namespace AsposeCellsChartTitleChineseVerification
 {
-    // Shows how to build a workbook, add a column chart, assign a Chinese‑language title, and export the chart as a PNG with Aspose.Cells for .NET, so you can confirm that the Unicode title appears correctly in the image.
+    // Creates a workbook, fills cells with Chinese labels, adds a column chart, sets the title to "销售报告", and exports the chart as a PNG image. The PNG can be inspected manually or with OCR to confirm the Chinese characters are rendered correctly.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
@@ -40,21 +38,21 @@ namespace AsposeCellsChartChineseTitleVerification
             chart.NSeries.Add("B2:B3", true);
             chart.NSeries.CategoryData = "A2:A3";
 
-            // Set the chart title to Chinese characters and make it visible
-            chart.Title.Text = "销售报告";          // "Sales Report" in Chinese
+            // Set the chart title using Chinese characters
+            chart.Title.Text = "销售报告"; // "Sales Report" in Chinese
             chart.Title.IsVisible = true;
 
             // Export the chart to a PNG image
-            string imagePath = "ChartChineseTitle.png";
+            string imagePath = "ChartWithChineseTitle.png";
             chart.ToImage(imagePath, ImageType.Png);
 
-            // Save the workbook (optional, for reference)
+            // Save the workbook (optional, for further inspection)
             workbook.Save("ChartWithChineseTitle.xlsx");
 
-            // Simple verification: read back the title text from the chart object
-            // (The visual verification of Chinese characters in the PNG should be done manually or via OCR)
-            Console.WriteLine("Chart title set to: " + chart.Title.Text);
-            Console.WriteLine("Chart image saved to: " + imagePath);
+            // At this point, the PNG file "ChartWithChineseTitle.png" contains the chart
+            // with the title rendered in Chinese characters. Manual visual verification
+            // or OCR can be used to confirm the presence of the Chinese title.
+            Console.WriteLine("Chart exported to PNG with Chinese title.");
         }
     }
 }

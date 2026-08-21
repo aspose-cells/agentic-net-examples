@@ -1,71 +1,79 @@
-// Title: Validate numeric columns in a CSV with Aspose.Cells for .NET (C#)
-// Description: Load a CSV into an Aspose.Cells workbook, enable numeric conversion, iterate through the data rows, use IsNumericValue to detect non‑numeric cells, log each mismatch with row, column and cell name, and optionally save the unchanged workbook. Ideal for data‑quality checks after CSV import.
-// Keywords: Aspose.Cells | C# CSV import | numeric validation | IsNumericValue | TxtLoadOptions | ConvertNumericData | cell type checking | log non‑numeric cells | Excel workbook | data quality
-// Common Searches: Aspose.Cells validate numeric values in CSV | C# check non‑numeric cells after CSV import | How to log mismatched data types with Aspose.Cells | Detect text in numeric columns using Aspose.Cells | CSV data validation example in .NET
-// Developer Intent: Ensure every cell that should contain a number after importing a CSV is actually numeric and capture any deviations for review.
-// Use Cases: Generate a list of cell addresses that contain text where numbers are expected, to clean source data before calculations. | Create an audit report of data‑type errors in CSV files imported into Excel worksheets. | Prevent runtime errors in downstream analytics by flagging non‑numeric entries immediately after import.
-// AI Prompts: Write C# code with Aspose.Cells that validates numeric columns in an imported CSV and stores mismatched cell references in a List<string>. | Show how to modify the validation loop to skip multiple header rows and validate only columns whose header matches a given pattern. | Explain how to configure TxtLoadOptions so that empty strings are treated as null and included in the mismatch log.
+// Title: C# – Validate Numeric Columns in a CSV with Aspose.Cells and Log Type Mismatches
+// Description: Loads a CSV using TxtLoadOptions (numeric and date conversion enabled), detects columns that contain numeric data, checks each cell in those columns for the correct data type, writes mismatched entries to the console, and saves the workbook as an XLSX file for review.
+// Keywords: Aspose.Cells CSV numeric validation | C# validate numeric columns | cell data type mismatch logging | TxtLoadOptions ConvertNumericData | detect non‑numeric values in Excel worksheet | CSV to XLSX conversion Aspose.Cells | data quality check Aspose.Cells
+// Common Searches: how to validate numeric columns in a CSV using Aspose.Cells .NET | log cells that are not numeric after loading CSV with Aspose.Cells | detect numeric columns and report type errors in C# | save validated CSV as Excel with Aspose.Cells | Aspose.Cells convert numeric strings automatically
+// Developer Intent: Identify columns that should contain numbers after loading a CSV and report any cells that hold non‑numeric values.
+// Use Cases: Ensure data integrity before performing calculations or imports. | Generate a report of rows where text appears in numeric fields. | Automate quality checks for CSV files received from external systems. | Create an Excel file that highlights mismatched cells for manual review.
+// AI Prompts: Generate C# code with Aspose.Cells that loads a CSV, finds numeric columns, and prints addresses of cells that are not numeric. | Provide a reusable method that returns a list of cell names where expected numeric values are stored as text after CSV import. | Explain how TxtLoadOptions settings affect numeric and date conversion, then show how to validate cell data types in the resulting worksheet.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace CsvNumericValidationDemo
+namespace AsposeCellsNumericValidation
 {
-    // Load a CSV into an Aspose.Cells workbook, enable numeric conversion, iterate through the data rows, use IsNumericValue to detect non‑numeric cells, log each mismatch with row, column and cell name, and optionally save the unchanged workbook. Ideal for data‑quality checks after CSV import.
+    // Loads a CSV using TxtLoadOptions (numeric and date conversion enabled), detects columns that contain numeric data, checks each cell in those columns for the correct data type, writes mismatched entries to the console, and saves the workbook as an XLSX file for review.
     class Program
     {
         static void Main()
         {
             // Path to the CSV file to be validated
-            string csvFilePath = "input.csv";
+            string csvPath = "data.csv";
 
-            // Create a new workbook (empty workbook)
-            Workbook workbook = new Workbook();
+            // Load options: enable automatic conversion of numeric strings to numeric values
+            TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv)
+            {
+                Separator = ',',               // CSV delimiter
+                ConvertNumericData = true,     // Convert numeric strings during load
+                ConvertDateTimeData = true     // Convert date strings if present
+            };
 
-            // Access the first worksheet
+            // Load the CSV into a workbook using the load options
+            Workbook workbook = new Workbook(csvPath, loadOptions);
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Configure CSV load options
-            TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv)
-            {
-                Separator = ',',            // CSV delimiter
-                ConvertNumericData = true, // Convert numeric strings to numeric values
-                ConvertDateTimeData = true // Convert date strings if needed
-            };
-
-            // Import CSV data starting at cell A1 (row 0, column 0)
-            cells.ImportCSV(csvFilePath, loadOptions, 0, 0);
-
             // Determine the used range
-            int maxRow = cells.MaxDataRow;       // zero‑based index of the last row with data
-            int maxColumn = cells.MaxDataColumn; // zero‑based index of the last column with data
+            int maxRow = cells.MaxDataRow;
+            int maxColumn = cells.MaxDataColumn;
 
-            // Assume first row (row 0) contains headers, start validation from row 1
+            // Assume the first row contains headers; start validation from the second row (index 1)
+            int dataStartRow = 1;
+
+            // Identify columns that contain at least one numeric value (excluding header)
+            bool[] isNumericColumn = new bool[maxColumn + 1];
             for (int col = 0; col <= maxColumn; col++)
             {
-                bool columnHasNumericHeader = true; // optional: you could check header type here
-
-                for (int row = 1; row <= maxRow; row++)
+                for (int row = dataStartRow; row <= maxRow; row++)
                 {
                     Cell cell = cells[row, col];
-
-                    // If the cell is empty, skip it
-                    if (cell.Type == CellValueType.IsNull)
-                        continue;
-
-                    // Check whether the cell value is numeric (int, double, or datetime)
-                    if (!cell.IsNumericValue)
+                    if (cell != null && cell.IsNumericValue)
                     {
-                        // Log mismatch: column index, row index (1‑based for readability), and cell content
-                        Console.WriteLine($"Mismatch found at Row {row + 1}, Column {col + 1} (Cell {cell.Name}): " +
-                                          $"Value \"{cell.StringValue}\" is not numeric.");
+                        isNumericColumn[col] = true;
+                        break;
                     }
                 }
             }
 
-            // Save the workbook (optional – the workbook is unchanged)
+            // Validate each cell in identified numeric columns
+            for (int col = 0; col <= maxColumn; col++)
+            {
+                if (!isNumericColumn[col]) continue; // Skip non‑numeric columns
+
+                for (int row = dataStartRow; row <= maxRow; row++)
+                {
+                    Cell cell = cells[row, col];
+                    if (cell == null) continue;
+
+                    // If the cell is not numeric, log the mismatch
+                    if (!cell.IsNumericValue)
+                    {
+                        Console.WriteLine($"Mismatch at {cell.Name}: Expected numeric, found '{cell.StringValue}'.");
+                    }
+                }
+            }
+
+            // Optionally save the workbook after validation (e.g., to review conversions)
             workbook.Save("validated_output.xlsx", SaveFormat.Xlsx);
         }
     }

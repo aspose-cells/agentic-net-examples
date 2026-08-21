@@ -1,50 +1,57 @@
-// Title: Export Formula Audit Trail with Timestamps to XML using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, switches to manual calculation mode, and uses a custom AbstractCalculationMonitor to capture each formula cell and the UTC time it was evaluated. After calculation the data is written to a well‑formed XML file that lists cell address, formula text, and ISO‑8601 timestamp.
-// Keywords: Aspose.Cells | .NET | C# | formula audit | calculation timestamps | XML report | AbstractCalculationMonitor | manual calculation mode | Excel audit log | global compliance tracking
-// Common Searches: Aspose.Cells export formula audit to XML | log formula calculation time C# | custom calculation monitor example | generate XML audit report for Excel formulas | record formula evaluation timestamps Aspose.Cells
-// Developer Intent: Create an XML file that records every evaluated formula cell together with the exact UTC timestamp of its calculation.
-// Use Cases: Compliance auditing: prove when each formula was calculated during a batch run. | Performance monitoring: identify formulas that trigger unexpectedly frequent recalculations. | Integration with logging pipelines: feed the XML audit into downstream monitoring or alerting systems. | Version control of spreadsheet logic: keep a timestamped snapshot of all formulas after a manual calculation.
-// AI Prompts: Show how to extend AuditCalculationMonitor to also capture the worksheet name in the XML output. | Provide code that reads FormulaAuditReport.xml and aggregates the number of formulas per worksheet. | Explain how to convert the UTC timestamps to a specific local time zone while preserving ISO‑8601 format.
+// Title: Export Formula Audit Trail with Timestamps to XML using Aspose.Cells (C#)
+// Description: Loads an Excel workbook, switches to manual calculation mode, and attaches a custom AbstractCalculationMonitor that records sheet index, row, column, and UTC timestamp before each formula is evaluated. The collected entries are assembled into an XML document (FormulaAuditTrail) and saved as a report file.
+// Keywords: Aspose.Cells | C# formula audit trail | Excel calculation log | XML report | custom calculation monitor | record timestamps | manual calculation mode | export audit XML | formula audit | Aspose.Cells example
+// Common Searches: Aspose.Cells export formula audit trail | C# log Excel formula calculations with timestamps | create calculation monitor in Aspose.Cells | generate XML audit of Excel formulas | save formula evaluation order to XML Aspose.Cells
+// Developer Intent: Create an XML report that logs every formula calculation and its timestamp from an Excel workbook using Aspose.Cells.
+// Use Cases: Debug complex spreadsheets by reviewing calculation order and timing. | Provide compliance documentation of calculation timestamps for regulated financial models. | Monitor performance of workbook recalculation in automated pipelines. | Integrate the audit XML into CI/CD validation or monitoring systems.
+// AI Prompts: Write C# code that implements an Aspose.Cells AbstractCalculationMonitor to capture sheet, row, column, and UTC timestamp for each formula evaluation and output an XML file. | Explain how to set an Aspose.Cells workbook to manual calculation mode and attach a custom calculation monitor for auditing purposes. | Show how to extend the AuditCalculationMonitor to record the duration of each cell calculation and include it in the XML audit trail. | Generate a GitHub‑compatible README snippet describing this example, its prerequisites, and how to run it.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
+using System.Xml.Linq;
 using Aspose.Cells;
 
-namespace AsposeCellsAudit
+namespace FormulaAuditTrailExport
 {
-    // Custom monitor to record formula evaluation timestamps
-    // Loads an Excel workbook, switches to manual calculation mode, and uses a custom AbstractCalculationMonitor to capture each formula cell and the UTC time it was evaluated. After calculation the data is written to a well‑formed XML file that lists cell address, formula text, and ISO‑8601 timestamp.
-    class AuditCalculationMonitor : AbstractCalculationMonitor
+    // Custom calculation monitor that records each cell calculation with a timestamp
+    // Loads an Excel workbook, switches to manual calculation mode, and attaches a custom AbstractCalculationMonitor that records sheet index, row, column, and UTC timestamp before each formula is evaluated. The collected entries are assembled into an XML document (FormulaAuditTrail) and saved as a report file.
+    public class AuditCalculationMonitor : AbstractCalculationMonitor
     {
-        private readonly Dictionary<string, (string Formula, DateTime Timestamp)> _audit;
-        private readonly WorksheetCollection _worksheets;
+        // List to hold audit entries
+        private readonly List<XElement> _entries = new List<XElement>();
 
-        public AuditCalculationMonitor(Dictionary<string, (string Formula, DateTime Timestamp)> audit, WorksheetCollection worksheets)
+        // Called before a cell is calculated
+        public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
         {
-            _audit = audit;
-            _worksheets = worksheets;
+            // Capture the current UTC time
+            string timestamp = DateTime.UtcNow.ToString("o"); // ISO 8601 format
+
+            // Build an XML element for this calculation step
+            XElement entry = new XElement("Calculation",
+                new XAttribute("SheetIndex", sheetIndex),
+                new XAttribute("Row", rowIndex),
+                new XAttribute("Column", columnIndex),
+                new XAttribute("Timestamp", timestamp));
+
+            _entries.Add(entry);
         }
 
-        public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
+        // Called after a cell is calculated (optional, not used here)
+        public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex) { }
+
+        // Called when a circular reference is detected (optional, not used here)
+        public override bool OnCircular(IEnumerator circularCellsData) => base.OnCircular(circularCellsData);
+
+        // Generates the final XML document containing all audit entries
+        public XDocument GetAuditXml()
         {
-            Worksheet sheet = _worksheets[sheetIndex];
-            Cell cell = sheet.Cells[rowIndex, columnIndex];
-
-            // Record only cells that contain a formula
-            if (!string.IsNullOrEmpty(cell.Formula))
-            {
-                string address = cell.Name; // e.g., "A1"
-                string formula = cell.Formula;
-                DateTime timestamp = DateTime.UtcNow; // UTC for consistency
-
-                _audit[address] = (formula, timestamp);
-            }
+            return new XDocument(
+                new XElement("FormulaAuditTrail",
+                    new XAttribute("GeneratedOn", DateTime.UtcNow.ToString("o")),
+                    _entries));
         }
-
-        public override bool OnCircular(System.Collections.IEnumerator circularCellsData) => base.OnCircular(circularCellsData);
-        public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex) { }
     }
 
     class Program
@@ -53,58 +60,49 @@ namespace AsposeCellsAudit
         {
             try
             {
-                string workbookPath = "InputWorkbook.xlsx";
+                // Path to the input workbook
+                string inputPath = "InputWorkbook.xlsx";
 
-                // Verify the input workbook exists
-                if (!File.Exists(workbookPath))
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Error: Workbook file '{workbookPath}' not found.");
+                    Console.WriteLine($"Error: Input file '{inputPath}' not found.");
                     return;
                 }
 
                 // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
+                Workbook workbook = new Workbook(inputPath);
 
-                // Use manual calculation mode to control when formulas are evaluated
+                // Ensure manual calculation mode so we control when formulas are evaluated
                 workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
 
-                // Dictionary to hold audit information: cell address -> (formula, timestamp)
-                var auditInfo = new Dictionary<string, (string Formula, DateTime Timestamp)>();
+                // Create the custom monitor
+                AuditCalculationMonitor monitor = new AuditCalculationMonitor();
 
-                // Set up calculation options with the custom monitor
+                // Set up calculation options and attach the monitor
                 CalculationOptions calcOptions = new CalculationOptions
                 {
-                    CalculationMonitor = new AuditCalculationMonitor(auditInfo, workbook.Worksheets)
+                    CalculationMonitor = monitor
                 };
 
-                // Perform the calculation; this triggers the monitor for each formula cell
+                // Perform calculation; the monitor will record each cell's calculation timestamp
                 workbook.CalculateFormula(calcOptions);
 
-                // Generate the XML audit report
-                string xmlReportPath = "FormulaAuditReport.xml";
-                using (XmlWriter writer = XmlWriter.Create(xmlReportPath, new XmlWriterSettings { Indent = true }))
+                // Retrieve the audit XML
+                XDocument auditXml = monitor.GetAuditXml();
+
+                // Save the XML report to a file
+                string outputXmlPath = "FormulaAuditTrail.xml";
+                using (FileStream fs = new FileStream(outputXmlPath, FileMode.Create, FileAccess.Write))
                 {
-                    writer.WriteStartDocument();
-                    writer.WriteStartElement("FormulaAudit");
-
-                    foreach (var entry in auditInfo)
-                    {
-                        writer.WriteStartElement("Cell");
-                        writer.WriteAttributeString("Address", entry.Key);
-                        writer.WriteAttributeString("Formula", entry.Value.Formula);
-                        writer.WriteAttributeString("Timestamp", entry.Value.Timestamp.ToString("o")); // ISO 8601
-                        writer.WriteEndElement(); // Cell
-                    }
-
-                    writer.WriteEndElement(); // FormulaAudit
-                    writer.WriteEndDocument();
+                    auditXml.Save(fs);
                 }
 
-                Console.WriteLine($"Formula audit trail exported to '{xmlReportPath}'.");
+                Console.WriteLine($"Formula audit trail exported to '{outputXmlPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             }
         }
     }

@@ -1,72 +1,69 @@
-// Title: Create Multiple PivotTables Across Worksheets with Aspose.Cells for .NET (C#)
-// Description: This example shows how to generate a new workbook, add several worksheets, populate each with sample data (A1:C5), and loop through the sheets to add a PivotTable using the `PivotTables.Add(sourceData, destinationCell, tableName)` overload. Each table is configured with row, column, and data fields and the workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells pivot table C# | add pivot table programmatically .NET | batch create pivot tables Aspose | loop worksheets pivot Aspose.Cells | PivotTables.Add overload example | automate pivot table generation | multiple worksheets pivot table
-// Common Searches: how to add a pivot table to each worksheet using Aspose.Cells | batch generate pivot tables in a C# workbook | create identical pivot tables on multiple sheets programmatically | Aspose.Cells loop through worksheets to add pivot tables | C# example for adding multiple pivot tables
-// Developer Intent: Programmatically add a separate PivotTable to every worksheet in a workbook by iterating over the sheets and invoking the `PivotTables.Add` method.
-// Use Cases: Populate several sheets with raw data and instantly provide a summary view on each sheet. | Automate monthly reporting where the same pivot layout is required for different data sets. | Prepare a template workbook with pre‑configured PivotTables for downstream users or BI tools.
-// AI Prompts: Generate code to apply a custom style to all PivotTables created in the loop. | Show how to refresh each PivotTable after modifying the source data programmatically. | Provide an example that adds a calculated field (e.g., Total = Amount * 1.2) to every PivotTable during creation.
+// Title: Batch create PivotTables on multiple worksheets with Aspose.Cells for .NET (C#)
+// Description: C# example that loops through worksheets, adds a PivotTable to each using the Add(sourceRange, destCell, tableName) overload, sets row/column/data fields, applies a style, refreshes all tables, and saves the workbook.
+// Keywords: Aspose.Cells PivotTable C# | batch create pivot tables .NET | loop worksheets add pivot table | Aspose.Cells Add method overload | refresh all pivot tables Aspose | PivotTableStyleType Medium9 | programmatic pivot table generation | Excel automation Aspose.Cells
+// Common Searches: How to add a pivot table to every sheet using Aspose.Cells | C# loop to create multiple pivot tables in a workbook | Aspose.Cells Add(string sourceRange, string destCell, string tableName) example | Apply the same PivotTable style to several tables with Aspose | Refresh all pivot tables in Aspose.Cells workbook
+// Developer Intent: Create and configure a PivotTable on each worksheet by iterating over sheets and invoking Aspose.Cells' Add method.
+// Use Cases: Generate identical pivot reports across several worksheets after populating each sheet with data. | Apply a consistent PivotTableStyle (e.g., Medium9) to all tables for uniform appearance. | Refresh every pivot table in one call before saving the workbook to ensure up‑to‑date calculations.
+// AI Prompts: Write C# code with Aspose.Cells that loops through N worksheets, adds a pivot table to each using a dynamic source range, and sets row, column, and data fields. | Show how to apply PivotTableStyleType.PivotTableStyleMedium9 to multiple pivot tables created in a batch operation. | Explain how to construct source range strings for each sheet and refresh all pivot tables in an Aspose.Cells workbook before saving.
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using System;
 
-// This example shows how to generate a new workbook, add several worksheets, populate each with sample data (A1:C5), and loop through the sheets to add a PivotTable using the `PivotTables.Add(sourceData, destinationCell, tableName)` overload. Each table is configured with row, column, and data fields and the workbook is saved as an XLSX file.
+// C# example that loops through worksheets, adds a PivotTable to each using the Add(sourceRange, destCell, tableName) overload, sets row/column/data fields, applies a style, refreshes all tables, and saves the workbook.
 class BatchPivotTables
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule: create)
+        // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Loop through a set of worksheets and add a pivot table to each
-        for (int wsIndex = 0; wsIndex < 3; wsIndex++)
+        // Number of worksheets to process
+        int sheetCount = 3;
+
+        for (int i = 0; i < sheetCount; i++)
         {
-            Worksheet ws;
-            if (wsIndex == 0)
-            {
-                // Use the default first worksheet
-                ws = workbook.Worksheets[0];
-                ws.Name = $"Sheet{wsIndex + 1}";
-            }
-            else
-            {
-                // Add additional worksheets
-                ws = workbook.Worksheets.Add($"Sheet{wsIndex + 1}");
-            }
+            // Get or create worksheet
+            Worksheet ws = i == 0 ? workbook.Worksheets[0] : workbook.Worksheets.Add($"Sheet{i + 1}");
 
-            // Populate sample data (A1:C5) on the current worksheet
-            Cells cells = ws.Cells;
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Item");
-            cells["C1"].PutValue("Amount");
+            // Populate sample data (A1:C5)
+            ws.Cells["A1"].PutValue("Category");
+            ws.Cells["B1"].PutValue("Item");
+            ws.Cells["C1"].PutValue("Amount");
 
-            for (int i = 2; i <= 5; i++)
+            for (int r = 2; r <= 5; r++)
             {
-                cells[$"A{i}"].PutValue($"Cat{(i % 2) + 1}");
-                cells[$"B{i}"].PutValue($"Item{i}");
-                cells[$"C{i}"].PutValue(i * 10);
+                ws.Cells[$"A{r}"].PutValue($"Cat{(r % 3) + 1}");
+                ws.Cells[$"B{r}"].PutValue($"Item{r + i * 10}");
+                ws.Cells[$"C{r}"].PutValue(r * 10 + i * 100);
             }
 
-            // Define the source data range string for the pivot table
-            string sourceData = $"=Sheet{wsIndex + 1}!A1:C5";
+            // Define source data range string (e.g., =Sheet1!A1:C5)
+            string sourceRange = $"=Sheet{i + 1}!A1:C5";
 
-            // Destination cell where the pivot table will be placed
+            // Destination cell for the pivot table
             string destCell = "E3";
 
-            // Unique pivot table name per worksheet
-            string tableName = $"Pivot_{wsIndex + 1}";
+            // Unique pivot table name
+            string tableName = $"Pivot_{i + 1}";
 
             // Add a new pivot table using the Add(string, string, string) overload
-            int pivotIndex = ws.PivotTables.Add(sourceData, destCell, tableName);
-
-            // Retrieve the newly created pivot table and configure its fields
+            int pivotIndex = ws.PivotTables.Add(sourceRange, destCell, tableName);
             PivotTable pivot = ws.PivotTables[pivotIndex];
+
+            // Configure the pivot table fields
             pivot.AddFieldToArea(PivotFieldType.Row, "Category");
             pivot.AddFieldToArea(PivotFieldType.Column, "Item");
             pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
+
+            // Optional: apply a style
+            pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
         }
 
-        // Save the workbook (lifecycle rule: save)
+        // Refresh all pivot tables in the workbook
+        workbook.Worksheets.RefreshPivotTables();
+
+        // Save the workbook
         workbook.Save("BatchPivotTables.xlsx");
     }
 }

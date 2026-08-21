@@ -1,80 +1,65 @@
-// Title: Export Excel Worksheet with OLE Object Placeholders to PDF using Aspose.Cells for .NET
-// Description: Demonstrates how to add an OLE object placeholder (using a 1×1 transparent PNG) to a worksheet, set the actual file bytes, configure DisplayDrawingObjects.Placeholders, disable attachment embedding with PdfSaveOptions, and save the sheet as a PDF while cleaning up temporary files.
-// Keywords: Aspose.Cells | C# | .NET | export OLE objects to PDF | OLE placeholder | DisplayDrawingObjects.Placeholders | PdfSaveOptions EmbedAttachments false | Excel to PDF conversion | temporary file cleanup
-// Common Searches: Aspose.Cells export OLE objects as placeholders PDF | C# add OLE object placeholder Excel Aspose.Cells | DisplayDrawingObjects.Placeholders PDF conversion | prevent embedding OLE data in PDF Aspose.Cells | how to clean up temporary files after Excel to PDF conversion
-// Developer Intent: Create a PDF from an Excel worksheet that contains OLE objects, showing only their placeholder icons and omitting the embedded data.
-// Use Cases: Generate lightweight PDF reports where embedded documents are represented by icons. | Export confidential spreadsheets while hiding actual OLE content for compliance. | Produce printable PDFs from templates that include OLE icons without increasing file size.
-// AI Prompts: Write C# code with Aspose.Cells to add an OLE placeholder and export the worksheet to PDF without embedding the OLE data. | Explain the impact of DisplayDrawingObjects.Placeholders and PdfSaveOptions.EmbedAttachments on PDF output for OLE objects. | Provide a step‑by‑step guide for removing temporary files after converting a worksheet with OLE placeholders to PDF.
+// Title: Export OLE Object Placeholders to PDF with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to add an embedded OLE object displayed as an icon, configure the workbook to show placeholders instead of the actual objects, and save the worksheet as a PDF using Aspose.Cells. The PDF contains only the OLE icons, does not embed the original files, and includes document structure for accessibility.
+// Keywords: Aspose.Cells | C# PDF export | OLE object placeholder | DisplayDrawingObjects.Placeholders | PdfSaveOptions EmbedAttachments false | Export OLE icons to PDF | OleObjects.Add C# | Worksheet OLE placeholder PDF | Aspose.Cells PDF save options
+// Common Searches: Aspose.Cells export OLE icons as placeholders PDF | C# display OLE objects as icons when saving to PDF | Prevent OLE attachments in PDF with Aspose.Cells | Set DisplayDrawingObjects to Placeholders before PDF conversion | PdfSaveOptions ExportDocumentStructure example
+// Developer Intent: Generate a PDF from an Excel worksheet that contains OLE objects, showing only their icon placeholders and excluding embedded data.
+// Use Cases: Secure reporting: share a PDF where embedded files are represented by icons, preventing distribution of the original content. | Template documentation: export a workbook with OLE placeholders for training manuals while keeping file size minimal. | Visual review: produce a PDF that preserves the layout of OLE icons for stakeholder review without exposing the embedded files.
+// AI Prompts: Write C# code that inserts an OLE object, sets it to display as an icon, and saves the workbook to PDF with only placeholders using Aspose.Cells. | Explain how DisplayDrawingObjects.Placeholders and PdfSaveOptions.EmbedAttachments affect the PDF output of OLE objects in Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add an OLE object placeholder (using a 1×1 transparent PNG) to a worksheet, set the actual file bytes, configure DisplayDrawingObjects.Placeholders, disable attachment embedding with PdfSaveOptions, and save the sheet as a PDF while cleaning up temporary files.
+// Demonstrates how to add an embedded OLE object displayed as an icon, configure the workbook to show placeholders instead of the actual objects, and save the worksheet as a PDF using Aspose.Cells. The PDF contains only the OLE icons, does not embed the original files, and includes document structure for accessibility.
 class ExportOleObjectsToPdf
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Create a temporary text file to be embedded as an OLE object
-            string tempFilePath = "sample.txt";
-            File.WriteAllText(tempFilePath, "This is sample content for the OLE object.");
+        // Add some sample text
+        worksheet.Cells["A1"].PutValue("Worksheet with OLE object placeholders");
 
-            // Placeholder image (1x1 transparent PNG) required by Aspose.Cells when adding OLE objects
-            byte[] placeholderImage = Convert.FromBase64String(
-                "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=");
+        // -----------------------------------------------------------------
+        // Add an OLE object (embedded) to the worksheet
+        // -----------------------------------------------------------------
+        // Image that will be shown as the OLE object's icon (placeholder)
+        byte[] iconImage = File.ReadAllBytes("icon.png"); // replace with a real image file
 
-            // Add an OLE object placeholder using the generated image data
-            int oleIndex = worksheet.OleObjects.Add(5, 2, 120, 120, placeholderImage);
-            OleObject oleObject = worksheet.OleObjects[oleIndex];
+        // Binary data of the embedded file (e.g., another Excel file)
+        byte[] oleData = File.ReadAllBytes("sample.xlsx"); // replace with a real file
 
-            // Set the embedded object data (the actual file bytes) if the file exists
-            if (File.Exists(tempFilePath))
-            {
-                oleObject.ObjectData = File.ReadAllBytes(tempFilePath);
-            }
+        // Add the OLE object using the Add method (topRow, leftColumn, height, width, imageData)
+        int oleIndex = worksheet.OleObjects.Add(5, 2, 200, 200, iconImage);
+        OleObject oleObject = worksheet.OleObjects[oleIndex];
 
-            // Optional: display as an icon with a label
-            oleObject.DisplayAsIcon = true;
-            oleObject.Label = "Sample Text File";
+        // Set the embedded object data and display options
+        oleObject.ObjectData = oleData;
+        oleObject.DisplayAsIcon = true;          // show as an icon
+        oleObject.Label = "Sample Excel File";   // icon label
 
-            // Configure the workbook to show placeholders instead of the actual OLE objects when rendering
-            workbook.Settings.DisplayDrawingObjects = DisplayDrawingObjects.Placeholders;
+        // -----------------------------------------------------------------
+        // Configure the workbook to show placeholders instead of actual objects
+        // -----------------------------------------------------------------
+        workbook.Settings.DisplayDrawingObjects = DisplayDrawingObjects.Placeholders;
 
-            // Prepare PDF save options – ensure attachments are not embedded
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                EmbedAttachments = false // placeholders will be kept
-            };
+        // -----------------------------------------------------------------
+        // Set PDF save options
+        // -----------------------------------------------------------------
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Save the worksheet as a PDF file
-            workbook.Save("WorksheetWithOlePlaceholders.pdf", pdfOptions);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-        }
-        finally
-        {
-            // Clean up the temporary file if it exists
-            string tempFilePath = "sample.txt";
-            if (File.Exists(tempFilePath))
-            {
-                try
-                {
-                    File.Delete(tempFilePath);
-                }
-                catch (Exception delEx)
-                {
-                    Console.WriteLine("Failed to delete temporary file: " + delEx.Message);
-                }
-            }
-        }
+        // Ensure that OLE objects are not embedded as attachments (placeholders only)
+        pdfOptions.EmbedAttachments = false; // default, but set explicitly per rule
+
+        // Optional: export document structure for better accessibility
+        pdfOptions.ExportDocumentStructure = true; // per rule
+
+        // -----------------------------------------------------------------
+        // Save the workbook as PDF
+        // -----------------------------------------------------------------
+        workbook.Save("WorksheetWithOlePlaceholders.pdf", pdfOptions);
     }
 }

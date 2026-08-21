@@ -1,35 +1,35 @@
-// Title: Insert a macro‑triggering hyperlink in cell S5 with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to enable macros, add a hyperlink to cell S5 that calls a VBA macro named "MyMacro", set custom display text and screen tip, and save the workbook using Aspose.Cells in C#.
-// Keywords: Aspose.Cells C# hyperlink macro | add macro hyperlink Excel | enable macros Aspose.Cells | cell S5 hyperlink | Excel hyperlink screen tip | run VBA from hyperlink | Aspose.Cells workbook automation
-// Common Searches: Aspose.Cells add hyperlink that runs a macro | C# create Excel hyperlink to VBA macro | how to enable macros in Aspose.Cells workbook | set hyperlink display text and tooltip in Excel using Aspose | insert macro link into specific cell with Aspose.Cells
-// Developer Intent: Create a clickable link in cell S5 that launches the VBA macro MyMacro when the user clicks it.
-// Use Cases: Provide end‑users a one‑click option to refresh data via a macro in generated reports. | Embed a setup macro link in a template workbook to configure custom settings on demand. | Add a tooltip‑enabled hyperlink that guides users to execute formatting or validation macros directly from the sheet.
-// AI Prompts: Write C# code with Aspose.Cells that adds a hyperlink in cell S5 to execute a macro called 'MyMacro', including custom display text and a screen tip. | Explain the steps required to enable macros in an Aspose.Cells workbook before inserting a macro‑triggering hyperlink. | Show how to update an existing Excel file using Aspose.Cells to insert or replace a hyperlink that calls a specific VBA macro.
+// Title: Insert a Macro‑Triggering Hyperlink in Cell S5 with Aspose.Cells for .NET (C#)
+// Description: Shows how to create a new workbook, enable macros, and add a hyperlink in cell S5 that runs the macro “MyMacro”. The example sets the link’s display text and screen tip, then saves the file as MacroHyperlink.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | hyperlink to macro | enable macros | cell S5 | run macro from hyperlink | Excel automation | MacroHyperlink.xlsx
+// Common Searches: Aspose.Cells add hyperlink that runs a macro | C# create macro hyperlink in Excel | How to enable macros in Aspose.Cells workbook | Set screen tip for hyperlink Aspose.Cells | Add clickable macro link to specific cell using Aspose
+// Developer Intent: Generate an Excel file where clicking cell S5 launches the macro MyMacro.
+// Use Cases: Add a button‑like link in a generated report that refreshes data via a custom macro. | Provide end‑users with a one‑click option to apply formatting macros in a template worksheet. | Create a dashboard hyperlink that triggers a macro to export data to another format.
+// AI Prompts: Write C# code with Aspose.Cells to add a hyperlink in cell S5 that calls a macro named MyMacro, including enabling macros and setting a screen tip. | Explain how to modify the hyperlink to reference a macro stored in a different workbook using Aspose.Cells. | Generate C# code that adds multiple macro‑triggering hyperlinks across a range of cells, each with custom display text and screen tip, using Aspose.Cells for .NET.
 
 using Aspose.Cells;
 
-// Demonstrates how to enable macros, add a hyperlink to cell S5 that calls a VBA macro named "MyMacro", set custom display text and screen tip, and save the workbook using Aspose.Cells in C#.
+// Shows how to create a new workbook, enable macros, and add a hyperlink in cell S5 that runs the macro “MyMacro”. The example sets the link’s display text and screen tip, then saves the file as MacroHyperlink.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         // Create a new workbook
-        Workbook wb = new Workbook();
+        Workbook workbook = new Workbook();
 
         // Enable macros in the workbook
-        wb.Settings.EnableMacros = true;
+        workbook.Settings.EnableMacros = true;
 
         // Get the first worksheet
-        Worksheet ws = wb.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
         // Add a hyperlink to cell S5 that points to a macro named "MyMacro"
-        int hyperlinkIndex = ws.Hyperlinks.Add("S5", 1, 1, "MyMacro");
+        int hyperlinkIndex = worksheet.Hyperlinks.Add("S5", 1, 1, "MyMacro");
 
         // Set the display text and screen tip for the hyperlink
-        ws.Hyperlinks[hyperlinkIndex].TextToDisplay = "Run Macro";
-        ws.Hyperlinks[hyperlinkIndex].ScreenTip = "Click to execute MyMacro";
+        worksheet.Hyperlinks[hyperlinkIndex].TextToDisplay = "Run My Macro";
+        worksheet.Hyperlinks[hyperlinkIndex].ScreenTip = "Click to execute the macro";
 
         // Save the workbook
-        wb.Save("HyperlinkMacroDemo.xlsx");
+        workbook.Save("MacroHyperlink.xlsx");
     }
 }

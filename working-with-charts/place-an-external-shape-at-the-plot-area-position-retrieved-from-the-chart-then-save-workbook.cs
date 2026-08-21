@@ -1,80 +1,86 @@
-// Title: Add a Rectangle Shape Over a Chart Plot Area Using Aspose.Cells for .NET
-// Description: This C# example creates a workbook, inserts sample data, builds a column chart, calculates the plot‑area dimensions, converts the ratios to the 1/4000 chart unit required by AddShapeInChart, places an external rectangle that aligns exactly with the plot area, applies simple formatting, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells | C# chart shape | AddShapeInChart | plot area coordinates | external shape | chart overlay | Aspose.Cells example | Excel automation .NET
-// Common Searches: Aspose.Cells add shape to chart plot area | Get chart plot area position Aspose.Cells .NET | How to overlay rectangle on Excel chart using Aspose | Convert PlotArea ratios to AddShapeInChart units | Place external shape in Aspose.Cells chart
-// Developer Intent: Insert an external rectangle that matches the chart's plot area and persist the workbook.
-// Use Cases: Visually emphasize the data region of a chart in automated reports | Add branded or labeled annotations that line up with the plot area | Generate dynamic Excel files where shapes are positioned relative to chart dimensions
-// AI Prompts: Write C# code with Aspose.Cells to place a circular shape over the plot area of a line chart and set its opacity. | Explain the formula for translating PlotArea.XRatioToChart, YRatioToChart, WidthRatioToChart, HeightRatioToChart into the integer values required by AddShapeInChart. | Provide a tutorial for adding multiple shapes to different chart sections (plot area, legend, title) using Aspose.Cells for .NET.
+// Title: Place a Shape Over a Chart Plot Area Using Aspose.Cells for .NET (C#)
+// Description: Shows how to create a workbook, add sample data, generate a column chart, calculate its layout, obtain chart and plot‑area dimensions, compute relative percentages, insert a rectangle shape that exactly matches the plot area with AddShapeInChartByScale, style the shape, and save the file.
+// Keywords: Aspose.Cells C# chart shape | AddShapeInChartByScale example | chart plot area dimensions | overlay shape on chart | save workbook Aspose.Cells | rectangle shape chart Aspose | chart area scaling | Aspose.Cells drawing API | place shape by percent | C# Excel chart annotation
+// Common Searches: Aspose.Cells add rectangle to chart plot area | How to use AddShapeInChartByScale in .NET | Get plot area size from Aspose.Cells chart | Overlay shape on Excel chart with Aspose.Cells | C# code to align shape with chart plot area | Save workbook after adding chart shape Aspose | Aspose.Cells chart drawing examples
+// Developer Intent: Insert a shape that aligns precisely with a chart’s plot area and persist the workbook.
+// Use Cases: Emphasize data region with a semi‑transparent overlay in financial reports. | Add a branded watermark or logo confined to the plot area. | Create an interactive hotspot over the plot area for drill‑down actions. | Mask unwanted chart elements by covering the plot area. | Generate a custom grid or background within the plot area.
+// AI Prompts: Write C# code with Aspose.Cells that adds a rectangle shape covering the plot area of a column chart and saves the workbook. | Show how to calculate plot‑area width and height as percentages of the chart and use AddShapeInChartByScale to position a shape. | Provide an Aspose.Cells example that styles the shape with semi‑transparent fill and dark border. | Explain how to retrieve chart dimensions and overlay an image on the plot area in C#. | Generate a step‑by‑step guide for placing any drawing object inside a chart plot area using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExternalShapeExample
+namespace AsposeCellsExamples
 {
-    // This C# example creates a workbook, inserts sample data, builds a column chart, calculates the plot‑area dimensions, converts the ratios to the 1/4000 chart unit required by AddShapeInChart, places an external rectangle that aligns exactly with the plot area, applies simple formatting, and saves the file as an XLSX document.
-    public class Program
+    // Shows how to create a workbook, add sample data, generate a column chart, calculate its layout, obtain chart and plot‑area dimensions, compute relative percentages, insert a rectangle shape that exactly matches the plot area with AddShapeInChartByScale, style the shape, and save the file.
+    public class PlaceShapeAtPlotArea
     {
         public static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["B3"].PutValue(20);
-                worksheet.Cells["B4"].PutValue(30);
-
-                // Add a column chart to the worksheet
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 1, 20, 10);
-                Chart chart = worksheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Ensure the chart is calculated so that PlotArea dimensions are valid
-                chart.Calculate();
-
-                // Get plot area ratios relative to the chart (values between 0 and 1)
-                double leftRatio = chart.PlotArea.XRatioToChart;
-                double topRatio = chart.PlotArea.YRatioToChart;
-                double widthRatio = chart.PlotArea.WidthRatioToChart;
-                double heightRatio = chart.PlotArea.HeightRatioToChart;
-
-                // Convert ratios to the unit required by AddShapeInChart (1/4000 of chart area)
-                int left = (int)(leftRatio * 4000);
-                int top = (int)(topRatio * 4000);
-                int right = (int)((leftRatio + widthRatio) * 4000);
-                int bottom = (int)((topRatio + heightRatio) * 4000);
-
-                // Add an external rectangle shape exactly over the plot area
-                Shape shape = chart.Shapes.AddShapeInChart(
-                    MsoDrawingType.Rectangle,   // Shape type
-                    PlacementType.Move,        // Placement behavior
-                    left, top, right, bottom);
-
-                // Optional: set some visual properties
-                shape.Fill.SolidFill.Color = System.Drawing.Color.LightBlue;
-                shape.Line.SolidFill.Color = System.Drawing.Color.DarkBlue;
-                shape.Text = "Plot Area Overlay";
-
-                // Save the workbook
-                string outputPath = "ChartWithExternalShape.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Run();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("Q1");
+            worksheet.Cells["A3"].PutValue("Q2");
+            worksheet.Cells["A4"].PutValue("Q3");
+            worksheet.Cells["B1"].PutValue("Sales");
+            worksheet.Cells["B2"].PutValue(1500);
+            worksheet.Cells["B3"].PutValue(2300);
+            worksheet.Cells["B4"].PutValue(1800);
+
+            // Add a column chart
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 1, 20, 10);
+            Chart chart = worksheet.Charts[chartIndex];
+            chart.SetChartDataRange("A1:B4", true);
+            chart.Calculate(); // Ensure the chart layout is calculated
+
+            // Retrieve chart dimensions (in points) via ChartObject
+            double chartWidth = chart.ChartObject.Width;
+            double chartHeight = chart.ChartObject.Height;
+
+            // Retrieve plot area dimensions (in points)
+            double plotWidth = chart.PlotArea.Width;
+            double plotHeight = chart.PlotArea.Height;
+
+            // Plot area starts at the top‑left corner of the chart area (percent = 0)
+            double leftPercent = 0.0;
+            double topPercent = 0.0;
+            double rightPercent = plotWidth / chartWidth;   // width as fraction of chart width
+            double bottomPercent = plotHeight / chartHeight; // height as fraction of chart height
+
+            // Add a rectangle shape that exactly covers the plot area
+            Shape shape = chart.Shapes.AddShapeInChartByScale(
+                MsoDrawingType.Rectangle,   // shape type
+                PlacementType.Move,         // placement behavior
+                leftPercent,                // left (percent of chart width)
+                topPercent,                 // top (percent of chart height)
+                rightPercent,               // right (percent of chart width)
+                bottomPercent);             // bottom (percent of chart height)
+
+            // Optional: format the shape to make it visible
+            shape.Fill.SolidFill.Color = System.Drawing.Color.FromArgb(128, System.Drawing.Color.LightGreen); // semi‑transparent fill
+            shape.Line.SolidFill.Color = System.Drawing.Color.DarkGreen; // border color
+
+            // Save the workbook
+            string outputPath = "ChartWithPlotAreaShape.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
     }
 }

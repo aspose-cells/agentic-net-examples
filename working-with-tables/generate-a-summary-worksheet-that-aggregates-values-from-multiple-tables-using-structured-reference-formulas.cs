@@ -1,107 +1,108 @@
-// Title: Aggregate Sales Data with Structured Reference Formulas in Aspose.Cells C#
-// Description: Creates a workbook with two ListObject tables (SalesQ1 and SalesQ2) and a Summary sheet that uses structured reference formulas (e.g., =SUM(SalesQ1Table[Sales])) to calculate quarterly totals and a combined total, then recalculates and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | structured reference | ListObject | summary worksheet | aggregate tables | SUM formula | Excel automation | multiple tables aggregation
-// Common Searches: Aspose.Cells sum column from ListObject | C# create summary sheet with structured references | aggregate data from multiple Excel tables using Aspose.Cells | how to use =SUM(Table[Column]) in Aspose.Cells | combine sales tables into one summary workbook C#
-// Developer Intent: Create a workbook with two ListObject tables and a summary sheet that calculates each quarter’s total and the combined sales using structured reference formulas.
-// Use Cases: Quarterly sales reporting with auto‑updating totals | Financial dashboard that consolidates data from several worksheets | Automated master summary for multi‑sheet Excel workbooks | Data validation and recalculation after adding new rows to source tables
-// AI Prompts: Generate C# Aspose.Cells code that builds two worksheets with ListObject tables and adds a summary worksheet using structured reference formulas like =SUM(Table[Column]) | Show how to apply structured reference formulas, recalculate the workbook, and save the file in Aspose.Cells .NET | Provide an example of aggregating values from multiple tables into a single summary sheet with Aspose.Cells for C#
+// Title: Create a Summary Sheet with Structured References from Multiple Tables in Aspose.Cells C#
+// Description: This example builds a new workbook, adds two ListObject tables (SalesData and ExpenseData) on separate worksheets, then creates a Summary sheet that uses structured reference formulas (e.g., =SUM(SalesData[Amount])) to compute total sales, total expenses, and net profit. The formulas are evaluated and the workbook is saved as SummaryWorkbook.xlsx.
+// Keywords: Aspose.Cells | C# structured references | ListObject table | summary worksheet | aggregate table data | SUM formula | net profit calculation | Excel automation .NET
+// Common Searches: Aspose.Cells structured reference formula example | C# create summary sheet from multiple tables | How to sum ListObject column in Aspose.Cells | Calculate net profit using Aspose.Cells tables | Programmatic Excel summary worksheet C#
+// Developer Intent: Generate a workbook with two data tables and a summary sheet that totals each table using structured reference formulas.
+// Use Cases: Financial reporting workbook that updates totals automatically when source tables change. | Dynamic dashboard where key metrics are derived from separate sales and expense tables. | Automated profit‑and‑loss statement generation by aggregating table data into a single summary sheet.
+// AI Prompts: Show C# code to add a ListObject table and reference its column with a structured formula in Aspose.Cells. | Provide an Aspose.Cells example that creates a summary worksheet calculating total sales, total expenses, and net profit. | Explain how to evaluate and save formulas after building tables in an Aspose.Cells workbook.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Tables; // Required for ListObject and ListObjectCollection
+using Aspose.Cells.Tables;
 
-namespace AsposeCellsSummaryExample
+namespace SummaryWorksheetExample
 {
-    // Creates a workbook with two ListObject tables (SalesQ1 and SalesQ2) and a Summary sheet that uses structured reference formulas (e.g., =SUM(SalesQ1Table[Sales])) to calculate quarterly totals and a combined total, then recalculates and saves the file.
+    // This example builds a new workbook, adds two ListObject tables (SalesData and ExpenseData) on separate worksheets, then creates a Summary sheet that uses structured reference formulas (e.g., =SUM(SalesData[Amount])) to compute total sales, total expenses, and net profit. The formulas are evaluated and the workbook is saved as SummaryWorkbook.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // ------------------------------
-                // Worksheet 1 – First data table
-                // ------------------------------
-                Worksheet ws1 = workbook.Worksheets[0];
-                ws1.Name = "SalesQ1";
+                // -------------------------------------------------
+                // 1. Create first data table (SalesData) on Sheet1
+                // -------------------------------------------------
+                Worksheet sheet1 = workbook.Worksheets[0];
+                sheet1.Name = "Sales";
 
-                // Populate sample data (header + 5 rows)
-                ws1.Cells["A1"].PutValue("Region");
-                ws1.Cells["B1"].PutValue("Sales");
-                ws1.Cells["A2"].PutValue("North");
-                ws1.Cells["B2"].PutValue(1200);
-                ws1.Cells["A3"].PutValue("South");
-                ws1.Cells["B3"].PutValue(950);
-                ws1.Cells["A4"].PutValue("East");
-                ws1.Cells["B4"].PutValue(780);
-                ws1.Cells["A5"].PutValue("West");
-                ws1.Cells["B5"].PutValue(660);
-                ws1.Cells["A6"].PutValue("Central");
-                ws1.Cells["B6"].PutValue(820);
+                // Header row
+                sheet1.Cells["A1"].PutValue("Region");
+                sheet1.Cells["B1"].PutValue("Amount");
 
-                // Convert the range into a structured table (ListObject)
-                ListObjectCollection tables1 = ws1.ListObjects;
-                int tableIndex1 = tables1.Add(0, 0, 5, 1, true); // rows 0‑5, columns 0‑1
-                ListObject table1 = tables1[tableIndex1];
-                // Use DisplayName to set the table name (Name property not available in some versions)
-                table1.DisplayName = "SalesQ1Table";
-
-                // ------------------------------
-                // Worksheet 2 – Second data table
-                // ------------------------------
-                Worksheet ws2 = workbook.Worksheets.Add("SalesQ2");
-
-                // Populate sample data (header + 5 rows)
-                ws2.Cells["A1"].PutValue("Region");
-                ws2.Cells["B1"].PutValue("Sales");
-                ws2.Cells["A2"].PutValue("North");
-                ws2.Cells["B2"].PutValue(1100);
-                ws2.Cells["A3"].PutValue("South");
-                ws2.Cells["B3"].PutValue(1020);
-                ws2.Cells["A4"].PutValue("East");
-                ws2.Cells["B4"].PutValue(850);
-                ws2.Cells["A5"].PutValue("West");
-                ws2.Cells["B5"].PutValue(730);
-                ws2.Cells["A6"].PutValue("Central");
-                ws2.Cells["B6"].PutValue(910);
+                // Data rows
+                sheet1.Cells["A2"].PutValue("North");
+                sheet1.Cells["B2"].PutValue(1200);
+                sheet1.Cells["A3"].PutValue("South");
+                sheet1.Cells["B3"].PutValue(850);
+                sheet1.Cells["A4"].PutValue("East");
+                sheet1.Cells["B4"].PutValue(950);
+                sheet1.Cells["A5"].PutValue("West");
+                sheet1.Cells["B5"].PutValue(1100);
 
                 // Convert the range into a structured table
-                ListObjectCollection tables2 = ws2.ListObjects;
-                int tableIndex2 = tables2.Add(0, 0, 5, 1, true);
-                ListObject table2 = tables2[tableIndex2];
-                table2.DisplayName = "SalesQ2Table";
+                ListObjectCollection tables1 = sheet1.ListObjects;
+                int salesTableIndex = tables1.Add(0, 0, 5, 1, true); // A1:B5
+                ListObject salesTable = tables1[salesTableIndex];
+                // Set table name (used in structured references)
+                salesTable.DisplayName = "SalesData";
 
-                // ------------------------------
-                // Summary worksheet – aggregation using structured references
-                // ------------------------------
-                Worksheet summaryWs = workbook.Worksheets.Add("Summary");
+                // -------------------------------------------------
+                // 2. Create second data table (ExpenseData) on Sheet2
+                // -------------------------------------------------
+                Worksheet sheet2 = workbook.Worksheets.Add("Expenses");
 
-                // Header labels
-                summaryWs.Cells["A1"].PutValue("Metric");
-                summaryWs.Cells["B1"].PutValue("Value");
+                // Header row
+                sheet2.Cells["A1"].PutValue("Category");
+                sheet2.Cells["B1"].PutValue("Amount");
 
-                // Total Sales Q1
-                summaryWs.Cells["A2"].PutValue("Total Sales Q1");
-                summaryWs.Cells["B2"].Formula = "=SUM(SalesQ1Table[Sales])";
+                // Data rows
+                sheet2.Cells["A2"].PutValue("Rent");
+                sheet2.Cells["B2"].PutValue(500);
+                sheet2.Cells["A3"].PutValue("Utilities");
+                sheet2.Cells["B3"].PutValue(200);
+                sheet2.Cells["A4"].PutValue("Supplies");
+                sheet2.Cells["B4"].PutValue(150);
+                sheet2.Cells["A5"].PutValue("Travel");
+                sheet2.Cells["B5"].PutValue(300);
 
-                // Total Sales Q2
-                summaryWs.Cells["A3"].PutValue("Total Sales Q2");
-                summaryWs.Cells["B3"].Formula = "=SUM(SalesQ2Table[Sales])";
+                // Convert the range into a structured table
+                ListObjectCollection tables2 = sheet2.ListObjects;
+                int expenseTableIndex = tables2.Add(0, 0, 5, 1, true); // A1:B5
+                ListObject expenseTable = tables2[expenseTableIndex];
+                expenseTable.DisplayName = "ExpenseData";
 
-                // Combined Total Sales
-                summaryWs.Cells["A4"].PutValue("Combined Total Sales");
-                summaryWs.Cells["B4"].Formula = "=SUM(SalesQ1Table[Sales], SalesQ2Table[Sales])";
+                // -------------------------------------------------
+                // 3. Create Summary worksheet with structured reference formulas
+                // -------------------------------------------------
+                Worksheet summary = workbook.Worksheets.Add("Summary");
+                Cells sumCells = summary.Cells;
 
-                // Recalculate all formulas so that the summary values are up‑to‑date
+                // Labels
+                sumCells["A1"].PutValue("Metric");
+                sumCells["B1"].PutValue("Value");
+
+                // Total Sales
+                sumCells["A2"].PutValue("Total Sales");
+                sumCells["B2"].Formula = "=SUM(SalesData[Amount])";
+
+                // Total Expenses
+                sumCells["A3"].PutValue("Total Expenses");
+                sumCells["B3"].Formula = "=SUM(ExpenseData[Amount])";
+
+                // Net Profit
+                sumCells["A4"].PutValue("Net Profit");
+                sumCells["B4"].Formula = "=B2-B3";
+
+                // Calculate all formulas so that the workbook contains the computed values
                 workbook.CalculateFormula();
 
-                // Save the workbook to a file
-                string outputPath = "SummaryWorkbook.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // -------------------------------------------------
+                // 4. Save the workbook
+                // -------------------------------------------------
+                workbook.Save("SummaryWorkbook.xlsx");
             }
             catch (Exception ex)
             {

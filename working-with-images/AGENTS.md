@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Image Rendering Agent
 category: working-with-images
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Render Excel worksheets, workbooks, and charts to image formats in C#
 primary_apis: [SheetRender, WorkbookRender, ImageOrPrintOptions, Chart.ToImage]
 search_intents: [convert Excel to PNG in C#, render worksheet to image, Excel to TIFF without Microsoft Excel, export chart to SVG]
@@ -120,3 +120,4 @@ Aspose.Cells renders without Microsoft Excel. Different machines can produce dif
 ## Definition of done
 
 The example compiles, runs, uses a verified rendering API, produces a nonempty image of the stated format, checks the claimed page or chart result, and introduces no unrelated dependency.
+

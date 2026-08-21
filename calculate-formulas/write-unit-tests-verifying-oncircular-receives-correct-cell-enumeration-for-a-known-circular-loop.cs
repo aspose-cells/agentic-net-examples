@@ -1,10 +1,10 @@
-// Title: Unit Test for Aspose.Cells OnCircular Callback – Verify Circular Reference Cell Enumeration (.NET)
-// Description: Demonstrates a custom CircularReferenceMonitor that overrides OnCircular, iterates over the enumerated circular cells, extracts each cell name (via reflection or ToString), and stores them. A workbook with a two‑cell circular loop (A1 ↔ B1) triggers the monitor during workbook.CalculateFormula, and the test asserts that the captured names match the expected set.
-// Keywords: Aspose.Cells | OnCircular | circular reference | calculation monitor | unit test | .NET | C# | MSTest | NUnit | xUnit | Workbook.CalculateFormula | cell enumeration | Excel circular loop detection | testing Aspose.Cells | formula calculation monitor
-// Common Searches: Aspose.Cells unit test circular reference | How to capture circular cells with CalculationMonitor | OnCircular method example Aspose.Cells | Test circular formula detection .NET | Aspose.Cells calculation monitor unit testing
-// Developer Intent: Create an automated test that confirms the OnCircular callback receives the exact collection of cells participating in a known circular reference.
-// Use Cases: Assert that CapturedCellNames contains "A1" and "B1" after calculating a workbook where A1 references B1 and B1 references A1. | Verify that null entries in the circularCellsData enumerator are recorded as "null". | Check that items lacking a Cell property are logged using their ToString representation. | Extend the test to a three‑cell loop (A1 → B1 → C1 → A1) and validate all three names are captured. | Run the verification with different test frameworks such as MSTest, NUnit, or xUnit.
-// AI Prompts: Generate an MSTest method that creates a CircularReferenceMonitor, builds a workbook with A1 =B1 and B1 =A1, runs CalculateFormula with a CalculationMonitor, and asserts that monitor.CapturedCellNames equals ["A1", "B1"]. | Write an NUnit test that injects a custom circular reference monitor, triggers formula calculation on a workbook containing a three‑cell circular loop, and verifies the enumeration passed to OnCircular includes "A1", "B1", and "C1". | Provide a xUnit test example using Moq to mock the IEnumerator supplied to OnCircular, ensuring the monitor extracts cell names from both the Cell property and the fallback ToString path.
+// Title: Unit test for CircularReferenceMonitor.OnCircular in Aspose.Cells (.NET) – verify A1↔B1 circular loop
+// Description: Creates a workbook where A1 references B1 and B1 references A1, attaches a custom CircularReferenceMonitor, runs CalculateFormula, and asserts that OnCircular receives the exact cell names (A1 and B1). Includes guidance for NUnit, MSTest, and xUnit implementations.
+// Keywords: Aspose.Cells | CircularReferenceMonitor | OnCircular | unit test | C# | formula calculation | circular reference detection | NUnit | MSTest | xUnit | .NET | cell enumeration | GitHub example
+// Common Searches: Aspose.Cells unit test circular reference | How to test OnCircular callback | Verify circular reference monitor Aspose.Cells | C# test for circular formula loop | Aspose.Cells CalculateFormula exception handling
+// Developer Intent: Confirm that the OnCircular callback receives the full set of cells involved in a known circular reference.
+// Use Cases: Create a workbook with A1 = "=B1" and B1 = "=A1", attach a CircularReferenceMonitor, call workbook.CalculateFormula, and assert that CircularCellNames contains both "A1" and "B1". | Implement the verification in NUnit using CollectionAssert.AreEquivalent to compare expected and actual cell name collections. | Use MSTest or xUnit to perform the same check, ensuring OnCircular returns false to halt further calculation.
+// AI Prompts: Generate an NUnit test method that sets up a circular reference between A1 and B1, uses a custom CircularReferenceMonitor, runs CalculateFormula, and asserts the monitor captured both cells. | Write a MSTest unit test for Aspose.Cells that verifies OnCircular receives an IEnumerator of Cell objects for a circular loop and stops calculation by returning false. | Provide an xUnit example that checks CircularReferenceMonitor records the correct cell names when a circular reference exception occurs during workbook calculation.
 
 using System;
 using System.Collections;
@@ -13,41 +13,28 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // Monitor to capture cell names involved in circular references
-    // Demonstrates a custom CircularReferenceMonitor that overrides OnCircular, iterates over the enumerated circular cells, extracts each cell name (via reflection or ToString), and stores them. A workbook with a two‑cell circular loop (A1 ↔ B1) triggers the monitor during workbook.CalculateFormula, and the test asserts that the captured names match the expected set.
+    // Custom monitor that captures the cells involved in a circular reference
+    // Creates a workbook where A1 references B1 and B1 references A1, attaches a custom CircularReferenceMonitor, runs CalculateFormula, and asserts that OnCircular receives the exact cell names (A1 and B1). Includes guidance for NUnit, MSTest, and xUnit implementations.
     public class CircularReferenceMonitor : AbstractCalculationMonitor
     {
-        public List<string> CapturedCellNames { get; } = new List<string>();
+        // Stores the names of cells reported by OnCircular
+        public List<string> CircularCellNames { get; } = new List<string>();
 
+        // Called by the calculation engine when a circular reference is detected
         public override bool OnCircular(IEnumerator circularCellsData)
         {
+            // Enumerate through the provided CalculationCell items
             while (circularCellsData.MoveNext())
             {
-                var item = circularCellsData.Current;
-                if (item == null)
+                // The enumerated objects are of type Cell
+                if (circularCellsData.Current is Cell cell)
                 {
-                    CapturedCellNames.Add("null");
-                    continue;
+                    CircularCellNames.Add(cell.Name);
                 }
-
-                // Try to get the underlying Cell via reflection
-                var cellProp = item.GetType().GetProperty("Cell");
-                if (cellProp != null)
-                {
-                    var cell = cellProp.GetValue(item) as Cell;
-                    if (cell != null)
-                    {
-                        CapturedCellNames.Add(cell.Name);
-                        continue;
-                    }
-                }
-
-                // Fallback to ToString representation
-                CapturedCellNames.Add(item.ToString());
             }
 
-            // Continue processing other circular cells
-            return true;
+            // Return false to stop further calculation of these cells
+            return false;
         }
     }
 
@@ -57,35 +44,47 @@ namespace AsposeCellsExample
         {
             try
             {
-                // Create a workbook with a circular reference: A1 <-> B1
+                // Arrange: create a workbook with a simple circular reference (A1 <-> B1)
                 var workbook = new Workbook();
                 var sheet = workbook.Worksheets[0];
                 sheet.Cells["A1"].Formula = "=B1";
                 sheet.Cells["B1"].Formula = "=A1";
 
-                // Attach the custom monitor
+                // Set up the custom monitor and calculation options
                 var monitor = new CircularReferenceMonitor();
                 var options = new CalculationOptions { CalculationMonitor = monitor };
 
-                // Perform calculation; monitor will capture circular cells
-                workbook.CalculateFormula(options);
+                // Act: attempt to calculate formulas; the circular reference will trigger OnCircular
+                try
+                {
+                    workbook.CalculateFormula(options);
+                }
+                catch (Exception ex)
+                {
+                    // Aspose.Cells may throw an exception for unresolved circular references.
+                    // The exception is logged but does not stop the test logic.
+                    Console.WriteLine($"Calculation exception (expected for circular reference): {ex.Message}");
+                }
 
-                // Verify captured cell names
+                // Assert: the monitor should have captured both A1 and B1 (order is not guaranteed)
                 var expected = new HashSet<string> { "A1", "B1" };
-                var actual = new HashSet<string>(monitor.CapturedCellNames);
+                var actual = new HashSet<string>(monitor.CircularCellNames);
 
                 if (expected.SetEquals(actual))
                 {
-                    Console.WriteLine("Test passed: Circular reference cells captured correctly.");
+                    Console.WriteLine("OnCircular captured expected cells: " + string.Join(", ", monitor.CircularCellNames));
                 }
                 else
                 {
-                    Console.WriteLine($"Test failed: Expected [{string.Join(", ", expected)}] but captured [{string.Join(", ", actual)}].");
+                    Console.WriteLine("OnCircular did not capture the expected cells.");
+                    Console.WriteLine("Expected: " + string.Join(", ", expected));
+                    Console.WriteLine("Actual: " + string.Join(", ", actual));
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Catch any unexpected runtime errors
+                Console.WriteLine($"Unexpected error: {e}");
             }
         }
     }

@@ -1,49 +1,76 @@
-// Title: Save Excel to PDF with a 20‑second timeout using Aspose.Cells for .NET
-// Description: Shows how to load an .xlsx file, attach a ThreadInterruptMonitor that aborts the Save operation after 20 seconds, export the workbook to PDF, catch the interrupted CellsException, and properly finish the monitor.
-// Keywords: Aspose.Cells | C# | .NET | ThreadInterruptMonitor | PDF conversion timeout | Excel to PDF | interrupt monitor | cancel workbook save | 20 second limit | CellsException
-// Common Searches: Aspose.Cells set timeout for workbook.Save | C# abort PDF export after 20 seconds | ThreadInterruptMonitor example | How to cancel Excel to PDF conversion in .NET | Catch interrupted exception Aspose.Cells | Limit Aspose.Cells PDF generation time | Save workbook as PDF with time limit
-// Developer Intent: The developer wants to export a loaded workbook to PDF but stop the operation if it runs longer than 20 seconds.
-// Use Cases: Prevent long‑running PDF conversions in a web API by applying a 20‑second interrupt monitor. | Provide a cancellable export button in a desktop app that automatically halts after a timeout. | Guard server resources in batch processing pipelines by aborting oversized workbook saves.
-// AI Prompts: Add logging to record the elapsed time before the interrupt occurs. | Show how to read the timeout value from an appsettings.json file and configure ThreadInterruptMonitor dynamically. | Explain handling of other CellsException codes when using an interrupt monitor during workbook.Save.
+// Title: C# – Convert Excel to PDF with a 20‑second timeout using Aspose.Cells InterruptMonitor
+// Description: Loads an XLSX file, attaches a SystemTimeInterruptMonitor via LoadOptions, starts a 20 000 ms timer, and saves the workbook as PDF. If the export exceeds the limit, a CellsException with the Interrupted code is thrown and handled.
+// Keywords: Aspose.Cells | C# Excel to PDF | InterruptMonitor | SystemTimeInterruptMonitor | timeout PDF conversion | abort long export | Workbook.Save timeout | SaveFormat.Pdf | performance safeguard | large Excel files
+// Common Searches: Aspose.Cells set timeout for PDF export C# | How to abort Excel to PDF conversion after 20 seconds | SystemTimeInterruptMonitor example for workbook.Save | C# limit Aspose.Cells PDF generation time | Catch CellsException.Interrupted during save
+// Developer Intent: Create a PDF conversion that automatically stops when processing exceeds twenty seconds.
+// Use Cases: Prevent web‑service requests from hanging while converting large spreadsheets to PDF. | Add a safety guard in batch jobs that generate PDFs to avoid server timeouts. | Provide immediate feedback to users when a conversion is terminated due to time constraints.
+// AI Prompts: Write C# code that uses Aspose.Cells and SystemTimeInterruptMonitor to export an Excel workbook to PDF with a 15‑second limit. | Explain how to detect and handle the CellsException.Interrupted error during a workbook.Save operation. | Show how to reuse a single InterruptMonitor for both loading and saving in Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsInterruptDemo
+// Loads an XLSX file, attaches a SystemTimeInterruptMonitor via LoadOptions, starts a 20 000 ms timer, and saves the workbook as PDF. If the export exceeds the limit, a CellsException with the Interrupted code is thrown and handled.
+class Program
 {
-    // Shows how to load an .xlsx file, attach a ThreadInterruptMonitor that aborts the Save operation after 20 seconds, export the workbook to PDF, catch the interrupted CellsException, and properly finish the monitor.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Input workbook file (replace with actual path)
+        string inputPath = "input.xlsx";
+        // Output PDF file
+        string outputPath = "output.pdf";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Load the source workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Create an interrupt monitor that will throw an exception when interrupted
-            ThreadInterruptMonitor monitor = new ThreadInterruptMonitor(terminateWithoutException: false);
+        // Create a SystemTimeInterruptMonitor that throws an exception when interrupted
+        SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
 
-            // Assign the monitor to the workbook
-            workbook.InterruptMonitor = monitor;
+        // Attach the monitor to load options so it is active during loading
+        LoadOptions loadOptions = new LoadOptions
+        {
+            InterruptMonitor = monitor
+        };
 
-            // Set a time limit of 20,000 milliseconds (20 seconds) for the save operation
-            monitor.StartMonitor(20000);
+        Workbook workbook;
+        try
+        {
+            // Load the workbook with the interrupt monitor attached
+            workbook = new Workbook(inputPath, loadOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
 
-            try
-            {
-                // Attempt to save the workbook as PDF; this will be aborted if it exceeds the time limit
-                workbook.Save("output.pdf", SaveFormat.Pdf);
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
-            {
-                // The operation was interrupted because it exceeded the time limit
-                Console.WriteLine("Save operation was interrupted after exceeding the 20‑second limit.");
-            }
-            finally
-            {
-                // Ensure the monitor is finished for this operation
-                monitor.FinishMonitor();
-            }
+        // Assign the monitor to the workbook to monitor the save operation
+        workbook.InterruptMonitor = monitor;
+
+        // Start the monitor with a 20‑second (20000 ms) limit before saving
+        monitor.StartMonitor(20000);
+
+        try
+        {
+            // Save the workbook as PDF; will be aborted if it exceeds 20 seconds
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine("Workbook successfully saved to PDF.");
+        }
+        catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
+        {
+            Console.WriteLine("Save operation was interrupted after exceeding the time limit.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error during save: {ex.Message}");
+        }
+        finally
+        {
+            // No explicit StopMonitor method; monitor will be disposed automatically when out of scope
         }
     }
 }

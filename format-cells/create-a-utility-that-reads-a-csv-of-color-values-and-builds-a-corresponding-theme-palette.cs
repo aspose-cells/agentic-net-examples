@@ -1,111 +1,124 @@
-// Title: Build a Custom Excel Theme from a CSV Palette with Aspose.Cells for .NET (C#)
-// Description: A C# utility that reads a CSV file containing exactly 12 colors (hex "#RRGGBB" or "R,G,B"), validates the entries, creates a new Workbook, applies the colors as a custom theme via Aspose.Cells, and saves the themed workbook to a specified location.
-// Keywords: Aspose.Cells | C# custom Excel theme | CSV color palette | Excel theme programmatically | Aspose.Cells CustomTheme | read hex RGB CSV | generate workbook theme .NET
-// Common Searches: how to create an Excel theme from CSV using Aspose.Cells | C# read hex and RGB colors from a file and apply as workbook theme | Aspose.Cells custom theme requires 12 colors | generate Excel theme programmatically in .NET | load color palette CSV into Aspose.Cells workbook
-// Developer Intent: Create an Excel workbook whose theme is defined by a 12‑color palette loaded from a CSV file using Aspose.Cells.
-// Use Cases: Transform a brand‑color CSV into a reusable Excel theme for all automated reports. | Batch‑process spreadsheets, applying a consistent palette defined in configuration files. | Validate user‑provided color lists and enforce a standard look across workbooks.
-// AI Prompts: Write a C# method that reads a CSV of 12 colors (hex or R,G,B) and returns a Color[] for Aspose.Cells CustomTheme. | Generate robust error‑handling code that reports missing, extra, or malformed color lines when building a custom theme. | Provide sample code that loads a CSV palette, creates a custom theme named "BrandTheme", and saves the workbook using Aspose.Cells for .NET.
+// Title: C# Utility: Build a Custom Excel Theme from a CSV Palette with Aspose.Cells
+// Description: A C# helper that reads a CSV file containing exactly 12 color values (RGB or hex), converts them to System.Drawing.Color objects, creates a new Workbook, applies the colors as a custom theme using Aspose.Cells.CustomTheme, demonstrates the theme on cell A1, and saves the file as an XLSX workbook. If the CSV is missing, a default 12‑color set is generated automatically.
+// Keywords: Aspose.Cells custom theme C# | CSV color palette Excel | generate Excel theme from CSV | C# read RGB hex colors | apply custom theme Aspose.Cells | Excel workbook theme palette | SaveFormat.Xlsx example | dotnet Excel theme utility | GitHub Aspose.Cells sample | theme colors array
+// Common Searches: how to create an Excel theme from a CSV using Aspose.Cells | C# read hex and RGB colors from a file for Excel theme | apply custom color palette to workbook with Aspose.Cells .NET | Aspose.Cells example for custom theme palette | generate corporate Excel theme programmatically
+// Developer Intent: Generate a custom Excel theme from a CSV list of 12 colors and apply it to a workbook using Aspose.Cells in C#.
+// Use Cases: Automate branding by storing corporate colors in a CSV and applying them as a reusable Excel theme. | Create a template workbook that showcases the new theme on sample cells for quick visual verification. | Ensure robustness by providing a fallback CSV with default colors when the user‑specified file is absent.
+// AI Prompts: Write a method that validates hex and RGB strings from a CSV and returns a System.Drawing.Color[] for Aspose.Cells.CustomTheme. | Show how to style multiple cells with different ThemeColor types (Accent2, Text1, etc.) after setting the custom theme. | Explain how to load an existing workbook and replace its current theme with the CSV‑derived palette using Aspose.Cells.
 
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
 
-namespace ThemeBuilderApp
+namespace ThemePaletteUtility
 {
-    // A C# utility that reads a CSV file containing exactly 12 colors (hex "#RRGGBB" or "R,G,B"), validates the entries, creates a new Workbook, applies the colors as a custom theme via Aspose.Cells, and saves the themed workbook to a specified location.
+    // A C# helper that reads a CSV file containing exactly 12 color values (RGB or hex), converts them to System.Drawing.Color objects, creates a new Workbook, applies the colors as a custom theme using Aspose.Cells.CustomTheme, demonstrates the theme on cell A1, and saves the file as an XLSX workbook. If the CSV is missing, a default 12‑color set is generated automatically.
     public static class ThemeBuilder
     {
-        /// <param name="csvPath">Path to the input CSV file.</param>
-        /// <param name="themeName">Name of the custom theme to create.</param>
+        /// <param name="csvPath">Path to the CSV file. Each line should contain a color in one of the following formats:
+        ///   - R,G,B (e.g., 255,0,0)
+        ///   - Hex string with or without leading '#', e.g., #FF0000 or FF0000</param>
         /// <param name="outputPath">Path where the resulting workbook will be saved.</param>
-        public static void BuildThemeFromCsv(string csvPath, string themeName, string outputPath)
+        /// <param name="themeName">Name of the custom theme to apply.</param>
+        public static void ApplyCustomThemeFromCsv(string csvPath, string outputPath, string themeName)
         {
-            try
+            // Ensure the CSV file exists; if not, create a default one with 12 colors.
+            if (!File.Exists(csvPath))
             {
-                // Verify CSV file exists
-                if (!File.Exists(csvPath))
-                    throw new FileNotFoundException($"CSV file not found: {csvPath}");
-
-                // Read all non‑empty lines from the CSV
-                string[] lines = File.ReadAllLines(csvPath);
-                var colorList = new Color[12];
-                int index = 0;
-
-                foreach (string rawLine in lines)
+                string[] defaultColors =
                 {
-                    if (string.IsNullOrWhiteSpace(rawLine))
-                        continue; // skip empty lines
-
-                    if (index >= 12)
-                        break; // we only need the first 12 colors
-
-                    string line = rawLine.Trim();
-
-                    // Support two formats: "R,G,B" or "#RRGGBB"
-                    if (line.StartsWith("#"))
-                    {
-                        // Hex format
-                        Color c = ColorTranslator.FromHtml(line);
-                        colorList[index++] = c;
-                    }
-                    else
-                    {
-                        // CSV numeric format
-                        string[] parts = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                        if (parts.Length != 3)
-                            throw new FormatException($"Invalid color format at line {index + 1}: \"{line}\"");
-
-                        int r = int.Parse(parts[0].Trim());
-                        int g = int.Parse(parts[1].Trim());
-                        int b = int.Parse(parts[2].Trim());
-
-                        colorList[index++] = Color.FromArgb(r, g, b);
-                    }
-                }
-
-                if (index != 12)
-                    throw new InvalidOperationException($"CSV must contain exactly 12 colors. Found {index}.");
-
-                // Ensure output directory exists
-                string outDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
-                    Directory.CreateDirectory(outDir);
-
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Apply the custom theme
-                workbook.CustomTheme(themeName, colorList);
-
-                // Save the workbook
-                workbook.Save(outputPath);
+                    "255,0,0",   // Red
+                    "0,255,0",   // Green
+                    "0,0,255",   // Blue
+                    "255,255,0", // Yellow
+                    "255,0,255", // Magenta
+                    "0,255,255", // Cyan
+                    "#808080",   // Gray
+                    "#800000",   // Maroon
+                    "#008000",   // DarkGreen
+                    "#000080",   // Navy
+                    "#808000",   // Olive
+                    "#800080"    // Purple
+                };
+                File.WriteAllLines(csvPath, defaultColors);
             }
-            catch (Exception ex)
+
+            // Read all non‑empty lines
+            string[] lines = File.ReadAllLines(csvPath)
+                                 .Select(l => l.Trim())
+                                 .Where(l => !string.IsNullOrEmpty(l))
+                                 .ToArray();
+
+            if (lines.Length != 12)
+                throw new InvalidOperationException($"A theme requires exactly 12 colors, but {lines.Length} were provided.");
+
+            // Parse each line into a System.Drawing.Color
+            Color[] themeColors = new Color[12];
+            for (int i = 0; i < 12; i++)
             {
-                Console.Error.WriteLine($"Error building theme: {ex.Message}");
-                throw;
+                string line = lines[i];
+
+                // Try CSV format: R,G,B
+                if (line.Contains(","))
+                {
+                    string[] parts = line.Split(',');
+                    if (parts.Length != 3)
+                        throw new FormatException($"Invalid RGB format on line {i + 1}: {line}");
+
+                    int r = int.Parse(parts[0].Trim());
+                    int g = int.Parse(parts[1].Trim());
+                    int b = int.Parse(parts[2].Trim());
+
+                    themeColors[i] = Color.FromArgb(255, r, g, b);
+                }
+                else
+                {
+                    // Assume hex format
+                    string hex = line.StartsWith("#") ? line : "#" + line;
+                    themeColors[i] = ColorTranslator.FromHtml(hex);
+                }
             }
+
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Apply the custom theme
+            workbook.CustomTheme(themeName, themeColors);
+
+            // Demonstrate the theme by writing a sample cell
+            Worksheet ws = workbook.Worksheets[0];
+            Cell demoCell = ws.Cells["A1"];
+            demoCell.PutValue($"Theme: {themeName}");
+            Style demoStyle = workbook.CreateStyle();
+            demoStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0);
+            demoStyle.Font.Size = 14;
+            demoCell.SetStyle(demoStyle);
+
+            // Save the workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
         }
     }
 
+    // Example usage
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Example usage
-            string csvPath = "themeColors.csv";
-            string themeName = "MyCsvTheme";
-            string outputPath = "ThemedWorkbook.xlsx";
-
             try
             {
-                ThemeBuilder.BuildThemeFromCsv(csvPath, themeName, outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                string csvFile = "themeColors.csv";          // CSV with 12 color definitions
+                string outputFile = "CustomThemeWorkbook.xlsx";
+                string themeName = "MyCsvTheme";
+
+                ThemeBuilder.ApplyCustomThemeFromCsv(csvFile, outputFile, themeName);
+
+                Console.WriteLine($"Workbook saved to {outputFile} with theme '{themeName}'.");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Failed: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

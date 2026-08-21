@@ -1,10 +1,10 @@
-// Title: Add Calculated Data Labels to a Histogram and Auto‑Fit Shapes with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, populate categories and values, compute a secondary range (e.g., double the original values), insert a column chart used as a histogram, link data‑label text to the calculated range, enable automatic shape resizing and font scaling, position labels inside the columns, recalculate the chart, and save the file as an Excel workbook.
-// Keywords: Aspose.Cells histogram data labels | C# chart data label linked source | auto‑fit label shape Aspose.Cells | IsResizeShapeToFitText | AutoScaleFont Aspose.Cells | LabelPositionType.InsideBase | column chart calculated labels .NET | Excel automation Aspose.Cells | dynamic data labels C# | chart recalculation Aspose.Cells
-// Common Searches: link data label to cell range Aspose.Cells | auto size data label shape in column chart .NET | histogram with custom calculated labels C# | set label position inside base Aspose.Cells | Aspose.Cells example for data label formulas
-// Developer Intent: Generate a histogram where each bar’s label shows a value derived from a formula range and automatically adjusts its shape to the text.
-// Use Cases: Sales distribution report that displays a computed metric (e.g., double sales) as a label on each histogram bar. | Dynamic workbook where label values update automatically when source data changes, with labels fitting the column width. | Dashboard chart with inside‑base labels that scale font size to remain readable across varying bar heights.
-// AI Prompts: Write C# code using Aspose.Cells to create a histogram, link its data labels to a calculation column, and enable shape auto‑fit. | Show how to set data label position to InsideBase and turn on AutoScaleFont for a column chart in Aspose.Cells. | Provide an example that updates the formula range for label values and refreshes the chart labels in Aspose.Cells for .NET.
+// Title: Add Calculated Data Labels to a Histogram Chart with Auto‑Fit Shapes – Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, fills columns A‑B with categories and values, builds a formula range in column C, adds a column (histogram‑style) chart, links data labels to the formula range, enables shape auto‑sizing, sets label position to InsideBase, recalculates the chart, and saves the file as an Excel workbook.
+// Keywords: Aspose.Cells histogram data labels | C# chart linked source labels | auto resize label shape Aspose.Cells | custom chart labels from formulas | SetLabelPosition InsideBase Aspose.Cells | Excel chart data labels .NET
+// Common Searches: link chart data labels to a cell range Aspose.Cells | auto‑fit data label shape in Excel using C# | histogram with concatenated labels Aspose.Cells | how to use LinkedSource for chart labels .NET | set data label position inside base column chart
+// Developer Intent: Generate a histogram where each column displays a calculated label that automatically resizes to fit its text.
+// Use Cases: Display "Category: Value" labels on a column chart without manual text entry. | Produce Excel reports where label boxes expand to accommodate dynamic formula results. | Create a reusable routine that adds formula‑driven, auto‑sized labels to any chart series.
+// AI Prompts: Write C# code with Aspose.Cells that adds data labels to a column chart, pulls label text from a calculated range, and enables auto‑fit of label shapes. | Show how to link a histogram's data labels to concatenated formulas and set the label position to InsideBase using Aspose.Cells for .NET. | Explain the steps to recalculate a chart after assigning a LinkedSource to data labels in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
@@ -12,7 +12,7 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsHistogramDataLabels
 {
-    // Demonstrates how to create a workbook, populate categories and values, compute a secondary range (e.g., double the original values), insert a column chart used as a histogram, link data‑label text to the calculated range, enable automatic shape resizing and font scaling, position labels inside the columns, recalculate the chart, and save the file as an Excel workbook.
+    // Creates a workbook, fills columns A‑B with categories and values, builds a formula range in column C, adds a column (histogram‑style) chart, links data labels to the formula range, enables shape auto‑sizing, sets label position to InsideBase, recalculates the chart, and saves the file as an Excel workbook.
     public class Program
     {
         public static void Main()
@@ -24,7 +24,7 @@ namespace AsposeCellsHistogramDataLabels
                 Worksheet sheet = workbook.Worksheets[0];
 
                 // -------------------------------------------------
-                // 1. Populate source data (Category in A, Values in B)
+                // Populate source data for the histogram (Category and Value)
                 // -------------------------------------------------
                 sheet.Cells["A1"].PutValue("Category");
                 sheet.Cells["A2"].PutValue("A");
@@ -33,52 +33,52 @@ namespace AsposeCellsHistogramDataLabels
                 sheet.Cells["A5"].PutValue("D");
 
                 sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
-                sheet.Cells["B5"].PutValue(40);
+                sheet.Cells["B2"].PutValue(15);
+                sheet.Cells["B3"].PutValue(30);
+                sheet.Cells["B4"].PutValue(45);
+                sheet.Cells["B5"].PutValue(60);
 
                 // -------------------------------------------------
-                // 2. Add a calculation range (C column) that will be used for data‑label text
-                //    Example: double the original value
+                // Create a calculation range that derives a label text.
+                // For demonstration, concatenate the category with the value.
+                // The result will be placed in column C.
                 // -------------------------------------------------
-                sheet.Cells["C1"].PutValue("CalcValue");
-                for (int row = 2; row <= 5; row++)
-                {
-                    // Formula: =B2*2, =B3*2, ...
-                    sheet.Cells[$"C{row}"].Formula = $"=B{row}*2";
-                }
+                sheet.Cells["C1"].PutValue("Label");
+                sheet.Cells["C2"].Formula = "=A2 & \": \" & B2";
+                sheet.Cells["C3"].Formula = "=A3 & \": \" & B3";
+                sheet.Cells["C4"].Formula = "=A4 & \": \" & B4";
+                sheet.Cells["C5"].Formula = "=A5 & \": \" & B5";
 
                 // -------------------------------------------------
-                // 3. Insert a column chart (used as histogram) and bind data
+                // Add a histogram‑like chart (using Column) to the worksheet
                 // -------------------------------------------------
                 int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 15);
                 Chart chart = sheet.Charts[chartIndex];
 
-                // Series data (values) and category (labels)
+                // Set the data range for the series (values only)
                 chart.NSeries.Add("B2:B5", true);
+                // Set the category (X‑axis) data
                 chart.NSeries.CategoryData = "A2:A5";
 
                 // -------------------------------------------------
-                // 4. Enable data labels and link them to the calculation range
+                // Enable data labels for the series
                 // -------------------------------------------------
                 Series series = chart.NSeries[0];
-                series.DataLabels.ShowValue = true;                 // Show the value (optional)
-                series.DataLabels.ShowCellRange = true;             // Use cell range for label text
-                series.DataLabels.LinkedSource = "C2:C5";           // Calculation range
-                series.DataLabels.IsResizeShapeToFitText = true;   // Auto‑fit shape to text
-                series.DataLabels.AutoScaleFont = true;            // Font scales with shape size
+                series.DataLabels.ShowValue = true;                     // Show the numeric value
+                series.DataLabels.ShowCellRange = true;                // Use a cell range as the source for label text
+                series.DataLabels.LinkedSource = "C2:C5";               // Link to the calculation range created above
+                series.DataLabels.IsResizeShapeToFitText = true;       // Ensure the label shape auto‑fits the text
 
-                // Optional: set label position inside the bars
+                // Optional: set a more compact position so labels do not overlap
                 series.DataLabels.Position = LabelPositionType.InsideBase;
 
                 // -------------------------------------------------
-                // 5. Recalculate the chart to apply custom positions/sizes
+                // Recalculate the chart to apply the linked source values
                 // -------------------------------------------------
                 chart.Calculate();
 
                 // -------------------------------------------------
-                // 6. Save the workbook
+                // Save the workbook
                 // -------------------------------------------------
                 workbook.Save("HistogramWithCalculatedDataLabels.xlsx");
             }

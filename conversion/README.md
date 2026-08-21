@@ -4,7 +4,7 @@ description: C# examples for converting XLSX and Excel workbooks to PDF, HTML, C
 product: Aspose.Cells for .NET
 category: conversion
 language: C#
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-14
 ---
 
 # Convert Excel Files in C# with Aspose.Cells for .NET

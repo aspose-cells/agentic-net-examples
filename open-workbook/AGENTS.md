@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Workbook Loading Agent
 category: open-workbook
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Open Excel and other spreadsheet formats from files or streams with controlled loading behavior in C#
 primary_apis: [Workbook, LoadOptions, TxtLoadOptions, HtmlLoadOptions, LoadFilter, LightCellsDataHandler, FileFormatUtil]
 search_intents: [open Excel file in C#, load XLSX stream, read large Excel file, detect spreadsheet format]
@@ -311,3 +311,4 @@ Interpret one developer intent
 ## Definition of done
 
 A `open-workbook` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
+

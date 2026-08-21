@@ -1,34 +1,29 @@
-// Title: Open an XLSX workbook from a local path with Aspose.Cells Workbook(string) in C#
-// Description: Demonstrates how to instantiate a Workbook by passing a full file‑system path to the Workbook(string) constructor, retrieve the first worksheet, and print its name and the value of cell A1 to the console, confirming that the XLSX file is loaded correctly.
-// Keywords: Aspose.Cells | C# Workbook(string) | open XLSX file | load workbook from path | .NET read Excel | first worksheet name | cell A1 value
-// Common Searches: Aspose.Cells open existing XLSX C# | Workbook(string) constructor example | C# read Excel file path Aspose.Cells | how to get worksheet name Aspose.Cells | retrieve cell A1 value after loading workbook
-// Developer Intent: Load an existing XLSX file from a specified local path and access its first worksheet.
-// Use Cases: Load a template workbook, populate data programmatically, and save the result. | Read configuration values stored in the first sheet before executing business logic. | Validate that a required worksheet exists and that cell A1 contains a header before processing rows.
-// AI Prompts: Generate C# code that opens an XLSX file using Aspose.Cells Workbook(string) and prints the first worksheet name and cell A1 value. | Add comprehensive error handling for missing files, empty workbooks, or absent worksheets when using the Workbook(string) constructor. | Show how to open a workbook from a relative path and iterate over all cells in the first row with Aspose.Cells.
+// Title: Open an XLSX workbook from a file path using Aspose.Cells Workbook(string) constructor (C#)
+// Description: Shows how to load an existing XLSX file by passing its local path to the Aspose.Cells Workbook(string) constructor and then read the name of the first worksheet.
+// Keywords: Aspose.Cells | C# | Workbook constructor | load XLSX | open Excel file | read worksheet name | local file path | Aspose.Cells .NET
+// Common Searches: Aspose.Cells open XLSX from disk C# | Workbook(string) constructor example Aspose.Cells | How to read first worksheet name with Aspose.Cells | Load Excel workbook using Aspose.Cells C#
+// Developer Intent: Load an existing Excel workbook from a local path and access its worksheets with Aspose.Cells.
+// Use Cases: Display the name of the first worksheet after opening the file. | Modify cell values, add rows/columns, or insert charts once the workbook is loaded. | Convert the opened workbook to PDF, CSV, or another format. | Retrieve workbook metadata such as total sheet count or sheet visibility.
+// AI Prompts: Provide C# code that opens an XLSX file with Aspose.Cells and prints all worksheet names. | Show how to catch and handle FileNotFoundException when using the Workbook(string) constructor in Aspose.Cells. | Explain the steps to open a workbook from a file path and immediately save it as a PDF using Aspose.Cells C#.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsOpenExample
+namespace AsposeCellsDemo
 {
-    // Demonstrates how to instantiate a Workbook by passing a full file‑system path to the Workbook(string) constructor, retrieve the first worksheet, and print its name and the value of cell A1 to the console, confirming that the XLSX file is loaded correctly.
+    // Shows how to load an existing XLSX file by passing its local path to the Aspose.Cells Workbook(string) constructor and then read the name of the first worksheet.
     class Program
     {
         static void Main()
         {
-            // Path to the existing XLSX file on the local file system
-            string filePath = @"C:\Data\SampleWorkbook.xlsx";
+            // Path to the existing XLSX file
+            string filePath = "example.xlsx";
 
-            // Open the workbook using the constructor that accepts a file path
-            // This follows the provided rule: Workbook(string)
+            // Open the workbook from the specified file path using the string constructor
             Workbook workbook = new Workbook(filePath);
 
-            // Access the first worksheet to demonstrate that the file was loaded
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Output the name of the first worksheet and the value of cell A1 (if any)
-            Console.WriteLine($"Worksheet Name: {sheet.Name}");
-            Console.WriteLine($"Cell A1 Value: {sheet.Cells["A1"].StringValue}");
+            // Example operation: display the name of the first worksheet
+            Console.WriteLine("First worksheet name: " + workbook.Worksheets[0].Name);
         }
     }
 }

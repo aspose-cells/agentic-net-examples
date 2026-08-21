@@ -1,17 +1,17 @@
-// Title: Insert and lock a Visio diagram as a cell‑sized OLE object with Aspose.Cells for .NET
-// Description: Creates a new workbook, calculates the pixel width and height of a target cell, adds an OLE object sized to that cell, embeds a .vsdx Visio file as a non‑icon object, locks it, sets PlacementType.MoveAndSize, and saves the file.
-// Keywords: Aspose.Cells | C# | OLE object | Visio embed | lock OLE | cell dimensions | PlacementType.MoveAndSize | Excel automation | .vsdx | embed diagram
-// Common Searches: embed Visio file in Excel using Aspose.Cells | lock OLE object in Aspose.Cells workbook | size OLE object to match Excel cell | PlacementType.MoveAndSize example C# | Aspose.Cells add OLE object from byte array
-// Developer Intent: Embed a Visio diagram as a locked OLE object that automatically fits and moves with a specific worksheet cell.
-// Use Cases: Generate reports where each row displays a Visio diagram locked inside its cell. | Create a template with pre‑locked Visio OLE objects that resize with underlying cells. | Automate bulk insertion of Visio diagrams into different cells while preventing user edits.
-// AI Prompts: Write C# code with Aspose.Cells to embed a Visio .vsdx file as a non‑icon OLE object at cell D10, size it to the cell's pixel dimensions, lock it, and set it to move and resize with the cell. | Explain how to obtain a worksheet cell's pixel width and height in Aspose.Cells and use those values for OLE object sizing. | Provide step‑by‑step instructions to embed a Visio diagram as a locked OLE object and ensure it stays protected when the sheet is protected.
+// Title: Embed a Visio diagram as a locked OLE object sized to a cell range using Aspose.Cells for .NET
+// Description: Creates a new workbook, loads a PNG preview and a .vsdx Visio file, adds an OLE object anchored at cell B2, embeds the Visio diagram, resizes it to cover cells B2:C5 based on default row height and column width, locks the object to prevent movement, and saves the file as VisioOleObject.xlsx.
+// Keywords: Aspose.Cells | C# OLE object | Visio embed Excel | lock OLE object | resize OLE to cell range | Excel automation | Visio diagram in workbook | programmatic OLE sizing
+// Common Searches: Aspose.Cells embed Visio as OLE object | Resize OLE object to specific cells in .NET | Lock OLE objects in Excel worksheets using Aspose | Calculate OLE width height from column width row height | Add Visio diagram to Excel with Aspose.Cells C#
+// Developer Intent: Insert a Visio diagram as an embedded OLE object, adjust its dimensions to match a target cell range, and lock it to keep the layout stable.
+// Use Cases: Automated report generation where each sheet contains a fixed‑position Visio flowchart aligned with a data table. | Template creation that places a Visio diagram into a predefined cell block and locks it to preserve layout across users. | Batch processing of workbooks to embed different Visio files into designated ranges while preventing accidental edits.
+// AI Prompts: Generate code that computes OLE object Width and Height from actual column widths and row heights instead of pixel approximations. | Show how to add multiple Visio OLE objects to different cell ranges and lock each one programmatically. | Explain how to maintain the aspect ratio of the Visio preview image while fitting the OLE object within a specified cell block.
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System;
 using System.IO;
 
-// Creates a new workbook, calculates the pixel width and height of a target cell, adds an OLE object sized to that cell, embeds a .vsdx Visio file as a non‑icon object, locks it, sets PlacementType.MoveAndSize, and saves the file.
+// Creates a new workbook, loads a PNG preview and a .vsdx Visio file, adds an OLE object anchored at cell B2, embeds the Visio diagram, resizes it to cover cells B2:C5 based on default row height and column width, locks the object to prevent movement, and saves the file as VisioOleObject.xlsx.
 class InsertVisioOleObject
 {
     static void Main()
@@ -20,47 +20,71 @@ class InsertVisioOleObject
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Target cell where the OLE object will be placed (zero‑based indexes)
-            int targetRow = 5;      // Row 6 in Excel UI
-            int targetColumn = 2;   // Column C in Excel UI
+            // Define the cell where the OLE object will be anchored (e.g., B2)
+            int topRow = 1;        // Row index (zero‑based) -> B2
+            int leftColumn = 1;    // Column index (zero‑based) -> B2
 
-            // Determine the pixel size of the target cell
-            int widthPx = sheet.Cells.GetColumnWidthPixel(targetColumn);
-            int heightPx = sheet.Cells.GetRowHeightPixel(targetRow);
-
-            // Add an OLE object at the target cell with the calculated size.
-            // An empty byte array is supplied for the image data (required by the API).
-            byte[] placeholderImage = new byte[0];
-            int oleIndex = sheet.OleObjects.Add(targetRow, targetColumn, heightPx, widthPx, placeholderImage);
-            OleObject ole = sheet.OleObjects[oleIndex];
-
-            // Load the Visio diagram to be embedded
+            // Load preview image and Visio file if they exist
+            string previewPath = "visio_preview.png";
             string visioPath = "diagram.vsdx";
-            if (!File.Exists(visioPath))
-                throw new FileNotFoundException($"Visio file not found: {visioPath}");
 
-            byte[] visioData = File.ReadAllBytes(visioPath);
+            byte[] previewImage = null;
+            byte[] visioData = null;
 
-            // Embed the Visio file (not linked, not displayed as an icon)
-            ole.SetEmbeddedObject(
-                linkToFile: false,
-                objectData: visioData,
-                sourceFileName: Path.GetFileName(visioPath),
-                displayAsIcon: false,
-                label: string.Empty);
+            if (File.Exists(previewPath))
+            {
+                previewImage = File.ReadAllBytes(previewPath);
+            }
+            else
+            {
+                Console.WriteLine($"Preview image not found: {previewPath}");
+            }
 
-            // Lock the OLE object so it cannot be modified when the sheet is protected
-            ole.IsLocked = true;
+            if (File.Exists(visioPath))
+            {
+                visioData = File.ReadAllBytes(visioPath);
+            }
+            else
+            {
+                Console.WriteLine($"Visio file not found: {visioPath}");
+            }
 
-            // Ensure the object moves and resizes with its underlying cells
-            ole.Placement = PlacementType.MoveAndSize;
+            // Proceed only if both files were loaded successfully
+            if (previewImage != null && visioData != null)
+            {
+                // Add the OLE object with the preview image.
+                // Height and width are set to 0 for now; they will be adjusted later.
+                int oleIndex = worksheet.OleObjects.Add(topRow, leftColumn, 0, 0, previewImage);
+                OleObject oleObject = worksheet.OleObjects[oleIndex];
+
+                // Embed the Visio file into the OLE object.
+                // linkToFile = false (embed), displayAsIcon = false, label = "Visio Diagram"
+                oleObject.SetEmbeddedObject(false, visioData, "diagram.vsdx", false, "Visio Diagram");
+
+                // ------------------------------------------------------------
+                // Resize the OLE object to match a specific cell range.
+                // Example: make it cover cells B2:C5 (rows 1‑4, columns 1‑2)
+                // ------------------------------------------------------------
+                int endRow = 4;      // Row index for row 5
+                int endColumn = 2;   // Column index for column C
+
+                // Approximate pixel size: default row height ≈ 20 px, default column width ≈ 64 px
+                int rowsCovered = endRow - topRow + 1;
+                int colsCovered = endColumn - leftColumn + 1;
+                int pixelHeight = rowsCovered * 20;   // height in pixels
+                int pixelWidth = colsCovered * 64;    // width in pixels
+
+                oleObject.Height = pixelHeight;
+                oleObject.Width = pixelWidth;
+
+                // Lock the OLE object so it cannot be moved or resized when the sheet is protected
+                oleObject.IsLocked = true;
+            }
 
             // Save the workbook
-            string outputPath = "VisioOleObject.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            workbook.Save("VisioOleObject.xlsx");
         }
         catch (Exception ex)
         {

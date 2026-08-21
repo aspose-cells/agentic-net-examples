@@ -1,50 +1,45 @@
-// Title: Change a Shape's Linked Cell from A1 to B2 with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add a ListBox shape, link it to cell A1, reassign the linked cell to B2 using SetLinkedCell, verify the change via the LinkedCell property, update the shape with UpdateSelectedValue, and optionally save the file.
-// Keywords: Aspose.Cells | C# | .NET | shape linked cell | SetLinkedCell | ListBox shape | UpdateSelectedValue | programmatic cell link | Excel shape example
-// Common Searches: Aspose.Cells change linked cell of shape | SetLinkedCell C# example | verify shape linked cell update Aspose | update ListBox linked cell programmatically | Aspose.Cells shape linked cell verification
-// Developer Intent: Reassign a shape's linked cell from A1 to B2 and confirm the shape reads the new cell.
-// Use Cases: Switch a form control's data source to a different cell at runtime. | Refresh a shape's displayed value after modifying its linked cell. | Persist linked‑cell changes by saving the workbook.
-// AI Prompts: Write C# code that uses Aspose.Cells to change a shape's linked cell from $A$1 to $B$2 and prints the LinkedCell before and after. | Show how to call UpdateSelectedValue after changing a shape's linked cell in Aspose.Cells for .NET. | Provide a complete example that verifies the linked cell update and saves the workbook.
+// Title: Change a Shape’s Linked Cell from A1 to B2 using Aspose.Cells for .NET (C#)
+// Description: This C# example creates a workbook, adds a rectangle shape, links it to cell A1, reassigns the link to B2, updates the displayed value, and saves the file so you can confirm the shape reflects the new cell.
+// Keywords: Aspose.Cells | C# | shape linked cell | SetLinkedCell | UpdateSelectedValue | rectangle shape | Excel automation | programmatic linked cell change | Aspose.Cells for .NET | cell reference
+// Common Searches: Aspose.Cells change shape linked cell | SetLinkedCell C# example | Update shape after linked cell change Aspose | How to reassign linked cell of a shape in Excel using Aspose.Cells | Verify shape linked cell update programmatically
+// Developer Intent: Reassign a shape’s linked cell and validate the update.
+// Use Cases: Generate reports where shapes need to point to different data cells dynamically | Build Excel templates that adjust form control links during runtime | Create interactive dashboards that switch shape references based on user input
+// AI Prompts: Provide C# code that uses Aspose.Cells to move a shape’s linked cell from $A$1 to $B$2 and refresh its value. | Explain the role of SetLinkedCell and UpdateSelectedValue when modifying shape references in a workbook. | Write a unit test in C# that asserts the LinkedCell property changes from $A$1 to $B$2 after calling SetLinkedCell.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, add a ListBox shape, link it to cell A1, reassign the linked cell to B2 using SetLinkedCell, verify the change via the LinkedCell property, update the shape with UpdateSelectedValue, and optionally save the file.
-class ShapeLinkedCellChangeDemo
+// This C# example creates a workbook, adds a rectangle shape, links it to cell A1, reassigns the link to B2, updates the displayed value, and saves the file so you can confirm the shape reflects the new cell.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a ListBox shape (any shape that supports linked cells)
-        // Parameters: upper left row, upper left column, top, left, width, height
-        Shape listBoxShape = sheet.Shapes.AddListBox(2, 0, 2, 0, 130, 130);
+        // Add a rectangle shape to the worksheet
+        // Parameters: upper left row, upper left column, height, width, upper left row offset, upper left column offset
+        Shape shape = worksheet.Shapes.AddRectangle(1, 1, 100, 100, 0, 0);
 
         // Initially link the shape to cell A1
-        listBoxShape.SetLinkedCell("$A$1", false, true);
+        shape.SetLinkedCell("$A$1", false, true);
 
-        // Verify initial linked cell
-        Console.WriteLine("Initial LinkedCell: " + listBoxShape.LinkedCell); // Expected: $A$1
+        // Output the initial linked cell
+        Console.WriteLine("Initial LinkedCell: " + shape.LinkedCell);
 
         // Change the linked cell from A1 to B2
-        listBoxShape.SetLinkedCell("$B$2", false, true);
+        shape.SetLinkedCell("$B$2", false, true);
 
-        // Verify that the linked cell has been updated
-        Console.WriteLine("Updated LinkedCell: " + listBoxShape.LinkedCell); // Expected: $B$2
+        // Output the updated linked cell to verify the change
+        Console.WriteLine("Updated LinkedCell: " + shape.LinkedCell);
 
-        // Set a value in the new linked cell to demonstrate that the shape reads it
-        sheet.Cells["B2"].Value = true; // For a ListBox this would affect selection if input range matches
+        // Optionally, set a value in the new linked cell and update the shape's selected value
+        worksheet.Cells["B2"].Value = "Sample";
+        shape.UpdateSelectedValue();
 
-        // Update the shape's selected value based on the linked cell
-        listBoxShape.UpdateSelectedValue();
-
-        // (Optional) If the shape were a CheckBox, you could cast and check IsChecked, but ListBox does not expose a direct value.
-        // The successful call to UpdateSelectedValue indicates the shape has read the new linked cell.
-
-        // Save the workbook (optional, demonstrates lifecycle usage)
-        workbook.Save("ShapeLinkedCellChangeDemo.xlsx");
+        // Save the workbook (verification can be done by opening the file)
+        workbook.Save("LinkedCellChangeDemo.xlsx");
     }
 }

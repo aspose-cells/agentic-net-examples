@@ -1,10 +1,10 @@
-// Title: Add a PivotTable Timeline and Export to PDF with Aspose.Cells for .NET
-// Description: Load an Excel workbook, create a PivotTable from Date and Sales columns, attach a Timeline control, save the updated file, and convert it to PDF using Aspose.Cells and ConversionUtility, with robust error handling.
-// Keywords: Aspose.Cells | C# timeline control | PivotTable timeline | Excel to PDF conversion | export workbook as PDF | .NET Excel automation | sales report PDF | ConversionUtility | add timeline programmatically | pivot table C# example
-// Common Searches: how to add a timeline to a pivot table using Aspose.Cells | asp.net convert excel with timeline to pdf | c# create pivot table and timeline Aspose.Cells | export excel workbook with timeline to pdf | aspose.cells timeline control example
-// Developer Intent: Create a PivotTable, link a Timeline control, and generate a PDF from the modified worksheet.
-// Use Cases: Produce a sales report PDF that lets readers filter data by date via an interactive timeline. | Automate monthly workbook processing: add a timeline for date selection and output a ready‑to‑share PDF. | Prepare a temporary Excel file with a timeline for downstream workflows before final PDF conversion.
-// AI Prompts: Generate C# code with Aspose.Cells that builds a PivotTable from columns A and B, adds a Timeline linked to the Date field, and saves the result as PDF. | Explain how to calculate the last data row in a worksheet and construct the source range for a PivotTable in Aspose.Cells. | Provide best‑practice error handling when inserting a Timeline control and converting an Excel file to PDF using Aspose.Cells.
+// Title: C# – Add a Timeline to a Pivot Table and Export Excel to PDF with Aspose.Cells
+// Description: Creates a sample sales workbook if missing, builds a pivot table on Ship Date and Sales, attaches a Timeline control to the pivot, saves the updated file, and converts it to a PDF using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells timeline C# | add timeline to pivot table .NET | export Excel to PDF Aspose | pivot table with timeline example | C# Excel PDF conversion Aspose.Cells | timeline control Excel API | GitHub Aspose.Cells sample
+// Common Searches: how to add a timeline to a pivot table using Aspose.Cells | convert Excel workbook with timeline to PDF C# | Aspose.Cells example for timeline control | C# code to create pivot table and timeline | export Excel with timeline to PDF Aspose
+// Developer Intent: Insert a Timeline linked to a Pivot Table in an Excel sheet and generate a PDF report programmatically.
+// Use Cases: Automated sales dashboards that let users filter data via a timeline before publishing to PDF. | Batch processing of Excel files to add interactive timelines and produce printable reports. | Generating PDF snapshots of workbooks that include date‑driven visual controls for stakeholder review.
+// AI Prompts: Provide C# code that creates a pivot table, adds a timeline control, and exports the workbook to PDF with Aspose.Cells. | Show how to handle a missing source Excel file by generating sample sales data before adding a timeline and converting to PDF. | Explain the steps to link a Timeline to the 'Ship Date' field of a pivot table and convert the result to PDF using Aspose.Cells for .NET.
 
 using System;
 using System.IO;
@@ -12,101 +12,67 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Utility;
 
-namespace AsposeCellsTimelineToPdf
+// Creates a sample sales workbook if missing, builds a pivot table on Ship Date and Sales, attaches a Timeline control to the pivot, saves the updated file, and converts it to a PDF using Aspose.Cells for .NET.
+class Program
 {
-    // Load an Excel workbook, create a PivotTable from Date and Sales columns, attach a Timeline control, save the updated file, and convert it to PDF using Aspose.Cells and ConversionUtility, with robust error handling.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputFile = "SalesData.xlsx";
+            const string tempFile = "SalesData_WithTimeline.xlsx";
+            const string pdfFile = "SalesReport.pdf";
+
+            // Ensure the source workbook exists; create a simple one if it does not.
+            if (!File.Exists(inputFile))
             {
-                // Paths – adjust as needed
-                string inputPath = "SalesData.xlsx";                 // Existing workbook with sales data
-                string tempPath = "SalesData_WithTimeline.xlsx";
-                string pdfPath = "SalesReport.pdf";
-
-                // Verify that the input workbook exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // -------------------------------------------------
-                // 1. Create a PivotTable based on the sales data.
-                //    Assume the data is in columns A (Date) and B (Sales) with headers in row 1.
-                // -------------------------------------------------
-                // Determine the last row that contains data in column A (Date)
-                int lastDataRow = sheet.Cells.GetLastDataRow(0); // 0‑based index
-                if (lastDataRow < 1) // No data rows beyond header
-                {
-                    Console.WriteLine("The source worksheet does not contain data rows.");
-                    return;
-                }
-
-                // Build the source range string (e.g., "A1:B5")
-                string sourceRange = $"A1:B{lastDataRow + 1}";
-
-                // Add the PivotTable to the worksheet (placed starting at cell D2)
-                int pivotIndex = sheet.PivotTables.Add(sourceRange, "D2", "SalesPivot");
-                PivotTable pivot = sheet.PivotTables[pivotIndex];
-
-                // Configure the PivotTable: Date as row field, Sales as data field
-                // Use column indexes to avoid mismatched header names
-                pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Column A – Date
-                pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Column B – Sales
-
-                // Refresh and calculate the PivotTable so it contains data
-                pivot.RefreshData();
-                pivot.CalculateData();
-
-                // -------------------------------------------------
-                // 2. Add a Timeline control linked to the PivotTable.
-                //    Place the Timeline at cell F1 (row 0, column 5).
-                // -------------------------------------------------
-                // Retrieve the actual field name used for the Date row field
-                string dateFieldName = pivot.RowFields[0].Name;
-
-                // Add the Timeline; wrap in try‑catch to handle potential issues
-                try
-                {
-                    sheet.Timelines.Add(pivot, 0, 5, dateFieldName);
-                }
-                catch (Exception tlEx)
-                {
-                    Console.WriteLine($"Failed to add Timeline: {tlEx.Message}");
-                    // Continue without Timeline if not critical
-                }
-
-                // -------------------------------------------------
-                // 3. Save the workbook (now containing the Timeline) to a temporary file.
-                // -------------------------------------------------
-                workbook.Save(tempPath);
-
-                // -------------------------------------------------
-                // 4. Convert the temporary workbook to PDF.
-                //    Using ConversionUtility which internally loads the source file and saves as PDF.
-                // -------------------------------------------------
-                // Ensure the temporary file was created before conversion
-                if (File.Exists(tempPath))
-                {
-                    ConversionUtility.Convert(tempPath, pdfPath);
-                    Console.WriteLine("Timeline added and workbook exported to PDF successfully.");
-                }
-                else
-                {
-                    Console.WriteLine("Temporary workbook file was not created; PDF conversion skipped.");
-                }
+                var wb = new Workbook();
+                var ws = wb.Worksheets[0];
+                // Add headers
+                ws.Cells["A1"].PutValue("Ship Date");
+                ws.Cells["B1"].PutValue("Sales");
+                // Add sample data
+                ws.Cells["A2"].PutValue(new DateTime(2023, 1, 1));
+                ws.Cells["B2"].PutValue(1200);
+                ws.Cells["A3"].PutValue(new DateTime(2023, 1, 2));
+                ws.Cells["B3"].PutValue(1500);
+                ws.Cells["A4"].PutValue(new DateTime(2023, 1, 3));
+                ws.Cells["B4"].PutValue(800);
+                ws.Cells["A5"].PutValue(new DateTime(2023, 1, 4));
+                ws.Cells["B5"].PutValue(950);
+                wb.Save(inputFile);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the workbook containing sales data.
+            Workbook workbook = new Workbook(inputFile);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Create a pivot table from the data range A1:B5 and place it at D1.
+            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D1", "SalesPivot");
+            PivotTable pivot = sheet.PivotTables[pivotIndex];
+
+            // Configure pivot fields.
+            pivot.AddFieldToArea(PivotFieldType.Row, "Ship Date");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+
+            // Refresh and calculate the pivot table.
+            pivot.RefreshData();
+            pivot.CalculateData();
+
+            // Add a Timeline control linked to the pivot table at cell F1.
+            sheet.Timelines.Add(pivot, "F1", "Ship Date");
+
+            // Save the workbook with the Timeline to a temporary file.
+            workbook.Save(tempFile);
+
+            // Convert the workbook to PDF.
+            ConversionUtility.Convert(tempFile, pdfFile);
+
+            Console.WriteLine($"PDF generated successfully: {pdfFile}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,58 +1,41 @@
-// Title: Protect an Excel worksheet with Aspose.Cells .NET – block edits, allow formatting
-// Description: Shows how to use Aspose.Cells for .NET to protect a specific worksheet, disable editing of locked cells, permit cell formatting, apply a password, and save the workbook. The sample also creates the output folder and handles exceptions.
-// Keywords: Aspose.Cells | worksheet protection | .NET | C# | Excel sheet password | allow cell formatting | disable cell editing | Protect method | ProtectionType.All | Excel security
-// Common Searches: Aspose.Cells protect worksheet allow formatting | C# protect Excel sheet with password Aspose.Cells | disable cell editing but keep formatting Aspose.Cells | worksheet protection options .NET Aspose | AllowFormattingCell example Aspose.Cells
-// Developer Intent: Enable worksheet protection that blocks content changes while allowing formatting modifications.
-// Use Cases: Distribute a template where users can style cells but cannot alter underlying data. | Lock calculated values in a financial report while still permitting column width or color adjustments. | Automate export of a protected workbook with a known password to preserve data integrity and visual flexibility.
-// AI Prompts: Provide C# code using Aspose.Cells to protect a worksheet with a password, prevent content edits, and allow formatting changes. | Show an example of setting worksheet protection options in Aspose.Cells so only cell styling is permitted. | Explain how to enable worksheet‑level protection in Aspose.Cells for .NET while keeping the sheet editable for formatting.
+// Title: Protect a worksheet in Aspose.Cells for .NET – allow formatting while blocking content edits
+// Description: Demonstrates how to enable worksheet‑level protection in Aspose.Cells (C#) by disabling content changes (AllowEditingContent = false), permitting cell formatting (AllowFormattingCell = true), applying full protection with sheet.Protect(ProtectionType.All), and saving the workbook.
+// Keywords: Aspose.Cells worksheet protection | C# protect sheet allow formatting | AllowEditingContent false | AllowFormattingCell true | protect specific worksheet .NET | Excel sheet protection Aspose | read‑only template Aspose.Cells
+// Common Searches: Aspose.Cells protect worksheet but allow formatting | C# worksheet protection AllowEditingContent false | How to lock cells content in Aspose.Cells | Enable sheet protection with formatting options Aspose | Protect only one sheet in Aspose.Cells workbook
+// Developer Intent: Apply worksheet protection that prevents users from editing cell values while still allowing them to change cell styles and formats on a chosen sheet.
+// Use Cases: Distribute a financial template where formulas stay locked but users can adjust colors, borders, and column widths. | Create a read‑only report that lets reviewers highlight cells without altering underlying data. | Provide a data‑entry form where only visual formatting is editable to maintain data integrity.
+// AI Prompts: Generate C# code with Aspose.Cells that protects a worksheet, disables content editing, and enables cell formatting. | Show how to set AllowEditingContent to false and AllowFormattingCell to true on a specific sheet using Aspose.Cells. | Explain additional protection options (e.g., AllowInsertingRows, AllowDeletingColumns) after applying worksheet protection in Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Shows how to use Aspose.Cells for .NET to protect a specific worksheet, disable editing of locked cells, permit cell formatting, apply a password, and save the workbook. The sample also creates the output folder and handles exceptions.
-public class WorksheetProtectionDemo
+namespace WorksheetProtectionDemo
 {
-    public static void Main(string[] args)
+    // Demonstrates how to enable worksheet‑level protection in Aspose.Cells (C#) by disabling content changes (AllowEditingContent = false), permitting cell formatting (AllowFormattingCell = true), applying full protection with sheet.Protect(ProtectionType.All), and saving the workbook.
+    class Program
     {
-        try
+        static void Main()
         {
-            Run();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet (or any specific sheet by index/name)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Get the protection settings for the worksheet
+            Protection protection = sheet.Protection;
+
+            // Disallow editing of locked cells' content
+            protection.AllowEditingContent = false;
+
+            // Allow users to format cells even when the sheet is protected
+            protection.AllowFormattingCell = true;
+
+            // Apply protection to the worksheet (all protection types)
+            sheet.Protect(ProtectionType.All);
+
+            // Save the workbook with the protected worksheet
+            workbook.Save("ProtectedSheet.xlsx");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    public static void Run()
-    {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Configure protection settings
-        Protection protection = sheet.Protection;
-        protection.AllowEditingContent = false;      // Disallow editing of locked cells
-        protection.AllowFormattingCell = true;       // Allow cell formatting while protected
-
-        // Apply protection with password
-        sheet.Protect(ProtectionType.All, "pwd123", null);
-
-        // Determine output file path
-        string outputPath = "WorksheetProtected.xlsx";
-
-        // Ensure the output directory exists
-        string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-        if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
-
-        // Save the workbook
-        workbook.Save(outputPath);
-        Console.WriteLine($"Workbook saved to {outputPath}");
     }
 }

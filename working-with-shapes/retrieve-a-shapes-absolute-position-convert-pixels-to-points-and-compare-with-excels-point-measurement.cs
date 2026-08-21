@@ -1,55 +1,87 @@
-// Title: Get Shape Absolute Position, Convert Pixels to Points, and Compare with Excel Points using Aspose.Cells for .NET
-// Description: Shows how to add a rectangle, read its X/Y pixel offsets, translate them to points (assuming 96 dpi), obtain WidthPt/HeightPt, and validate pixel‑derived dimensions against Excel's point measurements in a C# workbook.
-// Keywords: Aspose.Cells shape position | pixel to point conversion | WidthPt HeightPt | absolute shape coordinates | Excel points vs pixels | C# Aspose.Cells example | shape dimension scaling | DPI conversion
-// Common Searches: aspnet get shape X Y offset Aspose.Cells | convert shape pixels to points C# | compare shape width in points and pixels Aspose | retrieve shape dimensions in points from workbook | pixel to point conversion formula Aspose.Cells
-// Developer Intent: The developer needs the exact pixel location of a shape, a conversion to typographic points, and a way to confirm those values match Excel's native point properties.
-// Use Cases: Align shapes precisely when exporting to PDF by using point units. | Ensure program‑generated graphics replicate hand‑crafted Excel layouts. | Adapt shape placement dynamically for displays with different DPI settings.
-// AI Prompts: Write C# code with Aspose.Cells that reads a shape's X and Y pixel offsets and converts them to points for a 96 dpi screen. | Provide a snippet that compares a shape's WidthPt property with a width calculated from its pixel width. | Show how to shift a shape by a given point offset after converting its original pixel coordinates.
+// Title: Get Shape Position in Pixels, Convert to Points, and Compare with Excel Values using Aspose.Cells for .NET
+// Description: This C# example creates a workbook, adds a rectangle shape, reads its X/Y coordinates and size in pixels, converts those values to points using the 96 DPI → 72 points factor, and compares the results with the WidthPt and HeightPt properties reported by Excel. The differences are printed and the workbook is saved.
+// Keywords: Aspose.Cells | C# | shape position pixels | pixel to point conversion | WidthPt | HeightPt | DPI 96 | Excel shape dimensions | retrieve shape coordinates | compare shape size | worksheet shapes
+// Common Searches: Aspose.Cells get shape X Y in pixels | convert shape pixel size to points C# | compare WidthPt with pixel conversion Aspose.Cells | shape absolute position Aspose.Cells .NET | pixel to point factor 96 DPI Aspose
+// Developer Intent: Obtain a shape’s pixel coordinates and dimensions, translate them to points, and verify the conversion against Excel’s point measurements.
+// Use Cases: Validate that programmatically added shapes align with Excel’s layout by matching pixel‑derived points to WidthPt/HeightPt. | Generate exact point measurements for shapes when preparing documents for printing or PDF export. | Debug positioning mismatches when converting legacy pixel‑based layouts to point‑based formats.
+// AI Prompts: Write C# code with Aspose.Cells that reads a shape’s X, Y, Width, and Height in pixels and converts them to points using a 96 DPI to 72 points conversion factor. | Explain why Aspose.Cells’s WidthPt and HeightPt values may differ slightly from pixel‑to‑point calculations. | Suggest how to adjust a shape’s position programmatically so that the converted point values match a target Excel layout.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to add a rectangle, read its X/Y pixel offsets, translate them to points (assuming 96 dpi), obtain WidthPt/HeightPt, and validate pixel‑derived dimensions against Excel's point measurements in a C# workbook.
-class RetrieveShapePosition
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // This C# example creates a workbook, adds a rectangle shape, reads its X/Y coordinates and size in pixels, converts those values to points using the 96 DPI → 72 points factor, and compares the results with the WidthPt and HeightPt properties reported by Excel. The differences are printed and the workbook is saved.
+    public class ShapePositionComparison
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a rectangle shape.
-        // Parameters: upper left row, top offset (pixels), left column, left offset (pixels), height (pixels), width (pixels)
-        Shape rectangle = worksheet.Shapes.AddRectangle(5, 100, 2, 50, 200, 150);
+                // Add a rectangle shape at row 2, column 2 (zero‑based indexes) with no offset,
+                // height 100 pixels and width 150 pixels
+                Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 150);
 
-        // ----- Retrieve absolute position in pixels -----
-        // X and Y give the horizontal and vertical offset of the shape from the worksheet's left/top border (in pixels)
-        int xPixel = rectangle.X;
-        int yPixel = rectangle.Y;
+                // Position in pixels (offset from worksheet's top‑left corner)
+                int shapeXPixel = shape.X;
+                int shapeYPixel = shape.Y;
 
-        // ----- Convert pixels to points -----
-        // Excel uses points (1 point = 1/72 inch). Assuming a screen DPI of 96 (standard for Aspose.Cells),
-        // points = pixels * 72 / DPI
-        const double dpi = 96.0;
-        double xPoint = xPixel * 72.0 / dpi;
-        double yPoint = yPixel * 72.0 / dpi;
+                // Size reported by Excel in points
+                double shapeWidthPt = shape.WidthPt;
+                double shapeHeightPt = shape.HeightPt;
 
-        // ----- Retrieve shape size in points (for comparison) -----
-        double widthPt = rectangle.WidthPt;   // width in points
-        double heightPt = rectangle.HeightPt; // height in points
+                // Conversion factor from pixels to points (96 DPI → 72 points per inch)
+                const double dpi = 96.0;
+                const double pointsPerInch = 72.0;
+                double pixelsToPointsFactor = pointsPerInch / dpi; // 0.75
 
-        // Output the results
-        Console.WriteLine($"Shape X offset: {xPixel} px = {xPoint:F2} pt");
-        Console.WriteLine($"Shape Y offset: {yPixel} px = {yPoint:F2} pt");
-        Console.WriteLine($"Shape width: {widthPt} pt, height: {heightPt} pt");
+                // Convert pixel values to points
+                double shapeXPt = shapeXPixel * pixelsToPointsFactor;
+                double shapeYPt = shapeYPixel * pixelsToPointsFactor;
+                double shapeWidthPx = shape.Width;   // width in pixels
+                double shapeHeightPx = shape.Height; // height in pixels
 
-        // Example comparison: verify that the pixel‑derived width matches the point width
-        // (rectangle.Width is in pixels; convert to points using the same factor)
-        double widthFromPixelsPt = rectangle.Width * 72.0 / dpi;
-        Console.WriteLine($"Width from pixels: {widthFromPixelsPt:F2} pt (should match WidthPt)");
+                double shapeWidthPtFromPx = shapeWidthPx * pixelsToPointsFactor;
+                double shapeHeightPtFromPx = shapeHeightPx * pixelsToPointsFactor;
 
-        // Save the workbook
-        workbook.Save("ShapePositionDemo.xlsx");
+                // Output comparison
+                Console.WriteLine("Shape Position and Size Comparison:");
+                Console.WriteLine($"Position X: {shapeXPixel} px  => {shapeXPt:F2} pt (converted)");
+                Console.WriteLine($"Position Y: {shapeYPixel} px  => {shapeYPt:F2} pt (converted)");
+                Console.WriteLine($"Width:       {shapeWidthPx} px => {shapeWidthPtFromPx:F2} pt (converted)");
+                Console.WriteLine($"Height:      {shapeHeightPx} px => {shapeHeightPtFromPx:F2} pt (converted)");
+                Console.WriteLine();
+                Console.WriteLine($"Excel reported WidthPt:  {shapeWidthPt:F2} pt");
+                Console.WriteLine($"Excel reported HeightPt: {shapeHeightPt:F2} pt");
+                Console.WriteLine();
+                Console.WriteLine("Difference (converted - Excel):");
+                Console.WriteLine($"Width difference:  {Math.Abs(shapeWidthPtFromPx - shapeWidthPt):F2} pt");
+                Console.WriteLine($"Height difference: {Math.Abs(shapeHeightPtFromPx - shapeHeightPt):F2} pt");
+
+                // Save the workbook
+                string outputPath = "ShapePositionComparison.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"\nWorkbook saved to: {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ShapePositionComparison.Run();
+        }
     }
 }

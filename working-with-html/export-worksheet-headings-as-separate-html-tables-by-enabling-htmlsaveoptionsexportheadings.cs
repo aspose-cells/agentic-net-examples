@@ -1,17 +1,17 @@
-// Title: Export Worksheet Headings as Separate HTML Tables with Aspose.Cells for .NET
-// Description: Demonstrates how to enable HtmlSaveOptions.ExportHeadings in Aspose.Cells (C#) so that row and column headings are saved as distinct HTML tables when exporting a workbook.
-// Keywords: Aspose.Cells | HtmlSaveOptions | ExportHeadings | C# HTML export | worksheet headings HTML | separate tables | Excel to HTML | Aspose.Cells .NET
-// Common Searches: Aspose.Cells export headings to HTML | HtmlSaveOptions ExportHeadings C# | Save Excel worksheet headings as separate HTML tables | How to generate HTML with column and row headings using Aspose.Cells | Export row/column headers as distinct tables Aspose.Cells .NET
-// Developer Intent: Save a workbook to HTML with row and column headings emitted as independent tables.
-// Use Cases: Web reports that require header rows/columns to be styled separately from data. | Accessible HTML spreadsheets where headings are isolated for screen‑reader navigation. | Printable HTML output with distinct heading sections for custom page layout. | Embedding Excel data in web pages while applying CSS only to header tables.
-// AI Prompts: Provide a C# example that saves an Aspose.Cells workbook to HTML with ExportHeadings enabled. | Show how to export only the worksheet’s row and column headings as separate HTML tables using Aspose.Cells. | What is the recommended modern alternative to the obsolete ExportHeadings property for exporting headings in Aspose.Cells?
+// Title: Export Row and Column Headings as Separate HTML Tables with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to enable HtmlSaveOptions.ExportHeadings in Aspose.Cells to save an Excel worksheet as HTML where row and column headings are rendered in their own tables.
+// Keywords: Aspose.Cells ExportHeadings | C# HTML export Excel headings | separate heading tables Aspose | HtmlSaveOptions ExportHeadings example | Aspose.Cells .NET HTML output | export Excel column headings to HTML | row headings separate HTML table
+// Common Searches: Aspose.Cells ExportHeadings C# example | how to save Excel headings as separate HTML tables | HtmlSaveOptions ExportHeadings property usage | export Excel worksheet to HTML with headings split | C# Aspose.Cells HTML export row and column headings
+// Developer Intent: Generate an HTML file from a workbook where the worksheet’s row and column headings are placed in distinct tables by setting ExportHeadings to true.
+// Use Cases: Design web reports that need independent styling for header rows and columns. | Improve accessibility by isolating headings for screen‑reader navigation. | Create printable HTML layouts where headings are positioned separately from data.
+// AI Prompts: Show how to load an existing workbook, enable ExportHeadings, and save it as HTML with a custom file name. | Provide a snippet that adds CSS classes to the heading tables produced by ExportHeadings. | Explain the interaction between ExportHeadings and other HtmlSaveOptions such as ExportImagesAsBase64.
 
 using System;
 using Aspose.Cells;
 
 namespace ExportHeadingsExample
 {
-    // Demonstrates how to enable HtmlSaveOptions.ExportHeadings in Aspose.Cells (C#) so that row and column headings are saved as distinct HTML tables when exporting a workbook.
+    // Demonstrates how to enable HtmlSaveOptions.ExportHeadings in Aspose.Cells to save an Excel worksheet as HTML where row and column headings are rendered in their own tables.
     class Program
     {
         static void Main()
@@ -21,23 +21,21 @@ namespace ExportHeadingsExample
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate some sample data
-            sheet.Cells["A1"].PutValue("Header1");
-            sheet.Cells["B1"].PutValue("Header2");
-            sheet.Cells["A2"].PutValue("Data1");
-            sheet.Cells["B2"].PutValue("Data2");
-            sheet.Cells["A3"].PutValue("Data3");
-            sheet.Cells["B3"].PutValue("Data4");
+            sheet.Cells["B2"].PutValue("Item");
+            sheet.Cells["C2"].PutValue("Quantity");
+            sheet.Cells["B3"].PutValue("Apples");
+            sheet.Cells["C3"].PutValue(10);
+            sheet.Cells["B4"].PutValue("Oranges");
+            sheet.Cells["C4"].PutValue(20);
 
             // Configure HTML save options to export row/column headings
             HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            // This property is obsolete but still works for the requested scenario
-            saveOptions.ExportHeadings = true;
+            saveOptions.ExportHeadings = true; // enables separate tables for headings
 
-            // Save the workbook as HTML; headings will appear as separate tables
-            string outputPath = "WorksheetHeadings.html";
-            workbook.Save(outputPath, saveOptions);
+            // Save the workbook as HTML
+            workbook.Save("ExportHeadings.html", saveOptions);
 
-            Console.WriteLine($"Workbook saved to {outputPath} with headings exported as separate HTML tables.");
+            Console.WriteLine("Workbook saved with headings exported as separate HTML tables.");
         }
     }
 }

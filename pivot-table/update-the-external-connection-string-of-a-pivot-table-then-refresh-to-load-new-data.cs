@@ -1,10 +1,10 @@
-// Title: Aspose.Cells for .NET – Update Pivot Table External Connection String and Refresh Data
-// Description: Shows how to load an Excel workbook, locate the first pivot table, replace its external data connection string (e.g., to a new Access .accdb file), enable RefreshOnLoad, refresh and recalculate the pivot, and save the updated workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | pivot table | external connection | connection string | RefreshOnLoad | update data source | Excel automation | Access database
-// Common Searches: Aspose.Cells change pivot table data source C# | update external connection string for Excel pivot table | refresh pivot table after modifying connection string .NET | set RefreshOnLoad for pivot table using Aspose.Cells | retrieve and edit pivot table source connections C#
-// Developer Intent: The developer needs to programmatically change a pivot table’s external connection string and refresh the pivot so it pulls data from the new source.
-// Use Cases: Switch a pivot table from one Access database to another without opening Excel manually. | Batch‑process multiple workbooks to point their pivots to a refreshed data warehouse. | Configure workbooks to automatically refresh pivots on open after the connection string is updated.
-// AI Prompts: Write C# code that iterates through all pivot tables in a workbook, updates each external connection string to a specified Access file, and refreshes them with Aspose.Cells. | Explain how to add an external data connection to a pivot table when none exist, then refresh the pivot using Aspose.Cells for .NET. | Provide robust error handling for missing files, absent pivot tables, and missing external connections while updating a pivot table’s connection string.
+// Title: C# – Update Pivot Table External Connection String and Refresh Data with Aspose.Cells
+// Description: Load a workbook, locate the first pivot table, modify its external data connection string to a new Excel file, refresh the pivot, and save the result using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells pivot external connection | C# change pivot data source | refresh pivot after connection update | modify pivot table source workbook | Aspose.Cells ExternalConnection example
+// Common Searches: Aspose.Cells change pivot table connection string C# | Refresh pivot table after updating external data source .NET | How to edit PivotTable external connection with Aspose | Programmatically update pivot data source in Excel using C#
+// Developer Intent: Change a pivot table's external connection string and refresh it to load data from a new source.
+// Use Cases: Migrate existing pivot tables to a new data file without rebuilding them. | Automate bulk updates of pivot data sources after a database or file relocation. | Integrate pivot refresh into a nightly report generation pipeline.
+// AI Prompts: Write C# code with Aspose.Cells that updates a pivot table's external connection string to a different Excel workbook and then refreshes the pivot. | Explain how to retrieve a PivotTable's ExternalConnection, set a new ConnectionString, and recalculate the pivot using Aspose.Cells. | Show error‑handling patterns for scenarios where a pivot table has no external connections before attempting to modify the connection string.
 
 using System;
 using System.IO;
@@ -12,78 +12,73 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsExamples
+// Load a workbook, locate the first pivot table, modify its external data connection string to a new Excel file, refresh the pivot, and save the result using Aspose.Cells for .NET.
+class UpdatePivotExternalConnection
 {
-    // Shows how to load an Excel workbook, locate the first pivot table, replace its external data connection string (e.g., to a new Access .accdb file), enable RefreshOnLoad, refresh and recalculate the pivot, and save the updated workbook using Aspose.Cells for .NET.
-    public class UpdatePivotExternalConnection
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            const string inputPath = "InputWorkbook.xlsx";
-            const string outputPath = "OutputWorkbook.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify input file exists
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            try
+            // Load the existing workbook that contains the pivot table
+            Workbook workbook = new Workbook(inputPath);
+
+            // Ensure the workbook has at least one worksheet
+            if (workbook.Worksheets.Count == 0)
             {
-                // Load the workbook containing the pivot table with an external data connection
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (adjust if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Retrieve the first pivot table in the worksheet
-                if (worksheet.PivotTables.Count == 0)
-                {
-                    Console.WriteLine("No pivot tables found in the worksheet.");
-                    return;
-                }
-
-                PivotTable pivotTable = worksheet.PivotTables[0];
-
-                // Obtain external data connections used by the pivot table
-                ExternalConnection[] connections = pivotTable.GetSourceDataConnections();
-
-                if (connections.Length > 0)
-                {
-                    // Update the connection string to point to the new data source
-                    connections[0].ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=NewDataSource.accdb;Persist Security Info=False;";
-
-                    // Ensure the connection refreshes when the workbook is opened
-                    connections[0].RefreshOnLoad = true;
-                }
-                else
-                {
-                    Console.WriteLine("No external connections found for the pivot table.");
-                    return;
-                }
-
-                // Refresh the pivot table to pull data from the updated connection
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Console.WriteLine("Error: The workbook does not contain any worksheets.");
+                return;
             }
-            catch (Exception ex)
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("Error: No pivot tables found in the first worksheet.");
+                return;
             }
+
+            // Retrieve the first pivot table in the worksheet
+            PivotTable pivotTable = worksheet.PivotTables[0];
+
+            // Obtain external data connections associated with the pivot table
+            ExternalConnection[] connections = pivotTable.GetSourceDataConnections();
+
+            if (connections != null && connections.Length > 0)
+            {
+                // Use the first connection (typically there is only one)
+                ExternalConnection connection = connections[0];
+
+                // Update the connection string to point to the new data source
+                connection.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=NewData.xlsx;Extended Properties=\"Excel 12.0 Xml;HDR=YES\";";
+            }
+            else
+            {
+                Console.WriteLine("Warning: No external data connections found for the pivot table.");
+            }
+
+            // Refresh the pivot table to pull data from the updated connection
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            UpdatePivotExternalConnection.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

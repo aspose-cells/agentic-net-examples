@@ -1,17 +1,18 @@
-// Title: Retrieve X/Y Coordinates of Connector Shape Connection Points using Aspose.Cells for .NET
-// Description: Creates a workbook, adds a line connector shape, calls Shape.GetConnectionPoints() to obtain all connection points as a float array, and logs each point's X and Y values to the console before saving the file.
-// Keywords: Aspose.Cells | .NET | C# | connector shape | GetConnectionPoints | Excel line shape | shape connection points | retrieve coordinates | log X Y values | Excel drawing API
-// Common Searches: Aspose.Cells get connector shape points | C# retrieve connection points of line shape | Shape.GetConnectionPoints example | log connector coordinates Aspose.Cells | Excel shape connection points .NET
-// Developer Intent: Extract all connection points of a connector shape and output their X and Y coordinates.
-// Use Cases: Validate diagram geometry by checking exact connector endpoint locations. | Programmatically align or attach other shapes based on connector points. | Export connector coordinates to a report, CSV, or database for further analysis.
-// AI Prompts: Write C# code that uses Aspose.Cells to get a connector shape's connection points and stores them in a List<PointF>. | Show how to iterate over Shape.GetConnectionPoints() and write each X,Y pair to a CSV file with Aspose.Cells. | Explain how to modify a connector shape's connection points after retrieving them using GetConnectionPoints.
+// Title: C# – Retrieve Connector Shape Connection Points (X,Y) with Aspose.Cells for .NET
+// Description: Creates a workbook, adds a line shape that acts as a connector, calls GetConnectionPoints to obtain all X‑Y coordinate pairs, logs each point to the console, and saves the file. Demonstrates how to extract connector geometry for analysis.
+// Keywords: Aspose.Cells GetConnectionPoints | C# connector shape coordinates | Aspose.Cells line shape X Y | Excel shape connection points .NET | retrieve connector geometry Aspose | log connector points C# | Aspose.Cells shape API
+// Common Searches: Aspose.Cells get connection points of a line shape | C# retrieve connector coordinates in Excel | How to use GetConnectionPoints with Aspose.Cells | Log X Y values of connector shape Aspose | Extract connector geometry from workbook
+// Developer Intent: Extract every connection point of a connector (line) shape and output its X and Y coordinates using Aspose.Cells for .NET.
+// Use Cases: Validate diagram layout by comparing connector points to expected cell positions. | Export connector geometry for automated layout audits or reporting. | Perform collision detection or alignment checks in complex Excel drawings.
+// AI Prompts: Generate a C# method that returns a List<PointF> of all connection points for any Aspose.Cells shape. | Create code that writes connector X‑Y coordinates to a CSV file with error handling for non‑connector shapes. | Show how to overlay markers on a worksheet at each connection point returned by GetConnectionPoints.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a line connector shape, calls Shape.GetConnectionPoints() to obtain all connection points as a float array, and logs each point's X and Y values to the console before saving the file.
-class Program
+// Creates a workbook, adds a line shape that acts as a connector, calls GetConnectionPoints to obtain all X‑Y coordinate pairs, logs each point to the console, and saves the file. Demonstrates how to extract connector geometry for analysis.
+class RetrieveConnectorPoints
 {
     static void Main()
     {
@@ -21,18 +22,12 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a connector (line) shape to the worksheet
-            // Parameters: type, upper left row, upper left column, top offset, left offset, height, width
-            Shape connector = worksheet.Shapes.AddShape(
-                MsoDrawingType.Line,   // connector type
-                2,                     // upper left row
-                5,                     // upper left column
-                5,                     // top offset (in points)
-                5,                     // left offset (in points)
-                200,                   // height (length of the line)
-                0);                    // width (thickness)
+            // Add a line shape (acts as a connector) to the worksheet.
+            // The line is defined by the start cell (C3) and end cell (F6) – zero‑based indices.
+            // Width and height parameters are required; set to 0 for a simple connector.
+            Shape connector = worksheet.Shapes.AddLine(2, 2, 5, 5, 0, 0);
 
-            // Retrieve all connection points of the connector shape
+            // Retrieve all connection points of the line shape
             float[][] connectionPoints = connector.GetConnectionPoints();
 
             // Log the X and Y coordinates of each connection point
@@ -42,14 +37,23 @@ class Program
                 Console.WriteLine($"Point {i + 1}: X = {connectionPoints[i][0]}, Y = {connectionPoints[i][1]}");
             }
 
-            // Save the workbook to a file
-            string outputPath = "ConnectorConnectionPoints.xlsx";
+            // Save the workbook (optional, just to demonstrate full lifecycle)
+            string outputPath = "ConnectorPoints.xlsx";
+
+            // Ensure the directory exists before saving
+            string fullPath = Path.GetFullPath(outputPath);
+            string outputDir = Path.GetDirectoryName(fullPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to: {fullPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

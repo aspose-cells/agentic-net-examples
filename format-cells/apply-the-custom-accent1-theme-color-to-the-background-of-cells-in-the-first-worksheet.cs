@@ -1,62 +1,63 @@
-// Title: Apply Accent1 Theme Color as Cell Background in Aspere.Cells (C#)
-// Description: Creates a new workbook, defines a solid‑fill style whose background uses the Accent1 theme color, builds a range covering A1:D10 on the first worksheet, applies only the shading style to that range, and saves the file as an .xlsx document.
-// Keywords: Aspose.Cells C# theme background | Accent1 cell fill | set theme color for range | solid fill style Aspose.Cells | Excel theme color programmatically
-// Common Searches: Aspose.Cells apply theme color to cell background | C# set Accent1 as fill color in Excel | how to use ThemeColorType.Accent1 in Aspose.Cells | apply solid background to a range with Aspose.Cells .NET
-// Developer Intent: Color the background of a specific range on the first worksheet using the workbook’s Accent1 theme color.
-// Use Cases: Highlight header rows with the primary theme shade for consistent branding. | Mark important data sections in generated reports using the Accent1 background. | Create reusable Excel templates where key areas automatically adopt the Accent1 fill.
-// AI Prompts: Show how to use Accent2 as a solid background for a range with Aspose.Cells. | Provide C# code that adds a 20 % tint to the Accent1 background for cells A1:D10. | Explain how to define a reusable Accent1 background style and apply it across multiple worksheets.
+// Title: Apply Accent1 Theme Color as Cell Background in the First Worksheet (C# Aspose.Cells)
+// Description: Creates a new workbook, accesses the first worksheet, defines a solid‑fill style using the Accent1 theme color, applies it to cells A1:D10, and saves the file as Accent1Background.xlsx with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | theme color background | Accent1 | solid fill style | set cell background | ThemeColor | Excel styling | Workbook | Worksheet
+// Common Searches: Aspose.Cells set Accent1 background | C# apply theme color to cell range Aspose.Cells | How to use ThemeColor in Aspose.Cells .NET | Set solid fill background with Accent1 in Excel using Aspose | Apply theme color to multiple cells Aspose.Cells
+// Developer Intent: Apply the Accent1 theme color as a solid‑fill background to a range of cells in the first worksheet.
+// Use Cases: Highlight header rows (e.g., A1:D1) with an Accent1 background to make titles stand out. | Create a themed data table (A1:D10) where all cells share the same Accent1 fill for visual consistency. | Build a reusable workbook template that automatically styles title cells with the Accent1 background.
+// AI Prompts: Generate C# code that applies the Accent2 theme color as a gradient fill to cells B2:E5 using Aspose.Cells. | Show how to adjust the tint of an Accent1 background style to a lighter shade in Aspose.Cells. | Provide an example of applying a custom theme color to the entire worksheet background with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsThemeDemo
 {
-    // Creates a new workbook, defines a solid‑fill style whose background uses the Accent1 theme color, builds a range covering A1:D10 on the first worksheet, applies only the shading style to that range, and saves the file as an .xlsx document.
-    class Program
+    // Creates a new workbook, accesses the first worksheet, defines a solid‑fill style using the Accent1 theme color, applies it to cells A1:D10, and saves the file as Accent1Background.xlsx with Aspose.Cells for .NET.
+    public class ApplyAccent1Background
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Create a style that uses the Accent1 theme color as background
-                Style accentStyle = workbook.CreateStyle();
-                accentStyle.Pattern = BackgroundType.Solid; // solid fill
-                accentStyle.BackgroundThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0); // Accent1, no tint
-
-                // Define the range (A1:D10)
-                CellArea area = new CellArea
-                {
-                    StartRow = 0,
-                    StartColumn = 0,
-                    EndRow = 9,
-                    EndColumn = 3
-                };
-
-                // Calculate rows and columns for the range
-                int totalRows = area.EndRow - area.StartRow + 1;
-                int totalColumns = area.EndColumn - area.StartColumn + 1;
-
-                // Create the Aspose.Cells range (avoid conflict with System.Range)
-                Aspose.Cells.Range range = cells.CreateRange(area.StartRow, area.StartColumn, totalRows, totalColumns);
-
-                // Apply only the background style
-                StyleFlag flag = new StyleFlag { CellShading = true };
-                range.ApplyStyle(accentStyle, flag);
-
-                // Save the workbook
-                workbook.Save("Accent1BackgroundDemo.xlsx");
+                Run();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Create a style with solid fill and set its background to the Accent1 theme color
+            Style accentStyle = workbook.CreateStyle();
+            accentStyle.Pattern = BackgroundType.Solid;
+            // ThemeColor constructor: (ThemeColorType, tint). Tint 0 means original color.
+            accentStyle.BackgroundThemeColor = new ThemeColor(ThemeColorType.Accent1, 0);
+
+            // Define the range of cells to which the style will be applied (A1:D10)
+            int startRow = 0;
+            int endRow = 9;
+            int startColumn = 0;
+            int endColumn = 3;
+
+            // Apply the style to each cell in the defined range
+            for (int row = startRow; row <= endRow; row++)
+            {
+                for (int col = startColumn; col <= endColumn; col++)
+                {
+                    Cell cell = worksheet.Cells[row, col];
+                    cell.SetStyle(accentStyle);
+                }
+            }
+
+            // Save the workbook
+            string outputPath = "Accent1Background.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
     }
 }

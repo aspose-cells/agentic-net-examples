@@ -1,10 +1,10 @@
-// Title: Export VBA Project Digital Certificate to a MemoryStream using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, checks if its VBA project is signed, extracts the certificate raw bytes via VbaProject.CertRawData, writes them to a MemoryStream, and returns the stream for further processing or saving.
-// Keywords: Aspose.Cells | C# | .NET | VBA project certificate | CertRawData | MemoryStream export | signed VBA macro | extract digital certificate | Excel VBA security | global
-// Common Searches: how to export VBA certificate to MemoryStream Aspose.Cells | retrieve signed VBA project certificate C# | Aspose.Cells VbaProject CertRawData example | save VBA digital certificate as binary file | check if VBA project is signed with Aspose
-// Developer Intent: Obtain the digital certificate of a signed VBA project and deliver it as a MemoryStream for downstream use.
-// Use Cases: Validate the extracted certificate against a trusted store before macro execution. | Send the MemoryStream to a web service for remote verification. | Archive the certificate bytes to a .bin file for compliance auditing.
-// AI Prompts: Generate C# code that uses Aspose.Cells to detect a signed VBA project and return its certificate as a MemoryStream. | Create a method that extracts VbaProject.CertRawData, writes it to a .bin file, and includes robust error handling. | Show how to post the MemoryStream containing a VBA certificate to a REST API with HttpClient.
+// Title: Export VBA Project Digital Certificate to a MemoryStream (C#) – Aspose.Cells
+// Description: Loads a signed .xlsm workbook with Aspose.Cells, accesses its VbaProject, verifies the presence of a digital signature, and creates a MemoryStream from the certificate's raw data for downstream processing such as X509Certificate2 validation.
+// Keywords: Aspose.Cells VBA certificate export | C# MemoryStream from VbaProject | extract signed VBA project certificate | CertRawData Aspose.Cells | load X509Certificate2 from Excel VBA | signed .xlsm workbook handling
+// Common Searches: how to get VBA project certificate as MemoryStream using Aspose.Cells | C# extract digital signature from Excel macro project | Aspose.Cells read CertRawData from signed workbook | export VBA digital certificate to stream .NET | retrieve VBA project signature with Aspose.Cells
+// Developer Intent: Retrieve the digital certificate of a signed VBA project and provide it as a MemoryStream for further cryptographic operations.
+// Use Cases: Validate the authenticity of a signed .xlsm file by extracting its VBA certificate. | Convert the MemoryStream containing the certificate into an X509Certificate2 object for thumbprint or expiration checks. | Programmatically determine whether a VBA project is signed before attempting certificate extraction.
+// AI Prompts: Generate C# code that opens a signed .xlsm file with Aspose.Cells, checks VbaProject.IsSigned, and returns the certificate as a MemoryStream. | Show how to load the MemoryStream from VbaProject.CertRawData into a System.Security.Cryptography.X509Certificates.X509Certificate2 and verify its thumbprint. | Create a robust method that extracts CertRawData from a VbaProject, handles null or empty data, and outputs a ready‑to‑use MemoryStream.
 
 using System;
 using System.IO;
@@ -13,90 +13,68 @@ using Aspose.Cells.Vba;
 
 namespace AsposeCellsExamples
 {
-    // Loads an Excel workbook, checks if its VBA project is signed, extracts the certificate raw bytes via VbaProject.CertRawData, writes them to a MemoryStream, and returns the stream for further processing or saving.
+    // Loads a signed .xlsm workbook with Aspose.Cells, accesses its VbaProject, verifies the presence of a digital signature, and creates a MemoryStream from the certificate's raw data for downstream processing such as X509Certificate2 validation.
     public class ExportVbaCertificateToMemoryStream
     {
-        /// <param name="workbookPath">Path to the Excel file that contains a signed VBA project.</param>
-        /// <returns>A MemoryStream containing the certificate raw data, or null if the project is not signed.</returns>
-        public static MemoryStream Run(string workbookPath)
+        public static void Run()
         {
-            // Verify that the file exists before attempting to load it
-            if (!File.Exists(workbookPath))
+            // Path to the workbook that contains a signed VBA project
+            string signedWorkbookPath = "SignedWithVba.xlsm";
+
+            // Verify that the file exists to avoid FileNotFoundException
+            if (!File.Exists(signedWorkbookPath))
             {
-                Console.WriteLine($"File not found: {workbookPath}");
-                return null;
+                Console.WriteLine($"File not found: {signedWorkbookPath}");
+                return;
             }
 
             try
             {
                 // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
+                Workbook workbook = new Workbook(signedWorkbookPath);
 
-                // Access the VBA project
+                // Access the VBA project from the workbook
                 VbaProject vbaProject = workbook.VbaProject;
 
-                // Verify that the VBA project is signed
-                if (!vbaProject.IsSigned)
+                // Check if the VBA project is signed and certificate data is available
+                if (vbaProject.IsSigned && vbaProject.CertRawData != null && vbaProject.CertRawData.Length > 0)
                 {
-                    Console.WriteLine("The VBA project is not signed. No certificate data available.");
-                    return null;
+                    // Export the certificate raw data to a MemoryStream
+                    using (MemoryStream certStream = new MemoryStream(vbaProject.CertRawData))
+                    {
+                        Console.WriteLine($"Certificate exported to MemoryStream. Length: {certStream.Length}");
+
+                        // Reset position if you need to read from the beginning
+                        certStream.Position = 0;
+
+                        // Example of further processing (e.g., loading into X509Certificate2)
+                        // var certificate = new System.Security.Cryptography.X509Certificates.X509Certificate2(certStream.ToArray());
+                    }
                 }
-
-                // Get the certificate raw data (byte array)
-                byte[] certData = vbaProject.CertRawData;
-
-                if (certData == null || certData.Length == 0)
+                else
                 {
-                    Console.WriteLine("Certificate raw data is empty.");
-                    return null;
+                    Console.WriteLine("VBA project is not signed or certificate data is unavailable.");
                 }
-
-                // Write the certificate data into a MemoryStream
-                MemoryStream certStream = new MemoryStream();
-                certStream.Write(certData, 0, certData.Length);
-                certStream.Position = 0; // Reset position for downstream consumers
-
-                Console.WriteLine($"Certificate exported to MemoryStream. Length: {certStream.Length} bytes.");
-
-                return certStream;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
-                return null;
             }
         }
     }
 
-    // Entry point for the console application
+    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)
         {
-            // Example usage: provide the path to the Excel file as the first argument
-            string workbookPath = args.Length > 0 ? args[0] : "SignedVbaProject.xlsx";
-
-            Console.WriteLine($"Processing workbook: {workbookPath}");
-
-            MemoryStream result = ExportVbaCertificateToMemoryStream.Run(workbookPath);
-
-            if (result != null)
+            try
             {
-                // Optionally, save the certificate data to a file for verification
-                string outputPath = "VbaCertificate.bin";
-                try
-                {
-                    File.WriteAllBytes(outputPath, result.ToArray());
-                    Console.WriteLine($"Certificate data saved to {outputPath}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to write certificate file: {ex.Message}");
-                }
+                ExportVbaCertificateToMemoryStream.Run();
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("No certificate data was exported.");
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
             }
         }
     }

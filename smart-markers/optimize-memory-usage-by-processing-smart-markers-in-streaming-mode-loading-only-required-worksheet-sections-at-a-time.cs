@@ -1,10 +1,10 @@
-// Title: C# – Process Smart Markers in Streaming Mode with LightCellsDataHandler (Row‑Range Loading)
-// Description: Demonstrates how to use a custom LightCellsDataHandler to load only a specific row range from the first worksheet, define the smart‑marker range "_CellsSmartMarkers", bind a DataTable, and process smart markers with WorkbookDesigner in streaming mode, dramatically lowering memory consumption in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | smart markers streaming | LightCellsDataHandler | partial row loading | memory optimization | WorkbookDesigner | named range _CellsSmartMarkers | large Excel processing
-// Common Searches: Aspose.Cells LightCellsDataHandler limit rows | process smart markers without loading whole workbook | streaming smart markers C# example | reduce memory usage Aspose.Cells smart markers | named range _CellsSmartMarkers usage
-// Developer Intent: Load a workbook in streaming mode, restrict memory to a defined row interval, and execute smart‑marker processing with WorkbookDesigner.
-// Use Cases: Generate reports from massive Excel templates where smart markers occupy a known row block, avoiding full workbook loading. | Run server‑side batch jobs that populate smart markers on the first sheet while keeping RAM usage minimal. | Create a lightweight data‑binding routine that reads only required rows, processes smart markers, and writes the result back to disk.
-// AI Prompts: Write C# code that uses LightCellsDataHandler to process smart markers located in rows 50‑100 of the first worksheet in streaming mode. | Explain how to configure WorkbookDesigner with LineByLine = false and the "_CellsSmartMarkers" named range for efficient smart‑marker processing. | Show how to extend RangeLimitedLightCellsDataHandler to handle multiple worksheets while still limiting memory usage.
+// Title: C# – Stream Smart Markers with a Row‑Range LightCellsDataHandler to Reduce Memory in Aspose.Cells
+// Description: Shows how to load an Excel template in streaming mode using a custom LightCellsDataHandler that streams only a defined row interval, creates a named range for those rows, binds a DataTable, processes the smart markers inside the range, and saves the workbook. A fallback creates a minimal template when the original file is missing.
+// Keywords: Aspose.Cells | C# | smart markers | streaming mode | LightCellsDataHandler | row range | memory optimization | range‑based processing | WorkbookDesigner | large Excel files
+// Common Searches: Aspose.Cells LightCellsDataHandler row range example | process smart markers in streaming mode C# | reduce memory usage when handling big Excel files with smart markers | create named range for smart markers Aspose.Cells | fallback template when Excel file not found Aspose.Cells
+// Developer Intent: Load a workbook with LightCellsDataHandler and process smart markers only in a selected block of rows to keep memory usage low.
+// Use Cases: Generate a paginated report where only rows 1000‑1999 contain data, streaming just that block to avoid loading the whole file. | Handle a massive template that stores smart markers in a specific section, processing only that section to produce a filtered output. | Automatically create a simple workbook with placeholder smart markers when the source template is missing, then run normal smart‑marker processing.
+// AI Prompts: Extend the RangeLimitedHandler to also restrict processing to a column interval while staying in streaming mode. | Provide code that processes multiple named smart‑marker ranges in one workbook using WorkbookDesigner.Process with LightCellsDataHandler. | Explain the impact of returning true from IsGatherString() in the custom handler and how it interacts with row‑range filtering.
 
 using System;
 using System.Data;
@@ -14,45 +14,35 @@ using AsposeRange = Aspose.Cells.Range;
 
 namespace SmartMarkerStreamingDemo
 {
-    // Custom handler to read only a specific row range from the worksheet.
-    // This reduces memory consumption by skipping rows that are not needed.
-    // Demonstrates how to use a custom LightCellsDataHandler to load only a specific row range from the first worksheet, define the smart‑marker range "_CellsSmartMarkers", bind a DataTable, and process smart markers with WorkbookDesigner in streaming mode, dramatically lowering memory consumption in Aspose.Cells for .NET.
-    public class RangeLimitedLightCellsDataHandler : LightCellsDataHandler
+    // Custom LightCellsDataHandler that processes only rows within a specified range.
+    // Shows how to load an Excel template in streaming mode using a custom LightCellsDataHandler that streams only a defined row interval, creates a named range for those rows, binds a DataTable, processes the smart markers inside the range, and saves the workbook. A fallback creates a minimal template when the original file is missing.
+    class RangeLimitedHandler : LightCellsDataHandler
     {
-        private readonly int _startRow; // inclusive
-        private readonly int _endRow;   // inclusive
-        private bool _processCurrentSheet;
+        private readonly int _startRow; // inclusive, zero‑based
+        private readonly int _endRow;   // inclusive, zero‑based
 
-        public RangeLimitedLightCellsDataHandler(int startRow, int endRow)
+        public RangeLimitedHandler(int startRow, int endRow)
         {
             _startRow = startRow;
             _endRow = endRow;
         }
 
-        // Called for each worksheet. Process only the first sheet (index 0).
-        public bool StartSheet(Worksheet sheet)
-        {
-            _processCurrentSheet = sheet.Index == 0;
-            return _processCurrentSheet;
-        }
+        // Called for each worksheet. Return true to continue processing this sheet.
+        public bool StartSheet(Worksheet sheet) => true;
 
-        // Called for each row. Process only rows within the defined range.
-        public bool StartRow(int rowIndex)
-        {
-            if (!_processCurrentSheet) return false;
-            return rowIndex >= _startRow && rowIndex <= _endRow;
-        }
+        // Called for each row. Return true only for rows inside the desired range.
+        public bool StartRow(int rowIndex) => rowIndex >= _startRow && rowIndex <= _endRow;
 
-        // Row processing can be used for additional logic; we simply continue.
+        // Called after a row is started. Return true to continue processing its cells.
         public bool ProcessRow(Row row) => true;
 
-        // Called for each cell in a processed row. Process all cells.
+        // Called for each cell in a row that is being processed.
         public bool StartCell(int columnIndex) => true;
 
-        // Cell processing can be used for custom actions; we just continue.
+        // Called for each cell that is being processed.
         public bool ProcessCell(Cell cell) => true;
 
-        // No need to gather strings into a global pool for this scenario.
+        // Determines whether string values should be gathered into a global pool.
         public bool IsGatherString() => false;
     }
 
@@ -63,73 +53,89 @@ namespace SmartMarkerStreamingDemo
             try
             {
                 // Path to the template workbook that contains smart markers.
-                const string templatePath = "TemplateWithSmartMarkers.xlsx";
+                const string templatePath = "Template.xlsx";
 
-                // Ensure the template file exists; create a minimal one if missing.
-                if (!File.Exists(templatePath))
+                // Verify that the template file exists; if not, create a minimal workbook.
+                Workbook workbook;
+                if (File.Exists(templatePath))
                 {
-                    var tempWb = new Workbook();
-                    var ws = tempWb.Worksheets[0];
-                    // Insert example smart markers in the expected range (rows 10‑30).
-                    ws.Cells["A10"].PutValue("&=Employees.Name");
-                    ws.Cells["B10"].PutValue("&=Employees.Age");
-                    ws.Cells["C10"].PutValue("&=Employees.Department");
-                    tempWb.Save(templatePath);
+                    // Define the row range (e.g., rows 1000‑1999) that we want to load and process.
+                    const int startRow = 999; // zero‑based index for row 1000
+                    const int endRow = 1998;  // zero‑based index for row 1999
+                    const int rowCount = endRow - startRow + 1;
+
+                    // Set up LoadOptions with the custom LightCellsDataHandler to stream only the required rows.
+                    var loadOptions = new LoadOptions
+                    {
+                        LightCellsDataHandler = new RangeLimitedHandler(startRow, endRow)
+                    };
+
+                    // Load the workbook using the streaming options.
+                    workbook = new Workbook(templatePath, loadOptions);
+
+                    // Create a range that covers the same rows and columns where smart markers reside.
+                    // Example assumes smart markers are in columns A and B.
+                    Worksheet sheet = workbook.Worksheets[0];
+                    AsposeRange smartMarkerRange = sheet.Cells.CreateRange(startRow, 0, rowCount, 2);
+                    smartMarkerRange.Name = "_CellsSmartMarkers"; // Required name for range‑based processing.
+
+                    // Prepare a simple data source (DataTable) that matches the smart marker fields.
+                    DataTable data = new DataTable("MyData");
+                    data.Columns.Add("Name", typeof(string));
+                    data.Columns.Add("Value", typeof(double));
+
+                    // Populate the data table with sample rows.
+                    for (int i = 0; i < rowCount; i++)
+                    {
+                        data.Rows.Add($"Item {i + 1}", (i + 1) * 10.5);
+                    }
+
+                    // Set up the WorkbookDesigner with the loaded workbook.
+                    var designer = new WorkbookDesigner
+                    {
+                        Workbook = workbook
+                        // LineByLine is obsolete; range‑based processing is used instead.
+                    };
+
+                    // Bind the data source to the designer.
+                    designer.SetDataSource(data);
+
+                    // Process only the defined smart marker range.
+                    designer.Process(smartMarkerRange, true);
+                }
+                else
+                {
+                    // If the template is missing, create a new workbook with placeholder smart markers.
+                    workbook = new Workbook();
+                    Worksheet sheet = workbook.Worksheets[0];
+                    sheet.Name = "Data";
+
+                    // Insert simple smart markers in the first two columns.
+                    sheet.Cells["A1"].PutValue("&=Name");
+                    sheet.Cells["B1"].PutValue("&=Value");
+
+                    // Prepare a minimal data source.
+                    DataTable data = new DataTable("MyData");
+                    data.Columns.Add("Name", typeof(string));
+                    data.Columns.Add("Value", typeof(double));
+                    data.Rows.Add("Sample", 123.45);
+
+                    var designer = new WorkbookDesigner
+                    {
+                        Workbook = workbook
+                    };
+                    designer.SetDataSource(data);
+                    designer.Process(true);
                 }
 
-                // Define the row range that actually contains the smart markers.
-                // For example, rows 10 to 30 (zero‑based indices 9 to 29).
-                int smartMarkerStartRow = 9;
-                int smartMarkerEndRow   = 29;
-
-                // Set up load options with the custom LightCellsDataHandler.
-                var loadOptions = new LoadOptions
-                {
-                    LightCellsDataHandler = new RangeLimitedLightCellsDataHandler(smartMarkerStartRow, smartMarkerEndRow)
-                };
-
-                // Load the workbook in streaming mode; only the specified rows are kept in memory.
-                var workbook = new Workbook(templatePath, loadOptions);
-
-                // Ensure the range that holds smart markers is named "_CellsSmartMarkers".
-                // This is required when LineByLine is set to false.
-                Worksheet sheet = workbook.Worksheets[0];
-                AsposeRange smartMarkerRange = sheet.Cells.CreateRange(
-                    smartMarkerStartRow,
-                    0,
-                    smartMarkerEndRow - smartMarkerStartRow + 1,
-                    sheet.Cells.MaxDataColumn + 1);
-                smartMarkerRange.Name = "_CellsSmartMarkers";
-
-                // Prepare a simple data source (DataTable) that matches the smart markers.
-                var dt = new DataTable("Employees");
-                dt.Columns.Add("Name", typeof(string));
-                dt.Columns.Add("Age", typeof(int));
-                dt.Columns.Add("Department", typeof(string));
-                dt.Rows.Add("John Doe", 30, "Sales");
-                dt.Rows.Add("Jane Smith", 28, "Marketing");
-
-                // Set up the WorkbookDesigner.
-                var designer = new WorkbookDesigner
-                {
-                    Workbook = workbook,
-                    LineByLine = false   // Process the named range instead of line‑by‑line.
-                };
-
-                // Bind the data source to the name used in the smart markers.
-                designer.SetDataSource("Employees", dt);
-
-                // Process the smart markers. Only the previously loaded rows are examined.
-                designer.Process();
-
-                // Save the populated workbook.
-                const string outputPath = "ProcessedOutput.xlsx";
+                // Save the processed workbook.
+                const string outputPath = "Output.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Processing complete. Output saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
     }

@@ -1,51 +1,62 @@
-// Title: Move an Aspose.Cells chart legend to custom X/Y pixel coordinates in C#
-// Description: Creates a workbook, adds sample data and a column chart, sets the legend to a free (NotDocked) position, and positions it using XPixel and YPixel offsets relative to the chart area, with optional overlay disabling.
-// Keywords: Aspose.Cells chart legend position | C# legend XPixel YPixel | NotDocked legend Aspose.Cells | custom legend coordinates .NET | prevent legend overlay chart
-// Common Searches: Aspose.Cells set legend pixel position | C# move chart legend to exact coordinates | NotDocked legend Aspose.Cells example | how to disable legend overlay in Aspose.Cells | custom legend placement in Excel using Aspose
-// Developer Intent: Place a chart legend at precise pixel offsets within the chart area using Aspose.Cells for .NET.
-// Use Cases: Avoid data series overlap by positioning the legend away from the plot area. | Maintain consistent legend placement across multiple generated charts. | Align the legend with other UI elements such as titles or annotations.
-// AI Prompts: Generate C# code that sets an Aspose.Cells chart legend to (150, 60) pixels and disables overlay. | Show how to use Legend.Position = NotDocked, then assign XPixel and YPixel for a pie chart in Aspose.Cells.
+// Title: Position a Chart Legend at Exact Pixel Coordinates with Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, add a column chart, set the legend to NotDocked, and move it to specific XPixel and YPixel values relative to the chart area, then save the file.
+// Keywords: Aspose.Cells legend pixel position | C# chart legend custom coordinates | NotDocked legend Aspose.Cells | XPixel YPixel chart legend | disable legend overlay Aspose.Cells
+// Common Searches: Aspose.Cells set legend XPixel YPixel C# | move chart legend to exact pixel location .NET | NotDocked legend positioning example | prevent legend overlay in Aspose.Cells chart | custom legend placement Excel export
+// Developer Intent: Place a chart legend at precise pixel offsets inside the chart area.
+// Use Cases: Ensure the legend does not obscure data series in automated reports. | Align the legend with surrounding UI components for a uniform layout. | Apply corporate branding rules that require the legend at a fixed screen position.
+// AI Prompts: Write C# code using Aspose.Cells to set a chart legend at (150, 60) pixels and turn off overlay. | Explain how Legend.Position = NotDocked combined with XPixel and YPixel controls legend placement. | Provide a step‑by‑step tutorial for moving a chart legend to custom pixel coordinates and avoiding overlap.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data and a column chart, sets the legend to a free (NotDocked) position, and positions it using XPixel and YPixel offsets relative to the chart area, with optional overlay disabling.
-class MoveLegendCustomPosition
+namespace AsposeCellsLegendCustomPosition
 {
-    static void Main()
+    // Demonstrates how to create a workbook, add a column chart, set the legend to NotDocked, and move it to specific XPixel and YPixel values relative to the chart area, then save the file.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook (rule: create)
+            Workbook workbook = new Workbook();
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-        // Set legend to a free (not docked) position so pixel coordinates are respected
-        chart.Legend.Position = LegendPositionType.NotDocked;
+            // Add a column chart (top‑row, left‑column, bottom‑row, right‑column)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Move legend to custom X and Y pixel coordinates relative to the chart area
-        chart.Legend.XPixel = 120; // X offset in pixels
-        chart.Legend.YPixel = 80;  // Y offset in pixels
+            // Set the data range for the chart
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-        // Optional: prevent the legend from overlapping the chart
-        chart.Legend.IsOverLay = false;
+            // Access the legend
+            Legend legend = chart.Legend;
 
-        // Save the workbook
-        workbook.Save("LegendCustomPosition.xlsx");
+            // To allow free positioning, set the legend to NotDocked
+            legend.Position = LegendPositionType.NotDocked;
+
+            // Move the legend to custom pixel coordinates relative to the chart area
+            // XPixel and YPixel are measured in pixels from the upper‑left corner of the chart area
+            legend.XPixel = 120; // horizontal offset in pixels
+            legend.YPixel = 80;  // vertical offset in pixels
+
+            // Optional: ensure the legend does not overlap the chart
+            legend.IsOverLay = false;
+
+            // Save the workbook (rule: save)
+            workbook.Save("CustomLegendPosition.xlsx");
+        }
     }
 }

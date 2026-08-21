@@ -1,57 +1,84 @@
-// Title: C# – Update PivotTable ODBC Connection String to a New Server with Aspose.Cells
-// Description: Loads an Excel workbook, iterates through each worksheet and PivotTable, finds external ODBC connections, replaces the old server segment in the ConnectionString (and DBConnection.Command when present), and saves the workbook with the revised data source.
-// Keywords: Aspose.Cells | C# | PivotTable | ODBC connection string | external data source | DBConnection | update server name | Excel automation | change data source programmatically
-// Common Searches: Aspose.Cells change pivot table ODBC server | C# update external connection string in Excel workbook | replace old server in PivotTable data source | modify DBConnection command text Aspose | programmatically migrate pivot table data source
-// Developer Intent: Replace the old server identifier in every PivotTable ODBC connection string (and related command text) within a workbook.
-// Use Cases: Migrate a workbook’s pivot tables to a new database server after an upgrade. | Batch‑process multiple Excel files to correct outdated ODBC connection strings. | Ensure both ConnectionString and Command properties reflect the new server for ODBC/OLE DB sources.
-// AI Prompts: Write C# code that scans all PivotTables in a workbook and updates the server part of their ODBC ConnectionString using Aspose.Cells. | Create a reusable method that accepts oldServerPart and newServerPart and updates ConnectionString and DBConnection.Command for every external connection in a workbook. | Explain how to validate that updated PivotTable connections are applied before saving the workbook.
+// Title: Change PivotTable ODBC Connection String with Aspose.Cells for .NET
+// Description: Loads a workbook, loops through its worksheets and PivotTables, finds external DBConnection objects, replaces their ODBC ConnectionString with a new server address, and saves the updated file.
+// Keywords: Aspose.Cells | C# | PivotTable | ODBC connection string | external data source | DBConnection | Excel workbook | update server name | programmatic data connection | modify pivot source
+// Common Searches: Aspose.Cells change PivotTable ODBC connection | C# update external data source for Excel PivotTable | set new server in PivotTable DBConnection string | programmatically modify PivotTable connection string .NET | batch update ODBC connections in Excel workbooks
+// Developer Intent: Replace the ODBC connection string of a PivotTable’s external source so it points to a different database server.
+// Use Cases: Repoint all PivotTables after migrating the database to a new host. | Automate workbook preparation for deployment by updating data source credentials. | Process a collection of reports to ensure they reference the correct server before distribution.
+// AI Prompts: Generate C# code using Aspose.Cells that iterates through every PivotTable in a workbook and updates its ODBC ConnectionString to a specified server. | Show how to detect DBConnection objects within PivotTable source connections and safely assign a new connection string. | Explain best practices for error handling when saving a workbook after modifying external connections with Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.ExternalConnections;
 
-// Loads an Excel workbook, iterates through each worksheet and PivotTable, finds external ODBC connections, replaces the old server segment in the ConnectionString (and DBConnection.Command when present), and saves the workbook with the revised data source.
-class UpdatePivotTableConnection
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads a workbook, loops through its worksheets and PivotTables, finds external DBConnection objects, replaces their ODBC ConnectionString with a new server address, and saves the updated file.
+    public class UpdatePivotTableOdbcConnection
     {
-        // Load the workbook that contains the pivot table with an external ODBC source
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Define the part of the connection string that identifies the old server
-        // and the replacement that points to the new server location
-        string oldServerPart = "Server=OldServer;";
-        string newServerPart = "Server=NewServer;";
-
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Entry point for the application
+        public static void Main()
         {
-            // Iterate through all pivot tables on the current worksheet
-            foreach (PivotTable pivot in sheet.PivotTables)
+            try
             {
-                // Retrieve the external connections used by this pivot table
-                ExternalConnection[] connections = pivot.GetSourceDataConnections();
-
-                // Update each connection's ConnectionString if it references the old server
-                foreach (ExternalConnection conn in connections)
-                {
-                    if (!string.IsNullOrEmpty(conn.ConnectionString) &&
-                        conn.ConnectionString.Contains(oldServerPart))
-                    {
-                        conn.ConnectionString = conn.ConnectionString.Replace(oldServerPart, newServerPart);
-                    }
-
-                    // If the connection is a DBConnection (ODBC/OLE DB), optionally update its Command text
-                    if (conn is DBConnection dbConn && !string.IsNullOrEmpty(dbConn.Command))
-                    {
-                        dbConn.Command = dbConn.Command.Replace(oldServerPart, newServerPart);
-                    }
-                }
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
 
-        // Save the workbook with the updated connection strings
-        workbook.Save("output.xlsx");
+        public static void Run()
+        {
+            // Path to the workbook that contains the pivot table with an ODBC connection
+            string inputPath = "input.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // New ODBC connection string pointing to the new server location
+            string newConnectionString = "Driver={SQL Server};Server=NewServerName;Database=MyDatabase;Trusted_Connection=Yes;";
+
+            // Load the workbook (lifecycle rule: load)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all pivot tables in the worksheet
+                foreach (PivotTable pivot in sheet.PivotTables)
+                {
+                    // Get external data connections used by the pivot table
+                    ExternalConnection[] connections = pivot.GetSourceDataConnections();
+
+                    // Update each DBConnection's ConnectionString
+                    foreach (ExternalConnection conn in connections)
+                    {
+                        if (conn is DBConnection dbConn)
+                        {
+                            dbConn.ConnectionString = newConnectionString;
+                        }
+                    }
+                }
+            }
+
+            // Save the modified workbook (lifecycle rule: save)
+            string outputPath = "output.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
     }
 }

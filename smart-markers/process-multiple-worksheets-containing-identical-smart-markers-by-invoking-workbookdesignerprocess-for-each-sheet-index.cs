@@ -1,75 +1,75 @@
-// Title: Process Identical Smart Markers on All Worksheets with WorkbookDesigner.Process (C# Aspose.Cells)
-// Description: Loads or creates an Excel template containing smart markers, builds a DataTable named Employees, binds it to WorkbookDesigner, then iterates through every worksheet calling designer.Process(sheetIndex, true) to replace the markers while preserving any unknown placeholders, and finally saves the result.
-// Keywords: Aspose.Cells | C# | WorkbookDesigner | smart markers | multiple worksheets | process | preserve unknown markers | DataTable binding | Excel template | loop worksheets
-// Common Searches: Aspose.Cells process smart markers on each sheet C# | WorkbookDesigner.Process multiple worksheets example | preserve unknown smart markers Aspose.Cells | loop through worksheets to apply smart markers | create Excel template with smart markers programmatically
-// Developer Intent: Execute WorkbookDesigner.Process for every worksheet to replace identical smart markers with bound data while leaving any unmatched markers untouched.
-// Use Cases: Generate a multi‑sheet report where the same employee table appears on each page. | Apply a common smart‑marker template to several departmental worksheets without altering custom placeholders. | Preserve user‑defined placeholder text that is not linked to a data source during batch processing.
-// AI Prompts: Show how to skip worksheets that contain no smart markers before calling Process. | Provide code to add a new worksheet with the same smart markers and then process all sheets. | Explain how to catch and handle missing data‑source errors when processing smart markers. | Demonstrate changing the smart‑marker delimiters for a specific workbook. | Convert the processed workbook to PDF after all sheets have been processed.
+// Title: Process identical Smart Markers on every worksheet using WorkbookDesigner.Process (sheet index) – Aspose.Cells for .NET
+// Description: C# example that loads a workbook with the same smart markers on each sheet, binds a DataTable named "Employees" as the data source, loops through all worksheet indexes and calls WorkbookDesigner.Process(index, true) to fill the markers while keeping any unknown markers, then saves the result.
+// Keywords: Aspose.Cells smart markers multiple sheets | WorkbookDesigner.Process sheet index | preserve unknown smart markers | bind DataTable to smart markers | C# Excel smart marker processing
+// Common Searches: Aspose.Cells process smart markers on each worksheet | WorkbookDesigner.Process overload for specific sheet | keep unrecognized smart markers Aspose.Cells | iterate worksheets to fill smart markers C# | smart marker loop hidden sheets Aspose
+// Developer Intent: Run WorkbookDesigner.Process for every worksheet index to populate identical smart markers across a workbook while optionally preserving markers that have no matching data.
+// Use Cases: Create employee‑list reports where every sheet uses the same smart markers and shares one DataTable. | Populate a multi‑month sales template that repeats identical smart markers on each month’s worksheet. | Generate a multi‑sheet invoice workbook where customer and product smart markers appear on every page.
+// AI Prompts: Show how to skip hidden worksheets when processing smart markers with WorkbookDesigner.Process. | Provide code to process smart markers only on worksheets whose names are in a specified list. | Explain error handling for individual sheet processing so the loop continues with remaining sheets.
 
 using System;
 using System.Data;
 using System.IO;
 using Aspose.Cells;
 
-// Loads or creates an Excel template containing smart markers, builds a DataTable named Employees, binds it to WorkbookDesigner, then iterates through every worksheet calling designer.Process(sheetIndex, true) to replace the markers while preserving any unknown placeholders, and finally saves the result.
-class ProcessMultipleSheets
+namespace AsposeCellsSmartMarkerProcessing
 {
-    static void Main()
+    // C# example that loads a workbook with the same smart markers on each sheet, binds a DataTable named "Employees" as the data source, loops through all worksheet indexes and calls WorkbookDesigner.Process(index, true) to fill the markers while keeping any unknown markers, then saves the result.
+    public class MultipleSheetProcessor
     {
-        try
+        public static void Run()
         {
-            const string templatePath = "SmartMarkerTemplate.xlsx";
-            Workbook workbook;
-
-            // Load existing template or create a minimal one if it does not exist
-            if (File.Exists(templatePath))
+            try
             {
-                workbook = new Workbook(templatePath);
+                const string templatePath = "TemplateWithSmartMarkers.xlsx";
+                const string outputPath = "ProcessedMultipleSheets.xlsx";
+
+                // Verify that the template file exists to avoid FileNotFoundException
+                if (!File.Exists(templatePath))
+                {
+                    throw new FileNotFoundException($"Template file not found: {templatePath}");
+                }
+
+                // Load the workbook that contains identical smart markers on each worksheet
+                Workbook workbook = new Workbook(templatePath);
+
+                // Prepare a simple data source (DataTable) that matches the smart markers
+                DataTable data = new DataTable("Employees");
+                data.Columns.Add("Name", typeof(string));
+                data.Columns.Add("Age", typeof(int));
+                data.Rows.Add("John Doe", 30);
+                data.Rows.Add("Jane Smith", 28);
+                data.Rows.Add("Bob Johnson", 45);
+
+                // Initialize WorkbookDesigner with the loaded workbook
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+                // Bind the data source to a name used in the smart markers (e.g., "Employees")
+                designer.SetDataSource("Employees", data);
+
+                // Process each worksheet individually using the sheet index overload
+                // The boolean parameter 'true' preserves any unrecognized smart markers
+                for (int i = 0; i < workbook.Worksheets.Count; i++)
+                {
+                    designer.Process(i, true);
+                }
+
+                // Save the processed workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook processed and saved to '{outputPath}'.");
             }
-            else
+            catch (Exception ex)
             {
-                workbook = new Workbook();
-                Worksheet ws = workbook.Worksheets[0];
-                ws.Name = "Sheet1";
-
-                // Sample smart markers that match the data source
-                ws.Cells["A1"].PutValue("&=Employees.Name");
-                ws.Cells["B1"].PutValue("&=Employees.Age");
-
-                // Save the generated template for subsequent runs
-                workbook.Save(templatePath);
+                Console.Error.WriteLine($"Error processing workbook: {ex.Message}");
             }
-
-            // Prepare a sample data source (DataTable) that matches the smart markers
-            DataTable dt = new DataTable("Employees");
-            dt.Columns.Add("Name", typeof(string));
-            dt.Columns.Add("Age", typeof(int));
-            dt.Rows.Add("John Doe", 30);
-            dt.Rows.Add("Jane Smith", 28);
-
-            // Initialize the WorkbookDesigner and assign the loaded workbook
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = workbook
-            };
-
-            // Bind the data source to a name used in the smart markers
-            designer.SetDataSource("Employees", dt);
-
-            // Process smart markers on each worksheet
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
-            {
-                // Preserve any unrecognized smart markers (second parameter = true)
-                designer.Process(i, true);
-            }
-
-            // Save the processed workbook
-            workbook.Save("ProcessedOutput.xlsx");
-            Console.WriteLine("Processing completed successfully.");
         }
-        catch (Exception ex)
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            MultipleSheetProcessor.Run();
         }
     }
 }

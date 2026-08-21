@@ -1,22 +1,22 @@
-// Title: Aspose.Cells for .NET – Resize Chart Data Label Shapes by Disabling Auto‑Size
-// Description: Demonstrates how to create a workbook, add a column chart, enable data labels, turn off automatic shape resizing (IsResizeShapeToFitText = false), and assign a fixed width and height to each label shape—ideal for adding branded background images.
-// Keywords: Aspose.Cells resize data label | chart data label custom size .NET | disable auto‑size data label Aspose | set label width height Aspose.Cells | branding chart data labels C# | fixed size data label shape
-// Common Searches: how to set fixed size for chart data labels Aspose.Cells | prevent data label shape from auto‑resizing in .NET | resize data label shapes after adding background image | custom width and height for Excel chart labels C#
-// Developer Intent: Apply a consistent, fixed dimension to every chart data label shape so branding graphics align correctly.
-// Use Cases: Generate a column chart where each data label has an 80 × 30 pixel shape for uniform logo placement. | Iterate through all points in a series, disable auto‑size, and set custom dimensions before saving the workbook. | Prepare Excel reports with branded data labels that require a predetermined shape size to match background images.
-// AI Prompts: Show C# code to disable IsResizeShapeToFitText and set Width/Height for chart data labels using Aspose.Cells. | Explain how to resize data label shapes after adding a background image in an Excel chart with Aspose.Cells for .NET. | Provide a step‑by‑step guide to apply a fixed size to all data labels in a column chart without affecting other chart elements.
+// Title: Resize Chart Data Label Shapes for Branding with Aspose.Cells for .NET
+// Description: Demonstrates how to create a column chart, enable data labels, disable automatic shape resizing, and set a fixed width (60 px) and height (30 px) for each label so a background image can be applied without distortion.
+// Keywords: Aspose.Cells chart data label size | C# resize data label shape | disable IsResizeShapeToFitText | fixed width height chart label | add background image to data label | .NET Excel chart customization
+// Common Searches: set fixed size for Excel chart data labels Aspose.Cells | prevent data label auto‑resize after adding image | customize chart label dimensions C# | Aspose.Cells label background image sizing | how to control data label shape size in .NET
+// Developer Intent: Control the dimensions of chart data label shapes after applying a branding background image, ensuring consistent appearance across all labels.
+// Use Cases: Create a column chart and assign each data label a 60 × 30 pixel rectangle for logo placement. | Turn off IsResizeShapeToFitText to keep label shapes from expanding with longer text. | Maintain uniform label size when exporting Excel files to PDF or image formats.
+// AI Prompts: Write C# code using Aspose.Cells that adds a background image to each chart data label and then fixes the label Width to 60 and Height to 30 pixels. | Provide an example that disables IsResizeShapeToFitText for all points in a series, sets custom font color, and ensures the label shape size remains constant.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System.Drawing;
 
-namespace AsposeCellsBrandingExample
+namespace AsposeCellsLabelResizeDemo
 {
-    // Demonstrates how to create a workbook, add a column chart, enable data labels, turn off automatic shape resizing (IsResizeShapeToFitText = false), and assign a fixed width and height to each label shape—ideal for adding branded background images.
-    public class ResizeDataLabelShapes
+    // Demonstrates how to create a column chart, enable data labels, disable automatic shape resizing, and set a fixed width (60 px) and height (30 px) for each label so a background image can be applied without distortion.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
@@ -24,7 +24,7 @@ namespace AsposeCellsBrandingExample
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data
+                // Populate sample data for the chart
                 sheet.Cells["A1"].PutValue("Category");
                 sheet.Cells["A2"].PutValue("A");
                 sheet.Cells["A3"].PutValue("B");
@@ -45,39 +45,27 @@ namespace AsposeCellsBrandingExample
                 series.DataLabels.ShowValue = true;
                 series.DataLabels.Position = LabelPositionType.Center;
 
-                // Iterate through each point and customize its data label
+                // Customize each data label
                 foreach (ChartPoint point in series.Points)
                 {
-                    // Access the data label (ChartTextFrame)
-                    DataLabels label = point.DataLabels;
+                    // Disable automatic resizing so we can control the shape size
+                    point.DataLabels.IsResizeShapeToFitText = false;
 
-                    // Prevent the shape from auto‑resizing to fit the text
-                    label.IsResizeShapeToFitText = false;
+                    // Set a custom size (smaller than the default needed for the text)
+                    point.DataLabels.Width = 60;   // pixels
+                    point.DataLabels.Height = 30; // pixels
 
-                    // Define custom size for the label shape (in pixels)
-                    // Width and Height are obsolete but still functional; warnings are acceptable
-                    label.Width = 80;   // adjust as needed
-                    label.Height = 30;  // adjust as needed
+                    // Optional: set font color or other properties if needed
+                    point.DataLabels.Font.Color = Color.Black;
                 }
 
                 // Save the workbook
-                string outputPath = "ResizedDataLabels.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+                workbook.Save("ChartDataLabelsResized.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
-        }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ResizeDataLabelShapes.Run();
         }
     }
 }

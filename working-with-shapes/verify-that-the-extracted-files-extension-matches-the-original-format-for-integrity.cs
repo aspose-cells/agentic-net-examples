@@ -1,65 +1,93 @@
-// Title: Validate extracted Excel file extension against detected format with Aspose.Cells (.NET)
-// Description: A C# sample that uses Aspose.Cells FileFormatUtil to read an extracted spreadsheet via a stream, detect its true format, map the detected format and the file's extension to SaveFormat enums, and confirm they are identical. The console output shows the extension, detected format type, mapped SaveFormat values, and the integrity‑verification result.
-// Keywords: Aspose.Cells | FileFormatUtil | DetectFileFormat | ExtensionToSaveFormat | SaveFormat | C# | .NET | Excel file validation | spreadsheet integrity check | file extension verification | extracted file stream | zip extraction | format detection
-// Common Searches: Aspose.Cells verify Excel file extension matches content | C# detect spreadsheet format from stream | compare detected format with file extension Aspose.Cells | validate extracted .xlsx file integrity | how to check file extension against actual format .NET
-// Developer Intent: Ensure an extracted spreadsheet’s extension accurately reflects its underlying format to avoid processing errors.
-// Use Cases: Validate files extracted from ZIP archives before loading them into a workbook. | Reject uploaded spreadsheets in a web API when the extension does not match the detected content. | Automate integrity checks in a batch conversion pipeline that extracts and re‑saves spreadsheets in various formats.
-// AI Prompts: Write a C# helper that throws an exception if FileFormatUtil detects a format different from the file’s extension. | Create a unit test covering .xlsx, .xls, and .csv files extracted from a zip archive, verifying the integrity check passes or fails as expected. | Generate logging code that records the detected FileFormatType, the mapped SaveFormat, and the original extension when verification fails.
+// Title: C# – Verify an extracted spreadsheet’s extension matches its detected format using Aspose.Cells
+// Description: Shows how to employ Aspose.Cells FileFormatUtil to identify the real format of an extracted workbook, convert the format to a SaveFormat, obtain the standard file extension, compare it with the file’s current extension, and output the verification result while handling missing files and exceptions.
+// Keywords: Aspose.Cells | FileFormatUtil | detect spreadsheet format | verify file extension C# | SaveFormatToExtension | Excel file validation .NET | extension mismatch detection | spreadsheet integrity check | C# file format detection
+// Common Searches: Aspose.Cells detect file format C# example | C# check if Excel file extension matches its content | How to verify spreadsheet extension with Aspose.Cells | FileFormatUtil usage for extension validation | Validate extracted Excel file extension in .NET
+// Developer Intent: The developer wants to confirm that the extension of an extracted workbook accurately reflects the format detected by Aspose.Cells before any further processing.
+// Use Cases: Screen extracted files from zip archives to ensure they carry the correct extension before conversion. | Reject user‑uploaded spreadsheets whose extensions do not correspond to the actual file format in a web portal. | Automate batch integrity checks in a data‑pipeline that extracts and saves workbooks in multiple formats.
+// AI Prompts: Write C# code that logs a warning instead of printing to console when the detected extension differs from the file name, using Aspose.Cells. | Create a method that throws a custom ExtensionMismatchException when the extension check fails. | Show how to embed this verification step into an ASP.NET Core file‑upload controller.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A C# sample that uses Aspose.Cells FileFormatUtil to read an extracted spreadsheet via a stream, detect its true format, map the detected format and the file's extension to SaveFormat enums, and confirm they are identical. The console output shows the extension, detected format type, mapped SaveFormat values, and the integrity‑verification result.
-class VerifyFileExtension
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Shows how to employ Aspose.Cells FileFormatUtil to identify the real format of an extracted workbook, convert the format to a SaveFormat, obtain the standard file extension, compare it with the file’s current extension, and output the verification result while handling missing files and exceptions.
+    public class FileExtensionIntegrityVerifier
     {
-        // Path to the original file (used only for reference)
-        string originalFilePath = "original.xlsx";
-
-        // Path to the file that was extracted (could be from a zip, stream, etc.)
-        string extractedFilePath = "extracted_file";
-
-        // Verify that the extracted file exists before processing
-        if (!File.Exists(extractedFilePath))
+        /// <param name="originalFilePath">Path to the original file (used only for reference).</param>
+        /// <param name="extractedFilePath">Path to the extracted file whose integrity is to be verified.</param>
+        public static void VerifyFileExtension(string originalFilePath, string extractedFilePath)
         {
-            Console.WriteLine($"Error: Extracted file not found at path '{extractedFilePath}'.");
-            return;
-        }
-
-        try
-        {
-            // Detect the format of the extracted file using a stream
-            using (FileStream stream = File.OpenRead(extractedFilePath))
+            // Ensure the extracted file exists
+            if (!File.Exists(extractedFilePath))
             {
-                // Get format information from the file content
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(stream);
+                Console.WriteLine($"Extracted file not found: {extractedFilePath}");
+                return;
+            }
 
-                // Convert the detected FileFormatType to a SaveFormat enum value
+            try
+            {
+                // Detect the actual format of the extracted file
+                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(extractedFilePath);
+
+                // Convert the detected FileFormatType to a SaveFormat enum
                 SaveFormat detectedSaveFormat = FileFormatUtil.FileFormatToSaveFormat(formatInfo.FileFormatType);
 
-                // Obtain the file extension of the extracted file (including the leading dot)
-                string fileExtension = Path.GetExtension(extractedFilePath);
+                // Convert the SaveFormat to a canonical file extension (e.g., ".xlsx")
+                string detectedExtension = FileFormatUtil.SaveFormatToExtension(detectedSaveFormat);
 
-                // Convert the extension to a SaveFormat enum value
-                SaveFormat extensionSaveFormat = FileFormatUtil.ExtensionToSaveFormat(fileExtension);
+                // Get the extension present in the extracted file name
+                string actualExtension = Path.GetExtension(extractedFilePath);
 
-                // Verify that the detected format matches the extension and that the extension is recognized
-                bool isIntegrityIntact = detectedSaveFormat == extensionSaveFormat && extensionSaveFormat != SaveFormat.Unknown;
+                // Compare extensions (case‑insensitive)
+                bool isMatch = string.Equals(detectedExtension, actualExtension, StringComparison.OrdinalIgnoreCase);
 
-                // Output the verification result
-                Console.WriteLine($"Extracted file extension: {fileExtension}");
-                Console.WriteLine($"Detected file format type: {formatInfo.FileFormatType}");
-                Console.WriteLine($"Detected SaveFormat: {detectedSaveFormat}");
-                Console.WriteLine($"Extension mapped SaveFormat: {extensionSaveFormat}");
-                Console.WriteLine($"Integrity verification passed: {isIntegrityIntact}");
+                Console.WriteLine($"Original file: {Path.GetFileName(originalFilePath)}");
+                Console.WriteLine($"Extracted file: {Path.GetFileName(extractedFilePath)}");
+                Console.WriteLine($"Detected format: {formatInfo.FileFormatType}");
+                Console.WriteLine($"Detected extension: {detectedExtension}");
+                Console.WriteLine($"Actual extension: {actualExtension}");
+                Console.WriteLine($"Extension match: {isMatch}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during verification: {ex.Message}");
             }
         }
-        catch (Exception ex)
+
+        // Example usage
+        public static void Run()
         {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Path to the original file (could be any format)
+            string originalPath = "original.xlsx";
+
+            // Path to the extracted file that needs verification
+            string extractedPath = "extracted_file.dat"; // Example: file extracted without proper extension
+
+            // Optional: verify original file existence for completeness
+            if (!File.Exists(originalPath))
+            {
+                Console.WriteLine($"Original file not found (reference only): {originalPath}");
+            }
+
+            VerifyFileExtension(originalPath, extractedPath);
+        }
+    }
+
+    // Entry point required for console application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            try
+            {
+                FileExtensionIntegrityVerifier.Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
+            }
         }
     }
 }

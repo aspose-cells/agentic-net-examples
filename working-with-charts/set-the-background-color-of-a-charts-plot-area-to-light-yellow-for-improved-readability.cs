@@ -1,17 +1,18 @@
-// Title: Set Light Yellow Background for a Chart Plot Area with Aspose.Cells (.NET C#)
-// Description: Learn how to create a workbook, add sample data, insert a column chart, and apply a LightYellow opaque background to the chart's plot area using Aspose.Cells for .NET. The example saves the result as an Excel file.
-// Keywords: Aspose.Cells chart plot area background | C# set chart background color | LightYellow plot area Aspose.Cells | opaque chart background .NET | Excel chart formatting Aspose | Aspose.Cells PlotArea.BackgroundColor
-// Common Searches: Aspose.Cells change chart plot area color C# | set opaque background for chart plot area Aspose | light yellow background for Excel chart using Aspose.Cells | how to format chart plot area in .NET
-// Developer Intent: Apply a LightYellow opaque fill to the plot area of an Aspose.Cells chart.
-// Use Cases: Enhance readability of column charts by adding a contrasting light yellow plot area. | Match chart aesthetics to a corporate color scheme in automated report generation. | Ensure consistent plot‑area appearance when exporting workbooks to different Excel formats.
-// AI Prompts: Generate C# code to set a custom RGB color for a chart plot area and make it opaque with Aspose.Cells. | Show how to loop through all charts in a workbook and apply the same plot‑area background color. | Explain how to revert a chart's plot area background to the default setting after a custom color has been applied.
+// Title: Set Chart Plot Area Background to Light Yellow with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds sample data, inserts a column chart, and changes the chart's plot area fill to LightYellow using Aspose.Cells before saving as ChartPlotAreaBackground.xlsx.
+// Keywords: Aspose.Cells | C# chart formatting | plot area background color | light yellow chart fill | Excel chart styling .NET
+// Common Searches: Aspose.Cells change chart plot area color | C# set plot area background light yellow | how to fill chart plot area Aspose.Cells | Excel chart background color using Aspose
+// Developer Intent: Apply a LightYellow fill to a chart's plot area in an Aspose.Cells workbook.
+// Use Cases: Enhance readability of column charts with a subtle background shade. | Standardize chart appearance across generated Excel reports. | Programmatically style multiple charts in a workbook for branding consistency.
+// AI Prompts: Generate C# code that sets the plot area background of any Aspose.Cells chart to a custom color. | Explain how to conditionally assign different background shades to chart plot areas using Aspose.Cells. | Show a loop that applies a LightYellow fill to the plot area of all charts in a workbook.
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
+using System.Drawing;
 
-// Learn how to create a workbook, add sample data, insert a column chart, and apply a LightYellow opaque background to the chart's plot area using Aspose.Cells for .NET. The example saves the result as an Excel file.
+// Creates a workbook, adds sample data, inserts a column chart, and changes the chart's plot area fill to LightYellow using Aspose.Cells before saving as ChartPlotAreaBackground.xlsx.
 class SetPlotAreaBackground
 {
     static void Main()
@@ -20,7 +21,7 @@ class SetPlotAreaBackground
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data for the chart
+        // Add sample data for the chart
         sheet.Cells["A1"].PutValue("Category");
         sheet.Cells["A2"].PutValue("A");
         sheet.Cells["A3"].PutValue("B");
@@ -35,10 +36,8 @@ class SetPlotAreaBackground
         Chart chart = sheet.Charts[chartIndex];
         chart.SetChartDataRange("A1:B4", true);
 
-        // Set the plot area background color to light yellow for better readability
+        // Set the background color of the plot area to light yellow
         chart.PlotArea.Area.BackgroundColor = Color.LightYellow;
-        // Make the background opaque so the color is visible
-        chart.PlotArea.BackgroundMode = BackgroundMode.Opaque;
 
         // Save the workbook
         workbook.Save("ChartPlotAreaBackground.xlsx");

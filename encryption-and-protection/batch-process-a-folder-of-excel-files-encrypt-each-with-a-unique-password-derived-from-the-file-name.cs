@@ -1,10 +1,10 @@
-// Title: C# – Batch encrypt Excel files in a folder with Aspose.Cells using filename‑based passwords
-// Description: A console app that scans a specified directory, selects Excel workbooks (.xlsx, .xls, .xlsb, .xlsm), loads each with Aspose.Cells, assigns a password derived from the file name (without extension), applies 128‑bit strong encryption, overwrites the original file, and writes success or error messages to the console.
-// Keywords: Aspose.Cells C# encrypt Excel | batch Excel password protection .NET | filename based workbook password | strong encryption Excel files | programmatic Excel security C# | encrypt multiple Excel files | Aspose.Cells encryption example
-// Common Searches: how to encrypt all Excel files in a folder using Aspose.Cells | C# batch set password for Excel workbooks | Aspose.Cells encrypt multiple .xlsx files | apply strong encryption to Excel files programmatically | set workbook password from file name C#
-// Developer Intent: Automatically protect every Excel workbook in a directory by assigning a unique password derived from its file name.
-// Use Cases: Secure a collection of financial spreadsheets before archiving, giving each file its own name‑based password. | Enforce per‑report encryption for user‑generated Excel outputs to satisfy compliance policies. | Prepare a set of Excel templates for distribution, locking each with a distinct password without manual effort.
-// AI Prompts: Write C# code that uses Aspose.Cells to encrypt all .xlsx, .xls, .xlsb, and .xlsm files in a given folder, using the file name (without extension) as the password and applying 128‑bit strong encryption. | Refactor the batch encryption program to log progress and errors to a file and to skip files that are already password‑protected. | Explain how to modify the example so that the password is a SHA‑256 hash of the file name instead of the plain name, while still using Aspose.Cells encryption.
+// Title: Batch encrypt Excel .xlsx files with Aspose.Cells for .NET using filename‑derived passwords
+// Description: C# example that scans a directory, loads each .xlsx workbook via Aspose.Cells, sets the workbook password to the file name (without extension), applies AES‑128 strong encryption, and saves the file back, overwriting the original. Includes folder validation and exception handling.
+// Keywords: Aspose.Cells encrypt Excel | C# batch Excel encryption | filename password Excel | AES 128 Aspose.Cells | protect .xlsx files programmatically | Excel workbook password .NET | bulk Excel security
+// Common Searches: how to encrypt multiple xlsx files with Aspose.Cells | set Excel workbook password from file name using C# | batch apply AES encryption to Excel files | Aspose.Cells bulk password protection example | automate Excel file encryption .NET
+// Developer Intent: Programmatically encrypt every Excel workbook in a folder, assigning each a unique password derived from its file name.
+// Use Cases: Secure a batch of financial reports before archiving them on a shared drive. | Automatically protect generated invoices so each can be opened only with its own identifier as the password. | Encrypt confidential spreadsheets prior to uploading them to cloud storage or a collaboration platform.
+// AI Prompts: Create C# code with Aspose.Cells that encrypts all .xls files in a directory, using a password pattern of "Report_" + file name, and logs any failures. | Show how to switch the encryption to AES‑256 and save the encrypted workbooks to a separate output folder. | Explain how to modify the sample to skip files that are already password‑protected and to generate a summary report after processing.
 
 using System;
 using System.IO;
@@ -12,7 +12,7 @@ using Aspose.Cells;
 
 namespace BatchEncryptExcel
 {
-    // A console app that scans a specified directory, selects Excel workbooks (.xlsx, .xls, .xlsb, .xlsm), loads each with Aspose.Cells, assigns a password derived from the file name (without extension), applies 128‑bit strong encryption, overwrites the original file, and writes success or error messages to the console.
+    // C# example that scans a directory, loads each .xlsx workbook via Aspose.Cells, sets the workbook password to the file name (without extension), applies AES‑128 strong encryption, and saves the file back, overwriting the original. Includes folder validation and exception handling.
     class Program
     {
         static void Main(string[] args)
@@ -27,54 +27,45 @@ namespace BatchEncryptExcel
                 return;
             }
 
-            try
+            // Get all Excel files in the folder (adjust the pattern as needed)
+            string[] excelFiles = Directory.GetFiles(folderPath, "*.xlsx");
+
+            foreach (string filePath in excelFiles)
             {
-                // Get all files in the folder (filter later by extension)
-                string[] allFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
-
-                foreach (string filePath in allFiles)
+                // Ensure the file still exists before processing
+                if (!File.Exists(filePath))
                 {
-                    string extension = Path.GetExtension(filePath).ToLowerInvariant();
-                    if (extension != ".xlsx" && extension != ".xls" && extension != ".xlsb" && extension != ".xlsm")
-                        continue; // Skip non‑Excel files
+                    Console.WriteLine($"File not found: {filePath}");
+                    continue;
+                }
 
-                    // Ensure the file still exists before loading
-                    if (!File.Exists(filePath))
+                try
+                {
+                    // Load the workbook from the existing file
+                    using (Workbook workbook = new Workbook(filePath))
                     {
-                        Console.WriteLine($"File not found (skipped): {filePath}");
-                        continue;
-                    }
-
-                    try
-                    {
-                        // Load the workbook
-                        Workbook workbook = new Workbook(filePath);
-
                         // Derive a unique password from the file name (without extension)
                         string password = Path.GetFileNameWithoutExtension(filePath);
 
-                        // Set the password for the workbook (this encrypts the file)
+                        // Set the password for the workbook
                         workbook.Settings.Password = password;
 
-                        // Optional: set stronger encryption options (ignored for .xlsx/.xlsm/.xlsb but kept for completeness)
+                        // Optional: set stronger encryption options (AES 128-bit)
                         workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
 
                         // Save the workbook back to the same file (overwrites the original)
-                        workbook.Save(filePath);
-                        Console.WriteLine($"Encrypted: {Path.GetFileName(filePath)}");
+                        workbook.Save(filePath, SaveFormat.Xlsx);
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-                    }
-                }
 
-                Console.WriteLine("Batch encryption completed.");
+                    Console.WriteLine($"Encrypted '{Path.GetFileName(filePath)}' with password '{Path.GetFileNameWithoutExtension(filePath)}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing '{Path.GetFileName(filePath)}': {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+
+            Console.WriteLine("Batch encryption completed.");
         }
     }
 }

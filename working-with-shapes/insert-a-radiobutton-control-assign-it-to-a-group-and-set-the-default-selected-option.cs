@@ -1,10 +1,10 @@
-// Title: Add grouped ActiveX RadioButton controls and set a default selection with Aspose.Cells for .NET (C#)
-// Description: This example creates a new Workbook, inserts two RadioButton ActiveX controls into the first worksheet, assigns them the same GroupName for mutual exclusivity, sets custom captions, marks the first button as checked (default), and saves the file as an .xlsx workbook.
-// Keywords: Aspose.Cells | C# | .NET | ActiveX RadioButton | RadioButtonActiveXControl | GroupName | default checked | Excel form control | add shape to worksheet | multiple choice Excel form | Excel UI automation
-// Common Searches: Aspose.Cells add RadioButton ActiveX control C# | group RadioButtonActiveXControl in Excel with Aspose.Cells | set default checked RadioButton in Aspose.Cells workbook | how to assign GroupName to RadioButton in Aspose.Cells | create mutually exclusive radio buttons using Aspose.Cells .NET
-// Developer Intent: Insert two RadioButton ActiveX controls, place them in the same group, and make the first button the default selected option.
-// Use Cases: Design a single‑choice questionnaire inside an Excel sheet. | Build a settings panel with Yes/No options that require exclusive selection. | Create a simple Excel form where users pick one preference before proceeding.
-// AI Prompts: Generate C# code that adds three RadioButton ActiveX controls to a worksheet with Aspose.Cells, groups them, and sets the second button as the default checked. | Show how to change the GroupName of existing RadioButtonActiveXControl objects in an Aspose.Cells workbook to form separate exclusive groups. | Provide an example that reads the selected RadioButton value from an Aspose.Cells workbook after it is opened in Excel.
+// Title: Aspose.Cells for .NET – Add RadioButton ActiveX Controls, Group Them, and Set a Default Selection (C#)
+// Description: This example creates a new Workbook, inserts two RadioButton ActiveX controls onto the first worksheet, assigns both controls the same GroupName for mutual exclusivity, sets captions, marks the first button as checked (default) and the second as unchecked, then saves the file as an .xlsx workbook.
+// Keywords: Aspose.Cells | C# | RadioButton ActiveX | Excel form control | AddActiveXControl | GroupName | default selected radio button | CheckValueType | programmatic Excel UI | worksheet shapes
+// Common Searches: how to add radio button ActiveX with Aspose.Cells | group radio buttons in Excel using Aspose.Cells C# | set default checked RadioButton in Aspose.Cells workbook | Aspose.Cells add ActiveX control to worksheet | C# code for Excel radio button group Aspose
+// Developer Intent: Programmatically insert two RadioButton ActiveX controls into an Excel worksheet, place them in the same group, and pre‑select one as the default option.
+// Use Cases: Create a survey sheet where respondents can pick a single answer from a set of options. | Design a form‑style Excel template with mutually exclusive choices for data entry. | Build a configuration workbook that opens with a predefined default setting selected.
+// AI Prompts: Generate C# code with Aspose.Cells that adds three RadioButton ActiveX controls, groups them under "Choices", and sets the second button as the default selected. | Show how to change the GroupName of existing RadioButton controls and toggle their checked state using Aspose.Cells. | Explain how to read the selected RadioButton value from a saved workbook that contains ActiveX radio button groups.
 
 using System;
 using System.IO;
@@ -14,10 +14,10 @@ using Aspose.Cells.Drawing.ActiveXControls;
 
 namespace AsposeCellsRadioButtonDemo
 {
-    // This example creates a new Workbook, inserts two RadioButton ActiveX controls into the first worksheet, assigns them the same GroupName for mutual exclusivity, sets custom captions, marks the first button as checked (default), and saves the file as an .xlsx workbook.
-    class Program
+    // This example creates a new Workbook, inserts two RadioButton ActiveX controls onto the first worksheet, assigns both controls the same GroupName for mutual exclusivity, sets captions, marks the first button as checked (default) and the second as unchecked, then saves the file as an .xlsx workbook.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
@@ -25,50 +25,55 @@ namespace AsposeCellsRadioButtonDemo
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add the first RadioButton ActiveX control
+                // Add first RadioButton ActiveX control
                 Shape shape1 = worksheet.Shapes.AddActiveXControl(
-                    ControlType.RadioButton, // Control type
-                    1,   // Upper left row index
-                    0,   // Row offset (pixels)
-                    1,   // Upper left column index
-                    0,   // Column offset (pixels)
-                    100, // Width (pixels)
-                    30   // Height (pixels)
+                    ControlType.RadioButton, // control type
+                    1,   // upper left row index
+                    0,   // vertical offset (pixels) from the row
+                    1,   // upper left column index
+                    0,   // horizontal offset (pixels) from the column
+                    100, // width (pixels)
+                    30   // height (pixels)
                 );
                 RadioButtonActiveXControl radio1 = (RadioButtonActiveXControl)shape1.ActiveXControl;
 
-                // Add the second RadioButton ActiveX control
+                // Add second RadioButton ActiveX control
                 Shape shape2 = worksheet.Shapes.AddActiveXControl(
                     ControlType.RadioButton,
-                    2,   // Upper left row index (different row)
-                    0,
                     1,
                     0,
+                    1,
+                    50,
                     100,
                     30
                 );
                 RadioButtonActiveXControl radio2 = (RadioButtonActiveXControl)shape2.ActiveXControl;
 
-                // Assign both radio buttons to the same group so they are mutually exclusive
-                const string groupName = "OptionsGroup";
-                radio1.GroupName = groupName;
-                radio2.GroupName = groupName;
+                // Assign both radio buttons to the same group
+                radio1.GroupName = "DemoGroup";
+                radio2.GroupName = "DemoGroup";
 
-                // Set captions for the options
+                // Set captions for clarity
                 radio1.Caption = "Option A";
                 radio2.Caption = "Option B";
 
                 // Set the default selected option (first radio button)
-                radio1.Value = CheckValueType.Checked;               // Selected
-                // Use explicit cast for unchecked value to avoid enum version issues
-                radio2.Value = (CheckValueType)0;                     // Not selected
+                radio1.Value = CheckValueType.Checked;               // selected
+                radio2.Value = (CheckValueType)0;                    // unchecked (fallback if enum member missing)
 
                 // Define output file path
                 string outputPath = "RadioButtonGroupDemo.xlsx";
 
-                // Save the workbook to a file
+                // Ensure the directory exists
+                string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                // Save the workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {

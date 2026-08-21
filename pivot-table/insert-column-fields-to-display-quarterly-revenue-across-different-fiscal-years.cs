@@ -1,10 +1,10 @@
-// Title: Insert a Column and Build a Quarterly Revenue Pivot Table with Aspose.Cells for .NET (C#)
-// Description: The sample creates a workbook, populates FiscalYear, Quarter and random Revenue values, inserts a new column before the Revenue field, shifts the data, then generates a PivotTable that sums quarterly revenue per fiscal year with a currency format and saves the result as QuarterlyRevenuePivot.xlsx.
-// Keywords: Aspose.Cells insert column C# | Aspose.Cells PivotTable example | quarterly revenue pivot Aspose | C# sum revenue pivot field | Aspose.Cells move column data | .NET financial reporting pivot | Excel pivot table automation
-// Common Searches: How to insert a column before a data field using Aspose.Cells C# | Create a PivotTable that shows revenue by fiscal year and quarter in Aspose.Cells | Set sum aggregation and currency format for a PivotTable data field in .NET | Refresh and calculate a PivotTable after modifying its source range with Aspose.Cells
-// Developer Intent: Generate a PivotTable that displays total quarterly revenue for each fiscal year after adding an extra column to the source worksheet.
-// Use Cases: Add a placeholder column before the revenue column to accommodate future data without breaking existing calculations. | Produce a financial summary that aggregates revenue by fiscal year (rows) and quarter (columns). | Apply a $#,##0 number format to the revenue data field for clear monetary presentation.
-// AI Prompts: Write C# code with Aspose.Cells to insert a column at index 2, shift existing columns, and move Revenue values to the new column. | Show how to configure a PivotTable with FiscalYear as rows, Quarter as columns, and Revenue as a summed data field using a currency format. | Explain the steps to refresh and recalculate a PivotTable after changing its source range in Aspose.Cells.
+// Title: Insert a Notes column and build a quarterly revenue pivot table by fiscal year with Aspose.Cells for .NET
+// Description: This example shows how to create a workbook, add FiscalYear, Quarter, and Revenue data, insert a blank "Notes" column using the InsertColumns API, set a header and placeholder values, define a source range that excludes the new column, and generate a pivot table that displays summed quarterly revenue per fiscal year with currency formatting.
+// Keywords: Aspose.Cells insert column C# | Aspose.Cells InsertColumns API | Aspose.Cells pivot table example | quarterly revenue pivot Aspose.Cells | FiscalYear Quarter Revenue pivot | C# pivot table currency format | .NET spreadsheet pivot table | exclude column from pivot source Aspose.Cells | Aspose.Cells tutorial
+// Common Searches: How to insert a column before creating a pivot table with Aspose.Cells for .NET | Create a pivot table that shows quarterly revenue per fiscal year using Aspose.Cells | Exclude an inserted column from the pivot source range in Aspose.Cells | Apply currency number format to a pivot table data field in C# | Aspose.Cells InsertColumns example
+// Developer Intent: Add an extra column and generate a pivot table that summarizes quarterly revenue by fiscal year.
+// Use Cases: Insert a blank "Notes" column after the Revenue column, add a header, and fill rows with a default value. | Define a source range that includes only FiscalYear, Quarter, and Revenue columns, then configure the pivot with FiscalYear as rows, Quarter as columns, and Revenue summed as the data field. | Apply a currency number format to the Revenue data field, refresh the pivot, and save the workbook.
+// AI Prompts: Write C# code using Aspose.Cells to insert a column at a specific index, add a header, and populate it with placeholder values. | Generate C# code that creates a pivot table from a range, sets FiscalYear as row fields, Quarter as column fields, sums Revenue, and formats the data field as currency. | Explain how to exclude an inserted column from the pivot table source range so the pivot reflects only the intended data columns.
 
 using System;
 using Aspose.Cells;
@@ -12,8 +12,8 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // The sample creates a workbook, populates FiscalYear, Quarter and random Revenue values, inserts a new column before the Revenue field, shifts the data, then generates a PivotTable that sums quarterly revenue per fiscal year with a currency format and saves the result as QuarterlyRevenuePivot.xlsx.
-    public class InsertColumnFieldsForQuarterlyRevenue
+    // This example shows how to create a workbook, add FiscalYear, Quarter, and Revenue data, insert a blank "Notes" column using the InsertColumns API, set a header and placeholder values, define a source range that excludes the new column, and generate a pivot table that displays summed quarterly revenue per fiscal year with currency formatting.
+    public class QuarterlyRevenuePivotDemo
     {
         public static void Run()
         {
@@ -22,76 +22,79 @@ namespace AsposeCellsExamples
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
 
-                // ------------------------------------------------------------
+                // -------------------------------------------------
                 // 1. Prepare source data: FiscalYear, Quarter, Revenue
-                // ------------------------------------------------------------
-                cells["A1"].PutValue("FiscalYear");
-                cells["B1"].PutValue("Quarter");
-                cells["C1"].PutValue("Revenue");
+                // -------------------------------------------------
+                sheet.Cells["A1"].PutValue("FiscalYear");
+                sheet.Cells["B1"].PutValue("Quarter");
+                sheet.Cells["C1"].PutValue("Revenue");
 
                 // Sample data for two fiscal years
                 string[] years = { "2022", "2023" };
                 string[] quarters = { "Q1", "Q2", "Q3", "Q4" };
-                Random rnd = new Random();
+                double[,] revenues = {
+                    { 120000, 150000, 130000, 160000 }, // 2022
+                    { 140000, 170000, 150000, 180000 }  // 2023
+                };
 
-                int row = 1; // zero‑based index, row 1 is the second row (A2)
-                foreach (string year in years)
+                int row = 1;
+                for (int i = 0; i < years.Length; i++)
                 {
-                    foreach (string quarter in quarters)
+                    for (int j = 0; j < quarters.Length; j++)
                     {
-                        cells[row, 0].PutValue(year);          // FiscalYear
-                        cells[row, 1].PutValue(quarter);       // Quarter
-                        cells[row, 2].PutValue(rnd.Next(5000, 20000)); // Revenue
+                        sheet.Cells[row, 0].PutValue(years[i]);          // FiscalYear
+                        sheet.Cells[row, 1].PutValue(quarters[j]);      // Quarter
+                        sheet.Cells[row, 2].PutValue(revenues[i, j]);   // Revenue
                         row++;
                     }
                 }
 
-                // ------------------------------------------------------------
-                // 2. Insert an extra column before the Revenue column (optional)
-                //    Demonstrates the InsertColumns method.
-                // ------------------------------------------------------------
-                // Insert one column at index 2 (C column). Existing columns D and beyond shift right.
-                sheet.Cells.InsertColumns(2, 1);
-                // After insertion, move the Revenue header/value to the new column (now D)
-                sheet.Cells["D1"].PutValue("Revenue");
-                for (int i = 2; i <= row; i++)
+                // -------------------------------------------------
+                // 2. Insert an extra column (optional) to demonstrate InsertColumns API
+                // -------------------------------------------------
+                // Insert a blank column at index 3 (after the Revenue column)
+                sheet.Cells.InsertColumns(3, 1, true);
+
+                // Add a header for the new column
+                sheet.Cells["D1"].PutValue("Notes");
+                // Populate some placeholder notes
+                for (int r = 2; r <= row; r++)
                 {
-                    sheet.Cells[i, 3].PutValue(sheet.Cells[i, 2].Value);
-                    sheet.Cells[i, 2].PutValue(null); // clear old location
+                    sheet.Cells[r - 1, 3].PutValue("N/A");
                 }
 
-                // ------------------------------------------------------------
+                // -------------------------------------------------
                 // 3. Create a PivotTable to show quarterly revenue per fiscal year
-                // ------------------------------------------------------------
-                // Define the source range (including the inserted column)
-                string sourceRange = $"A1:D{row}";
-                // Place the pivot table starting at cell F3
-                int pivotIndex = sheet.PivotTables.Add(sourceRange, "F3", "QuarterlyRevenuePivot");
+                // -------------------------------------------------
+                // Define the source range (excluding the Notes column)
+                string sourceRange = "A1:C" + (row - 1).ToString();
+
+                // Place the pivot table starting at cell E3
+                int pivotIndex = sheet.PivotTables.Add(sourceRange, "E3", "QuarterlyRevenuePivot");
                 PivotTable pivot = sheet.PivotTables[pivotIndex];
 
                 // Add FiscalYear as Row field
                 pivot.AddFieldToArea(PivotFieldType.Row, "FiscalYear");
                 // Add Quarter as Column field
                 pivot.AddFieldToArea(PivotFieldType.Column, "Quarter");
-                // Add Revenue as Data field and set aggregation to Sum
+                // Add Revenue as Data field (Sum)
                 int dataFieldPos = pivot.AddFieldToArea(PivotFieldType.Data, "Revenue");
                 pivot.DataFields[dataFieldPos].Function = ConsolidationFunction.Sum;
                 pivot.DataFields[dataFieldPos].NumberFormat = "$#,##0";
 
-                // Refresh and calculate the pivot table
+                // Refresh and calculate the pivot table using the correct API
                 pivot.RefreshData();
                 pivot.CalculateData();
 
-                // ------------------------------------------------------------
+                // -------------------------------------------------
                 // 4. Save the workbook
-                // ------------------------------------------------------------
+                // -------------------------------------------------
                 workbook.Save("QuarterlyRevenuePivot.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
 

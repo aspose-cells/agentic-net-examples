@@ -1,86 +1,63 @@
-// Title: C# – Batch apply a corporate Excel theme to all workbooks on a network share with Aspose.Cells
-// Description: Loads a template workbook that contains the corporate theme, scans a UNC path for .xlsx, .xls and .xlsm files (including subfolders), copies the theme to each workbook using the CopyTheme method, overwrites the original file, and logs successes or errors.
-// Keywords: Aspose.Cells | CopyTheme | C# | batch Excel theme | network share | UNC path | apply corporate theme | bulk Excel processing | automate workbook branding | Excel file enumeration
-// Common Searches: apply Excel theme to multiple files Aspose.Cells | copy theme from template workbook C# | batch update Excel workbooks on network share | Aspose.Cells CopyTheme example | automate corporate branding in Excel files
-// Developer Intent: Automatically apply a corporate Excel theme to every workbook stored on a shared network folder in one operation.
-// Use Cases: Enforce brand‑consistent styling across all financial reports saved on a shared drive. | Refresh the visual design of archived spreadsheets after a company rebrand. | Run a nightly job that guarantees newly added workbooks adopt the latest corporate theme.
-// AI Prompts: Write C# code that uses Aspose.Cells to copy a theme from a template workbook to all .xlsx, .xls, and .xlsm files in a UNC directory, with error handling and logging. | Refactor the batch theme‑application script to process files in parallel while keeping Aspose.Cells usage thread‑safe. | Explain how to add a backup step that saves each original workbook to a separate folder before applying the corporate theme.
+// Title: Batch apply a corporate Excel theme to all workbooks on a network share with Aspose.Cells for .NET
+// Description: C# utility that loads a template workbook containing the corporate theme, enumerates every .xlsx file in a network share, copies the theme to each workbook via Aspose.Cells CopyTheme, and saves the files, with built‑in error handling and logging.
+// Keywords: Aspose.Cells | CopyTheme | C# | .NET | Excel theme automation | batch Excel processing | network share | corporate branding | bulk workbook update | Excel styling script
+// Common Searches: How to copy an Excel theme to multiple files using Aspose.Cells C# | Batch apply corporate theme to workbooks on a shared folder | Aspose.Cells CopyTheme example for network drives | C# script to update Excel themes in a directory | Automate Excel theme changes across many files
+// Developer Intent: Programmatically apply a corporate Excel theme to every workbook stored on a shared network location.
+// Use Cases: Enforce brand consistency across departmental reports saved on a shared drive. | Refresh the visual style of all existing Excel outputs after a rebranding initiative without manual editing. | Integrate into a CI/CD pipeline to guarantee that generated Excel files always use the corporate theme.
+// AI Prompts: Generate C# code that uses Aspose.Cells to copy a theme from a template workbook to all .xlsx files in a specified folder, including robust error handling and progress logging. | Show how to add a progress bar or console output that reports the number of workbooks processed and any failures during a bulk theme update on a network share. | Provide a modification to skip files that already contain the target corporate theme, using Aspose.Cells metadata inspection.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads a template workbook that contains the corporate theme, scans a UNC path for .xlsx, .xls and .xlsm files (including subfolders), copies the theme to each workbook using the CopyTheme method, overwrites the original file, and logs successes or errors.
-class ApplyCorporateThemeBatch
+namespace CorporateThemeBatch
 {
-    static void Main()
+    // C# utility that loads a template workbook containing the corporate theme, enumerates every .xlsx file in a network share, copies the theme to each workbook via Aspose.Cells CopyTheme, and saves the files, with built‑in error handling and logging.
+    class Program
     {
-        // Path to the corporate theme template workbook (contains the desired theme)
-        string themeTemplatePath = @"\\Server\Share\CorporateThemeTemplate.xlsx";
-
-        // Path to the network share that holds the workbooks to be processed
-        string workbooksFolder = @"\\Server\Share\Workbooks";
-
-        // Verify that the theme template exists
-        if (!File.Exists(themeTemplatePath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Theme template not found: {themeTemplatePath}");
-            return;
-        }
+            // Path to the workbook that contains the corporate theme (template file)
+            string themeTemplatePath = @"\\NetworkShare\Templates\CorporateThemeTemplate.xlsx";
 
-        // Verify that the workbooks folder exists
-        if (!Directory.Exists(workbooksFolder))
-        {
-            Console.WriteLine($"Workbooks folder not found: {workbooksFolder}");
-            return;
-        }
-
-        try
-        {
-            // Load the source workbook that carries the corporate theme
-            using (Workbook themeWorkbook = new Workbook(themeTemplatePath))
+            // Verify the template exists
+            if (!File.Exists(themeTemplatePath))
             {
-                // Retrieve all Excel files (xlsx, xls, xlsm) from the folder and its subfolders
-                string[] files = Directory.GetFiles(workbooksFolder, "*.*", SearchOption.AllDirectories);
-                foreach (string filePath in files)
+                Console.WriteLine($"Theme template not found: {themeTemplatePath}");
+                return;
+            }
+
+            // Load the source workbook that holds the desired theme
+            Workbook sourceWorkbook = new Workbook(themeTemplatePath);
+
+            // Path to the network share folder containing workbooks to process
+            string workbooksFolder = @"\\NetworkShare\Workbooks";
+
+            // Get all Excel files (you can adjust the search pattern as needed)
+            string[] excelFiles = Directory.GetFiles(workbooksFolder, "*.xlsx", SearchOption.AllDirectories);
+
+            foreach (string filePath in excelFiles)
+            {
+                try
                 {
-                    string ext = Path.GetExtension(filePath).ToLowerInvariant();
-                    if (ext != ".xlsx" && ext != ".xls" && ext != ".xlsm")
-                        continue; // Skip non‑Excel files
+                    // Load the target workbook
+                    Workbook targetWorkbook = new Workbook(filePath);
 
-                    // Ensure the target file still exists before processing
-                    if (!File.Exists(filePath))
-                    {
-                        Console.WriteLine($"File not found (skipped): {filePath}");
-                        continue;
-                    }
+                    // Copy the corporate theme from the source workbook
+                    targetWorkbook.CopyTheme(sourceWorkbook);
 
-                    try
-                    {
-                        // Load the target workbook
-                        using (Workbook targetWorkbook = new Workbook(filePath))
-                        {
-                            // Apply the corporate theme from the template workbook
-                            targetWorkbook.CopyTheme(themeWorkbook);
+                    // Save the workbook, overwriting the original file
+                    targetWorkbook.Save(filePath, SaveFormat.Xlsx);
 
-                            // Save the workbook, overwriting the original file
-                            targetWorkbook.Save(filePath);
-                        }
-
-                        Console.WriteLine($"Theme applied: {filePath}");
-                    }
-                    catch (Exception exFile)
-                    {
-                        Console.WriteLine($"Error processing file '{filePath}': {exFile.Message}");
-                    }
+                    Console.WriteLine($"Applied theme to: {filePath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
                 }
             }
 
-            Console.WriteLine("Corporate theme applied to all workbooks successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine("Batch theme application completed.");
         }
     }
 }

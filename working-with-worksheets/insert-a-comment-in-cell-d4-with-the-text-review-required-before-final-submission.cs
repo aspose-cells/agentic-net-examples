@@ -1,29 +1,31 @@
-// Title: Aspose.Cells for .NET – Add a Comment to Cell D4 in C#
-// Description: Shows how to create a new workbook with Aspose.Cells, insert a comment containing "Review required before final submission." into cell D4, and save the file as CommentInD4.xlsx using C#.
-// Keywords: Aspose.Cells | C# Excel comment | add comment D4 | Aspose.Cells API | Excel note .NET | Workbook.Save | Aspose.Cells tutorial
-// Common Searches: Aspose.Cells add comment to specific cell | C# insert comment D4 Excel | How to set comment text with Aspose.Cells | Save workbook after adding comments Aspose.Cells | Aspose.Cells comment visibility settings
-// Developer Intent: Insert a predefined comment into cell D4 of a newly created Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Mark cells that need review before publishing the workbook. | Provide reviewers with inline feedback directly in the spreadsheet. | Create an audit trail by programmatically attaching notes to key cells. | Automate quality‑control annotations during report generation.
-// AI Prompts: Write C# code with Aspose.Cells to add a comment to cell D4 and set the author to "QA Team". | Show how to update an existing comment in cell D4, change its text, and make it visible only when the cell is selected. | Provide a loop example that adds comments to a range of cells (e.g., D4:F6) with custom messages using Aspose.Cells for .NET.
+// Title: Add a comment to cell D4 in Excel with Aspose.Cells for .NET (C#)
+// Description: C# code that creates a new workbook, accesses the first worksheet, inserts a comment into cell D4, sets the comment text to "Review required before final submission.", and saves the file as Output.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | add comment to Excel cell | cell D4 comment | Comments.Add | Comment.Note | save workbook Aspose.Cells | Output.xlsx | Excel annotation
+// Common Searches: Aspose.Cells add comment to specific cell C# | How to set comment text for D4 using Aspose.Cells | Save Excel file after adding comments Aspose.Cells .NET | Insert review note in Excel cell with Aspose.Cells | C# Aspose.Cells comment API example
+// Developer Intent: Insert a predefined comment into cell D4 of a newly created Excel workbook.
+// Use Cases: Mark cells that need reviewer attention before publishing the spreadsheet. | Create an audit trail by programmatically adding notes to critical cells. | Automate data‑validation feedback by placing comments on cells that fail checks.
+// AI Prompts: Generate C# code that adds a comment to cell D4 with Aspose.Cells and saves the workbook. | Show how to add multiple comments with different texts to various cells using Aspose.Cells for .NET. | Explain how to customize a comment’s author, font style, and background color after adding it to a cell with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to create a new workbook with Aspose.Cells, insert a comment containing "Review required before final submission." into cell D4, and save the file as CommentInD4.xlsx using C#.
+// C# code that creates a new workbook, accesses the first worksheet, inserts a comment into cell D4, sets the comment text to "Review required before final submission.", and saves the file as Output.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a comment to cell D4
+        // Add a comment to cell D4 using the cell name overload
         int commentIndex = worksheet.Comments.Add("D4");
         Comment comment = worksheet.Comments[commentIndex];
+
+        // Set the comment text
         comment.Note = "Review required before final submission.";
 
-        // Save the workbook
-        workbook.Save("CommentInD4.xlsx");
+        // Save the workbook to a file
+        workbook.Save("Output.xlsx");
     }
 }

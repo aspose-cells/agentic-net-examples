@@ -1,87 +1,88 @@
-// Title: C# Batch Excel (.xlsx) to PDF Conversion with Error Logging using Aspose.Cells
-// Description: A console utility that scans a folder for .xlsx files, converts each workbook to PDF with Aspose.Cells, enables PdfSaveOptions.IgnoreError to suppress rendering issues, logs any conversion failures, and continues processing the remaining files. Ideal for automated, large‑scale document pipelines.
-// Keywords: Aspose.Cells C# example | batch Excel to PDF conversion | ignore rendering errors | PdfSaveOptions.IgnoreError | ConversionUtility | error handling in file conversion | corrupted Excel file logging | command‑line PDF generator | GitHub Aspose.Cells sample | automated document workflow
-// Common Searches: convert multiple xlsx files to pdf with Aspose.Cells | c# batch excel to pdf ignore errors | aspocells conversionutility example | skip corrupted Excel files during PDF conversion | how to log conversion failures in Aspose.Cells
-// Developer Intent: Convert a set of Excel workbooks to PDF, capture conversion errors, and keep the batch running without interruption.
-// Use Cases: Nightly job that turns a folder of financial Excel reports into PDFs while recording any files that fail. | Web service that processes user‑uploaded spreadsheets, returns PDFs, and stores a list of problematic uploads for admin review. | Command‑line tool for migration projects that traverses directory trees, converts every .xlsx to PDF, and writes error details to a log file.
-// AI Prompts: Write C# code that uses Aspose.Cells to batch convert .xls and .xlsx files to PDF, writes errors to a log file, and lets the user specify input and output directories. | Show how to configure PdfSaveOptions.IgnoreError in Aspose.Cells to suppress rendering errors during Excel‑to‑PDF conversion. | Extend the provided batch conversion sample with retry logic for transient file‑access exceptions and output a summary report of successes and failures.
+// Title: C# batch conversion of Excel (.xlsx) to PDF with error handling using Aspose.Cells
+// Description: A complete C# example that scans a source directory for *.xlsx files, creates an output folder, and converts each workbook to PDF with Aspose.Cells. The code uses PdfSaveOptions.IgnoreError to suppress rendering issues, catches CellsException for corrupted files, logs every failure to a text file, and continues processing the remaining files.
+// Keywords: Aspose.Cells batch conversion | C# Excel to PDF | ignore corrupted Excel files | PdfSaveOptions.IgnoreError | ConversionUtility example | .NET Excel PDF conversion | error logging Aspose.Cells | automated Excel PDF batch
+// Common Searches: batch convert xlsx to pdf c# aspnet | aspocells ignoreerror example | skip corrupted excel files aspnet conversion | log excel to pdf conversion errors c# | aspocells conversionutility multiple files
+// Developer Intent: Convert a collection of Excel workbooks to PDF, automatically skip files that are damaged, and record any conversion errors without stopping the batch process.
+// Use Cases: Nightly processing of uploaded financial reports: convert each Excel file to PDF and capture files that cannot be opened. | Web service that receives user spreadsheets: generate PDFs on‑the‑fly while ignoring and logging corrupted submissions. | Archival workflow for legacy Excel archives: batch‑convert to PDF, ensuring the job continues even if some files are corrupted.
+// AI Prompts: Show a C# Aspose.Cells snippet that batch converts .xlsx files to PDF, skips corrupted workbooks, and writes errors to a log. | Explain how PdfSaveOptions.IgnoreError works and how to catch CellsException.FileCorrupted during Excel‑to‑PDF conversion. | Suggest enhancements to add progress reporting and parallel processing to the batch conversion while keeping robust error handling.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-namespace BatchConversionExample
+namespace BatchConversionDemo
 {
-    // A console utility that scans a folder for .xlsx files, converts each workbook to PDF with Aspose.Cells, enables PdfSaveOptions.IgnoreError to suppress rendering issues, logs any conversion failures, and continues processing the remaining files. Ideal for automated, large‑scale document pipelines.
+    // A complete C# example that scans a source directory for *.xlsx files, creates an output folder, and converts each workbook to PDF with Aspose.Cells. The code uses PdfSaveOptions.IgnoreError to suppress rendering issues, catches CellsException for corrupted files, logs every failure to a text file, and continues processing the remaining files.
     class Program
     {
         static void Main()
         {
             // Folder containing source Excel files
             string sourceFolder = @"C:\InputFiles";
-            // Folder where converted PDF files will be saved
+            // Folder where converted PDFs will be saved
             string outputFolder = @"C:\OutputFiles";
 
-            try
+            // Ensure output folder exists
+            Directory.CreateDirectory(outputFolder);
+
+            // Verify source folder exists
+            if (!Directory.Exists(sourceFolder))
             {
-                // Ensure the source directory exists
-                if (!Directory.Exists(sourceFolder))
-                {
-                    Console.WriteLine($"Source folder does not exist: {sourceFolder}");
-                    return;
-                }
-
-                // Ensure the output directory exists
-                Directory.CreateDirectory(outputFolder);
-
-                // Get all Excel files in the source folder
-                string[] excelFiles = Directory.GetFiles(sourceFolder, "*.xlsx");
-
-                foreach (string sourcePath in excelFiles)
-                {
-                    // Verify the source file still exists
-                    if (!File.Exists(sourcePath))
-                    {
-                        Console.WriteLine($"File not found (skipped): {sourcePath}");
-                        continue;
-                    }
-
-                    // Determine the destination PDF file path
-                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
-                    string destPath = Path.Combine(outputFolder, fileNameWithoutExt + ".pdf");
-
-                    try
-                    {
-                        // Load options for the source Excel file (optional)
-                        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-
-                        // Save options for PDF conversion with error ignoring enabled
-                        PdfSaveOptions saveOptions = new PdfSaveOptions
-                        {
-                            // Hide rendering errors (e.g., shape, chart, image issues)
-                            IgnoreError = true
-                        };
-
-                        // Perform the conversion using Aspose.Cells utility method
-                        ConversionUtility.Convert(sourcePath, loadOptions, destPath, saveOptions);
-
-                        Console.WriteLine($"Successfully converted: {sourcePath} -> {destPath}");
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log the error but continue processing the remaining files
-                        Console.WriteLine($"Error converting file '{sourcePath}': {ex.Message}");
-                    }
-                }
-
-                Console.WriteLine("Batch conversion completed.");
+                Console.WriteLine($"Source folder not found: {sourceFolder}");
+                return;
             }
-            catch (Exception ex)
+
+            // Get all Excel files (you can adjust the pattern as needed)
+            string[] sourceFiles = Directory.GetFiles(sourceFolder, "*.xlsx");
+
+            foreach (string sourcePath in sourceFiles)
             {
-                // Catch any unexpected errors
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                try
+                {
+                    // Prepare load options (default loading of XLSX)
+                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+
+                    // Prepare save options for PDF and enable error ignoring
+                    PdfSaveOptions saveOptions = new PdfSaveOptions
+                    {
+                        // Hide any rendering errors (shape, image, chart, etc.)
+                        IgnoreError = true
+                    };
+
+                    // Destination file path with .pdf extension
+                    string destPath = Path.Combine(
+                        outputFolder,
+                        Path.GetFileNameWithoutExtension(sourcePath) + ".pdf");
+
+                    // Perform conversion using Aspose.Cells utility
+                    ConversionUtility.Convert(sourcePath, loadOptions, destPath, saveOptions);
+
+                    Console.WriteLine($"Successfully converted: {sourcePath}");
+                }
+                catch (CellsException cex) when (cex.Code == ExceptionType.FileCorrupted)
+                {
+                    // Specific handling for corrupted files
+                    Console.WriteLine($"Corrupted file skipped: {sourcePath}");
+                    LogError(sourcePath, cex);
+                }
+                catch (Exception ex)
+                {
+                    // General error handling – log and continue with next file
+                    Console.WriteLine($"Error converting {sourcePath}: {ex.Message}");
+                    LogError(sourcePath, ex);
+                }
             }
+
+            Console.WriteLine("Batch conversion completed.");
+        }
+
+        // Simple logger that appends error information to a text file
+        private static void LogError(string filePath, Exception ex)
+        {
+            string logFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConversionErrors.log");
+            string message = $"{DateTime.Now:u} | File: {filePath} | Error: {ex.Message}{Environment.NewLine}";
+            File.AppendAllText(logFile, message);
         }
     }
 }

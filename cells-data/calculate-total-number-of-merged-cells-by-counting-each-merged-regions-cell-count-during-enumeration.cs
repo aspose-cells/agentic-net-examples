@@ -1,29 +1,29 @@
-// Title: Aspose.Cells for .NET (C#) – Compute Total Merged Cells by Summing Each Merged Region
-// Description: This C# sample creates a workbook, merges three ranges (A1:B2, D4:E6, G1:G3), retrieves all merged areas with Cells.GetMergedAreas(), determines the row and column span of each CellArea, multiplies them to get the cell count per region, aggregates the counts to obtain the overall merged‑cell total, prints the results, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | merged cells count | GetMergedAreas | CellArea | Excel merge ranges | calculate merged cells | worksheet automation | Excel file processing
-// Common Searches: Aspose.Cells count merged cells C# | How to sum cells in merged areas using Aspose.Cells | Get total merged cell number in .NET workbook | Calculate merged region size with Aspose.Cells | C# code to enumerate merged ranges in Excel
-// Developer Intent: Determine how many individual cells belong to merged blocks in an Excel worksheet.
-// Use Cases: Enforce a maximum merged‑cell threshold before converting a sheet to PDF. | Produce a diagnostic report that lists each merged block’s dimensions and the cumulative merged‑cell count. | Adjust page‑layout or printing parameters based on the total merged cells to avoid unexpected page breaks.
-// AI Prompts: Generate a reusable C# method that returns the total merged‑cell count for any Worksheet object. | Provide code that safely handles worksheets with no merged areas or a null result from GetMergedAreas. | Show how to log the start row, end row, start column, and end column of each merged region while computing the total.
+// Title: Aspose.Cells for .NET – Compute total merged cells in a worksheet
+// Description: This C# sample creates a workbook, merges three ranges, retrieves all merged areas via GetMergedAreas, calculates each area’s row and column span, multiplies them to get the cell count per region, sums the counts, prints the total, and saves the file.
+// Keywords: Aspose.Cells merged cells count | GetMergedAreas .NET | CellArea row span | calculate merged region size | C# Excel merged cells | Aspose.Cells workbook merge enumeration | total merged cells worksheet
+// Common Searches: How to count merged cells with Aspose.Cells .NET | Get total merged cell count in Excel using Aspose | Aspose.Cells enumerate merged areas | C# count cells in merged ranges | Sum merged cells Aspose.Cells example
+// Developer Intent: Show how to determine the aggregate number of cells that belong to merged ranges in an Aspose.Cells worksheet.
+// Use Cases: Validate that merged regions stay within size limits before publishing a workbook. | Create a summary report that lists each merged area's dimensions and the overall merged cell total. | Adjust layout logic or formula references based on the cumulative count of merged cells.
+// AI Prompts: Write a reusable method that returns the total merged cell count for any Worksheet using Aspose.Cells. | Add robust error handling to compute merged cell totals when a workbook contains no merged areas or corrupted data. | Generate console‑output code that logs each merged region’s row/column span and the running total of merged cells.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // This C# sample creates a workbook, merges three ranges (A1:B2, D4:E6, G1:G3), retrieves all merged areas with Cells.GetMergedAreas(), determines the row and column span of each CellArea, multiplies them to get the cell count per region, aggregates the counts to obtain the overall merged‑cell total, prints the results, and saves the file.
+    // This C# sample creates a workbook, merges three ranges, retrieves all merged areas via GetMergedAreas, calculates each area’s row and column span, multiplies them to get the cell count per region, sums the counts, prints the total, and saves the file.
     public class MergedCellsCountDemo
     {
         public static void Run()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook (lifecycle rule: create)
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
                 Cells cells = worksheet.Cells;
 
-                // Merge a few sample ranges
+                // Merge some sample ranges
                 // A1:B2  (2 rows x 2 columns)
                 cells.Merge(0, 0, 2, 2);
                 // D4:E6  (3 rows x 2 columns)
@@ -44,13 +44,10 @@ namespace AsposeCellsExamples
                 }
 
                 // Output the result
-                Console.WriteLine($"Number of merged areas: {mergedAreas.Length}");
-                Console.WriteLine($"Total merged cells (by counting each region's cells): {totalMergedCellCount}");
+                Console.WriteLine($"Total merged cells count: {totalMergedCellCount}");
 
-                // Save the workbook (optional, just to visualize the merged cells)
-                string outputPath = "MergedCellsCountDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
+                // Save the workbook (lifecycle rule: save)
+                workbook.Save("MergedCellsCountDemo.xlsx");
             }
             catch (Exception ex)
             {

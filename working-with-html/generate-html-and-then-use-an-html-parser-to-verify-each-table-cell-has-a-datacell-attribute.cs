@@ -1,26 +1,25 @@
-// Title: C# – Export Aspose.Cells workbook to HTML with a data‑cell attribute and verify every <td>
-// Description: Creates a workbook, fills it with sample data, sets HtmlSaveOptions.CellNameAttribute to "data-cell", saves the sheet as HTML, reads the output, and uses pattern matching to confirm that each <td> element contains the required attribute. Reports success or failure.
-// Keywords: Aspose.Cells HTML export C# | CellNameAttribute data-cell | verify td attribute C# | regex HTML table validation | HtmlAgilityPack cell attribute check | export worksheet to HTML with identifiers
-// Common Searches: Aspose.Cells add data-cell attribute to HTML cells | C# verify every <td> has custom attribute after export | how to use HtmlSaveOptions.CellNameAttribute | check HTML table cells for attribute in C#
-// Developer Intent: Generate HTML from a spreadsheet and ensure each table cell includes a specific data‑cell attribute for downstream processing or testing.
-// Use Cases: Add unique cell identifiers to HTML for client‑side scripts or automated UI tests. | Validate exported HTML before publishing to catch missing attributes. | Integrate attribute verification into CI pipelines to guarantee export consistency.
-// AI Prompts: Write C# code that uses Aspose.Cells to save a workbook as HTML with a custom data‑cell attribute on each <td> and then checks the file to confirm the attribute exists. | Provide a C# example that uses HtmlAgilityPack instead of regular expressions to verify that every <td> element in the exported HTML contains the data‑cell attribute.
+// Title: C# Aspose.Cells: Export Excel to HTML with custom data-cell attribute and verify each <td>
+// Description: Shows how to build a workbook, configure HtmlSaveOptions.CellNameAttribute to add a data-cell attribute (e.g., data-cell="A1") to every <td> in the exported HTML, save the file, and programmatically confirm that the attribute exists on all table cells.
+// Keywords: Aspose.Cells C# | HtmlSaveOptions CellNameAttribute | data-cell attribute | export Excel to HTML | HTML table cell verification | C# HTML parsing | HtmlAgilityPack example | .NET Excel to HTML conversion | custom HTML attributes Aspose | automated HTML validation
+// Common Searches: Aspose.Cells add custom attribute to exported HTML cells | C# verify data-cell attribute in HTML generated from Excel | HtmlSaveOptions.CellNameAttribute usage example | How to include Excel cell address in HTML table with Aspose | C# code to check every <td> has a specific attribute
+// Developer Intent: Create an HTML file from an Excel workbook where each <td> includes a data-cell attribute, then programmatically ensure the attribute is present on every cell.
+// Use Cases: Link client‑side scripts to original Excel coordinates for interactive dashboards. | Implement regression tests that detect missing custom attributes after library upgrades. | Produce searchable HTML tables where each cell can be uniquely identified by its source address.
+// AI Prompts: Generate C# code using Aspose.Cells to export a worksheet to HTML with a data-cell attribute on each <td> and then validate the output. | Write a unit test in C# that loads the exported HTML and asserts that every table cell contains a data-cell attribute matching its Excel reference. | Suggest a robust HTML parsing method (e.g., HtmlAgilityPack) to scan the Aspose.Cells HTML output for missing data-cell attributes and report discrepancies.
 
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlCellAttributeDemo
 {
-    // Creates a workbook, fills it with sample data, sets HtmlSaveOptions.CellNameAttribute to "data-cell", saves the sheet as HTML, reads the output, and uses pattern matching to confirm that each <td> element contains the required attribute. Reports success or failure.
+    // Shows how to build a workbook, configure HtmlSaveOptions.CellNameAttribute to add a data-cell attribute (e.g., data-cell="A1") to every <td> in the exported HTML, save the file, and programmatically confirm that the attribute exists on all table cells.
     class Program
     {
         static void Main()
         {
             try
             {
-                // 1. Create a new workbook and add sample data
+                // Create a new workbook and add sample data
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
                 sheet.Cells["A1"].PutValue("Header1");
@@ -30,56 +29,50 @@ namespace AsposeCellsHtmlCellAttributeDemo
                 sheet.Cells["A3"].PutValue("Row2Col1");
                 sheet.Cells["B3"].PutValue("Row2Col2");
 
-                // 2. Configure HTML save options to write a custom attribute for each cell
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions
-                {
-                    CellNameAttribute = "data-cell",          // e.g., <td data-cell='A1'>...</td>
-                    ExportActiveWorksheetOnly = true          // Export only the active sheet
-                };
+                // Configure HTML save options to write a custom attribute with the cell name
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+                saveOptions.CellNameAttribute = "data-cell"; // each <td> will have data-cell="A1", etc.
 
-                // 3. Save the workbook as HTML
-                string htmlPath = "output.html";
+                // Define output HTML path
+                string htmlPath = Path.Combine(Environment.CurrentDirectory, "output.html");
+
+                // Save the workbook as HTML using the configured options
                 workbook.Save(htmlPath, saveOptions);
 
                 // Ensure the HTML file was created
                 if (!File.Exists(htmlPath))
                 {
-                    Console.WriteLine($"Failed to create HTML file at '{htmlPath}'.");
+                    Console.WriteLine("Failed to generate the HTML file.");
                     return;
                 }
 
-                // 4. Load the generated HTML content
+                // Load the generated HTML content
                 string htmlContent = File.ReadAllText(htmlPath);
 
-                // 5. Find all <td> elements using a simple regex
-                MatchCollection tdMatches = Regex.Matches(htmlContent, @"<td\b[^>]*>", RegexOptions.IgnoreCase);
-                if (tdMatches.Count == 0)
-                {
-                    Console.WriteLine("No <td> elements found in the HTML.");
-                    return;
-                }
-
-                // 6. Verify each <td> has the required attribute
+                // Simple verification: each <td> should contain the data-cell attribute
                 bool allHaveAttribute = true;
-                foreach (Match match in tdMatches)
+                string[] tdSegments = htmlContent.Split(new[] { "<td", "</td>" }, StringSplitOptions.None);
+                foreach (string segment in tdSegments)
                 {
-                    string tdTag = match.Value;
-                    if (!Regex.IsMatch(tdTag, @"\bdata-cell\s*=", RegexOptions.IgnoreCase))
+                    int closeIdx = segment.IndexOf('>');
+                    if (closeIdx > -1)
                     {
-                        allHaveAttribute = false;
-                        Console.WriteLine($"Missing attribute in cell HTML: {tdTag}");
+                        string tdTag = segment.Substring(0, closeIdx);
+                        if (!tdTag.Contains("data-cell="))
+                        {
+                            allHaveAttribute = false;
+                            Console.WriteLine($"Missing data-cell attribute in cell HTML: <td{tdTag}>...</td>");
+                        }
                     }
                 }
 
-                // 7. Output verification result
-                if (allHaveAttribute)
-                    Console.WriteLine("Verification succeeded: every <td> element contains the 'data-cell' attribute.");
-                else
-                    Console.WriteLine("Verification failed: some <td> elements are missing the 'data-cell' attribute.");
+                Console.WriteLine(allHaveAttribute
+                    ? "All table cells contain the data-cell attribute."
+                    : "Some table cells are missing the data-cell attribute.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

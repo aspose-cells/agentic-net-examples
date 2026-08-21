@@ -1,111 +1,81 @@
-// Title: Validate placeholder tags in Excel TextBox shapes before batch replacement – Aspose.Cells for .NET
-// Description: Creates a workbook, adds TextBox shapes with {{Name}} and {{Date}} placeholders, checks each TextBox for required tags, logs missing tags, performs a batch tag replacement, and saves the file. Demonstrates safe placeholder handling in Aspose.Cells.
-// Keywords: Aspose.Cells TextBox validation | Excel shape placeholder check | batch replace tags .NET | required tags in TextBox | Aspose.Cells template auditing | C# Excel shape processing | US developers Aspose.Cells | European .NET Excel automation
-// Common Searches: How to verify all TextBox shapes contain specific placeholders in Aspose.Cells | Aspose.Cells .NET batch replace tags in Excel TextBox objects | Validate required tags in Excel shapes before data merge | Log missing placeholders in TextBox without throwing exceptions | Aspose.Cells tutorial for placeholder validation in USA | European guide to Excel shape tag replacement using Aspose
-// Developer Intent: Confirm every TextBox in a workbook includes the defined placeholders before executing a bulk replacement to avoid missing‑data errors.
-// Use Cases: Audit template worksheets to ensure all required tags are present before populating user data. | Generate personalized reports by validating {{Name}} and {{Date}} placeholders in each TextBox. | Create a logging report of missing tags across a workbook for content review and quality control.
-// AI Prompts: Write a method that throws an exception when a TextBox lacks any required placeholder instead of only logging warnings. | Design a reusable utility class for validating and replacing placeholders in TextBox shapes across multiple workbooks with Aspose.Cells. | Extend the validation logic to accept custom tag patterns using regular expressions.
+// Title: Validate Required Tags in Excel TextBox Shapes Before Batch Replacement – Aspose.Cells for .NET
+// Description: C# code that loads an Excel workbook, iterates every worksheet’s TextBoxCollection, verifies that each TextBox contains a predefined set of placeholder tags, throws an exception if any tag is missing, replaces the tags with actual values, and saves the updated file.
+// Keywords: Aspose.Cells TextBox validation | Excel placeholder tags .NET | batch replace TextBox content | required tag check Aspose.Cells | C# Excel shape processing | mail merge tag verification | template validation Excel | US developers | global .NET Excel automation
+// Common Searches: how to check all TextBox shapes for placeholders using Aspose.Cells | validate required tags in Excel TextBox before replacement .NET | throw error when a TextBox is missing a tag in Aspose.Cells | batch replace placeholder tags in Excel TextBox C# | iterate TextBoxCollection and verify tags Aspose.Cells
+// Developer Intent: Confirm that every TextBox shape in a workbook includes all required placeholders before performing batch replacements, preventing missing‑data errors.
+// Use Cases: Pre‑flight validation of Excel templates for personalized report generation. | Error‑free mail‑merge where TextBox placeholders must exist before data injection. | Automated bulk update of marketing or invoice worksheets after ensuring tag completeness.
+// AI Prompts: Generate a C# method that scans all TextBox shapes in a workbook and returns a list of TextBox names with missing required tags using Aspose.Cells. | Write code that logs each missing placeholder instead of throwing an exception during TextBox validation with Aspose.Cells. | Create a reusable Aspose.Cells utility class that validates required tags in TextBox shapes and safely performs batch replacements for .NET applications.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds TextBox shapes with {{Name}} and {{Date}} placeholders, checks each TextBox for required tags, logs missing tags, performs a batch tag replacement, and saves the file. Demonstrates safe placeholder handling in Aspose.Cells.
-class Program
+namespace AsposeCellsTextBoxValidation
 {
-    static void Main()
+    // C# code that loads an Excel workbook, iterates every worksheet’s TextBoxCollection, verifies that each TextBox contains a predefined set of placeholder tags, throws an exception if any tag is missing, replaces the tags with actual values, and saves the updated file.
+    public class Program
     {
-        try
+        public static void Main()
         {
-            // Create a new workbook (lifecycle create)
-            Workbook workbook = new Workbook();
-
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add sample text boxes to demonstrate validation and replacement
-            int tbIndex1 = worksheet.TextBoxes.Add(1, 1, 100, 30);
-            TextBox textBox1 = worksheet.TextBoxes[tbIndex1];
-            textBox1.Text = "Hello {{Name}}";
-
-            int tbIndex2 = worksheet.TextBoxes.Add(2, 1, 100, 30);
-            TextBox textBox2 = worksheet.TextBoxes[tbIndex2];
-            textBox2.Text = "Date: {{Date}}";
+            // Input and output file paths
+            string inputPath = "Template.xlsx";
+            string outputPath = "Result.xlsx";
 
             // Define required tags that must exist in every TextBox
-            List<string> requiredTags = new List<string> { "{{Name}}", "{{Date}}" };
-
-            // Define replacement values for the tags
-            Dictionary<string, string> replacements = new Dictionary<string, string>
+            List<string> requiredTags = new List<string>
             {
-                { "{{Name}}", "John Doe" },
-                { "{{Date}}", DateTime.Today.ToShortDateString() }
+                "{{CustomerName}}",
+                "{{OrderDate}}",
+                "{{TotalAmount}}"
             };
 
-            // Validate that all TextBox shapes contain the required tags
-            ValidateTextBoxes(workbook, requiredTags);
-
-            // Perform batch replacement in TextBox shapes
-            BatchReplaceTextBoxes(workbook, replacements);
-
-            // Save the workbook (lifecycle save)
-            workbook.Save("ValidatedTextBoxes.xlsx");
-            Console.WriteLine("Workbook saved successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    // Checks each TextBox for the presence of all required tags.
-    // Logs missing tags instead of throwing to allow processing to continue.
-    static void ValidateTextBoxes(Workbook workbook, List<string> requiredTags)
-    {
-        foreach (Worksheet ws in workbook.Worksheets)
-        {
-            TextBoxCollection textBoxes = ws.TextBoxes;
-            for (int i = 0; i < textBoxes.Count; i++)
+            // Define batch replacements (old tag -> new value)
+            Dictionary<string, string> replacements = new Dictionary<string, string>
             {
-                TextBox tb = textBoxes[i];
-                string txt = tb.Text ?? string.Empty;
+                { "{{CustomerName}}", "Acme Corp" },
+                { "{{OrderDate}}", DateTime.Today.ToString("yyyy-MM-dd") },
+                { "{{TotalAmount}}", "$1,234.56" }
+            };
 
-                foreach (string tag in requiredTags)
+            // Load the workbook (creation, loading and saving follow Aspose.Cells lifecycle)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets
+            foreach (Worksheet worksheet in workbook.Worksheets)
+            {
+                // Get the collection of TextBox shapes on the current worksheet
+                TextBoxCollection textBoxes = worksheet.TextBoxes;
+
+                // Process each TextBox
+                for (int i = 0; i < textBoxes.Count; i++)
                 {
-                    if (!txt.Contains(tag))
+                    TextBox textBox = textBoxes[i];
+                    string text = textBox.Text ?? string.Empty;
+
+                    // Validate that all required tags are present
+                    foreach (string tag in requiredTags)
                     {
-                        Console.WriteLine(
-                            $"Warning: TextBox '{tb.Name}' (index {i}) is missing required tag '{tag}'.");
+                        if (!text.Contains(tag))
+                        {
+                            throw new InvalidOperationException(
+                                $"TextBox '{textBox.Name}' in worksheet '{worksheet.Name}' is missing required tag '{tag}'.");
+                        }
                     }
+
+                    // Perform batch replacement of tags with actual values
+                    foreach (KeyValuePair<string, string> kvp in replacements)
+                    {
+                        text = text.Replace(kvp.Key, kvp.Value);
+                    }
+
+                    // Update the TextBox content
+                    textBox.Text = text;
                 }
             }
-        }
-    }
 
-    // Replaces tags with actual values in all TextBox shapes
-    static void BatchReplaceTextBoxes(Workbook workbook, Dictionary<string, string> replacements)
-    {
-        foreach (Worksheet ws in workbook.Worksheets)
-        {
-            TextBoxCollection textBoxes = ws.TextBoxes;
-            for (int i = 0; i < textBoxes.Count; i++)
-            {
-                TextBox tb = textBoxes[i];
-                try
-                {
-                    string txt = tb.Text ?? string.Empty;
-                    foreach (var kvp in replacements)
-                    {
-                        txt = txt.Replace(kvp.Key, kvp.Value);
-                    }
-                    tb.Text = txt;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing TextBox '{tb.Name}' (index {i}): {ex.Message}");
-                }
-            }
+            // Save the modified workbook
+            workbook.Save(outputPath);
         }
     }
 }

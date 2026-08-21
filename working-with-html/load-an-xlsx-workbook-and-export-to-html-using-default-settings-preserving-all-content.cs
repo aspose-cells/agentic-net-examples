@@ -1,26 +1,27 @@
-// Title: Convert XLSX to HTML with Aspose.Cells (C#) – default settings preserve all content
-// Description: Loads an XLSX workbook, applies default HtmlSaveOptions, and saves it as an HTML file, keeping formulas, images, charts, and formatting intact.
-// Keywords: Aspose.Cells | C# Excel to HTML | XLSX to HTML conversion | HtmlSaveOptions default | preserve Excel content | export workbook as HTML | Aspose.Cells example | convert Excel to web page
-// Common Searches: C# Aspose.Cells convert XLSX to HTML | Export Excel workbook to HTML default options | How to keep formulas and images when saving Excel as HTML | Aspose.Cells HtmlSaveOptions default behavior | Save Excel file as HTML with full content
-// Developer Intent: Generate an HTML representation of an existing XLSX workbook using Aspose.Cells without altering any worksheet data or visual elements.
-// Use Cases: Display Excel reports in browsers without requiring Office | Create static HTML snapshots of financial models for offline review | Provide preview of uploaded Excel files in web portals | Archive Excel worksheets as web‑compatible pages
-// AI Prompts: Write C# code that reads an XLSX file and saves it as HTML using Aspose.Cells with default options, ensuring all content is retained. | Explain which default HtmlSaveOptions settings preserve formulas, images, charts, and styles during conversion. | Show how to change the output path or file name while still using default HTML conversion settings.
+// Title: Export XLSX to HTML with Aspose.Cells – default settings preserve all content
+// Description: Loads an .xlsx workbook, creates a HtmlSaveOptions object with its out‑of‑the‑box configuration, and saves the workbook as an HTML file while keeping formulas, styles, hidden sheets and other elements intact.
+// Keywords: Aspose.Cells export to HTML | XLSX to HTML conversion C# | HtmlSaveOptions default | preserve formulas Excel HTML | convert Excel to web page
+// Common Searches: Aspose.Cells convert xlsx to html default options | C# export Excel workbook as HTML preserving styles | How to keep formulas when saving Excel as HTML with Aspose | Save hidden sheets to HTML using Aspose.Cells | Default HtmlSaveOptions behavior Aspose.Cells
+// Developer Intent: Generate an HTML representation of an existing XLSX file using Aspose.Cells without customizing any export options.
+// Use Cases: Render financial dashboards as web pages while retaining calculation logic. | Provide instant HTML previews of user‑uploaded Excel files in a SaaS portal. | Run a nightly batch job that converts archived .xlsx reports to static HTML archives.
+// AI Prompts: Write C# code that loads a .xlsx file and saves it as .html with Aspose.Cells using the default HtmlSaveOptions, ensuring all workbook features are kept. | Explain how Aspose.Cells default HtmlSaveOptions handle formulas, cell styles, and hidden worksheets during Excel‑to‑HTML conversion. | Create a step‑by‑step tutorial for batch converting a directory of .xlsx files to .html in .NET, preserving every workbook element.
 
 using System;
 using Aspose.Cells;
 
-// Loads an XLSX workbook, applies default HtmlSaveOptions, and saves it as an HTML file, keeping formulas, images, charts, and formatting intact.
+// Loads an .xlsx workbook, creates a HtmlSaveOptions object with its out‑of‑the‑box configuration, and saves the workbook as an HTML file while keeping formulas, styles, hidden sheets and other elements intact.
 class Program
 {
     static void Main()
     {
-        // Load the existing XLSX workbook from disk
+        // Load the source XLSX workbook. The constructor automatically creates a Workbook instance.
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Create default HTML save options (all default settings preserve full content)
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        // Create HTML save options with default settings.
+        // Default options preserve all content (formulas, styles, hidden sheets, etc.).
+        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
 
-        // Export the workbook to an HTML file using the default options
-        workbook.Save("output.html", htmlOptions);
+        // Export the workbook to HTML using the default options.
+        workbook.Save("output.html", saveOptions);
     }
 }

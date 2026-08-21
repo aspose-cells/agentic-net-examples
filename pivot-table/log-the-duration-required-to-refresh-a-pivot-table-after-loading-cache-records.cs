@@ -1,3 +1,11 @@
+// Title: C# – Measure Aspose.Cells PivotTable refresh time and log RefreshDate
+// Description: Creates a workbook, adds sample data, builds a PivotTable, then uses Stopwatch to time RefreshData and CalculateData calls. The elapsed milliseconds and the PivotTable.RefreshDate are written to the console before saving the file.
+// Keywords: Aspose.Cells PivotTable refresh time | C# measure pivot cache duration | log PivotTable RefreshDate | Stopwatch Aspose.Cells performance | benchmark pivot table refresh .NET | Aspose.Cells RefreshData CalculateData timing
+// Common Searches: how to time pivot table refresh Aspose.Cells C# | log pivot refresh duration and date with Aspose.Cells | measure performance of PivotTable.RefreshData in .NET | Aspose.Cells benchmark pivot cache refresh | C# code to capture PivotTable.RefreshDate
+// Developer Intent: Determine how long a PivotTable refresh takes after loading its cache and record the refresh timestamp.
+// Use Cases: Performance testing of large workbooks that contain PivotTables. | Auditing data freshness by storing the last refresh timestamp. | Automated regression tests that flag slow pivot refresh operations.
+// AI Prompts: Generate C# code using Aspose.Cells that refreshes a PivotTable, measures the elapsed time with Stopwatch, and prints the duration and RefreshDate. | Show how to capture and log the RefreshDate property after calling RefreshData and CalculateData on a PivotTable. | Provide an example that benchmarks PivotTable refresh performance and outputs a formatted console message.
+
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
@@ -5,67 +13,47 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotRefreshTiming
 {
+    // Creates a workbook, adds sample data, builds a PivotTable, then uses Stopwatch to time RefreshData and CalculateData calls. The elapsed milliseconds and the PivotTable.RefreshDate are written to the console before saving the file.
     class Program
     {
         static void Main()
         {
-            // -------------------------------------------------
-            // 1. Create a workbook with sample data and a pivot table
-            // -------------------------------------------------
-            Workbook wb = new Workbook();
-            Worksheet sheet = wb.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Sample data
-            cells["A1"].Value = "Category";
-            cells["B1"].Value = "Amount";
-            cells["A2"].Value = "Food";
-            cells["B2"].Value = 120;
-            cells["A3"].Value = "Food";
-            cells["B3"].Value = 80;
-            cells["A4"].Value = "Drink";
-            cells["B4"].Value = 150;
-            cells["A5"].Value = "Drink";
-            cells["B5"].Value = 70;
+            // Populate sample data for the pivot table
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(1200);
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue(850);
+            sheet.Cells["A4"].PutValue("Orange");
+            sheet.Cells["B4"].PutValue(950);
 
-            // Add a pivot table
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D3", "SalesPivot");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Amount
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product column
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales column
 
-            // Initial refresh to build the cache
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
+            // Measure the time taken to refresh the pivot table
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
-            // Save the workbook (cache is stored)
-            string filePath = "PivotRefreshTiming.xlsx";
-            wb.Save(filePath);
+            // Refresh the pivot cache and calculate the pivot data
+            pivotTable.RefreshData();   // Gathers data from the source
+            pivotTable.CalculateData(); // Calculates the pivot report
 
-            // -------------------------------------------------
-            // 2. Load the workbook and measure refresh duration
-            // -------------------------------------------------
-            Workbook loadedWb = new Workbook(filePath);
-            Worksheet loadedSheet = loadedWb.Worksheets[0];
-            PivotTable loadedPivot = loadedSheet.PivotTables[0];
-
-            // Start timing
-            Stopwatch sw = Stopwatch.StartNew();
-
-            // Refresh the pivot table (this will rebuild the cache from source data)
-            loadedPivot.RefreshData();
-
-            // Stop timing
             sw.Stop();
 
-            // Output the duration
+            // Log the duration and the refresh date
             Console.WriteLine($"Pivot table refresh duration: {sw.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Pivot table last refreshed on: {pivotTable.RefreshDate}");
 
-            // Optional: calculate data so the refreshed values appear in the sheet
-            loadedPivot.CalculateData();
-
-            // Save the workbook after refresh (if needed)
-            loadedWb.Save("PivotRefreshTiming_Refreshed.xlsx");
+            // Save the workbook (optional, just to demonstrate persistence)
+            workbook.Save("PivotRefreshTimingDemo.xlsx");
         }
     }
 }

@@ -1,54 +1,103 @@
-// Title: C# – Merge Excel workbooks and retain each sheet’s page‑setup using Aspose.Cells
-// Description: Shows how to combine multiple Excel files into a single workbook with Aspose.Cells for .NET, then copy the original PageSetup of every source worksheet to its counterpart in the merged file, preserving margins, orientation, scaling, and other print settings.
-// Keywords: Aspose.Cells | C# | Workbook.Combine | PageSetup.Copy | merge workbooks | preserve print layout | Excel page setup | copy worksheet settings | combine Excel files | retain margins
-// Common Searches: Aspose.Cells copy page setup after combine | merge Excel workbooks keep print settings C# | how to preserve worksheet page layout when merging files Aspose | Workbook.Combine page setup not copied | C# merge multiple Excel files with original page setup
-// Developer Intent: Combine several Excel workbooks into one and automatically copy each source worksheet’s page‑setup to the newly added sheet.
-// Use Cases: Consolidate quarterly financial reports into a master workbook while keeping each report’s print margins and orientation. | Assemble department‑specific templates into a single distribution file, ensuring every sheet prints correctly without manual adjustments. | Automate creation of a client‑ready workbook that merges diverse source files and retains their original page‑setup to avoid re‑configuring print options.
-// AI Prompts: Generate C# code that merges an array of Excel files with Aspose.Cells and copies the PageSetup of each source worksheet to the merged workbook. | Explain how PageSetup.Copy works after Workbook.Combine, including how to map source sheet indexes to destination sheets. | Provide a step‑by‑step guide for preserving print settings when merging multiple workbooks using Aspose.Cells for .NET.
+// Title: Merge Excel workbooks and retain page‑setup settings with Aspose.Cells for .NET
+// Description: Demonstrates how to combine multiple .xlsx files into a single workbook using Workbook.Combine, then copy each source worksheet's PageSetup to the merged sheet with Worksheet.PageSetup.Copy and CopyOptions, preserving print layout and margins.
+// Keywords: Aspose.Cells merge workbooks | copy page setup Aspose.Cells | Workbook.Combine page setup | preserve worksheet print settings | C# Excel workbook consolidation | Aspose.Cells PageSetup.Copy example | merge .xlsx files .NET
+// Common Searches: Aspose.Cells copy page setup after combine | preserve print settings when merging Excel files C# | how to keep worksheet layout after Workbook.Combine | merge multiple Excel workbooks without losing page setup | Aspose.Cells combine workbooks with page orientation
+// Developer Intent: The developer needs to merge several Excel workbooks into one while keeping each worksheet’s original page‑setup configuration (margins, orientation, scaling, headers/footers).
+// Use Cases: Consolidate monthly reports into a master workbook while retaining each sheet’s print layout. | Create a single printable file from departmental templates without losing paper size or header/footer settings. | Automate generation of a combined workbook for distribution where every source sheet must keep its exact page formatting.
+// AI Prompts: Write C# code that merges a list of Excel files using Aspose.Cells and copies the PageSetup of each source worksheet to the corresponding destination worksheet. | Explain the role of CopyOptions when using Worksheet.PageSetup.Copy after a Workbook.Combine operation. | Provide robust error‑handling patterns for loading multiple workbooks, merging them, and preserving page‑setup settings with Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace WorkbookMergeWithPageSetup
+namespace AsposeCellsExamples
 {
-    // Shows how to combine multiple Excel files into a single workbook with Aspose.Cells for .NET, then copy the original PageSetup of every source worksheet to its counterpart in the merged file, preserving margins, orientation, scaling, and other print settings.
-    class Program
+    // Demonstrates how to combine multiple .xlsx files into a single workbook using Workbook.Combine, then copy each source worksheet's PageSetup to the merged sheet with Worksheet.PageSetup.Copy and CopyOptions, preserving print layout and margins.
+    public class MergeWorkbooksWithPageSetup
     {
-        static void Main()
+        public static void Run()
         {
-            // Paths of source workbooks to be merged
-            string[] sourceFiles = { "Source1.xlsx", "Source2.xlsx", "Source3.xlsx" };
-
-            // Destination workbook – starts empty
-            Workbook destinationWorkbook = new Workbook();
-
-            // Iterate through each source workbook
-            foreach (string filePath in sourceFiles)
+            // Destination workbook that will hold the merged result
+            Workbook destWorkbook = null;
+            try
             {
-                // Load the source workbook
-                Workbook sourceWorkbook = new Workbook(filePath);
+                destWorkbook = new Workbook();
 
-                // Remember the current number of worksheets in the destination
-                int destSheetStartIndex = destinationWorkbook.Worksheets.Count;
-
-                // Combine the source workbook into the destination workbook
-                destinationWorkbook.Combine(sourceWorkbook);
-
-                // After combining, copy the page‑setup settings from each source worksheet
-                // to its corresponding newly added worksheet in the destination workbook.
-                for (int i = 0; i < sourceWorkbook.Worksheets.Count; i++)
+                // List of source workbook file paths to be merged
+                string[] sourceFiles = new string[]
                 {
-                    Worksheet srcSheet = sourceWorkbook.Worksheets[i];
-                    Worksheet destSheet = destinationWorkbook.Worksheets[destSheetStartIndex + i];
+                    "Source1.xlsx",
+                    "Source2.xlsx",
+                    "Source3.xlsx"
+                };
 
-                    // Copy page‑setup settings using the PageSetup.Copy method.
-                    // A new CopyOptions instance is used (default options).
-                    destSheet.PageSetup.Copy(srcSheet.PageSetup, new CopyOptions());
+                // Iterate through each source workbook
+                foreach (string srcPath in sourceFiles)
+                {
+                    // Verify source file exists to avoid FileNotFoundException
+                    if (!File.Exists(srcPath))
+                    {
+                        Console.WriteLine($"Source file not found: {srcPath}. Skipping.");
+                        continue;
+                    }
+
+                    try
+                    {
+                        // Load the source workbook
+                        using (Workbook srcWorkbook = new Workbook(srcPath))
+                        {
+                            // Record the number of worksheets before combining
+                            int beforeCombineCount = destWorkbook.Worksheets.Count;
+
+                            // Combine the source workbook into the destination workbook
+                            destWorkbook.Combine(srcWorkbook);
+
+                            // Record the number of worksheets after combining
+                            int afterCombineCount = destWorkbook.Worksheets.Count;
+
+                            // Copy PageSetup from each source worksheet to its corresponding newly added worksheet
+                            for (int i = beforeCombineCount; i < afterCombineCount; i++)
+                            {
+                                // Index of the worksheet in the source workbook that matches the newly added one
+                                int srcIndex = i - beforeCombineCount;
+
+                                Worksheet destSheet = destWorkbook.Worksheets[i];
+                                Worksheet srcSheet = srcWorkbook.Worksheets[srcIndex];
+
+                                // Copy page setup settings
+                                destSheet.PageSetup.Copy(srcSheet.PageSetup, new CopyOptions());
+                            }
+                        } // srcWorkbook disposed here
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error processing file '{srcPath}': {ex.Message}");
+                    }
                 }
-            }
 
-            // Save the merged workbook preserving original page layouts
-            destinationWorkbook.Save("MergedWithPageSetup.xlsx");
+                // Save the merged workbook with all page‑setup settings preserved
+                string outputPath = "MergedWithPageSetup.xlsx";
+                destWorkbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbooks merged successfully. Output saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+            finally
+            {
+                // Clean up the destination workbook
+                destWorkbook?.Dispose();
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            MergeWorkbooksWithPageSetup.Run();
         }
     }
 }

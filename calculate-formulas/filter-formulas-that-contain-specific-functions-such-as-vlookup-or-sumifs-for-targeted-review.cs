@@ -1,16 +1,17 @@
-// Title: C# Example: Filter Cells Containing VLOOKUP or SUMIFS Formulas with Aspose.Cells
-// Description: Loads an Excel workbook, scans the first worksheet for formulas that include VLOOKUP or SUMIFS using Aspose.Cells FindOptions (OnlyFormulas + Contains), gathers each unique cell, prints its address and formula, and saves the workbook unchanged. Ideal for .NET developers needing to audit or extract specific functions from Excel files.
-// Keywords: Aspose.Cells | C# | .NET | find formulas | VLOOKUP | SUMIFS | filter cells by function | Excel workbook analysis | FindOptions OnlyFormulas | code example | GitHub
-// Common Searches: Aspose.Cells find VLOOKUP formulas C# | search for SUMIFS cells using Aspose.Cells .NET | list Excel cells that contain specific functions | avoid duplicate matches when searching multiple formulas | C# example to audit lookup functions in a workbook
-// Developer Intent: Locate and list every cell whose formula includes VLOOKUP or SUMIFS.
-// Use Cases: Create an audit report of all lookup and conditional‑sum formulas in a spreadsheet. | Validate that prohibited functions are not present before distributing an Excel file. | Extract formula strings for bulk refactoring or migration to newer functions.
-// AI Prompts: Generate C# code with Aspose.Cells that finds all INDEX function formulas and outputs their addresses. | Show how to replace each VLOOKUP formula with an XLOOKUP equivalent using Aspose.Cells. | Provide a snippet that logs matched cells to a CSV file while keeping the original workbook unchanged.
+// Title: C# Example: Filter and Highlight Cells Containing VLOOKUP or SUMIFS with Aspose.Cells
+// Description: Loads an Excel workbook, scans the used range of the first worksheet, and collects every cell whose formula includes VLOOKUP or SUMIFS (case‑insensitive). The script prints each address and formula, highlights the matching cells in yellow, and saves the workbook with the visual markers.
+// Keywords: Aspose.Cells | C# | filter formulas | VLOOKUP detection | SUMIFS detection | find formulas by function | highlight cells | Excel automation .NET | used range scan | formula search example | GitHub code sample
+// Common Searches: Aspose.Cells find VLOOKUP formulas C# | highlight SUMIFS cells using Aspose.Cells | search Excel formulas by function name .NET | filter cells containing specific functions Aspose.Cells | C# code to locate VLOOKUP or SUMIFS in workbook
+// Developer Intent: Locate and visually flag every cell whose formula contains VLOOKUP or SUMIFS.
+// Use Cases: Audit a workbook before migration by listing all VLOOKUP and SUMIFS formulas. | Create a visual report that highlights performance‑critical SUMIFS calculations. | Assist formula reviewers by marking cells that rely on VLOOKUP for easier validation.
+// AI Prompts: Generate a C# Aspose.Cells snippet that extracts cell addresses with the INDEX function and writes them to a CSV file. | Adapt the provided script to export matched cell names and formulas to a JSON document instead of console output. | Explain how to load target function names from an external configuration file and apply them in the formula‑filtering loop.
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Aspose.Cells;
 
+// Loads an Excel workbook, scans the used range of the first worksheet, and collects every cell whose formula includes VLOOKUP or SUMIFS (case‑insensitive). The script prints each address and formula, highlights the matching cells in yellow, and saves the workbook with the visual markers.
 class FilterFormulas
 {
     static void Main()
@@ -26,37 +27,44 @@ class FilterFormulas
         // Store cells that contain any of the target functions
         List<Cell> matchedCells = new List<Cell>();
 
-        // Scan all used cells in the worksheet
-        foreach (Cell cell in cells)
+        // Scan the used range of the worksheet
+        int maxRow = cells.MaxDataRow;
+        int maxCol = cells.MaxDataColumn;
+
+        for (int row = 0; row <= maxRow; row++)
         {
-            if (cell.IsFormula)
+            for (int col = 0; col <= maxCol; col++)
             {
-                string formula = cell.Formula;
-                foreach (string func in targetFunctions)
+                Cell cell = cells[row, col];
+                if (cell.IsFormula)
                 {
-                    if (formula.IndexOf(func, StringComparison.OrdinalIgnoreCase) >= 0)
+                    string formula = cell.Formula;
+                    foreach (string func in targetFunctions)
                     {
-                        matchedCells.Add(cell);
-                        break; // No need to check other functions for this cell
+                        if (formula.IndexOf(func, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            matchedCells.Add(cell);
+                            break; // No need to check other functions for this cell
+                        }
                     }
                 }
             }
         }
 
-        // Output the addresses and formulas of matched cells
-        Console.WriteLine("Cells containing VLOOKUP or SUMIFS:");
-        foreach (Cell c in matchedCells)
+        // Report the findings
+        Console.WriteLine($"Found {matchedCells.Count} cells containing VLOOKUP or SUMIFS:");
+        foreach (Cell cell in matchedCells)
         {
-            Console.WriteLine($"{c.Name}: {c.Formula}");
+            Console.WriteLine($"{cell.Name}: {cell.Formula}");
         }
 
-        // Optional: highlight matched cells for visual review
-        foreach (Cell c in matchedCells)
+        // Optional: highlight the matched cells for visual review
+        foreach (Cell cell in matchedCells)
         {
-            Style style = c.GetStyle();
+            Style style = cell.GetStyle();
             style.ForegroundColor = Color.Yellow;
             style.Pattern = BackgroundType.Solid;
-            c.SetStyle(style);
+            cell.SetStyle(style);
         }
 
         // Save the workbook with highlights (replace with desired output path)

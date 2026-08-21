@@ -1,59 +1,51 @@
-// Title: Set Column Font Size, Color, and Underline with Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, select column B, build a Style with a 14‑point blue font and single underline, enable the matching StyleFlag properties, apply the style to the entire column, and save the file as ColumnFontSettings.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# column font | set column font size Aspose.Cells | column font color Aspose.Cells | underline column text Aspose.Cells | .NET Excel column formatting | Apply StyleFlag to column | Excel column style programmatically | Aspose.Cells column formatting example | C# Excel column font settings | Aspose.Cells workbook column style
-// Common Searches: Aspose.Cells change font size for a whole column | C# apply font color to Excel column using Aspose.Cells | How to underline text in an Excel column with Aspose.Cells .NET | Set column style with StyleFlag Aspose.Cells | Apply same font to all cells in a column C# Aspose
-// Developer Intent: Apply uniform font formatting (size, color, underline) to every cell in a specific worksheet column.
-// Use Cases: Highlight a header column in generated reports with blue, 14‑point, underlined text for visual emphasis. | Enforce corporate spreadsheet style by programmatically applying the same font settings to target columns across multiple workbooks. | Provide end‑users a way to choose column appearance (size, color, underline) before exporting data to Excel.
-// AI Prompts: Generate C# code using Aspose.Cells to set column C to a 12‑point red double‑underlined font. | Show how to apply distinct font styles (size, color, underline) to columns A, B, and D in a single workbook with Aspose.Cells. | Create a reusable method that accepts font size, color, underline type, and column index, then applies the style using StyleFlag in Aspose.Cells.
+// Title: Configure column font size, color, underline and default style with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, target a column, define a Style with a 14‑pt blue font and single underline, use StyleFlag to apply only those font attributes, set the style as the column's default for future cells, and save the file as ColumnFontSettings.xlsx.
+// Keywords: Aspose.Cells column font style C# | set column font size color underline | StyleFlag column formatting Aspose | default column style Aspose.Cells | C# Excel column formatting library
+// Common Searches: Aspose.Cells change font size for entire column C# | apply blue underline to a column using Aspose.Cells | set default style for new cells in a column Aspose | StyleFlag usage for column formatting Aspose.Cells | C# Excel column font color and underline example
+// Developer Intent: Apply a specific font size, color, and underline to all existing cells in a column and make that style the default for any new cells added to the column.
+// Use Cases: Create a spreadsheet where the first column headings are uniformly styled (blue, 14 pt, underlined) without formatting each cell individually. | Ensure a data‑entry column automatically inherits a predefined font style for every new row. | Batch‑update an existing workbook to give a whole column a consistent appearance in a single operation.
+// AI Prompts: Write C# code with Aspose.Cells to set a 12‑pt red font with double underline for column B and apply it as the default style for that column. | Explain the role of StyleFlag when applying column styles in Aspose.Cells and show an example that changes only font color and underline.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// Shows how to create a workbook, select column B, build a Style with a 14‑point blue font and single underline, enable the matching StyleFlag properties, apply the style to the entire column, and save the file as ColumnFontSettings.xlsx using Aspose.Cells for .NET.
-class ConfigureColumnFont
+namespace AsposeCellsColumnFontSettings
 {
-    static void Main()
+    // Demonstrates how to create a workbook, target a column, define a Style with a 14‑pt blue font and single underline, use StyleFlag to apply only those font attributes, set the style as the column's default for future cells, and save the file as ColumnFontSettings.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            Run();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Access the first column (index 0)
+            Column column = worksheet.Cells.Columns[0];
+
+            // Create a style and configure the desired font properties
+            Style fontStyle = workbook.CreateStyle();
+            fontStyle.Font.Size = 14;                     // Font size
+            fontStyle.Font.Color = Color.Blue;            // Font color
+            fontStyle.Font.Underline = FontUnderlineType.Single; // Underline
+
+            // Define which font attributes should be applied
+            StyleFlag flag = new StyleFlag
+            {
+                FontSize = true,
+                FontColor = true,
+                FontUnderline = true
+            };
+
+            // Apply the style to existing cells in the column
+            column.ApplyStyle(fontStyle, flag);
+
+            // Set the style as the default for any new cells added to this column
+            column.SetStyle(fontStyle);
+
+            // Save the workbook
+            workbook.Save("ColumnFontSettings.xlsx");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Access the desired column (e.g., column B, index 1)
-        Column column = worksheet.Cells.Columns[1];
-
-        // Create a style and configure the font properties
-        Style style = workbook.CreateStyle();
-        style.Font.Size = 14;                                 // Font size
-        style.Font.Color = Color.Blue;                        // Font color
-        style.Font.Underline = FontUnderlineType.Single;      // Underline
-
-        // Define which font attributes should be applied
-        StyleFlag flag = new StyleFlag
-        {
-            FontSize = true,
-            FontColor = true,
-            FontUnderline = true
-        };
-
-        // Apply the style to the entire column
-        column.ApplyStyle(style, flag);
-
-        // Save the workbook
-        string outputPath = "ColumnFontSettings.xlsx";
-        workbook.Save(outputPath);
-        Console.WriteLine($"Workbook saved to '{outputPath}'.");
     }
 }

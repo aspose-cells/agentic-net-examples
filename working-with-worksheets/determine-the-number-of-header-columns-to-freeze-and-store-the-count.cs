@@ -1,53 +1,59 @@
-// Title: Freeze Header Columns in a Worksheet with Aspose.Cells for .NET and Capture the Count
-// Description: Demonstrates loading CSV data into an Aspose.Cells Workbook using TxtLoadOptions, setting HeaderColumnsCount, freezing the specified number of columns with FreezePanes, storing the frozen column count in a variable, and saving the result as an XLSX file.
-// Keywords: Aspose.Cells freeze columns | HeaderColumnsCount .NET | TxtLoadOptions CSV import | FreezePanes example C# | store frozen column count | Aspose.Cells worksheet freezing | C# load CSV Aspose.Cells | Excel column freeze programmatically
-// Common Searches: how to freeze first N columns using Aspose.Cells | HeaderColumnsCount usage in Aspose.Cells | freeze panes based on header count C# | store number of frozen columns Aspose.Cells | load CSV and freeze header columns .NET
-// Developer Intent: Freeze a defined number of header columns and retain the count for later processing.
-// Use Cases: Import a CSV file, treat the initial columns as headers, and keep them visible while scrolling horizontally. | Apply consistent column‑freeze settings across multiple worksheets after merging data from different CSV sources. | Use the stored header count to adjust UI layouts, generate reports, or drive further calculations that depend on the frozen columns.
-// AI Prompts: Generate C# code that reads a CSV with Aspose.Cells, freezes the first N columns based on HeaderColumnsCount, and returns the frozen column count. | Show how to refactor the sample so the header column count is passed as a method argument and applied to every worksheet in a workbook. | Provide an example that writes the frozen header column count to a JSON configuration file after applying FreezePanes.
+// Title: Determine Header Column Count and Freeze Columns with Aspose.Cells for .NET
+// Description: Loads CSV data into an Aspose.Cells workbook using TxtLoadOptions, reads the HeaderColumnsCount value, freezes the same number of columns with FreezePanes, and saves the result as an Excel file.
+// Keywords: Aspose.Cells | C# | .NET | FreezePanes | HeaderColumnsCount | TxtLoadOptions | CSV import | freeze columns | worksheet freeze panes | Excel automation example
+// Common Searches: Aspose.Cells freeze first columns | HeaderColumnsCount usage in C# | How to freeze columns based on header count | Load CSV with TxtLoadOptions Aspose.Cells | Freeze panes programmatically .NET
+// Developer Intent: Read the header column count from load options and apply FreezePanes to lock those columns in the worksheet.
+// Use Cases: Import a CSV where the first N columns are headers and keep them visible while scrolling. | Dynamically determine the number of header columns from TxtLoadOptions and apply a column freeze. | Generate Excel reports that require frozen header columns for better readability.
+// AI Prompts: Write C# code that loads a CSV with Aspose.Cells, sets HeaderColumnsCount, retrieves the count, and freezes those columns. | Explain the relationship between TxtLoadOptions.HeaderColumnsCount and FreezePanes in Aspose.Cells with a short example. | Show how to freeze both header rows and columns using Aspose.Cells based on configurable counts.
 
 using System;
 using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-// Demonstrates loading CSV data into an Aspose.Cells Workbook using TxtLoadOptions, setting HeaderColumnsCount, freezing the specified number of columns with FreezePanes, storing the frozen column count in a variable, and saving the result as an XLSX file.
-class Program
+namespace AsposeCellsHeaderFreezeDemo
 {
-    static void Main()
+    // Loads CSV data into an Aspose.Cells workbook using TxtLoadOptions, reads the HeaderColumnsCount value, freezes the same number of columns with FreezePanes, and saves the result as an Excel file.
+    class Program
     {
-        // Sample CSV data
-        string csvData = "Header1,Header2,Header3,Data1,Data2\n" +
-                         "H1,H2,H3,D1,D2\n" +
-                         "A,B,C,D,E\n" +
-                         "G,H,I,J,K";
-
-        // Configure TxtLoadOptions with the desired number of header columns
-        TxtLoadOptions loadOptions = new TxtLoadOptions
+        static void Main()
         {
-            HeaderColumnsCount = 3,          // Number of columns to treat as headers
-            Encoding = Encoding.UTF8
-        };
+            // Sample CSV data with header columns
+            string csvData = "Header1,Header2,Header3,Data1,Data2,Data3\n" +
+                             "H1,H2,H3,D1,D2,D3\n" +
+                             "A,B,C,D,E,F\n" +
+                             "G,H,I,J,K,L";
 
-        // Load the workbook from the CSV stream using the specified options
-        using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(csvData)))
-        {
-            Workbook workbook = new Workbook(stream, loadOptions);
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Define how many columns are considered headers
+            int headerColumnsToTreatAsHeader = 3; // example value
 
-            // Determine the number of header columns to freeze
-            int headerColumnsToFreeze = loadOptions.HeaderColumnsCount;
+            // Create TxtLoadOptions and set HeaderColumnsCount
+            TxtLoadOptions loadOptions = new TxtLoadOptions
+            {
+                HeaderColumnsCount = headerColumnsToTreatAsHeader,
+                Encoding = Encoding.UTF8
+            };
 
-            // Freeze the header columns (no rows are frozen)
-            // row index = 0, column index = headerColumnsToFreeze,
-            // freezedRows = 0, freezedColumns = headerColumnsToFreeze
-            worksheet.FreezePanes(0, headerColumnsToFreeze, 0, headerColumnsToFreeze);
+            // Load the CSV data into a workbook using the options
+            using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(csvData)))
+            {
+                Workbook workbook = new Workbook(stream, loadOptions);
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Store the count for later use (example variable)
-            int frozenHeaderColumnCount = headerColumnsToFreeze;
+                // Determine the number of header columns (store the count)
+                int headerCount = loadOptions.HeaderColumnsCount;
 
-            // Save the workbook
-            workbook.Save("HeaderFreezeDemo.xlsx");
+                // Freeze the header columns in the worksheet
+                // Freeze at column index = headerCount (0‑based), row index = 0
+                // Freeze only the left pane columns (no rows frozen)
+                worksheet.FreezePanes(0, headerCount, 0, headerCount);
+
+                // (Optional) Demonstrate that the freeze was applied
+                Console.WriteLine($"Header columns frozen: {headerCount}");
+
+                // Save the workbook to a file
+                workbook.Save("HeaderFreezeDemo.xlsx");
+            }
         }
     }
 }

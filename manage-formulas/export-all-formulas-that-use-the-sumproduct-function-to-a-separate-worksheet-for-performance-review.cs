@@ -1,10 +1,10 @@
-// Title: Export SUMPRODUCT formulas to a review worksheet with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, adds a sheet called “SUMPRODUCT Review”, scans every worksheet for formulas containing the SUMPRODUCT function (case‑insensitive), records the source sheet name, cell address and full formula, then saves the file for performance analysis.
-// Keywords: Aspose.Cells | C# | .NET | SUMPRODUCT | extract formulas | export formulas to new sheet | Excel performance review | formula audit | iterate workbook cells | diagnostic worksheet
-// Common Searches: Aspose.Cells export SUMPRODUCT formulas C# | How to list all SUMPRODUCT functions in an Excel file using .NET | Create a review sheet for specific Excel formulas with Aspose.Cells | Iterate through workbook cells and collect formulas containing a keyword | Performance analysis of SUMPRODUCT formulas in C#
-// Developer Intent: Extract every SUMPRODUCT formula and write its details to a separate worksheet for analysis.
-// Use Cases: Generate a report of all SUMPRODUCT formulas to identify calculation bottlenecks. | Provide a diagnostic sheet for auditors to review complex array formulas. | Create documentation of SUMPRODUCT usage across multiple worksheets for knowledge transfer.
-// AI Prompts: Write C# code with Aspose.Cells that extracts formulas containing a specified function and logs them to a new worksheet. | Modify the example to also capture each SUMPRODUCT formula's evaluated value in the review sheet. | Add logic to ignore hidden worksheets and include a summary count of SUMPRODUCT formulas per sheet.
+// Title: Export SUMPRODUCT formulas to a review worksheet using Aspose.Cells for .NET (C#)
+// Description: Loads an existing workbook, creates a sheet called "SUMPRODUCT Review", writes headers, scans every worksheet’s used range, detects formulas that contain the SUMPRODUCT function (case‑insensitive), records the source sheet name, cell address, and formula, and saves the workbook as a new file for performance analysis.
+// Keywords: Aspose.Cells | C# | .NET | SUMPRODUCT | export formulas | review worksheet | Excel performance | extract formulas | list formulas | used range iteration | save workbook
+// Common Searches: Aspose.Cells find SUMPRODUCT formulas in Excel | Export SUMPRODUCT formulas to another sheet C# | How to list cells with SUMPRODUCT using Aspose.Cells | Create a review worksheet for specific formulas .NET | Iterate used range of worksheets Aspose.Cells
+// Developer Intent: Locate every cell that uses the SUMPRODUCT function and log its sheet, address, and formula on a separate worksheet for analysis or optimization.
+// Use Cases: Generate a performance‑review report of all SUMPRODUCT calculations across a workbook. | Provide auditors with a concise list of heavy formulas for optimization assessment. | Automate documentation of formula usage for compliance or knowledge‑base creation.
+// AI Prompts: Write C# code with Aspose.Cells that scans all worksheets, finds cells containing SUMPRODUCT, and writes the sheet name, cell address, and formula to a new worksheet. | Modify the example to ignore hidden worksheets while exporting SUMPRODUCT formulas. | Explain how to extend the solution to capture SUMPRODUCT when it appears inside other functions such as IF(SUMPRODUCT(...)).
 
 using System;
 using System.IO;
@@ -12,73 +12,71 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Loads an Excel workbook, adds a sheet called “SUMPRODUCT Review”, scans every worksheet for formulas containing the SUMPRODUCT function (case‑insensitive), records the source sheet name, cell address and full formula, then saves the file for performance analysis.
+    // Loads an existing workbook, creates a sheet called "SUMPRODUCT Review", writes headers, scans every worksheet’s used range, detects formulas that contain the SUMPRODUCT function (case‑insensitive), records the source sheet name, cell address, and formula, and saves the workbook as a new file for performance analysis.
     public class ExportSumProductFormulas
     {
         public static void Run()
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
             try
             {
-                // Path to the source workbook
-                string sourcePath = "input.xlsx";
-
-                // Verify source file exists
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file '{sourcePath}' not found.");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(sourcePath);
+                // Load the source workbook
+                Workbook workbook = new Workbook(inputPath);
 
                 // Add a new worksheet to hold the extracted SUMPRODUCT formulas
-                int newSheetIndex = workbook.Worksheets.Add();
-                Worksheet reviewSheet = workbook.Worksheets[newSheetIndex];
+                Worksheet reviewSheet = workbook.Worksheets[workbook.Worksheets.Add()];
                 reviewSheet.Name = "SUMPRODUCT Review";
 
                 // Write header row in the review sheet
-                Cells reviewCells = reviewSheet.Cells;
-                reviewCells["A1"].PutValue("Source Sheet");
-                reviewCells["B1"].PutValue("Cell Address");
-                reviewCells["C1"].PutValue("Formula");
+                reviewSheet.Cells[0, 0].PutValue("Source Sheet");
+                reviewSheet.Cells[0, 1].PutValue("Cell Address");
+                reviewSheet.Cells[0, 2].PutValue("Formula");
 
-                int reviewRowIndex = 1; // start after header (0‑based index)
+                int reviewRow = 1; // Start writing data from the second row
 
-                // Iterate through all worksheets and cells
+                // Iterate through all worksheets in the workbook
                 foreach (Worksheet ws in workbook.Worksheets)
                 {
-                    // Skip the review sheet itself
+                    // Skip the review sheet itself (if it already existed)
                     if (ws.Name == reviewSheet.Name) continue;
 
-                    Cells cells = ws.Cells;
-                    int maxRow = cells.MaxDataRow;
-                    int maxCol = cells.MaxDataColumn;
+                    // Determine the used range to limit the iteration
+                    int maxRow = ws.Cells.MaxDataRow;
+                    int maxCol = ws.Cells.MaxDataColumn;
 
+                    // Scan each cell within the used range
                     for (int row = 0; row <= maxRow; row++)
                     {
                         for (int col = 0; col <= maxCol; col++)
                         {
-                            Cell cell = cells[row, col];
-                            if (!string.IsNullOrEmpty(cell.Formula))
+                            Cell cell = ws.Cells[row, col];
+
+                            // Check if the cell contains a formula that uses SUMPRODUCT
+                            if (cell.IsFormula && !string.IsNullOrEmpty(cell.Formula) &&
+                                cell.Formula.IndexOf("SUMPRODUCT", StringComparison.OrdinalIgnoreCase) >= 0)
                             {
-                                // Look for the SUMPRODUCT function (case‑insensitive)
-                                if (cell.Formula.IndexOf("SUMPRODUCT", StringComparison.OrdinalIgnoreCase) >= 0)
-                                {
-                                    reviewCells[reviewRowIndex, 0].PutValue(ws.Name);      // Source sheet name
-                                    reviewCells[reviewRowIndex, 1].PutValue(cell.Name);   // Cell address (e.g., B5)
-                                    reviewCells[reviewRowIndex, 2].PutValue(cell.Formula); // Full formula
-                                    reviewRowIndex++;
-                                }
+                                // Record the information in the review sheet
+                                reviewSheet.Cells[reviewRow, 0].PutValue(ws.Name);
+                                reviewSheet.Cells[reviewRow, 1].PutValue(cell.Name); // e.g., "B2"
+                                reviewSheet.Cells[reviewRow, 2].PutValue(cell.Formula);
+                                reviewRow++;
                             }
                         }
                     }
                 }
 
-                // Save the modified workbook
-                string outputPath = "output.xlsx";
+                // Save the modified workbook with the new review worksheet
                 workbook.Save(outputPath);
-                Console.WriteLine($"Export completed. Review sheet saved to '{outputPath}'.");
+                Console.WriteLine($"Review worksheet saved to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
@@ -87,7 +85,7 @@ namespace AsposeCellsExamples
         }
     }
 
-    // Entry point for the application
+    // Entry point for the console application
     public class Program
     {
         public static void Main(string[] args)

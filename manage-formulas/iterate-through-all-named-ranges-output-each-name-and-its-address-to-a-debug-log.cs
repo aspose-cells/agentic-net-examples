@@ -1,50 +1,70 @@
-// Title: C# – List All Named Ranges in an Aspose.Cells Workbook and Write Name‑Address to Debug Log
-// Description: Shows how to create a workbook, add named ranges, retrieve every defined range with Workbook.Worksheets.GetNamedRanges(), and output each range’s Name and Address to the Visual Studio debug console (with optional file save).
-// Keywords: Aspose.Cells | C# | named ranges | GetNamedRanges | debug log | list ranges | enumerate named ranges | Workbook.Worksheets | range address | Excel automation
-// Common Searches: Aspose.Cells get all named ranges C# | list named ranges address Aspose.Cells | debug write named range name address | enumerate named ranges .NET | Aspose.Cells GetNamedRanges loop example | how to retrieve named ranges in C#
-// Developer Intent: The developer wants to loop through every named range in a workbook and output its identifier and cell address for verification, reporting, or troubleshooting.
-// Use Cases: Validate that required named ranges exist before running calculations. | Generate a quick documentation report of all defined ranges by logging name‑address pairs. | Debug formula errors by exposing the underlying range definitions in the debug console. | Export range metadata to another system (e.g., CSV) after enumeration.
-// AI Prompts: Write C# code using Aspose.Cells to list all named ranges and save the name‑address pairs to a CSV file. | Show how to filter named ranges by a prefix (e.g., "Report_") and log only those matching ranges. | Explain how to safely handle a null return from GetNamedRanges and prevent runtime exceptions.
+// Title: C# – List all named ranges in an Aspose.Cells workbook and log their addresses
+// Description: Creates a workbook, defines sample named ranges, retrieves every named range with Workbook.Worksheets.GetNamedRanges(), and writes each range's Name and RefersTo address to the debug output using Debug.WriteLine. Includes handling for workbooks without named ranges.
+// Keywords: Aspose.Cells C# list named ranges | GetNamedRanges | Debug.WriteLine named range | range.RefersTo address | enumerate named ranges Aspose.Cells | C# workbook named range logging
+// Common Searches: how to enumerate named ranges Aspose.Cells C# | Aspose.Cells get all named ranges and addresses | debug log named range name and address Aspose.Cells | C# list workbook named ranges Aspose.Cells | retrieve named range RefersTo property
+// Developer Intent: Extract every named range from a workbook and output its name and cell reference to the debug console.
+// Use Cases: Verify that required named ranges exist before running calculations | Generate a quick reference sheet of all defined ranges for documentation | Troubleshoot formula or data‑validation issues by logging range details
+// AI Prompts: Generate C# code with Aspose.Cells that exports all named range names and addresses to a CSV file. | Show how to filter named ranges by a prefix and log only the matching ones using Aspose.Cells. | Provide a robust example that safely handles a workbook with no named ranges without throwing exceptions.
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Shows how to create a workbook, add named ranges, retrieve every defined range with Workbook.Worksheets.GetNamedRanges(), and output each range’s Name and Address to the Visual Studio debug console (with optional file save).
-class Program
+namespace AsposeCellsNamedRangeDemo
 {
-    static void Main()
+    // Creates a workbook, defines sample named ranges, retrieves every named range with Workbook.Worksheets.GetNamedRanges(), and writes each range's Name and RefersTo address to the debug output using Debug.WriteLine. Includes handling for workbooks without named ranges.
+    public class Program
     {
-        try
+        public static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Add sample named ranges for demonstration
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells.CreateRange("A1:B2").Name = "SalesData";
-            sheet.Cells.CreateRange("C3:D4").Name = "Expenses";
-
-            // Retrieve all defined named ranges in the workbook
-            // Use fully qualified type to avoid ambiguity with System.Range
-            Aspose.Cells.Range[] namedRanges = workbook.Worksheets.GetNamedRanges();
-
-            // Iterate through each named range and write its name and address to the debug log
-            if (namedRanges != null)
+            try
             {
-                foreach (Aspose.Cells.Range range in namedRanges)
-                {
-                    Debug.WriteLine($"Name: {range.Name}, Address: {range.Address}");
-                }
-            }
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
 
-            // Save the workbook (optional)
-            workbook.Save("NamedRangesDemo.xlsx");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Debug.WriteLine($"Error: {ex.Message}");
+                // ------------------------------------------------------------
+                // Sample data: create a couple of named ranges for demonstration
+                // ------------------------------------------------------------
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Item1");
+                sheet.Cells["A2"].PutValue("Item2");
+                sheet.Cells["B1"].PutValue(10);
+                sheet.Cells["B2"].PutValue(20);
+
+                // Define named ranges
+                sheet.Cells.CreateRange("A1:A2").Name = "ItemNames";
+                sheet.Cells.CreateRange("B1:B2").Name = "ItemValues";
+
+                // ------------------------------------------------------------
+                // Iterate through all named ranges and write name & address to debug log
+                // ------------------------------------------------------------
+                // Get all pre‑defined named ranges in the workbook
+                AsposeRange[] namedRanges = workbook.Worksheets.GetNamedRanges();
+
+                if (namedRanges != null && namedRanges.Length > 0)
+                {
+                    foreach (AsposeRange range in namedRanges)
+                    {
+                        // Output the name and its address using Debug.WriteLine
+                        Debug.WriteLine($"Name: {range.Name}, Address: {range.RefersTo}");
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("No named ranges found in the workbook.");
+                }
+
+                // ------------------------------------------------------------
+                // (Optional) Save the workbook if needed
+                // ------------------------------------------------------------
+                // workbook.Save("NamedRangesDemo.xlsx");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Debug.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

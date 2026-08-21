@@ -1,84 +1,80 @@
-// Title: C# Example: Copy a Worksheet with Embedded Charts Using Aspose.Cells for .NET
-// Description: Demonstrates how to load an Excel file, create a sample workbook with a column chart when needed, copy a worksheet (including all chart objects) to a new workbook, keep only the first sheet, and save the result. The code preserves chart data sources and formatting.
-// Keywords: Aspose.Cells copy worksheet C# | preserve charts when copying Excel sheet | duplicate worksheet with embedded charts .NET | copy sheet to new workbook Aspose.Cells | Excel chart preservation C# | Aspose.Cells example GitHub | C# Excel worksheet cloning
-// Common Searches: how to copy a worksheet and keep its charts in C# | Aspose.Cells copy sheet with charts to new file | preserve embedded chart objects when duplicating Excel sheet | copy first worksheet only using Aspose.Cells .NET | sample code for copying worksheet with charts
-// Developer Intent: Copy a worksheet from one workbook to another while retaining all embedded chart objects.
-// Use Cases: Generate individual reports by cloning a chart‑rich template sheet into separate workbooks. | Create a backup of a specific sheet that contains visualizations without losing chart formatting. | Extract a single worksheet with its charts from a multi‑sheet workbook for distribution to stakeholders.
-// AI Prompts: Provide C# code that copies a specific worksheet containing charts from a source workbook to a new workbook using Aspose.Cells, ensuring the charts are preserved. | Show an Aspose.Cells .NET example that copies only the first worksheet with its embedded charts to a new file and removes any extra sheets. | Explain how to duplicate a worksheet with charts while maintaining data sources and formatting in Aspose.Cells for C#.
+// Title: Copy a Worksheet with Embedded Charts using Aspose.Cells for .NET
+// Description: Demonstrates how to duplicate a worksheet while preserving all embedded chart objects with Aspose.Cells. The sample creates a workbook with a column chart if none exists, copies the sheet using Workbook.Worksheets.AddCopy, renames the copy, and saves the result.
+// Keywords: Aspose.Cells copy worksheet | duplicate sheet with charts | preserve chart objects .NET | Workbook.Worksheets.AddCopy | C# Aspose.Cells chart copy | copy worksheet including charts | Aspose.Cells sample workbook with chart
+// Common Searches: how to copy a worksheet and keep charts Aspose.Cells | Aspose.Cells AddCopy preserve chart objects | duplicate Excel sheet with embedded charts using C# | copy worksheet with charts to new workbook Aspose.Cells | Aspose.Cells copy sheet including charts example
+// Developer Intent: Programmatically copy an existing worksheet and retain every embedded chart without additional processing.
+// Use Cases: Generate a reporting template: create a chart once, then copy the sheet to produce multiple reports with identical visualizations. | Perform scenario analysis on a client‑provided workbook by duplicating chart‑rich sheets for what‑if calculations. | Automatically build a sample workbook with a chart when the source file is missing, then copy the sheet to create a ready‑to‑use template.
+// AI Prompts: Write C# code with Aspose.Cells that copies a worksheet containing charts and ensures the charts appear in the copied sheet. | Explain whether Workbook.Worksheets.AddCopy automatically copies chart objects or if extra steps are required. | Provide a step‑by‑step tutorial to create a workbook with a column chart, then duplicate that worksheet while preserving the chart.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
+using Aspose.Cells.Charts; // Required for ChartType and Chart classes
 
-// Demonstrates how to load an Excel file, create a sample workbook with a column chart when needed, copy a worksheet (including all chart objects) to a new workbook, keep only the first sheet, and save the result. The code preserves chart data sources and formatting.
-class CopyWorksheetWithCharts
+namespace AsposeCellsWorksheetCopyWithCharts
 {
-    static void Main()
+    // Demonstrates how to duplicate a worksheet while preserving all embedded chart objects with Aspose.Cells. The sample creates a workbook with a column chart if none exists, copies the sheet using Workbook.Worksheets.AddCopy, renames the copy, and saves the result.
+    class Program
     {
-        try
+        static void Main()
         {
-            string sourcePath = "SourceWithChart.xlsx";
-
-            // Ensure the source file exists; create a simple workbook with a chart if it doesn't.
-            if (!File.Exists(sourcePath))
+            try
             {
-                Console.WriteLine($"Source file '{sourcePath}' not found. Creating a sample workbook with a chart.");
+                // Path to the source workbook
+                string sourcePath = "SourceWithCharts.xlsx";
 
-                try
+                Workbook sourceWorkbook;
+
+                // Ensure the source file exists; if not, create a sample workbook with a chart
+                if (!File.Exists(sourcePath))
                 {
-                    Workbook sample = new Workbook();
-                    Worksheet ws = sample.Worksheets[0];
-                    ws.Name = "Data";
+                    Console.WriteLine($"Source file '{sourcePath}' not found. Creating a sample workbook with a chart.");
 
-                    // Populate sample data.
-                    ws.Cells["A1"].PutValue("Category");
-                    ws.Cells["B1"].PutValue("Value");
-                    ws.Cells["A2"].PutValue("A");
-                    ws.Cells["B2"].PutValue(10);
-                    ws.Cells["A3"].PutValue("B");
-                    ws.Cells["B3"].PutValue(20);
+                    sourceWorkbook = new Workbook();
+                    Worksheet ws = sourceWorkbook.Worksheets[0];
+                    ws.Name = "DataSheet";
 
-                    // Add a column chart.
-                    int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 20, 5);
+                    // Populate sample data
+                    ws.Cells["A1"].PutValue(1);
+                    ws.Cells["A2"].PutValue(2);
+                    ws.Cells["A3"].PutValue(3);
+                    ws.Cells["B1"].PutValue(2);
+                    ws.Cells["B2"].PutValue(4);
+                    ws.Cells["B3"].PutValue(6);
+
+                    // Add a simple column chart
+                    int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 15, 5);
                     Chart chart = ws.Charts[chartIdx];
-                    chart.NSeries.Add("B2:B3", true);
-                    chart.NSeries.CategoryData = "A2:A3";
-                    chart.Title.Text = "Sample Chart";
+                    chart.NSeries.Add("A1:B3", true);
 
-                    sample.Save(sourcePath);
-                    Console.WriteLine($"Sample workbook created at '{sourcePath}'.");
+                    // Save the generated source workbook
+                    sourceWorkbook.Save(sourcePath);
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"Failed to create sample workbook: {ex.Message}");
-                    return;
+                    // Load the existing workbook
+                    sourceWorkbook = new Workbook(sourcePath);
                 }
+
+                // Name of the worksheet to be copied
+                string sheetToCopy = "DataSheet";
+
+                // Copy the specified worksheet within the same workbook (includes charts)
+                int copiedIndex = sourceWorkbook.Worksheets.AddCopy(sheetToCopy);
+
+                // Rename the copied worksheet
+                Worksheet copiedSheet = sourceWorkbook.Worksheets[copiedIndex];
+                copiedSheet.Name = sheetToCopy + "_Copy";
+
+                // Save the workbook containing both original and copied worksheets
+                string outputPath = "WorkbookWithCopiedSheet.xlsx";
+                sourceWorkbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            // Load the source workbook.
-            Workbook sourceWorkbook = new Workbook(sourcePath);
-
-            // Create a new workbook to receive the copied worksheet.
-            Workbook destinationWorkbook = new Workbook();
-
-            // Copy all worksheets (including charts) from source to destination.
-            destinationWorkbook.Copy(sourceWorkbook);
-
-            // Keep only the first worksheet; remove the rest.
-            for (int i = destinationWorkbook.Worksheets.Count - 1; i > 0; i--)
+            catch (Exception ex)
             {
-                destinationWorkbook.Worksheets.RemoveAt(i);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the result.
-            string destPath = "CopiedWorksheet.xlsx";
-            destinationWorkbook.Save(destPath);
-            Console.WriteLine($"Worksheet copied successfully to '{destPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

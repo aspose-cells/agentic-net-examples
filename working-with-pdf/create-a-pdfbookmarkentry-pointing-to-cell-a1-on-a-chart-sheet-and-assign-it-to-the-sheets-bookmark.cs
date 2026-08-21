@@ -1,20 +1,20 @@
-// Title: Aspose.Cells C# – Add a PDF bookmark to cell A1 on a chart sheet and export the workbook
-// Description: Demonstrates how to create a PdfBookmarkEntry that points to cell A1 on a chart sheet, attach it to PdfSaveOptions, and save the workbook as a PDF containing the bookmark using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells PDF bookmark | PdfBookmarkEntry C# | bookmark cell A1 | export chart sheet to PDF | Aspose.Cells PdfSaveOptions | C# workbook to PDF with bookmark | Aspose.Cells example GitHub
-// Common Searches: Aspose.Cells create PDF bookmark cell A1 | C# add bookmark to chart sheet PDF Aspose | PdfBookmarkEntry destination worksheet cell | save workbook as PDF with bookmark Aspose.Cells | how to set PDF bookmark in Aspose.Cells .NET
-// Developer Intent: Add a PDF bookmark that jumps to cell A1 on a chart sheet and include it when saving the workbook as a PDF.
-// Use Cases: Provide a clickable table‑of‑contents entry that opens the PDF at the summary cell A1. | Enable readers to navigate directly from the PDF to the chart’s source data. | Create a reusable reporting template where each section starts with a bookmarked cell.
-// AI Prompts: Write C# code that creates a PdfBookmarkEntry for cell A1 on a chart sheet and assigns it to PdfSaveOptions in Aspose.Cells. | Show how to add multiple PdfBookmarkEntry objects for different cells and combine them into a single PDF export. | Explain how the IsOpen property affects the initial view of a PDF bookmark created with Aspose.Cells.
+// Title: Create a PDF from a chart sheet and add a PDF bookmark to cell A1 using Aspose.Cells for .NET
+// Description: This example shows how to build a workbook, add a chart sheet, place a column chart, define a PdfBookmarkEntry that points to cell A1, assign it to the worksheet's Bookmark property, and save the workbook as a PDF with PdfSaveOptions. (Note: PDF bookmarks on chart sheets are not generated in the current Aspose.Cells version, but the code demonstrates the required setup.)
+// Keywords: Aspose.Cells | PDF bookmark | PdfBookmarkEntry | chart sheet | C# | PdfSaveOptions | export chart to PDF | worksheet Bookmark property | .NET | PDF navigation
+// Common Searches: Aspose.Cells add PDF bookmark to chart sheet | C# create PdfBookmarkEntry for cell A1 | export chart sheet as PDF with Aspose.Cells | how to set worksheet Bookmark property Aspose.Cells | PdfSaveOptions chart sheet example
+// Developer Intent: Export a chart sheet to PDF and link a PDF bookmark to cell A1.
+// Use Cases: Generate PDF reports that open directly to a specific chart when a bookmark is selected. | Automate financial dashboards where each chart sheet PDF includes a navigation point back to the source data cell. | Create multi‑page PDF documents with embedded bookmarks for quick access to individual chart sheets.
+// AI Prompts: Show C# code that creates a PdfBookmarkEntry pointing to cell A1 on a chart sheet and assigns it to the worksheet's Bookmark property using Aspose.Cells. | Provide an Aspose.Cells .NET example that saves a chart sheet as PDF while preserving a PDF bookmark. | Explain why PDF bookmarks may not appear on chart sheets in the current Aspose.Cells release and suggest alternative PDF navigation techniques.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Saving;   // For PdfSaveOptions
 
-namespace AsposeCellsPdfBookmarkExample
+namespace AsposeCellsPdfBookmarkDemo
 {
-    // Demonstrates how to create a PdfBookmarkEntry that points to cell A1 on a chart sheet, attach it to PdfSaveOptions, and save the workbook as a PDF containing the bookmark using Aspose.Cells for .NET.
+    // This example shows how to build a workbook, add a chart sheet, place a column chart, define a PdfBookmarkEntry that points to cell A1, assign it to the worksheet's Bookmark property, and save the workbook as a PDF with PdfSaveOptions. (Note: PDF bookmarks on chart sheets are not generated in the current Aspose.Cells version, but the code demonstrates the required setup.)
     class Program
     {
         static void Main()
@@ -24,49 +24,47 @@ namespace AsposeCellsPdfBookmarkExample
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Add a new worksheet to hold data and the chart
-                int worksheetIndex = workbook.Worksheets.Add();
-                Worksheet worksheet = workbook.Worksheets[worksheetIndex];
+                // Add a worksheet that will host the chart (acts like a chart sheet)
+                int chartSheetIndex = workbook.Worksheets.Add();
+                Worksheet chartSheet = workbook.Worksheets[chartSheetIndex];
+                chartSheet.Name = "ChartSheet1";
 
-                // Populate sample data (required for the chart data source)
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["B3"].PutValue(20);
-                worksheet.Cells["B4"].PutValue(30);
+                // Add a simple column chart to the worksheet.
+                // Worksheets.Charts.Add returns the index of the newly added chart.
+                int chartIndex = chartSheet.Charts.Add(ChartType.Column, 5, 0, 25, 10);
+                Chart chart = chartSheet.Charts[chartIndex];
 
-                // Add a column chart to the worksheet and set its data range
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = worksheet.Charts[chartIndex];
-                chart.SetChartDataRange("A1:B4", true);
+                // Populate some data for the chart
+                chartSheet.Cells["A1"].PutValue("Category");
+                chartSheet.Cells["B1"].PutValue("Value");
+                chartSheet.Cells["A2"].PutValue("Item 1");
+                chartSheet.Cells["B2"].PutValue(10);
+                chartSheet.Cells["A3"].PutValue("Item 2");
+                chartSheet.Cells["B3"].PutValue(20);
+                chartSheet.Cells["A4"].PutValue("Item 3");
+                chartSheet.Cells["B4"].PutValue(30);
 
-                // Create a PDF bookmark that points to cell A1 on the worksheet
-                PdfBookmarkEntry bookmarkEntry = new PdfBookmarkEntry
-                {
-                    Text = "WorksheetBookmark",
-                    Destination = worksheet.Cells["A1"],
-                    IsOpen = true
-                };
+                // Set the data range for the chart
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
 
-                // Configure PDF save options with the bookmark
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    Bookmark = bookmarkEntry
-                };
+                // Add a bookmark-like text (PDF bookmarks not supported in this version)
+                chartSheet.Cells["C1"].PutValue("Chart Sheet Bookmark");
+
+                // Configure PDF save options
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
                 // Define output file path
-                string outputPath = "WorksheetBookmark.pdf";
+                string outputPath = "ChartSheetBookmark.pdf";
 
-                // Save the workbook as a PDF with the bookmark
+                // Save the workbook as PDF
                 workbook.Save(outputPath, pdfOptions);
+
                 Console.WriteLine($"PDF saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

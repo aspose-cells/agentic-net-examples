@@ -1,115 +1,46 @@
-// Title: C# – Load an Excel workbook without hidden rows using Aspose.Cells LoadFilter
-// Description: Demonstrates how to create a custom LoadFilter (VisibleRowsLoadFilter) that loads all data, then iterates each worksheet, deletes rows where Cells.IsRowHidden is true, and saves a clean workbook. The example also shows how to generate a sample file with a hidden row if none exists.
-// Keywords: Aspose.Cells LoadFilter hidden rows | C# exclude hidden rows Excel | LoadOptions filter hidden rows | remove hidden rows Aspose.Cells | skip hidden rows during load | Aspose.Cells workbook cleaning
-// Common Searches: how to ignore hidden rows when loading Excel with Aspose.Cells .NET | Aspose.Cells custom LoadFilter example | remove hidden rows after loading workbook C# | load workbook without hidden rows Aspose | skip hidden rows using LoadOptions
-// Developer Intent: Load an Excel file and automatically discard any rows that are hidden, producing a workbook that contains only visible data.
-// Use Cases: Import a template that contains hidden helper rows and export a clean version for downstream processing. | Validate user‑uploaded spreadsheets while ensuring hidden rows do not affect calculations or reports. | Generate data extracts where hidden rows must be omitted to meet compliance or presentation requirements.
-// AI Prompts: Show a C# Aspose.Cells snippet that uses LoadFilter to prevent hidden rows from being loaded at all. | Explain how to extend VisibleRowsLoadFilter to also skip hidden columns during workbook loading. | Suggest an alternative approach that uses LoadOptions.FilterObjects to exclude hidden rows before they are read into memory.
+// Title: C# Load Excel Workbook with Aspose.Cells and Skip Hidden Rows (AutoFilter)
+// Description: Demonstrates how to configure Aspose.Cells LoadOptions with AutoFilter to ignore rows hidden by an existing filter when opening an Excel file, then iterate only visible rows and optionally save the workbook.
+// Keywords: Aspose.Cells LoadOptions AutoFilter | C# skip hidden rows Excel | Aspose.Cells ignore filtered rows | .NET read visible rows Excel | Cells.IsRowHidden example | load workbook without hidden rows
+// Common Searches: Aspose.Cells load workbook without hidden rows | C# hide filtered rows when reading Excel | How to ignore AutoFilter hidden rows in Aspose.Cells | Read only visible rows from Excel using Aspose.Cells .NET | LoadOptions.AutoFilter usage example
+// Developer Intent: Open an Excel file with Aspose.Cells, automatically exclude rows hidden by an AutoFilter, and process only the visible data rows.
+// Use Cases: Extract data from a filtered sheet while ignoring hidden rows. | Export or copy only visible rows to another workbook. | Run calculations or analytics on rows that meet the filter criteria.
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, enables AutoFilter, and iterates only over rows that are not hidden. | Show how to use LoadOptions.AutoFilter and Cells.IsRowHidden to skip filtered‑out rows in a .NET application. | Explain the steps to configure Aspose.Cells so hidden rows are excluded during workbook loading.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Demonstrates how to configure Aspose.Cells LoadOptions with AutoFilter to ignore rows hidden by an existing filter when opening an Excel file, then iterate only visible rows and optionally save the workbook.
+class Program
 {
-    // Custom LoadFilter that loads all data (you can adjust options if needed)
-    // Demonstrates how to create a custom LoadFilter (VisibleRowsLoadFilter) that loads all data, then iterates each worksheet, deletes rows where Cells.IsRowHidden is true, and saves a clean workbook. The example also shows how to generate a sample file with a hidden row if none exists.
-    public class VisibleRowsLoadFilter : LoadFilter
+    static void Main()
     {
-        public override void StartSheet(Worksheet sheet)
+        // Create load options and enable AutoFilter.
+        // This tells Aspose.Cells to apply any existing autofilter
+        // in the source file and hide rows that do not meet the filter criteria.
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.AutoFilter = true;
+
+        // Load the workbook with the specified options.
+        // Hidden rows (as determined by the autofilter) will be ignored.
+        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+
+        // Access the first worksheet.
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Iterate through all rows that contain data.
+        // Process only rows that are not hidden.
+        int maxRow = cells.MaxDataRow;
+        for (int rowIndex = 0; rowIndex <= maxRow; rowIndex++)
         {
-            // Load everything for the sheet; hidden rows will be filtered out later
-            LoadDataFilterOptions = LoadDataFilterOptions.All;
-        }
-    }
-
-    public class ExcludeHiddenRowsDemo
-    {
-        public static void Run()
-        {
-            // Path to the source workbook (contains hidden rows)
-            string sourcePath = "SourceWithHiddenRows.xlsx";
-
-            // Ensure the source file exists; create a sample workbook if it does not
-            if (!File.Exists(sourcePath))
+            if (!cells.IsRowHidden(rowIndex))
             {
-                CreateSampleWorkbook(sourcePath);
-            }
-
-            try
-            {
-                // Configure load options with the custom filter
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    LoadFilter = new VisibleRowsLoadFilter()
-                };
-
-                // Load the workbook using the configured options
-                Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-                // Iterate through each worksheet and remove rows that are hidden
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Process rows in reverse order to avoid index shifting when deleting
-                    for (int row = sheet.Cells.MaxDataRow; row >= sheet.Cells.MinDataRow; row--)
-                    {
-                        if (sheet.Cells.IsRowHidden(row))
-                        {
-                            // Delete the hidden row so it is excluded from the loaded workbook
-                            sheet.Cells.DeleteRow(row);
-                        }
-                    }
-                }
-
-                // Save the resulting workbook; hidden rows are no longer present
-                string outputPath = "ResultWithoutHiddenRows.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
+                // Example processing: output the value of the first column.
+                Console.WriteLine($"Row {rowIndex + 1}: {cells[rowIndex, 0].StringValue}");
             }
         }
 
-        // Helper method to create a sample workbook with a hidden row
-        private static void CreateSampleWorkbook(string path)
-        {
-            try
-            {
-                Workbook wb = new Workbook();
-                Worksheet ws = wb.Worksheets[0];
-                ws.Cells["A1"].PutValue("Row 1");
-                ws.Cells["A2"].PutValue("Row 2 (hidden)");
-                ws.Cells["A3"].PutValue("Row 3");
-
-                // Hide the second row
-                ws.Cells.SetRowHeight(1, ws.Cells.GetRowHeight(1));
-                ws.Cells.Rows[1].IsHidden = true; // Correct way to hide a row
-
-                wb.Save(path);
-                Console.WriteLine($"Sample workbook created at '{path}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to create sample workbook: {ex.Message}");
-                throw;
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                ExcludeHiddenRowsDemo.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
-        }
+        // Save the workbook if further actions are required.
+        workbook.Save("output.xlsx");
     }
 }

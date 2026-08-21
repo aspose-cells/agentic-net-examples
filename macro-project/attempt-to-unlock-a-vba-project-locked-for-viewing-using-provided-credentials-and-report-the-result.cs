@@ -1,95 +1,82 @@
-// Title: Unlock a password‑protected VBA project in an Excel .xlsm workbook with Aspose.Cells for .NET (C#)
-// Description: Loads an .xlsm file using Aspose.Cells, detects a VBA project, reports its protection status, validates a supplied password, removes protection with VbaProject.Protect(false, null) when the password is correct, and saves the workbook as a new unlocked file.
-// Keywords: Aspose.Cells VBA unlock | C# remove VBA password | Aspose.Cells VbaProject.ValidatePassword | unprotect Excel macro project | programmatic VBA project unprotect .NET | save unlocked xlsm Aspose | batch VBA password removal
-// Common Searches: how to unlock a protected VBA project using Aspose.Cells C# | Aspose.Cells validate VBA password and unprotect workbook | C# code to remove VBA password from .xlsm file | unprotect Excel macro project programmatically .NET | Aspose.Cells VbaProject.Protect false example
-// Developer Intent: The developer needs to programmatically unlock a password‑protected VBA project in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Validate a user‑provided password and unprotect the VBA project before saving a new copy of the workbook. | Check whether an uploaded .xlsm file contains a VBA project and report its protection state. | Automate processing of multiple macro‑enabled workbooks to remove VBA protection in bulk.
-// AI Prompts: Generate C# code that uses Aspose.Cells to unlock a VBA project with a given password, including comprehensive error handling and console output. | Explain the purpose of VbaProject.Protect(false, null) and how it removes VBA project protection in Aspose.Cells. | Create a version of the demo that scans a directory for .xlsm files, attempts to unlock each VBA project, and logs success or failure to a CSV file.
+// Title: C# – Unlock a password‑protected VBA project in an XLSM file with Aspose.Cells
+// Description: Loads a macro‑enabled workbook, accesses its VbaProject, checks the protection flag, validates a supplied password using ValidatePassword, removes protection with Protect(false, null) when the password is correct, and saves the workbook as an unlocked XLSM file.
+// Keywords: Aspose.Cells VBA unlock | C# remove VBA password | Validate VBA project password | Unprotect VBA project programmatically | Save unlocked XLSM workbook
+// Common Searches: how to unlock VBA project programmatically c# | aspocells validate vba password | remove password from macro enabled workbook aspocells | c# unprotect vba project in xlsm | aspocells vba project protect false null
+// Developer Intent: Provide a C# example that unlocks a VBA project protected for viewing by validating a password and then removing the protection, finally saving the workbook without VBA protection.
+// Use Cases: Detect whether a loaded workbook contains a VBA project and report its initial protection status. | Validate a user‑supplied password against the VBA project and, if correct, clear the protection. | Persist the unprotected workbook by saving it to a new XLSM file.
+// AI Prompts: Write C# code using Aspose.Cells to check a VBA project's protection state, validate a password, and unprotect it. | Suggest robust error‑handling patterns for unlocking a VBA project in a console application with Aspose.Cells. | Explain the difference between VbaProject.IsProtected and VbaProject.Protect parameters when removing VBA protection.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// Loads an .xlsm file using Aspose.Cells, detects a VBA project, reports its protection status, validates a supplied password, removes protection with VbaProject.Protect(false, null) when the password is correct, and saves the workbook as a new unlocked file.
-public class UnlockVbaProjectDemo
+namespace AsposeCellsVbaUnlockDemo
 {
-    public static void Run(string filePath, string password)
+    // Loads a macro‑enabled workbook, accesses its VbaProject, checks the protection flag, validates a supplied password using ValidatePassword, removes protection with Protect(false, null) when the password is correct, and saves the workbook as an unlocked XLSM file.
+    class Program
     {
-        // Verify that the input file exists
-        if (!File.Exists(filePath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
-            return;
-        }
+            // Path to the macro‑enabled workbook that has a VBA project locked for viewing
+            string workbookPath = "LockedVbaProject.xlsm";
 
-        try
-        {
-            // Load the workbook containing the VBA project
-            Workbook workbook = new Workbook(filePath);
-            VbaProject vbaProject = workbook.VbaProject;
+            // Password that is supposed to unlock the VBA project
+            string vbaPassword = "yourPassword";
 
-            if (vbaProject == null)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(workbookPath))
             {
-                Console.WriteLine("The workbook does not contain a VBA project.");
+                Console.WriteLine($"Input file not found: {workbookPath}");
                 return;
             }
 
-            // Report current protection status
-            Console.WriteLine($"VBA Project IsProtected: {vbaProject.IsProtected}");
-
-            // Attempt to unlock only if it is protected
-            if (vbaProject.IsProtected)
+            try
             {
-                // Validate the supplied password
-                bool isPasswordValid = vbaProject.ValidatePassword(password);
+                // Load the workbook
+                Workbook workbook = new Workbook(workbookPath);
+
+                // Access the VBA project
+                VbaProject vbaProject = workbook.VbaProject;
+
+                if (vbaProject == null)
+                {
+                    Console.WriteLine("The workbook does not contain a VBA project.");
+                    return;
+                }
+
+                // Report initial protection state
+                Console.WriteLine($"Initial VBA Project IsProtected: {vbaProject.IsProtected}");
+
+                // Validate the provided password
+                bool isPasswordValid = vbaProject.ValidatePassword(vbaPassword);
                 Console.WriteLine($"Password validation result: {isPasswordValid}");
 
                 if (isPasswordValid)
                 {
-                    // Unprotect the VBA project (set IsProtected = false)
+                    // Unprotect the VBA project (remove protection)
+                    // Passing false for isProtected and null for password removes protection
                     vbaProject.Protect(false, null);
-                    Console.WriteLine("VBA project unlocked successfully.");
+                    Console.WriteLine("VBA project has been successfully unprotected.");
                 }
                 else
                 {
-                    Console.WriteLine("Failed to unlock VBA project: invalid password.");
+                    Console.WriteLine("Failed to unprotect VBA project: invalid password.");
                 }
+
+                // Report final protection state
+                Console.WriteLine($"Final VBA Project IsProtected: {vbaProject.IsProtected}");
+
+                // Optionally save the workbook to a new file to persist changes
+                string outputPath = "UnlockedVbaProject.xlsm";
+                workbook.Save(outputPath, SaveFormat.Xlsm);
+                Console.WriteLine($"Workbook saved to: {outputPath}");
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("VBA project is not protected; no action needed.");
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the workbook (optional, demonstrates that the project is now unprotected)
-            string outputPath = "unlocked_" + Path.GetFileName(filePath);
-            workbook.Save(outputPath, SaveFormat.Xlsm);
-            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
-
-public class Program
-{
-    // Entry point required for compilation
-    public static void Main(string[] args)
-    {
-        // args[0] = path to the .xlsm file
-        // args[1] = password for the VBA project (optional)
-
-        if (args.Length == 0)
-        {
-            Console.WriteLine("Usage: UnlockVbaProjectDemo <inputFilePath> [password]");
-            return;
-        }
-
-        string inputFile = args[0];
-        string password = args.Length > 1 ? args[1] : string.Empty;
-
-        UnlockVbaProjectDemo.Run(inputFile, password);
     }
 }

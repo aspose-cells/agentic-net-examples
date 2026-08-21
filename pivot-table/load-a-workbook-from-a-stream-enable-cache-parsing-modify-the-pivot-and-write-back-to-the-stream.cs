@@ -1,47 +1,53 @@
-// Title: C# – Load Excel workbook from stream, enable pivot cache parsing, refresh all pivots, and write back using Aspose.Cells
-// Description: Demonstrates how to use Aspose.Cells for .NET to load an Excel file from an input stream with LoadOptions.ParsingPivotCachedRecords enabled, refresh every pivot table via Worksheets.RefreshPivotTables(), and save the modified workbook directly to an output stream. Includes error handling and a sample console program.
-// Keywords: Aspose.Cells | .NET | C# | LoadOptions | ParsingPivotCachedRecords | pivot cache | refresh pivot tables | stream processing | Workbook.SaveToStream | Excel automation
-// Common Searches: Aspose.Cells load workbook from stream with pivot cache | Enable ParsingPivotCachedRecords in Aspose.Cells | Refresh all pivot tables programmatically .NET | Save Excel workbook to stream using Aspose.Cells | How to process Excel pivot tables in a web API | C# example for pivot cache parsing and refresh
-// Developer Intent: Load an Excel workbook from a stream, turn on pivot cache parsing, refresh its pivot tables, and output the updated file to another stream.
-// Use Cases: Web API that receives an Excel file stream, updates pivot data, and returns the refreshed file. | Scheduled service that reads Excel reports from a shared folder, refreshes embedded pivots, and stores the updated files. | Document conversion pipeline that streams Excel input, applies pivot refresh, and streams the result to downstream processors. | Desktop utility that batch‑processes multiple workbooks, refreshing pivots without loading entire files into memory.
-// AI Prompts: Write C# code using Aspose.Cells to read an Excel file from a MemoryStream, enable ParsingPivotCachedRecords, refresh all pivot tables, and return the result as a byte array. | Show how to handle large Excel workbooks with pivot caches by streaming input and output in Aspose.Cells, including error handling. | Explain best practices for refreshing pivot tables after loading a workbook with pivot cache parsing enabled in Aspose.Cells for .NET. | Generate a console application example that accepts input and output file paths, processes pivot tables via streams, and logs exceptions.
+// Title: Load Excel workbook from a stream, enable pivot cache parsing, refresh pivots, and save to MemoryStream using Aspose.Cells for .NET
+// Description: Demonstrates how to load an XLSX workbook from a Stream with LoadOptions.ParsingPivotCachedRecords enabled, refresh all pivot tables, adjust the first pivot's ManualUpdate setting, recalculate its data, and write the updated workbook back to a MemoryStream for further processing.
+// Keywords: Aspose.Cells load from stream | ParsingPivotCachedRecords | refresh pivot tables C# | modify pivot ManualUpdate | save workbook to MemoryStream | Aspose.Cells pivot cache | C# Excel pivot processing
+// Common Searches: Aspose.Cells enable pivot cache parsing when loading workbook | C# refresh all pivot tables programmatically | How to set ManualUpdate false for a pivot table using Aspose.Cells | Save modified Excel file to MemoryStream in .NET | Process Excel stream and update pivots Aspose.Cells
+// Developer Intent: Load an Excel file from a stream, turn on pivot cache parsing, update and recalculate pivot tables, and return the modified workbook as a MemoryStream.
+// Use Cases: Web API endpoint that receives an uploaded XLSX, refreshes its pivots, and returns the updated file as a byte array. | Automated nightly job that opens stored workbooks, refreshes pivot data, and stores the result back to a database BLOB. | Cloud function that reads an Excel stream from storage, updates pivot tables, and uploads the revised workbook without creating temporary files.
+// AI Prompts: Write C# code that loads an Excel workbook from a Stream with Aspose.Cells, enables ParsingPivotCachedRecords, refreshes all pivot tables, sets the first pivot's ManualUpdate to false, recalculates it, and returns a MemoryStream. | Provide a robust try‑catch example that ensures a MemoryStream is always returned when processing pivot tables with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Demonstrates how to use Aspose.Cells for .NET to load an Excel file from an input stream with LoadOptions.ParsingPivotCachedRecords enabled, refresh every pivot table via Worksheets.RefreshPivotTables(), and save the modified workbook directly to an output stream. Includes error handling and a sample console program.
+// Demonstrates how to load an XLSX workbook from a Stream with LoadOptions.ParsingPivotCachedRecords enabled, refresh all pivot tables, adjust the first pivot's ManualUpdate setting, recalculate its data, and write the updated workbook back to a MemoryStream for further processing.
 public class PivotCacheProcessor
 {
-    // Loads a workbook from the input stream, refreshes pivot tables, and writes to the output stream.
-    public static void Process(Stream inputStream, Stream outputStream)
+    // Processes a workbook stream: enables pivot cache parsing, refreshes/updates pivots,
+    // and returns the modified workbook as a memory stream.
+    public static void Process(Stream inputStream, out MemoryStream outputStream)
     {
         try
         {
             // Enable parsing of pivot cached records.
-            LoadOptions loadOptions = new LoadOptions
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
                 ParsingPivotCachedRecords = true
             };
 
-            // Load workbook with the specified options.
-            Workbook workbook = new Workbook(inputStream, loadOptions);
+            // Load the workbook from the provided stream.
+            var workbook = new Workbook(inputStream, loadOptions);
 
-            // Refresh all pivot tables in the workbook.
+            // Refresh all pivot tables to reflect any source data changes.
             workbook.Worksheets.RefreshPivotTables();
 
-            // Save workbook to a memory stream and copy to the output stream.
-            using (MemoryStream tempStream = workbook.SaveToStream())
+            // Example of additional pivot modification.
+            if (workbook.Worksheets[0].PivotTables.Count > 0)
             {
-                tempStream.Position = 0;
-                tempStream.CopyTo(outputStream);
-                outputStream.Position = 0;
+                var pivot = workbook.Worksheets[0].PivotTables[0];
+                pivot.ManualUpdate = false;                     // Enable automatic updates.
+                pivot.RefreshData();                            // Refresh the pivot's cached data.
+                pivot.CalculateData();                         // Recalculate the pivot results.
             }
+
+            // Save the modified workbook to a memory stream.
+            outputStream = workbook.SaveToStream();
         }
-        catch (Exception ex)
+        catch
         {
-            Console.Error.WriteLine($"Error processing workbook: {ex.Message}");
+            // Ensure outputStream is always assigned.
+            outputStream = new MemoryStream();
             throw;
         }
     }
@@ -49,39 +55,40 @@ public class PivotCacheProcessor
 
 public class Program
 {
-    // Entry point for the console application.
+    // Entry point required for the console application.
     public static void Main(string[] args)
     {
-        if (args.Length < 2)
-        {
-            Console.WriteLine("Usage: PivotCacheProcessor <inputFilePath> <outputFilePath>");
-            return;
-        }
-
-        string inputPath = args[0];
-        string outputPath = args[1];
-
-        // Verify input file exists.
-        if (!File.Exists(inputPath))
-        {
-            Console.Error.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Open streams and process the workbook.
-            using (FileStream inputStream = File.OpenRead(inputPath))
-            using (FileStream outputStream = File.Create(outputPath))
+            // Define input and output file paths.
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists.
+            if (!File.Exists(inputPath))
             {
-                PivotCacheProcessor.Process(inputStream, outputStream);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            Console.WriteLine($"Processing completed. Output saved to {outputPath}");
+            // Process the workbook.
+            using (FileStream inputStream = File.OpenRead(inputPath))
+            {
+                PivotCacheProcessor.Process(inputStream, out MemoryStream resultStream);
+
+                // Write the result to the output file.
+                resultStream.Position = 0;
+                using (FileStream outputStream = File.Create(outputPath))
+                {
+                    resultStream.CopyTo(outputStream);
+                }
+            }
+
+            Console.WriteLine($"Workbook processed successfully. Output saved to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

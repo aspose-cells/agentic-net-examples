@@ -1,53 +1,61 @@
-// Title: Convert XLSM to PDF/A‑2a with images using Aspose.Cells for .NET
-// Description: Loads a macro‑enabled XLSM workbook, verifies the file, configures PdfSaveOptions for PDF/A‑2a compliance, and saves it as a PDF while preserving all embedded images.
-// Keywords: Aspose.Cells XLSM to PDF/A-2a | preserve images Excel to PDF .NET | PdfSaveOptions PdfCompliance | macro enabled workbook conversion | PDF/A‑2a archival PDF generation
-// Common Searches: Aspose.Cells convert XLSM to PDF/A‑2a | keep pictures when saving Excel as PDF | PDF/A‑2a compliance option in Aspose.Cells | C# code to export macro enabled workbook to PDF/A‑2a | how to preserve embedded images in Excel to PDF conversion
-// Developer Intent: Convert a macro‑enabled Excel file to a PDF/A‑2a document while ensuring that all embedded images remain intact.
-// Use Cases: Create archival‑ready PDF/A‑2a reports from XLSM templates that contain charts and photos. | Automate batch conversion of macro‑enabled spreadsheets to compliant PDFs for a document management system. | Expose a web API that accepts XLSM uploads, validates them, and returns PDF/A‑2a files with all graphics preserved.
-// AI Prompts: Generate C# code with Aspose.Cells that converts an XLSM file to PDF/A‑2a and retains embedded images, including file‑existence checks. | Explain how to set PdfSaveOptions.Compliance = PdfCompliance.PdfA2a and provide a fallback for older Aspose.Cells versions. | Show a script to batch process a folder of XLSM files into PDF/A‑2a using Aspose.Cells while preserving all objects.
+// Title: C# – Convert XLSM to PDF/A‑2a with Aspose.Cells while preserving images
+// Description: Loads an XLSM workbook using auto‑detect, sets PdfSaveOptions (Compliance = PdfA2a, EmbedAttachments = false, EmbedStandardWindowsFonts = true) and calls ConversionUtility.Convert to produce a PDF/A‑2a file that keeps all embedded pictures intact.
+// Keywords: Aspose.Cells XLSM to PDF/A-2a | C# PDF/A-2a conversion | preserve images Excel to PDF | LoadOptions Auto format | PdfSaveOptions Compliance PdfA2a | EmbedAttachments false | ConversionUtility Convert | macro‑enabled workbook PDF export
+// Common Searches: convert xlsm to pdf/a-2a c# | asp​ose.cells preserve images pdf/a-2a | pdfsaveoptions pdf/a-2a settings | how to disable ole embedding asp​ose.cells | batch convert xlsm to pdf/a-2a
+// Developer Intent: Generate a PDF/A‑2a document from a macro‑enabled XLSM file without losing any embedded images.
+// Use Cases: Archival‑grade reports from Excel templates that contain charts, photos, or logos. | Regulatory submissions requiring PDF/A‑2a compliance while retaining visual content. | Automated pipelines that batch‑process XLSM workbooks into PDF/A‑2a files for long‑term storage.
+// AI Prompts: Write C# code using Aspose.Cells to convert an XLSM workbook to PDF/A‑2a, keeping all embedded images and disabling OLE attachment embedding. | Explain which PdfSaveOptions properties are mandatory for PDF/A‑2a compliance and image preservation in Aspose.Cells. | Provide a step‑by‑step guide to batch convert multiple XLSM files to PDF/A‑2a with Aspose.Cells, ensuring pictures remain intact.
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
+using Aspose.Cells.Rendering; // PdfSaveOptions resides in Aspose.Cells namespace, but included for completeness
 
-// Loads a macro‑enabled XLSM workbook, verifies the file, configures PdfSaveOptions for PDF/A‑2a compliance, and saves it as a PDF while preserving all embedded images.
-class ConvertXlsmToPdfA2a
+// Loads an XLSM workbook using auto‑detect, sets PdfSaveOptions (Compliance = PdfA2a, EmbedAttachments = false, EmbedStandardWindowsFonts = true) and calls ConversionUtility.Convert to produce a PDF/A‑2a file that keeps all embedded pictures intact.
+class XlsmToPdfA2aConverter
 {
     static void Main()
     {
-        // Source XLSM file (contains macros and embedded images)
+        // Path to the source XLSM workbook
         string sourcePath = "input.xlsm";
 
-        // Destination PDF file (PDF/A‑2a compliant)
-        string destPath = "output.pdf";
+        // Desired output PDF file (PDF/A‑2a)
+        string outputPath = "output.pdf";
+
+        // Verify that the source file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
+        {
+            Console.WriteLine($"Error: Source file not found at '{sourcePath}'.");
+            return;
+        }
 
         try
         {
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
+            // Load options – let Aspose.Cells auto‑detect the format (XLSM with macros)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+
+            // PDF save options configured for PDF/A‑2a compliance
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
+                // Set the PDF/A compliance level
+                Compliance = PdfCompliance.PdfA2a,
 
-            // Load the workbook; the constructor preserves all embedded objects including images
-            Workbook workbook = new Workbook(sourcePath);
+                // Ensure OLE attachments are NOT embedded (required for PDF/A)
+                EmbedAttachments = false,
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // Preserve embedded images (default behavior, kept explicit for clarity)
+                EmbedStandardWindowsFonts = true
+            };
 
-            // NOTE: The PdfCompliance enumeration may not be available in older Aspose.Cells versions.
-            // If supported, uncomment the following line to set PDF/A‑2a compliance:
-            // pdfOptions.Compliance = Aspose.Cells.PdfCompliance.PdfA2a;
+            // Perform the conversion using the provided ConversionUtility rule
+            ConversionUtility.Convert(sourcePath, loadOptions, outputPath, pdfOptions);
 
-            // Save the workbook as a PDF file, preserving embedded images
-            workbook.Save(destPath, pdfOptions);
-            Console.WriteLine($"Conversion successful. PDF saved to: {destPath}");
+            Console.WriteLine("Conversion completed: XLSM → PDF/A‑2a with images preserved.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Conversion failed: {ex.Message}");
         }
     }
 }

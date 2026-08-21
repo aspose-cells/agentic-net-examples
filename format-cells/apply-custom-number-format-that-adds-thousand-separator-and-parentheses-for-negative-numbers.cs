@@ -1,64 +1,50 @@
-// Title: Aspose.Cells .NET – Apply Custom Number Format with Thousand Separator and Parentheses for Negatives
-// Description: Demonstrates how to create a workbook, insert a numeric value, and apply a custom format "#,##0.00;(#,##0.00)" that adds commas, forces two decimal places, and encloses negative numbers in parentheses. The example uses a Style with a StyleFlag to modify only the NumberFormat property and saves the result as an XLSX file. Suitable for global .NET developers working with Excel reports.
-// Keywords: Aspose.Cells custom number format | C# thousand separator | negative numbers parentheses | StyleFlag NumberFormat | Excel number formatting .NET | financial reporting Excel | Aspose.Cells example
-// Common Searches: Aspose.Cells format numbers with commas C# | Show negative values in parentheses using Aspose.Cells | Apply custom number format to a single cell Aspose.Cells .NET | StyleFlag only number format Aspose.Cells example | C# Excel custom format #,##0.00;(#,##0.00)
-// Developer Intent: Create a workbook and format a cell so large numbers use commas and negative values appear in parentheses, without altering other cell styles.
-// Use Cases: Financial statements where millions need comma separators and losses are shown in parentheses. | Invoices that require two‑decimal monetary values with clear negative‑amount notation. | Automated data exports that enforce a consistent numeric style across multiple worksheets.
-// AI Prompts: Generate C# code with Aspose.Cells that applies the custom format "#,##0.00;(#,##0.00)" to range A1 while preserving existing fonts and borders. | Explain how to use StyleFlag in Aspose.Cells to change only the NumberFormat of a cell without affecting other style attributes. | Show a step‑by‑step example of creating a workbook, inserting a value, defining a custom number format with thousand separators and parentheses, and saving the file.
+// Title: Apply a custom number format with thousand separators and parentheses for negatives using Aspose.Cells for .NET (C#)
+// Description: This example creates a workbook, writes a positive and a negative value, defines the custom format "#,##0.00;(#,##0.00)" to add thousand separators, show two decimals and wrap negative numbers in parentheses, applies the format to cells A1:A2 with a StyleFlag that targets only the number format, and saves the file as CustomNumberFormat.xlsx.
+// Keywords: Aspose.Cells custom numeric format | C# thousand separator format | negative numbers parentheses Excel | StyleFlag number format only | Excel custom format Aspose .NET
+// Common Searches: Aspose.Cells format negative numbers with parentheses | C# custom number format with commas in Aspose.Cells | How to use StyleFlag to set only number format in Aspose.Cells | Create Excel custom numeric format string using Aspose.Cells
+// Developer Intent: Generate and apply a custom numeric style that inserts commas for thousands and encloses negative values in parentheses without altering other cell attributes.
+// Use Cases: Financial reports where negatives appear in parentheses while positives use standard comma separators. | Applying a consistent monetary format to an entire column of generated spreadsheets. | Automating Excel exports that require precise number formatting for both positive and negative amounts.
+// AI Prompts: Write C# code with Aspose.Cells that applies the format '#,##0.00;(#,##0.00)' to a given range while preserving existing cell styles. | Explain the role of StyleFlag in Aspose.Cells when you want to modify only the number format of a style. | Provide a reusable method in C# that formats any worksheet column with thousand separators and parentheses for negative values using Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsNumberFormatDemo
+// This example creates a workbook, writes a positive and a negative value, defines the custom format "#,##0.00;(#,##0.00)" to add thousand separators, show two decimals and wrap negative numbers in parentheses, applies the format to cells A1:A2 with a StyleFlag that targets only the number format, and saves the file as CustomNumberFormat.xlsx.
+class CustomNumberFormatDemo
 {
-    // Demonstrates how to create a workbook, insert a numeric value, and apply a custom format "#,##0.00;(#,##0.00)" that adds commas, forces two decimal places, and encloses negative numbers in parentheses. The example uses a Style with a StyleFlag to modify only the NumberFormat property and saves the result as an XLSX file. Suitable for global .NET developers working with Excel reports.
-    public class ApplyCustomNumberFormat
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Set a numeric value in cell A1
-                sheet.Cells["A1"].PutValue(1234567.89);
+            // Put a positive and a negative number in cells A1 and A2
+            sheet.Cells["A1"].PutValue(1234567.89);
+            sheet.Cells["A2"].PutValue(-1234567.89);
 
-                // Create a style and define a custom number format:
-                // - Thousand separator (",")
-                // - Two decimal places
-                // - Negative numbers displayed in parentheses
-                Style style = workbook.CreateStyle();
-                style.Custom = "#,##0.00;(#,##0.00)";
+            // Create a style with a custom number format:
+            // "#,##0.00;(#,##0.00)" adds thousand separators,
+            // shows two decimal places, and encloses negative numbers in parentheses
+            Style style = workbook.CreateStyle();
+            style.Custom = "#,##0.00;(#,##0.00)";
 
-                // Use StyleFlag to apply only the number format part of the style
-                StyleFlag flag = new StyleFlag();
-                flag.NumberFormat = true;
+            // Use StyleFlag to apply only the number format part of the style
+            StyleFlag flag = new StyleFlag();
+            flag.NumberFormat = true;
 
-                // Apply the style to the target cell (range of one cell)
-                Aspose.Cells.Range range = sheet.Cells.CreateRange("A1");
-                range.ApplyStyle(style, flag);
+            // Apply the style to the range A1:A2
+            AsposeRange range = sheet.Cells.CreateRange("A1", "A2");
+            range.ApplyStyle(style, flag);
 
-                // Save the workbook to verify the formatting
-                string outputPath = "CustomNumberFormatDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("CustomNumberFormat.xlsx");
         }
-    }
-
-    // Entry point for the console application
-    internal class Program
-    {
-        private static void Main(string[] args)
+        catch (Exception ex)
         {
-            ApplyCustomNumberFormat.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,24 +1,22 @@
-// Title: C# batch update of shape text box margins in multiple Excel workbooks using Aspose.Cells
-// Description: A C# console app that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, iterates every worksheet and shape, and sets the TextBoxOptions top, bottom, left and right margins to a 5‑point standard before saving the file to an output directory.
-// Keywords: Aspose.Cells | C# | .NET | Excel shape margins | batch processing workbooks | TextBoxOptions | set shape text margins | multiple workbook automation | Excel API example | GitHub Aspose.Cells sample
-// Common Searches: How to change text box margins for all shapes in Excel with Aspose.Cells | Batch update shape margins in multiple .xlsx files C# | Iterate through worksheets and shapes using Aspose.Cells | Set uniform text box padding for Excel dashboards programmatically | Aspose.Cells example for updating shape TextBoxOptions
-// Developer Intent: Apply a predefined margin to every shape’s text box across a collection of Excel files in one automated run.
-// Use Cases: Enforce corporate design standards on Excel reports before distribution | Prepare template workbooks with consistent shape padding for multiple teams | Automate compliance checks for dashboard visual consistency | Mass‑update legacy spreadsheets after a style guideline change
-// AI Prompts: Write C# code that uses Aspose.Cells to set 5‑point margins on all shape text boxes in every worksheet of a workbook. | Refactor the batch loop to include logging of each modified shape name and add robust exception handling. | Create a reusable method that accepts custom top, bottom, left, and right margin values and applies them to all shapes in a given workbook.
+// Title: Batch update shape text box margins in multiple Excel workbooks with Aspose.Cells (C#)
+// Description: Scans a folder for *.xlsx files, loads each workbook with Aspose.Cells, iterates every worksheet and shape, sets left, right, top, and bottom text box margins to a standard 5‑point value, optionally fits the shape to the new margins, and saves the modified files to a separate output directory.
+// Keywords: Aspose.Cells | C# | Excel shape margins | text box margins | batch processing | multiple workbooks | standard margin | FitToTextSize | automation | office document API
+// Common Searches: How to set uniform text box margins for all shapes in many Excel files using Aspose.Cells | C# batch update shape margins across a folder of workbooks | Aspose.Cells example for changing shape text box margins in bulk | Automate margin standardization for Excel shapes with .NET
+// Developer Intent: Apply a consistent text box margin to every shape in each workbook of a batch of Excel files.
+// Use Cases: Enforce corporate branding by standardizing shape margins in all generated reports. | Prepare a collection of spreadsheets for printing, ensuring uniform text box spacing. | Automate cleanup of legacy workbooks that contain inconsistent shape formatting.
+// AI Prompts: Write C# code with Aspose.Cells that sets all shape text box margins to 8 points in a single workbook. | Refactor the batch margin updater to add per‑file logging and skip shapes lacking TextBoxOptions without throwing errors. | Explain how to extend the processor to also change each shape's fill color while updating its margins.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing.Texts;
 
-// A C# console app that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, iterates every worksheet and shape, and sets the TextBoxOptions top, bottom, left and right margins to a 5‑point standard before saving the file to an output directory.
+// Scans a folder for *.xlsx files, loads each workbook with Aspose.Cells, iterates every worksheet and shape, sets left, right, top, and bottom text box margins to a standard 5‑point value, optionally fits the shape to the new margins, and saves the modified files to a separate output directory.
 class BatchShapeMarginUpdater
 {
-    // Standard margin values in points
-    const double StandardTopMargin = 5.0;
-    const double StandardBottomMargin = 5.0;
-    const double StandardLeftMargin = 5.0;
-    const double StandardRightMargin = 5.0;
+    // Standard margin value in points
+    const double StandardMargin = 5.0;
 
     static void Main()
     {
@@ -30,10 +28,12 @@ class BatchShapeMarginUpdater
         // Ensure output folder exists
         Directory.CreateDirectory(outputFolder);
 
-        // Process each .xlsx file in the input folder
-        foreach (string inputPath in Directory.GetFiles(inputFolder, "*.xlsx"))
+        // Get all Excel files in the input folder (you can adjust the pattern as needed)
+        string[] workbookFiles = Directory.GetFiles(inputFolder, "*.xlsx");
+
+        foreach (string inputPath in workbookFiles)
         {
-            // Load the workbook (lifecycle rule: use constructor)
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
             // Iterate through all worksheets
@@ -42,19 +42,27 @@ class BatchShapeMarginUpdater
                 // Iterate through all shapes in the worksheet
                 foreach (Shape shape in sheet.Shapes)
                 {
-                    // Apply standard text margins using TextBoxOptions
-                    shape.TextBoxOptions.TopMarginPt = StandardTopMargin;
-                    shape.TextBoxOptions.BottomMarginPt = StandardBottomMargin;
-                    shape.TextBoxOptions.LeftMarginPt = StandardLeftMargin;
-                    shape.TextBoxOptions.RightMarginPt = StandardRightMargin;
+                    // Only process shapes that support text box options (e.g., text boxes)
+                    // Some shapes may not have TextBoxOptions; skip those.
+                    if (shape.TextBoxOptions != null)
+                    {
+                        // Set all four margins to the standard value
+                        shape.TextBoxOptions.LeftMarginPt = StandardMargin;
+                        shape.TextBoxOptions.RightMarginPt = StandardMargin;
+                        shape.TextBoxOptions.TopMarginPt = StandardMargin;
+                        shape.TextBoxOptions.BottomMarginPt = StandardMargin;
+
+                        // Optionally, recalculate the shape size to fit the new margins
+                        shape.FitToTextSize();
+                    }
                 }
             }
 
-            // Build output file path
+            // Determine output file path (same name, different folder)
             string fileName = Path.GetFileName(inputPath);
             string outputPath = Path.Combine(outputFolder, fileName);
 
-            // Save the modified workbook (lifecycle rule: use Save method)
+            // Save the updated workbook
             workbook.Save(outputPath);
         }
 

@@ -1,61 +1,53 @@
-// Title: C# – Set Aspose.Cells Chart Legend to Top‑Right Corner and Get Its Position Ratios & Pixels
-// Description: Demonstrates how to create a workbook with a column chart, place the legend in the top‑right corner using Aspose.Cells for .NET, disable overlay, recalculate the chart, and read the legend's X/Y ratios (relative to the chart) and absolute pixel coordinates before saving the file.
-// Keywords: Aspose.Cells chart legend position | C# set legend top right | LegendPositionType.Corner | XRatioToChart | YRatioToChart | legend pixel coordinates | .NET Excel chart legend | Aspose.Cells legend overlay | retrieve legend coordinates | Aspose.Cells example
-// Common Searches: Aspose.Cells set chart legend top right | How to get legend XRatioToChart in C# | Legend pixel location Aspose.Cells | C# chart legend corner position Aspose | Retrieve legend coordinates from Excel chart
-// Developer Intent: Place a chart legend in the top‑right corner of an Aspose.Cells chart and read its relative ratios and absolute pixel coordinates.
-// Use Cases: Ensure legends do not overlap data series by positioning them in the corner and confirming exact placement. | Dynamically adjust legend location based on chart size using XRatioToChart and YRatioToChart values. | Create standardized Excel reports where every chart’s legend appears consistently in the top‑right corner.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a chart legend to the top‑right corner and prints its X/Y ratios and pixel coordinates. | Explain the effect of Legend.Position = LegendPositionType.Corner on XRatioToChart and YRatioToChart in Aspose.Cells. | Write a validation method in C# that checks whether the legend lies within the chart bounds after applying the Corner position.
+// Title: Aspose.Cells C# – Set chart legend to top‑right corner and read its pixel coordinates
+// Description: Shows how to create a workbook, add a column chart, position the legend at the plot‑area corner (top‑right) with LegendPositionType.Corner, refresh the layout using chart.Calculate, and retrieve the legend's XPixel and YPixel values before saving the file.
+// Keywords: Aspose.Cells | C# chart legend position | LegendPositionType.Corner | retrieve legend XPixel | retrieve legend YPixel | column chart Aspose.Cells | Excel automation legend coordinates | chart.Calculate legend update
+// Common Searches: Aspose.Cells set legend corner | Get legend pixel position C# Aspose.Cells | Chart legend top right Aspose.Cells example | How to read legend XPixel YPixel after chart.Calculate | Aspose.Cells legend placement API
+// Developer Intent: Place a chart legend in the top‑right corner and obtain its pixel location programmatically.
+// Use Cases: Guarantee consistent legend placement in automatically generated Excel reports. | Perform visual‑regression tests by comparing legend coordinates across versions. | Calculate offsets for other drawing objects to avoid overlapping the legend.
+// AI Prompts: Provide C# code that sets a chart legend to the Corner position and returns its XPixel and YPixel values using Aspose.Cells. | Explain how to verify legend coordinates after calling chart.Calculate in Aspose.Cells for .NET. | Show an example of adjusting other shapes based on the legend's pixel coordinates in an Aspose.Cells workbook.
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-namespace AsposeCellsLegendPositionDemo
+// Shows how to create a workbook, add a column chart, position the legend at the plot‑area corner (top‑right) with LegendPositionType.Corner, refresh the layout using chart.Calculate, and retrieve the legend's XPixel and YPixel values before saving the file.
+class Program
 {
-    // Demonstrates how to create a workbook with a column chart, place the legend in the top‑right corner using Aspose.Cells for .NET, disable overlay, recalculate the chart, and read the legend's X/Y ratios (relative to the chart) and absolute pixel coordinates before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+        // Populate sample data for the chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["A4"].PutValue("C");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["B4"].PutValue(30);
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.SetChartDataRange("A1:B4", true);
+        // Add a column chart to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+        Chart chart = sheet.Charts[chartIndex];
+        chart.SetChartDataRange("A1:B4", true);
 
-            // Set the legend position to the top‑right corner of the plot area
-            chart.Legend.Position = LegendPositionType.Corner;
+        // Set the legend position to the top‑right corner of the plot area
+        chart.Legend.Position = LegendPositionType.Corner;
 
-            // Ensure the legend does not overlap the chart (optional)
-            chart.Legend.IsOverLay = false;
+        // Calculate the chart layout so that position properties are up‑to‑date
+        chart.Calculate();
 
-            // Recalculate the chart so that layout properties (e.g., X/Y ratios) are updated
-            chart.Calculate();
+        // Retrieve the legend coordinates in pixels (XPixel, YPixel)
+        int legendX = chart.Legend.XPixel;
+        int legendY = chart.Legend.YPixel;
 
-            // Retrieve and display the legend's position ratios and pixel coordinates
-            double legendXRatio = chart.Legend.XRatioToChart; // 0‑1 fraction of chart width
-            double legendYRatio = chart.Legend.YRatioToChart; // 0‑1 fraction of chart height
-            int legendXPixel = chart.Legend.XPixel;           // X position in pixels
-            int legendYPixel = chart.Legend.YPixel;           // Y position in pixels
+        // Verify by outputting the coordinates
+        Console.WriteLine($"Legend positioned at Corner. Coordinates (pixels): X = {legendX}, Y = {legendY}");
 
-            Console.WriteLine($"Legend Position Ratios -> X: {legendXRatio:F3}, Y: {legendYRatio:F3}");
-            Console.WriteLine($"Legend Position Pixels  -> X: {legendXPixel}, Y: {legendYPixel}");
-
-            // Save the workbook
-            workbook.Save("LegendTopRightCorner.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("LegendTopRightCorner.xlsx");
     }
 }

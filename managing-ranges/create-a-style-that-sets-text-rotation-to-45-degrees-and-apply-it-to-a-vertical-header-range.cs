@@ -1,17 +1,17 @@
-// Title: Aspose.Cells .NET: Create a 45° Text Rotation Style and Apply It to a Vertical Header Range
-// Description: This example shows how to create a Workbook, define a Style with RotationAngle = 45°, enable rotation via StyleFlag, apply the style to the range A1:A5 (vertical header), populate sample text, and save the file as HeaderRotationExample.xlsx.
-// Keywords: Aspose.Cells text rotation | C# rotate text 45 degrees | StyleFlag rotation | apply style to range | vertical header style | Excel header angle | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells rotate text 45 degrees | How to apply rotated style to a range in C# | Set text rotation for column header using Aspose.Cells | Enable text rotation with StyleFlag in Aspose.Cells | Create angled header cells in Excel with Aspose
-// Developer Intent: Create a reusable style that rotates cell text 45° and apply it to a vertical header range in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Design compact tables where column headings are angled to save width. | Generate reports with visually distinct, slanted header labels. | Automate Excel exports that require rotated text for better readability.
-// AI Prompts: Generate code to change the rotation angle based on a user‑provided value in Aspose.Cells. | Show how to apply the same 45° rotation style to multiple non‑contiguous ranges in a workbook. | Explain how to combine text rotation with font styling and background color in a single Aspose.Cells style.
+// Title: Aspose.Cells .NET: Create a 45° Text Rotation Style and Apply to a Vertical Header Range (A1:A5)
+// Description: Demonstrates how to create a reusable Style with a 45‑degree RotationAngle, enable the rotation flag, define the A1:A5 header range, apply the style to that range, and save the workbook as VerticalHeaderWithRotation.xlsx using C# and Aspose.Cells.
+// Keywords: Aspose.Cells | .NET | C# | text rotation | RotationAngle | StyleFlag | apply style to range | vertical header | Excel export | A1:A5
+// Common Searches: Aspose.Cells rotate text 45 degrees | apply rotation style to a range Aspose.Cells .NET | set text orientation for column header in Aspose.Cells | how to use StyleFlag for rotation in C# | create rotated header cells with Aspose.Cells
+// Developer Intent: Create a 45° text‑rotation style and apply it to the vertical header range A1:A5 in an Aspose.Cells workbook.
+// Use Cases: Design reports where column headers are tilted to save horizontal space. | Export spreadsheets with vertically oriented titles for narrow columns while preserving other formatting. | Reuse a single rotation style across multiple header ranges in large workbooks.
+// AI Prompts: Generate a method that accepts any cell range and applies a 45° rotation style using Aspose.Cells. | Show code to let users specify the rotation angle at runtime while keeping existing style attributes intact. | Explain how to combine text rotation with font, border, and background styles when applying to a range in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsStyleRotationExample
 {
-    // This example shows how to create a Workbook, define a Style with RotationAngle = 45°, enable rotation via StyleFlag, apply the style to the range A1:A5 (vertical header), populate sample text, and save the file as HeaderRotationExample.xlsx.
+    // Demonstrates how to create a reusable Style with a 45‑degree RotationAngle, enable the rotation flag, define the A1:A5 header range, apply the style to that range, and save the workbook as VerticalHeaderWithRotation.xlsx using C# and Aspose.Cells.
     class Program
     {
         static void Main(string[] args)
@@ -26,24 +26,19 @@ namespace AsposeCellsStyleRotationExample
                 Style rotationStyle = workbook.CreateStyle();
                 rotationStyle.RotationAngle = 45;
 
-                // Enable the rotation setting using a style flag
+                // Enable the rotation setting via a style flag
                 StyleFlag styleFlag = new StyleFlag();
                 styleFlag.Rotation = true;
 
-                // Define the vertical header range (e.g., cells A1 to A5)
+                // Define the vertical header range (first column, rows 1 to 5)
+                // Use fully qualified type to avoid conflict with System.Range
                 Aspose.Cells.Range headerRange = worksheet.Cells.CreateRange("A1:A5");
 
                 // Apply the style with the rotation flag to the range
                 headerRange.ApplyStyle(rotationStyle, styleFlag);
 
-                // Optionally put some sample text in the header cells to see the effect
-                for (int row = 0; row < 5; row++)
-                {
-                    worksheet.Cells[row, 0].PutValue($"Header {row + 1}");
-                }
-
                 // Save the workbook
-                workbook.Save("HeaderRotationExample.xlsx");
+                workbook.Save("VerticalHeaderWithRotation.xlsx");
                 Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)

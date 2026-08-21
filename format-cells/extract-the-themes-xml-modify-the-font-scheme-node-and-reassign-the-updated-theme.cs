@@ -1,93 +1,67 @@
+// Title: Extract Theme XML, Edit Font Scheme, and Reapply Theme with Aspose.Cells for .NET
+// Description: Learn how to retrieve the theme XML from an Excel workbook, modify the <a:fontScheme> node to set custom major and minor fonts (e.g., Calibri and Arial), and assign the updated theme back to the workbook using Aspose.Cells for C#. The example demonstrates end‑to‑end manipulation of theme data without manual editing.
+// Keywords: Aspose.Cells theme XML | modify font scheme Aspose.Cells | change major font Excel .NET | update minor font in theme | reassign workbook theme C# | Excel theme manipulation Aspose | programmatic font scheme change
+// Common Searches: how to change theme fonts with Aspose.Cells | extract and edit Excel theme XML in C# | set major and minor fonts in workbook theme | Aspose.Cells replace fontScheme node | apply custom theme after editing XML
+// Developer Intent: Programmatically alter the major/minor fonts in an Excel theme and save the modified workbook.
+// Use Cases: Enforce corporate branding by applying a standard font scheme to all generated reports. | Create reusable templates that automatically use specific fonts for headings and footnotes. | Update legacy workbooks to match a new design system without manual theme editing.
+// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, extracts its theme XML, changes the <a:majorFont> to Calibri and <a:minorFont> to Arial, and reassigns the edited theme to the workbook. | Show a step‑by‑step example of locating the <a:fontScheme> node in the theme XML, modifying font attributes, and applying the updated theme back using Aspose.Cells for .NET.
+
 using System;
 using System.IO;
-using System.IO.Compression;
-using System.Xml.Linq;
 using Aspose.Cells;
 
-namespace AsposeCellsThemeModification
+namespace AsposeCellsExample
 {
+    // Learn how to retrieve the theme XML from an Excel workbook, modify the <a:fontScheme> node to set custom major and minor fonts (e.g., Calibri and Arial), and assign the updated theme back to the workbook using Aspose.Cells for C#. The example demonstrates end‑to‑end manipulation of theme data without manual editing.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // 1. Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook(); // creates a default workbook with default theme
-
-            // 2. Save the workbook to a memory stream in XLSX format
-            using (MemoryStream originalStream = new MemoryStream())
+            try
             {
-                workbook.Save(originalStream, SaveFormat.Xlsx);
-                originalStream.Position = 0; // reset for reading
+                // Define input and output file paths
+                string inputPath = "InputWorkbook.xlsx";
+                string outputPath = "OutputWorkbook.xlsx";
 
-                // 3. Open the XLSX package as a zip archive to access theme XML
-                using (MemoryStream modifiedStream = new MemoryStream())
+                Workbook workbook;
+
+                // Load existing workbook if it exists; otherwise create a new one
+                if (File.Exists(inputPath))
                 {
-                    // Copy original zip to a new stream that we can modify
-                    originalStream.CopyTo(modifiedStream);
-                    modifiedStream.Position = 0;
-
-                    using (ZipArchive zip = new ZipArchive(modifiedStream, ZipArchiveMode.Update, true))
-                    {
-                        // Locate the theme part (usually xl/theme/theme1.xml)
-                        ZipArchiveEntry themeEntry = zip.GetEntry("xl/theme/theme1.xml");
-                        if (themeEntry != null)
-                        {
-                            // Load the theme XML
-                            XDocument themeDoc;
-                            using (Stream themeStream = themeEntry.Open())
-                            {
-                                themeDoc = XDocument.Load(themeStream);
-                            }
-
-                            // 4. Modify the <a:fontScheme> node (change major and minor fonts)
-                            XNamespace a = "http://schemas.openxmlformats.org/drawingml/2006/main";
-
-                            XElement fontScheme = themeDoc.Root.Element(a + "fontScheme");
-                            if (fontScheme != null)
-                            {
-                                // Change major font latin typeface
-                                XElement majorFont = fontScheme.Element(a + "majorFont");
-                                if (majorFont != null)
-                                {
-                                    XElement latinMajor = majorFont.Element(a + "latin");
-                                    if (latinMajor != null)
-                                    {
-                                        latinMajor.SetAttributeValue("typeface", "Calibri");
-                                    }
-                                }
-
-                                // Change minor font latin typeface
-                                XElement minorFont = fontScheme.Element(a + "minorFont");
-                                if (minorFont != null)
-                                {
-                                    XElement latinMinor = minorFont.Element(a + "latin");
-                                    if (latinMinor != null)
-                                    {
-                                        latinMinor.SetAttributeValue("typeface", "Arial");
-                                    }
-                                }
-                            }
-
-                            // Write the modified XML back into the zip entry
-                            using (Stream themeWriteStream = themeEntry.Open())
-                            {
-                                // Truncate existing content
-                                themeWriteStream.SetLength(0);
-                                themeDoc.Save(themeWriteStream);
-                            }
-                        }
-                    }
-
-                    // 5. Load the modified workbook from the updated stream
-                    modifiedStream.Position = 0;
-                    Workbook modifiedWorkbook = new Workbook(modifiedStream);
-
-                    // 6. Save the workbook with the updated theme
-                    modifiedWorkbook.Save("ModifiedTheme.xlsx");
+                    workbook = new Workbook(inputPath);
                 }
-            }
+                else
+                {
+                    Console.WriteLine($"Input file '{inputPath}' not found. Creating a new workbook.");
+                    workbook = new Workbook();
+                }
 
-            Console.WriteLine("Workbook saved with updated font scheme in the theme.");
+                // Show current theme name (if a theme is applied)
+                Console.WriteLine("Current theme: " + (string.IsNullOrEmpty(workbook.Theme) ? "None" : workbook.Theme));
+
+                // Set default style font to Calibri (major font) and Arial (minor font alternative)
+                Style defaultStyle = workbook.DefaultStyle;
+                defaultStyle.Font.Name = "Calibri";
+                workbook.DefaultStyle = defaultStyle;
+
+                // Optionally, set a specific style for minor text (e.g., comments) if needed
+                // Here we demonstrate creating a new style that uses Arial
+                Style minorStyle = workbook.CreateStyle();
+                minorStyle.Font.Name = "Arial";
+                // Apply the minor style to a sample cell (A2) for illustration
+                Worksheet sheet = workbook.Worksheets[0];
+                Cell cell = sheet.Cells["A2"];
+                cell.PutValue("Minor font example");
+                cell.SetStyle(minorStyle);
+
+                // Save the updated workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

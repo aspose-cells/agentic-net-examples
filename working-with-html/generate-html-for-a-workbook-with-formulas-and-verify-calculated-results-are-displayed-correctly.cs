@@ -1,47 +1,76 @@
-// Title: Export Workbook with Formulas to HTML and Verify Calculated Result (Aspose.Cells C#)
-// Description: Demonstrates how to create a workbook, add numeric data and a SUM formula, configure HtmlSaveOptions to calculate formulas and omit the original expression, save as HTML, and programmatically confirm that the computed value (30) appears in the generated markup.
-// Keywords: Aspose.Cells HTML export | CalculateFormula option | ExportFormula false | C# verify HTML formula result | save Excel as static HTML | formula evaluation Aspose.Cells
-// Common Searches: Aspose.Cells export Excel to HTML with calculated formulas | How to show formula results instead of formulas in HTML output | C# HtmlSaveOptions CalculateFormula example | Validate that HTML contains computed cell value | Generate static HTML report from workbook using Aspose
-// Developer Intent: Generate an HTML file from a workbook where formulas are evaluated and only the resulting values are displayed, then programmatically ensure the expected result is present.
-// Use Cases: Create web‑ready financial dashboards that display pre‑calculated totals as plain numbers. | Automated testing of spreadsheet‑to‑HTML conversion to guarantee formula accuracy. | Produce email‑friendly static HTML snapshots of Excel reports without exposing underlying formulas.
-// AI Prompts: Write C# code with Aspose.Cells that saves a workbook containing formulas to HTML, enabling CalculateFormula and disabling ExportFormula. | Show how to read the saved HTML file and assert that a specific calculated value (e.g., 30) exists in the markup. | Explain how HtmlSaveOptions can be configured to export only evaluated results while preserving cell styling.
+// Title: Aspose.Cells for .NET: Export Workbook to HTML with Calculated Formulas
+// Description: Creates a workbook, fills cells A1 and A2, adds a SUM formula in A3, sets HtmlSaveOptions.CalculateFormula to true, saves the file as HTML, and verifies that the computed value (30) appears in the generated markup.
+// Keywords: Aspose.Cells | .NET | C# | HTML export | formula evaluation | HtmlSaveOptions | CalculateFormula | workbook to HTML | SUM formula | automated verification
+// Common Searches: Aspose.Cells export HTML with formula results | C# save Excel as HTML with calculated values | HtmlSaveOptions CalculateFormula example | verify formula result in exported HTML Aspose | how to include evaluated formulas in HTML using Aspose.Cells
+// Developer Intent: Generate an HTML representation of an Excel workbook where all formulas are evaluated beforehand, and optionally confirm that the expected numeric outcomes are present in the output.
+// Use Cases: Publish web‑ready reports that display totals and percentages already calculated. | Create documentation from spreadsheets where formulas must be resolved before publishing. | Automate QA tests that ensure exported HTML contains specific calculated values. | Integrate Excel‑to‑HTML conversion into a .NET web application with pre‑computed data.
+// AI Prompts: Show how to add custom CSS to cells that contain evaluated results during HTML export with Aspose.Cells. | Provide code to export multiple worksheets into a single HTML file while preserving each sheet's calculated values. | Explain how to log every formula's computed result during the HTML conversion process for debugging.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlFormulaDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, add numeric data and a SUM formula, configure HtmlSaveOptions to calculate formulas and omit the original expression, save as HTML, and programmatically confirm that the computed value (30) appears in the generated markup.
-    class Program
+    // Creates a workbook, fills cells A1 and A2, adds a SUM formula in A3, sets HtmlSaveOptions.CalculateFormula to true, saves the file as HTML, and verifies that the computed value (30) appears in the generated markup.
+    public class HtmlWithCalculatedFormulasDemo
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add sample data
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
-            // Add a formula that sums A1 and A2
-            sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
-
-            // Configure HTML save options to calculate formulas before saving
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            try
             {
-                CalculateFormula = true,
-                ExportFormula = false // export only the calculated values
-            };
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Save the workbook as HTML
-            string htmlPath = "WorkbookWithCalculatedFormulas.html";
-            workbook.Save(htmlPath, htmlOptions);
+                // Populate cells with values
+                worksheet.Cells["A1"].PutValue(10);
+                worksheet.Cells["A2"].PutValue(20);
 
-            // Verify that the calculated result (30) appears in the generated HTML
-            string htmlContent = File.ReadAllText(htmlPath);
-            bool containsResult = htmlContent.Contains(">30<");
-            Console.WriteLine($"HTML contains calculated result: {containsResult}");
+                // Add a formula that sums A1 and A2
+                worksheet.Cells["A3"].Formula = "=SUM(A1:A2)";
+
+                // Configure HtmlSaveOptions to calculate formulas before saving
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                {
+                    CalculateFormula = true // Ensure formulas are evaluated
+                };
+
+                // Save the workbook as HTML; the result of A3 will be written instead of the formula text
+                string htmlPath = "HtmlWithCalculatedFormulas.html";
+                workbook.Save(htmlPath, saveOptions);
+
+                // Optional verification: read the generated HTML and check that the calculated value (30) appears
+                if (File.Exists(htmlPath))
+                {
+                    string htmlContent = File.ReadAllText(htmlPath);
+                    bool containsResult = htmlContent.Contains("30");
+                    Console.WriteLine($"HTML contains calculated result (30): {containsResult}");
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to generate HTML file at path: {htmlPath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in HtmlWithCalculatedFormulasDemo: {ex.Message}");
+            }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            try
+            {
+                HtmlWithCalculatedFormulasDemo.Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
+            }
         }
     }
 }

@@ -1,39 +1,46 @@
 // Title: Export Excel to HTML with Exact Column Widths using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, optionally sets column widths, configures HtmlSaveOptions (WidthScalable = false, FormatDataIgnoreColumnWidth = false) and saves the file as HTML where each column is rendered with a fixed pixel width via CSS.
-// Keywords: Aspose.Cells | C# | .NET | Excel to HTML | preserve column width | HtmlSaveOptions | WidthScalable false | FormatDataIgnoreColumnWidth | CSS width export
-// Common Searches: Aspose.Cells keep column width when exporting to HTML | HTML export with fixed column sizes using Aspose.Cells .NET | How to retain Excel column widths in generated HTML | Aspose.Cells HtmlSaveOptions column width settings
-// Developer Intent: Generate an HTML representation of an Excel workbook that maintains the original column widths using CSS width attributes.
-// Use Cases: Create web‑ready reports that mirror the layout of the source spreadsheet. | Provide an accurate HTML preview of Excel data in a web application. | Produce email‑compatible HTML tables where column dimensions must stay consistent.
-// AI Prompts: Show how to export column widths as percentages instead of pixels with Aspose.Cells. | Give a code sample that writes the HTML to a MemoryStream and returns it from an ASP.NET Core controller while preserving widths. | Explain how to attach a custom CSS class to the generated table without affecting column‑width preservation.
+// Description: Demonstrates how to save a workbook as HTML while preserving the original column widths. The example sets column widths in characters, configures HtmlSaveOptions (FormatDataIgnoreColumnWidth = false, WidthScalable = false), and generates CSS width rules that match the Excel layout.
+// Keywords: Aspose.Cells HTML export | C# Excel to HTML | preserve column width | Css width from Excel | HtmlSaveOptions FormatDataIgnoreColumnWidth | WidthScalable false | fixed pixel column size | .NET spreadsheet conversion | Excel column width CSS | export workbook as HTML
+// Common Searches: Aspose.Cells keep column widths when exporting to HTML | C# export Excel to HTML with fixed column sizes | HtmlSaveOptions column width settings | How to generate CSS width for Excel columns using Aspose | Export Excel worksheet to HTML preserving layout
+// Developer Intent: Export an Excel worksheet to HTML and retain the exact column widths through CSS styling.
+// Use Cases: Create web‑ready reports that mirror the spreadsheet’s column layout. | Build dashboards where table columns must stay aligned across browsers. | Convert Excel templates into static HTML pages for newsletters or documentation while keeping the original column dimensions.
+// AI Prompts: Show how to output column widths as percentage values instead of fixed pixels with Aspose.Cells. | Add a custom CSS class to the generated HTML table while preserving column widths. | Export multiple worksheets to separate HTML files, each maintaining its own column width settings.
 
 using System;
 using Aspose.Cells;
 
-// Loads an Excel workbook, optionally sets column widths, configures HtmlSaveOptions (WidthScalable = false, FormatDataIgnoreColumnWidth = false) and saves the file as HTML where each column is rendered with a fixed pixel width via CSS.
-class Program
+namespace ExportExcelToHtmlWithColumnWidths
 {
-    static void Main()
+    // Demonstrates how to save a workbook as HTML while preserving the original column widths. The example sets column widths in characters, configures HtmlSaveOptions (FormatDataIgnoreColumnWidth = false, WidthScalable = false), and generates CSS width rules that match the Excel layout.
+    class Program
     {
-        // Load an existing Excel workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main()
+        {
+            // Load an existing workbook (replace with your file path) or create a new one.
+            Workbook workbook = new Workbook(); // new workbook
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Example: set custom column widths to demonstrate preservation
-        // (optional – remove if widths are already defined in the source file)
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells.SetColumnWidth(0, 20); // Column A width
-        sheet.Cells.SetColumnWidth(1, 30); // Column B width
+            // Populate sample data.
+            sheet.Cells["A1"].PutValue("Short");
+            sheet.Cells["B1"].PutValue("A much longer text that should respect column width");
+            sheet.Cells["C1"].PutValue(12345);
 
-        // Configure HTML save options to keep original column widths
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // Set column widths (in characters). These widths will be exported as CSS width properties.
+            sheet.Cells.SetColumnWidth(0, 12); // Column A
+            sheet.Cells.SetColumnWidth(1, 30); // Column B
+            sheet.Cells.SetColumnWidth(2, 15); // Column C
 
-        // Export column widths as fixed pixel values (CSS width) – default behavior,
-        // but set explicitly for clarity.
-        htmlOptions.WidthScalable = false;
+            // Configure HTML save options.
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-        // Ensure cell content respects column width (do not ignore it).
-        htmlOptions.FormatDataIgnoreColumnWidth = false;
+            // Ensure column widths are not ignored (default is false, set explicitly for clarity).
+            htmlOptions.FormatDataIgnoreColumnWidth = false;
 
-        // Save the workbook as an HTML file with the above options.
-        workbook.Save("output.html", htmlOptions);
+            // Export column widths as fixed pixel values (not scalable). This keeps the original widths.
+            htmlOptions.WidthScalable = false;
+
+            // Save the workbook as HTML. The generated HTML will contain CSS rules that preserve the column widths.
+            workbook.Save("ExportedWithColumnWidths.html", htmlOptions);
+        }
     }
 }

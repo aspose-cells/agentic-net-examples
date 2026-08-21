@@ -1,60 +1,61 @@
-// Title: CopyStyle Preserves Currency Number Format in Aspose.Cells for .NET
-// Description: Demonstrates how to apply a built‑in currency style (Number = 5) to a source range, copy the style with CopyStyle to another range, and retain the $ symbol and formatting after inserting values, using Aspose.Cells C# API.
-// Keywords: Aspose.Cells | CopyStyle | currency number format | preserve number format | C# Excel library | built‑in number format | Excel range style copy | financial report automation | .NET Excel export
-// Common Searches: Aspose.Cells CopyStyle keep currency symbol | CopyStyle retain number format .NET | how to copy built‑in number format with Aspose.Cells | C# copy Excel style including currency | preserve formatting when copying ranges Aspose
-// Developer Intent: Copy a style from one cell range to another so the destination cells keep the exact currency number format applied to the source.
-// Use Cases: Generate financial statements where calculated cells must display the same currency format as template cells. | Clone a formatted template block to a new area for dynamic data insertion while preserving monetary symbols. | Apply consistent number formatting across multiple worksheets in a multi‑sheet workbook.
-// AI Prompts: Show how to use Aspose.Cells CopyStyle in C# to copy a built‑in currency format from range A1:B2 to C1:D2 and verify the $ symbol appears on the new cells. | Provide a C# example that copies styles, including number formats, across worksheets and saves the workbook with Aspose.Cells. | Explain why setting IsNumberFormatApplied = true is required when copying number formats with CopyStyle.
+// Title: CopyStyle Preserves Currency Number Format in Aspose.Cells for .NET (C#)
+// Description: This example demonstrates how to create a built‑in currency style in a source worksheet, apply it to a range, and then copy the style to a destination range using Aspose.Cells CopyStyle. The destination cells retain the currency symbols and number formatting after values are written, making it ideal for financial Excel reports.
+// Keywords: Aspose.Cells | CopyStyle | currency number format | C# | .NET | Excel style copy | preserve number format | financial report generation | range styling
+// Common Searches: Aspose.Cells copy style with currency format | CopyStyle retain number format C# | How to copy built‑in number format using Aspose.Cells | C# copy Excel cell style preserving currency symbols | Aspose.Cells range style inheritance
+// Developer Intent: Copy a source range’s style so that the destination range keeps the same currency number format.
+// Use Cases: Generating multi‑sheet financial statements where currency formatting must stay consistent. | Duplicating styled templates for invoices or budgets across worksheets. | Automating Excel exports that require exact replication of number formats such as currency, percentages, or dates.
+// AI Prompts: Show me a C# Aspose.Cells example that copies a currency number format from one range to another using CopyStyle. | Explain how CopyStyle preserves built‑in number formats like currency when transferring styles between worksheets. | Provide code that verifies the currency symbols remain after copying styles with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells; // Ensure Aspose.Cells namespace is available
-using System.Drawing;
 
-// Demonstrates how to apply a built‑in currency style (Number = 5) to a source range, copy the style with CopyStyle to another range, and retain the $ symbol and formatting after inserting values, using Aspose.Cells C# API.
-class CopyStyleNumberFormatDemo
+// This example demonstrates how to create a built‑in currency style in a source worksheet, apply it to a range, and then copy the style to a destination range using Aspose.Cells CopyStyle. The destination cells retain the currency symbols and number formatting after values are written, making it ideal for financial Excel reports.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // Fill the source range with sample numeric values
-            sheet.Cells["A1"].PutValue(1234.56);
-            sheet.Cells["A2"].PutValue(7890.12);
-            sheet.Cells["B1"].PutValue(345.67);
-            sheet.Cells["B2"].PutValue(890.23);
+            // ---------- Source worksheet ----------
+            Worksheet srcSheet = workbook.Worksheets[0];
+            srcSheet.Name = "Source";
 
-            // Create a style that uses a built‑in currency format (includes the $ symbol)
+            // Create a style with a built‑in currency number format
             Style currencyStyle = workbook.CreateStyle();
             currencyStyle.Number = 5;                     // Built‑in currency format
-            currencyStyle.IsNumberFormatApplied = true;  // Ensure the number format is applied
+            currencyStyle.IsNumberFormatApplied = true;  // Ensure the format is applied
 
-            // Apply the currency style to the source range A1:B2
-            Aspose.Cells.Range srcRange = sheet.Cells.CreateRange("A1:B2");
+            // Apply the style to a source range and put numeric values
+            Aspose.Cells.Range srcRange = srcSheet.Cells.CreateRange("A1:A3");
             srcRange.SetStyle(currencyStyle);
+            srcRange[0, 0].PutValue(1234.56);
+            srcRange[1, 0].PutValue(7890);
+            srcRange[2, 0].PutValue(-45.67);
 
-            // Define the destination range C1:D2
-            Aspose.Cells.Range destRange = sheet.Cells.CreateRange("C1:D2");
+            // ---------- Destination worksheet ----------
+            Worksheet destSheet = workbook.Worksheets[workbook.Worksheets.Add()];
+            destSheet.Name = "Destination";
 
-            // Copy the style (including number format) from the source range to the destination range
+            // Create a destination range of the same size
+            Aspose.Cells.Range destRange = destSheet.Cells.CreateRange("B1:B3");
+
+            // Copy the style (including number format) from the source range
             destRange.CopyStyle(srcRange);
 
-            // Populate the destination range with values to verify the formatting is retained
-            sheet.Cells["C1"].PutValue(5555.55);
-            sheet.Cells["C2"].PutValue(6666.66);
-            sheet.Cells["D1"].PutValue(7777.77);
-            sheet.Cells["D2"].PutValue(8888.88);
+            // Put the same numeric values to verify the currency formatting is retained
+            destRange[0, 0].PutValue(1234.56);
+            destRange[1, 0].PutValue(7890);
+            destRange[2, 0].PutValue(-45.67);
 
             // Save the workbook
-            workbook.Save("CopyStyleNumberFormatDemo.xlsx");
+            workbook.Save("CopyStyleCurrencyDemo.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

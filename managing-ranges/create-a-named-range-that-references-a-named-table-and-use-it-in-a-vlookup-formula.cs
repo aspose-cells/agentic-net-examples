@@ -1,85 +1,73 @@
-// Title: Aspose.Cells for .NET (C#): Create a Named Range from a ListObject Table and Use It in a VLOOKUP Formula
-// Description: This C# example shows how to build a workbook, add a ListObject table, define a workbook‑level named range that points to the table, apply the named range in a VLOOKUP formula, calculate the result, and save the file.
-// Keywords: Aspose.Cells | C# | named range | ListObject | Excel table | VLOOKUP formula | reference table in formula | Workbook.CalculateFormula | Aspose.Cells example | GitHub demo | Excel automation
-// Common Searches: Aspose.Cells create named range from table C# | C# VLOOKUP using named range Aspose.Cells | How to reference a ListObject in a VLOOKUP with Aspose.Cells | Aspose.Cells named range example for formulas | C# Excel automation VLOOKUP named range
-// Developer Intent: Define a named range that references a ListObject table and use that range in a VLOOKUP formula with Aspose.Cells for .NET.
-// Use Cases: Expose a product‑price table via a named range so multiple worksheets can perform price lookups without duplicating data. | Maintain a single source of truth: updating the ListObject automatically refreshes all VLOOKUP results that use the named range. | Create reusable formula components for templates that require dynamic table references across workbooks.
-// AI Prompts: Generate C# code using Aspose.Cells to add a ListObject table, create a workbook‑level named range that points to the table, and write a VLOOKUP formula referencing that named range. | Show how to set the RefersTo property of a workbook name to a ListObject name and evaluate the VLOOKUP result with Workbook.CalculateFormula(). | Provide a sample that reuses a named range referencing a table in VLOOKUP formulas on different worksheets in an Aspose.Cells workbook.
+// Title: Aspose.Cells .NET – Define a Named Range from a ListObject and Apply VLOOKUP (C#)
+// Description: This C# example demonstrates how to create a workbook, add a ListObject (table) named "ProductsTable", define a workbook‑level named range "ProductRange" that points to the table, insert a VLOOKUP formula using the named range to retrieve the price of "Orange", calculate the formula, output the result, and save the file as an .xlsx document.
+// Keywords: Aspose.Cells | C# | .NET | named range | ListObject | table reference | VLOOKUP formula | formula calculation | workbook save | Excel automation
+// Common Searches: Aspose.Cells create named range from table | C# VLOOKUP using named range Aspose.Cells | How to reference ListObject in a name Aspose.Cells | Calculate formulas after VLOOKUP Aspose.Cells .NET | Sample code for named range and VLOOKUP in Aspose.Cells
+// Developer Intent: Define a named range that points to a table and use it in a VLOOKUP formula with Aspose.Cells for .NET.
+// Use Cases: Create a ListObject, assign a display name, and expose it through a workbook‑level name for cleaner formulas. | Apply VLOOKUP with the named range as the table array to look up values without hard‑coding cell addresses. | Force formula evaluation programmatically and persist the result in the saved workbook.
+// AI Prompts: Write C# code using Aspose.Cells to add a table, create a named range that references the table, and set a VLOOKUP formula that uses the name. | Explain how to retrieve the actual cell address of a named range that points to a ListObject and how to trigger formula calculation. | Provide step‑by‑step instructions to rename a ListObject, create a workbook‑level name, and reuse that name in multiple worksheets.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables; // Required for ListObject
 
-namespace AsposeCellsNamedRangeVLookupDemo
+namespace AsposeCellsNamedRangeVLookup
 {
-    // This C# example shows how to build a workbook, add a ListObject table, define a workbook‑level named range that points to the table, apply the named range in a VLOOKUP formula, calculate the result, and save the file.
-    class Program
+    // This C# example demonstrates how to create a workbook, add a ListObject (table) named "ProductsTable", define a workbook‑level named range "ProductRange" that points to the table, insert a VLOOKUP formula using the named range to retrieve the price of "Orange", calculate the formula, output the result, and save the file as an .xlsx document.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                // ---------- Create a new workbook ----------
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-
-                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "Data";
 
-                // Populate sample data for a table (Product, Price)
-                sheet.Cells["A1"].PutValue("Product");
+                // Populate sample data for a table (header + 3 rows)
+                // A1:B1 – headers, A2:B4 – data
+                sheet.Cells["A1"].PutValue("Item");
                 sheet.Cells["B1"].PutValue("Price");
                 sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["B2"].PutValue(1.20);
-                sheet.Cells["A3"].PutValue("Banana");
-                sheet.Cells["B3"].PutValue(0.80);
-                sheet.Cells["A4"].PutValue("Cherry");
-                sheet.Cells["B4"].PutValue(2.50);
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["A3"].PutValue("Orange");
+                sheet.Cells["B3"].PutValue(15);
+                sheet.Cells["A4"].PutValue("Banana");
+                sheet.Cells["B4"].PutValue(8);
 
-                // ---------- Create a table (ListObject) ----------
-                // The table will cover A1:B4 (zero‑based indices)
-                int firstRow = 0;
-                int firstCol = 0;
-                int totalRows = 4;
-                int totalCols = 2;
+                // Add a ListObject (table) that covers the data range A1:B4
+                // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
+                int listObjIdx = sheet.ListObjects.Add(0, 0, 4, 2, true);
+                ListObject productsTable = sheet.ListObjects[listObjIdx];
+                // Set the table name (DisplayName is the correct property)
+                productsTable.DisplayName = "ProductsTable";
 
-                // Add returns the index of the newly created ListObject
-                int tableIndex = sheet.ListObjects.Add(
-                    firstRow,
-                    firstCol,
-                    firstRow + totalRows - 1,
-                    firstCol + totalCols - 1,
-                    true);
+                // Create a named range that refers to the table "ProductsTable"
+                int nameIdx = workbook.Worksheets.Names.Add("ProductRange");
+                Name productRangeName = workbook.Worksheets.Names[nameIdx];
+                productRangeName.RefersTo = "=ProductsTable";
 
-                // Retrieve the ListObject and set its name
-                ListObject table = sheet.ListObjects[tableIndex];
-                table.DisplayName = "ProductsTable"; // Use DisplayName (or Name if supported)
+                // Retrieve the actual range that the name points to
+                Aspose.Cells.Range actualRange = productRangeName.GetRange();
+                Console.WriteLine($"Named range 'ProductRange' refers to address: {actualRange.Address}");
 
-                // ---------- Create a named range that references the table ----------
-                // Add a new name to the workbook's name collection
-                int nameIndex = workbook.Worksheets.Names.Add("ProductsRange");
-                // Set the RefersTo property to the table name (preceded by '=')
-                workbook.Worksheets.Names[nameIndex].RefersTo = "=ProductsTable";
-
-                // ---------- Use the named range in a VLOOKUP formula ----------
-                // Example: lookup the price of "Banana"
-                sheet.Cells["D1"].PutValue("Lookup Product");
-                sheet.Cells["E1"].PutValue("Price (VLOOKUP)");
-                sheet.Cells["D2"].PutValue("Banana");
-                // VLOOKUP(lookup_value, named_range, column_index, FALSE)
-                sheet.Cells["E2"].Formula = "=VLOOKUP(D2, ProductsRange, 2, FALSE)";
+                // Use the named range in a VLOOKUP formula.
+                // Look up the price of "Orange" using the named range as the table array.
+                sheet.Cells["D2"].Formula = "=VLOOKUP(\"Orange\", ProductRange, 2, FALSE)";
 
                 // Calculate formulas so that the VLOOKUP result is evaluated
                 workbook.CalculateFormula();
 
-                // ---------- Save the workbook ----------
-                string outputPath = "NamedRangeVLookupDemo.xlsx";
+                // Output the result of the VLOOKUP to the console
+                Console.WriteLine($"VLOOKUP result for 'Orange': {sheet.Cells["D2"].Value}");
+
+                // Save the workbook (single save)
+                string outputPath = "NamedRangeVLookup.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

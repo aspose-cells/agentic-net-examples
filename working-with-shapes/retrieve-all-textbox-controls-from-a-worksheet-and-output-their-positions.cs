@@ -1,42 +1,68 @@
-// Title: Aspose.Cells C# – List all TextBox shapes with their cell coordinates
-// Description: Creates a workbook, adds sample TextBox shapes, iterates through the worksheet's TextBoxCollection, and prints each box's UpperLeftRow, UpperLeftColumn, LowerRightRow, and LowerRightColumn values. The file can be saved to verify the layout.
-// Keywords: Aspose.Cells TextBox coordinates | C# enumerate TextBox shapes | retrieve TextBox cell positions | TextBoxCollection iteration | Aspose.Cells shape properties
-// Common Searches: how to get textbox row and column indices in Aspose.Cells | list all text boxes in an Excel worksheet using .NET | Aspose.Cells get UpperLeftRow UpperLeftColumn of shapes | extract textbox coordinates from a workbook
-// Developer Intent: Obtain every TextBox object on a worksheet and output its upper‑left and lower‑right row/column indices.
-// Use Cases: Audit a spreadsheet to ensure text boxes are placed within a required area. | Generate a report that lists each text box’s exact location for documentation. | Re‑position text boxes programmatically based on their current coordinates.
-// AI Prompts: Write C# code with Aspose.Cells that moves all text boxes to start at row 1, column 1 while keeping their original size. | Create a method that returns a collection of tuples containing UpperLeftRow, UpperLeftColumn, LowerRightRow, and LowerRightColumn for every TextBox in a worksheet. | Explain how to filter a TextBoxCollection to include only boxes that intersect a specified cell range.
+// Title: C# – Retrieve All TextBox Positions from an Excel Worksheet with Aspose.Cells
+// Description: Loads an Excel workbook, accesses the first worksheet’s TextBoxCollection, iterates each TextBox, and prints its Top, Left, Height, and Width values to the console. The workbook can then be saved optionally.
+// Keywords: Aspose.Cells | C# | Excel TextBox positions | shape coordinates | retrieve textbox size | list textbox locations | worksheet shapes | .NET Excel API
+// Common Searches: Aspose.Cells get textbox coordinates | list all textbox positions in Excel using C# | how to read textbox size with Aspose.Cells | enumerate shape locations Aspose.Cells .NET | retrieve textbox top left values Aspose.Cells
+// Developer Intent: The developer wants to enumerate every TextBox shape in a worksheet and obtain its exact location and dimensions.
+// Use Cases: Generate a layout audit that records the position and size of each TextBox in a spreadsheet. | Programmatically shift TextBox shapes by calculated offsets. | Export textbox coordinates to an external system for visualization or further processing.
+// AI Prompts: Write C# code that moves each TextBox in a worksheet 10 points down using Aspose.Cells. | Create a method that returns a list of objects containing Top, Left, Height, and Width for all TextBoxes in a given worksheet. | Explain how to filter TextBox shapes by size before retrieving their positions with Aspose.Cells.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds sample TextBox shapes, iterates through the worksheet's TextBoxCollection, and prints each box's UpperLeftRow, UpperLeftColumn, LowerRightRow, and LowerRightColumn values. The file can be saved to verify the layout.
-class RetrieveTextBoxes
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads an Excel workbook, accesses the first worksheet’s TextBoxCollection, iterates each TextBox, and prints its Top, Left, Height, and Width values to the console. The workbook can then be saved optionally.
+    public class RetrieveTextBoxPositions
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // (Optional) Add sample text boxes to demonstrate retrieval
-        int tbIndex1 = worksheet.TextBoxes.Add(2, 3, 100, 200);
-        worksheet.TextBoxes[tbIndex1].Text = "Sample Box 1";
-
-        int tbIndex2 = worksheet.TextBoxes.Add(10, 5, 150, 250);
-        worksheet.TextBoxes[tbIndex2].Text = "Sample Box 2";
-
-        // Retrieve all TextBox controls from the worksheet
-        TextBoxCollection textBoxes = worksheet.TextBoxes;
-
-        // Output the position of each TextBox
-        for (int i = 0; i < textBoxes.Count; i++)
+        public static void Run()
         {
-            TextBox tb = textBoxes[i];
-            Console.WriteLine($"TextBox {i}: UpperLeftRow={tb.UpperLeftRow}, UpperLeftColumn={tb.UpperLeftColumn}, LowerRightRow={tb.LowerRightRow}, LowerRightColumn={tb.LowerRightColumn}");
-        }
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Save the workbook (optional, to verify the added text boxes)
-        workbook.Save("TextBoxesPositions.xlsx");
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Access the collection of TextBox objects
+                TextBoxCollection textBoxes = worksheet.TextBoxes;
+
+                // Iterate through all TextBoxes and output their positions
+                for (int i = 0; i < textBoxes.Count; i++)
+                {
+                    TextBox tb = textBoxes[i];
+                    Console.WriteLine($"TextBox {i}: Top={tb.Top}, Left={tb.Left}, Height={tb.Height}, Width={tb.Width}");
+                }
+
+                // Save the workbook (optional, can be the same file or a new one)
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            RetrieveTextBoxPositions.Run();
+        }
     }
 }

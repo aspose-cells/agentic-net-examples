@@ -1,46 +1,59 @@
-// Title: C# – Update the "ReportPeriod" Named Range to C5:C15 with Aspose.Cells
-// Description: This example shows how to load an Excel workbook with Aspose.Cells for .NET, locate the existing named range "ReportPeriod", determine whether it is global or sheet‑specific, change its RefersTo property to the absolute address =$C$5:$C$15 on the correct worksheet, and save the file.
-// Keywords: Aspose.Cells | C# | named range update | RefersTo | C5:C15 | global named range | sheet‑specific name | Excel automation | Workbook.Names | Excel A1 notation
-// Common Searches: Aspose.Cells change RefersTo C# | Update existing named range Aspose.Cells | Set named range to C5:C15 in .NET | Handle global vs sheet specific named ranges Aspose | C# code to modify Excel named range
-// Developer Intent: Modify the "ReportPeriod" named range so it points to cells C5:C15.
-// Use Cases: Fix a named range after inserting rows that shift the original range. | Resize a reporting period range when new data rows are added. | Align a named range with a newly created data block without recreating the workbook. | Standardize named ranges across multiple worksheets in a template.
-// AI Prompts: Generate C# code using Aspose.Cells that finds a named range, checks for its existence, and updates its RefersTo to =$C$5:$C$15, handling both global and sheet‑specific scopes. | Explain step‑by‑step how to safely change the reference of an existing named range in an Excel file with Aspose.Cells. | Create a reusable C# method that accepts a workbook path, a named range name, and a new address, then updates the range's RefersTo property accordingly.
+// Title: Aspose.Cells for .NET – Update the "ReportPeriod" named range to cells C5:C15
+// Description: Loads an existing workbook, finds the named range "ReportPeriod", sets its RefersTo property to =$SheetName!$C$5:$C$15, and saves the updated file. Includes checks for missing files and absent ranges.
+// Keywords: Aspose.Cells | C# | .NET | named range | update RefersTo | ReportPeriod | C5:C15 | Excel automation | modify named range | Aspose.Cells example
+// Common Searches: Aspose.Cells change named range reference C# | Update existing named range in Excel using Aspose.Cells | .NET set RefersTo property for a named range | How to modify named range ReportPeriod Aspose.Cells | Set named range to C5:C15 with Aspose.Cells
+// Developer Intent: Change the RefersTo address of the existing ReportPeriod named range so it covers cells C5 through C15 on its worksheet.
+// Use Cases: Adjust a reporting period range after inserting or deleting rows in the source data. | Align a template's named range with a newly calculated data block before exporting to downstream systems. | Standardize a fixed column segment for batch processing or chart data sources. | Correct a mis‑defined range in a legacy workbook without manual Excel editing.
+// AI Prompts: Show code that verifies the ReportPeriod named range now points to C5:C15 after saving. | Generate a fallback routine that creates ReportPeriod if it does not exist, then sets its reference to C5:C15. | Explain how to update a named range located on a different worksheet using Aspose.Cells for .NET.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// This example shows how to load an Excel workbook with Aspose.Cells for .NET, locate the existing named range "ReportPeriod", determine whether it is global or sheet‑specific, change its RefersTo property to the absolute address =$C$5:$C$15 on the correct worksheet, and save the file.
-class UpdateNamedRange
+namespace UpdateNamedRangeApp
 {
-    static void Main()
+    // Loads an existing workbook, finds the named range "ReportPeriod", sets its RefersTo property to =$SheetName!$C$5:$C$15, and saves the updated file. Includes checks for missing files and absent ranges.
+    class UpdateNamedRange
     {
-        // Load the existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Retrieve the named range "ReportPeriod"
-        // The Names collection can be accessed by name directly
-        Name reportPeriod = workbook.Worksheets.Names["ReportPeriod"];
-
-        // Ensure the named range exists
-        if (reportPeriod == null)
+        static void Main()
         {
-            Console.WriteLine("Named range 'ReportPeriod' not found.");
-            return;
+            try
+            {
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet (assumes the named range is on this sheet)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Retrieve the existing named range "ReportPeriod"
+                Name reportPeriod = workbook.Worksheets.Names["ReportPeriod"];
+                if (reportPeriod == null)
+                {
+                    Console.WriteLine("Named range 'ReportPeriod' not found.");
+                    return;
+                }
+
+                // Update the reference to span cells C5:C15 on the same worksheet
+                reportPeriod.RefersTo = $"={sheet.Name}!$C$5:$C$15";
+
+                // Save the workbook with the updated named range
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-
-        // Determine the worksheet the name belongs to.
-        // If SheetIndex == 0 the name is global; otherwise it refers to a specific sheet (1‑based index).
-        Worksheet targetSheet = reportPeriod.SheetIndex == 0
-            ? workbook.Worksheets[0]                     // default to first sheet for global names
-            : workbook.Worksheets[reportPeriod.SheetIndex - 1];
-
-        // Update the reference to span cells C5:C15 on the target worksheet
-        // RefersTo must start with an equal sign and use absolute A1 notation.
-        reportPeriod.RefersTo = $"={targetSheet.Name}!$C$5:$C$15";
-
-        // Save the modified workbook (replace with desired output path)
-        workbook.Save("output.xlsx");
-
-        Console.WriteLine("Named range 'ReportPeriod' updated successfully.");
     }
 }

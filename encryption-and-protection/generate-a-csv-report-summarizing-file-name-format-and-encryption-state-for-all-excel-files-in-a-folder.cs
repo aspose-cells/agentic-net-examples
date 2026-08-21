@@ -1,61 +1,74 @@
-// Title: C# – Generate CSV report of Excel file names, formats and encryption status with Aspose.Cells
-// Description: A console utility that scans a given directory, uses Aspose.Cells FileFormatUtil.DetectFileFormat to identify each workbook’s format (XLS, XLSX, CSV, etc.) and encryption flag, then writes a CSV file (FileName,Format,IsEncrypted) to the same folder. Includes basic folder validation and exception handling.
-// Keywords: Aspose.Cells detect file format | C# Excel encryption status | CSV inventory of Excel files | FileFormatUtil IsEncrypted | list Excel workbooks folder | bulk Excel file audit | Aspose.Cells .NET example
-// Common Searches: how to list Excel files with format and password protection in C# | generate CSV report of Excel workbook types using Aspose.Cells | C# code to check if Excel files are encrypted | Aspose.Cells detect encryption and export to CSV
-// Developer Intent: Create a CSV file that enumerates every Excel workbook in a folder, showing its detected format and whether it is encrypted.
-// Use Cases: Perform a quick audit of a shared drive to locate password‑protected workbooks before batch processing. | Maintain a compliance inventory that records file type and protection status for all Excel files in a department folder. | Schedule an automated nightly job that updates a CSV summary of newly added or modified Excel files with their encryption flags.
-// AI Prompts: Write a C# method that iterates through all files in a folder, uses Aspose.Cells FileFormatUtil.DetectFileFormat to obtain FileFormatType and IsEncrypted, and writes the results to a CSV report. | Add robust error handling to the CSV generation code so that unreadable files are logged and processing continues with the remaining files. | Modify the sample to filter only Excel extensions (xls, xlsx, xlsm, xlsb) before calling DetectFileFormat, and include a command‑line argument for the output CSV path.
+// Title: C# – Generate CSV Report of Excel Files with Format and Encryption Status using Aspose.Cells
+// Description: A console app that scans a directory, uses Aspose.Cells FileFormatUtil.DetectFileFormat to determine each workbook’s type (XLS, XLSX, CSV, etc.) and whether it is password‑protected, then writes a CSV file containing the file name, detected format, and encryption flag.
+// Keywords: Aspose.Cells C# | FileFormatUtil DetectFileFormat | IsEncrypted Excel | CSV inventory of Excel files | .NET Excel file detection | list encrypted workbooks | batch Excel format audit | password‑protected Excel detection | Excel folder scan C# | Aspose.Cells file format report
+// Common Searches: C# Aspose.Cells detect Excel file format | How to list encrypted Excel files in a folder | Generate CSV inventory of workbooks using Aspose.Cells | FileFormatUtil IsEncrypted example C# | Batch scan Excel files for protection status .NET
+// Developer Intent: Create a CSV inventory that enumerates every Excel file in a specified folder, showing its detected format and whether the file is encrypted.
+// Use Cases: Perform a compliance audit of shared drives by cataloguing workbook types and identifying password‑protected files before migration. | Generate a quick inventory of XLS/XLSX/CSV files for reporting or licensing purposes. | Detect encrypted workbooks so that a downstream process can request passwords or skip protected files.
+// AI Prompts: Write C# code that scans a directory, uses Aspose.Cells FileFormatUtil to detect format and encryption, and outputs a CSV report. | Add columns for file size and last‑modified date to the generated CSV. | Implement detailed error logging that records files causing detection exceptions while continuing the scan.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A console utility that scans a given directory, uses Aspose.Cells FileFormatUtil.DetectFileFormat to identify each workbook’s format (XLS, XLSX, CSV, etc.) and encryption flag, then writes a CSV file (FileName,Format,IsEncrypted) to the same folder. Includes basic folder validation and exception handling.
-class ExcelFolderReport
+namespace ExcelFolderReportApp
 {
-    static void Main()
+    // A console app that scans a directory, uses Aspose.Cells FileFormatUtil.DetectFileFormat to determine each workbook’s type (XLS, XLSX, CSV, etc.) and whether it is password‑protected, then writes a CSV file containing the file name, detected format, and encryption flag.
+    class ExcelFolderReport
     {
-        try
+        static void Main()
         {
-            // Folder containing the Excel files
-            string folderPath = @"C:\Path\To\ExcelFolder";
-
-            // Verify that the folder exists
-            if (!Directory.Exists(folderPath))
+            try
             {
-                Console.WriteLine($"The folder \"{folderPath}\" does not exist.");
-                return;
-            }
+                // Specify the folder containing Excel files
+                string folderPath = @"C:\Path\To\ExcelFolder";
 
-            // Output CSV report file
-            string reportPath = Path.Combine(folderPath, "ExcelFilesReport.csv");
-
-            // Create or overwrite the report file
-            using (var writer = new StreamWriter(reportPath, false))
-            {
-                // Write CSV header
-                writer.WriteLine("FileName,Format,IsEncrypted");
-
-                // Iterate through all files in the folder
-                foreach (string filePath in Directory.GetFiles(folderPath))
+                // Verify that the source folder exists
+                if (!Directory.Exists(folderPath))
                 {
-                    // Detect file format and encryption state
-                    FileFormatInfo info = FileFormatUtil.DetectFileFormat(filePath);
-
-                    // Prepare CSV line
-                    string fileName = Path.GetFileName(filePath);
-                    string format = info.FileFormatType.ToString();
-                    string encrypted = info.IsEncrypted.ToString();
-
-                    writer.WriteLine($"{fileName},{format},{encrypted}");
+                    Console.WriteLine($"The folder \"{folderPath}\" does not exist.");
+                    return;
                 }
-            }
 
-            Console.WriteLine($"Report generated at: {reportPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Path for the generated CSV report
+                string reportPath = Path.Combine(folderPath, "ExcelFilesReport.csv");
+
+                // Ensure the directory for the report exists (it will, because it's the same folder)
+                // Create the StreamWriter for the CSV file
+                using (StreamWriter writer = new StreamWriter(reportPath, false))
+                {
+                    // Write CSV header
+                    writer.WriteLine("FileName,Format,IsEncrypted");
+
+                    // Iterate through all files in the folder
+                    foreach (string filePath in Directory.GetFiles(folderPath))
+                    {
+                        // Skip if the file is not accessible
+                        if (!File.Exists(filePath))
+                            continue;
+
+                        // Detect file format information
+                        FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
+
+                        // Skip files that cannot be recognized
+                        if (formatInfo.FileFormatType == FileFormatType.Unknown)
+                            continue;
+
+                        // Prepare CSV line
+                        string fileName = Path.GetFileName(filePath);
+                        string format = formatInfo.FileFormatType.ToString();
+                        string encrypted = formatInfo.IsEncrypted.ToString();
+
+                        // Write line to CSV
+                        writer.WriteLine($"{fileName},{format},{encrypted}");
+                    }
+                }
+
+                Console.WriteLine($"Report generated at: {reportPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

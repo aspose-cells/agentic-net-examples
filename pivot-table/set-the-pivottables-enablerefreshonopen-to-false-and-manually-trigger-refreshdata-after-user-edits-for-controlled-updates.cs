@@ -1,59 +1,80 @@
-// Title: Aspose.Cells .NET: Disable PivotTable auto‑refresh on open and refresh manually after edits
-// Description: Learn how to prevent a PivotTable from refreshing automatically when a workbook is opened using Aspose.Cells for .NET. The example sets RefreshDataOnOpeningFile to false, enables ManualUpdate, modifies source data, and then calls RefreshData and CalculateData to update the pivot on demand before saving the file.
-// Keywords: Aspose.Cells PivotTable manual refresh | RefreshDataOnOpeningFile false | ManualUpdate property C# | disable pivot auto refresh Aspose | RefreshData after source edit | Aspose.Cells .NET pivot example | controlled pivot updates
-// Common Searches: Aspose.Cells disable pivot auto refresh on open | how to manually refresh a PivotTable with Aspose.Cells | RefreshDataOnOpeningFile vs ManualUpdate Aspose.Cells | C# code to control PivotTable refresh Aspose | Aspose.Cells pivot table refresh after data change
-// Developer Intent: Turn off automatic PivotTable refresh on workbook open and invoke a manual refresh after the source data is edited.
-// Use Cases: Large workbooks where automatic refresh slows loading; refresh only after user edits. | Template files that keep pivot results static until a specific trigger runs. | Interactive Excel reports where a button or script updates the pivot on demand.
-// AI Prompts: Show C# code using Aspose.Cells to set RefreshDataOnOpeningFile = false and refresh a PivotTable after modifying source cells. | Explain how ManualUpdate and RefreshData work together to control PivotTable updates in Aspose.Cells .NET. | Provide a step‑by‑step example that disables auto‑refresh, edits data, and calls RefreshData and CalculateData.
+// Title: Disable Auto‑Refresh for Aspose.Cells PivotTable and Refresh Manually in C#
+// Description: Demonstrates how to set a PivotTable's RefreshDataOnOpeningFile to false, edit source data, then call RefreshData and CalculateData to update the pivot before saving the workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells PivotTable manual refresh | RefreshDataOnOpeningFile false | C# Aspose.Cells pivot cache | disable automatic pivot refresh | RefreshData after source edit
+// Common Searches: Aspose.Cells prevent pivot table auto refresh | how to manually refresh pivot table in C# | RefreshDataOnOpeningFile property usage | control pivot refresh Aspose.Cells .NET | update pivot after editing source cells
+// Developer Intent: Turn off automatic pivot refresh on workbook open and trigger a controlled refresh after source data changes.
+// Use Cases: Web apps where users modify data and the pivot should refresh only after submission, reducing latency. | Batch processing that updates many rows before recalculating the pivot to ensure accurate totals. | Generating reports that require a stable snapshot of source data until all calculations are finalized.
+// AI Prompts: Write C# code with Aspose.Cells to create a pivot table, disable auto‑refresh, modify a cell, and manually refresh the pivot. | Explain the relationship between RefreshDataOnOpeningFile and RefreshData in Aspose.Cells and suggest best practices for performance. | Provide error‑handling patterns for saving a workbook after a manual pivot refresh in Aspose.Cells for .NET.
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Learn how to prevent a PivotTable from refreshing automatically when a workbook is opened using Aspose.Cells for .NET. The example sets RefreshDataOnOpeningFile to false, enables ManualUpdate, modifies source data, and then calls RefreshData and CalculateData to update the pivot on demand before saving the file.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to set a PivotTable's RefreshDataOnOpeningFile to false, edit source data, then call RefreshData and CalculateData to update the pivot before saving the workbook using Aspose.Cells for .NET.
+    public class PivotTableControlledRefreshDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-        // Populate source data for the pivot table
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["A4"].PutValue("A");
-        worksheet.Cells["B4"].PutValue(30);
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a pivot table to the worksheet
-        int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+            // Populate source data for the pivot table
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("A");
+            sheet.Cells["B4"].PutValue(30);
 
-        // Configure the pivot table fields
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
+            // Add a pivot table based on the source range
+            int ptIndex = sheet.PivotTables.Add("A1:B4", "D3", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[ptIndex];
 
-        // Disable automatic refresh when the file is opened
-        pivotTable.RefreshDataOnOpeningFile = false;
+            // Configure the pivot table fields
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
 
-        // Enable manual update so the pivot table refreshes only on request
-        pivotTable.ManualUpdate = true;
+            // Disable automatic refresh when the workbook is opened
+            pivotTable.RefreshDataOnOpeningFile = false;
 
-        // Initial calculation to populate the pivot table
-        pivotTable.CalculateData();
+            // Initial calculation to populate the pivot table
+            pivotTable.CalculateData();
 
-        // ----- Simulate user editing the source data -----
-        worksheet.Cells["B2"].PutValue(50); // modify a value
-        worksheet.Cells["B3"].PutValue(40); // modify another value
+            // Simulate a user editing the source data
+            sheet.Cells["B2"].PutValue(100); // Change value from 10 to 100
 
-        // Manually refresh the pivot table after edits
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
+            // Manually refresh the pivot cache and recalculate the pivot table
+            pivotTable.RefreshData();   // Refreshes data from the source
+            pivotTable.CalculateData(); // Recalculates the pivot based on refreshed data
 
-        // Save the workbook
-        workbook.Save("ControlledPivotRefresh.xlsx");
+            // Save the workbook
+            string outputPath = "PivotTableControlledRefreshDemo.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
     }
 }

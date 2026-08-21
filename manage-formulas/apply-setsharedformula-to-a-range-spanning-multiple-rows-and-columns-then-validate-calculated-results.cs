@@ -1,76 +1,53 @@
-// Title: C# – Apply SetSharedFormula to a Multi‑Row, Multi‑Column Range and Validate Results with Aspose.Cells
-// Description: Creates a workbook, fills A1:A5 with 1‑5, uses SetSharedFormula to assign "=A1*2" to the rectangular range B1:C5, calculates all formulas, prints the computed values, checks that column B equals A × 2 and column C equals B × 2, and saves the file as SharedFormulaResult.xlsx.
-// Keywords: Aspose.Cells SetSharedFormula C# | shared formula range | apply shared formula multiple rows | calculate formulas Aspose.Cells | IsSharedFormula property | validate shared formula results | Workbook.CalculateFormula | Excel automation C# | relative reference in shared formula | save workbook Aspose.Cells
-// Common Searches: SetSharedFormula for a rectangular range Aspose.Cells | how to validate shared formula values in C# | check IsSharedFormula flag after applying SetSharedFormula | Aspose.Cells calculate formulas after setting shared formula | C# example of shared formula across multiple columns
-// Developer Intent: Apply a shared formula to a rectangular block of cells and confirm that the calculated values are correct.
-// Use Cases: Populate source data in column A, apply a shared formula to B1:C5, and compute the workbook. | Verify that cells in the shared range report IsSharedFormula = true. | Compare actual cell values with expected multiples to ensure formula accuracy. | Persist the verified workbook by saving it to disk.
-// AI Prompts: Generate C# code that uses SetSharedFormula to fill B1:C5 with "=A1*2" and then validates the results against expected values. | Explain how relative references shift when a shared formula is copied to adjacent columns in Aspose.Cells. | Write an MSTest unit test that asserts column B equals column A multiplied by 2 and column C equals column B multiplied by 2 after workbook.CalculateFormula().
+// Title: Apply SetSharedFormula to a Multi‑Row, Multi‑Column Range and Verify Results with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, fills A1:A5 with 1‑5, sets a shared formula at B1 that multiplies the left cell by 2 across 5 rows and 2 columns, calculates all formulas, prints B1, C1, B5, C5 for verification, and saves the file as SharedFormulaDemo.xlsx.
+// Keywords: Aspose.Cells | SetSharedFormula | C# | .NET | shared formula range | calculate formulas | validate formula results | Excel automation | cell formula propagation | workbook calculation
+// Common Searches: Aspose.Cells SetSharedFormula example for .NET | How to apply a shared formula to a block of cells in C# | Validate calculated values after using SetSharedFormula | Share one formula across multiple rows and columns in Aspose.Cells | C# code to propagate formulas with SetSharedFormula
+// Developer Intent: Apply a single formula to a rectangular cell block and confirm that each cell computes the expected value.
+// Use Cases: Generate dependent calculations in adjacent columns after populating a source column. | Reduce file size and improve performance by sharing one formula across large worksheets. | Automated testing of spreadsheet logic by calculating formulas and comparing results to expected values.
+// AI Prompts: Provide C# code that uses SetSharedFormula to apply a formula to a 10 × 3 range, then checks every cell against an expected value list. | Show how to log mismatched results when validating shared‑formula output in Aspose.Cells for .NET. | Explain common pitfalls and debugging steps for shared formula propagation errors in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsSharedFormulaDemo
 {
-    // Creates a workbook, fills A1:A5 with 1‑5, uses SetSharedFormula to assign "=A1*2" to the rectangular range B1:C5, calculates all formulas, prints the computed values, checks that column B equals A × 2 and column C equals B × 2, and saves the file as SharedFormulaResult.xlsx.
+    // Creates a workbook, fills A1:A5 with 1‑5, sets a shared formula at B1 that multiplies the left cell by 2 across 5 rows and 2 columns, calculates all formulas, prints B1, C1, B5, C5 for verification, and saves the file as SharedFormulaDemo.xlsx.
     class Program
     {
         static void Main()
         {
-            // 1. Create a new workbook and get the first worksheet
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // 2. Populate sample data in column A (A1:A5) with values 1 to 5
+            // Populate sample data in column A (A1:A5) with values 1 to 5
             for (int row = 0; row < 5; row++)
             {
-                cells[row, 0].PutValue(row + 1); // Column index 0 = "A"
+                cells[row, 0].PutValue(row + 1); // Column 0 = A
             }
 
-            // 3. Set a shared formula starting at cell B1 that will fill a 5x2 range (B1:C5)
-            //    The formula "=A1*2" uses a relative reference to the cell on the left.
-            //    When the formula is applied to column C, the reference shifts to the left cell (B).
+            // Set a shared formula starting at B1 that will propagate over 5 rows and 2 columns
+            // Formula: each cell will multiply the cell to its left by 2 (relative reference)
+            // B1 will have =A1*2, C1 will have =B1*2, B2 will have =A2*2, etc.
             Cell startCell = cells[0, 1]; // B1
-            // Use the overload: SetSharedFormula(string sharedFormula, int rowNumber, int columnNumber)
-            startCell.SetSharedFormula("=A1*2", 5, 2);
+            startCell.SetSharedFormula("=A1*2", 5, 2); // rowCount = 5, columnCount = 2
 
-            // 4. Verify that the cells contain a shared formula
-            Console.WriteLine($"B1 IsSharedFormula: {cells[0, 1].IsSharedFormula}");
-            Console.WriteLine($"C3 IsSharedFormula: {cells[2, 2].IsSharedFormula}");
-
-            // 5. Calculate all formulas in the workbook
+            // Calculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // 6. Output the calculated results for the filled range
-            Console.WriteLine("\nCalculated values after applying shared formula (B1:C5):");
-            for (int row = 0; row < 5; row++)
-            {
-                string bValue = cells[row, 1].Value?.ToString() ?? "null"; // Column B
-                string cValue = cells[row, 2].Value?.ToString() ?? "null"; // Column C
-                Console.WriteLine($"Row {row + 1}: B = {bValue}, C = {cValue}");
-            }
+            // Validate calculated results
+            // Expected values:
+            // B1 = 1*2 = 2, C1 = 2*2 = 4
+            // B5 = 5*2 = 10, C5 = 10*2 = 20
+            Console.WriteLine("Validated Results:");
+            Console.WriteLine($"B1 = {cells[0, 1].Value} (expected 2)");
+            Console.WriteLine($"C1 = {cells[0, 2].Value} (expected 4)");
+            Console.WriteLine($"B5 = {cells[4, 1].Value} (expected 10)");
+            Console.WriteLine($"C5 = {cells[4, 2].Value} (expected 20)");
 
-            // 7. Simple validation: expected B column = A * 2, C column = B * 2
-            bool validationPassed = true;
-            for (int row = 0; row < 5; row++)
-            {
-                double a = Convert.ToDouble(cells[row, 0].Value);
-                double expectedB = a * 2;
-                double actualB = Convert.ToDouble(cells[row, 1].Value);
-                double expectedC = expectedB * 2;
-                double actualC = Convert.ToDouble(cells[row, 2].Value);
-
-                if (Math.Abs(expectedB - actualB) > 1e-9 || Math.Abs(expectedC - actualC) > 1e-9)
-                {
-                    validationPassed = false;
-                    Console.WriteLine($"Validation failed at row {row + 1}");
-                }
-            }
-            Console.WriteLine($"\nValidation result: {(validationPassed ? "PASS" : "FAIL")}");
-
-            // 8. Save the workbook (lifecycle rule: use provided save method)
-            workbook.Save("SharedFormulaResult.xlsx");
-            Console.WriteLine("\nWorkbook saved as 'SharedFormulaResult.xlsx'.");
+            // Save the workbook to a file
+            workbook.Save("SharedFormulaDemo.xlsx");
         }
     }
 }

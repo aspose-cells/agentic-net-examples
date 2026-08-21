@@ -1,52 +1,45 @@
-// Title: Compress Excel‑to‑HTML output with GZIP using Aspose.Cells for .NET
-// Description: Shows how to load an Excel workbook with Aspose.Cells, export it to full‑featured HTML via HtmlSaveOptions, and write the HTML into a GZipStream to generate a .gz file for faster transmission.
-// Keywords: Aspose.Cells | C# | .NET | Excel to HTML | HtmlSaveOptions | GZipStream | compress HTML | HTML .gz file | memory stream | web performance
-// Common Searches: Aspose.Cells export Excel to HTML C# | C# GZIP compress HTML generated from Excel | Save Excel as compressed HTML .gz | HtmlSaveOptions all data export example | Stream GZIP HTML in ASP.NET Core
-// Developer Intent: Produce a GZIP‑compressed HTML representation of an Excel workbook for bandwidth‑efficient delivery or storage.
-// Use Cases: Web API that receives an XLSX file, converts it to full‑style HTML, compresses it with GZIP, and returns the .gz payload to clients. | Archiving spreadsheet previews as compressed HTML files to reduce storage while preserving formatting, images, and styles. | Serving pre‑compressed HTML reports from a web server to minimize bandwidth usage for end‑users.
-// AI Prompts: Generate C# code that uses Aspose.Cells to export a workbook to HTML with all styles and then compress the output using GZipStream. | Explain how to configure HtmlSaveOptions for full data export (styles, images, formulas) before applying GZIP compression. | Show how to write the GZIP‑compressed HTML directly to an ASP.NET Core response stream after converting an Excel file.
+// Title: Export Excel to Gzipped HTML with Aspose.Cells in C#
+// Description: This example demonstrates loading an Excel workbook with Aspose.Cells, saving it as HTML via HtmlSaveOptions into a MemoryStream, and compressing the HTML using .NET's GZipStream to create a .gz file. The technique reduces bandwidth and storage and can be streamed directly to an HTTP response.
+// Keywords: Aspose.Cells | C# HTML export | GZipStream compression | Excel to HTML | gzipped HTML | HtmlSaveOptions | memory stream | ASP.NET Core response | reduce bandwidth | file compression .NET
+// Common Searches: Aspose.Cells export Excel to HTML C# | Compress Aspose.Cells HTML output with GZIP | Save Excel as gzipped HTML .NET | How to stream gzipped HTML from Aspose.Cells | HtmlSaveOptions memory stream example | C# GZipStream for HTML files
+// Developer Intent: Create a gzipped HTML file from an Excel workbook using Aspose.Cells.
+// Use Cases: Serve compressed HTML previews of uploaded Excel files in a web API to speed up client downloads. | Archive Excel reports as small .gz HTML files for long‑term storage. | Integrate the compression step into an ASP.NET Core controller that writes the GZIP stream directly to the HTTP response.
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, converts it to HTML using HtmlSaveOptions, and writes the result to a .gz file via GZipStream. | Show how to return the gzipped HTML produced by Aspose.Cells as an ASP.NET Core FileResult. | Explain how to modify HtmlSaveOptions to export only the active worksheet before compressing the HTML output.
 
 using System;
 using System.IO;
 using System.IO.Compression;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlGzipExample
+// This example demonstrates loading an Excel workbook with Aspose.Cells, saving it as HTML via HtmlSaveOptions into a MemoryStream, and compressing the HTML using .NET's GZipStream to create a .gz file. The technique reduces bandwidth and storage and can be streamed directly to an HTTP response.
+class ExcelToCompressedHtml
 {
-    // Shows how to load an Excel workbook with Aspose.Cells, export it to full‑featured HTML via HtmlSaveOptions, and write the HTML into a GZipStream to generate a .gz file for faster transmission.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the Excel workbook from a file (load rule)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Configure HTML save options (create rule)
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        // Example: export the whole workbook (default), you can customize other options here
+        htmlOptions.ExportActiveWorksheetOnly = false;
+
+        // Save the workbook as HTML into a memory stream (save rule)
+        using (MemoryStream htmlStream = new MemoryStream())
         {
-            // Load an existing Excel workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            workbook.Save(htmlStream, htmlOptions);
+            // Reset the stream position to the beginning before reading
+            htmlStream.Position = 0;
 
-            // Configure HTML save options (optional customizations)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            // Export all data (including styles, images, etc.)
-            htmlOptions.ExportDataOptions = HtmlExportDataOptions.All;
-
-            // Save the workbook as HTML into a memory stream using the provided Save(Stream, SaveOptions) rule
-            using (MemoryStream htmlStream = new MemoryStream())
+            // Compress the HTML content using GZIP and write to a .gz file
+            using (FileStream compressedFile = new FileStream("output.html.gz", FileMode.Create, FileAccess.Write))
+            using (GZipStream gzipStream = new GZipStream(compressedFile, CompressionMode.Compress))
             {
-                workbook.Save(htmlStream, htmlOptions);
-
-                // Reset the stream position to the beginning before reading its content
-                htmlStream.Position = 0;
-
-                // Create the output file that will contain the GZIP-compressed HTML
-                using (FileStream compressedFile = new FileStream("output.html.gz", FileMode.Create, FileAccess.Write))
-                {
-                    // Wrap the file stream with GZipStream for compression
-                    using (GZipStream gzip = new GZipStream(compressedFile, CompressionMode.Compress))
-                    {
-                        // Copy the HTML data into the GZIP stream
-                        htmlStream.CopyTo(gzip);
-                    }
-                }
+                // Copy the HTML stream into the GZIP stream
+                htmlStream.CopyTo(gzipStream);
             }
-
-            Console.WriteLine("Excel workbook has been exported to compressed HTML (output.html.gz).");
         }
+
+        Console.WriteLine("Excel file has been exported to compressed HTML (output.html.gz).");
     }
 }

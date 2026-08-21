@@ -1,57 +1,55 @@
-// Title: Aspose.Cells .NET Benchmark: Export 500 Worksheets to CSV with ExportAllSheets = true
-// Description: C# example that builds a workbook with 500 sheets, enables TxtSaveOptions.ExportAllSheets, times the CSV save operation, and prints the elapsed milliseconds—showing the scalability of Aspose.Cells CSV export.
-// Keywords: Aspose.Cells | .NET | C# | CSV export | ExportAllSheets | benchmark | performance test | 500 worksheets | large workbook | save time measurement | TxtSaveOptions
-// Common Searches: Aspose.Cells export 500 sheets to CSV performance | CSV export speed Aspose.Cells .NET | ExportAllSheets benchmark | measure Aspose.Cells save time | how fast can Aspose.Cells save large workbook
-// Developer Intent: Determine how long Aspose.Cells takes to save a 500‑sheet workbook to CSV when ExportAllSheets is enabled.
-// Use Cases: Assess scalability of CSV export for multi‑sheet reports | Validate batch processing time for data‑export pipelines | Compare ExportAllSheets true versus false in large workbooks | Set a performance baseline for CI/CD testing of Aspose.Cells conversions
-// AI Prompts: Write a C# script that records CPU and memory while exporting 500 worksheets to CSV with ExportAllSheets true using Aspose.Cells. | Create a loop that runs the conversion 10 times and returns the average duration and standard deviation. | Suggest ways to accelerate CSV export for massive workbooks in Aspose.Cells, such as disabling calculations, using streaming, or parallelizing sheet processing. | Provide PowerShell commands to invoke the compiled benchmark and capture timing metrics.
+// Title: Aspose.Cells .NET Benchmark: ExportAllSheets Performance for 500 Worksheets to CSV
+// Description: Creates a workbook with 500 sheets, sets TxtSaveOptions.ExportAllSheets = true, measures the time required to save the workbook as a single CSV file, and outputs the elapsed milliseconds. Ideal for evaluating scalability and speed of multi‑sheet CSV export in Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | ExportAllSheets | CSV export benchmark | 500 worksheets | performance testing | C# | TxtSaveOptions | large workbook scalability | Stopwatch timing | multi‑sheet export speed
+// Common Searches: Aspose.Cells export 500 sheets to CSV performance | ExportAllSheets benchmark .NET | how fast is CSV export with many worksheets in Aspose.Cells | measure Aspose.Cells multi‑sheet export time | scalability test for Aspose.Cells CSV output
+// Developer Intent: Determine how long Aspose.Cells needs to export a 500‑sheet workbook to a single CSV file when ExportAllSheets is enabled.
+// Use Cases: Validate scalability of CSV export for large workbooks. | Compare execution time with ExportAllSheets set to false. | Identify performance bottlenecks before deploying to production. | Provide baseline metrics for optimization of multi‑sheet exports.
+// AI Prompts: Analyze the benchmark results and suggest code or configuration changes to reduce export time. | Create a comparable benchmark that exports the same workbook to HTML using HtmlSaveOptions and records both duration and memory usage. | Propose a parallel‑processing approach for sheet preparation while keeping ExportAllSheets behavior intact.
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace AsposeCellsBenchmark
+// Creates a workbook with 500 sheets, sets TxtSaveOptions.ExportAllSheets = true, measures the time required to save the workbook as a single CSV file, and outputs the elapsed milliseconds. Ideal for evaluating scalability and speed of multi‑sheet CSV export in Aspose.Cells for .NET.
+class BenchmarkExportAllSheets
 {
-    // C# example that builds a workbook with 500 sheets, enables TxtSaveOptions.ExportAllSheets, times the CSV save operation, and prints the elapsed milliseconds—showing the scalability of Aspose.Cells CSV export.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (default format is XLSX)
+        Workbook workbook = new Workbook();
+
+        // Add 500 worksheets and put a sample value in each
+        for (int i = 1; i <= 500; i++)
         {
-            // Initialize a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
-
-            // Add 500 worksheets and put a simple value in each
-            for (int i = 0; i < 500; i++)
+            if (i == 1)
             {
-                // Add a new worksheet; the first worksheet already exists at index 0
-                if (i > 0)
-                {
-                    workbook.Worksheets.Add($"Sheet{i + 1}");
-                }
-
-                // Access the current worksheet and set a sample value
-                Worksheet sheet = workbook.Worksheets[i];
-                sheet.Cells["A1"].PutValue($"Data in sheet {i + 1}");
+                // The first worksheet already exists
+                workbook.Worksheets[0].Name = $"Sheet{i}";
+                workbook.Worksheets[0].Cells["A1"].PutValue($"Data in Sheet{i}");
             }
-
-            // Prepare TxtSaveOptions with ExportAllSheets = true (feature rule)
-            TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
+            else
             {
-                ExportAllSheets = true
-            };
-
-            // Benchmark the conversion (saving) time
-            Stopwatch sw = Stopwatch.StartNew();
-
-            // Save the workbook to CSV using the options (lifecycle rule: save)
-            workbook.Save("BenchmarkOutput.csv", saveOptions);
-
-            sw.Stop();
-
-            Console.WriteLine($"Converted workbook with 500 worksheets to CSV in {sw.ElapsedMilliseconds} ms.");
-            
-            // Clean up
-            workbook.Dispose();
+                Worksheet ws = workbook.Worksheets.Add($"Sheet{i}");
+                ws.Cells["A1"].PutValue($"Data in Sheet{i}");
+            }
         }
+
+        // Configure TxtSaveOptions to export all sheets to a CSV file
+        TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv);
+        saveOptions.ExportAllSheets = true; // Use the ExportAllSheets property rule
+
+        // Start timing the export operation
+        Stopwatch sw = Stopwatch.StartNew();
+
+        // Save the workbook using the configured options
+        workbook.Save("BenchmarkAllSheets.csv", saveOptions);
+
+        // Stop timing
+        sw.Stop();
+
+        Console.WriteLine($"Exported 500 worksheets to CSV in {sw.ElapsedMilliseconds} ms.");
+
+        // Release resources
+        workbook.Dispose();
     }
 }

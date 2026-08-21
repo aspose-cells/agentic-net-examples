@@ -1,58 +1,74 @@
-// Title: Make chart legend background transparent while preserving text color with Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add a column chart, enable its legend, and set each LegendEntry's BackgroundMode to Transparent so the legend has no fill but retains the default text color, then saves the workbook as an Excel file.
-// Keywords: Aspose.Cells | C# | .NET | chart legend | transparent legend background | BackgroundMode.Transparent | LegendEntry | remove legend fill | preserve legend text color | Excel chart formatting | global | US
-// Common Searches: Aspose.Cells make legend background transparent | remove fill from chart legend C# | set legend entry background mode to transparent Aspose.Cells | keep legend text color while hiding background | Excel chart legend without background using Aspose
-// Developer Intent: Set chart legend entries to have no background fill while leaving their existing text color unchanged.
-// Use Cases: Designing reports where the legend must blend with a colored worksheet background. | Applying corporate style guidelines that require invisible legend backgrounds in Excel dashboards. | Creating dark‑theme Excel charts where legend text remains readable without a solid fill.
-// AI Prompts: Generate C# code with Aspose.Cells that makes all legend entries of a chart transparent while preserving the default font color. | Explain the effect of BackgroundMode.Transparent on LegendEntry objects and any required namespaces. | Provide a step‑by‑step guide to remove legend fill without altering text contrast in an Aspose.Cells chart.
+// Title: C# – Remove Chart Legend Background Fill (keep text color) with Aspose.Cells
+// Description: Demonstrates how to create a workbook, add a column chart, enable its legend, and set each LegendEntry's BackgroundMode to Transparent so the legend background disappears while the label colors stay visible. The workbook is saved as LegendWithoutBackgroundFill.xlsx.
+// Keywords: Aspose.Cells legend transparent | C# chart legend background | remove legend fill Aspose.Cells | Aspose.Cells BackgroundMode Transparent | Excel chart legend styling .NET
+// Common Searches: Aspose.Cells make legend background transparent | C# remove fill from chart legend entries | how to keep legend text color while clearing background in Aspose.Cells | set legend entry background mode to transparent .NET
+// Developer Intent: Strip the background color from all legend entries of an Excel chart while preserving the original text color for readability.
+// Use Cases: Design clean Excel reports where legends blend with sheet backgrounds. | Generate charts for presentations that require no legend fill to avoid visual clutter. | Apply a uniform transparent legend style across multiple charts in a single workbook.
+// AI Prompts: Write C# code using Aspose.Cells to set every LegendEntry.BackgroundMode to Transparent for any chart type. | Show how to loop through a LegendEntryCollection and change only the background fill, leaving font settings untouched. | Explain step‑by‑step how to customize legend appearance—removing fill and retaining font color—in Aspose.Cells for .NET.
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsLegendBackgroundRemoval
+namespace AsposeCellsExamples
 {
-    // Shows how to create a workbook, add a column chart, enable its legend, and set each LegendEntry's BackgroundMode to Transparent so the legend has no fill but retains the default text color, then saves the workbook as an Excel file.
-    class Program
+    // Demonstrates how to create a workbook, add a column chart, enable its legend, and set each LegendEntry's BackgroundMode to Transparent so the legend background disappears while the label colors stay visible. The workbook is saved as LegendWithoutBackgroundFill.xlsx.
+    public class RemoveLegendBackgroundFill
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Q1");
-            sheet.Cells["A3"].PutValue("Q2");
-            sheet.Cells["A4"].PutValue("Q3");
-
-            sheet.Cells["B1"].PutValue("Series 1");
-            sheet.Cells["B2"].PutValue(50);
-            sheet.Cells["B3"].PutValue(80);
-            sheet.Cells["B4"].PutValue(30);
-
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Ensure the legend is visible
-            chart.ShowLegend = true;
-
-            // Remove background fill from each legend entry while preserving text color
-            LegendEntryCollection legendEntries = chart.Legend.LegendEntries;
-            foreach (LegendEntry entry in legendEntries)
+            try
             {
-                // Set background to transparent (no fill)
-                entry.BackgroundMode = BackgroundMode.Transparent;
-                // Text color remains unchanged (default contrast)
-            }
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Save the workbook
-            workbook.Save("ChartWithTransparentLegendBackground.xlsx");
+                // Populate sample data for the chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["A2"].PutValue("Q1");
+                sheet.Cells["A3"].PutValue("Q2");
+                sheet.Cells["A4"].PutValue("Q3");
+
+                sheet.Cells["B1"].PutValue("Series 1");
+                sheet.Cells["B2"].PutValue(30);
+                sheet.Cells["B3"].PutValue(50);
+                sheet.Cells["B4"].PutValue(70);
+
+                // Add a column chart
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                Chart chart = sheet.Charts[chartIndex];
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Ensure the legend is visible
+                chart.ShowLegend = true;
+
+                // Iterate over all legend entries and remove their background fill
+                LegendEntryCollection entries = chart.Legend.LegendEntries;
+                foreach (LegendEntry entry in entries)
+                {
+                    // Set background mode to Transparent to remove fill
+                    entry.BackgroundMode = BackgroundMode.Transparent;
+                }
+
+                // Save the workbook
+                workbook.Save("LegendWithoutBackgroundFill.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            RemoveLegendBackgroundFill.Run();
         }
     }
 }

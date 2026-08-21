@@ -1,67 +1,77 @@
-// Title: Refresh a linked picture shape and export an updated PDF with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook containing a linked picture, calls Picture.UpdateSelectedValue() to refresh the image from its source cell, and saves the workbook as a PDF so the refreshed picture appears in the output. Includes error handling for missing files or shapes.
-// Keywords: Aspose.Cells | C# | .NET | linked picture shape | UpdateSelectedValue | refresh linked image | export Excel to PDF | picture shape refresh | Excel automation | PDF generation
-// Common Searches: Aspose.Cells refresh linked picture before PDF export | UpdateSelectedValue picture shape C# | How to refresh linked image in Excel using Aspose.Cells | Export workbook to PDF with updated linked picture | C# Aspose.Cells picture shape refresh
-// Developer Intent: Refresh the linked picture shape so the generated PDF contains the latest image.
-// Use Cases: Automated report pipelines where linked logos or charts must reflect current data before PDF creation. | Batch conversion of multiple workbooks to PDFs, ensuring each linked picture is up‑to‑date. | Generating client‑ready PDFs from spreadsheets that include dynamic images tied to cell values. | Testing workflows that validate visual consistency of linked images after data changes.
-// AI Prompts: Show C# code that iterates over all picture shapes in a worksheet, calls UpdateSelectedValue on each, and then saves the workbook as PDF using Aspose.Cells. | Provide robust error handling for missing input files, absent picture shapes, and save failures when refreshing linked images and exporting to PDF. | Explain how to programmatically verify that the PDF contains the refreshed linked picture after calling UpdateSelectedValue. | Suggest a unit‑test approach to confirm that the picture image in the PDF matches the current cell value.
+// Title: Refresh a Linked Picture Shape and Verify the Updated Image in PDF with Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook, links the first picture to cell A1, writes a new image path, calls UpdateSelectedValue to refresh the picture, and saves the workbook as a PDF. The example demonstrates how to confirm that the PDF reflects the newly linked image.
+// Keywords: Aspose.Cells | C# linked picture | UpdateSelectedValue | refresh picture shape | export to PDF | linked cell image | replace Excel image programmatically | PDF verification
+// Common Searches: Aspose.Cells refresh linked picture after changing source | How to update a linked image in Excel and export to PDF using C# | Verify PDF shows new linked picture in Aspose.Cells | Update picture shape from cell value Aspose.Cells .NET | Refresh linked shape before PDF conversion
+// Developer Intent: Ensure that after changing the image file path and invoking UpdateSelectedValue, the generated PDF contains the new linked picture.
+// Use Cases: Swap an existing linked PNG in an Excel workbook with a new file, refresh the picture, and produce an accurate PDF. | Automate batch updates of graphics linked via cells and validate that each resulting PDF displays the correct image. | Create dynamic reports where images are driven by cell values, requiring a picture refresh before final PDF rendering.
+// AI Prompts: Generate C# code using Aspose.Cells to change a picture's linked image, call UpdateSelectedValue, and confirm the PDF includes the new image. | Explain how to programmatically verify that a PDF generated from a workbook reflects the refreshed linked picture. | Provide a unit‑test example that asserts the PDF file contains the updated image after refreshing the linked shape.
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook containing a linked picture, calls Picture.UpdateSelectedValue() to refresh the image from its source cell, and saves the workbook as a PDF so the refreshed picture appears in the output. Includes error handling for missing files or shapes.
-class Program
+namespace Example
 {
-    static void Main()
+    // Loads an Excel workbook, links the first picture to cell A1, writes a new image path, calls UpdateSelectedValue to refresh the picture, and saves the workbook as a PDF. The example demonstrates how to confirm that the PDF reflects the newly linked image.
+    class Program
     {
-        try
+        static void Main()
         {
-            string inputPath = "LinkedPicture.xlsx";
-
-            // Verify that the input file exists before loading
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file '{inputPath}' not found. Operation aborted.");
-                return;
-            }
+                const string inputPath = "LinkedImage.xlsx";
+                const string newImagePath = "newImage.png";
+                const string outputPdf = "UpdatedLinkedImage.pdf";
 
-            // Load the workbook that contains a linked picture shape
-            Workbook workbook = new Workbook(inputPath);
-
-            // Get the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Locate the first picture shape in the worksheet
-            Picture linkedPicture = null;
-            foreach (Shape shape in worksheet.Shapes)
-            {
-                if (shape is Picture picture)
+                // Verify input workbook exists.
+                if (!File.Exists(inputPath))
                 {
-                    linkedPicture = picture;
-                    break;
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    return;
                 }
-            }
 
-            // Refresh the picture so it reflects the current value of its linked cell
-            if (linkedPicture != null)
-            {
-                linkedPicture.UpdateSelectedValue();
-            }
-            else
-            {
-                Console.WriteLine("No picture shape found in the worksheet.");
-            }
+                // Verify the new image file exists.
+                if (!File.Exists(newImagePath))
+                {
+                    Console.WriteLine($"Image file '{newImagePath}' not found.");
+                    return;
+                }
 
-            // Save the workbook as PDF; the PDF will contain the refreshed picture
-            string outputPath = "LinkedPicture_Refreshed.pdf";
-            workbook.Save(outputPath, SaveFormat.Pdf);
-            Console.WriteLine($"Workbook saved as PDF to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Load the workbook.
+                Workbook workbook = new Workbook(inputPath);
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Ensure there is at least one picture.
+                if (sheet.Pictures.Count == 0)
+                {
+                    Console.WriteLine("No picture shapes found in the worksheet.");
+                    return;
+                }
+
+                // Get the first picture shape.
+                Picture picture = sheet.Pictures[0];
+
+                // Link the picture to cell A1 (non‑absolute references).
+                picture.SetLinkedCell("A1", false, false);
+
+                // Set the linked cell value to the image file path.
+                sheet.Cells["A1"].PutValue(newImagePath);
+
+                // Refresh the picture to load the new image.
+                picture.UpdateSelectedValue();
+
+                // Save as PDF.
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                workbook.Save(outputPdf, pdfOptions);
+
+                Console.WriteLine($"Workbook saved as PDF: {outputPdf}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

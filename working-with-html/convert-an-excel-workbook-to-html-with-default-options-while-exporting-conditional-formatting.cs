@@ -1,38 +1,73 @@
-// Title: Convert Excel to HTML with default Aspose.Cells settings and preserve conditional formatting (C#)
-// Description: A C# sample that loads an .xlsx workbook with Aspose.Cells, applies the default HtmlSaveOptions (explicitly setting MergeAreas=true to keep conditional‑formatting ranges merged), and uses ConversionUtility.Convert to produce an HTML file.
-// Keywords: Aspose.Cells | C# | Excel to HTML conversion | HtmlSaveOptions | MergeAreas | conditional formatting export | ConversionUtility | LoadOptions | Xlsx to HTML | default HTML save options
-// Common Searches: Aspose.Cells export Excel to HTML with conditional formatting | C# convert .xlsx to HTML preserving colors | HtmlSaveOptions default settings example | How to use ConversionUtility.Convert for HTML output | MergeAreas true Aspose.Cells HTML conversion
-// Developer Intent: Create an HTML representation of an Excel workbook while retaining its conditional‑formatting using Aspose.Cells default options.
-// Use Cases: Display financial dashboards on a web page with the same color‑coded rules as the original Excel file. | Batch‑process uploaded spreadsheets to generate previewable HTML reports in a portal, ensuring formatting consistency. | Produce documentation from Excel templates where default styling and conditional highlights must appear in the HTML output.
-// AI Prompts: Generate C# code that converts an .xlsx file to HTML with Aspose.Cells, keeping conditional formatting and using default HtmlSaveOptions. | Show how to enable HtmlSaveOptions.MergeAreas for preserving conditional‑formatting ranges during Excel‑to‑HTML conversion. | Explain the step‑by‑step process of loading a workbook, configuring HtmlSaveOptions, and calling ConversionUtility.Convert to export HTML in .NET.
+// Title: C# Example: Convert Excel to HTML with Aspose.Cells – Preserve Conditional Formatting (Default HtmlSaveOptions)
+// Description: A complete C# snippet that checks an XLSX file, loads it with Aspose.Cells, optionally adds a conditional‑format rule, and saves the workbook as HTML using the default HtmlSaveOptions, which automatically export conditional formatting.
+// Keywords: Aspose.Cells | C# Excel to HTML | conditional formatting export | HtmlSaveOptions default | convert .xlsx to .html | Aspose.Cells sample code | .NET workbook conversion | HTML report from Excel | GitHub Aspose.Cells example | code snippet
+// Common Searches: Aspose.Cells export conditional formatting to HTML | C# default HtmlSaveOptions Excel to HTML conversion | How to keep conditional formatting when saving Excel as HTML | Aspose.Cells HTML conversion example .NET | Convert .xlsx to .html preserving styles C#
+// Developer Intent: Generate an HTML file from an Excel workbook in C# while retaining any conditional formatting using Aspose.Cells.
+// Use Cases: Display a spreadsheet on a web page with its color‑coded rules intact. | Create automated HTML reports from Excel templates that rely on conditional formatting. | Batch‑process multiple .xlsx files into web‑ready HTML without losing formatting.
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells and saves it as HTML using the default HtmlSaveOptions, ensuring conditional formatting is included. | Explain how Aspose.Cells' HtmlSaveOptions handles conditional formatting during Excel‑to‑HTML conversion. | Show how to modify the example to export each worksheet to a separate HTML file while preserving conditional formatting.
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-// A C# sample that loads an .xlsx workbook with Aspose.Cells, applies the default HtmlSaveOptions (explicitly setting MergeAreas=true to keep conditional‑formatting ranges merged), and uses ConversionUtility.Convert to produce an HTML file.
-class ExcelToHtmlConverter
+// A complete C# snippet that checks an XLSX file, loads it with Aspose.Cells, optionally adds a conditional‑format rule, and saves the workbook as HTML using the default HtmlSaveOptions, which automatically export conditional formatting.
+class Program
 {
     static void Main()
     {
-        // Path to the source Excel file
-        string sourcePath = "input.xlsx";
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-        // Path where the HTML output will be saved
-        string htmlPath = "output.html";
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Load options for the source workbook (auto-detect format if needed)
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            // Load the source Excel workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Create HTML save options with default settings
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // ------------------------------------------------------------
+            // OPTIONAL: Add a sample conditional formatting rule so that the
+            // conversion demonstrates exporting conditional formatting.
+            // This step can be omitted if the source file already contains
+            // conditional formatting.
+            // ------------------------------------------------------------
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Ensure conditional formatting areas are merged (default is true, set explicitly for clarity)
-        htmlOptions.MergeAreas = true;
+            // Define the range to which the conditional formatting will be applied
+            CellArea area = CellArea.CreateCellArea("A1", "B10");
 
-        // Convert the Excel file to HTML using the conversion utility
-        ConversionUtility.Convert(sourcePath, loadOptions, htmlPath, htmlOptions);
+            // Add a new ConditionalFormatting collection for the defined range
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            var cf = sheet.ConditionalFormattings[cfIndex];
+            cf.AddArea(area);
 
-        Console.WriteLine("Conversion completed. HTML saved to: " + htmlPath);
+            // Create a condition: cells with values > 50 will have a red background
+            int conditionIndex = cf.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50", null);
+            var condition = cf[conditionIndex];
+            var style = condition.Style;
+            style.ForegroundColor = Color.Red;
+            style.Pattern = BackgroundType.Solid;
+            condition.Style = style;
+
+            // ------------------------------------------------------------
+            // Save the workbook as HTML using default HtmlSaveOptions.
+            // The default options include exporting conditional formatting.
+            // ------------------------------------------------------------
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(); // default options
+            workbook.Save(outputPath, htmlOptions);
+
+            Console.WriteLine($"Workbook successfully saved as HTML to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

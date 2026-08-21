@@ -1,10 +1,10 @@
-// Title: Export Workbook to HTML without Comments Using Aspose.Cells for .NET
-// Description: Shows how to add a comment to a cell, set HtmlSaveOptions.IsExportComments to false, save the workbook as HTML, and programmatically confirm that the comment markup is not present in the output file.
-// Keywords: Aspose.Cells | C# HTML export | IsExportComments false | remove comments from HTML | Aspose.Cells HtmlSaveOptions | verify comment absence | export workbook without comments | .NET spreadsheet export
-// Common Searches: Aspose.Cells disable comment export | HTML export without cell comments C# | HtmlSaveOptions IsExportComments usage | check comment removal in generated HTML Aspose.Cells | save workbook as HTML without comments .NET
-// Developer Intent: Exclude cell comments from the HTML output when saving a workbook and validate that no comment markup remains.
-// Use Cases: Create public‑facing HTML reports that hide internal notes. | Generate compliance‑ready worksheet snapshots without exposing confidential comments. | Automate a post‑save check to ensure comments are omitted from exported HTML files.
-// AI Prompts: Write C# code with Aspose.Cells that saves a workbook as HTML while suppressing comments and then verifies the comment text is absent. | Provide a C# unit test that sets HtmlSaveOptions.IsExportComments = false, exports to HTML, and asserts that the generated file contains no comment elements. | Explain how HtmlSaveOptions.IsExportComments works and how to programmatically confirm comment removal after HTML export.
+// Title: Export Excel to HTML without comments using Aspose.Cells for .NET
+// Description: Creates a workbook, adds a value and a comment to cell A1, sets HtmlSaveOptions.IsExportComments to false, saves as HTML, reads the file, and confirms the comment text is absent.
+// Keywords: Aspose.Cells | C# | HtmlSaveOptions | IsExportComments | export HTML without comments | verify comment removal | Excel to HTML conversion | Aspose.Cells example
+// Common Searches: Aspose.Cells disable comment export HTML | How to hide comments when saving Excel as HTML in .NET | Check that comments are not in generated HTML Aspose.Cells | C# export workbook to HTML without comments
+// Developer Intent: Prevent comments from being written to the HTML file when converting an Excel workbook and programmatically verify their absence.
+// Use Cases: Produce clean HTML reports that omit internal worksheet comments. | Publish Excel‑derived web pages without exposing confidential notes. | Automated testing to ensure comment data is not leaked in HTML exports.
+// AI Prompts: Show C# code that saves an Aspose.Cells workbook to HTML with comments excluded and validates the result. | Explain the effect of HtmlSaveOptions.IsExportComments on the generated HTML and how to detect comment remnants. | Create an MSTest unit test that asserts no comment text appears in the saved HTML file.
 
 using System;
 using System.IO;
@@ -12,7 +12,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsExportCommentsDemo
 {
-    // Shows how to add a comment to a cell, set HtmlSaveOptions.IsExportComments to false, save the workbook as HTML, and programmatically confirm that the comment markup is not present in the output file.
+    // Creates a workbook, adds a value and a comment to cell A1, sets HtmlSaveOptions.IsExportComments to false, saves as HTML, reads the file, and confirms the comment text is absent.
     class Program
     {
         static void Main()
@@ -41,11 +41,13 @@ namespace AsposeCellsExportCommentsDemo
             // Save the workbook as HTML using the configured options
             workbook.Save(outputPath, htmlOptions);
 
-            // Verify that the comment text does not appear in the generated HTML
+            // Read the generated HTML file
             string htmlContent = File.ReadAllText(outputPath);
+
+            // Verify that the comment text is not present in the HTML
             bool commentAbsent = !htmlContent.Contains("This is a test comment");
 
-            Console.WriteLine($"Comment absent in HTML: {commentAbsent}");
+            Console.WriteLine($"Comment absent from HTML: {commentAbsent}");
         }
     }
 }

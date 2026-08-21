@@ -1,10 +1,10 @@
-// Title: Add a Rendered Worksheet SVG as an Excel Icon with Aspose.Cells for .NET
-// Description: Demonstrates how to render a worksheet to SVG in memory, embed the SVG as an Excel icon using ShapeCollection.AddIcons, set the picture to display as an icon, and save the workbook with the vector graphic as an embedded icon.
-// Keywords: Aspose.Cells | C# | .NET | SVG icon | Excel workbook icon | ShapeCollection.AddIcons | render worksheet to SVG | embed SVG in Excel | display picture as icon | vector graphic Excel | code example
-// Common Searches: embed SVG as icon in Excel using Aspose.Cells | Aspose.Cells render worksheet to SVG | C# add custom icon to Excel sheet | ShapeCollection AddIcons example | display picture as icon Aspose.Cells .NET
-// Developer Intent: Embed a worksheet‑generated SVG as an Excel icon programmatically with Aspose.Cells for .NET.
-// Use Cases: Create sales dashboards where each workbook shows a scalable SVG thumbnail as its icon for instant visual identification. | Automate branding of Excel templates by inserting vector‑based icons derived from sheet content. | Package multiple Excel reports with SVG icons that retain quality at any display size.
-// AI Prompts: Generate C# code that converts a rendered worksheet SVG to a .ico file and sets it as the workbook’s file icon using Aspose.Cells. | Explain how to adjust the size and position of an SVG icon added with ShapeCollection.AddIcons in Aspose.Cells. | Show how to add different SVG icons to several worksheets and configure each to display as an icon.
+// Title: Embed a Worksheet SVG as an Excel Icon with Aspose.Cells for .NET
+// Description: Demonstrates how to render a worksheet to SVG, read the SVG bytes, and embed the image as an icon on the sheet using ShapeCollection.AddIcons. The example sets DisplayAsIcon, custom dimensions, and saves the workbook as XLSX.
+// Keywords: Aspose.Cells SVG icon | AddIcons C# | DisplayAsIcon property | render worksheet to SVG | embed SVG in Excel | Aspose.Cells .NET example | Excel icon from SVG | C# Excel image embedding
+// Common Searches: How to embed an SVG as an icon in Excel using Aspose.Cells | Aspose.Cells AddIcons method example | Set DisplayAsIcon for a picture in Aspose.Cells | Render worksheet to SVG and use as Excel thumbnail | C# embed scalable SVG in XLSX file
+// Developer Intent: Add a rendered worksheet SVG as an embedded icon inside an Excel workbook with Aspose.Cells for .NET.
+// Use Cases: Create workbooks that show a small SVG preview of each sheet for quick visual navigation. | Add a custom SVG logo as an icon on a template sheet to reinforce branding. | Automate report generation that includes a scalable SVG thumbnail of a chart as an icon.
+// AI Prompts: Generate code to add a PNG fallback for older Excel versions when embedding an SVG icon with Aspose.Cells. | Show how to scale an SVG icon dynamically to fit a target cell range while keeping aspect ratio. | Explain how to place multiple different SVG icons on separate worksheets using ShapeCollection.AddIcons.
 
 using System;
 using System.IO;
@@ -12,9 +12,9 @@ using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsIconExample
+namespace AsposeCellsIconDemo
 {
-    // Demonstrates how to render a worksheet to SVG in memory, embed the SVG as an Excel icon using ShapeCollection.AddIcons, set the picture to display as an icon, and save the workbook with the vector graphic as an embedded icon.
+    // Demonstrates how to render a worksheet to SVG, read the SVG bytes, and embed the image as an icon on the sheet using ShapeCollection.AddIcons. The example sets DisplayAsIcon, custom dimensions, and saves the workbook as XLSX.
     class Program
     {
         static void Main()
@@ -31,27 +31,33 @@ namespace AsposeCellsIconExample
             sheet.Cells["A3"].PutValue("Orange");
             sheet.Cells["B3"].PutValue(95);
 
-            // Render the worksheet to SVG and capture the SVG bytes in memory
+            // -----------------------------------------------------------------
+            // Render the worksheet to an SVG image (this will be used as the icon)
+            // -----------------------------------------------------------------
+            string svgPath = "worksheet_icon.svg";
+
+            // Configure SVG rendering options
             SvgImageOptions svgOptions = new SvgImageOptions
             {
                 ImageType = ImageType.Svg,   // Ensure SVG output
-                FitToViewPort = true
+                FitToViewPort = true         // Fit the SVG to the viewport
             };
 
-            byte[] svgBytes;
-            using (MemoryStream svgStream = new MemoryStream())
-            {
-                // Render the first (and only) page of the worksheet to SVG
-                SheetRender renderer = new SheetRender(sheet, svgOptions);
-                renderer.ToImage(0, svgStream);
-                svgBytes = svgStream.ToArray();
-            }
+            // Render the first (and only) sheet to SVG
+            SheetRender renderer = new SheetRender(sheet, svgOptions);
+            renderer.ToImage(0, svgPath);
 
+            // Read the generated SVG bytes
+            byte[] svgBytes = File.ReadAllBytes(svgPath);
+
+            // ---------------------------------------------------------------
             // Add the SVG as an icon to the worksheet using ShapeCollection.AddIcons
+            // ---------------------------------------------------------------
             ShapeCollection shapes = sheet.Shapes;
 
-            // Parameters: topRow, top (pixel offset), leftColumn, left (pixel offset), height, width
-            // Using -1 for height/width lets Excel auto‑size the icon.
+            // Parameters: topRow, top (pixel offset), leftColumn, left (pixel offset),
+            // height, width, imageByteData (SVG), compatibleImageData (null for newer Excel)
+            // Using -1 for height and width lets Excel auto-size the icon.
             Picture iconPicture = shapes.AddIcons(
                 topRow: 5,          // place starting at row 6 (0‑based index)
                 top: 0,
@@ -62,14 +68,25 @@ namespace AsposeCellsIconExample
                 imageByteData: svgBytes,
                 compatibleImageData: null);
 
-            // Mark the picture to be displayed as an icon
+            // Mark the picture to be displayed as an icon (prevents auto‑conversion)
             iconPicture.DisplayAsIcon = true;
+
+            // Optionally set a name and size for the icon picture
             iconPicture.Name = "WorksheetSvgIcon";
+            iconPicture.Height = 64;   // pixels
+            iconPicture.Width = 64;    // pixels
 
+            // ---------------------------------------------------------------
             // Save the workbook (the SVG icon is now embedded)
-            workbook.Save("WorksheetWithSvgIcon.xlsx", SaveFormat.Xlsx);
+            // ---------------------------------------------------------------
+            string outputPath = "WorkbookWithSvgIcon.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
 
-            Console.WriteLine("Workbook saved with SVG used as an application icon.");
+            // Clean up temporary SVG file
+            if (File.Exists(svgPath))
+                File.Delete(svgPath);
+
+            Console.WriteLine($"Workbook saved to '{outputPath}' with SVG icon embedded.");
         }
     }
 }

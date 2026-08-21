@@ -1,51 +1,33 @@
-// Title: C# – Convert Pipe‑Delimited Text to XLSX with Aspose.Cells TxtLoadOptions.Separator
-// Description: Shows how to configure TxtLoadOptions.Separator to ‘|’, import a pipe‑separated .txt file into an Aspose.Cells Workbook, and save the result as an .xlsx workbook, with sample data creation and basic exception handling.
-// Keywords: Aspose.Cells | C# | pipe delimited | TxtLoadOptions | Separator | convert txt to xlsx | custom delimiter | load text file | save as xlsx | Excel conversion
-// Common Searches: Aspose.Cells set separator to pipe | load pipe delimited file C# | convert txt to xlsx using Aspose | TxtLoadOptions custom delimiter example | C# code for pipe separated values to Excel
-// Developer Intent: Import a pipe‑separated text file into a Workbook via TxtLoadOptions.Separator and export it as an XLSX document.
-// Use Cases: Turn log files that use ‘|’ as column delimiter into searchable Excel reports. | Migrate legacy pipe‑separated export files into modern .xlsx dashboards. | Provide business users with an Excel view of configuration data stored in plain‑text files.
-// AI Prompts: Write C# code that reads a pipe‑separated .txt file with Aspose.Cells TxtLoadOptions and saves it as .xlsx, including error handling. | Explain how to change TxtLoadOptions.Separator for other delimiters such as tab, comma, or semicolon. | Create a step‑by‑step guide to batch‑process multiple pipe‑delimited files into separate XLSX workbooks using Aspose.Cells.
+// Title: C# – Convert Pipe‑Delimited Text to XLSX with Aspose.Cells
+// Description: Demonstrates how to set TxtLoadOptions.Separator to the pipe character, load a pipe‑delimited .txt file into an Aspose.Cells Workbook, and save the result as an XLSX workbook.
+// Keywords: Aspose.Cells | C# | pipe delimited | TxtLoadOptions | Separator | text to Excel | XLSX conversion
+// Common Searches: Aspose.Cells set TxtLoadOptions separator to pipe | convert pipe delimited file to Excel .NET | load .txt with custom delimiter Aspose.Cells | save workbook as XLSX using C# | batch convert pipe separated files to XLSX
+// Developer Intent: Load a pipe‑separated text file into a Workbook and export it as an XLSX file.
+// Use Cases: Migrate legacy pipe‑separated reports into modern Excel dashboards. | Automate daily conversion of log files that use ‘|’ as a delimiter. | Integrate custom‑delimited data imports into a .NET analytics application.
+// AI Prompts: Generate C# code that uses Aspose.Cells to read a pipe‑delimited .txt file by configuring TxtLoadOptions.Separator and saves it as .xlsx. | Explain how to configure TxtLoadOptions for any custom delimiter when converting text files to Excel with Aspose.Cells for .NET. | Provide a script to batch‑process a directory of ‘|’ delimited files into separate XLSX workbooks using Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace PipeDelimitedConversion
+namespace AsposeCellsPipeDemo
 {
-    // Shows how to configure TxtLoadOptions.Separator to ‘|’, import a pipe‑separated .txt file into an Aspose.Cells Workbook, and save the result as an .xlsx workbook, with sample data creation and basic exception handling.
+    // Demonstrates how to set TxtLoadOptions.Separator to the pipe character, load a pipe‑delimited .txt file into an Aspose.Cells Workbook, and save the result as an XLSX workbook.
     class Program
     {
         static void Main()
         {
-            const string inputPath = "input_pipe.txt";
-            const string outputPath = "output.xlsx";
+            // Path to the pipe‑delimited source file
+            string sourcePath = "input_pipe.txt";
 
-            try
-            {
-                // Ensure the input file exists; create a simple sample if missing
-                if (!File.Exists(inputPath))
-                {
-                    File.WriteAllText(inputPath, "Column1|Column2|Column3\nValue1|Value2|Value3");
-                }
+            // Create load options and set the pipe character as the separator
+            TxtLoadOptions loadOptions = new TxtLoadOptions();
+            loadOptions.Separator = '|';
 
-                // Configure load options to use pipe as the column separator
-                TxtLoadOptions loadOptions = new TxtLoadOptions
-                {
-                    Separator = '|'
-                };
+            // Load the pipe‑delimited file using the configured options
+            Workbook workbook = new Workbook(sourcePath, loadOptions);
 
-                // Load the pipe‑delimited text file into a workbook
-                Workbook workbook = new Workbook(inputPath, loadOptions);
-
-                // Save the workbook in XLSX format
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Conversion successful. Output saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the loaded workbook as an XLSX file
+            workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
     }
 }

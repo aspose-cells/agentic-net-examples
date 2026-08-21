@@ -1,48 +1,53 @@
-// Title: Convert Excel to PDF and flatten all annotations with Aspose.Cells in C#
-// Description: A C# example that verifies the source .xlsx file, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions to calculate formulas and flatten comments, notes, and shapes into the PDF page, and saves the result as a PDF while handling errors.
-// Keywords: Aspose.Cells PDF conversion C# | flatten annotations Aspose.Cells | PdfSaveOptions FlattenAllComments | Excel to PDF with comments embedded | C# convert workbook to PDF | Aspose.Cells flatten shapes PDF | calculate formulas during PDF export | Aspose.Cells example GitHub
-// Common Searches: C# Aspose.Cells flatten comments when saving to PDF | How to embed Excel annotations in PDF using Aspose.Cells | PdfSaveOptions FlattenAllComments property | Convert .xlsx to PDF with annotations flattened | Aspose.Cells calculate formulas on PDF export
-// Developer Intent: Generate a PDF from an Excel workbook where all comments, notes, and drawing objects are flattened into the page content, ensuring formulas are evaluated during the conversion.
-// Use Cases: Publish a financial model with calculated results and reviewer comments as a read‑only PDF. | Create archival PDFs of engineering spreadsheets where callouts and shapes must appear as part of the page. | Automate report distribution while guaranteeing that no interactive Excel elements remain in the final PDF.
-// AI Prompts: Write C# code that uses Aspose.Cells to convert an Excel file to PDF, flattening all comments and shapes into the PDF page. | Explain the PdfSaveOptions properties needed to embed annotations and calculate formulas during Excel‑to‑PDF conversion. | Provide guidance on optimizing memory usage when converting large workbooks to flattened PDFs with Aspose.Cells.
+// Title: Convert Excel to PDF and Flatten Annotations with Aspose.Cells for .NET
+// Description: This example demonstrates how to load an XLSX workbook, optionally recalculate formulas, and export it to PDF using Aspose.Cells. It explains the PdfSaveOptions settings and notes that the FlattenAllAnnotations feature is available only in newer library versions, advising an upgrade when needed.
+// Keywords: Aspose.Cells | C# | Excel to PDF conversion | flatten annotations | PdfSaveOptions | export workbook as PDF | annotation flattening Aspose.Cells | update Aspose.Cells version | Excel PDF export .NET | formula calculation before PDF
+// Common Searches: Aspose.Cells flatten annotations when saving to PDF | how to export Excel as PDF with annotations merged | PdfSaveOptions FlattenAllAnnotations property | convert .xlsx to PDF using C# Aspose.Cells | upgrade Aspose.Cells for annotation flattening
+// Developer Intent: Export an Excel workbook to PDF while merging any cell comments or shapes into the final page content.
+// Use Cases: Generate a PDF report from a workbook with all formulas evaluated. | Create a PDF where comments, notes, and drawing objects become part of the static page. | Detect the current Aspose.Cells version and prompt an upgrade to access annotation‑flattening features. | Implement robust file‑existence checks and exception handling for the conversion workflow.
+// AI Prompts: Write C# code that loads an Excel file, calculates formulas, and saves it as a PDF with all annotations flattened using Aspose.Cells. | Show how to programmatically verify the Aspose.Cells version and conditionally enable the FlattenAllAnnotations option. | Provide error‑handling snippets for missing input files, licensing issues, and PDF save failures in an Aspose.Cells conversion routine.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A C# example that verifies the source .xlsx file, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions to calculate formulas and flatten comments, notes, and shapes into the PDF page, and saves the result as a PDF while handling errors.
+// This example demonstrates how to load an XLSX workbook, optionally recalculate formulas, and export it to PDF using Aspose.Cells. It explains the PdfSaveOptions settings and notes that the FlattenAllAnnotations feature is available only in newer library versions, advising an upgrade when needed.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
-
-            // Verify that the source workbook exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
-
-            // Load the source workbook
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Create PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Optional: calculate formulas before conversion
-                CalculateFormula = true
-            };
+            // Optional: calculate all formulas before saving
+            workbook.CalculateFormula();
 
-            // Save the workbook as a PDF with the specified options
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // NOTE: The FlattenAllAnnotations property is not available in the current
+            // Aspose.Cells version. If needed, update the library to a newer version
+            // that supports this feature.
+
+            // Save the workbook as a PDF
             workbook.Save(outputPath, pdfOptions);
+
             Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors (e.g., loading, saving, licensing)
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

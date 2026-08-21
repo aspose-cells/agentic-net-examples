@@ -1,60 +1,53 @@
-// Title: Unhide All Rows, Show Formulas, and Save Workbook to New File – Aspose.Cells C# Example
-// Description: Loads an existing XLSX file, accesses the first worksheet, unhides every row using Cells.UnhideRows with auto‑fit height, optionally toggles formula view, creates the output folder if missing, and saves the modified workbook as a new XLSX file while handling missing files and runtime errors.
-// Keywords: Aspose.Cells | C# unhide rows | Excel row visibility | Show formulas Aspose.Cells | Save workbook new file | Cells.UnhideRows | auto‑fit row height | error handling | create output directory | Aspose.Cells .NET
-// Common Searches: Aspose.Cells unhide rows C# | How to display formulas in Aspose.Cells .NET | Save modified Excel workbook to another location using Aspose.Cells | Create output folder before saving workbook C# | Unhide hidden rows in Excel with Aspose.Cells | Cells.UnhideRows example
-// Developer Intent: Unhide every row in the first worksheet, optionally display formulas, and write the workbook to a new file.
-// Use Cases: Prepare uploaded Excel files for downstream processing by removing hidden rows and storing a clean copy. | Automate a reporting pipeline that guarantees all rows are visible before exporting the workbook to a shared folder. | Create a utility that validates input workbooks, reveals hidden content, and saves the result with a distinct filename.
-// AI Prompts: Generate C# code using Aspose.Cells that unhides all rows in a worksheet, ensures the output directory exists, optionally enables formula view, and saves the workbook to a specified path with robust error handling. | Provide a reusable method that iterates through every worksheet in a workbook, calls Cells.UnhideRows for each sheet, toggles ShowFormula when supported, and saves each modified workbook with a custom suffix.
+// Title: C# Example: Unhide All Rows, Show Formulas, and Save Workbook with Aspose.Cells
+// Description: Demonstrates how to use Aspose.Cells for .NET to unhide every row in a worksheet, enable the ShowFormulas flag so cells display their formulas, and write the modified workbook to a new Excel file. The sample also shows how to calculate the row range using MaxDataRow and apply auto‑fit height.
+// Keywords: Aspose.Cells C# unhide rows | ShowFormulas Aspose.Cells | save workbook new file Aspose.Cells | Aspose.Cells UnhideRows example | .NET Excel row visibility | Aspose.Cells GitHub sample | Excel debugging Aspose.Cells
+// Common Searches: How to unhide all rows in an Aspose.Cells worksheet C# | Enable formula view (ShowFormulas) with Aspose.Cells .NET | Save modified workbook as new file using Aspose.Cells | Aspose.Cells UnhideRows MaxDataRow usage | Aspose.Cells example on GitHub for row visibility
+// Developer Intent: Unhide every row, turn on formula display, and save the workbook as a new file.
+// Use Cases: Restore hidden rows after temporary processing before exporting the workbook. | Display formulas for auditing while keeping original values unchanged. | Create a debug copy of an Excel file with all rows visible and formulas shown. | Prepare a clean version of a report for reviewers who need to see calculation logic.
+// AI Prompts: Write C# code using Aspose.Cells to unhide all rows, enable ShowFormulas, and save the workbook to a new .xlsx file. | Explain how the UnhideRows method works, including the meaning of the height parameter and how to determine the row count with MaxDataRow. | Show how to apply the unhide and ShowFormulas settings to every worksheet in a workbook with Aspose.Cells.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Loads an existing XLSX file, accesses the first worksheet, unhides every row using Cells.UnhideRows with auto‑fit height, optionally toggles formula view, creates the output folder if missing, and saves the modified workbook as a new XLSX file while handling missing files and runtime errors.
-class Program
+namespace AsposeCellsUnhideRowsAndShowFormulas
 {
-    static void Main()
+    // Demonstrates how to use Aspose.Cells for .NET to unhide every row in a worksheet, enable the ShowFormulas flag so cells display their formulas, and write the modified workbook to a new Excel file. The sample also shows how to calculate the row range using MaxDataRow and apply auto‑fit height.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException.
-        if (!File.Exists(inputPath))
+        static void Main()
         {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
-
-        try
-        {
-            // Load the existing workbook.
-            Workbook workbook = new Workbook(inputPath);
-
-            // Get the first worksheet.
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Unhide all rows in the worksheet.
-            // Start from row index 0, total rows equal to the number of rows in the sheet,
-            // and use -1 for height to let Aspose.Cells auto‑fit the row height.
-            worksheet.Cells.UnhideRows(0, worksheet.Cells.Rows.Count, -1);
-
-            // NOTE: The ShowFormula property is not available in the current Aspose.Cells version.
-            // If needed, alternative approaches can be used to display formulas.
-
-            // Ensure the output directory exists.
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            try
             {
-                Directory.CreateDirectory(outputDir);
-            }
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
 
-            // Save the modified workbook.
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
+
+                // Hide rows 3,4,5 (zero‑based index) to demonstrate the unhide operation
+                cells.HideRows(2, 3);
+
+                // Unhide all rows in the worksheet.
+                // Use UnhideRows starting from row 0 up to the last used row.
+                // Height = -1 means auto‑fit (no explicit height change).
+                int lastRow = cells.MaxDataRow;               // last row that contains data
+                int totalRows = lastRow + 1;                  // total rows to process (0‑based)
+                cells.UnhideRows(0, totalRows, -1);
+
+                // Enable formula display for the worksheet.
+                // When ShowFormulas is true, cells will display their formulas instead of calculated values.
+                worksheet.ShowFormulas = true;
+
+                // Save the modified workbook to a new file.
+                string outputPath = "UnhiddenRows_ShowFormulas.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

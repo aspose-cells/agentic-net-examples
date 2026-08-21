@@ -1,50 +1,60 @@
-// Title: Toggle Smart‑Marker Section Visibility with a Boolean Variable Using WorkbookDesigner.SetVariable in Aspose.Cells for .NET
-// Description: Demonstrates how to create an Excel workbook, embed a conditional smart‑marker block (&if/$ShowSection … &endif), assign a boolean flag via WorkbookDesigner.SetVariable, process the markers, and save the file. Ideal for generating reports with optional sections.
-// Keywords: Aspose.Cells SetVariable C# | smart markers conditional visibility | if endif smart marker .NET | WorkbookDesigner SetVariable example | toggle Excel template sections | dynamic report generation C#
-// Common Searches: Aspose.Cells hide smart marker block with boolean | WorkbookDesigner.SetVariable usage C# | conditional smart markers example Aspose.Cells | how to show or hide sections in Excel template using Aspose | C# smart marker &if condition
-// Developer Intent: Apply a boolean variable to control the display of a smart‑marker block and generate the final workbook.
-// Use Cases: Create financial statements where footnotes appear only when a flag is true. | Build marketing dashboards that include optional analysis sections based on user selection. | Produce contract documents that show or hide clauses depending on configuration settings.
-// AI Prompts: Show a C# code snippet that uses WorkbookDesigner.SetVariable to control &if smart markers in Aspose.Cells. | Explain when to prefer SetVariable over SetDataSource for scalar values in Aspose.Cells. | Provide an example of toggling multiple smart‑marker sections with a single boolean variable in .NET.
+// Title: C# – Toggle Conditional Smart Marker Sections with WorkbookDesigner.SetVariable in Aspose.Cells
+// Description: Demonstrates how to insert &IF/$ShowSection/&ENDIF smart markers in an Excel template, assign a boolean flag using WorkbookDesigner.SetVariable, process the markers, and save the workbook. The example shows conditional visibility of rows based on a single true/false variable.
+// Keywords: Aspose.Cells SetVariable C# | conditional smart markers | boolean flag Excel template | WorkbookDesigner.SetVariable example | toggle smart marker sections | Aspose.Cells smart markers tutorial | C# Excel conditional content
+// Common Searches: Aspose.Cells SetVariable boolean example | C# conditional smart markers with &IF | how to hide rows using smart markers Aspose | WorkbookDesigner SetVariable vs SetDataSource | toggle Excel sections programmatically Aspose
+// Developer Intent: Pass a boolean variable to smart markers so that &IF/$ShowSection/&ENDIF blocks are shown or hidden during workbook generation.
+// Use Cases: Show a disclaimer row only when a regulatory flag is true. | Add an optional promotional paragraph to invoices based on a campaign switch. | Reveal advanced analytics sheets in a dashboard when a user‑enabled setting is active.
+// AI Prompts: Generate C# code that uses WorkbookDesigner.SetVariable to control &IF/$ShowSection/&ENDIF smart markers in Aspose.Cells. | Explain the steps to hide a worksheet section with a boolean flag using SetVariable instead of SetDataSource. | Compare SetVariable and SetDataSource for handling conditional smart markers in Aspose.Cells.
 
 using System;
+using System.IO;
+using System.Data;
 using Aspose.Cells;
 
-// Demonstrates how to create an Excel workbook, embed a conditional smart‑marker block (&if/$ShowSection … &endif), assign a boolean flag via WorkbookDesigner.SetVariable, process the markers, and save the file. Ideal for generating reports with optional sections.
-class SmartMarkerVisibilityDemo
+// Demonstrates how to insert &IF/$ShowSection/&ENDIF smart markers in an Excel template, assign a boolean flag using WorkbookDesigner.SetVariable, process the markers, and save the workbook. The example shows conditional visibility of rows based on a single true/false variable.
+class SmartMarkerVariableDemo
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
+            Worksheet templateSheet = workbook.Worksheets[0];
+            templateSheet.Name = "Template";
 
-            // Get the first worksheet and name it
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Template";
+            // Insert smart markers that define a conditional section based on a boolean variable
+            // &IF($ShowSection) starts the conditional block, &ENDIF ends it
+            templateSheet.Cells["A1"].PutValue("&IF($ShowSection)");
+            templateSheet.Cells["A2"].PutValue("This content is visible when ShowSection is true.");
+            templateSheet.Cells["A3"].PutValue("&ENDIF");
 
-            // Define a conditional smart marker block
-            sheet.Cells["A1"].PutValue("&if($ShowSection)");
-            sheet.Cells["A2"].PutValue("This content is visible when ShowSection = true");
-            sheet.Cells["A3"].PutValue("&endif");
-
-            // Associate the workbook with a designer
+            // Initialize WorkbookDesigner with the workbook
             WorkbookDesigner designer = new WorkbookDesigner(workbook);
 
-            // Set the variable that controls visibility (use SetDataSource for scalar values)
-            designer.SetDataSource("ShowSection", true);
+            // Prepare a DataSet with a boolean column for the smart marker variable
+            DataTable dt = new DataTable("Data");
+            dt.Columns.Add("ShowSection", typeof(bool));
+            dt.Rows.Add(true); // set to false to hide the section
+            DataSet ds = new DataSet();
+            ds.Tables.Add(dt);
 
-            // Process smart markers (populate data and evaluate conditions)
+            // Pass the DataSet to the designer
+            designer.SetDataSource(ds);
+
+            // Process the smart markers and populate the data
             designer.Process();
 
-            // Save the workbook
-            string outputPath = "SmartMarkerVisibility.xlsx";
+            // Define output file path
+            string outputPath = "SmartMarkerVariableDemo.xlsx";
+
+            // Save the resulting workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

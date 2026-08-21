@@ -1,54 +1,82 @@
-// Title: Refresh a PivotTable after source data changes with Aspose.Cells (C#)
-// Description: Shows how to modify worksheet cells, call RefreshData and CalculateData to update an Aspose.Cells PivotTable, and save the refreshed workbook.
-// Keywords: Aspose.Cells PivotTable refresh | C# RefreshData | Aspose.Cells CalculateData | update pivot cache programmatically | refresh pivot after data edit | Aspose.Cells example | pivot table recalc C#
-// Common Searches: Aspose.Cells how to refresh pivot table after editing data | C# refresh pivot cache Aspose.Cells | RefreshData CalculateData Aspose.Cells example | programmatically update pivot table in .NET | Aspose.Cells pivot table recalculate
-// Developer Intent: Update a PivotTable to reflect changes made to its source range.
-// Use Cases: Recalculate sales totals after adjusting figures before exporting a report. | Automate monthly workbook generation where source data is refreshed and the pivot must show current aggregates. | Integrate pivot refresh into a data‑processing pipeline to guarantee that all summary tables are up‑to‑date.
-// AI Prompts: Generate C# code that changes source cells and refreshes all PivotTables in a workbook using Aspose.Cells. | Explain the role of RefreshData and CalculateData when a PivotTable’s source range is modified. | Create a reusable method that accepts a Workbook, updates a range, and ensures every PivotTable on each sheet is refreshed and recalculated.
+// Title: Refresh a PivotTable After Modifying Source Data with Aspose.Cells (C#)
+// Description: Learn how to programmatically refresh an Aspose.Cells PivotTable after changing source worksheet values using RefreshData and CalculateData, then save the updated workbook.
+// Keywords: Aspose.Cells | C# | PivotTable refresh | RefreshData | CalculateData | update pivot cache | Excel automation | .NET Excel library | dynamic report generation | programmatic pivot update
+// Common Searches: Aspose.Cells refresh pivot table after data change C# | How to update pivot cache programmatically in Aspose.Cells | C# code to recalculate PivotTable without reopening workbook | RefreshData vs CalculateData Aspose.Cells PivotTable | Dynamic Excel report with refreshed PivotTable using Aspose
+// Developer Intent: Update an existing PivotTable so it reflects edited source data without recreating the table.
+// Use Cases: After adjusting sales figures in the source sheet, call RefreshData and CalculateData to keep the pivot report accurate. | In automated reporting pipelines, refresh the pivot before exporting to ensure the latest data is displayed. | When batch‑processing large datasets, invoke the refresh methods after each batch to maintain a current PivotTable view.
+// AI Prompts: Show C# code that refreshes an Aspose.Cells PivotTable after source cells are modified. | Explain the roles of RefreshData and CalculateData when updating a PivotTable with Aspose.Cells. | Provide a step‑by‑step guide to programmatically recalculate a PivotTable without recreating it in C#.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Shows how to modify worksheet cells, call RefreshData and CalculateData to update an Aspose.Cells PivotTable, and save the refreshed workbook.
-class RefreshPivotDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Learn how to programmatically refresh an Aspose.Cells PivotTable after changing source worksheet values using RefreshData and CalculateData, then save the updated workbook.
+    public class RefreshPivotTableAfterDataChange
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
 
-        // Populate source data for the pivot table
-        sheet.Cells["A1"].PutValue("Product");
-        sheet.Cells["B1"].PutValue("Sales");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["B2"].PutValue(100);
-        sheet.Cells["A3"].PutValue("Banana");
-        sheet.Cells["B3"].PutValue(200);
-        sheet.Cells["A4"].PutValue("Apple");
-        sheet.Cells["B4"].PutValue(150);
+                // Get the first worksheet where source data resides
+                Worksheet dataSheet = workbook.Worksheets[0];
 
-        // Add a pivot table based on the source range
-        int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // Populate sample source data for the pivot table
+                dataSheet.Cells["A1"].PutValue("Product");
+                dataSheet.Cells["B1"].PutValue("Sales");
+                dataSheet.Cells["A2"].PutValue("Apple");
+                dataSheet.Cells["B2"].PutValue(100);
+                dataSheet.Cells["A3"].PutValue("Banana");
+                dataSheet.Cells["B3"].PutValue(200);
+                dataSheet.Cells["A4"].PutValue("Apple");
+                dataSheet.Cells["B4"].PutValue(150);
 
-        // Configure the pivot table (row field and data field)
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product column
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales column
+                // Add a second worksheet to host the pivot table
+                Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
 
-        // Initial calculation to populate the pivot table
-        pivotTable.CalculateData();
+                // Create the pivot table based on the source range A1:B4
+                int pivotIndex = pivotSheet.PivotTables.Add("A1:B4", "E3", "SalesPivot");
+                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-        // ----- Modify the source data -----
-        sheet.Cells["B2"].PutValue(120); // Change Apple sales from 100 to 120
-        sheet.Cells["B3"].PutValue(250); // Change Banana sales from 200 to 250
+                // Configure the pivot fields (Product as row, Sales as data)
+                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Column 0 -> Product
+                pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Column 1 -> Sales
 
-        // Refresh the pivot cache and recalculate the pivot table
-        pivotTable.RefreshData();   // Gather updated data from the source range
-        pivotTable.CalculateData(); // Recalculate the pivot results
+                // Initial calculation so the pivot table shows data
+                pivotTable.RefreshData();      // Refresh cache
+                pivotTable.CalculateData();    // Recalculate pivot
 
-        // Save the workbook with the refreshed pivot table
-        workbook.Save("RefreshedPivot.xlsx");
+                // ----- Modify the source data -----
+                dataSheet.Cells["B2"].PutValue(120); // Change Apple sales from 100 to 120
+                dataSheet.Cells["B3"].PutValue(250); // Change Banana sales from 200 to 250
+
+                // Refresh the pivot table to reflect the updated source data
+                pivotTable.RefreshData();      // Refresh cache after data change
+                pivotTable.CalculateData();    // Recalculate pivot
+
+                // Save the workbook with the refreshed pivot table
+                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "RefreshedPivotTable.xlsx");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            RefreshPivotTableAfterDataChange.Run();
+        }
     }
 }

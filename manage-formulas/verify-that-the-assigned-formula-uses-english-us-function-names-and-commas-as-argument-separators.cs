@@ -1,109 +1,74 @@
-// Title: Verify English function names and comma separators in cell formulas with Aspose.Cells for .NET
-// Description: This .NET example shows how to set a workbook's region (e.g., Germany), assign formulas using both the standard English syntax (Formula) and a localized syntax (FormulaLocal), and then validate each formula. The verification extracts the function name, maps it to the standard English name via GetStandardFunctionName, checks that arguments are separated by commas, and outputs the results before saving the workbook.
-// Keywords: Aspose.Cells | .NET | formula verification | English function name | comma separator | FormulaLocal | GetStandardFunctionName | globalization | workbook region | German locale | Excel formula validation
-// Common Searches: Aspose.Cells check if formula uses English function name | Validate comma separators in Aspose.Cells formulas | How to use GetStandardFunctionName in Aspose.Cells | Formula vs FormulaLocal Aspose.Cells example | Set workbook region for localized formulas Aspose.Cells | Detect non‑English Excel functions with Aspose.Cells
-// Developer Intent: Ensure that a cell's formula is expressed with an English function name and commas as argument delimiters.
-// Use Cases: Audit workbooks created in non‑English locales to confirm formulas conform to the standard English syntax required by downstream processing. | Automatically convert or flag formulas that use localized function names or semicolon delimiters before exporting to CSV or other systems. | Integrate formula language validation into CI pipelines to enforce compliance with corporate Excel standards.
-// AI Prompts: Generate a C# method that receives a Cell and its Workbook and returns true only when the formula uses an English function name and commas as separators, using Aspose.Cells APIs. | Write code that scans all worksheets in a workbook, verifies each formula's language and delimiter, and returns a list of cells that fail the check. | Provide a logging routine that records the cell address, original formula, detected language status, and delimiter type for every formula in an Aspose.Cells workbook.
+// Title: Check English (US) Formula Syntax and Comma Separators with Aspose.Cells for .NET
+// Description: Shows how to set a workbook region (e.g., Germany), assign an English‑US formula (=SUM(1,2,3)) to a cell, verify that the Formula property uses English function names and commas, compare it with FormulaLocal, map German function names via GlobalizationSettings.GetStandardFunctionName, and save the workbook.
+// Keywords: Aspose.Cells formula verification | English formula syntax | Formula vs FormulaLocal | GlobalizationSettings GetStandardFunctionName | workbook region Germany | .NET Excel localization | cross‑locale formulas
+// Common Searches: Aspose.Cells verify English formula | Formula vs FormulaLocal in .NET | GetStandardFunctionName example C# | Set workbook region Germany Aspose.Cells | Check formula separators Aspose.Cells | Excel formula localization C#
+// Developer Intent: Confirm that a formula assigned in code is stored in the standard English format with commas, regardless of the workbook's locale.
+// Use Cases: Validate that automatically generated formulas remain in English syntax for cross‑regional Excel files. | Display both the standard Formula and the localized FormulaLocal values to users in different locales. | Convert localized function names (e.g., German "SUMME") to their English equivalents using GlobalizationSettings.GetStandardFunctionName.
+// AI Prompts: Write C# code with Aspose.Cells that sets the workbook region to France and checks that a formula uses semicolons in the localized representation. | Create a method that receives any cell address and returns true if its Formula uses English function names and commas, using Aspose.Cells. | Explain how GlobalizationSettings.GetStandardFunctionName works and provide examples for German, French, and Spanish Excel function names.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaVerification
+namespace AsposeCellsExamples
 {
-    // This .NET example shows how to set a workbook's region (e.g., Germany), assign formulas using both the standard English syntax (Formula) and a localized syntax (FormulaLocal), and then validate each formula. The verification extracts the function name, maps it to the standard English name via GetStandardFunctionName, checks that arguments are separated by commas, and outputs the results before saving the workbook.
-    class Program
+    // Shows how to set a workbook region (e.g., Germany), assign an English‑US formula (=SUM(1,2,3)) to a cell, verify that the Formula property uses English function names and commas, compare it with FormulaLocal, map German function names via GlobalizationSettings.GetStandardFunctionName, and save the workbook.
+    public class VerifyEnglishFormula
     {
-        static void Main()
+        public static void Run()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook (lifecycle rule: create)
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
 
-                // Set the workbook region to Germany so that German localized formulas are accepted
+                // Set workbook region to a non‑English locale (e.g., Germany) to demonstrate localization
                 workbook.Settings.Region = CountryCode.Germany;
 
-                // Example 1: Set a formula using standard English function name (Formula property always uses English)
-                Cell englishCell = sheet.Cells["A1"];
-                englishCell.Formula = "=SUM(1,2,3)"; // English function with commas
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // Example 2: Set a formula using a localized (German) function name
-                // This uses the localized property which respects the workbook's region settings
-                Cell localizedCell = sheet.Cells["B1"];
-                localizedCell.FormulaLocal = "=SUMME(1;2;3)"; // German function with semicolon
+                // Assign a formula using English function name and commas
+                // This will be stored in the standard (en‑US) format regardless of the workbook locale
+                cells["A1"].Formula = "=SUM(1,2,3)";
 
-                // Verify each cell
-                VerifyFormula(englishCell, workbook);
-                VerifyFormula(localizedCell, workbook);
+                // Retrieve the standard formula (English) and the localized formula
+                string standardFormula = cells["A1"].Formula;          // Expected: "=SUM(1,2,3)"
+                string localizedFormula = cells["A1"].FormulaLocal;    // May be "=SUMME(1;2;3)" in German locale
 
-                // Save the workbook (lifecycle rule)
-                string outputPath = "FormulaVerificationResult.xlsx";
+                // Verify that the standard formula uses English function name and commas
+                bool usesEnglishFunction = standardFormula.Contains("SUM");
+                bool usesCommas = standardFormula.Contains(",");
+
+                Console.WriteLine("Standard Formula: " + standardFormula);
+                Console.WriteLine("Localized Formula: " + localizedFormula);
+                Console.WriteLine("Uses English function name: " + usesEnglishFunction);
+                Console.WriteLine("Uses commas as separators: " + usesCommas);
+
+                // Additional check: convert a German function name to its standard English name
+                // (demonstrates GlobalizationSettings.GetStandardFunctionName)
+                string germanFunction = "SUMME";
+                string converted = workbook.Settings.GlobalizationSettings.GetStandardFunctionName(germanFunction);
+                Console.WriteLine($"German function '{germanFunction}' maps to standard '{converted}'");
+
+                // Save the workbook (lifecycle rule: save)
+                string outputPath = "VerifyEnglishFormula.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
+    }
 
-        /// <param name="cell">The cell to verify.</param>
-        /// <param name="workbook">The workbook containing the cell (needed for globalization settings).</param>
-        static void VerifyFormula(Cell cell, Workbook workbook)
+    // Entry point for the application
+    public static class Program
+    {
+        public static void Main()
         {
-            try
-            {
-                // Retrieve the formula in standard (English) format
-                string standardFormula = cell.Formula;          // English function name, commas
-                // Retrieve the formula in localized format (if any)
-                string localFormula = cell.FormulaLocal;        // May be empty if not set
-
-                // Determine which representation to validate
-                string formulaToCheck = string.IsNullOrEmpty(standardFormula) ? localFormula : standardFormula;
-
-                if (string.IsNullOrEmpty(formulaToCheck))
-                {
-                    Console.WriteLine($"Cell {cell.Name} does not contain a formula.");
-                    return;
-                }
-
-                // Extract the function name (text before the first '(')
-                int openParenIndex = formulaToCheck.IndexOf('(');
-                if (openParenIndex <= 0)
-                {
-                    Console.WriteLine($"Cell {cell.Name}: Unable to parse function name.");
-                    return;
-                }
-
-                string functionName = formulaToCheck.Substring(0, openParenIndex)
-                                                   .TrimStart('=')
-                                                   .Trim();
-
-                // Get the standard (English) name for the extracted function name
-                string standardName = workbook.Settings.GlobalizationSettings.GetStandardFunctionName(functionName);
-                bool isEnglishFunction = string.Equals(functionName, standardName, StringComparison.OrdinalIgnoreCase);
-
-                // Extract the argument list (between '(' and ')')
-                int closeParenIndex = formulaToCheck.LastIndexOf(')');
-                string arguments = formulaToCheck.Substring(openParenIndex + 1,
-                                                            closeParenIndex - openParenIndex - 1);
-
-                bool usesCommas = arguments.Contains(",");
-
-                // Output verification result
-                Console.WriteLine($"Cell {cell.Name}:");
-                Console.WriteLine($"  Formula: {formulaToCheck}");
-                Console.WriteLine($"  Function name '{functionName}' is English: {isEnglishFunction}");
-                Console.WriteLine($"  Arguments use commas: {usesCommas}");
-                Console.WriteLine();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error verifying cell {cell?.Name}: {ex.Message}");
-            }
+            VerifyEnglishFormula.Run();
         }
     }
 }

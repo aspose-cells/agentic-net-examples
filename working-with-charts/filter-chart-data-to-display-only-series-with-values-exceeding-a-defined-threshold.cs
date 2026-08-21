@@ -1,21 +1,22 @@
-// Title: C# – Hide Aspose.Cells Chart Series Below a Value Threshold
-// Description: Creates a workbook with three data series, adds a column chart, then evaluates each series' maximum cell value. Series whose maximum does not exceed a defined threshold are hidden by setting the IsFiltered property. The example also shows how to read the filtered series count and save the workbook.
-// Keywords: Aspose.Cells chart filtering C# | hide chart series Aspose.Cells | IsFiltered property | filter series by threshold | column chart series max value | .NET Excel chart automation | dynamic chart series visibility
-// Common Searches: Aspose.Cells hide chart series below threshold | C# filter Excel chart series by value | How to use IsFiltered in Aspose.Cells | Remove low‑value series from Aspose.Cells chart | Count filtered series Aspose.Cells
-// Developer Intent: Programmatically hide chart series whose data never exceeds a specified numeric threshold.
-// Use Cases: Display only product lines with sales above a target in a sales dashboard. | Automatically exclude low‑risk assets from a financial performance chart. | Create a KPI report that shows only metrics surpassing a defined benchmark.
-// AI Prompts: Generate C# code that uses Aspose.Cells to hide chart series with a maximum value less than 50 and then saves the workbook. | Explain the purpose of the IsFiltered property for chart series in Aspose.Cells and how to retrieve the number of filtered series. | Show an alternative method to filter chart series based on their average value instead of the maximum using Aspose.Cells.
+// Title: Filter chart series by numeric threshold with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, add a column chart, and hide any series whose values never exceed a defined threshold. The example uses the Series.IsFiltered property and shows how to count filtered series before saving the file.
+// Keywords: Aspose.Cells chart filtering C# | hide chart series Aspose.Cells | Series.IsFiltered property | threshold based chart series | .NET Excel chart example | filter NSeries Aspose | Excel chart automation C# | dynamic chart series visibility
+// Common Searches: Aspose.Cells hide chart series below a threshold | C# filter column chart series by value | How to use Series.IsFiltered in Aspose.Cells | Remove low‑value series from Excel chart programmatically | Aspose.Cells chart series conditional display
+// Developer Intent: Show only those chart series that contain at least one data point greater than a specified numeric limit.
+// Use Cases: Sales dashboards that automatically omit products with sales below target. | KPI reports where only metrics surpassing risk thresholds appear in charts. | Monthly performance sheets that exclude insignificant data series without manual editing.
+// AI Prompts: Generate C# code using Aspose.Cells to hide chart series whose all values are below a given threshold. | Explain the role of the IsFiltered property for chart series and how to retrieve the filtered series count after applying a threshold. | Provide a pattern for making the threshold user‑configurable and re‑applying the filter without recreating the chart.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsChartFiltering
 {
-    // Creates a workbook with three data series, adds a column chart, then evaluates each series' maximum cell value. Series whose maximum does not exceed a defined threshold are hidden by setting the IsFiltered property. The example also shows how to read the filtered series count and save the workbook.
-    public class FilterSeriesByThreshold
+    // Demonstrates how to create a workbook, add a column chart, and hide any series whose values never exceed a defined threshold. The example uses the Series.IsFiltered property and shows how to count filtered series before saving the file.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
@@ -23,111 +24,78 @@ namespace AsposeCellsChartFiltering
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // -------------------------------------------------
-                // Populate sample data: three series in columns B, C, D
-                // -------------------------------------------------
-                // Header row
+                // Populate sample data: three series (B, C, D) with numeric values
                 sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Series1");
-                sheet.Cells["C1"].PutValue("Series2");
-                sheet.Cells["D1"].PutValue("Series3");
-
-                // Category labels
                 sheet.Cells["A2"].PutValue("A");
                 sheet.Cells["A3"].PutValue("B");
                 sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["A5"].PutValue("D");
 
-                // Series values
-                // Series1 values (some below threshold)
-                sheet.Cells["B2"].PutValue(5);
-                sheet.Cells["B3"].PutValue(12);
-                sheet.Cells["B4"].PutValue(18);
-                sheet.Cells["B5"].PutValue(22); // only this exceeds threshold
+                sheet.Cells["B1"].PutValue("Series1");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["B4"].PutValue(30);
 
-                // Series2 values (all below threshold)
-                sheet.Cells["C2"].PutValue(3);
-                sheet.Cells["C3"].PutValue(7);
-                sheet.Cells["C4"].PutValue(9);
-                sheet.Cells["C5"].PutValue(15);
+                sheet.Cells["C1"].PutValue("Series2");
+                sheet.Cells["C2"].PutValue(5);
+                sheet.Cells["C3"].PutValue(15);
+                sheet.Cells["C4"].PutValue(25);
 
-                // Series3 values (all above threshold)
-                sheet.Cells["D2"].PutValue(25);
-                sheet.Cells["D3"].PutValue(30);
-                sheet.Cells["D4"].PutValue(35);
-                sheet.Cells["D5"].PutValue(40);
+                sheet.Cells["D1"].PutValue("Series3");
+                sheet.Cells["D2"].PutValue(40);
+                sheet.Cells["D3"].PutValue(50);
+                sheet.Cells["D4"].PutValue(60);
 
-                // -------------------------------------------------
-                // Add a column chart and bind the data
-                // -------------------------------------------------
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 7, 0, 20, 8);
+                // Add a column chart
+                int chartIdx = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 8);
                 Chart chart = sheet.Charts[chartIdx];
 
                 // Add each series to the chart
-                chart.NSeries.Add("B2:B5", true); // Series1
-                chart.NSeries.Add("C2:C5", true); // Series2
-                chart.NSeries.Add("D2:D5", true); // Series3
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.Add("C2:C4", true);
+                chart.NSeries.Add("D2:D4", true);
+                chart.NSeries.CategoryData = "A2:A4";
 
-                // Set category (X‑axis) data
-                chart.NSeries.CategoryData = "A2:A5";
+                // Define the threshold: only series containing a value > 25 will be shown
+                double threshold = 25.0;
 
-                // -------------------------------------------------
-                // Define the threshold and filter series
-                // -------------------------------------------------
-                double threshold = 20.0;
-
-                // Helper array with the data ranges of each series (same order as added)
-                string[] seriesRanges = { "B2:B5", "C2:C5", "D2:D5" };
-
+                // Iterate through each series and filter out those that do not exceed the threshold
                 for (int i = 0; i < chart.NSeries.Count; i++)
                 {
-                    // Determine the maximum value in the current series range
-                    double maxVal = double.MinValue;
-                    string[] parts = seriesRanges[i].Split(':');
-                    CellArea area = CellArea.CreateCellArea(parts[0], parts[1]);
+                    Series series = chart.NSeries[i];
+                    // Get the range string that holds the series values (e.g., "B2:B4")
+                    string rangeStr = series.Values;
 
-                    for (int row = area.StartRow; row <= area.EndRow; row++)
+                    // Create a range object to access individual cells
+                    AsposeRange range = sheet.Cells.CreateRange(rangeStr);
+
+                    bool exceedsThreshold = false;
+                    foreach (Cell cell in range)
                     {
-                        double val = sheet.Cells[row, area.StartColumn].DoubleValue;
-                        if (val > maxVal) maxVal = val;
+                        // Ensure the cell contains a numeric value before comparison
+                        if (cell.Type == CellValueType.IsNumeric && cell.DoubleValue > threshold)
+                        {
+                            exceedsThreshold = true;
+                            break;
+                        }
                     }
 
-                    // If the maximum does not exceed the threshold, hide the series
-                    if (maxVal <= threshold)
+                    // If no value exceeds the threshold, hide the series
+                    if (!exceedsThreshold)
                     {
-                        chart.NSeries[i].IsFiltered = true;
+                        series.IsFiltered = true;
                     }
                 }
 
-                // Optional: display how many series are filtered
+                // Optional: display count of filtered series
                 Console.WriteLine("Filtered series count: " + chart.FilteredNSeries.Count);
 
-                // -------------------------------------------------
                 // Save the workbook
-                // -------------------------------------------------
-                string outputPath = "FilteredSeriesByThreshold.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                workbook.Save("ChartFilteredByThreshold.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                FilterSeriesByThreshold.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Unhandled exception: " + ex.Message);
             }
         }
     }

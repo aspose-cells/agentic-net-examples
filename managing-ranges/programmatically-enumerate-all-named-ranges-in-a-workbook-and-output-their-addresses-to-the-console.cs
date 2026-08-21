@@ -1,52 +1,62 @@
-// Title: C# – List All Named Ranges in an Aspose.Cells Workbook and Output Their Addresses
-// Description: Shows how to create a workbook, add sample named ranges, retrieve all defined ranges with Worksheets.GetNamedRanges(), and write each range’s name and address to the console before saving the file.
-// Keywords: Aspose.Cells | C# | named ranges | list named ranges | GetNamedRanges | range address | enumerate ranges | console output | Workbook automation | Excel API
-// Common Searches: Aspose.Cells GetNamedRanges C# example | list all named ranges in a workbook using Aspose | print named range addresses to console C# | retrieve named range names and addresses Aspose.Cells | enumerate named ranges Excel with Aspose.Cells
-// Developer Intent: Retrieve every named range in a workbook and display its name and address.
-// Use Cases: Verify that required named ranges exist before running calculations. | Generate a quick documentation snapshot of all defined ranges. | Debug complex spreadsheets by listing range definitions in the console.
-// AI Prompts: Provide C# code to filter named ranges by a prefix and output the matching ones. | Show how to export named range names and addresses to a CSV file using Aspose.Cells. | Explain handling of named ranges that reference cells on different worksheets.
+// Title: C# – List All Named Ranges in an Aspose.Cells Workbook and Print Their Addresses
+// Description: Demonstrates how to create a workbook, define named ranges, retrieve every named range with Worksheets.GetNamedRanges(), and output each range's name and address to the console using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# list named ranges | GetNamedRanges .NET | enumerate workbook named ranges | named range address Aspose.Cells | Aspose.Cells range enumeration example
+// Common Searches: Aspose.Cells get all named ranges C# | print named range addresses Aspose.Cells | list workbook named ranges .NET | How to enumerate named ranges in Aspose.Cells | Aspose.Cells GetNamedRanges usage
+// Developer Intent: Retrieve every defined named range in a workbook and display its name and cell address.
+// Use Cases: Validate that required named ranges exist before running calculations | Generate a quick reference sheet of all named ranges for documentation | Dynamically map named ranges to data‑processing logic at runtime
+// AI Prompts: Generate C# code with Aspose.Cells that writes all named range names and addresses to a CSV file. | Show how to filter named ranges by worksheet name and output only those matches. | Provide an example that logs each named range’s details to a text file instead of the console.
 
 using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Shows how to create a workbook, add sample named ranges, retrieve all defined ranges with Worksheets.GetNamedRanges(), and write each range’s name and address to the console before saving the file.
-class Program
+namespace NamedRangeEnumerationDemo
 {
-    static void Main()
+    // Demonstrates how to create a workbook, define named ranges, retrieve every named range with Worksheets.GetNamedRanges(), and output each range's name and address to the console using Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
-
-            // Add sample named ranges for demonstration
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells.CreateRange("A1:B2").Name = "SalesData";
-            sheet.Cells.CreateRange("C3:D4").Name = "Expenses";
-
-            // Retrieve all pre‑defined named ranges (using GetNamedRanges)
-            AsposeRange[] namedRanges = workbook.Worksheets.GetNamedRanges();
-
-            // Output each named range's name and address to the console
-            if (namedRanges != null && namedRanges.Length > 0)
+            try
             {
-                foreach (AsposeRange range in namedRanges)
+                // Create a new workbook (lifecycle rule: create)
+                Workbook workbook = new Workbook();
+
+                // Add sample data and named ranges for demonstration
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Item");
+                sheet.Cells["A2"].PutValue("Quantity");
+                sheet.Cells["B1"].PutValue(10);
+                sheet.Cells["B2"].PutValue(20);
+
+                // Create two named ranges
+                sheet.Cells.CreateRange("A1:B1").Name = "HeaderRange";
+                sheet.Cells.CreateRange("A2:B2").Name = "DataRange";
+
+                // Retrieve all pre-defined named ranges using the GetNamedRanges method (rule)
+                Aspose.Cells.Range[] namedRanges = workbook.Worksheets.GetNamedRanges();
+
+                // Output the addresses of the named ranges to the console
+                if (namedRanges != null && namedRanges.Length > 0)
                 {
-                    Console.WriteLine($"Name: {range.Name}, Address: {range.Address}");
+                    Console.WriteLine($"Found {namedRanges.Length} named range(s):");
+                    foreach (Aspose.Cells.Range range in namedRanges)
+                    {
+                        // Each Range object provides its address via the Address property
+                        Console.WriteLine($"Name: {range.Name}, Address: {range.Address}");
+                    }
                 }
-            }
-            else
-            {
-                Console.WriteLine("No named ranges found.");
-            }
+                else
+                {
+                    Console.WriteLine("No named ranges found in the workbook.");
+                }
 
-            // Save the workbook (lifecycle: save)
-            workbook.Save("NamedRangesDemo.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the workbook if needed (lifecycle rule: save)
+                workbook.Save("NamedRangesDemo.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

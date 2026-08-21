@@ -1,91 +1,86 @@
-// Title: Create a PivotTable and PivotChart on a Dashboard Sheet with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to build a workbook, add a data table, generate a PivotTable on a separate sheet, configure rows/columns, insert a column PivotChart linked to the PivotTable on a dashboard sheet, refresh the chart, and save the file as XLSX using Aspose.Cells for C#.
-// Keywords: Aspose.Cells | C# | PivotTable | PivotChart | dashboard worksheet | Excel automation | column chart | chart from pivot | save as xlsx | data table
-// Common Searches: Aspose.Cells create PivotTable and PivotChart in C# | How to add a dashboard sheet with pivot chart using Aspose.Cells | C# code for PivotChart linked to PivotTable Aspose.Cells | Generate Excel dashboard programmatically Aspose.Cells | Refresh pivot data and chart Aspose.Cells .NET
-// Developer Intent: Generate a data table, derive a PivotTable from it, and display the analysis in a PivotChart on a dedicated dashboard worksheet.
-// Use Cases: Automated sales reporting: raw data → pivot analysis → visual dashboard in one workbook. | Monthly KPI dashboard that updates when source data changes, without manual Excel interaction. | Self‑service Excel file for business users that combines raw data, pivot calculations, and interactive charts.
-// AI Prompts: Write C# code with Aspose.Cells to create a PivotChart that references an existing PivotTable on another worksheet. | Explain how to refresh a PivotTable and its linked PivotChart after modifying source cells using Aspose.Cells. | Show the correct syntax for setting the PivotSource property of a chart to a specific PivotTable name in Aspose.Cells.
+// Title: Build a Table, PivotTable and Dashboard Pivot Chart with Aspose.Cells for .NET (C#)
+// Description: This C# example demonstrates how to programmatically create a workbook, add a two‑column data table, generate a PivotTable that groups values by Category, and place a linked PivotChart on a separate Dashboard sheet. The chart is refreshed from the PivotTable and the file is saved as an XLSX workbook.
+// Keywords: Aspose.Cells C# pivot chart | create pivot table programmatically | Excel dashboard sheet Aspose.Cells | link chart to pivot table .NET | generate data table Aspose.Cells | refresh pivot chart Aspose.Cells | save workbook as XLSX C# | Aspose.Range example | GitHub Aspose.Cells pivot chart sample | Excel automation .NET
+// Common Searches: how to add a pivot chart to a dashboard sheet using Aspose.Cells | Aspose.Cells C# example linking chart to pivot table | create table and pivot table with Aspose.Cells for .NET | generate Excel dashboard programmatically C# | Aspose.Cells pivot chart refresh data
+// Developer Intent: Programmatically produce an Excel file that contains a data table, a PivotTable based on that table, and a PivotChart placed on a dashboard worksheet.
+// Use Cases: Automated monthly sales reports that summarize categories and display results on a visual dashboard. | Generating Excel‑based business intelligence dashboards where charts update automatically with pivot data changes. | Building reusable .NET utilities that create structured tables, pivot analyses, and linked charts for downstream users.
+// AI Prompts: Show how to change the dashboard chart type to a line chart and move it to cell D5 using Aspose.Cells. | Provide code to add a column field and a filter field to the PivotTable and reflect those fields in the dashboard chart. | Explain how to format the pivot chart’s axis titles, legend position, and data labels after linking it to the PivotTable.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsPivotChartDemo
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+// This C# example demonstrates how to programmatically create a workbook, add a two‑column data table, generate a PivotTable that groups values by Category, and place a linked PivotChart on a separate Dashboard sheet. The chart is refreshed from the PivotTable and the file is saved as an XLSX workbook.
+class PivotChartDashboardExample
 {
-    // Demonstrates how to build a workbook, add a data table, generate a PivotTable on a separate sheet, configure rows/columns, insert a column PivotChart linked to the PivotTable on a dashboard sheet, refresh the chart, and save the file as XLSX using Aspose.Cells for C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // 1. Create a new workbook
             Workbook workbook = new Workbook();
 
-            // -------------------------------------------------
-            // 1. Create a data table on the first worksheet
-            // -------------------------------------------------
+            // 2. Prepare source data in the first worksheet (as a table)
             Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
+            dataSheet.Name = "SourceData";
 
-            // Sample data: Category, Product, Sales
+            // Sample data: Category and Value columns
             dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Product");
-            dataSheet.Cells["C1"].PutValue("Sales");
-
+            dataSheet.Cells["B1"].PutValue("Value");
             dataSheet.Cells["A2"].PutValue("A");
-            dataSheet.Cells["B2"].PutValue("Apple");
-            dataSheet.Cells["C2"].PutValue(120);
-
-            dataSheet.Cells["A3"].PutValue("A");
-            dataSheet.Cells["B3"].PutValue("Banana");
-            dataSheet.Cells["C3"].PutValue(80);
-
-            dataSheet.Cells["A4"].PutValue("B");
-            dataSheet.Cells["B4"].PutValue("Carrot");
-            dataSheet.Cells["C4"].PutValue(150);
-
+            dataSheet.Cells["B2"].PutValue(10);
+            dataSheet.Cells["A3"].PutValue("B");
+            dataSheet.Cells["B3"].PutValue(20);
+            dataSheet.Cells["A4"].PutValue("A");
+            dataSheet.Cells["B4"].PutValue(30);
             dataSheet.Cells["A5"].PutValue("B");
-            dataSheet.Cells["B5"].PutValue("Date");
-            dataSheet.Cells["C5"].PutValue(200);
+            dataSheet.Cells["B5"].PutValue(40);
 
-            // -------------------------------------------------
-            // 2. Add a PivotTable on a new worksheet
-            // -------------------------------------------------
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-            // Define the source data range (including headers)
-            string sourceData = $"=Data!{dataSheet.Cells.MaxDisplayRange.Address}";
-            // Add the pivot table (sourceData, destination cell, table name)
+            // 3. Add a worksheet to host the PivotTable
+            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+
+            // 4. Define the source data range for the pivot table
+            AsposeRange sourceRange = dataSheet.Cells.MaxDisplayRange;
+            string sourceData = $"=SourceData!{sourceRange.Address}";
+
+            // 5. Add the pivot table
             int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A1", "SalesPivot");
             PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-            // Configure the pivot table: Category as row, Product as column, Sales as data
+            // 6. Configure the pivot table fields
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
 
-            // Refresh and calculate the pivot data
+            // Optional: display in tabular form and calculate data
+            pivotTable.ShowInTabularForm();
+            // Refresh and calculate pivot data using correct API
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // -------------------------------------------------
-            // 3. Create a dashboard sheet and add a PivotChart
-            // -------------------------------------------------
+            // 7. Add a dashboard worksheet where the pivot chart will be placed
             Worksheet dashboardSheet = workbook.Worksheets.Add("Dashboard");
-            // Add a column chart (type, upper-left row, upper-left column, lower-right row, lower-right column)
+
+            // 8. Add a chart to the dashboard sheet (Column chart as an example)
+            // Parameters: chart type, upper-left row, upper-left column, lower-right row, lower-right column
             int chartIndex = dashboardSheet.Charts.Add(ChartType.Column, 1, 0, 20, 10);
             Chart chart = dashboardSheet.Charts[chartIndex];
 
-            // Set the chart's pivot source to the previously created pivot table
-            // Format: SheetName!PivotTableName
-            chart.PivotSource = $"Pivot!SalesPivot";
+            // 9. Link the chart to the pivot table
+            chart.PivotSource = $"PivotTable!SalesPivot";
 
-            // Refresh the chart to pull data from the pivot table
+            // 10. Refresh the chart to pull data from the pivot table
             chart.RefreshPivotData();
 
-            // -------------------------------------------------
-            // 4. Save the workbook
-            // -------------------------------------------------
+            // 11. Save the workbook
             workbook.Save("PivotChartDashboard.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

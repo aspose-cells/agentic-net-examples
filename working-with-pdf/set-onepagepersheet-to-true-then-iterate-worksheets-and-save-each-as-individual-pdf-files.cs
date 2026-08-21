@@ -1,39 +1,68 @@
-// Title: Export Each Excel Worksheet to Separate PDF with OnePagePerSheet – Aspose.Cells C#
-// Description: Learn how to load an Excel workbook with Aspose.Cells, enable PdfSaveOptions.OnePagePerSheet, iterate through worksheets, set SheetSet for each sheet, and save every worksheet as an individual PDF file named after the sheet.
-// Keywords: Aspose.Cells PDF export C# | OnePagePerSheet option | save worksheet as PDF | SheetSet per sheet PDF | C# Excel to PDF batch conversion | individual PDF per worksheet
-// Common Searches: Aspose.Cells export each sheet to separate PDF | C# OnePagePerSheet true PDF conversion | How to use SheetSet with PdfSaveOptions | Save Excel worksheets as individual PDFs .NET | Batch convert Excel workbook to multiple PDFs
-// Developer Intent: Create a separate PDF file for every worksheet in an Excel workbook, ensuring each PDF contains only one page.
-// Use Cases: Generate distinct PDF reports for each worksheet in a multi‑sheet workbook. | Automate archival of individual sheet PDFs for compliance or record‑keeping. | Prepare per‑sheet PDFs for printing, guaranteeing a single‑page layout per document.
-// AI Prompts: Provide C# code using Aspose.Cells that sets PdfSaveOptions.OnePagePerSheet to true and exports each worksheet to its own PDF file. | Show how to configure SheetSet in PdfSaveOptions to limit the save operation to a specific worksheet. | Explain how to sanitize worksheet names for valid file names when saving each sheet as a PDF with Aspose.Cells.
+// Title: Export Each Excel Worksheet to a Separate One‑Page PDF with Aspose.Cells for .NET
+// Description: Loads an Excel workbook, sets PdfSaveOptions.OnePagePerSheet to true, iterates through all worksheets, and saves each sheet as an individual PDF (e.g., Sheet_1.pdf) using a SheetSet to limit rendering to the current sheet.
+// Keywords: Aspose.Cells | C# PDF conversion | OnePagePerSheet | PdfSaveOptions | SheetSet | export worksheet to PDF | individual PDF per sheet | Excel to PDF .NET | batch PDF export | Aspose.Cells example
+// Common Searches: Aspose.Cells export each worksheet to separate PDF | C# OnePagePerSheet PDF conversion | How to save Excel sheets as individual PDFs using Aspose.Cells | PdfSaveOptions SheetSet usage example | Convert multi‑sheet workbook to single‑page PDFs .NET
+// Developer Intent: Create separate one‑page PDF files for every worksheet in an Excel workbook.
+// Use Cases: Distribute each sheet as its own PDF report | Archive individual worksheets for compliance | Automate email attachments where each sheet is a separate PDF | Prepare printable PDFs with one page per sheet for easy printing | Integrate into a CI pipeline to generate PDFs from Excel templates
+// AI Prompts: Write C# code using Aspose.Cells to convert each worksheet of a workbook into a separate PDF with OnePagePerSheet enabled and custom filenames. | Explain how to add password protection to each generated PDF while using PdfSaveOptions and SheetSet. | Suggest memory‑efficient techniques for converting large workbooks to individual PDFs with Aspose.Cells. | Provide a PowerShell script that calls the compiled .NET assembly to batch convert Excel sheets to PDFs. | Show how to log the conversion status and handle missing worksheets gracefully.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Learn how to load an Excel workbook with Aspose.Cells, enable PdfSaveOptions.OnePagePerSheet, iterate through worksheets, set SheetSet for each sheet, and save every worksheet as an individual PDF file named after the sheet.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads an Excel workbook, sets PdfSaveOptions.OnePagePerSheet to true, iterates through all worksheets, and saves each sheet as an individual PDF (e.g., Sheet_1.pdf) using a SheetSet to limit rendering to the current sheet.
+    public class SaveSheetsAsIndividualPdf
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Create PDF save options and enable OnePagePerSheet
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.OnePagePerSheet = true;
-
-        // Iterate through all worksheets
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
+        public static void Run()
         {
-            // Restrict the save operation to the current worksheet
-            pdfOptions.SheetSet = new SheetSet(i);
+            const string inputPath = "input.xlsx";
 
-            // Generate a file name based on the worksheet name
-            string sheetName = workbook.Worksheets[i].Name;
-            string outputFile = $"{sheetName}.pdf";
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            // Save the current worksheet as an individual PDF file
-            workbook.Save(outputFile, pdfOptions);
+            try
+            {
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets in the workbook
+                for (int i = 0; i < workbook.Worksheets.Count; i++)
+                {
+                    // Create PDF save options for the current sheet
+                    PdfSaveOptions pdfOptions = new PdfSaveOptions
+                    {
+                        // Ensure each sheet is rendered on a single page
+                        OnePagePerSheet = true,
+                        // Restrict rendering to the current worksheet only
+                        SheetSet = new SheetSet(new int[] { i })
+                    };
+
+                    // Define the output PDF file name (e.g., Sheet_1.pdf, Sheet_2.pdf, ...)
+                    string outputFile = $"Sheet_{i + 1}.pdf";
+
+                    // Save the current worksheet as an individual PDF file
+                    workbook.Save(outputFile, pdfOptions);
+                    Console.WriteLine($"Saved: {outputFile}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Catch any runtime exceptions and display an error message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            Run();
         }
     }
 }

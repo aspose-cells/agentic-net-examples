@@ -1,46 +1,62 @@
-// Title: C# – Verify No ListObjects Remain After Converting Tables to Ranges with Aspose.Cells
-// Description: Loads an Excel workbook, iterates through each worksheet, converts every ListObject (table) to a regular range, confirms the ListObjects collection is empty, and saves the updated file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# convert ListObject to range | remove Excel tables Aspose.Cells | validate ListObjects count | Aspose.Cells ListObject verification | convert tables to ranges .NET
-// Common Searches: Aspose.Cells convert all tables to ranges | how to delete ListObjects after ConvertToRange | check for remaining ListObjects in workbook C# | ensure no Excel tables exist after conversion Aspose.Cells | bulk remove ListObjects from worksheets
-// Developer Intent: Confirm that after converting every ListObject to a range, the workbook contains zero ListObject objects.
-// Use Cases: Strip tables before exporting to CSV to avoid table‑specific formatting. | Validate workbook cleanliness after bulk table removal for downstream processing. | Increase compatibility with older Excel versions that lack ListObject support.
-// AI Prompts: Generate C# code using Aspose.Cells that converts all ListObjects in a workbook to ranges and asserts the ListObjects collection is empty. | Write a unit test that loads a sample workbook, runs the conversion loop, and verifies Worksheet.ListObjects.Count equals zero for every sheet. | Explain how ConvertToRange updates the ListObjects collection and recommend the safest iteration pattern for removing all tables.
+// Title: Remove all ListObject tables after converting them to ranges with Aspose.Cells for .NET
+// Description: This C# example creates a workbook, adds a ListObject (table) on A1:B3, converts every ListObject in every worksheet to a normal range using ConvertToRange, verifies that no tables remain, and saves the file.
+// Keywords: Aspose.Cells ListObject conversion | ConvertToRange C# | delete tables Aspose.Cells | check for ListObjects after conversion | .NET spreadsheet table removal | Aspose.Cells workbook cleanup
+// Common Searches: how to delete ListObject after ConvertToRange Aspose.Cells | verify no tables exist in workbook C# Aspose.Cells | convert Excel tables to ranges programmatically | Aspose.Cells remove all ListObjects from workbook | C# sample for ListObject cleanup in Aspose.Cells
+// Developer Intent: Ensure that every ListObject in a workbook has been transformed into a regular range and that the workbook no longer contains any table objects.
+// Use Cases: Prepare a workbook for CSV export where tables cause formatting issues. | Apply cell‑level styling that is unsupported on table objects. | Automated testing to confirm ListObject cleanup after batch processing.
+// AI Prompts: Generate a C# function that returns true if any ListObjects are still present after calling ConvertToRange on all worksheets using Aspose.Cells. | Write a unit test in NUnit that asserts no ListObjects remain after converting all tables to ranges in an Aspose.Cells workbook. | Suggest an alternative method to remove ListObjects without using ConvertToRange, leveraging other Aspose.Cells APIs.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Loads an Excel workbook, iterates through each worksheet, converts every ListObject (table) to a regular range, confirms the ListObjects collection is empty, and saves the updated file using Aspose.Cells for .NET.
-class ValidateNoListObjects
+// This C# example creates a workbook, adds a ListObject (table) on A1:B3, converts every ListObject in every worksheet to a normal range using ConvertToRange, verifies that no tables remain, and saves the file.
+class ValidateListObjectsRemoval
 {
     static void Main()
     {
-        // Load the workbook (replace with your source file)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Process each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Populate sample data that will become a table
+        sheet.Cells["A1"].PutValue("ID");
+        sheet.Cells["B1"].PutValue("Name");
+        sheet.Cells["A2"].PutValue(1);
+        sheet.Cells["B2"].PutValue("John");
+        sheet.Cells["A3"].PutValue(2);
+        sheet.Cells["B3"].PutValue("Jane");
+
+        // Add a ListObject (table) to the worksheet
+        int loIndex = sheet.ListObjects.Add("A1", "B3", true);
+        ListObject listObject = sheet.ListObjects[loIndex];
+
+        // Convert every ListObject in every worksheet to a normal range
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            // Convert all ListObjects (tables) in the worksheet to regular ranges
-            // Loop until the collection is empty because ConvertToRange removes the object
-            while (sheet.ListObjects.Count > 0)
+            // Iterate backwards because ConvertToRange removes the ListObject from the collection
+            for (int i = ws.ListObjects.Count - 1; i >= 0; i--)
             {
-                ListObject table = sheet.ListObjects[0];
-                table.ConvertToRange();
-            }
-
-            // Verify that no ListObjects remain
-            if (sheet.ListObjects.Count == 0)
-            {
-                Console.WriteLine($"Worksheet '{sheet.Name}' contains no ListObjects after conversion.");
-            }
-            else
-            {
-                Console.WriteLine($"Worksheet '{sheet.Name}' still contains {sheet.ListObjects.Count} ListObjects.");
+                ws.ListObjects[i].ConvertToRange();
             }
         }
 
-        // Save the modified workbook (replace with your desired output file)
-        workbook.Save("output.xlsx");
+        // Verify that no ListObjects remain in the workbook
+        bool anyListObjects = false;
+        foreach (Worksheet ws in workbook.Worksheets)
+        {
+            if (ws.ListObjects.Count > 0)
+            {
+                anyListObjects = true;
+                break;
+            }
+        }
+
+        Console.WriteLine(anyListObjects
+            ? "ListObjects still exist after conversion."
+            : "All ListObjects have been removed.");
+
+        // Save the workbook (optional, demonstrates lifecycle usage)
+        workbook.Save("ValidatedWorkbook.xlsx");
     }
 }

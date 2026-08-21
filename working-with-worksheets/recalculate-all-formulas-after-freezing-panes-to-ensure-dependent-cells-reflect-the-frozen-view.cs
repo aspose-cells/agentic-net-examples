@@ -1,40 +1,39 @@
-// Title: C# – Recalculate All Formulas After Freezing Panes with Aspose.Cells
-// Description: Creates a workbook, adds values and formulas, freezes the top two rows and left two columns at cell C3, then calls Workbook.CalculateFormula() to refresh all dependent calculations before saving.
-// Keywords: Aspose.Cells C# freeze panes | Workbook.CalculateFormula | recalculate formulas after FreezePanes | update dependent cells Excel .NET | freeze rows and columns Aspose.Cells | Excel formula refresh C# | Aspose.Cells worksheet calculation | freeze panes example .NET
-// Common Searches: Aspose.Cells recalculate formulas after FreezePanes | C# freeze panes and calculate formulas | Workbook.CalculateFormula usage with FreezePanes | how to refresh formulas after freezing rows in Aspose.Cells | Aspose.Cells example freeze panes C#
-// Developer Intent: Refresh every formula in a workbook so that cells dependent on frozen rows or columns show correct values after applying FreezePanes.
-// Use Cases: Generate reports with frozen header rows where totals must reflect the latest data before export. | Maintain calculation consistency in large workbooks after programmatically freezing panes. | Prepare Excel files for end‑users that require both navigation aids (frozen panes) and accurate formula results.
-// AI Prompts: Show C# code using Aspose.Cells to freeze panes at a specific cell and then recalculate all formulas before saving. | Explain why Workbook.CalculateFormula should be invoked after Worksheet.FreezePanes and list alternative ways to trigger a formula refresh in Aspose.Cells.
+// Title: Recalculate Formulas After Freeze Panes with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to freeze rows/columns using Worksheet.FreezePanes, then run Workbook.CalculateFormula to refresh all dependent formulas before saving the workbook.
+// Keywords: Aspose.Cells | FreezePanes | CalculateFormula | C# | recalculate formulas | update dependent cells | Excel export | worksheet calculations
+// Common Searches: Aspose.Cells recalculate formulas after FreezePanes | C# FreezePanes then CalculateFormula | update Excel formulas after freezing panes Aspose | Workbook.CalculateFormula after FreezePanes example
+// Developer Intent: Refresh every formula after applying FreezePanes so that dependent cells show correct values.
+// Use Cases: Financial reports with frozen header rows that need totals updated before distribution. | Dashboard exports where navigation panes are locked and all calculations must be current. | Template generation for printable spreadsheets that freeze panes for layout and require a final calculation pass.
+// AI Prompts: Show C# code that freezes panes with Aspose.Cells and then recalculates all formulas. | Explain why a second Workbook.CalculateFormula call is recommended after Worksheet.FreezePanes. | Provide a step‑by‑step guide to update dependent cells after applying FreezePanes in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, adds values and formulas, freezes the top two rows and left two columns at cell C3, then calls Workbook.CalculateFormula() to refresh all dependent calculations before saving.
+// Demonstrates how to freeze rows/columns using Worksheet.FreezePanes, then run Workbook.CalculateFormula to refresh all dependent formulas before saving the workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule: create)
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-
-        // Access the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Sample data and formulas (so we have something to recalculate)
+        // Populate some sample data
         worksheet.Cells["A1"].PutValue(10);
         worksheet.Cells["A2"].PutValue(20);
-        worksheet.Cells["B1"].Formula = "=A1+A2";   // B1 = 30
-        worksheet.Cells["C1"].Formula = "=B1*2";    // C1 = 60
+        // Formula that depends on the values above
+        worksheet.Cells["B1"].Formula = "=SUM(A1:A2)";
 
-        // Freeze panes at cell C3 (row index 2, column index 2) with 2 frozen rows and 2 frozen columns
-        // Rule: Worksheet.FreezePanes(int, int, int, int)
-        worksheet.FreezePanes(2, 2, 2, 2);
-
-        // Recalculate all formulas after freezing panes
-        // Rule: Workbook.CalculateFormula()
+        // Initial calculation to establish formula results
         workbook.CalculateFormula();
 
-        // Save the workbook (lifecycle rule: save)
-        workbook.Save("RecalculatedAfterFreeze.xlsx");
+        // Freeze panes at cell C3 (row index 2, column index 2) with 2 rows and 2 columns frozen
+        worksheet.FreezePanes(2, 2, 2, 2);
+
+        // Recalculate all formulas after freezing panes to ensure dependent cells are updated
+        workbook.CalculateFormula();
+
+        // Save the workbook
+        workbook.Save("RecalcAfterFreeze.xlsx");
     }
 }

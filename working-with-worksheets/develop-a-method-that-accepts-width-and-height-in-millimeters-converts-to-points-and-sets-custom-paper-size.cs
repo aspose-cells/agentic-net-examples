@@ -1,73 +1,80 @@
-// Title: C# – Set Custom Worksheet Paper Size in Aspose.Cells Using Millimeter Dimensions
-// Description: Shows a C# helper that takes width and height in millimeters, converts them to points (1 pt = 25.4/72 mm) and then to inches, sets PageSetup.PaperSize to Custom, and applies the size with PageSetup.CustomPaperSize on the first worksheet before saving the workbook.
-// Keywords: Aspose.Cells | C# custom paper size | millimeter to point conversion | PageSetup.CustomPaperSize | Excel worksheet page setup | convert mm to inches | non‑standard page size | label sheet printing | PDF report page size | Aspose.Cells API
-// Common Searches: Aspose.Cells set custom paper size C# | convert millimeters to points for Excel page setup | PageSetup.CustomPaperSize expects inches | how to define custom worksheet size in Aspose.Cells | C# convert mm to points Excel | custom paper size for PDF export Aspose.Cells
-// Developer Intent: Create a reusable C# method that receives a Workbook and paper dimensions in millimeters, converts the values to the units required by Aspose.Cells, and applies a custom page size to the first worksheet.
-// Use Cases: Generate a PDF report with a non‑standard page size (e.g., 100 mm × 150 mm) by setting a custom paper size before exporting. | Print label sheets or forms that require exact dimensions defined in millimeters. | Prepare a workbook for a specialized layout (e.g., custom brochures) where the default paper sizes are insufficient.
-// AI Prompts: Write a C# method that accepts width and height in millimeters, converts them to points and inches, and sets a custom paper size on an Aspose.Cells worksheet. | Explain the step‑by‑step conversion from millimeters to points and then to inches needed for PageSetup.CustomPaperSize in Aspose.Cells. | Add validation and error handling to the custom paper size helper to manage negative or zero dimensions. | Show how to apply the custom paper size to all worksheets in a workbook instead of only the first one.
+// Title: Set Custom Worksheet Paper Size in Points from Millimeters with Aspose.Cells for .NET
+// Description: C# method that receives width and height in millimeters, converts them to inches (1 in = 25.4 mm) and points (1 in = 72 pt), applies the dimensions to the first worksheet via PageSetup.CustomPaperSize, ensures the target folder exists, and saves the workbook.
+// Keywords: Aspose.Cells custom paper size | C# convert mm to points | Excel worksheet page setup inches | Aspose.Cells set page size programmatically | metric to point conversion .NET | custom worksheet dimensions | Aspose.Cells save workbook path
+// Common Searches: Aspose.Cells set custom paper size C# | convert millimeters to points for Excel page setup | how to define custom worksheet size in Aspose.Cells | C# create workbook with A4 dimensions using Aspose.Cells | set page size in points instead of inches Aspose.Cells
+// Developer Intent: Create a reusable C# routine that takes metric dimensions, converts them to the units required by Aspose.Cells, and assigns a custom paper size to a worksheet.
+// Use Cases: Printing labels or forms where the paper size is specified in millimeters. | Generating regional reports (A4, A5, Legal) directly from metric specifications. | Preparing Excel files for PDF conversion with exact point measurements to match print layouts.
+// AI Prompts: Generate a C# function using Aspose.Cells that accepts width and height in millimeters, converts them to inches and points, and sets the worksheet's custom paper size. | Add comprehensive error handling to the custom paper size method, including directory creation and detailed logging of conversion failures. | Show how to retrieve the calculated point values after setting the custom size and use them to adjust worksheet margins programmatically.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// C# method that receives width and height in millimeters, converts them to inches (1 in = 25.4 mm) and points (1 in = 72 pt), applies the dimensions to the first worksheet via PageSetup.CustomPaperSize, ensures the target folder exists, and saves the workbook.
+public static class PaperSizeHelper
 {
-    // Shows a C# helper that takes width and height in millimeters, converts them to points (1 pt = 25.4/72 mm) and then to inches, sets PageSetup.PaperSize to Custom, and applies the size with PageSetup.CustomPaperSize on the first worksheet before saving the workbook.
-    public static class CustomPaperSizeHelper
+    /// <param name="widthMm">Paper width in millimeters.</param>
+    /// <param name="heightMm">Paper height in millimeters.</param>
+    /// <param name="outputPath">Full path where the workbook will be saved.</param>
+    public static void SetCustomPaperSizeInPoints(double widthMm, double heightMm, string outputPath)
     {
-        /// <param name="workbook">The workbook whose first worksheet will be modified.</param>
-        /// <param name="widthMm">Paper width in millimeters.</param>
-        /// <param name="heightMm">Paper height in millimeters.</param>
-        public static void SetCustomPaperSizeInPoints(Workbook workbook, double widthMm, double heightMm)
+        try
         {
-            // Convert millimeters to points.
-            // 1 point = 1/72 inch, 1 inch = 25.4 mm  => 1 point = 25.4 / 72 mm
-            const double mmPerPoint = 25.4 / 72.0;
-            double widthPoints = widthMm / mmPerPoint;
-            double heightPoints = heightMm / mmPerPoint;
+            // Convert millimeters to inches (1 inch = 25.4 mm)
+            double widthInches = widthMm / 25.4;
+            double heightInches = heightMm / 25.4;
 
-            // Convert points to inches for the CustomPaperSize method.
-            double widthInches = widthPoints / 72.0;
-            double heightInches = heightPoints / 72.0;
+            // For informational purposes: convert inches to points (1 inch = 72 points)
+            double widthPoints = widthInches * 72.0;
+            double heightPoints = heightInches * 72.0;
 
-            // Access the first worksheet.
-            Worksheet sheet = workbook.Worksheets[0];
-            PageSetup pageSetup = sheet.PageSetup;
+            // Ensure the output directory exists
+            string directory = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
 
-            // Indicate that we are using a custom paper size.
-            pageSetup.PaperSize = PaperSizeType.Custom;
-
-            // Apply the custom size (method expects inches).
-            pageSetup.CustomPaperSize(widthInches, heightInches);
-        }
-
-        // Example usage.
-        public static void Run()
-        {
-            // Create a new workbook (lifecycle rule: create).
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Set custom paper size to 100 mm x 150 mm.
-            SetCustomPaperSizeInPoints(workbook, 100.0, 150.0);
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Save the workbook (lifecycle rule: save).
-            workbook.Save("CustomPaperSizeInPoints.xlsx");
+            // Set the custom paper size using inches (required by the API)
+            worksheet.PageSetup.CustomPaperSize(widthInches, heightInches);
+
+            // Optionally, you could store the point values somewhere or use them for other calculations
+            // Console.WriteLine($"Custom size in points: {widthPoints}pt x {heightPoints}pt");
+
+            // Save the workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error setting custom paper size: {ex.Message}");
+            throw;
         }
     }
+}
 
-    // Entry point for the console application.
-    public static class Program
+public class Program
+{
+    public static void Main(string[] args)
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                CustomPaperSizeHelper.Run();
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Example usage: A4 size (210mm x 297mm) saved to "CustomPaperSize.xlsx"
+            double widthMm = 210;
+            double heightMm = 297;
+            string outputPath = Path.Combine(Environment.CurrentDirectory, "CustomPaperSize.xlsx");
+
+            PaperSizeHelper.SetCustomPaperSizeInPoints(widthMm, heightMm, outputPath);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
         }
     }
 }

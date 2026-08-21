@@ -1,35 +1,46 @@
+// Title: Render the First Worksheet to PNG with Aspose.Cells for .NET (default DPI)
+// Description: Loads an Excel workbook, configures ImageOrPrintOptions for PNG using the library's default resolution, and uses SheetRender to export the first worksheet as a single‑page PNG file (first_worksheet_preview.png).
+// Keywords: Aspose.Cells | C# | SheetRender | PNG preview | default DPI | export worksheet as image | ImageOrPrintOptions | Excel to PNG | quick preview
+// Common Searches: Aspose.Cells render first sheet to PNG | C# export Excel worksheet as PNG default resolution | How to create worksheet thumbnail with Aspose.Cells | Generate PNG preview of Excel file using .NET | SheetRender PNG output example
+// Developer Intent: Create a PNG snapshot of the first worksheet using Aspose.Cells' default DPI for a fast visual preview.
+// Use Cases: Display thumbnail previews of uploaded Excel files in a web portal. | Generate a snapshot for email or PDF reports without altering the original workbook. | Provide an instant visual preview in a desktop application that reads Excel data. | Create image assets for documentation or training materials.
+// AI Prompts: Show how to set a custom DPI (e.g., 300) when rendering the first worksheet to PNG. | Explain how to batch‑convert all worksheets in a workbook to separate PNG files. | Provide code for robust error handling when the input file is missing or the worksheet index is out of range. | Demonstrate rendering a specific cell range to PNG instead of the whole sheet. | Show how to write the PNG image to a memory stream for further processing.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-class WorksheetToPng
+namespace AsposeCellsPreview
 {
-    static void Main()
+    // Loads an Excel workbook, configures ImageOrPrintOptions for PNG using the library's default resolution, and uses SheetRender to export the first worksheet as a single‑page PNG file (first_worksheet_preview.png).
+    class Program
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Load the source workbook (replace with your actual file path)
+            string sourcePath = "input.xlsx";
+            Workbook workbook = new Workbook(sourcePath);
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Configure image rendering options for PNG output.
+            // No resolution is set, so default resolution will be used.
+            ImageOrPrintOptions options = new ImageOrPrintOptions
+            {
+                ImageType = Aspose.Cells.Drawing.ImageType.Png,
+                // OnePagePerSheet ensures the whole worksheet is rendered to a single image.
+                OnePagePerSheet = true
+            };
 
-        // Optional: add some data to the sheet
-        sheet.Cells["A1"].PutValue("Sample Data");
+            // Create a SheetRender for the first worksheet.
+            SheetRender sheetRender = new SheetRender(workbook.Worksheets[0], options);
 
-        // Configure image rendering options for PNG (default resolution)
-        ImageOrPrintOptions options = new ImageOrPrintOptions();
-        options.ImageType = ImageType.Png;
+            // Render the first page (index 0) of the worksheet to a PNG file.
+            string outputPath = "first_worksheet_preview.png";
+            sheetRender.ToImage(0, outputPath);
 
-        // Create a SheetRender instance for the worksheet
-        SheetRender renderer = new SheetRender(sheet, options);
+            // Clean up resources.
+            sheetRender.Dispose();
 
-        // Define the output PNG file path
-        string outputPath = Path.Combine(Environment.CurrentDirectory, "FirstSheet.png");
-
-        // Render the first page (index 0) of the worksheet to the PNG file
-        renderer.ToImage(0, outputPath);
-
-        Console.WriteLine($"First worksheet rendered to PNG: {outputPath}");
+            Console.WriteLine($"First worksheet rendered to PNG at: {outputPath}");
+        }
     }
 }

@@ -1,10 +1,10 @@
-// Title: Set a Custom Gradient Angle for WordArt and Export to PDF with Aspose.Cells for .NET
-// Description: Demonstrates how to add a WordArt shape, apply a linear gradient fill with a user‑defined angle, optionally rotate the text, and save the workbook as a PDF using Aspose.Cells in C#.
-// Keywords: Aspose.Cells WordArt gradient angle | C# linear gradient fill WordArt | set GradientFill.Angle Aspose.Cells | WordArt text rotation Aspose.Cells | export workbook to PDF Aspose.Cells | custom gradient direction C# | shape FillType Gradient Aspose
-// Common Searches: how to change gradient angle of WordArt in Aspose.Cells | set text rotation for WordArt shape C# | Aspose.Cells linear gradient fill angle example | export WordArt with custom gradient to PDF | C# Aspose.Cells gradient fill direction
-// Developer Intent: Apply a specific gradient angle (and optional text rotation) to a WordArt shape before converting the worksheet to PDF.
-// Use Cases: Design marketing brochures with angled WordArt headings that use a precise gradient direction. | Create report sections where the WordArt text is rotated for visual emphasis while maintaining consistent gradient shading. | Generate a series of worksheets, each containing WordArt with different gradient angles, and combine them into a single PDF document.
-// AI Prompts: Write C# code using Aspose.Cells to add a WordArt shape, set a linear gradient fill with a custom angle, and save the workbook as a PDF. | Explain how to modify TextBody.TextAlignment.RotationAngle for a WordArt shape without affecting its gradient angle in Aspose.Cells. | Show how to change the GradientFill direction type (e.g., FromCenter, FromCorner) for WordArt and reflect the change in the exported PDF.
+// Title: Set WordArt Gradient Angle and Export to PDF with Aspose.Cells for .NET
+// Description: Demonstrates how to add a WordArt shape, apply a linear gradient with a custom angle, and save the workbook as a PDF using Aspose.Cells. The example shows setting the gradient direction (e.g., 45°) and configuring two‑color gradient fills before conversion.
+// Keywords: Aspose.Cells WordArt gradient angle | custom gradient direction Aspose.Cells | WordArt linear gradient .NET | export WordArt to PDF Aspose | gradient fill angle PDF conversion | C# Aspose.Cells shape styling
+// Common Searches: how to change WordArt gradient angle in Aspose.Cells | Aspose.Cells set linear gradient direction for WordArt | customize WordArt gradient before PDF export .NET | Aspose.Cells gradient fill angle property example | C# WordArt gradient rotation Aspose.Cells
+// Developer Intent: Apply a specific gradient angle to a WordArt shape so the angle appears correctly in the generated PDF.
+// Use Cases: Design a report title with a 45° blue‑to‑light‑blue gradient and export it as a PDF. | Create marketing flyers where each WordArt element needs a distinct gradient direction before PDF conversion. | Allow end‑users to select gradient angles for WordArt in a web app and produce PDFs with the chosen visual style.
+// AI Prompts: Show me C# code to set a custom gradient angle for a WordArt shape in Aspose.Cells and save it as a PDF. | Provide an Aspose.Cells example that changes the gradient direction of WordArt based on a variable angle and exports the workbook to PDF. | Explain how to combine shape rotation and gradient angle adjustments for WordArt using Aspose.Cells for .NET.
 
 using System;
 using System.Drawing;
@@ -12,42 +12,55 @@ using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-// Demonstrates how to add a WordArt shape, apply a linear gradient fill with a user‑defined angle, optionally rotate the text, and save the workbook as a PDF using Aspose.Cells in C#.
-class Program
+namespace AsposeCellsWordArtGradientPdf
 {
-    static void Main()
+    // Demonstrates how to add a WordArt shape, apply a linear gradient with a custom angle, and save the workbook as a PDF using Aspose.Cells. The example shows setting the gradient direction (e.g., 45°) and configuring two‑color gradient fills before conversion.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a WordArt shape with a preset style that supports gradient fill
-        // Parameters: style, text, topRow, top, leftColumn, left, height, width
-        Shape wordArt = worksheet.Shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle7,   // Gradient Fill - Blue, Accent 1, Reflection
-            "Gradient WordArt",
-            2,    // topRow
-            0,    // top (pixels)
-            2,    // leftColumn
-            0,    // left (pixels)
-            200,  // height (pixels)
-            100   // width (pixels)
-        );
+            // Add a WordArt shape with a preset style that supports gradient fill
+            // Parameters: style, text, topRow, top, leftColumn, left, height, width
+            Shape wordArt = sheet.Shapes.AddWordArt(
+                PresetWordArtStyle.WordArtStyle7, // Gradient Fill - Blue, Accent 1, Reflection
+                "Gradient WordArt",
+                2,   // topRow
+                0,   // top (pixels)
+                2,   // leftColumn
+                0,   // left (pixels)
+                100, // height (pixels)
+                400  // width (pixels)
+            );
 
-        // Configure the shape to use a linear gradient fill
-        wordArt.Fill.FillType = FillType.Gradient;
-        // Initialize the gradient (angle will be overridden later)
-        wordArt.Fill.GradientFill.SetGradient(GradientFillType.Linear, 0, GradientDirectionType.FromCenter);
+            // Ensure the shape uses gradient fill
+            wordArt.Fill.FillType = FillType.Gradient;
 
-        // Set the desired gradient angle (e.g., 60 degrees)
-        wordArt.Fill.GradientFill.Angle = 60f;
+            // Set the gradient type to linear and define an initial angle (e.g., 0 degrees)
+            wordArt.Fill.GradientFill.SetGradient(GradientFillType.Linear, 0f, GradientDirectionType.FromCenter);
 
-        // Optional: rotate the text inside the WordArt shape (e.g., 45 degrees)
-        // This uses the text alignment rotation property
-        wordArt.TextBody.TextAlignment.RotationAngle = 45;
+            // Customize the gradient angle – this is the rotation parameter for the gradient
+            // For example, set to 45 degrees
+            wordArt.Fill.GradientFill.Angle = 45f;
 
-        // Save the workbook as PDF
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        workbook.Save("WordArtGradientAngle.pdf", pdfOptions);
+            // Define the two colors for the gradient
+            wordArt.Fill.GradientFill.SetTwoColorGradient(
+                Color.Blue,          // Start color
+                Color.LightBlue,     // End color
+                GradientStyleType.Horizontal,
+                1);
+
+            // Optionally rotate the entire WordArt shape (not required for gradient angle)
+            // wordArt.RotationAngle = 30; // Uncomment if shape rotation is desired
+
+            // Prepare PDF save options (watermark not needed here)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as PDF; the gradient angle will be reflected in the output
+            workbook.Save("WordArtGradient.pdf", pdfOptions);
+        }
     }
 }

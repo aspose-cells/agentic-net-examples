@@ -1,81 +1,84 @@
-// Title: Batch convert XLSX to lightweight HTML with Aspose.Cells .NET (ExcludeUnusedStyles)
-// Description: Scans a folder for .xlsx files, loads each workbook with Aspose.Cells, removes unused styles, sets HtmlSaveOptions.ExcludeUnusedStyles, and saves a matching .html file to an output directory while handling missing files and exceptions.
-// Keywords: Aspose.Cells batch HTML export | ExcludeUnusedStyles .NET | remove unused styles Excel | convert multiple XLSX to HTML | reduce HTML size Aspose.Cells | C# Excel to HTML conversion | automated Excel HTML generation
-// Common Searches: batch convert xlsx to html asp.net | aspocells excludeunusedstyles example | how to remove unused styles when saving html | c# export many excel files to html | optimize html size from excel workbook
-// Developer Intent: Automatically transform every Excel workbook in a directory into a compact HTML file by stripping unused styles during the save process.
-// Use Cases: Create web‑ready reports from a library of Excel templates in a single run. | Provide fast HTML previews for user‑uploaded spreadsheets in a portal, minimizing bandwidth. | Schedule nightly conversion of financial workbooks to lightweight HTML for quick visual review.
-// AI Prompts: Generate a reusable C# method that processes all .xlsx files in a given folder and saves them as HTML with ExcludeUnusedStyles enabled. | Add robust logging and skip logic for corrupted or password‑protected Excel files in the batch conversion script. | Show how to preserve custom cell formatting while still excluding unused styles during HTML export with Aspose.Cells.
+// Title: Batch Convert XLSX Files to Compact HTML with Aspose.Cells (C#) – Remove Unused Styles
+// Description: A C# console utility that scans a folder for *.xlsx workbooks, loads each with Aspose.Cells, calls RemoveUnusedStyles, sets HtmlSaveOptions.ExcludeUnusedStyles, and saves a reduced‑size HTML file to a target directory. Includes progress logging and robust error handling.
+// Keywords: Aspose.Cells | C# batch export | XLSX to HTML conversion | RemoveUnusedStyles | ExcludeUnusedStyles | HTML size reduction | .NET console application | directory processing | Excel workbook HTML export | automated Excel to HTML
+// Common Searches: batch convert xlsx to html aspose.cells | remove unused styles when saving excel as html | htmlsaveoptions excludeunusedstyles c# example | process multiple excel files in a folder with aspose.cells | reduce html file size generated from excel
+// Developer Intent: Automatically transform every XLSX workbook in a specified folder into an HTML file while stripping unused styles to minimize output size.
+// Use Cases: Generate lightweight HTML reports from a repository of Excel templates for web publishing. | Schedule nightly export of financial spreadsheets to HTML, ensuring only essential styles are retained to save bandwidth. | Pre‑process user‑uploaded Excel files for preview in a web portal, delivering fast‑loading HTML previews.
+// AI Prompts: Write C# code that iterates through a directory of .xlsx files, removes unused styles, and saves each workbook as HTML using Aspose.Cells with ExcludeUnusedStyles enabled. | Explain how HtmlSaveOptions.ExcludeUnusedStyles affects the size and rendering of the generated HTML and when it should be applied. | Suggest best‑practice error‑handling patterns for a batch Excel‑to‑HTML conversion tool built with Aspose.Cells in .NET.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace BatchHtmlExport
+// A C# console utility that scans a folder for *.xlsx workbooks, loads each with Aspose.Cells, calls RemoveUnusedStyles, sets HtmlSaveOptions.ExcludeUnusedStyles, and saves a reduced‑size HTML file to a target directory. Includes progress logging and robust error handling.
+class BatchHtmlExport
 {
-    // Scans a folder for .xlsx files, loads each workbook with Aspose.Cells, removes unused styles, sets HtmlSaveOptions.ExcludeUnusedStyles, and saves a matching .html file to an output directory while handling missing files and exceptions.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Directory containing the source XLSX files
+        string inputDirectory = @"C:\InputXlsx";
+
+        // Directory where the reduced‑size HTML files will be saved
+        string outputDirectory = @"C:\OutputHtml";
+
+        // Verify input directory exists
+        if (!Directory.Exists(inputDirectory))
         {
-            // Input folder containing the source XLSX files
-            string sourceFolder = @"C:\InputXlsx";
+            Console.WriteLine($"Input directory not found: {inputDirectory}");
+            return;
+        }
 
-            // Output folder where the generated HTML files will be saved
-            string outputFolder = @"C:\OutputHtml";
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputDirectory);
 
-            // Verify source folder exists
-            if (!Directory.Exists(sourceFolder))
-            {
-                Console.WriteLine($"Source folder '{sourceFolder}' does not exist.");
-                return;
-            }
-
-            // Ensure the output directory exists
-            if (!Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);
-
-            // Get all .xlsx files in the source folder (non‑recursive)
-            string[] xlsxFiles = Directory.GetFiles(sourceFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
+        try
+        {
+            // Retrieve all XLSX files in the input directory
+            string[] xlsxFiles = Directory.GetFiles(inputDirectory, "*.xlsx", SearchOption.TopDirectoryOnly);
 
             foreach (string xlsxPath in xlsxFiles)
             {
+                // Verify the file still exists before processing
+                if (!File.Exists(xlsxPath))
+                {
+                    Console.WriteLine($"File not found (skipped): {xlsxPath}");
+                    continue;
+                }
+
                 try
                 {
-                    // Verify the file still exists before loading
-                    if (!File.Exists(xlsxPath))
-                    {
-                        Console.WriteLine($"File not found: {xlsxPath}");
-                        continue;
-                    }
-
-                    // Load the workbook from the current file
+                    // Load the workbook from the XLSX file
                     Workbook workbook = new Workbook(xlsxPath);
 
-                    // Optional: remove unused styles from the workbook to further reduce size
+                    // Remove any styles that are not used in the workbook
                     workbook.RemoveUnusedStyles();
 
-                    // Configure HTML save options to exclude unused styles (default is true, set explicitly)
+                    // Configure HTML save options to exclude unused styles
                     HtmlSaveOptions htmlOptions = new HtmlSaveOptions
                     {
-                        ExcludeUnusedStyles = true
+                        ExcludeUnusedStyles = true // default is true, set for clarity
                     };
 
-                    // Build the output HTML file path (same file name with .html extension)
-                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(xlsxPath);
-                    string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+                    // Build the output HTML file path (same name as source, different extension)
+                    string htmlFileName = Path.GetFileNameWithoutExtension(xlsxPath) + ".html";
+                    string htmlPath = Path.Combine(outputDirectory, htmlFileName);
 
-                    // Save the workbook as HTML using the configured options
+                    // Save the workbook as an HTML file using the configured options
                     workbook.Save(htmlPath, htmlOptions);
 
-                    Console.WriteLine($"Converted '{xlsxPath}' to '{htmlPath}'.");
+                    Console.WriteLine($"Converted: {Path.GetFileName(xlsxPath)} -> {htmlFileName}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing '{xlsxPath}': {ex.Message}");
+                    Console.WriteLine($"Error processing file '{xlsxPath}': {ex.Message}");
                 }
             }
 
-            Console.WriteLine("Batch conversion completed.");
+            Console.WriteLine("All XLSX files have been processed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

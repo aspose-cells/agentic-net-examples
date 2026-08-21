@@ -1,27 +1,28 @@
-// Title: Aspose.Cells for .NET – Apply Thin Black Borders to All Sides of a Cell Range (C#)
-// Description: C# example that creates a workbook, defines a range (e.g., A1:D4), builds a Style, sets thin black borders on left, right, top and bottom, uses a StyleFlag to affect only borders, applies the style to the range, and saves the file as AllBordersThinBlack.xlsx.
-// Keywords: Aspose.Cells C# border | set cell borders Aspose.Cells | thin black border .NET | apply borders to range | StyleFlag borders | Excel cell formatting C# | Aspose.Cells workbook styling | border all sides Aspose.Cells
-// Common Searches: Aspose.Cells add thin black border to range C# | how to set borders on all sides of cells using Aspose.Cells | C# code for applying borders with StyleFlag in Aspose.Cells | apply uniform border to Excel range Aspose.Cells .NET | set thin black cell borders Aspose.Cells example
-// Developer Intent: Add a uniform thin black border to every edge of a specified cell range in an Aspose.Cells workbook.
-// Use Cases: Create printable tables with clear grid lines for reports. | Emphasize header or summary blocks by framing them with a consistent border. | Prepare spreadsheets for export where each data section needs visual separation.
-// AI Prompts: Generate C# code that applies a thick red border only to the top edge of a selected range using Aspose.Cells. | Show how to assign different border styles (thin, medium, dashed) to each side of a range in Aspose.Cells for .NET. | Provide an example of applying borders to multiple non‑contiguous ranges with a single StyleFlag in Aspose.Cells.
+// Title: C# – Add Thin Black Borders to All Sides of a Cell Range with Aspose.Cells
+// Description: Creates a workbook, defines range A1:D4, builds a Style, sets thin black borders on left, right, top and bottom, applies only the border settings via StyleFlag, and saves as AllSidesThinBlackBorder.xlsx.
+// Keywords: Aspose.Cells C# border | thin black cell border | apply borders to range Aspose.Cells | StyleFlag border only | set cell borders .NET | Excel border formatting code
+// Common Searches: Aspose.Cells add thin black border to range | C# set cell borders without changing other styles | How to apply borders on all sides using Aspose.Cells | StyleFlag usage for borders Aspose.Cells .NET | Create thin black borders around A1:D4
+// Developer Intent: Add a uniform thin black border to every side of a specified cell range.
+// Use Cases: Design a table header where each cell is outlined with a thin black border. | Highlight a financial data block by surrounding it with consistent borders. | Produce a printable invoice section that is clearly separated by a thin black outline.
+// AI Prompts: Write C# code with Aspose.Cells to apply a thick red border only to the outer edges of range B2:E10. | Show how to reuse a single Style object to assign different colors to each side of a range in Aspose.Cells. | Explain combining border styling with background fill for a range using Aspose.Cells in .NET.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// C# example that creates a workbook, defines a range (e.g., A1:D4), builds a Style, sets thin black borders on left, right, top and bottom, uses a StyleFlag to affect only borders, applies the style to the range, and saves the file as AllBordersThinBlack.xlsx.
+// Creates a workbook, defines range A1:D4, builds a Style, sets thin black borders on left, right, top and bottom, applies only the border settings via StyleFlag, and saves as AllSidesThinBlackBorder.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (create rule)
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Define the range to which the borders will be applied (e.g., A1:D4)
+            // Define the range to which borders will be applied
+            // Use fully qualified type to avoid conflict with System.Range
             Aspose.Cells.Range range = worksheet.Cells.CreateRange("A1:D4");
 
             // Create a style object
@@ -33,19 +34,18 @@ class Program
             style.SetBorder(BorderType.TopBorder,    CellBorderType.Thin, Color.Black);
             style.SetBorder(BorderType.BottomBorder, CellBorderType.Thin, Color.Black);
 
-            // Prepare a StyleFlag to indicate that only border settings should be applied
-            StyleFlag flag = new StyleFlag();
-            flag.Borders = true;
-
-            // Apply the style with borders to the defined range
+            // Apply only the border settings to the range
+            StyleFlag flag = new StyleFlag { Borders = true };
             range.ApplyStyle(style, flag);
 
-            // Save the workbook
-            workbook.Save("AllBordersThinBlack.xlsx");
+            // Save the workbook (save rule)
+            string outputPath = "AllSidesThinBlackBorder.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

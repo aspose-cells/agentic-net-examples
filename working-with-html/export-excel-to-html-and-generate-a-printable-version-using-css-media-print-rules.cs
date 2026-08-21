@@ -1,48 +1,62 @@
-// Title: Export Excel to HTML with printable CSS (@media print) using Aspose.Cells for .NET
-// Description: Loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions to keep grid lines, injects custom CSS that defines @media print rules for hiding non‑print elements and adjusting layout, then saves the workbook as a print‑ready HTML page.
-// Keywords: Aspose.Cells HTML export | C# Excel to HTML | printable CSS @media print | export grid lines | custom CssStyles Aspose | .NET spreadsheet to web | HTMLSaveOptions printable
-// Common Searches: How to add @media print CSS when saving Excel as HTML with Aspose.Cells | Export Excel to HTML with grid lines and print layout in C# | Aspose.Cells custom CSS for printable HTML output | Generate print‑ready HTML from an Excel workbook .NET
-// Developer Intent: Create a web‑friendly HTML version of an Excel workbook that retains grid lines and applies print‑specific styling via CSS.
-// Use Cases: Display a spreadsheet on a website while ensuring the printed page matches the on‑screen view. | Produce a downloadable report that hides navigation controls (using a .no‑print class) when printed. | Automate conversion of Excel data into a printable HTML document for offline distribution.
-// AI Prompts: Show how to modify the CssStyles string to hide only the header row in the printed HTML. | Generate code that embeds a company logo in the @media print section using Aspose.Cells HtmlSaveOptions. | Explain how to set page size and orientation for the printed HTML via HtmlSaveOptions.PageSetup.
+// Title: Export Excel to HTML with printable CSS @media print using Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, defines a print area, and saves it as HTML with HtmlSaveOptions. The export includes grid lines and injects custom CSS that contains @media print rules to hide headers/footers and enforce page breaks, producing a printer‑friendly web page.
+// Keywords: Aspose.Cells | C# | .NET | Export Excel to HTML | HTMLSaveOptions | print area | grid lines | CSS @media print | printable HTML | custom CSS | page break
+// Common Searches: Aspose.Cells export Excel to HTML printable version | C# save workbook as HTML with print area only | Add @media print CSS when converting Excel to HTML with Aspose | Include grid lines in HTML output from Aspose.Cells | Hide header and footer in HTML export of Excel using Aspose
+// Developer Intent: Generate a printer‑friendly HTML file from an Excel workbook that contains only the defined print area, shows grid lines, and applies custom @media print CSS.
+// Use Cases: Create a web‑based report that prints cleanly by exporting a specific worksheet range with grid lines and print‑only styling. | Produce a printable financial summary from Excel, hiding UI elements like headers and footers during printing. | Generate multi‑page printable HTML documents from Excel where each table forces a page break using CSS media queries.
+// AI Prompts: Show how to modify the CssStyles string to adjust margins, fonts, and colors for the printable HTML version. | Provide code that iterates through all worksheets and saves each as a separate printable HTML file with Aspose.Cells. | Explain how to reference an external CSS file instead of inline CssStyles when exporting Excel to HTML with print media rules.
 
 using System;
 using Aspose.Cells;
 
-// Loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions to keep grid lines, injects custom CSS that defines @media print rules for hiding non‑print elements and adjusting layout, then saves the workbook as a print‑ready HTML page.
+// Creates a workbook, defines a print area, and saves it as HTML with HtmlSaveOptions. The export includes grid lines and injects custom CSS that contains @media print rules to hide headers/footers and enforce page breaks, producing a printer‑friendly web page.
 class ExportExcelToHtmlPrintable
 {
     static void Main()
     {
-        // Load the Excel workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        worksheet.Name = "Report";
 
-        // Create HTML save options
+        // Populate sample data
+        worksheet.Cells["A1"].PutValue("Product");
+        worksheet.Cells["B1"].PutValue("Quantity");
+        worksheet.Cells["C1"].PutValue("Price");
+        worksheet.Cells["A2"].PutValue("Apple");
+        worksheet.Cells["B2"].PutValue(10);
+        worksheet.Cells["C2"].PutValue(0.5);
+        worksheet.Cells["A3"].PutValue("Banana");
+        worksheet.Cells["B3"].PutValue(20);
+        worksheet.Cells["C3"].PutValue(0.3);
+
+        // Define the print area (optional, ensures only this range is exported)
+        worksheet.PageSetup.PrintArea = "A1:C3";
+
+        // Configure HTML save options
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-        // Export grid lines so they appear in the printed version
+        // Export only the defined print area
+        htmlOptions.ExportPrintAreaOnly = true;
+
+        // Include grid lines for better visual fidelity
         htmlOptions.ExportGridLines = true;
 
-        // Add custom CSS, including @media print rules for printable output
+        // Add custom CSS, including @media print rules for a printable version
         htmlOptions.CssStyles = @"
-            /* General page styling */
-            body { font-family: Arial, sans-serif; margin: 0; padding: 10px; }
-            table { border-collapse: collapse; width: 100%; }
-            td, th { border: 1px solid #ccc; padding: 5px; }
-
-            /* Print‑specific styling */
+            /* Styles applied when printing */
             @media print {
-                /* Hide elements that should not appear when printing */
-                .no-print { display: none !important; }
+                body { margin:0; }
+                .header, .footer { display:none; }
+                table { page-break-after:always; }
+            }
 
-                /* Ensure the table uses the full printable width */
-                table { width: 100% !important; }
+            /* General page styles */
+            .header { background:#f2f2f2; padding:10px; }
+            .footer { background:#f2f2f2; padding:10px; }
+        ";
 
-                /* Remove page margins for a cleaner print */
-                body { margin: 0; }
-            }";
-
-        // Save the workbook as an HTML file with the defined options
-        workbook.Save("output.html", htmlOptions);
+        // Save the workbook as an HTML file with the specified options
+        workbook.Save("Report.html", htmlOptions);
     }
 }

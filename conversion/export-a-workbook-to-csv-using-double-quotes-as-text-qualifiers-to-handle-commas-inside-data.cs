@@ -1,10 +1,10 @@
-// Title: Export Aspose.Cells Workbook to CSV with Double‑Quote Qualifiers (C#)
-// Description: Shows how to create a workbook, add cells that contain commas, and save it as a CSV using Aspose.Cells TxtSaveOptions with a comma separator, UTF‑8 encoding, and QuoteType.Always so every field is wrapped in double quotes.
-// Keywords: Aspose.Cells CSV export C# | TxtSaveOptions QuoteType.Always | double quote text qualifier | comma delimiter CSV | C# export Excel to CSV | UTF‑8 CSV Aspose | handle commas in CSV | Aspose.Cells .NET | CSV quoting options | SaveFormat.Csv
-// Common Searches: Aspose.Cells export CSV with all fields quoted | C# TxtSaveOptions QuoteType.Always example | force double quotes in CSV using Aspose.Cells | CSV export commas inside data Aspose .NET | save Excel as CSV with text qualifier Aspose
-// Developer Intent: Generate a CSV file from an Aspose.Cells workbook where each value is enclosed in double quotes to safely preserve commas and other delimiters.
-// Use Cases: Export address columns that contain commas for CRM imports that require quoted CSV. | Create CSV files for legacy parsers that expect every field to be quoted. | Produce locale‑independent CSV for international data exchange pipelines. | Automate batch conversion of Excel reports to CSV for downstream ETL processes.
-// AI Prompts: Write C# code using Aspose.Cells to export a workbook to CSV with QuoteType.Always and UTF‑8 encoding. | Explain why QuoteType.Always is needed when cell values contain commas in a CSV export. | Show how to configure TxtSaveOptions with a comma separator, UTF‑8 encoding, and always‑quote fields for CSV output.
+// Title: C# – Export Aspose.Cells Workbook to CSV with Double‑Quote Text Qualifiers
+// Description: Learn how to save an Aspose.Cells workbook as a CSV file in C#, using a comma delimiter, UTF‑8 encoding, and always enclosing each field in double quotes to preserve commas and other special characters. Ideal for global data exchange (US, UK, India, etc.).
+// Keywords: Aspose.Cells CSV export C# | double‑quote text qualifier | TxtSaveOptions QuoteType Always | comma delimiter CSV | UTF‑8 CSV output | handle commas in CSV fields | global data export
+// Common Searches: Aspose.Cells export CSV with quotes C# | How to always quote fields when saving CSV using Aspose.Cells | C# CSV export with double‑quote qualifier for every column | Save workbook as CSV with comma separator and quoted values
+// Developer Intent: Generate a CSV file where every cell value is wrapped in double quotes to ensure correct parsing of commas and other delimiters.
+// Use Cases: Creating CSV reports that include address or description fields containing commas. | Producing data feeds for third‑party systems that require all values to be quoted. | Exporting multilingual datasets with UTF‑8 encoding and consistent text qualifiers.
+// AI Prompts: Provide C# code that uses Aspose.Cells to export a workbook to CSV with every field enclosed in double quotes. | Show how to configure TxtSaveOptions for CSV: comma separator, UTF‑8 encoding, and QuoteType set to Always. | Demonstrate saving a workbook to a specific file path as a quoted‑field CSV using Aspose.Cells.
 
 using System;
 using System.Text;
@@ -12,7 +12,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsCsvExport
 {
-    // Shows how to create a workbook, add cells that contain commas, and save it as a CSV using Aspose.Cells TxtSaveOptions with a comma separator, UTF‑8 encoding, and QuoteType.Always so every field is wrapped in double quotes.
+    // Learn how to save an Aspose.Cells workbook as a CSV file in C#, using a comma delimiter, UTF‑8 encoding, and always enclosing each field in double quotes to preserve commas and other special characters. Ideal for global data exchange (US, UK, India, etc.).
     class Program
     {
         static void Main()
@@ -22,7 +22,7 @@ namespace AsposeCellsCsvExport
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate cells with data that includes commas
+            // Populate cells with data that contains commas
             cells["A1"].PutValue("Name");
             cells["B1"].PutValue("Address");
             cells["A2"].PutValue("John Doe");
@@ -30,18 +30,19 @@ namespace AsposeCellsCsvExport
             cells["A3"].PutValue("Jane Smith");
             cells["B3"].PutValue("456 Oak Ave, Metropolis");
 
-            // Configure CSV save options:
-            // - Use comma as separator
-            // - Quote all fields with double quotes to safely handle commas inside data
+            // Configure CSV save options
             TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
             {
-                Separator = ',',
-                QuoteType = TxtValueQuoteType.Always,
-                Encoding = Encoding.UTF8
+                Separator = ',',                 // Use comma as delimiter
+                Encoding = Encoding.UTF8,        // UTF-8 encoding
+                QuoteType = TxtValueQuoteType.Always // Enclose every field in double quotes
             };
 
             // Save the workbook as CSV with the specified options
-            workbook.Save("ExportedData.csv", saveOptions);
+            string outputPath = "ExportedData.csv";
+            workbook.Save(outputPath, saveOptions);
+
+            Console.WriteLine($"Workbook exported to CSV with double‑quote qualifiers: {outputPath}");
         }
     }
 }

@@ -1,58 +1,91 @@
+// Title: Copy UserForm Designer Storage Between Macro‑Enabled Workbooks with Aspose.Cells for .NET
+// Description: Shows how to load a macro‑enabled template, copy its worksheets, theme and VBA macros, then transfer each UserForm's code and .frx designer storage to a new workbook using Aspose.Cells VbaProject methods, and finally save the result as an .xlsm file.
+// Keywords: Aspose.Cells | C# | copy UserForm | VBA designer storage | .frx | macro‑enabled workbook | VbaProject | AddUserForm | GetDesignerStorage | Excel automation | workbook cloning
+// Common Searches: Aspose.Cells copy UserForm between workbooks | transfer VBA designer storage .frx with C# | preserve macros when cloning Excel file Aspose.Cells | how to add UserForm to a new workbook programmatically | copy macro‑enabled template to new workbook using Aspose
+// Developer Intent: Programmatically duplicate a UserForm—including its VBA code and .frx designer storage—from a template workbook to another workbook while retaining all macros and layout.
+// Use Cases: Create client‑specific macro workbooks from a standard template that contains pre‑designed UserForms. | Migrate legacy Excel files with embedded UserForms into a new project structure without losing form design. | Automate generation of reporting workbooks that need identical UserForm interfaces across multiple files.
+// AI Prompts: Write C# code using Aspose.Cells to copy all UserForm designer storage from a source .xlsm to a destination .xlsm, preserving VBA code and macros. | Explain the role of VbaProject.Modules.GetDesignerStorage and VbaProject.Modules.AddUserForm in transferring UserForms between workbooks. | Suggest robust error‑handling patterns for copying VBA projects and UserForms with Aspose.Cells.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-class CopyUserFormDesignerStorage
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Shows how to load a macro‑enabled template, copy its worksheets, theme and VBA macros, then transfer each UserForm's code and .frx designer storage to a new workbook using Aspose.Cells VbaProject methods, and finally save the result as an .xlsm file.
+    class CopyUserFormDesignerStorage
     {
-        // Paths to the template (source) workbook and the target workbook.
-        string templatePath = "Template.xlsm";
-        string targetPath   = "Target.xlsx";
-        string outputPath   = "Result.xlsm";
-
-        // Load the source workbook that contains the UserForm.
-        Workbook sourceWorkbook = new Workbook(templatePath);
-
-        // Load (or create) the destination workbook.
-        Workbook destWorkbook = new Workbook(targetPath);
-
-        // -----------------------------------------------------------------
-        // 1. Copy worksheets and keep macros (including VBA project structure).
-        // -----------------------------------------------------------------
-        CopyOptions copyOptions = new CopyOptions();
-        copyOptions.KeepMacros = true;               // Preserve macros while copying.
-        destWorkbook.Copy(sourceWorkbook, copyOptions);
-
-        // -----------------------------------------------------------------
-        // 2. Copy the DesignerStorage (FRX binary) of each UserForm.
-        // -----------------------------------------------------------------
-        VbaProject srcVba = sourceWorkbook.VbaProject;
-        VbaProject dstVba = destWorkbook.VbaProject;
-
-        // Iterate through all VBA modules in the source workbook.
-        foreach (VbaModule srcModule in srcVba.Modules)
+        static void Main()
         {
-            // Only process modules of type Designer (UserForms).
-            if (srcModule.Type == VbaModuleType.Designer)
+            try
             {
-                string formName = srcModule.Name;          // e.g., "UserForm1"
-                string formCode = srcModule.Codes;         // VBA code behind the form.
+                const string templatePath = "TemplateWithUserForm.xlsm";
+                const string targetPath = "TargetWithCopiedUserForm.xlsm";
 
-                // Retrieve the binary designer storage (FRX data) for the form.
-                byte[] designerStorage = srcVba.Modules.GetDesignerStorage(formName);
+                // Verify that the template file exists to avoid FileNotFoundException
+                if (!File.Exists(templatePath))
+                {
+                    Console.WriteLine($"Template file not found: {Path.GetFullPath(templatePath)}");
+                    return;
+                }
 
-                // Add the UserForm to the destination workbook's VBA project.
-                // The method returns the index of the newly added module (not used here).
-                dstVba.Modules.AddUserForm(formName, formCode, designerStorage);
+                // Load the template workbook (contains the UserForm and its designer storage)
+                Workbook templateWb = new Workbook(templatePath);
+
+                // Create an empty workbook that will receive the copied content
+                Workbook targetWb = new Workbook();
+
+                // -----------------------------------------------------------------
+                // 1. Copy worksheets, theme and macros from the template to the target
+                // -----------------------------------------------------------------
+                CopyOptions copyOpts = new CopyOptions
+                {
+                    KeepMacros = true // preserve VBA macros
+                };
+                targetWb.Copy(templateWb, copyOpts); // copies worksheets, theme, etc.
+
+                // -----------------------------------------------------------------
+                // 2. Copy the UserForm designer storage (and its code) manually
+                // -----------------------------------------------------------------
+                VbaProject templateVba = templateWb.VbaProject;
+                VbaProject targetVba = targetWb.VbaProject;
+
+                // Ensure both VBA projects are available
+                if (templateVba == null || targetVba == null)
+                {
+                    Console.WriteLine("One of the workbooks does not contain a VBA project.");
+                    return;
+                }
+
+                // Iterate through all modules in the template VBA project
+                foreach (VbaModule tmplModule in templateVba.Modules)
+                {
+                    // We are interested only in Designer modules (UserForms)
+                    if (tmplModule.Type == VbaModuleType.Designer)
+                    {
+                        string formName = tmplModule.Name;          // e.g., "UserForm1"
+                        string formCode = tmplModule.Codes;         // VBA code behind the form
+
+                        // Retrieve the binary designer storage (.frx) for this form
+                        byte[] designerStorage = templateVba.Modules.GetDesignerStorage(formName);
+
+                        // Add the UserForm to the target workbook's VBA project
+                        targetVba.Modules.AddUserForm(formName, formCode, designerStorage);
+                    }
+                }
+
+                // -----------------------------------------------------------------
+                // 3. Save the resulting workbook (still macro‑enabled)
+                // -----------------------------------------------------------------
+                targetWb.Save(targetPath, SaveFormat.Xlsm);
+                Console.WriteLine($"Workbook saved successfully to: {Path.GetFullPath(targetPath)}");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-
-        // -----------------------------------------------------------------
-        // 3. Save the resulting workbook (must be a macro‑enabled format).
-        // -----------------------------------------------------------------
-        destWorkbook.Save(outputPath, SaveFormat.Xlsm);
-
-        Console.WriteLine("UserForm DesignerStorage copied successfully to: " + outputPath);
     }
 }

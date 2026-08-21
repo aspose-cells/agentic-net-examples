@@ -1,84 +1,70 @@
-// Title: C# Utility to Detect Encrypted Excel Files Using Aspose.Cells
-// Description: A C# helper that scans a list of file paths, uses Aspose.Cells FileFormatUtil to identify encrypted workbooks via the IsEncrypted flag, logs missing or unsupported files, and returns only the encrypted file paths.
-// Keywords: Aspose.Cells encryption detection | C# detect password protected Excel | FileFormatUtil IsEncrypted | list encrypted .xlsx files | bulk Excel security check .NET
-// Common Searches: how to find password protected Excel files in C# | Aspose.Cells detect encrypted workbook programmatically | C# filter encrypted spreadsheets before import | list encrypted Excel files using Aspose.Cells
-// Developer Intent: Find and collect the paths of Excel workbooks that are encrypted within a given collection.
-// Use Cases: Exclude encrypted workbooks from a mass import routine. | Create an audit report of password‑protected spreadsheets on a file server. | Validate uploads in a web portal and reject encrypted Excel files.
-// AI Prompts: Generate a C# method that returns encrypted Excel file paths using Aspose.Cells FileFormatUtil. | Extend the EncryptionDetector to also return the encryption algorithm name for each file. | Add retry logic and detailed logging for unsupported formats while detecting encryption.
+// Title: C# Utility to Detect Encrypted Excel Workbooks with Aspose.Cells FileFormatUtil
+// Description: A C# helper that iterates over supplied file paths, confirms each file exists, uses Aspose.Cells.FileFormatUtil.DetectFileFormat to read the IsEncrypted flag, and returns a list of only the encrypted workbook paths while gracefully handling missing files and exceptions.
+// Keywords: Aspose.Cells | FileFormatUtil | IsEncrypted | C# encrypted Excel detection | password protected workbook | detect encrypted spreadsheet .NET | Excel file encryption check | bulk encrypted file scan | Aspose.Cells API | detect encrypted files
+// Common Searches: how to check if an Excel file is encrypted using Aspose.Cells C# | C# list of password‑protected Excel workbooks | detect encrypted spreadsheets in a folder with Aspose.Cells | FileFormatUtil IsEncrypted example | filter encrypted Excel files before conversion .NET
+// Developer Intent: Identify which Excel workbooks in a given collection are encrypted and retrieve their file paths.
+// Use Cases: Skip password‑protected spreadsheets during bulk import or conversion. | Create compliance reports that list encrypted workbooks in a directory. | Validate a batch of files before applying automated data extraction. | Log encrypted files for security audits in enterprise environments.
+// AI Prompts: Generate a C# method that accepts an IEnumerable<string> of file paths and returns only those marked as encrypted by Aspose.Cells. | Refactor the GetEncryptedFiles function to write missing‑file and error messages to a structured log file instead of the console. | Extend the utility to output the encryption algorithm (if available) alongside each encrypted workbook path.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsUtilities
+// A C# helper that iterates over supplied file paths, confirms each file exists, uses Aspose.Cells.FileFormatUtil.DetectFileFormat to read the IsEncrypted flag, and returns a list of only the encrypted workbook paths while gracefully handling missing files and exceptions.
+public class EncryptionDetector
 {
-    // A C# helper that scans a list of file paths, uses Aspose.Cells FileFormatUtil to identify encrypted workbooks via the IsEncrypted flag, logs missing or unsupported files, and returns only the encrypted file paths.
-    public static class EncryptionDetector
+    // Returns a list of file paths that are encrypted.
+    public static List<string> GetEncryptedFiles(IEnumerable<string> filePaths)
     {
-        /// <summary>
-        /// Checks each file path and returns a list of files that are encrypted.
-        /// </summary>
-        /// <param name="filePaths">Collection of file paths to examine.</param>
-        /// <returns>List of encrypted file paths.</returns>
-        public static List<string> GetEncryptedFiles(IEnumerable<string> filePaths)
-        {
-            var encryptedFiles = new List<string>();
+        var encryptedFiles = new List<string>();
 
-            foreach (var path in filePaths)
+        foreach (var path in filePaths)
+        {
+            try
             {
-                // Ensure the file exists before attempting detection
+                // Verify the file exists before attempting detection.
                 if (!File.Exists(path))
                 {
                     Console.WriteLine($"File not found: {path}");
                     continue;
                 }
 
-                try
-                {
-                    // Detect file format and retrieve encryption information
-                    FileFormatInfo info = FileFormatUtil.DetectFileFormat(path);
+                // Detect file format information for the given file.
+                FileFormatInfo info = FileFormatUtil.DetectFileFormat(path);
 
-                    // If the file is encrypted, add it to the result list
-                    if (info.IsEncrypted)
-                    {
-                        encryptedFiles.Add(path);
-                    }
-                }
-                catch (Exception ex)
+                // If the file is encrypted, add it to the result list.
+                if (info.IsEncrypted)
                 {
-                    // Log any errors (e.g., unsupported format) and continue processing other files
-                    Console.WriteLine($"Error processing '{path}': {ex.Message}");
+                    encryptedFiles.Add(path);
                 }
             }
-
-            return encryptedFiles;
+            catch (Exception ex)
+            {
+                // Log any unexpected errors and continue processing other files.
+                Console.WriteLine($"Error processing '{path}': {ex.Message}");
+            }
         }
+
+        return encryptedFiles;
     }
 
-    // Example usage
-    class Program
+    // Example entry point demonstrating usage.
+    public static void Main()
     {
-        static void Main()
+        var filesToCheck = new List<string>
         {
-            // Define a set of file paths to check
-            var filesToCheck = new List<string>
-            {
-                "sample1.xlsx",
-                "sample2.xlsx",
-                "encrypted1.xlsx",
-                "encrypted2.xlsm"
-            };
+            "example.xlsx",
+            "encrypted.xlsx",
+            "plain.xls"
+        };
 
-            // Get the list of encrypted files
-            List<string> encrypted = EncryptionDetector.GetEncryptedFiles(filesToCheck);
+        List<string> encrypted = GetEncryptedFiles(filesToCheck);
 
-            // Output the results
-            Console.WriteLine("Encrypted files:");
-            foreach (var encFile in encrypted)
-            {
-                Console.WriteLine(encFile);
-            }
+        Console.WriteLine("Encrypted files:");
+        foreach (var file in encrypted)
+        {
+            Console.WriteLine(file);
         }
     }
 }

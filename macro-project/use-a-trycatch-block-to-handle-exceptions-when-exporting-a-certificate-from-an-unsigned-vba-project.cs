@@ -1,88 +1,94 @@
-// Title: Export VBA Project Certificate with Try‑Catch Error Handling in Aspose.Cells for .NET
-// Description: Demonstrates how to load an XLSM workbook, verify the presence of a VBA project, extract its certificate (CertRawData) and write it to a .cer file while using try‑catch blocks to handle missing files, unsigned projects, I/O failures, and optional workbook saving.
-// Keywords: Aspose.Cells export VBA certificate | C# VBA project CertRawData | handle unsigned VBA project | try catch Aspose.Cells | export .cer from XLSM | VbaProject error handling | save XLSM workbook C#
-// Common Searches: export VBA certificate Aspose.Cells C# | how to catch errors when extracting VBA CertRawData | C# code to detect unsigned VBA project in XLSM | exception handling for loading and saving XLSM with VBA | Aspose.Cells VBA project certificate export example
-// Developer Intent: The developer needs a reliable way to export a VBA project's signing certificate and gracefully handle scenarios such as missing files, unsigned projects, or I/O errors.
-// Use Cases: Export a signed VBA project's certificate to a .cer file and log a clear message if the project is unsigned. | Load an XLSM workbook only after confirming the file exists, preventing FileNotFoundException. | Save the processed workbook in Xlsm format while capturing any save‑time failures.
-// AI Prompts: Write a C# method using Aspose.Cells that extracts a VBA project's certificate, returns a boolean success flag, and includes detailed try‑catch handling for missing files, unsigned projects, and I/O errors. | Create unit tests for ExportVbaCertificateDemo covering: missing input file, unsigned VBA project, and successful certificate export. | Refactor the sample to separate certificate extraction and workbook saving into reusable helper functions with proper exception propagation.
+// Title: Export VBA Project Certificate with Try‑Catch Error Handling Using Aspose.Cells for .NET
+// Description: Loads an .xlsm workbook with Aspose.Cells, checks file existence, uses nested try‑catch blocks to manage loading errors, unsigned VBA projects, and unexpected exceptions, and writes the raw certificate bytes to a .cer file when the project is signed.
+// Keywords: Aspose.Cells export VBA certificate | C# VBA project certificate extraction | try catch Aspose.Cells loading error | unsigned VBA project handling | export .cer from Excel macro | VbaProject.IsSigned | CellsException handling
+// Common Searches: how to export a VBA project certificate using Aspose.Cells C# | C# try‑catch example for extracting VBA certificate from .xlsm | what exception is thrown for an unsigned VBA project in Aspose.Cells | save VBA certificate bytes to a .cer file in .NET | Aspose.Cells error codes when loading a workbook
+// Developer Intent: Retrieve and save the signing certificate of a VBA project while gracefully handling missing files, unsigned projects, and Aspose.Cells errors.
+// Use Cases: Audit security by exporting the certificate of a signed VBA macro to a .cer file. | Prevent application crashes by informing users when a VBA project is unsigned. | Log detailed Aspose.Cells error codes for troubleshooting workbook load failures.
+// AI Prompts: Write a C# method that returns the VBA project's certificate as a byte array using Aspose.Cells, with proper exception handling for unsigned projects and load errors. | Generate unit tests for ExportVbaCertificate covering signed, unsigned, missing file, and CellsException scenarios. | Refactor the sample to use async file I/O while preserving the same try‑catch structure and error messages.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// Demonstrates how to load an XLSM workbook, verify the presence of a VBA project, extract its certificate (CertRawData) and write it to a .cer file while using try‑catch blocks to handle missing files, unsigned projects, I/O failures, and optional workbook saving.
-public class ExportVbaCertificateDemo
+// Loads an .xlsm workbook with Aspose.Cells, checks file existence, uses nested try‑catch blocks to manage loading errors, unsigned VBA projects, and unexpected exceptions, and writes the raw certificate bytes to a .cer file when the project is signed.
+class ExportVbaCertificate
 {
     public static void Run()
     {
-        const string inputFile = "UnsignedVba.xlsm";
-        const string outputCertFile = "ExportedVbaCertificate.cer";
-        const string outputWorkbookFile = "UnsignedVba_Processed.xlsm";
+        // Path to the workbook that may contain a VBA project
+        string workbookPath = "UnsignedWorkbook.xlsm";
 
-        Workbook workbook = null;
-
-        // Load the workbook safely
-        try
+        // Verify that the input file exists to prevent FileNotFoundException
+        if (!File.Exists(workbookPath))
         {
-            if (!File.Exists(inputFile))
-                throw new FileNotFoundException($"Input file '{inputFile}' was not found.");
-
-            workbook = new Workbook(inputFile);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            Console.WriteLine($"Error: Workbook file \"{workbookPath}\" not found.");
             return;
         }
 
+        Workbook workbook = null;
         try
         {
-            // Access the VBA project (may be null if none exists)
-            VbaProject vbaProject = workbook.VbaProject;
-            if (vbaProject == null)
-                throw new InvalidOperationException("The workbook does not contain a VBA project.");
+            // Load the workbook
+            workbook = new Workbook(workbookPath);
+        }
+        catch (CellsException cex)
+        {
+            Console.WriteLine("Aspose.Cells error while loading workbook: " + cex.Message);
+            Console.WriteLine("Error code: " + cex.Code);
+            return;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Unexpected error while loading workbook: " + ex.Message);
+            return;
+        }
 
-            // Retrieve the certificate raw data
+        VbaProject vbaProject = workbook.VbaProject;
+
+        try
+        {
+            // Verify that the VBA project is signed before accessing the certificate
+            if (!vbaProject.IsSigned)
+            {
+                throw new InvalidOperationException("The VBA project is not signed; certificate data is unavailable.");
+            }
+
+            // Retrieve the raw certificate data
             byte[] certData = vbaProject.CertRawData;
 
-            // If the project is unsigned, CertRawData will be null or empty – treat this as an error
-            if (certData == null || certData.Length == 0)
-                throw new InvalidOperationException("VBA project is not signed; certificate data is unavailable.");
-
-            // Export the certificate to a .cer file
-            File.WriteAllBytes(outputCertFile, certData);
-            Console.WriteLine("Certificate exported successfully.");
+            // Ensure data exists before writing to a file
+            if (certData != null && certData.Length > 0)
+            {
+                File.WriteAllBytes("ExportedVbaCertificate.cer", certData);
+                Console.WriteLine("Certificate exported successfully to ExportedVbaCertificate.cer");
+            }
+            else
+            {
+                Console.WriteLine("Certificate data is empty.");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            // Handle the case where the VBA project is unsigned
+            Console.WriteLine("Operation error: " + ex.Message);
+        }
+        catch (CellsException cex)
+        {
+            // Handle Aspose.Cells specific exceptions
+            Console.WriteLine("Aspose.Cells error: " + cex.Message);
+            Console.WriteLine("Error code: " + cex.Code);
         }
         catch (Exception ex)
         {
-            // Handle all exceptions (including unsigned project case)
-            Console.WriteLine($"Error exporting certificate: {ex.Message}");
-        }
-
-        // Save the workbook (optional, demonstrates lifecycle usage)
-        try
-        {
-            workbook.Save(outputWorkbookFile, SaveFormat.Xlsm);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            // Handle any other unexpected exceptions
+            Console.WriteLine("Unexpected error: " + ex.Message);
         }
     }
-}
 
-public class Program
-{
-    public static void Main(string[] args)
+    // Entry point required for compilation
+    static void Main(string[] args)
     {
-        try
-        {
-            ExportVbaCertificateDemo.Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unhandled exception: {ex.Message}");
-        }
+        Run();
     }
 }

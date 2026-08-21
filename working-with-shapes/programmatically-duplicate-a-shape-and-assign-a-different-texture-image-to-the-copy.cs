@@ -1,83 +1,56 @@
-// Title: Copy a Shape and Assign a Different Texture Image Using Aspose.Cells for .NET
-// Description: This C# example creates a workbook, adds a rectangle shape with a PNG texture, duplicates the shape using AddCopy, replaces the copy's fill with another PNG or a built‑in texture, and saves the workbook.
-// Keywords: Aspose.Cells | .NET | C# | duplicate shape | AddCopy | texture fill | custom image texture | Excel shape copy | shape fill type | fallback texture
-// Common Searches: Aspose.Cells copy shape | AddCopy shape texture .NET | change shape fill after copy Aspose.Cells | set custom texture for Excel shape C# | fallback built‑in texture Aspose.Cells
-// Developer Intent: Duplicate an existing worksheet shape and give the copy a different texture image.
-// Use Cases: Design a reusable graphic element and reuse it with distinct backgrounds across a report. | Create a dashboard where each copied shape shows a different status icon. | Generate Excel files that automatically switch to a built‑in texture when a custom image is missing.
-// AI Prompts: Generate C# code that copies any worksheet shape and applies a custom PNG texture using Aspose.Cells. | Show how to use AddCopy to position a duplicated shape and then change its FillType to a different image or built‑in texture. | Explain error handling for missing texture files when setting a shape's TextureFill in Aspose.Cells.
+// Title: Copy a Shape and Apply a New Texture Image with Aspose.Cells for .NET
+// Description: Shows how to create a workbook, add a rectangle shape, optionally set a PNG texture, duplicate the shape to a different location, and assign a distinct JPG texture (with optional tiling) to the copy before saving the Excel file.
+// Keywords: Aspose.Cells | C# shape copy | texture fill | Excel shape duplicate | image fill Aspose.Cells | AddCopy method | FillType.Texture | worksheet shapes | programmatic shape duplication | Excel file generation
+// Common Searches: Aspose.Cells copy shape and change fill | C# duplicate Excel shape with different image | How to set texture fill for a shape in Aspose.Cells | AddCopy shape Aspose.Cells example | Replace shape texture after copying
+// Developer Intent: Programmatically duplicate an existing worksheet shape and give the duplicate a distinct texture image.
+// Use Cases: Create a product catalog where each item icon is a copied shape with its own image. | Design a dashboard with repeated shape placeholders that need individual background pictures. | Generate a patterned worksheet by tiling different textures on copied shapes. | Automate branding by copying a logo shape and swapping its fill for region‑specific graphics.
+// AI Prompts: Generate C# code using Aspose.Cells to copy a rectangle shape and assign a new JPEG texture to the copy, handling missing files gracefully. | Show an example that duplicates a shape, sets FillType.Texture, and enables tiling for the copied shape in a .xlsx workbook. | Explain how to use Worksheet.Shapes.AddCopy to replicate a shape and then change its ImageData property.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// Shows how to create a workbook, add a rectangle shape, optionally set a PNG texture, duplicate the shape to a different location, and assign a distinct JPG texture (with optional tiling) to the copy before saving the Excel file.
+class DuplicateShapeWithTexture
 {
-    // This C# example creates a workbook, adds a rectangle shape with a PNG texture, duplicates the shape using AddCopy, replaces the copy's fill with another PNG or a built‑in texture, and saves the workbook.
-    public class DuplicateShapeWithNewTexture
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook and obtain the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add an original rectangle shape
+            Shape originalShape = worksheet.Shapes.AddRectangle(2, 0, 2, 0, 130, 130);
+
+            // (Optional) Apply a texture to the original shape
+            originalShape.Fill.FillType = FillType.Texture;
+            string originalTexturePath = "originalTexture.png";
+            if (File.Exists(originalTexturePath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add an initial rectangle shape to the worksheet
-                // Parameters: upper left row, top offset, upper left column, left offset, width, height
-                RectangleShape originalShape = worksheet.Shapes.AddRectangle(2, 0, 2, 0, 130, 130);
-
-                // Optionally set a texture for the original shape (demonstration purpose)
-                originalShape.Fill.FillType = FillType.Texture;
-                TextureFill originalTexture = originalShape.Fill.TextureFill;
-
-                // Load texture image if it exists
-                string originalTexturePath = Path.Combine(Environment.CurrentDirectory, "texture1.png");
-                if (File.Exists(originalTexturePath))
-                {
-                    originalTexture.ImageData = File.ReadAllBytes(originalTexturePath);
-                    // No need to set Type; assigning ImageData makes it a custom texture
-                }
-
-                // Duplicate the rectangle shape to a new location using AddCopy
-                // Parameters: source shape, top row, top offset, left column, left offset
-                Shape copiedShape = worksheet.Shapes.AddCopy(originalShape, 7, 0, 7, 0);
-
-                // Change the fill of the copied shape to use a different texture image
-                copiedShape.Fill.FillType = FillType.Texture;
-                TextureFill copiedTexture = copiedShape.Fill.TextureFill;
-
-                // Load a different texture image file if it exists
-                string newTexturePath = Path.Combine(Environment.CurrentDirectory, "texture2.png");
-                if (File.Exists(newTexturePath))
-                {
-                    copiedTexture.ImageData = File.ReadAllBytes(newTexturePath);
-                }
-                else
-                {
-                    // Fallback to a built‑in texture type if the image file is missing
-                    copiedTexture.Type = TextureType.WaterDroplets;
-                }
-
-                // Save the workbook
-                string outputPath = Path.Combine(Environment.CurrentDirectory, "DuplicateShapeWithNewTexture.xlsx");
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
+                originalShape.Fill.TextureFill.ImageData = File.ReadAllBytes(originalTexturePath);
             }
-            catch (Exception ex)
+
+            // Duplicate the shape to a new position
+            Shape copiedShape = worksheet.Shapes.AddCopy(originalShape, 7, 0, 7, 0);
+
+            // Assign a different texture image to the copied shape (if the file exists)
+            copiedShape.Fill.FillType = FillType.Texture;
+            string newTexturePath = "newTexture.jpg";
+            if (File.Exists(newTexturePath))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                copiedShape.Fill.TextureFill.ImageData = File.ReadAllBytes(newTexturePath);
+                copiedShape.Fill.TextureFill.IsTiling = true; // optional tiling
             }
+
+            // Save the workbook
+            workbook.Save("DuplicatedShapeWithTexture.xlsx");
         }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            DuplicateShapeWithNewTexture.Run();
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

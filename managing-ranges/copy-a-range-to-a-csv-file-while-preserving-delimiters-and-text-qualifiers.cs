@@ -1,53 +1,88 @@
-// Title: Copy a cell range to CSV with delimiters and text qualifiers using Aspose.Cells for .NET
-// Description: Creates a workbook, fills cells A1:B3 (including a comma‑containing value), defines a CellArea for that range, and saves it as a CSV file using TxtSaveOptions with a comma separator and always‑quoted fields.
-// Keywords: Aspose.Cells CSV export | C# range to CSV | TxtSaveOptions delimiter | always quote CSV fields | export selected cells Aspose | .NET workbook to CSV
-// Common Searches: Aspose.Cells export selected range to CSV | C# save worksheet area as CSV with quotes | how to preserve commas in CSV using Aspose | TxtSaveOptions QuoteType Always example | export part of Excel sheet to CSV .NET
-// Developer Intent: Save only the A1:B3 range as a CSV file while ensuring commas inside values are retained and every field is enclosed in quotes.
-// Use Cases: Generating a CSV report that includes only specific rows and columns. | Creating data files for systems that require all fields to be quoted, even when delimiters appear in the content. | Extracting a subset of a large workbook for lightweight data exchange.
-// AI Prompts: Write C# code with Aspose.Cells to export a defined cell area to CSV using a custom delimiter and always‑quote option. | Explain how TxtSaveOptions Separator, QuoteType, and ExportArea work together to preserve delimiters and text qualifiers in a CSV export.
+// Title: Copy a cell range to CSV while preserving commas and quotes – Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to copy a defined range (A1:C3) from one workbook to another, configure TxtSaveOptions with a comma separator and QuoteType.Always, limit the export to the copied area, and save the result as a CSV file that retains delimiters and text qualifiers.
+// Keywords: Aspose.Cells | C# | .NET | export range to CSV | preserve commas in CSV | preserve quotes in CSV | TxtSaveOptions | QuoteType.Always | range copy | CSV delimiter
+// Common Searches: Aspose.Cells export specific range to CSV | keep commas and quotes when saving CSV with Aspose.Cells | C# copy cell range and save as CSV using Aspose | TxtSaveOptions delimiter and quoting options | how to export only a CellArea to CSV in .NET
+// Developer Intent: Generate a CSV file from a selected cell range that maintains original commas and quotation marks.
+// Use Cases: Create a CSV report that includes user‑entered text containing commas or quotes without breaking column alignment. | Provide a data extract for an external system that requires every field to be quoted for reliable parsing. | Export a subset of a workbook (e.g., a table or filtered data) as CSV while preserving delimiters and text qualifiers.
+// AI Prompts: Write C# code using Aspose.Cells to copy a range and save it as a CSV with commas as separators and all fields quoted. | Show how to set TxtSaveOptions in Aspose.Cells to export only a specific CellArea and keep text qualifiers intact. | Provide an example that copies a range from one workbook to another and then exports the range to CSV, handling commas and quotes correctly.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsRangeToCsv
 {
-    // Creates a workbook, fills cells A1:B3 (including a comma‑containing value), defines a CellArea for that range, and saves it as a CSV file using TxtSaveOptions with a comma separator and always‑quoted fields.
+    // Demonstrates how to copy a defined range (A1:C3) from one workbook to another, configure TxtSaveOptions with a comma separator and QuoteType.Always, limit the export to the copied area, and save the result as a CSV file that retains delimiters and text qualifiers.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample data (including a value that contains the delimiter)
-            cells["A1"].PutValue("Name");
-            cells["B1"].PutValue("Age");
-            cells["A2"].PutValue("John, Doe"); // comma inside the text
-            cells["B2"].PutValue(30);
-            cells["A3"].PutValue("Alice");
-            cells["B3"].PutValue(25);
-
-            // Define the range to be exported (A1:B3)
-            CellArea exportArea = new CellArea
+            try
             {
-                StartRow = 0,   // Row index is zero‑based
-                EndRow = 2,
-                StartColumn = 0,
-                EndColumn = 1
-            };
+                // ---------- Create source workbook and fill sample data ----------
+                Workbook sourceWb = new Workbook();
+                Worksheet sourceSheet = sourceWb.Worksheets[0];
+                Cells srcCells = sourceSheet.Cells;
 
-            // Configure text save options for CSV export
-            TxtSaveOptions saveOptions = new TxtSaveOptions
+                // Sample data with commas and quotes to test text qualifiers
+                srcCells["A1"].PutValue("Name");
+                srcCells["B1"].PutValue("Description");
+                srcCells["C1"].PutValue("Value");
+
+                srcCells["A2"].PutValue("Item 1");
+                srcCells["B2"].PutValue("A, B, C");          // contains delimiter
+                srcCells["C2"].PutValue("\"Quoted\" Text"); // contains quotes
+
+                srcCells["A3"].PutValue("Item 2");
+                srcCells["B3"].PutValue("Simple");
+                srcCells["C3"].PutValue(12345);
+
+                // ---------- Define the source range ----------
+                Aspose.Cells.Range sourceRange = srcCells.CreateRange("A1:C3");
+
+                // ---------- Create destination workbook ----------
+                Workbook destWb = new Workbook();
+                Worksheet destSheet = destWb.Worksheets[0];
+                Cells destCells = destSheet.Cells;
+
+                // Destination range must match the size of the source range
+                Aspose.Cells.Range destRange = destCells.CreateRange("A1:C3");
+
+                // ---------- Copy the range (including values, formats, etc.) ----------
+                PasteOptions pasteOptions = new PasteOptions
+                {
+                    PasteType = PasteType.All // copy everything
+                };
+                destRange.Copy(sourceRange, pasteOptions);
+
+                // ---------- Configure CSV (text) save options ----------
+                TxtSaveOptions saveOptions = new TxtSaveOptions
+                {
+                    // Use comma as delimiter
+                    Separator = ',',
+                    // Always quote each field to preserve text qualifiers
+                    QuoteType = TxtValueQuoteType.Always,
+                    // Export only the copied range
+                    ExportArea = new CellArea
+                    {
+                        StartRow = 0,
+                        EndRow = 2,      // rows 0‑2 (A1:C3)
+                        StartColumn = 0,
+                        EndColumn = 2    // columns 0‑2 (A‑C)
+                    },
+                    // Ensure blank rows keep separators (optional, based on requirement)
+                    KeepSeparatorsForBlankRow = true
+                };
+
+                // ---------- Save the destination workbook as CSV ----------
+                string outputPath = "ExportedRange.csv";
+                destWb.Save(outputPath, saveOptions);
+
+                Console.WriteLine($"Range successfully exported to {outputPath}");
+            }
+            catch (Exception ex)
             {
-                Separator = ',',                     // Use comma as delimiter
-                QuoteType = TxtValueQuoteType.Always, // Always quote fields (preserves text qualifiers)
-                ExportArea = exportArea               // Export only the defined range
-            };
-
-            // Save the selected range to a CSV file
-            workbook.Save("ExportedRange.csv", saveOptions);
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

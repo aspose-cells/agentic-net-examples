@@ -1,10 +1,10 @@
-// Title: Encrypt Aspose.Cells Workbook with Random Password, Secure Store & Timestamp Log (C#)
-// Description: Creates a new workbook, adds data, generates a strong random password with RNGCryptoServiceProvider, applies it via workbook.Settings.Password, configures 128‑bit StrongCryptographicProvider encryption, saves the file, and records the UTC timestamp and password to a secure log. The example also shows how to reload the workbook using the generated password.
-// Keywords: Aspose.Cells encrypt workbook C# | random password generation .NET | Excel file encryption Aspose | store workbook password securely | encryption timestamp logging | StrongCryptographicProvider | SetEncryptionOptions | RNGCryptoServiceProvider password | C# workbook protection | audit encrypted Excel
-// Common Searches: how to encrypt an Aspose.Cells workbook with a random password in C# | store Excel password securely after encryption Aspose.Cells | log encryption timestamp for protected workbook .NET | set strong encryption options for Aspose.Cells workbook | generate strong random password for Excel file C#
-// Developer Intent: Securely encrypt an Excel workbook with a generated password, persist the password safely, and keep an audit‑ready timestamp of the encryption event.
-// Use Cases: Protect confidential financial reports by encrypting each workbook with a unique random password and recording the credentials for compliance audits. | Automate secure distribution of Excel files in a SaaS platform, generating per‑file passwords and logging creation times for traceability. | Validate encryption integrity by re‑opening the saved workbook using the stored password in automated test suites.
-// AI Prompts: Write C# code that encrypts an Aspose.Cells workbook with a 20‑character random password, saves the password in an encrypted JSON file, and logs the UTC timestamp. | Refactor the sample to use SecureString for password handling and write the log entry to the Windows Event Log instead of a text file. | Explain how to replace the plain‑text password store with Azure Key Vault integration while keeping the existing encryption workflow unchanged.
+// Title: C# – Encrypt an Aspose.Cells workbook with a random password, log the timestamp, and store the password securely
+// Description: Demonstrates how to create a workbook, generate a 16‑character random alphanumeric password, apply StrongCryptographicProvider (128‑bit) encryption, save the file, write a UTC timestamp to a log, and encrypt the password with AES (SHA‑256 derived key) before saving it to a binary store.
+// Keywords: Aspose.Cells encrypt workbook C# | random password generation .NET | StrongCryptographicProvider 128‑bit | AES password storage | SHA‑256 key derivation | encryption timestamp log | secure Excel file protection | C# workbook security example
+// Common Searches: how to encrypt an Excel file with Aspose.Cells using a random password | C# log workbook encryption timestamp | store Aspose.Cells password securely with AES | set encryption type and key size for Aspose.Cells workbook | generate random password for Excel encryption .NET
+// Developer Intent: Protect a workbook with a unique password, record the exact encryption time, and keep the password safely encrypted for later retrieval.
+// Use Cases: Compliance‑driven financial reports that require per‑file passwords and audit‑ready timestamps. | Automated nightly backups of sensitive spreadsheets, each encrypted with a distinct password stored in an encrypted vault. | Web services that deliver password‑protected Excel files while managing passwords on the server side.
+// AI Prompts: Generate C# code to decrypt the AES‑encrypted password file and open the protected workbook with Aspose.Cells. | Refactor StorePasswordSecurely to use a random salt and PBKDF2‑derived key instead of a static fallback key. | Create a unit test that confirms the workbook is saved with encryption enabled and that the log entry follows the ISO 8601 UTC format.
 
 using System;
 using System.IO;
@@ -12,80 +12,87 @@ using System.Security.Cryptography;
 using System.Text;
 using Aspose.Cells;
 
-namespace WorkbookEncryptionDemo
+// Demonstrates how to create a workbook, generate a 16‑character random alphanumeric password, apply StrongCryptographicProvider (128‑bit) encryption, save the file, write a UTC timestamp to a log, and encrypt the password with AES (SHA‑256 derived key) before saving it to a binary store.
+class WorkbookEncryptionDemo
 {
-    // Creates a new workbook, adds data, generates a strong random password with RNGCryptoServiceProvider, applies it via workbook.Settings.Password, configures 128‑bit StrongCryptographicProvider encryption, saves the file, and records the UTC timestamp and password to a secure log. The example also shows how to reload the workbook using the generated password.
-    class Program
+    static void Main()
     {
-        // Path to store encrypted workbook
-        private const string WorkbookPath = "EncryptedWorkbook.xlsx";
-        // Path to store passwords securely (for demo purposes)
-        private const string PasswordStorePath = "PasswordStore.txt";
-
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Create a new workbook and add sample data
+            Workbook wb = new Workbook();
+            wb.Worksheets[0].Cells["A1"].PutValue("Sensitive Data");
 
-            // Add sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sensitive Data");
-
-            // Generate a strong random password
+            // Generate a random password (16 characters)
             string password = GenerateRandomPassword(16);
 
-            // Apply password to workbook settings
-            workbook.Settings.Password = password;
+            // Apply password and encryption options to the workbook
+            wb.Settings.Password = password;
+            wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
 
-            // Optionally set encryption options (strong provider, 128-bit key)
-            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+            // Define the output file path
+            string filePath = "EncryptedWorkbook.xlsx";
 
             // Save the encrypted workbook
-            workbook.Save(WorkbookPath);
+            wb.Save(filePath);
 
-            // Log encryption timestamp and store password securely
-            LogEncryptionInfo(password);
+            // Log the encryption timestamp
+            string logEntry = $"{DateTime.UtcNow:o} - Workbook encrypted and saved to {filePath}";
+            Console.WriteLine(logEntry);
+            File.AppendAllText("encryption_log.txt", logEntry + Environment.NewLine);
 
-            // Verify by loading the encrypted workbook with the password
-            LoadOptions loadOptions = new LoadOptions { Password = password };
-            Workbook loadedWorkbook = new Workbook(WorkbookPath, loadOptions);
-            Console.WriteLine("Loaded workbook cell A1 value: " + loadedWorkbook.Worksheets[0].Cells["A1"].Value);
+            // Securely store the password
+            StorePasswordSecurely(password, "password_store.bin");
         }
-
-        // Generates a random password of specified length using RNGCryptoServiceProvider
-        private static string GenerateRandomPassword(int length)
+        catch (Exception ex)
         {
-            byte[] randomBytes = new byte[length];
-            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomBytes);
-            }
-            // Convert to a Base64 string and remove non-alphanumeric characters for simplicity
-            string base64 = Convert.ToBase64String(randomBytes);
-            StringBuilder sb = new StringBuilder();
-            foreach (char c in base64)
-            {
-                if (char.IsLetterOrDigit(c))
-                {
-                    sb.Append(c);
-                }
-                if (sb.Length == length)
-                {
-                    break;
-                }
-            }
-            return sb.ToString();
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
+    }
 
-        // Stores the password with a timestamp; in real scenarios, encrypt this storage
-        private static void LogEncryptionInfo(string password)
+    // Generates a random alphanumeric password of the specified length
+    static string GenerateRandomPassword(int length)
+    {
+        const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
         {
-            string timestamp = DateTime.UtcNow.ToString("o"); // ISO 8601 format
-            string logEntry = $"{timestamp} | Password: {password}";
-            // Append to the password store file
-            File.AppendAllText(PasswordStorePath, logEntry + Environment.NewLine);
-            // Also output to console for demonstration
-            Console.WriteLine($"Workbook encrypted at {timestamp}. Password stored securely.");
+            byte[] data = new byte[length];
+            rng.GetBytes(data);
+            char[] result = new char[length];
+            for (int i = 0; i < length; i++)
+            {
+                result[i] = chars[data[i] % chars.Length];
+            }
+            return new string(result);
+        }
+    }
+
+    // Encrypts the password and writes it to a file using AES.
+    static void StorePasswordSecurely(string password, string filePath)
+    {
+        try
+        {
+            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+            byte[] encrypted;
+
+            // AES encryption (cross‑platform)
+            using (Aes aes = Aes.Create())
+            {
+                // Derive a key from a static passphrase (for demo purposes only)
+                aes.Key = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes("fallback-key"));
+                aes.IV = new byte[16]; // Zero IV (not ideal for production)
+
+                using (ICryptoTransform encryptor = aes.CreateEncryptor())
+                {
+                    encrypted = encryptor.TransformFinalBlock(passwordBytes, 0, passwordBytes.Length);
+                }
+            }
+
+            File.WriteAllBytes(filePath, encrypted);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Failed to store password securely: {ex.Message}");
         }
     }
 }

@@ -1,18 +1,18 @@
-// Title: Define a Global Named Range for Lookup and Use VLOOKUP Across Sheets (Aspose.Cells C#)
-// Description: Creates a workbook, builds a two‑column lookup table on the first sheet, defines a global named range "LookupTable" (A1:B4), applies VLOOKUP formulas on a second sheet that reference this range, calculates the formulas, retrieves the range with GetRangeByName to display its address and first value, and saves the file.
-// Keywords: Aspose.Cells named range | C# global named range | lookup table Excel | VLOOKUP named range Aspose | GetRangeByName .NET | multi‑sheet lookup Aspose.Cells | create named range C#
-// Common Searches: Aspose.Cells create named range for lookup | How to use VLOOKUP with a named range in Aspose.Cells C# | GetRangeByName example Aspose.Cells .NET | Reference a global named range across worksheets Aspose.Cells | Define and retrieve named range in C# workbook
-// Developer Intent: Create a named range that holds lookup data and reference it in formulas on other worksheets.
-// Use Cases: Expose a two‑column table as a named range for reuse in multiple sheets | Apply VLOOKUP formulas that point to the named range to fetch related values | Programmatically retrieve the named range to verify its address or first cell value | Calculate formulas automatically and save the workbook with lookup results
-// AI Prompts: Generate C# code that creates a named range 'LookupTable' covering A1:B4 using Aspose.Cells. | Show how to write VLOOKUP formulas that reference a global named range on another worksheet. | Provide a snippet that calls GetRangeByName to obtain a named range and prints its address and first cell value. | Explain how to calculate formulas and save the workbook after using a named range for lookup.
+// Title: Define a Workbook‑Scoped Named Range for VLOOKUP Across Sheets with Aspose.Cells (C#)
+// Description: Creates a workbook, adds a "Lookup" sheet with key/value pairs, defines a global named range "LookupTable", inserts VLOOKUP formulas on a "Data" sheet that reference the named range, calculates formulas, retrieves the range via GetRangeByName, and saves the file.
+// Keywords: Aspose.Cells named range | global named range C# | VLOOKUP across worksheets | GetRangeByName example | Aspose.Cells .NET lookup table | Create workbook‑level name | Excel formula calculation Aspose
+// Common Searches: Aspose.Cells define workbook level named range | use VLOOKUP with named range in Aspose.Cells | retrieve named range by name Aspose.Cells C# | calculate formulas after setting VLOOKUP Aspose | save workbook after formula evaluation Aspose.Cells
+// Developer Intent: Create a workbook‑scoped named range for a lookup table and reference it in VLOOKUP formulas on other worksheets.
+// Use Cases: Build a dedicated lookup sheet, populate keys and values, and assign a global name for reuse. | Apply VLOOKUP formulas on separate sheets that point to the named range, enabling centralized data maintenance. | Programmatically fetch the named range with GetRangeByName to verify or modify its address. | Trigger full formula calculation and persist the resolved results in the saved workbook.
+// AI Prompts: Generate C# code that defines a workbook‑level named range for a two‑column lookup table and uses it in VLOOKUP formulas on another sheet with Aspose.Cells. | Show how to retrieve and update a named range by name in an existing Aspose.Cells workbook. | Explain how to force calculation of all formulas after inserting VLOOKUP references that use a named range.
 
 using System;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace NamedRangeLookupExample
+namespace AsposeCellsNamedRangeLookup
 {
-    // Creates a workbook, builds a two‑column lookup table on the first sheet, defines a global named range "LookupTable" (A1:B4), applies VLOOKUP formulas on a second sheet that reference this range, calculates the formulas, retrieves the range with GetRangeByName to display its address and first value, and saves the file.
+    // Creates a workbook, adds a "Lookup" sheet with key/value pairs, defines a global named range "LookupTable", inserts VLOOKUP formulas on a "Data" sheet that reference the named range, calculates formulas, retrieves the range via GetRangeByName, and saves the file.
     class Program
     {
         static void Main()
@@ -22,74 +22,69 @@ namespace NamedRangeLookupExample
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // -------------------------------------------------
-                // 1. Prepare lookup data on the first worksheet
-                // -------------------------------------------------
+                // -----------------------------------------------------------------
+                // 1. Create a worksheet that will hold the lookup table
+                // -----------------------------------------------------------------
                 Worksheet lookupSheet = workbook.Worksheets[0];
-                Cells lookupCells = lookupSheet.Cells;
+                lookupSheet.Name = "Lookup";
+
+                // Fill the lookup table (A column = keys, B column = values)
+                string[] keys = { "Apple", "Banana", "Cherry", "Date", "Elderberry" };
+                int[] values = { 10, 20, 30, 40, 50 };
+
+                for (int i = 0; i < keys.Length; i++)
+                {
+                    lookupSheet.Cells[i, 0].PutValue(keys[i]);   // Column A
+                    lookupSheet.Cells[i, 1].PutValue(values[i]); // Column B
+                }
+
+                // Create a Range object for the lookup table and assign a global name
+                AsposeRange lookupRange = lookupSheet.Cells.CreateRange("A1", "B5");
+                lookupRange.Name = "LookupTable"; // Global name (Workbook scope)
+
+                // -----------------------------------------------------------------
+                // 2. Create another worksheet that will use the lookup table
+                // -----------------------------------------------------------------
+                Worksheet dataSheet = workbook.Worksheets.Add("Data");
 
                 // Header
-                lookupCells["A1"].PutValue("Item");
-                lookupCells["B1"].PutValue("Price");
+                dataSheet.Cells["A1"].PutValue("Fruit");
+                dataSheet.Cells["B1"].PutValue("Quantity");
 
-                // Sample data
-                lookupCells["A2"].PutValue("Apple");
-                lookupCells["B2"].PutValue(1.20);
-                lookupCells["A3"].PutValue("Banana");
-                lookupCells["B3"].PutValue(0.80);
-                lookupCells["A4"].PutValue("Cherry");
-                lookupCells["B4"].PutValue(2.50);
+                // Sample fruits to look up
+                string[] fruitsToLookup = { "Cherry", "Apple", "Date" };
+                for (int i = 0; i < fruitsToLookup.Length; i++)
+                {
+                    dataSheet.Cells[i + 1, 0].PutValue(fruitsToLookup[i]); // Column A
 
-                // -------------------------------------------------
-                // 2. Create a named range that covers the lookup table
-                // -------------------------------------------------
-                AsposeRange namedRange = lookupCells.CreateRange("A1", "B4");
-                namedRange.Name = "LookupTable";
+                    // Use VLOOKUP with the named range "LookupTable"
+                    // Formula: =VLOOKUP(A2,LookupTable,2,FALSE)
+                    string formula = $"=VLOOKUP(A{i + 2},LookupTable,2,FALSE)";
+                    dataSheet.Cells[i + 1, 1].Formula = formula;
+                }
 
-                // -------------------------------------------------
-                // 3. Use the named range in another worksheet (lookup)
-                // -------------------------------------------------
-                Worksheet dataSheet = workbook.Worksheets.Add("Data");
-                Cells dataCells = dataSheet.Cells;
-
-                // Input items to lookup
-                dataCells["A1"].PutValue("Item");
-                dataCells["B1"].PutValue("Price (Lookup)");
-                dataCells["A2"].PutValue("Apple");
-                dataCells["A3"].PutValue("Cherry");
-                dataCells["A4"].PutValue("Banana");
-
-                // Apply VLOOKUP formula that references the named range
-                dataCells["B2"].Formula = "=VLOOKUP(A2,LookupTable,2,FALSE)";
-                dataCells["B3"].Formula = "=VLOOKUP(A3,LookupTable,2,FALSE)";
-                dataCells["B4"].Formula = "=VLOOKUP(A4,LookupTable,2,FALSE)";
-
-                // Calculate formulas so that values are materialized
+                // Calculate all formulas so that lookup results are materialized
                 workbook.CalculateFormula();
 
-                // -------------------------------------------------
-                // 4. Retrieve the named range using GetRangeByName (global scope)
-                // -------------------------------------------------
+                // -----------------------------------------------------------------
+                // 3. Demonstrate retrieving the named range via GetRangeByName
+                // -----------------------------------------------------------------
                 AsposeRange retrievedRange = workbook.Worksheets.GetRangeByName("LookupTable");
                 if (retrievedRange != null)
                 {
-                    Console.WriteLine("Named range found: " + retrievedRange.Address);
-                    Console.WriteLine("First cell value: " + retrievedRange[0, 0].StringValue);
-                }
-                else
-                {
-                    Console.WriteLine("Named range not found.");
+                    Console.WriteLine($"Named range '{retrievedRange.Name}' address: {retrievedRange.RefersTo}");
                 }
 
-                // -------------------------------------------------
-                // 5. Save the workbook
-                // -------------------------------------------------
-                workbook.Save("NamedRangeLookupDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+                // -----------------------------------------------------------------
+                // 4. Save the workbook
+                // -----------------------------------------------------------------
+                string outputPath = "NamedRangeLookupDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

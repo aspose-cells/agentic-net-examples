@@ -1,41 +1,63 @@
-// Title: Append Text to a TextBox Shape in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a TextBox shape, set initial text, and programmatically append additional characters using the FontSettingCollection.AppendText method, then save the file as AppendTextDemo.xlsx.
-// Keywords: Aspose.Cells C# textbox append text | FontSettingCollection AppendText | add text to Excel shape programmatically | modify textbox content Aspose.Cells | Excel automation C# Aspose | append string to TextBox shape
-// Common Searches: Aspose.Cells how to append text to a textbox | C# FontSettingCollection AppendText example | Add more text to an existing Excel textbox using Aspose | Programmatically update TextBox shape in .NET | Append string to TextBody in Aspose.Cells
-// Developer Intent: The developer needs to add new text to the existing content of a TextBox shape in an Excel workbook using Aspose.Cells for .NET without overwriting the original string.
-// Use Cases: Build dynamic report headers by concatenating user‑provided phrases at runtime. | Update a comment or note box with status messages as a spreadsheet is processed. | Create templates that preserve preset instructions while appending custom remarks.
-// AI Prompts: Show how to append multiple lines, including line breaks, to a TextBox using FontSettingCollection in Aspose.Cells C#. | Provide code to read, prepend, replace, or clear TextBox content before appending new text. | Explain handling of Unicode or right‑to‑left languages when appending text to a TextBox shape.
+// Title: C# – Append Text to an Aspose.Cells TextBox via FontSettingCollection
+// Description: Shows how to create a workbook, insert a TextBox shape, set its initial text, and programmatically append additional characters using FontSettingCollection.AppendText, then save the workbook as an .xlsx file.
+// Keywords: Aspose.Cells | C# TextBox AppendText | FontSettingCollection | Excel shape text manipulation | TextBody property | programmatic textbox update | .NET Excel automation | Add TextBox shape | Aspose.Cells .NET example | Excel textbox editing
+// Common Searches: Aspose.Cells AppendText C# example | How to add text to a TextBox shape in Aspose.Cells | FontSettingCollection TextBody usage | Update textbox content Aspose.Cells .NET | C# code to modify Excel textbox
+// Developer Intent: Programmatically extend the existing content of a TextBox shape in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Build a greeting textbox by concatenating a static prefix with a dynamic user name. | Append user comments to a pre‑filled notes textbox before distributing a report. | Combine multiple status messages into a single dashboard textbox generated on the fly.
+// AI Prompts: Provide C# code that appends several lines of text to an Aspose.Cells TextBox using FontSettingCollection. | Show an example of replacing the entire textbox content with a formatted string and saving the workbook. | Explain how to read the current TextBody text, modify it, and persist the changes in an Excel file with Aspose.Cells.
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// Demonstrates how to create a workbook, add a TextBox shape, set initial text, and programmatically append additional characters using the FontSettingCollection.AppendText method, then save the file as AppendTextDemo.xlsx.
-class AppendTextToTextBox
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Shows how to create a workbook, insert a TextBox shape, set its initial text, and programmatically append additional characters using FontSettingCollection.AppendText, then save the workbook as an .xlsx file.
+    public class AppendTextToTextBoxDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a textbox shape to the worksheet
-        // Parameters: upper left row, upper left column, height, width, top, left (in pixels)
-        var shape = worksheet.Shapes.AddTextBox(0, 0, 100, 100, 200, 200);
+                // Add a textbox shape to the worksheet
+                // Parameters: upper left row, upper left column, top, left, height, width (all in pixels)
+                TextBox textBox = worksheet.Shapes.AddTextBox(0, 0, 100, 100, 200, 100);
 
-        // Access the FontSettingCollection that holds the textbox text
-        FontSettingCollection fontSettings = shape.TextBody;
+                // Access the FontSettingCollection which manages the textbox text
+                FontSettingCollection fontSettings = textBox.TextBody;
 
-        // Set initial text in the textbox
-        fontSettings.Text = "Hello, ";
+                // Set the initial text of the textbox
+                fontSettings.Text = "Hello, ";
 
-        // Append additional text to the existing content
-        fontSettings.AppendText("World!");
+                // Append additional text to the existing content
+                fontSettings.AppendText("World!");
 
-        // Output the final text to the console (optional)
-        Console.WriteLine("Resulting text: " + fontSettings.Text);
+                // Optional: display the final text in console
+                Console.WriteLine("Final textbox text: " + fontSettings.Text);
 
-        // Save the workbook to a file
-        workbook.Save("AppendTextDemo.xlsx");
+                // Save the workbook to a file
+                string outputPath = "AppendTextToTextBoxDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            AppendTextToTextBoxDemo.Run();
+        }
     }
 }

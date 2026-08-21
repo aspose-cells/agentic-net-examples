@@ -1,19 +1,18 @@
-// Title: Suppress Scientific Notation in Aspose.Cells HTML Export and Verify Numeric Accuracy (C#)
-// Description: Creates a workbook with a tiny number, saves it to HTML using default settings, applies a custom decimal format to hide scientific notation, saves a second HTML file, extracts the displayed values with a regex, and confirms that the formatted output matches the original number.
-// Keywords: Aspose.Cells HTML export | suppress scientific notation | custom number format C# | numeric accuracy verification | regex cell value extraction | Excel to HTML conversion | C# Aspose.Cells example | global development
-// Common Searches: Aspose.Cells prevent scientific notation in HTML export | compare default and custom number formats in Aspose.Cells HTML | extract cell text from Aspose.Cells generated HTML | C# verify numeric display after HTML conversion | how to format small numbers in Aspose.Cells HTML output
-// Developer Intent: The developer wants to ensure that applying a custom decimal format removes exponential notation from the HTML export and that the displayed value exactly matches the original numeric value.
-// Use Cases: Generate HTML from an Excel workbook while keeping very small numbers in plain decimal form. | Automated test that compares default HTML output with a formatted version to detect numeric representation changes. | Validate that the cell value extracted from the suppressed‑notation HTML equals the expected formatted string.
-// AI Prompts: Write C# code to compare two Aspose.Cells HTML files and highlight numeric differences. | Suggest a reliable alternative to regex for extracting cell values from Aspose.Cells HTML output. | Explain how to apply a workbook‑wide custom number format to eliminate scientific notation before saving to HTML.
+// Title: C# – Compare Aspose.Cells HTML Export With and Without Scientific Notation Suppression
+// Description: Shows how to export a workbook to HTML using Aspose.Cells, first with default settings that may render numbers in scientific notation, then applying the custom format "0.####################" to force plain decimal output, and finally comparing the two HTML results.
+// Keywords: Aspose.Cells | C# | HTML export | scientific notation | exponential notation | custom number format | HtmlSaveOptions | suppress exponential notation | compare HTML output | extract cell values
+// Common Searches: Aspose.Cells prevent scientific notation in HTML | C# export Excel to HTML without exponential format | apply custom number format before HTML export Aspose.Cells | compare default and formatted HTML output Aspose.Cells | extract cell values from Aspose.Cells generated HTML
+// Developer Intent: Verify that a custom number format eliminates scientific notation from the HTML produced by Aspose.Cells.
+// Use Cases: Automated testing of numeric formatting in generated HTML reports | Creating financial or invoice HTML where large or tiny numbers must appear as plain decimals | Ensuring compliance‑driven presentations of exported data | Documenting exact numeric values without scientific notation | Adding a CI step to validate number‑formatting rules after HTML export
+// AI Prompts: Write a C# method that loads two Aspose.Cells HTML files, extracts numeric cell strings, and returns true if they match after formatting. | Show how to apply a custom number format to an entire column or range in a workbook before exporting to HTML with Aspose.Cells. | Explain which HtmlSaveOptions properties preserve custom number formats during HTML export. | Create a script that logs differences between default and formatted HTML exports for all numeric cells. | Provide PowerShell commands to run the comparison program and capture its output for further analysis.
 
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlComparison
 {
-    // Creates a workbook with a tiny number, saves it to HTML using default settings, applies a custom decimal format to hide scientific notation, saves a second HTML file, extracts the displayed values with a regex, and confirms that the formatted output matches the original number.
+    // Shows how to export a workbook to HTML using Aspose.Cells, first with default settings that may render numbers in scientific notation, then applying the custom format "0.####################" to force plain decimal output, and finally comparing the two HTML results.
     class Program
     {
         static void Main()
@@ -21,70 +20,87 @@ namespace AsposeCellsHtmlComparison
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Put a very small number that Excel would normally display in exponential notation
-            double smallNumber = 0.000000123456789;
-            cells["A1"].PutValue(smallNumber);
+            // Add numbers that normally appear in exponential notation when exported
+            // Large number
+            sheet.Cells["A1"].PutValue(1234567890123456.0);
+            // Small number
+            sheet.Cells["A2"].PutValue(0.000000123456789);
 
             // -----------------------------------------------------------------
             // Export HTML with default settings (exponential notation may appear)
             // -----------------------------------------------------------------
             HtmlSaveOptions defaultOptions = new HtmlSaveOptions();
-            string defaultHtmlPath = "default.html";
-            workbook.Save(defaultHtmlPath, defaultOptions);
+            // Keep default ExportFormula value (true) – not relevant for this demo
+            workbook.Save("default.html", defaultOptions);
 
             // -----------------------------------------------------------------
             // Apply a custom number format to suppress exponential notation
-            // Example format: show up to 15 decimal places without scientific format
+            // The format "0.####################" forces the value to be displayed
+            // as a plain decimal string without scientific notation.
             // -----------------------------------------------------------------
-            Style customStyle = cells["A1"].GetStyle();
-            customStyle.Custom = "0.####################"; // Plain decimal format
-            cells["A1"].SetStyle(customStyle);
+            Style suppressExpStyle = workbook.CreateStyle();
+            suppressExpStyle.Custom = "0.####################";
 
-            // Export HTML after applying the custom format
+            // Apply the style to the cells containing the numbers
+            sheet.Cells["A1"].SetStyle(suppressExpStyle);
+            sheet.Cells["A2"].SetStyle(suppressExpStyle);
+
+            // Export HTML after suppressing exponential notation
             HtmlSaveOptions suppressedOptions = new HtmlSaveOptions();
-            string suppressedHtmlPath = "suppressed.html";
-            workbook.Save(suppressedHtmlPath, suppressedOptions);
+            workbook.Save("suppressed.html", suppressedOptions);
 
             // -----------------------------------------------------------------
-            // Load both HTML files as strings
+            // Load the generated HTML files and display the numeric values
+            // for manual verification of the difference.
             // -----------------------------------------------------------------
-            string htmlDefault = File.ReadAllText(defaultHtmlPath);
-            string htmlSuppressed = File.ReadAllText(suppressedHtmlPath);
+            string htmlDefault = File.ReadAllText("default.html");
+            string htmlSuppressed = File.ReadAllText("suppressed.html");
 
-            // -----------------------------------------------------------------
-            // Extract the displayed cell value from each HTML using a simple regex.
-            // The cell value is typically inside a <td> element.
-            // -----------------------------------------------------------------
-            string pattern = @"<td[^>]*>(.*?)</td>";
-            string valueDefault = ExtractFirstMatch(htmlDefault, pattern);
-            string valueSuppressed = ExtractFirstMatch(htmlSuppressed, pattern);
+            Console.WriteLine("=== Default HTML (may contain exponential notation) ===");
+            Console.WriteLine(htmlDefault);
+            Console.WriteLine();
+            Console.WriteLine("=== Suppressed HTML (plain decimal notation) ===");
+            Console.WriteLine(htmlSuppressed);
+            Console.WriteLine();
 
-            // -----------------------------------------------------------------
-            // Output the comparison results
-            // -----------------------------------------------------------------
-            Console.WriteLine("Original numeric value: " + smallNumber);
-            Console.WriteLine("HTML with default settings   : " + valueDefault);
-            Console.WriteLine("HTML with exponential suppression: " + valueSuppressed);
+            // Simple extraction of the cell values from the HTML for comparison
+            // (Assumes the first <td> elements correspond to A1 and A2)
+            string[] defaultValues = ExtractCellValues(htmlDefault);
+            string[] suppressedValues = ExtractCellValues(htmlSuppressed);
 
-            // Simple accuracy check: compare the suppressed value with the original number formatted as plain text
-            string expectedPlain = smallNumber.ToString("0.####################");
-            bool isAccurate = string.Equals(valueSuppressed, expectedPlain, StringComparison.Ordinal);
-            Console.WriteLine("Suppressed HTML matches expected plain format: " + isAccurate);
+            Console.WriteLine("Cell A1 value - Default:    " + defaultValues[0]);
+            Console.WriteLine("Cell A1 value - Suppressed: " + suppressedValues[0]);
+            Console.WriteLine("Cell A2 value - Default:    " + defaultValues[1]);
+            Console.WriteLine("Cell A2 value - Suppressed: " + suppressedValues[1]);
         }
 
-        // Helper method to get the first captured group from a regex match
-        private static string ExtractFirstMatch(string input, string pattern)
+        // Helper method to extract the first two <td> contents from an HTML string.
+        // This is a lightweight parser sufficient for the demonstration purpose.
+        private static string[] ExtractCellValues(string html)
         {
-            Match match = Regex.Match(input, pattern, RegexOptions.Singleline);
-            if (match.Success && match.Groups.Count > 1)
+            string[] result = new string[2] { string.Empty, string.Empty };
+            int index = 0;
+            int searchPos = 0;
+
+            while (index < 2)
             {
-                // Remove any HTML tags that might be inside the cell (e.g., <span>)
-                string inner = Regex.Replace(match.Groups[1].Value, "<.*?>", string.Empty);
-                return inner.Trim();
+                int tdStart = html.IndexOf("<td", searchPos, StringComparison.OrdinalIgnoreCase);
+                if (tdStart == -1) break;
+
+                int tdClose = html.IndexOf('>', tdStart);
+                if (tdClose == -1) break;
+
+                int tdEnd = html.IndexOf("</td>", tdClose, StringComparison.OrdinalIgnoreCase);
+                if (tdEnd == -1) break;
+
+                string cellContent = html.Substring(tdClose + 1, tdEnd - tdClose - 1).Trim();
+                result[index] = System.Net.WebUtility.HtmlDecode(cellContent);
+                index++;
+                searchPos = tdEnd + 5; // Move past </td>
             }
-            return string.Empty;
+
+            return result;
         }
     }
 }

@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Sparklines Agent
 category: sparkline
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: C# examples for line, column, and win-loss sparklines, source ranges, groups, axes, markers, colors, visibility, copying, and removal
 primary_apis: [Worksheet.SparklineGroups, SparklineGroupCollection.Add, SparklineGroup, SparklineCollection, SparklineType]
 search_intents: [create Excel sparkline in C#, add column sparkline, format sparkline markers, remove Excel sparklines]
@@ -320,3 +320,4 @@ Interpret one developer intent
 ## Definition of done
 
 A `sparkline` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
+

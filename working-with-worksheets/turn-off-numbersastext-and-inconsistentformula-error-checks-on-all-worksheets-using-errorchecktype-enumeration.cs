@@ -1,45 +1,57 @@
-// Title: Turn off NumberStoredAsText and InconsistentFormula error checks for all worksheets (Aspose.Cells C#)
-// Description: Loads a workbook, iterates through each worksheet, adds an ErrorCheckOption, disables the NumberStoredAsText and InconsistentFormula checks for the full used range, and saves the updated file.
-// Keywords: Aspose.Cells | C# | ErrorCheckOption | ErrorCheckType | NumberStoredAsText | InconsistentFormula | disable error checks | worksheet error indicators | Excel automation | bulk workbook settings
-// Common Searches: Aspose.Cells turn off NumberStoredAsText for all sheets | disable InconsistentFormula error check C# Aspose.Cells | apply error‑check options to entire workbook Aspose | remove Excel error flags before saving with Aspose.Cells | bulk disable error checks in Aspose.Cells workbook
+// Title: Aspose.Cells .NET – Turn Off NumberStoredAsText & InconsistentFormula Checks for Every Worksheet
+// Description: Learn how to disable the NumberStoredAsText and InconsistentFormula error checks on all worksheets in a workbook using Aspose.Cells for .NET. The example creates (or loads) a Workbook, iterates through each Worksheet, adds an ErrorCheckOption, disables the two checks, applies the option to the used cell range only when data exists, and saves the file.
+// Keywords: Aspose.Cells disable NumberStoredAsText | Aspose.Cells turn off InconsistentFormula | ErrorCheckOptionCollection .NET | disable worksheet error checks Aspose | set error check options all sheets | C# Aspose.Cells error checking | Excel error checks suppression
+// Common Searches: how to disable NumberStoredAsText error in Aspose.Cells | turn off InconsistentFormula check for all worksheets .NET | Aspose.Cells disable specific error checks workbook | programmatically suppress Excel error warnings with Aspose | apply error‑check settings to used range Aspose.Cells
 // Developer Intent: Disable the NumberStoredAsText and InconsistentFormula error checks on every worksheet in an Aspose.Cells workbook.
-// Use Cases: Prepare reports for distribution without visible Excel error icons. | Clean up programmatically generated workbooks before PDF conversion. | Enforce consistent error‑checking settings across all sheets in an automated pipeline.
-// AI Prompts: Write C# code that disables NumberStoredAsText and InconsistentFormula checks for all worksheets using Aspose.Cells. | Show how to add EmptyCellReference to the list of disabled error checks in the same workbook. | Explain how to target a custom cell range instead of the entire used area when setting error‑check options.
+// Use Cases: Generate reports that contain numeric strings without triggering NumberStoredAsText warnings. | Copy formulas that intentionally differ across rows while keeping the error list clean. | Apply the settings only to worksheets that contain data, leaving empty sheets untouched.
+// AI Prompts: Write C# code using Aspose.Cells to turn off NumberStoredAsText and InconsistentFormula checks for all worksheets and save the workbook. | Show how to modify the example to apply the error‑check options to a custom cell range instead of the entire used area. | Demonstrate how to re‑enable the NumberStoredAsText and InconsistentFormula checks later in the same workbook.
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Loads a workbook, iterates through each worksheet, adds an ErrorCheckOption, disables the NumberStoredAsText and InconsistentFormula checks for the full used range, and saves the updated file.
-class DisableErrorChecks
+// Learn how to disable the NumberStoredAsText and InconsistentFormula error checks on all worksheets in a workbook using Aspose.Cells for .NET. The example creates (or loads) a Workbook, iterates through each Worksheet, adds an ErrorCheckOption, disables the two checks, applies the option to the used cell range only when data exists, and saves the file.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Access the collection of error‑check options for the current worksheet
-            ErrorCheckOptionCollection options = sheet.ErrorCheckOptions;
+            // Create a new workbook (you can also load an existing file here)
+            Workbook workbook = new Workbook();
 
-            // Add a new error‑check option entry
-            int optionIndex = options.Add();
-            ErrorCheckOption option = options[optionIndex];
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet worksheet in workbook.Worksheets)
+            {
+                // Get the collection that holds error‑check options for the worksheet
+                ErrorCheckOptionCollection errorCheckOptions = worksheet.ErrorCheckOptions;
 
-            // Disable the "Number stored as text" check
-            option.SetErrorCheck(ErrorCheckType.NumberStoredAsText, false);
-            // Disable the "Inconsistent formula" check
-            option.SetErrorCheck(ErrorCheckType.InconsistFormula, false);
+                // Add a new ErrorCheckOption to the collection
+                int optionIndex = errorCheckOptions.Add();
+                ErrorCheckOption errorCheckOption = errorCheckOptions[optionIndex];
 
-            // Apply the settings to the entire used range of the worksheet
-            int maxRow = sheet.Cells.MaxRow;
-            int maxCol = sheet.Cells.MaxDataColumn;
-            CellArea fullArea = CellArea.CreateCellArea(0, 0, maxRow, maxCol);
-            option.AddRange(fullArea);
+                // Turn off the "Number stored as text" check
+                errorCheckOption.SetErrorCheck(ErrorCheckType.NumberStoredAsText, false);
+                // Turn off the "Inconsistent formula" check
+                errorCheckOption.SetErrorCheck(ErrorCheckType.InconsistFormula, false);
+
+                // Determine the used range; MaxDataRow/Column return -1 if the sheet is empty
+                int maxRow = worksheet.Cells.MaxDataRow;
+                int maxColumn = worksheet.Cells.MaxDataColumn;
+
+                // Apply the settings only when there is at least one used cell
+                if (maxRow >= 0 && maxColumn >= 0)
+                {
+                    CellArea fullRange = CellArea.CreateCellArea(0, 0, maxRow, maxColumn);
+                    errorCheckOption.AddRange(fullRange);
+                }
+            }
+
+            // Save the workbook with the updated error‑check settings
+            workbook.Save("Output.xlsx");
         }
-
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

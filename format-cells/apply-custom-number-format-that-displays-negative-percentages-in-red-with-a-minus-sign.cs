@@ -1,25 +1,26 @@
-// Title: Aspose.Cells .NET: Custom number format to display negative percentages in red with a minus sign
-// Description: Demonstrates how to create a workbook, insert positive and negative decimal values, define a custom number format "0.00%;[Red]-0.00%" that shows negative percentages in red with a leading minus sign, apply the format to a specific range using a StyleFlag, and save the file as an XLSX document.
-// Keywords: Aspose.Cells custom number format | negative percentage red format .NET | C# Aspose.Cells style flag | Excel percentage formatting Aspose | display negative values in red | custom Excel number format string | Aspose.Cells tutorial | C# Excel styling example
-// Common Searches: Aspose.Cells format negative percentages red | C# custom number format for percentages | How to apply style flag number format Aspose.Cells | Excel red negative values custom format .NET | Aspose.Cells example for percentage styling | Create workbook with colored negative percentages C#
-// Developer Intent: Generate an Excel file where negative percentage cells appear in red with a minus sign using Aspose.Cells for .NET.
-// Use Cases: Financial reports that highlight loss percentages in red for quick visual analysis. | Sales or KPI dashboards where decline rates need distinct coloring without extra conditional rules. | Automated data exports that require consistent visual formatting of positive and negative percentages.
-// AI Prompts: Write C# code with Aspose.Cells to apply a custom number format that shows negative percentages in red and prefixed with a minus sign. | Show how to use StyleFlag to apply only the number format to a range while keeping other cell styles unchanged. | Explain how to modify the format string to use parentheses instead of a minus sign for negative percentages in Aspose.Cells.
+// Title: C# – Aspose.Cells: Custom number format to display negative percentages in red with a minus sign
+// Description: Creates a workbook, inserts 25% and -45% values, defines a style with the custom format "0.00%;[Red]-0.00%" to show positive percentages normally and negative percentages in red with a leading minus sign, applies the style to cells A1:A2 using a StyleFlag that targets only the number format, and saves the file as an XLSX document.
+// Keywords: Aspose.Cells custom number format | negative percentage red format | C# Excel style flag | Aspose.Cells .NET formatting | Excel red negative values | percentage display Aspose
+// Common Searches: Aspose.Cells show negative percentages in red | custom number format string for red negative percentages C# | apply number format to a range Aspose.Cells | StyleFlag number format only Aspose.Cells | C# Excel red negative percent formatting
+// Developer Intent: Apply a custom number format so that negative percentage values appear in red with a preceding minus sign.
+// Use Cases: Financial statements where loss percentages are highlighted in red. | KPI dashboards that differentiate negative growth rates with colored percentages. | Automated Excel reports that embed visual cues for negative values without using conditional formatting.
+// AI Prompts: Give a C# Aspose.Cells example that formats negative percentages in red with a minus sign using a custom number format. | Show how to modify the format string to display negative percentages in parentheses instead of a minus sign. | Demonstrate applying the red‑negative‑percentage format to an entire column programmatically.
 
 using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, insert positive and negative decimal values, define a custom number format "0.00%;[Red]-0.00%" that shows negative percentages in red with a leading minus sign, apply the format to a specific range using a StyleFlag, and save the file as an XLSX document.
-    public class NegativePercentageFormatDemo
+    // Creates a workbook, inserts 25% and -45% values, defines a style with the custom format "0.00%;[Red]-0.00%" to show positive percentages normally and negative percentages in red with a leading minus sign, applies the style to cells A1:A2 using a StyleFlag that targets only the number format, and saves the file as an XLSX document.
+    public class NegativePercentageNumberFormatDemo
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
             try
             {
                 Run();
-                Console.WriteLine("Workbook saved successfully.");
+                Console.WriteLine("Workbook created successfully.");
             }
             catch (Exception ex)
             {
@@ -33,25 +34,26 @@ namespace AsposeCellsExamples
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put sample values (as decimal fractions)
+            // Set sample values (positive and negative percentages)
             sheet.Cells["A1"].PutValue(0.25);   // 25%
             sheet.Cells["A2"].PutValue(-0.45); // -45%
 
             // Create a style with a custom number format:
-            // Positive percentages normal, negative percentages red with a minus sign
+            // Positive percentages: 0.00%
+            // Negative percentages: red color with minus sign
             Style style = workbook.CreateStyle();
             style.Custom = "0.00%;[Red]-0.00%";
 
-            // Apply only the number format part of the style
-            StyleFlag flag = new StyleFlag();
-            flag.NumberFormat = true;
+            // Apply only the number format using a StyleFlag
+            StyleFlag styleFlag = new StyleFlag();
+            styleFlag.NumberFormat = true;
 
             // Apply the style to the target range (A1:A2)
-            Aspose.Cells.Range range = sheet.Cells.CreateRange("A1", "A2");
-            range.ApplyStyle(style, flag);
+            AsposeRange range = sheet.Cells.CreateRange("A1", "A2");
+            range.ApplyStyle(style, styleFlag);
 
             // Save the workbook
-            string outputPath = "NegativePercentageFormatDemo.xlsx";
+            string outputPath = "NegativePercentageNumberFormatDemo.xlsx";
             workbook.Save(outputPath);
         }
     }

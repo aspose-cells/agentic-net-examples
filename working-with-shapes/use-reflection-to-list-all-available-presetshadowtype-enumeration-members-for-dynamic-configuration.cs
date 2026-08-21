@@ -1,30 +1,35 @@
-// Title: C# Example: Use Reflection to Enumerate All PresetShadowType Values in Aspose.Cells .NET
-// Description: Shows how to obtain the PresetShadowType enumeration from Aspose.Cells.Drawing via reflection, retrieve each member name and its integer value with Enum.GetNames/GetValues, and print the list to the console. Useful for dynamic UI controls, validation, or documentation of shape shadow presets.
-// Keywords: Aspose.Cells | PresetShadowType | enum reflection C# | .NET | shape shadow presets | Enum.GetNames | Enum.GetValues | list enum members | dynamic configuration | Aspose.Cells.Drawing | C# code example | GitHub snippet
-// Common Searches: list PresetShadowType enum Aspose.Cells | C# reflection get all shape shadow types | Aspose.Cells PresetShadowType values | how to enumerate PresetShadowType in .NET | Aspose.Cells shape shadow enumeration example
-// Developer Intent: Retrieve a complete runtime list of PresetShadowType enum members and their numeric identifiers.
-// Use Cases: Populate a dropdown or combo box with every shadow preset for user selection. | Validate that a user‑provided string corresponds to a valid PresetShadowType value. | Generate documentation or logs that display all supported shadow types for a workbook. | Automatically adapt code when new PresetShadowType members are added in future Aspose.Cells releases.
-// AI Prompts: Generate C# code that returns a Dictionary<string,int> of PresetShadowType names and values using reflection. | Show how to bind the reflected PresetShadowType list to a WPF ComboBox. | Explain how to handle unknown PresetShadowType values when reading from external configuration files. | Write a PowerShell script that lists PresetShadowType members from the Aspose.Cells assembly.
+// Title: Enumerate PresetShadowType enum values via reflection in Aspose.Cells for .NET
+// Description: Demonstrates how to initialize Aspose.Cells, obtain the PresetShadowType enum type, and use reflection to list every member name with its integer value. The sample also saves a workbook to show the typical create‑save workflow.
+// Keywords: Aspose.Cells | PresetShadowType | enum reflection | C# | .NET | list enum members | retrieve enum values | shape shadow presets | Aspose.Cells Drawing | enumeration introspection
+// Common Searches: list all PresetShadowType values Aspose.Cells | C# reflection enum Aspose.Cells Drawing | how to get numeric value of PresetShadowType | enumerate shadow presets for shapes in Aspose.Cells | retrieve Aspose.Cells PresetShadowType members programmatically
+// Developer Intent: The developer needs to programmatically obtain every PresetShadowType enumeration member and its underlying integer value using reflection.
+// Use Cases: Populate a dropdown or palette with every shadow preset for shape styling in a UI. | Validate user‑provided numeric codes against defined PresetShadowType values before applying them. | Generate documentation or logs that list supported shadow types for debugging or reporting.
+// AI Prompts: Create a method that returns a Dictionary<string,int> of all PresetShadowType names and values using reflection. | Show code that applies a user‑selected PresetShadowType to a shape after enumerating the enum. | Provide robust error handling for converting a string to PresetShadowType in Aspose.Cells.
 
 using System;
+using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to obtain the PresetShadowType enumeration from Aspose.Cells.Drawing via reflection, retrieve each member name and its integer value with Enum.GetNames/GetValues, and print the list to the console. Useful for dynamic UI controls, validation, or documentation of shape shadow presets.
+// Demonstrates how to initialize Aspose.Cells, obtain the PresetShadowType enum type, and use reflection to list every member name with its integer value. The sample also saves a workbook to show the typical create‑save workflow.
 class Program
 {
     static void Main()
     {
-        // Obtain the enum type via reflection
-        Type enumType = typeof(PresetShadowType);
+        // Create a workbook (optional, ensures Aspose.Cells is initialized)
+        Workbook workbook = new Workbook();
 
-        // Retrieve all names and corresponding values
-        string[] names = Enum.GetNames(enumType);
-        Array values = Enum.GetValues(enumType);
+        // Get the enum type for PresetShadowType
+        Type presetShadowEnum = typeof(PresetShadowType);
 
+        // List all enum members with their integer values
         Console.WriteLine("Available PresetShadowType members:");
-        for (int i = 0; i < names.Length; i++)
+        foreach (string name in Enum.GetNames(presetShadowEnum))
         {
-            Console.WriteLine($"{names[i]} = {(int)values.GetValue(i)}");
+            int value = (int)Enum.Parse(presetShadowEnum, name);
+            Console.WriteLine($"{name} = {value}");
         }
+
+        // Save the workbook to demonstrate the typical lifecycle (create, save)
+        workbook.Save("ReflectionPresetShadowTypeDemo.xlsx");
     }
 }

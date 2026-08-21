@@ -1,49 +1,65 @@
-// Title: Log Before/After RGB Values of Theme Colors Using Aspose.Cells for .NET (C#)
-// Description: C# example that creates a workbook, iterates the first 12 ThemeColorType entries, reads each original theme color, shifts its RGB components, applies the new color with SetThemeColor, prints the before and after RGB values to the console, and saves the file as ThemeColorChanges.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | ThemeColorType | GetThemeColor | SetThemeColor | log RGB values | theme color modification | Excel theme colors | programmatic color change | workbook save
-// Common Searches: Aspose.Cells log theme color RGB values | C# get and set Excel theme colors | Iterate ThemeColorType enum Aspose.Cells | Record original and new theme colors .NET | Save workbook after changing theme colors
-// Developer Intent: Capture and display the RGB values of each theme color before and after a programmatic modification in an Excel workbook.
-// Use Cases: Audit branding changes by recording original and updated theme color values. | Create a design‑review report that lists before/after RGB values for all theme colors. | Debug unexpected color shifts in spreadsheets by comparing logged values.
-// AI Prompts: Generate C# code that iterates ThemeColorType, logs before/after RGB values, and saves the workbook with Aspose.Cells. | Rewrite the example to write the RGB log to a CSV file instead of the console. | Explain how to revert the theme colors to their original RGB values after they have been changed.
+// Title: C# Example: Log Before‑and‑After RGB Values for Workbook Theme Colors with Aspose.Cells
+// Description: This Aspose.Cells for .NET sample creates a workbook, defines a 12‑color palette, iterates the ThemeColorType enum (excluding StyleColor), reads each original theme color with GetThemeColor, applies a new color via SetThemeColor, writes the before‑and‑after RGB values to the console, and saves the file as ThemeColorChangesLog.xlsx.
+// Keywords: Aspose.Cells C# theme color | GetThemeColor | SetThemeColor | ThemeColorType enumeration | log RGB values Aspose.Cells | Excel theme color change | C# workbook theme audit | Aspose.Cells example .NET
+// Common Searches: how to log theme color changes Aspose.Cells | retrieve original theme colors before modification C# | iterate ThemeColorType enum Aspose.Cells | save workbook after changing theme colors .NET | C# console output RGB values Excel theme
+// Developer Intent: Record the original and updated RGB components for every workbook theme color when applying a new palette using Aspose.Cells.
+// Use Cases: Create an audit trail of theme‑color modifications for compliance or QA. | Debug visual differences in generated Excel reports by comparing color values. | Maintain version‑controlled logs of theme updates across automated report pipelines.
+// AI Prompts: Generate C# code that logs before and after RGB values for each ThemeColorType when changing a workbook's theme with Aspose.Cells. | Explain how to exclude the StyleColor enum value while looping through ThemeColorType. | Show how to write the theme‑color change log to a CSV file instead of the console.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsThemeChangeLogger
+namespace ThemeColorChangeLogger
 {
-    // C# example that creates a workbook, iterates the first 12 ThemeColorType entries, reads each original theme color, shifts its RGB components, applies the new color with SetThemeColor, prints the before and after RGB values to the console, and saves the file as ThemeColorChanges.xlsx.
+    // This Aspose.Cells for .NET sample creates a workbook, defines a 12‑color palette, iterates the ThemeColorType enum (excluding StyleColor), reads each original theme color with GetThemeColor, applies a new color via SetThemeColor, writes the before‑and‑after RGB values to the console, and saves the file as ThemeColorChangesLog.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook (lifecycle rule)
             Workbook workbook = new Workbook();
 
-            // Iterate through the first 12 theme color types (Background1 to FollowedHyperlink)
-            foreach (ThemeColorType type in Enum.GetValues(typeof(ThemeColorType)))
+            // Define new colors for each theme type (must be 12 entries)
+            Color[] newColors = new Color[]
             {
-                // Only process the defined theme colors (indices 0‑11)
-                if ((int)type > 11) continue;
+                Color.FromArgb(255, 255, 200), // Background1
+                Color.FromArgb(200, 255, 255), // Text1
+                Color.FromArgb(255, 200, 255), // Background2
+                Color.FromArgb(200, 200, 255), // Text2
+                Color.FromArgb(255, 150, 150), // Accent1
+                Color.FromArgb(150, 255, 150), // Accent2
+                Color.FromArgb(150, 150, 255), // Accent3
+                Color.FromArgb(255, 255, 150), // Accent4
+                Color.FromArgb(150, 255, 255), // Accent5
+                Color.FromArgb(255, 150, 255), // Accent6
+                Color.FromArgb(100, 100, 255), // Hyperlink
+                Color.FromArgb(255, 100, 100)  // FollowedHyperlink
+            };
 
-                // Get the original theme color (before change)
-                Color beforeColor = workbook.GetThemeColor(type);
+            // Iterate over each ThemeColorType (0 to 11)
+            ThemeColorType[] types = (ThemeColorType[])Enum.GetValues(typeof(ThemeColorType));
+            for (int i = 0; i < types.Length; i++)
+            {
+                ThemeColorType type = types[i];
+                // Skip StyleColor (value 12) which is not a theme color
+                if (type == ThemeColorType.StyleColor) continue;
 
-                // Define a new color – for demonstration we shift each RGB component by +50 (wrap around 255)
-                Color afterColor = Color.FromArgb(
-                    (beforeColor.R + 50) % 256,
-                    (beforeColor.G + 50) % 256,
-                    (beforeColor.B + 50) % 256);
+                // Get the original color
+                Color before = workbook.GetThemeColor(type);
 
-                // Apply the new theme color (lifecycle rule: modify)
-                workbook.SetThemeColor(type, afterColor);
+                // Apply the new color
+                workbook.SetThemeColor(type, newColors[i]);
 
-                // Log the before‑and‑after RGB values
-                Console.WriteLine($"{type}: Before = {beforeColor.R},{beforeColor.G},{beforeColor.B} | After = {afterColor.R},{afterColor.G},{afterColor.B}");
+                // Get the updated color
+                Color after = workbook.GetThemeColor(type);
+
+                // Log before and after RGB values
+                Console.WriteLine($"{type}: Before = ({before.R}, {before.G}, {before.B}) -> After = ({after.R}, {after.G}, {after.B})");
             }
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("ThemeColorChanges.xlsx");
+            // Save the workbook (lifecycle rule)
+            workbook.Save("ThemeColorChangesLog.xlsx");
         }
     }
 }

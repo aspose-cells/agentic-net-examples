@@ -1,18 +1,18 @@
-// Title: Disable Auto‑Expand of an Excel Table (ListObject) in Aspose.Cells for .NET
-// Description: This C# example shows how to prevent an Aspose.Cells ListObject from automatically expanding. The workbook creates a table on A1:B3, calls ConvertToRange() to turn the table into a normal range, verifies that no ListObjects remain, adds extra rows that stay outside the former table, and saves the file.
-// Keywords: Aspose.Cells | Aspose.Cells for .NET | C# | .NET | Excel table | ListObject | disable auto expand | ConvertToRange | fixed table range | prevent table expansion | GitHub sample | code example
-// Common Searches: how to stop Aspose.Cells ListObject from expanding | convert Excel table to range Aspose.Cells C# | keep table range static in Aspose.Cells | disable auto‑expand of Excel table using Aspose.Cells | Aspose.Cells example for fixed table size
-// Developer Intent: Keep an Excel table’s range static by converting the ListObject to a normal range.
-// Use Cases: Create a table for initial data, then lock its size to prevent further auto‑expansion. | Add rows after conversion without them being incorporated into the original table. | Generate reports where the table layout must remain unchanged despite additional data.
-// AI Prompts: Show C# code to disable auto‑expand of a ListObject in Aspose.Cells. | Explain how ConvertToRange works and how to verify that no ListObjects exist. | Provide a step‑by‑step guide to add rows below a converted range without affecting the original table.
+// Title: Disable Excel table auto‑expand in C# using Aspose.Cells ConvertToRange
+// Description: This example shows how to create a ListObject (Excel table) with Aspose.Cells for .NET, apply a style, and then call ConvertToRange() to lock the table's range. After conversion the table is removed, additional rows can be added below without expanding the original range, and the worksheet’s ListObjects collection becomes empty.
+// Keywords: Aspose.Cells ConvertToRange | C# Excel table fixed range | disable table auto expand .NET | ListObject to range Aspose | prevent Excel table growth | Aspose.Cells ListObject example
+// Common Searches: Aspose.Cells ConvertToRange C# | stop Excel table from expanding with Aspose | convert ListObject to range .NET | fixed table range Aspose.Cells | how to lock Excel table size programmatically
+// Developer Intent: Transform a ListObject into a normal cell range so new rows do not automatically become part of the table.
+// Use Cases: Create a styled table for initial data, then lock its size before appending summary rows. | Provide a template where the table dimensions must stay constant while users add extra entries below. | Maintain static formula references by fixing the table range prior to further data imports.
+// AI Prompts: Generate C# code that builds an Excel table with Aspose.Cells, converts it to a fixed range, and adds rows without expanding the table. | Explain what happens to table styles, filters, and the ListObjects collection after ConvertToRange is called. | Show how to programmatically confirm that a ListObject has been removed and that ListObjects.Count equals zero.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsTableAutoExpandDemo
+namespace AsposeCellsTableFixedRangeDemo
 {
-    // This C# example shows how to prevent an Aspose.Cells ListObject from automatically expanding. The workbook creates a table on A1:B3, calls ConvertToRange() to turn the table into a normal range, verifies that no ListObjects remain, adds extra rows that stay outside the former table, and saves the file.
+    // This example shows how to create a ListObject (Excel table) with Aspose.Cells for .NET, apply a style, and then call ConvertToRange() to lock the table's range. After conversion the table is removed, additional rows can be added below without expanding the original range, and the worksheet’s ListObjects collection becomes empty.
     public class Program
     {
         public static void Main()
@@ -24,30 +24,36 @@ namespace AsposeCellsTableAutoExpandDemo
             // Populate initial data (including header row)
             sheet.Cells["A1"].PutValue("ID");
             sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("John");
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Mary");
+            for (int i = 2; i <= 5; i++) // rows 2‑5 contain data
+            {
+                sheet.Cells[i - 1, 0].PutValue(i - 1);               // ID
+                sheet.Cells[i - 1, 1].PutValue($"Item {i - 1}");    // Name
+            }
 
-            // Add a ListObject (Excel table) covering the data range A1:B3
-            int tableIndex = sheet.ListObjects.Add("A1", "B3", true);
+            // Add a ListObject (Excel table) covering the data range A1:B5
+            int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
             ListObject table = sheet.ListObjects[tableIndex];
+            table.TableStyleType = TableStyleType.TableStyleMedium2;
 
-            // At this point the table will auto‑expand when new rows are added below it.
-            // To keep the range fixed, convert the table back to a normal range.
+            // ------------------------------------------------------------
+            // Disable auto‑expand: convert the table back to a normal range.
+            // After conversion the table object is removed and its range
+            // remains fixed even if more rows are added below.
+            // ------------------------------------------------------------
             table.ConvertToRange();
 
-            // Verify that the ListObject no longer exists
-            Console.WriteLine("ListObjects count after conversion: " + sheet.ListObjects.Count); // Should be 0
+            // Add extra rows below the original range – the former table will NOT expand.
+            for (int i = 6; i <= 9; i++) // rows 6‑9 are new data
+            {
+                sheet.Cells[i - 1, 0].PutValue(i - 1);
+                sheet.Cells[i - 1, 1].PutValue($"NewItem {i - 1}");
+            }
 
-            // Add more rows below the original range; they will NOT be part of the former table
-            sheet.Cells["A4"].PutValue(3);
-            sheet.Cells["B4"].PutValue("Alice");
-            sheet.Cells["A5"].PutValue(4);
-            sheet.Cells["B5"].PutValue("Bob");
+            // Verify that the ListObjects collection is now empty
+            Console.WriteLine("ListObjects count after conversion: " + sheet.ListObjects.Count);
 
             // Save the workbook
-            workbook.Save("TableAutoExpandDisabled.xlsx");
+            workbook.Save("TableFixedRange.xlsx");
         }
     }
 }

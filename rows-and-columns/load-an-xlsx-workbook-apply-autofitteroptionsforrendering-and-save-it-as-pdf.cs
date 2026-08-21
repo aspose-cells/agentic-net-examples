@@ -1,15 +1,15 @@
-// Title: C# – Load XLSX with AutoFitterOptions.ForRendering and Export to PDF using Aspose.Cells
-// Description: Shows how to enable AutoFitterOptions.ForRendering via LoadOptions, load an XLSX workbook, and save it as a PDF with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | AutoFitterOptions | ForRendering | LoadOptions | XLSX to PDF | column auto fit | PDF conversion | Excel rendering | .NET
-// Common Searches: Aspose.Cells AutoFitterOptions.ForRendering example | Load XLSX with rendering‑aware auto fit in C# | Convert Excel to PDF preserving column widths Aspose.Cells | How to use LoadOptions with AutoFitterOptions in .NET | C# export XLSX to PDF using Aspose.Cells
-// Developer Intent: Load an Excel file with rendering‑aware auto‑fit settings and generate a PDF.
-// Use Cases: Create PDF reports that match the on‑screen column widths of the original spreadsheet. | Generate printable invoices from Excel templates while keeping the visual layout intact. | Archive Excel workbooks as PDFs where rendering calculations, not data size, determine column sizing.
-// AI Prompts: Provide a C# snippet that sets AutoFitterOptions.ForRendering, loads an XLSX workbook, and saves it as PDF with Aspose.Cells. | Explain the impact of AutoFitterOptions.ForRendering on column widths during Excel‑to‑PDF conversion. | Show how to combine LoadOptions and PdfSaveOptions to export an Excel file to PDF with rendering‑specific auto fitting.
+// Title: Load an XLSX workbook with AutoFitterOptions.ForRendering and save it as PDF using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to configure AutoFitterOptions.ForRendering in LoadOptions, load an XLSX file with those settings, and export the workbook to a PDF using default PdfSaveOptions. This ensures column widths are rendered exactly as they appear on screen.
+// Keywords: Aspose.Cells | AutoFitterOptions | ForRendering | LoadOptions | C# | .NET | XLSX to PDF conversion | column auto fit rendering | Excel PDF export | preserve column width
+// Common Searches: Aspose.Cells load XLSX with AutoFitterOptions.ForRendering | C# convert Excel to PDF keeping column widths | How to enable rendering auto‑fit in Aspose.Cells | Export XLSX to PDF with exact layout Aspose.Cells | AutoFitterOptions ForRendering example
+// Developer Intent: Apply rendering‑specific auto‑fit when loading an Excel workbook and then generate a PDF that matches the on‑screen layout.
+// Use Cases: Create PDF reports from Excel templates where precise column widths are required. | Batch‑process spreadsheets for archival PDFs without losing visual fidelity. | Generate printable documents from user‑edited Excel files while preserving the view seen in the application.
+// AI Prompts: Provide C# code that loads an XLSX file with AutoFitterOptions.ForRendering enabled and saves it as a PDF using Aspose.Cells. | Explain the impact of AutoFitterOptions.ForRendering on PDF output when converting Excel files with Aspose.Cells. | Show how to configure LoadOptions with rendering‑specific auto‑fit for accurate column widths in PDF conversion.
 
 using System;
 using Aspose.Cells;
 
-// Shows how to enable AutoFitterOptions.ForRendering via LoadOptions, load an XLSX workbook, and save it as a PDF with Aspose.Cells for .NET.
+// Demonstrates how to configure AutoFitterOptions.ForRendering in LoadOptions, load an XLSX file with those settings, and export the workbook to a PDF using default PdfSaveOptions. This ensures column widths are rendered exactly as they appear on screen.
 class Program
 {
     static void Main()

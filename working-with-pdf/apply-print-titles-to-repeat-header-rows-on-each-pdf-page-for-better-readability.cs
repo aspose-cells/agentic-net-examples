@@ -1,65 +1,51 @@
-// Title: How to Repeat a Header Row on Every PDF Page with Aspose.Cells for .NET (C#)
-// Description: C# sample that builds a workbook, adds a header row, populates 100 data rows, configures PageSetup.PrintTitleRows to repeat the first row on each printed page, sets the print area, and saves the sheet as a multi‑page PDF using PdfSaveOptions. The generated PDF shows the header on every page for clear readability.
-// Keywords: Aspose.Cells C# PDF repeat header | PrintTitleRows | page setup Aspose.Cells | export worksheet to PDF | repeat rows on PDF pages | Aspose.Cells PDF header example | C# Aspose.Cells PDF export
-// Common Searches: Aspose.Cells repeat header row PDF | C# set PrintTitleRows Aspose.Cells | how to keep column headings on each PDF page using Aspose.Cells | define print area and repeat rows in PDF with Aspose.Cells | Aspose.Cells PDF export with repeating titles
-// Developer Intent: Configure a worksheet so that the first row is printed as a title on every page of the generated PDF.
-// Use Cases: Multi‑page PDF reports with persistent column headings | Printable invoices or statements where the header stays visible | Large data tables exported to PDF for audit or compliance documentation | Financial statements that require repeated titles across pages
-// AI Prompts: Generate C# code with Aspose.Cells that repeats rows 1‑2 as titles on each PDF page and saves the workbook. | Explain the steps to set PageSetup.PrintTitleRows and PrintArea before exporting a worksheet to PDF using Aspose.Cells. | Provide troubleshooting tips when header rows do not appear on every PDF page in an Aspose.Cells export.
+// Title: C# – Repeat Header Row on Each PDF Page with Aspose.Cells PrintTitleRows
+// Description: Shows how to create a workbook, set a print area, designate the first row as a print title (PrintTitleRows = "$1:$1"), optionally fit the sheet to one page width, and save as PDF so the header repeats on every page.
+// Keywords: Aspose.Cells C# PDF header repeat | PrintTitleRows Aspose.Cells | repeat rows on PDF | Aspose.Cells PageSetup | FitToPagesWide PDF export | export Excel to PDF with repeated header | Aspose.Cells .NET PDF export
+// Common Searches: Aspose.Cells repeat header row PDF | PrintTitleRows C# Aspose.Cells | How to repeat rows on each PDF page Aspose.Cells | Fit worksheet width PDF Aspose.Cells | Set print titles for PDF export .NET
+// Developer Intent: Add a repeating header row to every page of a PDF generated from an Excel worksheet using Aspose.Cells.
+// Use Cases: Multi‑page PDF reports where column headings stay visible on each page. | Printable invoices that keep the first row as a static header across all pages. | Large data tables exported to PDF with the top row repeated for readability.
+// AI Prompts: Show me how to set PrintTitleRows in Aspose.Cells to repeat a header row when saving to PDF. | Provide an example of using FitToPagesWide together with PrintTitleRows to produce a single‑page‑width PDF with repeated headers. | Explain how to configure PageSetup to repeat multiple rows as titles in a PDF export using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPrintTitleDemo
 {
-    // C# sample that builds a workbook, adds a header row, populates 100 data rows, configures PageSetup.PrintTitleRows to repeat the first row on each printed page, sets the print area, and saves the sheet as a multi‑page PDF using PdfSaveOptions. The generated PDF shows the header on every page for clear readability.
-    public class PrintTitleRowsToPdfDemo
+    // Shows how to create a workbook, set a print area, designate the first row as a print title (PrintTitleRows = "$1:$1"), optionally fit the sheet to one page width, and save as PDF so the header repeats on every page.
+    public class Program
     {
-        public static void Run()
+        public static void Main()
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Populate sample data with a header row
+            worksheet.Cells["A1"].PutValue("Header");
+            for (int row = 2; row <= 100; row++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate header row (row 1) and some sample data
-                worksheet.Cells["A1"].PutValue("Header 1");
-                worksheet.Cells["B1"].PutValue("Header 2");
-                worksheet.Cells["C1"].PutValue("Header 3");
-
-                for (int i = 2; i <= 100; i++)
-                {
-                    worksheet.Cells[$"A{i}"].PutValue($"Data A{i - 1}");
-                    worksheet.Cells[$"B{i}"].PutValue($"Data B{i - 1}");
-                    worksheet.Cells[$"C{i}"].PutValue($"Data C{i - 1}");
-                }
-
-                // Configure page setup to repeat the first row on each printed page
-                PageSetup pageSetup = worksheet.PageSetup;
-                pageSetup.PrintTitleRows = "$1:$1"; // repeat row 1 as title rows
-
-                // Define the print area to include all used cells
-                pageSetup.PrintArea = "A1:C100";
-
-                // Create PDF save options (default options are sufficient for this demo)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-                // Save the workbook as PDF; the header row will repeat on each page
-                workbook.Save("PrintTitleRowsDemo.pdf", pdfOptions);
+                worksheet.Cells[$"A{row}"].PutValue($"Data {row - 1}");
+                worksheet.Cells[$"B{row}"].PutValue(row * 10);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
 
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
+            // Set the print area to include all populated cells
+            worksheet.PageSetup.PrintArea = "A1:B100";
+
+            // Repeat the first row on each printed page
+            worksheet.PageSetup.PrintTitleRows = "$1:$1";
+
+            // Optional: fit the worksheet to a single page width
+            worksheet.PageSetup.FitToPagesWide = 1;
+            worksheet.PageSetup.FitToPagesTall = 0; // 0 means unlimited pages tall
+
+            // Create PDF save options (no special options needed for titles)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as PDF; the header row will repeat on each page
+            workbook.Save("PrintTitleRowsDemo.pdf", pdfOptions);
         }
     }
 }

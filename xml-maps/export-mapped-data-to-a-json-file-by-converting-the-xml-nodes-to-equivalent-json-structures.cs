@@ -1,76 +1,53 @@
+// Title: Export XML‑Mapped Excel Data to JSON with Aspose.Cells for .NET (C#)
+// Description: Loads an Excel workbook that contains an XML map, validates the map's presence, configures JsonSaveOptions (ExportNestedStructure, AlwaysExportAsJsonObject, HasHeaderRow, ExportEmptyCells, Indent) to preserve the XML hierarchy and empty cells, and saves the mapped data as a readable JSON file.
+// Keywords: Aspose.Cells | C# | XML map | JSON export | JsonSaveOptions | ExportNestedStructure | AlwaysExportAsJsonObject | HasHeaderRow | ExportEmptyCells | Indent | Excel to JSON conversion | mapped worksheet data
+// Common Searches: Aspose.Cells export XML map to JSON C# | How to save mapped Excel data as JSON using Aspose | JsonSaveOptions nested structure example | Convert Excel XML map to hierarchical JSON | C# export empty Excel cells as null in JSON
+// Developer Intent: Convert an Excel workbook with an XML map into a structured JSON file using Aspose.Cells for .NET.
+// Use Cases: Generate JSON payloads for APIs from Excel sheets already aligned with an XML schema. | Create configuration or settings files by turning mapped rows into nested JSON objects. | Produce human‑readable JSON reports that retain empty cells as null values.
+// AI Prompts: Write C# code that loads an Excel file containing an XML map and exports the mapped data to JSON with hierarchical structure and nulls for empty cells using Aspose.Cells. | Explain the effect of each JsonSaveOptions property when exporting XML‑mapped data to JSON. | Add robust error handling for scenarios where the workbook lacks an XML map before attempting JSON conversion.
+
 using System;
-using System.IO;
-using System.Xml.Linq;
-using System.Text.Json;
 using Aspose.Cells;
+using Aspose.Cells.Json; // JsonSaveOptions resides in this namespace
 
-namespace AsposeCellsJsonExportDemo
+// Loads an Excel workbook that contains an XML map, validates the map's presence, configures JsonSaveOptions (ExportNestedStructure, AlwaysExportAsJsonObject, HasHeaderRow, ExportEmptyCells, Indent) to preserve the XML hierarchy and empty cells, and saves the mapped data as a readable JSON file.
+class ExportMappedDataToJson
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook that contains the XML map and the mapped data
+        Workbook workbook = new Workbook("MappedData.xlsx"); // replace with your file path
+
+        // Ensure the workbook actually has an XML map; otherwise there is nothing to export
+        if (workbook.Worksheets.XmlMaps.Count == 0)
         {
-            try
-            {
-                // 1. Create a new workbook and populate sample data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Id");
-                sheet.Cells["B1"].PutValue("Name");
-                sheet.Cells["A2"].PutValue(1);
-                sheet.Cells["B2"].PutValue("Alice");
-                sheet.Cells["A3"].PutValue(2);
-                sheet.Cells["B3"].PutValue("Bob");
-
-                // 2. Define a simple XML schema that maps the worksheet data
-                string xmlSchema = @"
-                    <xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-                      <xs:element name='Items'>
-                        <xs:complexType>
-                          <xs:sequence>
-                            <xs:element name='Item' maxOccurs='unbounded'>
-                              <xs:complexType>
-                                <xs:sequence>
-                                  <xs:element name='Id' type='xs:integer'/>
-                                  <xs:element name='Name' type='xs:string'/>
-                                </xs:sequence>
-                              </xs:complexType>
-                            </xs:element>
-                          </xs:sequence>
-                        </xs:complexType>
-                      </xs:element>
-                    </xs:schema>";
-
-                // 3. Add the XML map to the workbook
-                int mapIndex = workbook.Worksheets.XmlMaps.Add(xmlSchema);
-                XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-                xmlMap.Name = "ItemMap";
-
-                // 4. Export the mapped data to XML using a memory stream
-                using (MemoryStream xmlStream = new MemoryStream())
-                {
-                    workbook.ExportXml(xmlMap.Name, xmlStream);
-                    xmlStream.Position = 0; // Reset stream position for reading
-
-                    // 5. Load the exported XML into an XDocument
-                    XDocument xDoc = XDocument.Load(xmlStream);
-
-                    // 6. Convert the XDocument to JSON (preserving the XML hierarchy)
-                    string json = JsonSerializer.Serialize(
-                        xDoc,
-                        new JsonSerializerOptions { WriteIndented = true });
-
-                    // 7. Save the JSON string to a file
-                    string jsonPath = "MappedData.json";
-                    File.WriteAllText(jsonPath, json);
-
-                    Console.WriteLine($"JSON file generated successfully at: {Path.GetFullPath(jsonPath)}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine("No XmlMap found in the workbook.");
+            return;
         }
+
+        // Configure JSON export options
+        JsonSaveOptions jsonOptions = new JsonSaveOptions
+        {
+            // Export as a parent‑child hierarchy to reflect the XML structure
+            ExportNestedStructure = true,
+
+            // Always output a JSON object even if there is only one worksheet
+            AlwaysExportAsJsonObject = true,
+
+            // Treat the first row as header names (optional, based on your data)
+            HasHeaderRow = true,
+
+            // Include empty cells as null values
+            ExportEmptyCells = true,
+
+            // Indent the output for readability
+            Indent = "  "
+        };
+
+        // Save the workbook as a JSON file using the configured options
+        string outputPath = "MappedData.json";
+        workbook.Save(outputPath, jsonOptions);
+
+        Console.WriteLine($"Mapped data successfully exported to JSON file: {outputPath}");
     }
 }

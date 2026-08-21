@@ -1,32 +1,72 @@
-// Title: C# Sample – Reset All Worksheet TabId Values to Sequential Numbers Using Aspose.Cells
-// Description: This Aspose.Cells for .NET example loads an existing Excel workbook, iterates through its worksheets, assigns each sheet a TabId starting at 1 (making the tab order sequential), and saves the modified file. Adjusting TabId ensures the visible sheet order matches the intended sequence, useful after adding or removing sheets programmatically.
-// Keywords: Aspose.Cells | C# | .NET | Worksheet TabId | reset TabId | sequential tab order | Excel workbook | programmatic sheet ordering | TabId property | sample code | GitHub example
-// Common Searches: Aspose.Cells set worksheet TabId C# | reset Excel sheet TabId programmatically | sequential TabId Aspose.Cells example | change worksheet tab order .NET | how to renumber worksheet TabId with Aspose
-// Developer Intent: Assign sequential TabId numbers to every worksheet in a workbook.
-// Use Cases: Ensure the visual tab order matches logical sheet sequence before distributing a workbook. | Re‑order tabs after inserting or deleting sheets via automation. | Prepare workbooks for downstream processes that rely on consecutive TabId values. | Standardize tab ordering across multiple workbooks in a batch operation.
-// AI Prompts: Write C# code that uses Aspose.Cells to set each worksheet's TabId to a consecutive number starting from 1 and save the workbook. | Explain the effect of the TabId property on Excel sheet ordering and how to modify it with Aspose.Cells. | Add comprehensive error handling to the TabId reset example, including file‑not‑found and permission checks. | Create a PowerShell script that calls a .NET assembly to renumber worksheet TabIds using Aspose.Cells.
+// Title: Reset Worksheet TabId Sequentially with Aspose.Cells for .NET (C#)
+// Description: This example demonstrates how to renumber the TabId of every worksheet in an Aspose.Cells workbook so that the IDs start at 1 and increase by one for each sheet. The code creates a workbook, adds sample sheets, reassigns TabId values, saves the file, and prints the IDs to confirm the sequential order.
+// Keywords: Aspose.Cells TabId | reset worksheet TabId | sequential worksheet IDs | C# Aspose.Cells example | Excel tab order programmatically | Aspose.Cells workbook manipulation | standardize sheet TabId
+// Common Searches: how to reset worksheet TabId Aspose.Cells | set Excel sheet TabId sequentially C# | Aspose.Cells change worksheet tab identifiers | renumber worksheet TabId after adding sheets | verify TabId values in saved workbook Aspose.Cells
+// Developer Intent: Assign sequential TabId numbers to all worksheets in a workbook.
+// Use Cases: Ensure a predictable tab order before exporting a workbook to another system. | Re‑assign TabId values after dynamically adding or removing sheets to keep IDs contiguous. | Validate TabId sequence when loading a workbook for automated processing or reporting.
+// AI Prompts: Generate C# code using Aspose.Cells that resets each worksheet's TabId to start at 1 and saves the workbook. | Create a method that takes an existing Workbook object and reassigns sequential TabId values to its worksheets. | Explain how to read and verify TabId values after saving a workbook with Aspose.Cells, and why sequential IDs may be required.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// This Aspose.Cells for .NET example loads an existing Excel workbook, iterates through its worksheets, assigns each sheet a TabId starting at 1 (making the tab order sequential), and saves the modified file. Adjusting TabId ensures the visible sheet order matches the intended sequence, useful after adding or removing sheets programmatically.
-class ResetWorksheetTabIds
+namespace ExampleNamespace
 {
-    static void Main()
+    // This example demonstrates how to renumber the TabId of every worksheet in an Aspose.Cells workbook so that the IDs start at 1 and increase by one for each sheet. The code creates a workbook, adds sample sheets, reassigns TabId values, saves the file, and prints the IDs to confirm the sequential order.
+    public class ResetWorksheetTabIds
     {
-        // Load the workbook you want to modify
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-
-        // Assign sequential TabId values starting from 1
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
+        public static void Run()
         {
-            Worksheet sheet = workbook.Worksheets[i];
-            sheet.TabId = i + 1;
-        }
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Save the workbook with updated TabIds
-        string outputPath = "output.xlsx";
-        workbook.Save(outputPath);
+                // Add sample worksheets
+                workbook.Worksheets.Add("Sheet1");
+                workbook.Worksheets.Add("Sheet2");
+                workbook.Worksheets.Add("Sheet3");
+
+                // Reset TabId sequentially starting from 1
+                int nextTabId = 1;
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    sheet.TabId = nextTabId;
+                    nextTabId++;
+                }
+
+                // Define output file path
+                string outputPath = "ResetTabIds.xlsx";
+
+                // Save the workbook
+                workbook.Save(outputPath);
+
+                // Verify TabIds by loading the saved workbook if file exists
+                if (File.Exists(outputPath))
+                {
+                    Workbook loadedWorkbook = new Workbook(outputPath);
+                    foreach (Worksheet sheet in loadedWorkbook.Worksheets)
+                    {
+                        Console.WriteLine($"Worksheet \"{sheet.Name}\" has TabId: {sheet.TabId}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to create file: {outputPath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ResetWorksheetTabIds.Run();
+        }
     }
 }

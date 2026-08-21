@@ -1,68 +1,63 @@
-// Title: Load Freeze Pane Settings from XML and Apply with Aspose.Cells (C#)
-// Description: A C# example that reads row, column, frozenRows and frozenColumns values from an XML file, creates a workbook with sample data, applies Worksheet.FreezePanes using Aspose.Cells, and saves the result as Result.xlsx.
-// Keywords: Aspose.Cells | C# | FreezePanes | XML configuration | worksheet freeze | Excel automation | read XML settings | dynamic freeze rows | dynamic freeze columns
-// Common Searches: Aspose.Cells read freeze pane values from XML | C# set FreezePanes using external config | load freeze rows and columns from file Aspose.Cells | apply XML based freeze pane settings in Excel | dynamic freeze pane example C# Aspose
-// Developer Intent: Read freeze‑pane coordinates from an XML file and apply them to a worksheet with Aspose.Cells.
-// Use Cases: Generate reports where the frozen area is defined by a user‑editable XML template. | Standardize navigation across multiple workbooks by applying a common freeze configuration. | Create a batch process that reads different XML files to set unique freeze panes for each worksheet.
-// AI Prompts: Write C# code that reads freeze pane parameters from a JSON file and uses Aspose.Cells to apply them. | Show how to validate XML elements and provide fallback values when setting FreezePanes in Aspose.Cells. | Demonstrate applying separate freeze pane settings to several worksheets using a single XML configuration.
+// Title: Apply Freeze Panes from XML Config with Aspose.Cells for .NET (C#)
+// Description: C# example that loads an XML file (freezeConfig.xml), reads the <FreezeRow> and <FreezeColumn> elements (default 0), creates a workbook, applies Worksheet.FreezePanes using those values, and saves the result as FreezePanesResult.xlsx.
+// Keywords: Aspose.Cells | C# | XML configuration | freeze panes | FreezePanes method | read XML values | dynamic row freeze | Excel automation | workbook save | programmatic layout
+// Common Searches: Aspose.Cells read freeze row from XML | C# set freeze panes using XML config | How to freeze panes programmatically with Aspose.Cells | Load freeze pane settings from XML in .NET | XML driven freeze panes Aspose.Cells example
+// Developer Intent: Read freeze‑row/column values from an XML file and apply them as freeze panes to a worksheet using Aspose.Cells.
+// Use Cases: Generate Excel reports where the freeze pane position is defined by an external XML file, allowing end‑users to control view layout without code changes. | Apply freeze panes only when the configuration specifies non‑zero rows or columns, keeping the sheet unfrozen otherwise. | Integrate the XML‑based freeze logic into an automated reporting pipeline that creates workbooks with consistent scrolling behavior across multiple environments.
+// AI Prompts: Write C# code that reads <FreezeRow> and <FreezeColumn> from an XML file and uses Aspose.Cells to set FreezePanes on the first worksheet. | Show how to handle missing or malformed XML configuration when applying freeze panes with Aspose.Cells, including default fallback values and error logging. | Extend the example to support multiple worksheets, each with its own freeze settings defined in the same XML configuration.
 
 using System;
 using System.IO;
 using System.Xml.Linq;
 using Aspose.Cells;
 
-// A C# example that reads row, column, frozenRows and frozenColumns values from an XML file, creates a workbook with sample data, applies Worksheet.FreezePanes using Aspose.Cells, and saves the result as Result.xlsx.
-class FreezeFromConfig
+namespace Example
 {
-    static void Main()
+    // C# example that loads an XML file (freezeConfig.xml), reads the <FreezeRow> and <FreezeColumn> elements (default 0), creates a workbook, applies Worksheet.FreezePanes using those values, and saves the result as FreezePanesResult.xlsx.
+    class FreezePanesFromConfig
     {
-        // Path to the XML configuration file that contains freeze pane settings
-        string configPath = "freezeConfig.xml";
-
-        // Default values (no freeze) – will be overwritten if the file exists and contains data
-        int row = 0;
-        int column = 0;
-        int frozenRows = 0;
-        int frozenColumns = 0;
-
-        // Load configuration values from XML
-        if (File.Exists(configPath))
+        static void Main()
         {
-            XDocument doc = XDocument.Load(configPath);
-            XElement root = doc.Element("FreezeConfig");
-            if (root != null)
+            try
             {
-                // Use nullable cast to avoid exceptions if an element is missing
-                row = (int?)root.Element("Row") ?? 0;
-                column = (int?)root.Element("Column") ?? 0;
-                frozenRows = (int?)root.Element("FrozenRows") ?? 0;
-                frozenColumns = (int?)root.Element("FrozenColumns") ?? 0;
+                // Path to the XML configuration file
+                string configPath = "freezeConfig.xml";
+
+                // Default freeze values
+                int freezeRow = 0;
+                int freezeColumn = 0;
+
+                // Load configuration if the file exists
+                if (File.Exists(configPath))
+                {
+                    XDocument configDoc = XDocument.Load(configPath);
+                    freezeRow = (int?)configDoc.Root.Element("FreezeRow") ?? 0;
+                    freezeColumn = (int?)configDoc.Root.Element("FreezeColumn") ?? 0;
+                }
+                else
+                {
+                    // Configuration file not found; proceeding with defaults (no freeze)
+                }
+
+                // Create a new workbook and access the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Apply freeze panes if needed
+                if (freezeRow > 0 || freezeColumn > 0)
+                {
+                    sheet.FreezePanes(freezeRow, freezeColumn, freezeRow, freezeColumn);
+                }
+
+                // Save the workbook
+                string outputPath = "FreezePanesResult.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-
-        // Create a new workbook (Aspose.Cells)
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Optional: populate some sample data so the effect of freezing can be seen
-        for (int i = 0; i < 20; i++)
-        {
-            for (int j = 0; j < 5; j++)
-            {
-                worksheet.Cells[i, j].PutValue($"R{i + 1}C{j + 1}");
-            }
-        }
-
-        // Apply freeze panes if the configuration specifies a non‑zero position
-        // FreezePanes(row, column, frozenRows, frozenColumns) uses zero‑based indices
-        if (row > 0 || column > 0)
-        {
-            worksheet.FreezePanes(row, column, frozenRows, frozenColumns);
-        }
-
-        // Save the workbook to an Excel file
-        workbook.Save("Result.xlsx");
     }
 }

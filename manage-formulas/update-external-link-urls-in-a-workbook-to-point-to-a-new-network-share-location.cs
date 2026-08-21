@@ -1,52 +1,75 @@
-// Title: Update Excel External Link UNC Paths with Aspose.Cells for .NET (C#)
-// Description: Learn how to load an Excel workbook, enumerate its ExternalLinkCollection, and replace old UNC share prefixes in the DataSource and OriginalDataSource properties with a new network share path. The example saves the modified workbook, ensuring all external formulas point to the correct location after a server migration.
-// Keywords: Aspose.Cells external links | C# update UNC path | Excel external link DataSource | replace network share in workbook | modify OriginalDataSource Aspose | batch update Excel links .NET | external link collection Aspose.Cells
-// Common Searches: change external link source UNC path Aspose.Cells | update Excel workbook external links C# | replace old server share with new share in Excel file | Aspose.Cells modify ExternalLinkCollection | programmatically edit DataSource of external links
-// Developer Intent: Replace an outdated UNC network share prefix in every external link of an Excel workbook with a new share path using Aspose.Cells for .NET.
-// Use Cases: Migrate workbooks after moving a data server so formulas continue to resolve. | Automate bulk updates of multiple Excel files before distribution. | Synchronize OriginalDataSource after a path change to keep audit trails accurate.
-// AI Prompts: Write C# code that uses Aspose.Cells to scan all external links in an Excel workbook and replace a given UNC prefix with a new one, then save the file. | Explain how to verify that DataSource and OriginalDataSource values were correctly updated after changing the network share path with Aspose.Cells.
+// Title: Update External Link URLs to a New UNC Path in an Excel Workbook with Aspose.Cells for .NET
+// Description: Loads a workbook, scans its ExternalLinkCollection, replaces the old network‑share prefix in each link's DataSource and OriginalDataSource with a new UNC prefix, and saves the modified file.
+// Keywords: Aspose.Cells external links | C# update Excel UNC path | change network share prefix | modify DataSource Aspose | OriginalDataSource update | .NET Excel external link batch | workbook link migration | replace external link URL | Excel workbook server move
+// Common Searches: Aspose.Cells replace UNC path in external links | C# change external link source in Excel file | update network share prefix for workbook links | batch edit external links with Aspose.Cells | how to modify DataSource of external links .NET
+// Developer Intent: Swap the old UNC share prefix for a new one across all external links in a workbook and persist the changes.
+// Use Cases: Migrate Excel workbooks after moving a shared data server. | Automate link updates during a large‑scale file‑system reorganization. | Validate and enforce consistent external data sources before publishing workbooks.
+// AI Prompts: Write C# code using Aspose.Cells that replaces a given old UNC prefix with a new one in every ExternalLink of an Excel workbook. | Create a reusable method that accepts input file path, old prefix, new prefix, and output path, then updates all external link URLs. | Explain how to programmatically confirm that DataSource and OriginalDataSource values were correctly rewritten after saving the workbook.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Learn how to load an Excel workbook, enumerate its ExternalLinkCollection, and replace old UNC share prefixes in the DataSource and OriginalDataSource properties with a new network share path. The example saves the modified workbook, ensuring all external formulas point to the correct location after a server migration.
-class UpdateExternalLinks
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads a workbook, scans its ExternalLinkCollection, replaces the old network‑share prefix in each link's DataSource and OriginalDataSource with a new UNC prefix, and saves the modified file.
+    class UpdateExternalLinks
     {
-        // Load the workbook that contains external links
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Define the old and new network share prefixes
-        string oldShare = @"\\oldserver\share\";
-        string newShare = @"\\newserver\share\";
-
-        // Get the collection of external links
-        ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
-
-        // Iterate through each external link and update its path
-        for (int i = 0; i < externalLinks.Count; i++)
+        static void Main()
         {
-            ExternalLink link = externalLinks[i];
-
-            // Update DataSource if it uses the old share path
-            if (!string.IsNullOrEmpty(link.DataSource) &&
-                link.DataSource.StartsWith(oldShare, StringComparison.OrdinalIgnoreCase))
+            try
             {
-                string updatedPath = newShare + link.DataSource.Substring(oldShare.Length);
-                link.DataSource = updatedPath;
+                // Input and output file paths
+                string inputPath = @"C:\Data\MyWorkbook.xlsx";
+                string outputPath = @"C:\Data\MyWorkbook_Updated.xlsx";
+
+                // Verify that the source workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Error: Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook that contains external links
+                Workbook workbook = new Workbook(inputPath);
+
+                // Define the old network share prefix and the new one
+                string oldPrefix = @"\\oldserver\share\";
+                string newPrefix = @"\\newserver\share\";
+
+                // Get the collection of external links
+                ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
+
+                // Iterate through each external link and replace the old prefix with the new one
+                for (int i = 0; i < externalLinks.Count; i++)
+                {
+                    ExternalLink link = externalLinks[i];
+
+                    // Update DataSource if it starts with the old prefix
+                    if (!string.IsNullOrEmpty(link.DataSource) &&
+                        link.DataSource.StartsWith(oldPrefix, StringComparison.OrdinalIgnoreCase))
+                    {
+                        string updatedPath = newPrefix + link.DataSource.Substring(oldPrefix.Length);
+                        link.DataSource = updatedPath;
+                    }
+
+                    // Update OriginalDataSource similarly (optional but ensures all stored paths are changed)
+                    if (!string.IsNullOrEmpty(link.OriginalDataSource) &&
+                        link.OriginalDataSource.StartsWith(oldPrefix, StringComparison.OrdinalIgnoreCase))
+                    {
+                        string updatedOriginal = newPrefix + link.OriginalDataSource.Substring(oldPrefix.Length);
+                        link.OriginalDataSource = updatedOriginal;
+                    }
+                }
+
+                // Save the workbook with updated external link URLs
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
-
-            // Update OriginalDataSource similarly (optional but ensures consistency)
-            if (!string.IsNullOrEmpty(link.OriginalDataSource) &&
-                link.OriginalDataSource.StartsWith(oldShare, StringComparison.OrdinalIgnoreCase))
+            catch (Exception ex)
             {
-                string updatedOriginal = newShare + link.OriginalDataSource.Substring(oldShare.Length);
-                link.OriginalDataSource = updatedOriginal;
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        // Save the workbook with updated external link URLs
-        workbook.Save("output.xlsx");
     }
 }

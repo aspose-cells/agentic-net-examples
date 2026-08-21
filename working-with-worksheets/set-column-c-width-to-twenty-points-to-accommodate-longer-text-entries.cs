@@ -1,34 +1,44 @@
-// Title: Set Column C Width to 20 pts in Excel with Aspose.Cells for .NET
-// Description: Demonstrates how to convert 20 points to inches and apply the measurement to column C (index 2) using Aspose.Cells' SetColumnWidthInch method, then inserts a long string to verify the layout and saves the file as ColumnCWidth.xlsx.
-// Keywords: Aspose.Cells column width points | C# SetColumnWidthInch | Excel column width inches .NET | adjust column C size Aspose.Cells | Excel automation column sizing
-// Common Searches: Aspose.Cells set column width in points C# | How to use SetColumnWidthInch for column C | Convert points to inches for Excel column width | C# code to set Excel column width to 20 pts
-// Developer Intent: Apply a 20‑point (≈0.278 in) width to column C of an Excel worksheet via Aspose.Cells in a C# project.
-// Use Cases: Designing a report where column C must hold lengthy text without wrapping. | Creating a template with a fixed column dimension to preserve layout consistency. | Exporting data that must match a design specification defined in typographic points.
-// AI Prompts: Generate C# code that sets column D to 30 pts using Aspose.Cells. | Explain the relationship between inches, points, and Excel column width units in Aspose.Cells. | Show how to set column width in pixels instead of points with Aspose.Cells.
+// Title: Set Column C to 20‑character width with Aspose.Cells (C#)
+// Description: The C# sample creates a workbook, accesses the first worksheet, and calls Worksheet.Cells.SetColumnWidth to make column C 20 character units wide, writes a long string to C1, and saves the file as ColumnCWidth20.xlsx.
+// Keywords: Aspose.Cells C# column width | SetColumnWidth method | Excel column C width 20 characters | adjust column width Aspose.Cells .NET | worksheet column sizing | Aspose.Cells API column width | fixed column width Excel
+// Common Searches: C# Aspose.Cells set column width | How to change column C width in Aspose.Cells | Set column width to 20 characters using Aspose.Cells .NET | Aspose.Cells column width example | Increase Excel column width for long text Aspose.Cells
+// Developer Intent: Define a fixed 20‑character width for column C in an Excel workbook via the Aspose.Cells .NET API.
+// Use Cases: Generate reports where column C holds detailed descriptions that must not wrap. | Create a template with a predefined width for comment fields in column C. | Ensure consistent layout before populating column C with variable‑length data.
+// AI Prompts: Show how to set column widths for multiple columns based on their content length using Aspose.Cells for .NET. | Provide code to auto‑fit column C after inserting data with Aspose.Cells. | Explain the differences between SetColumnWidth and AutoFitColumn in the Aspose.Cells API.
 
+using System;
 using Aspose.Cells;
 
-// Demonstrates how to convert 20 points to inches and apply the measurement to column C (index 2) using Aspose.Cells' SetColumnWidthInch method, then inserts a long string to verify the layout and saves the file as ColumnCWidth.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The C# sample creates a workbook, accesses the first worksheet, and calls Worksheet.Cells.SetColumnWidth to make column C 20 character units wide, writes a long string to C1, and saves the file as ColumnCWidth20.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Column C has zero‑based index 2.
-        // 1 point = 1/72 inch, so 20 points = 20/72 inches.
-        double inches = 20.0 / 72.0;
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set the width of column C using the SetColumnWidthInch method.
-        cells.SetColumnWidthInch(2, inches);
+                // Set the width of column C (zero‑based index 2) to 20 character units
+                worksheet.Cells.SetColumnWidth(2, 20);
 
-        // Example data to demonstrate the width
-        cells["C1"].PutValue("This is a longer text entry that fits within 20 points.");
+                // Add sample data to demonstrate the width
+                worksheet.Cells["C1"].PutValue("This is a longer text entry for column C");
 
-        // Save the workbook
-        workbook.Save("ColumnCWidth.xlsx");
+                // Save the workbook
+                string outputPath = "ColumnCWidth20.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

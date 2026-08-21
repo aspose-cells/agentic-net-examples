@@ -1,10 +1,10 @@
-// Title: Validate Excel Column Types Against .NET Types Before Database Import with Aspose.Cells (C#)
-// Description: This example creates a workbook, defines the expected .NET type for each column, exports the sheet to a DataTable using full type detection (CheckMixedValueType), compares each DataColumn.DataType with the predefined types, aborts on any mismatch, and finally generates a SQL CREATE TABLE script with column‑type analysis via SqlScriptSaveOptions.
-// Keywords: Aspose.Cells | C# ExportDataTable | Validate column data types | CheckMixedValueType | DataColumn DataType comparison | .NET type validation | SqlScriptSaveOptions | Generate SQL script from Excel | Excel to database import | Bulk insert type safety
-// Common Searches: Aspose.Cells validate column type C# | ExportDataTable check mixed value type | compare DataColumn.DataType with expected .NET type | generate SQL CREATE TABLE from workbook Aspose.Cells | prevent type mismatch when importing Excel to SQL Server
-// Developer Intent: Ensure every column exported from an Excel worksheet matches a predefined .NET type before loading the data into a database.
-// Use Cases: Detect and abort on mismatched column types during bulk import | Create a reliable CREATE TABLE script that mirrors verified column types | Automate schema validation for Excel‑to‑SQL data pipelines | Log detailed type‑mismatch errors for data‑quality monitoring
-// AI Prompts: Write a C# method that takes a Worksheet and a Dictionary<string, Type> of expected column types, exports the data to a DataTable with CheckMixedValueType enabled, and returns a list of columns whose DataType does not match the expected .NET type. | Generate Aspose.Cells code that exports a worksheet to a DataTable, validates each DataColumn.DataType against a predefined type map, and throws an informative exception if any column type differs. | Provide a sample that saves a workbook as a SQL script using SqlScriptSaveOptions with CheckAllDataForColumnType set to true, ensuring the generated CREATE TABLE reflects the verified column types.
+// Title: Validate Excel column types against .NET types before generating a SQL script with Aspose.Cells for .NET
+// Description: Shows how to build a workbook, export a range to a DataTable using ExportTableOptions with mixed‑value type checking, compare each DataColumn.DataType to a predefined .NET type map, and create a CREATE TABLE/INSERT SQL script only when all columns match, leveraging SqlScriptSaveOptions.
+// Keywords: Aspose.Cells | C# | ExportDataTable | ExportTableOptions | CheckMixedValueType | DataTable column type validation | .NET type checking | SQL script generation | SqlScriptSaveOptions | Excel to SQL import | data import validation
+// Common Searches: Aspose.Cells validate Excel column data type | Export worksheet to DataTable with type checking C# | Check DataColumn.DataType against .NET types | Generate SQL script from workbook after validation | How to abort SQL export when column type mismatch
+// Developer Intent: Confirm that each column exported from an Excel sheet matches the expected .NET type before producing a SQL import script.
+// Use Cases: Export a worksheet to a DataTable while automatically detecting column types. | Validate DataTable columns against a dictionary of expected .NET types and log mismatches. | Prevent SQL script creation if any column fails the type check. | Automatically generate CREATE TABLE and INSERT statements for a verified worksheet.
+// AI Prompts: Write C# code using Aspose.Cells to export a worksheet to a DataTable with mixed‑value type checking and validate each column against a dictionary of expected .NET types. | Create a method that receives a DataTable and a Dictionary<int, Type>, returns true if all column DataTypes match, and logs any mismatches. | Show how to configure SqlScriptSaveOptions to produce a CREATE TABLE and INSERT script only after successful column type validation.
 
 using System;
 using System.Collections.Generic;
@@ -12,89 +12,98 @@ using System.Data;
 using Aspose.Cells;
 using Aspose.Cells.Saving;
 
-// This example creates a workbook, defines the expected .NET type for each column, exports the sheet to a DataTable using full type detection (CheckMixedValueType), compares each DataColumn.DataType with the predefined types, aborts on any mismatch, and finally generates a SQL CREATE TABLE script with column‑type analysis via SqlScriptSaveOptions.
-class Program
+namespace AsposeCellsValidationDemo
 {
-    static void Main()
+    // Shows how to build a workbook, export a range to a DataTable using ExportTableOptions with mixed‑value type checking, compare each DataColumn.DataType to a predefined .NET type map, and create a CREATE TABLE/INSERT SQL script only when all columns match, leveraging SqlScriptSaveOptions.
+    class Program
     {
-        // -------------------------------------------------
-        // 1. Create a workbook and populate it with sample data
-        // -------------------------------------------------
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-
-        // Header row
-        ws.Cells["A1"].PutValue("ID");
-        ws.Cells["B1"].PutValue("Name");
-        ws.Cells["C1"].PutValue("Salary");
-
-        // Data rows
-        ws.Cells["A2"].PutValue(1);
-        ws.Cells["B2"].PutValue("John");
-        ws.Cells["C2"].PutValue(5000.75);
-
-        ws.Cells["A3"].PutValue(2);
-        ws.Cells["B3"].PutValue("Jane");
-        ws.Cells["C3"].PutValue(6200.00);
-
-        // -------------------------------------------------
-        // 2. Define the expected .NET types for each column
-        // -------------------------------------------------
-        var expectedTypes = new Dictionary<string, Type>
+        static void Main()
         {
-            { "ID", typeof(int) },
-            { "Name", typeof(string) },
-            { "Salary", typeof(double) } // Aspose.Cells maps numeric cells to Double by default
-        };
+            // ------------------------------------------------------------
+            // 1. Create a workbook and populate it with sample data
+            // ------------------------------------------------------------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // -------------------------------------------------
-        // 3. Export the worksheet to a DataTable with full type detection
-        // -------------------------------------------------
-        ExportTableOptions exportOptions = new ExportTableOptions
-        {
-            ExportColumnName = true,      // Export first row as column names
-            CheckMixedValueType = true    // Examine all rows to determine column types
-        };
+            // Header row
+            sheet.Cells["A1"].PutValue("Id");          // Expected int
+            sheet.Cells["B1"].PutValue("Name");        // Expected string
+            sheet.Cells["C1"].PutValue("BirthDate");   // Expected DateTime
 
-        // Export 3 rows (header + 2 data rows) and 3 columns
-        DataTable dataTable = ws.Cells.ExportDataTable(0, 0, 3, 3, exportOptions);
+            // Data rows
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["C2"].PutValue(new DateTime(1990, 5, 23));
 
-        // -------------------------------------------------
-        // 4. Validate that each column's DataType matches the expected .NET type
-        // -------------------------------------------------
-        foreach (DataColumn column in dataTable.Columns)
-        {
-            if (expectedTypes.TryGetValue(column.ColumnName, out Type expected))
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
+            sheet.Cells["C3"].PutValue(new DateTime(1985, 11, 12));
+
+            // ------------------------------------------------------------
+            // 2. Export the worksheet to a DataTable with type checking
+            // ------------------------------------------------------------
+            ExportTableOptions exportOptions = new ExportTableOptions
             {
-                if (column.DataType != expected)
+                ExportColumnName = true,          // First row contains column names
+                CheckMixedValueType = true        // Examine all rows to determine column types
+            };
+
+            // Export all rows and columns (3 rows including header, 3 columns)
+            DataTable dataTable = sheet.Cells.ExportDataTable(0, 0, 3, 3, exportOptions);
+
+            // ------------------------------------------------------------
+            // 3. Define the expected .NET types for each column (by index)
+            // ------------------------------------------------------------
+            var expectedColumnTypes = new Dictionary<int, Type>
+            {
+                { 0, typeof(int) },        // Id column
+                { 1, typeof(string) },     // Name column
+                { 2, typeof(DateTime) }    // BirthDate column
+            };
+
+            // ------------------------------------------------------------
+            // 4. Validate that each column's DataType matches the expectation
+            // ------------------------------------------------------------
+            bool validationPassed = true;
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                int colIndex = column.Ordinal;
+                if (expectedColumnTypes.TryGetValue(colIndex, out Type expectedType))
                 {
-                    Console.WriteLine($"Column '{column.ColumnName}' type mismatch. Expected {expected}, but got {column.DataType}.");
-                    // Abort further processing because of type mismatch
-                    return;
+                    if (column.DataType != expectedType)
+                    {
+                        Console.WriteLine($"Column '{column.ColumnName}' (index {colIndex}) type mismatch. " +
+                                          $"Expected: {expectedType.FullName}, Actual: {column.DataType.FullName}");
+                        validationPassed = false;
+                    }
                 }
+                else
+                {
+                    Console.WriteLine($"No expected type defined for column index {colIndex}. Skipping validation.");
+                }
+            }
+
+            // ------------------------------------------------------------
+            // 5. If validation succeeds, generate a SQL script for import
+            // ------------------------------------------------------------
+            if (validationPassed)
+            {
+                SqlScriptSaveOptions sqlOptions = new SqlScriptSaveOptions
+                {
+                    OperatorType = SqlScriptOperatorType.Insert,
+                    CreateTable = true,
+                    TableName = "People",
+                    CheckAllDataForColumnType = true   // Ensure column types are derived from all data rows
+                };
+
+                // Save the workbook as a SQL script file
+                workbook.Save("PeopleData.sql", sqlOptions);
+                Console.WriteLine("Validation succeeded. SQL script 'PeopleData.sql' generated.");
             }
             else
             {
-                Console.WriteLine($"No expected type defined for column '{column.ColumnName}'.");
-                return;
+                Console.WriteLine("Validation failed. SQL script generation aborted.");
             }
         }
-
-        Console.WriteLine("All column types match the expected .NET types.");
-
-        // -------------------------------------------------
-        // 5. Generate a SQL script with full column‑type analysis
-        // -------------------------------------------------
-        SqlScriptSaveOptions sqlOptions = new SqlScriptSaveOptions
-        {
-            TableName = "Employees",
-            CreateTable = true,
-            CheckAllDataForColumnType = true // Examine all rows when determining column types
-        };
-
-        // Save the workbook as a SQL script file
-        wb.Save("Employees.sql", sqlOptions);
-
-        Console.WriteLine("SQL script generated successfully.");
     }
 }

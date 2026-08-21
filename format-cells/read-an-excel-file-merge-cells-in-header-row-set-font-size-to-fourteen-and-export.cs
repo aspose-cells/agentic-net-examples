@@ -1,34 +1,43 @@
-// Title: Merge Header Row Cells and Set 14‑Point Font with Aspose.Cells for .NET (C#)
-// Description: Loads an existing workbook, merges cells A1‑D1 into a single header cell, changes the font size of that merged cell to 14 points, and saves the result as a new Excel file using Aspose.Cells for C#.
-// Keywords: Aspose.Cells C# merge cells | Aspose.Cells set font size | merge header row Aspose.Cells | format header cell .NET | export Excel Aspose.Cells | C# Excel cell merging | Aspose.Cells style header
-// Common Searches: Aspose.Cells merge first row cells C# | How to set font size for merged cell Aspose.Cells | C# merge header row and change font Aspose.Cells | Save workbook after merging cells Aspose.Cells .NET | Aspose.Cells format header row Excel
-// Developer Intent: Combine cells A1‑D1 into one header, apply a 14‑point font, and save the workbook.
-// Use Cases: Create a centered title across columns A‑D for financial reports with a larger font before exporting. | Design printable invoice headers by merging cells and enlarging the font, then saving the file for distribution. | Standardize template worksheets by programmatically merging header cells and applying a consistent font size across all reports. | Prepare dashboard sheets where the main heading spans multiple columns and needs a specific typographic style.
-// AI Prompts: Generate C# code using Aspose.Cells to merge cells A1:E1, set the font to 14 bold, center the text, and export the workbook as PDF. | Show an example that merges the header row, applies a custom style (font size, alignment, background color), and writes the workbook to a memory stream. | Explain how to undo a cell merge or adjust column widths after merging with Aspose.Cells in C#.
+// Title: C# – Merge Header Cells (A1:D1), Set 14‑Point Font, and Save Workbook with Aspose.Cells
+// Description: Load an existing Excel file, merge cells A1 through D1 on the first worksheet to create a single header, apply a 14‑point font to the merged cell, and save the updated workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# merge cells | header row formatting Aspose.Cells | set font size 14 Aspose.Cells | Excel workbook export .NET | format cells Aspose.Cells | Aspose.Cells .NET US | Aspose.Cells Europe | C# Excel styling
+// Common Searches: how to merge cells A1:D1 with Aspose.Cells C# | set font size of merged header cell Aspose.Cells .NET | save workbook after formatting header row Aspose.Cells | Aspose.Cells merge cells and change font size example | C# code to create a title header in Excel using Aspose
+// Developer Intent: Combine the first‑row cells into one header, apply a 14‑point font, and write the changes back to a new Excel file.
+// Use Cases: Generate report sheets with a bold title spanning multiple columns. | Standardize header appearance across automated Excel exports. | Create printable dashboards where the header needs larger, readable text.
+// AI Prompts: Show C# code that merges A1:D1 and sets the font size to 14 with Aspose.Cells. | Give an Aspose.Cells example for styling a merged header row and saving the workbook. | Explain how to change font attributes (size, bold, color) of a merged cell after merging using Aspose.Cells in .NET.
 
 using System;
 using Aspose.Cells;
 
-// Loads an existing workbook, merges cells A1‑D1 into a single header cell, changes the font size of that merged cell to 14 points, and saves the result as a new Excel file using Aspose.Cells for C#.
-class Program
+namespace AsposeCellsHeaderMerge
 {
-    static void Main()
+    // Load an existing Excel file, merge cells A1 through D1 on the first worksheet to create a single header, apply a 14‑point font to the merged cell, and save the updated workbook using Aspose.Cells for .NET.
+    class Program
     {
-        // Load the existing Excel file
-        Workbook workbook = new Workbook("input.xlsx"); // lifecycle: load
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        static void Main(string[] args)
+        {
+            // Input and output file paths
+            string inputPath = "InputWorkbook.xlsx";
+            string outputPath = "OutputWorkbook.xlsx";
 
-        // Merge the header row cells (e.g., A1:D1)
-        // Parameters: firstRow (0‑based), firstColumn (0‑based), totalRows (1‑based), totalColumns (1‑based)
-        cells.Merge(0, 0, 1, 4); // merges cells A1, B1, C1, D1 into a single cell
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Set the font size of the merged header cell to 14 points
-        Style headerStyle = cells[0, 0].GetStyle();
-        headerStyle.Font.Size = 14;
-        cells[0, 0].SetStyle(headerStyle);
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx"); // lifecycle: save
+            // Merge cells in the header row (row 0, columns A to D)
+            // Parameters: firstRow, firstColumn, totalRows, totalColumns
+            cells.Merge(0, 0, 1, 4);
+
+            // Set the font size of the merged header cell to 14
+            Style headerStyle = cells[0, 0].GetStyle();
+            headerStyle.Font.Size = 14;
+            cells[0, 0].SetStyle(headerStyle);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+        }
     }
 }

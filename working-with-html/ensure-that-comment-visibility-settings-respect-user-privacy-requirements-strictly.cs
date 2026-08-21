@@ -1,46 +1,58 @@
-// Title: Control Excel Comment Visibility by User Authorization with Aspise.Cells for .NET
-// Description: Demonstrates how to add a comment to a cell, evaluate a user‑authorization check, and set the comment's IsVisible property so that only authorized users can see the comment before saving the workbook.
-// Keywords: Aspose.Cells comment visibility | Excel comment privacy .NET | IsVisible property Aspose.Cells | conditional comment display | user authorization Excel comment
-// Common Searches: hide Excel comments for unauthorized users Aspose.Cells | set comment visibility based on role .NET | Aspose.Cells conditional comment display example | Excel comment privacy implementation C# | control comment visibility with user authentication
-// Developer Intent: Show how to make an Excel comment visible only when a user passes an authorization test by toggling the comment's IsVisible flag.
-// Use Cases: Add confidential notes to cells that only administrators can view. | Integrate custom security logic (e.g., Active Directory groups) to control comment exposure in generated reports. | Create workbooks where sensitive comments are hidden from external partners or unprivileged users.
-// AI Prompts: Generate C# code using Aspose.Cells that shows a comment only for members of a specific security group. | Explain how to retrieve user roles from Azure AD and set comment.IsVisible accordingly in an Aspose.Cells workbook. | Describe how to preserve comment visibility settings when opening, editing, and re‑saving an existing Excel file.
+// Title: Programmatically Hide Excel Cell Comments with Aspose.Cells for .NET – Enforce Strict Privacy
+// Description: This example creates a workbook, adds a confidential comment to cell A1, sets the comment's IsVisible property to false, iterates through all worksheet comments to ensure they are hidden, and saves the file as CommentPrivacyDemo.xlsx. The approach guarantees that sensitive comment data remains invisible, supporting GDPR‑style privacy requirements.
+// Keywords: Aspose.Cells hide comment | Excel comment visibility .NET | C# hide Excel comments | comment privacy Aspose.Cells | set IsVisible false | GDPR Excel comment protection | confidential Excel comment | suppress Excel comments programmatically
+// Common Searches: how to hide Excel comments using Aspose.Cells C# | set comment.IsVisible false Aspose.Cells | make Excel cell comments invisible for privacy | Aspose.Cells hide all comments in workbook | protect sensitive comment data in Excel .NET
+// Developer Intent: Hide Excel cell comments so that sensitive information is not displayed, while keeping the comment data intact in the workbook.
+// Use Cases: Add a confidential note to a cell and hide it before distributing the workbook. | Batch‑process a worksheet to suppress all existing comments for a public release. | Generate reports that retain comment metadata for internal audit but prevent end‑user visibility.
+// AI Prompts: Generate C# code with Aspose.Cells that hides every comment in an existing workbook while preserving the comment text. | Show how to set comment.IsVisible = false for a specific cell and verify the setting after saving the file. | Explain a strategy to enforce comment privacy across multiple worksheets using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCommentPrivacyDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to add a comment to a cell, evaluate a user‑authorization check, and set the comment's IsVisible property so that only authorized users can see the comment before saving the workbook.
-    public class Program
+    // This example creates a workbook, adds a confidential comment to cell A1, sets the comment's IsVisible property to false, iterates through all worksheet comments to ensure they are hidden, and saves the file as CommentPrivacyDemo.xlsx. The approach guarantees that sensitive comment data remains invisible, supporting GDPR‑style privacy requirements.
+    public class CommentPrivacyDemo
     {
-        public static void Main()
+        // Entry point required for console application
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+                Console.WriteLine("Workbook saved successfully as CommentPrivacyDemo.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Add a comment to cell A1
             int commentIndex = worksheet.Comments.Add("A1");
             Comment comment = worksheet.Comments[commentIndex];
-            comment.Note = "Sensitive information";
+            comment.Author = "SensitiveUser";
+            comment.Note = "Confidential information";
 
-            // Determine if the current user is authorized to view the comment
-            bool isUserAuthorized = CheckUserAuthorization();
+            // Enforce strict privacy by making the comment invisible
+            comment.IsVisible = false;
 
-            // Enforce privacy: make the comment visible only for authorized users
-            comment.IsVisible = isUserAuthorized;
+            // Ensure all existing comments in the worksheet are also invisible
+            foreach (Comment c in worksheet.Comments)
+            {
+                c.IsVisible = false;
+            }
 
-            // Save the workbook
+            // Save the workbook with the privacy settings applied
             workbook.Save("CommentPrivacyDemo.xlsx");
-        }
-
-        // Simulated method for user authorization logic
-        private static bool CheckUserAuthorization()
-        {
-            // Replace with real authorization check as needed.
-            // Returning false hides the comment for all users in this demo.
-            return false;
         }
     }
 }

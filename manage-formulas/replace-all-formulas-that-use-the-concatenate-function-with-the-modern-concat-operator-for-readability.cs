@@ -1,69 +1,90 @@
-// Title: C# – Bulk replace CONCATENATE with CONCAT in Excel using Aspose.Cells
-// Description: This Aspose.Cells for .NET example loads an Excel file, walks through every worksheet and used cell, detects formulas that call the legacy CONCATENATE function (case‑insensitive), swaps the function name to the modern CONCAT operator while keeping arguments intact, forces recalculation, and writes the updated workbook.
-// Keywords: Aspose.Cells | C# | .NET | Excel formula conversion | CONCATENATE to CONCAT | bulk formula replace | programmatic Excel update | cell formula manipulation | modernize spreadsheets | Excel 2016+ | workbook automation
-// Common Searches: Aspose.Cells replace CONCATENATE with CONCAT | C# code to change Excel CONCATENATE to CONCAT | bulk update Excel formulas using Aspose | convert legacy CONCATENATE function .NET | scan workbook and modify formulas Aspose.Cells
-// Developer Intent: Convert all legacy CONCATENATE calls to the newer CONCAT syntax across a workbook.
-// Use Cases: Upgrade legacy spreadsheets before sharing with newer Office versions | Automate batch processing of multiple workbooks to enforce consistent formula style | Integrate into CI pipelines that validate Excel files for modern functions | Reduce manual editing time for large datasets with concatenated strings
-// AI Prompts: Write Aspose.Cells C# code that iterates over a workbook's used range and swaps every CONCATENATE call to CONCAT. | Create a robust helper that changes the function name in a formula string while preserving nested parentheses and arguments. | Suggest best‑practice error handling for loading, processing, and saving Excel files when performing bulk formula changes. | Explain how to trigger recalculation after modifying formulas with Aspose.Cells.
+// Title: Convert CONCATENATE to CONCAT in Excel using Aspose.Cells for .NET
+// Description: Loads an Excel workbook, scans every used cell, detects formulas that contain the legacy CONCATENATE function, replaces it with the modern CONCAT operator, recalculates the workbook, and saves the updated file.
+// Keywords: Aspose.Cells | C# Excel formula update | CONCATENATE to CONCAT conversion | bulk formula replacement | .NET Excel modernization | replace legacy Excel functions | Excel 365 compatibility
+// Common Searches: Aspose.Cells replace CONCATENATE with CONCAT | C# bulk update Excel formulas | Convert old CONCATENATE formulas to CONCAT .NET | Recalculate workbook after formula changes Aspose | Iterate cells and modify formulas Aspose.Cells
+// Developer Intent: Automatically change all CONCATENATE functions in a workbook to the CONCAT operator and save the revised file.
+// Use Cases: Upgrade legacy spreadsheets to the newer CONCAT syntax required by recent Excel versions. | Run a batch job that cleans up formulas across multiple workbooks before distribution. | Ensure formula compatibility when migrating older Excel files to cloud‑based reporting platforms.
+// AI Prompts: Write C# code that scans every worksheet in an Aspose.Cells workbook, replaces CONCATENATE with CONCAT in formulas, recalculates, and saves the result. | Create a method that logs the address of each cell where a CONCATENATE formula was changed to CONCAT using Aspose.Cells. | Develop a reusable Aspose.Cells utility class for bulk formula transformations, including CONCATENATE‑to‑CONCAT replacement with optional error handling.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// This Aspose.Cells for .NET example loads an Excel file, walks through every worksheet and used cell, detects formulas that call the legacy CONCATENATE function (case‑insensitive), swaps the function name to the modern CONCAT operator while keeping arguments intact, forces recalculation, and writes the updated workbook.
-class ReplaceConcatOperator
+namespace AsposeCellsFormulaUpdate
 {
-    static void Main()
+    // Loads an Excel workbook, scans every used cell, detects formulas that contain the legacy CONCATENATE function, replaces it with the modern CONCAT operator, recalculates the workbook, and saves the updated file.
+    public class ReplaceConcatenateWithConcat
     {
-        // Load the workbook (replace with actual path)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-
-        // Iterate through each worksheet
-        foreach (Worksheet sheet in workbook.Worksheets)
+        public static void Run()
         {
-            Cells cells = sheet.Cells;
+            // Input and output file paths (replace with actual paths)
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Determine the used range
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            // Scan each cell in the used range
-            for (int row = 0; row <= maxRow; row++)
+            try
             {
-                for (int col = 0; col <= maxCol; col++)
+                // Ensure the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    Cell cell = cells[row, col];
-                    string formula = cell.Formula;
+                    throw new FileNotFoundException($"Input file not found: {inputPath}");
+                }
 
-                    // Check if the formula uses CONCATENATE (case‑insensitive)
-                    if (!string.IsNullOrEmpty(formula) &&
-                        formula.IndexOf("CONCATENATE", StringComparison.OrdinalIgnoreCase) >= 0)
+                // Load the workbook (lifecycle rule: load)
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Determine the used range to limit iteration
+                    int maxRow = sheet.Cells.MaxDataRow;
+                    int maxCol = sheet.Cells.MaxDataColumn;
+
+                    // Loop through each cell in the used range
+                    for (int row = 0; row <= maxRow; row++)
                     {
-                        // Replace CONCATENATE with CONCAT
-                        string updatedFormula = ReplaceConcat(formula);
+                        for (int col = 0; col <= maxCol; col++)
+                        {
+                            Cell cell = sheet.Cells[row, col];
 
-                        // Apply the new formula; value is set to null so Aspose recalculates it
-                        cell.SetFormula(updatedFormula, null);
+                            // Process only cells that contain a formula
+                            if (cell.IsFormula)
+                            {
+                                string formula = cell.Formula; // Formula string includes leading '='
+
+                                // Check for the legacy CONCATENATE function (case‑insensitive)
+                                if (formula.IndexOf("CONCATENATE", StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    // Replace the function name with the modern CONCAT operator
+                                    string updatedFormula = formula.Replace("CONCATENATE", "CONCAT", StringComparison.OrdinalIgnoreCase);
+
+                                    // Assign the new formula back to the cell
+                                    cell.Formula = updatedFormula;
+                                }
+                            }
+                        }
                     }
                 }
+
+                // Recalculate all formulas after modifications
+                workbook.CalculateFormula();
+
+                // Save the modified workbook (lifecycle rule: save)
+                workbook.Save(outputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Optionally rethrow or handle specific exceptions as needed
             }
         }
-
-        // Save the modified workbook (replace with desired output path)
-        string outputPath = "output.xlsx";
-        workbook.Save(outputPath);
     }
 
-    // Helper method to replace the function name while preserving the rest of the formula
-    static string ReplaceConcat(string formula)
+    // Entry point for the application
+    public class Program
     {
-        // Find the position of the function name (case‑insensitive)
-        int index = formula.IndexOf("CONCATENATE", StringComparison.OrdinalIgnoreCase);
-        if (index < 0) return formula;
-
-        // Build the new formula string
-        string before = formula.Substring(0, index);
-        string after  = formula.Substring(index + "CONCATENATE".Length);
-        return before + "CONCAT" + after;
+        public static void Main(string[] args)
+        {
+            ReplaceConcatenateWithConcat.Run();
+        }
     }
 }

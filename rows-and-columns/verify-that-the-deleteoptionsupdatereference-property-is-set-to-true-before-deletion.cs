@@ -1,55 +1,69 @@
-// Title: C# – Verify DeleteOptions.UpdateReference before Deleting Columns with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, ensure DeleteOptions.UpdateReference is enabled, delete a column using DeleteColumns, and confirm that formulas adjust automatically before saving the file.
-// Keywords: Aspose.Cells | DeleteOptions | UpdateReference | C# | .NET | DeleteColumns | formula reference update | column deletion | workbook manipulation
-// Common Searches: Aspose.Cells set DeleteOptions.UpdateReference true | C# delete column keep formulas updated Aspose.Cells | how to verify DeleteOptions before column removal | DeleteColumns with reference update .NET | Aspose.Cells DeleteOptions property check
-// Developer Intent: Make sure the UpdateReference flag is true so that deleting columns automatically updates dependent formulas.
-// Use Cases: Programmatically delete one or more columns while preserving formula integrity. | Validate and correct DeleteOptions settings before modifying worksheet structure. | Automate workbook cleanup tasks that require reference‑aware column removal.
-// AI Prompts: Generate C# code that checks DeleteOptions.UpdateReference, sets it if needed, deletes a range of columns, and returns the modified workbook. | Explain the impact of DeleteOptions.UpdateReference on formula recalculation when rows or columns are removed in Aspose.Cells. | Create a method to delete a column in a .NET workbook, ensuring formulas are updated and output the new formula strings.
+// Title: Aspose.Cells for .NET – Ensure DeleteOptions.UpdateReference is true before deleting a column (C#)
+// Description: C# example that builds a workbook, adds values and formulas referencing column A, verifies the UpdateReference flag, enables it if needed, deletes column A with Cells.DeleteColumns, and confirms that formulas are automatically adjusted.
+// Keywords: Aspose.Cells DeleteOptions | UpdateReference flag | C# column deletion | formula reference update | Cells.DeleteColumns | Aspose.Cells .NET example | verify DeleteOptions | preserve formulas after delete
+// Common Searches: Aspose.Cells keep formulas after deleting a column | Set UpdateReference flag in C# Aspose.Cells | DeleteColumns with reference update Aspose.Cells | Check DeleteOptions before column removal | Aspose.Cells .NET delete column and adjust formulas
+// Developer Intent: Enable the UpdateReference flag so that removing a column automatically adjusts any dependent formulas.
+// Use Cases: Programmatically confirm and turn on UpdateReference before invoking Cells.DeleteColumns. | Delete a column while maintaining correct formula calculations across the worksheet. | Log when the flag was initially disabled, set it to true, perform the deletion, and verify the updated formulas.
+// AI Prompts: Generate C# code using Aspose.Cells that checks the UpdateReference flag, sets it if false, deletes a column, and prints the resulting formulas. | Show how to delete multiple columns with DeleteOptions while ensuring formula references are updated in Aspose.Cells .NET. | Explain how the UpdateReference setting influences formula recalculation when columns are removed.
 
 using System;
 using Aspose.Cells;
 
-namespace DeleteOptionsVerificationDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, ensure DeleteOptions.UpdateReference is enabled, delete a column using DeleteColumns, and confirm that formulas adjust automatically before saving the file.
-    class Program
+    // C# example that builds a workbook, adds values and formulas referencing column A, verifies the UpdateReference flag, enables it if needed, deletes column A with Cells.DeleteColumns, and confirms that formulas are automatically adjusted.
+    public class VerifyDeleteOptionsUpdateReference
     {
-        static void Main()
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
+
+        public static void Run()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Populate sample data and a formula that references column A
+            // Populate sample data and formulas that reference column A
             cells["A1"].PutValue(10);
-            cells["B1"].PutValue(20);
-            cells["C1"].Formula = "=A1+B1";
+            cells["B1"].Formula = "=A1*2";
+            cells["A2"].PutValue(20);
+            cells["B2"].Formula = "=A2*2";
 
             // Create DeleteOptions instance
             DeleteOptions deleteOptions = new DeleteOptions();
 
-            // Verify that UpdateReference is true; if not, set it
+            // Ensure UpdateReference is true before deletion
             if (!deleteOptions.UpdateReference)
             {
-                // Ensure references are updated when deleting
                 deleteOptions.UpdateReference = true;
-                Console.WriteLine("UpdateReference was false; set to true.");
+                Console.WriteLine("DeleteOptions.UpdateReference was false; set to true.");
             }
             else
             {
-                Console.WriteLine("UpdateReference is already true.");
+                Console.WriteLine("DeleteOptions.UpdateReference is already true.");
             }
 
             // Delete column A (index 0) using the verified DeleteOptions
-            // This will shift columns left and update the formula in C1 accordingly
-            sheet.Cells.DeleteColumns(0, 1, deleteOptions);
+            // This will also update the formulas in column B accordingly
+            cells.DeleteColumns(0, 1, deleteOptions);
 
-            // Output the updated formula to demonstrate that references were updated
-            Console.WriteLine("Updated formula in C1 after column deletion: " + cells["C1"].Formula);
+            // Output the formula after deletion to confirm it was updated
+            Console.WriteLine("Formula in A1 after column deletion: " + cells["A1"].Formula);
 
             // Save the workbook
-            workbook.Save("DeleteOptionsVerificationOutput.xlsx");
+            string outputPath = "VerifyDeleteOptionsUpdateReference_Output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine("Workbook saved to: " + outputPath);
         }
     }
 }

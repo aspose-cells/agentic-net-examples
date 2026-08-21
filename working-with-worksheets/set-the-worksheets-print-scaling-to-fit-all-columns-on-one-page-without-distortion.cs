@@ -1,63 +1,44 @@
-// Title: Fit all worksheet columns on one printed page with Aspose.Cells for .NET
-// Description: Demonstrates how to configure a workbook’s PageSetup in Aspose.Cells so the printed output fits every column on a single page (FitToPagesWide = 1, FitToPagesTall = 0) while disabling percentage scaling to avoid distortion.
-// Keywords: Aspose.Cells print scaling | FitToPagesWide | FitToPagesTall | IsPercentScale false | C# Excel page setup | fit columns one page | worksheet print layout .NET | Aspose.Cells pagination
-// Common Searches: Aspose.Cells fit columns to one page C# | set worksheet page setup FitToPagesWide Aspose | disable percent scaling Aspose.Cells | print Excel sheet without horizontal scroll .NET | how to fit all columns on a single printed page using Aspose
-// Developer Intent: Apply page‑setup properties to print every column on one page without using percentage scaling.
-// Use Cases: Creating printable reports that must stay within a single page width. | Generating invoices or receipts where column layout should not wrap across pages. | Exporting data tables for PDF conversion while preserving column alignment on one page.
-// AI Prompts: Provide C# code that sets FitToPagesWide = 1, FitToPagesTall = 0, and IsPercentScale = false in Aspose.Cells. | Explain the effect of disabling percentage scaling when using FitToPages settings in Aspose.Cells. | Show how to configure Aspose.Cells page setup to fit all columns on one page while allowing rows to span multiple pages.
+// Title: Set Aspose.Cells worksheet print scaling to fit all columns on one page (C#)
+// Description: Demonstrates how to configure a worksheet's PageSetup in Aspose.Cells for .NET so that the printed output fits all columns on a single page while allowing the row height to scale automatically. Includes sample data generation and saving the workbook.
+// Keywords: Aspose.Cells print scaling | FitToPagesWide | FitToPagesTall | C# worksheet page setup | fit columns on one page | Aspose.Cells page layout | Excel print fit width | .NET Excel printing
+// Common Searches: Aspose.Cells fit all columns on one printed page | C# set worksheet print scaling Aspose.Cells | FitToPagesWide = 1 Aspose.Cells example | How to print Excel sheet without distortion using Aspose.Cells | Aspose.Cells page setup fit width only
+// Developer Intent: Configure the worksheet's print settings so the width fits on one page and the height adjusts automatically.
+// Use Cases: Generating printable reports where horizontal data must stay on a single page. | Creating invoices or statements that need a consistent page width regardless of row count. | Exporting large data tables to Excel with automatic width scaling for clean printing.
+// AI Prompts: Show C# code to set FitToPagesWide = 1 and FitToPagesTall = 0 in Aspose.Cells. | Explain how Aspose.Cells page setup scales columns without distorting rows. | Provide an Aspose.Cells example that fits all worksheet columns on one printed page.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPrintScalingDemo
 {
-    // Demonstrates how to configure a workbook’s PageSetup in Aspose.Cells so the printed output fits every column on a single page (FitToPagesWide = 1, FitToPagesTall = 0) while disabling percentage scaling to avoid distortion.
-    public class FitAllColumnsOnePage
+    // Demonstrates how to configure a worksheet's PageSetup in Aspose.Cells for .NET so that the printed output fits all columns on a single page while allowing the row height to scale automatically. Includes sample data generation and saving the workbook.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // (Optional) Add some sample data to demonstrate the effect
+            for (int row = 0; row < 20; row++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // (Optional) Add some sample data to demonstrate the effect
-                for (int row = 0; row < 20; row++)
+                for (int col = 0; col < 10; col++)
                 {
-                    for (int col = 0; col < 10; col++)
-                    {
-                        worksheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                    }
+                    worksheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
                 }
-
-                // Set the page setup to fit all columns on a single page.
-                // FitToPagesWide = 1 means one page wide.
-                // FitToPagesTall = 0 lets the height adjust automatically.
-                worksheet.PageSetup.FitToPagesWide = 1;
-                worksheet.PageSetup.FitToPagesTall = 0;
-
-                // Ensure scaling is based on FitToPages settings, not percent scaling.
-                worksheet.PageSetup.IsPercentScale = false;
-
-                // Save the workbook (adjust the path/format as needed)
-                workbook.Save("FitAllColumnsOnePage.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            FitAllColumnsOnePage.Run();
+            // Set the page setup to fit all columns on one page.
+            // FitToPagesWide = 1 means one page wide.
+            // FitToPagesTall = 0 lets the height adjust automatically.
+            worksheet.PageSetup.FitToPagesWide = 1;
+            worksheet.PageSetup.FitToPagesTall = 0;
+
+            // Save the workbook
+            workbook.Save("FitAllColumnsOnePage.xlsx");
         }
     }
 }

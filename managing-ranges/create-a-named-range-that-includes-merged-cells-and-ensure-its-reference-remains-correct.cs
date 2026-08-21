@@ -1,17 +1,18 @@
 // Title: Aspose.Cells .NET: Create a Named Range that Includes Merged Cells
-// Description: Demonstrates how to merge cells A1:B2, assign a value, add a named range called "MergedArea" with an absolute A1 RefersTo formula, verify the range address and value, and save the workbook as NamedRangeWithMergedCells.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells named range merged cells | C# Aspose.Cells create named range | merged cells reference Aspose | absolute A1 notation Aspose.Cells | verify named range address .NET
-// Common Searches: Aspose.Cells add named range for merged cells | C# create named range covering A1:B2 merged area | how to keep named range reference after merging cells Aspose | retrieve values from a named range that includes merged cells
-// Developer Intent: Add a named range that spans merged cells and ensure its RefersTo formula remains accurate.
-// Use Cases: Define a reusable range for a merged header that can be used in formulas or charts. | Programmatically read or modify data inside a merged block via a named range. | Export a workbook with a correctly referenced named range for downstream reporting.
-// AI Prompts: Write C# code with Aspose.Cells to merge A1:B2, create a named range for the merged area, and print its address. | Explain how to set the RefersTo property using absolute A1 notation for a merged range in Aspose.Cells. | Show how to retrieve a named range that contains merged cells and access its first cell value.
+// Description: Demonstrates how to merge cells A1:C2, define a Range covering the merged block, assign a name, set the RefersTo formula correctly, verify the address, and save the workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells named range merged cells | C# create named range Aspose | merged cell range RefersTo | Aspose.Range CreateRange example | Workbook.Names add merged area
+// Common Searches: how to add a named range that contains merged cells asp.net | aspocells named range reference merged area | c# aspose create range for merged cells | set RefersTo for merged cells Aspose.Cells | verify named range address after merging cells
+// Developer Intent: Define a named range covering merged cells and ensure its RefersTo address stays accurate.
+// Use Cases: Reference a merged header block in formulas without manual address updates. | Programmatically retrieve and validate a named range that spans merged cells. | Export workbooks where named ranges must point to merged regions for downstream analytics.
+// AI Prompts: Write C# code with Aspose.Cells that merges A1:C2, creates a named range for the merged block, and sets RefersTo correctly. | Explain how Aspose.Cells treats merged cells when creating a Range and how to confirm the named range address. | Show how to adjust the RefersTo formula if the merged area is expanded after the named range is created.
 
 using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsNamedRangeWithMergedCells
 {
-    // Demonstrates how to merge cells A1:B2, assign a value, add a named range called "MergedArea" with an absolute A1 RefersTo formula, verify the range address and value, and save the workbook as NamedRangeWithMergedCells.xlsx using Aspose.Cells for .NET.
+    // Demonstrates how to merge cells A1:C2, define a Range covering the merged block, assign a name, set the RefersTo formula correctly, verify the address, and save the workbook using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
@@ -21,26 +22,32 @@ namespace AsposeCellsNamedRangeWithMergedCells
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Access the first worksheet (default name is "Sheet1")
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
 
-                // Merge cells A1:B2 (zero‑based indices: row 0, column 0, 2 rows, 2 columns)
-                cells.Merge(0, 0, 2, 2);
+                // Merge cells A1:C2 (rows 0‑1, columns 0‑2)
+                sheet.Cells.Merge(0, 0, 2, 3);
 
-                // Put a value into the merged cell (upper‑left cell of the range)
-                cells[0, 0].PutValue("Merged Area");
+                // Put a value into the merged cell (upper‑left cell of the merged area)
+                sheet.Cells[0, 0].PutValue("Merged Area");
 
-                // Add a named range that covers the merged cells
-                int nameIndex = workbook.Worksheets.Names.Add("MergedArea");
-                Name mergedName = workbook.Worksheets.Names[nameIndex];
-                // RefersTo must start with '=' and use absolute A1 notation
-                mergedName.RefersTo = $"={sheet.Name}!$A$1:$B$2";
+                // Create a Range object that covers the merged cells
+                AsposeRange mergedRange = sheet.Cells.CreateRange("A1", "C2");
 
-                // Retrieve the range via the name to verify the reference is correct
-                Aspose.Cells.Range namedRange = mergedName.GetRange();
-                Console.WriteLine($"Named range address: {namedRange.Address}");
-                Console.WriteLine($"First cell of the range value: {namedRange[0, 0].StringValue}");
+                // Assign a name to the range (named range)
+                mergedRange.Name = "MyMergedRange";
+
+                // Add the named range to the workbook's Names collection
+                int nameIndex = workbook.Worksheets.Names.Add("MyMergedRange");
+                Name namedRange = workbook.Worksheets.Names[nameIndex];
+                // RefersTo must start with '=' and include the sheet name
+                namedRange.RefersTo = $"={sheet.Name}!{mergedRange.RefersTo}";
+
+                // Verify that the reference is correct by retrieving the range via the Name object
+                AsposeRange retrievedRange = namedRange.GetRange();
+                Console.WriteLine("Named range address: " + retrievedRange.Address);
+                Console.WriteLine("Is the address the same as the original? " +
+                                  (retrievedRange.Address == mergedRange.Address));
 
                 // Save the workbook
                 string outputPath = "NamedRangeWithMergedCells.xlsx";
@@ -49,7 +56,7 @@ namespace AsposeCellsNamedRangeWithMergedCells
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }

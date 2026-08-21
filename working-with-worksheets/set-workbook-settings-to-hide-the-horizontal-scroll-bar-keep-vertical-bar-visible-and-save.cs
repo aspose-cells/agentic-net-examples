@@ -1,51 +1,32 @@
-// Title: Hide Horizontal Scroll Bar, Keep Vertical Scroll Bar Visible with Aspose.Cells for .NET
-// Description: Shows how to create a workbook, set WorkbookSettings.IsHScrollBarVisible to false and IsVScrollBarVisible to true, and save the result as an XLSX file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | hide horizontal scrollbar | vertical scrollbar visible | WorkbookSettings | Excel scroll bar visibility | SaveFormat.Xlsx | programmatic Excel UI | Excel generation
-// Common Searches: Aspose.Cells hide horizontal scrollbar C# | set workbook scroll bar visibility .NET | show only vertical scroll bar in generated Excel | Aspose.Cells workbook settings example | C# hide horizontal scroll bar in Excel file
-// Developer Intent: Create an Excel workbook, disable the horizontal scroll bar while keeping the vertical scroll bar active, and save the file programmatically.
-// Use Cases: Embedding generated Excel files in web portals where horizontal scrolling would break layout. | Designing mobile‑friendly reports that require only vertical navigation. | Preparing printable templates that should not allow sideways scrolling.
-// AI Prompts: Generate C# code with Aspose.Cells that hides the horizontal scroll bar and customizes its width. | Explain how to toggle scroll bar visibility at runtime based on user settings using Aspose.Cells. | Show how to apply the same scroll bar configuration to an existing workbook loaded from disk.
+// Title: C# – Hide Horizontal Scroll Bar, Keep Vertical Scroll Bar Visible in Aspose.Cells Workbook and Save as XLSX
+// Description: Demonstrates how to use Aspose.Cells WorkbookSettings in C# to disable the horizontal scroll bar, keep the vertical scroll bar enabled, and save the workbook in XLSX format.
+// Keywords: Aspose.Cells C# hide horizontal scroll bar | WorkbookSettings scroll bar visibility | IsHScrollBarVisible false | IsVScrollBarVisible true | disable horizontal scroll bar Aspose.Cells | customize Excel UI with Aspose.Cells | save workbook as XLSX C# | Excel scroll bar settings programmatically
+// Common Searches: how to hide horizontal scroll bar in Aspose.Cells C# | Aspose.Cells set scroll bar visibility | C# hide horizontal scroll bar Excel workbook | keep vertical scroll bar visible Aspose.Cells | save workbook with custom scroll bar settings
+// Developer Intent: Disable the horizontal scroll bar, retain the vertical scroll bar, and save the workbook using Aspose.Cells in C#.
+// Use Cases: Create clean‑look reports where only vertical navigation is needed. | Prepare workbooks for web viewers that require a fixed horizontal view. | Standardize exported Excel files by programmatically setting scroll bar visibility before saving.
+// AI Prompts: Show C# code to hide the horizontal scroll bar while keeping the vertical scroll bar visible in an Aspose.Cells workbook. | Explain how to toggle scroll bar visibility settings with Aspose.Cells WorkbookSettings for multiple workbooks. | Provide a step‑by‑step guide to configure scroll bar visibility and save the file as XLSX using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Demonstrates how to use Aspose.Cells WorkbookSettings in C# to disable the horizontal scroll bar, keep the vertical scroll bar enabled, and save the workbook in XLSX format.
+public class WorkbookScrollBarSettingsDemo
 {
-    // Shows how to create a workbook, set WorkbookSettings.IsHScrollBarVisible to false and IsVScrollBarVisible to true, and save the result as an XLSX file using Aspose.Cells for .NET.
-    public class WorkbookSettingsScrollBarDemo
+    public static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-                // Access workbook settings
-                WorkbookSettings settings = workbook.Settings;
+        // Access workbook settings
+        WorkbookSettings settings = workbook.Settings;
 
-                // Hide the horizontal scroll bar
-                settings.IsHScrollBarVisible = false;
+        // Hide the horizontal scroll bar
+        settings.IsHScrollBarVisible = false;
 
-                // Keep the vertical scroll bar visible
-                settings.IsVScrollBarVisible = true;
+        // Keep the vertical scroll bar visible
+        settings.IsVScrollBarVisible = true;
 
-                // Save the workbook
-                workbook.Save("ScrollBarSettings.xlsx", SaveFormat.Xlsx);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public static class Program
-    {
-        public static void Main()
-        {
-            WorkbookSettingsScrollBarDemo.Run();
-        }
+        // Save the workbook in XLSX format
+        workbook.Save("WorkbookWithScrollBars.xlsx", SaveFormat.Xlsx);
     }
 }

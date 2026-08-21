@@ -1,40 +1,66 @@
-// Title: Refresh Linked Pictures in an Excel Workbook with Aspose.Cells for .NET
-// Description: Loads a workbook, scans each worksheet for linked Picture objects, forces each image to reload by reassigning its SourceFullName, and saves the updated file. Ideal for synchronizing images after external changes on web servers.
-// Keywords: Aspose.Cells linked picture refresh | C# reload Excel images | update picture source Aspose.Cells | force picture reload .NET | Excel workbook linked images update | global image synchronization Excel
-// Common Searches: how to refresh linked pictures in Excel using Aspose.Cells | programmatically reload external images in a workbook .NET | reset picture source path Aspose.Cells C# | update Excel linked images after web server change
-// Developer Intent: Programmatically refresh every linked image in a workbook after its source file has changed.
-// Use Cases: Ensure the latest corporate logo appears in generated reports by refreshing linked images before export. | Synchronize chart snapshots stored as external PNG files on a web server with a shared Excel template. | Automatically update product photos in a sales catalog workbook when the source images are edited.
-// AI Prompts: Generate C# code with Aspose.Cells that iterates through all worksheets and resets Picture.SourceFullName to refresh linked images. | Explain error handling strategies when refreshing linked pictures in an Excel file using Aspose.Cells for .NET. | Show how to batch‑process multiple workbooks to refresh external image links with Aspose.Cells.
+// Title: Refresh linked pictures in an Excel workbook using Aspose.Cells for .NET (C#)
+// Description: Shows how to load an .xlsx file, invoke Workbook.UpdateLinkedDataSource to pull the latest external images, and save the workbook, with comprehensive error handling for loading, updating, and saving.
+// Keywords: Aspose.Cells | C# | .NET | Refresh linked pictures | UpdateLinkedDataSource | Excel external image links | linked picture refresh | programmatic image update | Workbook.UpdateLinkedDataSource example | GitHub Aspose.Cells sample
+// Common Searches: Aspose.Cells refresh linked pictures C# | UpdateLinkedDataSource external images .NET | How to refresh picture links in Excel programmatically | Refresh linked images after web server change Aspose | C# code to update linked pictures in workbook
+// Developer Intent: Refresh all linked pictures in a workbook after the source images have changed.
+// Use Cases: Load an .xlsx containing linked pictures, call UpdateLinkedDataSource to retrieve the newest images from their URLs, and save the refreshed file. | Schedule a nightly job that updates linked graphics in financial or marketing reports before distribution. | Expose a web API that receives updated image URLs, refreshes the linked pictures in the workbook, and returns the modified Excel file.
+// AI Prompts: Generate C# code using Aspose.Cells that loads a workbook, refreshes all linked pictures, handles missing files, and saves the result. | Create a method that enumerates linked picture objects, logs each source URL, calls UpdateLinkedDataSource, and captures any errors. | Provide a complete example that updates external image links, writes the workbook to a new file, and returns a success/failure status message.
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Loads a workbook, scans each worksheet for linked Picture objects, forces each image to reload by reassigning its SourceFullName, and saves the updated file. Ideal for synchronizing images after external changes on web servers.
-class RefreshLinkedPictures
+namespace RefreshLinkedPicturesDemo
 {
-    static void Main()
+    // Shows how to load an .xlsx file, invoke Workbook.UpdateLinkedDataSource to pull the latest external images, and save the workbook, with comprehensive error handling for loading, updating, and saving.
+    class Program
     {
-        // Load the workbook that contains linked pictures
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Loop through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            // Loop through all pictures in the current worksheet
-            foreach (Picture picture in sheet.Pictures)
+            const string inputPath = "InputWithLinkedPictures.xlsx";
+            const string outputPath = "OutputWithRefreshedPictures.xlsx";
+
+            Workbook workbook = null;
+
+            // Load the workbook only if the file exists.
+            if (File.Exists(inputPath))
             {
-                // Process only linked pictures
-                if (picture.IsLink)
+                try
                 {
-                    // Reassign the same source path to force the picture to reload
-                    string sourcePath = picture.SourceFullName;
-                    picture.SourceFullName = sourcePath;
+                    workbook = new Workbook(inputPath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                    return;
                 }
             }
-        }
+            else
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Save the workbook after refreshing the linked pictures
-        workbook.Save("output.xlsx");
+            // Refresh linked pictures by updating external data sources.
+            try
+            {
+                workbook.UpdateLinkedDataSource(new Workbook[0]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while updating linked data sources: {ex.Message}");
+            }
+
+            // Save the workbook with refreshed pictures.
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
     }
 }

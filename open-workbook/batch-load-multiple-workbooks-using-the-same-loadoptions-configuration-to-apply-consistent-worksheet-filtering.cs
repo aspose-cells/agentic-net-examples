@@ -1,81 +1,51 @@
-// Title: Batch load Excel workbooks with shared LoadOptions & custom LoadFilter (C# Aspose.Cells)
-// Description: Shows how to build one LoadOptions that holds a CustomLoadFilter—loading full data for visible worksheets and only structure for hidden ones—then loop through multiple .xlsx files, load each workbook with the shared options, output the worksheet count, and save a processed copy with a "_Processed" suffix. Includes file‑existence validation and robust exception handling.
-// Keywords: Aspose.Cells | C# | .NET | LoadOptions | LoadFilter | batch workbook processing | Excel file iteration | visible sheet data | hidden sheet structure | performance optimization | error handling | save processed workbook | GitHub example
-// Common Searches: Aspose.Cells load multiple workbooks with same LoadOptions | custom LoadFilter for visible and hidden sheets in C# | batch process Excel files using Aspose.Cells | how to apply a shared LoadOptions to several workbooks | reduce hidden sheet size with LoadFilter Aspose.Cells
-// Developer Intent: Load a collection of Excel files using one LoadOptions instance that applies a custom LoadFilter to control data loading per worksheet.
-// Use Cases: Automate processing of a reports folder, loading full data only for visible sheets while keeping hidden sheets lightweight, then save optimized copies. | Validate worksheet counts across many workbooks after applying a consistent filter to ensure data integrity before analytics. | Create a conversion pipeline that trims hidden sheet content, reducing file size for downstream systems.
-// AI Prompts: Generate C# code that scans a directory for .xlsx files and loads each with a shared LoadOptions containing a CustomLoadFilter that loads full data for visible sheets and only structure for hidden sheets, then saves each file with a "_Processed" suffix. | Explain how to extend the CustomLoadFilter to skip formulas in hidden worksheets while preserving cell formatting and comments. | Provide best‑practice error‑logging and continuation logic for batch loading workbooks with Aspose.Cells and a custom LoadFilter.
+// Title: Batch load Excel workbooks with a shared LoadOptions and custom LoadFilter using Aspose.Cells for .NET
+// Description: Demonstrates how to create a single LoadOptions object that contains a CustomLoadFilter, then reuse it to open multiple workbooks in a loop. The filter loads full cell data only for worksheets whose names start with "Data" and loads just the structure for all other sheets, reducing memory usage and speeding up batch processing.
+// Keywords: Aspose.Cells batch loading | shared LoadOptions | custom LoadFilter .NET | selective worksheet loading | load worksheet structure only | C# Excel performance | multiple workbook processing
+// Common Searches: reuse LoadOptions for several workbooks Aspose.Cells | load only specific sheets data in batch with Aspose.Cells | apply custom LoadFilter to multiple Excel files .NET | how to improve performance when opening many workbooks Aspose.Cells
+// Developer Intent: Open many Excel files with one LoadOptions instance that contains a custom LoadFilter, controlling per‑sheet data loading to optimize speed and memory consumption.
+// Use Cases: Extract summary information from dozens of report files while skipping heavy data in non‑report sheets. | Build an ETL pipeline that reads a batch of workbooks, modifies only the "Data*" sheets, and writes the files back. | Generate a quick inventory of worksheet counts across a folder of workbooks without loading full cell contents.
+// AI Prompts: Show how to extend CustomLoadFilter to also ignore charts and images on non‑Data worksheets. | Provide a Parallel.ForEach example that loads workbooks concurrently while sharing the same LoadOptions. | Create logging code that records which sheets were loaded with full data versus structure only during batch processing.
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-namespace BatchLoadExample
+// Demonstrates how to create a single LoadOptions object that contains a CustomLoadFilter, then reuse it to open multiple workbooks in a loop. The filter loads full cell data only for worksheets whose names start with "Data" and loads just the structure for all other sheets, reducing memory usage and speeding up batch processing.
+class CustomLoadFilter : LoadFilter
 {
-    // Custom filter that loads all data for visible sheets and only structure for hidden sheets
-    // Shows how to build one LoadOptions that holds a CustomLoadFilter—loading full data for visible worksheets and only structure for hidden ones—then loop through multiple .xlsx files, load each workbook with the shared options, output the worksheet count, and save a processed copy with a "_Processed" suffix. Includes file‑existence validation and robust exception handling.
-    class CustomLoadFilter : LoadFilter
+    // Adjust loading options per worksheet
+    public override void StartSheet(Worksheet sheet)
     {
-        public override void StartSheet(Worksheet sheet)
-        {
-            // Load full data for visible sheets, only structure for hidden sheets
-            LoadDataFilterOptions = sheet.IsVisible
-                ? LoadDataFilterOptions.All
-                : LoadDataFilterOptions.Structure;
-        }
+        // Load full data for sheets whose name starts with "Data"
+        // Otherwise load only the worksheet structure
+        if (sheet.Name.StartsWith("Data", StringComparison.OrdinalIgnoreCase))
+            LoadDataFilterOptions = LoadDataFilterOptions.All;
+        else
+            LoadDataFilterOptions = LoadDataFilterOptions.Structure;
     }
+}
 
-    class Program
+class Program
+{
+    static void Main()
     {
-        static void Main()
+        // Create a single LoadOptions instance and assign the custom filter
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.LoadFilter = new CustomLoadFilter();
+
+        // Paths of workbooks to be loaded in batch
+        string[] workbookFiles = { "Book1.xlsx", "Book2.xlsx", "Book3.xlsx" };
+
+        foreach (string filePath in workbookFiles)
         {
-            // Prepare a single LoadOptions instance with the custom filter
-            var loadOptions = new LoadOptions
-            {
-                LoadFilter = new CustomLoadFilter()
-            };
+            // Load each workbook using the shared LoadOptions configuration
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-            // List of workbook files to be loaded in batch
-            var inputFiles = new List<string>
-            {
-                "Workbook1.xlsx",
-                "Workbook2.xlsx",
-                "Workbook3.xlsx"
-            };
+            // Example: display the number of worksheets loaded
+            Console.WriteLine($"'{filePath}' loaded with {workbook.Worksheets.Count} worksheets.");
 
-            foreach (var filePath in inputFiles)
-            {
-                try
-                {
-                    // Verify that the input file exists
-                    if (!File.Exists(filePath))
-                    {
-                        Console.WriteLine($"Warning: File not found – skipping '{filePath}'.");
-                        continue;
-                    }
-
-                    // Load the workbook with the shared LoadOptions
-                    var workbook = new Workbook(filePath, loadOptions);
-
-                    // Example operation: output the number of loaded worksheets
-                    Console.WriteLine($"File: {filePath} - Loaded Worksheets: {workbook.Worksheets.Count}");
-
-                    // Determine output path
-                    var outputPath = Path.Combine(
-                        Path.GetDirectoryName(filePath) ?? string.Empty,
-                        Path.GetFileNameWithoutExtension(filePath) + "_Processed.xlsx");
-
-                    // Save the processed workbook
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Saved processed workbook to: {outputPath}");
-                }
-                catch (Exception ex)
-                {
-                    // Catch any runtime exceptions to prevent the program from crashing
-                    Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
-                }
-            }
+            // Save the workbook to verify successful loading (optional)
+            string outputPath = System.IO.Path.GetFileNameWithoutExtension(filePath) + "_processed.xlsx";
+            workbook.Save(outputPath);
         }
     }
 }

@@ -1,72 +1,65 @@
-// Title: Aspose.Cells for .NET – Verify PivotTable.GetCellByDisplayName throws exception for an invalid display name
-// Description: This example creates a workbook, adds a pivot table, defines row and data fields, refreshes the table, and then calls PivotTable.GetCellByDisplayName with a non‑existent field name. The code catches the expected exception and logs its type and message, demonstrating proper error handling for invalid pivot field references.
-// Keywords: Aspose.Cells | PivotTable | GetCellByDisplayName | invalid display name | exception handling | .NET | Aspose.Cells for .NET | pivot table error | catch exception
-// Common Searches: Aspose.Cells GetCellByDisplayName invalid field exception | how to test PivotTable.GetCellByDisplayName throws error | exception type for unknown display name in Aspose.Cells pivot table | validate error handling for PivotTable.GetCellByDisplayName .NET
-// Developer Intent: Confirm that calling PivotTable.GetCellByDisplayName with a non‑existent display name raises the appropriate exception.
-// Use Cases: Create a unit test that asserts an exception is thrown for an unknown pivot field name. | Wrap GetCellByDisplayName in try‑catch to log exception details during debugging. | Validate pivot table configuration by ensuring all required display names exist before accessing cells.
-// AI Prompts: Generate an MSTest method that verifies PivotTable.GetCellByDisplayName throws a specific exception for an unknown display name. | Provide sample code that catches the exception from GetCellByDisplayName and logs its type and message. | Explain which exception Aspose.Cells throws when GetCellByDisplayName receives an invalid display name and recommend handling strategies.
+// Title: Aspose.Cells .NET: GetCellByDisplayName throws exception for non‑existent pivot field
+// Description: Creates a workbook with a pivot table, retrieves a cell using a valid data field display name, then calls GetCellByDisplayName with a missing display name, catches the resulting exception, and saves the file.
+// Keywords: Aspose.Cells | C# | PivotTable | GetCellByDisplayName | invalid display name | exception handling | Aspose.Cells .NET | pivot field not found | cell retrieval error | Aspose.Cells API
+// Common Searches: GetCellByDisplayName invalid field Aspose.Cells | What exception does GetCellByDisplayName throw when display name does not exist | How to catch missing pivot field error in Aspose.Cells | Aspose.Cells pivot table GetCellByDisplayName example | C# Aspose.Cells exception for non‑existent display name
+// Developer Intent: Verify that GetCellByDisplayName raises the correct exception when the specified display name is not present in the pivot table.
+// Use Cases: Validate error handling in applications that rely on pivot table cell lookup. | Unit‑test GetCellByDisplayName behavior for both valid and invalid display names. | Demonstrate safe workbook processing by catching missing field errors before saving. | Provide sample code for developers integrating Aspose.Cells pivot tables.
+// AI Prompts: Generate an xUnit test that asserts GetCellByDisplayName throws ArgumentException for an unknown display name in an Aspose.Cells pivot table. | Show how to log the exception type and message when GetCellByDisplayName fails due to a missing field in C#. | Explain best practices for handling GetCellByDisplayName errors in Aspose.Cells .NET applications. | Create a reusable helper method that wraps GetCellByDisplayName with proper exception handling.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotValidation
+// Creates a workbook with a pivot table, retrieves a cell using a valid data field display name, then calls GetCellByDisplayName with a missing display name, catches the resulting exception, and saves the file.
+class Program
 {
-    // This example creates a workbook, adds a pivot table, defines row and data fields, refreshes the table, and then calls PivotTable.GetCellByDisplayName with a non‑existent field name. The code catches the expected exception and logs its type and message, demonstrating proper error handling for invalid pivot field references.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Populate sample data for the pivot table
+        sheet.Cells["A1"].Value = "Fruit";
+        sheet.Cells["B1"].Value = "Quantity";
+        sheet.Cells["A2"].Value = "Apple";
+        sheet.Cells["B2"].Value = 10;
+        sheet.Cells["A3"].Value = "Orange";
+        sheet.Cells["B3"].Value = 15;
+        sheet.Cells["A4"].Value = "Banana";
+        sheet.Cells["B4"].Value = 20;
+
+        // Add a pivot table to the worksheet
+        int ptIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+        PivotTable pivotTable = sheet.PivotTables[ptIndex];
+
+        // Configure the pivot table (row field and data field)
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Fruit");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
+
+        // Demonstrate successful retrieval with a valid display name
+        string validDisplayName = pivotTable.DataFields[0].DisplayName;
+        Cell validCell = pivotTable.GetCellByDisplayName(validDisplayName);
+        Console.WriteLine($"Valid display name \"{validDisplayName}\" returned cell {validCell.Name}");
+
+        // Attempt to retrieve a cell using an invalid display name and verify exception
+        string invalidDisplayName = "NonExistentField";
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample data for the pivot table
-            cells["A1"].Value = "Category";
-            cells["B1"].Value = "Amount";
-            cells["A2"].Value = "Food";
-            cells["B2"].Value = 120;
-            cells["A3"].Value = "Drink";
-            cells["B3"].Value = 80;
-            cells["A4"].Value = "Snack";
-            cells["B4"].Value = 45;
-
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-            // Add row field and data field
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-            // Refresh and calculate the pivot table so that it is ready for queries
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Attempt to retrieve a cell using an invalid display name.
-            // The display name "NonExistentField" does not exist in the pivot table.
-            string invalidDisplayName = "NonExistentField";
-
-            try
-            {
-                // This call is expected to throw an exception because the display name is invalid.
-                Cell cell = pivotTable.GetCellByDisplayName(invalidDisplayName);
-
-                // If no exception is thrown, the test has failed.
-                Console.WriteLine("Test Failed: No exception was thrown for an invalid display name.");
-            }
-            catch (Exception ex)
-            {
-                // Expected path: an exception should be thrown.
-                // Output the exception type and message for verification.
-                Console.WriteLine("Test Passed: Caught expected exception.");
-                Console.WriteLine($"Exception Type: {ex.GetType().FullName}");
-                Console.WriteLine($"Message: {ex.Message}");
-            }
-
-            // Optionally save the workbook (not required for the validation test)
-            // workbook.Save("PivotTable_InvalidDisplayName_Test.xlsx");
+            // This call is expected to throw an exception because the display name does not exist
+            Cell invalidCell = pivotTable.GetCellByDisplayName(invalidDisplayName);
+            // If no exception is thrown, the test has failed
+            Console.WriteLine("ERROR: No exception thrown for invalid display name.");
         }
+        catch (Exception ex)
+        {
+            // Expected path: capture and display the exception type and message
+            Console.WriteLine($"Caught expected exception: {ex.GetType().Name} - {ex.Message}");
+        }
+
+        // Save the workbook (optional, demonstrates lifecycle usage)
+        workbook.Save("PivotTable_InvalidDisplayName_Test.xlsx");
     }
 }

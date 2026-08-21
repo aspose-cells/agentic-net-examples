@@ -1,62 +1,62 @@
-// Title: Split an Excel workbook into multiple CSV files by column count with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, groups its columns into configurable batches, copies each batch to a new workbook, and saves each as a separate CSV file in a specified folder using Aspose.Cells for C#.
-// Keywords: Aspose.Cells split columns CSV | C# export Excel columns to CSV | convert workbook to multiple CSV files | copy column range Aspose.Cells | save worksheet as CSV .NET | Excel to CSV batch export | column‑wise CSV split C#
-// Common Searches: how to split Excel sheet into several CSV files by column count using Aspose.Cells | C# code to export specific column groups from a workbook to separate CSV files | Aspose.Cells copy selected columns and save as CSV | divide Excel columns into multiple CSV files programmatically | Aspose.Cells CSV split example .NET
-// Developer Intent: Generate separate CSV files for each defined set of columns in an Excel workbook using Aspose.Cells.
-// Use Cases: Create department‑specific CSV reports when each department's data occupies a fixed number of columns in a master sheet. | Break large spreadsheets into column‑limited chunks for systems that impose a maximum column width. | Automate CSV slicing for visualization tools that require one file per data segment.
-// AI Prompts: Write C# code with Aspose.Cells that splits a worksheet into CSV files, each containing a configurable number of columns. | Explain how to copy a range of columns from one worksheet to a new workbook and export it as CSV using Aspose.Cells. | Add robust error handling for missing source files, empty worksheets, and invalid column counts when splitting an Excel workbook into multiple CSV files.
+// Title: C# – Split an Excel workbook into multiple CSV files by column groups using Aspose.Cells
+// Description: Loads a source workbook, detects the last populated column, and iteratively copies a configurable number of columns (default 10) into new workbooks. Each new workbook is saved as a CSV file in a specified folder, producing a series of CSV parts that together represent the original sheet.
+// Keywords: Aspose.Cells CSV split C# | Excel to CSV column groups | split worksheet by columns | C# copy columns Aspose.Cells | export Excel columns to separate CSV files | Aspose.Cells example GitHub | convert workbook to CSV programmatically
+// Common Searches: How to split an Excel sheet into multiple CSV files by column count with Aspose.Cells | C# code to export selected column ranges to separate CSV files | Aspose.Cells copy columns and save as CSV example | GitHub Aspose.Cells CSV split sample | Split large Excel workbook into column‑wise CSV parts
+// Developer Intent: Generate a series of CSV files, each containing a fixed number of columns taken from the original workbook.
+// Use Cases: Create column‑wise CSV exports for downstream systems that require a maximum column width per file. | Distribute sections of a master workbook to different business units, each receiving only the columns they need. | Automate data‑migration pipelines where large sheets must be broken into smaller, column‑limited CSV chunks.
+// AI Prompts: Modify the code to accept the column‑per‑file count as a command‑line argument. | Add a header row to every split CSV file while preserving column order. | Handle merged cells when copying column ranges for CSV export with Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace WorkbookToCsvSplit
+// Loads a source workbook, detects the last populated column, and iteratively copies a configurable number of columns (default 10) into new workbooks. Each new workbook is saved as a CSV file in a specified folder, producing a series of CSV parts that together represent the original sheet.
+class Program
 {
-    // Loads an Excel workbook, groups its columns into configurable batches, copies each batch to a new workbook, and saves each as a separate CSV file in a specified folder using Aspose.Cells for C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the source workbook (can be any supported format)
+        string sourcePath = "input.xlsx";
+
+        // Folder where split CSV files will be saved
+        string outputFolder = "SplitCsvOutput";
+        Directory.CreateDirectory(outputFolder);
+
+        // Load the source workbook
+        Workbook sourceWorkbook = new Workbook(sourcePath);
+        Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+        Cells sourceCells = sourceSheet.Cells;
+
+        // Determine the total number of columns that contain data
+        int totalColumns = sourceCells.MaxDataColumn + 1; // zero‑based index + 1
+
+        // Define how many columns each split CSV should contain
+        int columnsPerFile = 10; // adjust as needed
+
+        // Loop through the columns in groups
+        int fileIndex = 1;
+        for (int startCol = 0; startCol < totalColumns; startCol += columnsPerFile)
         {
-            // Path to the source workbook (can be .xlsx, .xls, etc.)
-            string sourcePath = "input.xlsx";
+            // Calculate how many columns to copy in this iteration
+            int colsToCopy = Math.Min(columnsPerFile, totalColumns - startCol);
 
-            // Folder where split CSV files will be saved
-            string outputFolder = "SplitCsvOutput";
-            Directory.CreateDirectory(outputFolder);
+            // Create a new workbook for the current group
+            Workbook splitWorkbook = new Workbook();
+            Worksheet splitSheet = splitWorkbook.Worksheets[0];
+            Cells splitCells = splitSheet.Cells;
 
-            // Number of columns per split CSV file
-            int columnsPerFile = 5; // adjust as needed
+            // Copy the selected column range from the source worksheet to the new workbook
+            // Parameters: source cells, source start column, destination start column (0), number of columns
+            sourceCells.CopyColumns(sourceCells, startCol, 0, colsToCopy);
 
-            // Load the source workbook
-            Workbook sourceWorkbook = new Workbook(sourcePath);
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+            // Save the split workbook as CSV
+            string csvFileName = Path.Combine(outputFolder, $"part_{fileIndex}.csv");
+            splitWorkbook.Save(csvFileName, SaveFormat.Csv);
 
-            // Determine total number of data columns in the source sheet
-            int totalColumns = sourceSheet.Cells.MaxDataColumn + 1;
-
-            // Iterate over column groups and create separate CSV files
-            for (int startCol = 0; startCol < totalColumns; startCol += columnsPerFile)
-            {
-                // Calculate how many columns to copy for this group
-                int colsToCopy = Math.Min(columnsPerFile, totalColumns - startCol);
-
-                // Create a new workbook for the current group
-                Workbook splitWorkbook = new Workbook();
-                Worksheet splitSheet = splitWorkbook.Worksheets[0];
-
-                // Copy the selected column range from the source sheet to the new workbook
-                // Parameters: source cells, source start column, destination start column, number of columns
-                splitSheet.Cells.CopyColumns(sourceSheet.Cells, startCol, 0, colsToCopy);
-
-                // Build the output CSV file name
-                string csvFileName = $"Part_{(startCol / columnsPerFile) + 1}.csv";
-                string csvPath = Path.Combine(outputFolder, csvFileName);
-
-                // Save the split workbook as CSV
-                splitWorkbook.Save(csvPath, SaveFormat.Csv);
-            }
-
-            Console.WriteLine("Workbook has been split into CSV files successfully.");
+            fileIndex++;
         }
+
+        // Clean up
+        sourceWorkbook.Dispose();
     }
 }

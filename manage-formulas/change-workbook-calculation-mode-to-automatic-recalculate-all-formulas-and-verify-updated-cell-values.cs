@@ -1,52 +1,43 @@
-// Title: Aspose.Cells for .NET: Set Workbook to Automatic Calculation, Recalculate Formulas, and Verify Results
-// Description: Shows how to create a workbook, fill cells A1‑A3, add formulas to B1‑B3, switch FormulaSettings.CalculationMode to Automatic, run Workbook.CalculateFormula, read the computed values, and save the file.
-// Keywords: Aspose.Cells | C# automatic calculation mode | Workbook.CalculateFormula | formula evaluation .NET | Excel automatic recalculation | verify calculated cells | set calculation mode | recalculate all formulas | read cell values | Aspose.Cells API
-// Common Searches: Aspose.Cells set calculation mode to Automatic | How to recalculate formulas in Aspose.Cells C# | Read formula results after automatic calculation Aspose.Cells | Force full workbook recalculation Aspose.Cells .NET | Verify cell values after Workbook.CalculateFormula
-// Developer Intent: Enable automatic formula calculation, trigger a full recalculation, and programmatically confirm the updated cell values.
-// Use Cases: Generate server‑side Excel reports where formulas must be evaluated before delivery. | Validate business logic in automated tests by checking calculated results after data changes. | Prepare workbooks for downstream systems that require static values instead of live formulas.
-// AI Prompts: Write C# code that switches a workbook to Manual calculation, updates a range, then recalculates only the affected formulas using Aspose.Cells. | Create a unit test that compares expected and actual values after calling Workbook.CalculateFormula on a workbook with dependent formulas. | Explain how to toggle between Automatic and Manual calculation modes in Aspose.Cells while preserving performance for large sheets.
+// Title: Aspose.Cells .NET – Switch Workbook to Automatic Calculation, Recalculate All Formulas, and Verify Cell Values
+// Description: Demonstrates how to change a workbook's calculation mode to Automatic using Aspose.Cells for .NET, trigger a full recalculation with CalculateFormula, read the updated cell values, and save the workbook.
+// Keywords: Aspose.Cells automatic calculation | Workbook.CalculateFormula .NET | set calculation mode Aspose.Cells | recalculate formulas C# | verify formula results Aspose.Cells | Aspose.Cells workbook settings | C# Excel formula evaluation
+// Common Searches: Aspose.Cells change calculation mode to automatic | How to recalculate all formulas in Aspose.Cells | Read updated cell values after CalculateFormula | Aspose.Cells verify formula output programmatically | C# set workbook calculation mode Aspose.Cells
+// Developer Intent: The developer needs to enable automatic calculation for a workbook, force a full formula recompute, and confirm that the resulting cell values are correct before saving.
+// Use Cases: Ensure all dependent formulas are up‑to‑date when exporting a workbook. | Programmatically recalculate after modifying input cells in a data‑processing pipeline. | Validate formula results in automated tests or CI builds.
+// AI Prompts: Generate C# code that sets the workbook calculation mode to Manual, updates a cell, then forces a recalculation with Aspose.Cells. | Provide a unit‑test method that asserts expected values of formula cells after calling workbook.CalculateFormula. | Explain how to capture and handle calculation errors when using workbook.CalculateFormula in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCalculationDemo
+// Demonstrates how to change a workbook's calculation mode to Automatic using Aspose.Cells for .NET, trigger a full recalculation with CalculateFormula, read the updated cell values, and save the workbook.
+class Program
 {
-    // Shows how to create a workbook, fill cells A1‑A3, add formulas to B1‑B3, switch FormulaSettings.CalculationMode to Automatic, run Workbook.CalculateFormula, read the computed values, and save the file.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook (lifecycle create rule)
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Access the first worksheet and its cells
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-            // Populate some sample data
-            cells["A1"].PutValue(5);
-            cells["A2"].PutValue(10);
-            cells["A3"].PutValue(15);
+        // Populate sample data and formulas
+        cells["A1"].PutValue(5);               // Simple value
+        cells["B1"].Formula = "=A1*2";         // Depends on A1
+        cells["C1"].Formula = "=B1+10";        // Depends on B1
 
-            // Add formulas that depend on the data above
-            cells["B1"].Formula = "=A1*2";      // Expected 10
-            cells["B2"].Formula = "=A2*2";      // Expected 20
-            cells["B3"].Formula = "=SUM(A1:A3)"; // Expected 30
+        // Change calculation mode to Automatic (FormulaSettings.CalculationMode)
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
 
-            // Set the calculation mode to Automatic
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+        // Recalculate all formulas in the workbook
+        workbook.CalculateFormula();
 
-            // Recalculate all formulas in the workbook
-            workbook.CalculateFormula();
+        // Verify that the cell values have been updated
+        Console.WriteLine("A1 value: " + cells["A1"].Value); // Expected: 5
+        Console.WriteLine("B1 value: " + cells["B1"].Value); // Expected: 10
+        Console.WriteLine("C1 value: " + cells["C1"].Value); // Expected: 20
 
-            // Verify and display the calculated values
-            Console.WriteLine("Calculated Values after setting Automatic mode:");
-            Console.WriteLine($"B1 (A1*2) = {cells["B1"].Value}");
-            Console.WriteLine($"B2 (A2*2) = {cells["B2"].Value}");
-            Console.WriteLine($"B3 (SUM(A1:A3)) = {cells["B3"].Value}");
-
-            // Optionally save the workbook to inspect the results
-            workbook.Save("CalculationModeAutomatic.xlsx");
-        }
+        // Save the workbook (lifecycle save rule)
+        workbook.Save("UpdatedWorkbook.xlsx");
     }
 }

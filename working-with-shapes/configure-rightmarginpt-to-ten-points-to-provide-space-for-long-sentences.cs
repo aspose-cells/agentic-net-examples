@@ -1,16 +1,16 @@
-// Title: Aspose.Cells .NET: Set Shape Text RightMarginPt to 10 Points (C#)
-// Description: Creates a workbook, adds a rectangle shape, assigns a long caption, and uses the RightMarginPt property to set the shape's text frame right margin to 10 points before saving as an XLSX file.
-// Keywords: Aspose.Cells | C# | .NET | shape right margin | RightMarginPt | text frame margin | rectangle shape | Excel shape formatting | XLSX export | margin points
-// Common Searches: Aspose.Cells set shape right margin C# | RightMarginPt example for rectangle shape | increase right margin of shape text in Aspose.Cells | configure shape text margins Aspose.Cells .NET
-// Developer Intent: Apply a 10‑point right margin to a shape’s text frame to keep long sentences inside the shape.
-// Use Cases: Prevent text overflow in rectangle shapes with lengthy labels. | Design worksheets where each shape requires custom right‑margin spacing for better readability. | Generate Excel reports that include shapes with precisely controlled text layout.
-// AI Prompts: Write C# code that adds a rectangle shape to a worksheet and sets its RightMarginPt to 10 points using Aspose.Cells. | Explain how the RightMarginPt property influences text wrapping and alignment inside a shape in Aspose.Cells for .NET. | Provide a step‑by‑step tutorial for creating a shape, inserting long text, and adjusting the right margin with Aspose.Cells.
+// Title: Set RightMarginPt to 10 Points for Shape Text in Aspose.Cells for .NET (C#)
+// Description: This example creates a workbook, adds a rectangle shape, inserts a long sentence, and configures the shape's text frame right margin to 10 points using TextBody.TextAlignment.RightMarginPt, then saves the file as RightMarginDemo.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | shape text margin | RightMarginPt | rectangle shape | text wrapping | right margin points | Aspose.Cells example | Excel shape formatting
+// Common Searches: Aspose.Cells set right margin for shape text | RightMarginPt property C# example | increase right padding of rectangle shape in Aspose.Cells | avoid text clipping in shape Aspose.Cells .NET | how to add margin to shape text Aspose.Cells
+// Developer Intent: Configure a shape's text frame right margin to 10 points to prevent clipping of long sentences in an Excel worksheet generated with Aspose.Cells for .NET.
+// Use Cases: Ensure long labels inside rectangle shapes are fully visible by adding a 10‑point right margin. | Standardize right‑margin spacing across multiple shapes when generating reports programmatically. | Improve readability of shape‑based annotations in automated Excel dashboards.
+// AI Prompts: Show how to set left, top, and bottom margins for a shape's text body in Aspose.Cells using C#. | Provide code to apply a 10‑point right margin to all shapes on a worksheet with Aspose.Cells. | Explain the effect of RightMarginPt on text wrapping and alignment inside a shape in Aspose.Cells.
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// Creates a workbook, adds a rectangle shape, assigns a long caption, and uses the RightMarginPt property to set the shape's text frame right margin to 10 points before saving as an XLSX file.
+// This example creates a workbook, adds a rectangle shape, inserts a long sentence, and configures the shape's text frame right margin to 10 points using TextBody.TextAlignment.RightMarginPt, then saves the file as RightMarginDemo.xlsx.
 class Program
 {
     static void Main()
@@ -20,15 +20,15 @@ class Program
         Worksheet worksheet = workbook.Worksheets[0];
 
         // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, upper left offset in pixels,
-        // height in pixels, width in pixels, rotation angle
         Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 100, 200, 50);
-        shape.Text = "This is a long sentence that needs extra right margin space.";
 
-        // Configure the right margin of the shape's text frame to 10 points
+        // Set sample text that may be long
+        shape.Text = "This is a very long sentence that needs extra right margin space to avoid clipping.";
+
+        // Configure the right margin of the text frame to 10 points
         shape.TextBody.TextAlignment.RightMarginPt = 10.0;
 
         // Save the workbook
-        workbook.Save("ShapeRightMarginDemo.xlsx");
+        workbook.Save("RightMarginDemo.xlsx");
     }
 }

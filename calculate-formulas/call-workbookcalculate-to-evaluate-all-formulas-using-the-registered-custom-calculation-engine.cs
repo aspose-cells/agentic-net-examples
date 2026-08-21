@@ -1,71 +1,84 @@
+// Title: C# – Evaluate All Workbook Formulas with a Custom Calculation Engine in Aspose.Cells
+// Description: Demonstrates how to register a user‑defined AbstractCalculationEngine, assign a custom function (MYFUNC) in a formula, call workbook.CalculateFormula with CalculationOptions, and save the computed workbook.
+// Keywords: Aspose.Cells custom calculation engine | C# custom function MYFUNC | CalculateFormula with custom engine | AbstractCalculationEngine example | evaluate workbook formulas .NET | Aspose.Cells custom formula implementation | register custom engine Aspose.Cells
+// Common Searches: Aspose.Cells custom calculation engine tutorial | How to add user‑defined functions in Aspose.Cells C# | Calculate all formulas with custom engine Aspose.Cells | Register AbstractCalculationEngine for MYFUNC | C# example for workbook.CalculateFormula custom engine
+// Developer Intent: Implement and invoke a custom calculation engine to process user‑defined functions across an entire Aspose.Cells workbook.
+// Use Cases: Create proprietary business logic (e.g., a custom SUM) that runs during formula evaluation. | Replace the default calculator with a tailored engine to handle special data types or external services. | Generate a spreadsheet, embed custom formulas, compute results programmatically, and persist the final values.
+// AI Prompts: Show C# code that defines a class inheriting from AbstractCalculationEngine to handle a function named MYFUNC and uses it with workbook.CalculateFormula. | Provide a step‑by‑step example of registering a custom calculation engine via CalculationOptions in Aspose.Cells. | Explain how to retrieve parameter values inside the Calculate method for both scalar arguments and ReferredArea ranges.
+
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomEngineDemo
+namespace AsposeCellsCustomCalcDemo
 {
-    // Custom calculation engine that implements a user‑defined function CUSTOMSUM
-    public class CustomEngine : AbstractCalculationEngine
-    {
-        public override void Calculate(CalculationData data)
-        {
-            // Handle only the custom function name (case‑insensitive)
-            if (data.FunctionName.Equals("CUSTOMSUM", StringComparison.OrdinalIgnoreCase))
-            {
-                double sum = 0;
-
-                // Iterate through all parameters passed to the function
-                for (int i = 0; i < data.ParamCount; i++)
-                {
-                    object param = data.GetParamValue(i);
-
-                    // The parameter may be a numeric value (double, int, etc.)
-                    if (param is double d)
-                        sum += d;
-                    else if (param is int iVal)
-                        sum += iVal;
-                    // Add more type checks if needed (e.g., decimal, long)
-                }
-
-                // Set the calculated result – this will be written back to the cell
-                data.CalculatedValue = sum;
-            }
-        }
-    }
-
+    // Demonstrates how to register a user‑defined AbstractCalculationEngine, assign a custom function (MYFUNC) in a formula, call workbook.CalculateFormula with CalculationOptions, and save the computed workbook.
     class Program
     {
         static void Main()
         {
-            // -------------------- Create workbook --------------------
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet and its cells
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate some sample data
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
+            // Populate sample data
+            cells["A1"].PutValue(10);
+            cells["A2"].PutValue(20);
 
-            // Use the custom function in a formula
-            sheet.Cells["B1"].Formula = "=CUSTOMSUM(A1,A2)";
+            // Use a custom function in a formula
+            cells["A3"].Formula = "=MYFUNC(A1, A2)";
 
-            // -------------------- Set calculation options --------------------
+            // Set up calculation options with a custom engine
             CalculationOptions options = new CalculationOptions
             {
-                // Register the custom engine so that CalculateFormula uses it
-                CustomEngine = new CustomEngine(),
-                // Optional: keep default behavior for other settings
-                IgnoreError = true,
-                Recursive = true
+                CustomEngine = new MyCustomEngine()
             };
 
-            // -------------------- Calculate all formulas --------------------
-            // This evaluates every formula in the workbook using the custom engine
+            // Evaluate all formulas using the custom engine
             workbook.CalculateFormula(options);
 
-            // -------------------- Output result --------------------
-            Console.WriteLine("Result of CUSTOMSUM(A1,A2) in B1: " + sheet.Cells["B1"].Value);
+            // Display the result of the custom function
+            Console.WriteLine("Result of MYFUNC(A1, A2): " + cells["A3"].Value);
 
-            // -------------------- Save workbook --------------------
+            // Save the workbook
             workbook.Save("CustomEngineResult.xlsx");
+        }
+    }
+
+    // Custom calculation engine that implements the MYFUNC function
+    public class MyCustomEngine : AbstractCalculationEngine
+    {
+        public override void Calculate(CalculationData data)
+        {
+            // Handle only the custom function MYFUNC
+            if (data.FunctionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
+            {
+                double sum = 0;
+
+                // Iterate over all parameters passed to the function
+                for (int i = 0; i < data.ParamCount; i++)
+                {
+                    object param = data.GetParamValue(i);
+
+                    // Parameters may be a ReferredArea (cell range) or a direct value
+                    if (param is ReferredArea area)
+                    {
+                        // Get the value of the first cell in the area
+                        object val = area.GetValue(0, 0);
+                        if (val is double d)
+                            sum += d;
+                    }
+                    else if (param is double d)
+                    {
+                        sum += d;
+                    }
+                }
+
+                // Set the calculated result for the function
+                data.CalculatedValue = sum;
+            }
         }
     }
 }

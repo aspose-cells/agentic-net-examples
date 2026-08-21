@@ -1,44 +1,30 @@
-// Title: C# – Convert XLSX with Office Add‑Ins to PDF using Aspose.Cells default scaling
-// Description: Loads an XLSX workbook that may contain Office Add‑Ins (charts, embedded objects, etc.) and converts it to PDF with Aspose.Cells.Utility.ConversionUtility.Convert, relying on the library's default page‑scaling settings to preserve the original layout.
-// Keywords: Aspose.Cells C# PDF conversion | XLSX to PDF default scaling | render Office Add‑Ins | ConversionUtility Convert example | preserve embedded objects Excel PDF
-// Common Searches: Aspose.Cells convert Excel with add‑ins to PDF C# | ConversionUtility default page scaling example | How to export XLSX charts to PDF using Aspose | C# code to render Office Add‑Ins in PDF conversion
-// Developer Intent: Generate a PDF from an Excel file that includes Office Add‑Ins without specifying custom scaling.
-// Use Cases: Create printable PDF reports from Excel templates that contain embedded charts or SmartArt. | Batch‑process multiple workbooks with add‑ins while keeping their original layout. | Expose a web service that receives an XLSX file and returns a PDF rendering of all embedded objects.
-// AI Prompts: Provide C# code that uses Aspose.Cells ConversionUtility to convert an XLSX with Office Add‑Ins to PDF and captures conversion errors. | Explain how Aspose.Cells handles page scaling by default when exporting Excel to PDF and how to change it if needed. | Show a verification script that checks whether embedded objects from the source workbook appear in the generated PDF.
+// Title: Convert XLSX to PDF with default scaling and render Office Add‑Ins using Aspose.Cells ConversionUtility (C#)
+// Description: Demonstrates how to use Aspose.Cells.Utility.ConversionUtility in a .NET application to convert an XLSX workbook to PDF while preserving the workbook's original page setup. The conversion automatically renders any embedded Office Add‑Ins, and no explicit scaling options are required.
+// Keywords: Aspose.Cells ConversionUtility | XLSX to PDF C# | default scaling Excel PDF | render Office Add‑Ins PDF | Aspose.Cells PDF conversion .NET | Excel page setup PDF export | C# Excel to PDF sample
+// Common Searches: Aspose.Cells convert Excel to PDF default scaling | How to render Office Add‑Ins when exporting XLSX to PDF | C# ConversionUtility PDF export without scaling options | Preserve Excel page layout in PDF using Aspose.Cells | Export Excel workbook with embedded add‑ins to PDF
+// Developer Intent: Convert an Excel workbook to PDF in C# while keeping the original page layout and ensuring any Office Add‑Ins are included in the PDF output.
+// Use Cases: Generate PDF reports from Excel templates that contain Office Add‑Ins without manually adjusting scaling. | Batch‑process multiple spreadsheets to PDF while preserving each file’s page setup and add‑in visuals. | Distribute Excel data as PDF documents where embedded add‑ins (e.g., charts, controls) must remain visible.
+// AI Prompts: Show C# code that uses Aspose.Cells ConversionUtility to convert an XLSX file to PDF with default scaling and Office Add‑Ins rendered. | Provide a .NET example for batch converting a list of Excel files to PDF, preserving page setup and logging conversion errors. | Explain how Aspose.Cells handles Office Add‑Ins during PDF export and how to ensure they appear in the final document.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-namespace AsposeCellsAddInPdfConversion
+// Demonstrates how to use Aspose.Cells.Utility.ConversionUtility in a .NET application to convert an XLSX workbook to PDF while preserving the workbook's original page setup. The conversion automatically renders any embedded Office Add‑Ins, and no explicit scaling options are required.
+class Program
 {
-    // Loads an XLSX workbook that may contain Office Add‑Ins (charts, embedded objects, etc.) and converts it to PDF with Aspose.Cells.Utility.ConversionUtility.Convert, relying on the library's default page‑scaling settings to preserve the original layout.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Path to the source Excel workbook (XLSX)
-            string sourcePath = "input.xlsx";
+        // Path to the source XLSX workbook
+        string sourcePath = "input.xlsx";
 
-            // Path where the resulting PDF will be saved
-            string pdfPath = "output.pdf";
+        // Desired output PDF file path
+        string outputPath = "output.pdf";
 
-            try
-            {
-                // Load the workbook (creates a Workbook instance from the XLSX file)
-                Workbook workbook = new Workbook(sourcePath);
+        // Convert the workbook to PDF using default scaling.
+        // No explicit scaling options are set; the conversion uses the workbook's existing page setup.
+        ConversionUtility.Convert(sourcePath, outputPath);
 
-                // The workbook may contain Office Add‑Ins (e.g., embedded objects, charts, etc.).
-                // ConversionUtility.Convert will render the workbook to PDF using the default
-                // page scaling (no explicit scaling is applied, which matches the requirement).
-                ConversionUtility.Convert(sourcePath, pdfPath);
-
-                Console.WriteLine($"Workbook successfully converted to PDF: {pdfPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during conversion: {ex.Message}");
-            }
-        }
+        Console.WriteLine("Workbook has been successfully converted to PDF.");
     }
 }

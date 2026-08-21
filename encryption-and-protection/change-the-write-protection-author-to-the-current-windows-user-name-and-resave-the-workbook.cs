@@ -1,40 +1,29 @@
-// Title: Set Excel Write‑Protection Author to Current Windows User with Aspose.Cells (C#)
-// Description: Loads an existing .xlsx file using Aspose.Cells for .NET, sets Settings.WriteProtection.Author to the logged‑in Windows username, saves the workbook, and optionally reloads it to confirm the change.
-// Keywords: Aspose.Cells | C# | write protection author | Excel metadata | Environment.UserName | update workbook author | set write protection | protect Excel file programmatically | save workbook Aspose | Excel security settings
-// Common Searches: Aspose.Cells set write protection author C# | change Excel write protection author programmatically | assign current Windows user to Excel write protection author | update workbook metadata with Aspose.Cells | save workbook after modifying write protection
-// Developer Intent: Assign the current Windows username to the workbook's write‑protection author and re‑save the file.
-// Use Cases: Create audit‑ready Excel reports where the author field reflects the user who generated the file. | Automate metadata updates before distributing protected workbooks to ensure accurate author attribution. | Validate that write‑protection settings were applied correctly by reloading the file and reading the author property.
-// AI Prompts: Generate C# code using Aspose.Cells to set the write‑protection author of an existing workbook to Environment.UserName and save it as a new file. | Explain the purpose of Settings.WriteProtection.Author in Aspose.Cells and show how to verify the value after saving. | Provide a concise example that loads a workbook, updates the write‑protection author with the current Windows user, saves the workbook, and prints the author to the console.
+// Title: Set Write‑Protection Author to Current Windows User and Overwrite Workbook with Aspose.Cells for .NET
+// Description: Loads an existing Excel file, assigns the current Windows user (Environment.UserName) as the write‑protection author, and saves the workbook back to the original location, overwriting the file.
+// Keywords: Aspose.Cells | .NET | C# | write protection author | Environment.UserName | overwrite Excel workbook | update workbook protection
+// Common Searches: Aspose.Cells change write protection author C# | set Excel write protection author to Windows user | overwrite Excel file after updating protection settings | update workbook protection metadata programmatically
+// Developer Intent: Update the workbook's write‑protection author to the logged‑in Windows user and save the changes in place.
+// Use Cases: Ensure the author of write‑protected Excel files reflects the person who last processed the document. | Create an audit trail by embedding the current Windows username into the protection metadata of each workbook. | Run a batch operation that updates and overwrites multiple workbooks without generating duplicate files.
+// AI Prompts: Provide C# code that sets workbook.Settings.WriteProtection.Author to Environment.UserName using Aspose.Cells and saves the file in place. | Show an example of updating the write‑protection author of an existing Excel workbook and overwriting the original file with Aspose.Cells for .NET. | Explain how to programmatically change the write‑protection author of a workbook, preserve other settings, and save without creating a new copy.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsWriteProtectionDemo
+// Loads an existing Excel file, assigns the current Windows user (Environment.UserName) as the write‑protection author, and saves the workbook back to the original location, overwriting the file.
+class Program
 {
-    // Loads an existing .xlsx file using Aspose.Cells for .NET, sets Settings.WriteProtection.Author to the logged‑in Windows username, saves the workbook, and optionally reloads it to confirm the change.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the existing workbook
-            string inputPath = "input.xlsx";
+        // Path to the workbook that needs its write‑protection author updated
+        string workbookPath = "input.xlsx";
 
-            // Load the workbook (create rule)
-            Workbook workbook = new Workbook(inputPath);
+        // Load the existing workbook
+        Workbook workbook = new Workbook(workbookPath);
 
-            // Get the current Windows user name
-            string currentUser = Environment.UserName;
+        // Update the write‑protection author to the current Windows user name
+        workbook.Settings.WriteProtection.Author = Environment.UserName;
 
-            // Set the write‑protection author to the current user
-            workbook.Settings.WriteProtection.Author = currentUser;
-
-            // Save the workbook with the updated author (save rule)
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-
-            // Optional: verify the change
-            Workbook verifyWorkbook = new Workbook(outputPath);
-            Console.WriteLine("Write protection author: " + verifyWorkbook.Settings.WriteProtection.Author);
-        }
+        // Re‑save the workbook (overwrites the original file)
+        workbook.Save(workbookPath);
     }
 }

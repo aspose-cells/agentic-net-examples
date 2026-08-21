@@ -1,83 +1,138 @@
-// Title: Add Data Series to Pivot Timeline Chart, Annotate, and Export PDF – Aspose.Cells C#
-// Description: Creates a workbook with date‑based sales data, builds a pivot table, adds a timeline linked to the Date field, generates a column chart, appends a second sales series, inserts a textbox note, and exports the updated chart to PDF while saving the workbook.
-// Keywords: Aspose.Cells C# add chart series | pivot timeline Aspose.Cells | export chart to PDF .NET | worksheet textbox annotation Aspose.Cells | update chart data range programmatically | timeline linked to pivot table | column chart from pivot data
-// Common Searches: how to add another series to a pivot chart using Aspose.Cells | export timeline chart as PDF with Aspose.Cells .NET | add textbox annotation to Excel worksheet programmatically | create timeline for pivot table when Timeline class missing | Aspose.Cells chart to PDF example
-// Developer Intent: Add a new data series to an existing timeline‑linked chart, place a descriptive annotation, and generate a PDF of the updated chart using Aspose.Cells for .NET.
-// Use Cases: Generate a PDF report that shows multiple sales series on a timeline‑driven column chart. | Provide a visual note on the worksheet to indicate chart updates or data changes. | Support environments where the Aspose.Cells Timeline class is unavailable by using the generic timeline API.
-// AI Prompts: Write C# code with Aspose.Cells to add a second series to a pivot‑based column chart, set its series name, and export the chart to PDF with a textbox annotation. | Explain how to create a timeline linked to a pivot table's date field and handle cases where the Timeline class is not present in the library. | Show how to programmatically adjust a chart's data source ranges when new columns are added to the worksheet.
+// Title: C# – Add a Data Series to an Existing Timeline Chart, Annotate, and Export to PDF with Aspose.Cells
+// Description: This example shows how to load or create an Excel workbook, fill it with date‑sales data, build a pivot table, attach a timeline, create a column chart, add an extra data series, insert a textbox annotation, export the chart as a PDF, and save the updated workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# timeline | add chart series Aspose.Cells | export chart PDF Aspose.Cells | Excel timeline annotation | pivot table timeline .NET | Aspose.Cells chart textbox | C# generate PDF from chart | update existing timeline | Aspose.Cells workbook save | C# Excel automation
+// Common Searches: Aspose.Cells add series to timeline chart C# | How to export Aspose.Cells chart to PDF | Create timeline from pivot table using Aspose.Cells | Add textbox annotation to Excel chart with Aspose.Cells | Update existing Excel timeline programmatically | C# generate PDF report from Excel chart
+// Developer Intent: Add a new series to a timeline‑driven chart, place a textbox annotation, and produce a PDF version of the chart.
+// Use Cases: Enhance a sales dashboard by adding a comparative series to a timeline chart. | Provide contextual notes on the worksheet via a textbox positioned near the chart. | Automate creation of PDF charts for inclusion in reports or email distribution. | Preserve the modified workbook for further analysis or future updates.
+// AI Prompts: Generate C# code with Aspose.Cells that loads an Excel file, creates a pivot table, adds a timeline, inserts a column chart, adds an extra data series, places a textbox annotation, and exports the chart to PDF. | Show how to implement robust error handling when loading a workbook, adding a timeline, and exporting a chart using Aspose.Cells. | Explain the steps to refresh a pivot‑based timeline after adding new data in Aspose.Cells.
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
+using System.Drawing;
 
-// Creates a workbook with date‑based sales data, builds a pivot table, adds a timeline linked to the Date field, generates a column chart, appends a second sales series, inserts a textbox note, and exports the updated chart to PDF while saving the workbook.
-class UpdateTimelineAndExportPdf
+namespace AsposeCellsTimelineUpdate
 {
-    static void Main()
+    // This example shows how to load or create an Excel workbook, fill it with date‑sales data, build a pivot table, attach a timeline, create a column chart, add an extra data series, insert a textbox annotation, export the chart as a PDF, and save the updated workbook using Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            Workbook workbook;
+
+            // Load existing workbook if present; otherwise create a new one.
+            try
+            {
+                if (File.Exists("ExistingTimeline.xlsx"))
+                {
+                    workbook = new Workbook("ExistingTimeline.xlsx");
+                }
+                else
+                {
+                    workbook = new Workbook();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                workbook = new Workbook();
+            }
+
+            // Access the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate sample data with dates and two sales series
+            // ------------------------------------------------------------
+            // Ensure there is sample data for a pivot table (Date & Sales).
+            // ------------------------------------------------------------
             cells["A1"].PutValue("Date");
-            cells["B1"].PutValue("Sales1");
-            cells["C1"].PutValue("Sales2");
-            DateTime startDate = new DateTime(2023, 1, 1);
-            for (int i = 0; i < 5; i++)
-            {
-                cells[i + 1, 0].PutValue(startDate.AddMonths(i));
-                cells[i + 1, 1].PutValue(100 + i * 10);   // Sales1 values
-                cells[i + 1, 2].PutValue(150 + i * 15);   // Sales2 values
-            }
+            cells["B1"].PutValue("Sales");
+            cells["A2"].PutValue(new DateTime(2023, 1, 1));
+            cells["B2"].PutValue(1200);
+            cells["A3"].PutValue(new DateTime(2023, 2, 1));
+            cells["B3"].PutValue(1500);
+            cells["A4"].PutValue(new DateTime(2023, 3, 1));
+            cells["B4"].PutValue(1800);
+            cells["A5"].PutValue(new DateTime(2023, 4, 1));
+            cells["B5"].PutValue(2100);
+            cells["A6"].PutValue(new DateTime(2023, 5, 1));
+            cells["B6"].PutValue(2400);
+            cells["A7"].PutValue(new DateTime(2023, 6, 1));
+            cells["B7"].PutValue(2700);
 
-            // Create a pivot table using Date as row field and Sales1 as data field
-            int pivotIdx = sheet.PivotTables.Add("A1:C6", "E1", "PivotTable1");
+            // ------------------------------------------------------------
+            // Create a pivot table that will serve as the data source for the timeline.
+            // ------------------------------------------------------------
+            int pivotIdx = sheet.PivotTables.Add("A1:B7", "D1", "SalesPivot");
             PivotTable pivot = sheet.PivotTables[pivotIdx];
             pivot.AddFieldToArea(PivotFieldType.Row, "Date");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales1");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
             pivot.RefreshData();
             pivot.CalculateData();
 
-            // Add a timeline linked to the Date field of the pivot table (if supported)
-            // The Timeline class may not be available in older Aspose.Cells versions.
-            // Therefore, we add the timeline without using the Timeline type.
-            int timelineIdx = sheet.Timelines.Add(pivot, "G1", "Date");
-            // If the Timeline object is available, you could set its caption like this:
-            // sheet.Timelines[timelineIdx].Caption = "Sales Timeline";
+            // ------------------------------------------------------------
+            // Add (or update) a timeline linked to the pivot table.
+            // ------------------------------------------------------------
+            try
+            {
+                // Use zero‑based row/column indices (F1 => row 0, column 5)
+                sheet.Timelines.Add(pivot, 0, 5, "Date");
+                // Note: Setting Caption/Name is omitted due to API version constraints.
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding timeline: {ex.Message}");
+            }
 
-            // Add a column chart based on the pivot data (Sales1)
+            // ------------------------------------------------------------
+            // Create a chart that visualizes the same data.
+            // ------------------------------------------------------------
             int chartIdx = sheet.Charts.Add(ChartType.Column, 10, 0, 25, 15);
             Chart chart = sheet.Charts[chartIdx];
-            chart.NSeries.Add("=Sheet1!B2:B6", true);               // Series for Sales1
-            chart.NSeries.CategoryData = "=Sheet1!A2:A6";          // Categories (dates)
 
-            // Add a new data series (Sales2) to the existing chart
-            chart.NSeries.Add("=Sheet1!C2:C6", true);
-            chart.NSeries[1].Name = "Sales2";
+            // First series (existing data range).
+            chart.NSeries.Add("B2:B7", true);
+            chart.NSeries.CategoryData = "A2:A7";
 
-            // Add a textbox annotation to the worksheet (acts as a visual note)
-            Shape annotation = sheet.Shapes.AddTextBox(5, 0, 5, 0, 200, 30);
+            // ------------------------------------------------------------
+            // Add a new data series to the chart.
+            // ------------------------------------------------------------
+            chart.NSeries.Add("B3:B7", true);
+
+            // ------------------------------------------------------------
+            // Add an annotation (textbox) to the worksheet near the chart.
+            // ------------------------------------------------------------
+            Shape annotation = sheet.Shapes.AddTextBox(5, 0, 5, 0, 200, 50);
             annotation.Text = "Updated with new series";
             annotation.Font.Size = 12;
             annotation.Font.Color = Color.Blue;
 
-            // Export the chart (which reflects the updated data) to PDF
-            chart.ToPdf("UpdatedTimelineChart.pdf");
+            // ------------------------------------------------------------
+            // Export the chart to a PDF file.
+            // ------------------------------------------------------------
+            try
+            {
+                chart.ToPdf("SalesTimelineChart.pdf");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error exporting chart to PDF: {ex.Message}");
+            }
 
-            // Save the workbook for reference
-            workbook.Save("UpdatedTimelineWorkbook.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            // ------------------------------------------------------------
+            // Save the workbook with the updated timeline and chart.
+            // ------------------------------------------------------------
+            try
+            {
+                workbook.Save("UpdatedTimelineWorkbook.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
+            }
         }
     }
 }

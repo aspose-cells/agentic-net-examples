@@ -1,78 +1,53 @@
-// Title: C# Benchmark: Aspose.Cells HTML Export Speed for a 10 MB Workbook – CSS Classes vs Inline Styles
-// Description: A C# console app that loads a 10 MB Excel workbook with Aspose.Cells, saves it twice to HTML—once using the default external CSS stylesheet and once with inline styling (ExportCssClass disabled when supported)—and measures each conversion with Stopwatch, outputting the elapsed milliseconds.
-// Keywords: Aspose.Cells | HTML export benchmark | C# performance test | 10 MB workbook conversion | CSS classes vs inline styles | ExportCssClass | Stopwatch timing | SaveFormat.Html | large Excel to HTML | conversion speed
-// Common Searches: Aspose.Cells benchmark HTML export C# | measure Excel to HTML conversion time | disable CSS class export Aspose.Cells | external CSS vs inline styles performance | how fast is Aspose.Cells HTML save for large files
-// Developer Intent: Compare the execution time of converting a 10 MB Excel workbook to HTML with CSS classes enabled versus disabled using Aspose.Cells.
-// Use Cases: Assess whether external CSS or inline styles yield faster HTML generation for large workbooks. | Provide timing data for CI pipelines that validate Aspose.Cells performance regressions. | Guide architecture decisions for web apps that serve Excel content as HTML by quantifying the speed impact of CSS handling.
-// AI Prompts: Generate C# code that loads a 10 MB Excel file with Aspose.Cells, exports it to HTML twice (default CSS and inline styles), and logs the conversion time for each run. | Explain how the ExportCssClass property influences HTML output and why disabling it can affect performance. | Create a script that repeats the benchmark 10 times, then reports average, minimum, and maximum conversion times for both CSS-enabled and CSS-disabled scenarios.
+// Title: Aspose.Cells C# Benchmark: HTML Export of a 10 MB Workbook – CSS Enabled vs Disabled
+// Description: Loads a ~10 MB Excel file, saves it twice as HTML using Aspose.Cells—once with external CSS (DisableCss = false) and once with inline styles only (DisableCss = true)—while timing each operation and recording the output file sizes.
+// Keywords: Aspose.Cells HTML export performance | C# benchmark Excel to HTML | DisableCss Aspose.Cells | external CSS vs inline styles | large workbook HTML conversion time | HTML file size Aspose.Cells
+// Common Searches: Aspose.Cells benchmark HTML export speed | HTML size difference with and without CSS in Aspose.Cells | measure Excel to HTML conversion time C# | disable CSS Aspose.Cells performance test | large Excel workbook HTML export comparison
+// Developer Intent: Compare conversion speed and resulting HTML file size for a 10 MB workbook when CSS is enabled versus when it is disabled using Aspose.Cells.
+// Use Cases: Select the optimal HTML export setting for high‑volume reporting pipelines. | Assess storage impact of external CSS versus inline styling in generated HTML reports. | Determine whether disabling CSS yields measurable performance gains for batch conversions.
+// AI Prompts: Generate C# code that processes a directory of Excel files, converts each to HTML with both CSS enabled and disabled via Aspose.Cells, and logs time and size per file. | Create a PowerShell script to run the benchmark for multiple workbook sizes and output a CSV summary of the results. | Explain how to extend the benchmark to capture memory usage during HTML conversion with Aspose.Cells.
 
 using System;
 using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsBenchmark
+// Loads a ~10 MB Excel file, saves it twice as HTML using Aspose.Cells—once with external CSS (DisableCss = false) and once with inline styles only (DisableCss = true)—while timing each operation and recording the output file sizes.
+class HtmlConversionBenchmark
 {
-    // A C# console app that loads a 10 MB Excel workbook with Aspose.Cells, saves it twice to HTML—once using the default external CSS stylesheet and once with inline styling (ExportCssClass disabled when supported)—and measures each conversion with Stopwatch, outputting the elapsed milliseconds.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the 10 MB Excel workbook
-            string sourcePath = "input10mb.xlsx";
+        // Path to the source workbook (approximately 10 MB)
+        string sourcePath = "largeWorkbook.xlsx";
 
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Error: The file '{sourcePath}' was not found.");
-                return;
-            }
+        // Load the workbook (create + load lifecycle)
+        Workbook workbook = new Workbook(sourcePath);
 
-            try
-            {
-                // Load the workbook (create rule)
-                Workbook workbook = new Workbook(sourcePath);
+        // -------------------- Benchmark: CSS enabled (default) --------------------
+        HtmlSaveOptions optionsWithCss = new HtmlSaveOptions();
+        optionsWithCss.DisableCss = false; // use external CSS
 
-                // Benchmark with default CSS handling (external stylesheet)
-                HtmlSaveOptions cssOptions = new HtmlSaveOptions(SaveFormat.Html);
+        Stopwatch sw = Stopwatch.StartNew();
+        // Save the workbook as HTML with CSS
+        workbook.Save("output_with_css.html", optionsWithCss);
+        sw.Stop();
 
-                Stopwatch swCss = Stopwatch.StartNew();
-                try
-                {
-                    workbook.Save("output_with_css.html", cssOptions);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error saving with CSS: {ex.Message}");
-                }
-                swCss.Stop();
+        long timeWithCss = sw.ElapsedMilliseconds;
+        long sizeWithCss = new FileInfo("output_with_css.html").Length;
 
-                // Benchmark with inline styles (disable CSS class export)
-                HtmlSaveOptions inlineOptions = new HtmlSaveOptions(SaveFormat.Html);
-                // Note: In newer Aspose.Cells versions, CSS class export is controlled by ExportCssClass.
-                // If the property is unavailable, the default behavior will be used.
-                // inlineOptions.ExportCssClass = false; // Uncomment if supported by your version.
+        // -------------------- Benchmark: CSS disabled (inline styles) --------------------
+        HtmlSaveOptions optionsWithoutCss = new HtmlSaveOptions();
+        optionsWithoutCss.DisableCss = true; // use only inline styles
 
-                Stopwatch swInline = Stopwatch.StartNew();
-                try
-                {
-                    workbook.Save("output_with_inline.html", inlineOptions);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error saving with inline styles: {ex.Message}");
-                }
-                swInline.Stop();
+        sw.Restart();
+        // Save the workbook as HTML without CSS
+        workbook.Save("output_without_css.html", optionsWithoutCss);
+        sw.Stop();
 
-                // Output the results
-                Console.WriteLine($"HTML conversion with CSS enabled:  {swCss.ElapsedMilliseconds} ms");
-                Console.WriteLine($"HTML conversion with CSS disabled: {swInline.ElapsedMilliseconds} ms");
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors during processing
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        long timeWithoutCss = sw.ElapsedMilliseconds;
+        long sizeWithoutCss = new FileInfo("output_without_css.html").Length;
+
+        // -------------------- Results --------------------
+        Console.WriteLine($"CSS enabled  : Time = {timeWithCss} ms, Size = {sizeWithCss} bytes");
+        Console.WriteLine($"CSS disabled : Time = {timeWithoutCss} ms, Size = {sizeWithoutCss} bytes");
     }
 }

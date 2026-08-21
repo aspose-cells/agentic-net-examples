@@ -1,71 +1,62 @@
-// Title: C# – Add a Moving‑Average Trendline to a Line Chart and Save Its Equation with Aspose.Cells
-// Description: Loads an existing workbook, inserts sample X/Y data, creates a line chart, adds a 3‑point moving‑average trendline to the first series, enables equation display, writes a note about the equation to cell D1, and saves the file as an Excel workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | moving average trendline | line chart | Excel chart equation | trendline period | display equation | store equation in cell | chart customization | Aspose.Cells example
-// Common Searches: Aspose.Cells add moving average trendline C# | display trendline equation Aspose.Cells .NET | set moving average period for chart series Aspose.Cells | write chart equation to worksheet cell Aspose.Cells | line chart trendline customization Aspose.Cells
-// Developer Intent: Add a moving‑average trendline to a line chart, show its equation on the chart, and record a reference to that equation in a worksheet cell.
-// Use Cases: Generate a line chart from worksheet data and smooth the series with a 3‑point moving average. | Configure the trendline to display its equation, assign a custom name, and apply a red color for visual emphasis. | Insert a textual note in a worksheet cell indicating that the equation is visible on the chart before saving the workbook.
-// AI Prompts: Write C# code that adds a moving‑average trendline with a custom period to an Aspose.Cells line chart and enables equation display. | Show how to extract the trendline equation from an Aspose.Cells chart and write it into a specific worksheet cell. | Explain how to style a moving‑average trendline (color, name, period) using Aspose.Cells for .NET.
+// Title: Aspose.Cells for .NET – Add a Moving‑Average Trendline with Equation to a Line Chart
+// Description: Load an Excel workbook, create (or use) a line chart, attach a moving‑average trendline to the first series, set its period and custom name, enable the equation label, and save the file—all with Aspose.Cells C# API.
+// Keywords: Aspose.Cells moving average trendline | display trendline equation .NET | C# line chart trendline Aspose | set trendline period Aspose.Cells | Excel chart equation Aspose.Cells | add trendline to chart programmatically
+// Common Searches: Aspose.Cells add moving average trendline C# | show trendline equation in Excel chart using Aspose | set moving average period for chart series Aspose.Cells | create line chart with trendline Aspose.Cells .NET | how to display R‑squared value in Aspose.Cells chart
+// Developer Intent: Insert a moving‑average trendline into a line chart and make its equation visible in an Excel workbook via Aspose.Cells for .NET.
+// Use Cases: Automate financial dashboards by adding a 3‑period moving‑average trendline with a custom label to a sales line chart. | Enhance scientific reports with trendline equations for quick data interpretation without manual Excel editing. | Generate batch Excel files where each chart includes a configurable moving‑average trendline and its formula for downstream analysis.
+// AI Prompts: Generate C# code with Aspose.Cells that loads a workbook, builds a line chart from A2:A10 and B2:B10, adds a 5‑period moving‑average trendline named "5‑Period MA", and displays its equation. | Explain how to retrieve the equation string of a moving‑average trendline after saving the workbook with Aspose.Cells. | Provide a step‑by‑step guide to add multiple moving‑average trendlines to different series in the same chart and show each equation using Aspose.Cells for .NET.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using System.Drawing;
 
-// Loads an existing workbook, inserts sample X/Y data, creates a line chart, adds a 3‑point moving‑average trendline to the first series, enables equation display, writes a note about the equation to cell D1, and saves the file as an Excel workbook using Aspose.Cells for .NET.
-class MovingAverageTrendlineExample
+// Load an Excel workbook, create (or use) a line chart, attach a moving‑average trendline to the first series, set its period and custom name, enable the equation label, and save the file—all with Aspose.Cells C# API.
+class AddMovingAverageTrendline
 {
     static void Main()
     {
         // Load an existing workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        // Get the first worksheet (or any worksheet you need)
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // -------------------------------------------------
-        // Prepare sample data for the chart (if not already present)
-        // -------------------------------------------------
-        // X values
-        sheet.Cells["A1"].PutValue("X");
-        for (int i = 2; i <= 10; i++)
-            sheet.Cells[$"A{i}"].PutValue(i - 1);
+        // ------------------------------------------------------------
+        // Create a line chart (if a chart already exists you can skip this)
+        // ------------------------------------------------------------
+        int chartIndex = worksheet.Charts.Add(ChartType.Line, 5, 0, 20, 8);
+        Chart chart = worksheet.Charts[chartIndex];
 
-        // Y values
-        sheet.Cells["B1"].PutValue("Y");
-        for (int i = 2; i <= 10; i++)
-            sheet.Cells[$"B{i}"].PutValue((i - 1) * 2 + (i % 3)); // some sample data
+        // ------------------------------------------------------------
+        // Define the data range for the chart series
+        // Adjust the ranges according to your worksheet data
+        // ------------------------------------------------------------
+        // Example: Y values in B2:B10, X (category) values in A2:A10
+        chart.NSeries.Add("B2:B10", true);
+        chart.NSeries.CategoryData = "A2:A10";
 
-        // -------------------------------------------------
-        // Add a line chart
-        // -------------------------------------------------
-        int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 12);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Set the data source for the series
-        chart.NSeries.Add("B2:B10", true);          // Y values
-        chart.NSeries.CategoryData = "A2:A10";     // X values
-
-        // -------------------------------------------------
+        // ------------------------------------------------------------
         // Add a Moving Average trendline to the first series
-        // -------------------------------------------------
-        int trendlineIdx = chart.NSeries[0].TrendLines.Add(TrendlineType.MovingAverage);
-        Trendline trendline = chart.NSeries[0].TrendLines[trendlineIdx];
+        // ------------------------------------------------------------
+        int trendlineIndex = chart.NSeries[0].TrendLines.Add(TrendlineType.MovingAverage);
+        Trendline trendline = chart.NSeries[0].TrendLines[trendlineIndex];
 
-        // Configure the trendline
-        trendline.Period = 3;                       // 3‑point moving average
+        // Set the period for the moving average (optional, default is 2)
+        trendline.Period = 3;
+
+        // Give the trendline a custom name (optional)
         trendline.Name = "3‑Period Moving Average";
-        trendline.DisplayEquation = true;           // Show equation on the chart
-        trendline.DisplayRSquared = false;          // R‑squared not needed for moving average
-        trendline.Color = Color.Red;                // Optional visual styling
 
-        // -------------------------------------------------
-        // Store the equation text in a worksheet cell
-        // (Aspose.Cells does not expose the equation string directly,
-        //  so we store a placeholder indicating that the equation is displayed on the chart.)
-        // -------------------------------------------------
-        sheet.Cells["D1"].PutValue("Equation is displayed on the chart.");
+        // Enable the display of the equation on the chart
+        trendline.DisplayEquation = true;
 
-        // Save the modified workbook
+        // (Optional) You can also display the R‑squared value
+        // trendline.DisplayRSquared = true;
+
+        // ------------------------------------------------------------
+        // Save the workbook with the new chart and trendline
+        // ------------------------------------------------------------
         workbook.Save("output.xlsx");
     }
 }

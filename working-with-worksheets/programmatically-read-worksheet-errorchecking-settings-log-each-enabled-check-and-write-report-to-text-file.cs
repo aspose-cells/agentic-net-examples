@@ -1,76 +1,68 @@
-// Title: Export Worksheet Error‑Check Settings to a Text Report with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook using Aspose.Cells for .NET, reads each worksheet's ErrorCheckOptionCollection, enumerates enabled ErrorCheckType values and their target ranges, and writes a plain‑text report that lists the worksheet name, option index, active checks, and cell areas. The workbook can be saved unchanged after reporting.
-// Keywords: Aspose.Cells | C# error check options | ErrorCheckOptionCollection | read worksheet error checking | export error check settings | Excel error checking report | Aspose.Cells .NET | ErrorCheckType enumeration | log Excel error checks | generate text report
-// Common Searches: Aspose.Cells read error check options C# | How to list enabled error checks in Excel using Aspose.Cells | Export worksheet error‑checking configuration to text file | C# code to iterate ErrorCheckOptionCollection | Generate report of Excel error checking rules with Aspose.Cells
-// Developer Intent: Read each worksheet’s error‑checking configuration and produce a human‑readable text file that details the enabled checks and their applied ranges.
-// Use Cases: Audit custom error‑checking rules before distributing a workbook | Document error‑check settings for compliance or review purposes | Compare error‑checking configurations across different workbook versions | Automate generation of documentation for data‑validation policies
-// AI Prompts: Write a C# method that takes a Workbook object and returns the error‑check report as a string instead of writing to a file. | Show how to filter the report to include only specific ErrorCheckType values such as NumberAsText and InconsistentFormula. | Explain how to modify the code to export the report as CSV with columns: Worksheet, OptionIndex, EnabledCheck, RangeStart, RangeEnd.
+// Title: C# – Read Worksheet Error‑Checking Settings with Aspose.Cells and Export to Text Report
+// Description: Load an Excel workbook with Aspose.Cells for .NET, access each worksheet's ErrorCheckOptionCollection, list enabled ErrorCheckType values (including range details), and write a concise text file summarizing the error‑checking configuration.
+// Keywords: Aspose.Cells read error check options | C# Excel error checking report | ErrorCheckOptionCollection example | export worksheet error checks to txt | list enabled ErrorCheckType Aspose
+// Common Searches: how to get error‑check settings from a worksheet using Aspose.Cells | export Excel error checking configuration to a text file C# | iterate ErrorCheckOptionCollection Aspose.Cells .NET | retrieve ranges for error‑check options in a workbook
+// Developer Intent: Extract enabled error‑checking rules from a worksheet and save them as a readable text report.
+// Use Cases: Audit workbooks for data‑validation problems by listing active error checks per sheet. | Create compliance documentation that records each worksheet's error‑checking configuration. | Build a diagnostic tool that scans multiple Excel files and logs their error‑check settings for quality control.
+// AI Prompts: Generate a method that accepts a Workbook and returns a formatted error‑check report for all its worksheets using Aspose.Cells. | Extend the sample to loop through every worksheet in the workbook and append each sheet’s report to a single text file. | Add comprehensive error handling to manage missing files, empty worksheets, or unsupported error‑check types while creating the report.
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-// Loads an Excel workbook using Aspose.Cells for .NET, reads each worksheet's ErrorCheckOptionCollection, enumerates enabled ErrorCheckType values and their target ranges, and writes a plain‑text report that lists the worksheet name, option index, active checks, and cell areas. The workbook can be saved unchanged after reporting.
-class ErrorCheckReport
+// Load an Excel workbook with Aspose.Cells for .NET, access each worksheet's ErrorCheckOptionCollection, list enabled ErrorCheckType values (including range details), and write a concise text file summarizing the error‑checking configuration.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (load rule)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
+        // Load an existing workbook (replace the path with your file)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Path for the text report
-        string reportPath = "ErrorCheckReport.txt";
+        // Access the first worksheet (you can loop through all worksheets if needed)
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Create a writer for the report file
-        using (StreamWriter writer = new StreamWriter(reportPath))
+        // Prepare a list to hold report lines
+        List<string> report = new List<string>();
+        report.Add($"Worksheet: {worksheet.Name}");
+        report.Add("Enabled Error Checks:");
+
+        // Get the collection of error‑check options for the worksheet
+        ErrorCheckOptionCollection options = worksheet.ErrorCheckOptions;
+
+        // Iterate through each ErrorCheckOption in the collection
+        for (int i = 0; i < options.Count; i++)
         {
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet ws in workbook.Worksheets)
+            ErrorCheckOption option = options[i];
+
+            // Determine the ranges this option applies to
+            int rangeCount = option.GetCountOfRange();
+            string rangeInfo = rangeCount > 0 ? $"Ranges ({rangeCount})" : "No specific range";
+
+            // Collect all enabled error‑check types for this option
+            List<string> enabledTypes = new List<string>();
+            foreach (ErrorCheckType type in Enum.GetValues(typeof(ErrorCheckType)))
             {
-                writer.WriteLine($"Worksheet: {ws.Name}");
-
-                // Access the collection of error‑check options for the worksheet
-                ErrorCheckOptionCollection options = ws.ErrorCheckOptions;
-
-                // If there are no options, note it and continue
-                if (options.Count == 0)
+                if (option.IsErrorCheck(type))
                 {
-                    writer.WriteLine("  No error‑check options defined.");
-                    writer.WriteLine();
-                    continue;
+                    enabledTypes.Add(type.ToString());
                 }
+            }
 
-                // Process each ErrorCheckOption in the collection
-                for (int i = 0; i < options.Count; i++)
+            // If any checks are enabled, add them to the report
+            if (enabledTypes.Count > 0)
+            {
+                report.Add($"Option {i}: {rangeInfo}");
+                foreach (string typeName in enabledTypes)
                 {
-                    ErrorCheckOption option = options[i];
-                    writer.WriteLine($"  Option #{i + 1}:");
-
-                    // List all enabled error‑check types for this option
-                    foreach (ErrorCheckType type in Enum.GetValues(typeof(ErrorCheckType)))
-                    {
-                        if (option.IsErrorCheck(type))
-                        {
-                            writer.WriteLine($"    Enabled: {type}");
-                        }
-                    }
-
-                    // List the ranges to which this option applies
-                    int rangeCount = option.GetCountOfRange();
-                    writer.WriteLine($"    Ranges count: {rangeCount}");
-                    for (int r = 0; r < rangeCount; r++)
-                    {
-                        CellArea area = option.GetRange(r);
-                        writer.WriteLine($"      {area.StartRow},{area.StartColumn} : {area.EndRow},{area.EndColumn}");
-                    }
+                    report.Add($"  - {typeName}");
                 }
-
-                writer.WriteLine();
             }
         }
 
-        // Save the workbook unchanged (save rule) – optional
-        workbook.Save("output.xlsx");
+        // Write the report to a text file
+        string reportPath = "ErrorCheckReport.txt";
+        File.WriteAllLines(reportPath, report);
+        Console.WriteLine($"Error‑check report written to {reportPath}");
     }
 }

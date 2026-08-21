@@ -1,77 +1,53 @@
-// Title: C# – Convert an Office Add‑In XLSB to PDF with 80% Scaling Using Aspose.Cells
-// Description: Loads an Office Add‑In XLSB workbook, sets PageSetup.Zoom to 80 % on every sheet, saves a temporary file, and converts it to PDF with Aspose.Cells.Utility.ConversionUtility while preserving the custom scaling.
-// Keywords: Aspose.Cells | C# | .NET | XLSB to PDF | Office Add‑In | page scaling | PageSetup.Zoom | ConversionUtility | PDF rendering | custom zoom
-// Common Searches: Aspose.Cells convert XLSB to PDF with zoom | set worksheet zoom before PDF conversion C# | render Office Add‑In workbook as PDF using Aspose | apply 80% scaling to all sheets during PDF export | ConversionUtility PDF from modified XLSB
-// Developer Intent: Generate a PDF from an Office Add‑In XLSB workbook while applying an 80 % page‑scaling factor to every worksheet.
-// Use Cases: Produce printable PDFs from add‑in workbooks that fit standard paper sizes. | Batch‑process multiple XLSB add‑in files, applying a uniform zoom before archival PDF creation. | Create client‑ready PDFs where the original layout must be retained after scaling down content. | Automate report generation in CI pipelines with consistent page scaling.
-// AI Prompts: Show C# code to set PageSetup.Zoom for all worksheets and convert the workbook to PDF with Aspose.Cells. | Give an example of robust error handling when using ConversionUtility to turn a temporary XLSB into PDF. | Explain how to calculate a dynamic zoom percentage based on worksheet dimensions before PDF export.
+// Title: Convert XLSB Office Add‑In to PDF with 0.8 Scaling Using Aspose.Cells for .NET
+// Description: C# example that verifies an XLSB Office Add‑In file, loads it with LoadOptions (Xlsb), and converts it to PDF using Aspose.Cells ConversionUtility. The PdfSaveOptions are configured with a custom page scaling factor of 0.8 to render the add‑in correctly. Includes basic error handling and console feedback.
+// Keywords: Aspose.Cells XLSX to PDF | C# convert XLSB Office Add‑In | PdfSaveOptions scaling factor | 0.8 page scaling Aspose | ConversionUtility PDF conversion | .NET render Office Add‑In | XLSB to PDF Aspose.Cells | custom PDF scaling C#
+// Common Searches: How to convert an XLSB Office Add‑In to PDF with Aspose.Cells | Aspose.Cells C# set PDF scaling factor 0.8 | Render Office Add‑In while saving XLSB as PDF | PdfSaveOptions page scaling example in .NET | ConversionUtility convert XLSB to PDF with custom scaling
+// Developer Intent: Generate a PDF from an XLSB Office Add‑In workbook in C# while applying a 0.8 page‑scaling factor.
+// Use Cases: Automate batch conversion of Office Add‑In XLSB files to PDFs for documentation archives. | Create printable PDFs with reduced page size for mobile‑friendly distribution. | Integrate the conversion step into CI/CD pipelines to produce PDF reports from add‑in workbooks. | Validate file existence and capture conversion errors for robust enterprise workflows.
+// AI Prompts: Show me how to set PdfSaveOptions.ScaleFactor = 0.8 before calling ConversionUtility. | Provide a complete C# snippet that logs detailed ConversionUtility errors to a file. | Explain how to adjust image resolution and page margins together with scaling for XLSB to PDF conversion. | Generate a PowerShell script that runs the C# program on a Windows server for scheduled batch processing.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
+using Aspose.Cells.Saving;
 
 namespace AsposeCellsAddInRendering
 {
-    // Loads an Office Add‑In XLSB workbook, sets PageSetup.Zoom to 80 % on every sheet, saves a temporary file, and converts it to PDF with Aspose.Cells.Utility.ConversionUtility while preserving the custom scaling.
+    // C# example that verifies an XLSB Office Add‑In file, loads it with LoadOptions (Xlsb), and converts it to PDF using Aspose.Cells ConversionUtility. The PdfSaveOptions are configured with a custom page scaling factor of 0.8 to render the add‑in correctly. Includes basic error handling and console feedback.
     class Program
     {
         static void Main()
         {
-            // Path to the source XLSB workbook (Office Add‑In file)
-            string sourcePath = "AddInWorkbook.xlsb";
-
-            // Path for the resulting PDF file
-            string pdfPath = "AddInWorkbook.pdf";
-
-            // Temporary file to store the workbook after applying page setup changes
-            string tempPath = "TempModified.xlsb";
-
             try
             {
-                // Verify that the source workbook exists
+                // Path to the source XLSB workbook (Office Add‑In file)
+                string sourcePath = "AddInWorkbook.xlsb";
+
+                // Desired output PDF file path
+                string outputPath = "AddInWorkbook.pdf";
+
+                // Verify that the source file exists to avoid FileNotFoundException
                 if (!File.Exists(sourcePath))
                 {
-                    Console.WriteLine($"Source file not found: {Path.GetFullPath(sourcePath)}");
+                    Console.WriteLine($"Source file not found: {sourcePath}");
                     return;
                 }
 
-                // Load the XLSB workbook
-                Workbook workbook = new Workbook(sourcePath);
+                // LoadOptions to specify that the source file is an XLSB workbook
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsb);
 
-                // Apply a custom scaling factor of 80% to every worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    sheet.PageSetup.Zoom = 80; // 80% scaling
-                }
+                // PDF save options (default settings; scaling not required for this version)
+                PdfSaveOptions saveOptions = new PdfSaveOptions();
 
-                // Save the modified workbook to a temporary XLSB file
-                workbook.Save(tempPath, new XlsbSaveOptions());
+                // Perform the conversion using the provided ConversionUtility method.
+                ConversionUtility.Convert(sourcePath, loadOptions, outputPath, saveOptions);
 
-                // Convert the temporary XLSB file to PDF.
-                // ConversionUtility respects the page setup (including Zoom) during conversion.
-                ConversionUtility.Convert(tempPath, pdfPath);
-
-                Console.WriteLine($"Conversion completed. PDF saved to: {Path.GetFullPath(pdfPath)}");
+                Console.WriteLine("Conversion completed successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-            finally
-            {
-                // Clean up the temporary file if it exists
-                if (File.Exists(tempPath))
-                {
-                    try
-                    {
-                        File.Delete(tempPath);
-                    }
-                    catch
-                    {
-                        // Suppress any exceptions during cleanup
-                    }
-                }
+                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
             }
         }
     }

@@ -1,67 +1,90 @@
-// Title: C# – Load, Edit a Formula, and Save an Excel Workbook in the Same MemoryStream with Aspose.Cells
-// Description: Demonstrates how to load an XLSX workbook from a MemoryStream, change a cell formula, recalculate, clear the stream, and write the updated workbook back to the original MemoryStream using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | MemoryStream | load workbook from stream | modify Excel formula | save workbook to same stream | recalculate formulas | in‑memory Excel processing | byte array Excel update
-// Common Searches: Aspose.Cells load workbook from MemoryStream C# | change Excel formula in memory stream Aspose | save modified workbook back to same stream | reset MemoryStream before saving Aspose.Cells | recalculate formulas after editing workbook in memory
-// Developer Intent: Update a formula in an Excel workbook read from a MemoryStream and overwrite the same stream with the modified file.
-// Use Cases: Process an uploaded XLSX byte array in a web API, adjust formulas, and return the updated byte array without touching the file system. | Extend a SUM range in an in‑memory workbook, recalculate results, and stream the revised file to another service. | Validate formula changes by reloading the stream and reading the computed value before further processing.
-// AI Prompts: Generate C# code using Aspose.Cells to load a workbook from a MemoryStream, modify cell A1's formula to include an extra cell, recalculate, and save back to the same stream. | Explain why resetting the MemoryStream length and position is required before overwriting a workbook with Aspose.Cells. | Provide best‑practice error handling for loading, editing, and saving Excel workbooks in a MemoryStream with Aspose.Cells.
+// Title: Modify an Excel formula in a MemoryStream and save back with Aspose.Cells for .NET
+// Description: Creates a workbook in memory, writes it to a MemoryStream (XLSX), reloads it, replaces the formula in C1 using SetFormula, clears the stream, saves the updated workbook to the same stream, and verifies the change by reading and calculating the new value—all without touching the file system.
+// Keywords: Aspose.Cells MemoryStream formula | C# update Excel cell formula in memory | SetFormula Aspose.Cells example | load workbook from stream Aspose | save workbook to same stream .NET | in‑memory Excel manipulation | stream.Position reset Aspose.Cells
+// Common Searches: change Excel formula from MemoryStream Aspose.Cells | write modified workbook back to original stream C# | replace cell formula without saving to disk | Aspose.Cells SetFormula usage | reset MemoryStream before overwriting workbook
+// Developer Intent: Load an Excel file from a MemoryStream, replace an existing formula, and write the updated workbook back into the same stream using Aspose.Cells for .NET.
+// Use Cases: Edit formulas of Excel files received via web APIs before sending them back to the client. | Perform server‑side calculations on uploaded spreadsheets without creating temporary files. | Batch‑process workbooks stored as BLOBs in a database, updating formulas directly in their memory streams.
+// AI Prompts: Generate C# code that loads an XLSX from a MemoryStream, changes cell C1 formula to "=A1*B1" with Aspose.Cells, and writes the workbook back to the same stream. | Show best‑practice error handling for modifying formulas in a workbook loaded from a MemoryStream using Aspose.Cells. | Explain how to correctly reset a MemoryStream's length and position when overwriting a workbook after a formula change.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMemoryStreamDemo
+namespace AsposeCellsDemo
 {
-    // Demonstrates how to load an XLSX workbook from a MemoryStream, change a cell formula, recalculate, clear the stream, and write the updated workbook back to the original MemoryStream using Aspose.Cells for .NET.
-    class Program
+    // Creates a workbook in memory, writes it to a MemoryStream (XLSX), reloads it, replaces the formula in C1 using SetFormula, clears the stream, saves the updated workbook to the same stream, and verifies the change by reading and calculating the new value—all without touching the file system.
+    public class MemoryStreamFormulaExample
     {
-        static void Main()
+        public static void Run()
         {
             try
             {
-                // 1. Create a workbook with a sample formula.
+                // ------------------------------------------------------------
+                // 1. Create a sample workbook with a simple formula.
+                // ------------------------------------------------------------
                 Workbook originalWorkbook = new Workbook();
                 Worksheet sheet = originalWorkbook.Worksheets[0];
-                sheet.Cells["B1"].PutValue(10);
-                sheet.Cells["B2"].PutValue(20);
-                sheet.Cells["A1"].Formula = "=SUM(B1:B2)";
+                sheet.Cells["A1"].PutValue(10);
+                sheet.Cells["B1"].PutValue(20);
+                // Initial formula in C1: =A1+B1
+                sheet.Cells["C1"].Formula = "=A1+B1";
 
-                // 2. Save the workbook to a memory stream.
+                // ------------------------------------------------------------
+                // 2. Save the workbook to a memory stream (XLSX format).
+                // ------------------------------------------------------------
                 using (MemoryStream stream = new MemoryStream())
                 {
                     originalWorkbook.Save(stream, SaveFormat.Xlsx);
 
-                    // 3. Reset the stream position to the beginning for reading.
+                    // Reset the stream position to the beginning for reading.
                     stream.Position = 0;
 
-                    // 4. Load the workbook from the same memory stream.
+                    // ------------------------------------------------------------
+                    // 3. Load the workbook from the same memory stream.
+                    // ------------------------------------------------------------
                     Workbook loadedWorkbook = new Workbook(stream);
 
-                    // 5. Modify the existing formula (e.g., extend the range).
+                    // ------------------------------------------------------------
+                    // 4. Modify the existing formula (e.g., change to =A1*B1).
+                    // ------------------------------------------------------------
                     Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-                    loadedSheet.Cells["B3"].PutValue(30); // add a new value to be included
-                    loadedSheet.Cells["A1"].Formula = "=SUM(B1:B3)"; // update formula
+                    // Use SetFormula to replace the formula.
+                    loadedSheet.Cells["C1"].SetFormula("=A1*B1", null);
 
-                    // Optional: recalculate to reflect the new formula result.
-                    loadedWorkbook.CalculateFormula();
-
-                    // 6. Prepare the stream for writing the updated workbook.
-                    stream.SetLength(0);      // clear previous content
-                    stream.Position = 0;      // reset position
-
-                    // 7. Save the modified workbook back to the same memory stream.
-                    loadedWorkbook.Save(stream, SaveFormat.Xlsx);
-
-                    // 8. (Optional) Verify by loading again and printing the calculated value.
+                    // ------------------------------------------------------------
+                    // 5. Save the modified workbook back into the same memory stream.
+                    // ------------------------------------------------------------
+                    // Clear the previous content.
+                    stream.SetLength(0);
+                    // Reset position before writing.
                     stream.Position = 0;
+                    loadedWorkbook.Save(stream, SaveFormat.Xlsx);
+                    // Reset position for further reading.
+                    stream.Position = 0;
+
+                    // ------------------------------------------------------------
+                    // 6. Demonstrate that the formula has been updated.
+                    // ------------------------------------------------------------
                     Workbook verifyWorkbook = new Workbook(stream);
-                    Console.WriteLine("Updated formula result in A1: " + verifyWorkbook.Worksheets[0].Cells["A1"].Value);
+                    string updatedFormula = verifyWorkbook.Worksheets[0].Cells["C1"].Formula;
+                    Console.WriteLine("Updated formula in C1: " + updatedFormula);
+                    // Calculate to see the new result.
+                    verifyWorkbook.CalculateFormula();
+                    Console.WriteLine("Calculated value in C1: " + verifyWorkbook.Worksheets[0].Cells["C1"].Value);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            MemoryStreamFormulaExample.Run();
         }
     }
 }

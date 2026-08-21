@@ -1,67 +1,66 @@
-// Title: Enumerate Child Shapes in a GroupShape using Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add rectangle and oval shapes, group them into a GroupShape, enumerate the grouped shapes with GetGroupedShapes() and the GroupShape indexer, display each shape’s type, alternative text, name, and text, and save the result as EnumerateGroupShapes.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | GroupShape | GetGroupedShapes | enumerate shapes | shape grouping | Excel shape iteration | shape indexer | workbook saving
-// Common Searches: list shapes inside a GroupShape Aspose.Cells | how to enumerate child shapes of a GroupShape in C# | Aspose.Cells GetGroupedShapes example | iterate over grouped shapes in Excel using .NET | access individual shapes after grouping with Aspose.Cells
-// Developer Intent: The developer wants to retrieve and work with each individual shape that belongs to a GroupShape.
-// Use Cases: Display properties (type, alt text, name) of all shapes within a grouped object for debugging. | Apply formatting or data to specific child shapes after they have been grouped. | Generate a report of grouped shape composition before exporting the workbook.
-// AI Prompts: Write C# code that adds three shapes, groups them, and changes the fill color of the second child shape using the GroupShape indexer. | Provide an example that ungroups a GroupShape and accesses the original shapes with Aspose.Cells. | Explain how to safely enumerate child shapes when a GroupShape may contain zero elements.
+// Title: Enumerate Child Shapes in a GroupShape with Aspose.Cells for .NET
+// Description: Creates a workbook, adds a rectangle and an oval, groups them into a GroupShape, then lists each child shape using GetGroupedShapes() and the GroupShape indexer, displaying type and AlternativeText before saving the file.
+// Keywords: Aspose.Cells | GroupShape | GetGroupedShapes | .NET | C# | enumerate shapes | Excel shape grouping | access child shapes | shape iteration | Aspose.Cells API
+// Common Searches: How to get individual shapes from a GroupShape using Aspose.Cells | Aspose.Cells C# enumerate shapes in a grouped object | Retrieve child shapes of a grouped shape in Excel with Aspose | List shapes inside a GroupShape Aspose.Cells .NET | Iterate over grouped shapes in a worksheet using Aspose.Cells
+// Developer Intent: Retrieve and manipulate each shape contained in a GroupShape.
+// Use Cases: Read type and AlternativeText of all grouped shapes for reporting | Change properties (fill color, size) of specific child shapes after enumeration | Delete a shape from a group based on its AlternativeText | Export shape metadata to CSV or JSON for external analysis | Apply conditional formatting to grouped shapes programmatically
+// AI Prompts: Generate C# code with Aspose.Cells that enumerates child shapes of a GroupShape and sets each shape's fill color to blue. | Provide an example that iterates through grouped shapes and removes the shape whose AlternativeText equals "Oval1" using Aspose.Cells. | Create code that extracts the Type and AlternativeText of every shape in a GroupShape and writes the data to a CSV file.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// Creates a workbook, adds a rectangle and an oval, groups them into a GroupShape, then lists each child shape using GetGroupedShapes() and the GroupShape indexer, displaying type and AlternativeText before saving the file.
+class EnumerateGroupShapes
 {
-    // Shows how to create a workbook, add rectangle and oval shapes, group them into a GroupShape, enumerate the grouped shapes with GetGroupedShapes() and the GroupShape indexer, display each shape’s type, alternative text, name, and text, and save the result as EnumerateGroupShapes.xlsx.
-    class EnumerateGroupShapes
+    public static void Run()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add two shapes to the worksheet
+            Shape rect = sheet.Shapes.AddRectangle(2, 0, 2, 0, 80, 60);
+            rect.AlternativeText = "Rectangle1";
+
+            Shape oval = sheet.Shapes.AddOval(4, 0, 4, 0, 80, 60);
+            oval.AlternativeText = "Oval1";
+
+            // Group the shapes into a GroupShape
+            GroupShape group = sheet.Shapes.Group(new Shape[] { rect, oval });
+
+            // Enumerate child shapes using GetGroupedShapes()
+            Shape[] groupedShapes = group.GetGroupedShapes();
+            Console.WriteLine($"Group contains {groupedShapes.Length} shapes (GetGroupedShapes):");
+            foreach (Shape shape in groupedShapes)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Add two shapes to the worksheet
-                Shape rect = sheet.Shapes.AddRectangle(2, 0, 2, 0, 80, 60);
-                rect.AlternativeText = "Rectangle1";
-
-                Shape oval = sheet.Shapes.AddOval(4, 0, 4, 0, 80, 60);
-                oval.AlternativeText = "Oval1";
-
-                // Group the shapes into a GroupShape
-                GroupShape group = sheet.Shapes.Group(new Shape[] { rect, oval });
-
-                // Enumerate child shapes using GetGroupedShapes()
-                Shape[] childShapes = group.GetGroupedShapes();
-                Console.WriteLine($"Group contains {childShapes.Length} shapes:");
-                foreach (Shape child in childShapes)
-                {
-                    Console.WriteLine($"Type: {child.Type}, AltText: {child.AlternativeText}");
-                }
-
-                // Access child shapes via the indexer
-                for (int i = 0; i < childShapes.Length; i++)
-                {
-                    Shape s = group[i];
-                    Console.WriteLine($"Indexer [{i}] Name: {s.Name}, Text: {s.Text}");
-                }
-
-                // Save the workbook
-                workbook.Save("EnumerateGroupShapes.xlsx", SaveFormat.Xlsx);
-                Console.WriteLine("Workbook saved as EnumerateGroupShapes.xlsx");
+                Console.WriteLine($"Type: {shape.Type}, AltText: {shape.AlternativeText}");
             }
-            catch (Exception ex)
+
+            // Enumerate child shapes using the indexer
+            Console.WriteLine("Group enumeration using indexer:");
+            for (int i = 0; i < groupedShapes.Length; i++)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Shape shape = group[i];
+                Console.WriteLine($"Index {i}: Type: {shape.Type}, AltText: {shape.AlternativeText}");
             }
+
+            // Save the workbook
+            workbook.Save("EnumeratedGroupShapes.xlsx", SaveFormat.Xlsx);
         }
-
-        // Entry point required for the application
-        static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        EnumerateGroupShapes.Run();
     }
 }

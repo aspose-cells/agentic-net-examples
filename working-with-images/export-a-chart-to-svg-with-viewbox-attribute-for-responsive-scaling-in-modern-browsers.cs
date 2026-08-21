@@ -1,60 +1,67 @@
-// Title: Export Aspose.Cells Chart to SVG with viewBox for Responsive Scaling (C#)
-// Description: Creates a workbook, adds sample data, builds a column chart, and uses Aspose.Cells SvgImageOptions (FitToViewPort = true) to save the chart as an SVG file that contains a viewBox attribute, enabling responsive scaling in modern browsers.
-// Keywords: Aspose.Cells | C# | export chart to SVG | viewBox attribute | FitToViewPort | responsive SVG | SvgImageOptions | Excel chart to SVG | scalable vector graphics | column chart
-// Common Searches: Aspose.Cells export chart as SVG C# | How to add viewBox to SVG chart using Aspose.Cells | FitToViewPort option example Aspose.Cells | Responsive SVG chart from Excel workbook | C# code to save chart to SVG with viewBox | Aspose.Cells SvgImageOptions responsive scaling
-// Developer Intent: Generate an SVG file from an Aspose.Cells chart that includes a viewBox attribute for responsive display.
-// Use Cases: Embed scalable SVG charts in web dashboards that automatically adapt to container size. | Create high‑resolution graphics for email newsletters or PDF reports without pixelation. | Provide vector‑based visualizations in mobile apps that adjust to different screen orientations.
-// AI Prompts: Show C# code to export multiple Aspose.Cells charts to SVG files with viewBox enabled. | Explain how to customize the CSS prefix and embed fonts when exporting a chart to SVG with Aspose.Cells. | Demonstrate adjusting the output dimensions while preserving the viewBox for responsive behavior.
+// Title: Export Excel Chart to Responsive SVG with viewBox using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, add a column chart, configure SvgImageOptions with FitToViewPort (adds a viewBox attribute) and an optional CSS prefix, then export the chart to an SVG file while optionally saving the original XLSX.
+// Keywords: Aspose.Cells | C# | .NET | export chart to SVG | FitToViewPort | viewBox | responsive SVG | SvgImageOptions | CSS prefix | Excel chart SVG | column chart export | web dashboard graphics
+// Common Searches: Aspose.Cells export chart to SVG with viewBox | C# FitToViewPort SvgImageOptions example | How to add viewBox attribute when exporting Excel chart to SVG | Set CSS prefix for SVG chart export Aspose.Cells | Responsive SVG chart from Excel using Aspose.Cells
+// Developer Intent: Generate an SVG representation of an Excel chart that includes a viewBox attribute for fluid scaling in browsers.
+// Use Cases: Embed a scalable SVG chart in web dashboards without losing aspect ratio. | Export multiple charts to SVG on the same page while avoiding CSS naming conflicts. | Provide both an SVG image for front‑end display and the original XLSX for archival or further analysis.
+// AI Prompts: Write C# code that exports a pie chart from an Aspose.Cells workbook to SVG with FitToViewPort enabled and a custom CSS prefix. | Explain how the FitToViewPort property inserts a viewBox attribute into the SVG and why this enables responsive scaling. | Show how to embed the exported SVG chart into an HTML page and make it resize automatically using CSS.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
 namespace AsposeCellsSvgExport
 {
-    // Creates a workbook, adds sample data, builds a column chart, and uses Aspose.Cells SvgImageOptions (FitToViewPort = true) to save the chart as an SVG file that contains a viewBox attribute, enabling responsive scaling in modern browsers.
+    // Demonstrates how to create a workbook, add a column chart, configure SvgImageOptions with FitToViewPort (adds a viewBox attribute) and an optional CSS prefix, then export the chart to an SVG file while optionally saving the original XLSX.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
                 // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Month");
-                worksheet.Cells["A2"].PutValue("Jan");
-                worksheet.Cells["A3"].PutValue("Feb");
-                worksheet.Cells["A4"].PutValue("Mar");
+                sheet.Cells["A1"].PutValue("Month");
+                sheet.Cells["A2"].PutValue("Jan");
+                sheet.Cells["A3"].PutValue("Feb");
+                sheet.Cells["A4"].PutValue("Mar");
 
-                worksheet.Cells["B1"].PutValue("Sales");
-                worksheet.Cells["B2"].PutValue(120);
-                worksheet.Cells["B3"].PutValue(210);
-                worksheet.Cells["B4"].PutValue(150);
+                sheet.Cells["B1"].PutValue("Sales");
+                sheet.Cells["B2"].PutValue(120);
+                sheet.Cells["B3"].PutValue(210);
+                sheet.Cells["B4"].PutValue(150);
 
                 // Add a column chart to the worksheet
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-                Chart chart = worksheet.Charts[chartIndex];
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Set the data range for the chart
                 chart.NSeries.Add("B2:B4", true);          // Values
-                chart.NSeries.CategoryData = "A2:A4";      // Categories
+                chart.NSeries.CategoryData = "A2:A4";     // Categories
                 chart.Title.Text = "Quarterly Sales";
 
-                // Configure SVG rendering options (no ImageFormat property needed)
+                // Configure SVG rendering options
                 SvgImageOptions svgOptions = new SvgImageOptions
                 {
-                    FitToViewPort = true,            // Enable viewBox for responsive scaling
-                    CssPrefix = "chart-",            // Optional: CSS prefix
-                    EmbeddedFontType = SvgEmbeddedFontType.Woff // Optional: embed fonts
+                    // Ensure the generated SVG fits the viewport (adds viewBox attribute)
+                    FitToViewPort = true,
+
+                    // Optional: add a CSS prefix to avoid naming collisions
+                    CssPrefix = "chart-"
                 };
 
-                // Export the chart to an SVG file with viewBox attribute
-                string outputPath = "QuarterlySalesChart.svg";
-                chart.ToImage(outputPath, svgOptions);
+                // Export the chart to an SVG file using the configured options
+                chart.ToImage("QuarterlySales.svg", svgOptions);
 
-                Console.WriteLine($"Chart exported to SVG with viewBox: {outputPath}");
+                // Save the workbook if you also want the Excel file
+                workbook.Save("QuarterlySales.xlsx");
             }
             catch (Exception ex)
             {

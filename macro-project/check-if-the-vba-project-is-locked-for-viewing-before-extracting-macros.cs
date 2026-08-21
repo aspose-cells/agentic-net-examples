@@ -1,10 +1,10 @@
-// Title: Check VBA Project Protection and Extract Macros from an XLSM using Aspose.Cells for .NET
-// Description: Loads a macro‑enabled workbook, verifies the presence of a VBA project, tests the VbaProject.IsProtected flag, and when unprotected iterates through each VbaModule to display and save its code as a .bas file while handling missing files and I/O exceptions.
-// Keywords: Aspose.Cells VBA protection | VbaProject.IsProtected .NET | extract VBA modules C# | save VBA code to .bas | macro‑enabled workbook processing | locked VBA project detection
-// Common Searches: how to detect locked VBA project with Aspose.Cells | extract VBA code from xlsm using C# | skip macro extraction when VBA project is password protected | save each VBA module as .bas file Aspose.Cells | check if Excel VBA project is protected programmatically
-// Developer Intent: Identify whether an XLSM file’s VBA project is password‑protected and, if it is not, export each macro module to a separate .bas file.
-// Use Cases: Pre‑flight validation of workbooks in a batch job to avoid errors on protected VBA projects. | Automated migration of VBA code to source control by exporting modules from multiple files. | Integration into an Excel audit tool that logs macro content only for unprotected projects.
-// AI Prompts: Generate C# code that uses Aspose.Cells to list VBA module names without extracting their source when the project is protected. | Create a method that extracts VBA modules to .bas files only if VbaProject.IsProtected is false, with robust file‑I/O error handling. | Refactor the demo to write extraction results to a log file and return a collection of the saved .bas file paths.
+// Title: C# – Detect VBA Project Protection and Extract Macros with Aspose.Cells for .NET
+// Description: Loads an .xlsm workbook, confirms the presence of macros, checks the VBA project's IsProtected flag, and, when unprotected, iterates through each VbaModule to output its name, type, and source code. Includes handling for missing files, workbooks without macros, and protected projects.
+// Keywords: Aspose.Cells VBA protection | C# extract macros from xlsm | VbaProject.IsProtected | read VBA modules Aspose.Cells | check workbook.HasMacro | .NET Excel macro extraction
+// Common Searches: how to know if a VBA project is locked using Aspose.Cells | C# code to list VBA modules only when not protected | Aspose.Cells check workbook.HasMacro and VbaProject.IsProtected | extract macro source from .xlsm with Aspose.Cells .NET
+// Developer Intent: Identify whether an Excel workbook's VBA project is locked for viewing and, if it is not, retrieve the macro code from each module.
+// Use Cases: Pre‑flight validation of macro accessibility before bulk analysis of workbooks. | Skipping password‑protected VBA projects during automated macro extraction pipelines. | Logging unprotected VBA source for compliance audits or documentation.
+// AI Prompts: Create a C# function using Aspose.Cells that returns true when a workbook's VBA project is protected. | Generate code that saves each VBA module from an unprotected workbook as a separate .vba file. | Provide comprehensive error handling for missing files, workbooks without macros, and protected VBA projects when extracting macros with Aspose.Cells.
 
 using System;
 using System.IO;
@@ -13,30 +13,29 @@ using Aspose.Cells.Vba;
 
 namespace AsposeCellsExamples
 {
-    // Loads a macro‑enabled workbook, verifies the presence of a VBA project, tests the VbaProject.IsProtected flag, and when unprotected iterates through each VbaModule to display and save its code as a .bas file while handling missing files and I/O exceptions.
-    public class VbaProjectLockCheckAndExtractDemo
+    // Loads an .xlsm workbook, confirms the presence of macros, checks the VBA project's IsProtected flag, and, when unprotected, iterates through each VbaModule to output its name, type, and source code. Includes handling for missing files, workbooks without macros, and protected projects.
+    public class CheckVbaLockAndExtractMacros
     {
         public static void Run()
         {
+            const string filePath = "sample.xlsm";
+
+            // Ensure the file exists before attempting to load
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
+
             try
             {
-                // Path to the macro‑enabled Excel file
-                string inputPath = "sample.xlsm";
-
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
                 // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+                Workbook workbook = new Workbook(filePath);
 
-                // Ensure the workbook contains a VBA project
+                // Verify the workbook actually contains VBA/macros
                 if (!workbook.HasMacro)
                 {
-                    Console.WriteLine("The workbook does not contain any VBA project.");
+                    Console.WriteLine("The workbook does not contain any macros.");
                     return;
                 }
 
@@ -44,58 +43,39 @@ namespace AsposeCellsExamples
                 VbaProject vbaProject = workbook.VbaProject;
                 if (vbaProject == null)
                 {
-                    Console.WriteLine("Unable to retrieve the VBA project.");
+                    Console.WriteLine("Unable to access the VBA project.");
                     return;
                 }
 
-                // Check if the VBA project is protected (locked for viewing)
+                // Check if the VBA project is protected (locked) for viewing
                 if (vbaProject.IsProtected)
                 {
                     Console.WriteLine("The VBA project is protected. Cannot extract macros.");
                     return;
                 }
 
-                // Extract macro code from each module
-                Console.WriteLine("Extracting VBA modules...");
-
+                // If not protected, iterate through all VBA modules and output their code
+                Console.WriteLine("Extracting macros from the VBA project:");
                 for (int i = 0; i < vbaProject.Modules.Count; i++)
                 {
                     VbaModule module = vbaProject.Modules[i];
-                    string moduleName = module.Name;
-                    string moduleCode = module.Codes;
-
-                    Console.WriteLine($"--- Module: {moduleName} ---");
-                    Console.WriteLine(moduleCode);
+                    Console.WriteLine($"--- Module: {module.Name} (Type: {module.Type}) ---");
+                    Console.WriteLine(module.Codes);
                     Console.WriteLine();
-
-                    // Save each module's code to a .bas file
-                    string outputFile = $"{moduleName}.bas";
-                    try
-                    {
-                        File.WriteAllText(outputFile, moduleCode);
-                        Console.WriteLine($"Module code saved to: {outputFile}");
-                    }
-                    catch (Exception writeEx)
-                    {
-                        Console.WriteLine($"Failed to write module file '{outputFile}': {writeEx.Message}");
-                    }
                 }
-
-                Console.WriteLine("Macro extraction completed.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
             }
         }
     }
 
-    // Application entry point
     public class Program
     {
         public static void Main(string[] args)
         {
-            VbaProjectLockCheckAndExtractDemo.Run();
+            CheckVbaLockAndExtractMacros.Run();
         }
     }
 }

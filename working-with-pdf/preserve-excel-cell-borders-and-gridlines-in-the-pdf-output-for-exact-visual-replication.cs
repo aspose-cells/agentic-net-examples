@@ -1,17 +1,21 @@
 // Title: C# – Preserve Excel Cell Borders and Gridlines When Converting to PDF with Aspose.Cells
-// Description: A .NET example that creates a workbook, fills a small data range, applies a thick blue border to each used cell, makes gridlines visible and printable, sets PdfSaveOptions (dotted gray gridlines), and saves the worksheet as a PDF that exactly replicates the original borders and gridlines.
-// Keywords: Aspose.Cells C# PDF conversion | preserve cell borders PDF | include gridlines Aspose.Cells | PdfSaveOptions GridlineType | Excel to PDF exact visual replica | Aspose.Cells .NET export | border style PDF Aspose | gridline color PDF | C# Excel PDF export | Aspose.Cells USA | Aspose.Cells Europe
-// Common Searches: How to keep Excel borders in PDF using Aspose.Cells C# | Aspose.Cells PDFSaveOptions gridlines | Export worksheet with thick borders to PDF .NET | Preserve gridlines when saving Excel as PDF Aspose | C# code to apply borders to used range and export PDF | Aspose.Cells PDF export settings for exact layout
-// Developer Intent: Generate a PDF from an Excel workbook that faithfully reproduces the worksheet’s custom cell borders and visible gridlines.
-// Use Cases: Print-ready reports where the PDF must match the on‑screen Excel layout, including custom borders and dotted gridlines. | Invoice generation from a template workbook that requires retained border styling for regulatory compliance. | Multi‑page data sheets exported as PDFs where gridlines aid readability and data interpretation.
-// AI Prompts: Show me how to change the border color and line style while still preserving gridlines in the PDF output using Aspose.Cells. | Provide an example that applies borders to a dynamic used range and exports the worksheet to PDF with gridlines in C#. | Explain how to configure PdfSaveOptions to hide gridlines or adjust their opacity for different PDF export scenarios.
+// Description: Demonstrates how to create a workbook, apply a thick blue border style to a range, enable worksheet gridlines, set PageSetup.PrintGridlines, and save the sheet as a PDF using PdfSaveOptions so that both custom borders and gridlines appear exactly as they do in Excel.
+// Keywords: Aspose.Cells PDF export | preserve borders PDF | print gridlines Aspose.Cells | C# Excel to PDF | PdfSaveOptions gridlines | cell border style PDF | Aspose.Cells .NET example
+// Common Searches: keep cell borders when exporting Excel to PDF Aspose.Cells | enable gridlines in PDF output using Aspose.Cells C# | apply custom border style to range and save as PDF | Aspose.Cells print gridlines PDFSaveOptions | C# convert worksheet to PDF with borders and gridlines
+// Developer Intent: Generate a PDF that visually matches the worksheet, including all custom borders and visible gridlines.
+// Use Cases: Produce printable reports where table borders and gridlines must remain intact. | Create invoices or statements that retain the exact Excel layout in PDF form. | Archive spreadsheets as PDFs with full visual fidelity for compliance or record‑keeping.
+// AI Prompts: Show how to customize PdfSaveOptions (margins, image quality, compression) while preserving borders and gridlines. | Provide code to merge multiple worksheets into a single PDF, keeping each sheet’s borders and gridlines. | Explain how to programmatically toggle gridline visibility and modify border styles before PDF conversion with Aspose.Cells.
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// A .NET example that creates a workbook, fills a small data range, applies a thick blue border to each used cell, makes gridlines visible and printable, sets PdfSaveOptions (dotted gray gridlines), and saves the worksheet as a PDF that exactly replicates the original borders and gridlines.
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+// Demonstrates how to create a workbook, apply a thick blue border style to a range, enable worksheet gridlines, set PageSetup.PrintGridlines, and save the sheet as a PDF using PdfSaveOptions so that both custom borders and gridlines appear exactly as they do in Excel.
 class PreserveBordersAndGridlinesPdf
 {
     static void Main()
@@ -25,9 +29,9 @@ class PreserveBordersAndGridlinesPdf
             // Populate some sample data
             worksheet.Cells["A1"].PutValue("Header");
             worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["A2"].PutValue("Item1");
+            worksheet.Cells["A2"].PutValue("Item 1");
             worksheet.Cells["B2"].PutValue(100);
-            worksheet.Cells["A3"].PutValue("Item2");
+            worksheet.Cells["A3"].PutValue("Item 2");
             worksheet.Cells["B3"].PutValue(200);
 
             // Define a thick blue border style
@@ -41,29 +45,28 @@ class PreserveBordersAndGridlinesPdf
             borderStyle.Borders[BorderType.LeftBorder].Color = Color.Blue;
             borderStyle.Borders[BorderType.RightBorder].Color = Color.Blue;
 
-            // Apply the border style to the used range manually (avoids ApplyStyle overload issue)
-            CellArea usedRange = new CellArea { StartRow = 0, StartColumn = 0, EndRow = 2, EndColumn = 1 };
-            for (int row = usedRange.StartRow; row <= usedRange.EndRow; row++)
-            {
-                for (int col = usedRange.StartColumn; col <= usedRange.EndColumn; col++)
-                {
-                    worksheet.Cells[row, col].SetStyle(borderStyle);
-                }
-            }
+            // Apply the border style to the range A1:B3
+            AsposeRange range = worksheet.Cells.CreateRange("A1:B3");
+            range.ApplyStyle(borderStyle, new StyleFlag { All = true });
 
-            // Make gridlines visible in the worksheet and ensure they are printed
+            // Make gridlines visible in the worksheet UI and ensure they are printed
             worksheet.IsGridlinesVisible = true;
             worksheet.PageSetup.PrintGridlines = true;
 
-            // Configure PDF save options to include gridlines with desired appearance
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                GridlineType = GridlineType.Dotted,   // Choose gridline style
-                GridlineColor = Color.Gray            // Choose gridline color
-            };
+            // Configure PDF save options (gridlines will be printed because of PageSetup)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Save the workbook as PDF preserving borders and gridlines
-            workbook.Save("PreservedBordersGridlines.pdf", pdfOptions);
+            // Define output file path
+            string outputPath = "PreservedBordersGridlines.pdf";
+
+            // Delete existing file if it exists to avoid exceptions
+            if (File.Exists(outputPath))
+            {
+                File.Delete(outputPath);
+            }
+
+            // Save the workbook as PDF with the specified options
+            workbook.Save(outputPath, pdfOptions);
         }
         catch (Exception ex)
         {

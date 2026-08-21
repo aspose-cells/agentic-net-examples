@@ -1,56 +1,68 @@
-// Title: C# – Export a Worksheet‑Scoped Named Range to PDF with Aspose.Cells
-// Description: Shows how to build a workbook, create a range limited to one worksheet (e.g., MyRange covering A1:B3), set it as the print area, and save the result as a PDF containing only that area.
-// Keywords: Aspose.Cells | C# | named range PDF | print area | worksheet scoped range | export specific cells | PDF generation | Aspose.Cells .NET | range to PDF | save workbook as PDF
-// Common Searches: Aspose.Cells export only named range to PDF | set print area from named range C# | how to save specific cells as PDF using Aspose.Cells | worksheet scoped named range PDF Aspose | C# generate PDF from selected range Aspose.Cells
-// Developer Intent: Create a PDF that includes only the cells of a worksheet‑scoped named range.
-// Use Cases: Create a catalog page that includes only the product table defined by a named range. | Produce a PDF of an invoice line‑items section without the surrounding worksheet data. | Extract a summary block from a large worksheet into a standalone PDF report.
-// AI Prompts: Show C# code to set a worksheet's PrintArea to a named range and save as PDF with Aspose.Cells. | How can I export multiple worksheet‑scoped named ranges to separate PDF files using Aspose.Cells .NET? | Explain the steps to retrieve a named range and use it as the print area for PDF conversion.
+// Title: Export a Worksheet‑Scoped Named Range to PDF with Aspose.Cells for .NET (C#)
+// Description: This example shows how to create a workbook, define a worksheet‑scoped named range (B2:C4), set the worksheet's print area to that range, and save the result as a PDF so that only the named range appears in the output file.
+// Keywords: Aspose.Cells | C# | .NET | PDF export | named range | worksheet scoped range | PrintArea | PdfSaveOptions | export specific range to PDF | Aspose.Cells example
+// Common Searches: Aspose.Cells export only a named range to PDF | Set print area to a named range in C# | Worksheet‑scoped named range PDF export .NET | How to limit PDF output to a cell range using Aspose.Cells | C# code for PDFSaveOptions with named range
+// Developer Intent: Generate a PDF that contains exclusively the cells defined by a worksheet‑scoped named range.
+// Use Cases: Create a PDF report that includes just a data table defined by a named range, hiding other worksheet content. | Produce individual invoice PDFs by assigning each invoice area a named range and exporting it separately. | Offer a preview of a selected chart or table by setting its named range as the print area before PDF conversion.
+// AI Prompts: Show C# code to set a worksheet‑scoped named range as the print area and export it to PDF with Aspose.Cells. | How can I export only the cells of a named range to a PDF using Aspose.Cells for .NET? | Explain the steps to create a named range, register it, retrieve the Range object, and limit PDF output to that area.
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsPdfNamedRangeDemo
 {
-    // Shows how to build a workbook, create a range limited to one worksheet (e.g., MyRange covering A1:B3), set it as the print area, and save the result as a PDF containing only that area.
+    // This example shows how to create a workbook, define a worksheet‑scoped named range (B2:C4), set the worksheet's print area to that range, and save the result as a PDF so that only the named range appears in the output file.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook (lifecycle: create)
+                // ---------- Create a new workbook ----------
                 Workbook workbook = new Workbook();
-
-                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
                 // Populate sample data
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Price");
-                sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["B2"].PutValue(1.2);
-                sheet.Cells["A3"].PutValue("Banana");
-                sheet.Cells["B3"].PutValue(0.8);
-                sheet.Cells["A4"].PutValue("Cherry");
-                sheet.Cells["B4"].PutValue(2.5);
+                sheet.Cells["A1"].PutValue("Header1");
+                sheet.Cells["B1"].PutValue("Header2");
+                sheet.Cells["C1"].PutValue("Header3");
+                sheet.Cells["A2"].PutValue(10);
+                sheet.Cells["B2"].PutValue(20);
+                sheet.Cells["C2"].PutValue(30);
+                sheet.Cells["A3"].PutValue(40);
+                sheet.Cells["B3"].PutValue(50);
+                sheet.Cells["C3"].PutValue(60);
+                sheet.Cells["A4"].PutValue(70);
+                sheet.Cells["B4"].PutValue(80);
+                sheet.Cells["C4"].PutValue(90);
 
-                // Define a worksheet‑scoped named range that covers A1:B3
-                int nameIndex = workbook.Worksheets.Names.Add("MyRange");
-                // RefersTo must include the sheet name and be prefixed with '='
-                workbook.Worksheets.Names[nameIndex].RefersTo = $"={sheet.Name}!A1:B3";
+                // ---------- Define a worksheet‑scoped named range ----------
+                // Create a range B2:C4 and assign a name to it
+                AsposeRange namedRange = sheet.Cells.CreateRange("B2", "C4");
+                namedRange.Name = "MyRange";
 
-                // Retrieve the Range object for the named range
-                Name namedRange = workbook.Worksheets.Names[nameIndex];
-                AsposeRange range = namedRange.GetRange(); // Resolve ambiguity with alias
+                // Register the name in the worksheet's name collection (worksheet‑scoped)
+                int nameIdx = sheet.Workbook.Worksheets.Names.Add("MyRange");
+                // RefersTo must include the sheet name and start with '='
+                sheet.Workbook.Worksheets.Names[nameIdx].RefersTo = $"={sheet.Name}!B2:C4";
 
-                // Set the print area of the worksheet to the address of the named range
-                // This ensures that only this area is exported when saving to PDF
-                sheet.PageSetup.PrintArea = range.Address; // uses PrintArea property
+                // ---------- Retrieve the range via the Name object ----------
+                Name nameObj = sheet.Workbook.Worksheets.Names[nameIdx];
+                AsposeRange range = nameObj.GetRange(); // obtains the actual Range object
 
-                // Save the workbook as PDF (lifecycle: save)
-                // The PDF will contain only the defined print area
-                workbook.Save("NamedRangeOnly.pdf");
+                // ---------- Set the print area to the named range ----------
+                // PrintArea expects an address without the leading '='
+                sheet.PageSetup.PrintArea = range.RefersTo?.TrimStart('=');
+
+                // ---------- Save the workbook as PDF ----------
+                // The defined print area will be respected during PDF export.
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                workbook.Save("NamedRangeArea.pdf", pdfOptions);
+
+                Console.WriteLine("PDF generated successfully with only the named range area.");
             }
             catch (Exception ex)
             {

@@ -1,52 +1,71 @@
-// Title: C# – Expand an existing named range with Name.RefersTo and recalculate formulas using Aspose.Cells
-// Description: Demonstrates how to create a workbook, define a named range, use it in a SUM formula, change the Name.RefersTo property to a larger area, recalculate dependent formulas, and save the file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# named range | Name.RefersTo property | expand named range Aspose.Cells | recalculate formulas .NET | dynamic range Aspose.Cells | update named range programmatically | Aspose.Cells workbook.CalculateFormula
-// Common Searches: how to change a named range size in Aspose.Cells C# | update Name.RefersTo and refresh formulas | expand named range and recalculate sums Aspose.Cells | Aspose.Cells replace named range example | C# code to modify named range and recalc formulas
-// Developer Intent: Modify an existing named range to cover a larger cell block and refresh all formulas that reference it.
-// Use Cases: Add new rows to a data table and automatically extend the named range used in totals and charts. | Adjust a report's data source before export so that all entries are included in calculations. | Programmatically synchronize a named range with a dynamic dataset for downstream processing.
-// AI Prompts: Show C# code that updates the RefersTo property of a Name object to a larger range and recalculates all dependent formulas in Aspose.Cells. | Provide an Aspose.Cells .NET example that expands a named range from A1:A3 to A1:A10 and updates SUM formulas accordingly. | Explain how to verify that formulas using a renamed range reflect the new range after calling Workbook.CalculateFormula.
+// Title: Expand a Named Range with Name.RefersTo and Recalculate Formulas using Aspose.Cells for .NET
+// Description: Loads an Excel workbook, ensures a named range (e.g., "MyRange") exists, updates its RefersTo property to a larger area (A1:C10), forces a full formula recalculation with CalculateFormula, and saves the result.
+// Keywords: Aspose.Cells | C# | named range | Name.RefersTo | expand range | recalculate formulas | Workbook.CalculateFormula | create missing name | Excel automation
+// Common Searches: Aspose.Cells change RefersTo of a named range | expand named range and recalc formulas .NET | create named range if not exists Aspose.Cells | update named range address C# | force formula recalculation after range change
+// Developer Intent: Modify an existing named range to cover a larger cell block and refresh all dependent formulas in the workbook.
+// Use Cases: Enlarge a data range used by a chart after adding new rows. | Extend a validation range before importing additional records. | Adjust a range referenced by SUM/AVERAGE formulas when extra columns are added.
+// AI Prompts: Generate C# code that checks for a named range, creates it if missing, sets RefersTo to a new address, and calls CalculateFormula with Aspose.Cells. | Explain the correct RefersTo string format for updating a named range in Aspose.Cells. | Provide a step‑by‑step tutorial to replace a named range with a larger area and ensure all dependent formulas are recalculated.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, define a named range, use it in a SUM formula, change the Name.RefersTo property to a larger area, recalculate dependent formulas, and save the file with Aspose.Cells for .NET.
-class ReplaceNamedRange
+namespace ReplaceNamedRangeExample
 {
-    static void Main()
+    // Loads an Excel workbook, ensures a named range (e.g., "MyRange") exists, updates its RefersTo property to a larger area (A1:C10), forces a full formula recalculation with CalculateFormula, and saves the result.
+    class Program
     {
-        // Create a new workbook (create rule)
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Name = "Sheet1";
-
-        // Populate some data in column A (A1:A5)
-        for (int i = 0; i < 5; i++)
+        static void Main(string[] args)
         {
-            sheet.Cells[i, 0].PutValue(i + 1); // Values 1,2,3,4,5
+            try
+            {
+                // Input and output file paths
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (assumed to contain the named range)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Name of the existing named range to be replaced
+                string existingName = "MyRange";
+
+                // Retrieve the Name object; create it if it does not exist
+                Name namedRange = workbook.Worksheets.Names[existingName];
+                if (namedRange == null)
+                {
+                    // Add returns the index of the newly created name
+                    int index = workbook.Worksheets.Names.Add(existingName);
+                    namedRange = workbook.Worksheets.Names[index];
+                }
+
+                // Define the new, larger area for the named range (e.g., A1:C10 on the same sheet)
+                // The RefersTo string must start with an equal sign and include the sheet name.
+                string newRefersTo = $"={sheet.Name}!$A$1:$C$10";
+
+                // Update the RefersTo property to point to the new area
+                namedRange.RefersTo = newRefersTo;
+
+                // Recalculate all formulas in the workbook so they reflect the updated range
+                workbook.CalculateFormula();
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-
-        // Create an initial named range that refers to A1:A3
-        int nameIndex = workbook.Worksheets.Names.Add("MyRange");
-        Name namedRange = workbook.Worksheets.Names[nameIndex];
-        namedRange.RefersTo = "=Sheet1!$A$1:$A$3"; // original smaller area
-
-        // Use the named range in a formula
-        sheet.Cells["B1"].Formula = "=SUM(MyRange)";
-
-        // Calculate formulas (initial sum = 1+2+3 = 6)
-        workbook.CalculateFormula();
-        Console.WriteLine("Initial SUM (A1:A3): " + sheet.Cells["B1"].Value);
-
-        // Replace the existing named range with a larger area (A1:A5)
-        namedRange.RefersTo = "=Sheet1!$A$1:$A$5";
-
-        // Recalculate formulas after expanding the range (new sum = 1+2+3+4+5 = 15)
-        workbook.CalculateFormula();
-        Console.WriteLine("Updated SUM (A1:A5): " + sheet.Cells["B1"].Value);
-
-        // Save the workbook (save rule)
-        workbook.Save("UpdatedNamedRange.xlsx");
     }
 }

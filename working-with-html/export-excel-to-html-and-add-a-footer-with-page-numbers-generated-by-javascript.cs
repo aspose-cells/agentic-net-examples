@@ -1,15 +1,15 @@
-// Title: Export Excel to a Single‑File HTML page with a JavaScript‑generated page‑number footer using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, fill cells, set a left‑section footer containing the "Page &P" placeholder, enable footer export in HtmlSaveOptions, and save the workbook as one HTML file. The generated HTML includes JavaScript that renders the current page number in the footer.
-// Keywords: Aspose.Cells | C# | .NET | HTML export | single file HTML | footer page number | ExportPageFooters | JavaScript footer | Excel to HTML
-// Common Searches: Aspose.Cells export Excel to HTML with footer | Add page numbers to HTML output from Aspose.Cells .NET | Save workbook as single HTML file including footers | C# generate HTML report with Excel footer | JavaScript page number footer Aspose.Cells
-// Developer Intent: Create an HTML representation of an Excel worksheet that preserves the worksheet footer and shows the current page number via JavaScript.
-// Use Cases: Publish an Excel‑based report on a website while keeping printable page numbers. | Send a self‑contained HTML version of a spreadsheet via email with visible footers. | Generate a web‑ready document for archiving that retains Excel footer information.
-// AI Prompts: Show how to include total pages (e.g., "Page &P of &N") in the HTML footer using Aspose.Cells. | Provide C# code to export each worksheet to its own HTML file while preserving individual footers. | Explain how to customize the CSS of the generated HTML footer for branding purposes.
+// Title: Export Excel to a Single HTML File with JavaScript Page‑Number Footer using Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, fills sample cells, defines a centered footer with &P (current page) and &N (total pages) placeholders, and saves the workbook as one HTML file using HtmlSaveOptions that enable page footers, headers and JavaScript compatibility.
+// Keywords: Aspose.Cells | C# | .NET | Export Excel to HTML | HTML footer page numbers | SaveAsSingleFile | ExportPageFooters | JavaScript pagination | Excel web report | PageSetup footer
+// Common Searches: Aspose.Cells export Excel to single HTML file with footer | Add page numbers to HTML export using Aspose.Cells .NET | Enable JavaScript‑compatible HTML output with page footers Aspose | Set footer text &P &N in Aspose.Cells HTML export | C# export workbook to HTML with page numbering
+// Developer Intent: Generate a single‑file HTML export of an Excel workbook that displays the current page and total page count in the footer via JavaScript.
+// Use Cases: Web‑based printable reports that need "Page X of Y" footers | Embedding Excel data in a web app while preserving pagination information | Creating HTML invoices or statements that require legal page numbering
+// AI Prompts: Show how to align the footer text to the right while keeping page numbers in the exported HTML. | Provide code to attach a custom CSS stylesheet to the HTML output without breaking the JavaScript footer. | Explain how to export each worksheet to separate HTML files, each with a page‑number footer, using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, fill cells, set a left‑section footer containing the "Page &P" placeholder, enable footer export in HtmlSaveOptions, and save the workbook as one HTML file. The generated HTML includes JavaScript that renders the current page number in the footer.
+// Creates a workbook, fills sample cells, defines a centered footer with &P (current page) and &N (total pages) placeholders, and saves the workbook as one HTML file using HtmlSaveOptions that enable page footers, headers and JavaScript compatibility.
 class ExportExcelToHtmlWithFooter
 {
     static void Main()
@@ -18,7 +18,7 @@ class ExportExcelToHtmlWithFooter
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate some sample data
+        // Add some sample data
         worksheet.Cells["A1"].PutValue("Name");
         worksheet.Cells["B1"].PutValue("Age");
         worksheet.Cells["A2"].PutValue("John");
@@ -26,17 +26,18 @@ class ExportExcelToHtmlWithFooter
         worksheet.Cells["A3"].PutValue("Jane");
         worksheet.Cells["B3"].PutValue(28);
 
-        // Set the left section of the footer to display the page number
-        // &P is the placeholder for the current page number
-        worksheet.PageSetup.SetFooter(0, "Page &P");
+        // Set the footer: center section will display page number and total pages
+        // &P = current page number, &N = total page count
+        worksheet.PageSetup.SetFooter(1, "Page &P of &N");
 
         // Configure HTML save options
         HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-        saveOptions.ExportPageFooters = true;   // include footers in the HTML output
-        saveOptions.ExportPageHeaders = true;   // optional: include headers as well
+        saveOptions.ExportPageFooters = true;   // enable footer export
+        saveOptions.ExportPageHeaders = true;   // optional: export headers as well
         saveOptions.SaveAsSingleFile = true;    // required for footer export
+        saveOptions.IsJsBrowserCompatible = true; // ensure JavaScript works in browsers
 
-        // Save the workbook as an HTML file with the configured footer
-        workbook.Save("output.html", saveOptions);
+        // Save the workbook as an HTML file with the configured options
+        workbook.Save("WorkbookWithFooter.html", saveOptions);
     }
 }

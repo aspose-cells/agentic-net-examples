@@ -1,40 +1,45 @@
-// Title: Batch replace <DATE> placeholders in all Excel TextBox shapes with today’s date using Aspose.Cells for .NET
-// Description: Loads a workbook, formats the system date as yyyy‑MM‑dd, loops through every worksheet and each TextBox shape, replaces the <DATE> tag in the TextBox.TextBody, and saves the updated file. Ideal for automating date stamps in templated Excel reports.
-// Keywords: Aspose.Cells C# replace TextBox text | Excel TextBox placeholder update | batch replace <DATE> Aspose.Cells | .NET Excel shape text replacement | current date in Excel TextBox
-// Common Searches: replace <DATE> in all TextBoxes Aspose.Cells | update Excel TextBox placeholder with current date C# | iterate worksheets and modify TextBox text Aspose.Cells | batch replace placeholder in Excel shapes .NET
-// Developer Intent: Replace every <DATE> tag inside TextBox shapes across all worksheets with the current system date formatted yyyy‑MM‑dd.
-// Use Cases: Automatically stamp the generation date on daily report headers stored in TextBox shapes. | Populate templated workbooks that contain <DATE> placeholders before distribution. | Refresh document footers or titles embedded in TextBoxes across multiple sheets in a single operation.
-// AI Prompts: Generate C# code with Aspose.Cells that scans all worksheets and replaces a custom placeholder in TextBox.TextBody with the formatted current date. | Show how to safely handle TextBoxes that are empty or do not contain the target placeholder during a batch replacement. | Explain performance considerations when iterating over thousands of TextBox shapes in a large workbook using Aspose.Cells.
+// Title: Batch replace <DATE> tags in all Excel TextBoxes using Aspose.Cells for .NET
+// Description: Loads an Excel file, walks through each worksheet, accesses every TextBox via TextBoxCollection, and uses TextBox.TextBody.Replace to swap the <DATE> placeholder with the current system date formatted as yyyy‑MM‑dd, then saves the updated workbook.
+// Keywords: Aspose.Cells C# | Excel TextBox replace placeholder | batch update TextBox text | TextBoxCollection iteration | TextBody.Replace method | current date yyyy-MM-dd | automate Excel report date | .NET Excel shape manipulation | replace tags in workbook | Aspose.Cells example
+// Common Searches: Aspose.Cells replace placeholder in TextBox | C# batch update <DATE> in Excel shapes | How to iterate TextBoxCollection in Aspose.Cells | Replace text in Excel TextBox using Aspose.Cells .NET | Set current date in all TextBoxes of a workbook
+// Developer Intent: Swap every <DATE> placeholder inside all TextBoxes of a workbook with today’s date (yyyy‑MM‑dd).
+// Use Cases: Generating daily reports where a TextBox must show the report generation date. | Updating template workbooks that contain <DATE> tags in shapes before distribution. | Ensuring consistency of the processing date across multiple worksheets after a bulk copy operation.
+// AI Prompts: Provide C# code that uses Aspose.Cells to iterate all worksheets and replace a <DATE> tag in each TextBox with DateTime.Now formatted as yyyy-MM-dd. | Show how to apply TextBox.TextBody.Replace for placeholder substitution in Excel shapes and explain saving the workbook efficiently. | Explain how to skip TextBoxes without the <DATE> tag and optimize the loop for large workbooks.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-// Loads a workbook, formats the system date as yyyy‑MM‑dd, loops through every worksheet and each TextBox shape, replaces the <DATE> tag in the TextBox.TextBody, and saves the updated file. Ideal for automating date stamps in templated Excel reports.
+// Loads an Excel file, walks through each worksheet, accesses every TextBox via TextBoxCollection, and uses TextBox.TextBody.Replace to swap the <DATE> placeholder with the current system date formatted as yyyy‑MM‑dd, then saves the updated workbook.
 class ReplaceDateInTextBoxes
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
+        // Load the workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Current date formatted as yyyy-MM-dd
+        // Prepare the replacement string: current date in yyyy-MM-dd format
         string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
 
-        // Iterate through all worksheets
+        // Iterate through all worksheets in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Iterate through all TextBoxes in the worksheet
-            foreach (TextBox textBox in sheet.TextBoxes)
+            // Access the collection of TextBoxes on the current worksheet
+            TextBoxCollection textBoxes = sheet.TextBoxes;
+
+            // Loop through each TextBox
+            for (int i = 0; i < textBoxes.Count; i++)
             {
-                // Replace the placeholder <DATE> with the current date
-                // FontSettingCollection.Replace(string oldValue, string newValue) is used
-                textBox.TextBody.Replace("<DATE>", currentDate);
+                TextBox tb = textBoxes[i];
+
+                // Use the FontSettingCollection.Replace method to replace <DATE> tags
+                // TextBody is a FontSettingCollection that holds the text of the TextBox
+                tb.TextBody.Replace("<DATE>", currentDate);
             }
         }
 
-        // Save the modified workbook
+        // Save the modified workbook (replace with your desired output path)
         workbook.Save("output.xlsx");
     }
 }

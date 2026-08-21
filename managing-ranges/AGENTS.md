@@ -1,4 +1,4 @@
----
+﻿---
 name: Aspose.Cells Range Management Agent
 category: managing-ranges
 product: Aspose.Cells for .NET
@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-21
 primary_intent: Create, access, copy, merge, name, style, search, and transform Excel ranges in C#
 primary_apis: [Range, Cells.CreateRange, Cells.Merge, Cells.UnMerge, Range.Copy, Range.ApplyStyle, Name]
 search_intents: [manage Excel ranges in C#, copy cell range, merge Excel cells, create named range]
@@ -311,3 +311,4 @@ Interpret one developer intent
 ## Definition of done
 
 A `managing-ranges` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
+

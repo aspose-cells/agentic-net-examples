@@ -1,15 +1,15 @@
-// Title: Configure Aspose.Cells MemorySetting.Normal for Faster Small XLSX Processing (C#)
-// Description: Creates a new Workbook, sets Settings.MemorySetting to MemorySetting.Normal to speed up handling of a small Excel file, adds sample text and a date, then saves as SmallFile_NormalMemory.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | MemorySetting.Normal | C# | .NET Excel performance | small workbook speed | fast Excel generation | memory mode optimization | Workbook.Settings.MemorySetting | Excel file processing speed | low memory usage Aspose
-// Common Searches: Aspose.Cells set MemorySetting to Normal | How to improve performance for small XLSX with Aspose.Cells .NET | MemorySetting.Normal vs LowMemory Aspose.Cells | Fast workbook creation C# Aspose.Cells | Optimize memory settings for Excel files Aspose
-// Developer Intent: Apply the Normal memory mode to a workbook so a small XLSX file is processed more quickly.
-// Use Cases: Generating lightweight reports where rapid workbook creation is critical. | Batch‑processing dozens of small Excel files in a background service with minimal latency. | Creating temporary Excel files in a web API that require fast response and modest memory consumption.
-// AI Prompts: Show how to set Aspose.Cells MemorySetting.Normal in C# and explain its impact on small workbook performance. | Provide a concise example that configures MemorySetting.Normal, adds data, and saves an XLSX file. | Compare MemorySetting.Normal with LowMemory and advise when each should be used in Aspose.Cells for .NET.
+// Title: C# – Set Workbook MemorySetting to Normal for Faster Small XLSX Processing with Aspose.Cells
+// Description: Demonstrates how to create a workbook, apply MemorySetting.Normal to boost performance on a small XLSX file, add sample data, and save the document using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells MemorySetting Normal | C# Excel performance small file | Workbook.Settings.MemorySetting | optimize Aspose.Cells speed | fast XLSX generation .NET
+// Common Searches: Aspose.Cells set MemorySetting to Normal | increase speed for small Excel files Aspose | MemorySetting.Normal C# example | best memory preference for tiny workbooks Aspose.Cells
+// Developer Intent: Apply the Normal memory preference to a workbook so that small Excel files are processed more quickly.
+// Use Cases: Generate lightweight reports in a web service where latency must be minimal. | Create dozens of temporary spreadsheets in a batch job without excessive memory overhead. | Build on‑the‑fly Excel files for API responses, using MemorySetting.Normal to keep response time low.
+// AI Prompts: Write C# code that opens an existing small XLSX file with Aspose.Cells, sets MemorySetting to Normal, and then reads its contents. | Explain how MemorySetting.Normal affects memory consumption and execution time for small versus large workbooks in Aspose.Cells. | Provide a conditional snippet that chooses MemorySetting.Normal or MemorySetting.High based on the file size before loading a workbook.
 
 using System;
 using Aspose.Cells;
 
-// Creates a new Workbook, sets Settings.MemorySetting to MemorySetting.Normal to speed up handling of a small Excel file, adds sample text and a date, then saves as SmallFile_NormalMemory.xlsx using Aspose.Cells for .NET.
+// Demonstrates how to create a workbook, apply MemorySetting.Normal to boost performance on a small XLSX file, add sample data, and save the document using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -17,15 +17,15 @@ class Program
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Set memory usage to Normal for faster processing of a small file
+        // Set memory usage to Normal for faster processing on a small file
         workbook.Settings.MemorySetting = MemorySetting.Normal;
 
         // Add some sample data
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Sample Data");
+        sheet.Cells["A1"].PutValue("Sample Text");
         sheet.Cells["A2"].PutValue(DateTime.Now);
 
-        // Save the workbook
-        workbook.Save("SmallFile_NormalMemory.xlsx");
+        // Save the workbook to an XLSX file
+        workbook.Save("MemorySettingNormal.xlsx");
     }
 }

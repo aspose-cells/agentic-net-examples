@@ -1,33 +1,66 @@
-// Title: Merge Excel workbooks while preserving charts and images with Aspose.Cells Workbook.Combine (C#)
-// Description: The C# sample loads Destination.xlsx and Source.xlsx, merges the source into the destination using Workbook.Combine with default settings, and saves the result as CombinedResult.xlsx. The default combine operation retains all charts, pictures, and other embedded objects.
-// Keywords: Aspose.Cells Workbook.Combine | merge Excel workbooks C# | preserve charts Aspose | retain images Excel merge | .NET combine workbooks | default combine behavior | preserve embedded objects | Excel file consolidation | Aspose.Cells merge example
-// Common Searches: Aspose.Cells merge workbooks keep charts | How to combine two Excel files without losing images .NET | Workbook.Combine preserve embedded objects | C# merge Excel workbooks Aspose.Cells default options | Combine multiple workbooks preserving graphics
-// Developer Intent: Combine a source workbook into a destination workbook without losing any charts, pictures, or other embedded objects.
-// Use Cases: Consolidate monthly financial reports that contain charts into a single workbook for executive review. | Create a master workbook from departmental files that include images, ensuring visuals remain intact after merging. | Automate the merging of a template workbook with data workbooks while retaining all visual objects for a reporting pipeline.
-// AI Prompts: Generate C# code that uses Aspose.Cells Workbook.Combine to merge two Excel files and keep all charts and images. | Explain why Workbook.Combine's default settings preserve embedded objects and how to verify the result after merging. | Provide sample C# that loops through a list of workbooks, merging each into a destination workbook while retaining every chart and picture.
+// Title: Preserve Charts & Images When Merging Excel Workbooks with Aspose.Cells (C#)
+// Description: Demonstrates how to combine a source workbook into a destination workbook using Aspose.Cells' Workbook.Combine method. The default combine operation retains all charts, pictures, shapes, and other drawing objects without requiring extra options. The example also shows file‑existence checks and basic error handling, then saves the merged file as a new XLSX document.
+// Keywords: Aspose.Cells Workbook.Combine | merge Excel workbooks C# | preserve charts Excel merge | keep images during workbook combine | combine workbooks without losing drawings | Aspose.Cells merge example
+// Common Searches: Aspose.Cells merge workbooks keep charts | C# combine Excel files preserving images | Workbook.Combine default behavior | how to merge Excel workbooks without losing drawings | Aspose.Cells combine two workbooks example
+// Developer Intent: Combine a source Excel file into a destination file while automatically retaining all embedded charts, pictures, and shapes.
+// Use Cases: Create a master report that aggregates monthly sheets without stripping visual analytics. | Merge a template workbook with data‑driven workbooks while preserving branding graphics. | Automate consolidation of departmental spreadsheets, ensuring all inserted diagrams stay intact.
+// AI Prompts: Write C# code that uses Aspose.Cells to merge two workbooks and keep every chart and image. | Explain why Workbook.Combine retains drawing objects by default and how to confirm their presence after merging. | Suggest robust error‑handling patterns for workbook merging when files may be missing or corrupted.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMergeDemo
+namespace AsposeCellsExamples
 {
-    // The C# sample loads Destination.xlsx and Source.xlsx, merges the source into the destination using Workbook.Combine with default settings, and saves the result as CombinedResult.xlsx. The default combine operation retains all charts, pictures, and other embedded objects.
-    class Program
+    // Demonstrates how to combine a source workbook into a destination workbook using Aspose.Cells' Workbook.Combine method. The default combine operation retains all charts, pictures, shapes, and other drawing objects without requiring extra options. The example also shows file‑existence checks and basic error handling, then saves the merged file as a new XLSX document.
+    public class PreserveChartsAndImagesDuringMerge
     {
-        static void Main(string[] args)
+        // Entry point for the application
+        public static void Main(string[] args)
         {
-            // Load the first workbook (destination workbook)
-            Workbook destWorkbook = new Workbook("Destination.xlsx");
+            Run();
+        }
 
-            // Load the second workbook (source workbook to be merged)
-            Workbook sourceWorkbook = new Workbook("Source.xlsx");
+        public static void Run()
+        {
+            const string destPath = "DestinationWorkbook.xlsx";
+            const string sourcePath = "SourceWorkbook.xlsx";
+            const string outputPath = "CombinedWorkbook.xlsx";
 
-            // Combine the source workbook into the destination workbook.
-            // Default Combine behavior preserves charts, images, and other objects.
-            destWorkbook.Combine(sourceWorkbook);
+            try
+            {
+                // Ensure destination workbook exists; create an empty one if missing
+                if (!File.Exists(destPath))
+                {
+                    new Workbook().Save(destPath);
+                }
 
-            // Save the combined workbook.
-            destWorkbook.Save("CombinedResult.xlsx", SaveFormat.Xlsx);
+                // Ensure source workbook exists; create an empty one if missing
+                if (!File.Exists(sourcePath))
+                {
+                    new Workbook().Save(sourcePath);
+                }
+
+                // Load the destination workbook (the workbook that will receive the merged content)
+                Workbook destWorkbook = new Workbook(destPath);
+
+                // Load the source workbook (the workbook whose charts and images will be merged)
+                Workbook sourceWorkbook = new Workbook(sourcePath);
+
+                // Combine the source workbook into the destination workbook.
+                // This operation preserves charts, images, shapes, and other drawing objects.
+                destWorkbook.Combine(sourceWorkbook);
+
+                // Save the combined workbook.
+                destWorkbook.Save(outputPath, SaveFormat.Xlsx);
+
+                Console.WriteLine("Workbooks combined successfully. Charts and images are preserved.");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,25 +1,25 @@
-// Title: Add a comment and hyperlink to an Excel table header using Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, define a ListObject (table) over A1:B3, set its display name, place a comment on header cell A1, attach a hyperlink to the Aspose.Cells online documentation, add a plain‑text comment to the table itself, and save the result as an XLSX file.
-// Keywords: Aspose.Cells C# table comment | Aspose.Cells add hyperlink | ListObject comment Aspose | Excel table header comment .NET | Aspose.Cells external documentation link | C# Aspose.Cells create table | Aspose.Cells save as xlsx
-// Common Searches: How to add a comment to a table header in Aspose.Cells C# | Aspose.Cells add hyperlink to cell | Create ListObject with comment Aspose.Cells | C# Aspose.Cells embed documentation link | Add comment and hyperlink to Excel using Aspose.Cells
-// Developer Intent: Programmatically add a descriptive comment and a clickable link to the header of an Excel table so users can quickly access online documentation.
-// Use Cases: Generate reports where each table header contains a comment linking to the API reference for instant user guidance. | Provide end‑users with direct access to the latest Aspose.Cells documentation by embedding hyperlinks in key worksheet cells. | Add audit‑ready comments to tables while linking to external standards or policy documents for compliance tracking.
-// AI Prompts: Give me C# code that adds a comment and a hyperlink to a specific cell in an Aspose.Cells workbook. | Show an example that creates a ListObject, sets its display name, adds a header comment, and inserts a hyperlink to the Aspose.Cells documentation. | Explain how to retrieve, update, or delete a comment or hyperlink from a table header after the workbook has been saved.
+// Title: Add an Excel Table with a Visible Comment and Hyperlink using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, populate a range, convert it into a ListObject (table), insert a visible comment on the header cell, embed an HTML hyperlink to the Aspose.Cells documentation, and save the file as TableWithComment.xlsx with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# table comment hyperlink | Add visible comment Aspose.Cells .NET | ListObject with HtmlNote comment | Excel comment hyperlink Aspose | Save workbook with table and comment
+// Common Searches: Aspose.Cells add comment with link C# | Create Excel table and attach comment Aspose | Visible comment containing hyperlink Aspose.Cells | How to use HtmlNote in Aspose.Cells comment | C# ListObject comment hyperlink example
+// Developer Intent: Create a worksheet table and attach a visible comment that includes a clickable link to external documentation.
+// Use Cases: Automated reports where column headers link to API reference pages. | Template workbooks that guide end‑users to online usage guidelines via cell comments. | Training materials that embed documentation URLs directly in Excel comments for quick access.
+// AI Prompts: Generate C# code to add a ListObject and a visible comment with an HTML hyperlink using Aspose.Cells. | Show how to set the HtmlNote property of a comment so the link opens in a browser when clicked. | Explain steps to embed a documentation URL in a table header comment and save the workbook as XLSX.
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsDemo
 {
-    // Shows how to create a workbook, define a ListObject (table) over A1:B3, set its display name, place a comment on header cell A1, attach a hyperlink to the Aspose.Cells online documentation, add a plain‑text comment to the table itself, and save the result as an XLSX file.
-    public class TableWithCommentAndHyperlink
+    // Demonstrates how to create a workbook, populate a range, convert it into a ListObject (table), insert a visible comment on the header cell, embed an HTML hyperlink to the Aspose.Cells documentation, and save the file as TableWithComment.xlsx with Aspose.Cells for .NET.
+    class TableWithCommentDemo
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
                 Run();
+                Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)
             {
@@ -31,41 +31,36 @@ namespace AsposeCellsExamples
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the table (including header row)
-            worksheet.Cells["A1"].PutValue("ID");
-            worksheet.Cells["B1"].PutValue("Name");
-            worksheet.Cells["A2"].PutValue(1);
-            worksheet.Cells["B2"].PutValue("Alice");
-            worksheet.Cells["A3"].PutValue(2);
-            worksheet.Cells["B3"].PutValue("Bob");
+            // Populate sample data for the table
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
 
             // Create a ListObject (table) that covers the data range A1:B3
-            // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
-            int tableIndex = worksheet.ListObjects.Add(0, 0, 3, 2, true);
-            ListObject table = worksheet.ListObjects[tableIndex];
+            int tableIndex = sheet.ListObjects.Add(0, 0, 2, 1, true);
+            var listObj = sheet.ListObjects[tableIndex];
+            // If needed, set a display name (property may vary by version)
+            // listObj.DisplayName = "SampleTable";
 
-            // Set a display name for the table (Name property not available in this version)
-            table.DisplayName = "SampleTable";
+            // Add a comment to the header cell A1
+            int commentIdx = sheet.Comments.Add("A1");
+            var comment = sheet.Comments[commentIdx];
 
-            // Add a comment to the header cell A1 that references external documentation
-            int commentIdx = worksheet.Comments.Add(0, 0); // Row 0, Column 0 => A1
-            Comment comment = worksheet.Comments[commentIdx];
-            comment.Note = "For more details see the Aspose.Cells documentation.";
-            comment.Author = "Developer";
+            // Embed a hyperlink to external documentation using HtmlNote
+            comment.HtmlNote = "<a href=\"https://docs.aspose.com/cells/net/\" target=\"_blank\">Aspose.Cells Documentation</a>";
+            comment.IsVisible = true;
 
-            // Add a hyperlink to the same cell (A1) pointing to the external documentation
-            // Parameters: firstRow, firstColumn, totalRows, totalColumns, address
-            worksheet.Hyperlinks.Add(0, 0, 1, 1, "https://docs.aspose.com/cells/net/");
-
-            // Optionally, set the ListObject's own comment property (plain text)
-            table.Comment = "Table created. See cell A1 for documentation link.";
+            // Optionally set a plain‑text comment for the table (if supported)
+            // listObj.Comment = "See attached comment for documentation link.";
 
             // Save the workbook
-            string outputPath = "TableWithCommentAndHyperlink.xlsx";
+            string outputPath = "TableWithComment.xlsx";
             workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to {outputPath}");
         }
     }
 }

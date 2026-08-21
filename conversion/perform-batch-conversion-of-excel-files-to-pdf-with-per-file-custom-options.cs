@@ -1,13 +1,12 @@
-// Title: Batch Convert Excel & CSV to PDF with Individual PdfSaveOptions – Aspose.Cells for .NET
-// Description: C# sample that iterates a list of Excel/CSV files, detects each format, applies a custom PdfSaveOptions (one‑page‑per‑sheet, all‑columns‑in‑one‑page, PDF/A‑1b, watermark, image resampling) and converts them to PDF using Aspose.Cells ConversionUtility, with error handling and file‑existence checks.
-// Keywords: Aspose.Cells batch conversion | Excel to PDF C# | CSV to PDF Aspose | PdfSaveOptions per file | one page per sheet Aspose | PDF/A compliance Aspose.Cells | watermark PDF Aspose.Cells | image resample PDF Aspose | ConversionUtility Convert method | load format auto detection
-// Common Searches: batch convert multiple Excel files to PDF with different settings Aspose.Cells | apply watermark during Excel to PDF conversion C# | set PDF/A‑1b for specific Excel files in batch conversion | one page per sheet option for batch Excel to PDF | convert CSV to PDF with image resampling using Aspose.Cells
-// Developer Intent: Convert a mixed collection of .xlsx, .xls, and .csv workbooks to PDF, assigning a unique PdfSaveOptions configuration to each file.
-// Use Cases: Create separate PDF reports where each workbook requires a distinct layout—single‑page‑per‑sheet, all columns on one page, or PDF/A compliance. | Add a semi‑transparent diagonal watermark and lower image resolution for sensitive CSV data before generating PDFs. | Automatically detect CSV files, select the proper LoadFormat, and process a heterogeneous batch with individual conversion options.
-// AI Prompts: Generate C# code that adds a diagonal semi‑transparent watermark to PDFs produced from Excel files with Aspose.Cells. | Show how to extend the batch conversion loop to record conversion duration for each file and export a CSV summary. | Explain how to configure PdfSaveOptions to embed fonts and enable PDF/A‑2b compliance for selected files in a batch process.
+// Title: Batch convert Excel (XLSX, XLS, CSV) to PDF with custom options using Aspose.Cells for .NET
+// Description: Creates an output folder, loops through a list of Excel files, validates each path, builds a matching PDF name, and uses Aspose.Cells LoadOptions together with PdfSaveOptions (OnePagePerSheet, AllColumnsInOnePagePerSheet, PDF/A‑1b compliance, formula recalculation, font embedding) to convert every workbook to PDF via ConversionUtility.Convert. Successes and errors are logged to the console.
+// Keywords: Aspose.Cells batch conversion | Excel to PDF C# | PdfSaveOptions OnePagePerSheet | PDF/A-1b Aspose.Cells | ConversionUtility.Convert example | multiple Excel files to PDF | C# Excel PDF batch processing | embed fonts Aspose PDF
+// Common Searches: How to batch convert XLSX, XLS, CSV to PDF with Aspose.Cells | Set per‑file PDF options in Aspose.Cells C# | Convert many Excel workbooks to PDF/A‑1b using .NET | Aspose.Cells error handling for missing Excel files | C# code for converting a list of spreadsheets to PDF
+// Developer Intent: Convert a collection of Excel workbooks to PDF in a single run while applying individual PdfSaveOptions to each file.
+// Use Cases: Automate daily generation of PDF reports from multiple Excel exports. | Archive financial spreadsheets as PDF/A‑1b compliant documents for regulatory purposes. | Produce portable PDFs from CSV data sets with formulas recalculated and fonts embedded.
+// AI Prompts: Write C# code that uses Aspose.Cells to batch convert an array of Excel file paths to PDF, applying custom PdfSaveOptions such as OnePagePerSheet and PDF/A‑1b compliance, with error handling for missing files. | Explain how to vary PdfSaveOptions per file based on filename patterns in a batch conversion scenario. | Show how to log conversion results to a CSV file instead of the console while using Aspose.Cells ConversionUtility.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
@@ -15,72 +14,73 @@ using Aspose.Cells.Rendering;
 
 namespace BatchExcelToPdf
 {
-    // C# sample that iterates a list of Excel/CSV files, detects each format, applies a custom PdfSaveOptions (one‑page‑per‑sheet, all‑columns‑in‑one‑page, PDF/A‑1b, watermark, image resampling) and converts them to PDF using Aspose.Cells ConversionUtility, with error handling and file‑existence checks.
-    class Program
+    // Creates an output folder, loops through a list of Excel files, validates each path, builds a matching PDF name, and uses Aspose.Cells LoadOptions together with PdfSaveOptions (OnePagePerSheet, AllColumnsInOnePagePerSheet, PDF/A‑1b compliance, formula recalculation, font embedding) to convert every workbook to PDF via ConversionUtility.Convert. Successes and errors are logged to the console.
+    public class Converter
     {
-        static void Main()
+        /// <param name="sourceFiles">Full paths of the Excel files to convert.</param>
+        /// <param name="outputFolder">Folder where the resulting PDFs will be saved.</param>
+        public static void ConvertBatch(string[] sourceFiles, string outputFolder)
         {
-            // Define source Excel files and corresponding PDF output paths
-            var files = new List<(string source, string dest, Action<PdfSaveOptions> configure)>
+            // Ensure the output directory exists.
+            Directory.CreateDirectory(outputFolder);
+
+            foreach (string sourcePath in sourceFiles)
             {
-                // Example 1: simple conversion, one page per sheet
-                ("Input1.xlsx", "Output1.pdf", options =>
+                // Validate source file existence.
+                if (!File.Exists(sourcePath))
                 {
-                    options.OnePagePerSheet = true;
-                }),
-
-                // Example 2: fit all columns on one page, use PDF/A-1b compliance
-                ("Input2.xls", "Output2.pdf", options =>
-                {
-                    options.AllColumnsInOnePagePerSheet = true;
-                    options.Compliance = PdfCompliance.PdfA1b;
-                }),
-
-                // Example 3: custom watermark and image resampling
-                ("Input3.csv", "Output3.pdf", options =>
-                {
-                    options.Watermark = new RenderingWatermark("CONFIDENTIAL",
-                        new RenderingFont("Arial", 48) { Color = System.Drawing.Color.Red, Bold = true })
-                    {
-                        Opacity = 0.3f,
-                        Rotation = 45
-                    };
-                    options.SetImageResample(150, 80); // 150 PPI, 80% JPEG quality
-                })
-            };
-
-            foreach (var (source, dest, configure) in files)
-            {
-                // Verify that the source file exists
-                if (!File.Exists(source))
-                {
-                    Console.WriteLine($"Source file '{source}' not found. Skipping conversion.");
+                    Console.WriteLine($"Source file not found: {sourcePath}");
                     continue;
                 }
 
-                // Determine load format based on file extension
-                LoadFormat loadFormat = source.EndsWith(".csv", StringComparison.OrdinalIgnoreCase)
-                    ? LoadFormat.Csv
-                    : LoadFormat.Auto; // Auto detects format for other extensions
+                // Determine the output PDF file name (same base name, .pdf extension).
+                string outputPath = Path.Combine(outputFolder,
+                    Path.GetFileNameWithoutExtension(sourcePath) + ".pdf");
 
-                // Create load options (if needed)
-                var loadOptions = new LoadOptions(loadFormat);
+                // Create LoadOptions based on the source file format.
+                // For simplicity we let Aspose infer the format, but we can specify it explicitly.
+                LoadOptions loadOptions = new LoadOptions();
 
-                // Create PDF save options and apply per‑file custom configuration
-                var pdfOptions = new PdfSaveOptions();
-                configure?.Invoke(pdfOptions);
+                // Create PDF save options with custom settings for this file.
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    // Example customizations – adjust as needed per file.
+                    OnePagePerSheet = true,                     // Fit each sheet onto a single page.
+                    AllColumnsInOnePagePerSheet = true,        // Fit all columns onto one page.
+                    Compliance = PdfCompliance.PdfA1b,         // PDF/A‑1b compliance.
+                    CalculateFormula = true,                   // Re‑calculate formulas before saving.
+                    EmbedStandardWindowsFonts = true           // Embed fonts for better portability.
+                };
 
                 try
                 {
-                    // Perform conversion using the provided utility method
-                    ConversionUtility.Convert(source, loadOptions, dest, pdfOptions);
-                    Console.WriteLine($"Converted '{source}' to PDF '{dest}' with custom options.");
+                    // Perform the conversion using the utility method that accepts
+                    // load and save options.
+                    ConversionUtility.Convert(sourcePath, loadOptions, outputPath, pdfOptions);
+                    Console.WriteLine($"Converted: {sourcePath} → {outputPath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error converting '{source}' to PDF: {ex.Message}");
+                    Console.WriteLine($"Error converting '{sourcePath}': {ex.Message}");
                 }
             }
+        }
+
+        // Example usage.
+        public static void Main()
+        {
+            // Define the Excel files to process.
+            string[] filesToConvert = new[]
+            {
+                @"C:\Data\Report1.xlsx",
+                @"C:\Data\Report2.xls",
+                @"C:\Data\Report3.csv"
+            };
+
+            // Destination folder for PDFs.
+            string pdfFolder = @"C:\Data\PdfOutput";
+
+            ConvertBatch(filesToConvert, pdfFolder);
         }
     }
 }

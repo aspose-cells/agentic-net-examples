@@ -1,62 +1,51 @@
-// Title: Open Excel workbook from a UNC network share with Aspose.Cells (.NET) and save locally
-// Description: Shows how to verify a file on a Windows UNC share, load it using Aspose.Cells' Workbook(string) constructor, fall back to a new workbook when the file is absent, display the worksheet count, ensure the target folder exists, and save the workbook to a local path with proper exception handling in C#.
-// Keywords: Aspose.Cells UNC path | Aspose.Cells load workbook from network share | C# open Excel from UNC | Workbook(string) constructor | File.Exists UNC | Directory.CreateDirectory save workbook | exception handling Aspose.Cells | .NET network share Excel | save workbook to local folder | fallback workbook Aspose.Cells
-// Common Searches: How to open an Excel file on a UNC share with Aspose.Cells | Aspose.Cells load workbook from network share C# | Save Aspose.Cells workbook to local folder after opening from UNC | Create workbook when file not found Aspose.Cells | Ensure directory exists before saving workbook Aspose.Cells
-// Developer Intent: Load an Excel file from a UNC share, create a new workbook if the file does not exist, and optionally write a copy to a local directory.
-// Use Cases: Open a workbook located on a Windows network share after confirming its presence. | Automatically generate a new workbook with a default sheet when the shared file is missing. | Save the opened or newly created workbook to a local path, creating the destination folder if it isn’t already present.
-// AI Prompts: Generate C# code that opens an Excel file from a UNC path using Aspose.Cells, checks existence, and creates a new workbook if missing. | Show how to save a workbook loaded from a network share to a local directory, creating the folder if needed, with try‑catch error handling. | Explain permission and authentication considerations for accessing a Windows UNC share with Aspose.Cells.
+// Title: Open an Excel workbook from a UNC network share using Aspose.Cells in C#
+// Description: Demonstrates how to load an Excel file from a UNC path (e.g., \\Server\Share\Folder\file.xlsx) with Aspose.Cells, create a new workbook when the file is missing, display the first worksheet name, and save a local copy. Includes basic error handling for network‑share access.
+// Keywords: Aspose.Cells UNC path | C# load Excel from network share | open workbook from \Server\Share | create workbook if file not found Aspose | save workbook locally C# | Aspose.Cells file existence check | network share Excel handling .NET
+// Common Searches: Aspose.Cells load workbook from UNC path | C# open Excel file on network share | How to handle missing Excel file with Aspose.Cells | Save Aspose.Cells workbook to local folder | UNC path handling in Aspose.Cells examples
+// Developer Intent: Load an Excel workbook from a UNC network share, generate a new workbook when the file does not exist, and write a copy to a local directory using Aspose.Cells for .NET.
+// Use Cases: Read a shared financial template from \\Server\Share, modify the first sheet, and back it up locally before further processing. | Automate nightly synchronization of a reporting workbook stored on a network drive to a local analysis folder. | Validate the presence of a master spreadsheet on a file server; if absent, create a default workbook and store it locally for later upload.
+// AI Prompts: Generate C# code that uses Aspose.Cells to open an Excel file from a UNC path, creates a new workbook when the file is missing, and saves a copy to the application's current directory. | Explain best practices for handling permissions and path formatting when loading workbooks from network shares with Aspose.Cells. | Provide a snippet that iterates all worksheets of a workbook loaded from a UNC share and logs each sheet name with its index.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Shows how to verify a file on a Windows UNC share, load it using Aspose.Cells' Workbook(string) constructor, fall back to a new workbook when the file is absent, display the worksheet count, ensure the target folder exists, and save the workbook to a local path with proper exception handling in C#.
+// Demonstrates how to load an Excel file from a UNC path (e.g., \\Server\Share\Folder\file.xlsx) with Aspose.Cells, create a new workbook when the file is missing, display the first worksheet name, and save a local copy. Includes basic error handling for network‑share access.
 class Program
 {
     static void Main()
     {
         // UNC path to the workbook on a network share
-        string uncPath = @"\\ServerName\ShareFolder\Sample.xlsx";
+        string uncPath = @"\\Server\Share\Folder\example.xlsx";
 
         Workbook workbook = null;
 
         try
         {
-            // Verify that the network file exists before attempting to load it
+            // Load workbook if the file exists; otherwise create a new one
             if (File.Exists(uncPath))
             {
-                // Load the workbook from the UNC path
                 workbook = new Workbook(uncPath);
-                Console.WriteLine("Workbook opened from: " + uncPath);
+                Console.WriteLine("Workbook loaded from UNC path.");
             }
             else
             {
-                // If the file is not found, create a new workbook as a fallback
-                Console.WriteLine("Network file not found. Creating a new workbook.");
-                workbook = new Workbook();
+                Console.WriteLine("UNC file not found. Creating a new workbook.");
+                workbook = new Workbook(); // creates a new empty workbook
                 workbook.Worksheets[0].Name = "Sheet1";
             }
 
-            // Display basic information
-            Console.WriteLine("Worksheet count: " + workbook.Worksheets.Count);
+            // Display the name of the first worksheet
+            Console.WriteLine("First worksheet name: " + workbook.Worksheets[0].Name);
 
-            // Optionally save a copy to a local folder
-            string localCopyPath = @"C:\Temp\SampleCopy.xlsx";
-
-            // Ensure the target directory exists
-            string localDir = Path.GetDirectoryName(localCopyPath);
-            if (!Directory.Exists(localDir))
-            {
-                Directory.CreateDirectory(localDir);
-            }
-
+            // Save a local copy to verify the workbook was loaded/created successfully
+            string localCopyPath = Path.Combine(Environment.CurrentDirectory, "example_copy.xlsx");
             workbook.Save(localCopyPath);
-            Console.WriteLine("Workbook saved to: " + localCopyPath);
+            Console.WriteLine("Workbook saved locally to: " + localCopyPath);
         }
         catch (Exception ex)
         {
-            // Catch any unexpected exceptions and display the error
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

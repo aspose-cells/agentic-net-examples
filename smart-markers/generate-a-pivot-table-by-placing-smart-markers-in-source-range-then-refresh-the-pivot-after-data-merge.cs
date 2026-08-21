@@ -1,70 +1,88 @@
-// Title: Create and Refresh a Pivot Table from Smart Markers with Aspose.Cells for .NET (C#)
-// Description: This example shows how to build an Excel workbook, place smart‑marker placeholders for Category and Amount, generate a pivot table on a separate sheet, feed a DataTable to WorkbookDesigner, expand the source range automatically, refresh the pivot, and save the file as SmartMarkerPivot.xlsx using Aspose.Cells for C#.
-// Keywords: Aspose.Cells | C# | Smart Markers | Pivot Table | Refresh Pivot | WorkbookDesigner | DataTable to Excel | dynamic source range | Excel automation | US developers | European .NET community
-// Common Searches: Aspose.Cells create pivot table from smart markers C# | refresh pivot after WorkbookDesigner process | smart marker source range expansion example | generate Excel pivot using DataTable Aspose.Cells | C# code for dynamic pivot table with smart markers
-// Developer Intent: Build a pivot table that updates automatically after smart‑marker data merging.
-// Use Cases: Monthly sales report where new transaction rows are inserted via smart markers and the summary pivot updates instantly. | Financial dashboard that pulls quarterly figures from a DataTable and reflects changes without manual pivot adjustments. | Automated inventory analysis where product categories are added through smart markers and the pivot view expands accordingly.
-// AI Prompts: Provide C# code to add multiple value fields to the pivot after processing smart markers. | Explain how the smart‑marker expansion modifies the pivot source range and how to verify the refresh. | Suggest robust error‑handling patterns for WorkbookDesigner.Process and pivot refresh in Aspose.Cells.
+// Title: Create and Refresh a Pivot Table with Smart Markers Using Aspose.Cells for .NET (C#)
+// Description: This example demonstrates how to generate a workbook, insert smart‑marker data into a "SourceData" sheet, build a pivot table on a separate "PivotReport" sheet, configure row, column and data fields, refresh the pivot to capture the merged data, and save the file as PivotWithSmartMarkers.xlsx.
+// Keywords: Aspose.Cells C# pivot table | smart markers Aspose.Cells | refresh pivot tables .NET | programmatic pivot report | dynamic source range Aspose | C# Excel automation | global Aspose.Cells examples
+// Common Searches: how to add a pivot table with Aspose.Cells in C# | refresh pivot after data merge Aspose.Cells | use smart markers to populate Excel data for pivot | Aspose.Cells create pivot from list of objects | C# code for dynamic pivot table range
+// Developer Intent: Programmatically fill a worksheet with data via smart markers, create a pivot table based on that data, refresh the pivot, and export the workbook.
+// Use Cases: Generate a sales summary pivot that groups amounts by category and product without manual Excel interaction. | Automate reporting pipelines where source data changes frequently and pivots must stay up‑to‑date. | Create reusable .NET components that build Excel workbooks with smart‑marker driven data and built‑in pivot analysis.
+// AI Prompts: Write C# code that uses Aspose.Cells smart markers to insert a list of objects into a worksheet and then creates a pivot table that is refreshed automatically. | Show how to determine the source range for a pivot table with MaxDisplayRange and configure row, column, and data fields in Aspose.Cells. | Explain the steps to refresh all pivot tables in an Aspose.Cells workbook after updating the source data programmatically.
 
 using System;
-using System.Data;
+using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// This example shows how to build an Excel workbook, place smart‑marker placeholders for Category and Amount, generate a pivot table on a separate sheet, feed a DataTable to WorkbookDesigner, expand the source range automatically, refresh the pivot, and save the file as SmartMarkerPivot.xlsx using Aspose.Cells for C#.
-class Program
+namespace AsposeCellsPivotSmartMarkerDemo
 {
-    static void Main()
+    // Sample data class for pivot processing
+    // This example demonstrates how to generate a workbook, insert smart‑marker data into a "SourceData" sheet, build a pivot table on a separate "PivotReport" sheet, configure row, column and data fields, refresh the pivot to capture the merged data, and save the file as PivotWithSmartMarkers.xlsx.
+    public class SalesRecord
     {
-        try
+        public string Category { get; set; } = string.Empty;
+        public string Product { get; set; } = string.Empty;
+        public double Amount { get; set; }
+    }
+
+    class Program
+    {
+        static void Main()
         {
-            // Create a new workbook and a worksheet that will hold the source data
-            Workbook workbook = new Workbook();
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
+            try
+            {
+                // 1. Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Insert header row
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Amount");
+                // 2. Prepare the source worksheet with headers
+                Worksheet sourceSheet = workbook.Worksheets[0];
+                sourceSheet.Name = "SourceData";
 
-            // Insert a smart‑marker row – it will be replaced with the actual data rows
-            dataSheet.Cells["A2"].PutValue("&=Data.Category");
-            dataSheet.Cells["B2"].PutValue("&=Data.Amount");
+                sourceSheet.Cells["A1"].PutValue("Category");
+                sourceSheet.Cells["B1"].PutValue("Product");
+                sourceSheet.Cells["C1"].PutValue("Amount");
 
-            // Add a separate worksheet for the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+                // 3. Define sample data
+                List<SalesRecord> sales = new List<SalesRecord>
+                {
+                    new SalesRecord { Category = "Fruits", Product = "Apple",  Amount = 1200 },
+                    new SalesRecord { Category = "Fruits", Product = "Banana", Amount = 800 },
+                    new SalesRecord { Category = "Vegetables", Product = "Carrot", Amount = 600 },
+                    new SalesRecord { Category = "Vegetables", Product = "Tomato", Amount = 950 }
+                };
 
-            // Define the initial source range (it will be automatically expanded after smart‑marker processing)
-            string sourceRange = "Data!A1:B2";
+                // 4. Populate the source sheet with the sample data
+                int currentRow = 2; // Data starts from row 2
+                foreach (var record in sales)
+                {
+                    sourceSheet.Cells[currentRow, 0].PutValue(record.Category);
+                    sourceSheet.Cells[currentRow, 1].PutValue(record.Product);
+                    sourceSheet.Cells[currentRow, 2].PutValue(record.Amount);
+                    currentRow++;
+                }
 
-            // Create the pivot table
-            int pivotIndex = pivotSheet.PivotTables.Add(sourceRange, "A1", "MyPivot");
-            PivotTable pivot = pivotSheet.PivotTables[pivotIndex];
-            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
+                // 5. Create a worksheet that will hold the pivot table
+                Worksheet pivotSheet = workbook.Worksheets.Add("PivotReport");
 
-            // Prepare the data that will replace the smart markers
-            DataTable dt = new DataTable("Data");
-            dt.Columns.Add("Category", typeof(string));
-            dt.Columns.Add("Amount", typeof(double));
-            dt.Rows.Add("Fruit", 1200);
-            dt.Rows.Add("Vegetable", 800);
-            dt.Rows.Add("Beverage", 1500);
+                // 6. Add a pivot table based on the populated data range
+                var usedRange = sourceSheet.Cells.MaxDisplayRange;
+                string sourceData = $"=SourceData!{usedRange.Address}";
+                int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A3", "SalesPivot");
 
-            // Process smart markers using WorkbookDesigner (replaces SmartMarkerProcessor)
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource("Data", dt);
-            designer.Process();
+                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+                // Configure pivot fields
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+                pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-            // Refresh the pivot table so it reflects the newly merged data
-            pivotSheet.RefreshPivotTables();
+                // 7. Refresh the pivot table to reflect the data
+                pivotSheet.RefreshPivotTables();
 
-            // Save the workbook
-            workbook.Save("SmartMarkerPivot.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
+                // 8. Save the workbook
+                workbook.Save("PivotWithSmartMarkers.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

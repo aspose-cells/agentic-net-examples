@@ -1,15 +1,15 @@
-// Title: C# – Rename Active Worksheet to QuarterlyReport with Aspose.Cells (Data Preserved)
-// Description: Demonstrates how to access the active worksheet in a new Workbook, change its Name to "QuarterlyReport", and save the file while keeping all existing cell values intact.
-// Keywords: Aspose.Cells rename worksheet C# | active sheet rename .NET | preserve cell values Aspose | set worksheet name programmatically | Aspose.Cells workbook rename | C# worksheet name change
-// Common Searches: Aspose.Cells rename active sheet | C# change worksheet name without losing data | how to set worksheet name in Aspose.Cells | rename worksheet to QuarterlyReport Aspose | preserve cell data when renaming sheet Aspose.Cells
-// Developer Intent: Rename the currently active worksheet to "QuarterlyReport" while keeping all existing cell contents.
-// Use Cases: Rename the default sheet of a freshly created workbook before exporting to a client‑specific filename. | Update the sheet name after populating data to reflect the reporting period without altering any cell values. | Automate sheet renaming in a batch process, ensuring data integrity across multiple workbooks.
-// AI Prompts: Provide C# code using Aspose.Cells to rename the active worksheet to a given name while preserving all cell data. | Explain the steps to rename a worksheet in Aspose.Cells and verify that cell values are retained after saving the workbook. | Create a reusable method that takes a Workbook object and a new sheet name, renames the active worksheet, and returns the updated workbook.
+// Title: C# – Rename Active Worksheet to QuarterlyReport with Aspose.Cells (preserve cell data)
+// Description: Demonstrates how to rename the currently active worksheet in an Aspose.Cells workbook to "QuarterlyReport" while keeping all existing cell values intact. The example creates a new workbook, accesses the active sheet via ActiveSheetIndex, writes sample data, sets the Worksheet.Name property, and saves the file as an XLSX document.
+// Keywords: Aspose.Cells rename worksheet | C# active sheet name change | preserve cell data rename worksheet | Worksheet.Name property Aspose | save workbook after renaming sheet
+// Common Searches: rename active worksheet Aspose.Cells C# | change worksheet name without losing data | how to set worksheet name in Aspose.Cells | preserve cell values when renaming sheet | Aspose.Cells rename sheet example
+// Developer Intent: Rename the active worksheet to "QuarterlyReport" while ensuring no cell data is lost.
+// Use Cases: Rename the default sheet after populating data before exporting a report. | Assign period‑specific names (e.g., Q1, Q2) to worksheets in automated financial statements. | Standardize worksheet names in multi‑sheet workbooks for better end‑user navigation.
+// AI Prompts: Generate C# code that renames the active worksheet in an Aspose.Cells workbook to a custom name without affecting existing cell values. | Show how to use Worksheet.Name to change the active sheet's title and then save the workbook as XLSX. | Explain whether changing Worksheet.Name in Aspose.Cells impacts the data stored in cells.
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to access the active worksheet in a new Workbook, change its Name to "QuarterlyReport", and save the file while keeping all existing cell values intact.
+// Demonstrates how to rename the currently active worksheet in an Aspose.Cells workbook to "QuarterlyReport" while keeping all existing cell values intact. The example creates a new workbook, accesses the active sheet via ActiveSheetIndex, writes sample data, sets the Worksheet.Name property, and saves the file as an XLSX document.
 class RenameActiveWorksheet
 {
     static void Main()
@@ -17,7 +17,7 @@ class RenameActiveWorksheet
         // Create a new workbook (creation rule)
         Workbook workbook = new Workbook();
 
-        // Access the currently active worksheet
+        // Access the active worksheet using the active sheet index
         Worksheet activeSheet = workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex];
 
         // Example data to show that cell contents are preserved after renaming

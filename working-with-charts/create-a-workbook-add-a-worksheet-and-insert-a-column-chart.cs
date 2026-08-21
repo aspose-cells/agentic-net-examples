@@ -1,47 +1,49 @@
-// Title: C# – Create a Workbook, Populate Data, and Insert a Column Chart with Aspose.Cells
-// Description: Demonstrates how to instantiate a Workbook, write headers and sample rows, add a Column chart using ChartCollection.Add, define its data range with SetChartDataRange, set a title, and save the file as an XLSX document.
-// Keywords: Aspose.Cells C# column chart example | add chart to worksheet Aspose.Cells | ChartCollection.Add Aspose.Cells | SetChartDataRange Aspose.Cells | save workbook as XLSX Aspose.Cells | populate Excel cells programmatically
-// Common Searches: how to add a column chart in Aspose.Cells C# | Aspose.Cells set chart data range | save Aspose.Cells workbook with chart | C# example for creating charts with Aspose.Cells | Aspose.Cells chart positioning rows columns
-// Developer Intent: Generate an Excel file that contains sample data and a column chart using the Aspose.Cells .NET API.
-// Use Cases: Build a sales‑by‑category report that visualizes values with a column chart. | Automate monthly performance dashboards that include pre‑formatted charts. | Create a reusable Excel template with a placeholder column chart for downstream data entry.
-// AI Prompts: Modify the example to use a stacked column chart and change the chart title. | Add data labels to each column in the chart created with Aspose.Cells. | Reposition the chart to a different cell range and adjust its width and height programmatically.
+// Title: Create a Workbook and Add a Column Chart with Aspose.Cells for .NET (C#)
+// Description: C# example that creates a new Workbook, fills cells A1:B6 with sample data, adds a Column chart (rows 7‑20, columns 1‑8), sets the data range, gives the chart a title, and saves the file as ColumnChartDemo.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# column chart example | add chart to worksheet Aspose.Cells | ChartCollection.Add ChartType.Column | SetChartDataRange Aspose.Cells | save workbook as xlsx Aspose | Aspose.Cells chart title | Excel automation .NET
+// Common Searches: how to add a column chart in Aspose.Cells C# | Aspose.Cells set chart data range example | save Excel file with chart using Aspose.Cells | Aspose.Cells ChartCollection.Add usage | C# create Excel workbook with chart
+// Developer Intent: Generate an Excel workbook, populate it with sample data, insert a column chart, and save the result programmatically with Aspose.Cells for .NET.
+// Use Cases: Build a sales‑by‑category report that visualizes values in a column chart. | Automate monthly performance dashboards that include dynamically generated charts. | Export analytical data to XLSX files with ready‑to‑present column charts for stakeholders.
+// AI Prompts: Show how to change the inserted chart to a stacked column chart in the same workbook. | Provide code to bind the chart to a named range instead of a hard‑coded cell range. | Explain how to add data labels and customize their font for the column chart using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates how to instantiate a Workbook, write headers and sample rows, add a Column chart using ChartCollection.Add, define its data range with SetChartDataRange, set a title, and save the file as an XLSX document.
-class Program
+namespace AsposeCellsChartDemo
 {
-    static void Main()
+    // C# example that creates a new Workbook, fills cells A1:B6 with sample data, adds a Column chart (rows 7‑20, columns 1‑8), sets the data range, gives the chart a title, and saves the file as ColumnChartDemo.xlsx using Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook (lifecycle rule: Workbook constructor)
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet (lifecycle rule: Worksheets property)
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Value");
-        for (int i = 1; i <= 5; i++)
+        static void Main()
         {
-            sheet.Cells[$"A{i + 1}"].PutValue($"Item {i}");
-            sheet.Cells[$"B{i + 1}"].PutValue(i * 10);
+            // Create a new workbook (uses the Workbook() constructor rule)
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet (default worksheet is already present)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add sample data for the column chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            for (int i = 1; i <= 5; i++)
+            {
+                sheet.Cells[$"A{i + 1}"].PutValue($"Item {i}");
+                sheet.Cells[$"B{i + 1}"].PutValue(i * 10);
+            }
+
+            // Add a column chart to the worksheet using ChartCollection.Add(ChartType, int, int, int, int)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 1, 20, 8);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Define the data range for the chart (vertical series)
+            chart.SetChartDataRange("A1:B6", true);
+
+            // Optional: set a title for the chart
+            chart.Title.Text = "Sample Column Chart";
+
+            // Save the workbook (uses the Workbook.Save method rule)
+            workbook.Save("ColumnChartDemo.xlsx", SaveFormat.Xlsx);
         }
-
-        // Add a column chart to the worksheet (feature rule: ChartCollection.Add)
-        // Parameters: ChartType, topRow, leftColumn, bottomRow, rightColumn
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 2, 20, 10);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Define the data range for the chart (vertical series)
-        chart.SetChartDataRange("A1:B6", true);
-
-        // Set a title for the chart (optional customization)
-        chart.Title.Text = "Sample Column Chart";
-
-        // Save the workbook (lifecycle rule: Workbook.Save)
-        workbook.Save("ColumnChartDemo.xlsx", SaveFormat.Xlsx);
     }
 }

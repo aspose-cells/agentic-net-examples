@@ -1,100 +1,80 @@
-// Title: Extract Shape Glow Color and Validate Against Workbook or Custom Palette with Aspose.Cells for .NET
-// Description: Demonstrates how to add a rounded‑rectangle auto shape, set its glow effect, read the glow color, check if the color exists in the workbook's internal palette or a developer‑defined Color array, retrieve the nearest matching palette color when needed, and save the workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells shape glow color | read glow color C# | compare glow color palette | workbook palette lookup Aspose.Cells | closest matching Excel color | auto shape glow verification | color consistency check .NET
-// Common Searches: How to get the glow color of a shape in Aspose.Cells .NET | Check if a shape's glow color is in the workbook palette | Find nearest workbook palette color for a custom glow | Compare shape glow color with a predefined Color array | Validate Excel shape glow against brand colors
-// Developer Intent: Read a shape's glow color and determine whether it matches a predefined palette or the workbook's internal color palette, optionally obtaining the closest palette match.
-// Use Cases: Enforce corporate branding by confirming that shape glow colors conform to an approved color set before distributing the workbook. | Automate an audit that flags non‑standard glow colors and replaces them with the nearest workbook palette color. | Generate a compliance report that lists shapes with glow colors outside the allowed palette across multiple worksheets.
-// AI Prompts: Create a C# method that receives a Shape and a Color[] palette, returns true if the shape's glow color is present in the palette using Aspose.Cells. | Write code to replace a shape's glow color with the closest workbook palette color when the original color is absent from the workbook palette. | Provide an example that iterates over all shapes on a worksheet, checks each glow color against a predefined palette, and logs any mismatches.
+// Title: Extract and Validate a Shape’s Glow Color with Aspose.Cells for .NET
+// Description: Shows how to read a shape’s GlowEffect color, verify its existence in the workbook palette via Workbook.IsColorInPalette, compare it to a custom Color[] list, and obtain the closest workbook palette match using Workbook.GetMatchingColor.
+// Keywords: Aspose.Cells shape glow color | Workbook.IsColorInPalette | Workbook.GetMatchingColor | C# extract glow effect | Excel palette validation | custom color palette Aspose.Cells | compare shape color .NET | color consistency check | Aspose.Cells GetMatchingColor example
+// Common Searches: read glow color of a shape Aspose.Cells C# | check if shape glow color is in workbook palette | compare shape glow color to custom palette | find nearest Excel palette color for shape glow | Aspose.Cells IsColorInPalette usage
+// Developer Intent: Retrieve a worksheet shape’s glow color and determine whether it matches a predefined set or the workbook’s internal palette.
+// Use Cases: Enforce brand guidelines by confirming that shape glows use approved colors before publishing a workbook. | Detect and flag out‑of‑spec glow colors in automatically generated reports by comparing them to a whitelist. | Automatically replace non‑standard glow colors with the nearest workbook palette color to maintain compatibility with older Excel versions.
+// AI Prompts: Create a C# method that takes a Shape and a Color[] and returns true if the shape's Glow.Color exists in the array, using Aspose.Cells. | Generate code that replaces a shape's glow color with the closest workbook palette color when it is not found in a custom palette, leveraging Workbook.GetMatchingColor. | Explain the difference between Workbook.IsColorInPalette and Workbook.GetMatchingColor when working with System.Drawing.Color objects in Aspose.Cells.
 
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsGlowPaletteCheck
 {
-    // Demonstrates how to add a rounded‑rectangle auto shape, set its glow effect, read the glow color, check if the color exists in the workbook's internal palette or a developer‑defined Color array, retrieve the nearest matching palette color when needed, and save the workbook using Aspose.Cells for .NET.
-    class GlowColorConsistencyCheck
+    // Shows how to read a shape’s GlowEffect color, verify its existence in the workbook palette via Workbook.IsColorInPalette, compare it to a custom Color[] list, and obtain the closest workbook palette match using Workbook.GetMatchingColor.
+    public class Program
     {
-        public static void Run()
+        public static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add a rectangle shape to the worksheet
+            Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 150, 100);
+
+            // Configure the glow effect for the shape
+            GlowEffect glow = shape.Glow;
+            glow.Size = 12; // radius in points
+            glow.Transparency = 0.3; // 30% transparent
+            glow.Color = workbook.CreateCellsColor(); // create a CellsColor instance
+            glow.Color.Color = Color.FromArgb(255, 123, 200, 150); // custom glow color
+
+            // Extract the glow color (System.Drawing.Color) from the shape
+            Color extractedGlowColor = shape.Glow.Color.Color;
+
+            // Define a predefined palette (example: standard Excel palette colors)
+            Color[] predefinedPalette = new Color[]
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Color.Black,
+                Color.White,
+                Color.Red,
+                Color.Green,
+                Color.Blue,
+                Color.Yellow,
+                Color.Magenta,
+                Color.Cyan,
+                Color.FromArgb(255, 123, 200, 150) // include the custom color for demonstration
+            };
 
-                // Add a rounded rectangle shape to the worksheet
-                // Parameters: type, upperLeftRow, upperLeftColumn, top, left, height, width
-                Shape shape = sheet.Shapes.AddAutoShape(
-                    AutoShapeType.RoundedRectangle,
-                    1,               // upper left row
-                    1,               // upper left column
-                    10,              // top (pixels)
-                    10,              // left (pixels)
-                    60,              // height (pixels)
-                    100);            // width (pixels)
+            // Check if the extracted glow color exists in the workbook's palette
+            bool isInWorkbookPalette = workbook.IsColorInPalette(extractedGlowColor);
+            Console.WriteLine($"Glow color {extractedGlowColor} in workbook palette: {isInWorkbookPalette}");
 
-                // Configure the glow effect for the shape
-                shape.Glow.Size = 12;                     // radius in points
-                shape.Glow.Transparency = 0.3;            // 30% transparent
-                shape.Glow.Color.Color = Color.FromArgb(255, 123, 200, 150); // custom glow color
-
-                // Extract the glow color (as System.Drawing.Color)
-                CellsColor glowCellsColor = shape.Glow.Color;
-                Color glowSystemColor = glowCellsColor.Color;
-
-                // Define a predefined palette to compare against
-                Color[] predefinedPalette = new Color[]
-                {
-                    Color.Red,
-                    Color.Green,
-                    Color.Blue,
-                    Color.FromArgb(255, 123, 200, 150), // same as the glow color for demonstration
-                    Color.Yellow
-                };
-
-                // Check if the glow color exists in the workbook's internal palette
-                bool inWorkbookPalette = workbook.IsColorInPalette(glowSystemColor);
-                Console.WriteLine($"Glow color in workbook palette: {inWorkbookPalette}");
-
-                // Check if the glow color exists in the custom predefined palette
-                bool inCustomPalette = false;
-                foreach (Color c in predefinedPalette)
-                {
-                    if (c.ToArgb() == glowSystemColor.ToArgb())
-                    {
-                        inCustomPalette = true;
-                        break;
-                    }
-                }
-                Console.WriteLine($"Glow color in custom palette: {inCustomPalette}");
-
-                // If the glow color is not in the workbook palette, obtain the closest matching palette color
-                if (!inWorkbookPalette)
-                {
-                    Color matchedColor = workbook.GetMatchingColor(glowSystemColor);
-                    Console.WriteLine($"Closest matching workbook palette color: R={matchedColor.R}, G={matchedColor.G}, B={matchedColor.B}");
-                }
-
-                // Save the workbook (optional, demonstrates lifecycle usage)
-                string outputPath = "GlowColorCheck.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
+            // Perform consistency check against the predefined palette
+            bool isInPredefinedPalette = false;
+            foreach (Color paletteColor in predefinedPalette)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                if (paletteColor.ToArgb() == extractedGlowColor.ToArgb())
+                {
+                    isInPredefinedPalette = true;
+                    break;
+                }
             }
-        }
-    }
 
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            GlowColorConsistencyCheck.Run();
+            Console.WriteLine($"Glow color {extractedGlowColor} in predefined palette: {isInPredefinedPalette}");
+
+            // If not in predefined palette, get the closest matching color from the workbook palette
+            if (!isInPredefinedPalette)
+            {
+                Color matchedColor = workbook.GetMatchingColor(extractedGlowColor);
+                Console.WriteLine($"Closest matching color in workbook palette: {matchedColor}");
+            }
+
+            // Save the workbook
+            workbook.Save("GlowPaletteCheck.xlsx");
         }
     }
 }

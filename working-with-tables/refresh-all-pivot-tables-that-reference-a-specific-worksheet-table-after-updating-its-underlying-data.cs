@@ -1,79 +1,64 @@
-// Title: Refresh All Pivot Tables After Updating a Worksheet Table with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to load or create an Excel workbook, locate a worksheet and a ListObject (table), modify a cell in the table, and call Worksheets.RefreshPivotTables() to update every pivot table that uses the table before saving the file. Includes fallback handling for missing files, worksheets, or tables.
-// Keywords: Aspose.Cells | RefreshPivotTables | C# | .NET | ListObject | Excel table update | pivot cache refresh | programmatic pivot table refresh | worksheet table modification | Excel automation
-// Common Searches: Aspose.Cells refresh all pivot tables after table change | C# update ListObject and refresh pivot tables | Worksheets.RefreshPivotTables example | how to refresh pivot tables linked to a table in Aspose.Cells | programmatically refresh pivot cache .NET
+// Title: Refresh All Pivot Tables After Updating a Worksheet Table with Aspose.Cells for .NET
+// Description: Shows how to load an Excel workbook, change values inside a worksheet ListObject, call Workbook.Worksheets.RefreshPivotTables() to recalculate every pivot table that uses the altered data, and save the updated file.
+// Keywords: Aspose.Cells | RefreshPivotTables | C# | pivot table refresh | worksheet table update | ListObject | programmatic Excel pivot refresh | Excel automation .NET
+// Common Searches: Aspose.Cells refresh pivot tables after data change | C# update Excel table and refresh pivots | How to programmatically refresh all pivots in Aspose.Cells | RefreshPivotTables method example .NET | Refresh all pivot tables in workbook using Aspose.Cells
 // Developer Intent: Programmatically refresh every pivot table that depends on a modified worksheet table.
-// Use Cases: Update data in a ListObject and ensure all related pivot reports are current before exporting the workbook. | Create a workbook with a table, change its values via code, and automatically synchronize all pivot tables. | Load an existing Excel file, edit table rows, and call RefreshPivotTables to keep the pivot cache consistent.
-// AI Prompts: Generate C# code that changes a cell in a ListObject and then refreshes all dependent pivot tables using Aspose.Cells. | Show how to safely locate a worksheet and a ListObject by name, modify its data, and invoke Worksheets.RefreshPivotTables in .NET. | Provide an example that handles missing workbook, worksheet, or table while still performing a pivot table refresh.
+// Use Cases: After bulk updating rows in a data table, automatically refresh linked pivot reports before saving the workbook. | Process a batch of workbooks to change source data and ensure all pivot analyses reflect the new values. | Integrate table modifications and pivot refresh into an ETL pipeline so downstream analytics use the latest figures.
+// AI Prompts: Generate C# code that updates a specific ListObject range and then refreshes all pivot tables that reference it using Aspose.Cells. | Show how to refresh pivot tables on a single worksheet instead of the entire workbook with Aspose.Cells for .NET. | Provide a script that iterates through all Excel files in a folder, updates a data table, calls RefreshPivotTables, and saves each file.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables; // for ListObject
 
-// Demonstrates how to load or create an Excel workbook, locate a worksheet and a ListObject (table), modify a cell in the table, and call Worksheets.RefreshPivotTables() to update every pivot table that uses the table before saving the file. Includes fallback handling for missing files, worksheets, or tables.
-class RefreshPivotTablesDemo
+namespace AsposeCellsPivotRefreshDemo
 {
-    static void Main()
+    // Shows how to load an Excel workbook, change values inside a worksheet ListObject, call Workbook.Worksheets.RefreshPivotTables() to recalculate every pivot table that uses the altered data, and save the updated file.
+    public class RefreshPivotTablesAfterTableUpdate
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        try
+        public static void Main(string[] args)
         {
-            // Ensure the input file exists; create a simple workbook if missing
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            const string inputPath = "InputWorkbook.xlsx";
+            const string outputPath = "OutputWorkbook.xlsx";
+
+            // Verify input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                var tempWb = new Workbook();
-                var ws = tempWb.Worksheets[0];
-                ws.Name = "Data";
-
-                // Sample data
-                ws.Cells["A1"].PutValue("Header1");
-                ws.Cells["B1"].PutValue("Header2");
-                ws.Cells["A2"].PutValue("Value1");
-                ws.Cells["B2"].PutValue("Value2");
-
-                // Create a table named MyTable covering the sample data
-                var listObj = ws.ListObjects[ws.ListObjects.Add(0, 0, 1, 1, true)];
-                listObj.DisplayName = "MyTable";
-
-                tempWb.Save(inputPath);
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
 
             // Load the workbook that contains the data table and pivot tables
-            var workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook(inputPath);
 
-            // Access the worksheet that holds the source table (fallback to first sheet if not found)
-            Worksheet dataSheet = workbook.Worksheets["Data"] ?? workbook.Worksheets[0];
+            // Assume the data table is on the first worksheet (index 0)
+            Worksheet dataSheet = workbook.Worksheets[0];
 
-            // Access the table by its name (fallback to first table if not found)
-            ListObject table = dataSheet.ListObjects["MyTable"];
-            if (table == null && dataSheet.ListObjects.Count > 0)
-                table = dataSheet.ListObjects[0];
+            // Example: update some underlying data in the table (cells A2:B5)
+            // In a real scenario, you would locate the ListObject (table) and modify its range.
+            dataSheet.Cells["A2"].PutValue("UpdatedItem1");
+            dataSheet.Cells["B2"].PutValue(1234);
+            dataSheet.Cells["A3"].PutValue("UpdatedItem2");
+            dataSheet.Cells["B3"].PutValue(5678);
 
-            if (table != null)
-            {
-                // Modify the first data row of the first column in the table
-                int firstDataRow = table.DataRange.FirstRow;
-                int firstDataColumn = table.DataRange.FirstColumn;
-                dataSheet.Cells[firstDataRow, firstDataColumn].PutValue("UpdatedValue");
-            }
-            else
-            {
-                Console.WriteLine("No ListObject found in the worksheet.");
-            }
-
-            // Refresh all pivot tables in the workbook so they reflect the updated table data
+            // Refresh all pivot tables in the workbook.
+            // This will refresh any pivot table that uses the updated data range.
             workbook.Worksheets.RefreshPivotTables();
 
-            // Save the updated workbook
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
     }
 }

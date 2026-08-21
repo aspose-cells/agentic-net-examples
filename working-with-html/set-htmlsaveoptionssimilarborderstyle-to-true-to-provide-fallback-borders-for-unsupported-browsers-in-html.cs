@@ -1,43 +1,46 @@
-// Title: Aspose.Cells .NET – Enable ExportSimilarBorderStyle in HtmlSaveOptions for fallback borders
-// Description: C# example that creates a workbook, applies medium borders, sets HtmlSaveOptions.ExportSimilarBorderStyle to true, and saves as HTML so browsers lacking native border support receive equivalent styling.
-// Keywords: Aspose.Cells | HtmlSaveOptions | ExportSimilarBorderStyle | C# | fallback borders | HTML export | Excel to HTML | border compatibility | Aspose.Cells .NET | similar border style
-// Common Searches: Aspose.Cells ExportSimilarBorderStyle example | How to enable similar border style in HtmlSaveOptions C# | HTML export with border fallback Aspose.Cells | Save workbook as HTML with borders Aspose.Cells .NET | HtmlSaveOptions ExportSimilarBorderStyle property usage
-// Developer Intent: Activate ExportSimilarBorderStyle so the generated HTML contains equivalent border CSS for browsers that cannot render the original Excel border formatting.
-// Use Cases: Web dashboards that need exact Excel‑style borders across legacy browsers. | Automated report pipelines where HTML output must preserve cell borders. | Embedding styled worksheets in web pages with varying CSS border support. | Creating printable HTML versions of spreadsheets with consistent border appearance.
-// AI Prompts: Generate C# code using Aspose.Cells to apply medium borders and export to HTML with ExportSimilarBorderStyle enabled. | Explain how ExportSimilarBorderStyle changes the HTML markup produced by Aspose.Cells and why it helps unsupported browsers. | Provide a step‑by‑step guide to configure HtmlSaveOptions for fallback borders in Aspose.Cells .NET.
+// Title: Export Excel to HTML with fallback border styles using Aspose.Cells HtmlSaveOptions.ExportSimilarBorderStyle (C#)
+// Description: Shows how to create a workbook, apply a medium border to a cell, enable HtmlSaveOptions.ExportSimilarBorderStyle, and save the file as HTML so browsers that do not support the original border type render a compatible fallback.
+// Keywords: Aspose.Cells | HtmlSaveOptions | ExportSimilarBorderStyle | C# | .NET | HTML export | border fallback | unsupported browsers | Excel to HTML | cell border style | web report generation
+// Common Searches: Aspose.Cells ExportSimilarBorderStyle example C# | how to enable border fallback when saving Excel as HTML | HtmlSaveOptions similar border style true | export Excel workbook to HTML with compatible borders | C# code for Aspose.Cells HTML export with border fallback
+// Developer Intent: Enable fallback rendering of cell borders in HTML output to maintain visual consistency across browsers that lack support for certain Excel border styles.
+// Use Cases: Generate web‑ready reports from Excel files that display consistent borders on legacy and modern browsers. | Create HTML versions of spreadsheets where medium or custom borders must degrade gracefully. | Automate batch conversion of styled Excel sheets to HTML while preserving border appearance.
+// AI Prompts: Provide a C# snippet that exports an Aspose.Cells workbook to HTML with ExportSimilarBorderStyle set to true and explain the generated HTML. | Explain the visual differences when HtmlSaveOptions.ExportSimilarBorderStyle is true versus false. | Show how to apply a medium border to a cell and ensure the border appears correctly in all browsers after HTML export.
 
 using System;
 using Aspose.Cells;
 
-// C# example that creates a workbook, applies medium borders, sets HtmlSaveOptions.ExportSimilarBorderStyle to true, and saves as HTML so browsers lacking native border support receive equivalent styling.
-class Program
+namespace AsposeCellsExportSimilarBorderStyleDemo
 {
-    static void Main()
+    // Shows how to create a workbook, apply a medium border to a cell, enable HtmlSaveOptions.ExportSimilarBorderStyle, and save the file as HTML so browsers that do not support the original border type render a compatible fallback.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add sample data to a cell
-        worksheet.Cells["A1"].PutValue("Sample Data");
-
-        // Create a style with medium borders on all sides
-        Style borderStyle = workbook.CreateStyle();
-        borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Medium;
-        borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Medium;
-        borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Medium;
-        borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Medium;
-
-        // Apply the border style to the cell
-        worksheet.Cells["A1"].SetStyle(borderStyle);
-
-        // Create HTML save options and enable fallback similar border style
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+        static void Main()
         {
-            ExportSimilarBorderStyle = true
-        };
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook as an HTML file using the configured options
-        workbook.Save("output.html", htmlOptions);
+            // Add sample data
+            sheet.Cells["A1"].PutValue("Border Demo");
+
+            // Create a style with a border type that may not be supported by all browsers
+            Style borderStyle = workbook.CreateStyle();
+            borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Medium;
+            borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Medium;
+            borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Medium;
+            borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Medium;
+
+            // Apply the style to the cell
+            sheet.Cells["A1"].SetStyle(borderStyle);
+
+            // Create HTML save options and enable similar border style fallback
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                ExportSimilarBorderStyle = true // Fallback for unsupported browsers
+            };
+
+            // Save the workbook as HTML using the configured options
+            workbook.Save("ExportSimilarBorderStyle.html", htmlOptions);
+        }
     }
 }

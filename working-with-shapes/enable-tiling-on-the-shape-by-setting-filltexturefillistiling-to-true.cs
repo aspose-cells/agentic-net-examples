@@ -1,17 +1,17 @@
-// Title: Enable texture tiling on a shape with Fill.TextureFill.IsTiling in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to add a rectangle shape to a worksheet, set its fill to a built‑in texture (BlueTissuePaper), turn on tiling via the IsTiling property, and save the workbook as ShapeTextureTiling.xlsx.
-// Keywords: Aspose.Cells | C# shape texture tiling | Fill.TextureFill.IsTiling | texture fill example | rectangle shape texture | BlueTissuePaper texture | .NET spreadsheet graphics | Aspose.Cells FillType.Texture | shape fill tiling
-// Common Searches: Aspose.Cells enable texture tiling on shape | C# Fill.TextureFill.IsTiling usage | how to repeat texture fill in Aspose.Cells | set IsTiling property for shape fill .NET | texture fill tiling example Aspose.Cells
-// Developer Intent: Activate tiling for a shape's texture fill.
-// Use Cases: Create a patterned background by repeating a texture across a shape. | Maintain consistent texture appearance when resizing shapes in generated reports. | Apply the same tiled texture to multiple shapes for a uniform design.
-// AI Prompts: Show a C# snippet that enables texture tiling on a rectangle shape using Aspose.Cells. | Explain how to toggle the IsTiling property for different built‑in textures in Aspose.Cells. | Provide step‑by‑step instructions to apply a tiled texture fill to shapes in a .NET workbook.
+// Title: Enable Texture Tiling on a Shape with Aspose.Cells for .NET (C#)
+// Description: This C# example creates a workbook, adds a rectangle shape, sets its fill type to Texture, selects a built‑in texture (BlueTissuePaper), enables tiling by setting TextureFill.IsTiling to true, and saves the file as EnableTilingDemo.xlsx.
+// Keywords: Aspose.Cells | Aspose.Cells for .NET | C# shape texture fill | TextureFill.IsTiling | shape tiling | AddRectangle | FillType.Texture | TextureType.BlueTissuePaper | worksheet shape fill | code example | EnableTilingDemo
+// Common Searches: Aspose.Cells enable texture tiling on shape C# | How to set IsTiling for a shape fill in Aspose.Cells | C# Aspose.Cells texture fill repeat pattern | AddRectangle with tiled texture Aspose.Cells | TextureFill.IsTiling property usage Aspose.Cells .NET
+// Developer Intent: Turn on texture tiling for a worksheet shape using Aspose.Cells.
+// Use Cases: Create a patterned background by repeating a texture across a shape. | Apply a tiled logo or watermark texture to a shape for branding. | Design mock‑ups that require fabric or paper textures tiled inside shapes.
+// AI Prompts: Write C# code with Aspose.Cells that adds a rectangle shape and applies a tiled built‑in texture fill. | Show how to toggle TextureFill.IsTiling on and off for a shape in an Aspose.Cells workbook. | Provide an Aspose.Cells example that uses a custom image as a tiled texture fill for a shape and saves the workbook.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a rectangle shape to a worksheet, set its fill to a built‑in texture (BlueTissuePaper), turn on tiling via the IsTiling property, and save the workbook as ShapeTextureTiling.xlsx.
-class EnableTextureTilingDemo
+// This C# example creates a workbook, adds a rectangle shape, sets its fill type to Texture, selects a built‑in texture (BlueTissuePaper), enables tiling by setting TextureFill.IsTiling to true, and saves the file as EnableTilingDemo.xlsx.
+class EnableTilingDemo
 {
     static void Main()
     {
@@ -20,9 +20,10 @@ class EnableTextureTilingDemo
         Worksheet worksheet = workbook.Worksheets[0];
 
         // Add a rectangle shape to the worksheet
+        // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
         Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 150, 300);
 
-        // Set the fill type of the shape to texture
+        // Set the shape's fill type to texture so we can access TextureFill
         shape.Fill.FillType = FillType.Texture;
 
         // Get the TextureFill object associated with the shape
@@ -31,10 +32,10 @@ class EnableTextureTilingDemo
         // (Optional) Choose a built‑in texture type
         textureFill.Type = TextureType.BlueTissuePaper;
 
-        // Enable tiling for the texture fill
+        // Enable tiling of the texture
         textureFill.IsTiling = true;
 
         // Save the workbook to a file
-        workbook.Save("ShapeTextureTiling.xlsx");
+        workbook.Save("EnableTilingDemo.xlsx");
     }
 }

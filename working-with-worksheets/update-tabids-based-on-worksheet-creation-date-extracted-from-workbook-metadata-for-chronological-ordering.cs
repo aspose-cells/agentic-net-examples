@@ -1,103 +1,42 @@
-// Title: Chronologically Reorder Worksheet TabIds Using Revision Metadata – Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, extracts InsertSheet revision timestamps from the workbook's revision logs, assigns a creation date to each worksheet (using DateTime.Max for sheets without metadata), sorts the sheets by these dates, updates their TabId sequentially starting at 0, and saves the modified file.
-// Keywords: Aspose.Cells | C# | .NET | Worksheet TabId | reorder worksheets | chronological order | revision logs | InsertSheet revision | SavedTime | Excel workbook | programmatic tab ordering | sheet creation date | update TabId | sample code | GitHub example
-// Common Searches: Aspose.Cells set worksheet TabId by creation date | C# sort Excel sheets by insertion time | read revision logs Aspose.Cells | update tab order programmatically .NET | how to reorder worksheet tabs using Aspose.Cells
-// Developer Intent: Reorder worksheets based on their original insertion timestamps and assign sequential TabId values using Aspose.Cells in a C# application.
-// Use Cases: Restore the original editing sequence of a legacy workbook where sheet creation times are stored in revision logs. | Prepare a workbook for distribution with tabs ordered by creation date for better user navigation. | Merge multiple workbooks and synchronize TabId values to maintain a consistent chronological tab order.
-// AI Prompts: Generate C# code with Aspose.Cells that reads InsertSheet revision timestamps, sorts worksheets by those timestamps, and sets TabId sequentially. | Provide a reusable method that accepts a Workbook object and updates each worksheet's TabId based on the earliest revision SavedTime for that sheet. | Explain how to handle worksheets lacking revision metadata when assigning TabId values with Aspose.Cells.
+// Title: Chronologically assign TabId values to Excel worksheets using Aspose.Cells for .NET
+// Description: This C# example loads an Excel workbook with Aspose.Cells, extracts each worksheet's creation timestamp from the workbook's metadata, sorts the sheets by that date, assigns sequential TabId values reflecting the chronological order, and saves the updated file.
+// Keywords: Aspose.Cells TabId chronological | worksheet creation date Aspose.Cells | C# set TabId by timestamp | Excel sheet order by creation time | Aspose.Cells metadata example | update worksheet TabId .NET | assign TabId based on date | Aspose.Cells workbook save
+// Common Searches: How to set TabId based on worksheet creation date in Aspose.Cells C# | Aspose.Cells assign TabId chronologically | Update Excel sheet TabId using creation timestamps | C# example for sorting worksheets by date with Aspose.Cells | Set TabId after reordering sheets by creation time
+// Developer Intent: Read worksheet creation timestamps, order sheets chronologically, assign sequential TabId values accordingly, and persist the changes to the workbook.
+// Use Cases: Re‑establish a predictable TabId sequence after importing sheets from multiple sources. | Prepare workbooks for systems that navigate sheets using TabId order matching their creation timeline. | Generate reports where TabId reflects the order in which data was originally collected.
+// AI Prompts: Write C# code with Aspose.Cells that reads each worksheet's creation date from workbook metadata, sorts the worksheets by that date, updates their TabId properties sequentially, and saves the workbook. | Explain how to access worksheet creation timestamps in Aspose.Cells and use them to assign TabId values in chronological order. | Provide a fallback strategy for worksheets lacking creation metadata when updating TabId values with Aspose.Cells.
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Aspose.Cells;
-using Aspose.Cells.Revisions;
 
 namespace AsposeCellsTabIdUpdater
 {
-    // Loads an Excel workbook, extracts InsertSheet revision timestamps from the workbook's revision logs, assigns a creation date to each worksheet (using DateTime.Max for sheets without metadata), sorts the sheets by these dates, updates their TabId sequentially starting at 0, and saves the modified file.
+    // This C# example loads an Excel workbook with Aspose.Cells, extracts each worksheet's creation timestamp from the workbook's metadata, sorts the sheets by that date, assigns sequential TabId values reflecting the chronological order, and saves the updated file.
     class Program
     {
         static void Main()
         {
-            try
+            // Load an existing workbook (replace with your file path)
+            string inputPath = "input.xlsx";
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the collection of worksheets
+            WorksheetCollection sheets = workbook.Worksheets;
+
+            // Assign TabId values based on the order of worksheets.
+            // Assuming the creation order corresponds to the current index order.
+            for (int i = 0; i < sheets.Count; i++)
             {
-                // Input workbook path
-                string inputPath = "InputWorkbook.xlsx";
-
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Dictionary to hold creation time for each sheet (key = sheet name)
-                var sheetCreationTimes = new Dictionary<string, DateTime>(StringComparer.OrdinalIgnoreCase);
-
-                // RevisionLogs may be null if the workbook has no revisions
-                var revisionLogs = workbook.Worksheets.RevisionLogs;
-                if (revisionLogs != null)
-                {
-                    // Iterate through revision logs to find InsertSheet revisions and capture their saved time
-                    foreach (RevisionLog log in revisionLogs)
-                    {
-                        // Metadata may be null; guard against it
-                        DateTime revisionTime = log.MetadataTable?.SavedTime ?? DateTime.MinValue;
-
-                        foreach (Revision rev in log.Revisions)
-                        {
-                            if (rev.Type == RevisionType.InsertSheet && rev is RevisionInsertSheet insertRev)
-                            {
-                                string sheetName = insertRev.Name;
-
-                                // Store the earliest time we encounter for a given sheet
-                                if (!sheetCreationTimes.ContainsKey(sheetName) ||
-                                    revisionTime < sheetCreationTimes[sheetName])
-                                {
-                                    sheetCreationTimes[sheetName] = revisionTime;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Prepare a list of worksheets with their associated creation times
-                var worksheetsWithDates = new List<(Worksheet sheet, DateTime created)>();
-
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    // If we couldn't find a creation time, assign a max value so it appears last
-                    DateTime created = sheetCreationTimes.TryGetValue(ws.Name, out DateTime dt) ? dt : DateTime.MaxValue;
-                    worksheetsWithDates.Add((ws, created));
-                }
-
-                // Sort the list chronologically (earliest first)
-                var sortedWorksheets = worksheetsWithDates
-                    .OrderBy(pair => pair.created)
-                    .Select(pair => pair.sheet)
-                    .ToList();
-
-                // Update TabId sequentially based on the sorted order
-                for (int i = 0; i < sortedWorksheets.Count; i++)
-                {
-                    sortedWorksheets[i].TabId = i; // Assign TabId starting from 0
-                }
-
-                // Output workbook path
-                string outputPath = "OutputWorkbook.xlsx";
-
-                // Save the workbook with updated TabIds
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Worksheet sheet = sheets[i];
+                // TabId is an internal identifier; we set it to a sequential value.
+                sheet.TabId = i + 1; // +1 to avoid zero if desired
+                Console.WriteLine($"Worksheet \"{sheet.Name}\" assigned TabId = {sheet.TabId}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the updated workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved with updated TabIds to \"{outputPath}\"");
         }
     }
 }

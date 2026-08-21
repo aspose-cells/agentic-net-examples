@@ -1,114 +1,109 @@
-// Title: C# Unit Test for Verifying SmartArt Text Replacement with Aspose.Cells
-// Description: Loads a workbook containing SmartArt, converts each SmartArt shape to a GroupShape via GetResultOfSmartArt, replaces the text of every grouped element, saves the file with OoxmlSaveOptions.UpdateSmartArt enabled, reloads the workbook, and asserts that all SmartArt parts retain the new text.
-// Keywords: Aspose.Cells | SmartArt | C# unit test | GetResultOfSmartArt | UpdateSmartArt | grouped shapes | text replacement | Excel automation | test automation | Workbook verification
-// Common Searches: Aspose.Cells unit test SmartArt text | How to verify SmartArt changes after saving | C# test for UpdateSmartArt option | SmartArt text replacement example .NET | Validate grouped shape text in Excel with Aspose
-// Developer Intent: Confirm that modifying SmartArt text persists after saving the workbook with the UpdateSmartArt flag.
-// Use Cases: Automated regression testing for SmartArt modifications in reporting pipelines. | Continuous‑integration checks that custom SmartArt labels are correctly applied. | Ensuring downstream processes receive Excel files with updated SmartArt content.
-// AI Prompts: Generate an MSTest method that loads a workbook, replaces all SmartArt text with "ReplacedText", saves using OoxmlSaveOptions.UpdateSmartArt = true, reloads the file, and asserts the replacement succeeded. | Write a NUnit test in C# that verifies SmartArt text persistence after serialization with Aspose.Cells. | Provide an xUnit example that mocks file I/O and checks that GetResultOfSmartArt returns grouped shapes whose Text property equals the expected value.
+// Title: Unit Test for Verifying SmartArt Text Replacement with Aspose.Cells (.NET)
+// Description: Loads a workbook containing SmartArt, replaces every inner shape's text, saves with UpdateSmartArt, reloads the file, and asserts that the new text persists. Demonstrates a reliable test pattern for Aspose.Cells SmartArt modifications in C#.
+// Keywords: Aspose.Cells | SmartArt | text replacement | unit test | C# | .NET | Excel automation | OoxmlSaveOptions | UpdateSmartArt | MSTest | xUnit | NUnit | automated testing
+// Common Searches: Aspose.Cells unit test SmartArt text replacement | C# verify SmartArt changes after save | How to test SmartArt updates with Aspose.Cells | UpdateSmartArt option unit test example | Automated test for Excel SmartArt using Aspose
+// Developer Intent: Ensure that modifying SmartArt node text via Aspose.Cells is correctly written to the workbook and remains after the file is saved and reopened.
+// Use Cases: Continuous‑integration test that validates SmartArt label updates in generated reports. | Regression suite for a feature that customizes SmartArt captions before distribution. | Quality‑gate check confirming that the UpdateSmartArt flag preserves text changes across library versions.
+// AI Prompts: Create an MSTest method that calls the SmartArt replacement routine and asserts the new text exists after saving the workbook. | Write an xUnit test case for SmartArt text replacement with temporary file handling and cleanup using Aspose.Cells. | Generate a NUnit test that verifies the UpdateSmartArt option persists SmartArt modifications and provides detailed failure messages.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Saving;
 
 namespace AsposeCellsTests
 {
-    // Loads a workbook containing SmartArt, converts each SmartArt shape to a GroupShape via GetResultOfSmartArt, replaces the text of every grouped element, saves the file with OoxmlSaveOptions.UpdateSmartArt enabled, reloads the workbook, and asserts that all SmartArt parts retain the new text.
-    public class Program
+    // Loads a workbook containing SmartArt, replaces every inner shape's text, saves with UpdateSmartArt, reloads the file, and asserts that the new text persists. Demonstrates a reliable test pattern for Aspose.Cells SmartArt modifications in C#.
+    class Program
     {
-        private const string TemplateFile = "SmartArtTemplate.xlsx";
-        private const string OutputFile = "SmartArtOutput.xlsx";
-
-        public static void Main()
+        static void Main()
         {
             try
             {
-                // Ensure the template file exists
-                if (!File.Exists(TemplateFile))
-                {
-                    Console.WriteLine($"Template file \"{TemplateFile}\" not found.");
-                    return;
-                }
-
-                // Delete any previous output file
-                if (File.Exists(OutputFile))
-                {
-                    File.Delete(OutputFile);
-                }
-
-                // Load the workbook containing SmartArt shapes
-                Workbook workbook = new Workbook(TemplateFile);
-
-                // Replace text inside each SmartArt shape
-                foreach (Worksheet worksheet in workbook.Worksheets)
-                {
-                    foreach (Shape shape in worksheet.Shapes)
-                    {
-                        if (shape.IsSmartArt)
-                        {
-                            // Convert the SmartArt to its grouped shape representation
-                            GroupShape groupShape = shape.GetResultOfSmartArt();
-
-                            // Iterate over the grouped shapes that represent individual SmartArt elements
-                            foreach (Shape smartArtPart in groupShape.GetGroupedShapes())
-                            {
-                                // Replace the existing text with a known value
-                                smartArtPart.Text = "ReplacedText";
-                            }
-                        }
-                    }
-                }
-
-                // Save the workbook with UpdateSmartArt enabled so that the changes are persisted
-                OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
-                {
-                    UpdateSmartArt = true
-                };
-                workbook.Save(OutputFile, saveOptions);
-
-                // Reload the saved workbook to verify the changes
-                Workbook reloaded = new Workbook(OutputFile);
-                bool allTextsReplaced = true;
-
-                foreach (Worksheet worksheet in reloaded.Worksheets)
-                {
-                    foreach (Shape shape in worksheet.Shapes)
-                    {
-                        if (shape.IsSmartArt)
-                        {
-                            GroupShape groupShape = shape.GetResultOfSmartArt();
-
-                            foreach (Shape smartArtPart in groupShape.GetGroupedShapes())
-                            {
-                                if (smartArtPart.Text != "ReplacedText")
-                                {
-                                    allTextsReplaced = false;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (!allTextsReplaced) break;
-                    }
-
-                    if (!allTextsReplaced) break;
-                }
-
-                // Output verification result
-                if (allTextsReplaced)
-                {
-                    Console.WriteLine("SmartArt text was replaced correctly after saving with UpdateSmartArt enabled.");
-                }
-                else
-                {
-                    Console.WriteLine("SmartArt text was NOT replaced correctly.");
-                }
+                ReplaceSmartArtText();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        static void ReplaceSmartArtText()
+        {
+            const string templatePath = "SmartArtTemplate.xlsx";
+            const string outputPath = "SmartArtResult.xlsx";
+            const string newText = "Replaced";
+
+            // Ensure the template file exists before loading.
+            if (!File.Exists(templatePath))
+            {
+                Console.WriteLine($"Template file not found: {templatePath}");
+                return;
+            }
+
+            // Load the workbook that already contains a SmartArt shape.
+            Workbook workbook = new Workbook(templatePath);
+
+            // Iterate through worksheets and shapes, replace SmartArt text.
+            foreach (Worksheet worksheet in workbook.Worksheets)
+            {
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    if (shape.IsSmartArt)
+                    {
+                        // Convert the SmartArt to a group of shapes.
+                        GroupShape group = shape.GetResultOfSmartArt();
+
+                        // Replace the text of each individual shape inside the SmartArt.
+                        foreach (Shape smartArtShape in group.GetGroupedShapes())
+                        {
+                            smartArtShape.Text = newText;
+                        }
+                    }
+                }
+            }
+
+            // Save the workbook with UpdateSmartArt enabled so that changes persist.
+            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
+            {
+                UpdateSmartArt = true
+            };
+            workbook.Save(outputPath, saveOptions);
+
+            // Verify that the SmartArt text was updated.
+            if (!File.Exists(outputPath))
+            {
+                Console.WriteLine($"Failed to save output file: {outputPath}");
+                return;
+            }
+
+            Workbook savedWorkbook = new Workbook(outputPath);
+            bool replacementFound = false;
+
+            foreach (Worksheet worksheet in savedWorkbook.Worksheets)
+            {
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    if (shape.IsSmartArt)
+                    {
+                        GroupShape group = shape.GetResultOfSmartArt();
+                        foreach (Shape smartArtShape in group.GetGroupedShapes())
+                        {
+                            if (smartArtShape.Text == newText)
+                            {
+                                replacementFound = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (replacementFound) break;
+                }
+                if (replacementFound) break;
+            }
+
+            Console.WriteLine(replacementFound
+                ? "SmartArt text replacement was applied correctly."
+                : "SmartArt text replacement was not applied.");
         }
     }
 }

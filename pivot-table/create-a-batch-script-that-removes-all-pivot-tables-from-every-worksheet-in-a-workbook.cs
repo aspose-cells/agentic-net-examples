@@ -1,28 +1,32 @@
+// Title: C# – Remove All Pivot Tables from an Excel Workbook Using Aspose.Cells
+// Description: Load an Excel file with Aspose.Cells, call Worksheets.ClearPivottables() to delete every pivot table across all worksheets, and save the cleaned workbook. Ideal for batch cleanup of reports or templates.
+// Keywords: Aspose.Cells clear pivot tables | remove all pivot tables .NET | delete pivot tables workbook | C# Aspose.Cells pivot table removal | Excel pivot table cleanup
+// Common Searches: how to delete all pivot tables with Aspose.Cells | Aspose.Cells remove pivot tables from every sheet | C# batch script to clear pivot tables in Excel | clear pivot tables across workbook Aspose.Cells
+// Developer Intent: Eliminate every pivot table in a workbook and save the result.
+// Use Cases: Sanitize a template before distribution by stripping all pivot tables. | Prepare data‑only Excel files for downstream processing. | Automate cleanup of generated reports that contain unwanted pivot tables.
+// AI Prompts: Write C# code that uses Aspose.Cells to remove all pivot tables from an Excel workbook and saves the file. | Explain the requirements and side effects of Worksheets.ClearPivottables() in Aspose.Cells. | Create a PowerShell script that runs a compiled .NET executable to batch‑process multiple Excel files, removing their pivot tables.
+
 using System;
 using Aspose.Cells;
 
-namespace RemoveAllPivotTables
+// Load an Excel file with Aspose.Cells, call Worksheets.ClearPivottables() to delete every pivot table across all worksheets, and save the cleaned workbook. Ideal for batch cleanup of reports or templates.
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            // Path to the source workbook (replace with your actual file path)
-            string inputPath = "input.xlsx";
+        // Input Excel file containing pivot tables
+        string inputPath = "input.xlsx";
 
-            // Load the workbook from the file
-            Workbook workbook = new Workbook(inputPath);
+        // Output Excel file after removing all pivot tables
+        string outputPath = "output_no_pivots.xlsx";
 
-            // Remove all pivot tables from every worksheet in the workbook
-            workbook.Worksheets.ClearPivottables();
+        // Load the workbook from the input file
+        Workbook workbook = new Workbook(inputPath);
 
-            // Path to save the modified workbook (replace with desired output path)
-            string outputPath = "output_without_pivots.xlsx";
+        // Clear all pivot tables from every worksheet in the workbook
+        workbook.Worksheets.ClearPivottables();
 
-            // Save the workbook after clearing pivot tables
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine("All pivot tables have been removed and the workbook saved to: " + outputPath);
-        }
+        // Save the modified workbook to the output file
+        workbook.Save(outputPath, SaveFormat.Xlsx);
     }
 }

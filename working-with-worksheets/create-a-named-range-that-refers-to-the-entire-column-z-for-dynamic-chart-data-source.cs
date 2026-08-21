@@ -1,38 +1,44 @@
-// Title: Aspose.Cells .NET: Create a named range for the entire column Z to use as a dynamic chart source
-// Description: This example shows how to create a new workbook, rename the first worksheet to "Data", add a named range called "ColumnZ", set its RefersTo formula to the whole column Z ("=Data!$Z:$Z"), and save the file. The named range can then be referenced in chart series for a dynamic data source that automatically expands with new rows.
-// Keywords: Aspose.Cells | C# | .NET | named range entire column | column Z named range | RefersTo formula | dynamic chart data source | Excel automation | chart series | workbook save
-// Common Searches: Aspose.Cells create named range for whole column | C# named range column Z Aspose.Cells | dynamic chart source using named range Aspose.Cells | set RefersTo to $Z:$Z in Aspose.Cells | how to bind column named range to chart series .NET
-// Developer Intent: Add a named range that points to the full column Z so it can serve as a self‑updating data source for Excel charts created with Aspose.Cells.
-// Use Cases: Define ColumnZ once and reuse it across multiple charts to ensure all new entries are included automatically. | Switch the named range to another worksheet without changing the column reference, keeping chart formulas intact. | Combine the column‑wide named range with conditional formatting or data validation that applies to the entire column.
-// AI Prompts: Generate C# code using Aspose.Cells to create a named range that references the entire column Z and attach it to a chart series. | Show how to update an existing named range to point to a different worksheet while keeping the column reference unchanged. | Provide a complete Aspose.Cells example that creates a line chart using a column‑wide named range as its data source.
+// Title: Create a workbook‑level named range for column Z and bind it to a dynamic chart using Aspose.Cells for .NET (C#)
+// Description: The example creates a new workbook, fills column Z with sample values, adds a workbook‑level named range that references the entire column Z ("=Sheet1!$Z:$Z"), creates a column chart, sets the chart's data source to the named range, and saves the file as NamedRangeColumnZ.xlsx.
+// Keywords: Aspose.Cells | named range | column Z | dynamic chart | C# | .NET | chart data source | entire column reference | SetChartDataRange | Workbook.Names.Add
+// Common Searches: Aspose.Cells named range entire column | C# set chart data source named range Aspose.Cells | reference whole column in Aspose.Cells | dynamic chart from column Z Aspose.Cells | add workbook level named range Aspose.Cells .NET
+// Developer Intent: Define a workbook‑level named range that points to the full column Z and use it as the chart data source so the visualization automatically expands as new rows are added.
+// Use Cases: Create dashboards where the chart updates automatically when more rows are added to column Z. | Reuse the same ColumnZData range across multiple charts or worksheets for consistent visualizations. | Change the column reference in one place to update all linked charts without modifying each chart individually. | Generate reports that require a flexible data range without hard‑coding row limits.
+// AI Prompts: Generate C# code with Aspose.Cells that defines a named range for the entire column Z and assigns it to a chart data series. | Explain how to modify the named range to point to a different column or a specific row interval in Aspose.Cells. | Show steps to replace an existing chart's data source with a new named range for dynamic data in a .NET workbook.
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Charts;
 
-// This example shows how to create a new workbook, rename the first worksheet to "Data", add a named range called "ColumnZ", set its RefersTo formula to the whole column Z ("=Data!$Z:$Z"), and save the file. The named range can then be referenced in chart series for a dynamic data source that automatically expands with new rows.
+// The example creates a new workbook, fills column Z with sample values, adds a workbook‑level named range that references the entire column Z ("=Sheet1!$Z:$Z"), creates a column chart, sets the chart's data source to the named range, and saves the file as NamedRangeColumnZ.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-
-        // Access the first worksheet and give it a friendly name
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Name = "Data";
+        sheet.Name = "Sheet1";
 
-        // Add a named range that will refer to the entire column Z
-        int nameIndex = workbook.Worksheets.Names.Add("ColumnZ");
-        Name columnZ = workbook.Worksheets.Names[nameIndex];
+        // Populate some sample data in column Z (index 25, zero‑based)
+        for (int i = 0; i < 10; i++)
+        {
+            sheet.Cells[i, 25].PutValue(i + 1);
+        }
 
-        // Set the RefersTo formula to the whole column Z on the sheet named "Data"
-        // The syntax "$Z:$Z" denotes the entire column Z
-        columnZ.RefersTo = "=Data!$Z:$Z";
+        // Add a named range that refers to the entire column Z
+        int nameIdx = workbook.Worksheets.Names.Add("ColumnZData");
+        Name columnZName = workbook.Worksheets.Names[nameIdx];
+        // The RefersTo formula must start with '=' and use absolute column reference
+        columnZName.RefersTo = "=Sheet1!$Z:$Z";
 
-        // The named range can now be used as a dynamic data source for charts, e.g.:
-        // chart.NSeries.Add("ColumnZ", true);
+        // Create a chart and set its data source to the named range
+        int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
+        Chart chart = sheet.Charts[chartIdx];
+        // Use the named range; true indicates plotting by column (vertical)
+        chart.SetChartDataRange("ColumnZData", true);
 
         // Save the workbook
-        workbook.Save("ColumnZNamedRange.xlsx");
+        workbook.Save("NamedRangeColumnZ.xlsx");
     }
 }

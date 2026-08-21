@@ -1,86 +1,79 @@
-// Title: Render Excel Worksheet to SVG with Aspose.Cells and Embed in HTML via <object> Tag (C#)
-// Description: Creates a workbook, fills cells with sample data, uses Aspose.Cells SheetRender to export the first worksheet as an SVG file, then generates an HTML page that displays the SVG through the <object> element. Includes error handling and file‑system checks.
-// Keywords: Aspose.Cells | C# SVG rendering | Excel to SVG conversion | SheetRender | embed SVG in HTML | object tag | web preview of worksheet | display SVG in browser
-// Common Searches: Aspose.Cells convert worksheet to SVG C# | How to embed SVG file in HTML using object tag | C# render Excel sheet as SVG | Display Excel worksheet as SVG on a web page | Save worksheet as SVG and generate HTML page
-// Developer Intent: Generate an SVG image of an Excel worksheet and embed it in an HTML document using the <object> tag for browser display.
-// Use Cases: Provide a lightweight, printable snapshot of a report sheet for web preview without requiring Excel. | Integrate Excel‑derived visualizations into dashboards where the SVG updates automatically when the workbook changes. | Create static HTML reports that include worksheet graphics, enabling cross‑platform viewing in any modern browser.
-// AI Prompts: Write C# code that uses Aspose.Cells to render a specific worksheet to an SVG file and embed the result in an HTML page with an <object> element. | Add comprehensive error handling for SVG rendering and HTML file creation when using Aspose.Cells in .NET. | Show how to customize the width, height, and fallback content of the <object> tag for optimal SVG display.
+// Title: Render Excel worksheet to SVG with Aspose.Cells and embed it using the <object> tag (C#)
+// Description: Creates a workbook, fills sample data, converts the first worksheet to an SVG file with FitToViewPort enabled, then generates an HTML page that displays the SVG via an <object> element. Both files are saved to disk.
+// Keywords: Aspose.Cells SVG rendering C# | Excel to SVG conversion | embed SVG in HTML object tag | FitToViewPort SvgImageOptions | C# generate worksheet SVG | display Excel data as SVG | Aspose.Cells SheetRender example | HTML page with embedded SVG
+// Common Searches: Aspose.Cells render worksheet to SVG C# | how to embed generated SVG in HTML using object tag | C# convert Excel sheet to scalable SVG | display Excel worksheet as SVG in web page | FitToViewPort option Aspose.Cells SVG
+// Developer Intent: Produce an SVG representation of an Excel worksheet and show it in a web page via the <object> element.
+// Use Cases: Integrate high‑resolution worksheet graphics into dashboards without raster artifacts. | Create printable SVG reports that can be viewed directly in browsers. | Build responsive web pages where Excel data scales smoothly on any device.
+// AI Prompts: Generate C# code that uses Aspose.Cells to export a worksheet to SVG with FitToViewPort set to true. | Write an HTML template that embeds a given SVG file using the <object> tag and makes it fill the viewport. | Explain how to modify the example to embed multiple worksheet SVGs on one HTML page, each inside its own <object> element.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Creates a workbook, fills cells with sample data, uses Aspose.Cells SheetRender to export the first worksheet as an SVG file, then generates an HTML page that displays the SVG through the <object> element. Includes error handling and file‑system checks.
-class Program
+namespace AsposeCellsSvgToHtml
 {
-    static void Main()
+    // Creates a workbook, fills sample data, converts the first worksheet to an SVG file with FitToViewPort enabled, then generates an HTML page that displays the SVG via an <object> element. Both files are saved to disk.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Quantity");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["B2"].PutValue(120);
-            worksheet.Cells["A3"].PutValue("Orange");
-            worksheet.Cells["B3"].PutValue(85);
-
-            // Set SVG rendering options (default options are sufficient)
-            SvgImageOptions svgOptions = new SvgImageOptions();
-
-            string svgFile = "worksheet.svg";
-
-            // Ensure the output directory for the SVG exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(svgFile));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Render the worksheet to SVG
             try
             {
-                SheetRender renderer = new SheetRender(worksheet, svgOptions);
-                renderer.ToImage(0, svgFile);
-            }
-            catch (Exception renderEx)
-            {
-                Console.Error.WriteLine($"SVG rendering error: {renderEx.Message}");
-                throw;
-            }
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Build an HTML document that embeds the generated SVG using the <object> tag
-            string html = $@"
+                // Populate some sample data
+                sheet.Cells["A1"].PutValue("Month");
+                sheet.Cells["A2"].PutValue("Jan");
+                sheet.Cells["A3"].PutValue("Feb");
+                sheet.Cells["A4"].PutValue("Mar");
+
+                sheet.Cells["B1"].PutValue("Sales");
+                sheet.Cells["B2"].PutValue(120);
+                sheet.Cells["B3"].PutValue(210);
+                sheet.Cells["B4"].PutValue(150);
+
+                // Configure SVG rendering options (no ImageFormat property needed)
+                SvgImageOptions svgOptions = new SvgImageOptions
+                {
+                    FitToViewPort = true // Make SVG fit the viewport
+                };
+
+                // Render the worksheet to an SVG file
+                string svgFileName = "worksheet.svg";
+                SheetRender renderer = new SheetRender(sheet, svgOptions);
+                renderer.ToImage(0, svgFileName);
+
+                // Build an HTML document that embeds the generated SVG using the <object> tag
+                string htmlContent = $@"
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Worksheet SVG</title>
     <meta charset=""UTF-8"">
+    <title>Worksheet SVG in HTML</title>
+    <style>
+        body, html {{ margin:0; padding:0; height:100%; }}
+        object {{ width:100%; height:100%; border:none; }}
+    </style>
 </head>
 <body>
-    <object data=""{svgFile}"" type=""image/svg+xml"" width=""100%"" height=""100%"">
-        Your browser does not support SVG.
-    </object>
+    <object data=""{svgFileName}"" type=""image/svg+xml""></object>
 </body>
 </html>";
 
-            // Save the HTML file
-            string htmlFile = "worksheet.html";
-            try
-            {
-                File.WriteAllText(htmlFile, html);
+                // Save the HTML file
+                string htmlFileName = "worksheet.html";
+                File.WriteAllText(htmlFileName, htmlContent);
+
+                Console.WriteLine($"SVG file generated: {Path.GetFullPath(svgFileName)}");
+                Console.WriteLine($"HTML file generated: {Path.GetFullPath(htmlFileName)}");
             }
-            catch (Exception ioEx)
+            catch (Exception ex)
             {
-                Console.Error.WriteLine($"Failed to write HTML file: {ioEx.Message}");
-                throw;
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

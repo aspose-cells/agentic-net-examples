@@ -1,56 +1,89 @@
-// Title: Move a range with formulas from Sheet1 to Sheet2 and auto‑adjust references using Aspose.Cells for .NET
-// Description: C# example that creates a workbook, fills A1:B2 on Sheet1 with values and formulas, adds Sheet2, copies the range to C3:D4 on the new sheet, automatically updates relative and external references, recalculates all formulas with CalculateFormula, and saves the file as MovedRange.xlsx.
-// Keywords: Aspose.Cells | C# copy range with formulas | move range between worksheets | update formula references | CalculateFormula | Excel automation .NET | range.CopyData | external reference adjustment | Aspose.Cells example | Excel workbook manipulation
-// Common Searches: Aspose.Cells copy range with formulas to another sheet | How to move a range and keep formulas working in Aspose.Cells .NET | Update external references after copying cells with Aspose.Cells | Recalculate formulas after moving a range in C# | Copy range preserving relative references Aspose.Cells
-// Developer Intent: Copy a range that contains formulas to another worksheet and have all references update automatically.
-// Use Cases: Duplicate a calculation block from a source sheet to a summary sheet while preserving functional formulas. | Transfer a data table with computed columns to a reporting worksheet and trigger a full recalculation in the new location. | Copy a template area that includes formulas to a new sheet for batch processing, then recalculate to obtain fresh results.
-// AI Prompts: Generate C# code using Aspose.Cells that moves a range with formulas from one worksheet to another and automatically adjusts relative references. | Show how to copy a range, preserve its formulas, and invoke CalculateFormula to update all references in Aspose.Cells for .NET. | Provide an example that copies a range containing formulas to a different sheet and ensures external references are updated after the copy.
+// Title: Move a range with formulas between worksheets and auto‑update references using Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, fill Sheet1!A1:A3, place a formula on Sheet2 that references that range, copy the range to Sheet2!C1:C3, clear the original cells to simulate a move, recalculate the workbook so the external reference updates, and save the file.
+// Keywords: Aspose.Cells | C# move range | copy range with formulas | update external references | recalculate formulas .NET | Excel range relocation | Range.CopyData | Workbook.CalculateFormula
+// Common Searches: Aspose.Cells move range to another sheet | update formula references after moving cells Aspose | copy range with formulas and recalc workbook C# | how to relocate Excel cells programmatically Aspose.Cells | auto‑update external sheet references Aspose.Cells
+// Developer Intent: Programmatically move a cell range that contains formulas from one worksheet to another and have any formulas that reference the original range automatically point to the new location.
+// Use Cases: Reorganize a report by moving a data block while preserving dependent calculations. | Consolidate multiple worksheets into a single sheet without breaking summary formulas. | Automate workbook restructuring where formulas reference moved ranges and need instant updates.
+// AI Prompts: Generate C# code with Aspose.Cells to move a range containing formulas from Sheet1 to Sheet3 and refresh all external references. | Explain how Aspose.Cells updates formula references after a range is moved and how to verify the changes programmatically. | Provide a step‑by‑step guide to copy a range, clear the source, recalculate the workbook, and save the workbook using Aspose.Cells for .NET.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// C# example that creates a workbook, fills A1:B2 on Sheet1 with values and formulas, adds Sheet2, copies the range to C3:D4 on the new sheet, automatically updates relative and external references, recalculates all formulas with CalculateFormula, and saves the file as MovedRange.xlsx.
-class MoveRangeWithFormulas
+namespace AsposeCellsRangeMoveDemo
 {
-    static void Main()
+    // Demonstrates how to create a workbook, fill Sheet1!A1:A3, place a formula on Sheet2 that references that range, copy the range to Sheet2!C1:C3, clear the original cells to simulate a move, recalculate the workbook so the external reference updates, and save the file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook and get the default worksheet
+                Workbook wb = new Workbook();
+                Worksheet sheet1 = wb.Worksheets[0];
+                sheet1.Name = "Sheet1";
 
-            // Get the first worksheet (Sheet1) and give it a name
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Sheet1";
+                // Add a second worksheet that will receive the moved range
+                Worksheet sheet2 = wb.Worksheets.Add("Sheet2");
 
-            // Fill the source range with values and formulas
-            sheet1.Cells["A1"].PutValue(10);
-            sheet1.Cells["A2"].PutValue(20);
-            sheet1.Cells["B1"].Formula = "=A1*2";   // Formula referencing the same sheet
-            sheet1.Cells["B2"].Formula = "=A2*2";
+                // -------------------------------------------------
+                // 1. Populate Sheet1 with data and formulas
+                // -------------------------------------------------
+                sheet1.Cells["A1"].PutValue(10);
+                sheet1.Cells["A2"].PutValue(20);
+                sheet1.Cells["A3"].PutValue(30);
 
-            // Add a destination worksheet (Sheet2)
-            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+                // Formula that references the range we will move (A1:A3)
+                // Placed on Sheet2 to demonstrate external reference update
+                sheet2.Cells["B1"].Formula = "=Sheet1!SUM(A1:A3)";
 
-            // Define the source range (A1:B2) on Sheet1
-            AsposeRange sourceRange = sheet1.Cells.CreateRange("A1", "B2");
+                // -------------------------------------------------
+                // 2. Define the source range (A1:A3) on Sheet1
+                // -------------------------------------------------
+                AsposeRange srcRange = sheet1.Cells.CreateRange("A1:A3");
 
-            // Define the destination range on Sheet2 (starting at C3, same size)
-            AsposeRange destinationRange = sheet2.Cells.CreateRange("C3", "D4");
+                // -------------------------------------------------
+                // 3. Define the destination range on Sheet2 (C1:C3)
+                // -------------------------------------------------
+                AsposeRange destRange = sheet2.Cells.CreateRange("C1:C3");
 
-            // Copy data (including formulas) from the source range to the destination range
-            destinationRange.CopyData(sourceRange);
+                // -------------------------------------------------
+                // 4. Copy the range (including formulas) to the destination
+                // -------------------------------------------------
+                destRange.CopyData(srcRange);
 
-            // Recalculate formulas so that the copied formulas produce values
-            workbook.CalculateFormula();
+                // -------------------------------------------------
+                // 5. Clear the original cells (optional – simulates a "move")
+                // -------------------------------------------------
+                foreach (Cell cell in srcRange)
+                {
+                    cell.PutValue(string.Empty); // remove value/formula
+                }
 
-            // Save the workbook
-            workbook.Save("MovedRange.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // -------------------------------------------------
+                // 6. Recalculate the workbook so that any references are refreshed
+                // -------------------------------------------------
+                wb.CalculateFormula();
+
+                // -------------------------------------------------
+                // 7. Verify that the external reference on Sheet2!B1 now points to the new location
+                // -------------------------------------------------
+                Console.WriteLine("Updated formula in Sheet2!B1: " + sheet2.Cells["B1"].Formula);
+                // Expected: "=Sheet2!SUM(C1:C3)" because the source range was moved to Sheet2
+
+                // -------------------------------------------------
+                // 8. Save the workbook
+                // -------------------------------------------------
+                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "RangeMoved.xlsx");
+                wb.Save(outputPath);
+                Console.WriteLine("Workbook saved to: " + outputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

@@ -1,46 +1,52 @@
-// Title: C# – Add a Form Button that Runs a VBA Macro to Highlight the Active Row (Aspose.Cells)
-// Description: Creates a new workbook, inserts a Form button on the first worksheet, assigns the macro name HighlightActiveRow, embeds a VBA module that colors the active cell's entire row yellow, and saves the file as a macro‑enabled .xlsm using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# button macro | add form button Excel .NET | VBA macro HighlightActiveRow | save workbook as xlsm | assign macro to shape Aspose
-// Common Searches: how to add a button that runs a VBA macro with Aspose.Cells | C# code to create a macro‑enabled Excel file and attach a button | Aspose.Cells example: highlight active row via button | programmatically add Form control and VBA in .NET workbook
-// Developer Intent: Generate a macro‑enabled Excel workbook, place a Form button, and link it to a VBA routine that highlights the row of the active cell.
-// Use Cases: Provide end‑users a one‑click way to emphasize the row they are editing in a data‑entry template. | Automate report sheets where a button instantly marks the current record row for review. | Include a reusable highlight‑row button in any workbook produced by a C# application.
-// AI Prompts: Write C# code with Aspose.Cells to add a Form button that triggers a VBA macro named HighlightActiveRow and saves the workbook as .xlsm. | Explain how to change the highlight color in the embedded VBA macro and handle potential runtime errors. | Show how to add multiple buttons, each linked to different macros for row and column highlighting, using Aspose.Cells.
+// Title: Add a Worksheet Button that Runs a VBA Macro to Highlight the Active Row (Aspose.Cells for .NET)
+// Description: Shows how to create a macro‑enabled XLSM workbook with Aspose.Cells, add a button shape, embed a procedural VBA module, link the macro "HighlightActiveRow" to the button, and shade the active row yellow on click.
+// Keywords: Aspose.Cells add button VBA | C# macro enabled workbook | assign VBA macro to shape Aspose.Cells | highlight active row Excel | button click VBA highlight row | Aspose.Cells VBA integration | create XLSM with button C#
+// Common Searches: Aspose.Cells assign VBA macro to button | C# create macro enabled Excel file with button | how to highlight active row with VBA button using Aspose.Cells | add procedural VBA module in Aspose.Cells C# | button shape run macro Aspose.Cells .NET
+// Developer Intent: Generate an XLSM file that contains a button which executes a VBA macro to color the active row.
+// Use Cases: One‑click row highlighting for reviewers of auto‑generated reports. | Interactive data‑entry sheets where users can quickly mark the row they are editing. | Template designs that let end‑users emphasize rows without manual formatting.
+// AI Prompts: Write C# code with Aspose.Cells to insert a button that runs a VBA macro highlighting the active row. | Explain how to embed a procedural VBA module and bind its macro to a shape in a macro‑enabled workbook using Aspose.Cells. | Show how to modify the VBA macro to use a different fill color and update the button caption accordingly.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Vba;
 
-// Creates a new workbook, inserts a Form button on the first worksheet, assigns the macro name HighlightActiveRow, embeds a VBA module that colors the active cell's entire row yellow, and saves the file as a macro‑enabled .xlsm using Aspose.Cells for .NET.
-class HighlightActiveRowButtonDemo
+namespace AsposeCellsButtonVbaDemo
 {
-    static void Main()
+    // Shows how to create a macro‑enabled XLSM workbook with Aspose.Cells, add a button shape, embed a procedural VBA module, link the macro "HighlightActiveRow" to the button, and shade the active row yellow on click.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a Form button to the worksheet
-        // Parameters: topRow, top (pixel offset), leftColumn, left (pixel offset), height (pixels), width (pixels)
-        Button button = sheet.Shapes.AddButton(2, 0, 2, 0, 30, 100);
-        button.Text = "Highlight Row";
-        button.MacroName = "HighlightActiveRow";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Ensure the workbook has a VBA project (required for macro-enabled files)
-        // Adding a dummy module creates the project automatically
-        int moduleIndex = workbook.VbaProject.Modules.Add(VbaModuleType.Procedural, "Module1");
-        VbaModule module = workbook.VbaProject.Modules[moduleIndex];
+            // Add a button to the worksheet (row 1, column 1, size 100x30 pixels)
+            Button button = sheet.Shapes.AddButton(0, 0, 0, 0, 100, 30);
+            button.Text = "Highlight Row";
+            button.Name = "HighlightButton";
 
-        // VBA code that highlights the entire row of the active cell
-        string vbaCode = @"
+            // Set the macro name that will be executed when the button is clicked
+            button.MacroName = "HighlightActiveRow";
+
+            // Ensure the workbook has a VBA project (required for macro-enabled files)
+            // Adding a procedural module to hold the macro code
+            int moduleIndex = workbook.VbaProject.Modules.Add(VbaModuleType.Procedural, "Module1");
+            VbaModule module = workbook.VbaProject.Modules[moduleIndex];
+
+            // VBA code: highlights the entire active row with yellow background
+            string vbaCode = @"
 Sub HighlightActiveRow()
-    On Error Resume Next
-    ActiveCell.EntireRow.Interior.ColorIndex = 6   'Yellow
+    ActiveCell.EntireRow.Interior.Color = vbYellow
 End Sub
 ";
-        module.Codes = vbaCode;
+            module.Codes = vbaCode;
 
-        // Save as a macro‑enabled workbook
-        workbook.Save("HighlightActiveRowButton.xlsm", SaveFormat.Xlsm);
+            // Save the workbook as a macro‑enabled file
+            workbook.Save("ButtonWithVba.xlsm", SaveFormat.Xlsm);
+        }
     }
 }

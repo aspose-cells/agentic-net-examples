@@ -1,10 +1,10 @@
-// Title: Convert Excel to CSV and Standardize Phone Numbers with Aspose.Cells (C#)
-// Description: Loads an .xlsx workbook, iterates through every used cell, detects phone‑number patterns with a regular expression, rewrites them to (123) 456‑7890, and saves the updated data as a CSV file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | Excel to CSV conversion | phone number formatting | regex cell processing | custom cell value transformation | workbook export | data cleansing | CSV generation
-// Common Searches: Aspose.Cells convert workbook to CSV C# | reformat phone numbers in Excel before CSV export | apply regex to Excel cells using Aspose.Cells | standardize phone number format during Excel to CSV conversion | C# iterate over cells and modify values with Aspose.Cells
-// Developer Intent: Load an Excel file, normalize any phone‑number strings to a consistent format, and export the cleaned workbook as a CSV document.
-// Use Cases: Prepare contact lists for systems that require a uniform phone format. | Cleanse data before importing into a CRM or marketing platform. | Generate CSV reports where all telephone entries follow the (123) 456‑7890 pattern.
-// AI Prompts: Show how to extend the regex to support international phone numbers while exporting to CSV. | Provide an example of implementing ICellValueFormatter in Aspose.Cells to format phone numbers during the save operation. | Suggest a method to log each cell that was modified from its original phone format.
+// Title: Convert Excel to CSV and Normalize Phone Numbers with Aspose.Cells (C#)
+// Description: Loads an Excel workbook using Aspose.Cells, scans every used cell, detects phone‑number strings with a regular expression, rewrites them to the (XXX) XXX‑XXXX format, and saves the result as a CSV file.
+// Keywords: Aspose.Cells CSV export C# | Excel to CSV conversion .NET | phone number formatting Aspose.Cells | regex phone normalization C# | standardize US phone numbers Excel | bulk data cleanup Aspose.Cells | C# workbook cell formatter
+// Common Searches: How to format phone numbers in Excel before CSV export using Aspose.Cells | C# Aspose.Cells example to normalize phone numbers to (XXX) XXX-XXXX | Convert .xlsx to .csv and clean phone columns with Aspose.Cells | Regex based phone number standardization in Aspose.Cells workbook
+// Developer Intent: Load an Excel file, reformat any phone‑number strings to a consistent pattern, and export the workbook as a CSV file.
+// Use Cases: Prepare clean contact lists for CRM import. | Create uniform phone number columns for bulk SMS campaigns. | Generate CSV reports where phone fields must follow a specific US format.
+// AI Prompts: Show a C# Aspose.Cells snippet that iterates all cells, detects phone numbers with regex, reformats them to (XXX) XXX-XXXX, and saves the workbook as CSV. | Explain how to extend the phone‑number regex to handle international formats while using Aspose.Cells. | Suggest performance tips for processing large worksheets when applying custom cell formatting before CSV export.
 
 using System;
 using System.Text.RegularExpressions;
@@ -12,52 +12,64 @@ using Aspose.Cells;
 
 namespace AsposeCellsPhoneNumberFormatter
 {
-    // Loads an .xlsx workbook, iterates through every used cell, detects phone‑number patterns with a regular expression, rewrites them to (123) 456‑7890, and saves the updated data as a CSV file using Aspose.Cells for .NET.
+    // Loads an Excel workbook using Aspose.Cells, scans every used cell, detects phone‑number strings with a regular expression, rewrites them to the (XXX) XXX‑XXXX format, and saves the result as a CSV file.
     class Program
     {
         static void Main()
         {
-            // Paths for source workbook and destination CSV
+            // Path to the source workbook (can be .xlsx, .xls, etc.)
             string sourcePath = "input.xlsx";
-            string csvPath = "output.csv";
 
-            // Load the existing workbook (lifecycle: create & load)
+            // Load the workbook (create rule)
             Workbook workbook = new Workbook(sourcePath);
+
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Determine the used range
+            // Define a regular expression that matches common phone number patterns
+            // This pattern captures digits, optional separators, and optional country code
+            Regex phoneRegex = new Regex(@"\+?(\d{1,3})?[\s\-\.]?\(?(\d{3})\)?[\s\-\.]?(\d{3})[\s\-\.]?(\d{4})");
+
+            // Iterate over all used cells
             int maxRow = cells.MaxDataRow;
             int maxCol = cells.MaxDataColumn;
 
-            // Regex to capture various phone number patterns and reformat to (123) 456-7890
-            Regex phoneRegex = new Regex(@"\D*(\d{3})\D*(\d{3})\D*(\d{4})\D*");
-
-            // Iterate through all cells in the used range
             for (int row = 0; row <= maxRow; row++)
             {
                 for (int col = 0; col <= maxCol; col++)
                 {
                     Cell cell = cells[row, col];
 
-                    // Process only string cells
+                    // Process only string cells that look like phone numbers
                     if (cell.Type == CellValueType.IsString)
                     {
-                        string original = cell.StringValue;
-                        Match match = phoneRegex.Match(original);
+                        string original = cell.StringValue.Trim();
 
-                        // If a phone number is detected, replace with standardized format
+                        // Try to match the phone number pattern
+                        Match match = phoneRegex.Match(original);
                         if (match.Success)
                         {
-                            string formatted = $"({match.Groups[1].Value}) {match.Groups[2].Value}-{match.Groups[3].Value}";
+                            // Extract numeric groups (ignore country code if present)
+                            string area = match.Groups[2].Value;
+                            string prefix = match.Groups[3].Value;
+                            string line = match.Groups[4].Value;
+
+                            // Standardize to (XXX) XXX-XXXX format
+                            string formatted = $"({area}) {prefix}-{line}";
+
+                            // Replace the cell value with the formatted phone number
                             cell.PutValue(formatted);
                         }
                     }
                 }
             }
 
-            // Save the workbook as CSV (using provided Save method)
+            // Save the modified workbook as CSV (save rule)
+            string csvPath = "output.csv";
             workbook.Save(csvPath, SaveFormat.Csv);
+
+            Console.WriteLine($"Workbook converted to CSV with standardized phone numbers: {csvPath}");
         }
     }
 }

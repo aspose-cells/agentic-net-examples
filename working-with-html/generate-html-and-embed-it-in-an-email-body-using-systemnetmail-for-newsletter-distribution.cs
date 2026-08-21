@@ -1,72 +1,76 @@
-// Title: Convert Aspose.Cells Worksheet to HTML5 with Base64 Images and Send via System.Net.Mail (C# Newsletter)
-// Description: Creates an Excel workbook with Aspose.Cells, exports the used range as HTML5 (images embedded as Base64), converts the output to a UTF‑8 string, and sends it as the HTML body of an email using System.Net.Mail's SmtpClient. Includes basic error handling and SMTP configuration.
-// Keywords: Aspose.Cells HTML export | HTML5 email body C# | Base64 images in email | System.Net.Mail newsletter | Convert Excel range to HTML | C# send HTML email | Aspose.Cells ToHtml | SMTP client C#
-// Common Searches: how to export Aspose.Cells worksheet to HTML string | send HTML email with embedded images using System.Net.Mail | C# convert Excel range to HTML5 with Base64 | Aspose.Cells newsletter email example | C# email body from Excel data
-// Developer Intent: Generate an HTML5 representation of an Excel range (including Base64‑encoded images) and deliver it as the body of an email via System.Net.Mail.
-// Use Cases: Monthly newsletter generated from Excel data | Automated sales or inventory report emailed as styled HTML | Product catalog distribution where Excel tables become web‑ready email content | Sending chart‑rich Excel dashboards in email without attachments
-// AI Prompts: Show C# code to export a specific Aspose.Cells range to an HTML string with Base64 images and send it via System.Net.Mail. | Explain how to add multiple attachments while keeping the HTML body intact. | Provide best‑practice error‑handling and retry logic for SMTP delivery after converting Excel to HTML.
+// Title: Send an Aspose.Cells worksheet as mobile‑friendly HTML email using System.Net.Mail (C#)
+// Description: Creates a workbook, fills a sheet with data, converts the used range to a Base64‑embedded, mobile‑compatible HTML string via HtmlSaveOptions, and sends it as the body of an SMTP email with System.Net.Mail.
+// Keywords: Aspose.Cells HTML export C# | Convert worksheet to HTML string | ExportImagesAsBase64 | IsMobileCompatible HTML email | System.Net.Mail HTML body | C# email newsletter from Excel | SMTP send HTML email Aspose | Excel data in email without attachment
+// Common Searches: how to convert Aspose.Cells range to HTML string C# | send Excel data as HTML email using System.Net.Mail | Aspose.Cells HtmlSaveOptions for email newsletters | embed Base64 images in HTML email from workbook | C# code to email spreadsheet as HTML
+// Developer Intent: Generate an HTML representation of a workbook range and deliver it directly in the body of an email via SMTP.
+// Use Cases: Weekly sales dashboard emailed as a responsive HTML table to subscribers. | Automated product‑catalog newsletter that embeds chart images without attachments. | Transactional order confirmation that displays order details from an Excel sheet in the email body.
+// AI Prompts: Write C# code that loads an Aspose.Cells workbook, converts a specific range to a Base64‑embedded, mobile‑compatible HTML string, and sends it with System.Net.Mail using UTF‑8 encoding. | Explain the HtmlSaveOptions settings needed for email‑ready HTML and how to attach the generated HTML to a MailMessage.
 
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
 using Aspose.Cells;
 
-// Creates an Excel workbook with Aspose.Cells, exports the used range as HTML5 (images embedded as Base64), converts the output to a UTF‑8 string, and sends it as the HTML body of an email using System.Net.Mail's SmtpClient. Includes basic error handling and SMTP configuration.
-class NewsletterEmail
+namespace AsposeCellsEmailDemo
 {
-    static void Main()
+    // Creates a workbook, fills a sheet with data, converts the used range to a Base64‑embedded, mobile‑compatible HTML string via HtmlSaveOptions, and sends it as the body of an SMTP email with System.Net.Mail.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Welcome to our Newsletter");
-            sheet.Cells["A2"].PutValue("Here is some data:");
-            for (int i = 1; i <= 5; i++)
+            try
             {
-                sheet.Cells[i + 2, 0].PutValue($"Item {i}");
-                sheet.Cells[i + 2, 1].PutValue(i * 10);
-            }
+                // Create a new workbook and populate it with sample data
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Initialize HTML save options
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
-            {
-                ExportImagesAsBase64 = true,          // Embed images as Base64
-                HtmlVersion = HtmlVersion.Html5      // Use HTML5 standard
-            };
+                for (int row = 0; row < 10; row++)
+                {
+                    for (int col = 0; col < 5; col++)
+                    {
+                        sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                    }
+                }
 
-            // Convert the used range of the worksheet to HTML bytes
-            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
-            byte[] htmlBytes = usedRange.ToHtml(saveOptions);
-            string htmlBody = Encoding.UTF8.GetString(htmlBytes); // Convert bytes to string
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    ExportImagesAsBase64 = true,   // embed images if any
+                    IsMobileCompatible = true     // mobile friendly
+                };
 
-            // Prepare the email message
-            using (MailMessage mail = new MailMessage())
-            {
-                mail.From = new MailAddress("sender@example.com");
-                mail.To.Add("recipient@example.com");
-                mail.Subject = "Monthly Newsletter";
-                mail.Body = htmlBody;
-                mail.IsBodyHtml = true; // Indicate that the body contains HTML
+                // Convert the used range of the worksheet to HTML (as byte[])
+                Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+                byte[] htmlBytes = usedRange.ToHtml(htmlOptions);
 
-                // Configure the SMTP client (replace with actual server details)
+                // Convert the byte array to a UTF‑8 string
+                string htmlBody = Encoding.UTF8.GetString(htmlBytes);
+
+                // Prepare the email message
+                MailMessage message = new MailMessage
+                {
+                    From = new MailAddress("sender@example.com"),
+                    Subject = "Workbook as HTML Email",
+                    IsBodyHtml = true,
+                    Body = htmlBody
+                };
+                message.To.Add("recipient@example.com");
+
+                // Configure the SMTP client (replace with real host/credentials)
                 using (SmtpClient smtp = new SmtpClient("smtp.example.com", 587))
                 {
-                    smtp.Credentials = new NetworkCredential("username", "password");
                     smtp.EnableSsl = true;
+                    smtp.Credentials = new NetworkCredential("smtp_user", "smtp_password");
 
                     // Send the email
-                    smtp.Send(mail);
+                    smtp.Send(message);
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            // Log or handle exceptions as needed
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

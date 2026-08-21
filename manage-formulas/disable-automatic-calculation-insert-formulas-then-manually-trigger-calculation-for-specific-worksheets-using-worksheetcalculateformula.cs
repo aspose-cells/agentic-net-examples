@@ -1,69 +1,56 @@
+// Title: Disable Auto-Calc and Manually Recalculate Formulas per Worksheet in Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to set Aspose.Cells workbook calculation mode to Manual, insert static values and formulas on multiple sheets, and use Worksheet.CalculateFormula with CalculationOptions to evaluate formulas only on selected worksheets before saving the workbook.
+// Keywords: Aspose.Cells | C# | .NET | manual calculation mode | CalcModeType.Manual | Worksheet.CalculateFormula | calculate formulas per sheet | disable automatic formula evaluation | Excel performance optimization | multi‑sheet workbook | custom CalculationOptions
+// Common Searches: Aspose.Cells disable automatic calculation | Worksheet.CalculateFormula C# example | manual formula evaluation per worksheet Aspose | set CalcModeType.Manual in .NET | how to recalculate specific sheets with Aspose.Cells
+// Developer Intent: Turn off auto‑calc, add formulas, and trigger calculation only on chosen worksheets.
+// Use Cases: Large financial models where formulas are evaluated after all input data is entered. | Generating multi‑sheet reports that require independent recalculation after each sheet is populated. | Improving workbook creation speed by disabling auto‑calc and manually invoking calculation on demand.
+// AI Prompts: Show C# code that sets CalcModeType.Manual, adds formulas to several worksheets, and uses Worksheet.CalculateFormula with custom CalculationOptions to recalculate each sheet individually. | Provide an Aspose.Cells example that disables automatic formula calculation, inserts formulas, and manually triggers calculation for specific worksheets before saving the file.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsManualCalcDemo
+// Demonstrates how to set Aspose.Cells workbook calculation mode to Manual, insert static values and formulas on multiple sheets, and use Worksheet.CalculateFormula with CalculationOptions to evaluate formulas only on selected worksheets before saving the workbook.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            try
-            {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
+        // Create a new workbook (uses the provided create rule)
+        Workbook workbook = new Workbook();
 
-                // Access the first worksheet and add a second one
-                Worksheet sheet1 = workbook.Worksheets[0];
-                sheet1.Name = "DataSheet";
-                Worksheet sheet2 = workbook.Worksheets.Add("SummarySheet");
+        // Disable automatic calculation for the whole workbook
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
 
-                // -------------------------------------------------
-                // Disable automatic calculation for the whole workbook
-                // (FormulaSettings.CalculationMode = Manual)
-                // -------------------------------------------------
-                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+        // -------------------------------------------------
+        // Worksheet 1 – add data and a formula
+        // -------------------------------------------------
+        Worksheet sheet1 = workbook.Worksheets[0];
+        sheet1.Name = "Sheet1";
 
-                // -------------------------------------------------
-                // Insert sample data and formulas in the first sheet
-                // -------------------------------------------------
-                Cells cells1 = sheet1.Cells;
-                cells1["A1"].PutValue(10);
-                cells1["A2"].PutValue(20);
-                cells1["A3"].PutValue(30);
-                // Simple sum formula
-                cells1["B1"].Formula = "=SUM(A1:A3)";
+        // Put a static value
+        sheet1.Cells["A1"].PutValue(5);
+        // Insert a formula that depends on A1
+        sheet1.Cells["B1"].Formula = "=A1*2";
 
-                // -------------------------------------------------
-                // Insert formulas in the second sheet that reference the first sheet
-                // -------------------------------------------------
-                Cells cells2 = sheet2.Cells;
-                // Reference a cell from the first sheet
-                cells2["A1"].Formula = "=DataSheet!B1";
-                // Another calculation based on the first sheet
-                cells2["A2"].Formula = "=DataSheet!A1*2";
+        // -------------------------------------------------
+        // Worksheet 2 – add data and a different formula
+        // -------------------------------------------------
+        Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
 
-                // -------------------------------------------------
-                // Manually calculate all formulas in the workbook
-                // -------------------------------------------------
-                workbook.CalculateFormula();
+        sheet2.Cells["A1"].PutValue(10);
+        sheet2.Cells["B1"].Formula = "=A1+100";
 
-                // -------------------------------------------------
-                // Save the workbook (lifecycle rule: save)
-                // -------------------------------------------------
-                string outputPath = "ManualCalculationDemo.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
+        // -------------------------------------------------
+        // Manually trigger calculation for each worksheet
+        // -------------------------------------------------
+        CalculationOptions calcOptions = new CalculationOptions();
 
-                // Output results to console for verification
-                Console.WriteLine("DataSheet B1 (SUM): " + cells1["B1"].Value);
-                Console.WriteLine("SummarySheet A1 (link to DataSheet B1): " + cells2["A1"].Value);
-                Console.WriteLine("SummarySheet A2 (A1*2): " + cells2["A2"].Value);
-            }
-            catch (Exception ex)
-            {
-                // Log or display any unexpected errors
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+        // Calculate all formulas in Sheet1
+        sheet1.CalculateFormula(calcOptions, true);
+
+        // Calculate all formulas in Sheet2
+        sheet2.CalculateFormula(calcOptions, true);
+
+        // Save the workbook (uses the provided save rule)
+        workbook.Save("ManualCalculationDemo.xlsx");
     }
 }

@@ -1,68 +1,48 @@
-// Title: Ungroup Shapes, Adjust Positions, and Save Workbook with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, adds two rectangle shapes, groups them, extracts the individual shapes, ungroups the group, shifts each shape 20 px right and 10 px down by updating the X and Y properties, and saves the workbook.
-// Keywords: Aspose.Cells ungroup shape C# | modify shape position Aspose.Cells | move Excel shapes programmatically | GroupShape Ungroup Aspose.Cells .NET | adjust shape coordinates C# | Excel shape manipulation Aspose.Cells
-// Common Searches: Aspose.Cells ungroup shape group C# | change position of individual shapes after ungrouping | C# code to shift Excel shapes using Aspose.Cells | how to move grouped rectangle shapes in .NET | save workbook after modifying shape locations Aspose.Cells
-// Developer Intent: Break a GroupShape into its component shapes, reposition each shape, and persist the changes in the Excel file using Aspose.Cells for .NET.
-// Use Cases: Apply distinct formatting to shapes that were originally grouped. | Re‑align shapes with data rows or columns after dynamic layout changes. | Prepare Excel reports where shape positions must be programmatically adjusted before distribution. | Automate diagram updates by ungrouping and repositioning shapes.
-// AI Prompts: Write C# code with Aspose.Cells to ungroup a GroupShape, iterate its child shapes, apply a custom X/Y offset, and save the workbook. | Explain the steps to retrieve individual Shape objects from a GroupShape and modify their X and Y properties. | Show how to ensure shape position changes are saved without affecting other worksheet content in Aspose.Cells for .NET. | Provide a sample that groups two rectangles, ungroups them, moves each shape, and writes the file to disk.
+// Title: Ungroup Shapes, Adjust Their Positions, and Save the Workbook – Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, add rectangle shapes, group them, ungroup the group, iterate through the individual shapes, modify each shape's Left and Top coordinates, and save the result as an XLSX file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# ungroup shape | move shape left top Aspose.Cells | modify shape position Excel .NET | group and ungroup shapes Aspose.Cells | Worksheet.Shapes iterate C# | Excel shape coordinates Aspose.Cells | UngroupAndModifyShapes example
+// Common Searches: How to ungroup a shape group in Aspose.Cells C# | C# code to change Left and Top of Excel shapes after ungrouping | Aspose.Cells move individual shapes by index | Ungroup shapes and reposition them using Aspose.Cells for .NET | Adjust shape coordinates in an Excel workbook with Aspose.Cells
+// Developer Intent: Separate a grouped shape into its original components, reposition each component programmatically, and persist the changes in a new Excel file.
+// Use Cases: Create staggered or offset diagrams by ungrouping and shifting shapes after layout generation. | Programmatically correct overlapping shapes in dynamically generated reports. | Prepare workbooks for printing or PDF conversion by fine‑tuning shape positions post‑group manipulation.
+// AI Prompts: Generate C# code that groups three shapes with Aspose.Cells, then ungroups them and sets each shape's Left and Top based on its order in the collection. | Show how to loop through Worksheet.Shapes in Aspose.Cells for .NET and move only non‑group shapes by a custom X/Y offset.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// Demonstrates how to create a workbook, add rectangle shapes, group them, ungroup the group, iterate through the individual shapes, modify each shape's Left and Top coordinates, and save the result as an XLSX file using Aspose.Cells for .NET.
+class UngroupAndModifyShapes
 {
-    // This example creates a workbook, adds two rectangle shapes, groups them, extracts the individual shapes, ungroups the group, shifts each shape 20 px right and 10 px down by updating the X and Y properties, and saves the workbook.
-    public class UngroupAndModifyShapes
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Add two rectangle shapes to the worksheet
+        Shape rect1 = worksheet.Shapes.AddRectangle(0, 0, 0, 0, 100, 50);
+        Shape rect2 = worksheet.Shapes.AddRectangle(5, 0, 0, 0, 100, 50);
+
+        // Group the two shapes
+        GroupShape group = worksheet.Shapes.Group(new Shape[] { rect1, rect2 });
+
+        // Ungroup the group shape
+        group.Ungroup();
+
+        // After ungrouping, the original shapes are back in the collection.
+        // Modify each shape's position (Left and Top) individually.
+        for (int i = 0; i < worksheet.Shapes.Count; i++)
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                ShapeCollection shapes = worksheet.Shapes;
+            Shape shape = worksheet.Shapes[i];
+            // Skip any group shapes that might still exist
+            if (shape.IsGroup) continue;
 
-                // Add two rectangle shapes to the worksheet
-                Shape shape1 = shapes.AddRectangle(2, 0, 2, 0, 100, 50); // upperLeftRow, upperLeftColumn, upperLeftPixelRow, upperLeftPixelColumn, height, width
-                Shape shape2 = shapes.AddRectangle(6, 0, 2, 0, 100, 50);
-
-                // Group the two shapes
-                GroupShape groupShape = shapes.Group(new Shape[] { shape1, shape2 });
-
-                // Retrieve the individual shapes that are part of the group
-                Shape[] groupedShapes = groupShape.GetGroupedShapes();
-
-                // Ungroup the shapes
-                groupShape.Ungroup();
-
-                // After ungrouping, modify each shape's position
-                // For demonstration, shift each shape 20 pixels to the right and 10 pixels down
-                foreach (Shape s in groupedShapes)
-                {
-                    s.X += 20; // move right
-                    s.Y += 10; // move down
-                }
-
-                // Save the workbook with the modified shapes
-                string outputPath = "UngroupedAndModifiedShapes.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Example: shift each shape by 50 pixels to the right and 30 pixels down per index
+            shape.Left += 50 * (i + 1);
+            shape.Top  += 30 * (i + 1);
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            UngroupAndModifyShapes.Run();
-        }
+        // Save the workbook with the modified shapes
+        workbook.Save("UngroupedAndModifiedShapes.xlsx");
     }
 }

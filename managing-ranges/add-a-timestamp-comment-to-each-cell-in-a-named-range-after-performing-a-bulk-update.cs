@@ -1,17 +1,18 @@
-// Title: Add Timestamp Comments to All Cells in a Named Range After Bulk Update (C# Aspose.Cells)
-// Description: Creates a workbook, defines a named range, performs a bulk cell update, parses the range's RefersTo string, and adds a comment with the current date‑time to each cell in the range before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | timestamp comment | named range | bulk update | add comment to cells | Excel comment programmatically | RefersTo parsing | audit trail
-// Common Searches: Aspose.Cells add comment to range C# | C# timestamp comment named range Aspose.Cells | How to bulk update cells and insert comments with Aspose.Cells | Parse named range RefersTo Aspose.Cells .NET | Add Excel comments to multiple cells using Aspose.Cells
-// Developer Intent: Insert a current date‑time comment into every cell of a specified named range after a bulk data change using Aspose.Cells for .NET.
-// Use Cases: Generate an audit log of when each cell was modified during a data transformation. | Tag imported bulk data with processing timestamps for downstream validation. | Show end‑users the exact time a cell was updated in automatically generated reports. | Enable change tracking in shared Excel files by recording edit timestamps.
-// AI Prompts: Write C# code with Aspose.Cells that adds a comment containing the current timestamp to each cell in a named range. | Explain how to extract the worksheet name and address from a named range's RefersTo string and use it to create a Range object. | Show how to handle existing comments when adding a new timestamp comment to cells in Aspose.Cells. | Provide a sample that formats the timestamp as "yyyy-MM-dd HH:mm:ss" and inserts it into cell comments. | Demonstrate how to combine a bulk update (e.g., value multiplication) with comment insertion in a single Aspose.Cells workflow.
+// Title: Add timestamp comments to each cell in a named range after a bulk update – Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, defines a named range (A1:C3), bulk‑updates all cells with a single value, then adds a comment containing the current date‑time to every cell in the range, and saves the file as TimestampComments.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells timestamp comment | C# add comment to range | named range bulk update Aspose.Cells | Excel comment with date time | programmatic comment each cell | Aspose.Cells .NET example | Excel automation timestamp
+// Common Searches: Aspose.Cells add comment with current date to each cell | bulk update named range and insert timestamp comments C# | how to add timestamp comment to a range using Aspose.Cells | C# Aspose.Cells comment per cell after PutValue | save Excel with timestamped comments Aspose
+// Developer Intent: Apply a single value to all cells in a named range and automatically attach a date‑time comment to each cell for audit or tracking purposes.
+// Use Cases: Record the exact moment data was refreshed in a financial report. | Provide per‑cell audit trails in spreadsheets that undergo batch processing. | Add change‑history notes to exported Excel files for downstream consumers.
+// AI Prompts: Generate C# code with Aspose.Cells that updates a named range in bulk and adds a timestamp comment to every cell. | Show how to retrieve a named range, perform PutValue on the whole range, then iterate cells to set a comment with DateTime.Now. | Explain best practices for formatting timestamp comments and ensuring they persist after saving the workbook.
 
 using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsTimestampCommentDemo
 {
-    // Creates a workbook, defines a named range, performs a bulk cell update, parses the range's RefersTo string, and adds a comment with the current date‑time to each cell in the range before saving the file.
+    // Creates a workbook, defines a named range (A1:C3), bulk‑updates all cells with a single value, then adds a comment containing the current date‑time to every cell in the range, and saves the file as TimestampComments.xlsx using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
@@ -20,71 +21,56 @@ namespace AsposeCellsTimestampCommentDemo
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate some sample data in the worksheet (A1:C3)
-                for (int r = 0; r < 3; r++)
-                {
-                    for (int c = 0; c < 3; c++)
-                    {
-                        sheet.Cells[r, c].PutValue($"R{r + 1}C{c + 1}");
-                    }
-                }
-
-                // Define a named range that covers A1:C3
+                // -----------------------------------------------------------------
+                // 1. Define a named range (for demonstration purposes)
+                // -----------------------------------------------------------------
                 int nameIndex = workbook.Worksheets.Names.Add("MyRange");
                 Name namedRange = workbook.Worksheets.Names[nameIndex];
-                // RefersTo must include the sheet name and absolute references
-                namedRange.RefersTo = $"={sheet.Name}!$A$1:$C$3";
+                // The named range refers to cells A1:C3 on the first sheet
+                namedRange.RefersTo = "=Sheet1!$A$1:$C$3";
 
-                // ----- Bulk update -----
-                // Example bulk operation: multiply each numeric cell by 10
-                // (Here we just set a new value for demonstration)
-                Aspose.Cells.Range bulkRange = sheet.Cells.CreateRange("A1", "C3");
-                foreach (Cell cell in bulkRange)
-                {
-                    // Simple bulk update: append "-Updated" to existing text
-                    cell.PutValue($"{cell.StringValue}-Updated");
-                }
+                // -----------------------------------------------------------------
+                // 2. Retrieve the range object from the named range definition
+                // -----------------------------------------------------------------
+                // RefersTo includes the leading '=', remove it to obtain the address
+                string address = namedRange.RefersTo.TrimStart('=');
+                // Create a Range object based on the address
+                AsposeRange range = worksheet.Cells.CreateRange(address);
 
-                // ----- Add timestamp comment to each cell in the named range -----
-                // Resolve the range object from the named range's RefersTo string
-                // RefersTo format: =SheetName!$A$1:$C$3
-                string refersTo = namedRange.RefersTo.TrimStart('=');
-                int exclPos = refersTo.IndexOf('!');
-                string sheetName = refersTo.Substring(0, exclPos);
-                string address = refersTo.Substring(exclPos + 1);
+                // -----------------------------------------------------------------
+                // 3. Perform a bulk update on the range (e.g., set the same value)
+                // -----------------------------------------------------------------
+                // PutValue requires conversion and style flags; set both to false for plain text
+                range.PutValue("Bulk Updated", false, false);
 
-                // Get the worksheet that the named range refers to
-                Worksheet targetSheet = workbook.Worksheets[sheetName];
-
-                // Create a Range object for the address
-                Aspose.Cells.Range targetRange = targetSheet.Cells.CreateRange(address);
-
-                // Access the comment collection of the target worksheet
-                CommentCollection comments = targetSheet.Comments;
-
-                // Current timestamp string
-                string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-                // Iterate through each cell in the range and add a comment
-                foreach (Cell cell in targetRange)
+                // -----------------------------------------------------------------
+                // 4. Add a timestamp comment to each cell in the range
+                // -----------------------------------------------------------------
+                foreach (Cell cell in range)
                 {
                     int row = cell.Row;
-                    int col = cell.Column;
+                    int column = cell.Column;
 
-                    // Add a comment (if a comment already exists, this will create a new one)
-                    int commentIndex = comments.Add(row, col);
-                    Comment comment = comments[commentIndex];
-                    comment.Note = $"Updated on {timestamp}";
+                    // Add a comment to the current cell using the (row, column) overload
+                    int commentIndex = worksheet.Comments.Add(row, column);
+                    Comment comment = worksheet.Comments[commentIndex];
+
+                    // Set the comment text to include the current timestamp
+                    comment.Note = $"Updated on {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
                 }
 
-                // Save the workbook
-                workbook.Save("TimestampCommentDemo.xlsx");
+                // -----------------------------------------------------------------
+                // 5. Save the workbook
+                // -----------------------------------------------------------------
+                string outputPath = "TimestampComments.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

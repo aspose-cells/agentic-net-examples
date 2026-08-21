@@ -1,51 +1,58 @@
+// Title: C# – Load Excel Template and Apply CopyStyle Smart Marker to Preserve Formatting with Aspose.Cells
+// Description: Loads a workbook template, binds a List<Record> to a smart‑marker named Data, processes the template with WorkbookDesigner, and saves the output. The CopyStyle attribute on the markers makes every generated row inherit the original cell styles (fonts, borders, number formats).
+// Keywords: Aspose.Cells | CopyStyle | smart markers | C# | WorkbookDesigner | Excel template | preserve formatting | populate rows | automation
+// Common Searches: Aspose.Cells CopyStyle example C# | how to keep cell formatting when adding rows with smart markers | load Excel template and preserve styles using Aspose.Cells | WorkbookDesigner SetDataSource with CopyStyle attribute | smart marker copy style .NET
+// Developer Intent: Generate rows from a data collection while automatically inheriting the template’s cell formatting via the CopyStyle smart marker.
+// Use Cases: Create invoices where each line‑item row retains the header’s font, border, and number format. | Build sales or budget reports from a list of objects without losing conditional formatting defined in the template. | Export dynamic data to a pre‑styled Excel sheet for downstream processing or printing.
+// AI Prompts: Add a total row that also uses the CopyStyle attribute to match the existing style. | Explain how the CopyStyle attribute works with smart markers in Aspose.Cells for .NET, step by step. | Generate C# code that reads data from a DataTable and applies CopyStyle smart markers to a workbook template.
+
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
 
 namespace AsposeCellsCopyStyleDemo
 {
-    class Program
+    // Sample data class representing a record
+    // Loads a workbook template, binds a List<Record> to a smart‑marker named Data, processes the template with WorkbookDesigner, and saves the output. The CopyStyle attribute on the markers makes every generated row inherit the original cell styles (fonts, borders, number formats).
+    public class Record
     {
-        static void Main()
+        public string Name { get; set; }
+        public double Amount { get; set; }
+
+        public Record(string name, double amount)
         {
-            // Load the workbook template (lifecycle rule: use provided load constructor)
-            Workbook workbook = new Workbook("Template.xlsx");
+            Name = name;
+            Amount = amount;
+        }
+    }
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+    public class Program
+    {
+        public static void Main()
+        {
+            // Path to the workbook template that contains smart markers with the CopyStyle attribute
+            string templatePath = "Template.xlsx";
 
-            // Example data to be added as new records
-            string[,] newData = new string[,]
+            // Load the template workbook
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = new Workbook(templatePath);
+
+            // Prepare sample data source
+            List<Record> records = new List<Record>
             {
-                { "John", "Doe", "30" },
-                { "Jane", "Smith", "25" },
-                { "Bob", "Johnson", "40" }
+                new Record("Alice", 123.45),
+                new Record("Bob", 678.90),
+                new Record("Charlie", 234.56)
             };
 
-            // Starting row index where new records will be inserted (0‑based)
-            // Assuming the template has a header in row 0 and existing data starts at row 1
-            int insertRowIndex = 1;
+            // Set the data source for the smart markers (assumes markers like &=CopyStyle&=Data.Name, &Data.Amount)
+            designer.SetDataSource("Data", records);
 
-            // Loop through each record
-            for (int i = 0; i < newData.GetLength(0); i++)
-            {
-                // Insert a new row and inherit formatting from the row above
-                InsertOptions insertOptions = new InsertOptions();
-                insertOptions.CopyFormatType = CopyFormatType.SameAsAbove; // CopyStyle attribute equivalent
-                cells.InsertRows(insertRowIndex, 1, insertOptions);
+            // Process the template – this will generate rows and inherit formatting via the CopyStyle attribute
+            designer.Process();
 
-                // Populate the newly inserted row with data
-                for (int j = 0; j < newData.GetLength(1); j++)
-                {
-                    cells[insertRowIndex, j].PutValue(newData[i, j]);
-                }
-
-                // Move the insertion point down for the next record
-                insertRowIndex++;
-            }
-
-            // Save the workbook (lifecycle rule: use provided save method)
-            workbook.Save("OutputWithInheritedStyle.xlsx");
+            // Save the resulting workbook
+            designer.Workbook.Save("Output.xlsx");
         }
     }
 }

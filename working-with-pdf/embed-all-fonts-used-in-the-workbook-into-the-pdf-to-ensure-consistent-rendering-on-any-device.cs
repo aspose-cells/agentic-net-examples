@@ -1,59 +1,48 @@
-// Title: Embed All Fonts in PDF Export with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create or load an Excel workbook, apply custom fonts (including Unicode characters), configure PdfSaveOptions (EmbedStandardWindowsFonts, FontEncoding=Identity, DefaultFont, CheckWorkbookDefaultFont) and save the workbook as a PDF that contains every font used, guaranteeing identical rendering on any device.
-// Keywords: Aspose.Cells PDF font embedding | C# embed fonts in PDF | PdfSaveOptions EmbedStandardWindowsFonts | Identity font encoding Aspose | DefaultFont Aspose.Cells | CheckWorkbookDefaultFont | Excel to PDF with custom fonts | Unicode PDF Aspose.Cells | preserve fonts in PDF export | cross‑device PDF rendering
-// Common Searches: how to embed all fonts when converting Excel to PDF with Aspose.Cells | Aspose.Cells PdfSaveOptions EmbedStandardWindowsFonts example C# | set FontEncoding to Identity for PDF font embedding Aspose | defaultfont and checkworkbookdefaultfont usage in Aspose.Cells PDF export | embed Unicode fonts in PDF generated from Excel
-// Developer Intent: Ensure every font referenced in the workbook is embedded in the generated PDF so the document looks identical on any platform.
-// Use Cases: Export financial reports that mix Latin and Asian scripts to PDF while preserving the exact typography. | Create printable PDFs from Excel templates that rely on corporate custom fonts. | Distribute Excel‑derived PDFs to clients who may not have the source fonts installed.
-// AI Prompts: Generate C# code that loads an existing .xlsx file and saves it as a PDF with all fonts embedded using Aspose.Cells. | Explain the role of EmbedStandardWindowsFonts, FontEncoding, DefaultFont, and CheckWorkbookDefaultFont in Aspose.Cells PDF generation. | Provide a verification checklist to confirm that fonts are truly embedded in a PDF produced by Aspose.Cells.
+// Title: How to Embed All Fonts in a PDF Export with Aspose.Cells for .NET (C#)
+// Description: Demonstrates creating a workbook, configuring PdfSaveOptions (EmbedStandardWindowsFonts, Identity encoding, default fallback font, workbook‑font checks) and saving it as a PDF that contains every font used, ensuring identical rendering on any device.
+// Keywords: Aspose.Cells PDF font embedding | C# embed fonts Aspose.Cells | PdfSaveOptions EmbedStandardWindowsFonts | Identity font encoding Aspose.Cells | CheckFontCompatibility Aspose.Cells | custom font folder Aspose.Cells | export workbook to PDF with embedded fonts
+// Common Searches: Aspose.Cells embed all fonts when saving to PDF | PdfSaveOptions font embedding C# example | How to ensure PDF uses embedded TrueType fonts in Aspose.Cells | Set default font and encoding for PDF export Aspose.Cells | Check font compatibility for multilingual PDF with Aspose.Cells
+// Developer Intent: Include every font referenced in the workbook inside the generated PDF to guarantee consistent appearance.
+// Use Cases: Produce PDF reports that preserve corporate or brand‑specific typefaces across all viewers. | Export workbooks that rely on custom fonts stored in a local directory, embedding them automatically. | Create multilingual PDFs where all glyphs are retained by validating font compatibility during conversion.
+// AI Prompts: Generate C# code using Aspose.Cells that embeds all workbook fonts, including custom fonts from a folder, when saving to PDF. | Explain the impact of PdfSaveOptions properties such as EmbedStandardWindowsFonts, FontEncoding, and CheckFontCompatibility on PDF font embedding. | Provide a step‑by‑step tutorial for configuring Aspose.Cells to embed fonts and handle missing glyphs for international content.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace EmbedAllFontsInPdf
+// Demonstrates creating a workbook, configuring PdfSaveOptions (EmbedStandardWindowsFonts, Identity encoding, default fallback font, workbook‑font checks) and saving it as a PDF that contains every font used, ensuring identical rendering on any device.
+class EmbedFontsToPdf
 {
-    // Demonstrates how to create or load an Excel workbook, apply custom fonts (including Unicode characters), configure PdfSaveOptions (EmbedStandardWindowsFonts, FontEncoding=Identity, DefaultFont, CheckWorkbookDefaultFont) and save the workbook as a PDF that contains every font used, guaranteeing identical rendering on any device.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and add some sample data
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sample text with embedded fonts");
+
+        // If you have custom fonts, point Aspose.Cells to the folder containing them
+        // FontConfigs.SetFontFolder(@"C:\MyFonts", true);
+
+        // Configure PDF save options to embed all fonts
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            // Embed TrueType fonts (default is true, set explicitly for clarity)
+            EmbedStandardWindowsFonts = true,
 
-            // Access the first worksheet and add sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample text with various fonts");
-            sheet.Cells["A2"].PutValue("中文字符测试"); // Unicode characters to test font embedding
+            // Use Identity encoding to ensure all characters are embedded correctly
+            FontEncoding = PdfFontEncoding.Identity,
 
-            // Optionally apply different fonts to cells
-            Style style1 = sheet.Cells["A1"].GetStyle();
-            style1.Font.Name = "Arial";
-            style1.Font.Size = 14;
-            sheet.Cells["A1"].SetStyle(style1);
+            // Fallback font if a specific font is missing
+            DefaultFont = "Arial",
 
-            Style style2 = sheet.Cells["A2"].GetStyle();
-            style2.Font.Name = "Times New Roman";
-            style2.Font.Size = 12;
-            sheet.Cells["A2"].SetStyle(style2);
+            // Ensure workbook's default font is considered for Unicode characters
+            CheckWorkbookDefaultFont = true,
 
-            // Configure PDF save options to embed all fonts
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Ensure TrueType fonts are embedded (default is true)
-                EmbedStandardWindowsFonts = true,
+            // Verify font compatibility for each character (helps avoid missing glyphs)
+            CheckFontCompatibility = true
+        };
 
-                // Use Identity encoding to embed fonts for all characters
-                FontEncoding = PdfFontEncoding.Identity,
-
-                // Set a default font in case a cell's font is missing
-                DefaultFont = "Arial",
-
-                // Try to use workbook's default font for Unicode characters
-                CheckWorkbookDefaultFont = true
-            };
-
-            // Save the workbook as PDF with embedded fonts
-            workbook.Save("EmbeddedFontsOutput.pdf", pdfOptions);
-        }
+        // Save the workbook as a PDF with all fonts embedded
+        workbook.Save("EmbeddedFonts.pdf", pdfOptions);
     }
 }

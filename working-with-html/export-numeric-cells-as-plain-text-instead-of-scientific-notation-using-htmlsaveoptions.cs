@@ -1,17 +1,17 @@
-// Title: Export numeric cells as plain text (no scientific notation) using Aspose.Cells HtmlSaveOptions in C#
-// Description: Demonstrates how to create a workbook, apply a custom number format "0" to a large integer, configure HtmlSaveOptions with ExportDataOptions.All, and save the file as HTML so the numeric value appears as plain text instead of scientific notation.
-// Keywords: Aspose.Cells | HtmlSaveOptions | C# | plain text numbers | prevent scientific notation | custom number format | HTML export | large integer | ExportDataOptions.All
-// Common Searches: Aspose.Cells HTML export scientific notation | C# save workbook as HTML without exponent | force plain text numbers in Aspose.Cells HTML output | custom number format 0 Aspose.Cells
-// Developer Intent: Generate an HTML file from a workbook where numeric cells are rendered as plain text rather than scientific notation.
-// Use Cases: Financial reports that must display account numbers exactly as entered. | Web pages showing product serial numbers, IDs, or barcode values without exponent formatting. | Dashboard widgets that present large integer metrics with full precision.
-// AI Prompts: Provide C# code that uses Aspose.Cells HtmlSaveOptions to keep custom number formats when exporting to HTML. | Show how to apply the "0" number format to a cell so the value is saved as plain text in HTML. | Explain the impact of HtmlSaveOptions.ExportDataOptions.All on style and format preservation during HTML export.
+// Title: C# – Export Numeric Cells as Plain Text (No Scientific Notation) with Aspose.Cells HtmlSaveOptions
+// Description: Demonstrates how to create a workbook, apply the text format "@" to numeric cells, configure HtmlSaveOptions (ExportDataOptions.All) and save to HTML so large integers and tiny decimals are rendered as plain text instead of scientific notation.
+// Keywords: Aspose.Cells | HtmlSaveOptions | C# | export numeric as text | prevent scientific notation | text format @ | HtmlExportDataOptions.All | HTML report generation | cell style text | large numbers | small decimals
+// Common Searches: Aspose.Cells export numbers as plain text HTML | stop scientific notation when saving to HTML with Aspose.Cells | C# HtmlSaveOptions ExportDataOptions.All example | apply text format @ to cells before HTML export | how to keep original column widths in Aspose.Cells HTML output
+// Developer Intent: Save a workbook to HTML with numeric cells displayed as plain text rather than scientific notation.
+// Use Cases: Web‑based financial reports that must show exact ID strings and precise decimal values. | Archiving spreadsheets on a website while preserving readable numeric formats. | Generating invoices or data tables where scientific notation would confuse end users.
+// AI Prompts: Generate C# code using Aspose.Cells to export a worksheet to HTML with all numeric cells formatted as plain text, avoiding scientific notation. | Show how to set the Excel custom format "@" on specific cells before saving with HtmlSaveOptions. | Explain the role of HtmlExportDataOptions.All in ensuring cell values are included in the HTML output.
 
 using System;
 using Aspose.Cells;
 
 namespace ExportNumericAsPlainText
 {
-    // Demonstrates how to create a workbook, apply a custom number format "0" to a large integer, configure HtmlSaveOptions with ExportDataOptions.All, and save the file as HTML so the numeric value appears as plain text instead of scientific notation.
+    // Demonstrates how to create a workbook, apply the text format "@" to numeric cells, configure HtmlSaveOptions (ExportDataOptions.All) and save to HTML so large integers and tiny decimals are rendered as plain text instead of scientific notation.
     class Program
     {
         static void Main()
@@ -21,26 +21,26 @@ namespace ExportNumericAsPlainText
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Insert a large numeric value that would normally be shown in scientific notation
-            // Example: 123456789012345
-            Cell numericCell = cells["A1"];
-            numericCell.PutValue(123456789012345);
+            // Add numeric values that would normally be shown in scientific notation
+            cells["A1"].PutValue(123456789012345);
+            cells["A2"].PutValue(0.0000001234);
 
-            // Apply a custom number format to force plain text (no scientific notation)
-            // The format "0" displays the full integer without exponent.
-            Style style = workbook.CreateStyle();
-            style.Custom = "0";
-            numericCell.SetStyle(style);
+            // Apply a text style to the cells so they are exported as plain text
+            Style textStyle = workbook.CreateStyle();
+            // "@" is the Excel format code for text
+            textStyle.Custom = "@";
+            cells["A1"].SetStyle(textStyle);
+            cells["A2"].SetStyle(textStyle);
 
             // Configure HTML save options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            // Ensure all data (including styles) are exported
+            // Ensure all data (including cell values) is exported
             htmlOptions.ExportDataOptions = HtmlExportDataOptions.All;
+            // Optional: keep the original column widths (set to false to ignore width truncation)
+            htmlOptions.FormatDataIgnoreColumnWidth = false;
 
-            // Save the workbook as HTML
+            // Save the workbook as HTML; numeric cells will appear as plain text
             workbook.Save("NumericPlainText.html", htmlOptions);
-
-            Console.WriteLine("Workbook saved as HTML with numeric cells displayed as plain text.");
         }
     }
 }

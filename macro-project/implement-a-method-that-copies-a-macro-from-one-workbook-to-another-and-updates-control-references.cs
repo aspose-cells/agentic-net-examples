@@ -1,73 +1,88 @@
-// Title: Copy VBA macros between Excel workbooks with Aspose.Cells for .NET
-// Description: Shows how to verify source and destination files, load them using Aspose.Cells, copy all content while preserving VBA via CopyOptions.KeepMacros, enable macros in the target workbook, and save the result as a macro‑enabled .xlsm file.
-// Keywords: Aspose.Cells copy macros | C# copy VBA between workbooks | CopyOptions KeepMacros | macro‑enabled .xlsm save | preserve VBA Aspose | Excel macro transfer .NET | update form controls Aspose.Cells | merge workbooks with macros
-// Common Searches: Aspose.Cells copy VBA from one workbook to another | How to keep macros when merging Excel files using C# | CopyOptions KeepMacros example C# | Enable macros after copying workbook Aspose.Cells | Transfer Excel VBA modules programmatically .NET
-// Developer Intent: Copy VBA macros from a source workbook to a destination workbook, retain full macro functionality, and output a macro‑enabled file.
-// Use Cases: Merge a template workbook containing custom VBA with a data‑driven workbook generated at runtime. | Add macros to a macro‑free workbook after exporting data so end users can run predefined scripts. | Create a consolidated report that combines multiple workbooks while preserving their original macros for further automation.
-// AI Prompts: Generate C# code using Aspose.Cells to copy selected VBA modules from one workbook to another and adjust form control references. | Show how to rename or reassign form controls after copying macros with Aspose.Cells CopyOptions.KeepMacros. | Explain how to configure macro security settings when saving a workbook that contains transferred VBA macros using Aspose.Cells.
+// Title: Copy VBA macro between workbooks and sync references using Aspose.Cells for .NET
+// Description: A C# helper that validates source and target files, loads both workbooks with Aspose.Cells, enables macros on the destination, copies the entire workbook while preserving VBA code (CopyOptions.KeepMacros), replicates VBA project references, and saves the result as a macro‑enabled .xlsm file.
+// Keywords: Aspose.Cells copy macro | C# copy VBA workbook | KeepMacros option | sync VBA references | save as Xlsm | macro‑enabled workbook .NET | VBA project copy Aspose
+// Common Searches: how to copy a macro from .xlsm to .xlsx using Aspose.Cells | Aspose.Cells copy VBA project references between workbooks | enable macros in destination workbook before saving as xlsm | transfer VBA modules with Aspose.Cells CopyOptions | C# copy macro and update references Aspose.Cells
+// Developer Intent: Duplicate a macro‑enabled workbook into another file and update its VBA project references while keeping all macros intact.
+// Use Cases: Apply a standard macro template to a newly generated report workbook. | Consolidate several macro‑enabled files into a single distribution workbook. | Refresh external library references after moving VBA code to a different workbook.
+// AI Prompts: Generate C# code that copies selected VBA modules from one workbook to another with Aspose.Cells and adjusts reference paths. | Show robust error‑handling for macro copying, covering missing VBA projects, file‑access errors, and invalid paths. | Explain how to preserve custom forms, controls, and reference integrity when copying macros with Aspose.Cells, and how to verify the transfer.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsMacroCopyDemo
+namespace AsposeCellsMacroDemo
 {
-    // Shows how to verify source and destination files, load them using Aspose.Cells, copy all content while preserving VBA via CopyOptions.KeepMacros, enable macros in the target workbook, and save the result as a macro‑enabled .xlsm file.
-    public class MacroHelper
+    // A C# helper that validates source and target files, loads both workbooks with Aspose.Cells, enables macros on the destination, copies the entire workbook while preserving VBA code (CopyOptions.KeepMacros), replicates VBA project references, and saves the result as a macro‑enabled .xlsm file.
+    public static class MacroHelper
     {
-        /// <param name="sourcePath">Path to the source macro‑enabled workbook (e.g., .xlsm).</param>
-        /// <param name="destPath">Path to the destination workbook (can be macro‑free or macro‑enabled).</param>
-        /// <param name="outputPath">Path where the merged workbook will be saved.</param>
-        public static void CopyMacroAndUpdateControls(string sourcePath, string destPath, string outputPath)
+        /// <param name="sourcePath">Path to the macro‑enabled source workbook (e.g., .xlsm).</param>
+        /// <param name="destPath">Path to the destination workbook (can be a regular .xlsx file).</param>
+        /// <param name="outputPath">Path where the resulting workbook will be saved (should be .xlsm to retain macros).</param>
+        public static void CopyMacroAndUpdateReferences(string sourcePath, string destPath, string outputPath)
         {
+            // Validate input files.
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"Source workbook not found: {sourcePath}");
+            if (!File.Exists(destPath))
+                throw new FileNotFoundException($"Destination workbook not found: {destPath}");
+
             try
             {
-                // Verify source file exists
-                if (!File.Exists(sourcePath))
-                    throw new FileNotFoundException($"Source file not found: {sourcePath}");
+                // Load the source workbook that contains macros.
+                using (Workbook sourceWorkbook = new Workbook(sourcePath))
+                {
+                    // Load the destination workbook (may or may not contain macros).
+                    using (Workbook destWorkbook = new Workbook(destPath))
+                    {
+                        // Ensure the destination workbook is allowed to contain macros.
+                        destWorkbook.Settings.EnableMacros = true;
 
-                // Verify destination file exists
-                if (!File.Exists(destPath))
-                    throw new FileNotFoundException($"Destination file not found: {destPath}");
+                        // Configure copy options to keep macros during the copy operation.
+                        CopyOptions copyOptions = new CopyOptions
+                        {
+                            KeepMacros = true
+                        };
 
-                // Load workbooks
-                Workbook sourceWorkbook = new Workbook(sourcePath);
-                Workbook destWorkbook = new Workbook(destPath);
+                        // Copy the entire source workbook into the destination workbook, preserving macros.
+                        destWorkbook.Copy(sourceWorkbook, copyOptions);
 
-                // Copy entire content, preserving macros
-                CopyOptions copyOptions = new CopyOptions { KeepMacros = true };
-                destWorkbook.Copy(sourceWorkbook, copyOptions);
+                        // Synchronize VBA project references from source to destination.
+                        if (destWorkbook.VbaProject != null && sourceWorkbook.VbaProject != null)
+                        {
+                            destWorkbook.VbaProject.References.Copy(sourceWorkbook.VbaProject.References);
+                        }
 
-                // Ensure macros are enabled in the destination workbook
-                destWorkbook.Settings.EnableMacros = true;
-
-                // Save as macro‑enabled workbook
-                destWorkbook.Save(outputPath, SaveFormat.Xlsm);
+                        // Save the resulting workbook as a macro‑enabled file.
+                        destWorkbook.Save(outputPath, SaveFormat.Xlsm);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error during macro copy: {ex.Message}");
-                throw;
+                // Wrap and rethrow to provide context.
+                throw new InvalidOperationException("Failed to copy macros and update references.", ex);
             }
         }
+    }
 
-        // Example usage
-        public static void Main()
+    internal class Program
+    {
+        private static void Main(string[] args)
         {
+            // Example usage:
+            string sourcePath = "SourceWithMacro.xlsm";
+            string destPath = "EmptyWorkbook.xlsx";
+            string outputPath = "ResultWithMacro.xlsm";
+
             try
             {
-                string sourceFile = "SourceWithMacro.xlsm";
-                string destinationFile = "Destination.xlsx"; // can be macro‑free
-                string resultFile = "MergedWithMacro.xlsm";
-
-                CopyMacroAndUpdateControls(sourceFile, destinationFile, resultFile);
-
-                Console.WriteLine($"Macro copied and workbook saved to: {resultFile}");
+                MacroHelper.CopyMacroAndUpdateReferences(sourcePath, destPath, outputPath);
+                Console.WriteLine($"Macro copy completed successfully. Output saved to: {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
     }

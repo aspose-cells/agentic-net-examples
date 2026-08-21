@@ -1,53 +1,52 @@
-// Title: Save Aspose.Cells Worksheet as UTF‑8 SVG in C# – Preserve Unicode Characters
-// Description: Demonstrates how to render an Aspose.Cells worksheet containing Chinese, Russian, and Japanese text to SVG, convert the output to a UTF‑8 string, and write it to a file without a BOM, ensuring all Unicode characters are retained.
-// Keywords: Aspose.Cells | C# SVG export | UTF-8 SVG | Unicode Excel to SVG | SvgImageOptions | SheetRender | WriteAllText UTF8Encoding | multilingual Excel SVG | no BOM
-// Common Searches: C# save worksheet as SVG UTF-8 | Aspose.Cells export SVG Unicode | write SVG file without BOM .NET | render Excel sheet to SVG preserving characters | SvgImageOptions ImageType.Svg example
-// Developer Intent: Export a worksheet to an SVG file encoded in UTF‑8 (without BOM) so that all Unicode text displays correctly.
-// Use Cases: Generate web‑ready SVG images of multilingual Excel sheets while keeping Chinese, Russian, and Japanese characters readable. | Create SVG reports from Excel data that must be UTF‑8 encoded for downstream processing pipelines. | Capture SVG output in a memory stream, convert it to a UTF‑8 string, and save it with custom encoding settings.
-// AI Prompts: Write C# code using Aspose.Cells to render a worksheet with Unicode text to an SVG file encoded in UTF‑8 without a BOM. | Show how to configure SvgImageOptions and SheetRender to export an Excel sheet to SVG while preserving multilingual characters. | Provide a snippet that reads SVG bytes from a MemoryStream, converts them to a UTF‑8 string, and saves the result using File.WriteAllText with UTF8Encoding(false).
+// Title: C# – Export Excel Worksheet to UTF‑8 SVG using Aspose.Cells
+// Description: Demonstrates how to create a workbook, insert multilingual text, configure SvgImageOptions, and render the first worksheet to a UTF‑8 encoded SVG file with SheetRender, then save the workbook as XLSX.
+// Keywords: Aspose.Cells C# SVG export | UTF-8 SVG Aspose | SvgImageOptions | SheetRender Unicode | Excel to SVG conversion | multilingual SVG output
+// Common Searches: export excel to svg asp.net | aspocells svg utf-8 encoding | c# render worksheet as svg | preserve unicode characters in svg export | sheetrender svg options
+// Developer Intent: Create an SVG image of a worksheet that retains all Unicode characters by using UTF‑8 encoding.
+// Use Cases: Generate scalable SVG charts for web pages that include Chinese, Russian, or Japanese labels. | Produce high‑resolution documentation screenshots of Excel sheets without losing non‑Latin text. | Automate batch conversion of multiple worksheets to SVG files for archival while ensuring correct character encoding.
+// AI Prompts: Write C# code with Aspose.Cells to render a worksheet to a UTF‑8 SVG, including FitToViewPort and a custom CSS prefix. | Explain the role of SvgImageOptions in preserving Unicode text when exporting Excel to SVG with Aspose.Cells. | Provide a step‑by‑step guide to batch‑process several worksheets into SVG files, guaranteeing UTF‑8 encoding for all outputs.
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-// Demonstrates how to render an Aspose.Cells worksheet containing Chinese, Russian, and Japanese text to SVG, convert the output to a UTF‑8 string, and write it to a file without a BOM, ensuring all Unicode characters are retained.
+// Demonstrates how to create a workbook, insert multilingual text, configure SvgImageOptions, and render the first worksheet to a UTF‑8 encoded SVG file with SheetRender, then save the workbook as XLSX.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle create rule)
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add Unicode text to demonstrate UTF‑8 preservation
-        worksheet.Cells["A1"].PutValue("中文字符");   // Chinese
-        worksheet.Cells["A2"].PutValue("Привет");    // Russian
-        worksheet.Cells["A3"].PutValue("こんにちは"); // Japanese
-
-        // Configure SVG rendering options
-        SvgImageOptions svgOptions = new SvgImageOptions
+        try
         {
-            ImageType = ImageType.Svg,   // Ensure SVG output
-            FitToViewPort = true        // Optional: fit content to viewport
-        };
+            // Create a new workbook (lifecycle create rule)
+            Workbook workbook = new Workbook();
 
-        // Render the worksheet to SVG in a memory stream
-        SheetRender renderer = new SheetRender(worksheet, svgOptions);
-        using (MemoryStream svgStream = new MemoryStream())
-        {
-            renderer.ToImage(0, svgStream);   // Render first (and only) sheet
-            svgStream.Position = 0;           // Reset for reading
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Convert the stream bytes to a UTF‑8 string
-            string svgContent = Encoding.UTF8.GetString(svgStream.ToArray());
+            // Add Unicode text to demonstrate UTF‑8 preservation in the SVG
+            sheet.Cells["A1"].PutValue("中文字符");      // Chinese
+            sheet.Cells["A2"].PutValue("Привет");       // Russian
+            sheet.Cells["A3"].PutValue("こんにちは");   // Japanese
 
-            // Write the SVG content to a file using UTF‑8 encoding (no BOM)
-            File.WriteAllText("Worksheet.svg", svgContent, new UTF8Encoding(false));
+            // Configure SVG rendering options
+            SvgImageOptions svgOptions = new SvgImageOptions
+            {
+                // Ensure SVG output (default for SvgImageOptions)
+                FitToViewPort = true,        // Optional: fit content to viewport
+                CssPrefix = "sheet-"          // Optional CSS prefix
+            };
+
+            // Render the worksheet to an SVG file (uses SheetRender with SvgImageOptions)
+            SheetRender renderer = new SheetRender(sheet, svgOptions);
+            renderer.ToImage(0, "worksheet.svg");
+
+            // Save the workbook itself (lifecycle save rule)
+            workbook.Save("worksheet.xlsx", SaveFormat.Xlsx);
         }
-
-        Console.WriteLine("Worksheet saved as SVG with UTF‑8 encoding.");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,58 +1,52 @@
-using System;
+// Title: C# – Relocate a Sparkline to a New Cell with Aspose.Cells for .NET
+// Description: Demonstrates how to move a line sparkline from its original cell to another location by removing it from its SparklineGroup and adding it back at the target range, then saving the workbook.
+// Keywords: Aspose.Cells sparkline move | C# relocate sparkline | programmatic sparkline reposition .NET | remove and add sparkline Aspose | SparklineGroup manipulation | Excel sparkline location change | MoveSparklineDemo | Aspose.Cells example C#
+// Common Searches: how to move a sparkline in Aspose.Cells C# | change sparkline cell address programmatically | Aspose.Cells remove sparkline then add | relocate sparkline to another column .NET | sparkline group reposition example
+// Developer Intent: Shift an existing sparkline from its current cell to a different cell by deleting it from the group and inserting it at the new location.
+// Use Cases: Re‑arrange dashboard sparklines after inserting or deleting columns. | Align sparklines with newly added summary data in a financial report. | Batch‑move multiple sparklines to a new column range during data model updates.
+// AI Prompts: Generate C# code using Aspose.Cells to move a sparkline from E1 to G1 while keeping the same data range. | Explain how to programmatically relocate several sparklines within a SparklineGroup to a new column range in .NET. | Show a step‑by‑step example of removing a sparkline and adding it back at a different cell without recreating the workbook.
+
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace SparklineMoveDemo
+// Demonstrates how to move a line sparkline from its original cell to another location by removing it from its SparklineGroup and adding it back at the target range, then saving the workbook.
+class MoveSparklineDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the sparkline (A1:D1)
-            sheet.Cells["A1"].PutValue(5);
-            sheet.Cells["B1"].PutValue(2);
-            sheet.Cells["C1"].PutValue(1);
-            sheet.Cells["D1"].PutValue(3);
+        // Populate sample data that the sparkline will represent
+        sheet.Cells["A1"].PutValue(5);
+        sheet.Cells["B1"].PutValue(2);
+        sheet.Cells["C1"].PutValue(1);
+        sheet.Cells["D1"].PutValue(3);
 
-            // Define the initial location range for the sparkline (cell E1)
-            CellArea initialLocation = new CellArea
-            {
-                StartRow = 0,
-                EndRow = 0,
-                StartColumn = 4, // Column E (0‑based index)
-                EndColumn = 4
-            };
+        // Define the initial location range for the sparkline (cell E1)
+        CellArea initialLocation = CellArea.CreateCellArea("E1", "E1");
 
-            // Add a sparkline group with the data range and initial location
-            int groupIdx = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, initialLocation);
-            SparklineGroup group = sheet.SparklineGroups[groupIdx];
+        // Add a sparkline group with the data range A1:D1 placed at the initial location
+        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, initialLocation);
+        SparklineGroup group = sheet.SparklineGroups[groupIndex];
 
-            // Add a sparkline to the group at the initial location (row 0, column 4)
-            int sparklineIdx = group.Sparklines.Add("A1:D1", 0, 4);
-            Sparkline sparkline = group.Sparklines[sparklineIdx];
+        // Add a sparkline to the group at row 0, column 4 (cell E1)
+        int sparkIndex = group.Sparklines.Add("A1:D1", 0, 4);
+        Sparkline spark = group.Sparklines[sparkIndex];
 
-            Console.WriteLine($"Original sparkline position - Row: {sparkline.Row}, Column: {sparkline.Column}");
+        // Define the new location for the sparkline (cell G1)
+        int newRow = 0;      // same row
+        int newColumn = 6;   // column G (0‑based index)
 
-            // ----- Move the sparkline -----
-            // Define the new location (cell E3 -> row 2, column 4)
-            int newRow = 2;
-            int newColumn = 4;
+        // Remove the existing sparkline from the group
+        group.Sparklines.RemoveSparkline(spark);
 
-            // Remove the existing sparkline from the collection
-            group.Sparklines.RemoveSparkline(sparkline);
+        // Re‑add the sparkline at the new location
+        int newSparkIndex = group.Sparklines.Add("A1:D1", newRow, newColumn);
+        Sparkline newSpark = group.Sparklines[newSparkIndex];
 
-            // Add a new sparkline at the desired location using the same data range
-            int newSparklineIdx = group.Sparklines.Add("A1:D1", newRow, newColumn);
-            Sparkline movedSparkline = group.Sparklines[newSparklineIdx];
-
-            Console.WriteLine($"Moved sparkline position - Row: {movedSparkline.Row}, Column: {movedSparkline.Column}");
-
-            // Save the workbook with the moved sparkline
-            workbook.Save("SparklineMoved.xlsx");
-        }
+        // Save the workbook with the moved sparkline
+        workbook.Save("MovedSparkline.xlsx");
     }
 }

@@ -1,61 +1,46 @@
-// Title: C# – Verify Worksheet Count After Merging Workbooks with Aspose.Cells Combine
-// Description: Creates a workbook with two sheets and another with three sheets, merges them using the Workbook.Combine method, and checks that the resulting file contains the expected five worksheets. The sample prints the verification result and optionally saves the combined file.
-// Keywords: Aspose.Cells | C# | .NET | Workbook.Combine | merge workbooks | worksheet count | verify sheet total | combined workbook example
-// Common Searches: Aspose.Cells combine workbooks sheet count | C# check number of worksheets after Combine | validate total worksheets in merged workbook Aspose.Cells | how to verify sheet count after workbook merge .NET
-// Developer Intent: Confirm that the workbook produced by Combine contains the expected number of worksheets.
-// Use Cases: Automated validation after consolidating multiple report files. | Unit‑test scenario to ensure no sheets are lost during a merge operation. | Pre‑save safety check that guarantees all source worksheets are present.
-// AI Prompts: Generate a C# unit test using Aspose.Cells that creates two workbooks, combines them, and asserts Worksheets.Count equals the sum of source sheets. | Write code that merges three workbooks with Aspose.Cells, logs a warning if the final worksheet count differs from the calculated total, and handles exceptions gracefully. | Provide an example of using try‑catch to verify worksheet count after a Combine call and output a clear success or failure message.
+// Title: Check worksheet count after merging workbooks with Aspose.Cells for .NET
+// Description: Creates a source workbook with two worksheets and a destination workbook with one worksheet, calculates the expected total sheet count, merges the source into the destination using Workbook.Combine, and verifies that the resulting workbook contains the expected number of worksheets. The sample outputs the verification result and optionally saves the combined file.
+// Keywords: Aspose.Cells | Workbook.Combine | C# | .NET | worksheet count verification | merge workbooks | combined workbook sheets | Excel automation | validate sheet number
+// Common Searches: Aspose.Cells verify worksheet count after combine | C# count worksheets after Workbook.Combine | How to check number of sheets in merged Excel file using Aspose.Cells | Validate merged workbook sheet total .NET | Test workbook combine worksheet count
+// Developer Intent: Confirm that Workbook.Combine adds all source worksheets to the destination, resulting in the correct total sheet count.
+// Use Cases: Automated unit test for workbook merging logic | Pre‑deployment validation of Excel report generation pipelines | Runtime check before saving a combined workbook in a web service | Logging and alerting when worksheet count mismatch occurs | Batch processing of multiple workbooks where sheet count must meet business rules
+// AI Prompts: Generate a reusable C# method that combines two Aspose.Cells Workbook objects and throws an exception if the resulting worksheet count does not equal the sum of the original counts. | Create an NUnit test that builds source and destination workbooks, calls Workbook.Combine, and asserts that the worksheet count matches the expected total. | Write code that logs detailed verification messages and saves the merged workbook only when the worksheet count validation succeeds.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace VerifyCombinedWorkbook
 {
-    // Creates a workbook with two sheets and another with three sheets, merges them using the Workbook.Combine method, and checks that the resulting file contains the expected five worksheets. The sample prints the verification result and optionally saves the combined file.
-    public class VerifyCombinedWorkbookWorksheetCount
+    // Creates a source workbook with two worksheets and a destination workbook with one worksheet, calculates the expected total sheet count, merges the source into the destination using Workbook.Combine, and verifies that the resulting workbook contains the expected number of worksheets. The sample outputs the verification result and optionally saves the combined file.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
-            {
-                // Create the first workbook with two worksheets
-                Workbook wb1 = new Workbook();
-                wb1.Worksheets[0].Name = "FirstSheet1";
-                wb1.Worksheets.Add("FirstSheet2");
+            // Create source workbook with two worksheets
+            Workbook sourceWorkbook = new Workbook();
+            sourceWorkbook.Worksheets[0].Name = "SourceSheet1";
+            sourceWorkbook.Worksheets.Add("SourceSheet2");
 
-                // Create the second workbook with three worksheets
-                Workbook wb2 = new Workbook();
-                wb2.Worksheets[0].Name = "SecondSheet1";
-                wb2.Worksheets.Add("SecondSheet2");
-                wb2.Worksheets.Add("SecondSheet3");
+            // Create destination workbook with one worksheet
+            Workbook destWorkbook = new Workbook();
+            destWorkbook.Worksheets[0].Name = "DestSheet1";
 
-                // Combine the second workbook into the first workbook
-                wb1.Combine(wb2);
+            // Record expected worksheet count after combination
+            int expectedCount = destWorkbook.Worksheets.Count + sourceWorkbook.Worksheets.Count;
 
-                // Expected total worksheets after combination: 2 (from wb1) + 3 (from wb2) = 5
-                int expectedCount = 5;
-                int actualCount = wb1.Worksheets.Count;
+            // Combine source workbook into destination workbook
+            destWorkbook.Combine(sourceWorkbook);
 
-                // Output verification results
-                Console.WriteLine($"Expected worksheet count: {expectedCount}");
-                Console.WriteLine($"Actual worksheet count after combine: {actualCount}");
-                Console.WriteLine(actualCount == expectedCount ? "Verification passed." : "Verification failed.");
+            // Verify the worksheet count
+            int actualCount = destWorkbook.Worksheets.Count;
+            Console.WriteLine($"Expected worksheet count: {expectedCount}");
+            Console.WriteLine($"Actual worksheet count:   {actualCount}");
+            Console.WriteLine(actualCount == expectedCount
+                ? "Verification succeeded: worksheet count matches expected value."
+                : "Verification failed: worksheet count does not match expected value.");
 
-                // Save the combined workbook (optional)
-                wb1.Save("CombinedWorkbook.xlsx", SaveFormat.Xlsx);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            VerifyCombinedWorkbookWorksheetCount.Run();
+            // Save the combined workbook (optional)
+            destWorkbook.Save("CombinedWorkbook.xlsx", SaveFormat.Xlsx);
         }
     }
 }

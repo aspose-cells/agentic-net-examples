@@ -1,100 +1,112 @@
-// Title: Aspose.Cells .NET – Subclass ChartGlobalizationSettings to localize chart labels and export PNG
-// Description: Demonstrates how to create a MyChartGlobalizationSettings class that overrides axis unit names, chart title, and legend texts with Chinese strings, apply it to a workbook, build a column chart, set a display unit, and export the chart as a PNG image while also saving the Excel file.
-// Keywords: Aspose.Cells | C# chart localization | ChartGlobalizationSettings subclass | custom axis unit names | Chinese chart labels | export chart to PNG | Excel chart image generation | globalization settings Aspose | .NET chart rendering
-// Common Searches: Aspose.Cells custom ChartGlobalizationSettings example | localize chart axis units in C# Aspose.Cells | export Aspose.Cells chart as PNG with Chinese labels | how to change chart legend text in Aspose.Cells .NET | apply globalization settings to Excel chart programmatically
-// Developer Intent: The developer wants to implement a custom globalization class to replace default chart text with Chinese terms and generate a localized chart image.
-// Use Cases: Produce Chinese‑language Excel reports with correctly localized chart axes and titles. | Automate creation of web‑ready chart images (PNG) that match regional terminology. | Save both the workbook and a localized chart snapshot for distribution to international stakeholders.
-// AI Prompts: Generate C# code that subclasses ChartGlobalizationSettings to use French axis unit names and exports the chart as a JPEG. | Explain how to apply a custom ChartGlobalizationSettings instance to all charts in an Aspose.Cells workbook. | Write a try‑catch block that logs chart image export failures to a log file using Aspose.Cells.
+// Title: C# – Custom ChartGlobalizationSettings to Localize Axis Units and Export Chart as PNG with Aspose.Cells
+// Description: Shows how to subclass ChartGlobalizationSettings in Aspose.Cells for .NET to supply Chinese axis‑unit names and a localized chart title, apply the settings to a workbook, create a column chart, and render the chart directly to a PNG image (workbook save optional).
+// Keywords: Aspose.Cells | C# | ChartGlobalizationSettings | custom chart localization | axis unit translation | chart title localization | export chart to PNG | DisplayUnitType thousands | multilingual reporting
+// Common Searches: Aspose.Cells localize chart axis labels | How to change chart unit text in Aspose.Cells .NET | Export Aspose.Cells chart as image with custom title | Create custom ChartGlobalizationSettings C# | Chinese chart labels Aspose.Cells | Set chart display unit to thousands Aspose.Cells
+// Developer Intent: Implement a custom ChartGlobalizationSettings subclass, attach it to a workbook, generate a chart, and export the chart image with localized labels and title.
+// Use Cases: Generate Chinese financial reports with correctly translated axis units. | Reuse a chart‑localization class across multiple workbooks for multilingual dashboards. | Create high‑resolution chart images for PDFs, web pages, or presentations with custom titles. | Standardize chart appearance and terminology in enterprise reporting solutions.
+// AI Prompts: Write C# code that defines a MyChartGlobalizationSettings class inheriting from ChartGlobalizationSettings, overrides GetAxisUnitName for hundreds, thousands, and ten‑thousands, overrides GetChartTitleName, applies it to a Workbook, creates a column chart, sets DisplayUnit to thousands, and saves the chart as a PNG image. | Show how to export an Aspose.Cells chart to an image after customizing globalization settings for Chinese axis labels and a localized title.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsChartLocalizationDemo
+namespace AsposeCellsExamples
 {
-    // Custom globalization settings for charts
-    // Demonstrates how to create a MyChartGlobalizationSettings class that overrides axis unit names, chart title, and legend texts with Chinese strings, apply it to a workbook, build a column chart, set a display unit, and export the chart as a PNG image while also saving the Excel file.
+    // Custom ChartGlobalizationSettings subclass providing localized unit and title names
+    // Shows how to subclass ChartGlobalizationSettings in Aspose.Cells for .NET to supply Chinese axis‑unit names and a localized chart title, apply the settings to a workbook, create a column chart, and render the chart directly to a PNG image (workbook save optional).
     public class MyChartGlobalizationSettings : ChartGlobalizationSettings
     {
-        // Override axis unit names to provide localized strings
         public override string GetAxisUnitName(DisplayUnitType type)
         {
-            return type switch
+            switch (type)
             {
-                DisplayUnitType.Hundreds => "百",          // Chinese for "hundreds"
-                DisplayUnitType.Thousands => "千",          // Chinese for "thousands"
-                DisplayUnitType.TenThousands => "万",      // Chinese for "ten‑thousands"
-                _ => base.GetAxisUnitName(type),
-            };
+                case DisplayUnitType.Hundreds:
+                    return "百";
+                case DisplayUnitType.Thousands:
+                    return "千";
+                case DisplayUnitType.TenThousands:
+                    return "万";
+                default:
+                    return base.GetAxisUnitName(type);
+            }
         }
 
-        // Override chart title name
-        public override string GetChartTitleName() => "本地化图表标题";   // "Localized Chart Title"
-
-        // Override legend increase/decrease names
-        public override string GetLegendIncreaseName() => "增加";
-        public override string GetLegendDecreaseName() => "减少";
+        public override string GetChartTitleName()
+        {
+            return "本地化图表标题";
+        }
     }
 
-    class Program
+    public class ExportLocalizedChartImage
     {
-        static void Main()
+        public static void Run()
         {
             try
             {
                 // Create a new workbook and get the first worksheet
                 Workbook wb = new Workbook();
-                Worksheet sheet = wb.Worksheets[0];
+                Worksheet ws = wb.Worksheets[0];
 
                 // Populate sample data for the chart
-                sheet.Cells["A1"].PutValue("类别");
-                sheet.Cells["A2"].PutValue("第一季");
-                sheet.Cells["A3"].PutValue("第二季");
-                sheet.Cells["A4"].PutValue("第三季");
-                sheet.Cells["B1"].PutValue("销量");
-                sheet.Cells["B2"].PutValue(1200);
-                sheet.Cells["B3"].PutValue(1500);
-                sheet.Cells["B4"].PutValue(1800);
+                ws.Cells["A1"].PutValue("类别");
+                ws.Cells["A2"].PutValue("第一季");
+                ws.Cells["A3"].PutValue("第二季");
+                ws.Cells["A4"].PutValue("第三季");
+                ws.Cells["B1"].PutValue("销售额");
+                ws.Cells["B2"].PutValue(1200);
+                ws.Cells["B3"].PutValue(1500);
+                ws.Cells["B4"].PutValue(1800);
 
-                // Add a column chart
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 15);
-                Chart chart = sheet.Charts[chartIdx];
+                // Add a column chart to the worksheet
+                int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 20, 15);
+                Chart chart = ws.Charts[chartIdx];
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // Set a display unit to see the custom unit name in action
+                // Set display unit to thousands so the custom unit name will be used
                 chart.ValueAxis.DisplayUnit = DisplayUnitType.Thousands;
                 chart.ValueAxis.IsDisplayUnitLabelShown = true;
 
-                // Apply the custom globalization settings to the workbook
+                // Apply the custom ChartGlobalizationSettings to the workbook
                 wb.Settings.GlobalizationSettings = new GlobalizationSettings
                 {
                     ChartSettings = new MyChartGlobalizationSettings()
                 };
 
-                // Apply the custom title
+                // Use the custom chart title from the globalization settings
                 chart.Title.Text = wb.Settings.GlobalizationSettings.ChartSettings.GetChartTitleName();
 
-                // Configure image export options (default format is PNG)
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
+                // Export the chart as a PNG image directly to file
+                string imagePath = "LocalizedChart.png";
+                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions(); // defaults to PNG
+                chart.ToImage(imagePath, imgOptions); // corrected argument order
 
-                // Export the chart as an image (PNG)
-                try
-                {
-                    chart.ToImage("LocalizedChart.png", imgOptions);
-                }
-                catch (Exception imgEx)
-                {
-                    Console.WriteLine($"Image export error: {imgEx.Message}");
-                }
-
-                // Save the workbook to see the chart inside Excel
-                wb.Save("LocalizedChartWorkbook.xlsx");
+                // Save the workbook (optional, for reference)
+                string workbookPath = "LocalizedChartWorkbook.xlsx";
+                wb.Save(workbookPath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Runtime error: {ex.Message}");
+                throw;
+            }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main()
+        {
+            try
+            {
+                ExportLocalizedChartImage.Run();
+                Console.WriteLine("Chart exported successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
             }
         }
     }

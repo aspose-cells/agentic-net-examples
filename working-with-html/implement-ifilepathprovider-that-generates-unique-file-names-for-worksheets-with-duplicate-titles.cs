@@ -1,10 +1,10 @@
-// Title: Aspose.Cells for .NET – Implement IFilePathProvider to Create Unique HTML Files for Worksheets with Duplicate or Sanitized Names
-// Description: Shows how to build a custom IFilePathProvider that sanitizes worksheet titles with CellsHelper.CreateSafeSheetName, tracks case‑insensitive occurrences, and returns distinct file names (adding a numeric suffix for duplicates) when saving a workbook to HTML via HtmlSaveOptions.
-// Keywords: Aspose.Cells | IFilePathProvider | unique HTML file name | duplicate worksheet names | CreateSafeSheetName | HtmlSaveOptions | export workbook to HTML | C# example | case‑insensitive sheet name handling | multiple HTML files per workbook
-// Common Searches: Aspose.Cells custom IFilePathProvider example | generate unique HTML files for duplicate sheet names | how to sanitize worksheet names in Aspose.Cells | export each worksheet to separate HTML file .NET | unique file naming for Aspose.Cells HTML export
-// Developer Intent: Create a custom IFilePathProvider that returns a unique file path for every worksheet, handling duplicate or sanitized titles during HTML export.
-// Use Cases: Export a workbook with sheets named "Report*" and "Report?" to separate HTML files without overwriting. | Save workbooks that contain case‑insensitive duplicate sheet titles to distinct HTML files automatically. | Integrate UniqueFilePathProvider into HtmlSaveOptions to produce one HTML file per worksheet with incremental suffixes.
-// AI Prompts: Write a C# class implementing IFilePathProvider that adds an incremental suffix to duplicate sanitized worksheet names for HTML export with Aspose.Cells. | Provide a step‑by‑step tutorial on using UniqueFilePathProvider with HtmlSaveOptions to generate separate HTML files for each worksheet. | Explain the role of CellsHelper.CreateSafeSheetName and how to combine it with a dictionary to ensure unique file names during workbook export.
+// Title: Aspose.Cells .NET – Custom IFilePathProvider for Unique HTML Filenames When Exporting Worksheets
+// Description: This example shows how to implement a custom IFilePathProvider that creates safe, case‑insensitive sheet names and appends a numeric suffix only when a worksheet title repeats. The provider is used with HtmlSaveOptions to export each worksheet to a separate HTML file without filename collisions, even when sheet titles contain illegal file‑system characters.
+// Keywords: Aspose.Cells | IFilePathProvider | unique HTML filenames | duplicate worksheet names | HtmlSaveOptions | CreateSafeSheetName | .NET | C# | export workbook to HTML | file name collision handling | case‑insensitive dictionary
+// Common Searches: Aspose.Cells custom IFilePathProvider example | generate unique HTML file names for each worksheet | avoid duplicate sheet name collisions when saving to HTML | export workbook to multiple HTML files Aspose.Cells .NET | CreateSafeSheetName usage in Aspose.Cells
+// Developer Intent: Create a custom IFilePathProvider that returns a distinct HTML file name for every worksheet, handling duplicate or unsafe sheet titles.
+// Use Cases: Export a workbook with several sheets named "Report" to separate HTML files without overwriting any file. | Integrate the provider into a web service that generates per‑sheet HTML reports, guaranteeing unique filenames on the server. | Sanitize sheet titles containing characters illegal for file systems while still producing unique filenames for each exported HTML page.
+// AI Prompts: Write a C# class that implements IFilePathProvider, adds numeric suffixes to duplicate sheet names, and works with HtmlSaveOptions to export each worksheet as a separate HTML file. | Show how to configure HtmlSaveOptions to use a custom IFilePathProvider for unique HTML filenames when saving a workbook with Aspose.Cells. | Explain the role of CellsHelper.CreateSafeSheetName in preventing invalid characters in generated HTML filenames.
 
 using System;
 using System.Collections.Generic;
@@ -12,39 +12,37 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Custom file path provider that ensures each worksheet gets a unique file name
-    // even when worksheet titles are duplicated (case‑insensitive or after sanitizing).
-    // Shows how to build a custom IFilePathProvider that sanitizes worksheet titles with CellsHelper.CreateSafeSheetName, tracks case‑insensitive occurrences, and returns distinct file names (adding a numeric suffix for duplicates) when saving a workbook to HTML via HtmlSaveOptions.
+    // Custom implementation of IFilePathProvider that ensures unique file names
+    // even when worksheets have duplicate (case‑insensitive) titles.
+    // This example shows how to implement a custom IFilePathProvider that creates safe, case‑insensitive sheet names and appends a numeric suffix only when a worksheet title repeats. The provider is used with HtmlSaveOptions to export each worksheet to a separate HTML file without filename collisions, even when sheet titles contain illegal file‑system characters.
     internal class UniqueFilePathProvider : IFilePathProvider
     {
-        // Tracks how many times a sanitized sheet name has been encountered.
-        private readonly Dictionary<string, int> _nameCounters = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        // Tracks how many times a particular safe sheet name has been used.
+        private readonly Dictionary<string, int> _nameUsage = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         public string GetFullName(string sheetName)
         {
             // Convert the original sheet name to a safe file‑system name.
-            // This removes invalid characters and truncates to Excel's 31‑character limit.
             string safeName = CellsHelper.CreateSafeSheetName(sheetName);
 
-            // Determine the occurrence count for this safe name.
-            if (_nameCounters.TryGetValue(safeName, out int count))
+            // Determine the current usage count for this safe name.
+            if (_nameUsage.TryGetValue(safeName, out int count))
             {
-                // Increment the counter for subsequent duplicates.
+                // Increment the count and store it back.
                 count++;
-                _nameCounters[safeName] = count;
+                _nameUsage[safeName] = count;
             }
             else
             {
                 // First occurrence of this name.
                 count = 0;
-                _nameCounters[safeName] = count;
+                _nameUsage[safeName] = count;
             }
 
-            // Build a unique file name. The first occurrence gets the base name,
-            // subsequent duplicates receive a numeric suffix.
+            // Append a numeric suffix only when a duplicate exists (count > 0).
             string fileName = count == 0 ? $"{safeName}.html" : $"{safeName}_{count}.html";
 
-            // Return the full path (here we assume the current directory; callers can prepend a folder if needed).
+            // Return the full file name (relative path). Adjust as needed for absolute paths.
             return fileName;
         }
     }
@@ -55,39 +53,38 @@ namespace AsposeCellsExamples
         {
             try
             {
-                // Create a new workbook and populate it with data.
+                // Create a workbook.
                 Workbook workbook = new Workbook();
 
-                // First worksheet – default name "Sheet1".
-                Worksheet ws1 = workbook.Worksheets[0];
-                // Use a name containing illegal characters; it will be sanitized before assignment.
-                ws1.Name = CellsHelper.CreateSafeSheetName("Report*"); // Becomes "Report"
-                ws1.Cells["A1"].PutValue("First sheet");
+                // First sheet (default name "Sheet1").
+                Worksheet sheet1 = workbook.Worksheets[0];
+                sheet1.Name = "Report";
 
-                // Add a second worksheet with a name that sanitizes to the same safe name as the first.
-                int idx2 = workbook.Worksheets.Add();
-                Worksheet ws2 = workbook.Worksheets[idx2];
-                ws2.Name = CellsHelper.CreateSafeSheetName("Report?"); // Also becomes "Report"
-                ws2.Cells["A1"].PutValue("Second sheet");
+                // Add a second sheet with a distinct internal name.
+                Worksheet sheet2 = workbook.Worksheets.Add("Report_Second");
 
-                // Add a third worksheet with a distinct safe name.
-                int idx3 = workbook.Worksheets.Add();
-                Worksheet ws3 = workbook.Worksheets[idx3];
-                ws3.Name = "Summary";
-                ws3.Cells["A1"].PutValue("Third sheet");
+                // Add a third sheet with another distinct name.
+                Worksheet sheet3 = workbook.Worksheets.Add("Report_Third");
 
-                // Configure HTML save options to use the custom file path provider.
+                // Populate some data (optional).
+                sheet1.Cells["A1"].PutValue("Data in first Report sheet");
+                sheet2.Cells["A1"].PutValue("Data in second Report sheet");
+                sheet3.Cells["A1"].PutValue("Data in third Report sheet");
+
+                // Configure HTML save options to use the custom file‑path provider.
                 HtmlSaveOptions saveOptions = new HtmlSaveOptions
                 {
-                    ExportActiveWorksheetOnly = false, // Export all worksheets.
+                    // Export each worksheet to a separate HTML file.
+                    ExportActiveWorksheetOnly = false,
+                    // Assign the custom provider.
                     FilePathProvider = new UniqueFilePathProvider()
                 };
 
-                // Save the workbook; each worksheet will be written to a separate HTML file
-                // with unique names generated by UniqueFilePathProvider.
+                // Save the workbook. The provider will generate unique file names such as:
+                // Report.html, Report_Second.html, Report_Third.html
                 workbook.Save("CombinedOutput.html", saveOptions);
 
-                Console.WriteLine("Workbook saved with custom unique file names for each worksheet.");
+                Console.WriteLine("Workbook saved with unique HTML file names for each worksheet.");
             }
             catch (Exception ex)
             {

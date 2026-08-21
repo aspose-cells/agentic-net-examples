@@ -1,80 +1,82 @@
-// Title: Enable Calculation Chain in Aspose.Cells .NET, Run Workbook‑Wide Calculation, and Benchmark Performance
-// Description: Creates a 2,000‑row workbook with dependent formulas, measures full‑workbook calculation time with the calculation chain disabled, then enables the chain, changes a single cell, runs a partial recalculation, and compares the elapsed times to demonstrate speed gains before saving the file.
-// Keywords: Aspose.Cells | EnableCalculationChain | FormulaSettings | CalculateFormula | partial recalculation | performance benchmark | .NET | C# | Excel formula engine | calculation chain speed | measure calculation time
-// Common Searches: how to enable calculation chain in Aspose.Cells .NET | Aspose.Cells performance test CalculateFormula | partial formula recalculation after cell update Aspose.Cells | benchmark workbook calculation with and without chain | speed up Excel formula engine using Aspose.Cells
-// Developer Intent: Toggle the calculation chain, recalculate formulas, and compare execution time against the default configuration.
-// Use Cases: Accelerate partial recalculations after a single‑cell edit in large workbooks. | Establish baseline and optimized timings for full‑workbook formula evaluation. | Validate that enabling the calculation chain does not affect workbook saving or lifecycle rules.
-// AI Prompts: Show C# code to switch EnableCalculationChain on and off and capture CalculateFormula duration. | Explain how Aspose.Cells tracks dependencies when the calculation chain is enabled. | Generate a performance summary comparing calculation times for a workbook with 2,000 dependent rows, with the chain disabled vs. enabled.
+// Title: Aspose.Cells .NET – Benchmark Calculation Chain vs No Chain for Workbook‑wide Formula Evaluation
+// Description: This C# example builds two identical workbooks with 1,000 rows of inter‑dependent formulas, runs workbook‑wide CalculateFormula once with the calculation chain disabled and once with it enabled, measures execution time using Stopwatch, and outputs the results to illustrate the performance benefit of EnableCalculationChain.
+// Keywords: Aspose.Cells | .NET | C# | EnableCalculationChain | CalculationChainPerformanceDemo | CalculateFormula | formula performance benchmark | spreadsheet calculation speed | large dependent formulas | Excel performance tuning
+// Common Searches: Aspose.Cells calculation chain performance | EnableCalculationChain benchmark C# | CalculateFormula speed test Aspose.Cells | measure formula calculation time Aspose.Cells | impact of calculation chain on large spreadsheets
+// Developer Intent: Measure and compare the execution time of workbook‑wide formula calculation with the calculation chain disabled versus enabled in Aspose.Cells for .NET.
+// Use Cases: Benchmarking the effect of the calculation chain on spreadsheets with deep formula dependencies. | Deciding whether to enable the calculation chain to improve performance of large Excel files. | Validating that enabling the calculation chain yields identical results faster than the default mode.
+// AI Prompts: Write C# code that creates a workbook with 10,000 dependent formulas, runs CalculateFormula with EnableCalculationChain set to false and true, and logs the elapsed milliseconds for each run. | Explain how Aspose.Cells' calculation chain works and why it can accelerate evaluation of long formula dependency chains. | Provide a step‑by‑step tutorial for measuring and logging formula calculation performance when toggling EnableCalculationChain in Aspose.Cells settings.
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace AsposeCellsCalculationChainDemo
+namespace AsposeCellsExamples
 {
-    // Creates a 2,000‑row workbook with dependent formulas, measures full‑workbook calculation time with the calculation chain disabled, then enables the chain, changes a single cell, runs a partial recalculation, and compares the elapsed times to demonstrate speed gains before saving the file.
-    class Program
+    // This C# example builds two identical workbooks with 1,000 rows of inter‑dependent formulas, runs workbook‑wide CalculateFormula once with the calculation chain disabled and once with it enabled, measures execution time using Stopwatch, and outputs the results to illustrate the performance benefit of EnableCalculationChain.
+    class CalculationChainPerformanceDemo
     {
         static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Create a workbook and fill it with a large number of dependent formulas
+            Workbook wbNoChain = new Workbook();
+            Worksheet wsNoChain = wbNoChain.Worksheets[0];
+            Cells cellsNoChain = wsNoChain.Cells;
 
-            // Populate a large number of dependent formulas (e.g., 2000 rows)
-            // Column A will hold base values, Column B will contain cumulative sums,
-            // Column C will reference B to create a dependency chain.
-            int rowCount = 2000;
-            for (int i = 0; i < rowCount; i++)
+            // Populate column A with base values
+            for (int i = 0; i < 1000; i++)
             {
-                // Base value in column A
-                cells[i, 0].PutValue(i + 1);
-
-                // Cumulative sum in column B: =SUM(A1:A{row})
-                cells[i, 1].Formula = $"=SUM(A1:A{i + 1})";
-
-                // Dependent formula in column C: =B{i+1}*2
-                cells[i, 2].Formula = $"=B{i + 1}*2";
+                cellsNoChain[i, 0].PutValue(i + 1); // A1..A1000
             }
 
-            // -----------------------------------------------------------------
-            // 1. Calculate with default settings (calculation chain disabled)
-            // -----------------------------------------------------------------
-            // Ensure the chain is disabled (default)
-            workbook.Settings.FormulaSettings.EnableCalculationChain = false;
+            // Create dependent formulas in column B that sum a range in column A
+            // Each B cell depends on the previous B cell, forming a long dependency chain
+            cellsNoChain[0, 1].Formula = "=SUM(A1:A1)"; // B1
+            for (int i = 1; i < 1000; i++)
+            {
+                // B(i+1) = B(i) + A(i+1)
+                cellsNoChain[i, 1].Formula = $"=B{i}+A{i + 1}";
+            }
 
-            // Measure calculation time
-            Stopwatch sw = Stopwatch.StartNew();
-            workbook.CalculateFormula(); // full workbook calculation
-            sw.Stop();
-            long timeWithoutChain = sw.ElapsedMilliseconds;
-            Console.WriteLine($"Calculation time without chain: {timeWithoutChain} ms");
+            // ------------------------------
+            // 1. Calculate without calculation chain (default)
+            // ------------------------------
+            wbNoChain.Settings.FormulaSettings.EnableCalculationChain = false; // explicit for clarity
+            Stopwatch swNoChain = Stopwatch.StartNew();
+            wbNoChain.CalculateFormula(); // workbook‑wide calculation
+            swNoChain.Stop();
 
-            // -----------------------------------------------------------------
-            // 2. Enable calculation chain and recalculate after a small change
-            // -----------------------------------------------------------------
-            // Enable the calculation chain
-            workbook.Settings.FormulaSettings.EnableCalculationChain = true;
+            // ------------------------------
+            // 2. Calculate with calculation chain enabled
+            // ------------------------------
+            // Create a fresh workbook with the same data to avoid cached results
+            Workbook wbWithChain = new Workbook();
+            Worksheet wsWithChain = wbWithChain.Worksheets[0];
+            Cells cellsWithChain = wsWithChain.Cells;
 
-            // Modify a single cell to trigger partial recalculation
-            cells[0, 0].PutValue(9999); // change A1
+            // Copy the same data and formulas
+            for (int i = 0; i < 1000; i++)
+            {
+                cellsWithChain[i, 0].PutValue(i + 1);
+            }
+            cellsWithChain[0, 1].Formula = "=SUM(A1:A1)";
+            for (int i = 1; i < 1000; i++)
+            {
+                cellsWithChain[i, 1].Formula = $"=B{i}+A{i + 1}";
+            }
 
-            // Measure recalculation time with the chain active
-            sw.Restart();
-            workbook.CalculateFormula(); // only affected cells should be recomputed
-            sw.Stop();
-            long timeWithChain = sw.ElapsedMilliseconds;
-            Console.WriteLine($"Calculation time with chain after small change: {timeWithChain} ms");
+            // Enable calculation chain
+            wbWithChain.Settings.FormulaSettings.EnableCalculationChain = true;
+            Stopwatch swWithChain = Stopwatch.StartNew();
+            wbWithChain.CalculateFormula(); // first calculation builds the chain
+            swWithChain.Stop();
 
-            // -----------------------------------------------------------------
-            // Output performance comparison
-            // -----------------------------------------------------------------
-            double improvement = (timeWithoutChain - timeWithChain) / (double)timeWithoutChain * 100;
-            Console.WriteLine($"Performance improvement: {improvement:F2}%");
+            // Output the measured times
+            Console.WriteLine($"Calculation time without chain: {swNoChain.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Calculation time with chain   : {swWithChain.ElapsedMilliseconds} ms");
 
-            // Save the workbook (optional, demonstrates lifecycle rule usage)
-            workbook.Save("CalculationChainResult.xlsx", SaveFormat.Xlsx);
+            // Optional: save the workbooks to verify results (uses the allowed save lifecycle)
+            wbNoChain.Save("NoChainResult.xlsx", SaveFormat.Xlsx);
+            wbWithChain.Save("WithChainResult.xlsx", SaveFormat.Xlsx);
         }
     }
 }

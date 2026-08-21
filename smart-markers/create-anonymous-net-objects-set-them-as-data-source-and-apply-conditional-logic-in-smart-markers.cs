@@ -1,15 +1,15 @@
-// Title: Use anonymous .NET objects with IF conditional smart markers in Aspose.Cells (C#)
-// Description: Demonstrates creating a workbook, inserting smart markers that use an IF expression to show a person's name only when Age > 30 (otherwise “Young”), displaying a boolean IsActive field, binding a List<object> of anonymous objects as the “Person” data source via WorkbookDesigner, processing the markers, and saving the result as an Excel file.
-// Keywords: Aspose.Cells | C# smart markers | anonymous objects data source | IF conditional smart marker | WorkbookDesigner | conditional Excel export | boolean smart marker | list<object | dynamic data source | Excel report generation
-// Common Searches: Aspose.Cells smart marker IF condition | set anonymous list as data source Aspose.Cells | conditional smart markers C# example | display boolean value with smart markers | use WorkbookDesigner with anonymous objects | dynamic data source for smart markers
-// Developer Intent: Bind anonymous .NET objects to a smart‑marker data source and apply IF logic in the generated Excel file.
-// Use Cases: Create age‑based personnel reports where names appear only for employees over a threshold. | Generate Excel dashboards that show active/inactive status directly from a dynamic object list. | Produce quick Excel exports from ad‑hoc anonymous collections without defining POCO classes. | Implement conditional placeholders (e.g., “Young”) in templates for marketing lists.
-// AI Prompts: Show how to add multiple IF‑based smart markers using different fields from an anonymous data source. | Provide a nested IF example for smart markers with anonymous objects in Aspose.Cells. | Explain how to format a boolean smart marker as Yes/No or custom text. | Demonstrate grouping and subtotaling data when the source is a List<object> of anonymous types. | Give guidance on handling null values in conditional smart markers with anonymous objects.
+// Title: Aspose.Cells for .NET – Bind Anonymous Objects & Use &IF Conditional Smart Markers
+// Description: Create a workbook, add smart markers (&=$Person.Name and &IF($Person.Age>30,"Senior","Junior")), bind an array of anonymous C# objects as the "Person" data source with WorkbookDesigner, process the template, and save the XLSX file.
+// Keywords: Aspose.Cells | smart markers | anonymous objects | C# | .NET | &IF function | conditional smart marker | WorkbookDesigner | set data source | Excel template generation | dynamic Excel report
+// Common Searches: asp.net bind anonymous type to Aspose.Cells smart markers | Aspose.Cells &IF smart marker example C# | set data source for WorkbookDesigner without POCO class | conditional smart marker syntax Aspose.Cells | how to use anonymous objects with Aspose.Cells templates
+// Developer Intent: Bind an array of anonymous .NET objects to WorkbookDesigner and apply an &IF smart marker that outputs different text based on a property value.
+// Use Cases: Generate a staff roster where each row shows the employee name and labels them as Senior or Junior according to age. | Produce a sales dashboard that marks each entry as "Target Met" or "Target Missed" using &IF logic on an anonymous sales collection. | Create an inventory sheet that flags items as "Low Stock" or "Sufficient" based on quantity values supplied by an anonymous data set.
+// AI Prompts: Write C# code that creates an array of anonymous objects, sets it as the "Person" data source for WorkbookDesigner, and uses &IF smart markers to display "Senior" or "Junior" based on age. | Explain step‑by‑step how to apply the &IF function in Aspose.Cells smart markers when the source data is an anonymous type collection. | Generate a complete Aspose.Cells example that demonstrates conditional formatting with &IF and anonymous objects for a sales report.
 
-using System.Collections.Generic;
+using System;
 using Aspose.Cells;
 
-// Demonstrates creating a workbook, inserting smart markers that use an IF expression to show a person's name only when Age > 30 (otherwise “Young”), displaying a boolean IsActive field, binding a List<object> of anonymous objects as the “Person” data source via WorkbookDesigner, processing the markers, and saving the result as an Excel file.
+// Create a workbook, add smart markers (&=$Person.Name and &IF($Person.Age>30,"Senior","Junior")), bind an array of anonymous C# objects as the "Person" data source with WorkbookDesigner, process the template, and save the XLSX file.
 class Program
 {
     static void Main()
@@ -18,30 +18,26 @@ class Program
         Workbook wb = new Workbook();
         Worksheet ws = wb.Worksheets[0];
 
-        // Add smart markers with conditional logic:
-        // If Age > 30 show Name, otherwise show "Young"
-        ws.Cells["A1"].PutValue("&=IF($Person.Age>30,$Person.Name,\"Young\")");
-        // Show the boolean IsActive value
-        ws.Cells["B1"].PutValue("&=$Person.IsActive");
+        // Insert smart markers:
+        //   &=$Person.Name   -> simple data binding
+        //   &IF($Person.Age>30,"Senior","Junior") -> conditional logic
+        ws.Cells["A1"].PutValue("&=$Person.Name");
+        ws.Cells["B1"].PutValue("&IF($Person.Age>30,\"Senior\",\"Junior\")");
 
-        // Prepare anonymous objects as data source
-        var persons = new List<object>
+        // Prepare anonymous objects as the data source
+        var persons = new[]
         {
-            new { Name = "John Doe", Age = 35, IsActive = true },
-            new { Name = "Jane Smith", Age = 28, IsActive = false }
+            new { Name = "John Doe", Age = 35 },
+            new { Name = "Jane Smith", Age = 28 }
         };
 
-        // Initialize WorkbookDesigner and assign the workbook
+        // Set up the designer, bind the data source and process the smart markers
         WorkbookDesigner designer = new WorkbookDesigner();
         designer.Workbook = wb;
-
-        // Set the anonymous list as a data source named "Person"
         designer.SetDataSource("Person", persons);
-
-        // Process the smart markers
         designer.Process();
 
-        // Save the resulting workbook
-        wb.Save("ConditionalSmartMarkers.xlsx");
+        // Save the populated workbook
+        wb.Save("SmartMarkerConditionalOutput.xlsx");
     }
 }

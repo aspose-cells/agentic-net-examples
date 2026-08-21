@@ -1,91 +1,61 @@
 // Title: Export All Excel Formulas to JSON with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, parses every worksheet, gathers non‑empty formulas, writes them to a single column, creates a range and uses Aspose.Cells JsonSaveOptions with JsonUtility.ExportRangeToJson to produce a JSON file for external analysis.
-// Keywords: Aspose.Cells | C# | Export formulas to JSON | Excel formula extraction | JsonUtility | JsonSaveOptions | Workbook parsing | Range export | Spreadsheet auditing | Data migration
-// Common Searches: Aspose.Cells export formulas as JSON | C# extract all Excel formulas | JsonUtility ExportRangeToJson example | How to save Excel formulas to a JSON file | Parse formulas with Aspose.Cells .NET
-// Developer Intent: Generate a JSON file containing every formula from an Excel workbook for downstream processing.
-// Use Cases: Create an inventory of workbook calculations for audit trails. | Feed extracted formulas into a custom validation engine outside Excel. | Produce documentation of spreadsheet logic in a machine‑readable format.
-// AI Prompts: Write a C# method that returns a JSON string of all formulas in a workbook using Aspose.Cells. | Show how to include the worksheet name alongside each formula in the exported JSON. | Suggest performance optimizations for exporting formulas from very large workbooks to JSON.
+// Description: A C# example that loads an Excel workbook using Aspose.Cells, scans every worksheet and used cell, captures the sheet name, cell address, and formula text, then serializes the collection into a pretty‑printed JSON file (formulas.json) for external analysis.
+// Keywords: Aspose.Cells export formulas JSON | C# extract Excel formulas | list workbook formulas Aspose | serialize Excel formulas to JSON | Aspose.Cells iterate worksheets cells
+// Common Searches: how to extract all formulas from an Excel file using Aspose.Cells C# | save Excel formulas as JSON with Aspose.Cells | export workbook formula list to JSON .NET | Aspose.Cells iterate cells to get formulas
+// Developer Intent: Retrieve every formula in a workbook and write the details to a JSON file.
+// Use Cases: Create an audit log of all formulas for compliance or review. | Feed the JSON output into a data‑science pipeline to analyze formula complexity. | Generate documentation that maps each sheet and cell to its underlying calculation.
+// AI Prompts: Generate C# code that adds the calculated value and cell style to the JSON export. | Enhance the sample with error handling for missing files and atomic write operations. | Show how to filter and export only formulas that contain specific functions such as VLOOKUP or SUMIF.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
 namespace AsposeCellsFormulaExport
 {
-    // Loads an Excel workbook, parses every worksheet, gathers non‑empty formulas, writes them to a single column, creates a range and uses Aspose.Cells JsonSaveOptions with JsonUtility.ExportRangeToJson to produce a JSON file for external analysis.
+    // A C# example that loads an Excel workbook using Aspose.Cells, scans every worksheet and used cell, captures the sheet name, cell address, and formula text, then serializes the collection into a pretty‑printed JSON file (formulas.json) for external analysis.
     class Program
     {
         static void Main()
         {
-            try
+            // Load the workbook (replace with your actual file path)
+            string inputPath = "input.xlsx";
+            Workbook workbook = new Workbook(inputPath);
+
+            // Prepare a collection to hold formula information
+            var formulas = new List<Dictionary<string, string>>();
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Path to the source workbook
-                string sourcePath = "input.xlsx";
-
-                // Verify that the source file exists to avoid FileNotFoundException
-                if (!File.Exists(sourcePath))
+                // Iterate through all used cells in the worksheet
+                foreach (Cell cell in sheet.Cells)
                 {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
-
-                // Load the workbook (create/load lifecycle rule)
-                Workbook sourceWorkbook = new Workbook(sourcePath);
-
-                // Ensure all formulas are parsed
-                sourceWorkbook.ParseFormulas(false);
-
-                // Collect all formulas from every worksheet
-                List<string> formulaList = new List<string>();
-                foreach (Worksheet sheet in sourceWorkbook.Worksheets)
-                {
-                    Cells cells = sheet.Cells;
-                    // Iterate through used cells only for efficiency
-                    foreach (Cell cell in cells)
+                    // Check if the cell contains a formula
+                    if (cell.IsFormula)
                     {
-                        if (!string.IsNullOrEmpty(cell.Formula))
+                        // Store sheet name, cell name (e.g., "A1") and the formula text
+                        var entry = new Dictionary<string, string>
                         {
-                            formulaList.Add(cell.Formula);
-                        }
+                            { "Sheet", sheet.Name },
+                            { "Cell", cell.Name },
+                            { "Formula", cell.Formula }
+                        };
+                        formulas.Add(entry);
                     }
                 }
-
-                // Create a new workbook to hold the list of formulas (create lifecycle rule)
-                Workbook exportWorkbook = new Workbook();
-                Worksheet exportSheet = exportWorkbook.Worksheets[0];
-
-                // Write each formula into column A of the export sheet
-                for (int i = 0; i < formulaList.Count; i++)
-                {
-                    exportSheet.Cells[i, 0].PutValue(formulaList[i]);
-                }
-
-                // Define the range that contains the formulas (use fully qualified Aspose.Cells.Range)
-                Aspose.Cells.Range exportRange = exportSheet.Cells.CreateRange(0, 0, formulaList.Count, 1);
-
-                // Configure JSON export options
-                JsonSaveOptions jsonOptions = new JsonSaveOptions
-                {
-                    ExportAsString = true,   // export cell values as strings
-                    HasHeaderRow = false,    // no header row needed
-                    ExportEmptyCells = false // skip empty cells
-                };
-
-                // Export the range to a JSON string using the provided rule
-                string jsonOutput = JsonUtility.ExportRangeToJson(exportRange, jsonOptions);
-
-                // Save the JSON string to a file (save lifecycle rule)
-                string outputPath = "formulas.json";
-                File.WriteAllText(outputPath, jsonOutput);
-
-                Console.WriteLine($"Exported {formulaList.Count} formulas to '{outputPath}'.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Serialize the list of formulas to a formatted JSON string
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+            string jsonOutput = JsonSerializer.Serialize(formulas, jsonOptions);
+
+            // Save the JSON string to a file
+            string outputPath = "formulas.json";
+            File.WriteAllText(outputPath, jsonOutput);
+
+            Console.WriteLine($"Exported {formulas.Count} formulas to '{outputPath}'.");
         }
     }
 }

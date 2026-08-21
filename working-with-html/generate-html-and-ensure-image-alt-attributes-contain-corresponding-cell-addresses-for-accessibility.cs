@@ -1,67 +1,73 @@
-// Title: Aspose.Cells C# – Export Workbook to HTML with Image Alt Text Matching Cell Address
-// Description: This example verifies a JPEG file, creates a workbook, writes headers to A1 and B1, inserts a picture anchored at B2, assigns the picture’s AlternativeText to the cell name (e.g., "B2"), configures HtmlSaveOptions to embed images as Base64 and to add an id attribute containing the cell reference to each <td>, and saves the result as a single HTML document.
-// Keywords: Aspose.Cells HTML export C# | image alt text cell reference | ExportImagesAsBase64 | CellNameAttribute id | accessible Excel to HTML conversion | embed pictures base64 Aspose | C# workbook to HTML with accessibility
-// Common Searches: set picture alt attribute to cell address Aspose.Cells | HTML export with base64 images from Excel C# | add id to table cells based on Excel cell name | accessible HTML output from Aspose.Cells workbook | how to anchor image to specific cell in HTML export
-// Developer Intent: Generate an HTML file from a workbook where every embedded picture carries an alt attribute equal to its originating cell reference, ensuring accessibility and easy DOM targeting.
-// Use Cases: Create self‑contained HTML reports with product photos that screen readers can identify by cell location. | Enable CSS or JavaScript to target individual cells using id attributes derived from Excel cell names. | Distribute a single HTML file without external image resources while preserving accessibility metadata.
-// AI Prompts: Show how to prepend custom text to the alt attribute, e.g., "Product image at B2". | Demonstrate adding a title attribute to each <td> element via HtmlSaveOptions. | Explain how to export images as separate files instead of Base64 while still setting alt text to the cell address.
+// Title: C# – Export Excel to Accessible HTML with Cell IDs and Image Alt Text using Aspose.Cells
+// Description: This example creates a workbook, populates product rows, inserts a picture into cell A5 (when the file exists), assigns the cell address as the image's alt attribute, and saves the sheet as a self‑contained HTML file. The HtmlSaveOptions are set to output cell coordinates, use the address as the element ID, and embed images as Base64 strings, delivering an accessible, portable web page.
+// Keywords: Aspose.Cells C# HTML export | Excel to HTML with cell IDs | image alt attribute Aspose.Cells | ExportCellCoordinate option | CellNameAttribute id | ExportImagesAsBase64 | accessible HTML from Excel | screen‑reader friendly markup | self‑contained HTML report | sample code .NET
+// Common Searches: how to add alt text to images when exporting Excel to HTML with Aspose.Cells | export cell address as HTML element id using Aspose.Cells .NET | embed pictures as base64 in HTML output from Aspose.Cells | Aspose.Cells HtmlSaveOptions for accessibility | C# code to generate HTML with data‑celladdress attribute
+// Developer Intent: Produce an HTML document from a workbook where each table cell carries a unique identifier and any embedded picture includes an alt attribute that matches its originating cell.
+// Use Cases: Generate web‑ready reports that comply with WCAG guidelines by providing identifiable cells and descriptive alt text. | Create email‑friendly HTML snippets that contain all images inline, eliminating external dependencies. | Build interactive dashboards where JavaScript can target specific cells via their IDs for dynamic updates.
+// AI Prompts: Show how to set different alt texts for multiple pictures based on their cell locations. | Describe the HTML markup changes introduced by ExportCellCoordinate and CellNameAttribute settings. | Give a code sample that adds a custom data‑celladdress attribute while preserving existing cell formatting.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This example verifies a JPEG file, creates a workbook, writes headers to A1 and B1, inserts a picture anchored at B2, assigns the picture’s AlternativeText to the cell name (e.g., "B2"), configures HtmlSaveOptions to embed images as Base64 and to add an id attribute containing the cell reference to each <td>, and saves the result as a single HTML document.
-class Program
+namespace AsposeCellsHtmlExport
 {
-    static void Main()
+    // This example creates a workbook, populates product rows, inserts a picture into cell A5 (when the file exists), assigns the cell address as the image's alt attribute, and saves the sheet as a self‑contained HTML file. The HtmlSaveOptions are set to output cell coordinates, use the address as the element ID, and embed images as Base64 strings, delivering an accessible, portable web page.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Verify that the image file exists to avoid FileNotFoundException
-            const string imagePath = "sample.jpg";
-            if (!File.Exists(imagePath))
+            try
             {
-                Console.WriteLine($"Image file \"{imagePath}\" not found.");
-                return;
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Add some sample data
+                sheet.Cells["A1"].PutValue("Product");
+                sheet.Cells["B1"].PutValue("Price");
+                sheet.Cells["A2"].PutValue("Apple");
+                sheet.Cells["B2"].PutValue(1.20);
+                sheet.Cells["A3"].PutValue("Banana");
+                sheet.Cells["B3"].PutValue(0.80);
+
+                // Insert an image into cell A5 if the file exists
+                const string imagePath = "sample-image.png";
+                if (File.Exists(imagePath))
+                {
+                    // Row 4 (zero‑based) corresponds to A5, column 0 is column A
+                    int pictureIndex = sheet.Pictures.Add(4, 0, imagePath);
+                    Picture pic = sheet.Pictures[pictureIndex];
+                    // The AlternativeText property becomes the alt attribute in the generated HTML
+                    pic.AlternativeText = "A5";
+                }
+                else
+                {
+                    Console.WriteLine($"Image file \"{imagePath}\" not found. Skipping picture insertion.");
+                }
+
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    // Export cell coordinates as an attribute (e.g., data-celladdress) for accessibility
+                    ExportCellCoordinate = true,
+                    // Use the cell address as the HTML element id (e.g., <td id=\"A5\">)
+                    CellNameAttribute = "id",
+                    // Embed images directly as Base64 strings so the <img> tag appears in the HTML
+                    ExportImagesAsBase64 = true
+                };
+
+                // Save the workbook as an HTML file
+                const string outputPath = "output.html";
+                workbook.Save(outputPath, htmlOptions);
+
+                Console.WriteLine($"HTML file \"{outputPath}\" generated with cell coordinates and image alt text.");
             }
-
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add some sample data
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Image");
-
-            // Add an image anchored to cell B2 (row index 1, column index 1)
-            int imageRow = 1; // zero‑based index for row 2
-            int imageCol = 1; // zero‑based index for column B
-
-            // Add picture and retrieve the Picture object
-            int pictureIndex = worksheet.Pictures.Add(imageRow, imageCol, imagePath);
-            Picture picture = worksheet.Pictures[pictureIndex];
-
-            // Set the alt text of the image to the cell address (e.g., "B2") for accessibility
-            picture.AlternativeText = worksheet.Cells[imageRow, imageCol].Name; // "B2"
-
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            catch (Exception ex)
             {
-                // Embed images directly in the HTML as Base64 strings
-                ExportImagesAsBase64 = true,
-                // Add a cell identifier attribute (e.g., id="B2") to each <td>
-                CellNameAttribute = "id"
-            };
-
-            // Save the workbook as an HTML file
-            const string outputPath = "output.html";
-            workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved as \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

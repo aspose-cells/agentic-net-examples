@@ -1,45 +1,60 @@
-// Title: Recalculate All Formulas After Deleting a Row with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to delete a row, automatically adjust formula references, and recalculate the entire workbook using Aspose.Cells in C#. The example creates a sheet, adds data, sets a SUM formula, removes the second row, runs workbook.CalculateFormula(), and saves the result.
-// Keywords: Aspose.Cells C# delete row | recalculate formulas .NET | update formula references Aspose.Cells | Workbook.CalculateFormula example | row deletion formula adjustment | Aspose.Cells tutorial | C# Excel automation
-// Common Searches: How to recalculate formulas after deleting a row in Aspose.Cells C# | Aspose.Cells update SUM range when a row is removed | C# delete row and refresh all Excel formulas with Aspose | Aspose.Cells recalculate workbook after row removal | Delete row and keep formulas correct Aspose.Cells .NET
-// Developer Intent: Refresh every formula in a workbook after a row has been removed.
-// Use Cases: Remove a specific row and ensure dependent calculations reflect the new range. | Perform bulk row deletions and trigger a single recalculation before exporting. | Maintain accurate totals in financial reports after dynamic row removal.
-// AI Prompts: Write C# code using Aspose.Cells that deletes rows and automatically recalculates all workbook formulas. | Show how to adjust formula references only for cells impacted by a row deletion in Aspose.Cells. | Provide an Aspose.Cells example that handles SUM formula updates when rows are removed in a .NET application.
+// Title: C# – Delete a Row and Recalculate All Formulas with Aspose.Cells
+// Description: Loads an Excel workbook, removes the third row (index 2) from the first worksheet while updating cross‑sheet references, forces a full formula recalculation across the entire workbook, and saves the result.
+// Keywords: Aspose.Cells | C# DeleteRow | CalculateFormula | update references | Excel row removal | recalculate workbook formulas | cross‑sheet formula update | .NET Excel manipulation
+// Common Searches: Aspose.Cells delete row and recalculate formulas | C# remove Excel row and refresh formulas | How to update formula references after deleting rows in Aspose.Cells | CalculateFormula after row deletion .NET | DeleteRow with updateReference true Aspose.Cells
+// Developer Intent: Programmatically delete a specific row and ensure every formula in the workbook reflects the new layout.
+// Use Cases: Delete a header row in a sales report and automatically refresh totals, percentages, and charts. | Remove a data entry row from a financial model and keep linked calculations on other sheets accurate. | Clean up imported data by deleting empty rows while guaranteeing that all dependent formulas recalculate correctly.
+// AI Prompts: Generate C# code that deletes row 5 in an Excel workbook using Aspose.Cells, updates all references, and calls CalculateFormula with proper error handling. | Show how to delete multiple consecutive rows and then recalculate only the worksheets that contain affected formulas in Aspose.Cells for .NET. | Explain the effect of the DeleteRow method’s updateReference parameter on cross‑sheet formulas and how CalculateFormula resolves any remaining inconsistencies.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to delete a row, automatically adjust formula references, and recalculate the entire workbook using Aspose.Cells in C#. The example creates a sheet, adds data, sets a SUM formula, removes the second row, runs workbook.CalculateFormula(), and saves the result.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads an Excel workbook, removes the third row (index 2) from the first worksheet while updating cross‑sheet references, forces a full formula recalculation across the entire workbook, and saves the result.
+    public class CalculateFormulasAfterDeletion
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-        // Populate some sample data
-        cells["A1"].PutValue(10);
-        cells["A2"].PutValue(20);
-        cells["A3"].PutValue(30);
+        public static void Run()
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Add a formula that sums the three values
-        cells["B1"].Formula = "=SUM(A1:A3)";
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-        // Initial calculation (optional, ensures formula has a value before deletion)
-        workbook.CalculateFormula();
+            // Load an existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Delete the second row (index 1) and update references in formulas
-        cells.DeleteRow(1, true);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Recalculate all formulas after the deletion operation
-        workbook.CalculateFormula();
+            // Delete the third row (index 2) and update references in other worksheets
+            cells.DeleteRow(2, true);
 
-        // Display the updated result of the formula
-        Console.WriteLine("Formula result after deletion: " + cells["B1"].Value);
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-        // Save the workbook
-        workbook.Save("ResultAfterDeletion.xlsx");
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
     }
 }

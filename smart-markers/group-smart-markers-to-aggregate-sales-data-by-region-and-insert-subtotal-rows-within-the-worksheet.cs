@@ -1,55 +1,48 @@
-// Title: C# – Add Region‑Based Subtotal Rows to a Smart‑Marker Worksheet with Aspose.Cells
-// Description: Creates a new workbook, defines headers, inserts smart‑marker placeholders for Region, Product, and Sales, binds a List<Sale> data source, processes the markers, calculates the populated range, and uses Cells.Subtotal to group rows by the Region column, sum the Sales values, insert page breaks, and place summary rows below each group before saving the file.
-// Keywords: Aspose.Cells | C# smart markers | Excel subtotal | group by region | sales aggregation | Cells.Subtotal example | .NET Excel automation | regional totals | page break Excel | outline summary row | GitHub Aspose.Cells sample | US developers | European developers
-// Common Searches: Aspose.Cells add subtotal rows after smart marker processing | C# group smart‑marker data by column and sum values | How to use Cells.Subtotal with smart markers in .NET | Create regional subtotals in Excel using Aspose.Cells | Smart marker template with automatic totals
-// Developer Intent: Generate an Excel report where data inserted via smart markers is automatically grouped by region and each group shows a summed sales subtotal.
-// Use Cases: Produce a sales report that groups entries by region and displays total sales per region. | Build a reusable Excel template that fills data through smart markers and adds regional subtotals for printing or distribution. | Create worksheets with page breaks between regions and summary rows for easier navigation and review.
-// AI Prompts: Write C# code that uses Aspose.Cells to insert subtotal rows grouped by a specific column after smart markers are processed. | Explain how to change the Subtotal method parameters to place the summary row above the detail rows and disable page breaks. | Show how to capture the row indices created by the Subtotal operation for further custom formatting.
+// Title: C# Aspose.Cells Smart Markers – Group Sales by Region and Add Subtotal Rows
+// Description: Creates a workbook template with smart markers, fills it from a List<Sale> using WorkbookDesigner, then uses Cells.Subtotal to group rows by the Region column, sum the Sales column, and place summary rows below each group before saving.
+// Keywords: Aspose.Cells | Smart Markers | C# | .NET | Subtotal rows | group by region | WorkbookDesigner | CellArea | outline summary row | Excel export
+// Common Searches: Aspose.Cells smart markers subtotal example C# | group rows by column and add subtotals with Aspose.Cells | C# generate sales report with region totals using Aspose.Cells | how to use Cells.Subtotal in Aspose.Cells .NET | add outline summary rows below data Aspose.Cells
+// Developer Intent: Populate an Excel sheet from a collection via smart markers and automatically insert region‑wise subtotal rows.
+// Use Cases: Generate a sales report from a List<Sale> where each region’s sales are summed with a subtotal row. | Build a reusable Excel template that applies grouping and subtotals without manual formulas. | Export data with outline settings so summary rows appear directly beneath their detail rows.
+// AI Prompts: Write C# code that uses Aspose.Cells WorkbookDesigner to replace smart markers with a collection and then adds subtotal rows grouped by a specified column. | Explain the required CellArea and Subtotal method parameters to replace existing subtotals and place summary rows below the detail rows. | Show how to configure the worksheet outline so that summary rows are displayed below the grouped data after adding subtotals.
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsSmartMarkerSubtotalDemo
+namespace SmartMarkerSubtotalDemo
 {
-    // Simple data model for sales records
-    // Creates a new workbook, defines headers, inserts smart‑marker placeholders for Region, Product, and Sales, binds a List<Sale> data source, processes the markers, calculates the populated range, and uses Cells.Subtotal to group rows by the Region column, sum the Sales values, insert page breaks, and place summary rows below each group before saving the file.
+    // Simple POCO representing a sales record
+    // Creates a workbook template with smart markers, fills it from a List<Sale> using WorkbookDesigner, then uses Cells.Subtotal to group rows by the Region column, sum the Sales column, and place summary rows below each group before saving.
     public class Sale
     {
-        public string? Region { get; set; }
-        public string? Product { get; set; }
+        public string Region { get; set; }
+        public string Product { get; set; }
         public double Sales { get; set; }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
                 // 1. Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // 2. Set up header row
+                // 2. Set up the template with headers and smart markers
                 cells["A1"].PutValue("Region");
                 cells["B1"].PutValue("Product");
                 cells["C1"].PutValue("Sales");
 
-                // 3. Insert smart markers for the data rows (starting at row 2)
-                //    These markers will be replaced by the data source during processing
+                // Smart markers – they will be replaced by the data source
                 cells["A2"].PutValue("&=$Region");
                 cells["B2"].PutValue("&=$Product");
                 cells["C2"].PutValue("&=$Sales");
 
-                // 4. Define the range that contains the smart markers and give it the required name
-                //    Aspose.Cells looks for a range named "_CellsSmartMarkers" when processing
-                Aspose.Cells.Range smartMarkerRange = cells.CreateRange("A2:C2");
-                smartMarkerRange.Name = "_CellsSmartMarkers";
-
-                // 5. Prepare sample sales data
+                // 3. Prepare sample sales data
                 List<Sale> salesData = new List<Sale>
                 {
                     new Sale { Region = "North", Product = "Widget", Sales = 5000 },
@@ -59,44 +52,39 @@ namespace AsposeCellsSmartMarkerSubtotalDemo
                     new Sale { Region = "West",  Product = "Widget", Sales = 4500 }
                 };
 
-                // 6. Create a WorkbookDesigner, assign the workbook and the data source, then process
+                // 4. Process the smart markers using WorkbookDesigner
                 WorkbookDesigner designer = new WorkbookDesigner(workbook);
-                designer.SetDataSource("Data", salesData);
-                designer.Process(); // processes all smart markers in the workbook
+                designer.SetDataSource("SalesData", salesData);
+                designer.Process(); // fills the template with the list data
 
-                // 7. After processing, determine the total number of rows (header + data)
-                int totalRows = salesData.Count + 1; // +1 for header row
+                // 5. Determine the data range that now contains the populated rows
+                int startRow = 0;               // header row (zero‑based)
+                int startColumn = 0;            // column A
+                int endRow = cells.MaxDataRow;  // last row with data after processing
+                int endColumn = 2;              // column C (Sales)
 
-                // 8. Define the cell area that includes the header and all data rows
-                //    Columns A (0) to C (2), rows 0 to totalRows-1 (zero‑based)
-                CellArea dataArea = new CellArea
-                {
-                    StartRow = 0,
-                    StartColumn = 0,
-                    EndRow = totalRows - 1,
-                    EndColumn = 2
-                };
+                // 6. Create a CellArea covering the whole table (including header)
+                CellArea dataArea = CellArea.CreateCellArea(startRow, startColumn, endRow, endColumn);
 
-                // 9. Add subtotal rows:
-                //    - Group by the first column (Region) -> groupBy = 0
-                //    - Use SUM function on the Sales column (index 2)
-                //    - Replace existing subtotals, add page breaks, place summary below data
+                // 7. Add subtotal rows: group by Region (column 0), sum Sales (column 2)
+                //    Replace existing subtotals = true, no page breaks, summary placed below data = true
                 cells.Subtotal(
                     dataArea,
-                    0,
-                    ConsolidationFunction.Sum,
-                    new int[] { 2 },
-                    true,   // replace existing subtotals
-                    true,   // add page breaks between groups
-                    true    // place summary row below the detail rows
+                    0,                                 // group by first column (Region)
+                    ConsolidationFunction.Sum,         // use SUM for subtotals
+                    new int[] { 2 },                   // apply subtotal to Sales column
+                    true,                              // replace existing subtotals
+                    false,                             // do not insert page breaks between groups
+                    true                               // place summary rows below the detail rows
                 );
 
-                // 10. Ensure the outline shows the summary row below the grouped data
-                worksheet.Outline.SummaryRowBelow = true;
+                // 8. Ensure the outline shows summary rows below the detail rows
+                sheet.Outline.SummaryRowBelow = true;
 
-                // 11. Save the resulting workbook
-                workbook.Save("SmartMarkerSubtotalDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+                // 9. Save the resulting workbook
+                string outputPath = "SmartMarkerSubtotalResult.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {

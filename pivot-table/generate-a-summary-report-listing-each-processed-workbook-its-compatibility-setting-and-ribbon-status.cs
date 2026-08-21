@@ -1,62 +1,73 @@
-// Title: C# – Create CSV Report of Workbook CheckCompatibility Flag and Ribbon XML with Aspose.Cells
-// Description: Loads a set of Excel files, reads each workbook's Settings.CheckCompatibility property and RibbonXml presence, and writes a CSV file that lists the file name, compatibility status, and whether custom Ribbon XML is defined.
-// Keywords: Aspose.Cells C# read CheckCompatibility | Aspose.Cells RibbonXml detection | batch workbook analysis Aspose.Cells | export Excel settings to CSV | Aspose.Cells workbook audit
-// Common Searches: how to get CheckCompatibility using Aspose.Cells .NET | list workbooks with RibbonXml via Aspose.Cells | generate CSV of Excel workbook settings Aspose.Cells | Aspose.Cells batch process multiple workbooks
-// Developer Intent: Generate a CSV summary that shows each workbook’s filename, its compatibility flag, and whether custom Ribbon XML is set.
-// Use Cases: Verify compatibility settings across a large collection of Excel files before release. | Audit custom UI customizations by identifying workbooks that contain Ribbon XML. | Create an inventory of workbook properties for migration, compliance, or quality‑control purposes.
-// AI Prompts: Write C# code with Aspose.Cells that reads Settings.CheckCompatibility and RibbonXml for multiple Excel files and outputs the results to a CSV file. | Show how to handle missing files gracefully while continuing to process the remaining workbooks in Aspose.Cells. | Suggest extensions to the CSV report to include additional properties such as EnableMacros, IsProtected, or WorkbookVersion.
+// Title: Aspose.Cells .NET – Console report of workbook CheckCompatibility flag and RibbonXml presence
+// Description: A C# console utility that iterates over a collection of Excel files, loads each workbook with Aspose.Cells, reads the Workbook.Settings.CheckCompatibility property, checks whether the RibbonXml string is defined, and prints a formatted table showing the file path, compatibility mode, and ribbon status. The program gracefully handles missing files and load exceptions, making it ideal for batch audits or automated reporting.
+// Keywords: Aspose.Cells | .NET | C# | CheckCompatibility | RibbonXml | Excel workbook audit | batch workbook processing | console report | Excel compatibility mode | custom ribbon detection | automation script
+// Common Searches: Aspose.Cells get CheckCompatibility value | how to detect RibbonXml in Excel file using Aspose.Cells | C# console program list workbook settings | batch check Excel compatibility mode Aspose.Cells | report ribbon XML presence in workbooks
+// Developer Intent: Generate a concise summary that lists each processed workbook, its compatibility setting, and whether RibbonXml is defined, using Aspose.Cells in a .NET console application.
+// Use Cases: Run a nightly compliance audit that records the compatibility mode of all corporate workbooks. | Verify that custom ribbon XML has been applied to macro‑enabled files before distribution. | Export workbook paths, compatibility flags, and ribbon status to CSV for downstream analytics.
+// AI Prompts: Create C# code that reads CheckCompatibility and RibbonXml for each workbook and writes the results to a CSV file with Aspose.Cells. | Enhance the console program's error handling to log full exception details to a log file. | Show how to filter the workbook list to only those with RibbonXml set and output their file names.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// Loads a set of Excel files, reads each workbook's Settings.CheckCompatibility property and RibbonXml presence, and writes a CSV file that lists the file name, compatibility status, and whether custom Ribbon XML is defined.
-class Program
+namespace AsposeCellsSummaryReport
 {
-    static void Main()
+    // A C# console utility that iterates over a collection of Excel files, loads each workbook with Aspose.Cells, reads the Workbook.Settings.CheckCompatibility property, checks whether the RibbonXml string is defined, and prints a formatted table showing the file path, compatibility mode, and ribbon status. The program gracefully handles missing files and load exceptions, making it ideal for batch audits or automated reporting.
+    class Program
     {
-        // Define the workbook files to process
-        var workbookPaths = new List<string>
+        static void Main()
         {
-            "Book1.xlsx",
-            "Book2.xlsm"
-            // Add more file paths as needed
-        };
-
-        // Prepare a list to hold report lines (CSV format)
-        var reportLines = new List<string>();
-        reportLines.Add("Workbook,CheckCompatibility,RibbonXmlSet");
-
-        foreach (var path in workbookPaths)
-        {
-            // Verify the file exists before attempting to load
-            if (!File.Exists(path))
+            // List of workbook file paths to process
+            var workbookPaths = new List<string>
             {
-                Console.WriteLine($"File not found: {path}");
-                continue;
+                "Workbook1.xlsx",
+                "Workbook2.xlsm",
+                "Workbook3.xls"
+                // Add more paths as needed
+            };
+
+            // Header for the summary report
+            Console.WriteLine("Processed Workbook Summary");
+            Console.WriteLine("---------------------------");
+            Console.WriteLine("{0,-30} {1,-15} {2}", "File Path", "CheckCompatibility", "RibbonXml Set");
+
+            // Process each workbook
+            foreach (var path in workbookPaths)
+            {
+                // Verify that the file exists before attempting to load it
+                if (!File.Exists(path))
+                {
+                    Console.WriteLine("{0,-30} {1,-15} {2}", path, "N/A", "File not found");
+                    continue;
+                }
+
+                try
+                {
+                    // Load the workbook from the file path
+                    Workbook workbook = new Workbook(path);
+
+                    // Retrieve the compatibility setting from WorkbookSettings
+                    bool checkCompatibility = workbook.Settings.CheckCompatibility;
+
+                    // Determine whether RibbonXml is set (non‑null and non‑empty)
+                    bool ribbonSet = !string.IsNullOrEmpty(workbook.RibbonXml);
+
+                    // Output the information for this workbook
+                    Console.WriteLine("{0,-30} {1,-15} {2}",
+                        path,
+                        checkCompatibility,
+                        ribbonSet ? "Yes" : "No");
+                }
+                catch (Exception ex)
+                {
+                    // Handle any unexpected errors during loading/processing
+                    Console.WriteLine("{0,-30} {1,-15} {2}", path, "Error", ex.Message);
+                }
             }
 
-            // Load the workbook (uses the provided load rule)
-            Workbook workbook = new Workbook(path);
-
-            // Retrieve the compatibility setting from WorkbookSettings
-            bool checkCompatibility = workbook.Settings.CheckCompatibility;
-
-            // Determine whether RibbonXml has been set (non‑null and non‑empty)
-            bool ribbonXmlSet = !string.IsNullOrEmpty(workbook.RibbonXml);
-
-            // Add a line to the report
-            reportLines.Add($"{Path.GetFileName(path)},{checkCompatibility},{ribbonXmlSet}");
-
-            // Release resources
-            workbook.Dispose();
+            // Keep console window open if needed
+            Console.WriteLine("\nSummary report completed.");
         }
-
-        // Write the summary report to a CSV file (uses the provided save rule)
-        string reportPath = "WorkbookSummaryReport.csv";
-        File.WriteAllLines(reportPath, reportLines);
-
-        Console.WriteLine($"Summary report generated at: {reportPath}");
     }
 }

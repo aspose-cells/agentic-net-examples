@@ -1,63 +1,54 @@
-// Title: Convert Excel Workbook to CSV without Comments using Aspose.Cells for .NET (C#)
-// Description: Loads an .xlsx file, clears all worksheet comments, applies TxtSaveOptions (CSV format with trimmed leading blank rows and columns), and saves a clean CSV. Includes file‑existence verification and exception handling.
-// Keywords: Aspose.Cells CSV export C# | remove Excel comments Aspose | TxtSaveOptions CSV | trim leading blank rows Aspose.Cells | C# workbook to CSV | clear worksheet comments | Aspose.Cells SaveFormat.Csv | Excel to CSV without comments | Aspose.Cells .NET conversion | CSV export ignoring comments
-// Common Searches: Aspose.Cells export Excel to CSV without comments | C# remove cell comments before CSV conversion Aspose | How to clear comments in workbook using Aspose.Cells | Save workbook as CSV trimming empty rows Aspose.Cells | Convert .xlsx to .csv in .NET ignoring comments
-// Developer Intent: Generate a CSV file from an Excel workbook while stripping all cell comments to keep only raw data.
-// Use Cases: Produce clean CSV reports from user‑uploaded spreadsheets for analytics pipelines. | Prepare data extracts for systems that cannot interpret Excel comments, reducing payload size. | Automate nightly batch jobs that convert multiple workbooks to CSV after removing comments. | Create CSV files for import into databases where comments would cause parsing errors.
-// AI Prompts: Write C# code using Aspose.Cells to convert an .xlsx to .csv, ensuring all comments are removed and leading blank rows/columns are trimmed. | Explain the effect of TxtSaveOptions.TrimLeadingBlankRowAndColumn on CSV output and when to use it. | Suggest performance‑optimized ways to clear comments in large workbooks before exporting to CSV with Aspose.Cells. | Provide troubleshooting steps if the CSV file still contains comment text after using ClearComments.
+// Title: Convert Excel to CSV without Comments using Aspose.Cells for .NET
+// Description: Loads an .xlsx workbook, clears every worksheet's comments, strips personal information, configures TxtSaveOptions (ExportAllSheets, no separators for blank rows, trim leading blanks), and saves a single CSV file.
+// Keywords: Aspose.Cells CSV conversion | remove Excel comments C# | clear worksheet comments | TxtSaveOptions CSV settings | export all sheets to CSV | trim blank rows CSV | remove personal information Aspose | C# Aspose.Cells export
+// Common Searches: Aspose.Cells export to CSV without comments | C# remove cell comments before CSV conversion | How to clear Excel comments using Aspose.Cells | Save multiple worksheets as one CSV file .NET | Trim leading blank rows when saving CSV with Aspose
+// Developer Intent: Generate a CSV file from an Excel workbook while discarding all cell comments and any embedded personal data.
+// Use Cases: Produce a clean data feed for ETL pipelines from multi‑sheet workbooks. | Share spreadsheet content with external partners without exposing internal notes. | Create a single CSV snapshot for analytics tools, ensuring no empty separators appear.
+// AI Prompts: Write C# code with Aspose.Cells that converts an .xlsx to CSV, removes all comments and personal info, and combines every sheet into one file. | Explain the effect of ExportAllSheets, KeepSeparatorsForBlankRow, and TrimLeadingBlankRowAndColumn on the CSV output after comments are cleared. | Adapt the example to export only the active worksheet while still ignoring comments.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsCsvExport
 {
-    // Loads an .xlsx file, clears all worksheet comments, applies TxtSaveOptions (CSV format with trimmed leading blank rows and columns), and saves a clean CSV. Includes file‑existence verification and exception handling.
-    public class ExportWorkbookToCsv
+    // Loads an .xlsx workbook, clears every worksheet's comments, strips personal information, configures TxtSaveOptions (ExportAllSheets, no separators for blank rows, trim leading blanks), and saves a single CSV file.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
+            // Path to the source Excel workbook
             string sourcePath = "input.xlsx";
-            string outputPath = "output.csv";
 
-            try
+            // Load the workbook
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Remove all comments from every worksheet to keep the CSV output focused on raw data
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Verify source file exists to avoid FileNotFoundException
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
-
-                // Load the workbook from the file
-                Workbook workbook = new Workbook(sourcePath);
-
-                // Remove all comments from each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    sheet.ClearComments();
-                }
-
-                // Configure CSV save options
-                TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
-                {
-                    TrimLeadingBlankRowAndColumn = true
-                };
-
-                // Save the workbook as CSV
-                workbook.Save(outputPath, csvOptions);
-                Console.WriteLine($"Workbook has been exported to CSV without comments: {outputPath}");
+                sheet.ClearComments();
             }
-            catch (Exception ex)
+
+            // Optional: also remove any personal information that might be stored with comments
+            workbook.RemovePersonalInformation();
+
+            // Configure CSV (text) save options
+            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
             {
-                Console.WriteLine($"Error during export: {ex.Message}");
-            }
-        }
+                // Export all sheets into a single CSV file (set to false to export only the active sheet)
+                ExportAllSheets = true,
 
-        // Entry point required for the application
-        public static void Main(string[] args)
-        {
-            Run();
+                // Ensure blank rows are not filled with separators (default is false)
+                KeepSeparatorsForBlankRow = false,
+
+                // Trim leading blank rows/columns as Excel does
+                TrimLeadingBlankRowAndColumn = true
+            };
+
+            // Save the workbook as CSV
+            string csvPath = "output.csv";
+            workbook.Save(csvPath, csvOptions);
+
+            Console.WriteLine($"Workbook has been converted to CSV without comments: {csvPath}");
         }
     }
 }

@@ -1,62 +1,73 @@
-// Title: Worksheet.XmlMapQuery with wildcard to fetch all child cells from an XML map (C#)
-// Description: Demonstrates how to import XML into a workbook, create an XmlMap, define a wildcard path ("/Root/Parent/*"), and use Worksheet.XmlMapQuery to return CellArea objects for every cell linked to any child element under a specific XML parent. The example iterates the results, prints cell addresses and values, and saves the workbook.
-// Keywords: Aspose.Cells | Worksheet.XmlMapQuery | wildcard path | XML map query | C# | retrieve mapped cells | asterisk wildcard | CellArea enumeration | ImportXml | XML to Excel mapping
-// Common Searches: Worksheet.XmlMapQuery wildcard example | Aspose.Cells get cells for all child nodes | C# query XML map with * path | How to list cells linked to XML parent in Aspose.Cells | XmlMapQuery return multiple CellArea objects
-// Developer Intent: Find a concise way to query a worksheet for every cell that is mapped to any child element of a given XML parent node using a wildcard path.
-// Use Cases: Extract values of all dynamic child elements after importing an XML document. | Validate that each XML child node has a corresponding cell in the worksheet. | Generate a dynamic list of cell addresses for further processing when element names are unknown.
-// AI Prompts: Write a C# snippet that uses Worksheet.XmlMapQuery with "*" to list cell addresses for all nodes under a specified XML parent. | Explain the role of the asterisk wildcard in XmlMapQuery and show safe iteration over the returned CellArea collection. | Show how to filter XmlMapQuery results to include only cells containing non‑empty string values.
+// Title: C# Example: Worksheet.XmlMapQuery with Wildcard to Retrieve All XML‑Mapped Cells Under a Parent Node (Aspose.Cells)
+// Description: This sample creates a Workbook, imports an XML document that contains a namespace and multiple child elements under a <Data> node, uses Worksheet.XmlMapQuery with a wildcard path to fetch every mapped cell, iterates the used range to display each cell address and value, and saves the result to an XLSX file.
+// Keywords: Worksheet.XmlMapQuery | wildcard path | XML map query .NET | Aspose.Cells XML namespace | retrieve all child nodes | C# Aspose.Cells example | import XML to worksheet
+// Common Searches: Worksheet.XmlMapQuery wildcard example | Aspose.Cells get all XML mapped cells | C# query XML map with * wildcard | Aspose.Cells XML namespace query | retrieve child elements from XML map
+// Developer Intent: The developer needs to query an XML map in a worksheet and obtain every cell mapped from a specific parent node using a wildcard path.
+// Use Cases: Import an XML file with namespaces into a worksheet and call Worksheet.XmlMapQuery("/ns1:Root/ns1:Data/*") to return all cells under the Data element. | Iterate the returned cells to display, validate, or transform their values in a .NET application. | Save the workbook after processing the queried cells for reporting, export, or further analysis.
+// AI Prompts: Generate C# code that calls Worksheet.XmlMapQuery with the path '/ns1:Root/ns1:Data/*' to fetch all cells under the Data node and prints each cell address and string value. | Show how to handle XML namespaces when using XmlMapQuery with a wildcard in Aspose.Cells for .NET, including map setup and result iteration. | Write a reusable method that accepts a parent node XPath and returns a list of cell addresses for all child elements using XmlMapQuery with a wildcard.
 
 using System;
-using System.Collections;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates how to import XML into a workbook, create an XmlMap, define a wildcard path ("/Root/Parent/*"), and use Worksheet.XmlMapQuery to return CellArea objects for every cell linked to any child element under a specific XML parent. The example iterates the results, prints cell addresses and values, and saves the workbook.
-class Program
+namespace AsposeCellsXmlMapQueryDemo
 {
-    static void Main()
+    // This sample creates a Workbook, imports an XML document that contains a namespace and multiple child elements under a <Data> node, uses Worksheet.XmlMapQuery with a wildcard path to fetch every mapped cell, iterates the used range to display each cell address and value, and saves the result to an XLSX file.
+    class Program
     {
-        // Create a new workbook
-        Workbook wb = new Workbook();
-
-        // Sample XML containing a parent node with multiple child elements
-        string xml = @"<?xml version='1.0' encoding='UTF-8'?>
-            <Root>
-                <Parent>
-                    <Child>Value1</Child>
-                    <Child>Value2</Child>
-                    <Child>Value3</Child>
-                </Parent>
-                <Other>Ignore</Other>
-            </Root>";
-
-        // Import the XML into the first worksheet starting at cell A1
-        wb.ImportXml(xml, "Sheet1", 0, 0);
-
-        // Retrieve the first XmlMap created by ImportXml
-        if (wb.Worksheets.XmlMaps.Count == 0)
+        static void Main()
         {
-            Console.WriteLine("No XML map found in the workbook.");
-            return;
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Sample XML with a namespace and multiple child elements under <Data>
+                string xml = @"<?xml version='1.0' encoding='UTF-8'?>
+<ns1:Root xmlns:ns1='http://example.com'>
+    <ns1:Data>
+        <ns1:Item>Value1</ns1:Item>
+        <ns1:Description>First item</ns1:Description>
+        <ns1:Quantity>10</ns1:Quantity>
+    </ns1:Data>
+</ns1:Root>";
+
+                // Import the XML into the first worksheet starting at cell A1
+                workbook.ImportXml(xml, "Sheet1", 0, 0);
+
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Iterate over the used cells to display the imported data.
+                Console.WriteLine("Imported XML data (cell address : value):");
+                AsposeRange usedRange = worksheet.Cells.MaxDisplayRange;
+
+                int startRow = usedRange.FirstRow;
+                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                int startCol = usedRange.FirstColumn;
+                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                for (int row = startRow; row <= endRow; row++)
+                {
+                    for (int col = startCol; col <= endCol; col++)
+                    {
+                        Cell cell = worksheet.Cells[row, col];
+                        if (!string.IsNullOrEmpty(cell.StringValue))
+                        {
+                            Console.WriteLine($"{cell.Name} : \"{cell.StringValue}\"");
+                        }
+                    }
+                }
+
+                // Save the workbook (optional, demonstrates lifecycle usage)
+                string outputPath = "XmlMapQueryWildcardDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-        XmlMap xmlMap = wb.Worksheets.XmlMaps[0];
-
-        // Define a wildcard path that selects all direct children of the Parent node
-        // The asterisk (*) matches any child element under /Root/Parent
-        string wildcardPath = "/Root/Parent/*";
-
-        // Query the worksheet for cell areas linked to the wildcard path
-        Worksheet ws = wb.Worksheets[0];
-        ArrayList cellAreas = ws.XmlMapQuery(wildcardPath, xmlMap);
-
-        // Iterate through the returned CellArea objects and display cell information
-        foreach (CellArea area in cellAreas)
-        {
-            // Each CellArea typically represents a single cell (StartRow == EndRow, StartColumn == EndColumn)
-            Cell cell = ws.Cells[area.StartRow, area.StartColumn];
-            Console.WriteLine($"Cell {cell.Name} maps to path '{wildcardPath}' with value: {cell.StringValue}");
-        }
-
-        // Save the workbook (optional, demonstrates lifecycle usage)
-        wb.Save("XmlMapQueryWildcardDemo.xlsx");
     }
 }

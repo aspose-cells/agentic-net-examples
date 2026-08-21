@@ -1,46 +1,38 @@
-// Title: C# – List ActiveX Form Controls with Assigned Macros in a Macro‑Enabled Workbook Using Aspose.Cells
-// Description: Loads an XLSM file with Aspose.Cells, confirms the presence of VBA macros, then walks through each worksheet and its shapes to identify ActiveX controls. For every control it prints the worksheet name, shape name, control type and, when available, the linked cell reference.
-// Keywords: Aspose.Cells | C# | .NET | XLSM | macro enabled workbook | VBA macros | ActiveX control | form control listing | enumerate shapes | shape.ActiveXControl | workbook.HasMacro | linked cell | code example
-// Common Searches: list ActiveX controls in an .xlsm with Aspose.Cells | how to enumerate VBA form controls using C# | retrieve linked cell of ActiveX control Aspose.Cells | C# code to read macro enabled workbook shapes | Aspose.Cells get form control properties
-// Developer Intent: Extract all ActiveX form controls from a macro‑enabled workbook and display their key attributes.
-// Use Cases: Create an inventory of form controls before refactoring or removing macros. | Generate documentation of control types and linked cells for compliance audits. | Automated testing to verify required controls exist in a workbook.
-// AI Prompts: Show C# code that uses Aspose.Cells to enumerate every ActiveX control in an XLSM file and output its type and linked cell. | Explain how to filter shapes to only those that have VBA macros attached when processing a workbook with Aspose.Cells.
+// Title: List ActiveX Form Controls in a Macro‑Enabled Excel Workbook with Aspose.Cells for .NET
+// Description: Loads an .xlsm file using Aspose.Cells, walks through every worksheet and its shapes, detects ActiveX controls, and prints each control's worksheet, name and type to the console.
+// Keywords: Aspose.Cells | C# | ActiveX controls | Excel form controls | macro‑enabled workbook | list controls | VBA shapes | enumerate ActiveX | xlsm processing | Excel automation
+// Common Searches: how to list ActiveX controls in an .xlsm with Aspose.Cells | C# code to enumerate form controls that have macros assigned | retrieve control names and types from a macro‑enabled Excel file | Aspose.Cells example for reading VBA controls | list Excel ActiveX controls using .NET
+// Developer Intent: The developer needs to load a macro‑enabled workbook and output all form controls that are linked to VBA macros.
+// Use Cases: Create an inventory of VBA‑driven controls for documentation purposes. | Verify that required ActiveX controls exist before running further processing. | Generate an audit report of controls and their associated macros for compliance.
+// AI Prompts: Generate C# code with Aspose.Cells that lists only ActiveX controls having a non‑empty OnAction macro reference. | Modify the sample to export the control list to a CSV file with columns: Worksheet, ControlName, ControlType, MacroName. | Add comprehensive error handling for missing VBA projects, corrupted shapes, and permission issues when opening .xlsm files.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsVbaFormControlListing
+namespace AsposeCellsVbaControlLister
 {
-    // Loads an XLSM file with Aspose.Cells, confirms the presence of VBA macros, then walks through each worksheet and its shapes to identify ActiveX controls. For every control it prints the worksheet name, shape name, control type and, when available, the linked cell reference.
+    // Loads an .xlsm file using Aspose.Cells, walks through every worksheet and its shapes, detects ActiveX controls, and prints each control's worksheet, name and type to the console.
     class Program
     {
         static void Main()
         {
-            // Path to the macro‑enabled workbook
-            string inputPath = "SampleWithMacro.xlsm";
+            const string inputFile = "input_with_macro.xlsm";
 
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"File not found: {inputPath}");
+                Console.WriteLine($"Error: The file '{inputFile}' was not found.");
                 return;
             }
 
             try
             {
-                // Load the workbook (full load; VBA data will be available if present)
-                Workbook workbook = new Workbook(inputPath);
+                // Load the workbook (no specific data filter needed for this example)
+                Workbook workbook = new Workbook(inputFile);
 
-                // Verify that the workbook actually contains VBA macros
-                if (!workbook.HasMacro)
-                {
-                    Console.WriteLine("The workbook does not contain any VBA macros.");
-                    return;
-                }
-
-                // Iterate through all worksheets
+                // Iterate through each worksheet
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
                     // Iterate through all shapes on the worksheet
@@ -50,20 +42,17 @@ namespace AsposeCellsVbaFormControlListing
                         if (shape.ActiveXControl != null)
                         {
                             Console.WriteLine($"Worksheet: {sheet.Name}");
-                            Console.WriteLine($"  Shape Name   : {shape.Name}");
+                            Console.WriteLine($"  Control Name : {shape.Name}");
                             Console.WriteLine($"  Control Type : {shape.ActiveXControl.GetType().Name}");
-                            // Additional useful information (e.g., linked cell) can be displayed if needed
-                            if (!string.IsNullOrEmpty(shape.ActiveXControl.LinkedCell))
-                            {
-                                Console.WriteLine($"  Linked Cell  : {shape.ActiveXControl.LinkedCell}");
-                            }
+                            Console.WriteLine();
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
+                // Catch any runtime exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

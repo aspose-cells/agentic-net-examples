@@ -1,17 +1,17 @@
-// Title: Create a Scatter Chart with a Logarithmic X‑Axis in Aspose.Cells for .NET (C#)
-// Description: Shows how to build an Excel workbook, populate exponential X values and linear Y values, add a scatter chart, bind the series, and enable a logarithmic X‑axis (base 2) using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET charting | scatter chart | logarithmic X axis | CategoryAxis.IsLogarithmic | log base | Excel automation | data visualization | chart scaling
-// Common Searches: Aspose.Cells set X axis logarithmic C# | logarithmic scatter chart example Aspose.Cells | change log base in Aspose.Cells chart | C# create scatter chart with log scale | CategoryAxis.IsLogarithmic property usage
-// Developer Intent: Apply a logarithmic scale to the X‑axis of a scatter chart in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Display exponential or multi‑order‑of‑magnitude data where a log‑scaled X‑axis improves readability. | Generate scientific, engineering, or financial reports that require precise trend analysis on a log scale. | Programmatically adjust the log base (e.g., from 2 to 10) to match different domain conventions.
-// AI Prompts: Provide C# code to set the X‑axis log base to 10 for an Aspose.Cells scatter chart. | Show how to toggle between linear and logarithmic scaling on an existing Aspose.Cells chart axis. | Explain how to customize X‑axis label formatting after enabling logarithmic scaling in Aspose.Cells.
+// Title: C# Example: Scatter Chart with Logarithmic X‑Axis Using Aspose.Cells
+// Description: This C# sample creates a workbook, fills columns A and B with exponential X values and linear Y values, adds a scatter chart, binds the series, enables a logarithmic scale on the X (Category) axis with base 2, sets axis titles, and saves the file as an Excel workbook.
+// Keywords: Aspose.Cells | C# | .NET | scatter chart | logarithmic X axis | log scale | CategoryAxis.IsLogarithmic | log base 2 | Excel chart example | GitHub | source code
+// Common Searches: Aspose.Cells scatter chart log axis C# | how to set logarithmic X axis in Aspose.Cells | logarithmic scale for chart category axis .NET | C# example of scatter chart with log base 2 | Aspose.Cells chart axis properties
+// Developer Intent: Add a logarithmic scale to the X‑axis of a scatter chart in a .NET workbook.
+// Use Cases: Display exponential data on a readable X‑axis for scientific or financial analysis. | Compare linear Y trends against rapidly growing X values within the same chart. | Produce Excel reports that require base‑2 logarithmic scaling for measurement data.
+// AI Prompts: Show how to change the X‑axis log base to e (natural logarithm) in the same chart. | Add a secondary Y‑axis with logarithmic scaling to the scatter chart. | Format the logarithmic X‑axis labels to show powers of two (e.g., 2⁰, 2¹, 2²).
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Shows how to build an Excel workbook, populate exponential X values and linear Y values, add a scatter chart, bind the series, and enable a logarithmic X‑axis (base 2) using Aspose.Cells for .NET.
-class LogarithmicScatterChart
+// This C# sample creates a workbook, fills columns A and B with exponential X values and linear Y values, adds a scatter chart, binds the series, enables a logarithmic scale on the X (Category) axis with base 2, sets axis titles, and saves the file as an Excel workbook.
+class LogScaleScatterChart
 {
     static void Main()
     {
@@ -19,12 +19,16 @@ class LogarithmicScatterChart
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Add sample data: exponential X values and linear Y values
-        sheet.Cells["A1"].PutValue("X Values");
-        sheet.Cells["B1"].PutValue("Y Values");
+        // Add header cells
+        sheet.Cells["A1"].PutValue("X");
+        sheet.Cells["B1"].PutValue("Y");
+
+        // Populate sample data: exponential X values and linear Y values
         for (int i = 2; i <= 10; i++)
         {
-            sheet.Cells[$"A{i}"].PutValue(Math.Pow(2, i - 2)); // 1, 2, 4, 8, ...
+            // X values: 1, 2, 4, 8, ...
+            sheet.Cells[$"A{i}"].PutValue(Math.Pow(2, i - 2));
+            // Y values: 20, 30, 40, ...
             sheet.Cells[$"B{i}"].PutValue(i * 10);
         }
 
@@ -32,21 +36,20 @@ class LogarithmicScatterChart
         int chartIndex = sheet.Charts.Add(ChartType.Scatter, 5, 0, 20, 10);
         Chart chart = sheet.Charts[chartIndex];
 
-        // Add a series and bind Y values; then set X values separately
+        // Bind Y values (required first argument) and then X values
         chart.NSeries.Add("B2:B10", true);
         chart.NSeries[0].XValues = "A2:A10";
         chart.NSeries[0].Name = "Sample Series";
 
-        // Configure the X‑axis (CategoryAxis) to use a logarithmic scale
-        chart.CategoryAxis.IsLogarithmic = true;
-        chart.CategoryAxis.LogBase = 2; // Set logarithmic base to 2 (can be changed)
+        // Apply logarithmic scaling to the X‑axis (CategoryAxis)
+        chart.CategoryAxis.IsLogarithmic = true;   // Axis.IsLogarithmic property
+        chart.CategoryAxis.LogBase = 2;            // Axis.LogBase property (optional, base 2)
 
-        // Optional: add titles for clarity
-        chart.Title.Text = "Scatter Chart with Logarithmic X‑Axis";
-        chart.CategoryAxis.Title.Text = "Log Scale (Base 2)";
-        chart.ValueAxis.Title.Text = "Y Value";
+        // Optional: set axis titles for clarity
+        chart.CategoryAxis.Title.Text = "Logarithmic X Axis (Base 2)";
+        chart.ValueAxis.Title.Text = "Y Values";
 
         // Save the workbook with the chart
-        workbook.Save("LogarithmicScatterChart.xlsx");
+        workbook.Save("LogScaleScatterChart.xlsx");
     }
 }

@@ -1,8 +1,17 @@
+// Title: C# – Convert CSV to JSON using Aspose.Cells JsonUtility
+// Description: Loads a CSV file into an Aspose.Cells workbook, creates a range covering all data, configures JsonSaveOptions (header row, empty cells), exports the range to a JSON string with JsonUtility.ExportRangeToJson, and saves the result to a file.
+// Keywords: Aspose.Cells CSV to JSON | JsonUtility ExportRangeToJson C# | ImportCSV Aspose.Cells example | JsonSaveOptions header row | C# convert CSV file to JSON | Aspose.Cells write JSON file
+// Common Searches: Aspose.Cells convert CSV to JSON C# | JsonUtility ExportRangeToJson usage | ImportCSV then export JSON Aspose.Cells | C# code to export worksheet range as JSON | Save JSON output from Aspose.Cells
+// Developer Intent: Read a CSV file, load it into an Aspose.Cells workbook, and export the worksheet data as a JSON string or file.
+// Use Cases: Transform flat CSV data into JSON for web APIs. | Generate configuration files from spreadsheet data without manual conversion. | Create JSON payloads for services by exporting selected worksheet ranges.
+// AI Prompts: Show a C# snippet that reads a CSV with Aspose.Cells, sets JsonSaveOptions, and writes the exported JSON to a file. | Explain how to adjust JsonSaveOptions to produce nested JSON structures when exporting a range. | Provide guidance on streaming large CSV files into Aspose.Cells before converting them to JSON for optimal performance.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
+// Loads a CSV file into an Aspose.Cells workbook, creates a range covering all data, configures JsonSaveOptions (header row, empty cells), exports the range to a JSON string with JsonUtility.ExportRangeToJson, and saves the result to a file.
 class Program
 {
     static void Main()
@@ -10,30 +19,31 @@ class Program
         try
         {
             // Path to the source CSV file
-            string csvPath = "data.csv";
+            string csvPath = "input.csv";
 
             // Verify that the CSV file exists to avoid FileNotFoundException
             if (!File.Exists(csvPath))
             {
-                Console.WriteLine($"Error: CSV file not found at path '{csvPath}'.");
+                Console.Error.WriteLine($"Error: CSV file not found at path '{csvPath}'.");
                 return;
             }
 
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle rule)
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
 
-            // Import CSV data into the worksheet starting at cell A1 (row 0, column 0)
-            // Using comma as delimiter and converting numeric data where possible
+            // Get the Cells collection of the first worksheet
+            Cells cells = workbook.Worksheets[0].Cells;
+
+            // Import CSV data into the worksheet starting at cell A1
+            // Using comma as delimiter and converting numeric strings to numbers
             cells.ImportCSV(csvPath, ",", true, 0, 0);
 
             // Determine the used range dimensions
-            int totalRows = cells.MaxRow + 1;      // MaxRow is zero‑based
-            int totalColumns = cells.MaxColumn + 1;
+            int lastRow = cells.MaxDataRow;          // zero‑based index of the last row with data
+            int lastColumn = cells.MaxDataColumn;    // zero‑based index of the last column with data
 
-            // Create a Range object that covers the used cells
-            Aspose.Cells.Range usedRange = cells.CreateRange(0, 0, totalRows, totalColumns);
+            // Create a range that covers all imported data
+            Aspose.Cells.Range dataRange = cells.CreateRange(0, 0, lastRow + 1, lastColumn + 1);
 
             // Configure JSON export options
             JsonSaveOptions jsonOptions = new JsonSaveOptions
@@ -43,19 +53,21 @@ class Program
                 ExportNestedStructure = false
             };
 
-            // Export the range to a JSON string
-            string json = JsonUtility.ExportRangeToJson(usedRange, jsonOptions);
+            // Export the range to a JSON string using the JsonUtility method
+            string jsonResult = JsonUtility.ExportRangeToJson(dataRange, jsonOptions);
 
             // Output the JSON string to the console
-            Console.WriteLine(json);
+            Console.WriteLine(jsonResult);
 
             // Optionally, write the JSON string to a file
-            File.WriteAllText("output.json", json);
+            string outputPath = "output.json";
+            File.WriteAllText(outputPath, jsonResult);
+            Console.WriteLine($"JSON output written to '{outputPath}'.");
         }
         catch (Exception ex)
         {
             // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

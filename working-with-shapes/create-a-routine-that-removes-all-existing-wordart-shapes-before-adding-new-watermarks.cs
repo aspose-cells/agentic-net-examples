@@ -1,10 +1,10 @@
-// Title: C# – Remove all WordArt shapes before applying a PDF watermark with Aspose.Cells
-// Description: Loads an Excel workbook, iterates each worksheet, deletes every shape whose IsWordArt flag is true, then creates a RenderingFont and RenderingWatermark, configures PdfSaveOptions, and saves the workbook as a PDF with a semi‑transparent, rotated watermark.
-// Keywords: Aspose.Cells remove WordArt | delete WordArt shapes C# | Aspose.Cells PDF watermark | shape collection remove WordArt | Excel to PDF watermark Aspose | C# Aspose.Cells rendering watermark
-// Common Searches: how to delete WordArt in Aspose.Cells before PDF export | Aspose.Cells remove WordArt shapes C# example | apply PDF watermark after clearing WordArt with Aspose.Cells | C# code to clear all WordArt from Excel workbook using Aspose | Aspose.Cells remove decorative shapes before saving as PDF
-// Developer Intent: Delete every WordArt shape in all worksheets, then add a configurable PDF watermark using Aspose.Cells for .NET.
-// Use Cases: Prepare confidential reports by stripping WordArt and overlaying a semi‑transparent watermark. | Clean up client workbooks before batch conversion to PDF to avoid visual clutter. | Automate corporate branding enforcement by removing decorative shapes and applying a standard watermark.
-// AI Prompts: Generate C# code that iterates through all worksheets in an Aspose.Cells workbook, removes shapes where IsWordArt is true, and saves the file as a PDF with a custom watermark. | Show an alternative using ShapeCollection.RemoveAll with a lambda to delete WordArt shapes in Aspose.Cells. | Explain how to adjust watermark opacity, rotation, alignment, and scaling while ensuring WordArt shapes are removed first.
+// Title: C# – Remove WordArt Shapes and Add PDF Watermark with Aspose.Cells
+// Description: Loads an Excel workbook, deletes every WordArt shape from each worksheet, creates a red bold‑italic text watermark using RenderingFont and RenderingWatermark, and saves the workbook as a PDF with the watermark via PdfSaveOptions.
+// Keywords: Aspose.Cells remove WordArt | C# delete WordArt shapes | Aspose.Cells PDF watermark | RenderingWatermark example | Excel to PDF with watermark | Aspose.Cells shape collection | remove WordArt before export | Aspose.Cells C# tutorial
+// Common Searches: how to delete WordArt in Excel using Aspose.Cells | add text watermark when saving workbook to PDF Aspose.Cells | remove all WordArt shapes before PDF conversion C# | Aspose.Cells shape collection remove WordArt example | create diagonal CONFIDENTIAL watermark with Aspose.Cells
+// Developer Intent: Strip all WordArt objects from a workbook and then apply a custom text watermark during PDF export.
+// Use Cases: Prepare confidential reports by removing decorative WordArt and adding a semi‑transparent diagonal watermark. | Standardize batch conversion of Excel files to PDF where WordArt must be excluded for branding consistency. | Automate document sanitization for legal or compliance workflows, ensuring only the watermark remains visible in the final PDF.
+// AI Prompts: Generate C# code that iterates through every worksheet in an Aspose.Cells workbook, removes shapes where IsWordArt is true, and saves the file as a PDF with a red, bold, italic watermark rotated 30°. | Show how to configure RenderingFont and RenderingWatermark for a 48‑pt, 25% opacity watermark using Aspose.Cells. | Explain how to modify the routine to preserve non‑WordArt shapes while still applying the PDF watermark.
 
 using System;
 using System.Drawing;
@@ -13,95 +13,88 @@ using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWatermarkDemo
+namespace WatermarkApp
 {
-    // Loads an Excel workbook, iterates each worksheet, deletes every shape whose IsWordArt flag is true, then creates a RenderingFont and RenderingWatermark, configures PdfSaveOptions, and saves the workbook as a PDF with a semi‑transparent, rotated watermark.
+    // Loads an Excel workbook, deletes every WordArt shape from each worksheet, creates a red bold‑italic text watermark using RenderingFont and RenderingWatermark, and saves the workbook as a PDF with the watermark via PdfSaveOptions.
     public class WatermarkHelper
     {
         /// <param name="inputFile">Path to the source Excel file.</param>
-        /// <param name="outputFile">Path where the watermarked PDF will be saved.</param>
+        /// <param name="outputFile">Path where the PDF with watermark will be saved.</param>
         /// <param name="watermarkText">Text to be used for the watermark.</param>
-        public static void ApplyWatermark(string inputFile, string outputFile, string watermarkText)
+        public static void RemoveWordArtAndAddWatermark(string inputFile, string outputFile, string watermarkText)
         {
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
-                throw new FileNotFoundException($"Input file not found: {inputFile}");
-
             try
             {
-                // Load the workbook from the specified file
+                // Verify input file exists
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    return;
+                }
+
+                // Load the existing workbook
                 Workbook workbook = new Workbook(inputFile);
 
-                // Iterate through all worksheets and remove existing WordArt shapes
+                // Remove WordArt shapes from each worksheet
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
                     ShapeCollection shapes = sheet.Shapes;
-
-                    // Collect indices of WordArt shapes (IsWordArt == true)
-                    var wordArtIndices = new System.Collections.Generic.List<int>();
-                    for (int i = 0; i < shapes.Count; i++)
+                    for (int i = shapes.Count - 1; i >= 0; i--)
                     {
                         Shape shape = shapes[i];
                         if (shape.IsWordArt)
-                            wordArtIndices.Add(i);
+                        {
+                            shapes.RemoveAt(i);
+                        }
                     }
-
-                    // Remove WordArt shapes in reverse order to keep indices valid
-                    for (int i = wordArtIndices.Count - 1; i >= 0; i--)
-                        shapes.RemoveAt(wordArtIndices[i]);
                 }
 
                 // Create a rendering font for the watermark
                 RenderingFont font = new RenderingFont("Arial", 48)
                 {
                     Bold = true,
-                    Color = Color.Red,
-                    Italic = false
+                    Italic = true,
+                    Color = Color.Red
                 };
 
-                // Configure the text watermark
+                // Create the text watermark
                 RenderingWatermark watermark = new RenderingWatermark(watermarkText, font)
                 {
-                    Rotation = 45f,
-                    Opacity = 0.3f,
+                    Rotation = 30,
+                    Opacity = 0.25f,
                     IsBackground = true,
                     HAlignment = TextAlignmentType.Center,
                     VAlignment = TextAlignmentType.Center,
-                    ScaleToPagePercent = 70
+                    ScaleToPagePercent = 80
                 };
 
                 // Set the watermark in PDF save options
-                PdfSaveOptions saveOptions = new PdfSaveOptions
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
                 {
                     Watermark = watermark
                 };
 
-                // Save the workbook as PDF with the watermark applied
-                workbook.Save(outputFile, saveOptions);
+                // Save the workbook as PDF with the watermark
+                workbook.Save(outputFile, pdfOptions);
+                Console.WriteLine($"PDF saved with watermark to: {outputFile}");
             }
             catch (Exception ex)
             {
-                // Rethrow with additional context
-                throw new ApplicationException($"Failed to apply watermark to '{inputFile}'.", ex);
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
+    }
 
-        // Example usage
-        public static void Main()
+    class Program
+    {
+        static void Main(string[] args)
         {
-            string sourceExcel = "InputWorkbook.xlsx";
-            string resultPdf = "WatermarkedOutput.pdf";
-            string text = "CONFIDENTIAL";
+            // Example usage
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
+            string watermark = "CONFIDENTIAL";
 
-            try
-            {
-                ApplyWatermark(sourceExcel, resultPdf, text);
-                Console.WriteLine("Watermark applied and PDF saved to: " + resultPdf);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
+            WatermarkHelper.RemoveWordArtAndAddWatermark(inputPath, outputPath, watermark);
         }
     }
 }

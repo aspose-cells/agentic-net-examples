@@ -1,17 +1,17 @@
-// Title: Aspose.Cells .NET: Create an XLSX workbook with a centered header
-// Description: Demonstrates how to generate a new XLSX workbook using Aspose.Cells for .NET, access the first worksheet, configure the PageSetup to add a centered header, and save the file as "CenteredHeader.xlsx".
-// Keywords: Aspose.Cells .NET | create XLSX workbook | centered header | PageSetup SetHeader | Excel header formatting | save workbook as XLSX | C# Aspose.Cells example
-// Common Searches: Aspose.Cells set centered header C# | how to add a header to Excel with Aspose.Cells | C# create XLSX file and set page header | Aspose.Cells PageSetup header example | center header Aspose.Cells .NET
-// Developer Intent: Add a centered header to a newly created XLSX workbook and persist the file.
-// Use Cases: Produce printable reports where each page displays a centered title in the header. | Build a corporate template that automatically inserts a centered document name on every printed sheet. | Automate bulk workbook generation with a uniform centered header for branding consistency.
-// AI Prompts: Generate C# code with Aspose.Cells that creates an XLSX file and inserts a centered header containing the current date. | Show how to set left, center, and right headers differently in Aspose.Cells and save the workbook as XLSX. | Explain how to customize font style, size, and color of a centered header using Aspose.Cells PageSetup.
+// Title: Aspose.Cells .NET Example: Generate XLSX File with a Centered Header (C#)
+// Description: This C# snippet shows how to create a Workbook, configure PageSetup to place custom text in the center of the header, and save the result as an XLSX document using Aspose.Cells.
+// Keywords: Aspose.Cells C# header | centered header Excel | PageSetup SetHeader | save workbook XLSX | Excel printing header | C# Aspose.Cells example | create workbook with header
+// Common Searches: Aspose.Cells set center header C# | How to add a header to Excel file using Aspose.Cells .NET | PageSetup SetHeader example | Save workbook as XLSX with header Aspose | C# code for Excel header formatting
+// Developer Intent: Add custom text to the middle section of a worksheet header and export the sheet as an XLSX file.
+// Use Cases: Print‑ready reports where the title appears centered on each page | Standardized templates that embed a company name in the header | Automated invoices or statements with a centered header containing document ID | Batch generation of spreadsheets that require a consistent header layout
+// AI Prompts: Generate C# code that creates an XLSX workbook, sets a centered header using Aspose.Cells, and saves the file. | Provide a step‑by‑step guide to apply the same centered header to all worksheets in a workbook with Aspose.Cells. | Explain how to combine left, center, and right header sections in Aspose.Cells PageSetup for a multi‑page report.
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHeaderExample
+namespace CenteredHeaderExample
 {
-    // Demonstrates how to generate a new XLSX workbook using Aspose.Cells for .NET, access the first worksheet, configure the PageSetup to add a centered header, and save the file as "CenteredHeader.xlsx".
+    // This C# snippet shows how to create a Workbook, configure PageSetup to place custom text in the center of the header, and save the result as an XLSX document using Aspose.Cells.
     class Program
     {
         static void Main()
@@ -19,19 +19,19 @@ namespace AsposeCellsHeaderExample
             // Create a new workbook (default format is XLSX)
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Get the PageSetup object for the worksheet
+            // Access the page setup of the worksheet
             PageSetup pageSetup = worksheet.PageSetup;
 
-            // Set the centered header (section 1 = center) with desired text
-            pageSetup.SetHeader(1, "My Centered Header Text");
+            // Set the centered header (section 1) with the desired text
+            pageSetup.SetHeader(1, "My Centered Header");
 
-            // Save the workbook as an XLSX file
+            // Save the workbook to an XLSX file
             workbook.Save("CenteredHeader.xlsx");
 
-            Console.WriteLine("Workbook created with centered header and saved as XLSX.");
+            Console.WriteLine("Workbook created with centered header and saved as CenteredHeader.xlsx");
         }
     }
 }

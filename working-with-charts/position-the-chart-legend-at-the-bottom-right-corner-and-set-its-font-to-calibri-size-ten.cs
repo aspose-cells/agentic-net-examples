@@ -1,16 +1,16 @@
 // Title: Aspose.Cells .NET: Position Chart Legend Bottom‑Right and Apply Calibri 10 Font
-// Description: Creates a workbook, adds a column chart, moves the legend to the bottom‑right corner, disables overlay, and sets the legend font to Calibri size 10 before saving the file.
-// Keywords: Aspose.Cells chart legend position | bottom right legend .NET | legend font Calibri 10 | Aspose.Cells C# legend formatting | Excel chart legend placement | Aspose.Cells Legend.IsOverLay | set chart legend font Aspose.Cells
-// Common Searches: Aspose.Cells move legend to bottom right | change chart legend font to Calibri in C# | set legend position corner Aspose.Cells | disable legend overlay Aspose.Cells chart | Aspose.Cells legend formatting example
-// Developer Intent: Place the chart legend in the bottom‑right corner and format its text with Calibri size 10 using Aspose.Cells for .NET.
-// Use Cases: Design Excel reports where the legend must stay out of the plot area for better readability. | Apply corporate branding by using the standard Calibri 10 font for all chart legends. | Generate workbooks that require precise legend placement without overlapping chart data.
-// AI Prompts: Show how to set a chart legend to the bottom‑right corner and change its font to Calibri 10 with Aspose.Cells in C#. | Provide a C# code example that configures Legend.Position, Legend.IsOverLay, and Legend.Font for an Aspose.Cells chart. | Explain the effect of Legend.IsOverLay when positioning a legend at the corner of an Excel chart using Aspose.Cells.
+// Description: C# example that creates a workbook, adds a column chart, shows the legend, moves it to the bottom‑right corner using LegendPositionType.Corner, and sets the legend font to Calibri size 10 before saving the file.
+// Keywords: Aspose.Cells chart legend position | Aspose.Cells legend bottom right | Aspose.Cells set legend font | Calibri 10 legend Aspose.Cells | .NET Excel chart formatting | LegendPositionType.Corner
+// Common Searches: Aspose.Cells move chart legend to bottom right | How to change chart legend font in Aspose.Cells .NET | LegendPositionType.Corner example | Set legend font Calibri using Aspose.Cells | Excel chart legend formatting with Aspose.Cells
+// Developer Intent: Place the chart legend in the bottom‑right corner of the plot area and apply a Calibri 10‑point font.
+// Use Cases: Standardize corporate Excel reports so every chart legend appears in the bottom‑right corner with the company‑specified Calibri 10 style. | Automate generation of sales dashboards where legends must be positioned consistently for readability across dozens of workbooks. | Create reusable chart templates for financial models that enforce legend placement and typography without manual editing.
+// AI Prompts: Generate C# code with Aspose.Cells that moves a chart legend to the bottom‑right corner and sets the font to Calibri 10. | Show how to format an existing Aspose.Cells chart legend's position and font in a .NET workbook. | Explain step‑by‑step how to use LegendPositionType.Corner and Font properties to style a chart legend in Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds a column chart, moves the legend to the bottom‑right corner, disables overlay, and sets the legend font to Calibri size 10 before saving the file.
+// C# example that creates a workbook, adds a column chart, shows the legend, moves it to the bottom‑right corner using LegendPositionType.Corner, and sets the legend font to Calibri size 10 before saving the file.
 class ChartLegendExample
 {
     static void Main()
@@ -30,26 +30,24 @@ class ChartLegendExample
         sheet.Cells["B4"].PutValue(30);
 
         // Add a column chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 15);
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
         Chart chart = sheet.Charts[chartIndex];
 
         // Set the data range for the chart
-        chart.SetChartDataRange("A1:B4", true);
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
 
-        // Access the legend and configure its position and font
-        Legend legend = chart.Legend;
+        // Ensure the legend is visible
+        chart.ShowLegend = true;
 
-        // Position the legend at the corner (bottom‑right) of the plot area
-        legend.Position = LegendPositionType.Corner;
+        // Position the legend at the bottom‑right corner of the plot area
+        chart.Legend.Position = LegendPositionType.Corner;
 
-        // Optionally ensure the legend does not overlap the chart area
-        legend.IsOverLay = false;
+        // Set legend font to Calibri, size 10
+        chart.Legend.Font.Name = "Calibri";
+        chart.Legend.Font.Size = 10;
 
-        // Set the legend font to Calibri, size 10
-        legend.Font.Name = "Calibri";
-        legend.Font.Size = 10;
-
-        // Save the workbook to an XLSX file
-        workbook.Save("ChartWithBottomRightLegend.xlsx");
+        // Save the workbook
+        workbook.Save("ChartWithLegendBottomRight.xlsx");
     }
 }

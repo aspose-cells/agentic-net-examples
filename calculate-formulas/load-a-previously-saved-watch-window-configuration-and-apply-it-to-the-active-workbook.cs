@@ -1,72 +1,63 @@
-// Title: Apply a Saved Watch Window to an Active Workbook with Aspose.Cells (.NET)
-// Description: The example checks for a watch‑configuration file and an active workbook, loads both using Aspose.Cells, clears existing CellWatches in each target sheet, copies the saved CellWatch entries from the source workbook, and saves the updated workbook with the new watch settings.
-// Keywords: Aspose.Cells watch window | CellWatch copy .NET | load saved watch configuration | apply watch settings Excel | C# Aspose.Cells example | transfer CellWatches between workbooks
-// Common Searches: How to copy a Watch Window from one Excel file to another using Aspose.Cells | Aspose.Cells .NET code to transfer CellWatch objects between workbooks | Load and apply a saved watch configuration in C# with Aspose.Cells | Copy watch list across multiple generated reports Aspose.Cells
-// Developer Intent: Load a previously saved Watch Window and apply its CellWatch list to the currently opened workbook.
-// Use Cases: Standardize watch lists across a suite of financial models before distribution. | Retain monitoring of key cells when opening a new version of a spreadsheet. | Automate the injection of a predefined watch configuration into batch‑generated reports.
-// AI Prompts: Generate C# code that uses Aspose.Cells to copy CellWatch entries from a source workbook to a target workbook, handling missing files and worksheet mismatches. | Create robust error handling for differing worksheet counts when applying a saved Watch Window with Aspose.Cells. | Explain step‑by‑step how CellWatches are cleared and re‑added in Aspose.Cells for .NET.
+// Title: Apply Saved Watch Window (CellWatch) to Another Workbook using Aspose.Cells C#
+// Description: Loads a source workbook that contains a saved CellWatch (Watch Window) configuration, ensures the target workbook has matching worksheets, copies each CellWatch entry (cell name, row, column) to the corresponding worksheet, and saves the target file with the applied watch settings. Ideal for automating monitoring of critical cells across Excel reports.
+// Keywords: Aspose.Cells | C# | CellWatch | Watch Window | copy watch configuration | apply saved watch settings | Excel monitoring automation | transfer CellWatch between workbooks | load watch window configuration | Aspose.Cells tutorial
+// Common Searches: How to copy CellWatch from one Excel file to another with Aspose.Cells | Apply saved Watch Window settings to a target workbook C# | Transfer watch window entries between workbooks using Aspose.Cells | Copy watch window cells programmatically Aspose.Cells .NET | Load and apply CellWatch configuration in C#
+// Developer Intent: Copy a saved CellWatch (Watch Window) configuration from a source workbook and apply it to a target workbook using Aspose.Cells for .NET.
+// Use Cases: Reuse a template's watch list in newly generated reports to monitor key cells automatically. | Synchronize watch windows across multiple workbooks in a batch reporting pipeline. | Consolidate watch configurations from several source files into a master workbook for centralized monitoring.
+// AI Prompts: Generate C# code with Aspose.Cells that copies all CellWatch objects from a source workbook to a target workbook, adding missing worksheets as needed. | Explain best practices for transferring Watch Window entries when source and target workbooks have different worksheet counts. | Create a reusable method that accepts source and target file paths, copies CellWatch settings, and returns the updated target workbook.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsWatchWindowDemo
+// Loads a source workbook that contains a saved CellWatch (Watch Window) configuration, ensures the target workbook has matching worksheets, copies each CellWatch entry (cell name, row, column) to the corresponding worksheet, and saves the target file with the applied watch settings. Ideal for automating monitoring of critical cells across Excel reports.
+class ApplyWatchWindow
 {
-    // The example checks for a watch‑configuration file and an active workbook, loads both using Aspose.Cells, clears existing CellWatches in each target sheet, copies the saved CellWatch entries from the source workbook, and saves the updated workbook with the new watch settings.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths for source (contains saved watch configuration) and target workbooks
+        string sourcePath = "SourceWithWatch.xlsx";
+        string targetPath = "TargetWorkbook.xlsx";
+
+        try
         {
-            try
+            // Load source workbook if it exists; otherwise create an empty workbook
+            Workbook sourceWb = File.Exists(sourcePath) ? new Workbook(sourcePath) : new Workbook();
+
+            // Load target workbook if it exists; otherwise create a new workbook
+            Workbook targetWb = File.Exists(targetPath) ? new Workbook(targetPath) : new Workbook();
+
+            // Ensure the target workbook has at least the same number of worksheets as the source
+            while (targetWb.Worksheets.Count < sourceWb.Worksheets.Count)
             {
-                const string watchConfigPath = "WatchConfig.xlsx";
-                const string activeWorkbookPath = "ActiveWorkbook.xlsx";
-                const string outputPath = "ActiveWorkbook_WithWatch.xlsx";
-
-                // Verify that the required input files exist
-                if (!File.Exists(watchConfigPath))
-                {
-                    Console.WriteLine($"Error: File '{watchConfigPath}' not found.");
-                    return;
-                }
-
-                if (!File.Exists(activeWorkbookPath))
-                {
-                    Console.WriteLine($"Error: File '{activeWorkbookPath}' not found.");
-                    return;
-                }
-
-                // Load the workbook that contains the previously saved Watch Window configuration
-                Workbook watchConfigWorkbook = new Workbook(watchConfigPath);
-
-                // Load the active workbook to which the watch configuration will be applied
-                Workbook activeWorkbook = new Workbook(activeWorkbookPath);
-
-                // Iterate through each worksheet (assuming both workbooks have the same sheet order)
-                for (int i = 0; i < watchConfigWorkbook.Worksheets.Count; i++)
-                {
-                    Worksheet sourceSheet = watchConfigWorkbook.Worksheets[i];
-                    Worksheet targetSheet = activeWorkbook.Worksheets[i];
-
-                    // Clear any existing watches in the target sheet
-                    targetSheet.CellWatches.Clear();
-
-                    // Copy each CellWatch from the source sheet to the target sheet
-                    foreach (CellWatch sourceWatch in sourceSheet.CellWatches)
-                    {
-                        // Add a new watch in the target sheet using the same cell name
-                        targetSheet.CellWatches.Add(sourceWatch.CellName);
-                    }
-                }
-
-                // Save the active workbook with the applied Watch Window configuration
-                activeWorkbook.Save(outputPath);
-                Console.WriteLine($"Watch configuration applied and saved to '{outputPath}'.");
+                targetWb.Worksheets.Add();
             }
-            catch (Exception ex)
+
+            // Copy CellWatch settings from each source worksheet to the corresponding target worksheet
+            for (int i = 0; i < sourceWb.Worksheets.Count; i++)
             {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                Worksheet srcSheet = sourceWb.Worksheets[i];
+                Worksheet tgtSheet = targetWb.Worksheets[i];
+
+                foreach (CellWatch srcWatch in srcSheet.CellWatches)
+                {
+                    // Add the same cell name to the target sheet's watch collection
+                    int watchIndex = tgtSheet.CellWatches.Add(srcWatch.CellName);
+
+                    // Copy additional properties (row, column, name) to the new watch
+                    CellWatch tgtWatch = tgtSheet.CellWatches[watchIndex];
+                    tgtWatch.Row = srcWatch.Row;
+                    tgtWatch.Column = srcWatch.Column;
+                    tgtWatch.CellName = srcWatch.CellName;
+                }
             }
+
+            // Save the target workbook with the applied Watch Window configuration
+            targetWb.Save("TargetWorkbook_WithWatch.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

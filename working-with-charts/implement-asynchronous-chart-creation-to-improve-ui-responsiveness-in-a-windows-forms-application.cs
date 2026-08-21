@@ -1,77 +1,95 @@
-// Title: Asynchronously generate an Aspose.Cells chart and export it as a PNG image in a WinForms application
-// Description: Demonstrates how to create a workbook, add a column chart, and export the chart as a PNG file using Aspose.Cells while running the operation on a background thread to keep the Windows Forms UI responsive.
-// Keywords: Aspose.Cells async chart | C# asynchronous chart image | WinForms non‑blocking chart generation | export Excel chart to PNG | background thread Aspose.Cells | Task.Run chart creation | UI responsive Excel chart | C# async file I/O Aspose.Cells
-// Common Searches: async Aspose.Cells chart WinForms | how to create Excel chart without freezing UI | Aspose.Cells generate chart image in background | C# export chart to PNG asynchronously | Windows Forms chart generation Aspose.Cells example
-// Developer Intent: Create an Excel chart and its PNG image on a background thread so the WinForms UI remains responsive.
-// Use Cases: Run chart creation and image export inside Task.Run, then await the task from a button click. | Update a PictureBox with the generated PNG after the async operation completes, using Invoke or SynchronizationContext. | Show a progress bar while the chart is being rendered and saved to the user's desktop in a non‑blocking way. | Integrate the async chart routine into a larger data‑processing pipeline that must not block the UI thread.
-// AI Prompts: Write an async version of SaveChartImage that returns Task and can be awaited from a WinForms button click. | Show code that calls the async chart method inside Task.Run and marshals the resulting image path back to the UI thread to display in a PictureBox. | Provide a sample that uses IProgress<T> to report chart‑generation progress while exporting the chart image with Aspose.Cells.
+// Title: Async Excel Column Chart Generation with Aspose.Cells in WinForms (C#)
+// Description: Creates a workbook, fills sample data, adds a column chart, renders the chart to PNG, and saves the file—all executed on a background thread with Task.Run and async I/O to keep the WinForms UI responsive.
+// Keywords: Aspose.Cells | async chart creation | C# WinForms | Task.Run | non‑blocking UI | Excel chart image | background thread | .NET | chart generation | workbook creation
+// Common Searches: Aspose.Cells generate chart without freezing UI | async Excel chart creation C# WinForms | Task.Run Aspose.Cells chart example | save Excel chart as PNG asynchronously | non‑blocking workbook generation Aspose.Cells
+// Developer Intent: Build an Excel workbook with a column chart and export the chart image using asynchronous code so the UI remains responsive.
+// Use Cases: Generate large data‑driven charts on a background thread while showing a progress indicator in a WinForms form. | Create a preview PNG of a chart during workbook construction, then deliver both the image and the .xlsx file to the user. | Expose an API that assembles a chart‑filled workbook asynchronously, freeing the request thread for other operations.
+// AI Prompts: Write an async method that builds a pie chart with Aspose.Cells, saves it as PNG, and returns the workbook bytes. | Show how to report progress from a Task.Run chart creation to a WinForms ProgressBar using IProgress. | Provide robust error handling for asynchronous chart generation with Aspose.Cells, including logging and user‑friendly messages.
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsAsyncChartDemo
 {
-    // Demonstrates how to create a workbook, add a column chart, and export the chart as a PNG file using Aspose.Cells while running the operation on a background thread to keep the Windows Forms UI responsive.
+    // Creates a workbook, fills sample data, adds a column chart, renders the chart to PNG, and saves the file—all executed on a background thread with Task.Run and async I/O to keep the WinForms UI responsive.
     class Program
     {
-        static void Main()
+        // Entry point with async support
+        static async Task Main(string[] args)
         {
             try
             {
-                // Generate chart and save its image to the desktop
-                SaveChartImage();
+                Console.WriteLine("Generating chart asynchronously...");
 
-                Console.WriteLine("Chart image and workbook have been saved to the desktop.");
+                // Run chart creation on a background thread
+                var workbookBytes = await Task.Run(() => CreateChart());
+
+                // Save the workbook
+                string workbookPath = "AsyncChartWorkbook.xlsx";
+                await File.WriteAllBytesAsync(workbookPath, workbookBytes);
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(workbookPath)}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
 
-        private static void SaveChartImage()
+        // Creates a workbook with a chart, saves the chart image, and returns the workbook bytes
+        private static byte[] CreateChart()
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                var workbook = new Workbook();
+                var sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(30);
+                // Populate sample data
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["A4"].PutValue("C");
 
-            // Add a column chart to the worksheet (rule: ChartCollection.Add)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["B4"].PutValue(30);
 
-            // Set the data range for the chart
-            chart.SetChartDataRange("A1:B4", true);
+                // Add a column chart
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                var chart = sheet.Charts[chartIndex];
 
-            // Optional chart customizations
-            chart.Title.Text = "Sample Column Chart";
-            chart.ShowLegend = true;
-            chart.SizeWithWindow = true;
+                // Set data range for the chart
+                chart.SetChartDataRange("A1:B4", true);
 
-            // Ensure the chart layout is calculated before rendering
-            chart.Calculate();
+                // Configure chart appearance
+                chart.Title.Text = "Async Generated Chart";
+                chart.ShowLegend = true;
+                chart.SizeWithWindow = true;
 
-            // Determine desktop paths
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string imagePath = Path.Combine(desktopPath, "AsyncChartDemo.png");
-            string workbookPath = Path.Combine(desktopPath, "AsyncChartDemo.xlsx");
+                // Ensure layout is calculated before rendering
+                chart.Calculate();
 
-            // Save the chart as an image file
-            chart.ToImage(imagePath);
+                // Save chart image to file
+                string imagePath = "AsyncChart.png";
+                chart.ToImage(imagePath);
+                Console.WriteLine($"Chart image saved to: {Path.GetFullPath(imagePath)}");
 
-            // Save the workbook to a file (lifecycle rule: save)
-            workbook.Save(workbookPath, SaveFormat.Xlsx);
+                // Save workbook to a memory stream and return bytes
+                using (var ms = new MemoryStream())
+                {
+                    workbook.Save(ms, SaveFormat.Xlsx);
+                    return ms.ToArray();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Propagate exception to caller
+                throw new InvalidOperationException("Failed to create chart and workbook.", ex);
+            }
         }
     }
 }

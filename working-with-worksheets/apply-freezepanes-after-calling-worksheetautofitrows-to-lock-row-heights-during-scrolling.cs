@@ -1,54 +1,43 @@
-// Title: Freeze Top Row After AutoFitRows to Preserve Height – Aspose.Cells C# Example
-// Description: A concise C# sample that builds a workbook, inserts wrapped text, auto‑fits every row, then freezes the top row so its height remains unchanged while scrolling, finally saving the result as an XLSX file.
-// Keywords: Aspose.Cells | C# | FreezePanes | AutoFitRows | preserve row height | scrolling | wrap text | Excel export | worksheet freeze top row | row height lock
-// Common Searches: Aspose.Cells freeze top row after autofitrows | keep row height fixed while scrolling Excel C# | how to apply FreezePanes after AutoFitRows in .NET | lock header row height with Aspose.Cells | C# example for AutoFitRows then FreezePanes
-// Developer Intent: Apply FreezePanes after AutoFitRows so the first row’s height stays constant during scrolling.
-// Use Cases: Financial reports where the header row must stay visible and retain its auto‑fitted height. | Invoice sheets with wrapped description cells that are auto‑sized, while the top row remains frozen for quick reference. | Large data exports where readability is improved by freezing the first row after adjusting row heights.
-// AI Prompts: Generate C# code using Aspose.Cells that wraps text, auto‑fits rows, then freezes the top row to keep its height static while scrolling. | Show an Aspose.Cells example that calls Worksheet.AutoFitRows before Worksheet.FreezePanes and saves the workbook to a custom path. | Explain why the FreezePanes method should be invoked after AutoFitRows to maintain row height in an Excel file created with Aspose.Cells.
+// Title: Freeze Panes After AutoFitRows in Aspose.Cells for .NET – Keep Row Heights Fixed While Scrolling
+// Description: Shows how to auto‑fit rows, enable text wrapping, and then call Worksheet.FreezePanes in C# so the first two rows retain their height when the sheet is scrolled.
+// Keywords: Aspose.Cells | C# | FreezePanes | AutoFitRows | row height | scrolling | worksheet | Excel export | wrap text | freeze top rows | lock row height
+// Common Searches: Aspose.Cells freeze rows after autofit | C# FreezePanes after AutoFitRows | keep header row height fixed Aspose.Cells | how to lock row height when scrolling Excel using Aspose | freeze top rows after auto‑sizing rows .NET
+// Developer Intent: Apply Worksheet.FreezePanes after Worksheet.AutoFitRows to lock the height of the first two rows while scrolling.
+// Use Cases: Display header rows with correct height in reports that use wrapped text. | Generate Excel dashboards where auto‑sized rows stay fixed after freezing for easy navigation. | Create printable spreadsheets that preserve row dimensions when the user scrolls through data.
+// AI Prompts: Provide C# code that auto‑fits rows and then freezes the first two rows using Aspose.Cells. | Explain why FreezePanes should be called after AutoFitRows to maintain row heights in an Excel file. | Show an example of freezing panes on a worksheet after wrapping text and adjusting row heights with Aspose.Cells for .NET.
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace FreezePanesAfterAutoFitRowsDemo
+// Shows how to auto‑fit rows, enable text wrapping, and then call Worksheet.FreezePanes in C# so the first two rows retain their height when the sheet is scrolled.
+class FreezePanesAfterAutoFitRows
 {
-    // A concise C# sample that builds a workbook, inserts wrapped text, auto‑fits every row, then freezes the top row so its height remains unchanged while scrolling, finally saving the result as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate some sample data that will affect row heights
-            sheet.Cells["A1"].PutValue("Short text");
-            sheet.Cells["A2"].PutValue("This is a longer piece of text that should cause the row height to increase when wrapped.");
-            sheet.Cells["A3"].PutValue("Another line with\nmultiple line breaks\nto demonstrate auto‑fit.");
+        // Add sample data that will affect row heights
+        worksheet.Cells["A1"].PutValue("Short text");
+        worksheet.Cells["A2"].PutValue("This is a longer piece of text that will cause the row height to increase when wrapped.");
+        
+        // Enable text wrapping for the longer text
+        Style wrapStyle = worksheet.Cells["A2"].GetStyle();
+        wrapStyle.IsTextWrapped = true;
+        worksheet.Cells["A2"].SetStyle(wrapStyle);
 
-            // Enable text wrapping for the cells to allow row height changes
-            Style wrapStyle = sheet.Cells["A2"].GetStyle();
-            wrapStyle.IsTextWrapped = true;
-            sheet.Cells["A2"].SetStyle(wrapStyle);
-            sheet.Cells["A3"].SetStyle(wrapStyle);
+        // Auto-fit all rows to adjust heights based on content
+        worksheet.AutoFitRows();
 
-            // Auto‑fit all rows so that their heights match the content
-            sheet.AutoFitRows();
+        // Freeze panes after auto-fitting rows
+        // Freeze at row index 2 (third row) and column index 0 (first column)
+        // Freeze the first two rows (2 rows) and no columns (0 columns)
+        worksheet.FreezePanes(2, 0, 2, 0);
 
-            // Freeze the first row (row index 1) to lock its height during scrolling
-            // Parameters: row index, column index, number of frozen rows, number of frozen columns
-            sheet.FreezePanes(1, 0, 1, 0);
-
-            // Save the workbook to the desktop (adjust the path as needed)
-            string outputPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                "FreezePanesAfterAutoFitRows.xlsx");
-
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Workbook saved to: {outputPath}");
-        }
+        // Save the workbook
+        workbook.Save("FreezeAfterAutoFitRows.xlsx");
     }
 }

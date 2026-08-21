@@ -1,30 +1,28 @@
-// Title: C# – Apply MonochromaticPalette4 to Every Chart Series in an Excel Workbook with Aspose.Cells
-// Description: Load an existing XLSX file using Aspose.Cells for .NET, loop through all worksheets and charts, and use SeriesCollection.ChangeColors with ChartColorPaletteType.MonochromaticPalette4 to recolor every chart series before saving the workbook.
-// Keywords: Aspose.Cells | C# Excel chart colors | SeriesCollection.ChangeColors | ChartColorPaletteType | MonochromaticPalette4 | batch update chart palette | .NET Excel chart styling | apply color palette to charts | Excel workbook chart formatting
-// Common Searches: How to set MonochromaticPalette4 for all chart series in Excel using Aspose.Cells | C# code to change chart colors to a predefined palette in an XLSX file | Aspose.Cells example for iterating charts and applying a color scheme | Apply a single color palette to every chart in a workbook programmatically | SeriesCollection.ChangeColors usage in Aspose.Cells .NET
-// Developer Intent: Recolor every chart series in an existing XLSX workbook to the MonochromaticPalette4 palette and save the updated file.
-// Use Cases: Ensure consistent chart appearance across financial reports before distribution. | Prepare presentation‑ready workbooks by applying a uniform monochrome style to all charts. | Automate corporate branding rules by enforcing a specific chart color palette in generated Excel files.
-// AI Prompts: Write C# code that opens an XLSX workbook with Aspose.Cells, applies ChartColorPaletteType.MonochromaticPalette4 to all chart series, and saves the file. | Explain the SeriesCollection.ChangeColors method and list all ChartColorPaletteType options available in Aspose.Cells. | Add error handling to the chart‑coloring example for workbooks that contain no charts or have protected sheets.
+// Title: C# – Apply MonochromaticPalette4 to All Chart Series in an XLSX Workbook with Aspose.Cells
+// Description: Loads an XLSX file, iterates through each worksheet and chart, and uses SeriesCollection.ChangeColors to assign the predefined MonochromaticPalette4 palette to every series before saving the modified workbook.
+// Keywords: Aspose.Cells C# chart colors | MonochromaticPalette4 | SeriesCollection.ChangeColors | Excel chart palette programmatically | apply color palette to all charts | chart styling Aspose.Cells | set chart series colors .NET | bulk chart color update
+// Common Searches: Aspose.Cells set chart palette C# | change all Excel chart colors to monochrome | apply MonochromaticPalette4 to workbook charts | SeriesCollection.ChangeColors example | how to update chart series colors in Aspose.Cells
+// Developer Intent: Assign the MonochromaticPalette4 color scheme to every chart series in a workbook using Aspose.Cells for .NET.
+// Use Cases: Create a uniform, print‑friendly look for charts in financial dashboards. | Enforce corporate branding by applying a single palette across all generated reports. | Modernize legacy Excel files with a consistent monochrome style without manual editing.
+// AI Prompts: Write C# code that opens an XLSX file with Aspose.Cells, applies ChartColorPaletteType.MonochromaticPalette4 to all chart series, and saves the result. | Explain the behavior and limitations of SeriesCollection.ChangeColors when used with different chart types. | Add comprehensive error handling for workbooks that contain no worksheets, no charts, or unsupported chart formats while applying a color palette. | Suggest performance optimizations for processing very large workbooks with hundreds of charts.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Load an existing XLSX file using Aspose.Cells for .NET, loop through all worksheets and charts, and use SeriesCollection.ChangeColors with ChartColorPaletteType.MonochromaticPalette4 to recolor every chart series before saving the workbook.
+// Loads an XLSX file, iterates through each worksheet and chart, and uses SeriesCollection.ChangeColors to assign the predefined MonochromaticPalette4 palette to every series before saving the modified workbook.
 class Program
 {
     static void Main()
     {
-        // Path to the existing workbook
-        string inputPath = "input.xlsx";
+        // Load the existing XLSX workbook
+        string inputFile = "input.xlsx";
+        Workbook workbook = new Workbook(inputFile);
 
-        // Load the workbook (lifecycle rule: load)
-        Workbook workbook = new Workbook(inputPath);
-
-        // Iterate through all worksheets
+        // Iterate through each worksheet in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Iterate through all charts on the worksheet
+            // Iterate through each chart on the worksheet
             foreach (Chart chart in sheet.Charts)
             {
                 // Get the series collection of the chart
@@ -35,10 +33,8 @@ class Program
             }
         }
 
-        // Save the modified workbook (lifecycle rule: save)
-        string outputPath = "output.xlsx";
-        workbook.Save(outputPath, SaveFormat.Xlsx);
-
-        Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        // Save the modified workbook
+        string outputFile = "output.xlsx";
+        workbook.Save(outputFile);
     }
 }

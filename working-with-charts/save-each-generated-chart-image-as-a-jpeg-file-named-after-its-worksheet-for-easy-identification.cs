@@ -1,66 +1,55 @@
+// Title: Save worksheet charts as JPEG files named after their sheets using Aspose.Cells for .NET
+// Description: A C# sample that builds a workbook, inserts sample data and a column chart on each sheet, then loops through the sheets to export every chart as a JPEG image whose filename mirrors the sheet name. The workbook can be saved afterwards.
+// Keywords: Aspose.Cells C# chart export | Chart.ToImage JPEG | save chart per worksheet | export workbook charts .NET | image naming by sheet | column chart image Aspose | automate chart extraction | Aspose.Cells image generation
+// Common Searches: Aspose.Cells export chart to JPEG per sheet | C# save each worksheet chart as image | Chart.ToImage example Aspose.Cells | how to name chart images after worksheet | batch export charts from Excel using Aspose
+// Developer Intent: Create JPEG images for all charts in a workbook, using each worksheet's name as the image file name.
+// Use Cases: Produce individual chart pictures for embedding in web reports or email summaries. | Generate thumbnail previews of sheet charts for a dashboard overview. | Automate extraction of chart graphics for documentation, presentations, or archival purposes.
+// AI Prompts: Write C# code that iterates through every worksheet in an Aspose.Cells workbook and saves each chart as a PNG file named after the worksheet, placing the images in a designated folder. | Provide an example that exports charts as high‑resolution JPEGs, includes error handling for sheets without charts, and returns a list of the generated file paths. | Show how to modify the sample to add the worksheet index to the JPEG filename and set a custom image quality parameter.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-class SaveChartsAsJpeg
+// A C# sample that builds a workbook, inserts sample data and a column chart on each sheet, then loops through the sheets to export every chart as a JPEG image whose filename mirrors the sheet name. The workbook can be saved afterwards.
+class SaveChartImages
 {
     static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // ----- First worksheet with a column chart -----
-        Worksheet ws1 = workbook.Worksheets[0];
-        ws1.Cells["A1"].PutValue("Category");
-        ws1.Cells["A2"].PutValue("Apple");
-        ws1.Cells["A3"].PutValue("Orange");
-        ws1.Cells["A4"].PutValue("Banana");
-        ws1.Cells["B1"].PutValue("Value");
-        ws1.Cells["B2"].PutValue(10);
-        ws1.Cells["B3"].PutValue(15);
-        ws1.Cells["B4"].PutValue(7);
-
-        int chartIdx1 = ws1.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart1 = ws1.Charts[chartIdx1];
-        chart1.NSeries.Add("B2:B4", true);
-        chart1.NSeries.CategoryData = "A2:A4";
-
-        // ----- Second worksheet with a pie chart (optional) -----
-        Worksheet ws2 = workbook.Worksheets.Add("Sheet2");
-        ws2.Cells["A1"].PutValue("Category");
-        ws2.Cells["A2"].PutValue("X");
-        ws2.Cells["A3"].PutValue("Y");
-        ws2.Cells["B1"].PutValue("Value");
-        ws2.Cells["B2"].PutValue(20);
-        ws2.Cells["B3"].PutValue(30);
-
-        int chartIdx2 = ws2.Charts.Add(ChartType.Pie, 5, 0, 20, 8);
-        Chart chart2 = ws2.Charts[chartIdx2];
-        chart2.NSeries.Add("B2:B3", true);
-        chart2.NSeries.CategoryData = "A2:A3";
-
-        // ----- Save each chart as a JPEG named after its worksheet -----
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Add sample data and a chart to each worksheet
+        for (int w = 0; w < workbook.Worksheets.Count; w++)
         {
-            for (int i = 0; i < sheet.Charts.Count; i++)
+            Worksheet ws = workbook.Worksheets[w];
+            ws.Name = $"Sheet{w + 1}";
+
+            ws.Cells["A1"].PutValue("Category");
+            ws.Cells["A2"].PutValue("Apple");
+            ws.Cells["A3"].PutValue("Orange");
+            ws.Cells["B1"].PutValue("Value");
+            ws.Cells["B2"].PutValue(10 + w * 5);
+            ws.Cells["B3"].PutValue(20 + w * 5);
+
+            int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 15, 8);
+            Chart chart = ws.Charts[chartIdx];
+            chart.NSeries.Add("B2:B3", true);
+            chart.NSeries.CategoryData = "A2:A3";
+        }
+
+        // Save each chart as a JPEG file named after its worksheet
+        foreach (Worksheet ws in workbook.Worksheets)
+        {
+            for (int i = 0; i < ws.Charts.Count; i++)
             {
-                Chart c = sheet.Charts[i];
-
-                // Build file name: WorksheetName.jpg (or WorksheetName_ChartN.jpg if multiple charts)
-                string fileName = sheet.Name;
-                if (sheet.Charts.Count > 1)
-                {
-                    fileName += $"_Chart{i + 1}";
-                }
-                fileName += ".jpg";
-
-                // Save chart image as JPEG
-                c.ToImage(fileName, ImageType.Jpeg);
+                Chart chart = ws.Charts[i];
+                string imageFile = $"{ws.Name}.jpg";
+                chart.ToImage(imageFile, ImageType.Jpeg);
             }
         }
 
-        // Optionally save the workbook itself
-        workbook.Save("ChartsWorkbook.xlsx");
+        // Save the workbook (optional)
+        workbook.Save("WorkbookWithCharts.xlsx");
     }
 }

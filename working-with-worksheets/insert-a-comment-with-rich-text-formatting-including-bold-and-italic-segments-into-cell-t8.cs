@@ -1,20 +1,19 @@
-// Title: Aspose.Cells for .NET – Insert a Rich‑Text Comment (Bold & Italic) into cell T8 (C#)
-// Description: Creates a new workbook, accesses the first worksheet, adds a comment to cell T8, applies HTML‑styled text with bold and italic segments via the HtmlNote property, makes the comment visible, and saves the file as an .xlsx document.
-// Keywords: Aspose.Cells C# comment HtmlNote | rich text Excel comment .NET | bold italic comment Aspose.Cells | add comment to cell T8 | Excel comment formatting C# | Aspose.Cells tutorial
-// Common Searches: Aspose.Cells add HTML formatted comment C# | How to set bold and italic text in an Excel comment using Aspose.Cells | Make Excel comment visible with Aspose.Cells .NET | Insert comment into specific cell T8 programmatically
-// Developer Intent: Add a comment to cell T8 that contains both bold and italic text using Aspose.Cells for .NET.
-// Use Cases: Annotate financial statements with emphasized notes. | Highlight assumptions in data‑model worksheets. | Automate generation of documentation comments during workbook creation.
-// AI Prompts: Generate C# code that adds a comment with mixed bold and italic formatting to cell T8 using Aspose.Cells. | Show how to use the HtmlNote property to style an Excel comment and keep it visible. | Explain the difference between HtmlNote and Note properties for comment text in Aspose.Cells.
+// Title: Insert bold and italic rich‑text comment into cell T8 using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, access the first worksheet, add a comment to cell T8, apply bold and italic formatting via the HtmlNote property, make the comment visible, and save the file as CommentRichTextDemo.xlsx with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# comment HTML | rich text comment Aspose.Cells | cell T8 comment bold italic | Aspose.Cells HtmlNote | make comment visible Aspose.Cells | save workbook with comment Aspose.Cells | Aspose.Cells for .NET comment formatting | Excel comment rich text C#
+// Common Searches: how to add a bold italic comment in Aspose.Cells | Aspose.Cells set HtmlNote for a cell comment | make Excel comment visible by default using Aspose.Cells | C# Aspose.Cells add formatted comment to specific cell | rich‑text comment example Aspose.Cells
+// Developer Intent: Add a comment to cell T8 that contains bold and italic text, ensure the comment is visible, and save the workbook.
+// Use Cases: Provide styled explanatory notes in financial models. | Highlight key cells for reviewers with bold/italic comments. | Embed in‑sheet documentation directly on important cells.
+// AI Prompts: Generate C# code with Aspose.Cells to insert a comment containing bold and italic HTML into cell T8 and save the workbook. | Show how to extend the comment formatting to include underline, font color, or custom fonts using Aspose.Cells. | Explain how to programmatically toggle the visibility of comments after a workbook has been created with Aspose.Cells.
 
-using System;
 using Aspose.Cells;
 
 namespace AsposeCellsCommentRichTextDemo
 {
-    // Creates a new workbook, accesses the first worksheet, adds a comment to cell T8, applies HTML‑styled text with bold and italic segments via the HtmlNote property, makes the comment visible, and saves the file as an .xlsx document.
-    class Program
+    // Demonstrates how to create a workbook, access the first worksheet, add a comment to cell T8, apply bold and italic formatting via the HtmlNote property, make the comment visible, and save the file as CommentRichTextDemo.xlsx with Aspose.Cells for .NET.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
@@ -22,14 +21,14 @@ namespace AsposeCellsCommentRichTextDemo
             // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a comment to cell T8 (row 7, column 19)
+            // Add a comment to cell T8
             int commentIndex = worksheet.Comments.Add("T8");
             Comment comment = worksheet.Comments[commentIndex];
 
-            // Set rich formatted text using HTML: bold and italic segments
-            comment.HtmlNote = "<b>Bold segment</b> and <i>Italic segment</i> in the comment.";
+            // Set the comment text with bold and italic formatting using HTML
+            comment.HtmlNote = "<b>Bold segment</b> and <i>Italic segment</i>";
 
-            // Make the comment visible (optional)
+            // Make the comment visible
             comment.IsVisible = true;
 
             // Save the workbook

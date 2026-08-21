@@ -1,51 +1,66 @@
-// Title: Change an Encrypted Excel Workbook Password Using Aspose.Cells and a Secure Key Vault (C#)
-// Description: Shows how to open a password‑protected .xlsx file by retrieving the old password from a key‑vault (e.g., Azure Key Vault or AWS Secrets Manager), replace it with a new password, and save the workbook with Aspose.Cells. The sample includes file‑existence validation and handling of Aspose.Cells exceptions.
-// Keywords: Aspose.Cells | C# Excel password change | encrypted workbook | load workbook with password | save workbook with new password | Azure Key Vault | AWS Secrets Manager | secure secret retrieval | Excel file protection | LoadOptions.Password | Workbook.Settings.Password
-// Common Searches: How to change password of an encrypted Excel file using Aspose.Cells C# | Aspose.Cells load encrypted workbook with old password | Save Excel workbook with new password Aspose.Cells | Retrieve Excel passwords from Azure Key Vault in .NET | Replace workbook password without recreating file Aspose.Cells
-// Developer Intent: Replace the existing password of an encrypted Excel workbook with a new one obtained from a secure key vault and save the updated file.
-// Use Cases: Fetch old and new passwords from Azure Key Vault, AWS Secrets Manager, or another secret store, then open the protected .xlsx with LoadOptions.Password. | Assign the new password to workbook.Settings.Password and save to a different file name to avoid overwriting the original. | Validate that the source file exists before loading and catch CellsException for incorrect passwords or corrupted workbooks. | Swap the placeholder GetSecret method with real SDK calls to keep credentials out of source code.
-// AI Prompts: Generate C# code that uses Aspose.Cells to open an encrypted Excel workbook with a password retrieved from Azure Key Vault, change the password, and save the file. | Provide an example of integrating AWS Secrets Manager with Aspose.Cells to replace an Excel workbook’s password in a .NET console application. | Explain how to handle CellsException when the supplied old password is invalid while changing the workbook password using Aspose.Cells.
+// Title: Change an Excel workbook password with Aspose.Cells using a secure key vault (C#)
+// Description: Loads an encrypted workbook with the old password fetched from a key vault, replaces the opening password via Workbook.Settings.Password, and saves the file with the new password. Includes robust Aspose.Cells and generic exception handling.
+// Keywords: Aspose.Cells change workbook password | C# load encrypted Excel | update Excel opening password | Azure Key Vault secret retrieval | Workbook.Settings.Password | secure Excel password rotation | exception handling Aspose.Cells
+// Common Searches: replace password of a protected Excel file using Aspose.Cells C# | load encrypted workbook and set new password programmatically | retrieve Excel passwords from Azure Key Vault in C# | change opening password of Aspose.Cells workbook
+// Developer Intent: Replace the current opening password of an encrypted Excel workbook with a new password obtained from a secure key vault and save the updated file.
+// Use Cases: Automate periodic password rotation for confidential spreadsheets stored in a document management system. | Re‑encrypt workbooks after CI/CD pipelines update encryption keys to maintain compliance. | Migrate legacy password‑protected Excel files to a centralized secret‑management solution.
+// AI Prompts: Write C# code that opens a password‑protected Excel file with Aspose.Cells, reads old and new passwords from Azure Key Vault, updates the workbook password, and saves the file. | Show best‑practice error handling for Aspose.Cells password updates, covering CellsException and generic exceptions. | Replace the placeholder GetSecret method with actual Azure Key Vault SDK calls for retrieving workbook passwords.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace Example
+namespace ChangeWorkbookPassword
 {
-    // Shows how to open a password‑protected .xlsx file by retrieving the old password from a key‑vault (e.g., Azure Key Vault or AWS Secrets Manager), replace it with a new password, and save the workbook with Aspose.Cells. The sample includes file‑existence validation and handling of Aspose.Cells exceptions.
-    class ChangeWorkbookPassword
+    // Loads an encrypted workbook with the old password fetched from a key vault, replaces the opening password via Workbook.Settings.Password, and saves the file with the new password. Includes robust Aspose.Cells and generic exception handling.
+    class Program
     {
+        // Placeholder for retrieving secrets from a secure key vault.
+        // Replace with actual key vault SDK calls as needed.
+        static string GetSecret(string secretName)
+        {
+            // For demonstration purposes only.
+            // In production, fetch the secret securely.
+            if (secretName == "OldWorkbookPassword")
+                return "oldPassword123";
+            if (secretName == "NewWorkbookPassword")
+                return "newSecurePassword456";
+
+            throw new ArgumentException($"Secret '{secretName}' not found.");
+        }
+
         static void Main()
         {
+            // Paths to the source (encrypted) and destination workbook files.
+            string sourceFilePath = "EncryptedWorkbook.xlsx";
+            string destinationFilePath = "WorkbookWithNewPassword.xlsx";
+
+            // Verify source file exists to avoid FileNotFoundException.
+            if (!File.Exists(sourceFilePath))
+            {
+                Console.WriteLine($"Source file not found: {sourceFilePath}");
+                return;
+            }
+
+            // Retrieve passwords from the secure key vault.
+            string oldPassword = GetSecret("OldWorkbookPassword");
+            string newPassword = GetSecret("NewWorkbookPassword");
+
             try
             {
-                // Retrieve passwords from a secure key vault (placeholder implementation)
-                string oldPassword = GetSecret("OldWorkbookPassword");
-                string newPassword = GetSecret("NewWorkbookPassword");
-
-                string inputPath = "encryptedWorkbook.xlsx";
-                string outputPath = "encryptedWorkbook_updated.xlsx";
-
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the encrypted workbook using the old password
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                // Load the encrypted workbook using the old password.
+                var loadOptions = new LoadOptions
                 {
                     Password = oldPassword
                 };
-                Workbook workbook = new Workbook(inputPath, loadOptions);
+                var workbook = new Workbook(sourceFilePath, loadOptions);
 
-                // Change the workbook password
+                // Change the workbook's opening password to the new one.
                 workbook.Settings.Password = newPassword;
 
-                // Save the workbook with the new password
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                // Save the workbook with the updated password.
+                workbook.Save(destinationFilePath);
+                Console.WriteLine($"Workbook saved successfully to {destinationFilePath}");
             }
             catch (CellsException ex)
             {
@@ -55,18 +70,6 @@ namespace Example
             {
                 Console.WriteLine($"Unexpected error: {ex.Message}");
             }
-        }
-
-        // Placeholder method simulating secure key vault retrieval
-        static string GetSecret(string secretName)
-        {
-            // Replace this with actual key vault integration (e.g., Azure Key Vault, AWS Secrets Manager)
-            return secretName switch
-            {
-                "OldWorkbookPassword" => "oldPass123",
-                "NewWorkbookPassword" => "newPass456",
-                _ => string.Empty,
-            };
         }
     }
 }

@@ -1,17 +1,17 @@
-// Title: Cut and paste a formula range while preserving references with Aspose.Cells for .NET (C#)
-// Description: Shows how to build a workbook, place values and formulas in A1:C2, cut that range, and insert it at A5 using Aspose.Cells' InsertCutCells with ShiftType.Down. Formula links are automatically updated and the file is saved as CutPastePreserveFormulas.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | cut range | paste range | preserve formulas | InsertCutCells | ShiftType.Down | move cells with formulas | range manipulation | Excel automation | cell shifting
-// Common Searches: Aspose.Cells cut range with formulas | move cells and keep formulas .NET | InsertCutCells C# example | ShiftType.Down usage Aspose.Cells | cut and paste cells preserving references | range copy paste Aspose.Cells | adjust formula links after moving cells
-// Developer Intent: Shift a block of cells that includes formulas to a new position without breaking dependent calculations.
-// Use Cases: Reorder a budgeting section by cutting a calculation block and inserting it lower in the sheet while all formulas stay correct. | Create space for new entries by moving a data table down, ensuring summary formulas continue to reference the right cells. | Automate report layout changes by relocating summary rows to a designated area without manually fixing formula references.
-// AI Prompts: Provide a C# example that cuts a range containing formulas and pastes it elsewhere using Aspose.Cells, keeping all references intact. | How does InsertCutCells with ShiftType.Down adjust formula links when moving a cell block in an Aspose.Cells workbook? | Show code to relocate cells A1:C2 to A5 in a .NET workbook while automatically updating any dependent formulas.
+// Title: Cut and paste a formula range with Aspose.Cells for .NET while preserving references
+// Description: Demonstrates how to cut a range that contains formulas (A1:B3) and insert it at a new location (C1) using Aspose.Cells' InsertCutCells with ShiftType.Down, ensuring all formula references are automatically updated before saving the workbook.
+// Keywords: Aspose.Cells cut range | move cells with formulas .NET | InsertCutCells example | preserve formula references | ShiftType.Down Aspose | C# Excel manipulation | cut and paste range Aspose.Cells
+// Common Searches: Aspose.Cells cut range with formulas | how to preserve formula references when moving cells in .NET | InsertCutCells ShiftType.Down usage | C# cut and paste Excel range Aspose | move calculated block without breaking formulas
+// Developer Intent: Relocate a block of cells that includes formulas, updating all references automatically.
+// Use Cases: Rearrange a calculated table from columns A‑B to C‑D at runtime without breaking dependent formulas. | Generate a dynamic report by cutting a pre‑formatted formula section and inserting it into a designated report area. | Programmatically shift worksheet layout downward while keeping all calculations intact.
+// AI Prompts: Write C# code that cuts range A1:B3 containing formulas and inserts it at C1 using Aspose.Cells, preserving formula references. | Explain how InsertCutCells with ShiftType.Down updates relative formulas when a range is moved in Aspose.Cells for .NET. | Provide a step‑by‑step example of cutting a formula range and inserting it into a new location while shifting existing cells down.
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsCutPasteDemo
 {
-    // Shows how to build a workbook, place values and formulas in A1:C2, cut that range, and insert it at A5 using Aspose.Cells' InsertCutCells with ShiftType.Down. Formula links are automatically updated and the file is saved as CutPastePreserveFormulas.xlsx.
+    // Demonstrates how to cut a range that contains formulas (A1:B3) and insert it at a new location (C1) using Aspose.Cells' InsertCutCells with ShiftType.Down, ensuring all formula references are automatically updated before saving the workbook.
     class Program
     {
         static void Main()
@@ -23,21 +23,27 @@ namespace AsposeCellsCutPasteDemo
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // Populate source range with values and formulas
-                cells["A1"].PutValue(10);                     // Simple value
-                cells["B1"].PutValue(20);                     // Simple value
-                cells["C1"].Formula = "=A1+B1";               // Formula referencing A1 and B1
-                cells["A2"].Formula = "=C1*2";                // Formula referencing the formula cell
+                // Fill the source range with values
+                cells["A1"].PutValue(10);
+                cells["A2"].PutValue(20);
+                cells["A3"].PutValue(30);
 
-                // Define the range to cut (A1:C2)
-                Aspose.Cells.Range cutRange = cells.CreateRange("A1:C2");
+                // Add formulas that reference the values in column A
+                cells["B1"].Formula = "=A1*2";
+                cells["B2"].Formula = "=A2*2";
+                cells["B3"].Formula = "=A3*2";
 
-                // Insert the cut range at a new location (starting at row 4, column 0 i.e., A5)
-                // ShiftType.Down will shift existing cells down to make space
-                cells.InsertCutCells(cutRange, 4, 0, ShiftType.Down);
+                // Define the range to cut (A1:B3)
+                Aspose.Cells.Range cutRange = cells.CreateRange("A1:B3");
 
-                // Save the workbook to verify the operation
-                workbook.Save("CutPastePreserveFormulas.xlsx");
+                // Insert the cut range at a new location (C1) shifting cells down.
+                // Row index = 0 (first row), Column index = 2 (column C)
+                cells.InsertCutCells(cutRange, 0, 2, ShiftType.Down);
+
+                // Save the workbook with the cut‑and‑pasted data
+                string outputPath = "CutPasteDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {

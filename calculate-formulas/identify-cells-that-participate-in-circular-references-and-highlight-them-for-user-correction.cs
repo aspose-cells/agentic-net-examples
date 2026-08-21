@@ -1,103 +1,108 @@
+// Title: Highlight Circular Reference Cells with Aspose.Cells C# Calculation Monitor
+// Description: Demonstrates how to create a custom CircularReferenceMonitor (derived from AbstractCalculationMonitor) that captures circular‑reference cells during formula evaluation, logs each address, applies a yellow background style, stops further recursive calculation, and saves the workbook with the highlighted cells.
+// Keywords: Aspose.Cells circular reference | C# calculation monitor | highlight circular reference cells | AbstractCalculationMonitor example | Excel circular reference handling | Aspose.Cells API | formula calculation monitor
+// Common Searches: how to detect circular references in Aspose.Cells C# | highlight cells involved in circular reference Aspose | custom calculation monitor for circular references .NET | stop Excel formula recursion with Aspose.Cells | Aspose.Cells example for circular reference detection
+// Developer Intent: Find a way to automatically locate cells that cause circular references during formula calculation and visually mark them for correction.
+// Use Cases: Automatically flag and color‑code circular‑reference cells in generated workbooks before distribution. | Provide end‑users with immediate visual feedback on problematic formulas by highlighting offending cells. | Prevent infinite calculation loops by intercepting circular references and halting further evaluation.
+// AI Prompts: Create C# code that uses Aspose.Cells to log circular reference details and apply a red border instead of a yellow fill. | Modify the CircularReferenceMonitor to collect cell addresses into a List<string> for a summary report after calculation. | Explain step‑by‑step how to attach a custom calculation monitor to CalculationOptions for handling circular references in Aspose.Cells.
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using Aspose.Cells;
 
 namespace CircularReferenceHighlighter
 {
-    // Custom monitor to capture circular reference cells
+    // Custom monitor to detect circular references and highlight the involved cells
+    // Demonstrates how to create a custom CircularReferenceMonitor (derived from AbstractCalculationMonitor) that captures circular‑reference cells during formula evaluation, logs each address, applies a yellow background style, stops further recursive calculation, and saves the workbook with the highlighted cells.
     public class CircularReferenceMonitor : AbstractCalculationMonitor
     {
-        private readonly Worksheet _worksheet;
-        private readonly List<Cell> _circularCells = new List<Cell>();
+        private readonly Workbook _workbook;
 
-        public CircularReferenceMonitor(Worksheet worksheet)
+        public CircularReferenceMonitor(Workbook workbook)
         {
-            _worksheet = worksheet;
+            _workbook = workbook;
         }
 
-        // Called when a circular reference is detected
+        // Called when the calculation engine detects a circular reference
         public override bool OnCircular(IEnumerator circularCellsData)
         {
-            // Collect all cells involved in the circular reference
-            while (circularCellsData.MoveNext())
+            try
             {
-                // The enumerated object is a CalculationCell; its Cell property gives the actual Cell
-                // In many examples the object can be cast directly to Cell, so we handle both cases
-                var obj = circularCellsData.Current;
-                Cell cell = null;
+                Console.WriteLine("Circular reference detected in the following cells:");
 
-                // Try to get Cell from CalculationCell if possible
-                var type = obj.GetType();
-                var cellProp = type.GetProperty("Cell");
-                if (cellProp != null)
+                while (circularCellsData.MoveNext())
                 {
-                    cell = cellProp.GetValue(obj) as Cell;
-                }
-                else
-                {
-                    cell = obj as Cell;
-                }
+                    // Use dynamic to access properties without compile‑time binding
+                    dynamic calcCell = circularCellsData.Current;
+                    if (calcCell == null) continue;
 
-                if (cell != null)
-                {
-                    _circularCells.Add(cell);
+                    // Retrieve sheet name, row and column indexes
+                    string sheetName = calcCell.SheetName;
+                    int row = calcCell.Row;
+                    int column = calcCell.Column;
+
+                    // Get the worksheet and cell
+                    Worksheet ws = _workbook.Worksheets[sheetName];
+                    Cell cell = ws.Cells[row, column];
+
+                    // Output cell address
+                    Console.WriteLine($"- {cell.Name}");
+
+                    // Highlight the cell (yellow background)
+                    Style style = cell.GetStyle();
+                    style.ForegroundColor = Color.Yellow;
+                    style.Pattern = BackgroundType.Solid;
+                    cell.SetStyle(style);
                 }
             }
-
-            // Return true to let the engine continue calculation (or false to stop)
-            return true;
-        }
-
-        // After calculation finishes, highlight the collected cells
-        public void HighlightCircularCells()
-        {
-            foreach (var cell in _circularCells)
+            catch (Exception ex)
             {
-                // Create a style with a yellow background
-                Style style = cell.GetStyle();
-                style.ForegroundColor = Color.Yellow;
-                style.Pattern = BackgroundType.Solid;
-                cell.SetStyle(style);
+                Console.WriteLine($"Error while processing circular reference: {ex.Message}");
             }
+
+            // Return false to stop further recursive calculation for these cells
+            return false;
         }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Set up a circular reference scenario
-            sheet.Cells["A1"].Formula = "=B1+1";
-            sheet.Cells["B1"].Formula = "=A1+1";
-
-            // Optional: add more data to demonstrate normal cells
-            sheet.Cells["C1"].PutValue(10);
-            sheet.Cells["D1"].Formula = "=C1*2";
-
-            // Instantiate the custom monitor, passing the worksheet for later styling
-            var monitor = new CircularReferenceMonitor(sheet);
-
-            // Configure calculation options to use the monitor
-            CalculationOptions options = new CalculationOptions
+            try
             {
-                CalculationMonitor = monitor,
-                Recursive = true // default, but explicit for clarity
-            };
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-            // Perform formula calculation; circular references will be captured by the monitor
-            workbook.CalculateFormula(options);
+                // Set up a circular reference scenario
+                cells["A1"].Formula = "=B1";
+                cells["B1"].Formula = "=A1";
 
-            // Highlight cells that participated in circular references
-            monitor.HighlightCircularCells();
+                // Optional: add more data to demonstrate normal calculation
+                cells["C1"].PutValue(10);
+                cells["D1"].Formula = "=C1*2";
 
-            // Save the workbook (the highlighted cells will be visible in the saved file)
-            workbook.Save("CircularReferenceHighlighted.xlsx");
+                // Create calculation options and attach the custom monitor
+                CalculationOptions options = new CalculationOptions
+                {
+                    CalculationMonitor = new CircularReferenceMonitor(workbook)
+                };
+
+                // Perform calculation (circular reference will be intercepted by the monitor)
+                workbook.CalculateFormula(options);
+
+                // Save the workbook (highlighted cells will be visible)
+                string outputPath = "CircularReferenceHighlighted.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,67 +1,86 @@
+// Title: Aspose.Cells for .NET: Line chart with moving‑average series using a formula column
+// Description: Creates a workbook, fills columns A (categories) and B (values), inserts an AVERAGE formula in column C to compute a 3‑point moving average, forces formula calculation, adds a line chart, binds original and moving‑average series, sets the X‑axis to column A, applies basic formatting, and saves as MovingAverageChart.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | line chart | moving average | formula column | Excel AVERAGE function | chart series from formula | dynamic chart data | calculate rolling average
+// Common Searches: Aspose.Cells line chart with moving average | use formula column as chart series Aspose.Cells .NET | calculate rolling average in Excel with Aspose.Cells | add moving average series to Excel chart C# | chart series from calculated cells Aspose.Cells
+// Developer Intent: Generate a line chart that displays both raw values and a calculated moving‑average series derived from an Excel formula column.
+// Use Cases: Sales or revenue trend reports where a moving average smooths monthly volatility. | Financial dashboards that overlay rolling averages on key performance indicators. | Production or inventory charts that automatically update the average line as new data is added.
+// AI Prompts: Show how to make the moving‑average period configurable at runtime and refresh the chart. | Provide code to style the moving‑average series (e.g., dashed line, custom color) in the generated chart. | Explain how to replace hard‑coded ranges with named ranges for both original and moving‑average series.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class MovingAverageChartDemo
+namespace AsposeCellsMovingAverageChart
 {
-    static void Main()
+    // Creates a workbook, fills columns A (categories) and B (values), inserts an AVERAGE formula in column C to compute a 3‑point moving average, forces formula calculation, adds a line chart, binds original and moving‑average series, sets the X‑axis to column A, applies basic formatting, and saves as MovingAverageChart.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            Cells cells = ws.Cells;
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
 
-            // Populate sample data in column A (1‑12)
-            for (int i = 0; i < 12; i++)
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate sample data
+            // Column A: Category (e.g., Month)
+            // Column B: Original values
+            string[] categories = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct" };
+            double[] values = { 120, 150, 130, 170, 160, 180, 200, 190, 210, 230 };
+            int rowCount = categories.Length;
+
+            for (int i = 0; i < rowCount; i++)
             {
-                cells[i, 0].PutValue(i + 1); // A1..A12 = 1..12
+                cells[i + 1, 0].PutValue(categories[i]); // A column (index 0)
+                cells[i + 1, 1].PutValue(values[i]);    // B column (index 1)
             }
 
-            int period = 3; // Moving‑average period
+            // Define moving average period
+            int period = 3;
 
-            // Fill column B with moving‑average formulas
-            for (int row = 0; row < 12; row++)
+            // Column C will hold the moving average calculated by a formula
+            // For rows where there are not enough previous points, leave the cell empty
+            for (int i = 0; i < rowCount; i++)
             {
-                if (row + 1 < period)
+                int currentRow = i + 1; // Excel rows are 1‑based
+                if (i + 1 >= period)
                 {
-                    // For the first rows where a full window is not available, copy the original value
-                    cells[row, 1].PutValue(cells[row, 0].Value);
+                    // Formula: =AVERAGE(B{row-period+1}:B{row})
+                    string formula = $"=AVERAGE(B{currentRow - period + 1}:B{currentRow})";
+                    cells[currentRow, 2].Formula = formula; // C column (index 2)
                 }
                 else
                 {
-                    // Build formula: =AVERAGE(A{start}:A{end})
-                    int startRow = row - period + 2; // Excel rows are 1‑based
-                    int endRow = row + 1;
-                    string formula = $"=AVERAGE(A{startRow}:A{endRow})";
-
-                    // Set the formula using the Formula property (compatible with all versions)
-                    cells[row, 1].Formula = formula;
+                    cells[currentRow, 2].PutValue(string.Empty);
                 }
             }
 
-            // Add a line chart to display the moving‑average series
-            int chartIndex = ws.Charts.Add(ChartType.Line, 5, 0, 20, 12);
-            Chart chart = ws.Charts[chartIndex];
+            // Calculate all formulas so that the moving average values are materialized
+            workbook.CalculateFormula();
 
-            // Use column B (moving averages) as the series values and column A as categories
-            chart.NSeries.Add("B1:B12", true);
-            chart.NSeries.CategoryData = "A1:A12";
+            // Add a line chart
+            int chartIndex = sheet.Charts.Add(ChartType.Line, 12, 0, 30, 15);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Optionally add a moving‑average trendline to the series (same period)
-            int trendlineIdx = chart.NSeries[0].TrendLines.Add(TrendlineType.MovingAverage);
-            chart.NSeries[0].TrendLines[trendlineIdx].Period = period;
+            // Series 1: Original values (B column)
+            chart.NSeries.Add("B2:B11", true);
+            chart.NSeries[0].Name = "Original";
 
-            // Calculate all formulas so the chart reflects the latest data
-            wb.CalculateFormula();
+            // Series 2: Moving average (C column)
+            chart.NSeries.Add("C2:C11", true);
+            chart.NSeries[1].Name = "Moving Average";
 
-            // Save the workbook
-            wb.Save("MovingAverageChart.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Set category (X) axis data (A column)
+            chart.NSeries.CategoryData = "A2:A11";
+
+            // Optional: format the chart (titles, legend, etc.)
+            chart.Title.Text = "Sales with Moving Average";
+            chart.Legend.Position = LegendPositionType.Bottom;
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("MovingAverageChart.xlsx", SaveFormat.Xlsx);
         }
     }
 }

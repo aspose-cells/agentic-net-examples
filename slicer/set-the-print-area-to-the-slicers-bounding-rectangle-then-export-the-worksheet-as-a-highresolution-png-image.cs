@@ -1,83 +1,84 @@
-// Title: C# – Set Print Area and Export Worksheet as High‑Resolution PNG with Aspose.Cells
-// Description: Creates a workbook, fills a 20 × 5 range, adds a ListObject, builds an A1‑style address, assigns it to Worksheet.PageSetup.PrintArea, configures ImageOrPrintOptions for 300 DPI PNG, and renders the first page to a PNG file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# print area | Worksheet export PNG | high resolution DPI | ImageOrPrintOptions | PageSetup.PrintArea | A1 notation | SheetRender | Aspose.Cells .NET | Excel to PNG
-// Common Searches: set print area programmatically Aspose.Cells C# | export Excel sheet to PNG 300 DPI Aspose.Cells | convert zero based indices to A1 address C# | render worksheet as image Aspose.Cells .NET | how to define print area before image export
-// Developer Intent: Define the worksheet's print area and generate a 300 DPI PNG snapshot of the sheet.
-// Use Cases: Prepare a printable region that matches a data table before creating an image. | Produce publication‑quality PNG files for reports, presentations, or web assets. | Automate image generation after programmatic page‑setup adjustments.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a custom print area and saves the worksheet as a 300 DPI PNG. | Provide a utility method to convert zero‑based row/column indices to an A1‑style address for PageSetup.PrintArea. | Explain how to configure ImageOrPrintOptions for high‑resolution PNG export and handle multi‑page worksheets.
+// Title: C# – Set Print Area to a Slicer’s Bounding Rectangle and Export as High‑Resolution PNG with Aspose.Cells
+// Description: Loads an Excel file, reads the first slicer’s shape coordinates, sets the worksheet print area to that bounding range, and renders the area to a 300 DPI PNG using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# slicer print area | export slicer to PNG | high resolution worksheet image | set print area from slicer shape | Aspose.Cells ImageOrPrintOptions | C# Excel slicer export | 300 DPI PNG Aspose.Cells
+// Common Searches: Aspose.Cells set print area from slicer | C# export slicer region as PNG | high DPI worksheet image Aspose.Cells | get slicer shape bounds Aspose.Cells | render slicer area to image .NET
+// Developer Intent: Define the worksheet print area based on a slicer’s bounding rectangle and generate a high‑resolution PNG of that area.
+// Use Cases: Create a snapshot of a slicer for dashboards or reports. | Produce printable PNGs of filtered data views for documentation. | Automate generation of high‑quality images for web or PDF embedding.
+// AI Prompts: Generate C# code that sets the print area to a slicer’s shape bounds and saves a 300 DPI PNG with Aspose.Cells. | Explain how to retrieve a slicer’s UpperLeftRow/Column and LowerRightRow/Column to define a print area in Aspose.Cells. | Show how to loop through all slicers in a workbook and export each to a separate high‑resolution PNG file.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Slicers;
+using Aspose.Cells.Drawing;
 
-// Creates a workbook, fills a 20 × 5 range, adds a ListObject, builds an A1‑style address, assigns it to Worksheet.PageSetup.PrintArea, configures ImageOrPrintOptions for 300 DPI PNG, and renders the first page to a PNG file using Aspose.Cells for .NET.
-class ExportSlicerPrintArea
+namespace AsposeCellsSlicerExport
 {
-    static void Main()
+    // Loads an Excel file, reads the first slicer’s shape coordinates, sets the worksheet print area to that bounding range, and renders the area to a 300 DPI PNG using Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data (20 rows x 5 columns)
-            for (int row = 0; row < 20; row++)
+            try
             {
-                for (int col = 0; col < 5; col++)
+                const string inputFile = "input.xlsx";
+                const string outputFile = "slicer_area.png";
+
+                // Verify that the input workbook exists
+                if (!File.Exists(inputFile))
                 {
-                    worksheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                    Console.WriteLine($"Error: Input file '{inputFile}' not found.");
+                    return;
                 }
+
+                // Load the workbook that contains a slicer
+                Workbook workbook = new Workbook(inputFile);
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Ensure the worksheet contains at least one slicer
+                if (worksheet.Slicers.Count == 0)
+                {
+                    Console.WriteLine("Error: No slicers found in the worksheet.");
+                    return;
+                }
+
+                // Get the first slicer
+                Slicer slicer = worksheet.Slicers[0];
+
+                // Retrieve the slicer's bounding rectangle via its shape
+                Shape slicerShape = worksheet.Shapes[slicer.Name];
+                int startRow = slicerShape.UpperLeftRow;
+                int endRow = slicerShape.LowerRightRow;
+                int startColumn = slicerShape.UpperLeftColumn;
+                int endColumn = slicerShape.LowerRightColumn;
+
+                // Convert cell indices to A1 style addresses
+                string startCell = CellsHelper.CellIndexToName(startRow, startColumn);
+                string endCell = CellsHelper.CellIndexToName(endRow, endColumn);
+
+                // Set the worksheet's print area to the slicer's bounding rectangle
+                worksheet.PageSetup.PrintArea = $"{startCell}:{endCell}";
+
+                // Configure high‑resolution image options
+                ImageOrPrintOptions options = new ImageOrPrintOptions
+                {
+                    ImageType = Aspose.Cells.Drawing.ImageType.Png,
+                    OnePagePerSheet = true,
+                    HorizontalResolution = 300, // DPI
+                    VerticalResolution = 300    // DPI
+                };
+
+                // Render the worksheet (print area only) to a PNG image
+                SheetRender sheetRender = new SheetRender(worksheet, options);
+                sheetRender.ToImage(0, outputFile);
+
+                Console.WriteLine($"Export completed: {outputFile}");
             }
-
-            // Create a table (ListObject) covering the data range
-            int firstRow = 0, firstCol = 0, lastRow = 19, lastCol = 4;
-            int tableIdx = worksheet.ListObjects.Add(firstRow, firstCol, lastRow, lastCol, true);
-            ListObject table = worksheet.ListObjects[tableIdx];
-            table.DisplayName = "DataTable";
-
-            // Build the print area string in A1 style (e.g., "A1:E20")
-            string printArea = $"{CellAddress(firstCol, firstRow)}:{CellAddress(lastCol, lastRow)}";
-            worksheet.PageSetup.PrintArea = printArea;
-
-            // Configure high‑resolution image options
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            catch (Exception ex)
             {
-                ImageType = Aspose.Cells.Drawing.ImageType.Png,
-                OnePagePerSheet = true,
-                HorizontalResolution = 300, // DPI
-                VerticalResolution = 300    // DPI
-            };
-
-            // Render the worksheet (first page) to a PNG file
-            string outputPath = "SlicerPrintArea.png";
-            SheetRender sheetRender = new SheetRender(worksheet, imgOptions);
-            sheetRender.ToImage(0, outputPath);
-
-            Console.WriteLine($"Print area set to {printArea} and exported to {outputPath}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    // Helper: converts zero‑based column/row indices to an A1‑style cell address
-    static string CellAddress(int columnIndex, int rowIndex)
-    {
-        // Convert column number to letters (0 => A)
-        string columnName = "";
-        int dividend = columnIndex + 1;
-        while (dividend > 0)
-        {
-            int modulo = (dividend - 1) % 26;
-            columnName = Convert.ToChar('A' + modulo) + columnName;
-            dividend = (dividend - modulo) / 26;
-        }
-
-        // Row index is zero‑based; add 1 for A1 notation
-        int rowNumber = rowIndex + 1;
-        return $"{columnName}{rowNumber}";
     }
 }

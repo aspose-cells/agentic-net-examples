@@ -1,20 +1,21 @@
-// Title: Aspose.Cells for .NET: Custom number format to display zeros as a dash
-// Description: C# example that creates a workbook, defines the custom format "0;-0;\"-\"" (positive, negative, zero), applies it to cells A1:A5, writes sample data including zeros, and saves the file as CustomZeroFormatDemo.xlsx. Zero values appear as a dash, ideal for clean financial or reporting layouts.
-// Keywords: Aspose.Cells | C# | .NET | custom number format | zero dash | Excel formatting | display zero as dash | format positive negative zero | financial report formatting | Excel dash for zero values
-// Common Searches: Aspose.Cells custom format zero dash | C# Excel format zero as dash | How to show dash instead of 0 in Aspose.Cells | Custom number format string 0;-0;"-" Aspose | Apply number format to range Aspose.Cells .NET
-// Developer Intent: Create an Excel workbook and apply a style that renders zero values as a dash using Aspose.Cells for .NET.
-// Use Cases: Financial statements where zero amounts are displayed as a dash to improve readability. | Automated reporting dashboards that replace zero metrics with a dash for a cleaner look. | Batch processing of multiple worksheets where the same zero‑as‑dash formatting is applied programmatically.
-// AI Prompts: Generate C# code with Aspose.Cells that defines a custom number format "0;-0;\"-\"" and applies it to a column of data. | Explain each part of the custom number format string for positive, negative, and zero values in Aspose.Cells. | Show how to programmatically apply a zero‑as‑dash style to an entire worksheet range using Aspose.Cells for .NET.
+// Title: Aspose.Cells for .NET – C# custom number format that displays zero as a dash
+// Description: Demonstrates how to create a workbook, define a style with the custom format "0;-0;\"-\"" to show positive numbers normally, negative numbers with a minus sign, and zero values as a dash, apply the number‑format part to a specific range using StyleFlag, populate sample data, and save the file as CustomZeroFormat.xlsx.
+// Keywords: Aspose.Cells custom number format | C# zero dash format | display zero as dash | StyleFlag number format Aspose.Cells | apply format to range Aspose.Cells | Aspose.Cells for .NET formatting | Excel zero dash style
+// Common Searches: Aspose.Cells how to format zero as dash | custom number format string 0;-0;"-" in C# | apply number format to specific cells Aspose.Cells | StyleFlag usage for number format Aspose.Cells | C# Excel zero dash formatting example
+// Developer Intent: The developer needs to show zero values as a dash while preserving normal formatting for positive and negative numbers in a selected cell range.
+// Use Cases: Financial reports where zero amounts are represented by a dash for cleaner presentation. | Inventory sheets that replace 0 quantities with a dash to indicate no stock. | Selective styling of a column or range without affecting other cell formats.
+// AI Prompts: Show how to modify the custom format to display "N/A" instead of a dash in Aspose.Cells. | Provide code that applies the same zero‑dash format to an entire column using a loop. | Explain how to combine the zero‑dash number format with a date format in a single style.
 
 using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace Example
+namespace AsposeCellsCustomZeroFormat
 {
-    // C# example that creates a workbook, defines the custom format "0;-0;\"-\"" (positive, negative, zero), applies it to cells A1:A5, writes sample data including zeros, and saves the file as CustomZeroFormatDemo.xlsx. Zero values appear as a dash, ideal for clean financial or reporting layouts.
-    public class CustomZeroFormatDemo
+    // Demonstrates how to create a workbook, define a style with the custom format "0;-0;\"-\"" to show positive numbers normally, negative numbers with a minus sign, and zero values as a dash, apply the number‑format part to a specific range using StyleFlag, populate sample data, and save the file as CustomZeroFormat.xlsx.
+    public class Program
     {
-        public static void Run()
+        public static void Main()
         {
             try
             {
@@ -22,43 +23,36 @@ namespace Example
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Define a custom number format:
-                // Positive numbers -> 0
-                // Negative numbers -> -0
-                // Zero values        -> dash ("-")
-                Style zeroDashStyle = workbook.CreateStyle();
-                zeroDashStyle.Custom = "0;-0;\"-\"";
+                // Create a style with a custom number format:
+                // Positive numbers: 0
+                // Negative numbers: -0
+                // Zero values: displayed as a dash ("-")
+                Style style = workbook.CreateStyle();
+                style.Custom = "0;-0;\"-\"";
 
-                // Populate some sample data including zeros
-                sheet.Cells["A1"].PutValue(123);
-                sheet.Cells["A2"].PutValue(-45);
-                sheet.Cells["A3"].PutValue(0);
-                sheet.Cells["A4"].PutValue(78.9);
-                sheet.Cells["A5"].PutValue(0);
+                // Apply only the number format part of the style to the desired range
+                StyleFlag flag = new StyleFlag();
+                flag.NumberFormat = true;
 
-                // Apply the custom style to the range A1:A5
-                for (int row = 0; row < 5; row++)
-                {
-                    Cell cell = sheet.Cells[row, 0];
-                    cell.SetStyle(zeroDashStyle);
-                }
+                // Define a range (A1:A5) and apply the style
+                AsposeRange range = sheet.Cells.CreateRange("A1", "A5");
+                range.ApplyStyle(style, flag);
+
+                // Populate the cells with sample values
+                sheet.Cells["A1"].PutValue(123);   // Positive number
+                sheet.Cells["A2"].PutValue(-456);  // Negative number
+                sheet.Cells["A3"].PutValue(0);     // Zero (should appear as "-")
+                sheet.Cells["A4"].PutValue(78.9);  // Positive decimal
+                sheet.Cells["A5"].PutValue(0.0);   // Zero as decimal (should also appear as "-")
 
                 // Save the workbook
-                workbook.Save("CustomZeroFormatDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+                workbook.Save("CustomZeroFormat.xlsx");
+                Console.WriteLine("Workbook saved successfully as CustomZeroFormat.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CustomZeroFormatDemo.Run();
         }
     }
 }

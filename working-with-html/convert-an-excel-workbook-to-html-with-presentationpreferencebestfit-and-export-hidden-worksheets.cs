@@ -1,43 +1,76 @@
-// Title: Export Excel to HTML with BestFit layout & hidden sheets – Aspose.Cells .NET
-// Description: C# code that loads an .xlsx workbook, enables HtmlSaveOptions.PresentationPreference for a best‑fit HTML view, sets ExportHiddenWorksheet to true, disables ExportActiveWorksheetOnly, and saves the complete workbook as an HTML file.
-// Keywords: Aspose.Cells | HTML export | PresentationPreference | BestFit layout | ExportHiddenWorksheet | C# Excel to HTML | hidden worksheets | full workbook export | HtmlSaveOptions | .NET
-// Common Searches: Aspose.Cells export hidden worksheets to HTML | HTML export with PresentationPreference BestFit C# | Convert Excel workbook to HTML including hidden sheets | Aspose.Cells HtmlSaveOptions ExportActiveWorksheetOnly false example | C# batch convert .xlsx to HTML preserving hidden sheets
-// Developer Intent: Generate an HTML representation of the entire Excel workbook, using best‑fit column/row sizing and including any hidden worksheets.
-// Use Cases: Publish a web‑ready preview of a financial model that contains hidden calculation sheets, ensuring all data appears in the HTML view. | Build an online Excel viewer where every worksheet, visible or hidden, must be displayed with optimal column widths and row heights. | Automate batch conversion of multiple workbooks to HTML for documentation or archival, preserving hidden content and applying best‑fit layout.
-// AI Prompts: Write C# code with Aspose.Cells to convert an Excel file to HTML, enabling PresentationPreference for BestFit and exporting hidden worksheets. | Explain how HtmlSaveOptions.ExportHiddenWorksheet and ExportActiveWorksheetOnly affect the resulting HTML when using Aspose.Cells. | Provide a step‑by‑step guide to batch‑process all .xlsx files in a directory, converting each to HTML with best‑fit layout and hidden sheet inclusion.
+// Title: C# – Convert Excel workbook to HTML with BestFit layout and export hidden worksheets using Aspose.Cells
+// Description: Creates a workbook with a visible and a hidden sheet, configures HtmlSaveOptions (PresentationPreference = true, ExportHiddenWorksheet = true, ExportActiveWorksheetOnly = false) and saves the entire workbook as a single HTML file on the desktop.
+// Keywords: Aspose.Cells | C# | .NET | HtmlSaveOptions | PresentationPreference | BestFit | ExportHiddenWorksheet | ExportActiveWorksheetOnly | convert Excel to HTML | hidden worksheets | save workbook as HTML
+// Common Searches: Aspose.Cells export hidden sheets to HTML C# | HtmlSaveOptions PresentationPreference BestFit example | Save entire Excel workbook as HTML with hidden worksheets | C# convert workbook to HTML Aspose.Cells | How to include hidden worksheets in HTML export using Aspose
+// Developer Intent: Generate a single HTML file that represents the whole Excel workbook, applying the BestFit presentation style and including any hidden worksheets.
+// Use Cases: Render a complete workbook (including hidden configuration sheets) in a web portal for reporting. | Create an HTML snapshot of all worksheets for archival or email distribution while preserving layout. | Provide an HTML preview in a SaaS application where hidden sheets contain metadata required for calculations.
+// AI Prompts: Show how to attach a custom CSS stylesheet to the HTML output while still exporting hidden worksheets. | Explain how to export only selected worksheets with PresentationPreference set to BestFit. | Give a step‑by‑step guide to split a large workbook into separate HTML files per worksheet, ensuring hidden sheets are included.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+namespace AsposeCellsExamples
 {
-    // C# code that loads an .xlsx workbook, enables HtmlSaveOptions.PresentationPreference for a best‑fit HTML view, sets ExportHiddenWorksheet to true, disables ExportActiveWorksheetOnly, and saves the complete workbook as an HTML file.
-    class Program
+    // Creates a workbook with a visible and a hidden sheet, configures HtmlSaveOptions (PresentationPreference = true, ExportHiddenWorksheet = true, ExportActiveWorksheetOnly = false) and saves the entire workbook as a single HTML file on the desktop.
+    public class ConvertWorkbookToHtml
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            // Load an existing Excel workbook (replace with your actual file path)
-            string inputPath = "input.xlsx";
-            Workbook workbook = new Workbook(inputPath);
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
+
+            // Add sample data to the first (visible) worksheet
+            Worksheet visibleSheet = workbook.Worksheets[0];
+            visibleSheet.Name = "VisibleSheet";
+            visibleSheet.Cells["A1"].PutValue("Visible Data");
+
+            // Add a hidden worksheet with some data
+            Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
+            hiddenSheet.Cells["A1"].PutValue("Hidden Data");
+            hiddenSheet.IsVisible = false; // Mark the sheet as hidden
 
             // Configure HTML save options
             HtmlSaveOptions saveOptions = new HtmlSaveOptions
             {
-                // Enable presentation preference for a more visually appealing HTML output
+                // Enable presentation preference for a more beautiful layout (BestFit)
                 PresentationPreference = true,
 
-                // Ensure hidden worksheets are included in the export (default is true, set explicitly for clarity)
+                // Ensure hidden worksheets are exported
                 ExportHiddenWorksheet = true,
 
-                // Export the entire workbook, not only the active sheet
+                // Export all worksheets (including hidden) rather than only the active one
                 ExportActiveWorksheetOnly = false
             };
 
-            // Save the workbook as an HTML file with the specified options
-            string outputPath = "output.html";
+            // Define output HTML file path
+            string outputPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                "WorkbookExport.html");
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as HTML using the configured options
             workbook.Save(outputPath, saveOptions);
 
-            Console.WriteLine($"Workbook has been successfully exported to HTML at: {outputPath}");
+            Console.WriteLine($"Workbook successfully saved to HTML at: {outputPath}");
         }
     }
 }

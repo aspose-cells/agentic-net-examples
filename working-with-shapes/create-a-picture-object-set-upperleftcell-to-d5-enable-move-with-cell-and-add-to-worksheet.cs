@@ -1,17 +1,17 @@
-// Title: Aspose.Cells .NET – Insert a picture, anchor its upper‑left corner to cell D5, and set Placement to Move
-// Description: Shows how to create a workbook, check for an image file, add the picture at A1, reposition it so its upper‑left corner lines up with cell D5, configure Placement = Move so the image follows cell moves without resizing, and save the workbook.
-// Keywords: Aspose.Cells | C# | add picture to worksheet | anchor picture to cell D5 | Placement Move | picture.Move | PlacementType.Move | image insertion Aspose.Cells | worksheet picture positioning | move with cells
-// Common Searches: Aspose.Cells insert image at specific cell | Set picture placement to Move in Aspose.Cells C# | Align picture upper left corner to D5 Aspose.Cells | How to make a picture follow cell movements in .NET | Aspose.Cells picture.Move example
-// Developer Intent: Add an image, align it to cell D5, and enable it to move with the cell.
-// Use Cases: Place a company logo at D5 so it stays with the header when rows are added or removed. | Insert a diagram next to a data table at D5 that automatically shifts as the table expands. | Add a watermark anchored to D5 that follows sheet modifications without changing size.
-// AI Prompts: Generate C# code using Aspose.Cells to insert a PNG image at cell D5 and set its Placement to Move without resizing. | Explain the difference between PlacementType.Move and PlacementType.MoveAndSize in Aspose.Cells and when to use each. | Provide a step‑by‑step guide for checking an image file's existence before adding it as a picture in an Aspose.Cells workbook.
+// Title: Aspose.Cells C# – Insert picture at D5 and set Placement to Move
+// Description: Creates a new workbook, adds an image as a Picture object to cell D5 (row 4, column 3), aligns its UpperLeftCell, sets Placement = Move so the picture follows cell moves without resizing, and saves the file.
+// Keywords: Aspose.Cells insert picture | C# picture UpperLeftCell | PlacementType.Move | add image to Excel worksheet | .NET Aspose.Cells picture example | Excel picture move with cell | Aspose.Cells picture positioning
+// Common Searches: Aspose.Cells add image to specific cell | set picture placement move with cells Aspose | C# UpperLeftCell picture Aspose.Cells | prevent picture resizing Aspose.Cells | insert logo at D5 using Aspose.Cells
+// Developer Intent: Add an image to cell D5 and configure it to move with the cell while keeping its original size.
+// Use Cases: Anchor a company logo to a fixed cell so it stays aligned when rows/columns are inserted or deleted. | Attach product thumbnails to rows in a report, ensuring they shift with the data layout. | Place a watermark at a designated cell that follows sheet modifications without scaling.
+// AI Prompts: Show C# code to insert a picture at D5 with Aspose.Cells and set its placement to Move. | How do I align a Picture object's UpperLeftCell to D5 and prevent resizing in Aspose.Cells? | Example of checking an image file exists before adding it to an Aspose.Cells worksheet.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to create a workbook, check for an image file, add the picture at A1, reposition it so its upper‑left corner lines up with cell D5, configure Placement = Move so the image follows cell moves without resizing, and save the workbook.
+// Creates a new workbook, adds an image as a Picture object to cell D5 (row 4, column 3), aligns its UpperLeftCell, sets Placement = Move so the picture follows cell moves without resizing, and saves the file.
 class Program
 {
     static void Main()
@@ -22,20 +22,20 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Path to the image file
+            // Path to the image file to be inserted
             string imagePath = "image.jpg";
 
-            // Add picture only if the file exists
+            // Verify that the image file exists before attempting to add it
             if (File.Exists(imagePath))
             {
-                // Add picture at cell A1 (row 0, column 0)
-                int pictureIndex = worksheet.Pictures.Add(0, 0, imagePath);
+                // Add a picture to the worksheet at cell D5 (row 4, column 3)
+                int pictureIndex = worksheet.Pictures.Add(4, 3, imagePath);
                 Picture picture = worksheet.Pictures[pictureIndex];
 
-                // Move picture so its upper‑left corner aligns with cell D5 (row 4, column 3)
+                // Ensure the picture is placed at cell D5 (upper‑left corner)
                 picture.Move(4, 3);
 
-                // Enable the picture to move with the cell (but not resize)
+                // Set the placement type so the picture moves with the cell but does not resize
                 picture.Placement = PlacementType.Move;
             }
             else
@@ -44,12 +44,13 @@ class Program
             }
 
             // Save the workbook
-            string outputPath = "Result.xlsx";
+            string outputPath = "output.xlsx";
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
+            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

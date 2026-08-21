@@ -1,69 +1,74 @@
-// Title: C# – Count Formatting‑Only Initialized Cells per Worksheet with Aspose.Cells
-// Description: Shows how to create or load a workbook, apply custom styles, then enumerate only the instantiated cells of each worksheet to identify cells that have no value but a non‑default style, log the count per sheet, and optionally save the file.
-// Keywords: Aspose.Cells C# count formatted only cells | enumerate instantiated cells .NET | detect empty styled cells Aspose | worksheet style‑only cell count | audit workbook formatting Aspose.Cells | reduce Excel file size by clearing styles | C# Excel style comparison default | Aspose.Cells cell style analysis
-// Common Searches: how to count cells with only formatting using Aspose.Cells | Aspose.Cells enumerate initialized cells without values | C# find empty cells that have custom style in a workbook | count style‑only cells per worksheet Aspose | Aspose.Cells audit formatting‑only cells
-// Developer Intent: Determine the number of initialized cells that contain a custom style but no data in each worksheet of an Excel workbook.
-// Use Cases: Validate that a template’s styling does not contain stray formatted cells before distribution. | Generate a styling audit report that lists formatting‑only cell counts per sheet. | Identify and clear empty formatted cells to shrink workbook size and improve performance.
-// AI Prompts: Write a method that returns a dictionary of worksheet names and the count of cells that have a custom style but no value using Aspose.Cells. | Adapt the example to ignore hidden worksheets while counting formatting‑only cells. | Provide code that removes the style from cells with no value after the count is logged.
+// Title: Count Formatting‑Only Initialized Cells per Worksheet with Aspose.Cells for .NET
+// Description: A C# example that creates a workbook, adds cells with value only, style only, and both, then walks through every worksheet, enumerates only instantiated cells, detects non‑default formatting without a value, logs the count per sheet, and saves the file. Ideal for developers needing to audit or clean up styling in large Excel files.
+// Keywords: Aspose.Cells count formatting only cells | initialized cells enumeration .NET | detect non‑default style Aspose.Cells | worksheet formatting audit C# | Excel cell style only detection | Aspose.Cells workbook analysis | C# Excel formatting only cells
+// Common Searches: how to count cells with only formatting using Aspose.Cells | Aspose.Cells enumerate instantiated cells for style check | C# find cells that have style but no value in Excel | log formatting‑only cells per worksheet Aspose | detect non‑default cell formatting Aspose.Cells .NET
+// Developer Intent: Identify and tally cells that contain styling but no data in each worksheet of an Aspose.Cells workbook.
+// Use Cases: Generate a report of styling‑only cells to streamline workbook size before distribution. | Audit multiple sheets for orphaned formats that may affect performance or visual consistency. | Exclude formatting‑only cells from data export pipelines to improve processing speed.
+// AI Prompts: Create a function that returns a dictionary of worksheet names and formatting‑only cell counts using Aspose.Cells. | Rewrite the counting loop with LINQ to improve readability and performance. | Add logic to highlight every formatting‑only cell in yellow after the count is logged.
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to create or load a workbook, apply custom styles, then enumerate only the instantiated cells of each worksheet to identify cells that have no value but a non‑default style, log the count per sheet, and optionally save the file.
-    class CountFormattedOnlyCells
+    // A C# example that creates a workbook, adds cells with value only, style only, and both, then walks through every worksheet, enumerates only instantiated cells, detects non‑default formatting without a value, logs the count per sheet, and saves the file. Ideal for developers needing to audit or clean up styling in large Excel files.
+    class CountFormattingOnlyCells
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook(); // lifecycle: create
+                // Create a new workbook (lifecycle rule: create)
+                Workbook workbook = new Workbook();
 
-                // Example: add some data and formatting to demonstrate the counting logic
-                Worksheet sheet1 = workbook.Worksheets[0];
-                Cells cells1 = sheet1.Cells;
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // Cell with only formatting (no value)
+                // Sample data: cell with value only
+                cells["A1"].PutValue("Data");
+
+                // Sample data: cell with formatting only (no value)
                 Style fmtOnly = workbook.CreateStyle();
+                fmtOnly.Font.Color = Color.Red;
                 fmtOnly.Font.IsBold = true;
-                cells1["B2"].SetStyle(fmtOnly);
+                cells["B2"].SetStyle(fmtOnly);
 
-                // Cell with value and formatting
+                // Sample data: cell with both value and formatting (should not be counted)
                 Style fmtBoth = workbook.CreateStyle();
-                fmtBoth.Font.Color = System.Drawing.Color.Blue;
-                cells1["C3"].PutValue(123);
-                cells1["C3"].SetStyle(fmtBoth);
+                fmtBoth.Font.Color = Color.Blue;
+                cells["C3"].PutValue(123);
+                cells["C3"].SetStyle(fmtBoth);
 
-                // Cell with only value
-                cells1["D4"].PutValue("Text");
-
-                // Process each worksheet
+                // Iterate through each worksheet in the workbook
                 foreach (Worksheet ws in workbook.Worksheets)
                 {
-                    long formattedOnlyCount = 0;
+                    Cells wsCells = ws.Cells;
+                    int formattingOnlyCount = 0;
 
-                    // Enumerate only instantiated cells
-                    foreach (Cell cell in ws.Cells)
+                    // Enumerate only instantiated cells (initialized cells)
+                    foreach (Cell cell in wsCells)
                     {
                         // Determine if the cell has no value
                         bool hasNoValue = cell.Value == null || string.IsNullOrEmpty(cell.StringValue);
 
-                        // Determine if the cell has any formatting applied (different from default style)
+                        // Determine if the cell has any non‑default formatting
                         Style cellStyle = cell.GetStyle();
-                        bool hasFormatting = !cellStyle.Equals(workbook.DefaultStyle);
+                        bool hasFormatting = HasNonDefaultFormatting(cellStyle);
 
+                        // Count cells that have formatting but no value
                         if (hasNoValue && hasFormatting)
                         {
-                            formattedOnlyCount++;
+                            formattingOnlyCount++;
                         }
                     }
 
-                    Console.WriteLine($"Worksheet \"{ws.Name}\": {formattedOnlyCount} initialized cells contain only formatting.");
+                    // Log the result for the current worksheet
+                    Console.WriteLine($"Worksheet \"{ws.Name}\": Cells with only formatting = {formattingOnlyCount}");
                 }
 
-                // Save the workbook if needed (lifecycle: save)
+                // Save the workbook (lifecycle rule: save)
                 string outputPath = "FormattedOnlyCellsCount.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved to \"{outputPath}\".");
@@ -72,6 +77,30 @@ namespace AsposeCellsExamples
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+
+        // Checks whether a style contains any formatting different from the default style
+        private static bool HasNonDefaultFormatting(Style style)
+        {
+            // Font checks
+            if (style.Font.Color != Color.Empty) return true;
+            if (style.Font.IsBold) return true;
+            if (style.Font.IsItalic) return true;
+            if (style.Font.Underline != FontUnderlineType.None) return true;
+            if (style.Font.Size != 0) return true;
+
+            // Background checks
+            if (style.BackgroundColor != Color.Empty) return true;
+            if (style.Pattern != BackgroundType.None) return true;
+
+            // Border checks (any border style set)
+            if (style.Borders[BorderType.LeftBorder].LineStyle != CellBorderType.None) return true;
+            if (style.Borders[BorderType.RightBorder].LineStyle != CellBorderType.None) return true;
+            if (style.Borders[BorderType.TopBorder].LineStyle != CellBorderType.None) return true;
+            if (style.Borders[BorderType.BottomBorder].LineStyle != CellBorderType.None) return true;
+
+            // If none of the above, consider it default (no formatting)
+            return false;
         }
     }
 }

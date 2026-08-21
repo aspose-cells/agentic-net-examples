@@ -1,20 +1,29 @@
+// Title: Validate Required XML Elements Are Mapped to Cells Before Exporting with Aspose.Cells for .NET
+// Description: This C# example shows how to add an XML map from a temporary XSD, link worksheet cells to required elements, and use XmlMapQuery to verify that every mandatory XML node (Id, Name, Email) has at least one mapped cell. If any required mapping is missing, the export is cancelled and a clear message is logged.
+// Keywords: Aspose.Cells | XML map validation | C# .NET | XmlMapQuery | required XML elements | cell-to-XML mapping | ExportXml | XSD schema | missing mapping detection | GitHub Aspose.Cells example
+// Common Searches: how to check required XML elements are linked to cells using Aspose.Cells | Aspose.Cells .NET validate XML map before export | XmlMapQuery missing element detection C# | export XML only when all required mappings exist Aspose | C# example for XML map validation with Aspose.Cells | GitHub Aspose.Cells XML map validation sample
+// Developer Intent: Confirm that every element defined as required in the XML schema has at least one worksheet cell linked before calling ExportXml.
+// Use Cases: Prevent generation of invalid XML by aborting export when mandatory fields lack a cell mapping. | Provide developers with a validation routine that logs unmapped required elements for quick correction. | Enable automated quality checks in data‑export pipelines that rely on Aspose.Cells XML maps.
+// AI Prompts: Write a C# method for Aspose.Cells that receives a Workbook, an XmlMap name, and a list of required XPath strings, then returns a list of paths that have no linked cells. | Generate a refactored version of the validation loop that throws a custom MissingXmlMappingException containing all unmapped element names. | Create a reusable utility class in .NET that validates XML map completeness and integrates with Aspose.Cells ExportXml, including logging and optional workbook saving.
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsXmlValidationDemo
 {
-    public class ValidateXmlMappingBeforeExport
+    // This C# example shows how to add an XML map from a temporary XSD, link worksheet cells to required elements, and use XmlMapQuery to verify that every mandatory XML node (Id, Name, Email) has at least one mapped cell. If any required mapping is missing, the export is cancelled and a clear message is logged.
+    public class Program
     {
-        public static void Run()
+        public static void Main()
         {
             try
             {
-                // 1. Create a new workbook
+                // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // 2. Define a simple XML schema with required elements
+                // Define a simple XML schema with required elements
                 string xmlSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
                                         <xs:element name='Root'>
                                             <xs:complexType>
@@ -27,25 +36,40 @@ namespace AsposeCellsExamples
                                         </xs:element>
                                     </xs:schema>";
 
-                // 3. Add the XML map to the workbook
-                int mapIndex = workbook.Worksheets.XmlMaps.Add(xmlSchema);
+                // Write the schema to a temporary file (required by Aspose.Cells API)
+                string tempSchemaPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xsd");
+                File.WriteAllText(tempSchemaPath, xmlSchema);
+
+                // Ensure the temporary schema file exists before adding the XML map
+                if (!File.Exists(tempSchemaPath))
+                {
+                    Console.WriteLine("Failed to create temporary schema file.");
+                    return;
+                }
+
+                // Add the XML map to the workbook using the temporary schema file
+                int mapIndex = workbook.Worksheets.XmlMaps.Add(tempSchemaPath);
                 XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
                 xmlMap.Name = "UserDataMap";
 
-                // 4. Get the first worksheet and its cells
+                // Get the first worksheet and its cells collection
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // 5. Link worksheet cells to XML elements (Id and Name are mapped, Email is intentionally left unmapped)
-                cells.LinkToXmlMap(xmlMap.Name, 0, 0, "/Root/Id");      // Cell A1 -> Id
-                cells.LinkToXmlMap(xmlMap.Name, 0, 1, "/Root/Name");    // Cell B1 -> Name
-                // Email element is not linked to any cell to demonstrate validation failure
+                // Link worksheet cells to XML elements
+                // A1 -> /Root/Id
+                cells.LinkToXmlMap(xmlMap.Name, 0, 0, "/Root/Id");
+                // B1 -> /Root/Name
+                cells.LinkToXmlMap(xmlMap.Name, 0, 1, "/Root/Name");
+                // C1 -> /Root/Email   (intentionally omitted to demonstrate validation)
+                // cells.LinkToXmlMap(xmlMap.Name, 0, 2, "/Root/Email");
 
-                // 6. Populate the linked cells with sample data
-                cells["A1"].PutValue(101);
-                cells["B1"].PutValue("Alice");
+                // Populate some sample data
+                cells[0, 0].PutValue(101);      // Id
+                cells[0, 1].PutValue("Alice"); // Name
+                // Email cell left unmapped on purpose
 
-                // 7. Define the list of required XML element paths that must have a mapped cell
+                // List of required XML element paths that must have a mapped cell
                 string[] requiredPaths = new string[]
                 {
                     "/Root/Id",
@@ -53,54 +77,39 @@ namespace AsposeCellsExamples
                     "/Root/Email"
                 };
 
-                // 8. Validate that each required path has at least one mapped cell
-                List<string> missingMappings = new List<string>();
+                // Validate that each required path has at least one mapped cell
+                bool allMapped = true;
                 foreach (string path in requiredPaths)
                 {
-                    // Query the worksheet for cell areas linked to the current path
-                    ArrayList cellAreas = sheet.XmlMapQuery(path, xmlMap);
-                    if (cellAreas == null || cellAreas.Count == 0)
+                    // Query the worksheet for cells linked to the current XML path
+                    ArrayList mappedAreas = sheet.XmlMapQuery(path, xmlMap);
+
+                    if (mappedAreas.Count == 0)
                     {
-                        missingMappings.Add(path);
+                        Console.WriteLine($"Validation failed: No cell is mapped to required XML element '{path}'.");
+                        allMapped = false;
                     }
                 }
 
-                // 9. If any required element is missing a mapping, report and abort export
-                if (missingMappings.Count > 0)
+                // Export XML only if validation succeeds
+                if (allMapped)
                 {
-                    Console.WriteLine("Validation failed. The following XML elements have no mapped cells:");
-                    foreach (string missing in missingMappings)
-                    {
-                        Console.WriteLine($" - {missing}");
-                    }
-                    Console.WriteLine("Export aborted.");
-                    return;
-                }
-
-                // 10. All required elements are mapped; proceed to export the XML data
-                try
-                {
+                    // Export the XML data using the map name
                     workbook.ExportXml(xmlMap.Name, "ExportedData.xml");
-                    Console.WriteLine("XML exported successfully to ExportedData.xml");
+                    Console.WriteLine("XML exported successfully to 'ExportedData.xml'.");
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"Error during ExportXml: {ex.Message}");
+                    Console.WriteLine("XML export aborted due to missing mappings.");
                 }
+
+                // Optionally save the workbook for inspection
+                workbook.Save("WorkbookWithMappings.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ValidateXmlMappingBeforeExport.Run();
         }
     }
 }

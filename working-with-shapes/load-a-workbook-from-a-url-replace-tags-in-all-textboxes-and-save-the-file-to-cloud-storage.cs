@@ -1,85 +1,94 @@
-// Title: Download Excel from URL, replace TextBox placeholders, and save to cloud with Aspose.Cells (.NET)
-// Description: C# example that uses HttpClient to fetch an Excel file, loads it into an Aspose.Cells Workbook, iterates all worksheets and TextBox shapes to substitute defined tags, and saves the updated workbook to a cloud‑mounted folder.
-// Keywords: Aspose.Cells | C# download Excel file | replace TextBox text | placeholder tags | Excel shape text replacement | cloud storage save | HttpClient workbook load | Workbook.Save to cloud | Excel template automation | Aspose.Cells TextBox
-// Common Searches: How to replace placeholders in Excel TextBox shapes using Aspose.Cells | Download an Excel workbook from a URL and edit TextBox content in .NET | Save modified Excel file to a cloud folder with Aspose.Cells | Iterate all worksheets and TextBoxes to update text in C# | Aspose.Cells example for tag replacement in Excel templates
-// Developer Intent: Load an Excel workbook from a remote URL, replace placeholder tags in every TextBox shape, and write the modified file to cloud storage.
-// Use Cases: Automated report generation where a web‑hosted template contains {{CompanyName}} and {{ReportDate}} tags that must be filled before distribution. | Batch processing of multiple Excel templates downloaded via API, updating author/date placeholders in all TextBoxes, then storing results in shared cloud storage for downstream pipelines. | CI/CD workflows that pull a spreadsheet template, inject runtime values into shape text, and commit the final workbook to a cloud‑mounted repository.
-// AI Prompts: Write C# code using Aspose.Cells to download an Excel file from a URL, replace a list of placeholder strings in all TextBox shapes across every worksheet, and save the workbook to a specified cloud directory. | Explain the most efficient way to iterate TextBox objects in Aspose.Cells for string replacement, including handling missing tags and preserving original formatting. | Provide best‑practice error handling for HttpClient download, workbook loading, and saving to a cloud‑mounted folder with Aspose.Cells.
+// Title: Download Excel, replace TextBox tags, and stream to cloud using Aspose.Cells (.NET)
+// Description: C# sample that fetches an XLSX file from a web URL (with optional local fallback), iterates every worksheet to substitute a placeholder tag in all TextBox shapes, and saves the modified workbook to a MemoryStream ready for upload to Azure Blob, AWS S3, or other cloud storage.
+// Keywords: Aspose.Cells download workbook | C# replace TextBox placeholder | Excel TextBox tag replacement | save Aspose.Cells to MemoryStream | cloud upload Excel .NET | fallback local file Aspose | Aspose.Cells shape text replace
+// Common Searches: Aspose.Cells replace text in all TextBoxes | load Excel file from URL C# Aspose | save modified workbook to stream for Azure Blob | download Excel template and update placeholders | C# fallback to local file when web download fails
+// Developer Intent: Load an Excel workbook from a remote URL (or local file if needed), replace a specific placeholder in every TextBox across all worksheets, and obtain a stream that can be uploaded to cloud storage.
+// Use Cases: Personalized report generation: fetch a template, inject a customer name into every TextBox, and store the result in Azure Blob Storage. | Automated document pipeline: retrieve a workbook from a partner API, replace dynamic tags, and push the file to AWS S3 for downstream processing. | Resilient template handling: download a shared Excel template, fall back to a cached copy on failure, update shape text, and stream the file to a web service response.
+// AI Prompts: Generate C# code with Aspose.Cells that downloads an XLSX from a URL, replaces {{Name}} in all TextBoxes, and uploads the result to Azure Blob Storage. | Show robust error‑handling for remote workbook download with a local fallback using Aspose.Cells. | Explain how to convert a modified Aspose.Cells workbook to a MemoryStream and set the correct MIME type for an HTTP API response.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// C# example that uses HttpClient to fetch an Excel file, loads it into an Aspose.Cells Workbook, iterates all worksheets and TextBox shapes to substitute defined tags, and saves the updated workbook to a cloud‑mounted folder.
+// C# sample that fetches an XLSX file from a web URL (with optional local fallback), iterates every worksheet to substitute a placeholder tag in all TextBox shapes, and saves the modified workbook to a MemoryStream ready for upload to Azure Blob, AWS S3, or other cloud storage.
 class Program
 {
-    // Entry point
-    static async Task Main(string[] args)
+    static async Task Main()
     {
-        // URL of the source Excel file
-        string excelUrl = "https://example.com/template.xlsx";
+        // URL of the Excel file to process (may be unavailable)
+        string fileUrl = "https://example.com/sample.xlsx";
 
-        // Local path where the modified workbook will be saved (could be a cloud‑mounted folder)
-        string outputPath = @"C:\CloudStorage\ModifiedWorkbook.xlsx";
+        // Optional local fallback file path
+        string localFilePath = "sample.xlsx";
 
-        // Mapping of placeholder tags to replacement values
-        var tagReplacements = new Dictionary<string, string>
-        {
-            { "{{CompanyName}}", "Acme Corp" },
-            { "{{ReportDate}}", DateTime.Today.ToString("yyyy-MM-dd") },
-            { "{{Author}}", "John Doe" }
-        };
+        Workbook workbook = null;
 
         try
         {
-            // Ensure the output directory exists to avoid DirectoryNotFoundException
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Try to download the workbook from the URL
+            using var httpClient = new HttpClient();
+            using var response = await httpClient.GetAsync(fileUrl);
+            response.EnsureSuccessStatusCode();
 
-            // Download the workbook into a memory stream
-            using (var httpClient = new HttpClient())
-            using (var response = await httpClient.GetAsync(excelUrl))
-            {
-                response.EnsureSuccessStatusCode();
+            using var excelStream = await response.Content.ReadAsStreamAsync();
+            workbook = new Workbook(excelStream);
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Failed to download file: {ex.Message}");
 
-                using (var stream = await response.Content.ReadAsStreamAsync())
+            // Fallback to local file if it exists
+            if (File.Exists(localFilePath))
+            {
+                try
                 {
-                    // Load the workbook from the stream
-                    var workbook = new Workbook(stream);
-
-                    // Iterate through all worksheets
-                    foreach (Worksheet sheet in workbook.Worksheets)
-                    {
-                        // Iterate through all text boxes on the worksheet
-                        foreach (TextBox textBox in sheet.TextBoxes)
-                        {
-                            // Perform tag replacements inside the text box content
-                            string updatedText = textBox.Text;
-                            foreach (var kvp in tagReplacements)
-                            {
-                                updatedText = updatedText.Replace(kvp.Key, kvp.Value);
-                            }
-                            textBox.Text = updatedText;
-                        }
-                    }
-
-                    // Save the modified workbook to the specified location
-                    workbook.Save(outputPath);
+                    workbook = new Workbook(localFilePath);
+                }
+                catch (Exception fileEx)
+                {
+                    Console.WriteLine($"Error loading local workbook: {fileEx.Message}");
+                    return;
                 }
             }
-
-            Console.WriteLine("Workbook downloaded, tags replaced, and saved to cloud storage.");
+            else
+            {
+                Console.WriteLine($"Local file not found: {localFilePath}");
+                return;
+            }
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+            return;
         }
+
+        // Define the placeholder tag and its replacement value
+        const string placeholder = "{{Name}}";
+        const string replacement = "John Doe";
+
+        // Replace the placeholder in every TextBox of every worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            for (int i = 0; i < sheet.TextBoxes.Count; i++)
+            {
+                TextBox tb = sheet.TextBoxes[i];
+                if (!string.IsNullOrEmpty(tb.Text))
+                {
+                    tb.Text = tb.Text.Replace(placeholder, replacement);
+                }
+            }
+        }
+
+        // Save the modified workbook to a memory stream (ready for cloud upload)
+        using var outStream = new MemoryStream();
+        workbook.Save(outStream, SaveFormat.Xlsx);
+        outStream.Position = 0;
+
+        // TODO: Upload outStream to your cloud storage (e.g., Azure Blob, AWS S3, etc.)
+        // Example (pseudo‑code):
+        // await cloudStorageClient.UploadAsync("container/path/modified.xlsx", outStream);
     }
 }

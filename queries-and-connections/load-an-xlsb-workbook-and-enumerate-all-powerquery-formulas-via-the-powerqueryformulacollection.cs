@@ -1,77 +1,76 @@
+// Title: C# – Load an XLSB workbook and list all Power Query formulas with Aspose.Cells
+// Description: Sample code that opens an XLSB file (creating it if missing), accesses the workbook's DataMashup, iterates through the PowerQueryFormulaCollection to display each formula's name, definition and items, and saves the workbook to a new file.
+// Keywords: Aspose.Cells XLSB | Power Query formula enumeration | DataMashup API | PowerQueryFormulaCollection C# | read Power Query mashup data | list Power Query items
+// Common Searches: how to read Power Query formulas from an XLSB using Aspose.Cells | C# iterate PowerQueryFormulaCollection Aspose.Cells | check workbook for Power Query mashup data | save XLSB after enumerating Power Query formulas
+// Developer Intent: Extract and display every Power Query formula stored in an XLSB workbook via Aspose.Cells.
+// Use Cases: Verify that an incoming XLSB contains the expected Power Query definitions before processing. | Create an audit log of all Power Query formula names, definitions, and parameters. | Prepare the workbook for further automation by enumerating formulas, then editing or removing specific items.
+// AI Prompts: Generate C# code that adds a new Power Query formula to an existing XLSB workbook using Aspose.Cells. | Write a method that extracts all Power Query formula definitions from a workbook and exports them to JSON. | Provide comprehensive error handling for missing DataMashup, empty PowerQueryFormulaCollection, or file‑access issues.
+
 using System;
 using System.IO;
-using System.Collections;
 using Aspose.Cells;
+using Aspose.Cells.QueryTables;
 
 namespace AsposeCellsPowerQueryDemo
 {
+    // Sample code that opens an XLSB file (creating it if missing), accesses the workbook's DataMashup, iterates through the PowerQueryFormulaCollection to display each formula's name, definition and items, and saves the workbook to a new file.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Path to the XLSB workbook that may contain Power Query formulas
-            string sourcePath = "source.xlsb";
-
-            // Verify that the source file exists before attempting to load it
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {Path.GetFullPath(sourcePath)}");
-                return;
-            }
+            const string sourcePath = "source.xlsb";
+            const string outputPath = "source_modified.xlsb";
 
             try
             {
-                // Load the workbook (XLSB format is supported by Aspose.Cells)
+                // Ensure the source file exists; create an empty workbook if it does not.
+                if (!File.Exists(sourcePath))
+                {
+                    Console.WriteLine($"File '{sourcePath}' not found. Creating a new workbook.");
+                    var newWb = new Workbook();
+                    newWb.Save(sourcePath);
+                }
+
+                // Load the workbook (may contain Power Query formulas)
                 Workbook workbook = new Workbook(sourcePath);
 
-                // Use reflection to access Power Query information (avoids compile‑time dependency on specific API versions)
-                object mashup = workbook.GetType().GetProperty("DataMashup")?.GetValue(workbook);
-                if (mashup != null)
+                // Access the mashup data of the workbook
+                DataMashup mashup = workbook.DataMashup;
+
+                // Verify that Power Query formulas are present
+                if (mashup?.PowerQueryFormulas != null && mashup.PowerQueryFormulas.Count > 0)
                 {
-                    // Retrieve the collection of Power Query formulas
-                    object formulasObj = mashup.GetType().GetProperty("PowerQueryFormulas")?.GetValue(mashup);
-                    if (formulasObj is IEnumerable formulas)
-                    {
-                        // Count formulas
-                        int count = 0;
-                        foreach (var _ in formulas) count++;
-                        Console.WriteLine($"Number of Power Query formulas: {count}");
+                    Console.WriteLine("Power Query Formulas found:");
 
-                        // Enumerate each formula and display its details
-                        foreach (var formula in formulas)
+                    foreach (PowerQueryFormula formula in mashup.PowerQueryFormulas)
+                    {
+                        Console.WriteLine($"- Formula Name: {formula.Name}");
+                        Console.WriteLine($"  Definition   : {formula.FormulaDefinition}");
+
+                        // List items of the formula, if any
+                        if (formula.PowerQueryFormulaItems != null && formula.PowerQueryFormulaItems.Count > 0)
                         {
-                            var type = formula.GetType();
-
-                            string name = type.GetProperty("Name")?.GetValue(formula)?.ToString() ?? "N/A";
-                            string definition = type.GetProperty("FormulaDefinition")?.GetValue(formula)?.ToString() ?? "N/A";
-                            string formulaType = type.GetProperty("Type")?.GetValue(formula)?.ToString() ?? "N/A";
-                            string description = type.GetProperty("Description")?.GetValue(formula)?.ToString() ?? "N/A";
-
-                            Console.WriteLine("--------------------------------------------------");
-                            Console.WriteLine($"Formula Name       : {name}");
-                            Console.WriteLine($"Formula Definition : {definition}");
-                            Console.WriteLine($"Formula Type       : {formulaType}");
-                            Console.WriteLine($"Description        : {description}");
+                            Console.WriteLine("  Items:");
+                            foreach (PowerQueryFormulaItem item in formula.PowerQueryFormulaItems)
+                            {
+                                Console.WriteLine($"    * {item.Name} = {item.Value}");
+                            }
                         }
-                    }
-                    else
-                    {
-                        Console.WriteLine("No Power Query formulas found in the workbook.");
+
+                        Console.WriteLine(); // blank line for readability
                     }
                 }
                 else
                 {
-                    Console.WriteLine("The workbook does not contain Power Query (DataMashup) information.");
+                    Console.WriteLine("No Power Query formulas found in the workbook.");
                 }
 
-                // Optionally, save the workbook (unchanged) to a new file
-                string destPath = "output.xlsb";
-                workbook.Save(destPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(destPath)}");
+                // Save the workbook (optional, here we rewrite to a new file)
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved as '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                // Catch any unexpected errors and display a friendly message
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

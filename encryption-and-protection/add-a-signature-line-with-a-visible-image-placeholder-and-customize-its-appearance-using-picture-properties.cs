@@ -1,48 +1,56 @@
-// Title: C# – Add a Signature Line with Visible Placeholder and Style It Using Aspose.Cells
-// Description: Creates a new workbook, inserts a SignatureLine at cell B2, retrieves the resulting Picture placeholder, and customizes its border color, thickness, size, cell anchoring, and alternative text before saving the file as an .xlsx document.
-// Keywords: Aspose.Cells C# signature line | add signature placeholder Excel | customize signature picture Aspose | signature line border color | set picture size Aspose.Cells | place picture in cell | alternative text for Excel picture | Excel digital signature placeholder | Aspose.Cells example GitHub
-// Common Searches: how to add a signature line with a visible placeholder using Aspose.Cells for .NET | change border color and thickness of a signature line picture in Excel | place signature line picture inside a specific cell with Aspose.Cells | set alternative text for a signature placeholder in C# | Aspose.Cells add signature line example GitHub
-// Developer Intent: Insert a signature line with a visible placeholder image and modify its visual properties in an Excel workbook via Aspose.Cells.
-// Use Cases: Add a signature line to cell B2 with signer details and display a blue‑bordered placeholder of defined dimensions. | Anchor the placeholder picture inside the target cell for precise layout control. | Provide alternative text for the placeholder to improve accessibility and searchability. | Save the customized workbook as an .xlsx file for distribution or further processing.
-// AI Prompts: Write C# code that uses Aspose.Cells to add a signature line at a specified cell, retrieve the Picture object, and set its border color, weight, width, height, and placement. | Show an example of customizing the visual attributes of a signature line placeholder, including alternative text and cell anchoring, then save the workbook. | Explain how to obtain the Picture returned by Worksheet.Shapes.AddSignatureLine and modify its properties for styling a digital signature placeholder in Excel.
+// Title: C# – Add a Signature Line with a Picture Placeholder and Style It using Aspose.Cells
+// Description: Shows how to create a new Excel workbook with Aspose.Cells for .NET, insert an empty picture placeholder at cell B2, customize its border, size, and placement, attach a SignatureLine (signer, title, email, instructions) to the picture, and save the file as SignatureLineWithPlaceholder.xlsx.
+// Keywords: Aspose.Cells | C# signature line | Excel picture placeholder | SignatureLine object | customize picture border | add signature line without image | Aspose.Cells workbook | Excel digital signature placeholder | set picture properties Aspose.Cells | signature line styling .NET
+// Common Searches: Aspose.Cells add signature line to Excel | C# insert picture placeholder in Excel with Aspose.Cells | How to style a signature placeholder picture in Aspose.Cells | Attach SignatureLine to a picture using Aspose.Cells .NET | Create empty signature line in Excel workbook programmatically
+// Developer Intent: Programmatically embed a signature line in an Excel sheet by linking it to a styled picture placeholder, without requiring an actual image.
+// Use Cases: Create contract templates where signers see a clearly marked signature area. | Generate batch reports with individual signer placeholders for automated approval workflows. | Prepare protected Excel forms that display a placeholder until a user adds a scanned signature. | Build multi‑sheet workbooks where each sheet contains a customized signature placeholder for different stakeholders.
+// AI Prompts: Generate C# code using Aspose.Cells to add an empty picture at B2, set its border color to DarkBlue, width 150, height 80, place it inside the cell, and assign a SignatureLine with signer name, title, email, and instructions. | Explain how the IsPlacedInCell and AlternativeText properties affect a picture placeholder used for a signature line in Aspose.Cells. | Show how to export the workbook to .xlsx and later replace the placeholder image with an actual signature while preserving the SignatureLine settings. | Provide a step‑by‑step guide to create multiple worksheets each containing a unique signature placeholder for different users using Aspose.Cells.
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, inserts a SignatureLine at cell B2, retrieves the resulting Picture placeholder, and customizes its border color, thickness, size, cell anchoring, and alternative text before saving the file as an .xlsx document.
-class AddSignatureLineWithPlaceholder
+namespace AsposeCellsSignatureLineDemo
 {
-    static void Main()
+    // Shows how to create a new Excel workbook with Aspose.Cells for .NET, insert an empty picture placeholder at cell B2, customize its border, size, and placement, attach a SignatureLine (signer, title, email, instructions) to the picture, and save the file as SignatureLineWithPlaceholder.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Create a SignatureLine object and set its properties
-        SignatureLine signatureLine = new SignatureLine();
-        signatureLine.Signer = "John Doe";
-        signatureLine.Title = "Manager";
-        signatureLine.Email = "john.doe@example.com";
-        signatureLine.Instructions = "Please sign here.";
-        signatureLine.IsLine = true;
-        signatureLine.AllowComments = true;
-        signatureLine.ShowSignedDate = true;
+            // Add a picture placeholder (no image) at cell B2 (row 1, column 1)
+            int pictureIndex = worksheet.Pictures.Add(1, 1, (string)null);
+            Picture picture = worksheet.Pictures[pictureIndex];
 
-        // Add the signature line to the worksheet at cell B2 (row index 1, column index 1)
-        // This method returns the Picture that represents the signature placeholder
-        Picture picture = worksheet.Shapes.AddSignatureLine(1, 1, signatureLine);
+            // Customize appearance of the placeholder
+            picture.BorderLineColor = Color.DarkBlue;   // border color
+            picture.BorderWeight = 2;                  // border thickness (pt)
+            picture.Width = 150;                       // width in pixels
+            picture.Height = 80;                       // height in pixels
+            picture.IsPlacedInCell = true;             // place the picture inside the cell
+            picture.AlternativeText = "Signature placeholder";
 
-        // Customize the appearance of the picture (visible placeholder)
-        picture.BorderLineColor = Color.Blue;   // Set border color
-        picture.BorderWeight = 2;               // Set border thickness (points)
-        picture.Width = 150;                    // Width in pixels
-        picture.Height = 50;                    // Height in pixels
-        picture.IsPlacedInCell = true;          // Place the picture inside the cell
-        picture.AlternativeText = "Signature placeholder";
+            // Create and configure the signature line
+            SignatureLine signatureLine = new SignatureLine
+            {
+                Signer = "John Doe",
+                Title = "Project Manager",
+                Email = "john.doe@example.com",
+                Instructions = "Please sign here to approve the document.",
+                IsLine = true,
+                AllowComments = true,
+                ShowSignedDate = true
+            };
 
-        // Save the workbook
-        workbook.Save("SignatureLineWithPlaceholder.xlsx");
+            // Assign the signature line to the picture
+            picture.SignatureLine = signatureLine;
+
+            // Save the workbook
+            workbook.Save("SignatureLineWithPlaceholder.xlsx");
+        }
     }
 }

@@ -1,47 +1,52 @@
-// Title: C# – Password‑Protect and Encrypt an Excel Workbook (XLS) with Aspose.Cells
-// Description: Learn how to create a new workbook, apply a user‑defined password, enable 128‑bit strong encryption, save it as an Excel97‑2003 (XLS) file, and verify the protection by loading it with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells encrypt workbook C# | password protect XLS Aspose | strong encryption Excel97-2003 | Workbook.Settings.Password | SetEncryptionOptions Aspose | load password protected workbook | C# Excel file security
-// Common Searches: how to encrypt an Excel file with a password using Aspose.Cells | save password‑protected XLS with Aspose.Cells .NET | set 128‑bit encryption for Excel workbook C# | load protected XLS file Aspose.Cells example
-// Developer Intent: Secure a workbook with a custom password, apply strong encryption, save as XLS, and confirm access via password‑based loading.
-// Use Cases: Generate a fresh workbook, insert data, assign Workbook.Settings.Password, call SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128), then save as SaveFormat.Excel97To2003. | Open the encrypted XLS using LoadOptions.Password to read or modify protected cells. | Swap the encryption algorithm (e.g., to AES128) by changing the EncryptionType argument to meet compliance standards.
-// AI Prompts: Write C# code that encrypts a new Excel workbook with a user‑provided password, uses 128‑bit strong encryption, and saves it as an XLS file via Aspose.Cells. | Show how to open a password‑protected XLS file with Aspose.Cells and retrieve the value of a specific cell. | Explain how to change the encryption type to AES128 for an Aspose.Cells workbook before saving.
+// Title: C# – Password‑Protect and Encrypt an Excel Workbook, Save as XLS with Aspose.Cells
+// Description: Loads a plain .xlsx file (creates a sample if missing), sets a user‑defined password, applies 128‑bit strong encryption, and saves the workbook in Excel 97‑2003 (XLS) format using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | encrypt Excel workbook | password protect XLS | 128-bit encryption | Workbook.Settings.Password | SetEncryptionOptions | save as XLS | Excel 97-2003 | secure Excel file | convert xlsx to xls
+// Common Searches: Aspose.Cells encrypt workbook C# | How to password protect an XLS file using Aspose.Cells | Set 128‑bit encryption for Excel 97‑2003 with Aspose | Convert .xlsx to .xls with password protection .NET | C# code to save encrypted XLS with Aspose.Cells
+// Developer Intent: Apply a user‑specified password and strong encryption to an existing workbook and output it as a protected XLS file.
+// Use Cases: Securely distribute a financial report by delivering a password‑protected XLS version. | Meet compliance rules that require 128‑bit encryption when converting confidential .xlsx files to the legacy XLS format. | Automate batch processing that reads plain workbooks, encrypts each with a unique password, and stores them as protected XLS files.
+// AI Prompts: Show C# code that loads an .xlsx file, sets a user‑provided password, configures 128‑bit strong encryption, and saves the workbook as an XLS file using Aspose.Cells. | Provide an Aspose.Cells example with error handling that encrypts a workbook with a password and saves it in Excel 97‑2003 format.
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionDemo
+// Loads a plain .xlsx file (creates a sample if missing), sets a user‑defined password, applies 128‑bit strong encryption, and saves the workbook in Excel 97‑2003 (XLS) format using Aspose.Cells for .NET.
+class EncryptWorkbookToXls
 {
-    // Learn how to create a new workbook, apply a user‑defined password, enable 128‑bit strong encryption, save it as an Excel97‑2003 (XLS) file, and verify the protection by loading it with Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        string inputPath = "plain.xlsx";
+        string outputPath = "encrypted.xls";
+        string password = "mySecretPassword";
+
+        try
         {
-            // User‑specified password
-            string password = "MySecretPassword";
+            // Ensure the source workbook exists; create a simple one if it doesn't.
+            if (!File.Exists(inputPath))
+            {
+                Workbook tempWb = new Workbook();
+                Worksheet sheet = tempWb.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Sample Data");
+                tempWb.Save(inputPath, SaveFormat.Xlsx);
+            }
 
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+            // Load the existing workbook.
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add some sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Encrypted content");
-
-            // Set the password that will protect the workbook (WorkbookSettings.Password)
+            // Set password to protect the workbook.
             workbook.Settings.Password = password;
 
-            // Optional: set stronger encryption options (Workbook.SetEncryptionOptions)
+            // Apply strong encryption (128‑bit key) for XLS format.
             workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
 
-            // Save the workbook as an XLS file (lifecycle: save)
-            string outputPath = "EncryptedWorkbook.xls";
+            // Save as Excel 97‑2003 format (XLS).
             workbook.Save(outputPath, SaveFormat.Excel97To2003);
 
-            // Verify by loading the encrypted workbook with the password (lifecycle: load)
-            LoadOptions loadOptions = new LoadOptions { Password = password };
-            Workbook loadedWorkbook = new Workbook(outputPath, loadOptions);
-            string cellValue = loadedWorkbook.Worksheets[0].Cells["A1"].StringValue;
-
-            Console.WriteLine($"Loaded cell value: {cellValue}");
+            Console.WriteLine($"Workbook encrypted and saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

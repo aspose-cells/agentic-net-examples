@@ -1,85 +1,116 @@
-// Title: C# batch decrypt, sanitize, and re‑encrypt Excel files with Aspose.Cells
-// Description: Scans a folder for .xlsx workbooks, detects encryption, opens each file with the old password, removes personal information, redacts specified strings, applies a new password, and saves the cleaned file to an output directory. Includes error handling for individual files and supports compliance‑driven workflows.
-// Keywords: Aspose.Cells batch decrypt Excel | C# remove personal information Excel | re‑encrypt workbook new password | detect encrypted Excel file | sanitize Excel content programmatically | Excel compliance automation .NET
-// Common Searches: batch decrypt and re‑encrypt Excel files C# | how to remove personal data from Excel using Aspose.Cells | change password of multiple encrypted workbooks programmatically | detect if an Excel workbook is password protected with Aspose.Cells | automate Excel sanitization and re‑encryption
-// Developer Intent: Load encrypted Excel workbooks, cleanse sensitive data, and save them re‑protected with a new password in a single batch operation.
-// Use Cases: Securely archive confidential reports by stripping author comments and redacting placeholders before applying a stronger organization‑wide password. | Ensure regulatory compliance for incoming Excel uploads by automatically removing personal identifiers and re‑encrypting the files. | Integrate into CI/CD pipelines to guarantee that all generated Excel artifacts are sanitized and protected before distribution.
-// AI Prompts: Write C# code using Aspose.Cells to batch change passwords of encrypted Excel workbooks while preserving all worksheets and formulas. | Show how to extend the sanitization step to clear specific cell ranges based on a JSON configuration file. | Explain how to handle mixed Excel formats (xls, xlsx, xlsb) in the same batch process with Aspose.Cells.
+// Title: C# Batch Decrypt, Sanitize, and Re‑encrypt Encrypted Excel Files with Aspose.Cells
+// Description: A .NET console app that scans a folder of password‑protected .xlsx workbooks, opens each with the old password, removes personal data (e.g., comments, SSN values), applies a new password, and saves the cleaned files to an output directory. Includes robust error handling for compliance‑driven bulk processing.
+// Keywords: Aspose.Cells | C# batch decrypt Excel | re‑encrypt workbook | Excel data sanitization | remove personal information Excel | redact SSN in Excel | password protected Excel files | GDPR compliance Excel | HIPAA Excel encryption | bulk Excel processing .NET
+// Common Searches: How to open and decrypt password protected Excel files using Aspose.Cells C# | Batch replace sensitive text in Excel workbooks with Aspose.Cells | Re‑encrypt multiple Excel files with a new password in .NET | Remove personal information from Excel sheets programmatically | Automate Excel data redaction for GDPR/HIPAA compliance
+// Developer Intent: Decrypt many protected Excel workbooks, cleanse sensitive content, and re‑save them with a new password in an automated .NET workflow.
+// Use Cases: Redact employee SSNs from archived spreadsheets before long‑term storage to meet GDPR or HIPAA rules. | Prepare client financial reports for external audit by stripping personal identifiers and applying updated encryption. | Automate compliance for a batch of vendor‑supplied Excel files, ensuring all files are sanitized and protected with a corporate password.
+// AI Prompts: Write C# code using Aspose.Cells that loads all .xlsx files from a folder with an old password, replaces any cell containing "SSN" with "REDACTED", and saves each file with a new password. | Show how to implement per‑file logging of the number of cells redacted and the file path while processing encrypted Excel workbooks in a batch. | Provide an example of exception handling that skips corrupted or incorrectly password‑protected Excel files but continues processing the remaining batch.
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
 namespace BatchDecryptSanitizeReencrypt
 {
-    // Scans a folder for .xlsx workbooks, detects encryption, opens each file with the old password, removes personal information, redacts specified strings, applies a new password, and saves the cleaned file to an output directory. Includes error handling for individual files and supports compliance‑driven workflows.
+    // A .NET console app that scans a folder of password‑protected .xlsx workbooks, opens each with the old password, removes personal data (e.g., comments, SSN values), applies a new password, and saves the cleaned files to an output directory. Includes robust error handling for compliance‑driven bulk processing.
     class Program
     {
         static void Main(string[] args)
         {
-            // Input parameters (could be replaced with args parsing)
-            string inputFolder = @"C:\InputExcelFiles";
-            string outputFolder = @"C:\SanitizedExcelFiles";
-            string oldPassword = "oldPass123";
-            string newPassword = "newSecurePass456";
+            // Folder containing encrypted Excel files
+            string inputFolder = @"C:\InputEncrypted";
+            // Folder where re‑encrypted files will be saved
+            string outputFolder = @"C:\OutputReencrypted";
+
+            // Old password used to open the encrypted files
+            string oldPassword = "OldPassword123";
+            // New password to protect the files after sanitization
+            string newPassword = "NewSecurePass456";
+
+            // Verify input folder exists
+            if (!Directory.Exists(inputFolder))
+            {
+                Console.WriteLine($"Input folder not found: {inputFolder}");
+                return;
+            }
 
             // Ensure output directory exists
-            Directory.CreateDirectory(outputFolder);
+            if (!Directory.Exists(outputFolder))
+                Directory.CreateDirectory(outputFolder);
 
-            // Process each Excel file in the input folder
-            foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+            try
             {
-                try
+                // Process each .xlsx file in the input folder
+                foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
                 {
-                    // Detect file format and encryption status
-                    FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-                    bool isEncrypted = formatInfo.IsEncrypted;
-
-                    // Load the workbook with appropriate load options
-                    Workbook workbook;
-                    if (isEncrypted)
+                    // Verify the file still exists
+                    if (!File.Exists(filePath))
                     {
-                        // Use LoadOptions to supply the old password
-                        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                        Console.WriteLine($"File not found (skipped): {filePath}");
+                        continue;
+                    }
+
+                    try
+                    {
+                        // Load the workbook with the old password
+                        LoadOptions loadOptions = new LoadOptions
                         {
                             Password = oldPassword
                         };
-                        workbook = new Workbook(filePath, loadOptions);
+
+                        using (Workbook workbook = new Workbook(filePath, loadOptions))
+                        {
+                            // ---------- Data Sanitization ----------
+                            // Remove personal information such as author names in comments
+                            workbook.RemovePersonalInformation();
+
+                            // Example sanitization: replace any cell containing "SSN" with "REDACTED"
+                            foreach (Worksheet sheet in workbook.Worksheets)
+                            {
+                                Cells cells = sheet.Cells;
+                                int maxRow = cells.MaxDataRow;
+                                int maxCol = cells.MaxDataColumn;
+
+                                for (int row = 0; row <= maxRow; row++)
+                                {
+                                    for (int col = 0; col <= maxCol; col++)
+                                    {
+                                        Cell cell = cells[row, col];
+                                        if (cell.Type == CellValueType.IsString)
+                                        {
+                                            string text = cell.StringValue;
+                                            if (!string.IsNullOrEmpty(text) && text.Contains("SSN"))
+                                            {
+                                                cell.PutValue("REDACTED");
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            // ---------- Re‑encryption ----------
+                            // Set the new password for the workbook
+                            workbook.Settings.Password = newPassword;
+
+                            // Save the sanitized and re‑encrypted workbook
+                            string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
+                            workbook.Save(outputPath, SaveFormat.Xlsx);
+
+                            Console.WriteLine($"Processed and saved: {outputPath}");
+                        }
                     }
-                    else
+                    catch (Exception exFile)
                     {
-                        // Load without password
-                        workbook = new Workbook(filePath);
+                        Console.WriteLine($"Error processing file '{filePath}': {exFile.Message}");
                     }
-
-                    // ------------------- Data Sanitization -------------------
-                    // 1. Remove personal information such as author names in comments
-                    workbook.RemovePersonalInformation();
-
-                    // 2. Example string replacement to redact sensitive data
-                    // Replace any occurrence of the placeholder "SensitiveData" with "REDACTED"
-                    workbook.Replace("SensitiveData", "REDACTED");
-
-                    // Additional sanitization logic can be added here (e.g., clearing specific ranges)
-
-                    // ------------------- Re‑encrypt with new password -------------------
-                    // Set the new password on the workbook settings
-                    workbook.Settings.Password = newPassword;
-
-                    // Save the sanitized and re‑encrypted workbook to the output folder
-                    string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-                    workbook.Save(outputPath);
-
-                    Console.WriteLine($"Processed and saved: {outputPath}");
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-                }
+
+                Console.WriteLine("Batch processing completed.");
             }
-
-            Console.WriteLine("Batch processing completed.");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

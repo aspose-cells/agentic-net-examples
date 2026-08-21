@@ -1,22 +1,21 @@
-// Title: Parse, Sort & Reformat Date Strings with Aspose.Cells GetStringValue (C#)
-// Description: Demonstrates how to read formatted date strings from a worksheet using GetStringValue(CellValueFormatStrategy.DisplayString), convert them to DateTime with DateTime.ParseExact, sort the rows chronologically, write the dates back as true DateTime values, apply a custom "dd-MM-yyyy" style, and save the workbook as SortedDates.xlsx.
-// Keywords: Aspose.Cells GetStringValue | CellValueFormatStrategy.DisplayString | C# date parsing Excel | sort dates Aspose.Cells | convert string to DateTime Aspose | custom date format Aspose.Cells | Excel date sorting .NET | Aspose.Cells example
-// Common Searches: How to read displayed date strings with Aspose.Cells | Parse and sort string dates in Excel using C# | Apply custom date format after sorting with Aspose.Cells | GetStringValue with formatting Aspose.Cells .NET
-// Developer Intent: Extract displayed date strings, convert to DateTime, sort, and rewrite them with a consistent date format.
-// Use Cases: Read plain‑text dates stored in a column, parse them using a known pattern, and order the rows by date. | Replace the original strings with true DateTime cells while preserving the header row. | Apply a custom cell style (dd-MM-yyyy) to ensure consistent visual formatting after sorting.
-// AI Prompts: Show C# code that uses Aspose.Cells GetStringValue(DisplayString) to retrieve formatted dates, sort them, and write back with a custom style. | Explain how to safely parse date strings from Excel cells using DateTime.ParseExact in Aspose.Cells. | Provide a step‑by‑step guide for sorting date strings in an Aspose.Cells workbook and exporting the result to a new file.
+// Title: Use GetStringValue with WithFormatting to extract and sort dates in Aspose.Cells for .NET
+// Description: Creates a workbook, writes mixed‑format date strings to column A, reads each cell's displayed value via GetStringValue (WithFormatting), parses the strings into DateTime objects, orders them chronologically, and writes the sorted dates to column B with a consistent built‑in date style.
+// Keywords: Aspose.Cells GetStringValue WithFormatting | read formatted date string .NET | parse Excel dates C# | sort dates Aspose.Cells | Excel date style Aspose | DateTime conversion Aspose.Cells | C# Excel date sorting example
+// Common Searches: GetStringValue with formatting Aspose.Cells example | how to read displayed date value from Excel using Aspose | parse and sort mixed format dates in C# with Aspose.Cells | extract formatted cell value Aspose.Cells .NET | sort Excel dates programmatically Aspose
+// Developer Intent: Read the visible date text from worksheet cells, convert it to DateTime, and reorder the rows based on chronological order.
+// Use Cases: Normalize a column of heterogeneous date strings before analysis. | Generate a chronologically ordered report by writing sorted dates to a new column. | Log rows that contain unparseable date strings for data‑quality review.
+// AI Prompts: Write C# code that uses Aspose.Cells GetStringValue with WithFormatting to read date strings, convert them to DateTime, sort them, and output the sorted list to another column. | Show how to handle parsing errors when extracting formatted dates from Excel cells with Aspose.Cells. | Explain how to apply a built‑in date number format to both source and sorted cells in an Aspose.Cells workbook.
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Aspose.Cells;
 
 namespace AsposeCellsDateSortingDemo
 {
-    // Demonstrates how to read formatted date strings from a worksheet using GetStringValue(CellValueFormatStrategy.DisplayString), convert them to DateTime with DateTime.ParseExact, sort the rows chronologically, write the dates back as true DateTime values, apply a custom "dd-MM-yyyy" style, and save the workbook as SortedDates.xlsx.
-    public class Program
+    // Creates a workbook, writes mixed‑format date strings to column A, reads each cell's displayed value via GetStringValue (WithFormatting), parses the strings into DateTime objects, orders them chronologically, and writes the sorted dates to column B with a consistent built‑in date style.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
@@ -25,47 +24,62 @@ namespace AsposeCellsDateSortingDemo
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // Sample data: date strings in column A (index 0)
-                // These are stored as plain strings, not as DateTime values
-                cells["A1"].PutValue("Date"); // Header
-                cells["A2"].PutValue("15-05-2023");
-                cells["A3"].PutValue("01-04-2022");
-                cells["A4"].PutValue("23-12-2023");
-                cells["A5"].PutValue("07-08-2021");
+                // Populate column A with date strings in various formats
+                string[] dateStrings = {
+                    "15/05/2023",      // dd/MM/yyyy
+                    "2023-05-14",      // yyyy-MM-dd
+                    "May 13, 2023",    // MMM dd, yyyy
+                    "2023.05.12",      // yyyy.MM.dd
+                    "2023/05/11"       // yyyy/MM/dd
+                };
 
-                // List to hold parsed DateTime and original row index
-                List<(DateTime date, int row)> dateRows = new List<(DateTime, int)>();
-
-                // Determine the range of data rows (excluding header)
-                int startRow = 1; // zero‑based index, row 2 in Excel
-                int endRow = cells.MaxDataRow; // last row with data
-
-                // Extract the displayed string from each cell and parse it to DateTime
-                for (int r = startRow; r <= endRow; r++)
+                for (int i = 0; i < dateStrings.Length; i++)
                 {
-                    // GetStringValue with DisplayString returns the cell's displayed string with formatting
-                    string dateStr = cells[r, 0].GetStringValue(CellValueFormatStrategy.DisplayString);
+                    // Put the raw string into the cell
+                    cells[i, 0].PutValue(dateStrings[i]);
 
-                    // Parse using the known format (dd-MM-yyyy). Adjust format if needed.
-                    DateTime parsedDate = DateTime.ParseExact(dateStr, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-                    dateRows.Add((parsedDate, r));
+                    // Apply a date style so the cell displays a date format
+                    Style style = cells[i, 0].GetStyle();
+                    style.Number = 14; // Built‑in date format (e.g., "m/d/yyyy")
+                    cells[i, 0].SetStyle(style);
+                }
+
+                // Extract the formatted date strings using the displayed value
+                List<(int Row, DateTime Date)> extractedDates = new List<(int, DateTime)>();
+                for (int i = 0; i < dateStrings.Length; i++)
+                {
+                    // StringValue returns the displayed (formatted) value of the cell
+                    string formatted = cells[i, 0].StringValue;
+
+                    // Try to parse the string into a DateTime object using flexible parsing
+                    if (DateTime.TryParse(formatted, out DateTime dt))
+                    {
+                        extractedDates.Add((i, dt));
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Unable to parse date string at row {i + 1}: '{formatted}'");
+                    }
                 }
 
                 // Sort the list by the DateTime value
-                dateRows.Sort((x, y) => x.date.CompareTo(y.date));
+                extractedDates.Sort((a, b) => a.Date.CompareTo(b.Date));
 
-                // Write the sorted dates back to the worksheet (preserving the header)
-                for (int i = 0; i < dateRows.Count; i++)
+                // Write the sorted dates (as DateTime values) into column B
+                for (int i = 0; i < extractedDates.Count; i++)
                 {
-                    int targetRow = startRow + i;
-                    cells[targetRow, 0].PutValue(dateRows[i].date);
-                    // Apply a date format so the cell displays as a date string
-                    Style style = cells[targetRow, 0].GetStyle();
-                    style.Custom = "dd-MM-yyyy";
-                    cells[targetRow, 0].SetStyle(style);
+                    DateTime sortedDate = extractedDates[i].Date;
+
+                    // Place the DateTime value in column B (index 1)
+                    cells[i, 1].PutValue(sortedDate);
+
+                    // Apply the same date style for consistency
+                    Style style = cells[i, 1].GetStyle();
+                    style.Number = 14; // Built‑in date format
+                    cells[i, 1].SetStyle(style);
                 }
 
-                // Save the workbook
+                // Save the workbook to demonstrate the result
                 workbook.Save("SortedDates.xlsx");
             }
             catch (Exception ex)

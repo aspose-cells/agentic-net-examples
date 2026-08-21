@@ -1,17 +1,17 @@
-// Title: Add a Mandatory Comment Signature Line in Excel with Aspose.Cells for .NET (C#)
-// Description: Shows how to create a new workbook, configure a SignatureLine with signer details, enable AllowComments to require a comment, set custom instructions, display the signed date, place the line at cell B2, and save the file as SignatureLineWithComments.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# signature line | Excel mandatory comment | AllowComments property | digital signature line | add signature line Aspose | Excel workbook signing | Aspose.Cells .NET | signature line instructions | signed date display
-// Common Searches: Aspose.Cells add signature line with required comment | C# require comment on Excel signature line | How to set AllowComments in Aspose.Cells | Insert signature line at specific cell using Aspose.Cells | Aspose.Cells signature line custom instructions
-// Developer Intent: Insert a signature line into an Excel worksheet that forces the signer to provide a comment before completing the signature.
-// Use Cases: Contract templates where each approver must add remarks before signing. | Audit reports that need reviewers to leave comments on the signature line. | Compliance worksheets that capture the signing date together with mandatory comments. | Internal approval forms that enforce explanatory notes from signers.
-// AI Prompts: Generate C# code with Aspose.Cells to add a signature line that requires a comment and shows custom instructions. | Modify the example to place the signature line at cell D5 and retrieve the signer name from a variable. | Explain the purpose of the AllowComments property and how to extract the comment after the workbook is signed. | Create a reusable method that adds a mandatory‑comment signature line to any worksheet given signer details.
+// Title: Add a mandatory comment signature line to an Excel worksheet with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a new Workbook, configure a SignatureLine that forces the signer to enter comments, display the signing date, set custom instructions, place the line in cell B2, and save the file as SignatureLineWithComments.xlsx using Aspose.Cells for C#.
+// Keywords: Aspose.Cells signature line | C# mandatory comment signature | Excel signature line with comments | Aspose.Cells add signature line | SignatureLine AllowComments | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells required comment on signature line | C# add signature line with mandatory comments | How to enforce comments in Excel signature line using Aspose | Place signature line in specific cell Aspose.Cells | Show signed date with Aspose.Cells signature line
+// Developer Intent: Insert a signature line into an Excel sheet that obliges the signer to provide a comment and records the signing date.
+// Use Cases: Approval worksheets where each reviewer must sign and add remarks before finalization. | Contract templates that capture signer comments for audit compliance. | Automated audit logs embedding signature lines with mandatory feedback and timestamp.
+// AI Prompts: Write C# code with Aspose.Cells to add a signature line that requires a comment and shows the signed date. | Explain how to check if the comment field was filled after signing an Aspose.Cells workbook. | Provide a tutorial to customize instruction text and enforce mandatory comments on a signature line in Excel.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to create a new workbook, configure a SignatureLine with signer details, enable AllowComments to require a comment, set custom instructions, display the signed date, place the line at cell B2, and save the file as SignatureLineWithComments.xlsx using Aspose.Cells for .NET.
-class AddSignatureLineWithMandatoryComment
+// Demonstrates how to create a new Workbook, configure a SignatureLine that forces the signer to enter comments, display the signing date, set custom instructions, place the line in cell B2, and save the file as SignatureLineWithComments.xlsx using Aspose.Cells for C#.
+class Program
 {
     static void Main()
     {
@@ -20,21 +20,19 @@ class AddSignatureLineWithMandatoryComment
         Worksheet worksheet = workbook.Worksheets[0];
 
         // Configure the signature line
-        SignatureLine signatureLine = new SignatureLine
-        {
-            Signer = "John Doe",
-            Title = "Approver",
-            Email = "john.doe@example.com",
-            IsLine = true,
-            AllowComments = true,                     // Require comments from the signer
-            Instructions = "Please add comments before signing.", // Guidance shown at signing time
-            ShowSignedDate = true
-        };
+        SignatureLine signatureLine = new SignatureLine();
+        signatureLine.Signer = "John Doe";                     // Signer's name
+        signatureLine.Title = "Approver";                      // Signer's title
+        signatureLine.Email = "john.doe@example.com";          // Signer's email
+        signatureLine.IsLine = true;                           // Mark as a signature line
+        signatureLine.AllowComments = true;                    // Require comments from signer
+        signatureLine.Instructions = "Please sign and provide comments."; // Prompt shown to signer
+        signatureLine.ShowSignedDate = true;                   // Show date after signing
 
         // Add the signature line to the worksheet at row 2, column 2 (zero‑based indices)
         worksheet.Shapes.AddSignatureLine(1, 1, signatureLine);
 
-        // Save the workbook
+        // Save the workbook with the signature line
         workbook.Save("SignatureLineWithComments.xlsx");
     }
 }

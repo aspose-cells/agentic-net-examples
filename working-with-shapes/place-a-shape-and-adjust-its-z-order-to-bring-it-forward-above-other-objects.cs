@@ -1,52 +1,52 @@
-// Title: Adjust Z‑Order of Overlapping Shapes in Aspose.Cells for .NET – Bring to Front or Send to Back
-// Description: C# example that creates a workbook, adds two overlapping rectangle shapes, and uses the ToFrontOrBack method to change their layering (bring one shape forward, send the other backward) before saving the file.
-// Keywords: Aspose.Cells | C# shape Z-order | BringToFront | SendToBack | ToFrontOrBack | overlapping shapes | Excel shape layering | Aspose.Cells Drawing API | rectangle shape | worksheet shapes
-// Common Searches: Aspose.Cells bring shape to front C# | change Z-order of Excel shapes with Aspose.Cells | send shape to back Aspose.Cells .NET | ToFrontOrBack method example | layer overlapping shapes in Aspose.Cells workbook
-// Developer Intent: Add overlapping shapes to a worksheet and control which shape appears on top by modifying their Z‑order.
-// Use Cases: Design a diagram where foreground elements must overlay background graphics. | Place a company logo above data cells in an automated report. | Create interactive dashboards with layered shapes that need dynamic reordering.
-// AI Prompts: Show C# code to move a shape two positions forward in the Z‑order using Aspose.Cells. | Generate an example that toggles shape layering based on a runtime flag. | Explain how ToFrontOrBack differs from the dedicated BringToFront and SendToBack methods.
+// Title: C# – Change Shape Z‑Order (Bring to Front / Send to Back) in Excel with Aspose.Cells
+// Description: Shows how to add overlapping rectangle shapes to a worksheet and adjust their Z‑order using Aspose.Cells for .NET. The sample employs Shape.ToFrontOrBack to move a shape forward or backward before saving the workbook.
+// Keywords: Aspose.Cells | C# shape Z-order | ToFrontOrBack | bring shape to front | send shape to back | overlapping shapes Excel | modify shape order | Excel worksheet shapes | .NET Aspose.Cells example | shape layering
+// Common Searches: Aspose.Cells move shape to front | C# set Z-order of Excel shapes | how to bring a rectangle shape forward in Aspose.Cells | send shape backward programmatically Aspose.Cells | Shape.ToFrontOrBack usage | change layering of shapes in Excel using .NET
+// Developer Intent: Reorder overlapping shapes so a chosen shape appears above or below the others in an Excel file.
+// Use Cases: Create overlapping charts or images and control which element is visible. | Implement a drag‑and‑drop UI where users can change the stacking order of shapes. | Generate reports with layered graphics where the foreground shape must be highlighted. | Programmatically adjust Z‑order in a loop for dynamic dashboards or visualizations.
+// AI Prompts: Write C# code that iterates through all worksheet shapes and moves each one to the front using ToFrontOrBack(1). | Provide a WinForms button‑click handler that toggles two shapes between front and back positions with Aspose.Cells. | Explain how positive, zero, and negative values affect Shape.ToFrontOrBack and how to place a shape at the absolute front or back. | Generate a PowerShell script that reorders shapes in an Excel workbook based on a priority list using Aspose.Cells.
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeZOrderDemo
+namespace AsposeCellsExamples
 {
-    // C# example that creates a workbook, adds two overlapping rectangle shapes, and uses the ToFrontOrBack method to change their layering (bring one shape forward, send the other backward) before saving the file.
-    class Program
+    // Shows how to add overlapping rectangle shapes to a worksheet and adjust their Z‑order using Aspose.Cells for .NET. The sample employs Shape.ToFrontOrBack to move a shape forward or backward before saving the workbook.
+    public class ShapeZOrderDemo
     {
-        static void Main()
+        // Entry point for the application
+        public static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add two overlapping rectangle shapes
-                // shape1 added first (back initially)
-                Shape shape1 = worksheet.Shapes.AddRectangle(10, 10, 100, 100, 0, 0);
-                shape1.Text = "Back Shape";
-
-                // shape2 added on top of shape1 (higher Z-order)
-                Shape shape2 = worksheet.Shapes.AddRectangle(50, 50, 100, 100, 0, 0);
-                shape2.Text = "Front Shape";
-
-                // Bring shape2 one position forward (valid range)
-                shape2.ToFrontOrBack(1); // equivalent to BringToFront
-
-                // Send shape1 to back (optional)
-                shape1.ToFrontOrBack(-1); // equivalent to SendToBack
-
-                // Save the workbook
-                string outputPath = "ShapeZOrderDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Run();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add two overlapping rectangle shapes
+            Shape shape1 = worksheet.Shapes.AddRectangle(10, 10, 100, 100, 0, 0);
+            Shape shape2 = worksheet.Shapes.AddRectangle(50, 50, 100, 100, 0, 0);
+
+            // Bring shape2 to the front (positive value moves forward)
+            shape2.ToFrontOrBack(1);
+
+            // Send shape1 to the back (negative value moves backward)
+            shape1.ToFrontOrBack(-1);
+
+            // Save the workbook
+            workbook.Save("ShapeZOrderDemo.xlsx");
+            Console.WriteLine("Workbook saved as ShapeZOrderDemo.xlsx");
         }
     }
 }

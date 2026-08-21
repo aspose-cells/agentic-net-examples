@@ -1,101 +1,63 @@
-// Title: C# – Convert HTML to Excel with Aspose.Cells and Auto‑Generate a Hyperlinked Table of Contents
-// Description: Loads an HTML file into an Aspose.Cells workbook, extracts all <h1>‑<h6> headings, creates a "Table of Contents" worksheet, writes each heading with level‑based indentation, links each entry to the first matching cell in the workbook, and saves the result as an .xlsx file.
-// Keywords: Aspose.Cells HTML to Excel conversion | C# generate Excel table of contents | hyperlink headings in Excel | extract h1 h6 tags C# | auto TOC worksheet Aspose.Cells | convert HTML report to Excel | C# regex heading extraction
-// Common Searches: how to create a table of contents in Excel from HTML using Aspose.Cells | C# code to add hyperlinks from TOC to HTML headings in Excel | Aspose.Cells load HTML and generate TOC worksheet | extract h1‑h6 tags and map to Excel cells C# | convert HTML report to Excel with clickable navigation
-// Developer Intent: Produce an Excel workbook from an HTML source and add a hyperlinked TOC sheet that navigates to each heading.
-// Use Cases: Transform marketing or technical reports stored as HTML into Excel workbooks with instant navigation. | Automate documentation publishing where each HTML section appears as a clickable entry in an Excel TOC. | Provide analysts with a consolidated workbook that links summary rows to detailed sections extracted from HTML.
-// AI Prompts: Generate C# code using Aspose.Cells to load an HTML file, extract all heading tags, and build a hyperlinked Table of Contents worksheet. | Show how to include page numbers or cell references next to each TOC entry in the sample. | Suggest a strategy for handling duplicate heading texts when creating hyperlinks in the TOC.
+// Title: C# – Convert HTML to Excel with Aspose.Cells and Add a Table of Contents Sheet
+// Description: Loads an HTML file into an Aspose.Cells Workbook, creates a "Table of Contents" worksheet, lists each generated sheet with internal hyperlinks to its A1 cell, and saves the result as an XLSX file.
+// Keywords: Aspose.Cells HTML to Excel C# | generate TOC worksheet Aspose | internal hyperlink Excel sheet | load HTML workbook Aspose.Cells | programmatic Excel Table of Contents
+// Common Searches: Aspose.Cells convert HTML to XLSX C# | create table of contents sheet in Excel using Aspose | add internal hyperlinks between worksheets Aspose.Cells | C# code to load HTML into workbook and generate TOC | Aspose.Cells example for HTML headings to Excel
+// Developer Intent: Produce an Excel file from an HTML document and automatically add a navigable Table of Contents worksheet.
+// Use Cases: Transform a web‑based report into an Excel workbook with quick navigation links. | Export segmented documentation (one HTML section per sheet) and provide a clickable index. | Package data extracted from a website into a downloadable XLSX file that includes a TOC for end‑users.
+// AI Prompts: Show how to indent TOC entries based on HTML heading levels (H1, H2, H3). | Provide code to apply custom styling (font color, underline) to the TOC hyperlinks. | Explain how to add row numbers or page references next to each TOC entry.
 
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// Loads an HTML file into an Aspose.Cells workbook, extracts all <h1>‑<h6> headings, creates a "Table of Contents" worksheet, writes each heading with level‑based indentation, links each entry to the first matching cell in the workbook, and saves the result as an .xlsx file.
+// Loads an HTML file into an Aspose.Cells Workbook, creates a "Table of Contents" worksheet, lists each generated sheet with internal hyperlinks to its A1 cell, and saves the result as an XLSX file.
 class HtmlToExcelWithToc
 {
     static void Main()
     {
         try
         {
-            // Input HTML file and output Excel file paths
+            // Path to the source HTML file
             string htmlPath = "input.html";
-            string excelPath = "output.xlsx";
 
-            // Verify that the HTML source file exists
+            // Verify that the HTML file exists to avoid FileNotFoundException
             if (!File.Exists(htmlPath))
             {
-                Console.WriteLine($"Error: HTML file not found at '{htmlPath}'.");
+                Console.WriteLine($"Error: The file \"{htmlPath}\" was not found.");
                 return;
             }
 
-            // Load the HTML file into a workbook
+            // Load the HTML file into a workbook using HtmlLoadOptions
             HtmlLoadOptions loadOptions = new HtmlLoadOptions();
             Workbook workbook = new Workbook(htmlPath, loadOptions);
 
-            // Read the raw HTML content for heading extraction
-            string htmlContent = File.ReadAllText(htmlPath);
-
-            // Regex to capture <h1> … </h1> through <h6> … </h6>
-            Regex headingRegex = new Regex(@"<(h[1-6])[^>]*>(.*?)</\1>", RegexOptions.IgnoreCase);
-            MatchCollection headingMatches = headingRegex.Matches(htmlContent);
-
-            // Add a new worksheet that will hold the Table of Contents
-            Worksheet tocSheet = workbook.Worksheets[workbook.Worksheets.Add()];
+            // Add a new worksheet that will serve as the Table of Contents
+            int tocIndex = workbook.Worksheets.Add();
+            Worksheet tocSheet = workbook.Worksheets[tocIndex];
             tocSheet.Name = "Table of Contents";
 
+            // Populate the TOC with links to each worksheet (excluding the TOC itself)
             int tocRow = 0;
-
-            // Iterate over each heading found in the HTML
-            foreach (Match match in headingMatches)
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
-                // Determine heading level (1‑6) and plain text
-                string tag = match.Groups[1].Value.ToLower();               // e.g. "h2"
-                string headingText = System.Net.WebUtility.HtmlDecode(match.Groups[2].Value.Trim());
+                Worksheet ws = workbook.Worksheets[i];
+                if (ws.Name == "Table of Contents")
+                    continue;
 
-                // Indent the entry according to its level for visual hierarchy
-                int level = int.Parse(tag.Substring(1)); // 1‑6
-                string indentedText = new string(' ', (level - 1) * 4) + headingText;
-                tocSheet.Cells[tocRow, 0].PutValue(indentedText);
+                // Write the sheet name in the TOC
+                tocSheet.Cells[tocRow, 0].PutValue(ws.Name);
 
-                // Search for the first cell in the workbook that contains the heading text
-                // (skip the TOC sheet itself to avoid self‑reference)
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    if (ws == tocSheet) continue;
-
-                    // Find the heading text (case‑insensitive). Use overload with start cell = null.
-                    Cell foundCell = ws.Cells.Find(headingText, null, new FindOptions { CaseSensitive = false });
-                    if (foundCell != null)
-                    {
-                        // Create a hyperlink from the TOC entry to the found cell
-                        // Hyperlink format: 'SheetName'!A1
-                        string hyperlink = $"'{ws.Name}'!{foundCell.Name}";
-                        tocSheet.Hyperlinks.Add(tocRow, 0, 1, 1, hyperlink);
-                        break;
-                    }
-                }
+                // Add an internal hyperlink that points to cell A1 of the target sheet
+                // Correct overload: Add(firstRow, firstColumn, totalRows, totalColumns, address)
+                tocSheet.Hyperlinks.Add(tocRow, 0, 1, 1, ws.Name + "!A1");
 
                 tocRow++;
             }
 
-            // Ensure the output directory exists
-            try
-            {
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(excelPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as an Excel file
-                workbook.Save(excelPath);
-                Console.WriteLine($"Workbook saved successfully to '{excelPath}'.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            // Save the workbook as an Excel file
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
